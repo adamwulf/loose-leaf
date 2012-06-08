@@ -26,7 +26,7 @@
 {
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.
-    self.viewController = [[[SLPaperStackViewController alloc] initWithNibName:@"SLViewController" bundle:nil] autorelease];
+    self.viewController = [[[SLPaperStackViewController alloc] initWithNibName:@"SLPaperStackViewController" bundle:nil] autorelease];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     return YES;

@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SLPaperStackView.h"
+#import "SLPaperView.h"
 
-@interface SLPaperStackViewController : UIViewController
+@interface SLPaperStackViewController : UIViewController{
+    IBOutlet SLPaperStackView* stackView;
+}
 
 @end

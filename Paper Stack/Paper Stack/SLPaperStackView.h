@@ -7,7 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SLPaperView.h"
+#import "SLPanGestureRecognizer.h"
+#import "SLPinchGestureRecognizer.h"
 
-@interface SLPaperStackView : UIView
+@interface SLPaperStackView : UIView{
+    NSMutableArray* visibleStack;
+    NSMutableArray* hiddenStack;
+}
+
+-(void) addPaperToBottomOfStack:(SLPaperView*)page;
 
 @end
