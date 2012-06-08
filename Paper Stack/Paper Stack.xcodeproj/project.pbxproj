@@ -1,0 +1,459 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
+		66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8C1581BCEF00B4918C /* Foundation.framework */; };
+		66DCFB8F1581BCEF00B4918C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */; };
+		66DCFB951581BCEF00B4918C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66DCFB931581BCEF00B4918C /* InfoPlist.strings */; };
+		66DCFB971581BCEF00B4918C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB961581BCEF00B4918C /* main.m */; };
+		66DCFB9B1581BCEF00B4918C /* SLAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB9A1581BCEF00B4918C /* SLAppDelegate.m */; };
+		66DCFB9E1581BCEF00B4918C /* SLPaperStackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB9D1581BCEF00B4918C /* SLPaperStackViewController.m */; };
+		66DCFBA11581BCEF00B4918C /* SLPaperStackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 66DCFB9F1581BCEF00B4918C /* SLPaperStackViewController.xib */; };
+		66DCFBA91581BCF000B4918C /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFBA81581BCEF00B4918C /* SenTestingKit.framework */; };
+		66DCFBAA1581BCF000B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
+		66DCFBAB1581BCF000B4918C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8C1581BCEF00B4918C /* Foundation.framework */; };
+		66DCFBB31581BCF000B4918C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66DCFBB11581BCF000B4918C /* InfoPlist.strings */; };
+		66DCFBB61581BCF000B4918C /* Paper_StackTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBB51581BCF000B4918C /* Paper_StackTests.m */; };
+		66DCFBC21581C85B00B4918C /* SLPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBC11581C85B00B4918C /* SLPaperStackView.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		66DCFBAC1581BCF000B4918C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 66DCFB7D1581BCED00B4918C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 66DCFB851581BCEF00B4918C;
+			remoteInfo = "Paper Stack";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		66DCFB861581BCEF00B4918C /* Paper Stack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Paper Stack.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		66DCFB8A1581BCEF00B4918C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		66DCFB8C1581BCEF00B4918C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		66DCFB921581BCEF00B4918C /* Paper Stack-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Paper Stack-Info.plist"; sourceTree = "<group>"; };
+		66DCFB941581BCEF00B4918C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		66DCFB961581BCEF00B4918C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		66DCFB981581BCEF00B4918C /* Paper Stack-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Paper Stack-Prefix.pch"; sourceTree = "<group>"; };
+		66DCFB991581BCEF00B4918C /* SLAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLAppDelegate.h; sourceTree = "<group>"; };
+		66DCFB9A1581BCEF00B4918C /* SLAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLAppDelegate.m; sourceTree = "<group>"; };
+		66DCFB9C1581BCEF00B4918C /* SLPaperStackViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLPaperStackViewController.h; sourceTree = "<group>"; };
+		66DCFB9D1581BCEF00B4918C /* SLPaperStackViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLPaperStackViewController.m; sourceTree = "<group>"; };
+		66DCFBA01581BCEF00B4918C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SLPaperStackViewController.xib; sourceTree = "<group>"; };
+		66DCFBA71581BCEF00B4918C /* Paper StackTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Paper StackTests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		66DCFBA81581BCEF00B4918C /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		66DCFBB01581BCF000B4918C /* Paper StackTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Paper StackTests-Info.plist"; sourceTree = "<group>"; };
+		66DCFBB21581BCF000B4918C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		66DCFBB41581BCF000B4918C /* Paper_StackTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Paper_StackTests.h; sourceTree = "<group>"; };
+		66DCFBB51581BCF000B4918C /* Paper_StackTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Paper_StackTests.m; sourceTree = "<group>"; };
+		66DCFBC01581C85B00B4918C /* SLPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperStackView.h; sourceTree = "<group>"; };
+		66DCFBC11581C85B00B4918C /* SLPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPaperStackView.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		66DCFB831581BCEF00B4918C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */,
+				66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */,
+				66DCFB8F1581BCEF00B4918C /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66DCFBA31581BCEF00B4918C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66DCFBA91581BCF000B4918C /* SenTestingKit.framework in Frameworks */,
+				66DCFBAA1581BCF000B4918C /* UIKit.framework in Frameworks */,
+				66DCFBAB1581BCF000B4918C /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		66DCFB7B1581BCED00B4918C = {
+			isa = PBXGroup;
+			children = (
+				66DCFB901581BCEF00B4918C /* Paper Stack */,
+				66DCFBAE1581BCF000B4918C /* Paper StackTests */,
+				66DCFB891581BCEF00B4918C /* Frameworks */,
+				66DCFB871581BCEF00B4918C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		66DCFB871581BCEF00B4918C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				66DCFB861581BCEF00B4918C /* Paper Stack.app */,
+				66DCFBA71581BCEF00B4918C /* Paper StackTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		66DCFB891581BCEF00B4918C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				66DCFB8A1581BCEF00B4918C /* UIKit.framework */,
+				66DCFB8C1581BCEF00B4918C /* Foundation.framework */,
+				66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */,
+				66DCFBA81581BCEF00B4918C /* SenTestingKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		66DCFB901581BCEF00B4918C /* Paper Stack */ = {
+			isa = PBXGroup;
+			children = (
+				66DCFBBF1581C7F400B4918C /* SLPaperStack */,
+				66DCFB991581BCEF00B4918C /* SLAppDelegate.h */,
+				66DCFB9A1581BCEF00B4918C /* SLAppDelegate.m */,
+				66DCFB9C1581BCEF00B4918C /* SLPaperStackViewController.h */,
+				66DCFB9D1581BCEF00B4918C /* SLPaperStackViewController.m */,
+				66DCFB9F1581BCEF00B4918C /* SLPaperStackViewController.xib */,
+				66DCFB911581BCEF00B4918C /* Supporting Files */,
+			);
+			path = "Paper Stack";
+			sourceTree = "<group>";
+		};
+		66DCFB911581BCEF00B4918C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				66DCFB921581BCEF00B4918C /* Paper Stack-Info.plist */,
+				66DCFB931581BCEF00B4918C /* InfoPlist.strings */,
+				66DCFB961581BCEF00B4918C /* main.m */,
+				66DCFB981581BCEF00B4918C /* Paper Stack-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		66DCFBAE1581BCF000B4918C /* Paper StackTests */ = {
+			isa = PBXGroup;
+			children = (
+				66DCFBB41581BCF000B4918C /* Paper_StackTests.h */,
+				66DCFBB51581BCF000B4918C /* Paper_StackTests.m */,
+				66DCFBAF1581BCF000B4918C /* Supporting Files */,
+			);
+			path = "Paper StackTests";
+			sourceTree = "<group>";
+		};
+		66DCFBAF1581BCF000B4918C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				66DCFBB01581BCF000B4918C /* Paper StackTests-Info.plist */,
+				66DCFBB11581BCF000B4918C /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		66DCFBBF1581C7F400B4918C /* SLPaperStack */ = {
+			isa = PBXGroup;
+			children = (
+				66DCFBC01581C85B00B4918C /* SLPaperStackView.h */,
+				66DCFBC11581C85B00B4918C /* SLPaperStackView.m */,
+			);
+			name = SLPaperStack;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		66DCFB851581BCEF00B4918C /* Paper Stack */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 66DCFBB91581BCF000B4918C /* Build configuration list for PBXNativeTarget "Paper Stack" */;
+			buildPhases = (
+				66DCFB821581BCEF00B4918C /* Sources */,
+				66DCFB831581BCEF00B4918C /* Frameworks */,
+				66DCFB841581BCEF00B4918C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Paper Stack";
+			productName = "Paper Stack";
+			productReference = 66DCFB861581BCEF00B4918C /* Paper Stack.app */;
+			productType = "com.apple.product-type.application";
+		};
+		66DCFBA61581BCEF00B4918C /* Paper StackTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 66DCFBBC1581BCF000B4918C /* Build configuration list for PBXNativeTarget "Paper StackTests" */;
+			buildPhases = (
+				66DCFBA21581BCEF00B4918C /* Sources */,
+				66DCFBA31581BCEF00B4918C /* Frameworks */,
+				66DCFBA41581BCEF00B4918C /* Resources */,
+				66DCFBA51581BCEF00B4918C /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				66DCFBAD1581BCF000B4918C /* PBXTargetDependency */,
+			);
+			name = "Paper StackTests";
+			productName = "Paper StackTests";
+			productReference = 66DCFBA71581BCEF00B4918C /* Paper StackTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		66DCFB7D1581BCED00B4918C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = SL;
+				LastUpgradeCheck = 0440;
+			};
+			buildConfigurationList = 66DCFB801581BCED00B4918C /* Build configuration list for PBXProject "Paper Stack" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 66DCFB7B1581BCED00B4918C;
+			productRefGroup = 66DCFB871581BCEF00B4918C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				66DCFB851581BCEF00B4918C /* Paper Stack */,
+				66DCFBA61581BCEF00B4918C /* Paper StackTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		66DCFB841581BCEF00B4918C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66DCFB951581BCEF00B4918C /* InfoPlist.strings in Resources */,
+				66DCFBA11581BCEF00B4918C /* SLPaperStackViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66DCFBA41581BCEF00B4918C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66DCFBB31581BCF000B4918C /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		66DCFBA51581BCEF00B4918C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		66DCFB821581BCEF00B4918C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66DCFB971581BCEF00B4918C /* main.m in Sources */,
+				66DCFB9B1581BCEF00B4918C /* SLAppDelegate.m in Sources */,
+				66DCFB9E1581BCEF00B4918C /* SLPaperStackViewController.m in Sources */,
+				66DCFBC21581C85B00B4918C /* SLPaperStackView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		66DCFBA21581BCEF00B4918C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66DCFBB61581BCF000B4918C /* Paper_StackTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		66DCFBAD1581BCF000B4918C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 66DCFB851581BCEF00B4918C /* Paper Stack */;
+			targetProxy = 66DCFBAC1581BCF000B4918C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		66DCFB931581BCEF00B4918C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				66DCFB941581BCEF00B4918C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		66DCFB9F1581BCEF00B4918C /* SLPaperStackViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				66DCFBA01581BCEF00B4918C /* en */,
+			);
+			name = SLPaperStackViewController.xib;
+			sourceTree = "<group>";
+		};
+		66DCFBB11581BCF000B4918C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				66DCFBB21581BCF000B4918C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		66DCFBB71581BCF000B4918C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		66DCFBB81581BCF000B4918C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		66DCFBBA1581BCF000B4918C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Paper Stack/Paper Stack-Prefix.pch";
+				INFOPLIST_FILE = "Paper Stack/Paper Stack-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		66DCFBBB1581BCF000B4918C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Paper Stack/Paper Stack-Prefix.pch";
+				INFOPLIST_FILE = "Paper Stack/Paper Stack-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		66DCFBBD1581BCF000B4918C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Paper Stack.app/Paper Stack";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Paper Stack/Paper Stack-Prefix.pch";
+				INFOPLIST_FILE = "Paper StackTests/Paper StackTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		66DCFBBE1581BCF000B4918C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Paper Stack.app/Paper Stack";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Paper Stack/Paper Stack-Prefix.pch";
+				INFOPLIST_FILE = "Paper StackTests/Paper StackTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		66DCFB801581BCED00B4918C /* Build configuration list for PBXProject "Paper Stack" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66DCFBB71581BCF000B4918C /* Debug */,
+				66DCFBB81581BCF000B4918C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		66DCFBB91581BCF000B4918C /* Build configuration list for PBXNativeTarget "Paper Stack" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66DCFBBA1581BCF000B4918C /* Debug */,
+				66DCFBBB1581BCF000B4918C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		66DCFBBC1581BCF000B4918C /* Build configuration list for PBXNativeTarget "Paper StackTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66DCFBBD1581BCF000B4918C /* Debug */,
+				66DCFBBE1581BCF000B4918C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 66DCFB7D1581BCED00B4918C /* Project object */;
+}
