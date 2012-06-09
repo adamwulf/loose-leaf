@@ -62,7 +62,7 @@
 		66DCFBCB1582BAED00B4918C /* SLPaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperView.h; sourceTree = "<group>"; };
 		66DCFBCC1582BAED00B4918C /* SLPaperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPaperView.m; sourceTree = "<group>"; };
 		66DCFBCF1582BC0E00B4918C /* space.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = space.jpeg; sourceTree = "<group>"; };
-		66DCFBDB1582BE3900B4918C /* Contants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contants.h; sourceTree = "<group>"; };
+		66DCFBDB1582BE3900B4918C /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; path = Constants.h; sourceTree = "<group>"; };
 		66DCFBDD1582BF3E00B4918C /* SLPanGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPanGestureRecognizer.h; sourceTree = "<group>"; };
 		66DCFBDE1582BF3E00B4918C /* SLPanGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPanGestureRecognizer.m; sourceTree = "<group>"; };
 		66DCFBE01582BF5200B4918C /* SLPinchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPinchGestureRecognizer.h; sourceTree = "<group>"; };
@@ -145,7 +145,7 @@
 				66DCFB931581BCEF00B4918C /* InfoPlist.strings */,
 				66DCFB961581BCEF00B4918C /* main.m */,
 				66DCFB981581BCEF00B4918C /* Paper Stack-Prefix.pch */,
-				66DCFBDB1582BE3900B4918C /* Contants.h */,
+				66DCFBDB1582BE3900B4918C /* Constants.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";

@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SLPaperView : UIView
+@interface SLPaperView : UIView{
+    CGFloat scale;
+}
+
+@property (nonatomic, assign) CGFloat scale;
+
+-(void) setScale:(CGFloat)_scale atLocation:(CGPoint)locationInView;
 
 @end

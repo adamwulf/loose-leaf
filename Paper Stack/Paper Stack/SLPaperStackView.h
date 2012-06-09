@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
+#import "Constants.h"
 #import <UIKit/UIKit.h>
 #import "SLPaperView.h"
 #import "SLPanGestureRecognizer.h"
@@ -14,6 +15,9 @@
 @interface SLPaperStackView : UIView{
     NSMutableArray* visibleStack;
     NSMutableArray* hiddenStack;
+    
+    
+    CGPoint lastTranslationOfPan;
 }
 
 -(void) addPaperToBottomOfStack:(SLPaperView*)page;

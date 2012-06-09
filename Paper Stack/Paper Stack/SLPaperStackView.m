@@ -35,24 +35,37 @@
 -(void) pan:(UIPanGestureRecognizer*)panGesture{
     if([visibleStack count] == 0) return;
     
-    UIView* viewToMove = [visibleStack objectAtIndex:0];
+    SLPaperView* viewToMove = (SLPaperView*) [visibleStack objectAtIndex:0];
     CGPoint p = [panGesture translationInView:self];
-    NSLog(@"asdfasdf %f %f", p.x, p.y);
-    p = CGPointMake(-p.x, -p.y);
-    CGRect fr = viewToMove.bounds;
+    p = CGPointMake(p.x - lastTranslationOfPan.x, p.y - lastTranslationOfPan.y);
+    lastTranslationOfPan = [panGesture translationInView:self];
+//    NSLog(@"asdfasdf %f %f", p.x, p.y);
+    CGRect fr = viewToMove.frame;
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
        panGesture.state == UIGestureRecognizerStateEnded ||
        panGesture.state == UIGestureRecognizerStateFailed){
-        fr.origin = CGPointZero;
-        viewToMove.bounds = fr;
+
+    
+        // TODO clean up
+    
+    
     }else{
-        fr.origin = p;
-        viewToMove.bounds = fr;
+        fr.origin = CGPointMake(fr.origin.x + p.x, fr.origin.y + p.y);
+        viewToMove.frame = fr;
     }
 }
 
 -(void) pinch:(UIPinchGestureRecognizer*)pinchGesture{
-    NSLog(@"pinch");
+//    return;
+//    NSLog(@"pinch %f", pinchGesture.scale);
+    
+    if(pinchGesture.scale < .7){
+//        debug_NSLog(@"pinch all out to desk %f", pinchGesture.scale);
+    }else{
+        SLPaperView* viewToScale = [visibleStack objectAtIndex:0];
+        [viewToScale setScale:pinchGesture.scale atLocation:[pinchGesture locationInView:viewToScale]];
+    }
+    
 }
 
 
