@@ -1,311 +1,0 @@
-TPaper Stack
-v5
-r1
-cCheck dependencies
-cProcessInfoPlistFile "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/Info.plist" "Paper Stack/Paper Stack-Info.plist"
-cProcessPCH "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/PrecompiledHeaders/Paper Stack-Prefix-erzcgjuntvknrrgqxwnlsjvphshs/Paper Stack-Prefix.pch.pth" "Paper Stack/Paper Stack-Prefix.pch" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC "DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/main.o" "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/main.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC "DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLAppDelegate.o" "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLAppDelegate.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC "DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperStackViewController.o" "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperStackViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC "DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperStackView.o" "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperStackView.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC "DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperView.o" "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperView.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cLd "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/Paper Stack" normal i386
-cGenerateDSYMFile "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app.dSYM" "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/Paper Stack"
-cCompileXIB "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/en.lproj/SLPaperStackViewController.xib"
-cCpResource "Paper Stack/space.jpeg" "DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/space.jpeg"
-cCopyStringsFile "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/en.lproj/InfoPlist.strings" "Paper Stack/en.lproj/InfoPlist.strings"
-cTouch "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app"
-
-N/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk
-c000000004F161A590000000000000110
-t1326848601
-s272
-
-N/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics
-c000000004F3AB64B0000000000245480
-t1329247819
-s2380928
-
-N/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/System/Library/Frameworks/Foundation.framework/Foundation
-c000000004F3AB64F0000000000353830
-t1329247823
-s3487792
-
-N/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk/System/Library/Frameworks/UIKit.framework/UIKit
-c000000004F3AB65B00000000008F7390
-t1329247835
-s9401232
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/Paper Stack.LinkFileList
-c000000004FD2854900000000000003B6
-t1339196745
-s950
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLAppDelegate.o
-t2
-s0
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperStackView.o
-t2
-s0
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperStackViewController.o
-t2
-s0
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperView.o
-t2
-s0
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/main.o
-t2
-s0
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/PrecompiledHeaders/Paper Stack-Prefix-erzcgjuntvknrrgqxwnlsjvphshs/Paper Stack-Prefix.pch.pth
-t2
-s0
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app
-t2
-s0
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app.dSYM
-t2
-s0
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/Info.plist
-t2
-s0
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/Paper Stack
-t2
-s0
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/PkgInfo
-t2
-s0
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/en.lproj/InfoPlist.strings
-t2
-s0
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/en.lproj/SLPaperStackViewController.nib
-t2
-s0
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/space.jpeg
-t2
-s0
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/Paper Stack-Prefix.pch
-c000000004FD1856F0000000000000145
-t1339131247
-s325
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLAppDelegate.m
-c000000004FD190A800000000000009EB
-t1339134120
-s2539
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperStackView.m
-c000000004FD283BC00000000000003B7
-t1339196348
-s951
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperStackViewController.m
-c000000004FD284760000000000000338
-t1339196534
-s824
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperView.m
-c000000004FD284E900000000000002AD
-t1339196649
-s685
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/en.lproj/InfoPlist.strings
-c000000004FD1856F000000000000002D
-t1339131247
-s45
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/en.lproj/SLPaperStackViewController.xib
-c000000004FD28512000000000000195E
-t1339196690
-s6494
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/main.m
-c000000004FD1867F0000000000000157
-t1339131519
-s343
-
-N/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/space.jpeg
-c000000004FD28009000000000000E5E0
-t1339195401
-s58848
-
-NPaper Stack/Paper Stack-Info.plist
-c000000004FD1856F00000000000004D2
-t1339131247
-s1234
-
-CBuild AST from "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLAppDelegate.m"
-r0
-
-CBuild AST from "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperStackView.m"
-r0
-
-CBuild AST from "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperStackViewController.m"
-r0
-
-CBuild AST from "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperView.m"
-r0
-
-CBuild AST from "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/main.m"
-r0
-
-CCheck dependencies
-r0
-lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies971eb5c9bc82b541^f8a5bec9bc82b541^---0#1#0#--18"Check dependencies36"0F77DE58-B5E6-4C84-9D0F-F08841A16639-
-
-CCompileC "DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLAppDelegate.o" "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLAppDelegate.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360889546.163336
-e360889546.251107
-r1
-xCompileC
-xDerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLAppDelegate.o
-x/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLAppDelegate.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection86"Compile /Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLAppDelegate.m08002acabc82b541^024940cabc82b541^---0#0#0#-19%DVTDocumentLocation2@98"file://localhost/Users/adam/Documents/Code/paper-stack/Paper%20Stack/Paper%20Stack/SLAppDelegate.m0000000000000000^4002"CompileC "DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLAppDelegate.o" "Paper Stack/SLAppDelegate.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd "/Users/adam/Documents/Code/paper-stack/Paper Stack"    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-sign-compare -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.6 -g -Wno-conversion -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=50000 -iquote "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-generated-files.hmap" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-own-target-headers.hmap" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-all-target-headers.hmap" -iquote "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-project-headers.hmap" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/include" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/DerivedSources/i386" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/DerivedSources" "-F/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator" -include "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/PrecompiledHeaders/Paper Stack-Prefix-erzcgjuntvknrrgqxwnlsjvphshs/Paper Stack-Prefix.pch" -MMD -MT dependencies -MF "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLAppDelegate.d" --serialize-diagnostics "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLAppDelegate.dia" -c "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLAppDelegate.m" -o "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLAppDelegate.o"36"D8379208-C62E-41BA-828F-F4EC091522B9-
-
-CCompileC "DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperStackView.o" "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperStackView.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360889546.163413
-e360889546.245365
-r1
-xCompileC
-xDerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperStackView.o
-x/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperStackView.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection89"Compile /Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperStackView.m83f729cabc82b541^ffce3ecabc82b541^---0#0#0#-19%DVTDocumentLocation2@101"file://localhost/Users/adam/Documents/Code/paper-stack/Paper%20Stack/Paper%20Stack/SLPaperStackView.m0000000000000000^4020"CompileC "DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperStackView.o" "Paper Stack/SLPaperStackView.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd "/Users/adam/Documents/Code/paper-stack/Paper Stack"    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-sign-compare -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.6 -g -Wno-conversion -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=50000 -iquote "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-generated-files.hmap" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-own-target-headers.hmap" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-all-target-headers.hmap" -iquote "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-project-headers.hmap" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/include" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/DerivedSources/i386" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/DerivedSources" "-F/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator" -include "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/PrecompiledHeaders/Paper Stack-Prefix-erzcgjuntvknrrgqxwnlsjvphshs/Paper Stack-Prefix.pch" -MMD -MT dependencies -MF "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperStackView.d" --serialize-diagnostics "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperStackView.dia" -c "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperStackView.m" -o "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperStackView.o"36"FDD3BFE3-93C5-476B-8FD5-052151E0BC5E-
-
-CCompileC "DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperStackViewController.o" "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperStackViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360889546.163343
-e360889546.243454
-r1
-xCompileC
-xDerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperStackViewController.o
-x/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperStackViewController.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection99"Compile /Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperStackViewController.m7a182acabc82b541^6e6c3ecabc82b541^---0#0#0#-19%DVTDocumentLocation2@111"file://localhost/Users/adam/Documents/Code/paper-stack/Paper%20Stack/Paper%20Stack/SLPaperStackViewController.m0000000000000000^4080"CompileC "DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperStackViewController.o" "Paper Stack/SLPaperStackViewController.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd "/Users/adam/Documents/Code/paper-stack/Paper Stack"    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-sign-compare -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.6 -g -Wno-conversion -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=50000 -iquote "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-generated-files.hmap" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-own-target-headers.hmap" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-all-target-headers.hmap" -iquote "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-project-headers.hmap" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/include" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/DerivedSources/i386" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/DerivedSources" "-F/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator" -include "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/PrecompiledHeaders/Paper Stack-Prefix-erzcgjuntvknrrgqxwnlsjvphshs/Paper Stack-Prefix.pch" -MMD -MT dependencies -MF "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperStackViewController.d" --serialize-diagnostics "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperStackViewController.dia" -c "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperStackViewController.m" -o "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperStackViewController.o"36"C648783A-D392-4377-AE0C-79EC9B883E55-
-
-CCompileC "DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperView.o" "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperView.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360889546.211658
-e360889546.273140
-r1
-xCompileC
-xDerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperView.o
-x/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperView.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection84"Compile /Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperView.md46036cabc82b541^b7eb45cabc82b541^---0#0#0#-19%DVTDocumentLocation2@96"file://localhost/Users/adam/Documents/Code/paper-stack/Paper%20Stack/Paper%20Stack/SLPaperView.m0000000000000000^3990"CompileC "DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperView.o" "Paper Stack/SLPaperView.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd "/Users/adam/Documents/Code/paper-stack/Paper Stack"    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-sign-compare -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.6 -g -Wno-conversion -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=50000 -iquote "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-generated-files.hmap" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-own-target-headers.hmap" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-all-target-headers.hmap" -iquote "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-project-headers.hmap" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/include" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/DerivedSources/i386" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/DerivedSources" "-F/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator" -include "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/PrecompiledHeaders/Paper Stack-Prefix-erzcgjuntvknrrgqxwnlsjvphshs/Paper Stack-Prefix.pch" -MMD -MT dependencies -MF "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperView.d" --serialize-diagnostics "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperView.dia" -c "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/SLPaperView.m" -o "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/SLPaperView.o"36"8F6177EA-991D-4AAD-9305-F28B244D7114-
-
-CCompileC "DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/main.o" "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/main.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360889546.163333
-e360889546.209976
-r1
-xCompileC
-xDerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/main.o
-x/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/main.m
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection77"Compile /Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/main.m54fe29cabc82b541^adbf35cabc82b541^---0#0#0#-19%DVTDocumentLocation2@89"file://localhost/Users/adam/Documents/Code/paper-stack/Paper%20Stack/Paper%20Stack/main.m0000000000000000^3948"CompileC "DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/main.o" "Paper Stack/main.m" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd "/Users/adam/Documents/Code/paper-stack/Paper Stack"    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch i386 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-sign-compare -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.6 -g -Wno-conversion -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=50000 -iquote "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-generated-files.hmap" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-own-target-headers.hmap" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-all-target-headers.hmap" -iquote "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-project-headers.hmap" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/include" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/DerivedSources/i386" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/DerivedSources" "-F/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator" -include "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/PrecompiledHeaders/Paper Stack-Prefix-erzcgjuntvknrrgqxwnlsjvphshs/Paper Stack-Prefix.pch" -MMD -MT dependencies -MF "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/main.d" --serialize-diagnostics "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/main.dia" -c "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/main.m" -o "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/main.o"36"113067A3-AAE0-4DC3-B9DA-1BE41B7A4EBC-
-
-CCompileXIB "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/en.lproj/SLPaperStackViewController.xib"
-s360889546.349223
-e360889546.367931
-r1
-xCompileXIB
-x/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/en.lproj/SLPaperStackViewController.xib
-lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection112"Compiling /Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/en.lproj/SLPaperStackViewController.xib677e59cabc82b541^77305ecabc82b541^---0#0#0#-19%DVTDocumentLocation2@122"file://localhost/Users/adam/Documents/Code/paper-stack/Paper%20Stack/Paper%20Stack/en.lproj/SLPaperStackViewController.xib0000000000000000^994"CompileXIB "Paper Stack/en.lproj/SLPaperStackViewController.xib"    cd "/Users/adam/Documents/Code/paper-stack/Paper Stack"    setenv IBC_MINIMUM_COMPATIBILITY_VERSION 5.0    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    setenv XCODE_DEVELOPER_USR_PATH /Applications/Xcode.app/Contents/Developer/usr/bin/..    /Applications/Xcode.app/Contents/Developer/usr/bin/ibtool --errors --warnings --notices --output-format human-readable-text --compile "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/en.lproj/SLPaperStackViewController.nib" "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/en.lproj/SLPaperStackViewController.xib" --sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk36"71279D46-4F7C-462B-92F7-5004B8B675D9-
-
-CCopyStringsFile "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/en.lproj/InfoPlist.strings" "Paper Stack/en.lproj/InfoPlist.strings"
-s360889546.349241
-e360889546.356377
-r1
-xCopyStringsFile
-x/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/en.lproj/InfoPlist.strings
-xPaper Stack/en.lproj/InfoPlist.strings
-lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection43"Copy Paper Stack/en.lproj/InfoPlist.strings417f59cabc82b541^4e995bcabc82b541^---0#0#0#-19%DVTDocumentLocation2@109"file://localhost/Users/adam/Documents/Code/paper-stack/Paper%20Stack/Paper%20Stack/en.lproj/InfoPlist.strings0000000000000000^691"CopyStringsFile "DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/en.lproj/InfoPlist.strings" "Paper Stack/en.lproj/InfoPlist.strings"    cd "/Users/adam/Documents/Code/paper-stack/Paper Stack"    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    builtin-copyStrings --validate --inputencoding utf-8 --outputencoding binary --outdir "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/en.lproj" -- "Paper Stack/en.lproj/InfoPlist.strings"36"C1BBA7F0-7AC4-4AA2-82EE-455B2F82D0CB-
-
-CCpResource "Paper Stack/space.jpeg" "DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/space.jpeg"
-s360889546.349227
-e360889546.353200
-r1
-xCpResource
-xPaper Stack/space.jpeg
-xDerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/space.jpeg
-lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection92"Copy DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/space.jpeg897e59cabc82b541^ba6a5acabc82b541^---0#0#0#-19%DVTDocumentLocation2@160"file://localhost/Users/adam/Documents/Code/paper-stack/Paper%20Stack/DerivedData/Paper%20Stack/Build/Products/Debug-iphonesimulator/Paper%20Stack.app/space.jpeg000000000080d041^804"CpResource "Paper Stack/space.jpeg" "DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/space.jpeg"    cd "/Users/adam/Documents/Code/paper-stack/Paper Stack"    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/space.jpeg" "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app"36"5FB85EC2-383E-4D32-9FAD-CC2F5EFE7B4B-
-
-CGenerateDSYMFile "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app.dSYM" "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/Paper Stack"
-s360889546.320080
-e360889546.341320
-r1
-xGenerateDSYMFile
-x/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app.dSYM
-x/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/Paper Stack
-lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection143"Generating /Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app.dSYM820352cabc82b541^815f57cabc82b541^---0#0#0#-19%DVTDocumentLocation2@154"file://localhost/Users/adam/Documents/Code/paper-stack/Paper%20Stack/DerivedData/Paper%20Stack/Build/Products/Debug-iphonesimulator/Paper%20Stack.app.dSYM000000000080d041^827"GenerateDSYMFile "DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app.dSYM" "DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/Paper Stack"    cd "/Users/adam/Documents/Code/paper-stack/Paper Stack"    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/dsymutil "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/Paper Stack" -o "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app.dSYM"36"B0FA2543-D96A-4C28-8516-DDEB53A09405-
-
-CLd "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/Paper Stack" normal i386
-s360889546.280271
-e360889546.313208
-r1
-xLd
-x/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/Paper Stack
-xnormal
-xi386
-lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection144"Link /Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/Paper Stackaad547cabc82b541^282d50cabc82b541^---0#0#0#--1420"Ld "DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/Paper Stack" normal i386    cd "/Users/adam/Documents/Code/paper-stack/Paper Stack"    setenv MACOSX_DEPLOYMENT_TARGET 10.6    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk "-L/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator" "-F/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator" -filelist "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Objects-normal/i386/Paper Stack.LinkFileList" -mmacosx-version-min=10.6 -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -no_implicit_dylibs -D__IPHONE_OS_VERSION_MIN_REQUIRED=50000 -framework UIKit -framework Foundation -framework CoreGraphics -o "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/Paper Stack"36"ADF6E1A9-7A83-422F-ACA1-9F8C0ED01A36-
-
-CProcessInfoPlistFile "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/Info.plist" "Paper Stack/Paper Stack-Info.plist"
-s360889545.750159
-e360889545.753200
-r1
-xProcessInfoPlistFile
-x/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/Info.plist
-xPaper Stack/Paper Stack-Info.plist
-lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection42"Process Paper Stack/Paper Stack-Info.plistf31dc0c9bc82b541^58fec0c9bc82b541^---0#0#0#-19%DVTDocumentLocation2@107"file://localhost/Users/adam/Documents/Code/paper-stack/Paper%20Stack/Paper%20Stack/Paper%20Stack-Info.plist0000000000000000^825"ProcessInfoPlistFile "DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/Info.plist" "Paper Stack/Paper Stack-Info.plist"    cd "/Users/adam/Documents/Code/paper-stack/Paper Stack"    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    builtin-infoPlistUtility "Paper Stack/Paper Stack-Info.plist" -genpkginfo "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/PkgInfo" -expandbuildsettings -format binary -platform iphonesimulator -o "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app/Info.plist"36"35F5D5EF-D5F0-48D3-80F5-35B218D3B81B-
-
-CProcessPCH "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/PrecompiledHeaders/Paper Stack-Prefix-erzcgjuntvknrrgqxwnlsjvphshs/Paper Stack-Prefix.pch.pth" "Paper Stack/Paper Stack-Prefix.pch" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s360889545.761790
-e360889546.156532
-r1
-xProcessPCH
-x/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/PrecompiledHeaders/Paper Stack-Prefix-erzcgjuntvknrrgqxwnlsjvphshs/Paper Stack-Prefix.pch.pth
-xPaper Stack/Paper Stack-Prefix.pch
-xnormal
-xi386
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection45"Precompile Paper Stack/Paper Stack-Prefix.pch3d29c3c9bc82b541^e41128cabc82b541^---0#0#0#-19%DVTDocumentLocation2@107"file://localhost/Users/adam/Documents/Code/paper-stack/Paper%20Stack/Paper%20Stack/Paper%20Stack-Prefix.pch0000000000000000^3825"ProcessPCH "DerivedData/Paper Stack/Build/Intermediates/PrecompiledHeaders/Paper Stack-Prefix-erzcgjuntvknrrgqxwnlsjvphshs/Paper Stack-Prefix.pch.pth" "Paper Stack/Paper Stack-Prefix.pch" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd "/Users/adam/Documents/Code/paper-stack/Paper Stack"    setenv LANG en_US.US-ASCII    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c-header -arch i386 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-sign-compare -Wno-shorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk -fexceptions -fasm-blocks -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.6 -g -Wno-conversion -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -D__IPHONE_OS_VERSION_MIN_REQUIRED=50000 -iquote "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-generated-files.hmap" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-own-target-headers.hmap" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-all-target-headers.hmap" -iquote "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/Paper Stack-project-headers.hmap" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/include" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/DerivedSources/i386" "-I/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/Paper Stack.build/Debug-iphonesimulator/Paper Stack.build/DerivedSources" "-F/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator" --serialize-diagnostics "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/PrecompiledHeaders/Paper Stack-Prefix-erzcgjuntvknrrgqxwnlsjvphshs/Paper Stack-Prefix.pch.dia" -c "/Users/adam/Documents/Code/paper-stack/Paper Stack/Paper Stack/Paper Stack-Prefix.pch" -o "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/PrecompiledHeaders/Paper Stack-Prefix-erzcgjuntvknrrgqxwnlsjvphshs/Paper Stack-Prefix.pch.pth" -MMD -MT dependencies -MF "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Intermediates/PrecompiledHeaders/Paper Stack-Prefix-erzcgjuntvknrrgqxwnlsjvphshs/Paper Stack-Prefix.pch.d"36"B882AF24-0DD9-42DF-B2A7-5D88FACE6BA2-
-
-CProcessPCH "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Index/PrecompiledHeaders/Paper Stack-Prefix-dehmzbxjaxajeqaejppasalwduwt_ast/Paper Stack-Prefix.pch.pth" "Paper Stack/Paper Stack-Prefix.pch" normal i386 objective-c com.apple.compilers.llvm.clang.1_0.astbuilder
-r0
-
-CTouch "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app"
-s360889546.375429
-e360889546.383148
-r1
-xTouch
-x/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app
-lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection133"Touch /Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app6e3460cabc82b541^441562cabc82b541^---0#0#0#--492"Touch "DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app"    cd "/Users/adam/Documents/Code/paper-stack/Paper Stack"    setenv PATH "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"    /usr/bin/touch -c "/Users/adam/Documents/Code/paper-stack/Paper Stack/DerivedData/Paper Stack/Build/Products/Debug-iphonesimulator/Paper Stack.app"36"031CC8C8-2C88-4B00-BB47-19FE8F39400F-
-
