@@ -8,8 +8,7 @@
 
 #import "SLPaperView.h"
 #import <QuartzCore/QuartzCore.h>
-#import "SLPanGestureRecognizer.h"
-#import "SLPinchGestureRecognizer.h"
+#import "SLPanAndPinchGestureRecognizer.h"
 
 
 @interface SLPaperView (Private)
@@ -45,7 +44,7 @@
         [self.layer setShadowOffset:CGSizeMake( 0 , 0 ) ];
         [self.layer setShouldRasterize:YES ];
 
-        UIPanGestureRecognizer* panGesture = [[[SLPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScale:)] autorelease];
+        UIPanGestureRecognizer* panGesture = [[[SLPanAndPinchGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScale:)] autorelease];
         [panGesture setMinimumNumberOfTouches:2];
         [panGesture setMaximumNumberOfTouches:2];
         [self addGestureRecognizer:panGesture];
@@ -53,7 +52,7 @@
     return self;
 }
 
--(void) panAndScale:(SLPanGestureRecognizer*)panGesture{
+-(void) panAndScale:(SLPanAndPinchGestureRecognizer*)panGesture{
     CGPoint lastLocation = [panGesture locationInView:self.superview];
     CGPoint lastLocationInViewForScale = [panGesture locationInView:self];
     if(panGesture.numberOfTouches == 1){

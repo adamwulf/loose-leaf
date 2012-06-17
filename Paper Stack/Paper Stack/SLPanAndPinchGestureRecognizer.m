@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "SLPanGestureRecognizer.h"
+#import "SLPanAndPinchGestureRecognizer.h"
 
-@implementation SLPanGestureRecognizer
+@implementation SLPanAndPinchGestureRecognizer
 
 @synthesize scale;
 

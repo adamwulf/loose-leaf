@@ -23,8 +23,7 @@
 		66DCFBC21581C85B00B4918C /* SLPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBC11581C85B00B4918C /* SLPaperStackView.m */; };
 		66DCFBCD1582BAED00B4918C /* SLPaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBCC1582BAED00B4918C /* SLPaperView.m */; };
 		66DCFBD01582BC0E00B4918C /* space.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 66DCFBCF1582BC0E00B4918C /* space.jpeg */; };
-		66DCFBDF1582BF3E00B4918C /* SLPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBDE1582BF3E00B4918C /* SLPanGestureRecognizer.m */; };
-		66DCFBE21582BF5200B4918C /* SLPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBE11582BF5200B4918C /* SLPinchGestureRecognizer.m */; };
+		66DCFBDF1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBDE1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,11 +61,9 @@
 		66DCFBCB1582BAED00B4918C /* SLPaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperView.h; sourceTree = "<group>"; };
 		66DCFBCC1582BAED00B4918C /* SLPaperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPaperView.m; sourceTree = "<group>"; };
 		66DCFBCF1582BC0E00B4918C /* space.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = space.jpeg; sourceTree = "<group>"; };
-		66DCFBDB1582BE3900B4918C /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; path = Constants.h; sourceTree = "<group>"; };
-		66DCFBDD1582BF3E00B4918C /* SLPanGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPanGestureRecognizer.h; sourceTree = "<group>"; };
-		66DCFBDE1582BF3E00B4918C /* SLPanGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPanGestureRecognizer.m; sourceTree = "<group>"; };
-		66DCFBE01582BF5200B4918C /* SLPinchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPinchGestureRecognizer.h; sourceTree = "<group>"; };
-		66DCFBE11582BF5200B4918C /* SLPinchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPinchGestureRecognizer.m; sourceTree = "<group>"; };
+		66DCFBDB1582BE3900B4918C /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		66DCFBDD1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPanAndPinchGestureRecognizer.h; sourceTree = "<group>"; };
+		66DCFBDE1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPanAndPinchGestureRecognizer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,10 +181,8 @@
 		66DCFBDC1582BF1600B4918C /* Gestures */ = {
 			isa = PBXGroup;
 			children = (
-				66DCFBDD1582BF3E00B4918C /* SLPanGestureRecognizer.h */,
-				66DCFBDE1582BF3E00B4918C /* SLPanGestureRecognizer.m */,
-				66DCFBE01582BF5200B4918C /* SLPinchGestureRecognizer.h */,
-				66DCFBE11582BF5200B4918C /* SLPinchGestureRecognizer.m */,
+				66DCFBDD1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.h */,
+				66DCFBDE1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.m */,
 			);
 			name = Gestures;
 			sourceTree = "<group>";
@@ -305,8 +300,7 @@
 				66DCFB9E1581BCEF00B4918C /* SLPaperStackViewController.m in Sources */,
 				66DCFBC21581C85B00B4918C /* SLPaperStackView.m in Sources */,
 				66DCFBCD1582BAED00B4918C /* SLPaperView.m in Sources */,
-				66DCFBDF1582BF3E00B4918C /* SLPanGestureRecognizer.m in Sources */,
-				66DCFBE21582BF5200B4918C /* SLPinchGestureRecognizer.m in Sources */,
+				66DCFBDF1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

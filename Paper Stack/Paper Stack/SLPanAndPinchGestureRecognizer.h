@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 
-@interface SLPanGestureRecognizer : UIPanGestureRecognizer{
+@interface SLPanAndPinchGestureRecognizer : UIPanGestureRecognizer{
     CGFloat initialDistance;
     CGFloat scale;
 }
