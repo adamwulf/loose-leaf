@@ -17,7 +17,9 @@
     NSMutableArray* hiddenStack;
     
     
-    CGPoint lastTranslationOfPan;
+    CGPoint firstLocationOfGesture;
+    CGRect firstFrameOfViewForGesture;
+    NSInteger lastNumberOfPanGestures;
 }
 
 -(void) addPaperToBottomOfStack:(SLPaperView*)page;

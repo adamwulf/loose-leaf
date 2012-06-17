@@ -26,6 +26,7 @@
     
     UIPanGestureRecognizer* panGesture = [[[SLPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)] autorelease];
     [panGesture setMinimumNumberOfTouches:2];
+    [panGesture setMaximumNumberOfTouches:2];
     [self addGestureRecognizer:panGesture];
     
     UIPinchGestureRecognizer* pinchGesture = [[[SLPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinch:)] autorelease];
@@ -33,37 +34,50 @@
 }
 
 -(void) pan:(UIPanGestureRecognizer*)panGesture{
-    if([visibleStack count] == 0) return;
-    
-    SLPaperView* viewToMove = (SLPaperView*) [visibleStack objectAtIndex:0];
-    CGPoint p = [panGesture translationInView:self];
-    p = CGPointMake(p.x - lastTranslationOfPan.x, p.y - lastTranslationOfPan.y);
-    lastTranslationOfPan = [panGesture translationInView:self];
-//    NSLog(@"asdfasdf %f %f", p.x, p.y);
-    CGRect fr = viewToMove.frame;
+    SLPaperView* viewToAdjust = (SLPaperView*) [visibleStack objectAtIndex:0];
+    CGPoint lastLocation = [panGesture locationInView:self];
+    if(panGesture.numberOfTouches == 1){
+        lastNumberOfPanGestures = 1;
+        return;
+    }else if(lastNumberOfPanGestures == 1){
+        lastNumberOfPanGestures = 2;
+        firstLocationOfGesture = [panGesture locationInView:self];
+        firstFrameOfViewForGesture = viewToAdjust.frame;
+    }
+    if(panGesture.state == UIGestureRecognizerStateBegan){
+        lastNumberOfPanGestures = 2;
+        firstLocationOfGesture = [panGesture locationInView:self];
+        firstFrameOfViewForGesture = viewToAdjust.frame;
+        return;
+    }
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
        panGesture.state == UIGestureRecognizerStateEnded ||
        panGesture.state == UIGestureRecognizerStateFailed){
-
-    
-        // TODO clean up
-    
-    
-    }else{
-        fr.origin = CGPointMake(fr.origin.x + p.x, fr.origin.y + p.y);
-        viewToMove.frame = fr;
+        // exit when we're done
+        return;
     }
+    
+    
+    CGPoint diffLocation = CGPointMake(lastLocation.x - firstLocationOfGesture.x, lastLocation.y - firstLocationOfGesture.y);
+    
+    CGRect fr = viewToAdjust.frame;
+    fr.origin = CGPointMake(firstFrameOfViewForGesture.origin.x + diffLocation.x, firstFrameOfViewForGesture.origin.y + diffLocation.y);
+    viewToAdjust.frame = fr;
 }
 
 -(void) pinch:(UIPinchGestureRecognizer*)pinchGesture{
-//    return;
-//    NSLog(@"pinch %f", pinchGesture.scale);
+    if([visibleStack count] == 0) return;
+    SLPaperView* viewToAdjust = [visibleStack objectAtIndex:0];
+
+    //    NSLog(@"pinch %f", pinchGesture.scale);
+    
+    
+
     
     if(pinchGesture.scale < .7){
 //        debug_NSLog(@"pinch all out to desk %f", pinchGesture.scale);
     }else{
-        SLPaperView* viewToScale = [visibleStack objectAtIndex:0];
-        [viewToScale setScale:pinchGesture.scale atLocation:[pinchGesture locationInView:viewToScale]];
+//        [viewToAdjust setScale:pinchGesture.scale atLocation:[pinchGesture locationInView:viewToAdjust]];
     }
     
 }
