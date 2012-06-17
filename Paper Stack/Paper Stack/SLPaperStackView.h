@@ -9,17 +9,12 @@
 #import "Constants.h"
 #import <UIKit/UIKit.h>
 #import "SLPaperView.h"
-#import "SLPanGestureRecognizer.h"
-#import "SLPinchGestureRecognizer.h"
 
 @interface SLPaperStackView : UIView{
     NSMutableArray* visibleStack;
     NSMutableArray* hiddenStack;
     
     
-    CGPoint firstLocationOfGesture;
-    CGRect firstFrameOfViewForGesture;
-    NSInteger lastNumberOfPanGestures;
 }
 
 -(void) addPaperToBottomOfStack:(SLPaperView*)page;

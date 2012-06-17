@@ -18,4 +18,26 @@
     return NO;
 }
 
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [super touchesBegan:touches withEvent:event];
+}
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
+    [super touchesMoved:touches withEvent:event];
+}
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    [super touchesEnded:touches withEvent:event];
+    if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
+        self.state = UIGestureRecognizerStateEnded;
+    }
+}
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+    [super touchesCancelled:touches withEvent:event];
+    if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
+        self.state = UIGestureRecognizerStateEnded;
+    }
+}
+- (void)reset{
+    [super reset];
+}
+
 @end

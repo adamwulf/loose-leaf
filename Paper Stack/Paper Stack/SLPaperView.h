@@ -9,11 +9,22 @@
 #import <UIKit/UIKit.h>
 
 @interface SLPaperView : UIView{
+    
+    // properties for pinch gesture
+    CGFloat preGestureScale;
     CGFloat scale;
+    CGPoint normalizedLocationOfScale;
+    NSInteger lastNumberOfTouchesForPinchGesture;
+    
+    // properties for pan gesture
+    CGPoint firstLocationOfPanGesture;
+    CGRect firstFrameOfViewForGesture;
+    NSInteger lastNumberOfTouchesForPanGesture;
+    CGPoint panDiffLocation;
 }
 
 @property (nonatomic, assign) CGFloat scale;
 
--(void) setScale:(CGFloat)_scale atLocation:(CGPoint)locationInView;
+
 
 @end
