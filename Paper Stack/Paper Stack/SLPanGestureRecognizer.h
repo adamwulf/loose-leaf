@@ -9,6 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 
-@interface SLPanGestureRecognizer : UIPanGestureRecognizer
+@interface SLPanGestureRecognizer : UIPanGestureRecognizer{
+    CGFloat initialDistance;
+    CGFloat scale;
+}
+
+@property (nonatomic, readonly) CGFloat scale;
 
 @end

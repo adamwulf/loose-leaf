@@ -45,19 +45,17 @@
         [self.layer setShadowOffset:CGSizeMake( 0 , 0 ) ];
         [self.layer setShouldRasterize:YES ];
 
-        UIPanGestureRecognizer* panGesture = [[[SLPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)] autorelease];
+        UIPanGestureRecognizer* panGesture = [[[SLPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScale:)] autorelease];
         [panGesture setMinimumNumberOfTouches:2];
         [panGesture setMaximumNumberOfTouches:2];
-//        [self addGestureRecognizer:panGesture];
-        
-        UIPinchGestureRecognizer* pinchGesture = [[[SLPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinch:)] autorelease];
-        [self addGestureRecognizer:pinchGesture];
+        [self addGestureRecognizer:panGesture];
     }
     return self;
 }
 
--(void) pan:(UIPanGestureRecognizer*)panGesture{
+-(void) panAndScale:(SLPanGestureRecognizer*)panGesture{
     CGPoint lastLocation = [panGesture locationInView:self.superview];
+    CGPoint lastLocationInViewForScale = [panGesture locationInView:self];
     if(panGesture.numberOfTouches == 1){
         lastNumberOfTouchesForPanGesture = 1;
         return;
@@ -65,11 +63,20 @@
         lastNumberOfTouchesForPanGesture = 2;
         firstLocationOfPanGesture = [panGesture locationInView:self.superview];
         firstFrameOfViewForGesture = self.frame;
+        preGestureScale = scale;
+        normalizedLocationOfScale = CGPointMake(lastLocationInViewForScale.x / self.frame.size.width, 
+                                                lastLocationInViewForScale.y / self.frame.size.height);
     }
     if(panGesture.state == UIGestureRecognizerStateBegan){
+        // for pan
         lastNumberOfTouchesForPanGesture = 2;
         firstLocationOfPanGesture = [panGesture locationInView:self.superview];
         firstFrameOfViewForGesture = self.frame;
+        
+        // for scale
+        preGestureScale = scale;
+        normalizedLocationOfScale = CGPointMake(lastLocationInViewForScale.x / self.frame.size.width, 
+                                                lastLocationInViewForScale.y / self.frame.size.height);
         return;
     }
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
@@ -79,79 +86,31 @@
         return;
     }
     
-    
+    // pan
     panDiffLocation = CGPointMake(lastLocation.x - firstLocationOfPanGesture.x, lastLocation.y - firstLocationOfPanGesture.y);
     
-    CGRect fr = self.frame;
-    fr.origin = CGPointMake(firstFrameOfViewForGesture.origin.x + panDiffLocation.x, firstFrameOfViewForGesture.origin.y + panDiffLocation.y);
-    self.frame = fr;
-}
-
--(void) pinch:(UIPinchGestureRecognizer*)pinchGesture{
-    //    NSLog(@"pinch %f", pinchGesture.scale);
-    CGPoint lastLocationInViewForScale = [pinchGesture locationInView:self];
-
-    if(pinchGesture.numberOfTouches == 1){
-        lastNumberOfTouchesForPinchGesture = 1;
-        return;
-    }else if(lastNumberOfTouchesForPinchGesture == 1){
-        lastNumberOfTouchesForPinchGesture = 2;
-        normalizedLocationOfScale = CGPointMake(lastLocationInViewForScale.x / self.frame.size.width, 
-                                                lastLocationInViewForScale.y / self.frame.size.height);
-    }
-    if(pinchGesture.state == UIGestureRecognizerStateBegan){
-        preGestureScale = scale;
-    }
-    if(pinchGesture.state == UIGestureRecognizerStateCancelled ||
-       pinchGesture.state == UIGestureRecognizerStateEnded ||
-       pinchGesture.state == UIGestureRecognizerStateFailed){
-        // exit when we're done
-        return;
-    }
-    
-    
-    if(preGestureScale * pinchGesture.scale < .7){
-        //        debug_NSLog(@"pinch all out to desk %f", pinchGesture.scale);
-        [self setScale:0.7 atLocation:lastLocationInViewForScale];
+    // scale
+    if(preGestureScale * panGesture.scale > .7){
+        scale = preGestureScale * panGesture.scale;
     }else{
-        if(pinchGesture.state == UIGestureRecognizerStateBegan){
-            normalizedLocationOfScale = CGPointMake(lastLocationInViewForScale.x / self.frame.size.width, 
-                                                    lastLocationInViewForScale.y / self.frame.size.height);
-        }
-        [self setScale:preGestureScale * pinchGesture.scale atLocation:lastLocationInViewForScale];
+        scale = 0.7;
     }
-    
-}
-
--(void) setScale:(CGFloat)_scale{
-    [self setScale:_scale atLocation:self.center];
-}
-
--(void) setScale:(CGFloat)_scale atLocation:(CGPoint)locationInView{
-    scale = _scale;
     CGRect superBounds = self.superview.bounds;
-    CGRect oldBounds = self.frame;
-    CGRect newBounds = oldBounds;
-    
-    //
-    // calculate the size of the scale
+    CGPoint locationOfPinchBeforeScale = CGPointMake(preGestureScale * normalizedLocationOfScale.x * superBounds.size.width, preGestureScale * normalizedLocationOfScale.y * superBounds.size.height);
+    CGPoint locationOfPinchAfterScale = CGPointMake(scale * normalizedLocationOfScale.x * superBounds.size.width, scale * normalizedLocationOfScale.y * superBounds.size.height);
+    CGPoint adjustmentForScale = CGPointMake((locationOfPinchAfterScale.x - locationOfPinchBeforeScale.x),
+                                             (locationOfPinchAfterScale.y - locationOfPinchBeforeScale.y));
     CGSize newSizeOfView = CGSizeMake(superBounds.size.width * scale, superBounds.size.height * scale);
-    newBounds.size = newSizeOfView;
-    
-    CGPoint newLocationInView = CGPointMake(normalizedLocationOfScale.x * newSizeOfView.width, normalizedLocationOfScale.y * newSizeOfView.height);
-    
-    CGPoint adjustmentForScale = CGPointMake((locationInView.x - newLocationInView.x), (locationInView.y - newLocationInView.y));
-    CGPoint newOriginForBounds = CGPointMake(oldBounds.origin.x + adjustmentForScale.x, oldBounds.origin.y + adjustmentForScale.y);
-    newBounds.origin = newOriginForBounds;
-    
-    self.frame = newBounds;
 
-    /*
+    
+    
     CGRect fr = self.frame;
-    fr.origin = CGPointMake(firstFrameOfViewForGesture.origin.x + panDiffLocation.x + sumAdjustmentForScale.x,
-                            firstFrameOfViewForGesture.origin.y + panDiffLocation.y + sumAdjustmentForScale.y);
+    fr.origin = CGPointMake(firstFrameOfViewForGesture.origin.x + panDiffLocation.x - adjustmentForScale.x,
+                            firstFrameOfViewForGesture.origin.y + panDiffLocation.y - adjustmentForScale.y);
+    fr.size = newSizeOfView;
     self.frame = fr;
-*/
+    
 }
+
 
 @end

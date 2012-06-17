@@ -12,9 +12,7 @@
     
     // properties for pinch gesture
     CGFloat preGestureScale;
-    CGFloat scale;
     CGPoint normalizedLocationOfScale;
-    NSInteger lastNumberOfTouchesForPinchGesture;
     
     // properties for pan gesture
     CGPoint firstLocationOfPanGesture;
