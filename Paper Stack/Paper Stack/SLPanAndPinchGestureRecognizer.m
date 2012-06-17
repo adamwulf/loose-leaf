@@ -33,7 +33,6 @@ CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2)
 
 -(CGFloat) distanceBetweenTouches:(NSSet*) touches{
     if([touches count] == 2){
-        NSLog(@"began");
         NSEnumerator* enumerator = [touches objectEnumerator];
         UITouch* touch1 = [enumerator nextObject];
         UITouch* touch2 = [enumerator nextObject];
@@ -54,12 +53,10 @@ CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2)
         scale = 1;
     }
     if([touches count] == 2 && !initialDistance){
-        NSLog(@"began");
         initialDistance = [self distanceBetweenTouches:touches];
     }
     if([touches count] == 2 && initialDistance){
         scale = [self distanceBetweenTouches:touches] / initialDistance;
-        NSLog(@"moved %f", scale);
     }
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{

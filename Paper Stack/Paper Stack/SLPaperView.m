@@ -40,7 +40,7 @@
         [self.layer setMasksToBounds:NO ];
         [self.layer setShadowColor:[[UIColor blackColor ] CGColor ] ];
         [self.layer setShadowOpacity:0.5 ];
-        [self.layer setShadowRadius:2.0 ];
+        [self.layer setShadowRadius:1.0 ];
         [self.layer setShadowOffset:CGSizeMake( 0 , 0 ) ];
         [self.layer setShouldRasterize:YES ];
 
@@ -90,10 +90,15 @@
     
     // scale
     if(preGestureScale * panGesture.scale > .7){
-        scale = preGestureScale * panGesture.scale;
+        if(ABS((float)(preGestureScale * panGesture.scale - scale)) > .01){
+            scale = preGestureScale * panGesture.scale;
+        }
     }else{
         scale = 0.7;
     }
+    
+    debug_NSLog(@"zoom: %f", scale);
+    
     CGRect superBounds = self.superview.bounds;
     CGPoint locationOfPinchBeforeScale = CGPointMake(preGestureScale * normalizedLocationOfScale.x * superBounds.size.width, preGestureScale * normalizedLocationOfScale.y * superBounds.size.height);
     CGPoint locationOfPinchAfterScale = CGPointMake(scale * normalizedLocationOfScale.x * superBounds.size.width, scale * normalizedLocationOfScale.y * superBounds.size.height);
