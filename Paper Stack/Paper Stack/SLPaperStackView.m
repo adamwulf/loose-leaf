@@ -63,6 +63,18 @@
 }
 
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
+    if(page.scale < 1.0){
+        if(toFrame.origin.y < 0) toFrame.origin.y = 0;
+        if(toFrame.origin.y + toFrame.size.height > self.frame.size.height){
+            toFrame.origin.y = self.frame.size.height - toFrame.size.height;
+        }
+    }
+    if(page.scale >= 1.0){
+        if(toFrame.origin.y > 0) toFrame.origin.y = 0;
+        if(toFrame.origin.y + toFrame.size.height < self.frame.size.height){
+            toFrame.origin.y = self.frame.size.height - toFrame.size.height;
+        }
+    }
     return toFrame;
 }
 
