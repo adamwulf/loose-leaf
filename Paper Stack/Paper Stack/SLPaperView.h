@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "Constants.h"
+#import "SLPaperViewDelegate.h"
 
 @interface SLPaperView : UIView{
+    
+    NSObject<SLPaperViewDelegate>* delegate;
     
     // properties for pinch gesture
     CGFloat preGestureScale;
@@ -17,13 +20,12 @@
     
     // properties for pan gesture
     CGPoint firstLocationOfPanGestureInSuperView;
-    CGPoint originOfPageAtBeginningOfGesture;
+    CGRect frameOfPageAtBeginningOfGesture;
     NSInteger lastNumberOfTouchesForPanGesture;
     CGPoint panDiffLocation;
 }
 
+@property (nonatomic, assign) NSObject<SLPaperViewDelegate>* delegate;
 @property (nonatomic, assign) CGFloat scale;
-
-
 
 @end

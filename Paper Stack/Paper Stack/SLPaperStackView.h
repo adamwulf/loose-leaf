@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "SLPaperView.h"
 
-@interface SLPaperStackView : UIView{
+@interface SLPaperStackView : UIView<SLPaperViewDelegate>{
     NSMutableArray* visibleStack;
     NSMutableArray* hiddenStack;
     

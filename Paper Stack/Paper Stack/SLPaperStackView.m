@@ -34,6 +34,7 @@
  * and adds to the bottom of the subviews
  */
 -(void) addPaperToBottomOfStack:(SLPaperView*)page{
+    page.delegate = self;
     if([visibleStack count]){
         [self insertSubview:page belowSubview:[visibleStack lastObject]];
     }else{
@@ -51,5 +52,23 @@
     // Drawing code
 }
 */
+
+
+
+
+#pragma mark - SLPaperViewDelegate
+
+-(BOOL) allowsScaleForPage:(SLPaperView*)page{
+    return [visibleStack objectAtIndex:0] == page;
+}
+
+-(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
+    return toFrame;
+}
+
+-(void) finishedPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
+    
+}
+
 
 @end

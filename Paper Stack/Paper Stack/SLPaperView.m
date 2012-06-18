@@ -20,6 +20,7 @@
 @implementation SLPaperView
 
 @synthesize scale;
+@synthesize delegate;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -99,7 +100,7 @@
         firstLocationOfPanGestureInSuperView = [panGesture locationInView:self.superview];
         // note the origin of the frame before the gesture begins.
         // all adjustments of panning/zooming will be offset from this origin.
-        originOfPageAtBeginningOfGesture = self.frame.origin;
+        frameOfPageAtBeginningOfGesture = self.frame;
         
         // Reset Scaling
         // ====================================================================================
@@ -115,6 +116,10 @@
        panGesture.state == UIGestureRecognizerStateEnded ||
        panGesture.state == UIGestureRecognizerStateFailed){
         // exit when we're done and notify our delegate
+
+        [self.delegate finishedPanningAndScalingPage:self
+                                          fromFrame:frameOfPageAtBeginningOfGesture
+                                            toFrame:self.frame];
         return;
     }
     
@@ -123,24 +128,26 @@
     // of the current location of the gesture. that distance is the amount moved for the pan.
     panDiffLocation = CGPointMake(lastLocationInSuperview.x - firstLocationOfPanGestureInSuperView.x, lastLocationInSuperview.y - firstLocationOfPanGestureInSuperView.y);
     
-    //
-    // to track scaling, the scale value has to be a value between .7 and 2.0x of the /superview/'s size
-    // if i begin scaling an already zoomed in page, the gesture's default is the re-begin the zoom at 1.0x
-    // even though it may be 2x of our page size. so we need to remember the current scale in preGestureScale
-    // and multiply that by the gesture's scale value. this gives us the scale value as a factor of the superview
-    if(preGestureScale * panGesture.scale > 2.0){
-        // 2.0 is the maximum
-        scale = 2.0;
-    }else if(preGestureScale * panGesture.scale < 0.7){
-        // 0.7 is zoom minimum
-        scale = 0.7;
-    }else if(ABS((float)(preGestureScale * panGesture.scale - scale)) > .01){
+    if([self.delegate allowsScaleForPage:self]){
         //
-        // TODO
-        // only update the scale if its greater than a 1% difference of the previous
-        // scale. the goal here is to optimize re-draws for the view, but this should be
-        // validated when the full page contents are implemented.
-        scale = preGestureScale * panGesture.scale;
+        // to track scaling, the scale value has to be a value between .7 and 2.0x of the /superview/'s size
+        // if i begin scaling an already zoomed in page, the gesture's default is the re-begin the zoom at 1.0x
+        // even though it may be 2x of our page size. so we need to remember the current scale in preGestureScale
+        // and multiply that by the gesture's scale value. this gives us the scale value as a factor of the superview
+        if(preGestureScale * panGesture.scale > 2.0){
+            // 2.0 is the maximum
+            scale = 2.0;
+        }else if(preGestureScale * panGesture.scale < 0.7){
+            // 0.7 is zoom minimum
+            scale = 0.7;
+        }else if(ABS((float)(preGestureScale * panGesture.scale - scale)) > .01){
+            //
+            // TODO
+            // only update the scale if its greater than a 1% difference of the previous
+            // scale. the goal here is to optimize re-draws for the view, but this should be
+            // validated when the full page contents are implemented.
+            scale = preGestureScale * panGesture.scale;
+        }
     }
     
     //
@@ -167,15 +174,16 @@
     
     
     CGRect fr = self.frame;
-    fr.origin = CGPointMake(originOfPageAtBeginningOfGesture.x + panDiffLocation.x - adjustmentForScale.x,
-                            originOfPageAtBeginningOfGesture.y + panDiffLocation.y - adjustmentForScale.y);
+    fr.origin = CGPointMake(frameOfPageAtBeginningOfGesture.origin.x + panDiffLocation.x - adjustmentForScale.x,
+                            frameOfPageAtBeginningOfGesture.origin.y + panDiffLocation.y - adjustmentForScale.y);
     fr.size = newSizeOfView;
     
     //
     // now, notify delegate that we're about to set the frame of the page during a gesture,
     // and give it a chance to modify the frame if at all needed.
-    
-    
+    fr = [self.delegate isPanningAndScalingPage:self
+                      fromFrame:frameOfPageAtBeginningOfGesture
+                        toFrame:fr];
     
     
     //

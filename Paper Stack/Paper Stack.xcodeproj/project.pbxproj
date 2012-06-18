@@ -37,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		66C47DA5158EF03200E2CD0C /* SLPaperViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperViewDelegate.h; sourceTree = "<group>"; };
 		66DCFB861581BCEF00B4918C /* Paper Stack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Paper Stack.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		66DCFB8A1581BCEF00B4918C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		66DCFB8C1581BCEF00B4918C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -174,6 +175,7 @@
 				66DCFBC11581C85B00B4918C /* SLPaperStackView.m */,
 				66DCFBCB1582BAED00B4918C /* SLPaperView.h */,
 				66DCFBCC1582BAED00B4918C /* SLPaperView.m */,
+				66C47DA5158EF03200E2CD0C /* SLPaperViewDelegate.h */,
 			);
 			name = SLPaperStack;
 			sourceTree = "<group>";
