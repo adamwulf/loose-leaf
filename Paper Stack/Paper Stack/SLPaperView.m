@@ -44,7 +44,9 @@
         [self.layer setShadowOffset:CGSizeMake( 0 , 0 ) ];
         [self.layer setShouldRasterize:YES ];
 
-        UIPanGestureRecognizer* panGesture = [[[SLPanAndPinchGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScale:)] autorelease];
+        UIPanGestureRecognizer* panGesture = [[[SLPanAndPinchGestureRecognizer alloc] 
+                                               initWithTarget:self 
+                                                      action:@selector(panAndScale:)] autorelease];
         [panGesture setMinimumNumberOfTouches:2];
         [panGesture setMaximumNumberOfTouches:2];
         [self addGestureRecognizer:panGesture];
@@ -52,66 +54,132 @@
     return self;
 }
 
+/**
+ * this is the heart of the two finger zoom/pan for pages
+ *
+ * the premise is:
+ *
+ * a) if two fingers are down, then pan and zoom
+ * b) if the user lifts a finger, then stop all motion, but don't yield to any other gesture
+ *      (ios default is to continue the gesture altogether. instead we'll stop the gesture, but still won't yeild)
+ * c) the zoom should zoom into the location of the zoom gesture. don't just zoom from top/left or center
+ * d) lock zoom at .7x > 2x
+ * e) call delegates to ask if panning or zoom should even be enabled
+ * f) call delegates to ask them to perform any other modifications to the frame before setting it to the page
+ * g) notify the delegate when the pan and zoom is complete
+ */
 -(void) panAndScale:(SLPanAndPinchGestureRecognizer*)panGesture{
-    CGPoint lastLocation = [panGesture locationInView:self.superview];
-    CGPoint lastLocationInViewForScale = [panGesture locationInView:self];
+    CGPoint lastLocationInSuperview = [panGesture locationInView:self.superview];
+    CGPoint lastLocationInSelf = [panGesture locationInView:self];
     if(panGesture.numberOfTouches == 1){
+        //
+        // the gesture requires 2 fingers. it may still say it only has 1 touch if the user
+        // started the gesture with 2 fingers but then lifted a finger. in that case, 
+        // don't continue the gesture at all, just wait till they finish it proper or re-put
+        // that 2nd touch down
         lastNumberOfTouchesForPanGesture = 1;
         return;
-    }else if(lastNumberOfTouchesForPanGesture == 1){
-        lastNumberOfTouchesForPanGesture = 2;
-        firstLocationOfPanGesture = [panGesture locationInView:self.superview];
-        firstFrameOfViewForGesture = self.frame;
-        preGestureScale = scale;
-        normalizedLocationOfScale = CGPointMake(lastLocationInViewForScale.x / self.frame.size.width, 
-                                                lastLocationInViewForScale.y / self.frame.size.height);
-    }
-    if(panGesture.state == UIGestureRecognizerStateBegan){
-        // for pan
-        lastNumberOfTouchesForPanGesture = 2;
-        firstLocationOfPanGesture = [panGesture locationInView:self.superview];
-        firstFrameOfViewForGesture = self.frame;
+    }else if(lastNumberOfTouchesForPanGesture == 1 ||
+             panGesture.state == UIGestureRecognizerStateBegan){
+        //
+        // if the user had 1 finger down and re-touches with the 2nd finger, then this
+        // will be called as if it was a "new" gesture. this lets the pan and zoom start
+        // from the correct new gesture are of the page.
+        //
+        // to test. begin pan/zoom in bottom left, then lift 1 finger and move to the top right
+        // of the page, then re-pan/zoom on the top right. it should "just work".
         
-        // for scale
+        // Reset Panning
+        // ====================================================================================
+        // we know a valid gesture has 2 touches down
+        lastNumberOfTouchesForPanGesture = 2;
+        // find the location of the first touch in relation to the superview.
+        // since the superview doesn't move, this'll give us a static coordinate system to
+        // measure panning distance from
+        firstLocationOfPanGestureInSuperView = [panGesture locationInView:self.superview];
+        // note the origin of the frame before the gesture begins.
+        // all adjustments of panning/zooming will be offset from this origin.
+        originOfPageAtBeginningOfGesture = self.frame.origin;
+        
+        // Reset Scaling
+        // ====================================================================================
+        // remember the scale of the view before the gesture begins. we'll normalize the gesture's
+        // scale value to the superview location by multiplying it to the page's current scale
         preGestureScale = scale;
-        normalizedLocationOfScale = CGPointMake(lastLocationInViewForScale.x / self.frame.size.width, 
-                                                lastLocationInViewForScale.y / self.frame.size.height);
+        // the normalized location of the gesture is (0 < x < 1, 0 < y < 1).
+        // this lets us locate where the gesture should be in the view from any width or height
+        normalizedLocationOfScale = CGPointMake(lastLocationInSelf.x / self.frame.size.width, 
+                                                lastLocationInSelf.y / self.frame.size.height);
         return;
-    }
-    if(panGesture.state == UIGestureRecognizerStateCancelled ||
+    }else if(panGesture.state == UIGestureRecognizerStateCancelled ||
        panGesture.state == UIGestureRecognizerStateEnded ||
        panGesture.state == UIGestureRecognizerStateFailed){
-        // exit when we're done
+        // exit when we're done and notify our delegate
         return;
     }
     
-    // pan
-    panDiffLocation = CGPointMake(lastLocation.x - firstLocationOfPanGesture.x, lastLocation.y - firstLocationOfPanGesture.y);
+    //
+    // to track panning, we collect the first location of the pan gesture, and calculate the offset
+    // of the current location of the gesture. that distance is the amount moved for the pan.
+    panDiffLocation = CGPointMake(lastLocationInSuperview.x - firstLocationOfPanGestureInSuperView.x, lastLocationInSuperview.y - firstLocationOfPanGestureInSuperView.y);
     
-    // scale
-    if(preGestureScale * panGesture.scale > .7){
-        if(ABS((float)(preGestureScale * panGesture.scale - scale)) > .01){
-            scale = preGestureScale * panGesture.scale;
-        }
-    }else{
+    //
+    // to track scaling, the scale value has to be a value between .7 and 2.0x of the /superview/'s size
+    // if i begin scaling an already zoomed in page, the gesture's default is the re-begin the zoom at 1.0x
+    // even though it may be 2x of our page size. so we need to remember the current scale in preGestureScale
+    // and multiply that by the gesture's scale value. this gives us the scale value as a factor of the superview
+    if(preGestureScale * panGesture.scale > 2.0){
+        // 2.0 is the maximum
+        scale = 2.0;
+    }else if(preGestureScale * panGesture.scale < 0.7){
+        // 0.7 is zoom minimum
         scale = 0.7;
+    }else if(ABS((float)(preGestureScale * panGesture.scale - scale)) > .01){
+        //
+        // TODO
+        // only update the scale if its greater than a 1% difference of the previous
+        // scale. the goal here is to optimize re-draws for the view, but this should be
+        // validated when the full page contents are implemented.
+        scale = preGestureScale * panGesture.scale;
     }
     
-    debug_NSLog(@"zoom: %f", scale);
-    
-    CGRect superBounds = self.superview.bounds;
-    CGPoint locationOfPinchBeforeScale = CGPointMake(preGestureScale * normalizedLocationOfScale.x * superBounds.size.width, preGestureScale * normalizedLocationOfScale.y * superBounds.size.height);
-    CGPoint locationOfPinchAfterScale = CGPointMake(scale * normalizedLocationOfScale.x * superBounds.size.width, scale * normalizedLocationOfScale.y * superBounds.size.height);
+    //
+    // now, with our pan offset and new scale, we need to calculate the new frame location.
+    //
+    // first, find the location of the gesture at the size of the page before the gesture began.
+    // then, find the location of the gesture at the new scale of the page.
+    // since we're using the normalized location of the gesture, this will make sure the before/after
+    // location of the gesture is in the same place of the view after scaling the width/height.
+    // the difference in these locations is how muh we need to move the origin of the page to
+    // accomodate the new scale while maintaining the location of the gesture uner the user's fingers
+    //
+    // the, add the diff of the pan gesture to get the full displacement of the origin. also set the 
+    // width and height to the new scale.
+    CGSize superviewSize = self.superview.bounds.size;
+    CGPoint locationOfPinchBeforeScale = CGPointMake(preGestureScale * normalizedLocationOfScale.x * superviewSize.width,
+                                                     preGestureScale * normalizedLocationOfScale.y * superviewSize.height);
+    CGPoint locationOfPinchAfterScale = CGPointMake(scale * normalizedLocationOfScale.x * superviewSize.width,
+                                                    scale * normalizedLocationOfScale.y * superviewSize.height);
     CGPoint adjustmentForScale = CGPointMake((locationOfPinchAfterScale.x - locationOfPinchBeforeScale.x),
                                              (locationOfPinchAfterScale.y - locationOfPinchBeforeScale.y));
-    CGSize newSizeOfView = CGSizeMake(superBounds.size.width * scale, superBounds.size.height * scale);
+    CGSize newSizeOfView = CGSizeMake(superviewSize.width * scale, superviewSize.height * scale);
 
     
     
     CGRect fr = self.frame;
-    fr.origin = CGPointMake(firstFrameOfViewForGesture.origin.x + panDiffLocation.x - adjustmentForScale.x,
-                            firstFrameOfViewForGesture.origin.y + panDiffLocation.y - adjustmentForScale.y);
+    fr.origin = CGPointMake(originOfPageAtBeginningOfGesture.x + panDiffLocation.x - adjustmentForScale.x,
+                            originOfPageAtBeginningOfGesture.y + panDiffLocation.y - adjustmentForScale.y);
     fr.size = newSizeOfView;
+    
+    //
+    // now, notify delegate that we're about to set the frame of the page during a gesture,
+    // and give it a chance to modify the frame if at all needed.
+    
+    
+    
+    
+    //
+    // now we're ready, set the frame!
     self.frame = fr;
     
 }

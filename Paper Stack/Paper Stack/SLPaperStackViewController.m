@@ -23,6 +23,10 @@
     [stackView addPaperToBottomOfStack:paper];
     paper = [[SLPaperView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [stackView addPaperToBottomOfStack:paper];
+    paper = [[SLPaperView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [stackView addPaperToBottomOfStack:paper];
+    paper = [[SLPaperView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [stackView addPaperToBottomOfStack:paper];
 }
 
 - (void)viewDidUnload

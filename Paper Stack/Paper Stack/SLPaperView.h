@@ -16,8 +16,8 @@
     CGPoint normalizedLocationOfScale;
     
     // properties for pan gesture
-    CGPoint firstLocationOfPanGesture;
-    CGRect firstFrameOfViewForGesture;
+    CGPoint firstLocationOfPanGestureInSuperView;
+    CGPoint originOfPageAtBeginningOfGesture;
     NSInteger lastNumberOfTouchesForPanGesture;
     CGPoint panDiffLocation;
 }
