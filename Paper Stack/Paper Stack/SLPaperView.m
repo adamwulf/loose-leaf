@@ -21,7 +21,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        UIImage* img = [UIImage imageNamed:@"space.jpeg"];
+        UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", rand() % 6 + 1]];
         UIImageView* imgView = [[[UIImageView alloc] initWithImage:img] autorelease];
         imgView.frame = self.bounds;
         imgView.contentMode = UIViewContentModeScaleAspectFill;
