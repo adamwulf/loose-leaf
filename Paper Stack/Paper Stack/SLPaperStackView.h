@@ -10,11 +10,14 @@
 #import <UIKit/UIKit.h>
 #import "SLPaperView.h"
 #import "NSMutableArray+StackAdditions.h"
+#import "SLPaperIcon.h"
 
 @interface SLPaperStackView : UIView<SLPaperViewDelegate>{
     NSMutableArray* visibleStack;
     NSMutableArray* hiddenStack;
     
+    UIView* stackHolder;
+    SLPaperIcon* paperIcon;
     
 }
 

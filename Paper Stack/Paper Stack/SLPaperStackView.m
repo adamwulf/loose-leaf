@@ -23,6 +23,10 @@
 -(void) awakeFromNib{
     visibleStack = [[NSMutableArray array] retain]; // use NSMutableArray stack additions
     hiddenStack = [[NSMutableArray array] retain]; // use NSMutableArray stack additions
+    stackHolder = [[UIView alloc] initWithFrame:self.bounds];
+    [self addSubview:stackHolder];
+    paperIcon = [[SLPaperIcon alloc] initWithFrame:CGRectMake(400, 100, 100, 100)];
+    [self addSubview:paperIcon];
 }
 
 
@@ -35,9 +39,9 @@
 -(void) addPaperToBottomOfStack:(SLPaperView*)page{
     page.delegate = self;
     if([visibleStack count]){
-        [self insertSubview:page belowSubview:[visibleStack peek]];
+        [stackHolder insertSubview:page belowSubview:[visibleStack peek]];
     }else{
-        [self addSubview:page];
+        [stackHolder addSubview:page];
     }
     [visibleStack addToBottomOfStack:page];
 }
