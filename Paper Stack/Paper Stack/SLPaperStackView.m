@@ -21,9 +21,8 @@
 }
 
 -(void) awakeFromNib{
-    visibleStack = [[NSMutableArray array] retain];
-    hiddenStack = [[NSMutableArray array] retain];
-    
+    visibleStack = [[NSMutableArray array] retain]; // use NSMutableArray stack additions
+    hiddenStack = [[NSMutableArray array] retain]; // use NSMutableArray stack additions
 }
 
 
@@ -36,11 +35,11 @@
 -(void) addPaperToBottomOfStack:(SLPaperView*)page{
     page.delegate = self;
     if([visibleStack count]){
-        [self insertSubview:page belowSubview:[visibleStack lastObject]];
+        [self insertSubview:page belowSubview:[visibleStack peek]];
     }else{
         [self addSubview:page];
     }
-    [visibleStack addObject:page];
+    [visibleStack addToBottomOfStack:page];
 }
 
 
@@ -59,27 +58,18 @@
 #pragma mark - SLPaperViewDelegate
 
 -(BOOL) allowsScaleForPage:(SLPaperView*)page{
-    return [visibleStack objectAtIndex:0] == page;
+    return [visibleStack peek] == page;
 }
 
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
-    if(page.scale < 1.0){
-        if(toFrame.origin.y < 0) toFrame.origin.y = 0;
-        if(toFrame.origin.y + toFrame.size.height > self.frame.size.height){
-            toFrame.origin.y = self.frame.size.height - toFrame.size.height;
-        }
-    }
-    if(page.scale >= 1.0){
-        if(toFrame.origin.y > 0) toFrame.origin.y = 0;
-        if(toFrame.origin.y + toFrame.size.height < self.frame.size.height){
-            toFrame.origin.y = self.frame.size.height - toFrame.size.height;
-        }
+    if(page == [visibleStack peek]){
+        
     }
     return toFrame;
 }
 
 -(void) finishedPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
-    if(page.scale < 1){
+    if(page.scale <= 1){
         // bounce it back to full screen
         [UIView animateWithDuration:0.15 animations:^(void){
             CGRect bounceFrame = self.bounds;
