@@ -67,7 +67,13 @@
 }
 
 -(void) finishedPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
-    
+    if(page.scale < 1){
+        // bounce it back to full screen
+        [UIView animateWithDuration:0.3 animations:^(void){
+            page.frame = self.bounds;
+            page.scale = 1;
+        }];
+    }
 }
 
 

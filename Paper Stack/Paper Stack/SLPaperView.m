@@ -11,12 +11,6 @@
 #import "SLPanAndPinchGestureRecognizer.h"
 
 
-@interface SLPaperView (Private)
-
--(void) setScale:(CGFloat)_scale atLocation:(CGPoint)locationInView;
-
-@end
-
 @implementation SLPaperView
 
 @synthesize scale;
@@ -72,7 +66,15 @@
 -(void) panAndScale:(SLPanAndPinchGestureRecognizer*)panGesture{
     CGPoint lastLocationInSuperview = [panGesture locationInView:self.superview];
     CGPoint lastLocationInSelf = [panGesture locationInView:self];
-    if(panGesture.numberOfTouches == 1){
+    if(panGesture.state == UIGestureRecognizerStateCancelled ||
+       panGesture.state == UIGestureRecognizerStateEnded ||
+       panGesture.state == UIGestureRecognizerStateFailed){
+        // exit when we're done and notify our delegate
+        [self.delegate finishedPanningAndScalingPage:self
+                                           fromFrame:frameOfPageAtBeginningOfGesture
+                                             toFrame:self.frame];
+        return;
+    }else if(panGesture.numberOfTouches == 1){
         //
         // the gesture requires 2 fingers. it may still say it only has 1 touch if the user
         // started the gesture with 2 fingers but then lifted a finger. in that case, 
@@ -111,15 +113,6 @@
         // this lets us locate where the gesture should be in the view from any width or height
         normalizedLocationOfScale = CGPointMake(lastLocationInSelf.x / self.frame.size.width, 
                                                 lastLocationInSelf.y / self.frame.size.height);
-        return;
-    }else if(panGesture.state == UIGestureRecognizerStateCancelled ||
-       panGesture.state == UIGestureRecognizerStateEnded ||
-       panGesture.state == UIGestureRecognizerStateFailed){
-        // exit when we're done and notify our delegate
-
-        [self.delegate finishedPanningAndScalingPage:self
-                                          fromFrame:frameOfPageAtBeginningOfGesture
-                                            toFrame:self.frame];
         return;
     }
     
