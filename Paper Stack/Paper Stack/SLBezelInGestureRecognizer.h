@@ -9,6 +9,21 @@
 #import <UIKit/UIKit.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 
-@interface SLBezelInGestureRecognizer : UIPanGestureRecognizer
+enum {
+    SLBezelDirectionRightBezel  = 1 << 0,
+    SLBezelDirectionLeftBezel   = 1 << 1,
+    SLBezelDirectionTopBezel    = 1 << 2,
+    SLBezelDirectionBottomBezel = 1 << 3
+};
+typedef NSUInteger SLBezelDirection;
+
+@interface SLBezelInGestureRecognizer : UIPanGestureRecognizer{
+    
+    SLBezelDirection bezelDirectionMask;
+    
+}
+
+@property (nonatomic, assign) SLBezelDirection bezelDirectionMask;
+
 
 @end

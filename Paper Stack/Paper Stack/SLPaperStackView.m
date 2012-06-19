@@ -38,6 +38,7 @@
     boundsOfHiddenStack.origin.x += self.bounds.size.width;
     
     SLBezelInGestureRecognizer* bezelGesture = [[SLBezelInGestureRecognizer alloc] initWithTarget:self action:@selector(bezelIn:)];
+    [bezelGesture setBezelDirectionMask:SLBezelDirectionRightBezel];
     [bezelGesture setMinimumNumberOfTouches:2];
     [self addGestureRecognizer:bezelGesture];
     

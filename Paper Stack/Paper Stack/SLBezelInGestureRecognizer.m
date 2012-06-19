@@ -10,6 +10,13 @@
 #import "Constants.h"
 
 @implementation SLBezelInGestureRecognizer
+@synthesize bezelDirectionMask;
+
+-(id) init{
+    self = [super init];
+    self.bezelDirectionMask = SLBezelDirectionBottomBezel | SLBezelDirectionLeftBezel | SLBezelDirectionRightBezel | SLBezelDirectionTopBezel;
+    return self;
+}
 
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
     return YES;
@@ -27,6 +34,18 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     for(UITouch* touch in touches){
         CGPoint point = [touch locationInView:self.view];
+        if(point.x < 10 && !((self.bezelDirectionMask & SLBezelDirectionLeftBezel) == SLBezelDirectionLeftBezel)){
+            [self ignoreTouch:touch forEvent:event];
+        }
+        if(point.y < 10 && !((self.bezelDirectionMask & SLBezelDirectionTopBezel) == SLBezelDirectionTopBezel)){
+            [self ignoreTouch:touch forEvent:event];
+        }
+        if(point.x > self.view.frame.size.width - 10 && !((self.bezelDirectionMask & SLBezelDirectionRightBezel) == SLBezelDirectionRightBezel)){
+            [self ignoreTouch:touch forEvent:event];
+        }
+        if(point.y > self.view.frame.size.height - 10 && !((self.bezelDirectionMask & SLBezelDirectionBottomBezel) == SLBezelDirectionBottomBezel)){
+            [self ignoreTouch:touch forEvent:event];
+        }
         if(point.x > 10 && point.y > 10 && point.x < self.view.frame.size.width - 10 && point.y < self.view.frame.size.height - 10){
             // ignore touch inside main view, only accept bezel touches
             [self ignoreTouch:touch forEvent:event];
