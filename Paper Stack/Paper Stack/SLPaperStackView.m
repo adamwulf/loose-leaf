@@ -36,6 +36,16 @@
     
     boundsOfHiddenStack = self.bounds;
     boundsOfHiddenStack.origin.x += self.bounds.size.width;
+    
+    SLBezelGestureRecognizer* bezelGesture = [[SLBezelGestureRecognizer alloc] initWithTarget:self action:@selector(bezelIn:)];
+    [bezelGesture setMinimumNumberOfTouches:2];
+    [self addGestureRecognizer:bezelGesture];
+    
+}
+
+
+-(void) bezelIn:(SLBezelGestureRecognizer*)bezelGesture{
+    debug_NSLog(@"bezel!");
 }
 
 
