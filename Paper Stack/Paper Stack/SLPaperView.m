@@ -34,13 +34,6 @@
         preGestureScale = 1;
         scale = 1;
         
-        [self.layer setMasksToBounds:NO ];
-        [self.layer setShadowColor:[[UIColor blackColor ] CGColor ] ];
-        [self.layer setShadowOpacity:0.5 ];
-        [self.layer setShadowRadius:1.0 ];
-        [self.layer setShadowOffset:CGSizeMake( 0 , 0 ) ];
-        [self.layer setShouldRasterize:YES ];
-
         UIPanGestureRecognizer* panGesture = [[[SLPanAndPinchGestureRecognizer alloc] 
                                                initWithTarget:self 
                                                       action:@selector(panAndScale:)] autorelease];
@@ -49,6 +42,26 @@
         [self addGestureRecognizer:panGesture];
     }
     return self;
+}
+
+-(void) setShadowIsVisible:(BOOL)visible{
+    visible = NO;
+    if(visible){
+        [self.layer setMasksToBounds:NO ];
+        [self.layer setShadowColor:[[UIColor blackColor ] CGColor ] ];
+        [self.layer setShadowOpacity:0.5 ];
+        [self.layer setShadowRadius:1.0 ];
+        [self.layer setShadowOffset:CGSizeMake( 0 , 0 ) ];
+//        [self.layer setShouldRasterize:YES ];
+    }else{
+        [self.layer setMasksToBounds:YES ];
+        [self.layer setShadowColor:[[UIColor clearColor ] CGColor ] ];
+        [self.layer setShadowOpacity:0.0 ];
+        [self.layer setShadowRadius:0.0 ];
+        [self.layer setShadowOffset:CGSizeMake( 0 , 0 ) ];
+        [self.layer setShouldRasterize:NO ];
+    }
+    
 }
 
 /**

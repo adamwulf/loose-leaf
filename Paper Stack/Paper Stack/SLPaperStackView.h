@@ -15,6 +15,7 @@
 @interface SLPaperStackView : UIView<SLPaperViewDelegate>{
     NSMutableArray* visibleStack;
     NSMutableArray* hiddenStack;
+    CGRect boundsOfHiddenStack;
     
     UIView* stackHolder;
     SLPaperIcon* paperIcon;

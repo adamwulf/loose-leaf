@@ -27,6 +27,8 @@
     [self addSubview:stackHolder];
     paperIcon = [[SLPaperIcon alloc] initWithFrame:CGRectMake(200, 100, 100, 100)];
     [self addSubview:paperIcon];
+    boundsOfHiddenStack = self.bounds;
+    boundsOfHiddenStack.origin.x += self.bounds.size.width;
 }
 
 
@@ -39,15 +41,59 @@
 -(void) addPaperToBottomOfStack:(SLPaperView*)page{
     page.delegate = self;
     if([visibleStack count]){
-        [stackHolder insertSubview:page belowSubview:[visibleStack peek]];
+        [stackHolder insertSubview:page atIndex:0];
     }else{
         [stackHolder addSubview:page];
+        [page setShadowIsVisible:YES];
     }
     [visibleStack addToBottomOfStack:page];
 }
 
+/**
+ * the input is a page in the visible stack,
+ * and we pop all pages above but not including
+ * the input page
+ *
+ * these pages will be pushed over to the invisible stack
+ */
+-(void) popStackUntilPage:(SLPaperView*)page{
+    NSMutableArray* pagesToAnimate = [NSMutableArray array];
+    if([visibleStack containsObject:page]){
+        while([visibleStack peek] != page){
+            [pagesToAnimate addObject:[visibleStack pop]];
+        }
+    }
+    CGFloat delay = 0;
+    for(SLPaperView* aPage in pagesToAnimate){
+        [hiddenStack push:aPage];
+        [UIView animateWithDuration:0.1 delay:delay options:UIViewAnimationOptionAllowUserInteraction
+                         animations:^(void){
+                             aPage.frame = boundsOfHiddenStack;
+                             aPage.scale = 1;
+                         } completion:^(BOOL finished){
+                             [self insertSubview:aPage belowSubview:[self getPageBelow:aPage]];
+                             [aPage setShadowIsVisible:NO];
+                         }];
+        delay += .1;
+    }
+    [page setShadowIsVisible:YES];
+}
 
-
+-(SLPaperView*) getPageBelow:(SLPaperView*)page{
+    if([visibleStack containsObject:page]){
+        NSInteger index = [visibleStack indexOfObject:page];
+        if(index != 0){
+            return [visibleStack objectAtIndex:index-1];
+        }
+    }
+    if([hiddenStack containsObject:page]){
+        NSInteger index = [hiddenStack indexOfObject:page];
+        if(index != 0){
+            return [hiddenStack objectAtIndex:index-1];
+        }
+    }
+    return nil;
+}
 
 
 #pragma mark - SLPaperViewDelegate
@@ -76,11 +122,13 @@
     }else{
         // loop through all pages in stack
         // an pop the ones that aren't in view back to where they should be
-        for(SLPaperView* page in visibleStack){
+        for(SLPaperView* page in [[visibleStack copy] autorelease]){
             if(page != [visibleStack peek]){
                 if([page isBeingPannedAndZoomed]){
                     // TODO
                     debug_NSLog(@"pop stack until i see this page");
+                    [self popStackUntilPage:page];
+                    return;
                 }else{
                     if(!CGRectEqualToRect(page.frame, self.bounds)){
                         debug_NSLog(@"moving a page back to where it should be");

@@ -19,14 +19,16 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 
-    SLPaperView* paper = [[SLPaperView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [stackView addPaperToBottomOfStack:paper];
-    paper = [[SLPaperView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [stackView addPaperToBottomOfStack:paper];
-    paper = [[SLPaperView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [stackView addPaperToBottomOfStack:paper];
-    paper = [[SLPaperView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [stackView addPaperToBottomOfStack:paper];
+    for(int i=0;i<10;i++){
+        SLPaperView* paper = [[SLPaperView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        [stackView addPaperToBottomOfStack:paper];
+        paper = [[SLPaperView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        [stackView addPaperToBottomOfStack:paper];
+        paper = [[SLPaperView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        [stackView addPaperToBottomOfStack:paper];
+        paper = [[SLPaperView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        [stackView addPaperToBottomOfStack:paper];
+    }
 }
 
 - (void)viewDidUnload
