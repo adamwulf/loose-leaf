@@ -14,7 +14,7 @@
 #import "SLPlusIcon.h"
 #import "SLLeftArrow.h"
 #import "SLRightArrow.h"
-#import "SLBezelGestureRecognizer.h"
+#import "SLBezelInGestureRecognizer.h"
 
 @interface SLPaperStackView : UIView<SLPaperViewDelegate>{
     NSMutableArray* visibleStack;

@@ -6,10 +6,10 @@
 //  Copyright (c) 2012 Visere. All rights reserved.
 //
 
-#import "SLBezelGestureRecognizer.h"
+#import "SLBezelInGestureRecognizer.h"
 #import "Constants.h"
 
-@implementation SLBezelGestureRecognizer
+@implementation SLBezelInGestureRecognizer
 
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
     return YES;

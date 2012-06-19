@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 
-@interface SLBezelGestureRecognizer : UIPanGestureRecognizer
+@interface SLBezelInGestureRecognizer : UIPanGestureRecognizer
 
 @end

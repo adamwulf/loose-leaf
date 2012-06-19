@@ -9,7 +9,7 @@
 #import "SLPanAndPinchGestureRecognizer.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Constants.h"
-#import "SLBezelGestureRecognizer.h"
+#import "SLBezelInGestureRecognizer.h"
 
 @implementation SLPanAndPinchGestureRecognizer
 
@@ -21,7 +21,7 @@
 }
 
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return [preventingGestureRecognizer isKindOfClass:[SLBezelGestureRecognizer class]];
+    return [preventingGestureRecognizer isKindOfClass:[SLBezelInGestureRecognizer class]];
 }
 
 /**
