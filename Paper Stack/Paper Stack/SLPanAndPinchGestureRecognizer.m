@@ -29,10 +29,22 @@ CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2)
     return NO;
 }
 
+/**
+ * the first touch of a gesture.
+ * this touch may interrupt an animation on this frame, so set the frame
+ * to match that of the animation.
+ */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    // look at the presentation of the view (as would be seen during animation)
     CGRect lFrame = [self.view.layer.presentationLayer frame];
+    // look at the view frame to compare
     CGRect vFrame = self.view.frame;
     if(!CGRectEqualToRect(lFrame, vFrame)){
+        // if they're not equal, then remove all animations
+        // and set the frame to the presentation layer's frame
+        // so that the gesture will pick up in the middle
+        // of the animation instead of immediately reset to
+        // its end state
         self.view.frame = lFrame;
     }
     [self.view.layer removeAllAnimations];
