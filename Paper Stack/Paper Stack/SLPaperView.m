@@ -137,12 +137,6 @@
         if(targetScale > 1){
             targetScale = roundf(targetScale * 2) / 2;
         }
-        // only allow up to .05 change in scale at a time
-        if(targetScale < scale - .05){
-            gestureScale = (scale - .05) / preGestureScale;
-        }else if(targetScale > scale + .05){
-            gestureScale = (scale + .05) / preGestureScale;
-        }
         
         //
         // to track scaling, the scale value has to be a value between .7 and 2.0x of the /superview/'s size
@@ -196,7 +190,8 @@
     CGSize newSizeOfView = CGSizeMake(superviewSize.width * scale, superviewSize.height * scale);
 
     
-    
+    //
+    // now calculate our final frame given our pan and zoom
     CGRect fr = self.frame;
     fr.origin = CGPointMake(frameOfPageAtBeginningOfGesture.origin.x + panDiffLocation.x - adjustmentForScale.x,
                             frameOfPageAtBeginningOfGesture.origin.y + panDiffLocation.y - adjustmentForScale.y);

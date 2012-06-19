@@ -43,12 +43,15 @@
     }
     [self.view.layer removeAllAnimations];
     [super touchesBegan:touches withEvent:event];
+    [lastTouchTime release];
+    lastTouchTime = [[NSDate date] retain];
 }
 
 -(CGFloat) distanceBetweenTouches:(NSSet*) touches{
     if([touches count] == 2){
-        UITouch* touch1 = [[touches allObjects] objectAtIndex:0];
-        UITouch* touch2 = [[touches allObjects] objectAtIndex:1];
+        NSArray* arr = [touches allObjects];
+        UITouch* touch1 = [arr objectAtIndex:0];
+        UITouch* touch2 = [arr objectAtIndex:1];
         CGPoint initialPoint1 = [touch1 locationInView:self.view.superview];
         CGPoint initialPoint2 = [touch2 locationInView:self.view.superview];
         return DistanceBetweenTwoPoints(initialPoint1, initialPoint2);
@@ -69,7 +72,12 @@
         initialDistance = [self distanceBetweenTouches:touches];
     }
     if([touches count] == 2 && initialDistance){
-        scale = [self distanceBetweenTouches:touches] / initialDistance;
+        NSTimeInterval interval = [lastTouchTime timeIntervalSinceNow];
+        if(interval < -.03){
+            scale = [self distanceBetweenTouches:touches] / initialDistance;
+            [lastTouchTime release];
+            lastTouchTime = [[NSDate date] retain];
+        }
     }
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{

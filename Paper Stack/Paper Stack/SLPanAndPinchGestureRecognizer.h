@@ -12,6 +12,7 @@
 @interface SLPanAndPinchGestureRecognizer : UIPanGestureRecognizer{
     CGFloat initialDistance;
     CGFloat scale;
+    NSDate* lastTouchTime;
 }
 
 @property (nonatomic, readonly) CGFloat scale;
