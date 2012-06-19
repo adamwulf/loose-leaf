@@ -18,5 +18,22 @@
 
 CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
 
+enum {
+    SLBezelDirectionFromRightBezel  = 1 << 0,
+    SLBezelDirectionFromLeftBezel   = 1 << 1,
+    SLBezelDirectionFromTopBezel    = 1 << 2,
+    SLBezelDirectionFromBottomBezel = 1 << 3
+};
+typedef NSUInteger SLBezelDirection;
+
+enum {
+    SLBezelDirectionNone = 0,
+    SLBezelDirectionRight  = 1 << 0,
+    SLBezelDirectionLeft   = 1 << 1,
+    SLBezelDirectionUp    = 1 << 2,
+    SLBezelDirectionDown = 1 << 3
+};
+typedef NSUInteger SLBezelPanDirection;
+
 
 #endif
