@@ -45,19 +45,17 @@
         CGPoint point = [touch locationInView:self.view];
         if(point.x < 10 && !((self.bezelDirectionMask & SLBezelDirectionFromLeftBezel) == SLBezelDirectionFromLeftBezel)){
             [self ignoreTouch:touch forEvent:event];
-        }
-        if(point.y < 10 && !((self.bezelDirectionMask & SLBezelDirectionFromTopBezel) == SLBezelDirectionFromTopBezel)){
+        }else if(point.y < 10 && !((self.bezelDirectionMask & SLBezelDirectionFromTopBezel) == SLBezelDirectionFromTopBezel)){
             [self ignoreTouch:touch forEvent:event];
-        }
-        if(point.x > self.view.frame.size.width - 10 && !((self.bezelDirectionMask & SLBezelDirectionFromRightBezel) == SLBezelDirectionFromRightBezel)){
+        }else if(point.x > self.view.frame.size.width - 10 && !((self.bezelDirectionMask & SLBezelDirectionFromRightBezel) == SLBezelDirectionFromRightBezel)){
             [self ignoreTouch:touch forEvent:event];
-        }
-        if(point.y > self.view.frame.size.height - 10 && !((self.bezelDirectionMask & SLBezelDirectionFromBottomBezel) == SLBezelDirectionFromBottomBezel)){
+        }else if(point.y > self.view.frame.size.height - 10 && !((self.bezelDirectionMask & SLBezelDirectionFromBottomBezel) == SLBezelDirectionFromBottomBezel)){
             [self ignoreTouch:touch forEvent:event];
-        }
-        if(point.x > 10 && point.y > 10 && point.x < self.view.frame.size.width - 10 && point.y < self.view.frame.size.height - 10){
+        }else if(point.x > 10 && point.y > 10 && point.x < self.view.frame.size.width - 10 && point.y < self.view.frame.size.height - 10){
             // ignore touch inside main view, only accept bezel touches
             [self ignoreTouch:touch forEvent:event];
+        }else{
+            debug_NSLog(@"point for bezel: %f %f", point.x, point.y);
         }
     }
     panDirection = SLBezelDirectionNone;

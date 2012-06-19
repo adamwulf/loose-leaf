@@ -178,13 +178,6 @@
 }
 
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
-    if(fromRightBezelGesture.state == UIGestureRecognizerStateBegan){
-        // sometimes the panning of the top of the stack interferes with
-        // the gesture for bezeling in a page from the right.
-        //
-        // in this case we don't want them to interfere, so don't move the page at all
-        return fromFrame;
-    }
     if(page == [visibleStack peek]){
         
     }
@@ -196,15 +189,6 @@
                               toFrame:(CGRect)toFrame
                          withVelocity:(CGPoint)velocity{
     
-    if(fromRightBezelGesture.state == UIGestureRecognizerStateBegan){
-        //
-        // if the panning of a page is beging stopped because we're
-        // bezeling in a new page from the right, then we need to just
-        // send this page back to the top of the visible stack w/ minimal
-        // animations. no bounce!
-        [self animatePageToFullScreen:page withDelay:0 withBounce:NO];
-        return;
-    }
     if(page != [visibleStack peek]){
         SLPaperView* topPage = [visibleStack peek];
         if([topPage isBeingPannedAndZoomed]){

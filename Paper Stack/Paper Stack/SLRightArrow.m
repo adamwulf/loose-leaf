@@ -36,17 +36,17 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     //// Color Declarations
+    UIColor* darkerGrey = [UIColor colorWithRed: 0.26 green: 0.26 blue: 0.26 alpha: 0.25];
     UIColor* halfWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.36];
-    UIColor* barelyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.1];
     
     //// Gradient Declarations
     NSArray* frontOfPaperColors = [NSArray arrayWithObjects: 
-                                   (id)barelyWhite.CGColor, 
-                                   (id)[UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.23].CGColor, 
+                                   (id)darkerGrey.CGColor, 
+                                   (id)[UIColor colorWithRed: 0.66 green: 0.66 blue: 0.66 alpha: 0.3].CGColor, 
                                    (id)halfWhite.CGColor, 
                                    (id)[UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.36].CGColor, 
                                    (id)halfWhite.CGColor, nil];
-    CGFloat frontOfPaperLocations[] = {0.16, 0.4, 0.77, 0.95, 1};
+    CGFloat frontOfPaperLocations[] = {0, 0.2, 0.67, 0.93, 1};
     CGGradientRef frontOfPaper = CGGradientCreateWithColors(colorSpace, (CFArrayRef)frontOfPaperColors, frontOfPaperLocations);
     
     

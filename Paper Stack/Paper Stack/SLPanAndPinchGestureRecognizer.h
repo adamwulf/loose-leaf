@@ -13,6 +13,7 @@
     CGFloat initialDistance;
     CGFloat scale;
     NSDate* lastTouchTime;
+    NSMutableSet* validTouchesOnly;
 }
 
 @property (nonatomic, readonly) CGFloat scale;
