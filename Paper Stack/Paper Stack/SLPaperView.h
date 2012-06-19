@@ -30,6 +30,4 @@
 @property (nonatomic, assign) CGFloat scale;
 @property (nonatomic, readonly) BOOL isBeingPannedAndZoomed;
 
--(void) setShadowIsVisible:(BOOL)visible;
-
 @end

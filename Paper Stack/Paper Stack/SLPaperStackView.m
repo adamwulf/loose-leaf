@@ -44,7 +44,6 @@
         [stackHolder insertSubview:page atIndex:0];
     }else{
         [stackHolder addSubview:page];
-        [page setShadowIsVisible:YES];
     }
     [visibleStack addToBottomOfStack:page];
 }
@@ -66,17 +65,15 @@
     CGFloat delay = 0;
     for(SLPaperView* aPage in pagesToAnimate){
         [hiddenStack push:aPage];
-        [UIView animateWithDuration:0.1 delay:delay options:UIViewAnimationOptionAllowUserInteraction
+        [UIView animateWithDuration:0.2 delay:delay options:UIViewAnimationOptionAllowUserInteraction
                          animations:^(void){
                              aPage.frame = boundsOfHiddenStack;
                              aPage.scale = 1;
                          } completion:^(BOOL finished){
                              [self insertSubview:aPage belowSubview:[self getPageBelow:aPage]];
-                             [aPage setShadowIsVisible:NO];
                          }];
         delay += .1;
     }
-    [page setShadowIsVisible:YES];
 }
 
 -(SLPaperView*) getPageBelow:(SLPaperView*)page{

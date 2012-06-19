@@ -48,25 +48,6 @@
     return self;
 }
 
--(void) setShadowIsVisible:(BOOL)visible{
-    visible = NO;
-    if(visible){
-        [self.layer setMasksToBounds:NO ];
-        [self.layer setShadowColor:[[UIColor blackColor ] CGColor ] ];
-        [self.layer setShadowOpacity:0.5 ];
-        [self.layer setShadowRadius:1.0 ];
-        [self.layer setShadowOffset:CGSizeMake( 0 , 0 ) ];
-//        [self.layer setShouldRasterize:YES ];
-    }else{
-        [self.layer setMasksToBounds:YES ];
-        [self.layer setShadowColor:[[UIColor clearColor ] CGColor ] ];
-        [self.layer setShadowOpacity:0.0 ];
-        [self.layer setShadowRadius:0.0 ];
-        [self.layer setShadowOffset:CGSizeMake( 0 , 0 ) ];
-        [self.layer setShouldRasterize:NO ];
-    }
-    
-}
 
 /**
  * this is the heart of the two finger zoom/pan for pages
@@ -157,9 +138,9 @@
         
         CGFloat gestureScale = panGesture.scale;
         CGFloat targetScale = preGestureScale * gestureScale;
-        if(targetScale > 1){
-            targetScale = roundf(targetScale * 2) / 2;
-        }
+//        if(targetScale > 1){
+//            targetScale = roundf(targetScale * 2) / 2;
+//        }
         
         //
         // to track scaling, the scale value has to be a value between .7 and 2.0x of the /superview/'s size
