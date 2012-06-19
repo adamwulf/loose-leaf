@@ -42,9 +42,14 @@
     [fromRightBezelGesture setMinimumNumberOfTouches:2];
     [self addGestureRecognizer:fromRightBezelGesture];
     
+    toRightBezelGesture = [[SLBezelOutGestureRecognizer alloc] initWithTarget:self action:@selector(bezelOut:)];
+    [toRightBezelGesture setBezelDirectionMask:SLBezelDirectionFromRightBezel];
+    [self addGestureRecognizer:toRightBezelGesture];
 }
 
-
+-(void) bezelOut:(SLBezelOutGestureRecognizer*)bezelGesture{
+    debug_NSLog(@"out!");
+}
 -(void) bezelIn:(SLBezelInGestureRecognizer*)bezelGesture{
     SLPaperView* page = [hiddenStack peek];
     if(!page){

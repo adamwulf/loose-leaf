@@ -1,5 +1,5 @@
 //
-//  SLBezelGestureRecognizer.h
+//  SLBezelOutGestureRecognizer.h
 //  Paper Stack
 //
 //  Created by Adam Wulf on 6/19/12.
@@ -9,19 +9,18 @@
 #import <UIKit/UIKit.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "Constants.h"
+#import "NSMutableSet+Extras.h"
 
-
-@interface SLBezelInGestureRecognizer : UIPanGestureRecognizer{
+@interface SLBezelOutGestureRecognizer : UIGestureRecognizer{
     
     SLBezelDirection bezelDirectionMask;
-    SLBezelPanDirection panDirection;
-    CGPoint lastKnownLocation;
-    CGPoint firstKnownLocation;
     
+    NSMutableSet* knownTouches;
+    NSMutableSet* validTouches;
+    NSMutableSet* validatedEndedTouches;
+
 }
 
 @property (nonatomic, assign) SLBezelDirection bezelDirectionMask;
-@property (nonatomic, readonly) SLBezelPanDirection panDirection;
-
 
 @end

@@ -138,6 +138,7 @@
     [super reset];
     initialDistance = 0;
     scale = 1;
+    [validTouchesOnly removeAllObjects];
 }
 
 -(void) cancel{
