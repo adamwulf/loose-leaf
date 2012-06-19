@@ -30,4 +30,8 @@
 @property (nonatomic, assign) CGFloat scale;
 @property (nonatomic, readonly) BOOL isBeingPannedAndZoomed;
 
+-(void) cancelAllGestures;
+-(void) disableAllGestures;
+-(void) enableAllGestures;
+
 @end

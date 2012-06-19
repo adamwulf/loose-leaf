@@ -37,10 +37,10 @@
     frameOfHiddenStack = self.bounds;
     frameOfHiddenStack.origin.x += self.bounds.size.width;
     
-    SLBezelInGestureRecognizer* bezelGesture = [[SLBezelInGestureRecognizer alloc] initWithTarget:self action:@selector(bezelIn:)];
-    [bezelGesture setBezelDirectionMask:SLBezelDirectionFromRightBezel];
-    [bezelGesture setMinimumNumberOfTouches:2];
-    [self addGestureRecognizer:bezelGesture];
+    fromRightBezelGesture = [[SLBezelInGestureRecognizer alloc] initWithTarget:self action:@selector(bezelIn:)];
+    [fromRightBezelGesture setBezelDirectionMask:SLBezelDirectionFromRightBezel];
+    [fromRightBezelGesture setMinimumNumberOfTouches:2];
+    [self addGestureRecognizer:fromRightBezelGesture];
     
 }
 
@@ -48,7 +48,6 @@
 -(void) bezelIn:(SLBezelInGestureRecognizer*)bezelGesture{
     SLPaperView* page = [hiddenStack peek];
     if(!page){
-        debug_NSLog(@"no paper in the hidden stack. need to add one");
         page = [[SLPaperView alloc] initWithFrame:frameOfHiddenStack];
         page.delegate = self;
         [stackHolder addSubview:page];
@@ -62,20 +61,34 @@
         [stackHolder addSubview:[hiddenStack peek]];
     }
     
-    if(bezelGesture.state == UIGestureRecognizerStateCancelled ||
+    if(bezelGesture.state == UIGestureRecognizerStateBegan){
+        [[visibleStack peek] disableAllGestures];
+    }else if(bezelGesture.state == UIGestureRecognizerStateCancelled ||
        bezelGesture.state == UIGestureRecognizerStateFailed){
-        [self popPage:page withDelay:0];
+        [self animateBackToHiddenStack:page withDelay:0];
+        [[visibleStack peek] enableAllGestures];
     }else if(bezelGesture.state == UIGestureRecognizerStateEnded &&
              ((bezelGesture.panDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft)){
         [self popHiddenStackUntilPage:[self getPageBelow:page]]; 
     }else if(bezelGesture.state == UIGestureRecognizerStateEnded){
-        [self popPage:page withDelay:0];
+        [self animateBackToHiddenStack:page withDelay:0];
+        [[visibleStack peek] enableAllGestures];
     }else{
         CGRect newFrame = CGRectMake(frameOfHiddenStack.origin.x + translation.x,
                                      frameOfHiddenStack.origin.y,
                                      frameOfHiddenStack.size.width,
                                      frameOfHiddenStack.size.height);
         page.frame = newFrame;
+        
+        // in some cases, the top page on the visible stack will
+        // think it's also being panned at the same time as this bezel
+        // gesture
+        //
+        // double check and cancel it if needbe.
+        SLPaperView* topPage = [visibleStack peek];
+        if([topPage isBeingPannedAndZoomed]){
+            [topPage cancelAllGestures];
+        }
     }
 }
 
@@ -113,7 +126,7 @@
     CGFloat delay = 0;
     for(SLPaperView* aPage in pagesToAnimate){
         [hiddenStack push:aPage];
-        [self popPage:aPage withDelay:delay];
+        [self animateBackToHiddenStack:aPage withDelay:delay];
         delay += .1;
     }
 }
@@ -135,7 +148,7 @@
     CGFloat delay = 0;
     for(SLPaperView* aPage in pagesToAnimate){
         [visibleStack push:aPage];
-        [self bouncePageToFullScreen:aPage withDelay:delay];
+        [self animatePageToFullScreen:aPage withDelay:delay withBounce:YES];
         delay += .1;
     }
 }
@@ -165,6 +178,13 @@
 }
 
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
+    if(fromRightBezelGesture.state == UIGestureRecognizerStateBegan){
+        // sometimes the panning of the top of the stack interferes with
+        // the gesture for bezeling in a page from the right.
+        //
+        // in this case we don't want them to interfere, so don't move the page at all
+        return fromFrame;
+    }
     if(page == [visibleStack peek]){
         
     }
@@ -176,6 +196,15 @@
                               toFrame:(CGRect)toFrame
                          withVelocity:(CGPoint)velocity{
     
+    if(fromRightBezelGesture.state == UIGestureRecognizerStateBegan){
+        //
+        // if the panning of a page is beging stopped because we're
+        // bezeling in a new page from the right, then we need to just
+        // send this page back to the top of the visible stack w/ minimal
+        // animations. no bounce!
+        [self animatePageToFullScreen:page withDelay:0 withBounce:NO];
+        return;
+    }
     if(page != [visibleStack peek]){
         SLPaperView* topPage = [visibleStack peek];
         if([topPage isBeingPannedAndZoomed]){
@@ -204,7 +233,7 @@
     if(page.scale <= 1){
         //
         // bounce it back to full screen
-        [self bouncePageToFullScreen:page withDelay:0];
+        [self animatePageToFullScreen:page withDelay:0 withBounce:YES];
     }else{
         //
         // the scale is larger than 1, so we may need
@@ -329,25 +358,33 @@
  *
  * this animation is interruptable
  */
--(void) bouncePageToFullScreen:(SLPaperView*)page withDelay:(CGFloat) delay{
-    [UIView animateWithDuration:.15 delay:delay options:UIViewAnimationOptionAllowUserInteraction
-                     animations:^(void){
-                         page.scale = 1;
-                         CGRect bounceFrame = self.bounds;
-                         bounceFrame.origin.x = bounceFrame.origin.x-10;
-                         bounceFrame.origin.y = bounceFrame.origin.y-10;
-                         bounceFrame.size.width = bounceFrame.size.width+10*2;
-                         bounceFrame.size.height = bounceFrame.size.height+10*2;
-                         page.frame = bounceFrame;
-                     } completion:^(BOOL finished){
-                         if(finished){
-                             [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionAllowUserInteraction
-                                              animations:^(void){
-                                                  page.frame = self.bounds;
-                                                  page.scale = 1;
-                                              } completion:nil];
-                         }
-                     }];
+-(void) animatePageToFullScreen:(SLPaperView*)page withDelay:(CGFloat)delay withBounce:(BOOL)bounce{
+    if(bounce){
+        [UIView animateWithDuration:.15 delay:delay options:UIViewAnimationOptionAllowUserInteraction
+                         animations:^(void){
+                             page.scale = 1;
+                             CGRect bounceFrame = self.bounds;
+                             bounceFrame.origin.x = bounceFrame.origin.x-10;
+                             bounceFrame.origin.y = bounceFrame.origin.y-10;
+                             bounceFrame.size.width = bounceFrame.size.width+10*2;
+                             bounceFrame.size.height = bounceFrame.size.height+10*2;
+                             page.frame = bounceFrame;
+                         } completion:^(BOOL finished){
+                             if(finished){
+                                 [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionAllowUserInteraction
+                                                  animations:^(void){
+                                                      page.frame = self.bounds;
+                                                      page.scale = 1;
+                                                  } completion:nil];
+                             }
+                         }];
+    }else{
+        [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionAllowUserInteraction
+                         animations:^(void){
+                             page.frame = self.bounds;
+                             page.scale = 1;
+                         } completion:nil];
+    }
 }
 
 
@@ -356,7 +393,7 @@
  * this will animate a page onto the hidden stack
  * after the input delay, if any
  */
--(void) popPage:(SLPaperView*)page withDelay:(CGFloat)delay{
+-(void) animateBackToHiddenStack:(SLPaperView*)page withDelay:(CGFloat)delay{
     [UIView animateWithDuration:0.2 delay:delay options:UIViewAnimationOptionAllowUserInteraction
                      animations:^(void){
                          page.frame = frameOfHiddenStack;

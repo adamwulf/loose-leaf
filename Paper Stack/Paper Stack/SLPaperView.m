@@ -49,6 +49,25 @@
 }
 
 
+-(void) cancelAllGestures{
+    for(UIGestureRecognizer* gesture in self.gestureRecognizers){
+        if([gesture respondsToSelector:@selector(cancel)]){
+            [(SLPanAndPinchGestureRecognizer*)gesture cancel];
+        }
+    }
+}
+-(void) disableAllGestures{
+    for(UIGestureRecognizer* gesture in self.gestureRecognizers){
+        [gesture setEnabled:NO];
+    }
+}
+-(void) enableAllGestures{
+    for(UIGestureRecognizer* gesture in self.gestureRecognizers){
+        [gesture setEnabled:YES];
+    }
+}
+
+
 /**
  * this is the heart of the two finger zoom/pan for pages
  *

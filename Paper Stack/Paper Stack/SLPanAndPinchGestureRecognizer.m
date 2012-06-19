@@ -30,6 +30,22 @@
  * to match that of the animation.
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    // ignore all the touches that could be bezel touches
+    for(UITouch* touch in touches){
+        CGPoint point = [touch locationInView:self.view];
+        if(point.x < 10){
+            [self ignoreTouch:touch forEvent:event];
+        }
+        if(point.y < 10){
+            [self ignoreTouch:touch forEvent:event];
+        }
+        if(point.x > self.view.frame.size.width - 10){
+            [self ignoreTouch:touch forEvent:event];
+        }
+        if(point.y > self.view.frame.size.height - 10){
+            [self ignoreTouch:touch forEvent:event];
+        }
+    }
     // look at the presentation of the view (as would be seen during animation)
     CGRect lFrame = [self.view.layer.presentationLayer frame];
     // look at the view frame to compare
@@ -97,6 +113,11 @@
     [super reset];
     initialDistance = 0;
     scale = 1;
+}
+
+-(void) cancel{
+    self.enabled = NO;
+    self.enabled = YES;
 }
 
 @end

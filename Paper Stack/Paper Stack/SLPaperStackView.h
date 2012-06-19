@@ -27,6 +27,7 @@
     SLLeftArrow* leftArrow;
     SLRightArrow* rightArrow;
     
+    SLBezelInGestureRecognizer* fromRightBezelGesture;
 }
 
 -(void) addPaperToBottomOfStack:(SLPaperView*)page;

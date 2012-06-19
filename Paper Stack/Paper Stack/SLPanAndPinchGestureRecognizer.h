@@ -17,4 +17,6 @@
 
 @property (nonatomic, readonly) CGFloat scale;
 
+-(void) cancel;
+
 @end
