@@ -187,6 +187,15 @@
     // first, check to see if the frame is already out of bounds
     // the toFrame represents where the paper is pre-inertia, so if
     // the toFrame is wrong, then just animate it back to an edge straight away
+    //
+    //
+    // TODO
+    // even in this case, we should take into account the inertia
+    //
+    // if i'm at the edge of a zoomed in image and want to quickly get to the other
+    // side, then i'll often run into this case. currently, even a fast flick
+    // will get stopped immediately and bounce to the side even w/ a lot of
+    // intertia
     CGRect newToFrame = toFrame;
     if(toFrame.origin.x > 0){
         newToFrame.origin.x = 0;
@@ -233,7 +242,7 @@
     [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut animations:^(void){
         page.frame = newInertiaFrame;
     } completion:^(BOOL finished){
-            if(finished){
+            if(finished && !CGRectEqualToRect(newInertiaFrame, postInertialFrame)){
                 [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionAllowUserInteraction
                                  animations:^(void){
                                      page.frame = postInertialFrame;
