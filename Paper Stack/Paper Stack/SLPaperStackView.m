@@ -29,6 +29,11 @@
     [self addSubview:paperIcon];
     plusIcon = [[SLPlusIcon alloc] initWithFrame:CGRectMake(680, 476, 46, 46)];
     [self addSubview:plusIcon];
+    leftArrow = [[SLLeftArrow alloc] initWithFrame:CGRectMake(680, 420, 46, 46)];
+    [self addSubview:leftArrow];
+    rightArrow = [[SLRightArrow alloc] initWithFrame:CGRectMake(680, 530, 46, 46)];
+    [self addSubview:rightArrow];
+    
     boundsOfHiddenStack = self.bounds;
     boundsOfHiddenStack.origin.x += self.bounds.size.width;
 }

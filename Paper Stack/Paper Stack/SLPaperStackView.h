@@ -12,6 +12,8 @@
 #import "NSMutableArray+StackAdditions.h"
 #import "SLPaperIcon.h"
 #import "SLPlusIcon.h"
+#import "SLLeftArrow.h"
+#import "SLRightArrow.h"
 
 @interface SLPaperStackView : UIView<SLPaperViewDelegate>{
     NSMutableArray* visibleStack;
@@ -21,6 +23,8 @@
     UIView* stackHolder;
     SLPaperIcon* paperIcon;
     SLPlusIcon* plusIcon;
+    SLLeftArrow* leftArrow;
+    SLRightArrow* rightArrow;
     
 }
 
