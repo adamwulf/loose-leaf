@@ -64,6 +64,12 @@
  * e) call delegates to ask if panning or zoom should even be enabled
  * f) call delegates to ask them to perform any other modifications to the frame before setting it to the page
  * g) notify the delegate when the pan and zoom is complete
+ *
+ * TODO
+ * its possible using 3+ fingers to have the page suddenly fly offscreen
+ * i should possibly cap the speed that the page can move just like i do with scale,
+ * and also should ensure it never goes offscreen. there's no reason to show less than 100px
+ * in any direction (maybe more).
  */
 -(void) panAndScale:(SLPanAndPinchGestureRecognizer*)panGesture{
     CGPoint panDiffLocation = [panGesture translationInView:self];
