@@ -31,6 +31,10 @@
         imgView.clipsToBounds = YES;
         [self addSubview:imgView];
         
+        [self.layer setMasksToBounds:YES ];
+        [self.layer setBorderColor:[[[UIColor blackColor] colorWithAlphaComponent:.5] CGColor ] ];
+        [self.layer setBorderWidth:1.0];
+
         preGestureScale = 1;
         scale = 1;
         
