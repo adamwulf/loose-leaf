@@ -10,20 +10,34 @@
 #import <UIKit/UIGestureRecognizerSubclass.h>
 
 enum {
-    SLBezelDirectionRightBezel  = 1 << 0,
-    SLBezelDirectionLeftBezel   = 1 << 1,
-    SLBezelDirectionTopBezel    = 1 << 2,
-    SLBezelDirectionBottomBezel = 1 << 3
+    SLBezelDirectionFromRightBezel  = 1 << 0,
+    SLBezelDirectionFromLeftBezel   = 1 << 1,
+    SLBezelDirectionFromTopBezel    = 1 << 2,
+    SLBezelDirectionFromBottomBezel = 1 << 3
 };
 typedef NSUInteger SLBezelDirection;
+
+enum {
+    SLBezelDirectionNone = 0,
+    SLBezelDirectionRight  = 1 << 0,
+    SLBezelDirectionLeft   = 1 << 1,
+    SLBezelDirectionUp    = 1 << 2,
+    SLBezelDirectionDown = 1 << 3
+};
+typedef NSUInteger SLBezelPanDirection;
+
+
 
 @interface SLBezelInGestureRecognizer : UIPanGestureRecognizer{
     
     SLBezelDirection bezelDirectionMask;
-    
+    SLBezelPanDirection panDirection;
+    CGPoint lastKnownLocation;
+    CGPoint firstKnownLocation;
 }
 
 @property (nonatomic, assign) SLBezelDirection bezelDirectionMask;
+@property (nonatomic, readonly) SLBezelPanDirection panDirection;
 
 
 @end

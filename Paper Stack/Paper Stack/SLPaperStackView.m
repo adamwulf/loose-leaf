@@ -34,11 +34,11 @@
     rightArrow = [[SLRightArrow alloc] initWithFrame:CGRectMake(680, 530, 46, 46)];
     [self addSubview:rightArrow];
     
-    boundsOfHiddenStack = self.bounds;
-    boundsOfHiddenStack.origin.x += self.bounds.size.width;
+    frameOfHiddenStack = self.bounds;
+    frameOfHiddenStack.origin.x += self.bounds.size.width;
     
     SLBezelInGestureRecognizer* bezelGesture = [[SLBezelInGestureRecognizer alloc] initWithTarget:self action:@selector(bezelIn:)];
-    [bezelGesture setBezelDirectionMask:SLBezelDirectionRightBezel];
+    [bezelGesture setBezelDirectionMask:SLBezelDirectionFromRightBezel];
     [bezelGesture setMinimumNumberOfTouches:2];
     [self addGestureRecognizer:bezelGesture];
     
@@ -46,7 +46,37 @@
 
 
 -(void) bezelIn:(SLBezelInGestureRecognizer*)bezelGesture{
-    debug_NSLog(@"bezel!");
+    SLPaperView* page = [hiddenStack peek];
+    if(!page){
+        debug_NSLog(@"no paper in the hidden stack. need to add one");
+        page = [[SLPaperView alloc] initWithFrame:frameOfHiddenStack];
+        page.delegate = self;
+        [stackHolder addSubview:page];
+        [hiddenStack addToBottomOfStack:page];
+    }
+    CGPoint translation = [bezelGesture translationInView:self];
+    if([self.subviews lastObject] != [hiddenStack peek]){
+        // make sure the top of the hidden stack is the front most view
+        // in our stack ui, so that it'll show up when we scroll it on top
+        // of the visible stack
+        [stackHolder addSubview:[hiddenStack peek]];
+    }
+    
+    if(bezelGesture.state == UIGestureRecognizerStateCancelled ||
+       bezelGesture.state == UIGestureRecognizerStateFailed){
+        [self popPage:page withDelay:0];
+    }else if(bezelGesture.state == UIGestureRecognizerStateEnded &&
+             ((bezelGesture.panDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft)){
+        [self popHiddenStackUntilPage:[self getPageBelow:page]]; 
+    }else if(bezelGesture.state == UIGestureRecognizerStateEnded){
+        [self popPage:page withDelay:0];
+    }else{
+        CGRect newFrame = CGRectMake(frameOfHiddenStack.origin.x + translation.x,
+                                     frameOfHiddenStack.origin.y,
+                                     frameOfHiddenStack.size.width,
+                                     frameOfHiddenStack.size.height);
+        page.frame = newFrame;
+    }
 }
 
 
@@ -75,24 +105,41 @@
  */
 -(void) popStackUntilPage:(SLPaperView*)page{
     NSMutableArray* pagesToAnimate = [NSMutableArray array];
-    if([visibleStack containsObject:page]){
-        while([visibleStack peek] != page){
+    if([visibleStack containsObject:page] || page == nil){
+        while([visibleStack peek] != page && [visibleStack count]){
             [pagesToAnimate addObject:[visibleStack pop]];
         }
     }
     CGFloat delay = 0;
     for(SLPaperView* aPage in pagesToAnimate){
         [hiddenStack push:aPage];
-        [UIView animateWithDuration:0.2 delay:delay options:UIViewAnimationOptionAllowUserInteraction
-                         animations:^(void){
-                             aPage.frame = boundsOfHiddenStack;
-                             aPage.scale = 1;
-                         } completion:^(BOOL finished){
-                             [self insertSubview:aPage belowSubview:[self getPageBelow:aPage]];
-                         }];
+        [self popPage:aPage withDelay:delay];
         delay += .1;
     }
 }
+
+/**
+ * the input is a page in the visible stack,
+ * and we pop all pages above but not including
+ * the input page
+ *
+ * these pages will be pushed over to the invisible stack
+ */
+-(void) popHiddenStackUntilPage:(SLPaperView*)page{
+    NSMutableArray* pagesToAnimate = [NSMutableArray array];
+    if([hiddenStack containsObject:page] || page == nil){
+        while([hiddenStack peek] != page && [hiddenStack count]){
+            [pagesToAnimate addObject:[hiddenStack pop]];
+        }
+    }
+    CGFloat delay = 0;
+    for(SLPaperView* aPage in pagesToAnimate){
+        [visibleStack push:aPage];
+        [self bouncePageToFullScreen:aPage withDelay:delay];
+        delay += .1;
+    }
+}
+
 
 -(SLPaperView*) getPageBelow:(SLPaperView*)page{
     if([visibleStack containsObject:page]){
@@ -157,7 +204,7 @@
     if(page.scale <= 1){
         //
         // bounce it back to full screen
-        [self bouncePageToFullScreen:page];
+        [self bouncePageToFullScreen:page withDelay:0];
     }else{
         //
         // the scale is larger than 1, so we may need
@@ -282,8 +329,8 @@
  *
  * this animation is interruptable
  */
--(void) bouncePageToFullScreen:(SLPaperView*)page{
-    [UIView animateWithDuration:.15 delay:0 options:UIViewAnimationOptionAllowUserInteraction
+-(void) bouncePageToFullScreen:(SLPaperView*)page withDelay:(CGFloat) delay{
+    [UIView animateWithDuration:.15 delay:delay options:UIViewAnimationOptionAllowUserInteraction
                      animations:^(void){
                          page.scale = 1;
                          CGRect bounceFrame = self.bounds;
@@ -300,6 +347,22 @@
                                                   page.scale = 1;
                                               } completion:nil];
                          }
+                     }];
+}
+
+
+
+/**
+ * this will animate a page onto the hidden stack
+ * after the input delay, if any
+ */
+-(void) popPage:(SLPaperView*)page withDelay:(CGFloat)delay{
+    [UIView animateWithDuration:0.2 delay:delay options:UIViewAnimationOptionAllowUserInteraction
+                     animations:^(void){
+                         page.frame = frameOfHiddenStack;
+                         page.scale = 1;
+                     } completion:^(BOOL finished){
+                         [self insertSubview:page belowSubview:[self getPageBelow:page]];
                      }];
 }
 
