@@ -14,12 +14,6 @@
 
 @synthesize scale;
 
-CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2)
-{
-    CGFloat dx = point2.x - point1.x;
-    CGFloat dy = point2.y - point1.y;
-    return sqrt(dx*dx + dy*dy );
-};
 
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
     return NO;
@@ -53,9 +47,8 @@ CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2)
 
 -(CGFloat) distanceBetweenTouches:(NSSet*) touches{
     if([touches count] == 2){
-        NSEnumerator* enumerator = [touches objectEnumerator];
-        UITouch* touch1 = [enumerator nextObject];
-        UITouch* touch2 = [enumerator nextObject];
+        UITouch* touch1 = [[touches allObjects] objectAtIndex:0];
+        UITouch* touch2 = [[touches allObjects] objectAtIndex:1];
         CGPoint initialPoint1 = [touch1 locationInView:self.view.superview];
         CGPoint initialPoint2 = [touch2 locationInView:self.view.superview];
         return DistanceBetweenTwoPoints(initialPoint1, initialPoint2);

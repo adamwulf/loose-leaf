@@ -16,6 +16,7 @@
 #define debug_NSLog(format, ...)
 #endif
 
+CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
 
 
 #endif

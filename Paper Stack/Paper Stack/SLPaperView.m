@@ -9,12 +9,13 @@
 #import "SLPaperView.h"
 #import <QuartzCore/QuartzCore.h>
 #import "SLPanAndPinchGestureRecognizer.h"
-
+#import "NSArray+MapReduce.h"
 
 @implementation SLPaperView
 
 @synthesize scale;
 @synthesize delegate;
+
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -64,15 +65,18 @@
  * g) notify the delegate when the pan and zoom is complete
  */
 -(void) panAndScale:(SLPanAndPinchGestureRecognizer*)panGesture{
-    CGPoint lastLocationInSuperview = [panGesture locationInView:self.superview];
+    CGPoint panDiffLocation = [panGesture translationInView:self];
+//    CGPoint lastLocationInSuperview = [panGesture locationInView:self.superview];
     CGPoint lastLocationInSelf = [panGesture locationInView:self];
+    CGPoint velocity = [self calculateVelocityOfPanGesture:panGesture withTranslation:panDiffLocation];
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
        panGesture.state == UIGestureRecognizerStateEnded ||
        panGesture.state == UIGestureRecognizerStateFailed){
         // exit when we're done and notify our delegate
         [self.delegate finishedPanningAndScalingPage:self
                                            fromFrame:frameOfPageAtBeginningOfGesture
-                                             toFrame:self.frame];
+                                             toFrame:self.frame
+                                        withVelocity:velocity];
         return;
     }else if(panGesture.numberOfTouches == 1){
         //
@@ -117,20 +121,24 @@
     }
     
     
-    debug_NSLog(@"new scale: %f", preGestureScale * panGesture.scale);
+//    debug_NSLog(@"new scale: %f", preGestureScale * panGesture.scale);
     
     //
     // to track panning, we collect the first location of the pan gesture, and calculate the offset
     // of the current location of the gesture. that distance is the amount moved for the pan.
-    panDiffLocation = CGPointMake(lastLocationInSuperview.x - firstLocationOfPanGestureInSuperView.x, lastLocationInSuperview.y - firstLocationOfPanGestureInSuperView.y);
+//    panDiffLocation = CGPointMake(lastLocationInSuperview.x - firstLocationOfPanGestureInSuperView.x, lastLocationInSuperview.y - firstLocationOfPanGestureInSuperView.y);
     
     if([self.delegate allowsScaleForPage:self]){
         
         CGFloat gestureScale = panGesture.scale;
+        CGFloat targetScale = preGestureScale * gestureScale;
+        if(targetScale > 1){
+            targetScale = roundf(targetScale * 2) / 2;
+        }
         // only allow up to .05 change in scale at a time
-        if(preGestureScale * gestureScale < scale - .05){
+        if(targetScale < scale - .05){
             gestureScale = (scale - .05) / preGestureScale;
-        }else if(preGestureScale * gestureScale > scale + .05){
+        }else if(targetScale > scale + .05){
             gestureScale = (scale + .05) / preGestureScale;
         }
         
@@ -139,19 +147,28 @@
         // if i begin scaling an already zoomed in page, the gesture's default is the re-begin the zoom at 1.0x
         // even though it may be 2x of our page size. so we need to remember the current scale in preGestureScale
         // and multiply that by the gesture's scale value. this gives us the scale value as a factor of the superview
-        if(preGestureScale * gestureScale > 2.0){
+        if(targetScale > 2.5){
             // 2.0 is the maximum
-            scale = 2.0;
-        }else if(preGestureScale * gestureScale < 0.7){
-            // 0.7 is zoom minimum
-            scale = 0.7;
-        }else if(ABS((float)(preGestureScale * gestureScale - scale)) > .01){
+            scale = 2.5;
+        }else if(targetScale < 0.75){
+            // 0.75 is zoom minimum
+            scale = 0.75;
+        }else if(ABS((float)(targetScale - scale)) > .01){
             //
             // TODO
             // only update the scale if its greater than a 1% difference of the previous
             // scale. the goal here is to optimize re-draws for the view, but this should be
             // validated when the full page contents are implemented.
-            scale = preGestureScale * gestureScale;
+            if(scale < targetScale && scale > targetScale - .05){
+                scale = targetScale;
+            }else if(scale < targetScale){
+                scale += (targetScale - scale) / 5;
+            }else if(scale > targetScale && scale < targetScale + .05){
+                scale = targetScale;
+            }else if(scale > targetScale){
+                scale -= (scale - targetScale) / 5;
+            }
+//            scale = targetScale;
         }
     }
     
@@ -198,11 +215,51 @@
 }
 
 
--(CGFloat) scale{
-    if(scale != (self.layer.frame.size.width / self.superview.layer.frame.size.width)){
-        debug_NSLog(@"bad scale: %f vs %f", scale, (self.layer.frame.size.width / self.superview.layer.frame.size.width));
+
+
+/**
+ * this function processes each step of the pan gesture, and uses
+ * it to caclulate the velocity when the user lifts their finger.
+ *
+ * we use this to have the paper slide when the user swipes quickly
+ */
+- (CGPoint)calculateVelocityOfPanGesture:(UIPanGestureRecognizer *)sender withTranslation:(CGPoint)translate
+{
+//    CGPoint translate = [sender translationInView:self];
+    static NSTimeInterval lastTime;
+    static NSTimeInterval currTime;
+    static CGPoint currTranslate;
+    static CGPoint lastTranslate;
+    
+    if (sender.state == UIGestureRecognizerStateBegan)
+    {
+        currTime = [NSDate timeIntervalSinceReferenceDate];
+        currTranslate = translate;
     }
-    return scale;
+    else if (sender.state == UIGestureRecognizerStateChanged)
+    {
+        lastTime = currTime;
+        lastTranslate = currTranslate;
+        currTime = [NSDate timeIntervalSinceReferenceDate];
+        currTranslate = translate;
+    }   
+    else if (sender.state == UIGestureRecognizerStateEnded)
+    {
+        if (lastTime)
+        {
+            NSTimeInterval seconds = [NSDate timeIntervalSinceReferenceDate] - lastTime;
+            if (seconds){
+                return CGPointMake((translate.x - lastTranslate.x) / seconds, (translate.y - lastTranslate.y) / seconds);
+            }
+        }
+        /*
+         // let's calculate where that flick would take us this far in the future
+        float inertiaSeconds = 1.0;
+        CGPoint final = CGPointMake(translate.x + swipeVelocity.x * inertiaSeconds, translate.y + swipeVelocity.y * inertiaSeconds);
+         */
+        
+    }
+    return CGPointZero;
 }
 
 

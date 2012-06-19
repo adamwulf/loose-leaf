@@ -22,7 +22,6 @@
     CGPoint firstLocationOfPanGestureInSuperView;
     CGRect frameOfPageAtBeginningOfGesture;
     NSInteger lastNumberOfTouchesForPanGesture;
-    CGPoint panDiffLocation;
 }
 
 @property (nonatomic, assign) NSObject<SLPaperViewDelegate>* delegate;

@@ -25,7 +25,7 @@
     hiddenStack = [[NSMutableArray array] retain]; // use NSMutableArray stack additions
     stackHolder = [[UIView alloc] initWithFrame:self.bounds];
     [self addSubview:stackHolder];
-    paperIcon = [[SLPaperIcon alloc] initWithFrame:CGRectMake(400, 100, 100, 100)];
+    paperIcon = [[SLPaperIcon alloc] initWithFrame:CGRectMake(200, 100, 100, 100)];
     [self addSubview:paperIcon];
 }
 
@@ -72,30 +72,43 @@
     return toFrame;
 }
 
--(void) finishedPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
+-(void) finishedPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withVelocity:(CGPoint)velocity{
     if(page.scale <= 1){
-        // bounce it back to full screen
         //
-        // 
-        [UIView animateWithDuration:.15 delay:0 options:UIViewAnimationOptionAllowUserInteraction
-                         animations:^(void){
-                             page.scale = 1;
-                             CGRect bounceFrame = self.bounds;
-                             bounceFrame.origin.x = bounceFrame.origin.x-10;
-                             bounceFrame.origin.y = bounceFrame.origin.y-10;
-                             bounceFrame.size.width = bounceFrame.size.width+10*2;
-                             bounceFrame.size.height = bounceFrame.size.height+10*2;
-                             page.frame = bounceFrame;
-                         } completion:^(BOOL finished){
-                             if(finished){
-                                 [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionAllowUserInteraction
-                                                  animations:^(void){
-                                                      page.frame = self.bounds;
-                                                      page.scale = 1;
-                                                  } completion:nil];
-                             }
-                         }];
+        // bounce it back to full screen
+        [self bouncePageToFullScreen:page];
     }else{
+        //
+        // the scale is larger than 1, so we may need
+        // to slide the page with some inertia. if the page is
+        // to far from an edge, then we need to move it to another stack.
+        // if its not far enough to move, then we may need to bounce it
+        // back to an edge.
+        float inertiaSeconds = .3;
+        CGPoint finalOrigin = CGPointMake(toFrame.origin.x + velocity.x * inertiaSeconds, toFrame.origin.y + velocity.y * inertiaSeconds);
+        CGRect intertialFrame = toFrame;
+        intertialFrame.origin = finalOrigin;
+
+        
+        if([self shouldInterialSlideThePage:page withFrame:intertialFrame]){
+            
+            [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut animations:^(void){
+                page.frame = intertialFrame;
+            } completion:nil];
+
+        }else if([self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
+            
+        }else if([self shouldPushPageOntoVisibleStack:page withFrame:toFrame]){
+            
+        }else{
+            // bounce
+            [self bouncePageToEdge:page toFrame:toFrame intertialFrame:intertialFrame];
+        }
+        
+        
+        
+        
+/*
         CGFloat newX = toFrame.origin.x;
         CGFloat newY = toFrame.origin.y;
         if(newX > 0) newX = 0;
@@ -113,7 +126,127 @@
                 page.frame = toFrame;
             }];
         }
+ */
     }
+}
+
+
+
+
+#pragma mark - Page Animation and Navigation Helpers
+
+-(BOOL) shouldInterialSlideThePage:(SLPaperView*)page withFrame:(CGRect)frame{
+    if(frame.origin.y <= 0 && frame.origin.y + frame.size.height > self.superview.frame.size.height &&
+       frame.origin.x <= 0 && frame.origin.x + frame.size.width > self.superview.frame.size.width){
+        return YES;
+    }
+    return NO;
+}
+
+-(BOOL) shouldPopPageFromVisibleStack:(SLPaperView*)page withFrame:(CGRect)frame{
+    return NO;
+}
+-(BOOL) shouldPushPageOntoVisibleStack:(SLPaperView*)page withFrame:(CGRect)frame{
+    return NO;
+}
+
+
+#pragma mark - Page Animations
+
+
+-(void) bouncePageToEdge:(SLPaperView*)page toFrame:(CGRect)toFrame intertialFrame:(CGRect)inertialFrame{
+    
+    
+    
+    //
+    //
+    // first, check to see if the frame is already out of bounds
+    // the toFrame represents where the paper is pre-inertia, so if
+    // the toFrame is wrong, then just animate it back to an edge straight away
+    CGRect newToFrame = toFrame;
+    if(toFrame.origin.x > 0){
+        newToFrame.origin.x = 0;
+    }
+    if(toFrame.origin.y > 0){
+        newToFrame.origin.y = 0;
+    }
+    if(toFrame.origin.x + toFrame.size.width < self.superview.frame.size.width){
+        newToFrame.origin.x = self.superview.frame.size.width - toFrame.size.width;
+    }
+    if(toFrame.origin.y + toFrame.size.height < self.superview.frame.size.height){
+        newToFrame.origin.y = self.superview.frame.size.height - toFrame.size.height;
+    }
+    if(!CGRectEqualToRect(toFrame, newToFrame)){
+        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut animations:^(void){
+            page.frame = newToFrame;
+        } completion:nil];
+        return;
+    }
+    
+    //
+    // ok, the paper is currently in the correct view, but the inertia
+    // will carry it to an invalid location. for this, lets get the inertia
+    // to carry it a 10px difference, then bounce it back to the edige
+    CGRect newInertiaFrame = inertialFrame;
+    CGRect postInertialFrame = inertialFrame;
+    if(inertialFrame.origin.x > 10){
+        postInertialFrame.origin.x = 0;
+        newInertiaFrame.origin.x = 10;
+    }
+    if(inertialFrame.origin.y > 10){
+        postInertialFrame.origin.y = 0;
+        newInertiaFrame.origin.y = 10;
+    }
+    if(inertialFrame.origin.x + inertialFrame.size.width < self.superview.frame.size.width - 10){
+        postInertialFrame.origin.x = self.superview.frame.size.width - toFrame.size.width;
+        newInertiaFrame.origin.x = postInertialFrame.origin.x - 10;
+        
+    }
+    if(inertialFrame.origin.y + inertialFrame.size.height < self.superview.frame.size.height - 10){
+        postInertialFrame.origin.y = self.superview.frame.size.height - toFrame.size.height;
+        newInertiaFrame.origin.y = postInertialFrame.origin.y - 10;
+    }
+    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut animations:^(void){
+        page.frame = newInertiaFrame;
+    } completion:^(BOOL finished){
+            if(finished){
+                [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionAllowUserInteraction
+                                 animations:^(void){
+                                     page.frame = postInertialFrame;
+                                 } completion:nil];
+            }
+        }];
+
+}
+
+
+/**
+ * this animation will zoom the page back to scale of 1 and match it
+ * perfect to the screensize.
+ *
+ * it'll also add a small bounce to the animation for effect
+ *
+ * this animation is interruptable
+ */
+-(void) bouncePageToFullScreen:(SLPaperView*)page{
+    [UIView animateWithDuration:.15 delay:0 options:UIViewAnimationOptionAllowUserInteraction
+                     animations:^(void){
+                         page.scale = 1;
+                         CGRect bounceFrame = self.bounds;
+                         bounceFrame.origin.x = bounceFrame.origin.x-10;
+                         bounceFrame.origin.y = bounceFrame.origin.y-10;
+                         bounceFrame.size.width = bounceFrame.size.width+10*2;
+                         bounceFrame.size.height = bounceFrame.size.height+10*2;
+                         page.frame = bounceFrame;
+                     } completion:^(BOOL finished){
+                         if(finished){
+                             [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionAllowUserInteraction
+                                              animations:^(void){
+                                                  page.frame = self.bounds;
+                                                  page.scale = 1;
+                                              } completion:nil];
+                         }
+                     }];
 }
 
 
