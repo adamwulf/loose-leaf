@@ -25,8 +25,10 @@
     hiddenStack = [[NSMutableArray array] retain]; // use NSMutableArray stack additions
     stackHolder = [[UIView alloc] initWithFrame:self.bounds];
     [self addSubview:stackHolder];
-    paperIcon = [[SLPaperIcon alloc] initWithFrame:CGRectMake(200, 100, 100, 100)];
+    paperIcon = [[SLPaperIcon alloc] initWithFrame:CGRectMake(600, 460, 80, 80)];
     [self addSubview:paperIcon];
+    plusIcon = [[SLPlusIcon alloc] initWithFrame:CGRectMake(680, 476, 46, 46)];
+    [self addSubview:plusIcon];
     boundsOfHiddenStack = self.bounds;
     boundsOfHiddenStack.origin.x += self.bounds.size.width;
 }
