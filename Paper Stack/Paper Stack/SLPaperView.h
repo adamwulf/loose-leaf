@@ -22,9 +22,12 @@
     CGPoint firstLocationOfPanGestureInSuperView;
     CGRect frameOfPageAtBeginningOfGesture;
     NSInteger lastNumberOfTouchesForPanGesture;
+
+    BOOL isBeingPannedAndZoomed;
 }
 
 @property (nonatomic, assign) NSObject<SLPaperViewDelegate>* delegate;
 @property (nonatomic, assign) CGFloat scale;
+@property (nonatomic, readonly) BOOL isBeingPannedAndZoomed;
 
 @end

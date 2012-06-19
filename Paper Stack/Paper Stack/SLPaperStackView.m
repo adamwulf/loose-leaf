@@ -73,6 +73,30 @@
 }
 
 -(void) finishedPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withVelocity:(CGPoint)velocity{
+    
+    if(page != [visibleStack peek]){
+        SLPaperView* topPage = [visibleStack peek];
+        if([topPage isBeingPannedAndZoomed]){
+            return;
+        }
+    }else{
+        // loop through all pages in stack
+        // an pop the ones that aren't in view back to where they should be
+        for(SLPaperView* page in visibleStack){
+            if(page != [visibleStack peek]){
+                if([page isBeingPannedAndZoomed]){
+                    // TODO
+                    debug_NSLog(@"pop stack until i see this page");
+                }else{
+                    if(!CGRectEqualToRect(page.frame, self.bounds)){
+                        debug_NSLog(@"moving a page back to where it should be");
+                        page.frame = self.bounds;
+                    }
+                }
+            }
+        }
+    }
+    
     if(page.scale <= 1){
         //
         // bounce it back to full screen

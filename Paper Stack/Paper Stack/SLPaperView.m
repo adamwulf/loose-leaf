@@ -15,6 +15,7 @@
 
 @synthesize scale;
 @synthesize delegate;
+@synthesize isBeingPannedAndZoomed;
 
 
 - (id)initWithFrame:(CGRect)frame
@@ -77,6 +78,7 @@
                                            fromFrame:frameOfPageAtBeginningOfGesture
                                              toFrame:self.frame
                                         withVelocity:velocity];
+        isBeingPannedAndZoomed = NO;
         return;
     }else if(panGesture.numberOfTouches == 1){
         //
@@ -85,9 +87,11 @@
         // don't continue the gesture at all, just wait till they finish it proper or re-put
         // that 2nd touch down
         lastNumberOfTouchesForPanGesture = 1;
+        isBeingPannedAndZoomed = NO;
         return;
     }else if(lastNumberOfTouchesForPanGesture == 1 ||
              panGesture.state == UIGestureRecognizerStateBegan){
+        isBeingPannedAndZoomed = YES;
         //
         // if the user had 1 finger down and re-touches with the 2nd finger, then this
         // will be called as if it was a "new" gesture. this lets the pan and zoom start
@@ -120,8 +124,6 @@
         return;
     }
     
-    
-//    debug_NSLog(@"new scale: %f", preGestureScale * panGesture.scale);
     
     //
     // to track panning, we collect the first location of the pan gesture, and calculate the offset
