@@ -47,15 +47,6 @@
 }
 
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
-
 
 
 
@@ -72,7 +63,10 @@
     return toFrame;
 }
 
--(void) finishedPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withVelocity:(CGPoint)velocity{
+-(void) finishedPanningAndScalingPage:(SLPaperView*)page
+                            fromFrame:(CGRect)fromFrame
+                              toFrame:(CGRect)toFrame
+                         withVelocity:(CGPoint)velocity{
     
     if(page != [visibleStack peek]){
         SLPaperView* topPage = [visibleStack peek];
@@ -128,29 +122,6 @@
             // bounce
             [self bouncePageToEdge:page toFrame:toFrame intertialFrame:intertialFrame];
         }
-        
-        
-        
-        
-/*
-        CGFloat newX = toFrame.origin.x;
-        CGFloat newY = toFrame.origin.y;
-        if(newX > 0) newX = 0;
-        if(newY > 0) newY = 0;
-        if(newX + toFrame.size.width < self.frame.size.width){
-            newX = self.frame.size.width - toFrame.size.width;
-        }
-        if(newY + toFrame.size.height < self.frame.size.height){
-            newY = self.frame.size.height - toFrame.size.height;
-        }
-        if(newX != toFrame.origin.x || newY != toFrame.origin.y){
-            toFrame.origin.x = newX;
-            toFrame.origin.y = newY;
-            [UIView animateWithDuration:0.15 animations:^(void){
-                page.frame = toFrame;
-            }];
-        }
- */
     }
 }
 
@@ -179,9 +150,6 @@
 
 
 -(void) bouncePageToEdge:(SLPaperView*)page toFrame:(CGRect)toFrame intertialFrame:(CGRect)inertialFrame{
-    
-    
-    
     //
     //
     // first, check to see if the frame is already out of bounds
