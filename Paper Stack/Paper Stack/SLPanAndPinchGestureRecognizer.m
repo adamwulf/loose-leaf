@@ -7,6 +7,8 @@
 //
 
 #import "SLPanAndPinchGestureRecognizer.h"
+#import <QuartzCore/QuartzCore.h>
+#import "Constants.h"
 
 @implementation SLPanAndPinchGestureRecognizer
 
@@ -28,6 +30,12 @@ CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2)
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    CGRect lFrame = [self.view.layer.presentationLayer frame];
+    CGRect vFrame = self.view.frame;
+    if(!CGRectEqualToRect(lFrame, vFrame)){
+        self.view.frame = lFrame;
+    }
+    [self.view.layer removeAllAnimations];
     [super touchesBegan:touches withEvent:event];
 }
 

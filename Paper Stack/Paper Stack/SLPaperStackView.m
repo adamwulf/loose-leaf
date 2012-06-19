@@ -75,19 +75,44 @@
 -(void) finishedPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
     if(page.scale <= 1){
         // bounce it back to full screen
-        [UIView animateWithDuration:0.15 animations:^(void){
-            CGRect bounceFrame = self.bounds;
-            bounceFrame.origin.x = bounceFrame.origin.x-10;
-            bounceFrame.origin.y = bounceFrame.origin.y-10;
-            bounceFrame.size.width = bounceFrame.size.width+10*2;
-            bounceFrame.size.height = bounceFrame.size.height+10*2;
-            page.frame = bounceFrame;
-        } completion:^(BOOL finished){
+        //
+        // 
+        [UIView animateWithDuration:.15 delay:0 options:UIViewAnimationOptionAllowUserInteraction
+                         animations:^(void){
+                             page.scale = 1;
+                             CGRect bounceFrame = self.bounds;
+                             bounceFrame.origin.x = bounceFrame.origin.x-10;
+                             bounceFrame.origin.y = bounceFrame.origin.y-10;
+                             bounceFrame.size.width = bounceFrame.size.width+10*2;
+                             bounceFrame.size.height = bounceFrame.size.height+10*2;
+                             page.frame = bounceFrame;
+                         } completion:^(BOOL finished){
+                             if(finished){
+                                 [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionAllowUserInteraction
+                                                  animations:^(void){
+                                                      page.frame = self.bounds;
+                                                      page.scale = 1;
+                                                  } completion:nil];
+                             }
+                         }];
+    }else{
+        CGFloat newX = toFrame.origin.x;
+        CGFloat newY = toFrame.origin.y;
+        if(newX > 0) newX = 0;
+        if(newY > 0) newY = 0;
+        if(newX + toFrame.size.width < self.frame.size.width){
+            newX = self.frame.size.width - toFrame.size.width;
+        }
+        if(newY + toFrame.size.height < self.frame.size.height){
+            newY = self.frame.size.height - toFrame.size.height;
+        }
+        if(newX != toFrame.origin.x || newY != toFrame.origin.y){
+            toFrame.origin.x = newX;
+            toFrame.origin.y = newY;
             [UIView animateWithDuration:0.15 animations:^(void){
-                page.frame = self.bounds;
-                page.scale = 1;
+                page.frame = toFrame;
             }];
-        }];
+        }
     }
 }
 

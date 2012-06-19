@@ -43,7 +43,7 @@
                                                initWithTarget:self 
                                                       action:@selector(panAndScale:)] autorelease];
         [panGesture setMinimumNumberOfTouches:2];
-        [panGesture setMaximumNumberOfTouches:2];
+//        [panGesture setMaximumNumberOfTouches:2];
         [self addGestureRecognizer:panGesture];
     }
     return self;
@@ -108,7 +108,7 @@
         // ====================================================================================
         // remember the scale of the view before the gesture begins. we'll normalize the gesture's
         // scale value to the superview location by multiplying it to the page's current scale
-        preGestureScale = scale;
+        preGestureScale = self.scale;
         // the normalized location of the gesture is (0 < x < 1, 0 < y < 1).
         // this lets us locate where the gesture should be in the view from any width or height
         normalizedLocationOfScale = CGPointMake(lastLocationInSelf.x / self.frame.size.width, 
@@ -116,30 +116,42 @@
         return;
     }
     
+    
+    debug_NSLog(@"new scale: %f", preGestureScale * panGesture.scale);
+    
     //
     // to track panning, we collect the first location of the pan gesture, and calculate the offset
     // of the current location of the gesture. that distance is the amount moved for the pan.
     panDiffLocation = CGPointMake(lastLocationInSuperview.x - firstLocationOfPanGestureInSuperView.x, lastLocationInSuperview.y - firstLocationOfPanGestureInSuperView.y);
     
     if([self.delegate allowsScaleForPage:self]){
+        
+        CGFloat gestureScale = panGesture.scale;
+        // only allow up to .05 change in scale at a time
+        if(preGestureScale * gestureScale < scale - .05){
+            gestureScale = (scale - .05) / preGestureScale;
+        }else if(preGestureScale * gestureScale > scale + .05){
+            gestureScale = (scale + .05) / preGestureScale;
+        }
+        
         //
         // to track scaling, the scale value has to be a value between .7 and 2.0x of the /superview/'s size
         // if i begin scaling an already zoomed in page, the gesture's default is the re-begin the zoom at 1.0x
         // even though it may be 2x of our page size. so we need to remember the current scale in preGestureScale
         // and multiply that by the gesture's scale value. this gives us the scale value as a factor of the superview
-        if(preGestureScale * panGesture.scale > 2.0){
+        if(preGestureScale * gestureScale > 2.0){
             // 2.0 is the maximum
             scale = 2.0;
-        }else if(preGestureScale * panGesture.scale < 0.7){
+        }else if(preGestureScale * gestureScale < 0.7){
             // 0.7 is zoom minimum
             scale = 0.7;
-        }else if(ABS((float)(preGestureScale * panGesture.scale - scale)) > .01){
+        }else if(ABS((float)(preGestureScale * gestureScale - scale)) > .01){
             //
             // TODO
             // only update the scale if its greater than a 1% difference of the previous
             // scale. the goal here is to optimize re-draws for the view, but this should be
             // validated when the full page contents are implemented.
-            scale = preGestureScale * panGesture.scale;
+            scale = preGestureScale * gestureScale;
         }
     }
     
@@ -183,6 +195,14 @@
     // now we're ready, set the frame!
     self.frame = fr;
     
+}
+
+
+-(CGFloat) scale{
+    if(scale != (self.layer.frame.size.width / self.superview.layer.frame.size.width)){
+        debug_NSLog(@"bad scale: %f vs %f", scale, (self.layer.frame.size.width / self.superview.layer.frame.size.width));
+    }
+    return scale;
 }
 
 
