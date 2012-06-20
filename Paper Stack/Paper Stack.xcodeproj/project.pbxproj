@@ -40,6 +40,7 @@
 		66DCFBCD1582BAED00B4918C /* SLPaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBCC1582BAED00B4918C /* SLPaperView.m */; };
 		66DCFBD01582BC0E00B4918C /* img01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 66DCFBCF1582BC0E00B4918C /* img01.jpg */; };
 		66DCFBDF1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBDE1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.m */; };
+		66E88A371591853E001A6EBF /* SLPapersIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E88A361591853E001A6EBF /* SLPapersIcon.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +108,8 @@
 		66DCFBDB1582BE3900B4918C /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		66DCFBDD1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPanAndPinchGestureRecognizer.h; sourceTree = "<group>"; };
 		66DCFBDE1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPanAndPinchGestureRecognizer.m; sourceTree = "<group>"; };
+		66E88A351591853E001A6EBF /* SLPapersIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPapersIcon.h; sourceTree = "<group>"; };
+		66E88A361591853E001A6EBF /* SLPapersIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPapersIcon.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +154,8 @@
 			children = (
 				660E1DAE158FC7DB0001DA12 /* SLPaperIcon.h */,
 				660E1DAF158FC7DB0001DA12 /* SLPaperIcon.m */,
+				66E88A351591853E001A6EBF /* SLPapersIcon.h */,
+				66E88A361591853E001A6EBF /* SLPapersIcon.m */,
 				664F4137159063F8006F8B09 /* SLPlusIcon.h */,
 				664F4138159063F8006F8B09 /* SLPlusIcon.m */,
 				664F413B1590661F006F8B09 /* SLRightArrow.h */,
@@ -403,6 +408,7 @@
 				66C6FF80159100DF00C5BFDE /* SLBezelInGestureRecognizer.m in Sources */,
 				66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */,
 				66A3AF951591724200F8A7A6 /* SLBezelOutPanPinchGestureRecognizer.m in Sources */,
+				66E88A371591853E001A6EBF /* SLPapersIcon.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

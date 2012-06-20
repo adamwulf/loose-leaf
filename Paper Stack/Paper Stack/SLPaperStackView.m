@@ -22,18 +22,27 @@
 }
 
 -(void) awakeFromNib{
+    setOfPagesBeingPanned = [[NSMutableSet alloc] init]; // use this as a quick cache of pages being panned
     visibleStack = [[NSMutableArray array] retain]; // use NSMutableArray stack additions
     hiddenStack = [[NSMutableArray array] retain]; // use NSMutableArray stack additions
     stackHolder = [[UIView alloc] initWithFrame:self.bounds];
     [self addSubview:stackHolder];
+    papersIcon = [[SLPapersIcon alloc] initWithFrame:CGRectMake(600, 460, 80, 80)];
+    [self addSubview:papersIcon];
     paperIcon = [[SLPaperIcon alloc] initWithFrame:CGRectMake(600, 460, 80, 80)];
     [self addSubview:paperIcon];
-    plusIcon = [[SLPlusIcon alloc] initWithFrame:CGRectMake(680, 476, 46, 46)];
+    plusIcon = [[SLPlusIcon alloc] initWithFrame:CGRectMake(540, 476, 46, 46)];
     [self addSubview:plusIcon];
-    leftArrow = [[SLLeftArrow alloc] initWithFrame:CGRectMake(680, 420, 46, 46)];
+    leftArrow = [[SLLeftArrow alloc] initWithFrame:CGRectMake(540, 476, 46, 46)];
     [self addSubview:leftArrow];
-    rightArrow = [[SLRightArrow alloc] initWithFrame:CGRectMake(680, 530, 46, 46)];
+    rightArrow = [[SLRightArrow alloc] initWithFrame:CGRectMake(680, 476, 46, 46)];
     [self addSubview:rightArrow];
+    
+    papersIcon.alpha = 0;
+    paperIcon.alpha = 0;
+    leftArrow.alpha = 0;
+    rightArrow.alpha = 0;
+    plusIcon.alpha = 0;
     
     frameOfHiddenStack = self.bounds;
     frameOfHiddenStack.origin.x += self.bounds.size.width;
@@ -184,66 +193,146 @@
 
 #pragma mark - SLPaperViewDelegate
 
+/**
+ * let's only allow scaling the top most page
+ */
 -(BOOL) allowsScaleForPage:(SLPaperView*)page{
     return [visibleStack peek] == page;
 }
 
--(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
-    if(page == [visibleStack peek]){
-        
+/**
+ * we need to update the icons that are visible
+ * depending on the locations of the pages that are
+ * currently being panned and scaled
+ */
+-(void) updateIconAnimations{
+    BOOL showLeftArrow = NO;
+    BOOL showRightArrow = NO;
+    for(SLPaperView* page in setOfPagesBeingPanned){
+        if(page == [visibleStack peek]){
+            if(page.frame.origin.x < -380 && page.frame.origin.x + page.frame.size.width < self.frame.size.width - 200){
+                showLeftArrow = YES;
+            }
+        }
     }
+    if((showLeftArrow || showRightArrow) && 
+       ((!paperIcon.alpha && [setOfPagesBeingPanned count] == 1) ||
+        (!papersIcon.alpha && [setOfPagesBeingPanned count] > 1))){
+        [UIView animateWithDuration:0.3 animations:^{
+            if([setOfPagesBeingPanned count] > 1){
+                //
+                // user is holding the top page
+                // plus at least 1 other
+                papersIcon.alpha = 1;
+                paperIcon.alpha = 0;
+                plusIcon.alpha = 0;
+                leftArrow.alpha = 0;
+                rightArrow.alpha = 1;
+                return;
+            }
+
+            //
+            // ok, we're dealing with only
+            // panning teh top most page
+            papersIcon.alpha = 0;
+            paperIcon.alpha = 1;
+
+            if(showLeftArrow && [hiddenStack count]){
+                leftArrow.alpha = 1;
+                plusIcon.alpha = 0;
+            }else if(showLeftArrow){
+                leftArrow.alpha = 0;
+                plusIcon.alpha = 1;
+            }else if(!showLeftArrow){
+                leftArrow.alpha = 0;
+                plusIcon.alpha = 0;
+            }
+            if(showRightArrow){
+                rightArrow.alpha = 1;
+            }else{
+                rightArrow.alpha = 0;
+            }
+        }];
+    }else if(!showLeftArrow && !showRightArrow && (paperIcon.alpha || papersIcon.alpha)){
+        [UIView animateWithDuration:0.3 animations:^{
+            papersIcon.alpha = 0;
+            paperIcon.alpha = 0;
+            leftArrow.alpha = 0;
+            plusIcon.alpha = 0;
+            rightArrow.alpha = 0;
+        }];
+    }
+}
+
+/**
+ * during a pan, we'll need to show different icons
+ * depending on where they drag a page
+ */
+-(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
+    [setOfPagesBeingPanned addObject:page];
+    [self updateIconAnimations];
     return toFrame;
 }
 
-
+/**
+ * the user has completed their panning / scaling gesture
+ * on a page. they may still be panning / scaling other pages,
+ * so this function will take into account two scenarios:
+ *
+ * a) user bezel'd a page
+ * b) user is done with top page
+ * c) user is done with non-top page
+ */
 -(void) finishedPanningAndScalingPage:(SLPaperView*)page
                             intoBezel:(SLBezelDirection)bezelDirection
                             fromFrame:(CGRect)fromFrame
                               toFrame:(CGRect)toFrame
                          withVelocity:(CGPoint)velocity{
 
-    //
-    // first, check if they panned the page into the bezel
+    [setOfPagesBeingPanned removeObject:page];
+    [self updateIconAnimations];
     if((bezelDirection & SLBezelDirectionRight) == SLBezelDirectionRight){
+        //
+        // a) first, check if they panned the page into the bezel
         [self sendPageToHiddenStack:page];
         return;
-    }
-
-    //
-    // next, check if the page is the top of the visible stack or not
-    if(page == [visibleStack peek]){
+    }else if(page != [visibleStack peek]){
         //
-        // if they finished panning the page on the top of the stack,
-        // then we need to reset any pages that they had moved below
-        // that top most page.
-        //
-        //
-        // if they are still panning and scaling a page that's /below/
-        // the top page they just released, then we need to pop every
-        // page up to that page they're still holding on to.
-        //
-        // otherwise, we need to just reset all pages in the stack
-        // to be neatly stacked instead of spread out wherever the user
-        // may have put them
-        for(SLPaperView* page in [[visibleStack copy] autorelease]){
-            if(page != [visibleStack peek]){
-                if([page isBeingPannedAndZoomed]){
-                    // TODO
-                    //                    debug_NSLog(@"pop stack until i see this page");
-                    [self popStackUntilPage:page];
-                    return;
-                }else{
-                    if(!CGRectEqualToRect(page.frame, self.bounds)){
-                        //                        debug_NSLog(@"moving a page back into stack");
-                        page.frame = self.bounds;
-                    }
-                }
-            }
-        }
-    }else{
+        // b) next, check if they're done with a non-top page
         SLPaperView* topPage = [visibleStack peek];
         if([topPage isBeingPannedAndZoomed]){
             return;
+        }
+    }
+
+    //
+    // c) ok, this means we're working with the top page
+    //
+    // if they finished panning the page on the top of the stack,
+    // then we need to reset any pages that they had moved below
+    // that top most page.
+    //
+    //
+    // if they are still panning and scaling a page that's /below/
+    // the top page they just released, then we need to pop every
+    // page up to that page they're still holding on to.
+    //
+    // otherwise, we need to just reset all pages in the stack
+    // to be neatly stacked instead of spread out wherever the user
+    // may have put them
+    for(SLPaperView* page in [[visibleStack copy] autorelease]){
+        if(page != [visibleStack peek]){
+            if([page isBeingPannedAndZoomed]){
+                // TODO
+                //                    debug_NSLog(@"pop stack until i see this page");
+                [self popStackUntilPage:page];
+                return;
+            }else{
+                if(!CGRectEqualToRect(page.frame, self.bounds)){
+                    //                        debug_NSLog(@"moving a page back into stack");
+                    page.frame = self.bounds;
+                }
+            }
         }
     }
     
@@ -304,7 +393,14 @@
 
 #pragma mark - Page Animations
 
-
+/**
+ * this function is used when the user flicks a page
+ * and its momentum will carry the page to the edge of
+ * the screen.
+ *
+ * in this case, we want to animate the page to the edge
+ * then bounce it like a scrollview would
+ */
 -(void) bouncePageToEdge:(SLPaperView*)page toFrame:(CGRect)toFrame intertialFrame:(CGRect)inertialFrame{
     //
     //

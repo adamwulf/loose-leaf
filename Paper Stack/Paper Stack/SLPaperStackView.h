@@ -11,6 +11,7 @@
 #import "SLPaperView.h"
 #import "NSMutableArray+StackAdditions.h"
 #import "SLPaperIcon.h"
+#import "SLPapersIcon.h"
 #import "SLPlusIcon.h"
 #import "SLLeftArrow.h"
 #import "SLRightArrow.h"
@@ -22,12 +23,14 @@
     CGRect frameOfHiddenStack;
     
     UIView* stackHolder;
+    SLPapersIcon* papersIcon;
     SLPaperIcon* paperIcon;
     SLPlusIcon* plusIcon;
     SLLeftArrow* leftArrow;
     SLRightArrow* rightArrow;
     
     SLBezelInGestureRecognizer* fromRightBezelGesture;
+    NSMutableSet* setOfPagesBeingPanned;
 }
 
 -(void) addPaperToBottomOfStack:(SLPaperView*)page;
