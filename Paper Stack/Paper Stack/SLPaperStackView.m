@@ -297,14 +297,26 @@
     [setOfPagesBeingPanned removeObject:page];
     [self updateIconAnimations];
     if((bezelDirection & SLBezelDirectionRight) == SLBezelDirectionRight){
+        BOOL shouldResetVisibleStack = [visibleStack peek] == page;
         //
         // a) first, check if they panned the page into the bezel
         [self sendPageToHiddenStack:page];
         
         //
-        // TODO
         // also need to handle any pages that are left un-ordered
         // from a previous multi-pan
+        if(shouldResetVisibleStack){
+            for(SLPaperView* page in [[visibleStack copy] autorelease]){
+                if([page isBeingPannedAndZoomed]){
+                    [self popStackUntilPage:page];
+                    return;
+                }else{
+                    if(!CGRectEqualToRect(page.frame, self.bounds)){
+                        [self animatePageToFullScreen:page withDelay:0 withBounce:NO];
+                    }
+                }
+            }
+        }
         return;
     }else if(page != [visibleStack peek]){
         //
@@ -333,14 +345,11 @@
     for(SLPaperView* page in [[visibleStack copy] autorelease]){
         if(page != [visibleStack peek]){
             if([page isBeingPannedAndZoomed]){
-                // TODO
-                //                    debug_NSLog(@"pop stack until i see this page");
                 [self popStackUntilPage:page];
                 return;
             }else{
                 if(!CGRectEqualToRect(page.frame, self.bounds)){
-                    //                        debug_NSLog(@"moving a page back into stack");
-                    page.frame = self.bounds;
+                    [self animatePageToFullScreen:page withDelay:0 withBounce:NO];
                 }
             }
         }
