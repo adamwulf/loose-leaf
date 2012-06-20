@@ -109,6 +109,15 @@
     [visibleStack addToBottomOfStack:page];
 }
 
+-(void) sendPageToHiddenStack:(SLPaperView*)page{
+    if([visibleStack containsObject:page]){
+        [page disableAllGestures];
+        [hiddenStack push:page];
+        [visibleStack removeObject:page];
+        [self animateBackToHiddenStack:page withDelay:0];
+    }
+}
+
 /**
  * the input is a page in the visible stack,
  * and we pop all pages above but not including
@@ -186,6 +195,14 @@
     return toFrame;
 }
 
+
+-(void) gesturedPage:(SLPaperView*)page intoBezel:(SLBezelDirection)direction fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withVelocity:(CGPoint)velocity{
+    
+    [self sendPageToHiddenStack:page];
+    
+}
+
+
 -(void) finishedPanningAndScalingPage:(SLPaperView*)page
                             fromFrame:(CGRect)fromFrame
                               toFrame:(CGRect)toFrame
@@ -204,12 +221,12 @@
             if(page != [visibleStack peek]){
                 if([page isBeingPannedAndZoomed]){
                     // TODO
-                    debug_NSLog(@"pop stack until i see this page");
+//                    debug_NSLog(@"pop stack until i see this page");
                     [self popStackUntilPage:page];
                     return;
                 }else{
                     if(!CGRectEqualToRect(page.frame, self.bounds)){
-                        debug_NSLog(@"moving a page back to where it should be");
+//                        debug_NSLog(@"moving a page back into stack");
                         page.frame = self.bounds;
                     }
                 }

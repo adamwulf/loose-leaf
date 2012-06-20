@@ -55,7 +55,7 @@
             // ignore touch inside main view, only accept bezel touches
             [self ignoreTouch:touch forEvent:event];
         }else{
-            debug_NSLog(@"point for bezel: %f %f", point.x, point.y);
+//            debug_NSLog(@"point for bezel: %f %f", point.x, point.y);
         }
     }
     panDirection = SLBezelDirectionNone;

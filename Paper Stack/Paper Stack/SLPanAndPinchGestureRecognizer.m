@@ -63,7 +63,7 @@
             [self ignoreTouch:touch forEvent:event];
             [validTouches removeObject:touch];
         }else{
-            debug_NSLog(@"point for panandpinch: %f %f", point.x, point.y);
+//            debug_NSLog(@"point for panandpinch: %f %f", point.x, point.y);
         }
     }
     if([validTouches count]){
