@@ -16,7 +16,7 @@
 @synthesize scale;
 @synthesize delegate;
 @synthesize isBeingPannedAndZoomed;
-
+@synthesize textLabel;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -44,6 +44,12 @@
         [panGesture setMinimumNumberOfTouches:2];
         panGesture.bezelDirectionMask = SLBezelDirectionRight;
         [self addGestureRecognizer:panGesture];
+
+    
+        textLabel = [[[UILabel alloc] initWithFrame:CGRectMake(20, 20, 400, 40)] autorelease];
+        textLabel.backgroundColor = [UIColor whiteColor];
+        textLabel.textColor = [UIColor blackColor];
+        [self addSubview:textLabel];
     }
     return self;
 }

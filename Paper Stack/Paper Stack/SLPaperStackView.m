@@ -59,6 +59,7 @@
         page = [[SLPaperView alloc] initWithFrame:frameOfHiddenStack];
         page.delegate = self;
         [stackHolder addSubview:page];
+        page.textLabel.text = @"hidden";
         [hiddenStack addToBottomOfStack:page];
     }
     CGPoint translation = [bezelGesture translationInView:self];
@@ -115,12 +116,14 @@
     }else{
         [stackHolder addSubview:page];
     }
+    page.textLabel.text = @"visible";
     [visibleStack addToBottomOfStack:page];
 }
 
 -(void) sendPageToHiddenStack:(SLPaperView*)page{
     if([visibleStack containsObject:page]){
         [page disableAllGestures];
+        page.textLabel.text = @"hidden";
         [hiddenStack push:page];
         [visibleStack removeObject:page];
         [self animateBackToHiddenStack:page withDelay:0];
@@ -144,6 +147,7 @@
     CGFloat delay = 0;
     for(SLPaperView* aPage in pagesToAnimate){
         [aPage disableAllGestures];
+        aPage.textLabel.text = @"hidden";
         [hiddenStack push:aPage];
         [self animateBackToHiddenStack:aPage withDelay:delay];
         delay += .1;
@@ -166,6 +170,7 @@
     }
     CGFloat delay = 0;
     for(SLPaperView* aPage in pagesToAnimate){
+        aPage.textLabel.text = @"visible";
         [visibleStack push:aPage];
         [aPage enableAllGestures];
         [self animatePageToFullScreen:aPage withDelay:delay withBounce:YES];
@@ -210,7 +215,7 @@
     BOOL showRightArrow = NO;
     for(SLPaperView* page in setOfPagesBeingPanned){
         if(page == [visibleStack peek]){
-            if(page.frame.origin.x < -380 && page.frame.origin.x + page.frame.size.width < self.frame.size.width - 200){
+            if(page.frame.origin.x < -320 && page.frame.origin.x + page.frame.size.width < self.frame.size.width - 200){
                 showLeftArrow = YES;
             }
         }
@@ -295,6 +300,11 @@
         //
         // a) first, check if they panned the page into the bezel
         [self sendPageToHiddenStack:page];
+        
+        //
+        // TODO
+        // also need to handle any pages that are left un-ordered
+        // from a previous multi-pan
         return;
     }else if(page != [visibleStack peek]){
         //

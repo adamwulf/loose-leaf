@@ -24,11 +24,14 @@
     NSInteger lastNumberOfTouchesForPanGesture;
 
     BOOL isBeingPannedAndZoomed;
+    
+    UILabel* textLabel;
 }
 
 @property (nonatomic, assign) NSObject<SLPaperViewDelegate>* delegate;
 @property (nonatomic, assign) CGFloat scale;
 @property (nonatomic, readonly) BOOL isBeingPannedAndZoomed;
+@property (nonatomic, readonly) UILabel* textLabel;
 
 -(void) cancelAllGestures;
 -(void) disableAllGestures;
