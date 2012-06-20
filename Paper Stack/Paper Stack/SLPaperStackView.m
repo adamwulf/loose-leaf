@@ -196,41 +196,54 @@
 }
 
 
--(void) gesturedPage:(SLPaperView*)page intoBezel:(SLBezelDirection)direction fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withVelocity:(CGPoint)velocity{
-    
-    [self sendPageToHiddenStack:page];
-    
-}
-
-
 -(void) finishedPanningAndScalingPage:(SLPaperView*)page
+                            intoBezel:(SLBezelDirection)bezelDirection
                             fromFrame:(CGRect)fromFrame
                               toFrame:(CGRect)toFrame
                          withVelocity:(CGPoint)velocity{
-    debug_NSLog(@"finishedPanningAndScalingPage!");
 
-    if(page != [visibleStack peek]){
-        SLPaperView* topPage = [visibleStack peek];
-        if([topPage isBeingPannedAndZoomed]){
-            return;
-        }
-    }else{
-        // loop through all pages in stack
-        // an pop the ones that aren't in view back to where they should be
+    //
+    // first, check if they panned the page into the bezel
+    if((bezelDirection & SLBezelDirectionRight) == SLBezelDirectionRight){
+        [self sendPageToHiddenStack:page];
+        return;
+    }
+
+    //
+    // next, check if the page is the top of the visible stack or not
+    if(page == [visibleStack peek]){
+        //
+        // if they finished panning the page on the top of the stack,
+        // then we need to reset any pages that they had moved below
+        // that top most page.
+        //
+        //
+        // if they are still panning and scaling a page that's /below/
+        // the top page they just released, then we need to pop every
+        // page up to that page they're still holding on to.
+        //
+        // otherwise, we need to just reset all pages in the stack
+        // to be neatly stacked instead of spread out wherever the user
+        // may have put them
         for(SLPaperView* page in [[visibleStack copy] autorelease]){
             if(page != [visibleStack peek]){
                 if([page isBeingPannedAndZoomed]){
                     // TODO
-//                    debug_NSLog(@"pop stack until i see this page");
+                    //                    debug_NSLog(@"pop stack until i see this page");
                     [self popStackUntilPage:page];
                     return;
                 }else{
                     if(!CGRectEqualToRect(page.frame, self.bounds)){
-//                        debug_NSLog(@"moving a page back into stack");
+                        //                        debug_NSLog(@"moving a page back into stack");
                         page.frame = self.bounds;
                     }
                 }
             }
+        }
+    }else{
+        SLPaperView* topPage = [visibleStack peek];
+        if([topPage isBeingPannedAndZoomed]){
+            return;
         }
     }
     

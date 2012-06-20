@@ -90,30 +90,16 @@
  */
 -(void) panAndScale:(SLBezelOutPanPinchGestureRecognizer*)panGesture{
     CGPoint panDiffLocation = [panGesture translationInView:self];
-//    CGPoint lastLocationInSuperview = [panGesture locationInView:self.superview];
     CGPoint lastLocationInSelf = [panGesture locationInView:self];
     CGPoint velocity = [self calculateVelocityOfPanGesture:panGesture withTranslation:panDiffLocation];
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
        panGesture.state == UIGestureRecognizerStateEnded ||
        panGesture.state == UIGestureRecognizerStateFailed){
-        
-        
-        if((panGesture.didExitToBezel & SLBezelDirectionRight) == SLBezelDirectionRight){
-            debug_NSLog(@"did exit to bezel!");
-            
-            [self.delegate gesturedPage:self intoBezel:panGesture.didExitToBezel
-                                               fromFrame:frameOfPageAtBeginningOfGesture
-                                                 toFrame:self.frame
-                                            withVelocity:velocity];
-        }else{
-            debug_NSLog(@"did NOT exit to bezel!");
-            // exit when we're done and notify our delegate
-            [self.delegate finishedPanningAndScalingPage:self
-                                               fromFrame:frameOfPageAtBeginningOfGesture
-                                                 toFrame:self.frame
-                                            withVelocity:velocity];
-        }
-        
+        [self.delegate finishedPanningAndScalingPage:self 
+                                           intoBezel:panGesture.didExitToBezel
+                                           fromFrame:frameOfPageAtBeginningOfGesture
+                                             toFrame:self.frame
+                                        withVelocity:velocity];
         isBeingPannedAndZoomed = NO;
         return;
     }else if(panGesture.numberOfTouches == 1){
