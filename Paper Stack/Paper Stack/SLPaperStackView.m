@@ -7,6 +7,7 @@
 //
 
 #import "SLPaperStackView.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation SLPaperStackView
 
@@ -41,15 +42,8 @@
     [fromRightBezelGesture setBezelDirectionMask:SLBezelDirectionFromRightBezel];
     [fromRightBezelGesture setMinimumNumberOfTouches:2];
     [self addGestureRecognizer:fromRightBezelGesture];
-    
-    toRightBezelGesture = [[SLBezelOutGestureRecognizer alloc] initWithTarget:self action:@selector(bezelOut:)];
-    [toRightBezelGesture setBezelDirectionMask:SLBezelDirectionFromRightBezel];
-    [self addGestureRecognizer:toRightBezelGesture];
 }
 
--(void) bezelOut:(SLBezelOutGestureRecognizer*)bezelGesture{
-    debug_NSLog(@"out!");
-}
 -(void) bezelIn:(SLBezelInGestureRecognizer*)bezelGesture{
     SLPaperView* page = [hiddenStack peek];
     if(!page){
@@ -74,6 +68,7 @@
         [[visibleStack peek] enableAllGestures];
     }else if(bezelGesture.state == UIGestureRecognizerStateEnded &&
              ((bezelGesture.panDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft)){
+        [[visibleStack peek] enableAllGestures];
         [self popHiddenStackUntilPage:[self getPageBelow:page]]; 
     }else if(bezelGesture.state == UIGestureRecognizerStateEnded){
         [self animateBackToHiddenStack:page withDelay:0];
@@ -130,6 +125,7 @@
     }
     CGFloat delay = 0;
     for(SLPaperView* aPage in pagesToAnimate){
+        [aPage disableAllGestures];
         [hiddenStack push:aPage];
         [self animateBackToHiddenStack:aPage withDelay:delay];
         delay += .1;
@@ -153,6 +149,7 @@
     CGFloat delay = 0;
     for(SLPaperView* aPage in pagesToAnimate){
         [visibleStack push:aPage];
+        [aPage enableAllGestures];
         [self animatePageToFullScreen:aPage withDelay:delay withBounce:YES];
         delay += .1;
     }
@@ -193,7 +190,8 @@
                             fromFrame:(CGRect)fromFrame
                               toFrame:(CGRect)toFrame
                          withVelocity:(CGPoint)velocity{
-    
+    debug_NSLog(@"finishedPanningAndScalingPage!");
+
     if(page != [visibleStack peek]){
         SLPaperView* topPage = [visibleStack peek];
         if([topPage isBeingPannedAndZoomed]){
@@ -383,12 +381,12 @@
  * after the input delay, if any
  */
 -(void) animateBackToHiddenStack:(SLPaperView*)page withDelay:(CGFloat)delay{
-    [UIView animateWithDuration:0.2 delay:delay options:UIViewAnimationOptionAllowUserInteraction
+    [UIView animateWithDuration:0.2 delay:delay options:UIViewAnimationOptionCurveEaseOut
                      animations:^(void){
                          page.frame = frameOfHiddenStack;
                          page.scale = 1;
                      } completion:^(BOOL finished){
-                         [self insertSubview:page belowSubview:[self getPageBelow:page]];
+                         [stackHolder insertSubview:page belowSubview:[self getPageBelow:page]];
                      }];
 }
 

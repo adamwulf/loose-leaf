@@ -116,7 +116,20 @@
     NSMutableSet* validTouches = [NSMutableSet setWithSet:validTouchesOnly];
     [validTouches intersectSet:touches];
     if([validTouches count]){
-        [super touchesEnded:touches withEvent:event];
+        for(UITouch* touch in validTouches){
+            CGPoint point = [touch locationInView:self.view.superview];
+            if(point.x < 10){
+                [super touchesCancelled:[NSSet setWithObject:touch] withEvent:event];
+            }else if(point.y < 10){
+                [super touchesCancelled:[NSSet setWithObject:touch] withEvent:event];
+            }else if(point.x > self.view.frame.size.width - 10){
+                [super touchesCancelled:[NSSet setWithObject:touch] withEvent:event];
+            }else if(point.y > self.view.frame.size.height - 10){
+                [super touchesCancelled:[NSSet setWithObject:touch] withEvent:event];
+            }else{
+                [super touchesEnded:touches withEvent:event];
+            }
+        }
         if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
             self.state = UIGestureRecognizerStatePossible;
         }

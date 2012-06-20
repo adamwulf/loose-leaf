@@ -15,7 +15,6 @@
 #import "SLLeftArrow.h"
 #import "SLRightArrow.h"
 #import "SLBezelInGestureRecognizer.h"
-#import "SLBezelOutGestureRecognizer.h"
 
 @interface SLPaperStackView : UIView<SLPaperViewDelegate>{
     NSMutableArray* visibleStack;
@@ -29,7 +28,6 @@
     SLRightArrow* rightArrow;
     
     SLBezelInGestureRecognizer* fromRightBezelGesture;
-    SLBezelOutGestureRecognizer* toRightBezelGesture;
 }
 
 -(void) addPaperToBottomOfStack:(SLPaperView*)page;
