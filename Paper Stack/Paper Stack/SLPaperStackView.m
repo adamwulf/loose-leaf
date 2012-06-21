@@ -577,7 +577,12 @@
  * after the input delay, if any
  */
 -(void) animateBackToHiddenStack:(SLPaperView*)page withDelay:(CGFloat)delay{
-    [UIView animateWithDuration:0.2 delay:delay options:UIViewAnimationOptionCurveEaseOut
+    //
+    // the page may be sent to the hidden stack from ~90px away vs ~760px away
+    // this math makes the speed of the exit look more consistent
+    CGRect frInVisibleStack = [visibleStackHolder convertRect:page.frame fromView:page.superview];
+    CGFloat dist =  MAX((visibleStackHolder.frame.size.width - frInVisibleStack.origin.x), visibleStackHolder.frame.size.width / 2);
+    [UIView animateWithDuration:0.2 * (dist / visibleStackHolder.frame.size.width) delay:delay options:UIViewAnimationOptionCurveEaseOut
                      animations:^(void){
                          page.frame = [hiddenStackHolder containsSubview:page] ? hiddenStackHolder.bounds : hiddenStackHolder.frame;
                          page.scale = 1;
