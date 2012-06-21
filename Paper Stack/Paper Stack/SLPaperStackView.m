@@ -212,10 +212,10 @@
  * depending on the locations of the pages that are
  * currently being panned and scaled
  */
--(void) updateIconAnimations{
+-(void) updateIconAnimations:(SLPaperView*)pageTriggeringIconChange{
     BOOL showLeftArrow = NO;
-    BOOL exitingBezel = [[visibleStackHolder peekSubview] willExitBezel];
-    BOOL showRightArrow = [setOfPagesBeingPanned count] > 1 || exitingBezel;
+    BOOL topPageIsExitingBezel = [[visibleStackHolder peekSubview] willExitBezel];
+    BOOL nonTopPageIsExitingBezel = inProgressOfBezeling != [visibleStackHolder peekSubview] && [inProgressOfBezeling willExitBezel];
     NSInteger numberOfVisiblePagesThatAreNotAligned = 0;
     for(int i=[visibleStackHolder.subviews count]-1; i>=0 && i>[visibleStackHolder.subviews count]-4;i--){
         SLPaperView* page = [visibleStackHolder.subviews objectAtIndex:i];
@@ -223,6 +223,10 @@
             numberOfVisiblePagesThatAreNotAligned ++;
         }
     }
+    if(nonTopPageIsExitingBezel){
+        debug_NSLog(@"exiting non-top page");
+    }
+    BOOL showRightArrow = [setOfPagesBeingPanned count] > 1 || topPageIsExitingBezel || nonTopPageIsExitingBezel;
     for(SLPaperView* page in setOfPagesBeingPanned){
         if(page == [visibleStackHolder peekSubview]){
             if(page.frame.origin.x + page.frame.size.width < kGutterWidthToDragPages){
@@ -236,9 +240,10 @@
     if((showLeftArrow || showRightArrow) && 
        ((!paperIcon.alpha && [setOfPagesBeingPanned count] == 1) ||
         (!papersIcon.alpha && [setOfPagesBeingPanned count] > 1) ||
-        (!paperIcon.alpha && exitingBezel))){
+        (!paperIcon.alpha && topPageIsExitingBezel) ||
+        (!paperIcon.alpha && nonTopPageIsExitingBezel))){
         [UIView animateWithDuration:0.3 animations:^{
-            if([setOfPagesBeingPanned count] > 1){
+            if([setOfPagesBeingPanned count] > 1 && !nonTopPageIsExitingBezel){
                 //
                 // user is holding the top page
                 // plus at least 1 other
@@ -288,8 +293,11 @@
  * depending on where they drag a page
  */
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
+    if([page willExitBezel]){
+        inProgressOfBezeling = page;
+    }
     [setOfPagesBeingPanned addObject:page];
-    [self updateIconAnimations];
+    [self updateIconAnimations:page];
     return toFrame;
 }
 
@@ -307,10 +315,10 @@
                             fromFrame:(CGRect)fromFrame
                               toFrame:(CGRect)toFrame
                          withVelocity:(CGPoint)velocity{
-
     [setOfPagesBeingPanned removeObject:page];
-    [self updateIconAnimations];
+    [self updateIconAnimations:page];
     if((bezelDirection & SLBezelDirectionRight) == SLBezelDirectionRight){
+        inProgressOfBezeling = nil;
         BOOL shouldResetVisibleStack = [visibleStackHolder peekSubview] == page;
         //
         // a) first, check if they panned the page into the bezel

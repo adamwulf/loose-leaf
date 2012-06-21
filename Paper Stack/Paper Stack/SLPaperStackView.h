@@ -28,6 +28,8 @@
     
     SLBezelInGestureRecognizer* fromRightBezelGesture;
     NSMutableSet* setOfPagesBeingPanned;
+    
+    SLPaperView* inProgressOfBezeling;
 }
 
 -(void) addPaperToBottomOfStack:(SLPaperView*)page;
