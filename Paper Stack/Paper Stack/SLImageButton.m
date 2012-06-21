@@ -6,11 +6,11 @@
 //  Copyright (c) 2012 Visere. All rights reserved.
 //
 
-#import "SLInsertImageButton.h"
+#import "SLImageButton.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Constants.h"
 
-@implementation SLInsertImageButton
+@implementation SLImageButton
 
 - (id)initWithFrame:(CGRect)frame
 {

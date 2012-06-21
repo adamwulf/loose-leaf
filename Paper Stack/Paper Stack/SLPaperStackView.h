@@ -19,7 +19,7 @@
 #import "SLPlusButton.h"
 #import "SLPolylineButton.h"
 #import "SLPolygonButton.h"
-#import "SLInsertImageButton.h"
+#import "SLImageButton.h"
 #import "SLSidebarButtonDelegate.h"
 #import "SLBezelInGestureRecognizer.h"
 
@@ -36,7 +36,7 @@
     SLPlusButton* addPageSidebarButton;
     SLPolylineButton* polylineButton;
     SLPolygonButton* polygonButton;
-    SLInsertImageButton* insertImageButton;
+    SLImageButton* insertImageButton;
     
     SLBezelInGestureRecognizer* fromRightBezelGesture;
     NSMutableSet* setOfPagesBeingPanned;
