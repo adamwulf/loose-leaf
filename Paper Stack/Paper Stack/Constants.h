@@ -17,6 +17,7 @@
 #endif
 
 #define kGutterWidthToDragPages 300
+#define kFingerWidth 40
 
 CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
 

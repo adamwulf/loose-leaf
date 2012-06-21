@@ -72,6 +72,13 @@
 
     if(bezelGesture.state == UIGestureRecognizerStateBegan){
         [[visibleStackHolder peekSubview] disableAllGestures];
+        [UIView animateWithDuration:.2 animations:^{
+            CGRect newFrame = CGRectMake(hiddenStackHolder.bounds.origin.x + translation.x - kFingerWidth,
+                                         hiddenStackHolder.bounds.origin.y,
+                                         hiddenStackHolder.bounds.size.width,
+                                         hiddenStackHolder.bounds.size.height);
+            page.frame = newFrame;
+        }];
     }else if(bezelGesture.state == UIGestureRecognizerStateCancelled ||
        bezelGesture.state == UIGestureRecognizerStateFailed){
         [self animateBackToHiddenStack:page withDelay:0];
@@ -83,7 +90,7 @@
         [self animateBackToHiddenStack:page withDelay:0];
         [[visibleStackHolder peekSubview] enableAllGestures];
     }else{
-        CGRect newFrame = CGRectMake(hiddenStackHolder.bounds.origin.x + translation.x,
+        CGRect newFrame = CGRectMake(hiddenStackHolder.bounds.origin.x + translation.x - kFingerWidth,
                                      hiddenStackHolder.bounds.origin.y,
                                      hiddenStackHolder.bounds.size.width,
                                      hiddenStackHolder.bounds.size.height);

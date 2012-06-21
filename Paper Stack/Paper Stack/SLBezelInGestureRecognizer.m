@@ -27,9 +27,30 @@
     return NO;
 }
 
+-(CGPoint) furthestLeftTouchLocation{
+    CGPoint ret = CGPointMake(CGFLOAT_MAX, CGFLOAT_MAX);
+    for(int i=0;i<[self numberOfTouches];i++){
+        CGPoint ret2 = [self locationOfTouch:i inView:self.view];
+        if(ret2.x < ret.x){
+            ret = ret2;
+        }
+    }
+    return ret;
+}
+-(CGPoint) furthestRightTouchLocation{
+    CGPoint ret = CGPointZero;
+    for(int i=0;i<[self numberOfTouches];i++){
+        CGPoint ret2 = [self locationOfTouch:i inView:self.view];
+        if(ret2.x > ret.x){
+            ret = ret2;
+        }
+    }
+    return ret;
+}
+
 -(CGPoint) translationInView:(UIView *)view{
     if(view == self.view){
-        CGPoint p = [self locationInView:view];
+        CGPoint p = [self furthestLeftTouchLocation];
         return CGPointMake(p.x - firstKnownLocation.x, p.y - firstKnownLocation.y);
     }
     return [super translationInView:view];
@@ -59,12 +80,12 @@
         }
     }
     panDirection = SLBezelDirectionNone;
-    lastKnownLocation = [self locationInView:self.view];
+    lastKnownLocation = [self furthestLeftTouchLocation];
     [super touchesBegan:touches withEvent:event];
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
-    CGPoint p = [self locationInView:self.view];
+    CGPoint p = [self furthestLeftTouchLocation];
     panDirection = SLBezelDirectionNone;
     if(p.x < lastKnownLocation.x){
         panDirection = panDirection | SLBezelDirectionLeft;
@@ -81,7 +102,7 @@
     lastKnownLocation = p;
     [super touchesMoved:touches withEvent:event];
     if(self.state == UIGestureRecognizerStateBegan){
-        firstKnownLocation = lastKnownLocation;
+        firstKnownLocation = [self furthestRightTouchLocation];
     }
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -100,5 +121,6 @@
 }
 - (void)reset{
     [super reset];
+    panDirection = SLBezelDirectionNone;
 }
 @end
