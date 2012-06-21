@@ -19,10 +19,9 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        // Initialization code
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
-        [self addGestureRecognizer:[[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(bounceButton:)] autorelease]];
+        [self addTarget:self action:@selector(bounceButton:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
 }
@@ -76,6 +75,7 @@
         // Add the animations to the layers
         [self.layer addAnimation:bounceAnimation forKey:@"animateSize"];
     }
+
 }
 
 

@@ -28,6 +28,9 @@
 }
 
 -(void) awakeFromNib{
+    isFirstReading = YES;
+    currentRawReading = 0;
+    
     setOfPagesBeingPanned = [[NSMutableSet alloc] init]; // use this as a quick cache of pages being panned
     visibleStackHolder = [[UIView alloc] initWithFrame:self.bounds];
     hiddenStackHolder = [[UIView alloc] initWithFrame:self.bounds];
@@ -48,12 +51,16 @@
     rightArrow = [[SLRightArrow alloc] initWithFrame:CGRectMake(680, 476, 46, 46)];
     [self addSubview:rightArrow];
     
-    button = [[SLPaperButton alloc] initWithFrame:CGRectMake(60, 400, 40, 40)];
-    button.delegate = self;
-    [self addSubview:button];
-    plusButton = [[SLPlusButton alloc] initWithFrame:CGRectMake(60, 500, 40, 40)];
-    plusButton.delegate = self;
-    [self addSubview:plusButton];
+    documentBackgroundSidebarButton = [[SLPaperButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 400, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    documentBackgroundSidebarButton.delegate = self;
+    documentBackgroundSidebarButton.enabled = NO;
+    [self addSubview:documentBackgroundSidebarButton];
+    addPageSidebarButton = [[SLPlusButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 500, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    addPageSidebarButton.delegate = self;
+    [self addSubview:addPageSidebarButton];
+    
+    [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [documentBackgroundSidebarButton addTarget:self action:@selector(toggleButton:) forControlEvents:UIControlEventTouchUpInside];
     
     papersIcon.alpha = 0;
     paperIcon.alpha = 0;
@@ -100,12 +107,12 @@
         accelerationX = data.acceleration.x * kFilteringFactor + accelerationX * (1.0 - kFilteringFactor);
         accelerationY = data.acceleration.y * kFilteringFactor + accelerationY * (1.0 - kFilteringFactor);
         CGFloat newRawReading = atan2(accelerationY, accelerationX);
-        if(ABS(newRawReading - currentRawReading) > .05){
+        if(ABS(newRawReading - currentRawReading) > .05 || isFirstReading){
             currentRawReading = newRawReading;
+            isFirstReading = NO;
             [NSThread performBlockOnMainThread:^{
-                //            debug_NSLog(@"rotation %f", currentRawReading * 180 / M_PI);
-                plusButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-                button.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+                addPageSidebarButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+                documentBackgroundSidebarButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
             }];
         }
     }];
@@ -189,7 +196,6 @@
     page.delegate = self;
     [page enableAllGestures];
     [visibleStackHolder addSubviewToBottomOfStack:page];
-    [button setNeedsDisplay];
 }
 
 -(void) sendPageToHiddenStack:(SLPaperView*)page{
@@ -377,8 +383,6 @@
  * depending on where they drag a page
  */
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
-    [button setNeedsDisplay];
-    [visibleStackHolder setNeedsDisplay];
     if([page willExitBezel]){
         inProgressOfBezeling = page;
     }
@@ -684,6 +688,24 @@
                          }
                      }];
 }
+
+
+#pragma mark - Button Actions
+
+-(void) toggleButton:(UIButton*) _button{
+    _button.enabled = !_button.enabled;
+}
+
+-(void) addPageButtonTapped:(UIButton*)_button{
+    SLPaperView* page = [[SLPaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+    page.isBrandNewPage = YES;
+    page.delegate = self;
+    [hiddenStackHolder addSubviewToBottomOfStack:page];
+    [[visibleStackHolder peekSubview] enableAllGestures];
+    [self popTopPageOfHiddenStack]; 
+}
+
+
 
 
 @end
