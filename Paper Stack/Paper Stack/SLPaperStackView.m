@@ -38,6 +38,8 @@
     frameOfHiddenStack.origin.x += hiddenStackHolder.bounds.size.width;
     hiddenStackHolder.frame = frameOfHiddenStack;
     
+    //
+    // icons for moving and panning pages
     [self addSubview:visibleStackHolder];
     [self addSubview:hiddenStackHolder];
     papersIcon = [[SLPapersIcon alloc] initWithFrame:CGRectMake(600, 460, 80, 80)];
@@ -50,37 +52,41 @@
     [self addSubview:leftArrow];
     rightArrow = [[SLRightArrow alloc] initWithFrame:CGRectMake(680, 476, 46, 46)];
     [self addSubview:rightArrow];
-    
-    documentBackgroundSidebarButton = [[SLPaperButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 400, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-    documentBackgroundSidebarButton.delegate = self;
-    documentBackgroundSidebarButton.enabled = NO;
-    [self addSubview:documentBackgroundSidebarButton];
-    addPageSidebarButton = [[SLPlusButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 500, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-    addPageSidebarButton.delegate = self;
-    [self addSubview:addPageSidebarButton];
-    
-    [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [documentBackgroundSidebarButton addTarget:self action:@selector(toggleButton:) forControlEvents:UIControlEventTouchUpInside];
-    
     papersIcon.alpha = 0;
     paperIcon.alpha = 0;
     leftArrow.alpha = 0;
     rightArrow.alpha = 0;
     plusIcon.alpha = 0;
     
+    //
+    // sidebar buttons
+    documentBackgroundSidebarButton = [[SLPaperButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 400, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    documentBackgroundSidebarButton.delegate = self;
+    documentBackgroundSidebarButton.enabled = NO;
+    [documentBackgroundSidebarButton addTarget:self action:@selector(toggleButton:) forControlEvents:UIControlEventTouchUpInside];
+
+    [self addSubview:documentBackgroundSidebarButton];
+    addPageSidebarButton = [[SLPlusButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 500, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    addPageSidebarButton.delegate = self;
+    [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:addPageSidebarButton];
+    
+
+    //
+    // bezel gesture
     fromRightBezelGesture = [[SLBezelInGestureRecognizer alloc] initWithTarget:self action:@selector(bezelIn:)];
     [fromRightBezelGesture setBezelDirectionMask:SLBezelDirectionFromRightBezel];
     [fromRightBezelGesture setMinimumNumberOfTouches:2];
     [self addGestureRecognizer:fromRightBezelGesture];
     
 
+    //
+    // accelerometer for rotating buttons
     NSOperationQueue* opQueue = [[NSOperationQueue alloc] init];
     [opQueue setMaxConcurrentOperationCount:1];
-    
     CMMotionManager* motionManager = [[CMMotionManager alloc] init];
     [motionManager setAccelerometerUpdateInterval:0.03];
     [motionManager startAccelerometerUpdatesToQueue:opQueue withHandler:^(CMAccelerometerData* data, NSError* error){
-        debug_NSLog(@"Accelerometer: %@", [data description]);
         //
         // if z == -1, x == 0, y == 0
         // then it's flat up on a table
