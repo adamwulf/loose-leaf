@@ -159,6 +159,11 @@
 -(void) popStackUntilPage:(SLPaperView*)page{
     if([visibleStackHolder.subviews containsObject:page] || page == nil){
         CGFloat delay = 0;
+        NSArray* pages = [visibleStackHolder peekSubviewFromSubview:page];
+        for(SLPaperView* pageToPop in [pages reverseObjectEnumerator]){
+            [self animateBackToHiddenStack:pageToPop withDelay:delay];
+            delay += .1;
+        }/*
         while([visibleStackHolder peekSubview] != page && [visibleStackHolder.subviews count]){
             //
             // since we're manually popping the stack outside of an
@@ -175,6 +180,7 @@
             [self animateBackToHiddenStack:aPage withDelay:delay];
             delay += .1;
         }
+          */
     }
 }
 

@@ -41,4 +41,17 @@
     [self insertSubview:obj atIndex:0];
 }
 
+/**
+ * returns an array of all subviews above
+ * the input view
+ */
+- (NSArray*) peekSubviewFromSubview:(SLPaperView*)obj{
+    if([self containsSubview:obj]){
+        NSInteger index = [self.subviews indexOfObject:obj] + 1;
+        NSInteger count = [self.subviews count];
+        return [self.subviews subarrayWithRange:NSMakeRange(index, count - index)];
+    }
+    return nil;
+}
+
 @end
