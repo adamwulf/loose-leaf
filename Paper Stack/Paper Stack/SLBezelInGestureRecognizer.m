@@ -13,9 +13,10 @@
 @synthesize bezelDirectionMask;
 @synthesize panDirection;
 
--(id) init{
-    self = [super init];
+-(id) initWithTarget:(id)target action:(SEL)action{
+    self = [super initWithTarget:target action:action];
     self.bezelDirectionMask = SLBezelDirectionFromBottomBezel | SLBezelDirectionFromLeftBezel | SLBezelDirectionFromRightBezel | SLBezelDirectionFromTopBezel;
+    ignoredTouches = [[NSMutableSet alloc] init];
     return self;
 }
 
@@ -31,7 +32,12 @@
     CGPoint ret = CGPointMake(CGFLOAT_MAX, CGFLOAT_MAX);
     for(int i=0;i<[self numberOfTouches];i++){
         CGPoint ret2 = [self locationOfTouch:i inView:self.view];
-        if(ret2.x < ret.x){
+        BOOL isIgnoredTouchLocation = NO;
+        for(UITouch* touch in ignoredTouches){
+            CGPoint igLoc = [touch locationInView:self.view];
+            isIgnoredTouchLocation = isIgnoredTouchLocation || CGPointEqualToPoint(ret2, igLoc);
+        }
+        if(!isIgnoredTouchLocation && ret2.x < ret.x){
             ret = ret2;
         }
     }
@@ -41,7 +47,12 @@
     CGPoint ret = CGPointZero;
     for(int i=0;i<[self numberOfTouches];i++){
         CGPoint ret2 = [self locationOfTouch:i inView:self.view];
-        if(ret2.x > ret.x){
+        BOOL isIgnoredTouchLocation = NO;
+        for(UITouch* touch in ignoredTouches){
+            CGPoint igLoc = [touch locationInView:self.view];
+            isIgnoredTouchLocation = isIgnoredTouchLocation || CGPointEqualToPoint(ret2, igLoc);
+        }
+        if(!isIgnoredTouchLocation && ret2.x > ret.x){
             ret = ret2;
         }
     }
@@ -121,8 +132,13 @@
     }
     [super touchesCancelled:touches withEvent:event];
 }
+-(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
+    [ignoredTouches addObject:touch];
+    [super ignoreTouch:touch forEvent:event];
+}
 - (void)reset{
     [super reset];
     panDirection = SLBezelDirectionNone;
+    [ignoredTouches removeAllObjects];
 }
 @end
