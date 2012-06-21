@@ -32,6 +32,7 @@
 		66BD6E831593B12500D4544C /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E821593B12500D4544C /* CoreMotion.framework */; };
 		66BD6E861593B4A600D4544C /* NSThread+BlocksAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E851593B4A600D4544C /* NSThread+BlocksAdditions.m */; };
 		66BD6E8E1593D18800D4544C /* SLPolylineButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E8D1593D18800D4544C /* SLPolylineButton.m */; };
+		66BD6E911593DE4E00D4544C /* SLPolygonButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E901593DE4E00D4544C /* SLPolygonButton.m */; };
 		66C6FF80159100DF00C5BFDE /* SLBezelInGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C6FF7F159100DF00C5BFDE /* SLBezelInGestureRecognizer.m */; };
 		66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
 		66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8C1581BCEF00B4918C /* Foundation.framework */; };
@@ -106,6 +107,8 @@
 		66BD6E8B1593C3FF00D4544C /* SLSidebarButtonDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLSidebarButtonDelegate.h; sourceTree = "<group>"; };
 		66BD6E8C1593D18800D4544C /* SLPolylineButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPolylineButton.h; sourceTree = "<group>"; };
 		66BD6E8D1593D18800D4544C /* SLPolylineButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPolylineButton.m; sourceTree = "<group>"; };
+		66BD6E8F1593DE4E00D4544C /* SLPolygonButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPolygonButton.h; sourceTree = "<group>"; };
+		66BD6E901593DE4E00D4544C /* SLPolygonButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPolygonButton.m; sourceTree = "<group>"; };
 		66C47DA5158EF03200E2CD0C /* SLPaperViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperViewDelegate.h; sourceTree = "<group>"; };
 		66C6FF7E159100DF00C5BFDE /* SLBezelInGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLBezelInGestureRecognizer.h; sourceTree = "<group>"; };
 		66C6FF7F159100DF00C5BFDE /* SLBezelInGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLBezelInGestureRecognizer.m; sourceTree = "<group>"; };
@@ -217,6 +220,8 @@
 				66BD6E6F1593A8CC00D4544C /* SLPlusButton.m */,
 				66BD6E8C1593D18800D4544C /* SLPolylineButton.h */,
 				66BD6E8D1593D18800D4544C /* SLPolylineButton.m */,
+				66BD6E8F1593DE4E00D4544C /* SLPolygonButton.h */,
+				66BD6E901593DE4E00D4544C /* SLPolygonButton.m */,
 			);
 			name = Buttons;
 			sourceTree = "<group>";
@@ -473,6 +478,7 @@
 				66BD6E801593AF4200D4544C /* SLSidebarButton.m in Sources */,
 				66BD6E861593B4A600D4544C /* NSThread+BlocksAdditions.m in Sources */,
 				66BD6E8E1593D18800D4544C /* SLPolylineButton.m in Sources */,
+				66BD6E911593DE4E00D4544C /* SLPolygonButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

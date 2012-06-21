@@ -60,21 +60,26 @@
     
     //
     // sidebar buttons
-    documentBackgroundSidebarButton = [[SLPaperButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 400, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    polylineButton = [[SLPolylineButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 300, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    polylineButton.delegate = self;
+    [polylineButton addTarget:self action:@selector(polylineButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:polylineButton];
+    
+    polygonButton = [[SLPolygonButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 360, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    polygonButton.delegate = self;
+    [polygonButton addTarget:self action:@selector(polygonButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:polygonButton];
+
+    documentBackgroundSidebarButton = [[SLPaperButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 420, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     documentBackgroundSidebarButton.delegate = self;
     documentBackgroundSidebarButton.enabled = NO;
     [documentBackgroundSidebarButton addTarget:self action:@selector(toggleButton:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:documentBackgroundSidebarButton];
     
-    addPageSidebarButton = [[SLPlusButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 500, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    addPageSidebarButton = [[SLPlusButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 480, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     addPageSidebarButton.delegate = self;
     [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:addPageSidebarButton];
-    
-    polylineButton = [[SLPolylineButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 300, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-    polylineButton.delegate = self;
-    [polylineButton addTarget:self action:@selector(polylineButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:polylineButton];
     
 
     //
@@ -125,6 +130,7 @@
                 addPageSidebarButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
                 documentBackgroundSidebarButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
                 polylineButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+                polygonButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
             }];
         }
     }];
@@ -721,5 +727,8 @@
     debug_NSLog(@"polyline");
 }
 
+-(void) polygonButtonTapped:(UIButton*) _button{
+    debug_NSLog(@"polygon");
+}
 
 @end
