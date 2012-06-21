@@ -55,7 +55,7 @@
     [self addGestureRecognizer:fromRightBezelGesture];
 }
 
--(void) bezelIn:(SLBezelInGestureRecognizer*)bezelGesture{
+-(SLPaperView*) ensureTopPageInHiddenStack{
     SLPaperView* page = [hiddenStackHolder peekSubview];
     if(!page){
         page = [[SLPaperView alloc] initWithFrame:hiddenStackHolder.bounds];
@@ -63,6 +63,11 @@
         page.textLabel.text = @"hidden";
         [hiddenStackHolder addSubviewToBottomOfStack:page];
     }
+    return page;
+}
+
+-(void) bezelIn:(SLBezelInGestureRecognizer*)bezelGesture{
+    SLPaperView* page = [self ensureTopPageInHiddenStack];
     CGPoint translation = [bezelGesture translationInView:self];
 
     if(bezelGesture.state == UIGestureRecognizerStateBegan){
@@ -73,8 +78,7 @@
         [[visibleStackHolder peekSubview] enableAllGestures];
     }else if(bezelGesture.state == UIGestureRecognizerStateEnded &&
              ((bezelGesture.panDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft)){
-        [[visibleStackHolder peekSubview] enableAllGestures];
-        [self popHiddenStackUntilPage:[self getPageBelow:page]]; 
+        [self popTopPageOfHiddenStack]; 
     }else if(bezelGesture.state == UIGestureRecognizerStateEnded){
         [self animateBackToHiddenStack:page withDelay:0];
         [[visibleStackHolder peekSubview] enableAllGestures];
@@ -97,6 +101,11 @@
     }
 }
 
+
+-(void) popTopPageOfHiddenStack{
+    [self ensureTopPageInHiddenStack];
+    [self popHiddenStackUntilPage:[self getPageBelow:[hiddenStackHolder peekSubview]]]; 
+}
 
 
 
@@ -130,24 +139,7 @@
         for(SLPaperView* pageToPop in [pages reverseObjectEnumerator]){
             [self animateBackToHiddenStack:pageToPop withDelay:delay];
             delay += .1;
-        }/*
-        while([visibleStackHolder peekSubview] != page && [visibleStackHolder.subviews count]){
-            //
-            // since we're manually popping the stack outside of an
-            // animation, we need to make sure the page still exists
-            // inside a stack.
-            //
-            // when the animation completes, it'll validate which stack
-            // it's in anyways
-            SLPaperView* aPage = [visibleStackHolder peekSubview];
-            //
-            // this push will also pop it off the visible stack, and adjust the frame
-            // correctly
-            [hiddenStackHolder pushSubview:aPage];
-            [self animateBackToHiddenStack:aPage withDelay:delay];
-            delay += .1;
         }
-          */
     }
 }
 
@@ -173,6 +165,7 @@
             //
             // this push will also pop it off the visible stack, and adjust the frame
             // correctly
+            [aPage enableAllGestures];
             [visibleStackHolder pushSubview:aPage];
             [self animatePageToFullScreen:aPage withDelay:delay withBounce:YES];
             delay += .1;
@@ -229,10 +222,10 @@
     BOOL showRightArrow = [setOfPagesBeingPanned count] > 1 || topPageIsExitingBezel || nonTopPageIsExitingBezel;
     for(SLPaperView* page in setOfPagesBeingPanned){
         if(page == [visibleStackHolder peekSubview]){
-            if(page.frame.origin.x + page.frame.size.width < kGutterWidthToDragPages){
+            if([self shouldPushPageOntoVisibleStack:page withFrame:page.frame]){
                 showLeftArrow = YES;
             }
-            if(page.frame.origin.x > self.frame.size.width - kGutterWidthToDragPages){
+            if([self shouldPopPageFromVisibleStack:page withFrame:page.frame]){
                 showRightArrow = YES;
             }
         }
@@ -399,7 +392,12 @@
         [page enableAllGestures];
     }
     
-    if(page.scale <= 1){
+    if(page == [visibleStackHolder peekSubview] && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
+        [self popStackUntilPage:[self getPageBelow:page]];
+    }else if(page == [visibleStackHolder peekSubview] && [self shouldPushPageOntoVisibleStack:page withFrame:toFrame]){
+        [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO];
+        [self popTopPageOfHiddenStack];
+    }else if(page.scale <= 1){
         //
         // bounce it back to full screen
         [self animatePageToFullScreen:page withDelay:0 withBounce:YES];
@@ -422,10 +420,6 @@
                 page.frame = intertialFrame;
             } completion:nil];
 
-        }else if([self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
-            
-        }else if([self shouldPushPageOntoVisibleStack:page withFrame:toFrame]){
-            
         }else{
             // bounce
             [self bouncePageToEdge:page toFrame:toFrame intertialFrame:intertialFrame];
@@ -447,10 +441,10 @@
 }
 
 -(BOOL) shouldPopPageFromVisibleStack:(SLPaperView*)page withFrame:(CGRect)frame{
-    return NO;
+    return page.frame.origin.x > self.frame.size.width - kGutterWidthToDragPages;
 }
 -(BOOL) shouldPushPageOntoVisibleStack:(SLPaperView*)page withFrame:(CGRect)frame{
-    return NO;
+    return page.frame.origin.x + page.frame.size.width < kGutterWidthToDragPages;
 }
 
 
