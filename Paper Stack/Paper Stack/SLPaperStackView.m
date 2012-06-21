@@ -8,8 +8,11 @@
 
 #import "SLPaperStackView.h"
 #import <QuartzCore/QuartzCore.h>
+#import "SLPaperButton.h"
 
 @implementation SLPaperStackView
+
+@synthesize stackHolder;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -37,6 +40,10 @@
     [self addSubview:leftArrow];
     rightArrow = [[SLRightArrow alloc] initWithFrame:CGRectMake(680, 476, 46, 46)];
     [self addSubview:rightArrow];
+    
+    button = [[SLPaperButton alloc] initWithFrame:CGRectMake(400, 400, 80, 80)];
+    [self addSubview:button];
+    
     
     papersIcon.alpha = 0;
     paperIcon.alpha = 0;
@@ -118,6 +125,7 @@
     }
     page.textLabel.text = @"visible";
     [visibleStack addToBottomOfStack:page];
+    [button setNeedsDisplay];
 }
 
 -(void) sendPageToHiddenStack:(SLPaperView*)page{
@@ -274,6 +282,7 @@
  * depending on where they drag a page
  */
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
+    [button setNeedsDisplay];
     [setOfPagesBeingPanned addObject:page];
     [self updateIconAnimations];
     return toFrame;
