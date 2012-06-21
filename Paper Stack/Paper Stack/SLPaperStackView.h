@@ -17,9 +17,10 @@
 #import "SLRightArrow.h"
 #import "SLPaperButton.h"
 #import "SLPlusButton.h"
+#import "SLSidebarButtonDelegate.h"
 #import "SLBezelInGestureRecognizer.h"
 
-@interface SLPaperStackView : UIView<SLPaperViewDelegate,UIAccelerometerDelegate>{
+@interface SLPaperStackView : UIView<SLPaperViewDelegate,UIAccelerometerDelegate,SLSidebarButtonDelegate>{
     UIView* visibleStackHolder;
     UIView* hiddenStackHolder;
     SLPapersIcon* papersIcon;

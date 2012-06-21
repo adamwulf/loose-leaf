@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SLSidebarButtonDelegate.h"
 
-@interface SLSidebarButton : UIButton
+@interface SLSidebarButton : UIButton{
+    NSObject<SLSidebarButtonDelegate>* delegate;
+}
+@property (nonatomic, assign) NSObject<SLSidebarButtonDelegate>* delegate;
 
 @end
