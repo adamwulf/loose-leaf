@@ -27,6 +27,16 @@
     return self;
 }
 
+-(UIColor*) backgroundColor{
+    return [UIColor colorWithRed: 0.26 green: 0.26 blue: 0.26 alpha: 0.35 + (self.enabled ? 0 : -0.1)];
+}
+
+-(UIColor*) borderColor{
+    return [UIColor colorWithRed: 0.84 green: 0.84 blue: 0.84 alpha: 0.5 + (self.enabled ? 0 : -0.2)];
+}
+
+
+
 -(void) bounceButton:(id)sender{
     if(self.enabled){
         self.center = self.center;
