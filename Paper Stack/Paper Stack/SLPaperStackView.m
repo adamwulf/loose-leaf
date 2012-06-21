@@ -59,6 +59,7 @@
     SLPaperView* page = [hiddenStackHolder peekSubview];
     if(!page){
         page = [[SLPaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+        page.isBrandNewPage = YES;
         page.delegate = self;
         [hiddenStackHolder addSubviewToBottomOfStack:page];
     }
@@ -112,7 +113,9 @@
 
 -(void) popTopPageOfHiddenStack{
     [self ensureTopPageInHiddenStack];
-    [self popHiddenStackUntilPage:[self getPageBelow:[hiddenStackHolder peekSubview]]]; 
+    SLPaperView* page = [hiddenStackHolder peekSubview];
+    page.isBrandNewPage = NO;
+    [self popHiddenStackUntilPage:[self getPageBelow:page]]; 
 }
 
 
@@ -122,6 +125,7 @@
  * and adds to the bottom of the subviews
  */
 -(void) addPaperToBottomOfStack:(SLPaperView*)page{
+    page.isBrandNewPage = NO;
     page.delegate = self;
     [page enableAllGestures];
     [visibleStackHolder addSubviewToBottomOfStack:page];
@@ -275,7 +279,7 @@
                              papersIcon.alpha = 0;
                              paperIcon.alpha = 1;
                              
-                             if(showLeftArrow && [hiddenStackHolder.subviews count]){
+                             if(showLeftArrow && [hiddenStackHolder.subviews count] && ![hiddenStackHolder peekSubview].isBrandNewPage){
                                  leftArrow.alpha = 1;
                                  plusIcon.alpha = 0;
                              }else if(showLeftArrow){

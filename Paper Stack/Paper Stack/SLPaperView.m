@@ -16,6 +16,7 @@
 @synthesize delegate;
 @synthesize isBeingPannedAndZoomed;
 @synthesize textLabel;
+@synthesize isBrandNewPage;
 
 - (id)initWithFrame:(CGRect)frame
 {

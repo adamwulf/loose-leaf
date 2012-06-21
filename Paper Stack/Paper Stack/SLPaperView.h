@@ -29,6 +29,8 @@
     UILabel* textLabel;
     
     SLBezelOutPanPinchGestureRecognizer* panGesture;
+    
+    BOOL isBrandNewPage;
 }
 
 @property (nonatomic, assign) NSObject<SLPaperViewDelegate>* delegate;
@@ -37,6 +39,7 @@
 // this will only be true if the bezel gesture is triggered and the page is actively being panned
 @property (nonatomic, readonly) BOOL willExitBezel;
 @property (nonatomic, readonly) UILabel* textLabel;
+@property (nonatomic, assign) BOOL isBrandNewPage;
 
 -(void) cancelAllGestures;
 -(void) disableAllGestures;
