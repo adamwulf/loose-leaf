@@ -15,6 +15,7 @@
 #import "SLPlusIcon.h"
 #import "SLLeftArrow.h"
 #import "SLRightArrow.h"
+#import "SLPaperButton.h"
 #import "SLBezelInGestureRecognizer.h"
 
 @interface SLPaperStackView : UIView<SLPaperViewDelegate>{
@@ -29,9 +30,14 @@
     SLLeftArrow* leftArrow;
     SLRightArrow* rightArrow;
     
+    SLPaperButton* button;
+    
     SLBezelInGestureRecognizer* fromRightBezelGesture;
     NSMutableSet* setOfPagesBeingPanned;
 }
+
+@property (nonatomic, readonly) UIView* stackHolder;
+
 
 -(void) addPaperToBottomOfStack:(SLPaperView*)page;
 
