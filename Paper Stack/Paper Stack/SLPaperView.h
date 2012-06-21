@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Constants.h"
 #import "SLPaperViewDelegate.h"
+#import "SLBezelOutPanPinchGestureRecognizer.h"
 
 @interface SLPaperView : UIView{
     
@@ -26,11 +27,15 @@
     BOOL isBeingPannedAndZoomed;
     
     UILabel* textLabel;
+    
+    SLBezelOutPanPinchGestureRecognizer* panGesture;
 }
 
 @property (nonatomic, assign) NSObject<SLPaperViewDelegate>* delegate;
 @property (nonatomic, assign) CGFloat scale;
 @property (nonatomic, readonly) BOOL isBeingPannedAndZoomed;
+// this will only be true if the bezel gesture is triggered and the page is actively being panned
+@property (nonatomic, readonly) BOOL willExitBezel;
 @property (nonatomic, readonly) UILabel* textLabel;
 
 -(void) cancelAllGestures;

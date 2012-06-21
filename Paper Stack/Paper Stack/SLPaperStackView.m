@@ -247,7 +247,8 @@
  */
 -(void) updateIconAnimations{
     BOOL showLeftArrow = NO;
-    BOOL showRightArrow = [setOfPagesBeingPanned count] > 1;
+    BOOL exitingBezel = [[visibleStackHolder peekSubview] willExitBezel];
+    BOOL showRightArrow = [setOfPagesBeingPanned count] > 1 || exitingBezel;
     NSInteger numberOfVisiblePagesThatAreNotAligned = 0;
     for(int i=[visibleStackHolder.subviews count]-1; i>=0 && i>[visibleStackHolder.subviews count]-4;i--){
         SLPaperView* page = [visibleStackHolder.subviews objectAtIndex:i];
@@ -267,7 +268,8 @@
     }
     if((showLeftArrow || showRightArrow) && 
        ((!paperIcon.alpha && [setOfPagesBeingPanned count] == 1) ||
-        (!papersIcon.alpha && [setOfPagesBeingPanned count] > 1))){
+        (!papersIcon.alpha && [setOfPagesBeingPanned count] > 1) ||
+        (!paperIcon.alpha && exitingBezel))){
         [UIView animateWithDuration:0.3 animations:^{
             if([setOfPagesBeingPanned count] > 1){
                 //
