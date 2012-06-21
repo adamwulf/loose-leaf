@@ -60,7 +60,7 @@
     
     //
     // sidebar buttons
-    insertImageButton = [[SLInsertImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 340, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    insertImageButton = [[SLImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 340, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     insertImageButton.delegate = self;
     [insertImageButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:insertImageButton];

@@ -8,6 +8,6 @@
 
 #import "SLSidebarButton.h"
 
-@interface SLInsertImageButton : SLSidebarButton
+@interface SLImageButton : SLSidebarButton
 
 @end
