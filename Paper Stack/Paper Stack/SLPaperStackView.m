@@ -241,11 +241,14 @@
  */
 -(void) updateIconAnimations{
     BOOL showLeftArrow = NO;
-    BOOL showRightArrow = NO;
+    BOOL showRightArrow = [setOfPagesBeingPanned count] > 1;
     for(SLPaperView* page in setOfPagesBeingPanned){
         if(page == [visibleStackHolder peekSubview]){
             if(page.frame.origin.x < -320 && page.frame.origin.x + page.frame.size.width < self.frame.size.width - 200){
                 showLeftArrow = YES;
+            }
+            if(page.frame.origin.x > 768-320 && page.frame.origin.x + page.frame.size.width > 768 + self.frame.size.width - 200){
+                showRightArrow = YES;
             }
         }
     }
