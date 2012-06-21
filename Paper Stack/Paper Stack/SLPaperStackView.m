@@ -64,12 +64,17 @@
     documentBackgroundSidebarButton.delegate = self;
     documentBackgroundSidebarButton.enabled = NO;
     [documentBackgroundSidebarButton addTarget:self action:@selector(toggleButton:) forControlEvents:UIControlEventTouchUpInside];
-
     [self addSubview:documentBackgroundSidebarButton];
+    
     addPageSidebarButton = [[SLPlusButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 500, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     addPageSidebarButton.delegate = self;
     [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:addPageSidebarButton];
+    
+    polylineButton = [[SLPolylineButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 300, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    polylineButton.delegate = self;
+    [polylineButton addTarget:self action:@selector(toggleButton:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:polylineButton];
     
 
     //
@@ -710,8 +715,6 @@
     [[visibleStackHolder peekSubview] enableAllGestures];
     [self popTopPageOfHiddenStack]; 
 }
-
-
 
 
 @end

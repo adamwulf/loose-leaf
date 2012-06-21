@@ -1,16 +1,16 @@
 //
-//  SLPlusButton.m
+//  SLPolylineButton.m
 //  Paper Stack
 //
 //  Created by Adam Wulf on 6/21/12.
 //  Copyright (c) 2012 Visere. All rights reserved.
 //
 
-#import "SLPlusButton.h"
+#import "SLPolylineButton.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Constants.h"
 
-@implementation SLPlusButton
+@implementation SLPolylineButton
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -23,10 +23,12 @@
     return self;
 }
 
+
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
+    
     CGFloat smallest = MIN(self.bounds.size.width, self.bounds.size.height);
     CGFloat smallest2 = MIN([self.layer.presentationLayer frame].size.width, [self.layer.presentationLayer frame ].size.height);
     debug_NSLog(@"size: %f vs %f", smallest, smallest2);
@@ -57,7 +59,7 @@
     [darkerGreyBorder setStroke];
     ovalPath.lineWidth = 1;
     [ovalPath stroke];
-    
+
 }
 
 
