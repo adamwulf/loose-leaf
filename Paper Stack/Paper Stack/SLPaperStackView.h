@@ -29,12 +29,13 @@
     SLLeftArrow* leftArrow;
     SLRightArrow* rightArrow;
     
-    SLPaperButton* button;
-    SLPlusButton* plusButton;
+    SLPaperButton* documentBackgroundSidebarButton;
+    SLPlusButton* addPageSidebarButton;
     
     SLBezelInGestureRecognizer* fromRightBezelGesture;
     NSMutableSet* setOfPagesBeingPanned;
     
+    BOOL isFirstReading;
     CGFloat accelerationX;
     CGFloat accelerationY;
     CGFloat currentRawReading;
