@@ -73,7 +73,7 @@
     
     polylineButton = [[SLPolylineButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 300, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     polylineButton.delegate = self;
-    [polylineButton addTarget:self action:@selector(toggleButton:) forControlEvents:UIControlEventTouchUpInside];
+    [polylineButton addTarget:self action:@selector(polylineButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:polylineButton];
     
 
@@ -124,6 +124,7 @@
             [NSThread performBlockOnMainThread:^{
                 addPageSidebarButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
                 documentBackgroundSidebarButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+                polylineButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
             }];
         }
     }];
@@ -714,6 +715,10 @@
     [hiddenStackHolder addSubviewToBottomOfStack:page];
     [[visibleStackHolder peekSubview] enableAllGestures];
     [self popTopPageOfHiddenStack]; 
+}
+
+-(void) polylineButtonTapped:(UIButton*)_button{
+    debug_NSLog(@"polyline");
 }
 
 
