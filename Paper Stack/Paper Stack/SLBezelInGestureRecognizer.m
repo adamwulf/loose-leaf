@@ -33,9 +33,11 @@
     for(int i=0;i<[self numberOfTouches];i++){
         CGPoint ret2 = [self locationOfTouch:i inView:self.view];
         BOOL isIgnoredTouchLocation = NO;
-        for(UITouch* touch in ignoredTouches){
-            CGPoint igLoc = [touch locationInView:self.view];
-            isIgnoredTouchLocation = isIgnoredTouchLocation || CGPointEqualToPoint(ret2, igLoc);
+        if([self numberOfTouches] > 2){
+            for(UITouch* touch in ignoredTouches){
+                CGPoint igLoc = [touch locationInView:self.view];
+                isIgnoredTouchLocation = isIgnoredTouchLocation || CGPointEqualToPoint(ret2, igLoc);
+            }
         }
         if(!isIgnoredTouchLocation && ret2.x < ret.x){
             ret = ret2;
@@ -48,9 +50,11 @@
     for(int i=0;i<[self numberOfTouches];i++){
         CGPoint ret2 = [self locationOfTouch:i inView:self.view];
         BOOL isIgnoredTouchLocation = NO;
-        for(UITouch* touch in ignoredTouches){
-            CGPoint igLoc = [touch locationInView:self.view];
-            isIgnoredTouchLocation = isIgnoredTouchLocation || CGPointEqualToPoint(ret2, igLoc);
+        if([self numberOfTouches] > 2){
+            for(UITouch* touch in ignoredTouches){
+                CGPoint igLoc = [touch locationInView:self.view];
+                isIgnoredTouchLocation = isIgnoredTouchLocation || CGPointEqualToPoint(ret2, igLoc);
+            }
         }
         if(!isIgnoredTouchLocation && ret2.x > ret.x){
             ret = ret2;
