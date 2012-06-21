@@ -14,4 +14,7 @@
 }
 @property (nonatomic, assign) NSObject<SLSidebarButtonDelegate>* delegate;
 
+@property (nonatomic, readonly) UIColor* backgroundColor;
+@property (nonatomic, readonly) UIColor* borderColor;
+
 @end

@@ -35,8 +35,8 @@
     CGRect frame = CGRectMake(0, 0, smallest, smallest);
     
     //// Color Declarations
-    UIColor* darkerGrey = [UIColor colorWithRed: 0.26 green: 0.26 blue: 0.26 alpha: 0.35];
-    UIColor* halfGrey = [UIColor colorWithRed: 0.84 green: 0.84 blue: 0.84 alpha: 0.5];
+    UIColor* darkerGrey = [self backgroundColor];
+    UIColor* halfGrey = [self borderColor];
     
     //// Bezier 2 Drawing
     UIBezierPath* bezier2Path = [UIBezierPath bezierPath];
