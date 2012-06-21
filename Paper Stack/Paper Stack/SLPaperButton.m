@@ -7,9 +7,7 @@
 //
 
 #import "SLPaperButton.h"
-#import "SLPaperStackView.h"
 #import <QuartzCore/QuartzCore.h>
-#import "UIImage+MCDrawSubImage.h"
 #import "Constants.h"
 
 @implementation SLPaperButton
