@@ -86,20 +86,22 @@
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
     CGPoint p = [self furthestLeftTouchLocation];
-    panDirection = SLBezelDirectionNone;
-    if(p.x < lastKnownLocation.x){
-        panDirection = panDirection | SLBezelDirectionLeft;
+    if(p.x != lastKnownLocation.x){
+        panDirection = SLBezelDirectionNone;
+        if(p.x < lastKnownLocation.x){
+            panDirection = panDirection | SLBezelDirectionLeft;
+        }
+        if(p.x > lastKnownLocation.x){
+            panDirection = panDirection | SLBezelDirectionRight;
+        }
+        if(p.y > lastKnownLocation.y){
+            panDirection = panDirection | SLBezelDirectionDown;
+        }
+        if(p.y < lastKnownLocation.y){
+            panDirection = panDirection | SLBezelDirectionUp;
+        }
+        lastKnownLocation = p;
     }
-    if(p.x > lastKnownLocation.x){
-        panDirection = panDirection | SLBezelDirectionRight;
-    }
-    if(p.y > lastKnownLocation.y){
-        panDirection = panDirection | SLBezelDirectionDown;
-    }
-    if(p.y < lastKnownLocation.y){
-        panDirection = panDirection | SLBezelDirectionUp;
-    }
-    lastKnownLocation = p;
     [super touchesMoved:touches withEvent:event];
     if(self.state == UIGestureRecognizerStateBegan){
         firstKnownLocation = [self furthestRightTouchLocation];

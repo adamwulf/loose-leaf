@@ -69,11 +69,13 @@
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         [gesture setEnabled:NO];
     }
+    textLabel.text = @"disabled";
 }
 -(void) enableAllGestures{
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         [gesture setEnabled:YES];
     }
+    textLabel.text = @"enabled";
 }
 
 

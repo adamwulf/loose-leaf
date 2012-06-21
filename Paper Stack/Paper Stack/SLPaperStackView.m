@@ -60,7 +60,6 @@
     if(!page){
         page = [[SLPaperView alloc] initWithFrame:hiddenStackHolder.bounds];
         page.delegate = self;
-        page.textLabel.text = @"hidden";
         [hiddenStackHolder addSubviewToBottomOfStack:page];
     }
     return page;
@@ -85,6 +84,7 @@
         [[visibleStackHolder peekSubview] enableAllGestures];
     }else if(bezelGesture.state == UIGestureRecognizerStateEnded &&
              ((bezelGesture.panDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft)){
+        [[visibleStackHolder peekSubview] enableAllGestures];
         [self popTopPageOfHiddenStack]; 
     }else if(bezelGesture.state == UIGestureRecognizerStateEnded){
         [self animateBackToHiddenStack:page withDelay:0];
@@ -106,6 +106,7 @@
             [topPage cancelAllGestures];
         }
     }
+    [self updateIconAnimations];
 }
 
 
@@ -122,7 +123,7 @@
  */
 -(void) addPaperToBottomOfStack:(SLPaperView*)page{
     page.delegate = self;
-    page.textLabel.text = @"visible";
+    [page enableAllGestures];
     [visibleStackHolder addSubviewToBottomOfStack:page];
 }
 
@@ -213,6 +214,7 @@
  * currently being panned and scaled
  */
 -(void) updateIconAnimations{
+    BOOL bezelingFromRight = fromRightBezelGesture.state == UIGestureRecognizerStateBegan || fromRightBezelGesture.state == UIGestureRecognizerStateChanged;
     BOOL showLeftArrow = NO;
     BOOL topPageIsExitingBezel = [[visibleStackHolder peekSubview] willExitBezel];
     BOOL nonTopPageIsExitingBezel = inProgressOfBezeling != [visibleStackHolder peekSubview] && [inProgressOfBezeling willExitBezel];
@@ -227,6 +229,15 @@
         debug_NSLog(@"exiting non-top page");
     }
     BOOL showRightArrow = [setOfPagesBeingPanned count] > 1 || topPageIsExitingBezel || nonTopPageIsExitingBezel;
+    
+    if(bezelingFromRight){
+        if((fromRightBezelGesture.panDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft){
+            showLeftArrow = YES;
+        }else if((fromRightBezelGesture.panDirection & SLBezelDirectionRight) == SLBezelDirectionRight){
+            showRightArrow = YES;
+        }
+    }
+    
     for(SLPaperView* page in setOfPagesBeingPanned){
         if(page == [visibleStackHolder peekSubview]){
             if([self shouldPushPageOntoVisibleStack:page withFrame:page.frame]){
@@ -241,50 +252,58 @@
        ((!paperIcon.alpha && [setOfPagesBeingPanned count] == 1) ||
         (!papersIcon.alpha && [setOfPagesBeingPanned count] > 1) ||
         (!paperIcon.alpha && topPageIsExitingBezel) ||
-        (!paperIcon.alpha && nonTopPageIsExitingBezel))){
-        [UIView animateWithDuration:0.3 animations:^{
-            if([setOfPagesBeingPanned count] > 1 && !nonTopPageIsExitingBezel){
-                //
-                // user is holding the top page
-                // plus at least 1 other
-                papersIcon.alpha = numberOfVisiblePagesThatAreNotAligned > 2 ? 1 : 0;
-                paperIcon.alpha = numberOfVisiblePagesThatAreNotAligned > 2 ? 0 : 1;
-                plusIcon.alpha = 0;
-                leftArrow.alpha = 0;
-                rightArrow.alpha = 1;
-                return;
-            }
-
-            //
-            // ok, we're dealing with only
-            // panning teh top most page
-            papersIcon.alpha = 0;
-            paperIcon.alpha = 1;
-
-            if(showLeftArrow && [hiddenStackHolder.subviews count]){
-                leftArrow.alpha = 1;
-                plusIcon.alpha = 0;
-            }else if(showLeftArrow){
-                leftArrow.alpha = 0;
-                plusIcon.alpha = 1;
-            }else if(!showLeftArrow){
-                leftArrow.alpha = 0;
-                plusIcon.alpha = 0;
-            }
-            if(showRightArrow){
-                rightArrow.alpha = 1;
-            }else{
-                rightArrow.alpha = 0;
-            }
-        }];
+        (!paperIcon.alpha && nonTopPageIsExitingBezel) ||
+        bezelingFromRight)){
+        [UIView animateWithDuration:0.2
+                              delay:0 options:UIViewAnimationOptionBeginFromCurrentState
+                         animations:^{
+                             if([setOfPagesBeingPanned count] > 1 && !nonTopPageIsExitingBezel){
+                                 //
+                                 // user is holding the top page
+                                 // plus at least 1 other
+                                 papersIcon.alpha = numberOfVisiblePagesThatAreNotAligned > 2 ? 1 : 0;
+                                 paperIcon.alpha = numberOfVisiblePagesThatAreNotAligned > 2 ? 0 : 1;
+                                 plusIcon.alpha = 0;
+                                 leftArrow.alpha = 0;
+                                 rightArrow.alpha = 1;
+                                 return;
+                             }
+                             
+                             //
+                             // ok, we're dealing with only
+                             // panning teh top most page
+                             papersIcon.alpha = 0;
+                             paperIcon.alpha = 1;
+                             
+                             if(showLeftArrow && [hiddenStackHolder.subviews count]){
+                                 leftArrow.alpha = 1;
+                                 plusIcon.alpha = 0;
+                             }else if(showLeftArrow){
+                                 leftArrow.alpha = 0;
+                                 plusIcon.alpha = 1;
+                             }else if(!showLeftArrow){
+                                 leftArrow.alpha = 0;
+                                 plusIcon.alpha = 0;
+                             }
+                             if(showRightArrow){
+                                 rightArrow.alpha = 1;
+                             }else{
+                                 rightArrow.alpha = 0;
+                             }
+                         }
+                         completion:nil];
     }else if(!showLeftArrow && !showRightArrow && (paperIcon.alpha || papersIcon.alpha)){
-        [UIView animateWithDuration:0.3 animations:^{
-            papersIcon.alpha = 0;
-            paperIcon.alpha = 0;
-            leftArrow.alpha = 0;
-            plusIcon.alpha = 0;
-            rightArrow.alpha = 0;
-        }];
+        [UIView animateWithDuration:0.3 
+                              delay:0 
+                            options:UIViewAnimationOptionBeginFromCurrentState 
+                         animations:^{
+                             papersIcon.alpha = 0;
+                             paperIcon.alpha = 0;
+                             leftArrow.alpha = 0;
+                             plusIcon.alpha = 0;
+                             rightArrow.alpha = 0;
+                         } 
+                         completion:nil];
     }
 }
 
@@ -539,16 +558,14 @@
     
     void(^finishedBlock)(BOOL finished)  = ^(BOOL finished){
         if(finished){
-            page.textLabel.text = @"visible";
+            [page enableAllGestures];
             if(![visibleStackHolder containsSubview:page]){
                 [visibleStackHolder pushSubview:page];
             }
-            [page enableAllGestures];
         }
     };
     
     [page enableAllGestures];
-    page.textLabel.text = @"visible";
     if(bounce){
         [UIView animateWithDuration:.15 delay:delay options:UIViewAnimationOptionAllowUserInteraction
                          animations:^(void){
@@ -595,9 +612,8 @@
                          page.scale = 1;
                      } completion:^(BOOL finished){
                          if(finished){
-                             page.textLabel.text = @"hidden";
-                             [hiddenStackHolder pushSubview:page];
                              [page disableAllGestures];
+                             [hiddenStackHolder pushSubview:page];
                          }
                      }];
 }
