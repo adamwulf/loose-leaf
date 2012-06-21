@@ -242,6 +242,13 @@
 -(void) updateIconAnimations{
     BOOL showLeftArrow = NO;
     BOOL showRightArrow = [setOfPagesBeingPanned count] > 1;
+    NSInteger numberOfVisiblePagesThatAreNotAligned = 0;
+    for(int i=[visibleStackHolder.subviews count]-1; i>=0 && i>[visibleStackHolder.subviews count]-4;i--){
+        SLPaperView* page = [visibleStackHolder.subviews objectAtIndex:i];
+        if(!CGRectEqualToRect(page.frame, visibleStackHolder.bounds) || [page isBeingPannedAndZoomed]){
+            numberOfVisiblePagesThatAreNotAligned ++;
+        }
+    }
     for(SLPaperView* page in setOfPagesBeingPanned){
         if(page == [visibleStackHolder peekSubview]){
             if(page.frame.origin.x < -320 && page.frame.origin.x + page.frame.size.width < self.frame.size.width - 200){
@@ -260,8 +267,8 @@
                 //
                 // user is holding the top page
                 // plus at least 1 other
-                papersIcon.alpha = 1;
-                paperIcon.alpha = 0;
+                papersIcon.alpha = numberOfVisiblePagesThatAreNotAligned > 2 ? 1 : 0;
+                paperIcon.alpha = numberOfVisiblePagesThatAreNotAligned > 2 ? 0 : 1;
                 plusIcon.alpha = 0;
                 leftArrow.alpha = 0;
                 rightArrow.alpha = 1;
@@ -533,6 +540,17 @@
  * this animation is interruptable
  */
 -(void) animatePageToFullScreen:(SLPaperView*)page withDelay:(CGFloat)delay withBounce:(BOOL)bounce{
+    
+    void(^finishedBlock)(BOOL finished)  = ^(BOOL finished){
+        if(finished){
+            page.textLabel.text = @"visible";
+            if(![visibleStackHolder containsSubview:page]){
+                [visibleStackHolder pushSubview:page];
+            }
+            [page enableAllGestures];
+        }
+    };
+    
     [page enableAllGestures];
     page.textLabel.text = @"visible";
     if(bounce){
@@ -551,7 +569,7 @@
                                                   animations:^(void){
                                                       page.frame = self.bounds;
                                                       page.scale = 1;
-                                                  } completion:nil];
+                                                  } completion:finishedBlock];
                              }
                          }];
     }else{
@@ -559,13 +577,7 @@
                          animations:^(void){
                              page.frame = self.bounds;
                              page.scale = 1;
-                         } completion:^(BOOL finished){
-                             if(finished){
-                                 page.textLabel.text = @"visible";
-                                 [visibleStackHolder pushSubview:page];
-                                 [page enableAllGestures];
-                             }
-                         }];
+                         } completion:finishedBlock];
     }
 }
 
