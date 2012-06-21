@@ -8,7 +8,6 @@
 
 #import "SLPaperStackView.h"
 #import <QuartzCore/QuartzCore.h>
-#import "SLPaperButton.h"
 #import "UIView+SubviewStacks.h"
 
 @implementation SLPaperStackView
@@ -46,10 +45,10 @@
     rightArrow = [[SLRightArrow alloc] initWithFrame:CGRectMake(680, 476, 46, 46)];
     [self addSubview:rightArrow];
     
-    button = [[SLPaperButton alloc] initWithFrame:CGRectMake(400, 400, 40, 40)];
-//    button.layer.borderColor = [[UIColor blackColor] CGColor];
-//    button.layer.borderWidth = 1;
+    button = [[SLPaperButton alloc] initWithFrame:CGRectMake(60, 400, 40, 40)];
     [self addSubview:button];
+    plusButton = [[SLPlusButton alloc] initWithFrame:CGRectMake(60, 500, 40, 40)];
+    [self addSubview:plusButton];
     
     
     papersIcon.alpha = 0;
