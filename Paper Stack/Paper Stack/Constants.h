@@ -16,6 +16,8 @@
 #define debug_NSLog(format, ...)
 #endif
 
+#define kGutterWidthToDragPages 300
+
 CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
 
 enum {

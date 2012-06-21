@@ -225,10 +225,10 @@
     }
     for(SLPaperView* page in setOfPagesBeingPanned){
         if(page == [visibleStackHolder peekSubview]){
-            if(page.frame.origin.x < -320 && page.frame.origin.x + page.frame.size.width < self.frame.size.width - 200){
+            if(page.frame.origin.x + page.frame.size.width < kGutterWidthToDragPages){
                 showLeftArrow = YES;
             }
-            if(page.frame.origin.x > 768-320 && page.frame.origin.x + page.frame.size.width > 768 + self.frame.size.width - 200){
+            if(page.frame.origin.x > self.frame.size.width - kGutterWidthToDragPages){
                 showRightArrow = YES;
             }
         }
