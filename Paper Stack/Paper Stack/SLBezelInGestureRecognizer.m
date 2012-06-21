@@ -13,9 +13,10 @@
 @synthesize bezelDirectionMask;
 @synthesize panDirection;
 
--(id) init{
-    self = [super init];
+-(id) initWithTarget:(id)target action:(SEL)action{
+    self = [super initWithTarget:target action:action];
     self.bezelDirectionMask = SLBezelDirectionFromBottomBezel | SLBezelDirectionFromLeftBezel | SLBezelDirectionFromRightBezel | SLBezelDirectionFromTopBezel;
+    ignoredTouches = [[NSMutableSet alloc] init];
     return self;
 }
 
@@ -27,9 +28,44 @@
     return NO;
 }
 
+-(CGPoint) furthestLeftTouchLocation{
+    CGPoint ret = CGPointMake(CGFLOAT_MAX, CGFLOAT_MAX);
+    for(int i=0;i<[self numberOfTouches];i++){
+        CGPoint ret2 = [self locationOfTouch:i inView:self.view];
+        BOOL isIgnoredTouchLocation = NO;
+        if([self numberOfTouches] > 2){
+            for(UITouch* touch in ignoredTouches){
+                CGPoint igLoc = [touch locationInView:self.view];
+                isIgnoredTouchLocation = isIgnoredTouchLocation || CGPointEqualToPoint(ret2, igLoc);
+            }
+        }
+        if(!isIgnoredTouchLocation && ret2.x < ret.x){
+            ret = ret2;
+        }
+    }
+    return ret;
+}
+-(CGPoint) furthestRightTouchLocation{
+    CGPoint ret = CGPointZero;
+    for(int i=0;i<[self numberOfTouches];i++){
+        CGPoint ret2 = [self locationOfTouch:i inView:self.view];
+        BOOL isIgnoredTouchLocation = NO;
+        if([self numberOfTouches] > 2){
+            for(UITouch* touch in ignoredTouches){
+                CGPoint igLoc = [touch locationInView:self.view];
+                isIgnoredTouchLocation = isIgnoredTouchLocation || CGPointEqualToPoint(ret2, igLoc);
+            }
+        }
+        if(!isIgnoredTouchLocation && ret2.x > ret.x){
+            ret = ret2;
+        }
+    }
+    return ret;
+}
+
 -(CGPoint) translationInView:(UIView *)view{
     if(view == self.view){
-        CGPoint p = [self locationInView:view];
+        CGPoint p = [self furthestLeftTouchLocation];
         return CGPointMake(p.x - firstKnownLocation.x, p.y - firstKnownLocation.y);
     }
     return [super translationInView:view];
@@ -59,29 +95,31 @@
         }
     }
     panDirection = SLBezelDirectionNone;
-    lastKnownLocation = [self locationInView:self.view];
+    lastKnownLocation = [self furthestLeftTouchLocation];
     [super touchesBegan:touches withEvent:event];
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
-    CGPoint p = [self locationInView:self.view];
-    panDirection = SLBezelDirectionNone;
-    if(p.x < lastKnownLocation.x){
-        panDirection = panDirection | SLBezelDirectionLeft;
+    CGPoint p = [self furthestLeftTouchLocation];
+    if(p.x != lastKnownLocation.x){
+        panDirection = SLBezelDirectionNone;
+        if(p.x < lastKnownLocation.x){
+            panDirection = panDirection | SLBezelDirectionLeft;
+        }
+        if(p.x > lastKnownLocation.x){
+            panDirection = panDirection | SLBezelDirectionRight;
+        }
+        if(p.y > lastKnownLocation.y){
+            panDirection = panDirection | SLBezelDirectionDown;
+        }
+        if(p.y < lastKnownLocation.y){
+            panDirection = panDirection | SLBezelDirectionUp;
+        }
+        lastKnownLocation = p;
     }
-    if(p.x > lastKnownLocation.x){
-        panDirection = panDirection | SLBezelDirectionRight;
-    }
-    if(p.y > lastKnownLocation.y){
-        panDirection = panDirection | SLBezelDirectionDown;
-    }
-    if(p.y < lastKnownLocation.y){
-        panDirection = panDirection | SLBezelDirectionUp;
-    }
-    lastKnownLocation = p;
     [super touchesMoved:touches withEvent:event];
     if(self.state == UIGestureRecognizerStateBegan){
-        firstKnownLocation = lastKnownLocation;
+        firstKnownLocation = [self furthestRightTouchLocation];
     }
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -98,7 +136,13 @@
     }
     [super touchesCancelled:touches withEvent:event];
 }
+-(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
+    [ignoredTouches addObject:touch];
+    [super ignoreTouch:touch forEvent:event];
+}
 - (void)reset{
     [super reset];
+    panDirection = SLBezelDirectionNone;
+    [ignoredTouches removeAllObjects];
 }
 @end

@@ -18,6 +18,8 @@
     CGPoint lastKnownLocation;
     CGPoint firstKnownLocation;
     
+    NSMutableSet* ignoredTouches;
+    
 }
 
 @property (nonatomic, assign) SLBezelDirection bezelDirectionMask;

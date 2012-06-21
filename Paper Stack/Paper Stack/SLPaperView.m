@@ -8,7 +8,6 @@
 
 #import "SLPaperView.h"
 #import <QuartzCore/QuartzCore.h>
-#import "SLBezelOutPanPinchGestureRecognizer.h"
 #import "NSArray+MapReduce.h"
 
 @implementation SLPaperView
@@ -17,6 +16,7 @@
 @synthesize delegate;
 @synthesize isBeingPannedAndZoomed;
 @synthesize textLabel;
+@synthesize isBrandNewPage;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -38,7 +38,7 @@
         preGestureScale = 1;
         scale = 1;
         
-        SLBezelOutPanPinchGestureRecognizer* panGesture = [[[SLBezelOutPanPinchGestureRecognizer alloc] 
+        panGesture = [[[SLBezelOutPanPinchGestureRecognizer alloc] 
                                                initWithTarget:self 
                                                       action:@selector(panAndScale:)] autorelease];
         [panGesture setMinimumNumberOfTouches:2];
@@ -54,6 +54,10 @@
     return self;
 }
 
+-(BOOL) willExitBezel{
+    BOOL isRight = (panGesture.didExitToBezel & SLBezelDirectionRight) == SLBezelDirectionRight;
+    return isRight && panGesture.state == UIGestureRecognizerStateChanged;
+}
 
 -(void) cancelAllGestures{
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
@@ -66,11 +70,13 @@
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         [gesture setEnabled:NO];
     }
+    textLabel.text = @"disabled";
 }
 -(void) enableAllGestures{
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         [gesture setEnabled:YES];
     }
+    textLabel.text = @"enabled";
 }
 
 
@@ -94,7 +100,7 @@
  * and also should ensure it never goes offscreen. there's no reason to show less than 100px
  * in any direction (maybe more).
  */
--(void) panAndScale:(SLBezelOutPanPinchGestureRecognizer*)panGesture{
+-(void) panAndScale:(SLBezelOutPanPinchGestureRecognizer*)_panGesture{
     CGPoint panDiffLocation = [panGesture translationInView:self];
     CGPoint lastLocationInSelf = [panGesture locationInView:self];
     CGPoint velocity = [self calculateVelocityOfPanGesture:panGesture withTranslation:panDiffLocation];
@@ -109,6 +115,12 @@
         isBeingPannedAndZoomed = NO;
         return;
     }else if(panGesture.numberOfTouches == 1){
+        if(lastNumberOfTouchesForPanGesture != 1){
+            // notify the delegate of our state change
+            [self.delegate isPanningAndScalingPage:self
+                                         fromFrame:frameOfPageAtBeginningOfGesture
+                                           toFrame:frameOfPageAtBeginningOfGesture];
+        }
         //
         // the gesture requires 2 fingers. it may still say it only has 1 touch if the user
         // started the gesture with 2 fingers but then lifted a finger. in that case, 
