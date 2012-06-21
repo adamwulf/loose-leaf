@@ -8,7 +8,10 @@
 
 #import "SLPaperStackView.h"
 #import <QuartzCore/QuartzCore.h>
+#import <CoreMotion/CoreMotion.h>
 #import "UIView+SubviewStacks.h"
+#import "NSThread+BlocksAdditions.h"
+#import "Constants.h"
 
 @implementation SLPaperStackView
 
@@ -50,7 +53,6 @@
     plusButton = [[SLPlusButton alloc] initWithFrame:CGRectMake(60, 500, 40, 40)];
     [self addSubview:plusButton];
     
-    
     papersIcon.alpha = 0;
     paperIcon.alpha = 0;
     leftArrow.alpha = 0;
@@ -61,6 +63,50 @@
     [fromRightBezelGesture setBezelDirectionMask:SLBezelDirectionFromRightBezel];
     [fromRightBezelGesture setMinimumNumberOfTouches:2];
     [self addGestureRecognizer:fromRightBezelGesture];
+    
+
+    NSOperationQueue* opQueue = [[NSOperationQueue alloc] init];
+    [opQueue setMaxConcurrentOperationCount:1];
+    
+    CMMotionManager* motionManager = [[CMMotionManager alloc] init];
+    [motionManager setAccelerometerUpdateInterval:0.03];
+    [motionManager startAccelerometerUpdatesToQueue:opQueue withHandler:^(CMAccelerometerData* data, NSError* error){
+        debug_NSLog(@"Accelerometer: %@", [data description]);
+        //
+        // if z == -1, x == 0, y == 0
+        // then it's flat up on a table
+        
+        //
+        // if z == 1, x == 0, y == 0
+        // then it's flat down on a table
+
+        //
+        // if z == 0, x == 0, y == -1
+        // then it's up in portrait
+        
+        //
+        // if z == 0, x == 0, y == 1
+        // then it's upside down in portrait
+        
+        //
+        // if z == 0, x == 1, y == 0
+        // then it's landscape button left
+        
+        //
+        // if z == 0, x == -1, y == 0
+        // then it's landscape button right
+        accelerationX = data.acceleration.x * kFilteringFactor + accelerationX * (1.0 - kFilteringFactor);
+        accelerationY = data.acceleration.y * kFilteringFactor + accelerationY * (1.0 - kFilteringFactor);
+        CGFloat newRawReading = atan2(accelerationY, accelerationX);
+        if(ABS(newRawReading - currentRawReading) > .05){
+            currentRawReading = newRawReading;
+            [NSThread performBlockOnMainThread:^{
+                //            debug_NSLog(@"rotation %f", currentRawReading * 180 / M_PI);
+                plusButton.transform = CGAffineTransformMakeRotation(-(currentRawReading + M_PI/2));
+                button.transform = CGAffineTransformMakeRotation(-(currentRawReading + M_PI/2));
+            }];
+        }
+    }];
 }
 
 -(SLPaperView*) ensureTopPageInHiddenStack{
