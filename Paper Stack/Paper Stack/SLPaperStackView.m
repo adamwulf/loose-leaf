@@ -43,12 +43,6 @@
     rightArrow = [[SLRightArrow alloc] initWithFrame:CGRectMake(680, 476, 46, 46)];
     [self addSubview:rightArrow];
     
-    UIButton* validationButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    validationButton.frame = CGRectMake(500, 100, 90, 30);
-    [validationButton setTitle:@"validate" forState:UIControlStateNormal];
-    [validationButton addTarget:self action:@selector(doValidate:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:validationButton];
-    
     papersIcon.alpha = 0;
     paperIcon.alpha = 0;
     leftArrow.alpha = 0;
@@ -59,33 +53,6 @@
     [fromRightBezelGesture setBezelDirectionMask:SLBezelDirectionFromRightBezel];
     [fromRightBezelGesture setMinimumNumberOfTouches:2];
     [self addGestureRecognizer:fromRightBezelGesture];
-}
-
--(void) doValidate:(id)sender{
-    for(int i=1; i<[visibleStackHolder.subviews count];i++){
-        SLPaperView* page0 = [visibleStackHolder.subviews objectAtIndex:i-1];
-        SLPaperView* page1 = [visibleStackHolder.subviews objectAtIndex:i];
-        CGRect frame0 = page0.frame;
-        CGRect frame1 = page1.frame;
-        if(!CGRectEqualToRect(frame0, visibleStackHolder.bounds)){
-            debug_NSLog(@"bad frame");
-        }
-        if(!CGRectEqualToRect(frame1, visibleStackHolder.bounds)){
-            debug_NSLog(@"bad frame");
-        }
-    }
-    for(int i=1; i<[hiddenStackHolder.subviews count];i++){
-        SLPaperView* page0 = [hiddenStackHolder.subviews objectAtIndex:i-1];
-        SLPaperView* page1 = [hiddenStackHolder.subviews objectAtIndex:i];
-        CGRect frame0 = page0.frame;
-        CGRect frame1 = page1.frame;
-        if(!CGRectEqualToRect(frame0, hiddenStackHolder.bounds)){
-            debug_NSLog(@"bad frame");
-        }
-        if(!CGRectEqualToRect(frame1, hiddenStackHolder.bounds)){
-            debug_NSLog(@"bad frame");
-        }
-    }
 }
 
 -(void) bezelIn:(SLBezelInGestureRecognizer*)bezelGesture{
