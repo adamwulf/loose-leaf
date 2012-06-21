@@ -19,7 +19,7 @@
 #import "SLPlusButton.h"
 #import "SLBezelInGestureRecognizer.h"
 
-@interface SLPaperStackView : UIView<SLPaperViewDelegate>{
+@interface SLPaperStackView : UIView<SLPaperViewDelegate,UIAccelerometerDelegate>{
     UIView* visibleStackHolder;
     UIView* hiddenStackHolder;
     SLPapersIcon* papersIcon;
@@ -33,6 +33,10 @@
     
     SLBezelInGestureRecognizer* fromRightBezelGesture;
     NSMutableSet* setOfPagesBeingPanned;
+    
+    CGFloat accelerationX;
+    CGFloat accelerationY;
+    CGFloat currentRawReading;
     
     SLPaperView* inProgressOfBezeling;
 }
