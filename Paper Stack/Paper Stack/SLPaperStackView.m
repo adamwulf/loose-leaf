@@ -368,15 +368,27 @@
     // otherwise, we need to just reset all pages in the stack
     // to be neatly stacked instead of spread out wherever the user
     // may have put them
+    if([setOfPagesBeingPanned count]){
+        //
+        // first check for pages that are still panning,
+        // and pop to them
+        for(SLPaperView* page in [[[visibleStackHolder.subviews copy] autorelease] reverseObjectEnumerator]){
+            if(page != [visibleStackHolder peekSubview]){
+                if([page isBeingPannedAndZoomed]){
+                    [self popStackUntilPage:page];
+                    return;
+                }
+            }
+        }
+    }
+
+    //
+    // if nothing is still being panned, then
+    // realign the location of the pages.
     for(SLPaperView* page in [[visibleStackHolder.subviews copy] autorelease]){
         if(page != [visibleStackHolder peekSubview]){
-            if([page isBeingPannedAndZoomed]){
-                [self popStackUntilPage:page];
-                return;
-            }else{
-                if(!CGRectEqualToRect(page.frame, self.bounds)){
-                    [self animatePageToFullScreen:page withDelay:0 withBounce:NO];
-                }
+            if(!CGRectEqualToRect(page.frame, self.bounds)){
+                [self animatePageToFullScreen:page withDelay:0 withBounce:NO];
             }
         }
     }
