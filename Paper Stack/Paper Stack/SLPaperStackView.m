@@ -212,7 +212,7 @@
  * depending on the locations of the pages that are
  * currently being panned and scaled
  */
--(void) updateIconAnimations:(SLPaperView*)pageTriggeringIconChange{
+-(void) updateIconAnimations{
     BOOL showLeftArrow = NO;
     BOOL topPageIsExitingBezel = [[visibleStackHolder peekSubview] willExitBezel];
     BOOL nonTopPageIsExitingBezel = inProgressOfBezeling != [visibleStackHolder peekSubview] && [inProgressOfBezeling willExitBezel];
@@ -297,7 +297,7 @@
         inProgressOfBezeling = page;
     }
     [setOfPagesBeingPanned addObject:page];
-    [self updateIconAnimations:page];
+    [self updateIconAnimations];
     return toFrame;
 }
 
@@ -316,7 +316,7 @@
                               toFrame:(CGRect)toFrame
                          withVelocity:(CGPoint)velocity{
     [setOfPagesBeingPanned removeObject:page];
-    [self updateIconAnimations:page];
+    [self updateIconAnimations];
     if((bezelDirection & SLBezelDirectionRight) == SLBezelDirectionRight){
         inProgressOfBezeling = nil;
         BOOL shouldResetVisibleStack = [visibleStackHolder peekSubview] == page;
