@@ -20,13 +20,13 @@
 	// Do any additional setup after loading the view, typically from a nib.
 
     for(int i=0;i<10;i++){
-        SLPaperView* paper = [[SLPaperView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        SLPaperView* paper = [[SLPaperView alloc] initWithFrame:self.view.bounds];
         [stackView addPaperToBottomOfStack:paper];
-        paper = [[SLPaperView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        paper = [[SLPaperView alloc] initWithFrame:self.view.bounds];
         [stackView addPaperToBottomOfStack:paper];
-        paper = [[SLPaperView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        paper = [[SLPaperView alloc] initWithFrame:self.view.bounds];
         [stackView addPaperToBottomOfStack:paper];
-        paper = [[SLPaperView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        paper = [[SLPaperView alloc] initWithFrame:self.view.bounds];
         [stackView addPaperToBottomOfStack:paper];
     }
 }

@@ -18,11 +18,8 @@
 #import "SLBezelInGestureRecognizer.h"
 
 @interface SLPaperStackView : UIView<SLPaperViewDelegate>{
-    NSMutableArray* visibleStack;
-    NSMutableArray* hiddenStack;
-    CGRect frameOfHiddenStack;
-    
-    UIView* stackHolder;
+    UIView* visibleStackHolder;
+    UIView* hiddenStackHolder;
     SLPapersIcon* papersIcon;
     SLPaperIcon* paperIcon;
     SLPlusIcon* plusIcon;
