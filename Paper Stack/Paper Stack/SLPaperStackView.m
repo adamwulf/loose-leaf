@@ -49,8 +49,10 @@
     [self addSubview:rightArrow];
     
     button = [[SLPaperButton alloc] initWithFrame:CGRectMake(60, 400, 40, 40)];
+    button.delegate = self;
     [self addSubview:button];
     plusButton = [[SLPlusButton alloc] initWithFrame:CGRectMake(60, 500, 40, 40)];
+    plusButton.delegate = self;
     [self addSubview:plusButton];
     
     papersIcon.alpha = 0;
@@ -102,11 +104,15 @@
             currentRawReading = newRawReading;
             [NSThread performBlockOnMainThread:^{
                 //            debug_NSLog(@"rotation %f", currentRawReading * 180 / M_PI);
-                plusButton.transform = CGAffineTransformMakeRotation(-(currentRawReading + M_PI/2));
-                button.transform = CGAffineTransformMakeRotation(-(currentRawReading + M_PI/2));
+                plusButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+                button.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
             }];
         }
     }];
+}
+
+-(CGFloat) sidebarButtonRotation{
+    return -(currentRawReading + M_PI/2);
 }
 
 -(SLPaperView*) ensureTopPageInHiddenStack{

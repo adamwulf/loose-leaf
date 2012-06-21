@@ -102,6 +102,7 @@
 		66BD6E821593B12500D4544C /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		66BD6E841593B4A600D4544C /* NSThread+BlocksAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSThread+BlocksAdditions.h"; sourceTree = "<group>"; };
 		66BD6E851593B4A600D4544C /* NSThread+BlocksAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+BlocksAdditions.m"; sourceTree = "<group>"; };
+		66BD6E8B1593C3FF00D4544C /* SLSidebarButtonDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLSidebarButtonDelegate.h; sourceTree = "<group>"; };
 		66C47DA5158EF03200E2CD0C /* SLPaperViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperViewDelegate.h; sourceTree = "<group>"; };
 		66C6FF7E159100DF00C5BFDE /* SLBezelInGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLBezelInGestureRecognizer.h; sourceTree = "<group>"; };
 		66C6FF7F159100DF00C5BFDE /* SLBezelInGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLBezelInGestureRecognizer.m; sourceTree = "<group>"; };
@@ -210,6 +211,7 @@
 				66BD6E6F1593A8CC00D4544C /* SLPlusButton.m */,
 				66BD6E7E1593AF4100D4544C /* SLSidebarButton.h */,
 				66BD6E7F1593AF4100D4544C /* SLSidebarButton.m */,
+				66BD6E8B1593C3FF00D4544C /* SLSidebarButtonDelegate.h */,
 			);
 			name = Buttons;
 			sourceTree = "<group>";

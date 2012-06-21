@@ -12,6 +12,8 @@
 
 @implementation SLSidebarButton
 
+@synthesize delegate;
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -39,16 +41,19 @@
         CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
         bounceAnimation.removedOnCompletion = YES;
         
+        CATransform3D rotation = CATransform3DMakeAffineTransform(CGAffineTransformMakeRotation([self.delegate sidebarButtonRotation]));
+        
         NSMutableArray* keyTimes = [NSMutableArray arrayWithObjects:
                                     [NSNumber numberWithFloat:0.0],
                                     [NSNumber numberWithFloat:0.4],
                                     [NSNumber numberWithFloat:0.7],
                                     [NSNumber numberWithFloat:1.0], nil];
         bounceAnimation.keyTimes = keyTimes;
-        bounceAnimation.values = [NSArray arrayWithObjects:[NSValue valueWithCATransform3D:CATransform3DMakeScale(1.0, 1.0, 1.0)],
-                                  [NSValue valueWithCATransform3D:CATransform3DMakeScale(1.4, 1.4, 1.0)],
-                                  [NSValue valueWithCATransform3D:CATransform3DMakeScale(0.8, 0.8, 1.0)],
-                                  [NSValue valueWithCATransform3D:CATransform3DMakeScale(1.0, 1.0, 1.0)],
+        bounceAnimation.values = [NSArray arrayWithObjects:
+                                  [NSValue valueWithCATransform3D:CATransform3DConcat(rotation, CATransform3DMakeScale(1.0, 1.0, 1.0))],
+                                  [NSValue valueWithCATransform3D:CATransform3DConcat(rotation, CATransform3DMakeScale(1.4, 1.4, 1.0))],
+                                  [NSValue valueWithCATransform3D:CATransform3DConcat(rotation, CATransform3DMakeScale(0.8, 0.8, 1.0))],
+                                  [NSValue valueWithCATransform3D:CATransform3DConcat(rotation, CATransform3DMakeScale(1.0, 1.0, 1.0))],
                                   nil];
         bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
                                            [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut], 
