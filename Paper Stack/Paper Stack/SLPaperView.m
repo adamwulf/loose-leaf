@@ -51,8 +51,8 @@
         
         [self.layer setMasksToBounds:NO ];
         [self.layer setShadowColor:[[UIColor blackColor ] CGColor ] ];
-        [self.layer setShadowOpacity:0.5 ];
-        [self.layer setShadowRadius:8.0 ];
+        [self.layer setShadowOpacity:0.7 ];
+        [self.layer setShadowRadius:4.0 ];
         [self.layer setShadowPath:CGPathCreateWithRect(self.bounds, nil)];
         [self.layer setShadowOffset:CGSizeMake( 0 , 0 ) ];
         [self.layer setShouldRasterize:YES ];

@@ -86,21 +86,18 @@
     [halfGreyFill setFill];
     [ovalPath fill];
 
-    // clip end of pencil
+    //
+    // clear the arrow and box, then fill with
+    // border color
     CGContextSetBlendMode(context, kCGBlendModeClear);
     [[UIColor whiteColor] setFill];
     [arrowPath fill];
     [boxPath fill];
     CGContextSetBlendMode(context, kCGBlendModeNormal);
     
-    
-    [darkerGreyBorder setStroke];
-    boxPath.lineWidth = 1;
-    [boxPath stroke];
-
-    [darkerGreyBorder setStroke];
-    arrowPath.lineWidth = 1;
-    [arrowPath stroke];
+    [darkerGreyBorder setFill];
+    [arrowPath fill];
+    [boxPath fill];
 
 }
 

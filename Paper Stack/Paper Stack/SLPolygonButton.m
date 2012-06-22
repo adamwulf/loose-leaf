@@ -97,12 +97,13 @@
     [rect4 fill];
     CGContextSetBlendMode(context, kCGBlendModeNormal);
     
+    [darkerGreyBorder setFill];
     // stroke the lines
     [darkerGreyBorder setStroke];
-    [rect1 stroke];
-    [rect2 stroke];
-    [rect3 stroke];
-    [rect4 stroke];
+    [rect1 fill];
+    [rect2 fill];
+    [rect3 fill];
+    [rect4 fill];
     
     // erase the line border that is inside the circle
     CGContextSetBlendMode(context, kCGBlendModeClear);
@@ -113,12 +114,14 @@
     [dot4Path fill];
     CGContextSetBlendMode(context, kCGBlendModeNormal);
 
-    // stroke the circle
-    [dot1Path stroke];
-    [dot2Path stroke];
-    [dot3Path stroke];
-    [dot4Path stroke];
+    // fill the circle
+    [darkerGreyBorder setFill];
+    [dot1Path fill];
+    [dot2Path fill];
+    [dot3Path fill];
+    [dot4Path fill];
 
+    /*
     //
     // erase the .5pt lines, and do it twice
     // since it's a half pixel
@@ -129,6 +132,7 @@
     [thinRect3 fill];[thinRect3 fill];
     [thinRect4 fill];[thinRect4 fill];
     CGContextSetBlendMode(context, kCGBlendModeNormal);
+     */
     
 }
 
