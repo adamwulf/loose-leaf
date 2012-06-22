@@ -22,6 +22,7 @@
 #import "SLImageButton.h"
 #import "SLTextButton.h"
 #import "SLPencilButton.h"
+#import "SLShareButton.h"
 #import "SLSidebarButtonDelegate.h"
 #import "SLBezelInGestureRecognizer.h"
 
@@ -41,6 +42,7 @@
     SLImageButton* insertImageButton;
     SLTextButton* textButton;
     SLPencilButton* pencilButton;
+    SLShareButton* shareButton;
     
     SLBezelInGestureRecognizer* fromRightBezelGesture;
     NSMutableSet* setOfPagesBeingPanned;

@@ -61,6 +61,11 @@
     //
     // sidebar buttons
     
+    shareButton = [[SLShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 160, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    shareButton.delegate = self;
+    [shareButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:shareButton];
+    
     pencilButton = [[SLPencilButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 220, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     pencilButton.delegate = self;
     [pencilButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -150,6 +155,7 @@
                 insertImageButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
                 textButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
                 pencilButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+                shareButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
             }];
         }
     }];
