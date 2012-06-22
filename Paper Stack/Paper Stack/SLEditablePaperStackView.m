@@ -23,15 +23,14 @@
 -(void) awakeFromNib{
     [super awakeFromNib];
     
-    isFirstReading = YES;
-    currentRawReading = 0;
-    
-    
+    // test code for custom popovers
+    // ================================================================================
     //    SLPopoverView* popover = [[SLPopoverView alloc] initWithFrame:CGRectMake(100, 100, 300, 300)];
     //    [self addSubview:popover];
     
     //
     // sidebar buttons
+    // ================================================================================
     shareButton = [[SLShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 232, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     shareButton.delegate = self;
     [shareButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -67,18 +66,21 @@
      documentBackgroundSidebarButton.enabled = NO;
      [documentBackgroundSidebarButton addTarget:self action:@selector(toggleButton:) forControlEvents:UIControlEventTouchUpInside];
      [self addSubview:documentBackgroundSidebarButton];
-     */
+    */
     
     addPageSidebarButton = [[SLPlusButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 232 + 60 * 8, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     addPageSidebarButton.delegate = self;
     [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:addPageSidebarButton];
     
-    
-    
-    
     //
     // accelerometer for rotating buttons
+    // ================================================================================
+    // initialize state
+    isFirstReading = YES;
+    currentRawReading = 0;
+    
+    // add opqueue to sample the accelerometer
     NSOperationQueue* opQueue = [[NSOperationQueue alloc] init];
     [opQueue setMaxConcurrentOperationCount:1];
     CMMotionManager* motionManager = [[CMMotionManager alloc] init];
@@ -117,6 +119,10 @@
     }];
 }
 
+/**
+ * returns the value in radians that the sidebar buttons
+ * should be rotated to stay pointed "down"
+ */
 -(CGFloat) sidebarButtonRotation{
     return -(currentRawReading + M_PI/2);
 }
@@ -125,9 +131,6 @@
 
 #pragma mark - Button Actions
 
--(void) toggleButton:(UIButton*) _button{
-    _button.enabled = !_button.enabled;
-}
 
 /**
  * adds a new blank page to the visible stack
@@ -144,6 +147,9 @@
 
 -(void) tempButtonTapped:(UIButton*)_button{
     debug_NSLog(@"polyline");
+}
+-(void) toggleButton:(UIButton*) _button{
+    _button.enabled = !_button.enabled;
 }
 
 
