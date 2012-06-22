@@ -61,43 +61,44 @@
     //
     // sidebar buttons
     
-    shareButton = [[SLShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 160, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    shareButton = [[SLShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 232, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     shareButton.delegate = self;
     [shareButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:shareButton];
     
-    pencilButton = [[SLPencilButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 220, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    pencilButton = [[SLPencilButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 232 + 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     pencilButton.delegate = self;
     [pencilButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:pencilButton];
     
-    textButton = [[SLTextButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 280, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    textButton = [[SLTextButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 232 + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     textButton.delegate = self;
     [textButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:textButton];
     
-    insertImageButton = [[SLImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 340, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    insertImageButton = [[SLImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 232 + 60 * 4, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     insertImageButton.delegate = self;
     [insertImageButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:insertImageButton];
     
-    polylineButton = [[SLPolylineButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 400, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    polylineButton = [[SLPolylineButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 232 + 60 * 5, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     polylineButton.delegate = self;
     [polylineButton addTarget:self action:@selector(polylineButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:polylineButton];
     
-    polygonButton = [[SLPolygonButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 460, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    polygonButton = [[SLPolygonButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 232 + 60 * 6, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     polygonButton.delegate = self;
     [polygonButton addTarget:self action:@selector(polygonButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:polygonButton];
-
-    documentBackgroundSidebarButton = [[SLPaperButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 520, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+/*
+    documentBackgroundSidebarButton = [[SLPaperButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 232 + 60 * 7, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     documentBackgroundSidebarButton.delegate = self;
     documentBackgroundSidebarButton.enabled = NO;
     [documentBackgroundSidebarButton addTarget:self action:@selector(toggleButton:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:documentBackgroundSidebarButton];
+ */
     
-    addPageSidebarButton = [[SLPlusButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 580, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    addPageSidebarButton = [[SLPlusButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 232 + 60 * 8, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     addPageSidebarButton.delegate = self;
     [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:addPageSidebarButton];
