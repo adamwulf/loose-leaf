@@ -46,13 +46,15 @@
         [self addSubview:testView];
         
          CABasicAnimation *morph = [CABasicAnimation animationWithKeyPath:@"path"];
-         morph.duration = 5;
+         morph.duration = .5;
          morph.fromValue = (id) [self getTrianglePath2];
          morph.toValue = (id) [self getTrianglePath];
-         morph.repeatCount = 100;
+         morph.repeatCount = 0;
          morph.removedOnCompletion = NO;
          [morph setAutoreverses:YES];
          [maskLayer addAnimation:morph forKey:@"asdfasdfasfd"];
+        
+        maskLayer.path = [self getTrianglePath2];
     }
     return self;
 }
