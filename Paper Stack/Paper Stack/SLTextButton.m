@@ -69,22 +69,26 @@ UIBezierPath* GetUIBezierPathForCharacters(CFStringRef iString, CGFloat fontSize
 {
     CGContextRef context = UIGraphicsGetCurrentContext();  
     CGFloat smallest = MIN(self.bounds.size.width, self.bounds.size.height);
-    CGRect frame = CGRectMake(0, 0, smallest, smallest);
-    CGFloat fontSize = smallest * 28 / 40;
+    CGFloat drawingWidth = (smallest - 2*kWidthOfSidebarButtonBuffer);
+    CGRect frame = CGRectMake(kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer, drawingWidth, drawingWidth);
+    CGFloat fontSize = drawingWidth * 28 / 40;
     
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
     UIColor* halfGreyFill = [self backgroundColor];
     
-    CGAffineTransform flipTransform = CGAffineTransformConcat(CGAffineTransformMakeTranslation(0.f, -frame.size.height),
-                                                              CGAffineTransformMakeScale(1.f, -1.f));
-    CGContextConcatCTM(context, flipTransform);
-    
     
     UIGraphicsPushContext(context);
     
+    CGAffineTransform flipTransform = CGAffineTransformConcat(CGAffineTransformMakeTranslation(0.f, -frame.size.height),
+                                                              CGAffineTransformMakeScale(1.f, -1.f));
+    CGContextConcatCTM(context, flipTransform);
+    CGContextConcatCTM(context, CGAffineTransformMakeTranslation(0, -(2*kWidthOfSidebarButtonBuffer)));
+    
+    
+    
     UIBezierPath* glyphPath = GetUIBezierPathForCharacters((CFStringRef)@"T", fontSize);
-    [glyphPath applyTransform:CGAffineTransformMakeTranslation(smallest / 4, smallest / 4)];
+    [glyphPath applyTransform:CGAffineTransformMakeTranslation(drawingWidth / 4 + kWidthOfSidebarButtonBuffer, drawingWidth / 4 + kWidthOfSidebarButtonBuffer)];
     
     //// Oval Drawing
     UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + floor(CGRectGetWidth(frame) * 0.01) + 0.5, CGRectGetMinY(frame) + floor(CGRectGetHeight(frame) * 0.01) + 0.5, floor(CGRectGetWidth(frame) * 0.97), floor(CGRectGetHeight(frame) * 0.97))];
