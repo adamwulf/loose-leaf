@@ -69,16 +69,34 @@
     return self;
 }
 
+/**
+ * whenever the frame changes (from a scale)
+ * we should update our shadow path to match
+ *
+ * note that while the frame can be animated, the 
+ * shadow path needs its own CABasicAnimation to
+ * animate. it won't piggy back on the frame
+ * animation
+ */
 -(void) setFrame:(CGRect)frame{
     [super setFrame:frame];
     [self.layer setShadowPath:CGPathCreateWithRect(self.bounds, nil)];
 }
 
+/**
+ * returns true if the user is in the middle of a pan
+ * gesture that will send the page to exit via the
+ * bezel gesture
+ */
 -(BOOL) willExitBezel{
     BOOL isRight = (panGesture.didExitToBezel & SLBezelDirectionRight) == SLBezelDirectionRight;
     return isRight && panGesture.state == UIGestureRecognizerStateChanged;
 }
 
+/**
+ * cancels all gestures attached to
+ * this page, if they are cancelable
+ */
 -(void) cancelAllGestures{
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         if([gesture respondsToSelector:@selector(cancel)]){
@@ -86,12 +104,18 @@
         }
     }
 }
+/**
+ * disables all gestures on this page
+ */
 -(void) disableAllGestures{
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         [gesture setEnabled:NO];
     }
     textLabel.text = @"disabled";
 }
+/**
+ * enables all gestures on this page
+ */
 -(void) enableAllGestures{
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         [gesture setEnabled:YES];
