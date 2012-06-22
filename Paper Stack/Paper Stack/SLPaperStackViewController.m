@@ -47,14 +47,6 @@
     return UIInterfaceOrientationPortrait == interfaceOrientation;
 }
 
--(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
-    
-}
-
--(void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
-    
-}
-
 - (void)didRotate:(NSNotification *)notification {
     [stackView resign];
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
