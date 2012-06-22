@@ -27,11 +27,11 @@
 }
 
 -(UIColor*) borderColor{
-    return [UIColor colorWithRed: 0.26 green: 0.26 blue: 0.26 alpha: 0.35 + (self.enabled ? 0 : -0.1)];
+    return [UIColor colorWithRed: 0.26 green: 0.26 blue: 0.26 alpha: 0.35];
 }
 
 -(UIColor*) backgroundColor{
-    return [UIColor colorWithRed: 0.84 green: 0.84 blue: 0.84 alpha: 0.5 + (self.enabled ? 0 : -0.2)];
+    return [UIColor colorWithRed: 0.84 + (self.enabled ? 0 : -0.3) green: 0.84 + (self.enabled ? 0 : -0.3) blue: 0.84 + (self.enabled ? 0 : -0.3) alpha: 0.5 + (self.enabled ? 0 : -0.2)];
 }
 
 
