@@ -28,6 +28,15 @@
     return NO;
 }
 
+/**
+ * finds the touch that is furthest left
+ *
+ * right now, this gesture is effectively hard coded to
+ * allow for bezeling in from the right.
+ *
+ * it would need a refactor to support gesturing from
+ * other sides, despite what its API looks like
+ */
 -(CGPoint) furthestLeftTouchLocation{
     CGPoint ret = CGPointMake(CGFLOAT_MAX, CGFLOAT_MAX);
     for(int i=0;i<[self numberOfTouches];i++){
@@ -45,6 +54,9 @@
     }
     return ret;
 }
+/**
+ * returns the furthest right touch point of the gesture
+ */
 -(CGPoint) furthestRightTouchLocation{
     CGPoint ret = CGPointZero;
     for(int i=0;i<[self numberOfTouches];i++){
@@ -63,6 +75,14 @@
     return ret;
 }
 
+/**
+ * returns the furthest point of the gesture if possible,
+ * otherwise returns default behavior.
+ *
+ * this is so that the translation isn't an average of
+ * touch locations but will follow the lead finger in
+ * the gesture.
+ */
 -(CGPoint) translationInView:(UIView *)view{
     if(view == self.view){
         CGPoint p = [self furthestLeftTouchLocation];
