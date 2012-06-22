@@ -31,9 +31,11 @@
         imgView.clipsToBounds = YES;
         [self addSubview:imgView];
         
+        /*
         [self.layer setMasksToBounds:YES ];
         [self.layer setBorderColor:[[[UIColor blackColor] colorWithAlphaComponent:.5] CGColor ] ];
         [self.layer setBorderWidth:1.0];
+         */
 
         preGestureScale = 1;
         scale = 1;
@@ -44,6 +46,18 @@
         [panGesture setMinimumNumberOfTouches:2];
         panGesture.bezelDirectionMask = SLBezelDirectionRight;
         [self addGestureRecognizer:panGesture];
+        
+        
+        
+        [self.layer setMasksToBounds:NO ];
+        [self.layer setShadowColor:[[UIColor blackColor ] CGColor ] ];
+        [self.layer setShadowOpacity:0.5 ];
+        [self.layer setShadowRadius:8.0 ];
+        [self.layer setShadowPath:CGPathCreateWithRect(self.bounds, nil)];
+        [self.layer setShadowOffset:CGSizeMake( 0 , 0 ) ];
+        [self.layer setShouldRasterize:YES ];
+        
+
 
     /*
         textLabel = [[[UILabel alloc] initWithFrame:CGRectMake(20, 20, 400, 40)] autorelease];
@@ -53,6 +67,11 @@
      */
     }
     return self;
+}
+
+-(void) setFrame:(CGRect)frame{
+    [super setFrame:frame];
+    [self.layer setShadowPath:CGPathCreateWithRect(self.bounds, nil)];
 }
 
 -(BOOL) willExitBezel{
