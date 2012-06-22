@@ -12,9 +12,13 @@
 @interface SLSidebarButton : UIButton{
     NSObject<SLSidebarButtonDelegate>* delegate;
 }
-@property (nonatomic, assign) NSObject<SLSidebarButtonDelegate>* delegate;
 
+@property (nonatomic, assign) NSObject<SLSidebarButtonDelegate>* delegate;
 @property (nonatomic, readonly) UIColor* backgroundColor;
 @property (nonatomic, readonly) UIColor* borderColor;
+
+-(CGPoint) midPointOfPath:(UIBezierPath*)path;
+-(CGPoint) perpendicularUnitVectorForPoint:(CGPoint)p1 andPoint:(CGPoint) p2;
+-(UIBezierPath*) pathForLineGivePoint:(CGPoint)p1 andPoint:(CGPoint) p2 andVector:(CGPoint)pv andWidth:(CGFloat)width;
 
 @end
