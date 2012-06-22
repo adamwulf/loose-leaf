@@ -117,15 +117,6 @@
 }
 
 
--(void) popTopPageOfHiddenStack{
-    [self ensureTopPageInHiddenStack];
-    SLPaperView* page = [hiddenStackHolder peekSubview];
-    page.isBrandNewPage = NO;
-    [self popHiddenStackUntilPage:[self getPageBelow:page]]; 
-}
-
-
-
 /**
  * adds the page to the bottom of the stack
  * and adds to the bottom of the subviews
@@ -141,6 +132,20 @@
     if([visibleStackHolder.subviews containsObject:page]){
         [self animateBackToHiddenStack:page withDelay:0];
     }
+}
+
+/**
+ * will pop just the top of the hidden stack
+ * onto the visible stack.
+ *
+ * if a page does not exist, it will create one
+ * so that it has something to pop.
+ */
+-(void) popTopPageOfHiddenStack{
+    [self ensureTopPageInHiddenStack];
+    SLPaperView* page = [hiddenStackHolder peekSubview];
+    page.isBrandNewPage = NO;
+    [self popHiddenStackUntilPage:[self getPageBelow:page]]; 
 }
 
 /**
