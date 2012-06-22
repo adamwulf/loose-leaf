@@ -682,6 +682,15 @@
     
     [page enableAllGestures];
     if(bounce){
+        //
+        // we also need to animate the shadow so that it doesn't "pop"
+        // into place. it's not taken care of automatically in the
+        // UIView animationWithDuration call...
+        CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
+        theAnimation.duration = 0.3;
+        theAnimation.fromValue = (id) [UIBezierPath bezierPathWithRect:CGRectMake(-10.0, -10.0, 50.0, 50.0)].CGPath;
+        theAnimation.toValue = (id) [UIBezierPath bezierPathWithRect:CGRectMake(-10.0, -10.0, 50.0, 50.0)].CGPath;
+        [page.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
         [UIView animateWithDuration:.15 delay:delay options:UIViewAnimationOptionAllowUserInteraction
                          animations:^(void){
                              page.scale = 1;
