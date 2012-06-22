@@ -60,6 +60,12 @@
     
     //
     // sidebar buttons
+    
+    textButton = [[SLTextButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 280, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    textButton.delegate = self;
+    [textButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:textButton];
+    
     insertImageButton = [[SLImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 340, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     insertImageButton.delegate = self;
     [insertImageButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -137,6 +143,7 @@
                 polylineButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
                 polygonButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
                 insertImageButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+                textButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
             }];
         }
     }];
