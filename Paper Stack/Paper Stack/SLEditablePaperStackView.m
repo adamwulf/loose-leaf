@@ -34,32 +34,32 @@
     // sidebar buttons
     shareButton = [[SLShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 232, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     shareButton.delegate = self;
-    [shareButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [shareButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:shareButton];
     
     pencilButton = [[SLPencilButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 232 + 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     pencilButton.delegate = self;
-    [pencilButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [pencilButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:pencilButton];
     
     textButton = [[SLTextButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 232 + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     textButton.delegate = self;
-    [textButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [textButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:textButton];
     
     insertImageButton = [[SLImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 232 + 60 * 4, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     insertImageButton.delegate = self;
-    [insertImageButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [insertImageButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:insertImageButton];
     
     polylineButton = [[SLPolylineButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 232 + 60 * 5, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     polylineButton.delegate = self;
-    [polylineButton addTarget:self action:@selector(polylineButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [polylineButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:polylineButton];
     
     polygonButton = [[SLPolygonButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 232 + 60 * 6, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     polygonButton.delegate = self;
-    [polygonButton addTarget:self action:@selector(polygonButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [polygonButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:polygonButton];
     /*
      documentBackgroundSidebarButton = [[SLPaperButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, 232 + 60 * 7, kWidthOfSidebarButton, kWidthOfSidebarButton)];
@@ -129,25 +129,21 @@
     _button.enabled = !_button.enabled;
 }
 
+/**
+ * adds a new blank page to the visible stack
+ * without changing the hidden stack's contents
+ */
 -(void) addPageButtonTapped:(UIButton*)_button{
     SLPaperView* page = [[SLPaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.isBrandNewPage = YES;
     page.delegate = self;
-    [hiddenStackHolder addSubviewToBottomOfStack:page];
+    [hiddenStackHolder pushSubview:page];
     [[visibleStackHolder peekSubview] enableAllGestures];
     [self popTopPageOfHiddenStack]; 
 }
 
--(void) polylineButtonTapped:(UIButton*)_button{
+-(void) tempButtonTapped:(UIButton*)_button{
     debug_NSLog(@"polyline");
-}
-
--(void) polygonButtonTapped:(UIButton*) _button{
-    debug_NSLog(@"polygon");
-}
-
--(void) insertImageButtonTapped:(UIButton*) _button{
-    debug_NSLog(@"insert image");
 }
 
 
