@@ -15,20 +15,11 @@
 #import "SLPlusIcon.h"
 #import "SLLeftArrow.h"
 #import "SLRightArrow.h"
-#import "SLPaperButton.h"
-#import "SLPlusButton.h"
-#import "SLPolylineButton.h"
-#import "SLPolygonButton.h"
-#import "SLImageButton.h"
-#import "SLTextButton.h"
-#import "SLPencilButton.h"
-#import "SLShareButton.h"
-#import "SLSidebarButtonDelegate.h"
 #import "SLBezelInGestureRecognizer.h"
 
 #import "SLPopoverView.h"
 
-@interface SLPaperStackView : UIView<SLPaperViewDelegate,UIAccelerometerDelegate,SLSidebarButtonDelegate>{
+@interface SLPaperStackView : UIView<SLPaperViewDelegate>{
     UIView* visibleStackHolder;
     UIView* hiddenStackHolder;
     SLPapersIcon* papersIcon;
@@ -37,22 +28,8 @@
     SLLeftArrow* leftArrow;
     SLRightArrow* rightArrow;
     
-    SLPaperButton* documentBackgroundSidebarButton;
-    SLPlusButton* addPageSidebarButton;
-    SLPolylineButton* polylineButton;
-    SLPolygonButton* polygonButton;
-    SLImageButton* insertImageButton;
-    SLTextButton* textButton;
-    SLPencilButton* pencilButton;
-    SLShareButton* shareButton;
-    
     SLBezelInGestureRecognizer* fromRightBezelGesture;
     NSMutableSet* setOfPagesBeingPanned;
-    
-    BOOL isFirstReading;
-    CGFloat accelerationX;
-    CGFloat accelerationY;
-    CGFloat currentRawReading;
     
     SLPaperView* inProgressOfBezeling;
 }
@@ -61,5 +38,6 @@
 
 
 -(void) addPaperToBottomOfStack:(SLPaperView*)page;
+-(void) popTopPageOfHiddenStack;
 
 @end
