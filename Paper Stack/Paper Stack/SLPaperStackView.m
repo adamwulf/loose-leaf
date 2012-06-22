@@ -128,6 +128,10 @@
     [visibleStackHolder addSubviewToBottomOfStack:page];
 }
 
+/**
+ * immediately animates the page from the visible stack
+ * to the hidden stack
+ */
 -(void) sendPageToHiddenStack:(SLPaperView*)page{
     if([visibleStackHolder.subviews containsObject:page]){
         [self animateBackToHiddenStack:page withDelay:0];
