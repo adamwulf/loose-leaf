@@ -28,8 +28,6 @@
 - (void)drawRect:(CGRect)rect
 {
     CGFloat smallest = MIN(self.bounds.size.width, self.bounds.size.height);
-    CGFloat smallest2 = MIN([self.layer.presentationLayer frame].size.width, [self.layer.presentationLayer frame ].size.height);
-    debug_NSLog(@"size: %f vs %f", smallest, smallest2);
     CGRect frame = CGRectMake(kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer);
     
     //// Color Declarations
