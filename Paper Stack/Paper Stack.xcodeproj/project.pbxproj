@@ -36,6 +36,7 @@
 		66BD6E941593E1D800D4544C /* SLImageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E931593E1D700D4544C /* SLImageButton.m */; };
 		66BD6E971593E98D00D4544C /* SLTextButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E961593E98D00D4544C /* SLTextButton.m */; };
 		66BD6E991593E9C400D4544C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E981593E9C300D4544C /* CoreText.framework */; };
+		66BD6E9C15940D7500D4544C /* SLPencilButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9B15940D7400D4544C /* SLPencilButton.m */; };
 		66C6FF80159100DF00C5BFDE /* SLBezelInGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C6FF7F159100DF00C5BFDE /* SLBezelInGestureRecognizer.m */; };
 		66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
 		66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8C1581BCEF00B4918C /* Foundation.framework */; };
@@ -117,6 +118,8 @@
 		66BD6E951593E98D00D4544C /* SLTextButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLTextButton.h; sourceTree = "<group>"; };
 		66BD6E961593E98D00D4544C /* SLTextButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLTextButton.m; sourceTree = "<group>"; };
 		66BD6E981593E9C300D4544C /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		66BD6E9A15940D7300D4544C /* SLPencilButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPencilButton.h; sourceTree = "<group>"; };
+		66BD6E9B15940D7400D4544C /* SLPencilButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPencilButton.m; sourceTree = "<group>"; };
 		66C47DA5158EF03200E2CD0C /* SLPaperViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperViewDelegate.h; sourceTree = "<group>"; };
 		66C6FF7E159100DF00C5BFDE /* SLBezelInGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLBezelInGestureRecognizer.h; sourceTree = "<group>"; };
 		66C6FF7F159100DF00C5BFDE /* SLBezelInGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLBezelInGestureRecognizer.m; sourceTree = "<group>"; };
@@ -235,6 +238,8 @@
 				66BD6E931593E1D700D4544C /* SLImageButton.m */,
 				66BD6E951593E98D00D4544C /* SLTextButton.h */,
 				66BD6E961593E98D00D4544C /* SLTextButton.m */,
+				66BD6E9A15940D7300D4544C /* SLPencilButton.h */,
+				66BD6E9B15940D7400D4544C /* SLPencilButton.m */,
 			);
 			name = Buttons;
 			sourceTree = "<group>";
@@ -495,6 +500,7 @@
 				66BD6E911593DE4E00D4544C /* SLPolygonButton.m in Sources */,
 				66BD6E941593E1D800D4544C /* SLImageButton.m in Sources */,
 				66BD6E971593E98D00D4544C /* SLTextButton.m in Sources */,
+				66BD6E9C15940D7500D4544C /* SLPencilButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
