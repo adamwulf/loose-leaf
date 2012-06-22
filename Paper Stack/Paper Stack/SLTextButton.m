@@ -24,14 +24,14 @@
     return self;
 }
 
-UIBezierPath* GetUIBezierPathForCharacters(CFStringRef iString)
+UIBezierPath* GetUIBezierPathForCharacters(CFStringRef iString, CGFloat fontSize)
 {
     UniChar *characters;
     CGGlyph *glyphs;
     CFIndex count;
-
-    CTFontRef ref = CTFontCreateWithName((CFStringRef)@"Helvetica", 20, NULL);
-    CTFontRef iFont = CTFontCreateCopyWithSymbolicTraits(ref, 20, NULL, kCTFontItalicTrait, kCTFontItalicTrait);
+    
+    CTFontRef ref = CTFontCreateWithName((CFStringRef)@"Times New Roman", fontSize, NULL);
+    CTFontRef iFont = CTFontCreateCopyWithSymbolicTraits(ref, fontSize, NULL, kCTFontItalicTrait, kCTFontItalicTrait);
 
     assert(iFont != NULL && iString != NULL);
     
@@ -67,16 +67,24 @@ UIBezierPath* GetUIBezierPathForCharacters(CFStringRef iString)
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
+    CGContextRef context = UIGraphicsGetCurrentContext();  
     CGFloat smallest = MIN(self.bounds.size.width, self.bounds.size.height);
-    CGFloat smallest2 = MIN([self.layer.presentationLayer frame].size.width, [self.layer.presentationLayer frame ].size.height);
-    debug_NSLog(@"size: %f vs %f", smallest, smallest2);
     CGRect frame = CGRectMake(0, 0, smallest, smallest);
+    CGFloat fontSize = smallest * 28 / 40;
     
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
     UIColor* halfGreyFill = [self backgroundColor];
     
-    UIBezierPath* glyphPath = GetUIBezierPathForCharacters((CFStringRef)@"T");
+    CGAffineTransform flipTransform = CGAffineTransformConcat(CGAffineTransformMakeTranslation(0.f, -frame.size.height),
+                                                              CGAffineTransformMakeScale(1.f, -1.f));
+    CGContextConcatCTM(context, flipTransform);
+    
+    
+    UIGraphicsPushContext(context);
+    
+    UIBezierPath* glyphPath = GetUIBezierPathForCharacters((CFStringRef)@"T", fontSize);
+    [glyphPath applyTransform:CGAffineTransformMakeTranslation(smallest / 4, smallest / 4)];
     
     //// Oval Drawing
     UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + floor(CGRectGetWidth(frame) * 0.01) + 0.5, CGRectGetMinY(frame) + floor(CGRectGetHeight(frame) * 0.01) + 0.5, floor(CGRectGetWidth(frame) * 0.97), floor(CGRectGetHeight(frame) * 0.97))];
@@ -87,6 +95,8 @@ UIBezierPath* GetUIBezierPathForCharacters(CFStringRef iString)
     [darkerGreyBorder setStroke];
     ovalPath.lineWidth = 1;
     [ovalPath stroke];
+    
+    UIGraphicsPopContext();
     
 }
 

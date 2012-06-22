@@ -75,11 +75,11 @@
     
     //// Mountain 1 Drawing
     UIBezierPath* mountain1Path = [UIBezierPath bezierPath];
-    [mountain1Path moveToPoint: CGPointMake(CGRectGetMinX(frame) + 9, CGRectGetMinY(frame) + 28)];
-    [mountain1Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 9, CGRectGetMinY(frame) + 23)];
-    [mountain1Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 15, CGRectGetMinY(frame) + 16)];
-    [mountain1Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 24, CGRectGetMinY(frame) + 28)];
-    [mountain1Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 9, CGRectGetMinY(frame) + 28)];
+    [mountain1Path moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.23 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.7 * CGRectGetHeight(frame))];
+    [mountain1Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.23 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.57 * CGRectGetHeight(frame))];
+    [mountain1Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.38 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.4 * CGRectGetHeight(frame))];
+    [mountain1Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.6 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.7 * CGRectGetHeight(frame))];
+    [mountain1Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.23 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.7 * CGRectGetHeight(frame))];
     [mountain1Path closePath];
     CGContextSaveGState(context);
     [mountain1Path addClip];
@@ -94,12 +94,12 @@
     
     //// Mountain 2 Drawing
     UIBezierPath* mountain2Path = [UIBezierPath bezierPath];
-    [mountain2Path moveToPoint: CGPointMake(CGRectGetMinX(frame) + 24, CGRectGetMinY(frame) + 28)];
-    [mountain2Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 19, CGRectGetMinY(frame) + 22)];
-    [mountain2Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 22, CGRectGetMinY(frame) + 18)];
-    [mountain2Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 29, CGRectGetMinY(frame) + 24)];
-    [mountain2Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 31, CGRectGetMinY(frame) + 28)];
-    [mountain2Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 24, CGRectGetMinY(frame) + 28)];
+    [mountain2Path moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.6 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.7 * CGRectGetHeight(frame))];
+    [mountain2Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.47 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.55 * CGRectGetHeight(frame))];
+    [mountain2Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.55 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.45 * CGRectGetHeight(frame))];
+    [mountain2Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.72 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.6 * CGRectGetHeight(frame))];
+    [mountain2Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.78 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.7 * CGRectGetHeight(frame))];
+    [mountain2Path addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.6 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.7 * CGRectGetHeight(frame))];
     [mountain2Path closePath];
     CGContextSaveGState(context);
     [mountain2Path addClip];
@@ -109,27 +109,31 @@
                                 CGPointMake(CGRectGetMidX(mountain2Bounds), CGRectGetMaxY(mountain2Bounds)),
                                 0);
     CGContextRestoreGState(context);
-
-
     
-    //// Mountain Stroke Drawing
-    UIBezierPath* mountainStrokePath = [UIBezierPath bezierPath];
-    [mountainStrokePath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 9, CGRectGetMinY(frame) + 23)];
-    [mountainStrokePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 15, CGRectGetMinY(frame) + 16)];
-    [mountainStrokePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 19, CGRectGetMinY(frame) + 22)];
-    [mountainStrokePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 22, CGRectGetMinY(frame) + 18)];
-    [mountainStrokePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 29, CGRectGetMinY(frame) + 24)];
-    [mountainStrokePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 31, CGRectGetMinY(frame) + 28)];
-    [darkerGreyBorder setStroke];
-    mountainStrokePath.lineWidth = 1;
-    [mountainStrokePath stroke];
     
     
     //// Sun Drawing
-    UIBezierPath* sunPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 25.5, CGRectGetMinY(frame) + 14.5, 3, 3)];
+    UIBezierPath* sunPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + floor(CGRectGetWidth(frame) * 0.64) + 0.5, CGRectGetMinY(frame) + floor(CGRectGetHeight(frame) * 0.36) + 0.5, floor(CGRectGetWidth(frame) * 0.07), floor(CGRectGetHeight(frame) * 0.07))];
     [halfGreyFill setFill];
     [sunPath fill];
     
+    [darkerGreyBorder setStroke];
+    sunPath.lineWidth = 1;
+    [sunPath stroke];
+    
+    
+    //// Mountain Stroke Drawing
+    UIBezierPath* mountainStrokePath = [UIBezierPath bezierPath];
+    [mountainStrokePath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.23 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.57 * CGRectGetHeight(frame))];
+    [mountainStrokePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.38 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.4 * CGRectGetHeight(frame))];
+    [mountainStrokePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.47 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.55 * CGRectGetHeight(frame))];
+    [mountainStrokePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.55 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.45 * CGRectGetHeight(frame))];
+    [mountainStrokePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.72 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.6 * CGRectGetHeight(frame))];
+    [mountainStrokePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.78 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.7 * CGRectGetHeight(frame))];
+    [darkerGreyBorder setStroke];
+    mountainStrokePath.lineWidth = 1;
+    [mountainStrokePath stroke];
+  
     [darkerGreyBorder setStroke];
     sunPath.lineWidth = 1;
     [sunPath stroke];

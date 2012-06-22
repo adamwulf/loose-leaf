@@ -59,11 +59,11 @@
     [ovalPath appendPath:dot3Path];
     [ovalPath appendPath:dot4Path];
     // line 1
-    [ovalPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 9.5, CGRectGetMinY(frame) + 19.5)];
-    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 15.5, CGRectGetMinY(frame) + 28.5)];
-    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 16.5, CGRectGetMinY(frame) + 27.5)];
-    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 10.5, CGRectGetMinY(frame) + 18.5)];
-    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 9.5, CGRectGetMinY(frame) + 19.5)];
+    [ovalPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.24 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.49 * CGRectGetHeight(frame))];
+    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.39 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.71 * CGRectGetHeight(frame))];
+    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.41 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.69 * CGRectGetHeight(frame))];
+    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.26 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.46 * CGRectGetHeight(frame))];
+    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.24 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.49 * CGRectGetHeight(frame))];
     // line 2
     [ovalPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.54 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.29 * CGRectGetHeight(frame))];
     [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.41 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.69 * CGRectGetHeight(frame))];
