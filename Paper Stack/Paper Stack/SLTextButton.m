@@ -99,6 +99,18 @@ UIBezierPath* GetUIBezierPathForCharacters(CFStringRef iString, CGFloat fontSize
     [darkerGreyBorder setStroke];
     ovalPath.lineWidth = 1;
     [ovalPath stroke];
+
+    
+    //
+    // clear the arrow and box, then fill with
+    // border color
+    CGContextSetBlendMode(context, kCGBlendModeClear);
+    [[UIColor whiteColor] setFill];
+    [glyphPath fill];
+    CGContextSetBlendMode(context, kCGBlendModeNormal);
+    
+    [darkerGreyBorder setFill];
+    [glyphPath fill];
     
     UIGraphicsPopContext();
     
