@@ -181,6 +181,11 @@
         // this lets us locate where the gesture should be in the view from any width or height
         normalizedLocationOfScale = CGPointMake(lastLocationInSelf.x / self.frame.size.width, 
                                                 lastLocationInSelf.y / self.frame.size.height);
+
+        // notify the delegate of our state change
+        [self.delegate isPanningAndScalingPage:self
+                                     fromFrame:frameOfPageAtBeginningOfGesture
+                                       toFrame:frameOfPageAtBeginningOfGesture];
         return;
     }
     

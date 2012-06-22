@@ -84,6 +84,9 @@
         [lastTouchTime release];
         lastTouchTime = [[NSDate date] retain];
         [validTouchesOnly addObjectsFromArray:[validTouches allObjects]];
+        if([validTouchesOnly count] >= self.minimumNumberOfTouches && self.state == UIGestureRecognizerStatePossible){
+            self.state = UIGestureRecognizerStateBegan;
+        }
     }
 }
 
