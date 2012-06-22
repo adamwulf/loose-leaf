@@ -19,7 +19,7 @@
 #define kGutterWidthToDragPages 300
 #define kFingerWidth 40
 #define kFilteringFactor 0.2
-#define kWidthOfSidebarButton 60
+#define kWidthOfSidebarButton 40
 #define kWidthOfSidebar 80
 
 CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
