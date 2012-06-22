@@ -39,7 +39,7 @@
     // paintcode keeps them separate
     //
     CGFloat smallest = MIN(self.bounds.size.width, self.bounds.size.height);
-    CGRect frame = CGRectMake(0, 0, smallest, smallest);
+    CGRect frame = CGRectMake(kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer);
     
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
