@@ -30,6 +30,8 @@
         paper = [[SLPaperView alloc] initWithFrame:self.view.bounds];
         [stackView addPaperToBottomOfStack:paper];
     }
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRotate:)   name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 - (void)viewDidUnload
@@ -42,7 +44,29 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return YES;
+    return UIInterfaceOrientationPortrait == interfaceOrientation;
 }
+
+-(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    
+}
+
+-(void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+    
+}
+
+- (void)didRotate:(NSNotification *)notification {
+    [stackView resign];
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    if(orientation == UIDeviceOrientationUnknown ||
+       orientation == UIDeviceOrientationFaceDown ||
+       orientation == UIDeviceOrientationFaceUp){
+        orientation = UIDeviceOrientationPortrait;
+    }
+    [[UIApplication sharedApplication] setStatusBarOrientation:orientation animated:NO];
+//    [self positionScreenElements];
+    [stackView focus];
+}
+
 
 @end
