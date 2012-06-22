@@ -38,24 +38,22 @@
     CGFloat smallest = MIN(self.bounds.size.width, self.bounds.size.height);
     CGRect frame = CGRectMake(0, 0, smallest, smallest);
     
-    //// Color Declarations
-    UIColor* darkerGreyBorder = [self borderColor];
-    UIColor* halfGreyFill = [self backgroundColor];
-    UIColor* barelyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.2 + (self.enabled ? 0 : -0.1)];
-
-    
     //// General Declarations
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = UIGraphicsGetCurrentContext();
 
+    //// Color Declarations
+    UIColor* darkerGreyBorder = [self borderColor];
+    UIColor* halfGreyFill = [self backgroundColor];
+    UIColor* mountainShadow = [UIColor colorWithRed: 0.57 green: 0.57 blue: 0.57 alpha: 0.35];
+    
     //// Gradient Declarations
     NSArray* frontMountainGradientColors = [NSArray arrayWithObjects: 
                                             (id)halfGreyFill.CGColor, 
-                                            (id)[UIColor colorWithRed: 0.92 green: 0.92 blue: 0.92 alpha: 0.2].CGColor, 
-                                            (id)barelyWhite.CGColor, nil];
-    CGFloat frontMountainGradientLocations[] = {0, 0.71, 1};
+                                            (id)[UIColor colorWithRed: 0.71 green: 0.71 blue: 0.71 alpha: 0.32].CGColor, 
+                                            (id)mountainShadow.CGColor, nil];
+    CGFloat frontMountainGradientLocations[] = {0, 0.67, 1};
     CGGradientRef frontMountainGradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)frontMountainGradientColors, frontMountainGradientLocations);
-
 
 
     //// Oval Drawing
