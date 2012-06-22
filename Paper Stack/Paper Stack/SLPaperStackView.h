@@ -26,6 +26,8 @@
 #import "SLSidebarButtonDelegate.h"
 #import "SLBezelInGestureRecognizer.h"
 
+#import "SLPopoverView.h"
+
 @interface SLPaperStackView : UIView<SLPaperViewDelegate,UIAccelerometerDelegate,SLSidebarButtonDelegate>{
     UIView* visibleStackHolder;
     UIView* hiddenStackHolder;

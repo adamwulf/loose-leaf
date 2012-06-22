@@ -58,6 +58,11 @@
     rightArrow.alpha = 0;
     plusIcon.alpha = 0;
     
+    SLPopoverView* popover = [[SLPopoverView alloc] initWithFrame:CGRectMake(100, 100, 300, 300)];
+    [self addSubview:popover];
+    
+    
+    
     //
     // sidebar buttons
     

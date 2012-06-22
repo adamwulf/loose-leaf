@@ -72,10 +72,12 @@
     UIBezierPath* rect3 = [self pathForLineGivePoint:midPoint3 andPoint:midPoint4 andVector:per3 andWidth:1.5];
     UIBezierPath* rect4 = [self pathForLineGivePoint:midPoint4 andPoint:midPoint1 andVector:per4 andWidth:1.5];
 
+    /*
     UIBezierPath* thinRect1 = [self pathForLineGivePoint:midPoint1 andPoint:midPoint2 andVector:per1 andWidth:0.5];
     UIBezierPath* thinRect2 = [self pathForLineGivePoint:midPoint2 andPoint:midPoint3 andVector:per2 andWidth:0.5];
     UIBezierPath* thinRect3 = [self pathForLineGivePoint:midPoint3 andPoint:midPoint4 andVector:per3 andWidth:0.5];
     UIBezierPath* thinRect4 = [self pathForLineGivePoint:midPoint4 andPoint:midPoint1 andVector:per4 andWidth:0.5];
+    */
     
     // Fill Oval Drawing
     UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + floor(CGRectGetWidth(frame) * 0.01) + 0.5, CGRectGetMinY(frame) + floor(CGRectGetHeight(frame) * 0.01) + 0.5, floor(CGRectGetWidth(frame) * 0.97), floor(CGRectGetHeight(frame) * 0.97))];
