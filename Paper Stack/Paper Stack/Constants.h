@@ -22,9 +22,9 @@
 #define kGutterWidthToDragPages 300
 #define kFingerWidth 40
 #define kFilteringFactor 0.2
-#define kWidthOfSidebarButton 50
+#define kWidthOfSidebarButton 50.0
 #define kWidthOfSidebarButtonBuffer 5
-#define kWidthOfSidebar 80
+#define kWidthOfSidebar 100
 #define kMinScaleDelta .01
 #define kShadowDepth 7
 #define kShadowBend 3

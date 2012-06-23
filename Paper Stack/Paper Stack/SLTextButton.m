@@ -8,30 +8,39 @@
 
 #import "SLTextButton.h"
 #import <QuartzCore/QuartzCore.h>
-#import <CoreText/CoreText.h>
 #import "Constants.h"
 
 @implementation SLTextButton
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
+- (id)initWithFrame:(CGRect)_frame andFont:(UIFont*)_font andLetter:(NSString*)_letter andTraits:(CTFontSymbolicTraits)_traits andXOffset:(CGFloat)_xOffset{
+    self = [super initWithFrame:_frame];
     if (self) {
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
+        fontName = [_font fontName];
+        letter = _letter;
+        pointSize = [_font pointSize] * kWidthOfSidebarButton / 50.0;
+        traits = _traits;
+        xOffset = _xOffset;
     }
     return self;
 }
 
-UIBezierPath* GetUIBezierPathForCharacters(CFStringRef iString, CGFloat fontSize)
-{
+-(UIBezierPath*) getUIBezierPathForSize:(CGFloat) fontSize{
     UniChar *characters;
     CGGlyph *glyphs;
     CFIndex count;
     
-    CTFontRef ref = CTFontCreateWithName((CFStringRef)@"Times New Roman", fontSize, NULL);
-    CTFontRef iFont = CTFontCreateCopyWithSymbolicTraits(ref, fontSize, NULL, kCTFontItalicTrait, kCTFontItalicTrait);
+    CFStringRef iString = (CFStringRef) letter;
+    
+    CTFontRef ref = CTFontCreateWithName((CFStringRef)fontName, fontSize, NULL);
+    CTFontRef iFont = nil;
+    if(traits){
+        iFont = CTFontCreateCopyWithSymbolicTraits(ref, fontSize, NULL, traits, traits);
+    }else{
+        iFont = ref;
+    }
 
     assert(iFont != NULL && iString != NULL);
     
@@ -55,7 +64,6 @@ UIBezierPath* GetUIBezierPathForCharacters(CFStringRef iString, CGFloat fontSize
     CGPathRef glyphCGPath = CTFontCreatePathForGlyph(iFont, glyphs[0], nil);
     UIBezierPath* glyphPath = [UIBezierPath bezierPathWithCGPath:glyphCGPath];
 
-    
     // Free our buffers
     free(characters);
     free(glyphs);
@@ -71,7 +79,7 @@ UIBezierPath* GetUIBezierPathForCharacters(CFStringRef iString, CGFloat fontSize
     CGFloat smallest = MIN(self.bounds.size.width, self.bounds.size.height);
     CGFloat drawingWidth = (smallest - 2*kWidthOfSidebarButtonBuffer);
     CGRect frame = CGRectMake(kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer, drawingWidth, drawingWidth);
-    CGFloat fontSize = drawingWidth * 28 / 40;
+    CGFloat scaledPointSize = drawingWidth * pointSize / (kWidthOfSidebarButton - 2*kWidthOfSidebarButtonBuffer);
     
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
@@ -80,15 +88,12 @@ UIBezierPath* GetUIBezierPathForCharacters(CFStringRef iString, CGFloat fontSize
     
     UIGraphicsPushContext(context);
     
-    CGAffineTransform flipTransform = CGAffineTransformConcat(CGAffineTransformMakeTranslation(0.f, -frame.size.height),
-                                                              CGAffineTransformMakeScale(1.f, -1.f));
-    CGContextConcatCTM(context, flipTransform);
-    CGContextConcatCTM(context, CGAffineTransformMakeTranslation(0, -(2*kWidthOfSidebarButtonBuffer)));
-    
-    
-    
-    UIBezierPath* glyphPath = GetUIBezierPathForCharacters((CFStringRef)@"T", fontSize);
-    [glyphPath applyTransform:CGAffineTransformMakeTranslation(drawingWidth / 4 + kWidthOfSidebarButtonBuffer, drawingWidth / 4 + kWidthOfSidebarButtonBuffer)];
+    UIBezierPath* glyphPath = [self getUIBezierPathForSize:scaledPointSize];
+    CGRect glyphRect = [glyphPath bounds];
+    [glyphPath applyTransform:CGAffineTransformConcat(CGAffineTransformMakeTranslation(-glyphRect.origin.x - .5 + xOffset, -glyphRect.size.height),
+                                                              CGAffineTransformMakeScale(1.f, -1.f))];
+    [glyphPath applyTransform:CGAffineTransformMakeTranslation((drawingWidth - glyphRect.size.width) / 2 + kWidthOfSidebarButtonBuffer,
+                                                               (drawingWidth - glyphRect.size.height) / 2 + kWidthOfSidebarButtonBuffer)];
     
     //// Oval Drawing
     UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + floor(CGRectGetWidth(frame) * 0.01) + 0.5, CGRectGetMinY(frame) + floor(CGRectGetHeight(frame) * 0.01) + 0.5, floor(CGRectGetWidth(frame) * 0.97), floor(CGRectGetHeight(frame) * 0.97))];
