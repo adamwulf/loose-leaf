@@ -104,8 +104,11 @@ static SLShadowManager* _instance = nil;
     NSNumber* key = [NSNumber numberWithInt:(int) size.width];
     UIBezierPath* path = [shadowPathCache objectForKey:key];
     if(!path){
+        /*
         path = [[unitShadowPath copy] autorelease];
         [path applyTransform:CGAffineTransformMakeScale(size.width, size.height)];
+         */
+        path = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, size.width, size.height)];
         [shadowPathCache setObject:path forKey:key];
     }
     return path.CGPath;
