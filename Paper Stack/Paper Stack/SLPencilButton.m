@@ -46,7 +46,6 @@
     UIColor* barelyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.25];
 
     //// Gradient Declarations
-    //// Gradient Declarations
     NSArray* pencilFillGradientColors = [NSArray arrayWithObjects: 
                                          (id)halfGreyFill.CGColor, 
                                          (id)[UIColor colorWithRed: 0.71 green: 0.71 blue: 0.71 alpha: 0.42].CGColor, 

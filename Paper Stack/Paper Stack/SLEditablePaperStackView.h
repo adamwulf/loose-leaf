@@ -15,6 +15,7 @@
 #import "SLTextButton.h"
 #import "SLPencilButton.h"
 #import "SLShareButton.h"
+#import "SLMapButton.h"
 #import "SLSidebarButtonDelegate.h"
 #import "NSThread+BlocksAdditions.h"
 #import "SLRotationManager.h"
@@ -32,6 +33,7 @@
     SLTextButton* textButton;
     SLPencilButton* pencilButton;
     SLShareButton* shareButton;
+    SLMapButton* mapButton;
 }
 
 @end

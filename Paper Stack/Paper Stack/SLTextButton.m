@@ -86,7 +86,7 @@
     UIColor* halfGreyFill = [self backgroundColor];
     
     
-    UIGraphicsPushContext(context);
+    CGContextSaveGState(context);
     
     UIBezierPath* glyphPath = [self getUIBezierPathForSize:scaledPointSize];
     CGRect glyphRect = [glyphPath bounds];
@@ -117,7 +117,7 @@
     [darkerGreyBorder setFill];
     [glyphPath fill];
     
-    UIGraphicsPopContext();
+    CGContextRestoreGState(context);
     
 }
 
