@@ -34,7 +34,6 @@
         [stackView addPaperToBottomOfStack:paper];
     }
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRotate:)   name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 - (void)viewDidUnload
@@ -50,17 +49,6 @@
     return UIInterfaceOrientationPortrait == interfaceOrientation;
 }
 
-- (void)didRotate:(NSNotification *)notification {
-//    [stackView resign];
-    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
-    if(orientation == UIDeviceOrientationUnknown ||
-       orientation == UIDeviceOrientationFaceDown ||
-       orientation == UIDeviceOrientationFaceUp){
-        orientation = UIDeviceOrientationPortrait;
-    }
-    [[UIApplication sharedApplication] setStatusBarOrientation:orientation animated:NO];
-//    [stackView focus];
-}
 
 
 @end
