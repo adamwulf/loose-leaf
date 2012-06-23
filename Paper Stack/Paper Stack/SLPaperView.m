@@ -9,6 +9,7 @@
 #import "SLPaperView.h"
 #import <QuartzCore/QuartzCore.h>
 #import "NSArray+MapReduce.h"
+#import "SLShadowManager.h"
 
 @implementation SLPaperView
 
@@ -23,7 +24,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", rand() % 6 + 1]];
+        NSInteger photo = rand() % 6 + 1;
+        UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", photo]];
         UIImageView* imgView = [[[UIImageView alloc] initWithImage:img] autorelease];
         imgView.frame = self.bounds;
         imgView.contentMode = UIViewContentModeScaleAspectFill;
@@ -31,14 +33,9 @@
         imgView.clipsToBounds = YES;
         [self addSubview:imgView];
         
-        /*
-        [self.layer setMasksToBounds:YES ];
-        [self.layer setBorderColor:[[[UIColor blackColor] colorWithAlphaComponent:.5] CGColor ] ];
-        [self.layer setBorderWidth:1.0];
-         */
-
         preGestureScale = 1;
         scale = 1;
+        shadowSeed = rand();
         
         panGesture = [[[SLBezelOutPanPinchGestureRecognizer alloc] 
                                                initWithTarget:self 
@@ -47,22 +44,13 @@
         panGesture.bezelDirectionMask = SLBezelDirectionRight;
         [self addGestureRecognizer:panGesture];
         
-        
-        
         [self.layer setMasksToBounds:NO ];
         [self.layer setShadowColor:[[UIColor blackColor ] CGColor ] ];
         [self.layer setShadowOpacity:0.7 ];
-        [self.layer setShadowRadius:4.0 ];
-        [self.layer setShadowPath:CGPathCreateWithRect(self.bounds, nil)];
+        [self.layer setShadowRadius:kShadowDepth ];
+        [self.layer setShadowPath:[[SLShadowManager sharedInstace] getShadowForSize:self.bounds.size]];
         [self.layer setShadowOffset:CGSizeMake( 0 , 0 ) ];
         [self.layer setShouldRasterize:YES ];
-        
-    /*
-        textLabel = [[[UILabel alloc] initWithFrame:CGRectMake(20, 20, 400, 40)] autorelease];
-        textLabel.backgroundColor = [UIColor whiteColor];
-        textLabel.textColor = [UIColor blackColor];
-        [self addSubview:textLabel];
-     */
     }
     return self;
 }
@@ -79,7 +67,7 @@
  */
 -(void) setFrame:(CGRect)frame{
     [super setFrame:frame];
-    [self.layer setShadowPath:CGPathCreateWithRect(self.bounds, nil)];
+    [self.layer setShadowPath:[[SLShadowManager sharedInstace] getShadowForSize:self.bounds.size]];
 }
 
 /**
@@ -222,6 +210,7 @@
         
         CGFloat gestureScale = panGesture.scale;
         CGFloat targetScale = preGestureScale * gestureScale;
+        CGFloat scaleDiff = ABS((float)(targetScale - scale));
 //        if(targetScale > 1){
 //            targetScale = roundf(targetScale * 2) / 2;
 //        }
@@ -231,13 +220,13 @@
         // if i begin scaling an already zoomed in page, the gesture's default is the re-begin the zoom at 1.0x
         // even though it may be 2x of our page size. so we need to remember the current scale in preGestureScale
         // and multiply that by the gesture's scale value. this gives us the scale value as a factor of the superview
-        if(targetScale > 2.5){
-            // 2.0 is the maximum
-            scale = 2.5;
-        }else if(targetScale < 0.75){
+        if(targetScale > kMaxPageZoom){
+            scale = kMaxPageZoom;
+        }else if(targetScale < kMinPageZoom){
             // 0.75 is zoom minimum
-            scale = 0.75;
-        }else if(ABS((float)(targetScale - scale)) > .01){
+            scale = kMinPageZoom;
+        }else if((targetScale >= 1 && scaleDiff > kMinScaleDelta) ||
+                 (targetScale < 1 && scaleDiff > kMinScaleDelta / 2)){
             //
             // TODO
             // only update the scale if its greater than a 1% difference of the previous

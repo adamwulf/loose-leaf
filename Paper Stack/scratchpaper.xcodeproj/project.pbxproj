@@ -22,6 +22,7 @@
 		664F414015906628006F8B09 /* SLLeftArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413F15906628006F8B09 /* SLLeftArrow.m */; };
 		6672871215944B160018571A /* SLPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6672871115944B160018571A /* SLPopoverView.m */; };
 		66728715159515FD0018571A /* SLEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* SLEditablePaperStackView.m */; };
+		6693295A15958A950033E557 /* SLShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* SLShadowManager.m */; };
 		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; };
 		66A3AF951591724200F8A7A6 /* SLBezelOutPanPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF941591724200F8A7A6 /* SLBezelOutPanPinchGestureRecognizer.m */; };
 		66BD6E301591B57B00D4544C /* SLPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* SLPaperButton.m */; };
@@ -96,6 +97,8 @@
 		6672871115944B160018571A /* SLPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPopoverView.m; sourceTree = "<group>"; };
 		66728713159515FC0018571A /* SLEditablePaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLEditablePaperStackView.h; sourceTree = "<group>"; };
 		66728714159515FC0018571A /* SLEditablePaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLEditablePaperStackView.m; sourceTree = "<group>"; };
+		6693295815958A950033E557 /* SLShadowManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLShadowManager.h; sourceTree = "<group>"; };
+		6693295915958A950033E557 /* SLShadowManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLShadowManager.m; sourceTree = "<group>"; };
 		66A3AF8C15913B5E00F8A7A6 /* NSMutableSet+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableSet+Extras.h"; sourceTree = "<group>"; };
 		66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableSet+Extras.m"; sourceTree = "<group>"; };
 		66A3AF931591724200F8A7A6 /* SLBezelOutPanPinchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLBezelOutPanPinchGestureRecognizer.h; sourceTree = "<group>"; };
@@ -229,6 +232,15 @@
 			name = Icons;
 			sourceTree = "<group>";
 		};
+		6693295715958A890033E557 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				6693295815958A950033E557 /* SLShadowManager.h */,
+				6693295915958A950033E557 /* SLShadowManager.m */,
+			);
+			name = Managers;
+			sourceTree = "<group>";
+		};
 		66BD6E811593AF4500D4544C /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
@@ -292,6 +304,7 @@
 		66DCFB901581BCEF00B4918C /* Paper Stack */ = {
 			isa = PBXGroup;
 			children = (
+				6693295715958A890033E557 /* Managers */,
 				66BD6E811593AF4500D4544C /* Buttons */,
 				660E1DAD158FC7CA0001DA12 /* Icons */,
 				660E1DA6158FC6120001DA12 /* Categories */,
@@ -519,6 +532,7 @@
 				66BD6E9F15941B7B00D4544C /* SLShareButton.m in Sources */,
 				6672871215944B160018571A /* SLPopoverView.m in Sources */,
 				66728715159515FD0018571A /* SLEditablePaperStackView.m in Sources */,
+				6693295A15958A950033E557 /* SLShadowManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -590,6 +604,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
@@ -610,6 +625,7 @@
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
 			};

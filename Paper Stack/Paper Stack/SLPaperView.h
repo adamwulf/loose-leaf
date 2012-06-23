@@ -31,8 +31,13 @@
     SLBezelOutPanPinchGestureRecognizer* panGesture;
     
     BOOL isBrandNewPage;
+    
+    
+    NSInteger shadowSeed;
+    UIBezierPath* unitShadowPath;
 }
 
+@property (nonatomic, readonly) UIBezierPath* unitShadowPath;
 @property (nonatomic, assign) NSObject<SLPaperViewDelegate>* delegate;
 @property (nonatomic, assign) CGFloat scale;
 @property (nonatomic, readonly) BOOL isBeingPannedAndZoomed;

@@ -16,12 +16,18 @@
 #define debug_NSLog(format, ...)
 #endif
 
+#define kMinPageZoom .7
+#define kMaxPageZoom 2.5
+
 #define kGutterWidthToDragPages 300
 #define kFingerWidth 40
 #define kFilteringFactor 0.2
 #define kWidthOfSidebarButton 50
 #define kWidthOfSidebarButtonBuffer 5
 #define kWidthOfSidebar 80
+#define kMinScaleDelta .01
+#define kShadowDepth 7
+#define kShadowBend 3
 
 CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
 

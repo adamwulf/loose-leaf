@@ -10,6 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "UIView+SubviewStacks.h"
 #import "Constants.h"
+#import "SLShadowManager.h"
 
 @implementation SLPaperStackView
 
@@ -593,8 +594,8 @@
         // UIView animationWithDuration call...
         CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
         theAnimation.duration = 0.3;
-        theAnimation.fromValue = (id) [UIBezierPath bezierPathWithRect:CGRectMake(-10.0, -10.0, 50.0, 50.0)].CGPath;
-        theAnimation.toValue = (id) [UIBezierPath bezierPathWithRect:CGRectMake(-10.0, -10.0, 50.0, 50.0)].CGPath;
+        theAnimation.fromValue = (id) page.layer.shadowPath;
+        theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:page.bounds.size];
         [page.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
         [UIView animateWithDuration:.15 delay:delay options:UIViewAnimationOptionAllowUserInteraction
                          animations:^(void){
