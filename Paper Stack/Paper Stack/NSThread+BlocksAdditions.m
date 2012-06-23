@@ -35,9 +35,13 @@
 
 + (void)performBlockOnMainThread:(void (^)())block
 {
-    [NSThread performSelector:@selector(ng_runBlock:)
-                     onThread:[NSThread mainThread]
-                   withObject:[[block copy] autorelease]
-                waitUntilDone:NO];
+    if([NSThread isMainThread]){
+        block();
+    }else{
+        [NSThread performSelector:@selector(ng_runBlock:)
+                         onThread:[NSThread mainThread]
+                       withObject:[[block copy] autorelease]
+                    waitUntilDone:NO];
+    }
 }
 @end

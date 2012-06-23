@@ -76,47 +76,8 @@
     //
     // accelerometer for rotating buttons
     // ================================================================================
-    // initialize state
-    isFirstReading = YES;
-    currentRawReading = 0;
     
-    // add opqueue to sample the accelerometer
-    NSOperationQueue* opQueue = [[NSOperationQueue alloc] init];
-    [opQueue setMaxConcurrentOperationCount:1];
-    CMMotionManager* motionManager = [[CMMotionManager alloc] init];
-    [motionManager setAccelerometerUpdateInterval:0.03];
-    [motionManager startAccelerometerUpdatesToQueue:opQueue withHandler:^(CMAccelerometerData* data, NSError* error){
-        //
-        // if z == -1, x == 0, y == 0
-        //   then it's flat up on a table
-        // if z == 1, x == 0, y == 0
-        //   then it's flat down on a table
-        // if z == 0, x == 0, y == -1
-        //   then it's up in portrait
-        // if z == 0, x == 0, y == 1
-        //   then it's upside down in portrait
-        // if z == 0, x == 1, y == 0
-        //   then it's landscape button left
-        // if z == 0, x == -1, y == 0
-        //   then it's landscape button right
-        accelerationX = data.acceleration.x * kFilteringFactor + accelerationX * (1.0 - kFilteringFactor);
-        accelerationY = data.acceleration.y * kFilteringFactor + accelerationY * (1.0 - kFilteringFactor);
-        CGFloat newRawReading = atan2(accelerationY, accelerationX);
-        if(ABS(newRawReading - currentRawReading) > .05 || isFirstReading){
-            currentRawReading = newRawReading;
-            isFirstReading = NO;
-            [NSThread performBlockOnMainThread:^{
-                addPageSidebarButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-                documentBackgroundSidebarButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-                polylineButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-                polygonButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-                insertImageButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-                textButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-                pencilButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-                shareButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-            }];
-        }
-    }];
+    [[SLRotationManager sharedInstace] setDelegate:self];
 }
 
 /**
@@ -124,7 +85,7 @@
  * should be rotated to stay pointed "down"
  */
 -(CGFloat) sidebarButtonRotation{
-    return -(currentRawReading + M_PI/2);
+    return -([[SLRotationManager sharedInstace] currentRotationReading] + M_PI/2);
 }
 
 
@@ -150,6 +111,29 @@
 }
 -(void) toggleButton:(UIButton*) _button{
     _button.enabled = !_button.enabled;
+}
+
+#pragma mark - SLRotationManagerDelegate
+
+-(void) didUpdateAccelerometerWithReading:(CGFloat)currentRawReading{
+    [NSThread performBlockOnMainThread:^{
+        addPageSidebarButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        documentBackgroundSidebarButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        polylineButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        polygonButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        insertImageButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        textButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        pencilButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        shareButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+    }];
+}
+
+-(void) willRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient{
+    // noop
+}
+
+-(void) didRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient{
+    // noop
 }
 
 
