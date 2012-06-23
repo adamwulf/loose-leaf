@@ -31,8 +31,6 @@
     SLBezelOutPanPinchGestureRecognizer* panGesture;
     
     BOOL isBrandNewPage;
-    
-    UITextField* textField;
 }
 
 @property (nonatomic, assign) NSObject<SLPaperViewDelegate>* delegate;

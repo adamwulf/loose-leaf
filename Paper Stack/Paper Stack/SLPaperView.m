@@ -57,11 +57,6 @@
         [self.layer setShadowOffset:CGSizeMake( 0 , 0 ) ];
         [self.layer setShouldRasterize:YES ];
         
-        textField = [[UITextField alloc]initWithFrame:CGRectMake(100, 100, 400, 400)];
-        textField.layer.borderColor = [UIColor redColor].CGColor;
-        textField.layer.borderWidth = 2;
-        [self addSubview:textField];
-
     /*
         textLabel = [[[UILabel alloc] initWithFrame:CGRectMake(20, 20, 400, 40)] autorelease];
         textLabel.backgroundColor = [UIColor whiteColor];
@@ -70,13 +65,6 @@
      */
     }
     return self;
-}
-
--(void) resign{
-    [textField resignFirstResponder];
-}
--(void) focus{
-//    [textField becomeFirstResponder];
 }
 
 
