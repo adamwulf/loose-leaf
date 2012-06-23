@@ -24,6 +24,7 @@
 		66728715159515FD0018571A /* SLEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* SLEditablePaperStackView.m */; };
 		6693295A15958A950033E557 /* SLShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* SLShadowManager.m */; };
 		66932965159593C00033E557 /* SLRotationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66932964159593C00033E557 /* SLRotationManager.m */; };
+		6693296A1595A87E0033E557 /* SLMapButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329691595A87E0033E557 /* SLMapButton.m */; };
 		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; };
 		66A3AF951591724200F8A7A6 /* SLBezelOutPanPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF941591724200F8A7A6 /* SLBezelOutPanPinchGestureRecognizer.m */; };
 		66BD6E301591B57B00D4544C /* SLPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* SLPaperButton.m */; };
@@ -103,6 +104,8 @@
 		66932963159593C00033E557 /* SLRotationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLRotationManager.h; sourceTree = "<group>"; };
 		66932964159593C00033E557 /* SLRotationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLRotationManager.m; sourceTree = "<group>"; };
 		66932967159594A60033E557 /* SLRotationManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLRotationManagerDelegate.h; sourceTree = "<group>"; };
+		669329681595A87E0033E557 /* SLMapButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLMapButton.h; sourceTree = "<group>"; };
+		669329691595A87E0033E557 /* SLMapButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLMapButton.m; sourceTree = "<group>"; };
 		66A3AF8C15913B5E00F8A7A6 /* NSMutableSet+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableSet+Extras.h"; sourceTree = "<group>"; };
 		66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableSet+Extras.m"; sourceTree = "<group>"; };
 		66A3AF931591724200F8A7A6 /* SLBezelOutPanPinchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLBezelOutPanPinchGestureRecognizer.h; sourceTree = "<group>"; };
@@ -270,6 +273,8 @@
 				66BD6E9B15940D7400D4544C /* SLPencilButton.m */,
 				66BD6E9D15941B7A00D4544C /* SLShareButton.h */,
 				66BD6E9E15941B7B00D4544C /* SLShareButton.m */,
+				669329681595A87E0033E557 /* SLMapButton.h */,
+				669329691595A87E0033E557 /* SLMapButton.m */,
 			);
 			name = Buttons;
 			sourceTree = "<group>";
@@ -541,6 +546,7 @@
 				66728715159515FD0018571A /* SLEditablePaperStackView.m in Sources */,
 				6693295A15958A950033E557 /* SLShadowManager.m in Sources */,
 				66932965159593C00033E557 /* SLRotationManager.m in Sources */,
+				6693296A1595A87E0033E557 /* SLMapButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
