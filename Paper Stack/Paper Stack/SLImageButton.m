@@ -132,11 +132,6 @@
     mountainStrokePath.lineWidth = 1;
     [mountainStrokePath stroke];
   
-    [darkerGreyBorder setStroke];
-    sunPath.lineWidth = 1;
-    [sunPath stroke];
-
-
     
 }
 
