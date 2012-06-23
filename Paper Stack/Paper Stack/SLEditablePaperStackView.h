@@ -16,17 +16,13 @@
 #import "SLPencilButton.h"
 #import "SLShareButton.h"
 #import "SLSidebarButtonDelegate.h"
-#import <CoreMotion/CoreMotion.h>
 #import "NSThread+BlocksAdditions.h"
+#import "SLRotationManager.h"
+#import "SLRotationManagerDelegate.h"
 #import "Constants.h"
 
-@interface SLEditablePaperStackView : SLPaperStackView<UIAccelerometerDelegate,SLSidebarButtonDelegate>{
-    // rotation
-    BOOL isFirstReading;
-    CGFloat accelerationX;
-    CGFloat accelerationY;
-    CGFloat currentRawReading;
-    
+
+@interface SLEditablePaperStackView : SLPaperStackView<UIAccelerometerDelegate,SLSidebarButtonDelegate,SLRotationManagerDelegate>{
     // toolbar
     SLPaperButton* documentBackgroundSidebarButton;
     SLPlusButton* addPageSidebarButton;
@@ -36,8 +32,6 @@
     SLTextButton* textButton;
     SLPencilButton* pencilButton;
     SLShareButton* shareButton;
-    
-    
 }
 
 @end

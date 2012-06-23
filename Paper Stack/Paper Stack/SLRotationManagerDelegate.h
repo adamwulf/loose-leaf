@@ -16,5 +16,6 @@
 
 -(void) didRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient;
 
+-(void) didUpdateAccelerometerWithReading:(CGFloat)currentRawReading;
 
 @end
