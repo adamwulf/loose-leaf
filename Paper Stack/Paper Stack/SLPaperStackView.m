@@ -25,13 +25,6 @@
     return self;
 }
 
--(void) resign{
-    [[visibleStackHolder peekSubview] resign];
-}
--(void) focus{
-    [[visibleStackHolder peekSubview] focus];
-}
-
 
 -(void) awakeFromNib{
     setOfPagesBeingPanned = [[NSMutableSet alloc] init]; // use this as a quick cache of pages being panned

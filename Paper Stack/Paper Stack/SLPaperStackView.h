@@ -40,7 +40,4 @@
 -(void) addPaperToBottomOfStack:(SLPaperView*)page;
 -(void) popTopPageOfHiddenStack;
 
--(void) resign;
--(void) focus;
-
 @end

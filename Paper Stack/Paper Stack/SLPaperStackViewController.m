@@ -48,7 +48,7 @@
 }
 
 - (void)didRotate:(NSNotification *)notification {
-    [stackView resign];
+//    [stackView resign];
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     if(orientation == UIDeviceOrientationUnknown ||
        orientation == UIDeviceOrientationFaceDown ||
@@ -56,8 +56,7 @@
         orientation = UIDeviceOrientationPortrait;
     }
     [[UIApplication sharedApplication] setStatusBarOrientation:orientation animated:NO];
-//    [self positionScreenElements];
-    [stackView focus];
+//    [stackView focus];
 }
 
 
