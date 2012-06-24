@@ -32,7 +32,7 @@
     visibleStackHolder = [[UIView alloc] initWithFrame:self.bounds];
     hiddenStackHolder = [[UIView alloc] initWithFrame:self.bounds];
     CGRect frameOfHiddenStack = hiddenStackHolder.frame;
-    frameOfHiddenStack.origin.x += hiddenStackHolder.bounds.size.width;
+    frameOfHiddenStack.origin.x += hiddenStackHolder.bounds.size.width + 1;
     hiddenStackHolder.frame = frameOfHiddenStack;
     
     //
@@ -57,7 +57,7 @@
     
     //
     // bezel gesture
-    fromRightBezelGesture = [[SLBezelInGestureRecognizer alloc] initWithTarget:self action:@selector(bezelIn:)];
+    fromRightBezelGesture = [[SLBezelInRightGestureRecognizer alloc] initWithTarget:self action:@selector(bezelIn:)];
     [fromRightBezelGesture setBezelDirectionMask:SLBezelDirectionFromRightBezel];
     [fromRightBezelGesture setMinimumNumberOfTouches:2];
     [self addGestureRecognizer:fromRightBezelGesture];
@@ -77,6 +77,26 @@
 -(void) bezelIn:(SLBezelInGestureRecognizer*)bezelGesture{
     SLPaperView* page = [self ensureTopPageInHiddenStack];
     CGPoint translation = [bezelGesture translationInView:self];
+    CGPoint location = [bezelGesture locationInView:self];
+    
+    
+    if(bezelGesture.state == UIGestureRecognizerStateBegan){
+        debug_NSLog(@"began %f", 768 - location.x);
+    }else if(bezelGesture.state == UIGestureRecognizerStateCancelled){
+        debug_NSLog(@"cancelled");
+    }else if(bezelGesture.state == UIGestureRecognizerStateChanged){
+//        debug_NSLog(@"changed");
+    }else if(bezelGesture.state == UIGestureRecognizerStateEnded){
+        debug_NSLog(@"ended");
+    }else if(bezelGesture.state == UIGestureRecognizerStateFailed){
+        debug_NSLog(@"failed");
+    }else if(bezelGesture.state == UIGestureRecognizerStatePossible){
+        debug_NSLog(@"possible");
+    }else if(bezelGesture.state == UIGestureRecognizerStateRecognized){
+        debug_NSLog(@"recognized");
+    }
+    
+    
 
     if(bezelGesture.state == UIGestureRecognizerStateBegan){
         [[visibleStackHolder peekSubview] disableAllGestures];

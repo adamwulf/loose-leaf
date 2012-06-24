@@ -15,7 +15,7 @@
 #import "SLPlusIcon.h"
 #import "SLLeftArrow.h"
 #import "SLRightArrow.h"
-#import "SLBezelInGestureRecognizer.h"
+#import "SLBezelInRightGestureRecognizer.h"
 
 #import "SLPopoverView.h"
 
@@ -28,7 +28,7 @@
     SLLeftArrow* leftArrow;
     SLRightArrow* rightArrow;
     
-    SLBezelInGestureRecognizer* fromRightBezelGesture;
+    SLBezelInRightGestureRecognizer* fromRightBezelGesture;
     NSMutableSet* setOfPagesBeingPanned;
     
     SLPaperView* inProgressOfBezeling;

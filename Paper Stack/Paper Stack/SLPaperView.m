@@ -134,6 +134,15 @@
 -(void) panAndScale:(SLBezelOutPanPinchGestureRecognizer*)_panGesture{
     CGPoint panDiffLocation = [panGesture translationInView:self];
     CGPoint lastLocationInSelf = [panGesture locationInView:self];
+    
+    
+    if(_panGesture.state == UIGestureRecognizerStateBegan){
+        CGPoint loc = [panGesture locationInView:self.superview];
+        debug_NSLog(@"pan loc: %f", loc.x);
+    }
+    
+    
+    
     CGPoint velocity = [self calculateVelocityOfPanGesture:panGesture withTranslation:panDiffLocation];
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
        panGesture.state == UIGestureRecognizerStateEnded ||
