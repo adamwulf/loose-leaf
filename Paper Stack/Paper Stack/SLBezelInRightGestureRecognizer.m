@@ -161,7 +161,7 @@
         [ignoredTouches removeObject:touch];
         [validTouches removeObject:touch];
     }
-    if([validTouches count] == 0){
+    if([validTouches count] == 0 && self.state == UIGestureRecognizerStateChanged){
         self.state = UIGestureRecognizerStateEnded;
         [dateOfLastBezelEnding release];
         dateOfLastBezelEnding = [[NSDate date] retain];
@@ -177,7 +177,7 @@
         [ignoredTouches removeObject:touch];
         [validTouches removeObject:touch];
     }
-    if([validTouches count] == 0){
+    if([validTouches count] == 0 && self.state == UIGestureRecognizerStateChanged){
         self.state = UIGestureRecognizerStateCancelled;
         [dateOfLastBezelEnding release];
         dateOfLastBezelEnding = [[NSDate date] retain];
