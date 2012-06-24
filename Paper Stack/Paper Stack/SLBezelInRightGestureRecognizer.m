@@ -6,10 +6,10 @@
 //  Copyright (c) 2012 Visere. All rights reserved.
 //
 
-#import "SLBezelInGestureRecognizer.h"
+#import "SLBezelInRightGestureRecognizer.h"
 #import "Constants.h"
 
-@implementation SLBezelInGestureRecognizer
+@implementation SLBezelInRightGestureRecognizer
 @synthesize bezelDirectionMask;
 @synthesize panDirection;
 
@@ -111,7 +111,7 @@
             // ignore touch inside main view, only accept bezel touches
             [self ignoreTouch:touch forEvent:event];
         }else{
-//            debug_NSLog(@"point for bezel: %f %f", point.x, point.y);
+            //            debug_NSLog(@"point for bezel: %f %f", point.x, point.y);
         }
     }
     panDirection = SLBezelDirectionNone;

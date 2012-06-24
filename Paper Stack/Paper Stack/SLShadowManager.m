@@ -78,19 +78,18 @@ static SLShadowManager* _instance = nil;
     if(![shadowPathCache count]){
         //
         // only run once
+        // latest tests show this finishes in .02s on an iPad 3
         [NSThread performBlockInBackground:^{
             CGSize screenSize = [[UIScreen mainScreen] bounds].size;
             CGFloat minWidth = floorf(screenSize.width * kMinPageZoom);
             CGFloat maxWidth = screenSize.width * kMaxPageZoom;
             CGFloat currWidth = minWidth;
             CGFloat currHeight;
-            NSDate* dt = [NSDate date];
             while(currWidth <= maxWidth){
                 currHeight = currWidth / screenSize.width * screenSize.height;
                 [self getShadowForSize:CGSizeMake(currWidth, currHeight)];
                 currWidth += 1;
             }
-            debug_NSLog(@"done with shadows: %f", -[dt timeIntervalSinceNow]);
         }];
     }
 }
