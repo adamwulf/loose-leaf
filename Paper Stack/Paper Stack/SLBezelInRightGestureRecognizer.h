@@ -12,15 +12,16 @@
 
 @interface SLBezelInRightGestureRecognizer : UIGestureRecognizer{
     
-    SLBezelDirection bezelDirectionMask;
     SLBezelPanDirection panDirection;
     CGPoint lastKnownLocation;
     CGPoint firstKnownLocation;
     
     NSMutableSet* ignoredTouches;
+    NSMutableSet* validTouches;
 }
 
-@property (nonatomic, assign) SLBezelDirection bezelDirectionMask;
 @property (nonatomic, readonly) SLBezelPanDirection panDirection;
+
+-(CGPoint) translationInView:(UIView*)view;
 
 @end

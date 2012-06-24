@@ -10,13 +10,12 @@
 #import "Constants.h"
 
 @implementation SLBezelInRightGestureRecognizer
-@synthesize bezelDirectionMask;
 @synthesize panDirection;
 
 -(id) initWithTarget:(id)target action:(SEL)action{
     self = [super initWithTarget:target action:action];
-    self.bezelDirectionMask = SLBezelDirectionFromBottomBezel | SLBezelDirectionFromLeftBezel | SLBezelDirectionFromRightBezel | SLBezelDirectionFromTopBezel;
     ignoredTouches = [[NSMutableSet alloc] init];
+    validTouches = [[NSMutableSet alloc] init];
     return self;
 }
 
@@ -88,7 +87,7 @@
         CGPoint p = [self furthestLeftTouchLocation];
         return CGPointMake(p.x - firstKnownLocation.x, p.y - firstKnownLocation.y);
     }
-    return [super translationInView:view];
+    return CGPointZero;
 }
 
 /**
@@ -99,25 +98,26 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     for(UITouch* touch in touches){
         CGPoint point = [touch locationInView:self.view];
-        if(point.x < kBezelInGestureWidth && !((self.bezelDirectionMask & SLBezelDirectionFromLeftBezel) == SLBezelDirectionFromLeftBezel)){
+        if(point.x < self.view.frame.size.width - kBezelInGestureWidth){
+            // only accept touches on the right bezel
             [self ignoreTouch:touch forEvent:event];
-        }else if(point.y < kBezelInGestureWidth && !((self.bezelDirectionMask & SLBezelDirectionFromTopBezel) == SLBezelDirectionFromTopBezel)){
-            [self ignoreTouch:touch forEvent:event];
-        }else if(point.x > self.view.frame.size.width - kBezelInGestureWidth && !((self.bezelDirectionMask & SLBezelDirectionFromRightBezel) == SLBezelDirectionFromRightBezel)){
-            [self ignoreTouch:touch forEvent:event];
-        }else if(point.y > self.view.frame.size.height - kBezelInGestureWidth && !((self.bezelDirectionMask & SLBezelDirectionFromBottomBezel) == SLBezelDirectionFromBottomBezel)){
-            [self ignoreTouch:touch forEvent:event];
-        }else if(point.x > kBezelInGestureWidth && point.y > kBezelInGestureWidth && point.x < self.view.frame.size.width - kBezelInGestureWidth && point.y < self.view.frame.size.height - kBezelInGestureWidth){
-            // ignore touch inside main view, only accept bezel touches
-            [self ignoreTouch:touch forEvent:event];
+            return;
         }else{
-            //            debug_NSLog(@"point for bezel: %f %f", point.x, point.y);
+            [validTouches addObject:touch];
         }
     }
+    
     panDirection = SLBezelDirectionNone;
     lastKnownLocation = [self furthestLeftTouchLocation];
-    [super touchesBegan:touches withEvent:event];
-    debug_NSLog(@"points: %d", self.numberOfTouches);
+    debug_NSLog(@"points: %d %d", self.numberOfTouches, [validTouches count]);
+    
+    if(self.state == UIGestureRecognizerStatePossible){
+        // ok, a touch began, and we don't current have anything
+        // recognized
+        if([validTouches count] >= 2){
+            self.state = UIGestureRecognizerStateBegan;
+        }
+    }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -138,7 +138,6 @@
         }
         lastKnownLocation = p;
     }
-    [super touchesMoved:touches withEvent:event];
     if(self.state == UIGestureRecognizerStateBegan){
         firstKnownLocation = [self furthestRightTouchLocation];
     }
@@ -148,18 +147,25 @@
        self.state == UIGestureRecognizerStateBegan){
         self.state = UIGestureRecognizerStateEnded;
     }
-    [super touchesEnded:touches withEvent:event];
+    debug_NSLog(@"touch ended");
+    for(UITouch* touch in touches){
+        [ignoredTouches removeObject:touch];
+        [validTouches removeObject:touch];
+    }
 }
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
     if(self.state == UIGestureRecognizerStateChanged ||
        self.state == UIGestureRecognizerStateBegan){
         self.state = UIGestureRecognizerStateCancelled;
     }
-    [super touchesCancelled:touches withEvent:event];
+    debug_NSLog(@"touch cancelled");
+    for(UITouch* touch in touches){
+        [ignoredTouches removeObject:touch];
+        [validTouches removeObject:touch];
+    }
 }
 -(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
     [ignoredTouches addObject:touch];
-    [super ignoreTouch:touch forEvent:event];
 }
 - (void)reset{
     [super reset];

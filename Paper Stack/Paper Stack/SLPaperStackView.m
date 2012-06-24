@@ -58,8 +58,6 @@
     //
     // bezel gesture
     fromRightBezelGesture = [[SLBezelInRightGestureRecognizer alloc] initWithTarget:self action:@selector(bezelIn:)];
-    [fromRightBezelGesture setBezelDirectionMask:SLBezelDirectionFromRightBezel];
-    [fromRightBezelGesture setMinimumNumberOfTouches:2];
     [self addGestureRecognizer:fromRightBezelGesture];
 }
 
@@ -74,7 +72,7 @@
     return page;
 }
 
--(void) bezelIn:(SLBezelInGestureRecognizer*)bezelGesture{
+-(void) bezelIn:(SLBezelInRightGestureRecognizer*)bezelGesture{
     SLPaperView* page = [self ensureTopPageInHiddenStack];
     CGPoint translation = [bezelGesture translationInView:self];
     CGPoint location = [bezelGesture locationInView:self];
