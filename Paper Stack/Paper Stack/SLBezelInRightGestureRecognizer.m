@@ -152,6 +152,9 @@
         [ignoredTouches removeObject:touch];
         [validTouches removeObject:touch];
     }
+    if([validTouches count] == 0 && self.state != UIGestureRecognizerStatePossible){
+        self.state = UIGestureRecognizerStateEnded;
+    }
 }
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
     if(self.state == UIGestureRecognizerStateChanged ||
@@ -163,9 +166,13 @@
         [ignoredTouches removeObject:touch];
         [validTouches removeObject:touch];
     }
+    if([validTouches count] == 0 && self.state != UIGestureRecognizerStatePossible){
+        self.state = UIGestureRecognizerStateCancelled;
+    }
 }
 -(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
     [ignoredTouches addObject:touch];
+    [super ignoreTouch:touch forEvent:event];
 }
 - (void)reset{
     [super reset];

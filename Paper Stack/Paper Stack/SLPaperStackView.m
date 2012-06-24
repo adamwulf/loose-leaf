@@ -22,6 +22,7 @@
     if (self) {
         // Initialization code
         [self awakeFromNib];
+        numberOfRepeatingBezels = 0;
     }
     return self;
 }
@@ -73,6 +74,10 @@
 }
 
 -(void) bezelIn:(SLBezelInRightGestureRecognizer*)bezelGesture{
+    
+    
+    
+    
     SLPaperView* page = [self ensureTopPageInHiddenStack];
     CGPoint translation = [bezelGesture translationInView:self];
     CGPoint location = [bezelGesture locationInView:self];
@@ -80,6 +85,8 @@
     
     if(bezelGesture.state == UIGestureRecognizerStateBegan){
         debug_NSLog(@"began %f", 768 - location.x);
+        [self incrementBezelCounter];
+        debug_NSLog(@"should show %d pages", numberOfRepeatingBezels);
     }else if(bezelGesture.state == UIGestureRecognizerStateCancelled){
         debug_NSLog(@"cancelled");
     }else if(bezelGesture.state == UIGestureRecognizerStateChanged){
@@ -255,8 +262,8 @@
 -(void) updateIconAnimations{
     BOOL bezelingFromRight = fromRightBezelGesture.state == UIGestureRecognizerStateBegan || fromRightBezelGesture.state == UIGestureRecognizerStateChanged;
     BOOL showLeftArrow = NO;
-    BOOL topPageIsExitingBezel = [[visibleStackHolder peekSubview] willExitBezel];
-    BOOL nonTopPageIsExitingBezel = inProgressOfBezeling != [visibleStackHolder peekSubview] && [inProgressOfBezeling willExitBezel];
+    BOOL topPageIsExitingBezel = [[visibleStackHolder peekSubview] willExitToRightBezel];
+    BOOL nonTopPageIsExitingBezel = inProgressOfBezeling != [visibleStackHolder peekSubview] && [inProgressOfBezeling willExitToRightBezel];
     NSInteger numberOfVisiblePagesThatAreNotAligned = 0;
     for(int i=[visibleStackHolder.subviews count]-1; i>=0 && i>[visibleStackHolder.subviews count]-4;i--){
         SLPaperView* page = [visibleStackHolder.subviews objectAtIndex:i];
@@ -351,7 +358,11 @@
  * depending on where they drag a page
  */
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
-    if([page willExitBezel]){
+    //
+    // reset the bezel counter
+    [self resetBezelCounter];
+    
+    if([page willExitToRightBezel]){
         inProgressOfBezeling = page;
     }
     [setOfPagesBeingPanned addObject:page];
@@ -666,5 +677,17 @@
                      }];
 }
 
+
+
+#pragma mark - Bezel helpers
+
+-(void) resetBezelCounter{
+    debug_NSLog(@"bezel reset");
+    numberOfRepeatingBezels = 0;
+}
+-(void) incrementBezelCounter{
+    debug_NSLog(@"bezel incremented");
+    numberOfRepeatingBezels++;
+}
 
 @end
