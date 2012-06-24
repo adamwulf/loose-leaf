@@ -112,7 +112,7 @@
     
     panDirection = SLBezelDirectionNone;
     lastKnownLocation = [self furthestLeftTouchLocation];
-    debug_NSLog(@"points: %d %d", self.numberOfTouches, [validTouches count]);
+//    debug_NSLog(@"points: %d %d", self.numberOfTouches, [validTouches count]);
     
     // ok, a touch began, and we don't current have anything
     // recognized
@@ -120,9 +120,9 @@
         
         if(!dateOfLastBezelEnding || [dateOfLastBezelEnding timeIntervalSinceNow] > -.5){
             numberOfRepeatingBezels++;
-            debug_NSLog(@"add one! %d", numberOfRepeatingBezels);
+//            debug_NSLog(@"add one! %d", numberOfRepeatingBezels);
         }else{
-            debug_NSLog(@"reset to one!");
+//            debug_NSLog(@"reset to one!");
             numberOfRepeatingBezels = 1;
         }
         if(self.state != UIGestureRecognizerStateBegan){
@@ -156,7 +156,6 @@
     }
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
-    debug_NSLog(@"touch ended");
     for(UITouch* touch in touches){
         [ignoredTouches removeObject:touch];
         [validTouches removeObject:touch];
@@ -172,7 +171,6 @@
        self.state == UIGestureRecognizerStateBegan){
         self.state = UIGestureRecognizerStateCancelled;
     }
-    debug_NSLog(@"touch cancelled");
     for(UITouch* touch in touches){
         [ignoredTouches removeObject:touch];
         [validTouches removeObject:touch];
