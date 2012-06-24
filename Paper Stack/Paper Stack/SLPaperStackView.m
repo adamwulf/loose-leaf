@@ -31,9 +31,11 @@
     setOfPagesBeingPanned = [[NSMutableSet alloc] init]; // use this as a quick cache of pages being panned
     visibleStackHolder = [[UIView alloc] initWithFrame:self.bounds];
     hiddenStackHolder = [[UIView alloc] initWithFrame:self.bounds];
+    bezelStackHolder = [[UIView alloc] initWithFrame:self.bounds];
     CGRect frameOfHiddenStack = hiddenStackHolder.frame;
     frameOfHiddenStack.origin.x += hiddenStackHolder.bounds.size.width + 1;
     hiddenStackHolder.frame = frameOfHiddenStack;
+    bezelStackHolder.frame = frameOfHiddenStack;
     
     //
     // icons for moving and panning pages
@@ -73,10 +75,6 @@
 }
 
 -(void) bezelIn:(SLBezelInRightGestureRecognizer*)bezelGesture{
-    
-    
-    
-    
     SLPaperView* page = [self ensureTopPageInHiddenStack];
     CGPoint translation = [bezelGesture translationInView:self];
     CGPoint location = [bezelGesture locationInView:self];
@@ -103,6 +101,7 @@
 
     if(bezelGesture.state == UIGestureRecognizerStateBegan){
         [[visibleStackHolder peekSubview] disableAllGestures];
+        [bezelStackHolder pushSubview:[hiddenStackHolder popSubview]];
         [UIView animateWithDuration:.2 animations:^{
             CGRect newFrame = CGRectMake(hiddenStackHolder.bounds.origin.x + translation.x - kFingerWidth,
                                          hiddenStackHolder.bounds.origin.y,
@@ -112,16 +111,37 @@
         }];
     }else if(bezelGesture.state == UIGestureRecognizerStateCancelled ||
        bezelGesture.state == UIGestureRecognizerStateFailed){
-        [self animateBackToHiddenStack:page withDelay:0];
+        CGFloat delay = 0;
+        while([bezelStackHolder.subviews count]){
+            [hiddenStackHolder pushSubview:[bezelStackHolder popSubview]];
+            [self animateBackToHiddenStack:[hiddenStackHolder peekSubview] withDelay:delay];
+            delay += .1;
+        }
         [[visibleStackHolder peekSubview] enableAllGestures];
     }else if(bezelGesture.state == UIGestureRecognizerStateEnded &&
              ((bezelGesture.panDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft)){
         [[visibleStackHolder peekSubview] enableAllGestures];
-        [self popTopPageOfHiddenStack]; 
+        while([bezelStackHolder.subviews count]){
+            [hiddenStackHolder pushSubview:[bezelStackHolder popSubview]];
+        }
+        for(int i=0;i<bezelGesture.numberOfRepeatingBezels;i++){
+            [self popTopPageOfHiddenStack];
+        }
     }else if(bezelGesture.state == UIGestureRecognizerStateEnded){
-        [self animateBackToHiddenStack:page withDelay:0];
         [[visibleStackHolder peekSubview] enableAllGestures];
+        CGFloat delay = 0;
+        while([bezelStackHolder.subviews count]){
+            [hiddenStackHolder pushSubview:[bezelStackHolder popSubview]];
+            [self animateBackToHiddenStack:[hiddenStackHolder peekSubview] withDelay:delay];
+            delay += .1;
+        }
     }else{
+        while(bezelGesture.numberOfRepeatingBezels != [bezelStackHolder.subviews count] && [hiddenStackHolder.subviews count]){
+            //
+            // we need to add another page
+            [bezelStackHolder pushSubview:[hiddenStackHolder popSubview]];
+            debug_NSLog(@"add page! %d", [bezelStackHolder.subviews count]);
+        }
         CGRect newFrame = CGRectMake(hiddenStackHolder.bounds.origin.x + translation.x - kFingerWidth,
                                      hiddenStackHolder.bounds.origin.y,
                                      hiddenStackHolder.bounds.size.width,

@@ -22,6 +22,7 @@
 @interface SLPaperStackView : UIView<SLPaperViewDelegate>{
     UIView* visibleStackHolder;
     UIView* hiddenStackHolder;
+    UIView* bezelStackHolder;
     SLPapersIcon* papersIcon;
     SLPaperIcon* paperIcon;
     SLPlusIcon* plusIcon;
