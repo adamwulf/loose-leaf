@@ -72,10 +72,9 @@
 
 /**
  * returns true if the user is in the middle of a pan
- * gesture that will send the page to exit via the
- * bezel gesture
+ * gesture that will send the page to exit via the bezel
  */
--(BOOL) willExitBezel{
+-(BOOL) willExitToRightBezel{
     BOOL isRight = (panGesture.didExitToBezel & SLBezelDirectionRight) == SLBezelDirectionRight;
     return isRight && panGesture.state == UIGestureRecognizerStateChanged;
 }

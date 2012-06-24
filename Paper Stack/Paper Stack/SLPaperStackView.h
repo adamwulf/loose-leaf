@@ -31,7 +31,12 @@
     SLBezelInRightGestureRecognizer* fromRightBezelGesture;
     NSMutableSet* setOfPagesBeingPanned;
     
+    // track if we're currently pulling in a page
+    // from the bezel
     SLPaperView* inProgressOfBezeling;
+    // track how many pages we're pulling in from the
+    // bezel
+    NSInteger numberOfRepeatingBezels;
 }
 
 @property (nonatomic, readonly) UIView* stackHolder;
@@ -39,5 +44,9 @@
 
 -(void) addPaperToBottomOfStack:(SLPaperView*)page;
 -(void) popTopPageOfHiddenStack;
+
+-(void) incrementBezelCounter;
+-(void) resetBezelCounter;
+
 
 @end
