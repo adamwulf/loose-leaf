@@ -18,9 +18,13 @@
     
     NSMutableSet* ignoredTouches;
     NSMutableSet* validTouches;
+
+    NSDate* dateOfLastBezelEnding;
+    NSInteger numberOfRepeatingBezels;
 }
 
 @property (nonatomic, readonly) SLBezelPanDirection panDirection;
+@property (nonatomic, readonly) NSInteger numberOfRepeatingBezels;
 
 -(CGPoint) translationInView:(UIView*)view;
 

@@ -22,7 +22,6 @@
     if (self) {
         // Initialization code
         [self awakeFromNib];
-        numberOfRepeatingBezels = 0;
     }
     return self;
 }
@@ -85,8 +84,7 @@
     
     if(bezelGesture.state == UIGestureRecognizerStateBegan){
         debug_NSLog(@"began %f", 768 - location.x);
-        [self incrementBezelCounter];
-        debug_NSLog(@"should show %d pages", numberOfRepeatingBezels);
+        debug_NSLog(@"should show %d pages", bezelGesture.numberOfRepeatingBezels);
     }else if(bezelGesture.state == UIGestureRecognizerStateCancelled){
         debug_NSLog(@"cancelled");
     }else if(bezelGesture.state == UIGestureRecognizerStateChanged){
@@ -358,10 +356,6 @@
  * depending on where they drag a page
  */
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
-    //
-    // reset the bezel counter
-    [self resetBezelCounter];
-    
     if([page willExitToRightBezel]){
         inProgressOfBezeling = page;
     }
@@ -675,19 +669,6 @@
                              [hiddenStackHolder pushSubview:page];
                          }
                      }];
-}
-
-
-
-#pragma mark - Bezel helpers
-
--(void) resetBezelCounter{
-    debug_NSLog(@"bezel reset");
-    numberOfRepeatingBezels = 0;
-}
--(void) incrementBezelCounter{
-    debug_NSLog(@"bezel incremented");
-    numberOfRepeatingBezels++;
 }
 
 @end
