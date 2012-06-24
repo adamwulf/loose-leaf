@@ -104,7 +104,6 @@
  * without changing the hidden stack's contents
  */
 -(void) addPageButtonTapped:(UIButton*)_button{
-    [self resetBezelCounter];
     SLPaperView* page = [[SLPaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.isBrandNewPage = YES;
     page.delegate = self;
@@ -115,7 +114,6 @@
 
 -(void) tempButtonTapped:(UIButton*)_button{
     debug_NSLog(@"temp button");
-    [self resetBezelCounter];
 }
 -(void) toggleButton:(UIButton*) _button{
     _button.enabled = !_button.enabled;
