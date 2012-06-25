@@ -32,9 +32,8 @@
     visibleStackHolder = [[UIView alloc] initWithFrame:self.bounds];
     hiddenStackHolder = [[UIView alloc] initWithFrame:self.bounds];
     bezelStackHolder = [[UIView alloc] initWithFrame:self.bounds];
-//    bezelStackHolder.layer.borderColor = [UIColor redColor].CGColor;
-//    bezelStackHolder.layer.borderWidth = 1;
-//    bezelStackHolder.clipsToBounds = NO;
+
+    
     CGRect frameOfHiddenStack = hiddenStackHolder.frame;
     frameOfHiddenStack.origin.x += hiddenStackHolder.bounds.size.width + 1;
     hiddenStackHolder.frame = frameOfHiddenStack;
@@ -62,7 +61,7 @@
     plusIcon.alpha = 0;
     
     //
-    // bezel gesture
+    // bezel from right gesture
     fromRightBezelGesture = [[SLBezelInRightGestureRecognizer alloc] initWithTarget:self action:@selector(bezelIn:)];
     [self addGestureRecognizer:fromRightBezelGesture];
 }
@@ -79,7 +78,9 @@
 }
 
 -(void) bezelIn:(SLBezelInRightGestureRecognizer*)bezelGesture{
-    SLPaperView* page = [self ensureTopPageInHiddenStack];
+    // make sure there's a page to bezel
+    [self ensureTopPageInHiddenStack];
+    
     CGPoint translation = [bezelGesture translationInView:self];
     CGPoint location = [bezelGesture locationInView:self];
     
@@ -112,7 +113,6 @@
         [[visibleStackHolder peekSubview] disableAllGestures];
         [bezelStackHolder pushSubview:[hiddenStackHolder peekSubview]];
         [UIView animateWithDuration:.2 animations:^{
-            CGRect currFrame = bezelStackHolder.frame;
             CGRect newFrame = CGRectMake(hiddenStackHolder.frame.origin.x + translation.x - kFingerWidth,
                                          hiddenStackHolder.frame.origin.y,
                                          hiddenStackHolder.frame.size.width,
@@ -169,13 +169,38 @@
         // above the hidden stack off screen
         bezelStackHolder.frame = hiddenStackHolder.frame;
     }else{
+        //
+        // we're in progress of a bezel gesture from the right
+        // lets:
+        // a) make sure we're bezeling the correct number of pages
+        // b) make sure that (a) animates them to the correct place
+        // c) update the offset for the bezel gesture frame so they all move in tandem
         while(bezelGesture.numberOfRepeatingBezels != [bezelStackHolder.subviews count] && [hiddenStackHolder.subviews count]){
             //
             // we need to add another page
             [bezelStackHolder pushSubview:[hiddenStackHolder peekSubview]];
             debug_NSLog(@"add page! %d", [bezelStackHolder.subviews count]);
+            //
+            // ok, animate them all into place
+            [UIView animateWithDuration:.2 animations:^{
+                NSInteger numberOfPages = [bezelStackHolder.subviews count];
+                CGFloat delta;
+                if(numberOfPages < 10){
+                    delta = 10;
+                }else{
+                    delta = 100 / numberOfPages;
+                }
+                CGFloat currOffset = 0;
+                for(SLPaperView* page in bezelStackHolder.subviews){
+                    CGRect fr = page.frame;
+                    if(fr.origin.x != currOffset){
+                        fr.origin.x = currOffset;
+                        page.frame = fr;
+                    }
+                    currOffset += delta;
+                }
+            }];
         }
-        CGRect currFrame = bezelStackHolder.frame;
         CGRect newFrame = CGRectMake(hiddenStackHolder.frame.origin.x + translation.x - kFingerWidth,
                                      hiddenStackHolder.frame.origin.y,
                                      hiddenStackHolder.frame.size.width,
