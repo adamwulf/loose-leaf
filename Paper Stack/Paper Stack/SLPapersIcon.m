@@ -7,8 +7,11 @@
 //
 
 #import "SLPapersIcon.h"
+#import "UIFont+UIBezierCurve.h"
 
 @implementation SLPapersIcon
+
+@synthesize numberToShowIfApplicable;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -17,8 +20,14 @@
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
+        self.clipsToBounds = NO;
     }
     return self;
+}
+
+-(void) setNumberToShowIfApplicable:(NSInteger)_numberToShowIfApplicable{
+    numberToShowIfApplicable = _numberToShowIfApplicable;
+    [self setNeedsDisplay];
 }
 
 // Only override drawRect: if you perform custom drawing.
@@ -29,7 +38,6 @@
     //// Frames
     CGFloat largest = MAX(self.bounds.size.width, self.bounds.size.height);
     CGRect frame = CGRectMake(0, 0, largest * 42 / 49, largest);
-    
     
     //// General Declarations
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
@@ -49,6 +57,16 @@
     CGGradientRef frontOfPaper = CGGradientCreateWithColors(colorSpace, (CFArrayRef)frontOfPaperColors, frontOfPaperLocations);
     
     
+    UIBezierPath* glyphPath = nil;
+    if(self.numberToShowIfApplicable > 1){
+        glyphPath = [[UIFont boldSystemFontOfSize:(int)(largest * 2 / 3)] getUIBezierPathForLetter:[NSString stringWithFormat:@"%d", numberToShowIfApplicable]];
+        CGRect glyphRect = [glyphPath bounds];
+        [glyphPath applyTransform:CGAffineTransformConcat(CGAffineTransformMakeTranslation(-glyphRect.origin.x - 10.5, -glyphRect.size.height - 2.5),
+                                                          CGAffineTransformMakeScale(1.f, -1.f))];
+        [glyphPath applyTransform:CGAffineTransformMakeTranslation((largest - glyphRect.size.width) / 2,
+                                                                   (largest - glyphRect.size.height) / 2)];
+    }
+
     //// Bezier Drawing
     UIBezierPath* bezierPath = [UIBezierPath bezierPath];
     [bezierPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.11 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.09 * CGRectGetHeight(frame))];
@@ -141,18 +159,90 @@
     frontPagePath.lineWidth = 1;
     [frontPagePath stroke];
     
-    
     //// Front Page Curl Drawing
     UIBezierPath* frontPageCurlPath = [UIBezierPath bezierPath];
     [frontPageCurlPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.89 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.44 * CGRectGetHeight(frame))];
     [frontPageCurlPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.56 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.4 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.77 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.35 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.56 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.4 * CGRectGetHeight(frame))];
     [frontPageCurlPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.49 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.09 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.56 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.4 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.61 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.11 * CGRectGetHeight(frame))];
+
+    if(glyphPath){
+        // draw number
+        // ============================================================
+        
+        
+        //
+        // create number mask
+        UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0.0);
+        context = UIGraphicsGetCurrentContext();
+        CGAffineTransform flipVertical = CGAffineTransformMake(1, 0, 0, -1, 0, rect.size.height);
+        CGContextConcatCTM(context, flipVertical);
+
+        [[UIColor whiteColor] setFill];
+        [glyphPath fill];
+        CGContextSetBlendMode(context, kCGBlendModeClear);
+        [[UIColor whiteColor] setFill];
+        [frontPageCurlPath fill];
+        CGContextSetBlendMode(context, kCGBlendModeNormal);
+        UIImage *maskImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        context = UIGraphicsGetCurrentContext();
+        // created number mask
+        //
+        
+        //
+        // create number
+        UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0.0);
+        context = UIGraphicsGetCurrentContext();
+        CGContextConcatCTM(context, flipVertical);
+        CGContextSetBlendMode(context, kCGBlendModeClear);
+        [[UIColor whiteColor] setFill];
+        [glyphPath fill];
+        CGContextSetBlendMode(context, kCGBlendModeNormal);
+        [darkerGrey setStroke];
+        [glyphPath stroke];
+
+        CGContextSetBlendMode(context, kCGBlendModeClear);
+        [[UIColor whiteColor] setFill];
+        [frontPageCurlPath fill];
+        CGContextSetBlendMode(context, kCGBlendModeNormal);
+        
+        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        context = UIGraphicsGetCurrentContext();
+        // done creating number
+        //
+        
+
+        CGContextSaveGState(context);
+
+        // clip to mask
+        CGContextClipToMask(context, rect, maskImage.CGImage);
+
+        // clip number
+        CGContextSetBlendMode(context, kCGBlendModeClear);
+        [[UIColor whiteColor] setFill];
+        [glyphPath fill];
+        CGContextSetBlendMode(context, kCGBlendModeNormal);
+
+        CGContextConcatCTM(context, flipVertical);
+
+        // draw number
+        [image drawAtPoint:CGPointZero];
+        
+        CGContextRestoreGState(context);
+
+        
+        
+    }
+
+    
     [halfWhite setFill];
     [frontPageCurlPath fill];
     
     [strokeColor setStroke];
     frontPageCurlPath.lineWidth = 1;
     [frontPageCurlPath stroke];
+    
     
     //// Cleanup
     CGGradientRelease(frontOfPaper);

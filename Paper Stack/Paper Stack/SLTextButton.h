@@ -10,13 +10,13 @@
 #import <CoreText/CoreText.h>
 
 @interface SLTextButton : SLSidebarButton{
-    NSString* fontName;
     NSString* letter;
     CGFloat pointSize;
     CTFontSymbolicTraits traits;
     CGFloat xOffset;
+    UIFont* font;
 }
 
-- (id)initWithFrame:(CGRect)_frame andFont:(UIFont*)_font andLetter:(NSString*)_letter andTraits:(CTFontSymbolicTraits)_traits andXOffset:(CGFloat)_xOffset;
+- (id)initWithFrame:(CGRect)_frame andFont:(UIFont*)_font andLetter:(NSString*)_letter andXOffset:(CGFloat)_xOffset;
 
 @end

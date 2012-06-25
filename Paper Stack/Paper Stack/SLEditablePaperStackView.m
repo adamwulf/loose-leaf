@@ -42,7 +42,8 @@
     [self addSubview:pencilButton];
     
     CGRect textButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton);
-    textButton = [[SLTextButton alloc] initWithFrame:textButtonFrame andFont:[UIFont fontWithName:@"Times New Roman" size:28] andLetter:@"T" andTraits:kCTFontItalicTrait andXOffset:2];
+    ;
+    textButton = [[SLTextButton alloc] initWithFrame:textButtonFrame andFont:[UIFont fontWithName:@"TimesNewRomanPS-ItalicMT" size:28] andLetter:@"T" andXOffset:2];
     textButton.delegate = self;
     [textButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:textButton];

@@ -411,23 +411,32 @@
         [UIView animateWithDuration:0.2
                               delay:0 options:UIViewAnimationOptionBeginFromCurrentState
                          animations:^{
-                             if([setOfPagesBeingPanned count] > 1 && !nonTopPageIsExitingBezel){
+                             if(([setOfPagesBeingPanned count] > 1 && !nonTopPageIsExitingBezel)){
                                  //
                                  // user is holding the top page
                                  // plus at least 1 other
                                  papersIcon.alpha = numberOfVisiblePagesThatAreNotAligned > 2 ? 1 : 0;
                                  paperIcon.alpha = numberOfVisiblePagesThatAreNotAligned > 2 ? 0 : 1;
+                                 papersIcon.numberToShowIfApplicable = 0;
+                                 [papersIcon setNeedsDisplay];
+
                                  plusIcon.alpha = 0;
                                  leftArrow.alpha = 0;
                                  rightArrow.alpha = 1;
                                  return;
                              }
                              
-                             //
-                             // ok, we're dealing with only
-                             // panning teh top most page
-                             papersIcon.alpha = 0;
-                             paperIcon.alpha = 1;
+                             if(bezelingFromRight && fromRightBezelGesture.numberOfRepeatingBezels > 1){
+                                 papersIcon.numberToShowIfApplicable = fromRightBezelGesture.numberOfRepeatingBezels;
+                                 papersIcon.alpha = 1;
+                                 paperIcon.alpha = 0;
+                             }else{
+                                 //
+                                 // ok, we're dealing with only
+                                 // panning the top most page
+                                 papersIcon.alpha = 0;
+                                 paperIcon.alpha = 1;
+                             }
                              
                              if(showLeftArrow && [hiddenStackHolder.subviews count] && ![hiddenStackHolder peekSubview].isBrandNewPage){
                                  leftArrow.alpha = 1;
