@@ -32,6 +32,7 @@
         if(obj.superview){
             obj.frame = [self convertRect:obj.frame fromView:obj.superview];
         }
+        debug_NSLog(@"page %@ has %f %f", obj.uuid, obj.frame.origin.x, obj.frame.origin.y);
         [self addSubview:obj];
     }
 }
