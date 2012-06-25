@@ -71,8 +71,7 @@
     UIView* bezelGestureView = [[UIView alloc] initWithFrame:self.bounds];
     bezelGestureView.frame = CGRectMake(self.frame.size.width - kBezelInGestureWidth, 0, kBezelInGestureWidth, self.frame.size.height);
     [self addSubview:bezelGestureView];
-    bezelGestureView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.5];
-    bezelGestureView.userInteractionEnabled = YES;
+    bezelGestureView.backgroundColor = [UIColor clearColor];
     
     fromRightBezelGesture = [[SLBezelInRightGestureRecognizer alloc] initWithTarget:self action:@selector(bezelIn:)];
     [bezelGestureView addGestureRecognizer:fromRightBezelGesture];
