@@ -33,12 +33,19 @@
     visibleStackHolder = [[UIView alloc] initWithFrame:self.bounds];
     hiddenStackHolder = [[UIView alloc] initWithFrame:self.bounds];
     bezelStackHolder = [[UIView alloc] initWithFrame:self.bounds];
+    
+    bezelStackHolder.layer.borderColor = [UIColor redColor].CGColor;
+    bezelStackHolder.layer.borderWidth = 1;
 
     
     CGRect frameOfHiddenStack = hiddenStackHolder.frame;
     frameOfHiddenStack.origin.x += hiddenStackHolder.bounds.size.width + 1;
     hiddenStackHolder.frame = frameOfHiddenStack;
     bezelStackHolder.frame = frameOfHiddenStack;
+    
+    hiddenStackHolder.clipsToBounds = YES;
+    visibleStackHolder.clipsToBounds = YES;
+    bezelStackHolder.clipsToBounds = NO;
     
     //
     // icons for moving and panning pages
@@ -131,7 +138,7 @@
         CGFloat delay = 0;
         for(SLPaperView* page in [bezelStackHolder.subviews reverseObjectEnumerator]){
             //            [hiddenStackHolder pushSubview:[bezelStackHolder peekSubview]];
-            if(![bezelStackHolder.subviews count]){
+            if(page == [bezelStackHolder.subviews objectAtIndex:0]){
                 [self animateBackToHiddenStack:page withDelay:delay onComplete:^(BOOL finished){
                     bezelStackHolder.frame = hiddenStackHolder.frame;
                 }];
