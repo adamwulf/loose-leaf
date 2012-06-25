@@ -88,32 +88,17 @@
     return page;
 }
 
+/**
+ * this is the event handler for the SLBezelInRightGestureRecognizer
+ *
+ * this handles pulling pages from the hidden stack onto the visible
+ * stack. either one at a time, or multiple if the gesture is repeated
+ * without interruption.
+ */
 -(void) bezelIn:(SLBezelInRightGestureRecognizer*)bezelGesture{
     // make sure there's a page to bezel
     [self ensureTopPageInHiddenStack];
-    
     CGPoint translation = [bezelGesture translationInView:self];
-    CGPoint location = [bezelGesture locationInView:self];
-    
-    
-    if(bezelGesture.state == UIGestureRecognizerStateBegan){
-        debug_NSLog(@"began %f", 768 - location.x);
-        debug_NSLog(@"should show %d pages", bezelGesture.numberOfRepeatingBezels);
-    }else if(bezelGesture.state == UIGestureRecognizerStateCancelled){
-        debug_NSLog(@"cancelled");
-    }else if(bezelGesture.state == UIGestureRecognizerStateChanged){
-        //        debug_NSLog(@"changed");
-    }else if(bezelGesture.state == UIGestureRecognizerStateEnded){
-        debug_NSLog(@"ended");
-    }else if(bezelGesture.state == UIGestureRecognizerStateFailed){
-        debug_NSLog(@"failed");
-    }else if(bezelGesture.state == UIGestureRecognizerStatePossible){
-        debug_NSLog(@"possible");
-    }else if(bezelGesture.state == UIGestureRecognizerStateRecognized){
-        debug_NSLog(@"recognized");
-    }
-    
-    
     
     if(bezelGesture.state == UIGestureRecognizerStateBegan){
         //
@@ -145,16 +130,25 @@
         } completion:nil];
     }else if(bezelGesture.state == UIGestureRecognizerStateCancelled ||
              bezelGesture.state == UIGestureRecognizerStateFailed ||
-             (bezelGesture.state == UIGestureRecognizerStateEnded &&
-              ((bezelGesture.panDirection & SLBezelDirectionLeft) != SLBezelDirectionLeft))){
+             (bezelGesture.state == UIGestureRecognizerStateEnded && ((bezelGesture.panDirection & SLBezelDirectionLeft) != SLBezelDirectionLeft))){
         //
         // they cancelled the bezel. so push all the views from the bezel back
         // onto the hidden stack, then animate them back into position.
+        //
+        // during the animation, all of the views are still inside the bezelStackHolder
+        // until the animation for that page completes. they're not re-added to the
+        // hidden stack until their animation completes.
+        //
+        // this is handled in the UIGestureRecognizerStateBegan state, if the user
+        // begins a new bezel gesture but the animations for the previous bezel
+        // haven't completed.
         CGFloat delay = 0;
         for(SLPaperView* page in [bezelStackHolder.subviews reverseObjectEnumerator]){
-            //            [hiddenStackHolder pushSubview:[bezelStackHolder peekSubview]];
             if(page == [bezelStackHolder.subviews objectAtIndex:0]){
                 [self animateBackToHiddenStack:page withDelay:delay onComplete:^(BOOL finished){
+                    // since we're  moving the bezel frame for the drag animation, be sure to re-hide it
+                    // above the hidden stack off screen after all the pages animate
+                    // back to the hidden stack
                     bezelStackHolder.frame = hiddenStackHolder.frame;
                 }];
             }else{
@@ -163,8 +157,6 @@
             delay += .05;
         }
         [[visibleStackHolder peekSubview] enableAllGestures];
-        // since we're  moving the bezel frame for the animation, be sure to re-hide it
-        // above the hidden stack off screen
     }else if(bezelGesture.state == UIGestureRecognizerStateEnded &&
              ((bezelGesture.panDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft)){
         //
@@ -179,6 +171,10 @@
         // immediately
         [[visibleStackHolder peekSubview] enableAllGestures];
         while([bezelStackHolder.subviews count]){
+            // this will translate the frame from the bezel stack to the
+            // hidden stack, so that the pages appear in the same place
+            // to the user, the pop calls next will animate them to the
+            // visible stack
             [hiddenStackHolder pushSubview:[bezelStackHolder peekSubview]];
         }
         for(int i=0;i<bezelGesture.numberOfRepeatingBezels;i++){
@@ -195,10 +191,12 @@
     }else{
         //
         // we're in progress of a bezel gesture from the right
-        // lets:
+        //
+        // let's:
         // a) make sure we're bezeling the correct number of pages
         // b) make sure that (a) animates them to the correct place
-        // c) update the offset for the bezel gesture frame so they all move in tandem
+        // c) add correct number of pages to the bezelStackHolder
+        // d) update the offset for the bezelStackHolder so they all move in tandem
         while(bezelGesture.numberOfRepeatingBezels != [bezelStackHolder.subviews count] && [hiddenStackHolder.subviews count]){
             //
             // we need to add another page
@@ -363,6 +361,9 @@
  * we need to update the icons that are visible
  * depending on the locations of the pages that are
  * currently being panned and scaled
+ *
+ * this is the + <= => icons on the right side of the screen
+ * when a page is being panned
  */
 -(void) updateIconAnimations{
     BOOL bezelingFromRight = fromRightBezelGesture.state == UIGestureRecognizerStateBegan || fromRightBezelGesture.state == UIGestureRecognizerStateChanged;
