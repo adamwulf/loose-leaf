@@ -105,11 +105,9 @@
         if(point.x < self.view.frame.size.width - kBezelInGestureWidth){
             // only accept touches on the right bezel
             [self ignoreTouch:touch forEvent:event];
-            debug_NSLog(@"ignore :(  %f", point.x);
         }else{
             [validTouches addObject:touch];
             foundValidTouch = YES;
-            debug_NSLog(@"found touch");
         }
     }
     if(!foundValidTouch) return;

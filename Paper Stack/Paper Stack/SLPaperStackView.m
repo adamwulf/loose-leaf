@@ -109,8 +109,10 @@
         if([bezelStackHolder.subviews count]){
             // uh oh, we still have views in the bezel gesture
             // that haven't compeleted their animation.
-            // we should do something about that
-            debug_NSLog(@"oh no: %d", [bezelStackHolder.subviews count]);
+            //
+            // we need to cancel all of their animations
+            // and move them immediately to the hidden view
+            // being sure to maintain proper order
             while([bezelStackHolder.subviews count]){
                 SLPaperView* page = [bezelStackHolder peekSubview];
                 [page.layer removeAllAnimations];
