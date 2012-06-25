@@ -26,6 +26,8 @@
 		66932965159593C00033E557 /* SLRotationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66932964159593C00033E557 /* SLRotationManager.m */; };
 		6693296A1595A87E0033E557 /* SLMapButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329691595A87E0033E557 /* SLMapButton.m */; };
 		6693296D1596E0600033E557 /* SLBezelInRightGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693296C1596E0600033E557 /* SLBezelInRightGestureRecognizer.m */; };
+		669329701598E4DC0033E557 /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693296F1598E4DC0033E557 /* NSString+UUID.m */; };
+		669329731598EE210033E557 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329721598EE210033E557 /* UIView+Debug.m */; };
 		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; };
 		66A3AF951591724200F8A7A6 /* SLBezelOutPanPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF941591724200F8A7A6 /* SLBezelOutPanPinchGestureRecognizer.m */; };
 		66BD6E301591B57B00D4544C /* SLPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* SLPaperButton.m */; };
@@ -44,7 +46,6 @@
 		66BD6E991593E9C400D4544C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E981593E9C300D4544C /* CoreText.framework */; };
 		66BD6E9C15940D7500D4544C /* SLPencilButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9B15940D7400D4544C /* SLPencilButton.m */; };
 		66BD6E9F15941B7B00D4544C /* SLShareButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9E15941B7B00D4544C /* SLShareButton.m */; };
-		66C6FF80159100DF00C5BFDE /* SLBezelInGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C6FF7F159100DF00C5BFDE /* SLBezelInGestureRecognizer.m */; };
 		66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
 		66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8C1581BCEF00B4918C /* Foundation.framework */; };
 		66DCFB8F1581BCEF00B4918C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */; };
@@ -109,6 +110,10 @@
 		669329691595A87E0033E557 /* SLMapButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLMapButton.m; sourceTree = "<group>"; };
 		6693296B1596E0600033E557 /* SLBezelInRightGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLBezelInRightGestureRecognizer.h; sourceTree = "<group>"; };
 		6693296C1596E0600033E557 /* SLBezelInRightGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLBezelInRightGestureRecognizer.m; sourceTree = "<group>"; };
+		6693296E1598E4DC0033E557 /* NSString+UUID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+UUID.h"; sourceTree = "<group>"; };
+		6693296F1598E4DC0033E557 /* NSString+UUID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+UUID.m"; sourceTree = "<group>"; };
+		669329711598EE210033E557 /* UIView+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Debug.h"; sourceTree = "<group>"; };
+		669329721598EE210033E557 /* UIView+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Debug.m"; sourceTree = "<group>"; };
 		66A3AF8C15913B5E00F8A7A6 /* NSMutableSet+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableSet+Extras.h"; sourceTree = "<group>"; };
 		66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableSet+Extras.m"; sourceTree = "<group>"; };
 		66A3AF931591724200F8A7A6 /* SLBezelOutPanPinchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLBezelOutPanPinchGestureRecognizer.h; sourceTree = "<group>"; };
@@ -143,8 +148,6 @@
 		66BD6E9D15941B7A00D4544C /* SLShareButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLShareButton.h; sourceTree = "<group>"; };
 		66BD6E9E15941B7B00D4544C /* SLShareButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SLShareButton.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		66C47DA5158EF03200E2CD0C /* SLPaperViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperViewDelegate.h; sourceTree = "<group>"; };
-		66C6FF7E159100DF00C5BFDE /* SLBezelInGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLBezelInGestureRecognizer.h; sourceTree = "<group>"; };
-		66C6FF7F159100DF00C5BFDE /* SLBezelInGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLBezelInGestureRecognizer.m; sourceTree = "<group>"; };
 		66DCFB861581BCEF00B4918C /* scratchpaper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = scratchpaper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66DCFB8A1581BCEF00B4918C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		66DCFB8C1581BCEF00B4918C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -219,6 +222,10 @@
 				66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */,
 				66BD6E841593B4A600D4544C /* NSThread+BlocksAdditions.h */,
 				66BD6E851593B4A600D4544C /* NSThread+BlocksAdditions.m */,
+				6693296E1598E4DC0033E557 /* NSString+UUID.h */,
+				6693296F1598E4DC0033E557 /* NSString+UUID.m */,
+				669329711598EE210033E557 /* UIView+Debug.h */,
+				669329721598EE210033E557 /* UIView+Debug.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -394,8 +401,6 @@
 			children = (
 				66DCFBDD1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.h */,
 				66DCFBDE1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.m */,
-				66C6FF7E159100DF00C5BFDE /* SLBezelInGestureRecognizer.h */,
-				66C6FF7F159100DF00C5BFDE /* SLBezelInGestureRecognizer.m */,
 				66A3AF931591724200F8A7A6 /* SLBezelOutPanPinchGestureRecognizer.h */,
 				66A3AF941591724200F8A7A6 /* SLBezelOutPanPinchGestureRecognizer.m */,
 				6693296B1596E0600033E557 /* SLBezelInRightGestureRecognizer.h */,
@@ -531,7 +536,6 @@
 				664F4139159063F8006F8B09 /* SLPlusIcon.m in Sources */,
 				664F413D1590661F006F8B09 /* SLRightArrow.m in Sources */,
 				664F414015906628006F8B09 /* SLLeftArrow.m in Sources */,
-				66C6FF80159100DF00C5BFDE /* SLBezelInGestureRecognizer.m in Sources */,
 				66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */,
 				66A3AF951591724200F8A7A6 /* SLBezelOutPanPinchGestureRecognizer.m in Sources */,
 				66E88A371591853E001A6EBF /* SLPapersIcon.m in Sources */,
@@ -553,6 +557,8 @@
 				66932965159593C00033E557 /* SLRotationManager.m in Sources */,
 				6693296A1595A87E0033E557 /* SLMapButton.m in Sources */,
 				6693296D1596E0600033E557 /* SLBezelInRightGestureRecognizer.m in Sources */,
+				669329701598E4DC0033E557 /* NSString+UUID.m in Sources */,
+				669329731598EE210033E557 /* UIView+Debug.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -28,10 +28,12 @@
 }
 
 - (void)pushSubview:(SLPaperView*)obj{
-    if(obj.superview){
-        obj.frame = [self convertRect:obj.frame fromView:obj.superview];
+    if(![self containsSubview:obj]){
+        if(obj.superview){
+            obj.frame = [self convertRect:obj.frame fromView:obj.superview];
+        }
+        [self addSubview:obj];
     }
-    [self addSubview:obj];
 }
 
 - (void) addSubviewToBottomOfStack:(SLPaperView*)obj{

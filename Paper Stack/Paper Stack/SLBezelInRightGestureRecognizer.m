@@ -17,6 +17,8 @@
     self = [super initWithTarget:target action:action];
     ignoredTouches = [[NSMutableSet alloc] init];
     validTouches = [[NSMutableSet alloc] init];
+    numberOfRepeatingBezels = 0;
+    dateOfLastBezelEnding = nil;
     return self;
 }
 
@@ -84,9 +86,9 @@
  * the gesture.
  */
 -(CGPoint) translationInView:(UIView *)view{
-    if(view == self.view){
+    if(self.view){
         CGPoint p = [self furthestLeftTouchLocation];
-        return CGPointMake(p.x - firstKnownLocation.x, p.y - firstKnownLocation.y);
+        return p;
     }
     return CGPointZero;
 }
@@ -103,26 +105,39 @@
         if(point.x < self.view.frame.size.width - kBezelInGestureWidth){
             // only accept touches on the right bezel
             [self ignoreTouch:touch forEvent:event];
+            debug_NSLog(@"ignore :(  %f", point.x);
         }else{
             [validTouches addObject:touch];
             foundValidTouch = YES;
+            debug_NSLog(@"found touch");
         }
     }
     if(!foundValidTouch) return;
     
     panDirection = SLBezelDirectionNone;
     lastKnownLocation = [self furthestLeftTouchLocation];
-    debug_NSLog(@"points: %d %d", self.numberOfTouches, [validTouches count]);
     
-    // ok, a touch began, and we don't current have anything
-    // recognized
+    // ok, a touch began, and we need to start the gesture
+    // and increment our repeat count
+    //
+    // we have to manually track valid touches for this gesture
+    //
+    // the default for a gesture recognizer:
+    //   after the recognizer is set to UIGestureRecognizerStateEnded,
+    //   then all touches from that gesture are ignored for the rest
+    //   of the life of that touch
+    //
+    // we want to support the user gesturing with two fingers into the bezel,
+    // then gesturing both OR just one finger back off the bezel and repeating.
+    //
+    // since we want to effectively re-use a touch for the 2nd bezel gesture,
+    // we'll keep the gesture alive and just increment the repeat count counter
+    // instead of ending the gesture entirely.
+    //
     if([validTouches count] >= 2){
-        
         if(!dateOfLastBezelEnding || [dateOfLastBezelEnding timeIntervalSinceNow] > -.5){
             numberOfRepeatingBezels++;
-            debug_NSLog(@"add one! %d", numberOfRepeatingBezels);
         }else{
-            debug_NSLog(@"reset to one!");
             numberOfRepeatingBezels = 1;
         }
         if(self.state != UIGestureRecognizerStateBegan){
@@ -133,6 +148,10 @@
     }
 }
 
+/**
+ * when the touch moves, track which direction the gesture
+ * is moving and record it
+ */
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
     CGPoint p = [self furthestLeftTouchLocation];
     if(p.x != lastKnownLocation.x){
@@ -156,7 +175,6 @@
     }
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
-    debug_NSLog(@"touch ended");
     for(UITouch* touch in touches){
         [ignoredTouches removeObject:touch];
         [validTouches removeObject:touch];
@@ -172,7 +190,6 @@
        self.state == UIGestureRecognizerStateBegan){
         self.state = UIGestureRecognizerStateCancelled;
     }
-    debug_NSLog(@"touch cancelled");
     for(UITouch* touch in touches){
         [ignoredTouches removeObject:touch];
         [validTouches removeObject:touch];
@@ -191,5 +208,10 @@
     [super reset];
     panDirection = SLBezelDirectionNone;
     [ignoredTouches removeAllObjects];
+}
+- (void) resetPageCount{
+    numberOfRepeatingBezels = 0;
+    [dateOfLastBezelEnding release];
+    dateOfLastBezelEnding = nil;
 }
 @end
