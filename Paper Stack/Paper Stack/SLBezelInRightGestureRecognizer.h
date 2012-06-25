@@ -28,4 +28,6 @@
 
 -(CGPoint) translationInView:(UIView*)view;
 
+-(void) resetPageCount;
+
 @end

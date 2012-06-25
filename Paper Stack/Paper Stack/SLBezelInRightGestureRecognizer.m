@@ -17,6 +17,8 @@
     self = [super initWithTarget:target action:action];
     ignoredTouches = [[NSMutableSet alloc] init];
     validTouches = [[NSMutableSet alloc] init];
+    numberOfRepeatingBezels = 0;
+    dateOfLastBezelEnding = nil;
     return self;
 }
 
@@ -84,9 +86,9 @@
  * the gesture.
  */
 -(CGPoint) translationInView:(UIView *)view{
-    if(view == self.view){
+    if(self.view){
         CGPoint p = [self furthestLeftTouchLocation];
-        return CGPointMake(p.x - firstKnownLocation.x, p.y - firstKnownLocation.y);
+        return p;
     }
     return CGPointZero;
 }
@@ -103,9 +105,11 @@
         if(point.x < self.view.frame.size.width - kBezelInGestureWidth){
             // only accept touches on the right bezel
             [self ignoreTouch:touch forEvent:event];
+            debug_NSLog(@"ignore :(  %f", point.x);
         }else{
             [validTouches addObject:touch];
             foundValidTouch = YES;
+            debug_NSLog(@"found touch");
         }
     }
     if(!foundValidTouch) return;
@@ -189,5 +193,10 @@
     [super reset];
     panDirection = SLBezelDirectionNone;
     [ignoredTouches removeAllObjects];
+}
+- (void) resetPageCount{
+    numberOfRepeatingBezels = 0;
+    [dateOfLastBezelEnding release];
+    dateOfLastBezelEnding = nil;
 }
 @end

@@ -27,6 +27,7 @@
 		6693296A1595A87E0033E557 /* SLMapButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329691595A87E0033E557 /* SLMapButton.m */; };
 		6693296D1596E0600033E557 /* SLBezelInRightGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693296C1596E0600033E557 /* SLBezelInRightGestureRecognizer.m */; };
 		669329701598E4DC0033E557 /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693296F1598E4DC0033E557 /* NSString+UUID.m */; };
+		669329731598EE210033E557 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329721598EE210033E557 /* UIView+Debug.m */; };
 		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; };
 		66A3AF951591724200F8A7A6 /* SLBezelOutPanPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF941591724200F8A7A6 /* SLBezelOutPanPinchGestureRecognizer.m */; };
 		66BD6E301591B57B00D4544C /* SLPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* SLPaperButton.m */; };
@@ -111,6 +112,8 @@
 		6693296C1596E0600033E557 /* SLBezelInRightGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLBezelInRightGestureRecognizer.m; sourceTree = "<group>"; };
 		6693296E1598E4DC0033E557 /* NSString+UUID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+UUID.h"; sourceTree = "<group>"; };
 		6693296F1598E4DC0033E557 /* NSString+UUID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+UUID.m"; sourceTree = "<group>"; };
+		669329711598EE210033E557 /* UIView+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Debug.h"; sourceTree = "<group>"; };
+		669329721598EE210033E557 /* UIView+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Debug.m"; sourceTree = "<group>"; };
 		66A3AF8C15913B5E00F8A7A6 /* NSMutableSet+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableSet+Extras.h"; sourceTree = "<group>"; };
 		66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableSet+Extras.m"; sourceTree = "<group>"; };
 		66A3AF931591724200F8A7A6 /* SLBezelOutPanPinchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLBezelOutPanPinchGestureRecognizer.h; sourceTree = "<group>"; };
@@ -221,6 +224,8 @@
 				66BD6E851593B4A600D4544C /* NSThread+BlocksAdditions.m */,
 				6693296E1598E4DC0033E557 /* NSString+UUID.h */,
 				6693296F1598E4DC0033E557 /* NSString+UUID.m */,
+				669329711598EE210033E557 /* UIView+Debug.h */,
+				669329721598EE210033E557 /* UIView+Debug.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -553,6 +558,7 @@
 				6693296A1595A87E0033E557 /* SLMapButton.m in Sources */,
 				6693296D1596E0600033E557 /* SLBezelInRightGestureRecognizer.m in Sources */,
 				669329701598E4DC0033E557 /* NSString+UUID.m in Sources */,
+				669329731598EE210033E557 /* UIView+Debug.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
