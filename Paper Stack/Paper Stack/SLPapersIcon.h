@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SLPapersIcon : UIView
+@interface SLPapersIcon : UIView{
+    NSInteger numberToShowIfApplicable;
+}
+
+@property (nonatomic, assign) NSInteger numberToShowIfApplicable;
 
 @end

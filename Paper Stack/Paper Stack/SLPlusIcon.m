@@ -7,6 +7,7 @@
 //
 
 #import "SLPlusIcon.h"
+#import "UIFont+UIBezierCurve.h"
 
 @implementation SLPlusIcon
 

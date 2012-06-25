@@ -145,7 +145,7 @@
     // draw sign
     // ============================================================
   
-    UIGraphicsBeginImageContext(rect.size);
+    UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0.0);
     context = UIGraphicsGetCurrentContext();
 
     // color sign

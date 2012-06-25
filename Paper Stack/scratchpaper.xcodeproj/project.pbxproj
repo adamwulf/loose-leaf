@@ -28,6 +28,7 @@
 		6693296D1596E0600033E557 /* SLBezelInRightGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693296C1596E0600033E557 /* SLBezelInRightGestureRecognizer.m */; };
 		669329701598E4DC0033E557 /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693296F1598E4DC0033E557 /* NSString+UUID.m */; };
 		669329731598EE210033E557 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329721598EE210033E557 /* UIView+Debug.m */; };
+		6693297E1599196E0033E557 /* UIFont+UIBezierCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693297D1599196E0033E557 /* UIFont+UIBezierCurve.m */; };
 		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; };
 		66A3AF951591724200F8A7A6 /* SLBezelOutPanPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF941591724200F8A7A6 /* SLBezelOutPanPinchGestureRecognizer.m */; };
 		66BD6E301591B57B00D4544C /* SLPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* SLPaperButton.m */; };
@@ -114,6 +115,8 @@
 		6693296F1598E4DC0033E557 /* NSString+UUID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+UUID.m"; sourceTree = "<group>"; };
 		669329711598EE210033E557 /* UIView+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Debug.h"; sourceTree = "<group>"; };
 		669329721598EE210033E557 /* UIView+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Debug.m"; sourceTree = "<group>"; };
+		6693297C1599196E0033E557 /* UIFont+UIBezierCurve.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+UIBezierCurve.h"; sourceTree = "<group>"; };
+		6693297D1599196E0033E557 /* UIFont+UIBezierCurve.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+UIBezierCurve.m"; sourceTree = "<group>"; };
 		66A3AF8C15913B5E00F8A7A6 /* NSMutableSet+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableSet+Extras.h"; sourceTree = "<group>"; };
 		66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableSet+Extras.m"; sourceTree = "<group>"; };
 		66A3AF931591724200F8A7A6 /* SLBezelOutPanPinchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLBezelOutPanPinchGestureRecognizer.h; sourceTree = "<group>"; };
@@ -226,6 +229,8 @@
 				6693296F1598E4DC0033E557 /* NSString+UUID.m */,
 				669329711598EE210033E557 /* UIView+Debug.h */,
 				669329721598EE210033E557 /* UIView+Debug.m */,
+				6693297C1599196E0033E557 /* UIFont+UIBezierCurve.h */,
+				6693297D1599196E0033E557 /* UIFont+UIBezierCurve.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -559,6 +564,7 @@
 				6693296D1596E0600033E557 /* SLBezelInRightGestureRecognizer.m in Sources */,
 				669329701598E4DC0033E557 /* NSString+UUID.m in Sources */,
 				669329731598EE210033E557 /* UIView+Debug.m in Sources */,
+				6693297E1599196E0033E557 /* UIFont+UIBezierCurve.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
