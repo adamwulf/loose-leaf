@@ -168,8 +168,18 @@
     if(glyphPath){
         // draw number
         // ============================================================
+        // this drawing code will render the number
+        // into the page, and below the page curl.
+        //
+        // to do this:
+        // a) create a mask of the number path minus the path of the page curl.
+        //    we'll do this by creating a UIImage with white filled in the area
+        //    that we want to mask to
+        // b) draw the number and save it to an image as well
+        // c) render the image from (b) with the mask from (a)
         
-        
+        CGContextSaveGState(context);
+
         //
         // create number mask
         UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0.0);
@@ -201,38 +211,35 @@
         [darkerGrey setStroke];
         [glyphPath stroke];
 
-        CGContextSetBlendMode(context, kCGBlendModeClear);
-        [[UIColor whiteColor] setFill];
-        [frontPageCurlPath fill];
-        CGContextSetBlendMode(context, kCGBlendModeNormal);
-        
-        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+        UIImage *numberImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         context = UIGraphicsGetCurrentContext();
         // done creating number
         //
         
-
-        CGContextSaveGState(context);
-
+        
         // clip to mask
         CGContextClipToMask(context, rect, maskImage.CGImage);
-
         // clip number
         CGContextSetBlendMode(context, kCGBlendModeClear);
         [[UIColor whiteColor] setFill];
         [glyphPath fill];
         CGContextSetBlendMode(context, kCGBlendModeNormal);
 
+        //
+        // our image that we generated is upside down,
+        // so flip again
         CGContextConcatCTM(context, flipVertical);
 
         // draw number
-        [image drawAtPoint:CGPointZero];
+        [numberImage drawAtPoint:CGPointZero];
         
         CGContextRestoreGState(context);
 
         
-        
+        // ============================================================
+        // done draw number
+
     }
 
     
