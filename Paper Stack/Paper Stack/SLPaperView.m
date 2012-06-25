@@ -10,6 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "NSArray+MapReduce.h"
 #import "SLShadowManager.h"
+#import "NSString+UUID.h"
 
 @implementation SLPaperView
 
@@ -18,12 +19,14 @@
 @synthesize isBeingPannedAndZoomed;
 @synthesize textLabel;
 @synthesize isBrandNewPage;
+@synthesize uuid;
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        uuid = [[NSString createStringUUID] retain];
         NSInteger photo = rand() % 6 + 1;
         UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", photo]];
         UIImageView* imgView = [[[UIImageView alloc] initWithImage:img] autorelease];

@@ -13,6 +13,8 @@
 
 @interface SLPaperView : UIView{
     
+    NSString* uuid;
+    
     NSObject<SLPaperViewDelegate>* delegate;
     
     // properties for pinch gesture
@@ -37,6 +39,7 @@
     UIBezierPath* unitShadowPath;
 }
 
+@property (nonatomic, readonly) NSString* uuid;
 @property (nonatomic, readonly) UIBezierPath* unitShadowPath;
 @property (nonatomic, assign) NSObject<SLPaperViewDelegate>* delegate;
 @property (nonatomic, assign) CGFloat scale;
