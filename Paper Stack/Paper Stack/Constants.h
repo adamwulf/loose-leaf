@@ -16,6 +16,8 @@
 #define debug_NSLog(format, ...)
 #endif
 
+#define kAnimationDelay 0.05
+
 #define kMinPageZoom .7
 #define kMaxPageZoom 2.5
 

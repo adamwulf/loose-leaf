@@ -156,7 +156,7 @@
             }else{
                 [self animateBackToHiddenStack:page withDelay:delay onComplete:nil];
             }
-            delay += .05;
+            delay += kAnimationDelay;
         }
         [[visibleStackHolder peekSubview] enableAllGestures];
     }else if(bezelGesture.state == UIGestureRecognizerStateEnded &&
@@ -179,10 +179,22 @@
             // visible stack
             [hiddenStackHolder pushSubview:[bezelStackHolder peekSubview]];
         }
+        
+        void(^finishedBlock)(BOOL finished)  = ^(BOOL finished){
+            bezelStackHolder.frame = hiddenStackHolder.frame;
+        };
+        NSInteger index = [hiddenStackHolder.subviews count] - 1 - bezelGesture.numberOfRepeatingBezels;
+        if(index >= 0){
+            [self popHiddenStackUntilPage:[hiddenStackHolder.subviews objectAtIndex:index] onComplete:finishedBlock];
+        }else{
+            // pop entire stack
+            [self popHiddenStackUntilPage:nil onComplete:finishedBlock];
+        }
+        /*
         for(int i=0;i<bezelGesture.numberOfRepeatingBezels;i++){
             [self popTopPageOfHiddenStack];
         }
-        bezelStackHolder.frame = hiddenStackHolder.frame;
+         */
         //
         // successful gesture complete, so reset the gesture count
         // we only reset on the successful gesture, not a cancelled gesture
@@ -281,7 +293,7 @@
     [self ensureTopPageInHiddenStack];
     SLPaperView* page = [hiddenStackHolder peekSubview];
     page.isBrandNewPage = NO;
-    [self popHiddenStackUntilPage:[self getPageBelow:page]]; 
+    [self popHiddenStackUntilPage:[self getPageBelow:page] onComplete:nil];
 }
 
 /**
@@ -291,13 +303,14 @@
  *
  * these pages will be pushed over to the invisible stack
  */
--(void) popStackUntilPage:(SLPaperView*)page{
+-(void) popStackUntilPage:(SLPaperView*)page onComplete:(void(^)(BOOL finished))completionBlock{
     if([visibleStackHolder.subviews containsObject:page] || page == nil){
         CGFloat delay = 0;
         NSArray* pages = [visibleStackHolder peekSubviewFromSubview:page];
-        for(SLPaperView* pageToPop in [pages reverseObjectEnumerator]){
-            [self animateBackToHiddenStack:pageToPop withDelay:delay onComplete:nil];
-            delay += .1;
+        for(int i=[pages count]-1;i>=0;i--){
+            SLPaperView* pageToPop = [pages objectAtIndex:i];
+            [self animateBackToHiddenStack:pageToPop withDelay:delay onComplete:(i == 0 ? completionBlock : nil)];
+            delay += kAnimationDelay;
         }
     }
 }
@@ -309,7 +322,7 @@
  *
  * these pages will be pushed over to the invisible stack
  */
--(void) popHiddenStackUntilPage:(SLPaperView*)page{
+-(void) popHiddenStackUntilPage:(SLPaperView*)page onComplete:(void(^)(BOOL finished))completionBlock{
     if([hiddenStackHolder.subviews containsObject:page] || page == nil){
         CGFloat delay = 0;
         while([hiddenStackHolder peekSubview] != page && [hiddenStackHolder.subviews count]){
@@ -326,8 +339,9 @@
             // correctly
             [aPage enableAllGestures];
             [visibleStackHolder pushSubview:aPage];
-            [self animatePageToFullScreen:aPage withDelay:delay withBounce:YES];
-            delay += .1;
+            BOOL hasAnotherToPop = [hiddenStackHolder peekSubview] != page && [hiddenStackHolder.subviews count];
+            [self animatePageToFullScreen:aPage withDelay:delay withBounce:YES onComplete:(!hasAnotherToPop ? completionBlock : nil)];
+            delay += kAnimationDelay;
         }
     }
 }
@@ -529,11 +543,11 @@
                     // don't adjust the page we just dropped
                     // obviously :)
                     if([aPage isBeingPannedAndZoomed]){
-                        [self popStackUntilPage:aPage];
+                        [self popStackUntilPage:aPage onComplete:nil];
                         return;
                     }else{
                         if(!CGRectEqualToRect(aPage.frame, self.bounds)){
-                            [self animatePageToFullScreen:aPage withDelay:0 withBounce:NO];
+                            [self animatePageToFullScreen:aPage withDelay:0 withBounce:NO onComplete:nil];
                         }
                     }
                 }
@@ -571,7 +585,7 @@
         for(SLPaperView* page in [[[visibleStackHolder.subviews copy] autorelease] reverseObjectEnumerator]){
             if(page != [visibleStackHolder peekSubview]){
                 if([page isBeingPannedAndZoomed]){
-                    [self popStackUntilPage:page];
+                    [self popStackUntilPage:page onComplete:nil];
                     return;
                 }
             }
@@ -584,7 +598,7 @@
     for(SLPaperView* page in [[visibleStackHolder.subviews copy] autorelease]){
         if(page != [visibleStackHolder peekSubview]){
             if(!CGRectEqualToRect(page.frame, self.bounds)){
-                [self animatePageToFullScreen:page withDelay:0 withBounce:NO];
+                [self animatePageToFullScreen:page withDelay:0 withBounce:NO onComplete:nil];
             }
         }
     }
@@ -596,14 +610,14 @@
     }
     
     if(page == [visibleStackHolder peekSubview] && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
-        [self popStackUntilPage:[self getPageBelow:page]];
+        [self popStackUntilPage:[self getPageBelow:page] onComplete:nil];
     }else if(page == [visibleStackHolder peekSubview] && [self shouldPushPageOntoVisibleStack:page withFrame:toFrame]){
-        [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO];
+        [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO onComplete:nil];
         [self popTopPageOfHiddenStack];
     }else if(page.scale <= 1){
         //
         // bounce it back to full screen
-        [self animatePageToFullScreen:page withDelay:0 withBounce:YES];
+        [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:nil];
     }else{
         //
         // the scale is larger than 1, so we may need
@@ -731,7 +745,7 @@
  *
  * this animation is interruptable
  */
--(void) animatePageToFullScreen:(SLPaperView*)page withDelay:(CGFloat)delay withBounce:(BOOL)bounce{
+-(void) animatePageToFullScreen:(SLPaperView*)page withDelay:(CGFloat)delay withBounce:(BOOL)bounce onComplete:(void(^)(BOOL finished))completionBlock{
     
     void(^finishedBlock)(BOOL finished)  = ^(BOOL finished){
         if(finished){
@@ -740,6 +754,7 @@
                 [visibleStackHolder pushSubview:page];
             }
         }
+        if(completionBlock) completionBlock(finished);
     };
     
     [page enableAllGestures];
