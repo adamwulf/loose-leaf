@@ -47,27 +47,27 @@
  * to match that of the animation.
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSMutableSet* validTouches = [NSMutableSet setWithSet:touches];
+    NSMutableSet* validTouchesCurrentlyBeginning = [NSMutableSet setWithSet:touches];
     // ignore all the touches that could be bezel touches
     for(UITouch* touch in touches){
         CGPoint point = [touch locationInView:self.view.superview];
-        if(point.x < 10){
+        if(point.x < kBezelInGestureWidth){
             [self ignoreTouch:touch forEvent:event];
-            [validTouches removeObject:touch];
-        }else if(point.y < 10){
+            [validTouchesCurrentlyBeginning removeObject:touch];
+        }else if(point.y < kBezelInGestureWidth){
             [self ignoreTouch:touch forEvent:event];
-            [validTouches removeObject:touch];
-        }else if(point.x > self.view.frame.size.width - 10){
+            [validTouchesCurrentlyBeginning removeObject:touch];
+        }else if(point.x > self.view.frame.size.width - kBezelInGestureWidth){
             [self ignoreTouch:touch forEvent:event];
-            [validTouches removeObject:touch];
-        }else if(point.y > self.view.frame.size.height - 10){
+            [validTouchesCurrentlyBeginning removeObject:touch];
+        }else if(point.y > self.view.frame.size.height - kBezelInGestureWidth){
             [self ignoreTouch:touch forEvent:event];
-            [validTouches removeObject:touch];
+            [validTouchesCurrentlyBeginning removeObject:touch];
         }else{
 //            debug_NSLog(@"point for panandpinch: %f %f", point.x, point.y);
         }
     }
-    if([validTouches count]){
+    if([validTouchesCurrentlyBeginning count]){
         // look at the presentation of the view (as would be seen during animation)
         CGRect lFrame = [self.view.layer.presentationLayer frame];
         // look at the view frame to compare
@@ -81,8 +81,8 @@
             self.view.frame = lFrame;
         }
         [self.view.layer removeAllAnimations];
-        [super touchesBegan:validTouches withEvent:event];
-        [validTouchesOnly addObjectsFromArray:[validTouches allObjects]];
+        [super touchesBegan:validTouchesCurrentlyBeginning withEvent:event];
+        [validTouchesOnly addObjectsFromArray:[validTouchesCurrentlyBeginning allObjects]];
         if([validTouchesOnly count] >= self.minimumNumberOfTouches && self.state == UIGestureRecognizerStatePossible){
             self.state = UIGestureRecognizerStateBegan;
         }
@@ -90,10 +90,10 @@
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSMutableSet* validTouches = [NSMutableSet setWithSet:validTouchesOnly];
-    [validTouches intersectSet:touches];
-    if([validTouches count]){
-        [super touchesMoved:validTouches withEvent:event];
+    NSMutableSet* validTouchesCurrentlyMoving = [NSMutableSet setWithSet:validTouchesOnly];
+    [validTouchesCurrentlyMoving intersectSet:touches];
+    if([validTouchesCurrentlyMoving count]){
+        [super touchesMoved:validTouchesCurrentlyMoving withEvent:event];
         if(self.state == UIGestureRecognizerStateBegan){
             initialDistance = 0;
         }
@@ -101,67 +101,56 @@
             initialDistance = 0;
             scale = 1;
         }
-        if([validTouches count] == 2 && !initialDistance){
-            initialDistance = [self distanceBetweenTouches:validTouches];
+        if([validTouchesCurrentlyMoving count] == 2 && !initialDistance){
+            initialDistance = [self distanceBetweenTouches:validTouchesCurrentlyMoving];
         }
-        if([validTouches count] == 2 && initialDistance){
+        if([validTouchesCurrentlyMoving count] == 2 && initialDistance){
             scale = [self distanceBetweenTouches:touches] / initialDistance;
         }
     }
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
-    // bezel
-    for(UITouch* touch in touches){
-        CGPoint point = [touch locationInView:self.view.superview];
-        BOOL bezelDirHasLeft = ((self.bezelDirectionMask & SLBezelDirectionLeft) == SLBezelDirectionLeft);
-        BOOL bezelDirHasRight = ((self.bezelDirectionMask & SLBezelDirectionRight) == SLBezelDirectionRight);
-        BOOL bezelDirHasUp = ((self.bezelDirectionMask & SLBezelDirectionUp) == SLBezelDirectionUp);
-        BOOL bezelDirHasDown = ((self.bezelDirectionMask & SLBezelDirectionDown) == SLBezelDirectionDown);
-        if(point.x < kBezelInGestureWidth && bezelDirHasLeft){
-            didExitToBezel = didExitToBezel | SLBezelDirectionLeft;
-        }else if(point.y < kBezelInGestureWidth && bezelDirHasUp){
-            didExitToBezel = didExitToBezel | SLBezelDirectionUp;
-        }else if(point.x > self.view.superview.frame.size.width - kBezelInGestureWidth && bezelDirHasRight){
-            didExitToBezel = didExitToBezel | SLBezelDirectionRight;
-        }else if(point.y > self.view.superview.frame.size.height - kBezelInGestureWidth && bezelDirHasDown){
-            didExitToBezel = didExitToBezel | SLBezelDirectionDown;
-        }
-    }
-
-    
-    // pan and pinch
-    NSMutableSet* validTouches = [NSMutableSet setWithSet:validTouchesOnly];
-    [validTouches intersectSet:touches];
-    if([validTouches count]){
-        for(UITouch* touch in validTouches){
+    // pan and pinch and bezel
+    NSMutableSet* validTouchesCurrentlyEnding = [NSMutableSet setWithSet:validTouchesOnly];
+    [validTouchesCurrentlyEnding intersectSet:touches];
+    if([validTouchesCurrentlyEnding count]){
+        for(UITouch* touch in validTouchesCurrentlyEnding){
             CGPoint point = [touch locationInView:self.view.superview];
-            if(point.x < 10){
+            BOOL bezelDirHasLeft = ((self.bezelDirectionMask & SLBezelDirectionLeft) == SLBezelDirectionLeft);
+            BOOL bezelDirHasRight = ((self.bezelDirectionMask & SLBezelDirectionRight) == SLBezelDirectionRight);
+            BOOL bezelDirHasUp = ((self.bezelDirectionMask & SLBezelDirectionUp) == SLBezelDirectionUp);
+            BOOL bezelDirHasDown = ((self.bezelDirectionMask & SLBezelDirectionDown) == SLBezelDirectionDown);
+            if(point.x < kBezelInGestureWidth && bezelDirHasLeft){
+                didExitToBezel = didExitToBezel | SLBezelDirectionLeft;
                 [super touchesCancelled:[NSSet setWithObject:touch] withEvent:event];
-            }else if(point.y < 10){
+            }else if(point.y < kBezelInGestureWidth && bezelDirHasUp){
+                didExitToBezel = didExitToBezel | SLBezelDirectionUp;
                 [super touchesCancelled:[NSSet setWithObject:touch] withEvent:event];
-            }else if(point.x > self.view.frame.size.width - 10){
+            }else if(point.x > self.view.superview.frame.size.width - kBezelInGestureWidth && bezelDirHasRight){
+                didExitToBezel = didExitToBezel | SLBezelDirectionRight;
                 [super touchesCancelled:[NSSet setWithObject:touch] withEvent:event];
-            }else if(point.y > self.view.frame.size.height - 10){
+            }else if(point.y > self.view.superview.frame.size.height - kBezelInGestureWidth && bezelDirHasDown){
+                didExitToBezel = didExitToBezel | SLBezelDirectionDown;
                 [super touchesCancelled:[NSSet setWithObject:touch] withEvent:event];
             }else{
-                [super touchesEnded:touches withEvent:event];
+                [super touchesEnded:[NSSet setWithObject:touch] withEvent:event];
             }
         }
         if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
             self.state = UIGestureRecognizerStatePossible;
         }
-        [validTouchesOnly removeObjectsInSet:validTouches];
+        [validTouchesOnly removeObjectsInSet:validTouchesCurrentlyEnding];
     }
 }
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSMutableSet* validTouches = [NSMutableSet setWithSet:validTouchesOnly];
-    [validTouches intersectSet:touches];
-    if([validTouches count]){
+    NSMutableSet* validTouchesCurrentlyCancelling = [NSMutableSet setWithSet:validTouchesOnly];
+    [validTouchesCurrentlyCancelling intersectSet:touches];
+    if([validTouchesCurrentlyCancelling count]){
         [super touchesCancelled:touches withEvent:event];
         if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
             self.state = UIGestureRecognizerStatePossible;
         }
-        [validTouchesOnly removeObjectsInSet:validTouches];
+        [validTouchesOnly removeObjectsInSet:validTouchesCurrentlyCancelling];
     }
 }
 - (void)reset{
