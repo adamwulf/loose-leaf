@@ -11,8 +11,9 @@
 #import "Constants.h"
 
 @interface SLBezelOutPanPinchGestureRecognizer : SLPanAndPinchGestureRecognizer{
+    // track which bezels our delegate cares about
     SLBezelDirection bezelDirectionMask;
-    NSMutableSet* setOfTouchesThatExitedTheBezel;
+    // the direction that the user actually did exit, if any
     SLBezelDirection didExitToBezel;
 }
 

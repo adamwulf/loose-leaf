@@ -168,9 +168,6 @@
         }
         lastKnownLocation = p;
     }
-    if(self.state == UIGestureRecognizerStateBegan){
-        firstKnownLocation = [self furthestRightTouchLocation];
-    }
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     for(UITouch* touch in touches){

@@ -49,7 +49,6 @@
 -(void) reset{
     [super reset];
     didExitToBezel = SLBezelDirectionNone;
-    [setOfTouchesThatExitedTheBezel removeAllObjects];
 }
 
 @end

@@ -11,10 +11,10 @@
 #import "Constants.h"
 
 @interface SLBezelInRightGestureRecognizer : UIGestureRecognizer{
-    
+    // direction the user is panning
     SLBezelPanDirection panDirection;
+    // use to calculate direction
     CGPoint lastKnownLocation;
-    CGPoint firstKnownLocation;
     
     NSMutableSet* ignoredTouches;
     NSMutableSet* validTouches;
