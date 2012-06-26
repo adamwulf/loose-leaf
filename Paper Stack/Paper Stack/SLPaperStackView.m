@@ -309,6 +309,7 @@
         NSArray* pages = [visibleStackHolder peekSubviewFromSubview:page];
         for(int i=[pages count]-1;i>=0;i--){
             SLPaperView* pageToPop = [pages objectAtIndex:i];
+            [bezelStackHolder addSubviewToBottomOfStack:pageToPop];
             [self animateBackToHiddenStack:pageToPop withDelay:delay onComplete:(i == 0 ? completionBlock : nil)];
             delay += kAnimationDelay;
         }
