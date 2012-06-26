@@ -21,13 +21,7 @@
     
     
     debug_NSLog(@"font name: %@", [self fontName]);
-    CTFontRef ref = CTFontCreateWithName((CFStringRef)[self fontName], [self pointSize], NULL);
-    CTFontRef iFont = nil;
-//    if(traits){
-//        iFont = CTFontCreateCopyWithSymbolicTraits(ref, fontSize, NULL, traits, traits);
-//    }else{
-        iFont = ref;
-//    }
+    CTFontRef iFont = CTFontCreateWithName((CFStringRef)[self fontName], [self pointSize], NULL);
     
     assert(iFont != NULL && iString != NULL);
     
@@ -47,9 +41,17 @@
     // Get the glyphs for the characters.
     CTFontGetGlyphsForCharacters(iFont, characters, glyphs, count);
     
-    // Do something with the glyphs here, if a character is unmapped
-    CGPathRef glyphCGPath = CTFontCreatePathForGlyph(iFont, glyphs[0], nil);
-    UIBezierPath* glyphPath = [UIBezierPath bezierPathWithCGPath:glyphCGPath];
+    UIBezierPath* glyphPath = [UIBezierPath bezierPath];
+    
+    
+    for(int i=0;i<count;i++){
+        // Do something with the glyphs here, if a character is unmapped
+        CGPathRef glyphCGPath = CTFontCreatePathForGlyph(iFont, glyphs[i], nil);
+        CGFloat widthOfPrevChars = [glyphPath bounds].size.width + 6 * i;
+        UIBezierPath* pathOfChar = [UIBezierPath bezierPathWithCGPath:glyphCGPath];
+        [pathOfChar applyTransform:CGAffineTransformMakeTranslation(widthOfPrevChars, 0)];
+        [glyphPath appendPath:pathOfChar];
+    }
     
     // Free our buffers
     free(characters);
