@@ -11,6 +11,6 @@
 
 @interface UIFont (UIBezierCurve)
 
--(UIBezierPath*) getUIBezierPathForLetter:(NSString*) letter;
+-(UIBezierPath*) bezierPathForString:(NSString*) letter;
 
 @end
