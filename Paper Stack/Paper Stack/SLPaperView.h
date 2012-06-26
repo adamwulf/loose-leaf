@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Constants.h"
 #import "SLPaperViewDelegate.h"
-#import "SLBezelOutPanPinchGestureRecognizer.h"
+#import "SLPanAndPinchGestureRecognizer.h"
 
 @interface SLPaperView : UIView{
     
@@ -30,7 +30,7 @@
     
     UILabel* textLabel;
     
-    SLBezelOutPanPinchGestureRecognizer* panGesture;
+    SLPanAndPinchGestureRecognizer* panGesture;
     
     BOOL isBrandNewPage;
     

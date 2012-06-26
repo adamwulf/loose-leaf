@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
+#import "Constants.h"
 
 @interface SLPanAndPinchGestureRecognizer : UIPanGestureRecognizer{
     //
@@ -21,9 +22,16 @@
     //
     // the collection of valid touches for this gesture
     NSMutableSet* validTouchesOnly;
+
+    // track which bezels our delegate cares about
+    SLBezelDirection bezelDirectionMask;
+    // the direction that the user actually did exit, if any
+    SLBezelDirection didExitToBezel;
 }
 
 @property (nonatomic, readonly) CGFloat scale;
+@property (nonatomic, assign) SLBezelDirection bezelDirectionMask;
+@property (nonatomic, readonly) SLBezelDirection didExitToBezel;
 
 -(void) cancel;
 
