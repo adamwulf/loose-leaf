@@ -379,9 +379,6 @@
             numberOfVisiblePagesThatAreNotAligned ++;
         }
     }
-    if(nonTopPageIsExitingBezel){
-        debug_NSLog(@"exiting non-top page");
-    }
     BOOL showRightArrow = [setOfPagesBeingPanned count] > 1 || topPageIsExitingBezel || nonTopPageIsExitingBezel;
     
     if(bezelingFromRight){
@@ -415,11 +412,28 @@
                                  //
                                  // user is holding the top page
                                  // plus at least 1 other
-                                 papersIcon.alpha = numberOfVisiblePagesThatAreNotAligned > 2 ? 1 : 0;
-                                 paperIcon.alpha = numberOfVisiblePagesThatAreNotAligned > 2 ? 0 : 1;
-                                 papersIcon.numberToShowIfApplicable = 0;
-                                 [papersIcon setNeedsDisplay];
+                                 //
+                                 // calculate the number of pages that will be sent
+                                 // to the hidden stack if the user stops panning
+                                 // the top page
+                                 NSInteger numberToShowOnPagesIconIfNeeded = 0;
+                                 for(SLPaperView* page in [[[visibleStackHolder.subviews copy] autorelease] reverseObjectEnumerator]){
+                                     if([page isBeingPannedAndZoomed] && page != [visibleStackHolder peekSubview]){
+                                         break;
+                                     }else{
+                                         numberToShowOnPagesIconIfNeeded++;
+                                     }
+                                 }
+                                 
+                                 //
+                                 // update the icons as necessary
+                                 papersIcon.alpha = numberToShowOnPagesIconIfNeeded > 1 ? 1 : 0;
+                                 paperIcon.alpha = numberToShowOnPagesIconIfNeeded > 1 ? 0 : 1;
+                                 papersIcon.numberToShowIfApplicable = numberToShowOnPagesIconIfNeeded;
 
+                                 //
+                                 // show right arrow since this gesture can only send pages
+                                 // to the hidden stack
                                  plusIcon.alpha = 0;
                                  leftArrow.alpha = 0;
                                  rightArrow.alpha = 1;

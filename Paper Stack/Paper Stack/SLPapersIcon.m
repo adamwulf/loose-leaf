@@ -27,8 +27,10 @@
 }
 
 -(void) setNumberToShowIfApplicable:(NSInteger)_numberToShowIfApplicable{
-    numberToShowIfApplicable = _numberToShowIfApplicable;
-    [self setNeedsDisplay];
+    if(numberToShowIfApplicable != _numberToShowIfApplicable){
+        numberToShowIfApplicable = _numberToShowIfApplicable;
+        [self setNeedsDisplay];
+    }
 }
 
 // Only override drawRect: if you perform custom drawing.

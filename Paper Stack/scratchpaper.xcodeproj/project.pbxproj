@@ -266,6 +266,31 @@
 			name = Managers;
 			sourceTree = "<group>";
 		};
+		6693298015996C530033E557 /* Astronaut Images */ = {
+			isa = PBXGroup;
+			children = (
+				66DCFBCF1582BC0E00B4918C /* img01.jpg */,
+				660E1D9B158FC4570001DA12 /* img02.jpg */,
+				660E1DA0158FC4710001DA12 /* img03.jpg */,
+				660E1DA4158FC47D0001DA12 /* img04.jpg */,
+				660E1DA2158FC4750001DA12 /* img05.jpg */,
+				660E1D9E158FC45E0001DA12 /* img06.jpg */,
+			);
+			name = "Astronaut Images";
+			sourceTree = "<group>";
+		};
+		6693298115996C6A0033E557 /* Controller and App Delegate */ = {
+			isa = PBXGroup;
+			children = (
+				66DCFB991581BCEF00B4918C /* SLAppDelegate.h */,
+				66DCFB9A1581BCEF00B4918C /* SLAppDelegate.m */,
+				66DCFB9C1581BCEF00B4918C /* SLPaperStackViewController.h */,
+				66DCFB9D1581BCEF00B4918C /* SLPaperStackViewController.m */,
+				66DCFB9F1581BCEF00B4918C /* SLPaperStackViewController.xib */,
+			);
+			name = "Controller and App Delegate";
+			sourceTree = "<group>";
+		};
 		66BD6E811593AF4500D4544C /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
@@ -337,11 +362,7 @@
 				660E1DA6158FC6120001DA12 /* Categories */,
 				66DCFBDC1582BF1600B4918C /* Gestures */,
 				66DCFBBF1581C7F400B4918C /* SLPaperStack */,
-				66DCFB991581BCEF00B4918C /* SLAppDelegate.h */,
-				66DCFB9A1581BCEF00B4918C /* SLAppDelegate.m */,
-				66DCFB9C1581BCEF00B4918C /* SLPaperStackViewController.h */,
-				66DCFB9D1581BCEF00B4918C /* SLPaperStackViewController.m */,
-				66DCFB9F1581BCEF00B4918C /* SLPaperStackViewController.xib */,
+				6693298115996C6A0033E557 /* Controller and App Delegate */,
 				66DCFB911581BCEF00B4918C /* Supporting Files */,
 			);
 			path = "Paper Stack";
@@ -382,12 +403,7 @@
 		66DCFBBF1581C7F400B4918C /* SLPaperStack */ = {
 			isa = PBXGroup;
 			children = (
-				66DCFBCF1582BC0E00B4918C /* img01.jpg */,
-				660E1D9B158FC4570001DA12 /* img02.jpg */,
-				660E1DA0158FC4710001DA12 /* img03.jpg */,
-				660E1DA4158FC47D0001DA12 /* img04.jpg */,
-				660E1DA2158FC4750001DA12 /* img05.jpg */,
-				660E1D9E158FC45E0001DA12 /* img06.jpg */,
+				6693298015996C530033E557 /* Astronaut Images */,
 				66DCFBC01581C85B00B4918C /* SLPaperStackView.h */,
 				66DCFBC11581C85B00B4918C /* SLPaperStackView.m */,
 				66728713159515FC0018571A /* SLEditablePaperStackView.h */,
