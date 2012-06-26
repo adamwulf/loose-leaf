@@ -8,13 +8,14 @@
 
 #import "SLPanAndPinchGestureRecognizer.h"
 #import <QuartzCore/QuartzCore.h>
-#import "Constants.h"
 #import "SLBezelInRightGestureRecognizer.h"
 #import "NSMutableSet+Extras.h"
 
 @implementation SLPanAndPinchGestureRecognizer
 
 @synthesize scale;
+@synthesize bezelDirectionMask;
+@synthesize didExitToBezel;
 
 -(id) init{
     self = [super init];
@@ -109,6 +110,26 @@
     }
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    // bezel
+    for(UITouch* touch in touches){
+        CGPoint point = [touch locationInView:self.view.superview];
+        BOOL bezelDirHasLeft = ((self.bezelDirectionMask & SLBezelDirectionLeft) == SLBezelDirectionLeft);
+        BOOL bezelDirHasRight = ((self.bezelDirectionMask & SLBezelDirectionRight) == SLBezelDirectionRight);
+        BOOL bezelDirHasUp = ((self.bezelDirectionMask & SLBezelDirectionUp) == SLBezelDirectionUp);
+        BOOL bezelDirHasDown = ((self.bezelDirectionMask & SLBezelDirectionDown) == SLBezelDirectionDown);
+        if(point.x < kBezelInGestureWidth && bezelDirHasLeft){
+            didExitToBezel = didExitToBezel | SLBezelDirectionLeft;
+        }else if(point.y < kBezelInGestureWidth && bezelDirHasUp){
+            didExitToBezel = didExitToBezel | SLBezelDirectionUp;
+        }else if(point.x > self.view.superview.frame.size.width - kBezelInGestureWidth && bezelDirHasRight){
+            didExitToBezel = didExitToBezel | SLBezelDirectionRight;
+        }else if(point.y > self.view.superview.frame.size.height - kBezelInGestureWidth && bezelDirHasDown){
+            didExitToBezel = didExitToBezel | SLBezelDirectionDown;
+        }
+    }
+
+    
+    // pan and pinch
     NSMutableSet* validTouches = [NSMutableSet setWithSet:validTouchesOnly];
     [validTouches intersectSet:touches];
     if([validTouches count]){
@@ -148,6 +169,7 @@
     initialDistance = 0;
     scale = 1;
     [validTouchesOnly removeAllObjects];
+    didExitToBezel = SLBezelDirectionNone;
 }
 
 -(void) cancel{

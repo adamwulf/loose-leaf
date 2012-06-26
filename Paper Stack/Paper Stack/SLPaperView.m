@@ -40,7 +40,7 @@
         scale = 1;
         shadowSeed = rand();
         
-        panGesture = [[[SLBezelOutPanPinchGestureRecognizer alloc] 
+        panGesture = [[[SLPanAndPinchGestureRecognizer alloc]
                                                initWithTarget:self 
                                                       action:@selector(panAndScale:)] autorelease];
         [panGesture setMinimumNumberOfTouches:2];
@@ -89,7 +89,7 @@
 -(void) cancelAllGestures{
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         if([gesture respondsToSelector:@selector(cancel)]){
-            [(SLBezelOutPanPinchGestureRecognizer*)gesture cancel];
+            [(SLPanAndPinchGestureRecognizer*)gesture cancel];
         }
     }
 }
@@ -133,7 +133,7 @@
  * and also should ensure it never goes offscreen. there's no reason to show less than 100px
  * in any direction (maybe more).
  */
--(void) panAndScale:(SLBezelOutPanPinchGestureRecognizer*)_panGesture{
+-(void) panAndScale:(SLPanAndPinchGestureRecognizer*)_panGesture{
     CGPoint panDiffLocation = [panGesture translationInView:self];
     CGPoint lastLocationInSelf = [panGesture locationInView:self];
     
