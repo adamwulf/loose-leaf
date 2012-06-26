@@ -7,7 +7,7 @@
 //
 
 #import "SLBezelOutPanPinchGestureRecognizer.h"
-
+#import "Constants.h"
 
 @implementation SLBezelOutPanPinchGestureRecognizer
 
@@ -28,19 +28,18 @@
  */
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     for(UITouch* touch in touches){
-        NSInteger bezelWidth = 10;
         CGPoint point = [touch locationInView:self.view.superview];
         BOOL bezelDirHasLeft = ((self.bezelDirectionMask & SLBezelDirectionLeft) == SLBezelDirectionLeft);
         BOOL bezelDirHasRight = ((self.bezelDirectionMask & SLBezelDirectionRight) == SLBezelDirectionRight);
         BOOL bezelDirHasUp = ((self.bezelDirectionMask & SLBezelDirectionUp) == SLBezelDirectionUp);
         BOOL bezelDirHasDown = ((self.bezelDirectionMask & SLBezelDirectionDown) == SLBezelDirectionDown);
-        if(point.x < bezelWidth && bezelDirHasLeft){
+        if(point.x < kBezelInGestureWidth && bezelDirHasLeft){
             didExitToBezel = didExitToBezel | SLBezelDirectionLeft;
-        }else if(point.y < bezelWidth && bezelDirHasUp){
+        }else if(point.y < kBezelInGestureWidth && bezelDirHasUp){
             didExitToBezel = didExitToBezel | SLBezelDirectionUp;
-        }else if(point.x > self.view.superview.frame.size.width - bezelWidth && bezelDirHasRight){
+        }else if(point.x > self.view.superview.frame.size.width - kBezelInGestureWidth && bezelDirHasRight){
             didExitToBezel = didExitToBezel | SLBezelDirectionRight;
-        }else if(point.y > self.view.superview.frame.size.height - bezelWidth && bezelDirHasDown){
+        }else if(point.y > self.view.superview.frame.size.height - kBezelInGestureWidth && bezelDirHasDown){
             didExitToBezel = didExitToBezel | SLBezelDirectionDown;
         }
     }
