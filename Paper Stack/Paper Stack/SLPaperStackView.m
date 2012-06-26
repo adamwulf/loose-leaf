@@ -88,6 +88,148 @@
     return page;
 }
 
+
+/**
+ * adds the page to the bottom of the stack
+ * and adds to the bottom of the subviews
+ */
+-(void) addPaperToBottomOfStack:(SLPaperView*)page{
+    page.isBrandNewPage = NO;
+    page.delegate = self;
+    [page enableAllGestures];
+    [visibleStackHolder addSubviewToBottomOfStack:page];
+}
+
+
+#pragma mark - Pan and Bezel Icons
+
+/**
+ * we need to update the icons that are visible
+ * depending on the locations of the pages that are
+ * currently being panned and scaled
+ *
+ * this is the + <= => icons on the right side of the screen
+ * when a page is being panned
+ */
+-(void) updateIconAnimations{
+    BOOL bezelingFromRight = fromRightBezelGesture.state == UIGestureRecognizerStateBegan || fromRightBezelGesture.state == UIGestureRecognizerStateChanged;
+    BOOL showLeftArrow = NO;
+    BOOL topPageIsExitingBezel = [[visibleStackHolder peekSubview] willExitToRightBezel];
+    BOOL nonTopPageIsExitingBezel = inProgressOfBezeling != [visibleStackHolder peekSubview] && [inProgressOfBezeling willExitToRightBezel];
+    NSInteger numberOfVisiblePagesThatAreNotAligned = 0;
+    for(int i=[visibleStackHolder.subviews count]-1; i>=0 && i>[visibleStackHolder.subviews count]-4;i--){
+        SLPaperView* page = [visibleStackHolder.subviews objectAtIndex:i];
+        if(!CGRectEqualToRect(page.frame, visibleStackHolder.bounds) || [page isBeingPannedAndZoomed]){
+            numberOfVisiblePagesThatAreNotAligned ++;
+        }
+    }
+    BOOL showRightArrow = [setOfPagesBeingPanned count] > 1 || topPageIsExitingBezel || nonTopPageIsExitingBezel;
+    
+    if(bezelingFromRight){
+        if((fromRightBezelGesture.panDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft){
+            showLeftArrow = YES;
+        }else if((fromRightBezelGesture.panDirection & SLBezelDirectionRight) == SLBezelDirectionRight){
+            showRightArrow = YES;
+        }
+    }
+    
+    for(SLPaperView* page in setOfPagesBeingPanned){
+        if(page == [visibleStackHolder peekSubview]){
+            if([self shouldPushPageOntoVisibleStack:page withFrame:page.frame]){
+                showLeftArrow = YES;
+            }
+            if([self shouldPopPageFromVisibleStack:page withFrame:page.frame]){
+                showRightArrow = YES;
+            }
+        }
+    }
+    if((showLeftArrow || showRightArrow) && 
+       ((!paperIcon.alpha && [setOfPagesBeingPanned count] == 1) ||
+        (!papersIcon.alpha && [setOfPagesBeingPanned count] > 1) ||
+        (!paperIcon.alpha && topPageIsExitingBezel) ||
+        (!paperIcon.alpha && nonTopPageIsExitingBezel) ||
+        bezelingFromRight)){
+           [UIView animateWithDuration:0.2
+                                 delay:0 options:UIViewAnimationOptionBeginFromCurrentState
+                            animations:^{
+                                if(([setOfPagesBeingPanned count] > 1 && !nonTopPageIsExitingBezel)){
+                                    //
+                                    // user is holding the top page
+                                    // plus at least 1 other
+                                    //
+                                    // calculate the number of pages that will be sent
+                                    // to the hidden stack if the user stops panning
+                                    // the top page
+                                    NSInteger numberToShowOnPagesIconIfNeeded = 0;
+                                    for(SLPaperView* page in [[[visibleStackHolder.subviews copy] autorelease] reverseObjectEnumerator]){
+                                        if([page isBeingPannedAndZoomed] && page != [visibleStackHolder peekSubview]){
+                                            break;
+                                        }else{
+                                            numberToShowOnPagesIconIfNeeded++;
+                                        }
+                                    }
+                                    
+                                    //
+                                    // update the icons as necessary
+                                    papersIcon.alpha = numberToShowOnPagesIconIfNeeded > 1 ? 1 : 0;
+                                    paperIcon.alpha = numberToShowOnPagesIconIfNeeded > 1 ? 0 : 1;
+                                    papersIcon.numberToShowIfApplicable = numberToShowOnPagesIconIfNeeded;
+                                    
+                                    //
+                                    // show right arrow since this gesture can only send pages
+                                    // to the hidden stack
+                                    plusIcon.alpha = 0;
+                                    leftArrow.alpha = 0;
+                                    rightArrow.alpha = 1;
+                                    return;
+                                }
+                                
+                                if(bezelingFromRight && fromRightBezelGesture.numberOfRepeatingBezels > 1){
+                                    papersIcon.numberToShowIfApplicable = fromRightBezelGesture.numberOfRepeatingBezels;
+                                    papersIcon.alpha = 1;
+                                    paperIcon.alpha = 0;
+                                }else{
+                                    //
+                                    // ok, we're dealing with only
+                                    // panning the top most page
+                                    papersIcon.alpha = 0;
+                                    paperIcon.alpha = 1;
+                                }
+                                
+                                if(showLeftArrow && [hiddenStackHolder.subviews count] && ![hiddenStackHolder peekSubview].isBrandNewPage){
+                                    leftArrow.alpha = 1;
+                                    plusIcon.alpha = 0;
+                                }else if(showLeftArrow){
+                                    leftArrow.alpha = 0;
+                                    plusIcon.alpha = 1;
+                                }else if(!showLeftArrow){
+                                    leftArrow.alpha = 0;
+                                    plusIcon.alpha = 0;
+                                }
+                                if(showRightArrow){
+                                    rightArrow.alpha = 1;
+                                }else{
+                                    rightArrow.alpha = 0;
+                                }
+                            }
+                            completion:nil];
+       }else if(!showLeftArrow && !showRightArrow && (paperIcon.alpha || papersIcon.alpha)){
+           [UIView animateWithDuration:0.3 
+                                 delay:0 
+                               options:UIViewAnimationOptionBeginFromCurrentState 
+                            animations:^{
+                                papersIcon.alpha = 0;
+                                paperIcon.alpha = 0;
+                                leftArrow.alpha = 0;
+                                plusIcon.alpha = 0;
+                                rightArrow.alpha = 0;
+                            } 
+                            completion:nil];
+       }
+}
+
+#pragma mark - SLBezelInRightGestureRecognizer
+
 /**
  * this is the event handler for the SLBezelInRightGestureRecognizer
  *
@@ -191,9 +333,9 @@
             [self popHiddenStackUntilPage:nil onComplete:finishedBlock];
         }
         /*
-        for(int i=0;i<bezelGesture.numberOfRepeatingBezels;i++){
-            [self popTopPageOfHiddenStack];
-        }
+         for(int i=0;i<bezelGesture.numberOfRepeatingBezels;i++){
+         [self popTopPageOfHiddenStack];
+         }
          */
         //
         // successful gesture complete, so reset the gesture count
@@ -218,28 +360,28 @@
             debug_NSLog(@"add page! %d", [bezelStackHolder.subviews count]);
             //
             // ok, animate them all into place
-                NSInteger numberOfPages = [bezelStackHolder.subviews count];
-                CGFloat delta;
-                if(numberOfPages < 10){
-                    delta = 10;
-                }else{
-                    delta = 100 / numberOfPages;
-                }
-                CGFloat currOffset = 0;
-                for(SLPaperView* page in bezelStackHolder.subviews){
-                    CGRect fr = page.frame;
-                    if(fr.origin.x != currOffset){
-                        fr.origin.x = currOffset;
-                        if(page == [bezelStackHolder peekSubview]){
-                            [UIView animateWithDuration:.2 animations:^{
-                                page.frame = fr;
-                            }];
-                        }else{
+            NSInteger numberOfPages = [bezelStackHolder.subviews count];
+            CGFloat delta;
+            if(numberOfPages < 10){
+                delta = 10;
+            }else{
+                delta = 100 / numberOfPages;
+            }
+            CGFloat currOffset = 0;
+            for(SLPaperView* page in bezelStackHolder.subviews){
+                CGRect fr = page.frame;
+                if(fr.origin.x != currOffset){
+                    fr.origin.x = currOffset;
+                    if(page == [bezelStackHolder peekSubview]){
+                        [UIView animateWithDuration:.2 animations:^{
                             page.frame = fr;
-                        }
+                        }];
+                    }else{
+                        page.frame = fr;
                     }
-                    currOffset += delta;
                 }
+                currOffset += delta;
+            }
         }
         CGRect newFrame = CGRectMake(hiddenStackHolder.frame.origin.x + translation.x - kFingerWidth,
                                      hiddenStackHolder.frame.origin.y,
@@ -261,109 +403,6 @@
 }
 
 
-/**
- * adds the page to the bottom of the stack
- * and adds to the bottom of the subviews
- */
--(void) addPaperToBottomOfStack:(SLPaperView*)page{
-    page.isBrandNewPage = NO;
-    page.delegate = self;
-    [page enableAllGestures];
-    [visibleStackHolder addSubviewToBottomOfStack:page];
-}
-
-/**
- * immediately animates the page from the visible stack
- * to the hidden stack
- */
--(void) sendPageToHiddenStack:(SLPaperView*)page{
-    if([visibleStackHolder.subviews containsObject:page]){
-        [self animateBackToHiddenStack:page withDelay:0 onComplete:nil];
-    }
-}
-
-/**
- * will pop just the top of the hidden stack
- * onto the visible stack.
- *
- * if a page does not exist, it will create one
- * so that it has something to pop.
- */
--(void) popTopPageOfHiddenStack{
-    [self ensureTopPageInHiddenStack];
-    SLPaperView* page = [hiddenStackHolder peekSubview];
-    page.isBrandNewPage = NO;
-    [self popHiddenStackUntilPage:[self getPageBelow:page] onComplete:nil];
-}
-
-/**
- * the input is a page in the visible stack,
- * and we pop all pages above but not including
- * the input page
- *
- * these pages will be pushed over to the invisible stack
- */
--(void) popStackUntilPage:(SLPaperView*)page onComplete:(void(^)(BOOL finished))completionBlock{
-    if([visibleStackHolder.subviews containsObject:page] || page == nil){
-        CGFloat delay = 0;
-        NSArray* pages = [visibleStackHolder peekSubviewFromSubview:page];
-        for(int i=[pages count]-1;i>=0;i--){
-            SLPaperView* pageToPop = [pages objectAtIndex:i];
-            [bezelStackHolder addSubviewToBottomOfStack:pageToPop];
-            [self animateBackToHiddenStack:pageToPop withDelay:delay onComplete:(i == 0 ? completionBlock : nil)];
-            delay += kAnimationDelay;
-        }
-    }
-}
-
-/**
- * the input is a page in the visible stack,
- * and we pop all pages above but not including
- * the input page
- *
- * these pages will be pushed over to the invisible stack
- */
--(void) popHiddenStackUntilPage:(SLPaperView*)page onComplete:(void(^)(BOOL finished))completionBlock{
-    if([hiddenStackHolder.subviews containsObject:page] || page == nil){
-        CGFloat delay = 0;
-        while([hiddenStackHolder peekSubview] != page && [hiddenStackHolder.subviews count]){
-            //
-            // since we're manually popping the stack outside of an
-            // animation, we need to make sure the page still exists
-            // inside a stack.
-            //
-            // when the animation completes, it'll validate which stack
-            // it's in anyways
-            SLPaperView* aPage = [hiddenStackHolder peekSubview];
-            //
-            // this push will also pop it off the visible stack, and adjust the frame
-            // correctly
-            [aPage enableAllGestures];
-            [visibleStackHolder pushSubview:aPage];
-            BOOL hasAnotherToPop = [hiddenStackHolder peekSubview] != page && [hiddenStackHolder.subviews count];
-            [self animatePageToFullScreen:aPage withDelay:delay withBounce:YES onComplete:(!hasAnotherToPop ? completionBlock : nil)];
-            delay += kAnimationDelay;
-        }
-    }
-}
-
-
--(SLPaperView*) getPageBelow:(SLPaperView*)page{
-    if([visibleStackHolder.subviews containsObject:page]){
-        NSInteger index = [visibleStackHolder.subviews indexOfObject:page];
-        if(index != 0){
-            return [visibleStackHolder.subviews objectAtIndex:index-1];
-        }
-    }
-    if([hiddenStackHolder.subviews containsObject:page]){
-        NSInteger index = [hiddenStackHolder.subviews indexOfObject:page];
-        if(index != 0){
-            return [hiddenStackHolder.subviews objectAtIndex:index-1];
-        }
-    }
-    return nil;
-}
-
 
 #pragma mark - SLPaperViewDelegate
 
@@ -374,130 +413,6 @@
     return [visibleStackHolder peekSubview] == page;
 }
 
-/**
- * we need to update the icons that are visible
- * depending on the locations of the pages that are
- * currently being panned and scaled
- *
- * this is the + <= => icons on the right side of the screen
- * when a page is being panned
- */
--(void) updateIconAnimations{
-    BOOL bezelingFromRight = fromRightBezelGesture.state == UIGestureRecognizerStateBegan || fromRightBezelGesture.state == UIGestureRecognizerStateChanged;
-    BOOL showLeftArrow = NO;
-    BOOL topPageIsExitingBezel = [[visibleStackHolder peekSubview] willExitToRightBezel];
-    BOOL nonTopPageIsExitingBezel = inProgressOfBezeling != [visibleStackHolder peekSubview] && [inProgressOfBezeling willExitToRightBezel];
-    NSInteger numberOfVisiblePagesThatAreNotAligned = 0;
-    for(int i=[visibleStackHolder.subviews count]-1; i>=0 && i>[visibleStackHolder.subviews count]-4;i--){
-        SLPaperView* page = [visibleStackHolder.subviews objectAtIndex:i];
-        if(!CGRectEqualToRect(page.frame, visibleStackHolder.bounds) || [page isBeingPannedAndZoomed]){
-            numberOfVisiblePagesThatAreNotAligned ++;
-        }
-    }
-    BOOL showRightArrow = [setOfPagesBeingPanned count] > 1 || topPageIsExitingBezel || nonTopPageIsExitingBezel;
-    
-    if(bezelingFromRight){
-        if((fromRightBezelGesture.panDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft){
-            showLeftArrow = YES;
-        }else if((fromRightBezelGesture.panDirection & SLBezelDirectionRight) == SLBezelDirectionRight){
-            showRightArrow = YES;
-        }
-    }
-    
-    for(SLPaperView* page in setOfPagesBeingPanned){
-        if(page == [visibleStackHolder peekSubview]){
-            if([self shouldPushPageOntoVisibleStack:page withFrame:page.frame]){
-                showLeftArrow = YES;
-            }
-            if([self shouldPopPageFromVisibleStack:page withFrame:page.frame]){
-                showRightArrow = YES;
-            }
-        }
-    }
-    if((showLeftArrow || showRightArrow) && 
-       ((!paperIcon.alpha && [setOfPagesBeingPanned count] == 1) ||
-        (!papersIcon.alpha && [setOfPagesBeingPanned count] > 1) ||
-        (!paperIcon.alpha && topPageIsExitingBezel) ||
-        (!paperIcon.alpha && nonTopPageIsExitingBezel) ||
-        bezelingFromRight)){
-        [UIView animateWithDuration:0.2
-                              delay:0 options:UIViewAnimationOptionBeginFromCurrentState
-                         animations:^{
-                             if(([setOfPagesBeingPanned count] > 1 && !nonTopPageIsExitingBezel)){
-                                 //
-                                 // user is holding the top page
-                                 // plus at least 1 other
-                                 //
-                                 // calculate the number of pages that will be sent
-                                 // to the hidden stack if the user stops panning
-                                 // the top page
-                                 NSInteger numberToShowOnPagesIconIfNeeded = 0;
-                                 for(SLPaperView* page in [[[visibleStackHolder.subviews copy] autorelease] reverseObjectEnumerator]){
-                                     if([page isBeingPannedAndZoomed] && page != [visibleStackHolder peekSubview]){
-                                         break;
-                                     }else{
-                                         numberToShowOnPagesIconIfNeeded++;
-                                     }
-                                 }
-                                 
-                                 //
-                                 // update the icons as necessary
-                                 papersIcon.alpha = numberToShowOnPagesIconIfNeeded > 1 ? 1 : 0;
-                                 paperIcon.alpha = numberToShowOnPagesIconIfNeeded > 1 ? 0 : 1;
-                                 papersIcon.numberToShowIfApplicable = numberToShowOnPagesIconIfNeeded;
-
-                                 //
-                                 // show right arrow since this gesture can only send pages
-                                 // to the hidden stack
-                                 plusIcon.alpha = 0;
-                                 leftArrow.alpha = 0;
-                                 rightArrow.alpha = 1;
-                                 return;
-                             }
-                             
-                             if(bezelingFromRight && fromRightBezelGesture.numberOfRepeatingBezels > 1){
-                                 papersIcon.numberToShowIfApplicable = fromRightBezelGesture.numberOfRepeatingBezels;
-                                 papersIcon.alpha = 1;
-                                 paperIcon.alpha = 0;
-                             }else{
-                                 //
-                                 // ok, we're dealing with only
-                                 // panning the top most page
-                                 papersIcon.alpha = 0;
-                                 paperIcon.alpha = 1;
-                             }
-                             
-                             if(showLeftArrow && [hiddenStackHolder.subviews count] && ![hiddenStackHolder peekSubview].isBrandNewPage){
-                                 leftArrow.alpha = 1;
-                                 plusIcon.alpha = 0;
-                             }else if(showLeftArrow){
-                                 leftArrow.alpha = 0;
-                                 plusIcon.alpha = 1;
-                             }else if(!showLeftArrow){
-                                 leftArrow.alpha = 0;
-                                 plusIcon.alpha = 0;
-                             }
-                             if(showRightArrow){
-                                 rightArrow.alpha = 1;
-                             }else{
-                                 rightArrow.alpha = 0;
-                             }
-                         }
-                         completion:nil];
-    }else if(!showLeftArrow && !showRightArrow && (paperIcon.alpha || papersIcon.alpha)){
-        [UIView animateWithDuration:0.3 
-                              delay:0 
-                            options:UIViewAnimationOptionBeginFromCurrentState 
-                         animations:^{
-                             papersIcon.alpha = 0;
-                             paperIcon.alpha = 0;
-                             leftArrow.alpha = 0;
-                             plusIcon.alpha = 0;
-                             rightArrow.alpha = 0;
-                         } 
-                         completion:nil];
-    }
-}
 
 /**
  * during a pan, we'll need to show different icons
@@ -611,7 +526,7 @@
     }
     
     if(page == [visibleStackHolder peekSubview] && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
-        [self popStackUntilPage:[self getPageBelow:page] onComplete:nil];
+        [self popStackUntilPage:[visibleStackHolder getPageBelow:page] onComplete:nil];
     }else if(page == [visibleStackHolder peekSubview] && [self shouldPushPageOntoVisibleStack:page withFrame:toFrame]){
         [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO onComplete:nil];
         [self popTopPageOfHiddenStack];
@@ -667,6 +582,81 @@
 
 
 #pragma mark - Page Animations
+
+/**
+ * immediately animates the page from the visible stack
+ * to the hidden stack
+ */
+-(void) sendPageToHiddenStack:(SLPaperView*)page{
+    if([visibleStackHolder.subviews containsObject:page]){
+        [self animateBackToHiddenStack:page withDelay:0 onComplete:nil];
+    }
+}
+
+/**
+ * will pop just the top of the hidden stack
+ * onto the visible stack.
+ *
+ * if a page does not exist, it will create one
+ * so that it has something to pop.
+ */
+-(void) popTopPageOfHiddenStack{
+    [self ensureTopPageInHiddenStack];
+    SLPaperView* page = [hiddenStackHolder peekSubview];
+    page.isBrandNewPage = NO;
+    [self popHiddenStackUntilPage:[hiddenStackHolder getPageBelow:page] onComplete:nil];
+}
+
+/**
+ * the input is a page in the visible stack,
+ * and we pop all pages above but not including
+ * the input page
+ *
+ * these pages will be pushed over to the invisible stack
+ */
+-(void) popStackUntilPage:(SLPaperView*)page onComplete:(void(^)(BOOL finished))completionBlock{
+    if([visibleStackHolder.subviews containsObject:page] || page == nil){
+        CGFloat delay = 0;
+        NSArray* pages = [visibleStackHolder peekSubviewFromSubview:page];
+        for(int i=[pages count]-1;i>=0;i--){
+            SLPaperView* pageToPop = [pages objectAtIndex:i];
+            [bezelStackHolder addSubviewToBottomOfStack:pageToPop];
+            [self animateBackToHiddenStack:pageToPop withDelay:delay onComplete:(i == 0 ? completionBlock : nil)];
+            delay += kAnimationDelay;
+        }
+    }
+}
+
+/**
+ * the input is a page in the visible stack,
+ * and we pop all pages above but not including
+ * the input page
+ *
+ * these pages will be pushed over to the invisible stack
+ */
+-(void) popHiddenStackUntilPage:(SLPaperView*)page onComplete:(void(^)(BOOL finished))completionBlock{
+    if([hiddenStackHolder.subviews containsObject:page] || page == nil){
+        CGFloat delay = 0;
+        while([hiddenStackHolder peekSubview] != page && [hiddenStackHolder.subviews count]){
+            //
+            // since we're manually popping the stack outside of an
+            // animation, we need to make sure the page still exists
+            // inside a stack.
+            //
+            // when the animation completes, it'll validate which stack
+            // it's in anyways
+            SLPaperView* aPage = [hiddenStackHolder peekSubview];
+            //
+            // this push will also pop it off the visible stack, and adjust the frame
+            // correctly
+            [aPage enableAllGestures];
+            [visibleStackHolder pushSubview:aPage];
+            BOOL hasAnotherToPop = [hiddenStackHolder peekSubview] != page && [hiddenStackHolder.subviews count];
+            [self animatePageToFullScreen:aPage withDelay:delay withBounce:YES onComplete:(!hasAnotherToPop ? completionBlock : nil)];
+            delay += kAnimationDelay;
+        }
+    }
+}
 
 /**
  * this function is used when the user flicks a page

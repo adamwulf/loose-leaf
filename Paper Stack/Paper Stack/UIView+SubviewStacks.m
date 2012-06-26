@@ -56,4 +56,13 @@
     return nil;
 }
 
+-(SLPaperView*) getPageBelow:(SLPaperView*)page{
+    NSInteger index = [self.subviews indexOfObject:page];
+    if(index != 0){
+        return [self.subviews objectAtIndex:index-1];
+    }
+    return nil;
+}
+
+
 @end
