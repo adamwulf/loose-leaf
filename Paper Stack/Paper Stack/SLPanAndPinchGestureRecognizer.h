@@ -21,7 +21,7 @@
     CGFloat scale;
     //
     // the collection of valid touches for this gesture
-    NSMutableSet* validTouchesOnly;
+    NSMutableOrderedSet* validTouchesOnly;
 
     // track which bezels our delegate cares about
     SLBezelDirection bezelDirectionMask;

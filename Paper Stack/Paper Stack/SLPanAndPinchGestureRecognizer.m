@@ -20,7 +20,7 @@
 -(id) init{
     self = [super init];
     if(self){
-        validTouchesOnly = [[NSMutableSet alloc] init];
+        validTouchesOnly = [[NSMutableOrderedSet alloc] init];
     }
     return self;
 }
@@ -28,7 +28,7 @@
 -(id) initWithTarget:(id)target action:(SEL)action{
     self = [super initWithTarget:target action:action];
     if(self){
-        validTouchesOnly = [[NSMutableSet alloc] init];
+        validTouchesOnly = [[NSMutableOrderedSet alloc] init];
     }
     return self;
 }
@@ -47,7 +47,7 @@
  * to match that of the animation.
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSMutableSet* validTouchesCurrentlyBeginning = [NSMutableSet setWithSet:touches];
+    NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
     // ignore all the touches that could be bezel touches
     for(UITouch* touch in touches){
         CGPoint point = [touch locationInView:self.view.superview];
@@ -81,8 +81,8 @@
             self.view.frame = lFrame;
         }
         [self.view.layer removeAllAnimations];
-        [super touchesBegan:validTouchesCurrentlyBeginning withEvent:event];
-        [validTouchesOnly addObjectsFromArray:[validTouchesCurrentlyBeginning allObjects]];
+        [super touchesBegan:[validTouchesCurrentlyBeginning set] withEvent:event];
+        [validTouchesOnly addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
         if([validTouchesOnly count] >= self.minimumNumberOfTouches && self.state == UIGestureRecognizerStatePossible){
             self.state = UIGestureRecognizerStateBegan;
         }
@@ -90,10 +90,10 @@
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSMutableSet* validTouchesCurrentlyMoving = [NSMutableSet setWithSet:validTouchesOnly];
+    NSMutableOrderedSet* validTouchesCurrentlyMoving = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouchesOnly];
     [validTouchesCurrentlyMoving intersectSet:touches];
     if([validTouchesCurrentlyMoving count]){
-        [super touchesMoved:validTouchesCurrentlyMoving withEvent:event];
+        [super touchesMoved:[validTouchesCurrentlyMoving set] withEvent:event];
         if(self.state == UIGestureRecognizerStateBegan){
             initialDistance = 0;
         }
@@ -101,17 +101,17 @@
             initialDistance = 0;
             scale = 1;
         }
-        if([validTouchesCurrentlyMoving count] == 2 && !initialDistance){
-            initialDistance = [self distanceBetweenTouches:validTouchesCurrentlyMoving];
+        if([validTouchesOnly count] >= 2 && !initialDistance){
+            initialDistance = [self distanceBetweenTouches:validTouchesOnly];
         }
-        if([validTouchesCurrentlyMoving count] == 2 && initialDistance){
-            scale = [self distanceBetweenTouches:touches] / initialDistance;
+        if([validTouchesOnly count] >= 2 && initialDistance){
+            scale = [self distanceBetweenTouches:validTouchesOnly] / initialDistance;
         }
     }
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     // pan and pinch and bezel
-    NSMutableSet* validTouchesCurrentlyEnding = [NSMutableSet setWithSet:validTouchesOnly];
+    NSMutableOrderedSet* validTouchesCurrentlyEnding = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouchesOnly];
     [validTouchesCurrentlyEnding intersectSet:touches];
     if([validTouchesCurrentlyEnding count]){
         for(UITouch* touch in validTouchesCurrentlyEnding){
@@ -139,18 +139,18 @@
         if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
             self.state = UIGestureRecognizerStatePossible;
         }
-        [validTouchesOnly removeObjectsInSet:validTouchesCurrentlyEnding];
+        [validTouchesOnly minusOrderedSet:validTouchesCurrentlyEnding];
     }
 }
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSMutableSet* validTouchesCurrentlyCancelling = [NSMutableSet setWithSet:validTouchesOnly];
+    NSMutableOrderedSet* validTouchesCurrentlyCancelling = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouchesOnly];
     [validTouchesCurrentlyCancelling intersectSet:touches];
     if([validTouchesCurrentlyCancelling count]){
         [super touchesCancelled:touches withEvent:event];
         if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
             self.state = UIGestureRecognizerStatePossible;
         }
-        [validTouchesOnly removeObjectsInSet:validTouchesCurrentlyCancelling];
+        [validTouchesOnly minusOrderedSet:validTouchesCurrentlyCancelling];
     }
 }
 - (void)reset{
@@ -166,11 +166,10 @@
     self.enabled = YES;
 }
 
--(CGFloat) distanceBetweenTouches:(NSSet*) touches{
-    if([touches count] == 2){
-        NSArray* arr = [touches allObjects];
-        UITouch* touch1 = [arr objectAtIndex:0];
-        UITouch* touch2 = [arr objectAtIndex:1];
+-(CGFloat) distanceBetweenTouches:(NSOrderedSet*) touches{
+    if([touches count] >= 2){
+        UITouch* touch1 = [touches objectAtIndex:0];
+        UITouch* touch2 = [touches objectAtIndex:1];
         CGPoint initialPoint1 = [touch1 locationInView:self.view.superview];
         CGPoint initialPoint2 = [touch2 locationInView:self.view.superview];
         return DistanceBetweenTwoPoints(initialPoint1, initialPoint2);
