@@ -77,6 +77,10 @@
     [bezelGestureView addGestureRecognizer:fromRightBezelGesture];
 }
 
+/**
+ * this function makes sure there's at least 1 page
+ * in the hidden stack
+ */
 -(SLPaperView*) ensureTopPageInHiddenStack{
     SLPaperView* page = [hiddenStackHolder peekSubview];
     if(!page){
@@ -196,7 +200,10 @@
                                     paperIcon.alpha = 1;
                                 }
                                 
-                                if(showLeftArrow && [hiddenStackHolder.subviews count] && ![hiddenStackHolder peekSubview].isBrandNewPage){
+                                if(showLeftArrow && bezelingFromRight && ![bezelStackHolder peekSubview].isBrandNewPage){
+                                    leftArrow.alpha = 1;
+                                    plusIcon.alpha = 0;
+                                }else if(showLeftArrow && [hiddenStackHolder.subviews count] && ![hiddenStackHolder peekSubview].isBrandNewPage){
                                     leftArrow.alpha = 1;
                                     plusIcon.alpha = 0;
                                 }else if(showLeftArrow){
@@ -646,6 +653,7 @@
             // when the animation completes, it'll validate which stack
             // it's in anyways
             SLPaperView* aPage = [hiddenStackHolder peekSubview];
+            aPage.isBrandNewPage = NO;
             //
             // this push will also pop it off the visible stack, and adjust the frame
             // correctly
