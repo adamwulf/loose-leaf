@@ -8,6 +8,7 @@
 
 #import "SLPapersIcon.h"
 #import "UIFont+UIBezierCurve.h"
+#import "Constants.h"
 
 @implementation SLPapersIcon
 
@@ -57,16 +58,6 @@
     CGGradientRef frontOfPaper = CGGradientCreateWithColors(colorSpace, (CFArrayRef)frontOfPaperColors, frontOfPaperLocations);
     
     
-    UIBezierPath* glyphPath = nil;
-    if(self.numberToShowIfApplicable > 1){
-        glyphPath = [[UIFont boldSystemFontOfSize:(int)(largest * 2 / 3)] getUIBezierPathForLetter:[NSString stringWithFormat:@"%d", numberToShowIfApplicable]];
-        CGRect glyphRect = [glyphPath bounds];
-        [glyphPath applyTransform:CGAffineTransformConcat(CGAffineTransformMakeTranslation(-glyphRect.origin.x - 10.5, -glyphRect.size.height - 2.5),
-                                                          CGAffineTransformMakeScale(1.f, -1.f))];
-        [glyphPath applyTransform:CGAffineTransformMakeTranslation((largest - glyphRect.size.width) / 2,
-                                                                   (largest - glyphRect.size.height) / 2)];
-    }
-
     //// Bezier Drawing
     UIBezierPath* bezierPath = [UIBezierPath bezierPath];
     [bezierPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.11 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.09 * CGRectGetHeight(frame))];
@@ -105,6 +96,25 @@
     bezierPath.lineWidth = 1;
     [bezierPath stroke];
     
+    
+    UIBezierPath* glyphPath = nil;
+    if(self.numberToShowIfApplicable > 1){
+        glyphPath = [[UIFont boldSystemFontOfSize:(int)(largest * 2 / 3)] bezierPathForString:[NSString stringWithFormat:@"%d", numberToShowIfApplicable]];
+        CGRect glyphRect = [glyphPath bounds];
+        CGFloat iconWidth = [bezierPath bounds].size.width;
+        CGFloat iconHeight = [bezierPath bounds].size.height;
+        
+        CGFloat fullWidth = glyphPath.bounds.size.width - glyphPath.bounds.origin.x;
+        if(fullWidth > iconWidth - 20){
+            CGFloat scale = (iconWidth - 20) / fullWidth;
+            [glyphPath applyTransform:CGAffineTransformMakeScale(scale, scale)];
+            glyphRect = [glyphPath bounds];
+        }
+        [glyphPath applyTransform:CGAffineTransformConcat(CGAffineTransformMakeTranslation(-glyphRect.origin.x - .5, -glyphRect.size.height - 2.5),
+                                                          CGAffineTransformMakeScale(1.f, -1.f))];
+        [glyphPath applyTransform:CGAffineTransformMakeTranslation((iconWidth - glyphRect.size.width) / 2,
+                                                                   (iconHeight - glyphRect.size.height) / 2 + 4)];
+    }
     
     //// Back Page Curl Drawing
     UIBezierPath* backPageCurlPath = [UIBezierPath bezierPath];

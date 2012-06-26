@@ -45,7 +45,7 @@
     CGContextSaveGState(context);
     
     
-    UIBezierPath* glyphPath = [[font fontWithSize:scaledPointSize] getUIBezierPathForLetter:letter];
+    UIBezierPath* glyphPath = [[font fontWithSize:scaledPointSize] bezierPathForString:letter];
     CGRect glyphRect = [glyphPath bounds];
     [glyphPath applyTransform:CGAffineTransformConcat(CGAffineTransformMakeTranslation(-glyphRect.origin.x - .5 + xOffset, -glyphRect.size.height),
                                                               CGAffineTransformMakeScale(1.f, -1.f))];

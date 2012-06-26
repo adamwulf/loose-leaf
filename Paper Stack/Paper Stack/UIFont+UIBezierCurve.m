@@ -12,7 +12,7 @@
 
 @implementation UIFont (UIBezierCurve)
 
--(UIBezierPath*) getUIBezierPathForLetter:(NSString*) letter{
+-(UIBezierPath*) bezierPathForString:(NSString*) letter{
     UniChar *characters;
     CGGlyph *glyphs;
     CFIndex count;
