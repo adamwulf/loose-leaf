@@ -10,9 +10,16 @@
 #import <UIKit/UIGestureRecognizerSubclass.h>
 
 @interface SLPanAndPinchGestureRecognizer : UIPanGestureRecognizer{
+    //
+    // the initial distance between
+    // the touches. to be used to calculate
+    // scale
     CGFloat initialDistance;
+    //
+    // the current scale of the gesture
     CGFloat scale;
-    NSDate* lastTouchTime;
+    //
+    // the collection of valid touches for this gesture
     NSMutableSet* validTouchesOnly;
 }
 

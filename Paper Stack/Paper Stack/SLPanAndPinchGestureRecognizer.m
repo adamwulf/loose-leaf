@@ -81,8 +81,6 @@
         }
         [self.view.layer removeAllAnimations];
         [super touchesBegan:validTouches withEvent:event];
-        [lastTouchTime release];
-        lastTouchTime = [[NSDate date] retain];
         [validTouchesOnly addObjectsFromArray:[validTouches allObjects]];
         if([validTouchesOnly count] >= self.minimumNumberOfTouches && self.state == UIGestureRecognizerStatePossible){
             self.state = UIGestureRecognizerStateBegan;
@@ -106,12 +104,7 @@
             initialDistance = [self distanceBetweenTouches:validTouches];
         }
         if([validTouches count] == 2 && initialDistance){
-            NSTimeInterval interval = [lastTouchTime timeIntervalSinceNow];
-            if(interval < -.03){
-                scale = [self distanceBetweenTouches:touches] / initialDistance;
-                [lastTouchTime release];
-                lastTouchTime = [[NSDate date] retain];
-            }
+            scale = [self distanceBetweenTouches:touches] / initialDistance;
         }
     }
 }
