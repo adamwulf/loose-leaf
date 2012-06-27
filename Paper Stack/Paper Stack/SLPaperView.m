@@ -82,7 +82,7 @@
  */
 -(BOOL) willExitToBezel:(SLBezelDirection)bezelDirection{
     BOOL isBezel = (panGesture.didExitToBezel & bezelDirection) != SLBezelDirectionNone;
-    return isBezel && (panGesture.state == UIGestureRecognizerStateChanged);
+    return isBezel && (panGesture.state == UIGestureRecognizerStateChanged) && panGesture.numberOfTouches == 1;
 }
 
 /**
