@@ -45,6 +45,9 @@
     visibleStackHolder.clipsToBounds = YES;
     bezelStackHolder.clipsToBounds = NO;
     
+    bezelStackHolder.layer.borderColor = [[UIColor redColor] CGColor];
+    bezelStackHolder.layer.borderWidth = 1;
+    
     //
     // icons for moving and panning pages
     [self addSubview:visibleStackHolder];
@@ -431,6 +434,93 @@
     }
     [setOfPagesBeingPanned addObject:page];
     [self updateIconAnimations];
+    
+    
+    //
+    // the user is bezeling a page to the left, which will pop
+    // in pages from the hidden stack if they let go
+    //
+    // let's animate a small pop in
+    if([page willExitToBezel:SLBezelDirectionLeft]){
+        debug_NSLog(@"yep %d", page.numberOfTimesExitedBezel);
+        //
+        // we're in progress of a bezel gesture from the right
+        //
+        // let's:
+        // a) make sure we're bezeling the correct number of pages
+        // b) make sure that (a) animates them to the correct place
+        // c) add correct number of pages to the bezelStackHolder
+        // d) update the offset for the bezelStackHolder so they all move in tandem
+        while(page.numberOfTimesExitedBezel > [bezelStackHolder.subviews count]){
+            [self ensureAtLeastPagesInHiddenStack:1];
+            //
+            // we need to add another page
+            [bezelStackHolder pushSubview:[hiddenStackHolder peekSubview]];
+            SLPaperView* topPage = [bezelStackHolder peekSubview];
+            CGRect topPageFrame = topPage.frame;
+            topPageFrame.origin.x = visibleStackHolder.frame.size.width - [bezelStackHolder.layer.presentationLayer frame].origin.x;
+            topPage.frame = topPageFrame;
+            //
+            // ok, animate them all into place
+            NSInteger numberOfPages = [bezelStackHolder.subviews count];
+            CGFloat delta;
+            if(numberOfPages < 10){
+                delta = 10;
+            }else{
+                delta = 100 / numberOfPages;
+            }
+            CGFloat currOffset = 0;
+            for(SLPaperView* page in bezelStackHolder.subviews){
+                CGRect fr = page.frame;
+                if(fr.origin.x != currOffset){
+                    fr.origin.x = currOffset;
+                    if(page == [bezelStackHolder peekSubview]){
+                        [UIView animateWithDuration:.2 animations:^{
+                            page.frame = fr;
+                        }];
+                    }else{
+                        page.frame = fr;
+                    }
+                }
+                currOffset += delta;
+            }
+        }
+        CGRect newFrame = CGRectMake(hiddenStackHolder.frame.origin.x - MIN([bezelStackHolder.subviews count] * 10 + 4, 106),
+                                     hiddenStackHolder.frame.origin.y,
+                                     hiddenStackHolder.frame.size.width,
+                                     hiddenStackHolder.frame.size.height);
+        
+        if(!CGRectEqualToRect(bezelStackHolder.frame, newFrame) ||
+           CGRectEqualToRect(bezelStackHolder.frame, hiddenStackHolder.frame)){
+            if(CGRectEqualToRect([bezelStackHolder.layer.presentationLayer frame], hiddenStackHolder.frame)){
+                // bounce
+                [UIView animateWithDuration:.1 animations:^{
+                    CGRect bounceFrame = newFrame;
+                    bounceFrame.origin.x -= 10;
+                    bezelStackHolder.frame = bounceFrame;
+                } completion:^(BOOL finished){
+                    if(finished){
+                        [UIView animateWithDuration:.2 animations:^{
+                            bezelStackHolder.frame = newFrame;
+                        }];
+                    }
+                }];
+            }else{
+                // expand
+                [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+                    bezelStackHolder.frame = newFrame;
+                } completion:nil];
+            }
+        }
+    }else{
+        // ok, the user isn't bezeling left anymore
+        [UIView animateWithDuration:.2 delay:.5 options:UIViewAnimationCurveEaseOut animations:^{
+            bezelStackHolder.frame = hiddenStackHolder.frame;
+        } completion:nil];
+    }
+    
+    
+    
     return toFrame;
 }
 
