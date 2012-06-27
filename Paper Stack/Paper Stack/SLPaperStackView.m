@@ -109,20 +109,28 @@
  * when a page is being panned
  */
 -(void) updateIconAnimations{
+    // YES if we're pulling pages in from the hidden stack, NO otherwise
     BOOL bezelingFromRight = fromRightBezelGesture.state == UIGestureRecognizerStateBegan || fromRightBezelGesture.state == UIGestureRecognizerStateChanged;
-    BOOL showLeftArrow = NO;
+    // YES if the top page will bezel right, NO otherwise
+    BOOL topPageWillBezelRight = [[visibleStackHolder peekSubview] willExitToBezel:SLBezelDirectionRight];
+    // YES if the top page will bezel right, NO otherwise
+    BOOL topPageWillBezelLeft = [[visibleStackHolder peekSubview] willExitToBezel:SLBezelDirectionLeft];
+    // number of times the top page has been bezeled
     NSInteger numberOfTimesTheTopPageHasExitedBezel = [[visibleStackHolder peekSubview] numberOfTimesExitedBezel];
-    BOOL topPageWillBezel = [[visibleStackHolder peekSubview] willExitToRightBezel];
-    BOOL nonTopPageIsExitingBezel = inProgressOfBezeling != [visibleStackHolder peekSubview] && ([inProgressOfBezeling numberOfTimesExitedBezel] > 0);
-    NSInteger numberOfVisiblePagesThatAreNotAligned = 0;
-    for(int i=[visibleStackHolder.subviews count]-1; i>=0 && i>[visibleStackHolder.subviews count]-4;i--){
-        SLPaperView* page = [visibleStackHolder.subviews objectAtIndex:i];
-        if(!CGRectEqualToRect(page.frame, visibleStackHolder.bounds) || [page isBeingPannedAndZoomed]){
-            numberOfVisiblePagesThatAreNotAligned ++;
-        }
+    // YES if a non top page is will exit bezel
+    BOOL nonTopPageWillExitBezel = inProgressOfBezeling != [visibleStackHolder peekSubview] && ([inProgressOfBezeling numberOfTimesExitedBezel] > 0);
+    // YES if we should show the right arrow (push pages to hidden stack)
+    BOOL showRightArrow = NO;
+    if([setOfPagesBeingPanned count] > 1 ||
+       (topPageWillBezelRight && numberOfTimesTheTopPageHasExitedBezel > 0) ||
+       nonTopPageWillExitBezel){
+        showRightArrow  = YES;
     }
-    BOOL showRightArrow = [setOfPagesBeingPanned count] > 1 || (topPageWillBezel && numberOfTimesTheTopPageHasExitedBezel > 0) || nonTopPageIsExitingBezel;
-    
+    // YES if we should show the left arrow (pulling pages in from hidden stack)
+    BOOL showLeftArrow = NO;
+    if(topPageWillBezelLeft && numberOfTimesTheTopPageHasExitedBezel > 0){
+        showLeftArrow = YES;
+    }
     if(bezelingFromRight){
         if((fromRightBezelGesture.panDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft){
             showLeftArrow = YES;
@@ -144,13 +152,13 @@
     if((showLeftArrow || showRightArrow) && 
        ((!paperIcon.alpha && [setOfPagesBeingPanned count] == 1) ||
         (!papersIcon.alpha && [setOfPagesBeingPanned count] > 1) ||
-        (!paperIcon.alpha && topPageWillBezel && numberOfTimesTheTopPageHasExitedBezel > 0) ||
-        (!paperIcon.alpha && nonTopPageIsExitingBezel) ||
+        (!paperIcon.alpha && topPageWillBezelRight && numberOfTimesTheTopPageHasExitedBezel > 0) ||
+        (!paperIcon.alpha && nonTopPageWillExitBezel) ||
         bezelingFromRight)){
            [UIView animateWithDuration:0.2
                                  delay:0 options:UIViewAnimationOptionBeginFromCurrentState
                             animations:^{
-                                if(([setOfPagesBeingPanned count] > 1 && !nonTopPageIsExitingBezel)){
+                                if(([setOfPagesBeingPanned count] > 1 && !nonTopPageWillExitBezel)){
                                     //
                                     // user is holding the top page
                                     // plus at least 1 other
@@ -454,7 +462,9 @@
     BOOL justFinishedPanningTheTopPage = [visibleStackHolder peekSubview] == page;
     [setOfPagesBeingPanned removeObject:page];
     [self updateIconAnimations];
-    if((bezelDirection & SLBezelDirectionRight) == SLBezelDirectionRight){
+    if((bezelDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft){
+        debug_NSLog(@"bezel left %d", page.numberOfTimesExitedBezel);
+    }else if((bezelDirection & SLBezelDirectionRight) == SLBezelDirectionRight){
         inProgressOfBezeling = nil;
         
         //

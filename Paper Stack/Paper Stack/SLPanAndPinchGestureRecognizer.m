@@ -48,21 +48,6 @@
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
     return [preventingGestureRecognizer isKindOfClass:[SLBezelInRightGestureRecognizer class]];
 }
-/**
- * returns the furthest point of the gesture if possible,
- * otherwise returns default behavior.
- *
- * this is so that the translation isn't an average of
- * touch locations but will follow the lead finger in
- * the gesture.
- */
--(CGPoint) translationInView:(UIView *)view{
-    if(self.view){
-        CGPoint p = [self locationInView:view];
-        return CGPointMake(p.x - firstKnownLocation.x, p.y - firstKnownLocation.y);
-    }
-    return CGPointZero;
-}
 
 /**
  * the first touch of a gesture.
@@ -90,8 +75,6 @@
         [validTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
         if([validTouches count] >= self.minimumNumberOfTouches && self.state == UIGestureRecognizerStatePossible){
             self.state = UIGestureRecognizerStateBegan;
-            // used for velocity
-            firstKnownLocation = [self locationInView:self.view.superview];
         }else if([validTouches count] == self.minimumNumberOfTouches){
             didExitToBezel = SLBezelDirectionNone;
             //

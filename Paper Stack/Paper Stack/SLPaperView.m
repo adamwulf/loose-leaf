@@ -44,7 +44,7 @@
                                                initWithTarget:self 
                                                       action:@selector(panAndScale:)] autorelease];
         [panGesture setMinimumNumberOfTouches:2];
-        panGesture.bezelDirectionMask = SLBezelDirectionRight;
+        panGesture.bezelDirectionMask = SLBezelDirectionRight | SLBezelDirectionLeft;
         [self addGestureRecognizer:panGesture];
         
         [self.layer setMasksToBounds:NO ];
@@ -74,16 +74,16 @@
 }
 
 /**
- * returns true if the gesture will exit the bezel
+ * returns true if the gesture will exit the right bezel
  * returns false if the gesture will not exit bezel
  *
  * returns false if the gesture is ended or canceled!
  * this means a valid bezel gesture will return false here
  * if it has ended.
  */
--(BOOL) willExitToRightBezel{
-    BOOL isRight = (panGesture.didExitToBezel & SLBezelDirectionRight) == SLBezelDirectionRight;
-    return isRight && (panGesture.state == UIGestureRecognizerStateChanged);
+-(BOOL) willExitToBezel:(SLBezelDirection)bezelDirection{
+    BOOL isBezel = (panGesture.didExitToBezel & bezelDirection) != SLBezelDirectionNone;
+    return isBezel && (panGesture.state == UIGestureRecognizerStateChanged);
 }
 
 /**
@@ -92,8 +92,8 @@
  * user has pulled it back in, then 0 is returned.
  */
 -(NSInteger) numberOfTimesExitedBezel{
-    BOOL isRight = (panGesture.didExitToBezel & SLBezelDirectionRight) == SLBezelDirectionRight;
-    BOOL willExit = isRight && (panGesture.state == UIGestureRecognizerStateChanged || panGesture.state == UIGestureRecognizerStateEnded || panGesture.state == UIGestureRecognizerStateCancelled);
+    BOOL isBezeled = (panGesture.didExitToBezel & panGesture.bezelDirectionMask) != SLBezelDirectionNone;
+    BOOL willExit = isBezeled && (panGesture.state == UIGestureRecognizerStateChanged || panGesture.state == UIGestureRecognizerStateEnded || panGesture.state == UIGestureRecognizerStateCancelled);
     if(willExit){
         return panGesture.numberOfRepeatingBezels;
     }
