@@ -74,12 +74,17 @@
 }
 
 /**
- * returns true if the user is in the middle of a pan
- * gesture that will send the page to exit via the bezel
+ * returns the number of times the user has exited the bezel,
+ * but only if the page is currently being exited bezel. If the
+ * user has pulled it back in, then 0 is returned.
  */
--(BOOL) willExitToRightBezel{
+-(NSInteger) willExitToRightBezel{
     BOOL isRight = (panGesture.didExitToBezel & SLBezelDirectionRight) == SLBezelDirectionRight;
-    return isRight && panGesture.state == UIGestureRecognizerStateChanged;
+    BOOL willExit = isRight && panGesture.state == UIGestureRecognizerStateChanged;
+    if(willExit){
+        return panGesture.numberOfRepeatingBezels;
+    }
+    return 0;
 }
 
 /**
