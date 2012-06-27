@@ -43,7 +43,6 @@
         panGesture = [[[SLPanAndPinchGestureRecognizer alloc]
                                                initWithTarget:self 
                                                       action:@selector(panAndScale:)] autorelease];
-        [panGesture setMinimumNumberOfTouches:2];
         panGesture.bezelDirectionMask = SLBezelDirectionRight | SLBezelDirectionLeft;
         [self addGestureRecognizer:panGesture];
         
