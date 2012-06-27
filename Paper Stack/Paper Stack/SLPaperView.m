@@ -74,18 +74,32 @@
 }
 
 /**
+ * returns true if the gesture will exit the bezel
+ * returns false if the gesture will not exit bezel
+ *
+ * returns false if the gesture is ended or canceled!
+ * this means a valid bezel gesture will return false here
+ * if it has ended.
+ */
+-(BOOL) willExitToRightBezel{
+    BOOL isRight = (panGesture.didExitToBezel & SLBezelDirectionRight) == SLBezelDirectionRight;
+    return isRight && (panGesture.state == UIGestureRecognizerStateChanged);
+}
+
+/**
  * returns the number of times the user has exited the bezel,
  * but only if the page is currently being exited bezel. If the
  * user has pulled it back in, then 0 is returned.
  */
--(NSInteger) willExitToRightBezel{
+-(NSInteger) numberOfTimesExitedBezel{
     BOOL isRight = (panGesture.didExitToBezel & SLBezelDirectionRight) == SLBezelDirectionRight;
-    BOOL willExit = isRight && panGesture.state == UIGestureRecognizerStateChanged;
+    BOOL willExit = isRight && (panGesture.state == UIGestureRecognizerStateChanged || panGesture.state == UIGestureRecognizerStateEnded || panGesture.state == UIGestureRecognizerStateCancelled);
     if(willExit){
         return panGesture.numberOfRepeatingBezels;
     }
     return 0;
 }
+
 
 /**
  * cancels all gestures attached to

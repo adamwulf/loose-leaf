@@ -94,6 +94,10 @@
             firstKnownLocation = [self locationInView:self.view.superview];
         }else if([validTouches count] == self.minimumNumberOfTouches){
             didExitToBezel = SLBezelDirectionNone;
+            //
+            // ok, they just bezelled and brought their second
+            // touch back into the screen. reset the flag
+            secondToLastTouchDidBezel = NO;
         }
     }
     [self calculateVelocity];
@@ -145,8 +149,20 @@
                 cancelledFromBezel = YES;
             }
         }
-        if(didExitToBezel != SLBezelDirectionNone){
+        //
+        // ok, we need to increment the number of times the user has exited the
+        // bezel. only do it if the touch as exited bezel and if we're not
+        // double counting the last two touches.
+        if(didExitToBezel != SLBezelDirectionNone &&
+           !secondToLastTouchDidBezel &&
+           ([validTouches count] - [validTouchesCurrentlyEnding count]) < self.minimumNumberOfTouches){
             numberOfRepeatingBezels ++;
+            if([validTouches count] - [validTouchesCurrentlyEnding count] == 1){
+                // that was the 2nd to last touch!
+                // set this flag so we don't double count it when the last
+                // touch ends
+                secondToLastTouchDidBezel = YES;
+            }
         }
         if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
             self.state = UIGestureRecognizerStatePossible;
@@ -190,6 +206,7 @@
     [ignoredTouches removeAllObjects];
     didExitToBezel = SLBezelDirectionNone;
     [velocities removeAllObjects];
+    secondToLastTouchDidBezel = NO;
 }
 
 -(void) cancel{
