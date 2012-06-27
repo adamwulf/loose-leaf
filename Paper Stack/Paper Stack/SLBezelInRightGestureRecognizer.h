@@ -15,6 +15,8 @@
     SLBezelPanDirection panDirection;
     // use to calculate direction
     CGPoint lastKnownLocation;
+    // use to calculate translation
+    CGPoint firstKnownLocation;
     
     NSMutableSet* ignoredTouches;
     NSMutableSet* validTouches;

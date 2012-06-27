@@ -70,11 +70,11 @@
     // bezel from right gesture
     UIView* bezelGestureView = [[UIView alloc] initWithFrame:self.bounds];
     bezelGestureView.frame = CGRectMake(self.frame.size.width - kBezelInGestureWidth, 0, kBezelInGestureWidth, self.frame.size.height);
-    [self addSubview:bezelGestureView];
+//    [self addSubview:bezelGestureView];
     bezelGestureView.backgroundColor = [UIColor clearColor];
     
     fromRightBezelGesture = [[SLBezelInRightGestureRecognizer alloc] initWithTarget:self action:@selector(bezelIn:)];
-    [bezelGestureView addGestureRecognizer:fromRightBezelGesture];
+    [self addGestureRecognizer:fromRightBezelGesture];
 }
 
 /**

@@ -700,7 +700,7 @@
 				GCC_PREFIX_HEADER = "Paper Stack/scratchpaper-Prefix.pch";
 				INFOPLIST_FILE = "Paper Stack/scratchpaper-Info.plist";
 				PRODUCT_NAME = scratchpaper;
-				PROVISIONING_PROFILE = "CCB97520-63DD-4171-8C3A-45CEB23DD7C6";
+				PROVISIONING_PROFILE = "C8293E61-1D8E-4AB5-A93B-4640013DA122";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
