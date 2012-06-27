@@ -66,13 +66,6 @@
     rightArrow.alpha = 0;
     plusIcon.alpha = 0;
     
-    //
-    // bezel from right gesture
-    UIView* bezelGestureView = [[UIView alloc] initWithFrame:self.bounds];
-    bezelGestureView.frame = CGRectMake(self.frame.size.width - kBezelInGestureWidth, 0, kBezelInGestureWidth, self.frame.size.height);
-//    [self addSubview:bezelGestureView];
-    bezelGestureView.backgroundColor = [UIColor clearColor];
-    
     fromRightBezelGesture = [[SLBezelInRightGestureRecognizer alloc] initWithTarget:self action:@selector(bezelIn:)];
     [self addGestureRecognizer:fromRightBezelGesture];
 }
