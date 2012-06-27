@@ -13,6 +13,7 @@
 #import "SLShadowManager.h"
 #import "NSThread+BlocksAdditions.h"
 #import "UIView+Debug.h"
+#import "UIView+Animations.h"
 
 @implementation SLPaperStackView
 
@@ -306,20 +307,7 @@
         // this is handled in the UIGestureRecognizerStateBegan state, if the user
         // begins a new bezel gesture but the animations for the previous bezel
         // haven't completed.
-        CGFloat delay = 0;
-        for(SLPaperView* page in [bezelStackHolder.subviews reverseObjectEnumerator]){
-            if(page == [bezelStackHolder.subviews objectAtIndex:0]){
-                [self animateBackToHiddenStack:page withDelay:delay onComplete:^(BOOL finished){
-                    // since we're  moving the bezel frame for the drag animation, be sure to re-hide it
-                    // above the hidden stack off screen after all the pages animate
-                    // back to the hidden stack
-                    bezelStackHolder.frame = hiddenStackHolder.frame;
-                }];
-            }else{
-                [self animateBackToHiddenStack:page withDelay:delay onComplete:nil];
-            }
-            delay += kAnimationDelay;
-        }
+        [self emptyBezelStackToHiddenStack];
         [[visibleStackHolder peekSubview] enableAllGestures];
     }else if(bezelGesture.state == UIGestureRecognizerStateEnded &&
              ((bezelGesture.panDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft)){
@@ -412,7 +400,22 @@
 }
 
 
-
+-(void) emptyBezelStackToHiddenStack{
+    CGFloat delay = 0;
+    for(SLPaperView* page in [bezelStackHolder.subviews reverseObjectEnumerator]){
+        if(page == [bezelStackHolder.subviews objectAtIndex:0]){
+            [self animateBackToHiddenStack:page withDelay:delay onComplete:^(BOOL finished){
+                // since we're  moving the bezel frame for the drag animation, be sure to re-hide it
+                // above the hidden stack off screen after all the pages animate
+                // back to the hidden stack
+                bezelStackHolder.frame = hiddenStackHolder.frame;
+            }];
+        }else{
+            [self animateBackToHiddenStack:page withDelay:delay onComplete:nil];
+        }
+        delay += kAnimationDelay;
+    }
+}
 
 #pragma mark - SLPaperViewDelegate
 
@@ -541,11 +544,33 @@
     BOOL justFinishedPanningTheTopPage = [visibleStackHolder peekSubview] == page;
     [setOfPagesBeingPanned removeObject:page];
     [self updateIconAnimations];
-    if((bezelDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft){
-        //
-        // pop pages off of the hidden stack
-        [self popHiddenStackForPages:page.numberOfTimesExitedBezel onComplete:nil];
-    }else if((bezelDirection & SLBezelDirectionRight) == SLBezelDirectionRight){
+    
+    //
+    // first, check to see if any views are in the bezelGestureStack.
+    // they would be from a bezel left gesture
+    if([bezelStackHolder.subviews count]){
+        if((bezelDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft){
+            CGFloat delay = 0;
+            while([bezelStackHolder.subviews count]){
+                BOOL isLast = [bezelStackHolder.subviews count] == 1;
+                SLPaperView* aPage = [bezelStackHolder.subviews objectAtIndex:0];
+                [visibleStackHolder pushSubview:aPage];
+                aPage.frame = [aPage.layer.presentationLayer frame];
+                [self animatePageToFullScreen:aPage withDelay:delay withBounce:NO onComplete:(isLast ? ^(BOOL finished){
+                    bezelStackHolder.frame = hiddenStackHolder.frame;
+                } : nil)];
+                delay += kAnimationDelay;
+            }
+        }else{
+            debug_NSLog(@"need cleanup");
+            [bezelStackHolder removeAllAnimationsAndPreservePresentationFrame];
+            [self emptyBezelStackToHiddenStack];
+        }
+        return;
+    }
+    
+    
+    if((bezelDirection & SLBezelDirectionRight) == SLBezelDirectionRight){
         inProgressOfBezeling = nil;
         
         //
@@ -930,26 +955,40 @@
 /**
  * this will animate a page onto the hidden stack
  * after the input delay, if any
+ *
+ * if the page is already offscreen, then it won't
+ * animate
  */
 -(void) animateBackToHiddenStack:(SLPaperView*)page withDelay:(CGFloat)delay onComplete:(void(^)(BOOL finished))completionBlock{
     //
     // the page may be sent to the hidden stack from ~90px away vs ~760px away
     // this math makes the speed of the exit look more consistent
     CGRect frInVisibleStack = [visibleStackHolder convertRect:page.frame fromView:page.superview];
-    CGFloat dist =  MAX((visibleStackHolder.frame.size.width - frInVisibleStack.origin.x), visibleStackHolder.frame.size.width / 2);
-    [UIView animateWithDuration:0.2 * (dist / visibleStackHolder.frame.size.width) delay:delay options:UIViewAnimationOptionCurveEaseOut
-                     animations:^(void){
-                         CGRect toFrame = [hiddenStackHolder containsSubview:page] ? hiddenStackHolder.bounds : hiddenStackHolder.frame;
-                         toFrame = [page.superview convertRect:hiddenStackHolder.bounds fromView:hiddenStackHolder];
-                         page.frame = toFrame;
-                         page.scale = 1;
-                     } completion:^(BOOL finished){
-                         if(finished){
-                             [page disableAllGestures];
-                             [hiddenStackHolder pushSubview:page];
-                         }
-                         if(completionBlock) completionBlock(finished);
-                     }];
+    CGRect frOfPresentationInVisibleStack = [visibleStackHolder convertRect:[page.layer.presentationLayer frame] fromView:page.superview];
+    if(frOfPresentationInVisibleStack.origin.x >= visibleStackHolder.frame.size.width){
+        // it's invisible already, just push it on
+        debug_NSLog(@"pushing invisible page");
+        page.frame = hiddenStackHolder.bounds;
+        page.scale = 1;
+        [page disableAllGestures];
+        [hiddenStackHolder pushSubview:page];
+        if(completionBlock) completionBlock(YES);
+    }else{
+        CGFloat dist =  MAX((visibleStackHolder.frame.size.width - frInVisibleStack.origin.x), visibleStackHolder.frame.size.width / 2);
+        [UIView animateWithDuration:0.2 * (dist / visibleStackHolder.frame.size.width) delay:delay options:UIViewAnimationOptionCurveEaseOut
+                         animations:^(void){
+                             CGRect toFrame = [hiddenStackHolder containsSubview:page] ? hiddenStackHolder.bounds : hiddenStackHolder.frame;
+                             toFrame = [page.superview convertRect:hiddenStackHolder.bounds fromView:hiddenStackHolder];
+                             page.frame = toFrame;
+                             page.scale = 1;
+                         } completion:^(BOOL finished){
+                             if(finished){
+                                 [page disableAllGestures];
+                                 [hiddenStackHolder pushSubview:page];
+                             }
+                             if(completionBlock) completionBlock(finished);
+                         }];
+    }
 }
 
 @end
