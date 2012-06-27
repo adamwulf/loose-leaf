@@ -549,21 +549,21 @@
     // first, check to see if any views are in the bezelGestureStack.
     // they would be from a bezel left gesture
     if([bezelStackHolder.subviews count]){
+        [bezelStackHolder removeAllAnimationsAndPreservePresentationFrame];
         if((bezelDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft){
             CGFloat delay = 0;
             while([bezelStackHolder.subviews count]){
                 BOOL isLast = [bezelStackHolder.subviews count] == 1;
                 SLPaperView* aPage = [bezelStackHolder.subviews objectAtIndex:0];
+                [aPage removeAllAnimationsAndPreservePresentationFrame];
                 [visibleStackHolder pushSubview:aPage];
-                aPage.frame = [aPage.layer.presentationLayer frame];
                 [self animatePageToFullScreen:aPage withDelay:delay withBounce:NO onComplete:(isLast ? ^(BOOL finished){
                     bezelStackHolder.frame = hiddenStackHolder.frame;
                 } : nil)];
-                delay += kAnimationDelay;
+                delay += kAnimationDelay + 1;
             }
         }else{
             debug_NSLog(@"need cleanup");
-            [bezelStackHolder removeAllAnimationsAndPreservePresentationFrame];
             [self emptyBezelStackToHiddenStack];
         }
         return;
