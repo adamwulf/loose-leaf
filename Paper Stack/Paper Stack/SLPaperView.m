@@ -134,10 +134,10 @@
  * in any direction (maybe more).
  */
 -(void) panAndScale:(SLPanAndPinchGestureRecognizer*)_panGesture{
-    CGPoint panDiffLocation = [panGesture translationInView:self];
     CGPoint lastLocationInSelf = [panGesture locationInView:self];
+    CGPoint lastLocationInSuper = [panGesture locationInView:self.superview];
     
-    CGPoint velocity = [self calculateVelocityOfPanGesture:panGesture withTranslation:panDiffLocation];
+    CGPoint velocity = [_panGesture velocity];
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
        panGesture.state == UIGestureRecognizerStateEnded ||
        panGesture.state == UIGestureRecognizerStateFailed){
@@ -258,23 +258,19 @@
     // the difference in these locations is how muh we need to move the origin of the page to
     // accomodate the new scale while maintaining the location of the gesture uner the user's fingers
     //
-    // the, add the diff of the pan gesture to get the full displacement of the origin. also set the 
+    // the, add the diff of the pan gesture to get the full displacement of the origin. also set the
     // width and height to the new scale.
     CGSize superviewSize = self.superview.bounds.size;
-    CGPoint locationOfPinchBeforeScale = CGPointMake(preGestureScale * normalizedLocationOfScale.x * superviewSize.width,
-                                                     preGestureScale * normalizedLocationOfScale.y * superviewSize.height);
     CGPoint locationOfPinchAfterScale = CGPointMake(scale * normalizedLocationOfScale.x * superviewSize.width,
                                                     scale * normalizedLocationOfScale.y * superviewSize.height);
-    CGPoint adjustmentForScale = CGPointMake((locationOfPinchAfterScale.x - locationOfPinchBeforeScale.x),
-                                             (locationOfPinchAfterScale.y - locationOfPinchBeforeScale.y));
     CGSize newSizeOfView = CGSizeMake(superviewSize.width * scale, superviewSize.height * scale);
 
     
     //
     // now calculate our final frame given our pan and zoom
     CGRect fr = self.frame;
-    fr.origin = CGPointMake(frameOfPageAtBeginningOfGesture.origin.x + panDiffLocation.x - adjustmentForScale.x,
-                            frameOfPageAtBeginningOfGesture.origin.y + panDiffLocation.y - adjustmentForScale.y);
+    fr.origin = CGPointMake(lastLocationInSuper.x - locationOfPinchAfterScale.x,
+                            lastLocationInSuper.y - locationOfPinchAfterScale.y);
     fr.size = newSizeOfView;
     
     //
@@ -292,52 +288,6 @@
 }
 
 
-
-
-/**
- * this function processes each step of the pan gesture, and uses
- * it to caclulate the velocity when the user lifts their finger.
- *
- * we use this to have the paper slide when the user swipes quickly
- */
-- (CGPoint)calculateVelocityOfPanGesture:(UIPanGestureRecognizer *)sender withTranslation:(CGPoint)translate
-{
-//    CGPoint translate = [sender translationInView:self];
-    static NSTimeInterval lastTime;
-    static NSTimeInterval currTime;
-    static CGPoint currTranslate;
-    static CGPoint lastTranslate;
-    
-    if (sender.state == UIGestureRecognizerStateBegan)
-    {
-        currTime = [NSDate timeIntervalSinceReferenceDate];
-        currTranslate = translate;
-    }
-    else if (sender.state == UIGestureRecognizerStateChanged)
-    {
-        lastTime = currTime;
-        lastTranslate = currTranslate;
-        currTime = [NSDate timeIntervalSinceReferenceDate];
-        currTranslate = translate;
-    }   
-    else if (sender.state == UIGestureRecognizerStateEnded)
-    {
-        if (lastTime)
-        {
-            NSTimeInterval seconds = [NSDate timeIntervalSinceReferenceDate] - lastTime;
-            if (seconds){
-                return CGPointMake((translate.x - lastTranslate.x) / seconds, (translate.y - lastTranslate.y) / seconds);
-            }
-        }
-        /*
-         // let's calculate where that flick would take us this far in the future
-        float inertiaSeconds = 1.0;
-        CGPoint final = CGPointMake(translate.x + swipeVelocity.x * inertiaSeconds, translate.y + swipeVelocity.y * inertiaSeconds);
-         */
-        
-    }
-    return CGPointZero;
-}
 
 
 @end
