@@ -71,18 +71,16 @@
 }
 
 /**
- * this function makes sure there's at least 1 page
- * in the hidden stack
+ * this function makes sure there's at least numberOfPagesToEnsure pages
+ * in the hidden stack, and returns the top page
  */
--(SLPaperView*) ensureTopPageInHiddenStack{
-    SLPaperView* page = [hiddenStackHolder peekSubview];
-    if(!page){
-        page = [[SLPaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+-(void) ensureAtLeastPagesInHiddenStack:(NSInteger)numberOfPagesToEnsure{
+    while([hiddenStackHolder.subviews count] < numberOfPagesToEnsure){
+        SLPaperView* page = [[SLPaperView alloc] initWithFrame:hiddenStackHolder.bounds];
         page.isBrandNewPage = YES;
         page.delegate = self;
         [hiddenStackHolder addSubviewToBottomOfStack:page];
     }
-    return page;
 }
 
 
@@ -258,7 +256,7 @@
  */
 -(void) bezelIn:(SLBezelInRightGestureRecognizer*)bezelGesture{
     // make sure there's a page to bezel
-    [self ensureTopPageInHiddenStack];
+    [self ensureAtLeastPagesInHiddenStack:1];
     CGPoint translation = [bezelGesture translationInView:self];
     
     if(bezelGesture.state == UIGestureRecognizerStateBegan){
@@ -344,18 +342,8 @@
         void(^finishedBlock)(BOOL finished)  = ^(BOOL finished){
             bezelStackHolder.frame = hiddenStackHolder.frame;
         };
-        NSInteger index = [hiddenStackHolder.subviews count] - 1 - bezelGesture.numberOfRepeatingBezels;
-        if(index >= 0){
-            [self popHiddenStackUntilPage:[hiddenStackHolder.subviews objectAtIndex:index] onComplete:finishedBlock];
-        }else{
-            // pop entire stack
-            [self popHiddenStackUntilPage:nil onComplete:finishedBlock];
-        }
-        /*
-         for(int i=0;i<bezelGesture.numberOfRepeatingBezels;i++){
-         [self popTopPageOfHiddenStack];
-         }
-         */
+        [self popHiddenStackForPages:bezelGesture.numberOfRepeatingBezels onComplete:finishedBlock];
+        
         //
         // successful gesture complete, so reset the gesture count
         // we only reset on the successful gesture, not a cancelled gesture
@@ -422,6 +410,7 @@
 
 
 
+
 #pragma mark - SLPaperViewDelegate
 
 /**
@@ -464,6 +453,7 @@
     [self updateIconAnimations];
     if((bezelDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft){
         debug_NSLog(@"bezel left %d", page.numberOfTimesExitedBezel);
+        [self popHiddenStackForPages:page.numberOfTimesExitedBezel onComplete:nil];
     }else if((bezelDirection & SLBezelDirectionRight) == SLBezelDirectionRight){
         inProgressOfBezeling = nil;
         
@@ -643,7 +633,7 @@
  * so that it has something to pop.
  */
 -(void) popTopPageOfHiddenStack{
-    [self ensureTopPageInHiddenStack];
+    [self ensureAtLeastPagesInHiddenStack:1];
     SLPaperView* page = [hiddenStackHolder peekSubview];
     page.isBrandNewPage = NO;
     [self popHiddenStackUntilPage:[hiddenStackHolder getPageBelow:page] onComplete:nil];
@@ -698,6 +688,21 @@
             [self animatePageToFullScreen:aPage withDelay:delay withBounce:YES onComplete:(!hasAnotherToPop ? completionBlock : nil)];
             delay += kAnimationDelay;
         }
+    }
+}
+/**
+ * pop numberOfPages off of the hidden stack
+ * and call the completionBlock once they're all
+ * animated
+ */
+-(void) popHiddenStackForPages:(NSInteger)numberOfPages onComplete:(void(^)(BOOL finished))completionBlock{
+    [self ensureAtLeastPagesInHiddenStack:numberOfPages];
+    NSInteger index = [hiddenStackHolder.subviews count] - 1 - numberOfPages;
+    if(index >= 0){
+        [self popHiddenStackUntilPage:[hiddenStackHolder.subviews objectAtIndex:index] onComplete:completionBlock];
+    }else{
+        // pop entire stack
+        [self popHiddenStackUntilPage:nil onComplete:completionBlock];
     }
 }
 
