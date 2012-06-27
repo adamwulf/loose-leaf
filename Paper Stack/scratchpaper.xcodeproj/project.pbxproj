@@ -63,6 +63,7 @@
 		66DCFBCD1582BAED00B4918C /* SLPaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBCC1582BAED00B4918C /* SLPaperView.m */; };
 		66DCFBD01582BC0E00B4918C /* img01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 66DCFBCF1582BC0E00B4918C /* img01.jpg */; };
 		66DCFBDF1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBDE1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.m */; };
+		66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DF0B7D159BC30200C5C652 /* UIView+Animations.m */; };
 		66E88A371591853E001A6EBF /* SLPapersIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E88A361591853E001A6EBF /* SLPapersIcon.m */; };
 /* End PBXBuildFile section */
 
@@ -175,6 +176,8 @@
 		66DCFBDB1582BE3900B4918C /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		66DCFBDD1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPanAndPinchGestureRecognizer.h; sourceTree = "<group>"; };
 		66DCFBDE1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPanAndPinchGestureRecognizer.m; sourceTree = "<group>"; };
+		66DF0B7C159BC30200C5C652 /* UIView+Animations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Animations.h"; sourceTree = "<group>"; };
+		66DF0B7D159BC30200C5C652 /* UIView+Animations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Animations.m"; sourceTree = "<group>"; };
 		66E88A351591853E001A6EBF /* SLPapersIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPapersIcon.h; sourceTree = "<group>"; };
 		66E88A361591853E001A6EBF /* SLPapersIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPapersIcon.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -230,6 +233,8 @@
 				669329721598EE210033E557 /* UIView+Debug.m */,
 				6693297C1599196E0033E557 /* UIFont+UIBezierCurve.h */,
 				6693297D1599196E0033E557 /* UIFont+UIBezierCurve.m */,
+				66DF0B7C159BC30200C5C652 /* UIView+Animations.h */,
+				66DF0B7D159BC30200C5C652 /* UIView+Animations.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -583,6 +588,7 @@
 				669329701598E4DC0033E557 /* NSString+UUID.m in Sources */,
 				669329731598EE210033E557 /* UIView+Debug.m in Sources */,
 				6693297E1599196E0033E557 /* UIFont+UIBezierCurve.m in Sources */,
+				66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
