@@ -88,7 +88,7 @@
 -(CGPoint) translationInView:(UIView *)view{
     if(self.view){
         CGPoint p = [self furthestLeftTouchLocation];
-        return p;
+        return CGPointMake(p.x - firstKnownLocation.x, p.y - firstKnownLocation.y);
     }
     return CGPointZero;
 }
@@ -138,8 +138,9 @@
         }else{
             numberOfRepeatingBezels = 1;
         }
-        if(self.state != UIGestureRecognizerStateBegan){
+        if(self.state == UIGestureRecognizerStatePossible){
             self.state = UIGestureRecognizerStateBegan;
+            firstKnownLocation = [self furthestLeftTouchLocation];
         }
         [dateOfLastBezelEnding release];
         dateOfLastBezelEnding = nil;
@@ -202,6 +203,8 @@
 - (void)reset{
     [super reset];
     panDirection = SLBezelDirectionNone;
+    firstKnownLocation = CGPointZero;
+    lastKnownLocation = CGPointZero;
     [ignoredTouches removeAllObjects];
 }
 - (void) resetPageCount{
