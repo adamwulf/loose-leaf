@@ -17,9 +17,11 @@
 @synthesize scale;
 @synthesize bezelDirectionMask;
 @synthesize didExitToBezel;
-@synthesize minimumNumberOfTouches;
 @synthesize velocity = _averageVelocity;
 @synthesize numberOfRepeatingBezels;
+
+NSInteger const  minimumNumberOfTouches = 2;
+
 
 -(id) init{
     self = [super init];
@@ -73,9 +75,9 @@
         [self.view.layer removeAllAnimations];
 
         [validTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
-        if([validTouches count] >= self.minimumNumberOfTouches && self.state == UIGestureRecognizerStatePossible){
+        if([validTouches count] >= minimumNumberOfTouches && self.state == UIGestureRecognizerStatePossible){
             self.state = UIGestureRecognizerStateBegan;
-        }else if([validTouches count] == self.minimumNumberOfTouches){
+        }else if([validTouches count] == minimumNumberOfTouches){
             didExitToBezel = SLBezelDirectionNone;
             //
             // ok, they just bezelled and brought their second
@@ -138,7 +140,7 @@
         // double counting the last two touches.
         if(didExitToBezel != SLBezelDirectionNone &&
            !secondToLastTouchDidBezel &&
-           ([validTouches count] - [validTouchesCurrentlyEnding count]) < self.minimumNumberOfTouches){
+           ([validTouches count] - [validTouchesCurrentlyEnding count]) < minimumNumberOfTouches){
             numberOfRepeatingBezels ++;
             if([validTouches count] - [validTouchesCurrentlyEnding count] == 1){
                 // that was the 2nd to last touch!

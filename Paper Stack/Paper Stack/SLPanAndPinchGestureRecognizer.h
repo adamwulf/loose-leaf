@@ -29,8 +29,6 @@
     // the direction that the user actually did exit, if any
     SLBezelDirection didExitToBezel;
     
-    NSInteger minimumNumberOfTouches;
-    
     //
     // store panning velocity so we can continue
     // the animation after the gesture ends
@@ -48,7 +46,6 @@
     BOOL secondToLastTouchDidBezel;
 }
 
-@property (nonatomic, assign) NSInteger minimumNumberOfTouches;
 @property (nonatomic, readonly) NSInteger numberOfRepeatingBezels;
 @property (nonatomic, readonly) CGFloat scale;
 @property (nonatomic, readonly) CGPoint velocity;
