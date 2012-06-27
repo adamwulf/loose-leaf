@@ -19,8 +19,6 @@
     //
     // the current scale of the gesture
     CGFloat scale;
-    // use to calculate translation
-    CGPoint firstKnownLocation;
     //
     // the collection of valid touches for this gesture
     NSMutableSet* ignoredTouches;
