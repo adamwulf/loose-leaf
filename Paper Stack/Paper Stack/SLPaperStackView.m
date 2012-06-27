@@ -452,7 +452,8 @@
     [setOfPagesBeingPanned removeObject:page];
     [self updateIconAnimations];
     if((bezelDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft){
-        debug_NSLog(@"bezel left %d", page.numberOfTimesExitedBezel);
+        //
+        // pop pages off of the hidden stack
         [self popHiddenStackForPages:page.numberOfTimesExitedBezel onComplete:nil];
     }else if((bezelDirection & SLBezelDirectionRight) == SLBezelDirectionRight){
         inProgressOfBezeling = nil;
