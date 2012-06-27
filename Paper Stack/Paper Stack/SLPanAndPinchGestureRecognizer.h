@@ -38,9 +38,15 @@
     // the animation after the gesture ends
     NSMutableArray* velocities;
     CGPoint _averageVelocity;
+
+    //
+    // have they bezeled off the page more than once
+    // during the same gesture? this will track it
+    NSInteger numberOfRepeatingBezels;
 }
 
 @property (nonatomic, assign) NSInteger minimumNumberOfTouches;
+@property (nonatomic, readonly) NSInteger numberOfRepeatingBezels;
 @property (nonatomic, readonly) CGFloat scale;
 @property (nonatomic, readonly) CGPoint velocity;
 @property (nonatomic, assign) SLBezelDirection bezelDirectionMask;

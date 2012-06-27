@@ -45,7 +45,7 @@
 @property (nonatomic, assign) CGFloat scale;
 @property (nonatomic, readonly) BOOL isBeingPannedAndZoomed;
 // this will only be true if the bezel gesture is triggered and the page is actively being panned
-@property (nonatomic, readonly) BOOL willExitToRightBezel;
+@property (nonatomic, readonly) NSInteger numberOfTimesExitedBezel;
 @property (nonatomic, readonly) UILabel* textLabel;
 @property (nonatomic, assign) BOOL isBrandNewPage;
 

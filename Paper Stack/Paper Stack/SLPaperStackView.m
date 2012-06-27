@@ -111,8 +111,8 @@
 -(void) updateIconAnimations{
     BOOL bezelingFromRight = fromRightBezelGesture.state == UIGestureRecognizerStateBegan || fromRightBezelGesture.state == UIGestureRecognizerStateChanged;
     BOOL showLeftArrow = NO;
-    BOOL topPageIsExitingBezel = [[visibleStackHolder peekSubview] willExitToRightBezel];
-    BOOL nonTopPageIsExitingBezel = inProgressOfBezeling != [visibleStackHolder peekSubview] && [inProgressOfBezeling willExitToRightBezel];
+    NSInteger numberOfTimesTheTopPageHasExitedBezel = [[visibleStackHolder peekSubview] numberOfTimesExitedBezel];
+    BOOL nonTopPageIsExitingBezel = inProgressOfBezeling != [visibleStackHolder peekSubview] && ([inProgressOfBezeling numberOfTimesExitedBezel] > 0);
     NSInteger numberOfVisiblePagesThatAreNotAligned = 0;
     for(int i=[visibleStackHolder.subviews count]-1; i>=0 && i>[visibleStackHolder.subviews count]-4;i--){
         SLPaperView* page = [visibleStackHolder.subviews objectAtIndex:i];
@@ -120,7 +120,7 @@
             numberOfVisiblePagesThatAreNotAligned ++;
         }
     }
-    BOOL showRightArrow = [setOfPagesBeingPanned count] > 1 || topPageIsExitingBezel || nonTopPageIsExitingBezel;
+    BOOL showRightArrow = [setOfPagesBeingPanned count] > 1 || numberOfTimesTheTopPageHasExitedBezel > 0 || nonTopPageIsExitingBezel;
     
     if(bezelingFromRight){
         if((fromRightBezelGesture.panDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft){
@@ -143,7 +143,7 @@
     if((showLeftArrow || showRightArrow) && 
        ((!paperIcon.alpha && [setOfPagesBeingPanned count] == 1) ||
         (!papersIcon.alpha && [setOfPagesBeingPanned count] > 1) ||
-        (!paperIcon.alpha && topPageIsExitingBezel) ||
+        (!paperIcon.alpha && numberOfTimesTheTopPageHasExitedBezel > 0) ||
         (!paperIcon.alpha && nonTopPageIsExitingBezel) ||
         bezelingFromRight)){
            [UIView animateWithDuration:0.2
@@ -182,7 +182,17 @@
                                 }
                                 
                                 if(bezelingFromRight && fromRightBezelGesture.numberOfRepeatingBezels > 1){
+                                    //
+                                    // show the number of pages that the user
+                                    // is bezeling in
                                     papersIcon.numberToShowIfApplicable = fromRightBezelGesture.numberOfRepeatingBezels;
+                                    papersIcon.alpha = 1;
+                                    paperIcon.alpha = 0;
+                                }else if(numberOfTimesTheTopPageHasExitedBezel > 1){
+                                    //
+                                    // show pages icon w/ numbers if the user is exiting
+                                    // bezel more than once
+                                    papersIcon.numberToShowIfApplicable = numberOfTimesTheTopPageHasExitedBezel;
                                     papersIcon.alpha = 1;
                                     paperIcon.alpha = 0;
                                 }else{
@@ -419,7 +429,7 @@
  * depending on where they drag a page
  */
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
-    if([page willExitToRightBezel]){
+    if([page numberOfTimesExitedBezel] > 0){
         inProgressOfBezeling = page;
     }
     [setOfPagesBeingPanned addObject:page];

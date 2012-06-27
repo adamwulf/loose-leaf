@@ -19,6 +19,7 @@
 @synthesize didExitToBezel;
 @synthesize minimumNumberOfTouches;
 @synthesize velocity = _averageVelocity;
+@synthesize numberOfRepeatingBezels;
 
 -(id) init{
     self = [super init];
@@ -91,6 +92,8 @@
             self.state = UIGestureRecognizerStateBegan;
             // used for velocity
             firstKnownLocation = [self locationInView:self.view.superview];
+        }else if([validTouches count] == self.minimumNumberOfTouches){
+            didExitToBezel = SLBezelDirectionNone;
         }
     }
     [self calculateVelocity];
@@ -142,6 +145,9 @@
                 cancelledFromBezel = YES;
             }
         }
+        if(didExitToBezel != SLBezelDirectionNone){
+            numberOfRepeatingBezels ++;
+        }
         if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
             self.state = UIGestureRecognizerStatePossible;
         }
@@ -179,6 +185,7 @@
     [super reset];
     initialDistance = 0;
     scale = 1;
+    numberOfRepeatingBezels = 0;
     [validTouches removeAllObjects];
     [ignoredTouches removeAllObjects];
     didExitToBezel = SLBezelDirectionNone;
