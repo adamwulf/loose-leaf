@@ -368,7 +368,6 @@
             //
             // we need to add another page
             [bezelStackHolder pushSubview:[hiddenStackHolder peekSubview]];
-            debug_NSLog(@"add page! %d", [bezelStackHolder.subviews count]);
             //
             // ok, animate them all into place
             NSInteger numberOfPages = [bezelStackHolder.subviews count];
@@ -651,7 +650,6 @@
     if([visibleStackHolder.subviews containsObject:page] || page == nil){
         CGFloat delay = 0;
         NSArray* pages = [visibleStackHolder peekSubviewFromSubview:page];
-        debug_NSLog(@"popping %d pages", [pages count]);
         for(int i=[pages count]-1;i>=0;i--){
             SLPaperView* pageToPop = [pages objectAtIndex:i];
             [bezelStackHolder addSubviewToBottomOfStack:pageToPop];
