@@ -21,7 +21,7 @@
 #define kMinPageZoom .7
 #define kMaxPageZoom 2.5
 
-#define kGutterWidthToDragPages 600
+#define kGutterWidthToDragPages 500
 #define kFingerWidth 40
 #define kFilteringFactor 0.2
 #define kStartOfSidebar 212
