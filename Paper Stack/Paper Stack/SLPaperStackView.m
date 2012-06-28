@@ -718,15 +718,31 @@
         //
         // pull a page from the hidden stack, and re-align
         // the top page
-        [self emptyBezelStackToHiddenStackAnimated:NO onComplete:nil];
+        //
+        // the user may have bezeled left a lot, but then released
+        // the gesture inside the screen (which should only push 1 page).
+        //
+        // so check the bezelStackHolder
         [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO onComplete:finishedBlock];
-        [self popTopPageOfHiddenStack];
+        if([bezelStackHolder.subviews count]){
+            // pull the view onto the visible stack
+            SLPaperView* pageToPushToVisible = [bezelStackHolder.subviews objectAtIndex:0];
+            [pageToPushToVisible removeAllAnimationsAndPreservePresentationFrame];
+            [visibleStackHolder pushSubview:pageToPushToVisible];
+            [self animatePageToFullScreen:pageToPushToVisible withDelay:0 withBounce:NO onComplete:nil];
+            [self emptyBezelStackToHiddenStackAnimated:YES onComplete:finishedBlock];
+        }else{
+            [self popTopPageOfHiddenStack];
+        }
     }else if(page.scale <= 1){
         //
         // bounce it back to full screen
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:finishedBlock];
         [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:nil];
     }else{
+        //
+        // first, empty the bezelStackHolder, if any
+        [self emptyBezelStackToHiddenStackAnimated:YES onComplete:finishedBlock];
         //
         // the scale is larger than 1, so we may need
         // to slide the page with some inertia. if the page is
@@ -746,7 +762,6 @@
             // bounce
             [self bouncePageToEdge:page toFrame:toFrame intertialFrame:intertialFrame];
         }
-        finishedBlock(YES);
     }
 }
 
