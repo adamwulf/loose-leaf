@@ -306,7 +306,7 @@
         // this is handled in the UIGestureRecognizerStateBegan state, if the user
         // begins a new bezel gesture but the animations for the previous bezel
         // haven't completed.
-        [self emptyBezelStackToHiddenStackOnComplete:nil];
+        [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
         [[visibleStackHolder peekSubview] enableAllGestures];
     }else if(bezelGesture.state == UIGestureRecognizerStateEnded &&
              ((bezelGesture.panDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft)){
@@ -413,18 +413,30 @@
         delay += kAnimationDelay;
     }
 }
--(void) emptyBezelStackToHiddenStackOnComplete:(void(^)(BOOL finished))completionBlock{
-    CGFloat delay = 0;
-    for(SLPaperView* page in [bezelStackHolder.subviews reverseObjectEnumerator]){
-        BOOL isLastToAnimate = page == [bezelStackHolder.subviews objectAtIndex:0];
-        [self animateBackToHiddenStack:page withDelay:delay onComplete:(isLastToAnimate ? ^(BOOL finished){
-            // since we're  moving the bezel frame for the drag animation, be sure to re-hide it
-            // above the hidden stack off screen after all the pages animate
-            // back to the hidden stack
-            bezelStackHolder.frame = hiddenStackHolder.frame;
-            if(completionBlock) completionBlock(finished);
-        } : nil)];
-        delay += kAnimationDelay;
+-(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated onComplete:(void(^)(BOOL finished))completionBlock{
+    [bezelStackHolder removeAllAnimationsAndPreservePresentationFrame];
+    if(animated){
+        CGFloat delay = 0;
+        for(SLPaperView* page in [bezelStackHolder.subviews reverseObjectEnumerator]){
+            [page removeAllAnimationsAndPreservePresentationFrame];
+            BOOL isLastToAnimate = page == [bezelStackHolder.subviews objectAtIndex:0];
+            [self animateBackToHiddenStack:page withDelay:delay onComplete:(isLastToAnimate ? ^(BOOL finished){
+                // since we're  moving the bezel frame for the drag animation, be sure to re-hide it
+                // above the hidden stack off screen after all the pages animate
+                // back to the hidden stack
+                bezelStackHolder.frame = hiddenStackHolder.frame;
+                if(completionBlock) completionBlock(finished);
+            } : nil)];
+            delay += kAnimationDelay;
+        }
+    }else{
+        for(SLPaperView* page in [[[bezelStackHolder.subviews copy] autorelease] reverseObjectEnumerator]){
+            [page removeAllAnimationsAndPreservePresentationFrame];
+            [hiddenStackHolder pushSubview:page];
+            page.frame = hiddenStackHolder.bounds;
+        }
+        bezelStackHolder.frame = hiddenStackHolder.frame;
+        if(completionBlock) completionBlock(YES);
     }
 }
 
@@ -674,11 +686,13 @@
             // just released a non-top page and the top
             // page is not being held.
             //
+            // i've only seen this happen when touches get
+            // confused and gestures are "still on" even
+            // though no fingers are touching the screen
+            //
             // just realign and log
             debug_NSLog(@"ERROR: released non-top page while top page was not held.");
-            [self realignPagesInVisibleStackExcept:^(BOOL finished){
-                [self debugBezelHolder:@"not top page"];
-            }];
+            [self realignPagesInVisibleStackExcept:nil];
         }
         return;
     }
@@ -704,12 +718,14 @@
         //
         // pull a page from the hidden stack, and re-align
         // the top page
+        [self emptyBezelStackToHiddenStackAnimated:NO onComplete:nil];
         [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO onComplete:finishedBlock];
         [self popTopPageOfHiddenStack];
     }else if(page.scale <= 1){
         //
         // bounce it back to full screen
-        [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:finishedBlock];
+        [self emptyBezelStackToHiddenStackAnimated:YES onComplete:finishedBlock];
+        [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:nil];
     }else{
         //
         // the scale is larger than 1, so we may need
@@ -748,6 +764,7 @@
     for(SLPaperView* aPage in [[visibleStackHolder.subviews copy] autorelease]){
         if(aPage != [visibleStackHolder peekSubview]){
             if(!CGRectEqualToRect(aPage.frame, self.bounds)){
+                [aPage cancelAllGestures];
                 [self animatePageToFullScreen:aPage withDelay:0 withBounce:NO onComplete:nil];
             }
         }
@@ -784,7 +801,7 @@
 -(void) sendPageToHiddenStack:(SLPaperView*)page onComplete:(void(^)(BOOL finished))completionBlock{
     if([visibleStackHolder.subviews containsObject:page]){
         [bezelStackHolder addSubviewToBottomOfStack:page];
-        [self emptyBezelStackToHiddenStackOnComplete:completionBlock];
+        [self emptyBezelStackToHiddenStackAnimated:YES onComplete:completionBlock];
     }
 }
 
@@ -818,7 +835,7 @@
         for(SLPaperView* pageToPop in [pages reverseObjectEnumerator]){
             [bezelStackHolder addSubviewToBottomOfStack:pageToPop];
         }
-        [self emptyBezelStackToHiddenStackOnComplete:completionBlock];
+        [self emptyBezelStackToHiddenStackAnimated:YES onComplete:completionBlock];
     }
 }
 
