@@ -961,8 +961,7 @@
     // the page may be sent to the hidden stack from ~90px away vs ~760px away
     // this math makes the speed of the exit look more consistent
     CGRect frInVisibleStack = [visibleStackHolder convertRect:page.frame fromView:page.superview];
-    CGRect frOfPresentationInVisibleStack = [visibleStackHolder convertRect:[page.layer.presentationLayer frame] fromView:page.superview];
-    if(frOfPresentationInVisibleStack.origin.x >= visibleStackHolder.frame.size.width){
+    if(frInVisibleStack.origin.x >= visibleStackHolder.frame.size.width){
         // it's invisible already, just push it on
         debug_NSLog(@"pushing invisible page");
         page.frame = hiddenStackHolder.bounds;
