@@ -46,9 +46,6 @@
     visibleStackHolder.clipsToBounds = YES;
     bezelStackHolder.clipsToBounds = NO;
     
-    bezelStackHolder.layer.borderColor = [[UIColor redColor] CGColor];
-    bezelStackHolder.layer.borderWidth = 1;
-    
     //
     // icons for moving and panning pages
     [self addSubview:visibleStackHolder];
@@ -560,7 +557,7 @@
                 [self animatePageToFullScreen:aPage withDelay:delay withBounce:NO onComplete:(isLast ? ^(BOOL finished){
                     bezelStackHolder.frame = hiddenStackHolder.frame;
                 } : nil)];
-                delay += kAnimationDelay + 1;
+                delay += kAnimationDelay;
             }
         }else{
             debug_NSLog(@"need cleanup");
@@ -942,7 +939,7 @@
                              }
                          }];
     }else{
-        [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionAllowUserInteraction
+        [UIView animateWithDuration:0.15 delay:delay options:UIViewAnimationOptionAllowUserInteraction
                          animations:^(void){
                              page.frame = self.bounds;
                              page.scale = 1;
