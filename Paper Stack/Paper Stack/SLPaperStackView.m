@@ -148,8 +148,10 @@
             }
         }
     }
-    if((showLeftArrow || showRightArrow) && 
-       ((!paperIcon.alpha && [setOfPagesBeingPanned count] == 1) ||
+    if((showLeftArrow || showRightArrow) &&
+       ((!showLeftArrow && leftArrow.alpha) ||
+        (!showRightArrow && rightArrow.alpha) ||
+        (!paperIcon.alpha && [setOfPagesBeingPanned count] == 1) ||
         (!papersIcon.alpha && [setOfPagesBeingPanned count] > 1) ||
         (!paperIcon.alpha && topPageWillBezelRight && numberOfTimesTheTopPageHasExitedBezel > 0) ||
         (!paperIcon.alpha && nonTopPageWillExitBezel) ||
@@ -396,20 +398,29 @@
     [self updateIconAnimations];
 }
 
-
+-(void) emptyBezelStackToVisibleStack{
+    CGFloat delay = 0;
+    while([bezelStackHolder.subviews count]){
+        BOOL isLastToAnimate = [bezelStackHolder.subviews count] == 1;
+        SLPaperView* aPage = [bezelStackHolder.subviews objectAtIndex:0];
+        [aPage removeAllAnimationsAndPreservePresentationFrame];
+        [visibleStackHolder pushSubview:aPage];
+        [self animatePageToFullScreen:aPage withDelay:delay withBounce:NO onComplete:(isLastToAnimate ? ^(BOOL finished){
+            bezelStackHolder.frame = hiddenStackHolder.frame;
+        } : nil)];
+        delay += kAnimationDelay;
+    }
+}
 -(void) emptyBezelStackToHiddenStack{
     CGFloat delay = 0;
     for(SLPaperView* page in [bezelStackHolder.subviews reverseObjectEnumerator]){
-        if(page == [bezelStackHolder.subviews objectAtIndex:0]){
-            [self animateBackToHiddenStack:page withDelay:delay onComplete:^(BOOL finished){
-                // since we're  moving the bezel frame for the drag animation, be sure to re-hide it
-                // above the hidden stack off screen after all the pages animate
-                // back to the hidden stack
-                bezelStackHolder.frame = hiddenStackHolder.frame;
-            }];
-        }else{
-            [self animateBackToHiddenStack:page withDelay:delay onComplete:nil];
-        }
+        BOOL isLastToAnimate = page == [bezelStackHolder.subviews objectAtIndex:0];
+        [self animateBackToHiddenStack:page withDelay:delay onComplete:(isLastToAnimate ? ^(BOOL finished){
+            // since we're  moving the bezel frame for the drag animation, be sure to re-hide it
+            // above the hidden stack off screen after all the pages animate
+            // back to the hidden stack
+            bezelStackHolder.frame = hiddenStackHolder.frame;
+        } : nil)];
         delay += kAnimationDelay;
     }
 }
@@ -538,6 +549,7 @@
                             fromFrame:(CGRect)fromFrame
                               toFrame:(CGRect)toFrame
                          withVelocity:(CGPoint)velocity{
+    if(page == inProgressOfBezeling) inProgressOfBezeling = nil;
     BOOL justFinishedPanningTheTopPage = [visibleStackHolder peekSubview] == page;
     [setOfPagesBeingPanned removeObject:page];
     [self updateIconAnimations];
@@ -545,28 +557,19 @@
     //
     // first, check to see if any views are in the bezelGestureStack.
     // they would be from a bezel left gesture
-    if([bezelStackHolder.subviews count]){
+    if(justFinishedPanningTheTopPage){
         [bezelStackHolder removeAllAnimationsAndPreservePresentationFrame];
         if((bezelDirection & SLBezelDirectionLeft) == SLBezelDirectionLeft){
-            CGFloat delay = 0;
-            while([bezelStackHolder.subviews count]){
-                BOOL isLast = [bezelStackHolder.subviews count] == 1;
-                SLPaperView* aPage = [bezelStackHolder.subviews objectAtIndex:0];
-                [aPage removeAllAnimationsAndPreservePresentationFrame];
-                [visibleStackHolder pushSubview:aPage];
-                [self animatePageToFullScreen:aPage withDelay:delay withBounce:NO onComplete:(isLast ? ^(BOOL finished){
-                    bezelStackHolder.frame = hiddenStackHolder.frame;
-                } : nil)];
-                delay += kAnimationDelay;
-            }
-        }else{
-            debug_NSLog(@"need cleanup");
-            [self emptyBezelStackToHiddenStack];
+            [self emptyBezelStackToVisibleStack];
+            return;
         }
-        return;
     }
     
-    
+
+    //
+    //
+    // TODO
+    // need to empty the bezel stack correctly
     if((bezelDirection & SLBezelDirectionRight) == SLBezelDirectionRight){
         inProgressOfBezeling = nil;
         
