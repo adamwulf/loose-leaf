@@ -682,6 +682,9 @@
         // ============================================================================
         SLPaperView* topPage = [visibleStackHolder peekSubview];
         if(![topPage isBeingPannedAndZoomed]){
+            //
+            // TODO
+            //
             // odd, no idea how this happened. but we
             // just released a non-top page and the top
             // page is not being held.
@@ -712,9 +715,12 @@
 
     if(justFinishedPanningTheTopPage && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
         //
+        // bezelStackHolder debugging DONE
         // pop the top page, it's close to the right bezel
         [self popStackUntilPage:[visibleStackHolder getPageBelow:page] onComplete:finishedBlock];
     }else if(justFinishedPanningTheTopPage && [self shouldPushPageOntoVisibleStack:page withFrame:toFrame]){
+        //
+        // bezelStackHolder debugging DONE
         //
         // pull a page from the hidden stack, and re-align
         // the top page
@@ -736,10 +742,14 @@
         }
     }else if(page.scale <= 1){
         //
+        // bezelStackHolder debugging DONE
+        //
         // bounce it back to full screen
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:finishedBlock];
         [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:nil];
     }else{
+        //
+        // bezelStackHolder debugging DONE
         //
         // first, empty the bezelStackHolder, if any
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:finishedBlock];
