@@ -418,7 +418,6 @@
     if(animated){
         CGFloat delay = 0;
         for(SLPaperView* page in [bezelStackHolder.subviews reverseObjectEnumerator]){
-            [page removeAllAnimationsAndPreservePresentationFrame];
             BOOL isLastToAnimate = page == [bezelStackHolder.subviews objectAtIndex:0];
             [self animateBackToHiddenStack:page withDelay:delay onComplete:(isLastToAnimate ? ^(BOOL finished){
                 // since we're  moving the bezel frame for the drag animation, be sure to re-hide it
@@ -710,7 +709,7 @@
     };
 
     // all the actions below will move the top page only,
-    // so it's save to realign allothers
+    // so it's safe to realign allothers
     [self realignPagesInVisibleStackExcept:page];
 
     if(justFinishedPanningTheTopPage && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
@@ -736,6 +735,7 @@
             [pageToPushToVisible removeAllAnimationsAndPreservePresentationFrame];
             [visibleStackHolder pushSubview:pageToPushToVisible];
             [self animatePageToFullScreen:pageToPushToVisible withDelay:0 withBounce:NO onComplete:nil];
+            [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
             [self emptyBezelStackToHiddenStackAnimated:YES onComplete:finishedBlock];
         }else{
             [self popTopPageOfHiddenStack];
@@ -745,6 +745,7 @@
         // bezelStackHolder debugging DONE
         //
         // bounce it back to full screen
+        [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:finishedBlock];
         [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:nil];
     }else{
@@ -752,6 +753,7 @@
         // bezelStackHolder debugging DONE
         //
         // first, empty the bezelStackHolder, if any
+        [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:finishedBlock];
         //
         // the scale is larger than 1, so we may need
@@ -858,6 +860,7 @@
         // enumerage backwards, so top pages stay on top,
         // and all are below anything already in the bezelStackHolder
         for(SLPaperView* pageToPop in [pages reverseObjectEnumerator]){
+            [pageToPop removeAllAnimationsAndPreservePresentationFrame];
             [bezelStackHolder addSubviewToBottomOfStack:pageToPop];
         }
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:completionBlock];
