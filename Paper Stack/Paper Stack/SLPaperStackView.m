@@ -592,7 +592,7 @@
         // the bezelStackHolder was been filled during the pan, so add
         // the top page of the visible stack to the bottom of the bezelGestureHolder,
         // then animate
-        [bezelStackHolder addSubviewToBottomOfStack:page];
+        [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO onComplete:nil];
         [self emptyBezelStackToVisibleStackOnComplete:^(BOOL finished){
             [self debugBezelHolder:@"bezel left"];
         }];
@@ -627,6 +627,7 @@
         // they release a non-top page near the right
         // bezel. send to hidden stack
         // ============================================================================
+        [page removeAllAnimationsAndPreservePresentationFrame];
         [self sendPageToHiddenStack:page onComplete:^(BOOL finished){
             [self debugBezelHolder:@"non top pop"];
         }];
@@ -637,11 +638,7 @@
         // right bezel by any page
         // ============================================================================
         //
-        //
-        // ============================================================================
-        // TODO
-        // need to empty the bezel stack correctly
-        // ============================================================================
+        // bezelStackHolder debugging DONE
         //
         // either, i bezeled right the top page and am not bezeling anything else
         // or, i bezeled right a bottom page and am holding the top page
@@ -669,12 +666,16 @@
             //
             // they bezeled right a non-top page, just get
             // rid of it
+            [page removeAllAnimationsAndPreservePresentationFrame];
             [self sendPageToHiddenStack:page onComplete:finishedBlock];
         }
         return;
     }else if(!justFinishedPanningTheTopPage){
         //
         // CASE 5:
+        //
+        // bezelStackHolder debugging DONE
+        //
         // just released a non-top page, but didn't
         // send it anywhere. just exit as long
         // as we're still holding the top page
@@ -701,6 +702,9 @@
 
     //
     // CASE 6:
+    //
+    // bezelStackHolder debugging DONE
+    //
     // just relased the top page, and no
     // other pages are being held
     // ============================================================================
