@@ -16,6 +16,9 @@
 #define debug_NSLog(format, ...)
 #endif
 
+#define kAbstractMethodException [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)] userInfo:nil]
+
+
 #define kAnimationDelay 0.05
 
 #define kListPageZoom .25

@@ -11,13 +11,13 @@
 @implementation SLPaperView (ListView)
 
 -(NSInteger) rowInListView{
-    NSInteger indexOfPage = [self.superview.subviews indexOfObject:self];
+    NSInteger indexOfPage = [self.delegate indexOfPageInCompleteStack:self];
     NSInteger rowOfPage = floor(indexOfPage / 3);
     return rowOfPage;
 }
 
 -(NSInteger) columnInListView{
-    NSInteger indexOfPage = [self.superview.subviews indexOfObject:self];
+    NSInteger indexOfPage = [self.delegate indexOfPageInCompleteStack:self];
     NSInteger columnOfPage = indexOfPage % 3;
     return columnOfPage;
 }

@@ -783,17 +783,20 @@
 #pragma mark - SLPaperViewDelegate - List Methods
 
 -(void) isBeginningToScaleReallySmall:(SLPaperView *)page{
-    
+    @throw kAbstractMethodException;
 }
 
 -(void) finishedScalingReallySmall:(SLPaperView *)page{
-    
+    @throw kAbstractMethodException;
 }
 
 -(void) cancelledScalingReallySmall:(SLPaperView *)page{
-    
+    @throw kAbstractMethodException;
 }
 
+-(NSInteger) indexOfPageInCompleteStack:(SLPaperView*)page{
+    @throw kAbstractMethodException;
+}
 
 
 #pragma mark - Page Animation and Navigation Helpers
