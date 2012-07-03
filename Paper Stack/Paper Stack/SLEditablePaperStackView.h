@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Visere. All rights reserved.
 //
 
-#import "SLPaperStackView.h"
+#import "SLListPaperStackView.h"
 #import "SLPaperButton.h"
 #import "SLPlusButton.h"
 #import "SLPolylineButton.h"
@@ -23,7 +23,7 @@
 #import "Constants.h"
 
 
-@interface SLEditablePaperStackView : SLPaperStackView<UIAccelerometerDelegate,SLSidebarButtonDelegate,SLRotationManagerDelegate>{
+@interface SLEditablePaperStackView : SLListPaperStackView<UIAccelerometerDelegate,SLSidebarButtonDelegate,SLRotationManagerDelegate>{
     // toolbar
     SLPaperButton* documentBackgroundSidebarButton;
     SLPlusButton* addPageSidebarButton;
