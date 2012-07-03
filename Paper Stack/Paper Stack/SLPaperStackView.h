@@ -23,7 +23,7 @@
 #import "Constants.h"
 #import "SLPopoverView.h"
 
-@interface SLPaperStackView : UIView<SLPaperViewDelegate>{
+@interface SLPaperStackView : UIScrollView<SLPaperViewDelegate>{
     @private
     SLPapersIcon* papersIcon;
     SLPaperIcon* paperIcon;

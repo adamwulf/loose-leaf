@@ -22,17 +22,18 @@
 
 -(void) awakeFromNib{
     setOfInitialFramesForPagesBeingZoomed = [[NSMutableDictionary alloc] init];
+    [self setScrollEnabled:NO];
+    //
+    // screen and column constants
+    screenWidth = self.frame.size.width;
+    screenHeight = self.frame.size.height;
+    columnWidth = screenWidth / 4;
+    columnHeight = columnWidth * screenHeight / screenWidth;
+    bufferWidth = columnWidth / 4;
     [super awakeFromNib];
 }
 
 -(CGRect) zoomToListFrameForPage:(SLPaperView*)page oldToFrame:(CGRect)oldFrame withTrust:(CGFloat)percentageToTrustToFrame{
-    //
-    // screen and column constants
-    CGFloat screenWidth = self.frame.size.width;
-    CGFloat screenHeight = self.frame.size.height;
-    CGFloat columnWidth = screenWidth / 4;
-    CGFloat columnHeight = columnWidth * screenHeight / screenWidth;
-    CGFloat bufferWidth = columnWidth / 4;
     
     //
     // calculate the number of rows that will be hidden from offset
@@ -155,7 +156,24 @@
             }
         }
     } completion:^(BOOL finished){
+        [self setScrollEnabled:YES];
+        for(SLPaperView* aPage in visibleStackHolder.subviews){
+            CGFloat finalX = bufferWidth + bufferWidth * aPage.columnInListView + columnWidth * aPage.columnInListView;
+            CGFloat finalY = bufferWidth + bufferWidth * aPage.rowInListView + columnHeight * aPage.rowInListView;
+            CGFloat finalWidth = kListPageZoom * screenWidth;
+            CGFloat finalHeight = kListPageZoom * screenHeight;
+            CGRect frame = CGRectMake(finalX, finalY, finalWidth, finalHeight);
+            aPage.frame = frame;
+        }
+        //
+        // calculate the number of rows that will be hidden from offset
+        SLPaperView* topPage = [visibleStackHolder peekSubview];
+        NSInteger numberOfHiddenRows = MAX(0, topPage.rowInListView - 1);
+        CGFloat contentHeight = (topPage.rowInListView + 3) * (bufferWidth + columnHeight) + bufferWidth;
         
+        [self setContentOffset:CGPointMake(0, numberOfHiddenRows * (bufferWidth + columnHeight)) animated:NO];
+        [self setContentSize:CGSizeMake(screenWidth, contentHeight)];
+        [visibleStackHolder setClipsToBounds:NO];
     }];
     [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
 }
