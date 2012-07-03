@@ -71,32 +71,6 @@
     [self addGestureRecognizer:fromRightBezelGesture];
 }
 
-/**
- * this function makes sure there's at least numberOfPagesToEnsure pages
- * in the hidden stack, and returns the top page
- */
--(void) ensureAtLeastPagesInHiddenStack:(NSInteger)numberOfPagesToEnsure{
-    while([hiddenStackHolder.subviews count] < numberOfPagesToEnsure){
-        SLPaperView* page = [[SLPaperView alloc] initWithFrame:hiddenStackHolder.bounds];
-        page.isBrandNewPage = YES;
-        page.delegate = self;
-        [hiddenStackHolder addSubviewToBottomOfStack:page];
-    }
-}
-
-
-/**
- * adds the page to the bottom of the stack
- * and adds to the bottom of the subviews
- */
--(void) addPaperToBottomOfStack:(SLPaperView*)page{
-    page.isBrandNewPage = NO;
-    page.delegate = self;
-    [page enableAllGestures];
-    [visibleStackHolder addSubviewToBottomOfStack:page];
-}
-
-
 #pragma mark - Pan and Bezel Icons
 
 /**
@@ -448,6 +422,22 @@
     return [visibleStackHolder peekSubview] == page;
 }
 
+/**
+ * this will realign all the pages except the input page
+ * to be scale 1 and (0,0) in the visibleStackHolder
+ */
+-(void) realignPagesInVisibleStackExcept:(SLPaperView*)page{
+    for(SLPaperView* aPage in [[visibleStackHolder.subviews copy] autorelease]){
+        if(aPage != [visibleStackHolder peekSubview]){
+            if(!CGRectEqualToRect(aPage.frame, self.bounds)){
+                [aPage cancelAllGestures];
+                [self animatePageToFullScreen:aPage withDelay:0 withBounce:NO onComplete:nil];
+            }
+        }
+    }
+}
+
+
 
 /**
  * during a pan, we'll need to show different icons
@@ -593,9 +583,7 @@
         // the top page of the visible stack to the bottom of the bezelGestureHolder,
         // then animate
         [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO onComplete:nil];
-        [self emptyBezelStackToVisibleStackOnComplete:^(BOOL finished){
-            [self debugBezelHolder:@"bezel left"];
-        }];
+        [self emptyBezelStackToVisibleStackOnComplete:nil];
         return;
     }else if(justFinishedPanningTheTopPage && [setOfPagesBeingPanned count]){
         //
@@ -617,9 +605,7 @@
                 }
             }
         }
-        [self popStackUntilPage:popUntil onComplete:^(BOOL finished){
-            [self debugBezelHolder:@"pop till pan"];
-        }];
+        [self popStackUntilPage:popUntil onComplete:nil];
         return;
     }else if(!justFinishedPanningTheTopPage && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
         //
@@ -628,9 +614,7 @@
         // bezel. send to hidden stack
         // ============================================================================
         [page removeAllAnimationsAndPreservePresentationFrame];
-        [self sendPageToHiddenStack:page onComplete:^(BOOL finished){
-            [self debugBezelHolder:@"non top pop"];
-        }];
+        [self sendPageToHiddenStack:page onComplete:nil];
         return;
     }else if((bezelDirection & SLBezelDirectionRight) == SLBezelDirectionRight){
         //
@@ -642,9 +626,6 @@
         //
         // either, i bezeled right the top page and am not bezeling anything else
         // or, i bezeled right a bottom page and am holding the top page
-        void(^finishedBlock)(BOOL finished) = ^(BOOL finished){
-            [self debugBezelHolder:@"bezel right"];
-        };
         if(justFinishedPanningTheTopPage){
             //
             // we bezeled right the top page.
@@ -654,9 +635,9 @@
                 for(int i=0;i<page.numberOfTimesExitedBezel && (![pageToPopUntil isBeingPannedAndZoomed] || pageToPopUntil == page);i++){
                     pageToPopUntil = [visibleStackHolder getPageBelow:pageToPopUntil];
                 }
-                [self popStackUntilPage:pageToPopUntil onComplete:finishedBlock];
+                [self popStackUntilPage:pageToPopUntil onComplete:nil];
             }else{
-                [self sendPageToHiddenStack:page onComplete:finishedBlock];
+                [self sendPageToHiddenStack:page onComplete:nil];
             }
             //
             // now that pages are sent to the hidden stack,
@@ -667,7 +648,7 @@
             // they bezeled right a non-top page, just get
             // rid of it
             [page removeAllAnimationsAndPreservePresentationFrame];
-            [self sendPageToHiddenStack:page onComplete:finishedBlock];
+            [self sendPageToHiddenStack:page onComplete:nil];
         }
         return;
     }else if(!justFinishedPanningTheTopPage){
@@ -708,10 +689,6 @@
     // just relased the top page, and no
     // other pages are being held
     // ============================================================================
-    void(^finishedBlock)(BOOL finished) = ^(BOOL finished){
-        [self debugBezelHolder:@"top view only"];
-    };
-
     // all the actions below will move the top page only,
     // so it's safe to realign allothers
     [self realignPagesInVisibleStackExcept:page];
@@ -720,7 +697,7 @@
         //
         // bezelStackHolder debugging DONE
         // pop the top page, it's close to the right bezel
-        [self popStackUntilPage:[visibleStackHolder getPageBelow:page] onComplete:finishedBlock];
+        [self popStackUntilPage:[visibleStackHolder getPageBelow:page] onComplete:nil];
     }else if(justFinishedPanningTheTopPage && [self shouldPushPageOntoVisibleStack:page withFrame:toFrame]){
         //
         // bezelStackHolder debugging DONE
@@ -732,7 +709,7 @@
         // the gesture inside the screen (which should only push 1 page).
         //
         // so check the bezelStackHolder
-        [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO onComplete:finishedBlock];
+        [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO onComplete:nil];
         if([bezelStackHolder.subviews count]){
             // pull the view onto the visible stack
             SLPaperView* pageToPushToVisible = [bezelStackHolder.subviews objectAtIndex:0];
@@ -740,7 +717,7 @@
             [visibleStackHolder pushSubview:pageToPushToVisible];
             [self animatePageToFullScreen:pageToPushToVisible withDelay:0 withBounce:NO onComplete:nil];
             [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
-            [self emptyBezelStackToHiddenStackAnimated:YES onComplete:finishedBlock];
+            [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
         }else{
             [self popTopPageOfHiddenStack];
         }
@@ -750,7 +727,7 @@
         //
         // bounce it back to full screen
         [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
-        [self emptyBezelStackToHiddenStackAnimated:YES onComplete:finishedBlock];
+        [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
         [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:nil];
     }else{
         //
@@ -758,7 +735,7 @@
         //
         // first, empty the bezelStackHolder, if any
         [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
-        [self emptyBezelStackToHiddenStackAnimated:YES onComplete:finishedBlock];
+        [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
         //
         // the scale is larger than 1, so we may need
         // to slide the page with some inertia. if the page is
@@ -770,7 +747,7 @@
         CGRect intertialFrame = toFrame;
         intertialFrame.origin = finalOrigin;
         
-        if([self shouldInterialSlideThePage:page withFrame:intertialFrame]){
+        if([self shouldInterialSlideThePage:page toFrame:intertialFrame]){
             [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut animations:^(void){
                 page.frame = intertialFrame;
             } completion:nil];
@@ -781,33 +758,18 @@
     }
 }
 
--(void) debugBezelHolder:(NSString*)tag{
-    debug_NSLog(@"views in bezel: %d for %@", [bezelStackHolder.subviews count], tag);
-}
-
-
-
-/**
- * this will realign all the pages except the input page
- * to be scale 1 and (0,0) in the visibleStackHolder
- */
--(void) realignPagesInVisibleStackExcept:(SLPaperView*)page{
-    for(SLPaperView* aPage in [[visibleStackHolder.subviews copy] autorelease]){
-        if(aPage != [visibleStackHolder peekSubview]){
-            if(!CGRectEqualToRect(aPage.frame, self.bounds)){
-                [aPage cancelAllGestures];
-                [self animatePageToFullScreen:aPage withDelay:0 withBounce:NO onComplete:nil];
-            }
-        }
-    }
-}
-
-
 
 
 #pragma mark - Page Animation and Navigation Helpers
 
--(BOOL) shouldInterialSlideThePage:(SLPaperView*)page withFrame:(CGRect)frame{
+/**
+ * returns YES if the page should slide
+ * to the target frame as if it had inertia
+ *
+ * returns NO if the page should just bounce
+ * instead
+ */
+-(BOOL) shouldInterialSlideThePage:(SLPaperView*)page toFrame:(CGRect)frame{
     if(frame.origin.y <= 0 && frame.origin.y + frame.size.height > self.superview.frame.size.height &&
        frame.origin.x <= 0 && frame.origin.x + frame.size.width > self.superview.frame.size.width){
         return YES;
@@ -815,9 +777,22 @@
     return NO;
 }
 
+/**
+ * returns YES if a page should trigger removing
+ * a page from the visible stack to the hidden stack.
+ *
+ * this is used when a user drags a page to the left/right
+ */
 -(BOOL) shouldPopPageFromVisibleStack:(SLPaperView*)page withFrame:(CGRect)frame{
     return page.frame.origin.x > self.frame.size.width - kGutterWidthToDragPages;
 }
+
+/**
+ * returns YES if a page should trigger adding
+ * a page to the visible stack from the hidden stack.
+ *
+ * this is used when a user drags a page to the left/right
+ */
 -(BOOL) shouldPushPageOntoVisibleStack:(SLPaperView*)page withFrame:(CGRect)frame{
     return page.frame.origin.x + page.frame.size.width < kGutterWidthToDragPages;
 }
@@ -1084,6 +1059,33 @@
                              if(completionBlock) completionBlock(finished);
                          }];
     }
+}
+
+#pragma mark - Helper Methods
+
+/**
+ * this function makes sure there's at least numberOfPagesToEnsure pages
+ * in the hidden stack, and returns the top page
+ */
+-(void) ensureAtLeastPagesInHiddenStack:(NSInteger)numberOfPagesToEnsure{
+    while([hiddenStackHolder.subviews count] < numberOfPagesToEnsure){
+        SLPaperView* page = [[SLPaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+        page.isBrandNewPage = YES;
+        page.delegate = self;
+        [hiddenStackHolder addSubviewToBottomOfStack:page];
+    }
+}
+
+
+/**
+ * adds the page to the bottom of the stack
+ * and adds to the bottom of the subviews
+ */
+-(void) addPaperToBottomOfStack:(SLPaperView*)page{
+    page.isBrandNewPage = NO;
+    page.delegate = self;
+    [page enableAllGestures];
+    [visibleStackHolder addSubviewToBottomOfStack:page];
 }
 
 @end
