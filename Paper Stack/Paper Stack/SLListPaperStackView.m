@@ -7,6 +7,7 @@
 //
 
 #import "SLListPaperStackView.h"
+#import "SLPaperView+ListView.h"
 
 @implementation SLListPaperStackView
 
@@ -17,6 +18,11 @@
         // Initialization code
     }
     return self;
+}
+
+-(void) awakeFromNib{
+    setOfInitialFramesForPagesBeingZoomed = [[NSMutableDictionary alloc] init];
+    [super awakeFromNib];
 }
 
 /*
@@ -38,20 +44,14 @@
     CGFloat bufferWidth = columnWidth / 4;
 
     //
-    // page column and row
-    NSInteger indexOfPage = [visibleStackHolder.subviews indexOfObject:page];
-    NSInteger columnOfPage = indexOfPage % 3;
-    NSInteger rowOfPage = floor(indexOfPage / 3);
-
-    //
     // for now, we'll assume the page is being pulled from
     // it's containers bounds
     CGRect oldFrame = toFrame;
     
     
     CGRect newFrame = toFrame;
-    CGFloat finalX = bufferWidth + bufferWidth * columnOfPage + columnWidth * columnOfPage;
-    CGFloat finalY = bufferWidth + bufferWidth * rowOfPage + columnHeight * rowOfPage;
+    CGFloat finalX = bufferWidth + bufferWidth * page.columnInListView + columnWidth * page.columnInListView;
+    CGFloat finalY = bufferWidth + bufferWidth * page.rowInListView + columnHeight * page.rowInListView;
     CGFloat currX = oldFrame.origin.x;
     CGFloat currY = oldFrame.origin.y;
     CGFloat currWidth = oldFrame.size.width;
@@ -63,7 +63,7 @@
     newFrame.size.width = finalWidth - (finalWidth - currWidth) * percentageToTrustToFrame;
     newFrame.size.height = finalHeight - (finalHeight - currHeight) * percentageToTrustToFrame;
     
-    debug_NSLog(@"index:%d row:%d column: %d    x: %f  x2: %f", indexOfPage, rowOfPage, columnOfPage, toFrame.origin.x, newFrame.origin.x);
+    debug_NSLog(@"row:%d column: %d    x: %f  x2: %f", page.rowInListView, page.columnInListView, toFrame.origin.x, newFrame.origin.x);
     return newFrame;
 }
 
@@ -88,11 +88,11 @@
         NSInteger indexOfTopVisiblePage = [visibleStackHolder.subviews indexOfObject:page];
         NSInteger columnOfTopVisiblePage = indexOfTopVisiblePage % 3;
         NSInteger numberOfViewsBelowTopPageInList = MIN(3 + columnOfTopVisiblePage, [visibleStackHolder.subviews indexOfObject:page]);
-        
         for(int i=0;i<numberOfViewsBelowTopPageInList;i++){
             if(indexOfTopVisiblePage - 1 - i > 0){
                 SLPaperView* nonTopPage = [visibleStackHolder.subviews objectAtIndex:(indexOfTopVisiblePage - 1 - i)];
-                nonTopPage.frame = [self zoomToListFrameForPage:nonTopPage oldToFrame:visibleStackHolder.bounds withTrust:percentageToTrustToFrame];
+                CGRect oldFrame = [[setOfInitialFramesForPagesBeingZoomed objectForKey:nonTopPage.uuid] CGRectValue];
+                nonTopPage.frame = [self zoomToListFrameForPage:nonTopPage oldToFrame:oldFrame withTrust:percentageToTrustToFrame];
             }
         }
         
@@ -132,6 +132,16 @@
         }];
     }else{
         debug_NSLog(@"we're ok to begin zooming pages to location in list view");
+
+        NSInteger indexOfTopVisiblePage = [visibleStackHolder.subviews indexOfObject:page];
+        NSInteger columnOfTopVisiblePage = indexOfTopVisiblePage % 3;
+        NSInteger numberOfViewsBelowTopPageInList = MIN(3 + columnOfTopVisiblePage, [visibleStackHolder.subviews indexOfObject:page]);
+        for(int i=0;i<numberOfViewsBelowTopPageInList;i++){
+            if(indexOfTopVisiblePage - 1 - i > 0){
+                SLPaperView* nonTopPage = [visibleStackHolder.subviews objectAtIndex:(indexOfTopVisiblePage - 1 - i)];
+                [setOfInitialFramesForPagesBeingZoomed setObject:[NSValue valueWithCGRect:nonTopPage.frame] forKey:nonTopPage.uuid];
+            }
+        }
     }
 }
 
@@ -155,10 +165,12 @@
         }
     }
     [UIView commitAnimations];
+    [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
 }
 
 -(void) cancelledScalingReallySmall:(SLPaperView *)page{
     debug_NSLog(@"cancelled small scale");
+    [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
 }
 
 
