@@ -18,7 +18,7 @@
 
 #define kAnimationDelay 0.05
 
-#define kMinPageZoom .7
+#define kMinPageZoom .6
 #define kMaxPageZoom 2.5
 
 #define kGutterWidthToDragPages 500
