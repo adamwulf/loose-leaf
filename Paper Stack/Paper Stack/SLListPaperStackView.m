@@ -241,9 +241,14 @@
     NSInteger numberOfViewsBelowTopPageInList = MIN(3 + columnOfTopVisiblePage, [visibleStackHolder.subviews indexOfObject:page]);
     
 
+    
+    
     //
     // first, find all pages behind the first full scale
     // page, and just move them immediately
+    //
+    // this helps pretty dramatically with the animation
+    // performance
     SLPaperView* lastPage = nil;
     for(SLPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
         NSInteger indexOfAPage = [visibleStackHolder.subviews indexOfObject:aPage];
