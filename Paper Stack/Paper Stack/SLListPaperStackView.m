@@ -25,15 +25,6 @@
     [super awakeFromNib];
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
-
 -(CGRect) zoomToListFrameForPage:(SLPaperView*)page oldToFrame:(CGRect)oldFrame withTrust:(CGFloat)percentageToTrustToFrame{
     //
     // screen and column constants
@@ -42,13 +33,18 @@
     CGFloat columnWidth = screenWidth / 4;
     CGFloat columnHeight = columnWidth * screenHeight / screenWidth;
     CGFloat bufferWidth = columnWidth / 4;
+    
+    //
+    // calculate the number of rows that will be hidden from offset
+    SLPaperView* topPage = [visibleStackHolder peekSubview];
+    NSInteger numberOfHiddenRows = MAX(0, topPage.rowInListView - 1);
 
     //
     // for now, we'll assume the page is being pulled from
     // it's containers bounds
     CGRect newFrame = oldFrame;
     CGFloat finalX = bufferWidth + bufferWidth * page.columnInListView + columnWidth * page.columnInListView;
-    CGFloat finalY = bufferWidth + bufferWidth * page.rowInListView + columnHeight * page.rowInListView;
+    CGFloat finalY = bufferWidth + bufferWidth * (page.rowInListView - numberOfHiddenRows) + columnHeight * (page.rowInListView - numberOfHiddenRows);
     CGFloat currX = oldFrame.origin.x;
     CGFloat currY = oldFrame.origin.y;
     CGFloat currWidth = oldFrame.size.width;
@@ -148,7 +144,6 @@
     [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
         for(SLPaperView* aPage in visibleStackHolder.subviews){
             NSInteger indexOfAPage = [visibleStackHolder.subviews indexOfObject:aPage];
-            BOOL isTopPage = [visibleStackHolder peekSubview] == aPage;
             if(indexOfAPage >= indexOfTopVisiblePage - numberOfViewsBelowTopPageInList){
                 CGRect rect = [self zoomToListFrameForPage:aPage oldToFrame:aPage.frame withTrust:0.0];
                 aPage.frame = rect;
