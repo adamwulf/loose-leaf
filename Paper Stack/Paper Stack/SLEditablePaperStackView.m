@@ -66,7 +66,7 @@
      documentBackgroundSidebarButton = [[SLPaperButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 7, kWidthOfSidebarButton, kWidthOfSidebarButton)];
      documentBackgroundSidebarButton.delegate = self;
      documentBackgroundSidebarButton.enabled = NO;
-     [documentBackgroundSidebarButton addTarget:self action:@selector(toggleButton:) forControlEvents:UIControlEventTouchUpInside];
+     [documentBackgroundSidebarButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
      [self addSubview:documentBackgroundSidebarButton];
     */
     
@@ -115,9 +115,6 @@
 
 -(void) tempButtonTapped:(UIButton*)_button{
     debug_NSLog(@"temp button");
-}
--(void) toggleButton:(UIButton*) _button{
-    _button.enabled = !_button.enabled;
 }
 
 #pragma mark - SLRotationManagerDelegate
