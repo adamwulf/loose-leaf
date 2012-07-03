@@ -8,6 +8,14 @@
 
 #import "SLPaperStackView.h"
 
-@interface SLListPaperStackView : SLPaperStackView
+@interface SLListPaperStackView : SLPaperStackView{
+    //
+    // when beginning a zoom, we need to save the
+    // frames of all the pages we'll be animating
+    //
+    // then we'll use that saved frame value to
+    // animate between it's final state
+    NSMutableDictionary* setOfInitialFramesForPagesBeingZoomed;
+}
 
 @end
