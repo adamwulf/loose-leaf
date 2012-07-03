@@ -98,6 +98,14 @@
 
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
     if([visibleStackHolder peekSubview] == page){
+        
+        //
+        // defer to bezel gesture
+        if([page willExitToBezel:SLBezelDirectionLeft | SLBezelDirectionRight]){
+            return [super isPanningAndScalingPage:page fromFrame:fromFrame toFrame:toFrame];
+        }
+        
+        
         // make sure we're the top page
         if([visibleStackHolder peekSubview].scale < kMinPageZoom){
             //
@@ -134,7 +142,7 @@
             NSInteger columnOfTopVisiblePage = indexOfTopVisiblePage % 3;
             NSInteger numberOfViewsBelowTopPageInList = MIN(3 + columnOfTopVisiblePage, [visibleStackHolder.subviews indexOfObject:page]);
             for(int i=0;i<numberOfViewsBelowTopPageInList;i++){
-                if(indexOfTopVisiblePage - 1 - i > 0){
+                if(indexOfTopVisiblePage - 1 - i >= 0){
                     SLPaperView* nonTopPage = [visibleStackHolder.subviews objectAtIndex:(indexOfTopVisiblePage - 1 - i)];
                     CGRect oldFrame = [[setOfInitialFramesForPagesBeingZoomed objectForKey:nonTopPage.uuid] CGRectValue];
                     nonTopPage.frame = [self zoomToListFrameForPage:nonTopPage oldToFrame:oldFrame withTrust:percentageToTrustToFrame];
