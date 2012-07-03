@@ -12,5 +12,6 @@
 
 @property (nonatomic, readonly) NSInteger rowInListView;
 @property (nonatomic, readonly) NSInteger columnInListView;
+-(CGRect) frameForListViewGivenRowHeight:(CGFloat)columnHeight andColumnWidth:(CGFloat)columnWidth;
 
 @end

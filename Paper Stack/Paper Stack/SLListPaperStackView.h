@@ -20,7 +20,7 @@
     CGFloat screenWidth;
     CGFloat screenHeight;
     CGFloat columnWidth;
-    CGFloat columnHeight;
+    CGFloat rowHeight;
     CGFloat bufferWidth;
     
     UITapGestureRecognizer* tapGesture;

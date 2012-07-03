@@ -29,9 +29,9 @@
     // screen and column constants
     screenWidth = self.frame.size.width;
     screenHeight = self.frame.size.height;
-    columnWidth = screenWidth / 4;
-    columnHeight = columnWidth * screenHeight / screenWidth;
-    bufferWidth = columnWidth / 4;
+    columnWidth = screenWidth * kListPageZoom;
+    rowHeight = columnWidth * screenHeight / screenWidth;
+    bufferWidth = columnWidth * kListPageZoom;
     
     tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapScrollView:)];
     [tapGesture setNumberOfTapsRequired:1];
@@ -73,26 +73,26 @@
     SLPaperView* topPage = [visibleStackHolder peekSubview];
     NSInteger numberOfHiddenRows = MAX(0, topPage.rowInListView - 1);
 
+    CGRect finalFrame = [page frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
+    CGPoint offset = CGPointMake(0, numberOfHiddenRows * (rowHeight + bufferWidth));
+    finalFrame.origin.x -= offset.x;
+    finalFrame.origin.y -= offset.y;
     //
     // create some helper variables for the old/new frames
     CGFloat currX = oldFrame.origin.x;
     CGFloat currY = oldFrame.origin.y;
-    CGFloat finalX = bufferWidth + bufferWidth * page.columnInListView + columnWidth * page.columnInListView;
-    CGFloat finalY = bufferWidth + bufferWidth * (page.rowInListView - numberOfHiddenRows) + columnHeight * (page.rowInListView - numberOfHiddenRows);
     CGFloat currWidth = oldFrame.size.width;
     CGFloat currHeight = oldFrame.size.height;
-    CGFloat finalWidth = kListPageZoom * screenWidth;
-    CGFloat finalHeight = kListPageZoom * screenHeight;
     
     //
     // ok, set the new frame that we'll return
     CGRect newFrame = CGRectZero;
-    newFrame.origin.x = finalX - (finalX - currX) * percentageToTrustToFrame;
-    newFrame.origin.y = finalY - (finalY - currY) * percentageToTrustToFrame;
-    newFrame.size.width = finalWidth - (finalWidth - currWidth) * percentageToTrustToFrame;
-    newFrame.size.height = finalHeight - (finalHeight - currHeight) * percentageToTrustToFrame;
+    newFrame.origin.x = finalFrame.origin.x - (finalFrame.origin.x - currX) * percentageToTrustToFrame;
+    newFrame.origin.y = finalFrame.origin.y - (finalFrame.origin.y - currY) * percentageToTrustToFrame;
+    newFrame.size.width = finalFrame.size.width - (finalFrame.size.width - currWidth) * percentageToTrustToFrame;
+    newFrame.size.height = finalFrame.size.height - (finalFrame.size.height - currHeight) * percentageToTrustToFrame;
     
-    debug_NSLog(@"row:%d column: %d    x: %f  x2: %f", page.rowInListView, page.columnInListView, oldFrame.origin.x, oldFrame.origin.x);
+    debug_NSLog(@"row:%d column: %d    x:%f y: %f", page.rowInListView, page.columnInListView, newFrame.origin.x, newFrame.origin.y);
     return newFrame;
 }
 
@@ -302,7 +302,7 @@
         [self setScrollEnabled:YES];
         for(SLPaperView* aPage in visibleStackHolder.subviews){
             CGFloat finalX = bufferWidth + bufferWidth * aPage.columnInListView + columnWidth * aPage.columnInListView;
-            CGFloat finalY = bufferWidth + bufferWidth * aPage.rowInListView + columnHeight * aPage.rowInListView;
+            CGFloat finalY = bufferWidth + bufferWidth * aPage.rowInListView + rowHeight * aPage.rowInListView;
             CGFloat finalWidth = kListPageZoom * screenWidth;
             CGFloat finalHeight = kListPageZoom * screenHeight;
             CGRect frame = CGRectMake(finalX, finalY, finalWidth, finalHeight);
@@ -312,9 +312,9 @@
         // calculate the number of rows that will be hidden from offset
         SLPaperView* topPage = [visibleStackHolder peekSubview];
         NSInteger numberOfHiddenRows = MAX(0, topPage.rowInListView - 1);
-        CGFloat contentHeight = (topPage.rowInListView + 3) * (bufferWidth + columnHeight) + bufferWidth;
+        CGFloat contentHeight = (topPage.rowInListView + 3) * (bufferWidth + rowHeight) + bufferWidth;
         
-        [self setContentOffset:CGPointMake(0, numberOfHiddenRows * (bufferWidth + columnHeight)) animated:NO];
+        [self setContentOffset:CGPointMake(0, numberOfHiddenRows * (bufferWidth + rowHeight)) animated:NO];
         [self setContentSize:CGSizeMake(screenWidth, contentHeight)];
         [visibleStackHolder setClipsToBounds:NO];
         [tapGesture setEnabled:YES];
