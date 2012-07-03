@@ -14,6 +14,7 @@
 #import "NSThread+BlocksAdditions.h"
 #import "UIView+Debug.h"
 #import "UIView+Animations.h"
+#import "NSMutableSet+Extras.h"
 
 @implementation SLPaperStackView
 
@@ -122,6 +123,22 @@
             }
         }
     }
+    
+    
+    if([visibleStackHolder peekSubview].scale < kMinPageZoom){
+        //
+        // ok, we're in zoomed out mode, looking at the list
+        // of all the pages, so hide all the icons
+        showLeftArrow = NO;
+        showRightArrow = NO;
+    }
+    
+    
+    //
+    //
+    // now all the variables are set, we know our state
+    //
+    // so update the actual icons
     if((showLeftArrow || showRightArrow) &&
        ((!showLeftArrow && leftArrow.alpha) ||
         (!showRightArrow && rightArrow.alpha) ||
@@ -413,7 +430,7 @@
     }
 }
 
-#pragma mark - SLPaperViewDelegate
+#pragma mark - SLPaperViewDelegate - Paper View
 
 /**
  * let's only allow scaling the top most page
@@ -444,6 +461,16 @@
  * depending on where they drag a page
  */
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
+    //
+    // gestures for tiny pages aren't allowed
+    if([visibleStackHolder peekSubview].scale < kMinPageZoom){
+        return toFrame;
+    }
+
+    
+    //
+    // resume normal behavior for any pages
+    // of normal scale
     BOOL isPanningTopPage = page == [visibleStackHolder peekSubview];
     if([page numberOfTimesExitedBezel] > 0){
         inProgressOfBezeling = page;
@@ -758,8 +785,36 @@
     }
 }
 
+
+#pragma mark - SLPaperViewDelegate - List View
+
 -(void) isBeginningToScaleReallySmall:(SLPaperView *)page{
     debug_NSLog(@"is small scale");
+    
+    if([[setOfPagesBeingPanned setByRemovingObject:page] count]){
+        debug_NSLog(@"need to cancel some stuff");
+        //
+        // we're panning the top most page, and it's scale
+        // is less than the minimum allowed.
+        //
+        // this means we need to cancel all other gestures
+        // and start zooming views out
+        NSSet* setOfAllPannedPagesExceptTopVisible = [setOfPagesBeingPanned setByRemovingObject:[visibleStackHolder peekSubview]];
+        for(SLPaperView* page in setOfAllPannedPagesExceptTopVisible){
+            [page cancelAllGestures];
+        }
+    }
+    if([bezelStackHolder.subviews count]){
+        debug_NSLog(@"need to clean up bezel");
+        [self emptyBezelStackToHiddenStackAnimated:YES onComplete:^(BOOL finished){
+            if(finished){
+                // recur
+                [self isBeginningToScaleReallySmall:page];
+            }
+        }];
+    }else{
+        debug_NSLog(@"we're ok to begin zooming pages to location in list view");
+    }
 }
 
 -(void) finishedScalingReallySmall:(SLPaperView *)page{
