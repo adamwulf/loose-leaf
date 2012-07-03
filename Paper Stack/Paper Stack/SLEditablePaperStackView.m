@@ -141,5 +141,32 @@
     // noop
 }
 
+#pragma mark - SLPaperViewDelegate - List View
 
+-(void) setButtonsVisible:(BOOL)visible{
+    [UIView animateWithDuration:0.2 animations:^{
+        addPageSidebarButton.alpha = visible;
+        documentBackgroundSidebarButton.alpha = visible;
+        polylineButton.alpha = visible;
+        polygonButton.alpha = visible;
+        insertImageButton.alpha = visible;
+        textButton.alpha = visible;
+        pencilButton.alpha = visible;
+        shareButton.alpha = visible;
+        mapButton.alpha = visible;
+    }];
+}
+
+-(void) isBeginningToScaleReallySmall:(SLPaperView *)page{
+    [self setButtonsVisible:NO];
+    [super isBeginningToScaleReallySmall:page];
+}
+-(void) finishedScalingReallySmall:(SLPaperView *)page{
+    // noop
+    [super finishedScalingReallySmall:page];
+}
+-(void) cancelledScalingReallySmall:(SLPaperView *)page{
+    [self setButtonsVisible:YES];
+    [super cancelledScalingReallySmall:page];
+}
 @end
