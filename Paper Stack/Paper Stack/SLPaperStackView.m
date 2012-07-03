@@ -464,6 +464,26 @@
     //
     // gestures for tiny pages aren't allowed
     if([visibleStackHolder peekSubview].scale < kMinPageZoom){
+        
+        if([[setOfPagesBeingPanned setByRemovingObject:[visibleStackHolder peekSubview]] count]){
+            debug_NSLog(@"still pages being panned, this'll be caught by the isBeginningToScaleReallySmall handler");
+            return toFrame;
+        }
+        if([bezelStackHolder.subviews count]){
+            debug_NSLog(@"bezelStackHolder still has pages being animated, so hold off on any list animations for now");
+            return toFrame;
+        }
+        
+        debug_NSLog(@"ok, begin zooming to list view %f complete", [visibleStackHolder peekSubview].scale / kMinPageZoom);
+        
+        
+        NSInteger indexOfTopVisiblePage = [visibleStackHolder.subviews count];
+        NSInteger columnOfTopVisiblePage = (indexOfTopVisiblePage - 1) % 3;
+        
+        debug_NSLog(@"index: %d  column: %d", indexOfTopVisiblePage, columnOfTopVisiblePage);
+        
+        
+        
         return toFrame;
     }
 

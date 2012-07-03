@@ -140,7 +140,7 @@
  * b) if the user lifts a finger, then stop all motion, but don't yield to any other gesture
  *      (ios default is to continue the gesture altogether. instead we'll stop the gesture, but still won't yeild)
  * c) the zoom should zoom into the location of the zoom gesture. don't just zoom from top/left or center
- * d) lock zoom at .7x > 2x
+ * d) lock zoom at kMinPageZoom > kMaxPageZoom
  * e) call delegates to ask if panning or zoom should even be enabled
  * f) call delegates to ask them to perform any other modifications to the frame before setting it to the page
  * g) notify the delegate when the pan and zoom is complete
@@ -243,7 +243,7 @@
 //        }
         
         //
-        // to track scaling, the scale value has to be a value between .7 and 2.0x of the /superview/'s size
+        // to track scaling, the scale value has to be a value between kMinPageZoom and kMaxPageZoom of the /superview/'s size
         // if i begin scaling an already zoomed in page, the gesture's default is the re-begin the zoom at 1.0x
         // even though it may be 2x of our page size. so we need to remember the current scale in preGestureScale
         // and multiply that by the gesture's scale value. this gives us the scale value as a factor of the superview
@@ -257,7 +257,7 @@
             if(didCancelSmallScale) [self.delegate cancelledScalingReallySmall:self];
         }else if(targetScale < kMinPageZoom && scale >= kMinPageZoom){
             // 0.75 is zoom minimum
-            scale = kMinPageZoom;
+            scale = targetScale;
             [self.delegate isBeginningToScaleReallySmall:self];
         }else if((targetScale >= 1 && scaleDiff > kMinScaleDelta) ||
                  (targetScale < 1 && scaleDiff > kMinScaleDelta / 2)){
