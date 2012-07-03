@@ -154,6 +154,7 @@
                 newFrame.origin.y = -newFrame.size.height;
                 aPage.frame = newFrame;
             }
+            [aPage disableAllGestures];
         }
     } completion:^(BOOL finished){
         [self setScrollEnabled:YES];
