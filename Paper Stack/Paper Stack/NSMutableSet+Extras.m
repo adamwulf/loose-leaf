@@ -16,4 +16,12 @@
     }
 }
 
+-(NSSet*) setByRemovingObject:(id)obj{
+    NSMutableSet* ret = [NSMutableSet setWithSet:self];
+    [ret removeObject:obj];
+    return ret;
+}
+
+
+
 @end
