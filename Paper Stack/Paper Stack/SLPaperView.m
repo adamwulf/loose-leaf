@@ -312,10 +312,16 @@
                       fromFrame:frameOfPageAtBeginningOfGesture
                         toFrame:fr];
     
-    
-    //
-    // now we're ready, set the frame!
-    self.frame = fr;
+    if(panGesture.state != UIGestureRecognizerStateCancelled &&
+       panGesture.state != UIGestureRecognizerStateEnded &&
+       panGesture.state != UIGestureRecognizerStateFailed){
+        //
+        // now we're ready, set the frame!
+        //
+        // only set it if a delegate didn't change our state to
+        // complete the gesture
+        self.frame = fr;
+    }
     
 }
 
