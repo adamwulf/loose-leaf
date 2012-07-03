@@ -9,6 +9,7 @@
 #import "SLListPaperStackView.h"
 #import "SLPaperView+ListView.h"
 #import "UIView+Debug.h"
+#import "NSThread+BlocksAdditions.h"
 
 @implementation SLListPaperStackView
 
@@ -239,21 +240,46 @@
     NSInteger columnOfTopVisiblePage = indexOfTopVisiblePage % 3;
     NSInteger numberOfViewsBelowTopPageInList = MIN(3 + columnOfTopVisiblePage, [visibleStackHolder.subviews indexOfObject:page]);
     
+
+    //
+    // first, find all pages behind the first full scale
+    // page, and just move them immediately
+    SLPaperView* lastPage = nil;
+    for(SLPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
+        NSInteger indexOfAPage = [visibleStackHolder.subviews indexOfObject:aPage];
+        if(indexOfAPage >= indexOfTopVisiblePage - numberOfViewsBelowTopPageInList){
+            // ignore pages that we're going to animate for sure
+        }else{
+            // ok, check if it's full screen
+            CGRect rect = aPage.frame;
+            if(lastPage){
+                rect.origin.y = -rect.size.height;
+                aPage.frame = rect;
+            }else if(rect.origin.x <= 0 && rect.origin.y <= 0 && rect.origin.x + rect.size.width >= screenWidth && rect.origin.y + rect.size.height >= screenHeight){
+                lastPage = aPage;
+            }
+        }
+    }
+    
     // ok, animate all the views in the visible stack!
     [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
         //
         // make sure all the pages go to the correct place
         // so that it looks like where they'll be in the list view
-        for(SLPaperView* aPage in visibleStackHolder.subviews){
+        for(SLPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
             NSInteger indexOfAPage = [visibleStackHolder.subviews indexOfObject:aPage];
             if(indexOfAPage >= indexOfTopVisiblePage - numberOfViewsBelowTopPageInList){
                 CGRect rect = [self zoomToListFrameForPage:aPage oldToFrame:aPage.frame withTrust:0.0];
                 aPage.frame = rect;
             }else{
-                // move it to the top outside the scroll range
-                CGRect newFrame = aPage.frame;
-                newFrame.origin.y = -newFrame.size.height;
-                aPage.frame = newFrame;
+                if(aPage == lastPage){
+                    // move it to the top outside the scroll range
+                    CGRect newFrame = aPage.frame;
+                    newFrame.origin.y = -newFrame.size.height;
+                    aPage.frame = newFrame;
+                }else{
+                    break;
+                }
             }
             // gestures aren't allowed in list view
             [aPage disableAllGestures];
