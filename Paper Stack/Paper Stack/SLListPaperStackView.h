@@ -23,6 +23,7 @@
     CGFloat columnHeight;
     CGFloat bufferWidth;
     
+    UITapGestureRecognizer* tapGesture;
 }
 
 @end
