@@ -16,6 +16,13 @@
     // then we'll use that saved frame value to
     // animate between it's final state
     NSMutableDictionary* setOfInitialFramesForPagesBeingZoomed;
+
+    CGFloat screenWidth;
+    CGFloat screenHeight;
+    CGFloat columnWidth;
+    CGFloat columnHeight;
+    CGFloat bufferWidth;
+    
 }
 
 @end
