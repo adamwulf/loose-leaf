@@ -245,7 +245,7 @@
  */
 -(void) bezelIn:(SLBezelInRightGestureRecognizer*)bezelGesture{
     // make sure there's a page to bezel
-    [self ensureAtLeastPagesInHiddenStack:1];
+    [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
     CGPoint translation = [bezelGesture translationInView:self];
     
     if(bezelGesture.state == UIGestureRecognizerStateBegan){
@@ -440,7 +440,7 @@
  */
 -(void) realignPagesInVisibleStackExcept:(SLPaperView*)page{
     for(SLPaperView* aPage in [[visibleStackHolder.subviews copy] autorelease]){
-        if(aPage != [visibleStackHolder peekSubview]){
+        if(aPage != page){
             if(!CGRectEqualToRect(aPage.frame, self.bounds)){
                 [aPage cancelAllGestures];
                 [self animatePageToFullScreen:aPage withDelay:0 withBounce:NO onComplete:nil];
@@ -456,6 +456,13 @@
  * depending on where they drag a page
  */
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
+    
+    if(page == [visibleStackHolder.subviews objectAtIndex:0]){
+        // they're panning the bottom page in the visible stack,
+        // so add another
+        [self ensureAtLeast:[visibleStackHolder.subviews count] + 1 pagesInStack:visibleStackHolder];
+    }
+    
     //
     // resume normal behavior for any pages
     // of normal scale
@@ -465,7 +472,6 @@
     }
     [setOfPagesBeingPanned addObject:page];
     [self updateIconAnimations];
-    
     
     //
     // the user is bezeling a page to the left, which will pop
@@ -483,7 +489,7 @@
         // c) add correct number of pages to the bezelStackHolder
         // d) update the offset for the bezelStackHolder so they all move in tandem
         while(page.numberOfTimesExitedBezel > [bezelStackHolder.subviews count]){
-            [self ensureAtLeastPagesInHiddenStack:1];
+            [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
             //
             // we need to add another page
             [bezelStackHolder pushSubview:[hiddenStackHolder peekSubview]];
@@ -838,6 +844,7 @@
     if([visibleStackHolder.subviews containsObject:page]){
         [bezelStackHolder addSubviewToBottomOfStack:page];
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:completionBlock];
+        [self ensureAtLeast:1 pagesInStack:visibleStackHolder];
     }
 }
 
@@ -849,7 +856,7 @@
  * so that it has something to pop.
  */
 -(void) popTopPageOfHiddenStack{
-    [self ensureAtLeastPagesInHiddenStack:1];
+    [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
     SLPaperView* page = [hiddenStackHolder peekSubview];
     page.isBrandNewPage = NO;
     [self popHiddenStackUntilPage:[hiddenStackHolder getPageBelow:page] onComplete:nil];
@@ -873,6 +880,7 @@
             [bezelStackHolder addSubviewToBottomOfStack:pageToPop];
         }
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:completionBlock];
+        [self ensureAtLeast:1 pagesInStack:visibleStackHolder];
     }
 }
 
@@ -913,7 +921,7 @@
  * animated
  */
 -(void) popHiddenStackForPages:(NSInteger)numberOfPages onComplete:(void(^)(BOOL finished))completionBlock{
-    [self ensureAtLeastPagesInHiddenStack:numberOfPages];
+    [self ensureAtLeast:numberOfPages pagesInStack:hiddenStackHolder];
     NSInteger index = [hiddenStackHolder.subviews count] - 1 - numberOfPages;
     if(index >= 0){
         [self popHiddenStackUntilPage:[hiddenStackHolder.subviews objectAtIndex:index] onComplete:completionBlock];
@@ -1097,12 +1105,12 @@
  * this function makes sure there's at least numberOfPagesToEnsure pages
  * in the hidden stack, and returns the top page
  */
--(void) ensureAtLeastPagesInHiddenStack:(NSInteger)numberOfPagesToEnsure{
-    while([hiddenStackHolder.subviews count] < numberOfPagesToEnsure){
-        SLPaperView* page = [[SLPaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+-(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(UIView*)stackView{
+    while([stackView.subviews count] < numberOfPagesToEnsure){
+        SLPaperView* page = [[SLPaperView alloc] initWithFrame:stackView.bounds];
         page.isBrandNewPage = YES;
         page.delegate = self;
-        [hiddenStackHolder addSubviewToBottomOfStack:page];
+        [stackView addSubviewToBottomOfStack:page];
     }
 }
 

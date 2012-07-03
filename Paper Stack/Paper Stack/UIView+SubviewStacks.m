@@ -48,6 +48,9 @@
  * the input view
  */
 - (NSArray*) peekSubviewFromSubview:(SLPaperView*)obj{
+    if(!obj){
+        return [NSArray arrayWithArray:self.subviews];
+    }
     if([self containsSubview:obj]){
         NSInteger index = [self.subviews indexOfObject:obj] + 1;
         NSInteger count = [self.subviews count];
@@ -57,6 +60,7 @@
 }
 
 -(SLPaperView*) getPageBelow:(SLPaperView*)page{
+    if(!page) return page;
     NSInteger index = [self.subviews indexOfObject:page];
     if(index != 0){
         return [self.subviews objectAtIndex:index-1];
