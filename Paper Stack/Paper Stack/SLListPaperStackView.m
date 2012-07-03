@@ -73,12 +73,13 @@
     SLPaperView* topPage = [visibleStackHolder peekSubview];
     NSInteger numberOfHiddenRows = MAX(0, topPage.rowInListView - 1);
 
+    // final frame when the page is in the list view
     CGRect finalFrame = [page frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
     CGPoint offset = CGPointMake(0, numberOfHiddenRows * (rowHeight + bufferWidth));
     finalFrame.origin.x -= offset.x;
     finalFrame.origin.y -= offset.y;
-    //
-    // create some helper variables for the old/new frames
+    
+    // create some helper variables for the old frame
     CGFloat currX = oldFrame.origin.x;
     CGFloat currY = oldFrame.origin.y;
     CGFloat currWidth = oldFrame.size.width;
@@ -331,6 +332,13 @@
     [tapGesture setEnabled:NO];
 }
 
+-(NSInteger) indexOfPageInCompleteStack:(SLPaperView*)page{
+    if([visibleStackHolder containsSubview:page]){
+        return [visibleStackHolder.subviews indexOfObject:page];
+    }else{
+        return [visibleStackHolder.subviews count] + [hiddenStackHolder.subviews indexOfObject:page];
+    }
+}
 
 
 

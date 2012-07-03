@@ -24,4 +24,17 @@
 
 -(void) cancelledScalingReallySmall:(SLPaperView*)page;
 
+/**
+ * returns the index of the page within the total
+ * stack of visible and hidden stacks.
+ *
+ * the index for a visible page is its index in
+ * visibleStackHolder subviews
+ *
+ * the index for a hidden page is the count of
+ * all visible pages + the index in the hidden
+ * stack
+ */
+-(NSInteger) indexOfPageInCompleteStack:(SLPaperView*)page;
+
 @end
