@@ -18,4 +18,10 @@
 
 -(void) finishedPanningAndScalingPage:(SLPaperView*)page intoBezel:(SLBezelDirection)direction fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withVelocity:(CGPoint)velocity;
 
+-(void) isBeginningToScaleReallySmall:(SLPaperView*)page;
+
+-(void) finishedScalingReallySmall:(SLPaperView*)page;
+
+-(void) cancelledScalingReallySmall:(SLPaperView*)page;
+
 @end

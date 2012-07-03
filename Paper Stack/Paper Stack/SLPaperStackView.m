@@ -758,6 +758,18 @@
     }
 }
 
+-(void) isBeginningToScaleReallySmall:(SLPaperView *)page{
+    debug_NSLog(@"is small scale");
+}
+
+-(void) finishedScalingReallySmall:(SLPaperView *)page{
+    debug_NSLog(@"finished small scale");
+}
+
+-(void) cancelledScalingReallySmall:(SLPaperView *)page{
+    debug_NSLog(@"cancelled small scale");
+}
+
 
 
 #pragma mark - Page Animation and Navigation Helpers

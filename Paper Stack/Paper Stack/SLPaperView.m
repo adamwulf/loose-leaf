@@ -159,11 +159,17 @@
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
        panGesture.state == UIGestureRecognizerStateEnded ||
        panGesture.state == UIGestureRecognizerStateFailed){
-        [self.delegate finishedPanningAndScalingPage:self 
-                                           intoBezel:panGesture.didExitToBezel
-                                           fromFrame:frameOfPageAtBeginningOfGesture
-                                             toFrame:self.frame
-                                        withVelocity:velocity];
+        
+        if(scale < kMinPageZoom){
+            [self.delegate finishedScalingReallySmall:self];
+        }else{
+            [self.delegate finishedPanningAndScalingPage:self 
+                                               intoBezel:panGesture.didExitToBezel
+                                               fromFrame:frameOfPageAtBeginningOfGesture
+                                                 toFrame:self.frame
+                                            withVelocity:velocity];
+        }
+        
         isBeingPannedAndZoomed = NO;
         return;
     }else if(panGesture.numberOfTouches == 1){
@@ -241,11 +247,18 @@
         // if i begin scaling an already zoomed in page, the gesture's default is the re-begin the zoom at 1.0x
         // even though it may be 2x of our page size. so we need to remember the current scale in preGestureScale
         // and multiply that by the gesture's scale value. this gives us the scale value as a factor of the superview
+        
+        BOOL didCancelSmallScale = NO;
+        if(targetScale >= kMinPageZoom && scale < kMinPageZoom){
+            didCancelSmallScale = YES;
+        }
         if(targetScale > kMaxPageZoom){
             scale = kMaxPageZoom;
-        }else if(targetScale < kMinPageZoom){
+            if(didCancelSmallScale) [self.delegate cancelledScalingReallySmall:self];
+        }else if(targetScale < kMinPageZoom && scale >= kMinPageZoom){
             // 0.75 is zoom minimum
             scale = kMinPageZoom;
+            [self.delegate isBeginningToScaleReallySmall:self];
         }else if((targetScale >= 1 && scaleDiff > kMinScaleDelta) ||
                  (targetScale < 1 && scaleDiff > kMinScaleDelta / 2)){
             //
@@ -263,6 +276,7 @@
                 scale -= (scale - targetScale) / 5;
             }
 //            scale = targetScale;
+            if(didCancelSmallScale) [self.delegate cancelledScalingReallySmall:self];
         }
     }
     
