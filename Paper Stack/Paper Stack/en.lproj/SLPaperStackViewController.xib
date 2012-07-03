@@ -31,19 +31,18 @@
 				<string key="IBProxiedObjectIdentifier">IBFirstResponder</string>
 				<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 			</object>
-			<object class="IBUIView" id="709357137">
+			<object class="IBUIView" id="748969639">
 				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">292</int>
 				<array class="NSMutableArray" key="NSSubviews">
-					<object class="IBUIScrollView" id="507413064">
-						<reference key="NSNextResponder" ref="709357137"/>
+					<object class="IBUIScrollView" id="276506755">
+						<reference key="NSNextResponder" ref="748969639"/>
 						<int key="NSvFlags">274</int>
 						<string key="NSFrameSize">{768, 1024}</string>
-						<reference key="NSSuperview" ref="709357137"/>
+						<reference key="NSSuperview" ref="748969639"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
-						<object class="NSColor" key="IBUIBackgroundColor" id="956652651">
+						<object class="NSColor" key="IBUIBackgroundColor" id="546410821">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MCAwAA</bytes>
 						</object>
@@ -52,12 +51,13 @@
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<bool key="IBUIAlwaysBounceVertical">YES</bool>
 						<bool key="IBUIShowsHorizontalScrollIndicator">NO</bool>
+						<bool key="IBUIShowsVerticalScrollIndicator">NO</bool>
 					</object>
 				</array>
 				<string key="NSFrameSize">{768, 1024}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="507413064"/>
+				<reference key="NSNextKeyView" ref="276506755"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">10</int>
@@ -4446,7 +4446,7 @@ AAgAAAAIAAIACAACAAAAAgAAAAEAAQABAAE</bytes>
 								</object>
 							</array>
 						</array>
-						<reference key="NSColor" ref="956652651"/>
+						<reference key="NSColor" ref="546410821"/>
 					</object>
 					<string key="IBUIColorCocoaTouchKeyPath">scrollViewTexturedBackgroundColor</string>
 				</object>
@@ -4459,7 +4459,7 @@ AAgAAAAIAAIACAACAAAAAgAAAAEAAQABAAE</bytes>
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">stackView</string>
 						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="507413064"/>
+						<reference key="destination" ref="276506755"/>
 					</object>
 					<int key="connectionID">6</int>
 				</object>
@@ -4467,7 +4467,7 @@ AAgAAAAIAAIACAACAAAAAgAAAAEAAQABAAE</bytes>
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">view</string>
 						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="709357137"/>
+						<reference key="destination" ref="748969639"/>
 					</object>
 					<int key="connectionID">9</int>
 				</object>
@@ -4493,16 +4493,16 @@ AAgAAAAIAAIACAACAAAAAgAAAAEAAQABAAE</bytes>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">8</int>
-						<reference key="object" ref="709357137"/>
+						<reference key="object" ref="748969639"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="507413064"/>
+							<reference ref="276506755"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">5</int>
-						<reference key="object" ref="507413064"/>
-						<reference key="parent" ref="709357137"/>
+						<reference key="object" ref="276506755"/>
+						<reference key="parent" ref="748969639"/>
 					</object>
 				</array>
 			</object>

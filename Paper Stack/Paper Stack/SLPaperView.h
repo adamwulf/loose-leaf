@@ -50,6 +50,7 @@
 @property (nonatomic, assign) BOOL isBrandNewPage;
 
 -(BOOL) willExitToBezel:(SLBezelDirection)bezelDirection;
+
 -(void) cancelAllGestures;
 -(void) disableAllGestures;
 -(void) enableAllGestures;

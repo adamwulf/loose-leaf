@@ -8,6 +8,7 @@
 
 #import "SLListPaperStackView.h"
 #import "SLPaperView+ListView.h"
+#import "UIView+Debug.h"
 
 @implementation SLListPaperStackView
 
@@ -30,8 +31,23 @@
     columnWidth = screenWidth / 4;
     columnHeight = columnWidth * screenHeight / screenWidth;
     bufferWidth = columnWidth / 4;
+    
+    tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapScrollView:)];
+    [tapGesture setNumberOfTapsRequired:1];
+    [tapGesture setNumberOfTouchesRequired:1];
+    tapGesture.enabled = NO;
+    [self addGestureRecognizer:tapGesture];
+    
     [super awakeFromNib];
 }
+
+#pragma mark - SLPaperViewDelegate - Tap Gesture
+
+-(void) didTapScrollView:(UITapGestureRecognizer*)_tapGesture{
+    debug_NSLog(@"tapped at %f %f", [tapGesture locationInView:self].x, [tapGesture locationInView:self].y);
+}
+
+#pragma mark - SLPaperViewDelegate - Paper View
 
 -(CGRect) zoomToListFrameForPage:(SLPaperView*)page oldToFrame:(CGRect)oldFrame withTrust:(CGFloat)percentageToTrustToFrame{
     
@@ -175,6 +191,7 @@
         [self setContentOffset:CGPointMake(0, numberOfHiddenRows * (bufferWidth + columnHeight)) animated:NO];
         [self setContentSize:CGSizeMake(screenWidth, contentHeight)];
         [visibleStackHolder setClipsToBounds:NO];
+        [tapGesture setEnabled:YES];
     }];
     [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
 }
@@ -182,6 +199,7 @@
 -(void) cancelledScalingReallySmall:(SLPaperView *)page{
     debug_NSLog(@"cancelled small scale");
     [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
+    [tapGesture setEnabled:NO];
 }
 
 
