@@ -29,35 +29,41 @@
 */
 
 -(CGRect) zoomToListFrameForPage:(SLPaperView*)page oldToFrame:(CGRect)toFrame withTrust:(CGFloat)percentageToTrustToFrame{
-    debug_NSLog(@"ok, begin zooming to list view %f complete", percentageToTrustToFrame);
-    NSInteger indexOfTopVisiblePage = [visibleStackHolder.subviews count];
-    NSInteger columnOfTopVisiblePage = (indexOfTopVisiblePage - 1) % 3;
-    NSInteger rowOfTopVisiblePage = floor((indexOfTopVisiblePage - 1) / 3);
-    NSInteger indexOfPage = [visibleStackHolder.subviews indexOfObject:page];
-    NSInteger columnOfPage = (indexOfPage - 1) % 3;
-    NSInteger rowOfPage = floor((indexOfPage - 1) / 3);
+    //
+    // screen and column constants
     CGFloat screenWidth = self.frame.size.width;
     CGFloat screenHeight = self.frame.size.height;
     CGFloat columnWidth = screenWidth / 4;
     CGFloat columnHeight = columnWidth * screenHeight / screenWidth;
     CGFloat bufferWidth = columnWidth / 4;
+
+    //
+    // page column and row
+    NSInteger indexOfPage = [visibleStackHolder.subviews indexOfObject:page];
+    NSInteger columnOfPage = indexOfPage % 3;
+    NSInteger rowOfPage = floor(indexOfPage / 3);
+
+    //
+    // for now, we'll assume the page is being pulled from
+    // it's containers bounds
+    CGRect oldFrame = toFrame;
+    
+    
     CGRect newFrame = toFrame;
     CGFloat finalX = bufferWidth + bufferWidth * columnOfPage + columnWidth * columnOfPage;
-    CGFloat finalY = bufferWidth + bufferWidth * (rowOfTopVisiblePage - rowOfPage) + columnHeight * (rowOfTopVisiblePage - rowOfPage);
-    CGFloat currX = toFrame.origin.x;
-    CGFloat currY = toFrame.origin.y;
-    CGFloat currWidth = screenWidth;
-    CGFloat currHeight = screenHeight;
+    CGFloat finalY = bufferWidth + bufferWidth * rowOfPage + columnHeight * rowOfPage;
+    CGFloat currX = oldFrame.origin.x;
+    CGFloat currY = oldFrame.origin.y;
+    CGFloat currWidth = oldFrame.size.width;
+    CGFloat currHeight = oldFrame.size.height;
     CGFloat finalWidth = kListPageZoom * screenWidth;
     CGFloat finalHeight = kListPageZoom * screenHeight;
     newFrame.origin.x = finalX - (finalX - currX) * percentageToTrustToFrame;
     newFrame.origin.y = finalY - (finalY - currY) * percentageToTrustToFrame;
-    if(page != [visibleStackHolder peekSubview]){
-        newFrame.size.width = finalWidth - (finalWidth - currWidth) * percentageToTrustToFrame;
-        newFrame.size.height = finalHeight - (finalHeight - currHeight) * percentageToTrustToFrame;
-    }
+    newFrame.size.width = finalWidth - (finalWidth - currWidth) * percentageToTrustToFrame;
+    newFrame.size.height = finalHeight - (finalHeight - currHeight) * percentageToTrustToFrame;
     
-    debug_NSLog(@"index: %d  column: %d    x: %f  x2: %f", indexOfPage, columnOfPage, toFrame.origin.x, newFrame.origin.x);
+    debug_NSLog(@"index:%d row:%d column: %d    x: %f  x2: %f", indexOfPage, rowOfPage, columnOfPage, toFrame.origin.x, newFrame.origin.x);
     return newFrame;
 }
 
@@ -80,10 +86,10 @@
         
         
         NSInteger indexOfTopVisiblePage = [visibleStackHolder.subviews indexOfObject:page];
-        NSInteger columnOfTopVisiblePage = (indexOfTopVisiblePage - 1) % 3;
-        NSInteger numberOfViewsAboveTopPageInList = MIN(6 + columnOfTopVisiblePage, [visibleStackHolder.subviews indexOfObject:page]);
+        NSInteger columnOfTopVisiblePage = indexOfTopVisiblePage % 3;
+        NSInteger numberOfViewsBelowTopPageInList = MIN(3 + columnOfTopVisiblePage, [visibleStackHolder.subviews indexOfObject:page]);
         
-        for(int i=0;i<numberOfViewsAboveTopPageInList;i++){
+        for(int i=0;i<numberOfViewsBelowTopPageInList;i++){
             if(indexOfTopVisiblePage - 1 - i > 0){
                 SLPaperView* nonTopPage = [visibleStackHolder.subviews objectAtIndex:(indexOfTopVisiblePage - 1 - i)];
                 nonTopPage.frame = [self zoomToListFrameForPage:nonTopPage oldToFrame:visibleStackHolder.bounds withTrust:percentageToTrustToFrame];
@@ -130,20 +136,22 @@
 }
 
 -(void) finishedScalingReallySmall:(SLPaperView *)page{
+    
+    [page disableAllGestures];
+    
     NSInteger indexOfTopVisiblePage = [visibleStackHolder.subviews indexOfObject:page];
-    NSInteger columnOfTopVisiblePage = (indexOfTopVisiblePage - 1) % 3;
-    NSInteger numberOfViewsAboveTopPageInList = MIN(6 + columnOfTopVisiblePage, [visibleStackHolder.subviews indexOfObject:page]);
+    NSInteger columnOfTopVisiblePage = indexOfTopVisiblePage % 3;
+    NSInteger numberOfViewsBelowTopPageInList = MIN(3 + columnOfTopVisiblePage, [visibleStackHolder.subviews indexOfObject:page]);
     
     debug_NSLog(@"finished small scale");
     [UIView beginAnimations:@"pages" context:nil];
-    [UIView setAnimationDelay:3.0];
+    [UIView setAnimationDelay:1.0];
     [UIView setAnimationDuration:3.0];
-    for(int i=0;i<numberOfViewsAboveTopPageInList + 1;i++){
-        if(indexOfTopVisiblePage - i > 0){
-            SLPaperView* nonTopPage = [visibleStackHolder.subviews objectAtIndex:(indexOfTopVisiblePage - i)];
-            CGRect rect = [self zoomToListFrameForPage:nonTopPage oldToFrame:visibleStackHolder.bounds withTrust:0.0];
-            debug_NSLog(@"newfr: x:%f y:%f w:%f h:%f", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
-            nonTopPage.frame = rect;
+    for(int i=0;i<numberOfViewsBelowTopPageInList + 1;i++){
+        if(indexOfTopVisiblePage - i >= 0){
+            SLPaperView* aPage = [visibleStackHolder.subviews objectAtIndex:(indexOfTopVisiblePage - i)];
+            CGRect rect = [self zoomToListFrameForPage:aPage oldToFrame:page.frame withTrust:0.0];
+            aPage.frame = rect;
         }
     }
     [UIView commitAnimations];
