@@ -248,7 +248,9 @@
     // page, and just move them immediately
     //
     // this helps pretty dramatically with the animation
-    // performance
+    // performance.
+    //
+    // also, turn off gestures
     SLPaperView* lastPage = nil;
     for(SLPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
         NSInteger indexOfAPage = [visibleStackHolder.subviews indexOfObject:aPage];
@@ -264,6 +266,8 @@
                 lastPage = aPage;
             }
         }
+        // gestures aren't allowed in list view
+        [aPage disableAllGestures];
     }
     
     // ok, animate all the views in the visible stack!
@@ -286,8 +290,6 @@
                     break;
                 }
             }
-            // gestures aren't allowed in list view
-            [aPage disableAllGestures];
         }
     } completion:^(BOOL finished){
         //
