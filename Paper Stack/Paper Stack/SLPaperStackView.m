@@ -1039,7 +1039,7 @@
         theAnimation.fromValue = (id) page.layer.shadowPath;
         theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:page.bounds.size];
         [page.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
-        [UIView animateWithDuration:.15 delay:delay options:UIViewAnimationOptionAllowUserInteraction
+        [UIView animateWithDuration:.15 delay:delay options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState
                          animations:^(void){
                              page.scale = 1;
                              CGRect bounceFrame = self.bounds;
@@ -1050,7 +1050,7 @@
                              page.frame = bounceFrame;
                          } completion:^(BOOL finished){
                              if(finished){
-                                 [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionAllowUserInteraction
+                                 [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState
                                                   animations:^(void){
                                                       page.frame = self.bounds;
                                                       page.scale = 1;
@@ -1058,7 +1058,7 @@
                              }
                          }];
     }else{
-        [UIView animateWithDuration:0.15 delay:delay options:UIViewAnimationOptionAllowUserInteraction
+        [UIView animateWithDuration:0.15 delay:delay options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState
                          animations:^(void){
                              page.frame = self.bounds;
                              page.scale = 1;

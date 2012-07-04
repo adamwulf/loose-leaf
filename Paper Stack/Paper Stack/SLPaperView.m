@@ -47,12 +47,17 @@
         [self addGestureRecognizer:panGesture];
         
         [self.layer setMasksToBounds:NO ];
+        
+        //
+        // TODO
+        //
+        // only the top visible page should have shadow ?
         [self.layer setShadowColor:[[UIColor blackColor ] CGColor ] ];
         [self.layer setShadowOpacity:0.7 ];
         [self.layer setShadowRadius:kShadowDepth ];
-        [self.layer setShadowPath:[[SLShadowManager sharedInstace] getShadowForSize:self.bounds.size]];
         [self.layer setShadowOffset:CGSizeMake( 0 , 0 ) ];
         [self.layer setShouldRasterize:YES ];
+        [self.layer setShadowPath:[[SLShadowManager sharedInstace] getShadowForSize:self.bounds.size]];
     }
     return self;
 }
@@ -161,6 +166,7 @@
        panGesture.state == UIGestureRecognizerStateFailed){
         
         if(scale < kMinPageZoom && panGesture.didExitToBezel == SLBezelDirectionNone){
+            isBeingPannedAndZoomed = NO;
             if((_panGesture.scaleDirection & SLScaleDirectionSmaller) == SLScaleDirectionSmaller){
                 [self.delegate finishedScalingReallySmall:self];
             }else{
