@@ -3,7 +3,7 @@
 //  Paper Stack
 //
 //  Created by Adam Wulf on 6/8/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Skylight, LLC. All rights reserved.
 //
 
 #ifndef Paper_Stack_Contants_h
@@ -22,8 +22,8 @@
 #define kAnimationDelay 0.05
 
 // List View
-#define kNumberOfColumnsInListView 4
-#define kListPageZoom .20
+#define kNumberOfColumnsInListView 3
+#define kListPageZoom .25
 
 // List View Gesture
 #define kZoomToListPageZoom .4
