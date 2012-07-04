@@ -31,13 +31,13 @@
     SLLeftArrow* leftArrow;
     SLRightArrow* rightArrow;
     
-    SLBezelInRightGestureRecognizer* fromRightBezelGesture;
-    
     // track if we're currently pulling in a page
     // from the bezel
     SLPaperView* inProgressOfBezeling;
     
     @protected
+    SLBezelInRightGestureRecognizer* fromRightBezelGesture;
+    
     UIView* visibleStackHolder;
     UIView* hiddenStackHolder;
     UIView* bezelStackHolder;

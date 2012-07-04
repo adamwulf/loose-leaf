@@ -285,6 +285,8 @@
         initialScrollOffsetFromTransitionToListView = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
         // from offset/height, we know which views will be visible
         pagesThatWillBeVisibleAfterTransitionToListView = [[self pagesInVisibleRowsOfListView] retain];
+        // bezeling in from right is no longer allowed
+        [fromRightBezelGesture setEnabled:NO];
         //
         // ok, we're allowed to zoom out to list view, so save the frames
         // of all the pages in the visible stack
@@ -424,6 +426,7 @@
     [tapGesture setEnabled:NO];
     [pagesThatWillBeVisibleAfterTransitionToListView release];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
+    [fromRightBezelGesture setEnabled:YES];
     
     if(![page isBeingPannedAndZoomed]){
         [self animatePageToFullScreen:[visibleStackHolder peekSubview] withDelay:0 withBounce:YES onComplete:^(BOOL finished){
