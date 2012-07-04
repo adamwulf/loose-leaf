@@ -314,7 +314,6 @@
             // visible stack
             [hiddenStackHolder pushSubview:[bezelStackHolder peekSubview]];
         }
-        
         void(^finishedBlock)(BOOL finished)  = ^(BOOL finished){
             bezelStackHolder.frame = hiddenStackHolder.frame;
         };
@@ -1039,7 +1038,7 @@
         theAnimation.fromValue = (id) page.layer.shadowPath;
         theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:page.bounds.size];
         [page.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
-        [UIView animateWithDuration:.15 delay:delay options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState
+        [UIView animateWithDuration:.15 delay:delay options:UIViewAnimationOptionAllowUserInteraction
                          animations:^(void){
                              page.scale = 1;
                              CGRect bounceFrame = self.bounds;
@@ -1050,7 +1049,7 @@
                              page.frame = bounceFrame;
                          } completion:^(BOOL finished){
                              if(finished){
-                                 [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState
+                                 [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionAllowUserInteraction
                                                   animations:^(void){
                                                       page.frame = self.bounds;
                                                       page.scale = 1;
@@ -1058,7 +1057,7 @@
                              }
                          }];
     }else{
-        [UIView animateWithDuration:0.15 delay:delay options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState
+        [UIView animateWithDuration:0.15 delay:delay options:UIViewAnimationOptionAllowUserInteraction
                          animations:^(void){
                              page.frame = self.bounds;
                              page.scale = 1;
