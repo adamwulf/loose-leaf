@@ -19,6 +19,7 @@
 @synthesize didExitToBezel;
 @synthesize velocity = _averageVelocity;
 @synthesize numberOfRepeatingBezels;
+@synthesize scaleDirection;
 
 NSInteger const  minimumNumberOfTouches = 2;
 
@@ -97,13 +98,24 @@ NSInteger const  minimumNumberOfTouches = 2;
         }
         if(self.numberOfTouches == 1){
             initialDistance = 0;
+            if(scale < 1){
+                scaleDirection = SLScaleDirectionLarger;
+            }else if(scale > 1){
+                scaleDirection = SLScaleDirectionSmaller;
+            }
             scale = 1;
         }
         if([validTouches count] >= 2 && !initialDistance){
             initialDistance = [self distanceBetweenTouches:validTouches];
         }
         if([validTouches count] >= 2 && initialDistance){
-            scale = [self distanceBetweenTouches:validTouches] / initialDistance;
+            CGFloat newScale = [self distanceBetweenTouches:validTouches] / initialDistance;
+            if(newScale > scale){
+                scaleDirection = SLScaleDirectionLarger;
+            }else if(newScale < scale){
+                scaleDirection = SLScaleDirectionSmaller;
+            }
+            scale = newScale;
         }
     }
     [self calculateVelocity];
@@ -190,6 +202,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     [validTouches removeAllObjects];
     [ignoredTouches removeAllObjects];
     didExitToBezel = SLBezelDirectionNone;
+    scaleDirection = SLScaleDirectionNone;
     [velocities removeAllObjects];
     secondToLastTouchDidBezel = NO;
 }

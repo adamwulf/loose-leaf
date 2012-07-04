@@ -51,5 +51,7 @@
 -(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated onComplete:(void(^)(BOOL finished))completionBlock;
 -(void) popTopPageOfHiddenStack;
 -(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(UIView*)stackView;
+-(void) realignPagesInVisibleStackExcept:(SLPaperView*)page animated:(BOOL)animated;
+-(void) animatePageToFullScreen:(SLPaperView*)page withDelay:(CGFloat)delay withBounce:(BOOL)bounce onComplete:(void(^)(BOOL finished))completionBlock;
 
 @end

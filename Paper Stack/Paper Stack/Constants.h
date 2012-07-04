@@ -57,5 +57,12 @@ enum {
 };
 typedef NSUInteger SLBezelPanDirection;
 
+enum {
+    SLScaleDirectionNone = 0,
+    SLScaleDirectionLarger  = 1 << 0,
+    SLScaleDirectionSmaller   = 1 << 1
+};
+typedef NSUInteger SLBezelScaleDirection;
+
 
 #endif
