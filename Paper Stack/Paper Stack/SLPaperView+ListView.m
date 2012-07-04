@@ -22,20 +22,14 @@
     return columnOfPage;
 }
 
--(CGRect) frameForListViewGivenRowHeight:(CGFloat)columnHeight andColumnWidth:(CGFloat)columnWidth{
+-(CGRect) frameForListViewGivenRowHeight:(CGFloat)rowHeight andColumnWidth:(CGFloat)columnWidth{
     CGFloat bufferWidth = kListPageZoom * columnWidth;
-    CGFloat finalX = bufferWidth + bufferWidth * self.columnInListView + columnWidth * self.columnInListView;
-    CGFloat finalY = bufferWidth + bufferWidth * self.rowInListView + columnHeight * self.rowInListView;
-    CGFloat finalWidth = columnWidth;
-    CGFloat finalHeight = columnHeight;
     
-    //
-    // ok, set the new frame that we'll return
     CGRect newFrame = CGRectZero;
-    newFrame.origin.x = finalX;
-    newFrame.origin.y = finalY;
-    newFrame.size.width = finalWidth;
-    newFrame.size.height = finalHeight;
+    newFrame.origin.x = bufferWidth + bufferWidth * self.columnInListView + columnWidth * self.columnInListView;
+    newFrame.origin.y = bufferWidth + bufferWidth * self.rowInListView + rowHeight * self.rowInListView;
+    newFrame.size.width = columnWidth;
+    newFrame.size.height = rowHeight;
 
     return newFrame;
 }
