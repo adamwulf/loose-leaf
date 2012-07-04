@@ -44,8 +44,15 @@
 
 #pragma mark - Future Model Methods
 
+/**
+ * this will help decide which pages will
+ * be animated out into list view from page
+ * view.
+ *
+ * the goal is to return as few pages as possible
+ * so that we're not animating very many views
+ */ 
 -(NSArray*) pagesInVisibleRowsOfListView{
-    
     if(!self.scrollEnabled){
         //
         // ok, scroling is not enabled, which means we're
@@ -71,13 +78,30 @@
 
         return pagesThatWouldBeVisible;
     }
-    
     //
     // TODO: handle case where scrolling is enabled
     return nil;
 }
 
+/**
+ * this will return the scrollview's ideal contentOffset
+ * position that will show the page
+ * in the 2nd row of the view if possible
+ */
+-(CGPoint) offsetNeededToShowPage:(SLPaperView*)page{
+    //
+    // calculate the number of rows that will be hidden from offset
+    SLPaperView* topPage = [visibleStackHolder peekSubview];
+    NSInteger numberOfHiddenRows = MAX(0, topPage.rowInListView - 1);
+    return CGPointMake(0, numberOfHiddenRows * (bufferWidth + rowHeight));
+}
 
+-(CGFloat) contentHeightForAllPages{
+    SLPaperView* topHiddenPage = [hiddenStackHolder peekSubview];
+    NSInteger totalRows = topHiddenPage.rowInListView;
+    CGFloat contentHeight = (totalRows + 3) * (bufferWidth + rowHeight) + bufferWidth;
+    return contentHeight;
+}
 
 
 
@@ -106,18 +130,10 @@
  * up screen by numberOfHiddenRows
  */
 -(CGRect) zoomToListFrameForPage:(SLPaperView*)page oldToFrame:(CGRect)oldFrame withTrust:(CGFloat)percentageToTrustToFrame{
-    
-    //
-    // calculate the number of rows that will be hidden due to content offset
-    SLPaperView* topPage = [visibleStackHolder peekSubview];
-    NSInteger topRowMinusOne = topPage.rowInListView - 1;
-    NSInteger numberOfHiddenRows = MAX(0, topRowMinusOne);
-
     // final frame when the page is in the list view
     CGRect finalFrame = [page frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
-    CGPoint offset = CGPointMake(0, numberOfHiddenRows * (rowHeight + bufferWidth));
-    finalFrame.origin.x -= offset.x;
-    finalFrame.origin.y -= offset.y;
+    finalFrame.origin.x -= initialScrollOffsetFromTransitionToListView.x;
+    finalFrame.origin.y -= initialScrollOffsetFromTransitionToListView.y;
     
     //
     // ok, set the new frame that we'll return
@@ -245,6 +261,8 @@
     }else{
         [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
         pagesThatWillBeVisibleAfterTransitionToListView = [[self pagesInVisibleRowsOfListView] retain];
+        contentHeightFromTransitionToListView = [self contentHeightForAllPages];
+        initialScrollOffsetFromTransitionToListView = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
         //
         // ok, we're allowed to zoom out to list view, so save the frames
         // of all the pages in the visible stack
@@ -363,16 +381,9 @@
             aPage.frame = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
         }
         
-        //
-        // calculate the number of rows that will be hidden from offset
-        SLPaperView* topPage = [visibleStackHolder peekSubview];
-        SLPaperView* topHiddenPage = [hiddenStackHolder peekSubview];
-        NSInteger numberOfHiddenRows = MAX(0, topPage.rowInListView - 1);
-        NSInteger totalRows = topHiddenPage.rowInListView;
-        CGFloat contentHeight = (totalRows + 3) * (bufferWidth + rowHeight) + bufferWidth;
-        
-        [self setContentOffset:CGPointMake(0, numberOfHiddenRows * (bufferWidth + rowHeight)) animated:NO];
-        [self setContentSize:CGSizeMake(screenWidth, contentHeight)];
+        // set our content height/offset for the pages
+        [self setContentOffset:initialScrollOffsetFromTransitionToListView animated:NO];
+        [self setContentSize:CGSizeMake(screenWidth, contentHeightFromTransitionToListView)];
         [visibleStackHolder setClipsToBounds:NO];
         [hiddenStackHolder setClipsToBounds:NO];
         [tapGesture setEnabled:YES];
