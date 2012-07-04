@@ -21,11 +21,16 @@
 
 #define kAnimationDelay 0.05
 
-#define kListPageZoom .25
+// List View
+#define kNumberOfColumnsInListView 4
+#define kListPageZoom .20
+
+// List View Gesture
 #define kZoomToListPageZoom .4
 #define kMinPageZoom .7
 #define kMaxPageZoom 2.5
 
+// Page View
 #define kGutterWidthToDragPages 500
 #define kFingerWidth 40
 #define kFilteringFactor 0.2

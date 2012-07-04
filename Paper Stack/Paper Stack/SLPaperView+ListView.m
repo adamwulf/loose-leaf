@@ -12,13 +12,13 @@
 
 -(NSInteger) rowInListView{
     NSInteger indexOfPage = [self.delegate indexOfPageInCompleteStack:self];
-    NSInteger rowOfPage = floor(indexOfPage / 3);
+    NSInteger rowOfPage = floor(indexOfPage / kNumberOfColumnsInListView);
     return rowOfPage;
 }
 
 -(NSInteger) columnInListView{
     NSInteger indexOfPage = [self.delegate indexOfPageInCompleteStack:self];
-    NSInteger columnOfPage = indexOfPage % 3;
+    NSInteger columnOfPage = indexOfPage % kNumberOfColumnsInListView;
     return columnOfPage;
 }
 

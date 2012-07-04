@@ -42,7 +42,91 @@
     [super awakeFromNib];
 }
 
+#pragma mark - List View Enable / Disable Helper Methods
+
+/**
+ * list view is half enabled as the user
+ * gestures into the list view
+ *
+ * it is disabled when the user cancels the 
+ * gesture
+ */
+-(void) setListViewHalfEnabled:(BOOL)halfEnabled{
+    if(halfEnabled){
+        [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
+        // calculate height first, that'll help determine offset
+        contentHeightFromTransitionToListView = [self contentHeightForAllPages];
+        // ok, now we can get offset
+        initialScrollOffsetFromTransitionToListView = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
+        // from offset/height, we know which views will be visible
+        pagesThatWillBeVisibleAfterTransitionToListView = [[self pagesInVisibleRowsOfListView] retain];
+        // bezeling in from right is no longer allowed
+        [fromRightBezelGesture setEnabled:NO];
+    }else{
+        [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
+        [tapGesture setEnabled:NO];
+        [pagesThatWillBeVisibleAfterTransitionToListView release];
+        pagesThatWillBeVisibleAfterTransitionToListView = nil;
+        [fromRightBezelGesture setEnabled:YES];
+    }
+}
+
+/**
+ * a list view is entirely enabled when the user
+ * confirms the list view gesture.
+ *
+ * when the user taps to return to paper view,
+ * the list view is set to entirely disabled
+ */
+-(void) setListViewEntirelyEnabled:(BOOL)entirelyEnabled{
+    if(entirelyEnabled){
+        [visibleStackHolder setClipsToBounds:NO];
+        [hiddenStackHolder setClipsToBounds:NO];
+        [self setScrollEnabled:YES];
+        [tapGesture setEnabled:YES];
+        [pagesThatWillBeVisibleAfterTransitionToListView release];
+        pagesThatWillBeVisibleAfterTransitionToListView = nil;
+    }else{
+        // TODO allow user to disable list view
+    }
+}
+
+
+
+
 #pragma mark - Future Model Methods
+
+
+/**
+ * this will return the scrollview's ideal contentOffset
+ * position that will show the page
+ * in the 2nd row of the view if possible
+ */
+-(CGPoint) offsetNeededToShowPage:(SLPaperView*)page{
+    //
+    // calculate the number of rows that will be hidden from offset
+    SLPaperView* topPage = [visibleStackHolder peekSubview];
+    NSInteger numberOfHiddenRows = MAX(0, topPage.rowInListView - 1);
+    CGFloat contentHeight = [self contentHeightForAllPages];
+    CGPoint possiblePoint = CGPointMake(0, numberOfHiddenRows * (bufferWidth + rowHeight));
+    if(possiblePoint.y + self.frame.size.height > contentHeight){
+        possiblePoint.y = contentHeight - self.frame.size.height;
+    }
+    if(possiblePoint.y < 0) possiblePoint.y = 0;
+    return possiblePoint;
+}
+
+/**
+ * calculate the height of the entire list view
+ * from the number of both visible and hidden pages
+ */
+-(CGFloat) contentHeightForAllPages{
+    SLPaperView* topHiddenPage = [hiddenStackHolder peekSubview];
+    NSInteger totalRows = topHiddenPage.rowInListView;
+    // add 1 since rows start at 0
+    CGFloat contentHeight = (totalRows + 1) * (bufferWidth + rowHeight) + bufferWidth;
+    return contentHeight;
+}
 
 /**
  * this will help decide which pages will
@@ -95,40 +179,6 @@
     return nil;
 }
 
-/**
- * this will return the scrollview's ideal contentOffset
- * position that will show the page
- * in the 2nd row of the view if possible
- */
--(CGPoint) offsetNeededToShowPage:(SLPaperView*)page{
-    //
-    // calculate the number of rows that will be hidden from offset
-    SLPaperView* topPage = [visibleStackHolder peekSubview];
-    NSInteger numberOfHiddenRows = MAX(0, topPage.rowInListView - 1);
-    CGFloat contentHeight = [self contentHeightForAllPages];
-    CGPoint possiblePoint = CGPointMake(0, numberOfHiddenRows * (bufferWidth + rowHeight));
-    if(possiblePoint.y + self.frame.size.height > contentHeight){
-        possiblePoint.y = contentHeight - self.frame.size.height;
-    }
-    if(possiblePoint.y < 0) possiblePoint.y = 0;
-    return possiblePoint;
-}
-
--(CGFloat) contentHeightForAllPages{
-    SLPaperView* topHiddenPage = [hiddenStackHolder peekSubview];
-    NSInteger totalRows = topHiddenPage.rowInListView;
-    // add 1 since rows start at 0
-    CGFloat contentHeight = (totalRows + 1) * (bufferWidth + rowHeight) + bufferWidth;
-    return contentHeight;
-}
-
-
-
-#pragma mark - SLPaperViewDelegate - Tap Gesture
-
--(void) didTapScrollView:(UITapGestureRecognizer*)_tapGesture{
-    debug_NSLog(@"tapped at %f %f", [tapGesture locationInView:self].x, [tapGesture locationInView:self].y);
-}
 
 #pragma mark - SLPaperViewDelegate - Paper View
 
@@ -278,15 +328,7 @@
             }
         }];
     }else{
-        [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
-        // calculate height first, that'll help determine offset
-        contentHeightFromTransitionToListView = [self contentHeightForAllPages];
-        // ok, now we can get offset
-        initialScrollOffsetFromTransitionToListView = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
-        // from offset/height, we know which views will be visible
-        pagesThatWillBeVisibleAfterTransitionToListView = [[self pagesInVisibleRowsOfListView] retain];
-        // bezeling in from right is no longer allowed
-        [fromRightBezelGesture setEnabled:NO];
+        [self setListViewHalfEnabled:YES];
         //
         // ok, we're allowed to zoom out to list view, so save the frames
         // of all the pages in the visible stack
@@ -397,23 +439,16 @@
         // this means we need to keep the pages visually in the same place,
         // but adjust their frames and the content size/offset so
         // that the scrollview works.
-        [self setScrollEnabled:YES];
         for(SLPaperView* aPage in visibleStackHolder.subviews){
             aPage.frame = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
         }
         for(SLPaperView* aPage in hiddenStackHolder.subviews){
             aPage.frame = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
         }
-        
         // set our content height/offset for the pages
         [self setContentOffset:initialScrollOffsetFromTransitionToListView animated:NO];
         [self setContentSize:CGSizeMake(screenWidth, contentHeightFromTransitionToListView)];
-        [visibleStackHolder setClipsToBounds:NO];
-        [hiddenStackHolder setClipsToBounds:NO];
-        [tapGesture setEnabled:YES];
-        
-        [pagesThatWillBeVisibleAfterTransitionToListView release];
-        pagesThatWillBeVisibleAfterTransitionToListView = nil;
+        [self setListViewEntirelyEnabled:YES];
     }];
     //
     // now that the user has finished the gesture,
@@ -421,13 +456,11 @@
     [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
 }
 
+/**
+ * the user has cancelled the zoom-to-list gesture
+ */
 -(void) cancelledScalingReallySmall:(SLPaperView *)page{
-    [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
-    [tapGesture setEnabled:NO];
-    [pagesThatWillBeVisibleAfterTransitionToListView release];
-    pagesThatWillBeVisibleAfterTransitionToListView = nil;
-    [fromRightBezelGesture setEnabled:YES];
-    
+    [self setListViewHalfEnabled:NO];
     if(![page isBeingPannedAndZoomed]){
         [self animatePageToFullScreen:[visibleStackHolder peekSubview] withDelay:0 withBounce:YES onComplete:^(BOOL finished){
             [self realignPagesInVisibleStackExcept:[visibleStackHolder peekSubview] animated:NO];
@@ -440,6 +473,10 @@
     }
 }
 
+/**
+ * this delegate method tells the SLPageView where
+ * it sits in the combined visible/hidden stack
+ */
 -(NSInteger) indexOfPageInCompleteStack:(SLPaperView*)page{
     if([visibleStackHolder containsSubview:page]){
         return [visibleStackHolder.subviews indexOfObject:page];
@@ -449,5 +486,12 @@
 }
 
 
+
+
+#pragma mark - SLPaperViewDelegate - Tap Gesture
+
+-(void) didTapScrollView:(UITapGestureRecognizer*)_tapGesture{
+    debug_NSLog(@"tapped at %f %f", [tapGesture locationInView:self].x, [tapGesture locationInView:self].y);
+}
 
 @end
