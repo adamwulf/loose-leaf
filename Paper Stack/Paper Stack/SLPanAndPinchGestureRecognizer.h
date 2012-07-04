@@ -28,6 +28,8 @@
     SLBezelDirection bezelDirectionMask;
     // the direction that the user actually did exit, if any
     SLBezelDirection didExitToBezel;
+    // track the direction of the scale
+    SLBezelScaleDirection scaleDirection;
     
     //
     // store panning velocity so we can continue
@@ -51,6 +53,7 @@
 @property (nonatomic, readonly) CGPoint velocity;
 @property (nonatomic, assign) SLBezelDirection bezelDirectionMask;
 @property (nonatomic, readonly) SLBezelDirection didExitToBezel;
+@property (nonatomic, readonly) SLBezelScaleDirection scaleDirection;
 
 -(void) cancel;
 

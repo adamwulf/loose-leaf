@@ -161,7 +161,11 @@
        panGesture.state == UIGestureRecognizerStateFailed){
         
         if(scale < kMinPageZoom && panGesture.didExitToBezel == SLBezelDirectionNone){
-            [self.delegate finishedScalingReallySmall:self];
+            if((_panGesture.scaleDirection & SLScaleDirectionSmaller) == SLScaleDirectionSmaller){
+                [self.delegate finishedScalingReallySmall:self];
+            }else{
+                [self.delegate cancelledScalingReallySmall:self];
+            }
         }else{
             [self.delegate finishedPanningAndScalingPage:self 
                                                intoBezel:panGesture.didExitToBezel

@@ -392,6 +392,15 @@
     [tapGesture setEnabled:NO];
     [pagesThatWillBeVisibleAfterTransitionToListView release];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
+    
+    [self animatePageToFullScreen:[visibleStackHolder peekSubview] withDelay:0 withBounce:YES onComplete:^(BOOL finished){
+        [self realignPagesInVisibleStackExcept:[visibleStackHolder peekSubview] animated:NO];
+    }];
+    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationCurveLinear animations:^{
+        CGRect fr = visibleStackHolder.frame;
+        fr.origin.x = fr.size.width;
+        hiddenStackHolder.frame = fr;
+    } completion:nil];
 }
 
 -(NSInteger) indexOfPageInCompleteStack:(SLPaperView*)page{

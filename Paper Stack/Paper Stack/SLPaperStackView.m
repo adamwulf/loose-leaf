@@ -438,12 +438,16 @@
  * this will realign all the pages except the input page
  * to be scale 1 and (0,0) in the visibleStackHolder
  */
--(void) realignPagesInVisibleStackExcept:(SLPaperView*)page{
+-(void) realignPagesInVisibleStackExcept:(SLPaperView*)page animated:(BOOL)animated{
     for(SLPaperView* aPage in [[visibleStackHolder.subviews copy] autorelease]){
         if(aPage != page){
             if(!CGRectEqualToRect(aPage.frame, self.bounds)){
                 [aPage cancelAllGestures];
-                [self animatePageToFullScreen:aPage withDelay:0 withBounce:NO onComplete:nil];
+                if(animated){
+                    [self animatePageToFullScreen:aPage withDelay:0 withBounce:NO onComplete:nil];
+                }else{
+                    aPage.frame = self.bounds;
+                }
             }
         }
     }
@@ -663,7 +667,7 @@
             //
             // now that pages are sent to the hidden stack,
             // realign anything left in the visible stack
-            [self realignPagesInVisibleStackExcept:page];
+            [self realignPagesInVisibleStackExcept:page animated:YES];
         }else{
             //
             // they bezeled right a non-top page, just get
@@ -697,7 +701,7 @@
             //
             // just realign and log
             debug_NSLog(@"ERROR: released non-top page while top page was not held.");
-            [self realignPagesInVisibleStackExcept:nil];
+            [self realignPagesInVisibleStackExcept:nil animated:YES];
         }
         return;
     }
@@ -712,7 +716,7 @@
     // ============================================================================
     // all the actions below will move the top page only,
     // so it's safe to realign allothers
-    [self realignPagesInVisibleStackExcept:page];
+    [self realignPagesInVisibleStackExcept:page animated:YES];
 
     if(justFinishedPanningTheTopPage && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
         //
