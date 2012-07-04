@@ -110,7 +110,8 @@
     //
     // calculate the number of rows that will be hidden due to content offset
     SLPaperView* topPage = [visibleStackHolder peekSubview];
-    NSInteger numberOfHiddenRows = MAX(0, topPage.rowInListView - 1);
+    NSInteger topRowMinusOne = topPage.rowInListView - 1;
+    NSInteger numberOfHiddenRows = MAX(0, topRowMinusOne);
 
     // final frame when the page is in the list view
     CGRect finalFrame = [page frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
@@ -126,7 +127,6 @@
     newFrame.size.width = finalFrame.size.width - (finalFrame.size.width - oldFrame.size.width) * percentageToTrustToFrame;
     newFrame.size.height = finalFrame.size.height - (finalFrame.size.height - oldFrame.size.height) * percentageToTrustToFrame;
     
-    debug_NSLog(@"row:%d column: %d    x:%f y: %f", page.rowInListView, page.columnInListView, newFrame.origin.x, newFrame.origin.y);
     return newFrame;
 }
 
@@ -387,20 +387,21 @@
 }
 
 -(void) cancelledScalingReallySmall:(SLPaperView *)page{
-    debug_NSLog(@"cancelled small scale");
     [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
     [tapGesture setEnabled:NO];
     [pagesThatWillBeVisibleAfterTransitionToListView release];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
     
-    [self animatePageToFullScreen:[visibleStackHolder peekSubview] withDelay:0 withBounce:YES onComplete:^(BOOL finished){
-        [self realignPagesInVisibleStackExcept:[visibleStackHolder peekSubview] animated:NO];
-    }];
-    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationCurveLinear animations:^{
-        CGRect fr = visibleStackHolder.frame;
-        fr.origin.x = fr.size.width;
-        hiddenStackHolder.frame = fr;
-    } completion:nil];
+    if(![page isBeingPannedAndZoomed]){
+        [self animatePageToFullScreen:[visibleStackHolder peekSubview] withDelay:0 withBounce:YES onComplete:^(BOOL finished){
+            [self realignPagesInVisibleStackExcept:[visibleStackHolder peekSubview] animated:NO];
+        }];
+        [UIView animateWithDuration:0.1 delay:0 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationCurveLinear) animations:^{
+            CGRect fr = visibleStackHolder.frame;
+            fr.origin.x = fr.size.width;
+            hiddenStackHolder.frame = fr;
+        } completion:nil];
+    }
 }
 
 -(NSInteger) indexOfPageInCompleteStack:(SLPaperView*)page{
