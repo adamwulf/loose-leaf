@@ -64,16 +64,28 @@
         // two rows
         
         SLPaperView* aPage = [visibleStackHolder peekSubview];
-        SLPaperView* topVisiblePage = aPage;
         NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray arrayWithObject:aPage];
-        while((aPage = [visibleStackHolder getPageBelow:aPage]) && (topVisiblePage.rowInListView - 2 < aPage.rowInListView)){
-            [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
+        CGRect rectOfVisibleScroll = CGRectMake(initialScrollOffsetFromTransitionToListView.x, initialScrollOffsetFromTransitionToListView.y, screenWidth, screenHeight);
+        while((aPage = [visibleStackHolder getPageBelow:aPage])){
+            CGRect frameOfPage = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
+            if(frameOfPage.origin.y + frameOfPage.size.height > rectOfVisibleScroll.origin.y &&
+               frameOfPage.origin.y < rectOfVisibleScroll.origin.y + rectOfVisibleScroll.size.height){
+                [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
+            }else{
+                break;
+            }
         }
         
         aPage = [hiddenStackHolder.subviews objectAtIndex:0];
         [pagesThatWouldBeVisible addObject:aPage];
-        while((aPage = [hiddenStackHolder getPageAbove:aPage]) && (topVisiblePage.rowInListView + 3 > aPage.rowInListView)){
-            [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
+        while((aPage = [hiddenStackHolder getPageAbove:aPage])){
+            CGRect frameOfPage = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
+            if(frameOfPage.origin.y + frameOfPage.size.height > rectOfVisibleScroll.origin.y &&
+               frameOfPage.origin.y < rectOfVisibleScroll.origin.y + rectOfVisibleScroll.size.height){
+                [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
+            }else{
+                break;
+            }
         }
 
         return pagesThatWouldBeVisible;
@@ -93,13 +105,20 @@
     // calculate the number of rows that will be hidden from offset
     SLPaperView* topPage = [visibleStackHolder peekSubview];
     NSInteger numberOfHiddenRows = MAX(0, topPage.rowInListView - 1);
-    return CGPointMake(0, numberOfHiddenRows * (bufferWidth + rowHeight));
+    CGFloat contentHeight = [self contentHeightForAllPages];
+    CGPoint possiblePoint = CGPointMake(0, numberOfHiddenRows * (bufferWidth + rowHeight));
+    if(possiblePoint.y + self.frame.size.height > contentHeight){
+        possiblePoint.y = contentHeight - self.frame.size.height;
+    }
+    if(possiblePoint.y < 0) possiblePoint.y = 0;
+    return possiblePoint;
 }
 
 -(CGFloat) contentHeightForAllPages{
     SLPaperView* topHiddenPage = [hiddenStackHolder peekSubview];
     NSInteger totalRows = topHiddenPage.rowInListView;
-    CGFloat contentHeight = (totalRows + 3) * (bufferWidth + rowHeight) + bufferWidth;
+    // add 1 since rows start at 0
+    CGFloat contentHeight = (totalRows + 1) * (bufferWidth + rowHeight) + bufferWidth;
     return contentHeight;
 }
 
@@ -260,9 +279,12 @@
         }];
     }else{
         [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
-        pagesThatWillBeVisibleAfterTransitionToListView = [[self pagesInVisibleRowsOfListView] retain];
+        // calculate height first, that'll help determine offset
         contentHeightFromTransitionToListView = [self contentHeightForAllPages];
+        // ok, now we can get offset
         initialScrollOffsetFromTransitionToListView = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
+        // from offset/height, we know which views will be visible
+        pagesThatWillBeVisibleAfterTransitionToListView = [[self pagesInVisibleRowsOfListView] retain];
         //
         // ok, we're allowed to zoom out to list view, so save the frames
         // of all the pages in the visible stack
