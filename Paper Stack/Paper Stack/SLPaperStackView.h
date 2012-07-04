@@ -47,9 +47,9 @@
 
 @property (nonatomic, readonly) UIView* stackHolder;
 
-
 -(void) addPaperToBottomOfStack:(SLPaperView*)page;
 -(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated onComplete:(void(^)(BOOL finished))completionBlock;
 -(void) popTopPageOfHiddenStack;
+-(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(UIView*)stackView;
 
 @end

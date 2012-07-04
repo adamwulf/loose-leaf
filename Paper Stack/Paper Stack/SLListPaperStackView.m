@@ -143,6 +143,8 @@
             NSInteger indexOfTopVisiblePage = [visibleStackHolder.subviews indexOfObject:page];
             NSInteger columnOfTopVisiblePage = indexOfTopVisiblePage % 3;
             NSInteger numberOfViewsBelowTopPageInList = MIN(3 + columnOfTopVisiblePage, [visibleStackHolder.subviews indexOfObject:page]);
+            NSInteger numberOfViewsAboveTopPageInList = MIN(11, [hiddenStackHolder.subviews count]);
+            
             for(int i=0;i<numberOfViewsBelowTopPageInList;i++){
                 if(indexOfTopVisiblePage - 1 - i >= 0){
                     SLPaperView* nonTopPage = [visibleStackHolder.subviews objectAtIndex:(indexOfTopVisiblePage - 1 - i)];
@@ -150,6 +152,22 @@
                     nonTopPage.frame = [self zoomToListFrameForPage:nonTopPage oldToFrame:oldFrame withTrust:percentageToTrustToFrame];
                 }
             }
+            for(SLPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
+                NSInteger indexOfAPage = [hiddenStackHolder.subviews indexOfObject:aPage];
+                if(indexOfAPage >= [hiddenStackHolder.subviews count] - numberOfViewsAboveTopPageInList){
+                    CGRect rect = [self zoomToListFrameForPage:aPage oldToFrame:hiddenStackHolder.bounds withTrust:percentageToTrustToFrame];
+                    aPage.frame = rect;
+                }else{
+                    // noop for now
+                    break;
+                }
+            }
+            CGFloat percentageToMoveHiddenFrame = percentageToTrustToFrame;
+            percentageToMoveHiddenFrame += .1;
+            if(percentageToMoveHiddenFrame > 1) percentageToMoveHiddenFrame = 1;
+            CGRect hiddenFrame = hiddenStackHolder.frame;
+            hiddenFrame.origin.x = visibleStackHolder.frame.origin.x + percentageToMoveHiddenFrame * visibleStackHolder.frame.size.width;
+            hiddenStackHolder.frame = hiddenFrame;
             
             //
             // the user has zoomed out far enough for us to take over
@@ -203,6 +221,7 @@
             }
         }];
     }else{
+        [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
         //
         // ok, we're allowed to zoom out to list view, so save the frames
         // of all the pages in the visible stack
@@ -240,10 +259,9 @@
     NSInteger indexOfTopVisiblePage = [visibleStackHolder.subviews indexOfObject:page];
     NSInteger columnOfTopVisiblePage = indexOfTopVisiblePage % 3;
     NSInteger numberOfViewsBelowTopPageInList = MIN(3 + columnOfTopVisiblePage, [visibleStackHolder.subviews indexOfObject:page]);
+    NSInteger numberOfViewsAboveTopPageInList = MIN(11, [hiddenStackHolder.subviews count]);
     
 
-    
-    
     //
     // first, find all pages behind the first full scale
     // page, and just move them immediately
@@ -270,6 +288,16 @@
         // gestures aren't allowed in list view
         [aPage disableAllGestures];
     }
+    for(SLPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
+        NSInteger indexOfAPage = [hiddenStackHolder.subviews indexOfObject:aPage];
+        if(indexOfAPage >= [hiddenStackHolder.subviews count] - numberOfViewsAboveTopPageInList){
+            // noop for now
+        }else{
+            CGRect rect = aPage.frame;
+            rect.origin.y = -rect.size.height;
+            aPage.frame = rect;
+        }
+    }
     
     // ok, animate all the views in the visible stack!
     [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
@@ -292,6 +320,17 @@
                 }
             }
         }
+        for(SLPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
+            NSInteger indexOfAPage = [hiddenStackHolder.subviews indexOfObject:aPage];
+            if(indexOfAPage >= [hiddenStackHolder.subviews count] - numberOfViewsAboveTopPageInList){
+                CGRect rect = [self zoomToListFrameForPage:aPage oldToFrame:aPage.frame withTrust:0.0];
+                aPage.frame = rect;
+            }else{
+                // noop for now
+                break;
+            }
+        }
+        hiddenStackHolder.frame = visibleStackHolder.frame;
     } completion:^(BOOL finished){
         //
         // all of the pages "look" like they're in the right place,
@@ -302,22 +341,23 @@
         // that the scrollview works.
         [self setScrollEnabled:YES];
         for(SLPaperView* aPage in visibleStackHolder.subviews){
-            CGFloat finalX = bufferWidth + bufferWidth * aPage.columnInListView + columnWidth * aPage.columnInListView;
-            CGFloat finalY = bufferWidth + bufferWidth * aPage.rowInListView + rowHeight * aPage.rowInListView;
-            CGFloat finalWidth = kListPageZoom * screenWidth;
-            CGFloat finalHeight = kListPageZoom * screenHeight;
-            CGRect frame = CGRectMake(finalX, finalY, finalWidth, finalHeight);
-            aPage.frame = frame;
+            aPage.frame = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
+        }
+        for(SLPaperView* aPage in hiddenStackHolder.subviews){
+            aPage.frame = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
         }
         //
         // calculate the number of rows that will be hidden from offset
         SLPaperView* topPage = [visibleStackHolder peekSubview];
+        SLPaperView* topHiddenPage = [hiddenStackHolder peekSubview];
         NSInteger numberOfHiddenRows = MAX(0, topPage.rowInListView - 1);
-        CGFloat contentHeight = (topPage.rowInListView + 3) * (bufferWidth + rowHeight) + bufferWidth;
+        NSInteger totalRows = topHiddenPage.rowInListView;
+        CGFloat contentHeight = (totalRows + 3) * (bufferWidth + rowHeight) + bufferWidth;
         
         [self setContentOffset:CGPointMake(0, numberOfHiddenRows * (bufferWidth + rowHeight)) animated:NO];
         [self setContentSize:CGSizeMake(screenWidth, contentHeight)];
         [visibleStackHolder setClipsToBounds:NO];
+        [hiddenStackHolder setClipsToBounds:NO];
         [tapGesture setEnabled:YES];
     }];
     //
