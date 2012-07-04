@@ -354,12 +354,6 @@
  * and content offsets to that the user can scroll them
  */
 -(void) finishedScalingReallySmall:(SLPaperView *)page{
-    
-    //
-    // turn off the pan/scale gesture,
-    // we'll animate from here on out
-    [page disableAllGestures];
-
     //
     // first, find all pages behind the first full scale
     // page, and just move them immediately
@@ -397,6 +391,8 @@
             rect.origin.y = -rect.size.height;
             aPage.frame = rect;
         }
+        // gestures aren't allowed in list view
+        [aPage disableAllGestures];
     }
     
     // ok, animate all the views in the visible stack!
@@ -439,11 +435,11 @@
         // this means we need to keep the pages visually in the same place,
         // but adjust their frames and the content size/offset so
         // that the scrollview works.
-        for(SLPaperView* aPage in visibleStackHolder.subviews){
-            aPage.frame = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
-        }
-        for(SLPaperView* aPage in hiddenStackHolder.subviews){
-            aPage.frame = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
+        for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
+            CGRect newFrame = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
+            if(!CGRectEqualToRect(newFrame, aPage.frame)){
+                aPage.frame = newFrame;
+            };
         }
         // set our content height/offset for the pages
         [self setContentOffset:initialScrollOffsetFromTransitionToListView animated:NO];

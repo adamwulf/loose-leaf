@@ -144,7 +144,7 @@
 #pragma mark - SLPaperViewDelegate - List View
 
 -(void) setButtonsVisible:(BOOL)visible{
-    [UIView animateWithDuration:0.2 animations:^{
+    [UIView animateWithDuration:0.3 animations:^{
         addPageSidebarButton.alpha = visible;
         documentBackgroundSidebarButton.alpha = visible;
         polylineButton.alpha = visible;
