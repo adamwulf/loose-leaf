@@ -18,5 +18,6 @@
 - (void) addSubviewToBottomOfStack:(SLPaperView*)obj;
 - (NSArray*) peekSubviewFromSubview:(SLPaperView*)obj;
 - (SLPaperView*) getPageBelow:(SLPaperView*)page;
+-(SLPaperView*) getPageAbove:(SLPaperView*)page;
 
 @end

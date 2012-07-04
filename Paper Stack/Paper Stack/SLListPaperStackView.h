@@ -24,6 +24,8 @@
     CGFloat bufferWidth;
     
     UITapGestureRecognizer* tapGesture;
+    
+    NSArray* pagesThatWillBeVisibleAfterTransitionToListView;
 }
 
 @end

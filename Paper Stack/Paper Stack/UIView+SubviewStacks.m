@@ -68,5 +68,14 @@
     return nil;
 }
 
+-(SLPaperView*) getPageAbove:(SLPaperView*)page{
+    if(!page) return page;
+    NSInteger index = [self.subviews indexOfObject:page];
+    if(index != [self.subviews count] - 1){
+        return [self.subviews objectAtIndex:index+1];
+    }
+    return nil;
+}
+
 
 @end

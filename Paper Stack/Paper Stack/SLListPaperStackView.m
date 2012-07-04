@@ -42,6 +42,45 @@
     [super awakeFromNib];
 }
 
+#pragma mark - Future Model Methods
+
+-(NSArray*) pagesInVisibleRowsOfListView{
+    
+    if(!self.scrollEnabled){
+        //
+        // ok, scroling is not enabled, which means we're
+        // essentially in page view, and need to calculate
+        // which pages would be visible if the user
+        // switched into list view
+        //
+        // the top visible page will be at most w/in the top
+        // two rows
+        
+        SLPaperView* aPage = [visibleStackHolder peekSubview];
+        SLPaperView* topVisiblePage = aPage;
+        NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray arrayWithObject:aPage];
+        while((aPage = [visibleStackHolder getPageBelow:aPage]) && (topVisiblePage.rowInListView - 2 < aPage.rowInListView)){
+            [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
+        }
+        
+        aPage = [hiddenStackHolder.subviews objectAtIndex:0];
+        [pagesThatWouldBeVisible addObject:aPage];
+        while((aPage = [hiddenStackHolder getPageAbove:aPage]) && (topVisiblePage.rowInListView + 3 > aPage.rowInListView)){
+            [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
+        }
+
+        return pagesThatWouldBeVisible;
+    }
+    
+    //
+    // TODO: handle case where scrolling is enabled
+    return nil;
+}
+
+
+
+
+
 #pragma mark - SLPaperViewDelegate - Tap Gesture
 
 -(void) didTapScrollView:(UITapGestureRecognizer*)_tapGesture{
@@ -79,19 +118,13 @@
     finalFrame.origin.x -= offset.x;
     finalFrame.origin.y -= offset.y;
     
-    // create some helper variables for the old frame
-    CGFloat currX = oldFrame.origin.x;
-    CGFloat currY = oldFrame.origin.y;
-    CGFloat currWidth = oldFrame.size.width;
-    CGFloat currHeight = oldFrame.size.height;
-    
     //
     // ok, set the new frame that we'll return
     CGRect newFrame = CGRectZero;
-    newFrame.origin.x = finalFrame.origin.x - (finalFrame.origin.x - currX) * percentageToTrustToFrame;
-    newFrame.origin.y = finalFrame.origin.y - (finalFrame.origin.y - currY) * percentageToTrustToFrame;
-    newFrame.size.width = finalFrame.size.width - (finalFrame.size.width - currWidth) * percentageToTrustToFrame;
-    newFrame.size.height = finalFrame.size.height - (finalFrame.size.height - currHeight) * percentageToTrustToFrame;
+    newFrame.origin.x = finalFrame.origin.x - (finalFrame.origin.x - oldFrame.origin.x) * percentageToTrustToFrame;
+    newFrame.origin.y = finalFrame.origin.y - (finalFrame.origin.y - oldFrame.origin.y) * percentageToTrustToFrame;
+    newFrame.size.width = finalFrame.size.width - (finalFrame.size.width - oldFrame.size.width) * percentageToTrustToFrame;
+    newFrame.size.height = finalFrame.size.height - (finalFrame.size.height - oldFrame.size.height) * percentageToTrustToFrame;
     
     debug_NSLog(@"row:%d column: %d    x:%f y: %f", page.rowInListView, page.columnInListView, newFrame.origin.x, newFrame.origin.y);
     return newFrame;
@@ -107,8 +140,7 @@
             return [super isPanningAndScalingPage:page fromFrame:fromFrame toFrame:toFrame];
         }
         
-        
-        // make sure we're the top page
+        // make sure we're the top page being panned
         if([visibleStackHolder peekSubview].scale < kMinPageZoom){
             //
             // once the zoom is below kMinPageZoom and still above kZoomToListPageZoom,
@@ -139,29 +171,19 @@
             CGFloat percentageToTrustToFrame = [visibleStackHolder peekSubview].scale / kMinPageZoom;
             
             //
-            // ok, figure out how many pages will be above the top page
-            NSInteger indexOfTopVisiblePage = [visibleStackHolder.subviews indexOfObject:page];
-            NSInteger columnOfTopVisiblePage = indexOfTopVisiblePage % 3;
-            NSInteger numberOfViewsBelowTopPageInList = MIN(3 + columnOfTopVisiblePage, [visibleStackHolder.subviews indexOfObject:page]);
-            NSInteger numberOfViewsAboveTopPageInList = MIN(11, [hiddenStackHolder.subviews count]);
+            // ok, move all the soon to be visible pages into their
+            // position
+            for(SLPaperView* aPage in pagesThatWillBeVisibleAfterTransitionToListView){
+                CGRect oldFrame = hiddenStackHolder.bounds;
+                if([visibleStackHolder containsSubview:aPage]){
+                    oldFrame = [[setOfInitialFramesForPagesBeingZoomed objectForKey:aPage.uuid] CGRectValue];
+                }
+                CGRect rect = [self zoomToListFrameForPage:aPage oldToFrame:oldFrame withTrust:percentageToTrustToFrame];
+                aPage.frame = rect;
+            }
             
-            for(int i=0;i<numberOfViewsBelowTopPageInList;i++){
-                if(indexOfTopVisiblePage - 1 - i >= 0){
-                    SLPaperView* nonTopPage = [visibleStackHolder.subviews objectAtIndex:(indexOfTopVisiblePage - 1 - i)];
-                    CGRect oldFrame = [[setOfInitialFramesForPagesBeingZoomed objectForKey:nonTopPage.uuid] CGRectValue];
-                    nonTopPage.frame = [self zoomToListFrameForPage:nonTopPage oldToFrame:oldFrame withTrust:percentageToTrustToFrame];
-                }
-            }
-            for(SLPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
-                NSInteger indexOfAPage = [hiddenStackHolder.subviews indexOfObject:aPage];
-                if(indexOfAPage >= [hiddenStackHolder.subviews count] - numberOfViewsAboveTopPageInList){
-                    CGRect rect = [self zoomToListFrameForPage:aPage oldToFrame:hiddenStackHolder.bounds withTrust:percentageToTrustToFrame];
-                    aPage.frame = rect;
-                }else{
-                    // noop for now
-                    break;
-                }
-            }
+            //
+            // start to move the hidden frame to overlap the visible frame
             CGFloat percentageToMoveHiddenFrame = percentageToTrustToFrame;
             percentageToMoveHiddenFrame += .1;
             if(percentageToMoveHiddenFrame > 1) percentageToMoveHiddenFrame = 1;
@@ -222,6 +244,7 @@
         }];
     }else{
         [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
+        pagesThatWillBeVisibleAfterTransitionToListView = [[self pagesInVisibleRowsOfListView] retain];
         //
         // ok, we're allowed to zoom out to list view, so save the frames
         // of all the pages in the visible stack
@@ -252,15 +275,6 @@
     // turn off the pan/scale gesture,
     // we'll animate from here on out
     [page disableAllGestures];
-    
-    //
-    // calculate how many views will be visible
-    // in the first two rows
-    NSInteger indexOfTopVisiblePage = [visibleStackHolder.subviews indexOfObject:page];
-    NSInteger columnOfTopVisiblePage = indexOfTopVisiblePage % 3;
-    NSInteger numberOfViewsBelowTopPageInList = MIN(3 + columnOfTopVisiblePage, [visibleStackHolder.subviews indexOfObject:page]);
-    NSInteger numberOfViewsAboveTopPageInList = MIN(11, [hiddenStackHolder.subviews count]);
-    
 
     //
     // first, find all pages behind the first full scale
@@ -272,16 +286,19 @@
     // also, turn off gestures
     SLPaperView* lastPage = nil;
     for(SLPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
-        NSInteger indexOfAPage = [visibleStackHolder.subviews indexOfObject:aPage];
-        if(indexOfAPage >= indexOfTopVisiblePage - numberOfViewsBelowTopPageInList){
-            // ignore pages that we're going to animate for sure
+        if([pagesThatWillBeVisibleAfterTransitionToListView containsObject:aPage]){
+            // noop for now, we'll animate these
         }else{
             // ok, check if it's full screen
             CGRect rect = aPage.frame;
             if(lastPage){
+                // we already have the last visible page, move this one
+                // immediately
                 rect.origin.y = -rect.size.height;
                 aPage.frame = rect;
             }else if(rect.origin.x <= 0 && rect.origin.y <= 0 && rect.origin.x + rect.size.width >= screenWidth && rect.origin.y + rect.size.height >= screenHeight){
+                // we just found the page that covers the whole screen,
+                // so remember it
                 lastPage = aPage;
             }
         }
@@ -289,9 +306,8 @@
         [aPage disableAllGestures];
     }
     for(SLPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
-        NSInteger indexOfAPage = [hiddenStackHolder.subviews indexOfObject:aPage];
-        if(indexOfAPage >= [hiddenStackHolder.subviews count] - numberOfViewsAboveTopPageInList){
-            // noop for now
+        if([pagesThatWillBeVisibleAfterTransitionToListView containsObject:aPage]){
+            // noop for now, we'll animate these
         }else{
             CGRect rect = aPage.frame;
             rect.origin.y = -rect.size.height;
@@ -305,28 +321,28 @@
         // make sure all the pages go to the correct place
         // so that it looks like where they'll be in the list view
         for(SLPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
-            NSInteger indexOfAPage = [visibleStackHolder.subviews indexOfObject:aPage];
-            if(indexOfAPage >= indexOfTopVisiblePage - numberOfViewsBelowTopPageInList){
-                CGRect rect = [self zoomToListFrameForPage:aPage oldToFrame:aPage.frame withTrust:0.0];
-                aPage.frame = rect;
+            if([pagesThatWillBeVisibleAfterTransitionToListView containsObject:aPage]){
+                // these views we're animating into place
+                aPage.frame = [self zoomToListFrameForPage:aPage oldToFrame:aPage.frame withTrust:0.0];
             }else{
                 if(aPage == lastPage){
-                    // move it to the top outside the scroll range
+                    // animate the last page to cover the screen
+                    // up above the visible page
                     CGRect newFrame = aPage.frame;
                     newFrame.origin.y = -newFrame.size.height;
                     aPage.frame = newFrame;
                 }else{
+                    // the rest of these pages have alrady been moved
+                    // and shouldn't be animated
                     break;
                 }
             }
         }
         for(SLPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
-            NSInteger indexOfAPage = [hiddenStackHolder.subviews indexOfObject:aPage];
-            if(indexOfAPage >= [hiddenStackHolder.subviews count] - numberOfViewsAboveTopPageInList){
-                CGRect rect = [self zoomToListFrameForPage:aPage oldToFrame:aPage.frame withTrust:0.0];
-                aPage.frame = rect;
+            if([pagesThatWillBeVisibleAfterTransitionToListView containsObject:aPage]){
+                aPage.frame = [self zoomToListFrameForPage:aPage oldToFrame:aPage.frame withTrust:0.0];
             }else{
-                // noop for now
+                // already moved manually above
                 break;
             }
         }
@@ -346,6 +362,7 @@
         for(SLPaperView* aPage in hiddenStackHolder.subviews){
             aPage.frame = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
         }
+        
         //
         // calculate the number of rows that will be hidden from offset
         SLPaperView* topPage = [visibleStackHolder peekSubview];
@@ -359,6 +376,9 @@
         [visibleStackHolder setClipsToBounds:NO];
         [hiddenStackHolder setClipsToBounds:NO];
         [tapGesture setEnabled:YES];
+        
+        [pagesThatWillBeVisibleAfterTransitionToListView release];
+        pagesThatWillBeVisibleAfterTransitionToListView = nil;
     }];
     //
     // now that the user has finished the gesture,
@@ -370,6 +390,8 @@
     debug_NSLog(@"cancelled small scale");
     [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
     [tapGesture setEnabled:NO];
+    [pagesThatWillBeVisibleAfterTransitionToListView release];
+    pagesThatWillBeVisibleAfterTransitionToListView = nil;
 }
 
 -(NSInteger) indexOfPageInCompleteStack:(SLPaperView*)page{
