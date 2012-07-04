@@ -173,10 +173,17 @@
         }
 
         return pagesThatWouldBeVisible;
+    }else{
+        NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray array];
+        for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
+            CGRect frameOfPage = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
+            if(frameOfPage.origin.y < self.contentOffset.y + self.frame.size.height &&
+               frameOfPage.origin.y + frameOfPage.size.height > self.contentOffset.y){
+                [pagesThatWouldBeVisible addObject:aPage];
+            }
+        }
+        return pagesThatWouldBeVisible;
     }
-    //
-    // TODO: handle case where scrolling is enabled
-    return nil;
 }
 
 
@@ -487,7 +494,38 @@
 #pragma mark - SLPaperViewDelegate - Tap Gesture
 
 -(void) didTapScrollView:(UITapGestureRecognizer*)_tapGesture{
-    debug_NSLog(@"tapped at %f %f", [tapGesture locationInView:self].x, [tapGesture locationInView:self].y);
+    CGPoint locationOfTap = [_tapGesture locationInView:self];
+    CGPoint offset = self.contentOffset;
+    SLPaperView* thePageThatWasTapped = nil;
+    for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
+        CGRect frameOfPage = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
+        if(CGRectContainsPoint(frameOfPage, locationOfTap)){
+            thePageThatWasTapped = aPage;
+        }
+    }
+    if(!thePageThatWasTapped) return;
+    
+    // they tapped a page, and we know which one
+    for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
+        CGRect frameOfPage = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
+        frameOfPage.origin.y -= offset.y;
+        aPage.frame = frameOfPage;
+    }
+    self.contentOffset = CGPointZero;
+    //
+    // TODO
+    //
+    // before we animate, we need to move pages to/from
+    // the hidden stack
+    [self animatePageToFullScreen:thePageThatWasTapped withDelay:0 withBounce:YES onComplete:^(BOOL finished){
+        // TODO
+        // turn back on gestures etc
+        // and formally go back to page view
+        //
+        // also, make sure the hiddenStackHolder's frame is where it should be
+        // and that all the frames of all the pages are correct
+        debug_NSLog(@"clean up");
+    }];
 }
 
 @end
