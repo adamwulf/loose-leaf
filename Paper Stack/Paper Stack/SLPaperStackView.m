@@ -67,6 +67,34 @@
     [self addGestureRecognizer:fromRightBezelGesture];
 }
 
+#pragma mark - Future Model Methods
+
+/**
+ * this function makes sure there's at least numberOfPagesToEnsure pages
+ * in the hidden stack, and returns the top page
+ */
+-(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(UIView*)stackView{
+    while([stackView.subviews count] < numberOfPagesToEnsure){
+        SLPaperView* page = [[SLPaperView alloc] initWithFrame:stackView.bounds];
+        page.isBrandNewPage = YES;
+        page.delegate = self;
+        [stackView addSubviewToBottomOfStack:page];
+    }
+}
+
+
+/**
+ * adds the page to the bottom of the stack
+ * and adds to the bottom of the subviews
+ */
+-(void) addPaperToBottomOfStack:(SLPaperView*)page{
+    page.isBrandNewPage = NO;
+    page.delegate = self;
+    [page enableAllGestures];
+    [visibleStackHolder addSubviewToBottomOfStack:page];
+}
+
+
 #pragma mark - Pan and Bezel Icons
 
 /**
@@ -1103,33 +1131,6 @@
                              if(completionBlock) completionBlock(finished);
                          }];
     }
-}
-
-#pragma mark - Helper Methods
-
-/**
- * this function makes sure there's at least numberOfPagesToEnsure pages
- * in the hidden stack, and returns the top page
- */
--(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(UIView*)stackView{
-    while([stackView.subviews count] < numberOfPagesToEnsure){
-        SLPaperView* page = [[SLPaperView alloc] initWithFrame:stackView.bounds];
-        page.isBrandNewPage = YES;
-        page.delegate = self;
-        [stackView addSubviewToBottomOfStack:page];
-    }
-}
-
-
-/**
- * adds the page to the bottom of the stack
- * and adds to the bottom of the subviews
- */
--(void) addPaperToBottomOfStack:(SLPaperView*)page{
-    page.isBrandNewPage = NO;
-    page.delegate = self;
-    [page enableAllGestures];
-    [visibleStackHolder addSubviewToBottomOfStack:page];
 }
 
 @end

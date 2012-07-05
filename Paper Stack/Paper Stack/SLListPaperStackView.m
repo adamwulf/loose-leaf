@@ -42,60 +42,8 @@
     [super awakeFromNib];
 }
 
-#pragma mark - List View Enable / Disable Helper Methods
-
-/**
- * list view is half enabled as the user
- * gestures into the list view
- *
- * it is disabled when the user cancels the 
- * gesture
- */
--(void) setListViewHalfEnabled:(BOOL)halfEnabled{
-    if(halfEnabled){
-        [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
-        // calculate height first, that'll help determine offset
-        contentHeightFromTransitionToListView = [self contentHeightForAllPages];
-        // ok, now we can get offset
-        initialScrollOffsetFromTransitionToListView = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
-        // from offset/height, we know which views will be visible
-        pagesThatWillBeVisibleAfterTransitionToListView = [[self pagesInVisibleRowsOfListView] retain];
-        // bezeling in from right is no longer allowed
-        [fromRightBezelGesture setEnabled:NO];
-    }else{
-        [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
-        [tapGesture setEnabled:NO];
-        [pagesThatWillBeVisibleAfterTransitionToListView release];
-        pagesThatWillBeVisibleAfterTransitionToListView = nil;
-        [fromRightBezelGesture setEnabled:YES];
-    }
-}
-
-/**
- * a list view is entirely enabled when the user
- * confirms the list view gesture.
- *
- * when the user taps to return to paper view,
- * the list view is set to entirely disabled
- */
--(void) setListViewEntirelyEnabled:(BOOL)entirelyEnabled{
-    if(entirelyEnabled){
-        [visibleStackHolder setClipsToBounds:NO];
-        [hiddenStackHolder setClipsToBounds:NO];
-        [self setScrollEnabled:YES];
-        [tapGesture setEnabled:YES];
-        [pagesThatWillBeVisibleAfterTransitionToListView release];
-        pagesThatWillBeVisibleAfterTransitionToListView = nil;
-    }else{
-        // TODO allow user to disable list view
-    }
-}
-
-
-
 
 #pragma mark - Future Model Methods
-
 
 /**
  * this will return the scrollview's ideal contentOffset
@@ -171,9 +119,12 @@
                 break;
             }
         }
-
+        
         return pagesThatWouldBeVisible;
     }else{
+        //
+        // scrolling is enabled, so we need to return
+        // the list of pages that are currently visible
         NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray array];
         for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
             CGRect frameOfPage = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
@@ -185,6 +136,60 @@
         return pagesThatWouldBeVisible;
     }
 }
+
+
+
+
+#pragma mark - List View Enable / Disable Helper Methods
+
+/**
+ * list view is half enabled as the user
+ * gestures into the list view
+ *
+ * it is disabled when the user cancels the 
+ * gesture
+ */
+-(void) setListViewHalfEnabled:(BOOL)halfEnabled{
+    if(halfEnabled){
+        [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
+        // calculate height first, that'll help determine offset
+        contentHeightFromTransitionToListView = [self contentHeightForAllPages];
+        // ok, now we can get offset
+        initialScrollOffsetFromTransitionToListView = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
+        // from offset/height, we know which views will be visible
+        pagesThatWillBeVisibleAfterTransitionToListView = [[self pagesInVisibleRowsOfListView] retain];
+        // bezeling in from right is no longer allowed
+        [fromRightBezelGesture setEnabled:NO];
+    }else{
+        [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
+        [tapGesture setEnabled:NO];
+        [pagesThatWillBeVisibleAfterTransitionToListView release];
+        pagesThatWillBeVisibleAfterTransitionToListView = nil;
+        [fromRightBezelGesture setEnabled:YES];
+    }
+}
+
+/**
+ * a list view is entirely enabled when the user
+ * confirms the list view gesture.
+ *
+ * when the user taps to return to paper view,
+ * the list view is set to entirely disabled
+ */
+-(void) setListViewEntirelyEnabled:(BOOL)entirelyEnabled{
+    if(entirelyEnabled){
+        [visibleStackHolder setClipsToBounds:NO];
+        [hiddenStackHolder setClipsToBounds:NO];
+        [self setScrollEnabled:YES];
+        [tapGesture setEnabled:YES];
+        [pagesThatWillBeVisibleAfterTransitionToListView release];
+        pagesThatWillBeVisibleAfterTransitionToListView = nil;
+    }else{
+        // TODO allow user to disable list view
+    }
+}
+
+
 
 
 #pragma mark - SLPaperViewDelegate - Paper View
@@ -361,6 +366,9 @@
  * and content offsets to that the user can scroll them
  */
 -(void) finishedScalingReallySmall:(SLPaperView *)page{
+    
+    __block SLPaperView* lastPage = nil;
+
     //
     // first, find all pages behind the first full scale
     // page, and just move them immediately
@@ -369,44 +377,53 @@
     // performance.
     //
     // also, turn off gestures
-    SLPaperView* lastPage = nil;
-    for(SLPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
-        if([pagesThatWillBeVisibleAfterTransitionToListView containsObject:aPage]){
-            // noop for now, we'll animate these
-        }else{
-            // ok, check if it's full screen
-            CGRect rect = aPage.frame;
-            if(lastPage){
-                // we already have the last visible page, move this one
-                // immediately
+    void (^step1)(void) = ^{
+        //
+        // find visible stack pages that we can
+        // move immediately
+        for(SLPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
+            if([pagesThatWillBeVisibleAfterTransitionToListView containsObject:aPage]){
+                // noop for now, we'll animate these
+            }else{
+                // ok, check if it's full screen
+                CGRect rect = aPage.frame;
+                if(lastPage){
+                    // we already have the last visible page, move this one
+                    // immediately
+                    rect.origin.y = -rect.size.height;
+                    aPage.frame = rect;
+                }else if(rect.origin.x <= 0 && rect.origin.y <= 0 && rect.origin.x + rect.size.width >= screenWidth && rect.origin.y + rect.size.height >= screenHeight){
+                    // we just found the page that covers the whole screen,
+                    // so remember it
+                    lastPage = aPage;
+                }
+            }
+            // gestures aren't allowed in list view
+            [aPage disableAllGestures];
+        }
+        //
+        // find hidden stack pages that we can
+        // move immediately
+        for(SLPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
+            if([pagesThatWillBeVisibleAfterTransitionToListView containsObject:aPage]){
+                // noop for now, we'll animate these
+            }else{
+                CGRect rect = aPage.frame;
                 rect.origin.y = -rect.size.height;
                 aPage.frame = rect;
-            }else if(rect.origin.x <= 0 && rect.origin.y <= 0 && rect.origin.x + rect.size.width >= screenWidth && rect.origin.y + rect.size.height >= screenHeight){
-                // we just found the page that covers the whole screen,
-                // so remember it
-                lastPage = aPage;
             }
+            // gestures aren't allowed in list view
+            [aPage disableAllGestures];
         }
-        // gestures aren't allowed in list view
-        [aPage disableAllGestures];
-    }
-    for(SLPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
-        if([pagesThatWillBeVisibleAfterTransitionToListView containsObject:aPage]){
-            // noop for now, we'll animate these
-        }else{
-            CGRect rect = aPage.frame;
-            rect.origin.y = -rect.size.height;
-            aPage.frame = rect;
-        }
-        // gestures aren't allowed in list view
-        [aPage disableAllGestures];
-    }
+    };
     
-    // ok, animate all the views in the visible stack!
-    [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+    //
+    // make sure all the pages go to the correct place
+    // so that it looks like where they'll be in the list view
+    void (^step2)(void) = ^{
         //
-        // make sure all the pages go to the correct place
-        // so that it looks like where they'll be in the list view
+        // animate all visible stack pages that will be in the
+        // visible frame to the correct place
         for(SLPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
             if([pagesThatWillBeVisibleAfterTransitionToListView containsObject:aPage]){
                 // these views we're animating into place
@@ -425,6 +442,9 @@
                 }
             }
         }
+        //
+        // animate all hidden stack pages that will be in the
+        // visible frame to the correct place
         for(SLPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
             if([pagesThatWillBeVisibleAfterTransitionToListView containsObject:aPage]){
                 aPage.frame = [self zoomToListFrameForPage:aPage oldToFrame:aPage.frame withTrust:0.0];
@@ -434,10 +454,12 @@
             }
         }
         hiddenStackHolder.frame = visibleStackHolder.frame;
-    } completion:^(BOOL finished){
-        //
-        // all of the pages "look" like they're in the right place,
-        // but we need to turn on the scroll view.
+    };
+
+    //
+    // all of the pages "look" like they're in the right place,
+    // but we need to turn on the scroll view.
+    void (^step3)(BOOL finished) = ^(BOOL finished){
         //
         // this means we need to keep the pages visually in the same place,
         // but adjust their frames and the content size/offset so
@@ -452,7 +474,17 @@
         [self setContentOffset:initialScrollOffsetFromTransitionToListView animated:NO];
         [self setContentSize:CGSizeMake(screenWidth, contentHeightFromTransitionToListView)];
         [self setListViewEntirelyEnabled:YES];
-    }];
+    };
+    
+    
+    
+    step1();
+    // ok, animate all the views in the visible stack!
+    [UIView animateWithDuration:0.3
+                          delay:0.0
+                        options:UIViewAnimationCurveEaseOut
+                     animations:step2
+                     completion:step3];
     //
     // now that the user has finished the gesture,
     // we can forget about the original frame locations
@@ -517,6 +549,9 @@
     //
     // before we animate, we need to move pages to/from
     // the hidden stack
+    //
+    // also, the hidden pages need to be "under" the visible
+    // page that's about to get animated
     [self animatePageToFullScreen:thePageThatWasTapped withDelay:0 withBounce:YES onComplete:^(BOOL finished){
         // TODO
         // turn back on gestures etc
