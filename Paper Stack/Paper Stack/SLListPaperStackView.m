@@ -24,6 +24,7 @@
 
 -(void) awakeFromNib{
     setOfInitialFramesForPagesBeingZoomed = [[NSMutableDictionary alloc] init];
+    setOfFinalFramesForPagesBeingZoomed = [[NSMutableDictionary alloc] init];
     [self setScrollEnabled:NO];
     //
     // screen and column constants
@@ -39,7 +40,23 @@
     tapGesture.enabled = NO;
     [self addGestureRecognizer:tapGesture];
     
+    
     [super awakeFromNib];
+}
+
+#pragma mark - Local Cache
+
+//
+// for any given gesture, the frameForListViewGivenRowHeight:andColumnWidth: for any page
+// will be the same, so let's cache that for this gesture
+-(CGRect) frameForListViewForPage:(SLPaperView*)page givenRowHeight:(CGFloat)_rowHeight andColumnWidth:(CGFloat)_columnWidth{
+    NSValue* finalFrame = [setOfFinalFramesForPagesBeingZoomed objectForKey:page.uuid];
+    if(finalFrame){
+        return [finalFrame CGRectValue];
+    }
+    CGRect frameOfPage = [page frameForListViewGivenRowHeight:_rowHeight andColumnWidth:_columnWidth];
+    [setOfFinalFramesForPagesBeingZoomed setObject:[NSValue valueWithCGRect:frameOfPage] forKey:page.uuid];
+    return frameOfPage;
 }
 
 
@@ -99,7 +116,7 @@
         NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray arrayWithObject:aPage];
         CGRect rectOfVisibleScroll = CGRectMake(initialScrollOffsetFromTransitionToListView.x, initialScrollOffsetFromTransitionToListView.y, screenWidth, screenHeight);
         while((aPage = [visibleStackHolder getPageBelow:aPage])){
-            CGRect frameOfPage = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
+            CGRect frameOfPage = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
             if(frameOfPage.origin.y + frameOfPage.size.height > rectOfVisibleScroll.origin.y &&
                frameOfPage.origin.y < rectOfVisibleScroll.origin.y + rectOfVisibleScroll.size.height){
                 [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
@@ -111,7 +128,7 @@
         aPage = [hiddenStackHolder.subviews objectAtIndex:0];
         [pagesThatWouldBeVisible addObject:aPage];
         while((aPage = [hiddenStackHolder getPageAbove:aPage])){
-            CGRect frameOfPage = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
+            CGRect frameOfPage = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
             if(frameOfPage.origin.y + frameOfPage.size.height > rectOfVisibleScroll.origin.y &&
                frameOfPage.origin.y < rectOfVisibleScroll.origin.y + rectOfVisibleScroll.size.height){
                 [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
@@ -127,7 +144,7 @@
         // the list of pages that are currently visible
         NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray array];
         for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
-            CGRect frameOfPage = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
+            CGRect frameOfPage = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
             if(frameOfPage.origin.y < self.contentOffset.y + self.frame.size.height &&
                frameOfPage.origin.y + frameOfPage.size.height > self.contentOffset.y){
                 [pagesThatWouldBeVisible addObject:aPage];
@@ -152,6 +169,8 @@
 -(void) setListViewHalfEnabled:(BOOL)halfEnabled{
     if(halfEnabled){
         [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
+        // clear our cache of frame locations
+        [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
         // calculate height first, that'll help determine offset
         contentHeightFromTransitionToListView = [self contentHeightForAllPages];
         // ok, now we can get offset
@@ -194,7 +213,6 @@
 
 #pragma mark - SLPaperViewDelegate - Paper View
 
-
 /**
  * this method helps transition from a page's current frame
  * to that page's new frame in the list view.
@@ -212,7 +230,7 @@
  */
 -(CGRect) zoomToListFrameForPage:(SLPaperView*)page oldToFrame:(CGRect)oldFrame withTrust:(CGFloat)percentageToTrustToFrame{
     // final frame when the page is in the list view
-    CGRect finalFrame = [page frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
+    CGRect finalFrame = [self frameForListViewForPage:page givenRowHeight:rowHeight andColumnWidth:columnWidth];
     finalFrame.origin.x -= initialScrollOffsetFromTransitionToListView.x;
     finalFrame.origin.y -= initialScrollOffsetFromTransitionToListView.y;
     
@@ -452,7 +470,7 @@
         // but adjust their frames and the content size/offset so
         // that the scrollview works.
         for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
-            CGRect newFrame = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
+            CGRect newFrame = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
             if(!CGRectEqualToRect(newFrame, aPage.frame)){
                 aPage.frame = newFrame;
             };
@@ -461,6 +479,7 @@
         [self setContentOffset:initialScrollOffsetFromTransitionToListView animated:NO];
         [self setContentSize:CGSizeMake(screenWidth, contentHeightFromTransitionToListView)];
         [self setListViewEntirelyEnabled:YES];
+        [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
     };
     
     
@@ -493,6 +512,7 @@
             hiddenStackHolder.frame = fr;
         } completion:nil];
     }
+    [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
 }
 
 /**
