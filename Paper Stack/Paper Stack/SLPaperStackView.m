@@ -1073,9 +1073,9 @@
         // UIView animationWithDuration call...
         CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
         theAnimation.duration = 0.3;
-        theAnimation.fromValue = (id) page.layer.shadowPath;
+        theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
         theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:page.bounds.size];
-        [page.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
+        [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
         [UIView animateWithDuration:.15 delay:delay options:UIViewAnimationOptionAllowUserInteraction
                          animations:^(void){
                              page.scale = 1;
