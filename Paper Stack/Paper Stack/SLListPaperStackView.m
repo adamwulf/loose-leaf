@@ -103,6 +103,8 @@
  */ 
 -(NSArray*) pagesInVisibleRowsOfListView{
     if(!self.scrollEnabled){
+        [pagesThatWillBeVisibleAfterTransitionToListViewAndAreInVisibleStack release];
+        pagesThatWillBeVisibleAfterTransitionToListViewAndAreInVisibleStack = [[NSMutableSet alloc] init];
         //
         // ok, scroling is not enabled, which means we're
         // essentially in page view, and need to calculate
@@ -114,12 +116,14 @@
         
         SLPaperView* aPage = [visibleStackHolder peekSubview];
         NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray arrayWithObject:aPage];
+        [pagesThatWillBeVisibleAfterTransitionToListViewAndAreInVisibleStack addObject:aPage];
         CGRect rectOfVisibleScroll = CGRectMake(initialScrollOffsetFromTransitionToListView.x, initialScrollOffsetFromTransitionToListView.y, screenWidth, screenHeight);
         while((aPage = [visibleStackHolder getPageBelow:aPage])){
             CGRect frameOfPage = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
             if(frameOfPage.origin.y + frameOfPage.size.height > rectOfVisibleScroll.origin.y &&
                frameOfPage.origin.y < rectOfVisibleScroll.origin.y + rectOfVisibleScroll.size.height){
                 [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
+                [pagesThatWillBeVisibleAfterTransitionToListViewAndAreInVisibleStack addObject:aPage];
             }else{
                 break;
             }
@@ -290,7 +294,7 @@
             // position
             for(SLPaperView* aPage in pagesThatWillBeVisibleAfterTransitionToListView){
                 CGRect oldFrame = hiddenStackHolder.bounds;
-                if([visibleStackHolder containsSubview:aPage]){
+                if([pagesThatWillBeVisibleAfterTransitionToListViewAndAreInVisibleStack containsObject:aPage]){
                     oldFrame = [[setOfInitialFramesForPagesBeingZoomed objectForKey:aPage.uuid] CGRectValue];
                 }
                 CGRect rect = [self zoomToListFrameForPage:aPage oldToFrame:oldFrame withTrust:percentageToTrustToFrame];
