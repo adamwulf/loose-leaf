@@ -9,6 +9,7 @@
 #import "SLShadowedView.h"
 #import "UIView+Debug.h"
 #import "Constants.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation SLShadowedView
 
@@ -35,18 +36,31 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        [self showDebugBorder];
         CGRect contentFrame = self.bounds;
         contentFrame.origin = CGPointMake(10, 10);
         contentView = [[UIView alloc] initWithFrame:contentFrame];
         contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        self.opaque = NO;
+        self.clipsToBounds = YES;
+        
+        contentView.opaque = YES;
+        contentView.backgroundColor = [UIColor whiteColor];
+        contentView.clipsToBounds = NO;
+        
+        self.backgroundColor = [UIColor clearColor];
         [self addSubview:contentView];
+
+        contentView.layer.shadowPath = [UIBezierPath bezierPathWithRect:contentView.bounds].CGPath;
+        contentView.layer.shadowRadius = 5;
+        contentView.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.5].CGColor;
+        contentView.layer.shadowOpacity = 1;
     }
     return self;
 }
 
 -(void) setFrame:(CGRect)frame{
     [super setFrame:[SLShadowedView expandFrame:frame]];
+    contentView.layer.shadowPath = [UIBezierPath bezierPathWithRect:contentView.bounds].CGPath;
 }
 
 -(CGRect) frame{
@@ -61,11 +75,6 @@
 -(void) setBounds:(CGRect)bounds{
     [super setBounds:[SLShadowedView expandBounds:bounds]];
 }
-
-+(CGPoint) contentOffset{
-    return CGPointMake(10, 10);
-}
-
 
 
 @end
