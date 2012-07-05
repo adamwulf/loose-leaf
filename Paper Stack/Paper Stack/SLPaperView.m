@@ -52,11 +52,13 @@
         // TODO
         //
         // only the top visible page should have shadow ?
+        /*
         [self.layer setShadowColor:[[UIColor blackColor ] CGColor ] ];
         [self.layer setShadowOpacity:0.7 ];
         [self.layer setShadowRadius:kShadowDepth ];
         [self.layer setShadowOffset:CGSizeMake( 0 , 0 ) ];
         [self.layer setShouldRasterize:YES ];
+         */
         [self.layer setShadowPath:[[SLShadowManager sharedInstace] getShadowForSize:self.bounds.size]];
     }
     return self;
