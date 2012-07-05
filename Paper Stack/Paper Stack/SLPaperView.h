@@ -10,8 +10,9 @@
 #import "Constants.h"
 #import "SLPaperViewDelegate.h"
 #import "SLPanAndPinchGestureRecognizer.h"
+#import "SLShadowedView.h"
 
-@interface SLPaperView : UIView{
+@interface SLPaperView : SLShadowedView{
     
     NSString* uuid;
     

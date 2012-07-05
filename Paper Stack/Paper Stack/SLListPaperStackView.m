@@ -241,6 +241,8 @@
  * up screen by numberOfHiddenRows
  */
 -(CGRect) zoomToListFrameForPage:(SLPaperView*)page oldToFrame:(CGRect)oldFrame withTrust:(CGFloat)percentageToTrustToFrame{
+    if(percentageToTrustToFrame < 0) percentageToTrustToFrame = 0;
+    if(percentageToTrustToFrame > 1) percentageToTrustToFrame = 1;
     // final frame when the page is in the list view
     CGRect finalFrame = [self frameForListViewForPage:page givenRowHeight:rowHeight andColumnWidth:columnWidth];
     finalFrame.origin.x -= initialScrollOffsetFromTransitionToListView.x;
@@ -302,26 +304,34 @@
             // start to move the hidden frame to overlap the visible frame
             CGFloat percentageToMoveHiddenFrame = percentageToTrustToFrame;
             percentageToMoveHiddenFrame += .1;
-            if(percentageToMoveHiddenFrame > 1) percentageToMoveHiddenFrame = 1;
             CGFloat amountToMoveHiddenFrame = visibleStackHolder.frame.size.width - percentageToMoveHiddenFrame * visibleStackHolder.frame.size.width;
 
             //
             // ok, move all the soon to be visible pages into their
             // position
+            CGFloat transitionDelay = 0;
             for(SLPaperView* aPage in pagesThatWillBeVisibleAfterTransitionToListView){
-                CGRect oldFrame = hiddenStackHolder.bounds;
-                BOOL pageIsInVisibleStack = [pagesThatWillBeVisibleAfterTransitionToListViewAndAreInVisibleStack containsObject:aPage];
-                if(pageIsInVisibleStack){
-                    oldFrame = [[setOfInitialFramesForPagesBeingZoomed objectForKey:aPage.uuid] CGRectValue];
-                }
-                CGRect newFrame = [self zoomToListFrameForPage:aPage oldToFrame:oldFrame withTrust:percentageToTrustToFrame];
-                if(!pageIsInVisibleStack){
+                if(aPage != page){
+                    CGRect oldFrame = hiddenStackHolder.bounds;
+                    BOOL pageIsInVisibleStack = [pagesThatWillBeVisibleAfterTransitionToListViewAndAreInVisibleStack containsObject:aPage];
+                    if(pageIsInVisibleStack){
+                        oldFrame = [[setOfInitialFramesForPagesBeingZoomed objectForKey:aPage.uuid] CGRectValue];
+                    }
+                    CGRect newFrame = [self zoomToListFrameForPage:aPage oldToFrame:oldFrame withTrust:percentageToTrustToFrame + transitionDelay];
+                    if(!pageIsInVisibleStack){
+                        //
+                        // this helps the hidden pages to show coming in from
+                        // the right
+                        newFrame.origin.x -= amountToMoveHiddenFrame;
+                    }
+                    aPage.frame = newFrame;
+                    
                     //
-                    // this helps the hidden pages to show coming in from
-                    // the right
-                    newFrame.origin.x -= amountToMoveHiddenFrame;
+                    // transitionDelay makes sure that each page is not /exactly/ lined up
+                    // with its neighboring pages. just gives a bit of texture to the
+                    // transition
+                    transitionDelay += .05;
                 }
-                aPage.frame = newFrame;
             }
 
             //
@@ -333,6 +343,7 @@
             // it's resting place
             if([visibleStackHolder peekSubview].scale < kZoomToListPageZoom){
                 [[visibleStackHolder peekSubview] cancelAllGestures];
+                return fromFrame;
             }
             return [self zoomToListFrameForPage:page oldToFrame:toFrame withTrust:percentageToTrustToFrame];
         }
@@ -498,21 +509,21 @@
         [self setContentSize:CGSizeMake(screenWidth, contentHeightFromTransitionToListView)];
         [self setListViewEntirelyEnabled:YES];
         [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
+        [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
     };
     
     
     
     step1();
     // ok, animate all the views in the visible stack!
-    [UIView animateWithDuration:0.3
-                          delay:0.0
+    [UIView animateWithDuration:.3
+                          delay:0
                         options:UIViewAnimationCurveEaseOut
                      animations:step2
                      completion:step3];
     //
     // now that the user has finished the gesture,
     // we can forget about the original frame locations
-    [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
 }
 
 /**

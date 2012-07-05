@@ -11,6 +11,7 @@
 #import "NSArray+MapReduce.h"
 #import "SLShadowManager.h"
 #import "NSString+UUID.h"
+#import "UIView+Debug.h"
 
 @implementation SLPaperView
 
@@ -34,7 +35,7 @@
         imgView.contentMode = UIViewContentModeScaleAspectFill;
         imgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         imgView.clipsToBounds = YES;
-        [self addSubview:imgView];
+        [self.contentView addSubview:imgView];
         
         preGestureScale = 1;
         scale = 1;
@@ -46,7 +47,7 @@
         panGesture.bezelDirectionMask = SLBezelDirectionRight | SLBezelDirectionLeft;
         [self addGestureRecognizer:panGesture];
         
-        [self.layer setMasksToBounds:NO ];
+        [self.layer setMasksToBounds:YES ];
         
         //
         // TODO
@@ -229,7 +230,7 @@
         preGestureScale = self.scale;
         // the normalized location of the gesture is (0 < x < 1, 0 < y < 1).
         // this lets us locate where the gesture should be in the view from any width or height
-        normalizedLocationOfScale = CGPointMake(lastLocationInSelf.x / self.frame.size.width, 
+        normalizedLocationOfScale = CGPointMake(lastLocationInSelf.x / self.frame.size.width,
                                                 lastLocationInSelf.y / self.frame.size.height);
 
         // notify the delegate of our state change
