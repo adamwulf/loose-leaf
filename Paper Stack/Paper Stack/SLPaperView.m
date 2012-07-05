@@ -48,36 +48,8 @@
         [self addGestureRecognizer:panGesture];
         
         [self.layer setMasksToBounds:YES ];
-        
-        //
-        // TODO
-        //
-        // only the top visible page should have shadow ?
-        /*
-        [self.layer setShadowColor:[[UIColor blackColor ] CGColor ] ];
-        [self.layer setShadowOpacity:0.7 ];
-        [self.layer setShadowRadius:kShadowDepth ];
-        [self.layer setShadowOffset:CGSizeMake( 0 , 0 ) ];
-        [self.layer setShouldRasterize:YES ];
-         */
-        [self.layer setShadowPath:[[SLShadowManager sharedInstace] getShadowForSize:self.bounds.size]];
     }
     return self;
-}
-
-
-/**
- * whenever the frame changes (from a scale)
- * we should update our shadow path to match
- *
- * note that while the frame can be animated, the 
- * shadow path needs its own CABasicAnimation to
- * animate. it won't piggy back on the frame
- * animation
- */
--(void) setFrame:(CGRect)frame{
-    [super setFrame:frame];
-    [self.layer setShadowPath:[[SLShadowManager sharedInstace] getShadowForSize:self.bounds.size]];
 }
 
 /**
