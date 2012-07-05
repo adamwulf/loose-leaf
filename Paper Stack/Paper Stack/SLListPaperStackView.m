@@ -368,6 +368,7 @@
 -(void) finishedScalingReallySmall:(SLPaperView *)page{
     
     __block SLPaperView* lastPage = nil;
+    __block NSMutableSet* pagesThatNeedAnimating = [NSMutableSet set];
 
     //
     // first, find all pages behind the first full scale
@@ -383,7 +384,8 @@
         // move immediately
         for(SLPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
             if([pagesThatWillBeVisibleAfterTransitionToListView containsObject:aPage]){
-                // noop for now, we'll animate these
+                // we'll animate these in step 2
+                [pagesThatNeedAnimating addObject:aPage];
             }else{
                 // ok, check if it's full screen
                 CGRect rect = aPage.frame;
@@ -396,6 +398,7 @@
                     // we just found the page that covers the whole screen,
                     // so remember it
                     lastPage = aPage;
+                    [pagesThatNeedAnimating addObject:lastPage];
                 }
             }
             // gestures aren't allowed in list view
@@ -406,7 +409,8 @@
         // move immediately
         for(SLPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
             if([pagesThatWillBeVisibleAfterTransitionToListView containsObject:aPage]){
-                // noop for now, we'll animate these
+                // we'll animate these in step 2
+                [pagesThatNeedAnimating addObject:aPage];
             }else{
                 CGRect rect = aPage.frame;
                 rect.origin.y = -rect.size.height;
@@ -424,33 +428,16 @@
         //
         // animate all visible stack pages that will be in the
         // visible frame to the correct place
-        for(SLPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
-            if([pagesThatWillBeVisibleAfterTransitionToListView containsObject:aPage]){
+        for(SLPaperView* aPage in pagesThatNeedAnimating){
+            if(aPage == lastPage){
+                // animate the last page to cover the screen
+                // up above the visible page
+                CGRect newFrame = aPage.frame;
+                newFrame.origin.y = -newFrame.size.height;
+                aPage.frame = newFrame;
+            }else{
                 // these views we're animating into place
                 aPage.frame = [self zoomToListFrameForPage:aPage oldToFrame:aPage.frame withTrust:0.0];
-            }else{
-                if(aPage == lastPage){
-                    // animate the last page to cover the screen
-                    // up above the visible page
-                    CGRect newFrame = aPage.frame;
-                    newFrame.origin.y = -newFrame.size.height;
-                    aPage.frame = newFrame;
-                }else{
-                    // the rest of these pages have alrady been moved
-                    // and shouldn't be animated
-                    break;
-                }
-            }
-        }
-        //
-        // animate all hidden stack pages that will be in the
-        // visible frame to the correct place
-        for(SLPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
-            if([pagesThatWillBeVisibleAfterTransitionToListView containsObject:aPage]){
-                aPage.frame = [self zoomToListFrameForPage:aPage oldToFrame:aPage.frame withTrust:0.0];
-            }else{
-                // already moved manually above
-                break;
             }
         }
         hiddenStackHolder.frame = visibleStackHolder.frame;
