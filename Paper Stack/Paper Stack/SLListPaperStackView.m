@@ -183,12 +183,14 @@
         pagesThatWillBeVisibleAfterTransitionToListView = [[self pagesInVisibleRowsOfListView] retain];
         // bezeling in from right is no longer allowed
         [fromRightBezelGesture setEnabled:NO];
+        [hiddenStackHolder setClipsToBounds:NO];
     }else{
         [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
         [tapGesture setEnabled:NO];
         [pagesThatWillBeVisibleAfterTransitionToListView release];
         pagesThatWillBeVisibleAfterTransitionToListView = nil;
         [fromRightBezelGesture setEnabled:YES];
+        [hiddenStackHolder setClipsToBounds:YES];
     }
 }
 
@@ -209,6 +211,12 @@
         pagesThatWillBeVisibleAfterTransitionToListView = nil;
     }else{
         // TODO allow user to disable list view
+        [visibleStackHolder setClipsToBounds:YES];
+        [hiddenStackHolder setClipsToBounds:YES];
+        [self setScrollEnabled:NO];
+        [tapGesture setEnabled:NO];
+        [pagesThatWillBeVisibleAfterTransitionToListView release];
+        pagesThatWillBeVisibleAfterTransitionToListView = nil;
     }
 }
 
@@ -289,27 +297,33 @@
             // how close are we to list view? 1 is not close at all, 0 is list view
             CGFloat percentageToTrustToFrame = [visibleStackHolder peekSubview].scale / kMinPageZoom;
             
-            //
-            // ok, move all the soon to be visible pages into their
-            // position
-            for(SLPaperView* aPage in pagesThatWillBeVisibleAfterTransitionToListView){
-                CGRect oldFrame = hiddenStackHolder.bounds;
-                if([pagesThatWillBeVisibleAfterTransitionToListViewAndAreInVisibleStack containsObject:aPage]){
-                    oldFrame = [[setOfInitialFramesForPagesBeingZoomed objectForKey:aPage.uuid] CGRectValue];
-                }
-                CGRect rect = [self zoomToListFrameForPage:aPage oldToFrame:oldFrame withTrust:percentageToTrustToFrame];
-                aPage.frame = rect;
-            }
             
             //
             // start to move the hidden frame to overlap the visible frame
             CGFloat percentageToMoveHiddenFrame = percentageToTrustToFrame;
             percentageToMoveHiddenFrame += .1;
             if(percentageToMoveHiddenFrame > 1) percentageToMoveHiddenFrame = 1;
-            CGRect hiddenFrame = hiddenStackHolder.frame;
-            hiddenFrame.origin.x = visibleStackHolder.frame.origin.x + percentageToMoveHiddenFrame * visibleStackHolder.frame.size.width;
-            hiddenStackHolder.frame = hiddenFrame;
-            
+            CGFloat amountToMoveHiddenFrame = visibleStackHolder.frame.size.width - percentageToMoveHiddenFrame * visibleStackHolder.frame.size.width;
+
+            //
+            // ok, move all the soon to be visible pages into their
+            // position
+            for(SLPaperView* aPage in pagesThatWillBeVisibleAfterTransitionToListView){
+                CGRect oldFrame = hiddenStackHolder.bounds;
+                BOOL pageIsInVisibleStack = [pagesThatWillBeVisibleAfterTransitionToListViewAndAreInVisibleStack containsObject:aPage];
+                if(pageIsInVisibleStack){
+                    oldFrame = [[setOfInitialFramesForPagesBeingZoomed objectForKey:aPage.uuid] CGRectValue];
+                }
+                CGRect newFrame = [self zoomToListFrameForPage:aPage oldToFrame:oldFrame withTrust:percentageToTrustToFrame];
+                if(!pageIsInVisibleStack){
+                    //
+                    // this helps the hidden pages to show coming in from
+                    // the right
+                    newFrame.origin.x -= amountToMoveHiddenFrame;
+                }
+                aPage.frame = newFrame;
+            }
+
             //
             // the user has zoomed out far enough for us to take over
             // with animations. cancel the gesture.
@@ -571,6 +585,7 @@
         // also, make sure the hiddenStackHolder's frame is where it should be
         // and that all the frames of all the pages are correct
         debug_NSLog(@"clean up");
+        [self setListViewEntirelyEnabled:NO];
     }];
 }
 
