@@ -94,6 +94,16 @@
     [visibleStackHolder addSubviewToBottomOfStack:page];
 }
 
+/**
+ * adds the page to the bottom of the stack
+ * and adds to the bottom of the subviews
+ */
+-(void) addPaperToBottomOfHiddenStack:(SLPaperView*)page{
+    page.isBrandNewPage = YES;
+    page.delegate = self;
+    [page disableAllGestures];
+    [hiddenStackHolder addSubviewToBottomOfStack:page];
+}
 
 #pragma mark - Pan and Bezel Icons
 
