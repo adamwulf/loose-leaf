@@ -7,6 +7,7 @@
 //
 
 #import "UIView+Debug.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation UIView (Debug)
 

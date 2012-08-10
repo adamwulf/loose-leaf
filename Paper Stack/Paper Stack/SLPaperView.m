@@ -21,6 +21,7 @@
 @synthesize textLabel;
 @synthesize isBrandNewPage;
 @synthesize uuid;
+@synthesize unitShadowPath;
 
 - (id)initWithFrame:(CGRect)frame
 {

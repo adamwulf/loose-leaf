@@ -716,10 +716,14 @@
 		66DCFBBA1581BCF000B4918C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer: Adam Wulf (569ACMP6SC)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Adam Wulf (569ACMP6SC)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Paper Stack/scratchpaper-Prefix.pch";
 				INFOPLIST_FILE = "Paper Stack/scratchpaper-Info.plist";
 				PRODUCT_NAME = scratchpaper;
+				PROVISIONING_PROFILE = "992248CC-57C8-4552-B5BB-91F892685F60";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "992248CC-57C8-4552-B5BB-91F892685F60";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
