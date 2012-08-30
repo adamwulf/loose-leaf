@@ -86,7 +86,7 @@
  * from the number of both visible and hidden pages
  */
 -(CGFloat) contentHeightForAllPages{
-    SLPaperView* topHiddenPage = [hiddenStackHolder peekSubview];
+    SLPaperView* topHiddenPage = [hiddenStackHolder bottomSubview];
     NSInteger totalRows = topHiddenPage.rowInListView;
     // add 1 since rows start at 0
     CGFloat contentHeight = (totalRows + 1) * (bufferWidth + rowHeight) + bufferWidth;
@@ -129,9 +129,9 @@
             }
         }
         
-        aPage = [hiddenStackHolder.subviews objectAtIndex:0];
+        aPage = [hiddenStackHolder peekSubview];
         [pagesThatWouldBeVisible addObject:aPage];
-        while((aPage = [hiddenStackHolder getPageAbove:aPage])){
+        while((aPage = [hiddenStackHolder getPageBelow:aPage])){
             CGRect frameOfPage = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
             if(frameOfPage.origin.y + frameOfPage.size.height > rectOfVisibleScroll.origin.y &&
                frameOfPage.origin.y < rectOfVisibleScroll.origin.y + rectOfVisibleScroll.size.height){
@@ -549,11 +549,15 @@
  * it sits in the combined visible/hidden stack
  */
 -(NSInteger) indexOfPageInCompleteStack:(SLPaperView*)page{
-    if([visibleStackHolder containsSubview:page]){
+    if([self isInVisibleStack:page]){
         return [visibleStackHolder.subviews indexOfObject:page];
     }else{
-        return [visibleStackHolder.subviews count] + [hiddenStackHolder.subviews indexOfObject:page];
+        return [visibleStackHolder.subviews count] + [hiddenStackHolder.subviews count] - [hiddenStackHolder.subviews indexOfObject:page] - 1;
     }
+}
+
+-(BOOL) isInVisibleStack:(SLPaperView*)page{
+    return [visibleStackHolder containsSubview:page];
 }
 
 
@@ -562,6 +566,8 @@
 #pragma mark - SLPaperViewDelegate - Tap Gesture
 
 -(void) didTapScrollView:(UITapGestureRecognizer*)_tapGesture{
+    //
+    // first, we should find which page the user tapped
     CGPoint locationOfTap = [_tapGesture locationInView:self];
     CGPoint offset = self.contentOffset;
     SLPaperView* thePageThatWasTapped = nil;
@@ -572,6 +578,30 @@
         }
     }
     if(!thePageThatWasTapped) return;
+    
+    
+    //
+    // ok, we know what page was tapped.
+    //
+    // now we need to make sure that page is on the top
+    // of the visible stack
+    if([self isInVisibleStack:thePageThatWasTapped]){
+        // the page is in teh visible stack, so pop pages
+        // onto the hidden stack so that this page is the
+        // top visible page
+        while([visibleStackHolder peekSubview] != thePageThatWasTapped){
+            [hiddenStackHolder pushSubview:[visibleStackHolder peekSubview]];
+        }
+    }else{
+        // the page is in the hidden stack, so pop pages
+        // onto the visible stack so that this page is the
+        // top visible page
+        while([visibleStackHolder peekSubview] != thePageThatWasTapped){
+            [visibleStackHolder pushSubview:[hiddenStackHolder peekSubview]];
+        }
+    }
+    
+    return;
     
     // they tapped a page, and we know which one
     for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){

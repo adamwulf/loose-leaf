@@ -14,6 +14,7 @@
 - (BOOL) containsSubview:(SLPaperView*)obj;
 - (SLPaperView*) peekSubview;
 - (SLPaperView*)popSubview;
+- (SLPaperView*)bottomSubview;
 - (void)pushSubview:(SLPaperView*)obj;
 - (void) addSubviewToBottomOfStack:(SLPaperView*)obj;
 - (NSArray*) peekSubviewFromSubview:(SLPaperView*)obj;
