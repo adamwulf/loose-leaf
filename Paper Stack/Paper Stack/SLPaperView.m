@@ -53,6 +53,15 @@
     return self;
 }
 
+-(void)didMoveToSuperview{
+    if([self.delegate isInVisibleStack:self]){
+        self.layer.borderColor = [UIColor greenColor].CGColor;
+    }else{
+        self.layer.borderColor = [UIColor redColor].CGColor;
+    }
+    self.layer.borderWidth = 3;
+}
+
 /**
  * returns true if the gesture will exit the right bezel
  * returns false if the gesture will not exit bezel

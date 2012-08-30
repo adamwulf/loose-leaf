@@ -37,4 +37,6 @@
  */
 -(NSInteger) indexOfPageInCompleteStack:(SLPaperView*)page;
 
+-(BOOL) isInVisibleStack:(SLPaperView*)page;
+
 @end

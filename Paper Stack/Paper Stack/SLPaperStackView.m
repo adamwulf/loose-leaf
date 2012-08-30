@@ -839,6 +839,10 @@
     @throw kAbstractMethodException;
 }
 
+-(BOOL) isInVisibleStack:(SLPaperView *)page{
+    @throw kAbstractMethodException;
+}
+
 
 #pragma mark - Page Animation and Navigation Helpers
 

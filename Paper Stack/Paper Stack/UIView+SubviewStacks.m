@@ -36,6 +36,13 @@
     }
 }
 
+- (SLPaperView*)bottomSubview{
+    if([self.subviews count]){
+        return [self.subviews objectAtIndex:0];
+    }
+    return nil;
+}
+
 - (void) addSubviewToBottomOfStack:(SLPaperView*)obj{
     if(obj.superview){
         obj.frame = [self convertRect:obj.frame fromView:obj.superview];
