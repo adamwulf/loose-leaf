@@ -101,7 +101,7 @@
  * the goal is to return as few pages as possible
  * so that we're not animating very many views
  */ 
--(NSArray*) pagesInVisibleRowsOfListView{
+-(NSArray*) findPagesInVisibleRowsOfListViewGivenOffset:(CGPoint)eventualOffsetOfListView{
     if(!self.scrollEnabled){
         [pagesThatWillBeVisibleAfterTransitionToListViewAndAreInVisibleStack release];
         pagesThatWillBeVisibleAfterTransitionToListViewAndAreInVisibleStack = [[NSMutableSet alloc] init];
@@ -117,7 +117,7 @@
         SLPaperView* aPage = [visibleStackHolder peekSubview];
         NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray arrayWithObject:aPage];
         [pagesThatWillBeVisibleAfterTransitionToListViewAndAreInVisibleStack addObject:aPage];
-        CGRect rectOfVisibleScroll = CGRectMake(initialScrollOffsetFromTransitionToListView.x, initialScrollOffsetFromTransitionToListView.y, screenWidth, screenHeight);
+        CGRect rectOfVisibleScroll = CGRectMake(eventualOffsetOfListView.x, eventualOffsetOfListView.y, screenWidth, screenHeight);
         while((aPage = [visibleStackHolder getPageBelow:aPage])){
             CGRect frameOfPage = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
             //
@@ -184,7 +184,7 @@
         // ok, now we can get offset
         initialScrollOffsetFromTransitionToListView = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
         // from offset/height, we know which views will be visible
-        pagesThatWillBeVisibleAfterTransitionToListView = [[self pagesInVisibleRowsOfListView] retain];
+        pagesThatWillBeVisibleAfterTransitionToListView = [[self findPagesInVisibleRowsOfListViewGivenOffset:initialScrollOffsetFromTransitionToListView] retain];
         // bezeling in from right is no longer allowed
         [fromRightBezelGesture setEnabled:NO];
         [hiddenStackHolder setClipsToBounds:NO];
