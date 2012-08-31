@@ -11,9 +11,11 @@
 @implementation SLPanAndPinchFromListViewGestureRecognizer
 
 @synthesize scale;
+@synthesize initialPageScale;
 @synthesize scaleDirection;
 @synthesize pinchDelegate;
 @synthesize pinchedPage;
+@synthesize normalizedLocationOfScale;
 
 
 -(id) init{
@@ -43,7 +45,7 @@
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    debug_NSLog(@"touchesBegan");
+//    debug_NSLog(@"touchesBegan");
     [touches enumerateObjectsUsingBlock:^(id obj, BOOL *stop){
         UITouch* touch = obj;
         SLPaperView* page = [pinchDelegate pageForPointInList:[touch locationInView:self.view]];
@@ -55,6 +57,9 @@
                 [validTouches addObject:touch];
             }
             if([validTouches count] == 2 && self.state == UIGestureRecognizerStatePossible){
+                CGPoint lastLocationInPage = [self locationInView:pinchedPage];
+                normalizedLocationOfScale = CGPointMake(lastLocationInPage.x / pinchedPage.frame.size.width,
+                                                        lastLocationInPage.y / pinchedPage.frame.size.height);
                 initialDistance = [self distanceBetweenTouches:validTouches];
                 CGSize fullPageSize = [pinchDelegate sizeOfFullscreenPage];
                 CGSize initialPageSize = pinchedPage.frame.size;
@@ -70,22 +75,23 @@
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
     if([validTouches count] == 2 && self.state != UIGestureRecognizerStateBegan){
-        debug_NSLog(@"touchesMoved");
-        self.state = UIGestureRecognizerStateChanged;
-
+//        debug_NSLog(@"touchesMoved");
         CGFloat newScale = initialPageScale * [self distanceBetweenTouches:validTouches] / initialDistance;
         if(newScale > scale){
             scaleDirection = SLScaleDirectionLarger;
         }else if(newScale < scale){
             scaleDirection = SLScaleDirectionSmaller;
+        }else{
+            
         }
         scale = newScale;
+        self.state = UIGestureRecognizerStateChanged;
     }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     if([validTouches count] == 2){
-        debug_NSLog(@"touchesEnded");
+//        debug_NSLog(@"touchesEnded");
         [validTouches removeObjectsInSet:touches];
         self.state = UIGestureRecognizerStateEnded;
     }else{
@@ -94,22 +100,24 @@
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
-    debug_NSLog(@"touchesCancelled");
+//    debug_NSLog(@"touchesCancelled");
     [validTouches removeObjectsInSet:touches];
     self.state = UIGestureRecognizerStateCancelled;
 }
 
 - (void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
-    debug_NSLog(@"ignoreTouch");
+//    debug_NSLog(@"ignoreTouch");
     [super ignoreTouch:touch forEvent:event];
 }
 
 -(void) reset{
-    debug_NSLog(@"reset");
+//    debug_NSLog(@"reset");
     [validTouches removeAllObjects];
     pinchedPage = nil;
     scaleDirection = SLBezelDirectionNone;
     scale = 1.0;
+    normalizedLocationOfScale = CGPointZero;
+    [super reset];
 }
 
 -(void) cancel{
