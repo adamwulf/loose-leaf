@@ -244,6 +244,7 @@
     if(!pinchGesture.pinchedPage){
         [pinchGesture setEnabled:NO];
     }
+    [visibleStackHolder.superview insertSubview:visibleStackHolder aboveSubview:hiddenStackHolder];
 }
 
 /**
@@ -276,6 +277,7 @@
     [pinchGesture setEnabled:NO];
     [pagesThatWillBeVisibleAfterTransitionToListView release];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
+    [visibleStackHolder.superview insertSubview:visibleStackHolder belowSubview:hiddenStackHolder];
 }
 
 
@@ -792,7 +794,6 @@
                                  aPage.frame = hiddenStackHolder.bounds;
                                  page.scale = 1;
                              }
-                             [visibleStackHolder.superview insertSubview:visibleStackHolder belowSubview:hiddenStackHolder];
                          }];
     };
     
