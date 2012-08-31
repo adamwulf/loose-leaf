@@ -53,6 +53,9 @@
     return self;
 }
 
+/**
+ * helpful when testing visible vs hidden pages
+ */
 -(void)didMoveToSuperview{
     if([self.delegate isInVisibleStack:self]){
         self.backgroundColor = [UIColor greenColor];
@@ -63,6 +66,11 @@
     }
 //    self.layer.borderWidth = 3;
 }
+ 
+ /*
+ */
+
+
 
 /**
  * returns true if the gesture will exit the right bezel
@@ -252,8 +260,11 @@
         if(targetScale > kMaxPageZoom){
             scale = kMaxPageZoom;
             if(didCancelSmallScale) [self.delegate cancelledScalingReallySmall:self];
-        }else if(targetScale < kMinPageZoom && scale >= kMinPageZoom){
-            // 0.75 is zoom minimum
+        }else if(targetScale < kMinPageZoom && scale >= kMinPageZoom && ![_panGesture didExitToBezel]){
+            // doesn't count if the bezel is exiting.
+            //
+            // this tracks if the user is zooming out far enough to trigger a zoom into
+            // list mode
             scale = targetScale;
             [self.delegate isBeginningToScaleReallySmall:self];
         }else if((targetScale >= 1 && scaleDiff > kMinScaleDelta) ||
