@@ -700,6 +700,7 @@
     
     
     
+    
     //
     // first, find all pages behind the first full scale
     // page, and just move them immediately
@@ -717,11 +718,15 @@
         for(SLPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
             aPage.frame = visibleStackHolder.bounds;
             [aPage enableAllGestures];
+            page.scale = 1;
         }
         for(SLPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
             aPage.frame = hiddenStackHolder.bounds;
+            page.scale = 1;
         }
         [visibleStackHolder.superview insertSubview:visibleStackHolder belowSubview:hiddenStackHolder];
+        [self setListViewHalfEnabled:NO];
+        [self setListViewEntirelyEnabled:NO];
     };
     
     
