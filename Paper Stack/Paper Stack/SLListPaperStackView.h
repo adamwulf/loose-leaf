@@ -28,7 +28,6 @@
     
     CGPoint initialScrollOffsetFromTransitionToListView;
     NSArray* pagesThatWillBeVisibleAfterTransitionToListView;
-    NSMutableSet* pagesThatWillBeVisibleAfterTransitionToListViewAndAreInVisibleStack;
 }
 
 @end
