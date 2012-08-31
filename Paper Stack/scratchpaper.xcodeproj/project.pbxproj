@@ -16,6 +16,7 @@
 		660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAB158FC65C0001DA12 /* NSMutableArray+StackAdditions.m */; };
 		660E1DB0158FC7DB0001DA12 /* SLPaperIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAF158FC7DB0001DA12 /* SLPaperIcon.m */; };
 		660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DB2159028560001DA12 /* NSArray+MapReduce.m */; };
+		6630EDA115F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m */; };
 		664516B9159030FC0012FACA /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 664516B8159030FC0012FACA /* Constants.m */; };
 		664C62F015A36DA40072736A /* SLListPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 664C62EF15A36DA40072736A /* SLListPaperStackView.m */; };
 		664C62F415A375800072736A /* SLPaperView+ListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 664C62F315A375800072736A /* SLPaperView+ListView.m */; };
@@ -94,6 +95,9 @@
 		660E1DAF158FC7DB0001DA12 /* SLPaperIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPaperIcon.m; sourceTree = "<group>"; };
 		660E1DB1159028560001DA12 /* NSArray+MapReduce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+MapReduce.h"; sourceTree = "<group>"; };
 		660E1DB2159028560001DA12 /* NSArray+MapReduce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+MapReduce.m"; sourceTree = "<group>"; };
+		6630ED9F15F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPanAndPinchFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
+		6630EDA015F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPanAndPinchFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
+		6630EDA215F1588E007E38AA /* SLPanAndPinchFromListViewGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPanAndPinchFromListViewGestureRecognizerDelegate.h; sourceTree = "<group>"; };
 		664516B8159030FC0012FACA /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		664C62EE15A36DA40072736A /* SLListPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLListPaperStackView.h; sourceTree = "<group>"; };
 		664C62EF15A36DA40072736A /* SLListPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLListPaperStackView.m; sourceTree = "<group>"; };
@@ -457,6 +461,9 @@
 				66DCFBDE1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.m */,
 				6693296B1596E0600033E557 /* SLBezelInRightGestureRecognizer.h */,
 				6693296C1596E0600033E557 /* SLBezelInRightGestureRecognizer.m */,
+				6630ED9F15F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.h */,
+				6630EDA015F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m */,
+				6630EDA215F1588E007E38AA /* SLPanAndPinchFromListViewGestureRecognizerDelegate.h */,
 			);
 			name = Gestures;
 			sourceTree = "<group>";
@@ -615,6 +622,7 @@
 				664C62F015A36DA40072736A /* SLListPaperStackView.m in Sources */,
 				664C62F415A375800072736A /* SLPaperView+ListView.m in Sources */,
 				66D33F4C15A6408A0044C809 /* SLShadowedView.m in Sources */,
+				6630EDA115F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
