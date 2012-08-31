@@ -330,7 +330,7 @@
                     // transitionDelay makes sure that each page is not /exactly/ lined up
                     // with its neighboring pages. just gives a bit of texture to the
                     // transition
-                    transitionDelay += .05;
+                    transitionDelay += .017;
                 }
             }
 
