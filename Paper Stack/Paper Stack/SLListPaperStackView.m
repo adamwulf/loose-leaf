@@ -117,7 +117,6 @@
         CGRect rectOfVisibleScroll = CGRectMake(eventualOffsetOfListView.x, eventualOffsetOfListView.y, screenWidth, screenHeight);
         while((aPage = [visibleStackHolder getPageBelow:aPage])){
             CGRect frameOfPage = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
-            //
             // we have to expand the frame, because we want to count pages even if
             // just their shadow is visible
             frameOfPage = [SLShadowedView expandFrame:frameOfPage];
@@ -133,6 +132,9 @@
         [pagesThatWouldBeVisible addObject:aPage];
         while((aPage = [hiddenStackHolder getPageBelow:aPage])){
             CGRect frameOfPage = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
+            // we have to expand the frame, because we want to count pages even if
+            // just their shadow is visible
+            frameOfPage = [SLShadowedView expandFrame:frameOfPage];
             if(frameOfPage.origin.y + frameOfPage.size.height > rectOfVisibleScroll.origin.y &&
                frameOfPage.origin.y < rectOfVisibleScroll.origin.y + rectOfVisibleScroll.size.height){
                 [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
@@ -149,6 +151,9 @@
         NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray array];
         for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
             CGRect frameOfPage = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
+            // we have to expand the frame, because we want to count pages even if
+            // just their shadow is visible
+            frameOfPage = [SLShadowedView expandFrame:frameOfPage];
             if(frameOfPage.origin.y < self.contentOffset.y + self.frame.size.height &&
                frameOfPage.origin.y + frameOfPage.size.height > self.contentOffset.y){
                 [pagesThatWouldBeVisible addObject:aPage];
@@ -411,7 +416,10 @@
  * and content offsets to that the user can scroll them
  */
 -(void) finishedScalingReallySmall:(SLPaperView *)page{
-    
+    //
+    // clean up gesture state
+    [setOfPagesBeingPanned removeObject:page];
+
     __block SLPaperView* lastPage = nil;
     __block NSMutableSet* pagesThatNeedAnimating = [NSMutableSet set];
 
@@ -583,7 +591,7 @@
     //
     // first, we should find which page the user tapped
     CGPoint locationOfTap = [_tapGesture locationInView:self];
-    CGPoint offset = self.contentOffset;
+
     SLPaperView* thePageThatWasTapped = nil;
     for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
         CGRect frameOfPage = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
@@ -615,33 +623,125 @@
         }
     }
     
-    return;
+    [self animateFromListViewToFullScreenView:thePageThatWasTapped];
     
-    // they tapped a page, and we know which one
-    for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
-        CGRect frameOfPage = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
-        frameOfPage.origin.y -= offset.y;
-        aPage.frame = frameOfPage;
-    }
-    self.contentOffset = CGPointZero;
-    //
-    // TODO
-    //
-    // before we animate, we need to move pages to/from
-    // the hidden stack
-    //
-    // also, the hidden pages need to be "under" the visible
-    // page that's about to get animated
-    [self animatePageToFullScreen:thePageThatWasTapped withDelay:0 withBounce:YES onComplete:^(BOOL finished){
-        // TODO
-        // turn back on gestures etc
-        // and formally go back to page view
-        //
-        // also, make sure the hiddenStackHolder's frame is where it should be
-        // and that all the frames of all the pages are correct
-        debug_NSLog(@"clean up");
-        [self setListViewEntirelyEnabled:NO];
-    }];
 }
+
+
+
+
+
+/**
+ * the user has scaled small enough with the top page
+ * that we can take over and just animate the rest.
+ *
+ * so we need to cancel it's gestures, then calculate
+ * the final resting place for every page in the visible
+ * stack, then animate them.
+ *
+ * we're going to scale pages in the first two rows, and
+ * we'll just slide any pages below that above the screen.
+ *
+ * when the animation completes, we'll adjust all the frames
+ * and content offsets to that the user can scroll them
+ */
+-(void) animateFromListViewToFullScreenView:(SLPaperView *)page{
+    
+    __block NSMutableSet* pagesThatNeedAnimating = [NSMutableSet set];
+    
+    
+    
+    //
+    // all of the pages "look" like they're in the right place,
+    // but we need to turn on the scroll view.
+    void (^step1)(void) = ^{
+        //
+        // this means we need to keep the pages visually in the same place,
+        // but adjust their frames and the content size/offset so
+        // that we can set the scrollview offset to zero and turn off scrolling
+        for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
+            CGRect newFrame = aPage.frame;
+            newFrame.origin.y -= self.contentOffset.y;
+            if(!CGRectEqualToRect(newFrame, aPage.frame)){
+                aPage.frame = newFrame;
+            };
+        }
+        // set our content height/offset for the pages
+        [self setListViewHalfEnabled:YES];
+        [self setContentOffset:CGPointZero animated:NO];
+        [self setContentSize:CGSizeMake(screenWidth, screenHeight)];
+        [self setScrollEnabled:NO];
+        [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
+        [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
+        
+        [pagesThatNeedAnimating addObjectsFromArray:pagesThatWillBeVisibleAfterTransitionToListView];
+        
+        [visibleStackHolder.superview insertSubview:hiddenStackHolder belowSubview:visibleStackHolder];
+    };
+    
+    //
+    // make sure all the pages go to the correct place
+    // so that it looks like where they'll be in the list view
+    void (^step2)(void) = ^{
+        //
+        // animate all visible stack pages that will be in the
+        // visible frame to the correct place
+        for(SLPaperView* aPage in pagesThatNeedAnimating){
+            if([self isInVisibleStack:aPage]){
+                aPage.frame = visibleStackHolder.bounds;
+            }else{
+                aPage.frame = hiddenStackHolder.bounds;
+            }
+        }
+        CGRect newHiddenFrame = visibleStackHolder.frame;
+        newHiddenFrame.origin.x += screenWidth;
+        hiddenStackHolder.frame = newHiddenFrame;
+    };
+    
+    
+    
+    //
+    // first, find all pages behind the first full scale
+    // page, and just move them immediately
+    //
+    // this helps pretty dramatically with the animation
+    // performance.
+    //
+    // also, turn off gestures
+    void (^step3)(BOOL finished) = ^(BOOL finished){
+        [self setListViewEntirelyEnabled:NO];
+        
+        //
+        // find visible stack pages that we can
+        // move immediately
+        for(SLPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
+            aPage.frame = visibleStackHolder.bounds;
+            [aPage enableAllGestures];
+        }
+        for(SLPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
+            aPage.frame = hiddenStackHolder.bounds;
+        }
+        [visibleStackHolder.superview insertSubview:visibleStackHolder belowSubview:hiddenStackHolder];
+    };
+    
+    
+    step1();
+    
+
+    // ok, animate all the views in the visible stack!
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:UIViewAnimationCurveEaseOut
+                     animations:step2
+                     completion:step3];
+    //
+    // now that the user has finished the gesture,
+    // we can forget about the original frame locations
+}
+
+
+
+
+
 
 @end
