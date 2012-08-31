@@ -169,59 +169,75 @@
 #pragma mark - List View Enable / Disable Helper Methods
 
 /**
- * list view is half enabled as the user
- * gestures into the list view
- *
- * it is disabled when the user cancels the 
- * gesture
+ * the user is beginning to transition between list/page view
+ * and is starting from the Page view
  */
--(void) setListViewHalfEnabled:(BOOL)halfEnabled{
-    if(halfEnabled){
-        [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
-        // clear our cache of frame locations
-        [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
-        // ok, now we can get offset
-        initialScrollOffsetFromTransitionToListView = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
-        // from offset/height, we know which views will be visible
-        pagesThatWillBeVisibleAfterTransitionToListView = [[self findPagesInVisibleRowsOfListViewGivenOffset:initialScrollOffsetFromTransitionToListView] retain];
-        // bezeling in from right is no longer allowed
-        [fromRightBezelGesture setEnabled:NO];
-        [hiddenStackHolder setClipsToBounds:NO];
-    }else{
-        [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
-        [tapGesture setEnabled:NO];
-        [pagesThatWillBeVisibleAfterTransitionToListView release];
-        pagesThatWillBeVisibleAfterTransitionToListView = nil;
-        [fromRightBezelGesture setEnabled:YES];
-        [hiddenStackHolder setClipsToBounds:YES];
-    }
+-(void) beginUITransitionFromPageView{
+    [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
+    // clear our cache of frame locations
+    [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
+    // ok, now we can get offset
+    initialScrollOffsetFromTransitionToListView = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
+    // from offset/height, we know which views will be visible
+    pagesThatWillBeVisibleAfterTransitionToListView = [[self findPagesInVisibleRowsOfListViewGivenOffset:initialScrollOffsetFromTransitionToListView] retain];
+    // bezeling in from right is no longer allowed
+    [fromRightBezelGesture setEnabled:NO];
+    [hiddenStackHolder setClipsToBounds:NO];
+    [visibleStackHolder setClipsToBounds:NO];
+    [self setScrollEnabled:NO];
+    [tapGesture setEnabled:NO];
 }
 
 /**
- * a list view is entirely enabled when the user
- * confirms the list view gesture.
- *
- * when the user taps to return to paper view,
- * the list view is set to entirely disabled
+ * the user is beginning to transition between list/page view
+ * and is starting from the List view
  */
--(void) setListViewEntirelyEnabled:(BOOL)entirelyEnabled{
-    if(entirelyEnabled){
-        [visibleStackHolder setClipsToBounds:NO];
-        [hiddenStackHolder setClipsToBounds:NO];
-        [self setScrollEnabled:YES];
-        [tapGesture setEnabled:YES];
-        [pagesThatWillBeVisibleAfterTransitionToListView release];
-        pagesThatWillBeVisibleAfterTransitionToListView = nil;
-    }else{
-        // TODO allow user to disable list view
-        [visibleStackHolder setClipsToBounds:YES];
-        [hiddenStackHolder setClipsToBounds:YES];
-        [self setScrollEnabled:NO];
-        [tapGesture setEnabled:NO];
-        [pagesThatWillBeVisibleAfterTransitionToListView release];
-        pagesThatWillBeVisibleAfterTransitionToListView = nil;
-    }
+-(void) beginUITransitionFromListView{
+    [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
+    // clear our cache of frame locations
+    [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
+    // ok, now we can get offset
+    initialScrollOffsetFromTransitionToListView = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
+    // from offset/height, we know which views will be visible
+    pagesThatWillBeVisibleAfterTransitionToListView = [[self findPagesInVisibleRowsOfListViewGivenOffset:initialScrollOffsetFromTransitionToListView] retain];
+    // bezeling in from right is no longer allowed
+    [fromRightBezelGesture setEnabled:NO];
+    [hiddenStackHolder setClipsToBounds:NO];
+    [visibleStackHolder setClipsToBounds:NO];
+    [self setScrollEnabled:NO];
+    [tapGesture setEnabled:NO];
 }
+
+/**
+ * the user has confirmed that they want to complete the
+ * transition into list view from the transition state
+ */
+-(void) finishUITransitionToListView{
+    [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
+    [fromRightBezelGesture setEnabled:NO];
+    [visibleStackHolder setClipsToBounds:NO];
+    [hiddenStackHolder setClipsToBounds:NO];
+    [self setScrollEnabled:YES];
+    [tapGesture setEnabled:YES];
+    [pagesThatWillBeVisibleAfterTransitionToListView release];
+    pagesThatWillBeVisibleAfterTransitionToListView = nil;
+}
+
+/**
+ * the user has confirmed that they want to complete the
+ * transition into page view from the transition state
+ */
+-(void) finishUITransitionToPageView{
+    [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
+    [fromRightBezelGesture setEnabled:YES];
+    [visibleStackHolder setClipsToBounds:YES];
+    [hiddenStackHolder setClipsToBounds:YES];
+    [self setScrollEnabled:NO];
+    [tapGesture setEnabled:NO];
+    [pagesThatWillBeVisibleAfterTransitionToListView release];
+    pagesThatWillBeVisibleAfterTransitionToListView = nil;
+}
+
 
 
 
@@ -390,7 +406,7 @@
             }
         }];
     }else{
-        [self setListViewHalfEnabled:YES];
+        [self beginUITransitionFromPageView];
         //
         // ok, we're allowed to zoom out to list view, so save the frames
         // of all the pages in the visible stack
@@ -517,7 +533,7 @@
         // set our content height/offset for the pages
         [self setContentOffset:initialScrollOffsetFromTransitionToListView animated:NO];
         [self setContentSize:CGSizeMake(screenWidth, [self contentHeightForAllPages])];
-        [self setListViewEntirelyEnabled:YES];
+        [self finishUITransitionToListView];
         [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
         [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
     };
@@ -540,7 +556,7 @@
  * the user has cancelled the zoom-to-list gesture
  */
 -(void) cancelledScalingReallySmall:(SLPaperView *)page{
-    [self setListViewHalfEnabled:NO];
+    [self finishUITransitionToPageView];
     if(![page isBeingPannedAndZoomed]){
         [self animatePageToFullScreen:[visibleStackHolder peekSubview] withDelay:0 withBounce:YES onComplete:^(BOOL finished){
             [self realignPagesInVisibleStackExcept:[visibleStackHolder peekSubview] animated:NO];
@@ -687,7 +703,7 @@
             };
         }
         // set our content height/offset for the pages
-        [self setListViewHalfEnabled:YES];
+        [self beginUITransitionFromListView];
         [self setContentOffset:CGPointZero animated:NO];
         [self setContentSize:CGSizeMake(screenWidth, screenHeight)];
         [self setScrollEnabled:NO];
@@ -740,8 +756,8 @@
                          animations:^(void){
                              [visibleStackHolder peekSubview].frame = self.bounds;
                          } completion:^(BOOL finished){
-                             [self setListViewEntirelyEnabled:NO];
-                             
+                             [self finishUITransitionToPageView];
+
                              //
                              // find visible stack pages that we can
                              // move immediately
@@ -755,9 +771,6 @@
                                  page.scale = 1;
                              }
                              [visibleStackHolder.superview insertSubview:visibleStackHolder belowSubview:hiddenStackHolder];
-                             [self setListViewHalfEnabled:NO];
-                             [self setListViewEntirelyEnabled:NO];
-                             
                          }];
     };
     
