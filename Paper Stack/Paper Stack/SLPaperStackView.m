@@ -835,6 +835,10 @@
     @throw kAbstractMethodException;
 }
 
+-(void) finishedScalingBackToPageView:(SLPaperView*)page{
+    @throw kAbstractMethodException;
+}
+
 -(NSInteger) indexOfPageInCompleteStack:(SLPaperView*)page{
     @throw kAbstractMethodException;
 }

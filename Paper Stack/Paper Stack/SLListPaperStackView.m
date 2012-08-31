@@ -564,6 +564,17 @@
 }
 
 /**
+ * this is called after we've transitioned to page view
+ *
+ * a bit awkward, but we actually call this on ourselves so
+ * that the editablePaperStack can set buttons visibility
+ */
+-(void) finishedScalingBackToPageView:(SLPaperView*)page{
+    // noop
+}
+
+
+/**
  * this delegate method tells the SLPageView where
  * it sits in the combined visible/hidden stack
  */
@@ -707,6 +718,8 @@
         CGRect newHiddenFrame = visibleStackHolder.frame;
         newHiddenFrame.origin.x += screenWidth;
         hiddenStackHolder.frame = newHiddenFrame;
+        
+        [self finishedScalingBackToPageView:[visibleStackHolder peekSubview]];
     };
     
     

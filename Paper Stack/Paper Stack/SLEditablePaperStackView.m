@@ -169,4 +169,8 @@
     [self setButtonsVisible:YES];
     [super cancelledScalingReallySmall:page];
 }
+-(void) finishedScalingBackToPageView:(SLPaperView*)page{
+    [self setButtonsVisible:YES];
+    [super finishedScalingBackToPageView:page];
+}
 @end

@@ -24,6 +24,8 @@
 
 -(void) cancelledScalingReallySmall:(SLPaperView*)page;
 
+-(void) finishedScalingBackToPageView:(SLPaperView*)page;
+
 /**
  * returns the index of the page within the total
  * stack of visible and hidden stacks.
