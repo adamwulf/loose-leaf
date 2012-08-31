@@ -51,13 +51,20 @@
 
 
 -(void) didPinch:(SLPanAndPinchFromListViewGestureRecognizer*)gesture{
-    debug_NSLog(@"pinched");
+    debug_NSLog(@"pinched: %f", gesture.scale);
     if(gesture.state == UIGestureRecognizerStateBegan){
         [self setScrollEnabled:NO];
+        [self ensurePageIsAtTopOfVisibleStack:gesture.pinchedPage];
+        [self beginUITransitionFromListView];
     }else if(gesture.state == UIGestureRecognizerStateFailed ||
              gesture.state == UIGestureRecognizerStateEnded){
         [self setScrollEnabled:YES];
+        [self finishUITransitionToListView];
     }
+}
+
+-(CGSize) sizeOfFullscreenPage{
+    return CGSizeMake(screenWidth, screenHeight);
 }
 
 #pragma mark - Local Cache
@@ -192,6 +199,34 @@
     return nil;
 }
 
+/**
+ * makes sure that the input page is at the top of the visible
+ * stack. this will move pages on/off the visible stack to/from
+ * the hidden stack to preserve stack order.
+ */
+-(void) ensurePageIsAtTopOfVisibleStack:(SLPaperView*)aPage{
+    //
+    // ok, we know what page was tapped.
+    //
+    // now we need to make sure that page is on the top
+    // of the visible stack
+    if([self isInVisibleStack:aPage]){
+        // the page is in teh visible stack, so pop pages
+        // onto the hidden stack so that this page is the
+        // top visible page
+        while([visibleStackHolder peekSubview] != aPage){
+            [hiddenStackHolder pushSubview:[visibleStackHolder peekSubview]];
+        }
+    }else{
+        // the page is in the hidden stack, so pop pages
+        // onto the visible stack so that this page is the
+        // top visible page
+        while([visibleStackHolder peekSubview] != aPage){
+            [visibleStackHolder pushSubview:[hiddenStackHolder peekSubview]];
+        }
+    }
+}
+
 
 
 #pragma mark - List View Enable / Disable Helper Methods
@@ -235,7 +270,9 @@
     [visibleStackHolder setClipsToBounds:NO];
     [self setScrollEnabled:NO];
     [tapGesture setEnabled:NO];
-    [pinchGesture setEnabled:NO];
+    if(!pinchGesture.pinchedPage){
+        [pinchGesture setEnabled:NO];
+    }
 }
 
 /**
@@ -670,31 +707,11 @@
     if(!thePageThatWasTapped) return;
     
     
-    //
-    // ok, we know what page was tapped.
-    //
-    // now we need to make sure that page is on the top
-    // of the visible stack
-    if([self isInVisibleStack:thePageThatWasTapped]){
-        // the page is in teh visible stack, so pop pages
-        // onto the hidden stack so that this page is the
-        // top visible page
-        while([visibleStackHolder peekSubview] != thePageThatWasTapped){
-            [hiddenStackHolder pushSubview:[visibleStackHolder peekSubview]];
-        }
-    }else{
-        // the page is in the hidden stack, so pop pages
-        // onto the visible stack so that this page is the
-        // top visible page
-        while([visibleStackHolder peekSubview] != thePageThatWasTapped){
-            [visibleStackHolder pushSubview:[hiddenStackHolder peekSubview]];
-        }
-    }
+    [self ensurePageIsAtTopOfVisibleStack:thePageThatWasTapped];
     
     [self animateFromListViewToFullScreenView:thePageThatWasTapped];
     
 }
-
 
 
 

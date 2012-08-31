@@ -15,3 +15,12 @@
 -(NSSet*) setByRemovingObject:(id)obj;
 
 @end
+
+
+@interface NSMutableOrderedSet (Extras)
+
+-(void) removeObjectsInSet:(NSSet*)set;
+
+-(NSSet*) setByRemovingObject:(id)obj;
+
+@end

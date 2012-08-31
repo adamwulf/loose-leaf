@@ -14,4 +14,7 @@
 
 -(SLPaperView*) pageForPointInList:(CGPoint) point;
 
+-(CGSize) sizeOfFullscreenPage;
+
+
 @end
