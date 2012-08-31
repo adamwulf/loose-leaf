@@ -40,8 +40,24 @@
     tapGesture.enabled = NO;
     [self addGestureRecognizer:tapGesture];
     
+    pinchGesture = [[SLPanAndPinchFromListViewGestureRecognizer alloc] initWithTarget:self action:@selector(didPinch:)];
+    pinchGesture.enabled = NO;
+    pinchGesture.pinchDelegate = self;
+    [self addGestureRecognizer:pinchGesture];
+    
     
     [super awakeFromNib];
+}
+
+
+-(void) didPinch:(SLPanAndPinchFromListViewGestureRecognizer*)gesture{
+    debug_NSLog(@"pinched");
+    if(gesture.state == UIGestureRecognizerStateBegan){
+        [self setScrollEnabled:NO];
+    }else if(gesture.state == UIGestureRecognizerStateFailed ||
+             gesture.state == UIGestureRecognizerStateEnded){
+        [self setScrollEnabled:YES];
+    }
 }
 
 #pragma mark - Local Cache
@@ -163,6 +179,18 @@
     }
 }
 
+-(SLPaperView*) pageForPointInList:(CGPoint) point{
+    for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
+        CGRect frameOfPage = [self convertRect:aPage.frame fromView:aPage.superview];
+        // we have to expand the frame, because we want to count pages even if
+        // just their shadow is visible
+        frameOfPage = [SLShadowedView expandFrame:frameOfPage];
+        if(CGRectContainsPoint(frameOfPage, point)){
+            return aPage;
+        }
+    }
+    return nil;
+}
 
 
 
@@ -186,6 +214,7 @@
     [visibleStackHolder setClipsToBounds:NO];
     [self setScrollEnabled:NO];
     [tapGesture setEnabled:NO];
+    [pinchGesture setEnabled:NO];
 }
 
 /**
@@ -206,6 +235,7 @@
     [visibleStackHolder setClipsToBounds:NO];
     [self setScrollEnabled:NO];
     [tapGesture setEnabled:NO];
+    [pinchGesture setEnabled:NO];
 }
 
 /**
@@ -219,6 +249,7 @@
     [hiddenStackHolder setClipsToBounds:NO];
     [self setScrollEnabled:YES];
     [tapGesture setEnabled:YES];
+    [pinchGesture setEnabled:YES];
     [pagesThatWillBeVisibleAfterTransitionToListView release];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
 }
@@ -234,6 +265,7 @@
     [hiddenStackHolder setClipsToBounds:YES];
     [self setScrollEnabled:NO];
     [tapGesture setEnabled:NO];
+    [pinchGesture setEnabled:NO];
     [pagesThatWillBeVisibleAfterTransitionToListView release];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
 }

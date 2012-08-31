@@ -7,8 +7,9 @@
 //
 
 #import "SLPaperStackView.h"
+#import "SLPanAndPinchFromListViewGestureRecognizer.h"
 
-@interface SLListPaperStackView : SLPaperStackView{
+@interface SLListPaperStackView : SLPaperStackView<SLPanAndPinchFromListViewGestureRecognizerDelegate>{
     //
     // when beginning a zoom, we need to save the
     // frames of all the pages we'll be animating
@@ -25,6 +26,7 @@
     CGFloat bufferWidth;
     
     UITapGestureRecognizer* tapGesture;
+    SLPanAndPinchFromListViewGestureRecognizer* pinchGesture;
     
     CGPoint initialScrollOffsetFromTransitionToListView;
     NSArray* pagesThatWillBeVisibleAfterTransitionToListView;
