@@ -228,6 +228,10 @@
  * and is starting from the List view
  */
 -(void) beginUITransitionFromListView{
+    if(!tapGesture.enabled && !fromRightBezelGesture.enabled && !hiddenStackHolder.clipsToBounds && !visibleStackHolder.clipsToBounds){
+        // already began transition
+        return;
+    }
     [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
     // clear our cache of frame locations
     [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
