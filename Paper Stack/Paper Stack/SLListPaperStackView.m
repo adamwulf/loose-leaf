@@ -549,6 +549,15 @@
             CGRect fr = visibleStackHolder.frame;
             fr.origin.x = fr.size.width;
             hiddenStackHolder.frame = fr;
+            //
+            // reset hidden stack pages
+            for(SLPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
+                if(CGRectEqualToRect(aPage.frame, hiddenStackHolder.bounds)){
+                    break;
+                }else{
+                    aPage.frame = hiddenStackHolder.bounds;
+                }
+            }
         } completion:nil];
     }
     [setOfFinalFramesForPagesBeingZoomed removeAllObjects];

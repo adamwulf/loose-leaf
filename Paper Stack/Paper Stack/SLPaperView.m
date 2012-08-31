@@ -168,6 +168,9 @@
                 [self.delegate cancelledScalingReallySmall:self];
             }
         }else{
+            if(scale < kMinPageZoom){
+                [self.delegate cancelledScalingReallySmall:self];
+            }
             [self.delegate finishedPanningAndScalingPage:self 
                                                intoBezel:panGesture.didExitToBezel
                                                fromFrame:frameOfPageAtBeginningOfGesture
