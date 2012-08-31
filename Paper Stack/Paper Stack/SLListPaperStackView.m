@@ -687,7 +687,9 @@
         // animate all visible stack pages that will be in the
         // visible frame to the correct place
         for(SLPaperView* aPage in pagesThatNeedAnimating){
-            if([self isInVisibleStack:aPage]){
+            if(aPage == [visibleStackHolder peekSubview]){
+                aPage.frame = [SLPaperView expandFrame:visibleStackHolder.bounds];
+            }else if([self isInVisibleStack:aPage]){
                 aPage.frame = visibleStackHolder.bounds;
             }else{
                 aPage.frame = hiddenStackHolder.bounds;
@@ -710,23 +712,31 @@
     //
     // also, turn off gestures
     void (^step3)(BOOL finished) = ^(BOOL finished){
-        [self setListViewEntirelyEnabled:NO];
-        
         //
-        // find visible stack pages that we can
-        // move immediately
-        for(SLPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
-            aPage.frame = visibleStackHolder.bounds;
-            [aPage enableAllGestures];
-            page.scale = 1;
-        }
-        for(SLPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
-            aPage.frame = hiddenStackHolder.bounds;
-            page.scale = 1;
-        }
-        [visibleStackHolder.superview insertSubview:visibleStackHolder belowSubview:hiddenStackHolder];
-        [self setListViewHalfEnabled:NO];
-        [self setListViewEntirelyEnabled:NO];
+        // now complete the bounce for the top page
+        [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn
+                         animations:^(void){
+                             [visibleStackHolder peekSubview].frame = self.bounds;
+                         } completion:^(BOOL finished){
+                             [self setListViewEntirelyEnabled:NO];
+                             
+                             //
+                             // find visible stack pages that we can
+                             // move immediately
+                             for(SLPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
+                                 aPage.frame = visibleStackHolder.bounds;
+                                 [aPage enableAllGestures];
+                                 page.scale = 1;
+                             }
+                             for(SLPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
+                                 aPage.frame = hiddenStackHolder.bounds;
+                                 page.scale = 1;
+                             }
+                             [visibleStackHolder.superview insertSubview:visibleStackHolder belowSubview:hiddenStackHolder];
+                             [self setListViewHalfEnabled:NO];
+                             [self setListViewEntirelyEnabled:NO];
+                             
+                         }];
     };
     
     
@@ -734,7 +744,7 @@
     
 
     // ok, animate all the views in the visible stack!
-    [UIView animateWithDuration:0.3
+    [UIView animateWithDuration:0.2
                           delay:0
                         options:UIViewAnimationCurveEaseOut
                      animations:step2
