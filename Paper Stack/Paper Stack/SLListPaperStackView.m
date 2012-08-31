@@ -120,6 +120,10 @@
         CGRect rectOfVisibleScroll = CGRectMake(initialScrollOffsetFromTransitionToListView.x, initialScrollOffsetFromTransitionToListView.y, screenWidth, screenHeight);
         while((aPage = [visibleStackHolder getPageBelow:aPage])){
             CGRect frameOfPage = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
+            //
+            // we have to expand the frame, because we want to count pages even if
+            // just their shadow is visible
+            frameOfPage = [SLShadowedView expandFrame:frameOfPage];
             if(frameOfPage.origin.y + frameOfPage.size.height > rectOfVisibleScroll.origin.y &&
                frameOfPage.origin.y < rectOfVisibleScroll.origin.y + rectOfVisibleScroll.size.height){
                 [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
@@ -438,8 +442,9 @@
                 CGRect rect = aPage.frame;
                 if(lastPage){
                     // we already have the last visible page, move this one
-                    // immediately
-                    rect.origin.y = -rect.size.height;
+                    // immediately. we have to move it by the expanded frame
+                    // because shadows count here too
+                    rect.origin.y = -[SLShadowedView expandFrame:rect].size.height;
                     aPage.frame = rect;
                 }else if(rect.origin.x <= 0 && rect.origin.y <= 0 && rect.origin.x + rect.size.width >= screenWidth && rect.origin.y + rect.size.height >= screenHeight){
                     // we just found the page that covers the whole screen,
@@ -460,7 +465,9 @@
                 [pagesThatNeedAnimating addObject:aPage];
             }else{
                 CGRect rect = aPage.frame;
-                rect.origin.y = -rect.size.height;
+                // we have to move it by the expanded frame
+                // because shadows count here too
+                rect.origin.y = -[SLShadowedView expandFrame:rect].size.height;
                 aPage.frame = rect;
             }
             // gestures aren't allowed in list view
@@ -478,9 +485,10 @@
         for(SLPaperView* aPage in pagesThatNeedAnimating){
             if(aPage == lastPage){
                 // animate the last page to cover the screen
-                // up above the visible page
+                // up above the visible page. we have to move it by the expanded frame
+                // because shadows count here too
                 CGRect newFrame = aPage.frame;
-                newFrame.origin.y = -newFrame.size.height;
+                newFrame.origin.y = -[SLShadowedView expandFrame:newFrame].size.height;
                 aPage.frame = newFrame;
             }else{
                 // these views we're animating into place
@@ -556,15 +564,27 @@
     }
 }
 
+
+
+/**
+ * return true if the input page is in the visible stack
+ */
 -(BOOL) isInVisibleStack:(SLPaperView*)page{
     return [visibleStackHolder containsSubview:page];
 }
 
 
 
-
 #pragma mark - SLPaperViewDelegate - Tap Gesture
-
+ 
+ 
+/**
+ * we are in list view, and the user tapped onto the 
+ * scrollview (probably tapped a page).
+ *
+ * let's check if the user tapped a page, and zoom
+ * to that page as the top of the visible stack
+ */
 -(void) didTapScrollView:(UITapGestureRecognizer*)_tapGesture{
     //
     // first, we should find which page the user tapped
