@@ -150,6 +150,14 @@
  * i should possibly cap the speed that the page can move just like i do with scale,
  * and also should ensure it never goes offscreen. there's no reason to show less than 100px
  * in any direction (maybe more).
+ *
+ *
+ *
+ * TODO
+ * need to pull out the logic that scales the actual page into a separate method.
+ * this way, i can send in a normalized gesture location + scale from inputs to a method
+ * instead of state thats kept in this page object. then i can refactor to have both of my
+ * pan gestures use proper state control etc to zoom a page in and out.
  */
 -(void) panAndScale:(SLPanAndPinchGestureRecognizer*)_panGesture{
     CGPoint lastLocationInSelf = [panGesture locationInView:self];

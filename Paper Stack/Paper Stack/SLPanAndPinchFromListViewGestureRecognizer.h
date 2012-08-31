@@ -19,6 +19,7 @@
     // scale
     CGFloat initialDistance;
     CGFloat initialPageScale;
+    CGPoint normalizedLocationOfScale;
     //
     // the current scale of the gesture
     CGFloat scale;
@@ -36,7 +37,9 @@
 }
 
 @property (nonatomic, readonly) SLPaperView* pinchedPage;
+@property (nonatomic, readonly) CGPoint normalizedLocationOfScale;
 @property (nonatomic, readonly) CGFloat scale;
+@property (nonatomic, readonly) CGFloat initialPageScale;
 @property (nonatomic, readonly) SLBezelScaleDirection scaleDirection;
 @property (nonatomic, assign) NSObject<SLPanAndPinchFromListViewGestureRecognizerDelegate>* pinchDelegate;
 

@@ -40,7 +40,7 @@
     tapGesture.enabled = NO;
     [self addGestureRecognizer:tapGesture];
     
-    pinchGesture = [[SLPanAndPinchFromListViewGestureRecognizer alloc] initWithTarget:self action:@selector(didPinch:)];
+    pinchGesture = [[SLPanAndPinchFromListViewGestureRecognizer alloc] initWithTarget:self action:@selector(didPinchAPageInListView:)];
     pinchGesture.enabled = NO;
     pinchGesture.pinchDelegate = self;
     [self addGestureRecognizer:pinchGesture];
@@ -49,23 +49,6 @@
     [super awakeFromNib];
 }
 
-
--(void) didPinch:(SLPanAndPinchFromListViewGestureRecognizer*)gesture{
-    debug_NSLog(@"pinched: %f", gesture.scale);
-    if(gesture.state == UIGestureRecognizerStateBegan){
-        [self setScrollEnabled:NO];
-        [self ensurePageIsAtTopOfVisibleStack:gesture.pinchedPage];
-        [self beginUITransitionFromListView];
-    }else if(gesture.state == UIGestureRecognizerStateFailed ||
-             gesture.state == UIGestureRecognizerStateEnded){
-        [self setScrollEnabled:YES];
-        [self finishUITransitionToListView];
-    }
-}
-
--(CGSize) sizeOfFullscreenPage{
-    return CGSizeMake(screenWidth, screenHeight);
-}
 
 #pragma mark - Local Cache
 
@@ -186,18 +169,6 @@
     }
 }
 
--(SLPaperView*) pageForPointInList:(CGPoint) point{
-    for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
-        CGRect frameOfPage = [self convertRect:aPage.frame fromView:aPage.superview];
-        // we have to expand the frame, because we want to count pages even if
-        // just their shadow is visible
-        frameOfPage = [SLShadowedView expandFrame:frameOfPage];
-        if(CGRectContainsPoint(frameOfPage, point)){
-            return aPage;
-        }
-    }
-    return nil;
-}
 
 /**
  * makes sure that the input page is at the top of the visible
@@ -261,7 +232,7 @@
     // clear our cache of frame locations
     [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
     // ok, now we can get offset
-    initialScrollOffsetFromTransitionToListView = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
+    initialScrollOffsetFromTransitionToListView = self.contentOffset;
     // from offset/height, we know which views will be visible
     pagesThatWillBeVisibleAfterTransitionToListView = [[self findPagesInVisibleRowsOfListViewGivenOffset:initialScrollOffsetFromTransitionToListView] retain];
     // bezeling in from right is no longer allowed
@@ -744,12 +715,14 @@
         // this means we need to keep the pages visually in the same place,
         // but adjust their frames and the content size/offset so
         // that we can set the scrollview offset to zero and turn off scrolling
-        for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
-            CGRect newFrame = aPage.frame;
-            newFrame.origin.y -= self.contentOffset.y;
-            if(!CGRectEqualToRect(newFrame, aPage.frame)){
-                aPage.frame = newFrame;
-            };
+        if(self.contentOffset.y > 0){
+            for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
+                CGRect newFrame = aPage.frame;
+                newFrame.origin.y -= self.contentOffset.y;
+                if(!CGRectEqualToRect(newFrame, aPage.frame)){
+                    aPage.frame = newFrame;
+                };
+            }
         }
         // set our content height/offset for the pages
         [self beginUITransitionFromListView];
@@ -839,7 +812,106 @@
 }
 
 
+#pragma mark - SLPanAndPinchFromListViewGestureRecognizerDelegate - Tap Gesture
 
+/**
+ * called when a page is pinched in list view
+ *
+ * this manages the reordering and the zoom in/out from
+ * list view to page view
+ */
+-(void) didPinchAPageInListView:(SLPanAndPinchFromListViewGestureRecognizer*)gesture{
+    if(gesture.state == UIGestureRecognizerStateBegan){
+        [self setScrollEnabled:NO];
+        [self ensurePageIsAtTopOfVisibleStack:gesture.pinchedPage];
+        [self beginUITransitionFromListView];
+    }else if(gesture.state == UIGestureRecognizerStateFailed){
+        // TODO, check this
+        [self setScrollEnabled:YES];
+        [self finishUITransitionToListView];
+    }else if(gesture.state == UIGestureRecognizerStateEnded){
+        [self setScrollEnabled:YES];
+        if(gesture.scaleDirection == SLScaleDirectionLarger){
+            [self animateFromListViewToFullScreenView:gesture.pinchedPage];
+            return;
+        }else{
+            [self finishUITransitionToListView];
+            // TODO, scale the page back into place
+        }
+    }else if(gesture.state == UIGestureRecognizerStateChanged){
+        //
+        // ok, the top page is the only page that's being panned.
+        // and it's zoom is below the min page zoom, so we should
+        // start to move it's frame toward its resting place, and also
+        // move all the top two rows of pages to their resting place as well
+        //
+        // how close are we to list view? 1 is not close at all, 0 is list view
+        CGFloat percentageToTrustToFrame = gesture.scale / kMinPageZoom;
+//        debug_NSLog(@"pinched: %f and %d pages and %f", gesture.scale, [pagesThatWillBeVisibleAfterTransitionToListView count], percentageToTrustToFrame);
+
+        CGFloat scale = gesture.scale;
+        
+        if(percentageToTrustToFrame > 1.0){
+            //
+            // the user has scaled the page above the kMinPageZoom threshhold,
+            // so auto-pull that page to full screen
+            [self animateFromListViewToFullScreenView:gesture.pinchedPage];
+            return;
+        
+        }else if(gesture.scale < gesture.initialPageScale){
+            scale = gesture.initialPageScale;
+        }
+        
+        CGPoint lastLocationInSuper = [gesture locationInView:gesture.pinchedPage.superview];
+        //
+        // now, with our pan offset and new scale, we need to calculate the new frame location.
+        //
+        // first, find the location of the gesture at the size of the page before the gesture began.
+        // then, find the location of the gesture at the new scale of the page.
+        // since we're using the normalized location of the gesture, this will make sure the before/after
+        // location of the gesture is in the same place of the view after scaling the width/height.
+        // the difference in these locations is how muh we need to move the origin of the page to
+        // accomodate the new scale while maintaining the location of the gesture uner the user's fingers
+        //
+        // the, add the diff of the pan gesture to get the full displacement of the origin. also set the
+        // width and height to the new scale.
+        CGSize superviewSize = self.superview.bounds.size;
+        CGPoint locationOfPinchAfterScale = CGPointMake(scale * gesture.normalizedLocationOfScale.x * superviewSize.width,
+                                                        scale * gesture.normalizedLocationOfScale.y * superviewSize.height);
+        CGSize newSizeOfView = CGSizeMake(superviewSize.width * scale, superviewSize.height * scale);
+        
+        
+        //
+        // now calculate our final frame given our pan and zoom
+        CGRect fr = self.frame;
+        fr.origin = CGPointMake(lastLocationInSuper.x - locationOfPinchAfterScale.x,
+                                lastLocationInSuper.y - locationOfPinchAfterScale.y);
+        fr.size = newSizeOfView;
+        gesture.pinchedPage.frame = fr;
+    }
+}
+
+/**
+ * maps a point in this view to a page in either
+ * the visible or hidden stacks
+ */
+-(SLPaperView*) pageForPointInList:(CGPoint) point{
+    for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
+        CGRect frameOfPage = [self convertRect:aPage.frame fromView:aPage.superview];
+        // we have to expand the frame, because we want to count pages even if
+        // just their shadow is visible
+        frameOfPage = [SLShadowedView expandFrame:frameOfPage];
+        if(CGRectContainsPoint(frameOfPage, point)){
+            return aPage;
+        }
+    }
+    return nil;
+}
+
+
+-(CGSize) sizeOfFullscreenPage{
+    return CGSizeMake(screenWidth, screenHeight);
+}
 
 
 

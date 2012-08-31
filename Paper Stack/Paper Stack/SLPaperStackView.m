@@ -520,7 +520,6 @@
     //
     // let's animate a small pop in
     if(isPanningTopPage && [page willExitToBezel:SLBezelDirectionLeft]){
-        debug_NSLog(@"yep %d", page.numberOfTimesExitedBezel);
         //
         // we're in progress of a bezel gesture from the right
         //
