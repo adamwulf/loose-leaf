@@ -830,16 +830,22 @@
         [self setScrollEnabled:NO];
         [self ensurePageIsAtTopOfVisibleStack:gesture.pinchedPage];
         [self beginUITransitionFromListView];
-    }else if(gesture.state == UIGestureRecognizerStateFailed){
-        // TODO, check this
+    }else if(gesture.state == UIGestureRecognizerStateEnded ||
+             gesture.state == UIGestureRecognizerStateFailed){
         [self setScrollEnabled:YES];
-        [self finishUITransitionToListView];
-    }else if(gesture.state == UIGestureRecognizerStateEnded){
-        [self setScrollEnabled:YES];
-        if(gesture.scaleDirection == SLScaleDirectionLarger){
+        debug_NSLog(@"scale: %f", gesture.scale);
+        if(gesture.scaleDirection == SLScaleDirectionLarger && gesture.scale > kZoomToListPageZoom){
             [self animateFromListViewToFullScreenView:gesture.pinchedPage];
             return;
         }else{
+            CGRect frameOfPage = [self frameForListViewForPage:gesture.pinchedPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
+            [UIView animateWithDuration:.15
+                                  delay:0
+                                options:UIViewAnimationCurveEaseOut
+                             animations:^{
+                                 gesture.pinchedPage.frame = frameOfPage;
+                             }
+                             completion:nil];
             [self finishUITransitionToListView];
             // TODO, scale the page back into place
         }
@@ -852,7 +858,6 @@
         //
         // how close are we to list view? 1 is not close at all, 0 is list view
         CGFloat percentageToTrustToFrame = gesture.scale / kMinPageZoom;
-//        debug_NSLog(@"pinched: %f and %d pages and %f", gesture.scale, [pagesThatWillBeVisibleAfterTransitionToListView count], percentageToTrustToFrame);
 
         CGFloat scale = gesture.scale;
         
