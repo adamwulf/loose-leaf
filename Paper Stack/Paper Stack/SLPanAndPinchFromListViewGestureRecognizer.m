@@ -11,13 +11,16 @@
 @implementation SLPanAndPinchFromListViewGestureRecognizer
 
 @synthesize scale;
+@synthesize scaleDirection;
 @synthesize pinchDelegate;
+@synthesize pinchedPage;
 
 
 -(id) init{
     self = [super init];
     if(self){
-        validTouches = [[NSMutableSet alloc] init];
+        validTouches = [[NSMutableOrderedSet alloc] init];
+        [self reset];
     }
     return self;
 }
@@ -25,7 +28,8 @@
 -(id) initWithTarget:(id)target action:(SEL)action{
     self = [super initWithTarget:target action:action];
     if(self){
-        validTouches = [[NSMutableSet alloc] init];
+        validTouches = [[NSMutableOrderedSet alloc] init];
+        [self reset];
     }
     return self;
 }
@@ -51,6 +55,11 @@
                 [validTouches addObject:touch];
             }
             if([validTouches count] == 2 && self.state == UIGestureRecognizerStatePossible){
+                initialDistance = [self distanceBetweenTouches:validTouches];
+                CGSize fullPageSize = [pinchDelegate sizeOfFullscreenPage];
+                CGSize initialPageSize = pinchedPage.frame.size;
+                initialPageScale = initialPageSize.width / fullPageSize.width;
+                scale = initialPageScale;
                 self.state = UIGestureRecognizerStateBegan;
             }
         }else{
@@ -63,6 +72,14 @@
     if([validTouches count] == 2 && self.state != UIGestureRecognizerStateBegan){
         debug_NSLog(@"touchesMoved");
         self.state = UIGestureRecognizerStateChanged;
+
+        CGFloat newScale = initialPageScale * [self distanceBetweenTouches:validTouches] / initialDistance;
+        if(newScale > scale){
+            scaleDirection = SLScaleDirectionLarger;
+        }else if(newScale < scale){
+            scaleDirection = SLScaleDirectionSmaller;
+        }
+        scale = newScale;
     }
 }
 
@@ -91,11 +108,31 @@
     debug_NSLog(@"reset");
     [validTouches removeAllObjects];
     pinchedPage = nil;
+    scaleDirection = SLBezelDirectionNone;
+    scale = 1.0;
 }
 
 -(void) cancel{
     self.enabled = NO;
     self.enabled = YES;
+}
+
+
+
+
+
+
+
+
+-(CGFloat) distanceBetweenTouches:(NSOrderedSet*) touches{
+    if([touches count] >= 2){
+        UITouch* touch1 = [touches objectAtIndex:0];
+        UITouch* touch2 = [touches objectAtIndex:1];
+        CGPoint initialPoint1 = [touch1 locationInView:self.view.superview];
+        CGPoint initialPoint2 = [touch2 locationInView:self.view.superview];
+        return DistanceBetweenTwoPoints(initialPoint1, initialPoint2);
+    }
+    return 0;
 }
 
 @end

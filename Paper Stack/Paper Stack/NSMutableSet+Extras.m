@@ -22,6 +22,21 @@
     return ret;
 }
 
+@end
 
+
+@implementation NSMutableOrderedSet (Extras)
+
+-(void) removeObjectsInSet:(NSSet*)set{
+    for(id obj in set){
+        [self removeObject:obj];
+    }
+}
+
+-(NSOrderedSet*) setByRemovingObject:(id)obj{
+    NSMutableOrderedSet* ret = [[obj copy] autorelease];
+    [ret removeObject:obj];
+    return ret;
+}
 
 @end
