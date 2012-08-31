@@ -8,26 +8,47 @@
 
 #import "SLPaperView+ListView.h"
 
+
+@interface SLPaperView (ListView_Private)
+
+-(NSInteger) rowInListViewGivenIndex:(NSInteger) indexOfPage;
+
+-(NSInteger) columnInListViewGivenIndex:(NSInteger) indexOfPage;
+
+@end
+
+
 @implementation SLPaperView (ListView)
 
--(NSInteger) rowInListView{
-    NSInteger indexOfPage = [self.delegate indexOfPageInCompleteStack:self];
+-(NSInteger) rowInListViewGivenIndex:(NSInteger) indexOfPage{
     NSInteger rowOfPage = floor(indexOfPage / kNumberOfColumnsInListView);
     return rowOfPage;
 }
 
--(NSInteger) columnInListView{
-    NSInteger indexOfPage = [self.delegate indexOfPageInCompleteStack:self];
+-(NSInteger) columnInListViewGivenIndex:(NSInteger) indexOfPage{
     NSInteger columnOfPage = indexOfPage % kNumberOfColumnsInListView;
     return columnOfPage;
+}
+
+-(NSInteger) rowInListView{
+    NSInteger indexOfPage = [self.delegate indexOfPageInCompleteStack:self];
+    return [self rowInListViewGivenIndex:indexOfPage];
+}
+
+-(NSInteger) columnInListView{
+    NSInteger indexOfPage = [self.delegate indexOfPageInCompleteStack:self];
+    return [self columnInListViewGivenIndex:indexOfPage];
 }
 
 -(CGRect) frameForListViewGivenRowHeight:(CGFloat)rowHeight andColumnWidth:(CGFloat)columnWidth{
     CGFloat bufferWidth = kListPageZoom * columnWidth;
     
+    NSInteger indexOfPage = [self.delegate indexOfPageInCompleteStack:self];
+    NSInteger column = [self columnInListViewGivenIndex:indexOfPage];
+    NSInteger row = [self rowInListViewGivenIndex:indexOfPage];
     CGRect newFrame = CGRectZero;
-    newFrame.origin.x = bufferWidth + bufferWidth * self.columnInListView + columnWidth * self.columnInListView;
-    newFrame.origin.y = bufferWidth + bufferWidth * self.rowInListView + rowHeight * self.rowInListView;
+    newFrame.origin.x = bufferWidth + bufferWidth * column + columnWidth * column;
+    newFrame.origin.y = bufferWidth + bufferWidth * row + rowHeight * row;
     newFrame.size.width = columnWidth;
     newFrame.size.height = rowHeight;
 
