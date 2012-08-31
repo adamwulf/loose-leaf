@@ -179,8 +179,6 @@
         [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
         // clear our cache of frame locations
         [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
-        // calculate height first, that'll help determine offset
-        contentHeightFromTransitionToListView = [self contentHeightForAllPages];
         // ok, now we can get offset
         initialScrollOffsetFromTransitionToListView = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
         // from offset/height, we know which views will be visible
@@ -514,7 +512,7 @@
         }
         // set our content height/offset for the pages
         [self setContentOffset:initialScrollOffsetFromTransitionToListView animated:NO];
-        [self setContentSize:CGSizeMake(screenWidth, contentHeightFromTransitionToListView)];
+        [self setContentSize:CGSizeMake(screenWidth, [self contentHeightForAllPages])];
         [self setListViewEntirelyEnabled:YES];
         [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
         [setOfInitialFramesForPagesBeingZoomed removeAllObjects];

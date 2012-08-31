@@ -27,7 +27,6 @@
     UITapGestureRecognizer* tapGesture;
     
     CGPoint initialScrollOffsetFromTransitionToListView;
-    CGFloat contentHeightFromTransitionToListView;
     NSArray* pagesThatWillBeVisibleAfterTransitionToListView;
     NSMutableSet* pagesThatWillBeVisibleAfterTransitionToListViewAndAreInVisibleStack;
 }
