@@ -53,7 +53,9 @@
             if(!pinchedPage){
                 pinchedPage = page;
             }
-            if([validTouches count] < 2){
+            if([validTouches count] == 2){
+                [self ignoreTouch:touch forEvent:event];
+            }else if([validTouches count] < 2){
                 [validTouches addObject:touch];
             }
             if([validTouches count] == 2 && self.state == UIGestureRecognizerStatePossible){

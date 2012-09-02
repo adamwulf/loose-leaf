@@ -833,7 +833,6 @@
     }else if(gesture.state == UIGestureRecognizerStateEnded ||
              gesture.state == UIGestureRecognizerStateFailed){
         [self setScrollEnabled:YES];
-        debug_NSLog(@"scale: %f", gesture.scale);
         if(gesture.scaleDirection == SLScaleDirectionLarger && gesture.scale > kZoomToListPageZoom){
             [self animateFromListViewToFullScreenView:gesture.pinchedPage];
             return;
@@ -847,7 +846,6 @@
                              }
                              completion:nil];
             [self finishUITransitionToListView];
-            // TODO, scale the page back into place
         }
     }else if(gesture.state == UIGestureRecognizerStateChanged){
         //
