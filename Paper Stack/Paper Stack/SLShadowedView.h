@@ -10,9 +10,6 @@
 
 @interface SLShadowedView : UIView{
     UIView* contentView;
-    
-    // cache of the frame since it's computed by UIKit
-    CGRect lastFrame;
 }
 @property (nonatomic, readonly) UIView* contentView;
 
