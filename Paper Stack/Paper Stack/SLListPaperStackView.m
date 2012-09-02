@@ -103,8 +103,7 @@
 -(CGPoint) offsetNeededToShowPage:(SLPaperView*)page{
     //
     // calculate the number of rows that will be hidden from offset
-    SLPaperView* topPage = [visibleStackHolder peekSubview];
-    NSInteger numberOfHiddenRows = MAX(0, topPage.rowInListView - 1);
+    NSInteger numberOfHiddenRows = MAX(0, page.rowInListView - 1);
     CGFloat contentHeight = [self contentHeightForAllPages];
     CGPoint possiblePoint = CGPointMake(0, numberOfHiddenRows * (bufferWidth + rowHeight));
     if(possiblePoint.y + self.frame.size.height > contentHeight){
@@ -240,7 +239,7 @@
  * contentOffset, then the list frame will be adjusted
  * up screen by numberOfHiddenRows
  */
--(CGRect) zoomToListFrameForPage:(SLPaperView*)page oldToFrame:(CGRect)oldFrame withTrust:(CGFloat)percentageToTrustToFrame{
+-(CGRect) framePositionDuringTransitionForPage:(SLPaperView*)page originalFrame:(CGRect)oldFrame withTrust:(CGFloat)percentageToTrustToFrame{
     if(percentageToTrustToFrame < 0) percentageToTrustToFrame = 0;
     if(percentageToTrustToFrame > 1) percentageToTrustToFrame = 1;
     // final frame when the page is in the list view
@@ -539,12 +538,10 @@
             for(SLPaperView* aPage in pagesThatWillBeVisibleAfterTransitionToListView){
                 if(aPage != page){
                     CGRect oldFrame = hiddenStackHolder.bounds;
-                    BOOL pageIsInVisibleStack = [self isInVisibleStack:aPage];
-                    if(pageIsInVisibleStack){
+                    CGRect newFrame = [self framePositionDuringTransitionForPage:aPage originalFrame:oldFrame withTrust:percentageToTrustToFrame + transitionDelay];
+                    if([self isInVisibleStack:aPage]){
                         oldFrame = [[setOfInitialFramesForPagesBeingZoomed objectForKey:aPage.uuid] CGRectValue];
-                    }
-                    CGRect newFrame = [self zoomToListFrameForPage:aPage oldToFrame:oldFrame withTrust:percentageToTrustToFrame + transitionDelay];
-                    if(!pageIsInVisibleStack){
+                    }else{
                         //
                         // this helps the hidden pages to show coming in from
                         // the right
@@ -571,7 +568,7 @@
                 [[visibleStackHolder peekSubview] cancelAllGestures];
                 return fromFrame;
             }
-            return [self zoomToListFrameForPage:page oldToFrame:toFrame withTrust:percentageToTrustToFrame];
+            return [self framePositionDuringTransitionForPage:page originalFrame:toFrame withTrust:percentageToTrustToFrame];
         }
     }
     return [super isPanningAndScalingPage:page fromFrame:fromFrame toFrame:toFrame];
@@ -716,7 +713,7 @@
                 aPage.frame = newFrame;
             }else{
                 // these views we're animating into place
-                aPage.frame = [self zoomToListFrameForPage:aPage oldToFrame:aPage.frame withTrust:0.0];
+                aPage.frame = [self framePositionDuringTransitionForPage:aPage originalFrame:aPage.frame withTrust:0.0];
             }
         }
         hiddenStackHolder.frame = visibleStackHolder.frame;
