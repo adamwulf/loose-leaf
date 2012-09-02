@@ -51,6 +51,16 @@
 
 
 #pragma mark - Local Cache
+-(NSInteger) rowInListViewGivenIndex:(NSInteger) indexOfPage{
+    NSInteger rowOfPage = floor(indexOfPage / kNumberOfColumnsInListView);
+    return rowOfPage;
+}
+
+-(NSInteger) columnInListViewGivenIndex:(NSInteger) indexOfPage{
+    NSInteger columnOfPage = indexOfPage % kNumberOfColumnsInListView;
+    return columnOfPage;
+}
+
 
 //
 // for any given gesture, the frameForListViewGivenRowHeight:andColumnWidth: for any page
@@ -60,7 +70,16 @@
     if(finalFrame){
         return [finalFrame CGRectValue];
     }
-    CGRect frameOfPage = [page frameForListViewGivenRowHeight:_rowHeight andColumnWidth:_columnWidth];
+    
+    NSInteger indexOfPage = [self indexOfPageInCompleteStack:page];
+    NSInteger column = [self columnInListViewGivenIndex:indexOfPage];
+    NSInteger row = [self rowInListViewGivenIndex:indexOfPage];
+    CGRect frameOfPage = CGRectZero;
+    frameOfPage.origin.x = bufferWidth + bufferWidth * column + columnWidth * column;
+    frameOfPage.origin.y = bufferWidth + bufferWidth * row + rowHeight * row;
+    frameOfPage.size.width = columnWidth;
+    frameOfPage.size.height = rowHeight;
+    
     [setOfFinalFramesForPagesBeingZoomed setObject:[NSValue valueWithCGRect:frameOfPage] forKey:page.uuid];
     return frameOfPage;
 }
@@ -92,8 +111,8 @@
  * from the number of both visible and hidden pages
  */
 -(CGFloat) contentHeightForAllPages{
-    SLPaperView* topHiddenPage = [hiddenStackHolder bottomSubview];
-    NSInteger totalRows = topHiddenPage.rowInListView;
+    SLPaperView* mostHiddenPage = [hiddenStackHolder bottomSubview];
+    NSInteger totalRows = mostHiddenPage.rowInListView;
     // add 1 since rows start at 0
     CGFloat contentHeight = (totalRows + 1) * (bufferWidth + rowHeight) + bufferWidth;
     return contentHeight;
@@ -677,7 +696,7 @@
 
     SLPaperView* thePageThatWasTapped = nil;
     for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
-        CGRect frameOfPage = [aPage frameForListViewGivenRowHeight:rowHeight andColumnWidth:columnWidth];
+        CGRect frameOfPage = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
         if(CGRectContainsPoint(frameOfPage, locationOfTap)){
             thePageThatWasTapped = aPage;
         }

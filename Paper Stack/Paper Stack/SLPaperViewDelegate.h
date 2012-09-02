@@ -38,7 +38,8 @@
  * stack
  */
 -(NSInteger) indexOfPageInCompleteStack:(SLPaperView*)page;
-
+-(NSInteger) rowInListViewGivenIndex:(NSInteger) indexOfPage;
+-(NSInteger) columnInListViewGivenIndex:(NSInteger) indexOfPage;
 -(BOOL) isInVisibleStack:(SLPaperView*)page;
 
 @end
