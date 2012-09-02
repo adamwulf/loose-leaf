@@ -225,6 +225,164 @@
     }
 }
 
+/**
+ * this method helps transition from a page's current frame
+ * to that page's new frame in the list view.
+ *
+ * the percentageToTrustToFrame ranges from 0 to 1.
+ * if the value is 1, then the frame that's returned is
+ * exactly the same as the input oldFrame.
+ *
+ * if the value is 0, then the frame that's returned is it's
+ * position in the list view (during the transition).
+ *
+ * since the transition to list view has to adjust for the
+ * contentOffset, then the list frame will be adjusted
+ * up screen by numberOfHiddenRows
+ */
+-(CGRect) zoomToListFrameForPage:(SLPaperView*)page oldToFrame:(CGRect)oldFrame withTrust:(CGFloat)percentageToTrustToFrame{
+    if(percentageToTrustToFrame < 0) percentageToTrustToFrame = 0;
+    if(percentageToTrustToFrame > 1) percentageToTrustToFrame = 1;
+    // final frame when the page is in the list view
+    CGRect finalFrame = [self frameForListViewForPage:page givenRowHeight:rowHeight andColumnWidth:columnWidth];
+    finalFrame.origin.x -= initialScrollOffsetFromTransitionToListView.x;
+    finalFrame.origin.y -= initialScrollOffsetFromTransitionToListView.y;
+    
+    //
+    // ok, set the new frame that we'll return
+    CGRect newFrame = CGRectZero;
+    newFrame.origin.x = finalFrame.origin.x - (finalFrame.origin.x - oldFrame.origin.x) * percentageToTrustToFrame;
+    newFrame.origin.y = finalFrame.origin.y - (finalFrame.origin.y - oldFrame.origin.y) * percentageToTrustToFrame;
+    newFrame.size.width = finalFrame.size.width - (finalFrame.size.width - oldFrame.size.width) * percentageToTrustToFrame;
+    newFrame.size.height = finalFrame.size.height - (finalFrame.size.height - oldFrame.size.height) * percentageToTrustToFrame;
+    
+    return newFrame;
+}
+
+
+/**
+ * the user has scaled small enough with the top page
+ * that we can take over and just animate the rest.
+ *
+ * so we need to cancel it's gestures, then calculate
+ * the final resting place for every page in the visible
+ * stack, then animate them.
+ *
+ * we're going to scale pages in the first two rows, and
+ * we'll just slide any pages below that above the screen.
+ *
+ * when the animation completes, we'll adjust all the frames
+ * and content offsets to that the user can scroll them
+ */
+-(void) immediatelyAnimateFromListViewToFullScreenView:(SLPaperView *)page{
+    
+    __block NSMutableSet* pagesThatNeedAnimating = [NSMutableSet set];
+    
+    
+    
+    //
+    // all of the pages "look" like they're in the right place,
+    // but we need to turn on the scroll view.
+    void (^step1)(void) = ^{
+        //
+        // this means we need to keep the pages visually in the same place,
+        // but adjust their frames and the content size/offset so
+        // that we can set the scrollview offset to zero and turn off scrolling
+        if(self.contentOffset.y > 0){
+            for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
+                CGRect newFrame = aPage.frame;
+                newFrame.origin.y -= self.contentOffset.y;
+                if(!CGRectEqualToRect(newFrame, aPage.frame)){
+                    aPage.frame = newFrame;
+                };
+            }
+        }
+        // set our content height/offset for the pages
+        [self beginUITransitionFromListView];
+        [self setContentOffset:CGPointZero animated:NO];
+        [self setContentSize:CGSizeMake(screenWidth, screenHeight)];
+        [self setScrollEnabled:NO];
+        [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
+        [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
+        
+        [pagesThatNeedAnimating addObjectsFromArray:pagesThatWillBeVisibleAfterTransitionToListView];
+        
+        [visibleStackHolder.superview insertSubview:hiddenStackHolder belowSubview:visibleStackHolder];
+    };
+    
+    //
+    // make sure all the pages go to the correct place
+    // so that it looks like where they'll be in the list view
+    void (^step2)(void) = ^{
+        //
+        // animate all visible stack pages that will be in the
+        // visible frame to the correct place
+        for(SLPaperView* aPage in pagesThatNeedAnimating){
+            if(aPage == [visibleStackHolder peekSubview]){
+                aPage.frame = [SLPaperView expandFrame:visibleStackHolder.bounds];
+            }else if([self isInVisibleStack:aPage]){
+                aPage.frame = visibleStackHolder.bounds;
+            }else{
+                aPage.frame = hiddenStackHolder.bounds;
+            }
+        }
+        CGRect newHiddenFrame = visibleStackHolder.frame;
+        newHiddenFrame.origin.x += screenWidth;
+        hiddenStackHolder.frame = newHiddenFrame;
+        
+        [self finishedScalingBackToPageView:[visibleStackHolder peekSubview]];
+    };
+    
+    
+    
+    
+    //
+    // first, find all pages behind the first full scale
+    // page, and just move them immediately
+    //
+    // this helps pretty dramatically with the animation
+    // performance.
+    //
+    // also, turn off gestures
+    void (^step3)(BOOL finished) = ^(BOOL finished){
+        //
+        // now complete the bounce for the top page
+        [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn
+                         animations:^(void){
+                             [visibleStackHolder peekSubview].frame = self.bounds;
+                         } completion:^(BOOL finished){
+                             [self finishUITransitionToPageView];
+                             
+                             //
+                             // find visible stack pages that we can
+                             // move immediately
+                             for(SLPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
+                                 aPage.frame = visibleStackHolder.bounds;
+                                 [aPage enableAllGestures];
+                                 page.scale = 1;
+                             }
+                             for(SLPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
+                                 aPage.frame = hiddenStackHolder.bounds;
+                                 page.scale = 1;
+                             }
+                         }];
+    };
+    
+    
+    step1();
+    
+    
+    // ok, animate all the views in the visible stack!
+    [UIView animateWithDuration:0.2
+                          delay:0
+                        options:UIViewAnimationCurveEaseOut
+                     animations:step2
+                     completion:step3];
+    //
+    // now that the user has finished the gesture,
+    // we can forget about the original frame locations
+}
+
 
 
 #pragma mark - List View Enable / Disable Helper Methods
@@ -316,41 +474,6 @@
 
 
 #pragma mark - SLPaperViewDelegate - Paper View
-
-/**
- * this method helps transition from a page's current frame
- * to that page's new frame in the list view.
- *
- * the percentageToTrustToFrame ranges from 0 to 1.
- * if the value is 1, then the frame that's returned is
- * exactly the same as the input oldFrame.
- *
- * if the value is 0, then the frame that's returned is it's
- * position in the list view (during the transition).
- *
- * since the transition to list view has to adjust for the
- * contentOffset, then the list frame will be adjusted
- * up screen by numberOfHiddenRows
- */
--(CGRect) zoomToListFrameForPage:(SLPaperView*)page oldToFrame:(CGRect)oldFrame withTrust:(CGFloat)percentageToTrustToFrame{
-    if(percentageToTrustToFrame < 0) percentageToTrustToFrame = 0;
-    if(percentageToTrustToFrame > 1) percentageToTrustToFrame = 1;
-    // final frame when the page is in the list view
-    CGRect finalFrame = [self frameForListViewForPage:page givenRowHeight:rowHeight andColumnWidth:columnWidth];
-    finalFrame.origin.x -= initialScrollOffsetFromTransitionToListView.x;
-    finalFrame.origin.y -= initialScrollOffsetFromTransitionToListView.y;
-    
-    //
-    // ok, set the new frame that we'll return
-    CGRect newFrame = CGRectZero;
-    newFrame.origin.x = finalFrame.origin.x - (finalFrame.origin.x - oldFrame.origin.x) * percentageToTrustToFrame;
-    newFrame.origin.y = finalFrame.origin.y - (finalFrame.origin.y - oldFrame.origin.y) * percentageToTrustToFrame;
-    newFrame.size.width = finalFrame.size.width - (finalFrame.size.width - oldFrame.size.width) * percentageToTrustToFrame;
-    newFrame.size.height = finalFrame.size.height - (finalFrame.size.height - oldFrame.size.height) * percentageToTrustToFrame;
-    
-    return newFrame;
-}
-
 
 /**
  * this is a delegate method that's called when the page is being actively panned
@@ -698,7 +821,7 @@
 
 
 
-#pragma mark - SLPaperViewDelegate - Tap Gesture
+#pragma mark - Private Tap Gesture
  
  
 /**
@@ -725,135 +848,12 @@
     
     [self ensurePageIsAtTopOfVisibleStack:thePageThatWasTapped];
     
-    [self animateFromListViewToFullScreenView:thePageThatWasTapped];
+    [self immediatelyAnimateFromListViewToFullScreenView:thePageThatWasTapped];
     
 }
 
 
 
-
-/**
- * the user has scaled small enough with the top page
- * that we can take over and just animate the rest.
- *
- * so we need to cancel it's gestures, then calculate
- * the final resting place for every page in the visible
- * stack, then animate them.
- *
- * we're going to scale pages in the first two rows, and
- * we'll just slide any pages below that above the screen.
- *
- * when the animation completes, we'll adjust all the frames
- * and content offsets to that the user can scroll them
- */
--(void) animateFromListViewToFullScreenView:(SLPaperView *)page{
-    
-    __block NSMutableSet* pagesThatNeedAnimating = [NSMutableSet set];
-    
-    
-    
-    //
-    // all of the pages "look" like they're in the right place,
-    // but we need to turn on the scroll view.
-    void (^step1)(void) = ^{
-        //
-        // this means we need to keep the pages visually in the same place,
-        // but adjust their frames and the content size/offset so
-        // that we can set the scrollview offset to zero and turn off scrolling
-        if(self.contentOffset.y > 0){
-            for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
-                CGRect newFrame = aPage.frame;
-                newFrame.origin.y -= self.contentOffset.y;
-                if(!CGRectEqualToRect(newFrame, aPage.frame)){
-                    aPage.frame = newFrame;
-                };
-            }
-        }
-        // set our content height/offset for the pages
-        [self beginUITransitionFromListView];
-        [self setContentOffset:CGPointZero animated:NO];
-        [self setContentSize:CGSizeMake(screenWidth, screenHeight)];
-        [self setScrollEnabled:NO];
-        [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
-        [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
-        
-        [pagesThatNeedAnimating addObjectsFromArray:pagesThatWillBeVisibleAfterTransitionToListView];
-        
-        [visibleStackHolder.superview insertSubview:hiddenStackHolder belowSubview:visibleStackHolder];
-    };
-    
-    //
-    // make sure all the pages go to the correct place
-    // so that it looks like where they'll be in the list view
-    void (^step2)(void) = ^{
-        //
-        // animate all visible stack pages that will be in the
-        // visible frame to the correct place
-        for(SLPaperView* aPage in pagesThatNeedAnimating){
-            if(aPage == [visibleStackHolder peekSubview]){
-                aPage.frame = [SLPaperView expandFrame:visibleStackHolder.bounds];
-            }else if([self isInVisibleStack:aPage]){
-                aPage.frame = visibleStackHolder.bounds;
-            }else{
-                aPage.frame = hiddenStackHolder.bounds;
-            }
-        }
-        CGRect newHiddenFrame = visibleStackHolder.frame;
-        newHiddenFrame.origin.x += screenWidth;
-        hiddenStackHolder.frame = newHiddenFrame;
-        
-        [self finishedScalingBackToPageView:[visibleStackHolder peekSubview]];
-    };
-    
-    
-    
-    
-    //
-    // first, find all pages behind the first full scale
-    // page, and just move them immediately
-    //
-    // this helps pretty dramatically with the animation
-    // performance.
-    //
-    // also, turn off gestures
-    void (^step3)(BOOL finished) = ^(BOOL finished){
-        //
-        // now complete the bounce for the top page
-        [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn
-                         animations:^(void){
-                             [visibleStackHolder peekSubview].frame = self.bounds;
-                         } completion:^(BOOL finished){
-                             [self finishUITransitionToPageView];
-
-                             //
-                             // find visible stack pages that we can
-                             // move immediately
-                             for(SLPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
-                                 aPage.frame = visibleStackHolder.bounds;
-                                 [aPage enableAllGestures];
-                                 page.scale = 1;
-                             }
-                             for(SLPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
-                                 aPage.frame = hiddenStackHolder.bounds;
-                                 page.scale = 1;
-                             }
-                         }];
-    };
-    
-    
-    step1();
-    
-
-    // ok, animate all the views in the visible stack!
-    [UIView animateWithDuration:0.2
-                          delay:0
-                        options:UIViewAnimationCurveEaseOut
-                     animations:step2
-                     completion:step3];
-    //
-    // now that the user has finished the gesture,
-    // we can forget about the original frame locations
-}
 
 
 #pragma mark - SLPanAndPinchFromListViewGestureRecognizerDelegate - Tap Gesture
@@ -873,7 +873,7 @@
              gesture.state == UIGestureRecognizerStateFailed){
         [self setScrollEnabled:YES];
         if(gesture.scaleDirection == SLScaleDirectionLarger && gesture.scale > kZoomToListPageZoom){
-            [self animateFromListViewToFullScreenView:gesture.pinchedPage];
+            [self immediatelyAnimateFromListViewToFullScreenView:gesture.pinchedPage];
             return;
         }else{
             CGRect frameOfPage = [self frameForListViewForPage:gesture.pinchedPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
@@ -902,7 +902,7 @@
             //
             // the user has scaled the page above the kMinPageZoom threshhold,
             // so auto-pull that page to full screen
-            [self animateFromListViewToFullScreenView:gesture.pinchedPage];
+            [self immediatelyAnimateFromListViewToFullScreenView:gesture.pinchedPage];
             return;
         
         }else if(gesture.scale < gesture.initialPageScale){
