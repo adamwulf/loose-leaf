@@ -359,6 +359,8 @@
  * transition animation
  */
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
+    debug_NSLog(@"isPanningAndScalingPage");
+
     if([visibleStackHolder peekSubview] == page){
         
         //
@@ -456,7 +458,7 @@
  * trigger the zoom to list view
  */
 -(void) isBeginningToScaleReallySmall:(SLPaperView *)page{
-
+    debug_NSLog(@"isBeginningToScaleReallySmall");
     //
     // the user is also panning other pages, we need to
     // cancel them because only the top page's gesture
@@ -511,6 +513,7 @@
  * and content offsets to that the user can scroll them
  */
 -(void) finishedScalingReallySmall:(SLPaperView *)page{
+    debug_NSLog(@"finishedScalingReallySmall");
     //
     // clean up gesture state
     [setOfPagesBeingPanned removeObject:page];
@@ -635,6 +638,7 @@
  * the user has cancelled the zoom-to-list gesture
  */
 -(void) cancelledScalingReallySmall:(SLPaperView *)page{
+    debug_NSLog(@"cancelledScalingReallySmall");
     [self finishUITransitionToPageView];
     if(![page isBeingPannedAndZoomed]){
         [self animatePageToFullScreen:[visibleStackHolder peekSubview] withDelay:0 withBounce:YES onComplete:^(BOOL finished){
