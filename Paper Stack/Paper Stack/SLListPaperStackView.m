@@ -641,8 +641,9 @@
  * it sits in the combined visible/hidden stack
  */
 -(NSInteger) indexOfPageInCompleteStack:(SLPaperView*)page{
-    if([self isInVisibleStack:page]){
-        return [visibleStackHolder.subviews indexOfObject:page];
+    NSUInteger indexOfPageInVisible = [visibleStackHolder.subviews indexOfObject:page];
+    if(indexOfPageInVisible != NSNotFound){
+        return indexOfPageInVisible;
     }else{
         return [visibleStackHolder.subviews count] + [hiddenStackHolder.subviews count] - [hiddenStackHolder.subviews indexOfObject:page] - 1;
     }
@@ -654,7 +655,7 @@
  * return true if the input page is in the visible stack
  */
 -(BOOL) isInVisibleStack:(SLPaperView*)page{
-    return [visibleStackHolder containsSubview:page];
+    return [visibleStackHolder.subviews indexOfObject:page] != NSNotFound;
 }
 
 

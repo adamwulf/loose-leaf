@@ -151,6 +151,10 @@
  * and also should ensure it never goes offscreen. there's no reason to show less than 100px
  * in any direction (maybe more).
  *
+ * to fix this, i should figure out the offset that the gesture position changes for
+ * every new touch added to the gesture, then the page won't move at all when new
+ * touches are added
+ *
  *
  *
  * TODO
