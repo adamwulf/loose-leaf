@@ -61,6 +61,10 @@
         return [finalFrame CGRectValue];
     }
     
+    //
+    // fetching the index of a page can be moderately expensive,
+    // so do this once and then generate the row/column from that.
+    // instead of using the row/column getters on the page object
     NSInteger indexOfPage = [self indexOfPageInCompleteStack:page];
     NSInteger column = [self columnInListViewGivenIndex:indexOfPage];
     NSInteger row = [self rowInListViewGivenIndex:indexOfPage];
