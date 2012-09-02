@@ -69,7 +69,13 @@
  * animation
  */
 -(void) setFrame:(CGRect)frame{
-    [super setFrame:[SLShadowedView expandFrame:frame]];
+    CGRect expandedFrame = [SLShadowedView expandFrame:frame];
+    if(CGRectEqualToRect(lastFrame, expandedFrame)){
+        //
+        // only set if new
+        [super setFrame:expandedFrame];
+        lastFrame = expandedFrame;
+    }
     contentView.layer.shadowPath = [UIBezierPath bezierPathWithRect:contentView.bounds].CGPath;
 }
 

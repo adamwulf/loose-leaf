@@ -50,7 +50,29 @@
 }
 
 
-#pragma mark - Local Cache
+#pragma mark - Local Frame Cache
+
+//
+// for any given gesture, the frameForListViewGivenRowHeight:andColumnWidth: for any page
+// will be the same, so let's cache that for this gesture
+-(CGRect) frameForListViewForPage:(SLPaperView*)page givenRowHeight:(CGFloat)_rowHeight andColumnWidth:(CGFloat)_columnWidth{
+    NSValue* finalFrame = [setOfFinalFramesForPagesBeingZoomed objectForKey:page.uuid];
+    if(finalFrame){
+        return [finalFrame CGRectValue];
+    }
+    
+    NSInteger column = page.columnInListView;
+    NSInteger row = page.rowInListView;
+    CGRect frameOfPage = CGRectZero;
+    frameOfPage.origin.x = bufferWidth + bufferWidth * column + columnWidth * column;
+    frameOfPage.origin.y = bufferWidth + bufferWidth * row + rowHeight * row;
+    frameOfPage.size.width = columnWidth;
+    frameOfPage.size.height = rowHeight;
+    
+    [setOfFinalFramesForPagesBeingZoomed setObject:[NSValue valueWithCGRect:frameOfPage] forKey:page.uuid];
+    return frameOfPage;
+}
+
 -(NSInteger) rowInListViewGivenIndex:(NSInteger) indexOfPage{
     NSInteger rowOfPage = floor(indexOfPage / kNumberOfColumnsInListView);
     return rowOfPage;
@@ -62,35 +84,16 @@
 }
 
 
-//
-// for any given gesture, the frameForListViewGivenRowHeight:andColumnWidth: for any page
-// will be the same, so let's cache that for this gesture
--(CGRect) frameForListViewForPage:(SLPaperView*)page givenRowHeight:(CGFloat)_rowHeight andColumnWidth:(CGFloat)_columnWidth{
-    NSValue* finalFrame = [setOfFinalFramesForPagesBeingZoomed objectForKey:page.uuid];
-    if(finalFrame){
-        return [finalFrame CGRectValue];
-    }
-    
-    NSInteger indexOfPage = [self indexOfPageInCompleteStack:page];
-    NSInteger column = [self columnInListViewGivenIndex:indexOfPage];
-    NSInteger row = [self rowInListViewGivenIndex:indexOfPage];
-    CGRect frameOfPage = CGRectZero;
-    frameOfPage.origin.x = bufferWidth + bufferWidth * column + columnWidth * column;
-    frameOfPage.origin.y = bufferWidth + bufferWidth * row + rowHeight * row;
-    frameOfPage.size.width = columnWidth;
-    frameOfPage.size.height = rowHeight;
-    
-    [setOfFinalFramesForPagesBeingZoomed setObject:[NSValue valueWithCGRect:frameOfPage] forKey:page.uuid];
-    return frameOfPage;
-}
 
-
-#pragma mark - Future Model Methods
+#pragma mark - Private Helper Methods
 
 /**
  * this will return the scrollview's ideal contentOffset
  * position that will show the page
- * in the 2nd row of the view if possible
+ * in the 2nd row of the view if possible.
+ *
+ * it will properly account for if the page is at the beginning
+ * or end of the list
  */
 -(CGPoint) offsetNeededToShowPage:(SLPaperView*)page{
     //
@@ -344,6 +347,17 @@
 }
 
 
+/**
+ * this is a delegate method that's called when the page is being actively panned
+ * by the user. this page pan is only when we are in PAGE view. when panning a page
+ * in LIST view - this is NOT called, it is a different gesture.
+ *
+ * when a page is being panned, we need to handle the case where the user begins to 
+ * zoom out far enough to transition into list view
+ *
+ * when that happens, we start to also move pages below the panned page to show that
+ * transition animation
+ */
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
     if([visibleStackHolder peekSubview] == page){
         

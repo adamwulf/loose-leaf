@@ -464,6 +464,22 @@
 
 #pragma mark - SLPaperViewDelegate - Paper View
 
+//
+// for any given gesture, the frameForListViewGivenRowHeight:andColumnWidth: for any page
+// will be the same, so let's cache that for this gesture
+-(CGRect) frameForListViewForPage:(SLPaperView*)page givenRowHeight:(CGFloat)_rowHeight andColumnWidth:(CGFloat)_columnWidth{
+    @throw kAbstractMethodException;
+}
+
+-(NSInteger) rowInListViewGivenIndex:(NSInteger) indexOfPage{
+    @throw kAbstractMethodException;
+}
+
+-(NSInteger) columnInListViewGivenIndex:(NSInteger) indexOfPage{
+    @throw kAbstractMethodException;
+}
+
+
 /**
  * let's only allow scaling the top most page
  */
