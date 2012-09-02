@@ -364,8 +364,6 @@
  * transition animation
  */
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
-    debug_NSLog(@"isPanningAndScalingPage");
-
     if([visibleStackHolder peekSubview] == page){
         
         //
@@ -463,7 +461,6 @@
  * trigger the zoom to list view
  */
 -(void) isBeginningToScaleReallySmall:(SLPaperView *)page{
-    debug_NSLog(@"isBeginningToScaleReallySmall");
     //
     // the user is also panning other pages, we need to
     // cancel them because only the top page's gesture
@@ -518,7 +515,6 @@
  * and content offsets to that the user can scroll them
  */
 -(void) finishedScalingReallySmall:(SLPaperView *)page{
-    debug_NSLog(@"finishedScalingReallySmall");
     //
     // clean up gesture state
     [setOfPagesBeingPanned removeObject:page];
@@ -544,18 +540,19 @@
                 [pagesThatNeedAnimating addObject:aPage];
             }else{
                 // ok, check if it's full screen
-                CGRect rect = aPage.frame;
                 if(lastPage){
-                    // we already have the last visible page, move this one
-                    // immediately. we have to move it by the expanded frame
-                    // because shadows count here too
-                    rect.origin.y = -[SLShadowedView expandFrame:rect].size.height;
-                    aPage.frame = rect;
-                }else if(rect.origin.x <= 0 && rect.origin.y <= 0 && rect.origin.x + rect.size.width >= screenWidth && rect.origin.y + rect.size.height >= screenHeight){
-                    // we just found the page that covers the whole screen,
-                    // so remember it
-                    lastPage = aPage;
-                    [pagesThatNeedAnimating addObject:lastPage];
+                    // we already have the last visible page, we're going to
+                    // hide all other pages during the animation, then re-show
+                    // them in their correct positions afterwards
+                    aPage.hidden = YES;
+                }else{
+                    CGRect rect = aPage.frame;
+                    if(rect.origin.x <= 0 && rect.origin.y <= 0 && rect.origin.x + rect.size.width >= screenWidth && rect.origin.y + rect.size.height >= screenHeight){
+                        // we just found the page that covers the whole screen,
+                        // so remember it
+                        lastPage = aPage;
+                        [pagesThatNeedAnimating addObject:lastPage];
+                    }
                 }
             }
             // gestures aren't allowed in list view
@@ -569,11 +566,10 @@
                 // we'll animate these in step 2
                 [pagesThatNeedAnimating addObject:aPage];
             }else{
-                CGRect rect = aPage.frame;
-                // we have to move it by the expanded frame
-                // because shadows count here too
-                rect.origin.y = -[SLShadowedView expandFrame:rect].size.height;
-                aPage.frame = rect;
+                // this page won't be visible during the animation anyways,
+                // so just hide it altogether, then re-show
+                // it in their correct positions afterwards
+                aPage.hidden = YES;
             }
             // gestures aren't allowed in list view
             [aPage disableAllGestures];
@@ -616,6 +612,7 @@
             if(!CGRectEqualToRect(newFrame, aPage.frame)){
                 aPage.frame = newFrame;
             };
+            aPage.hidden = NO;
         }
         // set our content height/offset for the pages
         [self setContentOffset:initialScrollOffsetFromTransitionToListView animated:NO];
@@ -643,7 +640,6 @@
  * the user has cancelled the zoom-to-list gesture
  */
 -(void) cancelledScalingReallySmall:(SLPaperView *)page{
-    debug_NSLog(@"cancelledScalingReallySmall");
     [self finishUITransitionToPageView];
     if(![page isBeingPannedAndZoomed]){
         [self animatePageToFullScreen:[visibleStackHolder peekSubview] withDelay:0 withBounce:YES onComplete:^(BOOL finished){
