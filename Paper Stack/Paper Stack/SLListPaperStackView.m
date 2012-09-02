@@ -61,8 +61,9 @@
         return [finalFrame CGRectValue];
     }
     
-    NSInteger column = page.columnInListView;
-    NSInteger row = page.rowInListView;
+    NSInteger indexOfPage = [self indexOfPageInCompleteStack:page];
+    NSInteger column = [self columnInListViewGivenIndex:indexOfPage];
+    NSInteger row = [self rowInListViewGivenIndex:indexOfPage];
     CGRect frameOfPage = CGRectZero;
     frameOfPage.origin.x = bufferWidth + bufferWidth * column + columnWidth * column;
     frameOfPage.origin.y = bufferWidth + bufferWidth * row + rowHeight * row;
