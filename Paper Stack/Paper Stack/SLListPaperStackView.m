@@ -1003,16 +1003,6 @@
  * be affected by this change
  */
 -(void) ensurePage:(SLPaperView*)thePage isAtIndex:(NSInteger)newIndex{
-    /*
-    debug_NSLog(@"location is %d", index);
-    while(index >= [visibleStackHolder.subviews count]){
-        // the index is greater than the number of views
-        // in the visible stack, so move some pages over from the
-        // hidden stack
-        [visibleStackHolder pushSubview:[hiddenStackHolder peekSubview]];
-    }
-     */
-    
     // find out where it currently is
     NSInteger currentIndex = [self indexOfPageInCompleteStack:thePage];
     [self ensurePageIsAtTopOfVisibleStack:thePage];
@@ -1064,7 +1054,9 @@
 
 -(void) updateScrollOffsetDuringDrag{
     if(!pageBeingDragged){
-        debug_NSLog(@"paused the link");
+        //
+        // if we're not dragging the page, then don't update the display link
+        debug_NSLog(@"duration: %f", displayLink.duration);
         displayLink.paused = YES;
         return;
     }
@@ -1075,9 +1067,18 @@
         realizedThatPageIsBeingDragged = YES;
     }
     
+    //
+    // we're going to normalize the drag based on the
+    // midpoint of the screen.
     CGFloat directionAndAmplitude = lastDragPoint.y - screenHeight / 2;
-    directionAndAmplitude *= 1.3;
+    // make the max speed faster
+    directionAndAmplitude *= 1.5;
     
+    // save the middle half of the screen so that
+    // we never scroll
+    //
+    // anything above/below the middle half will begin
+    // to scroll
     if(directionAndAmplitude > screenHeight / 4){
         directionAndAmplitude -= screenHeight / 4;
     }else if (directionAndAmplitude < -screenHeight / 4){
@@ -1086,23 +1087,28 @@
         directionAndAmplitude = 0;
     }
     
-    CGFloat offsetDelta = directionAndAmplitude / 20;
-    CGPoint newOffset = self.contentOffset;
-    newOffset.y += offsetDelta;
-    self.contentOffset = newOffset;
-    CGRect fr = pageBeingDragged.frame;
-    fr.origin.y += offsetDelta;
-    pageBeingDragged.frame = fr;
-    
-    
-    //
-    // update the location of the dragged page
-    CGPoint locatinInScrollView = CGPointMake(lastDragPoint.x, lastDragPoint.y + self.contentOffset.y);
-    NSInteger indexOfGesture = [self indexForPointInList:locatinInScrollView];
-    [self ensurePage:pageBeingDragged isAtIndex:indexOfGesture];
-    
-    
-    
+    if(directionAndAmplitude){
+        
+        //
+        // the directionAndAmplitude is the number of points
+        // above/below the midpoint. so scale it down so that
+        // the user drags roughly 256 / 20 = 12 pts per
+        // display update
+        CGFloat offsetDelta = directionAndAmplitude * displayLink.duration * 3;
+        CGPoint newOffset = self.contentOffset;
+        newOffset.y += offsetDelta;
+        self.contentOffset = newOffset;
+        CGRect fr = pageBeingDragged.frame;
+        fr.origin.y += offsetDelta;
+        pageBeingDragged.frame = fr;
+        
+        
+        //
+        // update the location of the dragged page
+        CGPoint locatinInScrollView = CGPointMake(lastDragPoint.x, lastDragPoint.y + self.contentOffset.y);
+        NSInteger indexOfGesture = [self indexForPointInList:locatinInScrollView];
+        [self ensurePage:pageBeingDragged isAtIndex:indexOfGesture];
+    }
 }
 
 @end
