@@ -45,6 +45,11 @@
     pinchGesture.pinchDelegate = self;
     [self addGestureRecognizer:pinchGesture];
     
+    displayLink = [[CADisplayLink displayLinkWithTarget:self selector:@selector(updateScrollOffsetDuringDrag)] retain];
+    displayLink.paused = YES;
+    [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+
+    
     
     [super awakeFromNib];
 }
@@ -880,6 +885,11 @@
         [self beginUITransitionFromListView];
     }else if(gesture.state == UIGestureRecognizerStateEnded ||
              gesture.state == UIGestureRecognizerStateFailed){
+        // properties for drag behavior
+        realizedThatPageIsBeingDragged = NO;
+        pageBeingDragged = nil;
+        // go to page/list view
+        // based on how the gesture ended
         [self setScrollEnabled:YES];
         if(gesture.scaleDirection == SLScaleDirectionLarger && gesture.scale > kZoomToListPageZoom){
             [self immediatelyAnimateFromListViewToFullScreenView:gesture.pinchedPage];
@@ -918,9 +928,12 @@
             scale = gesture.initialPageScale;
         }
         
+        //
+        // scroll update for drag
         CGPoint locatinInScrollView = [gesture locationInView:self];
-        NSInteger indexOfGesture = [self indexForPointInList:locatinInScrollView];
-        [self ensurePage:gesture.pinchedPage isAtIndex:indexOfGesture];
+        pageBeingDragged = gesture.pinchedPage;
+        lastDragPoint = CGPointMake(locatinInScrollView.x, locatinInScrollView.y - self.contentOffset.y);
+        if(displayLink.paused) displayLink.paused = NO;
         
 
         //
@@ -1045,6 +1058,51 @@
                          }
                          completion:nil];
     }
+}
+
+
+
+-(void) updateScrollOffsetDuringDrag{
+    if(!pageBeingDragged){
+        debug_NSLog(@"paused the link");
+        displayLink.paused = YES;
+        return;
+    }
+    if(!realizedThatPageIsBeingDragged){
+        // skip the first call, so that the
+        // duration property of the display link
+        // will be defined
+        realizedThatPageIsBeingDragged = YES;
+    }
+    
+    CGFloat directionAndAmplitude = lastDragPoint.y - screenHeight / 2;
+    directionAndAmplitude *= 1.3;
+    
+    if(directionAndAmplitude > screenHeight / 4){
+        directionAndAmplitude -= screenHeight / 4;
+    }else if (directionAndAmplitude < -screenHeight / 4){
+        directionAndAmplitude += screenHeight / 4;
+    }else{
+        directionAndAmplitude = 0;
+    }
+    
+    CGFloat offsetDelta = directionAndAmplitude / 20;
+    CGPoint newOffset = self.contentOffset;
+    newOffset.y += offsetDelta;
+    self.contentOffset = newOffset;
+    CGRect fr = pageBeingDragged.frame;
+    fr.origin.y += offsetDelta;
+    pageBeingDragged.frame = fr;
+    
+    
+    //
+    // update the location of the dragged page
+    CGPoint locatinInScrollView = CGPointMake(lastDragPoint.x, lastDragPoint.y + self.contentOffset.y);
+    NSInteger indexOfGesture = [self indexForPointInList:locatinInScrollView];
+    [self ensurePage:pageBeingDragged isAtIndex:indexOfGesture];
+    
+    
+    
 }
 
 @end

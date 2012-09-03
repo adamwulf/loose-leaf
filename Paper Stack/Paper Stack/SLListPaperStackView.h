@@ -8,6 +8,7 @@
 
 #import "SLPaperStackView.h"
 #import "SLPanAndPinchFromListViewGestureRecognizer.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface SLListPaperStackView : SLPaperStackView<SLPanAndPinchFromListViewGestureRecognizerDelegate>{
     //
@@ -30,6 +31,13 @@
     
     CGPoint initialScrollOffsetFromTransitionToListView;
     NSArray* pagesThatWillBeVisibleAfterTransitionToListView;
+    
+    // the point in the view's coordinates (not scroll offset)
+    // of the drag gesture in list view
+    CGPoint lastDragPoint;
+    SLPaperView* pageBeingDragged;
+    CADisplayLink* displayLink;
+    BOOL realizedThatPageIsBeingDragged;
 }
 
 @end
