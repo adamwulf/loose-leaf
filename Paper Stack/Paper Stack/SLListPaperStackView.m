@@ -77,6 +77,9 @@
     [setOfFinalFramesForPagesBeingZoomed setObject:[NSValue valueWithCGRect:frameOfPage] forKey:page.uuid];
     return frameOfPage;
 }
+-(void) clearFrameCacheForPage:(SLPaperView*)page{
+    [setOfFinalFramesForPagesBeingZoomed removeObjectForKey:page.uuid];
+}
 
 -(NSInteger) rowInListViewGivenIndex:(NSInteger) indexOfPage{
     NSInteger rowOfPage = floor(indexOfPage / kNumberOfColumnsInListView);
@@ -860,6 +863,15 @@
  *
  * this manages the reordering and the zoom in/out from
  * list view to page view
+ *
+ * TODO
+ * when dragging a page around, i can calculate it's center, and compare that
+ * to locations in the scrollview. this'll tell me which index it's hovering over
+ * based on its offset w/in the scrollview.
+ *
+ * that index can be used to:
+ * a) insert that view into the stack at the specified index, and
+ * b) animate all views between the old/new index to their new home
  */
 -(void) didPinchAPageInListView:(SLPanAndPinchFromListViewGestureRecognizer*)gesture{
     if(gesture.state == UIGestureRecognizerStateBegan){
@@ -906,7 +918,11 @@
             scale = gesture.initialPageScale;
         }
         
-        CGPoint lastLocationInSuper = [gesture locationInView:gesture.pinchedPage.superview];
+        CGPoint locatinInScrollView = [gesture locationInView:self];
+        NSInteger indexOfGesture = [self indexForPointInList:locatinInScrollView];
+        [self ensurePage:gesture.pinchedPage isAtIndex:indexOfGesture];
+        
+
         //
         // now, with our pan offset and new scale, we need to calculate the new frame location.
         //
@@ -919,6 +935,7 @@
         //
         // the, add the diff of the pan gesture to get the full displacement of the origin. also set the
         // width and height to the new scale.
+        CGPoint lastLocationInSuper = [gesture locationInView:gesture.pinchedPage.superview];
         CGSize superviewSize = self.superview.bounds.size;
         CGPoint locationOfPinchAfterScale = CGPointMake(scale * gesture.normalizedLocationOfScale.x * superviewSize.width,
                                                         scale * gesture.normalizedLocationOfScale.y * superviewSize.height);
@@ -952,11 +969,82 @@
     return nil;
 }
 
+-(NSInteger) indexForPointInList:(CGPoint)point{
+    NSInteger numberOfColumns = 1 / kListPageZoom - 1; // subtract 1 to account for buffer
+    NSInteger row = point.y / (rowHeight + bufferWidth);
+    NSInteger col = point.x / (columnWidth + bufferWidth);
+    return row * numberOfColumns + col;
+}
+
 
 -(CGSize) sizeOfFullscreenPage{
     return CGSizeMake(screenWidth, screenHeight);
 }
 
 
+/**
+ * will move the input page to the specified index within the
+ * visible/hidden stacks.
+ *
+ * this will also trigger animations for all the pages that will
+ * be affected by this change
+ */
+-(void) ensurePage:(SLPaperView*)thePage isAtIndex:(NSInteger)newIndex{
+    /*
+    debug_NSLog(@"location is %d", index);
+    while(index >= [visibleStackHolder.subviews count]){
+        // the index is greater than the number of views
+        // in the visible stack, so move some pages over from the
+        // hidden stack
+        [visibleStackHolder pushSubview:[hiddenStackHolder peekSubview]];
+    }
+     */
+    
+    // find out where it currently is
+    NSInteger currentIndex = [self indexOfPageInCompleteStack:thePage];
+    [self ensurePageIsAtTopOfVisibleStack:thePage];
+    // that index is now the top of the visible stack
+
+    //
+    // here, we know that the aPage is at the top of the visible stack,
+    // but it's index isn't where it needs to be.
+    //
+    // so we're either going to add/remove pages below it
+    // until the index is in the right place.
+    //
+    // then we'll animate all the pages we just moved
+    NSMutableSet* pagesToAnimate = [NSMutableSet set];
+    while([visibleStackHolder.subviews count] - 1 != newIndex){
+        if(currentIndex > newIndex){
+            // i'm moving lower into the visible stack
+            // so i need to pop views off the visible stack
+            // and onto the hidden stack
+            [hiddenStackHolder pushSubview:[visibleStackHolder getPageBelow:thePage]];
+            [pagesToAnimate addObject:[hiddenStackHolder peekSubview]];
+            [self clearFrameCacheForPage:[hiddenStackHolder peekSubview]];
+        }else if(currentIndex < newIndex){
+            // iterate through the hidden stack
+            [pagesToAnimate addObject:[hiddenStackHolder peekSubview]];
+            [self clearFrameCacheForPage:[hiddenStackHolder peekSubview]];
+            [visibleStackHolder insertPage:[hiddenStackHolder peekSubview] belowPage:thePage];
+        }
+    }
+    
+    //
+    // ok, pages are in the right order, so animate them
+    // to their new home
+    if([pagesToAnimate count]){
+        [UIView animateWithDuration:.15
+                              delay:0
+                            options:UIViewAnimationCurveEaseOut
+                         animations:^{
+                             for(SLPaperView* aPage in pagesToAnimate){
+                                 CGRect frameOfPage = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
+                                 aPage.frame = frameOfPage;
+                             }
+                         }
+                         completion:nil];
+    }
+}
 
 @end

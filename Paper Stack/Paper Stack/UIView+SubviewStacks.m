@@ -84,5 +84,17 @@
     return nil;
 }
 
+-(void) insertPage:(SLPaperView*)pageToInsert belowPage:(SLPaperView*)referencePage{
+    if(!pageToInsert) return;
+    if(!referencePage) return;
+    [self insertSubview:pageToInsert belowSubview:referencePage];
+}
+
+-(void) insertPage:(SLPaperView*)pageToInsert abovePage:(SLPaperView*)referencePage{
+    if(!pageToInsert) return;
+    if(!referencePage) return;
+    [self insertSubview:pageToInsert aboveSubview:referencePage];
+}
+
 
 @end
