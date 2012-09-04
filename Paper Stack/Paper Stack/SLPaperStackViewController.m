@@ -23,7 +23,7 @@
 
     [[SLShadowManager sharedInstace] beginGeneratingShadows];
 
-    for(int i=0;i<250;i++){
+    for(int i=0;i<2;i++){
         SLPaperView* paper = [[SLPaperView alloc] initWithFrame:self.view.bounds];
         [stackView addPaperToBottomOfStack:paper];
         paper = [[SLPaperView alloc] initWithFrame:self.view.bounds];

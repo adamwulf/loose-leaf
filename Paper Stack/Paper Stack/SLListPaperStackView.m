@@ -33,7 +33,7 @@
     columnWidth = screenWidth * kListPageZoom;
     rowHeight = columnWidth * screenHeight / screenWidth;
     bufferWidth = columnWidth * kListPageZoom;
-    
+
     tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapScrollView:)];
     [tapGesture setNumberOfTapsRequired:1];
     [tapGesture setNumberOfTouchesRequired:1];
@@ -126,11 +126,9 @@
  * from the number of both visible and hidden pages
  */
 -(CGFloat) contentHeightForAllPages{
-    SLPaperView* mostHiddenPage = [hiddenStackHolder bottomSubview];
-    NSInteger totalRows = mostHiddenPage.rowInListView;
-    // add 1 since rows start at 0
-    CGFloat contentHeight = (totalRows + 1) * (bufferWidth + rowHeight) + bufferWidth;
-    return contentHeight;
+    NSInteger numberOfPages = [hiddenStackHolder.subviews count] + [visibleStackHolder.subviews count];
+    CGFloat numberOfRows = ceilf(numberOfPages / (CGFloat) kNumberOfColumnsInListView);
+    return numberOfRows * (bufferWidth + rowHeight) + bufferWidth;
 }
 
 /**
@@ -169,17 +167,22 @@
         }
         
         aPage = [hiddenStackHolder peekSubview];
-        [pagesThatWouldBeVisible addObject:aPage];
-        while((aPage = [hiddenStackHolder getPageBelow:aPage])){
-            CGRect frameOfPage = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
-            // we have to expand the frame, because we want to count pages even if
-            // just their shadow is visible
-            frameOfPage = [SLShadowedView expandFrame:frameOfPage];
-            if(frameOfPage.origin.y + frameOfPage.size.height > rectOfVisibleScroll.origin.y &&
-               frameOfPage.origin.y < rectOfVisibleScroll.origin.y + rectOfVisibleScroll.size.height){
-                [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
-            }else{
-                break;
+        if(aPage){
+            //
+            // only care about the hidden stack if there's anything
+            // actually in the stack
+            [pagesThatWouldBeVisible addObject:aPage];
+            while((aPage = [hiddenStackHolder getPageBelow:aPage])){
+                CGRect frameOfPage = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
+                // we have to expand the frame, because we want to count pages even if
+                // just their shadow is visible
+                frameOfPage = [SLShadowedView expandFrame:frameOfPage];
+                if(frameOfPage.origin.y + frameOfPage.size.height > rectOfVisibleScroll.origin.y &&
+                   frameOfPage.origin.y < rectOfVisibleScroll.origin.y + rectOfVisibleScroll.size.height){
+                    [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
+                }else{
+                    break;
+                }
             }
         }
         
@@ -399,7 +402,7 @@
  * and is starting from the Page view
  */
 -(void) beginUITransitionFromPageView{
-    [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
+//    [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
     // clear our cache of frame locations
     [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
     // ok, now we can get offset
@@ -424,7 +427,7 @@
         // already began transition
         return;
     }
-    [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
+//    [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
     // clear our cache of frame locations
     [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
     // ok, now we can get offset
@@ -929,9 +932,13 @@
         }
         
         //
-        // scroll update for drag
-        CGPoint locatinInScrollView = [gesture locationInView:self];
+        // update the location of the dragged page
         pageBeingDragged = gesture.pinchedPage;
+        CGPoint locatinInScrollView = [gesture locationInView:self];
+        NSInteger indexOfGesture = [self indexForPointInList:locatinInScrollView];
+        [self ensurePage:pageBeingDragged isAtIndex:indexOfGesture];
+        //
+        // scroll update for drag
         lastDragPoint = CGPointMake(locatinInScrollView.x, locatinInScrollView.y - self.contentOffset.y);
         if(displayLink.paused) displayLink.paused = NO;
         
@@ -983,10 +990,9 @@
 }
 
 -(NSInteger) indexForPointInList:(CGPoint)point{
-    NSInteger numberOfColumns = 1 / kListPageZoom - 1; // subtract 1 to account for buffer
     NSInteger row = point.y / (rowHeight + bufferWidth);
     NSInteger col = point.x / (columnWidth + bufferWidth);
-    return row * numberOfColumns + col;
+    return row * kNumberOfColumnsInListView + col;
 }
 
 
@@ -1008,6 +1014,11 @@
     [self ensurePageIsAtTopOfVisibleStack:thePage];
     // that index is now the top of the visible stack
 
+    if(newIndex > [visibleStackHolder.subviews count] + [hiddenStackHolder.subviews count] - 1){
+        // if the page is dragged beyond the bounds
+        // of the stacks, then put it at the very end
+        newIndex = [visibleStackHolder.subviews count] + [hiddenStackHolder.subviews count] - 1;
+    }
     //
     // here, we know that the aPage is at the top of the visible stack,
     // but it's index isn't where it needs to be.
@@ -1056,7 +1067,6 @@
     if(!pageBeingDragged){
         //
         // if we're not dragging the page, then don't update the display link
-        debug_NSLog(@"duration: %f", displayLink.duration);
         displayLink.paused = YES;
         return;
     }
@@ -1097,9 +1107,11 @@
         CGFloat offsetDelta = directionAndAmplitude * displayLink.duration * 3;
         CGPoint newOffset = self.contentOffset;
         newOffset.y += offsetDelta;
+        CGFloat delta = [self validateOffset:newOffset];
+        newOffset.y -= delta;
         self.contentOffset = newOffset;
         CGRect fr = pageBeingDragged.frame;
-        fr.origin.y += offsetDelta;
+        fr.origin.y += offsetDelta - delta;
         pageBeingDragged.frame = fr;
         
         
@@ -1109,6 +1121,28 @@
         NSInteger indexOfGesture = [self indexForPointInList:locatinInScrollView];
         [self ensurePage:pageBeingDragged isAtIndex:indexOfGesture];
     }
+}
+
+/**
+ * this method accepts an offset that may or may not
+ * be within the size bounds of the scroll view.
+ * the offset may be negative, or may be far below
+ * the end of the list of pages.
+ *
+ * the returned value is guarenteed to be the correct
+ * offset that will keep the pages visible on screen
+ * (including the add page button)
+ */
+-(CGFloat) validateOffset:(CGPoint)possibleOffset{
+    CGPoint actualOffset = possibleOffset;
+    CGFloat fullHeight = [self contentHeightForAllPages];
+    if(actualOffset.y > fullHeight - screenHeight){
+        actualOffset.y = fullHeight - screenHeight;
+    }
+    if(actualOffset.y < 0){
+        actualOffset.y = 0;
+    }
+    return possibleOffset.y - actualOffset.y;
 }
 
 @end
