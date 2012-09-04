@@ -402,7 +402,6 @@
  * and is starting from the Page view
  */
 -(void) beginUITransitionFromPageView{
-//    [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
     // clear our cache of frame locations
     [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
     // ok, now we can get offset
@@ -427,7 +426,6 @@
         // already began transition
         return;
     }
-//    [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
     // clear our cache of frame locations
     [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
     // ok, now we can get offset
