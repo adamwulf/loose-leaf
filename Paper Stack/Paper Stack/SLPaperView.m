@@ -59,12 +59,9 @@
 -(void)didMoveToSuperview{
     if([self.delegate isInVisibleStack:self]){
         self.backgroundColor = [UIColor greenColor];
-//        self.layer.borderColor = [UIColor greenColor].CGColor;
     }else{
         self.backgroundColor = [UIColor redColor];
-//        self.layer.borderColor = [UIColor redColor].CGColor;
     }
-//    self.layer.borderWidth = 3;
 }
  
  /*

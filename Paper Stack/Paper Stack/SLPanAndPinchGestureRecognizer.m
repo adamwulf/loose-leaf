@@ -11,6 +11,7 @@
 #import "SLBezelInRightGestureRecognizer.h"
 #import "NSMutableSet+Extras.h"
 #import "NSArray+MapReduce.h"
+#import "SLShadowedView.h"
 
 @implementation SLPanAndPinchGestureRecognizer
 
@@ -62,7 +63,8 @@ NSInteger const  minimumNumberOfTouches = 2;
     // ignore all the touches that could be bezel touches
     if([validTouchesCurrentlyBeginning count]){
         // look at the presentation of the view (as would be seen during animation)
-        CGRect lFrame = [self.view.layer.presentationLayer frame];
+        // (the layer will include the shadow, but our frame won't, since it's a shadow'd layer
+        CGRect lFrame = [SLShadowedView contractFrame:[self.view.layer.presentationLayer frame]];
         // look at the view frame to compare
         CGRect vFrame = self.view.frame;
         if(!CGRectEqualToRect(lFrame, vFrame)){
