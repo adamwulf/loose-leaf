@@ -57,6 +57,7 @@
  * helpful when testing visible vs hidden pages
  */
 -(void)didMoveToSuperview{
+    return;
     if(isBrandNewPage){
         self.backgroundColor = [UIColor blueColor];
     }else if([self.delegate isInVisibleStack:self]){
