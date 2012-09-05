@@ -6,11 +6,13 @@
 //  Copyright (c) 2012 Visere. All rights reserved.
 //
 
-#import "SLListAddPageIcon.h"
+#import "SLListAddPageButton.h"
 #import "Constants.h"
 #import <QuartzCore/QuartzCore.h>
 
-@implementation SLListAddPageIcon
+@implementation SLListAddPageButton
+
+@synthesize delegate;
 
 #define kAddButtonMinAnimationScale 0.97
 #define kAddButtonMidAnimationScale 0.98
@@ -85,6 +87,7 @@
     if(tapGesture.state == UIGestureRecognizerStateRecognized){
         //
         // event triggered!
+        [self.delegate didTapAddButtonInListView];
     }
 }
 

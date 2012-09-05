@@ -10,7 +10,6 @@
 #import "SLPaperView+ListView.h"
 #import "UIView+Debug.h"
 #import "NSThread+BlocksAdditions.h"
-#import "SLListAddPageIcon.h"
 
 @implementation SLListPaperStackView
 
@@ -51,10 +50,10 @@
     [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
 
     // init the add page button in top left of scrollview
-    addPageButtonInListView = [[SLListAddPageIcon alloc] initWithFrame:CGRectMake(bufferWidth, bufferWidth, columnWidth, rowHeight)];
-
-    [self addSubview:addPageButtonInListView];
+    addPageButtonInListView = [[SLListAddPageButton alloc] initWithFrame:CGRectMake(bufferWidth, bufferWidth, columnWidth, rowHeight)];
+    addPageButtonInListView.delegate = self;
     addPageButtonInListView.alpha = 0;
+    [self addSubview:addPageButtonInListView];
     
     [super awakeFromNib];
 }
@@ -82,6 +81,13 @@
 }
 -(void) moveAddButtonToTop{
     [self addSubview:addPageButtonInListView];
+}
+
+-(void) didTapAddButtonInListView{
+    SLPaperView* paper = [[SLPaperView alloc] initWithFrame:addPageButtonInListView.frame];
+    [self addPaperToBottomOfHiddenStack:paper];
+    [self ensurePageIsAtTopOfVisibleStack:paper];
+    [self immediatelyAnimateFromListViewToFullScreenView];
 }
 
 #pragma mark - Local Frame Cache
@@ -317,7 +323,7 @@
  * when the animation completes, we'll adjust all the frames
  * and content offsets to that the user can scroll them
  */
--(void) immediatelyAnimateFromListViewToFullScreenView:(SLPaperView *)page{
+-(void) immediatelyAnimateFromListViewToFullScreenView{
     
     __block NSMutableSet* pagesThatNeedAnimating = [NSMutableSet set];
     
@@ -404,11 +410,11 @@
                              for(SLPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
                                  aPage.frame = visibleStackHolder.bounds;
                                  [aPage enableAllGestures];
-                                 page.scale = 1;
+                                 aPage.scale = 1;
                              }
                              for(SLPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
                                  aPage.frame = hiddenStackHolder.bounds;
-                                 page.scale = 1;
+                                 aPage.scale = 1;
                              }
                          }];
     };
@@ -904,7 +910,7 @@
     
     [self ensurePageIsAtTopOfVisibleStack:thePageThatWasTapped];
     
-    [self immediatelyAnimateFromListViewToFullScreenView:thePageThatWasTapped];
+    [self immediatelyAnimateFromListViewToFullScreenView];
     
 }
 
@@ -943,7 +949,7 @@
         // based on how the gesture ended
         [self setScrollEnabled:YES];
         if(gesture.scaleDirection == SLScaleDirectionLarger && gesture.scale > kZoomToListPageZoom){
-            [self immediatelyAnimateFromListViewToFullScreenView:gesture.pinchedPage];
+            [self immediatelyAnimateFromListViewToFullScreenView];
             return;
         }else{
             CGRect frameOfPage = [self frameForListViewForPage:gesture.pinchedPage];
@@ -972,7 +978,7 @@
             //
             // the user has scaled the page above the kMinPageZoom threshhold,
             // so auto-pull that page to full screen
-            [self immediatelyAnimateFromListViewToFullScreenView:gesture.pinchedPage];
+            [self immediatelyAnimateFromListViewToFullScreenView];
             return;
         
         }else if(gesture.scale < gesture.initialPageScale){
