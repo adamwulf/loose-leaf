@@ -38,6 +38,8 @@
     SLPaperView* pageBeingDragged;
     CADisplayLink* displayLink;
     BOOL realizedThatPageIsBeingDragged;
+    
+    UIView* addPageButtonInListView;
 }
 
 @end

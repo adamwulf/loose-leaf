@@ -465,9 +465,9 @@
 #pragma mark - SLPaperViewDelegate - Paper View
 
 //
-// for any given gesture, the frameForListViewGivenRowHeight:andColumnWidth: for any page
+// for any given gesture, the frameForListViewForPage: for any page
 // will be the same, so let's cache that for this gesture
--(CGRect) frameForListViewForPage:(SLPaperView*)page givenRowHeight:(CGFloat)_rowHeight andColumnWidth:(CGFloat)_columnWidth{
+-(CGRect) frameForListViewForPage:(SLPaperView*)page{
     @throw kAbstractMethodException;
 }
 

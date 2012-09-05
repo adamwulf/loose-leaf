@@ -10,6 +10,7 @@
 #import "SLPaperView+ListView.h"
 #import "UIView+Debug.h"
 #import "NSThread+BlocksAdditions.h"
+#import "SLListAddPageIcon.h"
 
 @implementation SLListPaperStackView
 
@@ -49,18 +50,36 @@
     displayLink.paused = YES;
     [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
 
-    
-    
+    // init the add page button in top left of scrollview
+    addPageButtonInListView = [[SLListAddPageIcon alloc] initWithFrame:CGRectMake(bufferWidth, bufferWidth, columnWidth, rowHeight)];
+    [self addSubview:addPageButtonInListView];
+    addPageButtonInListView.alpha = 0;
     [super awakeFromNib];
 }
 
 
 #pragma mark - Local Frame Cache
 
+-(CGRect) frameForAddPageButton{
+    NSInteger numberOfPages = [visibleStackHolder.subviews count] + [hiddenStackHolder.subviews count];
+    NSInteger maxRow = numberOfPages / kNumberOfColumnsInListView;
+    CGRect ret = CGRectMake(0, 0, columnWidth, rowHeight);
+    
+    NSInteger possibleRemainder = 0;
+    while(true){
+        if(numberOfPages % kNumberOfColumnsInListView == possibleRemainder){
+            ret.origin.x = bufferWidth + bufferWidth * possibleRemainder + columnWidth * possibleRemainder;
+            ret.origin.y = bufferWidth + bufferWidth * maxRow + rowHeight * maxRow;
+            return ret;
+        }
+        possibleRemainder++;
+    }
+}
+
 //
-// for any given gesture, the frameForListViewGivenRowHeight:andColumnWidth: for any page
+// for any given gesture, the frameForListViewForPage: for any page
 // will be the same, so let's cache that for this gesture
--(CGRect) frameForListViewForPage:(SLPaperView*)page givenRowHeight:(CGFloat)_rowHeight andColumnWidth:(CGFloat)_columnWidth{
+-(CGRect) frameForListViewForPage:(SLPaperView*)page{
     NSValue* finalFrame = [setOfFinalFramesForPagesBeingZoomed objectForKey:page.uuid];
     if(finalFrame){
         return [finalFrame CGRectValue];
@@ -128,6 +147,10 @@
 -(CGFloat) contentHeightForAllPages{
     NSInteger numberOfPages = [hiddenStackHolder.subviews count] + [visibleStackHolder.subviews count];
     CGFloat numberOfRows = ceilf(numberOfPages / (CGFloat) kNumberOfColumnsInListView);
+    if(numberOfPages % kNumberOfColumnsInListView == 0){
+        // need to add a row for the add button
+        numberOfRows += 1;
+    }
     return numberOfRows * (bufferWidth + rowHeight) + bufferWidth;
 }
 
@@ -154,7 +177,7 @@
         NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray arrayWithObject:aPage];
         CGRect rectOfVisibleScroll = CGRectMake(eventualOffsetOfListView.x, eventualOffsetOfListView.y, screenWidth, screenHeight);
         while((aPage = [visibleStackHolder getPageBelow:aPage])){
-            CGRect frameOfPage = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
+            CGRect frameOfPage = [self frameForListViewForPage:aPage];
             // we have to expand the frame, because we want to count pages even if
             // just their shadow is visible
             frameOfPage = [SLShadowedView expandFrame:frameOfPage];
@@ -173,7 +196,7 @@
             // actually in the stack
             [pagesThatWouldBeVisible addObject:aPage];
             while((aPage = [hiddenStackHolder getPageBelow:aPage])){
-                CGRect frameOfPage = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
+                CGRect frameOfPage = [self frameForListViewForPage:aPage];
                 // we have to expand the frame, because we want to count pages even if
                 // just their shadow is visible
                 frameOfPage = [SLShadowedView expandFrame:frameOfPage];
@@ -193,7 +216,7 @@
         // the list of pages that are currently visible
         NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray array];
         for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
-            CGRect frameOfPage = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
+            CGRect frameOfPage = [self frameForListViewForPage:aPage];
             // we have to expand the frame, because we want to count pages even if
             // just their shadow is visible
             frameOfPage = [SLShadowedView expandFrame:frameOfPage];
@@ -254,7 +277,7 @@
     if(percentageToTrustToFrame < 0) percentageToTrustToFrame = 0;
     if(percentageToTrustToFrame > 1) percentageToTrustToFrame = 1;
     // final frame when the page is in the list view
-    CGRect finalFrame = [self frameForListViewForPage:page givenRowHeight:rowHeight andColumnWidth:columnWidth];
+    CGRect finalFrame = [self frameForListViewForPage:page];
     finalFrame.origin.x -= initialScrollOffsetFromTransitionToListView.x;
     finalFrame.origin.y -= initialScrollOffsetFromTransitionToListView.y;
     
@@ -318,6 +341,7 @@
         [pagesThatNeedAnimating addObjectsFromArray:pagesThatWillBeVisibleAfterTransitionToListView];
         
         [visibleStackHolder.superview insertSubview:hiddenStackHolder belowSubview:visibleStackHolder];
+        addPageButtonInListView.frame = [self frameForAddPageButton];
     };
     
     //
@@ -339,7 +363,7 @@
         CGRect newHiddenFrame = visibleStackHolder.frame;
         newHiddenFrame.origin.x += screenWidth;
         hiddenStackHolder.frame = newHiddenFrame;
-        
+        addPageButtonInListView.alpha = 0;
         [self finishedScalingBackToPageView:[visibleStackHolder peekSubview]];
     };
     
@@ -496,7 +520,6 @@
  */
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
     if([visibleStackHolder peekSubview] == page){
-        
         //
         // defer to bezel gesture
         if([page willExitToBezel:SLBezelDirectionLeft | SLBezelDirectionRight]){
@@ -505,6 +528,10 @@
         
         // make sure we're the top page being panned
         if([visibleStackHolder peekSubview].scale < kMinPageZoom){
+            CGRect fr = [self frameForAddPageButton];
+            fr.origin.y -= initialScrollOffsetFromTransitionToListView.y;
+            addPageButtonInListView.frame = fr;
+            addPageButtonInListView.alpha = 0;
             //
             // once the zoom is below kMinPageZoom and still above kZoomToListPageZoom,
             // then we need to adjust the frames of all the pages so that they zoom
@@ -565,7 +592,7 @@
                     transitionDelay += .017;
                 }
             }
-
+            
             //
             // the user has zoomed out far enough for us to take over
             // with animations. cancel the gesture.
@@ -703,6 +730,10 @@
             // gestures aren't allowed in list view
             [aPage disableAllGestures];
         }
+        CGRect fr = [self frameForAddPageButton];
+        fr.origin.y -= initialScrollOffsetFromTransitionToListView.y;
+        addPageButtonInListView.frame = fr;
+        addPageButtonInListView.alpha = 0;
     };
     
     //
@@ -726,6 +757,7 @@
             }
         }
         hiddenStackHolder.frame = visibleStackHolder.frame;
+        addPageButtonInListView.alpha = 1;
     };
 
     //
@@ -737,7 +769,7 @@
         // but adjust their frames and the content size/offset so
         // that the scrollview works.
         for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
-            CGRect newFrame = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
+            CGRect newFrame = [self frameForListViewForPage:aPage];
             if(!CGRectEqualToRect(newFrame, aPage.frame)){
                 aPage.frame = newFrame;
             };
@@ -749,6 +781,7 @@
         [self finishUITransitionToListView];
         [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
         [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
+        addPageButtonInListView.frame = [self frameForAddPageButton];
     };
     
     
@@ -844,7 +877,7 @@
 
     SLPaperView* thePageThatWasTapped = nil;
     for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
-        CGRect frameOfPage = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
+        CGRect frameOfPage = [self frameForListViewForPage:aPage];
         if(CGRectContainsPoint(frameOfPage, locationOfTap)){
             thePageThatWasTapped = aPage;
         }
@@ -896,7 +929,7 @@
             [self immediatelyAnimateFromListViewToFullScreenView:gesture.pinchedPage];
             return;
         }else{
-            CGRect frameOfPage = [self frameForListViewForPage:gesture.pinchedPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
+            CGRect frameOfPage = [self frameForListViewForPage:gesture.pinchedPage];
             [UIView animateWithDuration:.15
                                   delay:0
                                 options:UIViewAnimationCurveEaseOut
@@ -1051,7 +1084,7 @@
                             options:UIViewAnimationCurveEaseOut
                          animations:^{
                              for(SLPaperView* aPage in pagesToAnimate){
-                                 CGRect frameOfPage = [self frameForListViewForPage:aPage givenRowHeight:rowHeight andColumnWidth:columnWidth];
+                                 CGRect frameOfPage = [self frameForListViewForPage:aPage];
                                  aPage.frame = frameOfPage;
                              }
                          }
