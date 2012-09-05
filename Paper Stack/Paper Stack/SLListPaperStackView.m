@@ -52,13 +52,14 @@
 
     // init the add page button in top left of scrollview
     addPageButtonInListView = [[SLListAddPageIcon alloc] initWithFrame:CGRectMake(bufferWidth, bufferWidth, columnWidth, rowHeight)];
+
     [self addSubview:addPageButtonInListView];
     addPageButtonInListView.alpha = 0;
+    
     [super awakeFromNib];
 }
 
-
-#pragma mark - Local Frame Cache
+#pragma mark - Add Button
 
 -(CGRect) frameForAddPageButton{
     NSInteger numberOfPages = [visibleStackHolder.subviews count] + [hiddenStackHolder.subviews count];
@@ -75,6 +76,15 @@
         possibleRemainder++;
     }
 }
+
+-(void) moveAddButtonToBottom{
+    [self insertSubview:addPageButtonInListView atIndex:0];
+}
+-(void) moveAddButtonToTop{
+    [self addSubview:addPageButtonInListView];
+}
+
+#pragma mark - Local Frame Cache
 
 //
 // for any given gesture, the frameForListViewForPage: for any page
@@ -342,6 +352,7 @@
         
         [visibleStackHolder.superview insertSubview:hiddenStackHolder belowSubview:visibleStackHolder];
         addPageButtonInListView.frame = [self frameForAddPageButton];
+        [self moveAddButtonToBottom];
     };
     
     //
@@ -439,6 +450,7 @@
     [self setScrollEnabled:NO];
     [tapGesture setEnabled:NO];
     [pinchGesture setEnabled:NO];
+    [self moveAddButtonToBottom];
 }
 
 /**
@@ -465,6 +477,7 @@
     if(!pinchGesture.pinchedPage){
         [pinchGesture setEnabled:NO];
     }
+    [self moveAddButtonToBottom];
     [visibleStackHolder.superview insertSubview:visibleStackHolder aboveSubview:hiddenStackHolder];
 }
 
@@ -482,6 +495,7 @@
     [pinchGesture setEnabled:YES];
     [pagesThatWillBeVisibleAfterTransitionToListView release];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
+    [self moveAddButtonToTop];
 }
 
 /**
@@ -499,6 +513,7 @@
     [pagesThatWillBeVisibleAfterTransitionToListView release];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
     [visibleStackHolder.superview insertSubview:visibleStackHolder belowSubview:hiddenStackHolder];
+    [self moveAddButtonToBottom];
 }
 
 
@@ -532,6 +547,7 @@
             fr.origin.y -= initialScrollOffsetFromTransitionToListView.y;
             addPageButtonInListView.frame = fr;
             addPageButtonInListView.alpha = 0;
+            [self moveAddButtonToBottom];
             //
             // once the zoom is below kMinPageZoom and still above kZoomToListPageZoom,
             // then we need to adjust the frames of all the pages so that they zoom
@@ -782,6 +798,7 @@
         [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
         [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
         addPageButtonInListView.frame = [self frameForAddPageButton];
+        [self moveAddButtonToTop];
     };
     
     

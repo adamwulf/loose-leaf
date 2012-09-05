@@ -7,8 +7,15 @@
 //
 
 #import "SLListAddPageIcon.h"
+#import "Constants.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation SLListAddPageIcon
+
+#define kAddButtonMinAnimationScale 0.97
+#define kAddButtonMidAnimationScale 0.98
+#define kAddButtonMaxAnimationScale 1.03
+
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -17,8 +24,68 @@
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
+        
+        UITapGestureRecognizer* tapGesture = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)] autorelease];
+        [self addGestureRecognizer:tapGesture];
     }
     return self;
+}
+
+-(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    // animate down
+    [UIView animateWithDuration:.15 animations:^{
+        self.transform = CGAffineTransformMakeScale(kAddButtonMinAnimationScale, kAddButtonMinAnimationScale);
+    }];
+}
+-(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
+    // noop
+}
+-(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self touchesEnded:touches withEvent:event];
+}
+-(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    // animate bounce
+    
+    // run animation for a fraction of a second
+    CGFloat duration = .30;
+    
+    ////////////////////////////////////////////////////////
+    // Animate the button!
+    
+    // Create a keyframe animation to follow a path back to the center
+    CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+    bounceAnimation.removedOnCompletion = YES;
+    
+    NSMutableArray* keyTimes = [NSMutableArray arrayWithObjects:
+                                [NSNumber numberWithFloat:0.0],
+                                [NSNumber numberWithFloat:0.4],
+                                [NSNumber numberWithFloat:0.7],
+                                [NSNumber numberWithFloat:1.0], nil];
+    bounceAnimation.keyTimes = keyTimes;
+    bounceAnimation.values = [NSArray arrayWithObjects:
+                              [NSValue valueWithCATransform3D:CATransform3DMakeScale(kAddButtonMinAnimationScale, kAddButtonMinAnimationScale, 1.0)],
+                              [NSValue valueWithCATransform3D:CATransform3DMakeScale(kAddButtonMaxAnimationScale, kAddButtonMaxAnimationScale, 1.0)],
+                              [NSValue valueWithCATransform3D:CATransform3DMakeScale(kAddButtonMidAnimationScale, kAddButtonMidAnimationScale, 1.0)],
+                              [NSValue valueWithCATransform3D:CATransform3DIdentity],
+                              nil];
+    bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
+                                       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut],
+                                       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+                                       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn], nil];
+    
+    bounceAnimation.duration = duration;
+    
+    ///////////////////////////////////////////////
+    // Add the animations to the layers
+    [self.layer addAnimation:bounceAnimation forKey:@"animateSize"];
+    self.transform = CGAffineTransformIdentity;
+}
+
+-(void) tapped:(UITapGestureRecognizer*)tapGesture{
+    if(tapGesture.state == UIGestureRecognizerStateRecognized){
+        //
+        // event triggered!
+    }
 }
 
 

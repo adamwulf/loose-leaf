@@ -260,8 +260,6 @@
 			children = (
 				660E1DAE158FC7DB0001DA12 /* SLPaperIcon.h */,
 				660E1DAF158FC7DB0001DA12 /* SLPaperIcon.m */,
-				66D0905415F7080F004D2CAF /* SLListAddPageIcon.h */,
-				66D0905515F70810004D2CAF /* SLListAddPageIcon.m */,
 				66E88A351591853E001A6EBF /* SLPapersIcon.h */,
 				66E88A361591853E001A6EBF /* SLPapersIcon.m */,
 				664F4137159063F8006F8B09 /* SLPlusIcon.h */,
@@ -339,6 +337,8 @@
 			children = (
 				66BD6E7E1593AF4100D4544C /* SLSidebarButton.h */,
 				66BD6E7F1593AF4100D4544C /* SLSidebarButton.m */,
+				66D0905415F7080F004D2CAF /* SLListAddPageIcon.h */,
+				66D0905515F70810004D2CAF /* SLListAddPageIcon.m */,
 				66BD6E8B1593C3FF00D4544C /* SLSidebarButtonDelegate.h */,
 				66BD6E2E1591B57B00D4544C /* SLPaperButton.h */,
 				66BD6E2F1591B57B00D4544C /* SLPaperButton.m */,
