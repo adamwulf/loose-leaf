@@ -126,15 +126,22 @@
     CGContextSetFillColorWithColor(cacheContext, [color CGColor]);
     CGContextSetLineCap(cacheContext, kCGLineCapRound);
     CGContextSetLineWidth(cacheContext, fingerWidth / 3);
-    CGContextSetPatternPhase(cacheContext, CGSizeMake(rand()%52, rand()%52));
-    
-    // Probably in |draw| method call.
-    CGContextSetStrokeColorWithColor(cacheContext, strokeColor);
-    CGContextSetFillColorWithColor(cacheContext, fillColor);
+//    CGContextSetPatternPhase(cacheContext, CGSizeMake(rand()%52, rand()%52));
+//    CGContextSetAlpha(cacheContext, .8);
+
+    // TODO
+    // use the pattern image for graphite
+    // we'll work on this later after optimization...
+//    CGContextSetStrokeColorWithColor(cacheContext, strokeColor);
+//    CGContextSetFillColorWithColor(cacheContext, fillColor);
     
 
     if(point1.x > -1){
-        CGContextSetBlendMode(cacheContext, kCGBlendModeOverlay);
+        //
+        // TODO
+        // set a blend mode that lets me draw on top with alpha
+        // and slowly darken a color. make it feel like ink/graphite
+        CGContextSetBlendMode(cacheContext, kCGBlendModeNormal);
         double x0 = (point0.x > -1) ? point0.x : point1.x; //after 4 touches we should have a back anchor point, if not, use the current anchor point
         double y0 = (point0.y > -1) ? point0.y : point1.y; //after 4 touches we should have a back anchor point, if not, use the current anchor point
         double x1 = point1.x;
@@ -179,17 +186,6 @@
         CGContextMoveToPoint(cacheContext, point1.x, point1.y);
         CGContextAddCurveToPoint(cacheContext, ctrl1_x, ctrl1_y, ctrl2_x, ctrl2_y, point2.x, point2.y);
         
-        CGContextSetLineWidth(cacheContext, fingerWidth / 3 + 1);
-        CGContextSetLineCap(cacheContext, kCGLineCapButt);
-        CGContextSetAlpha(cacheContext, .5);
-        CGContextStrokePath(cacheContext);
-        
-        CGContextMoveToPoint(cacheContext, point1.x, point1.y);
-        CGContextAddCurveToPoint(cacheContext, ctrl1_x, ctrl1_y, ctrl2_x, ctrl2_y, point2.x, point2.y);
-        
-        CGContextSetLineCap(cacheContext, kCGLineCapRound);
-        CGContextSetLineWidth(cacheContext, fingerWidth / 3);
-        CGContextSetAlpha(cacheContext, .8);
         CGContextStrokePath(cacheContext);
         
         CGRect dirtyPoint1 = CGRectMake(point1.x-10, point1.y-10, 20, 20);
@@ -206,8 +202,6 @@
         [self setNeedsDisplayInRect:ellipseRect];
         
     }else if(point1.x == -1 && lineEnded){
-        CGContextSetLineWidth(cacheContext, fingerWidth / 3);
-        CGContextSetAlpha(cacheContext, 1);
         CGContextMoveToPoint(cacheContext, point2.x, point2.y);
         CGContextAddLineToPoint(cacheContext, point3.x, point3.y);
         CGContextStrokePath(cacheContext);
