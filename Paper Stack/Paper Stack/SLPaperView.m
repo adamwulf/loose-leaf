@@ -29,6 +29,7 @@
     if (self) {
         // Initialization code
         uuid = [[NSString createStringUUID] retain];
+        /*
         NSInteger photo = rand() % 6 + 1;
         UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", photo]];
         UIImageView* imgView = [[[UIImageView alloc] initWithImage:img] autorelease];
@@ -37,6 +38,7 @@
         imgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         imgView.clipsToBounds = YES;
         [self.contentView addSubview:imgView];
+         */
         
         preGestureScale = 1;
         scale = 1;

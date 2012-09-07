@@ -120,6 +120,7 @@
 #pragma mark - SLRotationManagerDelegate
 
 -(void) didUpdateAccelerometerWithReading:(CGFloat)currentRawReading{
+    NSLog(@"rotation: %f", currentRawReading);
     [NSThread performBlockOnMainThread:^{
         addPageSidebarButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         documentBackgroundSidebarButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
