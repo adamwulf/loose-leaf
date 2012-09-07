@@ -17,7 +17,8 @@
 
         hue = 0.0;
         [self initContext:frame.size];
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = [UIColor clearColor];
+        self.clearsContextBeforeDrawing = NO;
     }
     return self;
 }
@@ -190,16 +191,19 @@
         
         CGRect dirtyPoint1 = CGRectMake(point1.x-10, point1.y-10, 20, 20);
         CGRect dirtyPoint2 = CGRectMake(point2.x-10, point2.y-10, 20, 20);
-        [self setNeedsDisplayInRect:CGRectUnion(dirtyPoint1, dirtyPoint2)];
+        CGRect rectToDraw = CGRectUnion(dirtyPoint1, dirtyPoint2);
+        NSLog(@"asking for: %f %f", rectToDraw.size.width, rectToDraw.size.height);
+        [self setNeedsDisplayInRect:rectToDraw];
     }else if(point2.x == -1){
         CGContextSetLineWidth(cacheContext, fingerWidth / 3);
         CGContextSetAlpha(cacheContext, 1);
         // draw a dot at point3
         // Draw a circle (filled)
         CGFloat dotDiameter = fingerWidth / 3;
-        CGRect ellipseRect = CGRectMake(point3.x - .5*dotDiameter, point3.y - .5*dotDiameter, dotDiameter, dotDiameter);
-        CGContextFillEllipseInRect(cacheContext, ellipseRect);
-        [self setNeedsDisplayInRect:ellipseRect];
+        CGRect rectToDraw = CGRectMake(point3.x - .5*dotDiameter, point3.y - .5*dotDiameter, dotDiameter, dotDiameter);
+        CGContextFillEllipseInRect(cacheContext, rectToDraw);
+        NSLog(@"asking for: %f %f", rectToDraw.size.width, rectToDraw.size.height);
+        [self setNeedsDisplayInRect:rectToDraw];
         
     }else if(point1.x == -1 && lineEnded){
         CGContextMoveToPoint(cacheContext, point2.x, point2.y);
@@ -207,12 +211,15 @@
         CGContextStrokePath(cacheContext);
         CGRect dirtyPoint1 = CGRectMake(point2.x-10, point2.y-10, 20, 20);
         CGRect dirtyPoint2 = CGRectMake(point3.x-10, point3.y-10, 20, 20);
-        [self setNeedsDisplayInRect:CGRectUnion(dirtyPoint1, dirtyPoint2)];
+        CGRect rectToDraw = CGRectUnion(dirtyPoint1, dirtyPoint2);
+        NSLog(@"asking for: %f %f", rectToDraw.size.width, rectToDraw.size.height);
+        [self setNeedsDisplayInRect:rectToDraw];
     }
 }
 
 
 - (void) drawRect:(CGRect)rect {
+    NSLog(@"got for: %f %f", rect.size.width, rect.size.height);
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
     CGContextDrawImage(context, self.bounds, cacheImage);

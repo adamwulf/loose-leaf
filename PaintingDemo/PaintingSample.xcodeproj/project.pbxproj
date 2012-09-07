@@ -10,6 +10,8 @@
 		66203B7115F4B78200E3D343 /* MainWindowIPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 66203B7015F4B78200E3D343 /* MainWindowIPad.xib */; };
 		664FF26615F9B3D700B159EB /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 664FF26515F9B3D700B159EB /* QuartzCore.framework */; };
 		664FF27015F9CCAB00B159EB /* graphite.png in Resources */ = {isa = PBXBuildFile; fileRef = 664FF26F15F9CCAB00B159EB /* graphite.png */; };
+		664FF27215FA97C400B159EB /* mars.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 664FF27115FA97C400B159EB /* mars.jpeg */; };
+		664FF27515FA9BC800B159EB /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 664FF27415FA9BC800B159EB /* NSThread+BlockAdditions.m */; };
 		F1381063143F7971005CBF27 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381062143F7971005CBF27 /* UIKit.framework */; };
 		F1381065143F7971005CBF27 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381064143F7971005CBF27 /* Foundation.framework */; };
 		F1381067143F7971005CBF27 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381066143F7971005CBF27 /* CoreGraphics.framework */; };
@@ -26,6 +28,9 @@
 		66203B7015F4B78200E3D343 /* MainWindowIPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindowIPad.xib; sourceTree = "<group>"; };
 		664FF26515F9B3D700B159EB /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		664FF26F15F9CCAB00B159EB /* graphite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = graphite.png; sourceTree = "<group>"; };
+		664FF27115FA97C400B159EB /* mars.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mars.jpeg; sourceTree = "<group>"; };
+		664FF27315FA9BC800B159EB /* NSThread+BlockAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSThread+BlockAdditions.h"; sourceTree = "<group>"; };
+		664FF27415FA9BC800B159EB /* NSThread+BlockAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+BlockAdditions.m"; sourceTree = "<group>"; };
 		F138105E143F7971005CBF27 /* PaintingSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PaintingSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1381062143F7971005CBF27 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F1381064143F7971005CBF27 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -94,6 +99,7 @@
 				F1381071143F7971005CBF27 /* PaintingSampleAppDelegate.h */,
 				F1381072143F7971005CBF27 /* PaintingSampleAppDelegate.m */,
 				F1381074143F7971005CBF27 /* MainWindow.xib */,
+				664FF27115FA97C400B159EB /* mars.jpeg */,
 				66203B7015F4B78200E3D343 /* MainWindowIPad.xib */,
 				F1381077143F7971005CBF27 /* PaintingSampleViewController.h */,
 				F1381078143F7971005CBF27 /* PaintingSampleViewController.m */,
@@ -101,6 +107,8 @@
 				F1381069143F7971005CBF27 /* Supporting Files */,
 				F1381082143F7990005CBF27 /* PaintView.h */,
 				F1381083143F7990005CBF27 /* PaintView.m */,
+				664FF27315FA9BC800B159EB /* NSThread+BlockAdditions.h */,
+				664FF27415FA9BC800B159EB /* NSThread+BlockAdditions.m */,
 			);
 			path = PaintingSample;
 			sourceTree = "<group>";
@@ -171,6 +179,7 @@
 				F138107C143F7971005CBF27 /* PaintingSampleViewController.xib in Resources */,
 				66203B7115F4B78200E3D343 /* MainWindowIPad.xib in Resources */,
 				664FF27015F9CCAB00B159EB /* graphite.png in Resources */,
+				664FF27215FA97C400B159EB /* mars.jpeg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,6 +194,7 @@
 				F1381073143F7971005CBF27 /* PaintingSampleAppDelegate.m in Sources */,
 				F1381079143F7971005CBF27 /* PaintingSampleViewController.m in Sources */,
 				F1381084143F7990005CBF27 /* PaintView.m in Sources */,
+				664FF27515FA9BC800B159EB /* NSThread+BlockAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,6 +274,7 @@
 		F1381080143F7971005CBF27 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer: Adam Wulf (569ACMP6SC)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Adam Wulf (569ACMP6SC)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PaintingSample/PaintingSample-Prefix.pch";
@@ -271,6 +282,7 @@
 				INFOPLIST_FILE = "PaintingSample/PaintingSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "992248CC-57C8-4552-B5BB-91F892685F60";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "992248CC-57C8-4552-B5BB-91F892685F60";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -280,12 +292,16 @@
 		F1381081143F7971005CBF27 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer: Adam Wulf (569ACMP6SC)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Adam Wulf (569ACMP6SC)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PaintingSample/PaintingSample-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "PaintingSample/PaintingSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "992248CC-57C8-4552-B5BB-91F892685F60";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "992248CC-57C8-4552-B5BB-91F892685F60";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
