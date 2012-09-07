@@ -14,13 +14,10 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+
         hue = 0.0;
         [self initContext:frame.size];
-        point0 = CGPointMake(0, 0);
-		point1 = CGPointMake(50, 100);
-		point2 = CGPointMake(100, 50);
-		point3 = CGPointMake(150, 100);
-        [self drawToCache];
+        self.backgroundColor = [UIColor whiteColor];
     }
     return self;
 }
@@ -54,36 +51,90 @@
                                                  8, size.width * scaleFactor * 4, colorSpace,
                                                  kCGImageAlphaPremultipliedFirst);
     CGContextScaleCTM(cacheContext, scaleFactor, scaleFactor);
-	return YES;
+    CGContextSetAllowsAntialiasing(cacheContext, YES);
+    CGContextSetShouldAntialias(cacheContext, YES);
+
+	
+    // Somewhere in initialization code.
+    UIColor *pattern = [UIColor colorWithPatternImage:[UIImage imageNamed:@"graphite.png"]];
+    fillColor = [pattern CGColor];
+    strokeColor = [pattern CGColor];
+    
+    return YES;
 }
 
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [touches anyObject];
+    CGFloat newFingerWidth = [[touch valueForKey:@"pathMajorRadius"] floatValue];
+    if(newFingerWidth < 2) newFingerWidth = 2;
+    if(abs(newFingerWidth - fingerWidth) > 1){
+        if(newFingerWidth > fingerWidth) fingerWidth += 1;
+        if(newFingerWidth < fingerWidth) fingerWidth -= 1;
+    }
+    fingerWidth = newFingerWidth;
     point0 = CGPointMake(-1, -1);
     point1 = CGPointMake(-1, -1); // previous previous point
     point2 = CGPointMake(-1, -1); // previous touch point
     point3 = [touch locationInView:self]; // current touch point
+    [self drawToCache:NO];
+    [super touchesBegan:touches withEvent:event];
+    [super touchesMoved:touches withEvent:event];
 }
 
 - (void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [touches anyObject];
+    CGFloat newFingerWidth = [[touch valueForKey:@"pathMajorRadius"] floatValue];
+    if(newFingerWidth < 2) newFingerWidth = 2;
+    if(abs(newFingerWidth - fingerWidth) > 1){
+        if(newFingerWidth > fingerWidth) fingerWidth += 1;
+        if(newFingerWidth < fingerWidth) fingerWidth -= 1;
+    }
+    fingerWidth = newFingerWidth;
     point0 = point1;
     point1 = point2;
     point2 = point3;
     point3 = [touch locationInView:self];
-    [self drawToCache];
+    [self drawToCache:NO];
 }
 
-- (void) drawToCache {
+- (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    UITouch *touch = [touches anyObject];
+    CGFloat newFingerWidth = [[touch valueForKey:@"pathMajorRadius"] floatValue];
+    if(newFingerWidth < 2) newFingerWidth = 2;
+    if(abs(newFingerWidth - fingerWidth) > 1){
+        if(newFingerWidth > fingerWidth) fingerWidth += 1;
+        if(newFingerWidth < fingerWidth) fingerWidth -= 1;
+    }else{
+        fingerWidth = newFingerWidth;
+    }
+    point0 = point1;
+    point1 = point2;
+    point2 = point3;
+    point3 = [touch locationInView:self];
+    [self drawToCache:YES];
+}
+-(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+//    UITouch *touch = [touches anyObject];
+}
+
+- (void) drawToCache:(BOOL)lineEnded {
+    hue += 0.005;
+    if(hue > 1.0) hue = 0.0;
+    UIColor *color = [UIColor colorWithHue:hue saturation:0.7 brightness:1.0 alpha:1.0];
+
+    CGContextSetStrokeColorWithColor(cacheContext, [color CGColor]);
+    CGContextSetFillColorWithColor(cacheContext, [color CGColor]);
+    CGContextSetLineCap(cacheContext, kCGLineCapRound);
+    CGContextSetLineWidth(cacheContext, fingerWidth / 3);
+    CGContextSetPatternPhase(cacheContext, CGSizeMake(rand()%52, rand()%52));
+    
+    // Probably in |draw| method call.
+    CGContextSetStrokeColorWithColor(cacheContext, strokeColor);
+    CGContextSetFillColorWithColor(cacheContext, fillColor);
+    
+
     if(point1.x > -1){
-        hue += 0.005;
-        if(hue > 1.0) hue = 0.0;
-        UIColor *color = [UIColor colorWithHue:hue saturation:0.7 brightness:1.0 alpha:1.0];
-        
-        CGContextSetStrokeColorWithColor(cacheContext, [color CGColor]);
-        CGContextSetLineCap(cacheContext, kCGLineCapRound);
-        CGContextSetLineWidth(cacheContext, 15);
-        
+        CGContextSetBlendMode(cacheContext, kCGBlendModeOverlay);
         double x0 = (point0.x > -1) ? point0.x : point1.x; //after 4 touches we should have a back anchor point, if not, use the current anchor point
         double y0 = (point0.y > -1) ? point0.y : point1.y; //after 4 touches we should have a back anchor point, if not, use the current anchor point
         double x1 = point1.x;
@@ -127,13 +178,45 @@
         
         CGContextMoveToPoint(cacheContext, point1.x, point1.y);
         CGContextAddCurveToPoint(cacheContext, ctrl1_x, ctrl1_y, ctrl2_x, ctrl2_y, point2.x, point2.y);
+        
+        CGContextSetLineWidth(cacheContext, fingerWidth / 3 + 1);
+        CGContextSetLineCap(cacheContext, kCGLineCapButt);
+        CGContextSetAlpha(cacheContext, .5);
+        CGContextStrokePath(cacheContext);
+        
+        CGContextMoveToPoint(cacheContext, point1.x, point1.y);
+        CGContextAddCurveToPoint(cacheContext, ctrl1_x, ctrl1_y, ctrl2_x, ctrl2_y, point2.x, point2.y);
+        
+        CGContextSetLineCap(cacheContext, kCGLineCapRound);
+        CGContextSetLineWidth(cacheContext, fingerWidth / 3);
+        CGContextSetAlpha(cacheContext, .8);
         CGContextStrokePath(cacheContext);
         
         CGRect dirtyPoint1 = CGRectMake(point1.x-10, point1.y-10, 20, 20);
         CGRect dirtyPoint2 = CGRectMake(point2.x-10, point2.y-10, 20, 20);
         [self setNeedsDisplayInRect:CGRectUnion(dirtyPoint1, dirtyPoint2)];
+    }else if(point2.x == -1){
+        CGContextSetLineWidth(cacheContext, fingerWidth / 3);
+        CGContextSetAlpha(cacheContext, 1);
+        // draw a dot at point3
+        // Draw a circle (filled)
+        CGFloat dotDiameter = fingerWidth / 3;
+        CGRect ellipseRect = CGRectMake(point3.x - .5*dotDiameter, point3.y - .5*dotDiameter, dotDiameter, dotDiameter);
+        CGContextFillEllipseInRect(cacheContext, ellipseRect);
+        [self setNeedsDisplayInRect:ellipseRect];
+        
+    }else if(point1.x == -1 && lineEnded){
+        CGContextSetLineWidth(cacheContext, fingerWidth / 3);
+        CGContextSetAlpha(cacheContext, 1);
+        CGContextMoveToPoint(cacheContext, point2.x, point2.y);
+        CGContextAddLineToPoint(cacheContext, point3.x, point3.y);
+        CGContextStrokePath(cacheContext);
+        CGRect dirtyPoint1 = CGRectMake(point2.x-10, point2.y-10, 20, 20);
+        CGRect dirtyPoint2 = CGRectMake(point3.x-10, point3.y-10, 20, 20);
+        [self setNeedsDisplayInRect:CGRectUnion(dirtyPoint1, dirtyPoint2)];
     }
 }
+
 
 - (void) drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();

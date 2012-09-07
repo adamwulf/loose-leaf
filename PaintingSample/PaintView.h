@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
 
 @interface PaintView : UIView {
     void *cacheBitmap;
@@ -17,8 +18,13 @@
     CGPoint point1;
     CGPoint point2;
     CGPoint point3;
+    
+    CGFloat fingerWidth;
+    // Somewhere in initialization code.
+    CGColorRef fillColor;
+    CGColorRef strokeColor;
 }
 - (BOOL) initContext:(CGSize)size;
-- (void) drawToCache;
+- (void) drawToCache:(BOOL)lineEnded;
 
 @end
