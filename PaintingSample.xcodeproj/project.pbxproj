@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		66203B7115F4B78200E3D343 /* MainWindowIPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 66203B7015F4B78200E3D343 /* MainWindowIPad.xib */; };
 		F1381063143F7971005CBF27 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381062143F7971005CBF27 /* UIKit.framework */; };
 		F1381065143F7971005CBF27 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381064143F7971005CBF27 /* Foundation.framework */; };
 		F1381067143F7971005CBF27 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381066143F7971005CBF27 /* CoreGraphics.framework */; };
@@ -16,23 +17,27 @@
 		F1381076143F7971005CBF27 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1381074143F7971005CBF27 /* MainWindow.xib */; };
 		F1381079143F7971005CBF27 /* PaintingSampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1381078143F7971005CBF27 /* PaintingSampleViewController.m */; };
 		F138107C143F7971005CBF27 /* PaintingSampleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F138107A143F7971005CBF27 /* PaintingSampleViewController.xib */; };
+		F1381084143F7990005CBF27 /* PaintView.m in Sources */ = {isa = PBXBuildFile; fileRef = F1381083143F7990005CBF27 /* PaintView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		66203B7015F4B78200E3D343 /* MainWindowIPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindowIPad.xib; sourceTree = "<group>"; };
 		F138105E143F7971005CBF27 /* PaintingSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PaintingSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1381062143F7971005CBF27 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F1381064143F7971005CBF27 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F1381066143F7971005CBF27 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		F138106A143F7971005CBF27 /* PaintingSample-Info.plist */ = {isa = PBXFileReference; path = "PaintingSample-Info.plist"; sourceTree = "<group>"; };
+		F138106A143F7971005CBF27 /* PaintingSample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PaintingSample-Info.plist"; sourceTree = "<group>"; };
 		F138106C143F7971005CBF27 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F138106E143F7971005CBF27 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		F1381070143F7971005CBF27 /* PaintingSample-Prefix.pch */ = {isa = PBXFileReference; path = "PaintingSample-Prefix.pch"; sourceTree = "<group>"; };
-		F1381071143F7971005CBF27 /* PaintingSampleAppDelegate.h */ = {isa = PBXFileReference; path = PaintingSampleAppDelegate.h; sourceTree = "<group>"; };
+		F1381070143F7971005CBF27 /* PaintingSample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PaintingSample-Prefix.pch"; sourceTree = "<group>"; };
+		F1381071143F7971005CBF27 /* PaintingSampleAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaintingSampleAppDelegate.h; sourceTree = "<group>"; };
 		F1381072143F7971005CBF27 /* PaintingSampleAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaintingSampleAppDelegate.m; sourceTree = "<group>"; };
 		F1381075143F7971005CBF27 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		F1381077143F7971005CBF27 /* PaintingSampleViewController.h */ = {isa = PBXFileReference; path = PaintingSampleViewController.h; sourceTree = "<group>"; };
+		F1381077143F7971005CBF27 /* PaintingSampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaintingSampleViewController.h; sourceTree = "<group>"; };
 		F1381078143F7971005CBF27 /* PaintingSampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaintingSampleViewController.m; sourceTree = "<group>"; };
 		F138107B143F7971005CBF27 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PaintingSampleViewController.xib; sourceTree = "<group>"; };
+		F1381082143F7990005CBF27 /* PaintView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaintView.h; sourceTree = "<group>"; };
+		F1381083143F7990005CBF27 /* PaintView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaintView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,10 +87,13 @@
 				F1381071143F7971005CBF27 /* PaintingSampleAppDelegate.h */,
 				F1381072143F7971005CBF27 /* PaintingSampleAppDelegate.m */,
 				F1381074143F7971005CBF27 /* MainWindow.xib */,
+				66203B7015F4B78200E3D343 /* MainWindowIPad.xib */,
 				F1381077143F7971005CBF27 /* PaintingSampleViewController.h */,
 				F1381078143F7971005CBF27 /* PaintingSampleViewController.m */,
 				F138107A143F7971005CBF27 /* PaintingSampleViewController.xib */,
 				F1381069143F7971005CBF27 /* Supporting Files */,
+				F1381082143F7990005CBF27 /* PaintView.h */,
+				F1381083143F7990005CBF27 /* PaintView.m */,
 			);
 			path = PaintingSample;
 			sourceTree = "<group>";
@@ -126,6 +134,9 @@
 /* Begin PBXProject section */
 		F1381055143F7971005CBF27 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+			};
 			buildConfigurationList = F1381058143F7971005CBF27 /* Build configuration list for PBXProject "PaintingSample" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -151,6 +162,7 @@
 				F138106D143F7971005CBF27 /* InfoPlist.strings in Resources */,
 				F1381076143F7971005CBF27 /* MainWindow.xib in Resources */,
 				F138107C143F7971005CBF27 /* PaintingSampleViewController.xib in Resources */,
+				66203B7115F4B78200E3D343 /* MainWindowIPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -164,6 +176,7 @@
 				F138106F143F7971005CBF27 /* main.m in Sources */,
 				F1381073143F7971005CBF27 /* PaintingSampleAppDelegate.m in Sources */,
 				F1381079143F7971005CBF27 /* PaintingSampleViewController.m in Sources */,
+				F1381084143F7990005CBF27 /* PaintView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,10 +256,15 @@
 		F1381080143F7971005CBF27 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Adam Wulf (569ACMP6SC)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PaintingSample/PaintingSample-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "PaintingSample/PaintingSample-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "992248CC-57C8-4552-B5BB-91F892685F60";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -256,8 +274,11 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PaintingSample/PaintingSample-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "PaintingSample/PaintingSample-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -281,6 +302,7 @@
 				F1381081143F7971005CBF27 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
