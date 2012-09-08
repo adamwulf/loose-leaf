@@ -20,7 +20,7 @@
         self.backgroundColor = [UIColor clearColor];
         self.clearsContextBeforeDrawing = NO;
         
-        UILabel* lbl = [[[UILabel alloc] initWithFrame:self.bounds] autorelease];
+        UILabel* lbl = [[[UILabel alloc] initWithFrame:CGRectMake(100, 100, 50, 200)] autorelease];
         lbl.text = @"PaintView";
         [self addSubview:lbl];
     }
@@ -30,31 +30,35 @@
 - (BOOL) initContext:(CGSize)size {
 	float scaleFactor = [[UIScreen mainScreen] scale];
     
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     
     
     
     
 	int bitmapByteCount;
 	int	bitmapBytesPerRow;
+    int bitsPerComponent;
 	
 	// Declare the number of bytes per row. Each pixel in the bitmap in this
 	// example is represented by 4 bytes; 8 bits each of red, green, blue, and
 	// alpha.
-	bitmapBytesPerRow = (size.width * 4);
-	bitmapByteCount = (bitmapBytesPerRow * size.height);
-	
+    bitsPerComponent = 8;
+	bitmapBytesPerRow = (size.width * scaleFactor * 4); // only alpha
+	bitmapByteCount = (bitmapBytesPerRow * size.height * scaleFactor);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    colorSpace = NULL;
 	// Allocate memory for image data. This is the destination in memory
 	// where any drawing to the bitmap context will be rendered.
-	cacheBitmap = malloc( bitmapByteCount );
-	if (cacheBitmap == NULL){
-		return NO;
-	}
-//	cacheContext = CGBitmapContextCreate (cacheBitmap, size.width, size.height, 8, bitmapBytesPerRow, colorSpace, kCGImageAlphaNoneSkipFirst);
+//	cacheBitmap = malloc( bitmapByteCount );
+//	if (cacheBitmap == NULL){
+//		return NO;
+//	}
+    //
+    // alpha only, b/c it's black only!
+	cacheContext = CGBitmapContextCreate (NULL, size.width * scaleFactor, size.height * scaleFactor, bitsPerComponent, bitmapBytesPerRow, colorSpace, kCGImageAlphaOnly);
 
-    cacheContext = CGBitmapContextCreate(NULL,   size.width * scaleFactor, size.height * scaleFactor,
-                                                 8, size.width * scaleFactor * 4, colorSpace,
-                                                 kCGImageAlphaPremultipliedFirst);
+//    cacheContext = CGBitmapContextCreate(NULL,   size.width * scaleFactor, size.height * scaleFactor,
+//                                                 8, size.width * scaleFactor * 4, colorSpace,
+//                                                 kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little );
     CGContextScaleCTM(cacheContext, scaleFactor, scaleFactor);
     CGContextSetAllowsAntialiasing(cacheContext, YES);
     CGContextSetShouldAntialias(cacheContext, YES);
@@ -196,7 +200,7 @@
         CGRect dirtyPoint1 = CGRectMake(point1.x-10, point1.y-10, 20, 20);
         CGRect dirtyPoint2 = CGRectMake(point2.x-10, point2.y-10, 20, 20);
         CGRect rectToDraw = CGRectUnion(dirtyPoint1, dirtyPoint2);
-        [self setNeedsDisplayInRect:rectToDraw];
+//        [self setNeedsDisplayInRect:rectToDraw];
     }else if(point2.x == -1){
         CGContextSetLineWidth(cacheContext, fingerWidth / 3);
         CGContextSetAlpha(cacheContext, 1);
@@ -205,8 +209,7 @@
         CGFloat dotDiameter = fingerWidth / 3;
         CGRect rectToDraw = CGRectMake(point3.x - .5*dotDiameter, point3.y - .5*dotDiameter, dotDiameter, dotDiameter);
         CGContextFillEllipseInRect(cacheContext, rectToDraw);
-        [self setNeedsDisplayInRect:rectToDraw];
-        
+//        [self setNeedsDisplayInRect:rectToDraw];
     }else if(point1.x == -1 && lineEnded){
         CGContextMoveToPoint(cacheContext, point2.x, point2.y);
         CGContextAddLineToPoint(cacheContext, point3.x, point3.y);
@@ -214,24 +217,30 @@
         CGRect dirtyPoint1 = CGRectMake(point2.x-10, point2.y-10, 20, 20);
         CGRect dirtyPoint2 = CGRectMake(point3.x-10, point3.y-10, 20, 20);
         CGRect rectToDraw = CGRectUnion(dirtyPoint1, dirtyPoint2);
-        [self setNeedsDisplayInRect:rectToDraw];
+//        [self setNeedsDisplayInRect:rectToDraw];
     }
+    
+    CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
+    self.layer.contents = (id)cacheImage;
+    CGImageRelease(cacheImage);
+    
 }
 
-
+/*
 - (void) drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
     CGContextDrawImage(context, self.bounds, cacheImage);
     CGImageRelease(cacheImage);
 }
+ */
 
 
 
 -(void) dealloc{
     CGContextRelease(cacheContext);
-    free(cacheBitmap);
-    cacheBitmap = nil;
+//    free(cacheBitmap);
+//    cacheBitmap = nil;
     [super dealloc];
 }
 

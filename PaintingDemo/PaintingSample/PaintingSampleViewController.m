@@ -45,7 +45,7 @@
     fr.origin.y = self.view.bounds.size.height / 2;
     mars2.frame = fr;
     
-    timer = [[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(buildUI) userInfo:nil repeats:YES] retain];
+//    timer = [[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(buildUI) userInfo:nil repeats:YES] retain];
 
     [container addSubview:otherviews];
 
@@ -54,6 +54,8 @@
 
     [self.view addSubview:container];
     
+    [self buildUI];
+    [self buildUI];
     /*
     [NSThread performBlockInBackground:^{
         //
