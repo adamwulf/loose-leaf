@@ -8,6 +8,7 @@
 
 #import "PaintingSampleViewController.h"
 #import "PaintView.h"
+#import "PaintTouchView.h"
 #import "NSThread+BlockAdditions.h"
 
 @implementation PaintingSampleViewController
@@ -53,6 +54,12 @@
     PaintView *paint = [[PaintView alloc] initWithFrame:self.view.bounds];
     [container addSubview:paint];
     [paint release];
+
+    PaintTouchView *paintTouch = [[PaintTouchView alloc] initWithFrame:self.view.bounds];
+    [container addSubview:paintTouch];
+    [paintTouch release];
+    
+    [paintTouch setDelegate:paint];
 }
 
 

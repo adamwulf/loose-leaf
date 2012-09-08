@@ -8,26 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
-#import "PaintLayer.h"
+#import "PaintTouchViewDelegate.h"
 
-@interface PaintView : UIView {
+@interface PaintView : UIView<PaintTouchViewDelegate> {
     void *cacheBitmap;
     CGContextRef cacheContext;
     float hue;
     
-    CGPoint point0;
-    CGPoint point1;
-    CGPoint point2;
-    CGPoint point3;
-    
-    PaintLayer* paintLayer;
-    
-    CGFloat fingerWidth;
     // Somewhere in initialization code.
     CGColorRef fillColor;
     CGColorRef strokeColor;
 }
-- (BOOL) initContext:(CGSize)size;
-- (void) drawToCache:(BOOL)lineEnded;
+
 
 @end
