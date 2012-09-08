@@ -12,9 +12,6 @@
 		664FF27015F9CCAB00B159EB /* graphite.png in Resources */ = {isa = PBXBuildFile; fileRef = 664FF26F15F9CCAB00B159EB /* graphite.png */; };
 		664FF27215FA97C400B159EB /* mars.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 664FF27115FA97C400B159EB /* mars.jpeg */; };
 		664FF27515FA9BC800B159EB /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 664FF27415FA9BC800B159EB /* NSThread+BlockAdditions.m */; };
-		664FF28015FAA83500B159EB /* PaintLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 664FF27F15FAA83500B159EB /* PaintLayer.m */; };
-		664FF28315FAA84600B159EB /* LayerBackedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 664FF28215FAA84600B159EB /* LayerBackedView.m */; };
-		6654DE0C15FAB8F9006CF3D7 /* AsyncLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6654DE0B15FAB8F9006CF3D7 /* AsyncLayer.m */; };
 		F1381063143F7971005CBF27 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381062143F7971005CBF27 /* UIKit.framework */; };
 		F1381065143F7971005CBF27 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381064143F7971005CBF27 /* Foundation.framework */; };
 		F1381067143F7971005CBF27 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381066143F7971005CBF27 /* CoreGraphics.framework */; };
@@ -34,12 +31,6 @@
 		664FF27115FA97C400B159EB /* mars.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mars.jpeg; sourceTree = "<group>"; };
 		664FF27315FA9BC800B159EB /* NSThread+BlockAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSThread+BlockAdditions.h"; sourceTree = "<group>"; };
 		664FF27415FA9BC800B159EB /* NSThread+BlockAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+BlockAdditions.m"; sourceTree = "<group>"; };
-		664FF27E15FAA83500B159EB /* PaintLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaintLayer.h; sourceTree = "<group>"; };
-		664FF27F15FAA83500B159EB /* PaintLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaintLayer.m; sourceTree = "<group>"; };
-		664FF28115FAA84500B159EB /* LayerBackedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LayerBackedView.h; sourceTree = "<group>"; };
-		664FF28215FAA84600B159EB /* LayerBackedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LayerBackedView.m; sourceTree = "<group>"; };
-		6654DE0A15FAB8F9006CF3D7 /* AsyncLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncLayer.h; sourceTree = "<group>"; };
-		6654DE0B15FAB8F9006CF3D7 /* AsyncLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncLayer.m; sourceTree = "<group>"; };
 		F138105E143F7971005CBF27 /* PaintingSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PaintingSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1381062143F7971005CBF27 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F1381064143F7971005CBF27 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -73,24 +64,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		664FF28415FAAABD00B159EB /* Layer Backed */ = {
-			isa = PBXGroup;
-			children = (
-				664FF27E15FAA83500B159EB /* PaintLayer.h */,
-				664FF27F15FAA83500B159EB /* PaintLayer.m */,
-				664FF28115FAA84500B159EB /* LayerBackedView.h */,
-				664FF28215FAA84600B159EB /* LayerBackedView.m */,
-			);
-			name = "Layer Backed";
-			sourceTree = "<group>";
-		};
 		664FF28515FAAAC900B159EB /* Context Backed */ = {
 			isa = PBXGroup;
 			children = (
 				F1381082143F7990005CBF27 /* PaintView.h */,
 				F1381083143F7990005CBF27 /* PaintView.m */,
-				6654DE0A15FAB8F9006CF3D7 /* AsyncLayer.h */,
-				6654DE0B15FAB8F9006CF3D7 /* AsyncLayer.m */,
 			);
 			name = "Context Backed";
 			sourceTree = "<group>";
@@ -137,7 +115,6 @@
 				F138107A143F7971005CBF27 /* PaintingSampleViewController.xib */,
 				F1381069143F7971005CBF27 /* Supporting Files */,
 				664FF28515FAAAC900B159EB /* Context Backed */,
-				664FF28415FAAABD00B159EB /* Layer Backed */,
 				664FF27315FA9BC800B159EB /* NSThread+BlockAdditions.h */,
 				664FF27415FA9BC800B159EB /* NSThread+BlockAdditions.m */,
 			);
@@ -226,9 +203,6 @@
 				F1381079143F7971005CBF27 /* PaintingSampleViewController.m in Sources */,
 				F1381084143F7990005CBF27 /* PaintView.m in Sources */,
 				664FF27515FA9BC800B159EB /* NSThread+BlockAdditions.m in Sources */,
-				664FF28015FAA83500B159EB /* PaintLayer.m in Sources */,
-				664FF28315FAA84600B159EB /* LayerBackedView.m in Sources */,
-				6654DE0C15FAB8F9006CF3D7 /* AsyncLayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

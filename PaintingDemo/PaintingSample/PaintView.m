@@ -7,7 +7,6 @@
 //
 
 #import "PaintView.h"
-#import "AsyncLayer.h"
 
 @implementation PaintView
 
@@ -20,16 +19,6 @@
         [self initContext:frame.size];
         self.backgroundColor = [UIColor clearColor];
         self.clearsContextBeforeDrawing = NO;
-        /*
-        asyncLayer = [AsyncLayer layer];
-        asyncLayer.frame = self.bounds;
-        asyncLayer.cacheContext = cacheContext;
-        if([asyncLayer respondsToSelector:@selector(setDrawsAsynchronously:)]){
-            // iOS 6.0 only
-            asyncLayer.drawsAsynchronously = YES;
-        }
-        [self.layer addSublayer:asyncLayer];
-         */
     }
     return self;
 }
@@ -58,6 +47,7 @@
 		return NO;
 	}
 //	cacheContext = CGBitmapContextCreate (cacheBitmap, size.width, size.height, 8, bitmapBytesPerRow, colorSpace, kCGImageAlphaNoneSkipFirst);
+
     cacheContext = CGBitmapContextCreate(NULL,   size.width * scaleFactor, size.height * scaleFactor,
                                                  8, size.width * scaleFactor * 4, colorSpace,
                                                  kCGImageAlphaPremultipliedFirst);
@@ -231,12 +221,6 @@
     CGContextDrawImage(context, self.bounds, cacheImage);
     CGImageRelease(cacheImage);
 }
-
-/*
- -(void) setNeedsDisplayInRect:(CGRect)rect{
- [asyncLayer setNeedsDisplayInRect:rect];
- }
- */
 
 
 @end

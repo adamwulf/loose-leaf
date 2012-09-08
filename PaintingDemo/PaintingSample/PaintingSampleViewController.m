@@ -8,7 +8,6 @@
 
 #import "PaintingSampleViewController.h"
 #import "PaintView.h"
-#import "LayerBackedView.h"
 #import "NSThread+BlockAdditions.h"
 
 @implementation PaintingSampleViewController
@@ -51,19 +50,9 @@
 
     //
     // create the paint view, clear by default
-    CGRect topHalf = self.view.bounds;
-    topHalf.size.height = topHalf.size.height / 2;
-    CGRect bottomhalf = self.view.bounds;
-    bottomhalf.size.height = topHalf.size.height;
-    bottomhalf.origin.y = topHalf.size.height;
-    
-    PaintView *paint = [[PaintView alloc] initWithFrame:topHalf];
+    PaintView *paint = [[PaintView alloc] initWithFrame:self.view.bounds];
     [container addSubview:paint];
     [paint release];
-
-    LayerBackedView *layerBacked = [[LayerBackedView alloc] initWithFrame:bottomhalf];
-    [container addSubview:layerBacked];
-    [layerBacked release];
 
     [self.view addSubview:container];
     

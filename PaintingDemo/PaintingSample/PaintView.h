@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
-#import "AsyncLayer.h"
 
 @interface PaintView : UIView {
     void *cacheBitmap;
@@ -19,8 +18,6 @@
     CGPoint point1;
     CGPoint point2;
     CGPoint point3;
-    
-    AsyncLayer* asyncLayer;
     
     CGFloat fingerWidth;
     // Somewhere in initialization code.
