@@ -7,6 +7,7 @@
 //
 
 #import "PaintView.h"
+#import "NSThread+BlockAdditions.h"
 
 @implementation PaintView
 
@@ -14,12 +15,11 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-
         hue = 0.0;
         [self initContext:frame.size];
         self.backgroundColor = [UIColor clearColor];
         self.clearsContextBeforeDrawing = NO;
-        
+//        [self.layer setDrawsAsynchronously:YES];
         UILabel* lbl = [[[UILabel alloc] initWithFrame:CGRectMake(100, 100, 50, 200)] autorelease];
         lbl.text = @"PaintView";
         [self addSubview:lbl];
@@ -30,10 +30,6 @@
 - (BOOL) initContext:(CGSize)size {
 	float scaleFactor = [[UIScreen mainScreen] scale];
     
-    
-    
-    
-    
 	int bitmapByteCount;
 	int	bitmapBytesPerRow;
     int bitsPerComponent;
@@ -43,32 +39,25 @@
 	// alpha.
     bitsPerComponent = 8;
 	bitmapBytesPerRow = (size.width * scaleFactor * 4); // only alpha
-	bitmapByteCount = (bitmapBytesPerRow * size.height * scaleFactor);
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    colorSpace = NULL;
-	// Allocate memory for image data. This is the destination in memory
-	// where any drawing to the bitmap context will be rendered.
-//	cacheBitmap = malloc( bitmapByteCount );
-//	if (cacheBitmap == NULL){
-//		return NO;
-//	}
+	bitmapByteCount = (bitmapBytesPerRow * size.height * scaleFactor);
     //
     // alpha only, b/c it's black only!
-	cacheContext = CGBitmapContextCreate (NULL, size.width * scaleFactor, size.height * scaleFactor, bitsPerComponent, bitmapBytesPerRow, colorSpace, kCGImageAlphaOnly);
+	cacheContext = CGBitmapContextCreate (NULL, size.width * scaleFactor, size.height * scaleFactor, bitsPerComponent, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst); //kCGImageAlphaOnly or kCGImageAlphaPremultipliedFirst);
 
-//    cacheContext = CGBitmapContextCreate(NULL,   size.width * scaleFactor, size.height * scaleFactor,
-//                                                 8, size.width * scaleFactor * 4, colorSpace,
-//                                                 kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little );
     CGContextScaleCTM(cacheContext, scaleFactor, scaleFactor);
     CGContextSetAllowsAntialiasing(cacheContext, YES);
     CGContextSetShouldAntialias(cacheContext, YES);
-
-	
-    // Somewhere in initialization code.
-    UIColor *pattern = [UIColor colorWithPatternImage:[UIImage imageNamed:@"graphite.png"]];
-    fillColor = [pattern CGColor];
-    strokeColor = [pattern CGColor];
-    
+/*
+    [[NSThread mainThread] performBlock:^{
+        CGContextSetStrokeColorWithColor(cacheContext, [[UIColor blackColor] CGColor]);
+        CGContextFillEllipseInRect(cacheContext, CGRectMake(1, 1, 1, 1));
+        CGContextSetBlendMode(cacheContext, kCGBlendModeClear);
+        CGContextFillEllipseInRect(cacheContext, CGRectMake(1, 1, 1, 1));
+        [self setNeedsDisplayInRect:CGRectMake(1, 1, 1, 1)];
+        CGContextSetBlendMode(cacheContext, kCGBlendModeNormal);
+    } afterDelay:1];
+ */
     return YES;
 }
 
@@ -144,13 +133,11 @@
 //    CGContextSetStrokeColorWithColor(cacheContext, strokeColor);
 //    CGContextSetFillColorWithColor(cacheContext, fillColor);
     
-
     if(point1.x > -1){
         //
         // TODO
         // set a blend mode that lets me draw on top with alpha
         // and slowly darken a color. make it feel like ink/graphite
-        CGContextSetBlendMode(cacheContext, kCGBlendModeNormal);
         double x0 = (point0.x > -1) ? point0.x : point1.x; //after 4 touches we should have a back anchor point, if not, use the current anchor point
         double y0 = (point0.y > -1) ? point0.y : point1.y; //after 4 touches we should have a back anchor point, if not, use the current anchor point
         double x1 = point1.x;
@@ -200,7 +187,7 @@
         CGRect dirtyPoint1 = CGRectMake(point1.x-10, point1.y-10, 20, 20);
         CGRect dirtyPoint2 = CGRectMake(point2.x-10, point2.y-10, 20, 20);
         CGRect rectToDraw = CGRectUnion(dirtyPoint1, dirtyPoint2);
-//        [self setNeedsDisplayInRect:rectToDraw];
+        [self setNeedsDisplayInRect:rectToDraw];
     }else if(point2.x == -1){
         CGContextSetLineWidth(cacheContext, fingerWidth / 3);
         CGContextSetAlpha(cacheContext, 1);
@@ -209,7 +196,7 @@
         CGFloat dotDiameter = fingerWidth / 3;
         CGRect rectToDraw = CGRectMake(point3.x - .5*dotDiameter, point3.y - .5*dotDiameter, dotDiameter, dotDiameter);
         CGContextFillEllipseInRect(cacheContext, rectToDraw);
-//        [self setNeedsDisplayInRect:rectToDraw];
+        [self setNeedsDisplayInRect:rectToDraw];
     }else if(point1.x == -1 && lineEnded){
         CGContextMoveToPoint(cacheContext, point2.x, point2.y);
         CGContextAddLineToPoint(cacheContext, point3.x, point3.y);
@@ -217,23 +204,19 @@
         CGRect dirtyPoint1 = CGRectMake(point2.x-10, point2.y-10, 20, 20);
         CGRect dirtyPoint2 = CGRectMake(point3.x-10, point3.y-10, 20, 20);
         CGRect rectToDraw = CGRectUnion(dirtyPoint1, dirtyPoint2);
-//        [self setNeedsDisplayInRect:rectToDraw];
+        [self setNeedsDisplayInRect:rectToDraw];
     }
-    
-    CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
-    self.layer.contents = (id)cacheImage;
-    CGImageRelease(cacheImage);
     
 }
 
-/*
+
+
 - (void) drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
     CGContextDrawImage(context, self.bounds, cacheImage);
     CGImageRelease(cacheImage);
 }
- */
 
 
 

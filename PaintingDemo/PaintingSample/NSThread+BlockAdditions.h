@@ -14,5 +14,5 @@
 - (void)performBlock:(void (^)())block waitUntilDone:(BOOL)wait;
 + (void)performBlockInBackground:(void (^)())block;
 + (void)performBlockOnMainThread:(void (^)())block;
-
+- (void) performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay;
 @end

@@ -44,4 +44,8 @@
         dispatch_sync(dispatch_get_main_queue(), block);
     }
 }
+
+- (void) performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay{
+    [self performSelector: @selector(performBlock:) withObject: [[block copy] autorelease] afterDelay: delay];
+}
 @end
