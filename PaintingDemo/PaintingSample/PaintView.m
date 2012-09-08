@@ -7,6 +7,7 @@
 //
 
 #import "PaintView.h"
+#import "AsyncLayer.h"
 
 @implementation PaintView
 
@@ -19,6 +20,16 @@
         [self initContext:frame.size];
         self.backgroundColor = [UIColor clearColor];
         self.clearsContextBeforeDrawing = NO;
+        /*
+        asyncLayer = [AsyncLayer layer];
+        asyncLayer.frame = self.bounds;
+        asyncLayer.cacheContext = cacheContext;
+        if([asyncLayer respondsToSelector:@selector(setDrawsAsynchronously:)]){
+            // iOS 6.0 only
+            asyncLayer.drawsAsynchronously = YES;
+        }
+        [self.layer addSublayer:asyncLayer];
+         */
     }
     return self;
 }
@@ -47,8 +58,7 @@
 		return NO;
 	}
 //	cacheContext = CGBitmapContextCreate (cacheBitmap, size.width, size.height, 8, bitmapBytesPerRow, colorSpace, kCGImageAlphaNoneSkipFirst);
-    cacheContext = CGBitmapContextCreate(NULL,
-                                                 size.width * scaleFactor, size.height * scaleFactor,
+    cacheContext = CGBitmapContextCreate(NULL,   size.width * scaleFactor, size.height * scaleFactor,
                                                  8, size.width * scaleFactor * 4, colorSpace,
                                                  kCGImageAlphaPremultipliedFirst);
     CGContextScaleCTM(cacheContext, scaleFactor, scaleFactor);
@@ -192,7 +202,6 @@
         CGRect dirtyPoint1 = CGRectMake(point1.x-10, point1.y-10, 20, 20);
         CGRect dirtyPoint2 = CGRectMake(point2.x-10, point2.y-10, 20, 20);
         CGRect rectToDraw = CGRectUnion(dirtyPoint1, dirtyPoint2);
-        NSLog(@"asking for: %f %f", rectToDraw.size.width, rectToDraw.size.height);
         [self setNeedsDisplayInRect:rectToDraw];
     }else if(point2.x == -1){
         CGContextSetLineWidth(cacheContext, fingerWidth / 3);
@@ -202,7 +211,6 @@
         CGFloat dotDiameter = fingerWidth / 3;
         CGRect rectToDraw = CGRectMake(point3.x - .5*dotDiameter, point3.y - .5*dotDiameter, dotDiameter, dotDiameter);
         CGContextFillEllipseInRect(cacheContext, rectToDraw);
-        NSLog(@"asking for: %f %f", rectToDraw.size.width, rectToDraw.size.height);
         [self setNeedsDisplayInRect:rectToDraw];
         
     }else if(point1.x == -1 && lineEnded){
@@ -212,18 +220,23 @@
         CGRect dirtyPoint1 = CGRectMake(point2.x-10, point2.y-10, 20, 20);
         CGRect dirtyPoint2 = CGRectMake(point3.x-10, point3.y-10, 20, 20);
         CGRect rectToDraw = CGRectUnion(dirtyPoint1, dirtyPoint2);
-        NSLog(@"asking for: %f %f", rectToDraw.size.width, rectToDraw.size.height);
         [self setNeedsDisplayInRect:rectToDraw];
     }
 }
 
 
 - (void) drawRect:(CGRect)rect {
-    NSLog(@"got for: %f %f", rect.size.width, rect.size.height);
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
     CGContextDrawImage(context, self.bounds, cacheImage);
     CGImageRelease(cacheImage);
 }
+
+/*
+ -(void) setNeedsDisplayInRect:(CGRect)rect{
+ [asyncLayer setNeedsDisplayInRect:rect];
+ }
+ */
+
 
 @end

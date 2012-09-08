@@ -21,8 +21,14 @@
         paintLayer.contentsScale = [[UIScreen mainScreen] scale];
         [paintLayer setFrame:self.bounds];
         [self.layer addSublayer:paintLayer];
-        paintLayer set
+        
         self.clearsContextBeforeDrawing = NO;
+        if([paintLayer respondsToSelector:@selector(setDrawsAsynchronously:)]){
+            // iOS 6.0 only
+            paintLayer.drawsAsynchronously = YES;
+        }
+        self.opaque = NO;
+        paintLayer.opaque = NO;
     }
     return self;
 }
@@ -36,6 +42,9 @@
 }
 */
 
+-(void) setNeedsDisplay{
+    [super setNeedsDisplay];
+}
 
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [touches anyObject];
@@ -62,6 +71,7 @@
         if(newFingerWidth > paintLayer.fingerWidth) paintLayer.fingerWidth += 1;
         if(newFingerWidth < paintLayer.fingerWidth) paintLayer.fingerWidth -= 1;
     }
+    
     paintLayer.fingerWidth = newFingerWidth;
     paintLayer.point0 = paintLayer.point1;
     paintLayer.point1 = paintLayer.point2;

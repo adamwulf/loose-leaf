@@ -27,6 +27,7 @@
 }
 
 
+
 -(void) commitPointChanges{
     hue += 0.005;
     if(hue > 1.0) hue = 0.0;
@@ -54,6 +55,12 @@
 
 -(void) drawInContext:(CGContextRef)cacheContext{
     UIColor *color = [UIColor colorWithHue:hue saturation:0.7 brightness:1.0 alpha:1.0];
+    
+    
+    
+    CGContextSetFillColorWithColor(cacheContext, [[UIColor whiteColor] CGColor]);
+    CGContextFillRect(cacheContext, CGContextGetClipBoundingBox(cacheContext));
+    
     
     CGContextSetStrokeColorWithColor(cacheContext, [color CGColor]);
     CGContextSetFillColorWithColor(cacheContext, [color CGColor]);
@@ -133,6 +140,12 @@
         CGContextAddLineToPoint(cacheContext, point3.x, point3.y);
         CGContextStrokePath(cacheContext);
     }
+    
+    CGRect clipRect = CGContextGetClipBoundingBox(cacheContext);
+    clipRect = CGRectInset(clipRect, .5, .5);
+    CGContextSetLineWidth(cacheContext, 1);
+    CGContextSetStrokeColorWithColor(cacheContext, [[UIColor redColor] CGColor]);
+    CGContextStrokeRect(cacheContext, clipRect);
 }
 
 
