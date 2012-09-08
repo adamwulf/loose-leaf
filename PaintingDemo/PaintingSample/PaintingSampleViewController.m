@@ -30,7 +30,7 @@
     
     //
     // setup container for other views
-    UIView* container = [[UIView alloc] initWithFrame:self.view.bounds];
+    container = [[UIView alloc] initWithFrame:self.view.bounds];
     UIView* otherviews = [[UIView alloc] initWithFrame:self.view.bounds];
     UIImage* marsImg = [UIImage imageNamed:@"mars.jpeg"];
     if([[UIScreen mainScreen] scale] != 1.0){
@@ -45,14 +45,12 @@
     fr.origin.y = self.view.bounds.size.height / 2;
     mars2.frame = fr;
     
+    timer = [[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(buildUI) userInfo:nil repeats:YES] retain];
 
     [container addSubview:otherviews];
 
     //
     // create the paint view, clear by default
-    PaintView *paint = [[PaintView alloc] initWithFrame:self.view.bounds];
-    [container addSubview:paint];
-    [paint release];
 
     [self.view addSubview:container];
     
@@ -84,6 +82,17 @@
 }
 
 
+-(void) buildUI{
+    if([container.subviews count]){
+        [container.subviews makeObjectsPerformSelector:@selector(removeFromSuperview) withObject:nil];
+    }else{
+        PaintView *paint = [[PaintView alloc] initWithFrame:self.view.bounds];
+        [container addSubview:paint];
+        [paint release];
+    }
+}
+
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];
@@ -96,5 +105,4 @@
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
-
 @end

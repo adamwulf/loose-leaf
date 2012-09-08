@@ -19,6 +19,10 @@
         [self initContext:frame.size];
         self.backgroundColor = [UIColor clearColor];
         self.clearsContextBeforeDrawing = NO;
+        
+        UILabel* lbl = [[[UILabel alloc] initWithFrame:self.bounds] autorelease];
+        lbl.text = @"PaintView";
+        [self addSubview:lbl];
     }
     return self;
 }
@@ -220,6 +224,15 @@
     CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
     CGContextDrawImage(context, self.bounds, cacheImage);
     CGImageRelease(cacheImage);
+}
+
+
+
+-(void) dealloc{
+    CGContextRelease(cacheContext);
+    free(cacheBitmap);
+    cacheBitmap = nil;
+    [super dealloc];
 }
 
 

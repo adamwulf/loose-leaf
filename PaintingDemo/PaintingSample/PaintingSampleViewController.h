@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PaintingSampleViewController : UIViewController
+@interface PaintingSampleViewController : UIViewController{
+    UIView* container;
+    NSTimer* timer;
+}
 
 @end
