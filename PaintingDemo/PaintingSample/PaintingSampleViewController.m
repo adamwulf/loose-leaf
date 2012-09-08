@@ -45,53 +45,14 @@
     fr.origin.y = self.view.bounds.size.height / 2;
     mars2.frame = fr;
     
-//    timer = [[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(buildUI) userInfo:nil repeats:YES] retain];
-
     [container addSubview:otherviews];
+    [self.view addSubview:container];
 
     //
     // create the paint view, clear by default
-
-    [self.view addSubview:container];
-    
-    [self buildUI];
-    [self buildUI];
-    /*
-    [NSThread performBlockInBackground:^{
-        //
-        // create the background image to put behind
-        // the paint view
-        //
-        // this code is NOT safe
-        //
-        // TODO
-        // i'll have to create a render engine i guess, and render a page
-        // in the background not including teh current inking, then
-        // composite that ink down (?)
-        //
-        // but then using two fingers to move a layer while while ink is
-        // active will be difficult/impossible. i think just using
-        // transparency might be the way to go
-        UIGraphicsBeginImageContextWithOptions(otherviews.bounds.size, otherviews.opaque, 0.0);
-        [otherviews.layer renderInContext:UIGraphicsGetCurrentContext()];
-        UIImage * snapshot = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        [NSThread performBlockOnMainThread:^{
-            [paint setBackgroundColor:[UIColor colorWithPatternImage:snapshot]];
-        }];
-    }];
-     */
-}
-
-
--(void) buildUI{
-    if([container.subviews count]){
-        [container.subviews makeObjectsPerformSelector:@selector(removeFromSuperview) withObject:nil];
-    }else{
-        PaintView *paint = [[PaintView alloc] initWithFrame:self.view.bounds];
-        [container addSubview:paint];
-        [paint release];
-    }
+    PaintView *paint = [[PaintView alloc] initWithFrame:self.view.bounds];
+    [container addSubview:paint];
+    [paint release];
 }
 
 

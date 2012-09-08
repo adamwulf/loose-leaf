@@ -41,9 +41,19 @@
 	bitmapBytesPerRow = (size.width * scaleFactor * 4); // only alpha
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 	bitmapByteCount = (bitmapBytesPerRow * size.height * scaleFactor);
+    
+    
     //
-    // alpha only, b/c it's black only!
-	cacheContext = CGBitmapContextCreate (NULL, size.width * scaleFactor, size.height * scaleFactor, bitsPerComponent, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst); //kCGImageAlphaOnly or kCGImageAlphaPremultipliedFirst);
+    //
+    // to change to alpha only:
+    //
+    // colorspace should be NULL
+    // bitmapBytesPerRow should be * 1
+    // kCGImageAlphaPremultipliedFirst should be kCGImageAlphaOnly
+    
+    
+    
+    cacheContext = CGBitmapContextCreate (NULL, size.width * scaleFactor, size.height * scaleFactor, bitsPerComponent, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst); //kCGImageAlphaOnly or kCGImageAlphaPremultipliedFirst);
 
     CGContextScaleCTM(cacheContext, scaleFactor, scaleFactor);
     CGContextSetAllowsAntialiasing(cacheContext, YES);
