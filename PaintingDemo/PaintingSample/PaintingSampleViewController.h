@@ -7,10 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PaintableImageView.h"
+#import "PaintView.h"
+#import "PaintableImageView.h"
+#import "PaintTouchViewDelegate.h"
 
-@interface PaintingSampleViewController : UIViewController{
+@interface PaintingSampleViewController : UIViewController<PaintTouchViewDelegate>{
     UIView* container;
     NSTimer* timer;
+    
+    PaintableImageView* mars1;
+    PaintableImageView* mars2;
+    PaintView* paint;
 }
 
 @end

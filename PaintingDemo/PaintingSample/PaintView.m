@@ -59,6 +59,7 @@
     CGContextSetAllowsAntialiasing(cacheContext, YES);
     CGContextSetShouldAntialias(cacheContext, YES);
     CGContextSetAlpha(cacheContext, 1);
+    CGContextSetStrokeColorWithColor(cacheContext, [[UIColor blackColor] CGColor]);
 /*
     [[NSThread mainThread] performBlock:^{
         CGContextSetStrokeColorWithColor(cacheContext, [[UIColor blackColor] CGColor]);
@@ -76,10 +77,10 @@
 #pragma mark - PaintTouchViewDelegate
 
 -(void) tickHueWithFingerWidth:(CGFloat)fingerWidth{
-    hue += 0.005;
-    if(hue > 1.0) hue = 0.0;
-    UIColor *color = [UIColor colorWithHue:hue saturation:0.7 brightness:1.0 alpha:1.0];
-    CGContextSetStrokeColorWithColor(cacheContext, [color CGColor]);
+//    hue += 0.005;
+//    if(hue > 1.0) hue = 0.0;
+//    UIColor *color = [UIColor colorWithHue:hue saturation:0.7 brightness:1.0 alpha:1.0];
+//    CGContextSetStrokeColorWithColor(cacheContext, [color CGColor]);
     CGContextSetLineCap(cacheContext, kCGLineCapRound);
     CGContextSetLineWidth(cacheContext, fingerWidth / 3);
 }

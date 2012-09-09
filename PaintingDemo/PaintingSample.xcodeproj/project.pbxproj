@@ -13,6 +13,7 @@
 		664FF27215FA97C400B159EB /* mars.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 664FF27115FA97C400B159EB /* mars.jpeg */; };
 		664FF27515FA9BC800B159EB /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 664FF27415FA9BC800B159EB /* NSThread+BlockAdditions.m */; };
 		6654DE1315FBC737006CF3D7 /* PaintTouchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6654DE1215FBC737006CF3D7 /* PaintTouchView.m */; };
+		66E47E5015FD310A0043C284 /* PaintableImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E47E4F15FD310A0043C284 /* PaintableImageView.m */; };
 		F1381063143F7971005CBF27 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381062143F7971005CBF27 /* UIKit.framework */; };
 		F1381065143F7971005CBF27 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381064143F7971005CBF27 /* Foundation.framework */; };
 		F1381067143F7971005CBF27 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381066143F7971005CBF27 /* CoreGraphics.framework */; };
@@ -35,6 +36,8 @@
 		6654DE1115FBC737006CF3D7 /* PaintTouchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaintTouchView.h; sourceTree = "<group>"; };
 		6654DE1215FBC737006CF3D7 /* PaintTouchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaintTouchView.m; sourceTree = "<group>"; };
 		6654DE1415FBC7C6006CF3D7 /* PaintTouchViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaintTouchViewDelegate.h; sourceTree = "<group>"; };
+		66E47E4E15FD310A0043C284 /* PaintableImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaintableImageView.h; sourceTree = "<group>"; };
+		66E47E4F15FD310A0043C284 /* PaintableImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaintableImageView.m; sourceTree = "<group>"; };
 		F138105E143F7971005CBF27 /* PaintingSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PaintingSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1381062143F7971005CBF27 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F1381064143F7971005CBF27 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -80,6 +83,15 @@
 			name = "Context Backed";
 			sourceTree = "<group>";
 		};
+		66E47E4C15FD30E30043C284 /* Paintable Images */ = {
+			isa = PBXGroup;
+			children = (
+				66E47E4E15FD310A0043C284 /* PaintableImageView.h */,
+				66E47E4F15FD310A0043C284 /* PaintableImageView.m */,
+			);
+			name = "Paintable Images";
+			sourceTree = "<group>";
+		};
 		F1381053143F7971005CBF27 = {
 			isa = PBXGroup;
 			children = (
@@ -121,6 +133,7 @@
 				F1381078143F7971005CBF27 /* PaintingSampleViewController.m */,
 				F138107A143F7971005CBF27 /* PaintingSampleViewController.xib */,
 				F1381069143F7971005CBF27 /* Supporting Files */,
+				66E47E4C15FD30E30043C284 /* Paintable Images */,
 				664FF28515FAAAC900B159EB /* Context Backed */,
 				664FF27315FA9BC800B159EB /* NSThread+BlockAdditions.h */,
 				664FF27415FA9BC800B159EB /* NSThread+BlockAdditions.m */,
@@ -211,6 +224,7 @@
 				F1381084143F7990005CBF27 /* PaintView.m in Sources */,
 				664FF27515FA9BC800B159EB /* NSThread+BlockAdditions.m in Sources */,
 				6654DE1315FBC737006CF3D7 /* PaintTouchView.m in Sources */,
+				66E47E5015FD310A0043C284 /* PaintableImageView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

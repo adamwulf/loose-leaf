@@ -7,7 +7,6 @@
 //
 
 #import "PaintingSampleViewController.h"
-#import "PaintView.h"
 #import "PaintTouchView.h"
 #import "NSThread+BlockAdditions.h"
 
@@ -35,7 +34,7 @@
     
     //
     // create the paint view, clear by default
-    PaintView *paint = [[PaintView alloc] initWithFrame:self.view.bounds];
+    paint = [[PaintView alloc] initWithFrame:self.view.bounds];
     [container addSubview:paint];
     [paint release];
 
@@ -46,8 +45,8 @@
         // load images at high resolution
         marsImg = [UIImage imageWithCGImage:marsImg.CGImage scale:[[UIScreen mainScreen] scale] orientation:marsImg.imageOrientation];
     }
-    UIImageView* mars1 = [[UIImageView alloc] initWithImage:marsImg];
-    UIImageView* mars2 = [[UIImageView alloc] initWithImage:marsImg];
+    mars1 = [[PaintableImageView alloc] initWithImage:marsImg];
+    mars2 = [[PaintableImageView alloc] initWithImage:marsImg];
     CGRect fr = mars2.frame;
     fr.origin.y = self.view.bounds.size.height / 2;
     mars2.frame = fr;
@@ -65,7 +64,7 @@
     [container addSubview:paintTouch];
     [paintTouch release];
     
-    [paintTouch setDelegate:paint];
+    [paintTouch setDelegate:self];
 }
 
 
@@ -81,4 +80,29 @@
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
+
+
+
+#pragma mark - PaintTouchViewDelegate
+
+-(void) drawArcAtStart:(CGPoint)point1 end:(CGPoint)point2 controlPoint1:(CGPoint)ctrl1 controlPoint2:(CGPoint)ctrl2 withFingerWidth:(CGFloat)fingerWidth{
+    [paint drawArcAtStart:point1 end:point2 controlPoint1:ctrl1 controlPoint2:ctrl2 withFingerWidth:fingerWidth];
+    [mars1 drawArcAtStart:point1 end:point2 controlPoint1:ctrl1 controlPoint2:ctrl2 withFingerWidth:fingerWidth];
+    [mars2 drawArcAtStart:point1 end:point2 controlPoint1:ctrl1 controlPoint2:ctrl2 withFingerWidth:fingerWidth];
+}
+
+-(void) drawDotAtPoint:(CGPoint)point withFingerWidth:(CGFloat)fingerWidth{
+    [paint drawDotAtPoint:point withFingerWidth:fingerWidth];
+    [mars1 drawDotAtPoint:point withFingerWidth:fingerWidth];
+    [mars2 drawDotAtPoint:point withFingerWidth:fingerWidth];
+}
+
+-(void) drawLineAtStart:(CGPoint)start end:(CGPoint)end withFingerWidth:(CGFloat)fingerWidth{
+    [paint drawLineAtStart:start end:end withFingerWidth:fingerWidth];
+    [mars1 drawLineAtStart:start end:end withFingerWidth:fingerWidth];
+    [mars2 drawLineAtStart:start end:end withFingerWidth:fingerWidth];
+}
+
+
 @end

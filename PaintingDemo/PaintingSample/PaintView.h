@@ -14,10 +14,6 @@
     void *cacheBitmap;
     CGContextRef cacheContext;
     float hue;
-    
-    // Somewhere in initialization code.
-    CGColorRef fillColor;
-    CGColorRef strokeColor;
 }
 
 
