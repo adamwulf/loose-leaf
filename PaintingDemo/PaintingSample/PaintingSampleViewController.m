@@ -32,7 +32,15 @@
     //
     // setup container for other views
     container = [[UIView alloc] initWithFrame:self.view.bounds];
-    UIView* otherviews = [[UIView alloc] initWithFrame:self.view.bounds];
+    
+    //
+    // create the paint view, clear by default
+    PaintView *paint = [[PaintView alloc] initWithFrame:self.view.bounds];
+    [container addSubview:paint];
+    [paint release];
+
+    //
+    // mars images
     UIImage* marsImg = [UIImage imageNamed:@"mars.jpeg"];
     if([[UIScreen mainScreen] scale] != 1.0){
         // load images at high resolution
@@ -40,21 +48,19 @@
     }
     UIImageView* mars1 = [[UIImageView alloc] initWithImage:marsImg];
     UIImageView* mars2 = [[UIImageView alloc] initWithImage:marsImg];
-    [otherviews addSubview:mars1];
-    [otherviews addSubview:mars2];
     CGRect fr = mars2.frame;
     fr.origin.y = self.view.bounds.size.height / 2;
     mars2.frame = fr;
+    [container addSubview:mars1];
+    [container addSubview:mars2];
     
-    [container addSubview:otherviews];
+    
+    // add the container for all the views
     [self.view addSubview:container];
 
-    //
-    // create the paint view, clear by default
-    PaintView *paint = [[PaintView alloc] initWithFrame:self.view.bounds];
-    [container addSubview:paint];
-    [paint release];
-
+    
+    // ok, catch the touches on top of all the views
+    
     PaintTouchView *paintTouch = [[PaintTouchView alloc] initWithFrame:self.view.bounds];
     [container addSubview:paintTouch];
     [paintTouch release];
