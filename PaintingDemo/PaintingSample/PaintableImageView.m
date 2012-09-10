@@ -17,6 +17,7 @@
         // Initialization code
         paint = [[PaintView alloc] initWithFrame:self.bounds];
         [self addSubview:paint];
+        paint.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         
         UIPanGestureRecognizer* pan = [[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(dragging:)] autorelease];
         [self addGestureRecognizer:pan];
@@ -27,6 +28,9 @@
     return self;
 }
 
+-(CGRect) rotationlessFrame{
+    return CGRectMake(self.center.x - self.bounds.size.width/2.0, self.center.y - self.bounds.size.height/2.0, self.bounds.size.width, self.bounds.size.height);
+}
 
 #pragma mark - PaintTouchViewDelegate
 

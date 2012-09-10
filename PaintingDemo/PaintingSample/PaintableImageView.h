@@ -15,4 +15,6 @@
     CGPoint panCoord;
 }
 
+@property (nonatomic, readonly) CGRect rotationlessFrame;
+
 @end

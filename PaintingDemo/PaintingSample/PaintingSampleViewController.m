@@ -71,7 +71,7 @@
     }
     
 //    mars2.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(.3), CGAffineTransformMakeScale(2.0, 2.0));
-//    mars2.transform = CGAffineTransformMakeRotation(.4);
+    mars2.transform = CGAffineTransformMakeRotation(.4);
     
     // add the container for all the views
     [self.view addSubview:container];
@@ -101,15 +101,14 @@
     // TEST CODE
     //
     // this code is helping me define bezier paths for 2 views that intersect
+    //
+    // the definitelyNotVisiblePath is what should be returned from the view
+    // that is hiding another view. this bezier path will then be used to
+    // slice out a hole in any view underneath it.
     if(YES){
         
         // first, convert the top view into the bottom view's coordinate system
-        CGRect pathRect = [mars1 convertRect:mars2.bounds fromView:mars2];
-        
-        CGPoint pointInView = pathRect.origin;
-        
-        //    pathRect = CGRectApplyAffineTransform(pathRect, CGAffineTransformMake(1, 0, 0, -1, 0, mars1.bounds.size.height));
-        
+        CGRect coveringViewRect = [mars1 convertRect:mars2.rotationlessFrame fromView:mars2.superview];
         
         //
         // first, define the path that could possibly be visible:
@@ -122,24 +121,34 @@
         // of the possiblyVisiblePath (effectively making the
         // possible visible area less than or equal to itself)
         UIBezierPath *definitelyNotVisiblePath = [UIBezierPath bezierPath];
-        [definitelyNotVisiblePath moveToPoint:CGPointMake(pointInView.x, pointInView.y)];
-        [definitelyNotVisiblePath addLineToPoint:CGPointMake(pointInView.x, pointInView.y + mars1.bounds.size.height)];
-        [definitelyNotVisiblePath addLineToPoint:CGPointMake(pointInView.x + mars1.bounds.size.width, pointInView.y + mars1.bounds.size.height)];
-        [definitelyNotVisiblePath addLineToPoint:CGPointMake(pointInView.x + mars1.bounds.size.width, pointInView.y)];
+        [definitelyNotVisiblePath moveToPoint:CGPointMake(coveringViewRect.origin.x, coveringViewRect.origin.y)];
+        [definitelyNotVisiblePath addLineToPoint:CGPointMake(coveringViewRect.origin.x, coveringViewRect.origin.y + coveringViewRect.size.height)];
+        [definitelyNotVisiblePath addLineToPoint:CGPointMake(coveringViewRect.origin.x + coveringViewRect.size.width, coveringViewRect.origin.y + coveringViewRect.size.height)];
+        [definitelyNotVisiblePath addLineToPoint:CGPointMake(coveringViewRect.origin.x + coveringViewRect.size.width, coveringViewRect.origin.y)];
         [definitelyNotVisiblePath closePath];
-
+        
+        [definitelyNotVisiblePath applyTransform:CGAffineTransformMakeTranslation(-coveringViewRect.origin.x-coveringViewRect.size.width / 2, -coveringViewRect.origin.y-coveringViewRect.size.height / 2)];
+        [definitelyNotVisiblePath applyTransform:CGAffineTransformMakeRotation(0.4)];
+        [definitelyNotVisiblePath applyTransform:CGAffineTransformMakeTranslation(coveringViewRect.origin.x + coveringViewRect.size.width / 2, coveringViewRect.origin.y + coveringViewRect.size.height / 2)];
+        
         //
         // now add that path to crop out the invisible area
         [possiblyVisiblePath appendPath:definitelyNotVisiblePath];
         
         //
-        // create a mask layer
+        // create a mask layer from the bezier curve
+        // that defines the edge of all views that hide our content.
+        // (in this demo case, just 1 view's path, the definitelyNotVisiblePath)
         CAShapeLayer* maskLayer = [CAShapeLayer layer];
         maskLayer.contentsScale = scale;
         maskLayer.frame = mars1.layer.bounds;
         maskLayer.fillColor = [UIColor greenColor].CGColor; // needs to be opaque
         maskLayer.backgroundColor = [UIColor clearColor].CGColor; // needs to be clear
         maskLayer.path = possiblyVisiblePath.CGPath;
+//        maskLayer.borderColor = [UIColor purpleColor].CGColor;
+//        maskLayer.borderWidth = 1;
+//        maskLayer.lineWidth = 1;
+//        maskLayer.strokeColor = [UIColor orangeColor].CGColor;
 //        [mars1.layer addSublayer:maskLayer]; // used for debugging
         mars1.layer.mask = maskLayer;
         
@@ -148,15 +157,23 @@
         /*
          * debugging:
          * mark the corners of mars 2 inside of mars 1 layers
+         // corner
         CALayer* point1L = [CALayer layer];
         point1L.frame = CGRectMake(pointInLayer.x-5, pointInLayer.y-5, 10, 10);
         point1L.backgroundColor = [UIColor blueColor].CGColor;
         [mars1.layer addSublayer:point1L];
         
+         // corner
         CALayer* point2L = [CALayer layer];
         point2L.frame = CGRectMake(pointInLayer2.x-5, pointInLayer2.y-5, 10, 10);
         point2L.backgroundColor = [UIColor orangeColor].CGColor;
         [mars1.layer addSublayer:point2L];
+
+        // center
+        CALayer* point3L = [CALayer layer];
+        point3L.frame = CGRectMake(coveringViewRect.origin.x + coveringViewRect.size.width/2-5, coveringViewRect.origin.y + coveringViewRect.size.height/2 - 5, 10, 10);
+        point3L.backgroundColor = [UIColor orangeColor].CGColor;
+        [mars1.layer addSublayer:point3L];
          */
         
     }
