@@ -74,7 +74,7 @@
 #pragma mark - PaintTouchViewDelegate
 
 -(void) tickHueWithFingerWidth:(CGFloat)fingerWidth{
-//    hue += 0.005;
+//    hue += 0.3;
 //    if(hue > 1.0) hue = 0.0;
 //    UIColor *color = [UIColor colorWithHue:hue saturation:0.7 brightness:1.0 alpha:1.0];
 //    CGContextSetStrokeColorWithColor(cacheContext, [color CGColor]);
@@ -84,21 +84,43 @@
 
 -(void) drawArcAtStart:(CGPoint)point1 end:(CGPoint)point2 controlPoint1:(CGPoint)ctrl1 controlPoint2:(CGPoint)ctrl2 withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
     
+    // convert points from their touched view
+    // to this view so that we can see if
+    // they even hit us or not
     point1 = [view convertPoint:point1 toView:self];
     point2 = [view convertPoint:point2 toView:self];
     ctrl1 = [view convertPoint:ctrl1 toView:self];
     ctrl2 = [view convertPoint:ctrl2 toView:self];
     
-    [self tickHueWithFingerWidth:fingerWidth];
-    CGContextMoveToPoint(cacheContext, point1.x, point1.y);
-    CGContextAddCurveToPoint(cacheContext, ctrl1.x, ctrl1.y, ctrl2.x, ctrl2.y, point2.x, point2.y);
+    // find the extreme points of the bezier curve
+    CGFloat minX = MIN(MIN(MIN(point1.x, point2.x), ctrl1.x), ctrl2.x);
+    CGFloat minY = MIN(MIN(MIN(point1.y, point2.y), ctrl1.y), ctrl2.y);
+    CGFloat maxX = MAX(MAX(MAX(point1.x, point2.x), ctrl1.x), ctrl2.x);
+    CGFloat maxY = MAX(MAX(MAX(point1.y, point2.y), ctrl1.y), ctrl2.y);
     
-    CGContextStrokePath(cacheContext);
+    //
+    // calculate a reasonable bounding box for this bezier curve.
+    //
+    // we're actually a bit generous with this bounding box, we could
+    // make it tighter ( http://processingjs.nihongoresources.com/bezierinfo/#extremities )
+    // but this is fast and safe too
+    CGRect arcBoundingBox = CGRectMake(minX, minY, maxX-minX, maxY-minY);
     
-    CGRect dirtyPoint1 = CGRectMake(point1.x-10, point1.y-10, 20, 20);
-    CGRect dirtyPoint2 = CGRectMake(point2.x-10, point2.y-10, 20, 20);
-    CGRect rectToDraw = CGRectUnion(dirtyPoint1, dirtyPoint2);
-    [self setNeedsDisplayInRect:rectToDraw];
+    //
+    // check to see if the bezier curve intersects this
+    // paint frame at all, or if we can safely ignore it
+    if(CGRectIntersectsRect(self.bounds, arcBoundingBox)){
+        [self tickHueWithFingerWidth:fingerWidth];
+        CGContextMoveToPoint(cacheContext, point1.x, point1.y);
+        CGContextAddCurveToPoint(cacheContext, ctrl1.x, ctrl1.y, ctrl2.x, ctrl2.y, point2.x, point2.y);
+        
+        CGContextStrokePath(cacheContext);
+        
+        CGRect rectToDraw = CGRectInset(arcBoundingBox, -fingerWidth, -fingerWidth);
+        [self setNeedsDisplayInRect:rectToDraw];
+    }else{
+        // doesn't intersect this paint view at all
+    }
 }
 
 -(void) drawDotAtPoint:(CGPoint)point withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{

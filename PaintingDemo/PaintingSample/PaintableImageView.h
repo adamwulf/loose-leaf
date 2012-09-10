@@ -12,6 +12,7 @@
 
 @interface PaintableImageView : UIImageView<PaintTouchViewDelegate>{
     PaintView* paint;
+    CGPoint panCoord;
 }
 
 @end

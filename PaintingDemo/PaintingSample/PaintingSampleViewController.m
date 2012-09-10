@@ -7,7 +7,6 @@
 //
 
 #import "PaintingSampleViewController.h"
-#import "PaintTouchView.h"
 #import "NSThread+BlockAdditions.h"
 
 @implementation PaintingSampleViewController
@@ -34,13 +33,14 @@
     
     //
     // create the paint view, clear by default
-    paint = [[PaintView alloc] initWithFrame:self.view.bounds];
+    CGRect paintFrame = self.view.bounds;
+    paint = [[PaintView alloc] initWithFrame:paintFrame];
     [container addSubview:paint];
     [paint release];
 
     //
     // mars images
-    UIImage* marsImg = [UIImage imageNamed:@"mars.jpeg"];
+    UIImage* marsImg = [UIImage imageNamed:@"mars.png"];
     if([[UIScreen mainScreen] scale] != 1.0){
         // load images at high resolution
         marsImg = [UIImage imageWithCGImage:marsImg.CGImage scale:[[UIScreen mainScreen] scale] orientation:marsImg.imageOrientation];
@@ -49,13 +49,13 @@
     mars2 = [[PaintableImageView alloc] initWithImage:marsImg];
     CGRect fr = mars2.frame;
     fr.origin.y = self.view.bounds.size.height / 2;
-    fr.origin.x += 100;
+    fr.origin.x += 400;
     mars2.frame = fr;
     [container addSubview:mars1];
     [container addSubview:mars2];
     
-    mars2.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(.3), CGAffineTransformMakeScale(1.1, 1.1));
-    
+//    mars2.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(.3), CGAffineTransformMakeScale(2.0, 2.0));
+    mars2.transform = CGAffineTransformMakeRotation(.4);
     
     // add the container for all the views
     [self.view addSubview:container];
@@ -63,11 +63,22 @@
     
     // ok, catch the touches on top of all the views
     
-    PaintTouchView *paintTouch = [[PaintTouchView alloc] initWithFrame:self.view.bounds];
+    paintTouch = [[PaintTouchView alloc] initWithFrame:self.view.bounds];
     [container addSubview:paintTouch];
     [paintTouch release];
     
     [paintTouch setDelegate:self];
+    
+    
+    UIButton* button =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    button.backgroundColor = [UIColor whiteColor];
+    [button addTarget:self action:@selector(toggle) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:button];
+}
+
+
+-(void) toggle{
+    paintTouch.hidden = !paintTouch.hidden;
 }
 
 

@@ -13,8 +13,7 @@
 @interface PaintView : UIView<PaintTouchViewDelegate> {
     void *cacheBitmap;
     CGContextRef cacheContext;
-    float hue;
+    CGFloat hue;
 }
-
 
 @end

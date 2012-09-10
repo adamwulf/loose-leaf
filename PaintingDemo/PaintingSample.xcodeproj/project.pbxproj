@@ -13,6 +13,7 @@
 		664FF27215FA97C400B159EB /* mars.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 664FF27115FA97C400B159EB /* mars.jpeg */; };
 		664FF27515FA9BC800B159EB /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 664FF27415FA9BC800B159EB /* NSThread+BlockAdditions.m */; };
 		6654DE1315FBC737006CF3D7 /* PaintTouchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6654DE1215FBC737006CF3D7 /* PaintTouchView.m */; };
+		666589DE15FDAB7800C6C4BB /* mars.png in Resources */ = {isa = PBXBuildFile; fileRef = 666589DD15FDAB7800C6C4BB /* mars.png */; };
 		66E47E5015FD310A0043C284 /* PaintableImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E47E4F15FD310A0043C284 /* PaintableImageView.m */; };
 		F1381063143F7971005CBF27 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381062143F7971005CBF27 /* UIKit.framework */; };
 		F1381065143F7971005CBF27 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381064143F7971005CBF27 /* Foundation.framework */; };
@@ -36,6 +37,7 @@
 		6654DE1115FBC737006CF3D7 /* PaintTouchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaintTouchView.h; sourceTree = "<group>"; };
 		6654DE1215FBC737006CF3D7 /* PaintTouchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaintTouchView.m; sourceTree = "<group>"; };
 		6654DE1415FBC7C6006CF3D7 /* PaintTouchViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaintTouchViewDelegate.h; sourceTree = "<group>"; };
+		666589DD15FDAB7800C6C4BB /* mars.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mars.png; sourceTree = "<group>"; };
 		66E47E4E15FD310A0043C284 /* PaintableImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaintableImageView.h; sourceTree = "<group>"; };
 		66E47E4F15FD310A0043C284 /* PaintableImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaintableImageView.m; sourceTree = "<group>"; };
 		F138105E143F7971005CBF27 /* PaintingSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PaintingSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -127,6 +129,7 @@
 				F1381071143F7971005CBF27 /* PaintingSampleAppDelegate.h */,
 				F1381072143F7971005CBF27 /* PaintingSampleAppDelegate.m */,
 				F1381074143F7971005CBF27 /* MainWindow.xib */,
+				666589DD15FDAB7800C6C4BB /* mars.png */,
 				664FF27115FA97C400B159EB /* mars.jpeg */,
 				66203B7015F4B78200E3D343 /* MainWindowIPad.xib */,
 				F1381077143F7971005CBF27 /* PaintingSampleViewController.h */,
@@ -208,6 +211,7 @@
 				66203B7115F4B78200E3D343 /* MainWindowIPad.xib in Resources */,
 				664FF27015F9CCAB00B159EB /* graphite.png in Resources */,
 				664FF27215FA97C400B159EB /* mars.jpeg in Resources */,
+				666589DE15FDAB7800C6C4BB /* mars.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

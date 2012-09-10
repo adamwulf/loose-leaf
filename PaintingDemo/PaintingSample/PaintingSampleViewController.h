@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PaintableImageView.h"
 #import "PaintView.h"
+#import "PaintTouchView.h"
 #import "PaintableImageView.h"
 #import "PaintTouchViewDelegate.h"
 
@@ -19,6 +20,7 @@
     PaintableImageView* mars1;
     PaintableImageView* mars2;
     PaintView* paint;
+    PaintTouchView *paintTouch;
 }
 
 @end

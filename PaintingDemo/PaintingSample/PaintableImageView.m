@@ -17,6 +17,11 @@
         // Initialization code
         paint = [[PaintView alloc] initWithFrame:self.bounds];
         [self addSubview:paint];
+        
+        UIPanGestureRecognizer* pan = [[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(dragging:)] autorelease];
+        [self addGestureRecognizer:pan];
+        
+        self.userInteractionEnabled = YES;
     }
     return self;
 }
@@ -36,4 +41,22 @@
     [paint drawLineAtStart:start end:end withFingerWidth:fingerWidth fromView:view];
 }
 
+
+
+
+-(void)dragging:(UIPanGestureRecognizer *)gesture
+{
+    if(gesture.state == UIGestureRecognizerStateBegan)
+    {
+        //NSLog(@"Received a pan gesture");
+        panCoord = [gesture locationInView:gesture.view];
+        
+        
+    }
+    CGPoint newCoord = [gesture locationInView:gesture.view];
+    float dX = newCoord.x-panCoord.x;
+    float dY = newCoord.y-panCoord.y;
+    
+    gesture.view.center = CGPointMake(gesture.view.center.x + dX, gesture.view.center.y + dY);
+}
 @end
