@@ -123,6 +123,37 @@
     }
 }
 
+-(BOOL) fullyContainsArcAtStart:(CGPoint)point1
+                            end:(CGPoint)point2
+                  controlPoint1:(CGPoint)ctrl1
+                  controlPoint2:(CGPoint)ctrl2
+                withFingerWidth:(CGFloat)fingerWidth
+                       fromView:(UIView*)view{
+    // convert points from their touched view
+    // to this view so that we can see if
+    // they even hit us or not
+    point1 = [view convertPoint:point1 toView:self];
+    point2 = [view convertPoint:point2 toView:self];
+    ctrl1 = [view convertPoint:ctrl1 toView:self];
+    ctrl2 = [view convertPoint:ctrl2 toView:self];
+    
+    // find the extreme points of the bezier curve
+    CGFloat minX = MIN(MIN(MIN(point1.x, point2.x), ctrl1.x), ctrl2.x);
+    CGFloat minY = MIN(MIN(MIN(point1.y, point2.y), ctrl1.y), ctrl2.y);
+    CGFloat maxX = MAX(MAX(MAX(point1.x, point2.x), ctrl1.x), ctrl2.x);
+    CGFloat maxY = MAX(MAX(MAX(point1.y, point2.y), ctrl1.y), ctrl2.y);
+    
+    //
+    // calculate a reasonable bounding box for this bezier curve.
+    //
+    // we're actually a bit generous with this bounding box, we could
+    // make it tighter ( http://processingjs.nihongoresources.com/bezierinfo/#extremities )
+    // but this is fast and safe too
+    CGRect arcBoundingBox = CGRectMake(minX, minY, maxX-minX, maxY-minY);
+
+    return CGRectContainsRect(self.bounds, arcBoundingBox);
+}
+
 -(void) drawDotAtPoint:(CGPoint)point withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
 
     point = [view convertPoint:point toView:self];

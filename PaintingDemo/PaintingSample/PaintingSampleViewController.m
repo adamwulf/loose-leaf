@@ -54,6 +54,16 @@
     [container addSubview:mars1];
     [container addSubview:mars2];
     
+    for(int i=0;i<10;i++){
+        PaintableImageView* view = [[PaintableImageView alloc] initWithImage:marsImg];
+        CGRect fr = mars2.frame;
+        fr.origin.x += rand() % 50;
+        fr.origin.y += rand() % 50;
+        view.frame = fr;
+        [container addSubview:view];
+        
+    }
+    
 //    mars2.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(.3), CGAffineTransformMakeScale(2.0, 2.0));
     mars2.transform = CGAffineTransformMakeRotation(.4);
     
@@ -101,9 +111,14 @@
 #pragma mark - PaintTouchViewDelegate
 
 -(void) drawArcAtStart:(CGPoint)point1 end:(CGPoint)point2 controlPoint1:(CGPoint)ctrl1 controlPoint2:(CGPoint)ctrl2 withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
-    [paint drawArcAtStart:point1 end:point2 controlPoint1:ctrl1 controlPoint2:ctrl2 withFingerWidth:fingerWidth fromView:view];
-    [mars1 drawArcAtStart:point1 end:point2 controlPoint1:ctrl1 controlPoint2:ctrl2 withFingerWidth:fingerWidth fromView:view];
-    [mars2 drawArcAtStart:point1 end:point2 controlPoint1:ctrl1 controlPoint2:ctrl2 withFingerWidth:fingerWidth fromView:view];
+    for(UIView* v in [container.subviews reverseObjectEnumerator]){
+        if([v respondsToSelector:@selector(drawArcAtStart:end:controlPoint1:controlPoint2:withFingerWidth:fromView:)]){
+            [(NSObject<PaintTouchViewDelegate>*)v drawArcAtStart:point1 end:point2 controlPoint1:ctrl1 controlPoint2:ctrl2 withFingerWidth:fingerWidth fromView:view];
+            if([((NSObject<PaintTouchViewDelegate>*)v) fullyContainsArcAtStart:point1 end:point2 controlPoint1:ctrl1 controlPoint2:ctrl2 withFingerWidth:fingerWidth fromView:view]){
+                break;
+            }
+        }
+    }
 }
 
 -(void) drawDotAtPoint:(CGPoint)point withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
@@ -116,6 +131,10 @@
     [paint drawLineAtStart:start end:end withFingerWidth:fingerWidth fromView:view];
     [mars1 drawLineAtStart:start end:end withFingerWidth:fingerWidth fromView:view];
     [mars2 drawLineAtStart:start end:end withFingerWidth:fingerWidth fromView:view];
+}
+
+-(BOOL) fullyContainsArcAtStart:(CGPoint)point1 end:(CGPoint)point2 controlPoint1:(CGPoint)ctrl1 controlPoint2:(CGPoint)ctrl2 withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
+    return YES;
 }
 
 

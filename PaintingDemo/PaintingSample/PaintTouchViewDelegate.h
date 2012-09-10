@@ -26,4 +26,11 @@
         withFingerWidth:(CGFloat)fingerWidth
                fromView:(UIView*)view;
 
+-(BOOL) fullyContainsArcAtStart:(CGPoint)point1
+                            end:(CGPoint)point2
+                  controlPoint1:(CGPoint)ctrl1
+                  controlPoint2:(CGPoint)ctrl2
+                withFingerWidth:(CGFloat)fingerWidth
+                       fromView:(UIView*)view;
+
 @end

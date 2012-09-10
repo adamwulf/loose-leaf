@@ -40,6 +40,14 @@
 -(void) drawLineAtStart:(CGPoint)start end:(CGPoint)end withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
     [paint drawLineAtStart:start end:end withFingerWidth:fingerWidth fromView:view];
 }
+-(BOOL) fullyContainsArcAtStart:(CGPoint)point1
+                            end:(CGPoint)point2
+                  controlPoint1:(CGPoint)ctrl1
+                  controlPoint2:(CGPoint)ctrl2
+                withFingerWidth:(CGFloat)fingerWidth
+                       fromView:(UIView*)view{
+    return [paint fullyContainsArcAtStart:point1 end:point2 controlPoint1:ctrl1 controlPoint2:ctrl2 withFingerWidth:fingerWidth fromView:view];
+}
 
 
 
