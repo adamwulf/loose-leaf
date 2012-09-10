@@ -126,11 +126,20 @@
         float ctrl2_x = xm2 + (xc2 - xm2) * smooth_value + x2 - xm2;
         float ctrl2_y = ym2 + (yc2 - ym2) * smooth_value + y2 - ym2;
         
-        [self.delegate drawArcAtStart:point1 end:point2 controlPoint1:CGPointMake(ctrl1_x, ctrl1_y) controlPoint2:CGPointMake(ctrl2_x, ctrl2_y) withFingerWidth:fingerWidth];
+        [self.delegate drawArcAtStart:point1
+                                  end:point2
+                        controlPoint1:CGPointMake(ctrl1_x, ctrl1_y)
+                        controlPoint2:CGPointMake(ctrl2_x, ctrl2_y)
+                      withFingerWidth:fingerWidth fromView:self];
     }else if(point2.x == -1){
-        [self.delegate drawDotAtPoint:point3 withFingerWidth:fingerWidth];
+        [self.delegate drawDotAtPoint:point3
+                      withFingerWidth:fingerWidth
+                             fromView:self];
     }else if(point1.x == -1 && lineEnded){
-        [self.delegate drawLineAtStart:point2 end:point3 withFingerWidth:fingerWidth];
+        [self.delegate drawLineAtStart:point2
+                                   end:point3
+                       withFingerWidth:fingerWidth
+                              fromView:self];
     }
     
 }

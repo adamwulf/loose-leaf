@@ -50,9 +50,6 @@
     // colorspace should be NULL
     // bitmapBytesPerRow should be * 1
     // kCGImageAlphaPremultipliedFirst should be kCGImageAlphaOnly
-    
-    
-    
     cacheContext = CGBitmapContextCreate (NULL, size.width * scaleFactor, size.height * scaleFactor, bitsPerComponent, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst); //kCGImageAlphaOnly or kCGImageAlphaPremultipliedFirst);
 
     CGContextScaleCTM(cacheContext, scaleFactor, scaleFactor);
@@ -85,7 +82,13 @@
     CGContextSetLineWidth(cacheContext, fingerWidth / 3);
 }
 
--(void) drawArcAtStart:(CGPoint)point1 end:(CGPoint)point2 controlPoint1:(CGPoint)ctrl1 controlPoint2:(CGPoint)ctrl2 withFingerWidth:(CGFloat)fingerWidth{
+-(void) drawArcAtStart:(CGPoint)point1 end:(CGPoint)point2 controlPoint1:(CGPoint)ctrl1 controlPoint2:(CGPoint)ctrl2 withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
+    
+    point1 = [view convertPoint:point1 toView:self];
+    point2 = [view convertPoint:point2 toView:self];
+    ctrl1 = [view convertPoint:ctrl1 toView:self];
+    ctrl2 = [view convertPoint:ctrl2 toView:self];
+    
     [self tickHueWithFingerWidth:fingerWidth];
     CGContextMoveToPoint(cacheContext, point1.x, point1.y);
     CGContextAddCurveToPoint(cacheContext, ctrl1.x, ctrl1.y, ctrl2.x, ctrl2.y, point2.x, point2.y);
@@ -98,7 +101,10 @@
     [self setNeedsDisplayInRect:rectToDraw];
 }
 
--(void) drawDotAtPoint:(CGPoint)point withFingerWidth:(CGFloat)fingerWidth{
+-(void) drawDotAtPoint:(CGPoint)point withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
+
+    point = [view convertPoint:point toView:self];
+
     [self tickHueWithFingerWidth:fingerWidth];
     // draw a dot at point3
     // Draw a circle (filled)
@@ -108,7 +114,11 @@
     [self setNeedsDisplayInRect:rectToDraw];
 }
 
--(void) drawLineAtStart:(CGPoint)start end:(CGPoint)end withFingerWidth:(CGFloat)fingerWidth{
+-(void) drawLineAtStart:(CGPoint)start end:(CGPoint)end withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
+
+    start = [view convertPoint:start toView:self];
+    end = [view convertPoint:end toView:self];
+    
     CGContextMoveToPoint(cacheContext, start.x, start.y);
     CGContextAddLineToPoint(cacheContext, end.x, end.y);
     CGContextStrokePath(cacheContext);

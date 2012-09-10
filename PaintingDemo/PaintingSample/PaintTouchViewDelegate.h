@@ -14,13 +14,16 @@
                      end:(CGPoint)point2
            controlPoint1:(CGPoint)ctrl1
            controlPoint2:(CGPoint)ctrl2
-          withFingerWidth:(CGFloat)fingerWidth;
+          withFingerWidth:(CGFloat)fingerWidth
+              fromView:(UIView*)view;
 
 -(void) drawDotAtPoint:(CGPoint)point
-       withFingerWidth:(CGFloat)fingerWidth;
+       withFingerWidth:(CGFloat)fingerWidth
+              fromView:(UIView*)view;
 
 -(void) drawLineAtStart:(CGPoint)start
                     end:(CGPoint)end
-        withFingerWidth:(CGFloat)fingerWidth;
+        withFingerWidth:(CGFloat)fingerWidth
+               fromView:(UIView*)view;
 
 @end
