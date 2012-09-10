@@ -30,7 +30,8 @@
     //
     // setup container for other views
     container = [[UIView alloc] initWithFrame:self.view.bounds];
-    
+    CGFloat scale = [[UIScreen mainScreen] scale];
+
     //
     // create the paint view, clear by default
     CGRect paintFrame = self.view.bounds;
@@ -41,20 +42,25 @@
     //
     // mars images
     UIImage* marsImg = [UIImage imageNamed:@"mars.png"];
-    if([[UIScreen mainScreen] scale] != 1.0){
+//    if([[UIScreen mainScreen] scale] != 1.0){
         // load images at high resolution
-        marsImg = [UIImage imageWithCGImage:marsImg.CGImage scale:[[UIScreen mainScreen] scale] orientation:marsImg.imageOrientation];
-    }
+        marsImg = [UIImage imageWithCGImage:marsImg.CGImage scale:2.0 orientation:marsImg.imageOrientation];
+//    }
     mars1 = [[PaintableImageView alloc] initWithImage:marsImg];
+    CGRect fr = mars1.frame;
+    fr.origin.y = 200;
+    fr.origin.x = 150;
+    mars1.frame = fr;
     mars2 = [[PaintableImageView alloc] initWithImage:marsImg];
-    CGRect fr = mars2.frame;
-    fr.origin.y = self.view.bounds.size.height / 2;
-    fr.origin.x += 400;
+    fr = mars2.frame;
+    fr.origin.y = 282;
+    fr.origin.x = 200;
     mars2.frame = fr;
+    mars2.alpha = .5;
     [container addSubview:mars1];
     [container addSubview:mars2];
     
-    for(int i=0;i<10;i++){
+    for(int i=0;i<0;i++){
         PaintableImageView* view = [[PaintableImageView alloc] initWithImage:marsImg];
         CGRect fr = mars2.frame;
         fr.origin.x += rand() % 50;
@@ -65,7 +71,7 @@
     }
     
 //    mars2.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(.3), CGAffineTransformMakeScale(2.0, 2.0));
-    mars2.transform = CGAffineTransformMakeRotation(.4);
+//    mars2.transform = CGAffineTransformMakeRotation(.4);
     
     // add the container for all the views
     [self.view addSubview:container];
@@ -84,6 +90,76 @@
     button.backgroundColor = [UIColor whiteColor];
     [button addTarget:self action:@selector(toggle) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
+    
+    
+    
+    
+    
+    
+    //
+    //
+    // TEST CODE
+    //
+    // this code is helping me define bezier paths for 2 views that intersect
+    if(YES){
+        
+        // first, convert the top view into the bottom view's coordinate system
+        CGRect pathRect = [mars1 convertRect:mars2.bounds fromView:mars2];
+        
+        CGPoint pointInView = pathRect.origin;
+        
+        //    pathRect = CGRectApplyAffineTransform(pathRect, CGAffineTransformMake(1, 0, 0, -1, 0, mars1.bounds.size.height));
+        
+        
+        //
+        // first, define the path that could possibly be visible:
+        UIBezierPath* possiblyVisiblePath = [UIBezierPath bezierPath];
+        [possiblyVisiblePath appendPath:[UIBezierPath bezierPathWithRect:mars1.bounds]];
+        
+        //
+        // the definitely not visible path needs to be
+        // in the reverse direction so that it cuts out a hole
+        // of the possiblyVisiblePath (effectively making the
+        // possible visible area less than or equal to itself)
+        UIBezierPath *definitelyNotVisiblePath = [UIBezierPath bezierPath];
+        [definitelyNotVisiblePath moveToPoint:CGPointMake(pointInView.x, pointInView.y)];
+        [definitelyNotVisiblePath addLineToPoint:CGPointMake(pointInView.x, pointInView.y + mars1.bounds.size.height)];
+        [definitelyNotVisiblePath addLineToPoint:CGPointMake(pointInView.x + mars1.bounds.size.width, pointInView.y + mars1.bounds.size.height)];
+        [definitelyNotVisiblePath addLineToPoint:CGPointMake(pointInView.x + mars1.bounds.size.width, pointInView.y)];
+        [definitelyNotVisiblePath closePath];
+
+        //
+        // now add that path to crop out the invisible area
+        [possiblyVisiblePath appendPath:definitelyNotVisiblePath];
+        
+        //
+        // create a mask layer
+        CAShapeLayer* maskLayer = [CAShapeLayer layer];
+        maskLayer.contentsScale = scale;
+        maskLayer.frame = mars1.layer.bounds;
+        maskLayer.fillColor = [UIColor greenColor].CGColor; // needs to be opaque
+        maskLayer.backgroundColor = [UIColor clearColor].CGColor; // needs to be clear
+        maskLayer.path = possiblyVisiblePath.CGPath;
+//        [mars1.layer addSublayer:maskLayer]; // used for debugging
+        mars1.layer.mask = maskLayer;
+        
+        
+        
+        /*
+         * debugging:
+         * mark the corners of mars 2 inside of mars 1 layers
+        CALayer* point1L = [CALayer layer];
+        point1L.frame = CGRectMake(pointInLayer.x-5, pointInLayer.y-5, 10, 10);
+        point1L.backgroundColor = [UIColor blueColor].CGColor;
+        [mars1.layer addSublayer:point1L];
+        
+        CALayer* point2L = [CALayer layer];
+        point2L.frame = CGRectMake(pointInLayer2.x-5, pointInLayer2.y-5, 10, 10);
+        point2L.backgroundColor = [UIColor orangeColor].CGColor;
+        [mars1.layer addSublayer:point2L];
+         */
+        
+    }
 }
 
 

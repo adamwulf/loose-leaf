@@ -22,6 +22,7 @@
         [self addGestureRecognizer:pan];
         
         self.userInteractionEnabled = YES;
+        self.clipsToBounds = YES;
     }
     return self;
 }

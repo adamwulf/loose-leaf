@@ -22,7 +22,7 @@
 //        [self.layer setDrawsAsynchronously:YES];
         UILabel* lbl = [[[UILabel alloc] initWithFrame:CGRectMake(100, 100, 200, 50)] autorelease];
         lbl.text = @"PaintView";
-        [self addSubview:lbl];
+//        [self addSubview:lbl];
     }
     return self;
 }
