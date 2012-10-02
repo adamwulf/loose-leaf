@@ -51,9 +51,10 @@
         [self addSubview:contentView];
 
         contentView.layer.shadowPath = [UIBezierPath bezierPathWithRect:contentView.bounds].CGPath;
-        contentView.layer.shadowRadius = 5;
-        contentView.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.5].CGColor;
+        contentView.layer.shadowRadius = 3;
+        contentView.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:1.0].CGColor;
         contentView.layer.shadowOpacity = 1;
+        contentView.layer.shadowOffset = CGSizeMake(0, 0);
     }
     return self;
 }
