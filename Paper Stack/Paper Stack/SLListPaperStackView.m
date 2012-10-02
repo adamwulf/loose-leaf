@@ -978,6 +978,10 @@
             //
             // the user has scaled the page above the kMinPageZoom threshhold,
             // so auto-pull that page to full screen
+            //
+            // also, cancel the gesture so that it doesn't continue to fire
+            // after we've committed our animations
+            [gesture cancel];
             [self immediatelyAnimateFromListViewToFullScreenView];
             return;
         
