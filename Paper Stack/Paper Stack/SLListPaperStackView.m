@@ -10,6 +10,7 @@
 #import "SLPaperView+ListView.h"
 #import "UIView+Debug.h"
 #import "NSThread+BlocksAdditions.h"
+#import "SLShadowManager.h"
 
 @implementation SLListPaperStackView
 
@@ -327,7 +328,7 @@
     
     __block NSMutableSet* pagesThatNeedAnimating = [NSMutableSet set];
     
-    
+    CGFloat duration = 0.2;
     
     //
     // all of the pages "look" like they're in the right place,
@@ -355,7 +356,20 @@
         [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
         
         [pagesThatNeedAnimating addObjectsFromArray:pagesThatWillBeVisibleAfterTransitionToListView];
-        
+        for(SLPaperView* aPage in pagesThatNeedAnimating){
+            //
+            // animate shadows
+            CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
+            theAnimation.duration = duration;
+            theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+            theAnimation.fromValue = (id) aPage.contentView.layer.shadowPath;
+            CGSize toSize = visibleStackHolder.bounds.size;
+            if(aPage == [visibleStackHolder peekSubview]){
+                toSize = [SLShadowedView expandBounds:visibleStackHolder.bounds].size;
+            }
+            theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:toSize];
+            [aPage.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
+        }
         [visibleStackHolder.superview insertSubview:hiddenStackHolder belowSubview:visibleStackHolder];
         addPageButtonInListView.frame = [self frameForAddPageButton];
         [self moveAddButtonToBottom];
@@ -398,6 +412,12 @@
     void (^step3)(BOOL finished) = ^(BOOL finished){
         //
         // now complete the bounce for the top page
+        CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
+        theAnimation.duration = 0.15;
+        theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        theAnimation.fromValue = (id) [visibleStackHolder peekSubview].contentView.layer.shadowPath;
+        theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:self.bounds.size];
+        [[visibleStackHolder peekSubview].contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
         [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn
                          animations:^(void){
                              [visibleStackHolder peekSubview].frame = self.bounds;
@@ -424,9 +444,9 @@
     
     
     // ok, animate all the views in the visible stack!
-    [UIView animateWithDuration:0.2
+    [UIView animateWithDuration:duration
                           delay:0
-                        options:UIViewAnimationCurveEaseOut
+                        options:UIViewAnimationOptionCurveEaseOut
                      animations:step2
                      completion:step3];
     //
@@ -697,6 +717,7 @@
     // clean up gesture state
     [setOfPagesBeingPanned removeObject:page];
 
+    CGFloat duration = 0.3;
     __block SLPaperView* lastPage = nil;
     __block NSMutableSet* pagesThatNeedAnimating = [NSMutableSet set];
 
@@ -751,6 +772,19 @@
             }
             // gestures aren't allowed in list view
             [aPage disableAllGestures];
+        }
+        //
+        // animate shadows
+        for(SLPaperView* aPage in pagesThatNeedAnimating){
+            if(aPage != lastPage){
+                CGRect newFrame = [self framePositionDuringTransitionForPage:aPage originalFrame:aPage.frame withTrust:0.0];
+                CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
+                theAnimation.duration = duration;
+                theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+                theAnimation.fromValue = (id) aPage.contentView.layer.shadowPath;
+                theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:newFrame.size];
+                [aPage.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
+            }
         }
         CGRect fr = [self frameForAddPageButton];
         fr.origin.y -= initialScrollOffsetFromTransitionToListView.y;
@@ -811,9 +845,9 @@
     
     step1();
     // ok, animate all the views in the visible stack!
-    [UIView animateWithDuration:.3
+    [UIView animateWithDuration:duration
                           delay:0
-                        options:UIViewAnimationCurveEaseOut
+                        options:UIViewAnimationOptionCurveEaseOut
                      animations:step2
                      completion:step3];
     //
