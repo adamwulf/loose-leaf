@@ -1090,27 +1090,38 @@
     
     [page enableAllGestures];
     if(bounce){
+        CGFloat duration = .3;
+        CGFloat bounceHeight = 10;
         //
         // we also need to animate the shadow so that it doesn't "pop"
         // into place. it's not taken care of automatically in the
         // UIView animationWithDuration call...
         CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
-        theAnimation.duration = 0.3;
+        theAnimation.duration = duration / 2;
+        theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
         theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
-        theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:page.bounds.size];
+        theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:[SLShadowedView expandBounds:self.bounds].size];
         [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
-        [UIView animateWithDuration:.15 delay:delay options:UIViewAnimationOptionAllowUserInteraction
+        
+        
+        [UIView animateWithDuration:duration/2 delay:delay options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut
                          animations:^(void){
                              page.scale = 1;
                              CGRect bounceFrame = self.bounds;
-                             bounceFrame.origin.x = bounceFrame.origin.x-10;
-                             bounceFrame.origin.y = bounceFrame.origin.y-10;
-                             bounceFrame.size.width = bounceFrame.size.width+10*2;
-                             bounceFrame.size.height = bounceFrame.size.height+10*2;
+                             bounceFrame.origin.x = bounceFrame.origin.x-bounceHeight;
+                             bounceFrame.origin.y = bounceFrame.origin.y-bounceHeight;
+                             bounceFrame.size.width = bounceFrame.size.width+bounceHeight*2;
+                             bounceFrame.size.height = bounceFrame.size.height+bounceHeight*2;
                              page.frame = bounceFrame;
                          } completion:^(BOOL finished){
                              if(finished){
-                                 [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionAllowUserInteraction
+                                 CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
+                                 theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+                                 theAnimation.duration = duration / 2;
+                                 theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
+                                 theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:self.bounds.size];
+                                 [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
+                                 [UIView animateWithDuration:duration/2 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseIn
                                                   animations:^(void){
                                                       page.frame = self.bounds;
                                                       page.scale = 1;
@@ -1118,7 +1129,16 @@
                              }
                          }];
     }else{
-        [UIView animateWithDuration:0.15 delay:delay options:UIViewAnimationOptionAllowUserInteraction
+        CGFloat duration = .15;
+        
+        CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
+        theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        theAnimation.duration = duration;
+        theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
+        theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:self.bounds.size];
+        [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
+        
+        [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut
                          animations:^(void){
                              page.frame = self.bounds;
                              page.scale = 1;
