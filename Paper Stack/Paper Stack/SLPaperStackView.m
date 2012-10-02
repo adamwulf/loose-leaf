@@ -1102,8 +1102,6 @@
         theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
         theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:[SLShadowedView expandBounds:self.bounds].size];
         [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
-        
-        
         [UIView animateWithDuration:duration/2 delay:delay options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut
                          animations:^(void){
                              page.scale = 1;
@@ -1115,6 +1113,10 @@
                              page.frame = bounceFrame;
                          } completion:^(BOOL finished){
                              if(finished){
+                                 //
+                                 // ok, here the page is bounced too large for the screen, so
+                                 // complete the bounce and put the zoom at 100% exactly.
+                                 // first the shadow, then the frame
                                  CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
                                  theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
                                  theAnimation.duration = duration / 2;
@@ -1131,13 +1133,14 @@
     }else{
         CGFloat duration = .15;
         
+        //
+        // always animate the shadow and the frame
         CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
         theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
         theAnimation.duration = duration;
         theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
         theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:self.bounds.size];
         [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
-        
         [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut
                          animations:^(void){
                              page.frame = self.bounds;
