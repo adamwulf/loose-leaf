@@ -32,11 +32,13 @@
 - (id)initWithFrame:(CGRect)frame
 {
     //
-    // this'll call our setFrame, so it'll be adjusted
+    // this'll call our setFrame, so it'll be adjusted in a super call
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
         CGRect contentFrame = self.bounds;
+        // since our frame has been adjusted, we need to offset the
+        // content view appropriately inside of our adjusted frame
         contentFrame.origin = CGPointMake(10, 10);
         contentView = [[UIView alloc] initWithFrame:contentFrame];
         contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -51,8 +53,8 @@
         [self addSubview:contentView];
 
         contentView.layer.shadowPath = [UIBezierPath bezierPathWithRect:contentView.bounds].CGPath;
-        contentView.layer.shadowRadius = 3;
-        contentView.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:1.0].CGColor;
+        contentView.layer.shadowRadius = 4;
+        contentView.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.75].CGColor;
         contentView.layer.shadowOpacity = 1;
         contentView.layer.shadowOffset = CGSizeMake(0, 0);
     }
