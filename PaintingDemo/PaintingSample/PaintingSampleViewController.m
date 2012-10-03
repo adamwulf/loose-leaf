@@ -38,6 +38,23 @@
     paint = [[PaintView alloc] initWithFrame:paintFrame];
     [container addSubview:paint];
     [paint release];
+    [paint setNeedsDisplay];
+
+    
+    
+    
+    /**
+     * the following code was commented out to
+     * not worry about actually managing multiple
+     * images and subviews yet
+     *
+     * the PaintView drawRect: shows how to clip
+     * to multiple polygons. it's just a refactor
+     * to pull these paths from subviews
+     *
+     *
+     * it's a further refactor to add undo :P
+     *
 
     //
     // mars images
@@ -72,10 +89,6 @@
     
 //    mars2.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(.3), CGAffineTransformMakeScale(2.0, 2.0));
     mars2.transform = CGAffineTransformMakeRotation(.4);
-    
-    // add the container for all the views
-    [self.view addSubview:container];
-
     
     // ok, catch the touches on top of all the views
     
@@ -154,7 +167,7 @@
         
         
         
-        /*
+        / *
          * debugging:
          * mark the corners of mars 2 inside of mars 1 layers
          // corner
@@ -174,9 +187,14 @@
         point3L.frame = CGRectMake(coveringViewRect.origin.x + coveringViewRect.size.width/2-5, coveringViewRect.origin.y + coveringViewRect.size.height/2 - 5, 10, 10);
         point3L.backgroundColor = [UIColor orangeColor].CGColor;
         [mars1.layer addSublayer:point3L];
-         */
-        
+         * /
+    
     }
+
+    */
+    // add the container for all the views
+    [self.view addSubview:container];
+    
 }
 
 

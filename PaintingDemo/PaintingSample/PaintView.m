@@ -182,14 +182,61 @@
 }
 
 
-
+/**
+ *
+ * this is the draw rect that's used to show the paint
+ *
+ * it's commented out so that i can test only clipping
+ * with paths in the below fuction w/o worrying about the
+ * imagecontext
 - (void) drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
     CGContextDrawImage(context, self.bounds, cacheImage);
     CGImageRelease(cacheImage);
 }
+*/
 
+
+/**
+ * ok, so this shows how to clip multiple paths
+ * that may or may not overlap
+ */
+- (void)drawRect:(CGRect)dirtyRect{
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    //Fill the background with gray:
+    CGContextSetRGBFillColor(ctx, 0.5, 0.5, 0.5, 1);
+    CGContextFillRect(ctx, self.bounds);
+
+    //
+    // clip the first path
+    // just a normal rectangle
+    CGContextAddRect(ctx, self.bounds);
+    CGContextAddRect(ctx, CGRectMake(10, 10, 200, 200));
+    CGContextEOClip(ctx);
+
+    // clip the 2nd path
+    // also a rectangle
+    CGContextAddRect(ctx, self.bounds);
+    CGContextAddRect(ctx, CGRectMake(120, 120, 350, 300));
+    CGContextEOClip(ctx);
+    
+    // clip the 3rd path
+    // irregular polygon
+    CGContextAddRect(ctx, self.bounds);
+    CGContextMoveToPoint(ctx, 400, 400);
+    CGContextAddLineToPoint(ctx, 480, 530);
+    CGContextAddLineToPoint(ctx, 400, 570);
+    CGContextAddLineToPoint(ctx, 340, 460);
+    CGContextAddLineToPoint(ctx, 370, 430);
+    CGContextClosePath(ctx);
+    CGContextEOClip(ctx);
+    
+    
+    //Fill the entire bounds with red:
+    CGContextSetRGBFillColor(ctx, 1.0, 0.0, 0.0, 1.0);
+    CGContextFillRect(ctx, self.bounds);
+}
 
 
 -(void) dealloc{
