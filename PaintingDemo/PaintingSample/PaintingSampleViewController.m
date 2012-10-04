@@ -65,10 +65,33 @@
     mars3.frame = fr;
     mars3.clipPath = [UIBezierPath bezierPathWithOvalInRect:mars3.bounds];
     [container addSubview:mars3];
+    mars4 = [[PaintableImageView alloc] initWithImage:marsImg];
+    fr = mars4.frame;
+    fr.origin.y = 582;
+    fr.origin.x = 400;
+    mars4.frame = fr;
+    /*
+    UIBezierPath* donut = [UIBezierPath bezierPathWithOvalInRect:mars4.bounds];
+    [donut appendPath:[[UIBezierPath bezierPathWithOvalInRect:CGRectInset(mars4.bounds, 40, 40)] bezierPathByReversingPath]];
+     */
+    UIBezierPath* donut = [UIBezierPath bezierPath];
+    [donut moveToPoint:CGPointZero];
+    [donut addLineToPoint:CGPointMake(mars4.bounds.size.width, 0)];
+    [donut addLineToPoint:CGPointMake(mars4.bounds.size.width, mars4.bounds.size.height)];
+    [donut addLineToPoint:CGPointMake(0, mars4.bounds.size.height)];
+    [donut addLineToPoint:CGPointZero];
+    [donut moveToPoint:CGPointMake(40, 40)];
+    [donut addLineToPoint:CGPointMake(40, mars4.bounds.size.height-40)];
+    [donut addLineToPoint:CGPointMake(mars4.bounds.size.width-40, mars4.bounds.size.height-40)];
+    [donut addLineToPoint:CGPointMake(mars4.bounds.size.width-40, 40)];
+    [donut addLineToPoint:CGPointMake(40, 40)];
+    mars4.clipPath = donut;
+    [container addSubview:mars4];
 
 
     // test rotation on an image
     mars2.transform = CGAffineTransformMakeRotation(.4);
+    mars4.transform = CGAffineTransformMakeRotation(-0.3);
 
     
     //
@@ -98,7 +121,8 @@
     [canvas setDelegate:self];
     [mars1 setDelegate:self];
     [mars2 setDelegate:self];
-    
+    [mars3 setDelegate:self];
+    [mars4 setDelegate:self];
 }
 
 
@@ -146,6 +170,7 @@
     [mars1 drawDotAtPoint:point withFingerWidth:fingerWidth fromView:view];
     [mars2 drawDotAtPoint:point withFingerWidth:fingerWidth fromView:view];
     [mars3 drawDotAtPoint:point withFingerWidth:fingerWidth fromView:view];
+    [mars4 drawDotAtPoint:point withFingerWidth:fingerWidth fromView:view];
 }
 
 -(void) drawLineAtStart:(CGPoint)start end:(CGPoint)end withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
@@ -153,6 +178,7 @@
     [mars1 drawLineAtStart:start end:end withFingerWidth:fingerWidth fromView:view];
     [mars2 drawLineAtStart:start end:end withFingerWidth:fingerWidth fromView:view];
     [mars3 drawLineAtStart:start end:end withFingerWidth:fingerWidth fromView:view];
+    [mars4 drawLineAtStart:start end:end withFingerWidth:fingerWidth fromView:view];
 }
 
 -(BOOL) fullyContainsArcAtStart:(CGPoint)point1 end:(CGPoint)point2 controlPoint1:(CGPoint)ctrl1 controlPoint2:(CGPoint)ctrl2 withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
@@ -163,12 +189,14 @@
 #pragma mark - PaintableViewDelegate
 
 -(NSArray*) paintableViewsAbove:(UIView*)aView{
-    if(aView == mars2){
-        return [NSArray arrayWithObject:mars3];
+    if(aView == mars3){
+        return [NSArray arrayWithObject:mars4];
+    }else if(aView == mars2){
+        return [NSArray arrayWithObjects:mars3, mars4, nil];
     } else if(aView == mars1){
-        return [NSArray arrayWithObjects:mars2, mars3, nil];
+        return [NSArray arrayWithObjects:mars2, mars3, mars4, nil];
     }else if(aView == canvas){
-        return [NSArray arrayWithObjects:mars1, mars2, mars3, nil];
+        return [NSArray arrayWithObjects:mars1, mars2, mars3, mars4, nil];
     }
     return [NSArray array];
 }
@@ -181,6 +209,7 @@
     [mars1 setNeedsDisplay];
     [mars2 setNeedsDisplay];
     [mars3 setNeedsDisplay];
+    [mars4 setNeedsDisplay];
 }
 
 -(CGAffineTransform) transform{

@@ -106,4 +106,20 @@
     
     gesture.view.center = CGPointMake(gesture.view.center.x + dX, gesture.view.center.y + dY);
 }
+
+
+#pragma mark - UIView hit test
+
+-(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+    if([self pointInside:point withEvent:event]){
+        return [super hitTest:point withEvent:event];
+    }
+    return nil;
+}
+
+-(BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
+    return [super pointInside:point withEvent:event] && [self.clipPath containsPoint:point];
+}
+
+
 @end
