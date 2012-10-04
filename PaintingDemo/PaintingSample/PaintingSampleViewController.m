@@ -65,15 +65,27 @@
     mars3.frame = fr;
     mars3.clipPath = [UIBezierPath bezierPathWithOvalInRect:mars3.bounds];
     [container addSubview:mars3];
+    
+    
+    
+    ////////////////////////////////////
+    //
+    // donut shape
     mars4 = [[PaintableImageView alloc] initWithImage:marsImg];
     fr = mars4.frame;
     fr.origin.y = 582;
     fr.origin.x = 400;
     mars4.frame = fr;
+
+    //
+    // create a circular donut
+    UIBezierPath* donut = [UIBezierPath bezierPath];
+    [donut appendPath:[UIBezierPath bezierPathWithArcCenter:CGPointMake(mars4.bounds.size.width/2, mars4.bounds.size.height/2) radius:mars4.bounds.size.width/2 startAngle:0 endAngle:2*M_PI clockwise:NO]];
+    [donut appendPath:[UIBezierPath bezierPathWithArcCenter:CGPointMake(mars4.bounds.size.width/2, mars4.bounds.size.height/2) radius:mars4.bounds.size.width/2-40 startAngle:0 endAngle:2*M_PI clockwise:YES]];
+    
+    //
+    // or create a square donut
     /*
-    UIBezierPath* donut = [UIBezierPath bezierPathWithOvalInRect:mars4.bounds];
-    [donut appendPath:[[UIBezierPath bezierPathWithOvalInRect:CGRectInset(mars4.bounds, 40, 40)] bezierPathByReversingPath]];
-     */
     UIBezierPath* donut = [UIBezierPath bezierPath];
     [donut moveToPoint:CGPointZero];
     [donut addLineToPoint:CGPointMake(mars4.bounds.size.width, 0)];
@@ -85,10 +97,17 @@
     [donut addLineToPoint:CGPointMake(mars4.bounds.size.width-40, mars4.bounds.size.height-40)];
     [donut addLineToPoint:CGPointMake(mars4.bounds.size.width-40, 40)];
     [donut addLineToPoint:CGPointMake(40, 40)];
+     */
     mars4.clipPath = donut;
     [container addSubview:mars4];
+    //
+    // enddonut shape
+    //
+    ////////////////////////////////////
 
 
+    // rotation
+    //
     // test rotation on an image
     mars2.transform = CGAffineTransformMakeRotation(.4);
     mars4.transform = CGAffineTransformMakeRotation(-0.3);
