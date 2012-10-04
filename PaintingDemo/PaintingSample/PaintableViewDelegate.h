@@ -14,4 +14,6 @@
 
 -(BOOL) shouldDrawClipPath;
 
+-(CGAffineTransform) transform;
+
 @end

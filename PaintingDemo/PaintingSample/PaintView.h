@@ -16,10 +16,11 @@
     CGContextRef cacheContext;
     CGFloat hue;
     NSObject<PaintableViewDelegate>* delegate;
+    UIBezierPath* clipPath;
 }
 
 @property (nonatomic, assign) NSObject<PaintableViewDelegate>* delegate;
 
-@property (nonatomic, readonly) UIBezierPath* clipPath;
+@property (nonatomic, retain) UIBezierPath* clipPath;
 
 @end

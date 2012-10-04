@@ -12,19 +12,18 @@
 @implementation PaintView
 
 @synthesize delegate;
+@synthesize clipPath;
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         hue = 0.0;
+        self.clipPath = [UIBezierPath bezierPathWithRect:self.bounds];
         [self initContext:frame.size];
         self.backgroundColor = [UIColor clearColor];
         self.clearsContextBeforeDrawing = NO;
 //        [self.layer setDrawsAsynchronously:YES];
-        UILabel* lbl = [[[UILabel alloc] initWithFrame:CGRectMake(100, 100, 200, 50)] autorelease];
-        lbl.text = @"PaintView";
-//        [self addSubview:lbl];
     }
     return self;
 }
@@ -70,6 +69,11 @@
     } afterDelay:1];
  */
     return YES;
+}
+
+
+-(UIBezierPath*) clipPath{
+    return [[clipPath copy] autorelease];
 }
 
 
@@ -202,33 +206,40 @@
 }
 
 
--(UIBezierPath*) clipPath{
-    return [UIBezierPath bezierPathWithRect:self.bounds];
-}
-
 -(void) clipPathInContext:(CGContextRef) context andDraw:(BOOL)draw{
+    //
+    // my own clip path:
+//    CGContextAddRect(context, self.bounds);
+    CGContextAddPath(context, clipPath.CGPath);
+    CGContextEOClip(context);
+
+    
+    //
+    //views above me:
     NSArray* overViews = [delegate paintableViewsAbove:self];
     for(PaintView* aView in overViews){
+        UIBezierPath* aClipPath = [aView clipPath];
         
-        UIBezierPath* clipPath = [aView clipPath];
+        // if i'm rotated, unrotate my own rotation first
+        [aClipPath applyTransform:CGAffineTransformInvert(self.delegate.transform)];
         // rotate first!
-        [clipPath applyTransform:aView.transform];
+        [aClipPath applyTransform:aView.transform];
         // then adjust for offset
         CGPoint offset = [self convertPoint:aView.bounds.origin fromView:aView];
         
-        [clipPath applyTransform:CGAffineTransformMakeTranslation(offset.x, offset.y)];
+        [aClipPath applyTransform:CGAffineTransformMakeTranslation(offset.x, offset.y)];
 
         //
         // clip it
         CGContextAddRect(context, self.bounds);
-        CGContextAddPath(context, clipPath.CGPath);
+        CGContextAddPath(context, aClipPath.CGPath);
         CGContextEOClip(context);
 
         if(draw){
             [[UIColor redColor] setStroke];
             CGContextSetLineCap(cacheContext, kCGLineCapRound);
             CGContextSetLineWidth(cacheContext, 2);
-            [clipPath stroke];
+            [aClipPath stroke];
         }
     }
 }

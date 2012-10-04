@@ -48,6 +48,21 @@
     return paint.clipPath;
 }
 
+-(void) setClipPath:(UIBezierPath *)clipPath{
+    paint.clipPath = clipPath;
+
+    //
+    // clip the view to the bounds.
+    //
+    // this only clips display, not the painting
+    // view. the paintview clips inside of its
+    // draw methods
+    CAShapeLayer *shapeLayer  = [CAShapeLayer layer];
+    [shapeLayer setFrame:[self bounds]];
+    [shapeLayer setPath:[clipPath CGPath]];
+    [[self layer] setMask:shapeLayer];
+}
+
 
 -(CGRect) rotationlessFrame{
     return CGRectMake(self.center.x - self.bounds.size.width/2.0, self.center.y - self.bounds.size.height/2.0, self.bounds.size.width, self.bounds.size.height);

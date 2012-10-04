@@ -23,6 +23,7 @@
     PaintView* canvas;
     PaintableImageView* mars1;
     PaintableImageView* mars2;
+    PaintableImageView* mars3;
     
     
     PaintTouchView *paintTouch;

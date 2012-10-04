@@ -19,6 +19,6 @@
 
 @property (nonatomic, assign) NSObject<PaintableViewDelegate>* delegate;
 @property (nonatomic, readonly) CGRect rotationlessFrame;
-@property (nonatomic, readonly) UIBezierPath* clipPath;
+@property (nonatomic, retain) UIBezierPath* clipPath;
 
 @end

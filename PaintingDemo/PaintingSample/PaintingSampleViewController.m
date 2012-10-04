@@ -50,14 +50,22 @@
     fr.origin.y = 200;
     fr.origin.x = 150;
     mars1.frame = fr;
+    [container addSubview:mars1];
     mars2 = [[PaintableImageView alloc] initWithImage:marsImg];
     fr = mars2.frame;
     fr.origin.y = 282;
     fr.origin.x = 200;
     mars2.frame = fr;
     mars2.alpha = .5;
-    [container addSubview:mars1];
     [container addSubview:mars2];
+    mars3 = [[PaintableImageView alloc] initWithImage:marsImg];
+    fr = mars3.frame;
+    fr.origin.y = 482;
+    fr.origin.x = 200;
+    mars3.frame = fr;
+    mars3.clipPath = [UIBezierPath bezierPathWithOvalInRect:mars3.bounds];
+    [container addSubview:mars3];
+
 
     // test rotation on an image
     mars2.transform = CGAffineTransformMakeRotation(.4);
@@ -137,23 +145,30 @@
     [canvas drawDotAtPoint:point withFingerWidth:fingerWidth fromView:view];
     [mars1 drawDotAtPoint:point withFingerWidth:fingerWidth fromView:view];
     [mars2 drawDotAtPoint:point withFingerWidth:fingerWidth fromView:view];
+    [mars3 drawDotAtPoint:point withFingerWidth:fingerWidth fromView:view];
 }
 
 -(void) drawLineAtStart:(CGPoint)start end:(CGPoint)end withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
     [canvas drawLineAtStart:start end:end withFingerWidth:fingerWidth fromView:view];
     [mars1 drawLineAtStart:start end:end withFingerWidth:fingerWidth fromView:view];
     [mars2 drawLineAtStart:start end:end withFingerWidth:fingerWidth fromView:view];
+    [mars3 drawLineAtStart:start end:end withFingerWidth:fingerWidth fromView:view];
 }
 
 -(BOOL) fullyContainsArcAtStart:(CGPoint)point1 end:(CGPoint)point2 controlPoint1:(CGPoint)ctrl1 controlPoint2:(CGPoint)ctrl2 withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
     return YES;
 }
 
+
+#pragma mark - PaintableViewDelegate
+
 -(NSArray*) paintableViewsAbove:(UIView*)aView{
-    if(aView == mars1){
-        return [NSArray arrayWithObject:mars2];
+    if(aView == mars2){
+        return [NSArray arrayWithObject:mars3];
+    } else if(aView == mars1){
+        return [NSArray arrayWithObjects:mars2, mars3, nil];
     }else if(aView == canvas){
-        return [NSArray arrayWithObjects:mars1, mars2, nil];
+        return [NSArray arrayWithObjects:mars1, mars2, mars3, nil];
     }
     return [NSArray array];
 }
@@ -165,6 +180,11 @@
     [canvas setNeedsDisplay];
     [mars1 setNeedsDisplay];
     [mars2 setNeedsDisplay];
+    [mars3 setNeedsDisplay];
+}
+
+-(CGAffineTransform) transform{
+    return CGAffineTransformIdentity;
 }
 
 

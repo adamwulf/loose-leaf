@@ -80,6 +80,7 @@
 			children = (
 				F1381082143F7990005CBF27 /* PaintView.h */,
 				F1381083143F7990005CBF27 /* PaintView.m */,
+				665B1449161D6A73001A15E5 /* PaintableViewDelegate.h */,
 				6654DE1115FBC737006CF3D7 /* PaintTouchView.h */,
 				6654DE1215FBC737006CF3D7 /* PaintTouchView.m */,
 				6654DE1415FBC7C6006CF3D7 /* PaintTouchViewDelegate.h */,
@@ -101,7 +102,6 @@
 			children = (
 				66E47E4E15FD310A0043C284 /* PaintableImageView.h */,
 				66E47E4F15FD310A0043C284 /* PaintableImageView.m */,
-				665B1449161D6A73001A15E5 /* PaintableViewDelegate.h */,
 			);
 			name = "Paintable Images";
 			sourceTree = "<group>";
