@@ -12,15 +12,19 @@
 #import "PaintTouchView.h"
 #import "PaintableImageView.h"
 #import "PaintTouchViewDelegate.h"
+#import "PaintableViewDelegate.h"
 
-@interface PaintingSampleViewController : UIViewController<PaintTouchViewDelegate>{
+@interface PaintingSampleViewController : UIViewController<PaintTouchViewDelegate,PaintableViewDelegate>{
     UIView* container;
     NSTimer* timer;
     
+    UISwitch* _switch;
+    
+    PaintView* canvas;
     PaintableImageView* mars1;
     PaintableImageView* mars2;
-
-    PaintView* paint;
+    
+    
     PaintTouchView *paintTouch;
 }
 

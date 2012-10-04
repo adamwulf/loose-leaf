@@ -26,8 +26,6 @@
 	<string>1.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSMainNibFile</key>
-	<string>MainWindow</string>
 	<key>NSMainNibFile~ipad</key>
 	<string>MainWindowIPad</string>
 	<key>UISupportedInterfaceOrientations</key>

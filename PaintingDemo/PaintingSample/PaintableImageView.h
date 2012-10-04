@@ -8,13 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import "PaintTouchViewDelegate.h"
+#import "PaintableViewDelegate.h"
 #import "PaintView.h"
 
-@interface PaintableImageView : UIImageView<PaintTouchViewDelegate>{
+@interface PaintableImageView : UIImageView<PaintTouchViewDelegate,PaintableViewDelegate>{
     PaintView* paint;
     CGPoint panCoord;
+    NSObject<PaintableViewDelegate>* delegate;
 }
 
+@property (nonatomic, assign) NSObject<PaintableViewDelegate>* delegate;
 @property (nonatomic, readonly) CGRect rotationlessFrame;
+@property (nonatomic, readonly) UIBezierPath* clipPath;
 
 @end

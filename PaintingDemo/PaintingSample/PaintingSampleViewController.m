@@ -8,6 +8,7 @@
 
 #import "PaintingSampleViewController.h"
 #import "NSThread+BlockAdditions.h"
+#import "UIImage+Scale.h"
 
 @implementation PaintingSampleViewController
 
@@ -30,39 +31,20 @@
     //
     // setup container for other views
     container = [[UIView alloc] initWithFrame:self.view.bounds];
-    CGFloat scale = [[UIScreen mainScreen] scale];
 
     //
-    // create the paint view, clear by default
+    // create the canvas, clear by default
     CGRect paintFrame = self.view.bounds;
-    paint = [[PaintView alloc] initWithFrame:paintFrame];
-    [container addSubview:paint];
-    [paint release];
-    [paint setNeedsDisplay];
+    canvas = [[PaintView alloc] initWithFrame:paintFrame];
+    [container addSubview:canvas];
+    [canvas release];
+    [canvas setNeedsDisplay];
 
     
     
-    
-    /**
-     * the following code was commented out to
-     * not worry about actually managing multiple
-     * images and subviews yet
-     *
-     * the PaintView drawRect: shows how to clip
-     * to multiple polygons. it's just a refactor
-     * to pull these paths from subviews
-     *
-     *
-     * it's a further refactor to add undo :P
-     *
-
     //
-    // mars images
-    UIImage* marsImg = [UIImage imageNamed:@"mars.png"];
-//    if([[UIScreen mainScreen] scale] != 1.0){
-        // load images at high resolution
-        marsImg = [UIImage imageWithCGImage:marsImg.CGImage scale:2.0 orientation:marsImg.imageOrientation];
-//    }
+    // create two images to draw over
+    UIImage* marsImg = [UIImage maxResolutionImageNamed:@"mars.png"];
     mars1 = [[PaintableImageView alloc] initWithImage:marsImg];
     CGRect fr = mars1.frame;
     fr.origin.y = 200;
@@ -76,124 +58,38 @@
     mars2.alpha = .5;
     [container addSubview:mars1];
     [container addSubview:mars2];
-    
-    for(int i=0;i<0;i++){
-        PaintableImageView* view = [[PaintableImageView alloc] initWithImage:marsImg];
-        CGRect fr = mars2.frame;
-        fr.origin.x += rand() % 50;
-        fr.origin.y += rand() % 50;
-        view.frame = fr;
-        [container addSubview:view];
-        
-    }
-    
-//    mars2.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(.3), CGAffineTransformMakeScale(2.0, 2.0));
+
+    // test rotation on an image
     mars2.transform = CGAffineTransformMakeRotation(.4);
+
     
-    // ok, catch the touches on top of all the views
-    
+    //
+    // handle painting events
     paintTouch = [[PaintTouchView alloc] initWithFrame:self.view.bounds];
     [container addSubview:paintTouch];
     [paintTouch release];
-    
     [paintTouch setDelegate:self];
     
+    // add the container for all the views
+    [self.view addSubview:container];
     
+    //
+    // button to toggle the paint event capture
     UIButton* button =[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     button.backgroundColor = [UIColor whiteColor];
     [button addTarget:self action:@selector(toggle) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
     
+    _switch = [[UISwitch alloc] initWithFrame:CGRectMake(100, 10, 80, 40)];
+    [_switch addTarget: self
+                  action: @selector(switchChanged:)
+        forControlEvents: UIControlEventValueChanged];
+    _switch.on = YES;
+    [self.view addSubview:_switch];
     
-    
-    
-    
-    
-    //
-    //
-    // TEST CODE
-    //
-    // this code is helping me define bezier paths for 2 views that intersect
-    //
-    // the definitelyNotVisiblePath is what should be returned from the view
-    // that is hiding another view. this bezier path will then be used to
-    // slice out a hole in any view underneath it.
-    if(YES){
-        
-        // first, convert the top view into the bottom view's coordinate system
-        CGRect coveringViewRect = [mars1 convertRect:mars2.rotationlessFrame fromView:mars2.superview];
-        
-        //
-        // first, define the path that could possibly be visible:
-        UIBezierPath* possiblyVisiblePath = [UIBezierPath bezierPath];
-        [possiblyVisiblePath appendPath:[UIBezierPath bezierPathWithRect:mars1.bounds]];
-        
-        //
-        // the definitely not visible path needs to be
-        // in the reverse direction so that it cuts out a hole
-        // of the possiblyVisiblePath (effectively making the
-        // possible visible area less than or equal to itself)
-        UIBezierPath *definitelyNotVisiblePath = [UIBezierPath bezierPath];
-        [definitelyNotVisiblePath moveToPoint:CGPointMake(coveringViewRect.origin.x, coveringViewRect.origin.y)];
-        [definitelyNotVisiblePath addLineToPoint:CGPointMake(coveringViewRect.origin.x, coveringViewRect.origin.y + coveringViewRect.size.height)];
-        [definitelyNotVisiblePath addLineToPoint:CGPointMake(coveringViewRect.origin.x + coveringViewRect.size.width, coveringViewRect.origin.y + coveringViewRect.size.height)];
-        [definitelyNotVisiblePath addLineToPoint:CGPointMake(coveringViewRect.origin.x + coveringViewRect.size.width, coveringViewRect.origin.y)];
-        [definitelyNotVisiblePath closePath];
-        
-        [definitelyNotVisiblePath applyTransform:CGAffineTransformMakeTranslation(-coveringViewRect.origin.x-coveringViewRect.size.width / 2, -coveringViewRect.origin.y-coveringViewRect.size.height / 2)];
-        [definitelyNotVisiblePath applyTransform:CGAffineTransformMakeRotation(0.4)];
-        [definitelyNotVisiblePath applyTransform:CGAffineTransformMakeTranslation(coveringViewRect.origin.x + coveringViewRect.size.width / 2, coveringViewRect.origin.y + coveringViewRect.size.height / 2)];
-        
-        //
-        // now add that path to crop out the invisible area
-        [possiblyVisiblePath appendPath:definitelyNotVisiblePath];
-        
-        //
-        // create a mask layer from the bezier curve
-        // that defines the edge of all views that hide our content.
-        // (in this demo case, just 1 view's path, the definitelyNotVisiblePath)
-        CAShapeLayer* maskLayer = [CAShapeLayer layer];
-        maskLayer.contentsScale = scale;
-        maskLayer.frame = mars1.layer.bounds;
-        maskLayer.fillColor = [UIColor greenColor].CGColor; // needs to be opaque
-        maskLayer.backgroundColor = [UIColor clearColor].CGColor; // needs to be clear
-        maskLayer.path = possiblyVisiblePath.CGPath;
-//        maskLayer.borderColor = [UIColor purpleColor].CGColor;
-//        maskLayer.borderWidth = 1;
-//        maskLayer.lineWidth = 1;
-//        maskLayer.strokeColor = [UIColor orangeColor].CGColor;
-//        [mars1.layer addSublayer:maskLayer]; // used for debugging
-        mars1.layer.mask = maskLayer;
-        
-        
-        
-        / *
-         * debugging:
-         * mark the corners of mars 2 inside of mars 1 layers
-         // corner
-        CALayer* point1L = [CALayer layer];
-        point1L.frame = CGRectMake(pointInLayer.x-5, pointInLayer.y-5, 10, 10);
-        point1L.backgroundColor = [UIColor blueColor].CGColor;
-        [mars1.layer addSublayer:point1L];
-        
-         // corner
-        CALayer* point2L = [CALayer layer];
-        point2L.frame = CGRectMake(pointInLayer2.x-5, pointInLayer2.y-5, 10, 10);
-        point2L.backgroundColor = [UIColor orangeColor].CGColor;
-        [mars1.layer addSublayer:point2L];
-
-        // center
-        CALayer* point3L = [CALayer layer];
-        point3L.frame = CGRectMake(coveringViewRect.origin.x + coveringViewRect.size.width/2-5, coveringViewRect.origin.y + coveringViewRect.size.height/2 - 5, 10, 10);
-        point3L.backgroundColor = [UIColor orangeColor].CGColor;
-        [mars1.layer addSublayer:point3L];
-         * /
-    
-    }
-
-    */
-    // add the container for all the views
-    [self.view addSubview:container];
+    [canvas setDelegate:self];
+    [mars1 setDelegate:self];
+    [mars2 setDelegate:self];
     
 }
 
@@ -225,27 +121,50 @@
     for(UIView* v in [container.subviews reverseObjectEnumerator]){
         if([v respondsToSelector:@selector(drawArcAtStart:end:controlPoint1:controlPoint2:withFingerWidth:fromView:)]){
             [(NSObject<PaintTouchViewDelegate>*)v drawArcAtStart:point1 end:point2 controlPoint1:ctrl1 controlPoint2:ctrl2 withFingerWidth:fingerWidth fromView:view];
+            /**
+             * commenting out this optimization for now
+             * to focus on correctness
+             *
             if([((NSObject<PaintTouchViewDelegate>*)v) fullyContainsArcAtStart:point1 end:point2 controlPoint1:ctrl1 controlPoint2:ctrl2 withFingerWidth:fingerWidth fromView:view]){
                 break;
             }
+             */
         }
     }
 }
 
 -(void) drawDotAtPoint:(CGPoint)point withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
-    [paint drawDotAtPoint:point withFingerWidth:fingerWidth fromView:view];
+    [canvas drawDotAtPoint:point withFingerWidth:fingerWidth fromView:view];
     [mars1 drawDotAtPoint:point withFingerWidth:fingerWidth fromView:view];
     [mars2 drawDotAtPoint:point withFingerWidth:fingerWidth fromView:view];
 }
 
 -(void) drawLineAtStart:(CGPoint)start end:(CGPoint)end withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
-    [paint drawLineAtStart:start end:end withFingerWidth:fingerWidth fromView:view];
+    [canvas drawLineAtStart:start end:end withFingerWidth:fingerWidth fromView:view];
     [mars1 drawLineAtStart:start end:end withFingerWidth:fingerWidth fromView:view];
     [mars2 drawLineAtStart:start end:end withFingerWidth:fingerWidth fromView:view];
 }
 
 -(BOOL) fullyContainsArcAtStart:(CGPoint)point1 end:(CGPoint)point2 controlPoint1:(CGPoint)ctrl1 controlPoint2:(CGPoint)ctrl2 withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
     return YES;
+}
+
+-(NSArray*) paintableViewsAbove:(UIView*)aView{
+    if(aView == mars1){
+        return [NSArray arrayWithObject:mars2];
+    }else if(aView == canvas){
+        return [NSArray arrayWithObjects:mars1, mars2, nil];
+    }
+    return [NSArray array];
+}
+-(BOOL) shouldDrawClipPath{
+    return _switch.on;
+}
+
+-(void) switchChanged:(UISwitch*)_aSwitch{
+    [canvas setNeedsDisplay];
+    [mars1 setNeedsDisplay];
+    [mars2 setNeedsDisplay];
 }
 
 

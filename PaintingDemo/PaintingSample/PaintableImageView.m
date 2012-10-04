@@ -10,6 +10,8 @@
 
 @implementation PaintableImageView
 
+@synthesize delegate;
+
 - (id)initWithImage:(UIImage *)image
 {
     self = [super initWithImage:image];
@@ -18,6 +20,7 @@
         paint = [[PaintView alloc] initWithFrame:self.bounds];
         [self addSubview:paint];
         paint.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        paint.delegate = self;
         
         UIPanGestureRecognizer* pan = [[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(dragging:)] autorelease];
         [self addGestureRecognizer:pan];
@@ -27,6 +30,24 @@
     }
     return self;
 }
+
+-(NSArray*) paintableViewsAbove:(UIView *)aView{
+    return [delegate paintableViewsAbove:self];
+}
+
+-(BOOL)shouldDrawClipPath{
+    return [delegate shouldDrawClipPath];
+}
+
+-(void) setNeedsDisplay{
+    [paint setNeedsDisplay];
+    [super setNeedsDisplay];
+}
+
+-(UIBezierPath*)clipPath{
+    return paint.clipPath;
+}
+
 
 -(CGRect) rotationlessFrame{
     return CGRectMake(self.center.x - self.bounds.size.width/2.0, self.center.y - self.bounds.size.height/2.0, self.bounds.size.width, self.bounds.size.height);
@@ -63,8 +84,6 @@
     {
         //NSLog(@"Received a pan gesture");
         panCoord = [gesture locationInView:gesture.view];
-        
-        
     }
     CGPoint newCoord = [gesture locationInView:gesture.view];
     float dX = newCoord.x-panCoord.x;

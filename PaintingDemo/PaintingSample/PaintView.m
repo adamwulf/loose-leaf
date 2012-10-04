@@ -11,6 +11,8 @@
 
 @implementation PaintView
 
+@synthesize delegate;
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -84,6 +86,10 @@
 
 -(void) drawArcAtStart:(CGPoint)point1 end:(CGPoint)point2 controlPoint1:(CGPoint)ctrl1 controlPoint2:(CGPoint)ctrl2 withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
     
+    CGContextSaveGState(cacheContext);
+
+    [self clipPathInContext:cacheContext andDraw:NO];
+
     // convert points from their touched view
     // to this view so that we can see if
     // they even hit us or not
@@ -121,6 +127,8 @@
     }else{
         // doesn't intersect this paint view at all
     }
+
+    CGContextRestoreGState(cacheContext);
 }
 
 -(BOOL) fullyContainsArcAtStart:(CGPoint)point1
@@ -155,6 +163,9 @@
 }
 
 -(void) drawDotAtPoint:(CGPoint)point withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
+    CGContextSaveGState(cacheContext);
+
+    [self clipPathInContext:cacheContext andDraw:NO];
 
     point = [view convertPoint:point toView:self];
 
@@ -164,10 +175,16 @@
     CGFloat dotDiameter = fingerWidth / 3;
     CGRect rectToDraw = CGRectMake(point.x - .5*dotDiameter, point.y - .5*dotDiameter, dotDiameter, dotDiameter);
     CGContextFillEllipseInRect(cacheContext, rectToDraw);
+
+    CGContextRestoreGState(cacheContext);
+
     [self setNeedsDisplayInRect:rectToDraw];
 }
 
 -(void) drawLineAtStart:(CGPoint)start end:(CGPoint)end withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
+    CGContextSaveGState(cacheContext);
+
+    [self clipPathInContext:cacheContext andDraw:NO];
 
     start = [view convertPoint:start toView:self];
     end = [view convertPoint:end toView:self];
@@ -175,11 +192,47 @@
     CGContextMoveToPoint(cacheContext, start.x, start.y);
     CGContextAddLineToPoint(cacheContext, end.x, end.y);
     CGContextStrokePath(cacheContext);
+
+    CGContextRestoreGState(cacheContext);
+
     CGRect dirtyPoint1 = CGRectMake(start.x-10, start.y-10, 20, 20);
     CGRect dirtyPoint2 = CGRectMake(end.x-10, end.y-10, 20, 20);
     CGRect rectToDraw = CGRectUnion(dirtyPoint1, dirtyPoint2);
     [self setNeedsDisplayInRect:rectToDraw];
 }
+
+
+-(UIBezierPath*) clipPath{
+    return [UIBezierPath bezierPathWithRect:self.bounds];
+}
+
+-(void) clipPathInContext:(CGContextRef) context andDraw:(BOOL)draw{
+    NSArray* overViews = [delegate paintableViewsAbove:self];
+    for(PaintView* aView in overViews){
+        
+        UIBezierPath* clipPath = [aView clipPath];
+        // rotate first!
+        [clipPath applyTransform:aView.transform];
+        // then adjust for offset
+        CGPoint offset = [self convertPoint:aView.bounds.origin fromView:aView];
+        
+        [clipPath applyTransform:CGAffineTransformMakeTranslation(offset.x, offset.y)];
+
+        //
+        // clip it
+        CGContextAddRect(context, self.bounds);
+        CGContextAddPath(context, clipPath.CGPath);
+        CGContextEOClip(context);
+
+        if(draw){
+            [[UIColor redColor] setStroke];
+            CGContextSetLineCap(cacheContext, kCGLineCapRound);
+            CGContextSetLineWidth(cacheContext, 2);
+            [clipPath stroke];
+        }
+    }
+}
+
 
 
 /**
@@ -189,21 +242,23 @@
  * it's commented out so that i can test only clipping
  * with paths in the below fuction w/o worrying about the
  * imagecontext
+ */
 - (void) drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
     CGContextDrawImage(context, self.bounds, cacheImage);
     CGImageRelease(cacheImage);
+    
+    [self clipPathInContext:context andDraw:[delegate shouldDrawClipPath]];
 }
-*/
 
 
 /**
  * ok, so this shows how to clip multiple paths
  * that may or may not overlap
- */
 - (void)drawRect:(CGRect)dirtyRect{
     CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(ctx);
     //Fill the background with gray:
     CGContextSetRGBFillColor(ctx, 0.5, 0.5, 0.5, 1);
     CGContextFillRect(ctx, self.bounds);
@@ -236,7 +291,9 @@
     //Fill the entire bounds with red:
     CGContextSetRGBFillColor(ctx, 1.0, 0.0, 0.0, 1.0);
     CGContextFillRect(ctx, self.bounds);
+    CGContextRestoreGState(ctx);
 }
+ */
 
 
 -(void) dealloc{
