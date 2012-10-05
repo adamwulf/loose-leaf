@@ -46,8 +46,6 @@
 
 // roughening and randomising paths
 
-- (UIBezierPath*)		bezierPathByRandomisingPoints:(CGFloat) maxAmount;
-- (UIBezierPath*)		bezierPathWithRoughenedStrokeOutline:(CGFloat) amount;
 - (UIBezierPath*)		bezierPathWithFragmentedLineSegments:(CGFloat) flatness;
 
 // zig-zags and waves

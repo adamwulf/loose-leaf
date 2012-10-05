@@ -63,12 +63,9 @@ static BOOL				CornerBevel( const CGPoint* pointsIn, CGFloat offset, UIBezierPat
 	{
 		UIBezierPath* copy = [self copy];
 		
-		NSAffineTransform*	xfm = [NSAffineTransform transform];
-		[xfm translateXBy:cp.x yBy:cp.y];
-		[xfm scaleXBy:scale yBy:scale];
-		[xfm translateXBy:-cp.x yBy:-cp.y];
-		
-		[copy transformUsingAffineTransform:xfm];
+        [copy applyTransform:CGAffineTransformMakeTranslation(cp.x, cp.y)];
+        [copy applyTransform:CGAffineTransformMakeScale(scale, scale)];
+        [copy applyTransform:CGAffineTransformMakeTranslation(-cp.x, -cp.y)];
 	
 		return [copy autorelease];
 	}
@@ -95,8 +92,9 @@ static BOOL				CornerBevel( const CGPoint* pointsIn, CGFloat offset, UIBezierPat
 	{
 		UIBezierPath* copy = [self copy];
 	
-		NSAffineTransform*	xfm = RotationTransform( angle, cp );
-		[copy transformUsingAffineTransform:xfm];
+        [copy applyTransform:CGAffineTransformMakeTranslation(cp.x, cp.y)];
+        [copy applyTransform:CGAffineTransformMakeRotation(angle)];
+        [copy applyTransform:CGAffineTransformMakeTranslation(-cp.x, -cp.y)];
 		
 		return [copy autorelease];
 	}
@@ -127,13 +125,10 @@ static BOOL				CornerBevel( const CGPoint* pointsIn, CGFloat offset, UIBezierPat
 		UIBezierPath* copy = [self copy];
 		CGPoint		cp = [copy centreOfBounds];
 		
-		NSAffineTransform*	xfm = [NSAffineTransform transform];
-		[xfm translateXBy:cp.x yBy:cp.y];
-		[xfm scaleXBy:xs yBy:ys];
-		[xfm translateXBy:-cp.x yBy:-cp.y];
-		
-		[copy transformUsingAffineTransform:xfm];
-		
+        [copy applyTransform:CGAffineTransformMakeTranslation(cp.x, cp.y)];
+        [copy applyTransform:CGAffineTransformMakeScale(xs, ys)];
+        [copy applyTransform:CGAffineTransformMakeTranslation(-cp.x, -cp.y)];
+
 		return [copy autorelease];
 	}
 }
@@ -143,13 +138,10 @@ static BOOL				CornerBevel( const CGPoint* pointsIn, CGFloat offset, UIBezierPat
 {
 	UIBezierPath* copy = [self copy];
 	
-	NSAffineTransform*	xfm = [NSAffineTransform transform];
-	[xfm translateXBy:cp.x yBy:cp.y];
-	[xfm scaleXBy:-1.0 yBy:1.0];
-	[xfm translateXBy:-cp.x yBy:-cp.y];
-	
-	[copy transformUsingAffineTransform:xfm];
-	
+    [copy applyTransform:CGAffineTransformMakeTranslation(cp.x, cp.y)];
+    [copy applyTransform:CGAffineTransformMakeScale(-1.0, 1.0)];
+    [copy applyTransform:CGAffineTransformMakeTranslation(-cp.x, -cp.y)];
+    
 	return [copy autorelease];
 }
 
@@ -158,13 +150,10 @@ static BOOL				CornerBevel( const CGPoint* pointsIn, CGFloat offset, UIBezierPat
 {
 	UIBezierPath* copy = [self copy];
 	
-	NSAffineTransform*	xfm = [NSAffineTransform transform];
-	[xfm translateXBy:cp.x yBy:cp.y];
-	[xfm scaleXBy:1.0 yBy:-1.0];
-	[xfm translateXBy:-cp.x yBy:-cp.y];
-	
-	[copy transformUsingAffineTransform:xfm];
-	
+    [copy applyTransform:CGAffineTransformMakeTranslation(cp.x, cp.y)];
+    [copy applyTransform:CGAffineTransformMakeScale(1.0, -1.0)];
+    [copy applyTransform:CGAffineTransformMakeTranslation(-cp.x, -cp.y)];
+    
 	return [copy autorelease];
 }
 
@@ -184,7 +173,7 @@ static BOOL				CornerBevel( const CGPoint* pointsIn, CGFloat offset, UIBezierPat
 #pragma mark -
 - (CGPoint)				centreOfBounds
 {
-	return CGPointMake( NSMidX([self bounds]), NSMidY([self bounds]));
+	return CGPointMake( CGRectGetMidX([self bounds]), CGRectGetMidY([self bounds]));
 }
 
 
@@ -1079,41 +1068,6 @@ static void				InterpolatePoints( const CGPoint* v, CGPoint* cp1, CGPoint* cp2, 
 
 #pragma mark -
 
-
-- (UIBezierPath*)		bezierPathWithRoughenedStrokeOutline:(CGFloat) amount
-{
-	// given the path, this returns the outline of the path stroke roughened by the given amount. Roughening works by first taking the stroke outline at the
-	// current stroke width, inserting a large number of redundant points and then randomly offsetting each one by a small amount. The result is a path that, when
-	// FILLED, will emulate a stroke drawn using a randomly varying width pen. This can be used to give a very naturalistic effect that precise strokes lack. 
-	
-	UIBezierPath* newPath = [self strokedPath];
-	
-	if ( newPath != nil && amount > 0.0 )
-	{
-		// work out the desired flatness by getting the average length of the elements and dividing that down:
-
-		CGFloat flatness = 4.0 / ([newPath length] / [newPath elementCount]);
-		
-		//NSLog(@"flatness = %f", flatness);
-		
-		// break up existing line segments into short lengths:
-		
-		newPath = [newPath bezierPathWithFragmentedLineSegments:[self lineWidth] / 2.0 ];
-		
-		// flatten the path - this breaks up curve segments into short straight segments
-		
-		CGFloat savedFlatness = [[self class] defaultFlatness];
-		[[self class] setDefaultFlatness:flatness];
-		newPath = [newPath bezierPathByFlatteningPath];
-		[[self class] setDefaultFlatness:savedFlatness];
-		
-		// randomise the positions of the points
-		
-		newPath = [newPath bezierPathByRandomisingPoints:amount];
-	}
-	
-	return newPath; //[newPath bezierPathByUnflatteningPath];
-}
 
 
 - (UIBezierPath*)		bezierPathWithFragmentedLineSegments:(CGFloat) flatness
@@ -2183,7 +2137,7 @@ static CGFloat subdivideBezierAtLength (const CGPoint bez[4],
 		CGFloat		elementLength;
 		CGFloat		remainingLength = trimLength - length;
     
-		switch (element)
+		switch (element.type)
 		{
 			case kCGPathElementMoveToPoint:
 				if ( length > trimLength )
@@ -2318,24 +2272,18 @@ static CGFloat subdivideBezierAtLength (const CGPoint bez[4],
 {
 	UIBezierPath *rightSide = [self bezierPathByTrimmingToLength:length];
 	UIBezierPath *leftSide = [rightSide bezierPathByReversingPath];
-	NSAffineTransform *rightTransform = [NSAffineTransform transform];
-	NSAffineTransform *leftTransform = [NSAffineTransform transform];
 	CGPoint firstPoint = [self firstPoint];
 	//CGPoint fp2 = [self firstPoint2:length / 2.0];
 	// Rotate about the point of the arrowhead
-	[rightTransform translateXBy:firstPoint.x yBy:firstPoint.y];
-	[rightTransform rotateByDegrees:angle];
-	[rightTransform translateXBy:-firstPoint.x yBy:-firstPoint.y];
+
+    [rightSide applyTransform:CGAffineTransformMakeTranslation(firstPoint.x, firstPoint.y)];
+    [rightSide applyTransform:CGAffineTransformMakeRotation(angle)];
+    [rightSide applyTransform:CGAffineTransformMakeTranslation(-firstPoint.x, -firstPoint.y)];
   
-	[rightSide transformUsingAffineTransform:rightTransform];
-  
-	// Same again, but for the left hand side of the arrowhead
-	[leftTransform translateXBy:firstPoint.x yBy:firstPoint.y];
-	[leftTransform rotateByDegrees:-angle];
-	[leftTransform translateXBy:-firstPoint.x yBy:-firstPoint.y];
-  
-	[leftSide transformUsingAffineTransform:leftTransform];
-  
+    [leftSide applyTransform:CGAffineTransformMakeTranslation(firstPoint.x, firstPoint.y)];
+    [leftSide applyTransform:CGAffineTransformMakeRotation(-angle)];
+    [leftSide applyTransform:CGAffineTransformMakeTranslation(-firstPoint.x, -firstPoint.y)];
+    
 	/* Careful!  We don't want to append the -moveToPoint from the right hand
      side, because then -closePath won't do what we would want it to. */
 	[leftSide appendPathRemovingInitialMoveToPoint:rightSide];
