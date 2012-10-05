@@ -92,7 +92,7 @@
     
     CGContextSaveGState(cacheContext);
 
-    [self clipPathInContext:cacheContext andDraw:NO];
+//    [self clipPathInContext:cacheContext andDraw:NO];
 
     // convert points from their touched view
     // to this view so that we can see if
@@ -169,7 +169,7 @@
 -(void) drawDotAtPoint:(CGPoint)point withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
     CGContextSaveGState(cacheContext);
 
-    [self clipPathInContext:cacheContext andDraw:NO];
+//    [self clipPathInContext:cacheContext andDraw:NO];
 
     point = [view convertPoint:point toView:self];
 
@@ -188,7 +188,7 @@
 -(void) drawLineAtStart:(CGPoint)start end:(CGPoint)end withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
     CGContextSaveGState(cacheContext);
 
-    [self clipPathInContext:cacheContext andDraw:NO];
+//    [self clipPathInContext:cacheContext andDraw:NO];
 
     start = [view convertPoint:start toView:self];
     end = [view convertPoint:end toView:self];
@@ -256,11 +256,11 @@
  */
 - (void) drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
+    [self clipPathInContext:context andDraw:[delegate shouldDrawClipPath]];
+
     CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
     CGContextDrawImage(context, self.bounds, cacheImage);
     CGImageRelease(cacheImage);
-    
-    [self clipPathInContext:context andDraw:[delegate shouldDrawClipPath]];
 }
 
 

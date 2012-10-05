@@ -134,7 +134,7 @@
     [_switch addTarget: self
                   action: @selector(switchChanged:)
         forControlEvents: UIControlEventValueChanged];
-    _switch.on = YES;
+    _switch.on = NO;
     [self.view addSubview:_switch];
     
     [canvas setDelegate:self];
