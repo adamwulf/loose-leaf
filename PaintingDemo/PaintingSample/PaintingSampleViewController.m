@@ -179,7 +179,7 @@
             if([((NSObject<PaintTouchViewDelegate>*)v) fullyContainsArcAtStart:point1 end:point2 controlPoint1:ctrl1 controlPoint2:ctrl2 withFingerWidth:fingerWidth fromView:view]){
                 break;
             }
-             */
+            */
         }
     }
 }

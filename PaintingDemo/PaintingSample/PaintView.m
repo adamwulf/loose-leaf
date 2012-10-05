@@ -86,14 +86,13 @@
 //    CGContextSetStrokeColorWithColor(cacheContext, [color CGColor]);
     CGContextSetLineCap(cacheContext, kCGLineCapRound);
     CGContextSetLineWidth(cacheContext, fingerWidth / 3);
+    CGContextSetLineJoin(cacheContext, kCGLineJoinMiter);
+    CGContextSetMiterLimit(cacheContext, 20);
+    CGContextSetFlatness(cacheContext, 1.0);
 }
 
 -(void) drawArcAtStart:(CGPoint)point1 end:(CGPoint)point2 controlPoint1:(CGPoint)ctrl1 controlPoint2:(CGPoint)ctrl2 withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
     
-    CGContextSaveGState(cacheContext);
-
-//    [self clipPathInContext:cacheContext andDraw:NO];
-
     // convert points from their touched view
     // to this view so that we can see if
     // they even hit us or not
@@ -101,6 +100,9 @@
     point2 = [view convertPoint:point2 toView:self];
     ctrl1 = [view convertPoint:ctrl1 toView:self];
     ctrl2 = [view convertPoint:ctrl2 toView:self];
+    
+    
+    
     
     // find the extreme points of the bezier curve
     CGFloat minX = MIN(MIN(MIN(point1.x, point2.x), ctrl1.x), ctrl2.x);
@@ -117,6 +119,13 @@
     CGRect arcBoundingBox = CGRectMake(minX, minY, maxX-minX, maxY-minY);
     
     //
+    // ok, clip and save state
+    CGContextSaveGState(cacheContext);
+
+    [self clipPathInContext:cacheContext andDraw:NO forRect:arcBoundingBox];
+
+
+    //
     // check to see if the bezier curve intersects this
     // paint frame at all, or if we can safely ignore it
     if(CGRectIntersectsRect(self.bounds, arcBoundingBox)){
@@ -131,7 +140,7 @@
     }else{
         // doesn't intersect this paint view at all
     }
-
+    
     CGContextRestoreGState(cacheContext);
 }
 
@@ -167,17 +176,20 @@
 }
 
 -(void) drawDotAtPoint:(CGPoint)point withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
-    CGContextSaveGState(cacheContext);
 
-//    [self clipPathInContext:cacheContext andDraw:NO];
-
-    point = [view convertPoint:point toView:self];
-
-    [self tickHueWithFingerWidth:fingerWidth];
     // draw a dot at point3
     // Draw a circle (filled)
     CGFloat dotDiameter = fingerWidth / 3;
     CGRect rectToDraw = CGRectMake(point.x - .5*dotDiameter, point.y - .5*dotDiameter, dotDiameter, dotDiameter);
+
+    
+    CGContextSaveGState(cacheContext);
+
+    [self clipPathInContext:cacheContext andDraw:NO forRect:rectToDraw];
+
+    point = [view convertPoint:point toView:self];
+
+    [self tickHueWithFingerWidth:fingerWidth];
     CGContextFillEllipseInRect(cacheContext, rectToDraw);
 
     CGContextRestoreGState(cacheContext);
@@ -186,9 +198,13 @@
 }
 
 -(void) drawLineAtStart:(CGPoint)start end:(CGPoint)end withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
+    CGRect dirtyPoint1 = CGRectMake(start.x-10, start.y-10, 20, 20);
+    CGRect dirtyPoint2 = CGRectMake(end.x-10, end.y-10, 20, 20);
+    CGRect rectToDraw = CGRectUnion(dirtyPoint1, dirtyPoint2);
+
     CGContextSaveGState(cacheContext);
 
-//    [self clipPathInContext:cacheContext andDraw:NO];
+    [self clipPathInContext:cacheContext andDraw:NO forRect:rectToDraw];
 
     start = [view convertPoint:start toView:self];
     end = [view convertPoint:end toView:self];
@@ -199,47 +215,48 @@
 
     CGContextRestoreGState(cacheContext);
 
-    CGRect dirtyPoint1 = CGRectMake(start.x-10, start.y-10, 20, 20);
-    CGRect dirtyPoint2 = CGRectMake(end.x-10, end.y-10, 20, 20);
-    CGRect rectToDraw = CGRectUnion(dirtyPoint1, dirtyPoint2);
     [self setNeedsDisplayInRect:rectToDraw];
 }
 
 
--(void) clipPathInContext:(CGContextRef) context andDraw:(BOOL)draw{
+-(void) clipPathInContext:(CGContextRef) context andDraw:(BOOL)draw forRect:(CGRect)affectedRect{
     //
     // my own clip path:
 //    CGContextAddRect(context, self.bounds);
     CGContextAddPath(context, clipPath.CGPath);
     CGContextEOClip(context);
 
-    
+    NSInteger numberOfIntersections = 0;
     //
     //views above me:
     NSArray* overViews = [delegate paintableViewsAbove:self];
     for(PaintView* aView in overViews){
-        UIBezierPath* aClipPath = [aView clipPath];
-        
-        // if i'm rotated, unrotate my own rotation first
-        [aClipPath applyTransform:CGAffineTransformInvert(self.delegate.transform)];
-        // rotate first!
-        [aClipPath applyTransform:aView.transform];
-        // then adjust for offset
-        CGPoint offset = [self convertPoint:aView.bounds.origin fromView:aView];
-        
-        [aClipPath applyTransform:CGAffineTransformMakeTranslation(offset.x, offset.y)];
-
-        //
-        // clip it
-        CGContextAddRect(context, self.bounds);
-        CGContextAddPath(context, aClipPath.CGPath);
-        CGContextEOClip(context);
-
-        if(draw){
-            [[UIColor redColor] setStroke];
-            CGContextSetLineCap(cacheContext, kCGLineCapRound);
-            CGContextSetLineWidth(cacheContext, 2);
-            [aClipPath stroke];
+        if(CGRectIntersectsRect(affectedRect, [self convertRect:aView.bounds fromView:aView]) || draw){
+            UIBezierPath* aClipPath = [aView clipPath];
+            NSLog(@"%d", [aClipPath intersectsPath:aClipPath]);
+            
+            // if i'm rotated, unrotate my own rotation first
+            [aClipPath applyTransform:CGAffineTransformInvert(self.delegate.transform)];
+            // rotate first!
+            [aClipPath applyTransform:aView.transform];
+            // then adjust for offset
+            CGPoint offset = [self convertPoint:aView.bounds.origin fromView:aView];
+            
+            [aClipPath applyTransform:CGAffineTransformMakeTranslation(offset.x, offset.y)];
+            
+            //
+            // clip it
+            CGContextAddRect(context, CGRectInfinite);
+            CGContextAddPath(context, aClipPath.CGPath);
+            CGContextEOClip(context);
+            
+            if(draw){
+                [[UIColor redColor] setStroke];
+                CGContextSetLineCap(cacheContext, kCGLineCapRound);
+                CGContextSetLineWidth(cacheContext, 2);
+                [aClipPath stroke];
+            }
+            numberOfIntersections++;
         }
     }
 }
@@ -256,11 +273,14 @@
  */
 - (void) drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
-    [self clipPathInContext:context andDraw:[delegate shouldDrawClipPath]];
 
     CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
     CGContextDrawImage(context, self.bounds, cacheImage);
     CGImageRelease(cacheImage);
+
+    if([delegate shouldDrawClipPath]){
+        [self clipPathInContext:context andDraw:YES forRect:self.bounds];
+    }
 }
 
 
