@@ -22,4 +22,6 @@
 
 -(CGRect) controlPointBounds;
 
++(NSInteger) numberOfPointsForElement:(CGPathElement)element;
+
 @end
