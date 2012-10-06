@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIBezierPath+NSOSX.h"
+#import <DrawKit-iOS/DrawKit-iOS.h>
 
 @interface TestView : UIView
 

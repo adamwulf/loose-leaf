@@ -10,7 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "PaintTouchViewDelegate.h"
 #import "PaintableViewDelegate.h"
-#import "UIBezierPath+GPC.h"
+#import <DrawKit-iOS/DrawKit-iOS.h>
 
 @interface PaintView : UIView<PaintTouchViewDelegate> {
     void *cacheBitmap;

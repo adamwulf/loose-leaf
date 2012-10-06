@@ -14,18 +14,14 @@
 		664FF27515FA9BC800B159EB /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 664FF27415FA9BC800B159EB /* NSThread+BlockAdditions.m */; };
 		6654DE1315FBC737006CF3D7 /* PaintTouchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6654DE1215FBC737006CF3D7 /* PaintTouchView.m */; };
 		665B1448161D6842001A15E5 /* UIImage+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = 665B1447161D6842001A15E5 /* UIImage+Scale.m */; };
-		665B1479161F6972001A15E5 /* gpc.c in Sources */ = {isa = PBXBuildFile; fileRef = 665B1477161F694D001A15E5 /* gpc.c */; };
-		665B147A161F6972001A15E5 /* UIBezierPath+GPC.m in Sources */ = {isa = PBXBuildFile; fileRef = 665B1476161F6932001A15E5 /* UIBezierPath+GPC.m */; };
-		665B147D161F6AAE001A15E5 /* UIBezierPath+Editing.m in Sources */ = {isa = PBXBuildFile; fileRef = 665B147C161F6AAE001A15E5 /* UIBezierPath+Editing.m */; };
-		665B1481161F6B82001A15E5 /* DKGeometryUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 665B1480161F6B82001A15E5 /* DKGeometryUtilities.m */; };
-		665B1484161F6BD8001A15E5 /* UIBezierPath+Geometry.m in Sources */ = {isa = PBXBuildFile; fileRef = 665B1483161F6BD8001A15E5 /* UIBezierPath+Geometry.m */; };
-		665B1488161F71C0001A15E5 /* UIBezierPath+NSOSX.m in Sources */ = {isa = PBXBuildFile; fileRef = 665B1487161F71BF001A15E5 /* UIBezierPath+NSOSX.m */; };
 		666589DE15FDAB7800C6C4BB /* mars.png in Resources */ = {isa = PBXBuildFile; fileRef = 666589DD15FDAB7800C6C4BB /* mars.png */; };
+		6677045F1620F64200E764C0 /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 667704541620F12800E764C0 /* DrawKit-iOS.framework */; };
+		667704781620FAFE00E764C0 /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 667704771620FAFE00E764C0 /* DrawKit-iOS.framework */; };
 		66E47E5015FD310A0043C284 /* PaintableImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E47E4F15FD310A0043C284 /* PaintableImageView.m */; };
 		66EF4EDB161FACF9000F6906 /* TestView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EF4EDA161FACF9000F6906 /* TestView.m */; };
 		F1381063143F7971005CBF27 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381062143F7971005CBF27 /* UIKit.framework */; };
 		F1381065143F7971005CBF27 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381064143F7971005CBF27 /* Foundation.framework */; };
-		F1381067143F7971005CBF27 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381066143F7971005CBF27 /* CoreGraphics.framework */; };
+		F1381067143F7971005CBF27 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381066143F7971005CBF27 /* CoreGraphics.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		F138106D143F7971005CBF27 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F138106B143F7971005CBF27 /* InfoPlist.strings */; };
 		F138106F143F7971005CBF27 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F138106E143F7971005CBF27 /* main.m */; };
 		F1381073143F7971005CBF27 /* PaintingSampleAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F1381072143F7971005CBF27 /* PaintingSampleAppDelegate.m */; };
@@ -33,6 +29,30 @@
 		F138107C143F7971005CBF27 /* PaintingSampleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F138107A143F7971005CBF27 /* PaintingSampleViewController.xib */; };
 		F1381084143F7990005CBF27 /* PaintView.m in Sources */ = {isa = PBXBuildFile; fileRef = F1381083143F7990005CBF27 /* PaintView.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		667704531620F12800E764C0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6677044B1620F12700E764C0 /* DrawKit-iOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 667703EB1620F02900E764C0;
+			remoteInfo = "DrawKit-iOS";
+		};
+		667704551620F12800E764C0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6677044B1620F12700E764C0 /* DrawKit-iOS.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 667703FC1620F02900E764C0;
+			remoteInfo = "DrawKit-iOSTests";
+		};
+		667704571620F13200E764C0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6677044B1620F12700E764C0 /* DrawKit-iOS.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 667703EA1620F02900E764C0;
+			remoteInfo = "DrawKit-iOS";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		66203B7015F4B78200E3D343 /* MainWindowIPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindowIPad.xib; sourceTree = "<group>"; };
@@ -47,20 +67,9 @@
 		665B1446161D6842001A15E5 /* UIImage+Scale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Scale.h"; sourceTree = "<group>"; };
 		665B1447161D6842001A15E5 /* UIImage+Scale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Scale.m"; sourceTree = "<group>"; };
 		665B1449161D6A73001A15E5 /* PaintableViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaintableViewDelegate.h; sourceTree = "<group>"; };
-		665B1475161F6932001A15E5 /* UIBezierPath+GPC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+GPC.h"; sourceTree = "<group>"; };
-		665B1476161F6932001A15E5 /* UIBezierPath+GPC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+GPC.m"; sourceTree = "<group>"; };
-		665B1477161F694D001A15E5 /* gpc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gpc.c; sourceTree = "<group>"; };
-		665B1478161F694D001A15E5 /* gpc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gpc.h; sourceTree = "<group>"; };
-		665B147B161F6AAE001A15E5 /* UIBezierPath+Editing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+Editing.h"; sourceTree = "<group>"; };
-		665B147C161F6AAE001A15E5 /* UIBezierPath+Editing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+Editing.m"; sourceTree = "<group>"; };
-		665B147F161F6B82001A15E5 /* DKGeometryUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKGeometryUtilities.h; sourceTree = "<group>"; };
-		665B1480161F6B82001A15E5 /* DKGeometryUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKGeometryUtilities.m; sourceTree = "<group>"; };
-		665B1482161F6BD8001A15E5 /* UIBezierPath+Geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+Geometry.h"; sourceTree = "<group>"; };
-		665B1483161F6BD8001A15E5 /* UIBezierPath+Geometry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+Geometry.m"; sourceTree = "<group>"; };
-		665B1485161F6C94001A15E5 /* DKDrawKitMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DKDrawKitMacros.h; sourceTree = "<group>"; };
-		665B1486161F71BE001A15E5 /* UIBezierPath+NSOSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+NSOSX.h"; sourceTree = "<group>"; };
-		665B1487161F71BF001A15E5 /* UIBezierPath+NSOSX.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+NSOSX.m"; sourceTree = "<group>"; };
 		666589DD15FDAB7800C6C4BB /* mars.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mars.png; sourceTree = "<group>"; };
+		6677044B1620F12700E764C0 /* DrawKit-iOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "DrawKit-iOS.xcodeproj"; path = "../../../DrawKit-iOS/DrawKit-iOS.xcodeproj"; sourceTree = "<group>"; };
+		667704771620FAFE00E764C0 /* DrawKit-iOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "DrawKit-iOS.framework"; path = "../../../DrawKit-iOS/DerivedData/DrawKit-iOS/Build/Products/Debug-iphoneos/DrawKit-iOS.framework"; sourceTree = "<group>"; };
 		66E47E4E15FD310A0043C284 /* PaintableImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaintableImageView.h; sourceTree = "<group>"; };
 		66E47E4F15FD310A0043C284 /* PaintableImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaintableImageView.m; sourceTree = "<group>"; };
 		66EF4ED9161FACF9000F6906 /* TestView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestView.h; sourceTree = "<group>"; };
@@ -87,10 +96,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6677045F1620F64200E764C0 /* DrawKit-iOS.framework in Frameworks */,
 				664FF26615F9B3D700B159EB /* QuartzCore.framework in Frameworks */,
 				F1381063143F7971005CBF27 /* UIKit.framework in Frameworks */,
 				F1381065143F7971005CBF27 /* Foundation.framework in Frameworks */,
 				F1381067143F7971005CBF27 /* CoreGraphics.framework in Frameworks */,
+				667704781620FAFE00E764C0 /* DrawKit-iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,31 +124,19 @@
 		665B1445161D681D001A15E5 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				665B147E161F6B72001A15E5 /* DrawKit */,
 				665B1446161D6842001A15E5 /* UIImage+Scale.h */,
 				665B1447161D6842001A15E5 /* UIImage+Scale.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
 		};
-		665B147E161F6B72001A15E5 /* DrawKit */ = {
+		6677044C1620F12700E764C0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				665B1478161F694D001A15E5 /* gpc.h */,
-				665B1477161F694D001A15E5 /* gpc.c */,
-				665B1485161F6C94001A15E5 /* DKDrawKitMacros.h */,
-				665B1475161F6932001A15E5 /* UIBezierPath+GPC.h */,
-				665B1476161F6932001A15E5 /* UIBezierPath+GPC.m */,
-				665B147B161F6AAE001A15E5 /* UIBezierPath+Editing.h */,
-				665B147C161F6AAE001A15E5 /* UIBezierPath+Editing.m */,
-				665B1482161F6BD8001A15E5 /* UIBezierPath+Geometry.h */,
-				665B1483161F6BD8001A15E5 /* UIBezierPath+Geometry.m */,
-				665B147F161F6B82001A15E5 /* DKGeometryUtilities.h */,
-				665B1480161F6B82001A15E5 /* DKGeometryUtilities.m */,
-				665B1486161F71BE001A15E5 /* UIBezierPath+NSOSX.h */,
-				665B1487161F71BF001A15E5 /* UIBezierPath+NSOSX.m */,
+				667704541620F12800E764C0 /* DrawKit-iOS.framework */,
+				667704561620F12800E764C0 /* DrawKit-iOSTests.octest */,
 			);
-			name = DrawKit;
+			name = Products;
 			sourceTree = "<group>";
 		};
 		66E47E4C15FD30E30043C284 /* Paintable Images */ = {
@@ -161,8 +160,8 @@
 		F1381053143F7971005CBF27 = {
 			isa = PBXGroup;
 			children = (
+				6677044B1620F12700E764C0 /* DrawKit-iOS.xcodeproj */,
 				664FF26F15F9CCAB00B159EB /* graphite.png */,
-				664FF26515F9B3D700B159EB /* QuartzCore.framework */,
 				F1381068143F7971005CBF27 /* PaintingSample */,
 				F1381061143F7971005CBF27 /* Frameworks */,
 				F138105F143F7971005CBF27 /* Products */,
@@ -180,6 +179,8 @@
 		F1381061143F7971005CBF27 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				667704771620FAFE00E764C0 /* DrawKit-iOS.framework */,
+				664FF26515F9B3D700B159EB /* QuartzCore.framework */,
 				F1381062143F7971005CBF27 /* UIKit.framework */,
 				F1381064143F7971005CBF27 /* Foundation.framework */,
 				F1381066143F7971005CBF27 /* CoreGraphics.framework */,
@@ -234,6 +235,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				667704581620F13200E764C0 /* PBXTargetDependency */,
 			);
 			name = PaintingSample;
 			productName = PaintingSample;
@@ -258,12 +260,35 @@
 			mainGroup = F1381053143F7971005CBF27;
 			productRefGroup = F138105F143F7971005CBF27 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 6677044C1620F12700E764C0 /* Products */;
+					ProjectRef = 6677044B1620F12700E764C0 /* DrawKit-iOS.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				F138105D143F7971005CBF27 /* PaintingSample */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		667704541620F12800E764C0 /* DrawKit-iOS.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework.static;
+			path = "DrawKit-iOS.framework";
+			remoteRef = 667704531620F12800E764C0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		667704561620F12800E764C0 /* DrawKit-iOSTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "DrawKit-iOSTests.octest";
+			remoteRef = 667704551620F12800E764C0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		F138105C143F7971005CBF27 /* Resources */ = {
@@ -294,17 +319,19 @@
 				6654DE1315FBC737006CF3D7 /* PaintTouchView.m in Sources */,
 				66E47E5015FD310A0043C284 /* PaintableImageView.m in Sources */,
 				665B1448161D6842001A15E5 /* UIImage+Scale.m in Sources */,
-				665B1479161F6972001A15E5 /* gpc.c in Sources */,
-				665B147A161F6972001A15E5 /* UIBezierPath+GPC.m in Sources */,
-				665B147D161F6AAE001A15E5 /* UIBezierPath+Editing.m in Sources */,
-				665B1481161F6B82001A15E5 /* DKGeometryUtilities.m in Sources */,
-				665B1484161F6BD8001A15E5 /* UIBezierPath+Geometry.m in Sources */,
-				665B1488161F71C0001A15E5 /* UIBezierPath+NSOSX.m in Sources */,
 				66EF4EDB161FACF9000F6906 /* TestView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		667704581620F13200E764C0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "DrawKit-iOS";
+			targetProxy = 667704571620F13200E764C0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		F138106B143F7971005CBF27 /* InfoPlist.strings */ = {
@@ -374,11 +401,20 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer: Adam Wulf (569ACMP6SC)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Adam Wulf (569ACMP6SC)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/DerivedData/PaintingSample/Build/Products/Debug-iphoneos\"",
+					"\"$(SRCROOT)/../../../DrawKit-iOS/DerivedData/DrawKit-iOS/Build/Products/Debug-iphoneos\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PaintingSample/PaintingSample-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "PaintingSample/PaintingSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "992248CC-57C8-4552-B5BB-91F892685F60";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "992248CC-57C8-4552-B5BB-91F892685F60";
@@ -392,11 +428,20 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer: Adam Wulf (569ACMP6SC)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Adam Wulf (569ACMP6SC)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/DerivedData/PaintingSample/Build/Products/Debug-iphoneos\"",
+					"\"$(SRCROOT)/../../../DrawKit-iOS/DerivedData/DrawKit-iOS/Build/Products/Debug-iphoneos\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PaintingSample/PaintingSample-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "PaintingSample/PaintingSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "992248CC-57C8-4552-B5BB-91F892685F60";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "992248CC-57C8-4552-B5BB-91F892685F60";
