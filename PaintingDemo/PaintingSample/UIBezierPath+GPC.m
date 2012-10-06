@@ -229,6 +229,10 @@ NSString*	kDKCurveFittingPolicyDefaultsKey = @"DKCurveFittingPolicy";
 	
 	for( i = 0; i < ec; ++i )
 	{
+//        NSLog(@"asking for %d of %d", i, [flat elementCount]);
+//        if(i >= [flat elementCount]){
+//            NSLog(@"oh no");
+//        }
 		elem = [flat elementAtIndex:i associatedPoints:ap];
 		
 		switch( elem.type )

@@ -54,12 +54,18 @@ void countPathElement(void* info, const CGPathElement* element) {
 // helper function
 void getPathElementAtIndex(void* info, const CGPathElement* element) {
     NSMutableDictionary* params = (NSMutableDictionary*)info;
-    int currentIndex = 0;
-    if([params objectForKey:@"curr"]){
-        currentIndex = [[params objectForKey:@"curr"] intValue] + 1;
-    }
-    if(currentIndex == [[params objectForKey:@"index"] intValue]){
-        [params setObject:[NSValue valueWithPointer:element] forKey:@"element"];
+    int askingForIndex = [[params objectForKey:@"index"] intValue];
+    if(![params objectForKey:@"element"]){
+        int currentIndex = 0;
+        if([params objectForKey:@"curr"]){
+            currentIndex = [[params objectForKey:@"curr"] intValue] + 1;
+        }
+        if(currentIndex == askingForIndex){
+            CGPathElement* returnVal = [UIBezierPath copyCGPathElement:(CGPathElement*)element];
+            [params setObject:[NSValue valueWithPointer:returnVal] forKey:@"element"];
+            NSLog(@"found index %d is a %d", currentIndex, (*returnVal).type);
+        }
+        [params setObject:[NSNumber numberWithInt:currentIndex] forKey:@"curr"];
     }
 }
 
@@ -94,9 +100,10 @@ void updatePathElementAtIndex(void* info, const CGPathElement* element) {
         for(int i=0;i<[UIBezierPath numberOfPointsForElement:*element];i++){
             element->points[i] = points[i];
         }
-
-        [params setObject:[NSValue valueWithPointer:element] forKey:@"element"];
+        CGPathElement* returnVal = [UIBezierPath copyCGPathElement:(CGPathElement*)element];
+        [params setObject:[NSValue valueWithPointer:returnVal] forKey:@"element"];
     }
+    [params setObject:[NSNumber numberWithInt:currentIndex] forKey:@"curr"];
 }
 
 
@@ -132,6 +139,23 @@ void updatePathElementAtIndex(void* info, const CGPathElement* element) {
     return nPoints;
 }
 
+
+
++(CGPathElement*) copyCGPathElement:(CGPathElement*)element{
+    CGPathElement* ret = malloc(sizeof(CGPathElement));
+    NSInteger numberOfPoints = [UIBezierPath numberOfPointsForElement:*element];
+    if(numberOfPoints){
+        ret->points = malloc(sizeof(CGPoint) * numberOfPoints);
+    }else{
+        ret->points = NULL;
+    }
+    ret->type = element->type;
+    
+    for(int i=0;i<numberOfPoints;i++){
+        ret->points[i] = element->points[i];
+    }
+    return ret;
+}
 
 
 @end

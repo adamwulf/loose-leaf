@@ -349,7 +349,9 @@ static inline NSInteger		elementIndexForPartcode( const NSInteger pc );
 	
 	for( i = 0; i < ec; ++i )
 	{
+        NSLog(@"fetching %d", i);
 		elem = [self elementAtIndex:i];
+        NSLog(@"received %d is a %d", i, elem.type);
 		
 		switch( elem.type )
 		{

@@ -7,6 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DKGeometryUtilities.h"
+#import "UIBezierPath+Geometry.h"
+#import "UIBezierPath+Editing.h"
+#import "UIBezierPath+GPC.h"
 
 @interface UIBezierPath (NSOSX)
 
@@ -23,5 +27,8 @@
 -(CGRect) controlPointBounds;
 
 +(NSInteger) numberOfPointsForElement:(CGPathElement)element;
+
++(CGPathElement*) copyCGPathElement:(CGPathElement*)element;
+
 
 @end

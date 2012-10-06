@@ -22,6 +22,7 @@
 		665B1488161F71C0001A15E5 /* UIBezierPath+NSOSX.m in Sources */ = {isa = PBXBuildFile; fileRef = 665B1487161F71BF001A15E5 /* UIBezierPath+NSOSX.m */; };
 		666589DE15FDAB7800C6C4BB /* mars.png in Resources */ = {isa = PBXBuildFile; fileRef = 666589DD15FDAB7800C6C4BB /* mars.png */; };
 		66E47E5015FD310A0043C284 /* PaintableImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E47E4F15FD310A0043C284 /* PaintableImageView.m */; };
+		66EF4EDB161FACF9000F6906 /* TestView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EF4EDA161FACF9000F6906 /* TestView.m */; };
 		F1381063143F7971005CBF27 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381062143F7971005CBF27 /* UIKit.framework */; };
 		F1381065143F7971005CBF27 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381064143F7971005CBF27 /* Foundation.framework */; };
 		F1381067143F7971005CBF27 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1381066143F7971005CBF27 /* CoreGraphics.framework */; };
@@ -62,6 +63,8 @@
 		666589DD15FDAB7800C6C4BB /* mars.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mars.png; sourceTree = "<group>"; };
 		66E47E4E15FD310A0043C284 /* PaintableImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaintableImageView.h; sourceTree = "<group>"; };
 		66E47E4F15FD310A0043C284 /* PaintableImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaintableImageView.m; sourceTree = "<group>"; };
+		66EF4ED9161FACF9000F6906 /* TestView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestView.h; sourceTree = "<group>"; };
+		66EF4EDA161FACF9000F6906 /* TestView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestView.m; sourceTree = "<group>"; };
 		F138105E143F7971005CBF27 /* PaintingSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PaintingSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1381062143F7971005CBF27 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F1381064143F7971005CBF27 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -146,6 +149,15 @@
 			name = "Paintable Images";
 			sourceTree = "<group>";
 		};
+		66EF4ED7161FACE8000F6906 /* TestView */ = {
+			isa = PBXGroup;
+			children = (
+				66EF4ED9161FACF9000F6906 /* TestView.h */,
+				66EF4EDA161FACF9000F6906 /* TestView.m */,
+			);
+			name = TestView;
+			sourceTree = "<group>";
+		};
 		F1381053143F7971005CBF27 = {
 			isa = PBXGroup;
 			children = (
@@ -178,6 +190,7 @@
 		F1381068143F7971005CBF27 /* PaintingSample */ = {
 			isa = PBXGroup;
 			children = (
+				66EF4ED7161FACE8000F6906 /* TestView */,
 				665B1445161D681D001A15E5 /* Categories */,
 				F1381071143F7971005CBF27 /* PaintingSampleAppDelegate.h */,
 				F1381072143F7971005CBF27 /* PaintingSampleAppDelegate.m */,
@@ -287,6 +300,7 @@
 				665B1481161F6B82001A15E5 /* DKGeometryUtilities.m in Sources */,
 				665B1484161F6BD8001A15E5 /* UIBezierPath+Geometry.m in Sources */,
 				665B1488161F71C0001A15E5 /* UIBezierPath+NSOSX.m in Sources */,
+				66EF4EDB161FACF9000F6906 /* TestView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

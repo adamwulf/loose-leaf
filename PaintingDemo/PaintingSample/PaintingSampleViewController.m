@@ -9,6 +9,7 @@
 #import "PaintingSampleViewController.h"
 #import "NSThread+BlockAdditions.h"
 #import "UIImage+Scale.h"
+#import "TestView.h"
 
 @implementation PaintingSampleViewController
 
@@ -142,6 +143,10 @@
     [mars2 setDelegate:self];
     [mars3 setDelegate:self];
     [mars4 setDelegate:self];
+    
+    
+    TestView* testView = [[TestView alloc] initWithFrame:CGRectMake(300, 100, 300, 700)];
+    [self.view addSubview:testView];
 }
 
 
