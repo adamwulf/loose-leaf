@@ -50,6 +50,10 @@
         //
         //////////////////////////////////////////////////////////////////////
         
+        paintView = [[PaintView alloc] initWithFrame:self.bounds];
+        paintView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        [self.contentView addSubview:paintView];
+        
         preGestureScale = 1;
         scale = 1;
 
@@ -88,7 +92,7 @@
         [panGesture requireGestureRecognizerToFail:tap];
         [self addGestureRecognizer:panGesture];
         
-        
+        [paintView drawArcAtStart:CGPointMake(100, 100) end:CGPointMake(500, 400) controlPoint1:CGPointMake(200, 300) controlPoint2:CGPointMake(600, 600) withFingerWidth:4 fromView:self];
         
         [self.layer setMasksToBounds:YES ];
     }
@@ -398,6 +402,19 @@
 }
 
 
+#pragma mark - PaintableViewDelegate
+
+-(NSArray*) paintableViewsAbove:(UIView*)aView{
+    return [NSArray array];
+}
+
+-(BOOL) shouldDrawClipPath{
+    return NO;
+}
+
+-(CGAffineTransform) transform{
+    return CGAffineTransformIdentity;
+}
 
 
 @end
