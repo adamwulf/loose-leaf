@@ -18,7 +18,6 @@
     // use to calculate translation
     CGPoint firstKnownLocation;
     
-    NSMutableSet* ignoredTouches;
     NSMutableSet* validTouches;
 
     NSDate* dateOfLastBezelEnding;

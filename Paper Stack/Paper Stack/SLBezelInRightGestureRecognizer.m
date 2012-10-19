@@ -15,7 +15,6 @@
 
 -(id) initWithTarget:(id)target action:(SEL)action{
     self = [super initWithTarget:target action:action];
-    ignoredTouches = [[NSMutableSet alloc] init];
     validTouches = [[NSMutableSet alloc] init];
     numberOfRepeatingBezels = 0;
     dateOfLastBezelEnding = nil;
@@ -43,14 +42,7 @@
     CGPoint ret = CGPointMake(CGFLOAT_MAX, CGFLOAT_MAX);
     for(int i=0;i<[self numberOfTouches];i++){
         CGPoint ret2 = [self locationOfTouch:i inView:self.view];
-        BOOL isIgnoredTouchLocation = NO;
-        if([self numberOfTouches] > 2){
-            for(UITouch* touch in ignoredTouches){
-                CGPoint igLoc = [touch locationInView:self.view];
-                isIgnoredTouchLocation = isIgnoredTouchLocation || CGPointEqualToPoint(ret2, igLoc);
-            }
-        }
-        if(!isIgnoredTouchLocation && ret2.x < ret.x){
+        if(ret2.x < ret.x){
             ret = ret2;
         }
     }
@@ -63,14 +55,7 @@
     CGPoint ret = CGPointZero;
     for(int i=0;i<[self numberOfTouches];i++){
         CGPoint ret2 = [self locationOfTouch:i inView:self.view];
-        BOOL isIgnoredTouchLocation = NO;
-        if([self numberOfTouches] > 2){
-            for(UITouch* touch in ignoredTouches){
-                CGPoint igLoc = [touch locationInView:self.view];
-                isIgnoredTouchLocation = isIgnoredTouchLocation || CGPointEqualToPoint(ret2, igLoc);
-            }
-        }
-        if(!isIgnoredTouchLocation && ret2.x > ret.x){
+        if(ret2.x > ret.x){
             ret = ret2;
         }
     }
@@ -172,7 +157,6 @@
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     for(UITouch* touch in touches){
-        [ignoredTouches removeObject:touch];
         [validTouches removeObject:touch];
     }
     if([validTouches count] == 0 && self.state == UIGestureRecognizerStateChanged){
@@ -187,7 +171,6 @@
         self.state = UIGestureRecognizerStateCancelled;
     }
     for(UITouch* touch in touches){
-        [ignoredTouches removeObject:touch];
         [validTouches removeObject:touch];
     }
     if([validTouches count] == 0 && self.state == UIGestureRecognizerStateChanged){
@@ -197,7 +180,6 @@
     }
 }
 -(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
-    [ignoredTouches addObject:touch];
     [super ignoreTouch:touch forEvent:event];
 }
 - (void)reset{
@@ -205,7 +187,10 @@
     panDirection = SLBezelDirectionNone;
     firstKnownLocation = CGPointZero;
     lastKnownLocation = CGPointZero;
-    [ignoredTouches removeAllObjects];
+    [validTouches removeAllObjects];
+}
+-(void) setState:(UIGestureRecognizerState)state{
+    [super setState:state];
 }
 - (void) resetPageCount{
     numberOfRepeatingBezels = 0;
