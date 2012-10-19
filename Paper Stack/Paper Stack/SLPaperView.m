@@ -46,29 +46,42 @@
         scale = 1;
         shadowSeed = rand();
 
-        
+
+        //
+        // allow the user to select an object by long pressing
+        // on it. this'll allow the user to select + move/scale/rotate
+        // an object in one gesture
         SLObjectSelectLongPressGestureRecognizer* longPress = [[[SLObjectSelectLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)]autorelease];
         longPress.numberOfTouchesRequired = 2;
         [self addGestureRecognizer:longPress];
+        //
+        // allow the user to select an object by tapping on the page
+        // with two fingers
+        SLImmovableTapGestureRecognizer* tap = [[[SLImmovableTapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleFingerDoubleTap:)] autorelease];
+        tap.numberOfTapsRequired = 1;
+        tap.numberOfTouchesRequired = 2;
+        //
+        // only allow tap if the long press fails, otherwise
+        // we'll get a double positive
+        [tap requireGestureRecognizerToFail:longPress];
+        [self addGestureRecognizer:tap];
+
         
-        
+        //
+        // This pan gesture is used to pan/scale the page itself.
         panGesture = [[[SLPanAndPinchGestureRecognizer alloc]
                                                initWithTarget:self 
                                                       action:@selector(panAndScale:)] autorelease];
         panGesture.bezelDirectionMask = SLBezelDirectionRight | SLBezelDirectionLeft;
-        [self addGestureRecognizer:panGesture];
-        
-        
-        SLImmovableTapGestureRecognizer* tap = [[[SLImmovableTapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleFingerDoubleTap:)] autorelease];
-        tap.numberOfTapsRequired = 1;
-        tap.numberOfTouchesRequired = 2;
-        [self addGestureRecognizer:tap];
-        
-        
+        //
+        // This gesture is only allowed to run if the user is not
+        // acting on an object on the page. defer to the long press
+        // and the tap gesture, and only allow page pan/scale if
+        // these fail
         [panGesture requireGestureRecognizerToFail:longPress];
         [panGesture requireGestureRecognizerToFail:tap];
+        [self addGestureRecognizer:panGesture];
         
-        [tap requireGestureRecognizerToFail:longPress];
         
         
         [self.layer setMasksToBounds:YES ];
