@@ -11,8 +11,10 @@
 #import "SLPaperViewDelegate.h"
 #import "SLPanAndPinchGestureRecognizer.h"
 #import "SLShadowedView.h"
+#import "PaintView.h"
+#import "PaintableViewDelegate.h"
 
-@interface SLPaperView : SLShadowedView{
+@interface SLPaperView : SLShadowedView<PaintableViewDelegate>{
     
     NSString* uuid;
     
@@ -36,6 +38,8 @@
     BOOL isBrandNewPage;
     
     UIBezierPath* unitShadowPath;
+    
+    PaintView* paintView;
 }
 
 @property (nonatomic, readonly) NSString* uuid;
