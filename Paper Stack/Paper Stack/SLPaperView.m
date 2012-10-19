@@ -32,6 +32,11 @@
         // Initialization code
         uuid = [[NSString createStringUUID] retain];
         
+        //////////////////////////////////////////////////////////////////////
+        //
+        // debug image to help show page zoom/pan etc better
+        // than a blank page
+        //
         NSInteger photo = rand() % 6 + 1;
         UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", photo]];
         UIImageView* imgView = [[[UIImageView alloc] initWithImage:img] autorelease];
@@ -40,12 +45,13 @@
         imgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         imgView.clipsToBounds = YES;
         [self.contentView addSubview:imgView];
-         
+        //
+        // end debug image
+        //
+        //////////////////////////////////////////////////////////////////////
         
         preGestureScale = 1;
         scale = 1;
-        shadowSeed = rand();
-
 
         //
         // allow the user to select an object by long pressing

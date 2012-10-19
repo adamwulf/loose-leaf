@@ -35,8 +35,6 @@
     
     BOOL isBrandNewPage;
     
-    
-    NSInteger shadowSeed;
     UIBezierPath* unitShadowPath;
 }
 
