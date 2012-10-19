@@ -9,6 +9,7 @@
 #import "SLPanAndPinchGestureRecognizer.h"
 #import <QuartzCore/QuartzCore.h>
 #import "SLBezelInRightGestureRecognizer.h"
+#import "SLObjectSelectLongPressGestureRecognizer.h"
 #import "NSMutableSet+Extras.h"
 #import "NSArray+MapReduce.h"
 #import "SLShadowedView.h"

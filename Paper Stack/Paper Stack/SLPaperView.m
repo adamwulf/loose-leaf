@@ -12,6 +12,8 @@
 #import "SLShadowManager.h"
 #import "NSString+UUID.h"
 #import "UIView+Debug.h"
+#import "SLObjectSelectLongPressGestureRecognizer.h"
+#import "SLImmovableTapGestureRecognizer.h"
 
 @implementation SLPaperView
 
@@ -29,7 +31,7 @@
     if (self) {
         // Initialization code
         uuid = [[NSString createStringUUID] retain];
-        /*
+        
         NSInteger photo = rand() % 6 + 1;
         UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", photo]];
         UIImageView* imgView = [[[UIImageView alloc] initWithImage:img] autorelease];
@@ -38,11 +40,17 @@
         imgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         imgView.clipsToBounds = YES;
         [self.contentView addSubview:imgView];
-         */
+         
         
         preGestureScale = 1;
         scale = 1;
         shadowSeed = rand();
+
+        
+        SLObjectSelectLongPressGestureRecognizer* longPress = [[[SLObjectSelectLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)]autorelease];
+        longPress.numberOfTouchesRequired = 2;
+        [self addGestureRecognizer:longPress];
+        
         
         panGesture = [[[SLPanAndPinchGestureRecognizer alloc]
                                                initWithTarget:self 
@@ -50,9 +58,30 @@
         panGesture.bezelDirectionMask = SLBezelDirectionRight | SLBezelDirectionLeft;
         [self addGestureRecognizer:panGesture];
         
+        
+        SLImmovableTapGestureRecognizer* tap = [[[SLImmovableTapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleFingerDoubleTap:)] autorelease];
+        tap.numberOfTapsRequired = 1;
+        tap.numberOfTouchesRequired = 2;
+        [self addGestureRecognizer:tap];
+        
+        
+        [panGesture requireGestureRecognizerToFail:longPress];
+        [panGesture requireGestureRecognizerToFail:tap];
+        
+        [tap requireGestureRecognizerToFail:longPress];
+        
+        
         [self.layer setMasksToBounds:YES ];
     }
     return self;
+}
+
+-(void) longPress:(UILongPressGestureRecognizer*)pressGesture{
+    NSLog(@"long press %d", pressGesture.state);
+}
+
+-(void) doubleFingerDoubleTap:(UITapGestureRecognizer*)tapGesture{
+    NSLog(@"tap! %d", tapGesture.state);
 }
 
 /**
@@ -165,6 +194,8 @@
 -(void) panAndScale:(SLPanAndPinchGestureRecognizer*)_panGesture{
     CGPoint lastLocationInSelf = [panGesture locationInView:self];
     CGPoint lastLocationInSuper = [panGesture locationInView:self.superview];
+    
+    NSLog(@"pan: %d %f %f", panGesture.state, lastLocationInSuper.x, lastLocationInSuper.y);
     
     CGPoint velocity = [_panGesture velocity];
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
