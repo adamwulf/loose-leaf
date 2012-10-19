@@ -29,11 +29,6 @@
     return touchLocations;
 }
 
--(BOOL) canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
-    return NO;
-}
-
-
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [super touchesBegan:touches withEvent:event];
     for(UITouch* touch in touches){
