@@ -32,6 +32,8 @@
 		669329701598E4DC0033E557 /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693296F1598E4DC0033E557 /* NSString+UUID.m */; };
 		669329731598EE210033E557 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329721598EE210033E557 /* UIView+Debug.m */; };
 		6693297E1599196E0033E557 /* UIFont+UIBezierCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693297D1599196E0033E557 /* UIFont+UIBezierCurve.m */; };
+		66A13D3A1631D9D9002F5428 /* SLObjectSelectLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D391631D9D8002F5428 /* SLObjectSelectLongPressGestureRecognizer.m */; };
+		66A13D401631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D3F1631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m */; };
 		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; };
 		66BD6E301591B57B00D4544C /* SLPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* SLPaperButton.m */; };
 		66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E331591C37D00D4544C /* UIImage+MCDrawSubImage.m */; };
@@ -129,6 +131,10 @@
 		669329721598EE210033E557 /* UIView+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Debug.m"; sourceTree = "<group>"; };
 		6693297C1599196E0033E557 /* UIFont+UIBezierCurve.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+UIBezierCurve.h"; sourceTree = "<group>"; };
 		6693297D1599196E0033E557 /* UIFont+UIBezierCurve.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+UIBezierCurve.m"; sourceTree = "<group>"; };
+		66A13D381631D9D8002F5428 /* SLObjectSelectLongPressGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLObjectSelectLongPressGestureRecognizer.h; sourceTree = "<group>"; };
+		66A13D391631D9D8002F5428 /* SLObjectSelectLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLObjectSelectLongPressGestureRecognizer.m; sourceTree = "<group>"; };
+		66A13D3E1631E0E6002F5428 /* SLImmovableTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLImmovableTapGestureRecognizer.h; sourceTree = "<group>"; };
+		66A13D3F1631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLImmovableTapGestureRecognizer.m; sourceTree = "<group>"; };
 		66A3AF8C15913B5E00F8A7A6 /* NSMutableSet+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableSet+Extras.h"; sourceTree = "<group>"; };
 		66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableSet+Extras.m"; sourceTree = "<group>"; };
 		66BD6E2E1591B57B00D4544C /* SLPaperButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperButton.h; sourceTree = "<group>"; };
@@ -333,6 +339,31 @@
 			name = Experiments;
 			sourceTree = "<group>";
 		};
+		66A13D3C1631E06D002F5428 /* Object Selection */ = {
+			isa = PBXGroup;
+			children = (
+				66A13D381631D9D8002F5428 /* SLObjectSelectLongPressGestureRecognizer.h */,
+				66A13D391631D9D8002F5428 /* SLObjectSelectLongPressGestureRecognizer.m */,
+				66A13D3E1631E0E6002F5428 /* SLImmovableTapGestureRecognizer.h */,
+				66A13D3F1631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m */,
+			);
+			name = "Object Selection";
+			sourceTree = "<group>";
+		};
+		66A13D3D1631E075002F5428 /* Page Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				66DCFBDD1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.h */,
+				66DCFBDE1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.m */,
+				6693296B1596E0600033E557 /* SLBezelInRightGestureRecognizer.h */,
+				6693296C1596E0600033E557 /* SLBezelInRightGestureRecognizer.m */,
+				6630ED9F15F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.h */,
+				6630EDA015F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m */,
+				6630EDA215F1588E007E38AA /* SLPanAndPinchFromListViewGestureRecognizerDelegate.h */,
+			);
+			name = "Page Navigation";
+			sourceTree = "<group>";
+		};
 		66BD6E811593AF4500D4544C /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
@@ -464,13 +495,8 @@
 		66DCFBDC1582BF1600B4918C /* Gestures */ = {
 			isa = PBXGroup;
 			children = (
-				66DCFBDD1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.h */,
-				66DCFBDE1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.m */,
-				6693296B1596E0600033E557 /* SLBezelInRightGestureRecognizer.h */,
-				6693296C1596E0600033E557 /* SLBezelInRightGestureRecognizer.m */,
-				6630ED9F15F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.h */,
-				6630EDA015F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m */,
-				6630EDA215F1588E007E38AA /* SLPanAndPinchFromListViewGestureRecognizerDelegate.h */,
+				66A13D3D1631E075002F5428 /* Page Navigation */,
+				66A13D3C1631E06D002F5428 /* Object Selection */,
 			);
 			name = Gestures;
 			sourceTree = "<group>";
@@ -631,6 +657,8 @@
 				6630EDA115F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m in Sources */,
 				6630EDBF15F30FFF007E38AA /* SLPaperView+ListView.m in Sources */,
 				66D0905615F70810004D2CAF /* SLListAddPageButton.m in Sources */,
+				66A13D3A1631D9D9002F5428 /* SLObjectSelectLongPressGestureRecognizer.m in Sources */,
+				66A13D401631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
