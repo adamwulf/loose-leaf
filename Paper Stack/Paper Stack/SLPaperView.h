@@ -14,7 +14,7 @@
 #import "PaintView.h"
 #import "PaintableViewDelegate.h"
 
-@interface SLPaperView : SLShadowedView<PaintableViewDelegate>{
+@interface SLPaperView : SLShadowedView<PaintableViewDelegate,SLDrawingGestureRecognizerDelegate>{
     
     NSString* uuid;
     

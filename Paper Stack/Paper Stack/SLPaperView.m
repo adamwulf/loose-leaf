@@ -13,6 +13,7 @@
 #import "NSString+UUID.h"
 #import "UIView+Debug.h"
 #import "SLObjectSelectLongPressGestureRecognizer.h"
+#import "SLDrawingGestureRecognizer.h"
 #import "SLImmovableTapGestureRecognizer.h"
 
 @implementation SLPaperView
@@ -49,14 +50,14 @@
         // end debug image
         //
         //////////////////////////////////////////////////////////////////////
-        
+        [self.layer setMasksToBounds:YES ];
+        preGestureScale = 1;
+        scale = 1;
+                
         paintView = [[PaintView alloc] initWithFrame:self.bounds];
         paintView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self.contentView addSubview:paintView];
         
-        preGestureScale = 1;
-        scale = 1;
-
         //
         // allow the user to select an object by long pressing
         // on it. this'll allow the user to select + move/scale/rotate
@@ -77,6 +78,14 @@
         [self addGestureRecognizer:tap];
 
         
+        SLDrawingGestureRecognizer* draw = [[SLDrawingGestureRecognizer alloc] init];
+        draw.minimumNumberOfTouches = 1;
+        draw.maximumNumberOfTouches = 1;
+        draw.paintDelegate = self;
+        [self addGestureRecognizer:draw];
+        
+        
+        
         //
         // This pan gesture is used to pan/scale the page itself.
         panGesture = [[[SLPanAndPinchGestureRecognizer alloc]
@@ -90,11 +99,10 @@
         // these fail
         [panGesture requireGestureRecognizerToFail:longPress];
         [panGesture requireGestureRecognizerToFail:tap];
+//        [draw requireGestureRecognizerToFail:tap];
         [self addGestureRecognizer:panGesture];
         
-        [paintView drawArcAtStart:CGPointMake(100, 100) end:CGPointMake(500, 400) controlPoint1:CGPointMake(200, 300) controlPoint2:CGPointMake(600, 600) withFingerWidth:4 fromView:self];
-        
-        [self.layer setMasksToBounds:YES ];
+
     }
     return self;
 }
@@ -414,6 +422,26 @@
 
 -(CGAffineTransform) transform{
     return CGAffineTransformIdentity;
+}
+
+
+
+#pragma mark - SLDrawingGestureRecognizerDelegate
+
+-(void) drawArcAtStart:(CGPoint)point1 end:(CGPoint)point2 controlPoint1:(CGPoint)ctrl1 controlPoint2:(CGPoint)ctrl2 withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
+    [paintView drawArcAtStart:point1 end:point2 controlPoint1:ctrl1 controlPoint2:ctrl2 withFingerWidth:fingerWidth fromView:view];
+}
+
+-(void) drawDotAtPoint:(CGPoint)point withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
+    [paintView drawDotAtPoint:point withFingerWidth:fingerWidth fromView:view];
+}
+
+-(void) drawLineAtStart:(CGPoint)start end:(CGPoint)end withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
+    [paintView drawLineAtStart:start end:end withFingerWidth:fingerWidth fromView:view];
+}
+
+-(BOOL) fullyContainsArcAtStart:(CGPoint)point1 end:(CGPoint)point2 controlPoint1:(CGPoint)ctrl1 controlPoint2:(CGPoint)ctrl2 withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
+    return YES;
 }
 
 
