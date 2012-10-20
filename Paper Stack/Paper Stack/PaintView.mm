@@ -98,7 +98,7 @@
 
 
 
-#pragma mark - PaintTouchViewDelegate
+#pragma mark - SLDrawingGestureRecognizerDelegate
 
 /**
  * TODO: refactor into proper Pen class

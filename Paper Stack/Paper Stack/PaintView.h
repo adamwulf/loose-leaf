@@ -9,10 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import "PaintableViewDelegate.h"
-#import "PaintTouchViewDelegate.h"
+#import "SLDrawingGestureRecognizerDelegate.h"
 #import <DrawKit-iOS/DrawKit-iOS.h>
 
-@interface PaintView : UIView<PaintTouchViewDelegate> {
+@interface PaintView : UIView<SLDrawingGestureRecognizerDelegate> {
     void *cacheBitmap;
     CGContextRef cacheContext;
     CGFloat hue;

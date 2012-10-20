@@ -1,5 +1,5 @@
 //
-//  PaintTouchViewDelegate.h
+//  SLDrawingGestureRecognizerDelegate.h
 //  PaintingSample
 //
 //  Created by Adam Wulf on 9/8/12.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol PaintTouchViewDelegate <NSObject>
+@protocol SLDrawingGestureRecognizerDelegate <NSObject>
 
 -(void) drawArcAtStart:(CGPoint)point1
                      end:(CGPoint)point2

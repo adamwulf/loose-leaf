@@ -39,6 +39,7 @@
 		66A4BD3F163217F500C45070 /* PaintView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD3E163217F500C45070 /* PaintView.mm */; };
 		66A4BD4316321A9A00C45070 /* PaintView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD3E163217F500C45070 /* PaintView.mm */; };
 		66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */; };
+		66A4BD61163277EA00C45070 /* SLDrawingGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD60163277EA00C45070 /* SLDrawingGestureRecognizer.m */; };
 		66BD6E301591B57B00D4544C /* SLPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* SLPaperButton.m */; };
 		66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E331591C37D00D4544C /* UIImage+MCDrawSubImage.m */; };
 		66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */; };
@@ -168,7 +169,9 @@
 		66A4BD401632180400C45070 /* PaintableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaintableViewDelegate.h; sourceTree = "<group>"; };
 		66A4BD4416321ABC00C45070 /* NSThread+BlockAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSThread+BlockAdditions.h"; sourceTree = "<group>"; };
 		66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+BlockAdditions.m"; sourceTree = "<group>"; };
-		66A4BD4C16321CCF00C45070 /* PaintTouchViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaintTouchViewDelegate.h; sourceTree = "<group>"; };
+		66A4BD4C16321CCF00C45070 /* SLDrawingGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLDrawingGestureRecognizerDelegate.h; sourceTree = "<group>"; };
+		66A4BD5F163277EA00C45070 /* SLDrawingGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLDrawingGestureRecognizer.h; sourceTree = "<group>"; };
+		66A4BD60163277EA00C45070 /* SLDrawingGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLDrawingGestureRecognizer.m; sourceTree = "<group>"; };
 		66BD6E2E1591B57B00D4544C /* SLPaperButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperButton.h; sourceTree = "<group>"; };
 		66BD6E2F1591B57B00D4544C /* SLPaperButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPaperButton.m; sourceTree = "<group>"; };
 		66BD6E321591C37D00D4544C /* UIImage+MCDrawSubImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MCDrawSubImage.h"; sourceTree = "<group>"; };
@@ -413,9 +416,18 @@
 			isa = PBXGroup;
 			children = (
 				66A4BD401632180400C45070 /* PaintableViewDelegate.h */,
-				66A4BD4C16321CCF00C45070 /* PaintTouchViewDelegate.h */,
 				66A4BD3D163217F500C45070 /* PaintView.h */,
 				66A4BD3E163217F500C45070 /* PaintView.mm */,
+			);
+			name = Drawing;
+			sourceTree = "<group>";
+		};
+		66A4BD5E1632778700C45070 /* Drawing */ = {
+			isa = PBXGroup;
+			children = (
+				66A4BD4C16321CCF00C45070 /* SLDrawingGestureRecognizerDelegate.h */,
+				66A4BD5F163277EA00C45070 /* SLDrawingGestureRecognizer.h */,
+				66A4BD60163277EA00C45070 /* SLDrawingGestureRecognizer.m */,
 			);
 			name = Drawing;
 			sourceTree = "<group>";
@@ -554,6 +566,7 @@
 			children = (
 				66A13D3D1631E075002F5428 /* Page Navigation */,
 				66A13D3C1631E06D002F5428 /* Object Selection */,
+				66A4BD5E1632778700C45070 /* Drawing */,
 			);
 			name = Gestures;
 			sourceTree = "<group>";
@@ -742,6 +755,7 @@
 				66A13D3A1631D9D9002F5428 /* SLObjectSelectLongPressGestureRecognizer.m in Sources */,
 				66A13D401631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m in Sources */,
 				66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */,
+				66A4BD61163277EA00C45070 /* SLDrawingGestureRecognizer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
