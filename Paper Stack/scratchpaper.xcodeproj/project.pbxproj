@@ -40,6 +40,8 @@
 		66A4BD4316321A9A00C45070 /* PaintView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD3E163217F500C45070 /* PaintView.mm */; };
 		66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */; };
 		66A4BD61163277EA00C45070 /* SLDrawingGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD60163277EA00C45070 /* SLDrawingGestureRecognizer.m */; };
+		66A539F6163F18C8003EAEC0 /* nav.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A539F5163F18C8003EAEC0 /* nav.png */; };
+		66A539FA163F18CB003EAEC0 /* nav@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A539F9163F18CB003EAEC0 /* nav@2x.png */; };
 		66BD6E301591B57B00D4544C /* SLPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* SLPaperButton.m */; };
 		66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E331591C37D00D4544C /* UIImage+MCDrawSubImage.m */; };
 		66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */; };
@@ -172,6 +174,8 @@
 		66A4BD4C16321CCF00C45070 /* SLDrawingGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLDrawingGestureRecognizerDelegate.h; sourceTree = "<group>"; };
 		66A4BD5F163277EA00C45070 /* SLDrawingGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLDrawingGestureRecognizer.h; sourceTree = "<group>"; };
 		66A4BD60163277EA00C45070 /* SLDrawingGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLDrawingGestureRecognizer.m; sourceTree = "<group>"; };
+		66A539F5163F18C8003EAEC0 /* nav.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = nav.png; path = ../nav.png; sourceTree = "<group>"; };
+		66A539F9163F18CB003EAEC0 /* nav@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "nav@2x.png"; path = "../nav@2x.png"; sourceTree = "<group>"; };
 		66BD6E2E1591B57B00D4544C /* SLPaperButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperButton.h; sourceTree = "<group>"; };
 		66BD6E2F1591B57B00D4544C /* SLPaperButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPaperButton.m; sourceTree = "<group>"; };
 		66BD6E321591C37D00D4544C /* UIImage+MCDrawSubImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MCDrawSubImage.h"; sourceTree = "<group>"; };
@@ -519,6 +523,8 @@
 			children = (
 				6693298015996C530033E557 /* Astronaut Images */,
 				660E1DA6158FC6120001DA12 /* Categories */,
+				66A539F9163F18CB003EAEC0 /* nav@2x.png */,
+				66A539F5163F18C8003EAEC0 /* nav.png */,
 				66DCFB921581BCEF00B4918C /* scratchpaper-Info.plist */,
 				66DCFB931581BCEF00B4918C /* InfoPlist.strings */,
 				66DCFB961581BCEF00B4918C /* main.m */,
@@ -674,6 +680,8 @@
 				660E1DA1158FC4710001DA12 /* img03.jpg in Resources */,
 				660E1DA3158FC4750001DA12 /* img05.jpg in Resources */,
 				660E1DA5158FC47D0001DA12 /* img04.jpg in Resources */,
+				66A539F6163F18C8003EAEC0 /* nav.png in Resources */,
+				66A539FA163F18CB003EAEC0 /* nav@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
