@@ -53,10 +53,12 @@
         [self.layer setMasksToBounds:YES ];
         preGestureScale = 1;
         scale = 1;
-                
+        
+        /*
         paintView = [[PaintView alloc] initWithFrame:self.bounds];
         paintView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self.contentView addSubview:paintView];
+         */
         
         //
         // allow the user to select an object by long pressing
