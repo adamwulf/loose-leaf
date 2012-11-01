@@ -23,6 +23,11 @@
 		664F4139159063F8006F8B09 /* SLPlusIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F4138159063F8006F8B09 /* SLPlusIcon.m */; };
 		664F413D1590661F006F8B09 /* SLRightArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413C1590661F006F8B09 /* SLRightArrow.m */; };
 		664F414015906628006F8B09 /* SLLeftArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413F15906628006F8B09 /* SLLeftArrow.m */; };
+		665978F3164318CA00E10FC7 /* SLDrawingGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 665978ED164318CA00E10FC7 /* SLDrawingGestureRecognizer.m */; };
+		665978F4164318CA00E10FC7 /* SLDrawingTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 665978EF164318CA00E10FC7 /* SLDrawingTapGestureRecognizer.m */; };
+		665978F5164318CA00E10FC7 /* SLPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 665978F1164318CA00E10FC7 /* SLPanGestureRecognizer.m */; };
+		665978F8164318E300E10FC7 /* PaintView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 665978F7164318E300E10FC7 /* PaintView.mm */; };
+		665978FA164319D700E10FC7 /* PaintView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 665978F7164318E300E10FC7 /* PaintView.mm */; };
 		6672871215944B160018571A /* SLPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6672871115944B160018571A /* SLPopoverView.m */; };
 		66728715159515FD0018571A /* SLEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* SLEditablePaperStackView.m */; };
 		6693295A15958A950033E557 /* SLShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* SLShadowManager.m */; };
@@ -36,10 +41,7 @@
 		66A13D401631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D3F1631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m */; };
 		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; };
 		66A4BD1D1632171800C45070 /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66A4BD181632170E00C45070 /* DrawKit-iOS.framework */; };
-		66A4BD3F163217F500C45070 /* PaintView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD3E163217F500C45070 /* PaintView.mm */; };
-		66A4BD4316321A9A00C45070 /* PaintView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD3E163217F500C45070 /* PaintView.mm */; };
 		66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */; };
-		66A4BD61163277EA00C45070 /* SLDrawingGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD60163277EA00C45070 /* SLDrawingGestureRecognizer.m */; };
 		66A539F6163F18C8003EAEC0 /* nav.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A539F5163F18C8003EAEC0 /* nav.png */; };
 		66A539FA163F18CB003EAEC0 /* nav@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A539F9163F18CB003EAEC0 /* nav@2x.png */; };
 		66BD6E301591B57B00D4544C /* SLPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* SLPaperButton.m */; };
@@ -140,6 +142,16 @@
 		664F413C1590661F006F8B09 /* SLRightArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLRightArrow.m; sourceTree = "<group>"; };
 		664F413E15906628006F8B09 /* SLLeftArrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLLeftArrow.h; sourceTree = "<group>"; };
 		664F413F15906628006F8B09 /* SLLeftArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLLeftArrow.m; sourceTree = "<group>"; };
+		665978EC164318CA00E10FC7 /* SLDrawingGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLDrawingGestureRecognizer.h; sourceTree = "<group>"; };
+		665978ED164318CA00E10FC7 /* SLDrawingGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLDrawingGestureRecognizer.m; sourceTree = "<group>"; };
+		665978EE164318CA00E10FC7 /* SLDrawingTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLDrawingTapGestureRecognizer.h; sourceTree = "<group>"; };
+		665978EF164318CA00E10FC7 /* SLDrawingTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLDrawingTapGestureRecognizer.m; sourceTree = "<group>"; };
+		665978F0164318CA00E10FC7 /* SLPanGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPanGestureRecognizer.h; sourceTree = "<group>"; };
+		665978F1164318CA00E10FC7 /* SLPanGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPanGestureRecognizer.m; sourceTree = "<group>"; };
+		665978F2164318CA00E10FC7 /* SLPanGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPanGestureRecognizerDelegate.h; sourceTree = "<group>"; };
+		665978F6164318E300E10FC7 /* PaintView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaintView.h; sourceTree = "<group>"; };
+		665978F7164318E300E10FC7 /* PaintView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PaintView.mm; sourceTree = "<group>"; };
+		665978F91643191000E10FC7 /* PaintTouchViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaintTouchViewDelegate.h; sourceTree = "<group>"; };
 		6672871015944B160018571A /* SLPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPopoverView.h; sourceTree = "<group>"; };
 		6672871115944B160018571A /* SLPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPopoverView.m; sourceTree = "<group>"; };
 		66728713159515FC0018571A /* SLEditablePaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLEditablePaperStackView.h; sourceTree = "<group>"; };
@@ -166,14 +178,9 @@
 		66A3AF8C15913B5E00F8A7A6 /* NSMutableSet+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableSet+Extras.h"; sourceTree = "<group>"; };
 		66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableSet+Extras.m"; sourceTree = "<group>"; };
 		66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "DrawKit-iOS.xcodeproj"; path = "../../DrawKit-iOS/DrawKit-iOS.xcodeproj"; sourceTree = "<group>"; };
-		66A4BD3D163217F500C45070 /* PaintView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaintView.h; sourceTree = "<group>"; };
-		66A4BD3E163217F500C45070 /* PaintView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PaintView.mm; sourceTree = "<group>"; };
 		66A4BD401632180400C45070 /* PaintableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaintableViewDelegate.h; sourceTree = "<group>"; };
 		66A4BD4416321ABC00C45070 /* NSThread+BlockAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSThread+BlockAdditions.h"; sourceTree = "<group>"; };
 		66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+BlockAdditions.m"; sourceTree = "<group>"; };
-		66A4BD4C16321CCF00C45070 /* SLDrawingGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLDrawingGestureRecognizerDelegate.h; sourceTree = "<group>"; };
-		66A4BD5F163277EA00C45070 /* SLDrawingGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLDrawingGestureRecognizer.h; sourceTree = "<group>"; };
-		66A4BD60163277EA00C45070 /* SLDrawingGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLDrawingGestureRecognizer.m; sourceTree = "<group>"; };
 		66A539F5163F18C8003EAEC0 /* nav.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = nav.png; path = ../nav.png; sourceTree = "<group>"; };
 		66A539F9163F18CB003EAEC0 /* nav@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "nav@2x.png"; path = "../nav@2x.png"; sourceTree = "<group>"; };
 		66BD6E2E1591B57B00D4544C /* SLPaperButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperButton.h; sourceTree = "<group>"; };
@@ -420,8 +427,9 @@
 			isa = PBXGroup;
 			children = (
 				66A4BD401632180400C45070 /* PaintableViewDelegate.h */,
-				66A4BD3D163217F500C45070 /* PaintView.h */,
-				66A4BD3E163217F500C45070 /* PaintView.mm */,
+				665978F91643191000E10FC7 /* PaintTouchViewDelegate.h */,
+				665978F6164318E300E10FC7 /* PaintView.h */,
+				665978F7164318E300E10FC7 /* PaintView.mm */,
 			);
 			name = Drawing;
 			sourceTree = "<group>";
@@ -429,9 +437,13 @@
 		66A4BD5E1632778700C45070 /* Drawing */ = {
 			isa = PBXGroup;
 			children = (
-				66A4BD4C16321CCF00C45070 /* SLDrawingGestureRecognizerDelegate.h */,
-				66A4BD5F163277EA00C45070 /* SLDrawingGestureRecognizer.h */,
-				66A4BD60163277EA00C45070 /* SLDrawingGestureRecognizer.m */,
+				665978EC164318CA00E10FC7 /* SLDrawingGestureRecognizer.h */,
+				665978ED164318CA00E10FC7 /* SLDrawingGestureRecognizer.m */,
+				665978EE164318CA00E10FC7 /* SLDrawingTapGestureRecognizer.h */,
+				665978EF164318CA00E10FC7 /* SLDrawingTapGestureRecognizer.m */,
+				665978F0164318CA00E10FC7 /* SLPanGestureRecognizer.h */,
+				665978F1164318CA00E10FC7 /* SLPanGestureRecognizer.m */,
+				665978F2164318CA00E10FC7 /* SLPanGestureRecognizerDelegate.h */,
 			);
 			name = Drawing;
 			sourceTree = "<group>";
@@ -717,7 +729,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				66DCFB971581BCEF00B4918C /* main.m in Sources */,
-				66A4BD4316321A9A00C45070 /* PaintView.mm in Sources */,
 				66DCFB9B1581BCEF00B4918C /* SLAppDelegate.m in Sources */,
 				66DCFB9E1581BCEF00B4918C /* SLPaperStackViewController.m in Sources */,
 				66DCFBC21581C85B00B4918C /* SLPaperStackView.m in Sources */,
@@ -756,6 +767,7 @@
 				6693297E1599196E0033E557 /* UIFont+UIBezierCurve.m in Sources */,
 				66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */,
 				664C62F015A36DA40072736A /* SLListPaperStackView.m in Sources */,
+				665978FA164319D700E10FC7 /* PaintView.mm in Sources */,
 				66D33F4C15A6408A0044C809 /* SLShadowedView.m in Sources */,
 				6630EDA115F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m in Sources */,
 				6630EDBF15F30FFF007E38AA /* SLPaperView+ListView.m in Sources */,
@@ -763,7 +775,9 @@
 				66A13D3A1631D9D9002F5428 /* SLObjectSelectLongPressGestureRecognizer.m in Sources */,
 				66A13D401631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m in Sources */,
 				66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */,
-				66A4BD61163277EA00C45070 /* SLDrawingGestureRecognizer.m in Sources */,
+				665978F3164318CA00E10FC7 /* SLDrawingGestureRecognizer.m in Sources */,
+				665978F4164318CA00E10FC7 /* SLDrawingTapGestureRecognizer.m in Sources */,
+				665978F5164318CA00E10FC7 /* SLPanGestureRecognizer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -772,7 +786,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				66DCFBB61581BCF000B4918C /* Paper_StackTests.m in Sources */,
-				66A4BD3F163217F500C45070 /* PaintView.mm in Sources */,
+				665978F8164318E300E10FC7 /* PaintView.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

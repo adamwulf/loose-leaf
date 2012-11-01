@@ -122,6 +122,11 @@
 
 #pragma mark - Drawing
 
+-(void) beginPanAt:(CGPoint)point forView:(UIView*)view{ }
+-(void) movePanBy:(CGPoint)delta{ }
+-(void) panComplete{ }
+
+
 /**
  * draws the input curve onto the bitmap context, taking into
  * account all views that may be obstructing this PaintView

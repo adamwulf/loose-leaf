@@ -9,12 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "Constants.h"
 #import "SLPaperViewDelegate.h"
+#import "SLDrawingGestureRecognizer.h"
 #import "SLPanAndPinchGestureRecognizer.h"
 #import "SLShadowedView.h"
 #import "PaintView.h"
 #import "PaintableViewDelegate.h"
 
-@interface SLPaperView : SLShadowedView<PaintableViewDelegate,SLDrawingGestureRecognizerDelegate>{
+@interface SLPaperView : SLShadowedView<PaintableViewDelegate>{
     
     NSString* uuid;
     
@@ -39,6 +40,7 @@
     
     UIBezierPath* unitShadowPath;
     
+    SLDrawingGestureRecognizer* drawGesture;
     PaintView* paintView;
 }
 

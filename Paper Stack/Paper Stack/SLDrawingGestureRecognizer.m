@@ -16,17 +16,34 @@
 
 @implementation SLDrawingGestureRecognizer
 
-@synthesize paintDelegate;
+@synthesize startPoint;
+@synthesize pathElement;
+@synthesize fingerWidth;
 
--(id) init{
-    if(self = [super init]){
+-(id) initWithTarget:(id)target action:(SEL)action{
+    if(self = [super initWithTarget:target action:action]){
         fingerWidth = 3;
+        pathElement.points = malloc(sizeof(CGPoint) * 4);
     }
     return self;
 }
 
+-(void) dealloc{
+    free(pathElement.points);
+    [super dealloc];
+}
+
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    
+    if(self.state == UIGestureRecognizerStateBegan ||
+       self.state == UIGestureRecognizerStateChanged){
+        for(UITouch* touch in touches){
+            [self ignoreTouch:touch forEvent:event];
+        }
+        return;
+    }
+    
     [super touchesBegan:touches withEvent:event];
     if(self.state == UIGestureRecognizerStatePossible ||
        self.state == UIGestureRecognizerStateBegan ||
@@ -46,6 +63,7 @@
         [super touchesMoved:touches withEvent:event];
         [self sendPaintEventsToDelegate:NO];
     }
+    self.state = UIGestureRecognizerStateBegan;
 }
 
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -153,20 +171,26 @@
         float ctrl2_x = xm2 + (xc2 - xm2) * smooth_value + x2 - xm2;
         float ctrl2_y = ym2 + (yc2 - ym2) * smooth_value + y2 - ym2;
         
-        [paintDelegate drawArcAtStart:point1
-                                  end:point2
-                        controlPoint1:CGPointMake(ctrl1_x, ctrl1_y)
-                        controlPoint2:CGPointMake(ctrl2_x, ctrl2_y)
-                      withFingerWidth:fingerWidth fromView:self.view];
+        startPoint = point1;
+        pathElement.type = kCGPathElementAddCurveToPoint;
+        pathElement.points[2] = point2;
+        pathElement.points[0] = CGPointMake(ctrl1_x, ctrl1_y);
+        pathElement.points[1] = CGPointMake(ctrl2_x, ctrl2_y);
     }else if(point2.x == -1){
-        [paintDelegate drawDotAtPoint:point3
-                      withFingerWidth:fingerWidth
-                             fromView:self.view];
+        startPoint = point3;
+        pathElement.type = kCGPathElementMoveToPoint;
     }else if(point1.x == -1 && lineEnded){
-        [paintDelegate drawLineAtStart:point2
-                                   end:point3
-                       withFingerWidth:fingerWidth
-                              fromView:self.view];
+        startPoint = point2;
+        pathElement.type = kCGPathElementAddLineToPoint;
+        pathElement.points[0] = point3;
+    }
+}
+
+
+
+-(void) cancel{
+    if(self.state == UIGestureRecognizerStateChanged){
+        self.state = UIGestureRecognizerStateCancelled;
     }
 }
 
