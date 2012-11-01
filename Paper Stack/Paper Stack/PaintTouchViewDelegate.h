@@ -1,5 +1,5 @@
 //
-//  SLDrawingGestureRecognizerDelegate.h
+//  PaintTouchViewDelegate.h
 //  PaintingSample
 //
 //  Created by Adam Wulf on 9/8/12.
@@ -8,7 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol SLDrawingGestureRecognizerDelegate <NSObject>
+@protocol PaintTouchViewDelegate <NSObject>
+
+
+-(void) beginPanAt:(CGPoint)point forView:(UIView*)view;
+-(void) movePanBy:(CGPoint)delta;
+-(void) panComplete;
+
 
 -(void) drawArcAtStart:(CGPoint)point1
                      end:(CGPoint)point2

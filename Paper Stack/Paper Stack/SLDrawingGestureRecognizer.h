@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SLDrawingGestureRecognizerDelegate.h"
 #import <UIKit/UIGestureRecognizerSubclass.h>
 
 @interface SLDrawingGestureRecognizer : UIPanGestureRecognizer{
@@ -18,9 +17,14 @@
     
     CGFloat fingerWidth;
 
-    NSObject<SLDrawingGestureRecognizerDelegate>* paintDelegate;
+    CGPoint startPoint;
+    CGPathElement pathElement;
 }
 
-@property (nonatomic, assign) NSObject<SLDrawingGestureRecognizerDelegate>* paintDelegate;
+@property (nonatomic, readonly) CGFloat fingerWidth;
+@property (nonatomic, readonly) CGPoint startPoint;
+@property (nonatomic, readonly) CGPathElement pathElement;
+
+-(void) cancel;
 
 @end

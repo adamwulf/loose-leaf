@@ -45,7 +45,7 @@
         imgView.contentMode = UIViewContentModeScaleAspectFill;
         imgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         imgView.clipsToBounds = YES;
-        [self.contentView addSubview:imgView];
+//        [self.contentView addSubview:imgView];
         //
         // end debug image
         //
@@ -54,12 +54,26 @@
         preGestureScale = 1;
         scale = 1;
         
-        /*
         paintView = [[PaintView alloc] initWithFrame:self.bounds];
         paintView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self.contentView addSubview:paintView];
-         */
         
+        
+        
+        
+        
+        //
+        // this gesture handles any single finger drawing
+        // on the page. any gesture that overrides the one finger
+        // drag (a pan or scale, for instance) will need to call
+        // [cancel] on this gesture to make sure that the drawing
+        // turns off
+        drawGesture = [[SLDrawingGestureRecognizer alloc] initWithTarget:self action:@selector(draw:)];
+        drawGesture.minimumNumberOfTouches = 1;
+        drawGesture.maximumNumberOfTouches = 1;
+        [self addGestureRecognizer:drawGesture];
+        
+
         //
         // allow the user to select an object by long pressing
         // on it. this'll allow the user to select + move/scale/rotate
@@ -80,13 +94,8 @@
         [self addGestureRecognizer:tap];
 
         
-        SLDrawingGestureRecognizer* draw = [[SLDrawingGestureRecognizer alloc] init];
-        draw.minimumNumberOfTouches = 1;
-        draw.maximumNumberOfTouches = 1;
-        draw.paintDelegate = self;
-        [self addGestureRecognizer:draw];
         
-        
+                
         
         //
         // This pan gesture is used to pan/scale the page itself.
@@ -110,12 +119,37 @@
 }
 
 -(void) longPress:(UILongPressGestureRecognizer*)pressGesture{
-    NSLog(@"long press %d", pressGesture.state);
+    NSLog(@"long press!!!!! %d", pressGesture.state);
 }
 
 -(void) doubleFingerDoubleTap:(UITapGestureRecognizer*)tapGesture{
     NSLog(@"tap! %d", tapGesture.state);
 }
+
+-(void) draw:(SLDrawingGestureRecognizer*)_drawGesture{
+    if(drawGesture.state == UIGestureRecognizerStateBegan ||
+       drawGesture.state == UIGestureRecognizerStateChanged ||
+       drawGesture.state == UIGestureRecognizerStateEnded){
+        if(drawGesture.pathElement.type == kCGPathElementMoveToPoint){
+            [self drawDotAtPoint:drawGesture.startPoint withFingerWidth:drawGesture.fingerWidth fromView:self];
+        }else if(drawGesture.pathElement.type == kCGPathElementAddLineToPoint){
+            [self drawLineAtStart:drawGesture.startPoint
+                              end:drawGesture.pathElement.points[0]
+                  withFingerWidth:drawGesture.fingerWidth
+                         fromView:self];
+        }else if(drawGesture.pathElement.type == kCGPathElementAddCurveToPoint){
+            [self drawArcAtStart:drawGesture.startPoint
+                             end:drawGesture.pathElement.points[2]
+                   controlPoint1:drawGesture.pathElement.points[0]
+                   controlPoint2:drawGesture.pathElement.points[1]
+                 withFingerWidth:drawGesture.fingerWidth
+                        fromView:self];
+        }
+    }else{
+        // cancelled or something
+    }
+}
+
 
 /**
  * helpful when testing visible vs hidden pages
@@ -225,16 +259,26 @@
  * pan gestures use proper state control etc to zoom a page in and out.
  */
 -(void) panAndScale:(SLPanAndPinchGestureRecognizer*)_panGesture{
+    //
+    // cancel drawing, if any
+    [drawGesture setEnabled:NO];
+    
+    
+    //
+    // procede with the pan gesture
     CGPoint lastLocationInSelf = [panGesture locationInView:self];
     CGPoint lastLocationInSuper = [panGesture locationInView:self.superview];
     
-    NSLog(@"pan: %d %f %f", panGesture.state, lastLocationInSuper.x, lastLocationInSuper.y);
+//    NSLog(@"pan: %d %f %f", panGesture.state, lastLocationInSuper.x, lastLocationInSuper.y);
     
     CGPoint velocity = [_panGesture velocity];
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
        panGesture.state == UIGestureRecognizerStateEnded ||
        panGesture.state == UIGestureRecognizerStateFailed){
-        
+        //
+        // pan is finished, re-enable drawing
+        [drawGesture setEnabled:YES];
+
         if(scale < kMinPageZoom && panGesture.didExitToBezel == SLBezelDirectionNone){
             isBeingPannedAndZoomed = NO;
             if((_panGesture.scaleDirection & SLScaleDirectionSmaller) == SLScaleDirectionSmaller){
