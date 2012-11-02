@@ -60,6 +60,7 @@
  */
 - (BOOL) initContext:(CGSize)size {
 	float scaleFactor = [[UIScreen mainScreen] scale];
+    scaleFactor = 1;
     
 	// Declare the number of bytes per row. Each pixel in the bitmap in this
 	// example is represented by 4 bytes; 8 bits each of red, green, blue, and
@@ -72,7 +73,18 @@
     //
     // create the bitmap context that we'll use to cache
     // the drawn strokes
-    cacheContext = CGBitmapContextCreate (NULL, size.width * scaleFactor, size.height * scaleFactor, bitsPerComponent, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst);
+    void *rawData = malloc(bitmapBytesPerRow * size.height * scaleFactor);
+    
+    //
+    // create a cgimageref backed by the same pixels
+    CGDataProviderRef dataProvider = CGDataProviderCreateWithData(NULL, rawData, bitmapBytesPerRow * size.height * scaleFactor, NULL);
+    CGImageRef cgImage = CGImageCreate(size.width*scaleFactor, size.height*scaleFactor, bitsPerComponent, bitsPerComponent*4, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst, dataProvider, NULL, false, kCGRenderingIntentDefault);
+    CGDataProviderRelease(dataProvider);
+    self.layer.contents = (id) cgImage;
+    
+    
+
+    cacheContext = CGBitmapContextCreate (rawData, size.width * scaleFactor, size.height * scaleFactor, bitsPerComponent, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst);
     // set scale for high res display
     CGContextScaleCTM(cacheContext, scaleFactor, scaleFactor);
     // antialias the strokes
@@ -284,6 +296,17 @@
 
 
 
+-(void) setNeedsDisplayInRect:(CGRect)rect{
+//    CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
+//    //    CGContextDrawImage(context, self.bounds, cacheImage);
+//    
+//    self.layer.contents = (id) cacheImage;
+//    [self.layer setGeometryFlipped:YES];
+//    CGImageRelease(cacheImage);
+    [self.layer setNeedsDisplayInRect:rect];
+    [super setNeedsDisplayInRect:rect];
+}
+
 /**
  *
  * this is the draw rect that's used to show the paint
@@ -291,19 +314,22 @@
  * it's commented out so that i can test only clipping
  * with paths in the below fuction w/o worrying about the
  * imagecontext
- */
 - (void) drawRect:(CGRect)rect {
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
-    CGContextDrawImage(context, self.bounds, cacheImage);
+//    CGContextDrawImage(context, self.bounds, cacheImage);
+    self.layer.contents = (id) cacheImage;
+    [self.layer setGeometryFlipped:YES];
     CGImageRelease(cacheImage);
+    
     
     if([delegate shouldDrawClipPath]){
         [self updateCachedClipPathForContext:context andDraw:YES];
     }
 }
+ */
 
 
 -(void) updateClipPath{
