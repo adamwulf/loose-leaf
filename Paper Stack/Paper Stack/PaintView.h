@@ -12,6 +12,8 @@
 #import "PaintTouchViewDelegate.h"
 #import <DrawKit-iOS/DrawKit-iOS.h>
 
+@class SLPaperView;
+
 @interface PaintView : UIView<PaintTouchViewDelegate> {
     void *cacheBitmap;
     CGContextRef cacheContext;
@@ -21,7 +23,12 @@
 
 
     UIBezierPath* cachedClipPath;
+    
+    
+    SLPaperView* page;
 }
+
+@property (nonatomic, assign) SLPaperView* page;
 
 @property (nonatomic, assign) NSObject<PaintableViewDelegate>* delegate;
 

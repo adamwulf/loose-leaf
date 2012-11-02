@@ -56,6 +56,7 @@
         
         paintView = [[PaintView alloc] initWithFrame:self.bounds];
         paintView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        paintView.page = self;
         [self.contentView addSubview:paintView];
         
         

@@ -8,6 +8,7 @@
 
 #import "PaintView.h"
 #import "NSThread+BlockAdditions.h"
+#import "SLPaperView.h"
 
 @interface PaintView (Private)
 
@@ -18,6 +19,7 @@
 
 @synthesize delegate;
 @synthesize clipPath;
+@synthesize page;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -136,7 +138,7 @@
  *
  * TODO: change path from fill to stroke
  */
--(void) drawArcAtStart:(CGPoint)point1 end:(CGPoint)point2 controlPoint1:(CGPoint)ctrl1 controlPoint2:(CGPoint)ctrl2 withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
+-(void) drawArcAtStart:(CGPoint)point1 end:(CGPoint)point2 controlPoint1:(CGPoint)ctrl1 controlPoint2:(CGPoint)ctrl2 withFingerWidth:(CGFloat)fingerWidth fromView:(SLPaperView *)view{
     
     // convert points from their touched view
     // to this view so that we can see if
@@ -178,15 +180,19 @@
             UIBezierPath* strokedPath = [UIBezierPath bezierPath];
             [strokedPath moveToPoint:point1];
             [strokedPath addCurveToPoint:point2 controlPoint1:ctrl1 controlPoint2:ctrl2];
+            CGAffineTransform scaleToCanvas = CGAffineTransformMakeScale(1/view.scale, 1/view.scale);
+            [strokedPath applyTransform:scaleToCanvas];
             //
             // now we know the stroke, so clip it to our
             // visible area
             UIBezierPath* clippedPath = [strokedPath unclosedPathFromIntersectionWithPath:cachedClipPath];
+
             //
             // now draw it
             CGContextAddPath(cacheContext, clippedPath.CGPath);
             CGContextStrokePath(cacheContext);
             [self setNeedsDisplayInRect:rectToDraw];
+//            [self setNeedsDisplayInRect:self.bounds];
 //        }];
         
 //        NSLog(@"time for clip: %f", time);
@@ -199,7 +205,7 @@
 //
 // TODO: dots are currently only drawing on the lowest PaintView,
 // but should respect the clip path
--(void) drawDotAtPoint:(CGPoint)point withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
+-(void) drawDotAtPoint:(CGPoint)point withFingerWidth:(CGFloat)fingerWidth fromView:(SLPaperView *)view{
 
     // convert point from its touched view
     // to this view so that we can see if
@@ -209,7 +215,7 @@
     // draw a dot at point3
     // Draw a circle (filled)
     CGFloat dotDiameter = fingerWidth / 3;
-    CGRect rectToDraw = CGRectMake(point.x - .5*dotDiameter, point.y - .5*dotDiameter, dotDiameter, dotDiameter);
+    CGRect rectToDisplay = CGRectMake(point.x - .5*dotDiameter, point.y - .5*dotDiameter, dotDiameter, dotDiameter);
 
     // calculate the clip path if needed
     [self updateCachedClipPathForContext:cacheContext andDraw:NO];
@@ -220,14 +226,16 @@
         // update our pen properties
         [self tickHueWithFingerWidth:fingerWidth];
         // draw
+        CGAffineTransform scaleToCanvas = CGAffineTransformMakeScale(1/view.scale, 1/view.scale);
+        CGRect rectToDraw = CGRectApplyAffineTransform(rectToDisplay, scaleToCanvas);
         CGContextFillEllipseInRect(cacheContext, rectToDraw);
-        [self setNeedsDisplayInRect:rectToDraw];
+        [self setNeedsDisplayInRect:rectToDisplay];
     }
 }
 
 //
 // TODO: mirror the line drawing as is done in the arc drawing
--(void) drawLineAtStart:(CGPoint)start end:(CGPoint)end withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
+-(void) drawLineAtStart:(CGPoint)start end:(CGPoint)end withFingerWidth:(CGFloat)fingerWidth fromView:(SLPaperView *)view{
 
     // convert points from their touched view
     // to this view so that we can see if
@@ -261,6 +269,8 @@
         UIBezierPath* strokedPath = [UIBezierPath bezierPath];
         [strokedPath moveToPoint:start];
         [strokedPath addLineToPoint:end];
+        CGAffineTransform scaleToCanvas = CGAffineTransformMakeScale(1/view.scale, 1/view.scale);
+        [strokedPath applyTransform:scaleToCanvas];
         // ...and clip that line to our visible area
         UIBezierPath* clippedPath = [strokedPath unclosedPathFromIntersectionWithPath:cachedClipPath];
         // now draw it
@@ -283,6 +293,7 @@
  * imagecontext
  */
 - (void) drawRect:(CGRect)rect {
+    
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
