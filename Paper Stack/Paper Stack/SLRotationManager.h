@@ -15,6 +15,7 @@
     BOOL isFirstReading;
     CGFloat accelerationX;
     CGFloat accelerationY;
+    CGFloat accelerationZ;
     CGFloat currentRotationReading;
 
     NSObject<SLRotationManagerDelegate>* delegate;
