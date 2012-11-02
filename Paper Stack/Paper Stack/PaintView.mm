@@ -112,7 +112,7 @@
 //    CGContextSetStrokeColorWithColor(cacheContext, [color CGColor]);
     CGContextSetStrokeColorWithColor(cacheContext, [[UIColor blackColor] CGColor]);
     CGContextSetLineCap(cacheContext, kCGLineCapRound);
-    CGContextSetLineWidth(cacheContext, fingerWidth / 3);
+    CGContextSetLineWidth(cacheContext, fingerWidth / 1.5);
     CGContextSetLineJoin(cacheContext, kCGLineJoinMiter);
     CGContextSetMiterLimit(cacheContext, 20);
     CGContextSetFlatness(cacheContext, 1.0);
