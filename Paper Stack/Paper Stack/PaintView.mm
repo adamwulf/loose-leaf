@@ -73,6 +73,11 @@
     //
     // create the bitmap context that we'll use to cache
     // the drawn strokes
+    //
+    // we'll manage the memory manually so that we can use this to
+    // back a cgimageref that'll be used to display on screen
+    //
+    // it'll back both the context and the imageref
     void *rawData = malloc(bitmapBytesPerRow * size.height * scaleFactor);
     
     //
@@ -80,10 +85,14 @@
     CGDataProviderRef dataProvider = CGDataProviderCreateWithData(NULL, rawData, bitmapBytesPerRow * size.height * scaleFactor, NULL);
     CGImageRef cgImage = CGImageCreate(size.width*scaleFactor, size.height*scaleFactor, bitsPerComponent, bitsPerComponent*4, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst, dataProvider, NULL, false, kCGRenderingIntentDefault);
     CGDataProviderRelease(dataProvider);
+    // we'll use this cgimageref to back the layer contents,
+    // so that whenever we draw, we're drawing directly on the layer
+    // and we can display that directly
     self.layer.contents = (id) cgImage;
     
-    
-
+    //
+    // now use those same pixels to back the context that we'll
+    // be drawing on
     cacheContext = CGBitmapContextCreate (rawData, size.width * scaleFactor, size.height * scaleFactor, bitsPerComponent, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst);
     // set scale for high res display
     CGContextScaleCTM(cacheContext, scaleFactor, scaleFactor);
