@@ -277,7 +277,6 @@
 }
 
 
-
 /**
  *
  * this is the draw rect that's used to show the paint
