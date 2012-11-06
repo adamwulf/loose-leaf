@@ -36,12 +36,10 @@ static SLShadowManager* _instance = nil;
 #pragma mark - shadow methods
 
 -(UIBezierPath*) generateUnitShadowPath{
-    UIBezierPath* path = [UIBezierPath bezierPath];
     [SLShadowManager sharedInstace];
     CGFloat width = [[UIScreen mainScreen] bounds].size.width;
     CGFloat height = [[UIScreen mainScreen] bounds].size.height;
-    [path release];
-    path = [[UIBezierPath bezierPath] retain];
+    UIBezierPath* path = [[UIBezierPath bezierPath] retain];
     [path moveToPoint:CGPointMake((rand() % kShadowDepth) / width, (rand() % kShadowDepth) / height)];
     CGFloat loc = rand() % 100 / 100.0 / 20.0;
     // left

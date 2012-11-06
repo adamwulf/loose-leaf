@@ -17,6 +17,7 @@
 @interface PaintView : UIView<PaintTouchViewDelegate> {
     void *cacheBitmap;
     CGContextRef cacheContext;
+    CGLayerRef cacheCGLayer;
     CGFloat hue;
     NSObject<PaintableViewDelegate>* delegate;
     UIBezierPath* clipPath;
@@ -26,6 +27,14 @@
     
     
     SLPaperView* page;
+    float scaleFactor;
+    CGSize contextSize;
+    void *rawData;
+    
+    // debug
+    CGImageRef cgImage;
+    UIImageView* imageView;
+    
 }
 
 @property (nonatomic, assign) SLPaperView* page;

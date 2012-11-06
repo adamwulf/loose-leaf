@@ -93,9 +93,6 @@
         // we'll get a double positive
         [tap requireGestureRecognizerToFail:longPress];
         [self addGestureRecognizer:tap];
-
-        
-        
                 
         
         //
@@ -114,7 +111,13 @@
 //        [draw requireGestureRecognizerToFail:tap];
         [self addGestureRecognizer:panGesture];
         
+        
+        
+        [self drawArcAtStart:CGPointMake(100, 100) end:CGPointMake(300, 300) controlPoint1:CGPointMake(200, 200) controlPoint2:CGPointMake(250, 200) withFingerWidth:10 fromView:self];
 
+        
+        
+        
     }
     return self;
 }

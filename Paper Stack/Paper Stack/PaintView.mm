@@ -29,6 +29,13 @@
         [self initContext:frame.size];
         self.backgroundColor = [UIColor clearColor];
         self.clearsContextBeforeDrawing = NO;
+        
+        
+        imageView = [[UIImageView alloc] initWithFrame:CGRectMake(400, 100, 300, 300)];
+        imageView.layer.borderColor = [[UIColor blackColor] CGColor];
+        imageView.layer.borderWidth = 1;
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        [self addSubview:imageView];
     }
     return self;
 }
@@ -58,16 +65,17 @@
  * bitmapBytesPerRow should be * 1
  * kCGImageAlphaPremultipliedFirst should be kCGImageAlphaOnly
  */
-- (BOOL) initContext:(CGSize)size {
-	float scaleFactor = [[UIScreen mainScreen] scale];
+- (BOOL) initContext:(CGSize)_size {
+    contextSize = _size;
+	scaleFactor = [[UIScreen mainScreen] scale];
     scaleFactor = 1;
+    
     
 	// Declare the number of bytes per row. Each pixel in the bitmap in this
 	// example is represented by 4 bytes; 8 bits each of red, green, blue, and
 	// alpha.
-	int	bitmapBytesPerRow = (size.width * scaleFactor * 4); // only alpha;
+	int	bitmapBytesPerRow = (contextSize.width * scaleFactor * 4); // only alpha;
     int bitsPerComponent = 8;
-	
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     
     //
@@ -78,22 +86,12 @@
     // back a cgimageref that'll be used to display on screen
     //
     // it'll back both the context and the imageref
-    void *rawData = malloc(bitmapBytesPerRow * size.height * scaleFactor);
-    
-    //
-    // create a cgimageref backed by the same pixels
-    CGDataProviderRef dataProvider = CGDataProviderCreateWithData(NULL, rawData, bitmapBytesPerRow * size.height * scaleFactor, NULL);
-    CGImageRef cgImage = CGImageCreate(size.width*scaleFactor, size.height*scaleFactor, bitsPerComponent, bitsPerComponent*4, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst, dataProvider, NULL, false, kCGRenderingIntentDefault);
-    CGDataProviderRelease(dataProvider);
-    // we'll use this cgimageref to back the layer contents,
-    // so that whenever we draw, we're drawing directly on the layer
-    // and we can display that directly
-    self.layer.contents = (id) cgImage;
+    rawData = malloc(bitmapBytesPerRow * contextSize.height * scaleFactor);
     
     //
     // now use those same pixels to back the context that we'll
     // be drawing on
-    cacheContext = CGBitmapContextCreate (rawData, size.width * scaleFactor, size.height * scaleFactor, bitsPerComponent, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst);
+    cacheContext = CGBitmapContextCreate (rawData, contextSize.width * scaleFactor, contextSize.height * scaleFactor, bitsPerComponent, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst);
     // set scale for high res display
     CGContextScaleCTM(cacheContext, scaleFactor, scaleFactor);
     // antialias the strokes
@@ -116,6 +114,17 @@
     // NSData* dataForFile = [NSData dataWithBytesNoCopy:data length:bitmapByteCount];
     
     
+    cacheCGLayer = CGLayerCreateWithContext(cacheContext, contextSize, nil);
+    
+    //
+    // create a cgimageref backed by the same pixels
+//    CGDataProviderRef dataProvider = CGDataProviderCreateWithData(NULL, rawData, bitmapBytesPerRow * contextSize.height * scaleFactor, NULL);
+//    cgImage = CGImageCreate(contextSize.width*scaleFactor, contextSize.height*scaleFactor, bitsPerComponent, bitsPerComponent*4, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst, dataProvider, NULL, false, kCGRenderingIntentDefault);
+//    CGDataProviderRelease(dataProvider);
+    // we'll use this cgimageref to back the layer contents,
+    // so that whenever we draw, we're drawing directly on the layer
+    // and we can display that directly
+    
     return YES;
 }
 
@@ -129,16 +138,21 @@
  * sets some basic pen properties of the context
  */
 -(void) tickHueWithFingerWidth:(CGFloat)fingerWidth{
-//    hue += 0.3;
-//    if(hue > 1.0) hue = 0.0;
-//    UIColor *color = [UIColor colorWithHue:hue saturation:0.7 brightness:1.0 alpha:1.0];
-//    CGContextSetStrokeColorWithColor(cacheContext, [color CGColor]);
-    CGContextSetStrokeColorWithColor(cacheContext, [[UIColor blackColor] CGColor]);
-    CGContextSetLineCap(cacheContext, kCGLineCapRound);
-    CGContextSetLineWidth(cacheContext, fingerWidth / 1.5);
-    CGContextSetLineJoin(cacheContext, kCGLineJoinMiter);
-    CGContextSetMiterLimit(cacheContext, 20);
-    CGContextSetFlatness(cacheContext, 1.0);
+    hue += 0.3;
+    if(hue > 1.0) hue = 0.0;
+    UIColor *color = [UIColor colorWithHue:hue saturation:0.7 brightness:1.0 alpha:1.0];
+    CGContextSetStrokeColorWithColor(cacheContext, [color CGColor]);
+    
+    CGContextRef contextRef = cacheContext;
+//    contextRef = CGLayerGetContext(cacheCGLayer);
+    
+    
+//    CGContextSetStrokeColorWithColor(contextRef, [[UIColor blackColor] CGColor]);
+    CGContextSetLineCap(contextRef, kCGLineCapRound);
+    CGContextSetLineWidth(contextRef, fingerWidth / 1.5);
+    CGContextSetLineJoin(contextRef, kCGLineJoinMiter);
+    CGContextSetMiterLimit(contextRef, 20);
+    CGContextSetFlatness(contextRef, 1.0);
 }
 
 
@@ -150,6 +164,20 @@
 -(void) panComplete{ }
 
 
+-(CGRect) normalizeRectToDraw:(CGRect)rectToDraw{
+    return rectToDraw;
+    if(rectToDraw.origin.x < 768/2 && rectToDraw.origin.y < 1024/2){
+        rectToDraw = CGRectMake(0, 0, 768/2, 1024/2);
+    }else if(rectToDraw.origin.x >= 768/2 && rectToDraw.origin.y < 1024/2){
+        rectToDraw = CGRectMake(768/2, 0, 768/2, 1024/2);
+    }else if(rectToDraw.origin.x < 768/2){
+        rectToDraw = CGRectMake(0, 1024/2, 768/2, 1024/2);
+    }else if(rectToDraw.origin.x >= 768/2){
+        rectToDraw = CGRectMake(768/2, 1024/2, 768/2, 1024/2);
+    }
+    return rectToDraw;
+}
+
 /**
  * draws the input curve onto the bitmap context, taking into
  * account all views that may be obstructing this PaintView
@@ -160,7 +188,9 @@
  * TODO: change path from fill to stroke
  */
 -(void) drawArcAtStart:(CGPoint)point1 end:(CGPoint)point2 controlPoint1:(CGPoint)ctrl1 controlPoint2:(CGPoint)ctrl2 withFingerWidth:(CGFloat)fingerWidth fromView:(SLPaperView *)view{
-    
+    CGContextRef contextRef = cacheContext;
+//    contextRef = CGLayerGetContext(cacheCGLayer);
+
     // convert points from their touched view
     // to this view so that we can see if
     // they even hit us or not
@@ -185,6 +215,12 @@
     // but this is fast and safe too
     __block CGRect rectToDraw = CGRectMake(minX, minY, maxX-minX, maxY-minY);
     rectToDraw = CGRectInset(rectToDraw, -fingerWidth, -fingerWidth);
+    
+    
+    rectToDraw = [self normalizeRectToDraw:rectToDraw];
+    
+    
+    
 
     //
     // check to see if the bezier curve intersects this
@@ -195,7 +231,7 @@
             // update our pen properties
             [self tickHueWithFingerWidth:fingerWidth];
             // calculate the clip path if needed
-            [self updateCachedClipPathForContext:cacheContext andDraw:NO];
+            [self updateCachedClipPathForContext:contextRef andDraw:NO];
             //
             // calculate a closed path for the input stroke
             UIBezierPath* strokedPath = [UIBezierPath bezierPath];
@@ -210,8 +246,8 @@
 
             //
             // now draw it
-            CGContextAddPath(cacheContext, clippedPath.CGPath);
-            CGContextStrokePath(cacheContext);
+            CGContextAddPath(contextRef, clippedPath.CGPath);
+            CGContextStrokePath(contextRef);
             [self setNeedsDisplayInRect:rectToDraw];
 //            [self setNeedsDisplayInRect:self.bounds];
 //        }];
@@ -227,6 +263,8 @@
 // TODO: dots are currently only drawing on the lowest PaintView,
 // but should respect the clip path
 -(void) drawDotAtPoint:(CGPoint)point withFingerWidth:(CGFloat)fingerWidth fromView:(SLPaperView *)view{
+    CGContextRef contextRef = cacheContext;
+//    contextRef = CGLayerGetContext(cacheCGLayer);
 
     // convert point from its touched view
     // to this view so that we can see if
@@ -239,7 +277,7 @@
     CGRect rectToDisplay = CGRectMake(point.x - .5*dotDiameter, point.y - .5*dotDiameter, dotDiameter, dotDiameter);
 
     // calculate the clip path if needed
-    [self updateCachedClipPathForContext:cacheContext andDraw:NO];
+    [self updateCachedClipPathForContext:contextRef andDraw:NO];
 
     // only draw the point if it is inside of
     // our visible area
@@ -249,7 +287,8 @@
         // draw
         CGAffineTransform scaleToCanvas = CGAffineTransformMakeScale(1/view.scale, 1/view.scale);
         CGRect rectToDraw = CGRectApplyAffineTransform(rectToDisplay, scaleToCanvas);
-        CGContextFillEllipseInRect(cacheContext, rectToDraw);
+        CGContextFillEllipseInRect(contextRef, rectToDraw);
+        rectToDisplay = [self normalizeRectToDraw:rectToDisplay];
         [self setNeedsDisplayInRect:rectToDisplay];
     }
 }
@@ -257,6 +296,9 @@
 //
 // TODO: mirror the line drawing as is done in the arc drawing
 -(void) drawLineAtStart:(CGPoint)start end:(CGPoint)end withFingerWidth:(CGFloat)fingerWidth fromView:(SLPaperView *)view{
+    
+    CGContextRef contextRef = cacheContext;
+//    contextRef = CGLayerGetContext(cacheCGLayer);
 
     // convert points from their touched view
     // to this view so that we can see if
@@ -278,14 +320,15 @@
     // but this is fast and safe too
     CGRect rectToDraw = CGRectMake(minX, minY, maxX-minX, maxY-minY);
     rectToDraw = CGRectInset(rectToDraw, -fingerWidth, -fingerWidth);
-
+    rectToDraw = [self normalizeRectToDraw:rectToDraw];
+    
     //
     // only draw if the line intersects us
     if(CGRectIntersectsRect(self.bounds, rectToDraw)){
         // update pen properties
         [self tickHueWithFingerWidth:fingerWidth];
         // calculate the clip path if needed
-        [self updateCachedClipPathForContext:cacheContext andDraw:NO];
+        [self updateCachedClipPathForContext:contextRef andDraw:NO];
         // calculate the line drawn...
         UIBezierPath* strokedPath = [UIBezierPath bezierPath];
         [strokedPath moveToPoint:start];
@@ -295,8 +338,8 @@
         // ...and clip that line to our visible area
         UIBezierPath* clippedPath = [strokedPath unclosedPathFromIntersectionWithPath:cachedClipPath];
         // now draw it
-        CGContextAddPath(cacheContext, clippedPath.CGPath);
-        CGContextStrokePath(cacheContext);
+        CGContextAddPath(contextRef, clippedPath.CGPath);
+        CGContextStrokePath(contextRef);
         [self setNeedsDisplayInRect:rectToDraw];
     }else{
         // doesn't intersect our view at all
@@ -312,6 +355,23 @@
 //    self.layer.contents = (id) cacheImage;
 //    [self.layer setGeometryFlipped:YES];
 //    CGImageRelease(cacheImage);
+    //
+    // create a cgimageref backed by the same pixels
+    /*
+	int	bitmapBytesPerRow = (contextSize.width * scaleFactor * 4); // only alpha;
+    int bitsPerComponent = 8;
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGDataProviderRef dataProvider = CGDataProviderCreateWithData(NULL, rawData, bitmapBytesPerRow * contextSize.height * scaleFactor, NULL);
+    cgImage = CGImageCreate(contextSize.width*scaleFactor, contextSize.height*scaleFactor, bitsPerComponent, bitsPerComponent*4, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst, dataProvider, NULL, false, kCGRenderingIntentDefault);
+    CGDataProviderRelease(dataProvider);
+    // we'll use this cgimageref to back the layer contents,
+    // so that whenever we draw, we're drawing directly on the layer
+    // and we can display that directly
+//    self.layer.contents = (id) cgImage;
+    imageView.image = [UIImage imageWithCGImage:cgImage];
+    CFRelease(cgImage);
+     */
+
     [self.layer setNeedsDisplayInRect:rect];
     [super setNeedsDisplayInRect:rect];
 }
@@ -323,22 +383,51 @@
  * it's commented out so that i can test only clipping
  * with paths in the below fuction w/o worrying about the
  * imagecontext
+ */
 - (void) drawRect:(CGRect)rect {
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     
+    
+    CGContextSaveGState(cacheContext);
+
+//    CGContextTranslateCTM(cacheContext, 0.0f, contextSize.height * scaleFactor);
+//    CGContextScaleCTM(cacheContext, scaleFactor, -scaleFactor);
+
+    CGRect rectForCrop = rect;
+    rectForCrop = CGRectApplyAffineTransform(rectForCrop, CGAffineTransformMakeScale(1/page.scale,1/page.scale));
+    rectForCrop.origin.y = rectForCrop.origin.y + rectForCrop.size.height - contextSize.height;
+    rectForCrop.origin.y = - rectForCrop.origin.y;
+    
+    
     CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
+    CGFloat cacheWidth = CGImageGetWidth(cacheImage);
+    CGFloat cacheHeight = CGImageGetHeight(cacheImage);
+    
+    CGImageRef cropped = CGImageCreateWithImageInRect(cacheImage, rectForCrop);
+    imageView.image = [UIImage imageWithCGImage:cropped];
+    
+    CGContextRestoreGState(cacheContext);
+    
+    
+    
 //    CGContextDrawImage(context, self.bounds, cacheImage);
-    self.layer.contents = (id) cacheImage;
-    [self.layer setGeometryFlipped:YES];
+
+    
+    CGContextDrawImage(context, rect, cropped);
+//    self.layer.contents = (id) cacheImage;
+//    [self.layer setGeometryFlipped:YES];
+    CGImageRelease(cropped);
     CGImageRelease(cacheImage);
     
     
     if([delegate shouldDrawClipPath]){
         [self updateCachedClipPathForContext:context andDraw:YES];
     }
+
+    
+    
 }
- */
 
 
 -(void) updateClipPath{
