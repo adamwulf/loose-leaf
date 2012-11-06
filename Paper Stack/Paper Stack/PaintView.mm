@@ -29,6 +29,8 @@
         [self initContext:frame.size];
         self.backgroundColor = [UIColor clearColor];
         self.clearsContextBeforeDrawing = NO;
+        self.layer.borderColor = [[UIColor redColor] CGColor];
+        self.layer.borderWidth = 2;
     }
     return self;
 }
@@ -180,8 +182,6 @@
             UIBezierPath* strokedPath = [UIBezierPath bezierPath];
             [strokedPath moveToPoint:point1];
             [strokedPath addCurveToPoint:point2 controlPoint1:ctrl1 controlPoint2:ctrl2];
-            CGAffineTransform scaleToCanvas = CGAffineTransformMakeScale(1/view.scale, 1/view.scale);
-            [strokedPath applyTransform:scaleToCanvas];
             //
             // now we know the stroke, so clip it to our
             // visible area
@@ -226,9 +226,7 @@
         // update our pen properties
         [self tickHueWithFingerWidth:fingerWidth];
         // draw
-        CGAffineTransform scaleToCanvas = CGAffineTransformMakeScale(1/view.scale, 1/view.scale);
-        CGRect rectToDraw = CGRectApplyAffineTransform(rectToDisplay, scaleToCanvas);
-        CGContextFillEllipseInRect(cacheContext, rectToDraw);
+        CGContextFillEllipseInRect(cacheContext, rectToDisplay);
         [self setNeedsDisplayInRect:rectToDisplay];
     }
 }
@@ -269,8 +267,6 @@
         UIBezierPath* strokedPath = [UIBezierPath bezierPath];
         [strokedPath moveToPoint:start];
         [strokedPath addLineToPoint:end];
-        CGAffineTransform scaleToCanvas = CGAffineTransformMakeScale(1/view.scale, 1/view.scale);
-        [strokedPath applyTransform:scaleToCanvas];
         // ...and clip that line to our visible area
         UIBezierPath* clippedPath = [strokedPath unclosedPathFromIntersectionWithPath:cachedClipPath];
         // now draw it

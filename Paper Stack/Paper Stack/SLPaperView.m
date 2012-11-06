@@ -52,11 +52,12 @@
         //////////////////////////////////////////////////////////////////////
         [self.layer setMasksToBounds:YES ];
         preGestureScale = 1;
-        scale = 1;
+        self.scale = 1;
         
-        paintView = [[PaintView alloc] initWithFrame:self.bounds];
-        paintView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        paintView = [[PaintView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width * kMaxPageResolution, self.bounds.size.height * kMaxPageResolution)];
+        paintView.autoresizingMask = UIViewAutoresizingNone; // UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         paintView.page = self;
+        paintView.transform = CGAffineTransformMakeScale(1/kMaxPageResolution, 1/kMaxPageResolution);
         [self.contentView addSubview:paintView];
         
         
@@ -117,6 +118,19 @@
 
     }
     return self;
+}
+
+
+-(void) setScale:(CGFloat)_scale{
+    scale = _scale;
+}
+
+-(void) setFrame:(CGRect)_frame{
+    [super setFrame:_frame];
+    paintView.transform = CGAffineTransformMakeScale(scale/kMaxPageResolution, scale/kMaxPageResolution);
+//    paintView.center = self.center;
+    NSLog(@"new frame: %f %f %f %f vs %f %f", paintView.frame.origin.x, paintView.frame.origin.y,
+          paintView.frame.size.width, paintView.frame.size.height, self.frame.size.width, self.frame.size.height);
 }
 
 -(void) longPress:(UILongPressGestureRecognizer*)pressGesture{
@@ -381,14 +395,14 @@
             didCancelSmallScale = YES;
         }
         if(targetScale > kMaxPageZoom){
-            scale = kMaxPageZoom;
+            self.scale = kMaxPageZoom;
             if(didCancelSmallScale) [self.delegate cancelledScalingReallySmall:self];
         }else if(targetScale < kMinPageZoom && scale >= kMinPageZoom && ![_panGesture didExitToBezel]){
             // doesn't count if the bezel is exiting.
             //
             // this tracks if the user is zooming out far enough to trigger a zoom into
             // list mode
-            scale = targetScale;
+            self.scale = targetScale;
             [self.delegate isBeginningToScaleReallySmall:self];
         }else if((targetScale >= 1 && scaleDiff > kMinScaleDelta) ||
                  (targetScale < 1 && scaleDiff > kMinScaleDelta / 2)){
@@ -398,15 +412,15 @@
             // scale. the goal here is to optimize re-draws for the view, but this should be
             // validated when the full page contents are implemented.
             if(scale < targetScale && scale > targetScale - .05){
-                scale = targetScale;
+                self.scale = targetScale;
             }else if(scale < targetScale){
                 scale += (targetScale - scale) / 5;
             }else if(scale > targetScale && scale < targetScale + .05){
-                scale = targetScale;
+                self.scale = targetScale;
             }else if(scale > targetScale){
-                scale -= (scale - targetScale) / 5;
+                self.scale -= (scale - targetScale) / 5;
             }
-//            scale = targetScale;
+//            self.scale = targetScale;
             if(didCancelSmallScale) [self.delegate cancelledScalingReallySmall:self];
         }
     }
