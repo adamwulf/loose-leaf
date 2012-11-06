@@ -42,6 +42,7 @@
     
     SLDrawingGestureRecognizer* drawGesture;
     PaintView* paintView;
+    CGRect initialPaintViewFrame;
 }
 
 @property (nonatomic, readonly) NSString* uuid;
