@@ -7,6 +7,7 @@
 //
 
 #import "SLDrawingGestureRecognizer.h"
+#import "Constants.h"
 
 @interface SLDrawingGestureRecognizer (Private)
 
@@ -22,7 +23,7 @@
 
 -(id) initWithTarget:(id)target action:(SEL)action{
     if(self = [super initWithTarget:target action:action]){
-        fingerWidth = 3;
+        fingerWidth = 3 * kMaxPageResolution;
         pathElement.points = malloc(sizeof(CGPoint) * 4);
     }
     return self;
@@ -55,7 +56,7 @@
             if(newFingerWidth > fingerWidth) fingerWidth += 1;
             if(newFingerWidth < fingerWidth) fingerWidth -= 1;
         }
-        fingerWidth = newFingerWidth;
+        fingerWidth = newFingerWidth * kMaxPageResolution;
         point0 = CGPointMake(-1, -1);
         point1 = CGPointMake(-1, -1); // previous previous point
         point2 = CGPointMake(-1, -1); // previous touch point
@@ -78,7 +79,7 @@
             if(newFingerWidth > fingerWidth) fingerWidth += 1;
             if(newFingerWidth < fingerWidth) fingerWidth -= 1;
         }
-        fingerWidth = newFingerWidth;
+        fingerWidth = newFingerWidth * kMaxPageResolution;
         point0 = point1;
         point1 = point2;
         point2 = point3;
@@ -95,7 +96,7 @@
         if(newFingerWidth > fingerWidth) fingerWidth += 1;
         if(newFingerWidth < fingerWidth) fingerWidth -= 1;
     }else{
-        fingerWidth = newFingerWidth;
+        fingerWidth = newFingerWidth * kMaxPageResolution;
     }
     point0 = point1;
     point1 = point2;
