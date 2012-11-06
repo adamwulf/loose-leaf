@@ -29,8 +29,6 @@
         [self initContext:frame.size];
         self.backgroundColor = [UIColor clearColor];
         self.clearsContextBeforeDrawing = NO;
-        self.layer.borderColor = [[UIColor redColor] CGColor];
-        self.layer.borderWidth = 2;
     }
     return self;
 }

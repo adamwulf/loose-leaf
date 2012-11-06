@@ -57,10 +57,9 @@
         paintView = [[PaintView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width * kMaxPageResolution, self.bounds.size.height * kMaxPageResolution)];
         paintView.autoresizingMask = UIViewAutoresizingNone; // UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         paintView.page = self;
-        paintView.transform = CGAffineTransformMakeScale(1/kMaxPageResolution, 1/kMaxPageResolution);
         [self.contentView addSubview:paintView];
         initialPaintViewFrame = paintView.frame;
-        
+        [self updatePaintScaleTransform];
         
         
         
@@ -126,14 +125,23 @@
     scale = _scale;
 }
 
--(void) setFrame:(CGRect)_frame{
-    [super setFrame:_frame];
+/**
+ * this function makes sure that our paint view,
+ * regardless of size, is scaled properly to exactly fit
+ * our page
+ *
+ * this way, we can make a paint view 2x our screen size,
+ * so that it's native resolution when fully zoomed
+ */
+-(void) updatePaintScaleTransform{
     paintView.transform = CGAffineTransformMakeScale(self.frame.size.width / initialPaintViewFrame.size.width,
                                                      self.frame.size.height / initialPaintViewFrame.size.height);
-//    paintView.transform = CGAffineTransformMakeScale(scale/kMaxPageResolution, scale/kMaxPageResolution);
     paintView.center = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2);
-    NSLog(@"new frame: %f %f %f %f vs %f %f", paintView.frame.origin.x, paintView.frame.origin.y,
-          paintView.frame.size.width, paintView.frame.size.height, self.frame.size.width, self.frame.size.height);
+}
+
+-(void) setFrame:(CGRect)_frame{
+    [super setFrame:_frame];
+    [self updatePaintScaleTransform];
 }
 
 -(void) longPress:(UILongPressGestureRecognizer*)pressGesture{
