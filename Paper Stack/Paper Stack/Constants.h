@@ -28,7 +28,7 @@
 // List View Gesture
 #define kZoomToListPageZoom .4
 #define kMinPageZoom .7
-#define kMaxPageZoom 2.0
+#define kMaxPageZoom 1.0
 
 // Page View
 #define kGutterWidthToDragPages 500
