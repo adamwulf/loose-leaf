@@ -233,6 +233,7 @@ NSInteger const  minimumNumberOfTouches = 2;
  * we use this to have the paper slide when the user swipes quickly
  */
 - (CGPoint)calculateVelocity{
+//    if([validTouches count] < 2) return _averageVelocity;
     CGPoint translate = [self locationInView:self.view.superview];
     static NSTimeInterval lastTime;
     static NSTimeInterval currTime;

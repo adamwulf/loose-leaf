@@ -839,19 +839,19 @@
 #pragma mark - SLPaperViewDelegate - List Methods
 
 -(void) isBeginningToScaleReallySmall:(SLPaperView *)page{
-    @throw kAbstractMethodException;
+    [self updateIconAnimations];
 }
 
 -(void) finishedScalingReallySmall:(SLPaperView *)page{
-    @throw kAbstractMethodException;
+    [self updateIconAnimations];
 }
 
 -(void) cancelledScalingReallySmall:(SLPaperView *)page{
-    @throw kAbstractMethodException;
+    [self updateIconAnimations];
 }
 
 -(void) finishedScalingBackToPageView:(SLPaperView*)page{
-    @throw kAbstractMethodException;
+    [self updateIconAnimations];
 }
 
 -(NSInteger) indexOfPageInCompleteStack:(SLPaperView*)page{
@@ -887,7 +887,7 @@
  * this is used when a user drags a page to the left/right
  */
 -(BOOL) shouldPopPageFromVisibleStack:(SLPaperView*)page withFrame:(CGRect)frame{
-    return page.frame.origin.x > self.frame.size.width - kGutterWidthToDragPages;
+    return page.frame.origin.x + page.frame.size.width - self.frame.size.width > page.frame.size.width * 2 / 5;
 }
 
 /**

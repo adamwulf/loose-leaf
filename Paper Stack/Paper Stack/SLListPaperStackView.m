@@ -659,6 +659,7 @@
  * trigger the zoom to list view
  */
 -(void) isBeginningToScaleReallySmall:(SLPaperView *)page{
+    [super isBeginningToScaleReallySmall:page];
     //
     // the user is also panning other pages, we need to
     // cancel them because only the top page's gesture
@@ -713,6 +714,7 @@
  * and content offsets to that the user can scroll them
  */
 -(void) finishedScalingReallySmall:(SLPaperView *)page{
+    [super finishedScalingReallySmall:page];
     //
     // clean up gesture state
     [setOfPagesBeingPanned removeObject:page];
@@ -859,6 +861,7 @@
  * the user has cancelled the zoom-to-list gesture
  */
 -(void) cancelledScalingReallySmall:(SLPaperView *)page{
+    [super cancelledScalingReallySmall:page];
     [self finishUITransitionToPageView];
     if(![page isBeingPannedAndZoomed]){
         [self animatePageToFullScreen:[visibleStackHolder peekSubview] withDelay:0 withBounce:YES onComplete:^(BOOL finished){
@@ -889,6 +892,7 @@
  * that the editablePaperStack can set buttons visibility
  */
 -(void) finishedScalingBackToPageView:(SLPaperView*)page{
+    [super finishedScalingBackToPageView:page];
     // noop
 }
 
