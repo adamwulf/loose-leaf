@@ -59,6 +59,7 @@
         paintView.page = self;
         paintView.transform = CGAffineTransformMakeScale(1/kMaxPageResolution, 1/kMaxPageResolution);
         [self.contentView addSubview:paintView];
+        initialPaintViewFrame = paintView.frame;
         
         
         
@@ -127,8 +128,10 @@
 
 -(void) setFrame:(CGRect)_frame{
     [super setFrame:_frame];
-    paintView.transform = CGAffineTransformMakeScale(scale/kMaxPageResolution, scale/kMaxPageResolution);
-//    paintView.center = self.center;
+    paintView.transform = CGAffineTransformMakeScale(self.frame.size.width / initialPaintViewFrame.size.width,
+                                                     self.frame.size.height / initialPaintViewFrame.size.height);
+//    paintView.transform = CGAffineTransformMakeScale(scale/kMaxPageResolution, scale/kMaxPageResolution);
+    paintView.center = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2);
     NSLog(@"new frame: %f %f %f %f vs %f %f", paintView.frame.origin.x, paintView.frame.origin.y,
           paintView.frame.size.width, paintView.frame.size.height, self.frame.size.width, self.frame.size.height);
 }
