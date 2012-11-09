@@ -81,7 +81,7 @@ NSInteger const  minimumNumberOfTouches = 2;
         [validTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
         if([validTouches count] >= minimumNumberOfTouches && self.state == UIGestureRecognizerStatePossible){
             self.state = UIGestureRecognizerStateBegan;
-        }else if([validTouches count] == minimumNumberOfTouches){
+        }else if([validTouches count] <= minimumNumberOfTouches){
             didExitToBezel = SLBezelDirectionNone;
             //
             // ok, they just bezelled and brought their second
@@ -128,56 +128,69 @@ NSInteger const  minimumNumberOfTouches = 2;
     BOOL cancelledFromBezel = NO;
     NSMutableOrderedSet* validTouchesCurrentlyEnding = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
     [validTouchesCurrentlyEnding intersectSet:touches];
-    if([validTouchesCurrentlyEnding count]){
-        for(UITouch* touch in validTouchesCurrentlyEnding){
-            CGPoint point = [touch locationInView:self.view.superview];
-            BOOL bezelDirHasLeft = ((self.bezelDirectionMask & SLBezelDirectionLeft) == SLBezelDirectionLeft);
-            BOOL bezelDirHasRight = ((self.bezelDirectionMask & SLBezelDirectionRight) == SLBezelDirectionRight);
-            BOOL bezelDirHasUp = ((self.bezelDirectionMask & SLBezelDirectionUp) == SLBezelDirectionUp);
-            BOOL bezelDirHasDown = ((self.bezelDirectionMask & SLBezelDirectionDown) == SLBezelDirectionDown);
-            if(point.x < kBezelInGestureWidth && bezelDirHasLeft){
-                didExitToBezel = didExitToBezel | SLBezelDirectionLeft;
-                cancelledFromBezel = YES;
-            }else if(point.y < kBezelInGestureWidth && bezelDirHasUp){
-                didExitToBezel = didExitToBezel | SLBezelDirectionUp;
-                cancelledFromBezel = YES;
-            }else if(point.x > self.view.superview.frame.size.width - kBezelInGestureWidth && bezelDirHasRight){
-                didExitToBezel = didExitToBezel | SLBezelDirectionRight;
-                cancelledFromBezel = YES;
-            }else if(point.y > self.view.superview.frame.size.height - kBezelInGestureWidth && bezelDirHasDown){
-                didExitToBezel = didExitToBezel | SLBezelDirectionDown;
-                cancelledFromBezel = YES;
-            }
-        }
+
+    if(self.state == UIGestureRecognizerStateBegan ||
+       self.state == UIGestureRecognizerStateChanged){
         //
-        // ok, we need to increment the number of times the user has exited the
-        // bezel. only do it if the touch as exited bezel and if we're not
-        // double counting the last two touches.
-        if(didExitToBezel != SLBezelDirectionNone &&
-           !secondToLastTouchDidBezel &&
-           ([validTouches count] - [validTouchesCurrentlyEnding count]) < minimumNumberOfTouches){
-            numberOfRepeatingBezels ++;
-            if([validTouches count] - [validTouchesCurrentlyEnding count] == 1){
-                // that was the 2nd to last touch!
-                // set this flag so we don't double count it when the last
-                // touch ends
-                secondToLastTouchDidBezel = YES;
+        // make sure we've actually seen two fingers on the page
+        // before we change state or worry about bezeling
+        if([validTouchesCurrentlyEnding count]){
+            for(UITouch* touch in validTouchesCurrentlyEnding){
+                CGPoint point = [touch locationInView:self.view.superview];
+                BOOL bezelDirHasLeft = ((self.bezelDirectionMask & SLBezelDirectionLeft) == SLBezelDirectionLeft);
+                BOOL bezelDirHasRight = ((self.bezelDirectionMask & SLBezelDirectionRight) == SLBezelDirectionRight);
+                BOOL bezelDirHasUp = ((self.bezelDirectionMask & SLBezelDirectionUp) == SLBezelDirectionUp);
+                BOOL bezelDirHasDown = ((self.bezelDirectionMask & SLBezelDirectionDown) == SLBezelDirectionDown);
+                if(point.x < kBezelInGestureWidth && bezelDirHasLeft){
+                    didExitToBezel = didExitToBezel | SLBezelDirectionLeft;
+                    cancelledFromBezel = YES;
+                }else if(point.y < kBezelInGestureWidth && bezelDirHasUp){
+                    didExitToBezel = didExitToBezel | SLBezelDirectionUp;
+                    cancelledFromBezel = YES;
+                }else if(point.x > self.view.superview.frame.size.width - kBezelInGestureWidth && bezelDirHasRight){
+                    didExitToBezel = didExitToBezel | SLBezelDirectionRight;
+                    cancelledFromBezel = YES;
+                }else if(point.y > self.view.superview.frame.size.height - kBezelInGestureWidth && bezelDirHasDown){
+                    didExitToBezel = didExitToBezel | SLBezelDirectionDown;
+                    cancelledFromBezel = YES;
+                }
+            }
+            //
+            // ok, we need to increment the number of times the user has exited the
+            // bezel. only do it if the touch as exited bezel and if we're not
+            // double counting the last two touches.
+            if(didExitToBezel != SLBezelDirectionNone &&
+               !secondToLastTouchDidBezel &&
+               ([validTouches count] - [validTouchesCurrentlyEnding count]) < minimumNumberOfTouches){
+                numberOfRepeatingBezels ++;
+                if([validTouches count] - [validTouchesCurrentlyEnding count] == 1){
+                    // that was the 2nd to last touch!
+                    // set this flag so we don't double count it when the last
+                    // touch ends
+                    secondToLastTouchDidBezel = YES;
+                }
+            }
+            if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
+                self.state = UIGestureRecognizerStatePossible;
+            }
+            [validTouches minusOrderedSet:validTouchesCurrentlyEnding];
+            [ignoredTouches removeObjectsInSet:touches];
+        }
+        if([validTouches count] == 0 && self.state == UIGestureRecognizerStateChanged){
+            if(cancelledFromBezel){
+                self.state = UIGestureRecognizerStateCancelled;
+            }else{
+                self.state = UIGestureRecognizerStateEnded;
             }
         }
-        if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
-            self.state = UIGestureRecognizerStatePossible;
-        }
+        [self calculateVelocity];
+    }else{
+        //
+        // only 1 finger during this gesture, and it's exited
+        // so it doesn't count for bezeling or pan/pinch
         [validTouches minusOrderedSet:validTouchesCurrentlyEnding];
         [ignoredTouches removeObjectsInSet:touches];
     }
-    if([validTouches count] == 0 && self.state == UIGestureRecognizerStateChanged){
-        if(cancelledFromBezel){
-            self.state = UIGestureRecognizerStateCancelled;
-        }else{
-            self.state = UIGestureRecognizerStateEnded;
-        }
-    }
-    [self calculateVelocity];
 }
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
     NSMutableOrderedSet* validTouchesCurrentlyCancelling = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
