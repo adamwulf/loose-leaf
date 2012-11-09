@@ -52,7 +52,6 @@
 		66BD6E7D1593ACD400D4544C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E7C1593ACD400D4544C /* QuartzCore.framework */; };
 		66BD6E801593AF4200D4544C /* SLSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E7F1593AF4100D4544C /* SLSidebarButton.m */; };
 		66BD6E831593B12500D4544C /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E821593B12500D4544C /* CoreMotion.framework */; };
-		66BD6E861593B4A600D4544C /* NSThread+BlocksAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E851593B4A600D4544C /* NSThread+BlocksAdditions.m */; };
 		66BD6E8E1593D18800D4544C /* SLPolylineButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E8D1593D18800D4544C /* SLPolylineButton.m */; };
 		66BD6E911593DE4E00D4544C /* SLPolygonButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E901593DE4E00D4544C /* SLPolygonButton.m */; };
 		66BD6E941593E1D800D4544C /* SLImageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E931593E1D700D4544C /* SLImageButton.m */; };
@@ -196,8 +195,6 @@
 		66BD6E7E1593AF4100D4544C /* SLSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLSidebarButton.h; sourceTree = "<group>"; };
 		66BD6E7F1593AF4100D4544C /* SLSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLSidebarButton.m; sourceTree = "<group>"; };
 		66BD6E821593B12500D4544C /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		66BD6E841593B4A600D4544C /* NSThread+BlocksAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSThread+BlocksAdditions.h"; sourceTree = "<group>"; };
-		66BD6E851593B4A600D4544C /* NSThread+BlocksAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+BlocksAdditions.m"; sourceTree = "<group>"; };
 		66BD6E8B1593C3FF00D4544C /* SLSidebarButtonDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLSidebarButtonDelegate.h; sourceTree = "<group>"; };
 		66BD6E8C1593D18800D4544C /* SLPolylineButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPolylineButton.h; sourceTree = "<group>"; };
 		66BD6E8D1593D18800D4544C /* SLPolylineButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPolylineButton.m; sourceTree = "<group>"; };
@@ -297,8 +294,6 @@
 				660E1DB2159028560001DA12 /* NSArray+MapReduce.m */,
 				66BD6E391592CFE500D4544C /* UIView+SubviewStacks.h */,
 				66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */,
-				66BD6E841593B4A600D4544C /* NSThread+BlocksAdditions.h */,
-				66BD6E851593B4A600D4544C /* NSThread+BlocksAdditions.m */,
 				6693296E1598E4DC0033E557 /* NSString+UUID.h */,
 				6693296F1598E4DC0033E557 /* NSString+UUID.m */,
 				669329711598EE210033E557 /* UIView+Debug.h */,
@@ -749,7 +744,6 @@
 				66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */,
 				66BD6E701593A8CC00D4544C /* SLPlusButton.m in Sources */,
 				66BD6E801593AF4200D4544C /* SLSidebarButton.m in Sources */,
-				66BD6E861593B4A600D4544C /* NSThread+BlocksAdditions.m in Sources */,
 				66BD6E8E1593D18800D4544C /* SLPolylineButton.m in Sources */,
 				66BD6E911593DE4E00D4544C /* SLPolygonButton.m in Sources */,
 				66BD6E941593E1D800D4544C /* SLImageButton.m in Sources */,

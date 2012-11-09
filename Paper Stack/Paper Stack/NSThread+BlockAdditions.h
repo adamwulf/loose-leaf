@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSThread (BlocksAdditions)
+@interface NSThread (BlockAdditions)
 
 +(CGFloat) timeBlock:(void (^)())block;
 

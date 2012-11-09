@@ -15,7 +15,7 @@ CGFloat BNRTimeBlock (void (^block)(void));
 
 @end
 
-@implementation NSThread (BlocksAdditions)
+@implementation NSThread (BlockAdditions)
 
 +(CGFloat) timeBlock:(void (^)())block{
     return BNRTimeBlock(block);

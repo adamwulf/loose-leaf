@@ -9,7 +9,7 @@
 #import "SLShadowManager.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Constants.h"
-#import "NSThread+BlocksAdditions.h"
+#import "NSThread+BlockAdditions.h"
 
 @implementation SLShadowManager
 
