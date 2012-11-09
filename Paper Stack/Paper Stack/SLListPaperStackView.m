@@ -9,7 +9,7 @@
 #import "SLListPaperStackView.h"
 #import "SLPaperView+ListView.h"
 #import "UIView+Debug.h"
-#import "NSThread+BlocksAdditions.h"
+#import "NSThread+BlockAdditions.h"
 #import "SLShadowManager.h"
 
 @implementation SLListPaperStackView

@@ -17,7 +17,7 @@
 #import "SLShareButton.h"
 #import "SLMapButton.h"
 #import "SLSidebarButtonDelegate.h"
-#import "NSThread+BlocksAdditions.h"
+#import "NSThread+BlockAdditions.h"
 #import "SLRotationManager.h"
 #import "SLRotationManagerDelegate.h"
 #import "Constants.h"

@@ -9,7 +9,7 @@
 #import "SLPaperStackView.h"
 #import <QuartzCore/QuartzCore.h>
 #import "SLShadowManager.h"
-#import "NSThread+BlocksAdditions.h"
+#import "NSThread+BlockAdditions.h"
 
 @implementation SLPaperStackView
 
@@ -1132,20 +1132,21 @@
                          }];
     }else{
         CGFloat duration = .15;
-        
-        //
-        // always animate the shadow and the frame
-        CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
-        theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-        theAnimation.duration = duration;
-        theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
-        theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:self.bounds.size];
-        [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
-        [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut
-                         animations:^(void){
-                             page.frame = self.bounds;
-                             page.scale = 1;
-                         } completion:finishedBlock];
+        [[NSThread mainThread] performBlock:^{
+            //
+            // always animate the shadow and the frame
+            CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
+            theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+            theAnimation.duration = duration;
+            theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
+            theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:self.bounds.size];
+            [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
+            [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut
+                             animations:^(void){
+                                 page.frame = self.bounds;
+                                 page.scale = 1;
+                             } completion:finishedBlock];
+        } afterDelay:delay];
     }
 }
 
