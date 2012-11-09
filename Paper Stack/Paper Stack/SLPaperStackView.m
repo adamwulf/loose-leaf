@@ -887,9 +887,7 @@
  * this is used when a user drags a page to the left/right
  */
 -(BOOL) shouldPopPageFromVisibleStack:(SLPaperView*)page withFrame:(CGRect)frame{
-    //
-    // TODO: fix this, it's broken when page is scaled
-    return NO; // page.frame.origin.x + page.frame.size.width - self.frame.size.width > page.frame.size.width * 2 / 5;
+    return page.frame.origin.x > self.frame.size.width - kGutterWidthToDragPages;
 }
 
 /**
