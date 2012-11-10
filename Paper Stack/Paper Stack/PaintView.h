@@ -21,9 +21,13 @@
     CGContextRef cacheContext;
     
     //
-    // the current stroke, if any
-    NSMutableArray* currentStrokes;
-    
+    // This array holds multiple StrokeSegment objects
+    // for each segement of the user's current stroke
+    //
+    // this lets us keep the current stroke out of the
+    // cacheContext and only rasterize it once the user
+    // confirms the stroke
+    NSMutableArray* currentStrokeSegments;
     
     //
     // the delegate that tells us which views
