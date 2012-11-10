@@ -21,6 +21,11 @@
     CGContextRef cacheContext;
     
     //
+    // the current stroke, if any
+    NSMutableArray* currentStrokes;
+    
+    
+    //
     // the delegate that tells us which views
     // are "above" this view so that we can clip
     // the strokes properly

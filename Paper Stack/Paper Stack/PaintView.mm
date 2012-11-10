@@ -10,10 +10,37 @@
 #import "NSThread+BlockAdditions.h"
 #import "SLPaperView.h"
 
-@interface PaintView (Private)
-
+@interface Stroke : NSObject{
+    CGFloat fingerWidth;
+    CGRect rectToDisplay;
+    UIBezierPath* path;
+}
+@property (nonatomic, assign) CGFloat fingerWidth;
+@property (nonatomic, assign) CGRect rectToDisplay;
+@property (nonatomic, retain) UIBezierPath* path;
 
 @end
+
+@implementation Stroke
+@synthesize rectToDisplay;
+@synthesize fingerWidth;
+@synthesize path;
+
++(Stroke*) strokeWithFingerWidth:(CGFloat)_fingerWidth andRect:(CGRect)_rectToDisplay andPath:(UIBezierPath*)_path{
+    return [[[Stroke alloc] initWithFingerWidth:_fingerWidth andRect:_rectToDisplay andPath:_path] autorelease];
+}
+
+-(id) initWithFingerWidth:(CGFloat)_fingerWidth andRect:(CGRect)_rectToDisplay andPath:(UIBezierPath*)_path{
+    if(self = [super init]){
+        self.fingerWidth = _fingerWidth;
+        self.rectToDisplay = _rectToDisplay;
+        self.path = _path;
+    }
+    return self;
+}
+
+@end
+
 
 @implementation PaintView
 
@@ -28,6 +55,7 @@
         [self initContext:frame.size];
         self.backgroundColor = [UIColor clearColor];
         self.clearsContextBeforeDrawing = NO;
+        currentStrokes = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -106,17 +134,17 @@
  *
  * sets some basic pen properties of the context
  */
--(void) tickHueWithFingerWidth:(CGFloat)fingerWidth{
+-(void) tickHueWithFingerWidth:(CGFloat)fingerWidth forContext:(CGContextRef)context{
 //    hue += 0.3;
 //    if(hue > 1.0) hue = 0.0;
 //    UIColor *color = [UIColor colorWithHue:hue saturation:0.7 brightness:1.0 alpha:1.0];
 //    CGContextSetStrokeColorWithColor(cacheContext, [color CGColor]);
-    CGContextSetStrokeColorWithColor(cacheContext, [[UIColor blackColor] CGColor]);
-    CGContextSetLineCap(cacheContext, kCGLineCapRound);
-    CGContextSetLineWidth(cacheContext, fingerWidth / 1.5);
-    CGContextSetLineJoin(cacheContext, kCGLineJoinMiter);
-    CGContextSetMiterLimit(cacheContext, 20);
-    CGContextSetFlatness(cacheContext, 1.0);
+    CGContextSetStrokeColorWithColor(context, [[UIColor blackColor] CGColor]);
+    CGContextSetLineCap(context, kCGLineCapRound);
+    CGContextSetLineWidth(context, fingerWidth / 1.5);
+    CGContextSetLineJoin(context, kCGLineJoinMiter);
+    CGContextSetMiterLimit(context, 20);
+    CGContextSetFlatness(context, 1.0);
 }
 
 
@@ -168,31 +196,21 @@
     // check to see if the bezier curve intersects this
     // paint frame at all, or if we can safely ignore it
     if(CGRectIntersectsRect(self.bounds, rectToDraw)){
-        // time the drawing
-//        CGFloat time = [NSThread timeBlock:^{
-            // update our pen properties
-            [self tickHueWithFingerWidth:fingerWidth];
-            // calculate the clip path if needed
-            [self updateCachedClipPathForContext:cacheContext andDraw:NO];
-            //
-            // calculate a closed path for the input stroke
-            UIBezierPath* strokedPath = [UIBezierPath bezierPath];
-            [strokedPath moveToPoint:point1];
-            [strokedPath addCurveToPoint:point2 controlPoint1:ctrl1 controlPoint2:ctrl2];
-            //
-            // now we know the stroke, so clip it to our
-            // visible area
-            UIBezierPath* clippedPath = [strokedPath unclosedPathFromIntersectionWithPath:cachedClipPath];
+        // calculate the clip path if needed
+        [self updateCachedClipPathForContext:cacheContext andDraw:NO];
+        //
+        // calculate a closed path for the input stroke
+        UIBezierPath* strokedPath = [UIBezierPath bezierPath];
+        [strokedPath moveToPoint:point1];
+        [strokedPath addCurveToPoint:point2 controlPoint1:ctrl1 controlPoint2:ctrl2];
+        //
+        // now we know the stroke, so clip it to our
+        // visible area
+        UIBezierPath* clippedPath = [strokedPath unclosedPathFromIntersectionWithPath:cachedClipPath];
 
-            //
-            // now draw it
-            CGContextAddPath(cacheContext, clippedPath.CGPath);
-            CGContextStrokePath(cacheContext);
-            [self setNeedsDisplayInRect:rectToDraw];
-//            [self setNeedsDisplayInRect:self.bounds];
-//        }];
+        [currentStrokes addObject:[Stroke strokeWithFingerWidth:fingerWidth andRect:rectToDraw andPath:clippedPath]];
         
-//        NSLog(@"time for clip: %f", time);
+        [self setNeedsDisplayInRect:rectToDraw];
     }else{
         // doesn't intersect this paint view at all,
         // so don't draw it
@@ -220,10 +238,7 @@
     // only draw the point if it is inside of
     // our visible area
     if([cachedClipPath containsPoint:point]){
-        // update our pen properties
-        [self tickHueWithFingerWidth:fingerWidth];
-        // draw
-        CGContextFillEllipseInRect(cacheContext, rectToDisplay);
+        [currentStrokes addObject:[Stroke strokeWithFingerWidth:fingerWidth andRect:rectToDisplay andPath:[UIBezierPath bezierPathWithOvalInRect:rectToDisplay]]];
         [self setNeedsDisplayInRect:rectToDisplay];
     }
 }
@@ -256,8 +271,6 @@
     //
     // only draw if the line intersects us
     if(CGRectIntersectsRect(self.bounds, rectToDraw)){
-        // update pen properties
-        [self tickHueWithFingerWidth:fingerWidth];
         // calculate the clip path if needed
         [self updateCachedClipPathForContext:cacheContext andDraw:NO];
         // calculate the line drawn...
@@ -266,15 +279,32 @@
         [strokedPath addLineToPoint:end];
         // ...and clip that line to our visible area
         UIBezierPath* clippedPath = [strokedPath unclosedPathFromIntersectionWithPath:cachedClipPath];
-        // now draw it
-        CGContextAddPath(cacheContext, clippedPath.CGPath);
-        CGContextStrokePath(cacheContext);
+        
+        [currentStrokes addObject:[Stroke strokeWithFingerWidth:fingerWidth andRect:rectToDraw andPath:clippedPath]];
         [self setNeedsDisplayInRect:rectToDraw];
     }else{
         // doesn't intersect our view at all
     }
 }
 
+-(void) cancelStroke{
+    [currentStrokes removeAllObjects];
+    [self setNeedsDisplay];
+}
+-(void) commitStroke{
+    [self commitStrokesToContext:cacheContext];
+    [currentStrokes removeAllObjects];
+}
+-(void) commitStrokesToContext:(CGContextRef)context{
+    for(Stroke* stroke in currentStrokes){
+        // time the drawing
+        // update our pen properties
+        [self tickHueWithFingerWidth:stroke.fingerWidth forContext:context];
+        // now draw it
+        CGContextAddPath(context, stroke.path.CGPath);
+        CGContextStrokePath(context);
+    }
+}
 
 /**
  *
@@ -291,6 +321,9 @@
     CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
     CGContextDrawImage(context, self.bounds, cacheImage);
     CGImageRelease(cacheImage);
+    
+    
+    [self commitStrokesToContext:context];
     
     if([delegate shouldDrawClipPath]){
         [self updateCachedClipPathForContext:context andDraw:YES];
