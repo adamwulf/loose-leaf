@@ -56,7 +56,6 @@
         
         paintView = [[PaintView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width * kMaxPageResolution, self.bounds.size.height * kMaxPageResolution)];
         paintView.autoresizingMask = UIViewAutoresizingNone; // UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        paintView.page = self;
         [self.contentView addSubview:paintView];
         initialPaintViewFrame = paintView.frame;
         [self updatePaintScaleTransform];
