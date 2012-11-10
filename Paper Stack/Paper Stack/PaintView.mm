@@ -19,7 +19,6 @@
 
 @synthesize delegate;
 @synthesize clipPath;
-@synthesize page;
 
 - (id)initWithFrame:(CGRect)frame
 {
