@@ -14,10 +14,12 @@
     CGFloat fingerWidth;
     CGRect rectToDisplay;
     UIBezierPath* path;
+    BOOL shouldFillInsteadOfStroke;
 }
 @property (nonatomic, assign) CGFloat fingerWidth;
 @property (nonatomic, assign) CGRect rectToDisplay;
 @property (nonatomic, retain) UIBezierPath* path;
+@property (nonatomic, assign) BOOL shouldFillInsteadOfStroke;
 
 @end
 
@@ -25,16 +27,22 @@
 @synthesize rectToDisplay;
 @synthesize fingerWidth;
 @synthesize path;
+@synthesize shouldFillInsteadOfStroke;
 
 +(Stroke*) strokeWithFingerWidth:(CGFloat)_fingerWidth andRect:(CGRect)_rectToDisplay andPath:(UIBezierPath*)_path{
-    return [[[Stroke alloc] initWithFingerWidth:_fingerWidth andRect:_rectToDisplay andPath:_path] autorelease];
+    return [[[Stroke alloc] initWithFingerWidth:_fingerWidth andRect:_rectToDisplay andPath:_path andFill:NO] autorelease];
 }
 
--(id) initWithFingerWidth:(CGFloat)_fingerWidth andRect:(CGRect)_rectToDisplay andPath:(UIBezierPath*)_path{
++(Stroke*) strokeWithFingerWidth:(CGFloat)_fingerWidth andRect:(CGRect)_rectToDisplay andPath:(UIBezierPath*)_path andFill:(BOOL)_fill{
+    return [[[Stroke alloc] initWithFingerWidth:_fingerWidth andRect:_rectToDisplay andPath:_path andFill:_fill] autorelease];
+}
+
+-(id) initWithFingerWidth:(CGFloat)_fingerWidth andRect:(CGRect)_rectToDisplay andPath:(UIBezierPath*)_path andFill:(BOOL)_shouldFillInsteadOfStroke{
     if(self = [super init]){
         self.fingerWidth = _fingerWidth;
         self.rectToDisplay = _rectToDisplay;
         self.path = _path;
+        self.shouldFillInsteadOfStroke = _shouldFillInsteadOfStroke;
     }
     return self;
 }
@@ -238,7 +246,7 @@
     // only draw the point if it is inside of
     // our visible area
     if([cachedClipPath containsPoint:point]){
-        [currentStrokes addObject:[Stroke strokeWithFingerWidth:fingerWidth andRect:rectToDisplay andPath:[UIBezierPath bezierPathWithOvalInRect:rectToDisplay]]];
+        [currentStrokes addObject:[Stroke strokeWithFingerWidth:fingerWidth andRect:rectToDisplay andPath:[UIBezierPath bezierPathWithOvalInRect:rectToDisplay] andFill:YES]];
         [self setNeedsDisplayInRect:rectToDisplay];
     }
 }
@@ -302,7 +310,11 @@
         [self tickHueWithFingerWidth:stroke.fingerWidth forContext:context];
         // now draw it
         CGContextAddPath(context, stroke.path.CGPath);
-        CGContextStrokePath(context);
+        if(stroke.shouldFillInsteadOfStroke){
+            CGContextFillPath(context);
+        }else{
+            CGContextStrokePath(context);
+        }
     }
 }
 
