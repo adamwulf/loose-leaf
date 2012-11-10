@@ -39,4 +39,7 @@
                 withFingerWidth:(CGFloat)fingerWidth
                        fromView:(UIView*)view;
 
+-(void) cancelStroke;
+-(void) commitStroke;
+
 @end

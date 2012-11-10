@@ -168,8 +168,12 @@
                  withFingerWidth:drawGesture.fingerWidth
                         fromView:self];
         }
+        if(drawGesture.state == UIGestureRecognizerStateEnded){
+            [self commitStroke];
+        }
     }else{
         // cancelled or something
+        [self cancelStroke];
     }
 }
 
@@ -284,6 +288,7 @@
 -(void) panAndScale:(SLPanAndPinchGestureRecognizer*)_panGesture{
     //
     // cancel drawing, if any
+    [drawGesture cancel];
     [drawGesture setEnabled:NO];
     
     
@@ -511,6 +516,14 @@
 
 -(BOOL) fullyContainsArcAtStart:(CGPoint)point1 end:(CGPoint)point2 controlPoint1:(CGPoint)ctrl1 controlPoint2:(CGPoint)ctrl2 withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
     return YES;
+}
+
+-(void) cancelStroke{
+    [paintView cancelStroke];
+}
+
+-(void) commitStroke{
+    [paintView commitStroke];
 }
 
 
