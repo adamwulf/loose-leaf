@@ -10,7 +10,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "SLPaperView.h"
 
-@interface Stroke : NSObject{
+@interface StrokeSegment : NSObject{
     CGFloat fingerWidth;
     CGRect rectToDisplay;
     UIBezierPath* path;
@@ -23,18 +23,18 @@
 
 @end
 
-@implementation Stroke
+@implementation StrokeSegment
 @synthesize rectToDisplay;
 @synthesize fingerWidth;
 @synthesize path;
 @synthesize shouldFillInsteadOfStroke;
 
-+(Stroke*) strokeWithFingerWidth:(CGFloat)_fingerWidth andRect:(CGRect)_rectToDisplay andPath:(UIBezierPath*)_path{
-    return [[[Stroke alloc] initWithFingerWidth:_fingerWidth andRect:_rectToDisplay andPath:_path andFill:NO] autorelease];
++(StrokeSegment*) strokeWithFingerWidth:(CGFloat)_fingerWidth andRect:(CGRect)_rectToDisplay andPath:(UIBezierPath*)_path{
+    return [[[StrokeSegment alloc] initWithFingerWidth:_fingerWidth andRect:_rectToDisplay andPath:_path andFill:NO] autorelease];
 }
 
-+(Stroke*) strokeWithFingerWidth:(CGFloat)_fingerWidth andRect:(CGRect)_rectToDisplay andPath:(UIBezierPath*)_path andFill:(BOOL)_fill{
-    return [[[Stroke alloc] initWithFingerWidth:_fingerWidth andRect:_rectToDisplay andPath:_path andFill:_fill] autorelease];
++(StrokeSegment*) strokeWithFingerWidth:(CGFloat)_fingerWidth andRect:(CGRect)_rectToDisplay andPath:(UIBezierPath*)_path andFill:(BOOL)_fill{
+    return [[[StrokeSegment alloc] initWithFingerWidth:_fingerWidth andRect:_rectToDisplay andPath:_path andFill:_fill] autorelease];
 }
 
 -(id) initWithFingerWidth:(CGFloat)_fingerWidth andRect:(CGRect)_rectToDisplay andPath:(UIBezierPath*)_path andFill:(BOOL)_shouldFillInsteadOfStroke{
@@ -63,7 +63,7 @@
         [self initContext:frame.size];
         self.backgroundColor = [UIColor clearColor];
         self.clearsContextBeforeDrawing = NO;
-        currentStrokes = [[NSMutableArray alloc] init];
+        currentStrokeSegments = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -216,7 +216,12 @@
         // visible area
         UIBezierPath* clippedPath = [strokedPath unclosedPathFromIntersectionWithPath:cachedClipPath];
 
-        [currentStrokes addObject:[Stroke strokeWithFingerWidth:fingerWidth andRect:rectToDraw andPath:clippedPath]];
+        // TODO should I check if clippedPath is empty here?
+        if([clippedPath isEmpty]){
+            NSLog(@"drawing empty path!");
+        }
+
+        [currentStrokeSegments addObject:[StrokeSegment strokeWithFingerWidth:fingerWidth andRect:rectToDraw andPath:clippedPath]];
         
         [self setNeedsDisplayInRect:rectToDraw];
     }else{
@@ -246,7 +251,7 @@
     // only draw the point if it is inside of
     // our visible area
     if([cachedClipPath containsPoint:point]){
-        [currentStrokes addObject:[Stroke strokeWithFingerWidth:fingerWidth andRect:rectToDisplay andPath:[UIBezierPath bezierPathWithOvalInRect:rectToDisplay] andFill:YES]];
+        [currentStrokeSegments addObject:[StrokeSegment strokeWithFingerWidth:fingerWidth andRect:rectToDisplay andPath:[UIBezierPath bezierPathWithOvalInRect:rectToDisplay] andFill:YES]];
         [self setNeedsDisplayInRect:rectToDisplay];
     }
 }
@@ -287,30 +292,42 @@
         [strokedPath addLineToPoint:end];
         // ...and clip that line to our visible area
         UIBezierPath* clippedPath = [strokedPath unclosedPathFromIntersectionWithPath:cachedClipPath];
-        
-        [currentStrokes addObject:[Stroke strokeWithFingerWidth:fingerWidth andRect:rectToDraw andPath:clippedPath]];
+
+        [currentStrokeSegments addObject:[StrokeSegment strokeWithFingerWidth:fingerWidth andRect:rectToDraw andPath:clippedPath]];
         [self setNeedsDisplayInRect:rectToDraw];
     }else{
         // doesn't intersect our view at all
     }
 }
 
+/**
+ * to cancel a stroke, simply remove all the segments
+ * from the current stroke and redisplay the view
+ */
 -(void) cancelStroke{
-    [currentStrokes removeAllObjects];
+    [currentStrokeSegments removeAllObjects];
     [self setNeedsDisplay];
 }
+/**
+ * to commit the stroke, draw them to our backing store
+ * and reset our current stroke cache to empty
+ */
 -(void) commitStroke{
     [self commitStrokesToContext:cacheContext];
-    [currentStrokes removeAllObjects];
+    [currentStrokeSegments removeAllObjects];
 }
+/**
+ * helper method to draw our cache of stroke segments
+ * to an arbitrary context
+ */
 -(void) commitStrokesToContext:(CGContextRef)context{
-    for(Stroke* stroke in currentStrokes){
+    for(StrokeSegment* segment in currentStrokeSegments){
         // time the drawing
         // update our pen properties
-        [self tickHueWithFingerWidth:stroke.fingerWidth forContext:context];
+        [self tickHueWithFingerWidth:segment.fingerWidth forContext:context];
         // now draw it
-        CGContextAddPath(context, stroke.path.CGPath);
-        if(stroke.shouldFillInsteadOfStroke){
+        CGContextAddPath(context, segment.path.CGPath);
+        if(segment.shouldFillInsteadOfStroke){
             CGContextFillPath(context);
         }else{
             CGContextStrokePath(context);
@@ -325,16 +342,19 @@
  * it's commented out so that i can test only clipping
  * with paths in the below fuction w/o worrying about the
  * imagecontext
+ *
+ * TODO
+ * future optimization to only stroke the StrokeSegments that
+ * overlap the input rect
  */
 - (void) drawRect:(CGRect)rect {
-    
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
     CGContextDrawImage(context, self.bounds, cacheImage);
     CGImageRelease(cacheImage);
-    
-    
+    //
+    // draw the active stroke, if any, to the screen context
     [self commitStrokesToContext:context];
     
     if([delegate shouldDrawClipPath]){
@@ -342,12 +362,21 @@
     }
 }
 
-
+/**
+ * this method updates our cached clipping path for any strokes
+ * that the user draws to this view.
+ *
+ * this method is expensive and should only be called when a view
+ * "above" us is added/deleted/moved/changed etc
+ */
 -(void) updateClipPath{
     [cachedClipPath release];
     cachedClipPath = nil;
     [self updateCachedClipPathForContext:cacheContext andDraw:NO];
 }
+
+
+
 #pragma mark - Clipping
 
 /**
