@@ -59,6 +59,7 @@
 		66BD6E991593E9C400D4544C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E981593E9C300D4544C /* CoreText.framework */; };
 		66BD6E9C15940D7500D4544C /* SLPencilButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9B15940D7400D4544C /* SLPencilButton.m */; };
 		66BD6E9F15941B7B00D4544C /* SLShareButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9E15941B7B00D4544C /* SLShareButton.m */; };
+		66C9042C164EF8A900E58FD3 /* StrokeSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C9042B164EF8A900E58FD3 /* StrokeSegment.m */; };
 		66D0905615F70810004D2CAF /* SLListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* SLListAddPageButton.m */; };
 		66D33F4C15A6408A0044C809 /* SLShadowedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D33F4B15A6408A0044C809 /* SLShadowedView.m */; };
 		66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
@@ -210,6 +211,8 @@
 		66BD6E9D15941B7A00D4544C /* SLShareButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLShareButton.h; sourceTree = "<group>"; };
 		66BD6E9E15941B7B00D4544C /* SLShareButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SLShareButton.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		66C47DA5158EF03200E2CD0C /* SLPaperViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperViewDelegate.h; sourceTree = "<group>"; };
+		66C9042A164EF8A900E58FD3 /* StrokeSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrokeSegment.h; sourceTree = "<group>"; };
+		66C9042B164EF8A900E58FD3 /* StrokeSegment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StrokeSegment.m; sourceTree = "<group>"; };
 		66D0905415F7080F004D2CAF /* SLListAddPageButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLListAddPageButton.h; sourceTree = "<group>"; };
 		66D0905515F70810004D2CAF /* SLListAddPageButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLListAddPageButton.m; sourceTree = "<group>"; };
 		66D0905815F71941004D2CAF /* SLListAddPageButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLListAddPageButtonDelegate.h; sourceTree = "<group>"; };
@@ -425,6 +428,8 @@
 				665978F91643191000E10FC7 /* PaintTouchViewDelegate.h */,
 				665978F6164318E300E10FC7 /* PaintView.h */,
 				665978F7164318E300E10FC7 /* PaintView.mm */,
+				66C9042A164EF8A900E58FD3 /* StrokeSegment.h */,
+				66C9042B164EF8A900E58FD3 /* StrokeSegment.m */,
 			);
 			name = Drawing;
 			sourceTree = "<group>";
@@ -772,6 +777,7 @@
 				665978F3164318CA00E10FC7 /* SLDrawingGestureRecognizer.m in Sources */,
 				665978F4164318CA00E10FC7 /* SLDrawingTapGestureRecognizer.m in Sources */,
 				665978F5164318CA00E10FC7 /* SLPanGestureRecognizer.m in Sources */,
+				66C9042C164EF8A900E58FD3 /* StrokeSegment.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
