@@ -25,6 +25,8 @@
         self.backgroundColor = [UIColor clearColor];
         self.clearsContextBeforeDrawing = NO;
         currentStrokeSegments = [[NSMutableArray alloc] init];
+        committedStrokes = [[NSMutableArray alloc] init];
+        undoneStrokes = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -274,15 +276,38 @@
  * and reset our current stroke cache to empty
  */
 -(void) commitStroke{
-    [self commitStrokesToContext:cacheContext];
+    [committedStrokes addObject:[NSArray arrayWithArray:currentStrokeSegments]];
+    if([committedStrokes count] > 10){
+        [self commitStroke:[committedStrokes objectAtIndex:0] toContext:cacheContext];
+        [committedStrokes removeObjectAtIndex:0];
+    }
+    [undoneStrokes removeAllObjects];
     [currentStrokeSegments removeAllObjects];
 }
+
+-(void) undo{
+    if([committedStrokes count]){
+        [undoneStrokes addObject:[committedStrokes lastObject]];
+        [committedStrokes removeLastObject];
+        [self setNeedsDisplay];
+    }
+}
+-(void) redo{
+    if([undoneStrokes count]){
+        [committedStrokes addObject:[undoneStrokes lastObject]];
+        [undoneStrokes removeLastObject];
+        [self setNeedsDisplay];
+    }
+}
+
+
+
 /**
  * helper method to draw our cache of stroke segments
  * to an arbitrary context
  */
--(void) commitStrokesToContext:(CGContextRef)context{
-    for(StrokeSegment* segment in currentStrokeSegments){
+-(void) commitStroke:(NSArray*)stroke toContext:(CGContextRef)context{
+    for(StrokeSegment* segment in stroke){
         // time the drawing
         // update our pen properties
         [self tickHueWithFingerWidth:segment.fingerWidth forContext:context];
@@ -314,9 +339,16 @@
     CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
     CGContextDrawImage(context, self.bounds, cacheImage);
     CGImageRelease(cacheImage);
+    
+    //
+    // draw all the undo states
+    for(NSArray* stroke in committedStrokes){
+        [self commitStroke:stroke toContext:context];
+    }
+    
     //
     // draw the active stroke, if any, to the screen context
-    [self commitStrokesToContext:context];
+    [self commitStroke:currentStrokeSegments toContext:context];
     
     if([delegate shouldDrawClipPath]){
         [self updateCachedClipPathForContext:context andDraw:YES];

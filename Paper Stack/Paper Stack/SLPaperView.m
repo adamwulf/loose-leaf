@@ -526,5 +526,12 @@
     [paintView commitStroke];
 }
 
+-(void) undo{
+    [paintView undo];
+}
+
+-(void) redo{
+    [paintView redo];
+}
 
 @end

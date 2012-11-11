@@ -28,6 +28,8 @@
     // cacheContext and only rasterize it once the user
     // confirms the stroke
     NSMutableArray* currentStrokeSegments;
+    NSMutableArray* committedStrokes;
+    NSMutableArray* undoneStrokes;
     
     //
     // the delegate that tells us which views
@@ -54,5 +56,8 @@
 @property (nonatomic, retain) UIBezierPath* clipPath;
 
 -(void) updateClipPath;
+
+-(void) undo;
+-(void) redo;
 
 @end
