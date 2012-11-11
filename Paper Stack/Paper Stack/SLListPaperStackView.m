@@ -85,7 +85,11 @@
 }
 
 -(void) didTapAddButtonInListView{
-    SLPaperView* paper = [[SLPaperView alloc] initWithFrame:addPageButtonInListView.frame];
+    //
+    // this'll determine the resolution of the canvas too
+    SLPaperView* paper = [[SLPaperView alloc] initWithFrame:self.bounds];
+    // now size it for display
+    paper.frame = addPageButtonInListView.frame;
     [self addPaperToBottomOfHiddenStack:paper];
     [self ensurePageIsAtTopOfVisibleStack:paper];
     [self immediatelyAnimateFromListViewToFullScreenView];
