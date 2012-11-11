@@ -80,6 +80,18 @@
     [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:addPageSidebarButton];
     
+    CGRect undoButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar - 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton);
+    undoButton = [[SLTextButton alloc] initWithFrame:undoButtonFrame andFont:[UIFont fontWithName:@"TimesNewRomanPS-ItalicMT" size:28] andLetter:@"<" andXOffset:2];
+    undoButton.delegate = self;
+    [undoButton addTarget:self action:@selector(undo:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:undoButton];
+
+    CGRect redoButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar - 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton);
+    redoButton = [[SLTextButton alloc] initWithFrame:redoButtonFrame andFont:[UIFont fontWithName:@"TimesNewRomanPS-ItalicMT" size:28] andLetter:@">" andXOffset:2];
+    redoButton.delegate = self;
+    [redoButton addTarget:self action:@selector(redo:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:redoButton];
+
     //
     // accelerometer for rotating buttons
     // ================================================================================
@@ -130,6 +142,8 @@
         pencilButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         shareButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         mapButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        undoButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        redoButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
     }];
 }
 
@@ -154,6 +168,8 @@
         pencilButton.alpha = visible;
         shareButton.alpha = visible;
         mapButton.alpha = visible;
+        redoButton.alpha = visible;
+        undoButton.alpha = visible;
     }];
 }
 
@@ -173,4 +189,17 @@
     [self setButtonsVisible:YES];
     [super finishedScalingBackToPageView:page];
 }
+
+
+
+-(void) undo:(SLTextButton*)undoButton{
+    [[visibleStackHolder peekSubview] undo];
+}
+
+-(void) redo:(SLTextButton*)undoButton{
+    [[visibleStackHolder peekSubview] redo];
+}
+
+
+
 @end

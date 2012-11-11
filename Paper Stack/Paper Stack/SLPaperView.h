@@ -61,4 +61,7 @@
 -(void) disableAllGestures;
 -(void) enableAllGestures;
 
+-(void) undo;
+-(void) redo;
+
 @end
