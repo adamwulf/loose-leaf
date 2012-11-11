@@ -42,4 +42,6 @@
 -(NSInteger) columnInListViewGivenIndex:(NSInteger) indexOfPage;
 -(BOOL) isInVisibleStack:(SLPaperView*)page;
 
+-(CGSize) sizeOfPaper;
+
 @end

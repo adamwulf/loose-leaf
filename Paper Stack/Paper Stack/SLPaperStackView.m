@@ -836,6 +836,11 @@
 }
 
 
+-(CGSize) sizeOfPaper{
+    return self.bounds.size;
+}
+
+
 #pragma mark - SLPaperViewDelegate - List Methods
 
 -(void) isBeginningToScaleReallySmall:(SLPaperView *)page{
