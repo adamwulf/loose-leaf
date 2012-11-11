@@ -277,7 +277,7 @@
  */
 -(void) commitStroke{
     [committedStrokes addObject:[NSArray arrayWithArray:currentStrokeSegments]];
-    if([committedStrokes count] > 10){
+    if([committedStrokes count] > kUndoLimit){
         [self commitStroke:[committedStrokes objectAtIndex:0] toContext:cacheContext];
         [committedStrokes removeObjectAtIndex:0];
     }
