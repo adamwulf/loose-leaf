@@ -16,12 +16,11 @@
 @synthesize delegate;
 @synthesize clipPath;
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
         hue = 4.0;
-        [self initContext:frame.size];
+        backingStore = [[SLBackingStore alloc] initWithSize:frame.size];
         self.backgroundColor = [UIColor clearColor];
         self.clearsContextBeforeDrawing = NO;
         currentStrokeSegments = [[NSMutableArray alloc] init];
@@ -43,60 +42,6 @@
     }
     return clipPath;
 }
-
-/**
- * every PaintView is backed by a bitmap context of the same size
- *
- * this bitmap context holds all of the ink that's been drawn onto
- * this paint view
- *
- * to change to alpha only:
- * in the CGBitmapContextCreate
- * colorspace should be NULL
- * bitmapBytesPerRow should be * 1
- * kCGImageAlphaPremultipliedFirst should be kCGImageAlphaOnly
- */
-- (BOOL) initContext:(CGSize)size {
-	float scaleFactor = [[UIScreen mainScreen] scale];
-    
-	// Declare the number of bytes per row. Each pixel in the bitmap in this
-	// example is represented by 4 bytes; 8 bits each of red, green, blue, and
-	// alpha.
-	int	bitmapBytesPerRow = (size.width * scaleFactor * 4); // only alpha;
-    int bitsPerComponent = 8;
-	
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    
-    //
-    // create the bitmap context that we'll use to cache
-    // the drawn strokes
-    cacheContext = CGBitmapContextCreate (NULL, size.width * scaleFactor, size.height * scaleFactor, bitsPerComponent, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst);
-    // set scale for high res display
-    CGContextScaleCTM(cacheContext, scaleFactor, scaleFactor);
-    // antialias the strokes
-    CGContextSetAllowsAntialiasing(cacheContext, YES);
-    CGContextSetShouldAntialias(cacheContext, YES);
-    // allow transparency
-    CGContextSetAlpha(cacheContext, 1);
-    //
-    // when saving this context out to disk, i should be able to use
-    // CGBitmapContextGetData to get the raw bytes  of the data
-    // and then save to disk.
-    //
-    // then, reading this from disk and using these bytes again
-    // to initialize a context should work.
-    //
-    // in theory!
-    //
-    // int bitmapByteCount = (bitmapBytesPerRow * size.height * scaleFactor);
-    // void* data = CGBitmapContextGetData(cacheContext);
-    // NSData* dataForFile = [NSData dataWithBytesNoCopy:data length:bitmapByteCount];
-    
-    
-    return YES;
-}
-
-
 
 #pragma mark - SLDrawingGestureRecognizerDelegate
 
@@ -168,7 +113,7 @@
     // paint frame at all, or if we can safely ignore it
     if(CGRectIntersectsRect(self.bounds, rectToDraw)){
         // calculate the clip path if needed
-        [self updateCachedClipPathForContext:cacheContext andDraw:NO];
+        [self updateCachedClipPathForContext:backingStore.cacheContext andDraw:NO];
         //
         // calculate a closed path for the input stroke
         UIBezierPath* strokedPath = [UIBezierPath bezierPath];
@@ -209,7 +154,7 @@
     CGRect rectToDisplay = CGRectMake(point.x - .5*dotDiameter, point.y - .5*dotDiameter, dotDiameter, dotDiameter);
 
     // calculate the clip path if needed
-    [self updateCachedClipPathForContext:cacheContext andDraw:NO];
+    [self updateCachedClipPathForContext:backingStore.cacheContext andDraw:NO];
 
     // only draw the point if it is inside of
     // our visible area
@@ -248,7 +193,7 @@
     // only draw if the line intersects us
     if(CGRectIntersectsRect(self.bounds, rectToDraw)){
         // calculate the clip path if needed
-        [self updateCachedClipPathForContext:cacheContext andDraw:NO];
+        [self updateCachedClipPathForContext:backingStore.cacheContext andDraw:NO];
         // calculate the line drawn...
         UIBezierPath* strokedPath = [UIBezierPath bezierPath];
         [strokedPath moveToPoint:start];
@@ -278,7 +223,7 @@
 -(void) commitStroke{
     [committedStrokes addObject:[NSArray arrayWithArray:currentStrokeSegments]];
     if([committedStrokes count] > kUndoLimit){
-        [self commitStroke:[committedStrokes objectAtIndex:0] toContext:cacheContext];
+        [self commitStroke:[committedStrokes objectAtIndex:0] toContext:backingStore.cacheContext];
         [committedStrokes removeObjectAtIndex:0];
     }
     [undoneStrokes removeAllObjects];
@@ -336,7 +281,7 @@
 - (void) drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
+    CGImageRef cacheImage = CGBitmapContextCreateImage(backingStore.cacheContext);
     CGContextDrawImage(context, self.bounds, cacheImage);
     CGImageRelease(cacheImage);
     
@@ -365,7 +310,7 @@
 -(void) updateClipPath{
     [cachedClipPath release];
     cachedClipPath = nil;
-    [self updateCachedClipPathForContext:cacheContext andDraw:NO];
+    [self updateCachedClipPathForContext:backingStore.cacheContext andDraw:NO];
 }
 
 
@@ -506,7 +451,7 @@
 }
 
 -(void) dealloc{
-    CGContextRelease(cacheContext);
+    [backingStore release];
     [super dealloc];
 }
 

@@ -7,18 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <DrawKit-iOS/DrawKit-iOS.h>
 #import <QuartzCore/QuartzCore.h>
 #import "PaintableViewDelegate.h"
 #import "PaintTouchViewDelegate.h"
-#import <DrawKit-iOS/DrawKit-iOS.h>
+#import "SLBackingStore.h"
 
 @class SLPaperView;
 
 @interface PaintView : UIView<PaintTouchViewDelegate> {
     //
     // the bitmap backing store for the strokes
-    void *cacheBitmap;
-    CGContextRef cacheContext;
+    //
+    // this handles creating the cgcontext to draw to
+    // as well as saving to/from disk
+    SLBackingStore* backingStore;
     
     //
     // This array holds multiple StrokeSegment objects
