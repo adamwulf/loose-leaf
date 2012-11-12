@@ -54,6 +54,8 @@
 
 -(void) addPaperToBottomOfStack:(SLPaperView*)page;
 -(void) addPaperToBottomOfHiddenStack:(SLPaperView*)page;
+-(void) pushPaperToTopOfStack:(SLPaperView*)page;
+-(void) pushPaperToTopOfHiddenStack:(SLPaperView*)page;
 
 -(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated onComplete:(void(^)(BOOL finished))completionBlock;
 -(void) popTopPageOfHiddenStack;

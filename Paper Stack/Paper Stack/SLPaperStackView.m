@@ -92,19 +92,36 @@
 -(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(SLStackView*)stackView{
     while([stackView.subviews count] < numberOfPagesToEnsure){
         SLPaperView* page = [[SLPaperView alloc] initWithFrame:stackView.bounds];
-        page.isBrandNewPage = YES;
         page.delegate = self;
         [stackView addSubviewToBottomOfStack:page];
     }
 }
 
+/**
+ * adds the page to the top of the stack
+ * and to the top of the subviews
+ */
+-(void) pushPaperToTopOfStack:(SLPaperView*)page{
+    page.delegate = self;
+    [page enableAllGestures];
+    [visibleStackHolder pushSubview:page];
+}
+
+/**
+ * adds the page to the top of the stack
+ * and to the top of the subviews
+ */
+-(void) pushPaperToTopOfHiddenStack:(SLPaperView*)page{
+    page.delegate = self;
+    [page disableAllGestures];
+    [hiddenStackHolder pushSubview:page];
+}
 
 /**
  * adds the page to the bottom of the stack
  * and adds to the bottom of the subviews
  */
 -(void) addPaperToBottomOfStack:(SLPaperView*)page{
-    page.isBrandNewPage = NO;
     page.delegate = self;
     [page enableAllGestures];
     [visibleStackHolder addSubviewToBottomOfStack:page];
@@ -115,7 +132,6 @@
  * and adds to the bottom of the subviews
  */
 -(void) addPaperToBottomOfHiddenStack:(SLPaperView*)page{
-    page.isBrandNewPage = YES;
     page.delegate = self;
     [page disableAllGestures];
     [hiddenStackHolder addSubviewToBottomOfStack:page];

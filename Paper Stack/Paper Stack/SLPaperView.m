@@ -36,8 +36,10 @@
         // Initialization code
         if(_uuid){
             uuid = [_uuid retain];
+            isBrandNewPage = NO;
         }else{
             uuid = [[NSString createStringUUID] retain];
+            isBrandNewPage = YES;
         }
         
         //////////////////////////////////////////////////////////////////////

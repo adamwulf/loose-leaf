@@ -117,7 +117,6 @@
  */
 -(void) addPageButtonTapped:(UIButton*)_button{
     SLPaperView* page = [[SLPaperView alloc] initWithFrame:hiddenStackHolder.bounds];
-    page.isBrandNewPage = YES;
     page.delegate = self;
     [hiddenStackHolder pushSubview:page];
     [[visibleStackHolder peekSubview] enableAllGestures];

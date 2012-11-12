@@ -19,6 +19,7 @@ static SLPageManager* _instance = nil;
 -(id) init{
     if(_instance) return _instance;
     if((_instance = [super init])){
+        [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(save) userInfo:nil repeats:NO];
 
     }
     return _instance;
@@ -30,19 +31,6 @@ static SLPageManager* _instance = nil;
     }
     return _instance;
 }
-
-dispatch_source_t CreateDispatchTimer(uint64_t interval, uint64_t leeway, dispatch_queue_t queue, dispatch_block_t block)
-{
-    dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
-    if (timer)
-    {
-        dispatch_source_set_timer(timer, dispatch_walltime(NULL, 0), interval, leeway);
-        dispatch_source_set_event_handler(timer, block);
-        dispatch_resume(timer);
-    }
-    return timer;
-}
-
 
 
 +(NSString*) pathToSavedData{
@@ -71,7 +59,7 @@ dispatch_source_t CreateDispatchTimer(uint64_t interval, uint64_t leeway, dispat
         }
     }];
     NSString* filePath = [SLPageManager pathToSavedData];
-    NSLog(@"saving %d %d %d %f", [visiblePages count], [inflightPages count], [hiddenPages count], time);
+    NSLog(@"saving %d %f", [visiblePages count] + [inflightPages count] + [hiddenPages count], time);
     NSLog(@"to %@", filePath);
     
     NSMutableDictionary* dataToSave = [NSMutableDictionary dictionary];
@@ -80,19 +68,26 @@ dispatch_source_t CreateDispatchTimer(uint64_t interval, uint64_t leeway, dispat
     [dataToSave setObject:hiddenPages forKey:@"hiddenPages"];
     
     [dataToSave writeToFile:filePath atomically:YES];
+
+    NSLog(@"saving data: %@", dataToSave);
 }
 
 
 -(void) load{
     NSDictionary* dataFromDisk = [NSDictionary dictionaryWithContentsOfFile:[SLPageManager pathToSavedData]];
+    NSLog(@"loading data: %@", dataFromDisk);
     if(dataFromDisk){
-        for(NSString* uuid in [[dataFromDisk objectForKey:@"visiblePages"] reverseObjectEnumerator]){
+        for(NSString* uuid in [dataFromDisk objectForKey:@"visiblePages"]){
             SLPaperView* paper = [[SLPaperView alloc] initWithFrame:idealBounds andUUID:uuid];
-            [stackView addPaperToBottomOfStack:paper];
+            [stackView pushPaperToTopOfStack:paper];
         }
-        for(NSString* uuid in [[dataFromDisk objectForKey:@"hiddenPages"] reverseObjectEnumerator]){
+        for(NSString* uuid in [dataFromDisk objectForKey:@"hiddenPages"]){
             SLPaperView* paper = [[SLPaperView alloc] initWithFrame:idealBounds andUUID:uuid];
-            [stackView addPaperToBottomOfHiddenStack:paper];
+            [stackView pushPaperToTopOfHiddenStack:paper];
+        }
+        for(NSString* uuid in [[dataFromDisk objectForKey:@"inflightPages"] reverseObjectEnumerator]){
+            SLPaperView* paper = [[SLPaperView alloc] initWithFrame:idealBounds andUUID:uuid];
+            [stackView pushPaperToTopOfHiddenStack:paper];
         }
     }else{
         SLPaperView* paper = [[SLPaperView alloc] initWithFrame:idealBounds];
