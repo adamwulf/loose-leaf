@@ -1,14 +1,24 @@
 //
-//  UIView+SubviewStacks.m
-//  Paper Stack
+//  SLStackView.m
+//  scratchpaper
 //
-//  Created by Adam Wulf on 6/20/12.
-//  Copyright (c) 2012 Visere. All rights reserved.
+//  Created by Adam Wulf on 11/12/12.
+//
 //
 
-#import "UIView+SubviewStacks.h"
+#import "SLStackView.h"
 
-@implementation UIView (SubviewStacks)
+@implementation SLStackView
+
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        // Initialization code
+    }
+    return self;
+}
+
 
 - (BOOL) containsSubview:(SLPaperView*)obj{
     return [self.subviews containsObject:obj];
@@ -95,6 +105,5 @@
     if(!referencePage) return;
     [self insertSubview:pageToInsert aboveSubview:referencePage];
 }
-
 
 @end

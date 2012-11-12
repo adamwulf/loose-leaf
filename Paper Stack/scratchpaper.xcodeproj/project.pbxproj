@@ -46,7 +46,6 @@
 		66A539FA163F18CB003EAEC0 /* nav@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A539F9163F18CB003EAEC0 /* nav@2x.png */; };
 		66BD6E301591B57B00D4544C /* SLPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* SLPaperButton.m */; };
 		66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E331591C37D00D4544C /* UIImage+MCDrawSubImage.m */; };
-		66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */; };
 		66BD6E65159316CF00D4544C /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E64159316CF00D4544C /* CoreImage.framework */; };
 		66BD6E701593A8CC00D4544C /* SLPlusButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E6F1593A8CC00D4544C /* SLPlusButton.m */; };
 		66BD6E7D1593ACD400D4544C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E7C1593ACD400D4544C /* QuartzCore.framework */; };
@@ -60,6 +59,9 @@
 		66BD6E9C15940D7500D4544C /* SLPencilButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9B15940D7400D4544C /* SLPencilButton.m */; };
 		66BD6E9F15941B7B00D4544C /* SLShareButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9E15941B7B00D4544C /* SLShareButton.m */; };
 		66C9042C164EF8A900E58FD3 /* StrokeSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C9042B164EF8A900E58FD3 /* StrokeSegment.m */; };
+		66C904391651920200E58FD3 /* SLPageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C904381651920200E58FD3 /* SLPageManager.m */; };
+		66C9043C165197F100E58FD3 /* SLStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C9043B165197F100E58FD3 /* SLStackView.m */; };
+		66C9043F165198C600E58FD3 /* SLSynchronizedStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C9043E165198C600E58FD3 /* SLSynchronizedStackView.m */; };
 		66D0905615F70810004D2CAF /* SLListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* SLListAddPageButton.m */; };
 		66D33F4C15A6408A0044C809 /* SLShadowedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D33F4B15A6408A0044C809 /* SLShadowedView.m */; };
 		66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
@@ -187,8 +189,6 @@
 		66BD6E2F1591B57B00D4544C /* SLPaperButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPaperButton.m; sourceTree = "<group>"; };
 		66BD6E321591C37D00D4544C /* UIImage+MCDrawSubImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MCDrawSubImage.h"; sourceTree = "<group>"; };
 		66BD6E331591C37D00D4544C /* UIImage+MCDrawSubImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MCDrawSubImage.m"; sourceTree = "<group>"; };
-		66BD6E391592CFE500D4544C /* UIView+SubviewStacks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+SubviewStacks.h"; sourceTree = "<group>"; };
-		66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+SubviewStacks.m"; sourceTree = "<group>"; };
 		66BD6E64159316CF00D4544C /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		66BD6E6E1593A8CC00D4544C /* SLPlusButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPlusButton.h; sourceTree = "<group>"; };
 		66BD6E6F1593A8CC00D4544C /* SLPlusButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPlusButton.m; sourceTree = "<group>"; };
@@ -213,6 +213,12 @@
 		66C47DA5158EF03200E2CD0C /* SLPaperViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperViewDelegate.h; sourceTree = "<group>"; };
 		66C9042A164EF8A900E58FD3 /* StrokeSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrokeSegment.h; sourceTree = "<group>"; };
 		66C9042B164EF8A900E58FD3 /* StrokeSegment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StrokeSegment.m; sourceTree = "<group>"; };
+		66C904371651920200E58FD3 /* SLPageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPageManager.h; sourceTree = "<group>"; };
+		66C904381651920200E58FD3 /* SLPageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPageManager.m; sourceTree = "<group>"; };
+		66C9043A165197F100E58FD3 /* SLStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLStackView.h; sourceTree = "<group>"; };
+		66C9043B165197F100E58FD3 /* SLStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLStackView.m; sourceTree = "<group>"; };
+		66C9043D165198C500E58FD3 /* SLSynchronizedStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLSynchronizedStackView.h; sourceTree = "<group>"; };
+		66C9043E165198C600E58FD3 /* SLSynchronizedStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLSynchronizedStackView.m; sourceTree = "<group>"; };
 		66D0905415F7080F004D2CAF /* SLListAddPageButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLListAddPageButton.h; sourceTree = "<group>"; };
 		66D0905515F70810004D2CAF /* SLListAddPageButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLListAddPageButton.m; sourceTree = "<group>"; };
 		66D0905815F71941004D2CAF /* SLListAddPageButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLListAddPageButtonDelegate.h; sourceTree = "<group>"; };
@@ -295,8 +301,6 @@
 				660E1DAB158FC65C0001DA12 /* NSMutableArray+StackAdditions.m */,
 				660E1DB1159028560001DA12 /* NSArray+MapReduce.h */,
 				660E1DB2159028560001DA12 /* NSArray+MapReduce.m */,
-				66BD6E391592CFE500D4544C /* UIView+SubviewStacks.h */,
-				66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */,
 				6693296E1598E4DC0033E557 /* NSString+UUID.h */,
 				6693296F1598E4DC0033E557 /* NSString+UUID.m */,
 				669329711598EE210033E557 /* UIView+Debug.h */,
@@ -344,6 +348,8 @@
 		6693295715958A890033E557 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				66C904371651920200E58FD3 /* SLPageManager.h */,
+				66C904381651920200E58FD3 /* SLPageManager.m */,
 				6693295815958A950033E557 /* SLShadowManager.h */,
 				6693295915958A950033E557 /* SLShadowManager.m */,
 				66932963159593C00033E557 /* SLRotationManager.h */,
@@ -533,6 +539,10 @@
 		66DCFB911581BCEF00B4918C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				66C9043A165197F100E58FD3 /* SLStackView.h */,
+				66C9043B165197F100E58FD3 /* SLStackView.m */,
+				66C9043D165198C500E58FD3 /* SLSynchronizedStackView.h */,
+				66C9043E165198C600E58FD3 /* SLSynchronizedStackView.m */,
 				6693298015996C530033E557 /* Astronaut Images */,
 				660E1DA6158FC6120001DA12 /* Categories */,
 				66A539F9163F18CB003EAEC0 /* nav@2x.png */,
@@ -746,7 +756,6 @@
 				66E88A371591853E001A6EBF /* SLPapersIcon.m in Sources */,
 				66BD6E301591B57B00D4544C /* SLPaperButton.m in Sources */,
 				66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */,
-				66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */,
 				66BD6E701593A8CC00D4544C /* SLPlusButton.m in Sources */,
 				66BD6E801593AF4200D4544C /* SLSidebarButton.m in Sources */,
 				66BD6E8E1593D18800D4544C /* SLPolylineButton.m in Sources */,
@@ -778,6 +787,9 @@
 				665978F4164318CA00E10FC7 /* SLDrawingTapGestureRecognizer.m in Sources */,
 				665978F5164318CA00E10FC7 /* SLPanGestureRecognizer.m in Sources */,
 				66C9042C164EF8A900E58FD3 /* StrokeSegment.m in Sources */,
+				66C904391651920200E58FD3 /* SLPageManager.m in Sources */,
+				66C9043C165197F100E58FD3 /* SLStackView.m in Sources */,
+				66C9043F165198C600E58FD3 /* SLSynchronizedStackView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

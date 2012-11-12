@@ -9,6 +9,7 @@
 #import "SLPaperStackView.h"
 #import <QuartzCore/QuartzCore.h>
 #import "SLShadowManager.h"
+#import "SLSynchronizedStackView.h"
 #import "NSThread+BlockAdditions.h"
 
 @implementation SLPaperStackView
@@ -28,9 +29,9 @@
 
 -(void) awakeFromNib{
     setOfPagesBeingPanned = [[NSMutableSet alloc] init]; // use this as a quick cache of pages being panned
-    visibleStackHolder = [[UIView alloc] initWithFrame:self.bounds];
-    hiddenStackHolder = [[UIView alloc] initWithFrame:self.bounds];
-    bezelStackHolder = [[UIView alloc] initWithFrame:self.bounds];
+    visibleStackHolder = [[SLSynchronizedStackView alloc] initWithFrame:self.bounds];
+    hiddenStackHolder = [[SLSynchronizedStackView alloc] initWithFrame:self.bounds];
+    bezelStackHolder = [[SLSynchronizedStackView alloc] initWithFrame:self.bounds];
 
     
     CGRect frameOfHiddenStack = hiddenStackHolder.frame;
@@ -67,13 +68,28 @@
     [self addGestureRecognizer:fromRightBezelGesture];
 }
 
+#pragma mark - Model Methods
+
+-(NSArray*) visibleViews{
+    return visibleStackHolder.subviews;
+}
+
+-(NSArray*) inflightViews{
+    return bezelStackHolder.subviews;
+}
+
+-(NSArray*) hiddenViews{
+    return hiddenStackHolder.subviews;
+}
+
+
 #pragma mark - Future Model Methods
 
 /**
  * this function makes sure there's at least numberOfPagesToEnsure pages
  * in the hidden stack, and returns the top page
  */
--(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(UIView*)stackView{
+-(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(SLStackView*)stackView{
     while([stackView.subviews count] < numberOfPagesToEnsure){
         SLPaperView* page = [[SLPaperView alloc] initWithFrame:stackView.bounds];
         page.isBrandNewPage = YES;

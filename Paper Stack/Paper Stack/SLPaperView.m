@@ -26,12 +26,19 @@
 @synthesize uuid;
 @synthesize unitShadowPath;
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame{
+    return [self initWithFrame:frame andUUID:nil];
+}
+
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        uuid = [[NSString createStringUUID] retain];
+        if(_uuid){
+            uuid = [_uuid retain];
+        }else{
+            uuid = [[NSString createStringUUID] retain];
+        }
         
         //////////////////////////////////////////////////////////////////////
         //
@@ -46,6 +53,14 @@
         imgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         imgView.clipsToBounds = YES;
 //        [self.contentView addSubview:imgView];
+        
+        
+        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
+        label.font = [UIFont systemFontOfSize:[UIFont smallSystemFontSize]];
+        label.text = uuid;
+        [self.contentView addSubview:label];
+        
+        
         //
         // end debug image
         //

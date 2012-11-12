@@ -55,6 +55,8 @@
 @property (nonatomic, readonly) UILabel* textLabel;
 @property (nonatomic, assign) BOOL isBrandNewPage;
 
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid;
+
 -(BOOL) willExitToBezel:(SLBezelDirection)bezelDirection;
 
 -(void) cancelAllGestures;

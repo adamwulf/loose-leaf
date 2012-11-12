@@ -7,7 +7,6 @@
 //
 
 #import "SLEditablePaperStackView.h"
-#import "UIView+SubviewStacks.h"
 
 @implementation SLEditablePaperStackView
 

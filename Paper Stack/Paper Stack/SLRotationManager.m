@@ -58,7 +58,7 @@ static SLRotationManager* _instance = nil;
 
 +(SLRotationManager*) sharedInstace{
     if(!_instance){
-        _instance = [[SLRotationManager alloc]init];
+        _instance = [[SLRotationManager alloc] init];
     }
     return _instance;
 }
