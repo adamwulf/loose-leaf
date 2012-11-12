@@ -54,13 +54,13 @@
         preGestureScale = 1;
         self.scale = 1;
         
-        paintView = [[PaintView alloc] initWithFrame:CGRectMake(0, 0,
-                                                                frame.size.width * kMaxPageResolution,
-                                                                frame.size.height * kMaxPageResolution)];
-        paintView.autoresizingMask = UIViewAutoresizingNone; // UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        [self.contentView addSubview:paintView];
-        initialPaintViewFrame = paintView.frame;
-        [self updatePaintScaleTransform];
+//        paintView = [[PaintView alloc] initWithFrame:CGRectMake(0, 0,
+//                                                                frame.size.width * kMaxPageResolution,
+//                                                                frame.size.height * kMaxPageResolution)];
+//        paintView.autoresizingMask = UIViewAutoresizingNone; // UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+//        [self.contentView addSubview:paintView];
+//        initialPaintViewFrame = paintView.frame;
+//        [self updatePaintScaleTransform];
         
         
         
