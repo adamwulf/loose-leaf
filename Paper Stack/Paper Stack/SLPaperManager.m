@@ -6,15 +6,15 @@
 //
 //
 
-#import "SLPageManager.h"
+#import "SLPaperManager.h"
 #import "NSThread+BlockAdditions.h"
 
-@implementation SLPageManager
+@implementation SLPaperManager
 
 @synthesize stackView;
 @synthesize idealBounds;
 
-static SLPageManager* _instance = nil;
+static SLPaperManager* _instance = nil;
 
 -(id) init{
     if(_instance) return _instance;
@@ -25,9 +25,9 @@ static SLPageManager* _instance = nil;
     return _instance;
 }
 
-+(SLPageManager*) sharedInstace{
++(SLPaperManager*) sharedInstace{
     if(!_instance){
-        _instance = [[SLPageManager alloc] init];
+        _instance = [[SLPaperManager alloc] init];
     }
     return _instance;
 }
@@ -58,7 +58,7 @@ static SLPageManager* _instance = nil;
             }
         }
     }];
-    NSString* filePath = [SLPageManager pathToSavedData];
+    NSString* filePath = [SLPaperManager pathToSavedData];
     NSLog(@"saving %d %f", [visiblePages count] + [inflightPages count] + [hiddenPages count], time);
     NSLog(@"to %@", filePath);
     
@@ -74,7 +74,7 @@ static SLPageManager* _instance = nil;
 
 
 -(void) load{
-    NSDictionary* dataFromDisk = [NSDictionary dictionaryWithContentsOfFile:[SLPageManager pathToSavedData]];
+    NSDictionary* dataFromDisk = [NSDictionary dictionaryWithContentsOfFile:[SLPaperManager pathToSavedData]];
     NSLog(@"loading data: %@", dataFromDisk);
     if(dataFromDisk){
         for(NSString* uuid in [dataFromDisk objectForKey:@"visiblePages"]){
@@ -90,13 +90,23 @@ static SLPageManager* _instance = nil;
             [stackView pushPaperToTopOfHiddenStack:paper];
         }
     }else{
-        SLPaperView* paper = [[SLPaperView alloc] initWithFrame:idealBounds];
+        SLPaperView* paper = [[SLPaperManager sharedInstace] createNewBlankPage];
         [stackView addPaperToBottomOfStack:paper];
-        paper = [[SLPaperView alloc] initWithFrame:idealBounds];
+        paper = [[SLPaperManager sharedInstace] createNewBlankPage];
         [stackView addPaperToBottomOfHiddenStack:paper];
     }
     
 }
+
+
+
+
+#pragma mark - Create Pages
+
+-(SLPaperView*) createNewBlankPage{
+    return [[[SLPaperView alloc] initWithFrame:self.idealBounds] autorelease];
+}
+
 
 
 @end

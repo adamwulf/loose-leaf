@@ -11,6 +11,7 @@
 #import "SLShadowManager.h"
 #import "SLSynchronizedStackView.h"
 #import "NSThread+BlockAdditions.h"
+#import "SLPaperManager.h"
 
 @implementation SLPaperStackView
 
@@ -91,7 +92,7 @@
  */
 -(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(SLStackView*)stackView{
     while([stackView.subviews count] < numberOfPagesToEnsure){
-        SLPaperView* page = [[SLPaperView alloc] initWithFrame:stackView.bounds];
+        SLPaperView* page = [[SLPaperManager sharedInstace] createNewBlankPage];
         page.delegate = self;
         [stackView addSubviewToBottomOfStack:page];
     }

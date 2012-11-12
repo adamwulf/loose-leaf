@@ -59,7 +59,7 @@
 		66BD6E9C15940D7500D4544C /* SLPencilButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9B15940D7400D4544C /* SLPencilButton.m */; };
 		66BD6E9F15941B7B00D4544C /* SLShareButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9E15941B7B00D4544C /* SLShareButton.m */; };
 		66C9042C164EF8A900E58FD3 /* StrokeSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C9042B164EF8A900E58FD3 /* StrokeSegment.m */; };
-		66C904391651920200E58FD3 /* SLPageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C904381651920200E58FD3 /* SLPageManager.m */; };
+		66C904391651920200E58FD3 /* SLPaperManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C904381651920200E58FD3 /* SLPaperManager.m */; };
 		66C9043C165197F100E58FD3 /* SLStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C9043B165197F100E58FD3 /* SLStackView.m */; };
 		66C9043F165198C600E58FD3 /* SLSynchronizedStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C9043E165198C600E58FD3 /* SLSynchronizedStackView.m */; };
 		66D0905615F70810004D2CAF /* SLListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* SLListAddPageButton.m */; };
@@ -213,8 +213,8 @@
 		66C47DA5158EF03200E2CD0C /* SLPaperViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperViewDelegate.h; sourceTree = "<group>"; };
 		66C9042A164EF8A900E58FD3 /* StrokeSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrokeSegment.h; sourceTree = "<group>"; };
 		66C9042B164EF8A900E58FD3 /* StrokeSegment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StrokeSegment.m; sourceTree = "<group>"; };
-		66C904371651920200E58FD3 /* SLPageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPageManager.h; sourceTree = "<group>"; };
-		66C904381651920200E58FD3 /* SLPageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPageManager.m; sourceTree = "<group>"; };
+		66C904371651920200E58FD3 /* SLPaperManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperManager.h; sourceTree = "<group>"; };
+		66C904381651920200E58FD3 /* SLPaperManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPaperManager.m; sourceTree = "<group>"; };
 		66C9043A165197F100E58FD3 /* SLStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLStackView.h; sourceTree = "<group>"; };
 		66C9043B165197F100E58FD3 /* SLStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLStackView.m; sourceTree = "<group>"; };
 		66C9043D165198C500E58FD3 /* SLSynchronizedStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLSynchronizedStackView.h; sourceTree = "<group>"; };
@@ -348,8 +348,8 @@
 		6693295715958A890033E557 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				66C904371651920200E58FD3 /* SLPageManager.h */,
-				66C904381651920200E58FD3 /* SLPageManager.m */,
+				66C904371651920200E58FD3 /* SLPaperManager.h */,
+				66C904381651920200E58FD3 /* SLPaperManager.m */,
 				6693295815958A950033E557 /* SLShadowManager.h */,
 				6693295915958A950033E557 /* SLShadowManager.m */,
 				66932963159593C00033E557 /* SLRotationManager.h */,
@@ -787,7 +787,7 @@
 				665978F4164318CA00E10FC7 /* SLDrawingTapGestureRecognizer.m in Sources */,
 				665978F5164318CA00E10FC7 /* SLPanGestureRecognizer.m in Sources */,
 				66C9042C164EF8A900E58FD3 /* StrokeSegment.m in Sources */,
-				66C904391651920200E58FD3 /* SLPageManager.m in Sources */,
+				66C904391651920200E58FD3 /* SLPaperManager.m in Sources */,
 				66C9043C165197F100E58FD3 /* SLStackView.m in Sources */,
 				66C9043F165198C600E58FD3 /* SLSynchronizedStackView.m in Sources */,
 			);

@@ -7,6 +7,7 @@
 //
 
 #import "SLEditablePaperStackView.h"
+#import "SLPaperManager.h"
 
 @implementation SLEditablePaperStackView
 
@@ -116,7 +117,7 @@
  * without changing the hidden stack's contents
  */
 -(void) addPageButtonTapped:(UIButton*)_button{
-    SLPaperView* page = [[SLPaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+    SLPaperView* page = [[SLPaperManager sharedInstace] createNewBlankPage];
     page.delegate = self;
     [hiddenStackHolder pushSubview:page];
     [[visibleStackHolder peekSubview] enableAllGestures];

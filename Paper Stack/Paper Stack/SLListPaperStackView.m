@@ -11,6 +11,7 @@
 #import "UIView+Debug.h"
 #import "NSThread+BlockAdditions.h"
 #import "SLShadowManager.h"
+#import "SLPaperManager.h"
 
 @implementation SLListPaperStackView
 
@@ -87,7 +88,7 @@
 -(void) didTapAddButtonInListView{
     //
     // this'll determine the resolution of the canvas too
-    SLPaperView* paper = [[SLPaperView alloc] initWithFrame:self.bounds];
+    SLPaperView* paper = [[SLPaperManager sharedInstace] createNewBlankPage];
     // now size it for display
     paper.frame = addPageButtonInListView.frame;
     [self addPaperToBottomOfHiddenStack:paper];

@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "SLPaperStackView.h"
 
-@interface SLPageManager : NSObject{
+@interface SLPaperManager : NSObject{
     //
     // this is the stack of pages
     // that we need to save
@@ -28,9 +28,11 @@
 @property (nonatomic, assign) SLPaperStackView* stackView;
 @property (nonatomic, assign) CGRect idealBounds;
 
-+(SLPageManager*) sharedInstace;
++(SLPaperManager*) sharedInstace;
 
 -(void) load;
 -(void) save;
+
+-(SLPaperView*) createNewBlankPage;
 
 @end

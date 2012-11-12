@@ -8,7 +8,7 @@
 
 #import "SLPaperStackViewController.h"
 #import "SLShadowManager.h"
-#import "SLPageManager.h"
+#import "SLPaperManager.h"
 
 @interface SLPaperStackViewController ()
 
@@ -23,22 +23,11 @@
     srand ( time(NULL) );
 
     [[SLShadowManager sharedInstace] beginGeneratingShadows];
-    [SLPageManager sharedInstace].stackView = stackView;
-    [SLPageManager sharedInstace].idealBounds = self.view.bounds;
+    [SLPaperManager sharedInstace].stackView = stackView;
+    [SLPaperManager sharedInstace].idealBounds = self.view.bounds;
 
-//    for(int i=0;i<1;i++){
-//        SLPaperView* paper = [[SLPaperView alloc] initWithFrame:self.view.bounds];
-//        [stackView addPaperToBottomOfStack:paper];
-//        paper = [[SLPaperView alloc] initWithFrame:self.view.bounds];
-//        [stackView addPaperToBottomOfStack:paper];
-//
-//        paper = [[SLPaperView alloc] initWithFrame:self.view.bounds];
-//        [stackView addPaperToBottomOfHiddenStack:paper];
-//        paper = [[SLPaperView alloc] initWithFrame:self.view.bounds];
-//        [stackView addPaperToBottomOfHiddenStack:paper];
-//    }
-    [[SLPageManager sharedInstace] load];
-    [[SLPageManager sharedInstace] save];
+    [[SLPaperManager sharedInstace] load];
+    [[SLPaperManager sharedInstace] save];
 }
 
 - (void)viewDidUnload
