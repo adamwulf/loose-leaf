@@ -40,14 +40,27 @@ static SLPaperManager* _instance = nil;
     return [basePath stringByAppendingPathComponent:@"data.dat"];
 }
 
+
+/**
+ * TODO
+ *
+ * this currently synchronizes on the view itself, which means
+ * that running this in the background doesn't have a fantastic effect.
+ *
+ * instead, i should have the StackView also contain a backing model view
+ * and all modifications to the subviews of each stack will be done
+ * in order in a background thread on the model arrays.
+ *
+ * this way, i can sync/save/etc on the model, which will always be modified on
+ * a background thread, and will not block the UI views or subview arrays.
+ */
 -(void) save{
     [NSThread performBlockInBackground:^{
         NSMutableArray* visiblePages = [NSMutableArray array];
         NSMutableArray* inflightPages = [NSMutableArray array];
         NSMutableArray* hiddenPages = [NSMutableArray array];
+        NSLog(@"saving paper order");
         @synchronized(stackView){
-            NSLog(@"saving paper order");
-            
             for(SLPaperView* page in stackView.visibleViews){
                 [visiblePages addObject:[page uuid]];
             }

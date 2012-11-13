@@ -83,14 +83,11 @@
     // TODO save a backing store
     [NSThread performBlockInBackground:^{
         /**
-         * TODO: turn saving back on for pages
-         *
-         * right now, i just run a block in the background.
+         * TODO: right now, i just run a block in the background.
          *
          * instead, i should use nsoperationqueue in the slbackingstoremanager
          * to handle saving these out to disk
          */
-        return;
         @synchronized(self){
             NSString* pathToBinaryData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"bin"]];
             [backingStoreData writeToFile:pathToBinaryData atomically:YES];
