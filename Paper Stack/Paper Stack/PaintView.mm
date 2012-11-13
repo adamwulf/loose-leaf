@@ -15,16 +15,22 @@
 
 @synthesize delegate;
 @synthesize clipPath;
+@synthesize uuid;
 
-- (id)initWithFrame:(CGRect)frame{
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     self = [super initWithFrame:frame];
     if (self) {
+        self.uuid = _uuid;
         hue = 4.0;
-        backingStore = [[SLBackingStore alloc] initWithSize:frame.size];
+        backingStore = [[SLBackingStore alloc] initWithSize:frame.size andUUID:_uuid];
         self.backgroundColor = [UIColor clearColor];
         self.clearsContextBeforeDrawing = NO;
     }
     return self;
+}
+
+-(void) save{
+    [backingStore save];
 }
 
 /**
@@ -241,8 +247,6 @@
         [self setNeedsDisplay];
     }
 }
-
-
 
 /**
  * helper method to draw our cache of stroke segments

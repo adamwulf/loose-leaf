@@ -10,6 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "NSArray+MapReduce.h"
 #import "SLShadowManager.h"
+#import "SLPaperManager.h"
 #import "NSString+UUID.h"
 #import "UIView+Debug.h"
 #import "SLObjectSelectLongPressGestureRecognizer.h"
@@ -47,20 +48,20 @@
         // debug image to help show page zoom/pan etc better
         // than a blank page
         //
-        NSInteger photo = rand() % 6 + 1;
-        UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", photo]];
-        UIImageView* imgView = [[[UIImageView alloc] initWithImage:img] autorelease];
-        imgView.frame = self.contentView.bounds;
-        imgView.contentMode = UIViewContentModeScaleAspectFill;
-        imgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        imgView.clipsToBounds = YES;
+//        NSInteger photo = rand() % 6 + 1;
+//        UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", photo]];
+//        UIImageView* imgView = [[[UIImageView alloc] initWithImage:img] autorelease];
+//        imgView.frame = self.contentView.bounds;
+//        imgView.contentMode = UIViewContentModeScaleAspectFill;
+//        imgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//        imgView.clipsToBounds = YES;
 //        [self.contentView addSubview:imgView];
         
-        
-        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
-        label.font = [UIFont systemFontOfSize:[UIFont smallSystemFontSize]];
-        label.text = uuid;
-        [self.contentView addSubview:label];
+//        
+//        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
+//        label.font = [UIFont systemFontOfSize:[UIFont smallSystemFontSize]];
+//        label.text = uuid;
+//        [self.contentView addSubview:label];
         
         
         //
@@ -71,15 +72,14 @@
         preGestureScale = 1;
         self.scale = 1;
         
-//        paintView = [[PaintView alloc] initWithFrame:CGRectMake(0, 0,
-//                                                                frame.size.width * kMaxPageResolution,
-//                                                                frame.size.height * kMaxPageResolution)];
-//        paintView.autoresizingMask = UIViewAutoresizingNone; // UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-//        [self.contentView addSubview:paintView];
-//        initialPaintViewFrame = paintView.frame;
-//        [self updatePaintScaleTransform];
-        
-        
+        paintView = [[PaintView alloc] initWithFrame:CGRectMake(0, 0,
+                                                                frame.size.width * kMaxPageResolution,
+                                                                frame.size.height * kMaxPageResolution)
+                                             andUUID:uuid];
+        paintView.autoresizingMask = UIViewAutoresizingNone; // we'll use transforms to size the paint correctly
+        [self.contentView addSubview:paintView];
+        initialPaintViewFrame = paintView.frame;
+        [self updatePaintScaleTransform];
         
         
         //
@@ -189,6 +189,8 @@
         }
         if(drawGesture.state == UIGestureRecognizerStateEnded){
             [self commitStroke];
+            [paintView save];
+            [[SLPaperManager sharedInstace] save];
         }
     }else{
         // cancelled or something

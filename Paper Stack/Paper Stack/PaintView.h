@@ -17,6 +17,10 @@
 
 @interface PaintView : UIView<PaintTouchViewDelegate> {
     //
+    // for saving and loading
+    NSString* uuid;
+    
+    //
     // the bitmap backing store for the strokes
     //
     // this handles creating the cgcontext to draw to
@@ -43,13 +47,17 @@
     CGFloat hue;
 }
 
+@property (nonatomic, retain) NSString* uuid;
+
 @property (nonatomic, assign) NSObject<PaintableViewDelegate>* delegate;
 
 @property (nonatomic, retain) UIBezierPath* clipPath;
 
--(void) updateClipPath;
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid;
 
+-(void) updateClipPath;
 -(void) undo;
 -(void) redo;
+-(void) save;
 
 @end

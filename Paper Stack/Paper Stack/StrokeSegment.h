@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface StrokeSegment : NSObject{
+@interface StrokeSegment : NSObject<NSCoding>{
     CGFloat fingerWidth;
     CGRect rectToDisplay;
     UIBezierPath* path;

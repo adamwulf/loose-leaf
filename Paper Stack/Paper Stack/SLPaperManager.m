@@ -19,7 +19,6 @@ static SLPaperManager* _instance = nil;
 -(id) init{
     if(_instance) return _instance;
     if((_instance = [super init])){
-        [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(save) userInfo:nil repeats:NO];
 
     }
     return _instance;
@@ -42,25 +41,23 @@ static SLPaperManager* _instance = nil;
 }
 
 -(void) save{
+    NSLog(@"saving paper order");
+    
     NSMutableArray* visiblePages = [NSMutableArray array];
     NSMutableArray* inflightPages = [NSMutableArray array];
     NSMutableArray* hiddenPages = [NSMutableArray array];
-    CGFloat time = [NSThread timeBlock:^{
-        @synchronized(stackView){
-            for(SLPaperView* page in stackView.visibleViews){
-                [visiblePages addObject:[page uuid]];
-            }
-            for(SLPaperView* page in stackView.inflightViews){
-                [inflightPages addObject:[page uuid]];
-            }
-            for(SLPaperView* page in stackView.hiddenViews){
-                [hiddenPages addObject:[page uuid]];
-            }
+    @synchronized(stackView){
+        for(SLPaperView* page in stackView.visibleViews){
+            [visiblePages addObject:[page uuid]];
         }
-    }];
+        for(SLPaperView* page in stackView.inflightViews){
+            [inflightPages addObject:[page uuid]];
+        }
+        for(SLPaperView* page in stackView.hiddenViews){
+            [hiddenPages addObject:[page uuid]];
+        }
+    }
     NSString* filePath = [SLPaperManager pathToSavedData];
-    NSLog(@"saving %d %f", [visiblePages count] + [inflightPages count] + [hiddenPages count], time);
-    NSLog(@"to %@", filePath);
     
     NSMutableDictionary* dataToSave = [NSMutableDictionary dictionary];
     [dataToSave setObject:visiblePages forKey:@"visiblePages"];
@@ -68,14 +65,11 @@ static SLPaperManager* _instance = nil;
     [dataToSave setObject:hiddenPages forKey:@"hiddenPages"];
     
     [dataToSave writeToFile:filePath atomically:YES];
-
-    NSLog(@"saving data: %@", dataToSave);
 }
 
 
 -(void) load{
     NSDictionary* dataFromDisk = [NSDictionary dictionaryWithContentsOfFile:[SLPaperManager pathToSavedData]];
-    NSLog(@"loading data: %@", dataFromDisk);
     if(dataFromDisk){
         for(NSString* uuid in [dataFromDisk objectForKey:@"visiblePages"]){
             SLPaperView* paper = [[SLPaperView alloc] initWithFrame:idealBounds andUUID:uuid];

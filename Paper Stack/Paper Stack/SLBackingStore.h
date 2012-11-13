@@ -20,6 +20,8 @@
     NSData* backingStoreData;
     CGContextRef cacheContext;
     
+    NSString* uuid;
+    
     //
     // This array holds multiple StrokeSegment objects
     // for each segement of the user's current stroke
@@ -33,12 +35,16 @@
     
 }
 
+@property (nonatomic, retain) NSString* uuid;
+
 @property (nonatomic, readonly) CGContextRef cacheContext;
 
 @property (nonatomic, readonly) NSMutableArray* currentStrokeSegments;
 @property (nonatomic, readonly) NSMutableArray* committedStrokes;
 @property (nonatomic, readonly) NSMutableArray* undoneStrokes;
 
--(id) initWithSize:(CGSize)size;
+-(id) initWithSize:(CGSize)size andUUID:(NSString*)uuid;
+
+-(void) save;
 
 @end

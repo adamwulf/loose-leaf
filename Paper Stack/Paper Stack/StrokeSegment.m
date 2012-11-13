@@ -32,4 +32,23 @@
     return self;
 }
 
+#pragma mark - NSCoding
+
+- (void) encodeWithCoder:(NSCoder *)encoder {
+    [encoder encodeObject:[NSValue valueWithCGRect:rectToDisplay] forKey:@"rectToDisplay"];
+    [encoder encodeObject:[NSNumber numberWithFloat:fingerWidth] forKey:@"fingerWidth"];
+    [encoder encodeObject:[NSNumber numberWithBool:shouldFillInsteadOfStroke] forKey:@"shouldFillInsteadOfStroke"];
+    [encoder encodeObject:path forKey:@"path"];
+}
+
+- (id)initWithCoder:(NSCoder *)decoder {
+    if (self = [super init]) {
+        rectToDisplay = [[decoder decodeObjectForKey:@"rectToDisplay"] CGRectValue];
+        fingerWidth = [[decoder decodeObjectForKey:@"fingerWidth"] floatValue];
+        shouldFillInsteadOfStroke = [[decoder decodeObjectForKey:@"shouldFillInsteadOfStroke"] boolValue];
+        path = [[decoder decodeObjectForKey:@"path"] retain];
+    }
+    return self;
+}
+
 @end
