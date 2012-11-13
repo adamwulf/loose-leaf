@@ -46,34 +46,7 @@
     return clipPath;
 }
 
-#pragma mark - SLDrawingGestureRecognizerDelegate
-
-/**
- * TODO: refactor into proper Pen class
- *
- * sets some basic pen properties of the context
- */
--(void) tickHueWithFingerWidth:(CGFloat)fingerWidth forContext:(CGContextRef)context{
-//    hue += 0.3;
-//    if(hue > 1.0) hue = 0.0;
-//    UIColor *color = [UIColor colorWithHue:hue saturation:0.7 brightness:1.0 alpha:1.0];
-//    CGContextSetStrokeColorWithColor(cacheContext, [color CGColor]);
-    CGContextSetStrokeColorWithColor(context, [[UIColor blackColor] CGColor]);
-    CGContextSetLineCap(context, kCGLineCapRound);
-    CGContextSetLineWidth(context, fingerWidth / 1.5);
-    CGContextSetLineJoin(context, kCGLineJoinMiter);
-    CGContextSetMiterLimit(context, 20);
-    CGContextSetFlatness(context, 1.0);
-}
-
-
-
 #pragma mark - Drawing
-
--(void) beginPanAt:(CGPoint)point forView:(UIView*)view{ }
--(void) movePanBy:(CGPoint)delta{ }
--(void) panComplete{ }
-
 
 /**
  * draws the input curve onto the bitmap context, taking into
@@ -211,61 +184,38 @@
     }
 }
 
+#pragma mark - Strokes and Undo/Redo
+
 /**
  * to cancel a stroke, simply remove all the segments
  * from the current stroke and redisplay the view
  */
 -(void) cancelStroke{
-    [backingStore.currentStrokeSegments removeAllObjects];
-    [self setNeedsDisplay];
+    if([backingStore cancelStroke]){
+        [self setNeedsDisplay];
+    }
 }
 /**
  * to commit the stroke, draw them to our backing store
  * and reset our current stroke cache to empty
  */
 -(void) commitStroke{
-    [backingStore.committedStrokes addObject:[NSArray arrayWithArray:backingStore.currentStrokeSegments]];
-    if([backingStore.committedStrokes count] > kUndoLimit){
-        [self commitStroke:[backingStore.committedStrokes objectAtIndex:0] toContext:backingStore.cacheContext];
-        [backingStore.committedStrokes removeObjectAtIndex:0];
-    }
-    [backingStore.undoneStrokes removeAllObjects];
-    [backingStore.currentStrokeSegments removeAllObjects];
+    [backingStore commitStroke];
 }
 
 -(void) undo{
-    if([backingStore.committedStrokes count]){
-        [backingStore.undoneStrokes addObject:[backingStore.committedStrokes lastObject]];
-        [backingStore.committedStrokes removeLastObject];
+    if([backingStore undo]){
         [self setNeedsDisplay];
     }
 }
 -(void) redo{
-    if([backingStore.undoneStrokes count]){
-        [backingStore.committedStrokes addObject:[backingStore.undoneStrokes lastObject]];
-        [backingStore.undoneStrokes removeLastObject];
+    if([backingStore redo]){
         [self setNeedsDisplay];
     }
 }
 
-/**
- * helper method to draw our cache of stroke segments
- * to an arbitrary context
- */
--(void) commitStroke:(NSArray*)stroke toContext:(CGContextRef)context{
-    for(StrokeSegment* segment in stroke){
-        // time the drawing
-        // update our pen properties
-        [self tickHueWithFingerWidth:segment.fingerWidth forContext:context];
-        // now draw it
-        CGContextAddPath(context, segment.path.CGPath);
-        if(segment.shouldFillInsteadOfStroke){
-            CGContextFillPath(context);
-        }else{
-            CGContextStrokePath(context);
-        }
-    }
-}
+
+#pragma mark - UIView drawing
 
 /**
  *
@@ -282,24 +232,17 @@
 - (void) drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGImageRef cacheImage = CGBitmapContextCreateImage(backingStore.cacheContext);
-    CGContextDrawImage(context, self.bounds, cacheImage);
-    CGImageRelease(cacheImage);
-    
-    //
-    // draw all the undo states
-    for(NSArray* stroke in backingStore.committedStrokes){
-        [self commitStroke:stroke toContext:context];
-    }
-    
-    //
-    // draw the active stroke, if any, to the screen context
-    [self commitStroke:backingStore.currentStrokeSegments toContext:context];
+    [backingStore drawIntoContext:context intoBounds:self.bounds];
     
     if([delegate shouldDrawClipPath]){
         [self updateCachedClipPathForContext:context andDraw:YES];
     }
 }
+
+
+
+#pragma mark - Clipping
+
 
 /**
  * this method updates our cached clipping path for any strokes
@@ -314,9 +257,6 @@
     [self updateCachedClipPathForContext:backingStore.cacheContext andDraw:NO];
 }
 
-
-
-#pragma mark - Clipping
 
 /**
  * this is the work horse for clipping the pen

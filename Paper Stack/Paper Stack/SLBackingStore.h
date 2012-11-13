@@ -19,7 +19,7 @@
     // the bitmap backing store for the strokes
     NSData* backingStoreData;
     CGContextRef cacheContext;
-    
+    CGSize idealSize;
     NSString* uuid;
     
     //
@@ -44,7 +44,13 @@
 @property (nonatomic, readonly) NSMutableArray* undoneStrokes;
 
 -(id) initWithSize:(CGSize)size andUUID:(NSString*)uuid;
+-(BOOL) cancelStroke;
+-(void) commitStroke;
+-(BOOL) undo;
+-(BOOL) redo;
 
 -(void) save;
+
+-(void) drawIntoContext:(CGContextRef)context intoBounds:(CGRect)bounds;
 
 @end

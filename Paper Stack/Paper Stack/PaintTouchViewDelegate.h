@@ -10,12 +10,6 @@
 
 @protocol PaintTouchViewDelegate <NSObject>
 
-
--(void) beginPanAt:(CGPoint)point forView:(UIView*)view;
--(void) movePanBy:(CGPoint)delta;
--(void) panComplete;
-
-
 -(void) drawArcAtStart:(CGPoint)point1
                      end:(CGPoint)point2
            controlPoint1:(CGPoint)ctrl1

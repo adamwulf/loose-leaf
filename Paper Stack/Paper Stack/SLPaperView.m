@@ -43,31 +43,6 @@
             isBrandNewPage = YES;
         }
         
-        //////////////////////////////////////////////////////////////////////
-        //
-        // debug image to help show page zoom/pan etc better
-        // than a blank page
-        //
-//        NSInteger photo = rand() % 6 + 1;
-//        UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", photo]];
-//        UIImageView* imgView = [[[UIImageView alloc] initWithImage:img] autorelease];
-//        imgView.frame = self.contentView.bounds;
-//        imgView.contentMode = UIViewContentModeScaleAspectFill;
-//        imgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-//        imgView.clipsToBounds = YES;
-//        [self.contentView addSubview:imgView];
-        
-//        
-//        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
-//        label.font = [UIFont systemFontOfSize:[UIFont smallSystemFontSize]];
-//        label.text = uuid;
-//        [self.contentView addSubview:label];
-        
-        
-        //
-        // end debug image
-        //
-        //////////////////////////////////////////////////////////////////////
         [self.layer setMasksToBounds:YES ];
         preGestureScale = 1;
         self.scale = 1;
@@ -113,10 +88,6 @@
         [tap requireGestureRecognizerToFail:longPress];
         [self addGestureRecognizer:tap];
 
-        
-        
-                
-        
         //
         // This pan gesture is used to pan/scale the page itself.
         panGesture = [[[SLPanAndPinchGestureRecognizer alloc]
