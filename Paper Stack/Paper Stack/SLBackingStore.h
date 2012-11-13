@@ -19,9 +19,25 @@
     // the bitmap backing store for the strokes
     NSData* backingStoreData;
     CGContextRef cacheContext;
+    
+    //
+    // This array holds multiple StrokeSegment objects
+    // for each segement of the user's current stroke
+    //
+    // this lets us keep the current stroke out of the
+    // cacheContext and only rasterize it once the user
+    // confirms the stroke
+    NSMutableArray* currentStrokeSegments;
+    NSMutableArray* committedStrokes;
+    NSMutableArray* undoneStrokes;
+    
 }
 
 @property (nonatomic, readonly) CGContextRef cacheContext;
+
+@property (nonatomic, readonly) NSMutableArray* currentStrokeSegments;
+@property (nonatomic, readonly) NSMutableArray* committedStrokes;
+@property (nonatomic, readonly) NSMutableArray* undoneStrokes;
 
 -(id) initWithSize:(CGSize)size;
 

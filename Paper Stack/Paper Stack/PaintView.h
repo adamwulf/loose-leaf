@@ -24,17 +24,6 @@
     SLBackingStore* backingStore;
     
     //
-    // This array holds multiple StrokeSegment objects
-    // for each segement of the user's current stroke
-    //
-    // this lets us keep the current stroke out of the
-    // cacheContext and only rasterize it once the user
-    // confirms the stroke
-    NSMutableArray* currentStrokeSegments;
-    NSMutableArray* committedStrokes;
-    NSMutableArray* undoneStrokes;
-    
-    //
     // the delegate that tells us which views
     // are "above" this view so that we can clip
     // the strokes properly

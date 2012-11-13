@@ -23,9 +23,6 @@
         backingStore = [[SLBackingStore alloc] initWithSize:frame.size];
         self.backgroundColor = [UIColor clearColor];
         self.clearsContextBeforeDrawing = NO;
-        currentStrokeSegments = [[NSMutableArray alloc] init];
-        committedStrokes = [[NSMutableArray alloc] init];
-        undoneStrokes = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -129,7 +126,7 @@
             NSLog(@"drawing empty path!");
         }
 
-        [currentStrokeSegments addObject:[StrokeSegment strokeWithFingerWidth:fingerWidth andRect:rectToDraw andPath:clippedPath]];
+        [backingStore.currentStrokeSegments addObject:[StrokeSegment strokeWithFingerWidth:fingerWidth andRect:rectToDraw andPath:clippedPath]];
         
         [self setNeedsDisplayInRect:rectToDraw];
     }else{
@@ -159,7 +156,7 @@
     // only draw the point if it is inside of
     // our visible area
     if([cachedClipPath containsPoint:point]){
-        [currentStrokeSegments addObject:[StrokeSegment strokeWithFingerWidth:fingerWidth andRect:rectToDisplay andPath:[UIBezierPath bezierPathWithOvalInRect:rectToDisplay] andFill:YES]];
+        [backingStore.currentStrokeSegments addObject:[StrokeSegment strokeWithFingerWidth:fingerWidth andRect:rectToDisplay andPath:[UIBezierPath bezierPathWithOvalInRect:rectToDisplay] andFill:YES]];
         [self setNeedsDisplayInRect:rectToDisplay];
     }
 }
@@ -201,7 +198,7 @@
         // ...and clip that line to our visible area
         UIBezierPath* clippedPath = [strokedPath unclosedPathFromIntersectionWithPath:cachedClipPath];
 
-        [currentStrokeSegments addObject:[StrokeSegment strokeWithFingerWidth:fingerWidth andRect:rectToDraw andPath:clippedPath]];
+        [backingStore.currentStrokeSegments addObject:[StrokeSegment strokeWithFingerWidth:fingerWidth andRect:rectToDraw andPath:clippedPath]];
         [self setNeedsDisplayInRect:rectToDraw];
     }else{
         // doesn't intersect our view at all
@@ -213,7 +210,7 @@
  * from the current stroke and redisplay the view
  */
 -(void) cancelStroke{
-    [currentStrokeSegments removeAllObjects];
+    [backingStore.currentStrokeSegments removeAllObjects];
     [self setNeedsDisplay];
 }
 /**
@@ -221,26 +218,26 @@
  * and reset our current stroke cache to empty
  */
 -(void) commitStroke{
-    [committedStrokes addObject:[NSArray arrayWithArray:currentStrokeSegments]];
-    if([committedStrokes count] > kUndoLimit){
-        [self commitStroke:[committedStrokes objectAtIndex:0] toContext:backingStore.cacheContext];
-        [committedStrokes removeObjectAtIndex:0];
+    [backingStore.committedStrokes addObject:[NSArray arrayWithArray:backingStore.currentStrokeSegments]];
+    if([backingStore.committedStrokes count] > kUndoLimit){
+        [self commitStroke:[backingStore.committedStrokes objectAtIndex:0] toContext:backingStore.cacheContext];
+        [backingStore.committedStrokes removeObjectAtIndex:0];
     }
-    [undoneStrokes removeAllObjects];
-    [currentStrokeSegments removeAllObjects];
+    [backingStore.undoneStrokes removeAllObjects];
+    [backingStore.currentStrokeSegments removeAllObjects];
 }
 
 -(void) undo{
-    if([committedStrokes count]){
-        [undoneStrokes addObject:[committedStrokes lastObject]];
-        [committedStrokes removeLastObject];
+    if([backingStore.committedStrokes count]){
+        [backingStore.undoneStrokes addObject:[backingStore.committedStrokes lastObject]];
+        [backingStore.committedStrokes removeLastObject];
         [self setNeedsDisplay];
     }
 }
 -(void) redo{
-    if([undoneStrokes count]){
-        [committedStrokes addObject:[undoneStrokes lastObject]];
-        [undoneStrokes removeLastObject];
+    if([backingStore.undoneStrokes count]){
+        [backingStore.committedStrokes addObject:[backingStore.undoneStrokes lastObject]];
+        [backingStore.undoneStrokes removeLastObject];
         [self setNeedsDisplay];
     }
 }
@@ -287,13 +284,13 @@
     
     //
     // draw all the undo states
-    for(NSArray* stroke in committedStrokes){
+    for(NSArray* stroke in backingStore.committedStrokes){
         [self commitStroke:stroke toContext:context];
     }
     
     //
     // draw the active stroke, if any, to the screen context
-    [self commitStroke:currentStrokeSegments toContext:context];
+    [self commitStroke:backingStore.currentStrokeSegments toContext:context];
     
     if([delegate shouldDrawClipPath]){
         [self updateCachedClipPathForContext:context andDraw:YES];

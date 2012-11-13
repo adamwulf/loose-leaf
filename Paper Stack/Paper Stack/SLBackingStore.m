@@ -11,6 +11,9 @@
 @implementation SLBackingStore
 
 @synthesize cacheContext;
+@synthesize currentStrokeSegments;
+@synthesize committedStrokes;
+@synthesize undoneStrokes;
 
 /**
  * creates a CGContext that is backed by manually allocated bytes.
@@ -60,6 +63,10 @@
         CGContextSetShouldAntialias(cacheContext, YES);
         // allow transparency
         CGContextSetAlpha(cacheContext, 1);
+        
+        currentStrokeSegments = [[NSMutableArray alloc] init];
+        committedStrokes = [[NSMutableArray alloc] init];
+        undoneStrokes = [[NSMutableArray alloc] init];
     }
     return self;
 }
