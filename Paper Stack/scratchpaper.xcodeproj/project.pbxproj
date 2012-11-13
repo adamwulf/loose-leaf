@@ -134,6 +134,7 @@
 		660E1DB2159028560001DA12 /* NSArray+MapReduce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+MapReduce.m"; sourceTree = "<group>"; };
 		661E08691652F7C500EF779F /* SLBackingStoreManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLBackingStoreManager.h; sourceTree = "<group>"; };
 		661E086A1652F7C500EF779F /* SLBackingStoreManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLBackingStoreManager.m; sourceTree = "<group>"; };
+		661E08771652FEF800EF779F /* SLBackingStoreDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLBackingStoreDelegate.h; sourceTree = "<group>"; };
 		6630ED9F15F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPanAndPinchFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
 		6630EDA015F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPanAndPinchFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		6630EDA215F1588E007E38AA /* SLPanAndPinchFromListViewGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPanAndPinchFromListViewGestureRecognizerDelegate.h; sourceTree = "<group>"; };
@@ -336,6 +337,16 @@
 			name = Icons;
 			sourceTree = "<group>";
 		};
+		661E08761652FEE300EF779F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				66B1F40D1651BA5D00379C5B /* SLBackingStore.h */,
+				66B1F40E1651BA5D00379C5B /* SLBackingStore.m */,
+				661E08771652FEF800EF779F /* SLBackingStoreDelegate.h */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		664C62F115A36DB00072736A /* SLPaperView */ = {
 			isa = PBXGroup;
 			children = (
@@ -354,6 +365,7 @@
 		6693295715958A890033E557 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				661E08761652FEE300EF779F /* Model */,
 				66C904371651920200E58FD3 /* SLPaperManager.h */,
 				66C904381651920200E58FD3 /* SLPaperManager.m */,
 				6693295815958A950033E557 /* SLShadowManager.h */,
@@ -361,8 +373,6 @@
 				66932963159593C00033E557 /* SLRotationManager.h */,
 				66932964159593C00033E557 /* SLRotationManager.m */,
 				66932967159594A60033E557 /* SLRotationManagerDelegate.h */,
-				66B1F40D1651BA5D00379C5B /* SLBackingStore.h */,
-				66B1F40E1651BA5D00379C5B /* SLBackingStore.m */,
 				661E08691652F7C500EF779F /* SLBackingStoreManager.h */,
 				661E086A1652F7C500EF779F /* SLBackingStoreManager.m */,
 			);

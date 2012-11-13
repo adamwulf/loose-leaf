@@ -17,6 +17,7 @@
 @synthesize committedStrokes;
 @synthesize undoneStrokes;
 @synthesize uuid;
+@synthesize delegate;
 
 /**
  * creates a CGContext that is backed by manually allocated bytes.
@@ -49,10 +50,6 @@
         // uuid is used for loading/saving
         self.uuid = _uuid;
         idealSize = size;
-        //
-        // load the bytes that will be the backing store for the context
-        [self load];
-        
     }
     return self;
 }
@@ -81,12 +78,22 @@
 // void* data = CGBitmapContextGetData(cacheContext);
 // NSData* dataForFile = [NSData dataWithBytesNoCopy:data length:bitmapByteCount freeWhenDone:NO];
 -(void) save{
+    SLBackingStore* this = self;
+    [this retain];
     // TODO save a backing store
     [NSThread performBlockInBackground:^{
+        /**
+         * TODO: turn saving back on for pages
+         *
+         * right now, i just run a block in the background.
+         *
+         * instead, i should use nsoperationqueue in the slbackingstoremanager
+         * to handle saving these out to disk
+         */
+        return;
         @synchronized(self){
             NSString* pathToBinaryData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"bin"]];
             [backingStoreData writeToFile:pathToBinaryData atomically:YES];
-            
             
             NSString* pathToArrayData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"bez"]];
             NSMutableDictionary* dataToSave = [NSMutableDictionary dictionary];
@@ -95,8 +102,7 @@
             [dataToSave setObject:undoneStrokes forKey:@"undoneStrokes"];
             
             [NSKeyedArchiver archiveRootObject:dataToSave toFile:pathToArrayData];
-            
-            NSLog(@"saved to: %@", pathToArrayData);
+            [this release];
         }
     }];
 }
@@ -106,7 +112,7 @@
         // TODO load a backing store
         NSString* pathToBinaryData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"bin"]];
         if([[NSFileManager defaultManager] fileExistsAtPath:pathToBinaryData]){
-            backingStoreData = [[NSData dataWithContentsOfMappedFile:pathToBinaryData] retain];
+            backingStoreData = [[NSData dataWithContentsOfFile:pathToBinaryData] retain];
             NSLog(@"loaded for %@", uuid);
         }
 
@@ -120,8 +126,6 @@
             [currentStrokeSegments addObjectsFromArray:[dataFromDisk objectForKey:@"currentStrokeSegments"]];
             [committedStrokes addObjectsFromArray:[dataFromDisk objectForKey:@"committedStrokes"]];
             [undoneStrokes addObjectsFromArray:[dataFromDisk objectForKey:@"undoneStrokes"]];
-            
-            NSLog(@"loaded curves %d %d %d", [currentStrokeSegments count], [committedStrokes count], [undoneStrokes count]);
         }
         
         
@@ -153,6 +157,9 @@
         CGContextSetShouldAntialias(cacheContext, YES);
         // allow transparency
         CGContextSetAlpha(cacheContext, 1);
+        CGColorSpaceRelease(colorSpace);
+        
+        [self.delegate didLoadBackingStore:self];
     }
 }
 
@@ -163,13 +170,19 @@
  * to cancel a stroke, simply remove all the segments
  * from the current stroke and redisplay the view
  */
--(BOOL) cancelStroke{
-    BOOL ret = NO;
+-(CGRect) cancelStroke{
+    CGRect ret2 = CGRectZero;
     @synchronized(self){
-        ret = [currentStrokeSegments count] > 0;
+        for(StrokeSegment* seg in currentStrokeSegments){
+            if(CGRectEqualToRect(ret2, CGRectZero)){
+                ret2 = [seg bounds];
+            }else{
+                ret2 = CGRectUnion(ret2, [seg bounds]);
+            }
+        }
         [currentStrokeSegments removeAllObjects];
     }
-    return ret;
+    return ret2;
 }
 
 /**
@@ -242,6 +255,7 @@
     //    if(hue > 1.0) hue = 0.0;
     //    UIColor *color = [UIColor colorWithHue:hue saturation:0.7 brightness:1.0 alpha:1.0];
     //    CGContextSetStrokeColorWithColor(cacheContext, [color CGColor]);
+    CGContextSetFillColorWithColor(context, [[UIColor blackColor] CGColor]);
     CGContextSetStrokeColorWithColor(context, [[UIColor blackColor] CGColor]);
     CGContextSetLineCap(context, kCGLineCapRound);
     CGContextSetLineWidth(context, fingerWidth / 1.5);
@@ -251,27 +265,41 @@
 }
 
 -(void) drawIntoContext:(CGContextRef)context intoBounds:(CGRect)bounds{
-    CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
-    CGContextDrawImage(context, bounds, cacheImage);
-    CGImageRelease(cacheImage);
-    
-    //
-    // draw all the undo states
-    for(NSArray* stroke in committedStrokes){
-        [self drawStroke:stroke intoContext:context];
+    @synchronized(self){
+        if(backingStoreData){
+            CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
+            CGContextDrawImage(context, bounds, cacheImage);
+            CGImageRelease(cacheImage);
+            
+            //
+            // draw all the undo states
+            for(NSArray* stroke in committedStrokes){
+                [self drawStroke:stroke intoContext:context];
+            }
+            
+            //
+            // draw the active stroke, if any, to the screen context
+            [self drawStroke:currentStrokeSegments intoContext:context];
+        }else{
+            // noop because i'm not loaded
+        }
     }
-    
-    //
-    // draw the active stroke, if any, to the screen context
-    [self drawStroke:currentStrokeSegments intoContext:context];
 }
 
 
 #pragma mark - Dealloc
 
 -(void) dealloc{
+    delegate = nil;
+
     CGContextRelease(cacheContext);
     [backingStoreData release];
+    [uuid release];
+    
+    [currentStrokeSegments release];
+    [committedStrokes release];
+    [undoneStrokes release];
+    
     [super dealloc];
 }
 

@@ -78,4 +78,10 @@
     }
 }
 
+
+-(void) reset{
+    [touchLocations removeAllObjects];
+    [super reset];
+}
+
 @end

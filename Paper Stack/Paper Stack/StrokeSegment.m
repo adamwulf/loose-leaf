@@ -51,4 +51,13 @@
     return self;
 }
 
+-(CGRect) bounds{
+    return CGRectInset([path bounds], -self.fingerWidth, -self.fingerWidth);
+}
+
+-(void) dealloc{
+    [path release];
+    [super dealloc];
+}
+
 @end

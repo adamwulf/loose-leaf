@@ -29,6 +29,8 @@
 
 
 -(void) awakeFromNib{
+    previouslyVisiblePage = nil;
+    
     setOfPagesBeingPanned = [[NSMutableSet alloc] init]; // use this as a quick cache of pages being panned
     visibleStackHolder = [[SLSynchronizedStackView alloc] initWithFrame:self.bounds];
     hiddenStackHolder = [[SLSynchronizedStackView alloc] initWithFrame:self.bounds];
@@ -83,6 +85,14 @@
     return hiddenStackHolder.subviews;
 }
 
+-(void) loadVisiblePageIfNeeded{
+    if(previouslyVisiblePage != [visibleStackHolder peekSubview]){
+        [previouslyVisiblePage flush];
+        previouslyVisiblePage = [visibleStackHolder peekSubview];
+        [previouslyVisiblePage load];
+    }
+}
+
 
 #pragma mark - Future Model Methods
 
@@ -96,17 +106,9 @@
         page.delegate = self;
         [stackView addSubviewToBottomOfStack:page];
     }
+    [self loadVisiblePageIfNeeded];
 }
 
-/**
- * adds the page to the top of the stack
- * and to the top of the subviews
- */
--(void) pushPaperToTopOfStack:(SLPaperView*)page{
-    page.delegate = self;
-    [page enableAllGestures];
-    [visibleStackHolder pushSubview:page];
-}
 
 /**
  * adds the page to the top of the stack
@@ -126,6 +128,7 @@
     page.delegate = self;
     [page enableAllGestures];
     [visibleStackHolder addSubviewToBottomOfStack:page];
+    [self loadVisiblePageIfNeeded];
 }
 
 /**
@@ -462,6 +465,7 @@
         SLPaperView* aPage = [bezelStackHolder.subviews objectAtIndex:0];
         [aPage removeAllAnimationsAndPreservePresentationFrame];
         [visibleStackHolder pushSubview:aPage];
+        [self loadVisiblePageIfNeeded];
         [self animatePageToFullScreen:aPage withDelay:delay withBounce:NO onComplete:(isLastToAnimate ? ^(BOOL finished){
             bezelStackHolder.frame = hiddenStackHolder.frame;
             if(completionBlock) completionBlock(finished);
@@ -948,6 +952,7 @@
 -(void) sendPageToHiddenStack:(SLPaperView*)page onComplete:(void(^)(BOOL finished))completionBlock{
     if([visibleStackHolder.subviews containsObject:page]){
         [bezelStackHolder addSubviewToBottomOfStack:page];
+        [self loadVisiblePageIfNeeded];
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:completionBlock];
         [self ensureAtLeast:1 pagesInStack:visibleStackHolder];
     }
@@ -986,6 +991,7 @@
         }
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:completionBlock];
         [self ensureAtLeast:1 pagesInStack:visibleStackHolder];
+        [self loadVisiblePageIfNeeded];
     }
 }
 
@@ -1014,6 +1020,7 @@
             // correctly
             [aPage enableAllGestures];
             [visibleStackHolder pushSubview:aPage];
+            [self loadVisiblePageIfNeeded];
             BOOL hasAnotherToPop = [hiddenStackHolder peekSubview] != page && [hiddenStackHolder.subviews count];
             [self animatePageToFullScreen:aPage withDelay:delay withBounce:YES onComplete:(!hasAnotherToPop ? completionBlock : nil)];
             delay += kAnimationDelay;
@@ -1209,6 +1216,7 @@
         page.scale = 1;
         [page disableAllGestures];
         [hiddenStackHolder pushSubview:page];
+        [self loadVisiblePageIfNeeded];
         if(completionBlock) completionBlock(YES);
     }else{
         CGFloat dist =  MAX((visibleStackHolder.frame.size.width - frInVisibleStack.origin.x), visibleStackHolder.frame.size.width / 2);
@@ -1222,6 +1230,7 @@
                              if(finished){
                                  [page disableAllGestures];
                                  [hiddenStackHolder pushSubview:page];
+                                 [self loadVisiblePageIfNeeded];
                              }
                              if(completionBlock) completionBlock(finished);
                          }];

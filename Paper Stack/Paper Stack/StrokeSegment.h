@@ -23,5 +23,6 @@
 
 +(StrokeSegment*) strokeWithFingerWidth:(CGFloat)_fingerWidth andRect:(CGRect)_rectToDisplay andPath:(UIBezierPath*)_path andFill:(BOOL)_fill;
 
+-(CGRect) bounds;
 
 @end

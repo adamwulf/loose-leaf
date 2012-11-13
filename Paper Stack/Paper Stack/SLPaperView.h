@@ -66,7 +66,8 @@
 -(void) undo;
 -(void) redo;
 
-
+-(void) flush;
+-(void) load;
 
 
 @end

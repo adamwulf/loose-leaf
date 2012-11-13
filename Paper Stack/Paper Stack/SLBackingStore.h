@@ -13,6 +13,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Constants.h"
+#import "SLBackingStoreDelegate.h"
 
 @interface SLBackingStore : NSObject{
     //
@@ -33,23 +34,30 @@
     NSMutableArray* committedStrokes;
     NSMutableArray* undoneStrokes;
     
+    
+    //
+    // delegate to listen for load/save notifications
+    NSObject<SLBackingStoreDelegate>* delegate;
+    
 }
 
 @property (nonatomic, retain) NSString* uuid;
-
 @property (nonatomic, readonly) CGContextRef cacheContext;
 
 @property (nonatomic, readonly) NSMutableArray* currentStrokeSegments;
 @property (nonatomic, readonly) NSMutableArray* committedStrokes;
 @property (nonatomic, readonly) NSMutableArray* undoneStrokes;
 
+@property (nonatomic, assign) NSObject<SLBackingStoreDelegate>* delegate;
+
 -(id) initWithSize:(CGSize)size andUUID:(NSString*)uuid;
--(BOOL) cancelStroke;
+-(CGRect) cancelStroke;
 -(void) commitStroke;
 -(BOOL) undo;
 -(BOOL) redo;
 
 -(void) save;
+-(void) load;
 
 -(void) drawIntoContext:(CGContextRef)context intoBounds:(CGRect)bounds;
 

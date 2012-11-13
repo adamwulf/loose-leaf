@@ -278,6 +278,7 @@
             [visibleStackHolder pushSubview:[hiddenStackHolder peekSubview]];
         }
     }
+    [self loadVisiblePageIfNeeded];
 }
 
 /**

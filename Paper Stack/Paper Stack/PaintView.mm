@@ -22,28 +22,41 @@
     if (self) {
         self.uuid = _uuid;
         hue = 4.0;
-        backingStore = [[SLBackingStore alloc] initWithSize:frame.size andUUID:_uuid];
         self.backgroundColor = [UIColor clearColor];
         self.clearsContextBeforeDrawing = NO;
+        backingStoreSize = frame.size;
     }
     return self;
 }
 
+-(void) flush{
+    [backingStore save];
+    [backingStore release];
+    backingStore = nil;
+}
 -(void) save{
     [backingStore save];
 }
-
-/**
- * this method returns the bezier that describes the clipped
- * area of this paint view. the default is the bounds of
- * this view
- */
--(UIBezierPath*) clipPath{
-    if(!clipPath || [clipPath isEmpty]){
-        [clipPath release];
-        clipPath = [[UIBezierPath bezierPathWithRect:self.bounds] retain];
+-(void) load{
+    if(!backingStore){
+        backingStore = [[SLBackingStore alloc] initWithSize:backingStoreSize andUUID:self.uuid];
+        backingStore.delegate = self;
+        [backingStore load];
     }
-    return clipPath;
+}
+
+#pragma mark - SLBackingStoreDelegate
+
+-(void) didLoadBackingStore:(SLBackingStore*)_backingStore{
+    [self.delegate didLoadPaintView:self];
+    [self setNeedsDisplay];
+}
+
+-(void) didSaveBackingStore:(SLBackingStore*)_backingStore{
+    if(!backingStore){
+        // we're flushed, so notify our delegate
+        [self.delegate didFlushPaintView:self];
+    }
 }
 
 #pragma mark - Drawing
@@ -191,8 +204,9 @@
  * from the current stroke and redisplay the view
  */
 -(void) cancelStroke{
-    if([backingStore cancelStroke]){
-        [self setNeedsDisplay];
+    CGRect affectedCancelledRect = [backingStore cancelStroke];
+    if(!CGRectEqualToRect(affectedCancelledRect, CGRectZero)){
+        [self setNeedsDisplayInRect:affectedCancelledRect];
     }
 }
 /**
@@ -243,6 +257,18 @@
 
 #pragma mark - Clipping
 
+/**
+ * this method returns the bezier that describes the clipped
+ * area of this paint view. the default is the bounds of
+ * this view
+ */
+-(UIBezierPath*) clipPath{
+    if(!clipPath || [clipPath isEmpty]){
+        [clipPath release];
+        clipPath = [[UIBezierPath bezierPathWithRect:self.bounds] retain];
+    }
+    return clipPath;
+}
 
 /**
  * this method updates our cached clipping path for any strokes

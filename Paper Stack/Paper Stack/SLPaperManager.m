@@ -41,39 +41,41 @@ static SLPaperManager* _instance = nil;
 }
 
 -(void) save{
-    NSLog(@"saving paper order");
-    
-    NSMutableArray* visiblePages = [NSMutableArray array];
-    NSMutableArray* inflightPages = [NSMutableArray array];
-    NSMutableArray* hiddenPages = [NSMutableArray array];
-    @synchronized(stackView){
-        for(SLPaperView* page in stackView.visibleViews){
-            [visiblePages addObject:[page uuid]];
+    [NSThread performBlockInBackground:^{
+        NSMutableArray* visiblePages = [NSMutableArray array];
+        NSMutableArray* inflightPages = [NSMutableArray array];
+        NSMutableArray* hiddenPages = [NSMutableArray array];
+        @synchronized(stackView){
+            NSLog(@"saving paper order");
+            
+            for(SLPaperView* page in stackView.visibleViews){
+                [visiblePages addObject:[page uuid]];
+            }
+            for(SLPaperView* page in stackView.inflightViews){
+                [inflightPages addObject:[page uuid]];
+            }
+            for(SLPaperView* page in stackView.hiddenViews){
+                [hiddenPages addObject:[page uuid]];
+            }
         }
-        for(SLPaperView* page in stackView.inflightViews){
-            [inflightPages addObject:[page uuid]];
-        }
-        for(SLPaperView* page in stackView.hiddenViews){
-            [hiddenPages addObject:[page uuid]];
-        }
-    }
-    NSString* filePath = [SLPaperManager pathToSavedData];
-    
-    NSMutableDictionary* dataToSave = [NSMutableDictionary dictionary];
-    [dataToSave setObject:visiblePages forKey:@"visiblePages"];
-    [dataToSave setObject:inflightPages forKey:@"inflightPages"];
-    [dataToSave setObject:hiddenPages forKey:@"hiddenPages"];
-    
-    [dataToSave writeToFile:filePath atomically:YES];
+        NSString* filePath = [SLPaperManager pathToSavedData];
+        
+        NSMutableDictionary* dataToSave = [NSMutableDictionary dictionary];
+        [dataToSave setObject:visiblePages forKey:@"visiblePages"];
+        [dataToSave setObject:inflightPages forKey:@"inflightPages"];
+        [dataToSave setObject:hiddenPages forKey:@"hiddenPages"];
+        
+        [dataToSave writeToFile:filePath atomically:YES];
+    }];
 }
 
 
 -(void) load{
     NSDictionary* dataFromDisk = [NSDictionary dictionaryWithContentsOfFile:[SLPaperManager pathToSavedData]];
     if(dataFromDisk){
-        for(NSString* uuid in [dataFromDisk objectForKey:@"visiblePages"]){
+        for(NSString* uuid in [[dataFromDisk objectForKey:@"visiblePages"] reverseObjectEnumerator]){
             SLPaperView* paper = [[SLPaperView alloc] initWithFrame:idealBounds andUUID:uuid];
-            [stackView pushPaperToTopOfStack:paper];
+            [stackView addPaperToBottomOfStack:paper];
         }
         for(NSString* uuid in [dataFromDisk objectForKey:@"hiddenPages"]){
             SLPaperView* paper = [[SLPaperView alloc] initWithFrame:idealBounds andUUID:uuid];

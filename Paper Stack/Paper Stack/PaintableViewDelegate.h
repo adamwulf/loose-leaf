@@ -7,8 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "SLBackingStoreDelegate.h"
+
+@class PaintView;
 
 @protocol PaintableViewDelegate <NSObject>
+
+-(void) didFlushPaintView:(PaintView*)paintView;
+
+-(void) didLoadPaintView:(PaintView*)paintView;
 
 -(NSArray*) paintableViewsAbove:(UIView*)aView;
 

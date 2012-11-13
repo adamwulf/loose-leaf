@@ -161,7 +161,6 @@
         if(drawGesture.state == UIGestureRecognizerStateEnded){
             [self commitStroke];
             [paintView save];
-            [[SLPaperManager sharedInstace] save];
         }
     }else{
         // cancelled or something
@@ -491,6 +490,36 @@
 }
 
 
+#pragma mark - Saving and Loading
+
+-(void) flush{
+    [paintView flush];
+}
+
+/**
+ * this page should load all editable assets
+ * and then transition from readonly low-memory mode
+ * into editable high-memory mode
+ */
+-(void) load{
+    [paintView load];
+}
+
+
+#pragma mark - SLBackingStoreDelegate
+
+/**
+ * our paint view has loaded its backing
+ * store from disk, so show the paint view
+ * instead of our cached image
+ */
+-(void) didLoadPaintView:(PaintView*)_paintView{
+    paintView.hidden = NO;
+}
+
+-(void) didFlushPaintView:(PaintView *)_paintView{
+    paintView.hidden = YES;
+}
 
 #pragma mark - SLDrawingGestureRecognizerDelegate
 
@@ -525,5 +554,7 @@
 -(void) redo{
     [paintView redo];
 }
+
+
 
 @end

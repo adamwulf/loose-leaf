@@ -12,10 +12,11 @@
 #import "PaintableViewDelegate.h"
 #import "PaintTouchViewDelegate.h"
 #import "SLBackingStore.h"
+#import "SLBackingStoreDelegate.h"
 
 @class SLPaperView;
 
-@interface PaintView : UIView<PaintTouchViewDelegate> {
+@interface PaintView : UIView<PaintTouchViewDelegate,SLBackingStoreDelegate> {
     //
     // for saving and loading
     NSString* uuid;
@@ -26,6 +27,7 @@
     // this handles creating the cgcontext to draw to
     // as well as saving to/from disk
     SLBackingStore* backingStore;
+    CGSize backingStoreSize;
     
     //
     // the delegate that tells us which views
@@ -58,6 +60,8 @@
 -(void) updateClipPath;
 -(void) undo;
 -(void) redo;
+-(void) flush;
 -(void) save;
+-(void) load;
 
 @end
