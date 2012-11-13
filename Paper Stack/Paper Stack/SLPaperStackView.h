@@ -16,12 +16,12 @@
 #import "SLLeftArrow.h"
 #import "SLRightArrow.h"
 #import "SLBezelInRightGestureRecognizer.h"
-#import "UIView+SubviewStacks.h"
 #import "UIView+Debug.h"
 #import "UIView+Animations.h"
 #import "NSMutableSet+Extras.h"
-#import "Constants.h"
 #import "SLPopoverView.h"
+#import "SLStackView.h"
+#import "Constants.h"
 
 @interface SLPaperStackView : UIScrollView<SLPaperViewDelegate>{
     @private
@@ -38,17 +38,24 @@
     @protected
     SLBezelInRightGestureRecognizer* fromRightBezelGesture;
     
-    UIView* visibleStackHolder;
-    UIView* hiddenStackHolder;
-    UIView* bezelStackHolder;
+    SLStackView* visibleStackHolder;
+    SLStackView* hiddenStackHolder;
+    SLStackView* bezelStackHolder;
 
     NSMutableSet* setOfPagesBeingPanned;
 }
 
 @property (nonatomic, readonly) UIView* stackHolder;
 
+@property (nonatomic, readonly) NSArray* visibleViews;
+@property (nonatomic, readonly) NSArray* inflightViews;
+@property (nonatomic, readonly) NSArray* hiddenViews;
+
+
 -(void) addPaperToBottomOfStack:(SLPaperView*)page;
 -(void) addPaperToBottomOfHiddenStack:(SLPaperView*)page;
+-(void) pushPaperToTopOfStack:(SLPaperView*)page;
+-(void) pushPaperToTopOfHiddenStack:(SLPaperView*)page;
 
 -(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated onComplete:(void(^)(BOOL finished))completionBlock;
 -(void) popTopPageOfHiddenStack;

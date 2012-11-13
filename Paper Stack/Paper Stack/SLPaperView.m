@@ -26,12 +26,21 @@
 @synthesize uuid;
 @synthesize unitShadowPath;
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame{
+    return [self initWithFrame:frame andUUID:nil];
+}
+
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        uuid = [[NSString createStringUUID] retain];
+        if(_uuid){
+            uuid = [_uuid retain];
+            isBrandNewPage = NO;
+        }else{
+            uuid = [[NSString createStringUUID] retain];
+            isBrandNewPage = YES;
+        }
         
         //////////////////////////////////////////////////////////////////////
         //
@@ -46,6 +55,14 @@
         imgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         imgView.clipsToBounds = YES;
 //        [self.contentView addSubview:imgView];
+        
+        
+        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
+        label.font = [UIFont systemFontOfSize:[UIFont smallSystemFontSize]];
+        label.text = uuid;
+        [self.contentView addSubview:label];
+        
+        
         //
         // end debug image
         //
@@ -54,13 +71,13 @@
         preGestureScale = 1;
         self.scale = 1;
         
-        paintView = [[PaintView alloc] initWithFrame:CGRectMake(0, 0,
-                                                                frame.size.width * kMaxPageResolution,
-                                                                frame.size.height * kMaxPageResolution)];
-        paintView.autoresizingMask = UIViewAutoresizingNone; // UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        [self.contentView addSubview:paintView];
-        initialPaintViewFrame = paintView.frame;
-        [self updatePaintScaleTransform];
+//        paintView = [[PaintView alloc] initWithFrame:CGRectMake(0, 0,
+//                                                                frame.size.width * kMaxPageResolution,
+//                                                                frame.size.height * kMaxPageResolution)];
+//        paintView.autoresizingMask = UIViewAutoresizingNone; // UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+//        [self.contentView addSubview:paintView];
+//        initialPaintViewFrame = paintView.frame;
+//        [self updatePaintScaleTransform];
         
         
         

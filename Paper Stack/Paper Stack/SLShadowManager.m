@@ -27,7 +27,7 @@ static SLShadowManager* _instance = nil;
 
 +(SLShadowManager*) sharedInstace{
     if(!_instance){
-        _instance = [[SLShadowManager alloc]init];
+        _instance = [[SLShadowManager alloc] init];
     }
     return _instance;
 }

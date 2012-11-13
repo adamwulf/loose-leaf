@@ -51,7 +51,7 @@
         //
         // load the bytes that will be the backing store for the context
         backingStoreData = [[NSData dataWithBytesNoCopy:malloc(bitmapByteCount) length:bitmapByteCount freeWhenDone:YES] retain];
-        
+
         //
         // create the bitmap context that we'll use to cache
         // the drawn strokes
