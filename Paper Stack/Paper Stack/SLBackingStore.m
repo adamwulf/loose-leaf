@@ -139,10 +139,45 @@
             int bitmapByteCount = (bitmapBytesPerRow * idealSize.height * scaleFactor);
             CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
             
+            //
+            // debug
+            //
+            //
+            // this code proves that the bytecount i use to malloc is the exact
+            // same as the filesize byte count.
+            //
+            // so! what i need to do is allocate 2, maybe 3 of these void* pointers
+            // and hand them out in a pool.
+            //
+            // that way, then a page is flushed, after its written to disk the malloc
+            // isn't freed but used for the next backing store that loads data directly
+            // into that memory.
+            //
+            // this way i'm not constantly re-allocating memory of the exact same size
+            // only to free it soon after.
+            //
+            // http://stackoverflow.com/questions/9662490/load-file-to-nsdata-with-c
+            // shows how to load a file into a pre-malloc'd are of memory
+            //
+            // also
+            // when saving, i shouldn't bother writing to disk if the memory was blank anyways
+            // instead, i should just force zero out all the memory and give it a new
+            // pointer, which'll be much faster than loading in a bunch of zeros from disk.
+            //
+            //            memset(pointer, 0, length);
+            //
+            // can be used to re-set the buffer to zeroes when reusing a pointer for a blank
+            // slate as opposed to reading in from disk to replace it
+            NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToBinaryData error:nil];
+            NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
+            long long fileSize = [fileSizeNumber longLongValue];
+            NSLog(@"length of file: %lld vs %d", fileSize, bitmapByteCount);
             
+            
+
             if(!backingStoreData){
                 NSLog(@"new for %@", uuid);
-                backingStoreData = [[NSData dataWithBytesNoCopy:malloc(bitmapByteCount) length:bitmapByteCount freeWhenDone:YES] retain];
+                backingStoreData = [[NSData dataWithBytesNoCopy:calloc(1, bitmapByteCount) length:bitmapByteCount freeWhenDone:YES] retain];
             }
             
             //
