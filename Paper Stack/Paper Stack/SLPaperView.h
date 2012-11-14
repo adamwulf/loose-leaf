@@ -43,9 +43,10 @@
     
     SLDrawingGestureRecognizer* drawGesture;
     UIActivityIndicatorView* activity;
+    
+    BOOL isFlushingPaintView;
     CGSize paintViewFrameSize;
     PaintView* paintView;
-    CGRect initialPaintViewFrame;
 }
 
 @property (nonatomic, readonly) NSString* uuid;

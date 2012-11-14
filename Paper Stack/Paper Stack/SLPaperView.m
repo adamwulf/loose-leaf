@@ -49,8 +49,8 @@
             preGestureScale = 1;
             self.scale = 1;
             
-            paintViewFrameSize = frame.size;
-//            [self initPaintView];
+            paintViewFrameSize = CGSizeMake(frame.size.width * kMaxPageResolution, frame.size.height * kMaxPageResolution);
+            [self initPaintView];
             
             // saving/loading activity indicator
             activity = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray] autorelease];
@@ -119,7 +119,6 @@
                                          andUUID:uuid];
     paintView.autoresizingMask = UIViewAutoresizingNone; // we'll use transforms to size the paint correctly
     [self.contentView addSubview:paintView];
-    initialPaintViewFrame = paintView.frame;
     [self updatePaintScaleTransform];
     paintView.hidden = YES;
 }
@@ -138,9 +137,11 @@
  * so that it's native resolution when fully zoomed
  */
 -(void) updatePaintScaleTransform{
-    paintView.transform = CGAffineTransformMakeScale(self.frame.size.width / initialPaintViewFrame.size.width,
-                                                     self.frame.size.height / initialPaintViewFrame.size.height);
-    paintView.center = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2);
+    if(paintView){
+        paintView.transform = CGAffineTransformMakeScale(self.frame.size.width / paintViewFrameSize.width,
+                                                         self.frame.size.height / paintViewFrameSize.height);
+        paintView.center = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2);
+    }
 }
 
 -(void) setFrame:(CGRect)_frame{
@@ -509,7 +510,10 @@
 #pragma mark - Saving and Loading
 
 -(void) flush{
-    [paintView flush];
+    if(paintView){
+        isFlushingPaintView = YES;
+        [paintView flush];
+    }
 }
 
 /**
@@ -518,7 +522,10 @@
  * into editable high-memory mode
  */
 -(void) load{
-    if(!paintView) [self initPaintView];
+    isFlushingPaintView = NO;
+    if(!paintView){
+        [self initPaintView];
+    }
     [paintView load];
 }
 
@@ -594,6 +601,11 @@
 -(void) didSaveBackingStore:(SLBackingStore*)backingStore{
     paintView.hidden = YES;
     [activity stopAnimating];
+    if(isFlushingPaintView){
+        [paintView removeFromSuperview];
+        [paintView release];
+        paintView = nil;
+    }
 }
 
 

@@ -174,7 +174,12 @@
             NSLog(@"length of file: %lld vs %d", fileSize, bitmapByteCount);
             
             
-
+            if(fileSize != bitmapByteCount){
+                // uh oh
+                NSLog(@"backing store data file is not same size as context! %lld vs %d", fileSize, bitmapByteCount);
+                [backingStoreData release];
+                backingStoreData = nil;
+            }
             if(!backingStoreData){
                 NSLog(@"new for %@", uuid);
                 backingStoreData = [[NSData dataWithBytesNoCopy:calloc(1, bitmapByteCount) length:bitmapByteCount freeWhenDone:YES] retain];
