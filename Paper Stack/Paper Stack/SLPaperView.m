@@ -50,7 +50,6 @@
             self.scale = 1;
             
             paintViewFrameSize = CGSizeMake(frame.size.width * kMaxPageResolution, frame.size.height * kMaxPageResolution);
-            [self initPaintView];
             
             // saving/loading activity indicator
             activity = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray] autorelease];

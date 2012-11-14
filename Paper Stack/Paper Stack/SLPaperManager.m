@@ -117,7 +117,7 @@ static SLPaperManager* _instance = nil;
         @autoreleasepool {
             if ([[file pathExtension] isEqualToString: @"bez"]) {
                 // process the document
-                NSString* uuid = [file lastPathComponent];
+                NSString* uuid = [[file lastPathComponent] stringByDeletingPathExtension];
                 if(![[SLPaperManager sharedInstace] pageForUUID:uuid]){
                     NSLog(@"page resurrected: %@", uuid);
                     [stackView pushPaperToTopOfHiddenStack:[self createPageForUUID:uuid]];
