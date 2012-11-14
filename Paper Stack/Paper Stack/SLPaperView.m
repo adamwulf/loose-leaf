@@ -114,8 +114,8 @@
 
 -(void) initPaintView{
     paintView = [[PaintView alloc] initWithFrame:CGRectMake(0, 0,
-                                                            paintViewFrameSize.width * kMaxPageResolution,
-                                                            paintViewFrameSize.height * kMaxPageResolution)
+                                                            paintViewFrameSize.width,
+                                                            paintViewFrameSize.height)
                                          andUUID:uuid];
     paintView.autoresizingMask = UIViewAutoresizingNone; // we'll use transforms to size the paint correctly
     [self.contentView addSubview:paintView];
