@@ -527,6 +527,7 @@
     [pagesThatWillBeVisibleAfterTransitionToListView release];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
     [self moveAddButtonToTop];
+    [[SLPaperManager sharedInstace] save];
 }
 
 /**

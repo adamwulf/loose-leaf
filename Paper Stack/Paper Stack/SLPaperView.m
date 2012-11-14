@@ -42,46 +42,18 @@
             isBrandNewPage = YES;
         }
         
-        //////////////////////////////////////////////////////////////////////
-        //
-        // debug image to help show page zoom/pan etc better
-        // than a blank page
-        //
-        NSInteger photo = rand() % 6 + 1;
-        UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", photo]];
-        UIImageView* imgView = [[[UIImageView alloc] initWithImage:img] autorelease];
-        imgView.frame = self.contentView.bounds;
-        imgView.contentMode = UIViewContentModeScaleAspectFill;
-        imgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        imgView.clipsToBounds = YES;
-//        [self.contentView addSubview:imgView];
-        
-        
-        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
-        label.font = [UIFont systemFontOfSize:[UIFont smallSystemFontSize]];
-        label.text = uuid;
-        [self.contentView addSubview:label];
-        
-        
-        //
-        // end debug image
-        //
-        //////////////////////////////////////////////////////////////////////
         [self.layer setMasksToBounds:YES ];
         preGestureScale = 1;
         self.scale = 1;
         
-//        paintView = [[PaintView alloc] initWithFrame:CGRectMake(0, 0,
-//                                                                frame.size.width * kMaxPageResolution,
-//                                                                frame.size.height * kMaxPageResolution)];
-//        paintView.autoresizingMask = UIViewAutoresizingNone; // UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-//        [self.contentView addSubview:paintView];
-//        initialPaintViewFrame = paintView.frame;
-//        [self updatePaintScaleTransform];
-        
-        
-        
-        
+        paintView = [[PaintView alloc] initWithFrame:CGRectMake(0, 0,
+                                                                frame.size.width * kMaxPageResolution,
+                                                                frame.size.height * kMaxPageResolution)];
+        paintView.autoresizingMask = UIViewAutoresizingNone;
+        [self.contentView addSubview:paintView];
+        initialPaintViewFrame = paintView.frame;
+        [self updatePaintScaleTransform];
+                
         //
         // this gesture handles any single finger drawing
         // on the page. any gesture that overrides the one finger

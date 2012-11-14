@@ -20,7 +20,7 @@
 #import "UIView+Animations.h"
 #import "NSMutableSet+Extras.h"
 #import "SLPopoverView.h"
-#import "SLStackView.h"
+#import "SLModeledStackView.h"
 #import "Constants.h"
 
 @interface SLPaperStackView : UIScrollView<SLPaperViewDelegate>{
@@ -38,9 +38,9 @@
     @protected
     SLBezelInRightGestureRecognizer* fromRightBezelGesture;
     
-    SLStackView* visibleStackHolder;
-    SLStackView* hiddenStackHolder;
-    SLStackView* bezelStackHolder;
+    SLModeledStackView* visibleStackHolder;
+    SLModeledStackView* hiddenStackHolder;
+    SLModeledStackView* bezelStackHolder;
 
     NSMutableSet* setOfPagesBeingPanned;
 }

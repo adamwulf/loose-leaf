@@ -16,6 +16,7 @@
 		660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAB158FC65C0001DA12 /* NSMutableArray+StackAdditions.m */; };
 		660E1DB0158FC7DB0001DA12 /* SLPaperIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAF158FC7DB0001DA12 /* SLPaperIcon.m */; };
 		660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DB2159028560001DA12 /* NSArray+MapReduce.m */; };
+		661E08841653691C00EF779F /* SLModeledStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 661E08831653691C00EF779F /* SLModeledStackView.m */; };
 		6630EDA115F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m */; };
 		6630EDBF15F30FFF007E38AA /* SLPaperView+ListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDBE15F30FFF007E38AA /* SLPaperView+ListView.m */; };
 		664516B9159030FC0012FACA /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 664516B8159030FC0012FACA /* Constants.m */; };
@@ -130,6 +131,8 @@
 		660E1DAF158FC7DB0001DA12 /* SLPaperIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPaperIcon.m; sourceTree = "<group>"; };
 		660E1DB1159028560001DA12 /* NSArray+MapReduce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+MapReduce.h"; sourceTree = "<group>"; };
 		660E1DB2159028560001DA12 /* NSArray+MapReduce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+MapReduce.m"; sourceTree = "<group>"; };
+		661E08821653691C00EF779F /* SLModeledStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLModeledStackView.h; sourceTree = "<group>"; };
+		661E08831653691C00EF779F /* SLModeledStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLModeledStackView.m; sourceTree = "<group>"; };
 		6630ED9F15F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPanAndPinchFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
 		6630EDA015F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPanAndPinchFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		6630EDA215F1588E007E38AA /* SLPanAndPinchFromListViewGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPanAndPinchFromListViewGestureRecognizerDelegate.h; sourceTree = "<group>"; };
@@ -543,6 +546,8 @@
 				66C9043B165197F100E58FD3 /* SLStackView.m */,
 				66C9043D165198C500E58FD3 /* SLSynchronizedStackView.h */,
 				66C9043E165198C600E58FD3 /* SLSynchronizedStackView.m */,
+				661E08821653691C00EF779F /* SLModeledStackView.h */,
+				661E08831653691C00EF779F /* SLModeledStackView.m */,
 				6693298015996C530033E557 /* Astronaut Images */,
 				660E1DA6158FC6120001DA12 /* Categories */,
 				66A539F9163F18CB003EAEC0 /* nav@2x.png */,
@@ -790,6 +795,7 @@
 				66C904391651920200E58FD3 /* SLPaperManager.m in Sources */,
 				66C9043C165197F100E58FD3 /* SLStackView.m in Sources */,
 				66C9043F165198C600E58FD3 /* SLSynchronizedStackView.m in Sources */,
+				661E08841653691C00EF779F /* SLModeledStackView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

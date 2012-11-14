@@ -19,7 +19,6 @@ static SLPaperManager* _instance = nil;
 -(id) init{
     if(_instance) return _instance;
     if((_instance = [super init])){
-        [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(save) userInfo:nil repeats:NO];
 
     }
     return _instance;
@@ -46,7 +45,7 @@ static SLPaperManager* _instance = nil;
     NSMutableArray* inflightPages = [NSMutableArray array];
     NSMutableArray* hiddenPages = [NSMutableArray array];
     CGFloat time = [NSThread timeBlock:^{
-        @synchronized(stackView){
+        @synchronized(self){
             for(SLPaperView* page in stackView.visibleViews){
                 [visiblePages addObject:[page uuid]];
             }
