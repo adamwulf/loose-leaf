@@ -21,9 +21,10 @@
 #import "NSMutableSet+Extras.h"
 #import "SLPopoverView.h"
 #import "SLModeledStackView.h"
+#import "SLBackingStoreManagerDelegate.h"
 #import "Constants.h"
 
-@interface SLPaperStackView : UIScrollView<SLPaperViewDelegate>{
+@interface SLPaperStackView : UIScrollView<SLPaperViewDelegate,SLBackingStoreManagerDelegate>{
     @private
     SLPapersIcon* papersIcon;
     SLPaperIcon* paperIcon;

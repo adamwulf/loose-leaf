@@ -135,7 +135,7 @@
 		660E1DB2159028560001DA12 /* NSArray+MapReduce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+MapReduce.m"; sourceTree = "<group>"; };
 		661E08691652F7C500EF779F /* SLBackingStoreManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLBackingStoreManager.h; sourceTree = "<group>"; };
 		661E086A1652F7C500EF779F /* SLBackingStoreManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLBackingStoreManager.m; sourceTree = "<group>"; };
-		661E08771652FEF800EF779F /* SLBackingStoreDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLBackingStoreDelegate.h; sourceTree = "<group>"; };
+		661E08771652FEF800EF779F /* SLBackingStoreManagerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLBackingStoreManagerDelegate.h; sourceTree = "<group>"; };
 		661E08821653691C00EF779F /* SLModeledStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLModeledStackView.h; sourceTree = "<group>"; };
 		661E08831653691C00EF779F /* SLModeledStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLModeledStackView.m; sourceTree = "<group>"; };
 		6630ED9F15F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPanAndPinchFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
@@ -345,7 +345,6 @@
 			children = (
 				66B1F40D1651BA5D00379C5B /* SLBackingStore.h */,
 				66B1F40E1651BA5D00379C5B /* SLBackingStore.m */,
-				661E08771652FEF800EF779F /* SLBackingStoreDelegate.h */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -378,6 +377,7 @@
 				66932967159594A60033E557 /* SLRotationManagerDelegate.h */,
 				661E08691652F7C500EF779F /* SLBackingStoreManager.h */,
 				661E086A1652F7C500EF779F /* SLBackingStoreManager.m */,
+				661E08771652FEF800EF779F /* SLBackingStoreManagerDelegate.h */,
 			);
 			name = Managers;
 			sourceTree = "<group>";

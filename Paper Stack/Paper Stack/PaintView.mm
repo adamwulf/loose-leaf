@@ -40,22 +40,7 @@
 -(void) load{
     if(!backingStore){
         backingStore = [[SLBackingStore alloc] initWithSize:backingStoreSize andUUID:self.uuid];
-        backingStore.delegate = self;
         [backingStore load];
-    }
-}
-
-#pragma mark - SLBackingStoreDelegate
-
--(void) didLoadBackingStore:(SLBackingStore*)_backingStore{
-    [self.delegate didLoadPaintView:self];
-    [self setNeedsDisplay];
-}
-
--(void) didSaveBackingStore:(SLBackingStore*)_backingStore{
-    if(!backingStore){
-        // we're flushed, so notify our delegate
-        [self.delegate didFlushPaintView:self];
     }
 }
 

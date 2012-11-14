@@ -12,11 +12,10 @@
 #import "PaintableViewDelegate.h"
 #import "PaintTouchViewDelegate.h"
 #import "SLBackingStore.h"
-#import "SLBackingStoreDelegate.h"
 
 @class SLPaperView;
 
-@interface PaintView : UIView<PaintTouchViewDelegate,SLBackingStoreDelegate> {
+@interface PaintView : UIView<PaintTouchViewDelegate> {
     //
     // for saving and loading
     NSString* uuid;

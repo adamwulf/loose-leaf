@@ -7,6 +7,7 @@
 //
 
 #import "SLBackingStore.h"
+#import "SLBackingStoreManager.h"
 #import "NSThread+BlockAdditions.h"
 #import "StrokeSegment.h"
 
@@ -17,7 +18,6 @@
 @synthesize committedStrokes;
 @synthesize undoneStrokes;
 @synthesize uuid;
-@synthesize delegate;
 
 /**
  * creates a CGContext that is backed by manually allocated bytes.
@@ -78,86 +78,90 @@
 // void* data = CGBitmapContextGetData(cacheContext);
 // NSData* dataForFile = [NSData dataWithBytesNoCopy:data length:bitmapByteCount freeWhenDone:NO];
 -(void) save{
+    [[SLBackingStoreManager sharedInstace].delegate willSaveBackingStore:self];
+
     SLBackingStore* this = self;
     [this retain];
-    // TODO save a backing store
-    [NSThread performBlockInBackground:^{
-        /**
-         * TODO: right now, i just run a block in the background.
-         *
-         * instead, i should use nsoperationqueue in the slbackingstoremanager
-         * to handle saving these out to disk
-         */
-        @synchronized(self){
-            NSString* pathToBinaryData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"bin"]];
+    [[SLBackingStoreManager sharedInstace].opQueue addOperationWithBlock:^{
+        @synchronized(this){
+            NSString* pathToBinaryData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[this.uuid stringByAppendingPathExtension:@"bin"]];
             [backingStoreData writeToFile:pathToBinaryData atomically:YES];
             
-            NSString* pathToArrayData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"bez"]];
+            NSString* pathToArrayData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[this.uuid stringByAppendingPathExtension:@"bez"]];
             NSMutableDictionary* dataToSave = [NSMutableDictionary dictionary];
             [dataToSave setObject:currentStrokeSegments forKey:@"currentStrokeSegments"];
             [dataToSave setObject:committedStrokes forKey:@"committedStrokes"];
             [dataToSave setObject:undoneStrokes forKey:@"undoneStrokes"];
             
             [NSKeyedArchiver archiveRootObject:dataToSave toFile:pathToArrayData];
+            
+            
+            [[SLBackingStoreManager sharedInstace].delegate didSaveBackingStore:this];
             [this release];
         }
     }];
 }
 
 -(void) load{
-    @synchronized(self){
-        // TODO load a backing store
-        NSString* pathToBinaryData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"bin"]];
-        if([[NSFileManager defaultManager] fileExistsAtPath:pathToBinaryData]){
-            backingStoreData = [[NSData dataWithContentsOfFile:pathToBinaryData] retain];
-            NSLog(@"loaded for %@", uuid);
+    [[SLBackingStoreManager sharedInstace].delegate willLoadBackingStore:self];
+    
+    SLBackingStore* this = self;
+    [this retain];
+    [[SLBackingStoreManager sharedInstace].opQueue addOperationWithBlock:^{
+        @synchronized(self){
+            // TODO load a backing store
+            NSString* pathToBinaryData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"bin"]];
+            if([[NSFileManager defaultManager] fileExistsAtPath:pathToBinaryData]){
+                backingStoreData = [[NSData dataWithContentsOfFile:pathToBinaryData] retain];
+            }
+            
+            NSString* pathToArrayData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"bez"]];
+            
+            if([[NSFileManager defaultManager] fileExistsAtPath:pathToArrayData]){
+                NSDictionary* dataFromDisk = [NSKeyedUnarchiver unarchiveObjectWithFile:pathToArrayData];
+                [currentStrokeSegments removeAllObjects];
+                [committedStrokes removeAllObjects];
+                [undoneStrokes removeAllObjects];
+                [currentStrokeSegments addObjectsFromArray:[dataFromDisk objectForKey:@"currentStrokeSegments"]];
+                [committedStrokes addObjectsFromArray:[dataFromDisk objectForKey:@"committedStrokes"]];
+                [undoneStrokes addObjectsFromArray:[dataFromDisk objectForKey:@"undoneStrokes"]];
+            }
+            
+            
+            //
+            // scale factor for high resolution screens
+            float scaleFactor = [[UIScreen mainScreen] scale];
+            // Declare the number of bytes per row. Each pixel in the bitmap in this
+            // example is represented by 4 bytes; 8 bits each of red, green, blue, and
+            // alpha.
+            int	bitmapBytesPerRow = (idealSize.width * scaleFactor * 4); // only alpha;
+            int bitsPerComponent = 8;
+            int bitmapByteCount = (bitmapBytesPerRow * idealSize.height * scaleFactor);
+            CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+            
+            
+            if(!backingStoreData){
+                NSLog(@"new for %@", uuid);
+                backingStoreData = [[NSData dataWithBytesNoCopy:malloc(bitmapByteCount) length:bitmapByteCount freeWhenDone:YES] retain];
+            }
+            
+            //
+            // create the bitmap context that we'll use to cache
+            // the drawn strokes
+            cacheContext = CGBitmapContextCreate ((void*)[backingStoreData bytes], idealSize.width * scaleFactor, idealSize.height * scaleFactor, bitsPerComponent, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst);
+            // set scale for high res display
+            CGContextScaleCTM(cacheContext, scaleFactor, scaleFactor);
+            // antialias the strokes
+            CGContextSetAllowsAntialiasing(cacheContext, YES);
+            CGContextSetShouldAntialias(cacheContext, YES);
+            // allow transparency
+            CGContextSetAlpha(cacheContext, 1);
+            CGColorSpaceRelease(colorSpace);
+            
+            [[SLBackingStoreManager sharedInstace].delegate didLoadBackingStore:self];
+            [this release];
         }
-
-        NSString* pathToArrayData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"bez"]];
-
-        if([[NSFileManager defaultManager] fileExistsAtPath:pathToArrayData]){
-            NSDictionary* dataFromDisk = [NSKeyedUnarchiver unarchiveObjectWithFile:pathToArrayData];
-            [currentStrokeSegments removeAllObjects];
-            [committedStrokes removeAllObjects];
-            [undoneStrokes removeAllObjects];
-            [currentStrokeSegments addObjectsFromArray:[dataFromDisk objectForKey:@"currentStrokeSegments"]];
-            [committedStrokes addObjectsFromArray:[dataFromDisk objectForKey:@"committedStrokes"]];
-            [undoneStrokes addObjectsFromArray:[dataFromDisk objectForKey:@"undoneStrokes"]];
-        }
-        
-        
-        //
-        // scale factor for high resolution screens
-        float scaleFactor = [[UIScreen mainScreen] scale];
-        // Declare the number of bytes per row. Each pixel in the bitmap in this
-        // example is represented by 4 bytes; 8 bits each of red, green, blue, and
-        // alpha.
-        int	bitmapBytesPerRow = (idealSize.width * scaleFactor * 4); // only alpha;
-        int bitsPerComponent = 8;
-        int bitmapByteCount = (bitmapBytesPerRow * idealSize.height * scaleFactor);
-        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-        
-
-        if(!backingStoreData){
-            NSLog(@"new for %@", uuid);
-            backingStoreData = [[NSData dataWithBytesNoCopy:malloc(bitmapByteCount) length:bitmapByteCount freeWhenDone:YES] retain];
-        }
-        
-        //
-        // create the bitmap context that we'll use to cache
-        // the drawn strokes
-        cacheContext = CGBitmapContextCreate ((void*)[backingStoreData bytes], idealSize.width * scaleFactor, idealSize.height * scaleFactor, bitsPerComponent, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst);
-        // set scale for high res display
-        CGContextScaleCTM(cacheContext, scaleFactor, scaleFactor);
-        // antialias the strokes
-        CGContextSetAllowsAntialiasing(cacheContext, YES);
-        CGContextSetShouldAntialias(cacheContext, YES);
-        // allow transparency
-        CGContextSetAlpha(cacheContext, 1);
-        CGColorSpaceRelease(colorSpace);
-        
-        [self.delegate didLoadBackingStore:self];
-    }
+    }];
 }
 
 
@@ -287,8 +291,6 @@
 #pragma mark - Dealloc
 
 -(void) dealloc{
-    delegate = nil;
-
     CGContextRelease(cacheContext);
     [backingStoreData release];
     [uuid release];

@@ -22,6 +22,7 @@ static SLPaperManager* _instance = nil;
         opQueue = [[NSOperationQueue alloc] init];
         opQueue.maxConcurrentOperationCount = 1;
         opQueue.name = @"SLPaperManager Queue";
+        cacheOfPagesByUUID = [[NSMutableDictionary alloc] init];
     }
     return _instance;
 }
@@ -90,16 +91,13 @@ static SLPaperManager* _instance = nil;
     NSDictionary* dataFromDisk = [NSDictionary dictionaryWithContentsOfFile:[SLPaperManager pathToSavedData]];
     if(dataFromDisk){
         for(NSString* uuid in [[dataFromDisk objectForKey:@"visiblePages"] reverseObjectEnumerator]){
-            SLPaperView* paper = [[SLPaperView alloc] initWithFrame:idealBounds andUUID:uuid];
-            [stackView addPaperToBottomOfStack:paper];
+            [stackView addPaperToBottomOfStack:[self createPageForUUID:uuid]];
         }
         for(NSString* uuid in [dataFromDisk objectForKey:@"hiddenPages"]){
-            SLPaperView* paper = [[SLPaperView alloc] initWithFrame:idealBounds andUUID:uuid];
-            [stackView pushPaperToTopOfHiddenStack:paper];
+            [stackView pushPaperToTopOfHiddenStack:[self createPageForUUID:uuid]];
         }
         for(NSString* uuid in [[dataFromDisk objectForKey:@"inflightPages"] reverseObjectEnumerator]){
-            SLPaperView* paper = [[SLPaperView alloc] initWithFrame:idealBounds andUUID:uuid];
-            [stackView pushPaperToTopOfHiddenStack:paper];
+            [stackView pushPaperToTopOfHiddenStack:[self createPageForUUID:uuid]];
         }
     }else{
         SLPaperView* paper = [[SLPaperManager sharedInstace] createNewBlankPage];
@@ -107,7 +105,6 @@ static SLPaperManager* _instance = nil;
         paper = [[SLPaperManager sharedInstace] createNewBlankPage];
         [stackView addPaperToBottomOfHiddenStack:paper];
     }
-    
 }
 
 
@@ -116,9 +113,21 @@ static SLPaperManager* _instance = nil;
 #pragma mark - Create Pages
 
 -(SLPaperView*) createNewBlankPage{
-    return [[[SLPaperView alloc] initWithFrame:self.idealBounds] autorelease];
+    SLPaperView* paper = [[[SLPaperView alloc] initWithFrame:self.idealBounds] autorelease];
+    [cacheOfPagesByUUID setObject:paper forKey:paper.uuid];
+    return paper;
 }
 
+-(SLPaperView*) createPageForUUID:(NSString*)uuid{
+    SLPaperView* paper = [[[SLPaperView alloc] initWithFrame:idealBounds andUUID:uuid] autorelease];
+    [cacheOfPagesByUUID setObject:paper forKey:paper.uuid];
+    return paper;
+}
 
+#pragma mark - Fetch Pages
+
+-(SLPaperView*) pageForUUID:(NSString*)uuid{
+    return [cacheOfPagesByUUID objectForKey:uuid];
+}
 
 @end

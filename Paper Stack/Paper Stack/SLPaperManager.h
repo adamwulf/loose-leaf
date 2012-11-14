@@ -22,8 +22,14 @@
     
     NSOperationQueue* opQueue;
     
+    // be able to look up pages
+    // by UUID
+    NSMutableDictionary* cacheOfPagesByUUID;
+
     // Debug
     NSTimer* timer;
+    
+    
 }
 
 @property (nonatomic, assign) SLPaperStackView* stackView;

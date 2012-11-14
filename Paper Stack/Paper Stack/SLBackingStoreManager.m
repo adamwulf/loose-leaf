@@ -10,12 +10,17 @@
 
 @implementation SLBackingStoreManager
 
+@synthesize delegate;
+@synthesize opQueue;
+
 static SLBackingStoreManager* _instance = nil;
 
 -(id) init{
     if(_instance) return _instance;
     if((_instance = [super init])){
-        
+        opQueue = [[NSOperationQueue alloc] init];
+        opQueue.maxConcurrentOperationCount = 1;
+        opQueue.name = @"SLBackingStoreManager Queue";
     }
     return _instance;
 }

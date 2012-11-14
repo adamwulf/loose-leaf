@@ -12,6 +12,7 @@
 #import "SLModeledStackView.h"
 #import "NSThread+BlockAdditions.h"
 #import "SLPaperManager.h"
+#import "SLBackingStoreManager.h"
 
 @implementation SLPaperStackView
 
@@ -29,6 +30,7 @@
 
 
 -(void) awakeFromNib{
+    
     previouslyVisiblePage = nil;
     
     setOfPagesBeingPanned = [[NSMutableSet alloc] init]; // use this as a quick cache of pages being panned
@@ -1257,5 +1259,25 @@
                          }];
     }
 }
+
+
+#pragma mark - SLBackingStoreManagerDelegate
+
+-(void) willLoadBackingStore:(SLBackingStore*)backingStore{
+    NSLog(@"will load for %@", backingStore.uuid);
+}
+
+-(void) didLoadBackingStore:(SLBackingStore*)backingStore{
+    NSLog(@"did load for %@", backingStore.uuid);
+}
+
+-(void) willSaveBackingStore:(SLBackingStore*)backingStore{
+    NSLog(@"will save for %@", backingStore.uuid);
+}
+
+-(void) didSaveBackingStore:(SLBackingStore*)backingStore{
+    NSLog(@"did save for %@", backingStore.uuid);
+}
+
 
 @end

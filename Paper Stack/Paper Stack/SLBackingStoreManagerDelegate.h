@@ -10,9 +10,13 @@
 
 @class SLBackingStore;
 
-@protocol SLBackingStoreDelegate <NSObject>
+@protocol SLBackingStoreManagerDelegate <NSObject>
+
+-(void) willLoadBackingStore:(SLBackingStore*)backingStore;
 
 -(void) didLoadBackingStore:(SLBackingStore*)backingStore;
+
+-(void) willSaveBackingStore:(SLBackingStore*)backingStore;
 
 -(void) didSaveBackingStore:(SLBackingStore*)backingStore;
 

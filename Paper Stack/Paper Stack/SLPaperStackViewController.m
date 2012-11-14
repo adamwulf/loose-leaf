@@ -9,6 +9,7 @@
 #import "SLPaperStackViewController.h"
 #import "SLShadowManager.h"
 #import "SLPaperManager.h"
+#import "SLBackingStoreManager.h"
 
 @interface SLPaperStackViewController ()
 
@@ -26,6 +27,8 @@
     [SLPaperManager sharedInstace].stackView = stackView;
     [SLPaperManager sharedInstace].idealBounds = self.view.bounds;
 
+    [SLBackingStoreManager sharedInstace].delegate = stackView;
+    
     [[SLPaperManager sharedInstace] load];
     [[SLPaperManager sharedInstace] save];
 }
