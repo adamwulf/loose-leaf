@@ -547,6 +547,7 @@
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
     [visibleStackHolder.superview insertSubview:visibleStackHolder belowSubview:hiddenStackHolder];
     [self moveAddButtonToBottom];
+    [[SLPaperManager sharedInstace] save];
 }
 
 

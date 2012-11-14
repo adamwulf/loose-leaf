@@ -33,6 +33,7 @@
     NSMutableArray* committedStrokes;
     NSMutableArray* undoneStrokes;
     
+    BOOL hasEditedContextSinceLoadOrLastSave;
 }
 
 @property (nonatomic, retain) NSString* uuid;

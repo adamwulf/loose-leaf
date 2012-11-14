@@ -1,5 +1,5 @@
 //
-//  SLPageManager.m
+//  SLPaperManager.m
 //  scratchpaper
 //
 //  Created by Adam Wulf on 11/12/12.
