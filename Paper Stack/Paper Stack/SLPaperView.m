@@ -59,6 +59,14 @@
             [self updatePaintScaleTransform];
             
             
+            // saving/loading activity indicator
+            activity = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray] autorelease];
+            activity.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
+            activity.frame = CGRectMake(self.frame.size.width - activity.frame.size.width - 10, 10,
+                                        activity.frame.size.width, activity.frame.size.height);
+            activity.hidesWhenStopped = YES;
+            [self addSubview:activity];
+            
             //
             // this gesture handles any single finger drawing
             // on the page. any gesture that overrides the one finger
@@ -163,7 +171,6 @@
         }
         if(drawGesture.state == UIGestureRecognizerStateEnded){
             [self commitStroke];
-            [paintView save];
         }
     }else{
         // cancelled or something
@@ -558,6 +565,29 @@
     [paintView redo];
 }
 
+#pragma mark - SLBackingStoreManagerDelegate
+
+
+-(void) willLoadBackingStore:(SLBackingStore*)backingStore{
+    paintView.hidden = YES;
+    [activity startAnimating];
+}
+
+-(void) didLoadBackingStore:(SLBackingStore*)backingStore{
+    paintView.hidden = NO;
+    [activity stopAnimating];
+    [paintView setNeedsDisplay];
+}
+
+-(void) willSaveBackingStore:(SLBackingStore*)backingStore{
+    paintView.hidden = NO;
+    [activity startAnimating];
+}
+
+-(void) didSaveBackingStore:(SLBackingStore*)backingStore{
+    paintView.hidden = YES;
+    [activity stopAnimating];
+}
 
 
 @end

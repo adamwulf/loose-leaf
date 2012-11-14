@@ -42,4 +42,6 @@
 
 -(SLPaperView*) createNewBlankPage;
 
+-(SLPaperView*) pageForUUID:(NSString*)uuid;
+
 @end

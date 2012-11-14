@@ -14,8 +14,9 @@
 #import "SLShadowedView.h"
 #import "PaintView.h"
 #import "PaintableViewDelegate.h"
+#import "SLBackingStoreManagerDelegate.h"
 
-@interface SLPaperView : SLShadowedView<PaintableViewDelegate>{
+@interface SLPaperView : SLShadowedView<PaintableViewDelegate,SLBackingStoreManagerDelegate>{
     
     NSString* uuid;
     
@@ -41,6 +42,7 @@
     UIBezierPath* unitShadowPath;
     
     SLDrawingGestureRecognizer* drawGesture;
+    UIActivityIndicatorView* activity;
     PaintView* paintView;
     CGRect initialPaintViewFrame;
 }

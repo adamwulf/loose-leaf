@@ -1265,18 +1265,30 @@
 
 -(void) willLoadBackingStore:(SLBackingStore*)backingStore{
     NSLog(@"will load for %@", backingStore.uuid);
+    SLPaperView* page = [[SLPaperManager sharedInstace] pageForUUID:backingStore.uuid];
+    [page willLoadBackingStore:backingStore];
 }
 
 -(void) didLoadBackingStore:(SLBackingStore*)backingStore{
-    NSLog(@"did load for %@", backingStore.uuid);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"did load for %@", backingStore.uuid);
+        SLPaperView* page = [[SLPaperManager sharedInstace] pageForUUID:backingStore.uuid];
+        [page didLoadBackingStore:backingStore];
+    });
 }
 
 -(void) willSaveBackingStore:(SLBackingStore*)backingStore{
     NSLog(@"will save for %@", backingStore.uuid);
+    SLPaperView* page = [[SLPaperManager sharedInstace] pageForUUID:backingStore.uuid];
+    [page willSaveBackingStore:backingStore];
 }
 
 -(void) didSaveBackingStore:(SLBackingStore*)backingStore{
-    NSLog(@"did save for %@", backingStore.uuid);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"did save for %@", backingStore.uuid);
+        SLPaperView* page = [[SLPaperManager sharedInstace] pageForUUID:backingStore.uuid];
+        [page didSaveBackingStore:backingStore];
+    });
 }
 
 
