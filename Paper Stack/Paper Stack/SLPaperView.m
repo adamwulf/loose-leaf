@@ -49,15 +49,8 @@
             preGestureScale = 1;
             self.scale = 1;
             
-            paintView = [[PaintView alloc] initWithFrame:CGRectMake(0, 0,
-                                                                    frame.size.width * kMaxPageResolution,
-                                                                    frame.size.height * kMaxPageResolution)
-                                                 andUUID:uuid];
-            paintView.autoresizingMask = UIViewAutoresizingNone; // we'll use transforms to size the paint correctly
-            [self.contentView addSubview:paintView];
-            initialPaintViewFrame = paintView.frame;
-            [self updatePaintScaleTransform];
-            
+            paintViewFrameSize = frame.size;
+//            [self initPaintView];
             
             // saving/loading activity indicator
             activity = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray] autorelease];
@@ -116,6 +109,19 @@
         }
     }
     return self;
+}
+
+
+-(void) initPaintView{
+    paintView = [[PaintView alloc] initWithFrame:CGRectMake(0, 0,
+                                                            paintViewFrameSize.width * kMaxPageResolution,
+                                                            paintViewFrameSize.height * kMaxPageResolution)
+                                         andUUID:uuid];
+    paintView.autoresizingMask = UIViewAutoresizingNone; // we'll use transforms to size the paint correctly
+    [self.contentView addSubview:paintView];
+    initialPaintViewFrame = paintView.frame;
+    [self updatePaintScaleTransform];
+    paintView.hidden = YES;
 }
 
 
@@ -512,6 +518,7 @@
  * into editable high-memory mode
  */
 -(void) load{
+    if(!paintView) [self initPaintView];
     [paintView load];
 }
 

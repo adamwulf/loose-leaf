@@ -53,4 +53,6 @@
 
 -(void) drawIntoContext:(CGContextRef)context intoBounds:(CGRect)bounds;
 
++(NSString*) pathToSavedData;
+
 @end

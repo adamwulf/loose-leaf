@@ -43,6 +43,7 @@
     
     SLDrawingGestureRecognizer* drawGesture;
     UIActivityIndicatorView* activity;
+    CGSize paintViewFrameSize;
     PaintView* paintView;
     CGRect initialPaintViewFrame;
 }

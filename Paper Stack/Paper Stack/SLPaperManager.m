@@ -82,6 +82,7 @@ static SLPaperManager* _instance = nil;
             [dataToSave setObject:hiddenPages forKey:@"hiddenPages"];
             
             [dataToSave writeToFile:filePath atomically:YES];
+            NSLog(@"saving paper stack: %@", dataToSave);
         }];
     }
 }
@@ -90,6 +91,7 @@ static SLPaperManager* _instance = nil;
 -(void) load{
     NSDictionary* dataFromDisk = [NSDictionary dictionaryWithContentsOfFile:[SLPaperManager pathToSavedData]];
     if(dataFromDisk){
+        NSLog(@"loading: %@", dataFromDisk);
         for(NSString* uuid in [[dataFromDisk objectForKey:@"visiblePages"] reverseObjectEnumerator]){
             [stackView addPaperToBottomOfStack:[self createPageForUUID:uuid]];
         }
@@ -105,6 +107,27 @@ static SLPaperManager* _instance = nil;
         paper = [[SLPaperManager sharedInstace] createNewBlankPage];
         [stackView addPaperToBottomOfHiddenStack:paper];
     }
+    
+    
+    //
+    // look for pages to resurrect
+    NSDirectoryEnumerator* dirEnum = [[NSFileManager defaultManager] enumeratorAtPath:[SLBackingStore pathToSavedData]];
+    NSString *file;
+    while (file = [dirEnum nextObject]) {
+        @autoreleasepool {
+            if ([[file pathExtension] isEqualToString: @"bez"]) {
+                // process the document
+                NSString* uuid = [file lastPathComponent];
+                if(![[SLPaperManager sharedInstace] pageForUUID:uuid]){
+                    NSLog(@"page resurrected: %@", uuid);
+                    [stackView pushPaperToTopOfHiddenStack:[self createPageForUUID:uuid]];
+                }
+            }
+        }
+    }
+    
+    NSLog(@"done loading");
+    
 }
 
 

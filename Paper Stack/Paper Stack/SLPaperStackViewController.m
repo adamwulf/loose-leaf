@@ -30,7 +30,6 @@
     [SLBackingStoreManager sharedInstace].delegate = stackView;
     
     [[SLPaperManager sharedInstace] load];
-    [[SLPaperManager sharedInstace] save];
 }
 
 - (void)viewDidUnload

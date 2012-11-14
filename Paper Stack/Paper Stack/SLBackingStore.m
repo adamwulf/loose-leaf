@@ -193,7 +193,11 @@
             CGContextSetAlpha(cacheContext, 1);
             CGColorSpaceRelease(colorSpace);
             
+            NSLog(@"have context");
+            
             [[SLBackingStoreManager sharedInstace].delegate didLoadBackingStore:self];
+
+            NSLog(@"did tell");
             [this release];
         }
     }];
