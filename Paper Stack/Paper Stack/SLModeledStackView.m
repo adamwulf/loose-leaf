@@ -13,7 +13,6 @@
 @synthesize threadSafeSubviews;
 @synthesize synchronizedOn;
 @synthesize otherStacks;
-@synthesize name;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -37,7 +36,6 @@
  */
 -(void) removeObjectFromOtherStacks:(UIView*)obj{
     for(SLModeledStackView* stack in otherStacks){
-//        NSLog(@"%@ removed: %@", self.name, [obj uuid]);
         [stack removeQuietly:obj];
     }
 }

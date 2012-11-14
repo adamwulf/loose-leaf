@@ -21,15 +21,12 @@
     NSMutableArray* threadSafeSubviews;
     NSOperationQueue* operationQueue;
     
-    NSString* name;
-    
     // we need to know what other stacks may exist
     // so that we can remove a view from its
     // threadSafeSubviews to add it to our own
     NSMutableArray* otherStacks;
 }
 
-@property (nonatomic, retain) NSString* name;
 @property (nonatomic, assign) NSObject* synchronizedOn;
 @property (nonatomic, readonly) NSArray* threadSafeSubviews;
 @property (nonatomic, readonly) NSMutableArray* otherStacks;

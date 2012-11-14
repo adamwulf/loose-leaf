@@ -34,75 +34,78 @@
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
-        if(_uuid){
-            uuid = [_uuid retain];
-            isBrandNewPage = NO;
-        }else{
-            uuid = [[NSString createStringUUID] retain];
-            isBrandNewPage = YES;
+        @autoreleasepool {
+            
+            // Initialization code
+            if(_uuid){
+                uuid = [_uuid retain];
+                isBrandNewPage = NO;
+            }else{
+                uuid = [[NSString createStringUUID] retain];
+                isBrandNewPage = YES;
+            }
+            
+            [self.layer setMasksToBounds:YES ];
+            preGestureScale = 1;
+            self.scale = 1;
+            
+            paintView = [[PaintView alloc] initWithFrame:CGRectMake(0, 0,
+                                                                    frame.size.width * kMaxPageResolution,
+                                                                    frame.size.height * kMaxPageResolution)
+                                                 andUUID:uuid];
+            paintView.autoresizingMask = UIViewAutoresizingNone; // we'll use transforms to size the paint correctly
+            [self.contentView addSubview:paintView];
+            initialPaintViewFrame = paintView.frame;
+            [self updatePaintScaleTransform];
+            
+            
+            //
+            // this gesture handles any single finger drawing
+            // on the page. any gesture that overrides the one finger
+            // drag (a pan or scale, for instance) will need to call
+            // [cancel] on this gesture to make sure that the drawing
+            // turns off
+            drawGesture = [[SLDrawingGestureRecognizer alloc] initWithTarget:self action:@selector(draw:)];
+            drawGesture.minimumNumberOfTouches = 1;
+            drawGesture.maximumNumberOfTouches = 1;
+            [self addGestureRecognizer:drawGesture];
+            
+            
+            //
+            // allow the user to select an object by long pressing
+            // on it. this'll allow the user to select + move/scale/rotate
+            // an object in one gesture
+            SLObjectSelectLongPressGestureRecognizer* longPress = [[[SLObjectSelectLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)]autorelease];
+            longPress.numberOfTouchesRequired = 2;
+            [self addGestureRecognizer:longPress];
+            //
+            // allow the user to select an object by tapping on the page
+            // with two fingers
+            SLImmovableTapGestureRecognizer* tap = [[[SLImmovableTapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleFingerDoubleTap:)] autorelease];
+            tap.numberOfTapsRequired = 1;
+            tap.numberOfTouchesRequired = 2;
+            //
+            // only allow tap if the long press fails, otherwise
+            // we'll get a double positive
+            [tap requireGestureRecognizerToFail:longPress];
+            [self addGestureRecognizer:tap];
+            
+            //
+            // This pan gesture is used to pan/scale the page itself.
+            panGesture = [[[SLPanAndPinchGestureRecognizer alloc]
+                           initWithTarget:self
+                           action:@selector(panAndScale:)] autorelease];
+            panGesture.bezelDirectionMask = SLBezelDirectionRight | SLBezelDirectionLeft;
+            //
+            // This gesture is only allowed to run if the user is not
+            // acting on an object on the page. defer to the long press
+            // and the tap gesture, and only allow page pan/scale if
+            // these fail
+            [panGesture requireGestureRecognizerToFail:longPress];
+            [panGesture requireGestureRecognizerToFail:tap];
+            //        [draw requireGestureRecognizerToFail:tap];
+            [self addGestureRecognizer:panGesture];
         }
-        
-        [self.layer setMasksToBounds:YES ];
-        preGestureScale = 1;
-        self.scale = 1;
-        
-        paintView = [[PaintView alloc] initWithFrame:CGRectMake(0, 0,
-                                                                frame.size.width * kMaxPageResolution,
-                                                                frame.size.height * kMaxPageResolution)
-                                             andUUID:uuid];
-        paintView.autoresizingMask = UIViewAutoresizingNone; // we'll use transforms to size the paint correctly
-        [self.contentView addSubview:paintView];
-        initialPaintViewFrame = paintView.frame;
-        [self updatePaintScaleTransform];
-        
-        
-        //
-        // this gesture handles any single finger drawing
-        // on the page. any gesture that overrides the one finger
-        // drag (a pan or scale, for instance) will need to call
-        // [cancel] on this gesture to make sure that the drawing
-        // turns off
-        drawGesture = [[SLDrawingGestureRecognizer alloc] initWithTarget:self action:@selector(draw:)];
-        drawGesture.minimumNumberOfTouches = 1;
-        drawGesture.maximumNumberOfTouches = 1;
-        [self addGestureRecognizer:drawGesture];
-        
-
-        //
-        // allow the user to select an object by long pressing
-        // on it. this'll allow the user to select + move/scale/rotate
-        // an object in one gesture
-        SLObjectSelectLongPressGestureRecognizer* longPress = [[[SLObjectSelectLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)]autorelease];
-        longPress.numberOfTouchesRequired = 2;
-        [self addGestureRecognizer:longPress];
-        //
-        // allow the user to select an object by tapping on the page
-        // with two fingers
-        SLImmovableTapGestureRecognizer* tap = [[[SLImmovableTapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleFingerDoubleTap:)] autorelease];
-        tap.numberOfTapsRequired = 1;
-        tap.numberOfTouchesRequired = 2;
-        //
-        // only allow tap if the long press fails, otherwise
-        // we'll get a double positive
-        [tap requireGestureRecognizerToFail:longPress];
-        [self addGestureRecognizer:tap];
-
-        //
-        // This pan gesture is used to pan/scale the page itself.
-        panGesture = [[[SLPanAndPinchGestureRecognizer alloc]
-                                               initWithTarget:self 
-                                                      action:@selector(panAndScale:)] autorelease];
-        panGesture.bezelDirectionMask = SLBezelDirectionRight | SLBezelDirectionLeft;
-        //
-        // This gesture is only allowed to run if the user is not
-        // acting on an object on the page. defer to the long press
-        // and the tap gesture, and only allow page pan/scale if
-        // these fail
-        [panGesture requireGestureRecognizerToFail:longPress];
-        [panGesture requireGestureRecognizerToFail:tap];
-//        [draw requireGestureRecognizerToFail:tap];
-        [self addGestureRecognizer:panGesture];
     }
     return self;
 }

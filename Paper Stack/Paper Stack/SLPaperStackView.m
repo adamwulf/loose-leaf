@@ -36,14 +36,23 @@
     hiddenStackHolder = [[SLModeledStackView alloc] initWithFrame:self.bounds];
     bezelStackHolder = [[SLModeledStackView alloc] initWithFrame:self.bounds];
     
-    visibleStackHolder.name = @"Visible Stack";
-    hiddenStackHolder.name = @"Hidden Stack";
-    bezelStackHolder.name = @"Bezel Stack";
-    
+    //
+    // when a UIView is added to a stack, it will be removed from it's
+    // previous superview automatically. We need to allow the model
+    // of these SLModeledStackViews to mimic that same behavior. To do that,
+    // we tell each stack about all the other stacks so that the view
+    // can be removed from the model arrays of the other stacks when the view
+    // is added to a stack.
     [visibleStackHolder.otherStacks addObjectsFromArray:[NSArray arrayWithObjects:hiddenStackHolder, bezelStackHolder, nil]];
     [hiddenStackHolder.otherStacks addObjectsFromArray:[NSArray arrayWithObjects:visibleStackHolder, bezelStackHolder, nil]];
     [bezelStackHolder.otherStacks addObjectsFromArray:[NSArray arrayWithObjects:visibleStackHolder, hiddenStackHolder, nil]];
     
+    //
+    // since the SLPaperManager will be saving these stacks to disk,
+    // we need to makesure we synchronize on that manager.
+    //
+    // this way, we will never change any of the stacks during the save
+    // which means we'll never mixup or lose a page during a save operation
     visibleStackHolder.synchronizedOn = [SLPaperManager sharedInstace];
     hiddenStackHolder.synchronizedOn = [SLPaperManager sharedInstace];
     bezelStackHolder.synchronizedOn = [SLPaperManager sharedInstace];

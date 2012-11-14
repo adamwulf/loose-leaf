@@ -20,6 +20,7 @@
     SLPaperStackView* stackView;
     CGRect idealBounds;
     
+    NSOperationQueue* opQueue;
     
     // Debug
     NSTimer* timer;
