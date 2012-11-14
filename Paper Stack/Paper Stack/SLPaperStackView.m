@@ -9,7 +9,7 @@
 #import "SLPaperStackView.h"
 #import <QuartzCore/QuartzCore.h>
 #import "SLShadowManager.h"
-#import "SLSynchronizedStackView.h"
+#import "SLModeledStackView.h"
 #import "NSThread+BlockAdditions.h"
 #import "SLPaperManager.h"
 
@@ -32,9 +32,21 @@
     previouslyVisiblePage = nil;
     
     setOfPagesBeingPanned = [[NSMutableSet alloc] init]; // use this as a quick cache of pages being panned
-    visibleStackHolder = [[SLSynchronizedStackView alloc] initWithFrame:self.bounds];
-    hiddenStackHolder = [[SLSynchronizedStackView alloc] initWithFrame:self.bounds];
-    bezelStackHolder = [[SLSynchronizedStackView alloc] initWithFrame:self.bounds];
+    visibleStackHolder = [[SLModeledStackView alloc] initWithFrame:self.bounds];
+    hiddenStackHolder = [[SLModeledStackView alloc] initWithFrame:self.bounds];
+    bezelStackHolder = [[SLModeledStackView alloc] initWithFrame:self.bounds];
+    
+    visibleStackHolder.name = @"Visible Stack";
+    hiddenStackHolder.name = @"Hidden Stack";
+    bezelStackHolder.name = @"Bezel Stack";
+    
+    [visibleStackHolder.otherStacks addObjectsFromArray:[NSArray arrayWithObjects:hiddenStackHolder, bezelStackHolder, nil]];
+    [hiddenStackHolder.otherStacks addObjectsFromArray:[NSArray arrayWithObjects:visibleStackHolder, bezelStackHolder, nil]];
+    [bezelStackHolder.otherStacks addObjectsFromArray:[NSArray arrayWithObjects:visibleStackHolder, hiddenStackHolder, nil]];
+    
+    visibleStackHolder.synchronizedOn = [SLPaperManager sharedInstace];
+    hiddenStackHolder.synchronizedOn = [SLPaperManager sharedInstace];
+    bezelStackHolder.synchronizedOn = [SLPaperManager sharedInstace];
 
     
     CGRect frameOfHiddenStack = hiddenStackHolder.frame;
@@ -74,15 +86,15 @@
 #pragma mark - Model Methods
 
 -(NSArray*) visibleViews{
-    return visibleStackHolder.subviews;
+    return visibleStackHolder.threadSafeSubviews;
 }
 
 -(NSArray*) inflightViews{
-    return bezelStackHolder.subviews;
+    return bezelStackHolder.threadSafeSubviews;
 }
 
 -(NSArray*) hiddenViews{
-    return hiddenStackHolder.subviews;
+    return hiddenStackHolder.threadSafeSubviews;
 }
 
 -(void) loadVisiblePageIfNeeded{

@@ -42,7 +42,6 @@
         [self.touchLocations setObject:[NSValue valueWithCGPoint:[touch locationInView:self.view]]
                                 forKey:[NSNumber numberWithInteger:[touch hash]]];
     }
-//    NSLog(@"long press touch began: %d", [self.touchLocations count]);
 }
 
 /**
@@ -70,7 +69,6 @@
     if(!didChangeState){
         [super touchesMoved:touches withEvent:event];
     }
-//    NSLog(@"long press touch moved: %d", [self.touchLocations count]);
 }
 
 /**
@@ -81,7 +79,6 @@
     for(UITouch* touch in touches){
         [self.touchLocations removeObjectForKey:[NSNumber numberWithInteger:[touch hash]]];
     }
-//    NSLog(@"long press touch cancelled: %d", [self.touchLocations count]);
 }
 
 /**
@@ -92,7 +89,6 @@
     for(UITouch* touch in touches){
         [self.touchLocations removeObjectForKey:[NSNumber numberWithInteger:[touch hash]]];
     }
-//    NSLog(@"long press touch ended: %d", [self.touchLocations count]);
 }
 
 /**

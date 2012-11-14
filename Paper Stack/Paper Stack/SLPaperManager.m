@@ -55,31 +55,28 @@ static SLPaperManager* _instance = nil;
  * a background thread, and will not block the UI views or subview arrays.
  */
 -(void) save{
-    [NSThread performBlockInBackground:^{
-        NSMutableArray* visiblePages = [NSMutableArray array];
-        NSMutableArray* inflightPages = [NSMutableArray array];
-        NSMutableArray* hiddenPages = [NSMutableArray array];
-        NSLog(@"saving paper order");
-        @synchronized(stackView){
-            for(SLPaperView* page in stackView.visibleViews){
-                [visiblePages addObject:[page uuid]];
-            }
-            for(SLPaperView* page in stackView.inflightViews){
-                [inflightPages addObject:[page uuid]];
-            }
-            for(SLPaperView* page in stackView.hiddenViews){
-                [hiddenPages addObject:[page uuid]];
-            }
+    NSMutableArray* visiblePages = [NSMutableArray array];
+    NSMutableArray* inflightPages = [NSMutableArray array];
+    NSMutableArray* hiddenPages = [NSMutableArray array];
+    @synchronized(self){
+        for(SLPaperView* page in stackView.visibleViews){
+            [visiblePages addObject:[page uuid]];
         }
-        NSString* filePath = [SLPaperManager pathToSavedData];
-        
-        NSMutableDictionary* dataToSave = [NSMutableDictionary dictionary];
-        [dataToSave setObject:visiblePages forKey:@"visiblePages"];
-        [dataToSave setObject:inflightPages forKey:@"inflightPages"];
-        [dataToSave setObject:hiddenPages forKey:@"hiddenPages"];
-        
-        [dataToSave writeToFile:filePath atomically:YES];
-    }];
+        for(SLPaperView* page in stackView.inflightViews){
+            [inflightPages addObject:[page uuid]];
+        }
+        for(SLPaperView* page in stackView.hiddenViews){
+            [hiddenPages addObject:[page uuid]];
+        }
+    }
+    NSString* filePath = [SLPaperManager pathToSavedData];
+    
+    NSMutableDictionary* dataToSave = [NSMutableDictionary dictionary];
+    [dataToSave setObject:visiblePages forKey:@"visiblePages"];
+    [dataToSave setObject:inflightPages forKey:@"inflightPages"];
+    [dataToSave setObject:hiddenPages forKey:@"hiddenPages"];
+    
+    [dataToSave writeToFile:filePath atomically:YES];
 }
 
 
