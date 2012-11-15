@@ -21,6 +21,7 @@ static SLBackingStoreManager* _instance = nil;
         opQueue = [[NSOperationQueue alloc] init];
         opQueue.maxConcurrentOperationCount = 1;
         opQueue.name = @"SLBackingStoreManager Queue";
+        setOfPointers = [[NSMutableSet alloc] init];
     }
     return _instance;
 }
@@ -33,7 +34,47 @@ static SLBackingStoreManager* _instance = nil;
 }
 
 
+-(void*) getZerodPointerForMemory:(int) size{
+    void* ret = [self getPointerForMemory:size];
+    memset(ret, 0, size);
+    return ret;
+}
 
+-(void*) getPointerForMemory:(int) size{
+    @synchronized(self){
+        NSValue* obj = [setOfPointers anyObject];
+        void* ret = nil;
+        if(obj){
+            ret = [obj pointerValue];
+            [setOfPointers removeObject:obj];
+        }else{
+            ret = calloc(1, size);
+        }
+        return ret;
+    }
+}
+
+-(void) givePointerForMemory:(void*)ptr{
+    @synchronized(self){
+        if([setOfPointers count] >= 1){
+            free(ptr);
+        }else{
+            [setOfPointers addObject:[NSValue valueWithPointer:ptr]];
+        }
+    }
+}
+
+-(void) didReceiveMemoryWarning{
+    @synchronized(self){
+        NSLog(@"did get memory warning: %d", [setOfPointers count]);
+        while([setOfPointers count]){
+            NSValue* val = [setOfPointers anyObject];
+            void* ptr = [val pointerValue];
+            free (ptr);
+            [setOfPointers removeObject:val];
+        }
+    }
+}
 
 
 @end

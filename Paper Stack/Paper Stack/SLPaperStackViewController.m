@@ -45,6 +45,9 @@
     return UIInterfaceOrientationPortrait == interfaceOrientation;
 }
 
+-(void) didReceiveMemoryWarning{
+    [[SLBackingStoreManager sharedInstace] didReceiveMemoryWarning];
+}
 
 
 @end

@@ -82,7 +82,7 @@ static SLPaperManager* _instance = nil;
             [dataToSave setObject:hiddenPages forKey:@"hiddenPages"];
             
             [dataToSave writeToFile:filePath atomically:YES];
-            NSLog(@"saving paper stack: %@", dataToSave);
+//            NSLog(@"saving paper stack: %@", dataToSave);
         }];
     }
 }
@@ -91,7 +91,7 @@ static SLPaperManager* _instance = nil;
 -(void) load{
     NSDictionary* dataFromDisk = [NSDictionary dictionaryWithContentsOfFile:[SLPaperManager pathToSavedData]];
     if(dataFromDisk){
-        NSLog(@"loading: %@", dataFromDisk);
+//        NSLog(@"loading: %@", dataFromDisk);
         for(NSString* uuid in [[dataFromDisk objectForKey:@"visiblePages"] reverseObjectEnumerator]){
             [stackView addPaperToBottomOfStack:[self createPageForUUID:uuid]];
         }

@@ -122,10 +122,36 @@
     [[SLBackingStoreManager sharedInstace].opQueue addOperationWithBlock:^{
         CGFloat time = [NSThread timeBlock:^{
             @synchronized(self){
+                //
+                // scale factor for high resolution screens
+                float scaleFactor = [[UIScreen mainScreen] scale];
+                // Declare the number of bytes per row. Each pixel in the bitmap in this
+                // example is represented by 4 bytes; 8 bits each of red, green, blue, and
+                // alpha.
+                int	bitmapBytesPerRow = (idealSize.width * scaleFactor * 4); // only alpha;
+                int bitsPerComponent = 8;
+                int bitmapByteCount = (bitmapBytesPerRow * idealSize.height * scaleFactor);
+
+                
+                
                 // TODO load a backing store
                 NSString* pathToBinaryData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"bin"]];
+                long long fileSize = 0;
                 if([[NSFileManager defaultManager] fileExistsAtPath:pathToBinaryData]){
-                    backingStoreData = [[NSData dataWithContentsOfFile:pathToBinaryData] retain];
+                    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToBinaryData error:nil];
+                    NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
+                    fileSize = [fileSizeNumber longLongValue];
+                    if(fileSize == bitmapByteCount){
+                        FILE * ret = fopen([pathToBinaryData UTF8String], "r");
+
+                        void *data = [[SLBackingStoreManager sharedInstace] getPointerForMemory:fileSize];
+                        
+                        fread(data, 1, fileSize, ret);
+                        fclose(ret);
+                        backingStoreData = [[NSData dataWithBytesNoCopy:data length:fileSize freeWhenDone:NO] retain];
+                    }else{
+                        NSLog(@"backing store data file is not same size as context! %lld vs %d", fileSize, bitmapByteCount);
+                    }
                 }
                 
                 NSString* pathToArrayData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"bez"]];
@@ -141,15 +167,6 @@
                 }
                 
                 
-                //
-                // scale factor for high resolution screens
-                float scaleFactor = [[UIScreen mainScreen] scale];
-                // Declare the number of bytes per row. Each pixel in the bitmap in this
-                // example is represented by 4 bytes; 8 bits each of red, green, blue, and
-                // alpha.
-                int	bitmapBytesPerRow = (idealSize.width * scaleFactor * 4); // only alpha;
-                int bitsPerComponent = 8;
-                int bitmapByteCount = (bitmapBytesPerRow * idealSize.height * scaleFactor);
                 CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
                 
                 //
@@ -181,18 +198,10 @@
                 //
                 // can be used to re-set the buffer to zeroes when reusing a pointer for a blank
                 // slate as opposed to reading in from disk to replace it
-                NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToBinaryData error:nil];
-                NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
-                long long fileSize = [fileSizeNumber longLongValue];
                 
-                if(backingStoreData && (fileSize != bitmapByteCount)){
-                    // uh oh
-                    NSLog(@"backing store data file is not same size as context! %lld vs %d", fileSize, bitmapByteCount);
-                    [backingStoreData release];
-                    backingStoreData = nil;
-                }
                 if(!backingStoreData){
-                    backingStoreData = [[NSData dataWithBytesNoCopy:calloc(1, bitmapByteCount) length:bitmapByteCount freeWhenDone:YES] retain];
+                    void* ptr = [[SLBackingStoreManager sharedInstace] getZerodPointerForMemory:bitmapByteCount];
+                    backingStoreData = [[NSData dataWithBytesNoCopy:ptr length:bitmapByteCount freeWhenDone:NO] retain];
                 }
                 
                 //
@@ -348,6 +357,9 @@
 
 -(void) dealloc{
     CGContextRelease(cacheContext);
+    if(backingStoreData){
+        [[SLBackingStoreManager sharedInstace] givePointerForMemory:(void*)[backingStoreData bytes]];
+    }
     [backingStoreData release];
     [uuid release];
     
