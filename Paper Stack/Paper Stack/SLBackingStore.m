@@ -78,25 +78,18 @@
 // void* data = CGBitmapContextGetData(cacheContext);
 // NSData* dataForFile = [NSData dataWithBytesNoCopy:data length:bitmapByteCount freeWhenDone:NO];
 -(void) save{
-    if(!hasEditedContextSinceLoadOrLastSave){
-        [[SLBackingStoreManager sharedInstace].delegate willSaveBackingStore:self];
-        CGFloat time =[NSThread timeBlock:^{
-            [[SLBackingStoreManager sharedInstace].delegate didSaveBackingStore:self];
-        }];
-        NSLog(@"saving backing store: %f", time);
-        return;
-    }
     
     [[SLBackingStoreManager sharedInstace].delegate willSaveBackingStore:self];
-
+    
     SLBackingStore* this = self;
     [this retain];
     [[SLBackingStoreManager sharedInstace].opQueue addOperationWithBlock:^{
         CGFloat time =[NSThread timeBlock:^{
             @synchronized(this){
-                NSString* pathToBinaryData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[this.uuid stringByAppendingPathExtension:@"bin"]];
-                [backingStoreData writeToFile:pathToBinaryData atomically:YES];
-                
+                if(hasEditedContextSinceLoadOrLastSave){
+                    NSString* pathToBinaryData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[this.uuid stringByAppendingPathExtension:@"bin"]];
+                    [backingStoreData writeToFile:pathToBinaryData atomically:YES];
+                }
                 NSString* pathToArrayData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[this.uuid stringByAppendingPathExtension:@"bez"]];
                 NSMutableDictionary* dataToSave = [NSMutableDictionary dictionary];
                 [dataToSave setObject:currentStrokeSegments forKey:@"currentStrokeSegments"];
@@ -143,7 +136,6 @@
                     fileSize = [fileSizeNumber longLongValue];
                     if(fileSize == bitmapByteCount){
                         FILE * ret = fopen([pathToBinaryData UTF8String], "r");
-
                         void *data = [[SLBackingStoreManager sharedInstace] getPointerForMemory:fileSize];
                         
                         fread(data, 1, fileSize, ret);
@@ -256,9 +248,9 @@
  */
 -(void) commitStroke{
     @synchronized(self){
-        hasEditedContextSinceLoadOrLastSave = YES;
         [committedStrokes addObject:[NSArray arrayWithArray:currentStrokeSegments]];
         if([committedStrokes count] > kUndoLimit){
+            hasEditedContextSinceLoadOrLastSave = YES;
             [self drawStroke:[committedStrokes objectAtIndex:0] intoContext:cacheContext];
             [committedStrokes removeObjectAtIndex:0];
         }
