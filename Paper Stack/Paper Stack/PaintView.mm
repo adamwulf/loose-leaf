@@ -97,6 +97,7 @@
         // now we know the stroke, so clip it to our
         // visible area
         UIBezierPath* clippedPath = [strokedPath unclosedPathFromIntersectionWithPath:cachedClipPath];
+//        UIBezierPath* clippedPath = strokedPath;
 
         // TODO should I check if clippedPath is empty here?
         if([clippedPath isEmpty]){
