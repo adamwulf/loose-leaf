@@ -105,6 +105,21 @@
             [panGesture requireGestureRecognizerToFail:tap];
             //        [draw requireGestureRecognizerToFail:tap];
             [self addGestureRecognizer:panGesture];
+            
+            
+            thumbnailImageView = [[UIImageView alloc] initWithFrame:self.bounds];
+            thumbnailImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+            thumbnailImageView.contentMode = UIViewContentModeScaleAspectFill;
+            [self.contentView addSubview:thumbnailImageView];
+            
+            thumbnailImageView.hidden = NO;
+            paintView.hidden = YES;
+            
+            NSString* pathToThumbnail = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"png"]];
+            if([[NSFileManager defaultManager] fileExistsAtPath:pathToThumbnail]){
+                thumbnailImageView.image = [UIImage imageWithContentsOfFile:pathToThumbnail];
+            }
+
         }
     }
     return self;
@@ -582,22 +597,27 @@
 
 
 -(void) willLoadBackingStore:(SLBackingStore*)backingStore{
+    thumbnailImageView.hidden = NO;
     paintView.hidden = YES;
     [activity startAnimating];
 }
 
 -(void) didLoadBackingStore:(SLBackingStore*)backingStore{
+    thumbnailImageView.hidden = YES;
     paintView.hidden = NO;
     [activity stopAnimating];
     [paintView setNeedsDisplay];
 }
 
 -(void) willSaveBackingStore:(SLBackingStore*)backingStore{
+    thumbnailImageView.hidden = YES;
     paintView.hidden = NO;
     [activity startAnimating];
 }
 
--(void) didSaveBackingStore:(SLBackingStore*)backingStore{
+-(void) didSaveBackingStore:(SLBackingStore*)backingStore withImage:(UIImage*)img{
+    thumbnailImageView.image = img;
+    thumbnailImageView.hidden = NO;
     paintView.hidden = YES;
     [activity stopAnimating];
     if(isFlushingPaintView){

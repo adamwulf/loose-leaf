@@ -86,6 +86,29 @@
     [[SLBackingStoreManager sharedInstace].opQueue addOperationWithBlock:^{
         CGFloat time =[NSThread timeBlock:^{
             @synchronized(this){
+                
+                CGRect thumbnailBounds = CGRectZero;
+                CGSize thumbnailSize = CGSizeMake(idealSize.width / kMaxPageResolution * kListPageZoom * 2,
+                                                  idealSize.height / kMaxPageResolution * kListPageZoom * 2);
+                thumbnailBounds.size = thumbnailSize;
+                
+                //
+                // generate an image and send to delegate
+                NSString* pathToThumbnail = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"png"]];
+                UIGraphicsBeginImageContextWithOptions(thumbnailSize, NO, 0.0f);
+                CGContextRef context = UIGraphicsGetCurrentContext();
+                CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
+                CGContextFillRect(context, thumbnailBounds);
+                [self drawIntoContext:context intoBounds:thumbnailBounds];
+                UIImage* smallImg = UIGraphicsGetImageFromCurrentImageContext();
+                UIGraphicsEndImageContext();
+                
+                NSData* imageData = UIImagePNGRepresentation(smallImg);
+                [imageData writeToFile:pathToThumbnail atomically:YES];
+                
+
+                //
+                // ok, save it
                 if(hasEditedContextSinceLoadOrLastSave){
                     NSString* pathToBinaryData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[this.uuid stringByAppendingPathExtension:@"bin"]];
                     [backingStoreData writeToFile:pathToBinaryData atomically:YES];
@@ -99,7 +122,7 @@
                 [NSKeyedArchiver archiveRootObject:dataToSave toFile:pathToArrayData];
                 
                 hasEditedContextSinceLoadOrLastSave = NO;
-                [[SLBackingStoreManager sharedInstace].delegate didSaveBackingStore:this];
+                [[SLBackingStoreManager sharedInstace].delegate didSaveBackingStore:this withImage:smallImg];
                 [this release];
             }
         }];
@@ -329,6 +352,15 @@
             CGContextDrawImage(context, bounds, cacheImage);
             CGImageRelease(cacheImage);
             
+            CGContextSaveGState(context);
+            
+            CGFloat xScale = bounds.size.width / idealSize.width;
+            CGFloat yScale = bounds.size.height / idealSize.height;
+            CGAffineTransform scale = CGAffineTransformMakeScale(xScale, yScale);
+
+            CGContextConcatCTM(context, scale);
+
+            
             //
             // draw all the undo states
             for(NSArray* stroke in committedStrokes){
@@ -338,6 +370,8 @@
             //
             // draw the active stroke, if any, to the screen context
             [self drawStroke:currentStrokeSegments intoContext:context];
+            
+            CGContextRestoreGState(context);
         }else{
             // noop because i'm not loaded
         }
@@ -349,6 +383,7 @@
 
 -(void) dealloc{
     CGContextRelease(cacheContext);
+    cacheContext = nil;
     if(backingStoreData){
         [[SLBackingStoreManager sharedInstace] givePointerForMemory:(void*)[backingStoreData bytes]];
     }

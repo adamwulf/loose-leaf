@@ -18,6 +18,6 @@
 
 -(void) willSaveBackingStore:(SLBackingStore*)backingStore;
 
--(void) didSaveBackingStore:(SLBackingStore*)backingStore;
+-(void) didSaveBackingStore:(SLBackingStore*)backingStore withImage:(UIImage*)img;
 
 @end

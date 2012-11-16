@@ -47,6 +47,7 @@
     BOOL isFlushingPaintView;
     CGSize paintViewFrameSize;
     PaintView* paintView;
+    UIImageView* thumbnailImageView;
 }
 
 @property (nonatomic, readonly) NSString* uuid;

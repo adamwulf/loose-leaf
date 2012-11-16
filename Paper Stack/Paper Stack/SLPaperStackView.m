@@ -1280,10 +1280,17 @@
     [page willSaveBackingStore:backingStore];
 }
 
--(void) didSaveBackingStore:(SLBackingStore*)backingStore{
+-(void) didSaveBackingStore:(SLBackingStore*)backingStore withImage:(UIImage*)img{
     dispatch_async(dispatch_get_main_queue(), ^{
         SLPaperView* page = [[SLPaperManager sharedInstace] pageForUUID:backingStore.uuid];
-        [page didSaveBackingStore:backingStore];
+        [page didSaveBackingStore:backingStore withImage:img];
+        
+        NSData* imgData = UIImagePNGRepresentation(img);
+        NSString* pngPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Test.png"];
+        [imgData writeToFile:pngPath atomically:YES];
+        NSLog(@"path %@", pngPath);
+        
+        NSLog(@"showing image: %f %f", img.size.width, img.size.height);
     });
 }
 
