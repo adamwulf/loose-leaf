@@ -16,14 +16,16 @@
 #import "SLObjectSelectLongPressGestureRecognizer.h"
 #import "SLDrawingGestureRecognizer.h"
 #import "SLImmovableTapGestureRecognizer.h"
+#import "SLRenderManager.h"
 
 @implementation SLPaperView
 
+@synthesize uuid;
+@synthesize lastModified;
 @synthesize scale;
 @synthesize delegate;
 @synthesize isBeingPannedAndZoomed;
 @synthesize isBrandNewPage;
-@synthesize uuid;
 @synthesize initialPageSize;
 
 - (id)initWithFrame:(CGRect)frame{
@@ -46,6 +48,13 @@
                 uuid = [[NSString createStringUUID] retain];
                 isBrandNewPage = YES;
             }
+            lastModified = nil;
+            
+            
+            
+            
+            
+            
             
             [self.layer setMasksToBounds:YES ];
             preGestureScale = 1;
@@ -125,6 +134,13 @@
         }
     }
     return self;
+}
+
+-(void) setLastModified:(NSDate *)_lastModified{
+    if(lastModified != _lastModified){
+        [lastModified release];
+        lastModified = [_lastModified retain];
+    }
 }
 
 
@@ -261,6 +277,7 @@
  * disables all gestures on this page
  */
 -(void) disableAllGestures{
+    [drawGesture cancel];
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         [gesture setEnabled:NO];
     }
@@ -524,10 +541,24 @@
 #pragma mark - Saving and Loading
 
 -(void) flush{
-    if(paintView){
-        isFlushingPaintView = YES;
-        [paintView flush];
+    if(paintView && !isFlushingPaintView){
+        @autoreleasepool {
+            isFlushingPaintView = YES;
+            [paintView flush];
+            
+            NSString* pathToPageData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"page"]];
+            
+            NSMutableDictionary* dataForDisk = [NSMutableDictionary dictionary];
+            if(self.lastModified){
+                [dataForDisk setObject:self.lastModified forKey:@"lastModified"];
+            }
+            [dataForDisk writeToFile:pathToPageData atomically:YES];
+        }
     }
+}
+
+-(BOOL) isFlushed{
+    return !paintView && !isFlushingPaintView;
 }
 
 /**
@@ -536,11 +567,21 @@
  * into editable high-memory mode
  */
 -(void) load{
-    isFlushingPaintView = NO;
-    if(!paintView){
-        [self initPaintView];
+    @autoreleasepool {
+        isFlushingPaintView = NO;
+        if(!paintView){
+            [self initPaintView];
+        }
+        [paintView load];
+        
+        NSString* pathToPageData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"page"]];
+        if([[NSFileManager defaultManager] fileExistsAtPath:pathToPageData]){
+            NSDictionary* dataFromDisk = [NSDictionary dictionaryWithContentsOfFile:pathToPageData];
+            self.lastModified = [dataFromDisk objectForKey:@"lastModified"];
+        }else{
+            self.lastModified = nil;
+        }
     }
-    [paintView load];
 }
 
 
@@ -583,14 +624,17 @@
 
 -(void) commitStroke{
     [paintView commitStroke];
+    self.lastModified = [NSDate date];
 }
 
 -(void) undo{
     [paintView undo];
+    self.lastModified = [NSDate date];
 }
 
 -(void) redo{
     [paintView redo];
+    self.lastModified = [NSDate date];
 }
 
 #pragma mark - SLBackingStoreManagerDelegate
@@ -620,6 +664,7 @@
     paintView.hidden = YES;
     [activity stopAnimating];
     if(isFlushingPaintView){
+        isFlushingPaintView = NO;
         [paintView removeFromSuperview];
         [paintView release];
         paintView = nil;
@@ -644,10 +689,10 @@
 #pragma mark - Debug
 
 -(NSArray*) arrayOfBlocksForDrawing{
-    return [[NSArray arrayWithObject:[^(CGContextRef context, CGRect bounds){
+    return [[NSArray arrayWithObject:[[^(CGContextRef context, CGRect bounds){
         CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
         CGContextFillRect(context, bounds);
-    } copy]]
+    } copy] autorelease]]
             arrayByAddingObjectsFromArray:[paintView arrayOfBlocksForDrawing]];
 }
 

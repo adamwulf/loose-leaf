@@ -112,8 +112,10 @@
 -(void) loadVisiblePageIfNeeded{
     if(previouslyVisiblePage != [visibleStackHolder peekSubview]){
         [previouslyVisiblePage flush];
-        previouslyVisiblePage = [visibleStackHolder peekSubview];
-        [previouslyVisiblePage load];
+        if(!previouslyVisiblePage || [previouslyVisiblePage isFlushed]){
+            previouslyVisiblePage = [visibleStackHolder peekSubview];
+            [previouslyVisiblePage load];
+        }
     }
 }
 
@@ -376,6 +378,9 @@
             bezelStackHolder.frame = newFrame;
             [bezelStackHolder peekSubview].frame = bezelStackHolder.bounds;
         } completion:nil];
+        
+        [[SLRenderManager sharedInstace] renderThumbnailForPage:[visibleStackHolder peekSubview]];
+        
     }else if(bezelGesture.state == UIGestureRecognizerStateCancelled ||
              bezelGesture.state == UIGestureRecognizerStateFailed ||
              (bezelGesture.state == UIGestureRecognizerStateEnded && ((bezelGesture.panDirection & SLBezelDirectionLeft) != SLBezelDirectionLeft))){
@@ -489,7 +494,10 @@
         SLPaperView* aPage = [bezelStackHolder.subviews objectAtIndex:0];
         [aPage removeAllAnimationsAndPreservePresentationFrame];
         [visibleStackHolder pushSubview:aPage];
-        [self loadVisiblePageIfNeeded];
+        if([bezelStackHolder.subviews count] == 0){
+            // last one, so load it
+            [self loadVisiblePageIfNeeded];
+        }
         [self animatePageToFullScreen:aPage withDelay:delay withBounce:NO onComplete:(isLastToAnimate ? ^(BOOL finished){
             bezelStackHolder.frame = hiddenStackHolder.frame;
             if(completionBlock) completionBlock(finished);
@@ -574,7 +582,6 @@
  * depending on where they drag a page
  */
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
-    
     
     [[SLRenderManager sharedInstace] renderThumbnailForPage:page];
     
@@ -1047,11 +1054,11 @@
             // correctly
             [aPage enableAllGestures];
             [visibleStackHolder pushSubview:aPage];
-            [self loadVisiblePageIfNeeded];
             BOOL hasAnotherToPop = [hiddenStackHolder peekSubview] != page && [hiddenStackHolder.subviews count];
             [self animatePageToFullScreen:aPage withDelay:delay withBounce:YES onComplete:(!hasAnotherToPop ? completionBlock : nil)];
             delay += kAnimationDelay;
         }
+        [self loadVisiblePageIfNeeded];
     }
 }
 /**
@@ -1288,13 +1295,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         SLPaperView* page = [[SLPaperManager sharedInstace] pageForUUID:backingStore.uuid];
         [page didSaveBackingStore:backingStore withImage:img];
-        
-        NSData* imgData = UIImagePNGRepresentation(img);
-        NSString* pngPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Test.png"];
-        [imgData writeToFile:pngPath atomically:YES];
-        NSLog(@"path %@", pngPath);
-        
-        NSLog(@"showing image: %f %f", img.size.width, img.size.height);
+        [self loadVisiblePageIfNeeded];
     });
 }
 

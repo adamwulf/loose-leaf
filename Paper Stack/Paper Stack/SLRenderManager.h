@@ -14,6 +14,8 @@
     NSOperationQueue* opQueue;
 
     NSObject<SLRenderManagerDelegate>* delegate;
+    
+    NSMutableDictionary* renderStamps;
 }
 
 @property (nonatomic, readonly) NSOperationQueue* opQueue;

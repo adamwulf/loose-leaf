@@ -20,6 +20,7 @@
 @interface SLPaperView : SLShadowedView<PaintableViewDelegate,SLBackingStoreManagerDelegate,SLRenderManagerDelegate>{
     
     NSString* uuid;
+    NSDate* lastModified;
     
     NSObject<SLPaperViewDelegate>* delegate;
     
@@ -49,8 +50,9 @@
     CGSize initialPageSize;
 }
 
-@property (nonatomic, readonly) CGSize initialPageSize;
 @property (nonatomic, readonly) NSString* uuid;
+@property (nonatomic, readonly) NSDate* lastModified;
+@property (nonatomic, readonly) CGSize initialPageSize;
 @property (nonatomic, assign) NSObject<SLPaperViewDelegate>* delegate;
 @property (nonatomic, assign) CGFloat scale;
 @property (nonatomic, readonly) BOOL isBeingPannedAndZoomed;
@@ -70,6 +72,7 @@
 -(void) redo;
 
 -(void) flush;
+-(BOOL) isFlushed;
 -(void) load;
 
 

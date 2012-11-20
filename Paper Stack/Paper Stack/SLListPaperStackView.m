@@ -12,6 +12,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "SLShadowManager.h"
 #import "SLPaperManager.h"
+#import "SLRenderManager.h"
 
 @implementation SLListPaperStackView
 
@@ -483,6 +484,8 @@
     [tapGesture setEnabled:NO];
     [pinchGesture setEnabled:NO];
     [self moveAddButtonToBottom];
+    
+    [[SLRenderManager sharedInstace] renderThumbnailForPage:[visibleStackHolder peekSubview]];
 }
 
 /**
@@ -511,6 +514,7 @@
     }
     [self moveAddButtonToBottom];
     [visibleStackHolder.superview insertSubview:visibleStackHolder aboveSubview:hiddenStackHolder];
+    [self loadVisiblePageIfNeeded];
 }
 
 /**
@@ -529,6 +533,8 @@
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
     [self moveAddButtonToTop];
     [[SLPaperManager sharedInstace] save];
+
+    [[SLRenderManager sharedInstace] renderThumbnailForPage:[visibleStackHolder peekSubview]];
 }
 
 /**
@@ -548,6 +554,7 @@
     [visibleStackHolder.superview insertSubview:visibleStackHolder belowSubview:hiddenStackHolder];
     [self moveAddButtonToBottom];
     [[SLPaperManager sharedInstace] save];
+    [self loadVisiblePageIfNeeded];
 }
 
 

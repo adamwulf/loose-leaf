@@ -89,7 +89,7 @@
 //    [self regenerateThumbnail];
     
     [[SLBackingStoreManager sharedInstace].opQueue addOperationWithBlock:^{
-        NSLog(@"about to save backing store");
+//        NSLog(@"about to save backing store");
         CGFloat time =[NSThread timeBlock:^{
             @synchronized(this){
                 CGFloat time =[NSThread timeBlock:^{
@@ -100,7 +100,7 @@
                         [backingStoreData writeToFile:pathToBinaryData atomically:YES];
                     }
                 }];
-                NSLog(@"   saving bitmap: %f", time);
+//                NSLog(@"   saving bitmap: %f", time);
                 
                 time =[NSThread timeBlock:^{
                     NSString* pathToArrayData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[this.uuid stringByAppendingPathExtension:@"bez"]];
@@ -110,15 +110,15 @@
                     [dataToSave setObject:undoneStrokes forKey:@"undoneStrokes"];
                     
                     [NSKeyedArchiver archiveRootObject:dataToSave toFile:pathToArrayData];
-                    NSLog(@"   saving bezier to: %@", pathToArrayData);
+//                    NSLog(@"   saving bezier to: %@", pathToArrayData);
                 }];
-                NSLog(@"   saving bezier: %f", time);
+//                NSLog(@"   saving bezier: %f", time);
                 hasEditedContextSinceLoadOrLastSave = NO;
                 [[SLBackingStoreManager sharedInstace].delegate didSaveBackingStore:this withImage:smallImg];
                 [this release];
             }
         }];
-        NSLog(@"saving backing store: %f", time);
+//        NSLog(@"saving backing store: %f", time);
     }];
 }
 
@@ -130,108 +130,110 @@
     [[SLBackingStoreManager sharedInstace].opQueue addOperationWithBlock:^{
         CGFloat time = [NSThread timeBlock:^{
             @synchronized(self){
-                //
-                // scale factor for high resolution screens
-                float scaleFactor = [[UIScreen mainScreen] scale];
-                // Declare the number of bytes per row. Each pixel in the bitmap in this
-                // example is represented by 4 bytes; 8 bits each of red, green, blue, and
-                // alpha.
-                int	bitmapBytesPerRow = (idealSize.width * scaleFactor * 4); // only alpha;
-                int bitsPerComponent = 8;
-                int bitmapByteCount = (bitmapBytesPerRow * idealSize.height * scaleFactor);
-
-                
-                
-                // TODO load a backing store
-                NSString* pathToBinaryData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"bin"]];
-                long long fileSize = 0;
-                if([[NSFileManager defaultManager] fileExistsAtPath:pathToBinaryData]){
-                    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToBinaryData error:nil];
-                    NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
-                    fileSize = [fileSizeNumber longLongValue];
-                    if(fileSize == bitmapByteCount){
-                        FILE * ret = fopen([pathToBinaryData UTF8String], "r");
-                        void *data = [[SLBackingStoreManager sharedInstace] getPointerForMemory:fileSize];
-                        
-                        fread(data, 1, fileSize, ret);
-                        fclose(ret);
-                        backingStoreData = [[NSData dataWithBytesNoCopy:data length:fileSize freeWhenDone:NO] retain];
-                    }else{
-                        NSLog(@"backing store data file is not same size as context! %lld vs %d", fileSize, bitmapByteCount);
+                @autoreleasepool {
+                    //
+                    // scale factor for high resolution screens
+                    float scaleFactor = [[UIScreen mainScreen] scale];
+                    // Declare the number of bytes per row. Each pixel in the bitmap in this
+                    // example is represented by 4 bytes; 8 bits each of red, green, blue, and
+                    // alpha.
+                    int	bitmapBytesPerRow = (idealSize.width * scaleFactor * 4); // only alpha;
+                    int bitsPerComponent = 8;
+                    int bitmapByteCount = (bitmapBytesPerRow * idealSize.height * scaleFactor);
+                    
+                    
+                    
+                    // TODO load a backing store
+                    NSString* pathToBinaryData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"bin"]];
+                    long long fileSize = 0;
+                    if([[NSFileManager defaultManager] fileExistsAtPath:pathToBinaryData]){
+                        NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:pathToBinaryData error:nil];
+                        NSNumber *fileSizeNumber = [fileAttributes objectForKey:NSFileSize];
+                        fileSize = [fileSizeNumber longLongValue];
+                        if(fileSize == bitmapByteCount){
+                            FILE * ret = fopen([pathToBinaryData UTF8String], "r");
+                            void *data = [[SLBackingStoreManager sharedInstace] getPointerForMemory:fileSize];
+                            
+                            fread(data, 1, fileSize, ret);
+                            fclose(ret);
+                            backingStoreData = [[NSData dataWithBytesNoCopy:data length:fileSize freeWhenDone:NO] retain];
+                        }else{
+                            NSLog(@"backing store data file is not same size as context! %lld vs %d", fileSize, bitmapByteCount);
+                        }
                     }
+                    
+                    NSString* pathToArrayData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"bez"]];
+                    
+                    if([[NSFileManager defaultManager] fileExistsAtPath:pathToArrayData]){
+                        NSDictionary* dataFromDisk = [NSKeyedUnarchiver unarchiveObjectWithFile:pathToArrayData];
+                        [currentStrokeSegments removeAllObjects];
+                        [committedStrokes removeAllObjects];
+                        [undoneStrokes removeAllObjects];
+                        [currentStrokeSegments addObjectsFromArray:[dataFromDisk objectForKey:@"currentStrokeSegments"]];
+                        [committedStrokes addObjectsFromArray:[dataFromDisk objectForKey:@"committedStrokes"]];
+                        [undoneStrokes addObjectsFromArray:[dataFromDisk objectForKey:@"undoneStrokes"]];
+                    }
+                    
+                    
+                    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+                    
+                    //
+                    // debug
+                    //
+                    //
+                    // this code proves that the bytecount i use to malloc is the exact
+                    // same as the filesize byte count.
+                    //
+                    // so! what i need to do is allocate 2, maybe 3 of these void* pointers
+                    // and hand them out in a pool.
+                    //
+                    // that way, then a page is flushed, after its written to disk the malloc
+                    // isn't freed but used for the next backing store that loads data directly
+                    // into that memory.
+                    //
+                    // this way i'm not constantly re-allocating memory of the exact same size
+                    // only to free it soon after.
+                    //
+                    // http://stackoverflow.com/questions/9662490/load-file-to-nsdata-with-c
+                    // shows how to load a file into a pre-malloc'd are of memory
+                    //
+                    // also
+                    // when saving, i shouldn't bother writing to disk if the memory was blank anyways
+                    // instead, i should just force zero out all the memory and give it a new
+                    // pointer, which'll be much faster than loading in a bunch of zeros from disk.
+                    //
+                    //            memset(pointer, 0, length);
+                    //
+                    // can be used to re-set the buffer to zeroes when reusing a pointer for a blank
+                    // slate as opposed to reading in from disk to replace it
+                    
+                    if(!backingStoreData){
+                        void* ptr = [[SLBackingStoreManager sharedInstace] getZerodPointerForMemory:bitmapByteCount];
+                        backingStoreData = [[NSData dataWithBytesNoCopy:ptr length:bitmapByteCount freeWhenDone:NO] retain];
+                    }
+                    
+                    //
+                    // create the bitmap context that we'll use to cache
+                    // the drawn strokes
+                    cacheContext = CGBitmapContextCreate ((void*)[backingStoreData bytes], idealSize.width * scaleFactor, idealSize.height * scaleFactor, bitsPerComponent, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst);
+                    // set scale for high res display
+                    CGContextScaleCTM(cacheContext, scaleFactor, scaleFactor);
+                    // antialias the strokes
+                    CGContextSetAllowsAntialiasing(cacheContext, YES);
+                    CGContextSetShouldAntialias(cacheContext, YES);
+                    // allow transparency
+                    CGContextSetAlpha(cacheContext, 1);
+                    CGColorSpaceRelease(colorSpace);
+                    
+                    hasEditedContextSinceLoadOrLastSave = NO;
+                    
+                    [[SLBackingStoreManager sharedInstace].delegate didLoadBackingStore:self];
+                    
+                    [this release];
                 }
-                
-                NSString* pathToArrayData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"bez"]];
-                
-                if([[NSFileManager defaultManager] fileExistsAtPath:pathToArrayData]){
-                    NSDictionary* dataFromDisk = [NSKeyedUnarchiver unarchiveObjectWithFile:pathToArrayData];
-                    [currentStrokeSegments removeAllObjects];
-                    [committedStrokes removeAllObjects];
-                    [undoneStrokes removeAllObjects];
-                    [currentStrokeSegments addObjectsFromArray:[dataFromDisk objectForKey:@"currentStrokeSegments"]];
-                    [committedStrokes addObjectsFromArray:[dataFromDisk objectForKey:@"committedStrokes"]];
-                    [undoneStrokes addObjectsFromArray:[dataFromDisk objectForKey:@"undoneStrokes"]];
-                }
-                
-                
-                CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-                
-                //
-                // debug
-                //
-                //
-                // this code proves that the bytecount i use to malloc is the exact
-                // same as the filesize byte count.
-                //
-                // so! what i need to do is allocate 2, maybe 3 of these void* pointers
-                // and hand them out in a pool.
-                //
-                // that way, then a page is flushed, after its written to disk the malloc
-                // isn't freed but used for the next backing store that loads data directly
-                // into that memory.
-                //
-                // this way i'm not constantly re-allocating memory of the exact same size
-                // only to free it soon after.
-                //
-                // http://stackoverflow.com/questions/9662490/load-file-to-nsdata-with-c
-                // shows how to load a file into a pre-malloc'd are of memory
-                //
-                // also
-                // when saving, i shouldn't bother writing to disk if the memory was blank anyways
-                // instead, i should just force zero out all the memory and give it a new
-                // pointer, which'll be much faster than loading in a bunch of zeros from disk.
-                //
-                //            memset(pointer, 0, length);
-                //
-                // can be used to re-set the buffer to zeroes when reusing a pointer for a blank
-                // slate as opposed to reading in from disk to replace it
-                
-                if(!backingStoreData){
-                    void* ptr = [[SLBackingStoreManager sharedInstace] getZerodPointerForMemory:bitmapByteCount];
-                    backingStoreData = [[NSData dataWithBytesNoCopy:ptr length:bitmapByteCount freeWhenDone:NO] retain];
-                }
-                
-                //
-                // create the bitmap context that we'll use to cache
-                // the drawn strokes
-                cacheContext = CGBitmapContextCreate ((void*)[backingStoreData bytes], idealSize.width * scaleFactor, idealSize.height * scaleFactor, bitsPerComponent, bitmapBytesPerRow, colorSpace, kCGImageAlphaPremultipliedFirst);
-                // set scale for high res display
-                CGContextScaleCTM(cacheContext, scaleFactor, scaleFactor);
-                // antialias the strokes
-                CGContextSetAllowsAntialiasing(cacheContext, YES);
-                CGContextSetShouldAntialias(cacheContext, YES);
-                // allow transparency
-                CGContextSetAlpha(cacheContext, 1);
-                CGColorSpaceRelease(colorSpace);
-                
-                hasEditedContextSinceLoadOrLastSave = NO;
-                
-                [[SLBackingStoreManager sharedInstace].delegate didLoadBackingStore:self];
-                
-                [this release];
             }
         }];
-        NSLog(@"loading backing store: %f", time);
+//        NSLog(@"loading backing store: %f", time);
     }];
 }
 
@@ -378,20 +380,14 @@
 #pragma mark - Drawing
 
 -(NSArray*) arrayOfBlocksForDrawing{
-    return [NSArray arrayWithObject:[^(CGContextRef context, CGRect bounds){
-        NSLog(@"about to generate thumbnail");
-        CGFloat time =[NSThread timeBlock:^{
-            
-            //
-            // generate an image and send to delegate
-            @synchronized(self){
-                [self drawIntoContext:context intoBounds:bounds];
-                needsToGenerateThumbnail = NO;
-            }
-            
-        }];
-        NSLog(@"done generating thumbnail: %f", time);
-    } copy]];
+    return [NSArray arrayWithObject:[[^(CGContextRef context, CGRect bounds){
+        //
+        // generate an image and send to delegate
+        @synchronized(self){
+            [self drawIntoContext:context intoBounds:bounds];
+            needsToGenerateThumbnail = NO;
+        }
+    } copy] autorelease]];
 }
 
 
