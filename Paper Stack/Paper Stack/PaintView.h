@@ -63,4 +63,7 @@
 -(void) save;
 -(void) load;
 
+
+-(NSArray*) arrayOfBlocksForDrawing;
+
 @end

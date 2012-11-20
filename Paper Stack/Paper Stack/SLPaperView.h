@@ -15,8 +15,9 @@
 #import "PaintView.h"
 #import "PaintableViewDelegate.h"
 #import "SLBackingStoreManagerDelegate.h"
+#import "SLRenderManagerDelegate.h"
 
-@interface SLPaperView : SLShadowedView<PaintableViewDelegate,SLBackingStoreManagerDelegate>{
+@interface SLPaperView : SLShadowedView<PaintableViewDelegate,SLBackingStoreManagerDelegate,SLRenderManagerDelegate>{
     
     NSString* uuid;
     
@@ -33,13 +34,9 @@
 
     BOOL isBeingPannedAndZoomed;
     
-    UILabel* textLabel;
-    
     SLPanAndPinchGestureRecognizer* panGesture;
     
     BOOL isBrandNewPage;
-    
-    UIBezierPath* unitShadowPath;
     
     SLDrawingGestureRecognizer* drawGesture;
     UIActivityIndicatorView* activity;
@@ -48,16 +45,17 @@
     CGSize paintViewFrameSize;
     PaintView* paintView;
     UIImageView* thumbnailImageView;
+    
+    CGSize initialPageSize;
 }
 
+@property (nonatomic, readonly) CGSize initialPageSize;
 @property (nonatomic, readonly) NSString* uuid;
-@property (nonatomic, readonly) UIBezierPath* unitShadowPath;
 @property (nonatomic, assign) NSObject<SLPaperViewDelegate>* delegate;
 @property (nonatomic, assign) CGFloat scale;
 @property (nonatomic, readonly) BOOL isBeingPannedAndZoomed;
 // this will only be true if the bezel gesture is triggered and the page is actively being panned
 @property (nonatomic, readonly) NSInteger numberOfTimesExitedBezel;
-@property (nonatomic, readonly) UILabel* textLabel;
 @property (nonatomic, assign) BOOL isBrandNewPage;
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid;
@@ -73,6 +71,12 @@
 
 -(void) flush;
 -(void) load;
+
+
+
+
+// thumbnail
+-(NSArray*) arrayOfBlocksForDrawing;
 
 
 @end

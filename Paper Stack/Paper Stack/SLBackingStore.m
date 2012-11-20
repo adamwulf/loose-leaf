@@ -77,50 +77,42 @@
 //
 // void* data = CGBitmapContextGetData(cacheContext);
 // NSData* dataForFile = [NSData dataWithBytesNoCopy:data length:bitmapByteCount freeWhenDone:NO];
+
 -(void) save{
     
     [[SLBackingStoreManager sharedInstace].delegate willSaveBackingStore:self];
     
     SLBackingStore* this = self;
     [this retain];
+    
+    // make sure we get an up to date thumbnail
+//    [self regenerateThumbnail];
+    
     [[SLBackingStoreManager sharedInstace].opQueue addOperationWithBlock:^{
+        NSLog(@"about to save backing store");
         CGFloat time =[NSThread timeBlock:^{
             @synchronized(this){
+                CGFloat time =[NSThread timeBlock:^{
+                    //
+                    // ok, save it
+                    if(hasEditedContextSinceLoadOrLastSave){
+                        NSString* pathToBinaryData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[this.uuid stringByAppendingPathExtension:@"bin"]];
+                        [backingStoreData writeToFile:pathToBinaryData atomically:YES];
+                    }
+                }];
+                NSLog(@"   saving bitmap: %f", time);
                 
-                CGRect thumbnailBounds = CGRectZero;
-                CGSize thumbnailSize = CGSizeMake(idealSize.width / kMaxPageResolution * kListPageZoom * 2,
-                                                  idealSize.height / kMaxPageResolution * kListPageZoom * 2);
-                thumbnailBounds.size = thumbnailSize;
-                
-                //
-                // generate an image and send to delegate
-                NSString* pathToThumbnail = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"png"]];
-                UIGraphicsBeginImageContextWithOptions(thumbnailSize, NO, 0.0f);
-                CGContextRef context = UIGraphicsGetCurrentContext();
-                CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
-                CGContextFillRect(context, thumbnailBounds);
-                [self drawIntoContext:context intoBounds:thumbnailBounds];
-                UIImage* smallImg = UIGraphicsGetImageFromCurrentImageContext();
-                UIGraphicsEndImageContext();
-                
-                NSData* imageData = UIImagePNGRepresentation(smallImg);
-                [imageData writeToFile:pathToThumbnail atomically:YES];
-                
-
-                //
-                // ok, save it
-                if(hasEditedContextSinceLoadOrLastSave){
-                    NSString* pathToBinaryData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[this.uuid stringByAppendingPathExtension:@"bin"]];
-                    [backingStoreData writeToFile:pathToBinaryData atomically:YES];
-                }
-                NSString* pathToArrayData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[this.uuid stringByAppendingPathExtension:@"bez"]];
-                NSMutableDictionary* dataToSave = [NSMutableDictionary dictionary];
-                [dataToSave setObject:currentStrokeSegments forKey:@"currentStrokeSegments"];
-                [dataToSave setObject:committedStrokes forKey:@"committedStrokes"];
-                [dataToSave setObject:undoneStrokes forKey:@"undoneStrokes"];
-                
-                [NSKeyedArchiver archiveRootObject:dataToSave toFile:pathToArrayData];
-                
+                time =[NSThread timeBlock:^{
+                    NSString* pathToArrayData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[this.uuid stringByAppendingPathExtension:@"bez"]];
+                    NSMutableDictionary* dataToSave = [NSMutableDictionary dictionary];
+                    [dataToSave setObject:currentStrokeSegments forKey:@"currentStrokeSegments"];
+                    [dataToSave setObject:committedStrokes forKey:@"committedStrokes"];
+                    [dataToSave setObject:undoneStrokes forKey:@"undoneStrokes"];
+                    
+                    [NSKeyedArchiver archiveRootObject:dataToSave toFile:pathToArrayData];
+                    NSLog(@"   saving bezier to: %@", pathToArrayData);
+                }];
+                NSLog(@"   saving bezier: %f", time);
                 hasEditedContextSinceLoadOrLastSave = NO;
                 [[SLBackingStoreManager sharedInstace].delegate didSaveBackingStore:this withImage:smallImg];
                 [this release];
@@ -271,6 +263,7 @@
  */
 -(void) commitStroke{
     @synchronized(self){
+        needsToGenerateThumbnail = YES;
         [committedStrokes addObject:[NSArray arrayWithArray:currentStrokeSegments]];
         if([committedStrokes count] > kUndoLimit){
             hasEditedContextSinceLoadOrLastSave = YES;
@@ -285,6 +278,7 @@
 -(BOOL) undo{
     @synchronized(self){
         if([committedStrokes count]){
+            needsToGenerateThumbnail = YES;
             [undoneStrokes addObject:[committedStrokes lastObject]];
             [committedStrokes removeLastObject];
             return YES;
@@ -295,6 +289,7 @@
 -(BOOL) redo{
     @synchronized(self){
         if([undoneStrokes count]){
+            needsToGenerateThumbnail = YES;
             [committedStrokes addObject:[undoneStrokes lastObject]];
             [undoneStrokes removeLastObject];
             return YES;
@@ -376,6 +371,27 @@
             // noop because i'm not loaded
         }
     }
+}
+
+
+
+#pragma mark - Drawing
+
+-(NSArray*) arrayOfBlocksForDrawing{
+    return [NSArray arrayWithObject:[^(CGContextRef context, CGRect bounds){
+        NSLog(@"about to generate thumbnail");
+        CGFloat time =[NSThread timeBlock:^{
+            
+            //
+            // generate an image and send to delegate
+            @synchronized(self){
+                [self drawIntoContext:context intoBounds:bounds];
+                needsToGenerateThumbnail = NO;
+            }
+            
+        }];
+        NSLog(@"done generating thumbnail: %f", time);
+    } copy]];
 }
 
 

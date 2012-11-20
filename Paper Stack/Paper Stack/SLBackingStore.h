@@ -34,6 +34,12 @@
     NSMutableArray* undoneStrokes;
     
     BOOL hasEditedContextSinceLoadOrLastSave;
+    
+    
+    
+    // Debug;
+    UIImage* smallImg;
+    BOOL needsToGenerateThumbnail;
 }
 
 @property (nonatomic, retain) NSString* uuid;
@@ -55,5 +61,10 @@
 -(void) drawIntoContext:(CGContextRef)context intoBounds:(CGRect)bounds;
 
 +(NSString*) pathToSavedData;
+
+
+// debug
+
+-(NSArray*) arrayOfBlocksForDrawing;
 
 @end

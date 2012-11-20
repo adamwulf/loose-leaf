@@ -409,6 +409,10 @@
 }
 
 
+#pragma mark - Drawing
 
+-(NSArray*) arrayOfBlocksForDrawing{
+    return [backingStore arrayOfBlocksForDrawing];
+}
 
 @end

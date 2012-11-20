@@ -13,6 +13,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "SLPaperManager.h"
 #import "SLBackingStoreManager.h"
+#import "SLRenderManager.h"
 
 @implementation SLPaperStackView
 
@@ -573,6 +574,9 @@
  * depending on where they drag a page
  */
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
+    
+    
+    [[SLRenderManager sharedInstace] renderThumbnailForPage:page];
     
     if(page == [visibleStackHolder.subviews objectAtIndex:0]){
         // they're panning the bottom page in the visible stack,

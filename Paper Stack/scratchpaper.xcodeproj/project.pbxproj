@@ -47,6 +47,7 @@
 		66A539F6163F18C8003EAEC0 /* nav.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A539F5163F18C8003EAEC0 /* nav.png */; };
 		66A539FA163F18CB003EAEC0 /* nav@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A539F9163F18CB003EAEC0 /* nav@2x.png */; };
 		66B1F40F1651BA5D00379C5B /* SLBackingStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B1F40E1651BA5D00379C5B /* SLBackingStore.m */; };
+		66B572CB165C12ED0062F169 /* SLRenderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B572CA165C12ED0062F169 /* SLRenderManager.m */; };
 		66BD6E301591B57B00D4544C /* SLPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* SLPaperButton.m */; };
 		66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E331591C37D00D4544C /* UIImage+MCDrawSubImage.m */; };
 		66BD6E65159316CF00D4544C /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E64159316CF00D4544C /* CoreImage.framework */; };
@@ -195,6 +196,9 @@
 		66A539F9163F18CB003EAEC0 /* nav@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "nav@2x.png"; path = "../nav@2x.png"; sourceTree = "<group>"; };
 		66B1F40D1651BA5D00379C5B /* SLBackingStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLBackingStore.h; sourceTree = "<group>"; };
 		66B1F40E1651BA5D00379C5B /* SLBackingStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLBackingStore.m; sourceTree = "<group>"; };
+		66B572C9165C12ED0062F169 /* SLRenderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLRenderManager.h; sourceTree = "<group>"; };
+		66B572CA165C12ED0062F169 /* SLRenderManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLRenderManager.m; sourceTree = "<group>"; };
+		66B572CC165C13070062F169 /* SLRenderManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLRenderManagerDelegate.h; sourceTree = "<group>"; };
 		66BD6E2E1591B57B00D4544C /* SLPaperButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperButton.h; sourceTree = "<group>"; };
 		66BD6E2F1591B57B00D4544C /* SLPaperButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPaperButton.m; sourceTree = "<group>"; };
 		66BD6E321591C37D00D4544C /* UIImage+MCDrawSubImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MCDrawSubImage.h"; sourceTree = "<group>"; };
@@ -340,15 +344,6 @@
 			name = Icons;
 			sourceTree = "<group>";
 		};
-		661E08761652FEE300EF779F /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				66B1F40D1651BA5D00379C5B /* SLBackingStore.h */,
-				66B1F40E1651BA5D00379C5B /* SLBackingStore.m */,
-			);
-			name = Model;
-			sourceTree = "<group>";
-		};
 		664C62F115A36DB00072736A /* SLPaperView */ = {
 			isa = PBXGroup;
 			children = (
@@ -367,17 +362,11 @@
 		6693295715958A890033E557 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				661E08761652FEE300EF779F /* Model */,
-				66C904371651920200E58FD3 /* SLPaperManager.h */,
-				66C904381651920200E58FD3 /* SLPaperManager.m */,
-				6693295815958A950033E557 /* SLShadowManager.h */,
-				6693295915958A950033E557 /* SLShadowManager.m */,
-				66932963159593C00033E557 /* SLRotationManager.h */,
-				66932964159593C00033E557 /* SLRotationManager.m */,
-				66932967159594A60033E557 /* SLRotationManagerDelegate.h */,
-				661E08691652F7C500EF779F /* SLBackingStoreManager.h */,
-				661E086A1652F7C500EF779F /* SLBackingStoreManager.m */,
-				661E08771652FEF800EF779F /* SLBackingStoreManagerDelegate.h */,
+				66B572C8165C128D0062F169 /* Rendering */,
+				66B572C4165C123F0062F169 /* BackingStore */,
+				66B572C7165C125F0062F169 /* Rotation */,
+				66B572C6165C12590062F169 /* Shadow */,
+				66B572C5165C12520062F169 /* Paper */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -475,6 +464,56 @@
 				665978F2164318CA00E10FC7 /* SLPanGestureRecognizerDelegate.h */,
 			);
 			name = Drawing;
+			sourceTree = "<group>";
+		};
+		66B572C4165C123F0062F169 /* BackingStore */ = {
+			isa = PBXGroup;
+			children = (
+				66B1F40D1651BA5D00379C5B /* SLBackingStore.h */,
+				66B1F40E1651BA5D00379C5B /* SLBackingStore.m */,
+				661E08691652F7C500EF779F /* SLBackingStoreManager.h */,
+				661E086A1652F7C500EF779F /* SLBackingStoreManager.m */,
+				661E08771652FEF800EF779F /* SLBackingStoreManagerDelegate.h */,
+			);
+			name = BackingStore;
+			sourceTree = "<group>";
+		};
+		66B572C5165C12520062F169 /* Paper */ = {
+			isa = PBXGroup;
+			children = (
+				66C904371651920200E58FD3 /* SLPaperManager.h */,
+				66C904381651920200E58FD3 /* SLPaperManager.m */,
+			);
+			name = Paper;
+			sourceTree = "<group>";
+		};
+		66B572C6165C12590062F169 /* Shadow */ = {
+			isa = PBXGroup;
+			children = (
+				6693295815958A950033E557 /* SLShadowManager.h */,
+				6693295915958A950033E557 /* SLShadowManager.m */,
+			);
+			name = Shadow;
+			sourceTree = "<group>";
+		};
+		66B572C7165C125F0062F169 /* Rotation */ = {
+			isa = PBXGroup;
+			children = (
+				66932963159593C00033E557 /* SLRotationManager.h */,
+				66932964159593C00033E557 /* SLRotationManager.m */,
+				66932967159594A60033E557 /* SLRotationManagerDelegate.h */,
+			);
+			name = Rotation;
+			sourceTree = "<group>";
+		};
+		66B572C8165C128D0062F169 /* Rendering */ = {
+			isa = PBXGroup;
+			children = (
+				66B572C9165C12ED0062F169 /* SLRenderManager.h */,
+				66B572CA165C12ED0062F169 /* SLRenderManager.m */,
+				66B572CC165C13070062F169 /* SLRenderManagerDelegate.h */,
+			);
+			name = Rendering;
 			sourceTree = "<group>";
 		};
 		66BD6E811593AF4500D4544C /* Buttons */ = {
@@ -818,6 +857,7 @@
 				66C9043F165198C600E58FD3 /* SLSynchronizedStackView.m in Sources */,
 				661E086B1652F7C600EF779F /* SLBackingStoreManager.m in Sources */,
 				661E08841653691C00EF779F /* SLModeledStackView.m in Sources */,
+				66B572CB165C12ED0062F169 /* SLRenderManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -949,6 +989,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Adam Wulf";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Adam Wulf";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Paper Stack/scratchpaper-Prefix.pch";
 				INFOPLIST_FILE = "Paper Stack/scratchpaper-Info.plist";
@@ -957,6 +998,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = scratchpaper;
+				PROVISIONING_PROFILE = "92A75BB7-DD33-4790-9097-DA008F5787F4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "92A75BB7-DD33-4790-9097-DA008F5787F4";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};

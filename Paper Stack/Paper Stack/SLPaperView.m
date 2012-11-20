@@ -22,10 +22,9 @@
 @synthesize scale;
 @synthesize delegate;
 @synthesize isBeingPannedAndZoomed;
-@synthesize textLabel;
 @synthesize isBrandNewPage;
 @synthesize uuid;
-@synthesize unitShadowPath;
+@synthesize initialPageSize;
 
 - (id)initWithFrame:(CGRect)frame{
     return [self initWithFrame:frame andUUID:nil];
@@ -35,6 +34,9 @@
     self = [super initWithFrame:frame];
     if (self) {
         @autoreleasepool {
+            
+            initialPageSize = frame.size;
+            
             
             // Initialization code
             if(_uuid){
@@ -262,7 +264,6 @@
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         [gesture setEnabled:NO];
     }
-    textLabel.text = @"disabled";
 }
 /**
  * enables all gestures on this page
@@ -271,7 +272,6 @@
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         [gesture setEnabled:YES];
     }
-    textLabel.text = @"enabled";
 }
 
 
@@ -616,7 +616,6 @@
 }
 
 -(void) didSaveBackingStore:(SLBackingStore*)backingStore withImage:(UIImage*)img{
-    thumbnailImageView.image = img;
     thumbnailImageView.hidden = NO;
     paintView.hidden = YES;
     [activity stopAnimating];
@@ -627,5 +626,29 @@
     }
 }
 
+
+#pragma mark - SLRenderManagerDelegate
+
+-(void) willGenerateThumbnailForPage:(SLPaperView*)page{
+    
+}
+
+-(void) didGenerateThumbnail:(UIImage*)img forPage:(SLPaperView*)page{
+    if(page == self){
+        thumbnailImageView.image = img;
+    }
+}
+
+
+
+#pragma mark - Debug
+
+-(NSArray*) arrayOfBlocksForDrawing{
+    return [[NSArray arrayWithObject:[^(CGContextRef context, CGRect bounds){
+        CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
+        CGContextFillRect(context, bounds);
+    } copy]]
+            arrayByAddingObjectsFromArray:[paintView arrayOfBlocksForDrawing]];
+}
 
 @end
