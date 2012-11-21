@@ -39,6 +39,11 @@
 		669329701598E4DC0033E557 /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693296F1598E4DC0033E557 /* NSString+UUID.m */; };
 		669329731598EE210033E557 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329721598EE210033E557 /* UIView+Debug.m */; };
 		6693297E1599196E0033E557 /* UIFont+UIBezierCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693297D1599196E0033E557 /* UIFont+UIBezierCurve.m */; };
+		669EEC70165D7CDD001896F4 /* libOmniFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 669EEC13165D7833001896F4 /* libOmniFoundation.a */; };
+		669EEC71165D7CFA001896F4 /* libOmniBase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 669EEC64165D79E6001896F4 /* libOmniBase.a */; };
+		669EECA8165D7DE9001896F4 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 669EECA7165D7DE9001896F4 /* libz.dylib */; };
+		669EECAA165D7DF3001896F4 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 669EECA9165D7DF3001896F4 /* libxml2.dylib */; };
+		669EECAE165D7E3C001896F4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 669EECAD165D7E3C001896F4 /* SystemConfiguration.framework */; };
 		66A13D3A1631D9D9002F5428 /* SLObjectSelectLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D391631D9D8002F5428 /* SLObjectSelectLongPressGestureRecognizer.m */; };
 		66A13D401631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D3F1631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m */; };
 		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; };
@@ -90,6 +95,118 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		669EEC10165D7833001896F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 669EEBF9165D7833001896F4 /* OmniFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4A4E075308AA72B10098FF0F;
+			remoteInfo = OmniFoundation;
+		};
+		669EEC12165D7833001896F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 669EEBF9165D7833001896F4 /* OmniFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 344D08BA1190D47300264D89;
+			remoteInfo = OmniFoundationTouch;
+		};
+		669EEC14165D7833001896F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 669EEBF9165D7833001896F4 /* OmniFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 340115D411E515DB0016ADB3;
+			remoteInfo = OmniFoundationTouchTests;
+		};
+		669EEC16165D7833001896F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 669EEBF9165D7833001896F4 /* OmniFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4A4E07CF08AA72B10098FF0F;
+			remoteInfo = OFUnitTests;
+		};
+		669EEC18165D7833001896F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 669EEBF9165D7833001896F4 /* OmniFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4A4E077408AA72B10098FF0F;
+			remoteInfo = OFSimpleLockTest;
+		};
+		669EEC1A165D7833001896F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 669EEBF9165D7833001896F4 /* OmniFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4A4E079608AA72B10098FF0F;
+			remoteInfo = OFDedicatedThreadSchedulerTest;
+		};
+		669EEC1C165D7833001896F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 669EEBF9165D7833001896F4 /* OmniFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4A4E07A608AA72B10098FF0F;
+			remoteInfo = OFClobberDetectionZoneTest;
+		};
+		669EEC1E165D7833001896F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 669EEBF9165D7833001896F4 /* OmniFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4A4E07DF08AA72B10098FF0F;
+			remoteInfo = OFMainThreadLockTest;
+		};
+		669EEC20165D7833001896F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 669EEBF9165D7833001896F4 /* OmniFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 345069110D747ED4004B40C2;
+			remoteInfo = OFCrashOnExceptionTest;
+		};
+		669EEC22165D7833001896F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 669EEBF9165D7833001896F4 /* OmniFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 343B36341034F68F0006290A;
+			remoteInfo = OFRandomRepeatTest;
+		};
+		669EEC50165D7980001896F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 669EEBF9165D7833001896F4 /* OmniFoundation.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 344D08B91190D47300264D89;
+			remoteInfo = OmniFoundationTouch;
+		};
+		669EEC5F165D79E6001896F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 669EEC57165D79E6001896F4 /* OmniBase.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4A33D42808A0191B003A3FA5;
+			remoteInfo = OmniBase;
+		};
+		669EEC61165D79E6001896F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 669EEC57165D79E6001896F4 /* OmniBase.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 34778CD211810BE700EC28C1;
+			remoteInfo = OBLoadBundle;
+		};
+		669EEC63165D79E6001896F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 669EEC57165D79E6001896F4 /* OmniBase.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 342163B211907BF600C06E45;
+			remoteInfo = OmniBaseTouch;
+		};
+		669EEC65165D79E6001896F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 669EEC57165D79E6001896F4 /* OmniBase.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 340115B011E515790016ADB3;
+			remoteInfo = OmniBaseTouchTests;
+		};
+		669EEC67165D79E6001896F4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 669EEC57165D79E6001896F4 /* OmniBase.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 34EE20D114F0354300722491;
+			remoteInfo = OBUnitTests;
+		};
 		66A4BD171632170E00C45070 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */;
@@ -182,6 +299,12 @@
 		669329721598EE210033E557 /* UIView+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Debug.m"; sourceTree = "<group>"; };
 		6693297C1599196E0033E557 /* UIFont+UIBezierCurve.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+UIBezierCurve.h"; sourceTree = "<group>"; };
 		6693297D1599196E0033E557 /* UIFont+UIBezierCurve.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+UIBezierCurve.m"; sourceTree = "<group>"; };
+		669EEBF9165D7833001896F4 /* OmniFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OmniFoundation.xcodeproj; path = ../../../OmniGroup/Frameworks/OmniFoundation/OmniFoundation.xcodeproj; sourceTree = "<group>"; };
+		669EEC57165D79E6001896F4 /* OmniBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OmniBase.xcodeproj; path = "/Users/adam/Documents/Code/loose-leaf/paper-stack/Paper Stack/../../../OmniGroup/Frameworks/OmniBase/OmniBase.xcodeproj"; sourceTree = "<absolute>"; };
+		669EECA7165D7DE9001896F4 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		669EECA9165D7DF3001896F4 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		669EECAB165D7E0D001896F4 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		669EECAD165D7E3C001896F4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		66A13D381631D9D8002F5428 /* SLObjectSelectLongPressGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLObjectSelectLongPressGestureRecognizer.h; sourceTree = "<group>"; };
 		66A13D391631D9D8002F5428 /* SLObjectSelectLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLObjectSelectLongPressGestureRecognizer.m; sourceTree = "<group>"; };
 		66A13D3E1631E0E6002F5428 /* SLImmovableTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLImmovableTapGestureRecognizer.h; sourceTree = "<group>"; };
@@ -276,6 +399,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				669EECAE165D7E3C001896F4 /* SystemConfiguration.framework in Frameworks */,
+				669EECAA165D7DF3001896F4 /* libxml2.dylib in Frameworks */,
+				669EECA8165D7DE9001896F4 /* libz.dylib in Frameworks */,
+				669EEC71165D7CFA001896F4 /* libOmniBase.a in Frameworks */,
+				669EEC70165D7CDD001896F4 /* libOmniFoundation.a in Frameworks */,
 				66A4BD1D1632171800C45070 /* DrawKit-iOS.framework in Frameworks */,
 				66BD6E991593E9C400D4544C /* CoreText.framework in Frameworks */,
 				66BD6E831593B12500D4544C /* CoreMotion.framework in Frameworks */,
@@ -403,6 +531,35 @@
 				6672871115944B160018571A /* SLPopoverView.m */,
 			);
 			name = Experiments;
+			sourceTree = "<group>";
+		};
+		669EEBFA165D7833001896F4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				669EEC11165D7833001896F4 /* OmniFoundation.framework */,
+				669EEC13165D7833001896F4 /* libOmniFoundation.a */,
+				669EEC15165D7833001896F4 /* libOmniFoundationTouchTests.a */,
+				669EEC17165D7833001896F4 /* OFUnitTests.octest */,
+				669EEC19165D7833001896F4 /* OFSimpleLockTest */,
+				669EEC1B165D7833001896F4 /* OFDedicatedThreadSchedulerTest */,
+				669EEC1D165D7833001896F4 /* OFClobberDetectionTest */,
+				669EEC1F165D7833001896F4 /* OFMainThreadLockTest */,
+				669EEC21165D7833001896F4 /* OFCrashOnExceptionTest */,
+				669EEC23165D7833001896F4 /* OFRandomRepeatTest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		669EEC58165D79E6001896F4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				669EEC60165D79E6001896F4 /* OmniBase.framework */,
+				669EEC62165D79E6001896F4 /* OBLoadBundle */,
+				669EEC64165D79E6001896F4 /* libOmniBase.a */,
+				669EEC66165D79E6001896F4 /* libOmniBaseTouchTests.a */,
+				669EEC68165D79E6001896F4 /* OBUnitTests.octest */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		66A13D3C1631E06D002F5428 /* Object Selection */ = {
@@ -550,6 +707,12 @@
 		66DCFB7B1581BCED00B4918C = {
 			isa = PBXGroup;
 			children = (
+				669EECAD165D7E3C001896F4 /* SystemConfiguration.framework */,
+				669EECAB165D7E0D001896F4 /* MobileCoreServices.framework */,
+				669EECA9165D7DF3001896F4 /* libxml2.dylib */,
+				669EECA7165D7DE9001896F4 /* libz.dylib */,
+				669EEC57165D79E6001896F4 /* OmniBase.xcodeproj */,
+				669EEBF9165D7833001896F4 /* OmniFoundation.xcodeproj */,
 				66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */,
 				66DCFB901581BCEF00B4918C /* Paper Stack */,
 				66DCFBAE1581BCF000B4918C /* Paper StackTests */,
@@ -677,6 +840,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				669EEC51165D7980001896F4 /* PBXTargetDependency */,
 				66A4BD1C1632171500C45070 /* PBXTargetDependency */,
 			);
 			name = scratchpaper;
@@ -727,6 +891,14 @@
 					ProductGroup = 66A4BD131632170E00C45070 /* Products */;
 					ProjectRef = 66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */;
 				},
+				{
+					ProductGroup = 669EEC58165D79E6001896F4 /* Products */;
+					ProjectRef = 669EEC57165D79E6001896F4 /* OmniBase.xcodeproj */;
+				},
+				{
+					ProductGroup = 669EEBFA165D7833001896F4 /* Products */;
+					ProjectRef = 669EEBF9165D7833001896F4 /* OmniFoundation.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -737,6 +909,111 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		669EEC11165D7833001896F4 /* OmniFoundation.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OmniFoundation.framework;
+			remoteRef = 669EEC10165D7833001896F4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		669EEC13165D7833001896F4 /* libOmniFoundation.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libOmniFoundation.a;
+			remoteRef = 669EEC12165D7833001896F4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		669EEC15165D7833001896F4 /* libOmniFoundationTouchTests.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libOmniFoundationTouchTests.a;
+			remoteRef = 669EEC14165D7833001896F4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		669EEC17165D7833001896F4 /* OFUnitTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = OFUnitTests.octest;
+			remoteRef = 669EEC16165D7833001896F4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		669EEC19165D7833001896F4 /* OFSimpleLockTest */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = OFSimpleLockTest;
+			remoteRef = 669EEC18165D7833001896F4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		669EEC1B165D7833001896F4 /* OFDedicatedThreadSchedulerTest */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = OFDedicatedThreadSchedulerTest;
+			remoteRef = 669EEC1A165D7833001896F4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		669EEC1D165D7833001896F4 /* OFClobberDetectionTest */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = OFClobberDetectionTest;
+			remoteRef = 669EEC1C165D7833001896F4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		669EEC1F165D7833001896F4 /* OFMainThreadLockTest */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = OFMainThreadLockTest;
+			remoteRef = 669EEC1E165D7833001896F4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		669EEC21165D7833001896F4 /* OFCrashOnExceptionTest */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = OFCrashOnExceptionTest;
+			remoteRef = 669EEC20165D7833001896F4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		669EEC23165D7833001896F4 /* OFRandomRepeatTest */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = OFRandomRepeatTest;
+			remoteRef = 669EEC22165D7833001896F4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		669EEC60165D79E6001896F4 /* OmniBase.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OmniBase.framework;
+			remoteRef = 669EEC5F165D79E6001896F4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		669EEC62165D79E6001896F4 /* OBLoadBundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = OBLoadBundle;
+			remoteRef = 669EEC61165D79E6001896F4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		669EEC64165D79E6001896F4 /* libOmniBase.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libOmniBase.a;
+			remoteRef = 669EEC63165D79E6001896F4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		669EEC66165D79E6001896F4 /* libOmniBaseTouchTests.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libOmniBaseTouchTests.a;
+			remoteRef = 669EEC65165D79E6001896F4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		669EEC68165D79E6001896F4 /* OBUnitTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = OBUnitTests.octest;
+			remoteRef = 669EEC67165D79E6001896F4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		66A4BD181632170E00C45070 /* DrawKit-iOS.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework.static;
@@ -873,6 +1150,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		669EEC51165D7980001896F4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = OmniFoundationTouch;
+			targetProxy = 669EEC50165D7980001896F4 /* PBXContainerItemProxy */;
+		};
 		66A4BD1C1632171500C45070 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "DrawKit-iOS";

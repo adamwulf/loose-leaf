@@ -65,7 +65,7 @@ static SLRenderManager* _instance = nil;
             NSDate* dtOfRender = [renderStamps objectForKey:page.uuid];
             if(!dtOfRender || ![dtOfRender isEqualToDate:page.lastModified]){
                 @autoreleasepool {
-//                    NSLog(@"rendering thumbnail: %@", page.uuid);
+                    NSLog(@"rendering thumbnail: %@", page.uuid);
                     //
                     // notify the page that we're about to generate its thumbnail
                     [page willGenerateThumbnailForPage:page];

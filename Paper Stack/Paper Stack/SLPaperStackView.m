@@ -368,6 +368,7 @@
                 page.frame = hiddenStackHolder.bounds;
             }
         }
+        [[visibleStackHolder peekSubview] save];
         [[visibleStackHolder peekSubview] disableAllGestures];
         [bezelStackHolder pushSubview:[hiddenStackHolder peekSubview]];
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
@@ -589,6 +590,10 @@
         // they're panning the bottom page in the visible stack,
         // so add another
         [self ensureAtLeast:[visibleStackHolder.subviews count] + 1 pagesInStack:visibleStackHolder];
+    }
+    
+    if(page == [visibleStackHolder peekSubview]){
+        [[visibleStackHolder peekSubview] save];
     }
     
     //

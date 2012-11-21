@@ -15,6 +15,9 @@
 #import "Constants.h"
 
 @interface SLBackingStore : NSObject{
+    NSInteger lastSavedVersion;
+    NSInteger lastModifiedVersion;
+    
     //
     // the bitmap backing store for the strokes
     NSData* backingStoreData;

@@ -82,44 +82,54 @@
     
     [[SLBackingStoreManager sharedInstace].delegate willSaveBackingStore:self];
     
-    SLBackingStore* this = self;
-    [this retain];
-    
-    // make sure we get an up to date thumbnail
-//    [self regenerateThumbnail];
-    
-    [[SLBackingStoreManager sharedInstace].opQueue addOperationWithBlock:^{
-//        NSLog(@"about to save backing store");
-        CGFloat time =[NSThread timeBlock:^{
-            @synchronized(this){
+    @synchronized(self){
+        if(lastSavedVersion != lastModifiedVersion){
+            lastSavedVersion = lastModifiedVersion;
+
+            SLBackingStore* this = self;
+            [this retain];
+            
+            // make sure we get an up to date thumbnail
+            //    [self regenerateThumbnail];
+            
+            [[SLBackingStoreManager sharedInstace].opQueue addOperationWithBlock:^{
+                NSLog(@"about to save backing store %d vs %d", lastModifiedVersion, lastSavedVersion);
                 CGFloat time =[NSThread timeBlock:^{
-                    //
-                    // ok, save it
-                    if(hasEditedContextSinceLoadOrLastSave){
-                        NSString* pathToBinaryData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[this.uuid stringByAppendingPathExtension:@"bin"]];
-                        [backingStoreData writeToFile:pathToBinaryData atomically:YES];
+                    @synchronized(this){
+                        CGFloat time =[NSThread timeBlock:^{
+                            //
+                            // ok, save it
+                            if(hasEditedContextSinceLoadOrLastSave){
+                                NSString* pathToBinaryData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[this.uuid stringByAppendingPathExtension:@"bin"]];
+                                [backingStoreData writeToFile:pathToBinaryData atomically:YES];
+                            }
+                        }];
+                        NSLog(@"   saving bitmap: %f", time);
+                        
+                        time =[NSThread timeBlock:^{
+                            NSString* pathToArrayData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[this.uuid stringByAppendingPathExtension:@"bez"]];
+                            NSMutableDictionary* dataToSave = [NSMutableDictionary dictionary];
+                            [dataToSave setObject:currentStrokeSegments forKey:@"currentStrokeSegments"];
+                            [dataToSave setObject:committedStrokes forKey:@"committedStrokes"];
+                            [dataToSave setObject:undoneStrokes forKey:@"undoneStrokes"];
+                            [dataToSave setObject:[NSNumber numberWithInteger:lastSavedVersion] forKey:@"version"];
+                            
+                            [NSKeyedArchiver archiveRootObject:dataToSave toFile:pathToArrayData];
+                            //                    NSLog(@"   saving bezier to: %@", pathToArrayData);
+                        }];
+                        NSLog(@"   saving bezier: %f", time);
+                        hasEditedContextSinceLoadOrLastSave = NO;
+                        [[SLBackingStoreManager sharedInstace].delegate didSaveBackingStore:this withImage:smallImg];
+                        [this release];
                     }
                 }];
-//                NSLog(@"   saving bitmap: %f", time);
-                
-                time =[NSThread timeBlock:^{
-                    NSString* pathToArrayData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[this.uuid stringByAppendingPathExtension:@"bez"]];
-                    NSMutableDictionary* dataToSave = [NSMutableDictionary dictionary];
-                    [dataToSave setObject:currentStrokeSegments forKey:@"currentStrokeSegments"];
-                    [dataToSave setObject:committedStrokes forKey:@"committedStrokes"];
-                    [dataToSave setObject:undoneStrokes forKey:@"undoneStrokes"];
-                    
-                    [NSKeyedArchiver archiveRootObject:dataToSave toFile:pathToArrayData];
-//                    NSLog(@"   saving bezier to: %@", pathToArrayData);
-                }];
-//                NSLog(@"   saving bezier: %f", time);
-                hasEditedContextSinceLoadOrLastSave = NO;
-                [[SLBackingStoreManager sharedInstace].delegate didSaveBackingStore:this withImage:smallImg];
-                [this release];
-            }
-        }];
-//        NSLog(@"saving backing store: %f", time);
-    }];
+                NSLog(@"saving backing store: %f", time);
+            }];
+
+        }else{
+            [[SLBackingStoreManager sharedInstace].delegate didSaveBackingStore:self withImage:nil];
+        }
+    }
 }
 
 -(void) load{
@@ -131,6 +141,25 @@
         CGFloat time = [NSThread timeBlock:^{
             @synchronized(self){
                 @autoreleasepool {
+                    
+                    //
+                    // load bezier array data
+                    NSString* pathToArrayData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"bez"]];
+                    
+                    if([[NSFileManager defaultManager] fileExistsAtPath:pathToArrayData]){
+                        NSDictionary* dataFromDisk = [NSKeyedUnarchiver unarchiveObjectWithFile:pathToArrayData];
+                        [currentStrokeSegments removeAllObjects];
+                        [committedStrokes removeAllObjects];
+                        [undoneStrokes removeAllObjects];
+                        [currentStrokeSegments addObjectsFromArray:[dataFromDisk objectForKey:@"currentStrokeSegments"]];
+                        [committedStrokes addObjectsFromArray:[dataFromDisk objectForKey:@"committedStrokes"]];
+                        [undoneStrokes addObjectsFromArray:[dataFromDisk objectForKey:@"undoneStrokes"]];
+                        
+                        lastSavedVersion = [[dataFromDisk objectForKey:@"version"] integerValue];
+                        lastModifiedVersion = lastSavedVersion;
+                    }
+                    
+                    
                     //
                     // scale factor for high resolution screens
                     float scaleFactor = [[UIScreen mainScreen] scale];
@@ -140,10 +169,8 @@
                     int	bitmapBytesPerRow = (idealSize.width * scaleFactor * 4); // only alpha;
                     int bitsPerComponent = 8;
                     int bitmapByteCount = (bitmapBytesPerRow * idealSize.height * scaleFactor);
-                    
-                    
-                    
-                    // TODO load a backing store
+                    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+
                     NSString* pathToBinaryData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"bin"]];
                     long long fileSize = 0;
                     if([[NSFileManager defaultManager] fileExistsAtPath:pathToBinaryData]){
@@ -161,21 +188,6 @@
                             NSLog(@"backing store data file is not same size as context! %lld vs %d", fileSize, bitmapByteCount);
                         }
                     }
-                    
-                    NSString* pathToArrayData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"bez"]];
-                    
-                    if([[NSFileManager defaultManager] fileExistsAtPath:pathToArrayData]){
-                        NSDictionary* dataFromDisk = [NSKeyedUnarchiver unarchiveObjectWithFile:pathToArrayData];
-                        [currentStrokeSegments removeAllObjects];
-                        [committedStrokes removeAllObjects];
-                        [undoneStrokes removeAllObjects];
-                        [currentStrokeSegments addObjectsFromArray:[dataFromDisk objectForKey:@"currentStrokeSegments"]];
-                        [committedStrokes addObjectsFromArray:[dataFromDisk objectForKey:@"committedStrokes"]];
-                        [undoneStrokes addObjectsFromArray:[dataFromDisk objectForKey:@"undoneStrokes"]];
-                    }
-                    
-                    
-                    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
                     
                     //
                     // debug
@@ -233,7 +245,7 @@
                 }
             }
         }];
-//        NSLog(@"loading backing store: %f", time);
+        NSLog(@"loading backing store: %f", time);
     }];
 }
 
@@ -265,15 +277,18 @@
  */
 -(void) commitStroke{
     @synchronized(self){
-        needsToGenerateThumbnail = YES;
-        [committedStrokes addObject:[NSArray arrayWithArray:currentStrokeSegments]];
-        if([committedStrokes count] > kUndoLimit){
-            hasEditedContextSinceLoadOrLastSave = YES;
-            [self drawStroke:[committedStrokes objectAtIndex:0] intoContext:cacheContext];
-            [committedStrokes removeObjectAtIndex:0];
+        if([currentStrokeSegments count]){
+            needsToGenerateThumbnail = YES;
+            [committedStrokes addObject:[NSArray arrayWithArray:currentStrokeSegments]];
+            if([committedStrokes count] > kUndoLimit){
+                hasEditedContextSinceLoadOrLastSave = YES;
+                [self drawStroke:[committedStrokes objectAtIndex:0] intoContext:cacheContext];
+                [committedStrokes removeObjectAtIndex:0];
+            }
+            [undoneStrokes removeAllObjects];
+            [currentStrokeSegments removeAllObjects];
+            lastModifiedVersion += 1;
         }
-        [undoneStrokes removeAllObjects];
-        [currentStrokeSegments removeAllObjects];
     }
 }
 
@@ -283,6 +298,7 @@
             needsToGenerateThumbnail = YES;
             [undoneStrokes addObject:[committedStrokes lastObject]];
             [committedStrokes removeLastObject];
+            lastModifiedVersion -= 1;
             return YES;
         }
     }
@@ -294,6 +310,7 @@
             needsToGenerateThumbnail = YES;
             [committedStrokes addObject:[undoneStrokes lastObject]];
             [undoneStrokes removeLastObject];
+            lastModifiedVersion += 1;
             return YES;
         }
     }

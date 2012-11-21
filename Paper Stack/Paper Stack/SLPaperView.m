@@ -8,6 +8,7 @@
 
 #import "SLPaperView.h"
 #import <QuartzCore/QuartzCore.h>
+#import "NSThread+BlockAdditions.h"
 #import "NSArray+MapReduce.h"
 #import "SLShadowManager.h"
 #import "SLPaperManager.h"
@@ -140,6 +141,13 @@
     if(lastModified != _lastModified){
         [lastModified release];
         lastModified = [_lastModified retain];
+    }
+}
+
+-(void) setLastSaved:(NSDate *)_lastSaved{
+    if(lastSaved != _lastSaved){
+        [lastSaved release];
+        lastSaved = [_lastSaved retain];
     }
 }
 
@@ -540,19 +548,25 @@
 
 #pragma mark - Saving and Loading
 
+-(void) save{
+    if(YES || !lastSaved || ![lastSaved isEqualToDate:lastModified]){
+        [paintView save];
+        NSString* pathToPageData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"page"]];
+        NSMutableDictionary* dataForDisk = [NSMutableDictionary dictionary];
+        if(self.lastModified){
+            [dataForDisk setObject:self.lastModified forKey:@"lastModified"];
+        }
+        [dataForDisk writeToFile:pathToPageData atomically:YES];
+        self.lastSaved = self.lastModified;
+    }
+}
+
 -(void) flush{
     if(paintView && !isFlushingPaintView){
         @autoreleasepool {
             isFlushingPaintView = YES;
+            [self save];
             [paintView flush];
-            
-            NSString* pathToPageData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"page"]];
-            
-            NSMutableDictionary* dataForDisk = [NSMutableDictionary dictionary];
-            if(self.lastModified){
-                [dataForDisk setObject:self.lastModified forKey:@"lastModified"];
-            }
-            [dataForDisk writeToFile:pathToPageData atomically:YES];
         }
     }
 }
@@ -643,32 +657,22 @@
 -(void) willLoadBackingStore:(SLBackingStore*)backingStore{
     thumbnailImageView.hidden = NO;
     paintView.hidden = YES;
-    [activity startAnimating];
+//    [activity startAnimating];
 }
 
 -(void) didLoadBackingStore:(SLBackingStore*)backingStore{
+    NSLog(@"did load backing store!");
     thumbnailImageView.hidden = YES;
     paintView.hidden = NO;
-    [activity stopAnimating];
-    [paintView setNeedsDisplay];
+//    [activity stopAnimating];
 }
 
 -(void) willSaveBackingStore:(SLBackingStore*)backingStore{
-    thumbnailImageView.hidden = YES;
-    paintView.hidden = NO;
-    [activity startAnimating];
+//    [activity startAnimating];
 }
 
 -(void) didSaveBackingStore:(SLBackingStore*)backingStore withImage:(UIImage*)img{
-    thumbnailImageView.hidden = NO;
-    paintView.hidden = YES;
-    [activity stopAnimating];
-    if(isFlushingPaintView){
-        isFlushingPaintView = NO;
-        [paintView removeFromSuperview];
-        [paintView release];
-        paintView = nil;
-    }
+//    [activity stopAnimating];
 }
 
 
@@ -681,6 +685,13 @@
 -(void) didGenerateThumbnail:(UIImage*)img forPage:(SLPaperView*)page{
     if(page == self){
         thumbnailImageView.image = img;
+        if(isFlushingPaintView){
+            isFlushingPaintView = NO;
+            thumbnailImageView.hidden = NO;
+            [paintView removeFromSuperview];
+            [paintView release];
+            paintView = nil;
+        }
     }
 }
 

@@ -21,6 +21,7 @@
     
     NSString* uuid;
     NSDate* lastModified;
+    NSDate* lastSaved;
     
     NSObject<SLPaperViewDelegate>* delegate;
     
@@ -71,6 +72,7 @@
 -(void) undo;
 -(void) redo;
 
+-(void) save;
 -(void) flush;
 -(BOOL) isFlushed;
 -(void) load;
