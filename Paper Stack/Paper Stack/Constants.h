@@ -43,7 +43,7 @@
 #define kShadowDepth 7
 #define kShadowBend 3
 #define kBezelInGestureWidth 20
-#define kUndoLimit 20
+#define kUndoLimit 10
 
 CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
 

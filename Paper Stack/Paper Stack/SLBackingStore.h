@@ -13,10 +13,14 @@
 
 #import <Foundation/Foundation.h>
 #import "Constants.h"
+#import <OmniFoundation/OmniFoundation.h>
+#import <OmniFoundation/OFReadWRiteLock.h>
 
 @interface SLBackingStore : NSObject{
     NSInteger lastSavedVersion;
     NSInteger lastModifiedVersion;
+    
+    OFReadWriteLock* lock;
     
     //
     // the bitmap backing store for the strokes

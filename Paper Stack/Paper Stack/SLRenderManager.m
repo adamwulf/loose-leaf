@@ -110,6 +110,9 @@ static SLRenderManager* _instance = nil;
                     // notify the page that we're done with the thumbnail
                     [page didGenerateThumbnail:smallImg forPage:page];
                 }
+            }else{
+                // no change from last time, so send nil
+                [page didGenerateThumbnail:nil forPage:page];
             }
         }
     }];

@@ -368,7 +368,7 @@
                 page.frame = hiddenStackHolder.bounds;
             }
         }
-        [[visibleStackHolder peekSubview] save];
+        
         [[visibleStackHolder peekSubview] disableAllGestures];
         [bezelStackHolder pushSubview:[hiddenStackHolder peekSubview]];
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
@@ -381,7 +381,8 @@
         } completion:nil];
         
         [[SLRenderManager sharedInstace] renderThumbnailForPage:[visibleStackHolder peekSubview]];
-        
+        [[visibleStackHolder peekSubview] save];
+
     }else if(bezelGesture.state == UIGestureRecognizerStateCancelled ||
              bezelGesture.state == UIGestureRecognizerStateFailed ||
              (bezelGesture.state == UIGestureRecognizerStateEnded && ((bezelGesture.panDirection & SLBezelDirectionLeft) != SLBezelDirectionLeft))){
@@ -584,8 +585,6 @@
  */
 -(CGRect) isPanningAndScalingPage:(SLPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
     
-    [[SLRenderManager sharedInstace] renderThumbnailForPage:page];
-    
     if(page == [visibleStackHolder.subviews objectAtIndex:0]){
         // they're panning the bottom page in the visible stack,
         // so add another
@@ -593,6 +592,7 @@
     }
     
     if(page == [visibleStackHolder peekSubview]){
+        [[SLRenderManager sharedInstace] renderThumbnailForPage:[visibleStackHolder peekSubview]];
         [[visibleStackHolder peekSubview] save];
     }
     
@@ -1300,7 +1300,6 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         SLPaperView* page = [[SLPaperManager sharedInstace] pageForUUID:backingStore.uuid];
         [page didSaveBackingStore:backingStore withImage:img];
-        [self loadVisiblePageIfNeeded];
     });
 }
 

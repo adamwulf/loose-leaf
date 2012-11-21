@@ -119,9 +119,11 @@
             [self addGestureRecognizer:panGesture];
             
             
-            thumbnailImageView = [[UIImageView alloc] initWithFrame:self.bounds];
+            thumbnailImageView = [[UIImageView alloc] initWithFrame:self.bounds]; //CGRectInset(self.bounds, 10, 10)];
             thumbnailImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
             thumbnailImageView.contentMode = UIViewContentModeScaleAspectFill;
+//            thumbnailImageView.layer.borderColor = [UIColor redColor].CGColor;
+//            thumbnailImageView.layer.borderWidth = 4;
             [self.contentView addSubview:thumbnailImageView];
             
             thumbnailImageView.hidden = NO;
@@ -549,6 +551,7 @@
 #pragma mark - Saving and Loading
 
 -(void) save{
+    NSLog(@"trying to save %@", self.uuid);
     if(YES || !lastSaved || ![lastSaved isEqualToDate:lastModified]){
         [paintView save];
         NSString* pathToPageData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"page"]];
@@ -562,6 +565,7 @@
 }
 
 -(void) flush{
+    NSLog(@"trying to flush %@", self.uuid);
     if(paintView && !isFlushingPaintView){
         @autoreleasepool {
             isFlushingPaintView = YES;
@@ -581,6 +585,7 @@
  * into editable high-memory mode
  */
 -(void) load{
+    NSLog(@"trying to load %@", self.uuid);
     @autoreleasepool {
         isFlushingPaintView = NO;
         if(!paintView){
@@ -673,6 +678,13 @@
 
 -(void) didSaveBackingStore:(SLBackingStore*)backingStore withImage:(UIImage*)img{
 //    [activity stopAnimating];
+    if(isFlushingPaintView){
+        isFlushingPaintView = NO;
+        thumbnailImageView.hidden = NO;
+        [paintView removeFromSuperview];
+        [paintView release];
+        paintView = nil;
+    }
 }
 
 
@@ -683,15 +695,8 @@
 }
 
 -(void) didGenerateThumbnail:(UIImage*)img forPage:(SLPaperView*)page{
-    if(page == self){
+    if(page == self && img){
         thumbnailImageView.image = img;
-        if(isFlushingPaintView){
-            isFlushingPaintView = NO;
-            thumbnailImageView.hidden = NO;
-            [paintView removeFromSuperview];
-            [paintView release];
-            paintView = nil;
-        }
     }
 }
 

@@ -303,7 +303,6 @@
 		669EEC57165D79E6001896F4 /* OmniBase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OmniBase.xcodeproj; path = "/Users/adam/Documents/Code/loose-leaf/paper-stack/Paper Stack/../../../OmniGroup/Frameworks/OmniBase/OmniBase.xcodeproj"; sourceTree = "<absolute>"; };
 		669EECA7165D7DE9001896F4 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		669EECA9165D7DF3001896F4 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
-		669EECAB165D7E0D001896F4 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		669EECAD165D7E3C001896F4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		66A13D381631D9D8002F5428 /* SLObjectSelectLongPressGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLObjectSelectLongPressGestureRecognizer.h; sourceTree = "<group>"; };
 		66A13D391631D9D8002F5428 /* SLObjectSelectLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLObjectSelectLongPressGestureRecognizer.m; sourceTree = "<group>"; };
@@ -707,10 +706,6 @@
 		66DCFB7B1581BCED00B4918C = {
 			isa = PBXGroup;
 			children = (
-				669EECAD165D7E3C001896F4 /* SystemConfiguration.framework */,
-				669EECAB165D7E0D001896F4 /* MobileCoreServices.framework */,
-				669EECA9165D7DF3001896F4 /* libxml2.dylib */,
-				669EECA7165D7DE9001896F4 /* libz.dylib */,
 				669EEC57165D79E6001896F4 /* OmniBase.xcodeproj */,
 				669EEBF9165D7833001896F4 /* OmniFoundation.xcodeproj */,
 				66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */,
@@ -733,6 +728,9 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				669EECAD165D7E3C001896F4 /* SystemConfiguration.framework */,
+				669EECA9165D7DF3001896F4 /* libxml2.dylib */,
+				669EECA7165D7DE9001896F4 /* libz.dylib */,
 				66BD6E981593E9C300D4544C /* CoreText.framework */,
 				66BD6E821593B12500D4544C /* CoreMotion.framework */,
 				66BD6E7C1593ACD400D4544C /* QuartzCore.framework */,
