@@ -41,6 +41,7 @@
  */
 -(id) initWithSize:(CGSize)size andUUID:(NSString*)_uuid{
     if(self = [super init]){
+        NSLog(@"backing   alloc: %@", self.uuid);
         
         currentStrokeSegments = [[NSMutableArray alloc] init];
         committedStrokes = [[NSMutableArray alloc] init];
@@ -82,8 +83,6 @@
 
 -(void) save{
     
-    [[SLBackingStoreManager sharedInstace].delegate willSaveBackingStore:self];
-    
     //
     //
     // lock!
@@ -92,6 +91,8 @@
     if(lastSavedVersion != lastModifiedVersion){
         lastSavedVersion = lastModifiedVersion;
 
+        [[SLBackingStoreManager sharedInstace].delegate willSaveBackingStore:self];
+        
         SLBackingStore* this = self;
         [this retain];
         
@@ -141,7 +142,7 @@
         }];
 
     }else{
-        [[SLBackingStoreManager sharedInstace].delegate didSaveBackingStore:self withImage:nil];
+//        [[SLBackingStoreManager sharedInstace].delegate didSaveBackingStore:self withImage:nil];
     }
     
     //
@@ -151,7 +152,6 @@
 }
 
 -(void) load{
-    [[SLBackingStoreManager sharedInstace].delegate willLoadBackingStore:self];
     
     SLBackingStore* this = self;
     [this retain];
@@ -160,6 +160,10 @@
             //
             // lock!
             [lock lockForWriting];
+            NSLog(@"loading from disk: %@", this.uuid);
+
+            [[SLBackingStoreManager sharedInstace].delegate willLoadBackingStore:self];
+
             @autoreleasepool {
                 
                 //
@@ -393,6 +397,8 @@
 -(void) drawIntoContext:(CGContextRef)context intoBounds:(CGRect)bounds{
     [lock lockForReading];
     
+    NSLog(@"drawing: %@", self.uuid);
+    
     if(backingStoreData){
         CGImageRef cacheImage = CGBitmapContextCreateImage(cacheContext);
         CGContextDrawImage(context, bounds, cacheImage);
@@ -446,6 +452,7 @@
 #pragma mark - Dealloc
 
 -(void) dealloc{
+    NSLog(@"backing dealloc: %@", self.uuid);
     CGContextRelease(cacheContext);
     cacheContext = nil;
     if(backingStoreData){

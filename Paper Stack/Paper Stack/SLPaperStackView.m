@@ -1280,11 +1280,15 @@
 #pragma mark - SLBackingStoreManagerDelegate
 
 -(void) willLoadBackingStore:(SLBackingStore*)backingStore{
-    SLPaperView* page = [[SLPaperManager sharedInstace] pageForUUID:backingStore.uuid];
-    [page willLoadBackingStore:backingStore];
+    NSLog(@"willLoadBackingStore");
+    dispatch_async(dispatch_get_main_queue(), ^{
+        SLPaperView* page = [[SLPaperManager sharedInstace] pageForUUID:backingStore.uuid];
+        [page willLoadBackingStore:backingStore];
+    });
 }
 
 -(void) didLoadBackingStore:(SLBackingStore*)backingStore{
+    NSLog(@"didLoadBackingStore");
     dispatch_async(dispatch_get_main_queue(), ^{
         SLPaperView* page = [[SLPaperManager sharedInstace] pageForUUID:backingStore.uuid];
         [page didLoadBackingStore:backingStore];
@@ -1292,11 +1296,15 @@
 }
 
 -(void) willSaveBackingStore:(SLBackingStore*)backingStore{
-    SLPaperView* page = [[SLPaperManager sharedInstace] pageForUUID:backingStore.uuid];
-    [page willSaveBackingStore:backingStore];
+    NSLog(@"willSaveBackingStore");
+    dispatch_async(dispatch_get_main_queue(), ^{
+        SLPaperView* page = [[SLPaperManager sharedInstace] pageForUUID:backingStore.uuid];
+        [page willSaveBackingStore:backingStore];
+    });
 }
 
 -(void) didSaveBackingStore:(SLBackingStore*)backingStore withImage:(UIImage*)img{
+    NSLog(@"didSaveBackingStore");
     dispatch_async(dispatch_get_main_queue(), ^{
         SLPaperView* page = [[SLPaperManager sharedInstace] pageForUUID:backingStore.uuid];
         [page didSaveBackingStore:backingStore withImage:img];

@@ -20,6 +20,7 @@
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     self = [super initWithFrame:frame];
     if (self) {
+        NSLog(@"paint   alloc: %@", self.uuid);
         self.uuid = _uuid;
         hue = 4.0;
         self.backgroundColor = [UIColor clearColor];
@@ -404,6 +405,7 @@
 }
 
 -(void) dealloc{
+    NSLog(@"paint dealloc: %@", self.uuid);
     [backingStore release];
     [super dealloc];
 }

@@ -18,6 +18,7 @@
 #import "SLDrawingGestureRecognizer.h"
 #import "SLImmovableTapGestureRecognizer.h"
 #import "SLRenderManager.h"
+#import "SLBackingStoreManager.h"
 
 @implementation SLPaperView
 
@@ -551,23 +552,24 @@
 #pragma mark - Saving and Loading
 
 -(void) save{
-    NSLog(@"trying to save %@", self.uuid);
     if(YES || !lastSaved || ![lastSaved isEqualToDate:lastModified]){
-        [paintView save];
-        NSString* pathToPageData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"page"]];
-        NSMutableDictionary* dataForDisk = [NSMutableDictionary dictionary];
-        if(self.lastModified){
-            [dataForDisk setObject:self.lastModified forKey:@"lastModified"];
-        }
-        [dataForDisk writeToFile:pathToPageData atomically:YES];
+        [[SLBackingStoreManager sharedInstace].opQueue addOperationWithBlock:^{
+            [paintView save];
+            NSString* pathToPageData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"page"]];
+            NSMutableDictionary* dataForDisk = [NSMutableDictionary dictionary];
+            if(self.lastModified){
+                [dataForDisk setObject:self.lastModified forKey:@"lastModified"];
+            }
+            [dataForDisk writeToFile:pathToPageData atomically:YES];
+        }];
         self.lastSaved = self.lastModified;
     }
 }
 
 -(void) flush{
-    NSLog(@"trying to flush %@", self.uuid);
     if(paintView && !isFlushingPaintView){
         @autoreleasepool {
+            NSLog(@"will flush: %@!", self.uuid);
             isFlushingPaintView = YES;
             [self save];
             [paintView flush];
@@ -585,21 +587,22 @@
  * into editable high-memory mode
  */
 -(void) load{
-    NSLog(@"trying to load %@", self.uuid);
     @autoreleasepool {
         isFlushingPaintView = NO;
-        if(!paintView){
-            [self initPaintView];
-        }
-        [paintView load];
-        
-        NSString* pathToPageData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"page"]];
-        if([[NSFileManager defaultManager] fileExistsAtPath:pathToPageData]){
-            NSDictionary* dataFromDisk = [NSDictionary dictionaryWithContentsOfFile:pathToPageData];
-            self.lastModified = [dataFromDisk objectForKey:@"lastModified"];
-        }else{
-            self.lastModified = nil;
-        }
+        [[SLBackingStoreManager sharedInstace].opQueue addOperationWithBlock:^{
+            if(!paintView){
+                [self initPaintView];
+            }
+            [paintView load];
+            
+            NSString* pathToPageData = [[SLBackingStore pathToSavedData] stringByAppendingPathComponent:[self.uuid stringByAppendingPathExtension:@"page"]];
+            if([[NSFileManager defaultManager] fileExistsAtPath:pathToPageData]){
+                NSDictionary* dataFromDisk = [NSDictionary dictionaryWithContentsOfFile:pathToPageData];
+                self.lastModified = [dataFromDisk objectForKey:@"lastModified"];
+            }else{
+                self.lastModified = nil;
+            }
+        }];
     }
 }
 
@@ -666,9 +669,9 @@
 }
 
 -(void) didLoadBackingStore:(SLBackingStore*)backingStore{
-    NSLog(@"did load backing store!");
     thumbnailImageView.hidden = YES;
     paintView.hidden = NO;
+    [paintView setNeedsDisplay];
 //    [activity stopAnimating];
 }
 
@@ -691,12 +694,17 @@
 #pragma mark - SLRenderManagerDelegate
 
 -(void) willGenerateThumbnailForPage:(SLPaperView*)page{
-    
+    if(page == self){
+        NSLog(@"will generate thumbnail!");
+    }
 }
 
 -(void) didGenerateThumbnail:(UIImage*)img forPage:(SLPaperView*)page{
-    if(page == self && img){
-        thumbnailImageView.image = img;
+    if(page == self){
+        NSLog(@"did generate thumbnail!");
+        if(img){
+            thumbnailImageView.image = img;
+        }
     }
 }
 
