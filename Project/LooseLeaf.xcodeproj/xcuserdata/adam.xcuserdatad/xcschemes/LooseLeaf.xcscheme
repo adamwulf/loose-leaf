@@ -14,7 +14,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "66DCFB851581BCEF00B4918C"
-               BuildableName = "scratchpaper.app"
+               BuildableName = "LooseLeaf.app"
                BlueprintName = "LooseLeaf"
                ReferencedContainer = "container:LooseLeaf.xcodeproj">
             </BuildableReference>
@@ -32,7 +32,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "66DCFBA61581BCEF00B4918C"
-               BuildableName = "scratchpaperTests.octest"
+               BuildableName = "LooseLeafTests.octest"
                BlueprintName = "LooseLeafTests"
                ReferencedContainer = "container:LooseLeaf.xcodeproj">
             </BuildableReference>
@@ -42,7 +42,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "66DCFB851581BCEF00B4918C"
-            BuildableName = "scratchpaper.app"
+            BuildableName = "LooseLeaf.app"
             BlueprintName = "LooseLeaf"
             ReferencedContainer = "container:LooseLeaf.xcodeproj">
          </BuildableReference>
@@ -61,7 +61,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "66DCFB851581BCEF00B4918C"
-            BuildableName = "scratchpaper.app"
+            BuildableName = "LooseLeaf.app"
             BlueprintName = "LooseLeaf"
             ReferencedContainer = "container:LooseLeaf.xcodeproj">
          </BuildableReference>
@@ -79,7 +79,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "66DCFB851581BCEF00B4918C"
-            BuildableName = "scratchpaper.app"
+            BuildableName = "LooseLeaf.app"
             BlueprintName = "LooseLeaf"
             ReferencedContainer = "container:LooseLeaf.xcodeproj">
          </BuildableReference>

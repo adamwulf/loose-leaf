@@ -1,6 +1,6 @@
 //
 //  SLShadowedView.h
-//  scratchpaper
+//  Loose Leaf
 //
 //  Created by Adam Wulf on 7/5/12.
 //

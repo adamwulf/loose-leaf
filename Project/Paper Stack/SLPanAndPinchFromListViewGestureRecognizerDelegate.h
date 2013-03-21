@@ -1,6 +1,6 @@
 //
 //  SLPanAndPinchFromListViewGestureRecognizerDelegate.h
-//  scratchpaper
+//  Loose Leaf
 //
 //  Created by Adam Wulf on 8/31/12.
 //

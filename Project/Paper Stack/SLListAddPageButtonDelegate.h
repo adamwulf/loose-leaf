@@ -1,6 +1,6 @@
 //
 //  SLListAddPageButtonDelegate.h
-//  scratchpaper
+//  Loose Leaf
 //
 //  Created by Adam Wulf on 9/5/12.
 //

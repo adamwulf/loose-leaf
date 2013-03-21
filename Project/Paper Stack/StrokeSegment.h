@@ -1,6 +1,6 @@
 //
 //  StrokeSegment.h
-//  scratchpaper
+//  Loose Leaf
 //
 //  Created by Adam Wulf on 11/10/12.
 //
