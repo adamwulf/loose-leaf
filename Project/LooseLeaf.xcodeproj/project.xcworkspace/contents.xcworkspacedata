@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:scratchpaper.xcodeproj">
+      location = "self:LooseLeaf.xcodeproj">
    </FileRef>
 </Workspace>
