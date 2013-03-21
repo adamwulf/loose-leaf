@@ -28,7 +28,6 @@
 		665978F5164318CA00E10FC7 /* SLPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 665978F1164318CA00E10FC7 /* SLPanGestureRecognizer.m */; };
 		665978F8164318E300E10FC7 /* PaintView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 665978F7164318E300E10FC7 /* PaintView.mm */; };
 		665978FA164319D700E10FC7 /* PaintView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 665978F7164318E300E10FC7 /* PaintView.mm */; };
-		6672871215944B160018571A /* SLPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6672871115944B160018571A /* SLPopoverView.m */; };
 		66728715159515FD0018571A /* SLEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* SLEditablePaperStackView.m */; };
 		6693295A15958A950033E557 /* SLShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* SLShadowManager.m */; };
 		66932965159593C00033E557 /* SLRotationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66932964159593C00033E557 /* SLRotationManager.m */; };
@@ -45,7 +44,7 @@
 		66A539F6163F18C8003EAEC0 /* nav.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A539F5163F18C8003EAEC0 /* nav.png */; };
 		66A539FA163F18CB003EAEC0 /* nav@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A539F9163F18CB003EAEC0 /* nav@2x.png */; };
 		66AA212316FBB0A200E86922 /* Paper_StackTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AA212216FBB0A200E86922 /* Paper_StackTests.m */; };
-		66AA212616FBB0A900E86922 /* LooseLeafTests-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 66AA212516FBB0A900E86922 /* LooseLeafTests-Info.plist */; };
+		66AA212D16FBB31C00E86922 /* SLPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AA212C16FBB31C00E86922 /* SLPopoverView.m */; };
 		66BD6E301591B57B00D4544C /* SLPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* SLPaperButton.m */; };
 		66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E331591C37D00D4544C /* UIImage+MCDrawSubImage.m */; };
 		66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */; };
@@ -153,8 +152,6 @@
 		665978F6164318E300E10FC7 /* PaintView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaintView.h; sourceTree = "<group>"; };
 		665978F7164318E300E10FC7 /* PaintView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PaintView.mm; sourceTree = "<group>"; };
 		665978F91643191000E10FC7 /* PaintTouchViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaintTouchViewDelegate.h; sourceTree = "<group>"; };
-		6672871015944B160018571A /* SLPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPopoverView.h; sourceTree = "<group>"; };
-		6672871115944B160018571A /* SLPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPopoverView.m; sourceTree = "<group>"; };
 		66728713159515FC0018571A /* SLEditablePaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLEditablePaperStackView.h; sourceTree = "<group>"; };
 		66728714159515FC0018571A /* SLEditablePaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLEditablePaperStackView.m; sourceTree = "<group>"; };
 		6693295815958A950033E557 /* SLShadowManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLShadowManager.h; sourceTree = "<group>"; };
@@ -187,6 +184,8 @@
 		66AA212116FBB0A200E86922 /* Paper_StackTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Paper_StackTests.h; path = LooseLeafTests/Paper_StackTests.h; sourceTree = SOURCE_ROOT; };
 		66AA212216FBB0A200E86922 /* Paper_StackTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Paper_StackTests.m; path = LooseLeafTests/Paper_StackTests.m; sourceTree = SOURCE_ROOT; };
 		66AA212516FBB0A900E86922 /* LooseLeafTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "LooseLeafTests-Info.plist"; path = "LooseLeafTests/LooseLeafTests-Info.plist"; sourceTree = SOURCE_ROOT; };
+		66AA212B16FBB31C00E86922 /* SLPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPopoverView.h; sourceTree = "<group>"; };
+		66AA212C16FBB31C00E86922 /* SLPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPopoverView.m; sourceTree = "<group>"; };
 		66BD6E2E1591B57B00D4544C /* SLPaperButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperButton.h; sourceTree = "<group>"; };
 		66BD6E2F1591B57B00D4544C /* SLPaperButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPaperButton.m; sourceTree = "<group>"; };
 		66BD6E321591C37D00D4544C /* UIImage+MCDrawSubImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MCDrawSubImage.h"; sourceTree = "<group>"; };
@@ -382,8 +381,8 @@
 		66932995159984090033E557 /* Experiments */ = {
 			isa = PBXGroup;
 			children = (
-				6672871015944B160018571A /* SLPopoverView.h */,
-				6672871115944B160018571A /* SLPopoverView.m */,
+				66AA212B16FBB31C00E86922 /* SLPopoverView.h */,
+				66AA212C16FBB31C00E86922 /* SLPopoverView.m */,
 			);
 			name = Experiments;
 			sourceTree = "<group>";
@@ -484,7 +483,7 @@
 			isa = PBXGroup;
 			children = (
 				66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */,
-				66DCFB901581BCEF00B4918C /* Paper Stack */,
+				66DCFB901581BCEF00B4918C /* Loose Leaf */,
 				66DCFBAE1581BCF000B4918C /* LooseLeafTests */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
 				66DCFB871581BCEF00B4918C /* Products */,
@@ -515,7 +514,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		66DCFB901581BCEF00B4918C /* Paper Stack */ = {
+		66DCFB901581BCEF00B4918C /* Loose Leaf */ = {
 			isa = PBXGroup;
 			children = (
 				66932995159984090033E557 /* Experiments */,
@@ -528,7 +527,8 @@
 				6693298115996C6A0033E557 /* Controller and App Delegate */,
 				66DCFB911581BCEF00B4918C /* Supporting Files */,
 			);
-			path = "Paper Stack";
+			name = "Loose Leaf";
+			path = LooseLeaf;
 			sourceTree = "<group>";
 		};
 		66DCFB911581BCEF00B4918C /* Supporting Files */ = {
@@ -704,7 +704,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				66DCFBB31581BCF000B4918C /* InfoPlist.strings in Resources */,
-				66AA212616FBB0A900E86922 /* LooseLeafTests-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -758,7 +757,6 @@
 				66BD6E971593E98D00D4544C /* SLTextButton.m in Sources */,
 				66BD6E9C15940D7500D4544C /* SLPencilButton.m in Sources */,
 				66BD6E9F15941B7B00D4544C /* SLShareButton.m in Sources */,
-				6672871215944B160018571A /* SLPopoverView.m in Sources */,
 				66728715159515FD0018571A /* SLEditablePaperStackView.m in Sources */,
 				6693295A15958A950033E557 /* SLShadowManager.m in Sources */,
 				66932965159593C00033E557 /* SLRotationManager.m in Sources */,
@@ -790,6 +788,7 @@
 			files = (
 				665978F8164318E300E10FC7 /* PaintView.mm in Sources */,
 				66AA212316FBB0A200E86922 /* Paper_StackTests.m in Sources */,
+				66AA212D16FBB31C00E86922 /* SLPopoverView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -894,8 +893,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Paper Stack/LooseLeaf-Prefix.pch";
-				INFOPLIST_FILE = "Paper Stack/LooseLeaf-Info.plist";
+				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
+				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC++",
@@ -914,8 +913,8 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Adam Wulf";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Paper Stack/LooseLeaf-Prefix.pch";
-				INFOPLIST_FILE = "Paper Stack/LooseLeaf-Info.plist";
+				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
+				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
 				OTHER_LDFLAGS = (
 					"-ObjC++",
 					"-all_load",
@@ -935,8 +934,8 @@
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Paper Stack/Paper Stack-Prefix.pch";
-				INFOPLIST_FILE = "Paper StackTests/LooseLeafTests-Info.plist";
+				GCC_PREFIX_HEADER = "LooseLeaf/Paper Stack-Prefix.pch";
+				INFOPLIST_FILE = "LooseLeafTests/LooseLeafTests-Info.plist";
 				PRODUCT_NAME = LooseLeafTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
@@ -952,8 +951,8 @@
 					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Paper Stack/Paper Stack-Prefix.pch";
-				INFOPLIST_FILE = "Paper StackTests/LooseLeafTests-Info.plist";
+				GCC_PREFIX_HEADER = "LooseLeaf/Paper Stack-Prefix.pch";
+				INFOPLIST_FILE = "LooseLeafTests/LooseLeafTests-Info.plist";
 				PRODUCT_NAME = LooseLeafTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
