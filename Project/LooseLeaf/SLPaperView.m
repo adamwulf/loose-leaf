@@ -9,7 +9,7 @@
 #import "SLPaperView.h"
 #import <QuartzCore/QuartzCore.h>
 #import "NSArray+MapReduce.h"
-#import "SLShadowManager.h"
+#import "MSShadowManager.h"
 #import "NSString+UUID.h"
 #import "UIView+Debug.h"
 #import "SLObjectSelectLongPressGestureRecognizer.h"

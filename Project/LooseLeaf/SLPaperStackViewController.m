@@ -7,13 +7,13 @@
 //
 
 #import "SLPaperStackViewController.h"
-#import "SLShadowManager.h"
+#import "MSShadowManager.h"
 
-@interface SLPaperStackViewController ()
+@interface MSLooseLeafViewController ()
 
 @end
 
-@implementation SLPaperStackViewController
+@implementation MSLooseLeafViewController
 
 - (void)viewDidLoad
 {
@@ -21,7 +21,7 @@
 	// Do any additional setup after loading the view, typically from a nib.
     srand ( time(NULL) );
 
-    [[SLShadowManager sharedInstace] beginGeneratingShadows];
+    [[MSShadowManager sharedInstace] beginGeneratingShadows];
 
     for(int i=0;i<1;i++){
         SLPaperView* paper = [[SLPaperView alloc] initWithFrame:self.view.bounds];

@@ -8,7 +8,7 @@
 
 #import "SLPaperStackView.h"
 #import <QuartzCore/QuartzCore.h>
-#import "SLShadowManager.h"
+#import "MSShadowManager.h"
 #import "NSThread+BlockAdditions.h"
 
 @implementation SLPaperStackView
@@ -607,7 +607,7 @@
         }
     }else if(isPanningTopPage){
         // ok, the user isn't bezeling left anymore
-        [UIView animateWithDuration:.2 delay:.5 options:UIViewAnimationCurveEaseOut animations:^{
+        [UIView animateWithDuration:.2 delay:.5 options:UIViewAnimationOptionCurveEaseOut animations:^{
             bezelStackHolder.frame = hiddenStackHolder.frame;
         } completion:nil];
     }
@@ -1105,7 +1105,7 @@
         theAnimation.duration = duration / 2;
         theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
         theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
-        theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:[SLShadowedView expandBounds:self.bounds].size];
+        theAnimation.toValue = (id) [[MSShadowManager sharedInstace] getShadowForSize:[SLShadowedView expandBounds:self.bounds].size];
         [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
         [UIView animateWithDuration:duration/2 delay:delay options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut
                          animations:^(void){
@@ -1126,7 +1126,7 @@
                                  theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
                                  theAnimation.duration = duration / 2;
                                  theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
-                                 theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:self.bounds.size];
+                                 theAnimation.toValue = (id) [[MSShadowManager sharedInstace] getShadowForSize:self.bounds.size];
                                  [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
                                  [UIView animateWithDuration:duration/2 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseIn
                                                   animations:^(void){
@@ -1144,7 +1144,7 @@
             theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
             theAnimation.duration = duration;
             theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
-            theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:self.bounds.size];
+            theAnimation.toValue = (id) [[MSShadowManager sharedInstace] getShadowForSize:self.bounds.size];
             [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
             [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut
                              animations:^(void){

@@ -10,7 +10,7 @@
 #import "SLPaperView+ListView.h"
 #import "UIView+Debug.h"
 #import "NSThread+BlockAdditions.h"
-#import "SLShadowManager.h"
+#import "MSShadowManager.h"
 
 @implementation SLListPaperStackView
 
@@ -51,7 +51,7 @@
     [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
 
     // init the add page button in top left of scrollview
-    addPageButtonInListView = [[SLListAddPageButton alloc] initWithFrame:CGRectMake(bufferWidth, bufferWidth, columnWidth, rowHeight)];
+    addPageButtonInListView = [[MSListAddPageButton alloc] initWithFrame:CGRectMake(bufferWidth, bufferWidth, columnWidth, rowHeight)];
     addPageButtonInListView.delegate = self;
     addPageButtonInListView.alpha = 0;
     [self addSubview:addPageButtonInListView];
@@ -371,7 +371,7 @@
             if(aPage == [visibleStackHolder peekSubview]){
                 toSize = [SLShadowedView expandBounds:visibleStackHolder.bounds].size;
             }
-            theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:toSize];
+            theAnimation.toValue = (id) [[MSShadowManager sharedInstace] getShadowForSize:toSize];
             [aPage.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
         }
         [visibleStackHolder.superview insertSubview:hiddenStackHolder belowSubview:visibleStackHolder];
@@ -420,7 +420,7 @@
         theAnimation.duration = 0.15;
         theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
         theAnimation.fromValue = (id) [visibleStackHolder peekSubview].contentView.layer.shadowPath;
-        theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:self.bounds.size];
+        theAnimation.toValue = (id) [[MSShadowManager sharedInstace] getShadowForSize:self.bounds.size];
         [[visibleStackHolder peekSubview].contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
         [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn
                          animations:^(void){
@@ -788,7 +788,7 @@
                 theAnimation.duration = duration;
                 theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
                 theAnimation.fromValue = (id) aPage.contentView.layer.shadowPath;
-                theAnimation.toValue = (id) [[SLShadowManager sharedInstace] getShadowForSize:newFrame.size];
+                theAnimation.toValue = (id) [[MSShadowManager sharedInstace] getShadowForSize:newFrame.size];
                 [aPage.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
             }
         }
@@ -997,7 +997,7 @@
             CGRect frameOfPage = [self frameForListViewForPage:gesture.pinchedPage];
             [UIView animateWithDuration:.15
                                   delay:0
-                                options:UIViewAnimationCurveEaseOut
+                                options:UIViewAnimationOptionCurveEaseOut
                              animations:^{
                                  gesture.pinchedPage.frame = frameOfPage;
                              }
@@ -1150,7 +1150,7 @@
     if([pagesToAnimate count]){
         [UIView animateWithDuration:.15
                               delay:0
-                            options:UIViewAnimationCurveEaseOut
+                            options:UIViewAnimationOptionCurveEaseOut
                          animations:^{
                              for(SLPaperView* aPage in pagesToAnimate){
                                  CGRect frameOfPage = [self frameForListViewForPage:aPage];
