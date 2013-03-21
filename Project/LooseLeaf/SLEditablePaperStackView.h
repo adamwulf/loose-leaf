@@ -7,36 +7,36 @@
 //
 
 #import "SLListPaperStackView.h"
-#import "SLPaperButton.h"
-#import "SLPlusButton.h"
-#import "SLPolylineButton.h"
-#import "SLPolygonButton.h"
-#import "SLImageButton.h"
-#import "SLTextButton.h"
-#import "SLPencilButton.h"
-#import "SLShareButton.h"
-#import "SLMapButton.h"
-#import "SLSidebarButtonDelegate.h"
+#import "MSPaperButton.h"
+#import "MSPlusButton.h"
+#import "MSPolylineButton.h"
+#import "MSPolygonButton.h"
+#import "MSImageButton.h"
+#import "MSTextButton.h"
+#import "MSPencilButton.h"
+#import "MSShareButton.h"
+#import "MSMapButton.h"
+#import "MSSidebarButtonDelegate.h"
 #import "NSThread+BlockAdditions.h"
-#import "SLRotationManager.h"
-#import "SLRotationManagerDelegate.h"
+#import "MSRotationManager.h"
+#import "MSRotationManagerDelegate.h"
 #import "Constants.h"
 
 
-@interface SLEditablePaperStackView : SLListPaperStackView<UIAccelerometerDelegate,SLSidebarButtonDelegate,SLRotationManagerDelegate>{
+@interface SLEditablePaperStackView : SLListPaperStackView<UIAccelerometerDelegate,MSSidebarButtonDelegate,MSRotationManagerDelegate>{
     // toolbar
-    SLPaperButton* documentBackgroundSidebarButton;
-    SLPlusButton* addPageSidebarButton;
-    SLPolylineButton* polylineButton;
-    SLPolygonButton* polygonButton;
-    SLImageButton* insertImageButton;
-    SLTextButton* textButton;
-    SLPencilButton* pencilButton;
-    SLShareButton* shareButton;
-    SLMapButton* mapButton;
+    MSPaperButton* documentBackgroundSidebarButton;
+    MSPlusButton* addPageSidebarButton;
+    MSPolylineButton* polylineButton;
+    MSPolygonButton* polygonButton;
+    MSImageButton* insertImageButton;
+    MSTextButton* textButton;
+    MSPencilButton* pencilButton;
+    MSShareButton* shareButton;
+    MSMapButton* mapButton;
     
-    SLTextButton* undoButton;
-    SLTextButton* redoButton;
+    MSTextButton* undoButton;
+    MSTextButton* redoButton;
 }
 
 @end

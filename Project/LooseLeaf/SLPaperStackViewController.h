@@ -10,7 +10,7 @@
 #import "SLPaperStackView.h"
 #import "SLPaperView.h"
 
-@interface SLPaperStackViewController : UIViewController{
+@interface MSLooseLeafViewController : UIViewController{
     IBOutlet SLPaperStackView* stackView;
 }
 

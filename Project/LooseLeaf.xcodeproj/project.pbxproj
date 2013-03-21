@@ -29,9 +29,9 @@
 		665978F8164318E300E10FC7 /* PaintView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 665978F7164318E300E10FC7 /* PaintView.mm */; };
 		665978FA164319D700E10FC7 /* PaintView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 665978F7164318E300E10FC7 /* PaintView.mm */; };
 		66728715159515FD0018571A /* SLEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* SLEditablePaperStackView.m */; };
-		6693295A15958A950033E557 /* SLShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* SLShadowManager.m */; };
-		66932965159593C00033E557 /* SLRotationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66932964159593C00033E557 /* SLRotationManager.m */; };
-		6693296A1595A87E0033E557 /* SLMapButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329691595A87E0033E557 /* SLMapButton.m */; };
+		6693295A15958A950033E557 /* MSShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MSShadowManager.m */; };
+		66932965159593C00033E557 /* MSRotationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66932964159593C00033E557 /* MSRotationManager.m */; };
+		6693296A1595A87E0033E557 /* MSMapButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329691595A87E0033E557 /* MSMapButton.m */; };
 		6693296D1596E0600033E557 /* SLBezelInRightGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693296C1596E0600033E557 /* SLBezelInRightGestureRecognizer.m */; };
 		669329701598E4DC0033E557 /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693296F1598E4DC0033E557 /* NSString+UUID.m */; };
 		669329731598EE210033E557 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329721598EE210033E557 /* UIView+Debug.m */; };
@@ -44,31 +44,31 @@
 		66A539F6163F18C8003EAEC0 /* nav.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A539F5163F18C8003EAEC0 /* nav.png */; };
 		66A539FA163F18CB003EAEC0 /* nav@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A539F9163F18CB003EAEC0 /* nav@2x.png */; };
 		66AA212316FBB0A200E86922 /* Paper_StackTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AA212216FBB0A200E86922 /* Paper_StackTests.m */; };
-		66AA212D16FBB31C00E86922 /* SLPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AA212C16FBB31C00E86922 /* SLPopoverView.m */; };
-		66BD6E301591B57B00D4544C /* SLPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* SLPaperButton.m */; };
+		66AA212D16FBB31C00E86922 /* MSPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AA212C16FBB31C00E86922 /* MSPopoverView.m */; };
+		66BD6E301591B57B00D4544C /* MSPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* MSPaperButton.m */; };
 		66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E331591C37D00D4544C /* UIImage+MCDrawSubImage.m */; };
 		66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */; };
 		66BD6E65159316CF00D4544C /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E64159316CF00D4544C /* CoreImage.framework */; };
-		66BD6E701593A8CC00D4544C /* SLPlusButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E6F1593A8CC00D4544C /* SLPlusButton.m */; };
+		66BD6E701593A8CC00D4544C /* MSPlusButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E6F1593A8CC00D4544C /* MSPlusButton.m */; };
 		66BD6E7D1593ACD400D4544C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E7C1593ACD400D4544C /* QuartzCore.framework */; };
-		66BD6E801593AF4200D4544C /* SLSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E7F1593AF4100D4544C /* SLSidebarButton.m */; };
+		66BD6E801593AF4200D4544C /* MSSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E7F1593AF4100D4544C /* MSSidebarButton.m */; };
 		66BD6E831593B12500D4544C /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E821593B12500D4544C /* CoreMotion.framework */; };
-		66BD6E8E1593D18800D4544C /* SLPolylineButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E8D1593D18800D4544C /* SLPolylineButton.m */; };
-		66BD6E911593DE4E00D4544C /* SLPolygonButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E901593DE4E00D4544C /* SLPolygonButton.m */; };
-		66BD6E941593E1D800D4544C /* SLImageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E931593E1D700D4544C /* SLImageButton.m */; };
-		66BD6E971593E98D00D4544C /* SLTextButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E961593E98D00D4544C /* SLTextButton.m */; };
+		66BD6E8E1593D18800D4544C /* MSPolylineButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E8D1593D18800D4544C /* MSPolylineButton.m */; };
+		66BD6E911593DE4E00D4544C /* MSPolygonButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E901593DE4E00D4544C /* MSPolygonButton.m */; };
+		66BD6E941593E1D800D4544C /* MSImageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E931593E1D700D4544C /* MSImageButton.m */; };
+		66BD6E971593E98D00D4544C /* MSTextButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E961593E98D00D4544C /* MSTextButton.m */; };
 		66BD6E991593E9C400D4544C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E981593E9C300D4544C /* CoreText.framework */; };
-		66BD6E9C15940D7500D4544C /* SLPencilButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9B15940D7400D4544C /* SLPencilButton.m */; };
-		66BD6E9F15941B7B00D4544C /* SLShareButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9E15941B7B00D4544C /* SLShareButton.m */; };
+		66BD6E9C15940D7500D4544C /* MSPencilButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9B15940D7400D4544C /* MSPencilButton.m */; };
+		66BD6E9F15941B7B00D4544C /* MSShareButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9E15941B7B00D4544C /* MSShareButton.m */; };
 		66C9042C164EF8A900E58FD3 /* StrokeSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C9042B164EF8A900E58FD3 /* StrokeSegment.m */; };
-		66D0905615F70810004D2CAF /* SLListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* SLListAddPageButton.m */; };
+		66D0905615F70810004D2CAF /* MSListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* MSListAddPageButton.m */; };
 		66D33F4C15A6408A0044C809 /* SLShadowedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D33F4B15A6408A0044C809 /* SLShadowedView.m */; };
 		66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
 		66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8C1581BCEF00B4918C /* Foundation.framework */; };
 		66DCFB8F1581BCEF00B4918C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */; };
 		66DCFB951581BCEF00B4918C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66DCFB931581BCEF00B4918C /* InfoPlist.strings */; };
 		66DCFB971581BCEF00B4918C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB961581BCEF00B4918C /* main.m */; };
-		66DCFB9B1581BCEF00B4918C /* SLAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB9A1581BCEF00B4918C /* SLAppDelegate.m */; };
+		66DCFB9B1581BCEF00B4918C /* MSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB9A1581BCEF00B4918C /* MSAppDelegate.m */; };
 		66DCFB9E1581BCEF00B4918C /* SLPaperStackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB9D1581BCEF00B4918C /* SLPaperStackViewController.m */; };
 		66DCFBA11581BCEF00B4918C /* SLPaperStackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 66DCFB9F1581BCEF00B4918C /* SLPaperStackViewController.xib */; };
 		66DCFBA91581BCF000B4918C /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFBA81581BCEF00B4918C /* SenTestingKit.framework */; };
@@ -154,13 +154,13 @@
 		665978F91643191000E10FC7 /* PaintTouchViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaintTouchViewDelegate.h; sourceTree = "<group>"; };
 		66728713159515FC0018571A /* SLEditablePaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLEditablePaperStackView.h; sourceTree = "<group>"; };
 		66728714159515FC0018571A /* SLEditablePaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLEditablePaperStackView.m; sourceTree = "<group>"; };
-		6693295815958A950033E557 /* SLShadowManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLShadowManager.h; sourceTree = "<group>"; };
-		6693295915958A950033E557 /* SLShadowManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLShadowManager.m; sourceTree = "<group>"; };
-		66932963159593C00033E557 /* SLRotationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLRotationManager.h; sourceTree = "<group>"; };
-		66932964159593C00033E557 /* SLRotationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLRotationManager.m; sourceTree = "<group>"; };
-		66932967159594A60033E557 /* SLRotationManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLRotationManagerDelegate.h; sourceTree = "<group>"; };
-		669329681595A87E0033E557 /* SLMapButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLMapButton.h; sourceTree = "<group>"; };
-		669329691595A87E0033E557 /* SLMapButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLMapButton.m; sourceTree = "<group>"; };
+		6693295815958A950033E557 /* MSShadowManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSShadowManager.h; sourceTree = "<group>"; };
+		6693295915958A950033E557 /* MSShadowManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSShadowManager.m; sourceTree = "<group>"; };
+		66932963159593C00033E557 /* MSRotationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSRotationManager.h; sourceTree = "<group>"; };
+		66932964159593C00033E557 /* MSRotationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSRotationManager.m; sourceTree = "<group>"; };
+		66932967159594A60033E557 /* MSRotationManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSRotationManagerDelegate.h; sourceTree = "<group>"; };
+		669329681595A87E0033E557 /* MSMapButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSMapButton.h; sourceTree = "<group>"; };
+		669329691595A87E0033E557 /* MSMapButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSMapButton.m; sourceTree = "<group>"; };
 		6693296B1596E0600033E557 /* SLBezelInRightGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLBezelInRightGestureRecognizer.h; sourceTree = "<group>"; };
 		6693296C1596E0600033E557 /* SLBezelInRightGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLBezelInRightGestureRecognizer.m; sourceTree = "<group>"; };
 		6693296E1598E4DC0033E557 /* NSString+UUID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+UUID.h"; sourceTree = "<group>"; };
@@ -184,41 +184,41 @@
 		66AA212116FBB0A200E86922 /* Paper_StackTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Paper_StackTests.h; path = LooseLeafTests/Paper_StackTests.h; sourceTree = SOURCE_ROOT; };
 		66AA212216FBB0A200E86922 /* Paper_StackTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Paper_StackTests.m; path = LooseLeafTests/Paper_StackTests.m; sourceTree = SOURCE_ROOT; };
 		66AA212516FBB0A900E86922 /* LooseLeafTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "LooseLeafTests-Info.plist"; path = "LooseLeafTests/LooseLeafTests-Info.plist"; sourceTree = SOURCE_ROOT; };
-		66AA212B16FBB31C00E86922 /* SLPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPopoverView.h; sourceTree = "<group>"; };
-		66AA212C16FBB31C00E86922 /* SLPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPopoverView.m; sourceTree = "<group>"; };
-		66BD6E2E1591B57B00D4544C /* SLPaperButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperButton.h; sourceTree = "<group>"; };
-		66BD6E2F1591B57B00D4544C /* SLPaperButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPaperButton.m; sourceTree = "<group>"; };
+		66AA212B16FBB31C00E86922 /* MSPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSPopoverView.h; sourceTree = "<group>"; };
+		66AA212C16FBB31C00E86922 /* MSPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSPopoverView.m; sourceTree = "<group>"; };
+		66BD6E2E1591B57B00D4544C /* MSPaperButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSPaperButton.h; sourceTree = "<group>"; };
+		66BD6E2F1591B57B00D4544C /* MSPaperButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSPaperButton.m; sourceTree = "<group>"; };
 		66BD6E321591C37D00D4544C /* UIImage+MCDrawSubImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MCDrawSubImage.h"; sourceTree = "<group>"; };
 		66BD6E331591C37D00D4544C /* UIImage+MCDrawSubImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MCDrawSubImage.m"; sourceTree = "<group>"; };
 		66BD6E391592CFE500D4544C /* UIView+SubviewStacks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+SubviewStacks.h"; sourceTree = "<group>"; };
 		66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+SubviewStacks.m"; sourceTree = "<group>"; };
 		66BD6E64159316CF00D4544C /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
-		66BD6E6E1593A8CC00D4544C /* SLPlusButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPlusButton.h; sourceTree = "<group>"; };
-		66BD6E6F1593A8CC00D4544C /* SLPlusButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPlusButton.m; sourceTree = "<group>"; };
+		66BD6E6E1593A8CC00D4544C /* MSPlusButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSPlusButton.h; sourceTree = "<group>"; };
+		66BD6E6F1593A8CC00D4544C /* MSPlusButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSPlusButton.m; sourceTree = "<group>"; };
 		66BD6E7C1593ACD400D4544C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		66BD6E7E1593AF4100D4544C /* SLSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLSidebarButton.h; sourceTree = "<group>"; };
-		66BD6E7F1593AF4100D4544C /* SLSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLSidebarButton.m; sourceTree = "<group>"; };
+		66BD6E7E1593AF4100D4544C /* MSSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSSidebarButton.h; sourceTree = "<group>"; };
+		66BD6E7F1593AF4100D4544C /* MSSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSSidebarButton.m; sourceTree = "<group>"; };
 		66BD6E821593B12500D4544C /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		66BD6E8B1593C3FF00D4544C /* SLSidebarButtonDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLSidebarButtonDelegate.h; sourceTree = "<group>"; };
-		66BD6E8C1593D18800D4544C /* SLPolylineButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPolylineButton.h; sourceTree = "<group>"; };
-		66BD6E8D1593D18800D4544C /* SLPolylineButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPolylineButton.m; sourceTree = "<group>"; };
-		66BD6E8F1593DE4E00D4544C /* SLPolygonButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPolygonButton.h; sourceTree = "<group>"; };
-		66BD6E901593DE4E00D4544C /* SLPolygonButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPolygonButton.m; sourceTree = "<group>"; };
-		66BD6E921593E1D700D4544C /* SLImageButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLImageButton.h; sourceTree = "<group>"; };
-		66BD6E931593E1D700D4544C /* SLImageButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLImageButton.m; sourceTree = "<group>"; };
-		66BD6E951593E98D00D4544C /* SLTextButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLTextButton.h; sourceTree = "<group>"; };
-		66BD6E961593E98D00D4544C /* SLTextButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLTextButton.m; sourceTree = "<group>"; };
+		66BD6E8B1593C3FF00D4544C /* MSSidebarButtonDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSSidebarButtonDelegate.h; sourceTree = "<group>"; };
+		66BD6E8C1593D18800D4544C /* MSPolylineButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSPolylineButton.h; sourceTree = "<group>"; };
+		66BD6E8D1593D18800D4544C /* MSPolylineButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSPolylineButton.m; sourceTree = "<group>"; };
+		66BD6E8F1593DE4E00D4544C /* MSPolygonButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSPolygonButton.h; sourceTree = "<group>"; };
+		66BD6E901593DE4E00D4544C /* MSPolygonButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSPolygonButton.m; sourceTree = "<group>"; };
+		66BD6E921593E1D700D4544C /* MSImageButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSImageButton.h; sourceTree = "<group>"; };
+		66BD6E931593E1D700D4544C /* MSImageButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSImageButton.m; sourceTree = "<group>"; };
+		66BD6E951593E98D00D4544C /* MSTextButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSTextButton.h; sourceTree = "<group>"; };
+		66BD6E961593E98D00D4544C /* MSTextButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSTextButton.m; sourceTree = "<group>"; };
 		66BD6E981593E9C300D4544C /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
-		66BD6E9A15940D7300D4544C /* SLPencilButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPencilButton.h; sourceTree = "<group>"; };
-		66BD6E9B15940D7400D4544C /* SLPencilButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPencilButton.m; sourceTree = "<group>"; };
-		66BD6E9D15941B7A00D4544C /* SLShareButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLShareButton.h; sourceTree = "<group>"; };
-		66BD6E9E15941B7B00D4544C /* SLShareButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SLShareButton.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		66BD6E9A15940D7300D4544C /* MSPencilButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSPencilButton.h; sourceTree = "<group>"; };
+		66BD6E9B15940D7400D4544C /* MSPencilButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSPencilButton.m; sourceTree = "<group>"; };
+		66BD6E9D15941B7A00D4544C /* MSShareButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSShareButton.h; sourceTree = "<group>"; };
+		66BD6E9E15941B7B00D4544C /* MSShareButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MSShareButton.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		66C47DA5158EF03200E2CD0C /* SLPaperViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperViewDelegate.h; sourceTree = "<group>"; };
 		66C9042A164EF8A900E58FD3 /* StrokeSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrokeSegment.h; sourceTree = "<group>"; };
 		66C9042B164EF8A900E58FD3 /* StrokeSegment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StrokeSegment.m; sourceTree = "<group>"; };
-		66D0905415F7080F004D2CAF /* SLListAddPageButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLListAddPageButton.h; sourceTree = "<group>"; };
-		66D0905515F70810004D2CAF /* SLListAddPageButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLListAddPageButton.m; sourceTree = "<group>"; };
-		66D0905815F71941004D2CAF /* SLListAddPageButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLListAddPageButtonDelegate.h; sourceTree = "<group>"; };
+		66D0905415F7080F004D2CAF /* MSListAddPageButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSListAddPageButton.h; sourceTree = "<group>"; };
+		66D0905515F70810004D2CAF /* MSListAddPageButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSListAddPageButton.m; sourceTree = "<group>"; };
+		66D0905815F71941004D2CAF /* MSListAddPageButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSListAddPageButtonDelegate.h; sourceTree = "<group>"; };
 		66D33F4A15A6408A0044C809 /* SLShadowedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLShadowedView.h; sourceTree = "<group>"; };
 		66D33F4B15A6408A0044C809 /* SLShadowedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLShadowedView.m; sourceTree = "<group>"; };
 		66DCFB861581BCEF00B4918C /* LooseLeaf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LooseLeaf.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -229,8 +229,8 @@
 		66DCFB941581BCEF00B4918C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		66DCFB961581BCEF00B4918C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		66DCFB981581BCEF00B4918C /* LooseLeaf-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LooseLeaf-Prefix.pch"; sourceTree = "<group>"; };
-		66DCFB991581BCEF00B4918C /* SLAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLAppDelegate.h; sourceTree = "<group>"; };
-		66DCFB9A1581BCEF00B4918C /* SLAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLAppDelegate.m; sourceTree = "<group>"; };
+		66DCFB991581BCEF00B4918C /* MSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSAppDelegate.h; sourceTree = "<group>"; };
+		66DCFB9A1581BCEF00B4918C /* MSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSAppDelegate.m; sourceTree = "<group>"; };
 		66DCFB9C1581BCEF00B4918C /* SLPaperStackViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLPaperStackViewController.h; sourceTree = "<group>"; };
 		66DCFB9D1581BCEF00B4918C /* SLPaperStackViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLPaperStackViewController.m; sourceTree = "<group>"; };
 		66DCFBA01581BCEF00B4918C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SLPaperStackViewController.xib; sourceTree = "<group>"; };
@@ -344,11 +344,11 @@
 		6693295715958A890033E557 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				6693295815958A950033E557 /* SLShadowManager.h */,
-				6693295915958A950033E557 /* SLShadowManager.m */,
-				66932963159593C00033E557 /* SLRotationManager.h */,
-				66932964159593C00033E557 /* SLRotationManager.m */,
-				66932967159594A60033E557 /* SLRotationManagerDelegate.h */,
+				6693295815958A950033E557 /* MSShadowManager.h */,
+				6693295915958A950033E557 /* MSShadowManager.m */,
+				66932963159593C00033E557 /* MSRotationManager.h */,
+				66932964159593C00033E557 /* MSRotationManager.m */,
+				66932967159594A60033E557 /* MSRotationManagerDelegate.h */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -369,8 +369,8 @@
 		6693298115996C6A0033E557 /* Controller and App Delegate */ = {
 			isa = PBXGroup;
 			children = (
-				66DCFB991581BCEF00B4918C /* SLAppDelegate.h */,
-				66DCFB9A1581BCEF00B4918C /* SLAppDelegate.m */,
+				66DCFB991581BCEF00B4918C /* MSAppDelegate.h */,
+				66DCFB9A1581BCEF00B4918C /* MSAppDelegate.m */,
 				66DCFB9C1581BCEF00B4918C /* SLPaperStackViewController.h */,
 				66DCFB9D1581BCEF00B4918C /* SLPaperStackViewController.m */,
 				66DCFB9F1581BCEF00B4918C /* SLPaperStackViewController.xib */,
@@ -381,8 +381,8 @@
 		66932995159984090033E557 /* Experiments */ = {
 			isa = PBXGroup;
 			children = (
-				66AA212B16FBB31C00E86922 /* SLPopoverView.h */,
-				66AA212C16FBB31C00E86922 /* SLPopoverView.m */,
+				66AA212B16FBB31C00E86922 /* MSPopoverView.h */,
+				66AA212C16FBB31C00E86922 /* MSPopoverView.m */,
 			);
 			name = Experiments;
 			sourceTree = "<group>";
@@ -451,30 +451,30 @@
 		66BD6E811593AF4500D4544C /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
-				66BD6E7E1593AF4100D4544C /* SLSidebarButton.h */,
-				66BD6E7F1593AF4100D4544C /* SLSidebarButton.m */,
-				66D0905415F7080F004D2CAF /* SLListAddPageButton.h */,
-				66D0905515F70810004D2CAF /* SLListAddPageButton.m */,
-				66D0905815F71941004D2CAF /* SLListAddPageButtonDelegate.h */,
-				66BD6E8B1593C3FF00D4544C /* SLSidebarButtonDelegate.h */,
-				66BD6E2E1591B57B00D4544C /* SLPaperButton.h */,
-				66BD6E2F1591B57B00D4544C /* SLPaperButton.m */,
-				66BD6E6E1593A8CC00D4544C /* SLPlusButton.h */,
-				66BD6E6F1593A8CC00D4544C /* SLPlusButton.m */,
-				66BD6E8C1593D18800D4544C /* SLPolylineButton.h */,
-				66BD6E8D1593D18800D4544C /* SLPolylineButton.m */,
-				66BD6E8F1593DE4E00D4544C /* SLPolygonButton.h */,
-				66BD6E901593DE4E00D4544C /* SLPolygonButton.m */,
-				66BD6E921593E1D700D4544C /* SLImageButton.h */,
-				66BD6E931593E1D700D4544C /* SLImageButton.m */,
-				66BD6E951593E98D00D4544C /* SLTextButton.h */,
-				66BD6E961593E98D00D4544C /* SLTextButton.m */,
-				66BD6E9A15940D7300D4544C /* SLPencilButton.h */,
-				66BD6E9B15940D7400D4544C /* SLPencilButton.m */,
-				66BD6E9D15941B7A00D4544C /* SLShareButton.h */,
-				66BD6E9E15941B7B00D4544C /* SLShareButton.m */,
-				669329681595A87E0033E557 /* SLMapButton.h */,
-				669329691595A87E0033E557 /* SLMapButton.m */,
+				66BD6E7E1593AF4100D4544C /* MSSidebarButton.h */,
+				66BD6E7F1593AF4100D4544C /* MSSidebarButton.m */,
+				66D0905415F7080F004D2CAF /* MSListAddPageButton.h */,
+				66D0905515F70810004D2CAF /* MSListAddPageButton.m */,
+				66D0905815F71941004D2CAF /* MSListAddPageButtonDelegate.h */,
+				66BD6E8B1593C3FF00D4544C /* MSSidebarButtonDelegate.h */,
+				66BD6E2E1591B57B00D4544C /* MSPaperButton.h */,
+				66BD6E2F1591B57B00D4544C /* MSPaperButton.m */,
+				66BD6E6E1593A8CC00D4544C /* MSPlusButton.h */,
+				66BD6E6F1593A8CC00D4544C /* MSPlusButton.m */,
+				66BD6E8C1593D18800D4544C /* MSPolylineButton.h */,
+				66BD6E8D1593D18800D4544C /* MSPolylineButton.m */,
+				66BD6E8F1593DE4E00D4544C /* MSPolygonButton.h */,
+				66BD6E901593DE4E00D4544C /* MSPolygonButton.m */,
+				66BD6E921593E1D700D4544C /* MSImageButton.h */,
+				66BD6E931593E1D700D4544C /* MSImageButton.m */,
+				66BD6E951593E98D00D4544C /* MSTextButton.h */,
+				66BD6E961593E98D00D4544C /* MSTextButton.m */,
+				66BD6E9A15940D7300D4544C /* MSPencilButton.h */,
+				66BD6E9B15940D7400D4544C /* MSPencilButton.m */,
+				66BD6E9D15941B7A00D4544C /* MSShareButton.h */,
+				66BD6E9E15941B7B00D4544C /* MSShareButton.m */,
+				669329681595A87E0033E557 /* MSMapButton.h */,
+				669329691595A87E0033E557 /* MSMapButton.m */,
 			);
 			name = Buttons;
 			sourceTree = "<group>";
@@ -637,8 +637,8 @@
 		66DCFB7D1581BCED00B4918C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				CLASSPREFIX = SL;
-				LastUpgradeCheck = 0440;
+				CLASSPREFIX = MS;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = 66DCFB801581BCED00B4918C /* Build configuration list for PBXProject "LooseLeaf" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -731,7 +731,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				66DCFB971581BCEF00B4918C /* main.m in Sources */,
-				66DCFB9B1581BCEF00B4918C /* SLAppDelegate.m in Sources */,
+				66DCFB9B1581BCEF00B4918C /* MSAppDelegate.m in Sources */,
 				66DCFB9E1581BCEF00B4918C /* SLPaperStackViewController.m in Sources */,
 				66DCFBC21581C85B00B4918C /* SLPaperStackView.m in Sources */,
 				66DCFBCD1582BAED00B4918C /* SLPaperView.m in Sources */,
@@ -746,21 +746,21 @@
 				664F414015906628006F8B09 /* SLLeftArrow.m in Sources */,
 				66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */,
 				66E88A371591853E001A6EBF /* SLPapersIcon.m in Sources */,
-				66BD6E301591B57B00D4544C /* SLPaperButton.m in Sources */,
+				66BD6E301591B57B00D4544C /* MSPaperButton.m in Sources */,
 				66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */,
 				66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */,
-				66BD6E701593A8CC00D4544C /* SLPlusButton.m in Sources */,
-				66BD6E801593AF4200D4544C /* SLSidebarButton.m in Sources */,
-				66BD6E8E1593D18800D4544C /* SLPolylineButton.m in Sources */,
-				66BD6E911593DE4E00D4544C /* SLPolygonButton.m in Sources */,
-				66BD6E941593E1D800D4544C /* SLImageButton.m in Sources */,
-				66BD6E971593E98D00D4544C /* SLTextButton.m in Sources */,
-				66BD6E9C15940D7500D4544C /* SLPencilButton.m in Sources */,
-				66BD6E9F15941B7B00D4544C /* SLShareButton.m in Sources */,
+				66BD6E701593A8CC00D4544C /* MSPlusButton.m in Sources */,
+				66BD6E801593AF4200D4544C /* MSSidebarButton.m in Sources */,
+				66BD6E8E1593D18800D4544C /* MSPolylineButton.m in Sources */,
+				66BD6E911593DE4E00D4544C /* MSPolygonButton.m in Sources */,
+				66BD6E941593E1D800D4544C /* MSImageButton.m in Sources */,
+				66BD6E971593E98D00D4544C /* MSTextButton.m in Sources */,
+				66BD6E9C15940D7500D4544C /* MSPencilButton.m in Sources */,
+				66BD6E9F15941B7B00D4544C /* MSShareButton.m in Sources */,
 				66728715159515FD0018571A /* SLEditablePaperStackView.m in Sources */,
-				6693295A15958A950033E557 /* SLShadowManager.m in Sources */,
-				66932965159593C00033E557 /* SLRotationManager.m in Sources */,
-				6693296A1595A87E0033E557 /* SLMapButton.m in Sources */,
+				6693295A15958A950033E557 /* MSShadowManager.m in Sources */,
+				66932965159593C00033E557 /* MSRotationManager.m in Sources */,
+				6693296A1595A87E0033E557 /* MSMapButton.m in Sources */,
 				6693296D1596E0600033E557 /* SLBezelInRightGestureRecognizer.m in Sources */,
 				669329701598E4DC0033E557 /* NSString+UUID.m in Sources */,
 				669329731598EE210033E557 /* UIView+Debug.m in Sources */,
@@ -771,7 +771,7 @@
 				66D33F4C15A6408A0044C809 /* SLShadowedView.m in Sources */,
 				6630EDA115F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m in Sources */,
 				6630EDBF15F30FFF007E38AA /* SLPaperView+ListView.m in Sources */,
-				66D0905615F70810004D2CAF /* SLListAddPageButton.m in Sources */,
+				66D0905615F70810004D2CAF /* MSListAddPageButton.m in Sources */,
 				66A13D3A1631D9D9002F5428 /* SLObjectSelectLongPressGestureRecognizer.m in Sources */,
 				66A13D401631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m in Sources */,
 				66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */,
@@ -788,7 +788,7 @@
 			files = (
 				665978F8164318E300E10FC7 /* PaintView.mm in Sources */,
 				66AA212316FBB0A200E86922 /* Paper_StackTests.m in Sources */,
-				66AA212D16FBB31C00E86922 /* SLPopoverView.m in Sources */,
+				66AA212D16FBB31C00E86922 /* MSPopoverView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -841,6 +841,10 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Adam Wulf (569ACMP6SC)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -869,6 +873,10 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;

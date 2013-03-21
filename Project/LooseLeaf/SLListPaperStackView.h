@@ -9,10 +9,10 @@
 #import "SLPaperStackView.h"
 #import "SLPanAndPinchFromListViewGestureRecognizer.h"
 #import <QuartzCore/QuartzCore.h>
-#import "SLListAddPageButton.h"
-#import "SLListAddPageButtonDelegate.h"
+#import "MSListAddPageButton.h"
+#import "MSListAddPageButtonDelegate.h"
 
-@interface SLListPaperStackView : SLPaperStackView<SLPanAndPinchFromListViewGestureRecognizerDelegate,SLListAddPageButtonDelegate>{
+@interface SLListPaperStackView : SLPaperStackView<SLPanAndPinchFromListViewGestureRecognizerDelegate,MSListAddPageButtonDelegate>{
     //
     // when beginning a zoom, we need to save the
     // frames of all the pages we'll be animating
@@ -41,7 +41,7 @@
     CADisplayLink* displayLink;
     BOOL realizedThatPageIsBeingDragged;
     
-    SLListAddPageButton* addPageButtonInListView;
+    MSListAddPageButton* addPageButtonInListView;
 }
 
 @end

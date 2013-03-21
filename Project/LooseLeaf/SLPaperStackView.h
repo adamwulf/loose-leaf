@@ -21,7 +21,7 @@
 #import "UIView+Animations.h"
 #import "NSMutableSet+Extras.h"
 #import "Constants.h"
-#import "SLPopoverView.h"
+#import "MSPopoverView.h"
 
 @interface SLPaperStackView : UIScrollView<SLPaperViewDelegate>{
     @private
