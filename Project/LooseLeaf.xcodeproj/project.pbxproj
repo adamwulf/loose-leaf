@@ -218,22 +218,22 @@
 		66D0905815F71941004D2CAF /* SLListAddPageButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLListAddPageButtonDelegate.h; sourceTree = "<group>"; };
 		66D33F4A15A6408A0044C809 /* SLShadowedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLShadowedView.h; sourceTree = "<group>"; };
 		66D33F4B15A6408A0044C809 /* SLShadowedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLShadowedView.m; sourceTree = "<group>"; };
-		66DCFB861581BCEF00B4918C /* scratchpaper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = scratchpaper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		66DCFB861581BCEF00B4918C /* LooseLeaf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LooseLeaf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66DCFB8A1581BCEF00B4918C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		66DCFB8C1581BCEF00B4918C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		66DCFB921581BCEF00B4918C /* scratchpaper-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "scratchpaper-Info.plist"; sourceTree = "<group>"; };
+		66DCFB921581BCEF00B4918C /* LooseLeaf-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LooseLeaf-Info.plist"; sourceTree = "<group>"; };
 		66DCFB941581BCEF00B4918C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		66DCFB961581BCEF00B4918C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		66DCFB981581BCEF00B4918C /* scratchpaper-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "scratchpaper-Prefix.pch"; sourceTree = "<group>"; };
+		66DCFB981581BCEF00B4918C /* LooseLeaf-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LooseLeaf-Prefix.pch"; sourceTree = "<group>"; };
 		66DCFB991581BCEF00B4918C /* SLAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLAppDelegate.h; sourceTree = "<group>"; };
 		66DCFB9A1581BCEF00B4918C /* SLAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLAppDelegate.m; sourceTree = "<group>"; };
 		66DCFB9C1581BCEF00B4918C /* SLPaperStackViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLPaperStackViewController.h; sourceTree = "<group>"; };
 		66DCFB9D1581BCEF00B4918C /* SLPaperStackViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLPaperStackViewController.m; sourceTree = "<group>"; };
 		66DCFBA01581BCEF00B4918C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SLPaperStackViewController.xib; sourceTree = "<group>"; };
-		66DCFBA71581BCEF00B4918C /* scratchpaperTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = scratchpaperTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		66DCFBA71581BCEF00B4918C /* LooseLeafTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LooseLeafTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		66DCFBA81581BCEF00B4918C /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		66DCFBB01581BCF000B4918C /* scratchpaperTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "scratchpaperTests-Info.plist"; sourceTree = "<group>"; };
+		66DCFBB01581BCF000B4918C /* LooseLeafTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LooseLeafTests-Info.plist"; sourceTree = "<group>"; };
 		66DCFBB21581BCF000B4918C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		66DCFBB41581BCF000B4918C /* Paper_StackTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Paper_StackTests.h; sourceTree = "<group>"; };
 		66DCFBB51581BCF000B4918C /* Paper_StackTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Paper_StackTests.m; sourceTree = "<group>"; };
@@ -493,8 +493,8 @@
 		66DCFB871581BCEF00B4918C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				66DCFB861581BCEF00B4918C /* scratchpaper.app */,
-				66DCFBA71581BCEF00B4918C /* scratchpaperTests.octest */,
+				66DCFB861581BCEF00B4918C /* LooseLeaf.app */,
+				66DCFBA71581BCEF00B4918C /* LooseLeafTests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -537,10 +537,10 @@
 				660E1DA6158FC6120001DA12 /* Categories */,
 				66A539F9163F18CB003EAEC0 /* nav@2x.png */,
 				66A539F5163F18C8003EAEC0 /* nav.png */,
-				66DCFB921581BCEF00B4918C /* scratchpaper-Info.plist */,
+				66DCFB921581BCEF00B4918C /* LooseLeaf-Info.plist */,
 				66DCFB931581BCEF00B4918C /* InfoPlist.strings */,
 				66DCFB961581BCEF00B4918C /* main.m */,
-				66DCFB981581BCEF00B4918C /* scratchpaper-Prefix.pch */,
+				66DCFB981581BCEF00B4918C /* LooseLeaf-Prefix.pch */,
 				66DCFBDB1582BE3900B4918C /* Constants.h */,
 				664516B8159030FC0012FACA /* Constants.m */,
 			);
@@ -560,7 +560,7 @@
 		66DCFBAF1581BCF000B4918C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				66DCFBB01581BCF000B4918C /* scratchpaperTests-Info.plist */,
+				66DCFBB01581BCF000B4918C /* LooseLeafTests-Info.plist */,
 				66DCFBB11581BCF000B4918C /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -592,9 +592,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		66DCFB851581BCEF00B4918C /* scratchpaper */ = {
+		66DCFB851581BCEF00B4918C /* LooseLeaf */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 66DCFBB91581BCF000B4918C /* Build configuration list for PBXNativeTarget "scratchpaper" */;
+			buildConfigurationList = 66DCFBB91581BCF000B4918C /* Build configuration list for PBXNativeTarget "LooseLeaf" */;
 			buildPhases = (
 				66DCFB821581BCEF00B4918C /* Sources */,
 				66DCFB831581BCEF00B4918C /* Frameworks */,
@@ -605,14 +605,14 @@
 			dependencies = (
 				66A4BD1C1632171500C45070 /* PBXTargetDependency */,
 			);
-			name = scratchpaper;
+			name = LooseLeaf;
 			productName = "Paper Stack";
-			productReference = 66DCFB861581BCEF00B4918C /* scratchpaper.app */;
+			productReference = 66DCFB861581BCEF00B4918C /* LooseLeaf.app */;
 			productType = "com.apple.product-type.application";
 		};
-		66DCFBA61581BCEF00B4918C /* scratchpaperTests */ = {
+		66DCFBA61581BCEF00B4918C /* LooseLeafTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 66DCFBBC1581BCF000B4918C /* Build configuration list for PBXNativeTarget "scratchpaperTests" */;
+			buildConfigurationList = 66DCFBBC1581BCF000B4918C /* Build configuration list for PBXNativeTarget "LooseLeafTests" */;
 			buildPhases = (
 				66DCFBA21581BCEF00B4918C /* Sources */,
 				66DCFBA31581BCEF00B4918C /* Frameworks */,
@@ -624,9 +624,9 @@
 			dependencies = (
 				66DCFBAD1581BCF000B4918C /* PBXTargetDependency */,
 			);
-			name = scratchpaperTests;
+			name = LooseLeafTests;
 			productName = "Paper StackTests";
-			productReference = 66DCFBA71581BCEF00B4918C /* scratchpaperTests.octest */;
+			productReference = 66DCFBA71581BCEF00B4918C /* LooseLeafTests.octest */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -638,7 +638,7 @@
 				CLASSPREFIX = SL;
 				LastUpgradeCheck = 0440;
 			};
-			buildConfigurationList = 66DCFB801581BCED00B4918C /* Build configuration list for PBXProject "scratchpaper" */;
+			buildConfigurationList = 66DCFB801581BCED00B4918C /* Build configuration list for PBXProject "LooseLeaf" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -656,8 +656,8 @@
 			);
 			projectRoot = "";
 			targets = (
-				66DCFB851581BCEF00B4918C /* scratchpaper */,
-				66DCFBA61581BCEF00B4918C /* scratchpaperTests */,
+				66DCFB851581BCEF00B4918C /* LooseLeaf */,
+				66DCFBA61581BCEF00B4918C /* LooseLeafTests */,
 			);
 		};
 /* End PBXProject section */
@@ -800,7 +800,7 @@
 		};
 		66DCFBAD1581BCF000B4918C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 66DCFB851581BCEF00B4918C /* scratchpaper */;
+			target = 66DCFB851581BCEF00B4918C /* LooseLeaf */;
 			targetProxy = 66DCFBAC1581BCF000B4918C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -887,19 +887,19 @@
 		66DCFBBA1581BCF000B4918C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Adam Wulf (569ACMP6SC)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Adam Wulf (569ACMP6SC)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Paper Stack/scratchpaper-Prefix.pch";
-				INFOPLIST_FILE = "Paper Stack/scratchpaper-Info.plist";
+				GCC_PREFIX_HEADER = "Paper Stack/LooseLeaf-Prefix.pch";
+				INFOPLIST_FILE = "Paper Stack/LooseLeaf-Info.plist";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC++",
 					"-all_load",
 				);
-				PRODUCT_NAME = scratchpaper;
-				PROVISIONING_PROFILE = "992248CC-57C8-4552-B5BB-91F892685F60";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "992248CC-57C8-4552-B5BB-91F892685F60";
+				PRODUCT_NAME = LooseLeaf;
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
@@ -910,13 +910,13 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Adam Wulf";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Paper Stack/scratchpaper-Prefix.pch";
-				INFOPLIST_FILE = "Paper Stack/scratchpaper-Info.plist";
+				GCC_PREFIX_HEADER = "Paper Stack/LooseLeaf-Prefix.pch";
+				INFOPLIST_FILE = "Paper Stack/LooseLeaf-Info.plist";
 				OTHER_LDFLAGS = (
 					"-ObjC++",
 					"-all_load",
 				);
-				PRODUCT_NAME = scratchpaper;
+				PRODUCT_NAME = LooseLeaf;
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
@@ -932,8 +932,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Paper Stack/Paper Stack-Prefix.pch";
-				INFOPLIST_FILE = "Paper StackTests/scratchpaperTests-Info.plist";
-				PRODUCT_NAME = scratchpaperTests;
+				INFOPLIST_FILE = "Paper StackTests/LooseLeafTests-Info.plist";
+				PRODUCT_NAME = LooseLeafTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
@@ -949,8 +949,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Paper Stack/Paper Stack-Prefix.pch";
-				INFOPLIST_FILE = "Paper StackTests/scratchpaperTests-Info.plist";
-				PRODUCT_NAME = scratchpaperTests;
+				INFOPLIST_FILE = "Paper StackTests/LooseLeafTests-Info.plist";
+				PRODUCT_NAME = LooseLeafTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
@@ -959,7 +959,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		66DCFB801581BCED00B4918C /* Build configuration list for PBXProject "scratchpaper" */ = {
+		66DCFB801581BCED00B4918C /* Build configuration list for PBXProject "LooseLeaf" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				66DCFBB71581BCF000B4918C /* Debug */,
@@ -968,7 +968,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		66DCFBB91581BCF000B4918C /* Build configuration list for PBXNativeTarget "scratchpaper" */ = {
+		66DCFBB91581BCF000B4918C /* Build configuration list for PBXNativeTarget "LooseLeaf" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				66DCFBBA1581BCF000B4918C /* Debug */,
@@ -977,7 +977,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		66DCFBBC1581BCF000B4918C /* Build configuration list for PBXNativeTarget "scratchpaperTests" */ = {
+		66DCFBBC1581BCF000B4918C /* Build configuration list for PBXNativeTarget "LooseLeafTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				66DCFBBD1581BCF000B4918C /* Debug */,
