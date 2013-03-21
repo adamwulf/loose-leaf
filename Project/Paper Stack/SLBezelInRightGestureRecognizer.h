@@ -1,6 +1,6 @@
 //
 //  SLBezelInRightGestureRecognizer.h
-//  scratchpaper
+//  Loose Leaf
 //
 //  Created by Adam Wulf on 6/24/12.
 //

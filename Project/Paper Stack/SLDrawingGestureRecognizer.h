@@ -1,6 +1,6 @@
 //
 //  SLDrawingGestureRecognizer.h
-//  scratchpaper
+//  Loose Leaf
 //
 //  Created by Adam Wulf on 10/20/12.
 //

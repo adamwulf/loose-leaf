@@ -1,6 +1,6 @@
 //
 //  UIFont+UIBezierCurve.m
-//  scratchpaper
+//  Loose Leaf
 //
 //  Created by Adam Wulf on 6/25/12.
 //

@@ -1,6 +1,6 @@
 //
 //  SLListPaperStackView.h
-//  scratchpaper
+//  Loose Leaf
 //
 //  Created by Adam Wulf on 7/3/12.
 //

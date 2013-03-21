@@ -1,6 +1,6 @@
 //
 //  SLRotationManagerDelegate.h
-//  scratchpaper
+//  Loose Leaf
 //
 //  Created by Adam Wulf on 6/23/12.
 //

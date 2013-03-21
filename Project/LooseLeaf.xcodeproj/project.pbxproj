@@ -44,6 +44,8 @@
 		66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */; };
 		66A539F6163F18C8003EAEC0 /* nav.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A539F5163F18C8003EAEC0 /* nav.png */; };
 		66A539FA163F18CB003EAEC0 /* nav@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A539F9163F18CB003EAEC0 /* nav@2x.png */; };
+		66AA212316FBB0A200E86922 /* Paper_StackTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AA212216FBB0A200E86922 /* Paper_StackTests.m */; };
+		66AA212616FBB0A900E86922 /* LooseLeafTests-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 66AA212516FBB0A900E86922 /* LooseLeafTests-Info.plist */; };
 		66BD6E301591B57B00D4544C /* SLPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* SLPaperButton.m */; };
 		66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E331591C37D00D4544C /* UIImage+MCDrawSubImage.m */; };
 		66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */; };
@@ -74,7 +76,6 @@
 		66DCFBAA1581BCF000B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
 		66DCFBAB1581BCF000B4918C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8C1581BCEF00B4918C /* Foundation.framework */; };
 		66DCFBB31581BCF000B4918C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66DCFBB11581BCF000B4918C /* InfoPlist.strings */; };
-		66DCFBB61581BCF000B4918C /* Paper_StackTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBB51581BCF000B4918C /* Paper_StackTests.m */; };
 		66DCFBC21581C85B00B4918C /* SLPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBC11581C85B00B4918C /* SLPaperStackView.m */; };
 		66DCFBCD1582BAED00B4918C /* SLPaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBCC1582BAED00B4918C /* SLPaperView.m */; };
 		66DCFBD01582BC0E00B4918C /* img01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 66DCFBCF1582BC0E00B4918C /* img01.jpg */; };
@@ -183,6 +184,9 @@
 		66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+BlockAdditions.m"; sourceTree = "<group>"; };
 		66A539F5163F18C8003EAEC0 /* nav.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = nav.png; path = ../nav.png; sourceTree = "<group>"; };
 		66A539F9163F18CB003EAEC0 /* nav@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "nav@2x.png"; path = "../nav@2x.png"; sourceTree = "<group>"; };
+		66AA212116FBB0A200E86922 /* Paper_StackTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Paper_StackTests.h; path = LooseLeafTests/Paper_StackTests.h; sourceTree = SOURCE_ROOT; };
+		66AA212216FBB0A200E86922 /* Paper_StackTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Paper_StackTests.m; path = LooseLeafTests/Paper_StackTests.m; sourceTree = SOURCE_ROOT; };
+		66AA212516FBB0A900E86922 /* LooseLeafTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "LooseLeafTests-Info.plist"; path = "LooseLeafTests/LooseLeafTests-Info.plist"; sourceTree = SOURCE_ROOT; };
 		66BD6E2E1591B57B00D4544C /* SLPaperButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperButton.h; sourceTree = "<group>"; };
 		66BD6E2F1591B57B00D4544C /* SLPaperButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPaperButton.m; sourceTree = "<group>"; };
 		66BD6E321591C37D00D4544C /* UIImage+MCDrawSubImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MCDrawSubImage.h"; sourceTree = "<group>"; };
@@ -233,10 +237,7 @@
 		66DCFBA01581BCEF00B4918C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SLPaperStackViewController.xib; sourceTree = "<group>"; };
 		66DCFBA71581BCEF00B4918C /* LooseLeafTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LooseLeafTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		66DCFBA81581BCEF00B4918C /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		66DCFBB01581BCF000B4918C /* LooseLeafTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LooseLeafTests-Info.plist"; sourceTree = "<group>"; };
 		66DCFBB21581BCF000B4918C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		66DCFBB41581BCF000B4918C /* Paper_StackTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Paper_StackTests.h; sourceTree = "<group>"; };
-		66DCFBB51581BCF000B4918C /* Paper_StackTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Paper_StackTests.m; sourceTree = "<group>"; };
 		66DCFBC01581C85B00B4918C /* SLPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperStackView.h; sourceTree = "<group>"; };
 		66DCFBC11581C85B00B4918C /* SLPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPaperStackView.m; sourceTree = "<group>"; };
 		66DCFBCB1582BAED00B4918C /* SLPaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperView.h; sourceTree = "<group>"; };
@@ -484,7 +485,7 @@
 			children = (
 				66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */,
 				66DCFB901581BCEF00B4918C /* Paper Stack */,
-				66DCFBAE1581BCF000B4918C /* Paper StackTests */,
+				66DCFBAE1581BCF000B4918C /* LooseLeafTests */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
 				66DCFB871581BCEF00B4918C /* Products */,
 			);
@@ -547,20 +548,21 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		66DCFBAE1581BCF000B4918C /* Paper StackTests */ = {
+		66DCFBAE1581BCF000B4918C /* LooseLeafTests */ = {
 			isa = PBXGroup;
 			children = (
-				66DCFBB41581BCF000B4918C /* Paper_StackTests.h */,
-				66DCFBB51581BCF000B4918C /* Paper_StackTests.m */,
+				66AA212116FBB0A200E86922 /* Paper_StackTests.h */,
+				66AA212216FBB0A200E86922 /* Paper_StackTests.m */,
 				66DCFBAF1581BCF000B4918C /* Supporting Files */,
 			);
+			name = LooseLeafTests;
 			path = "Paper StackTests";
 			sourceTree = "<group>";
 		};
 		66DCFBAF1581BCF000B4918C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				66DCFBB01581BCF000B4918C /* LooseLeafTests-Info.plist */,
+				66AA212516FBB0A900E86922 /* LooseLeafTests-Info.plist */,
 				66DCFBB11581BCF000B4918C /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -702,6 +704,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				66DCFBB31581BCF000B4918C /* InfoPlist.strings in Resources */,
+				66AA212616FBB0A900E86922 /* LooseLeafTests-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -785,8 +788,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66DCFBB61581BCF000B4918C /* Paper_StackTests.m in Sources */,
 				665978F8164318E300E10FC7 /* PaintView.mm in Sources */,
+				66AA212316FBB0A200E86922 /* Paper_StackTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -828,6 +831,7 @@
 				66DCFBB21581BCF000B4918C /* en */,
 			);
 			name = InfoPlist.strings;
+			path = LooseLeafTests;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

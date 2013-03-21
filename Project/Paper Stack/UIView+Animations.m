@@ -1,6 +1,6 @@
 //
 //  UIView+Animations.m
-//  scratchpaper
+//  Loose Leaf
 //
 //  Created by Adam Wulf on 6/27/12.
 //

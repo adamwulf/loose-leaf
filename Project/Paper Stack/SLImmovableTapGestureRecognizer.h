@@ -1,6 +1,6 @@
 //
 //  SLImmovableTapGestureRecognizer.h
-//  scratchpaper
+//  Loose Leaf
 //
 //  Created by Adam Wulf on 10/19/12.
 //
