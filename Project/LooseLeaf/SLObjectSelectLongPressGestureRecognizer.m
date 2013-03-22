@@ -21,6 +21,16 @@
 
 @implementation SLObjectSelectLongPressGestureRecognizer
 
+- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
+    return NO;
+}
+
+- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
+    return NO;
+}
+
+
+
 -(NSMutableDictionary*)touchLocations{
     if(!touchLocations){
         touchLocations = [[NSMutableDictionary alloc] init];
@@ -40,7 +50,7 @@
     [super touchesBegan:touches withEvent:event];
     for(UITouch* touch in touches){
         [self.touchLocations setObject:[NSValue valueWithCGPoint:[touch locationInView:self.view]]
-                                forKey:[NSNumber numberWithInteger:[touch hash]]];
+                                forKey:@([touch hash])];
     }
     NSLog(@"long press touch began: %d", [self.touchLocations count]);
 }
@@ -58,12 +68,13 @@
     BOOL didChangeState = NO;
     if(self.state == UIGestureRecognizerStatePossible){
         for(UITouch* touch in touches){
-            CGPoint initialLocation = [[self.touchLocations objectForKey:[NSNumber numberWithInteger:[touch hash]]] CGPointValue];
+            CGPoint initialLocation = [[self.touchLocations objectForKey:@([touch hash])] CGPointValue];
             CGPoint currentLocation = [touch locationInView:self.view];
             CGFloat distance = DistanceBetweenTwoPoints(initialLocation, currentLocation);
             if(distance > self.allowableMovement && self.state == UIGestureRecognizerStatePossible){
                 self.state = UIGestureRecognizerStateFailed;
                 didChangeState = YES;
+                NSLog(@"failed");
             }
         }
     }
@@ -79,7 +90,7 @@
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
     [super touchesCancelled:touches withEvent:event];
     for(UITouch* touch in touches){
-        [self.touchLocations removeObjectForKey:[NSNumber numberWithInteger:[touch hash]]];
+        [self.touchLocations removeObjectForKey:@([touch hash])];
     }
     NSLog(@"long press touch cancelled: %d", [self.touchLocations count]);
 }
@@ -90,7 +101,7 @@
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     [super touchesEnded:touches withEvent:event];
     for(UITouch* touch in touches){
-        [self.touchLocations removeObjectForKey:[NSNumber numberWithInteger:[touch hash]]];
+        [self.touchLocations removeObjectForKey:@([touch hash])];
     }
     NSLog(@"long press touch ended: %d", [self.touchLocations count]);
 }
@@ -107,6 +118,12 @@
        state == UIGestureRecognizerStateCancelled){
         [self.touchLocations removeAllObjects];
     }
+}
+
+-(void)reset{
+    NSLog(@"long press reset");
+    [super reset];
+    [self.touchLocations removeAllObjects];
 }
 
 @end
