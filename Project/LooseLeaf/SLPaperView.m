@@ -90,7 +90,6 @@
         // these fail
         [panGesture requireGestureRecognizerToFail:longPress];
         [panGesture requireGestureRecognizerToFail:tap];
-//        [draw requireGestureRecognizerToFail:tap];
         [self addGestureRecognizer:panGesture];
     }
     return self;
