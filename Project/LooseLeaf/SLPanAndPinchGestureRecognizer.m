@@ -1,5 +1,5 @@
 //
-//  SLPanGestureRecognizer.m
+//  SLPanAndPinchGestureRecognizer.m
 //  Paper Stack
 //
 //  Created by Adam Wulf on 6/8/12.
@@ -190,6 +190,7 @@ NSInteger const  minimumNumberOfTouches = 2;
         // so it doesn't count for bezeling or pan/pinch
         [validTouches minusOrderedSet:validTouchesCurrentlyEnding];
         [ignoredTouches removeObjectsInSet:touches];
+        self.state = UIGestureRecognizerStateFailed;
     }
 }
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
