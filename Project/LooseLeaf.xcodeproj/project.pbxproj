@@ -24,7 +24,6 @@
 		664F4139159063F8006F8B09 /* SLPlusIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F4138159063F8006F8B09 /* SLPlusIcon.m */; };
 		664F413D1590661F006F8B09 /* SLRightArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413C1590661F006F8B09 /* SLRightArrow.m */; };
 		664F414015906628006F8B09 /* SLLeftArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413F15906628006F8B09 /* SLLeftArrow.m */; };
-		665978F5164318CA00E10FC7 /* SLPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 665978F1164318CA00E10FC7 /* SLPanGestureRecognizer.m */; };
 		66728715159515FD0018571A /* SLEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* SLEditablePaperStackView.m */; };
 		6693295A15958A950033E557 /* MSShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MSShadowManager.m */; };
 		66932965159593C00033E557 /* MSRotationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66932964159593C00033E557 /* MSRotationManager.m */; };
@@ -137,9 +136,6 @@
 		664F413C1590661F006F8B09 /* SLRightArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLRightArrow.m; sourceTree = "<group>"; };
 		664F413E15906628006F8B09 /* SLLeftArrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLLeftArrow.h; sourceTree = "<group>"; };
 		664F413F15906628006F8B09 /* SLLeftArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLLeftArrow.m; sourceTree = "<group>"; };
-		665978F0164318CA00E10FC7 /* SLPanGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPanGestureRecognizer.h; sourceTree = "<group>"; };
-		665978F1164318CA00E10FC7 /* SLPanGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPanGestureRecognizer.m; sourceTree = "<group>"; };
-		665978F2164318CA00E10FC7 /* SLPanGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPanGestureRecognizerDelegate.h; sourceTree = "<group>"; };
 		66728713159515FC0018571A /* SLEditablePaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLEditablePaperStackView.h; sourceTree = "<group>"; };
 		66728714159515FC0018571A /* SLEditablePaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLEditablePaperStackView.m; sourceTree = "<group>"; };
 		6693295815958A950033E557 /* MSShadowManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSShadowManager.h; sourceTree = "<group>"; };
@@ -403,16 +399,6 @@
 				66A4BD1A1632170E00C45070 /* DrawKit-iOSTests.octest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		66A4BD5E1632778700C45070 /* Drawing */ = {
-			isa = PBXGroup;
-			children = (
-				665978F0164318CA00E10FC7 /* SLPanGestureRecognizer.h */,
-				665978F1164318CA00E10FC7 /* SLPanGestureRecognizer.m */,
-				665978F2164318CA00E10FC7 /* SLPanGestureRecognizerDelegate.h */,
-			);
-			name = Drawing;
 			sourceTree = "<group>";
 		};
 		66BD6E811593AF4500D4544C /* Buttons */ = {
@@ -740,7 +726,6 @@
 				66A13D3A1631D9D9002F5428 /* SLObjectSelectLongPressGestureRecognizer.m in Sources */,
 				66A13D401631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m in Sources */,
 				66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */,
-				665978F5164318CA00E10FC7 /* SLPanGestureRecognizer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
