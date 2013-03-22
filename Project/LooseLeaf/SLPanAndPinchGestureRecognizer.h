@@ -1,5 +1,5 @@
 //
-//  SLPanGestureRecognizer.h
+//  SLPanAndPinchGestureRecognizer.h
 //  Paper Stack
 //
 //  Created by Adam Wulf on 6/8/12.

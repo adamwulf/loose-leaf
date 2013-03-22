@@ -586,7 +586,6 @@
 			children = (
 				66A13D3D1631E075002F5428 /* Page Navigation */,
 				66A13D3C1631E06D002F5428 /* Object Selection */,
-				66A4BD5E1632778700C45070 /* Drawing */,
 			);
 			name = Gestures;
 			sourceTree = "<group>";
