@@ -13,7 +13,6 @@
 #import "NSString+UUID.h"
 #import "UIView+Debug.h"
 #import "SLObjectSelectLongPressGestureRecognizer.h"
-#import "SLDrawingGestureRecognizer.h"
 #import "SLImmovableTapGestureRecognizer.h"
 
 @implementation SLPaperView
@@ -53,28 +52,6 @@
         [self.layer setMasksToBounds:YES ];
         preGestureScale = 1;
         self.scale = 1;
-        
-        paintView = [[PaintView alloc] initWithFrame:CGRectMake(0, 0,
-                                                                frame.size.width * kMaxPageResolution,
-                                                                frame.size.height * kMaxPageResolution)];
-        paintView.autoresizingMask = UIViewAutoresizingNone; // UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        [self.contentView addSubview:paintView];
-        initialPaintViewFrame = paintView.frame;
-        [self updatePaintScaleTransform];
-        
-        
-        
-        
-        //
-        // this gesture handles any single finger drawing
-        // on the page. any gesture that overrides the one finger
-        // drag (a pan or scale, for instance) will need to call
-        // [cancel] on this gesture to make sure that the drawing
-        // turns off
-        drawGesture = [[SLDrawingGestureRecognizer alloc] initWithTarget:self action:@selector(draw:)];
-        drawGesture.minimumNumberOfTouches = 1;
-        drawGesture.maximumNumberOfTouches = 1;
-        [self addGestureRecognizer:drawGesture];
         
 
         //
@@ -124,23 +101,9 @@
     scale = _scale;
 }
 
-/**
- * this function makes sure that our paint view,
- * regardless of size, is scaled properly to exactly fit
- * our page
- *
- * this way, we can make a paint view 2x our screen size,
- * so that it's native resolution when fully zoomed
- */
--(void) updatePaintScaleTransform{
-    paintView.transform = CGAffineTransformMakeScale(self.frame.size.width / initialPaintViewFrame.size.width,
-                                                     self.frame.size.height / initialPaintViewFrame.size.height);
-    paintView.center = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2);
-}
 
 -(void) setFrame:(CGRect)_frame{
     [super setFrame:_frame];
-    [self updatePaintScaleTransform];
 }
 
 -(void) longPress:(UILongPressGestureRecognizer*)pressGesture{
@@ -149,34 +112,6 @@
 
 -(void) doubleFingerDoubleTap:(UITapGestureRecognizer*)tapGesture{
     NSLog(@"tap! %d", tapGesture.state);
-}
-
--(void) draw:(SLDrawingGestureRecognizer*)_drawGesture{
-    if(drawGesture.state == UIGestureRecognizerStateBegan ||
-       drawGesture.state == UIGestureRecognizerStateChanged ||
-       drawGesture.state == UIGestureRecognizerStateEnded){
-        if(drawGesture.pathElement.type == kCGPathElementMoveToPoint){
-            [self drawDotAtPoint:drawGesture.startPoint withFingerWidth:drawGesture.fingerWidth fromView:self];
-        }else if(drawGesture.pathElement.type == kCGPathElementAddLineToPoint){
-            [self drawLineAtStart:drawGesture.startPoint
-                              end:drawGesture.pathElement.points[0]
-                  withFingerWidth:drawGesture.fingerWidth
-                         fromView:self];
-        }else if(drawGesture.pathElement.type == kCGPathElementAddCurveToPoint){
-            [self drawArcAtStart:drawGesture.startPoint
-                             end:drawGesture.pathElement.points[2]
-                   controlPoint1:drawGesture.pathElement.points[0]
-                   controlPoint2:drawGesture.pathElement.points[1]
-                 withFingerWidth:drawGesture.fingerWidth
-                        fromView:self];
-        }
-        if(drawGesture.state == UIGestureRecognizerStateEnded){
-            [self commitStroke];
-        }
-    }else{
-        // cancelled or something
-        [self cancelStroke];
-    }
 }
 
 
@@ -289,12 +224,6 @@
  */
 -(void) panAndScale:(SLPanAndPinchGestureRecognizer*)_panGesture{
     //
-    // cancel drawing, if any
-    [drawGesture cancel];
-    [drawGesture setEnabled:NO];
-    
-    
-    //
     // procede with the pan gesture
     CGPoint lastLocationInSelf = [panGesture locationInView:self];
     CGPoint lastLocationInSuper = [panGesture locationInView:self.superview];
@@ -305,10 +234,6 @@
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
        panGesture.state == UIGestureRecognizerStateEnded ||
        panGesture.state == UIGestureRecognizerStateFailed){
-        //
-        // pan is finished, re-enable drawing
-        [drawGesture setEnabled:YES];
-
         if(scale < kMinPageZoom && panGesture.didExitToBezel == SLBezelDirectionNone){
             isBeingPannedAndZoomed = NO;
             if((_panGesture.scaleDirection & SLScaleDirectionSmaller) == SLScaleDirectionSmaller){
@@ -501,39 +426,5 @@
 }
 
 
-
-#pragma mark - SLDrawingGestureRecognizerDelegate
-
--(void) drawArcAtStart:(CGPoint)point1 end:(CGPoint)point2 controlPoint1:(CGPoint)ctrl1 controlPoint2:(CGPoint)ctrl2 withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
-    [paintView drawArcAtStart:point1 end:point2 controlPoint1:ctrl1 controlPoint2:ctrl2 withFingerWidth:fingerWidth fromView:view];
-}
-
--(void) drawDotAtPoint:(CGPoint)point withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
-    [paintView drawDotAtPoint:point withFingerWidth:fingerWidth fromView:view];
-}
-
--(void) drawLineAtStart:(CGPoint)start end:(CGPoint)end withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
-    [paintView drawLineAtStart:start end:end withFingerWidth:fingerWidth fromView:view];
-}
-
--(BOOL) fullyContainsArcAtStart:(CGPoint)point1 end:(CGPoint)point2 controlPoint1:(CGPoint)ctrl1 controlPoint2:(CGPoint)ctrl2 withFingerWidth:(CGFloat)fingerWidth fromView:(UIView *)view{
-    return YES;
-}
-
--(void) cancelStroke{
-    [paintView cancelStroke];
-}
-
--(void) commitStroke{
-    [paintView commitStroke];
-}
-
--(void) undo{
-    [paintView undo];
-}
-
--(void) redo{
-    [paintView redo];
-}
 
 @end

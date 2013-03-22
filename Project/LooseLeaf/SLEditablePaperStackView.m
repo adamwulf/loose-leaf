@@ -191,15 +191,4 @@
 }
 
 
-
--(void) undo:(MSTextButton*)undoButton{
-    [[visibleStackHolder peekSubview] undo];
-}
-
--(void) redo:(MSTextButton*)undoButton{
-    [[visibleStackHolder peekSubview] redo];
-}
-
-
-
 @end
