@@ -9,13 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "Constants.h"
 #import "SLPaperViewDelegate.h"
-#import "SLDrawingGestureRecognizer.h"
 #import "SLPanAndPinchGestureRecognizer.h"
 #import "SLShadowedView.h"
-#import "PaintView.h"
-#import "PaintableViewDelegate.h"
 
-@interface SLPaperView : SLShadowedView<PaintableViewDelegate>{
+@interface SLPaperView : SLShadowedView{
     
     NSString* uuid;
     
@@ -39,10 +36,6 @@
     BOOL isBrandNewPage;
     
     UIBezierPath* unitShadowPath;
-    
-    SLDrawingGestureRecognizer* drawGesture;
-    PaintView* paintView;
-    CGRect initialPaintViewFrame;
 }
 
 @property (nonatomic, readonly) NSString* uuid;
@@ -60,8 +53,5 @@
 -(void) cancelAllGestures;
 -(void) disableAllGestures;
 -(void) enableAllGestures;
-
--(void) undo;
--(void) redo;
 
 @end
