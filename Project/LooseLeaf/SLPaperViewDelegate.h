@@ -65,6 +65,13 @@
 -(void) finishedScalingBackToPageView:(SLPaperView*)page;
 
 /**
+ * Performance optimization:
+ * the index, row, and column are all computed separately,
+ * and within the list class instead of the page class.
+ * this is because finding the index is expensive, and
+ * i would have to do re-calculate that if i kept this in the
+ * page.
+ *
  * returns the index of the page within the total
  * stack of visible and hidden stacks.
  *
