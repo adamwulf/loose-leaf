@@ -35,7 +35,6 @@
         [self.touchLocations setObject:[NSValue valueWithCGPoint:[touch locationInView:self.view]]
                                 forKey:[NSNumber numberWithInteger:[touch hash]]];
     }
-    NSLog(@"tap began");
 }
 
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -54,7 +53,6 @@
     if(!didChangeState){
         [super touchesMoved:touches withEvent:event];
     }
-    NSLog(@"tap moved");
 }
 
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -62,7 +60,6 @@
     for(UITouch* touch in touches){
         [self.touchLocations removeObjectForKey:[NSNumber numberWithInteger:[touch hash]]];
     }
-    NSLog(@"tap cancelled");
 }
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -70,7 +67,6 @@
     for(UITouch* touch in touches){
         [self.touchLocations removeObjectForKey:[NSNumber numberWithInteger:[touch hash]]];
     }
-    NSLog(@"tap ended");
 }
 
 -(void) setState:(UIGestureRecognizerState)state{
@@ -83,7 +79,6 @@
 }
 
 -(void) reset{
-    NSLog(@"tap reset");
     [super reset];
     [self.touchLocations removeAllObjects];
 }
