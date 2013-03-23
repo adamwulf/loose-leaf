@@ -47,7 +47,7 @@
                                    (id)[UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.36].CGColor, 
                                    (id)halfWhite.CGColor, nil];
     CGFloat frontOfPaperLocations[] = {0, 0.2, 0.67, 0.93, 1};
-    CGGradientRef frontOfPaper = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)frontOfPaperColors, frontOfPaperLocations);
+    CGGradientRef frontOfPaper = CGGradientCreateWithColors(colorSpace, (CFArrayRef)frontOfPaperColors, frontOfPaperLocations);
     
     
     //// Bezier 2 Drawing

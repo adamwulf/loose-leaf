@@ -53,7 +53,7 @@
                                             (id)[UIColor colorWithRed: 0.71 green: 0.71 blue: 0.71 alpha: 0.32].CGColor, 
                                             (id)mountainShadow.CGColor, nil];
     CGFloat frontMountainGradientLocations[] = {0, 0.67, 1};
-    CGGradientRef frontMountainGradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)frontMountainGradientColors, frontMountainGradientLocations);
+    CGGradientRef frontMountainGradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)frontMountainGradientColors, frontMountainGradientLocations);
 
 
     //// Oval Drawing
