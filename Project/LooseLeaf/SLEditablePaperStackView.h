@@ -22,7 +22,10 @@
 #import "MSRotationManagerDelegate.h"
 #import "Constants.h"
 
-
+/**
+ * this class is responsible for the editable buttons and controls that show
+ * outside of a page's view subviews
+ */
 @interface SLEditablePaperStackView : SLListPaperStackView<UIAccelerometerDelegate,MSSidebarButtonDelegate,MSRotationManagerDelegate>{
     // toolbar
     MSPaperButton* documentBackgroundSidebarButton;

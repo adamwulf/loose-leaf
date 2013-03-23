@@ -459,6 +459,36 @@
 }
 
 
+#pragma mark - Private Tap Gesture
+
+/**
+ * we are in list view, and the user tapped onto the
+ * scrollview (probably tapped a page).
+ *
+ * let's check if the user tapped a page, and zoom
+ * to that page as the top of the visible stack
+ */
+-(void) didTapScrollView:(UITapGestureRecognizer*)_tapGesture{
+    //
+    // first, we should find which page the user tapped
+    CGPoint locationOfTap = [_tapGesture locationInView:self];
+    
+    SLPaperView* thePageThatWasTapped = nil;
+    for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
+        CGRect frameOfPage = [self frameForListViewForPage:aPage];
+        if(CGRectContainsPoint(frameOfPage, locationOfTap)){
+            thePageThatWasTapped = aPage;
+        }
+    }
+    if(!thePageThatWasTapped) return;
+    
+    
+    [self ensurePageIsAtTopOfVisibleStack:thePageThatWasTapped];
+    
+    [self immediatelyAnimateFromListViewToFullScreenView];
+    
+}
+
 
 #pragma mark - List View Enable / Disable Helper Methods
 
@@ -548,16 +578,14 @@
 
 
 
-
-
-#pragma mark - SLPaperViewDelegate - Paper View
+#pragma mark - SLPaperViewDelegate
 
 /**
  * this is a delegate method that's called when the page is being actively panned
  * by the user. this page pan is only when we are in PAGE view. when panning a page
  * in LIST view - this is NOT called, it is a different gesture.
  *
- * when a page is being panned, we need to handle the case where the user begins to 
+ * when a page is being panned, we need to handle the case where the user begins to
  * zoom out far enough to transition into list view
  *
  * when that happens, we start to also move pages below the panned page to show that
@@ -612,7 +640,7 @@
             CGFloat percentageToMoveHiddenFrame = percentageToTrustToFrame;
             percentageToMoveHiddenFrame += .1;
             CGFloat amountToMoveHiddenFrame = visibleStackHolder.frame.size.width - percentageToMoveHiddenFrame * visibleStackHolder.frame.size.width;
-
+            
             //
             // ok, move all the soon to be visible pages into their
             // position
@@ -655,8 +683,6 @@
     }
     return [super isPanningAndScalingPage:page fromFrame:fromFrame toFrame:toFrame];
 }
-
-#pragma mark - SLPaperViewDelegate - List View
 
 /**
  * the user has scaled a page small enough for us to 
@@ -847,8 +873,6 @@
         [self moveAddButtonToTop];
     };
     
-    
-    
     step1();
     // ok, animate all the views in the visible stack!
     [UIView animateWithDuration:duration
@@ -900,7 +924,6 @@
     // noop
 }
 
-
 /**
  * this delegate method tells the SLPageView where
  * it sits in the combined visible/hidden stack
@@ -914,50 +937,12 @@
     }
 }
 
-
-
 /**
  * return true if the input page is in the visible stack
  */
 -(BOOL) isInVisibleStack:(SLPaperView*)page{
     return [visibleStackHolder.subviews indexOfObject:page] != NSNotFound;
 }
-
-
-
-#pragma mark - Private Tap Gesture
- 
- 
-/**
- * we are in list view, and the user tapped onto the 
- * scrollview (probably tapped a page).
- *
- * let's check if the user tapped a page, and zoom
- * to that page as the top of the visible stack
- */
--(void) didTapScrollView:(UITapGestureRecognizer*)_tapGesture{
-    //
-    // first, we should find which page the user tapped
-    CGPoint locationOfTap = [_tapGesture locationInView:self];
-
-    SLPaperView* thePageThatWasTapped = nil;
-    for(SLPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
-        CGRect frameOfPage = [self frameForListViewForPage:aPage];
-        if(CGRectContainsPoint(frameOfPage, locationOfTap)){
-            thePageThatWasTapped = aPage;
-        }
-    }
-    if(!thePageThatWasTapped) return;
-    
-    
-    [self ensurePageIsAtTopOfVisibleStack:thePageThatWasTapped];
-    
-    [self immediatelyAnimateFromListViewToFullScreenView];
-    
-}
-
-
-
 
 
 #pragma mark - SLPanAndPinchFromListViewGestureRecognizerDelegate - Tap Gesture
@@ -1251,5 +1236,7 @@
     }
     return possibleOffset.y - actualOffset.y;
 }
+
+
 
 @end

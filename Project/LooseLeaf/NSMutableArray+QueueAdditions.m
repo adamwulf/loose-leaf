@@ -13,12 +13,11 @@
 // Queues are first-in-first-out, so we remove objects from the head
 - (id) dequeue {
     // if ([self count] == 0) return nil; // to avoid raising exception (Quinn)
-    id headObject = [self objectAtIndex:0];
+    id headObject = [[self objectAtIndex:0] retain];
     if (headObject != nil) {
-        [[headObject retain] autorelease]; // so it isn't dealloc'ed on remove
         [self removeObjectAtIndex:0];
     }
-    return headObject;
+    return [headObject autorelease];
 }
 
 // Add to the tail of the queue (no one likes it when people cut in line!)

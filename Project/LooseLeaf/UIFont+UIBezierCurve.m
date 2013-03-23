@@ -32,7 +32,7 @@ static NSMutableDictionary* _pathCacheInstance = nil;
         CGGlyph *glyphs;
         CFIndex count;
         
-        CFStringRef iString = (CFStringRef) letter;
+        CFStringRef iString = (__bridge CFStringRef) letter;
         
         CTFontRef iFont = CTFontCreateWithName((CFStringRef)[self fontName], [self pointSize], NULL);
         
