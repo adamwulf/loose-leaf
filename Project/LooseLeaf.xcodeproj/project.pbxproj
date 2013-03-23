@@ -24,6 +24,8 @@
 		664F4139159063F8006F8B09 /* SLPlusIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F4138159063F8006F8B09 /* SLPlusIcon.m */; };
 		664F413D1590661F006F8B09 /* SLRightArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413C1590661F006F8B09 /* SLRightArrow.m */; };
 		664F414015906628006F8B09 /* SLLeftArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413F15906628006F8B09 /* SLLeftArrow.m */; };
+		6661144716FD67F8005032B9 /* Loose-Leaf_72.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144616FD67F8005032B9 /* Loose-Leaf_72.png */; };
+		6661144A16FD67FA005032B9 /* Loose-Leaf_144.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144916FD67FA005032B9 /* Loose-Leaf_144.png */; };
 		66728715159515FD0018571A /* SLEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* SLEditablePaperStackView.m */; };
 		6693295A15958A950033E557 /* MSShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MSShadowManager.m */; };
 		66932965159593C00033E557 /* MSRotationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66932964159593C00033E557 /* MSRotationManager.m */; };
@@ -36,8 +38,6 @@
 		66A13D401631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D3F1631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m */; };
 		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; };
 		66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */; };
-		66A539F6163F18C8003EAEC0 /* nav.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A539F5163F18C8003EAEC0 /* nav.png */; };
-		66A539FA163F18CB003EAEC0 /* nav@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66A539F9163F18CB003EAEC0 /* nav@2x.png */; };
 		66AA212316FBB0A200E86922 /* Paper_StackTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AA212216FBB0A200E86922 /* Paper_StackTests.m */; };
 		66AA212D16FBB31C00E86922 /* MSPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AA212C16FBB31C00E86922 /* MSPopoverView.m */; };
 		66BD6E301591B57B00D4544C /* MSPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* MSPaperButton.m */; };
@@ -136,6 +136,8 @@
 		664F413C1590661F006F8B09 /* SLRightArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLRightArrow.m; sourceTree = "<group>"; };
 		664F413E15906628006F8B09 /* SLLeftArrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLLeftArrow.h; sourceTree = "<group>"; };
 		664F413F15906628006F8B09 /* SLLeftArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLLeftArrow.m; sourceTree = "<group>"; };
+		6661144616FD67F8005032B9 /* Loose-Leaf_72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf_72.png"; path = "../Loose-Leaf_72.png"; sourceTree = "<group>"; };
+		6661144916FD67FA005032B9 /* Loose-Leaf_144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf_144.png"; path = "../Loose-Leaf_144.png"; sourceTree = "<group>"; };
 		66728713159515FC0018571A /* SLEditablePaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLEditablePaperStackView.h; sourceTree = "<group>"; };
 		66728714159515FC0018571A /* SLEditablePaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLEditablePaperStackView.m; sourceTree = "<group>"; };
 		6693295815958A950033E557 /* MSShadowManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSShadowManager.h; sourceTree = "<group>"; };
@@ -162,8 +164,6 @@
 		66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "DrawKit-iOS.xcodeproj"; path = "../../DrawKit-iOS/DrawKit-iOS.xcodeproj"; sourceTree = "<group>"; };
 		66A4BD4416321ABC00C45070 /* NSThread+BlockAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSThread+BlockAdditions.h"; sourceTree = "<group>"; };
 		66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+BlockAdditions.m"; sourceTree = "<group>"; };
-		66A539F5163F18C8003EAEC0 /* nav.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = nav.png; path = ../nav.png; sourceTree = "<group>"; };
-		66A539F9163F18CB003EAEC0 /* nav@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "nav@2x.png"; path = "../nav@2x.png"; sourceTree = "<group>"; };
 		66AA212116FBB0A200E86922 /* Paper_StackTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Paper_StackTests.h; path = LooseLeafTests/Paper_StackTests.h; sourceTree = SOURCE_ROOT; };
 		66AA212216FBB0A200E86922 /* Paper_StackTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Paper_StackTests.m; path = LooseLeafTests/Paper_StackTests.m; sourceTree = SOURCE_ROOT; };
 		66AA212516FBB0A900E86922 /* LooseLeafTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "LooseLeafTests-Info.plist"; path = "LooseLeafTests/LooseLeafTests-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -489,8 +489,8 @@
 			children = (
 				6693298015996C530033E557 /* Astronaut Images */,
 				660E1DA6158FC6120001DA12 /* Categories */,
-				66A539F9163F18CB003EAEC0 /* nav@2x.png */,
-				66A539F5163F18C8003EAEC0 /* nav.png */,
+				6661144916FD67FA005032B9 /* Loose-Leaf_144.png */,
+				6661144616FD67F8005032B9 /* Loose-Leaf_72.png */,
 				66DCFB921581BCEF00B4918C /* LooseLeaf-Info.plist */,
 				66DCFB931581BCEF00B4918C /* InfoPlist.strings */,
 				66DCFB961581BCEF00B4918C /* main.m */,
@@ -646,8 +646,8 @@
 				660E1DA1158FC4710001DA12 /* img03.jpg in Resources */,
 				660E1DA3158FC4750001DA12 /* img05.jpg in Resources */,
 				660E1DA5158FC47D0001DA12 /* img04.jpg in Resources */,
-				66A539F6163F18C8003EAEC0 /* nav.png in Resources */,
-				66A539FA163F18CB003EAEC0 /* nav@2x.png in Resources */,
+				6661144716FD67F8005032B9 /* Loose-Leaf_72.png in Resources */,
+				6661144A16FD67FA005032B9 /* Loose-Leaf_144.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
