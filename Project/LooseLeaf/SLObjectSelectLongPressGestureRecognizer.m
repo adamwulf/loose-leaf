@@ -52,7 +52,6 @@
         [self.touchLocations setObject:[NSValue valueWithCGPoint:[touch locationInView:self.view]]
                                 forKey:@([touch hash])];
     }
-    NSLog(@"long press touch began: %d", [self.touchLocations count]);
 }
 
 /**
@@ -74,14 +73,12 @@
             if(distance > self.allowableMovement && self.state == UIGestureRecognizerStatePossible){
                 self.state = UIGestureRecognizerStateFailed;
                 didChangeState = YES;
-                NSLog(@"failed");
             }
         }
     }
     if(!didChangeState){
         [super touchesMoved:touches withEvent:event];
     }
-    NSLog(@"long press touch moved: %d", [self.touchLocations count]);
 }
 
 /**
@@ -92,7 +89,6 @@
     for(UITouch* touch in touches){
         [self.touchLocations removeObjectForKey:@([touch hash])];
     }
-    NSLog(@"long press touch cancelled: %d", [self.touchLocations count]);
 }
 
 /**
@@ -103,7 +99,6 @@
     for(UITouch* touch in touches){
         [self.touchLocations removeObjectForKey:@([touch hash])];
     }
-    NSLog(@"long press touch ended: %d", [self.touchLocations count]);
 }
 
 /**
@@ -121,7 +116,6 @@
 }
 
 -(void)reset{
-    NSLog(@"long press reset");
     [super reset];
     [self.touchLocations removeAllObjects];
 }
