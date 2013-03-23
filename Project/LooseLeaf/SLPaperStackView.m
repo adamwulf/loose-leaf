@@ -464,13 +464,6 @@
 
 #pragma mark - SLPaperViewDelegate - Paper View
 
-//
-// for any given gesture, the frameForListViewForPage: for any page
-// will be the same, so let's cache that for this gesture
--(CGRect) frameForListViewForPage:(SLPaperView*)page{
-    @throw kAbstractMethodException;
-}
-
 -(NSInteger) rowInListViewGivenIndex:(NSInteger) indexOfPage{
     @throw kAbstractMethodException;
 }
@@ -478,7 +471,6 @@
 -(NSInteger) columnInListViewGivenIndex:(NSInteger) indexOfPage{
     @throw kAbstractMethodException;
 }
-
 
 /**
  * let's only allow scaling the top most page
@@ -836,26 +828,25 @@
 }
 
 
--(CGSize) sizeOfPaper{
-    return self.bounds.size;
-}
-
-
 #pragma mark - SLPaperViewDelegate - List Methods
 
 -(void) isBeginningToScaleReallySmall:(SLPaperView *)page{
+    NSLog(@"isBeginningToScaleReallySmall");
     [self updateIconAnimations];
 }
 
 -(void) finishedScalingReallySmall:(SLPaperView *)page{
+    NSLog(@"finishedScalingReallySmall");
     [self updateIconAnimations];
 }
 
 -(void) cancelledScalingReallySmall:(SLPaperView *)page{
+    NSLog(@"cancelledScalingReallySmall");
     [self updateIconAnimations];
 }
 
 -(void) finishedScalingBackToPageView:(SLPaperView*)page{
+    NSLog(@"finishedScalingBackToPageView");
     [self updateIconAnimations];
 }
 

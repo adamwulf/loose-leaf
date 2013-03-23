@@ -987,13 +987,20 @@
         // properties for drag behavior
         realizedThatPageIsBeingDragged = NO;
         pageBeingDragged = nil;
+        
         // go to page/list view
         // based on how the gesture ended
         [self setScrollEnabled:YES];
         if(gesture.scaleDirection == SLScaleDirectionLarger && gesture.scale > kZoomToListPageZoom){
+            // the user has released their pinch, and the page is still really small,
+            // but they were *increasing* the size of the page when they let go,
+            // so we're going to use that "momentum" and scale the page into view
             [self immediatelyAnimateFromListViewToFullScreenView];
             return;
         }else{
+            // the user has released their pinch, and the page is still really small,
+            // but they were *decreasing* the size of the page when they let go,
+            // so we'll decrease it back into list view
             CGRect frameOfPage = [self frameForListViewForPage:gesture.pinchedPage];
             [UIView animateWithDuration:.15
                                   delay:0

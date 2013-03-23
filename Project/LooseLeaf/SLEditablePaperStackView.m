@@ -129,6 +129,22 @@
     debug_NSLog(@"temp button");
 }
 
+-(void) setButtonsVisible:(BOOL)visible{
+    [UIView animateWithDuration:0.3 animations:^{
+        addPageSidebarButton.alpha = visible;
+        documentBackgroundSidebarButton.alpha = visible;
+        polylineButton.alpha = visible;
+        polygonButton.alpha = visible;
+        insertImageButton.alpha = visible;
+        textButton.alpha = visible;
+        pencilButton.alpha = visible;
+        shareButton.alpha = visible;
+        mapButton.alpha = visible;
+        redoButton.alpha = visible;
+        undoButton.alpha = visible;
+    }];
+}
+
 #pragma mark - SLRotationManagerDelegate
 
 -(void) didUpdateAccelerometerWithReading:(CGFloat)currentRawReading{
@@ -157,28 +173,11 @@
 
 #pragma mark - SLPaperViewDelegate - List View
 
--(void) setButtonsVisible:(BOOL)visible{
-    [UIView animateWithDuration:0.3 animations:^{
-        addPageSidebarButton.alpha = visible;
-        documentBackgroundSidebarButton.alpha = visible;
-        polylineButton.alpha = visible;
-        polygonButton.alpha = visible;
-        insertImageButton.alpha = visible;
-        textButton.alpha = visible;
-        pencilButton.alpha = visible;
-        shareButton.alpha = visible;
-        mapButton.alpha = visible;
-        redoButton.alpha = visible;
-        undoButton.alpha = visible;
-    }];
-}
-
 -(void) isBeginningToScaleReallySmall:(SLPaperView *)page{
     [self setButtonsVisible:NO];
     [super isBeginningToScaleReallySmall:page];
 }
 -(void) finishedScalingReallySmall:(SLPaperView *)page{
-    // noop
     [super finishedScalingReallySmall:page];
 }
 -(void) cancelledScalingReallySmall:(SLPaperView *)page{
