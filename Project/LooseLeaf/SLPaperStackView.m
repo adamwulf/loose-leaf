@@ -82,7 +82,6 @@
     }
 }
 
-
 /**
  * adds the page to the bottom of the stack
  * and adds to the bottom of the subviews
@@ -104,6 +103,7 @@
     [page disableAllGestures];
     [hiddenStackHolder addSubviewToBottomOfStack:page];
 }
+
 
 #pragma mark - Pan and Bezel Icons
 
@@ -462,15 +462,7 @@
     }
 }
 
-#pragma mark - SLPaperViewDelegate - Paper View
-
--(NSInteger) rowInListViewGivenIndex:(NSInteger) indexOfPage{
-    @throw kAbstractMethodException;
-}
-
--(NSInteger) columnInListViewGivenIndex:(NSInteger) indexOfPage{
-    @throw kAbstractMethodException;
-}
+#pragma mark - SLPaperViewDelegate
 
 /**
  * let's only allow scaling the top most page
@@ -478,27 +470,6 @@
 -(BOOL) allowsScaleForPage:(SLPaperView*)page{
     return [visibleStackHolder peekSubview] == page;
 }
-
-/**
- * this will realign all the pages except the input page
- * to be scale 1 and (0,0) in the visibleStackHolder
- */
--(void) realignPagesInVisibleStackExcept:(SLPaperView*)page animated:(BOOL)animated{
-    for(SLPaperView* aPage in [[visibleStackHolder.subviews copy] autorelease]){
-        if(aPage != page){
-            if(!CGRectEqualToRect(aPage.frame, self.bounds)){
-                [aPage cancelAllGestures];
-                if(animated){
-                    [self animatePageToFullScreen:aPage withDelay:0 withBounce:NO onComplete:nil];
-                }else{
-                    aPage.frame = self.bounds;
-                }
-            }
-        }
-    }
-}
-
-
 
 /**
  * during a pan, we'll need to show different icons
@@ -827,9 +798,6 @@
     }
 }
 
-
-#pragma mark - SLPaperViewDelegate - List Methods
-
 -(void) isBeginningToScaleReallySmall:(SLPaperView *)page{
     NSLog(@"isBeginningToScaleReallySmall");
     [self updateIconAnimations];
@@ -851,6 +819,14 @@
 }
 
 -(NSInteger) indexOfPageInCompleteStack:(SLPaperView*)page{
+    @throw kAbstractMethodException;
+}
+
+-(NSInteger) rowInListViewGivenIndex:(NSInteger) indexOfPage{
+    @throw kAbstractMethodException;
+}
+
+-(NSInteger) columnInListViewGivenIndex:(NSInteger) indexOfPage{
     @throw kAbstractMethodException;
 }
 
@@ -895,6 +871,27 @@
 -(BOOL) shouldPushPageOntoVisibleStack:(SLPaperView*)page withFrame:(CGRect)frame{
     return page.frame.origin.x + page.frame.size.width < kGutterWidthToDragPages;
 }
+
+/**
+ * this will realign all the pages except the input page
+ * to be scale 1 and (0,0) in the visibleStackHolder
+ */
+-(void) realignPagesInVisibleStackExcept:(SLPaperView*)page animated:(BOOL)animated{
+    for(SLPaperView* aPage in [[visibleStackHolder.subviews copy] autorelease]){
+        if(aPage != page){
+            if(!CGRectEqualToRect(aPage.frame, self.bounds)){
+                [aPage cancelAllGestures];
+                if(animated){
+                    [self animatePageToFullScreen:aPage withDelay:0 withBounce:NO onComplete:nil];
+                }else{
+                    aPage.frame = self.bounds;
+                }
+            }
+        }
+    }
+}
+
+
 
 
 #pragma mark - Page Animations

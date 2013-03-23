@@ -38,8 +38,6 @@
 		66A13D401631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D3F1631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m */; };
 		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; };
 		66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */; };
-		66AA212316FBB0A200E86922 /* Paper_StackTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AA212216FBB0A200E86922 /* Paper_StackTests.m */; };
-		66AA212D16FBB31C00E86922 /* MSPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AA212C16FBB31C00E86922 /* MSPopoverView.m */; };
 		66BD6E301591B57B00D4544C /* MSPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* MSPaperButton.m */; };
 		66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E331591C37D00D4544C /* UIImage+MCDrawSubImage.m */; };
 		66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */; };
@@ -65,10 +63,6 @@
 		66DCFB9B1581BCEF00B4918C /* MSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB9A1581BCEF00B4918C /* MSAppDelegate.m */; };
 		66DCFB9E1581BCEF00B4918C /* SLPaperStackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB9D1581BCEF00B4918C /* SLPaperStackViewController.m */; };
 		66DCFBA11581BCEF00B4918C /* SLPaperStackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 66DCFB9F1581BCEF00B4918C /* SLPaperStackViewController.xib */; };
-		66DCFBA91581BCF000B4918C /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFBA81581BCEF00B4918C /* SenTestingKit.framework */; };
-		66DCFBAA1581BCF000B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
-		66DCFBAB1581BCF000B4918C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8C1581BCEF00B4918C /* Foundation.framework */; };
-		66DCFBB31581BCF000B4918C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66DCFBB11581BCF000B4918C /* InfoPlist.strings */; };
 		66DCFBC21581C85B00B4918C /* SLPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBC11581C85B00B4918C /* SLPaperStackView.m */; };
 		66DCFBCD1582BAED00B4918C /* SLPaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBCC1582BAED00B4918C /* SLPaperView.m */; };
 		66DCFBD01582BC0E00B4918C /* img01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 66DCFBCF1582BC0E00B4918C /* img01.jpg */; };
@@ -98,13 +92,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 667703EA1620F02900E764C0;
 			remoteInfo = "DrawKit-iOS";
-		};
-		66DCFBAC1581BCF000B4918C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 66DCFB7D1581BCED00B4918C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 66DCFB851581BCEF00B4918C;
-			remoteInfo = "Paper Stack";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -164,9 +151,6 @@
 		66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "DrawKit-iOS.xcodeproj"; path = "../../DrawKit-iOS/DrawKit-iOS.xcodeproj"; sourceTree = "<group>"; };
 		66A4BD4416321ABC00C45070 /* NSThread+BlockAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSThread+BlockAdditions.h"; sourceTree = "<group>"; };
 		66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+BlockAdditions.m"; sourceTree = "<group>"; };
-		66AA212116FBB0A200E86922 /* Paper_StackTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Paper_StackTests.h; path = LooseLeafTests/Paper_StackTests.h; sourceTree = SOURCE_ROOT; };
-		66AA212216FBB0A200E86922 /* Paper_StackTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Paper_StackTests.m; path = LooseLeafTests/Paper_StackTests.m; sourceTree = SOURCE_ROOT; };
-		66AA212516FBB0A900E86922 /* LooseLeafTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "LooseLeafTests-Info.plist"; path = "LooseLeafTests/LooseLeafTests-Info.plist"; sourceTree = SOURCE_ROOT; };
 		66AA212B16FBB31C00E86922 /* MSPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSPopoverView.h; sourceTree = "<group>"; };
 		66AA212C16FBB31C00E86922 /* MSPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSPopoverView.m; sourceTree = "<group>"; };
 		66BD6E2E1591B57B00D4544C /* MSPaperButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSPaperButton.h; sourceTree = "<group>"; };
@@ -215,9 +199,7 @@
 		66DCFB9C1581BCEF00B4918C /* SLPaperStackViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLPaperStackViewController.h; sourceTree = "<group>"; };
 		66DCFB9D1581BCEF00B4918C /* SLPaperStackViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLPaperStackViewController.m; sourceTree = "<group>"; };
 		66DCFBA01581BCEF00B4918C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SLPaperStackViewController.xib; sourceTree = "<group>"; };
-		66DCFBA71581BCEF00B4918C /* LooseLeafTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LooseLeafTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		66DCFBA81581BCEF00B4918C /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		66DCFBB21581BCF000B4918C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		66DCFBC01581C85B00B4918C /* SLPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperStackView.h; sourceTree = "<group>"; };
 		66DCFBC11581C85B00B4918C /* SLPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPaperStackView.m; sourceTree = "<group>"; };
 		66DCFBCB1582BAED00B4918C /* SLPaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPaperView.h; sourceTree = "<group>"; };
@@ -245,16 +227,6 @@
 				66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */,
 				66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */,
 				66DCFB8F1581BCEF00B4918C /* CoreGraphics.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		66DCFBA31581BCEF00B4918C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				66DCFBA91581BCF000B4918C /* SenTestingKit.framework in Frameworks */,
-				66DCFBAA1581BCF000B4918C /* UIKit.framework in Frameworks */,
-				66DCFBAB1581BCF000B4918C /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -437,7 +409,6 @@
 			children = (
 				66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */,
 				66DCFB901581BCEF00B4918C /* Loose Leaf */,
-				66DCFBAE1581BCF000B4918C /* LooseLeafTests */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
 				66DCFB871581BCEF00B4918C /* Products */,
 			);
@@ -447,7 +418,6 @@
 			isa = PBXGroup;
 			children = (
 				66DCFB861581BCEF00B4918C /* LooseLeaf.app */,
-				66DCFBA71581BCEF00B4918C /* LooseLeafTests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -501,26 +471,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		66DCFBAE1581BCF000B4918C /* LooseLeafTests */ = {
-			isa = PBXGroup;
-			children = (
-				66AA212116FBB0A200E86922 /* Paper_StackTests.h */,
-				66AA212216FBB0A200E86922 /* Paper_StackTests.m */,
-				66DCFBAF1581BCF000B4918C /* Supporting Files */,
-			);
-			name = LooseLeafTests;
-			path = "Paper StackTests";
-			sourceTree = "<group>";
-		};
-		66DCFBAF1581BCF000B4918C /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				66AA212516FBB0A900E86922 /* LooseLeafTests-Info.plist */,
-				66DCFBB11581BCF000B4918C /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		66DCFBBF1581C7F400B4918C /* SLPaperStack */ = {
 			isa = PBXGroup;
 			children = (
@@ -564,25 +514,6 @@
 			productReference = 66DCFB861581BCEF00B4918C /* LooseLeaf.app */;
 			productType = "com.apple.product-type.application";
 		};
-		66DCFBA61581BCEF00B4918C /* LooseLeafTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 66DCFBBC1581BCF000B4918C /* Build configuration list for PBXNativeTarget "LooseLeafTests" */;
-			buildPhases = (
-				66DCFBA21581BCEF00B4918C /* Sources */,
-				66DCFBA31581BCEF00B4918C /* Frameworks */,
-				66DCFBA41581BCEF00B4918C /* Resources */,
-				66DCFBA51581BCEF00B4918C /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				66DCFBAD1581BCF000B4918C /* PBXTargetDependency */,
-			);
-			name = LooseLeafTests;
-			productName = "Paper StackTests";
-			productReference = 66DCFBA71581BCEF00B4918C /* LooseLeafTests.octest */;
-			productType = "com.apple.product-type.bundle";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -611,7 +542,6 @@
 			projectRoot = "";
 			targets = (
 				66DCFB851581BCEF00B4918C /* LooseLeaf */,
-				66DCFBA61581BCEF00B4918C /* LooseLeafTests */,
 			);
 		};
 /* End PBXProject section */
@@ -651,31 +581,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		66DCFBA41581BCEF00B4918C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				66DCFBB31581BCF000B4918C /* InfoPlist.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		66DCFBA51581BCEF00B4918C /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		66DCFB821581BCEF00B4918C /* Sources */ = {
@@ -729,15 +635,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		66DCFBA21581BCEF00B4918C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				66AA212316FBB0A200E86922 /* Paper_StackTests.m in Sources */,
-				66AA212D16FBB31C00E86922 /* MSPopoverView.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -745,11 +642,6 @@
 			isa = PBXTargetDependency;
 			name = "DrawKit-iOS";
 			targetProxy = 66A4BD1B1632171500C45070 /* PBXContainerItemProxy */;
-		};
-		66DCFBAD1581BCF000B4918C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 66DCFB851581BCEF00B4918C /* LooseLeaf */;
-			targetProxy = 66DCFBAC1581BCF000B4918C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -768,15 +660,6 @@
 				66DCFBA01581BCEF00B4918C /* en */,
 			);
 			name = SLPaperStackViewController.xib;
-			sourceTree = "<group>";
-		};
-		66DCFBB11581BCF000B4918C /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				66DCFBB21581BCF000B4918C /* en */,
-			);
-			name = InfoPlist.strings;
-			path = LooseLeafTests;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -882,40 +765,6 @@
 			};
 			name = Release;
 		};
-		66DCFBBD1581BCF000B4918C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Paper Stack.app/Paper Stack";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "LooseLeaf/Paper Stack-Prefix.pch";
-				INFOPLIST_FILE = "LooseLeafTests/LooseLeafTests-Info.plist";
-				PRODUCT_NAME = LooseLeafTests;
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
-			};
-			name = Debug;
-		};
-		66DCFBBE1581BCF000B4918C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Paper Stack.app/Paper Stack";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "LooseLeaf/Paper Stack-Prefix.pch";
-				INFOPLIST_FILE = "LooseLeafTests/LooseLeafTests-Info.plist";
-				PRODUCT_NAME = LooseLeafTests;
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -933,15 +782,6 @@
 			buildConfigurations = (
 				66DCFBBA1581BCF000B4918C /* Debug */,
 				66DCFBBB1581BCF000B4918C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		66DCFBBC1581BCF000B4918C /* Build configuration list for PBXNativeTarget "LooseLeafTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				66DCFBBD1581BCF000B4918C /* Debug */,
-				66DCFBBE1581BCF000B4918C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
