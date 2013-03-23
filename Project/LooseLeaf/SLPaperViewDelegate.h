@@ -37,17 +37,31 @@
 
 /**
  * this is triggered when the page has been scaled small
- * enough to trigger a transition into list view
+ * enough to begin transition into list view. the user will
+ * still have control of the page's zoom, but other pages will
+ * begin to follow its scale into list view
  */
 -(void) isBeginningToScaleReallySmall:(SLPaperView*)page;
 
 /**
- *
+ * the user has continued to scale the page down so far
+ * that we can now take over and auto-scale it into list view
  */
 -(void) finishedScalingReallySmall:(SLPaperView*)page;
 
+/**
+ * the user has already begun to scale small (notification above),
+ * but now they've scaled large enough to cancel any auto
+ * scale that we're doing for other nearby pages
+ */
 -(void) cancelledScalingReallySmall:(SLPaperView*)page;
 
+/**
+ * this is the parallel to finishedScalingReallySmall, except
+ * that the user is scaling the page back up from list
+ * view into page view. once it hits this method we will
+ * auto-scale it into full page view.
+ */
 -(void) finishedScalingBackToPageView:(SLPaperView*)page;
 
 /**
@@ -62,10 +76,23 @@
  * stack
  */
 -(NSInteger) indexOfPageInCompleteStack:(SLPaperView*)page;
--(NSInteger) rowInListViewGivenIndex:(NSInteger) indexOfPage;
--(NSInteger) columnInListViewGivenIndex:(NSInteger) indexOfPage;
--(BOOL) isInVisibleStack:(SLPaperView*)page;
 
--(CGSize) sizeOfPaper;
+/**
+ * this will return the row number of this page, if we were to
+ * find it in list view
+ */
+-(NSInteger) rowInListViewGivenIndex:(NSInteger) indexOfPage;
+
+/**
+ * this will return the column number of the page, if we were to
+ * find it in list view
+ */
+-(NSInteger) columnInListViewGivenIndex:(NSInteger) indexOfPage;
+
+/**
+ * returns true if the page is in the logical "lefthand" stack
+ * of the two stacks.
+ */
+-(BOOL) isInVisibleStack:(SLPaperView*)page;
 
 @end
