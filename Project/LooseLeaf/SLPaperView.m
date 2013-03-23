@@ -73,10 +73,6 @@
         [tap requireGestureRecognizerToFail:longPress];
         [self addGestureRecognizer:tap];
 
-        
-        
-                
-        
         //
         // This pan gesture is used to pan/scale the page itself.
         panGesture = [[[SLPanAndPinchGestureRecognizer alloc]
@@ -312,16 +308,10 @@
     //
     // to track panning, we collect the first location of the pan gesture, and calculate the offset
     // of the current location of the gesture. that distance is the amount moved for the pan.
-//    panDiffLocation = CGPointMake(lastLocationInSuperview.x - firstLocationOfPanGestureInSuperView.x, lastLocationInSuperview.y - firstLocationOfPanGestureInSuperView.y);
-    
     if([self.delegate allowsScaleForPage:self]){
-        
         CGFloat gestureScale = panGesture.scale;
         CGFloat targetScale = preGestureScale * gestureScale;
         CGFloat scaleDiff = ABS((float)(targetScale - scale));
-//        if(targetScale > 1){
-//            targetScale = roundf(targetScale * 2) / 2;
-//        }
         
         //
         // to track scaling, the scale value has to be a value between kMinPageZoom and kMaxPageZoom of the /superview/'s size
@@ -359,7 +349,6 @@
             }else if(scale > targetScale){
                 self.scale -= (scale - targetScale) / 5;
             }
-//            self.scale = targetScale;
             if(didCancelSmallScale) [self.delegate cancelledScalingReallySmall:self];
         }
     }
@@ -406,7 +395,6 @@
         // complete the gesture
         self.frame = fr;
     }
-    
 }
 
 
