@@ -1,9 +1,9 @@
 //
 //  Contants.h
-//  Paper Stack
+//  Loose Leaf
 //
 //  Created by Adam Wulf on 6/8/12.
-//  Copyright (c) 2012 Skylight, LLC. All rights reserved.
+//  Copyright (c) 2012 Milestone Made, LLC. All rights reserved.
 //
 
 #ifndef Paper_Stack_Contants_h
@@ -48,28 +48,20 @@
 CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
 
 enum {
-    SLBezelDirectionFromRightBezel  = 1 << 0,
-    SLBezelDirectionFromLeftBezel   = 1 << 1,
-    SLBezelDirectionFromTopBezel    = 1 << 2,
-    SLBezelDirectionFromBottomBezel = 1 << 3
+    MMBezelDirectionNone = 0,
+    MMBezelDirectionRight  = 1 << 0,
+    MMBezelDirectionLeft   = 1 << 1,
+    MMBezelDirectionUp    = 1 << 2,
+    MMBezelDirectionDown = 1 << 3
 };
-typedef NSUInteger SLBezelDirection;
+typedef NSUInteger MMBezelDirection;
 
 enum {
-    SLBezelDirectionNone = 0,
-    SLBezelDirectionRight  = 1 << 0,
-    SLBezelDirectionLeft   = 1 << 1,
-    SLBezelDirectionUp    = 1 << 2,
-    SLBezelDirectionDown = 1 << 3
+    MMScaleDirectionNone = 0,
+    MMScaleDirectionLarger  = 1 << 0,
+    MMScaleDirectionSmaller   = 1 << 1
 };
-typedef NSUInteger SLBezelPanDirection;
-
-enum {
-    SLScaleDirectionNone = 0,
-    SLScaleDirectionLarger  = 1 << 0,
-    SLScaleDirectionSmaller   = 1 << 1
-};
-typedef NSUInteger SLBezelScaleDirection;
+typedef NSUInteger MMBezelScaleDirection;
 
 
 #endif

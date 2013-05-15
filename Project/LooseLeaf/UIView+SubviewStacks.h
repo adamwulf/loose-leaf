@@ -1,26 +1,26 @@
 //
 //  UIView+SubviewStacks.h
-//  Paper Stack
+//  Loose Leaf
 //
 //  Created by Adam Wulf on 6/20/12.
-//  Copyright (c) 2012 Visere. All rights reserved.
+//  Copyright (c) 2012 Milestone Made, LLC. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import "SLPaperView.h"
+#import "MMPaperView.h"
 
 @interface UIView (SubviewStacks)
 
-- (BOOL) containsSubview:(SLPaperView*)obj;
-- (SLPaperView*) peekSubview;
-- (SLPaperView*)popSubview;
-- (SLPaperView*)bottomSubview;
-- (void)pushSubview:(SLPaperView*)obj;
-- (void) addSubviewToBottomOfStack:(SLPaperView*)obj;
-- (NSArray*) peekSubviewFromSubview:(SLPaperView*)obj;
-- (SLPaperView*) getPageBelow:(SLPaperView*)page;
--(SLPaperView*) getPageAbove:(SLPaperView*)page;
--(void) insertPage:(SLPaperView*)pageToInsert belowPage:(SLPaperView*)referencePage;
--(void) insertPage:(SLPaperView*)pageToInsert abovePage:(SLPaperView*)referencePage;
+- (BOOL) containsSubview:(MMPaperView*)obj;
+- (MMPaperView*) peekSubview;
+- (MMPaperView*)popSubview;
+- (MMPaperView*)bottomSubview;
+- (void)pushSubview:(MMPaperView*)obj;
+- (void) addSubviewToBottomOfStack:(MMPaperView*)obj;
+- (NSArray*) peekSubviewFromSubview:(MMPaperView*)obj;
+- (MMPaperView*) getPageBelow:(MMPaperView*)page;
+-(MMPaperView*) getPageAbove:(MMPaperView*)page;
+-(void) insertPage:(MMPaperView*)pageToInsert belowPage:(MMPaperView*)referencePage;
+-(void) insertPage:(MMPaperView*)pageToInsert abovePage:(MMPaperView*)referencePage;
 
 @end
