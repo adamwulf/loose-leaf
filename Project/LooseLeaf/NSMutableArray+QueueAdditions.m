@@ -1,9 +1,9 @@
 //
 //  NSMutableArray+QueueAdditions.m
-//  Paper Stack
+//  Loose Leaf
 //
 //  Created by Adam Wulf on 6/18/12.
-//  Copyright (c) 2012 Visere. All rights reserved.
+//  Copyright (c) 2012 Milestone Made, LLC. All rights reserved.
 //
 
 #import "NSMutableArray+QueueAdditions.h"
