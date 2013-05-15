@@ -47,7 +47,7 @@ CGFloat BNRTimeBlock (void (^block)(void)) {
 {
     [NSThread performSelector:@selector(ng_runBlock:)
                      onThread:self
-                   withObject:[[block copy] autorelease]
+                   withObject:[block copy]
                 waitUntilDone:wait];
 }
 + (void)ng_runBlock:(void (^)())block
@@ -57,7 +57,7 @@ CGFloat BNRTimeBlock (void (^block)(void)) {
 + (void)performBlockInBackground:(void (^)())block
 {
 	[NSThread performSelectorInBackground:@selector(ng_runBlock:)
-	                           withObject:[[block copy] autorelease]];
+	                           withObject:[block copy]];
 }
 + (void)performBlockOnMainThread:(void (^)())block
 {
@@ -72,6 +72,6 @@ CGFloat BNRTimeBlock (void (^block)(void)) {
 }
 
 - (void) performBlock:(void(^)())block afterDelay:(NSTimeInterval)delay{
-    [self performSelector: @selector(performBlock:) withObject: [[block copy] autorelease] afterDelay: delay];
+    [self performSelector: @selector(performBlock:) withObject: [block copy] afterDelay: delay];
 }
 @end

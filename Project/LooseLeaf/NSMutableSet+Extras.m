@@ -34,7 +34,7 @@
 }
 
 -(NSOrderedSet*) setByRemovingObject:(id)obj{
-    NSMutableOrderedSet* ret = [[obj copy] autorelease];
+    NSMutableOrderedSet* ret = [obj copy];
     [ret removeObject:obj];
     return ret;
 }

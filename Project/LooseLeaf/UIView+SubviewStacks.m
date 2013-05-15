@@ -15,12 +15,12 @@
 }
 
 - (SLPaperView*) peekSubview{
-    return [[[self.subviews lastObject] retain] autorelease];
+    return [self.subviews lastObject];
 }
 
 - (SLPaperView*)popSubview{
     // nil if [self count] == 0
-    SLPaperView* lastObject = [[[self.subviews lastObject] retain] autorelease];
+    SLPaperView* lastObject = [self.subviews lastObject];
     if (lastObject){
         [lastObject removeFromSuperview];
     }
