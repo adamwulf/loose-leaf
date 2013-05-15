@@ -11,14 +11,15 @@
 @implementation NSMutableArray (StackAdditions)
 
 - (id) peek{
-    return [[[self lastObject] retain] autorelease];
+    return [self lastObject];
 }
 
 - (id)pop{
     // nil if [self count] == 0
-    id lastObject = [[[self lastObject] retain] autorelease];
-    if (lastObject)
+    id __strong lastObject = [self lastObject];
+    if (lastObject){
         [self removeLastObject];
+    }
     return lastObject;
 }
 
