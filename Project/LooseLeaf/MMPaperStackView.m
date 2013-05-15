@@ -877,7 +877,7 @@
  * to be scale 1 and (0,0) in the visibleStackHolder
  */
 -(void) realignPagesInVisibleStackExcept:(MMPaperView*)page animated:(BOOL)animated{
-    for(MMPaperView* aPage in [[visibleStackHolder.subviews copy] autorelease]){
+    for(MMPaperView* aPage in [visibleStackHolder.subviews copy]){
         if(aPage != page){
             if(!CGRectEqualToRect(aPage.frame, self.bounds)){
                 [aPage cancelAllGestures];
