@@ -12,39 +12,39 @@
 		660E1DA1158FC4710001DA12 /* img03.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 660E1DA0158FC4710001DA12 /* img03.jpg */; };
 		660E1DA3158FC4750001DA12 /* img05.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 660E1DA2158FC4750001DA12 /* img05.jpg */; };
 		660E1DA5158FC47D0001DA12 /* img04.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 660E1DA4158FC47D0001DA12 /* img04.jpg */; };
-		660E1DA9158FC6300001DA12 /* NSMutableArray+QueueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DA8158FC6300001DA12 /* NSMutableArray+QueueAdditions.m */; };
-		660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAB158FC65C0001DA12 /* NSMutableArray+StackAdditions.m */; };
+		660E1DA9158FC6300001DA12 /* NSMutableArray+QueueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DA8158FC6300001DA12 /* NSMutableArray+QueueAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAB158FC65C0001DA12 /* NSMutableArray+StackAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		660E1DB0158FC7DB0001DA12 /* SLPaperIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAF158FC7DB0001DA12 /* SLPaperIcon.m */; };
-		660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DB2159028560001DA12 /* NSArray+MapReduce.m */; };
-		6630EDA115F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m */; };
-		6630EDBF15F30FFF007E38AA /* SLPaperView+ListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDBE15F30FFF007E38AA /* SLPaperView+ListView.m */; };
-		664516B9159030FC0012FACA /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 664516B8159030FC0012FACA /* Constants.m */; };
-		664C62F015A36DA40072736A /* SLListPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 664C62EF15A36DA40072736A /* SLListPaperStackView.m */; };
+		660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DB2159028560001DA12 /* NSArray+MapReduce.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		6630EDA115F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		6630EDBF15F30FFF007E38AA /* SLPaperView+ListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDBE15F30FFF007E38AA /* SLPaperView+ListView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		664516B9159030FC0012FACA /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 664516B8159030FC0012FACA /* Constants.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		664C62F015A36DA40072736A /* SLListPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 664C62EF15A36DA40072736A /* SLListPaperStackView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		664D5C5416FD0D4C00F518EC /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66A4BD181632170E00C45070 /* DrawKit-iOS.framework */; };
 		664F4139159063F8006F8B09 /* SLPlusIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F4138159063F8006F8B09 /* SLPlusIcon.m */; };
 		664F413D1590661F006F8B09 /* SLRightArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413C1590661F006F8B09 /* SLRightArrow.m */; };
 		664F414015906628006F8B09 /* SLLeftArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413F15906628006F8B09 /* SLLeftArrow.m */; };
 		6661144716FD67F8005032B9 /* Loose-Leaf_72.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144616FD67F8005032B9 /* Loose-Leaf_72.png */; };
 		6661144A16FD67FA005032B9 /* Loose-Leaf_144.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144916FD67FA005032B9 /* Loose-Leaf_144.png */; };
-		66728715159515FD0018571A /* SLEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* SLEditablePaperStackView.m */; };
-		6693295A15958A950033E557 /* MSShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MSShadowManager.m */; };
-		66932965159593C00033E557 /* MSRotationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66932964159593C00033E557 /* MSRotationManager.m */; };
+		66728715159515FD0018571A /* SLEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* SLEditablePaperStackView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		6693295A15958A950033E557 /* MSShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MSShadowManager.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66932965159593C00033E557 /* MSRotationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66932964159593C00033E557 /* MSRotationManager.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6693296A1595A87E0033E557 /* MSMapButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329691595A87E0033E557 /* MSMapButton.m */; };
-		6693296D1596E0600033E557 /* SLBezelInRightGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693296C1596E0600033E557 /* SLBezelInRightGestureRecognizer.m */; };
-		669329701598E4DC0033E557 /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693296F1598E4DC0033E557 /* NSString+UUID.m */; };
-		669329731598EE210033E557 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329721598EE210033E557 /* UIView+Debug.m */; };
+		6693296D1596E0600033E557 /* SLBezelInRightGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693296C1596E0600033E557 /* SLBezelInRightGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		669329701598E4DC0033E557 /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693296F1598E4DC0033E557 /* NSString+UUID.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		669329731598EE210033E557 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329721598EE210033E557 /* UIView+Debug.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6693297E1599196E0033E557 /* UIFont+UIBezierCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693297D1599196E0033E557 /* UIFont+UIBezierCurve.m */; };
-		66A13D3A1631D9D9002F5428 /* SLObjectSelectLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D391631D9D8002F5428 /* SLObjectSelectLongPressGestureRecognizer.m */; };
-		66A13D401631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D3F1631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m */; };
-		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; };
-		66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */; };
+		66A13D3A1631D9D9002F5428 /* SLObjectSelectLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D391631D9D8002F5428 /* SLObjectSelectLongPressGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66A13D401631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D3F1631E0E6002F5428 /* SLImmovableTapGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66BD6E301591B57B00D4544C /* MSPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* MSPaperButton.m */; };
-		66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E331591C37D00D4544C /* UIImage+MCDrawSubImage.m */; };
-		66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */; };
+		66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E331591C37D00D4544C /* UIImage+MCDrawSubImage.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66BD6E65159316CF00D4544C /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E64159316CF00D4544C /* CoreImage.framework */; };
 		66BD6E701593A8CC00D4544C /* MSPlusButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E6F1593A8CC00D4544C /* MSPlusButton.m */; };
 		66BD6E7D1593ACD400D4544C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E7C1593ACD400D4544C /* QuartzCore.framework */; };
-		66BD6E801593AF4200D4544C /* MSSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E7F1593AF4100D4544C /* MSSidebarButton.m */; };
+		66BD6E801593AF4200D4544C /* MSSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E7F1593AF4100D4544C /* MSSidebarButton.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66BD6E831593B12500D4544C /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E821593B12500D4544C /* CoreMotion.framework */; };
 		66BD6E8E1593D18800D4544C /* MSPolylineButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E8D1593D18800D4544C /* MSPolylineButton.m */; };
 		66BD6E911593DE4E00D4544C /* MSPolygonButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E901593DE4E00D4544C /* MSPolygonButton.m */; };
@@ -54,20 +54,20 @@
 		66BD6E9C15940D7500D4544C /* MSPencilButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9B15940D7400D4544C /* MSPencilButton.m */; };
 		66BD6E9F15941B7B00D4544C /* MSShareButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9E15941B7B00D4544C /* MSShareButton.m */; };
 		66D0905615F70810004D2CAF /* MSListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* MSListAddPageButton.m */; };
-		66D33F4C15A6408A0044C809 /* SLShadowedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D33F4B15A6408A0044C809 /* SLShadowedView.m */; };
+		66D33F4C15A6408A0044C809 /* SLShadowedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D33F4B15A6408A0044C809 /* SLShadowedView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
 		66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8C1581BCEF00B4918C /* Foundation.framework */; };
 		66DCFB8F1581BCEF00B4918C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */; };
 		66DCFB951581BCEF00B4918C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66DCFB931581BCEF00B4918C /* InfoPlist.strings */; };
-		66DCFB971581BCEF00B4918C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB961581BCEF00B4918C /* main.m */; };
-		66DCFB9B1581BCEF00B4918C /* MSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB9A1581BCEF00B4918C /* MSAppDelegate.m */; };
-		66DCFB9E1581BCEF00B4918C /* SLPaperStackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB9D1581BCEF00B4918C /* SLPaperStackViewController.m */; };
+		66DCFB971581BCEF00B4918C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB961581BCEF00B4918C /* main.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66DCFB9B1581BCEF00B4918C /* MSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB9A1581BCEF00B4918C /* MSAppDelegate.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66DCFB9E1581BCEF00B4918C /* SLPaperStackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB9D1581BCEF00B4918C /* SLPaperStackViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66DCFBA11581BCEF00B4918C /* SLPaperStackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 66DCFB9F1581BCEF00B4918C /* SLPaperStackViewController.xib */; };
-		66DCFBC21581C85B00B4918C /* SLPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBC11581C85B00B4918C /* SLPaperStackView.m */; };
-		66DCFBCD1582BAED00B4918C /* SLPaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBCC1582BAED00B4918C /* SLPaperView.m */; };
+		66DCFBC21581C85B00B4918C /* SLPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBC11581C85B00B4918C /* SLPaperStackView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66DCFBCD1582BAED00B4918C /* SLPaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBCC1582BAED00B4918C /* SLPaperView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66DCFBD01582BC0E00B4918C /* img01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 66DCFBCF1582BC0E00B4918C /* img01.jpg */; };
-		66DCFBDF1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBDE1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.m */; };
-		66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DF0B7D159BC30200C5C652 /* UIView+Animations.m */; };
+		66DCFBDF1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBDE1582BF3E00B4918C /* SLPanAndPinchGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DF0B7D159BC30200C5C652 /* UIView+Animations.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66E88A371591853E001A6EBF /* SLPapersIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E88A361591853E001A6EBF /* SLPapersIcon.m */; };
 /* End PBXBuildFile section */
 
@@ -727,6 +727,7 @@
 		66DCFBBA1581BCF000B4918C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -749,6 +750,7 @@
 		66DCFBBB1581BCF000B4918C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";

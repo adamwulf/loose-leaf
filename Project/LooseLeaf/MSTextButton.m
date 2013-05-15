@@ -19,10 +19,10 @@
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
-        letter = [_letter retain];
+        letter = _letter;
         pointSize = [_font pointSize] * kWidthOfSidebarButton / 50.0;
         xOffset = _xOffset;
-        font = [_font retain];
+        font = _font;
     }
     return self;
 }

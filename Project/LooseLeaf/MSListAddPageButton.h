@@ -10,10 +10,10 @@
 #import "MSListAddPageButtonDelegate.h"
 
 @interface MSListAddPageButton : UIView{
-    NSObject<MSListAddPageButtonDelegate>* delegate;
+    NSObject<MSListAddPageButtonDelegate>* __weak delegate;
 }
 
-@property (nonatomic, assign) NSObject<MSListAddPageButtonDelegate>* delegate;
+@property (nonatomic, weak) NSObject<MSListAddPageButtonDelegate>* delegate;
 
 
 @end

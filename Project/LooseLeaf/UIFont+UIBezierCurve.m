@@ -32,9 +32,9 @@ static NSMutableDictionary* _pathCacheInstance = nil;
         CGGlyph *glyphs;
         CFIndex count;
         
-        CFStringRef iString = (CFStringRef) letter;
+        CFStringRef iString = (__bridge CFStringRef) letter;
         
-        CTFontRef iFont = CTFontCreateWithName((CFStringRef)[self fontName], [self pointSize], NULL);
+        CTFontRef iFont = CTFontCreateWithName((__bridge CFStringRef)[self fontName], [self pointSize], NULL);
         
         assert(iFont != NULL && iString != NULL);
         
@@ -72,6 +72,6 @@ static NSMutableDictionary* _pathCacheInstance = nil;
         
         [[UIFont sharedPathCache] setObject:glyphPath forKey:key];
     }
-    return [[glyphPath copy] autorelease];
+    return [glyphPath copy];
 }
 @end
