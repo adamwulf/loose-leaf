@@ -20,7 +20,7 @@
 	for( index = 0; index < [self count]; index++ ) {
 		[result addObject:mapfunc( [self objectAtIndex:index], index )];
 	}
-	return [result autorelease];
+	return result;
 }
 
 //NSNumber* sum = [numbers reduce:^(id obj, NSUInteger idx, id accum) {
