@@ -47,7 +47,7 @@
                                    (id)[UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.36].CGColor, 
                                    (id)halfWhite.CGColor, nil];
     CGFloat frontOfPaperLocations[] = {0, 0.2, 0.67, 0.93, 1};
-    CGGradientRef frontOfPaper = CGGradientCreateWithColors(colorSpace, (CFArrayRef)frontOfPaperColors, frontOfPaperLocations);
+    CGGradientRef frontOfPaper = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)frontOfPaperColors, frontOfPaperLocations);
     
     
     //// Bezier 2 Drawing
@@ -73,7 +73,6 @@
                                 CGPointApplyAffineTransform(CGPointMake(CGRectGetMinX(bezier2Bounds), CGRectGetMidY(bezier2Bounds)), bezier2Transform),
                                 CGPointApplyAffineTransform(CGPointMake(CGRectGetMaxX(bezier2Bounds), CGRectGetMidY(bezier2Bounds)), bezier2Transform),
                                 0);
-    [bezier2RotatedPath release];
     CGContextRestoreGState(context);
     
     [[UIColor blackColor] setStroke];

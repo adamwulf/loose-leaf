@@ -47,7 +47,7 @@
                                    (id)[UIColor colorWithRed: 0.57 green: 0.57 blue: 0.57 alpha: 0.34].CGColor, 
                                    (id)halfWhite.CGColor, nil];
     CGFloat frontOfPaperLocations[] = {0.98, 0.74, 0.09};
-    CGGradientRef frontOfPaper = CGGradientCreateWithColors(colorSpace, (CFArrayRef)frontOfPaperColors, frontOfPaperLocations);
+    CGGradientRef frontOfPaper = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)frontOfPaperColors, frontOfPaperLocations);
     
     
     //// Bezier Drawing
@@ -81,7 +81,6 @@
                                 CGPointApplyAffineTransform(CGPointMake(CGRectGetMinX(bezierBounds), CGRectGetMidY(bezierBounds)), bezierTransform),
                                 CGPointApplyAffineTransform(CGPointMake(CGRectGetMaxX(bezierBounds), CGRectGetMidY(bezierBounds)), bezierTransform),
                                 0);
-    [bezierRotatedPath release];
     CGContextRestoreGState(context);
     
     [strokeColor setStroke];

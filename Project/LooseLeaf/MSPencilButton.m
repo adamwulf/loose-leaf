@@ -58,7 +58,7 @@
                                          (id)[UIColor colorWithRed: 0.71 green: 0.71 blue: 0.71 alpha: 0.42].CGColor, 
                                          (id)pencilShadow.CGColor, nil];
     CGFloat pencilFillGradientLocations[] = {0, 0.26, 0.33, 0.33, 0.33, 0.5, 0.65, 0.66, 0.75, 0.93};
-    CGGradientRef pencilFillGradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)pencilFillGradientColors, pencilFillGradientLocations);
+    CGGradientRef pencilFillGradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)pencilFillGradientColors, pencilFillGradientLocations);
 
     //// Pencil Tip Drawing
     UIBezierPath* pencilTipPath = [UIBezierPath bezierPath];
@@ -138,7 +138,6 @@
                                 CGPointApplyAffineTransform(CGPointMake(CGRectGetMinX(pencilFillBounds), CGRectGetMidY(pencilFillBounds)), pencilFillTransform),
                                 CGPointApplyAffineTransform(CGPointMake(CGRectGetMaxX(pencilFillBounds), CGRectGetMidY(pencilFillBounds)), pencilFillTransform),
                                 0);
-    [pencilFillRotatedPath release];
     CGContextRestoreGState(context);
 
     

@@ -27,8 +27,7 @@
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
         
-        UITapGestureRecognizer* tapGesture = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)] autorelease];
-        [self addGestureRecognizer:tapGesture];
+        [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)]];
     }
     return self;
 }
