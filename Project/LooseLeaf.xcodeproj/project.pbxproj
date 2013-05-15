@@ -44,7 +44,7 @@
 		66BD6E65159316CF00D4544C /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E64159316CF00D4544C /* CoreImage.framework */; };
 		66BD6E701593A8CC00D4544C /* MSPlusButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E6F1593A8CC00D4544C /* MSPlusButton.m */; };
 		66BD6E7D1593ACD400D4544C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E7C1593ACD400D4544C /* QuartzCore.framework */; };
-		66BD6E801593AF4200D4544C /* MSSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E7F1593AF4100D4544C /* MSSidebarButton.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66BD6E801593AF4200D4544C /* MSSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E7F1593AF4100D4544C /* MSSidebarButton.m */; };
 		66BD6E831593B12500D4544C /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E821593B12500D4544C /* CoreMotion.framework */; };
 		66BD6E8E1593D18800D4544C /* MSPolylineButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E8D1593D18800D4544C /* MSPolylineButton.m */; };
 		66BD6E911593DE4E00D4544C /* MSPolygonButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E901593DE4E00D4544C /* MSPolygonButton.m */; };
