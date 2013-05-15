@@ -10,10 +10,10 @@
 #import "MSSidebarButtonDelegate.h"
 
 @interface MSSidebarButton : UIButton{
-    NSObject<MSSidebarButtonDelegate>* delegate;
+    NSObject<MSSidebarButtonDelegate>* __weak delegate;
 }
 
-@property (nonatomic, assign) NSObject<MSSidebarButtonDelegate>* delegate;
+@property (nonatomic, weak) NSObject<MSSidebarButtonDelegate>* delegate;
 @property (nonatomic, readonly) UIColor* backgroundColor;
 @property (nonatomic, readonly) UIColor* borderColor;
 
