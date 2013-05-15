@@ -1,33 +1,33 @@
 //
 //  UIView+SubviewStacks.m
-//  Paper Stack
+//  Loose Leaf
 //
 //  Created by Adam Wulf on 6/20/12.
-//  Copyright (c) 2012 Visere. All rights reserved.
+//  Copyright (c) 2012 Milestone Made, LLC. All rights reserved.
 //
 
 #import "UIView+SubviewStacks.h"
 
 @implementation UIView (SubviewStacks)
 
-- (BOOL) containsSubview:(SLPaperView*)obj{
+- (BOOL) containsSubview:(MMPaperView*)obj{
     return [self.subviews containsObject:obj];
 }
 
-- (SLPaperView*) peekSubview{
+- (MMPaperView*) peekSubview{
     return [self.subviews lastObject];
 }
 
-- (SLPaperView*)popSubview{
+- (MMPaperView*)popSubview{
     // nil if [self count] == 0
-    SLPaperView* lastObject = [self.subviews lastObject];
+    MMPaperView* lastObject = [self.subviews lastObject];
     if (lastObject){
         [lastObject removeFromSuperview];
     }
     return lastObject;
 }
 
-- (void)pushSubview:(SLPaperView*)obj{
+- (void)pushSubview:(MMPaperView*)obj{
     if(![self containsSubview:obj]){
         if(obj.superview){
             obj.frame = [self convertRect:obj.frame fromView:obj.superview];
@@ -36,14 +36,14 @@
     }
 }
 
-- (SLPaperView*)bottomSubview{
+- (MMPaperView*)bottomSubview{
     if([self.subviews count]){
         return [self.subviews objectAtIndex:0];
     }
     return nil;
 }
 
-- (void) addSubviewToBottomOfStack:(SLPaperView*)obj{
+- (void) addSubviewToBottomOfStack:(MMPaperView*)obj{
     if(obj.superview){
         obj.frame = [self convertRect:obj.frame fromView:obj.superview];
     }
@@ -54,7 +54,7 @@
  * returns an array of all subviews above
  * the input view
  */
-- (NSArray*) peekSubviewFromSubview:(SLPaperView*)obj{
+- (NSArray*) peekSubviewFromSubview:(MMPaperView*)obj{
     if(!obj){
         return [NSArray arrayWithArray:self.subviews];
     }
@@ -66,7 +66,7 @@
     return nil;
 }
 
--(SLPaperView*) getPageBelow:(SLPaperView*)page{
+-(MMPaperView*) getPageBelow:(MMPaperView*)page{
     if(!page) return page;
     NSInteger index = [self.subviews indexOfObject:page];
     if(index != 0){
@@ -75,7 +75,7 @@
     return nil;
 }
 
--(SLPaperView*) getPageAbove:(SLPaperView*)page{
+-(MMPaperView*) getPageAbove:(MMPaperView*)page{
     if(!page) return page;
     NSInteger index = [self.subviews indexOfObject:page];
     if(index != [self.subviews count] - 1){
@@ -84,13 +84,13 @@
     return nil;
 }
 
--(void) insertPage:(SLPaperView*)pageToInsert belowPage:(SLPaperView*)referencePage{
+-(void) insertPage:(MMPaperView*)pageToInsert belowPage:(MMPaperView*)referencePage{
     if(!pageToInsert) return;
     if(!referencePage) return;
     [self insertSubview:pageToInsert belowSubview:referencePage];
 }
 
--(void) insertPage:(SLPaperView*)pageToInsert abovePage:(SLPaperView*)referencePage{
+-(void) insertPage:(MMPaperView*)pageToInsert abovePage:(MMPaperView*)referencePage{
     if(!pageToInsert) return;
     if(!referencePage) return;
     [self insertSubview:pageToInsert aboveSubview:referencePage];
