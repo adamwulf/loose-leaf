@@ -16,7 +16,7 @@
     
     NSString* uuid;
     
-    NSObject<MMPaperViewDelegate>* delegate;
+    NSObject<MMPaperViewDelegate>* __weak delegate;
     
     // properties for pinch gesture
     CGFloat preGestureScale;
@@ -40,7 +40,7 @@
 
 @property (nonatomic, readonly) NSString* uuid;
 @property (nonatomic, readonly) UIBezierPath* unitShadowPath;
-@property (nonatomic, assign) NSObject<MMPaperViewDelegate>* delegate;
+@property (nonatomic, weak) NSObject<MMPaperViewDelegate>* delegate;
 @property (nonatomic, assign) CGFloat scale;
 @property (nonatomic, readonly) BOOL isBeingPannedAndZoomed;
 // this will only be true if the bezel gesture is triggered and the page is actively being panned

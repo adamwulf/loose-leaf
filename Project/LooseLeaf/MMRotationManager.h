@@ -18,11 +18,11 @@
     CGFloat accelerationZ;
     CGFloat currentRotationReading;
 
-    NSObject<MMRotationManagerDelegate>* delegate;
+    NSObject<MMRotationManagerDelegate>* __weak delegate;
 }
 
 @property (nonatomic, readonly) CGFloat currentRotationReading;
-@property (nonatomic, assign) NSObject<MMRotationManagerDelegate>* delegate;
+@property (nonatomic, weak) NSObject<MMRotationManagerDelegate>* delegate;
 
 
 +(MMRotationManager*) sharedInstace;

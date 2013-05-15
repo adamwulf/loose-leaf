@@ -46,7 +46,7 @@
     pinchGesture.pinchDelegate = self;
     [self addGestureRecognizer:pinchGesture];
     
-    displayLink = [[CADisplayLink displayLinkWithTarget:self selector:@selector(updateScrollOffsetDuringDrag)] retain];
+    displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateScrollOffsetDuringDrag)];
     displayLink.paused = YES;
     [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
 
@@ -502,7 +502,7 @@
     // ok, now we can get offset
     initialScrollOffsetFromTransitionToListView = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
     // from offset/height, we know which views will be visible
-    pagesThatWillBeVisibleAfterTransitionToListView = [[self findPagesInVisibleRowsOfListViewGivenOffset:initialScrollOffsetFromTransitionToListView] retain];
+    pagesThatWillBeVisibleAfterTransitionToListView = [self findPagesInVisibleRowsOfListViewGivenOffset:initialScrollOffsetFromTransitionToListView];
     // bezeling in from right is no longer allowed
     [fromRightBezelGesture setEnabled:NO];
     [hiddenStackHolder setClipsToBounds:NO];
@@ -527,7 +527,7 @@
     // ok, now we can get offset
     initialScrollOffsetFromTransitionToListView = self.contentOffset;
     // from offset/height, we know which views will be visible
-    pagesThatWillBeVisibleAfterTransitionToListView = [[self findPagesInVisibleRowsOfListViewGivenOffset:initialScrollOffsetFromTransitionToListView] retain];
+    pagesThatWillBeVisibleAfterTransitionToListView = [self findPagesInVisibleRowsOfListViewGivenOffset:initialScrollOffsetFromTransitionToListView];
     // bezeling in from right is no longer allowed
     [fromRightBezelGesture setEnabled:NO];
     [hiddenStackHolder setClipsToBounds:NO];
@@ -553,7 +553,6 @@
     [self setScrollEnabled:YES];
     [tapGesture setEnabled:YES];
     [pinchGesture setEnabled:YES];
-    [pagesThatWillBeVisibleAfterTransitionToListView release];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
     [self moveAddButtonToTop];
 }
@@ -570,7 +569,6 @@
     [self setScrollEnabled:NO];
     [tapGesture setEnabled:NO];
     [pinchGesture setEnabled:NO];
-    [pagesThatWillBeVisibleAfterTransitionToListView release];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
     [visibleStackHolder.superview insertSubview:visibleStackHolder belowSubview:hiddenStackHolder];
     [self moveAddButtonToBottom];

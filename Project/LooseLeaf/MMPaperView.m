@@ -30,7 +30,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        uuid = [[NSString createStringUUID] retain];
+        uuid = [NSString createStringUUID];
         
         //////////////////////////////////////////////////////////////////////
         //
@@ -39,7 +39,7 @@
         //
         NSInteger photo = rand() % 6 + 1;
         UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", photo]];
-        UIImageView* imgView = [[[UIImageView alloc] initWithImage:img] autorelease];
+        UIImageView* imgView = [[UIImageView alloc] initWithImage:img];
         imgView.frame = self.contentView.bounds;
         imgView.contentMode = UIViewContentModeScaleAspectFill;
         imgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -58,13 +58,13 @@
         // allow the user to select an object by long pressing
         // on it. this'll allow the user to select + move/scale/rotate
         // an object in one gesture
-        MMObjectSelectLongPressGestureRecognizer* longPress = [[[MMObjectSelectLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)]autorelease];
+        MMObjectSelectLongPressGestureRecognizer* longPress = [[MMObjectSelectLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
         longPress.numberOfTouchesRequired = 2;
         [self addGestureRecognizer:longPress];
         //
         // allow the user to select an object by tapping on the page
         // with two fingers
-        MMImmovableTapGestureRecognizer* tap = [[[MMImmovableTapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleFingerDoubleTap:)] autorelease];
+        MMImmovableTapGestureRecognizer* tap = [[MMImmovableTapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleFingerDoubleTap:)];
         tap.numberOfTapsRequired = 1;
         tap.numberOfTouchesRequired = 2;
         //
@@ -75,9 +75,7 @@
 
         //
         // This pan gesture is used to pan/scale the page itself.
-        panGesture = [[[MMPanAndPinchGestureRecognizer alloc]
-                                               initWithTarget:self 
-                                                      action:@selector(panAndScale:)] autorelease];
+        panGesture = [[MMPanAndPinchGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScale:)];
         panGesture.bezelDirectionMask = MMBezelDirectionRight | MMBezelDirectionLeft;
         //
         // This gesture is only allowed to run if the user is not
