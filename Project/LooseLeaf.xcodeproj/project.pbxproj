@@ -12,8 +12,8 @@
 		660E1DA1158FC4710001DA12 /* img03.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 660E1DA0158FC4710001DA12 /* img03.jpg */; };
 		660E1DA3158FC4750001DA12 /* img05.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 660E1DA2158FC4750001DA12 /* img05.jpg */; };
 		660E1DA5158FC47D0001DA12 /* img04.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 660E1DA4158FC47D0001DA12 /* img04.jpg */; };
-		660E1DA9158FC6300001DA12 /* NSMutableArray+QueueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DA8158FC6300001DA12 /* NSMutableArray+QueueAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAB158FC65C0001DA12 /* NSMutableArray+StackAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		660E1DA9158FC6300001DA12 /* NSMutableArray+QueueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DA8158FC6300001DA12 /* NSMutableArray+QueueAdditions.m */; };
+		660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAB158FC65C0001DA12 /* NSMutableArray+StackAdditions.m */; };
 		660E1DB0158FC7DB0001DA12 /* SLPaperIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAF158FC7DB0001DA12 /* SLPaperIcon.m */; };
 		660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DB2159028560001DA12 /* NSArray+MapReduce.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6630EDA115F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* SLPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
