@@ -59,8 +59,8 @@
 		66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8C1581BCEF00B4918C /* Foundation.framework */; };
 		66DCFB8F1581BCEF00B4918C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */; };
 		66DCFB951581BCEF00B4918C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66DCFB931581BCEF00B4918C /* InfoPlist.strings */; };
-		66DCFB971581BCEF00B4918C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB961581BCEF00B4918C /* main.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		66DCFB9B1581BCEF00B4918C /* MSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB9A1581BCEF00B4918C /* MSAppDelegate.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66DCFB971581BCEF00B4918C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB961581BCEF00B4918C /* main.m */; };
+		66DCFB9B1581BCEF00B4918C /* MSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB9A1581BCEF00B4918C /* MSAppDelegate.m */; };
 		66DCFB9E1581BCEF00B4918C /* SLPaperStackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB9D1581BCEF00B4918C /* SLPaperStackViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66DCFBA11581BCEF00B4918C /* SLPaperStackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 66DCFB9F1581BCEF00B4918C /* SLPaperStackViewController.xib */; };
 		66DCFBC21581C85B00B4918C /* SLPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBC11581C85B00B4918C /* SLPaperStackView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
