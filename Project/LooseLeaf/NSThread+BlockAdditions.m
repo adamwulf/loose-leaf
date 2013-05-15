@@ -1,9 +1,9 @@
 //
 //  NSThread+BlockAdditions.m
-//  PaintingSample
+//  Loose Leaf
 //
 //  Created by Adam Wulf on 9/7/12.
-//
+//  Copyright (c) 2012 Milestone Made, LLC. All rights reserved.
 //
 
 #import "NSThread+BlockAdditions.h"
