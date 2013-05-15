@@ -27,7 +27,7 @@
 		6661144716FD67F8005032B9 /* Loose-Leaf_72.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144616FD67F8005032B9 /* Loose-Leaf_72.png */; };
 		6661144A16FD67FA005032B9 /* Loose-Leaf_144.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144916FD67FA005032B9 /* Loose-Leaf_144.png */; };
 		66728715159515FD0018571A /* SLEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* SLEditablePaperStackView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		6693295A15958A950033E557 /* MSShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MSShadowManager.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		6693295A15958A950033E557 /* MSShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MSShadowManager.m */; };
 		66932965159593C00033E557 /* MSRotationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66932964159593C00033E557 /* MSRotationManager.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6693296A1595A87E0033E557 /* MSMapButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329691595A87E0033E557 /* MSMapButton.m */; };
 		6693296D1596E0600033E557 /* SLBezelInRightGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693296C1596E0600033E557 /* SLBezelInRightGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };

@@ -20,7 +20,7 @@ static MSShadowManager* _instance = nil;
     if(_instance) return _instance;
     if((_instance = [super init])){
         shadowPathCache = [[NSMutableDictionary alloc] init];
-        unitShadowPath = [[self generateUnitShadowPath] retain];
+        unitShadowPath = [self generateUnitShadowPath];
     }
     return _instance;
 }
@@ -39,7 +39,7 @@ static MSShadowManager* _instance = nil;
     [MSShadowManager sharedInstace];
     CGFloat width = [[UIScreen mainScreen] bounds].size.width;
     CGFloat height = [[UIScreen mainScreen] bounds].size.height;
-    UIBezierPath* path = [[UIBezierPath bezierPath] retain];
+    UIBezierPath* path = [UIBezierPath bezierPath];
     [path moveToPoint:CGPointMake((rand() % kShadowDepth) / width, (rand() % kShadowDepth) / height)];
     CGFloat loc = rand() % 100 / 100.0 / 20.0;
     // left
