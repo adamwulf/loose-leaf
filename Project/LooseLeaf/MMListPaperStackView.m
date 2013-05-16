@@ -7,7 +7,6 @@
 //
 
 #import "MMListPaperStackView.h"
-#import "MMPaperView+ListView.h"
 #import "UIView+Debug.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMShadowManager.h"
@@ -589,12 +588,12 @@
  * when that happens, we start to also move pages below the panned page to show that
  * transition animation
  */
--(CGRect) isPanningAndScalingPage:(MMPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
+-(CGRect) isBeginning:(BOOL)beginning toPanAndScalePage:(MMPaperView *)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
     if([visibleStackHolder peekSubview] == page){
         //
         // defer to bezel gesture
         if([page willExitToBezel:MMBezelDirectionLeft | MMBezelDirectionRight]){
-            return [super isPanningAndScalingPage:page fromFrame:fromFrame toFrame:toFrame];
+            return [super isBeginning:beginning toPanAndScalePage:page fromFrame:fromFrame toFrame:toFrame];
         }
         
         // make sure we're the top page being panned
@@ -679,7 +678,7 @@
             return [self framePositionDuringTransitionForPage:page originalFrame:toFrame withTrust:percentageToTrustToFrame];
         }
     }
-    return [super isPanningAndScalingPage:page fromFrame:fromFrame toFrame:toFrame];
+    return [super isBeginning:beginning toPanAndScalePage:page fromFrame:fromFrame toFrame:toFrame];
 }
 
 /**

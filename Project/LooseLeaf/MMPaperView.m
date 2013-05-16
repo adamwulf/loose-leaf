@@ -45,6 +45,11 @@
         imgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         imgView.clipsToBounds = YES;
 //        [self.contentView addSubview:imgView];
+        
+        UILabel* label = [[UILabel alloc] initWithFrame:self.bounds];
+        label.text = uuid;
+        [label sizeToFit];
+        [self.contentView addSubview:label];
         //
         // end debug image
         //
@@ -96,6 +101,9 @@
 
 
 -(void) setFrame:(CGRect)_frame{
+    if(!_frame.size.width){
+        NSLog(@"zero width");
+    }
     [super setFrame:_frame];
 }
 
@@ -250,9 +258,10 @@
     }else if(panGesture.numberOfTouches == 1){
         if(lastNumberOfTouchesForPanGesture != 1){
             // notify the delegate of our state change
-            [self.delegate isPanningAndScalingPage:self
-                                         fromFrame:frameOfPageAtBeginningOfGesture
-                                           toFrame:frameOfPageAtBeginningOfGesture];
+            [self.delegate isBeginning:NO
+                     toPanAndScalePage:self
+                             fromFrame:frameOfPageAtBeginningOfGesture
+                               toFrame:frameOfPageAtBeginningOfGesture];
         }
         //
         // the gesture requires 2 fingers. it may still say it only has 1 touch if the user
@@ -268,7 +277,7 @@
         //
         // if the user had 1 finger down and re-touches with the 2nd finger, then this
         // will be called as if it was a "new" gesture. this lets the pan and zoom start
-        // from the correct new gesture are of the page.
+        // from the correct new gesture area of the page.
         //
         // to test. begin pan/zoom in bottom left, then lift 1 finger and move to the top right
         // of the page, then re-pan/zoom on the top right. it should "just work".
@@ -296,9 +305,10 @@
                                                 lastLocationInSelf.y / self.frame.size.height);
 
         // notify the delegate of our state change
-        [self.delegate isPanningAndScalingPage:self
-                                     fromFrame:frameOfPageAtBeginningOfGesture
-                                       toFrame:frameOfPageAtBeginningOfGesture];
+        [self.delegate isBeginning:panGesture.state == UIGestureRecognizerStateBegan
+                 toPanAndScalePage:self
+                         fromFrame:frameOfPageAtBeginningOfGesture
+                           toFrame:frameOfPageAtBeginningOfGesture];
         return;
     }
     
@@ -379,7 +389,7 @@
     //
     // now, notify delegate that we're about to set the frame of the page during a gesture,
     // and give it a chance to modify the frame if at all needed.
-    fr = [self.delegate isPanningAndScalingPage:self
+    fr = [self.delegate isBeginning:NO toPanAndScalePage:self
                       fromFrame:frameOfPageAtBeginningOfGesture
                         toFrame:fr];
     
@@ -411,5 +421,16 @@
 }
 
 
+#pragma mark - List View
+
+-(NSInteger) rowInListView{
+    NSInteger indexOfPage = [self.delegate indexOfPageInCompleteStack:self];
+    return [self.delegate rowInListViewGivenIndex:indexOfPage];
+}
+
+-(NSInteger) columnInListView{
+    NSInteger indexOfPage = [self.delegate indexOfPageInCompleteStack:self];
+    return [self.delegate columnInListViewGivenIndex:indexOfPage];
+}
 
 @end

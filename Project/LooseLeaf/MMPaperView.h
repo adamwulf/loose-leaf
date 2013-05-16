@@ -48,8 +48,12 @@
 @property (nonatomic, readonly) UILabel* textLabel;
 @property (nonatomic, assign) BOOL isBrandNewPage;
 
--(BOOL) willExitToBezel:(MMBezelDirection)bezelDirection;
+// List View
+@property (nonatomic, readonly) NSInteger rowInListView;
+@property (nonatomic, readonly) NSInteger columnInListView;
 
+
+-(BOOL) willExitToBezel:(MMBezelDirection)bezelDirection;
 -(void) cancelAllGestures;
 -(void) disableAllGestures;
 -(void) enableAllGestures;
