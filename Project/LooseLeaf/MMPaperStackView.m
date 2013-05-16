@@ -142,7 +142,6 @@
     if(bezelingFromRight){
         if((fromRightBezelGesture.panDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft){
             showLeftArrow = YES;
-            NSLog(@"left");
         }else if((fromRightBezelGesture.panDirection & MMBezelDirectionRight) == MMBezelDirectionRight){
             showRightArrow = YES;
         }
@@ -156,7 +155,6 @@
         showRightArrow = YES;
     }
     
-    
     if([visibleStackHolder peekSubview].scale < kMinPageZoom){
         //
         // ok, we're in zoomed out mode, looking at the list
@@ -165,11 +163,8 @@
         showRightArrow = NO;
     }
     
-    
-    //
     //
     // now all the variables are set, we know our state
-    //
     // so update the actual icons
     if((showLeftArrow || showRightArrow) &&
        ((!showLeftArrow && leftArrow.alpha) ||
@@ -673,8 +668,6 @@
     // ok, update the icons
     [self updateIconAnimations];
     
-
-    
     if(justFinishedPanningTheTopPage && (bezelDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft){
         //
         // CASE 1:
@@ -694,7 +687,9 @@
         // then animate
         [self willChangeTopPageTo:[bezelStackHolder peekSubview]];
         [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO onComplete:nil];
-        [self emptyBezelStackToVisibleStackOnComplete:nil];
+        [self emptyBezelStackToVisibleStackOnComplete:^(BOOL finished){
+            [self updateIconAnimations];
+        }];
         return;
     }else if(justFinishedPanningTheTopPage && [setOfPagesBeingPanned count]){
         //
@@ -718,7 +713,9 @@
         }
         [self willChangeTopPageTo:popUntil];
         [self mayChangeTopPageTo:[visibleStackHolder getPageBelow:popUntil]];
-        [self popStackUntilPage:popUntil onComplete:nil];
+        [self popStackUntilPage:popUntil onComplete:^(BOOL finished){
+            [self updateIconAnimations];
+        }];
         return;
     }else if(!justFinishedPanningTheTopPage && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
         //
@@ -728,7 +725,9 @@
         // ============================================================================
         [self willNotChangeTopPageTo:page];
         [page removeAllAnimationsAndPreservePresentationFrame];
-        [self sendPageToHiddenStack:page onComplete:nil];
+        [self sendPageToHiddenStack:page onComplete:^(BOOL finished){
+            [self updateIconAnimations];
+        }];
         [self mayChangeTopPageTo:[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]]];
         return;
     }else if((bezelDirection & MMBezelDirectionRight) == MMBezelDirectionRight){
@@ -755,10 +754,14 @@
                     pageToPopUntil = [visibleStackHolder getPageBelow:pageToPopUntil];
                 }
                 [self willChangeTopPageTo:pageToPopUntil];
-                [self popStackUntilPage:pageToPopUntil onComplete:nil];
+                [self popStackUntilPage:pageToPopUntil onComplete:^(BOOL finished){
+                    [self updateIconAnimations];
+                }];
             }else{
                 [self willChangeTopPageTo:[visibleStackHolder getPageBelow:page]];
-                [self sendPageToHiddenStack:page onComplete:nil];
+                [self sendPageToHiddenStack:page onComplete:^(BOOL finished){
+                    [self updateIconAnimations];
+                }];
             }
             //
             // now that pages are sent to the hidden stack,
@@ -769,7 +772,9 @@
             // they bezeled right a non-top page, just get
             // rid of it
             [page removeAllAnimationsAndPreservePresentationFrame];
-            [self sendPageToHiddenStack:page onComplete:nil];
+            [self sendPageToHiddenStack:page onComplete:^(BOOL finished){
+                [self updateIconAnimations];
+            }];
         }
         return;
     }else if(!justFinishedPanningTheTopPage){
@@ -785,7 +790,7 @@
         MMPaperView* topPage = [visibleStackHolder peekSubview];
         if(![topPage isBeingPannedAndZoomed]){
             //
-            // TODO
+            // TODO: log this to analytics
             //
             // odd, no idea how this happened. but we
             // just released a non-top page and the top
@@ -819,7 +824,9 @@
         // bezelStackHolder debugging DONE
         // pop the top page, it's close to the right bezel
         [self willChangeTopPageTo:[visibleStackHolder getPageBelow:page]];
-        [self popStackUntilPage:[visibleStackHolder getPageBelow:page] onComplete:nil];
+        [self popStackUntilPage:[visibleStackHolder getPageBelow:page] onComplete:^(BOOL finished){
+            [self updateIconAnimations];
+        }];
     }else if(justFinishedPanningTheTopPage && [self shouldPushPageOntoVisibleStack:page withFrame:toFrame]){
         //
         // bezelStackHolder debugging DONE
@@ -831,7 +838,9 @@
         // the gesture inside the screen (which should only push 1 page).
         //
         // so check the bezelStackHolder
-        [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO onComplete:nil];
+        [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO onComplete:^(BOOL finished){
+            [self updateIconAnimations];
+        }];
         if([bezelStackHolder.subviews count]){
             // pull the view onto the visible stack
             MMPaperView* pageToPushToVisible = [bezelStackHolder.subviews objectAtIndex:0];
