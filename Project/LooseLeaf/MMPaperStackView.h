@@ -25,6 +25,11 @@
 
 @interface MMPaperStackView : UIScrollView<MMPaperViewDelegate>{
     @private
+    // this is the UUID of the page that has
+    // most recently been suggested that it might
+    // be the top page soon
+    NSString* recentlySuggestedPageUUID;
+    
     MMPapersIcon* papersIcon;
     MMPaperIcon* paperIcon;
     MMPlusIcon* plusIcon;

@@ -120,7 +120,7 @@
     BOOL bezelingFromRight = fromRightBezelGesture.state == UIGestureRecognizerStateBegan || fromRightBezelGesture.state == UIGestureRecognizerStateChanged;
     // YES if the top page will bezel right, NO otherwise
     BOOL topPageWillBezelRight = [[visibleStackHolder peekSubview] willExitToBezel:MMBezelDirectionRight];
-    // YES if the top page will bezel right, NO otherwise
+    // YES if the top page will bezel left, NO otherwise
     BOOL topPageWillBezelLeft = [[visibleStackHolder peekSubview] willExitToBezel:MMBezelDirectionLeft];
     // number of times the top page has been bezeled
     NSInteger numberOfTimesTheTopPageHasExitedBezel = [[visibleStackHolder peekSubview] numberOfTimesExitedBezel];
@@ -142,20 +142,18 @@
     if(bezelingFromRight){
         if((fromRightBezelGesture.panDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft){
             showLeftArrow = YES;
+            NSLog(@"left");
         }else if((fromRightBezelGesture.panDirection & MMBezelDirectionRight) == MMBezelDirectionRight){
             showRightArrow = YES;
         }
     }
     
-    for(MMPaperView* page in setOfPagesBeingPanned){
-        if(page == [visibleStackHolder peekSubview]){
-            if([self shouldPushPageOntoVisibleStack:page withFrame:page.frame]){
-                showLeftArrow = YES;
-            }
-            if([self shouldPopPageFromVisibleStack:page withFrame:page.frame]){
-                showRightArrow = YES;
-            }
-        }
+    MMPaperView* topPage = [visibleStackHolder peekSubview];
+    if([self shouldPushPageOntoVisibleStack:topPage withFrame:topPage.frame]){
+        showLeftArrow = YES;
+    }
+    if([self shouldPopPageFromVisibleStack:topPage withFrame:topPage.frame]){
+        showRightArrow = YES;
     }
     
     
@@ -520,21 +518,17 @@
     [setOfPagesBeingPanned addObject:page];
     [self updateIconAnimations];
     
-    
     //
     // with the pinch/pan gesture, pages may be
     // loading or unloading. so we should notify
     // when to start pushing pages in or out of
     // caches.
-    //
-    
     if(isBeginningGesture && isPanningTopPage){
         // if they're panning the top page
         [self mayChangeTopPageTo:[visibleStackHolder getPageBelow:page]];
     }else if(isBeginningGesture){
         [self mayChangeTopPageTo:page];
     }
-    
     
     //
     // the user is bezeling a page to the left, which will pop
@@ -616,10 +610,35 @@
             }
         }
     }else if(isPanningTopPage){
-        if(!CGRectEqualToRect(bezelStackHolder.frame, hiddenStackHolder.frame)){
-            // if the bezel stack is still visible,
-            // then notify ourselves that we're probably going to change
-            // the top page to the one below the current top, if anything
+        if([page willExitToBezel:MMBezelDirectionRight] && page.numberOfTimesExitedBezel > 1){
+            //
+            // ok, the user is bezeling the top page to the right,
+            // so find the page that's page.numberOfTimesExitedBezel
+            // below the top page on the visible stack, and notify
+            // that we may pop to that page.
+            //
+            // we only need to notify if the bezel number is > 1 because
+            // we'll have already notified about the page immediately below
+            // the top page when the user first picked up the top page
+            MMPaperView* pageMayPopTo = page;
+            for(int i=0;i<page.numberOfTimesExitedBezel;i++){
+                pageMayPopTo = [visibleStackHolder getPageBelow:pageMayPopTo];
+            }
+            [self mayChangeTopPageTo:pageMayPopTo];
+        }else if([self shouldPushPageOntoVisibleStack:page withFrame:page.frame]){
+            //
+            // the user has moved the top page far enough left that if they release
+            // now then we'd pop a page from the hidden stack onto the visible stack
+            MMPaperView* paperView = nil;
+            if([bezelStackHolder.subviews count]){
+                paperView = [bezelStackHolder.subviews objectAtIndex:0];
+            }else{
+                paperView = [hiddenStackHolder peekSubview];
+            }
+            if(paperView){
+                [self mayChangeTopPageTo:paperView];
+            }
+        }else{
             [self mayChangeTopPageTo:[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]]];
         }
         // ok, the user isn't bezeling left anymore
@@ -627,8 +646,6 @@
             bezelStackHolder.frame = hiddenStackHolder.frame;
         } completion:nil];
     }
-    
-    
     
     return toFrame;
 }
@@ -700,6 +717,7 @@
             }
         }
         [self willChangeTopPageTo:popUntil];
+        [self mayChangeTopPageTo:[visibleStackHolder getPageBelow:popUntil]];
         [self popStackUntilPage:popUntil onComplete:nil];
         return;
     }else if(!justFinishedPanningTheTopPage && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
@@ -800,6 +818,7 @@
         //
         // bezelStackHolder debugging DONE
         // pop the top page, it's close to the right bezel
+        [self willChangeTopPageTo:[visibleStackHolder getPageBelow:page]];
         [self popStackUntilPage:[visibleStackHolder getPageBelow:page] onComplete:nil];
     }else if(justFinishedPanningTheTopPage && [self shouldPushPageOntoVisibleStack:page withFrame:toFrame]){
         //
@@ -816,12 +835,15 @@
         if([bezelStackHolder.subviews count]){
             // pull the view onto the visible stack
             MMPaperView* pageToPushToVisible = [bezelStackHolder.subviews objectAtIndex:0];
+            [self willChangeTopPageTo:pageToPushToVisible];
             [pageToPushToVisible removeAllAnimationsAndPreservePresentationFrame];
             [visibleStackHolder pushSubview:pageToPushToVisible];
             [self animatePageToFullScreen:pageToPushToVisible withDelay:0 withBounce:NO onComplete:nil];
             [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
             [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
         }else{
+            // the pop method will notify us about the change
+            // in top page, so we won't do it here.
             [self popTopPageOfHiddenStack];
         }
     }else if(page.scale <= 1){
@@ -977,6 +999,7 @@
 -(void) popTopPageOfHiddenStack{
     [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
     MMPaperView* page = [hiddenStackHolder peekSubview];
+    [self willChangeTopPageTo:page];
     page.isBrandNewPage = NO;
     [self popHiddenStackUntilPage:[hiddenStackHolder getPageBelow:page] onComplete:nil];
 }
@@ -1257,7 +1280,10 @@
  * to disk
  */
 -(void) mayChangeTopPageTo:(MMPaperView*)page{
-    NSLog(@"may change top page to: %@", page.uuid);
+    if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
+        recentlySuggestedPageUUID = page.uuid;
+        NSLog(@"may change top page to: %@", page.uuid);
+    }
 }
 
 /**
