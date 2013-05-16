@@ -8,6 +8,7 @@
 
 #import "UIView+Animations.h"
 #import <QuartzCore/QuartzCore.h>
+#import "MMShadowedView.h"
 
 @implementation UIView (Animations)
 
@@ -16,7 +17,10 @@
     CGRect lFrame = [self.layer.presentationLayer frame];
     // look at the view frame to compare
     CGRect vFrame = self.frame;
-    if(!CGRectEqualToRect(lFrame, vFrame)){
+    if([self isKindOfClass:[MMShadowedView class]]){
+        vFrame = [MMShadowedView expandFrame:vFrame];
+    }
+    if(!CGRectEqualToRect(lFrame, vFrame) && !CGRectEqualToRect(lFrame, CGRectZero)){
         // if they're not equal, then remove all animations
         // and set the frame to the presentation layer's frame
         // so that the gesture will pick up in the middle

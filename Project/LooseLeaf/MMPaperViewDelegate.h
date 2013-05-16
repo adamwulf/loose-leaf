@@ -24,7 +24,7 @@
  * being scaled and moved from the fromFrame to the
  * toFrame
  */
--(CGRect) isPanningAndScalingPage:(MMPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame;
+-(CGRect) isBeginning:(BOOL)isBeginningGesture toPanAndScalePage:(MMPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame;
 
 /**
  * this notification is triggered when the user finishes

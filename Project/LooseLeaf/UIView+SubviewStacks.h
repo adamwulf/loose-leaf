@@ -13,9 +13,9 @@
 
 - (BOOL) containsSubview:(MMPaperView*)obj;
 - (MMPaperView*) peekSubview;
-- (MMPaperView*)popSubview;
-- (MMPaperView*)bottomSubview;
-- (void)pushSubview:(MMPaperView*)obj;
+- (MMPaperView*) popSubview;
+- (MMPaperView*) bottomSubview;
+- (void) pushSubview:(MMPaperView*)obj;
 - (void) addSubviewToBottomOfStack:(MMPaperView*)obj;
 - (NSArray*) peekSubviewFromSubview:(MMPaperView*)obj;
 - (MMPaperView*) getPageBelow:(MMPaperView*)page;
