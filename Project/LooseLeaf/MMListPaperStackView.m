@@ -677,10 +677,11 @@
                     oldFrame = [possibleCachedOriginalLocation CGRectValue];
                 }
                 CGRect newFrame = [self framePositionDuringTransitionForPage:aPage originalFrame:oldFrame withTrust:percentageToTrustToFrame + transitionDelay];
-                if(![self isInVisibleStack:aPage]){
+                if(![self isInVisibleStack:aPage] && !possibleCachedOriginalLocation){
                     //
                     // this helps the hidden pages to show coming in from
-                    // the right
+                    // the right, but only if their position wasn't saved
+                    // frome the bezel location
                     newFrame.origin.x -= amountToMoveHiddenFrame;
                 }
                 aPage.frame = newFrame;
