@@ -489,6 +489,13 @@
 }
 
 
+-(BOOL) shouldPopPageFromVisibleStack:(MMPaperView*)page withFrame:(CGRect)frame{
+    if([visibleStackHolder peekSubview].scale < kMinPageZoom){
+        return NO;
+    }
+    return [super shouldPopPageFromVisibleStack:page withFrame:frame];
+}
+
 #pragma mark - List View Enable / Disable Helper Methods
 
 /**
@@ -510,6 +517,26 @@
     [tapGesture setEnabled:NO];
     [pinchGesture setEnabled:NO];
     [self moveAddButtonToBottom];
+    //
+    // ok, we're about to zoom out to list view, so save the frames
+    // of all the pages in the visible stack
+    //
+    // first check the pagse in the visible stack
+    for(MMPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
+        [setOfInitialFramesForPagesBeingZoomed setObject:[NSValue valueWithCGRect:aPage.frame] forKey:aPage.uuid];
+        if(aPage != [visibleStackHolder peekSubview]){
+            [aPage disableAllGestures];
+        }
+        if(CGRectEqualToRect(aPage.frame, visibleStackHolder.bounds)){
+            break;
+        }
+    }
+    for(MMPaperView* aPage in pagesThatWillBeVisibleAfterTransitionToListView){
+        [setOfInitialFramesForPagesBeingZoomed setObject:[NSValue valueWithCGRect:aPage.frame] forKey:aPage.uuid];
+        if(aPage != [visibleStackHolder peekSubview]){
+            [aPage disableAllGestures];
+        }
+    }
 }
 
 /**
@@ -561,6 +588,16 @@
  * transition into page view from the transition state
  */
 -(void) finishUITransitionToPageView{
+    for(MMPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
+        if(aPage != [visibleStackHolder peekSubview]){
+            [aPage enableAllGestures];
+        }
+    }
+    for(MMPaperView* aPage in pagesThatWillBeVisibleAfterTransitionToListView){
+        if(aPage != [visibleStackHolder peekSubview]){
+            [aPage disableAllGestures];
+        }
+    }
     [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
     [fromRightBezelGesture setEnabled:YES];
     [visibleStackHolder setClipsToBounds:YES];
@@ -589,94 +626,85 @@
  * transition animation
  */
 -(CGRect) isBeginning:(BOOL)beginning toPanAndScalePage:(MMPaperView *)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
-    if([visibleStackHolder peekSubview] == page){
+    if([visibleStackHolder peekSubview].scale < kMinPageZoom && [visibleStackHolder peekSubview] == page){
+        // make sure we're the top page being panned,
+        // and that we're zooming into list view
+        
+        CGRect fr = [self frameForAddPageButton];
+        fr.origin.y -= initialScrollOffsetFromTransitionToListView.y;
+        addPageButtonInListView.frame = fr;
+        addPageButtonInListView.alpha = 0;
+        [self moveAddButtonToBottom];
         //
-        // defer to bezel gesture
-        if([page willExitToBezel:MMBezelDirectionLeft | MMBezelDirectionRight]){
-            return [super isBeginning:beginning toPanAndScalePage:page fromFrame:fromFrame toFrame:toFrame];
+        // once the zoom is below kMinPageZoom and still above kZoomToListPageZoom,
+        // then we need to adjust the frames of all the pages so that they zoom
+        // into their list view frames correctly
+        if([bezelStackHolder.subviews count]){
+            // bezelStackHolder still has pages being animated, so hold off on any list animations for now
+            //
+            // while we wait for the bezel to empty, we'll just return the toFrame
+            return toFrame;
         }
         
-        // make sure we're the top page being panned
-        if([visibleStackHolder peekSubview].scale < kMinPageZoom){
-            CGRect fr = [self frameForAddPageButton];
-            fr.origin.y -= initialScrollOffsetFromTransitionToListView.y;
-            addPageButtonInListView.frame = fr;
-            addPageButtonInListView.alpha = 0;
-            [self moveAddButtonToBottom];
-            //
-            // once the zoom is below kMinPageZoom and still above kZoomToListPageZoom,
-            // then we need to adjust the frames of all the pages so that they zoom
-            // into their list view frames correctly
-            
-            if([[setOfPagesBeingPanned setByRemovingObject:[visibleStackHolder peekSubview]] count]){
-                // still pages being panned, this'll be caught by the isBeginningToScaleReallySmall handler
-                //
-                // while we wait for those other pages to have their gesturs cancelled, we'll just
-                // return the toFrame so the gesture can continue
-                return toFrame;
-            }
-            if([bezelStackHolder.subviews count]){
-                // bezelStackHolder still has pages being animated, so hold off on any list animations for now
-                //
-                // while we wait for the bezel to empty, we'll just return the toFrame
-                return toFrame;
-            }
-            
-            //
-            // ok, the top page is the only page that's being panned.
-            // and it's zoom is below the min page zoom, so we should
-            // start to move it's frame toward its resting place, and also
-            // move all the top two rows of pages to their resting place as well
-            //
-            // how close are we to list view? 1 is not close at all, 0 is list view
-            CGFloat percentageToTrustToFrame = [visibleStackHolder peekSubview].scale / kMinPageZoom;
-            
-            
-            //
-            // start to move the hidden frame to overlap the visible frame
-            CGFloat percentageToMoveHiddenFrame = percentageToTrustToFrame;
-            percentageToMoveHiddenFrame += .1;
-            CGFloat amountToMoveHiddenFrame = visibleStackHolder.frame.size.width - percentageToMoveHiddenFrame * visibleStackHolder.frame.size.width;
-            
-            //
-            // ok, move all the soon to be visible pages into their
-            // position
-            CGFloat transitionDelay = 0;
-            for(MMPaperView* aPage in pagesThatWillBeVisibleAfterTransitionToListView){
-                if(aPage != page){
-                    CGRect oldFrame = hiddenStackHolder.bounds;
-                    CGRect newFrame = [self framePositionDuringTransitionForPage:aPage originalFrame:oldFrame withTrust:percentageToTrustToFrame + transitionDelay];
-                    if([self isInVisibleStack:aPage]){
-                        oldFrame = [[setOfInitialFramesForPagesBeingZoomed objectForKey:aPage.uuid] CGRectValue];
-                    }else{
-                        //
-                        // this helps the hidden pages to show coming in from
-                        // the right
-                        newFrame.origin.x -= amountToMoveHiddenFrame;
-                    }
-                    aPage.frame = newFrame;
-                    
-                    //
-                    // transitionDelay makes sure that each page is not /exactly/ lined up
-                    // with its neighboring pages. just gives a bit of texture to the
-                    // transition
-                    transitionDelay += .017;
+        //
+        // ok, the top page is the only page that's being panned.
+        // and it's zoom is below the min page zoom, so we should
+        // start to move it's frame toward its resting place, and also
+        // move all the top two rows of pages to their resting place as well
+        //
+        // how close are we to list view? 1 is not close at all, 0 is list view
+        CGFloat percentageToTrustToFrame = [visibleStackHolder peekSubview].scale / kMinPageZoom;
+        
+        
+        //
+        // start to move the hidden frame to overlap the visible frame
+        CGFloat percentageToMoveHiddenFrame = percentageToTrustToFrame;
+        percentageToMoveHiddenFrame += .1;
+        CGFloat amountToMoveHiddenFrame = visibleStackHolder.frame.size.width - percentageToMoveHiddenFrame * visibleStackHolder.frame.size.width;
+        
+        //
+        // ok, move all the soon to be visible pages into their
+        // position
+        CGFloat transitionDelay = 0;
+        for(MMPaperView* aPage in pagesThatWillBeVisibleAfterTransitionToListView){
+            if(aPage != page){
+                CGRect oldFrame = hiddenStackHolder.bounds;
+                NSValue* possibleCachedOriginalLocation = [setOfInitialFramesForPagesBeingZoomed objectForKey:aPage.uuid];
+                if(possibleCachedOriginalLocation){
+                    // https://github.com/adamwulf/loose-leaf/issues/18
+                    // the user may have been panning pages behind the top page
+                    // so use that as its original location if we can
+                    oldFrame = [possibleCachedOriginalLocation CGRectValue];
                 }
+                CGRect newFrame = [self framePositionDuringTransitionForPage:aPage originalFrame:oldFrame withTrust:percentageToTrustToFrame + transitionDelay];
+                if(![self isInVisibleStack:aPage]){
+                    //
+                    // this helps the hidden pages to show coming in from
+                    // the right
+                    newFrame.origin.x -= amountToMoveHiddenFrame;
+                }
+                aPage.frame = newFrame;
+                
+                //
+                // transitionDelay makes sure that each page is not /exactly/ lined up
+                // with its neighboring pages. just gives a bit of texture to the
+                // transition
+                transitionDelay += .017;
             }
-            
-            //
-            // the user has zoomed out far enough for us to take over
-            // with animations. cancel the gesture.
-            //
-            // the cancelled state will be caught in MMPaperStackView, so
-            // the frame is not adjusted after we animate the page to
-            // it's resting place
-            if([visibleStackHolder peekSubview].scale < kZoomToListPageZoom){
-                [[visibleStackHolder peekSubview] cancelAllGestures];
-                return fromFrame;
-            }
-            return [self framePositionDuringTransitionForPage:page originalFrame:toFrame withTrust:percentageToTrustToFrame];
         }
+        
+        //
+        // the user has zoomed out far enough for us to take over
+        // with animations. cancel the gesture.
+        //
+        // the cancelled state will be caught in MMPaperStackView, so
+        // the frame is not adjusted after we animate the page to
+        // it's resting place
+        if([visibleStackHolder peekSubview].scale < kZoomToListPageZoom){
+            [[visibleStackHolder peekSubview] cancelAllGestures];
+            return fromFrame;
+        }
+        return [self framePositionDuringTransitionForPage:page originalFrame:toFrame withTrust:percentageToTrustToFrame];
     }
     return [super isBeginning:beginning toPanAndScalePage:page fromFrame:fromFrame toFrame:toFrame];
 }
@@ -708,21 +736,22 @@
     // so empty that stack to the hidden stack before
     // we can continue scaling out
     if([bezelStackHolder.subviews count]){
-        [self emptyBezelStackToHiddenStackAnimated:YES onComplete:^(BOOL finished){
-            if(finished){
-                // ok, bezel should be empty, try again
-                [self isBeginningToScaleReallySmall:page];
-            }
-        }];
-    }else{
-        [self beginUITransitionFromPageView];
         //
-        // ok, we're allowed to zoom out to list view, so save the frames
-        // of all the pages in the visible stack
-        for(MMPaperView* aPage in visibleStackHolder.subviews){
-            [setOfInitialFramesForPagesBeingZoomed setObject:[NSValue valueWithCGRect:aPage.frame] forKey:aPage.uuid];
-        }
+        // https://github.com/adamwulf/loose-leaf/issues/24
+        // check to see if we have pages in the bezel or not.
+        // if we do, then we need to move those pages to the appropriate
+        // stack so that the animation into list view works correctly.
+        //
+        // we need to cancel any bezel gestures and consider this purely
+        // a pinch gesture, not a pan->bezel gesture.
+        //
+        // we need to preserve the frame, so that if the bezel'd pages
+        // are currently visible, when the animation to list view begins
+        // they'll begin from their current location intsead of the hidden
+        // stack
+        [self emptyBezelStackToHiddenStackAnimated:NO andPreserveFrame:YES onComplete:nil];
     }
+    [self beginUITransitionFromPageView];
 }
 
 
@@ -906,6 +935,14 @@
                 }
             }
         } completion:nil];
+    }else{
+        for(MMPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
+            if(CGRectEqualToRect(aPage.frame, hiddenStackHolder.bounds)){
+                break;
+            }else{
+                aPage.frame = hiddenStackHolder.bounds;
+            }
+        }
     }
     [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
 }
