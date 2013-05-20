@@ -141,6 +141,9 @@
  * if it has ended.
  */
 -(BOOL) willExitToBezel:(MMBezelDirection)bezelDirection{
+    if(self.scale < kMinPageZoom){
+        return NO;
+    }
     BOOL isBezel = (panGesture.didExitToBezel & bezelDirection) != MMBezelDirectionNone;
     return isBezel && (panGesture.state == UIGestureRecognizerStateChanged) && panGesture.numberOfTouches == 1;
 }
@@ -151,6 +154,9 @@
  * user has pulled it back in, then 0 is returned.
  */
 -(NSInteger) numberOfTimesExitedBezel{
+    if(self.scale < kMinPageZoom){
+        return 0;
+    }
     BOOL isBezeled = (panGesture.didExitToBezel & panGesture.bezelDirectionMask) != MMBezelDirectionNone;
     BOOL willExit = isBezeled && (panGesture.state == UIGestureRecognizerStateChanged || panGesture.state == UIGestureRecognizerStateEnded || panGesture.state == UIGestureRecognizerStateCancelled);
     if(willExit){

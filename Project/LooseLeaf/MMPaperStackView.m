@@ -457,6 +457,9 @@
     }
 }
 -(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated onComplete:(void(^)(BOOL finished))completionBlock{
+    [self emptyBezelStackToHiddenStackAnimated:animated andPreserveFrame:NO onComplete:completionBlock];
+}
+-(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated andPreserveFrame:(BOOL)preserveFrame onComplete:(void(^)(BOOL finished))completionBlock{
     [bezelStackHolder removeAllAnimationsAndPreservePresentationFrame];
     if(animated){
         CGFloat delay = 0;
@@ -466,7 +469,9 @@
                 // since we're  moving the bezel frame for the drag animation, be sure to re-hide it
                 // above the hidden stack off screen after all the pages animate
                 // back to the hidden stack
-                bezelStackHolder.frame = hiddenStackHolder.frame;
+                if(!preserveFrame){
+                    bezelStackHolder.frame = hiddenStackHolder.frame;
+                }
                 if(completionBlock) completionBlock(finished);
             } : nil)];
             delay += kAnimationDelay;
@@ -475,7 +480,9 @@
         for(MMPaperView* page in [[bezelStackHolder.subviews copy] reverseObjectEnumerator]){
             [page removeAllAnimationsAndPreservePresentationFrame];
             [hiddenStackHolder pushSubview:page];
-            page.frame = hiddenStackHolder.bounds;
+            if(!preserveFrame){
+                page.frame = hiddenStackHolder.bounds;
+            }
         }
         bezelStackHolder.frame = hiddenStackHolder.frame;
         if(completionBlock) completionBlock(YES);
@@ -524,6 +531,8 @@
     }else if(isBeginningGesture){
         [self mayChangeTopPageTo:page];
     }
+    
+    
     
     //
     // the user is bezeling a page to the left, which will pop
@@ -719,6 +728,9 @@
         return;
     }else if(!justFinishedPanningTheTopPage && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
         //
+        // TODO: check if this was cancelled or finished on purpose
+        //
+        //
         // CASE 3:
         // they release a non-top page near the right bezel (but didn't bezel)
         // send the page to hidden stack
@@ -894,9 +906,6 @@
 
 -(void) isBeginningToScaleReallySmall:(MMPaperView *)page{
     NSLog(@"isBeginningToScaleReallySmall");
-    if([bezelStackHolder.subviews count]){
-        NSLog(@"uh oh, empty the bezel holder");
-    }
     [self updateIconAnimations];
 }
 
