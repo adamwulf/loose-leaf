@@ -30,15 +30,7 @@
 - (void)pushSubview:(MMPaperView*)obj{
     if(![self containsSubview:obj]){
         if(obj.superview){
-            CGRect myFrame = self.frame;
-            if(myFrame.origin.x == MAXFLOAT){
-                myFrame = self.frame;
-            }
-            CGRect pageFrame = obj.frame;
-            CGRect pageSuperFrame = obj.superview.frame;
-            CGRect newFrame = [self convertRect:obj.frame fromView:obj.superview];
-            CGPoint newOrigin = [self convertPoint:obj.frame.origin fromView:obj.superview];
-            obj.frame = newFrame;
+            obj.frame = [self convertRect:obj.frame fromView:obj.superview];
         }
         [self addSubview:obj];
     }
