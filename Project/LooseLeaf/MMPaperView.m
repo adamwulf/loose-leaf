@@ -334,7 +334,7 @@
         if(targetScale > kMaxPageZoom){
             self.scale = kMaxPageZoom;
             if(didCancelSmallScale) [self.delegate cancelledScalingReallySmall:self];
-        }else if(targetScale < kMinPageZoom && scale >= kMinPageZoom && ![_panGesture didExitToBezel]){
+        }else if(targetScale < kMinPageZoom && scale >= kMinPageZoom){
             // doesn't count if the bezel is exiting.
             //
             // this tracks if the user is zooming out far enough to trigger a zoom into
