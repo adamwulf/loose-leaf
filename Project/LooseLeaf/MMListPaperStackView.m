@@ -458,7 +458,7 @@
 }
 
 
-#pragma mark - Private Tap Gesture
+#pragma mark Private Tap Gesture
 
 /**
  * we are in list view, and the user tapped onto the

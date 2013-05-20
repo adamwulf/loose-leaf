@@ -893,14 +893,20 @@
 }
 
 -(void) isBeginningToScaleReallySmall:(MMPaperView *)page{
+    NSLog(@"isBeginningToScaleReallySmall");
+    if([bezelStackHolder.subviews count]){
+        NSLog(@"uh oh, empty the bezel holder");
+    }
     [self updateIconAnimations];
 }
 
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
+    NSLog(@"finishedScalingReallySmall");
     [self updateIconAnimations];
 }
 
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
+    NSLog(@"cancelledScalingReallySmall");
     [self updateIconAnimations];
 }
 
