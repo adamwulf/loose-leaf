@@ -47,16 +47,16 @@
         
         contentView.opaque = YES;
         contentView.backgroundColor = [UIColor whiteColor];
-        contentView.clipsToBounds = NO;
+        contentView.clipsToBounds = YES;
         
         self.backgroundColor = [UIColor clearColor];
         [self addSubview:contentView];
 
-        contentView.layer.shadowPath = [UIBezierPath bezierPathWithRect:contentView.bounds].CGPath;
-        contentView.layer.shadowRadius = 4;
-        contentView.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.75].CGColor;
-        contentView.layer.shadowOpacity = 1;
-        contentView.layer.shadowOffset = CGSizeMake(0, 0);
+        self.layer.shadowPath = [UIBezierPath bezierPathWithRect:contentView.frame].CGPath;
+        self.layer.shadowRadius = 4;
+        self.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.75].CGColor;
+        self.layer.shadowOpacity = 1;
+        self.layer.shadowOffset = CGSizeMake(0, 0);
     }
     return self;
 }
@@ -74,7 +74,7 @@
 -(void) setFrame:(CGRect)frame{
     CGRect expandedFrame = [MMShadowedView expandFrame:frame];
     [super setFrame:expandedFrame];
-    contentView.layer.shadowPath = [UIBezierPath bezierPathWithRect:contentView.bounds].CGPath;
+    self.layer.shadowPath = [UIBezierPath bezierPathWithRect:contentView.frame].CGPath;
 }
 
 -(CGRect) frame{
