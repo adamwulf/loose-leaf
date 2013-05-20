@@ -318,7 +318,7 @@
         [self mayChangeTopPageTo:[hiddenStackHolder peekSubview]];
         [bezelStackHolder pushSubview:[hiddenStackHolder peekSubview]];
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-            CGRect newFrame = CGRectMake(hiddenStackHolder.frame.origin.x + translation.x - kFingerWidth,
+            CGRect newFrame = CGRectMake(hiddenStackHolder.frame.origin.x + translation.x,
                                          hiddenStackHolder.frame.origin.y,
                                          hiddenStackHolder.frame.size.width,
                                          hiddenStackHolder.frame.size.height);
