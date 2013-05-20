@@ -180,7 +180,7 @@
         self.state = UIGestureRecognizerStateEnded;
         [dateOfLastBezelEnding release];
         dateOfLastBezelEnding = [[NSDate date] retain];
-    }else if(didChangeTouchLoc){
+    }else if(didChangeTouchLoc && self.state == UIGestureRecognizerStateChanged){
         self.state = UIGestureRecognizerStateChanged;
     }
 }
