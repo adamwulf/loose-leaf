@@ -22,9 +22,9 @@ static MMRotationManager* _instance = nil;
         isFirstReading = YES;
         currentRotationReading = 0;
         // add opqueue to sample the accelerometer
-        NSOperationQueue* opQueue = [[NSOperationQueue alloc] init];
+        opQueue = [[NSOperationQueue alloc] init];
         [opQueue setMaxConcurrentOperationCount:1];
-        CMMotionManager* motionManager = [[CMMotionManager alloc] init];
+        motionManager = [[CMMotionManager alloc] init];
         [motionManager setAccelerometerUpdateInterval:0.03];
         [motionManager startAccelerometerUpdatesToQueue:opQueue withHandler:^(CMAccelerometerData* data, NSError* error){
             //
