@@ -13,6 +13,7 @@
 @interface MMBezelInRightGestureRecognizer : UIGestureRecognizer{
     // direction the user is panning
     MMBezelDirection panDirection;
+    CGFloat liftedLeftFingerOffset;
     // use to calculate direction
     CGPoint lastKnownLocation;
     // use to calculate translation
