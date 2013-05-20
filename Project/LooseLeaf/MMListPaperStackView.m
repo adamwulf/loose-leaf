@@ -523,7 +523,16 @@
     //
     // first check the pagse in the visible stack
     for(MMPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
-        [setOfInitialFramesForPagesBeingZoomed setObject:[NSValue valueWithCGRect:aPage.frame] forKey:aPage.uuid];
+        // all these if statements are a bit wonky,
+        // but the gist is that we need to only save
+        // interesting frames, and ignore any that match
+        // the bounds.
+        //
+        // also make sure to disable gestures for all but the top
+        // page
+        if(!CGRectEqualToRect(aPage.frame, visibleStackHolder.bounds)){
+            [setOfInitialFramesForPagesBeingZoomed setObject:[NSValue valueWithCGRect:aPage.frame] forKey:aPage.uuid];
+        }
         if(aPage != [visibleStackHolder peekSubview]){
             [aPage disableAllGestures];
         }
@@ -532,7 +541,9 @@
         }
     }
     for(MMPaperView* aPage in pagesThatWillBeVisibleAfterTransitionToListView){
-        [setOfInitialFramesForPagesBeingZoomed setObject:[NSValue valueWithCGRect:aPage.frame] forKey:aPage.uuid];
+        if(!CGRectEqualToRect(aPage.frame, hiddenStackHolder.bounds)){
+            [setOfInitialFramesForPagesBeingZoomed setObject:[NSValue valueWithCGRect:aPage.frame] forKey:aPage.uuid];
+        }
         if(aPage != [visibleStackHolder peekSubview]){
             [aPage disableAllGestures];
         }
@@ -592,10 +603,11 @@
         if(aPage != [visibleStackHolder peekSubview]){
             [aPage enableAllGestures];
         }
-    }
-    for(MMPaperView* aPage in pagesThatWillBeVisibleAfterTransitionToListView){
-        if(aPage != [visibleStackHolder peekSubview]){
-            [aPage disableAllGestures];
+        NSValue* possibleCachedLocation = [setOfInitialFramesForPagesBeingZoomed objectForKey:aPage.uuid];
+        if(possibleCachedLocation){
+            aPage.frame = [possibleCachedLocation CGRectValue];
+        }else{
+            aPage.frame = visibleStackHolder.bounds;
         }
     }
     [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
@@ -661,6 +673,7 @@
         CGFloat percentageToMoveHiddenFrame = percentageToTrustToFrame;
         percentageToMoveHiddenFrame += .1;
         CGFloat amountToMoveHiddenFrame = visibleStackHolder.frame.size.width - percentageToMoveHiddenFrame * visibleStackHolder.frame.size.width;
+        CGFloat amountToMoveHiddenFrameFromCachedPosition = visibleStackHolder.frame.size.width - percentageToTrustToFrame * visibleStackHolder.frame.size.width;
         
         //
         // ok, move all the soon to be visible pages into their
@@ -683,6 +696,8 @@
                     // the right, but only if their position wasn't saved
                     // frome the bezel location
                     newFrame.origin.x -= amountToMoveHiddenFrame;
+                }else if(![self isInVisibleStack:aPage]){
+                    newFrame.origin.x -= amountToMoveHiddenFrameFromCachedPosition;
                 }
                 aPage.frame = newFrame;
                 
