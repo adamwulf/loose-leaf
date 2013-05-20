@@ -1007,6 +1007,7 @@
  */
 -(void) sendPageToHiddenStack:(MMPaperView*)page onComplete:(void(^)(BOOL finished))completionBlock{
     if([visibleStackHolder.subviews containsObject:page]){
+        [page removeAllAnimationsAndPreservePresentationFrame];
         [bezelStackHolder addSubviewToBottomOfStack:page];
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:completionBlock];
         [self ensureAtLeast:1 pagesInStack:visibleStackHolder];
