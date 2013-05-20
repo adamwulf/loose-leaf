@@ -340,43 +340,47 @@
         // begins a new bezel gesture but the animations for the previous bezel
         // haven't completed.
 
-        [self willNotChangeTopPageTo:[bezelStackHolder peekSubview]];
-        [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
-        [[visibleStackHolder peekSubview] enableAllGestures];
+        if([bezelStackHolder.subviews count]){
+            [self willNotChangeTopPageTo:[bezelStackHolder peekSubview]];
+            [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
+            [[visibleStackHolder peekSubview] enableAllGestures];
+        }
     }else if(bezelGesture.state == UIGestureRecognizerStateEnded &&
              ((bezelGesture.panDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft)){
-        //
-        // ok, the user has completed a bezel gesture, so we should take all
-        // the pages in the bezel view and push them onto the visible stack
-        //
-        // to do that, we'll move them back onto the hidden frame (and retain their visible frame)
-        // and then use our animation functions to pop them off the hidden stack onto
-        // the visible stack
-        //
-        // this'll let us move the bezel frame back to its hidden place above the hidden stack
-        // immediately
-        [[visibleStackHolder peekSubview] enableAllGestures];
-        [self willChangeTopPageTo:[bezelStackHolder peekSubview]];
-        while([bezelStackHolder.subviews count]){
-            // this will translate the frame from the bezel stack to the
-            // hidden stack, so that the pages appear in the same place
-            // to the user, the pop calls next will animate them to the
-            // visible stack
-            [hiddenStackHolder pushSubview:[bezelStackHolder peekSubview]];
+        if([bezelStackHolder.subviews count]){
+            //
+            // ok, the user has completed a bezel gesture, so we should take all
+            // the pages in the bezel view and push them onto the visible stack
+            //
+            // to do that, we'll move them back onto the hidden frame (and retain their visible frame)
+            // and then use our animation functions to pop them off the hidden stack onto
+            // the visible stack
+            //
+            // this'll let us move the bezel frame back to its hidden place above the hidden stack
+            // immediately
+            [[visibleStackHolder peekSubview] enableAllGestures];
+            [self willChangeTopPageTo:[bezelStackHolder peekSubview]];
+            while([bezelStackHolder.subviews count]){
+                // this will translate the frame from the bezel stack to the
+                // hidden stack, so that the pages appear in the same place
+                // to the user, the pop calls next will animate them to the
+                // visible stack
+                [hiddenStackHolder pushSubview:[bezelStackHolder peekSubview]];
+            }
+            void(^finishedBlock)(BOOL finished)  = ^(BOOL finished){
+                bezelStackHolder.frame = hiddenStackHolder.frame;
+            };
+            [self popHiddenStackForPages:bezelGesture.numberOfRepeatingBezels onComplete:finishedBlock];
+            
+            //
+            // successful gesture complete, so reset the gesture count
+            // we only reset on the successful gesture, not a cancelled gesture
+            //
+            // that way, if the user moves their entire 2 fingers off bezel and
+            // immediately back on bezel, then it'll increment count correctly
+            [bezelGesture resetPageCount];
         }
-        void(^finishedBlock)(BOOL finished)  = ^(BOOL finished){
-            bezelStackHolder.frame = hiddenStackHolder.frame;
-        };
-        [self popHiddenStackForPages:bezelGesture.numberOfRepeatingBezels onComplete:finishedBlock];
-        
-        //
-        // successful gesture complete, so reset the gesture count
-        // we only reset on the successful gesture, not a cancelled gesture
-        //
-        // that way, if the user moves their entire 2 fingers off bezel and
-        // immediately back on bezel, then it'll increment count correctly
-        [bezelGesture resetPageCount];
-    }else{
+    }else if(bezelGesture.numberOfRepeatingBezels){
         //
         // we're in progress of a bezel gesture from the right
         //
