@@ -61,6 +61,14 @@ NSInteger const  minimumNumberOfTouches = 2;
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
+    if(self.state != UIGestureRecognizerStatePossible){
+        //
+        // if we're already pinching
+        [touches enumerateObjectsUsingBlock:^(id obj, BOOL* stop){
+            [self ignoreTouch:obj forEvent:event];
+        }];
+        return;
+    }
     // ignore all the touches that could be bezel touches
     if([validTouchesCurrentlyBeginning count]){
         // look at the presentation of the view (as would be seen during animation)
