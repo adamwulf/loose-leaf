@@ -33,6 +33,12 @@
 		669329701598E4DC0033E557 /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693296F1598E4DC0033E557 /* NSString+UUID.m */; };
 		669329731598EE210033E557 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329721598EE210033E557 /* UIView+Debug.m */; };
 		6693297E1599196E0033E557 /* UIFont+UIBezierCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693297D1599196E0033E557 /* UIFont+UIBezierCurve.m */; };
+		6695B6DD175008210069E61F /* JotTouchSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6DC175008210069E61F /* JotTouchSDK.framework */; };
+		6695B6E01750082B0069E61F /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6DF1750082B0069E61F /* JotUI.framework */; };
+		6695B6E3175008680069E61F /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6E2175008680069E61F /* OpenGLES.framework */; };
+		6695B6E6175008840069E61F /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6E5175008840069E61F /* CoreBluetooth.framework */; };
+		6695B6E81750088D0069E61F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6E71750088D0069E61F /* AudioToolbox.framework */; };
+		6695B6EC17505FBF0069E61F /* MMEditablePaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6695B6EB17505FBF0069E61F /* MMEditablePaperView.m */; };
 		66A13D3A1631D9D9002F5428 /* MMObjectSelectLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D3F1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; };
@@ -139,6 +145,13 @@
 		669329721598EE210033E557 /* UIView+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Debug.m"; sourceTree = "<group>"; };
 		6693297C1599196E0033E557 /* UIFont+UIBezierCurve.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+UIBezierCurve.h"; sourceTree = "<group>"; };
 		6693297D1599196E0033E557 /* UIFont+UIBezierCurve.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+UIBezierCurve.m"; sourceTree = "<group>"; };
+		6695B6DC175008210069E61F /* JotTouchSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotTouchSDK.framework; path = "/Users/adam/Documents/Code/loose-leaf/JotUI/JotUI/../JotTouchSDK/JotTouchSDK.framework"; sourceTree = "<absolute>"; };
+		6695B6DF1750082B0069E61F /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
+		6695B6E2175008680069E61F /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		6695B6E5175008840069E61F /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		6695B6E71750088D0069E61F /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		6695B6EA17505FBF0069E61F /* MMEditablePaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEditablePaperView.h; sourceTree = "<group>"; };
+		6695B6EB17505FBF0069E61F /* MMEditablePaperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEditablePaperView.m; sourceTree = "<group>"; };
 		66A13D381631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMObjectSelectLongPressGestureRecognizer.h; sourceTree = "<group>"; };
 		66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMObjectSelectLongPressGestureRecognizer.m; sourceTree = "<group>"; };
 		66A13D3E1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImmovableTapGestureRecognizer.h; sourceTree = "<group>"; };
@@ -216,6 +229,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6695B6E81750088D0069E61F /* AudioToolbox.framework in Frameworks */,
+				6695B6E6175008840069E61F /* CoreBluetooth.framework in Frameworks */,
+				6695B6E3175008680069E61F /* OpenGLES.framework in Frameworks */,
+				6695B6E01750082B0069E61F /* JotUI.framework in Frameworks */,
 				664D5C5416FD0D4C00F518EC /* DrawKit-iOS.framework in Frameworks */,
 				66BD6E991593E9C400D4544C /* CoreText.framework in Frameworks */,
 				66BD6E831593B12500D4544C /* CoreMotion.framework in Frameworks */,
@@ -224,6 +241,7 @@
 				66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */,
 				66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */,
 				66DCFB8F1581BCEF00B4918C /* CoreGraphics.framework in Frameworks */,
+				6695B6DD175008210069E61F /* JotTouchSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,6 +301,8 @@
 				66D33F4B15A6408A0044C809 /* MMShadowedView.m */,
 				66DCFBCB1582BAED00B4918C /* MMPaperView.h */,
 				66DCFBCC1582BAED00B4918C /* MMPaperView.m */,
+				6695B6EA17505FBF0069E61F /* MMEditablePaperView.h */,
+				6695B6EB17505FBF0069E61F /* MMEditablePaperView.m */,
 				66C47DA5158EF03200E2CD0C /* MMPaperViewDelegate.h */,
 			);
 			name = MMPaperView;
@@ -332,6 +352,27 @@
 				66AA212C16FBB31C00E86922 /* MMPopoverView.m */,
 			);
 			name = Experiments;
+			sourceTree = "<group>";
+		};
+		6695B6E1175008530069E61F /* JotUI */ = {
+			isa = PBXGroup;
+			children = (
+				6695B6E2175008680069E61F /* OpenGLES.framework */,
+				66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */,
+				6695B6DF1750082B0069E61F /* JotUI.framework */,
+				66BD6E7C1593ACD400D4544C /* QuartzCore.framework */,
+			);
+			name = JotUI;
+			sourceTree = "<group>";
+		};
+		6695B6E41750086D0069E61F /* JotTouchSDK */ = {
+			isa = PBXGroup;
+			children = (
+				6695B6E71750088D0069E61F /* AudioToolbox.framework */,
+				6695B6E5175008840069E61F /* CoreBluetooth.framework */,
+				6695B6DC175008210069E61F /* JotTouchSDK.framework */,
+			);
+			name = JotTouchSDK;
 			sourceTree = "<group>";
 		};
 		66A13D3C1631E06D002F5428 /* Object Selection */ = {
@@ -420,13 +461,13 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6695B6E1175008530069E61F /* JotUI */,
+				6695B6E41750086D0069E61F /* JotTouchSDK */,
 				66BD6E981593E9C300D4544C /* CoreText.framework */,
 				66BD6E821593B12500D4544C /* CoreMotion.framework */,
-				66BD6E7C1593ACD400D4544C /* QuartzCore.framework */,
 				66BD6E64159316CF00D4544C /* CoreImage.framework */,
 				66DCFB8A1581BCEF00B4918C /* UIKit.framework */,
 				66DCFB8C1581BCEF00B4918C /* Foundation.framework */,
-				66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */,
 				66DCFBA81581BCEF00B4918C /* SenTestingKit.framework */,
 			);
 			name = Frameworks;
@@ -627,6 +668,7 @@
 				6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */,
 				66A13D3A1631D9D9002F5428 /* MMObjectSelectLongPressGestureRecognizer.m in Sources */,
 				66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */,
+				6695B6EC17505FBF0069E61F /* MMEditablePaperView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -725,6 +767,11 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../JotUI/JotTouchSDK\"",
+					"\"$(SRCROOT)/../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
@@ -747,6 +794,11 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../JotUI/JotTouchSDK\"",
+					"\"$(SRCROOT)/../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
