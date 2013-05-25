@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "MMPaperStackView.h"
-#import "MMPaperView.h"
 
 @interface MMLooseLeafViewController : UIViewController{
     IBOutlet MMPaperStackView* stackView;

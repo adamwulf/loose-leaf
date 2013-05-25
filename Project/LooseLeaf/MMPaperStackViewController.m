@@ -8,6 +8,7 @@
 
 #import "MMPaperStackViewController.h"
 #import "MMShadowManager.h"
+#import "MMEditablePaperView.h"
 
 @interface MMLooseLeafViewController ()
 
@@ -24,7 +25,7 @@
     [[MMShadowManager sharedInstace] beginGeneratingShadows];
 
     for(int i=0;i<1;i++){
-        MMPaperView* paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
+        MMPaperView* paper = [[MMEditablePaperView alloc] initWithFrame:self.view.bounds];
         [stackView addPaperToBottomOfStack:paper];
         paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
         [stackView addPaperToBottomOfStack:paper];
@@ -34,7 +35,6 @@
         paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
         [stackView addPaperToBottomOfHiddenStack:paper];
     }
-
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
