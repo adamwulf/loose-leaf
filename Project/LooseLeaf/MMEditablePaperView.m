@@ -25,6 +25,13 @@
         // stays in place
         drawableView.layer.anchorPoint = CGPointMake(0,0);
         drawableView.layer.position = CGPointMake(0,0);
+        
+        pen = [[Pen alloc] initWithMinSize:6 andMaxSize:15 andMinAlpha:.9 andMaxAlpha:.9];
+        pen.shouldUseVelocity = YES;
+        
+        [[JotStylusManager sharedInstance] setEnabled:YES];
+        [[JotStylusManager sharedInstance] setRejectMode:NO];
+        [[JotStylusManager sharedInstance] setPalmRejectorDelegate:drawableView];
     }
     return self;
 }
@@ -39,19 +46,19 @@
 #pragma mark - JotViewDelegate
 
 -(void) willBeginStrokeWithTouch:(JotTouch*)touch{
-    // noop
+    [pen willBeginStrokeWithTouch:touch];
 }
 
 -(void) willMoveStrokeWithTouch:(JotTouch*)touch{
-    // noop
+    [pen willMoveStrokeWithTouch:touch];
 }
 
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
-    // noop
+    [pen didEndStrokeWithTouch:touch];
 }
 
 -(void) didCancelStrokeWithTouch:(JotTouch*)touch{
-    // noop
+    [pen didCancelStrokeWithTouch:touch];
 }
 
 -(UIColor*) colorForTouch:(JotTouch *)touch{
@@ -59,15 +66,15 @@
 }
 
 -(CGFloat) widthForTouch:(JotTouch*)touch{
-    return 10;
+    return [pen widthForTouch:touch];
 }
 
 -(CGFloat) smoothnessForTouch:(JotTouch *)touch{
-    return .75;
+    return [pen smoothnessForTouch:touch];
 }
 
 -(CGFloat) rotationForSegment:(AbstractBezierPathElement *)segment fromPreviousSegment:(AbstractBezierPathElement *)previousSegment{
-    return 0;
+    return [pen rotationForSegment:segment fromPreviousSegment:previousSegment];;
 }
 
 
