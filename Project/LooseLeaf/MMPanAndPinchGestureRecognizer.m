@@ -65,7 +65,8 @@ NSInteger const  minimumNumberOfTouches = 2;
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
-    if(self.state != UIGestureRecognizerStatePossible){
+    if(self.state != UIGestureRecognizerStatePossible &&
+       [validTouches count] == minimumNumberOfTouches){
         //
         // if we're already pinching
         [touches enumerateObjectsUsingBlock:^(id obj, BOOL* stop){
