@@ -43,6 +43,21 @@
     drawableView.transform = CGAffineTransformMakeScale(_scale, _scale);
 }
 
+
+#pragma mark - Gestures
+
+-(void) panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture{
+    if(panGesture.state == UIGestureRecognizerStateBegan){
+        [[JotStylusManager sharedInstance] unregisterView:drawableView];
+    }else if(panGesture.state == UIGestureRecognizerStateCancelled ||
+             panGesture.state == UIGestureRecognizerStateEnded ||
+             panGesture.state == UIGestureRecognizerStateFailed){
+        [[JotStylusManager sharedInstance] registerView:drawableView];
+    }
+    [super panAndScale:_panGesture];
+}
+
+
 #pragma mark - JotViewDelegate
 
 -(void) willBeginStrokeWithTouch:(JotTouch*)touch{
