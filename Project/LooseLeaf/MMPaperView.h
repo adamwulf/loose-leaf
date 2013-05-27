@@ -58,4 +58,6 @@
 -(void) disableAllGestures;
 -(void) enableAllGestures;
 
+-(void) panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture;
+
 @end
