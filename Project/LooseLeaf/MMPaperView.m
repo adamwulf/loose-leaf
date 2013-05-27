@@ -349,29 +349,7 @@
             [self.delegate isBeginningToScaleReallySmall:self];
         }else if((targetScale >= 1 && scaleDiff > kMinScaleDelta) ||
                  (targetScale < 1 && scaleDiff > kMinScaleDelta / 2)){
-            //
-            // TODO
-            // only update the scale if its greater than a 1% difference of the previous
-            // scale. the goal here is to optimize re-draws for the view, but this should be
-            // validated when the full page contents are implemented.
-            //
-            // TODO
-            // check performance when pinching. it's pretty spotty right now,
-            // but that may be because the drawing gesture isn't being cancelled
-            // when a pinch gesture begins. i should cancel a draw when a pinch happens,
-            // and only allow drawing on the 1st or 3rd touch, but not the 2nd
-            //
-            // it may be choppy right now because its also drawing and scaling at the
-            // same time.
-            if(scale < targetScale && scale > targetScale - .05){
-                self.scale = targetScale;
-            }else if(scale < targetScale){
-                scale += (targetScale - scale) / 5;
-            }else if(scale > targetScale && scale < targetScale + .05){
-                self.scale = targetScale;
-            }else if(scale > targetScale){
-                self.scale -= (scale - targetScale) / 5;
-            }
+            self.scale = targetScale;
             if(didCancelSmallScale) [self.delegate cancelledScalingReallySmall:self];
         }
     }
