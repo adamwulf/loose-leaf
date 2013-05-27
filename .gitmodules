@@ -1,0 +1,3 @@
+[submodule "Submodules/JotUI"]
+	path = Submodules/JotUI
+	url = git@github.com:adamwulf/JotUI.git
