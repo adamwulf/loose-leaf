@@ -300,8 +300,7 @@
 		664C62F115A36DB00072736A /* MMPaperView */ = {
 			isa = PBXGroup;
 			children = (
-				6695B6EE1751CC160069E61F /* Pen.h */,
-				6695B6EF1751CC160069E61F /* Pen.m */,
+				66C38AC51753226F0035B872 /* Tools */,
 				66D33F4A15A6408A0044C809 /* MMShadowedView.h */,
 				66D33F4B15A6408A0044C809 /* MMShadowedView.m */,
 				66DCFBCB1582BAED00B4918C /* MMPaperView.h */,
@@ -443,6 +442,15 @@
 				669329691595A87E0033E557 /* MMMapButton.m */,
 			);
 			name = Buttons;
+			sourceTree = "<group>";
+		};
+		66C38AC51753226F0035B872 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				6695B6EE1751CC160069E61F /* Pen.h */,
+				6695B6EF1751CC160069E61F /* Pen.m */,
+			);
+			name = Tools;
 			sourceTree = "<group>";
 		};
 		66DCFB7B1581BCED00B4918C = {

@@ -22,6 +22,7 @@
 @synthesize velocity = _averageVelocity;
 @synthesize numberOfRepeatingBezels;
 @synthesize scaleDirection;
+@synthesize validTouches;
 
 NSInteger const  minimumNumberOfTouches = 2;
 

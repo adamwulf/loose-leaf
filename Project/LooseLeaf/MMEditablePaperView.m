@@ -26,7 +26,7 @@
         drawableView.layer.anchorPoint = CGPointMake(0,0);
         drawableView.layer.position = CGPointMake(0,0);
         
-        pen = [[Pen alloc] initWithMinSize:6 andMaxSize:15 andMinAlpha:.9 andMaxAlpha:.9];
+        pen = [[Pen alloc] initWithMinSize:6 andMaxSize:12 andMinAlpha:.9 andMaxAlpha:.9];
         pen.shouldUseVelocity = YES;
         
         [[JotStylusManager sharedInstance] setEnabled:YES];
@@ -48,11 +48,13 @@
 
 -(void) panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture{
     if(panGesture.state == UIGestureRecognizerStateBegan){
-        [[JotStylusManager sharedInstance] unregisterView:drawableView];
+        for(UITouch* touch in _panGesture.validTouches){
+            [drawableView cancelStrokeForTouch:touch];
+        }
     }else if(panGesture.state == UIGestureRecognizerStateCancelled ||
              panGesture.state == UIGestureRecognizerStateEnded ||
              panGesture.state == UIGestureRecognizerStateFailed){
-        [[JotStylusManager sharedInstance] registerView:drawableView];
+        // noop
     }
     [super panAndScale:_panGesture];
 }
@@ -60,8 +62,12 @@
 
 #pragma mark - JotViewDelegate
 
--(void) willBeginStrokeWithTouch:(JotTouch*)touch{
-    [pen willBeginStrokeWithTouch:touch];
+-(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+    if(panGesture.state == UIGestureRecognizerStateBegan ||
+       panGesture.state == UIGestureRecognizerStateChanged){
+        return ![panGesture containsTouch:touch.touch];
+    }
+    return [pen willBeginStrokeWithTouch:touch];
 }
 
 -(void) willMoveStrokeWithTouch:(JotTouch*)touch{
