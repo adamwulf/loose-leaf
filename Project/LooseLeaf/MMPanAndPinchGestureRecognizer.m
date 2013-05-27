@@ -54,6 +54,10 @@ NSInteger const  minimumNumberOfTouches = 2;
     return [preventingGestureRecognizer isKindOfClass:[MMBezelInRightGestureRecognizer class]];
 }
 
+-(BOOL) containsTouch:(UITouch*)touch{
+    return [validTouches containsObject:touch];
+}
+
 /**
  * the first touch of a gesture.
  * this touch may interrupt an animation on this frame, so set the frame

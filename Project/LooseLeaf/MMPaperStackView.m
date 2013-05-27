@@ -886,25 +886,38 @@
         // first, empty the bezelStackHolder, if any
         [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
-        //
-        // the scale is larger than 1, so we may need
-        // to slide the page with some inertia. if the page is
-        // to far from an edge, then we need to move it to another stack.
-        // if its not far enough to move, then we may need to bounce it
-        // back to an edge.
-        float inertiaSeconds = .3;
-        CGPoint finalOrigin = CGPointMake(toFrame.origin.x + velocity.x * inertiaSeconds, toFrame.origin.y + velocity.y * inertiaSeconds);
-        CGRect intertialFrame = toFrame;
-        intertialFrame.origin = finalOrigin;
+        [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:nil];
+
         
-        if([self shouldInterialSlideThePage:page toFrame:intertialFrame]){
-            [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut animations:^(void){
-                page.frame = intertialFrame;
-            } completion:nil];
-        }else{
-            // bounce
-            [self bouncePageToEdge:page toFrame:toFrame intertialFrame:intertialFrame];
-        }
+
+        //
+        // the below code was when we allowed
+        // zoomed pages to stay zoomed.
+        //
+        // now we only allow it when the user is holding
+        // the page
+//        {
+//            //
+//            // the scale is larger than 1, so we may need
+//            // to slide the page with some inertia. if the page is
+//            // to far from an edge, then we need to move it to another stack.
+//            // if its not far enough to move, then we may need to bounce it
+//            // back to an edge.
+//            float inertiaSeconds = .3;
+//            CGPoint finalOrigin = CGPointMake(toFrame.origin.x + velocity.x * inertiaSeconds, toFrame.origin.y + velocity.y * inertiaSeconds);
+//            CGRect intertialFrame = toFrame;
+//            intertialFrame.origin = finalOrigin;
+//            
+//            if([self shouldInterialSlideThePage:page toFrame:intertialFrame]){
+//                [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut animations:^(void){
+//                    page.frame = intertialFrame;
+//                } completion:nil];
+//            }else{
+//                // bounce
+//                [self bouncePageToEdge:page toFrame:toFrame intertialFrame:intertialFrame];
+//            }
+//        }
+        
     }
 }
 
@@ -1196,6 +1209,11 @@
     if(bounce){
         CGFloat duration = .3;
         CGFloat bounceHeight = 10;
+        if(page.scale > 1){
+            // this will cause it to bounce in
+            // the correct direction of the scale
+            bounceHeight = -5;
+        }
         //
         // we also need to animate the shadow so that it doesn't "pop"
         // into place. it's not taken care of automatically in the
