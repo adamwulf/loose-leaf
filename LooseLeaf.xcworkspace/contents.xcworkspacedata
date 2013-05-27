@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../JotUI/JotUI/JotUI.xcodeproj">
+      location = "group:Submodules/JotUI/JotUI/JotUI.xcodeproj">
    </FileRef>
    <FileRef
       location = "container:Project/LooseLeaf.xcodeproj">
