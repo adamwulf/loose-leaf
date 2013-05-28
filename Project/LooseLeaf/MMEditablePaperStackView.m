@@ -189,5 +189,4 @@
     [super finishedScalingBackToPageView:page];
 }
 
-
 @end

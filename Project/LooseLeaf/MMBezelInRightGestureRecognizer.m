@@ -8,6 +8,7 @@
 
 #import "MMBezelInRightGestureRecognizer.h"
 #import "Constants.h"
+#import <JotUI/JotUI.h>
 
 @implementation MMBezelInRightGestureRecognizer
 @synthesize panDirection;
@@ -131,6 +132,15 @@
         }
         if(self.state == UIGestureRecognizerStatePossible){
             self.state = UIGestureRecognizerStateBegan;
+            // our gesture has began, so make sure to kill
+            // any touches that are being used to draw
+            //
+            // the stroke manager is the definitive source for all strokes.
+            // cancel through that manager, and it'll notify the appropriate
+            // view if need be
+            for(UITouch* touch in validTouches){
+                [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+            }
             firstKnownLocation = [self furthestRightTouchLocation];
             firstKnownLocation.x = self.view.bounds.size.width;
         }

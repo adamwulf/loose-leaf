@@ -58,7 +58,7 @@
     [super awakeFromNib];
 }
 
-#pragma mark - Add Button
+#pragma mark - Add Button in List View
 
 -(CGRect) frameForAddPageButton{
     NSInteger numberOfPages = [visibleStackHolder.subviews count] + [hiddenStackHolder.subviews count];
@@ -137,364 +137,6 @@
 
 
 
-#pragma mark - Private Helper Methods
-
-/**
- * this will return the scrollview's ideal contentOffset
- * position that will show the page
- * in the 2nd row of the view if possible.
- *
- * it will properly account for if the page is at the beginning
- * or end of the list
- */
--(CGPoint) offsetNeededToShowPage:(MMPaperView*)page{
-    //
-    // calculate the number of rows that will be hidden from offset
-    NSInteger numberOfHiddenRows = MAX(0, page.rowInListView - 1);
-    CGFloat contentHeight = [self contentHeightForAllPages];
-    CGPoint possiblePoint = CGPointMake(0, numberOfHiddenRows * (bufferWidth + rowHeight));
-    if(possiblePoint.y + self.frame.size.height > contentHeight){
-        possiblePoint.y = contentHeight - self.frame.size.height;
-    }
-    if(possiblePoint.y < 0) possiblePoint.y = 0;
-    return possiblePoint;
-}
-
-/**
- * calculate the height of the entire list view
- * from the number of both visible and hidden pages
- */
--(CGFloat) contentHeightForAllPages{
-    NSInteger numberOfPages = [hiddenStackHolder.subviews count] + [visibleStackHolder.subviews count];
-    CGFloat numberOfRows = ceilf(numberOfPages / (CGFloat) kNumberOfColumnsInListView);
-    if(numberOfPages % kNumberOfColumnsInListView == 0){
-        // need to add a row for the add button
-        numberOfRows += 1;
-    }
-    return numberOfRows * (bufferWidth + rowHeight) + bufferWidth;
-}
-
-/**
- * this will help decide which pages will
- * be animated out into list view from page
- * view.
- *
- * the goal is to return as few pages as possible
- * so that we're not animating very many views
- */ 
--(NSArray*) findPagesInVisibleRowsOfListViewGivenOffset:(CGPoint)eventualOffsetOfListView{
-    if(!self.scrollEnabled){
-        //
-        // ok, scroling is not enabled, which means we're
-        // essentially in page view, and need to calculate
-        // which pages would be visible if the user
-        // switched into list view
-        //
-        // the top visible page will be at most w/in the top
-        // two rows
-        
-        MMPaperView* aPage = [visibleStackHolder peekSubview];
-        NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray arrayWithObject:aPage];
-        CGRect rectOfVisibleScroll = CGRectMake(eventualOffsetOfListView.x, eventualOffsetOfListView.y, screenWidth, screenHeight);
-        while((aPage = [visibleStackHolder getPageBelow:aPage])){
-            CGRect frameOfPage = [self frameForListViewForPage:aPage];
-            // we have to expand the frame, because we want to count pages even if
-            // just their shadow is visible
-            frameOfPage = [MMShadowedView expandFrame:frameOfPage];
-            if(frameOfPage.origin.y + frameOfPage.size.height > rectOfVisibleScroll.origin.y &&
-               frameOfPage.origin.y < rectOfVisibleScroll.origin.y + rectOfVisibleScroll.size.height){
-                [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
-            }else{
-                break;
-            }
-        }
-        
-        aPage = [hiddenStackHolder peekSubview];
-        if(aPage){
-            //
-            // only care about the hidden stack if there's anything
-            // actually in the stack
-            [pagesThatWouldBeVisible addObject:aPage];
-            while((aPage = [hiddenStackHolder getPageBelow:aPage])){
-                CGRect frameOfPage = [self frameForListViewForPage:aPage];
-                // we have to expand the frame, because we want to count pages even if
-                // just their shadow is visible
-                frameOfPage = [MMShadowedView expandFrame:frameOfPage];
-                if(frameOfPage.origin.y + frameOfPage.size.height > rectOfVisibleScroll.origin.y &&
-                   frameOfPage.origin.y < rectOfVisibleScroll.origin.y + rectOfVisibleScroll.size.height){
-                    [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
-                }else{
-                    break;
-                }
-            }
-        }
-        
-        return pagesThatWouldBeVisible;
-    }else{
-        //
-        // scrolling is enabled, so we need to return
-        // the list of pages that are currently visible
-        NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray array];
-        for(MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
-            CGRect frameOfPage = [self frameForListViewForPage:aPage];
-            // we have to expand the frame, because we want to count pages even if
-            // just their shadow is visible
-            frameOfPage = [MMShadowedView expandFrame:frameOfPage];
-            if(frameOfPage.origin.y < self.contentOffset.y + self.frame.size.height &&
-               frameOfPage.origin.y + frameOfPage.size.height > self.contentOffset.y){
-                [pagesThatWouldBeVisible addObject:aPage];
-            }
-        }
-        return pagesThatWouldBeVisible;
-    }
-}
-
-
-/**
- * makes sure that the input page is at the top of the visible
- * stack. this will move pages on/off the visible stack to/from
- * the hidden stack to preserve stack order.
- */
--(void) ensurePageIsAtTopOfVisibleStack:(MMPaperView*)aPage{
-    //
-    // ok, we know what page was tapped.
-    //
-    // now we need to make sure that page is on the top
-    // of the visible stack
-    if([self isInVisibleStack:aPage]){
-        // the page is in teh visible stack, so pop pages
-        // onto the hidden stack so that this page is the
-        // top visible page
-        while([visibleStackHolder peekSubview] != aPage){
-            [hiddenStackHolder pushSubview:[visibleStackHolder peekSubview]];
-        }
-    }else{
-        // the page is in the hidden stack, so pop pages
-        // onto the visible stack so that this page is the
-        // top visible page
-        while([visibleStackHolder peekSubview] != aPage){
-            [visibleStackHolder pushSubview:[hiddenStackHolder peekSubview]];
-        }
-    }
-}
-
-/**
- * this method helps transition from a page's current frame
- * to that page's new frame in the list view.
- *
- * the percentageToTrustToFrame ranges from 0 to 1.
- * if the value is 1, then the frame that's returned is
- * exactly the same as the input oldFrame.
- *
- * if the value is 0, then the frame that's returned is it's
- * position in the list view (during the transition).
- *
- * since the transition to list view has to adjust for the
- * contentOffset, then the list frame will be adjusted
- * up screen by numberOfHiddenRows
- */
--(CGRect) framePositionDuringTransitionForPage:(MMPaperView*)page originalFrame:(CGRect)oldFrame withTrust:(CGFloat)percentageToTrustToFrame{
-    if(percentageToTrustToFrame < 0) percentageToTrustToFrame = 0;
-    if(percentageToTrustToFrame > 1) percentageToTrustToFrame = 1;
-    // final frame when the page is in the list view
-    CGRect finalFrame = [self frameForListViewForPage:page];
-    finalFrame.origin.x -= initialScrollOffsetFromTransitionToListView.x;
-    finalFrame.origin.y -= initialScrollOffsetFromTransitionToListView.y;
-    
-    //
-    // ok, set the new frame that we'll return
-    CGRect newFrame = CGRectZero;
-    newFrame.origin.x = finalFrame.origin.x - (finalFrame.origin.x - oldFrame.origin.x) * percentageToTrustToFrame;
-    newFrame.origin.y = finalFrame.origin.y - (finalFrame.origin.y - oldFrame.origin.y) * percentageToTrustToFrame;
-    newFrame.size.width = finalFrame.size.width - (finalFrame.size.width - oldFrame.size.width) * percentageToTrustToFrame;
-    newFrame.size.height = finalFrame.size.height - (finalFrame.size.height - oldFrame.size.height) * percentageToTrustToFrame;
-    
-    return newFrame;
-}
-
-
-/**
- * the user has scaled small enough with the top page
- * that we can take over and just animate the rest.
- *
- * so we need to cancel it's gestures, then calculate
- * the final resting place for every page in the visible
- * stack, then animate them.
- *
- * we're going to scale pages in the first two rows, and
- * we'll just slide any pages below that above the screen.
- *
- * when the animation completes, we'll adjust all the frames
- * and content offsets to that the user can scroll them
- */
--(void) immediatelyAnimateFromListViewToFullScreenView{
-    
-    __block NSMutableSet* pagesThatNeedAnimating = [NSMutableSet set];
-    
-    CGFloat duration = 0.2;
-    
-    //
-    // all of the pages "look" like they're in the right place,
-    // but we need to turn on the scroll view.
-    void (^step1)(void) = ^{
-        //
-        // this means we need to keep the pages visually in the same place,
-        // but adjust their frames and the content size/offset so
-        // that we can set the scrollview offset to zero and turn off scrolling
-        if(self.contentOffset.y > 0){
-            for(MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
-                CGRect newFrame = aPage.frame;
-                newFrame.origin.y -= self.contentOffset.y;
-                if(!CGRectEqualToRect(newFrame, aPage.frame)){
-                    aPage.frame = newFrame;
-                };
-            }
-        }
-        // set our content height/offset for the pages
-        [self beginUITransitionFromListView];
-        [self setContentOffset:CGPointZero animated:NO];
-        [self setContentSize:CGSizeMake(screenWidth, screenHeight)];
-        [self setScrollEnabled:NO];
-        [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
-        [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
-        
-        [pagesThatNeedAnimating addObjectsFromArray:pagesThatWillBeVisibleAfterTransitionToListView];
-        for(MMPaperView* aPage in pagesThatNeedAnimating){
-            //
-            // animate shadows
-            CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
-            theAnimation.duration = duration;
-            theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-            theAnimation.fromValue = (id) aPage.contentView.layer.shadowPath;
-            CGSize toSize = visibleStackHolder.bounds.size;
-            if(aPage == [visibleStackHolder peekSubview]){
-                toSize = [MMShadowedView expandBounds:visibleStackHolder.bounds].size;
-            }
-            theAnimation.toValue = (id) [[MMShadowManager sharedInstace] getShadowForSize:toSize];
-            [aPage.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
-        }
-        [visibleStackHolder.superview insertSubview:hiddenStackHolder belowSubview:visibleStackHolder];
-        addPageButtonInListView.frame = [self frameForAddPageButton];
-        [self moveAddButtonToBottom];
-    };
-    
-    //
-    // make sure all the pages go to the correct place
-    // so that it looks like where they'll be in the list view
-    void (^step2)(void) = ^{
-        //
-        // animate all visible stack pages that will be in the
-        // visible frame to the correct place
-        for(MMPaperView* aPage in pagesThatNeedAnimating){
-            if(aPage == [visibleStackHolder peekSubview]){
-                aPage.frame = [MMPaperView expandFrame:visibleStackHolder.bounds];
-            }else if([self isInVisibleStack:aPage]){
-                aPage.frame = visibleStackHolder.bounds;
-            }else{
-                aPage.frame = hiddenStackHolder.bounds;
-            }
-        }
-        CGRect newHiddenFrame = visibleStackHolder.frame;
-        newHiddenFrame.origin.x += screenWidth;
-        hiddenStackHolder.frame = newHiddenFrame;
-        addPageButtonInListView.alpha = 0;
-        [self finishedScalingBackToPageView:[visibleStackHolder peekSubview]];
-    };
-    
-    
-    
-    
-    //
-    // first, find all pages behind the first full scale
-    // page, and just move them immediately
-    //
-    // this helps pretty dramatically with the animation
-    // performance.
-    //
-    // also, turn off gestures
-    void (^step3)(BOOL finished) = ^(BOOL finished){
-        //
-        // now complete the bounce for the top page
-        CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
-        theAnimation.duration = 0.15;
-        theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-        theAnimation.fromValue = (id) [visibleStackHolder peekSubview].contentView.layer.shadowPath;
-        theAnimation.toValue = (id) [[MMShadowManager sharedInstace] getShadowForSize:self.bounds.size];
-        [[visibleStackHolder peekSubview].contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
-        [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn
-                         animations:^(void){
-                             [visibleStackHolder peekSubview].frame = self.bounds;
-                         } completion:^(BOOL finished){
-                             [self finishUITransitionToPageView];
-                             
-                             //
-                             // find visible stack pages that we can
-                             // move immediately
-                             for(MMPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
-                                 aPage.frame = visibleStackHolder.bounds;
-                                 [aPage enableAllGestures];
-                                 aPage.scale = 1;
-                             }
-                             for(MMPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
-                                 aPage.frame = hiddenStackHolder.bounds;
-                                 aPage.scale = 1;
-                             }
-                         }];
-    };
-    
-    
-    step1();
-    
-    
-    // ok, animate all the views in the visible stack!
-    [UIView animateWithDuration:duration
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseOut
-                     animations:step2
-                     completion:step3];
-    //
-    // now that the user has finished the gesture,
-    // we can forget about the original frame locations
-}
-
-
-#pragma mark Private Tap Gesture
-
-/**
- * we are in list view, and the user tapped onto the
- * scrollview (probably tapped a page).
- *
- * let's check if the user tapped a page, and zoom
- * to that page as the top of the visible stack
- */
--(void) didTapScrollView:(UITapGestureRecognizer*)_tapGesture{
-    //
-    // first, we should find which page the user tapped
-    CGPoint locationOfTap = [_tapGesture locationInView:self];
-    
-    MMPaperView* thePageThatWasTapped = nil;
-    for(MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
-        CGRect frameOfPage = [self frameForListViewForPage:aPage];
-        if(CGRectContainsPoint(frameOfPage, locationOfTap)){
-            thePageThatWasTapped = aPage;
-        }
-    }
-    if(!thePageThatWasTapped) return;
-    
-    
-    [self ensurePageIsAtTopOfVisibleStack:thePageThatWasTapped];
-    
-    [self immediatelyAnimateFromListViewToFullScreenView];
-    
-}
-
-
--(BOOL) shouldPopPageFromVisibleStack:(MMPaperView*)page withFrame:(CGRect)frame{
-    if([visibleStackHolder peekSubview].scale < kMinPageZoom){
-        return NO;
-    }
-    return [super shouldPopPageFromVisibleStack:page withFrame:frame];
-}
 
 #pragma mark - List View Enable / Disable Helper Methods
 
@@ -1288,5 +930,363 @@
 }
 
 
+#pragma mark - Private Helper Methods
+
+/**
+ * this will return the scrollview's ideal contentOffset
+ * position that will show the page
+ * in the 2nd row of the view if possible.
+ *
+ * it will properly account for if the page is at the beginning
+ * or end of the list
+ */
+-(CGPoint) offsetNeededToShowPage:(MMPaperView*)page{
+    //
+    // calculate the number of rows that will be hidden from offset
+    NSInteger numberOfHiddenRows = MAX(0, page.rowInListView - 1);
+    CGFloat contentHeight = [self contentHeightForAllPages];
+    CGPoint possiblePoint = CGPointMake(0, numberOfHiddenRows * (bufferWidth + rowHeight));
+    if(possiblePoint.y + self.frame.size.height > contentHeight){
+        possiblePoint.y = contentHeight - self.frame.size.height;
+    }
+    if(possiblePoint.y < 0) possiblePoint.y = 0;
+    return possiblePoint;
+}
+
+/**
+ * calculate the height of the entire list view
+ * from the number of both visible and hidden pages
+ */
+-(CGFloat) contentHeightForAllPages{
+    NSInteger numberOfPages = [hiddenStackHolder.subviews count] + [visibleStackHolder.subviews count];
+    CGFloat numberOfRows = ceilf(numberOfPages / (CGFloat) kNumberOfColumnsInListView);
+    if(numberOfPages % kNumberOfColumnsInListView == 0){
+        // need to add a row for the add button
+        numberOfRows += 1;
+    }
+    return numberOfRows * (bufferWidth + rowHeight) + bufferWidth;
+}
+
+/**
+ * this will help decide which pages will
+ * be animated out into list view from page
+ * view.
+ *
+ * the goal is to return as few pages as possible
+ * so that we're not animating very many views
+ */
+-(NSArray*) findPagesInVisibleRowsOfListViewGivenOffset:(CGPoint)eventualOffsetOfListView{
+    if(!self.scrollEnabled){
+        //
+        // ok, scroling is not enabled, which means we're
+        // essentially in page view, and need to calculate
+        // which pages would be visible if the user
+        // switched into list view
+        //
+        // the top visible page will be at most w/in the top
+        // two rows
+        
+        MMPaperView* aPage = [visibleStackHolder peekSubview];
+        NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray arrayWithObject:aPage];
+        CGRect rectOfVisibleScroll = CGRectMake(eventualOffsetOfListView.x, eventualOffsetOfListView.y, screenWidth, screenHeight);
+        while((aPage = [visibleStackHolder getPageBelow:aPage])){
+            CGRect frameOfPage = [self frameForListViewForPage:aPage];
+            // we have to expand the frame, because we want to count pages even if
+            // just their shadow is visible
+            frameOfPage = [MMShadowedView expandFrame:frameOfPage];
+            if(frameOfPage.origin.y + frameOfPage.size.height > rectOfVisibleScroll.origin.y &&
+               frameOfPage.origin.y < rectOfVisibleScroll.origin.y + rectOfVisibleScroll.size.height){
+                [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
+            }else{
+                break;
+            }
+        }
+        
+        aPage = [hiddenStackHolder peekSubview];
+        if(aPage){
+            //
+            // only care about the hidden stack if there's anything
+            // actually in the stack
+            [pagesThatWouldBeVisible addObject:aPage];
+            while((aPage = [hiddenStackHolder getPageBelow:aPage])){
+                CGRect frameOfPage = [self frameForListViewForPage:aPage];
+                // we have to expand the frame, because we want to count pages even if
+                // just their shadow is visible
+                frameOfPage = [MMShadowedView expandFrame:frameOfPage];
+                if(frameOfPage.origin.y + frameOfPage.size.height > rectOfVisibleScroll.origin.y &&
+                   frameOfPage.origin.y < rectOfVisibleScroll.origin.y + rectOfVisibleScroll.size.height){
+                    [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
+                }else{
+                    break;
+                }
+            }
+        }
+        
+        return pagesThatWouldBeVisible;
+    }else{
+        //
+        // scrolling is enabled, so we need to return
+        // the list of pages that are currently visible
+        NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray array];
+        for(MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
+            CGRect frameOfPage = [self frameForListViewForPage:aPage];
+            // we have to expand the frame, because we want to count pages even if
+            // just their shadow is visible
+            frameOfPage = [MMShadowedView expandFrame:frameOfPage];
+            if(frameOfPage.origin.y < self.contentOffset.y + self.frame.size.height &&
+               frameOfPage.origin.y + frameOfPage.size.height > self.contentOffset.y){
+                [pagesThatWouldBeVisible addObject:aPage];
+            }
+        }
+        return pagesThatWouldBeVisible;
+    }
+}
+
+
+/**
+ * makes sure that the input page is at the top of the visible
+ * stack. this will move pages on/off the visible stack to/from
+ * the hidden stack to preserve stack order.
+ */
+-(void) ensurePageIsAtTopOfVisibleStack:(MMPaperView*)aPage{
+    //
+    // ok, we know what page was tapped.
+    //
+    // now we need to make sure that page is on the top
+    // of the visible stack
+    if([self isInVisibleStack:aPage]){
+        // the page is in teh visible stack, so pop pages
+        // onto the hidden stack so that this page is the
+        // top visible page
+        while([visibleStackHolder peekSubview] != aPage){
+            [hiddenStackHolder pushSubview:[visibleStackHolder peekSubview]];
+        }
+    }else{
+        // the page is in the hidden stack, so pop pages
+        // onto the visible stack so that this page is the
+        // top visible page
+        while([visibleStackHolder peekSubview] != aPage){
+            [visibleStackHolder pushSubview:[hiddenStackHolder peekSubview]];
+        }
+    }
+}
+
+/**
+ * this method helps transition from a page's current frame
+ * to that page's new frame in the list view.
+ *
+ * the percentageToTrustToFrame ranges from 0 to 1.
+ * if the value is 1, then the frame that's returned is
+ * exactly the same as the input oldFrame.
+ *
+ * if the value is 0, then the frame that's returned is it's
+ * position in the list view (during the transition).
+ *
+ * since the transition to list view has to adjust for the
+ * contentOffset, then the list frame will be adjusted
+ * up screen by numberOfHiddenRows
+ */
+-(CGRect) framePositionDuringTransitionForPage:(MMPaperView*)page originalFrame:(CGRect)oldFrame withTrust:(CGFloat)percentageToTrustToFrame{
+    if(percentageToTrustToFrame < 0) percentageToTrustToFrame = 0;
+    if(percentageToTrustToFrame > 1) percentageToTrustToFrame = 1;
+    // final frame when the page is in the list view
+    CGRect finalFrame = [self frameForListViewForPage:page];
+    finalFrame.origin.x -= initialScrollOffsetFromTransitionToListView.x;
+    finalFrame.origin.y -= initialScrollOffsetFromTransitionToListView.y;
+    
+    //
+    // ok, set the new frame that we'll return
+    CGRect newFrame = CGRectZero;
+    newFrame.origin.x = finalFrame.origin.x - (finalFrame.origin.x - oldFrame.origin.x) * percentageToTrustToFrame;
+    newFrame.origin.y = finalFrame.origin.y - (finalFrame.origin.y - oldFrame.origin.y) * percentageToTrustToFrame;
+    newFrame.size.width = finalFrame.size.width - (finalFrame.size.width - oldFrame.size.width) * percentageToTrustToFrame;
+    newFrame.size.height = finalFrame.size.height - (finalFrame.size.height - oldFrame.size.height) * percentageToTrustToFrame;
+    
+    return newFrame;
+}
+
+
+/**
+ * the user has scaled small enough with the top page
+ * that we can take over and just animate the rest.
+ *
+ * so we need to cancel it's gestures, then calculate
+ * the final resting place for every page in the visible
+ * stack, then animate them.
+ *
+ * we're going to scale pages in the first two rows, and
+ * we'll just slide any pages below that above the screen.
+ *
+ * when the animation completes, we'll adjust all the frames
+ * and content offsets to that the user can scroll them
+ */
+-(void) immediatelyAnimateFromListViewToFullScreenView{
+    
+    __block NSMutableSet* pagesThatNeedAnimating = [NSMutableSet set];
+    
+    CGFloat duration = 0.2;
+    
+    //
+    // all of the pages "look" like they're in the right place,
+    // but we need to turn on the scroll view.
+    void (^step1)(void) = ^{
+        //
+        // this means we need to keep the pages visually in the same place,
+        // but adjust their frames and the content size/offset so
+        // that we can set the scrollview offset to zero and turn off scrolling
+        if(self.contentOffset.y > 0){
+            for(MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
+                CGRect newFrame = aPage.frame;
+                newFrame.origin.y -= self.contentOffset.y;
+                if(!CGRectEqualToRect(newFrame, aPage.frame)){
+                    aPage.frame = newFrame;
+                };
+            }
+        }
+        // set our content height/offset for the pages
+        [self beginUITransitionFromListView];
+        [self setContentOffset:CGPointZero animated:NO];
+        [self setContentSize:CGSizeMake(screenWidth, screenHeight)];
+        [self setScrollEnabled:NO];
+        [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
+        [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
+        
+        [pagesThatNeedAnimating addObjectsFromArray:pagesThatWillBeVisibleAfterTransitionToListView];
+        for(MMPaperView* aPage in pagesThatNeedAnimating){
+            //
+            // animate shadows
+            CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
+            theAnimation.duration = duration;
+            theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+            theAnimation.fromValue = (id) aPage.contentView.layer.shadowPath;
+            CGSize toSize = visibleStackHolder.bounds.size;
+            if(aPage == [visibleStackHolder peekSubview]){
+                toSize = [MMShadowedView expandBounds:visibleStackHolder.bounds].size;
+            }
+            theAnimation.toValue = (id) [[MMShadowManager sharedInstace] getShadowForSize:toSize];
+            [aPage.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
+        }
+        [visibleStackHolder.superview insertSubview:hiddenStackHolder belowSubview:visibleStackHolder];
+        addPageButtonInListView.frame = [self frameForAddPageButton];
+        [self moveAddButtonToBottom];
+    };
+    
+    //
+    // make sure all the pages go to the correct place
+    // so that it looks like where they'll be in the list view
+    void (^step2)(void) = ^{
+        //
+        // animate all visible stack pages that will be in the
+        // visible frame to the correct place
+        for(MMPaperView* aPage in pagesThatNeedAnimating){
+            if(aPage == [visibleStackHolder peekSubview]){
+                aPage.frame = [MMPaperView expandFrame:visibleStackHolder.bounds];
+            }else if([self isInVisibleStack:aPage]){
+                aPage.frame = visibleStackHolder.bounds;
+            }else{
+                aPage.frame = hiddenStackHolder.bounds;
+            }
+        }
+        CGRect newHiddenFrame = visibleStackHolder.frame;
+        newHiddenFrame.origin.x += screenWidth;
+        hiddenStackHolder.frame = newHiddenFrame;
+        addPageButtonInListView.alpha = 0;
+        [self finishedScalingBackToPageView:[visibleStackHolder peekSubview]];
+    };
+    
+    
+    
+    
+    //
+    // first, find all pages behind the first full scale
+    // page, and just move them immediately
+    //
+    // this helps pretty dramatically with the animation
+    // performance.
+    //
+    // also, turn off gestures
+    void (^step3)(BOOL finished) = ^(BOOL finished){
+        //
+        // now complete the bounce for the top page
+        CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
+        theAnimation.duration = 0.15;
+        theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        theAnimation.fromValue = (id) [visibleStackHolder peekSubview].contentView.layer.shadowPath;
+        theAnimation.toValue = (id) [[MMShadowManager sharedInstace] getShadowForSize:self.bounds.size];
+        [[visibleStackHolder peekSubview].contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
+        [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn
+                         animations:^(void){
+                             [visibleStackHolder peekSubview].frame = self.bounds;
+                         } completion:^(BOOL finished){
+                             [self finishUITransitionToPageView];
+                             
+                             //
+                             // find visible stack pages that we can
+                             // move immediately
+                             for(MMPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
+                                 aPage.frame = visibleStackHolder.bounds;
+                                 [aPage enableAllGestures];
+                                 aPage.scale = 1;
+                             }
+                             for(MMPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]){
+                                 aPage.frame = hiddenStackHolder.bounds;
+                                 aPage.scale = 1;
+                             }
+                         }];
+    };
+    
+    
+    step1();
+    
+    
+    // ok, animate all the views in the visible stack!
+    [UIView animateWithDuration:duration
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:step2
+                     completion:step3];
+    //
+    // now that the user has finished the gesture,
+    // we can forget about the original frame locations
+}
+
+
+#pragma mark Private Tap Gesture
+
+/**
+ * we are in list view, and the user tapped onto the
+ * scrollview (probably tapped a page).
+ *
+ * let's check if the user tapped a page, and zoom
+ * to that page as the top of the visible stack
+ */
+-(void) didTapScrollView:(UITapGestureRecognizer*)_tapGesture{
+    //
+    // first, we should find which page the user tapped
+    CGPoint locationOfTap = [_tapGesture locationInView:self];
+    
+    MMPaperView* thePageThatWasTapped = nil;
+    for(MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
+        CGRect frameOfPage = [self frameForListViewForPage:aPage];
+        if(CGRectContainsPoint(frameOfPage, locationOfTap)){
+            thePageThatWasTapped = aPage;
+        }
+    }
+    if(!thePageThatWasTapped) return;
+    
+    
+    [self ensurePageIsAtTopOfVisibleStack:thePageThatWasTapped];
+    
+    [self immediatelyAnimateFromListViewToFullScreenView];
+    
+}
+
+
+-(BOOL) shouldPopPageFromVisibleStack:(MMPaperView*)page withFrame:(CGRect)frame{
+    if([visibleStackHolder peekSubview].scale < kMinPageZoom){
+        return NO;
+    }
+    return [super shouldPopPageFromVisibleStack:page withFrame:frame];
+}
 
 @end

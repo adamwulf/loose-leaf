@@ -62,4 +62,11 @@
 -(void) realignPagesInVisibleStackExcept:(MMPaperView*)page animated:(BOOL)animated;
 -(void) animatePageToFullScreen:(MMPaperView*)page withDelay:(CGFloat)delay withBounce:(BOOL)bounce onComplete:(void(^)(BOOL finished))completionBlock;
 -(BOOL) shouldPopPageFromVisibleStack:(MMPaperView*)page withFrame:(CGRect)frame;
+
+
+// private
+
+-(void) isBezelingInWithGesture:(MMBezelInRightGestureRecognizer*)bezelGesture;
+
+
 @end
