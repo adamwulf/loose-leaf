@@ -14,6 +14,7 @@
 #import "MMImageButton.h"
 #import "MMTextButton.h"
 #import "MMPencilButton.h"
+#import "MMPencilEraserButton.h"
 #import "MMShareButton.h"
 #import "MMMapButton.h"
 #import "MMSidebarButtonDelegate.h"
@@ -35,6 +36,7 @@
     MMImageButton* insertImageButton;
     MMTextButton* textButton;
     MMPencilButton* pencilButton;
+    MMPencilEraserButton* eraserButton;
     MMShareButton* shareButton;
     MMMapButton* mapButton;
     
