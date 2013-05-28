@@ -8,6 +8,7 @@
 
 #import "MMEditablePaperView.h"
 #import <QuartzCore/QuartzCore.h>
+#import <JotUI/JotUI.h>
 
 @implementation MMEditablePaperView
 
@@ -47,9 +48,10 @@
 #pragma mark - Gestures
 
 -(void) panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture{
-    if(panGesture.state == UIGestureRecognizerStateBegan){
+    if(panGesture.state == UIGestureRecognizerStateBegan ||
+       panGesture.state == UIGestureRecognizerStateChanged){
         for(UITouch* touch in _panGesture.validTouches){
-            [drawableView cancelStrokeForTouch:touch];
+            [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
         }
     }else if(panGesture.state == UIGestureRecognizerStateCancelled ||
              panGesture.state == UIGestureRecognizerStateEnded ||
