@@ -45,22 +45,6 @@
 }
 
 
-#pragma mark - Gestures
-
--(void) panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture{
-    if(panGesture.state == UIGestureRecognizerStateBegan ||
-       panGesture.state == UIGestureRecognizerStateChanged){
-        for(UITouch* touch in _panGesture.validTouches){
-            [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
-        }
-    }else if(panGesture.state == UIGestureRecognizerStateCancelled ||
-             panGesture.state == UIGestureRecognizerStateEnded ||
-             panGesture.state == UIGestureRecognizerStateFailed){
-        // noop
-    }
-    [super panAndScale:_panGesture];
-}
-
 
 #pragma mark - JotViewDelegate
 
@@ -89,7 +73,12 @@
 }
 
 -(CGFloat) widthForTouch:(JotTouch*)touch{
-    return [pen widthForTouch:touch];
+    //
+    // we divide by scale so that when the user is zoomed in,
+    // their pen is always writing at the same visible scale
+    //
+    // this lets them write smaller text / detail when zoomed in
+    return [pen widthForTouch:touch] / self.scale;
 }
 
 -(CGFloat) smoothnessForTouch:(JotTouch *)touch{

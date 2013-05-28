@@ -54,7 +54,6 @@
 @property (nonatomic, assign) MMBezelDirection bezelDirectionMask;
 @property (nonatomic, readonly) MMBezelDirection didExitToBezel;
 @property (nonatomic, readonly) MMBezelScaleDirection scaleDirection;
-@property (nonatomic, readonly) NSOrderedSet* validTouches;
 
 -(void) cancel;
 -(BOOL) containsTouch:(UITouch*)touch;
