@@ -22,12 +22,14 @@
 #import "MMRotationManager.h"
 #import "MMRotationManagerDelegate.h"
 #import "Constants.h"
+#import "Pen.h"
+#import "Eraser.h"
 
 /**
  * this class is responsible for the editable buttons and controls that show
  * outside of a page's view subviews
  */
-@interface MMEditablePaperStackView : MMListPaperStackView<UIAccelerometerDelegate,MMSidebarButtonDelegate,MMRotationManagerDelegate>{
+@interface MMEditablePaperStackView : MMListPaperStackView<JotViewDelegate,MMSidebarButtonDelegate,MMRotationManagerDelegate>{
     // toolbar
     MMPaperButton* documentBackgroundSidebarButton;
     MMPlusButton* addPageSidebarButton;
@@ -42,6 +44,9 @@
     
     MMTextButton* undoButton;
     MMTextButton* redoButton;
+
+    Pen* pen;
+    Eraser* eraser;
 }
 
 @end

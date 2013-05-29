@@ -8,11 +8,9 @@
 
 #import "MMPaperView.h"
 #import <JotUI/JotUI.h>
-#import "Pen.h"
 
 @interface MMEditablePaperView : MMPaperView<JotViewDelegate>{
     JotView* drawableView;
-    Pen* pen;
 }
 
 @end
