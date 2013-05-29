@@ -18,6 +18,7 @@
 		660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DB2159028560001DA12 /* NSArray+MapReduce.m */; };
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C1877175538A800706A05 /* MMPencilEraserButton.m */; };
+		663C187D1755B63D00706A05 /* Eraser.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C187C1755B63D00706A05 /* Eraser.m */; };
 		664516B9159030FC0012FACA /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 664516B8159030FC0012FACA /* Constants.m */; };
 		664C62F015A36DA40072736A /* MMListPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 664C62EF15A36DA40072736A /* MMListPaperStackView.m */; };
 		664D5C5416FD0D4C00F518EC /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66A4BD181632170E00C45070 /* DrawKit-iOS.framework */; };
@@ -121,6 +122,8 @@
 		6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizerDelegate.h; sourceTree = "<group>"; };
 		663C1876175538A800706A05 /* MMPencilEraserButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPencilEraserButton.h; sourceTree = "<group>"; };
 		663C1877175538A800706A05 /* MMPencilEraserButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPencilEraserButton.m; sourceTree = "<group>"; };
+		663C187B1755B63D00706A05 /* Eraser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Eraser.h; sourceTree = "<group>"; };
+		663C187C1755B63D00706A05 /* Eraser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Eraser.m; sourceTree = "<group>"; };
 		664516B8159030FC0012FACA /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		664C62EE15A36DA40072736A /* MMListPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListPaperStackView.h; sourceTree = "<group>"; };
 		664C62EF15A36DA40072736A /* MMListPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListPaperStackView.m; sourceTree = "<group>"; };
@@ -454,6 +457,8 @@
 			children = (
 				6695B6EE1751CC160069E61F /* Pen.h */,
 				6695B6EF1751CC160069E61F /* Pen.m */,
+				663C187B1755B63D00706A05 /* Eraser.h */,
+				663C187C1755B63D00706A05 /* Eraser.m */,
 			);
 			name = Tools;
 			sourceTree = "<group>";
@@ -689,6 +694,7 @@
 				6695B6EC17505FBF0069E61F /* MMEditablePaperView.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
 				663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */,
+				663C187D1755B63D00706A05 /* Eraser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

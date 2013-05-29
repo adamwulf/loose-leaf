@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MMPaperStackView.h"
+#import "MMEditablePaperStackView.h"
 
 @interface MMLooseLeafViewController : UIViewController{
-    IBOutlet MMPaperStackView* stackView;
+    IBOutlet MMEditablePaperStackView* stackView;
 }
 
 @end

@@ -7,10 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <JotUI/JotUI.h>
 
 @class MMPaperView;
 
-@protocol MMPaperViewDelegate <NSObject>
+@protocol MMPaperViewDelegate <JotViewDelegate>
 
 /**
  * return YES if we allow the input page to

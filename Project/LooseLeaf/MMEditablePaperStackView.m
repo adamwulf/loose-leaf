@@ -23,6 +23,12 @@
 -(void) awakeFromNib{
     [super awakeFromNib];
     
+    pen = [[Pen alloc] init];
+    pen.shouldUseVelocity = YES;
+    
+    eraser = [[Eraser alloc] init];
+    eraser.shouldUseVelocity = YES;
+    
     // test code for custom popovers
     // ================================================================================
     //    MMPopoverView* popover = [[MMPopoverView alloc] initWithFrame:CGRectMake(100, 100, 300, 300)];
@@ -38,12 +44,12 @@
     
     pencilButton = [[MMPencilButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     pencilButton.delegate = self;
-    [pencilButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [pencilButton addTarget:self action:@selector(penTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:pencilButton];
     
     eraserButton = [[MMPencilEraserButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     eraserButton.delegate = self;
-    [eraserButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [eraserButton addTarget:self action:@selector(eraserTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:eraserButton];
     
     
@@ -113,10 +119,26 @@
     return -([[MMRotationManager sharedInstace] currentRotationReading] + M_PI/2);
 }
 
+-(Pen*) activePen{
+    if(eraserButton.selected){
+        return eraser;
+    }else{
+        return pen;
+    }
+}
 
 
 #pragma mark - Button Actions
 
+-(void) penTapped:(UIButton*)_button{
+    eraserButton.selected = NO;
+    pencilButton.selected = YES;
+}
+
+-(void) eraserTapped:(UIButton*)_button{
+    eraserButton.selected = YES;
+    pencilButton.selected = NO;
+}
 
 /**
  * adds a new blank page to the visible stack
@@ -195,6 +217,46 @@
 -(void) finishedScalingBackToPageView:(MMPaperView*)page{
     [self setButtonsVisible:YES];
     [super finishedScalingBackToPageView:page];
+}
+
+
+#pragma mark - JotViewDelegate
+
+-(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+    return [[self activePen] willBeginStrokeWithTouch:touch];
+}
+
+-(void) willMoveStrokeWithTouch:(JotTouch*)touch{
+    [[self activePen] willMoveStrokeWithTouch:touch];
+}
+
+-(void) didEndStrokeWithTouch:(JotTouch*)touch{
+    [[self activePen] didEndStrokeWithTouch:touch];
+}
+
+-(void) didCancelStrokeWithTouch:(JotTouch*)touch{
+    [[self activePen] didCancelStrokeWithTouch:touch];
+}
+
+-(UIColor*) colorForTouch:(JotTouch *)touch{
+    return [[self activePen] colorForTouch:touch];
+}
+
+-(CGFloat) widthForTouch:(JotTouch*)touch{
+    //
+    // we divide by scale so that when the user is zoomed in,
+    // their pen is always writing at the same visible scale
+    //
+    // this lets them write smaller text / detail when zoomed in
+    return [[self activePen] widthForTouch:touch];
+}
+
+-(CGFloat) smoothnessForTouch:(JotTouch *)touch{
+    return [[self activePen] smoothnessForTouch:touch];
+}
+
+-(CGFloat) rotationForSegment:(AbstractBezierPathElement *)segment fromPreviousSegment:(AbstractBezierPathElement *)previousSegment{
+    return [[self activePen] rotationForSegment:segment fromPreviousSegment:previousSegment];;
 }
 
 @end

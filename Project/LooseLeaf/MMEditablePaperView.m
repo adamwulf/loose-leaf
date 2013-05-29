@@ -27,9 +27,6 @@
         drawableView.layer.anchorPoint = CGPointMake(0,0);
         drawableView.layer.position = CGPointMake(0,0);
         
-        pen = [[Pen alloc] initWithMinSize:6 andMaxSize:12 andMinAlpha:.9 andMaxAlpha:.9];
-        pen.shouldUseVelocity = YES;
-        
         [[JotStylusManager sharedInstance] setEnabled:YES];
         [[JotStylusManager sharedInstance] setRejectMode:NO];
         [[JotStylusManager sharedInstance] setPalmRejectorDelegate:drawableView];
@@ -51,25 +48,27 @@
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
     if(panGesture.state == UIGestureRecognizerStateBegan ||
        panGesture.state == UIGestureRecognizerStateChanged){
-        return ![panGesture containsTouch:touch.touch];
+        if([panGesture containsTouch:touch.touch]){
+            return NO;
+        }
     }
-    return [pen willBeginStrokeWithTouch:touch];
+    return [delegate willBeginStrokeWithTouch:touch];
 }
 
 -(void) willMoveStrokeWithTouch:(JotTouch*)touch{
-    [pen willMoveStrokeWithTouch:touch];
+    [delegate willMoveStrokeWithTouch:touch];
 }
 
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
-    [pen didEndStrokeWithTouch:touch];
+    [delegate didEndStrokeWithTouch:touch];
 }
 
 -(void) didCancelStrokeWithTouch:(JotTouch*)touch{
-    [pen didCancelStrokeWithTouch:touch];
+    [delegate didCancelStrokeWithTouch:touch];
 }
 
 -(UIColor*) colorForTouch:(JotTouch *)touch{
-    return [UIColor blackColor];
+    return [delegate colorForTouch:touch];
 }
 
 -(CGFloat) widthForTouch:(JotTouch*)touch{
@@ -78,15 +77,15 @@
     // their pen is always writing at the same visible scale
     //
     // this lets them write smaller text / detail when zoomed in
-    return [pen widthForTouch:touch] / self.scale;
+    return [delegate widthForTouch:touch] / self.scale;
 }
 
 -(CGFloat) smoothnessForTouch:(JotTouch *)touch{
-    return [pen smoothnessForTouch:touch];
+    return [delegate smoothnessForTouch:touch];
 }
 
 -(CGFloat) rotationForSegment:(AbstractBezierPathElement *)segment fromPreviousSegment:(AbstractBezierPathElement *)previousSegment{
-    return [pen rotationForSegment:segment fromPreviousSegment:previousSegment];;
+    return [delegate rotationForSegment:segment fromPreviousSegment:previousSegment];;
 }
 
 

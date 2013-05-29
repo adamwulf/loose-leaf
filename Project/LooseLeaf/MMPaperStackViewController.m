@@ -29,7 +29,6 @@
         [stackView addPaperToBottomOfStack:paper];
         paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
         [stackView addPaperToBottomOfStack:paper];
-
         paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
         [stackView addPaperToBottomOfHiddenStack:paper];
         paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
