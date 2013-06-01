@@ -40,6 +40,7 @@
     
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
+    UIColor* barelyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.25];
     UIColor* halfGreyFill = [self backgroundColor];
     UIColor* darkerFill = [UIColor colorWithRed: 0.57 green: 0.57 blue: 0.57 alpha: 0.35];
 
@@ -49,9 +50,9 @@
     [darkerGreyBorder setStroke];
     [ovalPath stroke];
     if(reverseArrow){
-        [halfGreyFill setFill];
+        [barelyWhite setFill];
     }else{
-        [darkerFill setFill];
+        [halfGreyFill setFill];
     }
     [ovalPath fill];
 
@@ -95,11 +96,11 @@
     CGContextSetBlendMode(context, kCGBlendModeNormal);
 
     if(reverseArrow){
-        [darkerFill setFill];
+        [halfGreyFill setFill];
         [arrowPath fill];
         [arrowPath stroke];
     }else{
-        [halfGreyFill setFill];
+        [barelyWhite setFill];
         [arrowPath fill];
         [arrowPath stroke];
     }
