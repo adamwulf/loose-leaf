@@ -35,7 +35,7 @@
 #define kGutterWidthToDragPages 500
 #define kFingerWidth 40
 #define kFilteringFactor 0.2
-#define kStartOfSidebar 212
+#define kStartOfSidebar 272
 #define kWidthOfSidebarButton 50.0
 #define kWidthOfSidebarButtonBuffer 5
 #define kWidthOfSidebar 80
