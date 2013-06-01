@@ -14,9 +14,10 @@
     CGFloat pointSize;
     CTFontSymbolicTraits traits;
     CGFloat xOffset;
+    CGFloat yOffset;
     UIFont* font;
 }
 
-- (id)initWithFrame:(CGRect)_frame andFont:(UIFont*)_font andLetter:(NSString*)_letter andXOffset:(CGFloat)_xOffset;
+- (id)initWithFrame:(CGRect)_frame andFont:(UIFont*)_font andLetter:(NSString*)_letter andXOffset:(CGFloat)_xOffset andYOffset:(CGFloat)_yOffset;
 
 @end

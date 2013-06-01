@@ -37,6 +37,7 @@
     MMPolylineButton* polylineButton;
     MMPolygonButton* polygonButton;
     MMImageButton* insertImageButton;
+    MMTextButton* scissorButton;
     MMTextButton* textButton;
     MMPencilButton* pencilButton;
     MMPencilEraserButton* eraserButton;

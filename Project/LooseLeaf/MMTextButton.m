@@ -13,7 +13,7 @@
 
 @implementation MMTextButton
 
-- (id)initWithFrame:(CGRect)_frame andFont:(UIFont*)_font andLetter:(NSString*)_letter andXOffset:(CGFloat)_xOffset{
+- (id)initWithFrame:(CGRect)_frame andFont:(UIFont*)_font andLetter:(NSString*)_letter andXOffset:(CGFloat)_xOffset andYOffset:(CGFloat)_yOffset{
     self = [super initWithFrame:_frame];
     if (self) {
         // Initialization code
@@ -22,6 +22,7 @@
         letter = _letter;
         pointSize = [_font pointSize] * kWidthOfSidebarButton / 50.0;
         xOffset = _xOffset;
+        yOffset = _yOffset;
         font = _font;
     }
     return self;
@@ -47,7 +48,7 @@
     
     UIBezierPath* glyphPath = [[font fontWithSize:scaledPointSize] bezierPathForString:letter];
     CGRect glyphRect = [glyphPath bounds];
-    [glyphPath applyTransform:CGAffineTransformConcat(CGAffineTransformMakeTranslation(-glyphRect.origin.x - .5 + xOffset, -glyphRect.size.height),
+    [glyphPath applyTransform:CGAffineTransformConcat(CGAffineTransformMakeTranslation(-glyphRect.origin.x - .5 + xOffset, -glyphRect.size.height + yOffset),
                                                               CGAffineTransformMakeScale(1.f, -1.f))];
     [glyphPath applyTransform:CGAffineTransformMakeTranslation((drawingWidth - glyphRect.size.width) / 2 + kWidthOfSidebarButtonBuffer,
                                                                (drawingWidth - glyphRect.size.height) / 2 + kWidthOfSidebarButtonBuffer)];
