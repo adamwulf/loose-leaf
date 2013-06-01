@@ -89,6 +89,18 @@
     
     
     
+    CGRect rulerButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton);
+    rulerButton = [[MMTextButton alloc] initWithFrame:rulerButtonFrame andFont:[UIFont fontWithName:@"ZapfDingbatsITC" size:28] andLetter:@"\u2195" andXOffset:1 andYOffset:3];
+    rulerButton.delegate = self;
+    [rulerButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:rulerButton];
+    
+    CGRect handButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton);
+    handButton = [[MMTextButton alloc] initWithFrame:handButtonFrame andFont:[UIFont fontWithName:@"ZapfDingbatsITC" size:34] andLetter:@"\u270C" andXOffset:1 andYOffset:0];
+    handButton.delegate = self;
+    [handButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:handButton];
+    
     addPageSidebarButton = [[MMPlusButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     addPageSidebarButton.delegate = self;
     [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -190,6 +202,8 @@
         mapButton.alpha = visible;
         redoButton.alpha = visible;
         undoButton.alpha = visible;
+        rulerButton.alpha = visible;
+        handButton.alpha = visible;
     }];
 }
 
@@ -224,6 +238,8 @@
         mapButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         undoButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         redoButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        rulerButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        handButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
     }];
 }
 
