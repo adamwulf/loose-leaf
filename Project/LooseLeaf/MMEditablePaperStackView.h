@@ -7,6 +7,7 @@
 //
 
 #import "MMListPaperStackView.h"
+#import "MMUndoRedoButton.h"
 #import "MMPaperButton.h"
 #import "MMPlusButton.h"
 #import "MMPolylineButton.h"
@@ -38,8 +39,8 @@
     MMShareButton* shareButton;
     MMMapButton* mapButton;
     
-    MMTextButton* undoButton;
-    MMTextButton* redoButton;
+    MMUndoRedoButton* undoButton;
+    MMUndoRedoButton* redoButton;
 }
 
 @end
