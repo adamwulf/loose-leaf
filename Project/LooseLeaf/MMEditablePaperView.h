@@ -13,4 +13,7 @@
     JotView* drawableView;
 }
 
+-(void) undo;
+-(void) redo;
+
 @end

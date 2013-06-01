@@ -41,7 +41,15 @@
     drawableView.transform = CGAffineTransformMakeScale(_scale, _scale);
 }
 
+#pragma mark - Public Methods
 
+-(void) undo{
+    [drawableView undo];
+}
+
+-(void) redo{
+    [drawableView redo];
+}
 
 #pragma mark - JotViewDelegate
 
