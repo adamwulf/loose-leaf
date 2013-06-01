@@ -95,14 +95,14 @@
     CGRect undoButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar - 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton);
     undoButton = [[MMUndoRedoButton alloc] initWithFrame:undoButtonFrame];
     undoButton.delegate = self;
-    [undoButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [undoButton addTarget:self action:@selector(undo:) forControlEvents:UIControlEventTouchUpInside];
     undoButton.reverseArrow = YES;
     [self addSubview:undoButton];
 
     CGRect redoButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar - 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton);
     redoButton = [[MMUndoRedoButton alloc] initWithFrame:redoButtonFrame];
     redoButton.delegate = self;
-    [redoButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [redoButton addTarget:self action:@selector(redo:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:redoButton];
 
     //
@@ -173,6 +173,20 @@
         redoButton.alpha = visible;
         undoButton.alpha = visible;
     }];
+}
+
+-(void) undo:(UIButton*)_button{
+    id obj = [visibleStackHolder peekSubview];
+    if([obj respondsToSelector:@selector(undo)]){
+        [obj undo];
+    }
+}
+
+-(void) redo:(UIButton*)_button{
+    id obj = [visibleStackHolder peekSubview];
+    if([obj respondsToSelector:@selector(redo)]){
+        [obj redo];
+    }
 }
 
 #pragma mark - MMRotationManagerDelegate

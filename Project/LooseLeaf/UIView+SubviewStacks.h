@@ -7,19 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MMPaperView.h"
+#import "MMEditablePaperView.h"
 
 @interface UIView (SubviewStacks)
 
 - (BOOL) containsSubview:(MMPaperView*)obj;
-- (MMPaperView*) peekSubview;
-- (MMPaperView*) popSubview;
-- (MMPaperView*) bottomSubview;
+- (MMEditablePaperView*) peekSubview;
+- (MMEditablePaperView*) popSubview;
+- (MMEditablePaperView*) bottomSubview;
 - (void) pushSubview:(MMPaperView*)obj;
 - (void) addSubviewToBottomOfStack:(MMPaperView*)obj;
 - (NSArray*) peekSubviewFromSubview:(MMPaperView*)obj;
-- (MMPaperView*) getPageBelow:(MMPaperView*)page;
--(MMPaperView*) getPageAbove:(MMPaperView*)page;
+- (MMEditablePaperView*) getPageBelow:(MMPaperView*)page;
+-(MMEditablePaperView*) getPageAbove:(MMPaperView*)page;
 -(void) insertPage:(MMPaperView*)pageToInsert belowPage:(MMPaperView*)referencePage;
 -(void) insertPage:(MMPaperView*)pageToInsert abovePage:(MMPaperView*)referencePage;
 
