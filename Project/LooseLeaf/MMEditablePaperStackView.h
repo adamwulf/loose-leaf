@@ -47,6 +47,9 @@
     MMUndoRedoButton* undoButton;
     MMUndoRedoButton* redoButton;
 
+    MMTextButton* rulerButton;
+    MMTextButton* handButton;
+
     Pen* pen;
     Eraser* eraser;
 }
