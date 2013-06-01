@@ -45,8 +45,8 @@
 
 #pragma mark - JotViewDelegate
 
--(void) willBeginStrokeWithTouch:(JotTouch*)touch{
-    [pen willBeginStrokeWithTouch:touch];
+-(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+    return [pen willBeginStrokeWithTouch:touch];
 }
 
 -(void) willMoveStrokeWithTouch:(JotTouch*)touch{

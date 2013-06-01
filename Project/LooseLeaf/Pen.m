@@ -96,10 +96,11 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
  * that a new touch is about to be processed. we should
  * reset all of our counters/etc to base values
  */
--(void) willBeginStrokeWithTouch:(JotTouch*)touch{
+-(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
     velocity = 1;
     lastDate = [NSDate date];
     numberOfTouches = 1;
+    return YES;
 }
 
 /**
