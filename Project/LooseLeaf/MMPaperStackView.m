@@ -1353,5 +1353,38 @@
     NSLog(@"will NOT change top page to: %@", page.uuid);
 }
 
+#pragma mark - JotViewDelegate
+
+-(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+    @throw kAbstractMethodException;
+}
+
+-(void) willMoveStrokeWithTouch:(JotTouch*)touch{
+    @throw kAbstractMethodException;
+}
+
+-(void) didEndStrokeWithTouch:(JotTouch*)touch{
+    @throw kAbstractMethodException;
+}
+
+-(void) didCancelStrokeWithTouch:(JotTouch*)touch{
+    @throw kAbstractMethodException;
+}
+
+-(UIColor*) colorForTouch:(JotTouch *)touch{
+    @throw kAbstractMethodException;
+}
+
+-(CGFloat) widthForTouch:(JotTouch*)touch{
+    @throw kAbstractMethodException;
+}
+
+-(CGFloat) smoothnessForTouch:(JotTouch *)touch{
+    @throw kAbstractMethodException;
+}
+
+-(CGFloat) rotationForSegment:(AbstractBezierPathElement *)segment fromPreviousSegment:(AbstractBezierPathElement *)previousSegment{
+    @throw kAbstractMethodException;
+}
 
 @end
