@@ -44,7 +44,7 @@
         imgView.contentMode = UIViewContentModeScaleAspectFill;
         imgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         imgView.clipsToBounds = YES;
-//        [self.contentView addSubview:imgView];
+        [self.contentView addSubview:imgView];
         
         UILabel* label = [[UILabel alloc] initWithFrame:self.bounds];
         label.text = uuid;

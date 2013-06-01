@@ -41,16 +41,19 @@
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
     UIColor* halfGreyFill = [self backgroundColor];
-    
+    UIColor* darkerFill = [UIColor colorWithRed: 0.57 green: 0.57 blue: 0.57 alpha: 0.35];
+
     //// Oval Drawing
     UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 0.5), floor(CGRectGetHeight(frame) - 0.5))];
     ovalPath.lineWidth = 1;
     [darkerGreyBorder setStroke];
     [ovalPath stroke];
-    [halfGreyFill setFill];
     if(reverseArrow){
-        [ovalPath fill];
+        [halfGreyFill setFill];
+    }else{
+        [darkerFill setFill];
     }
+    [ovalPath fill];
 
     
     
@@ -92,6 +95,8 @@
     CGContextSetBlendMode(context, kCGBlendModeNormal);
 
     if(reverseArrow){
+        [darkerFill setFill];
+        [arrowPath fill];
         [arrowPath stroke];
     }else{
         [halfGreyFill setFill];
