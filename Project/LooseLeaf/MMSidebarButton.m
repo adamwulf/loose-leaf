@@ -50,7 +50,7 @@
         CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
         bounceAnimation.removedOnCompletion = YES;
         
-        CATransform3D rotation = CATransform3DMakeAffineTransform(CGAffineTransformMakeRotation([self.delegate sidebarButtonRotation]));
+        CATransform3D rotation = CATransform3DMakeAffineTransform(CGAffineTransformMakeRotation([self rotation]));
         
         NSMutableArray* keyTimes = [NSMutableArray arrayWithObjects:
                                     [NSNumber numberWithFloat:0.0],
@@ -103,6 +103,10 @@
      CGFloat x4 = x1 - (N/2)*dy;
      CGFloat y4 = y1 + (N/2)*dx;
      */
+}
+
+-(CGFloat) rotation{
+    return [self.delegate sidebarButtonRotation];
 }
 
 /**
