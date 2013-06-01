@@ -18,6 +18,7 @@
 #import "MMPencilEraserButton.h"
 #import "MMShareButton.h"
 #import "MMMapButton.h"
+#import "MMRulerButton.h"
 #import "MMSidebarButtonDelegate.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMRotationManager.h"
@@ -47,7 +48,7 @@
     MMUndoRedoButton* undoButton;
     MMUndoRedoButton* redoButton;
 
-    MMTextButton* rulerButton;
+    MMRulerButton* rulerButton;
     MMTextButton* handButton;
 
     Pen* pen;
