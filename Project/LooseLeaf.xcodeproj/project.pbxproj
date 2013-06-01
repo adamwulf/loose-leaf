@@ -19,6 +19,9 @@
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C1877175538A800706A05 /* MMPencilEraserButton.m */; };
 		663C187D1755B63D00706A05 /* Eraser.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C187C1755B63D00706A05 /* Eraser.m */; };
+		663C188B1759B51600706A05 /* MMUndoRedoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C188A1759B51600706A05 /* MMUndoRedoButton.m */; };
+		663C188E1759B56200706A05 /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663C188D1759B56200706A05 /* JotUI.framework */; };
+		663C188F1759B57800706A05 /* JotTouchSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66C38AC7175329160035B872 /* JotTouchSDK.framework */; };
 		664516B9159030FC0012FACA /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 664516B8159030FC0012FACA /* Constants.m */; };
 		664C62F015A36DA40072736A /* MMListPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 664C62EF15A36DA40072736A /* MMListPaperStackView.m */; };
 		664D5C5416FD0D4C00F518EC /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66A4BD181632170E00C45070 /* DrawKit-iOS.framework */; };
@@ -35,7 +38,6 @@
 		669329701598E4DC0033E557 /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693296F1598E4DC0033E557 /* NSString+UUID.m */; };
 		669329731598EE210033E557 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329721598EE210033E557 /* UIView+Debug.m */; };
 		6693297E1599196E0033E557 /* UIFont+UIBezierCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693297D1599196E0033E557 /* UIFont+UIBezierCurve.m */; };
-		6695B6E01750082B0069E61F /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6DF1750082B0069E61F /* JotUI.framework */; };
 		6695B6E3175008680069E61F /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6E2175008680069E61F /* OpenGLES.framework */; };
 		6695B6E6175008840069E61F /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6E5175008840069E61F /* CoreBluetooth.framework */; };
 		6695B6E81750088D0069E61F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6E71750088D0069E61F /* AudioToolbox.framework */; };
@@ -60,7 +62,6 @@
 		66BD6E991593E9C400D4544C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E981593E9C300D4544C /* CoreText.framework */; };
 		66BD6E9C15940D7500D4544C /* MMPencilButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9B15940D7400D4544C /* MMPencilButton.m */; };
 		66BD6E9F15941B7B00D4544C /* MMShareButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9E15941B7B00D4544C /* MMShareButton.m */; };
-		66C38AC8175329160035B872 /* JotTouchSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66C38AC7175329160035B872 /* JotTouchSDK.framework */; };
 		66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* MMListAddPageButton.m */; };
 		66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D33F4B15A6408A0044C809 /* MMShadowedView.m */; };
 		66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
@@ -124,6 +125,9 @@
 		663C1877175538A800706A05 /* MMPencilEraserButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPencilEraserButton.m; sourceTree = "<group>"; };
 		663C187B1755B63D00706A05 /* Eraser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Eraser.h; sourceTree = "<group>"; };
 		663C187C1755B63D00706A05 /* Eraser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Eraser.m; sourceTree = "<group>"; };
+		663C18891759B51600706A05 /* MMUndoRedoButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoRedoButton.h; sourceTree = "<group>"; };
+		663C188A1759B51600706A05 /* MMUndoRedoButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUndoRedoButton.m; sourceTree = "<group>"; };
+		663C188D1759B56200706A05 /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = file; name = JotUI.framework; path = "../Submodules/JotUI/JotUI/build/Release-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
 		664516B8159030FC0012FACA /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		664C62EE15A36DA40072736A /* MMListPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListPaperStackView.h; sourceTree = "<group>"; };
 		664C62EF15A36DA40072736A /* MMListPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListPaperStackView.m; sourceTree = "<group>"; };
@@ -238,11 +242,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66C38AC8175329160035B872 /* JotTouchSDK.framework in Frameworks */,
+				663C188F1759B57800706A05 /* JotTouchSDK.framework in Frameworks */,
+				663C188E1759B56200706A05 /* JotUI.framework in Frameworks */,
 				6695B6E81750088D0069E61F /* AudioToolbox.framework in Frameworks */,
 				6695B6E6175008840069E61F /* CoreBluetooth.framework in Frameworks */,
 				6695B6E3175008680069E61F /* OpenGLES.framework in Frameworks */,
-				6695B6E01750082B0069E61F /* JotUI.framework in Frameworks */,
 				664D5C5416FD0D4C00F518EC /* DrawKit-iOS.framework in Frameworks */,
 				66BD6E991593E9C400D4544C /* CoreText.framework in Frameworks */,
 				66BD6E831593B12500D4544C /* CoreMotion.framework in Frameworks */,
@@ -422,6 +426,8 @@
 		66BD6E811593AF4500D4544C /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
+				663C18891759B51600706A05 /* MMUndoRedoButton.h */,
+				663C188A1759B51600706A05 /* MMUndoRedoButton.m */,
 				66BD6E7E1593AF4100D4544C /* MMSidebarButton.h */,
 				66BD6E7F1593AF4100D4544C /* MMSidebarButton.m */,
 				66D0905415F7080F004D2CAF /* MMListAddPageButton.h */,
@@ -466,6 +472,7 @@
 		66DCFB7B1581BCED00B4918C = {
 			isa = PBXGroup;
 			children = (
+				663C188D1759B56200706A05 /* JotUI.framework */,
 				66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */,
 				66DCFB901581BCEF00B4918C /* Loose Leaf */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
@@ -695,6 +702,7 @@
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
 				663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */,
 				663C187D1755B63D00706A05 /* Eraser.m in Sources */,
+				663C188B1759B51600706A05 /* MMUndoRedoButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
