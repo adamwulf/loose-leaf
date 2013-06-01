@@ -53,7 +53,7 @@
                                                                (drawingWidth - glyphRect.size.height) / 2 + kWidthOfSidebarButtonBuffer)];
     
     //// Oval Drawing
-    UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 0.5), floor(CGRectGetHeight(frame) - 0.5))];
+    UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 1.0), floor(CGRectGetHeight(frame) - 1.0))];
     [ovalPath appendPath:glyphPath];
     [ovalPath closePath];
     [halfGreyFill setFill];
