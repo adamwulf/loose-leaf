@@ -42,10 +42,9 @@
     UIColor* darkerGreyBorder = [self borderColor];
     UIColor* barelyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.25];
     UIColor* halfGreyFill = [self backgroundColor];
-    UIColor* darkerFill = [UIColor colorWithRed: 0.57 green: 0.57 blue: 0.57 alpha: 0.35];
 
     //// Oval Drawing
-    UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 0.5), floor(CGRectGetHeight(frame) - 0.5))];
+    UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 1.0), floor(CGRectGetHeight(frame) - 1.0))];
     ovalPath.lineWidth = 1;
     [darkerGreyBorder setStroke];
     [ovalPath stroke];
