@@ -108,5 +108,13 @@
     [super setTransform:transform];
 }
 
+-(CGFloat) rotation{
+    if(reverseArrow){
+        return [super rotation] + M_PI;
+    }
+    return [super rotation];
+}
+
+
 
 @end
