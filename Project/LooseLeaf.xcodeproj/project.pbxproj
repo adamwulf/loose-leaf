@@ -20,8 +20,8 @@
 		663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C1877175538A800706A05 /* MMPencilEraserButton.m */; };
 		663C187D1755B63D00706A05 /* Eraser.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C187C1755B63D00706A05 /* Eraser.m */; };
 		663C188B1759B51600706A05 /* MMUndoRedoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C188A1759B51600706A05 /* MMUndoRedoButton.m */; };
-		663C188E1759B56200706A05 /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663C188D1759B56200706A05 /* JotUI.framework */; };
 		663C188F1759B57800706A05 /* JotTouchSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66C38AC7175329160035B872 /* JotTouchSDK.framework */; };
+		663C1894175A709B00706A05 /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663C1893175A709B00706A05 /* JotUI.framework */; };
 		664516B9159030FC0012FACA /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 664516B8159030FC0012FACA /* Constants.m */; };
 		664C62F015A36DA40072736A /* MMListPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 664C62EF15A36DA40072736A /* MMListPaperStackView.m */; };
 		664D5C5416FD0D4C00F518EC /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66A4BD181632170E00C45070 /* DrawKit-iOS.framework */; };
@@ -127,7 +127,7 @@
 		663C187C1755B63D00706A05 /* Eraser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Eraser.m; sourceTree = "<group>"; };
 		663C18891759B51600706A05 /* MMUndoRedoButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoRedoButton.h; sourceTree = "<group>"; };
 		663C188A1759B51600706A05 /* MMUndoRedoButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUndoRedoButton.m; sourceTree = "<group>"; };
-		663C188D1759B56200706A05 /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = file; name = JotUI.framework; path = "../Submodules/JotUI/JotUI/build/Release-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
+		663C1893175A709B00706A05 /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
 		664516B8159030FC0012FACA /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		664C62EE15A36DA40072736A /* MMListPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListPaperStackView.h; sourceTree = "<group>"; };
 		664C62EF15A36DA40072736A /* MMListPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListPaperStackView.m; sourceTree = "<group>"; };
@@ -156,7 +156,6 @@
 		669329721598EE210033E557 /* UIView+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Debug.m"; sourceTree = "<group>"; };
 		6693297C1599196E0033E557 /* UIFont+UIBezierCurve.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+UIBezierCurve.h"; sourceTree = "<group>"; };
 		6693297D1599196E0033E557 /* UIFont+UIBezierCurve.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+UIBezierCurve.m"; sourceTree = "<group>"; };
-		6695B6DF1750082B0069E61F /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
 		6695B6E2175008680069E61F /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		6695B6E5175008840069E61F /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		6695B6E71750088D0069E61F /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -242,8 +241,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				663C1894175A709B00706A05 /* JotUI.framework in Frameworks */,
 				663C188F1759B57800706A05 /* JotTouchSDK.framework in Frameworks */,
-				663C188E1759B56200706A05 /* JotUI.framework in Frameworks */,
 				6695B6E81750088D0069E61F /* AudioToolbox.framework in Frameworks */,
 				6695B6E6175008840069E61F /* CoreBluetooth.framework in Frameworks */,
 				6695B6E3175008680069E61F /* OpenGLES.framework in Frameworks */,
@@ -371,9 +370,9 @@
 		6695B6E1175008530069E61F /* JotUI */ = {
 			isa = PBXGroup;
 			children = (
+				663C1893175A709B00706A05 /* JotUI.framework */,
 				6695B6E2175008680069E61F /* OpenGLES.framework */,
 				66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */,
-				6695B6DF1750082B0069E61F /* JotUI.framework */,
 				66BD6E7C1593ACD400D4544C /* QuartzCore.framework */,
 			);
 			name = JotUI;
@@ -472,7 +471,6 @@
 		66DCFB7B1581BCED00B4918C = {
 			isa = PBXGroup;
 			children = (
-				663C188D1759B56200706A05 /* JotUI.framework */,
 				66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */,
 				66DCFB901581BCEF00B4918C /* Loose Leaf */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
