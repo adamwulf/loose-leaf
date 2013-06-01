@@ -90,7 +90,7 @@
     
     
     CGRect rulerButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton);
-    rulerButton = [[MMTextButton alloc] initWithFrame:rulerButtonFrame andFont:[UIFont fontWithName:@"ZapfDingbatsITC" size:28] andLetter:@"\u2195" andXOffset:1 andYOffset:3];
+    rulerButton = [[MMRulerButton alloc] initWithFrame:rulerButtonFrame];
     rulerButton.delegate = self;
     [rulerButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:rulerButton];
