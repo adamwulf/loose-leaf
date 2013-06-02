@@ -34,6 +34,8 @@
         paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
         [stackView addPaperToBottomOfHiddenStack:paper];
     }
+    
+    [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth.png"]]];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
