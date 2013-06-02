@@ -96,7 +96,7 @@
     [self addSubview:rulerButton];
     
     CGRect handButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton);
-    handButton = [[MMTextButton alloc] initWithFrame:handButtonFrame andFont:[UIFont fontWithName:@"ZapfDingbatsITC" size:34] andLetter:@"\u270C" andXOffset:1 andYOffset:0];
+    handButton = [[MMHandButton alloc] initWithFrame:handButtonFrame];
     handButton.delegate = self;
     [handButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:handButton];
