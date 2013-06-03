@@ -264,8 +264,18 @@
 
 -(void) isBeginningToScaleReallySmall:(MMPaperView *)page{
     // make sure the currently edited page is being saved
-    // to disk if needbe
-    [[visibleStackHolder peekSubview] saveToDisk];
+    // to disk if need be
+    if([page isKindOfClass:[MMEditablePaperView class]]){
+        __block MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
+        [[visibleStackHolder peekSubview] saveToDisk:^{
+            if(pageToSave.scale < kMinPageZoom){
+                [pageToSave setEditable:NO];
+                NSLog(@"page %@ isn't editable", pageToSave.uuid);
+            }
+        }];
+    }else{
+        NSLog(@"would save, but can't b/c its readonly page");
+    }
     
     // update UI for scaling small into list view
     [self setButtonsVisible:NO];
@@ -277,10 +287,24 @@
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
     [self setButtonsVisible:YES];
     [super cancelledScalingReallySmall:page];
+
+    // ok, we've zoomed into this page now
+    if([page isKindOfClass:[MMEditablePaperView class]]){
+        MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
+        [pageToSave setEditable:YES];
+        NSLog(@"page %@ is editable", pageToSave.uuid);
+    }
 }
 -(void) finishedScalingBackToPageView:(MMPaperView*)page{
     [self setButtonsVisible:YES];
     [super finishedScalingBackToPageView:page];
+
+    // ok, we've zoomed into this page now
+    if([page isKindOfClass:[MMEditablePaperView class]]){
+        MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
+        [pageToSave setEditable:YES];
+        NSLog(@"page %@ is editable", pageToSave.uuid);
+    }
 }
 
 

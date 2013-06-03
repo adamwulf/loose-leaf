@@ -10,11 +10,13 @@
 #import <JotUI/JotUI.h>
 
 @interface MMEditablePaperView : MMPaperView<JotViewDelegate>{
+    UIImageView* cachedImgView;
     JotView* drawableView;
 }
 
 -(void) undo;
 -(void) redo;
--(void) saveToDisk;
+-(void) saveToDisk:(void(^)(void))onComplete;
+-(void) setEditable:(BOOL)isEditable;
 
 @end
