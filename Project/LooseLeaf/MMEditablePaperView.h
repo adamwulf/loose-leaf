@@ -15,5 +15,6 @@
 
 -(void) undo;
 -(void) redo;
+-(void) saveToDisk;
 
 @end

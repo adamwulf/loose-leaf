@@ -263,6 +263,11 @@
 #pragma mark - MMPaperViewDelegate - List View
 
 -(void) isBeginningToScaleReallySmall:(MMPaperView *)page{
+    // make sure the currently edited page is being saved
+    // to disk if needbe
+    [[visibleStackHolder peekSubview] saveToDisk];
+    
+    // update UI for scaling small into list view
     [self setButtonsVisible:NO];
     [super isBeginningToScaleReallySmall:page];
 }
