@@ -37,14 +37,8 @@
         // debug image to help show page zoom/pan etc better
         // than a blank page
         //
-        NSInteger photo = rand() % 6 + 1;
-        UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", photo]];
-        UIImageView* imgView = [[UIImageView alloc] initWithImage:img];
-        imgView.frame = self.contentView.bounds;
-        imgView.contentMode = UIViewContentModeScaleAspectFill;
-        imgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        imgView.clipsToBounds = YES;
-//        [self.contentView addSubview:imgView];
+//        NSInteger photo = rand() % 6 + 1;
+//        UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", photo]];
         
         UILabel* label = [[UILabel alloc] initWithFrame:self.bounds];
         label.text = uuid;

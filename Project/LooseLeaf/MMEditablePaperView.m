@@ -9,6 +9,7 @@
 #import "MMEditablePaperView.h"
 #import <QuartzCore/QuartzCore.h>
 #import <JotUI/JotUI.h>
+#import "UIImage+Resize.h"
 
 @implementation MMEditablePaperView{
     NSUInteger lastSavedUndoHash;
@@ -18,7 +19,16 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
+        // create the cache view
+        cachedImgView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
+        cachedImgView.frame = self.contentView.bounds;
+        cachedImgView.contentMode = UIViewContentModeScaleAspectFill;
+        cachedImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        cachedImgView.clipsToBounds = YES;
+        [self.contentView addSubview:cachedImgView];
+
+        
+        // create the drawable view
         drawableView = [[JotView alloc] initWithFrame:self.bounds];
         drawableView.delegate = self;
         [self.contentView addSubview:drawableView];
@@ -55,12 +65,51 @@
     [drawableView redo];
 }
 
--(void) saveToDisk{
+-(void) setEditable:(BOOL)isEditable{
+    if(isEditable){
+        cachedImgView.hidden = YES;
+        drawableView.hidden = NO;
+    }else{
+        cachedImgView.hidden = NO;
+        drawableView.hidden = YES;
+    }
+}
+
+
+-(void) saveToDisk:(void(^)(void))onComplete{
+    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString* documentsPath = [paths objectAtIndex:0];
+    NSString* pagesPath = [documentsPath stringByAppendingPathComponent:@"Pages"];
+    
+    if(![[NSFileManager defaultManager] fileExistsAtPath:pagesPath]){
+        [[NSFileManager defaultManager] createDirectoryAtPath:pagesPath withIntermediateDirectories:NO attributes:nil error:nil];
+    }
+    
+//    NSString* plistPath = [[pagesPath stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"plist"];
+    NSString* inkPath = [[pagesPath stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"png"];
+    
+    // find out what our current undo state looks like.
     NSUInteger currentUndoHash = [drawableView undoHash];
     if(currentUndoHash != lastSavedUndoHash){
         lastSavedUndoHash = currentUndoHash;
         NSLog(@"saving page %@ with hash %ui", self.uuid, lastSavedUndoHash);
+        
+        [drawableView exportToImageWithBackgroundColor:[[UIColor blueColor] colorWithAlphaComponent:.3] andBackgroundImage:nil onComplete:^(UIImage* output){
+            // scale by 50%
+            output = [output resizedImage:CGSizeMake(output.size.width / 2 * output.scale, output.size.height / 2 * output.scale) interpolationQuality:kCGInterpolationHigh];
+            cachedImgView.image = output;
+            
+            onComplete();
+            
+            [UIImagePNGRepresentation(output) writeToFile:inkPath atomically:YES];
+            NSLog(@"wrote ink to: %@", inkPath);
+        }];
+    }else{
+        // already saved, but don't need to write
+        // anything new to disk
+        onComplete();
     }
+    
 }
 
 #pragma mark - JotViewDelegate
