@@ -10,7 +10,9 @@
 #import <QuartzCore/QuartzCore.h>
 #import <JotUI/JotUI.h>
 
-@implementation MMEditablePaperView
+@implementation MMEditablePaperView{
+    NSUInteger lastSavedUndoHash;
+}
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -30,6 +32,8 @@
         [[JotStylusManager sharedInstance] setEnabled:YES];
         [[JotStylusManager sharedInstance] setRejectMode:NO];
         [[JotStylusManager sharedInstance] setPalmRejectorDelegate:drawableView];
+        
+        lastSavedUndoHash = [drawableView undoHash];
     }
     return self;
 }
@@ -49,6 +53,14 @@
 
 -(void) redo{
     [drawableView redo];
+}
+
+-(void) saveToDisk{
+    NSUInteger currentUndoHash = [drawableView undoHash];
+    if(currentUndoHash != lastSavedUndoHash){
+        lastSavedUndoHash = currentUndoHash;
+        NSLog(@"saving page %@ with hash %ui", self.uuid, lastSavedUndoHash);
+    }
 }
 
 #pragma mark - JotViewDelegate
