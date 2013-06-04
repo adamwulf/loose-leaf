@@ -8,6 +8,7 @@
 
 #import "MMStackManager.h"
 #import "NSThread+BlockAdditions.h"
+#import "NSArray+Map.h"
 
 @implementation MMStackManager
 
@@ -38,12 +39,21 @@
         [NSThread performBlockInBackground:^{
             // now that we have the views to save,
             // we can actually write to disk on the background
+
+            NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString* documentsPath = [paths objectAtIndex:0];
+            NSString* visiblePlistPath = [[documentsPath stringByAppendingPathComponent:@"visiblePages"] stringByAppendingPathExtension:@"plist"];
+            NSString* hiddenPlistPath = [[documentsPath stringByAppendingPathComponent:@"hiddenPages"] stringByAppendingPathExtension:@"plist"];
             
-            NSLog(@"visible: %@", visiblePages);
-            NSLog(@"hidden: %@", hiddenPages);
+            NSArray* visiblePagesToWrite = [visiblePages mapObjectsUsingSelector:@selector(dictionaryDescription)];
+            NSArray* hiddenPagesToWrite = [hiddenPages mapObjectsUsingSelector:@selector(dictionaryDescription)];
+            
+            [visiblePagesToWrite writeToFile:visiblePlistPath atomically:YES];
+            [hiddenPagesToWrite writeToFile:hiddenPlistPath atomically:YES];
+            
+            NSLog(@"visible: %@\n %@", visiblePlistPath, visiblePages);
+            NSLog(@"hidden: %@\n %@", hiddenPlistPath, hiddenPages);
         }];
-        
-        
     }];
 }
 
