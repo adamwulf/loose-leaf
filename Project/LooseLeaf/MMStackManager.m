@@ -79,12 +79,24 @@
     NSMutableArray* hiddenPages = [NSMutableArray array];
     
     for(NSDictionary* pageDict in visiblePagesToCreate){
-        MMPaperView* page = [[NSClassFromString([pageDict objectForKey:@"class"]) alloc] initWithFrame:bounds andUUID:[pageDict objectForKey:@"uuid"]];
+        Class pageClass = nil;
+        if([[pageDict objectForKey:@"class"] isEqualToString:@"MMPaperView"]){
+            pageClass = [MMPaperView class];
+        }else{
+            pageClass = [MMEditablePaperView class];
+        }
+        MMPaperView* page = [[pageClass alloc] initWithFrame:bounds andUUID:[pageDict objectForKey:@"uuid"]];
         [visiblePages addObject:page];
     }
     
     for(NSDictionary* pageDict in hiddenPagesToCreate){
-        MMPaperView* page = [[NSClassFromString([pageDict objectForKey:@"class"]) alloc] initWithFrame:bounds andUUID:[pageDict objectForKey:@"uuid"]];
+        Class pageClass = nil;
+        if([[pageDict objectForKey:@"class"] isEqualToString:@"MMPaperView"]){
+            pageClass = [MMPaperView class];
+        }else{
+            pageClass = [MMEditablePaperView class];
+        }
+        MMPaperView* page = [[pageClass alloc] initWithFrame:bounds andUUID:[pageDict objectForKey:@"uuid"]];
         [hiddenPages addObject:page];
     }
     

@@ -15,9 +15,8 @@
     NSUInteger lastSavedUndoHash;
 }
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
+    self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
         // create the cache view
         cachedImgView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
