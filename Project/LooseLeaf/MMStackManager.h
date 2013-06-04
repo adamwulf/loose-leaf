@@ -22,6 +22,6 @@
 
 -(void) saveToDisk;
 
--(void) loadFromDisk;
+-(NSDictionary*) loadFromDiskWithBounds:(CGRect)bounds;
 
 @end
