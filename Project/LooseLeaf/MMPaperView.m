@@ -420,4 +420,10 @@
     return [self.delegate columnInListViewGivenIndex:indexOfPage];
 }
 
+#pragma mark - description
+
+-(NSString*) description{
+    return [NSString stringWithFormat:@"[%@ %@]", NSStringFromClass(self.class), self.uuid];
+}
+
 @end
