@@ -310,8 +310,15 @@
         [pageToSave setEditable:YES];
         NSLog(@"page %@ is editable", pageToSave.uuid);
     }
+    [stackManager saveToDisk];
 }
 
+
+#pragma mark - Page Loading and Unloading
+
+-(void) saveStacksToDisk{
+    [stackManager saveToDisk];
+}
 
 #pragma mark - JotViewDelegate
 

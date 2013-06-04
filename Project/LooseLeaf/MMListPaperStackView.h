@@ -44,4 +44,6 @@
     MMListAddPageButton* addPageButtonInListView;
 }
 
+-(void) ensurePage:(MMPaperView*)thePage isAtIndex:(NSInteger)newIndex;
+
 @end

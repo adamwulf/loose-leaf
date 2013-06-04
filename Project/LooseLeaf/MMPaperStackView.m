@@ -1341,6 +1341,7 @@
  */
 -(void) willChangeTopPageTo:(MMPaperView*)page{
     NSLog(@"will change top page to: %@", page.uuid);
+    [self saveStacksToDisk];
 }
 
 /**
@@ -1353,8 +1354,11 @@
     NSLog(@"will NOT change top page to: %@", page.uuid);
 }
 
-#pragma mark - JotViewDelegate
+-(void) saveStacksToDisk{
+    @throw kAbstractMethodException;
+}
 
+#pragma mark - JotViewDelegate
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
     @throw kAbstractMethodException;
 }
