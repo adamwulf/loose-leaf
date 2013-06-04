@@ -67,6 +67,6 @@
 // private
 
 -(void) isBezelingInWithGesture:(MMBezelInRightGestureRecognizer*)bezelGesture;
-
+-(void) saveStacksToDisk;
 
 @end

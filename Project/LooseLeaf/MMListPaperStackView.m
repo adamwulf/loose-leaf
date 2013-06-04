@@ -842,6 +842,8 @@
                              }
                          }
                          completion:nil];
+        
+        [self saveStacksToDisk];
     }
 }
 

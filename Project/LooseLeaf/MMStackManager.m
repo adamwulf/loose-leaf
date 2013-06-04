@@ -57,6 +57,8 @@
             
             [visiblePagesToWrite writeToFile:visiblePlistPath atomically:YES];
             [hiddenPagesToWrite writeToFile:hiddenPlistPath atomically:YES];
+            
+            NSLog(@"saved stacks");
         }]];
     }];
 }
