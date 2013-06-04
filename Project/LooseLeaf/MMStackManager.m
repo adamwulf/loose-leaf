@@ -9,6 +9,7 @@
 #import "MMStackManager.h"
 #import "NSThread+BlockAdditions.h"
 #import "NSArray+Map.h"
+#import "MMBlockOperation.h"
 
 @implementation MMStackManager
 
@@ -17,6 +18,9 @@
         visibleStack = _visibleStack;
         hiddenStack = _hiddenStack;
         bezelStack = _bezelStack;
+        
+        opQueue = [[NSOperationQueue alloc] init];
+        [opQueue setMaxConcurrentOperationCount:1];
     }
     return self;
 }
@@ -36,10 +40,13 @@
             [bezelPages removeLastObject];
         }
         
-        [NSThread performBlockInBackground:^{
+        [opQueue addOperation:[[MMBlockOperation alloc] initWithBlock:^{
             // now that we have the views to save,
             // we can actually write to disk on the background
-
+            //
+            // the opqueue makes sure that we will always save
+            // to disk in the order that [saveToDisk] was called
+            // on the main thread.
             NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
             NSString* documentsPath = [paths objectAtIndex:0];
             NSString* visiblePlistPath = [[documentsPath stringByAppendingPathComponent:@"visiblePages"] stringByAppendingPathExtension:@"plist"];
@@ -50,10 +57,7 @@
             
             [visiblePagesToWrite writeToFile:visiblePlistPath atomically:YES];
             [hiddenPagesToWrite writeToFile:hiddenPlistPath atomically:YES];
-            
-            NSLog(@"visible: %@\n %@", visiblePlistPath, visiblePages);
-            NSLog(@"hidden: %@\n %@", hiddenPlistPath, hiddenPages);
-        }];
+        }]];
     }];
 }
 

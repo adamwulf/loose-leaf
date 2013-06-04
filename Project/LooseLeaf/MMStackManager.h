@@ -13,6 +13,9 @@
     UIView* visibleStack;
     UIView* bezelStack;
     UIView* hiddenStack;
+    
+    
+    NSOperationQueue* opQueue;
 }
 
 -(id) initWithVisibleStack:(UIView*)_visibleStack andHiddenStack:(UIView*)_hiddenStack andBezelStack:(UIView*)_bezelStack;
