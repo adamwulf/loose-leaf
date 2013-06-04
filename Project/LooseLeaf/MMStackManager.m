@@ -25,6 +25,18 @@
     return self;
 }
 
+-(NSString*) visiblePlistPath{
+    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString* documentsPath = [paths objectAtIndex:0];
+    return [[documentsPath stringByAppendingPathComponent:@"visiblePages"] stringByAppendingPathExtension:@"plist"];
+}
+
+-(NSString*) hiddenPlistPath{
+    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString* documentsPath = [paths objectAtIndex:0];
+    return [[documentsPath stringByAppendingPathComponent:@"hiddenPages"] stringByAppendingPathExtension:@"plist"];
+}
+
 
 -(void) saveToDisk{
     [NSThread performBlockOnMainThread:^{
@@ -47,24 +59,37 @@
             // the opqueue makes sure that we will always save
             // to disk in the order that [saveToDisk] was called
             // on the main thread.
-            NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            NSString* documentsPath = [paths objectAtIndex:0];
-            NSString* visiblePlistPath = [[documentsPath stringByAppendingPathComponent:@"visiblePages"] stringByAppendingPathExtension:@"plist"];
-            NSString* hiddenPlistPath = [[documentsPath stringByAppendingPathComponent:@"hiddenPages"] stringByAppendingPathExtension:@"plist"];
-            
             NSArray* visiblePagesToWrite = [visiblePages mapObjectsUsingSelector:@selector(dictionaryDescription)];
             NSArray* hiddenPagesToWrite = [hiddenPages mapObjectsUsingSelector:@selector(dictionaryDescription)];
             
-            [visiblePagesToWrite writeToFile:visiblePlistPath atomically:YES];
-            [hiddenPagesToWrite writeToFile:hiddenPlistPath atomically:YES];
+            [visiblePagesToWrite writeToFile:[self visiblePlistPath] atomically:YES];
+            [hiddenPagesToWrite writeToFile:[self hiddenPlistPath] atomically:YES];
             
             NSLog(@"saved stacks");
         }]];
     }];
 }
 
--(void) loadFromDisk{
+-(NSDictionary*) loadFromDiskWithBounds:(CGRect)bounds{
     
+    NSArray* visiblePagesToCreate = [[NSArray alloc] initWithContentsOfFile:[self visiblePlistPath]];
+    NSArray* hiddenPagesToCreate = [[NSArray alloc] initWithContentsOfFile:[self hiddenPlistPath]];
+    
+    NSMutableArray* visiblePages = [NSMutableArray array];
+    NSMutableArray* hiddenPages = [NSMutableArray array];
+    
+    for(NSDictionary* pageDict in visiblePagesToCreate){
+        MMPaperView* page = [[NSClassFromString([pageDict objectForKey:@"class"]) alloc] initWithFrame:bounds andUUID:[pageDict objectForKey:@"uuid"]];
+        [visiblePages addObject:page];
+    }
+    
+    for(NSDictionary* pageDict in hiddenPagesToCreate){
+        MMPaperView* page = [[NSClassFromString([pageDict objectForKey:@"class"]) alloc] initWithFrame:bounds andUUID:[pageDict objectForKey:@"uuid"]];
+        [hiddenPages addObject:page];
+    }
+    
+    return [NSDictionary dictionaryWithObjectsAndKeys:visiblePages, @"visiblePages",
+            hiddenPages, @"hiddenPages", nil];
 }
 
 @end
