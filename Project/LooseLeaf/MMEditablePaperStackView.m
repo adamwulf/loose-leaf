@@ -321,14 +321,24 @@
 }
 
 -(void) loadStacksFromDisk{
+    BOOL isTop = YES;
     NSDictionary* pages = [stackManager loadFromDiskWithBounds:self.bounds];
     for(MMPaperView* page in [[pages objectForKey:@"visiblePages"] reverseObjectEnumerator]){
         NSLog(@"loaded: %@", [page description]);
         [self addPaperToBottomOfStack:page];
+        if(!isTop && [page isKindOfClass:[MMEditablePaperView class]]){
+            [((MMEditablePaperView*)page) setEditable:NO];
+        }
+        isTop = NO;
     }
     for(MMPaperView* page in [[pages objectForKey:@"hiddenPages"] reverseObjectEnumerator]){
         NSLog(@"loaded hidden: %@", [page description]);
         [self addPaperToBottomOfHiddenStack:page];
+    }
+    
+    MMPaperView* topPage = [visibleStackHolder peekSubview];
+    if([topPage isKindOfClass:[MMEditablePaperView class]]){
+        [((MMEditablePaperView*)topPage) setEditable:YES];
     }
 }
 

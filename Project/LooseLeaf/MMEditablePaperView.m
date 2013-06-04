@@ -26,11 +26,19 @@
         cachedImgView.clipsToBounds = YES;
         [self.contentView addSubview:cachedImgView];
 
-        
         // create the drawable view
         drawableView = [[JotView alloc] initWithFrame:self.bounds];
-        drawableView.delegate = self;
         [self.contentView addSubview:drawableView];
+
+        
+        NSLog(@"loading ink %@", [self inkPath]);
+        
+        if([[NSFileManager defaultManager] fileExistsAtPath:[self inkPath]]){
+            [drawableView loadImage:[UIImage imageWithContentsOfFile:[self inkPath]]];
+            cachedImgView.image = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
+        }
+        
+        drawableView.delegate = self;
 
         // anchor the view to the top left,
         // so that when we scale down, the drawable view
@@ -86,6 +94,7 @@
     
 //    NSString* plistPath = [[pagesPath stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"plist"];
     NSString* inkPath = [[pagesPath stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"png"];
+    NSString* thumbnailPath = [[pagesPath stringByAppendingPathComponent:[self.uuid stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
     
     // find out what our current undo state looks like.
     NSUInteger currentUndoHash = [drawableView undoHash];
@@ -93,22 +102,24 @@
         lastSavedUndoHash = currentUndoHash;
         NSLog(@"saving page %@ with hash %ui", self.uuid, lastSavedUndoHash);
         
-        [drawableView exportToImageWithBackgroundColor:[[UIColor blueColor] colorWithAlphaComponent:.3] andBackgroundImage:nil onComplete:^(UIImage* output){
+        [drawableView exportToImageWithBackgroundColor:nil andBackgroundImage:nil onComplete:^(UIImage* output){
             // scale by 50%
-            output = [output resizedImage:CGSizeMake(output.size.width / 2 * output.scale, output.size.height / 2 * output.scale) interpolationQuality:kCGInterpolationHigh];
+            UIImage* thumbnail = [output resizedImage:CGSizeMake(output.size.width / 2 * output.scale, output.size.height / 2 * output.scale) interpolationQuality:kCGInterpolationHigh];
             cachedImgView.image = output;
             
             onComplete();
             
             [UIImagePNGRepresentation(output) writeToFile:inkPath atomically:YES];
             NSLog(@"wrote ink to: %@", inkPath);
+            
+            [UIImagePNGRepresentation(thumbnail) writeToFile:thumbnailPath atomically:YES];
+            NSLog(@"wrote thumbnail to: %@", thumbnailPath);
         }];
     }else{
         // already saved, but don't need to write
         // anything new to disk
         onComplete();
     }
-    
 }
 
 #pragma mark - JotViewDelegate
@@ -154,6 +165,30 @@
 
 -(CGFloat) rotationForSegment:(AbstractBezierPathElement *)segment fromPreviousSegment:(AbstractBezierPathElement *)previousSegment{
     return [delegate rotationForSegment:segment fromPreviousSegment:previousSegment];;
+}
+
+
+
+
+#pragma mark - File Paths
+
+-(NSString*) pagesPath{
+    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString* documentsPath = [paths objectAtIndex:0];
+    NSString* pagesPath = [documentsPath stringByAppendingPathComponent:@"Pages"];
+    
+    if(![[NSFileManager defaultManager] fileExistsAtPath:pagesPath]){
+        [[NSFileManager defaultManager] createDirectoryAtPath:pagesPath withIntermediateDirectories:NO attributes:nil error:nil];
+    }
+    return pagesPath;
+}
+
+-(NSString*) inkPath{
+    return [[[self pagesPath] stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"png"];;
+}
+
+-(NSString*) thumbnailPath{
+    return [[[self pagesPath] stringByAppendingPathComponent:[self.uuid stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
 }
 
 
