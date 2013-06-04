@@ -320,6 +320,14 @@
     [stackManager saveToDisk];
 }
 
+-(void) loadStacksFromDisk{
+    [stackManager loadFromDisk];
+}
+
+-(BOOL) hasPages{
+    return [visibleStackHolder.subviews count] > 0;
+}
+
 #pragma mark - JotViewDelegate
 
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{

@@ -61,4 +61,10 @@
     Eraser* eraser;
 }
 
+-(void) saveStacksToDisk;
+
+-(void) loadStacksFromDisk;
+
+-(BOOL) hasPages;
+
 @end

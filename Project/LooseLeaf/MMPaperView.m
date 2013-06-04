@@ -25,12 +25,15 @@
 @synthesize uuid;
 @synthesize unitShadowPath;
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame{
+    return [self initWithFrame:frame andUUID:[NSString createStringUUID]];
+}
+
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        uuid = [NSString createStringUUID];
+        uuid = _uuid;
         
         //////////////////////////////////////////////////////////////////////
         //
