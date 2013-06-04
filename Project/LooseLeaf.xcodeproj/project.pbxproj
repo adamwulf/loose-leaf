@@ -21,11 +21,11 @@
 		663C187D1755B63D00706A05 /* Eraser.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C187C1755B63D00706A05 /* Eraser.m */; };
 		663C188B1759B51600706A05 /* MMUndoRedoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C188A1759B51600706A05 /* MMUndoRedoButton.m */; };
 		663C188F1759B57800706A05 /* JotTouchSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66C38AC7175329160035B872 /* JotTouchSDK.framework */; };
-		663C1894175A709B00706A05 /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663C1893175A709B00706A05 /* JotUI.framework */; };
 		663C1897175A89EF00706A05 /* MMRulerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C1896175A89ED00706A05 /* MMRulerButton.m */; };
 		664516B9159030FC0012FACA /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 664516B8159030FC0012FACA /* Constants.m */; };
+		66455F84175E938000C66DFA /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66A4BD181632170E00C45070 /* DrawKit-iOS.framework */; };
+		66455F86175E938500C66DFA /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66455F85175E938400C66DFA /* JotUI.framework */; };
 		664C62F015A36DA40072736A /* MMListPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 664C62EF15A36DA40072736A /* MMListPaperStackView.m */; };
-		664D5C5416FD0D4C00F518EC /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66A4BD181632170E00C45070 /* DrawKit-iOS.framework */; };
 		664F4139159063F8006F8B09 /* MMPlusIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F4138159063F8006F8B09 /* MMPlusIcon.m */; };
 		664F413D1590661F006F8B09 /* MMRightArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413C1590661F006F8B09 /* MMRightArrow.m */; };
 		664F414015906628006F8B09 /* MMLeftArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413F15906628006F8B09 /* MMLeftArrow.m */; };
@@ -90,6 +90,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		66455F82175E937500C66DFA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 667703EA1620F02900E764C0;
+			remoteInfo = "DrawKit-iOS";
+		};
 		66A4BD171632170E00C45070 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */;
@@ -103,13 +110,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 667703FC1620F02900E764C0;
 			remoteInfo = "DrawKit-iOSTests";
-		};
-		66A4BD1B1632171500C45070 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 667703EA1620F02900E764C0;
-			remoteInfo = "DrawKit-iOS";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -140,6 +140,7 @@
 		663C1895175A89EB00706A05 /* MMRulerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRulerButton.h; sourceTree = "<group>"; };
 		663C1896175A89ED00706A05 /* MMRulerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRulerButton.m; sourceTree = "<group>"; };
 		664516B8159030FC0012FACA /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		66455F85175E938400C66DFA /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = file; name = JotUI.framework; path = "../Submodules/JotUI/JotUI/build/Release-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
 		664C62EE15A36DA40072736A /* MMListPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListPaperStackView.h; sourceTree = "<group>"; };
 		664C62EF15A36DA40072736A /* MMListPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListPaperStackView.m; sourceTree = "<group>"; };
 		664F4137159063F8006F8B09 /* MMPlusIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPlusIcon.h; sourceTree = "<group>"; };
@@ -267,12 +268,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				663C1894175A709B00706A05 /* JotUI.framework in Frameworks */,
+				66455F86175E938500C66DFA /* JotUI.framework in Frameworks */,
+				66455F84175E938000C66DFA /* DrawKit-iOS.framework in Frameworks */,
 				663C188F1759B57800706A05 /* JotTouchSDK.framework in Frameworks */,
 				6695B6E81750088D0069E61F /* AudioToolbox.framework in Frameworks */,
 				6695B6E6175008840069E61F /* CoreBluetooth.framework in Frameworks */,
 				6695B6E3175008680069E61F /* OpenGLES.framework in Frameworks */,
-				664D5C5416FD0D4C00F518EC /* DrawKit-iOS.framework in Frameworks */,
 				66BD6E991593E9C400D4544C /* CoreText.framework in Frameworks */,
 				66BD6E831593B12500D4544C /* CoreMotion.framework in Frameworks */,
 				66BD6E7D1593ACD400D4544C /* QuartzCore.framework in Frameworks */,
@@ -520,6 +521,7 @@
 		66DCFB7B1581BCED00B4918C = {
 			isa = PBXGroup;
 			children = (
+				66455F85175E938400C66DFA /* JotUI.framework */,
 				66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */,
 				66DCFB901581BCEF00B4918C /* Loose Leaf */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
@@ -622,7 +624,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				66A4BD1C1632171500C45070 /* PBXTargetDependency */,
+				66455F83175E937500C66DFA /* PBXTargetDependency */,
 			);
 			name = LooseLeaf;
 			productName = "Paper Stack";
@@ -767,10 +769,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		66A4BD1C1632171500C45070 /* PBXTargetDependency */ = {
+		66455F83175E937500C66DFA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "DrawKit-iOS";
-			targetProxy = 66A4BD1B1632171500C45070 /* PBXContainerItemProxy */;
+			targetProxy = 66455F82175E937500C66DFA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -861,8 +863,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Adam Wulf (569ACMP6SC)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../JotUI/JotTouchSDK\"",
-					"\"$(SRCROOT)/../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos\"",
 					"\"$(SRCROOT)/../Submodules/JotUI/JotTouchSDK\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -889,8 +889,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../JotUI/JotTouchSDK\"",
-					"\"$(SRCROOT)/../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos\"",
 					"\"$(SRCROOT)/../Submodules/JotUI/JotTouchSDK\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
