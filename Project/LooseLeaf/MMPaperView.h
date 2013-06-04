@@ -52,6 +52,7 @@
 @property (nonatomic, readonly) NSInteger rowInListView;
 @property (nonatomic, readonly) NSInteger columnInListView;
 
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid;
 
 -(BOOL) willExitToBezel:(MMBezelDirection)bezelDirection;
 -(void) cancelAllGestures;

@@ -22,4 +22,6 @@
 
 -(void) saveToDisk;
 
+-(void) loadFromDisk;
+
 @end

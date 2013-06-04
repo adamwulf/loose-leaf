@@ -23,16 +23,20 @@
     srand ( time(NULL) );
 
     [[MMShadowManager sharedInstace] beginGeneratingShadows];
+    
+    [stackView loadStacksFromDisk];
 
-    for(int i=0;i<1;i++){
-        MMPaperView* paper = [[MMEditablePaperView alloc] initWithFrame:self.view.bounds];
-        [stackView addPaperToBottomOfStack:paper];
-        paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
-        [stackView addPaperToBottomOfStack:paper];
-        paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
-        [stackView addPaperToBottomOfHiddenStack:paper];
-        paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
-        [stackView addPaperToBottomOfHiddenStack:paper];
+    if(![stackView hasPages]){
+        for(int i=0;i<1;i++){
+            MMPaperView* paper = [[MMEditablePaperView alloc] initWithFrame:self.view.bounds];
+            [stackView addPaperToBottomOfStack:paper];
+            paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
+            [stackView addPaperToBottomOfStack:paper];
+            paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
+            [stackView addPaperToBottomOfHiddenStack:paper];
+            paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
+            [stackView addPaperToBottomOfHiddenStack:paper];
+        }
     }
     
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth.png"]]];
