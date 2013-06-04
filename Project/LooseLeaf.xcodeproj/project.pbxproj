@@ -53,6 +53,7 @@
 		66B21A5B175D4C9A0049F1AF /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A5A175D4C9A0049F1AF /* UIImage+Resize.m */; };
 		66B21A5E175D4D200049F1AF /* UIImage+Alpha.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A5D175D4D200049F1AF /* UIImage+Alpha.m */; };
 		66B21A61175D4D290049F1AF /* UIImage+RoundedCorner.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A60175D4D290049F1AF /* UIImage+RoundedCorner.m */; };
+		66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A6B175E4A5A0049F1AF /* MMStackManager.m */; };
 		66BD6E301591B57B00D4544C /* MMPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* MMPaperButton.m */; };
 		66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E331591C37D00D4544C /* UIImage+MCDrawSubImage.m */; };
 		66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */; };
@@ -191,6 +192,8 @@
 		66B21A5F175D4D240049F1AF /* UIImage+Alpha.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+Alpha.h"; sourceTree = "<group>"; };
 		66B21A60175D4D290049F1AF /* UIImage+RoundedCorner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RoundedCorner.m"; sourceTree = "<group>"; };
 		66B21A62175D4D2E0049F1AF /* UIImage+RoundedCorner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+RoundedCorner.h"; sourceTree = "<group>"; };
+		66B21A6A175E4A5A0049F1AF /* MMStackManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackManager.h; sourceTree = "<group>"; };
+		66B21A6B175E4A5A0049F1AF /* MMStackManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStackManager.m; sourceTree = "<group>"; };
 		66BD6E2E1591B57B00D4544C /* MMPaperButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperButton.h; sourceTree = "<group>"; };
 		66BD6E2F1591B57B00D4544C /* MMPaperButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPaperButton.m; sourceTree = "<group>"; };
 		66BD6E321591C37D00D4544C /* UIImage+MCDrawSubImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MCDrawSubImage.h"; sourceTree = "<group>"; };
@@ -352,6 +355,8 @@
 				66932963159593C00033E557 /* MMRotationManager.h */,
 				66932964159593C00033E557 /* MMRotationManager.m */,
 				66932967159594A60033E557 /* MMRotationManagerDelegate.h */,
+				66B21A6A175E4A5A0049F1AF /* MMStackManager.h */,
+				66B21A6B175E4A5A0049F1AF /* MMStackManager.m */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -735,6 +740,7 @@
 				66B21A5B175D4C9A0049F1AF /* UIImage+Resize.m in Sources */,
 				66B21A5E175D4D200049F1AF /* UIImage+Alpha.m in Sources */,
 				66B21A61175D4D290049F1AF /* UIImage+RoundedCorner.m in Sources */,
+				66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

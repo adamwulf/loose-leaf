@@ -24,6 +24,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMRotationManager.h"
 #import "MMRotationManagerDelegate.h"
+#import "MMStackManager.h"
 #import "Constants.h"
 #import "Pen.h"
 #import "Eraser.h"
@@ -33,6 +34,10 @@
  * outside of a page's view subviews
  */
 @interface MMEditablePaperStackView : MMListPaperStackView<JotViewDelegate,MMSidebarButtonDelegate,MMRotationManagerDelegate>{
+    
+    // managers
+    MMStackManager* stackManager;
+    
     // toolbar
     MMPaperButton* documentBackgroundSidebarButton;
     MMPlusButton* addPageSidebarButton;

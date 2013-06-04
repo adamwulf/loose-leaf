@@ -23,6 +23,10 @@
 -(void) awakeFromNib{
     [super awakeFromNib];
     
+    stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
+    
+    
+    
     pen = [[Pen alloc] init];
     pen.shouldUseVelocity = YES;
     
@@ -283,6 +287,7 @@
 }
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     [super finishedScalingReallySmall:page];
+    [stackManager saveToDisk];
 }
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
     [self setButtonsVisible:YES];
