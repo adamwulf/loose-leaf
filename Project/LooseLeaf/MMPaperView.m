@@ -426,4 +426,9 @@
     return [NSString stringWithFormat:@"[%@ %@]", NSStringFromClass(self.class), self.uuid];
 }
 
+-(NSDictionary*) dictionaryDescription{
+    return [NSDictionary dictionaryWithObjectsAndKeys:NSStringFromClass(self.class), @"class",
+            self.uuid, @"uuid", nil];
+}
+
 @end

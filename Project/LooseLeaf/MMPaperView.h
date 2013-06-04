@@ -60,4 +60,6 @@
 
 -(void) panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture;
 
+-(NSDictionary*) dictionaryDescription;
+
 @end
