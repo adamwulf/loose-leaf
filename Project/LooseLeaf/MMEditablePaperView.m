@@ -31,18 +31,30 @@
         drawableView = [[JotView alloc] initWithFrame:self.bounds];
         [self.contentView addSubview:drawableView];
 
+        testImageView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
+        testImageView.frame = CGRectMake(50, 0, 200, 200);
+        testImageView.contentMode = UIViewContentModeScaleAspectFill;
+        testImageView.clipsToBounds = YES;
+        testImageView.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:.3];
+        testImageView.layer.borderColor = [UIColor blackColor].CGColor;
+        testImageView.layer.borderWidth = 2;
+        [self.contentView addSubview:testImageView];
         
+
         NSLog(@"loading ink %@", [self inkPath]);
         
         if([[NSFileManager defaultManager] fileExistsAtPath:[self inkPath]]){
             [drawableView loadImage:[UIImage imageWithContentsOfFile:[self inkPath]]];
             cachedImgView.image = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
+            
+            testImageView.image = [UIImage imageWithContentsOfFile:[self inkPath]];
         }else{
             [drawableView loadImage:nil];
             [drawableView clear];
         }
         
         drawableView.delegate = self;
+        drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
 
         // anchor the view to the top left,
         // so that when we scale down, the drawable view
