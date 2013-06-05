@@ -140,7 +140,7 @@
 		663C1895175A89EB00706A05 /* MMRulerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRulerButton.h; sourceTree = "<group>"; };
 		663C1896175A89ED00706A05 /* MMRulerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRulerButton.m; sourceTree = "<group>"; };
 		664516B8159030FC0012FACA /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
-		66455F85175E938400C66DFA /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = file; name = JotUI.framework; path = "../Submodules/JotUI/JotUI/build/Release-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
+		66455F85175E938400C66DFA /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../Submodules/JotUI/JotUI/build/Release-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
 		664C62EE15A36DA40072736A /* MMListPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListPaperStackView.h; sourceTree = "<group>"; };
 		664C62EF15A36DA40072736A /* MMListPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListPaperStackView.m; sourceTree = "<group>"; };
 		664F4137159063F8006F8B09 /* MMPlusIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPlusIcon.h; sourceTree = "<group>"; };
@@ -408,6 +408,7 @@
 			isa = PBXGroup;
 			children = (
 				663C1893175A709B00706A05 /* JotUI.framework */,
+				66455F85175E938400C66DFA /* JotUI.framework */,
 				6695B6E2175008680069E61F /* OpenGLES.framework */,
 				66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */,
 				66BD6E7C1593ACD400D4544C /* QuartzCore.framework */,
@@ -521,7 +522,6 @@
 		66DCFB7B1581BCED00B4918C = {
 			isa = PBXGroup;
 			children = (
-				66455F85175E938400C66DFA /* JotUI.framework */,
 				66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */,
 				66DCFB901581BCEF00B4918C /* Loose Leaf */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
