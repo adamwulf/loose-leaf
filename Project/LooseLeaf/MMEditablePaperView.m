@@ -24,6 +24,7 @@
         cachedImgView.contentMode = UIViewContentModeScaleAspectFill;
         cachedImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         cachedImgView.clipsToBounds = YES;
+        cachedImgView.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:.3];
         [self.contentView addSubview:cachedImgView];
 
         // create the drawable view
@@ -36,6 +37,9 @@
         if([[NSFileManager defaultManager] fileExistsAtPath:[self inkPath]]){
             [drawableView loadImage:[UIImage imageWithContentsOfFile:[self inkPath]]];
             cachedImgView.image = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
+        }else{
+            [drawableView loadImage:nil];
+            [drawableView clear];
         }
         
         drawableView.delegate = self;
