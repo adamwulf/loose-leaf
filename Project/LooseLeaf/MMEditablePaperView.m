@@ -50,7 +50,6 @@
             testImageView.image = [UIImage imageWithContentsOfFile:[self inkPath]];
         }else{
             [drawableView loadImage:nil];
-            [drawableView clear];
         }
         
         drawableView.delegate = self;
