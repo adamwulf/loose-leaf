@@ -99,37 +99,65 @@
 
 
 -(void) saveToDisk:(void(^)(void))onComplete{
+    
+    //
+    //
+    //
+    // Sanity checks on directory structure
     NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString* documentsPath = [paths objectAtIndex:0];
     NSString* pagesPath = [documentsPath stringByAppendingPathComponent:@"Pages"];
-    
     if(![[NSFileManager defaultManager] fileExistsAtPath:pagesPath]){
         [[NSFileManager defaultManager] createDirectoryAtPath:pagesPath withIntermediateDirectories:NO attributes:nil error:nil];
     }
     
+    
+    
+    
 //    NSString* plistPath = [[pagesPath stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"plist"];
+    // get the path for the high res texture
     NSString* inkPath = [[pagesPath stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"png"];
+    // path for the half res fully rendered thumbnail
     NSString* thumbnailPath = [[pagesPath stringByAppendingPathComponent:[self.uuid stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
+    
     
     // find out what our current undo state looks like.
     NSUInteger currentUndoHash = [drawableView undoHash];
     if(currentUndoHash != lastSavedUndoHash){
+        // something has changed since the last time we saved,
+        // so ask the JotView to save out the png of its data
         lastSavedUndoHash = currentUndoHash;
         NSLog(@"saving page %@ with hash %ui", self.uuid, lastSavedUndoHash);
         
-        [drawableView exportToImageWithBackgroundColor:nil andBackgroundImage:nil onComplete:^(UIImage* output){
-            // scale by 50%
-            UIImage* thumbnail = [output resizedImage:CGSizeMake(output.size.width / 2 * output.scale, output.size.height / 2 * output.scale) interpolationQuality:kCGInterpolationHigh];
-            cachedImgView.image = output;
+        
+        [drawableView exportEverythingOnComplete:^(UIImage* ink, UIImage* thumbnail, NSDictionary* state){
+
+            thumbnail = [thumbnail resizedImage:CGSizeMake(thumbnail.size.width / 2 * thumbnail.scale, thumbnail.size.height / 2 * thumbnail.scale) interpolationQuality:kCGInterpolationHigh];
+            cachedImgView.image = thumbnail;
             
             onComplete();
-            
-            [UIImagePNGRepresentation(output) writeToFile:inkPath atomically:YES];
+
+            [UIImagePNGRepresentation(ink) writeToFile:inkPath atomically:YES];
             NSLog(@"wrote ink to: %@", inkPath);
             
             [UIImagePNGRepresentation(thumbnail) writeToFile:thumbnailPath atomically:YES];
             NSLog(@"wrote thumbnail to: %@", thumbnailPath);
         }];
+        
+        
+//        [drawableView exportToImageWithBackgroundColor:nil andBackgroundImage:nil onComplete:^(UIImage* output){
+//            // scale by 50%
+//            UIImage* thumbnail = [output resizedImage:CGSizeMake(output.size.width / 2 * output.scale, output.size.height / 2 * output.scale) interpolationQuality:kCGInterpolationHigh];
+//            cachedImgView.image = output;
+//            
+//            onComplete();
+//            
+//            [UIImagePNGRepresentation(output) writeToFile:inkPath atomically:YES];
+//            NSLog(@"wrote ink to: %@", inkPath);
+//            
+//            [UIImagePNGRepresentation(thumbnail) writeToFile:thumbnailPath atomically:YES];
+//            NSLog(@"wrote thumbnail to: %@", thumbnailPath);
+//        }];
     }else{
         // already saved, but don't need to write
         // anything new to disk
