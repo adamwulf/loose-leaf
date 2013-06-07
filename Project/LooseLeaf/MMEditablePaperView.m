@@ -52,8 +52,6 @@
         drawableView.layer.anchorPoint = CGPointMake(0,0);
         drawableView.layer.position = CGPointMake(0,0);
         
-        [[JotStylusManager sharedInstance] setEnabled:YES];
-        [[JotStylusManager sharedInstance] setRejectMode:NO];
         [[JotStylusManager sharedInstance] setPalmRejectorDelegate:drawableView];
         
         lastSavedUndoHash = [drawableView undoHash];

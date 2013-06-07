@@ -16,142 +16,155 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+
+        stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
+        
+        
+        
+        pen = [[Pen alloc] init];
+        pen.shouldUseVelocity = YES;
+        
+        eraser = [[Eraser alloc] init];
+        eraser.shouldUseVelocity = YES;
+        
+        // test code for custom popovers
+        // ================================================================================
+        //    MMPopoverView* popover = [[MMPopoverView alloc] initWithFrame:CGRectMake(100, 100, 300, 300)];
+        //    [self addSubview:popover];
+        
+        //
+        // sidebar buttons
+        // ================================================================================
+        CGRect undoButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton);
+        undoButton = [[MMUndoRedoButton alloc] initWithFrame:undoButtonFrame];
+        undoButton.delegate = self;
+        [undoButton addTarget:self action:@selector(undo:) forControlEvents:UIControlEventTouchUpInside];
+        undoButton.reverseArrow = YES;
+        [self addSubview:undoButton];
+        
+        CGRect redoButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton);
+        redoButton = [[MMUndoRedoButton alloc] initWithFrame:redoButtonFrame];
+        redoButton.delegate = self;
+        [redoButton addTarget:self action:@selector(redo:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:redoButton];
+        
+        
+        
+        
+        
+        pencilButton = [[MMPencilButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        pencilButton.delegate = self;
+        [pencilButton addTarget:self action:@selector(penTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:pencilButton];
+        
+        eraserButton = [[MMPencilEraserButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        eraserButton.delegate = self;
+        [eraserButton addTarget:self action:@selector(eraserTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:eraserButton];
+        
+        polygonButton = [[MMPolygonButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        polygonButton.delegate = self;
+        [polygonButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:polygonButton];
+        
+        insertImageButton = [[MMImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        insertImageButton.delegate = self;
+        [insertImageButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:insertImageButton];
+        
+        CGRect scissorButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 4, kWidthOfSidebarButton, kWidthOfSidebarButton);
+        scissorButton = [[MMScissorButton alloc] initWithFrame:scissorButtonFrame];
+        scissorButton.delegate = self;
+        [scissorButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:scissorButton];
+        
+        
+        
+        
+        CGRect handButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 5.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
+        handButton = [[MMHandButton alloc] initWithFrame:handButtonFrame];
+        handButton.delegate = self;
+        [handButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:handButton];
+        
+        CGRect rulerButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 6.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
+        rulerButton = [[MMRulerButton alloc] initWithFrame:rulerButtonFrame];
+        rulerButton.delegate = self;
+        [rulerButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:rulerButton];
+        
+        
+        
+        
+        
+        
+        
+        
+        addPageSidebarButton = [[MMPlusButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        addPageSidebarButton.delegate = self;
+        [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:addPageSidebarButton];
+        
+        shareButton = [[MMShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        shareButton.delegate = self;
+        [shareButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:shareButton];
+        
+        
+        
+        //
+        // accelerometer for rotating buttons
+        // ================================================================================
+        
+        [[MMRotationManager sharedInstace] setDelegate:self];
+        
+        
+        
+        
+        // unused buttons
+        
+        //    CGRect textButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 5, kWidthOfSidebarButton, kWidthOfSidebarButton);
+        //    textButton = [[MMTextButton alloc] initWithFrame:textButtonFrame andFont:[UIFont fontWithName:@"TimesNewRomanPS-ItalicMT" size:28] andLetter:@"T" andXOffset:2 andYOffset:0];
+        //    textButton.delegate = self;
+        //    [textButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        //    [self addSubview:textButton];
+        
+        //    polylineButton = [[MMPolylineButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 6, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        //    polylineButton.delegate = self;
+        //    [polylineButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        //    [self addSubview:polylineButton];
+        
+        //     documentBackgroundSidebarButton = [[MMPaperButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 7, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        //     documentBackgroundSidebarButton.delegate = self;
+        //     documentBackgroundSidebarButton.enabled = NO;
+        //     [documentBackgroundSidebarButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        //     [self addSubview:documentBackgroundSidebarButton];
+        
+        //    mapButton = [[MMMapButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 8, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        //    mapButton.delegate = self;
+        //    [mapButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        //    [self addSubview:mapButton];
+
+        
+        
+        
+        self.showsHorizontalScrollIndicator = NO;
+        self.showsVerticalScrollIndicator = NO;
+        self.multipleTouchEnabled = YES;
+        self.bounces = YES;
+        self.alwaysBounceHorizontal = NO;
+        self.canCancelContentTouches = YES;
+        self.opaque = YES;
+        self.clearsContextBeforeDrawing = YES;
+        self.clipsToBounds = YES;
+        
+        
+        [NSThread performBlockInBackground:^{
+            [[JotStylusManager sharedInstance] setEnabled:YES];
+            [[JotStylusManager sharedInstance] setRejectMode:NO];
+        }];
     }
     return self;
-}
-
--(void) awakeFromNib{
-    [super awakeFromNib];
-    
-    stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
-    
-    
-    
-    pen = [[Pen alloc] init];
-    pen.shouldUseVelocity = YES;
-    
-    eraser = [[Eraser alloc] init];
-    eraser.shouldUseVelocity = YES;
-    
-    // test code for custom popovers
-    // ================================================================================
-    //    MMPopoverView* popover = [[MMPopoverView alloc] initWithFrame:CGRectMake(100, 100, 300, 300)];
-    //    [self addSubview:popover];
-    
-    //
-    // sidebar buttons
-    // ================================================================================
-    CGRect undoButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton);
-    undoButton = [[MMUndoRedoButton alloc] initWithFrame:undoButtonFrame];
-    undoButton.delegate = self;
-    [undoButton addTarget:self action:@selector(undo:) forControlEvents:UIControlEventTouchUpInside];
-    undoButton.reverseArrow = YES;
-    [self addSubview:undoButton];
-    
-    CGRect redoButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton);
-    redoButton = [[MMUndoRedoButton alloc] initWithFrame:redoButtonFrame];
-    redoButton.delegate = self;
-    [redoButton addTarget:self action:@selector(redo:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:redoButton];
-    
-
-    
-    
-    
-    pencilButton = [[MMPencilButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-    pencilButton.delegate = self;
-    [pencilButton addTarget:self action:@selector(penTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:pencilButton];
-    
-    eraserButton = [[MMPencilEraserButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-    eraserButton.delegate = self;
-    [eraserButton addTarget:self action:@selector(eraserTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:eraserButton];
-    
-    polygonButton = [[MMPolygonButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-    polygonButton.delegate = self;
-    [polygonButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:polygonButton];
-    
-    insertImageButton = [[MMImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-    insertImageButton.delegate = self;
-    [insertImageButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:insertImageButton];
-    
-    CGRect scissorButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 4, kWidthOfSidebarButton, kWidthOfSidebarButton);
-    scissorButton = [[MMTextButton alloc] initWithFrame:scissorButtonFrame andFont:[UIFont fontWithName:@"ZapfDingbatsITC" size:28] andLetter:@"\u2702" andXOffset:1 andYOffset:-2];
-    scissorButton.delegate = self;
-    [scissorButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:scissorButton];
-    
-    
-    
-    
-    CGRect handButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 5.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
-    handButton = [[MMHandButton alloc] initWithFrame:handButtonFrame];
-    handButton.delegate = self;
-    [handButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:handButton];
-    
-    CGRect rulerButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 6.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
-    rulerButton = [[MMRulerButton alloc] initWithFrame:rulerButtonFrame];
-    rulerButton.delegate = self;
-    [rulerButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:rulerButton];
-    
-    
-    
-    
-    
-    
-    
-    
-    addPageSidebarButton = [[MMPlusButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-    addPageSidebarButton.delegate = self;
-    [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:addPageSidebarButton];
-    
-    shareButton = [[MMShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-    shareButton.delegate = self;
-    [shareButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:shareButton];
-    
-    
-    
-    //
-    // accelerometer for rotating buttons
-    // ================================================================================
-    
-    [[MMRotationManager sharedInstace] setDelegate:self];
-    
-    
-    
-    
-    // unused buttons
-    
-//    CGRect textButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 5, kWidthOfSidebarButton, kWidthOfSidebarButton);
-//    textButton = [[MMTextButton alloc] initWithFrame:textButtonFrame andFont:[UIFont fontWithName:@"TimesNewRomanPS-ItalicMT" size:28] andLetter:@"T" andXOffset:2 andYOffset:0];
-//    textButton.delegate = self;
-//    [textButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-//    [self addSubview:textButton];
-
-    //    polylineButton = [[MMPolylineButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 6, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-    //    polylineButton.delegate = self;
-    //    [polylineButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    //    [self addSubview:polylineButton];
-    
-    //     documentBackgroundSidebarButton = [[MMPaperButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 7, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-    //     documentBackgroundSidebarButton.delegate = self;
-    //     documentBackgroundSidebarButton.enabled = NO;
-    //     [documentBackgroundSidebarButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    //     [self addSubview:documentBackgroundSidebarButton];
-    
-    //    mapButton = [[MMMapButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 8, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-    //    mapButton.delegate = self;
-    //    [mapButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    //    [self addSubview:mapButton];
-    
-
 }
 
 /**

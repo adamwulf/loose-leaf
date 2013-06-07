@@ -16,32 +16,40 @@
 
 @implementation MMLooseLeafViewController
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    srand ( time(NULL) );
-
-    [[MMShadowManager sharedInstace] beginGeneratingShadows];
+- (id)init{
+    if(self = [super init]){
+        // Do any additional setup after loading the view, typically from a nib.
+        srand ( time(NULL) );
+        [[MMShadowManager sharedInstace] beginGeneratingShadows];
     
-    [stackView loadStacksFromDisk];
-
-    if(![stackView hasPages]){
-        for(int i=0;i<1;i++){
-            MMEditablePaperView* editable = [[MMEditablePaperView alloc] initWithFrame:self.view.bounds];
-            [editable setEditable:YES];
-            [stackView addPaperToBottomOfStack:editable];
-            MMPaperView* paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
-            [stackView addPaperToBottomOfStack:paper];
-            paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
-            [stackView addPaperToBottomOfHiddenStack:paper];
-            paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
-            [stackView addPaperToBottomOfHiddenStack:paper];
+        self.view.opaque = YES;
+        
+        stackView = [[MMEditablePaperStackView alloc] initWithFrame:self.view.frame];
+        stackView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        [self.view addSubview:stackView];
+        
+        [stackView loadStacksFromDisk];
+        
+        if(![stackView hasPages]){
+            for(int i=0;i<1;i++){
+                MMEditablePaperView* editable = [[MMEditablePaperView alloc] initWithFrame:self.view.bounds];
+                [editable setEditable:YES];
+                [stackView addPaperToBottomOfStack:editable];
+                MMPaperView* paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
+                [stackView addPaperToBottomOfStack:paper];
+                paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
+                [stackView addPaperToBottomOfHiddenStack:paper];
+                paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
+                [stackView addPaperToBottomOfHiddenStack:paper];
+            }
+            [stackView saveStacksToDisk];
         }
-        [stackView saveStacksToDisk];
+        
+        [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth.png"]]];
+
+        
     }
-    
-    [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth.png"]]];
+    return self;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

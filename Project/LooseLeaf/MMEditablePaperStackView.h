@@ -20,6 +20,7 @@
 #import "MMMapButton.h"
 #import "MMRulerButton.h"
 #import "MMHandButton.h"
+#import "MMScissorButton.h"
 #import "MMSidebarButtonDelegate.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMRotationManager.h"
@@ -44,7 +45,7 @@
     MMPolylineButton* polylineButton;
     MMPolygonButton* polygonButton;
     MMImageButton* insertImageButton;
-    MMTextButton* scissorButton;
+    MMScissorButton* scissorButton;
     MMTextButton* textButton;
     MMPencilButton* pencilButton;
     MMPencilEraserButton* eraserButton;
