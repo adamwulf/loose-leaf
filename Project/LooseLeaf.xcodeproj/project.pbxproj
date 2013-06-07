@@ -29,6 +29,7 @@
 		664F4139159063F8006F8B09 /* MMPlusIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F4138159063F8006F8B09 /* MMPlusIcon.m */; };
 		664F413D1590661F006F8B09 /* MMRightArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413C1590661F006F8B09 /* MMRightArrow.m */; };
 		664F414015906628006F8B09 /* MMLeftArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413F15906628006F8B09 /* MMLeftArrow.m */; };
+		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
 		6661144716FD67F8005032B9 /* Loose-Leaf_72.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144616FD67F8005032B9 /* Loose-Leaf_72.png */; };
 		6661144A16FD67FA005032B9 /* Loose-Leaf_144.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144916FD67FA005032B9 /* Loose-Leaf_144.png */; };
 		66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* MMEditablePaperStackView.m */; };
@@ -142,6 +143,8 @@
 		664F413C1590661F006F8B09 /* MMRightArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRightArrow.m; sourceTree = "<group>"; };
 		664F413E15906628006F8B09 /* MMLeftArrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLeftArrow.h; sourceTree = "<group>"; };
 		664F413F15906628006F8B09 /* MMLeftArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLeftArrow.m; sourceTree = "<group>"; };
+		6655E924176291C800E4F36A /* MMScissorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScissorButton.h; sourceTree = "<group>"; };
+		6655E925176291C800E4F36A /* MMScissorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorButton.m; sourceTree = "<group>"; };
 		6661144616FD67F8005032B9 /* Loose-Leaf_72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf_72.png"; path = "../Loose-Leaf_72.png"; sourceTree = "<group>"; };
 		6661144916FD67FA005032B9 /* Loose-Leaf_144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf_144.png"; path = "../Loose-Leaf_144.png"; sourceTree = "<group>"; };
 		66728713159515FC0018571A /* MMEditablePaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEditablePaperStackView.h; sourceTree = "<group>"; };
@@ -465,6 +468,8 @@
 				663C1896175A89ED00706A05 /* MMRulerButton.m */,
 				66B21A54175AFCA70049F1AF /* MMHandButton.h */,
 				66B21A55175AFCA70049F1AF /* MMHandButton.m */,
+				6655E924176291C800E4F36A /* MMScissorButton.h */,
+				6655E925176291C800E4F36A /* MMScissorButton.m */,
 			);
 			name = Buttons;
 			sourceTree = "<group>";
@@ -717,6 +722,7 @@
 				663C188B1759B51600706A05 /* MMUndoRedoButton.m in Sources */,
 				663C1897175A89EF00706A05 /* MMRulerButton.m in Sources */,
 				66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */,
+				6655E926176291C800E4F36A /* MMScissorButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
