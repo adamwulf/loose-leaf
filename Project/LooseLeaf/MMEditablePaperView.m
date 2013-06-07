@@ -44,12 +44,15 @@
         NSLog(@"loading ink %@", [self inkPath]);
         
         if([[NSFileManager defaultManager] fileExistsAtPath:[self inkPath]]){
-            [drawableView loadImage:[UIImage imageWithContentsOfFile:[self inkPath]]];
+            
+            NSDictionary* dict = [NSKeyedUnarchiver unarchiveObjectWithFile:[self plistPath]];
+            
+            [drawableView loadImage:[UIImage imageWithContentsOfFile:[self inkPath]] andState:dict];
             cachedImgView.image = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
             
             testImageView.image = [UIImage imageWithContentsOfFile:[self inkPath]];
         }else{
-            [drawableView loadImage:nil];
+            [drawableView loadImage:nil andState:nil];
         }
         
         drawableView.delegate = self;
@@ -142,6 +145,9 @@
             
             [UIImagePNGRepresentation(thumbnail) writeToFile:thumbnailPath atomically:YES];
             NSLog(@"wrote thumbnail to: %@", thumbnailPath);
+            
+            [NSKeyedArchiver archiveRootObject:state toFile:[self plistPath]];
+            NSLog(@"wrote thumbnail to: %@", [self plistPath]);
         }];
         
         
@@ -228,6 +234,10 @@
 
 -(NSString*) inkPath{
     return [[[self pagesPath] stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"png"];;
+}
+
+-(NSString*) plistPath{
+    return [[[self pagesPath] stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"plist"];;
 }
 
 -(NSString*) thumbnailPath{
