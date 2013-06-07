@@ -75,7 +75,7 @@
     [self addSubview:insertImageButton];
     
     CGRect scissorButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 4, kWidthOfSidebarButton, kWidthOfSidebarButton);
-    scissorButton = [[MMTextButton alloc] initWithFrame:scissorButtonFrame andFont:[UIFont fontWithName:@"ZapfDingbatsITC" size:28] andLetter:@"\u2702" andXOffset:1 andYOffset:-2];
+    scissorButton = [[MMScissorButton alloc] initWithFrame:scissorButtonFrame];
     scissorButton.delegate = self;
     [scissorButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:scissorButton];
