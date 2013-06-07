@@ -12,8 +12,6 @@
 @interface MMEditablePaperView : MMPaperView<JotViewDelegate>{
     UIImageView* cachedImgView;
     JotView* drawableView;
-    
-    UIImageView* testImageView;
 }
 
 -(void) undo;
