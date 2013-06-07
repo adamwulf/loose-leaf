@@ -151,6 +151,12 @@
         self.opaque = YES;
         self.clearsContextBeforeDrawing = YES;
         self.clipsToBounds = YES;
+        
+        
+        [NSThread performBlockInBackground:^{
+            [[JotStylusManager sharedInstance] setEnabled:YES];
+            [[JotStylusManager sharedInstance] setRejectMode:NO];
+        }];
     }
     return self;
 }
