@@ -18,44 +18,41 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        setOfInitialFramesForPagesBeingZoomed = [[NSMutableDictionary alloc] init];
+        setOfFinalFramesForPagesBeingZoomed = [[NSMutableDictionary alloc] init];
+        [self setScrollEnabled:NO];
+        //
+        // screen and column constants
+        screenWidth = self.frame.size.width;
+        screenHeight = self.frame.size.height;
+        columnWidth = screenWidth * kListPageZoom;
+        rowHeight = columnWidth * screenHeight / screenWidth;
+        bufferWidth = columnWidth * kListPageZoom;
+
+        tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapScrollView:)];
+        [tapGesture setNumberOfTapsRequired:1];
+        [tapGesture setNumberOfTouchesRequired:1];
+        tapGesture.enabled = NO;
+        [self addGestureRecognizer:tapGesture];
+        
+        pinchGesture = [[MMPanAndPinchFromListViewGestureRecognizer alloc] initWithTarget:self action:@selector(didPinchAPageInListView:)];
+        pinchGesture.enabled = NO;
+        pinchGesture.pinchDelegate = self;
+        [self addGestureRecognizer:pinchGesture];
+        
+        [NSThread performBlockInBackground:^{
+            displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateScrollOffsetDuringDrag)];
+            displayLink.paused = YES;
+            [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+        }];
+
+        // init the add page button in top left of scrollview
+        addPageButtonInListView = [[MMListAddPageButton alloc] initWithFrame:CGRectMake(bufferWidth, bufferWidth, columnWidth, rowHeight)];
+        addPageButtonInListView.delegate = self;
+        addPageButtonInListView.alpha = 0;
+        [self addSubview:addPageButtonInListView];
     }
     return self;
-}
-
--(void) awakeFromNib{
-    setOfInitialFramesForPagesBeingZoomed = [[NSMutableDictionary alloc] init];
-    setOfFinalFramesForPagesBeingZoomed = [[NSMutableDictionary alloc] init];
-    [self setScrollEnabled:NO];
-    //
-    // screen and column constants
-    screenWidth = self.frame.size.width;
-    screenHeight = self.frame.size.height;
-    columnWidth = screenWidth * kListPageZoom;
-    rowHeight = columnWidth * screenHeight / screenWidth;
-    bufferWidth = columnWidth * kListPageZoom;
-
-    tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapScrollView:)];
-    [tapGesture setNumberOfTapsRequired:1];
-    [tapGesture setNumberOfTouchesRequired:1];
-    tapGesture.enabled = NO;
-    [self addGestureRecognizer:tapGesture];
-    
-    pinchGesture = [[MMPanAndPinchFromListViewGestureRecognizer alloc] initWithTarget:self action:@selector(didPinchAPageInListView:)];
-    pinchGesture.enabled = NO;
-    pinchGesture.pinchDelegate = self;
-    [self addGestureRecognizer:pinchGesture];
-    
-    displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateScrollOffsetDuringDrag)];
-    displayLink.paused = YES;
-    [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
-
-    // init the add page button in top left of scrollview
-    addPageButtonInListView = [[MMListAddPageButton alloc] initWithFrame:CGRectMake(bufferWidth, bufferWidth, columnWidth, rowHeight)];
-    addPageButtonInListView.delegate = self;
-    addPageButtonInListView.alpha = 0;
-    [self addSubview:addPageButtonInListView];
-    
-    [super awakeFromNib];
 }
 
 #pragma mark - Add Button in List View
