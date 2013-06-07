@@ -31,16 +31,6 @@
         drawableView = [[JotView alloc] initWithFrame:self.bounds];
         [self.contentView addSubview:drawableView];
 
-        testImageView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
-        testImageView.frame = CGRectMake(50, 0, 200, 200);
-        testImageView.contentMode = UIViewContentModeScaleAspectFill;
-        testImageView.clipsToBounds = YES;
-        testImageView.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:.3];
-        testImageView.layer.borderColor = [UIColor blackColor].CGColor;
-        testImageView.layer.borderWidth = 2;
-        [self.contentView addSubview:testImageView];
-        
-
         NSLog(@"loading ink %@", [self inkPath]);
         
         if([[NSFileManager defaultManager] fileExistsAtPath:[self inkPath]]){
@@ -49,8 +39,6 @@
             
             [drawableView loadImage:[UIImage imageWithContentsOfFile:[self inkPath]] andState:dict];
             cachedImgView.image = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
-            
-            testImageView.image = [UIImage imageWithContentsOfFile:[self inkPath]];
         }else{
             [drawableView loadImage:nil andState:nil];
         }
