@@ -16,14 +16,24 @@
 
 @implementation MMLooseLeafViewController
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    srand ( time(NULL) );
+- (id)init{
+    if(self = [super init]){
+        // Do any additional setup after loading the view, typically from a nib.
+        srand ( time(NULL) );
+        [[MMShadowManager sharedInstace] beginGeneratingShadows];
+        
+    }
+    return self;
+}
 
-    [[MMShadowManager sharedInstace] beginGeneratingShadows];
-
+-(void) viewDidLoad{
+    
+    self.view.opaque = YES;
+    
+    stackView = [[MMEditablePaperStackView alloc] initWithFrame:self.view.frame];
+    stackView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    [self.view addSubview:stackView];
+    
     for(int i=0;i<1;i++){
         MMPaperView* paper = [[MMEditablePaperView alloc] initWithFrame:self.view.bounds];
         [stackView addPaperToBottomOfStack:paper];

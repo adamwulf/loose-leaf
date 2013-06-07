@@ -20,51 +20,46 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        [self awakeFromNib];
+        setOfPagesBeingPanned = [[NSMutableSet alloc] init]; // use this as a quick cache of pages being panned
+        visibleStackHolder = [[UIView alloc] initWithFrame:self.bounds];
+        hiddenStackHolder = [[UIView alloc] initWithFrame:self.bounds];
+        bezelStackHolder = [[UIView alloc] initWithFrame:self.bounds];
+
+        
+        CGRect frameOfHiddenStack = hiddenStackHolder.frame;
+        frameOfHiddenStack.origin.x += hiddenStackHolder.bounds.size.width + 1;
+        hiddenStackHolder.frame = frameOfHiddenStack;
+        bezelStackHolder.frame = frameOfHiddenStack;
+        
+        hiddenStackHolder.clipsToBounds = YES;
+        visibleStackHolder.clipsToBounds = YES;
+        bezelStackHolder.clipsToBounds = NO;
+        
+        //
+        // icons for moving and panning pages
+        [self addSubview:visibleStackHolder];
+        [self addSubview:hiddenStackHolder];
+        [self addSubview:bezelStackHolder];
+        papersIcon = [[MMPapersIcon alloc] initWithFrame:CGRectMake(600, 460, 80, 80)];
+        [self addSubview:papersIcon];
+        paperIcon = [[MMPaperIcon alloc] initWithFrame:CGRectMake(600, 460, 80, 80)];
+        [self addSubview:paperIcon];
+        plusIcon = [[MMPlusIcon alloc] initWithFrame:CGRectMake(540, 476, 46, 46)];
+        [self addSubview:plusIcon];
+        leftArrow = [[MMLeftArrow alloc] initWithFrame:CGRectMake(540, 476, 46, 46)];
+        [self addSubview:leftArrow];
+        rightArrow = [[MMRightArrow alloc] initWithFrame:CGRectMake(680, 476, 46, 46)];
+        [self addSubview:rightArrow];
+        papersIcon.alpha = 0;
+        paperIcon.alpha = 0;
+        leftArrow.alpha = 0;
+        rightArrow.alpha = 0;
+        plusIcon.alpha = 0;
+        
+        fromRightBezelGesture = [[MMBezelInRightGestureRecognizer alloc] initWithTarget:self action:@selector(isBezelingInWithGesture:)];
+        [self addGestureRecognizer:fromRightBezelGesture];
     }
     return self;
-}
-
-
--(void) awakeFromNib{
-    setOfPagesBeingPanned = [[NSMutableSet alloc] init]; // use this as a quick cache of pages being panned
-    visibleStackHolder = [[UIView alloc] initWithFrame:self.bounds];
-    hiddenStackHolder = [[UIView alloc] initWithFrame:self.bounds];
-    bezelStackHolder = [[UIView alloc] initWithFrame:self.bounds];
-
-    
-    CGRect frameOfHiddenStack = hiddenStackHolder.frame;
-    frameOfHiddenStack.origin.x += hiddenStackHolder.bounds.size.width + 1;
-    hiddenStackHolder.frame = frameOfHiddenStack;
-    bezelStackHolder.frame = frameOfHiddenStack;
-    
-    hiddenStackHolder.clipsToBounds = YES;
-    visibleStackHolder.clipsToBounds = YES;
-    bezelStackHolder.clipsToBounds = NO;
-    
-    //
-    // icons for moving and panning pages
-    [self addSubview:visibleStackHolder];
-    [self addSubview:hiddenStackHolder];
-    [self addSubview:bezelStackHolder];
-    papersIcon = [[MMPapersIcon alloc] initWithFrame:CGRectMake(600, 460, 80, 80)];
-    [self addSubview:papersIcon];
-    paperIcon = [[MMPaperIcon alloc] initWithFrame:CGRectMake(600, 460, 80, 80)];
-    [self addSubview:paperIcon];
-    plusIcon = [[MMPlusIcon alloc] initWithFrame:CGRectMake(540, 476, 46, 46)];
-    [self addSubview:plusIcon];
-    leftArrow = [[MMLeftArrow alloc] initWithFrame:CGRectMake(540, 476, 46, 46)];
-    [self addSubview:leftArrow];
-    rightArrow = [[MMRightArrow alloc] initWithFrame:CGRectMake(680, 476, 46, 46)];
-    [self addSubview:rightArrow];
-    papersIcon.alpha = 0;
-    paperIcon.alpha = 0;
-    leftArrow.alpha = 0;
-    rightArrow.alpha = 0;
-    plusIcon.alpha = 0;
-    
-    fromRightBezelGesture = [[MMBezelInRightGestureRecognizer alloc] initWithTarget:self action:@selector(isBezelingInWithGesture:)];
-    [self addGestureRecognizer:fromRightBezelGesture];
 }
 
 #pragma mark - Future Model Methods
