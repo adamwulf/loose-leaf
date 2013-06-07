@@ -40,9 +40,11 @@
         pinchGesture.pinchDelegate = self;
         [self addGestureRecognizer:pinchGesture];
         
-        displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateScrollOffsetDuringDrag)];
-        displayLink.paused = YES;
-        [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+        [NSThread performBlockInBackground:^{
+            displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateScrollOffsetDuringDrag)];
+            displayLink.paused = YES;
+            [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+        }];
 
         // init the add page button in top left of scrollview
         addPageButtonInListView = [[MMListAddPageButton alloc] initWithFrame:CGRectMake(bufferWidth, bufferWidth, columnWidth, rowHeight)];
