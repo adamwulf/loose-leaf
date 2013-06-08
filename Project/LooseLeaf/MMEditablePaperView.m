@@ -36,6 +36,37 @@
         
         if([[NSFileManager defaultManager] fileExistsAtPath:[self inkPath]]){
             
+            //
+            // one option would be to load the dict +
+            // generate a JotGLTexture at the same time
+            // on different background threads,
+            // then when they're both done continue on
+            // the main thread and ask the drawable view to
+            // loadImage: andState:
+            //
+            // the cost of the archiving can probably be minimized,
+            // but the cost of generating a CGImage for the texture
+            // probably can't (b/c i need to inflate the saved PNG
+            // somewhere.)
+            //
+            // this guy might have a much faster way to load a png
+            // into an opengl texture:
+            // http://stackoverflow.com/questions/16847680/extract-opengl-raw-rgba-texture-data-from-png-data-stored-in-nsdata-using-libp
+            //
+            // https://gist.github.com/joshcodes/5681512
+            //
+            // http://iphonedevelopment.blogspot.no/2008/10/iphone-optimized-pngs.html
+            //
+            // http://blog.nobel-joergensen.com/2010/11/07/loading-a-png-as-texture-in-opengl-using-libpng/
+            //
+            //
+            // right now, unarchiving is taking longer than loading
+            // the texture. so moving from NSCoding to plist will
+            // probably make the texture loading take longer.
+            // if i can write the texture + load the archive
+            // in parallel, then i should be able to get a texture
+            // loaded in ~90ms hopefully.
+            //
             NSDictionary* dict = [NSKeyedUnarchiver unarchiveObjectWithFile:[self plistPath]];
             
             UIImage* savedInkImage = [UIImage imageWithContentsOfFile:[self inkPath]];
