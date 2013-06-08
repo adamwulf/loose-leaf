@@ -287,11 +287,11 @@
         [[visibleStackHolder peekSubview] saveToDisk:^{
             if(pageToSave.scale < kMinPageZoom){
                 [pageToSave setEditable:NO];
-                NSLog(@"page %@ isn't editable", pageToSave.uuid);
+                debug_NSLog(@"page %@ isn't editable", pageToSave.uuid);
             }
         }];
     }else{
-        NSLog(@"would save, but can't b/c its readonly page");
+        debug_NSLog(@"would save, but can't b/c its readonly page");
     }
     
     // update UI for scaling small into list view
@@ -310,7 +310,7 @@
     if([page isKindOfClass:[MMEditablePaperView class]]){
         MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
         [pageToSave setEditable:YES];
-        NSLog(@"page %@ is editable", pageToSave.uuid);
+        debug_NSLog(@"page %@ is editable", pageToSave.uuid);
     }
 }
 -(void) finishedScalingBackToPageView:(MMPaperView*)page{
@@ -321,7 +321,7 @@
     if([page isKindOfClass:[MMEditablePaperView class]]){
         MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
         [pageToSave setEditable:YES];
-        NSLog(@"page %@ is editable", pageToSave.uuid);
+        debug_NSLog(@"page %@ is editable", pageToSave.uuid);
     }
     [stackManager saveToDisk];
 }
@@ -337,7 +337,7 @@
     BOOL isTop = YES;
     NSDictionary* pages = [stackManager loadFromDiskWithBounds:self.bounds];
     for(MMPaperView* page in [[pages objectForKey:@"visiblePages"] reverseObjectEnumerator]){
-        NSLog(@"loaded: %@", [page description]);
+        debug_NSLog(@"loaded: %@", [page description]);
         [self addPaperToBottomOfStack:page];
         if(!isTop && [page isKindOfClass:[MMEditablePaperView class]]){
             [((MMEditablePaperView*)page) setEditable:NO];
@@ -347,7 +347,7 @@
         isTop = NO;
     }
     for(MMPaperView* page in [[pages objectForKey:@"hiddenPages"] reverseObjectEnumerator]){
-        NSLog(@"loaded hidden: %@", [page description]);
+        debug_NSLog(@"loaded hidden: %@", [page description]);
         [self addPaperToBottomOfHiddenStack:page];
     }
 }

@@ -10,6 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <JotUI/JotUI.h>
 #import "UIImage+Resize.h"
+#import "NSThread+BlockAdditions.h"
 
 @implementation MMEditablePaperView{
     NSUInteger lastSavedUndoHash;
@@ -31,7 +32,7 @@
         drawableView = [[JotView alloc] initWithFrame:self.bounds];
         [self.contentView addSubview:drawableView];
 
-        NSLog(@"loading ink %@", [self inkPath]);
+        debug_NSLog(@"loading ink %@", [self inkPath]);
         
         if([[NSFileManager defaultManager] fileExistsAtPath:[self inkPath]]){
             
@@ -116,24 +117,26 @@
         // something has changed since the last time we saved,
         // so ask the JotView to save out the png of its data
         lastSavedUndoHash = currentUndoHash;
-        NSLog(@"saving page %@ with hash %ui", self.uuid, lastSavedUndoHash);
+        debug_NSLog(@"saving page %@ with hash %ui", self.uuid, lastSavedUndoHash);
         
         
         [drawableView exportEverythingOnComplete:^(UIImage* ink, UIImage* thumbnail, NSDictionary* state){
 
             thumbnail = [thumbnail resizedImage:CGSizeMake(thumbnail.size.width / 2 * thumbnail.scale, thumbnail.size.height / 2 * thumbnail.scale) interpolationQuality:kCGInterpolationHigh];
-            cachedImgView.image = thumbnail;
             
-            onComplete();
+            [NSThread performBlockOnMainThread:^{
+                cachedImgView.image = thumbnail;
+                onComplete();
+            }];
 
             [UIImagePNGRepresentation(ink) writeToFile:inkPath atomically:YES];
-            NSLog(@"wrote ink to: %@", inkPath);
+            debug_NSLog(@"wrote ink to: %@", inkPath);
             
             [UIImagePNGRepresentation(thumbnail) writeToFile:thumbnailPath atomically:YES];
-            NSLog(@"wrote thumbnail to: %@", thumbnailPath);
+            debug_NSLog(@"wrote thumbnail to: %@", thumbnailPath);
             
             [NSKeyedArchiver archiveRootObject:state toFile:[self plistPath]];
-            NSLog(@"wrote thumbnail to: %@", [self plistPath]);
+            debug_NSLog(@"wrote thumbnail to: %@", [self plistPath]);
         }];
         
         
@@ -145,10 +148,10 @@
 //            onComplete();
 //            
 //            [UIImagePNGRepresentation(output) writeToFile:inkPath atomically:YES];
-//            NSLog(@"wrote ink to: %@", inkPath);
+//            debug_NSLog(@"wrote ink to: %@", inkPath);
 //            
 //            [UIImagePNGRepresentation(thumbnail) writeToFile:thumbnailPath atomically:YES];
-//            NSLog(@"wrote thumbnail to: %@", thumbnailPath);
+//            debug_NSLog(@"wrote thumbnail to: %@", thumbnailPath);
 //        }];
     }else{
         // already saved, but don't need to write

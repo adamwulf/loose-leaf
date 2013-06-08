@@ -99,17 +99,17 @@
 
 -(void) setFrame:(CGRect)_frame{
     if(!_frame.size.width){
-        NSLog(@"zero width");
+        debug_NSLog(@"zero width");
     }
     [super setFrame:_frame];
 }
 
 -(void) longPress:(UILongPressGestureRecognizer*)pressGesture{
-    NSLog(@"long press!!!!! %d", pressGesture.state);
+    debug_NSLog(@"long press!!!!! %d", pressGesture.state);
 }
 
 -(void) doubleFingerDoubleTap:(UITapGestureRecognizer*)tapGesture{
-    NSLog(@"tap! %d", tapGesture.state);
+    debug_NSLog(@"tap! %d", tapGesture.state);
 }
 
 
@@ -232,7 +232,7 @@
     CGPoint lastLocationInSelf = [panGesture locationInView:self];
     CGPoint lastLocationInSuper = [panGesture locationInView:self.superview];
     
-//    NSLog(@"pan: %d %f %f", panGesture.state, lastLocationInSuper.x, lastLocationInSuper.y);
+//    debug_NSLog(@"pan: %d %f %f", panGesture.state, lastLocationInSuper.x, lastLocationInSuper.y);
     
     CGPoint velocity = [_panGesture velocity];
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
