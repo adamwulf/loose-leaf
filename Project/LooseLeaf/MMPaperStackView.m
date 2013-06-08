@@ -917,17 +917,17 @@
 }
 
 -(void) isBeginningToScaleReallySmall:(MMPaperView *)page{
-    NSLog(@"isBeginningToScaleReallySmall");
+    debug_NSLog(@"isBeginningToScaleReallySmall");
     [self updateIconAnimations];
 }
 
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
-    NSLog(@"finishedScalingReallySmall");
+    debug_NSLog(@"finishedScalingReallySmall");
     [self updateIconAnimations];
 }
 
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
-    NSLog(@"cancelledScalingReallySmall");
+    debug_NSLog(@"cancelledScalingReallySmall");
     [self updateIconAnimations];
 }
 
@@ -1324,7 +1324,7 @@
 -(void) mayChangeTopPageTo:(MMPaperView*)page{
     if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
         recentlySuggestedPageUUID = page.uuid;
-        NSLog(@"may change top page to: %@", page.uuid);
+        debug_NSLog(@"may change top page to: %@", page.uuid);
     }
 }
 
@@ -1335,7 +1335,7 @@
  * get this into static mode asap.
  */
 -(void) willChangeTopPageTo:(MMPaperView*)page{
-    NSLog(@"will change top page to: %@", page.uuid);
+    debug_NSLog(@"will change top page to: %@", page.uuid);
     [self saveStacksToDisk];
 }
 
@@ -1346,7 +1346,7 @@
  * get this into static mode asap.
  */
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
-    NSLog(@"will NOT change top page to: %@", page.uuid);
+    debug_NSLog(@"will NOT change top page to: %@", page.uuid);
 }
 
 -(void) saveStacksToDisk{

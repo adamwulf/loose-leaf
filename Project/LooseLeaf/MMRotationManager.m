@@ -44,7 +44,7 @@ static MMRotationManager* _instance = nil;
             accelerationY = data.acceleration.y * kFilteringFactor + accelerationY * (1.0 - kFilteringFactor);
             accelerationZ = data.acceleration.z * kFilteringFactor + accelerationZ * (1.0 - kFilteringFactor);
             CGFloat absZ = accelerationZ < 0 ? -accelerationZ : accelerationZ;
-//            NSLog(@"x: %f   y: %f   z: %f   diff: %f", accelerationX, accelerationY, absZ);
+//            debug_NSLog(@"x: %f   y: %f   z: %f   diff: %f", accelerationX, accelerationY, absZ);
             CGFloat newRawReading = atan2(accelerationY, accelerationX);
             if((ABS(newRawReading - currentRotationReading) > .05 || isFirstReading) && absZ < 0.95){
                 currentRotationReading = newRawReading;
