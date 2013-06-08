@@ -38,7 +38,9 @@
             
             NSDictionary* dict = [NSKeyedUnarchiver unarchiveObjectWithFile:[self plistPath]];
             
-            [drawableView loadImage:[UIImage imageWithContentsOfFile:[self inkPath]] andState:dict];
+            UIImage* savedInkImage = [UIImage imageWithContentsOfFile:[self inkPath]];
+            
+            [drawableView loadImage:savedInkImage andState:dict];
             cachedImgView.image = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
         }else{
             [drawableView loadImage:nil andState:nil];
@@ -101,9 +103,6 @@
         [[NSFileManager defaultManager] createDirectoryAtPath:pagesPath withIntermediateDirectories:NO attributes:nil error:nil];
     }
     
-    
-    
-    
 //    NSString* plistPath = [[pagesPath stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"plist"];
     // get the path for the high res texture
     NSString* inkPath = [[pagesPath stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"png"];
@@ -118,7 +117,6 @@
         // so ask the JotView to save out the png of its data
         lastSavedUndoHash = currentUndoHash;
         debug_NSLog(@"saving page %@ with hash %ui", self.uuid, lastSavedUndoHash);
-        
         
         [drawableView exportEverythingOnComplete:^(UIImage* ink, UIImage* thumbnail, NSDictionary* state){
 
@@ -138,21 +136,6 @@
             [NSKeyedArchiver archiveRootObject:state toFile:[self plistPath]];
             debug_NSLog(@"wrote thumbnail to: %@", [self plistPath]);
         }];
-        
-        
-//        [drawableView exportToImageWithBackgroundColor:nil andBackgroundImage:nil onComplete:^(UIImage* output){
-//            // scale by 50%
-//            UIImage* thumbnail = [output resizedImage:CGSizeMake(output.size.width / 2 * output.scale, output.size.height / 2 * output.scale) interpolationQuality:kCGInterpolationHigh];
-//            cachedImgView.image = output;
-//            
-//            onComplete();
-//            
-//            [UIImagePNGRepresentation(output) writeToFile:inkPath atomically:YES];
-//            debug_NSLog(@"wrote ink to: %@", inkPath);
-//            
-//            [UIImagePNGRepresentation(thumbnail) writeToFile:thumbnailPath atomically:YES];
-//            debug_NSLog(@"wrote thumbnail to: %@", thumbnailPath);
-//        }];
     }else{
         // already saved, but don't need to write
         // anything new to disk
