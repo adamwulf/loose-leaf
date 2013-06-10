@@ -129,7 +129,13 @@
             debug_NSLog(@"wrote thumbnail to: %@", thumbnailPath);
             
             [NSKeyedArchiver archiveRootObject:state toFile:[self plistPath]];
-            debug_NSLog(@"wrote thumbnail to: %@", [self plistPath]);
+            debug_NSLog(@"wrote state to: %@", [self plistPath]);
+            
+            if([state writeToFile:[[self plistPath] stringByAppendingString:@"2"] atomically:YES]){
+                debug_NSLog(@"wrote plist file");
+            }else{
+                debug_NSLog(@"couldn't write plist file");
+            }
         }];
     }else{
         // already saved, but don't need to write
