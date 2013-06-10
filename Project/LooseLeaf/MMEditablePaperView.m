@@ -67,12 +67,53 @@
             // in parallel, then i should be able to get a texture
             // loaded in ~90ms hopefully.
             //
-            NSDictionary* dict = [NSKeyedUnarchiver unarchiveObjectWithFile:[self plistPath]];
             
-            UIImage* savedInkImage = [UIImage imageWithContentsOfFile:[self inkPath]];
-            
-            [drawableView loadImage:savedInkImage andState:dict];
-            cachedImgView.image = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
+            {
+                dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+                dispatch_semaphore_t sema2 = dispatch_semaphore_create(0);
+                
+                __block NSDictionary* stateDictionary = nil;
+                __block JotGLTextureBackedFrameBuffer* backgroundFramebuffer = nil;
+                
+                [NSThread performBlockInBackground:^{
+                    
+                    stateDictionary = [NSKeyedUnarchiver unarchiveObjectWithFile:[self plistPath]];
+                    dispatch_semaphore_signal(sema1);
+                }];
+                
+                [NSThread performBlockInBackground:^{
+
+                    EAGLContext* secondContext = [[EAGLContext alloc] initWithAPI:drawableView.context.API sharegroup:drawableView.context.sharegroup];
+                    [EAGLContext setCurrentContext:secondContext];
+                    
+                    // load image from disk
+                    UIImage* savedInkImage = [UIImage imageWithContentsOfFile:[self inkPath]];
+                    
+                    // calc final size of the backing texture
+                    CGFloat scale = [[UIScreen mainScreen] scale];
+                    CGSize fullPixelSize = CGSizeMake(self.frame.size.width * scale, self.frame.size.height * scale);
+                    
+                    // load new texture
+                    JotGLTexture* backgroundTexture = [[JotGLTexture alloc] initForImage:savedInkImage withSize:fullPixelSize];
+                    
+                    // generate FBO for the texture
+                    backgroundFramebuffer = [[JotGLTextureBackedFrameBuffer alloc] initForTexture:backgroundTexture];
+                    
+                    if(!savedInkImage){
+                        // no image was given, so it should be a blank texture
+                        // lets erase it, since it defaults to uncleared memory
+                        [backgroundFramebuffer clear];
+                    }
+                    glFlush();
+                    dispatch_semaphore_signal(sema2);
+                }];
+                
+                dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+                dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
+                
+                [drawableView loadImage:backgroundFramebuffer andState:stateDictionary];
+                cachedImgView.image = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
+            }
         }else{
             [drawableView loadImage:nil andState:nil];
         }
