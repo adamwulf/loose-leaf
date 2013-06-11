@@ -86,9 +86,6 @@
 
 
 -(void) saveToDisk:(void(^)(void))onComplete{
-    
-    //
-    //
     //
     // Sanity checks on directory structure
     NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -98,13 +95,6 @@
         [[NSFileManager defaultManager] createDirectoryAtPath:pagesPath withIntermediateDirectories:NO attributes:nil error:nil];
     }
     
-//    NSString* plistPath = [[pagesPath stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"plist"];
-    // get the path for the high res texture
-    NSString* inkPath = [[pagesPath stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"png"];
-    // path for the half res fully rendered thumbnail
-    NSString* thumbnailPath = [[pagesPath stringByAppendingPathComponent:[self.uuid stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
-    
-    
     // find out what our current undo state looks like.
     NSUInteger currentUndoHash = [drawableView undoHash];
     if(currentUndoHash != lastSavedUndoHash){
@@ -113,27 +103,15 @@
         lastSavedUndoHash = currentUndoHash;
         debug_NSLog(@"saving page %@ with hash %ui", self.uuid, lastSavedUndoHash);
         
-        [drawableView exportEverythingOnComplete:^(UIImage* ink, UIImage* thumbnail, NSDictionary* state){
-
-            thumbnail = [thumbnail resizedImage:CGSizeMake(thumbnail.size.width / 2 * thumbnail.scale, thumbnail.size.height / 2 * thumbnail.scale) interpolationQuality:kCGInterpolationHigh];
-            
-            [NSThread performBlockOnMainThread:^{
-                cachedImgView.image = thumbnail;
-                onComplete();
-            }];
-
-            [UIImagePNGRepresentation(ink) writeToFile:inkPath atomically:YES];
-            debug_NSLog(@"wrote ink to: %@", inkPath);
-            
-            [UIImagePNGRepresentation(thumbnail) writeToFile:thumbnailPath atomically:YES];
-            debug_NSLog(@"wrote thumbnail to: %@", thumbnailPath);
-            
-            if([state writeToFile:[self plistPath] atomically:YES]){
-                debug_NSLog(@"wrote plist file");
-            }else{
-                debug_NSLog(@"couldn't write plist file");
-            }
-        }];
+        [drawableView exportInkTo:[self inkPath]
+                   andThumbnailTo:[self thumbnailPath]
+                       andPlistTo:[self plistPath]
+                       onComplete:^(UIImage* ink, UIImage* thumbnail, NSDictionary* state){
+                           [NSThread performBlockOnMainThread:^{
+                               cachedImgView.image = thumbnail;
+                               onComplete();
+                           }];
+                       }];
     }else{
         // already saved, but don't need to write
         // anything new to disk
