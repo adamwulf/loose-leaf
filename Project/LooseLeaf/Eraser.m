@@ -11,9 +11,19 @@
 @implementation Eraser
 
 -(id) init{
-    return [self initWithMinSize:12.0 andMaxSize:60.0 andMinAlpha:1.0 andMaxAlpha:1.0];
+    return [self initWithMinSize:12.0 andMaxSize:180.0 andMinAlpha:1.0 andMaxAlpha:1.0];
 }
 
+/**
+ * delegate method - a notification from the JotView
+ * that a new touch is about to be processed. we should
+ * reset all of our counters/etc to base values
+ */
+-(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+    [super willBeginStrokeWithTouch:touch];
+    velocity = 0;
+    return YES;
+}
 
 /**
  * the user has moved to this new touch point, and we need
