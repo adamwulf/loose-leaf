@@ -9,7 +9,6 @@
 #import "MMEditablePaperView.h"
 #import <QuartzCore/QuartzCore.h>
 #import <JotUI/JotUI.h>
-#import "UIImage+Resize.h"
 #import "NSThread+BlockAdditions.h"
 
 @implementation MMEditablePaperView{
