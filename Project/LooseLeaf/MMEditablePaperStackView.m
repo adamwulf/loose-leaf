@@ -157,7 +157,7 @@
         self.opaque = YES;
         self.clearsContextBeforeDrawing = YES;
         self.clipsToBounds = YES;
-        
+        self.delaysContentTouches = NO;
         
         [NSThread performBlockInBackground:^{
             [[JotStylusManager sharedInstance] setEnabled:YES];
