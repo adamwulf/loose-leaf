@@ -84,13 +84,13 @@
         CGRect handButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 5.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
         handButton = [[MMHandButton alloc] initWithFrame:handButtonFrame];
         handButton.delegate = self;
-        [handButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [handButton addTarget:self action:@selector(handTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:handButton];
         
         CGRect rulerButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 6.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
         rulerButton = [[MMRulerButton alloc] initWithFrame:rulerButtonFrame];
         rulerButton.delegate = self;
-        [rulerButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [rulerButton addTarget:self action:@selector(rulerTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:rulerButton];
         
         
@@ -159,6 +159,10 @@
         self.clipsToBounds = YES;
         self.delaysContentTouches = NO;
         
+        
+        pencilButton.selected = YES;
+        handButton.selected = YES;
+        
         [NSThread performBlockInBackground:^{
             [[JotStylusManager sharedInstance] setEnabled:YES];
             [[JotStylusManager sharedInstance] setRejectMode:NO];
@@ -183,18 +187,57 @@
     }
 }
 
+#pragma mark - Undo/Redo Button Actions
 
-#pragma mark - Button Actions
+-(void) undo:(UIButton*)_button{
+    id obj = [visibleStackHolder peekSubview];
+    if([obj respondsToSelector:@selector(undo)]){
+        [obj undo];
+    }
+}
+
+-(void) redo:(UIButton*)_button{
+    id obj = [visibleStackHolder peekSubview];
+    if([obj respondsToSelector:@selector(redo)]){
+        [obj redo];
+    }
+}
+
+
+#pragma mark - Tool Button Actions
 
 -(void) penTapped:(UIButton*)_button{
     eraserButton.selected = NO;
     pencilButton.selected = YES;
+    polygonButton.selected = NO;
+    insertImageButton.selected = NO;
+    scissorButton.selected = NO;
 }
 
 -(void) eraserTapped:(UIButton*)_button{
     eraserButton.selected = YES;
     pencilButton.selected = NO;
+    polygonButton.selected = NO;
+    insertImageButton.selected = NO;
+    scissorButton.selected = NO;
 }
+
+
+#pragma mark - Gesture Button Actions
+
+-(void) handTapped:(UIButton*)_button{
+    handButton.selected = YES;
+    rulerButton.selected = NO;
+}
+
+-(void) rulerTapped:(UIButton*)_button{
+    handButton.selected = NO;
+    rulerButton.selected = YES;
+}
+
+
+
+#pragma mark - Page/Save Button Actions
 
 /**
  * adds a new blank page to the visible stack
@@ -231,20 +274,6 @@
         rulerButton.alpha = visible;
         handButton.alpha = visible;
     }];
-}
-
--(void) undo:(UIButton*)_button{
-    id obj = [visibleStackHolder peekSubview];
-    if([obj respondsToSelector:@selector(undo)]){
-        [obj undo];
-    }
-}
-
--(void) redo:(UIButton*)_button{
-    id obj = [visibleStackHolder peekSubview];
-    if([obj respondsToSelector:@selector(redo)]){
-        [obj redo];
-    }
 }
 
 #pragma mark - MMRotationManagerDelegate

@@ -35,8 +35,7 @@
     // the page border bezier has to be added to the oval bezier
     // paintcode keeps them separate
     //
-    CGFloat smallest = MIN(self.bounds.size.width, self.bounds.size.height);
-    CGRect frame = CGRectMake(kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer);
+    CGRect frame = [self drawableFrame];
     
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];

@@ -26,6 +26,13 @@
     return self;
 }
 
+-(void) setSelected:(BOOL)selected{
+    if(selected != self.selected){
+        [super setSelected:selected];
+        [self setNeedsDisplay];
+    }
+}
+
 -(UIColor*) borderColor{
     return [UIColor colorWithRed: 0.26 green: 0.26 blue: 0.26 alpha: 0.35];
 }
@@ -34,6 +41,49 @@
     return [UIColor colorWithRed: 0.84 + (self.enabled ? 0 : -0.3) green: 0.84 + (self.enabled ? 0 : -0.3) blue: 0.84 + (self.enabled ? 0 : -0.3) alpha: 0.5 + (self.enabled ? 0 : -0.2)];
 }
 
+-(CGRect) drawableFrame{
+    CGFloat smallest = MIN(self.bounds.size.width, self.bounds.size.height);
+    return CGRectMake(kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer);
+}
+
+-(UIBezierPath*) ovalPath{
+    CGRect frame = [self drawableFrame];
+    return [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 1.0), floor(CGRectGetHeight(frame) - 1.0))];
+}
+
+-(void) drawDropshadowIfSelected{
+    if(self.selected){
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+
+        UIColor* selectedBlueFill = [UIColor colorWithRed: 77.0/255.0 green: 187.0/255.0 blue: 1.0 alpha: 0.5];
+        
+        CGRect frame = [self drawableFrame];
+        UIBezierPath* ovalPath = [self ovalPath];
+        
+        //
+        // possible drop shadow
+        UIColor* gradientColor = [selectedBlueFill colorWithAlphaComponent:1];
+        UIColor* clearColor = [selectedBlueFill colorWithAlphaComponent:0];
+        NSArray* gradientColors = [NSArray arrayWithObjects:
+                                   (id)gradientColor.CGColor,
+                                   (id)clearColor.CGColor, nil];
+        CGFloat gradientLocations[] = {0, 1};
+        CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)gradientColors, gradientLocations);
+        CGContextSaveGState(context);
+        
+        UIBezierPath* clipPath = [ovalPath copy];
+        [clipPath appendPath:[UIBezierPath bezierPathWithRect:CGRectInfinite]];
+        clipPath.usesEvenOddFillRule = YES;
+        [clipPath addClip];
+        
+        CGContextDrawRadialGradient(context, gradient,
+                                    CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), 19,
+                                    CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), 24.5,
+                                    kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation);
+        CGContextRestoreGState(context);
+    }
+}
 
 
 -(void) bounceButton:(id)sender{

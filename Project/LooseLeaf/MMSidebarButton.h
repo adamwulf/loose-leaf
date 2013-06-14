@@ -23,4 +23,8 @@
 
 -(CGFloat) rotation;
 
+-(CGRect) drawableFrame;
+-(UIBezierPath*) ovalPath;
+-(void) drawDropshadowIfSelected;
+
 @end

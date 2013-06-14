@@ -21,8 +21,8 @@
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
-        self.layer.borderWidth = 2;
-        self.layer.borderColor = [UIColor greenColor].CGColor;
+//        self.layer.borderWidth = 2;
+//        self.layer.borderColor = [UIColor greenColor].CGColor;
     }
     return self;
 }
@@ -40,16 +40,11 @@
     CGContextSetAllowsAntialiasing(context, true);
     CGContextSetShouldAntialias(context, true);
     
-    CGFloat smallest = MIN(self.bounds.size.width, self.bounds.size.height);
-    CGRect frame = CGRectMake(kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer);
-    
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
     UIColor* halfGreyFill = [self backgroundColor];
     UIColor* pencilShadow = [UIColor colorWithRed: 0.57 green: 0.57 blue: 0.57 alpha: 0.35];
     UIColor* barelyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.25];
-    
-    UIColor* selectedBlueFill = [UIColor colorWithRed: 77.0/255.0 green: 187.0/255.0 blue: 1.0 alpha: 0.5];
     
     //// Gradient Declarations
     NSArray* pencilFillGradientColors = [NSArray arrayWithObjects:
@@ -66,10 +61,10 @@
     CGFloat pencilFillGradientLocations[] = {0, 0.26, 0.33, 0.33, 0.33, 0.5, 0.65, 0.66, 0.75, 0.93};
     CGGradientRef pencilFillGradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)pencilFillGradientColors, pencilFillGradientLocations);
     
-    
+    CGRect frame = [self drawableFrame];
+
     //// Oval
-    UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 1.0), floor(CGRectGetHeight(frame) - 1.0))];
-    [ovalPath closePath];
+    UIBezierPath* ovalPath = [self ovalPath];
     
     //// Pencil Fill Drawing
     UIBezierPath* pencilFillPath = [UIBezierPath bezierPath];
@@ -233,31 +228,8 @@
     [ovalPath stroke];
 
     
-    //
-    // possible drop shadow
-    UIColor* gradientColor = [selectedBlueFill colorWithAlphaComponent:1];
-    UIColor* clearColor = [selectedBlueFill colorWithAlphaComponent:0];
-    NSArray* gradientColors = [NSArray arrayWithObjects:
-                               (id)gradientColor.CGColor,
-                               (id)clearColor.CGColor, nil];
-    CGFloat gradientLocations[] = {0, 1};
-    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)gradientColors, gradientLocations);
-    CGContextSaveGState(context);
     
-    UIBezierPath* clipPath = [ovalPath copy];
-    [clipPath appendPath:[UIBezierPath bezierPathWithRect:CGRectInfinite]];
-    clipPath.usesEvenOddFillRule = YES;
-    [clipPath addClip];
-    
-    CGContextDrawRadialGradient(context, gradient,
-                                CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), 19,
-                                CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), 24.5,
-                                kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation);
-    CGContextRestoreGState(context);
-    
-    
-    
- 
+    [self drawDropshadowIfSelected];
 }
 
 
