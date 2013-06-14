@@ -448,6 +448,54 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		66A7462F176B85FD00466AA4 /* Unused */ = {
+			isa = PBXGroup;
+			children = (
+				66BD6E2E1591B57B00D4544C /* MMPaperButton.h */,
+				66BD6E2F1591B57B00D4544C /* MMPaperButton.m */,
+				66BD6E8C1593D18800D4544C /* MMPolylineButton.h */,
+				66BD6E8D1593D18800D4544C /* MMPolylineButton.m */,
+				66BD6E951593E98D00D4544C /* MMTextButton.h */,
+				66BD6E961593E98D00D4544C /* MMTextButton.m */,
+				669329681595A87E0033E557 /* MMMapButton.h */,
+				669329691595A87E0033E557 /* MMMapButton.m */,
+			);
+			name = Unused;
+			sourceTree = "<group>";
+		};
+		66A74630176B860900466AA4 /* Used */ = {
+			isa = PBXGroup;
+			children = (
+				66BD6E7E1593AF4100D4544C /* MMSidebarButton.h */,
+				66BD6E7F1593AF4100D4544C /* MMSidebarButton.m */,
+				66BD6E8B1593C3FF00D4544C /* MMSidebarButtonDelegate.h */,
+				663C18891759B51600706A05 /* MMUndoRedoButton.h */,
+				663C188A1759B51600706A05 /* MMUndoRedoButton.m */,
+				66BD6E9A15940D7300D4544C /* MMPencilButton.h */,
+				66BD6E9B15940D7400D4544C /* MMPencilButton.m */,
+				663C1876175538A800706A05 /* MMPencilEraserButton.h */,
+				663C1877175538A800706A05 /* MMPencilEraserButton.m */,
+				66BD6E8F1593DE4E00D4544C /* MMPolygonButton.h */,
+				66BD6E901593DE4E00D4544C /* MMPolygonButton.m */,
+				66BD6E921593E1D700D4544C /* MMImageButton.h */,
+				66BD6E931593E1D700D4544C /* MMImageButton.m */,
+				6655E924176291C800E4F36A /* MMScissorButton.h */,
+				6655E925176291C800E4F36A /* MMScissorButton.m */,
+				66B21A54175AFCA70049F1AF /* MMHandButton.h */,
+				66B21A55175AFCA70049F1AF /* MMHandButton.m */,
+				663C1895175A89EB00706A05 /* MMRulerButton.h */,
+				663C1896175A89ED00706A05 /* MMRulerButton.m */,
+				66BD6E6E1593A8CC00D4544C /* MMPlusButton.h */,
+				66BD6E6F1593A8CC00D4544C /* MMPlusButton.m */,
+				66BD6E9D15941B7A00D4544C /* MMShareButton.h */,
+				66BD6E9E15941B7B00D4544C /* MMShareButton.m */,
+				66D0905415F7080F004D2CAF /* MMListAddPageButton.h */,
+				66D0905515F70810004D2CAF /* MMListAddPageButton.m */,
+				66D0905815F71941004D2CAF /* MMListAddPageButtonDelegate.h */,
+			);
+			name = Used;
+			sourceTree = "<group>";
+		};
 		66B21A77175E59490049F1AF /* Operations */ = {
 			isa = PBXGroup;
 			children = (
@@ -460,40 +508,8 @@
 		66BD6E811593AF4500D4544C /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
-				663C18891759B51600706A05 /* MMUndoRedoButton.h */,
-				663C188A1759B51600706A05 /* MMUndoRedoButton.m */,
-				66BD6E7E1593AF4100D4544C /* MMSidebarButton.h */,
-				66BD6E7F1593AF4100D4544C /* MMSidebarButton.m */,
-				66D0905415F7080F004D2CAF /* MMListAddPageButton.h */,
-				66D0905515F70810004D2CAF /* MMListAddPageButton.m */,
-				66D0905815F71941004D2CAF /* MMListAddPageButtonDelegate.h */,
-				66BD6E8B1593C3FF00D4544C /* MMSidebarButtonDelegate.h */,
-				66BD6E2E1591B57B00D4544C /* MMPaperButton.h */,
-				66BD6E2F1591B57B00D4544C /* MMPaperButton.m */,
-				66BD6E6E1593A8CC00D4544C /* MMPlusButton.h */,
-				66BD6E6F1593A8CC00D4544C /* MMPlusButton.m */,
-				66BD6E8C1593D18800D4544C /* MMPolylineButton.h */,
-				66BD6E8D1593D18800D4544C /* MMPolylineButton.m */,
-				66BD6E8F1593DE4E00D4544C /* MMPolygonButton.h */,
-				66BD6E901593DE4E00D4544C /* MMPolygonButton.m */,
-				66BD6E921593E1D700D4544C /* MMImageButton.h */,
-				66BD6E931593E1D700D4544C /* MMImageButton.m */,
-				66BD6E951593E98D00D4544C /* MMTextButton.h */,
-				66BD6E961593E98D00D4544C /* MMTextButton.m */,
-				66BD6E9A15940D7300D4544C /* MMPencilButton.h */,
-				66BD6E9B15940D7400D4544C /* MMPencilButton.m */,
-				663C1876175538A800706A05 /* MMPencilEraserButton.h */,
-				663C1877175538A800706A05 /* MMPencilEraserButton.m */,
-				66BD6E9D15941B7A00D4544C /* MMShareButton.h */,
-				66BD6E9E15941B7B00D4544C /* MMShareButton.m */,
-				669329681595A87E0033E557 /* MMMapButton.h */,
-				669329691595A87E0033E557 /* MMMapButton.m */,
-				663C1895175A89EB00706A05 /* MMRulerButton.h */,
-				663C1896175A89ED00706A05 /* MMRulerButton.m */,
-				66B21A54175AFCA70049F1AF /* MMHandButton.h */,
-				66B21A55175AFCA70049F1AF /* MMHandButton.m */,
-				6655E924176291C800E4F36A /* MMScissorButton.h */,
-				6655E925176291C800E4F36A /* MMScissorButton.m */,
+				66A74630176B860900466AA4 /* Used */,
+				66A7462F176B85FD00466AA4 /* Unused */,
 			);
 			name = Buttons;
 			sourceTree = "<group>";

@@ -36,8 +36,8 @@
 #define kFingerWidth 40
 #define kFilteringFactor 0.2
 #define kStartOfSidebar 290
-#define kWidthOfSidebarButton 50.0
-#define kWidthOfSidebarButtonBuffer 5
+#define kWidthOfSidebarButton 60.0
+#define kWidthOfSidebarButtonBuffer 10
 #define kWidthOfSidebar 80
 #define kMinScaleDelta .01
 #define kShadowDepth 7
