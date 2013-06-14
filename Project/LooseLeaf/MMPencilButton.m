@@ -36,9 +36,6 @@
     CGContextSetAllowsAntialiasing(context, true);
     CGContextSetShouldAntialias(context, true);
     
-    CGFloat smallest = MIN(self.bounds.size.width, self.bounds.size.height);
-    CGRect frame = CGRectMake(kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer);
-    
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
     UIColor* halfGreyFill = [self backgroundColor];
@@ -60,6 +57,12 @@
     CGFloat pencilFillGradientLocations[] = {0, 0.26, 0.33, 0.33, 0.33, 0.5, 0.65, 0.66, 0.75, 0.93};
     CGGradientRef pencilFillGradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)pencilFillGradientColors, pencilFillGradientLocations);
 
+    CGRect frame = [self drawableFrame];
+    
+    //// Oval
+    UIBezierPath* ovalPath = [self ovalPath];
+
+    
     //// Pencil Tip Drawing
     UIBezierPath* pencilTipPath = [UIBezierPath bezierPath];
     [pencilTipPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.41 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.6 * CGRectGetHeight(frame))];
@@ -92,7 +95,6 @@
 
     
     // Fill Oval Drawing
-    UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 1.0), floor(CGRectGetHeight(frame) - 1.0))];
     [ovalPath closePath];
     [halfGreyFill setFill];
     [ovalPath fill];
@@ -170,8 +172,7 @@
     ovalPath.lineWidth = 1;
     [ovalPath stroke];
     
-    
-
+    [self drawDropshadowIfSelected];
 }
 
 

@@ -35,12 +35,15 @@
     CGContextSetAllowsAntialiasing(context, true);
     CGContextSetShouldAntialias(context, true);
     
-    CGFloat smallest = MIN(self.bounds.size.width, self.bounds.size.height);
-    CGRect frame = CGRectMake(kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer);
-    
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
     UIColor* halfGreyFill = [self backgroundColor];
+    
+
+    CGRect frame = [self drawableFrame];
+    
+    //// Oval
+    UIBezierPath* ovalPath = [self ovalPath];
     
     
     // define dots for graph
@@ -80,7 +83,6 @@
     */
     
     // Fill Oval Drawing
-    UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 1.0), floor(CGRectGetHeight(frame) - 1.0))];
     [halfGreyFill setFill];
     [ovalPath fill];
     
@@ -136,6 +138,7 @@
     CGContextSetBlendMode(context, kCGBlendModeNormal);
      */
     
+    [self drawDropshadowIfSelected];
 }
 
 

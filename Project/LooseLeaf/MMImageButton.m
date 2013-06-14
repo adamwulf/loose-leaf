@@ -35,8 +35,6 @@
     // the page border bezier has to be added to the oval bezier
     // paintcode keeps them separate
     //
-    CGFloat smallest = MIN(self.bounds.size.width, self.bounds.size.height);
-    CGRect frame = CGRectMake(kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer);
     
     //// General Declarations
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
@@ -55,9 +53,10 @@
     CGFloat frontMountainGradientLocations[] = {0, 0.67, 1};
     CGGradientRef frontMountainGradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)frontMountainGradientColors, frontMountainGradientLocations);
 
-
-    //// Oval Drawing
-    UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 1.0), floor(CGRectGetHeight(frame) - 1.0))];
+    CGRect frame = [self drawableFrame];
+    
+    //// Oval
+    UIBezierPath* ovalPath = [self ovalPath];
     [ovalPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.21 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.29 * CGRectGetHeight(frame))];
     [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.21 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.71 * CGRectGetHeight(frame))];
     [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.79 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.71 * CGRectGetHeight(frame))];
@@ -132,7 +131,8 @@
     mountainStrokePath.lineWidth = 1;
     [mountainStrokePath stroke];
   
-    
+    [self drawDropshadowIfSelected];
+
 }
 
 

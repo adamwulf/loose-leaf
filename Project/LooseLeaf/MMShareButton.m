@@ -38,13 +38,16 @@
     // the page border bezier has to be added to the oval bezier
     // paintcode keeps them separate
     //
-    CGFloat smallest = MIN(self.bounds.size.width, self.bounds.size.height);
-    CGRect frame = CGRectMake(kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer);
     
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
     UIColor* halfGreyFill = [self backgroundColor];
-        
+    
+    CGRect frame = [self drawableFrame];
+    
+    //// Oval
+    UIBezierPath* ovalPath = [self ovalPath];
+    
     //// Box Drawing
     UIBezierPath* boxPath = [UIBezierPath bezierPath];
     [boxPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.55 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.31 * CGRectGetHeight(frame))];
@@ -79,7 +82,6 @@
 
     
     //// Oval Drawing
-    UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 1.0), floor(CGRectGetHeight(frame) - 1.0))];
     ovalPath.lineWidth = 1;
     [darkerGreyBorder setStroke];
     [ovalPath stroke];
@@ -98,6 +100,8 @@
     [darkerGreyBorder setFill];
     [arrowPath fill];
     [boxPath fill];
+
+    [self drawDropshadowIfSelected];
 
 }
 

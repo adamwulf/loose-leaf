@@ -579,9 +579,9 @@
 			isa = PBXGroup;
 			children = (
 				66B21A77175E59490049F1AF /* Operations */,
+				660E1DA6158FC6120001DA12 /* Categories */,
 				66B21A58175B0BF30049F1AF /* cloth.png */,
 				6693298015996C530033E557 /* Astronaut Images */,
-				660E1DA6158FC6120001DA12 /* Categories */,
 				6661144916FD67FA005032B9 /* Loose-Leaf_144.png */,
 				6661144616FD67F8005032B9 /* Loose-Leaf_72.png */,
 				66DCFB921581BCEF00B4918C /* LooseLeaf-Info.plist */,
