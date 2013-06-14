@@ -24,7 +24,6 @@
         cachedImgView.contentMode = UIViewContentModeScaleAspectFill;
         cachedImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         cachedImgView.clipsToBounds = YES;
-        cachedImgView.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:.3];
         [self.contentView addSubview:cachedImgView];
 
         // create the drawable view
@@ -41,7 +40,6 @@
         }
         
         drawableView.delegate = self;
-        drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
 
         // anchor the view to the top left,
         // so that when we scale down, the drawable view
