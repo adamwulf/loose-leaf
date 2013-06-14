@@ -54,8 +54,6 @@
         [halfGreyFill setFill];
     }
     [ovalPath fill];
-
-    
     
     //// Arrow Drawing
     UIBezierPath* arrowPath = [UIBezierPath bezierPath];
@@ -103,6 +101,8 @@
         [arrowPath fill];
         [arrowPath stroke];
     }
+
+    [super drawRect:rect];
 }
 
 

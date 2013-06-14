@@ -103,6 +103,7 @@
 
     [self drawDropshadowIfSelected];
 
+    [super drawRect:rect];
 }
 
 
