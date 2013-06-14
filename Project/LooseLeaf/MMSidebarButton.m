@@ -22,6 +22,8 @@
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
         [self addTarget:self action:@selector(bounceButton:) forControlEvents:UIControlEventTouchUpInside];
+        self.adjustsImageWhenDisabled = NO;
+        self.adjustsImageWhenHighlighted = NO;
     }
     return self;
 }
@@ -29,6 +31,13 @@
 -(void) setSelected:(BOOL)selected{
     if(selected != self.selected){
         [super setSelected:selected];
+        [self setNeedsDisplay];
+    }
+}
+
+-(void) setEnabled:(BOOL)enabled{
+    if(enabled != self.enabled){
+        [super setEnabled:enabled];
         [self setNeedsDisplay];
     }
 }
@@ -175,5 +184,19 @@
     return linePath;
 }
 
+
+
+- (void)drawRect:(CGRect)rect{
+    if(!self.enabled){
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        //
+        // clear the arrow and box, then fill with
+        // border color
+        CGContextSetBlendMode(context, kCGBlendModeLuminosity);
+        [[[UIColor whiteColor] colorWithAlphaComponent:.7] setFill];
+        [[UIBezierPath bezierPathWithRect:self.bounds] fill];
+        CGContextSetBlendMode(context, kCGBlendModeNormal);
+    }
+}
 
 @end

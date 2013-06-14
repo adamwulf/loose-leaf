@@ -173,6 +173,8 @@
     [ovalPath stroke];
     
     [self drawDropshadowIfSelected];
+    
+    [super drawRect:rect];
 }
 
 
