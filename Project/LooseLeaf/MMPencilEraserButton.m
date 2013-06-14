@@ -21,10 +21,8 @@
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
-        
-        self.layer.shadowPath = [[UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 0.5), floor(CGRectGetHeight(frame) - 0.5))] CGPath];
-        self.layer.shadowColor = [[UIColor blueColor] CGColor];
-        self.layer.shadowRadius = 2;
+        self.layer.borderWidth = 2;
+        self.layer.borderColor = [UIColor greenColor].CGColor;
     }
     return self;
 }
@@ -51,7 +49,7 @@
     UIColor* pencilShadow = [UIColor colorWithRed: 0.57 green: 0.57 blue: 0.57 alpha: 0.35];
     UIColor* barelyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.25];
     
-    UIColor* selectedBlueFill = [UIColor colorWithRed: 167.0/255.0 green: 203.0/255.0 blue: 1.0 alpha: 0.5];
+    UIColor* selectedBlueFill = [UIColor colorWithRed: 77.0/255.0 green: 187.0/255.0 blue: 1.0 alpha: 0.5];
     
     //// Gradient Declarations
     NSArray* pencilFillGradientColors = [NSArray arrayWithObjects:
@@ -132,9 +130,19 @@
         [band4Path addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.73750 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.51250 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.70000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.41750 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.73750 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.51250 * CGRectGetHeight(frame))];
     
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     // Fill Oval Drawing
     [halfGreyFill setFill];
-    [selectedBlueFill setFill];
+//    [selectedBlueFill setFill];
     [ovalPath fill];
     
     
@@ -211,32 +219,13 @@
     
     
     
-    //
-    // possible drop shadow
-//    
-//    UIColor* gradientColor = [UIColor blueColor];
-//    UIColor* fillColor = [UIColor clearColor];
-//    NSArray* gradientColors = [NSArray arrayWithObjects:
-//                               (id)gradientColor.CGColor,
-//                               (id)[UIColor blueColor].CGColor,
-//                               (id)[[UIColor blueColor] colorWithAlphaComponent:.3].CGColor,
-//                               (id)fillColor.CGColor, nil];
-//    CGFloat gradientLocations[] = {0, 0.65, .9, 1};
-//    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)gradientColors, gradientLocations);
-//    CGContextSaveGState(context);
-//
-//    UIBezierPath* clipPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame), CGRectGetMinY(frame), floor(CGRectGetWidth(frame)), floor(CGRectGetHeight(frame)))];
-//    [clipPath appendPath:[UIBezierPath bezierPathWithRect:CGRectInfinite]];
-//    clipPath.usesEvenOddFillRule = YES;
-//    [clipPath addClip];
-//    
-//    CGContextDrawRadialGradient(context, gradient,
-//                                CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), 1,
-//                                CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), 24.5,
-//                                kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation);
-//    CGContextRestoreGState(context);
-//    
-//    
+    // clip end of pencil
+    CGContextSetBlendMode(context, kCGBlendModeClear);
+    [[UIColor whiteColor] setStroke];
+    ovalPath.lineWidth = 1;
+    [ovalPath stroke];
+    CGContextSetBlendMode(context, kCGBlendModeNormal);
+    
 
     // stroke circle
     [darkerGreyBorder setStroke];
@@ -244,6 +233,31 @@
     [ovalPath stroke];
 
     
+    //
+    // possible drop shadow
+    UIColor* gradientColor = [selectedBlueFill colorWithAlphaComponent:1];
+    UIColor* clearColor = [selectedBlueFill colorWithAlphaComponent:0];
+    NSArray* gradientColors = [NSArray arrayWithObjects:
+                               (id)gradientColor.CGColor,
+                               (id)clearColor.CGColor, nil];
+    CGFloat gradientLocations[] = {0, 1};
+    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)gradientColors, gradientLocations);
+    CGContextSaveGState(context);
+    
+    UIBezierPath* clipPath = [ovalPath copy];
+    [clipPath appendPath:[UIBezierPath bezierPathWithRect:CGRectInfinite]];
+    clipPath.usesEvenOddFillRule = YES;
+    [clipPath addClip];
+    
+    CGContextDrawRadialGradient(context, gradient,
+                                CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), 19,
+                                CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), 24.5,
+                                kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation);
+    CGContextRestoreGState(context);
+    
+    
+    
+ 
 }
 
 
