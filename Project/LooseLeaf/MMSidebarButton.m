@@ -189,13 +189,18 @@
 - (void)drawRect:(CGRect)rect{
     if(!self.enabled){
         CGContextRef context = UIGraphicsGetCurrentContext();
+        UIBezierPath *circleClipPath = [self ovalPath];
+        circleClipPath.usesEvenOddFillRule = YES;
+        [circleClipPath addClip];
+
         //
         // clear the arrow and box, then fill with
         // border color
-        CGContextSetBlendMode(context, kCGBlendModeLuminosity);
-        [[[UIColor whiteColor] colorWithAlphaComponent:.7] setFill];
+        CGContextSetBlendMode(context, kCGBlendModeDestinationIn);
+        [[[UIColor whiteColor] colorWithAlphaComponent:.5] setFill];
         [[UIBezierPath bezierPathWithRect:self.bounds] fill];
         CGContextSetBlendMode(context, kCGBlendModeNormal);
+        
     }
 }
 
