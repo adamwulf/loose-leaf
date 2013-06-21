@@ -108,13 +108,17 @@
                        onComplete:^(UIImage* ink, UIImage* thumbnail, NSDictionary* state){
                            [NSThread performBlockOnMainThread:^{
                                cachedImgView.image = thumbnail;
-                               onComplete();
+                               if(onComplete){
+                                   onComplete();
+                               }
                            }];
                        }];
     }else{
         // already saved, but don't need to write
         // anything new to disk
-        onComplete();
+        if(onComplete){
+            onComplete();
+        }
     }
 }
 
@@ -136,6 +140,7 @@
 
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
     [delegate didEndStrokeWithTouch:touch];
+    [self saveToDisk:nil];
 }
 
 -(void) didCancelStrokeWithTouch:(JotTouch*)touch{

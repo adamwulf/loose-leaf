@@ -333,7 +333,7 @@
 }
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     [super finishedScalingReallySmall:page];
-    [stackManager saveToDisk];
+    [self saveStacksToDisk];
 }
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
     [self setButtonsVisible:YES];
@@ -356,7 +356,7 @@
         [pageToSave setEditable:YES];
         debug_NSLog(@"page %@ is editable", pageToSave.uuid);
     }
-    [stackManager saveToDisk];
+    [self saveStacksToDisk];
 }
 
 
