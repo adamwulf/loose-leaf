@@ -362,9 +362,15 @@
     NSLog(@"saved page: %@", page.uuid);
     if(page.scale < kMinPageZoom){
         if([page isKindOfClass:[MMEditablePaperView class]]){
-            [(MMEditablePaperView*)page setCanvasVisible:NO];
+            MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
+            if([editablePage hasEditsToSave]){
+                NSLog(@"page still has edits to save...");
+            }else{
+                NSLog(@"page is done saving...");
+                [(MMEditablePaperView*)page setCanvasVisible:NO];
+                debug_NSLog(@"thumb for %@ is visible", page.uuid);
+            }
         }
-        debug_NSLog(@"thumb for %@ is visible", page.uuid);
     }else{
         debug_NSLog(@"scale %f vs %f", page.scale, kMinPageZoom);
     }
