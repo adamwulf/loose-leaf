@@ -91,6 +91,15 @@
     }
 }
 
+/**
+ * we have more information to save, if our
+ * drawable view's hash does not equal to our
+ * currently saved hash
+ */
+-(BOOL) hasEditsToSave{
+    NSLog(@"%u vs %u", [drawableView undoHash], lastSavedUndoHash);
+    return [drawableView undoHash] != lastSavedUndoHash;
+}
 
 -(void) saveToDisk:(void(^)(void))onComplete{
     //
@@ -103,30 +112,28 @@
     }
     
     // find out what our current undo state looks like.
-    NSUInteger currentUndoHash = [drawableView undoHash];
-    if(currentUndoHash != lastSavedUndoHash){
+    if([self hasEditsToSave]){
         // something has changed since the last time we saved,
         // so ask the JotView to save out the png of its data
-        lastSavedUndoHash = currentUndoHash;
-        debug_NSLog(@"saving page %@ with hash %ui", self.uuid, lastSavedUndoHash);
-        
         [drawableView exportImageTo:[self inkPath]
                    andThumbnailTo:[self thumbnailPath]
                        andStateTo:[self plistPath]
                        onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* state){
                            [NSThread performBlockOnMainThread:^{
+                               lastSavedUndoHash = [state undoHash];
+                               debug_NSLog(@"saving page %@ with hash %u", self.uuid, lastSavedUndoHash);
+                               debug_NSLog(@"state hash %u vs page %u", [state undoHash], [drawableView undoHash]);
                                cachedImgView.image = thumbnail;
                                [self.delegate didSavePage:self];
                                if(onComplete){
                                    onComplete();
-                               }else{
-                                   NSLog(@"oncomplete is nil");
                                }
                            }];
                        }];
     }else{
         // already saved, but don't need to write
         // anything new to disk
+        debug_NSLog(@"no edits to save with hash %u", [drawableView undoHash]);
         [self.delegate didSavePage:self];
         if(onComplete){
             onComplete();
