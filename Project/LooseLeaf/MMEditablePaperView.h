@@ -17,7 +17,7 @@
 -(void) undo;
 -(void) redo;
 -(BOOL) hasEditsToSave;
--(void) saveToDisk:(void(^)(void))onComplete;
+-(void) saveToDisk;
 -(void) setCanvasVisible:(BOOL)isVisible;
 -(void) setEditable:(BOOL)isEditable;
 
