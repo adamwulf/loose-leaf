@@ -101,7 +101,7 @@
     return [drawableView undoHash] != lastSavedUndoHash;
 }
 
--(void) saveToDisk:(void(^)(void))onComplete{
+-(void) saveToDisk{
     //
     // Sanity checks on directory structure
     NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -125,9 +125,6 @@
                                debug_NSLog(@"state hash %u vs page %u", [state undoHash], [drawableView undoHash]);
                                cachedImgView.image = thumbnail;
                                [self.delegate didSavePage:self];
-                               if(onComplete){
-                                   onComplete();
-                               }
                            }];
                        }];
     }else{
@@ -135,9 +132,6 @@
         // anything new to disk
         debug_NSLog(@"no edits to save with hash %u", [drawableView undoHash]);
         [self.delegate didSavePage:self];
-        if(onComplete){
-            onComplete();
-        }
     }
 }
 
@@ -159,7 +153,7 @@
 
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
     [delegate didEndStrokeWithTouch:touch];
-    [self saveToDisk:nil];
+    [self saveToDisk];
 }
 
 -(void) didCancelStrokeWithTouch:(JotTouch*)touch{
