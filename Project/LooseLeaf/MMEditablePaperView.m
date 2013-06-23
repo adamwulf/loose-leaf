@@ -66,11 +66,17 @@
 #pragma mark - Public Methods
 
 -(void) undo{
-    [drawableView undo];
+    if([drawableView canUndo]){
+        [drawableView undo];
+        [self saveToDisk];
+    }
 }
 
 -(void) redo{
-    [drawableView redo];
+    if([drawableView canRedo]){
+        [drawableView redo];
+        [self saveToDisk];
+    }
 }
 
 -(void) setCanvasVisible:(BOOL)isCanvasVisible{
@@ -101,8 +107,11 @@
     return [drawableView undoHash] != lastSavedUndoHash;
 }
 
+/**
+ * write the thumbnail, backing texture, and entire undo
+ * state to disk, and notify our delegate when done
+ */
 -(void) saveToDisk{
-    //
     // Sanity checks on directory structure
     NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString* documentsPath = [paths objectAtIndex:0];
