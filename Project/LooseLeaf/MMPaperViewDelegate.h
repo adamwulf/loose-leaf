@@ -103,4 +103,11 @@
  */
 -(BOOL) isInVisibleStack:(MMPaperView*)page;
 
+
+/**
+ * called after a page gets saved
+ * to disk
+ */
+-(void) didSavePage:(MMPaperView*)page;
+
 @end

@@ -317,12 +317,9 @@
     // to disk if need be
     if([page isKindOfClass:[MMEditablePaperView class]]){
         __block MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
-        [[visibleStackHolder peekSubview] saveToDisk:^{
-            if(pageToSave.scale < kMinPageZoom){
-                [pageToSave setEditable:NO];
-                debug_NSLog(@"page %@ isn't editable", pageToSave.uuid);
-            }
-        }];
+        [pageToSave setEditable:NO];
+        debug_NSLog(@"page %@ isn't editable", pageToSave.uuid);
+        [[visibleStackHolder peekSubview] saveToDisk:nil];
     }else{
         debug_NSLog(@"would save, but can't b/c its readonly page");
     }
@@ -342,6 +339,7 @@
     // ok, we've zoomed into this page now
     if([page isKindOfClass:[MMEditablePaperView class]]){
         MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
+        [pageToSave setCanvasVisible:YES];
         [pageToSave setEditable:YES];
         debug_NSLog(@"page %@ is editable", pageToSave.uuid);
     }
@@ -353,12 +351,24 @@
     // ok, we've zoomed into this page now
     if([page isKindOfClass:[MMEditablePaperView class]]){
         MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
+        [pageToSave setCanvasVisible:YES];
         [pageToSave setEditable:YES];
         debug_NSLog(@"page %@ is editable", pageToSave.uuid);
     }
     [self saveStacksToDisk];
 }
 
+-(void) didSavePage:(MMPaperView*)page{
+    NSLog(@"saved page: %@", page.uuid);
+    if(page.scale < kMinPageZoom){
+        if([page isKindOfClass:[MMEditablePaperView class]]){
+            [(MMEditablePaperView*)page setCanvasVisible:NO];
+        }
+        debug_NSLog(@"thumb for %@ is visible", page.uuid);
+    }else{
+        debug_NSLog(@"scale %f vs %f", page.scale, kMinPageZoom);
+    }
+}
 
 #pragma mark - Page Loading and Unloading
 
@@ -374,8 +384,10 @@
         [self addPaperToBottomOfStack:page];
         if(!isTop && [page isKindOfClass:[MMEditablePaperView class]]){
             [((MMEditablePaperView*)page) setEditable:NO];
+            [((MMEditablePaperView*)page) setCanvasVisible:NO];
         }else if(isTop && [page isKindOfClass:[MMEditablePaperView class]]){
             [((MMEditablePaperView*)page) setEditable:YES];
+            [((MMEditablePaperView*)page) setCanvasVisible:YES];
         }
         isTop = NO;
     }
