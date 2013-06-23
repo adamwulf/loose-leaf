@@ -73,13 +73,21 @@
     [drawableView redo];
 }
 
--(void) setEditable:(BOOL)isEditable{
-    if(isEditable){
+-(void) setCanvasVisible:(BOOL)isCanvasVisible{
+    if(isCanvasVisible){
         cachedImgView.hidden = YES;
         drawableView.hidden = NO;
     }else{
         cachedImgView.hidden = NO;
         drawableView.hidden = YES;
+    }
+}
+
+-(void) setEditable:(BOOL)isEditable{
+    if(isEditable){
+        drawableView.userInteractionEnabled = YES;
+    }else{
+        drawableView.userInteractionEnabled = NO;
     }
 }
 
@@ -102,20 +110,24 @@
         lastSavedUndoHash = currentUndoHash;
         debug_NSLog(@"saving page %@ with hash %ui", self.uuid, lastSavedUndoHash);
         
-        [drawableView exportInkTo:[self inkPath]
+        [drawableView exportImageTo:[self inkPath]
                    andThumbnailTo:[self thumbnailPath]
-                       andPlistTo:[self plistPath]
-                       onComplete:^(UIImage* ink, UIImage* thumbnail, NSDictionary* state){
+                       andStateTo:[self plistPath]
+                       onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* state){
                            [NSThread performBlockOnMainThread:^{
                                cachedImgView.image = thumbnail;
+                               [self.delegate didSavePage:self];
                                if(onComplete){
                                    onComplete();
+                               }else{
+                                   NSLog(@"oncomplete is nil");
                                }
                            }];
                        }];
     }else{
         // already saved, but don't need to write
         // anything new to disk
+        [self.delegate didSavePage:self];
         if(onComplete){
             onComplete();
         }

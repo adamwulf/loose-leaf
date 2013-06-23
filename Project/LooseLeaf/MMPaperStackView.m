@@ -951,6 +951,9 @@
     @throw kAbstractMethodException;
 }
 
+-(void) didSavePage:(MMPaperView*)page{
+    @throw kAbstractMethodException;
+}
 
 #pragma mark - Page Animation and Navigation Helpers
 
