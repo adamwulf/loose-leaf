@@ -92,6 +92,7 @@
 
             [drawableView loadState:state];
             [self.contentView addSubview:drawableView];
+            [self setFrame:self.frame];
             
             drawableView.delegate = self;
             

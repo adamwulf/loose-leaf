@@ -259,6 +259,7 @@
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
     [visibleStackHolder.superview insertSubview:visibleStackHolder belowSubview:hiddenStackHolder];
     [self moveAddButtonToBottom];
+    [self didChangeTopPage];
 }
 
 
