@@ -398,12 +398,11 @@
             
             currentEditablePage = editableTopPage;
             NSLog(@"guys, gotta check this out");
-
-            if([editableTopPage isKindOfClass:[MMEditablePaperView class]]){
-                [editableTopPage setDrawableView:drawableView];
-                [editableTopPage setCanvasVisible:YES];
-                [editableTopPage setEditable:YES];
-            }
+        }
+        if([currentEditablePage isKindOfClass:[MMEditablePaperView class]]){
+            [currentEditablePage setDrawableView:drawableView];
+            [currentEditablePage setCanvasVisible:YES];
+            [currentEditablePage setEditable:YES];
         }
     }
 }
