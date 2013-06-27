@@ -364,6 +364,7 @@
             }
             void(^finishedBlock)(BOOL finished)  = ^(BOOL finished){
                 bezelStackHolder.frame = hiddenStackHolder.frame;
+                [self didChangeTopPage];
             };
             [self popHiddenStackForPages:bezelGesture.numberOfRepeatingBezels onComplete:finishedBlock];
             
@@ -694,7 +695,9 @@
         // the top page of the visible stack to the bottom of the bezelGestureHolder,
         // then animate
         [self willChangeTopPageTo:[bezelStackHolder peekSubview]];
-        [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO onComplete:nil];
+        [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO onComplete:^(BOOL finished){
+            [self didChangeTopPage];
+        }];
         [self emptyBezelStackToVisibleStackOnComplete:^(BOOL finished){
             [self updateIconAnimations];
         }];
@@ -723,6 +726,7 @@
         [self mayChangeTopPageTo:[visibleStackHolder getPageBelow:popUntil]];
         [self popStackUntilPage:popUntil onComplete:^(BOOL finished){
             [self updateIconAnimations];
+            [self didChangeTopPage];
         }];
         return;
     }else if(!justFinishedPanningTheTopPage && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
@@ -767,11 +771,13 @@
                 [self willChangeTopPageTo:pageToPopUntil];
                 [self popStackUntilPage:pageToPopUntil onComplete:^(BOOL finished){
                     [self updateIconAnimations];
+                    [self didChangeTopPage];
                 }];
             }else{
                 [self willChangeTopPageTo:[visibleStackHolder getPageBelow:page]];
                 [self sendPageToHiddenStack:page onComplete:^(BOOL finished){
                     [self updateIconAnimations];
+                    [self didChangeTopPage];
                 }];
             }
             //
@@ -837,6 +843,7 @@
         [self willChangeTopPageTo:[visibleStackHolder getPageBelow:page]];
         [self popStackUntilPage:[visibleStackHolder getPageBelow:page] onComplete:^(BOOL finished){
             [self updateIconAnimations];
+            [self didChangeTopPage];
         }];
     }else if(justFinishedPanningTheTopPage && [self shouldPushPageOntoVisibleStack:page withFrame:toFrame]){
         //
@@ -858,7 +865,9 @@
             [self willChangeTopPageTo:pageToPushToVisible];
             [pageToPushToVisible removeAllAnimationsAndPreservePresentationFrame];
             [visibleStackHolder pushSubview:pageToPushToVisible];
-            [self animatePageToFullScreen:pageToPushToVisible withDelay:0 withBounce:NO onComplete:nil];
+            [self animatePageToFullScreen:pageToPushToVisible withDelay:0 withBounce:NO onComplete:^(BOOL finished){
+                [self didChangeTopPage];
+            }];
             [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
             [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
         }else{
@@ -1041,7 +1050,9 @@
     MMPaperView* page = [hiddenStackHolder peekSubview];
     [self willChangeTopPageTo:page];
     page.isBrandNewPage = NO;
-    [self popHiddenStackUntilPage:[hiddenStackHolder getPageBelow:page] onComplete:nil];
+    [self popHiddenStackUntilPage:[hiddenStackHolder getPageBelow:page] onComplete:^(BOOL finished){
+        [self didChangeTopPage];
+    }];
 }
 
 /**
@@ -1340,6 +1351,10 @@
 -(void) willChangeTopPageTo:(MMPaperView*)page{
     debug_NSLog(@"will change top page to: %@", page.uuid);
     [self saveStacksToDisk];
+}
+
+-(void) didChangeTopPage{
+    // noop
 }
 
 /**

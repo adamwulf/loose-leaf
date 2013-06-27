@@ -68,6 +68,7 @@
 
 -(void) mayChangeTopPageTo:(MMPaperView*)page;
 -(void) willChangeTopPageTo:(MMPaperView*)page;
+-(void) didChangeTopPage;
 -(void) willNotChangeTopPageTo:(MMPaperView*)page;
 -(void) isBezelingInWithGesture:(MMBezelInRightGestureRecognizer*)bezelGesture;
 -(void) saveStacksToDisk;

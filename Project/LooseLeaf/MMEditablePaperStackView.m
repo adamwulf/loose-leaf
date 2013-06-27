@@ -10,8 +10,7 @@
 #import "UIView+SubviewStacks.h"
 
 @implementation MMEditablePaperStackView{
-    MMPaperView* currentEditablePage;
-    MMPaperView* nextEditablePage;
+    MMEditablePaperView* currentEditablePage;
     JotView* drawableView;
 }
 
@@ -353,14 +352,6 @@
 -(void) finishedScalingBackToPageView:(MMPaperView*)page{
     [self setButtonsVisible:YES];
     [super finishedScalingBackToPageView:page];
-
-    // ok, we've zoomed into this page now
-    if([page isKindOfClass:[MMEditablePaperView class]]){
-        MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
-        [pageToSave setCanvasVisible:YES];
-        [pageToSave setEditable:YES];
-        debug_NSLog(@"page %@ is editable", pageToSave.uuid);
-    }
     [self saveStacksToDisk];
 }
 
@@ -391,10 +382,30 @@
 -(void) willChangeTopPageTo:(MMPaperView*)page{
     [super willChangeTopPageTo:page];
     NSLog(@"validating top page");
-    if([page isKindOfClass:[MMEditablePaperView class]]){
-        [((MMEditablePaperView*)page) setDrawableView:drawableView];
-        [((MMEditablePaperView*)page) setCanvasVisible:YES];
-        [((MMEditablePaperView*)page) setEditable:YES];
+}
+
+-(void) didChangeTopPage{
+    CheckMainThread;
+    [super didChangeTopPage];
+    NSLog(@"did change top page");
+    MMPaperView* topPage = [visibleStackHolder peekSubview];
+    if([topPage isKindOfClass:[MMEditablePaperView class]]){
+        MMEditablePaperView* editableTopPage = (MMEditablePaperView*)topPage;
+        if(currentEditablePage != editableTopPage){
+            [currentEditablePage setDrawableView:nil];
+            [currentEditablePage setEditable:NO];
+            [currentEditablePage setCanvasVisible:NO];
+            
+            currentEditablePage = editableTopPage;
+            NSLog(@"guys, gotta check this out");
+
+            if([editableTopPage isKindOfClass:[MMEditablePaperView class]]){
+                [editableTopPage setDrawableView:drawableView];
+                [editableTopPage setCanvasVisible:YES];
+                [editableTopPage setEditable:YES];
+            }
+
+        }
     }
 }
 
@@ -433,6 +444,7 @@
         [self saveStacksToDisk];
     }
     [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
+    [self didChangeTopPage];
 }
 
 -(BOOL) hasPages{
