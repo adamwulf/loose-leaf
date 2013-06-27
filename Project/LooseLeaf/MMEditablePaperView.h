@@ -11,8 +11,10 @@
 
 @interface MMEditablePaperView : MMPaperView<JotViewDelegate>{
     UIImageView* cachedImgView;
-    JotView* drawableView;
+    __weak JotView* drawableView;
 }
+
+@property (nonatomic, weak) JotView* drawableView;
 
 -(void) undo;
 -(void) redo;
