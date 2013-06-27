@@ -83,7 +83,7 @@
 -(void) didTapAddButtonInListView{
     //
     // this'll determine the resolution of the canvas too
-    MMPaperView* paper = [[MMPaperView alloc] initWithFrame:self.bounds];
+    MMEditablePaperView* paper = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
     // now size it for display
     paper.frame = addPageButtonInListView.frame;
     [self addPaperToBottomOfHiddenStack:paper];
@@ -259,6 +259,7 @@
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
     [visibleStackHolder.superview insertSubview:visibleStackHolder belowSubview:hiddenStackHolder];
     [self moveAddButtonToBottom];
+    [self didChangeTopPage];
 }
 
 
@@ -1217,8 +1218,6 @@
                          animations:^(void){
                              [visibleStackHolder peekSubview].frame = self.bounds;
                          } completion:^(BOOL finished){
-                             [self finishUITransitionToPageView];
-                             
                              //
                              // find visible stack pages that we can
                              // move immediately
@@ -1231,6 +1230,7 @@
                                  aPage.frame = hiddenStackHolder.bounds;
                                  aPage.scale = 1;
                              }
+                             [self finishUITransitionToPageView];
                          }];
     };
     

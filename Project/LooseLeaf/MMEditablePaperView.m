@@ -13,7 +13,10 @@
 
 @implementation MMEditablePaperView{
     NSUInteger lastSavedUndoHash;
+    JotViewState* state;
 }
+
+@synthesize drawableView;
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     self = [super initWithFrame:frame andUUID:_uuid];
@@ -26,28 +29,7 @@
         cachedImgView.clipsToBounds = YES;
         [self.contentView addSubview:cachedImgView];
 
-        // create the drawable view
-        drawableView = [[JotView alloc] initWithFrame:self.bounds];
-        [self.contentView addSubview:drawableView];
-
-        debug_NSLog(@"loading ink %@", [self inkPath]);
-        
-        if([[NSFileManager defaultManager] fileExistsAtPath:[self plistPath]]){
-            [drawableView loadImage:[self inkPath] andState:[self plistPath]];
-            cachedImgView.image = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
-        }else{
-            [drawableView loadImage:nil andState:nil];
-        }
-        
-        drawableView.delegate = self;
-
-        // anchor the view to the top left,
-        // so that when we scale down, the drawable view
-        // stays in place
-        drawableView.layer.anchorPoint = CGPointMake(0,0);
-        drawableView.layer.position = CGPointMake(0,0);
-        
-        [[JotStylusManager sharedInstance] setPalmRejectorDelegate:drawableView];
+        cachedImgView.image = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
         
         lastSavedUndoHash = [drawableView undoHash];
     }
@@ -64,15 +46,21 @@
 #pragma mark - Public Methods
 
 -(void) undo{
-    [drawableView undo];
+    if([drawableView canUndo]){
+        [drawableView undo];
+        [self saveToDisk];
+    }
 }
 
 -(void) redo{
-    [drawableView redo];
+    if([drawableView canRedo]){
+        [drawableView redo];
+        [self saveToDisk];
+    }
 }
 
--(void) setEditable:(BOOL)isEditable{
-    if(isEditable){
+-(void) setCanvasVisible:(BOOL)isCanvasVisible{
+    if(isCanvasVisible){
         cachedImgView.hidden = YES;
         drawableView.hidden = NO;
     }else{
@@ -81,9 +69,56 @@
     }
 }
 
+-(void) setEditable:(BOOL)isEditable{
+    if(isEditable && (!drawableView || drawableView.hidden)){
+        NSLog(@"setting editable w/o canvas");
+    }
+    if(isEditable){
+        drawableView.userInteractionEnabled = YES;
+    }else{
+        drawableView.userInteractionEnabled = NO;
+    }
+}
 
--(void) saveToDisk:(void(^)(void))onComplete{
-    //
+-(void) setDrawableView:(JotView *)_drawableView{
+    if(drawableView != _drawableView){
+        drawableView = _drawableView;
+        if(drawableView){
+            state = [[JotViewState alloc] initWithImageFile:[self inkPath]
+                                               andStateFile:[self plistPath]
+                                                andPageSize:[drawableView pagePixelSize]
+                                               andGLContext:[drawableView context]];
+
+            [drawableView loadState:state];
+            [self.contentView addSubview:drawableView];
+            [self setFrame:self.frame];
+            
+            drawableView.delegate = self;
+            
+            // anchor the view to the top left,
+            // so that when we scale down, the drawable view
+            // stays in place
+            drawableView.layer.anchorPoint = CGPointMake(0,0);
+            drawableView.layer.position = CGPointMake(0,0);
+        }
+    }
+}
+
+/**
+ * we have more information to save, if our
+ * drawable view's hash does not equal to our
+ * currently saved hash
+ */
+-(BOOL) hasEditsToSave{
+    NSLog(@"checking if edits to save %u vs %u", [drawableView undoHash], lastSavedUndoHash);
+    return [drawableView undoHash] != lastSavedUndoHash;
+}
+
+/**
+ * write the thumbnail, backing texture, and entire undo
+ * state to disk, and notify our delegate when done
+ */
+-(void) saveToDisk{
     // Sanity checks on directory structure
     NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString* documentsPath = [paths objectAtIndex:0];
@@ -93,26 +128,26 @@
     }
     
     // find out what our current undo state looks like.
-    NSUInteger currentUndoHash = [drawableView undoHash];
-    if(currentUndoHash != lastSavedUndoHash){
+    if([self hasEditsToSave]){
         // something has changed since the last time we saved,
         // so ask the JotView to save out the png of its data
-        lastSavedUndoHash = currentUndoHash;
-        debug_NSLog(@"saving page %@ with hash %ui", self.uuid, lastSavedUndoHash);
-        
-        [drawableView exportInkTo:[self inkPath]
+        [drawableView exportImageTo:[self inkPath]
                    andThumbnailTo:[self thumbnailPath]
-                       andPlistTo:[self plistPath]
-                       onComplete:^(UIImage* ink, UIImage* thumbnail, NSDictionary* state){
+                       andStateTo:[self plistPath]
+                       onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* immutableState){
                            [NSThread performBlockOnMainThread:^{
+                               lastSavedUndoHash = [immutableState undoHash];
+                               debug_NSLog(@"saving page %@ with hash %u", self.uuid, lastSavedUndoHash);
+                               debug_NSLog(@"state hash %u vs page %u", [immutableState undoHash], [drawableView undoHash]);
                                cachedImgView.image = thumbnail;
-                               onComplete();
+                               [self.delegate didSavePage:self];
                            }];
                        }];
     }else{
         // already saved, but don't need to write
         // anything new to disk
-        onComplete();
+        debug_NSLog(@"no edits to save with hash %u", [drawableView undoHash]);
+        [self.delegate didSavePage:self];
     }
 }
 
@@ -134,6 +169,7 @@
 
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
     [delegate didEndStrokeWithTouch:touch];
+    [self saveToDisk];
 }
 
 -(void) didCancelStrokeWithTouch:(JotTouch*)touch{

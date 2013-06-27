@@ -11,12 +11,16 @@
 
 @interface MMEditablePaperView : MMPaperView<JotViewDelegate>{
     UIImageView* cachedImgView;
-    JotView* drawableView;
+    __weak JotView* drawableView;
 }
+
+@property (nonatomic, weak) JotView* drawableView;
 
 -(void) undo;
 -(void) redo;
--(void) saveToDisk:(void(^)(void))onComplete;
+-(BOOL) hasEditsToSave;
+-(void) saveToDisk;
+-(void) setCanvasVisible:(BOOL)isVisible;
 -(void) setEditable:(BOOL)isEditable;
 
 @end

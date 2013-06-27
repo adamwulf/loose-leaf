@@ -9,7 +9,10 @@
 #import "MMEditablePaperStackView.h"
 #import "UIView+SubviewStacks.h"
 
-@implementation MMEditablePaperStackView
+@implementation MMEditablePaperStackView{
+    MMEditablePaperView* currentEditablePage;
+    JotView* drawableView;
+}
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -19,8 +22,9 @@
 
         stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
         
-        
-        
+        drawableView = [[JotView alloc] initWithFrame:self.bounds];
+        [[JotStylusManager sharedInstance] setPalmRejectorDelegate:drawableView];
+
         pen = [[Pen alloc] init];
         pen.shouldUseVelocity = YES;
         
@@ -248,7 +252,7 @@
  * without changing the hidden stack's contents
  */
 -(void) addPageButtonTapped:(UIButton*)_button{
-    MMPaperView* page = [[MMPaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+    MMEditablePaperView* page = [[MMEditablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.isBrandNewPage = YES;
     page.delegate = self;
     [hiddenStackHolder pushSubview:page];
@@ -317,12 +321,9 @@
     // to disk if need be
     if([page isKindOfClass:[MMEditablePaperView class]]){
         __block MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
-        [[visibleStackHolder peekSubview] saveToDisk:^{
-            if(pageToSave.scale < kMinPageZoom){
-                [pageToSave setEditable:NO];
-                debug_NSLog(@"page %@ isn't editable", pageToSave.uuid);
-            }
-        }];
+        [pageToSave setEditable:NO];
+        debug_NSLog(@"page %@ isn't editable", pageToSave.uuid);
+        [[visibleStackHolder peekSubview] saveToDisk];
     }else{
         debug_NSLog(@"would save, but can't b/c its readonly page");
     }
@@ -333,7 +334,7 @@
 }
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     [super finishedScalingReallySmall:page];
-    [stackManager saveToDisk];
+    [self saveStacksToDisk];
 }
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
     [self setButtonsVisible:YES];
@@ -342,6 +343,7 @@
     // ok, we've zoomed into this page now
     if([page isKindOfClass:[MMEditablePaperView class]]){
         MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
+        [pageToSave setCanvasVisible:YES];
         [pageToSave setEditable:YES];
         debug_NSLog(@"page %@ is editable", pageToSave.uuid);
     }
@@ -349,40 +351,97 @@
 -(void) finishedScalingBackToPageView:(MMPaperView*)page{
     [self setButtonsVisible:YES];
     [super finishedScalingBackToPageView:page];
-
-    // ok, we've zoomed into this page now
-    if([page isKindOfClass:[MMEditablePaperView class]]){
-        MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
-        [pageToSave setEditable:YES];
-        debug_NSLog(@"page %@ is editable", pageToSave.uuid);
-    }
-    [stackManager saveToDisk];
+    [self saveStacksToDisk];
 }
 
+-(void) didSavePage:(MMPaperView*)page{
+    NSLog(@"saved page: %@", page.uuid);
+    if(page.scale < kMinPageZoom){
+        if([page isKindOfClass:[MMEditablePaperView class]]){
+            MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
+            if([editablePage hasEditsToSave]){
+                NSLog(@"page still has edits to save...");
+            }else{
+                NSLog(@"page is done saving...");
+                [(MMEditablePaperView*)page setCanvasVisible:NO];
+                debug_NSLog(@"thumb for %@ is visible", page.uuid);
+            }
+        }
+    }else{
+        debug_NSLog(@"scale %f vs %f", page.scale, kMinPageZoom);
+    }
+}
 
 #pragma mark - Page Loading and Unloading
+
+-(void) mayChangeTopPageTo:(MMPaperView*)page{
+    [super mayChangeTopPageTo:page];
+}
+
+-(void) willChangeTopPageTo:(MMPaperView*)page{
+    [super willChangeTopPageTo:page];
+    NSLog(@"validating top page");
+}
+
+-(void) didChangeTopPage{
+    CheckMainThread;
+    [super didChangeTopPage];
+    NSLog(@"did change top page");
+    MMPaperView* topPage = [visibleStackHolder peekSubview];
+    if([topPage isKindOfClass:[MMEditablePaperView class]]){
+        MMEditablePaperView* editableTopPage = (MMEditablePaperView*)topPage;
+        if(currentEditablePage != editableTopPage){
+            [currentEditablePage setDrawableView:nil];
+            [currentEditablePage setEditable:NO];
+            [currentEditablePage setCanvasVisible:NO];
+            
+            currentEditablePage = editableTopPage;
+            NSLog(@"guys, gotta check this out");
+        }
+        if([currentEditablePage isKindOfClass:[MMEditablePaperView class]]){
+            [currentEditablePage setDrawableView:drawableView];
+            [currentEditablePage setCanvasVisible:YES];
+            [currentEditablePage setEditable:YES];
+        }
+    }
+}
+
+-(void) willNotChangeTopPageTo:(MMPaperView*)page{
+    [super willNotChangeTopPageTo:page];
+}
+
 
 -(void) saveStacksToDisk{
     [stackManager saveToDisk];
 }
 
 -(void) loadStacksFromDisk{
-    BOOL isTop = YES;
     NSDictionary* pages = [stackManager loadFromDiskWithBounds:self.bounds];
     for(MMPaperView* page in [[pages objectForKey:@"visiblePages"] reverseObjectEnumerator]){
         debug_NSLog(@"loaded: %@", [page description]);
         [self addPaperToBottomOfStack:page];
-        if(!isTop && [page isKindOfClass:[MMEditablePaperView class]]){
-            [((MMEditablePaperView*)page) setEditable:NO];
-        }else if(isTop && [page isKindOfClass:[MMEditablePaperView class]]){
-            [((MMEditablePaperView*)page) setEditable:YES];
-        }
-        isTop = NO;
     }
     for(MMPaperView* page in [[pages objectForKey:@"hiddenPages"] reverseObjectEnumerator]){
         debug_NSLog(@"loaded hidden: %@", [page description]);
         [self addPaperToBottomOfHiddenStack:page];
     }
+    
+    if(![self hasPages]){
+        for(int i=0;i<1;i++){
+            MMEditablePaperView* editable = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
+            [editable setEditable:YES];
+            [self addPaperToBottomOfStack:editable];
+            MMEditablePaperView* paper = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
+            [self addPaperToBottomOfStack:paper];
+            paper = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
+            [self addPaperToBottomOfHiddenStack:paper];
+            paper = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
+            [self addPaperToBottomOfHiddenStack:paper];
+        }
+        [self saveStacksToDisk];
+    }
+    [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
+    [self didChangeTopPage];
 }
 
 -(BOOL) hasPages{
