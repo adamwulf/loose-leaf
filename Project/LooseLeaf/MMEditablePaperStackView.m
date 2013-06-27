@@ -9,7 +9,11 @@
 #import "MMEditablePaperStackView.h"
 #import "UIView+SubviewStacks.h"
 
-@implementation MMEditablePaperStackView
+@implementation MMEditablePaperStackView{
+    MMPaperView* currentEditablePage;
+    MMPaperView* nextEditablePage;
+    JotView* drawableView;
+}
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -19,8 +23,10 @@
 
         stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
         
-        
-        
+        drawableView = [[JotView alloc] initWithFrame:self.bounds];
+        drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
+        [[JotStylusManager sharedInstance] setPalmRejectorDelegate:drawableView];
+
         pen = [[Pen alloc] init];
         pen.shouldUseVelocity = YES;
         
@@ -378,29 +384,55 @@
 
 #pragma mark - Page Loading and Unloading
 
+-(void) mayChangeTopPageTo:(MMPaperView*)page{
+    [super mayChangeTopPageTo:page];
+}
+
+-(void) willChangeTopPageTo:(MMPaperView*)page{
+    [super willChangeTopPageTo:page];
+    NSLog(@"validating top page");
+    if([page isKindOfClass:[MMEditablePaperView class]]){
+        [((MMEditablePaperView*)page) setDrawableView:drawableView];
+        [((MMEditablePaperView*)page) setCanvasVisible:YES];
+        [((MMEditablePaperView*)page) setEditable:YES];
+    }
+}
+
+-(void) willNotChangeTopPageTo:(MMPaperView*)page{
+    [super willNotChangeTopPageTo:page];
+}
+
+
 -(void) saveStacksToDisk{
     [stackManager saveToDisk];
 }
 
 -(void) loadStacksFromDisk{
-    BOOL isTop = YES;
     NSDictionary* pages = [stackManager loadFromDiskWithBounds:self.bounds];
     for(MMPaperView* page in [[pages objectForKey:@"visiblePages"] reverseObjectEnumerator]){
         debug_NSLog(@"loaded: %@", [page description]);
         [self addPaperToBottomOfStack:page];
-        if(!isTop && [page isKindOfClass:[MMEditablePaperView class]]){
-            [((MMEditablePaperView*)page) setEditable:NO];
-            [((MMEditablePaperView*)page) setCanvasVisible:NO];
-        }else if(isTop && [page isKindOfClass:[MMEditablePaperView class]]){
-            [((MMEditablePaperView*)page) setEditable:YES];
-            [((MMEditablePaperView*)page) setCanvasVisible:YES];
-        }
-        isTop = NO;
     }
     for(MMPaperView* page in [[pages objectForKey:@"hiddenPages"] reverseObjectEnumerator]){
         debug_NSLog(@"loaded hidden: %@", [page description]);
         [self addPaperToBottomOfHiddenStack:page];
     }
+    
+    if(![self hasPages]){
+        for(int i=0;i<1;i++){
+            MMEditablePaperView* editable = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
+            [editable setEditable:YES];
+            [self addPaperToBottomOfStack:editable];
+            MMPaperView* paper = [[MMPaperView alloc] initWithFrame:self.bounds];
+            [self addPaperToBottomOfStack:paper];
+            paper = [[MMPaperView alloc] initWithFrame:self.bounds];
+            [self addPaperToBottomOfHiddenStack:paper];
+            paper = [[MMPaperView alloc] initWithFrame:self.bounds];
+            [self addPaperToBottomOfHiddenStack:paper];
+        }
+        [self saveStacksToDisk];
+    }
+    [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
 }
 
 -(BOOL) hasPages{

@@ -13,7 +13,10 @@
 
 @implementation MMEditablePaperView{
     NSUInteger lastSavedUndoHash;
+    JotViewState* state;
 }
+
+@synthesize drawableView;
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     self = [super initWithFrame:frame andUUID:_uuid];
@@ -27,27 +30,7 @@
         cachedImgView.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:.3];
         [self.contentView addSubview:cachedImgView];
 
-        // create the drawable view
-        drawableView = [[JotView alloc] initWithFrame:self.bounds];
-        [self.contentView addSubview:drawableView];
-
-        JotViewState* state = [[JotViewState alloc] initWithImageFile:[self inkPath]
-                                           andStateFile:[self plistPath]
-                                            andPageSize:[drawableView pagePixelSize]
-                                           andGLContext:[drawableView context]];
         cachedImgView.image = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
-        [drawableView loadState:state];
-        
-        drawableView.delegate = self;
-        drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
-
-        // anchor the view to the top left,
-        // so that when we scale down, the drawable view
-        // stays in place
-        drawableView.layer.anchorPoint = CGPointMake(0,0);
-        drawableView.layer.position = CGPointMake(0,0);
-        
-        [[JotStylusManager sharedInstance] setPalmRejectorDelegate:drawableView];
         
         lastSavedUndoHash = [drawableView undoHash];
     }
@@ -88,10 +71,36 @@
 }
 
 -(void) setEditable:(BOOL)isEditable{
+    if(isEditable && (!drawableView || drawableView.hidden)){
+        NSLog(@"setting editable w/o canvas");
+    }
     if(isEditable){
         drawableView.userInteractionEnabled = YES;
     }else{
         drawableView.userInteractionEnabled = NO;
+    }
+}
+
+-(void) setDrawableView:(JotView *)_drawableView{
+    if(drawableView != _drawableView){
+        drawableView = _drawableView;
+        if(drawableView){
+            state = [[JotViewState alloc] initWithImageFile:[self inkPath]
+                                               andStateFile:[self plistPath]
+                                                andPageSize:[drawableView pagePixelSize]
+                                               andGLContext:[drawableView context]];
+
+            [drawableView loadState:state];
+            [self.contentView addSubview:drawableView];
+            
+            drawableView.delegate = self;
+            
+            // anchor the view to the top left,
+            // so that when we scale down, the drawable view
+            // stays in place
+            drawableView.layer.anchorPoint = CGPointMake(0,0);
+            drawableView.layer.position = CGPointMake(0,0);
+        }
     }
 }
 
@@ -125,11 +134,11 @@
         [drawableView exportImageTo:[self inkPath]
                    andThumbnailTo:[self thumbnailPath]
                        andStateTo:[self plistPath]
-                       onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* state){
+                       onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* immutableState){
                            [NSThread performBlockOnMainThread:^{
-                               lastSavedUndoHash = [state undoHash];
+                               lastSavedUndoHash = [immutableState undoHash];
                                debug_NSLog(@"saving page %@ with hash %u", self.uuid, lastSavedUndoHash);
-                               debug_NSLog(@"state hash %u vs page %u", [state undoHash], [drawableView undoHash]);
+                               debug_NSLog(@"state hash %u vs page %u", [immutableState undoHash], [drawableView undoHash]);
                                cachedImgView.image = thumbnail;
                                [self.delegate didSavePage:self];
                            }];

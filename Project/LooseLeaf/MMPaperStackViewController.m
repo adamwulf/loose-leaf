@@ -10,9 +10,6 @@
 #import "MMShadowManager.h"
 #import "MMEditablePaperView.h"
 
-@interface MMLooseLeafViewController ()
-
-@end
 
 @implementation MMLooseLeafViewController
 
@@ -30,24 +27,7 @@
         
         [stackView loadStacksFromDisk];
         
-        if(![stackView hasPages]){
-            for(int i=0;i<1;i++){
-                MMEditablePaperView* editable = [[MMEditablePaperView alloc] initWithFrame:self.view.bounds];
-                [editable setEditable:YES];
-                [stackView addPaperToBottomOfStack:editable];
-                MMPaperView* paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
-                [stackView addPaperToBottomOfStack:paper];
-                paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
-                [stackView addPaperToBottomOfHiddenStack:paper];
-                paper = [[MMPaperView alloc] initWithFrame:self.view.bounds];
-                [stackView addPaperToBottomOfHiddenStack:paper];
-            }
-            [stackView saveStacksToDisk];
-        }
-        
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth.png"]]];
-
-        
     }
     return self;
 }
@@ -56,7 +36,5 @@
 {
     return UIInterfaceOrientationPortrait == interfaceOrientation;
 }
-
-
 
 @end
