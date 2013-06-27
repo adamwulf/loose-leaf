@@ -1218,8 +1218,6 @@
                          animations:^(void){
                              [visibleStackHolder peekSubview].frame = self.bounds;
                          } completion:^(BOOL finished){
-                             [self finishUITransitionToPageView];
-                             
                              //
                              // find visible stack pages that we can
                              // move immediately
@@ -1232,6 +1230,7 @@
                                  aPage.frame = hiddenStackHolder.bounds;
                                  aPage.scale = 1;
                              }
+                             [self finishUITransitionToPageView];
                          }];
     };
     
