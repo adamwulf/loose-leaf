@@ -253,7 +253,7 @@
  * without changing the hidden stack's contents
  */
 -(void) addPageButtonTapped:(UIButton*)_button{
-    MMPaperView* page = [[MMPaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+    MMEditablePaperView* page = [[MMEditablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.isBrandNewPage = YES;
     page.delegate = self;
     [hiddenStackHolder pushSubview:page];
@@ -404,7 +404,6 @@
                 [editableTopPage setCanvasVisible:YES];
                 [editableTopPage setEditable:YES];
             }
-
         }
     }
 }
@@ -434,11 +433,11 @@
             MMEditablePaperView* editable = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
             [editable setEditable:YES];
             [self addPaperToBottomOfStack:editable];
-            MMPaperView* paper = [[MMPaperView alloc] initWithFrame:self.bounds];
+            MMEditablePaperView* paper = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
             [self addPaperToBottomOfStack:paper];
-            paper = [[MMPaperView alloc] initWithFrame:self.bounds];
+            paper = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
             [self addPaperToBottomOfHiddenStack:paper];
-            paper = [[MMPaperView alloc] initWithFrame:self.bounds];
+            paper = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
             [self addPaperToBottomOfHiddenStack:paper];
         }
         [self saveStacksToDisk];

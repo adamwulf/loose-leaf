@@ -83,7 +83,7 @@
 -(void) didTapAddButtonInListView{
     //
     // this'll determine the resolution of the canvas too
-    MMPaperView* paper = [[MMPaperView alloc] initWithFrame:self.bounds];
+    MMEditablePaperView* paper = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
     // now size it for display
     paper.frame = addPageButtonInListView.frame;
     [self addPaperToBottomOfHiddenStack:paper];
