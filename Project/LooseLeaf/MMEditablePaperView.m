@@ -31,14 +31,12 @@
         drawableView = [[JotView alloc] initWithFrame:self.bounds];
         [self.contentView addSubview:drawableView];
 
-        debug_NSLog(@"loading ink %@", [self inkPath]);
-        
-        if([[NSFileManager defaultManager] fileExistsAtPath:[self plistPath]]){
-            [drawableView loadImage:[self inkPath] andState:[self plistPath]];
-            cachedImgView.image = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
-        }else{
-            [drawableView loadImage:nil andState:nil];
-        }
+        JotViewState* state = [[JotViewState alloc] initWithImageFile:[self inkPath]
+                                           andStateFile:[self plistPath]
+                                            andPageSize:[drawableView pagePixelSize]
+                                           andGLContext:[drawableView context]];
+        cachedImgView.image = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
+        [drawableView loadState:state];
         
         drawableView.delegate = self;
         drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
@@ -103,7 +101,7 @@
  * currently saved hash
  */
 -(BOOL) hasEditsToSave{
-    NSLog(@"%u vs %u", [drawableView undoHash], lastSavedUndoHash);
+    NSLog(@"checking if edits to save %u vs %u", [drawableView undoHash], lastSavedUndoHash);
     return [drawableView undoHash] != lastSavedUndoHash;
 }
 
