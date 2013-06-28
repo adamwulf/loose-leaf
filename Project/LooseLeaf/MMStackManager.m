@@ -64,8 +64,6 @@
             
             [visiblePagesToWrite writeToFile:[self visiblePlistPath] atomically:YES];
             [hiddenPagesToWrite writeToFile:[self hiddenPlistPath] atomically:YES];
-            
-            debug_NSLog(@"saved stacks");
         }]];
     }];
 }
@@ -79,24 +77,24 @@
     NSMutableArray* hiddenPages = [NSMutableArray array];
     
     for(NSDictionary* pageDict in visiblePagesToCreate){
-        Class pageClass = nil;
+//        Class pageClass = nil;
 //        if([[pageDict objectForKey:@"class"] isEqualToString:@"MMPaperView"]){
 //            pageClass = [MMPaperView class];
 //        }else{
-            pageClass = [MMEditablePaperView class];
+//            pageClass = [MMEditablePaperView class];
 //        }
-        MMPaperView* page = [[pageClass alloc] initWithFrame:bounds andUUID:[pageDict objectForKey:@"uuid"]];
+        MMPaperView* page = [[MMEditablePaperView alloc] initWithFrame:bounds andUUID:[pageDict objectForKey:@"uuid"]];
         [visiblePages addObject:page];
     }
     
     for(NSDictionary* pageDict in hiddenPagesToCreate){
-        Class pageClass = nil;
+//        Class pageClass = nil;
 //        if([[pageDict objectForKey:@"class"] isEqualToString:@"MMPaperView"]){
 //            pageClass = [MMPaperView class];
 //        }else{
-            pageClass = [MMEditablePaperView class];
+//            pageClass = [MMEditablePaperView class];
 //        }
-        MMPaperView* page = [[pageClass alloc] initWithFrame:bounds andUUID:[pageDict objectForKey:@"uuid"]];
+        MMPaperView* page = [[MMEditablePaperView alloc] initWithFrame:bounds andUUID:[pageDict objectForKey:@"uuid"]];
         [hiddenPages addObject:page];
     }
     

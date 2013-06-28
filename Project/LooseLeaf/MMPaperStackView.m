@@ -926,17 +926,14 @@
 }
 
 -(void) isBeginningToScaleReallySmall:(MMPaperView *)page{
-    debug_NSLog(@"isBeginningToScaleReallySmall");
     [self updateIconAnimations];
 }
 
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
-    debug_NSLog(@"finishedScalingReallySmall");
     [self updateIconAnimations];
 }
 
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
-    debug_NSLog(@"cancelledScalingReallySmall");
     [self updateIconAnimations];
 }
 
@@ -1349,7 +1346,6 @@
  * get this into static mode asap.
  */
 -(void) willChangeTopPageTo:(MMPaperView*)page{
-    debug_NSLog(@"will change top page to: %@", page.uuid);
     [self saveStacksToDisk];
 }
 

@@ -11,12 +11,29 @@
 #import <JotUI/JotUI.h>
 #import "NSThread+BlockAdditions.h"
 
+dispatch_queue_t importThumbnailQueue;
+
+
 @implementation MMEditablePaperView{
     NSUInteger lastSavedUndoHash;
     JotViewState* state;
+    
+    // cached static values
+    NSString* pagesPath;
+    NSString* inkPath;
+    NSString* plistPath;
+    NSString* thumbnailPath;
 }
 
 @synthesize drawableView;
+
++(dispatch_queue_t) importThumbnailQueue{
+    if(!importThumbnailQueue){
+        importThumbnailQueue = dispatch_queue_create("com.milestonemade.looseleaf.importThumbnailQueue", DISPATCH_QUEUE_SERIAL);
+    }
+    return importThumbnailQueue;
+}
+
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     self = [super initWithFrame:frame andUUID:_uuid];
@@ -30,7 +47,15 @@
         cachedImgView.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:.3];
         [self.contentView addSubview:cachedImgView];
 
-        cachedImgView.image = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
+        //
+        // TODO:
+        // need to handle these images from list / stack view better
+        dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
+            UIImage* img = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
+            [NSThread performBlockOnMainThread:^{
+                cachedImgView.image = img;
+            }];
+        });
         
         lastSavedUndoHash = [drawableView undoHash];
     }
@@ -120,13 +145,8 @@
  * state to disk, and notify our delegate when done
  */
 -(void) saveToDisk{
-    // Sanity checks on directory structure
-    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString* documentsPath = [paths objectAtIndex:0];
-    NSString* pagesPath = [documentsPath stringByAppendingPathComponent:@"Pages"];
-    if(![[NSFileManager defaultManager] fileExistsAtPath:pagesPath]){
-        [[NSFileManager defaultManager] createDirectoryAtPath:pagesPath withIntermediateDirectories:NO attributes:nil error:nil];
-    }
+    // Sanity checks to generate our directory structure if needed
+    [self pagesPath];
     
     // find out what our current undo state looks like.
     if([self hasEditsToSave]){
@@ -204,26 +224,37 @@
 #pragma mark - File Paths
 
 -(NSString*) pagesPath{
-    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString* documentsPath = [paths objectAtIndex:0];
-    NSString* pagesPath = [documentsPath stringByAppendingPathComponent:@"Pages"];
-    
-    if(![[NSFileManager defaultManager] fileExistsAtPath:pagesPath]){
-        [[NSFileManager defaultManager] createDirectoryAtPath:pagesPath withIntermediateDirectories:NO attributes:nil error:nil];
+    if(!pagesPath){
+        NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString* documentsPath = [paths objectAtIndex:0];
+        pagesPath = [documentsPath stringByAppendingPathComponent:@"Pages"];
+        
+        if(![[NSFileManager defaultManager] fileExistsAtPath:pagesPath]){
+            [[NSFileManager defaultManager] createDirectoryAtPath:pagesPath withIntermediateDirectories:NO attributes:nil error:nil];
+        }
     }
     return pagesPath;
 }
 
 -(NSString*) inkPath{
-    return [[[self pagesPath] stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"png"];;
+    if(!inkPath){
+        inkPath = [[[self pagesPath] stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"png"];;
+    }
+    return inkPath;
 }
 
 -(NSString*) plistPath{
-    return [[[self pagesPath] stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"plist"];;
+    if(!plistPath){
+        plistPath = [[[self pagesPath] stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"plist"];;
+    }
+    return plistPath;
 }
 
 -(NSString*) thumbnailPath{
-    return [[[self pagesPath] stringByAppendingPathComponent:[self.uuid stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
+    if(!thumbnailPath){
+        thumbnailPath = [[[self pagesPath] stringByAppendingPathComponent:[self.uuid stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
+    }
+    return thumbnailPath;
 }
 
 
