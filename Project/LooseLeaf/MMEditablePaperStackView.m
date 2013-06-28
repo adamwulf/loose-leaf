@@ -380,7 +380,7 @@
 
 -(void) willChangeTopPageTo:(MMPaperView*)page{
     [super willChangeTopPageTo:page];
-    NSLog(@"validating top page");
+    NSLog(@"will switch top page to %@", page.uuid);
 }
 
 -(void) didChangeTopPage{
@@ -394,9 +394,8 @@
             [currentEditablePage setDrawableView:nil];
             [currentEditablePage setEditable:NO];
             [currentEditablePage setCanvasVisible:NO];
-            
             currentEditablePage = editableTopPage;
-            NSLog(@"guys, gotta check this out");
+            NSLog(@"did switch top page to %@", currentEditablePage.uuid);
         }
         if([currentEditablePage isKindOfClass:[MMEditablePaperView class]]){
             [currentEditablePage setDrawableView:drawableView];
