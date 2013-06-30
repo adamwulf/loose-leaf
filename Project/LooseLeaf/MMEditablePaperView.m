@@ -16,7 +16,6 @@ dispatch_queue_t importThumbnailQueue;
 
 @implementation MMEditablePaperView{
     NSUInteger lastSavedUndoHash;
-    JotViewState* state;
     
     // cached static values
     NSString* pagesPath;
@@ -109,7 +108,7 @@ dispatch_queue_t importThumbnailQueue;
     if(drawableView != _drawableView){
         drawableView = _drawableView;
         if(drawableView){
-            state = [[JotViewState alloc] initWithImageFile:[self inkPath]
+            JotViewState* state = [[JotViewState alloc] initWithImageFile:[self inkPath]
                                                andStateFile:[self plistPath]
                                                 andPageSize:[drawableView pagePixelSize]
                                                andGLContext:[drawableView context]];
