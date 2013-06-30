@@ -354,7 +354,6 @@
 }
 
 -(void) didSavePage:(MMPaperView*)page{
-    NSLog(@"saved page: %@", page.uuid);
     if(page.scale < kMinPageZoom){
         if([page isKindOfClass:[MMEditablePaperView class]]){
             MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
@@ -366,8 +365,6 @@
                 debug_NSLog(@"thumb for %@ is visible", page.uuid);
             }
         }
-    }else{
-        debug_NSLog(@"scale %f vs %f", page.scale, kMinPageZoom);
     }
 }
 

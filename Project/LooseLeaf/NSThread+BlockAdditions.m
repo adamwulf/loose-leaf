@@ -67,7 +67,7 @@ CGFloat BNRTimeBlock (void (^block)(void)) {
     }
     else
     {
-        dispatch_sync(dispatch_get_main_queue(), block);
+        dispatch_async(dispatch_get_main_queue(), block);
     }
 }
 
