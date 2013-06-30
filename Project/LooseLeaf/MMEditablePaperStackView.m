@@ -413,11 +413,9 @@
 -(void) loadStacksFromDisk{
     NSDictionary* pages = [stackManager loadFromDiskWithBounds:self.bounds];
     for(MMPaperView* page in [[pages objectForKey:@"visiblePages"] reverseObjectEnumerator]){
-        debug_NSLog(@"loaded: %@", [page description]);
         [self addPaperToBottomOfStack:page];
     }
     for(MMPaperView* page in [[pages objectForKey:@"hiddenPages"] reverseObjectEnumerator]){
-        debug_NSLog(@"loaded hidden: %@", [page description]);
         [self addPaperToBottomOfHiddenStack:page];
     }
     
