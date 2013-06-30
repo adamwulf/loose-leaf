@@ -40,18 +40,15 @@
         //
         // sidebar buttons
         // ================================================================================
-        CGRect undoButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton);
-        undoButton = [[MMUndoRedoButton alloc] initWithFrame:undoButtonFrame];
-        undoButton.delegate = self;
-        [undoButton addTarget:self action:@selector(undo:) forControlEvents:UIControlEventTouchUpInside];
-        undoButton.reverseArrow = YES;
-        [self addSubview:undoButton];
+        addPageSidebarButton = [[MMPlusButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        addPageSidebarButton.delegate = self;
+        [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:addPageSidebarButton];
         
-        CGRect redoButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton);
-        redoButton = [[MMUndoRedoButton alloc] initWithFrame:redoButtonFrame];
-        redoButton.delegate = self;
-        [redoButton addTarget:self action:@selector(redo:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:redoButton];
+        shareButton = [[MMShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        shareButton.delegate = self;
+        [shareButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:shareButton];
         
         
         
@@ -103,17 +100,18 @@
         
         
         
+        undoButton = [[MMUndoRedoButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        undoButton.delegate = self;
+        [undoButton addTarget:self action:@selector(undo:) forControlEvents:UIControlEventTouchUpInside];
+        undoButton.reverseArrow = YES;
+        [self addSubview:undoButton];
         
+        redoButton = [[MMUndoRedoButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        redoButton.delegate = self;
+        [redoButton addTarget:self action:@selector(redo:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:redoButton];
+       
         
-        addPageSidebarButton = [[MMPlusButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        addPageSidebarButton.delegate = self;
-        [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:addPageSidebarButton];
-        
-        shareButton = [[MMShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        shareButton.delegate = self;
-        [shareButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:shareButton];
         
         
         
