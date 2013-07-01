@@ -368,22 +368,13 @@
     }
 }
 
+-(BOOL) isPageEditable:(MMPaperView*)page{
+    return page == currentEditablePage;
+}
+
 #pragma mark - Page Loading and Unloading
 
--(void) mayChangeTopPageTo:(MMPaperView*)page{
-    [super mayChangeTopPageTo:page];
-}
-
--(void) willChangeTopPageTo:(MMPaperView*)page{
-    [super willChangeTopPageTo:page];
-    NSLog(@"will switch top page to %@", page.uuid);
-}
-
--(void) didChangeTopPage{
-    CheckMainThread;
-    [super didChangeTopPage];
-    NSLog(@"did change top page");
-    MMPaperView* topPage = [visibleStackHolder peekSubview];
+-(void) ensureTopPageIsLoaded:(MMPaperView*)topPage{
     if([topPage isKindOfClass:[MMEditablePaperView class]]){
         MMEditablePaperView* editableTopPage = (MMEditablePaperView*)topPage;
         if(currentEditablePage != editableTopPage){
@@ -395,10 +386,26 @@
         }
         if([currentEditablePage isKindOfClass:[MMEditablePaperView class]]){
             [currentEditablePage setDrawableView:drawableView];
-            [currentEditablePage setCanvasVisible:YES];
-            [currentEditablePage setEditable:YES];
         }
     }
+}
+
+-(void) mayChangeTopPageTo:(MMPaperView*)page{
+    [super mayChangeTopPageTo:page];
+}
+
+-(void) willChangeTopPageTo:(MMPaperView*)page{
+    [super willChangeTopPageTo:page];
+    NSLog(@"will switch top page to %@", page.uuid);
+    [self ensureTopPageIsLoaded:page];
+}
+
+-(void) didChangeTopPage{
+    CheckMainThread;
+    [super didChangeTopPage];
+    NSLog(@"did change top page");
+    MMPaperView* topPage = [visibleStackHolder peekSubview];
+    [self ensureTopPageIsLoaded:topPage];
 }
 
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
