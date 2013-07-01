@@ -12,6 +12,7 @@
 @implementation MMEditablePaperStackView{
     MMEditablePaperView* currentEditablePage;
     JotView* drawableView;
+    NSMutableArray* stateLoadedPages;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -20,6 +21,8 @@
     if (self) {
         // Initialization code
 
+        stateLoadedPages = [NSMutableArray array];
+        
         stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
         
         drawableView = [[JotView alloc] initWithFrame:self.bounds];
@@ -374,6 +377,21 @@
 
 #pragma mark - Page Loading and Unloading
 
+-(void) loadStateForPage:(MMPaperView*)page{
+    [stateLoadedPages removeObject:page];
+    [stateLoadedPages insertObject:page atIndex:0];
+    [stateLoadedPages removeObject:currentEditablePage];
+    [stateLoadedPages insertObject:currentEditablePage atIndex:0];
+    if([stateLoadedPages count] > 5){
+        [[stateLoadedPages lastObject] unloadState];
+        [stateLoadedPages removeLastObject];
+    }
+    if([page isKindOfClass:[MMEditablePaperView class]]){
+        MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
+        [editablePage loadStateAsynchronously:YES withSize:[drawableView pagePixelSize] andContext:[drawableView context] andThen:nil];
+    }
+}
+
 -(void) ensureTopPageIsLoaded:(MMPaperView*)topPage{
     if([topPage isKindOfClass:[MMEditablePaperView class]]){
         MMEditablePaperView* editableTopPage = (MMEditablePaperView*)topPage;
@@ -385,6 +403,7 @@
             NSLog(@"did switch top page to %@", currentEditablePage.uuid);
         }
         if([currentEditablePage isKindOfClass:[MMEditablePaperView class]]){
+            [self loadStateForPage:currentEditablePage];
             [currentEditablePage setDrawableView:drawableView];
         }
     }
@@ -392,10 +411,7 @@
 
 -(void) mayChangeTopPageTo:(MMPaperView*)page{
     [super mayChangeTopPageTo:page];
-    if([page isKindOfClass:[MMEditablePaperView class]]){
-        MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
-        [editablePage loadStateWithSize:[drawableView pagePixelSize] andContext:[drawableView context] andThen:nil];
-    }
+    [self loadStateForPage:page];
 }
 
 -(void) willChangeTopPageTo:(MMPaperView*)page{
@@ -445,6 +461,13 @@
         }
         [self saveStacksToDisk];
     }
+    
+    
+    [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
+                                                     withSize:[drawableView pagePixelSize]
+                                                   andContext:[drawableView context]
+                                                      andThen:nil];
+    
     [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
     [self didChangeTopPage];
 }
