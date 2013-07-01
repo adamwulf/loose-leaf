@@ -380,8 +380,10 @@
 -(void) loadStateForPage:(MMPaperView*)page{
     [stateLoadedPages removeObject:page];
     [stateLoadedPages insertObject:page atIndex:0];
-    [stateLoadedPages removeObject:currentEditablePage];
-    [stateLoadedPages insertObject:currentEditablePage atIndex:0];
+    if(currentEditablePage){
+        [stateLoadedPages removeObject:currentEditablePage];
+        [stateLoadedPages insertObject:currentEditablePage atIndex:0];
+    }
     if([stateLoadedPages count] > 5){
         [[stateLoadedPages lastObject] unloadState];
         [stateLoadedPages removeLastObject];
@@ -417,7 +419,7 @@
 -(void) willChangeTopPageTo:(MMPaperView*)page{
     [super willChangeTopPageTo:page];
     NSLog(@"will switch top page to %@", page.uuid);
-    [self ensureTopPageIsLoaded:page];
+    [self loadStateForPage:page];
 }
 
 -(void) didChangeTopPage{
