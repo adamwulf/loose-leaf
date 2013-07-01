@@ -114,8 +114,13 @@ dispatch_queue_t importThumbnailQueue;
     }
 }
 
--(void) loadStateWithSize:(CGSize) pagePixelSize andContext:(EAGLContext*)context andThen:(void (^)())block{
-    dispatch_async([MMEditablePaperView loadUnloadStateQueue], ^(void) {
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(EAGLContext*)context andThen:(void (^)())block{
+    if(state){
+        if(block) block();
+        return;
+    }
+    
+    void (^block2)() = ^(void) {
         if(!state){
             state = [[JotViewState alloc] initWithImageFile:[self inkPath]
                                                andStateFile:[self plistPath]
@@ -123,6 +128,17 @@ dispatch_queue_t importThumbnailQueue;
                                                andGLContext:context];
         }
         if(block) block();
+    };
+    
+    if(async){
+        dispatch_async([MMEditablePaperView loadUnloadStateQueue], block2);
+    }else{
+        block2();
+    }
+}
+-(void) unloadState{
+    dispatch_async([MMEditablePaperView loadUnloadStateQueue], ^(void) {
+        state = nil;
     });
 }
 
@@ -131,25 +147,29 @@ dispatch_queue_t importThumbnailQueue;
         drawableView = _drawableView;
         if(drawableView){
             [self setFrame:self.frame];
-            [self loadStateWithSize:[drawableView pagePixelSize]
-                         andContext:[drawableView context]
-                            andThen:^{
-                                [NSThread performBlockOnMainThread:^{
-                                    if([self.delegate isPageEditable:self]){
-                                        [drawableView loadState:state];
-                                        [self.contentView addSubview:drawableView];
-                                        // anchor the view to the top left,
-                                        // so that when we scale down, the drawable view
-                                        // stays in place
-                                        drawableView.layer.anchorPoint = CGPointMake(0,0);
-                                        drawableView.layer.position = CGPointMake(0,0);
-                                        drawableView.delegate = self;
-                                        [self setCanvasVisible:YES];
-                                        [self setEditable:YES];
-                                    }
-                                }];
-                            }];
+            [self loadStateAsynchronously:YES
+                                 withSize:[drawableView pagePixelSize]
+                               andContext:[drawableView context]
+                                  andThen:^{
+                                      [NSThread performBlockOnMainThread:^{
+                                          if([self.delegate isPageEditable:self]){
+                                              [drawableView loadState:state];
+                                              [self.contentView addSubview:drawableView];
+                                              // anchor the view to the top left,
+                                              // so that when we scale down, the drawable view
+                                              // stays in place
+                                              drawableView.layer.anchorPoint = CGPointMake(0,0);
+                                              drawableView.layer.position = CGPointMake(0,0);
+                                              drawableView.delegate = self;
+                                              [self setCanvasVisible:YES];
+                                              [self setEditable:YES];
+                                          }
+                                      }];
+                                  }];
         }
+    }else if(drawableView){
+        [self setCanvasVisible:YES];
+        [self setEditable:YES];
     }
 }
 
