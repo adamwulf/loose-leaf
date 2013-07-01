@@ -961,6 +961,10 @@
     @throw kAbstractMethodException;
 }
 
+-(BOOL) isPageEditable:(MMPaperView *)page{
+    @throw kAbstractMethodException;
+}
+
 #pragma mark - Page Animation and Navigation Helpers
 
 /**
