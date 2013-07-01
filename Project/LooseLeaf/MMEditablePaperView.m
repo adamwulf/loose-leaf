@@ -167,7 +167,7 @@ dispatch_queue_t importThumbnailQueue;
                                       }];
                                   }];
         }
-    }else if(drawableView){
+    }else if(drawableView && state){
         [self setCanvasVisible:YES];
         [self setEditable:YES];
     }
