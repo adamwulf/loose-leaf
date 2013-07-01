@@ -392,6 +392,10 @@
 
 -(void) mayChangeTopPageTo:(MMPaperView*)page{
     [super mayChangeTopPageTo:page];
+    if([page isKindOfClass:[MMEditablePaperView class]]){
+        MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
+        [editablePage loadStateWithSize:[drawableView pagePixelSize] andContext:[drawableView context] andThen:nil];
+    }
 }
 
 -(void) willChangeTopPageTo:(MMPaperView*)page{
@@ -410,6 +414,7 @@
 
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
     [super willNotChangeTopPageTo:page];
+    NSLog(@"won't change to: %@", page.uuid);
 }
 
 

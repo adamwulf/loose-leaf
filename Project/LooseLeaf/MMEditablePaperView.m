@@ -11,12 +11,14 @@
 #import <JotUI/JotUI.h>
 #import "NSThread+BlockAdditions.h"
 
+dispatch_queue_t loadUnloadStateQueue;
 dispatch_queue_t importThumbnailQueue;
 
 
 @implementation MMEditablePaperView{
     NSUInteger lastSavedUndoHash;
     
+    JotViewState* state;
     // cached static values
     NSString* pagesPath;
     NSString* inkPath;
@@ -25,6 +27,13 @@ dispatch_queue_t importThumbnailQueue;
 }
 
 @synthesize drawableView;
+
++(dispatch_queue_t) loadUnloadStateQueue{
+    if(!loadUnloadStateQueue){
+        loadUnloadStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.loadUnloadStateQueue", DISPATCH_QUEUE_SERIAL);
+    }
+    return loadUnloadStateQueue;
+}
 
 +(dispatch_queue_t) importThumbnailQueue{
     if(!importThumbnailQueue){
@@ -105,32 +114,41 @@ dispatch_queue_t importThumbnailQueue;
     }
 }
 
+-(void) loadStateWithSize:(CGSize) pagePixelSize andContext:(EAGLContext*)context andThen:(void (^)())block{
+    dispatch_async([MMEditablePaperView loadUnloadStateQueue], ^(void) {
+        if(!state){
+            state = [[JotViewState alloc] initWithImageFile:[self inkPath]
+                                               andStateFile:[self plistPath]
+                                                andPageSize:pagePixelSize
+                                               andGLContext:context];
+        }
+        if(block) block();
+    });
+}
+
 -(void) setDrawableView:(JotView *)_drawableView{
     if(drawableView != _drawableView){
         drawableView = _drawableView;
         if(drawableView){
-            __block JotViewState* state;
             [self setFrame:self.frame];
-            [NSThread performBlockInBackground:^{
-                state = [[JotViewState alloc] initWithImageFile:[self inkPath]
-                                                   andStateFile:[self plistPath]
-                                                    andPageSize:[drawableView pagePixelSize]
-                                                   andGLContext:[drawableView context]];
-                [NSThread performBlockOnMainThread:^{
-                    if([self.delegate isPageEditable:self]){
-                        [drawableView loadState:state];
-                        [self.contentView addSubview:drawableView];
-                        // anchor the view to the top left,
-                        // so that when we scale down, the drawable view
-                        // stays in place
-                        drawableView.layer.anchorPoint = CGPointMake(0,0);
-                        drawableView.layer.position = CGPointMake(0,0);
-                        drawableView.delegate = self;
-                        [self setCanvasVisible:YES];
-                        [self setEditable:YES];
-                    }
-                }];
-            }];
+            [self loadStateWithSize:[drawableView pagePixelSize]
+                         andContext:[drawableView context]
+                            andThen:^{
+                                [NSThread performBlockOnMainThread:^{
+                                    if([self.delegate isPageEditable:self]){
+                                        [drawableView loadState:state];
+                                        [self.contentView addSubview:drawableView];
+                                        // anchor the view to the top left,
+                                        // so that when we scale down, the drawable view
+                                        // stays in place
+                                        drawableView.layer.anchorPoint = CGPointMake(0,0);
+                                        drawableView.layer.position = CGPointMake(0,0);
+                                        drawableView.delegate = self;
+                                        [self setCanvasVisible:YES];
+                                        [self setEditable:YES];
+                                    }
+                                }];
+                            }];
         }
     }
 }
