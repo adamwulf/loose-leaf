@@ -55,7 +55,7 @@
         UILabel* feedbackSubTitle = [[UILabel alloc] initWithFrame:CGRectMake(30, 40, self.frame.size.width-60, 60)];
         feedbackSubTitle.textAlignment = NSTextAlignmentCenter;
         feedbackSubTitle.numberOfLines = 0;
-        feedbackSubTitle.text = @"“If we are not ashamed to think it, we should not be ashamed to say it.” - Cicero";
+        feedbackSubTitle.text = @"Thanks for your help testing Loose Leaf!";
         feedbackSubTitle.backgroundColor = [UIColor clearColor];
         [contentView addSubview:feedbackSubTitle];
         
