@@ -56,7 +56,7 @@
         [shareButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:shareButton];
         
-        feedbackButton = [[MMShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60*2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        feedbackButton = [[MMLikeButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60*2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         feedbackButton.delegate = self;
         [feedbackButton addTarget:self action:@selector(feedbackButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:feedbackButton];
