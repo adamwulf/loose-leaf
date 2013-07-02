@@ -49,56 +49,62 @@
         feedbackTitle.textAlignment = NSTextAlignmentCenter;
         feedbackTitle.text = @"Feedback";
         feedbackTitle.font = [UIFont boldSystemFontOfSize:18];
+        feedbackTitle.backgroundColor = [UIColor clearColor];
         [contentView addSubview:feedbackTitle];
 
         UILabel* feedbackSubTitle = [[UILabel alloc] initWithFrame:CGRectMake(30, 40, self.frame.size.width-60, 60)];
         feedbackSubTitle.textAlignment = NSTextAlignmentCenter;
         feedbackSubTitle.numberOfLines = 0;
         feedbackSubTitle.text = @"“If we are not ashamed to think it, we should not be ashamed to say it.” - Cicero";
+        feedbackSubTitle.backgroundColor = [UIColor clearColor];
         [contentView addSubview:feedbackSubTitle];
         
         
         
         // ratings
         
-        UILabel* penRatingLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 110, 360, 40)];
+        UILabel* penRatingLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 130, 360, 40)];
         penRatingLabel.text = @"The pen feels perfect:";
+        penRatingLabel.backgroundColor = [UIColor clearColor];
         [penRatingLabel sizeToFit];
         [contentView addSubview:penRatingLabel];
-        penRatingView = [[DYRateView alloc] initWithFrame:CGRectMake(300, 110, 160, 40)
+        penRatingView = [[DYRateView alloc] initWithFrame:CGRectMake(300, 130, 160, 40)
                                                  fullStar:[UIImage imageNamed:@"StarFullLarge.png"]
                                                 emptyStar:[UIImage imageNamed:@"StarEmptyLarge.png"]];
         penRatingView.editable = YES;
         [contentView addSubview:penRatingView];
         
 
-        UILabel* eraserRatingLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 150, 360, 40)];
+        UILabel* eraserRatingLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 170, 360, 40)];
         eraserRatingLabel.text = @"The eraser feels perfect:";
+        eraserRatingLabel.backgroundColor = [UIColor clearColor];
         [eraserRatingLabel sizeToFit];
         [contentView addSubview:eraserRatingLabel];
-        eraserRatingView = [[DYRateView alloc] initWithFrame:CGRectMake(300, 150, 160, 40)
+        eraserRatingView = [[DYRateView alloc] initWithFrame:CGRectMake(300, 170, 160, 40)
                                                  fullStar:[UIImage imageNamed:@"StarFullLarge.png"]
                                                 emptyStar:[UIImage imageNamed:@"StarEmptyLarge.png"]];
         eraserRatingView.editable = YES;
         [contentView addSubview:eraserRatingView];
         
 
-        UILabel* gestureRatingLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 190, 360, 40)];
+        UILabel* gestureRatingLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 210, 360, 40)];
         gestureRatingLabel.text = @"Gestures are intuitive:";
+        gestureRatingLabel.backgroundColor = [UIColor clearColor];
         [gestureRatingLabel sizeToFit];
         [contentView addSubview:gestureRatingLabel];
-        gestureRatingView = [[DYRateView alloc] initWithFrame:CGRectMake(300, 190, 160, 40)
+        gestureRatingView = [[DYRateView alloc] initWithFrame:CGRectMake(300, 210, 160, 40)
                                                     fullStar:[UIImage imageNamed:@"StarFullLarge.png"]
                                                    emptyStar:[UIImage imageNamed:@"StarEmptyLarge.png"]];
         gestureRatingView.editable = YES;
         [contentView addSubview:gestureRatingView];
         
 
-        UILabel* performanceRatingLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 230, 360, 40)];
+        UILabel* performanceRatingLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 250, 360, 40)];
         performanceRatingLabel.text = @"The app feels fast:";
+        performanceRatingLabel.backgroundColor = [UIColor clearColor];
         [performanceRatingLabel sizeToFit];
         [contentView addSubview:performanceRatingLabel];
-        performanceRatingView = [[DYRateView alloc] initWithFrame:CGRectMake(300, 230, 160, 40)
+        performanceRatingView = [[DYRateView alloc] initWithFrame:CGRectMake(300, 250, 160, 40)
                                                      fullStar:[UIImage imageNamed:@"StarFullLarge.png"]
                                                     emptyStar:[UIImage imageNamed:@"StarEmptyLarge.png"]];
         performanceRatingView.editable = YES;
@@ -106,12 +112,12 @@
         
         
         
-        furtherComments = [[UIPlaceHolderTextView alloc] initWithFrame:CGRectMake(30, 280, self.frame.size.width-60, 140)];
+        furtherComments = [[UIPlaceHolderTextView alloc] initWithFrame:CGRectMake(30, 300, self.frame.size.width-60, 140)];
         furtherComments.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
         furtherComments.layer.borderColor = [UIColor blackColor].CGColor;
         furtherComments.layer.borderWidth = 1;
         furtherComments.layer.cornerRadius = 2;
-        furtherComments.placeholder = @"Tell me what hate and what you love...";
+        furtherComments.placeholder = @"Tell me what you love and what you hate...";
         [contentView addSubview:furtherComments];
         
         // buttons
@@ -120,14 +126,14 @@
         [sendFeedbackButton setTitle:@"Send Feedback" forState:UIControlStateNormal];
         [sendFeedbackButton addTarget:self action:@selector(submitFeedback) forControlEvents:UIControlEventTouchUpInside];
         [sendFeedbackButton sizeToFit];
-        sendFeedbackButton.frame = CGRectMake(280, 540, sendFeedbackButton.frame.size.width, sendFeedbackButton.frame.size.height);
+        sendFeedbackButton.frame = CGRectMake(280, 510, sendFeedbackButton.frame.size.width, sendFeedbackButton.frame.size.height);
         [contentView addSubview:sendFeedbackButton];
         
         UIButton* cancelFeedbackButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [cancelFeedbackButton setTitle:@"Cancel" forState:UIControlStateNormal];
         [cancelFeedbackButton addTarget:self action:@selector(cancelFeedback) forControlEvents:UIControlEventTouchUpInside];
         [cancelFeedbackButton sizeToFit];
-        cancelFeedbackButton.frame = CGRectMake(40, 540, cancelFeedbackButton.frame.size.width, cancelFeedbackButton.frame.size.height);
+        cancelFeedbackButton.frame = CGRectMake(40, 510, cancelFeedbackButton.frame.size.width, cancelFeedbackButton.frame.size.height);
         [contentView addSubview:cancelFeedbackButton];
         
         self.alpha = 0;
@@ -140,7 +146,8 @@
 #pragma mark - button actions
 
 -(void) submitFeedback{
-    //    [TestFlight submitFeedback:<#(NSString *)#>];
+    NSString* feedback = [NSString stringWithFormat:@"Pen: %f\nEraser:%f\nGesture:%f\nSpeed:%f\n\nComments:\n%@", penRatingView.rate, eraserRatingView.rate, gestureRatingView.rate, performanceRatingView.rate, furtherComments.text];
+    [TestFlight submitFeedback:feedback];
     [self hide];
 }
 
@@ -151,6 +158,7 @@
 
 
 -(void) hide{
+    [furtherComments resignFirstResponder];
     [UIView animateWithDuration:0.3
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut

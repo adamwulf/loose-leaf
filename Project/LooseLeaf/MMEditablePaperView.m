@@ -10,6 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <JotUI/JotUI.h>
 #import "NSThread+BlockAdditions.h"
+#import "TestFlight.h"
 
 dispatch_queue_t loadUnloadStateQueue;
 dispatch_queue_t importThumbnailQueue;

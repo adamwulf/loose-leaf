@@ -18,6 +18,7 @@
 
 #define kAbstractMethodException [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)] userInfo:nil]
 
+#define kTestflightAppToken @"7cad2371-d0e0-4524-a833-dbc6cbc7a870"
 
 #define kAnimationDelay 0.05
 

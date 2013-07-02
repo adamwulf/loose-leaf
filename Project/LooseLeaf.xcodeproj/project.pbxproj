@@ -38,7 +38,6 @@
 		663C1897175A89EF00706A05 /* MMRulerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C1896175A89ED00706A05 /* MMRulerButton.m */; };
 		664516B9159030FC0012FACA /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 664516B8159030FC0012FACA /* Constants.m */; };
 		66455F84175E938000C66DFA /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66A4BD181632170E00C45070 /* DrawKit-iOS.framework */; };
-		66455F86175E938500C66DFA /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66455F85175E938400C66DFA /* JotUI.framework */; };
 		664C62F015A36DA40072736A /* MMListPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 664C62EF15A36DA40072736A /* MMListPaperStackView.m */; };
 		664F4139159063F8006F8B09 /* MMPlusIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F4138159063F8006F8B09 /* MMPlusIcon.m */; };
 		664F413D1590661F006F8B09 /* MMRightArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413C1590661F006F8B09 /* MMRightArrow.m */; };
@@ -83,6 +82,7 @@
 		66BD6E991593E9C400D4544C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E981593E9C300D4544C /* CoreText.framework */; };
 		66BD6E9C15940D7500D4544C /* MMPencilButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9B15940D7400D4544C /* MMPencilButton.m */; };
 		66BD6E9F15941B7B00D4544C /* MMShareButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9E15941B7B00D4544C /* MMShareButton.m */; };
+		66C0C9CA1783645E009491B3 /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66C0C9C91783645E009491B3 /* JotUI.framework */; };
 		66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* MMListAddPageButton.m */; };
 		66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D33F4B15A6408A0044C809 /* MMShadowedView.m */; };
 		66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
@@ -168,11 +168,9 @@
 		663C187C1755B63D00706A05 /* Eraser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Eraser.m; sourceTree = "<group>"; };
 		663C18891759B51600706A05 /* MMUndoRedoButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoRedoButton.h; sourceTree = "<group>"; };
 		663C188A1759B51600706A05 /* MMUndoRedoButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUndoRedoButton.m; sourceTree = "<group>"; };
-		663C1893175A709B00706A05 /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
 		663C1895175A89EB00706A05 /* MMRulerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRulerButton.h; sourceTree = "<group>"; };
 		663C1896175A89ED00706A05 /* MMRulerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRulerButton.m; sourceTree = "<group>"; };
 		664516B8159030FC0012FACA /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
-		66455F85175E938400C66DFA /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../Submodules/JotUI/JotUI/build/Release-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
 		664C62EE15A36DA40072736A /* MMListPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListPaperStackView.h; sourceTree = "<group>"; };
 		664C62EF15A36DA40072736A /* MMListPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListPaperStackView.m; sourceTree = "<group>"; };
 		664F4137159063F8006F8B09 /* MMPlusIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPlusIcon.h; sourceTree = "<group>"; };
@@ -256,6 +254,7 @@
 		66BD6E9B15940D7400D4544C /* MMPencilButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPencilButton.m; sourceTree = "<group>"; };
 		66BD6E9D15941B7A00D4544C /* MMShareButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShareButton.h; sourceTree = "<group>"; };
 		66BD6E9E15941B7B00D4544C /* MMShareButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MMShareButton.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		66C0C9C91783645E009491B3 /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
 		66C38AC7175329160035B872 /* JotTouchSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotTouchSDK.framework; path = ../Submodules/JotUI/JotTouchSDK/JotTouchSDK.framework; sourceTree = "<group>"; };
 		66C47DA5158EF03200E2CD0C /* MMPaperViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperViewDelegate.h; sourceTree = "<group>"; };
 		66D0905415F7080F004D2CAF /* MMListAddPageButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButton.h; sourceTree = "<group>"; };
@@ -295,8 +294,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66C0C9CA1783645E009491B3 /* JotUI.framework in Frameworks */,
 				66150769178333D500B181F3 /* libz.dylib in Frameworks */,
-				66455F86175E938500C66DFA /* JotUI.framework in Frameworks */,
 				66455F84175E938000C66DFA /* DrawKit-iOS.framework in Frameworks */,
 				663C188F1759B57800706A05 /* JotTouchSDK.framework in Frameworks */,
 				6695B6E81750088D0069E61F /* AudioToolbox.framework in Frameworks */,
@@ -367,6 +366,7 @@
 		6615075D1783338E00B181F3 /* TestFlightSDK */ = {
 			isa = PBXGroup;
 			children = (
+				66150768178333D500B181F3 /* libz.dylib */,
 				6615075E1783338E00B181F3 /* libTestFlight.a */,
 				6615075F1783338E00B181F3 /* README.md */,
 				661507601783338E00B181F3 /* release_notes.md */,
@@ -381,14 +381,7 @@
 		6615076C178338E400B181F3 /* In App Feedback */ = {
 			isa = PBXGroup;
 			children = (
-				6615077B1783420100B181F3 /* StarEmptyLarge.png */,
-				6615077C1783420100B181F3 /* StarEmptyLarge@2x.png */,
-				6615077D1783420100B181F3 /* StarFullLarge.png */,
-				6615077E1783420100B181F3 /* StarFullLarge@2x.png */,
-				661507731783417100B181F3 /* StarEmpty.png */,
-				661507741783417100B181F3 /* StarEmpty@2x.png */,
-				661507751783417100B181F3 /* StarFull.png */,
-				661507761783417100B181F3 /* StarFull@2x.png */,
+				6615078817835A7F00B181F3 /* stars */,
 				661507701783410800B181F3 /* DYRateView.h */,
 				661507711783410900B181F3 /* DYRateView.m */,
 				6615076D1783390400B181F3 /* MMFeedbackView.h */,
@@ -397,6 +390,21 @@
 				66150784178347A100B181F3 /* UIPlaceHolderTextView.m */,
 			);
 			name = "In App Feedback";
+			sourceTree = "<group>";
+		};
+		6615078817835A7F00B181F3 /* stars */ = {
+			isa = PBXGroup;
+			children = (
+				6615077B1783420100B181F3 /* StarEmptyLarge.png */,
+				6615077C1783420100B181F3 /* StarEmptyLarge@2x.png */,
+				6615077D1783420100B181F3 /* StarFullLarge.png */,
+				6615077E1783420100B181F3 /* StarFullLarge@2x.png */,
+				661507731783417100B181F3 /* StarEmpty.png */,
+				661507741783417100B181F3 /* StarEmpty@2x.png */,
+				661507751783417100B181F3 /* StarFull.png */,
+				661507761783417100B181F3 /* StarFull@2x.png */,
+			);
+			name = stars;
 			sourceTree = "<group>";
 		};
 		664C62F115A36DB00072736A /* MMPaperView */ = {
@@ -464,8 +472,7 @@
 		6695B6E1175008530069E61F /* JotUI */ = {
 			isa = PBXGroup;
 			children = (
-				663C1893175A709B00706A05 /* JotUI.framework */,
-				66455F85175E938400C66DFA /* JotUI.framework */,
+				66C0C9C91783645E009491B3 /* JotUI.framework */,
 				6695B6E2175008680069E61F /* OpenGLES.framework */,
 				66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */,
 				66BD6E7C1593ACD400D4544C /* QuartzCore.framework */,
@@ -597,7 +604,6 @@
 		66DCFB7B1581BCED00B4918C = {
 			isa = PBXGroup;
 			children = (
-				66150768178333D500B181F3 /* libz.dylib */,
 				66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */,
 				66DCFB901581BCEF00B4918C /* Loose Leaf */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
@@ -943,6 +949,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../Submodules/JotUI/JotTouchSDK\"",
+					"\"$(SRCROOT)/../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
@@ -951,10 +958,9 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/External/TestFlightSDK\"",
 				);
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC++",
-					"-all_load",
 					"-lstdc++",
 				);
 				PRODUCT_NAME = LooseLeaf;
@@ -973,6 +979,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../Submodules/JotUI/JotTouchSDK\"",
+					"\"$(SRCROOT)/../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
@@ -983,7 +990,6 @@
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC++",
-					"-all_load",
 					"-lstdc++",
 				);
 				PRODUCT_NAME = LooseLeaf;
