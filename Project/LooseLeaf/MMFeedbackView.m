@@ -64,7 +64,7 @@
         // ratings
         
         UILabel* penRatingLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 130, 360, 40)];
-        penRatingLabel.text = @"The pen feels perfect:";
+        penRatingLabel.text = @"The pen is perfect:";
         penRatingLabel.backgroundColor = [UIColor clearColor];
         [penRatingLabel sizeToFit];
         [contentView addSubview:penRatingLabel];
@@ -76,7 +76,7 @@
         
 
         UILabel* eraserRatingLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 170, 360, 40)];
-        eraserRatingLabel.text = @"The eraser feels perfect:";
+        eraserRatingLabel.text = @"The eraser is perfect:";
         eraserRatingLabel.backgroundColor = [UIColor clearColor];
         [eraserRatingLabel sizeToFit];
         [contentView addSubview:eraserRatingLabel];
@@ -100,7 +100,7 @@
         
 
         UILabel* performanceRatingLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 250, 360, 40)];
-        performanceRatingLabel.text = @"The app feels fast:";
+        performanceRatingLabel.text = @"The app is fast:";
         performanceRatingLabel.backgroundColor = [UIColor clearColor];
         [performanceRatingLabel sizeToFit];
         [contentView addSubview:performanceRatingLabel];
