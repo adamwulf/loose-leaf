@@ -17,7 +17,10 @@
     if(self = [super init]){
         
         [NSThread performBlockInBackground:^{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
+#pragma clang diagnostic pop
             [TestFlight takeOff:kTestflightAppToken];
             [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
             [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
