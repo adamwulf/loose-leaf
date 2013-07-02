@@ -8,10 +8,17 @@
 
 #import "MMFeedbackView.h"
 #import "TestFlight.h"
+#import "DYRateView.h"
+#import "UIPlaceHolderTextView.h"
 
 
 @implementation MMFeedbackView{
     UIView* contentView;
+    DYRateView* penRatingView;
+    DYRateView* eraserRatingView;
+    DYRateView* gestureRatingView;
+    DYRateView* performanceRatingView;
+    UIPlaceHolderTextView* furtherComments;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -35,6 +42,79 @@
         self.layer.backgroundColor = [UIColor whiteColor].CGColor;
         self.backgroundColor = [UIColor whiteColor];
         
+        
+        // title
+        
+        UILabel* feedbackTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, self.frame.size.width, 30)];
+        feedbackTitle.textAlignment = NSTextAlignmentCenter;
+        feedbackTitle.text = @"Feedback";
+        feedbackTitle.font = [UIFont boldSystemFontOfSize:18];
+        [contentView addSubview:feedbackTitle];
+
+        UILabel* feedbackSubTitle = [[UILabel alloc] initWithFrame:CGRectMake(30, 40, self.frame.size.width-60, 60)];
+        feedbackSubTitle.textAlignment = NSTextAlignmentCenter;
+        feedbackSubTitle.numberOfLines = 0;
+        feedbackSubTitle.text = @"“If we are not ashamed to think it, we should not be ashamed to say it.” - Cicero";
+        [contentView addSubview:feedbackSubTitle];
+        
+        
+        
+        // ratings
+        
+        UILabel* penRatingLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 110, 360, 40)];
+        penRatingLabel.text = @"The pen feels perfect:";
+        [penRatingLabel sizeToFit];
+        [contentView addSubview:penRatingLabel];
+        penRatingView = [[DYRateView alloc] initWithFrame:CGRectMake(300, 110, 160, 40)
+                                                 fullStar:[UIImage imageNamed:@"StarFullLarge.png"]
+                                                emptyStar:[UIImage imageNamed:@"StarEmptyLarge.png"]];
+        penRatingView.editable = YES;
+        [contentView addSubview:penRatingView];
+        
+
+        UILabel* eraserRatingLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 150, 360, 40)];
+        eraserRatingLabel.text = @"The eraser feels perfect:";
+        [eraserRatingLabel sizeToFit];
+        [contentView addSubview:eraserRatingLabel];
+        eraserRatingView = [[DYRateView alloc] initWithFrame:CGRectMake(300, 150, 160, 40)
+                                                 fullStar:[UIImage imageNamed:@"StarFullLarge.png"]
+                                                emptyStar:[UIImage imageNamed:@"StarEmptyLarge.png"]];
+        eraserRatingView.editable = YES;
+        [contentView addSubview:eraserRatingView];
+        
+
+        UILabel* gestureRatingLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 190, 360, 40)];
+        gestureRatingLabel.text = @"Gestures are intuitive:";
+        [gestureRatingLabel sizeToFit];
+        [contentView addSubview:gestureRatingLabel];
+        gestureRatingView = [[DYRateView alloc] initWithFrame:CGRectMake(300, 190, 160, 40)
+                                                    fullStar:[UIImage imageNamed:@"StarFullLarge.png"]
+                                                   emptyStar:[UIImage imageNamed:@"StarEmptyLarge.png"]];
+        gestureRatingView.editable = YES;
+        [contentView addSubview:gestureRatingView];
+        
+
+        UILabel* performanceRatingLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 230, 360, 40)];
+        performanceRatingLabel.text = @"The app feels fast:";
+        [performanceRatingLabel sizeToFit];
+        [contentView addSubview:performanceRatingLabel];
+        performanceRatingView = [[DYRateView alloc] initWithFrame:CGRectMake(300, 230, 160, 40)
+                                                     fullStar:[UIImage imageNamed:@"StarFullLarge.png"]
+                                                    emptyStar:[UIImage imageNamed:@"StarEmptyLarge.png"]];
+        performanceRatingView.editable = YES;
+        [contentView addSubview:performanceRatingView];
+        
+        
+        
+        furtherComments = [[UIPlaceHolderTextView alloc] initWithFrame:CGRectMake(30, 280, self.frame.size.width-60, 140)];
+        furtherComments.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+        furtherComments.layer.borderColor = [UIColor blackColor].CGColor;
+        furtherComments.layer.borderWidth = 1;
+        furtherComments.layer.cornerRadius = 2;
+        furtherComments.placeholder = @"Tell me what hate and what you love...";
+        [contentView addSubview:furtherComments];
+        
+        // buttons
         
         UIButton* sendFeedbackButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [sendFeedbackButton setTitle:@"Send Feedback" forState:UIControlStateNormal];
@@ -88,6 +168,11 @@
 
 -(void) show{
     if(self.alpha == 0){
+        penRatingView.rate = 0;
+        eraserRatingView.rate = 0;
+        gestureRatingView.rate = 0;
+        performanceRatingView.rate = 0;
+        furtherComments.text = @"";
         self.transform = CGAffineTransformMakeScale(.9, .9);
         [UIView animateWithDuration:0.15
                               delay:0

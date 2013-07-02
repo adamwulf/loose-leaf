@@ -20,6 +20,16 @@
 		661507661783338E00B181F3 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 661507601783338E00B181F3 /* release_notes.md */; };
 		66150769178333D500B181F3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66150768178333D500B181F3 /* libz.dylib */; };
 		6615076F1783390400B181F3 /* MMFeedbackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6615076E1783390400B181F3 /* MMFeedbackView.m */; };
+		661507721783410900B181F3 /* DYRateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 661507711783410900B181F3 /* DYRateView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		661507771783417100B181F3 /* StarEmpty.png in Resources */ = {isa = PBXBuildFile; fileRef = 661507731783417100B181F3 /* StarEmpty.png */; };
+		661507781783417100B181F3 /* StarEmpty@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 661507741783417100B181F3 /* StarEmpty@2x.png */; };
+		661507791783417100B181F3 /* StarFull.png in Resources */ = {isa = PBXBuildFile; fileRef = 661507751783417100B181F3 /* StarFull.png */; };
+		6615077A1783417100B181F3 /* StarFull@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 661507761783417100B181F3 /* StarFull@2x.png */; };
+		6615077F1783420100B181F3 /* StarEmptyLarge.png in Resources */ = {isa = PBXBuildFile; fileRef = 6615077B1783420100B181F3 /* StarEmptyLarge.png */; };
+		661507801783420100B181F3 /* StarEmptyLarge@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6615077C1783420100B181F3 /* StarEmptyLarge@2x.png */; };
+		661507811783420100B181F3 /* StarFullLarge.png in Resources */ = {isa = PBXBuildFile; fileRef = 6615077D1783420100B181F3 /* StarFullLarge.png */; };
+		661507821783420100B181F3 /* StarFullLarge@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6615077E1783420100B181F3 /* StarFullLarge@2x.png */; };
+		66150785178347A100B181F3 /* UIPlaceHolderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66150784178347A100B181F3 /* UIPlaceHolderTextView.m */; };
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C1877175538A800706A05 /* MMPencilEraserButton.m */; };
 		663C187D1755B63D00706A05 /* Eraser.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C187C1755B63D00706A05 /* Eraser.m */; };
@@ -137,6 +147,18 @@
 		6615076B178338AF00B181F3 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
 		6615076D1783390400B181F3 /* MMFeedbackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFeedbackView.h; sourceTree = "<group>"; };
 		6615076E1783390400B181F3 /* MMFeedbackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFeedbackView.m; sourceTree = "<group>"; };
+		661507701783410800B181F3 /* DYRateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DYRateView.h; path = ../../Submodules/DYRateView/DYRateView/DYRateView/DYRateView.h; sourceTree = "<group>"; };
+		661507711783410900B181F3 /* DYRateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DYRateView.m; path = ../../Submodules/DYRateView/DYRateView/DYRateView/DYRateView.m; sourceTree = "<group>"; };
+		661507731783417100B181F3 /* StarEmpty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = StarEmpty.png; path = ../../Submodules/DYRateView/DYRateView/Resources/StarEmpty.png; sourceTree = "<group>"; };
+		661507741783417100B181F3 /* StarEmpty@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "StarEmpty@2x.png"; path = "../../Submodules/DYRateView/DYRateView/Resources/StarEmpty@2x.png"; sourceTree = "<group>"; };
+		661507751783417100B181F3 /* StarFull.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = StarFull.png; path = ../../Submodules/DYRateView/DYRateView/Resources/StarFull.png; sourceTree = "<group>"; };
+		661507761783417100B181F3 /* StarFull@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "StarFull@2x.png"; path = "../../Submodules/DYRateView/DYRateView/Resources/StarFull@2x.png"; sourceTree = "<group>"; };
+		6615077B1783420100B181F3 /* StarEmptyLarge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = StarEmptyLarge.png; path = ../../Submodules/DYRateView/DYRateView/Resources/StarEmptyLarge.png; sourceTree = "<group>"; };
+		6615077C1783420100B181F3 /* StarEmptyLarge@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "StarEmptyLarge@2x.png"; path = "../../Submodules/DYRateView/DYRateView/Resources/StarEmptyLarge@2x.png"; sourceTree = "<group>"; };
+		6615077D1783420100B181F3 /* StarFullLarge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = StarFullLarge.png; path = ../../Submodules/DYRateView/DYRateView/Resources/StarFullLarge.png; sourceTree = "<group>"; };
+		6615077E1783420100B181F3 /* StarFullLarge@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "StarFullLarge@2x.png"; path = "../../Submodules/DYRateView/DYRateView/Resources/StarFullLarge@2x.png"; sourceTree = "<group>"; };
+		66150783178347A100B181F3 /* UIPlaceHolderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIPlaceHolderTextView.h; sourceTree = "<group>"; };
+		66150784178347A100B181F3 /* UIPlaceHolderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPlaceHolderTextView.m; sourceTree = "<group>"; };
 		6630ED9F15F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
 		6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizerDelegate.h; sourceTree = "<group>"; };
@@ -359,8 +381,20 @@
 		6615076C178338E400B181F3 /* In App Feedback */ = {
 			isa = PBXGroup;
 			children = (
+				6615077B1783420100B181F3 /* StarEmptyLarge.png */,
+				6615077C1783420100B181F3 /* StarEmptyLarge@2x.png */,
+				6615077D1783420100B181F3 /* StarFullLarge.png */,
+				6615077E1783420100B181F3 /* StarFullLarge@2x.png */,
+				661507731783417100B181F3 /* StarEmpty.png */,
+				661507741783417100B181F3 /* StarEmpty@2x.png */,
+				661507751783417100B181F3 /* StarFull.png */,
+				661507761783417100B181F3 /* StarFull@2x.png */,
+				661507701783410800B181F3 /* DYRateView.h */,
+				661507711783410900B181F3 /* DYRateView.m */,
 				6615076D1783390400B181F3 /* MMFeedbackView.h */,
 				6615076E1783390400B181F3 /* MMFeedbackView.m */,
+				66150783178347A100B181F3 /* UIPlaceHolderTextView.h */,
+				66150784178347A100B181F3 /* UIPlaceHolderTextView.m */,
 			);
 			name = "In App Feedback";
 			sourceTree = "<group>";
@@ -741,6 +775,14 @@
 				6661144A16FD67FA005032B9 /* Loose-Leaf_144.png in Resources */,
 				66B21A59175B0BF30049F1AF /* cloth.png in Resources */,
 				661507661783338E00B181F3 /* release_notes.md in Resources */,
+				661507771783417100B181F3 /* StarEmpty.png in Resources */,
+				661507781783417100B181F3 /* StarEmpty@2x.png in Resources */,
+				661507791783417100B181F3 /* StarFull.png in Resources */,
+				6615077A1783417100B181F3 /* StarFull@2x.png in Resources */,
+				6615077F1783420100B181F3 /* StarEmptyLarge.png in Resources */,
+				661507801783420100B181F3 /* StarEmptyLarge@2x.png in Resources */,
+				661507811783420100B181F3 /* StarFullLarge.png in Resources */,
+				661507821783420100B181F3 /* StarFullLarge@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -806,6 +848,8 @@
 				66B21A7A175E595B0049F1AF /* MMBlockOperation.m in Sources */,
 				6655E926176291C800E4F36A /* MMScissorButton.m in Sources */,
 				6615076F1783390400B181F3 /* MMFeedbackView.m in Sources */,
+				661507721783410900B181F3 /* DYRateView.m in Sources */,
+				66150785178347A100B181F3 /* UIPlaceHolderTextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
