@@ -146,7 +146,12 @@
 #pragma mark - button actions
 
 -(void) submitFeedback{
-    NSString* feedback = [NSString stringWithFormat:@"Pen: %f\nEraser:%f\nGesture:%f\nSpeed:%f\n\nComments:\n%@", penRatingView.rate, eraserRatingView.rate, gestureRatingView.rate, performanceRatingView.rate, furtherComments.text];
+    
+    NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
+    NSString* version = [infoDict objectForKey:@"CFBundleVersion"];
+    NSString* shortVersion = [infoDict objectForKey:@"CFBundleShortVersionString"];
+    
+    NSString* feedback = [NSString stringWithFormat:@"Pen: %f\nEraser:%f\nGesture:%f\nSpeed:%f\n\nComments:\n%@\n\nVersion:%@\nShort Version:%@", penRatingView.rate, eraserRatingView.rate, gestureRatingView.rate, performanceRatingView.rate, furtherComments.text, version, shortVersion];
     [TestFlight submitFeedback:feedback];
     [self hide];
 }
