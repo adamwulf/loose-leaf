@@ -110,4 +110,7 @@
  */
 -(void) didSavePage:(MMPaperView*)page;
 
+
+-(BOOL) isPageEditable:(MMPaperView*)page;
+
 @end

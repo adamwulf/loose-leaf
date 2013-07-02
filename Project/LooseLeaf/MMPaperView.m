@@ -14,6 +14,7 @@
 #import "UIView+Debug.h"
 #import "MMObjectSelectLongPressGestureRecognizer.h"
 #import "MMImmovableTapGestureRecognizer.h"
+#import "TestFlight.h"
 
 @implementation MMPaperView
 

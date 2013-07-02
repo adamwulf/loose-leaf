@@ -16,6 +16,20 @@
 		660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAB158FC65C0001DA12 /* NSMutableArray+StackAdditions.m */; };
 		660E1DB0158FC7DB0001DA12 /* MMPaperIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAF158FC7DB0001DA12 /* MMPaperIcon.m */; };
 		660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DB2159028560001DA12 /* NSArray+MapReduce.m */; };
+		661507641783338E00B181F3 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6615075E1783338E00B181F3 /* libTestFlight.a */; };
+		661507661783338E00B181F3 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 661507601783338E00B181F3 /* release_notes.md */; };
+		66150769178333D500B181F3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66150768178333D500B181F3 /* libz.dylib */; };
+		6615076F1783390400B181F3 /* MMFeedbackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6615076E1783390400B181F3 /* MMFeedbackView.m */; };
+		661507721783410900B181F3 /* DYRateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 661507711783410900B181F3 /* DYRateView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		661507771783417100B181F3 /* StarEmpty.png in Resources */ = {isa = PBXBuildFile; fileRef = 661507731783417100B181F3 /* StarEmpty.png */; };
+		661507781783417100B181F3 /* StarEmpty@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 661507741783417100B181F3 /* StarEmpty@2x.png */; };
+		661507791783417100B181F3 /* StarFull.png in Resources */ = {isa = PBXBuildFile; fileRef = 661507751783417100B181F3 /* StarFull.png */; };
+		6615077A1783417100B181F3 /* StarFull@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 661507761783417100B181F3 /* StarFull@2x.png */; };
+		6615077F1783420100B181F3 /* StarEmptyLarge.png in Resources */ = {isa = PBXBuildFile; fileRef = 6615077B1783420100B181F3 /* StarEmptyLarge.png */; };
+		661507801783420100B181F3 /* StarEmptyLarge@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6615077C1783420100B181F3 /* StarEmptyLarge@2x.png */; };
+		661507811783420100B181F3 /* StarFullLarge.png in Resources */ = {isa = PBXBuildFile; fileRef = 6615077D1783420100B181F3 /* StarFullLarge.png */; };
+		661507821783420100B181F3 /* StarFullLarge@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6615077E1783420100B181F3 /* StarFullLarge@2x.png */; };
+		66150785178347A100B181F3 /* UIPlaceHolderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66150784178347A100B181F3 /* UIPlaceHolderTextView.m */; };
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C1877175538A800706A05 /* MMPencilEraserButton.m */; };
 		663C187D1755B63D00706A05 /* Eraser.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C187C1755B63D00706A05 /* Eraser.m */; };
@@ -24,7 +38,6 @@
 		663C1897175A89EF00706A05 /* MMRulerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C1896175A89ED00706A05 /* MMRulerButton.m */; };
 		664516B9159030FC0012FACA /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 664516B8159030FC0012FACA /* Constants.m */; };
 		66455F84175E938000C66DFA /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66A4BD181632170E00C45070 /* DrawKit-iOS.framework */; };
-		66455F86175E938500C66DFA /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66455F85175E938400C66DFA /* JotUI.framework */; };
 		664C62F015A36DA40072736A /* MMListPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 664C62EF15A36DA40072736A /* MMListPaperStackView.m */; };
 		664F4139159063F8006F8B09 /* MMPlusIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F4138159063F8006F8B09 /* MMPlusIcon.m */; };
 		664F413D1590661F006F8B09 /* MMRightArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413C1590661F006F8B09 /* MMRightArrow.m */; };
@@ -69,9 +82,10 @@
 		66BD6E991593E9C400D4544C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E981593E9C300D4544C /* CoreText.framework */; };
 		66BD6E9C15940D7500D4544C /* MMPencilButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9B15940D7400D4544C /* MMPencilButton.m */; };
 		66BD6E9F15941B7B00D4544C /* MMShareButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9E15941B7B00D4544C /* MMShareButton.m */; };
+		66C0C9CA1783645E009491B3 /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66C0C9C91783645E009491B3 /* JotUI.framework */; };
+		66C0C9D0178386B8009491B3 /* MMLikeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C0C9CF178386B8009491B3 /* MMLikeButton.m */; };
 		66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* MMListAddPageButton.m */; };
 		66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D33F4B15A6408A0044C809 /* MMShadowedView.m */; };
-		66DBA5021761213600B54117 /* foobar.png in Resources */ = {isa = PBXBuildFile; fileRef = 66DBA5011761213600B54117 /* foobar.png */; };
 		66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
 		66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8C1581BCEF00B4918C /* Foundation.framework */; };
 		66DCFB8F1581BCEF00B4918C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */; };
@@ -125,6 +139,27 @@
 		660E1DAF158FC7DB0001DA12 /* MMPaperIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPaperIcon.m; sourceTree = "<group>"; };
 		660E1DB1159028560001DA12 /* NSArray+MapReduce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+MapReduce.h"; sourceTree = "<group>"; };
 		660E1DB2159028560001DA12 /* NSArray+MapReduce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+MapReduce.m"; sourceTree = "<group>"; };
+		6615075E1783338E00B181F3 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		6615075F1783338E00B181F3 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		661507601783338E00B181F3 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
+		661507631783338E00B181F3 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
+		66150768178333D500B181F3 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		6615076A178338AF00B181F3 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
+		6615076B178338AF00B181F3 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
+		6615076D1783390400B181F3 /* MMFeedbackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFeedbackView.h; sourceTree = "<group>"; };
+		6615076E1783390400B181F3 /* MMFeedbackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFeedbackView.m; sourceTree = "<group>"; };
+		661507701783410800B181F3 /* DYRateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DYRateView.h; path = ../../Submodules/DYRateView/DYRateView/DYRateView/DYRateView.h; sourceTree = "<group>"; };
+		661507711783410900B181F3 /* DYRateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DYRateView.m; path = ../../Submodules/DYRateView/DYRateView/DYRateView/DYRateView.m; sourceTree = "<group>"; };
+		661507731783417100B181F3 /* StarEmpty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = StarEmpty.png; path = ../../Submodules/DYRateView/DYRateView/Resources/StarEmpty.png; sourceTree = "<group>"; };
+		661507741783417100B181F3 /* StarEmpty@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "StarEmpty@2x.png"; path = "../../Submodules/DYRateView/DYRateView/Resources/StarEmpty@2x.png"; sourceTree = "<group>"; };
+		661507751783417100B181F3 /* StarFull.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = StarFull.png; path = ../../Submodules/DYRateView/DYRateView/Resources/StarFull.png; sourceTree = "<group>"; };
+		661507761783417100B181F3 /* StarFull@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "StarFull@2x.png"; path = "../../Submodules/DYRateView/DYRateView/Resources/StarFull@2x.png"; sourceTree = "<group>"; };
+		6615077B1783420100B181F3 /* StarEmptyLarge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = StarEmptyLarge.png; path = ../../Submodules/DYRateView/DYRateView/Resources/StarEmptyLarge.png; sourceTree = "<group>"; };
+		6615077C1783420100B181F3 /* StarEmptyLarge@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "StarEmptyLarge@2x.png"; path = "../../Submodules/DYRateView/DYRateView/Resources/StarEmptyLarge@2x.png"; sourceTree = "<group>"; };
+		6615077D1783420100B181F3 /* StarFullLarge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = StarFullLarge.png; path = ../../Submodules/DYRateView/DYRateView/Resources/StarFullLarge.png; sourceTree = "<group>"; };
+		6615077E1783420100B181F3 /* StarFullLarge@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "StarFullLarge@2x.png"; path = "../../Submodules/DYRateView/DYRateView/Resources/StarFullLarge@2x.png"; sourceTree = "<group>"; };
+		66150783178347A100B181F3 /* UIPlaceHolderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIPlaceHolderTextView.h; sourceTree = "<group>"; };
+		66150784178347A100B181F3 /* UIPlaceHolderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPlaceHolderTextView.m; sourceTree = "<group>"; };
 		6630ED9F15F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
 		6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizerDelegate.h; sourceTree = "<group>"; };
@@ -134,11 +169,9 @@
 		663C187C1755B63D00706A05 /* Eraser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Eraser.m; sourceTree = "<group>"; };
 		663C18891759B51600706A05 /* MMUndoRedoButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoRedoButton.h; sourceTree = "<group>"; };
 		663C188A1759B51600706A05 /* MMUndoRedoButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUndoRedoButton.m; sourceTree = "<group>"; };
-		663C1893175A709B00706A05 /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
 		663C1895175A89EB00706A05 /* MMRulerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRulerButton.h; sourceTree = "<group>"; };
 		663C1896175A89ED00706A05 /* MMRulerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRulerButton.m; sourceTree = "<group>"; };
 		664516B8159030FC0012FACA /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
-		66455F85175E938400C66DFA /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../Submodules/JotUI/JotUI/build/Release-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
 		664C62EE15A36DA40072736A /* MMListPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListPaperStackView.h; sourceTree = "<group>"; };
 		664C62EF15A36DA40072736A /* MMListPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListPaperStackView.m; sourceTree = "<group>"; };
 		664F4137159063F8006F8B09 /* MMPlusIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPlusIcon.h; sourceTree = "<group>"; };
@@ -222,6 +255,9 @@
 		66BD6E9B15940D7400D4544C /* MMPencilButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPencilButton.m; sourceTree = "<group>"; };
 		66BD6E9D15941B7A00D4544C /* MMShareButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShareButton.h; sourceTree = "<group>"; };
 		66BD6E9E15941B7B00D4544C /* MMShareButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MMShareButton.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		66C0C9C91783645E009491B3 /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
+		66C0C9CE178386B8009491B3 /* MMLikeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLikeButton.h; sourceTree = "<group>"; };
+		66C0C9CF178386B8009491B3 /* MMLikeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLikeButton.m; sourceTree = "<group>"; };
 		66C38AC7175329160035B872 /* JotTouchSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotTouchSDK.framework; path = ../Submodules/JotUI/JotTouchSDK/JotTouchSDK.framework; sourceTree = "<group>"; };
 		66C47DA5158EF03200E2CD0C /* MMPaperViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperViewDelegate.h; sourceTree = "<group>"; };
 		66D0905415F7080F004D2CAF /* MMListAddPageButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButton.h; sourceTree = "<group>"; };
@@ -229,7 +265,6 @@
 		66D0905815F71941004D2CAF /* MMListAddPageButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButtonDelegate.h; sourceTree = "<group>"; };
 		66D33F4A15A6408A0044C809 /* MMShadowedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShadowedView.h; sourceTree = "<group>"; };
 		66D33F4B15A6408A0044C809 /* MMShadowedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShadowedView.m; sourceTree = "<group>"; };
-		66DBA5011761213600B54117 /* foobar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = foobar.png; sourceTree = "<group>"; };
 		66DCFB861581BCEF00B4918C /* LooseLeaf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LooseLeaf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66DCFB8A1581BCEF00B4918C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		66DCFB8C1581BCEF00B4918C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -262,7 +297,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66455F86175E938500C66DFA /* JotUI.framework in Frameworks */,
+				66C0C9CA1783645E009491B3 /* JotUI.framework in Frameworks */,
+				66150769178333D500B181F3 /* libz.dylib in Frameworks */,
 				66455F84175E938000C66DFA /* DrawKit-iOS.framework in Frameworks */,
 				663C188F1759B57800706A05 /* JotTouchSDK.framework in Frameworks */,
 				6695B6E81750088D0069E61F /* AudioToolbox.framework in Frameworks */,
@@ -275,6 +311,7 @@
 				66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */,
 				66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */,
 				66DCFB8F1581BCEF00B4918C /* CoreGraphics.framework in Frameworks */,
+				661507641783338E00B181F3 /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,6 +366,50 @@
 			name = Icons;
 			sourceTree = "<group>";
 		};
+		6615075D1783338E00B181F3 /* TestFlightSDK */ = {
+			isa = PBXGroup;
+			children = (
+				66150768178333D500B181F3 /* libz.dylib */,
+				6615075E1783338E00B181F3 /* libTestFlight.a */,
+				6615075F1783338E00B181F3 /* README.md */,
+				661507601783338E00B181F3 /* release_notes.md */,
+				6615076A178338AF00B181F3 /* TestFlight+AsyncLogging.h */,
+				6615076B178338AF00B181F3 /* TestFlight+ManualSessions.h */,
+				661507631783338E00B181F3 /* TestFlight.h */,
+			);
+			name = TestFlightSDK;
+			path = External/TestFlightSDK;
+			sourceTree = "<group>";
+		};
+		6615076C178338E400B181F3 /* In App Feedback */ = {
+			isa = PBXGroup;
+			children = (
+				6615078817835A7F00B181F3 /* stars */,
+				661507701783410800B181F3 /* DYRateView.h */,
+				661507711783410900B181F3 /* DYRateView.m */,
+				6615076D1783390400B181F3 /* MMFeedbackView.h */,
+				6615076E1783390400B181F3 /* MMFeedbackView.m */,
+				66150783178347A100B181F3 /* UIPlaceHolderTextView.h */,
+				66150784178347A100B181F3 /* UIPlaceHolderTextView.m */,
+			);
+			name = "In App Feedback";
+			sourceTree = "<group>";
+		};
+		6615078817835A7F00B181F3 /* stars */ = {
+			isa = PBXGroup;
+			children = (
+				6615077B1783420100B181F3 /* StarEmptyLarge.png */,
+				6615077C1783420100B181F3 /* StarEmptyLarge@2x.png */,
+				6615077D1783420100B181F3 /* StarFullLarge.png */,
+				6615077E1783420100B181F3 /* StarFullLarge@2x.png */,
+				661507731783417100B181F3 /* StarEmpty.png */,
+				661507741783417100B181F3 /* StarEmpty@2x.png */,
+				661507751783417100B181F3 /* StarFull.png */,
+				661507761783417100B181F3 /* StarFull@2x.png */,
+			);
+			name = stars;
+			sourceTree = "<group>";
+		};
 		664C62F115A36DB00072736A /* MMPaperView */ = {
 			isa = PBXGroup;
 			children = (
@@ -337,7 +418,6 @@
 				66D33F4B15A6408A0044C809 /* MMShadowedView.m */,
 				66DCFBCB1582BAED00B4918C /* MMPaperView.h */,
 				66DCFBCC1582BAED00B4918C /* MMPaperView.m */,
-				66DBA5011761213600B54117 /* foobar.png */,
 				6695B6EA17505FBF0069E61F /* MMEditablePaperView.h */,
 				6695B6EB17505FBF0069E61F /* MMEditablePaperView.m */,
 				66C47DA5158EF03200E2CD0C /* MMPaperViewDelegate.h */,
@@ -395,8 +475,7 @@
 		6695B6E1175008530069E61F /* JotUI */ = {
 			isa = PBXGroup;
 			children = (
-				663C1893175A709B00706A05 /* JotUI.framework */,
-				66455F85175E938400C66DFA /* JotUI.framework */,
+				66C0C9C91783645E009491B3 /* JotUI.framework */,
 				6695B6E2175008680069E61F /* OpenGLES.framework */,
 				66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */,
 				66BD6E7C1593ACD400D4544C /* QuartzCore.framework */,
@@ -469,8 +548,12 @@
 				66BD6E7E1593AF4100D4544C /* MMSidebarButton.h */,
 				66BD6E7F1593AF4100D4544C /* MMSidebarButton.m */,
 				66BD6E8B1593C3FF00D4544C /* MMSidebarButtonDelegate.h */,
-				663C18891759B51600706A05 /* MMUndoRedoButton.h */,
-				663C188A1759B51600706A05 /* MMUndoRedoButton.m */,
+				66BD6E6E1593A8CC00D4544C /* MMPlusButton.h */,
+				66BD6E6F1593A8CC00D4544C /* MMPlusButton.m */,
+				66BD6E9D15941B7A00D4544C /* MMShareButton.h */,
+				66BD6E9E15941B7B00D4544C /* MMShareButton.m */,
+				66C0C9CE178386B8009491B3 /* MMLikeButton.h */,
+				66C0C9CF178386B8009491B3 /* MMLikeButton.m */,
 				66BD6E9A15940D7300D4544C /* MMPencilButton.h */,
 				66BD6E9B15940D7400D4544C /* MMPencilButton.m */,
 				663C1876175538A800706A05 /* MMPencilEraserButton.h */,
@@ -485,10 +568,8 @@
 				66B21A55175AFCA70049F1AF /* MMHandButton.m */,
 				663C1895175A89EB00706A05 /* MMRulerButton.h */,
 				663C1896175A89ED00706A05 /* MMRulerButton.m */,
-				66BD6E6E1593A8CC00D4544C /* MMPlusButton.h */,
-				66BD6E6F1593A8CC00D4544C /* MMPlusButton.m */,
-				66BD6E9D15941B7A00D4544C /* MMShareButton.h */,
-				66BD6E9E15941B7B00D4544C /* MMShareButton.m */,
+				663C18891759B51600706A05 /* MMUndoRedoButton.h */,
+				663C188A1759B51600706A05 /* MMUndoRedoButton.m */,
 				66D0905415F7080F004D2CAF /* MMListAddPageButton.h */,
 				66D0905515F70810004D2CAF /* MMListAddPageButton.m */,
 				66D0905815F71941004D2CAF /* MMListAddPageButtonDelegate.h */,
@@ -546,6 +627,7 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6615075D1783338E00B181F3 /* TestFlightSDK */,
 				6695B6E1175008530069E61F /* JotUI */,
 				6695B6E41750086D0069E61F /* JotTouchSDK */,
 				66BD6E981593E9C300D4544C /* CoreText.framework */,
@@ -561,6 +643,7 @@
 		66DCFB901581BCEF00B4918C /* Loose Leaf */ = {
 			isa = PBXGroup;
 			children = (
+				6615076C178338E400B181F3 /* In App Feedback */,
 				66932995159984090033E557 /* Experiments */,
 				6693295715958A890033E557 /* Managers */,
 				66BD6E811593AF4500D4544C /* Buttons */,
@@ -623,6 +706,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 66DCFBB91581BCF000B4918C /* Build configuration list for PBXNativeTarget "LooseLeaf" */;
 			buildPhases = (
+				66C0C9D217838C91009491B3 /* ShellScript */,
 				66DCFB821581BCEF00B4918C /* Sources */,
 				66DCFB831581BCEF00B4918C /* Frameworks */,
 				66DCFB841581BCEF00B4918C /* Resources */,
@@ -702,11 +786,36 @@
 				6661144716FD67F8005032B9 /* Loose-Leaf_72.png in Resources */,
 				6661144A16FD67FA005032B9 /* Loose-Leaf_144.png in Resources */,
 				66B21A59175B0BF30049F1AF /* cloth.png in Resources */,
-				66DBA5021761213600B54117 /* foobar.png in Resources */,
+				661507661783338E00B181F3 /* release_notes.md in Resources */,
+				661507771783417100B181F3 /* StarEmpty.png in Resources */,
+				661507781783417100B181F3 /* StarEmpty@2x.png in Resources */,
+				661507791783417100B181F3 /* StarFull.png in Resources */,
+				6615077A1783417100B181F3 /* StarFull@2x.png in Resources */,
+				6615077F1783420100B181F3 /* StarEmptyLarge.png in Resources */,
+				661507801783420100B181F3 /* StarEmptyLarge@2x.png in Resources */,
+				661507811783420100B181F3 /* StarFullLarge.png in Resources */,
+				661507821783420100B181F3 /* StarFullLarge@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		66C0C9D217838C91009491B3 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Update the CFBundleShortVersionString in the generated Info.plist using the most recent Git tag.\n# Idea taken from http://tinyurl.com/3usjj9d by Joachim Bondo.\n\n# Get the current release description from Git.\nGIT_RELEASE_SHORT_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\nGIT_RELEASE_VERSION=`git describe --tags`\n\n# Set the CFBundleShortVersionString in the generated Info.plist (stripping off the leading \"v\").\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleShortVersionString\" \"${GIT_RELEASE_SHORT_VERSION#*v}\"\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleVersion\" \"${GIT_RELEASE_VERSION#*v}\"";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		66DCFB821581BCEF00B4918C /* Sources */ = {
@@ -767,6 +876,10 @@
 				66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */,
 				66B21A7A175E595B0049F1AF /* MMBlockOperation.m in Sources */,
 				6655E926176291C800E4F36A /* MMScissorButton.m in Sources */,
+				6615076F1783390400B181F3 /* MMFeedbackView.m in Sources */,
+				661507721783410900B181F3 /* DYRateView.m in Sources */,
+				66150785178347A100B181F3 /* UIPlaceHolderTextView.m in Sources */,
+				66C0C9D0178386B8009491B3 /* MMLikeButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -860,14 +973,18 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../Submodules/JotUI/JotTouchSDK\"",
+					"\"$(SRCROOT)/../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
-				ONLY_ACTIVE_ARCH = YES;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/External/TestFlightSDK\"",
+				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC++",
-					"-all_load",
 					"-lstdc++",
 				);
 				PRODUCT_NAME = LooseLeaf;
@@ -886,13 +1003,17 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../Submodules/JotUI/JotTouchSDK\"",
+					"\"$(SRCROOT)/../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/External/TestFlightSDK\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC++",
-					"-all_load",
 					"-lstdc++",
 				);
 				PRODUCT_NAME = LooseLeaf;

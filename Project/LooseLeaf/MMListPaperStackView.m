@@ -1054,6 +1054,7 @@
     //
     // now we need to make sure that page is on the top
     // of the visible stack
+    [self willChangeTopPageTo:aPage];
     if([self isInVisibleStack:aPage]){
         // the page is in teh visible stack, so pop pages
         // onto the hidden stack so that this page is the

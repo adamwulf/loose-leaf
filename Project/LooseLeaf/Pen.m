@@ -7,6 +7,8 @@
 //
 
 #import "Pen.h"
+#import "Constants.h"
+#import "TestFlight.h"
 
 static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
 
@@ -126,6 +128,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
  */
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
     // noop
+    debug_NSLog(@"PEN velocity: %f", velocity);
 }
 
 /**

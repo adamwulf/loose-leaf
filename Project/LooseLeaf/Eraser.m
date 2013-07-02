@@ -7,6 +7,8 @@
 //
 
 #import "Eraser.h"
+#import "Constants.h"
+#import "TestFlight.h"
 
 @implementation Eraser
 
@@ -55,6 +57,11 @@
 
 -(UIColor*) colorForTouch:(JotTouch*)touch{
     return nil; // nil means erase
+}
+
+
+-(void) didEndStrokeWithTouch:(JotTouch *)touch{
+    debug_NSLog(@"PEN velocity: %f", velocity);
 }
 
 @end

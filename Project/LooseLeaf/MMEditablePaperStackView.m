@@ -8,10 +8,14 @@
 
 #import "MMEditablePaperStackView.h"
 #import "UIView+SubviewStacks.h"
+#import "TestFlight.h"
+#import "MMFeedbackView.h"
 
 @implementation MMEditablePaperStackView{
     MMEditablePaperView* currentEditablePage;
     JotView* drawableView;
+    NSMutableArray* stateLoadedPages;
+    MMFeedbackView* feedbackView;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -20,6 +24,8 @@
     if (self) {
         // Initialization code
 
+        stateLoadedPages = [NSMutableArray array];
+        
         stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
         
         drawableView = [[JotView alloc] initWithFrame:self.bounds];
@@ -48,6 +54,11 @@
         shareButton.delegate = self;
         [shareButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:shareButton];
+        
+        feedbackButton = [[MMLikeButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60*2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        feedbackButton.delegate = self;
+        [feedbackButton addTarget:self action:@selector(feedbackButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:feedbackButton];
         
         
         
@@ -199,6 +210,7 @@
     id obj = [visibleStackHolder peekSubview];
     if([obj respondsToSelector:@selector(undo)]){
         [obj undo];
+        [TestFlight passCheckpoint:@"BUTTON_UNDO"];
     }
 }
 
@@ -206,6 +218,7 @@
     id obj = [visibleStackHolder peekSubview];
     if([obj respondsToSelector:@selector(redo)]){
         [obj redo];
+        [TestFlight passCheckpoint:@"BUTTON_REDO"];
     }
 }
 
@@ -255,7 +268,19 @@
     page.delegate = self;
     [hiddenStackHolder pushSubview:page];
     [[visibleStackHolder peekSubview] enableAllGestures];
-    [self popTopPageOfHiddenStack]; 
+    [self popTopPageOfHiddenStack];
+    [TestFlight passCheckpoint:@"BUTTON_ADD_PAGE"];
+}
+
+-(void) feedbackButtonTapped:(UIButton*)_button{
+    CGRect feedbackFrame = CGRectInset(self.bounds, 150, 200);
+    feedbackFrame.size.height -= 30;
+    if(!feedbackView){
+        feedbackView = [[MMFeedbackView alloc] initWithFrame:feedbackFrame];
+    }
+    feedbackView.frame = feedbackFrame;
+    [self addSubview:feedbackView];
+    [feedbackView show];
 }
 
 -(void) tempButtonTapped:(UIButton*)_button{
@@ -265,6 +290,7 @@
 -(void) setButtonsVisible:(BOOL)visible{
     [UIView animateWithDuration:0.3 animations:^{
         addPageSidebarButton.alpha = visible;
+        feedbackButton.alpha = visible;
         documentBackgroundSidebarButton.alpha = visible;
         polylineButton.alpha = visible;
         polygonButton.alpha = visible;
@@ -301,6 +327,7 @@
         redoButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         rulerButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         handButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        feedbackButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
     }];
 }
 
@@ -333,6 +360,7 @@
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     [super finishedScalingReallySmall:page];
     [self saveStacksToDisk];
+    [TestFlight passCheckpoint:@"NAV_TO_LIST_FROM_PAGE"];
 }
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
     [self setButtonsVisible:YES];
@@ -350,42 +378,48 @@
     [self setButtonsVisible:YES];
     [super finishedScalingBackToPageView:page];
     [self saveStacksToDisk];
+    [TestFlight passCheckpoint:@"NAV_TO_PAGE_FROM_LIST"];
 }
 
 -(void) didSavePage:(MMPaperView*)page{
-    NSLog(@"saved page: %@", page.uuid);
     if(page.scale < kMinPageZoom){
         if([page isKindOfClass:[MMEditablePaperView class]]){
             MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
             if([editablePage hasEditsToSave]){
-                NSLog(@"page still has edits to save...");
+                debug_NSLog(@"page still has edits to save...");
             }else{
-                NSLog(@"page is done saving...");
+                debug_NSLog(@"page is done saving...");
                 [(MMEditablePaperView*)page setCanvasVisible:NO];
                 debug_NSLog(@"thumb for %@ is visible", page.uuid);
             }
         }
-    }else{
-        debug_NSLog(@"scale %f vs %f", page.scale, kMinPageZoom);
     }
+}
+
+-(BOOL) isPageEditable:(MMPaperView*)page{
+    return page == currentEditablePage;
 }
 
 #pragma mark - Page Loading and Unloading
 
--(void) mayChangeTopPageTo:(MMPaperView*)page{
-    [super mayChangeTopPageTo:page];
+-(void) loadStateForPage:(MMPaperView*)page{
+    [stateLoadedPages removeObject:page];
+    [stateLoadedPages insertObject:page atIndex:0];
+    if(currentEditablePage){
+        [stateLoadedPages removeObject:currentEditablePage];
+        [stateLoadedPages insertObject:currentEditablePage atIndex:0];
+    }
+    if([stateLoadedPages count] > 5){
+        [[stateLoadedPages lastObject] unloadState];
+        [stateLoadedPages removeLastObject];
+    }
+    if([page isKindOfClass:[MMEditablePaperView class]]){
+        MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
+        [editablePage loadStateAsynchronously:YES withSize:[drawableView pagePixelSize] andContext:[drawableView context] andThen:nil];
+    }
 }
 
--(void) willChangeTopPageTo:(MMPaperView*)page{
-    [super willChangeTopPageTo:page];
-    NSLog(@"will switch top page to %@", page.uuid);
-}
-
--(void) didChangeTopPage{
-    CheckMainThread;
-    [super didChangeTopPage];
-    NSLog(@"did change top page");
-    MMPaperView* topPage = [visibleStackHolder peekSubview];
+-(void) ensureTopPageIsLoaded:(MMPaperView*)topPage{
     if([topPage isKindOfClass:[MMEditablePaperView class]]){
         MMEditablePaperView* editableTopPage = (MMEditablePaperView*)topPage;
         if(currentEditablePage != editableTopPage){
@@ -393,18 +427,37 @@
             [currentEditablePage setEditable:NO];
             [currentEditablePage setCanvasVisible:NO];
             currentEditablePage = editableTopPage;
-            NSLog(@"did switch top page to %@", currentEditablePage.uuid);
+            debug_NSLog(@"did switch top page to %@", currentEditablePage.uuid);
         }
         if([currentEditablePage isKindOfClass:[MMEditablePaperView class]]){
+            [self loadStateForPage:currentEditablePage];
             [currentEditablePage setDrawableView:drawableView];
-            [currentEditablePage setCanvasVisible:YES];
-            [currentEditablePage setEditable:YES];
         }
     }
 }
 
+-(void) mayChangeTopPageTo:(MMPaperView*)page{
+    [super mayChangeTopPageTo:page];
+    [self loadStateForPage:page];
+}
+
+-(void) willChangeTopPageTo:(MMPaperView*)page{
+    [super willChangeTopPageTo:page];
+    debug_NSLog(@"will switch top page to %@", page.uuid);
+    [self loadStateForPage:page];
+}
+
+-(void) didChangeTopPage{
+    CheckMainThread;
+    [super didChangeTopPage];
+    debug_NSLog(@"did change top page");
+    MMPaperView* topPage = [visibleStackHolder peekSubview];
+    [self ensureTopPageIsLoaded:topPage];
+}
+
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
     [super willNotChangeTopPageTo:page];
+    debug_NSLog(@"won't change to: %@", page.uuid);
 }
 
 
@@ -415,11 +468,9 @@
 -(void) loadStacksFromDisk{
     NSDictionary* pages = [stackManager loadFromDiskWithBounds:self.bounds];
     for(MMPaperView* page in [[pages objectForKey:@"visiblePages"] reverseObjectEnumerator]){
-        debug_NSLog(@"loaded: %@", [page description]);
         [self addPaperToBottomOfStack:page];
     }
     for(MMPaperView* page in [[pages objectForKey:@"hiddenPages"] reverseObjectEnumerator]){
-        debug_NSLog(@"loaded hidden: %@", [page description]);
         [self addPaperToBottomOfHiddenStack:page];
     }
     
@@ -437,6 +488,13 @@
         }
         [self saveStacksToDisk];
     }
+    
+    
+    [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
+                                                     withSize:[drawableView pagePixelSize]
+                                                   andContext:[drawableView context]
+                                                      andThen:nil];
+    
     [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
     [self didChangeTopPage];
 }

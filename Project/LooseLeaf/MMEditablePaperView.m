@@ -10,13 +10,16 @@
 #import <QuartzCore/QuartzCore.h>
 #import <JotUI/JotUI.h>
 #import "NSThread+BlockAdditions.h"
+#import "TestFlight.h"
 
+dispatch_queue_t loadUnloadStateQueue;
 dispatch_queue_t importThumbnailQueue;
 
 
 @implementation MMEditablePaperView{
     NSUInteger lastSavedUndoHash;
     
+    JotViewState* state;
     // cached static values
     NSString* pagesPath;
     NSString* inkPath;
@@ -25,6 +28,13 @@ dispatch_queue_t importThumbnailQueue;
 }
 
 @synthesize drawableView;
+
++(dispatch_queue_t) loadUnloadStateQueue{
+    if(!loadUnloadStateQueue){
+        loadUnloadStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.loadUnloadStateQueue", DISPATCH_QUEUE_SERIAL);
+    }
+    return loadUnloadStateQueue;
+}
 
 +(dispatch_queue_t) importThumbnailQueue{
     if(!importThumbnailQueue){
@@ -95,7 +105,7 @@ dispatch_queue_t importThumbnailQueue;
 
 -(void) setEditable:(BOOL)isEditable{
     if(isEditable && (!drawableView || drawableView.hidden)){
-        NSLog(@"setting editable w/o canvas");
+        debug_NSLog(@"setting editable w/o canvas");
     }
     if(isEditable){
         drawableView.userInteractionEnabled = YES;
@@ -104,27 +114,63 @@ dispatch_queue_t importThumbnailQueue;
     }
 }
 
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(EAGLContext*)context andThen:(void (^)())block{
+    if(state){
+        if(block) block();
+        return;
+    }
+    
+    void (^block2)() = ^(void) {
+        if(!state){
+            state = [[JotViewState alloc] initWithImageFile:[self inkPath]
+                                               andStateFile:[self plistPath]
+                                                andPageSize:pagePixelSize
+                                               andGLContext:context];
+        }
+        if(block) block();
+    };
+    
+    if(async){
+        dispatch_async([MMEditablePaperView loadUnloadStateQueue], block2);
+    }else{
+        block2();
+    }
+}
+-(void) unloadState{
+    dispatch_async([MMEditablePaperView loadUnloadStateQueue], ^(void) {
+        state = nil;
+    });
+}
+
 -(void) setDrawableView:(JotView *)_drawableView{
     if(drawableView != _drawableView){
         drawableView = _drawableView;
         if(drawableView){
-            JotViewState* state = [[JotViewState alloc] initWithImageFile:[self inkPath]
-                                               andStateFile:[self plistPath]
-                                                andPageSize:[drawableView pagePixelSize]
-                                               andGLContext:[drawableView context]];
-
-            [drawableView loadState:state];
-            [self.contentView addSubview:drawableView];
             [self setFrame:self.frame];
-            
-            drawableView.delegate = self;
-            
-            // anchor the view to the top left,
-            // so that when we scale down, the drawable view
-            // stays in place
-            drawableView.layer.anchorPoint = CGPointMake(0,0);
-            drawableView.layer.position = CGPointMake(0,0);
+            [self loadStateAsynchronously:YES
+                                 withSize:[drawableView pagePixelSize]
+                               andContext:[drawableView context]
+                                  andThen:^{
+                                      [NSThread performBlockOnMainThread:^{
+                                          if([self.delegate isPageEditable:self]){
+                                              [drawableView loadState:state];
+                                              lastSavedUndoHash = [drawableView undoHash];
+                                              [self.contentView addSubview:drawableView];
+                                              // anchor the view to the top left,
+                                              // so that when we scale down, the drawable view
+                                              // stays in place
+                                              drawableView.layer.anchorPoint = CGPointMake(0,0);
+                                              drawableView.layer.position = CGPointMake(0,0);
+                                              drawableView.delegate = self;
+                                              [self setCanvasVisible:YES];
+                                              [self setEditable:YES];
+                                          }
+                                      }];
+                                  }];
         }
+    }else if(drawableView && state){
+        [self setCanvasVisible:YES];
+        [self setEditable:YES];
     }
 }
 
@@ -134,7 +180,7 @@ dispatch_queue_t importThumbnailQueue;
  * currently saved hash
  */
 -(BOOL) hasEditsToSave{
-    NSLog(@"checking if edits to save %u vs %u", [drawableView undoHash], lastSavedUndoHash);
+    debug_NSLog(@"checking if edits to save %u vs %u", [drawableView undoHash], lastSavedUndoHash);
     return [drawableView undoHash] != lastSavedUndoHash;
 }
 
@@ -157,7 +203,6 @@ dispatch_queue_t importThumbnailQueue;
                            [NSThread performBlockOnMainThread:^{
                                lastSavedUndoHash = [immutableState undoHash];
                                debug_NSLog(@"saving page %@ with hash %u", self.uuid, lastSavedUndoHash);
-                               debug_NSLog(@"state hash %u vs page %u", [immutableState undoHash], [drawableView undoHash]);
                                cachedImgView.image = thumbnail;
                                [self.delegate didSavePage:self];
                            }];
@@ -225,10 +270,10 @@ dispatch_queue_t importThumbnailQueue;
     if(!pagesPath){
         NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString* documentsPath = [paths objectAtIndex:0];
-        pagesPath = [documentsPath stringByAppendingPathComponent:@"Pages"];
+        pagesPath = [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:[self uuid]];
         
         if(![[NSFileManager defaultManager] fileExistsAtPath:pagesPath]){
-            [[NSFileManager defaultManager] createDirectoryAtPath:pagesPath withIntermediateDirectories:NO attributes:nil error:nil];
+            [[NSFileManager defaultManager] createDirectoryAtPath:pagesPath withIntermediateDirectories:YES attributes:nil error:nil];
         }
     }
     return pagesPath;
@@ -236,21 +281,21 @@ dispatch_queue_t importThumbnailQueue;
 
 -(NSString*) inkPath{
     if(!inkPath){
-        inkPath = [[[self pagesPath] stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"png"];;
+        inkPath = [[[self pagesPath] stringByAppendingPathComponent:@"ink"] stringByAppendingPathExtension:@"png"];;
     }
     return inkPath;
 }
 
 -(NSString*) plistPath{
     if(!plistPath){
-        plistPath = [[[self pagesPath] stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"plist"];;
+        plistPath = [[[self pagesPath] stringByAppendingPathComponent:@"info"] stringByAppendingPathExtension:@"plist"];;
     }
     return plistPath;
 }
 
 -(NSString*) thumbnailPath{
     if(!thumbnailPath){
-        thumbnailPath = [[[self pagesPath] stringByAppendingPathComponent:[self.uuid stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
+        thumbnailPath = [[[self pagesPath] stringByAppendingPathComponent:[@"ink" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
     }
     return thumbnailPath;
 }

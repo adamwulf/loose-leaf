@@ -19,6 +19,8 @@
 -(void) undo;
 -(void) redo;
 -(BOOL) hasEditsToSave;
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(EAGLContext*)context andThen:(void (^)())block;
+-(void) unloadState;
 -(void) saveToDisk;
 -(void) setCanvasVisible:(BOOL)isVisible;
 -(void) setEditable:(BOOL)isEditable;

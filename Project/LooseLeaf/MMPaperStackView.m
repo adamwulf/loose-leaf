@@ -10,6 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "MMShadowManager.h"
 #import "NSThread+BlockAdditions.h"
+#import "TestFlight.h"
 
 @implementation MMPaperStackView
 
@@ -628,7 +629,9 @@
             for(int i=0;i<page.numberOfTimesExitedBezel;i++){
                 pageMayPopTo = [visibleStackHolder getPageBelow:pageMayPopTo];
             }
-            [self mayChangeTopPageTo:pageMayPopTo];
+            if(pageMayPopTo){
+                [self mayChangeTopPageTo:pageMayPopTo];
+            }
         }else if([self shouldPushPageOntoVisibleStack:page withFrame:page.frame]){
             //
             // the user has moved the top page far enough left that if they release
@@ -643,7 +646,10 @@
                 [self mayChangeTopPageTo:paperView];
             }
         }else{
-            [self mayChangeTopPageTo:[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]]];
+            MMPaperView* pageBelow = [visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]];
+            if(pageBelow){
+                [self mayChangeTopPageTo:pageBelow];
+            }
         }
         // ok, the user isn't bezeling left anymore
         [UIView animateWithDuration:.2 delay:.5 options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -958,6 +964,10 @@
 }
 
 -(void) didSavePage:(MMPaperView*)page{
+    @throw kAbstractMethodException;
+}
+
+-(BOOL) isPageEditable:(MMPaperView *)page{
     @throw kAbstractMethodException;
 }
 
