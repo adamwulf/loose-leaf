@@ -270,10 +270,10 @@ dispatch_queue_t importThumbnailQueue;
     if(!pagesPath){
         NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString* documentsPath = [paths objectAtIndex:0];
-        pagesPath = [documentsPath stringByAppendingPathComponent:@"Pages"];
+        pagesPath = [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:[self uuid]];
         
         if(![[NSFileManager defaultManager] fileExistsAtPath:pagesPath]){
-            [[NSFileManager defaultManager] createDirectoryAtPath:pagesPath withIntermediateDirectories:NO attributes:nil error:nil];
+            [[NSFileManager defaultManager] createDirectoryAtPath:pagesPath withIntermediateDirectories:YES attributes:nil error:nil];
         }
     }
     return pagesPath;
@@ -281,21 +281,21 @@ dispatch_queue_t importThumbnailQueue;
 
 -(NSString*) inkPath{
     if(!inkPath){
-        inkPath = [[[self pagesPath] stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"png"];;
+        inkPath = [[[self pagesPath] stringByAppendingPathComponent:@"ink"] stringByAppendingPathExtension:@"png"];;
     }
     return inkPath;
 }
 
 -(NSString*) plistPath{
     if(!plistPath){
-        plistPath = [[[self pagesPath] stringByAppendingPathComponent:self.uuid] stringByAppendingPathExtension:@"plist"];;
+        plistPath = [[[self pagesPath] stringByAppendingPathComponent:@"info"] stringByAppendingPathExtension:@"plist"];;
     }
     return plistPath;
 }
 
 -(NSString*) thumbnailPath{
     if(!thumbnailPath){
-        thumbnailPath = [[[self pagesPath] stringByAppendingPathComponent:[self.uuid stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
+        thumbnailPath = [[[self pagesPath] stringByAppendingPathComponent:[@"ink" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
     }
     return thumbnailPath;
 }
