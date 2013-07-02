@@ -10,8 +10,6 @@
 #import "Constants.h"
 #import "TestFlight.h"
 
-static float averageVelocity = 0;
-
 static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
 
 @implementation Pen
