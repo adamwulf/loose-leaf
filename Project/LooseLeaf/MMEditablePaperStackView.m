@@ -8,11 +8,14 @@
 
 #import "MMEditablePaperStackView.h"
 #import "UIView+SubviewStacks.h"
+#import "TestFlight.h"
+#import "MMFeedbackView.h"
 
 @implementation MMEditablePaperStackView{
     MMEditablePaperView* currentEditablePage;
     JotView* drawableView;
     NSMutableArray* stateLoadedPages;
+    MMFeedbackView* feedbackView;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -52,6 +55,11 @@
         shareButton.delegate = self;
         [shareButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:shareButton];
+        
+        feedbackButton = [[MMShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60*2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        feedbackButton.delegate = self;
+        [feedbackButton addTarget:self action:@selector(feedbackButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:feedbackButton];
         
         
         
@@ -203,6 +211,7 @@
     id obj = [visibleStackHolder peekSubview];
     if([obj respondsToSelector:@selector(undo)]){
         [obj undo];
+        [TestFlight passCheckpoint:@"BUTTON_UNDO"];
     }
 }
 
@@ -210,6 +219,7 @@
     id obj = [visibleStackHolder peekSubview];
     if([obj respondsToSelector:@selector(redo)]){
         [obj redo];
+        [TestFlight passCheckpoint:@"BUTTON_REDO"];
     }
 }
 
@@ -259,7 +269,17 @@
     page.delegate = self;
     [hiddenStackHolder pushSubview:page];
     [[visibleStackHolder peekSubview] enableAllGestures];
-    [self popTopPageOfHiddenStack]; 
+    [self popTopPageOfHiddenStack];
+    [TestFlight passCheckpoint:@"BUTTON_ADD_PAGE"];
+}
+
+-(void) feedbackButtonTapped:(UIButton*)_button{
+    if(!feedbackView){
+        feedbackView = [[MMFeedbackView alloc] initWithFrame:CGRectInset(self.bounds, 150, 200)];
+    }
+    feedbackView.frame = CGRectInset(self.bounds, 150, 200);
+    [self addSubview:feedbackView];
+    [feedbackView show];
 }
 
 -(void) tempButtonTapped:(UIButton*)_button{
@@ -269,6 +289,7 @@
 -(void) setButtonsVisible:(BOOL)visible{
     [UIView animateWithDuration:0.3 animations:^{
         addPageSidebarButton.alpha = visible;
+        feedbackButton.alpha = visible;
         documentBackgroundSidebarButton.alpha = visible;
         polylineButton.alpha = visible;
         polygonButton.alpha = visible;
@@ -305,6 +326,7 @@
         redoButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         rulerButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         handButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        feedbackButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
     }];
 }
 
@@ -337,6 +359,7 @@
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     [super finishedScalingReallySmall:page];
     [self saveStacksToDisk];
+    [TestFlight passCheckpoint:@"NAV_TO_LIST_FROM_PAGE"];
 }
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
     [self setButtonsVisible:YES];
@@ -354,6 +377,7 @@
     [self setButtonsVisible:YES];
     [super finishedScalingBackToPageView:page];
     [self saveStacksToDisk];
+    [TestFlight passCheckpoint:@"NAV_TO_PAGE_FROM_LIST"];
 }
 
 -(void) didSavePage:(MMPaperView*)page{

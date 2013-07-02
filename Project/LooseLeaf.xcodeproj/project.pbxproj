@@ -16,6 +16,10 @@
 		660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAB158FC65C0001DA12 /* NSMutableArray+StackAdditions.m */; };
 		660E1DB0158FC7DB0001DA12 /* MMPaperIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAF158FC7DB0001DA12 /* MMPaperIcon.m */; };
 		660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DB2159028560001DA12 /* NSArray+MapReduce.m */; };
+		661507641783338E00B181F3 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6615075E1783338E00B181F3 /* libTestFlight.a */; };
+		661507661783338E00B181F3 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 661507601783338E00B181F3 /* release_notes.md */; };
+		66150769178333D500B181F3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66150768178333D500B181F3 /* libz.dylib */; };
+		6615076F1783390400B181F3 /* MMFeedbackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6615076E1783390400B181F3 /* MMFeedbackView.m */; };
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C1877175538A800706A05 /* MMPencilEraserButton.m */; };
 		663C187D1755B63D00706A05 /* Eraser.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C187C1755B63D00706A05 /* Eraser.m */; };
@@ -124,6 +128,15 @@
 		660E1DAF158FC7DB0001DA12 /* MMPaperIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPaperIcon.m; sourceTree = "<group>"; };
 		660E1DB1159028560001DA12 /* NSArray+MapReduce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+MapReduce.h"; sourceTree = "<group>"; };
 		660E1DB2159028560001DA12 /* NSArray+MapReduce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+MapReduce.m"; sourceTree = "<group>"; };
+		6615075E1783338E00B181F3 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		6615075F1783338E00B181F3 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		661507601783338E00B181F3 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
+		661507631783338E00B181F3 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
+		66150768178333D500B181F3 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		6615076A178338AF00B181F3 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
+		6615076B178338AF00B181F3 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
+		6615076D1783390400B181F3 /* MMFeedbackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFeedbackView.h; sourceTree = "<group>"; };
+		6615076E1783390400B181F3 /* MMFeedbackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFeedbackView.m; sourceTree = "<group>"; };
 		6630ED9F15F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
 		6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizerDelegate.h; sourceTree = "<group>"; };
@@ -260,6 +273,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66150769178333D500B181F3 /* libz.dylib in Frameworks */,
 				66455F86175E938500C66DFA /* JotUI.framework in Frameworks */,
 				66455F84175E938000C66DFA /* DrawKit-iOS.framework in Frameworks */,
 				663C188F1759B57800706A05 /* JotTouchSDK.framework in Frameworks */,
@@ -273,6 +287,7 @@
 				66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */,
 				66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */,
 				66DCFB8F1581BCEF00B4918C /* CoreGraphics.framework in Frameworks */,
+				661507641783338E00B181F3 /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -325,6 +340,29 @@
 				664F413F15906628006F8B09 /* MMLeftArrow.m */,
 			);
 			name = Icons;
+			sourceTree = "<group>";
+		};
+		6615075D1783338E00B181F3 /* TestFlightSDK */ = {
+			isa = PBXGroup;
+			children = (
+				6615075E1783338E00B181F3 /* libTestFlight.a */,
+				6615075F1783338E00B181F3 /* README.md */,
+				661507601783338E00B181F3 /* release_notes.md */,
+				6615076A178338AF00B181F3 /* TestFlight+AsyncLogging.h */,
+				6615076B178338AF00B181F3 /* TestFlight+ManualSessions.h */,
+				661507631783338E00B181F3 /* TestFlight.h */,
+			);
+			name = TestFlightSDK;
+			path = External/TestFlightSDK;
+			sourceTree = "<group>";
+		};
+		6615076C178338E400B181F3 /* In App Feedback */ = {
+			isa = PBXGroup;
+			children = (
+				6615076D1783390400B181F3 /* MMFeedbackView.h */,
+				6615076E1783390400B181F3 /* MMFeedbackView.m */,
+			);
+			name = "In App Feedback";
 			sourceTree = "<group>";
 		};
 		664C62F115A36DB00072736A /* MMPaperView */ = {
@@ -525,6 +563,7 @@
 		66DCFB7B1581BCED00B4918C = {
 			isa = PBXGroup;
 			children = (
+				66150768178333D500B181F3 /* libz.dylib */,
 				66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */,
 				66DCFB901581BCEF00B4918C /* Loose Leaf */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
@@ -543,6 +582,7 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6615075D1783338E00B181F3 /* TestFlightSDK */,
 				6695B6E1175008530069E61F /* JotUI */,
 				6695B6E41750086D0069E61F /* JotTouchSDK */,
 				66BD6E981593E9C300D4544C /* CoreText.framework */,
@@ -558,6 +598,7 @@
 		66DCFB901581BCEF00B4918C /* Loose Leaf */ = {
 			isa = PBXGroup;
 			children = (
+				6615076C178338E400B181F3 /* In App Feedback */,
 				66932995159984090033E557 /* Experiments */,
 				6693295715958A890033E557 /* Managers */,
 				66BD6E811593AF4500D4544C /* Buttons */,
@@ -699,6 +740,7 @@
 				6661144716FD67F8005032B9 /* Loose-Leaf_72.png in Resources */,
 				6661144A16FD67FA005032B9 /* Loose-Leaf_144.png in Resources */,
 				66B21A59175B0BF30049F1AF /* cloth.png in Resources */,
+				661507661783338E00B181F3 /* release_notes.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -763,6 +805,7 @@
 				66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */,
 				66B21A7A175E595B0049F1AF /* MMBlockOperation.m in Sources */,
 				6655E926176291C800E4F36A /* MMScissorButton.m in Sources */,
+				6615076F1783390400B181F3 /* MMFeedbackView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -860,6 +903,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/External/TestFlightSDK\"",
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC++",
@@ -886,6 +933,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/External/TestFlightSDK\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC++",
 					"-all_load",
