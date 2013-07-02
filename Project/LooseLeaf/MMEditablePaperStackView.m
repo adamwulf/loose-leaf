@@ -274,10 +274,12 @@
 }
 
 -(void) feedbackButtonTapped:(UIButton*)_button{
+    CGRect feedbackFrame = CGRectInset(self.bounds, 150, 200);
+    feedbackFrame.size.height -= 30;
     if(!feedbackView){
-        feedbackView = [[MMFeedbackView alloc] initWithFrame:CGRectInset(self.bounds, 150, 200)];
+        feedbackView = [[MMFeedbackView alloc] initWithFrame:feedbackFrame];
     }
-    feedbackView.frame = CGRectInset(self.bounds, 150, 200);
+    feedbackView.frame = feedbackFrame;
     [self addSubview:feedbackView];
     [feedbackView show];
 }

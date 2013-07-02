@@ -10,6 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "MMShadowManager.h"
 #import "NSThread+BlockAdditions.h"
+#import "TestFlight.h"
 
 @implementation MMPaperStackView
 
