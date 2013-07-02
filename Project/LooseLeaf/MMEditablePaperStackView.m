@@ -361,9 +361,9 @@
         if([page isKindOfClass:[MMEditablePaperView class]]){
             MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
             if([editablePage hasEditsToSave]){
-                NSLog(@"page still has edits to save...");
+                debug_NSLog(@"page still has edits to save...");
             }else{
-                NSLog(@"page is done saving...");
+                debug_NSLog(@"page is done saving...");
                 [(MMEditablePaperView*)page setCanvasVisible:NO];
                 debug_NSLog(@"thumb for %@ is visible", page.uuid);
             }
@@ -402,7 +402,7 @@
             [currentEditablePage setEditable:NO];
             [currentEditablePage setCanvasVisible:NO];
             currentEditablePage = editableTopPage;
-            NSLog(@"did switch top page to %@", currentEditablePage.uuid);
+            debug_NSLog(@"did switch top page to %@", currentEditablePage.uuid);
         }
         if([currentEditablePage isKindOfClass:[MMEditablePaperView class]]){
             [self loadStateForPage:currentEditablePage];
@@ -418,21 +418,21 @@
 
 -(void) willChangeTopPageTo:(MMPaperView*)page{
     [super willChangeTopPageTo:page];
-    NSLog(@"will switch top page to %@", page.uuid);
+    debug_NSLog(@"will switch top page to %@", page.uuid);
     [self loadStateForPage:page];
 }
 
 -(void) didChangeTopPage{
     CheckMainThread;
     [super didChangeTopPage];
-    NSLog(@"did change top page");
+    debug_NSLog(@"did change top page");
     MMPaperView* topPage = [visibleStackHolder peekSubview];
     [self ensureTopPageIsLoaded:topPage];
 }
 
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
     [super willNotChangeTopPageTo:page];
-    NSLog(@"won't change to: %@", page.uuid);
+    debug_NSLog(@"won't change to: %@", page.uuid);
 }
 
 

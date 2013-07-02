@@ -10,11 +10,11 @@
 #define Paper_Stack_Contants_h
 
 
-#ifdef DEBUG
-#define debug_NSLog(format, ...) NSLog(format, ## __VA_ARGS__)
-#else
+//#ifdef DEBUG
+//#define debug_NSLog(format, ...) NSLog(format, ## __VA_ARGS__)
+//#else
 #define debug_NSLog(format, ...)
-#endif
+//#endif
 
 #define kAbstractMethodException [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)] userInfo:nil]
 

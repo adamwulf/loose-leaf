@@ -105,7 +105,7 @@ dispatch_queue_t importThumbnailQueue;
 
 -(void) setEditable:(BOOL)isEditable{
     if(isEditable && (!drawableView || drawableView.hidden)){
-        NSLog(@"setting editable w/o canvas");
+        debug_NSLog(@"setting editable w/o canvas");
     }
     if(isEditable){
         drawableView.userInteractionEnabled = YES;
@@ -154,6 +154,7 @@ dispatch_queue_t importThumbnailQueue;
                                       [NSThread performBlockOnMainThread:^{
                                           if([self.delegate isPageEditable:self]){
                                               [drawableView loadState:state];
+                                              lastSavedUndoHash = [drawableView undoHash];
                                               [self.contentView addSubview:drawableView];
                                               // anchor the view to the top left,
                                               // so that when we scale down, the drawable view
@@ -179,7 +180,7 @@ dispatch_queue_t importThumbnailQueue;
  * currently saved hash
  */
 -(BOOL) hasEditsToSave{
-    NSLog(@"checking if edits to save %u vs %u", [drawableView undoHash], lastSavedUndoHash);
+    debug_NSLog(@"checking if edits to save %u vs %u", [drawableView undoHash], lastSavedUndoHash);
     return [drawableView undoHash] != lastSavedUndoHash;
 }
 
