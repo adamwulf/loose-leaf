@@ -10,14 +10,15 @@
 #define Paper_Stack_Contants_h
 
 
-//#ifdef DEBUG
-//#define debug_NSLog(format, ...) NSLog(format, ## __VA_ARGS__)
-//#else
-#define debug_NSLog(format, ...)
-//#endif
+#ifdef DEBUG
+#define debug_NSLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
+#else
+#define debug_NSLog(__FORMAT__, ...) TFLog((@"%s [Line %d] " __FORMAT__), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#endif
 
 #define kAbstractMethodException [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)] userInfo:nil]
 
+#define kTestflightAppToken @"7cad2371-d0e0-4524-a833-dbc6cbc7a870"
 
 #define kAnimationDelay 0.05
 
