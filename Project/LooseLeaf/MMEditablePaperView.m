@@ -190,7 +190,7 @@ dispatch_queue_t importThumbnailQueue;
     
 
     [@"Thanks for helping test Loose Leaf!" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 342), CGAffineTransformMakeScale(scale, scale))
-                                withFont:[UIFont systemFontOfSize:20 * scale]];
+                                withFont:[UIFont boldSystemFontOfSize:20 * scale]];
     
     
     [@"• 1 finger will draw" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 402), CGAffineTransformMakeScale(scale, scale))
@@ -216,6 +216,14 @@ dispatch_queue_t importThumbnailQueue;
                                  withFont:[UIFont systemFontOfSize:20 * scale]];
     
     [@"• pinch out to go to list view" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 694), CGAffineTransformMakeScale(scale, scale))
+                                          withFont:[UIFont systemFontOfSize:20 * scale]];
+    
+    [@"• in list view, use two fingers to grab and" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 734), CGAffineTransformMakeScale(scale, scale))
+                                          withFont:[UIFont systemFontOfSize:20 * scale]];
+    [@"  reorder pages, or tap to open" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 760), CGAffineTransformMakeScale(scale, scale))
+                                                       withFont:[UIFont systemFontOfSize:20 * scale]];
+    
+    [@"• the disabled buttons will be added in future builds" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 800), CGAffineTransformMakeScale(scale, scale))
                                           withFont:[UIFont systemFontOfSize:20 * scale]];
     
 
