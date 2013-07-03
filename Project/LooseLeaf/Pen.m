@@ -9,12 +9,11 @@
 #import "Pen.h"
 #import "Constants.h"
 #import "TestFlight.h"
+#import <JotUI/JotUI.h>
 
 static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
 
 @implementation Pen
-
-@synthesize shouldUseVelocity;
 
 @synthesize minSize;
 @synthesize maxSize;
@@ -46,6 +45,13 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
     return [UIImage imageNamed:@"Circle.png"];
 }
 
+-(BOOL) shouldUseVelocity{
+    if([[JotStylusManager sharedInstance] enabled] && [[JotStylusManager sharedInstance] isStylusConnected]){
+        return NO;
+    }
+    return YES;
+}
+
 #pragma mark - Setters
 
 -(void) setMinSize:(CGFloat)_minSize{
@@ -74,8 +80,8 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
 -(CGFloat) velocityForTouch:(JotTouch*)touch{
     //
     // first, find the current and previous location of the touch
-    CGPoint l = [touch windowPosition];
-    CGPoint previousPoint = [touch previousWindowPosition];
+    CGPoint l = [touch.touch locationInView:nil];
+    CGPoint previousPoint = [touch.touch previousLocationInView:nil];
     // find how far we've travelled
     float distanceFromPrevious = sqrtf((l.x - previousPoint.x) * (l.x - previousPoint.x) + (l.y - previousPoint.y) * (l.y - previousPoint.y));
     // how long did it take?
@@ -148,7 +154,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
  */
 -(UIColor*) colorForTouch:(JotTouch*)touch{
     CGFloat width = [self widthForTouch:touch];
-    if(shouldUseVelocity){
+    if(self.shouldUseVelocity){
         CGFloat segmentAlpha = (velocity - 1);
         if(segmentAlpha > 0) segmentAlpha = 0;
         segmentAlpha = minAlpha + ABS(segmentAlpha) * (maxAlpha - minAlpha);
@@ -169,14 +175,14 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
  * we'll fall back to use velocity data
  */
 -(CGFloat) widthForTouch:(JotTouch*)touch{
-    if(shouldUseVelocity){
+    if(self.shouldUseVelocity){
         CGFloat width = (velocity - 1);
         if(width > 0) width = 0;
         width = minSize + ABS(width) * (maxSize - minSize);
         if(width < 1) width = 1;
         return width;
     }else{
-        CGFloat newWidth = minSize + (maxSize-minSize) * touch.pressure / JOT_MAX_PRESSURE;
+        CGFloat newWidth = minSize + (maxSize-minSize) * touch.pressure / (CGFloat) JOT_MAX_PRESSURE;
         return newWidth;
     }
 }

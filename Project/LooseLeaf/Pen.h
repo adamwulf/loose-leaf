@@ -27,8 +27,6 @@
     CGPoint lastLoc;
     NSDate* lastDate;
     
-    BOOL shouldUseVelocity;
-    
     UIColor* color;
 }
 
@@ -48,7 +46,7 @@
  **/
 @property (nonatomic, readonly) CGFloat velocity;
 
-@property (nonatomic) BOOL shouldUseVelocity;
+@property (nonatomic, readonly) BOOL shouldUseVelocity;
 
 -(id) initWithMinSize:(CGFloat)_minSize andMaxSize:(CGFloat)_maxSize andMinAlpha:(CGFloat)_minAlpha andMaxAlpha:(CGFloat)_maxAlpha;
 
