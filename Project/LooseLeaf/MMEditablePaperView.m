@@ -205,15 +205,17 @@ dispatch_queue_t importThumbnailQueue;
     [@"• drag pages to left/right to change page" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 522), CGAffineTransformMakeScale(scale, scale))
                                                   withFont:[UIFont systemFontOfSize:20 * scale]];
     
-    [@"• or drag two fingers from the right bezel to change pages" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 562), CGAffineTransformMakeScale(scale, scale))
+    [@"• or drag two fingers from the right bezel to" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 562), CGAffineTransformMakeScale(scale, scale))
                                                                  withFont:[UIFont systemFontOfSize:20 * scale]];
+    [@"  change pages" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 588), CGAffineTransformMakeScale(scale, scale))
+                                                                      withFont:[UIFont systemFontOfSize:20 * scale]];
 
-    [@"• with system gestures off, you can grab pages" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 602), CGAffineTransformMakeScale(scale, scale))
+    [@"• with system gestures off, you can grab pages" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 628), CGAffineTransformMakeScale(scale, scale))
                                                           withFont:[UIFont systemFontOfSize:20 * scale]];
-    [@"  behind top page too" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 628), CGAffineTransformMakeScale(scale, scale))
+    [@"  behind top page too" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 654), CGAffineTransformMakeScale(scale, scale))
                                  withFont:[UIFont systemFontOfSize:20 * scale]];
     
-    [@"• pinch out to go to list view" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 668), CGAffineTransformMakeScale(scale, scale))
+    [@"• pinch out to go to list view" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 694), CGAffineTransformMakeScale(scale, scale))
                                           withFont:[UIFont systemFontOfSize:20 * scale]];
     
 
