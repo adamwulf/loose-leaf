@@ -59,7 +59,7 @@
         [feedbackButton addTarget:self action:@selector(feedbackButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:feedbackButton];
         
-        settingsButton = [[MMLikeButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60*3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        settingsButton = [[MMAdonitButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60*3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         settingsButton.delegate = self;
         [settingsButton addTarget:self action:@selector(jotSettingsTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:settingsButton];
@@ -274,7 +274,7 @@
     JotSettingsViewController* settings = [[JotSettingsViewController alloc] initWithOnOffSwitch: YES];
     popover = [[UIPopoverController alloc] initWithContentViewController:settings];
     [popover presentPopoverFromRect:_button.frame inView:self permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-    [popover setPopoverContentSize:CGSizeMake(300, 400) animated:NO];
+    [popover setPopoverContentSize:CGSizeMake(300, 446) animated:NO];
 }
 
 

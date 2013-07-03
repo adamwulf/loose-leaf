@@ -700,13 +700,15 @@
         // the bezelStackHolder was been filled during the pan, so add
         // the top page of the visible stack to the bottom of the bezelGestureHolder,
         // then animate
-        [self willChangeTopPageTo:[bezelStackHolder peekSubview]];
-        [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO onComplete:^(BOOL finished){
-            [self didChangeTopPage];
-        }];
-        [self emptyBezelStackToVisibleStackOnComplete:^(BOOL finished){
-            [self updateIconAnimations];
-        }];
+        if([bezelStackHolder peekSubview]){
+            [self willChangeTopPageTo:[bezelStackHolder peekSubview]];
+            [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO onComplete:^(BOOL finished){
+                [self didChangeTopPage];
+            }];
+            [self emptyBezelStackToVisibleStackOnComplete:^(BOOL finished){
+                [self updateIconAnimations];
+            }];
+        }
         return;
     }else if(justFinishedPanningTheTopPage && [setOfPagesBeingPanned count]){
         //
