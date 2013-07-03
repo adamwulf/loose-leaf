@@ -275,7 +275,7 @@
     JotSettingsViewController* settings = [[JotSettingsViewController alloc] initWithOnOffSwitch: YES];
     popover = [[UIPopoverController alloc] initWithContentViewController:settings];
     [popover presentPopoverFromRect:_button.frame inView:self permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-    [popover setPopoverContentSize:CGSizeMake(300, 400) animated:NO];
+    [popover setPopoverContentSize:CGSizeMake(300, 446) animated:NO];
 }
 
 
