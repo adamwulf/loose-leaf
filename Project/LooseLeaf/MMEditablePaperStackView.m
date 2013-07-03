@@ -16,7 +16,7 @@
     JotView* drawableView;
     NSMutableArray* stateLoadedPages;
     MMFeedbackView* feedbackView;
-    UIPopoverController* popover;
+    UIPopoverController* jotTouchPopover;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -52,14 +52,14 @@
         shareButton = [[MMShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         shareButton.delegate = self;
         [shareButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:shareButton];
+//        [self addSubview:shareButton];
         
         feedbackButton = [[MMLikeButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60*2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         feedbackButton.delegate = self;
         [feedbackButton addTarget:self action:@selector(feedbackButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:feedbackButton];
         
-        settingsButton = [[MMAdonitButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60*3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        settingsButton = [[MMAdonitButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         settingsButton.delegate = self;
         [settingsButton addTarget:self action:@selector(jotSettingsTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:settingsButton];
@@ -266,15 +266,15 @@
 }
 
 -(void) jotSettingsTapped:(UIButton*)_button{
-    if(popover && popover.popoverVisible){
+    if(jotTouchPopover && jotTouchPopover.popoverVisible){
         return;
-    }else if(popover){
-        [popover dismissPopoverAnimated:NO];
+    }else if(jotTouchPopover){
+        [jotTouchPopover dismissPopoverAnimated:NO];
     }
     JotSettingsViewController* settings = [[JotSettingsViewController alloc] initWithOnOffSwitch: YES];
-    popover = [[UIPopoverController alloc] initWithContentViewController:settings];
-    [popover presentPopoverFromRect:_button.frame inView:self permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-    [popover setPopoverContentSize:CGSizeMake(300, 446) animated:NO];
+    jotTouchPopover = [[UIPopoverController alloc] initWithContentViewController:settings];
+    [jotTouchPopover presentPopoverFromRect:_button.frame inView:self permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+    [jotTouchPopover setPopoverContentSize:CGSizeMake(300, 446) animated:NO];
 }
 
 
