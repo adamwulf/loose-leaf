@@ -23,7 +23,7 @@
  */
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
     [super willBeginStrokeWithTouch:touch];
-    velocity = 0;
+//    velocity = 0;
     return YES;
 }
 
@@ -35,7 +35,7 @@
  * we'll fall back to use velocity data
  */
 -(CGFloat) widthForTouch:(JotTouch*)touch{
-    if(shouldUseVelocity){
+    if(self.shouldUseVelocity){
         //
         // velocity is reversed from the pen, this eraser
         // will get wider with faster velocity instead
