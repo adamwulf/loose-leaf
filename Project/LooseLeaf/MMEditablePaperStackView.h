@@ -52,6 +52,7 @@
     MMPencilEraserButton* eraserButton;
     MMShareButton* shareButton;
     MMLikeButton* feedbackButton;
+    MMLikeButton* settingsButton;
     MMMapButton* mapButton;
     
     MMUndoRedoButton* undoButton;

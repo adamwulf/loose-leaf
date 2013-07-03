@@ -16,6 +16,7 @@
     JotView* drawableView;
     NSMutableArray* stateLoadedPages;
     MMFeedbackView* feedbackView;
+    UIPopoverController* popover;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -32,10 +33,8 @@
         [[JotStylusManager sharedInstance] setPalmRejectorDelegate:drawableView];
 
         pen = [[Pen alloc] init];
-        pen.shouldUseVelocity = YES;
         
         eraser = [[Eraser alloc] init];
-        eraser.shouldUseVelocity = YES;
         
         // test code for custom popovers
         // ================================================================================
@@ -59,6 +58,11 @@
         feedbackButton.delegate = self;
         [feedbackButton addTarget:self action:@selector(feedbackButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:feedbackButton];
+        
+        settingsButton = [[MMLikeButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60*3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        settingsButton.delegate = self;
+        [settingsButton addTarget:self action:@selector(jotSettingsTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:settingsButton];
         
         
         
@@ -174,13 +178,20 @@
         
         
         pencilButton.selected = YES;
-        handButton.selected = YES;
+//        handButton.selected = YES;
         
         polygonButton.enabled = NO;
         insertImageButton.enabled = NO;
         scissorButton.enabled = NO;
+        handButton.enabled = NO;
+        rulerButton.enabled = NO;
+        shareButton.enabled = NO;
         
         [NSThread performBlockInBackground:^{
+            [[NSNotificationCenter defaultCenter] addObserver: self
+                                                     selector:@selector(connectionChange:)
+                                                         name: JotStylusManagerDidChangeConnectionStatus
+                                                       object:nil];
             [[JotStylusManager sharedInstance] setEnabled:YES];
             [[JotStylusManager sharedInstance] setRejectMode:NO];
         }];
@@ -254,6 +265,17 @@
     rulerButton.selected = YES;
 }
 
+-(void) jotSettingsTapped:(UIButton*)_button{
+    if(popover && popover.popoverVisible){
+        return;
+    }else if(popover){
+        [popover dismissPopoverAnimated:NO];
+    }
+    JotSettingsViewController* settings = [[JotSettingsViewController alloc] initWithOnOffSwitch: YES];
+    popover = [[UIPopoverController alloc] initWithContentViewController:settings];
+    [popover presentPopoverFromRect:_button.frame inView:self permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    [popover setPopoverContentSize:CGSizeMake(300, 400) animated:NO];
+}
 
 
 #pragma mark - Page/Save Button Actions
@@ -305,6 +327,7 @@
         undoButton.alpha = visible;
         rulerButton.alpha = visible;
         handButton.alpha = visible;
+        settingsButton.alpha = visible;
     }];
 }
 
@@ -328,6 +351,7 @@
         rulerButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         handButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         feedbackButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        settingsButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
     }];
 }
 
@@ -542,4 +566,36 @@
     return [[self activePen] rotationForSegment:segment fromPreviousSegment:previousSegment];;
 }
 
+
+-(void)connectionChange:(NSNotification *) note{
+    NSString *text;
+    switch([[JotStylusManager sharedInstance] connectionStatus])
+    {
+        case JotConnectionStatusOff:
+            text = @"Off";
+            settingsButton.selected = NO;
+            break;
+        case JotConnectionStatusScanning:
+            text = @"Scanning";
+            settingsButton.selected = NO;
+            break;
+        case JotConnectionStatusPairing:
+            text = @"Pairing";
+            settingsButton.selected = NO;
+            break;
+        case JotConnectionStatusConnected:
+            text = @"Connected";
+            settingsButton.selected = YES;
+            break;
+        case JotConnectionStatusDisconnected:
+            text = @"Disconnected";
+            settingsButton.selected = NO;
+            break;
+        default:
+            text = @"";
+            settingsButton.selected = NO;
+            break;
+    }
+    debug_NSLog(@"jot status: %@", text);
+}
 @end
