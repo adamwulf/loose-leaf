@@ -20,7 +20,9 @@
 -(void) redo;
 -(BOOL) hasEditsToSave;
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(EAGLContext*)context andThen:(void (^)())block;
+-(void) setBackgroundTextureToStartPage;
 -(void) unloadState;
+-(void) forceSaveToDisk;
 -(void) saveToDisk;
 -(void) setCanvasVisible:(BOOL)isVisible;
 -(void) setEditable:(BOOL)isEditable;

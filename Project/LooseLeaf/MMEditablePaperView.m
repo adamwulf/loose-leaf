@@ -142,6 +142,58 @@ dispatch_queue_t importThumbnailQueue;
     });
 }
 
+-(void) setBackgroundTextureToStartPage{
+    UIGraphicsBeginImageContext(state.backgroundTexture.pixelSize);
+    CGFloat scale = [[UIScreen mainScreen] scale];
+
+    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 18), CGAffineTransformMakeScale(scale, scale))
+                            withFont:[UIFont systemFontOfSize:32 * scale]];
+    [@"New Blank Page" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(100, 30), CGAffineTransformMakeScale(scale, scale))
+                          withFont:[UIFont systemFontOfSize:16 * scale]];
+    
+    
+    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 18 + 60), CGAffineTransformMakeScale(scale, scale))
+             withFont:[UIFont systemFontOfSize:32 * scale]];
+    [@"Jot Touch Settings" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(100, 30 + 60), CGAffineTransformMakeScale(scale, scale))
+                          withFont:[UIFont systemFontOfSize:16 * scale]];
+    
+
+    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 18 + 60*2), CGAffineTransformMakeScale(scale, scale))
+             withFont:[UIFont systemFontOfSize:32 * scale]];
+    [@"Send Adam your Alpha Feedback!" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(100, 30 + 60*2), CGAffineTransformMakeScale(scale, scale))
+                              withFont:[UIFont systemFontOfSize:16 * scale]];
+    
+
+    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 298), CGAffineTransformMakeScale(scale, scale))
+             withFont:[UIFont systemFontOfSize:32 * scale]];
+    [@"Pen" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(100, 310), CGAffineTransformMakeScale(scale, scale))
+                                          withFont:[UIFont systemFontOfSize:16 * scale]];
+    
+
+    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 298 + 60), CGAffineTransformMakeScale(scale, scale))
+             withFont:[UIFont systemFontOfSize:32 * scale]];
+    [@"Eraser" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(100, 310 + 60), CGAffineTransformMakeScale(scale, scale))
+                                          withFont:[UIFont systemFontOfSize:16 * scale]];
+    
+
+    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 902), CGAffineTransformMakeScale(scale, scale))
+             withFont:[UIFont systemFontOfSize:32 * scale]];
+    [@"Undo" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(100, 914), CGAffineTransformMakeScale(scale, scale))
+                  withFont:[UIFont systemFontOfSize:16 * scale]];
+    
+    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 902 + 60), CGAffineTransformMakeScale(scale, scale))
+             withFont:[UIFont systemFontOfSize:32 * scale]];
+    [@"Redo" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(100, 914 + 60), CGAffineTransformMakeScale(scale, scale))
+                withFont:[UIFont systemFontOfSize:16 * scale]];
+    
+
+    UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    state.backgroundTexture = [[JotGLTexture alloc] initForImage:image withSize:state.backgroundTexture.pixelSize];
+    lastSavedUndoHash = 0;
+}
+
 -(void) setDrawableView:(JotView *)_drawableView{
     if(drawableView != _drawableView){
         drawableView = _drawableView;
@@ -188,6 +240,10 @@ dispatch_queue_t importThumbnailQueue;
  * write the thumbnail, backing texture, and entire undo
  * state to disk, and notify our delegate when done
  */
+-(void) forceSaveToDisk{
+    lastSavedUndoHash = 0;
+    [self saveToDisk];
+}
 -(void) saveToDisk{
     // Sanity checks to generate our directory structure if needed
     [self pagesPath];

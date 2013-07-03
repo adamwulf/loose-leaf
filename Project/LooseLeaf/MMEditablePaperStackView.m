@@ -498,7 +498,10 @@
         [self addPaperToBottomOfHiddenStack:page];
     }
     
+    BOOL isStart = NO;
+    
     if(![self hasPages]){
+        isStart = YES;
         for(int i=0;i<1;i++){
             MMEditablePaperView* editable = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
             [editable setEditable:YES];
@@ -513,14 +516,21 @@
         [self saveStacksToDisk];
     }
     
-    
     [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
                                                      withSize:[drawableView pagePixelSize]
                                                    andContext:[drawableView context]
                                                       andThen:nil];
     
+    if(isStart){
+        [[visibleStackHolder peekSubview] setBackgroundTextureToStartPage];
+    }
+    
     [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
     [self didChangeTopPage];
+
+    if(isStart){
+        [[visibleStackHolder peekSubview] forceSaveToDisk];
+    }
 }
 
 -(BOOL) hasPages{
