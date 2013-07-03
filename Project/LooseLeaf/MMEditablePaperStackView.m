@@ -175,11 +175,13 @@
         
         
         pencilButton.selected = YES;
-        handButton.selected = YES;
+//        handButton.selected = YES;
         
         polygonButton.enabled = NO;
         insertImageButton.enabled = NO;
         scissorButton.enabled = NO;
+        handButton.enabled = NO;
+        rulerButton.enabled = NO;
         
         [NSThread performBlockInBackground:^{
             [[JotStylusManager sharedInstance] setEnabled:YES];
