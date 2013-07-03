@@ -186,6 +186,49 @@ dispatch_queue_t importThumbnailQueue;
     [@"Redo" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(100, 914 + 60), CGAffineTransformMakeScale(scale, scale))
                 withFont:[UIFont systemFontOfSize:16 * scale]];
     
+    
+    
+
+    [@"Thanks for helping test Loose Leaf!" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 342), CGAffineTransformMakeScale(scale, scale))
+                                withFont:[UIFont systemFontOfSize:20 * scale]];
+    
+    
+    [@"• 1 finger will draw" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 402), CGAffineTransformMakeScale(scale, scale))
+             withFont:[UIFont systemFontOfSize:20 * scale]];
+    
+    [@"• 2 fingers will grab/zoom the page" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 442), CGAffineTransformMakeScale(scale, scale))
+                  withFont:[UIFont systemFontOfSize:20 * scale]];
+    
+    [@"• you can zoom + draw at the same time" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 482), CGAffineTransformMakeScale(scale, scale))
+                                        withFont:[UIFont systemFontOfSize:20 * scale]];
+    
+    [@"• drag pages to left/right to change page" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 522), CGAffineTransformMakeScale(scale, scale))
+                                                  withFont:[UIFont systemFontOfSize:20 * scale]];
+    
+    [@"• or drag two fingers from the right bezel to change pages" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 562), CGAffineTransformMakeScale(scale, scale))
+                                                                 withFont:[UIFont systemFontOfSize:20 * scale]];
+
+    [@"• with system gestures off, you can grab pages" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 602), CGAffineTransformMakeScale(scale, scale))
+                                                          withFont:[UIFont systemFontOfSize:20 * scale]];
+    [@"  behind top page too" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 628), CGAffineTransformMakeScale(scale, scale))
+                                 withFont:[UIFont systemFontOfSize:20 * scale]];
+    
+    [@"• pinch out to go to list view" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 668), CGAffineTransformMakeScale(scale, scale))
+                                          withFont:[UIFont systemFontOfSize:20 * scale]];
+    
+
+    /**
+     
+     Thanks for helping to test Loose Leaf!
+     
+     • one finger will draw
+     
+     • two fingers will pinch/grab a page
+     
+     • you can pinch and draw at the same time
+     
+     
+     */
 
     UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
