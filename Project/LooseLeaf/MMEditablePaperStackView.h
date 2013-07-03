@@ -22,6 +22,7 @@
 #import "MMHandButton.h"
 #import "MMScissorButton.h"
 #import "MMLikeButton.h"
+#import "MMAdonitButton.h"
 #import "MMSidebarButtonDelegate.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMRotationManager.h"
@@ -52,7 +53,7 @@
     MMPencilEraserButton* eraserButton;
     MMShareButton* shareButton;
     MMLikeButton* feedbackButton;
-    MMLikeButton* settingsButton;
+    MMAdonitButton* settingsButton;
     MMMapButton* mapButton;
     
     MMUndoRedoButton* undoButton;
