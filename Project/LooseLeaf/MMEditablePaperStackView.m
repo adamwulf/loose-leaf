@@ -182,6 +182,7 @@
         scissorButton.enabled = NO;
         handButton.enabled = NO;
         rulerButton.enabled = NO;
+        shareButton.enabled = NO;
         
         [NSThread performBlockInBackground:^{
             [[JotStylusManager sharedInstance] setEnabled:YES];
