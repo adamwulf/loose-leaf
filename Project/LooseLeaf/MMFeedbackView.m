@@ -117,7 +117,7 @@
         furtherComments.layer.borderColor = [UIColor blackColor].CGColor;
         furtherComments.layer.borderWidth = 1;
         furtherComments.layer.cornerRadius = 2;
-        furtherComments.placeholder = @"Tell me what you love and what you hate...";
+        furtherComments.placeholder = @"Tell me what you love, hate, and in between...";
         [contentView addSubview:furtherComments];
         
         // buttons
