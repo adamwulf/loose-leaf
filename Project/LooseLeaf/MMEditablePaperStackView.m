@@ -328,6 +328,7 @@
         undoButton.alpha = visible;
         rulerButton.alpha = visible;
         handButton.alpha = visible;
+        settingsButton.alpha = visible;
     }];
 }
 
@@ -351,6 +352,7 @@
         rulerButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         handButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         feedbackButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        settingsButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
     }];
 }
 
