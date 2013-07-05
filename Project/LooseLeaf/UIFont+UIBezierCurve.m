@@ -64,6 +64,7 @@ static NSMutableDictionary* _pathCacheInstance = nil;
             UIBezierPath* pathOfChar = [UIBezierPath bezierPathWithCGPath:glyphCGPath];
             [pathOfChar applyTransform:CGAffineTransformMakeTranslation(widthOfPrevChars, 0)];
             [glyphPath appendPath:pathOfChar];
+            CGPathRelease(glyphCGPath);
         }
         
         // Free our buffers

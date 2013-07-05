@@ -1318,8 +1318,7 @@
         CGFloat dist =  MAX((visibleStackHolder.frame.size.width - frInVisibleStack.origin.x), visibleStackHolder.frame.size.width / 2);
         [UIView animateWithDuration:0.2 * (dist / visibleStackHolder.frame.size.width) delay:delay options:UIViewAnimationOptionCurveEaseOut
                          animations:^(void){
-                             CGRect toFrame = [hiddenStackHolder containsSubview:page] ? hiddenStackHolder.bounds : hiddenStackHolder.frame;
-                             toFrame = [page.superview convertRect:hiddenStackHolder.bounds fromView:hiddenStackHolder];
+                             CGRect toFrame = [page.superview convertRect:hiddenStackHolder.bounds fromView:hiddenStackHolder];
                              page.frame = toFrame;
                              page.scale = 1;
                          } completion:^(BOOL finished){

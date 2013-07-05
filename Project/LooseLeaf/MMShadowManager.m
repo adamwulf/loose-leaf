@@ -18,7 +18,8 @@ static MMShadowManager* _instance = nil;
 
 -(id) init{
     if(_instance) return _instance;
-    if((_instance = [super init])){
+    if((self = [super init])){
+        _instance = _instance;
         shadowPathCache = [[NSMutableDictionary alloc] init];
         unitShadowPath = [self generateUnitShadowPath];
     }
