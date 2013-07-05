@@ -24,12 +24,15 @@
 #import "MMPopoverView.h"
 
 @interface MMPaperStackView : UIScrollView<MMPaperViewDelegate>{
-    @private
+
+@protected
     // this is the UUID of the page that has
     // most recently been suggested that it might
     // be the top page soon
     NSString* recentlySuggestedPageUUID;
+    NSString* recentlyConfirmedPageUUID;
     
+@private
     MMPapersIcon* papersIcon;
     MMPaperIcon* paperIcon;
     MMPlusIcon* plusIcon;

@@ -462,20 +462,22 @@
 }
 
 -(void) mayChangeTopPageTo:(MMPaperView*)page{
+    if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
+        [self loadStateForPage:page];
+    }
     [super mayChangeTopPageTo:page];
-    [self loadStateForPage:page];
 }
 
 -(void) willChangeTopPageTo:(MMPaperView*)page{
+    if(page && ![recentlyConfirmedPageUUID isEqualToString:page.uuid]){
+        [self loadStateForPage:page];
+    }
     [super willChangeTopPageTo:page];
-    debug_NSLog(@"will switch top page to %@", page.uuid);
-    [self loadStateForPage:page];
 }
 
 -(void) didChangeTopPage{
     CheckMainThread;
     [super didChangeTopPage];
-    debug_NSLog(@"did change top page");
     MMPaperView* topPage = [visibleStackHolder peekSubview];
     [self ensureTopPageIsLoaded:topPage];
 }
