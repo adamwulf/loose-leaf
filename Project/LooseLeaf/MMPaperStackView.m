@@ -748,9 +748,19 @@
         // ============================================================================
         [self willNotChangeTopPageTo:page];
         [page removeAllAnimationsAndPreservePresentationFrame];
-        [self sendPageToHiddenStack:page onComplete:^(BOOL finished){
-            [self updateIconAnimations];
-        }];
+        if([visibleStackHolder.subviews containsObject:page]){
+            // need to animate with animateBackToHiddenStack:withDelay:onComplete:
+            // to keep this page in the visible stack while it animates to the hidden stack.
+            // this would prevent the page from snapping in front of the top page during the animation
+            // see: https://github.com/adamwulf/loose-leaf/issues/19
+            //
+            // i used to use [self sendPageToHiddenStack:page onComplete:], but this would put the page in
+            // the bezel stack, which would pop it in front of the top held page
+            [self animateBackToHiddenStack:page withDelay:0 onComplete:^(BOOL finished){
+                [self updateIconAnimations];
+                [self ensureAtLeast:1 pagesInStack:visibleStackHolder];
+            }];
+        }
         [self mayChangeTopPageTo:[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]]];
         return;
     }else if((bezelDirection & MMBezelDirectionRight) == MMBezelDirectionRight){
