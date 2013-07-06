@@ -181,7 +181,7 @@ dispatch_queue_t importThumbnailQueue;
  * currently saved hash
  */
 -(BOOL) hasEditsToSave{
-    debug_NSLog(@"checking if edits to save %u vs %u", [drawableView undoHash], lastSavedUndoHash);
+//    debug_NSLog(@"checking if edits to save %u vs %u", [drawableView undoHash], lastSavedUndoHash);
     return [drawableView undoHash] != lastSavedUndoHash;
 }
 
