@@ -134,7 +134,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
  */
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
     // noop
-    debug_NSLog(@"PEN velocity: %f", velocity);
+//    debug_NSLog(@"PEN velocity: %f", velocity);
 }
 
 /**
