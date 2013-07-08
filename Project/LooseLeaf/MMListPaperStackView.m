@@ -468,8 +468,6 @@
                     }
                 }
             }
-            // gestures aren't allowed in list view
-            [aPage disableAllGestures];
         }
         //
         // find hidden stack pages that we can
@@ -544,6 +542,8 @@
                 aPage.frame = newFrame;
             };
             aPage.hidden = NO;
+            // gestures aren't allowed in list view
+            [aPage disableAllGestures];
         }
         // set our content height/offset for the pages
         [self setContentOffset:initialScrollOffsetFromTransitionToListView animated:NO];
@@ -713,6 +713,8 @@
             scale = gesture.initialPageScale;
         }
         
+        NSLog(@"scale is : %f", scale);
+
         //
         // update the location of the dragged page
         pageBeingDragged = gesture.pinchedPage;
