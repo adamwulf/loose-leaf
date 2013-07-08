@@ -60,6 +60,11 @@
             }
             if([validTouches count] == 2 && self.state == UIGestureRecognizerStatePossible){
                 CGPoint lastLocationInPage = [self locationInView:pinchedPage];
+                if([pinchedPage isKindOfClass:[MMShadowedView class]]){
+                    // the location needs to take into account the shadow
+                    lastLocationInPage.x -= [MMShadowedView shadowWidth];
+                    lastLocationInPage.y -= [MMShadowedView shadowWidth];
+                }
                 normalizedLocationOfScale = CGPointMake(lastLocationInPage.x / pinchedPage.frame.size.width,
                                                         lastLocationInPage.y / pinchedPage.frame.size.height);
                 initialDistance = [self distanceBetweenTouches:validTouches];

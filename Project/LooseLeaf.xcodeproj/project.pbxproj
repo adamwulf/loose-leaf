@@ -100,6 +100,7 @@
 		66DCFBDF1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBDE1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DF0B7D159BC30200C5C652 /* UIView+Animations.m */; };
 		66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E88A361591853E001A6EBF /* MMPapersIcon.m */; };
+		66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -293,6 +294,8 @@
 		66DF0B7D159BC30200C5C652 /* UIView+Animations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Animations.m"; sourceTree = "<group>"; };
 		66E88A351591853E001A6EBF /* MMPapersIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPapersIcon.h; sourceTree = "<group>"; };
 		66E88A361591853E001A6EBF /* MMPapersIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPapersIcon.m; sourceTree = "<group>"; };
+		66F4B4B5178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLongPressFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
+		66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLongPressFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -517,6 +520,8 @@
 				6630ED9F15F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.h */,
 				6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */,
 				6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */,
+				66F4B4B5178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.h */,
+				66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */,
 			);
 			name = "Page Navigation";
 			sourceTree = "<group>";
@@ -886,6 +891,7 @@
 				66150785178347A100B181F3 /* UIPlaceHolderTextView.m in Sources */,
 				66C0C9D0178386B8009491B3 /* MMLikeButton.m in Sources */,
 				66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */,
+				66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
