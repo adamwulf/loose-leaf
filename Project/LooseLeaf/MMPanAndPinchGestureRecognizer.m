@@ -324,11 +324,4 @@ NSInteger const  minimumNumberOfTouches = 2;
 }
 
 
--(void) setEnabled:(BOOL)_enabled{
-    [super setEnabled:_enabled];
-    if([[self.view uuid] hasPrefix:@"41B98"]){
-        NSLog(@"enabling");
-    }
-}
-
 @end
