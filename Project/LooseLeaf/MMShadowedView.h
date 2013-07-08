@@ -17,4 +17,6 @@
 +(CGRect) contractFrame:(CGRect)rect;
 +(CGRect) expandBounds:(CGRect)rect;
 +(CGRect) contractBounds:(CGRect)rect;
+
++(CGFloat) shadowWidth;
 @end

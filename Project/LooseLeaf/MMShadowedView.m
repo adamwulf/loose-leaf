@@ -28,6 +28,10 @@
     return CGRectMake(rect.origin.x, rect.origin.y, rect.size.width - 20, rect.size.height - 20);
 }
 
++(CGFloat) shadowWidth{
+    return 10;
+}
+
 
 - (id)initWithFrame:(CGRect)frame
 {
