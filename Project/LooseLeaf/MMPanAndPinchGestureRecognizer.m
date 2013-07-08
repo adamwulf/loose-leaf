@@ -248,8 +248,10 @@ NSInteger const  minimumNumberOfTouches = 2;
 }
 
 -(void) cancel{
-    self.enabled = NO;
-    self.enabled = YES;
+    if(self.enabled){
+        self.enabled = NO;
+        self.enabled = YES;
+    }
 }
 
 -(CGFloat) distanceBetweenTouches:(NSOrderedSet*) touches{
@@ -319,6 +321,14 @@ NSInteger const  minimumNumberOfTouches = 2;
      CGPoint final = CGPointMake(translate.x + swipeVelocity.x * inertiaSeconds, translate.y + swipeVelocity.y * inertiaSeconds);
      */
     return CGPointZero;
+}
+
+
+-(void) setEnabled:(BOOL)_enabled{
+    [super setEnabled:_enabled];
+    if([[self.view uuid] hasPrefix:@"41B98"]){
+        NSLog(@"enabling");
+    }
 }
 
 @end

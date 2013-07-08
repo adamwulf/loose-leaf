@@ -183,6 +183,9 @@
         [gesture setEnabled:NO];
     }
     textLabel.text = @"disabled";
+    if([self.uuid hasPrefix:@"41B98"]){
+        NSLog(@"disabled: %@ %d", self.uuid, panGesture.enabled);
+    }
 }
 /**
  * enables all gestures on this page
@@ -192,6 +195,9 @@
         [gesture setEnabled:YES];
     }
     textLabel.text = @"enabled";
+    if([self.uuid hasPrefix:@"41B98"]){
+        NSLog(@"enabled: %@", self.uuid);
+    }
 }
 
 
