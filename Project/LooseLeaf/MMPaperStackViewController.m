@@ -19,7 +19,9 @@
         [NSThread performBlockInBackground:^{
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
+            if([[UIDevice currentDevice] respondsToSelector:@selector(uniqueIdentifier)]){
+                [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] performSelector:@selector(uniqueIdentifier)]];
+            }
 #pragma clang diagnostic pop
             [TestFlight takeOff:kTestflightAppToken];
             [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
