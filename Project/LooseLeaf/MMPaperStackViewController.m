@@ -19,6 +19,7 @@
         [NSThread performBlockInBackground:^{
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wundeclared-selector"
             if([[UIDevice currentDevice] respondsToSelector:@selector(uniqueIdentifier)]){
                 [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] performSelector:@selector(uniqueIdentifier)]];
             }
