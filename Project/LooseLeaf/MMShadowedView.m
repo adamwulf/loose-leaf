@@ -9,6 +9,7 @@
 #import "MMShadowedView.h"
 #import "UIView+Debug.h"
 #import "Constants.h"
+#import "UIColor+Shadow.h"
 #import <QuartzCore/QuartzCore.h>
 
 @implementation MMShadowedView
@@ -49,16 +50,22 @@
         self.opaque = NO;
         self.clipsToBounds = YES;
         
+        
+        UIColor* clear = [UIColor clearColor];
+        UIColor* white = [UIColor whiteColor];
+        UIColor* shadowColor = [UIColor shadowColor];
+        
+        
         contentView.opaque = YES;
-        contentView.backgroundColor = [UIColor whiteColor];
+        contentView.backgroundColor = white;
         contentView.clipsToBounds = YES;
         
-        self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = clear;
         [self addSubview:contentView];
 
         self.layer.shadowPath = [UIBezierPath bezierPathWithRect:contentView.frame].CGPath;
         self.layer.shadowRadius = 4;
-        self.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.75].CGColor;
+        self.layer.shadowColor = shadowColor.CGColor;
         self.layer.shadowOpacity = 1;
         self.layer.shadowOffset = CGSizeMake(0, 0);
     }

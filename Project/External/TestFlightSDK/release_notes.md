@@ -1,8 +1,14 @@
 ## 1.3
 
+### 1.3.0-beta.7
+
+- Do not automatically start a session on `+takeOff:`.
+
+  With iOS 7 and more background modes, there are more chances for apps to be launched in the background and a session shouldn't start if the user is not using the app. For apps with special session needs please see "TestFlight+ManualSessions.h".
+
 ### 1.3.0-beta.6
 
-Fix bug with crash reporting in iOS 7
+- Fix bug with crash reporting in iOS 7
 
 ### 1.3.0-beta.5
 

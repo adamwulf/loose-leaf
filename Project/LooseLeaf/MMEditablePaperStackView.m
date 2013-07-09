@@ -517,10 +517,21 @@
     }
     
     
+
+    
     [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
                                                      withSize:[drawableView pagePixelSize]
                                                    andContext:[drawableView context]
                                                       andThen:nil];
+    
+    
+    CGPoint scrollOffset = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
+    NSArray* visiblePages = [self findPagesInVisibleRowsOfListViewGivenOffset:scrollOffset];
+    
+    // only load the image previews for the pages that will be visible
+    for(MMEditablePaperView* page in visiblePages){
+        [page loadCachedPreview];
+    }
     
     [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
     [self didChangeTopPage];

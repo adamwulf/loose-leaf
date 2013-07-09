@@ -55,20 +55,19 @@ dispatch_queue_t importThumbnailQueue;
         cachedImgView.clipsToBounds = YES;
         cachedImgView.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:.3];
         [self.contentView addSubview:cachedImgView];
-
-        //
-        // TODO:
-        // need to handle these images from list / stack view better
-        dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
-            UIImage* img = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
-            [NSThread performBlockOnMainThread:^{
-                cachedImgView.image = img;
-            }];
-        });
         
         lastSavedUndoHash = [drawableView undoHash];
     }
     return self;
+}
+
+-(void) loadCachedPreview{
+    dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
+        UIImage* img = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
+        [NSThread performBlockOnMainThread:^{
+            cachedImgView.image = img;
+        }];
+    });
 }
 
 

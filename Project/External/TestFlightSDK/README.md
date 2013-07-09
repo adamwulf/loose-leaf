@@ -76,6 +76,8 @@ For **BETA** apps only: In order for "In App Updates" to work and for user data 
     
 Note: `[[UIDevice currentDevice] uniqueIdentifier]` is deprecated, which means it may be removed from iOS in the future and that it should not be used in production apps. We recommend using it **only** in beta apps. If using it makes you feel uncomfortable, you are not required to include it.
 
+**Note on iOS 7 and Xcode 5**: In iOS 7, `uniqueIdentifier` no longer returns the device's UDID, so iOS 7 users will show up anonymously on TestFlight. Also, when building with ARC, Xcode 5 will not allow you to call `uniqueIdentifier` because it has been removed in iOS 7 from `UIDevice`'s header. We are working on a workaround for this issue.
+
 **DO NOT USE THIS IN PRODUCTION APPS**. When it is time to submit to the App Store comment this line out. Apple will probably reject your app if you leave this line in.
 
 
