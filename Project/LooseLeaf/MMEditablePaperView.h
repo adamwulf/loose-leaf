@@ -19,6 +19,7 @@
 -(void) undo;
 -(void) redo;
 -(BOOL) hasEditsToSave;
+-(void) loadCachedPreview;
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(EAGLContext*)context andThen:(void (^)())block;
 -(void) unloadState;
 -(void) saveToDisk;

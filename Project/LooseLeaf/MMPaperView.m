@@ -44,10 +44,10 @@
 //        NSInteger photo = rand() % 6 + 1;
 //        UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", photo]];
         
-        UILabel* label = [[UILabel alloc] initWithFrame:self.bounds];
-        label.text = uuid;
-        [label sizeToFit];
-        [self.contentView addSubview:label];
+//        UILabel* label = [[UILabel alloc] initWithFrame:self.bounds];
+//        label.text = uuid;
+//        [label sizeToFit];
+//        [self.contentView addSubview:label];
         //
         // end debug image
         //
