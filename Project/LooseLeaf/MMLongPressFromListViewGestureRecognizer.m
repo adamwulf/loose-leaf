@@ -24,13 +24,13 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     //    debug_NSLog(@"touchesBegan");
-    [super touchesBegan:touches withEvent:event];
+    NSMutableSet* mset = [NSMutableSet set];
     [touches enumerateObjectsUsingBlock:^(id obj, BOOL *stop){
         UITouch* touch = obj;
         MMPaperView* page = [pinchDelegate pageForPointInList:[touch locationInView:self.view]];
         if(page && !pinchedPage){
             pinchedPage = page;
-            CGPoint lastLocationInPage = [self locationInView:pinchedPage];
+            CGPoint lastLocationInPage = [touch locationInView:pinchedPage];
             if([pinchedPage isKindOfClass:[MMShadowedView class]]){
                 // the location needs to take into account the shadow
                 lastLocationInPage.x -= [MMShadowedView shadowWidth];
@@ -38,10 +38,14 @@
             }
             normalizedLocationOfScale = CGPointMake(lastLocationInPage.x / pinchedPage.frame.size.width,
                                                     lastLocationInPage.y / pinchedPage.frame.size.height);
+            [mset addObject:touch];
         }else{
             [self ignoreTouch:touch forEvent:event];
         }
     }];
+    if([mset count]){
+        [super touchesBegan:mset withEvent:event];
+    }
 }
 
 -(void) reset{
