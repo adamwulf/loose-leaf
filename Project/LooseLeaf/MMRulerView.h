@@ -10,4 +10,6 @@
 
 @interface MMRulerView : UIView
 
+-(void) updateLineAt:(CGPoint)p1 to:(CGPoint)p2;
+
 @end

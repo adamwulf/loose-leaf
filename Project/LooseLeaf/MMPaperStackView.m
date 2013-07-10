@@ -492,6 +492,10 @@
 
 #pragma mark - MMPaperViewDelegate
 
+-(void) didMoveRuler:(MMRulerToolGestureRecognizer *)gesture{
+    @throw kAbstractMethodException;
+}
+
 /**
  * return YES if we're in hand mode, no otherwise
  */

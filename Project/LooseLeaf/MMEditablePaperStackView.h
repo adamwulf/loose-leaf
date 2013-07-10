@@ -31,6 +31,7 @@
 #import "Constants.h"
 #import "Pen.h"
 #import "Eraser.h"
+#import "MMRulerView.h"
 
 /**
  * this class is responsible for the editable buttons and controls that show
@@ -66,6 +67,7 @@
     Eraser* eraser;
     
     NSMutableSet* pagesWithLoadedCacheImages;
+    MMRulerView* rulerView;
 }
 
 -(void) saveStacksToDisk;
