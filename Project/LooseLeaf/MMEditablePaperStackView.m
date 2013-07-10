@@ -10,6 +10,7 @@
 #import "UIView+SubviewStacks.h"
 #import "TestFlight.h"
 #import "MMFeedbackView.h"
+#import "MMRulerView.h"
 
 @implementation MMEditablePaperStackView{
     MMEditablePaperView* currentEditablePage;
@@ -196,9 +197,13 @@
                                                      selector:@selector(connectionChange:)
                                                          name: JotStylusManagerDidChangeConnectionStatus
                                                        object:nil];
-//            [[JotStylusManager sharedInstance] setEnabled:YES];
+            [[JotStylusManager sharedInstance] setEnabled:YES];
             [[JotStylusManager sharedInstance] setRejectMode:NO];
         }];
+        
+        
+        MMRulerView* rulerView = [[MMRulerView alloc] initWithFrame:self.bounds];
+        [self addSubview:rulerView];
     }
     return self;
 }
