@@ -25,6 +25,8 @@ dispatch_queue_t importThumbnailQueue;
     NSString* inkPath;
     NSString* plistPath;
     NSString* thumbnailPath;
+    
+    BOOL isLoadingCachedImageFromDisk;
 }
 
 @synthesize drawableView;
@@ -60,16 +62,6 @@ dispatch_queue_t importThumbnailQueue;
     }
     return self;
 }
-
--(void) loadCachedPreview{
-    dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
-        UIImage* img = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
-        [NSThread performBlockOnMainThread:^{
-            cachedImgView.image = img;
-        }];
-    });
-}
-
 
 -(void) setFrame:(CGRect)frame{
     [super setFrame:frame];
@@ -214,6 +206,35 @@ dispatch_queue_t importThumbnailQueue;
         [self.delegate didSavePage:self];
     }
 }
+
+-(void) loadCachedPreview{
+    if(!cachedImgView.image && !isLoadingCachedImageFromDisk){
+        isLoadingCachedImageFromDisk = YES;
+        dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
+            UIImage* img = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
+            [NSThread performBlockOnMainThread:^{
+                cachedImgView.image = img;
+                isLoadingCachedImageFromDisk = NO;
+            }];
+        });
+    }
+}
+
+-(void) unloadCachedPreview{
+    // i have to do this on the dispatch queues, so
+    // that this will execute after loading if the loading
+    // hasn't executed yet
+    //
+    // i should probably make an nsoperationqueue or something
+    // so that i can cancel operations if they havne't run yet... (?)
+    dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
+        [NSThread performBlockOnMainThread:^{
+            cachedImgView.image = nil;
+        }];
+    });
+}
+
+
 
 #pragma mark - JotViewDelegate
 

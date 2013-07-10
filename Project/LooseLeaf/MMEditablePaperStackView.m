@@ -25,6 +25,9 @@
     if (self) {
         // Initialization code
 
+        self.delegate = self;
+        
+        pagesWithLoadedCacheImages = [NSMutableSet set];
         stateLoadedPages = [NSMutableArray array];
         
         stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
@@ -377,10 +380,10 @@
     }else{
         debug_NSLog(@"would save, but can't b/c its readonly page");
     }
-    
     // update UI for scaling small into list view
     [self setButtonsVisible:NO];
     [super isBeginningToScaleReallySmall:page];
+    [self updateVisiblePageImageCache];
 }
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     [super finishedScalingReallySmall:page];
@@ -462,6 +465,9 @@
 }
 
 -(void) mayChangeTopPageTo:(MMPaperView*)page{
+    if([page isKindOfClass:[MMEditablePaperView class]]){
+        [(MMEditablePaperView*)page loadCachedPreview];
+    }
     if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
         [self loadStateForPage:page];
     }
@@ -480,6 +486,7 @@
     [super didChangeTopPage];
     MMPaperView* topPage = [visibleStackHolder peekSubview];
     [self ensureTopPageIsLoaded:topPage];
+    [self updateVisiblePageImageCache];
 }
 
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
@@ -516,19 +523,18 @@
         [self saveStacksToDisk];
     }
     
-    
-
-    
+    // load the state for the top page in the visible stack
     [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
                                                      withSize:[drawableView pagePixelSize]
                                                    andContext:[drawableView context]
                                                       andThen:nil];
     
     
+    // only load the image previews for the pages that will be visible
+    // other page previews will load as the user turns the page,
+    // or as they scroll the list view
     CGPoint scrollOffset = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
     NSArray* visiblePages = [self findPagesInVisibleRowsOfListViewGivenOffset:scrollOffset];
-    
-    // only load the image previews for the pages that will be visible
     for(MMEditablePaperView* page in visiblePages){
         [page loadCachedPreview];
     }
@@ -612,4 +618,34 @@
     }
     debug_NSLog(@"jot status: %@", text);
 }
+
+
+
+#pragma mark - UIScrollViewDelegate
+
+-(void) updateVisiblePageImageCache{
+    CGPoint visibleScrollOffset;
+    if(self.scrollEnabled){
+        visibleScrollOffset = self.contentOffset;
+    }else{
+        visibleScrollOffset = initialScrollOffsetFromTransitionToListView;
+    }
+    NSArray* visiblePages = [self findPagesInVisibleRowsOfListViewGivenOffset:visibleScrollOffset];
+    for(MMEditablePaperView* page in visiblePages){
+        [page loadCachedPreview];
+    }
+    NSSet* invisiblePages = [pagesWithLoadedCacheImages objectsPassingTest:^BOOL(id obj, BOOL*stop){
+        return ![visiblePages containsObject:obj];
+    }];
+    for(MMEditablePaperView* page in invisiblePages){
+        [page unloadCachedPreview];
+    }
+    [pagesWithLoadedCacheImages addObjectsFromArray:visiblePages];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [self updateVisiblePageImageCache];
+}
+
+
 @end
