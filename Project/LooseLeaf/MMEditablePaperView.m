@@ -63,7 +63,6 @@ dispatch_queue_t importThumbnailQueue;
         //
         // This pan gesture is used to pan/scale the page itself.
         rulerGesture = [[MMRulerToolGestureRecognizer alloc] initWithTarget:self action:@selector(didMoveRuler:)];
-        rulerGesture.bezelDirectionMask = MMBezelDirectionRight | MMBezelDirectionLeft;
         //
         // This gesture is only allowed to run if the user is not
         // acting on an object on the page. defer to the long press

@@ -18,9 +18,6 @@
 @implementation MMRulerToolGestureRecognizer
 
 @synthesize scale;
-@synthesize bezelDirectionMask;
-@synthesize didExitToBezel;
-@synthesize velocity = _averageVelocity;
 @synthesize numberOfRepeatingBezels;
 @synthesize scaleDirection;
 
@@ -32,7 +29,6 @@ NSInteger const  minimumNumberOfTouches = 2;
     if(self){
         validTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
-        velocities = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -42,7 +38,6 @@ NSInteger const  minimumNumberOfTouches = 2;
     if(self){
         validTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
-        velocities = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -104,15 +99,8 @@ NSInteger const  minimumNumberOfTouches = 2;
             for(UITouch* touch in validTouches){
                 [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
             }
-        }else if([validTouches count] <= minimumNumberOfTouches){
-            didExitToBezel = MMBezelDirectionNone;
-            //
-            // ok, they just bezelled and brought their second
-            // touch back into the screen. reset the flag
-            secondToLastTouchDidBezel = NO;
         }
     }
-    [self calculateVelocity];
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -144,11 +132,9 @@ NSInteger const  minimumNumberOfTouches = 2;
             scale = newScale;
         }
     }
-    [self calculateVelocity];
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     // pan and pinch and bezel
-    BOOL cancelledFromBezel = NO;
     NSMutableOrderedSet* validTouchesCurrentlyEnding = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
     [validTouchesCurrentlyEnding intersectSet:touches];
     
@@ -157,56 +143,9 @@ NSInteger const  minimumNumberOfTouches = 2;
         //
         // make sure we've actually seen two fingers on the page
         // before we change state or worry about bezeling
-        if([validTouchesCurrentlyEnding count]){
-            for(UITouch* touch in validTouchesCurrentlyEnding){
-                CGPoint point = [touch locationInView:self.view.superview];
-                BOOL bezelDirHasLeft = ((self.bezelDirectionMask & MMBezelDirectionLeft) == MMBezelDirectionLeft);
-                BOOL bezelDirHasRight = ((self.bezelDirectionMask & MMBezelDirectionRight) == MMBezelDirectionRight);
-                BOOL bezelDirHasUp = ((self.bezelDirectionMask & MMBezelDirectionUp) == MMBezelDirectionUp);
-                BOOL bezelDirHasDown = ((self.bezelDirectionMask & MMBezelDirectionDown) == MMBezelDirectionDown);
-                if(point.x < kBezelInGestureWidth && bezelDirHasLeft){
-                    didExitToBezel = didExitToBezel | MMBezelDirectionLeft;
-                    cancelledFromBezel = YES;
-                }else if(point.y < kBezelInGestureWidth && bezelDirHasUp){
-                    didExitToBezel = didExitToBezel | MMBezelDirectionUp;
-                    cancelledFromBezel = YES;
-                }else if(point.x > self.view.superview.frame.size.width - kBezelInGestureWidth && bezelDirHasRight){
-                    didExitToBezel = didExitToBezel | MMBezelDirectionRight;
-                    cancelledFromBezel = YES;
-                }else if(point.y > self.view.superview.frame.size.height - kBezelInGestureWidth && bezelDirHasDown){
-                    didExitToBezel = didExitToBezel | MMBezelDirectionDown;
-                    cancelledFromBezel = YES;
-                }
-            }
-            //
-            // ok, we need to increment the number of times the user has exited the
-            // bezel. only do it if the touch as exited bezel and if we're not
-            // double counting the last two touches.
-            if(didExitToBezel != MMBezelDirectionNone &&
-               !secondToLastTouchDidBezel &&
-               ([validTouches count] - [validTouchesCurrentlyEnding count]) < minimumNumberOfTouches){
-                numberOfRepeatingBezels ++;
-                if([validTouches count] - [validTouchesCurrentlyEnding count] == 1){
-                    // that was the 2nd to last touch!
-                    // set this flag so we don't double count it when the last
-                    // touch ends
-                    secondToLastTouchDidBezel = YES;
-                }
-            }
-            if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
-                self.state = UIGestureRecognizerStatePossible;
-            }
-            [validTouches minusOrderedSet:validTouchesCurrentlyEnding];
-            [ignoredTouches removeObjectsInSet:touches];
+        if([validTouches count] <= 1 && self.state == UIGestureRecognizerStateChanged){
+            self.state = UIGestureRecognizerStateEnded;
         }
-        if([validTouches count] == 0 && self.state == UIGestureRecognizerStateChanged){
-            if(cancelledFromBezel){
-                self.state = UIGestureRecognizerStateCancelled;
-            }else{
-                self.state = UIGestureRecognizerStateEnded;
-            }
-        }
-        [self calculateVelocity];
     }else{
         //
         // only 1 finger during this gesture, and it's exited
@@ -228,7 +167,6 @@ NSInteger const  minimumNumberOfTouches = 2;
         [validTouches minusOrderedSet:validTouchesCurrentlyCancelling];
         [ignoredTouches removeObjectsInSet:touches];
     }
-    [self calculateVelocity];
 }
 -(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
     [ignoredTouches addObject:touch];
@@ -241,10 +179,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     numberOfRepeatingBezels = 0;
     [validTouches removeAllObjects];
     [ignoredTouches removeAllObjects];
-    didExitToBezel = MMBezelDirectionNone;
     scaleDirection = MMScaleDirectionNone;
-    [velocities removeAllObjects];
-    secondToLastTouchDidBezel = NO;
 }
 
 -(void) cancel{
@@ -264,64 +199,5 @@ NSInteger const  minimumNumberOfTouches = 2;
     }
     return 0;
 }
-
-/**
- * this function processes each step of the pan gesture, and uses
- * it to caclulate the velocity when the user lifts their finger.
- *
- * we use this to have the paper slide when the user swipes quickly
- */
-- (CGPoint)calculateVelocity{
-    //    if([validTouches count] < 2) return _averageVelocity;
-    CGPoint translate = [self locationInView:self.view.superview];
-    static NSTimeInterval lastTime;
-    static NSTimeInterval currTime;
-    static CGPoint currTranslate;
-    static CGPoint lastTranslate;
-    
-    if (self.state == UIGestureRecognizerStateBegan)
-    {
-        currTime = [NSDate timeIntervalSinceReferenceDate];
-        currTranslate = translate;
-    }
-    else if (self.state == UIGestureRecognizerStateChanged)
-    {
-        lastTime = currTime;
-        lastTranslate = currTranslate;
-        currTime = [NSDate timeIntervalSinceReferenceDate];
-        currTranslate = translate;
-        //
-        // calculate the current velocity for this moment,
-        // add add it to the velocities array. we'll average
-        // them later
-        NSTimeInterval seconds = [NSDate timeIntervalSinceReferenceDate] - lastTime;
-        CGPoint currVel = CGPointMake((translate.x - lastTranslate.x) / seconds, (translate.y - lastTranslate.y) / seconds);
-        [velocities addObject:[NSValue valueWithCGPoint:currVel]];
-        if([velocities count] > 10){
-            [velocities removeObjectAtIndex:0];
-        }
-    }
-    if ([velocities count] > 1)
-    {
-        //
-        // calculate the average velocity
-        CGPoint avgVel = [[velocities reduce:^id(id obj, NSUInteger index, id accum){
-            CGPoint avgVel = [accum CGPointValue];
-            CGPoint curVel = [obj CGPointValue];
-            avgVel.x = (avgVel.x * index + curVel.x) / (index + 1);
-            avgVel.y = (avgVel.y * index + curVel.y) / (index + 1);
-            return [NSValue valueWithCGPoint:avgVel];
-        }] CGPointValue];
-        _averageVelocity = avgVel;
-        return avgVel;
-    }
-    /*
-     // let's calculate where that flick would take us this far in the future
-     float inertiaSeconds = 1.0;
-     CGPoint final = CGPointMake(translate.x + swipeVelocity.x * inertiaSeconds, translate.y + swipeVelocity.y * inertiaSeconds);
-     */
-    return CGPointZero;
-}
-
 
 @end
