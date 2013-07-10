@@ -8,10 +8,12 @@
 
 #import "MMPaperView.h"
 #import <JotUI/JotUI.h>
+#import "MMRulerToolGestureRecognizer.h"
 
 @interface MMEditablePaperView : MMPaperView<JotViewDelegate>{
     UIImageView* cachedImgView;
     __weak JotView* drawableView;
+    MMRulerToolGestureRecognizer* rulerGesture;
 }
 
 @property (nonatomic, weak) JotView* drawableView;

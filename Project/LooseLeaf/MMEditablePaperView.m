@@ -59,6 +59,19 @@ dispatch_queue_t importThumbnailQueue;
         [self.contentView addSubview:cachedImgView];
         
         lastSavedUndoHash = [drawableView undoHash];
+        
+        //
+        // This pan gesture is used to pan/scale the page itself.
+        rulerGesture = [[MMRulerToolGestureRecognizer alloc] initWithTarget:self action:@selector(didMoveRuler:)];
+        rulerGesture.bezelDirectionMask = MMBezelDirectionRight | MMBezelDirectionLeft;
+        //
+        // This gesture is only allowed to run if the user is not
+        // acting on an object on the page. defer to the long press
+        // and the tap gesture, and only allow page pan/scale if
+        // these fail
+        [rulerGesture requireGestureRecognizerToFail:longPress];
+        [rulerGesture requireGestureRecognizerToFail:tap];
+        [self addGestureRecognizer:rulerGesture];
     }
     return self;
 }
@@ -235,6 +248,14 @@ dispatch_queue_t importThumbnailQueue;
 }
 
 
+
+#pragma mark - Ruler Tool
+
+-(void) didMoveRuler:(MMRulerToolGestureRecognizer*)gesture{
+    if(![delegate shouldAllowPan:self]){
+        NSLog(@"ruler");
+    }
+}
 
 #pragma mark - JotViewDelegate
 
