@@ -144,15 +144,14 @@ NSInteger const  minimumNumberOfTouches = 2;
         // make sure we've actually seen two fingers on the page
         // before we change state or worry about bezeling
         if([validTouches count] <= 1 && self.state == UIGestureRecognizerStateChanged){
+            // only 1 finger during this gesture, and it's exited
+            // so it doesn't count for bezeling or pan/pinch
+            self.state = UIGestureRecognizerStateFailed;
+        }else{
             self.state = UIGestureRecognizerStateEnded;
         }
-    }else{
-        //
-        // only 1 finger during this gesture, and it's exited
-        // so it doesn't count for bezeling or pan/pinch
         [validTouches minusOrderedSet:validTouchesCurrentlyEnding];
         [ignoredTouches removeObjectsInSet:touches];
-        self.state = UIGestureRecognizerStateFailed;
     }
 }
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
