@@ -234,6 +234,9 @@
  * pan gestures use proper state control etc to zoom a page in and out.
  */
 -(void) panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture{
+    if(![self.delegate shouldAllowPan:self]){
+        return;
+    }
     //
     // procede with the pan gesture
     CGPoint lastLocationInSelf = [panGesture locationInView:self];

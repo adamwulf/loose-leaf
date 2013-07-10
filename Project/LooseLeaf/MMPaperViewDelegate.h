@@ -113,4 +113,9 @@
 
 -(BOOL) isPageEditable:(MMPaperView*)page;
 
+
+/**
+ * return YES if the page should allow pan
+ */
+-(BOOL) shouldAllowPan:(MMPaperView*)page;
 @end
