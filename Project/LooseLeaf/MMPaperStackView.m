@@ -493,6 +493,13 @@
 #pragma mark - MMPaperViewDelegate
 
 /**
+ * return YES if we're in hand mode, no otherwise
+ */
+-(BOOL) shouldAllowPan:(MMPaperView*)page{
+    return YES;
+}
+
+/**
  * let's only allow scaling the top most page
  */
 -(BOOL) allowsScaleForPage:(MMPaperView*)page{
@@ -532,8 +539,6 @@
     }else if(isBeginningGesture){
         [self mayChangeTopPageTo:page];
     }
-    
-    
     
     //
     // the user is bezeling a page to the left, which will pop

@@ -265,6 +265,7 @@
 }
 
 -(void) rulerTapped:(UIButton*)_button{
+    [[visibleStackHolder peekSubview] cancelAllGestures];
     handButton.selected = NO;
     rulerButton.selected = YES;
 }
@@ -426,6 +427,13 @@
 
 -(BOOL) isPageEditable:(MMPaperView*)page{
     return page == currentEditablePage;
+}
+
+/**
+ * return YES if we're in hand mode, no otherwise
+ */
+-(BOOL) shouldAllowPan:(MMPaperView*)page{
+    return handButton.selected;
 }
 
 #pragma mark - Page Loading and Unloading
