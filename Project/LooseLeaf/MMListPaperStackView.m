@@ -1132,6 +1132,12 @@
         //
         // scrolling is enabled, so we need to return
         // the list of pages that are currently visible
+        //
+        // TODO: https://github.com/adamwulf/loose-leaf/issues/113
+        // i should probably hash each page into setOfFinalFramesForPagesBeingZoomed
+        // based on the 100px that the frame is in. then i know the visible min/max y,
+        // and use that to calc the 100px hashes i should look up. this way i don't need to
+        // iterate through every single page
         NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray array];
         for(MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
             CGRect frameOfPage = [self frameForListViewForPage:aPage];

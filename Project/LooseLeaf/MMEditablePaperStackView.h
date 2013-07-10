@@ -36,7 +36,7 @@
  * this class is responsible for the editable buttons and controls that show
  * outside of a page's view subviews
  */
-@interface MMEditablePaperStackView : MMListPaperStackView<JotViewDelegate,MMSidebarButtonDelegate,MMRotationManagerDelegate>{
+@interface MMEditablePaperStackView : MMListPaperStackView<JotViewDelegate,MMSidebarButtonDelegate,MMRotationManagerDelegate,UIScrollViewDelegate>{
     
     // managers
     MMStackManager* stackManager;
@@ -64,6 +64,8 @@
 
     Pen* pen;
     Eraser* eraser;
+    
+    NSMutableSet* pagesWithLoadedCacheImages;
 }
 
 -(void) saveStacksToDisk;
