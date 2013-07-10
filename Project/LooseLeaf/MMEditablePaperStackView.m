@@ -465,8 +465,25 @@
 }
 
 -(void) mayChangeTopPageTo:(MMPaperView*)page{
+    if([visibleStackHolder containsSubview:page]){
+        MMPaperView* pageBelow = [visibleStackHolder getPageBelow:page];
+        if([pageBelow isKindOfClass:[MMEditablePaperView class]]){
+            [(MMEditablePaperView*)pageBelow loadCachedPreview];
+            [pagesWithLoadedCacheImages addObject:pageBelow];
+        }
+    }
     if([page isKindOfClass:[MMEditablePaperView class]]){
         [(MMEditablePaperView*)page loadCachedPreview];
+        [pagesWithLoadedCacheImages addObject:page];
+        if([bezelStackHolder.subviews count] > 6){
+            MMPaperView* page = [bezelStackHolder.subviews objectAtIndex:[bezelStackHolder.subviews count] - 6];
+            if([page isKindOfClass:[MMEditablePaperView class]]){
+                // we have a pretty impressive bezel going on here,
+                // so start to unload the pages that are pretty much
+                // invisible in the bezel stack
+                [(MMEditablePaperView*)page unloadCachedPreview];
+            }
+        }
     }
     if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
         [self loadStateForPage:page];
