@@ -202,7 +202,7 @@
         }];
         
         
-        MMRulerView* rulerView = [[MMRulerView alloc] initWithFrame:self.bounds];
+        rulerView = [[MMRulerView alloc] initWithFrame:self.bounds];
         [self addSubview:rulerView];
     }
     return self;
@@ -439,6 +439,10 @@
  */
 -(BOOL) shouldAllowPan:(MMPaperView*)page{
     return handButton.selected;
+}
+
+-(void) didMoveRuler:(MMRulerToolGestureRecognizer *)gesture{
+    [rulerView updateLineAt:[gesture point1InView:rulerView] to:[gesture point2InView:rulerView]];
 }
 
 #pragma mark - Page Loading and Unloading

@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <JotUI/JotUI.h>
 
-@class MMPaperView;
+@class MMPaperView,MMRulerToolGestureRecognizer;
 
 @protocol MMPaperViewDelegate <JotViewDelegate>
 
@@ -118,4 +118,11 @@
  * return YES if the page should allow pan
  */
 -(BOOL) shouldAllowPan:(MMPaperView*)page;
+
+/**
+ * called when the ruler moves
+ */
+-(void) didMoveRuler:(MMRulerToolGestureRecognizer*)gesture;
+
+
 @end

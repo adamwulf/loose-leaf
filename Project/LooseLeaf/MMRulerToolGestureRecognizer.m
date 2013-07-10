@@ -199,4 +199,16 @@ NSInteger const  minimumNumberOfTouches = 2;
     return 0;
 }
 
+
+#pragma mark - Public Interface
+
+-(CGPoint) point1InView:(UIView*)view{
+    return [[validTouches firstObject] locationInView:view];
+}
+
+-(CGPoint) point2InView:(UIView*)view{
+    return [[validTouches lastObject] locationInView:view];
+}
+
+
 @end

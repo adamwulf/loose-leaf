@@ -35,4 +35,8 @@
 -(void) cancel;
 -(BOOL) containsTouch:(UITouch*)touch;
 
+-(CGPoint) point1InView:(UIView*)view;
+
+-(CGPoint) point2InView:(UIView*)view;
+
 @end

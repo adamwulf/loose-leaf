@@ -252,7 +252,7 @@ dispatch_queue_t importThumbnailQueue;
 
 -(void) didMoveRuler:(MMRulerToolGestureRecognizer*)gesture{
     if(![delegate shouldAllowPan:self]){
-        NSLog(@"ruler");
+        [self.delegate didMoveRuler:gesture];
     }
 }
 
