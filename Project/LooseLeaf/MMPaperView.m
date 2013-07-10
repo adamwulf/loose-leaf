@@ -12,8 +12,6 @@
 #import "MMShadowManager.h"
 #import "NSString+UUID.h"
 #import "UIView+Debug.h"
-#import "MMObjectSelectLongPressGestureRecognizer.h"
-#import "MMImmovableTapGestureRecognizer.h"
 #import "TestFlight.h"
 
 @implementation MMPaperView
@@ -61,13 +59,13 @@
         // allow the user to select an object by long pressing
         // on it. this'll allow the user to select + move/scale/rotate
         // an object in one gesture
-        MMObjectSelectLongPressGestureRecognizer* longPress = [[MMObjectSelectLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+        longPress = [[MMObjectSelectLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
         longPress.numberOfTouchesRequired = 2;
         [self addGestureRecognizer:longPress];
         //
         // allow the user to select an object by tapping on the page
         // with two fingers
-        MMImmovableTapGestureRecognizer* tap = [[MMImmovableTapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleFingerDoubleTap:)];
+        tap = [[MMImmovableTapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleFingerDoubleTap:)];
         tap.numberOfTapsRequired = 1;
         tap.numberOfTouchesRequired = 2;
         //

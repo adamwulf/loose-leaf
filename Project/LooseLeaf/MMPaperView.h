@@ -10,6 +10,8 @@
 #import "Constants.h"
 #import "MMPaperViewDelegate.h"
 #import "MMPanAndPinchGestureRecognizer.h"
+#import "MMImmovableTapGestureRecognizer.h"
+#import "MMObjectSelectLongPressGestureRecognizer.h"
 #import "MMShadowedView.h"
 
 @interface MMPaperView : MMShadowedView{
@@ -31,6 +33,8 @@
     
     UILabel* textLabel;
     
+    MMObjectSelectLongPressGestureRecognizer* longPress;
+    MMImmovableTapGestureRecognizer* tap;
     MMPanAndPinchGestureRecognizer* panGesture;
     
     BOOL isBrandNewPage;
