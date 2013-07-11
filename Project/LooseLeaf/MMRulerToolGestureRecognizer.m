@@ -150,9 +150,11 @@ NSInteger const  minimumNumberOfTouches = 2;
         }else{
             self.state = UIGestureRecognizerStateEnded;
         }
-        [validTouches minusOrderedSet:validTouchesCurrentlyEnding];
-        [ignoredTouches removeObjectsInSet:touches];
+    }else{
+        self.state = UIGestureRecognizerStateFailed;
     }
+    [validTouches minusOrderedSet:validTouchesCurrentlyEnding];
+    [ignoredTouches removeObjectsInSet:touches];
 }
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
     NSMutableOrderedSet* validTouchesCurrentlyCancelling = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];

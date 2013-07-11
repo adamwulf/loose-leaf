@@ -265,6 +265,7 @@
 #pragma mark - Gesture Button Actions
 
 -(void) handTapped:(UIButton*)_button{
+    [[visibleStackHolder peekSubview] cancelAllGestures];
     handButton.selected = YES;
     rulerButton.selected = NO;
 }
