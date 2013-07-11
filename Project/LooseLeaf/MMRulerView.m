@@ -91,6 +91,44 @@
             //            so that means that radius = d/(2sin(θ/2))
             CGFloat radius = currentDistance / (2 * sinf(radian / 2));
             
+            // calculate the midpoint of the ruler, and it's distance to
+            // an edge
+            CGPoint midPoint = CGPointMake((tl.x + bl.x)/2, (tl.y + bl.y)/2);
+            CGFloat distanceToMidPoint = DistanceBetweenTwoPoints(tl, midPoint);
+            
+            // need to half the radian b/c the line from the midpoint
+            // bisects the angle to create the right triangle
+            CGFloat triangleScalingFactor = distanceToMidPoint / sinf(radian/2);
+            CGFloat distanceToCenter = cosf(radian/2) * triangleScalingFactor;
+            
+            // calculate direction of center point
+            CGPoint center = [[perpN flip] pointFromPoint:midPoint distance:distanceToCenter];
+
+            // now we have a right triangle between
+            // tl, midpoint, and centerpoint
+            //
+            UIBezierPath* path = [UIBezierPath bezierPath];
+            [path moveToPoint:midPoint];
+            [path addLineToPoint:center];
+            [path setLineWidth:2];
+            [path stroke];
+
+            //
+            // draw the straight edge ruler lines
+            [[UIColor blueColor] setStroke];
+            path = [UIBezierPath bezierPath];
+            [path moveToPoint:br];
+            [path addLineToPoint:tr];
+            [path moveToPoint:bl];
+            [path addLineToPoint:tl];
+            [path setLineWidth:2];
+            [path stroke];
+
+            
+            
+            path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:0 endAngle:M_PI * 2 clockwise:NO];
+            [path stroke];
+            
             NSLog(@"arc %f %f %f", percent, radius, currentDistance);
         }else{
             NSLog(@"straight");
