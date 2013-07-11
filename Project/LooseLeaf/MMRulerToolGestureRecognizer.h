@@ -23,22 +23,15 @@
     // the collection of valid touches for this gesture
     NSMutableSet* ignoredTouches;
     NSMutableOrderedSet* validTouches;
-
-    // track the direction of the scale
-    MMBezelScaleDirection scaleDirection;
 }
 
-@property (nonatomic, readonly) NSInteger numberOfRepeatingBezels;
+@property (nonatomic, readonly) CGFloat initialDistance;
 @property (nonatomic, readonly) CGFloat scale;
-@property (nonatomic, readonly) MMBezelScaleDirection scaleDirection;
 
 -(void) cancel;
 -(BOOL) containsTouch:(UITouch*)touch;
 
 -(CGPoint) point1InView:(UIView*)view;
 -(CGPoint) point2InView:(UIView*)view;
-
--(CGPoint) startPoint1InView:(UIView*)view;
--(CGPoint) startPoint2InView:(UIView*)view;
 
 @end

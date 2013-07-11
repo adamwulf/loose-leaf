@@ -250,6 +250,9 @@ dispatch_queue_t importThumbnailQueue;
 
 #pragma mark - Ruler Tool
 
+/**
+ * the ruler gesture is firing
+ */
 -(void) didMoveRuler:(MMRulerToolGestureRecognizer*)gesture{
     if(![delegate shouldAllowPan:self]){
         if(gesture.state == UIGestureRecognizerStateFailed ||

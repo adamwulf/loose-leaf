@@ -13,6 +13,8 @@
 
 @protocol MMPaperViewDelegate <JotViewDelegate>
 
+#pragma mark Scale
+
 /**
  * return YES if we allow the input page to
  * be scaled with a pinch gesture (top page),
@@ -65,6 +67,8 @@
  */
 -(void) finishedScalingBackToPageView:(MMPaperView*)page;
 
+#pragma mark List View
+
 /**
  * Performance optimization:
  * the index, row, and column are all computed separately,
@@ -103,6 +107,7 @@
  */
 -(BOOL) isInVisibleStack:(MMPaperView*)page;
 
+#pragma mark Saving and Drawing
 
 /**
  * called after a page gets saved
@@ -113,6 +118,7 @@
 
 -(BOOL) isPageEditable:(MMPaperView*)page;
 
+#pragma mark Ruler
 
 /**
  * return YES if the page should allow pan
@@ -120,12 +126,12 @@
 -(BOOL) shouldAllowPan:(MMPaperView*)page;
 
 /**
- * called when the ruler moves
+ * called when the ruler begins and when it moves
  */
 -(void) didMoveRuler:(MMRulerToolGestureRecognizer*)gesture;
 
 /**
- * called when the ruler stops
+ * called when the user stops the ruler gesture
  */
 -(void) didStopRuler:(MMRulerToolGestureRecognizer*)gesture;
 

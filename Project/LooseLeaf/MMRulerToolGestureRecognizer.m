@@ -15,14 +15,10 @@
 #import "MMShadowedView.h"
 #import <JotUI/JotUI.h>
 
-@implementation MMRulerToolGestureRecognizer{
-    CGPoint startPoint1InView;
-    CGPoint startPoint2InView;
-}
+@implementation MMRulerToolGestureRecognizer
 
 @synthesize scale;
-@synthesize numberOfRepeatingBezels;
-@synthesize scaleDirection;
+@synthesize initialDistance;
 
 NSInteger const minimumNumberOfTouches = 2;
 
@@ -87,8 +83,7 @@ NSInteger const minimumNumberOfTouches = 2;
             for(UITouch* touch in validTouches){
                 [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
             }
-            startPoint1InView = [[validTouches firstObject] locationInView:self.view];
-            startPoint2InView = [[validTouches lastObject] locationInView:self.view];
+            initialDistance = [self distanceBetweenTouches:validTouches];
         }
     }
 }
@@ -102,24 +97,9 @@ NSInteger const minimumNumberOfTouches = 2;
         }
         if(self.numberOfTouches == 1){
             initialDistance = 0;
-            if(scale < 1){
-                scaleDirection = MMScaleDirectionLarger;
-            }else if(scale > 1){
-                scaleDirection = MMScaleDirectionSmaller;
-            }
-            scale = 1;
         }
         if([validTouches count] >= 2 && !initialDistance){
             initialDistance = [self distanceBetweenTouches:validTouches];
-        }
-        if([validTouches count] >= 2 && initialDistance){
-            CGFloat newScale = [self distanceBetweenTouches:validTouches] / initialDistance;
-            if(newScale > scale){
-                scaleDirection = MMScaleDirectionLarger;
-            }else if(newScale < scale){
-                scaleDirection = MMScaleDirectionSmaller;
-            }
-            scale = newScale;
         }
     }
 }
@@ -167,10 +147,8 @@ NSInteger const minimumNumberOfTouches = 2;
     [super reset];
     initialDistance = 0;
     scale = 1;
-    numberOfRepeatingBezels = 0;
     [validTouches removeAllObjects];
     [ignoredTouches removeAllObjects];
-    scaleDirection = MMScaleDirectionNone;
 }
 
 -(void) cancel{
@@ -179,6 +157,25 @@ NSInteger const minimumNumberOfTouches = 2;
         self.enabled = YES;
     }
 }
+
+
+#pragma mark - Public Interface
+
+/**
+ * return the two locations of the ruler in
+ * the input view
+ */
+-(CGPoint) point1InView:(UIView*)view{
+    return [[validTouches firstObject] locationInView:view];
+}
+
+-(CGPoint) point2InView:(UIView*)view{
+    return [[validTouches lastObject] locationInView:view];
+}
+
+
+#pragma mark - Private Helpers
+
 
 -(CGFloat) distanceBetweenTouches:(NSOrderedSet*) touches{
     if([touches count] >= 2){
@@ -189,25 +186,6 @@ NSInteger const minimumNumberOfTouches = 2;
         return DistanceBetweenTwoPoints(initialPoint1, initialPoint2);
     }
     return 0;
-}
-
-
-#pragma mark - Public Interface
-
--(CGPoint) point1InView:(UIView*)view{
-    return [[validTouches firstObject] locationInView:view];
-}
-
--(CGPoint) point2InView:(UIView*)view{
-    return [[validTouches lastObject] locationInView:view];
-}
-
--(CGPoint) startPoint1InView:(UIView *)view{
-    return [self.view convertPoint:startPoint1InView toView:view];
-}
-
--(CGPoint) startPoint2InView:(UIView *)view{
-    return [self.view convertPoint:startPoint2InView toView:view];
 }
 
 @end
