@@ -15,13 +15,16 @@
 #import "MMShadowedView.h"
 #import <JotUI/JotUI.h>
 
-@implementation MMRulerToolGestureRecognizer
+@implementation MMRulerToolGestureRecognizer{
+    CGPoint startPoint1InView;
+    CGPoint startPoint2InView;
+}
 
 @synthesize scale;
 @synthesize numberOfRepeatingBezels;
 @synthesize scaleDirection;
 
-NSInteger const  minimumNumberOfTouches = 2;
+NSInteger const minimumNumberOfTouches = 2;
 
 
 -(id) init{
@@ -72,21 +75,6 @@ NSInteger const  minimumNumberOfTouches = 2;
     }
     // ignore all the touches that could be bezel touches
     if([validTouchesCurrentlyBeginning count]){
-        // look at the presentation of the view (as would be seen during animation)
-        // (the layer will include the shadow, but our frame won't, since it's a shadow'd layer
-        CGRect lFrame = [MMShadowedView contractFrame:[self.view.layer.presentationLayer frame]];
-        // look at the view frame to compare
-        CGRect vFrame = self.view.frame;
-        if(!CGRectEqualToRect(lFrame, vFrame)){
-            // if they're not equal, then remove all animations
-            // and set the frame to the presentation layer's frame
-            // so that the gesture will pick up in the middle
-            // of the animation instead of immediately reset to
-            // its end state
-            self.view.frame = lFrame;
-        }
-        [self.view.layer removeAllAnimations];
-        
         [validTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
         if([validTouches count] >= minimumNumberOfTouches && self.state == UIGestureRecognizerStatePossible){
             self.state = UIGestureRecognizerStateBegan;
@@ -99,6 +87,8 @@ NSInteger const  minimumNumberOfTouches = 2;
             for(UITouch* touch in validTouches){
                 [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
             }
+            startPoint1InView = [[validTouches firstObject] locationInView:self.view];
+            startPoint2InView = [[validTouches lastObject] locationInView:self.view];
         }
     }
 }
@@ -212,5 +202,12 @@ NSInteger const  minimumNumberOfTouches = 2;
     return [[validTouches lastObject] locationInView:view];
 }
 
+-(CGPoint) startPoint1InView:(UIView *)view{
+    return [self.view convertPoint:startPoint1InView toView:view];
+}
+
+-(CGPoint) startPoint2InView:(UIView *)view{
+    return [self.view convertPoint:startPoint2InView toView:view];
+}
 
 @end

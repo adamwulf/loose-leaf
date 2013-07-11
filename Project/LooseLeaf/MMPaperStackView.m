@@ -496,6 +496,10 @@
     @throw kAbstractMethodException;
 }
 
+-(void) didStopRuler:(MMRulerToolGestureRecognizer *)gesture{
+    @throw kAbstractMethodException;
+}
+
 /**
  * return YES if we're in hand mode, no otherwise
  */

@@ -252,7 +252,13 @@ dispatch_queue_t importThumbnailQueue;
 
 -(void) didMoveRuler:(MMRulerToolGestureRecognizer*)gesture{
     if(![delegate shouldAllowPan:self]){
-        [self.delegate didMoveRuler:gesture];
+        if(gesture.state == UIGestureRecognizerStateFailed ||
+           gesture.state == UIGestureRecognizerStateCancelled ||
+           gesture.state == UIGestureRecognizerStateEnded){
+            [self.delegate didStopRuler:gesture];
+        }else{
+            [self.delegate didMoveRuler:gesture];
+        }
     }
 }
 

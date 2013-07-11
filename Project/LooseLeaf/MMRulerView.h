@@ -10,6 +10,8 @@
 
 @interface MMRulerView : UIView
 
--(void) updateLineAt:(CGPoint)p1 to:(CGPoint)p2;
+-(void) updateLineAt:(CGPoint)p1 to:(CGPoint)p2 startingFrom:(CGPoint)p1 andFrom:(CGPoint)p2;
+
+-(void) liftRuler;
 
 @end

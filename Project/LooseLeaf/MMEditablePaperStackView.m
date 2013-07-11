@@ -443,7 +443,12 @@
 }
 
 -(void) didMoveRuler:(MMRulerToolGestureRecognizer *)gesture{
-    [rulerView updateLineAt:[gesture point1InView:rulerView] to:[gesture point2InView:rulerView]];
+    [rulerView updateLineAt:[gesture point1InView:rulerView] to:[gesture point2InView:rulerView]
+               startingFrom:[gesture startPoint1InView:rulerView] andFrom:[gesture startPoint2InView:rulerView]];
+}
+
+-(void) didStopRuler:(MMRulerToolGestureRecognizer *)gesture{
+    [rulerView liftRuler];
 }
 
 #pragma mark - Page Loading and Unloading
