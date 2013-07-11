@@ -25,9 +25,9 @@
 }
 
 
-
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
+/**
+ * Draw our ruler
+ */
 - (void)drawRect:(CGRect)rect
 {
     if(originalDistance > 0){
@@ -41,7 +41,7 @@
         
         CGFloat currentDistance = DistanceBetweenTwoPoints(old_p1, old_p2);
         
-        if(currentDistance < originalDistance * 2 / 3){
+        if(currentDistance < originalDistance * 3 / 5){
             NSLog(@"squeeze");
         }else if(currentDistance < originalDistance * 7 / 8){
             NSLog(@"arc");
@@ -52,8 +52,44 @@
 }
 
 
+#pragma mark - Public Interface
+
+/**
+ * the ruler is being moved around on the screen between the
+ * two input points p1 and p2, and the user had originally
+ * started the ruler between start1 and start2
+ */
+-(void) updateLineAt:(CGPoint)p1 to:(CGPoint)p2 startingDistance:(CGFloat)distance{
+    [self updateRectForPoint:p1 andPoint:p2];
+    
+    old_p1 = p1;
+    old_p2 = p2;
+    originalDistance = distance;
+}
+
+/**
+ * the ruler gesture has ended
+ */
+-(void) liftRuler{
+    // set needs display in our current ruler
+    [self updateRectForPoint:old_p1 andPoint:old_p2];
+    
+    // zero everything out.
+    // this will cause our drawRect to
+    // display nothing
+    old_p1 = CGPointZero;
+    old_p2 = CGPointZero;
+    originalDistance = 0;
+}
+
+
 #pragma mark - Ignore Touches
 
+/**
+ * these two methods make sure that the ruler view
+ * can never intercept any touch input. instead it will
+ * effectively pass through this view to the views behind it
+ */
 -(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
     return nil;
 }
@@ -63,28 +99,19 @@
 }
 
 
+#pragma mark - Private Helpers
+
+/**
+ * this setNeedsDisplay in a rectangle that contains both the the
+ * new ruler dimentions (input) and the old ruler dimensions
+ * (old points).
+ */
 -(void) updateRectForPoint:(CGPoint)p1 andPoint:(CGPoint)p2{
     CGPoint minP = CGPointMake(MIN(MIN(MIN(p1.x, p2.x), old_p1.x), old_p2.x), MIN(MIN(MIN(p1.y, p2.y), old_p1.y), old_p2.y));
     CGPoint maxP = CGPointMake(MAX(MAX(MAX(p1.x, p2.x), old_p1.x), old_p2.x), MAX(MAX(MAX(p1.y, p2.y), old_p1.y), old_p2.y));
     CGRect needsDisp = CGRectMake(minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y);
     needsDisp = CGRectInset(needsDisp, -5, -5);
     [self setNeedsDisplayInRect:needsDisp];
-}
-
--(void) updateLineAt:(CGPoint)p1 to:(CGPoint)p2 startingFrom:(CGPoint)start1 andFrom:(CGPoint)start2{
-    [self updateRectForPoint:p1 andPoint:p2];
-    
-    old_p1 = p1;
-    old_p2 = p2;
-    originalDistance = DistanceBetweenTwoPoints(start1, start2);
-}
-
--(void) liftRuler{
-    [self updateRectForPoint:old_p1 andPoint:old_p2];
-
-    old_p1 = CGPointZero;
-    old_p2 = CGPointZero;
-    originalDistance = 0;
 }
 
 @end

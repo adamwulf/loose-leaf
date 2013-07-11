@@ -224,7 +224,7 @@
     }
 }
 
-#pragma mark - Undo/Redo Button Actions
+#pragma mark - Tool Button Actions
 
 -(void) undo:(UIButton*)_button{
     id obj = [visibleStackHolder peekSubview];
@@ -242,9 +242,6 @@
     }
 }
 
-
-#pragma mark - Tool Button Actions
-
 -(void) penTapped:(UIButton*)_button{
     eraserButton.selected = NO;
     pencilButton.selected = YES;
@@ -260,9 +257,6 @@
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
 }
-
-
-#pragma mark - Gesture Button Actions
 
 -(void) handTapped:(UIButton*)_button{
     [[visibleStackHolder peekSubview] cancelAllGestures];
@@ -374,7 +368,8 @@
     // noop
 }
 
-#pragma mark - MMPaperViewDelegate - List View
+#pragma mark - MMPaperViewDelegate
+#pragma mark = List View
 
 -(void) isBeginningToScaleReallySmall:(MMPaperView *)page{
     // make sure the currently edited page is being saved
@@ -416,6 +411,8 @@
     [TestFlight passCheckpoint:@"NAV_TO_PAGE_FROM_LIST"];
 }
 
+#pragma mark = Saving and Editing
+
 -(void) didSavePage:(MMPaperView*)page{
     if(page.scale < kMinPageZoom){
         if([page isKindOfClass:[MMEditablePaperView class]]){
@@ -435,6 +432,8 @@
     return page == currentEditablePage;
 }
 
+#pragma mark = Ruler
+
 /**
  * return YES if we're in hand mode, no otherwise
  */
@@ -444,7 +443,7 @@
 
 -(void) didMoveRuler:(MMRulerToolGestureRecognizer *)gesture{
     [rulerView updateLineAt:[gesture point1InView:rulerView] to:[gesture point2InView:rulerView]
-               startingFrom:[gesture startPoint1InView:rulerView] andFrom:[gesture startPoint2InView:rulerView]];
+           startingDistance:[gesture initialDistance]];
 }
 
 -(void) didStopRuler:(MMRulerToolGestureRecognizer *)gesture{

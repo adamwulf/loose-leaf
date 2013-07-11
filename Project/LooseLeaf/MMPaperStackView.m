@@ -492,6 +492,9 @@
 
 #pragma mark - MMPaperViewDelegate
 
+/**
+ * these are implemented in MMEditablePaperStackView
+ */
 -(void) didMoveRuler:(MMRulerToolGestureRecognizer *)gesture{
     @throw kAbstractMethodException;
 }
