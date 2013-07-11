@@ -124,5 +124,10 @@
  */
 -(void) didMoveRuler:(MMRulerToolGestureRecognizer*)gesture;
 
+/**
+ * called when the ruler stops
+ */
+-(void) didStopRuler:(MMRulerToolGestureRecognizer*)gesture;
+
 
 @end
