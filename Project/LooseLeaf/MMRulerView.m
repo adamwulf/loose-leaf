@@ -281,9 +281,11 @@
 #pragma mark - adjust stroke to elements
 
 -(NSArray*) adjustElement:(AbstractBezierPathElement*)element{
-    
 
-    if(path1){
+    UIBezierPath* flippedPath = [path1 copy];
+    [flippedPath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+    
+    if(flippedPath){
         AbstractBezierPathElement* newElement;
         
         //
@@ -299,15 +301,12 @@
         // that was hit, and use that to split the curve into the exact pieces.
         // then use those pieces to build an array of elements to return.
         //
-        CGPoint pointNearTheCurve = element.startPoint;
-        CGPoint nearestStart; // = [path1 nearestPointToPoint:pointNearTheCurve tolerance:1000];
+        CGPoint nearestStart = [flippedPath closestPointOnPathTo:element.startPoint];
         CGPoint nearestEnd;
-        
-        nearestStart = [path1 closestPointOnPathTo:pointNearTheCurve];
         
         if([element isKindOfClass:[LineToPathElement class]]){
             nearestEnd = [(LineToPathElement*)element lineTo];
-            nearestEnd = [path1 closestPointOnPathTo:nearestEnd];
+            nearestEnd = [flippedPath closestPointOnPathTo:nearestEnd];
             newElement = [CurveToPathElement elementWithStart:nearestStart andCurveTo:nearestEnd andControl1:nearestStart andControl2:nearestEnd];
             newElement.color = element.color;
             newElement.width = element.width;
@@ -320,7 +319,7 @@
             newElement.rotation = element.rotation;
         }else if([element isKindOfClass:[CurveToPathElement class]]){
             nearestEnd = [(CurveToPathElement*)element curveTo];
-            nearestEnd = [path1 closestPointOnPathTo:nearestEnd];
+            nearestEnd = [flippedPath closestPointOnPathTo:nearestEnd];
             newElement = [CurveToPathElement elementWithStart:nearestStart andCurveTo:nearestEnd andControl1:nearestStart andControl2:nearestEnd];
             newElement.color = element.color;
             newElement.width = element.width;
