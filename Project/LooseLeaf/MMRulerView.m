@@ -11,6 +11,7 @@
 #import "MMVector.h"
 #import <DrawKit-iOS/UIBezierPath+NSOSX.h>
 #import <DrawKit-iOS/UIBezierPath+Editing.h>
+#import <DrawKit-iOS/UIBezierPath+Ahmed.h>
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 
@@ -298,12 +299,15 @@
         // that was hit, and use that to split the curve into the exact pieces.
         // then use those pieces to build an array of elements to return.
         //
-        CGPoint nearestStart = [path1 nearestPointToPoint:element.startPoint tolerance:1000];
+        CGPoint pointNearTheCurve = element.startPoint;
+        CGPoint nearestStart; // = [path1 nearestPointToPoint:pointNearTheCurve tolerance:1000];
         CGPoint nearestEnd;
+        
+        nearestStart = [path1 closestPointOnPathTo:pointNearTheCurve];
         
         if([element isKindOfClass:[LineToPathElement class]]){
             nearestEnd = [(LineToPathElement*)element lineTo];
-            nearestEnd = [path1 nearestPointToPoint:nearestEnd tolerance:1000];
+            nearestEnd = [path1 closestPointOnPathTo:nearestEnd];
             newElement = [CurveToPathElement elementWithStart:nearestStart andCurveTo:nearestEnd andControl1:nearestStart andControl2:nearestEnd];
             newElement.color = element.color;
             newElement.width = element.width;
@@ -316,7 +320,7 @@
             newElement.rotation = element.rotation;
         }else if([element isKindOfClass:[CurveToPathElement class]]){
             nearestEnd = [(CurveToPathElement*)element curveTo];
-            nearestEnd = [path1 nearestPointToPoint:nearestEnd tolerance:1000];
+            nearestEnd = [path1 closestPointOnPathTo:nearestEnd];
             newElement = [CurveToPathElement elementWithStart:nearestStart andCurveTo:nearestEnd andControl1:nearestStart andControl2:nearestEnd];
             newElement.color = element.color;
             newElement.width = element.width;
