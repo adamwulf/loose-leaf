@@ -9,10 +9,11 @@
 #import "MMRulerView.h"
 #import "Constants.h"
 #import "MMVector.h"
+#import <DrawKit-iOS/UIBezierPath+NSOSX.h>
 
 @implementation MMRulerView{
     CGPoint old_p1, old_p2;
-    CGFloat originalDistance;
+    CGFloat initialDistance;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -25,13 +26,12 @@
     return self;
 }
 
-
 /**
  * Draw our ruler
  */
 - (void)drawRect:(CGRect)rect
 {
-    if(originalDistance > 0){
+    if(initialDistance > 0){
         // calculate the current distance
         CGFloat currentDistance = DistanceBetweenTwoPoints(old_p1, old_p2);
         
@@ -59,23 +59,49 @@
         
         // This is the distance between points that should result
         // in a 90 degree arc
-        CGFloat nintyDistance = originalDistance * 3 / 5;
+        CGFloat nintyDistance = initialDistance * 3 / 5;
         // This is the distance between points that should result
         // in a 1 degree arc
-        CGFloat oneDistance = originalDistance - 40;
+        CGFloat oneDistance = initialDistance - 40;
         
 
         if(currentDistance < nintyDistance){
-            NSLog(@"squeeze");
+            // the user has pinched so that the arc
+            // is now a semi circle.
+            //
+            // we should scale that semicircle so that it
+            // stretches out into a thinner curve
+            //
+            // this will bounce the curve slightly near where
+            // currentDistance == nintyDistance. this is where
+            // the ruler makes a semicircle. instead we bounce
+            // slightly out further, then bounce back to a
+            // scale that will keep the curve's distance exactly
+            // where it is at the semicircle
+            //
+            // our default scale to keep distance correct
+            CGFloat scale = nintyDistance / currentDistance;
+            // a squared scale to bounce toward
+            CGFloat scale2 = scale * scale;
+            // cap the scale at 2x (time is 1 < time < 2)
+            CGFloat time = MIN(scale, 2);
+            // get the inverse of the time
+            // time is 0 < time < 1
+            CGFloat invTime = (2 - time);
+            // now quartic easing
+            CGFloat easing = invTime*invTime*invTime*invTime;
+            // now use the squared scale at the beginning, and
+            // ease out to the normal scale
+            scale = easing * scale2 + (1 - easing) * scale;
+            [self drawArcWithOriginalDistance:currentDistance * 5 / 3 currentDistance:currentDistance andPerpN:[perpN flip] withPoint1:tl andPoint2:bl andScale:scale];
+            [self drawArcWithOriginalDistance:currentDistance * 5 / 3 currentDistance:currentDistance andPerpN:perpN withPoint1:br andPoint2:tr andScale:scale];
         }else if(currentDistance < oneDistance){
-            //            NSLog(@"arc %f %f %f", percent, radius, currentDistance);
-            [self drawArcWithCurrentDistance:currentDistance andPerpN:[perpN flip] withPoint1:tl andPoint2:bl];
-            [self drawArcWithCurrentDistance:currentDistance andPerpN:perpN withPoint1:br andPoint2:tr];
+            // the user has pinched enough that we should
+            // start to use an arc path between the points
+            // instead of a straight line
+            [self drawArcWithOriginalDistance:initialDistance currentDistance:currentDistance andPerpN:[perpN flip] withPoint1:tl andPoint2:bl andScale:1];
+            [self drawArcWithOriginalDistance:initialDistance currentDistance:currentDistance andPerpN:perpN withPoint1:br andPoint2:tr andScale:1];
         }else{
-            NSLog(@"straight");
-            
-            
-            
             // draw lines for the edges
             [[UIColor blueColor] setStroke];
             path = [UIBezierPath bezierPath];
@@ -98,7 +124,7 @@
  *
  * this method will draw an arc connecting the two input points
  */
--(void) drawArcWithCurrentDistance:(CGFloat)currentDistance andPerpN:(MMVector*)perpN withPoint1:(CGPoint)point1 andPoint2:(CGPoint)point2{
+-(void) drawArcWithOriginalDistance:(CGFloat)originalDistance currentDistance:(CGFloat)currentDistance andPerpN:(MMVector*)perpN withPoint1:(CGPoint)point1 andPoint2:(CGPoint)point2 andScale:(CGFloat)scale{
 
     CGFloat nintyDistance = originalDistance * 3 / 5;
     // This is the distance between points that should result
@@ -178,11 +204,23 @@
     CGFloat endAngle = calculateAngle(point1, center);
     CGFloat startAngle = calculateAngle(point2, center);
     
+//    NSLog(@"angle: %f %f   %f %f     %f", endAngle, startAngle, center.x, center.y, radius);
+    
     // now draw the arc between the two points
     [[UIColor blueColor] setStroke];
     UIBezierPath* path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:endAngle endAngle:startAngle clockwise:NO];
+    
+    // now scale
+    [path applyTransform:CGAffineTransformMakeTranslation(-center.x, -center.y)];
+    [path applyTransform:CGAffineTransformRotate(CGAffineTransformIdentity, -[perpN angle])];
+    [path applyTransform:CGAffineTransformScale(CGAffineTransformIdentity, scale, 1)];
+    [path applyTransform:CGAffineTransformRotate(CGAffineTransformIdentity, [perpN angle])];
+    [path applyTransform:CGAffineTransformMakeTranslation(center.x, center.y)];
+
+    [[UIColor blueColor] setStroke];
     [path setLineWidth:2];
     [path stroke];
+
 }
 
 #pragma mark - Public Interface
@@ -197,7 +235,7 @@
     
     old_p1 = p1;
     old_p2 = p2;
-    originalDistance = distance;
+    initialDistance = distance;
 }
 
 /**
@@ -212,7 +250,7 @@
     // display nothing
     old_p1 = CGPointZero;
     old_p2 = CGPointZero;
-    originalDistance = 0;
+    initialDistance = 0;
 }
 
 

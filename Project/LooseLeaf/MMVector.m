@@ -39,6 +39,20 @@
     return self;
 }
 
+-(CGFloat) angle{
+    CGFloat theta = atanf(y / x);
+    BOOL isYNeg = y < 0;
+    BOOL isXNeg = x < 0;
+    
+    // adjust the angle depending on which quadrant it's in
+    if(isYNeg && isXNeg){
+        theta -= M_PI;
+    }else if(!isYNeg && isXNeg){
+        theta += M_PI;
+    }
+    return theta;
+}
+
 -(MMVector*) normal{
     // just divide our x and y by our length
     CGFloat length = sqrt(x * x + y * y);

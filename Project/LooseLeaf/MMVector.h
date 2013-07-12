@@ -24,6 +24,8 @@
 
 -(MMVector*) flip;
 
+-(CGFloat) angle;
+
 -(CGPoint) pointFromPoint:(CGPoint)point distance:(CGFloat)distance;
 
 @end
