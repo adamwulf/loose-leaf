@@ -10,11 +10,16 @@
 #import "Constants.h"
 #import "MMVector.h"
 #import <DrawKit-iOS/UIBezierPath+NSOSX.h>
+#import <DrawKit-iOS/UIBezierPath+Editing.h>
 #import <JotUI/JotUI.h>
+#import <JotUI/AbstractBezierPathElement-Protected.h>
 
 @implementation MMRulerView{
     CGPoint old_p1, old_p2;
     CGFloat initialDistance;
+    
+    UIBezierPath* path1;
+    UIBezierPath* path2;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -45,7 +50,6 @@
         CGPoint bl = [perpN pointFromPoint:old_p2 distance:40];
         CGPoint br = [perpN pointFromPoint:old_p2 distance:-40];
         
-
         // Drawing code
         
         // draw lines to cap the ruler
@@ -66,6 +70,7 @@
         CGFloat oneDistance = initialDistance - 40;
         
 
+        [[UIColor blueColor] setStroke];
         if(currentDistance < nintyDistance){
             // the user has pinched so that the arc
             // is now a semi circle.
@@ -94,25 +99,27 @@
             // now use the squared scale at the beginning, and
             // ease out to the normal scale
             scale = easing * scale2 + (1 - easing) * scale;
-            [self drawArcWithOriginalDistance:currentDistance * 5 / 3 currentDistance:currentDistance andPerpN:[perpN flip] withPoint1:tl andPoint2:bl andScale:scale];
-            [self drawArcWithOriginalDistance:currentDistance * 5 / 3 currentDistance:currentDistance andPerpN:perpN withPoint1:br andPoint2:tr andScale:scale];
+            path1 = [self drawArcWithOriginalDistance:currentDistance * 5 / 3 currentDistance:currentDistance andPerpN:[perpN flip] withPoint1:tl andPoint2:bl andScale:scale];
+            path2 = [self drawArcWithOriginalDistance:currentDistance * 5 / 3 currentDistance:currentDistance andPerpN:perpN withPoint1:br andPoint2:tr andScale:scale];
         }else if(currentDistance < oneDistance){
             // the user has pinched enough that we should
             // start to use an arc path between the points
             // instead of a straight line
-            [self drawArcWithOriginalDistance:initialDistance currentDistance:currentDistance andPerpN:[perpN flip] withPoint1:tl andPoint2:bl andScale:1];
-            [self drawArcWithOriginalDistance:initialDistance currentDistance:currentDistance andPerpN:perpN withPoint1:br andPoint2:tr andScale:1];
+            path1 = [self drawArcWithOriginalDistance:initialDistance currentDistance:currentDistance andPerpN:[perpN flip] withPoint1:tl andPoint2:bl andScale:1];
+            path2 = [self drawArcWithOriginalDistance:initialDistance currentDistance:currentDistance andPerpN:perpN withPoint1:br andPoint2:tr andScale:1];
         }else{
             // draw lines for the edges
-            [[UIColor blueColor] setStroke];
-            path = [UIBezierPath bezierPath];
-            [path moveToPoint:br];
-            [path addLineToPoint:tr];
-            [path moveToPoint:bl];
-            [path addLineToPoint:tl];
-            [path setLineWidth:2];
-            [path stroke];
+            path1 = [UIBezierPath bezierPath];
+            path2 = [UIBezierPath bezierPath];
+            [path1 moveToPoint:br];
+            [path1 addLineToPoint:tr];
+            [path2 moveToPoint:bl];
+            [path2 addLineToPoint:tl];
         }
+        [path1 setLineWidth:2];
+        [path1 stroke];
+        [path2 setLineWidth:2];
+        [path2 stroke];
     }
 }
 
@@ -124,7 +131,7 @@
  *
  * this method will draw an arc connecting the two input points
  */
--(void) drawArcWithOriginalDistance:(CGFloat)originalDistance currentDistance:(CGFloat)currentDistance andPerpN:(MMVector*)perpN withPoint1:(CGPoint)point1 andPoint2:(CGPoint)point2 andScale:(CGFloat)scale{
+-(UIBezierPath*) drawArcWithOriginalDistance:(CGFloat)originalDistance currentDistance:(CGFloat)currentDistance andPerpN:(MMVector*)perpN withPoint1:(CGPoint)point1 andPoint2:(CGPoint)point2 andScale:(CGFloat)scale{
 
     CGFloat nintyDistance = originalDistance * 3 / 5;
     // This is the distance between points that should result
@@ -217,10 +224,7 @@
     [path applyTransform:CGAffineTransformRotate(CGAffineTransformIdentity, [perpN angle])];
     [path applyTransform:CGAffineTransformMakeTranslation(center.x, center.y)];
 
-    [[UIColor blueColor] setStroke];
-    [path setLineWidth:2];
-    [path stroke];
-
+    return path;
 }
 
 #pragma mark - Public Interface
@@ -251,6 +255,9 @@
     old_p1 = CGPointZero;
     old_p2 = CGPointZero;
     initialDistance = 0;
+    
+    path1 = nil;
+    path2 = nil;
 }
 
 
@@ -273,6 +280,51 @@
 #pragma mark - adjust stroke to elements
 
 -(NSArray*) adjustElement:(AbstractBezierPathElement*)element{
+    
+
+    if(path1){
+        AbstractBezierPathElement* newElement;
+        
+        //
+        // TODO: #21
+        // this is finding the nearest point to any element inside the stroke.
+        // i need to find the nearest point to every element in a stroke (?)
+        // and then filter them by distance to find the actual shortest point.
+        //
+        // then i should do the same on path2, and find out which path the
+        // user is drawing closest to.
+        //
+        // then i can use elementHitByPoint: to find the t value on the element
+        // that was hit, and use that to split the curve into the exact pieces.
+        // then use those pieces to build an array of elements to return.
+        //
+        CGPoint nearestStart = [path1 nearestPointToPoint:element.startPoint tolerance:1000];
+        CGPoint nearestEnd;
+        
+        if([element isKindOfClass:[LineToPathElement class]]){
+            nearestEnd = [(LineToPathElement*)element lineTo];
+            nearestEnd = [path1 nearestPointToPoint:nearestEnd tolerance:1000];
+            newElement = [CurveToPathElement elementWithStart:nearestStart andCurveTo:nearestEnd andControl1:nearestStart andControl2:nearestEnd];
+            newElement.color = element.color;
+            newElement.width = element.width;
+            newElement.rotation = element.rotation;
+        }else if([element isKindOfClass:[MoveToPathElement class]]){
+            nearestEnd = [(MoveToPathElement*)element startPoint];
+            newElement = [MoveToPathElement elementWithMoveTo:nearestStart];
+            newElement.color = element.color;
+            newElement.width = element.width;
+            newElement.rotation = element.rotation;
+        }else if([element isKindOfClass:[CurveToPathElement class]]){
+            nearestEnd = [(CurveToPathElement*)element curveTo];
+            nearestEnd = [path1 nearestPointToPoint:nearestEnd tolerance:1000];
+            newElement = [CurveToPathElement elementWithStart:nearestStart andCurveTo:nearestEnd andControl1:nearestStart andControl2:nearestEnd];
+            newElement.color = element.color;
+            newElement.width = element.width;
+            newElement.rotation = element.rotation;
+        }
+        return [NSArray arrayWithObject:newElement];
+    }
+    
     return [NSArray arrayWithObject:element];
 }
 
