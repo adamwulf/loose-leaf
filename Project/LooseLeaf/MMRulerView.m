@@ -21,6 +21,8 @@
     
     UIBezierPath* path1;
     UIBezierPath* path2;
+    UIBezierPath* path1Full;
+    UIBezierPath* path2Full;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -100,14 +102,26 @@
             // now use the squared scale at the beginning, and
             // ease out to the normal scale
             scale = easing * scale2 + (1 - easing) * scale;
-            path1 = [self drawArcWithOriginalDistance:currentDistance * 5 / 3 currentDistance:currentDistance andPerpN:[perpN flip] withPoint1:tl andPoint2:bl andScale:scale];
-            path2 = [self drawArcWithOriginalDistance:currentDistance * 5 / 3 currentDistance:currentDistance andPerpN:perpN withPoint1:br andPoint2:tr andScale:scale];
+            [self drawArcWithOriginalDistance:currentDistance * 5 / 3 currentDistance:currentDistance andPerpN:[perpN flip] withPoint1:tl andPoint2:bl andScale:scale onComplete:^(UIBezierPath* clippedPath, UIBezierPath* circle){
+                path1 = clippedPath;
+                path1Full = circle;
+            }];
+            [self drawArcWithOriginalDistance:currentDistance * 5 / 3 currentDistance:currentDistance andPerpN:perpN withPoint1:br andPoint2:tr andScale:scale onComplete:^(UIBezierPath* clippedPath, UIBezierPath* circle){
+                path2 = clippedPath;
+                path2Full = circle;
+            }];
         }else if(currentDistance < oneDistance){
             // the user has pinched enough that we should
             // start to use an arc path between the points
             // instead of a straight line
-            path1 = [self drawArcWithOriginalDistance:initialDistance currentDistance:currentDistance andPerpN:[perpN flip] withPoint1:tl andPoint2:bl andScale:1];
-            path2 = [self drawArcWithOriginalDistance:initialDistance currentDistance:currentDistance andPerpN:perpN withPoint1:br andPoint2:tr andScale:1];
+            [self drawArcWithOriginalDistance:initialDistance currentDistance:currentDistance andPerpN:[perpN flip] withPoint1:tl andPoint2:bl andScale:1 onComplete:^(UIBezierPath* clippedPath, UIBezierPath* circle){
+                path1 = clippedPath;
+                path1Full = circle;
+            }];
+            [self drawArcWithOriginalDistance:initialDistance currentDistance:currentDistance andPerpN:perpN withPoint1:br andPoint2:tr andScale:1 onComplete:^(UIBezierPath* clippedPath, UIBezierPath* circle){
+                path2 = clippedPath;
+                path2Full = circle;
+            }];
         }else{
             // draw lines for the edges
             path1 = [UIBezierPath bezierPath];
@@ -116,6 +130,9 @@
             [path1 addLineToPoint:tr];
             [path2 moveToPoint:bl];
             [path2 addLineToPoint:tl];
+            
+            path1Full = path1;
+            path2Full = path2;
         }
         [path1 setLineWidth:2];
         [path1 stroke];
@@ -132,7 +149,7 @@
  *
  * this method will draw an arc connecting the two input points
  */
--(UIBezierPath*) drawArcWithOriginalDistance:(CGFloat)originalDistance currentDistance:(CGFloat)currentDistance andPerpN:(MMVector*)perpN withPoint1:(CGPoint)point1 andPoint2:(CGPoint)point2 andScale:(CGFloat)scale{
+-(void) drawArcWithOriginalDistance:(CGFloat)originalDistance currentDistance:(CGFloat)currentDistance andPerpN:(MMVector*)perpN withPoint1:(CGPoint)point1 andPoint2:(CGPoint)point2 andScale:(CGFloat)scale onComplete:(void(^)(UIBezierPath* clippedPath, UIBezierPath* fullCirclePath))onComplete{
 
     CGFloat nintyDistance = originalDistance * 3 / 5;
     // This is the distance between points that should result
@@ -217,15 +234,21 @@
     // now draw the arc between the two points
     [[UIColor blueColor] setStroke];
     UIBezierPath* path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:endAngle endAngle:startAngle clockwise:NO];
+    UIBezierPath* circle = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:0 endAngle:M_PI*2 clockwise:NO];
+
+    CGAffineTransform transform = CGAffineTransformMakeTranslation(-center.x, -center.y);
+    transform = CGAffineTransformConcat(transform, CGAffineTransformRotate(CGAffineTransformIdentity, -[perpN angle]));
+    transform = CGAffineTransformConcat(transform, CGAffineTransformScale(CGAffineTransformIdentity, scale, 1));
+    transform = CGAffineTransformConcat(transform, CGAffineTransformRotate(CGAffineTransformIdentity, [perpN angle]));
+    transform = CGAffineTransformConcat(transform, CGAffineTransformMakeTranslation(center.x, center.y));
     
     // now scale
-    [path applyTransform:CGAffineTransformMakeTranslation(-center.x, -center.y)];
-    [path applyTransform:CGAffineTransformRotate(CGAffineTransformIdentity, -[perpN angle])];
-    [path applyTransform:CGAffineTransformScale(CGAffineTransformIdentity, scale, 1)];
-    [path applyTransform:CGAffineTransformRotate(CGAffineTransformIdentity, [perpN angle])];
-    [path applyTransform:CGAffineTransformMakeTranslation(center.x, center.y)];
+    [path applyTransform:transform];
+    [circle applyTransform:transform];
 
-    return path;
+    if(onComplete){
+        onComplete(path, circle);
+    }
 }
 
 #pragma mark - Public Interface
@@ -259,6 +282,8 @@
     
     path1 = nil;
     path2 = nil;
+    path1Full = nil;
+    path2Full = nil;
 }
 
 
@@ -282,10 +307,10 @@
 
 -(NSArray*) adjustElement:(AbstractBezierPathElement*)element{
 
-    UIBezierPath* flippedPath = [path1 copy];
-    [flippedPath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
-    
-    if(flippedPath){
+    if(path1){
+        UIBezierPath* flippedPath = [path1Full copy];
+        [flippedPath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+        
         AbstractBezierPathElement* newElement;
         
         //
