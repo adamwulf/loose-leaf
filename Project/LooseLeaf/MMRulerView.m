@@ -308,8 +308,27 @@
 -(NSArray*) adjustElement:(AbstractBezierPathElement*)element{
 
     if(path1){
-        UIBezierPath* flippedPath = [path1Full copy];
-        [flippedPath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+        
+        UIBezierPath* flippedPath;
+        
+        UIBezierPath* flippedPath1 = [path1Full copy];
+        [flippedPath1 applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+        
+        UIBezierPath* flippedPath2 = [path2Full copy];
+        [flippedPath2 applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+        
+        CGPoint nearestStart;
+        CGPoint nearestStart1 = [flippedPath1 closestPointOnPathTo:element.startPoint];
+        CGPoint nearestStart2 = [flippedPath2 closestPointOnPathTo:element.startPoint];
+        if(DistanceBetweenTwoPoints(nearestStart1, element.startPoint) < DistanceBetweenTwoPoints(nearestStart2, element.startPoint)){
+            flippedPath = flippedPath1;
+            nearestStart = nearestStart1;
+        }else{
+            flippedPath = flippedPath2;
+            nearestStart = nearestStart2;
+        }
+        
+        
         
         AbstractBezierPathElement* newElement;
         
@@ -322,7 +341,6 @@
         // that was hit, and use that to split the curve into the exact pieces.
         // then use those pieces to build an array of elements to return.
         //
-        CGPoint nearestStart = [flippedPath closestPointOnPathTo:element.startPoint];
         CGPoint nearestEnd;
         
         if([element isKindOfClass:[LineToPathElement class]]){
@@ -333,7 +351,6 @@
             newElement.width = element.width;
             newElement.rotation = element.rotation;
         }else if([element isKindOfClass:[MoveToPathElement class]]){
-            nearestEnd = [(MoveToPathElement*)element startPoint];
             newElement = [MoveToPathElement elementWithMoveTo:nearestStart];
             newElement.color = element.color;
             newElement.width = element.width;
