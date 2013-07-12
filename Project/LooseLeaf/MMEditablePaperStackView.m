@@ -622,9 +622,15 @@
 }
 
 -(CGFloat) rotationForSegment:(AbstractBezierPathElement *)segment fromPreviousSegment:(AbstractBezierPathElement *)previousSegment{
-    return [[self activePen] rotationForSegment:segment fromPreviousSegment:previousSegment];;
+    return [[self activePen] rotationForSegment:segment fromPreviousSegment:previousSegment];
 }
 
+-(NSArray*) willAddElementsToStroke:(NSArray *)elements{
+    return [rulerView willAddElementsToStroke:[[self activePen] willAddElementsToStroke:elements]];
+}
+
+
+#pragma mark - JotStylusManager Connection Notification
 
 -(void)connectionChange:(NSNotification *) note{
     NSString *text;
