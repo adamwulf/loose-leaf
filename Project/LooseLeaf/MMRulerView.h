@@ -14,4 +14,6 @@
 
 -(void) liftRuler;
 
+-(NSArray*) willAddElementsToStroke:(NSArray *)elements;
+
 @end

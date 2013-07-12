@@ -10,6 +10,7 @@
 #import "Constants.h"
 #import "MMVector.h"
 #import <DrawKit-iOS/UIBezierPath+NSOSX.h>
+#import <JotUI/JotUI.h>
 
 @implementation MMRulerView{
     CGPoint old_p1, old_p2;
@@ -111,7 +112,6 @@
             [path addLineToPoint:tl];
             [path setLineWidth:2];
             [path stroke];
-            
         }
     }
 }
@@ -268,6 +268,22 @@
 -(BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
     return NO;
 }
+
+
+#pragma mark - adjust stroke to elements
+
+-(NSArray*) adjustElement:(AbstractBezierPathElement*)element{
+    return [NSArray arrayWithObject:element];
+}
+
+-(NSArray*) willAddElementsToStroke:(NSArray *)elements{
+    NSMutableArray* output = [NSMutableArray array];
+    for(AbstractBezierPathElement* element in elements){
+        [output addObjectsFromArray:[self adjustElement:element]];
+    }
+    return output;
+}
+
 
 
 #pragma mark - Private Helpers

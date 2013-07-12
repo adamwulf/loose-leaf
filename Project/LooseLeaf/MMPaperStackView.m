@@ -1442,4 +1442,9 @@
     @throw kAbstractMethodException;
 }
 
+-(NSArray*) willAddElementsToStroke:(NSArray *)elements{
+    @throw kAbstractMethodException;
+}
+
+
 @end
