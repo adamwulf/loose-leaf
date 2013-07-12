@@ -315,10 +315,6 @@
         
         //
         // TODO: #21
-        // this is finding the nearest point to any element inside the stroke.
-        // i need to find the nearest point to every element in a stroke (?)
-        // and then filter them by distance to find the actual shortest point.
-        //
         // then i should do the same on path2, and find out which path the
         // user is drawing closest to.
         //
