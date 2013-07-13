@@ -48,22 +48,12 @@
         MMVector* perpN = [[[MMVector vectorWithPoint:old_p1 andPoint:old_p2] perpendicular] normal];
         
         // calculate the four corners of our ruler
-        CGPoint tl = [perpN pointFromPoint:old_p1 distance:40];
-        CGPoint tr = [perpN pointFromPoint:old_p1 distance:-40];
-        CGPoint bl = [perpN pointFromPoint:old_p2 distance:40];
-        CGPoint br = [perpN pointFromPoint:old_p2 distance:-40];
+        CGPoint tl = [perpN pointFromPoint:old_p1 distance:50];
+        CGPoint tr = [perpN pointFromPoint:old_p1 distance:-50];
+        CGPoint bl = [perpN pointFromPoint:old_p2 distance:50];
+        CGPoint br = [perpN pointFromPoint:old_p2 distance:-50];
         
         // Drawing code
-        
-        // draw lines to cap the ruler
-        [[UIColor redColor] setStroke];
-        UIBezierPath* path = [UIBezierPath bezierPath];
-        [path moveToPoint:tl];
-        [path addLineToPoint:tr];
-        [path moveToPoint:bl];
-        [path addLineToPoint:br];
-        [path setLineWidth:2];
-        [path stroke];
         
         // This is the distance between points that should result
         // in a 90 degree arc
@@ -123,6 +113,14 @@
                 path2Full = circle;
             }];
         }else{
+            CGFloat ratio =  initialDistance / currentDistance;
+            ratio = MAX(ratio, 0.5);
+            
+            tl = [perpN pointFromPoint:old_p1 distance:50 * ratio];
+            tr = [perpN pointFromPoint:old_p1 distance:-50 * ratio];
+            bl = [perpN pointFromPoint:old_p2 distance:50 * ratio];
+            br = [perpN pointFromPoint:old_p2 distance:-50 * ratio];
+            
             // draw lines for the edges
             path1 = [UIBezierPath bezierPath];
             path2 = [UIBezierPath bezierPath];
