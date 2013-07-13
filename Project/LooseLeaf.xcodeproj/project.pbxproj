@@ -64,6 +64,7 @@
 		6695B6F01751CC170069E61F /* Pen.m in Sources */ = {isa = PBXBuildFile; fileRef = 6695B6EF1751CC160069E61F /* Pen.m */; };
 		66A13D3A1631D9D9002F5428 /* MMObjectSelectLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D3F1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66A3A6BB1791F18900D8FE1D /* UIDevice+PPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3A6BA1791F18900D8FE1D /* UIDevice+PPI.m */; };
 		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; };
 		66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */; };
 		66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A55175AFCA70049F1AF /* MMHandButton.m */; };
@@ -226,6 +227,8 @@
 		66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMObjectSelectLongPressGestureRecognizer.m; sourceTree = "<group>"; };
 		66A13D3E1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImmovableTapGestureRecognizer.h; sourceTree = "<group>"; };
 		66A13D3F1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImmovableTapGestureRecognizer.m; sourceTree = "<group>"; };
+		66A3A6B91791F18900D8FE1D /* UIDevice+PPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+PPI.h"; sourceTree = "<group>"; };
+		66A3A6BA1791F18900D8FE1D /* UIDevice+PPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+PPI.m"; sourceTree = "<group>"; };
 		66A3AF8C15913B5E00F8A7A6 /* NSMutableSet+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableSet+Extras.h"; sourceTree = "<group>"; };
 		66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableSet+Extras.m"; sourceTree = "<group>"; };
 		66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "DrawKit-iOS.xcodeproj"; path = "../../DrawKit-iOS/DrawKit-iOS.xcodeproj"; sourceTree = "<group>"; };
@@ -365,6 +368,8 @@
 				66B21A75175E559E0049F1AF /* NSArray+Map.m */,
 				6648D21B178C9E5400BE3B37 /* UIColor+Shadow.h */,
 				6648D21C178C9E5400BE3B37 /* UIColor+Shadow.m */,
+				66A3A6B91791F18900D8FE1D /* UIDevice+PPI.h */,
+				66A3A6BA1791F18900D8FE1D /* UIDevice+PPI.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -870,6 +875,7 @@
 				660E1DB0158FC7DB0001DA12 /* MMPaperIcon.m in Sources */,
 				660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */,
 				664516B9159030FC0012FACA /* Constants.m in Sources */,
+				66A3A6BB1791F18900D8FE1D /* UIDevice+PPI.m in Sources */,
 				664F4139159063F8006F8B09 /* MMPlusIcon.m in Sources */,
 				664F413D1590661F006F8B09 /* MMRightArrow.m in Sources */,
 				664F414015906628006F8B09 /* MMLeftArrow.m in Sources */,

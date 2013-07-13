@@ -14,10 +14,34 @@
 #import <DrawKit-iOS/UIBezierPath+Ahmed.h>
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
+#import "UIDevice+PPI.h"
+
+@interface MMPointAndVector : NSObject
+@property (nonatomic) CGPoint point;
+@property (nonatomic) MMVector* vector;
+-(id) initWithPoint:(CGPoint)point andVector:(MMVector*)vector;
+@end
+@implementation MMPointAndVector{
+    CGPoint point;
+    MMVector* vector;
+}
+@synthesize point, vector;
+-(id) initWithPoint:(CGPoint)_point andVector:(MMVector*)_vector{
+    if(self = [super init]){
+        self.point = _point;
+        self.vector = _vector;
+    }
+    return self;
+}
+@end
+
+
+
 
 @implementation MMRulerView{
     CGPoint old_p1, old_p2;
     CGFloat initialDistance;
+    CGFloat unitLength;
     
     UIBezierPath* path1;
     UIBezierPath* path2;
@@ -31,6 +55,7 @@
     if (self) {
         // Initialization code
         self.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:.3];
+        unitLength = [UIDevice ppc];
     }
     return self;
 }
@@ -45,7 +70,8 @@
         CGFloat currentDistance = DistanceBetweenTwoPoints(old_p1, old_p2);
         
         // calculate the perpendicular normal
-        MMVector* perpN = [[[MMVector vectorWithPoint:old_p1 andPoint:old_p2] perpendicular] normal];
+        MMVector* normal = [[MMVector vectorWithPoint:old_p1 andPoint:old_p2] normal];
+        MMVector* perpN = [normal perpendicular];
         
         // calculate the four corners of our ruler
         CGPoint tl = [perpN pointFromPoint:old_p1 distance:50];
@@ -121,7 +147,54 @@
             bl = [perpN pointFromPoint:old_p2 distance:50 * ratio];
             br = [perpN pointFromPoint:old_p2 distance:-50 * ratio];
             
-            // draw lines for the edges
+            CGFloat lengthOfRuler = DistanceBetweenTwoPoints(tl, bl);
+            CGPoint leftMidPoint = [normal pointFromPoint:tl distance:lengthOfRuler/2];
+            CGPoint rightMidPoint = [normal pointFromPoint:tr distance:lengthOfRuler/2];
+            MMVector* flippedPerpN = [perpN flip];
+            
+            // this path will contain all the tick marks
+            UIBezierPath* ticks = [UIBezierPath bezierPath];
+            // center ticks first
+            [ticks moveToPoint:leftMidPoint];
+            [ticks addLineToPoint:[[perpN flip] pointFromPoint:leftMidPoint distance:10]];
+            [ticks moveToPoint:rightMidPoint];
+            [ticks addLineToPoint:[perpN pointFromPoint:rightMidPoint distance:10]];
+            
+
+            // now we're going to loop until the end of the ruler and draw
+            // all of the tick marks on both sides.
+            NSArray* tickArray = [NSArray arrayWithObjects:[[MMPointAndVector alloc] initWithPoint:leftMidPoint andVector:flippedPerpN],
+            [[MMPointAndVector alloc] initWithPoint:rightMidPoint andVector:perpN], nil];
+            CGFloat drawnTickLengthSoFar = unitLength;
+            do{
+                for(MMPointAndVector* pointAndVector in tickArray){
+                    if(drawnTickLengthSoFar < lengthOfRuler / 2){
+                        [self addTickTo:ticks atPoint:[normal pointFromPoint:pointAndVector.point distance:drawnTickLengthSoFar] withPerp:pointAndVector.vector andWidth:10];
+                        [self addTickTo:ticks atPoint:[normal pointFromPoint:pointAndVector.point distance:-drawnTickLengthSoFar] withPerp:pointAndVector.vector andWidth:10];
+                    }
+                    if(drawnTickLengthSoFar - unitLength / 2 < lengthOfRuler / 2){
+                        [self addTickTo:ticks atPoint:[normal pointFromPoint:pointAndVector.point distance:drawnTickLengthSoFar - unitLength / 2] withPerp:pointAndVector.vector andWidth:7];
+                        [self addTickTo:ticks atPoint:[normal pointFromPoint:pointAndVector.point distance:-drawnTickLengthSoFar + unitLength / 2] withPerp:pointAndVector.vector andWidth:7];
+                    }
+                    if(drawnTickLengthSoFar - unitLength / 4 < lengthOfRuler / 2){
+                        [self addTickTo:ticks atPoint:[normal pointFromPoint:pointAndVector.point distance:drawnTickLengthSoFar - unitLength / 4] withPerp:pointAndVector.vector andWidth:5];
+                        [self addTickTo:ticks atPoint:[normal pointFromPoint:pointAndVector.point distance:-drawnTickLengthSoFar + unitLength / 4] withPerp:pointAndVector.vector andWidth:5];
+                    }
+                    if(drawnTickLengthSoFar - unitLength * 3 / 4 < lengthOfRuler / 2){
+                        [self addTickTo:ticks atPoint:[normal pointFromPoint:pointAndVector.point distance:drawnTickLengthSoFar - unitLength * 3 / 4] withPerp:pointAndVector.vector andWidth:5];
+                        [self addTickTo:ticks atPoint:[normal pointFromPoint:pointAndVector.point distance:-drawnTickLengthSoFar + unitLength * 3 / 4] withPerp:pointAndVector.vector andWidth:5];
+                    }
+                }
+                drawnTickLengthSoFar += unitLength;
+                // we need to loop slightly longer than the length of the ruler,
+                // so that if a partial unitLength needs to be drawn it will
+            }while(drawnTickLengthSoFar < lengthOfRuler / 2 + unitLength);
+            
+            // draw ticks
+            [[UIColor blueColor] setStroke];
+            [ticks stroke];
+            
+            // draw lines for the edges of the ruler
             path1 = [UIBezierPath bezierPath];
             path2 = [UIBezierPath bezierPath];
             [path1 moveToPoint:br];
@@ -137,6 +210,10 @@
         [path2 setLineWidth:2];
         [path2 stroke];
     }
+}
+-(void) addTickTo:(UIBezierPath*)path atPoint:(CGPoint)point withPerp:(MMVector*)perpN andWidth:(CGFloat)width{
+    [path moveToPoint:point];
+    [path addLineToPoint:[perpN pointFromPoint:point distance:width]];
 }
 
 
