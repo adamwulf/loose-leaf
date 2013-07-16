@@ -14,6 +14,8 @@
 		<string>ssh://github.com/adamwulf/DrawKit-iOS.git</string>
 		<key>5148601B-759B-4B3D-8C4E-83D206A92ED2</key>
 		<string>ssh://github.com/adamwulf/painting-demo.git</string>
+		<key>AD2028FA-458E-4976-B726-9499C781146E</key>
+		<string>git://github.com/rentzsch/jrswizzle.git</string>
 		<key>BC8ADFAC-BC7E-461B-B1A2-081D8AB6C365</key>
 		<string>ssh://github.com/adamwulf/JotUI.git</string>
 		<key>BDC88C21-6091-422D-87F4-A8FC1073FA61</key>
@@ -31,6 +33,8 @@
 		<string>../../DrawKit-iOS</string>
 		<key>5148601B-759B-4B3D-8C4E-83D206A92ED2</key>
 		<string>../../painting-demo</string>
+		<key>AD2028FA-458E-4976-B726-9499C781146E</key>
+		<string>../../jrswizzle</string>
 		<key>BC8ADFAC-BC7E-461B-B1A2-081D8AB6C365</key>
 		<string>../Submodules/JotUI</string>
 		<key>BDC88C21-6091-422D-87F4-A8FC1073FA61</key>
@@ -93,6 +97,14 @@
 			<string>5148601B-759B-4B3D-8C4E-83D206A92ED2</string>
 			<key>IDESourceControlWCCName</key>
 			<string>painting-demo</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>AD2028FA-458E-4976-B726-9499C781146E</string>
+			<key>IDESourceControlWCCName</key>
+			<string>jrswizzle</string>
 		</dict>
 	</array>
 </dict>

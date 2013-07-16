@@ -4,3 +4,6 @@
 [submodule "Submodules/DYRateView"]
 	path = Submodules/DYRateView
 	url = git@github.com:dyang/DYRateView.git
+[submodule "Submodules/DrawKit-iOS"]
+	path = Submodules/DrawKit-iOS
+	url = git@github.com:adamwulf/DrawKit-iOS.git
