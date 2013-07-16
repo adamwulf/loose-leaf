@@ -415,37 +415,44 @@
 
 
     if(scale > 1){
-        // now draw the tick marks
+        // now draw the tick marks if the circle is squeezed
         CGFloat lengthOfPath = [path length];
         
+        // first, draw the tick mark in the exact center of the arc
         UIBezierPath* trimmedToCenter = [path bezierPathByTrimmingFromLength:lengthOfPath / 2];
         CGFloat centerTangent = [trimmedToCenter tangentAtStartOfSubpath:0];
         MMVector* centerTickVector = [[[MMVector vectorWithAngle:centerTangent] perpendicular] normal];
         [ticks moveToPoint:[trimmedToCenter firstPoint]];
         [ticks addLineToPoint:[centerTickVector pointFromPoint:[trimmedToCenter firstPoint] distance:10]];
         
+        // now we'll draw all the ticks from the center to the edge
         CGFloat drawnLength = 0;
         
+        // chop the path in half
+        UIBezierPath* pathFromMidPoint = [path bezierPathByTrimmingFromLength:(lengthOfPath / 2)];
+
         do{
-            
             drawnLength += unitLength;
             
-            UIBezierPath* pathFromMidPoint = [path bezierPathByTrimmingFromLength:(lengthOfPath / 2)];
-            
+            // check for the ticks at the unitLength distance
             if(lengthOfPath / 2 > drawnLength){
                 UIBezierPath* trimmed = [pathFromMidPoint bezierPathByTrimmingToLength:drawnLength withMaximumError:.5];
                 CGFloat startTangent = [trimmed tangentAtEnd];
                 MMVector* tickVector = [[[[MMVector vectorWithAngle:startTangent] perpendicular] normal] flip];
                 
+                // first tick
                 [ticks moveToPoint:[trimmed lastPoint]];
                 [ticks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:10]];
                 
-                trimmed = [path bezierPathByTrimmingToLength:(lengthOfPath / 2) - drawnLength withMaximumError:.5];
+                // now find the location of the 2nd tick
+                // by refelcting the point across the center point line
+                CGPoint lastPointPrime = [centerTickVector mirrorPoint:[trimmed lastPoint] aroundPoint:center];
+                // the slope for the tick is a mirror of the other side's slope too
                 tickVector = [[tickVector mirrorAround:centerTickVector] flip];
                 
-                [ticks moveToPoint:[trimmed lastPoint]];
-                [ticks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:10]];
-                
+                // now add the 2nd tick
+                [ticks moveToPoint:lastPointPrime];
+                [ticks addLineToPoint:[tickVector pointFromPoint:lastPointPrime distance:10]];
             }
             if(lengthOfPath / 2 > drawnLength - unitLength / 2){
                 UIBezierPath* trimmed = [pathFromMidPoint bezierPathByTrimmingToLength:drawnLength - unitLength / 2 withMaximumError:.5];
@@ -455,12 +462,11 @@
                 [ticks moveToPoint:[trimmed lastPoint]];
                 [ticks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:7]];
                 
-                trimmed = [path bezierPathByTrimmingToLength:(lengthOfPath / 2) - drawnLength + unitLength / 2 withMaximumError:.5];
+                CGPoint lastPointPrime = [centerTickVector mirrorPoint:[trimmed lastPoint] aroundPoint:center];
                 tickVector = [[tickVector mirrorAround:centerTickVector] flip];
                 
-                [ticks moveToPoint:[trimmed lastPoint]];
-                [ticks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:7]];
-                
+                [ticks moveToPoint:lastPointPrime];
+                [ticks addLineToPoint:[tickVector pointFromPoint:lastPointPrime distance:7]];
             }
             if(lengthOfPath / 2 > drawnLength - unitLength / 4){
                 UIBezierPath* trimmed = [pathFromMidPoint bezierPathByTrimmingToLength:drawnLength - unitLength / 4 withMaximumError:.5];
@@ -470,12 +476,11 @@
                 [ticks moveToPoint:[trimmed lastPoint]];
                 [ticks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:5]];
                 
-                trimmed = [path bezierPathByTrimmingToLength:(lengthOfPath / 2) - drawnLength + unitLength / 4 withMaximumError:.5];
+                CGPoint lastPointPrime = [centerTickVector mirrorPoint:[trimmed lastPoint] aroundPoint:center];
                 tickVector = [[tickVector mirrorAround:centerTickVector] flip];
                 
-                [ticks moveToPoint:[trimmed lastPoint]];
-                [ticks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:5]];
-                
+                [ticks moveToPoint:lastPointPrime];
+                [ticks addLineToPoint:[tickVector pointFromPoint:lastPointPrime distance:5]];
             }
             if(lengthOfPath / 2 > drawnLength - unitLength * 3 / 4){
                 UIBezierPath* trimmed = [pathFromMidPoint bezierPathByTrimmingToLength:drawnLength - unitLength * 3 / 4 withMaximumError:.5];
@@ -485,12 +490,11 @@
                 [ticks moveToPoint:[trimmed lastPoint]];
                 [ticks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:5]];
                 
-                trimmed = [path bezierPathByTrimmingToLength:(lengthOfPath / 2) - drawnLength + unitLength * 3 / 4 withMaximumError:.5];
+                CGPoint lastPointPrime = [centerTickVector mirrorPoint:[trimmed lastPoint] aroundPoint:center];
                 tickVector = [[tickVector mirrorAround:centerTickVector] flip];
                 
-                [ticks moveToPoint:[trimmed lastPoint]];
-                [ticks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:5]];
-                
+                [ticks moveToPoint:lastPointPrime];
+                [ticks addLineToPoint:[tickVector pointFromPoint:lastPointPrime distance:5]];
             }
         }while(drawnLength < lengthOfPath / 2 + unitLength);
     }

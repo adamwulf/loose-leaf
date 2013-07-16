@@ -100,4 +100,24 @@
 	return [MMVector vectorWithX:xprime andY:yprime];
 }
 
+
+-(CGPoint) mirrorPoint:(CGPoint)point aroundPoint:(CGPoint)startPoint{
+    CGFloat dx,dy,a,b;
+    CGFloat x2,y2;
+    
+    dx  = self.x;
+    dy  = self.y;
+    
+    CGFloat x0 = startPoint.x;
+    CGFloat y0 = startPoint.y;
+           
+    a   = (dx * dx - dy * dy) / (dx * dx + dy*dy);
+    b   = 2 * dx * dy / (dx*dx + dy*dy);
+
+    x2  = a * (point.x - x0) + b*(point.y - y0) + x0;
+    y2  = b * (point.x - x0) - a*(point.y - y0) + y0;
+    
+    return CGPointMake(x2, y2);
+}
+
 @end
