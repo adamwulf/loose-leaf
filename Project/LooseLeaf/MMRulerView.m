@@ -426,7 +426,6 @@
         
         CGFloat drawnLength = 0;
         
-        
         do{
             
             drawnLength += unitLength;
@@ -434,14 +433,14 @@
             UIBezierPath* pathFromMidPoint = [path bezierPathByTrimmingFromLength:(lengthOfPath / 2)];
             
             if(lengthOfPath / 2 > drawnLength){
-                UIBezierPath* trimmed = [pathFromMidPoint bezierPathByTrimmingToLength:drawnLength withMaximumError:1];
+                UIBezierPath* trimmed = [pathFromMidPoint bezierPathByTrimmingToLength:drawnLength withMaximumError:.5];
                 CGFloat startTangent = [trimmed tangentAtEnd];
                 MMVector* tickVector = [[[[MMVector vectorWithAngle:startTangent] perpendicular] normal] flip];
                 
                 [ticks moveToPoint:[trimmed lastPoint]];
                 [ticks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:10]];
                 
-                trimmed = [path bezierPathByTrimmingToLength:(lengthOfPath / 2) - drawnLength withMaximumError:1];
+                trimmed = [path bezierPathByTrimmingToLength:(lengthOfPath / 2) - drawnLength withMaximumError:.5];
                 tickVector = [[tickVector mirrorAround:centerTickVector] flip];
                 
                 [ticks moveToPoint:[trimmed lastPoint]];
@@ -449,14 +448,14 @@
                 
             }
             if(lengthOfPath / 2 > drawnLength - unitLength / 2){
-                UIBezierPath* trimmed = [pathFromMidPoint bezierPathByTrimmingToLength:drawnLength - unitLength / 2 withMaximumError:1];
+                UIBezierPath* trimmed = [pathFromMidPoint bezierPathByTrimmingToLength:drawnLength - unitLength / 2 withMaximumError:.5];
                 CGFloat startTangent = [trimmed tangentAtEnd];
                 MMVector* tickVector = [[[[MMVector vectorWithAngle:startTangent] perpendicular] normal] flip];
                 
                 [ticks moveToPoint:[trimmed lastPoint]];
                 [ticks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:7]];
                 
-                trimmed = [path bezierPathByTrimmingToLength:(lengthOfPath / 2) - drawnLength + unitLength / 2 withMaximumError:1];
+                trimmed = [path bezierPathByTrimmingToLength:(lengthOfPath / 2) - drawnLength + unitLength / 2 withMaximumError:.5];
                 tickVector = [[tickVector mirrorAround:centerTickVector] flip];
                 
                 [ticks moveToPoint:[trimmed lastPoint]];
@@ -464,14 +463,14 @@
                 
             }
             if(lengthOfPath / 2 > drawnLength - unitLength / 4){
-                UIBezierPath* trimmed = [pathFromMidPoint bezierPathByTrimmingToLength:drawnLength - unitLength / 4 withMaximumError:1];
+                UIBezierPath* trimmed = [pathFromMidPoint bezierPathByTrimmingToLength:drawnLength - unitLength / 4 withMaximumError:.5];
                 CGFloat startTangent = [trimmed tangentAtEnd];
                 MMVector* tickVector = [[[[MMVector vectorWithAngle:startTangent] perpendicular] normal] flip];
                 
                 [ticks moveToPoint:[trimmed lastPoint]];
                 [ticks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:5]];
                 
-                trimmed = [path bezierPathByTrimmingToLength:(lengthOfPath / 2) - drawnLength + unitLength / 4 withMaximumError:1];
+                trimmed = [path bezierPathByTrimmingToLength:(lengthOfPath / 2) - drawnLength + unitLength / 4 withMaximumError:.5];
                 tickVector = [[tickVector mirrorAround:centerTickVector] flip];
                 
                 [ticks moveToPoint:[trimmed lastPoint]];
@@ -479,14 +478,14 @@
                 
             }
             if(lengthOfPath / 2 > drawnLength - unitLength * 3 / 4){
-                UIBezierPath* trimmed = [pathFromMidPoint bezierPathByTrimmingToLength:drawnLength - unitLength * 3 / 4 withMaximumError:1];
+                UIBezierPath* trimmed = [pathFromMidPoint bezierPathByTrimmingToLength:drawnLength - unitLength * 3 / 4 withMaximumError:.5];
                 CGFloat startTangent = [trimmed tangentAtEnd];
                 MMVector* tickVector = [[[[MMVector vectorWithAngle:startTangent] perpendicular] normal] flip];
                 
                 [ticks moveToPoint:[trimmed lastPoint]];
                 [ticks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:5]];
                 
-                trimmed = [path bezierPathByTrimmingToLength:(lengthOfPath / 2) - drawnLength + unitLength * 3 / 4 withMaximumError:1];
+                trimmed = [path bezierPathByTrimmingToLength:(lengthOfPath / 2) - drawnLength + unitLength * 3 / 4 withMaximumError:.5];
                 tickVector = [[tickVector mirrorAround:centerTickVector] flip];
                 
                 [ticks moveToPoint:[trimmed lastPoint]];
