@@ -16,6 +16,8 @@
 #define debug_NSLog(__FORMAT__, ...) TFLog((@"%s [Line %d] " __FORMAT__), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 #endif
 
+#define SIGN(__var__) (__var__ / ABS(__var__))
+
 #define kAbstractMethodException [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)] userInfo:nil]
 
 #define kTestflightAppToken @"7cad2371-d0e0-4524-a833-dbc6cbc7a870"
