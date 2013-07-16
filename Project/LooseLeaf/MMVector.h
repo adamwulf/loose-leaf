@@ -37,4 +37,6 @@
 
 -(MMVector*) rotateBy:(CGFloat)angle;
 
+-(MMVector*) mirrorAround:(MMVector*)normal;
+
 @end
