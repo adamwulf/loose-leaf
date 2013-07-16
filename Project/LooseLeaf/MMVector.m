@@ -91,8 +91,13 @@
     CGFloat xprime = x * cosf(angle) + y * sinf(angle);
     CGFloat yprime = -(x * sinf(angle) - y * cosf(angle));
     return [MMVector vectorWithX:xprime andY:yprime];
-    
 }
 
+-(MMVector*) mirrorAround:(MMVector*)normal{
+    CGFloat dotprod =-x*normal.x-y*normal.y;
+    CGFloat xprime =x+2*normal.x*dotprod;
+    CGFloat yprime =y+2*normal.y*dotprod;
+	return [MMVector vectorWithX:xprime andY:yprime];
+}
 
 @end
