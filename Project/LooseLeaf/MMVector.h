@@ -10,9 +10,14 @@
 
 @interface MMVector : NSObject
 
+@property (nonatomic) CGFloat x;
+@property (nonatomic) CGFloat y;
+
 +(id) vectorWithPoint:(CGPoint)p1 andPoint:(CGPoint)p2;
 
 +(id) vectorWithX:(CGFloat)x andY:(CGFloat)y;
+
++(id) vectorWithAngle:(CGFloat)angle;
 
 -(id) initWithPoint:(CGPoint)p1 andPoint:(CGPoint)p2;
 
@@ -27,5 +32,9 @@
 -(CGFloat) angle;
 
 -(CGPoint) pointFromPoint:(CGPoint)point distance:(CGFloat)distance;
+
+-(MMVector*) averageWith:(MMVector*)vector;
+
+-(MMVector*) rotateBy:(CGFloat)angle;
 
 @end

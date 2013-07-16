@@ -225,7 +225,7 @@
  * this method will draw an arc connecting the two input points
  */
 -(void) drawArcWithOriginalDistance:(CGFloat)originalDistance currentDistance:(CGFloat)currentDistance andPerpN:(MMVector*)perpN withPoint1:(CGPoint)point1 andPoint2:(CGPoint)point2 andScale:(CGFloat)scale onComplete:(void(^)(UIBezierPath* clippedPath, UIBezierPath* fullCirclePath))onComplete{
-
+    
     CGFloat nintyDistance = originalDistance * 3 / 5;
     // This is the distance between points that should result
     // in a 1 degree arc
@@ -253,6 +253,8 @@
     //            angle θ=2arcsin(d/(2r))
     //            so that means that radius = d/(2sin(θ/2))
     CGFloat radius = currentDistance / (2 * sinf(radian / 2));
+    // this will determine the total length of the visible arc
+    CGFloat arcLength = radian * radius;
     
     // calculate the midpoint of the ruler, and it's distance
     // from one of the two ruler corners that it splits
@@ -304,13 +306,99 @@
     CGFloat endAngle = calculateAngle(point1, center);
     CGFloat startAngle = calculateAngle(point2, center);
     
-//    NSLog(@"angle: %f %f   %f %f     %f", endAngle, startAngle, center.x, center.y, radius);
+    //    NSLog(@"angle: %f %f   %f %f     %f", endAngle, startAngle, center.x, center.y, radius);
     
     // now draw the arc between the two points
     [[UIColor blueColor] setStroke];
     UIBezierPath* path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:endAngle endAngle:startAngle clockwise:NO];
     UIBezierPath* circle = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:0 endAngle:M_PI*2 clockwise:NO];
+    UIBezierPath* ticks = [UIBezierPath bezierPath];
 
+    //
+    // calculate the vectors that will point
+    // to the start, and mid point of our
+    // circle
+    MMVector* midVector = [perpN flip];
+
+    // this will find the center of the semicircle stroke, and the vector
+    // that points to it from the center of the circle
+    midPoint = [midVector pointFromPoint:center distance:radius];
+    [ticks moveToPoint:midPoint];
+    [ticks addLineToPoint:[[midVector flip] pointFromPoint:midPoint distance:10]];
+
+    
+    // find the circumference
+    CGFloat circum = (M_PI * radius * 2);
+    CGFloat unitAngleRatio = (unitLength / circum);
+    // now find the angle we need to rotate
+    // to travel one unitlength along the circumference
+    CGFloat unitAngle = unitAngleRatio * M_PI * 2;
+    
+    // this will track how far we've drawn our ticks along the arc
+    CGFloat drawnLength = 0;
+    CGFloat rotatedAngle = 0;
+    do{
+        // unit angle is the unit length / circumference
+        // this lets us rotate the centerVector by unitAngle
+        // to get the tick marks for each unitlength along the
+        // the circumference
+        drawnLength += unitLength;
+        rotatedAngle += unitAngle;
+        
+        
+        // now draw the ticks that will fit inside the visible arc
+        MMVector* nextVector;
+        CGPoint nextPoint;
+        
+        // now check to see which ticks inside this unitLength
+        // segment should be drawn along the arc
+        if(drawnLength < arcLength / 2){
+            nextVector = [[midVector rotateBy:rotatedAngle] normal];
+            nextPoint = [nextVector pointFromPoint:center distance:radius];
+            [ticks moveToPoint:nextPoint];
+            [ticks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:10]];
+            
+            nextVector = [[midVector rotateBy:-rotatedAngle] normal];
+            nextPoint = [nextVector pointFromPoint:center distance:radius];
+            [ticks moveToPoint:nextPoint];
+            [ticks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:10]];
+        }
+        if(drawnLength - unitLength / 2 < arcLength / 2){
+            nextVector = [[midVector rotateBy:rotatedAngle - unitAngle / 2] normal];
+            nextPoint = [nextVector pointFromPoint:center distance:radius];
+            [ticks moveToPoint:nextPoint];
+            [ticks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:7]];
+            
+            nextVector = [[midVector rotateBy:-rotatedAngle + unitAngle / 2] normal];
+            nextPoint = [nextVector pointFromPoint:center distance:radius];
+            [ticks moveToPoint:nextPoint];
+            [ticks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:7]];
+        }
+        if(drawnLength - unitLength / 4 < arcLength / 2){
+            nextVector = [[midVector rotateBy:rotatedAngle - unitAngle / 4] normal];
+            nextPoint = [nextVector pointFromPoint:center distance:radius];
+            [ticks moveToPoint:nextPoint];
+            [ticks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
+            
+            nextVector = [[midVector rotateBy:-rotatedAngle + unitAngle / 4] normal];
+            nextPoint = [nextVector pointFromPoint:center distance:radius];
+            [ticks moveToPoint:nextPoint];
+            [ticks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
+        }
+        if(drawnLength - unitLength * 3 / 4 < arcLength / 2){
+            nextVector = [[midVector rotateBy:rotatedAngle - unitAngle * 3 / 4] normal];
+            nextPoint = [nextVector pointFromPoint:center distance:radius];
+            [ticks moveToPoint:nextPoint];
+            [ticks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
+            
+            nextVector = [[midVector rotateBy:-rotatedAngle + unitAngle * 3 / 4] normal];
+            nextPoint = [nextVector pointFromPoint:center distance:radius];
+            [ticks moveToPoint:nextPoint];
+            [ticks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
+        }
+    }while(drawnLength < arcLength / 2 + unitLength);
+    
+    
     CGAffineTransform transform = CGAffineTransformMakeTranslation(-center.x, -center.y);
     transform = CGAffineTransformConcat(transform, CGAffineTransformRotate(CGAffineTransformIdentity, -[perpN angle]));
     transform = CGAffineTransformConcat(transform, CGAffineTransformScale(CGAffineTransformIdentity, scale, 1));
@@ -320,10 +408,25 @@
     // now scale
     [path applyTransform:transform];
     [circle applyTransform:transform];
+    [ticks applyTransform:transform];
+
+    
+    // draw ticks
+    [[UIColor blueColor] setStroke];
+    [ticks setLineWidth:1];
+    [ticks stroke];
 
     if(onComplete){
         onComplete(path, circle);
     }
+    
+    // now draw the ticks
+    
+    
+    
+    
+    
+    
 }
 
 #pragma mark - Public Interface

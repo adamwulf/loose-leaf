@@ -15,12 +15,18 @@
     CGFloat y;
 }
 
+@synthesize x, y;
+
 +(id) vectorWithPoint:(CGPoint)p1 andPoint:(CGPoint)p2{
     return [[MMVector alloc] initWithPoint:p1 andPoint:p2];
 }
 
 +(id) vectorWithX:(CGFloat)x andY:(CGFloat)y{
     return [[MMVector alloc] initWithX:x andY:y];
+}
+
++(id) vectorWithAngle:(CGFloat)angle{
+    return [[MMVector alloc] initWithX:cosf(angle) andY:sinf(angle)];
 }
 
 -(id) initWithPoint:(CGPoint)p1 andPoint:(CGPoint)p2{
@@ -72,6 +78,20 @@
 -(CGPoint) pointFromPoint:(CGPoint)point distance:(CGFloat)distance{
     return CGPointMake(point.x + x * distance,
                        point.y + y * distance);
+}
+
+-(MMVector*) averageWith:(MMVector*)vector{
+    return [MMVector vectorWithX:(x + vector.x)/2 andY:(y + vector.y)/2];
+}
+
+-(MMVector*) rotateBy:(CGFloat)angle{
+    
+    return [MMVector vectorWithAngle:self.angle + angle];
+    
+    CGFloat xprime = x * cosf(angle) + y * sinf(angle);
+    CGFloat yprime = -(x * sinf(angle) - y * cosf(angle));
+    return [MMVector vectorWithX:xprime andY:yprime];
+    
 }
 
 
