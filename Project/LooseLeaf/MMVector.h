@@ -39,4 +39,6 @@
 
 -(MMVector*) mirrorAround:(MMVector*)normal;
 
+-(CGPoint) mirrorPoint:(CGPoint)point aroundPoint:(CGPoint)startPoint;
+
 @end
