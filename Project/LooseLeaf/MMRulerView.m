@@ -416,6 +416,10 @@
 
     if(scale > 1){
         // now draw the tick marks if the circle is squeezed
+        // we could use this algorithm for the arc ticks as well, instead of
+        // the above scale == 1 do loop, but this uses slightly more CPU
+        // than the arc calculations above. so we'll keep them separate since
+        // the arc will save some CPU cycles.
         CGFloat lengthOfPath = [path length];
         
         // first, draw the tick mark in the exact center of the arc
@@ -499,8 +503,6 @@
         }while(drawnLength < lengthOfPath / 2 + unitLength);
     }
     
-    
-    
     // draw ticks
     [[UIColor blueColor] setStroke];
     [ticks setLineWidth:1];
@@ -509,14 +511,6 @@
     if(onComplete){
         onComplete(path, circle);
     }
-    
-    // now draw the ticks
-    
-    
-    
-    
-    
-    
 }
 
 #pragma mark - Public Interface
