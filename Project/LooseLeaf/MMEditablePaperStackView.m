@@ -34,7 +34,7 @@
         stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
         
         drawableView = [[JotView alloc] initWithFrame:self.bounds];
-        drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
+//        drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
         [[JotStylusManager sharedInstance] setPalmRejectorDelegate:drawableView];
 
         pen = [[Pen alloc] init];

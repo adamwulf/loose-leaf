@@ -55,7 +55,7 @@ dispatch_queue_t importThumbnailQueue;
         cachedImgView.contentMode = UIViewContentModeScaleAspectFill;
         cachedImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         cachedImgView.clipsToBounds = YES;
-        cachedImgView.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:.3];
+//        cachedImgView.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:.3];
         [self.contentView addSubview:cachedImgView];
         
         lastSavedUndoHash = [drawableView undoHash];
