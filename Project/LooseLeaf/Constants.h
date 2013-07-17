@@ -24,6 +24,11 @@
 
 #define kAnimationDelay 0.05
 
+// Ruler
+#define kWidthOfRuler 50
+#define kRulerPinchBuffer 40
+
+
 // List View
 #define kNumberOfColumnsInListView 3
 #define kListPageZoom .25
