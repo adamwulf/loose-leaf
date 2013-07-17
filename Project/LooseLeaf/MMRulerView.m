@@ -349,11 +349,6 @@
         [ticks moveToPoint:midPoint];
         [ticks addLineToPoint:[[midVector flip] pointFromPoint:midPoint distance:10]];
         
-        NSLog(@"unitangle: %f", unitAngle);
-        NSLog(@"midVector : %@", midVector);
-        MMVector* nextVector = [[midVector rotateBy:unitAngle] normal];
-        NSLog(@"nextVector: %@", nextVector);
-
         // this will track how far we've drawn our ticks along the arc
         CGFloat drawnLength = 0;
         CGFloat rotatedAngle = 0;
