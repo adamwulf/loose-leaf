@@ -85,11 +85,8 @@
 }
 
 -(MMVector*) rotateBy:(CGFloat)angle{
-    
-    return [MMVector vectorWithAngle:self.angle + angle];
-    
-    CGFloat xprime = x * cosf(angle) + y * sinf(angle);
-    CGFloat yprime = -(x * sinf(angle) - y * cosf(angle));
+    CGFloat xprime = x * cosf(angle) - y * sinf(angle);
+    CGFloat yprime = x * sinf(angle) + y * cosf(angle);
     return [MMVector vectorWithX:xprime andY:yprime];
 }
 
@@ -118,6 +115,11 @@
     y2  = b * (point.x - x0) - a*(point.y - y0) + y0;
     
     return CGPointMake(x2, y2);
+}
+
+
+-(NSString*) description{
+    return [@"[MMVector: " stringByAppendingFormat:@"%f %f]", self.x, self.y];
 }
 
 @end

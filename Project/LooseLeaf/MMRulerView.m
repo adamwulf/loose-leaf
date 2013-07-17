@@ -99,7 +99,6 @@
         CGFloat oneDistance = initialDistance - kRulerPinchBuffer;
         
 
-        [[MMRulerView rulerColor] setStroke];
         if(currentDistance < nintyDistance){
             // the user has pinched so that the arc
             // is now a semi circle.
@@ -222,6 +221,7 @@
             path1Full = path1;
             path2Full = path2;
         }
+        [[MMRulerView rulerColor] setStroke];
         [path1 setLineWidth:2];
         [path1 stroke];
         [path2 setLineWidth:2];
@@ -349,7 +349,11 @@
         [ticks moveToPoint:midPoint];
         [ticks addLineToPoint:[[midVector flip] pointFromPoint:midPoint distance:10]];
         
-        
+        NSLog(@"unitangle: %f", unitAngle);
+        NSLog(@"midVector : %@", midVector);
+        MMVector* nextVector = [[midVector rotateBy:unitAngle] normal];
+        NSLog(@"nextVector: %@", nextVector);
+
         // this will track how far we've drawn our ticks along the arc
         CGFloat drawnLength = 0;
         CGFloat rotatedAngle = 0;
@@ -546,6 +550,18 @@
     
     old_p1 = p1;
     old_p2 = p2;
+    
+    MMVector* normal = [[MMVector vectorWithPoint:old_p1 andPoint:old_p2] normal];
+    
+    // check if we're within 4 degrees of a straight angle
+    if(ABS(ABS(normal.angle) - M_PI_2) < M_PI / 45.0){
+        old_p1.x = (old_p1.x + old_p2.x) / 2;
+        old_p2.x = old_p1.x;
+    }else if(ABS(normal.angle) < M_PI / 45.0 || ABS(normal.angle - M_PI) < M_PI / 45.0){
+        old_p1.y = (old_p1.y + old_p2.y) / 2;
+        old_p2.y = old_p1.y;
+    }
+
     initialDistance = distance;
 }
 

@@ -25,7 +25,7 @@
 #define kAnimationDelay 0.05
 
 // Ruler
-#define kWidthOfRuler 50
+#define kWidthOfRuler 70
 #define kRulerPinchBuffer 40
 
 
