@@ -49,12 +49,17 @@
     UIBezierPath* path2Full;
 }
 
++(UIColor*) rulerColor{
+    return [UIColor colorWithRed: 77.0/255.0 green: 187.0/255.0 blue: 1.0 alpha: 1];
+}
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        self.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:.3];
+//        self.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:.3];
+        self.backgroundColor = [UIColor clearColor];
         unitLength = [UIDevice ppc];
     }
     return self;
@@ -69,6 +74,9 @@
         // calculate the current distance
         CGFloat currentDistance = DistanceBetweenTwoPoints(old_p1, old_p2);
         
+        if(CGPointEqualToPoint(old_p1, CGPointZero) || CGPointEqualToPoint(old_p2, CGPointZero)){
+            return;
+        }
         // calculate the perpendicular normal
         MMVector* normal = [[MMVector vectorWithPoint:old_p1 andPoint:old_p2] normal];
         MMVector* perpN = [normal perpendicular];
@@ -89,7 +97,7 @@
         CGFloat oneDistance = initialDistance - kRulerPinchBuffer;
         
 
-        [[UIColor blueColor] setStroke];
+        [[MMRulerView rulerColor] setStroke];
         if(currentDistance < nintyDistance){
             // the user has pinched so that the arc
             // is now a semi circle.
@@ -198,7 +206,7 @@
             }while(drawnTickLengthSoFar < lengthOfRuler / 2 + unitLength);
             
             // draw ticks
-            [[UIColor blueColor] setStroke];
+            [[MMRulerView rulerColor] setStroke];
             [ticks stroke];
             
             // draw lines for the edges of the ruler
@@ -310,7 +318,7 @@
     CGFloat startAngle = calculateAngle(point2, center);
     
     // now draw the arc between the two points
-    [[UIColor blueColor] setStroke];
+    [[MMRulerView rulerColor] setStroke];
     UIBezierPath* path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:endAngle endAngle:startAngle clockwise:NO];
     UIBezierPath* circle = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:0 endAngle:M_PI*2 clockwise:NO];
     UIBezierPath* ticks = [UIBezierPath bezierPath];
@@ -515,7 +523,7 @@
     }
     
     // draw ticks
-    [[UIColor blueColor] setStroke];
+    [[MMRulerView rulerColor] setStroke];
     [ticks setLineWidth:1];
     [ticks stroke];
 
