@@ -74,10 +74,10 @@
         MMVector* perpN = [normal perpendicular];
         
         // calculate the four corners of our ruler
-        CGPoint tl = [perpN pointFromPoint:old_p1 distance:50];
-        CGPoint tr = [perpN pointFromPoint:old_p1 distance:-50];
-        CGPoint bl = [perpN pointFromPoint:old_p2 distance:50];
-        CGPoint br = [perpN pointFromPoint:old_p2 distance:-50];
+        CGPoint tl = [perpN pointFromPoint:old_p1 distance:kWidthOfRuler];
+        CGPoint tr = [perpN pointFromPoint:old_p1 distance:-kWidthOfRuler];
+        CGPoint bl = [perpN pointFromPoint:old_p2 distance:kWidthOfRuler];
+        CGPoint br = [perpN pointFromPoint:old_p2 distance:-kWidthOfRuler];
         
         // Drawing code
         
@@ -86,7 +86,7 @@
         CGFloat nintyDistance = initialDistance * 3 / 5;
         // This is the distance between points that should result
         // in a 1 degree arc
-        CGFloat oneDistance = initialDistance - 40;
+        CGFloat oneDistance = initialDistance - kRulerPinchBuffer;
         
 
         [[UIColor blueColor] setStroke];
@@ -142,10 +142,10 @@
             CGFloat ratio =  initialDistance / currentDistance;
             ratio = MAX(ratio, 0.5);
             
-            tl = [perpN pointFromPoint:old_p1 distance:50 * ratio];
-            tr = [perpN pointFromPoint:old_p1 distance:-50 * ratio];
-            bl = [perpN pointFromPoint:old_p2 distance:50 * ratio];
-            br = [perpN pointFromPoint:old_p2 distance:-50 * ratio];
+            tl = [perpN pointFromPoint:old_p1 distance:kWidthOfRuler * ratio];
+            tr = [perpN pointFromPoint:old_p1 distance:-kWidthOfRuler * ratio];
+            bl = [perpN pointFromPoint:old_p2 distance:kWidthOfRuler * ratio];
+            br = [perpN pointFromPoint:old_p2 distance:-kWidthOfRuler * ratio];
             
             CGFloat lengthOfRuler = DistanceBetweenTwoPoints(tl, bl);
             CGPoint leftMidPoint = [normal pointFromPoint:tl distance:lengthOfRuler/2];
@@ -160,7 +160,14 @@
             [ticks moveToPoint:rightMidPoint];
             [ticks addLineToPoint:[perpN pointFromPoint:rightMidPoint distance:10]];
             
-
+            
+            // very simple helper that'll add a tick mark
+            // at the input point for the given length
+            void(^addTick)(UIBezierPath* path, CGPoint point, MMVector* perpN, CGFloat width) = ^(UIBezierPath* path, CGPoint point, MMVector* perpN, CGFloat length){
+                [path moveToPoint:point];
+                [path addLineToPoint:[perpN pointFromPoint:point distance:length]];
+            };
+            
             // now we're going to loop until the end of the ruler and draw
             // all of the tick marks on both sides.
             NSArray* tickArray = [NSArray arrayWithObjects:[[MMPointAndVector alloc] initWithPoint:leftMidPoint andVector:flippedPerpN],
@@ -169,20 +176,20 @@
             do{
                 for(MMPointAndVector* pointAndVector in tickArray){
                     if(drawnTickLengthSoFar < lengthOfRuler / 2){
-                        [self addTickTo:ticks atPoint:[normal pointFromPoint:pointAndVector.point distance:drawnTickLengthSoFar] withPerp:pointAndVector.vector andWidth:10];
-                        [self addTickTo:ticks atPoint:[normal pointFromPoint:pointAndVector.point distance:-drawnTickLengthSoFar] withPerp:pointAndVector.vector andWidth:10];
+                        addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:drawnTickLengthSoFar], pointAndVector.vector, 10);
+                        addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:-drawnTickLengthSoFar], pointAndVector.vector, 10);
                     }
                     if(drawnTickLengthSoFar - unitLength / 2 < lengthOfRuler / 2){
-                        [self addTickTo:ticks atPoint:[normal pointFromPoint:pointAndVector.point distance:drawnTickLengthSoFar - unitLength / 2] withPerp:pointAndVector.vector andWidth:7];
-                        [self addTickTo:ticks atPoint:[normal pointFromPoint:pointAndVector.point distance:-drawnTickLengthSoFar + unitLength / 2] withPerp:pointAndVector.vector andWidth:7];
+                        addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:drawnTickLengthSoFar - unitLength / 2], pointAndVector.vector, 7);
+                        addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:-drawnTickLengthSoFar + unitLength / 2], pointAndVector.vector, 7);
                     }
                     if(drawnTickLengthSoFar - unitLength / 4 < lengthOfRuler / 2){
-                        [self addTickTo:ticks atPoint:[normal pointFromPoint:pointAndVector.point distance:drawnTickLengthSoFar - unitLength / 4] withPerp:pointAndVector.vector andWidth:5];
-                        [self addTickTo:ticks atPoint:[normal pointFromPoint:pointAndVector.point distance:-drawnTickLengthSoFar + unitLength / 4] withPerp:pointAndVector.vector andWidth:5];
+                        addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:drawnTickLengthSoFar - unitLength / 4], pointAndVector.vector, 5);
+                        addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:-drawnTickLengthSoFar + unitLength / 4], pointAndVector.vector, 5);
                     }
                     if(drawnTickLengthSoFar - unitLength * 3 / 4 < lengthOfRuler / 2){
-                        [self addTickTo:ticks atPoint:[normal pointFromPoint:pointAndVector.point distance:drawnTickLengthSoFar - unitLength * 3 / 4] withPerp:pointAndVector.vector andWidth:5];
-                        [self addTickTo:ticks atPoint:[normal pointFromPoint:pointAndVector.point distance:-drawnTickLengthSoFar + unitLength * 3 / 4] withPerp:pointAndVector.vector andWidth:5];
+                        addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:drawnTickLengthSoFar - unitLength * 3 / 4], pointAndVector.vector, 5);
+                        addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:-drawnTickLengthSoFar + unitLength * 3 / 4], pointAndVector.vector, 5);
                     }
                 }
                 drawnTickLengthSoFar += unitLength;
@@ -210,10 +217,6 @@
         [path2 setLineWidth:2];
         [path2 stroke];
     }
-}
--(void) addTickTo:(UIBezierPath*)path atPoint:(CGPoint)point withPerp:(MMVector*)perpN andWidth:(CGFloat)width{
-    [path moveToPoint:point];
-    [path addLineToPoint:[perpN pointFromPoint:point distance:width]];
 }
 
 
@@ -306,8 +309,6 @@
     CGFloat endAngle = calculateAngle(point1, center);
     CGFloat startAngle = calculateAngle(point2, center);
     
-    //    NSLog(@"angle: %f %f   %f %f     %f", endAngle, startAngle, center.x, center.y, radius);
-    
     // now draw the arc between the two points
     [[UIColor blueColor] setStroke];
     UIBezierPath* path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:endAngle endAngle:startAngle clockwise:NO];
@@ -328,6 +329,9 @@
     CGFloat unitAngle = unitAngleRatio * M_PI * 2;
     
     
+    //
+    // check to see if we need to draw tick marks for an arc
+    // instead of a sqeezed bezier
     if(scale == 1){
         // this will find the center of the semicircle stroke, and the vector
         // that points to it from the center of the circle
@@ -402,19 +406,26 @@
     }
     
     
-    
+    //
+    // these transforms will scale the semicircle if needed
+    // so that it things up when the user pinches their fingers
     CGAffineTransform transform = CGAffineTransformMakeTranslation(-center.x, -center.y);
     transform = CGAffineTransformConcat(transform, CGAffineTransformRotate(CGAffineTransformIdentity, -[perpN angle]));
     transform = CGAffineTransformConcat(transform, CGAffineTransformScale(CGAffineTransformIdentity, scale, 1));
     transform = CGAffineTransformConcat(transform, CGAffineTransformRotate(CGAffineTransformIdentity, [perpN angle]));
     transform = CGAffineTransformConcat(transform, CGAffineTransformMakeTranslation(center.x, center.y));
     
-    // now scale
     [path applyTransform:transform];
     [circle applyTransform:transform];
 
 
+    //
+    // check if we need to draw tick marks for a squeezed beizer
+    // instead of an arc
     if(scale > 1){
+        // the transforms won't work for the tick marks,
+        // we need to draw those in manually
+        //
         // now draw the tick marks if the circle is squeezed
         // we could use this algorithm for the arc ticks as well, instead of
         // the above scale == 1 do loop, but this uses slightly more CPU
@@ -565,7 +576,7 @@
 }
 
 
-#pragma mark - adjust stroke to elements
+#pragma mark - Adjust Stroke To Align To Ruler
 
 -(NSArray*) adjustElement:(AbstractBezierPathElement*)element{
 
