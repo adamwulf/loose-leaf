@@ -73,7 +73,6 @@ NSInteger const minimumNumberOfTouches = 2;
     if([validTouchesCurrentlyBeginning count]){
         [validTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
         if([validTouches count] >= minimumNumberOfTouches && self.state == UIGestureRecognizerStatePossible){
-            self.state = UIGestureRecognizerStateBegan;
             // our gesture has began, so make sure to kill
             // any touches that are being used to draw
             //
@@ -84,6 +83,7 @@ NSInteger const minimumNumberOfTouches = 2;
                 [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
             }
             initialDistance = [self distanceBetweenTouches:validTouches];
+            self.state = UIGestureRecognizerStateBegan;
         }
     }
 }
@@ -101,6 +101,7 @@ NSInteger const minimumNumberOfTouches = 2;
         if([validTouches count] >= 2 && !initialDistance){
             initialDistance = [self distanceBetweenTouches:validTouches];
         }
+        self.state = UIGestureRecognizerStateChanged;
     }
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{

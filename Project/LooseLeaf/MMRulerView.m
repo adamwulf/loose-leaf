@@ -547,7 +547,7 @@
     
     old_p1 = p1;
     old_p2 = p2;
-    
+
     MMVector* normal = [[MMVector vectorWithPoint:old_p1 andPoint:old_p2] normal];
     
     // check if we're within 4 degrees of a straight angle
@@ -722,9 +722,10 @@
     CGPoint minP = CGPointMake(MIN(MIN(MIN(p1.x, p2.x), old_p1.x), old_p2.x), MIN(MIN(MIN(p1.y, p2.y), old_p1.y), old_p2.y));
     CGPoint maxP = CGPointMake(MAX(MAX(MAX(p1.x, p2.x), old_p1.x), old_p2.x), MAX(MAX(MAX(p1.y, p2.y), old_p1.y), old_p2.y));
     CGRect needsDisp = CGRectMake(minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y);
+    needsDisp = CGRectUnion(needsDisp, [path1 bounds]);
+    needsDisp = CGRectUnion(needsDisp, [path2 bounds]);
     needsDisp = CGRectInset(needsDisp, -80, -80);
     [self setNeedsDisplayInRect:needsDisp];
-    [self setNeedsDisplay];
 }
 
 @end
