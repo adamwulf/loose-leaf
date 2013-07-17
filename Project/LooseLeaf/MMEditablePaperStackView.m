@@ -592,6 +592,7 @@
 #pragma mark - JotViewDelegate
 
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+    [rulerView willBeginStrokeAt:[touch locationInView:rulerView]];
     return [[self activePen] willBeginStrokeWithTouch:touch];
 }
 

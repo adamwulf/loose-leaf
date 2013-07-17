@@ -47,6 +47,8 @@
     UIBezierPath* path2;
     UIBezierPath* path1Full;
     UIBezierPath* path2Full;
+    
+    BOOL nearestPathIsPath1;
 }
 
 +(UIColor*) rulerColor{
@@ -70,13 +72,13 @@
  */
 - (void)drawRect:(CGRect)rect
 {
+    if(CGPointEqualToPoint(old_p1, CGPointZero) || CGPointEqualToPoint(old_p2, CGPointZero)){
+        return;
+    }
     if(initialDistance > 0){
         // calculate the current distance
         CGFloat currentDistance = DistanceBetweenTwoPoints(old_p1, old_p2);
         
-        if(CGPointEqualToPoint(old_p1, CGPointZero) || CGPointEqualToPoint(old_p2, CGPointZero)){
-            return;
-        }
         // calculate the perpendicular normal
         MMVector* normal = [[MMVector vectorWithPoint:old_p1 andPoint:old_p2] normal];
         MMVector* perpN = [normal perpendicular];
@@ -586,29 +588,65 @@
 
 #pragma mark - Adjust Stroke To Align To Ruler
 
--(NSArray*) adjustElement:(AbstractBezierPathElement*)element{
+/**
+ * this method is called to give us a chance
+ * to realign all the input elements to the ruler
+ */
+-(NSArray*) willAddElementsToStroke:(NSArray *)elements{
+    NSMutableArray* output = [NSMutableArray array];
+    for(AbstractBezierPathElement* element in elements){
+        [output addObjectsFromArray:[self adjustElement:element]];
+    }
+    return output;
+}
 
+/**
+ * we need to take this input point and decide
+ * which side of the ruler the user is drawing on.
+ * then we'll set our nearestPathIsPath1 flag,
+ * which we'll use when adjusting all of the elements
+ * of the stroke
+ */
+-(void) willBeginStrokeAt:(CGPoint)point{
+    //
+    // we need to flip the coordinates of the path because
+    // OpenGL and CoreGraphics have swapped coordinates
+    UIBezierPath* flippedPath1 = [path1 copy];
+    [flippedPath1 applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+    
+    UIBezierPath* flippedPath2 = [path2 copy];
+    [flippedPath2 applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+    
+    // now find the closest points from the input to each path
+    CGPoint nearestStart1 = [flippedPath1 closestPointOnPathTo:point];
+    CGPoint nearestStart2 = [flippedPath2 closestPointOnPathTo:point];
+    // pick the one that's closest
+    if(DistanceBetweenTwoPoints(nearestStart1, point) < DistanceBetweenTwoPoints(nearestStart2, point)){
+        nearestPathIsPath1 = YES;
+    }else{
+        nearestPathIsPath1 = NO;
+    }
+}
+
+
+#pragma mark - Private Helpers
+
+-(NSArray*) adjustElement:(AbstractBezierPathElement*)element{
+    
     if(path1){
         
         UIBezierPath* flippedPath;
         
-        UIBezierPath* flippedPath1 = [path1Full copy];
-        [flippedPath1 applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
-        
-        UIBezierPath* flippedPath2 = [path2Full copy];
-        [flippedPath2 applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
-        
         CGPoint nearestStart;
-        CGPoint nearestStart1 = [flippedPath1 closestPointOnPathTo:element.startPoint];
-        CGPoint nearestStart2 = [flippedPath2 closestPointOnPathTo:element.startPoint];
-        if(DistanceBetweenTwoPoints(nearestStart1, element.startPoint) < DistanceBetweenTwoPoints(nearestStart2, element.startPoint)){
-            flippedPath = flippedPath1;
-            nearestStart = nearestStart1;
+        if(nearestPathIsPath1){
+            flippedPath = [path1Full copy];
+            [flippedPath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+            nearestStart = [flippedPath closestPointOnPathTo:element.startPoint];
         }else{
-            flippedPath = flippedPath2;
-            nearestStart = nearestStart2;
+            flippedPath = [path2Full copy];
+            [flippedPath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+            nearestStart = [flippedPath closestPointOnPathTo:element.startPoint];
         }
-        
         
         
         AbstractBezierPathElement* newElement;
@@ -649,18 +687,6 @@
     
     return [NSArray arrayWithObject:element];
 }
-
--(NSArray*) willAddElementsToStroke:(NSArray *)elements{
-    NSMutableArray* output = [NSMutableArray array];
-    for(AbstractBezierPathElement* element in elements){
-        [output addObjectsFromArray:[self adjustElement:element]];
-    }
-    return output;
-}
-
-
-
-#pragma mark - Private Helpers
 
 /**
  * this setNeedsDisplay in a rectangle that contains both the the
