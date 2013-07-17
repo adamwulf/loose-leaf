@@ -49,6 +49,8 @@
     UIBezierPath* path2Full;
     
     BOOL nearestPathIsPath1;
+    
+    CGPoint lastEndPointOfStroke;
 }
 
 +(UIColor*) rulerColor{
@@ -213,10 +215,10 @@
             // draw lines for the edges of the ruler
             path1 = [UIBezierPath bezierPath];
             path2 = [UIBezierPath bezierPath];
-            [path1 moveToPoint:br];
-            [path1 addLineToPoint:tr];
-            [path2 moveToPoint:bl];
-            [path2 addLineToPoint:tl];
+            [path1 moveToPoint:bl];
+            [path1 addLineToPoint:tl];
+            [path2 moveToPoint:br];
+            [path2 addLineToPoint:tr];
             
             path1Full = path1;
             path2Full = path2;
@@ -622,20 +624,27 @@
     //
     // we need to flip the coordinates of the path because
     // OpenGL and CoreGraphics have swapped coordinates
-    UIBezierPath* flippedPath1 = [path1 copy];
+    UIBezierPath* flippedPath1 = [path1Full copy];
     [flippedPath1 applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
     
-    UIBezierPath* flippedPath2 = [path2 copy];
+    UIBezierPath* flippedPath2 = [path2Full copy];
     [flippedPath2 applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
     
+    CGPoint flippedPoint = CGPointApplyAffineTransform(point, CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height));
+    
     // now find the closest points from the input to each path
-    CGPoint nearestStart1 = [flippedPath1 closestPointOnPathTo:point];
-    CGPoint nearestStart2 = [flippedPath2 closestPointOnPathTo:point];
+    CGPoint nearestStart1 = [path1 closestPointOnPathTo:point];
+    CGPoint nearestStart2 = [path2 closestPointOnPathTo:point];
     // pick the one that's closest
-    if(DistanceBetweenTwoPoints(nearestStart1, point) < DistanceBetweenTwoPoints(nearestStart2, point)){
+    CGFloat path1Dist = DistanceBetweenTwoPoints(nearestStart1, point);
+    CGFloat path2Dist = DistanceBetweenTwoPoints(nearestStart2, point);
+    
+    if(path1Dist < path2Dist){
         nearestPathIsPath1 = YES;
+        lastEndPointOfStroke = [flippedPath1 closestPointOnPathTo:flippedPoint];
     }else{
         nearestPathIsPath1 = NO;
+        lastEndPointOfStroke = [flippedPath2 closestPointOnPathTo:flippedPoint];
     }
 }
 
@@ -673,6 +682,8 @@
         //
         CGPoint nearestEnd;
         
+        nearestStart = lastEndPointOfStroke;
+        
         if([element isKindOfClass:[LineToPathElement class]]){
             nearestEnd = [(LineToPathElement*)element lineTo];
             nearestEnd = [flippedPath closestPointOnPathTo:nearestEnd];
@@ -681,6 +692,7 @@
             newElement.width = element.width;
             newElement.rotation = element.rotation;
         }else if([element isKindOfClass:[MoveToPathElement class]]){
+            nearestEnd = nearestStart;
             newElement = [MoveToPathElement elementWithMoveTo:nearestStart];
             newElement.color = element.color;
             newElement.width = element.width;
@@ -693,6 +705,8 @@
             newElement.width = element.width;
             newElement.rotation = element.rotation;
         }
+        
+        lastEndPointOfStroke = nearestEnd;
         return [NSArray arrayWithObject:newElement];
     }
     
