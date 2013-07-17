@@ -70,6 +70,7 @@ static NSMutableDictionary* _pathCacheInstance = nil;
         // Free our buffers
         free(characters);
         free(glyphs);
+        CFRelease(iFont);
         
         [[UIFont sharedPathCache] setObject:glyphPath forKey:key];
     }
