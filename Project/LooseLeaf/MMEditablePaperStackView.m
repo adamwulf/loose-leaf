@@ -391,6 +391,7 @@
     [super finishedScalingReallySmall:page];
     [self saveStacksToDisk];
     [TestFlight passCheckpoint:@"NAV_TO_LIST_FROM_PAGE"];
+    [rulerView setHidden:YES];
 }
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
     [self setButtonsVisible:YES];
@@ -403,11 +404,13 @@
         [pageToSave setEditable:YES];
         debug_NSLog(@"page %@ is editable", pageToSave.uuid);
     }
+    [rulerView setHidden:NO];
 }
 -(void) finishedScalingBackToPageView:(MMPaperView*)page{
     [self setButtonsVisible:YES];
     [super finishedScalingBackToPageView:page];
     [self saveStacksToDisk];
+    [rulerView setHidden:NO];
     [TestFlight passCheckpoint:@"NAV_TO_PAGE_FROM_LIST"];
 }
 
