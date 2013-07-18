@@ -75,6 +75,7 @@
 - (void)drawRect:(CGRect)rect
 {
     // draw ticks
+    [self drawRectHelper];
     [[MMRulerView rulerColor] setStroke];
     [drawThisPath setLineWidth:1];
     [drawThisPath stroke];
@@ -734,7 +735,6 @@
     needsDisp = CGRectUnion(needsDisp, [path1 bounds]);
     needsDisp = CGRectUnion(needsDisp, [path2 bounds]);
     needsDisp = CGRectInset(needsDisp, -80, -80);
-    [self drawRectHelper];
     [self setNeedsDisplayInRect:needsDisp];
 }
 
