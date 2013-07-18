@@ -43,6 +43,8 @@
     CGFloat initialDistance;
     CGFloat unitLength;
     
+    UIBezierPath* drawThisPath;
+    UIBezierPath* ticks;
     UIBezierPath* path1;
     UIBezierPath* path2;
     UIBezierPath* path1Full;
@@ -69,11 +71,20 @@
     return self;
 }
 
+
+- (void)drawRect:(CGRect)rect
+{
+    // draw ticks
+    [[MMRulerView rulerColor] setStroke];
+    [drawThisPath setLineWidth:1];
+    [drawThisPath stroke];
+}
+
+
 /**
  * Draw our ruler
  */
-- (void)drawRect:(CGRect)rect
-{
+- (void)drawRectHelper{
     if(CGPointEqualToPoint(old_p1, CGPointZero) || CGPointEqualToPoint(old_p2, CGPointZero)){
         return;
     }
@@ -129,25 +140,31 @@
             // now use the squared scale at the beginning, and
             // ease out to the normal scale
             scale = easing * scale2 + (1 - easing) * scale;
-            [self drawArcWithOriginalDistance:currentDistance * 5 / 3 currentDistance:currentDistance andPerpN:[perpN flip] withPoint1:tl andPoint2:bl andScale:scale onComplete:^(UIBezierPath* clippedPath, UIBezierPath* circle){
+            ticks = [UIBezierPath bezierPath];
+            [self drawArcWithOriginalDistance:currentDistance * 5 / 3 currentDistance:currentDistance andPerpN:[perpN flip] withPoint1:tl andPoint2:bl andScale:scale onComplete:^(UIBezierPath* clippedPath, UIBezierPath* circle, UIBezierPath* tickMarks){
                 path1 = clippedPath;
                 path1Full = circle;
+                [ticks appendPath:tickMarks];
             }];
-            [self drawArcWithOriginalDistance:currentDistance * 5 / 3 currentDistance:currentDistance andPerpN:perpN withPoint1:br andPoint2:tr andScale:scale onComplete:^(UIBezierPath* clippedPath, UIBezierPath* circle){
+            [self drawArcWithOriginalDistance:currentDistance * 5 / 3 currentDistance:currentDistance andPerpN:perpN withPoint1:br andPoint2:tr andScale:scale onComplete:^(UIBezierPath* clippedPath, UIBezierPath* circle, UIBezierPath* tickMarks){
                 path2 = clippedPath;
                 path2Full = circle;
+                [ticks appendPath:tickMarks];
             }];
         }else if(currentDistance < oneDistance){
             // the user has pinched enough that we should
             // start to use an arc path between the points
             // instead of a straight line
-            [self drawArcWithOriginalDistance:initialDistance currentDistance:currentDistance andPerpN:[perpN flip] withPoint1:tl andPoint2:bl andScale:1 onComplete:^(UIBezierPath* clippedPath, UIBezierPath* circle){
+            ticks = [UIBezierPath bezierPath];
+            [self drawArcWithOriginalDistance:initialDistance currentDistance:currentDistance andPerpN:[perpN flip] withPoint1:tl andPoint2:bl andScale:1 onComplete:^(UIBezierPath* clippedPath, UIBezierPath* circle, UIBezierPath* tickMarks){
                 path1 = clippedPath;
                 path1Full = circle;
+                [ticks appendPath:tickMarks];
             }];
-            [self drawArcWithOriginalDistance:initialDistance currentDistance:currentDistance andPerpN:perpN withPoint1:br andPoint2:tr andScale:1 onComplete:^(UIBezierPath* clippedPath, UIBezierPath* circle){
+            [self drawArcWithOriginalDistance:initialDistance currentDistance:currentDistance andPerpN:perpN withPoint1:br andPoint2:tr andScale:1 onComplete:^(UIBezierPath* clippedPath, UIBezierPath* circle, UIBezierPath* tickMarks){
                 path2 = clippedPath;
                 path2Full = circle;
+                [ticks appendPath:tickMarks];
             }];
         }else{
             CGFloat ratio =  initialDistance / currentDistance;
@@ -164,7 +181,7 @@
             MMVector* flippedPerpN = [perpN flip];
             
             // this path will contain all the tick marks
-            UIBezierPath* ticks = [UIBezierPath bezierPath];
+            ticks = [UIBezierPath bezierPath];
             // center ticks first
             [ticks moveToPoint:leftMidPoint];
             [ticks addLineToPoint:[[perpN flip] pointFromPoint:leftMidPoint distance:10]];
@@ -208,10 +225,6 @@
                 // so that if a partial unitLength needs to be drawn it will
             }while(drawnTickLengthSoFar < lengthOfRuler / 2 + unitLength);
             
-            // draw ticks
-            [[MMRulerView rulerColor] setStroke];
-            [ticks stroke];
-            
             // draw lines for the edges of the ruler
             path1 = [UIBezierPath bezierPath];
             path2 = [UIBezierPath bezierPath];
@@ -223,11 +236,11 @@
             path1Full = path1;
             path2Full = path2;
         }
-        [[MMRulerView rulerColor] setStroke];
-        [path1 setLineWidth:2];
-        [path1 stroke];
-        [path2 setLineWidth:2];
-        [path2 stroke];
+        
+        drawThisPath = [UIBezierPath bezierPath];
+        [drawThisPath appendPath:path1];
+        [drawThisPath appendPath:path2];
+        [drawThisPath appendPath:ticks];
     }
 }
 
@@ -239,7 +252,7 @@
  *
  * this method will draw an arc connecting the two input points
  */
--(void) drawArcWithOriginalDistance:(CGFloat)originalDistance currentDistance:(CGFloat)currentDistance andPerpN:(MMVector*)perpN withPoint1:(CGPoint)point1 andPoint2:(CGPoint)point2 andScale:(CGFloat)scale onComplete:(void(^)(UIBezierPath* clippedPath, UIBezierPath* fullCirclePath))onComplete{
+-(void) drawArcWithOriginalDistance:(CGFloat)originalDistance currentDistance:(CGFloat)currentDistance andPerpN:(MMVector*)perpN withPoint1:(CGPoint)point1 andPoint2:(CGPoint)point2 andScale:(CGFloat)scale onComplete:(void(^)(UIBezierPath* clippedPath, UIBezierPath* fullCirclePath, UIBezierPath* tickMarks))onComplete{
     
     CGFloat nintyDistance = originalDistance * 3 / 5;
     // This is the distance between points that should result
@@ -322,10 +335,9 @@
     CGFloat startAngle = calculateAngle(point2, center);
     
     // now draw the arc between the two points
-    [[MMRulerView rulerColor] setStroke];
     UIBezierPath* path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:endAngle endAngle:startAngle clockwise:NO];
     UIBezierPath* circle = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:0 endAngle:M_PI*2 clockwise:NO];
-    UIBezierPath* ticks = [UIBezierPath bezierPath];
+    UIBezierPath* tickMarks = [UIBezierPath bezierPath];
 
     //
     // calculate the vectors that will point
@@ -348,8 +360,8 @@
         // this will find the center of the semicircle stroke, and the vector
         // that points to it from the center of the circle
         midPoint = [midVector pointFromPoint:center distance:radius];
-        [ticks moveToPoint:midPoint];
-        [ticks addLineToPoint:[[midVector flip] pointFromPoint:midPoint distance:10]];
+        [tickMarks moveToPoint:midPoint];
+        [tickMarks addLineToPoint:[[midVector flip] pointFromPoint:midPoint distance:10]];
         
         // this will track how far we've drawn our ticks along the arc
         CGFloat drawnLength = 0;
@@ -372,46 +384,46 @@
             if(drawnLength < arcLength / 2){
                 nextVector = [[midVector rotateBy:rotatedAngle] normal];
                 nextPoint = [nextVector pointFromPoint:center distance:radius];
-                [ticks moveToPoint:nextPoint];
-                [ticks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:10]];
+                [tickMarks moveToPoint:nextPoint];
+                [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:10]];
                 
                 nextVector = [[midVector rotateBy:-rotatedAngle] normal];
                 nextPoint = [nextVector pointFromPoint:center distance:radius];
-                [ticks moveToPoint:nextPoint];
-                [ticks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:10]];
+                [tickMarks moveToPoint:nextPoint];
+                [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:10]];
             }
             if(drawnLength - unitLength / 2 < arcLength / 2){
                 nextVector = [[midVector rotateBy:rotatedAngle - unitAngle / 2] normal];
                 nextPoint = [nextVector pointFromPoint:center distance:radius];
-                [ticks moveToPoint:nextPoint];
-                [ticks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:7]];
+                [tickMarks moveToPoint:nextPoint];
+                [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:7]];
                 
                 nextVector = [[midVector rotateBy:-rotatedAngle + unitAngle / 2] normal];
                 nextPoint = [nextVector pointFromPoint:center distance:radius];
-                [ticks moveToPoint:nextPoint];
-                [ticks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:7]];
+                [tickMarks moveToPoint:nextPoint];
+                [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:7]];
             }
             if(drawnLength - unitLength / 4 < arcLength / 2){
                 nextVector = [[midVector rotateBy:rotatedAngle - unitAngle / 4] normal];
                 nextPoint = [nextVector pointFromPoint:center distance:radius];
-                [ticks moveToPoint:nextPoint];
-                [ticks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
+                [tickMarks moveToPoint:nextPoint];
+                [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
                 
                 nextVector = [[midVector rotateBy:-rotatedAngle + unitAngle / 4] normal];
                 nextPoint = [nextVector pointFromPoint:center distance:radius];
-                [ticks moveToPoint:nextPoint];
-                [ticks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
+                [tickMarks moveToPoint:nextPoint];
+                [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
             }
             if(drawnLength - unitLength * 3 / 4 < arcLength / 2){
                 nextVector = [[midVector rotateBy:rotatedAngle - unitAngle * 3 / 4] normal];
                 nextPoint = [nextVector pointFromPoint:center distance:radius];
-                [ticks moveToPoint:nextPoint];
-                [ticks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
+                [tickMarks moveToPoint:nextPoint];
+                [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
                 
                 nextVector = [[midVector rotateBy:-rotatedAngle + unitAngle * 3 / 4] normal];
                 nextPoint = [nextVector pointFromPoint:center distance:radius];
-                [ticks moveToPoint:nextPoint];
-                [ticks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
+                [tickMarks moveToPoint:nextPoint];
+                [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
             }
         }while(drawnLength < arcLength / 2 + unitLength);
     }
@@ -448,8 +460,8 @@
         UIBezierPath* trimmedToCenter = [path bezierPathByTrimmingFromLength:lengthOfPath / 2];
         CGFloat centerTangent = [trimmedToCenter tangentAtStartOfSubpath:0];
         MMVector* centerTickVector = [[[MMVector vectorWithAngle:centerTangent] perpendicular] normal];
-        [ticks moveToPoint:[trimmedToCenter firstPoint]];
-        [ticks addLineToPoint:[centerTickVector pointFromPoint:[trimmedToCenter firstPoint] distance:10]];
+        [tickMarks moveToPoint:[trimmedToCenter firstPoint]];
+        [tickMarks addLineToPoint:[centerTickVector pointFromPoint:[trimmedToCenter firstPoint] distance:10]];
         
         // now we'll draw all the ticks from the center to the edge
         CGFloat drawnLength = 0;
@@ -467,8 +479,8 @@
                 MMVector* tickVector = [[[[MMVector vectorWithAngle:startTangent] perpendicular] normal] flip];
                 
                 // first tick
-                [ticks moveToPoint:[trimmed lastPoint]];
-                [ticks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:10]];
+                [tickMarks moveToPoint:[trimmed lastPoint]];
+                [tickMarks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:10]];
                 
                 // now find the location of the 2nd tick
                 // by refelcting the point across the center point line
@@ -477,61 +489,56 @@
                 tickVector = [[tickVector mirrorAround:centerTickVector] flip];
                 
                 // now add the 2nd tick
-                [ticks moveToPoint:lastPointPrime];
-                [ticks addLineToPoint:[tickVector pointFromPoint:lastPointPrime distance:10]];
+                [tickMarks moveToPoint:lastPointPrime];
+                [tickMarks addLineToPoint:[tickVector pointFromPoint:lastPointPrime distance:10]];
             }
             if(lengthOfPath / 2 > drawnLength - unitLength / 2){
                 UIBezierPath* trimmed = [pathFromMidPoint bezierPathByTrimmingToLength:drawnLength - unitLength / 2 withMaximumError:.5];
                 CGFloat startTangent = [trimmed tangentAtEnd];
                 MMVector* tickVector = [[[[MMVector vectorWithAngle:startTangent] perpendicular] normal] flip];
                 
-                [ticks moveToPoint:[trimmed lastPoint]];
-                [ticks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:7]];
+                [tickMarks moveToPoint:[trimmed lastPoint]];
+                [tickMarks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:7]];
                 
                 CGPoint lastPointPrime = [centerTickVector mirrorPoint:[trimmed lastPoint] aroundPoint:center];
                 tickVector = [[tickVector mirrorAround:centerTickVector] flip];
                 
-                [ticks moveToPoint:lastPointPrime];
-                [ticks addLineToPoint:[tickVector pointFromPoint:lastPointPrime distance:7]];
+                [tickMarks moveToPoint:lastPointPrime];
+                [tickMarks addLineToPoint:[tickVector pointFromPoint:lastPointPrime distance:7]];
             }
             if(lengthOfPath / 2 > drawnLength - unitLength / 4){
                 UIBezierPath* trimmed = [pathFromMidPoint bezierPathByTrimmingToLength:drawnLength - unitLength / 4 withMaximumError:.5];
                 CGFloat startTangent = [trimmed tangentAtEnd];
                 MMVector* tickVector = [[[[MMVector vectorWithAngle:startTangent] perpendicular] normal] flip];
                 
-                [ticks moveToPoint:[trimmed lastPoint]];
-                [ticks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:5]];
+                [tickMarks moveToPoint:[trimmed lastPoint]];
+                [tickMarks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:5]];
                 
                 CGPoint lastPointPrime = [centerTickVector mirrorPoint:[trimmed lastPoint] aroundPoint:center];
                 tickVector = [[tickVector mirrorAround:centerTickVector] flip];
                 
-                [ticks moveToPoint:lastPointPrime];
-                [ticks addLineToPoint:[tickVector pointFromPoint:lastPointPrime distance:5]];
+                [tickMarks moveToPoint:lastPointPrime];
+                [tickMarks addLineToPoint:[tickVector pointFromPoint:lastPointPrime distance:5]];
             }
             if(lengthOfPath / 2 > drawnLength - unitLength * 3 / 4){
                 UIBezierPath* trimmed = [pathFromMidPoint bezierPathByTrimmingToLength:drawnLength - unitLength * 3 / 4 withMaximumError:.5];
                 CGFloat startTangent = [trimmed tangentAtEnd];
                 MMVector* tickVector = [[[[MMVector vectorWithAngle:startTangent] perpendicular] normal] flip];
                 
-                [ticks moveToPoint:[trimmed lastPoint]];
-                [ticks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:5]];
+                [tickMarks moveToPoint:[trimmed lastPoint]];
+                [tickMarks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:5]];
                 
                 CGPoint lastPointPrime = [centerTickVector mirrorPoint:[trimmed lastPoint] aroundPoint:center];
                 tickVector = [[tickVector mirrorAround:centerTickVector] flip];
                 
-                [ticks moveToPoint:lastPointPrime];
-                [ticks addLineToPoint:[tickVector pointFromPoint:lastPointPrime distance:5]];
+                [tickMarks moveToPoint:lastPointPrime];
+                [tickMarks addLineToPoint:[tickVector pointFromPoint:lastPointPrime distance:5]];
             }
         }while(drawnLength < lengthOfPath / 2 + unitLength);
     }
     
-    // draw ticks
-    [[MMRulerView rulerColor] setStroke];
-    [ticks setLineWidth:1];
-    [ticks stroke];
-
     if(onComplete){
-        onComplete(path, circle);
+        onComplete(path, circle, tickMarks);
     }
 }
 
@@ -551,10 +558,10 @@
     MMVector* normal = [[MMVector vectorWithPoint:old_p1 andPoint:old_p2] normal];
     
     // check if we're within 4 degrees of a straight angle
-    if(ABS(ABS(normal.angle) - M_PI_2) < M_PI / 45.0){
+    if(ABS(ABS(normal.angle) - M_PI_2) < kRulerSnapAngle){
         old_p1.x = (old_p1.x + old_p2.x) / 2;
         old_p2.x = old_p1.x;
-    }else if(ABS(normal.angle) < M_PI / 45.0 || ABS(normal.angle - M_PI) < M_PI / 45.0){
+    }else if(ABS(normal.angle) < kRulerSnapAngle || ABS(normal.angle - M_PI) < kRulerSnapAngle){
         old_p1.y = (old_p1.y + old_p2.y) / 2;
         old_p2.y = old_p1.y;
     }
@@ -580,6 +587,8 @@
     path2 = nil;
     path1Full = nil;
     path2Full = nil;
+    ticks = nil;
+    drawThisPath = nil;
 }
 
 
@@ -725,6 +734,7 @@
     needsDisp = CGRectUnion(needsDisp, [path1 bounds]);
     needsDisp = CGRectUnion(needsDisp, [path2 bounds]);
     needsDisp = CGRectInset(needsDisp, -80, -80);
+    [self drawRectHelper];
     [self setNeedsDisplayInRect:needsDisp];
 }
 

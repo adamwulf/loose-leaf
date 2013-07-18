@@ -27,6 +27,7 @@
 // Ruler
 #define kWidthOfRuler 70
 #define kRulerPinchBuffer 40
+#define kRulerSnapAngle M_PI / 45.0
 
 
 // List View
