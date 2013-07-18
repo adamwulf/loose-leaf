@@ -10,7 +10,7 @@
 #import <JotUI/JotUI.h>
 
 #define           VELOCITY_CLAMP_MIN 20
-#define           VELOCITY_CLAMP_MAX 2200
+#define           VELOCITY_CLAMP_MAX 1000
 
 @interface Pen : NSObject<JotViewDelegate>{
 
@@ -22,12 +22,11 @@
     CGFloat minAlpha;
     CGFloat maxAlpha;
     
-    int numberOfTouches;
     CGFloat velocity;
-    CGPoint lastLoc;
-    NSDate* lastDate;
     
     UIColor* color;
+    
+    NSMutableDictionary* lastStampPerTouch;
 }
 
 @property (nonatomic, assign) CGFloat minSize;

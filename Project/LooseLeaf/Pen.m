@@ -33,6 +33,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
         defaultMinSize = minSize;
         defaultMaxSize = maxSize;
         color = [UIColor blackColor];
+        lastStampPerTouch = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -85,7 +86,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
     // find how far we've travelled
     float distanceFromPrevious = sqrtf((l.x - previousPoint.x) * (l.x - previousPoint.x) + (l.y - previousPoint.y) * (l.y - previousPoint.y));
     // how long did it take?
-    CGFloat duration = [[NSDate date] timeIntervalSinceDate:lastDate];
+    NSTimeInterval duration = [self durationForTouchBang:touch];
     // velocity is distance/time
     CGFloat velocityMagnitude = distanceFromPrevious/duration;
     
@@ -100,14 +101,30 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
 #pragma mark - JotViewDelegate
 
 /**
+ * this will return the previous duration of a touch
+ * AND will set our cache to the touch's current timestamp.
+ *
+ * this means that if you call this function twice w/o the touch
+ * having been udpated, this method will start to return 0!
+ *
+ * the Bang in the method name signifies this
+ * (from using ! in function names with side effects in Scheme...)
+ */
+-(NSTimeInterval) durationForTouchBang:(JotTouch*)touch{
+    NSNumber* val = [lastStampPerTouch objectForKey:@(touch.touch.hash)];
+    NSTimeInterval lastTime = [val doubleValue];
+    NSTimeInterval currTime = touch.timestamp;
+    [lastStampPerTouch setObject:[NSNumber numberWithDouble:currTime] forKey:@(touch.touch.hash)];
+    return currTime - lastTime;
+}
+
+/**
  * delegate method - a notification from the JotView
  * that a new touch is about to be processed. we should
  * reset all of our counters/etc to base values
  */
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
     velocity = 1;
-    lastDate = [NSDate date];
-    numberOfTouches = 1;
     return YES;
 }
 
@@ -117,15 +134,12 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
  * our velocity model and state info for this new touch
  */
 -(void) willMoveStrokeWithTouch:(JotTouch*)touch{
-    numberOfTouches ++;
-    if(numberOfTouches > 4) numberOfTouches = 4;
-    if([self velocityForTouch:touch]){
-        velocity = [self velocityForTouch:touch];
+    CGFloat velCalc;
+    if((velCalc = [self velocityForTouch:touch])){
+        velocity = velCalc;
     }else{
         // noop
     }
-    lastDate = [NSDate date];
-    lastLoc = [touch windowPosition];
 }
 
 /**
@@ -135,6 +149,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
     // noop
 //    debug_NSLog(@"PEN velocity: %f", velocity);
+    [lastStampPerTouch removeObjectForKey:@(touch.touch.hash)];
 }
 
 /**
@@ -142,6 +157,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
  */
 -(void) didCancelStrokeWithTouch:(JotTouch*)touch{
     // noop
+    [lastStampPerTouch removeObjectForKey:@(touch.touch.hash)];
 }
 
 /**
@@ -180,6 +196,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
         if(width > 0) width = 0;
         width = minSize + ABS(width) * (maxSize - minSize);
         if(width < 1) width = 1;
+        
         return width;
     }else{
         CGFloat newWidth = minSize + (maxSize-minSize) * touch.pressure / (CGFloat) JOT_MAX_PRESSURE;
