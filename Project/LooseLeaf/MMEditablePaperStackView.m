@@ -597,6 +597,7 @@
 }
 
 -(void) willMoveStrokeWithTouch:(JotTouch*)touch{
+    [rulerView willMoveStrokeAt:[touch locationInView:rulerView]];
     [[self activePen] willMoveStrokeWithTouch:touch];
 }
 

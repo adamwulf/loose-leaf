@@ -631,30 +631,38 @@
  * of the stroke
  */
 -(void) willBeginStrokeAt:(CGPoint)point{
-    //
-    // we need to flip the coordinates of the path because
-    // OpenGL and CoreGraphics have swapped coordinates
-    UIBezierPath* flippedPath1 = [path1Full copy];
-    [flippedPath1 applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
-    
-    UIBezierPath* flippedPath2 = [path2Full copy];
-    [flippedPath2 applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
-    
-    CGPoint flippedPoint = CGPointApplyAffineTransform(point, CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height));
-    
-    // now find the closest points from the input to each path
-    CGPoint nearestStart1 = [path1 closestPointOnPathTo:point];
-    CGPoint nearestStart2 = [path2 closestPointOnPathTo:point];
-    // pick the one that's closest
-    CGFloat path1Dist = DistanceBetweenTwoPoints(nearestStart1, point);
-    CGFloat path2Dist = DistanceBetweenTwoPoints(nearestStart2, point);
-    
-    if(path1Dist < path2Dist){
-        nearestPathIsPath1 = YES;
-        lastEndPointOfStroke = [flippedPath1 closestPointOnPathTo:flippedPoint];
-    }else{
-        nearestPathIsPath1 = NO;
-        lastEndPointOfStroke = [flippedPath2 closestPointOnPathTo:flippedPoint];
+    if(path1){
+        //
+        // we need to flip the coordinates of the path because
+        // OpenGL and CoreGraphics have swapped coordinates
+        UIBezierPath* flippedPath1 = [path1Full copy];
+        [flippedPath1 applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+        
+        UIBezierPath* flippedPath2 = [path2Full copy];
+        [flippedPath2 applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+        
+        CGPoint flippedPoint = CGPointApplyAffineTransform(point, CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height));
+        
+        // now find the closest points from the input to each path
+        CGPoint nearestStart1 = [path1 closestPointOnPathTo:point];
+        CGPoint nearestStart2 = [path2 closestPointOnPathTo:point];
+        // pick the one that's closest
+        CGFloat path1Dist = DistanceBetweenTwoPoints(nearestStart1, point);
+        CGFloat path2Dist = DistanceBetweenTwoPoints(nearestStart2, point);
+        
+        if(path1Dist < path2Dist){
+            nearestPathIsPath1 = YES;
+            lastEndPointOfStroke = [flippedPath1 closestPointOnPathTo:flippedPoint];
+        }else{
+            nearestPathIsPath1 = NO;
+            lastEndPointOfStroke = [flippedPath2 closestPointOnPathTo:flippedPoint];
+        }
+    }
+}
+
+-(void) willMoveStrokeAt:(CGPoint)point{
+    if(path1 && CGPointEqualToPoint(lastEndPointOfStroke, CGPointZero)){
+        [self willBeginStrokeAt:point];
     }
 }
 
@@ -664,7 +672,6 @@
 -(NSArray*) adjustElement:(AbstractBezierPathElement*)element{
     
     if(path1){
-        
         UIBezierPath* flippedPath;
         
         CGPoint nearestStart;

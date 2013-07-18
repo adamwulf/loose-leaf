@@ -17,5 +17,6 @@
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements;
 
 -(void) willBeginStrokeAt:(CGPoint)point;
+-(void) willMoveStrokeAt:(CGPoint)point;
 
 @end
