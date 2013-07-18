@@ -53,7 +53,10 @@
     BOOL nearestPathIsPath1;
     
     CGPoint lastEndPointOfStroke;
+    JotView* jotView;
 }
+
+@synthesize jotView;
 
 +(UIColor*) rulerColor{
     return [UIColor colorWithRed: 77.0/255.0 green: 187.0/255.0 blue: 1.0 alpha: 1];
@@ -71,10 +74,12 @@
     return self;
 }
 
+static NSDate* lastRender;
 
 - (void)drawRect:(CGRect)rect
 {
     // draw ticks
+    lastRender = [NSDate date];
     [self drawRectHelper];
     [[MMRulerView rulerColor] setStroke];
     [drawThisPath setLineWidth:1];
@@ -743,6 +748,13 @@
     needsDisp = CGRectUnion(needsDisp, [path2 bounds]);
     needsDisp = CGRectInset(needsDisp, -80, -80);
     [self setNeedsDisplayInRect:needsDisp];
+    NSTimeInterval lastRenderStamp = [lastRender timeIntervalSinceNow];
+    if(lastRenderStamp < -.03){
+        NSLog(@"dropped frames %f", lastRenderStamp);
+        [jotView slowDownFPS];
+    }else{
+        [jotView speedUpFPS];
+    }
 }
 
 @end

@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <JotUI/JotUI.h>
 
 @interface MMRulerView : UIView
+
+@property (nonatomic) JotView* jotView;
 
 -(void) updateLineAt:(CGPoint)p1 to:(CGPoint)p2 startingDistance:(CGFloat)distance;
 
