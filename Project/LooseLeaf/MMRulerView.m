@@ -701,6 +701,8 @@ static NSDate* lastRender;
     }
     UIBezierPath* newPath = [flippedPath bezierPathByTrimmingFromClosestPointOnPathFrom:nearestStart to:nearestEnd];
     if(newPath){
+        // this transform is so that we can draw it in core graphics correctly.
+        // for opengl we shouldn't do this last flip
         [newPath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
         [pathSegmentFromNearestStart appendPath:newPath];
     }
@@ -788,7 +790,7 @@ static NSDate* lastRender;
     [self setNeedsDisplay];
     NSTimeInterval lastRenderStamp = [lastRender timeIntervalSinceNow];
     if(lastRenderStamp < -.03){
-        NSLog(@"dropped frames %f", lastRenderStamp);
+//        NSLog(@"dropped frames %f", lastRenderStamp);
         [jotView slowDownFPS];
     }else{
         [jotView speedUpFPS];
