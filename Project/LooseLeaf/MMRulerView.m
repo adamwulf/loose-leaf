@@ -57,7 +57,6 @@
     
     
     UIBezierPath* pathSegmentFromNearestStart;
-    UIBezierPath* pathSegmentFromNearestEnd;
 }
 
 @synthesize jotView;
@@ -74,6 +73,7 @@
 //        self.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:.3];
         self.backgroundColor = [UIColor clearColor];
         unitLength = [UIDevice ppc];
+        pathSegmentFromNearestStart = [UIBezierPath bezierPath];
     }
     return self;
 }
@@ -90,11 +90,8 @@ static NSDate* lastRender;
     [drawThisPath stroke];
     
     [pathSegmentFromNearestStart setLineWidth:2];
-    [pathSegmentFromNearestEnd setLineWidth:2];
     [[[UIColor blueColor] colorWithAlphaComponent:.5] setStroke];
     [pathSegmentFromNearestStart stroke];
-    [[[UIColor redColor] colorWithAlphaComponent:.5] setStroke];
-    [pathSegmentFromNearestEnd stroke];
 }
 
 
@@ -648,6 +645,7 @@ static NSDate* lastRender;
  */
 -(void) willBeginStrokeAt:(CGPoint)point{
     if(path1){
+        pathSegmentFromNearestStart = [UIBezierPath bezierPath];
         //
         // we need to flip the coordinates of the path because
         // OpenGL and CoreGraphics have swapped coordinates
@@ -691,7 +689,7 @@ static NSDate* lastRender;
 
 #pragma mark - Private Helpers
 
--(void) findPathSegmentsForElement:(AbstractBezierPathElement*)element withNearestStart:(CGPoint)nearestStart andNearestEnd:(CGPoint)nearestEnd{
+-(UIBezierPath*) findPathSegmentsForElement:(AbstractBezierPathElement*)element withNearestStart:(CGPoint)nearestStart andNearestEnd:(CGPoint)nearestEnd{
     UIBezierPath* flippedPath;
     
     if(nearestPathIsPath1){
@@ -703,15 +701,10 @@ static NSDate* lastRender;
     }
     UIBezierPath* newPath = [flippedPath bezierPathByTrimmingFromClosestPointOnPathFrom:nearestStart to:nearestEnd];
     if(newPath){
-        if(CGPointEqualToPoint(newPath.firstPoint, CGPointZero)){
-            newPath = [flippedPath bezierPathByTrimmingFromClosestPointOnPathFrom:nearestStart to:nearestEnd];
-        }else if(CGPointEqualToPoint(newPath.lastPoint, CGPointZero)){
-            newPath = [flippedPath bezierPathByTrimmingFromClosestPointOnPathFrom:nearestStart to:nearestEnd];
-        }
         [newPath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
-        pathSegmentFromNearestStart = newPath;
-        NSLog(@"%@", newPath);
+        [pathSegmentFromNearestStart appendPath:newPath];
     }
+    return newPath;
 }
 
 -(NSArray*) adjustElement:(AbstractBezierPathElement*)element{
