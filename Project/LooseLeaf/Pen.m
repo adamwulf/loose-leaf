@@ -227,7 +227,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
     return 0;
 }
 
--(NSArray*) willAddElementsToStroke:(NSArray *)elements{
+-(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
     return elements;
 }
 

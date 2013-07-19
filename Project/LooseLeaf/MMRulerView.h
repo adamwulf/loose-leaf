@@ -17,7 +17,7 @@
 
 -(void) liftRuler;
 
--(NSArray*) willAddElementsToStroke:(NSArray *)elements;
+-(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement;
 
 -(void) willBeginStrokeAt:(CGPoint)point;
 -(void) willMoveStrokeAt:(CGPoint)point;

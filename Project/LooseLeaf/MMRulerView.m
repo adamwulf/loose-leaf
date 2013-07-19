@@ -54,9 +54,6 @@
     
     CGPoint lastEndPointOfStroke;
     JotView* jotView;
-    
-    
-    UIBezierPath* pathSegmentFromNearestStart;
 }
 
 @synthesize jotView;
@@ -73,7 +70,6 @@
 //        self.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:.3];
         self.backgroundColor = [UIColor clearColor];
         unitLength = [UIDevice ppc];
-        pathSegmentFromNearestStart = [UIBezierPath bezierPath];
     }
     return self;
 }
@@ -88,10 +84,6 @@ static NSDate* lastRender;
     [[MMRulerView rulerColor] setStroke];
     [drawThisPath setLineWidth:1];
     [drawThisPath stroke];
-    
-    [pathSegmentFromNearestStart setLineWidth:2];
-    [[[UIColor blueColor] colorWithAlphaComponent:.5] setStroke];
-    [pathSegmentFromNearestStart stroke];
 }
 
 
@@ -628,10 +620,11 @@ static NSDate* lastRender;
  * this method is called to give us a chance
  * to realign all the input elements to the ruler
  */
--(NSArray*) willAddElementsToStroke:(NSArray *)elements{
+-(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
     NSMutableArray* output = [NSMutableArray array];
     for(AbstractBezierPathElement* element in elements){
-        [output addObjectsFromArray:[self adjustElement:element]];
+        [output addObjectsFromArray:[self adjustElement:element fromPreviousElement:previousElement]];
+        previousElement = element;
     }
     return output;
 }
@@ -645,7 +638,6 @@ static NSDate* lastRender;
  */
 -(void) willBeginStrokeAt:(CGPoint)point{
     if(path1){
-        pathSegmentFromNearestStart = [UIBezierPath bezierPath];
         //
         // we need to flip the coordinates of the path because
         // OpenGL and CoreGraphics have swapped coordinates
@@ -701,15 +693,16 @@ static NSDate* lastRender;
     }
     UIBezierPath* newPath = [flippedPath bezierPathByTrimmingFromClosestPointOnPathFrom:nearestStart to:nearestEnd];
     if(newPath){
-        // this transform is so that we can draw it in core graphics correctly.
-        // for opengl we shouldn't do this last flip
-        [newPath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
-        [pathSegmentFromNearestStart appendPath:newPath];
+        // check if we're in the correct direction
+        if(DistanceBetweenTwoPoints(newPath.firstPoint, nearestEnd) < DistanceBetweenTwoPoints(newPath.firstPoint, nearestStart)){
+            // our path begins where it should be ending
+            newPath = [newPath bezierPathByReversingPath];
+        }
     }
     return newPath;
 }
 
--(NSArray*) adjustElement:(AbstractBezierPathElement*)element{
+-(NSArray*) adjustElement:(AbstractBezierPathElement*)element fromPreviousElement:(AbstractBezierPathElement*)previousElement{
     
     if(path1){
         UIBezierPath* flippedPath;
@@ -726,8 +719,6 @@ static NSDate* lastRender;
         }
         
         
-        AbstractBezierPathElement* newElement;
-        
         //
         // TODO: #21
         // then i should do the same on path2, and find out which path the
@@ -743,31 +734,61 @@ static NSDate* lastRender;
         
         if([element isKindOfClass:[LineToPathElement class]]){
             nearestEnd = [(LineToPathElement*)element lineTo];
-            nearestEnd = [flippedPath closestPointOnPathTo:nearestEnd];
-            newElement = [CurveToPathElement elementWithStart:nearestStart andCurveTo:nearestEnd andControl1:nearestStart andControl2:nearestEnd];
-            newElement.color = element.color;
-            newElement.width = element.width;
-            newElement.rotation = element.rotation;
         }else if([element isKindOfClass:[MoveToPathElement class]]){
             nearestEnd = nearestStart;
-            newElement = [MoveToPathElement elementWithMoveTo:nearestStart];
-            newElement.color = element.color;
-            newElement.width = element.width;
-            newElement.rotation = element.rotation;
         }else if([element isKindOfClass:[CurveToPathElement class]]){
             nearestEnd = [(CurveToPathElement*)element curveTo];
-            nearestEnd = [flippedPath closestPointOnPathTo:nearestEnd];
-            newElement = [CurveToPathElement elementWithStart:nearestStart andCurveTo:nearestEnd andControl1:nearestStart andControl2:nearestEnd];
-            newElement.color = element.color;
-            newElement.width = element.width;
-            newElement.rotation = element.rotation;
         }
         
-        [self findPathSegmentsForElement:element withNearestStart:nearestStart andNearestEnd:nearestEnd];
+        //
+        // now we have the
+        UIBezierPath* subpathForElement = [self findPathSegmentsForElement:element withNearestStart:nearestStart andNearestEnd:nearestEnd];
         
-
+        NSMutableArray* output = [NSMutableArray array];
+        __block CGPoint previousEndpoint = subpathForElement.firstPoint;
+        
+        //
+        // ok
+        [subpathForElement iteratePathWithBlock:^(CGPathElement pathEle){
+            AbstractBezierPathElement* newElement;
+            if(pathEle.type == kCGPathElementAddCurveToPoint){
+                // curve
+                newElement = [CurveToPathElement elementWithStart:previousEndpoint
+                                                       andCurveTo:pathEle.points[2]
+                                                      andControl1:pathEle.points[0]
+                                                      andControl2:pathEle.points[1]];
+                previousEndpoint = pathEle.points[2];
+            }else if(pathEle.type == kCGPathElementAddLineToPoint){
+                newElement = [LineToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
+                previousEndpoint = pathEle.points[0];
+            }
+            if(newElement){
+                newElement.color = element.color;
+                newElement.width = element.width;
+                newElement.rotation = element.rotation;
+                [output addObject:newElement];
+            }
+        }];
+        
         lastEndPointOfStroke = nearestEnd;
-        return [NSArray arrayWithObject:newElement];
+        
+        
+        if([output count]){
+            CGPoint oldBeginning = previousElement.endPoint;
+            if(previousElement && !CGPointEqualToPoint(oldBeginning, CGPointZero)){
+                // if we have a previous element, then we should adjust the start point
+                // of this element to start from the previous element's end.
+                //
+                // this way, if the ruler moves mid stroke, the stroke stays
+                // connected
+                CGPoint newBeginning = [[output firstObject] startPoint];
+                CGPoint adjustment = CGPointMake(oldBeginning.x - newBeginning.x, oldBeginning.y - newBeginning.y);
+                [[output firstObject] adjustStartBy:adjustment];
+            }
+        }
+        
+        
+        return output;
     }
     
     return [NSArray arrayWithObject:element];

@@ -312,8 +312,8 @@ dispatch_queue_t importThumbnailQueue;
     return [delegate rotationForSegment:segment fromPreviousSegment:previousSegment];;
 }
 
--(NSArray*) willAddElementsToStroke:(NSArray *)elements{
-    return [delegate willAddElementsToStroke:elements];
+-(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
+    return [delegate willAddElementsToStroke:elements fromPreviousElement:previousElement];
 }
 
 
