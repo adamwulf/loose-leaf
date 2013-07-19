@@ -241,7 +241,6 @@ static NSDate* lastRender;
             [path2 moveToPoint:br];
             [path2 addLineToPoint:tr];
             
-            
             path1Full = [UIBezierPath bezierPath];
             path2Full = [UIBezierPath bezierPath];
             [path1Full moveToPoint:[[vector flip] pointFromPoint:bl distance:self.bounds.size.height]];
@@ -711,52 +710,21 @@ static NSDate* lastRender;
 }
 
 -(NSArray*) adjustElement:(AbstractBezierPathElement*)element fromPreviousElement:(AbstractBezierPathElement*)previousElement{
-    
     if(path1){
-        UIBezierPath* flippedPath;
-        CGPoint nearestStart;
-        
-        if(nearestPathIsPath1){
-            flippedPath = [path1Full copy];
-            [flippedPath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
-            nearestStart = [flippedPath closestPointOnPathTo:element.startPoint];
-        }else{
-            flippedPath = [path2Full copy];
-            [flippedPath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
-            nearestStart = [flippedPath closestPointOnPathTo:element.startPoint];
-        }
-        
-        
         //
-        // TODO: #21
-        // then i should do the same on path2, and find out which path the
-        // user is drawing closest to.
-        //
-        // then i can use elementHitByPoint: to find the t value on the element
-        // that was hit, and use that to split the curve into the exact pieces.
-        // then use those pieces to build an array of elements to return.
-        //
-        CGPoint nearestEnd;
+        // now we have a UIBezierPath that represents the portion of the ruler
+        // that we should draw. this means we need to convert this uibezierpath
+        // to AbstractBezierElements to return to the JotView
+        UIBezierPath* subpathForElement = [self findPathSegmentsForElement:element withNearestStart:lastEndPointOfStroke andNearestEnd:element.endPoint];
         
-        nearestStart = lastEndPointOfStroke;
-        
-        if([element isKindOfClass:[LineToPathElement class]]){
-            nearestEnd = [(LineToPathElement*)element lineTo];
-        }else if([element isKindOfClass:[MoveToPathElement class]]){
-            nearestEnd = nearestStart;
-        }else if([element isKindOfClass:[CurveToPathElement class]]){
-            nearestEnd = [(CurveToPathElement*)element curveTo];
-        }
-        
-        //
-        // now we have the
-        UIBezierPath* subpathForElement = [self findPathSegmentsForElement:element withNearestStart:nearestStart andNearestEnd:element.endPoint];
-        
+        // this'll be our output element array
         NSMutableArray* output = [NSMutableArray array];
+        // and this'll track our previosu end point as we iterate
         __block CGPoint previousEndpoint = subpathForElement.firstPoint;
         
         //
-        // ok
+        // now iterate over the path and convert each element
+        // into an AbstractBezierElement
         [subpathForElement iteratePathWithBlock:^(CGPathElement pathEle){
             AbstractBezierPathElement* newElement;
             if(pathEle.type == kCGPathElementAddCurveToPoint){
@@ -771,6 +739,7 @@ static NSDate* lastRender;
                 previousEndpoint = pathEle.points[0];
             }
             if(newElement){
+                // be sure to set color/width/etc
                 newElement.color = element.color;
                 newElement.width = element.width;
                 newElement.rotation = element.rotation;
@@ -778,9 +747,15 @@ static NSDate* lastRender;
             }
         }];
         
+        // lastEndPointOfStroke helps us track if the stroke
+        // is beginning or has moved.
+        // see willMoveStrokeAt:
         lastEndPointOfStroke = element.endPoint;
         
-        
+        // now if we have output, we need to connect
+        // these new strokes to anything the user has already
+        // drawn. so calc the diff between our start and the
+        // previousElement's end, and connect them.
         if([output count]){
             CGPoint oldBeginning = previousElement.endPoint;
             if(previousElement && !CGPointEqualToPoint(oldBeginning, CGPointZero)){
@@ -795,10 +770,10 @@ static NSDate* lastRender;
             }
         }
         
-        
         return output;
     }
-    
+
+    // no adjustment
     return [NSArray arrayWithObject:element];
 }
 
