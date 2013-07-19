@@ -231,6 +231,8 @@ static NSDate* lastRender;
                 // so that if a partial unitLength needs to be drawn it will
             }while(drawnTickLengthSoFar < lengthOfRuler / 2 + unitLength);
             
+            MMVector* vector = [MMVector vectorWithPoint:bl andPoint:tl];
+
             // draw lines for the edges of the ruler
             path1 = [UIBezierPath bezierPath];
             path2 = [UIBezierPath bezierPath];
@@ -239,8 +241,14 @@ static NSDate* lastRender;
             [path2 moveToPoint:br];
             [path2 addLineToPoint:tr];
             
-            path1Full = path1;
-            path2Full = path2;
+            
+            path1Full = [UIBezierPath bezierPath];
+            path2Full = [UIBezierPath bezierPath];
+            [path1Full moveToPoint:[[vector flip] pointFromPoint:bl distance:self.bounds.size.height]];
+            [path1Full addLineToPoint:[vector pointFromPoint:tl distance:self.bounds.size.height]];
+            [path2Full moveToPoint:[[vector flip] pointFromPoint:br distance:self.bounds.size.height]];
+            [path2Full addLineToPoint:[vector pointFromPoint:tr distance:self.bounds.size.height]];
+
         }
         
         drawThisPath = [UIBezierPath bezierPath];
@@ -742,7 +750,7 @@ static NSDate* lastRender;
         
         //
         // now we have the
-        UIBezierPath* subpathForElement = [self findPathSegmentsForElement:element withNearestStart:nearestStart andNearestEnd:nearestEnd];
+        UIBezierPath* subpathForElement = [self findPathSegmentsForElement:element withNearestStart:nearestStart andNearestEnd:element.endPoint];
         
         NSMutableArray* output = [NSMutableArray array];
         __block CGPoint previousEndpoint = subpathForElement.firstPoint;
@@ -770,7 +778,7 @@ static NSDate* lastRender;
             }
         }];
         
-        lastEndPointOfStroke = nearestEnd;
+        lastEndPointOfStroke = element.endPoint;
         
         
         if([output count]){
