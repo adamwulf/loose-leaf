@@ -259,7 +259,8 @@ dispatch_queue_t importThumbnailQueue;
            gesture.state == UIGestureRecognizerStateCancelled ||
            gesture.state == UIGestureRecognizerStateEnded){
             [self.delegate didStopRuler:gesture];
-        }else{
+        }else if(gesture.state == UIGestureRecognizerStateBegan ||
+               gesture.state == UIGestureRecognizerStateChanged){
             [self.delegate didMoveRuler:gesture];
         }
     }
