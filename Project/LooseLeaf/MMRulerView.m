@@ -52,7 +52,7 @@
     
     BOOL nearestPathIsPath1;
     
-    CGPoint lastEndPointOfStroke;
+    CGPoint mostRecentTouchPointInOpenGLCoord;
     JotView* jotView;
 }
 
@@ -67,7 +67,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-//        self.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:.3];
         self.backgroundColor = [UIColor clearColor];
         unitLength = [UIDevice ppc];
     }
@@ -648,13 +647,7 @@ static NSDate* lastRender;
         //
         // we need to flip the coordinates of the path because
         // OpenGL and CoreGraphics have swapped coordinates
-        UIBezierPath* flippedPath1 = [path1Full copy];
-        [flippedPath1 applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
-        
-        UIBezierPath* flippedPath2 = [path2Full copy];
-        [flippedPath2 applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
-        
-        CGPoint flippedPoint = CGPointApplyAffineTransform(point, CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height));
+        mostRecentTouchPointInOpenGLCoord = CGPointApplyAffineTransform(point, CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height));
         
         // now find the closest points from the input to each path
         CGPoint nearestStart1 = [path1 closestPointOnPathTo:point];
@@ -665,10 +658,8 @@ static NSDate* lastRender;
         
         if(path1Dist < path2Dist){
             nearestPathIsPath1 = YES;
-            lastEndPointOfStroke = [flippedPath1 closestPointOnPathTo:flippedPoint];
         }else{
             nearestPathIsPath1 = NO;
-            lastEndPointOfStroke = [flippedPath2 closestPointOnPathTo:flippedPoint];
         }
     }
 }
@@ -680,7 +671,7 @@ static NSDate* lastRender;
  * down at the same time
  */
 -(void) willMoveStrokeAt:(CGPoint)point{
-    if(path1 && CGPointEqualToPoint(lastEndPointOfStroke, CGPointZero)){
+    if(path1 && CGPointEqualToPoint(mostRecentTouchPointInOpenGLCoord, CGPointZero)){
         [self willBeginStrokeAt:point];
     }
 }
@@ -688,6 +679,11 @@ static NSDate* lastRender;
 
 #pragma mark - Private Helpers
 
+/**
+ * this method will return a UIBezierPath along our ruler's edge
+ * that most closely matches the input element, given the start/end
+ * points of that element.
+ */
 -(UIBezierPath*) findPathSegmentsForElement:(AbstractBezierPathElement*)element withNearestStart:(CGPoint)nearestStart andNearestEnd:(CGPoint)nearestEnd{
     UIBezierPath* flippedPath;
     
@@ -709,13 +705,18 @@ static NSDate* lastRender;
     return newPath;
 }
 
+/**
+ * this will take the input element and make sure that the output
+ * aligns to the ruler, if we have a ruler open. otherwise it'll
+ * just return the input element w/o any changes
+ */
 -(NSArray*) adjustElement:(AbstractBezierPathElement*)element fromPreviousElement:(AbstractBezierPathElement*)previousElement{
     if(path1){
         //
         // now we have a UIBezierPath that represents the portion of the ruler
         // that we should draw. this means we need to convert this uibezierpath
         // to AbstractBezierElements to return to the JotView
-        UIBezierPath* subpathForElement = [self findPathSegmentsForElement:element withNearestStart:lastEndPointOfStroke andNearestEnd:element.endPoint];
+        UIBezierPath* subpathForElement = [self findPathSegmentsForElement:element withNearestStart:mostRecentTouchPointInOpenGLCoord andNearestEnd:element.endPoint];
         
         // this'll be our output element array
         NSMutableArray* output = [NSMutableArray array];
@@ -750,7 +751,7 @@ static NSDate* lastRender;
         // lastEndPointOfStroke helps us track if the stroke
         // is beginning or has moved.
         // see willMoveStrokeAt:
-        lastEndPointOfStroke = element.endPoint;
+        mostRecentTouchPointInOpenGLCoord = element.endPoint;
         
         // now if we have output, we need to connect
         // these new strokes to anything the user has already
@@ -769,7 +770,7 @@ static NSDate* lastRender;
                 [[output firstObject] adjustStartBy:adjustment];
             }
         }
-        
+        // ok, return our adjusted elements
         return output;
     }
 
