@@ -54,6 +54,10 @@
     
     CGPoint lastEndPointOfStroke;
     JotView* jotView;
+    
+    
+    UIBezierPath* pathSegmentFromNearestStart;
+    UIBezierPath* pathSegmentFromNearestEnd;
 }
 
 @synthesize jotView;
@@ -84,6 +88,13 @@ static NSDate* lastRender;
     [[MMRulerView rulerColor] setStroke];
     [drawThisPath setLineWidth:1];
     [drawThisPath stroke];
+    
+    [pathSegmentFromNearestStart setLineWidth:2];
+    [pathSegmentFromNearestEnd setLineWidth:2];
+    [[[UIColor blueColor] colorWithAlphaComponent:.5] setStroke];
+    [pathSegmentFromNearestStart stroke];
+    [[[UIColor redColor] colorWithAlphaComponent:.5] setStroke];
+    [pathSegmentFromNearestEnd stroke];
 }
 
 
@@ -665,6 +676,12 @@ static NSDate* lastRender;
     }
 }
 
+/**
+ * this will make sure we fire the begin stroke
+ * before we render the ruler if the ruler + stroke
+ * happen in the same touch event - ie, put three fingers
+ * down at the same time
+ */
 -(void) willMoveStrokeAt:(CGPoint)point{
     if(path1 && CGPointEqualToPoint(lastEndPointOfStroke, CGPointZero)){
         [self willBeginStrokeAt:point];
@@ -674,12 +691,35 @@ static NSDate* lastRender;
 
 #pragma mark - Private Helpers
 
+-(void) findPathSegmentsForElement:(AbstractBezierPathElement*)element withNearestStart:(CGPoint)nearestStart andNearestEnd:(CGPoint)nearestEnd{
+    UIBezierPath* flippedPath;
+    
+    if(nearestPathIsPath1){
+        flippedPath = [path1Full copy];
+        [flippedPath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+    }else{
+        flippedPath = [path2Full copy];
+        [flippedPath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+    }
+    UIBezierPath* newPath = [flippedPath bezierPathByTrimmingFromClosestPointOnPathFrom:nearestStart to:nearestEnd];
+    if(newPath){
+        if(CGPointEqualToPoint(newPath.firstPoint, CGPointZero)){
+            newPath = [flippedPath bezierPathByTrimmingFromClosestPointOnPathFrom:nearestStart to:nearestEnd];
+        }else if(CGPointEqualToPoint(newPath.lastPoint, CGPointZero)){
+            newPath = [flippedPath bezierPathByTrimmingFromClosestPointOnPathFrom:nearestStart to:nearestEnd];
+        }
+        [newPath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+        pathSegmentFromNearestStart = newPath;
+        NSLog(@"%@", newPath);
+    }
+}
+
 -(NSArray*) adjustElement:(AbstractBezierPathElement*)element{
     
     if(path1){
         UIBezierPath* flippedPath;
-        
         CGPoint nearestStart;
+        
         if(nearestPathIsPath1){
             flippedPath = [path1Full copy];
             [flippedPath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
@@ -728,6 +768,9 @@ static NSDate* lastRender;
             newElement.rotation = element.rotation;
         }
         
+        [self findPathSegmentsForElement:element withNearestStart:nearestStart andNearestEnd:nearestEnd];
+        
+
         lastEndPointOfStroke = nearestEnd;
         return [NSArray arrayWithObject:newElement];
     }
@@ -748,6 +791,8 @@ static NSDate* lastRender;
     needsDisp = CGRectUnion(needsDisp, [path2 bounds]);
     needsDisp = CGRectInset(needsDisp, -80, -80);
     [self setNeedsDisplayInRect:needsDisp];
+    // TODO: remove setNeedsDisplay
+    [self setNeedsDisplay];
     NSTimeInterval lastRenderStamp = [lastRender timeIntervalSinceNow];
     if(lastRenderStamp < -.03){
         NSLog(@"dropped frames %f", lastRenderStamp);
