@@ -1442,7 +1442,7 @@
     @throw kAbstractMethodException;
 }
 
--(NSArray*) willAddElementsToStroke:(NSArray *)elements{
+-(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
     @throw kAbstractMethodException;
 }
 
