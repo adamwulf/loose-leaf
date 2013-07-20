@@ -56,6 +56,8 @@
 
 CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
 
+CGFloat SquaredDistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
+
 enum {
     MMBezelDirectionNone = 0,
     MMBezelDirectionRight  = 1 << 0,

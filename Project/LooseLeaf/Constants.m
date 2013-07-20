@@ -14,3 +14,13 @@ CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2)
 };
 
 
+//
+// useful when comparing to another squared distance
+CGFloat SquaredDistanceBetweenTwoPoints(CGPoint point1,CGPoint point2)
+{
+    CGFloat dx = point2.x - point1.x;
+    CGFloat dy = point2.y - point1.y;
+    return dx*dx + dy*dy;
+};
+
+

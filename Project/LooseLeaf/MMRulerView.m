@@ -43,7 +43,6 @@
     CGFloat initialDistance;
     CGFloat unitLength;
     
-    UIBezierPath* drawThisPath;
     UIBezierPath* ticks;
     UIBezierPath* path1;
     UIBezierPath* path2;
@@ -81,8 +80,8 @@ static NSDate* lastRender;
     lastRender = [NSDate date];
     [self drawRectHelper];
     [[MMRulerView rulerColor] setStroke];
-    [drawThisPath setLineWidth:1];
-    [drawThisPath stroke];
+    [ticks setLineWidth:1];
+    [ticks stroke];
 }
 
 
@@ -248,10 +247,15 @@ static NSDate* lastRender;
             [path2Full addLineToPoint:[vector pointFromPoint:tr distance:self.bounds.size.height]];
         }
         
-        drawThisPath = [UIBezierPath bezierPath];
-        [drawThisPath appendPath:path1];
-        [drawThisPath appendPath:path2];
-        [drawThisPath appendPath:ticks];
+        //
+        // path1Full and path2Full are used to calculate closest points
+        // in OpenGL coordinate space, so we need to invert them from
+        // CoreGraphics coordinate space
+        [path1Full applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+        [path2Full applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+
+        [ticks appendPath:path1];
+        [ticks appendPath:path2];
     }
 }
 
@@ -439,18 +443,19 @@ static NSDate* lastRender;
         }while(drawnLength < arcLength / 2 + unitLength);
     }
     
-    
-    //
-    // these transforms will scale the semicircle if needed
-    // so that it things up when the user pinches their fingers
-    CGAffineTransform transform = CGAffineTransformMakeTranslation(-center.x, -center.y);
-    transform = CGAffineTransformConcat(transform, CGAffineTransformRotate(CGAffineTransformIdentity, -[perpN angle]));
-    transform = CGAffineTransformConcat(transform, CGAffineTransformScale(CGAffineTransformIdentity, scale, 1));
-    transform = CGAffineTransformConcat(transform, CGAffineTransformRotate(CGAffineTransformIdentity, [perpN angle]));
-    transform = CGAffineTransformConcat(transform, CGAffineTransformMakeTranslation(center.x, center.y));
-    
-    [path applyTransform:transform];
-    [circle applyTransform:transform];
+    if(scale != 1){
+        //
+        // these transforms will scale the semicircle if needed
+        // so that it things up when the user pinches their fingers
+        CGAffineTransform transform = CGAffineTransformMakeTranslation(-center.x, -center.y);
+        transform = CGAffineTransformConcat(transform, CGAffineTransformRotate(CGAffineTransformIdentity, -[perpN angle]));
+        transform = CGAffineTransformConcat(transform, CGAffineTransformScale(CGAffineTransformIdentity, scale, 1));
+        transform = CGAffineTransformConcat(transform, CGAffineTransformRotate(CGAffineTransformIdentity, [perpN angle]));
+        transform = CGAffineTransformConcat(transform, CGAffineTransformMakeTranslation(center.x, center.y));
+        
+        [path applyTransform:transform];
+        [circle applyTransform:transform];
+    }
 
 
     //
@@ -599,7 +604,6 @@ static NSDate* lastRender;
     path1Full = nil;
     path2Full = nil;
     ticks = nil;
-    drawThisPath = nil;
 }
 
 
@@ -652,10 +656,10 @@ static NSDate* lastRender;
         CGPoint nearestStart1 = [path1 closestPointOnPathTo:point];
         CGPoint nearestStart2 = [path2 closestPointOnPathTo:point];
         // pick the one that's closest
-        CGFloat path1Dist = DistanceBetweenTwoPoints(nearestStart1, point);
-        CGFloat path2Dist = DistanceBetweenTwoPoints(nearestStart2, point);
+        CGFloat path1DistSq = SquaredDistanceBetweenTwoPoints(nearestStart1, point);
+        CGFloat path2DistSq = SquaredDistanceBetweenTwoPoints(nearestStart2, point);
         
-        if(path1Dist < path2Dist){
+        if(path1DistSq < path2DistSq){
             nearestPathIsPath1 = YES;
         }else{
             nearestPathIsPath1 = NO;
@@ -687,16 +691,14 @@ static NSDate* lastRender;
     UIBezierPath* flippedPath;
     
     if(nearestPathIsPath1){
-        flippedPath = [path1Full copy];
-        [flippedPath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+        flippedPath = path1Full;
     }else{
-        flippedPath = [path2Full copy];
-        [flippedPath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+        flippedPath = path2Full;
     }
     UIBezierPath* newPath = [flippedPath bezierPathByTrimmingFromClosestPointOnPathFrom:nearestStart to:nearestEnd];
     if(newPath){
         // check if we're in the correct direction
-        if(DistanceBetweenTwoPoints(newPath.lastPoint, nearestStart) < DistanceBetweenTwoPoints(newPath.firstPoint, nearestStart)){
+        if(SquaredDistanceBetweenTwoPoints(newPath.lastPoint, nearestStart) < SquaredDistanceBetweenTwoPoints(newPath.firstPoint, nearestStart)){
             // our path begins where it should be ending
             newPath = [newPath bezierPathByReversingPath];
         }
