@@ -246,7 +246,6 @@ static NSDate* lastRender;
             [path1Full addLineToPoint:[vector pointFromPoint:tl distance:self.bounds.size.height]];
             [path2Full moveToPoint:[[vector flip] pointFromPoint:br distance:self.bounds.size.height]];
             [path2Full addLineToPoint:[vector pointFromPoint:tr distance:self.bounds.size.height]];
-
         }
         
         drawThisPath = [UIBezierPath bezierPath];
@@ -697,7 +696,7 @@ static NSDate* lastRender;
     UIBezierPath* newPath = [flippedPath bezierPathByTrimmingFromClosestPointOnPathFrom:nearestStart to:nearestEnd];
     if(newPath){
         // check if we're in the correct direction
-        if(DistanceBetweenTwoPoints(newPath.firstPoint, nearestEnd) < DistanceBetweenTwoPoints(newPath.firstPoint, nearestStart)){
+        if(DistanceBetweenTwoPoints(newPath.lastPoint, nearestStart) < DistanceBetweenTwoPoints(newPath.firstPoint, nearestStart)){
             // our path begins where it should be ending
             newPath = [newPath bezierPathByReversingPath];
         }
