@@ -44,8 +44,34 @@
         [stackView loadStacksFromDisk];
         
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth.png"]]];
+        
+        
+        NSUserDefaults* def = [NSUserDefaults standardUserDefaults];
+        NSDictionary* alldef = [def dictionaryRepresentation];
+        
+        [self printKeys:alldef atlevel:1];
     }
     return self;
+}
+
+-(void) printKeys:(NSDictionary*)dict atlevel:(NSInteger)level{
+    NSString* space = @"";
+    for(int i=0;i<level;i++){
+        space = [space stringByAppendingString:@" "];
+    }
+    for(NSString* key in [dict allKeys]){
+        
+        id obj = [dict objectForKey:key];
+        if([obj isKindOfClass:[NSDictionary class]]){
+            [self printKeys:obj atlevel:level+1];
+        }else{
+            if([obj isKindOfClass:[NSArray class]]){
+                NSLog(@"%@ %@ - %@ [%d]", space, key, [obj class], [obj count]);
+            }else{
+                NSLog(@"%@ %@ - %@", space, key, [obj class]);
+            }
+        }
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
