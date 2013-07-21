@@ -125,13 +125,15 @@ dispatch_queue_t importThumbnailQueue;
     }
     
     void (^block2)() = ^(void) {
-        if(!state){
-            state = [[JotViewState alloc] initWithImageFile:[self inkPath]
-                                               andStateFile:[self plistPath]
-                                                andPageSize:pagePixelSize
-                                               andGLContext:context];
+        @autoreleasepool {
+            if(!state){
+                state = [[JotViewState alloc] initWithImageFile:[self inkPath]
+                                                   andStateFile:[self plistPath]
+                                                    andPageSize:pagePixelSize
+                                                   andGLContext:context];
+            }
+            if(block) block();
         }
-        if(block) block();
     };
     
     if(async){
@@ -223,11 +225,13 @@ dispatch_queue_t importThumbnailQueue;
     if(!cachedImgView.image && !isLoadingCachedImageFromDisk){
         isLoadingCachedImageFromDisk = YES;
         dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
-            UIImage* img = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
-            [NSThread performBlockOnMainThread:^{
-                cachedImgView.image = img;
-                isLoadingCachedImageFromDisk = NO;
-            }];
+            @autoreleasepool {
+                UIImage* img = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
+                [NSThread performBlockOnMainThread:^{
+                    cachedImgView.image = img;
+                    isLoadingCachedImageFromDisk = NO;
+                }];
+            }
         });
     }
 }
