@@ -737,7 +737,7 @@ static NSDate* lastRender;
                                                       andControl2:pathEle.points[1]];
                 previousEndpoint = pathEle.points[2];
             }else if(pathEle.type == kCGPathElementAddLineToPoint){
-                newElement = [LineToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
+                newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
                 previousEndpoint = pathEle.points[0];
             }
             if(newElement){
