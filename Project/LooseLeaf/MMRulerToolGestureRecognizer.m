@@ -28,6 +28,7 @@ NSInteger const minimumNumberOfTouches = 2;
     if(self){
         validTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
+        self.cancelsTouchesInView = NO;
     }
     return self;
 }
@@ -37,6 +38,7 @@ NSInteger const minimumNumberOfTouches = 2;
     if(self){
         validTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
+        self.cancelsTouchesInView = NO;
     }
     return self;
 }
