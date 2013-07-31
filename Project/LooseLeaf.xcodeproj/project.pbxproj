@@ -71,6 +71,7 @@
 		66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A6B175E4A5A0049F1AF /* MMStackManager.m */; };
 		66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A75175E559E0049F1AF /* NSArray+Map.m */; };
 		66B21A7A175E595B0049F1AF /* MMBlockOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A79175E595B0049F1AF /* MMBlockOperation.m */; };
+		66B3522517A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B3522417A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m */; };
 		66BD6E301591B57B00D4544C /* MMPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* MMPaperButton.m */; };
 		66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E331591C37D00D4544C /* UIImage+MCDrawSubImage.m */; };
 		66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */; };
@@ -244,6 +245,8 @@
 		66B21A75175E559E0049F1AF /* NSArray+Map.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Map.m"; sourceTree = "<group>"; };
 		66B21A78175E595B0049F1AF /* MMBlockOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBlockOperation.h; sourceTree = "<group>"; };
 		66B21A79175E595B0049F1AF /* MMBlockOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBlockOperation.m; sourceTree = "<group>"; };
+		66B3522317A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIGestureRecognizer+GestureDebug.h"; sourceTree = "<group>"; };
+		66B3522417A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIGestureRecognizer+GestureDebug.m"; sourceTree = "<group>"; };
 		66BD6E2E1591B57B00D4544C /* MMPaperButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperButton.h; sourceTree = "<group>"; };
 		66BD6E2F1591B57B00D4544C /* MMPaperButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPaperButton.m; sourceTree = "<group>"; };
 		66BD6E321591C37D00D4544C /* UIImage+MCDrawSubImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MCDrawSubImage.h"; sourceTree = "<group>"; };
@@ -738,6 +741,8 @@
 				66510831178DF9B900A7A7DD /* Ruler Tool */,
 				66A13D3D1631E075002F5428 /* Page Navigation */,
 				66A13D3C1631E06D002F5428 /* Object Selection */,
+				66B3522317A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.h */,
+				66B3522417A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m */,
 			);
 			name = Gestures;
 			sourceTree = "<group>";
@@ -912,6 +917,7 @@
 				66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */,
 				6695B6EC17505FBF0069E61F /* MMEditablePaperView.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
+				66B3522517A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m in Sources */,
 				663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */,
 				663C187D1755B63D00706A05 /* Eraser.m in Sources */,
 				663C188B1759B51600706A05 /* MMUndoRedoButton.m in Sources */,
