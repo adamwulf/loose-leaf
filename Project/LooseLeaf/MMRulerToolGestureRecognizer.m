@@ -9,6 +9,7 @@
 #import "MMRulerToolGestureRecognizer.h"
 #import <QuartzCore/QuartzCore.h>
 #import "MMBezelInRightGestureRecognizer.h"
+#import "MMBezelInLeftGestureRecognizer.h"
 #import "MMObjectSelectLongPressGestureRecognizer.h"
 #import "NSMutableSet+Extras.h"
 #import "NSArray+MapReduce.h"
@@ -48,7 +49,8 @@ NSInteger const minimumNumberOfTouches = 2;
 }
 
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return [preventingGestureRecognizer isKindOfClass:[MMBezelInRightGestureRecognizer class]];
+    return [preventingGestureRecognizer isKindOfClass:[MMBezelInRightGestureRecognizer class]] ||
+           [preventingGestureRecognizer isKindOfClass:[MMBezelInLeftGestureRecognizer class]];
 }
 
 -(BOOL) containsTouch:(UITouch*)touch{

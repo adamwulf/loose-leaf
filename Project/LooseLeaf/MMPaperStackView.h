@@ -16,6 +16,7 @@
 #import "MMLeftArrow.h"
 #import "MMRightArrow.h"
 #import "MMBezelInRightGestureRecognizer.h"
+#import "MMBezelInLeftGestureRecognizer.h"
 #import "UIView+SubviewStacks.h"
 #import "UIView+Debug.h"
 #import "UIView+Animations.h"
@@ -45,6 +46,7 @@
     
     @protected
     MMBezelInRightGestureRecognizer* fromRightBezelGesture;
+    MMBezelInLeftGestureRecognizer* fromLeftBezelGesture;
     
     UIView* visibleStackHolder;
     UIView* hiddenStackHolder;
@@ -73,7 +75,8 @@
 -(void) willChangeTopPageTo:(MMPaperView*)page;
 -(void) didChangeTopPage;
 -(void) willNotChangeTopPageTo:(MMPaperView*)page;
--(void) isBezelingInWithGesture:(MMBezelInRightGestureRecognizer*)bezelGesture;
+-(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer*)bezelGesture;
+-(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture;
 -(void) saveStacksToDisk;
 
 @end

@@ -57,8 +57,11 @@
         rightArrow.alpha = 0;
         plusIcon.alpha = 0;
         
-        fromRightBezelGesture = [[MMBezelInRightGestureRecognizer alloc] initWithTarget:self action:@selector(isBezelingInWithGesture:)];
+        fromRightBezelGesture = [[MMBezelInRightGestureRecognizer alloc] initWithTarget:self action:@selector(isBezelingInRightWithGesture:)];
         [self addGestureRecognizer:fromRightBezelGesture];
+
+        fromLeftBezelGesture = [[MMBezelInLeftGestureRecognizer alloc] initWithTarget:self action:@selector(isBezelingInLeftWithGesture:)];
+        [self addGestureRecognizer:fromLeftBezelGesture];
     }
     return self;
 }
@@ -276,6 +279,21 @@
        }
 }
 
+
+#pragma mark - MMBezelInLeftGestureRecognizer
+
+
+/**
+ * this is the event handler for the MMBezelInRightGestureRecognizer
+ *
+ * this handles pulling pages from the hidden stack onto the visible
+ * stack. either one at a time, or multiple if the gesture is repeated
+ * without interruption.
+ */
+-(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
+    NSLog(@"bezel left: %d", bezelGesture.state);
+}
+
 #pragma mark - MMBezelInRightGestureRecognizer
 
 /**
@@ -285,7 +303,7 @@
  * stack. either one at a time, or multiple if the gesture is repeated
  * without interruption.
  */
--(void) isBezelingInWithGesture:(MMBezelInRightGestureRecognizer*)bezelGesture{
+-(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer*)bezelGesture{
     // make sure there's a page to bezel
     [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
     CGPoint translation = [bezelGesture translationInView:self];
