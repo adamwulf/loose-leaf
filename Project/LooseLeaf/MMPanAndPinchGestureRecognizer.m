@@ -21,7 +21,6 @@
 @synthesize bezelDirectionMask;
 @synthesize didExitToBezel;
 @synthesize velocity = _averageVelocity;
-@synthesize numberOfRepeatingBezels;
 @synthesize scaleDirection;
 
 NSInteger const  minimumNumberOfTouches = 2;
@@ -185,7 +184,6 @@ NSInteger const  minimumNumberOfTouches = 2;
             if(didExitToBezel != MMBezelDirectionNone &&
                !secondToLastTouchDidBezel &&
                ([validTouches count] - [validTouchesCurrentlyEnding count]) < minimumNumberOfTouches){
-                numberOfRepeatingBezels ++;
                 if([validTouches count] - [validTouchesCurrentlyEnding count] == 1){
                     // that was the 2nd to last touch!
                     // set this flag so we don't double count it when the last
@@ -238,7 +236,6 @@ NSInteger const  minimumNumberOfTouches = 2;
     [super reset];
     initialDistance = 0;
     scale = 1;
-    numberOfRepeatingBezels = 0;
     [validTouches removeAllObjects];
     [ignoredTouches removeAllObjects];
     didExitToBezel = MMBezelDirectionNone;

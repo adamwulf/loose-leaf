@@ -156,7 +156,7 @@
     BOOL isBezeled = (panGesture.didExitToBezel & panGesture.bezelDirectionMask) != MMBezelDirectionNone;
     BOOL willExit = isBezeled && (panGesture.state == UIGestureRecognizerStateChanged || panGesture.state == UIGestureRecognizerStateEnded || panGesture.state == UIGestureRecognizerStateCancelled);
     if(willExit){
-        return panGesture.numberOfRepeatingBezels;
+        return 1;
     }
     return 0;
 }
