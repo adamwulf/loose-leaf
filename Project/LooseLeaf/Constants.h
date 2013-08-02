@@ -36,7 +36,7 @@
 
 // List View Gesture
 #define kZoomToListPageZoom .4
-#define kMinPageZoom .7
+#define kMinPageZoom .9
 #define kMaxPageZoom 2.0
 #define kMaxPageResolution 1.5
 
