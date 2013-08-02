@@ -556,7 +556,8 @@
     // in pages from the hidden stack if they let go
     //
     // let's animate a small pop in
-    if(isPanningTopPage && [page willExitToBezel:MMBezelDirectionLeft]){
+    if(isPanningTopPage && ([page willExitToBezel:MMBezelDirectionLeft] ||
+                            [self shouldPushPageOntoVisibleStack:page withFrame:page.frame])){
         //
         // we're in progress of a bezel gesture from the right
         //
@@ -565,8 +566,9 @@
         // b) make sure that (a) animates them to the correct place
         // c) add correct number of pages to the bezelStackHolder
         // d) update the offset for the bezelStackHolder so they all move in tandem
-        BOOL needsToUpdateAnimations = page.numberOfTimesExitedBezel > [bezelStackHolder.subviews count];
-        while(page.numberOfTimesExitedBezel > [bezelStackHolder.subviews count]){
+        NSInteger numberOfPagesToAnimateFromRightBezel = 1;
+        BOOL needsToUpdateAnimations = numberOfPagesToAnimateFromRightBezel > [bezelStackHolder.subviews count];
+        while(numberOfPagesToAnimateFromRightBezel > [bezelStackHolder.subviews count]){
             [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
             //
             // we need to add another page
@@ -602,32 +604,32 @@
                 }
                 currOffset += delta;
             }
-        }
-        CGRect newFrame = CGRectMake(hiddenStackHolder.frame.origin.x - MIN([bezelStackHolder.subviews count] * 10 + 4, 106),
-                                     hiddenStackHolder.frame.origin.y,
-                                     hiddenStackHolder.frame.size.width,
-                                     hiddenStackHolder.frame.size.height);
-        
-        if(!CGRectEqualToRect(bezelStackHolder.frame, newFrame) ||
-           CGRectEqualToRect(bezelStackHolder.frame, hiddenStackHolder.frame)){
-            if(CGRectEqualToRect([bezelStackHolder.layer.presentationLayer frame], hiddenStackHolder.frame)){
-                // bounce
-                [UIView animateWithDuration:.1 animations:^{
-                    CGRect bounceFrame = newFrame;
-                    bounceFrame.origin.x -= 10;
-                    bezelStackHolder.frame = bounceFrame;
-                } completion:^(BOOL finished){
-                    if(finished){
-                        [UIView animateWithDuration:.2 animations:^{
-                            bezelStackHolder.frame = newFrame;
-                        }];
-                    }
-                }];
-            }else{
-                // expand
-                [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-                    bezelStackHolder.frame = newFrame;
-                } completion:nil];
+            CGRect newFrame = CGRectMake(hiddenStackHolder.frame.origin.x - MIN([bezelStackHolder.subviews count] * 10 + 20, 106),
+                                         hiddenStackHolder.frame.origin.y,
+                                         hiddenStackHolder.frame.size.width,
+                                         hiddenStackHolder.frame.size.height);
+            
+            if(!CGRectEqualToRect(bezelStackHolder.frame, newFrame) ||
+               CGRectEqualToRect(bezelStackHolder.frame, hiddenStackHolder.frame)){
+                if(CGRectEqualToRect([bezelStackHolder.layer.presentationLayer frame], hiddenStackHolder.frame)){
+                    // bounce
+                    [UIView animateWithDuration:.1 animations:^{
+                        CGRect bounceFrame = newFrame;
+                        bounceFrame.origin.x -= 10;
+                        bezelStackHolder.frame = bounceFrame;
+                    } completion:^(BOOL finished){
+                        if(finished){
+                            [UIView animateWithDuration:.2 animations:^{
+                                bezelStackHolder.frame = newFrame;
+                            }];
+                        }
+                    }];
+                }else{
+                    // expand
+                    [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+                        bezelStackHolder.frame = newFrame;
+                    } completion:nil];
+                }
             }
         }
     }else if(isPanningTopPage){
@@ -648,29 +650,25 @@
             if(pageMayPopTo){
                 [self mayChangeTopPageTo:pageMayPopTo];
             }
-        }else if([self shouldPushPageOntoVisibleStack:page withFrame:page.frame]){
-            //
-            // the user has moved the top page far enough left that if they release
-            // now then we'd pop a page from the hidden stack onto the visible stack
-            MMPaperView* paperView = nil;
-            if([bezelStackHolder.subviews count]){
-                paperView = [bezelStackHolder.subviews objectAtIndex:0];
-            }else{
-                paperView = [hiddenStackHolder peekSubview];
-            }
-            if(paperView){
-                [self mayChangeTopPageTo:paperView];
-            }
         }else{
             MMPaperView* pageBelow = [visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]];
             if(pageBelow){
                 [self mayChangeTopPageTo:pageBelow];
             }
         }
-        // ok, the user isn't bezeling left anymore
-        [UIView animateWithDuration:.2 delay:.5 options:UIViewAnimationOptionCurveEaseOut animations:^{
-            bezelStackHolder.frame = hiddenStackHolder.frame;
-        } completion:nil];
+        if(!CGRectEqualToRect(bezelStackHolder.frame, hiddenStackHolder.frame)){
+            // ok, the user isn't bezeling left anymore
+            [UIView animateWithDuration:.2 delay:.5 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                bezelStackHolder.frame = hiddenStackHolder.frame;
+            } completion:^(BOOL finished){
+                if(finished && CGRectEqualToRect(bezelStackHolder.frame, hiddenStackHolder.frame)){
+                    // empty the bezel stack to the hidden stack,
+                    // animates are all offscreen and complete now
+                    [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
+                    [self emptyBezelStackToHiddenStackAnimated:NO onComplete:nil];
+                }
+            }];
+        }
     }
     
     return toFrame;
