@@ -331,7 +331,7 @@
         // ok, move all the soon to be visible pages into their
         // position
         CGFloat transitionDelay = 0;
-        for(MMPaperView* aPage in pagesThatWillBeVisibleAfterTransitionToListView){
+        for(MMPaperView* aPage in [pagesThatWillBeVisibleAfterTransitionToListView reverseObjectEnumerator]){
             if(aPage != page){
                 CGRect oldFrame = hiddenStackHolder.bounds;
                 NSValue* possibleCachedOriginalLocation = [setOfInitialFramesForPagesBeingZoomed objectForKey:aPage.uuid];
