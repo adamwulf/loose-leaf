@@ -291,7 +291,8 @@
  * without interruption.
  */
 -(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
-    NSLog(@"bezel left: %d", bezelGesture.state);
+    CGPoint translation = [bezelGesture translationInView:self];
+    NSLog(@"bezel left: %d   %f", bezelGesture.state, translation.x);
 }
 
 #pragma mark - MMBezelInRightGestureRecognizer
@@ -308,6 +309,8 @@
     [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
     CGPoint translation = [bezelGesture translationInView:self];
     
+    NSLog(@"bezel right: %d   %f", bezelGesture.state, translation.x);
+
     if(bezelGesture.state == UIGestureRecognizerStateBegan){
         //
         // ok, the user is beginning the drag two fingers from the
