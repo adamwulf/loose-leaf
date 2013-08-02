@@ -38,17 +38,12 @@
     CGPoint _averageVelocity;
 
     //
-    // have they bezeled off the page more than once
-    // during the same gesture? this will track it
-    NSInteger numberOfRepeatingBezels;
-    //
     // don't allow both the 2nd to last touch
     // and the last touch to trigger a repeat
     // of the bezel
     BOOL secondToLastTouchDidBezel;
 }
 
-@property (nonatomic, readonly) NSInteger numberOfRepeatingBezels;
 @property (nonatomic, readonly) CGFloat scale;
 @property (nonatomic, readonly) CGPoint velocity;
 @property (nonatomic, assign) MMBezelDirection bezelDirectionMask;
