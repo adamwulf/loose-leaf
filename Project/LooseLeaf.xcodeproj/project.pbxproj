@@ -46,8 +46,8 @@
 		66510838178DFEE700A7A7DD /* MMRulerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66510837178DFEE700A7A7DD /* MMRulerView.m */; };
 		6651083C178F249C00A7A7DD /* MMVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6651083B178F249C00A7A7DD /* MMVector.m */; };
 		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
-		6661144716FD67F8005032B9 /* Loose-Leaf_72.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144616FD67F8005032B9 /* Loose-Leaf_72.png */; };
-		6661144A16FD67FA005032B9 /* Loose-Leaf_144.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144916FD67FA005032B9 /* Loose-Leaf_144.png */; };
+		6661144716FD67F8005032B9 /* Loose-Leaf-Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144616FD67F8005032B9 /* Loose-Leaf-Icon.png */; };
+		6661144A16FD67FA005032B9 /* Loose-Leaf-Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144916FD67FA005032B9 /* Loose-Leaf-Icon@2x.png */; };
 		66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* MMEditablePaperStackView.m */; };
 		6693295A15958A950033E557 /* MMShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MMShadowManager.m */; };
 		66932965159593C00033E557 /* MMRotationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66932964159593C00033E557 /* MMRotationManager.m */; };
@@ -198,8 +198,8 @@
 		6651083B178F249C00A7A7DD /* MMVector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMVector.m; sourceTree = "<group>"; };
 		6655E924176291C800E4F36A /* MMScissorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScissorButton.h; sourceTree = "<group>"; };
 		6655E925176291C800E4F36A /* MMScissorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorButton.m; sourceTree = "<group>"; };
-		6661144616FD67F8005032B9 /* Loose-Leaf_72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf_72.png"; path = "../Loose-Leaf_72.png"; sourceTree = "<group>"; };
-		6661144916FD67FA005032B9 /* Loose-Leaf_144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf_144.png"; path = "../Loose-Leaf_144.png"; sourceTree = "<group>"; };
+		6661144616FD67F8005032B9 /* Loose-Leaf-Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf-Icon.png"; path = "../Loose-Leaf-Icon.png"; sourceTree = "<group>"; };
+		6661144916FD67FA005032B9 /* Loose-Leaf-Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf-Icon@2x.png"; path = "../Loose-Leaf-Icon@2x.png"; sourceTree = "<group>"; };
 		66728713159515FC0018571A /* MMEditablePaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEditablePaperStackView.h; sourceTree = "<group>"; };
 		66728714159515FC0018571A /* MMEditablePaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEditablePaperStackView.m; sourceTree = "<group>"; };
 		6693295815958A950033E557 /* MMShadowManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShadowManager.h; sourceTree = "<group>"; };
@@ -710,8 +710,8 @@
 				660E1DA6158FC6120001DA12 /* Categories */,
 				66B21A58175B0BF30049F1AF /* cloth.png */,
 				6693298015996C530033E557 /* Astronaut Images */,
-				6661144916FD67FA005032B9 /* Loose-Leaf_144.png */,
-				6661144616FD67F8005032B9 /* Loose-Leaf_72.png */,
+				6661144916FD67FA005032B9 /* Loose-Leaf-Icon@2x.png */,
+				6661144616FD67F8005032B9 /* Loose-Leaf-Icon.png */,
 				66DCFB921581BCEF00B4918C /* LooseLeaf-Info.plist */,
 				66DCFB931581BCEF00B4918C /* InfoPlist.strings */,
 				66DCFB961581BCEF00B4918C /* main.m */,
@@ -831,8 +831,8 @@
 				660E1DA1158FC4710001DA12 /* img03.jpg in Resources */,
 				660E1DA3158FC4750001DA12 /* img05.jpg in Resources */,
 				660E1DA5158FC47D0001DA12 /* img04.jpg in Resources */,
-				6661144716FD67F8005032B9 /* Loose-Leaf_72.png in Resources */,
-				6661144A16FD67FA005032B9 /* Loose-Leaf_144.png in Resources */,
+				6661144716FD67F8005032B9 /* Loose-Leaf-Icon.png in Resources */,
+				6661144A16FD67FA005032B9 /* Loose-Leaf-Icon@2x.png in Resources */,
 				66B21A59175B0BF30049F1AF /* cloth.png in Resources */,
 				661507661783338E00B181F3 /* release_notes.md in Resources */,
 				661507771783417100B181F3 /* StarEmpty.png in Resources */,
