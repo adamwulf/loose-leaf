@@ -294,6 +294,7 @@
     CGPoint translation = [bezelGesture translationInView:self];
     
     if(bezelGesture.state == UIGestureRecognizerStateBegan){
+        [[visibleStackHolder peekSubview] disableAllGestures];
         //
         // ok, the user is beginning the drag two fingers from the
         // left hand bezel. we need to push a page from the visible
@@ -318,7 +319,6 @@
         [bezelStackHolder removeAllAnimationsAndPreservePresentationFrame];
         bezelStackHolder.frame = visibleStackHolder.frame;
         
-        [[visibleStackHolder peekSubview] disableAllGestures];
         // make sure we have two pages, the one we're pulling, and
         // the one below it
         [self ensureAtLeast:2 pagesInStack:visibleStackHolder];
@@ -1284,7 +1284,6 @@
         for(MMPaperView* pageToPop in [pages reverseObjectEnumerator]){
             [pageToPop removeAllAnimationsAndPreservePresentationFrame];
             [bezelStackHolder addSubviewToBottomOfStack:pageToPop];
-            CGRect fr = [pageToPop frame];
         }
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:completionBlock];
         [self ensureAtLeast:1 pagesInStack:visibleStackHolder];

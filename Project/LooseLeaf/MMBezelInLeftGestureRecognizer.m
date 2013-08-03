@@ -8,6 +8,7 @@
 
 #import "MMBezelInLeftGestureRecognizer.h"
 #import <JotUI/JotUI.h>
+#import "MMBezelInRightGestureRecognizer.h"
 
 @implementation MMBezelInLeftGestureRecognizer
 @synthesize panDirection;
@@ -27,7 +28,7 @@
 }
 
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return NO;
+    return [preventingGestureRecognizer isKindOfClass:[MMBezelInRightGestureRecognizer class]];
 }
 
 /**

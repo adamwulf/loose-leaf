@@ -8,6 +8,7 @@
 
 #import "MMBezelInRightGestureRecognizer.h"
 #import "Constants.h"
+#import "MMBezelInLeftGestureRecognizer.h"
 #import <JotUI/JotUI.h>
 
 @implementation MMBezelInRightGestureRecognizer
@@ -28,7 +29,7 @@
 }
 
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return NO;
+    return [preventingGestureRecognizer isKindOfClass:[MMBezelInLeftGestureRecognizer class]];
 }
 
 /**
