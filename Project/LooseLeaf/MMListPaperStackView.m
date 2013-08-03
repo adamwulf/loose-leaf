@@ -417,7 +417,7 @@
         // are currently visible, when the animation to list view begins
         // they'll begin from their current location intsead of the hidden
         // stack
-        [self emptyBezelStackToHiddenStackAnimated:NO andPreserveFrame:YES onComplete:nil];
+        [self emptyBezelStackToHiddenStackAnimated:NO andPreservePageFrame:YES onComplete:nil];
     }
     [self beginUITransitionFromPageView];
 }

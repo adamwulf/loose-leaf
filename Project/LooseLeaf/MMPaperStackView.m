@@ -280,7 +280,7 @@
 }
 
 
-#pragma mark - MMBezelInLeftGestureRecognizer
+#pragma mark - Bezel Left and Right Gestures
 
 
 /**
@@ -312,6 +312,10 @@
                 [page.layer removeAllAnimations];
                 [visibleStackHolder pushSubview:page];
                 if([bezelStackHolder.subviews count] != 1){
+                    // this will immediately move all pages
+                    // that are already in the bezel stack, but
+                    // won't immediately move the new page that
+                    // we're adding
                     page.frame = visibleStackHolder.bounds;
                 }
             }
@@ -456,7 +460,6 @@
     [self updateIconAnimations];
 }
 
-#pragma mark - MMBezelInRightGestureRecognizer
 
 /**
  * this is the event handler for the MMBezelInRightGestureRecognizer
@@ -638,9 +641,9 @@
     }
 }
 -(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated onComplete:(void(^)(BOOL finished))completionBlock{
-    [self emptyBezelStackToHiddenStackAnimated:animated andPreserveFrame:NO onComplete:completionBlock];
+    [self emptyBezelStackToHiddenStackAnimated:animated andPreservePageFrame:NO onComplete:completionBlock];
 }
--(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated andPreserveFrame:(BOOL)preserveFrame onComplete:(void(^)(BOOL finished))completionBlock{
+-(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated andPreservePageFrame:(BOOL)preserveFrame onComplete:(void(^)(BOOL finished))completionBlock{
     [bezelStackHolder removeAllAnimationsAndPreservePresentationFrame];
     if(animated){
         CGFloat delay = 0;
@@ -650,9 +653,7 @@
                 // since we're  moving the bezel frame for the drag animation, be sure to re-hide it
                 // above the hidden stack off screen after all the pages animate
                 // back to the hidden stack
-                if(!preserveFrame){
-                    bezelStackHolder.frame = hiddenStackHolder.frame;
-                }
+                bezelStackHolder.frame = hiddenStackHolder.frame;
                 if(completionBlock) completionBlock(finished);
             } : nil)];
             delay += kAnimationDelay;
