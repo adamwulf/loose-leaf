@@ -83,6 +83,16 @@ dispatch_queue_t importThumbnailQueue;
 
 #pragma mark - Public Methods
 
+-(void) disableAllGestures{
+    [super disableAllGestures];
+    drawableView.userInteractionEnabled = NO;
+}
+
+-(void) enableAllGestures{
+    [super enableAllGestures];
+    drawableView.userInteractionEnabled = YES;
+}
+
 -(void) undo{
     if([drawableView canUndo]){
         [drawableView undo];
