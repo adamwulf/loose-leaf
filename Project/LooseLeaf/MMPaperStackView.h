@@ -61,7 +61,7 @@
 -(void) addPaperToBottomOfHiddenStack:(MMPaperView*)page;
 
 -(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated onComplete:(void(^)(BOOL finished))completionBlock;
--(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated andPreserveFrame:(BOOL)preserveFrame onComplete:(void(^)(BOOL finished))completionBlock;
+-(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated andPreservePageFrame:(BOOL)preserveFrame onComplete:(void(^)(BOOL finished))completionBlock;
 -(void) popTopPageOfHiddenStack;
 -(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(UIView*)stackView;
 -(void) realignPagesInVisibleStackExcept:(MMPaperView*)page animated:(BOOL)animated;
