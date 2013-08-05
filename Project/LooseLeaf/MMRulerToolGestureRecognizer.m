@@ -21,7 +21,7 @@
 @synthesize scale;
 @synthesize initialDistance;
 
-NSInteger const minimumNumberOfTouches = 2;
+NSInteger const minimumNumberOfRulerTouches = 2;
 
 
 -(id) init{
@@ -65,7 +65,7 @@ NSInteger const minimumNumberOfTouches = 2;
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
     if(self.state != UIGestureRecognizerStatePossible &&
-       [validTouches count] == minimumNumberOfTouches){
+       [validTouches count] == minimumNumberOfRulerTouches){
         //
         // if we're already pinching
         [touches enumerateObjectsUsingBlock:^(id obj, BOOL* stop){
@@ -76,7 +76,7 @@ NSInteger const minimumNumberOfTouches = 2;
     // ignore all the touches that could be bezel touches
     if([validTouchesCurrentlyBeginning count]){
         [validTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
-        if([validTouches count] >= minimumNumberOfTouches && self.state == UIGestureRecognizerStatePossible){
+        if([validTouches count] >= minimumNumberOfRulerTouches && self.state == UIGestureRecognizerStatePossible){
             // our gesture has began, so make sure to kill
             // any touches that are being used to draw
             //
