@@ -17,7 +17,6 @@
 		660E1DB0158FC7DB0001DA12 /* MMPaperIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAF158FC7DB0001DA12 /* MMPaperIcon.m */; };
 		660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DB2159028560001DA12 /* NSArray+MapReduce.m */; };
 		661507641783338E00B181F3 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6615075E1783338E00B181F3 /* libTestFlight.a */; };
-		661507661783338E00B181F3 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 661507601783338E00B181F3 /* release_notes.md */; };
 		66150769178333D500B181F3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66150768178333D500B181F3 /* libz.dylib */; };
 		6615076F1783390400B181F3 /* MMFeedbackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6615076E1783390400B181F3 /* MMFeedbackView.m */; };
 		661507721783410900B181F3 /* DYRateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 661507711783410900B181F3 /* DYRateView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -73,6 +72,20 @@
 		66B21A7A175E595B0049F1AF /* MMBlockOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A79175E595B0049F1AF /* MMBlockOperation.m */; };
 		66B3522517A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B3522417A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m */; };
 		66B51A2A17AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B51A2917AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66B843E717B0529D008BF8B8 /* JRSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 6648954317B0511D0001829C /* JRSwizzle.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66B843E817B052A6008BF8B8 /* gpc.c in Sources */ = {isa = PBXBuildFile; fileRef = 6648954617B0511D0001829C /* gpc.c */; };
+		66B843E917B052B7008BF8B8 /* UIBezierPath+GPC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6648954917B0511D0001829C /* UIBezierPath+GPC.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66B843EA17B052B7008BF8B8 /* UIBezierPath+Editing.m in Sources */ = {isa = PBXBuildFile; fileRef = 6648954B17B0511D0001829C /* UIBezierPath+Editing.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66B843EB17B052B7008BF8B8 /* UIBezierPath+Geometry.m in Sources */ = {isa = PBXBuildFile; fileRef = 6648954D17B0511D0001829C /* UIBezierPath+Geometry.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66B843EC17B052B7008BF8B8 /* UIBezierPath+NSOSX.m in Sources */ = {isa = PBXBuildFile; fileRef = 6648954F17B0511D0001829C /* UIBezierPath+NSOSX.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66B843ED17B052B7008BF8B8 /* UIBezierPath+Ahmed.m in Sources */ = {isa = PBXBuildFile; fileRef = 6648955117B0511D0001829C /* UIBezierPath+Ahmed.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66B843EE17B052C4008BF8B8 /* DKGeometryUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 6648955717B0511D0001829C /* DKGeometryUtilities.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66B843EF17B052D4008BF8B8 /* CurveFit.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6648955C17B0511D0001829C /* CurveFit.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66B843F017B052D4008BF8B8 /* bezier-utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6648955D17B0511D0001829C /* bezier-utils.cpp */; };
+		66B843F117B052D4008BF8B8 /* matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6648955E17B0511D0001829C /* matrix.cpp */; };
+		66B843F217B052D4008BF8B8 /* point.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6648955F17B0511D0001829C /* point.cpp */; };
+		66B843F317B052D4008BF8B8 /* rotate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6648956017B0511D0001829C /* rotate.cpp */; };
+		66B843F417B052D4008BF8B8 /* transforms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6648956117B0511D0001829C /* transforms.cpp */; };
 		66BD6E301591B57B00D4544C /* MMPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* MMPaperButton.m */; };
 		66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E331591C37D00D4544C /* UIImage+MCDrawSubImage.m */; };
 		66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */; };
@@ -93,7 +106,6 @@
 		66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */; };
 		66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* MMListAddPageButton.m */; };
 		66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D33F4B15A6408A0044C809 /* MMShadowedView.m */; };
-		66D83FC51795EAB00093DB26 /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66D83FC01795EA740093DB26 /* DrawKit-iOS.framework */; };
 		66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
 		66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8C1581BCEF00B4918C /* Foundation.framework */; };
 		66DCFB8F1581BCEF00B4918C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */; };
@@ -109,30 +121,6 @@
 		66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E88A361591853E001A6EBF /* MMPapersIcon.m */; };
 		66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		66D83FBF1795EA740093DB26 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 66D83FBA1795EA740093DB26 /* DrawKit-iOS.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 667703EB1620F02900E764C0;
-			remoteInfo = "DrawKit-iOS";
-		};
-		66D83FC11795EA740093DB26 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 66D83FBA1795EA740093DB26 /* DrawKit-iOS.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 667703FC1620F02900E764C0;
-			remoteInfo = "DrawKit-iOSTests";
-		};
-		66D83FC31795EAA60093DB26 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 66D83FBA1795EA740093DB26 /* DrawKit-iOS.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 667703EA1620F02900E764C0;
-			remoteInfo = "DrawKit-iOS";
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		660E1D9B158FC4570001DA12 /* img02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img02.jpg; sourceTree = "<group>"; };
@@ -181,6 +169,122 @@
 		663C1895175A89EB00706A05 /* MMRulerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRulerButton.h; sourceTree = "<group>"; };
 		663C1896175A89ED00706A05 /* MMRulerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRulerButton.m; sourceTree = "<group>"; };
 		664516B8159030FC0012FACA /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		6648954217B0511D0001829C /* JRSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JRSwizzle.h; path = "DrawKit-iOS/JRSwizzle.h"; sourceTree = "<group>"; };
+		6648954317B0511D0001829C /* JRSwizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JRSwizzle.m; path = "DrawKit-iOS/JRSwizzle.m"; sourceTree = "<group>"; };
+		6648954517B0511D0001829C /* gpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gpc.h; sourceTree = "<group>"; };
+		6648954617B0511D0001829C /* gpc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gpc.c; sourceTree = "<group>"; };
+		6648954817B0511D0001829C /* UIBezierPath+GPC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+GPC.h"; sourceTree = "<group>"; };
+		6648954917B0511D0001829C /* UIBezierPath+GPC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+GPC.m"; sourceTree = "<group>"; };
+		6648954A17B0511D0001829C /* UIBezierPath+Editing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+Editing.h"; sourceTree = "<group>"; };
+		6648954B17B0511D0001829C /* UIBezierPath+Editing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+Editing.m"; sourceTree = "<group>"; };
+		6648954C17B0511D0001829C /* UIBezierPath+Geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+Geometry.h"; sourceTree = "<group>"; };
+		6648954D17B0511D0001829C /* UIBezierPath+Geometry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+Geometry.m"; sourceTree = "<group>"; };
+		6648954E17B0511D0001829C /* UIBezierPath+NSOSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+NSOSX.h"; sourceTree = "<group>"; };
+		6648954F17B0511D0001829C /* UIBezierPath+NSOSX.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+NSOSX.m"; sourceTree = "<group>"; };
+		6648955017B0511D0001829C /* UIBezierPath+Ahmed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+Ahmed.h"; sourceTree = "<group>"; };
+		6648955117B0511D0001829C /* UIBezierPath+Ahmed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+Ahmed.m"; sourceTree = "<group>"; };
+		6648955217B0511D0001829C /* Ahmed_thesis_code.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Ahmed_thesis_code.c; sourceTree = "<group>"; };
+		6648955317B0511D0001829C /* UIBezierPath+NSOSX_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+NSOSX_Private.h"; sourceTree = "<group>"; };
+		6648955417B0511D0001829C /* UIBezierPath+Ahmed_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+Ahmed_Private.h"; sourceTree = "<group>"; };
+		6648955617B0511D0001829C /* DKGeometryUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKGeometryUtilities.h; sourceTree = "<group>"; };
+		6648955717B0511D0001829C /* DKGeometryUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKGeometryUtilities.m; sourceTree = "<group>"; };
+		6648955817B0511D0001829C /* DKDrawKitMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKDrawKitMacros.h; sourceTree = "<group>"; };
+		6648955A17B0511D0001829C /* DrawKit-iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DrawKit-iOS.h"; sourceTree = "<group>"; };
+		6648955B17B0511D0001829C /* CurveFit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurveFit.h; sourceTree = "<group>"; };
+		6648955C17B0511D0001829C /* CurveFit.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CurveFit.mm; sourceTree = "<group>"; };
+		6648955D17B0511D0001829C /* bezier-utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "bezier-utils.cpp"; sourceTree = "<group>"; };
+		6648955E17B0511D0001829C /* matrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrix.cpp; sourceTree = "<group>"; };
+		6648955F17B0511D0001829C /* point.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = point.cpp; sourceTree = "<group>"; };
+		6648956017B0511D0001829C /* rotate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rotate.cpp; sourceTree = "<group>"; };
+		6648956117B0511D0001829C /* transforms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = transforms.cpp; sourceTree = "<group>"; };
+		6648956217B0511D0001829C /* bezier-utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "bezier-utils.h"; sourceTree = "<group>"; };
+		6648956317B0511D0001829C /* coord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coord.h; sourceTree = "<group>"; };
+		6648956417B0511D0001829C /* isnan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isnan.h; sourceTree = "<group>"; };
+		6648956517B0511D0001829C /* math-utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "math-utils.h"; sourceTree = "<group>"; };
+		6648956617B0511D0001829C /* macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = macros.h; sourceTree = "<group>"; };
+		6648956717B0511D0001829C /* matrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = matrix.h; sourceTree = "<group>"; };
+		6648956817B0511D0001829C /* point.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = point.h; sourceTree = "<group>"; };
+		6648956917B0511D0001829C /* rotate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rotate.h; sourceTree = "<group>"; };
+		6648956A17B0511D0001829C /* scale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scale.h; sourceTree = "<group>"; };
+		6648956B17B0511D0001829C /* transforms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = transforms.h; sourceTree = "<group>"; };
+		6648956C17B0511D0001829C /* translate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = translate.h; sourceTree = "<group>"; };
+		6648956E17B0511D0001829C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		6648956F17B0511D0001829C /* DrawKit-iOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DrawKit-iOS-Info.plist"; sourceTree = "<group>"; };
+		6648957017B0511D0001829C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6648957217B0511D0001829C /* DrawKit-iOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DrawKit-iOS-Prefix.pch"; sourceTree = "<group>"; };
+		6648957517B0511D0001829C /* gpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gpc.h; sourceTree = "<group>"; };
+		6648957617B0511D0001829C /* gpc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gpc.c; sourceTree = "<group>"; };
+		6648957817B0511D0001829C /* gpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gpc.h; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/gpc.h"; sourceTree = "<group>"; };
+		6648957917B0511D0001829C /* gpc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gpc.c; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/gpc.c"; sourceTree = "<group>"; };
+		6648957A17B0511D0001829C /* UIBezierPath+GPC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+GPC.h"; sourceTree = "<group>"; };
+		6648957B17B0511D0001829C /* UIBezierPath+GPC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+GPC.m"; sourceTree = "<group>"; };
+		6648957C17B0511D0001829C /* UIBezierPath+Editing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+Editing.h"; sourceTree = "<group>"; };
+		6648957D17B0511D0001829C /* UIBezierPath+Editing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+Editing.m"; sourceTree = "<group>"; };
+		6648957E17B0511D0001829C /* UIBezierPath+Geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+Geometry.h"; sourceTree = "<group>"; };
+		6648957F17B0511D0001829C /* UIBezierPath+Geometry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+Geometry.m"; sourceTree = "<group>"; };
+		6648958017B0511D0001829C /* UIBezierPath+NSOSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+NSOSX.h"; sourceTree = "<group>"; };
+		6648958117B0511D0001829C /* UIBezierPath+NSOSX.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+NSOSX.m"; sourceTree = "<group>"; };
+		6648958217B0511D0001829C /* UIBezierPath+Ahmed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+Ahmed.h"; sourceTree = "<group>"; };
+		6648958317B0511D0001829C /* UIBezierPath+Ahmed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+Ahmed.m"; sourceTree = "<group>"; };
+		6648958417B0511D0001829C /* Ahmed_thesis_code.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Ahmed_thesis_code.c; sourceTree = "<group>"; };
+		6648958517B0511D0001829C /* UIBezierPath+NSOSX_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+NSOSX_Private.h"; sourceTree = "<group>"; };
+		6648958617B0511D0001829C /* UIBezierPath+Ahmed_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+Ahmed_Private.h"; sourceTree = "<group>"; };
+		6648958817B0511D0001829C /* UIBezierPath+GPC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIBezierPath+GPC.h"; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/UIBezierPath+GPC.h"; sourceTree = "<group>"; };
+		6648958917B0511D0001829C /* UIBezierPath+GPC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIBezierPath+GPC.m"; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/UIBezierPath+GPC.m"; sourceTree = "<group>"; };
+		6648958A17B0511D0001829C /* UIBezierPath+Editing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIBezierPath+Editing.h"; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/UIBezierPath+Editing.h"; sourceTree = "<group>"; };
+		6648958B17B0511D0001829C /* UIBezierPath+Editing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIBezierPath+Editing.m"; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/UIBezierPath+Editing.m"; sourceTree = "<group>"; };
+		6648958C17B0511D0001829C /* UIBezierPath+Geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIBezierPath+Geometry.h"; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/UIBezierPath+Geometry.h"; sourceTree = "<group>"; };
+		6648958D17B0511D0001829C /* UIBezierPath+Geometry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIBezierPath+Geometry.m"; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/UIBezierPath+Geometry.m"; sourceTree = "<group>"; };
+		6648958E17B0511D0001829C /* UIBezierPath+NSOSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIBezierPath+NSOSX.h"; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/UIBezierPath+NSOSX.h"; sourceTree = "<group>"; };
+		6648958F17B0511D0001829C /* UIBezierPath+NSOSX.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIBezierPath+NSOSX.m"; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/UIBezierPath+NSOSX.m"; sourceTree = "<group>"; };
+		6648959017B0511D0001829C /* UIBezierPath+Ahmed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIBezierPath+Ahmed.h"; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/UIBezierPath+Ahmed.h"; sourceTree = "<group>"; };
+		6648959117B0511D0001829C /* UIBezierPath+Ahmed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIBezierPath+Ahmed.m"; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/UIBezierPath+Ahmed.m"; sourceTree = "<group>"; };
+		6648959217B0511D0001829C /* Ahmed_thesis_code.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Ahmed_thesis_code.c; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/Ahmed_thesis_code.c"; sourceTree = "<group>"; };
+		6648959317B0511D0001829C /* UIBezierPath+NSOSX_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIBezierPath+NSOSX_Private.h"; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/UIBezierPath+NSOSX_Private.h"; sourceTree = "<group>"; };
+		6648959417B0511D0001829C /* UIBezierPath+Ahmed_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIBezierPath+Ahmed_Private.h"; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/UIBezierPath+Ahmed_Private.h"; sourceTree = "<group>"; };
+		6648959517B0511D0001829C /* DKGeometryUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKGeometryUtilities.h; sourceTree = "<group>"; };
+		6648959617B0511D0001829C /* DKGeometryUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKGeometryUtilities.m; sourceTree = "<group>"; };
+		6648959717B0511D0001829C /* DKDrawKitMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKDrawKitMacros.h; sourceTree = "<group>"; };
+		6648959917B0511D0001829C /* DKGeometryUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKGeometryUtilities.h; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/DKGeometryUtilities.h"; sourceTree = "<group>"; };
+		6648959A17B0511D0001829C /* DKGeometryUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DKGeometryUtilities.m; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/DKGeometryUtilities.m"; sourceTree = "<group>"; };
+		6648959B17B0511D0001829C /* DKDrawKitMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKDrawKitMacros.h; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/DKDrawKitMacros.h"; sourceTree = "<group>"; };
+		6648959C17B0511D0001829C /* DrawKit-iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "DrawKit-iOS.h"; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/DrawKit-iOS.h"; sourceTree = "<group>"; };
+		6648959D17B0511D0001829C /* CurveFit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurveFit.h; sourceTree = "<group>"; };
+		6648959E17B0511D0001829C /* CurveFit.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CurveFit.mm; sourceTree = "<group>"; };
+		6648959F17B0511D0001829C /* bezier-utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "bezier-utils.cpp"; sourceTree = "<group>"; };
+		664895A017B0511D0001829C /* matrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrix.cpp; sourceTree = "<group>"; };
+		664895A117B0511D0001829C /* point.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = point.cpp; sourceTree = "<group>"; };
+		664895A217B0511D0001829C /* rotate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rotate.cpp; sourceTree = "<group>"; };
+		664895A317B0511D0001829C /* transforms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = transforms.cpp; sourceTree = "<group>"; };
+		664895A417B0511D0001829C /* bezier-utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "bezier-utils.h"; sourceTree = "<group>"; };
+		664895A517B0511D0001829C /* coord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coord.h; sourceTree = "<group>"; };
+		664895A617B0511D0001829C /* isnan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isnan.h; sourceTree = "<group>"; };
+		664895A717B0511D0001829C /* math-utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "math-utils.h"; sourceTree = "<group>"; };
+		664895A817B0511D0001829C /* macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = macros.h; sourceTree = "<group>"; };
+		664895A917B0511D0001829C /* matrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = matrix.h; sourceTree = "<group>"; };
+		664895AA17B0511D0001829C /* point.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = point.h; sourceTree = "<group>"; };
+		664895AB17B0511D0001829C /* rotate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rotate.h; sourceTree = "<group>"; };
+		664895AC17B0511D0001829C /* scale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scale.h; sourceTree = "<group>"; };
+		664895AD17B0511D0001829C /* transforms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = transforms.h; sourceTree = "<group>"; };
+		664895AE17B0511D0001829C /* translate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = translate.h; sourceTree = "<group>"; };
+		664895B017B0511D0001829C /* CurveFit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurveFit.h; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/CurveFit.h"; sourceTree = "<group>"; };
+		664895B117B0511D0001829C /* CurveFit.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CurveFit.mm; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/CurveFit.mm"; sourceTree = "<group>"; };
+		664895B217B0511D0001829C /* bezier-utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "bezier-utils.cpp"; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/bezier-utils.cpp"; sourceTree = "<group>"; };
+		664895B317B0511D0001829C /* matrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = matrix.cpp; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/matrix.cpp"; sourceTree = "<group>"; };
+		664895B417B0511D0001829C /* point.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = point.cpp; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/point.cpp"; sourceTree = "<group>"; };
+		664895B517B0511D0001829C /* rotate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rotate.cpp; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/rotate.cpp"; sourceTree = "<group>"; };
+		664895B617B0511D0001829C /* transforms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = transforms.cpp; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/transforms.cpp"; sourceTree = "<group>"; };
+		664895B717B0511D0001829C /* bezier-utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "bezier-utils.h"; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/bezier-utils.h"; sourceTree = "<group>"; };
+		664895B817B0511D0001829C /* coord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = coord.h; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/coord.h"; sourceTree = "<group>"; };
+		664895B917B0511D0001829C /* isnan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = isnan.h; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/isnan.h"; sourceTree = "<group>"; };
+		664895BA17B0511D0001829C /* math-utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "math-utils.h"; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/math-utils.h"; sourceTree = "<group>"; };
+		664895BB17B0511D0001829C /* macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = macros.h; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/macros.h"; sourceTree = "<group>"; };
+		664895BC17B0511D0001829C /* matrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = matrix.h; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/matrix.h"; sourceTree = "<group>"; };
+		664895BD17B0511D0001829C /* point.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = point.h; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/point.h"; sourceTree = "<group>"; };
+		664895BE17B0511D0001829C /* rotate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rotate.h; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/rotate.h"; sourceTree = "<group>"; };
+		664895BF17B0511D0001829C /* scale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scale.h; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/scale.h"; sourceTree = "<group>"; };
+		664895C017B0511D0001829C /* transforms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = transforms.h; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/transforms.h"; sourceTree = "<group>"; };
+		664895C117B0511D0001829C /* translate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = translate.h; path = "../../Submodules/DrawKit-iOS/DrawKit-iOS/translate.h"; sourceTree = "<group>"; };
 		6648D21B178C9E5400BE3B37 /* UIColor+Shadow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Shadow.h"; sourceTree = "<group>"; };
 		6648D21C178C9E5400BE3B37 /* UIColor+Shadow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Shadow.m"; sourceTree = "<group>"; };
 		664C62EE15A36DA40072736A /* MMListPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListPaperStackView.h; sourceTree = "<group>"; };
@@ -289,7 +393,6 @@
 		66D0905815F71941004D2CAF /* MMListAddPageButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButtonDelegate.h; sourceTree = "<group>"; };
 		66D33F4A15A6408A0044C809 /* MMShadowedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShadowedView.h; sourceTree = "<group>"; };
 		66D33F4B15A6408A0044C809 /* MMShadowedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShadowedView.m; sourceTree = "<group>"; };
-		66D83FBA1795EA740093DB26 /* DrawKit-iOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "DrawKit-iOS.xcodeproj"; path = "../Submodules/DrawKit-iOS/DrawKit-iOS.xcodeproj"; sourceTree = "<group>"; };
 		66DCFB861581BCEF00B4918C /* LooseLeaf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LooseLeaf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66DCFB8A1581BCEF00B4918C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		66DCFB8C1581BCEF00B4918C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -324,10 +427,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66D83FC51795EAB00093DB26 /* DrawKit-iOS.framework in Frameworks */,
+				663C188F1759B57800706A05 /* JotTouchSDK.framework in Frameworks */,
 				66C0C9CA1783645E009491B3 /* JotUI.framework in Frameworks */,
 				66150769178333D500B181F3 /* libz.dylib in Frameworks */,
-				663C188F1759B57800706A05 /* JotTouchSDK.framework in Frameworks */,
 				6695B6E81750088D0069E61F /* AudioToolbox.framework in Frameworks */,
 				6695B6E6175008840069E61F /* CoreBluetooth.framework in Frameworks */,
 				6695B6E3175008680069E61F /* OpenGLES.framework in Frameworks */,
@@ -439,6 +541,224 @@
 				661507761783417100B181F3 /* StarFull@2x.png */,
 			);
 			name = stars;
+			sourceTree = "<group>";
+		};
+		6648954117B050F90001829C /* DrawKit */ = {
+			isa = PBXGroup;
+			children = (
+				6648954417B0511D0001829C /* JRSwizzle */,
+				6648957417B0511D0001829C /* DrawKit-iOS */,
+				6648957717B0511D0001829C /* GPC */,
+				6648957817B0511D0001829C /* gpc.h */,
+				6648957917B0511D0001829C /* gpc.c */,
+				6648958717B0511D0001829C /* UIBezierPath Categories */,
+				6648958817B0511D0001829C /* UIBezierPath+GPC.h */,
+				6648958917B0511D0001829C /* UIBezierPath+GPC.m */,
+				6648958A17B0511D0001829C /* UIBezierPath+Editing.h */,
+				6648958B17B0511D0001829C /* UIBezierPath+Editing.m */,
+				6648958C17B0511D0001829C /* UIBezierPath+Geometry.h */,
+				6648958D17B0511D0001829C /* UIBezierPath+Geometry.m */,
+				6648958E17B0511D0001829C /* UIBezierPath+NSOSX.h */,
+				6648958F17B0511D0001829C /* UIBezierPath+NSOSX.m */,
+				6648959017B0511D0001829C /* UIBezierPath+Ahmed.h */,
+				6648959117B0511D0001829C /* UIBezierPath+Ahmed.m */,
+				6648959217B0511D0001829C /* Ahmed_thesis_code.c */,
+				6648959317B0511D0001829C /* UIBezierPath+NSOSX_Private.h */,
+				6648959417B0511D0001829C /* UIBezierPath+Ahmed_Private.h */,
+				6648959817B0511D0001829C /* Private Files */,
+				6648959917B0511D0001829C /* DKGeometryUtilities.h */,
+				6648959A17B0511D0001829C /* DKGeometryUtilities.m */,
+				6648959B17B0511D0001829C /* DKDrawKitMacros.h */,
+				6648959C17B0511D0001829C /* DrawKit-iOS.h */,
+				664895AF17B0511D0001829C /* CurveFit */,
+				664895B017B0511D0001829C /* CurveFit.h */,
+				664895B117B0511D0001829C /* CurveFit.mm */,
+				664895B217B0511D0001829C /* bezier-utils.cpp */,
+				664895B317B0511D0001829C /* matrix.cpp */,
+				664895B417B0511D0001829C /* point.cpp */,
+				664895B517B0511D0001829C /* rotate.cpp */,
+				664895B617B0511D0001829C /* transforms.cpp */,
+				664895B717B0511D0001829C /* bezier-utils.h */,
+				664895B817B0511D0001829C /* coord.h */,
+				664895B917B0511D0001829C /* isnan.h */,
+				664895BA17B0511D0001829C /* math-utils.h */,
+				664895BB17B0511D0001829C /* macros.h */,
+				664895BC17B0511D0001829C /* matrix.h */,
+				664895BD17B0511D0001829C /* point.h */,
+				664895BE17B0511D0001829C /* rotate.h */,
+				664895BF17B0511D0001829C /* scale.h */,
+				664895C017B0511D0001829C /* transforms.h */,
+				664895C117B0511D0001829C /* translate.h */,
+			);
+			name = DrawKit;
+			path = LooseLeaf;
+			sourceTree = "<group>";
+		};
+		6648954417B0511D0001829C /* JRSwizzle */ = {
+			isa = PBXGroup;
+			children = (
+				6648954217B0511D0001829C /* JRSwizzle.h */,
+				6648954317B0511D0001829C /* JRSwizzle.m */,
+			);
+			name = JRSwizzle;
+			path = "../../Submodules/DrawKit-iOS";
+			sourceTree = "<group>";
+		};
+		6648954717B0511D0001829C /* GPC */ = {
+			isa = PBXGroup;
+			children = (
+				6648954517B0511D0001829C /* gpc.h */,
+				6648954617B0511D0001829C /* gpc.c */,
+			);
+			name = GPC;
+			sourceTree = "<group>";
+		};
+		6648955517B0511D0001829C /* UIBezierPath Categories */ = {
+			isa = PBXGroup;
+			children = (
+				6648954817B0511D0001829C /* UIBezierPath+GPC.h */,
+				6648954917B0511D0001829C /* UIBezierPath+GPC.m */,
+				6648954A17B0511D0001829C /* UIBezierPath+Editing.h */,
+				6648954B17B0511D0001829C /* UIBezierPath+Editing.m */,
+				6648954C17B0511D0001829C /* UIBezierPath+Geometry.h */,
+				6648954D17B0511D0001829C /* UIBezierPath+Geometry.m */,
+				6648954E17B0511D0001829C /* UIBezierPath+NSOSX.h */,
+				6648954F17B0511D0001829C /* UIBezierPath+NSOSX.m */,
+				6648955017B0511D0001829C /* UIBezierPath+Ahmed.h */,
+				6648955117B0511D0001829C /* UIBezierPath+Ahmed.m */,
+				6648955317B0511D0001829C /* UIBezierPath+NSOSX_Private.h */,
+				6648955417B0511D0001829C /* UIBezierPath+Ahmed_Private.h */,
+			);
+			name = "UIBezierPath Categories";
+			sourceTree = "<group>";
+		};
+		6648955917B0511D0001829C /* Private Files */ = {
+			isa = PBXGroup;
+			children = (
+				6648955617B0511D0001829C /* DKGeometryUtilities.h */,
+				6648955717B0511D0001829C /* DKGeometryUtilities.m */,
+				6648955817B0511D0001829C /* DKDrawKitMacros.h */,
+			);
+			name = "Private Files";
+			sourceTree = "<group>";
+		};
+		6648956D17B0511D0001829C /* CurveFit */ = {
+			isa = PBXGroup;
+			children = (
+				6648955B17B0511D0001829C /* CurveFit.h */,
+				6648955C17B0511D0001829C /* CurveFit.mm */,
+				6648955D17B0511D0001829C /* bezier-utils.cpp */,
+				6648955E17B0511D0001829C /* matrix.cpp */,
+				6648955F17B0511D0001829C /* point.cpp */,
+				6648956017B0511D0001829C /* rotate.cpp */,
+				6648956117B0511D0001829C /* transforms.cpp */,
+				6648956217B0511D0001829C /* bezier-utils.h */,
+				6648956317B0511D0001829C /* coord.h */,
+				6648956417B0511D0001829C /* isnan.h */,
+				6648956517B0511D0001829C /* math-utils.h */,
+				6648956617B0511D0001829C /* macros.h */,
+				6648956717B0511D0001829C /* matrix.h */,
+				6648956817B0511D0001829C /* point.h */,
+				6648956917B0511D0001829C /* rotate.h */,
+				6648956A17B0511D0001829C /* scale.h */,
+				6648956B17B0511D0001829C /* transforms.h */,
+				6648956C17B0511D0001829C /* translate.h */,
+			);
+			name = CurveFit;
+			sourceTree = "<group>";
+		};
+		6648957317B0511D0001829C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				6648955217B0511D0001829C /* Ahmed_thesis_code.c */,
+				6648956E17B0511D0001829C /* README.md */,
+				6648956F17B0511D0001829C /* DrawKit-iOS-Info.plist */,
+				6648957117B0511D0001829C /* InfoPlist.strings */,
+				6648957217B0511D0001829C /* DrawKit-iOS-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		6648957417B0511D0001829C /* DrawKit-iOS */ = {
+			isa = PBXGroup;
+			children = (
+				6648954717B0511D0001829C /* GPC */,
+				6648955517B0511D0001829C /* UIBezierPath Categories */,
+				6648955917B0511D0001829C /* Private Files */,
+				6648955A17B0511D0001829C /* DrawKit-iOS.h */,
+				6648956D17B0511D0001829C /* CurveFit */,
+				6648957317B0511D0001829C /* Supporting Files */,
+			);
+			name = "DrawKit-iOS";
+			path = "../../Submodules/DrawKit-iOS/DrawKit-iOS";
+			sourceTree = "<group>";
+		};
+		6648957717B0511D0001829C /* GPC */ = {
+			isa = PBXGroup;
+			children = (
+				6648957517B0511D0001829C /* gpc.h */,
+				6648957617B0511D0001829C /* gpc.c */,
+			);
+			name = GPC;
+			path = "../../Submodules/DrawKit-iOS/DrawKit-iOS";
+			sourceTree = "<group>";
+		};
+		6648958717B0511D0001829C /* UIBezierPath Categories */ = {
+			isa = PBXGroup;
+			children = (
+				6648957A17B0511D0001829C /* UIBezierPath+GPC.h */,
+				6648957B17B0511D0001829C /* UIBezierPath+GPC.m */,
+				6648957C17B0511D0001829C /* UIBezierPath+Editing.h */,
+				6648957D17B0511D0001829C /* UIBezierPath+Editing.m */,
+				6648957E17B0511D0001829C /* UIBezierPath+Geometry.h */,
+				6648957F17B0511D0001829C /* UIBezierPath+Geometry.m */,
+				6648958017B0511D0001829C /* UIBezierPath+NSOSX.h */,
+				6648958117B0511D0001829C /* UIBezierPath+NSOSX.m */,
+				6648958217B0511D0001829C /* UIBezierPath+Ahmed.h */,
+				6648958317B0511D0001829C /* UIBezierPath+Ahmed.m */,
+				6648958417B0511D0001829C /* Ahmed_thesis_code.c */,
+				6648958517B0511D0001829C /* UIBezierPath+NSOSX_Private.h */,
+				6648958617B0511D0001829C /* UIBezierPath+Ahmed_Private.h */,
+			);
+			name = "UIBezierPath Categories";
+			path = "../../Submodules/DrawKit-iOS/DrawKit-iOS";
+			sourceTree = "<group>";
+		};
+		6648959817B0511D0001829C /* Private Files */ = {
+			isa = PBXGroup;
+			children = (
+				6648959517B0511D0001829C /* DKGeometryUtilities.h */,
+				6648959617B0511D0001829C /* DKGeometryUtilities.m */,
+				6648959717B0511D0001829C /* DKDrawKitMacros.h */,
+			);
+			name = "Private Files";
+			path = "../../Submodules/DrawKit-iOS/DrawKit-iOS";
+			sourceTree = "<group>";
+		};
+		664895AF17B0511D0001829C /* CurveFit */ = {
+			isa = PBXGroup;
+			children = (
+				6648959D17B0511D0001829C /* CurveFit.h */,
+				6648959E17B0511D0001829C /* CurveFit.mm */,
+				6648959F17B0511D0001829C /* bezier-utils.cpp */,
+				664895A017B0511D0001829C /* matrix.cpp */,
+				664895A117B0511D0001829C /* point.cpp */,
+				664895A217B0511D0001829C /* rotate.cpp */,
+				664895A317B0511D0001829C /* transforms.cpp */,
+				664895A417B0511D0001829C /* bezier-utils.h */,
+				664895A517B0511D0001829C /* coord.h */,
+				664895A617B0511D0001829C /* isnan.h */,
+				664895A717B0511D0001829C /* math-utils.h */,
+				664895A817B0511D0001829C /* macros.h */,
+				664895A917B0511D0001829C /* matrix.h */,
+				664895AA17B0511D0001829C /* point.h */,
+				664895AB17B0511D0001829C /* rotate.h */,
+				664895AC17B0511D0001829C /* scale.h */,
+				664895AD17B0511D0001829C /* transforms.h */,
+				664895AE17B0511D0001829C /* translate.h */,
+			);
+			name = CurveFit;
+			path = "../../Submodules/DrawKit-iOS/DrawKit-iOS";
 			sourceTree = "<group>";
 		};
 		664C62F115A36DB00072736A /* MMPaperView */ = {
@@ -647,19 +967,10 @@
 			name = Tools;
 			sourceTree = "<group>";
 		};
-		66D83FBB1795EA740093DB26 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				66D83FC01795EA740093DB26 /* DrawKit-iOS.framework */,
-				66D83FC21795EA740093DB26 /* DrawKit-iOSTests.octest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		66DCFB7B1581BCED00B4918C = {
 			isa = PBXGroup;
 			children = (
-				66D83FBA1795EA740093DB26 /* DrawKit-iOS.xcodeproj */,
+				6648954117B050F90001829C /* DrawKit */,
 				66DCFB901581BCEF00B4918C /* Loose Leaf */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
 				66DCFB871581BCEF00B4918C /* Products */,
@@ -767,7 +1078,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				66D83FC41795EAA60093DB26 /* PBXTargetDependency */,
 			);
 			name = LooseLeaf;
 			productName = "Paper Stack";
@@ -794,35 +1104,12 @@
 			mainGroup = 66DCFB7B1581BCED00B4918C;
 			productRefGroup = 66DCFB871581BCEF00B4918C /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 66D83FBB1795EA740093DB26 /* Products */;
-					ProjectRef = 66D83FBA1795EA740093DB26 /* DrawKit-iOS.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				66DCFB851581BCEF00B4918C /* LooseLeaf */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		66D83FC01795EA740093DB26 /* DrawKit-iOS.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework.static;
-			path = "DrawKit-iOS.framework";
-			remoteRef = 66D83FBF1795EA740093DB26 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		66D83FC21795EA740093DB26 /* DrawKit-iOSTests.octest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "DrawKit-iOSTests.octest";
-			remoteRef = 66D83FC11795EA740093DB26 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		66DCFB841581BCEF00B4918C /* Resources */ = {
@@ -839,7 +1126,6 @@
 				6661144716FD67F8005032B9 /* Loose-Leaf-Icon.png in Resources */,
 				6661144A16FD67FA005032B9 /* Loose-Leaf-Icon@2x.png in Resources */,
 				66B21A59175B0BF30049F1AF /* cloth.png in Resources */,
-				661507661783338E00B181F3 /* release_notes.md in Resources */,
 				661507771783417100B181F3 /* StarEmpty.png in Resources */,
 				661507781783417100B181F3 /* StarEmpty@2x.png in Resources */,
 				661507791783417100B181F3 /* StarFull.png in Resources */,
@@ -942,20 +1228,34 @@
 				66C0C9D0178386B8009491B3 /* MMLikeButton.m in Sources */,
 				66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */,
 				66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */,
+				66B843E717B0529D008BF8B8 /* JRSwizzle.m in Sources */,
+				66B843E817B052A6008BF8B8 /* gpc.c in Sources */,
+				66B843E917B052B7008BF8B8 /* UIBezierPath+GPC.m in Sources */,
+				66B843EA17B052B7008BF8B8 /* UIBezierPath+Editing.m in Sources */,
+				66B843EB17B052B7008BF8B8 /* UIBezierPath+Geometry.m in Sources */,
+				66B843EC17B052B7008BF8B8 /* UIBezierPath+NSOSX.m in Sources */,
+				66B843ED17B052B7008BF8B8 /* UIBezierPath+Ahmed.m in Sources */,
+				66B843EE17B052C4008BF8B8 /* DKGeometryUtilities.m in Sources */,
+				66B843EF17B052D4008BF8B8 /* CurveFit.mm in Sources */,
+				66B843F017B052D4008BF8B8 /* bezier-utils.cpp in Sources */,
+				66B843F117B052D4008BF8B8 /* matrix.cpp in Sources */,
+				66B843F217B052D4008BF8B8 /* point.cpp in Sources */,
+				66B843F317B052D4008BF8B8 /* rotate.cpp in Sources */,
+				66B843F417B052D4008BF8B8 /* transforms.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		66D83FC41795EAA60093DB26 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "DrawKit-iOS";
-			targetProxy = 66D83FC31795EAA60093DB26 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
+		6648957117B0511D0001829C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6648957017B0511D0001829C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		66DCFB931581BCEF00B4918C /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1039,8 +1339,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Adam Wulf (569ACMP6SC)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../Submodules/JotUI/JotTouchSDK\"",
-					"\"$(SRCROOT)/../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos\"",
+					"$(SRCROOT)/../Submodules/JotUI/JotTouchSDK",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
@@ -1070,8 +1369,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../Submodules/JotUI/JotTouchSDK\"",
-					"\"$(SRCROOT)/../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos\"",
+					"$(SRCROOT)/../Submodules/JotUI/JotTouchSDK",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";

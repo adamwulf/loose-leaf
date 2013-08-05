@@ -14,8 +14,8 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
-				<string>Loose-Leaf_72.png</string>
-				<string>Loose-Leaf_144.png</string>
+				<string>Loose-Leaf-Icon.png</string>
+				<string>Loose-Leaf-Icon@2x.png</string>
 			</array>
 			<key>UIPrerenderedIcon</key>
 			<true/>
