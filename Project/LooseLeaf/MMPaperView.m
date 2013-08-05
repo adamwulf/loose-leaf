@@ -12,8 +12,6 @@
 #import "MMShadowManager.h"
 #import "NSString+UUID.h"
 #import "UIView+Debug.h"
-#import "MMObjectSelectLongPressGestureRecognizer.h"
-#import "MMImmovableTapGestureRecognizer.h"
 #import "TestFlight.h"
 
 @implementation MMPaperView
@@ -45,13 +43,13 @@
         // allow the user to select an object by long pressing
         // on it. this'll allow the user to select + move/scale/rotate
         // an object in one gesture
-        MMObjectSelectLongPressGestureRecognizer* longPress = [[MMObjectSelectLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+        longPress = [[MMObjectSelectLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
         longPress.numberOfTouchesRequired = 2;
         [self addGestureRecognizer:longPress];
         //
         // allow the user to select an object by tapping on the page
         // with two fingers
-        MMImmovableTapGestureRecognizer* tap = [[MMImmovableTapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleFingerDoubleTap:)];
+        tap = [[MMImmovableTapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleFingerDoubleTap:)];
         tap.numberOfTapsRequired = 1;
         tap.numberOfTouchesRequired = 2;
         //
@@ -142,7 +140,7 @@
     BOOL isBezeled = (panGesture.didExitToBezel & panGesture.bezelDirectionMask) != MMBezelDirectionNone;
     BOOL willExit = isBezeled && (panGesture.state == UIGestureRecognizerStateChanged || panGesture.state == UIGestureRecognizerStateEnded || panGesture.state == UIGestureRecognizerStateCancelled);
     if(willExit){
-        return panGesture.numberOfRepeatingBezels;
+        return 1;
     }
     return 0;
 }
@@ -167,6 +165,9 @@
         [gesture setEnabled:NO];
     }
     textLabel.text = @"disabled";
+    if([self.uuid hasPrefix:@"41B98"]){
+        NSLog(@"disabled: %@ %d", self.uuid, panGesture.enabled);
+    }
 }
 /**
  * enables all gestures on this page
@@ -176,6 +177,9 @@
         [gesture setEnabled:YES];
     }
     textLabel.text = @"enabled";
+    if([self.uuid hasPrefix:@"41B98"]){
+        NSLog(@"enabled: %@", self.uuid);
+    }
 }
 
 
@@ -212,6 +216,9 @@
  * pan gestures use proper state control etc to zoom a page in and out.
  */
 -(void) panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture{
+    if(![self.delegate shouldAllowPan:self]){
+        return;
+    }
     //
     // procede with the pan gesture
     CGPoint lastLocationInSelf = [panGesture locationInView:self];

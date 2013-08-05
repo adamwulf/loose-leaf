@@ -17,7 +17,8 @@ static MMRotationManager* _instance = nil;
 
 -(id) init{
     if(_instance) return _instance;
-    if((_instance = [super init])){
+    if((self = [super init])){
+        _instance = self;
         [[NSNotificationCenter defaultCenter] addObserver:_instance selector:@selector(didRotate:)   name:UIDeviceOrientationDidChangeNotification object:nil];
         isFirstReading = YES;
         currentRotationReading = 0;

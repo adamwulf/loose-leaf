@@ -7,8 +7,9 @@
 //
 
 #import "MMPaperStackView.h"
-#import "MMPanAndPinchFromListViewGestureRecognizer.h"
 #import <QuartzCore/QuartzCore.h>
+#import "MMPanAndPinchFromListViewGestureRecognizer.h"
+#import "MMLongPressFromListViewGestureRecognizer.h"
 #import "MMListAddPageButton.h"
 #import "MMListAddPageButtonDelegate.h"
 
@@ -30,6 +31,7 @@
     
     UITapGestureRecognizer* tapGesture;
     MMPanAndPinchFromListViewGestureRecognizer* pinchGesture;
+    MMLongPressFromListViewGestureRecognizer* longPressGesture;
     
     CGPoint initialScrollOffsetFromTransitionToListView;
     NSArray* pagesThatWillBeVisibleAfterTransitionToListView;
@@ -45,5 +47,9 @@
 }
 
 -(void) ensurePage:(MMPaperView*)thePage isAtIndex:(NSInteger)newIndex;
+
+-(CGPoint) offsetNeededToShowPage:(MMPaperView*)page;
+-(NSArray*) findPagesInVisibleRowsOfListViewGivenOffset:(CGPoint)eventualOffsetOfListView;
+
 
 @end

@@ -134,6 +134,9 @@
     [self drawDropshadowIfSelected];
 
     [super drawRect:rect];
+    
+    CGGradientRelease(frontMountainGradient);
+    CGColorSpaceRelease(colorSpace);
 }
 
 

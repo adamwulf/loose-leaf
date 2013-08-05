@@ -25,6 +25,8 @@ dispatch_queue_t importThumbnailQueue;
     NSString* inkPath;
     NSString* plistPath;
     NSString* thumbnailPath;
+    
+    BOOL isLoadingCachedImageFromDisk;
 }
 
 @synthesize drawableView;
@@ -54,22 +56,23 @@ dispatch_queue_t importThumbnailQueue;
         cachedImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         cachedImgView.clipsToBounds = YES;
         [self.contentView addSubview:cachedImgView];
-
-        //
-        // TODO:
-        // need to handle these images from list / stack view better
-        dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
-            UIImage* img = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
-            [NSThread performBlockOnMainThread:^{
-                cachedImgView.image = img;
-            }];
-        });
         
         lastSavedUndoHash = [drawableView undoHash];
+        
+        //
+        // This pan gesture is used to pan/scale the page itself.
+        rulerGesture = [[MMRulerToolGestureRecognizer alloc] initWithTarget:self action:@selector(didMoveRuler:)];
+        //
+        // This gesture is only allowed to run if the user is not
+        // acting on an object on the page. defer to the long press
+        // and the tap gesture, and only allow page pan/scale if
+        // these fail
+        [rulerGesture requireGestureRecognizerToFail:longPress];
+        [rulerGesture requireGestureRecognizerToFail:tap];
+        [self addGestureRecognizer:rulerGesture];
     }
     return self;
 }
-
 
 -(void) setFrame:(CGRect)frame{
     [super setFrame:frame];
@@ -78,6 +81,16 @@ dispatch_queue_t importThumbnailQueue;
 }
 
 #pragma mark - Public Methods
+
+-(void) disableAllGestures{
+    [super disableAllGestures];
+    drawableView.userInteractionEnabled = NO;
+}
+
+-(void) enableAllGestures{
+    [super enableAllGestures];
+    drawableView.userInteractionEnabled = YES;
+}
 
 -(void) undo{
     if([drawableView canUndo]){
@@ -121,13 +134,15 @@ dispatch_queue_t importThumbnailQueue;
     }
     
     void (^block2)() = ^(void) {
-        if(!state){
-            state = [[JotViewState alloc] initWithImageFile:[self inkPath]
-                                               andStateFile:[self plistPath]
-                                                andPageSize:pagePixelSize
-                                               andGLContext:context];
+        @autoreleasepool {
+            if(!state){
+                state = [[JotViewState alloc] initWithImageFile:[self inkPath]
+                                                   andStateFile:[self plistPath]
+                                                    andPageSize:pagePixelSize
+                                                   andGLContext:context];
+            }
+            if(block) block();
         }
-        if(block) block();
     };
     
     if(async){
@@ -145,45 +160,57 @@ dispatch_queue_t importThumbnailQueue;
 -(void) setBackgroundTextureToStartPage{
     UIGraphicsBeginImageContext(state.backgroundTexture.pixelSize);
     CGFloat scale = [[UIScreen mainScreen] scale];
+    
+    CGFloat textStartX = 110;
 
     [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 18), CGAffineTransformMakeScale(scale, scale))
                             withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"New Blank Page" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(100, 30), CGAffineTransformMakeScale(scale, scale))
+    [@"New Blank Page" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 25), CGAffineTransformMakeScale(scale, scale))
                           withFont:[UIFont systemFontOfSize:16 * scale]];
     
     
     [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 18 + 60), CGAffineTransformMakeScale(scale, scale))
              withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Jot Touch Settings" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(100, 30 + 60), CGAffineTransformMakeScale(scale, scale))
+    [@"Jot Touch Settings" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 25 + 60), CGAffineTransformMakeScale(scale, scale))
                           withFont:[UIFont systemFontOfSize:16 * scale]];
     
 
     [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 18 + 60*2), CGAffineTransformMakeScale(scale, scale))
              withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Send Adam your Alpha Feedback!" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(100, 30 + 60*2), CGAffineTransformMakeScale(scale, scale))
+    [@"Send Adam your Alpha Feedback!" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 25 + 60*2), CGAffineTransformMakeScale(scale, scale))
                               withFont:[UIFont systemFontOfSize:16 * scale]];
     
 
     [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 298), CGAffineTransformMakeScale(scale, scale))
              withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Pen" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(100, 310), CGAffineTransformMakeScale(scale, scale))
+    [@"Pen" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 310), CGAffineTransformMakeScale(scale, scale))
                                           withFont:[UIFont systemFontOfSize:16 * scale]];
     
 
     [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 298 + 60), CGAffineTransformMakeScale(scale, scale))
              withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Eraser" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(100, 310 + 60), CGAffineTransformMakeScale(scale, scale))
+    [@"Eraser" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 310 + 60), CGAffineTransformMakeScale(scale, scale))
                                           withFont:[UIFont systemFontOfSize:16 * scale]];
     
+    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 330 + 60 * 5), CGAffineTransformMakeScale(scale, scale))
+             withFont:[UIFont systemFontOfSize:32 * scale]];
+    [@"Grab" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 342 + 60 * 5), CGAffineTransformMakeScale(scale, scale))
+                  withFont:[UIFont systemFontOfSize:16 * scale]];
+
+    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 330 + 60 * 6), CGAffineTransformMakeScale(scale, scale))
+             withFont:[UIFont systemFontOfSize:32 * scale]];
+    [@"Ruler" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 342 + 60 * 6), CGAffineTransformMakeScale(scale, scale))
+                     withFont:[UIFont systemFontOfSize:16 * scale]];
+
 
     [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 902), CGAffineTransformMakeScale(scale, scale))
              withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Undo" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(100, 914), CGAffineTransformMakeScale(scale, scale))
+    [@"Undo" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 914), CGAffineTransformMakeScale(scale, scale))
                   withFont:[UIFont systemFontOfSize:16 * scale]];
     
     [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 902 + 60), CGAffineTransformMakeScale(scale, scale))
              withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Redo" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(100, 914 + 60), CGAffineTransformMakeScale(scale, scale))
+    [@"Redo" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 914 + 60), CGAffineTransformMakeScale(scale, scale))
                 withFont:[UIFont systemFontOfSize:16 * scale]];
     
     
@@ -193,39 +220,40 @@ dispatch_queue_t importThumbnailQueue;
                                 withFont:[UIFont boldSystemFontOfSize:20 * scale]];
     
     
-    [@"• 1 finger will draw" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 402), CGAffineTransformMakeScale(scale, scale))
-             withFont:[UIFont systemFontOfSize:20 * scale]];
+    [@"New this build:" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 402), CGAffineTransformMakeScale(scale, scale))
+             withFont:[UIFont boldSystemFontOfSize:20 * scale]];
     
-    [@"• 2 fingers will grab/zoom the page" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 442), CGAffineTransformMakeScale(scale, scale))
+    [@"• New Ruler mode lets you draw super straight lines" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 442), CGAffineTransformMakeScale(scale, scale))
                   withFont:[UIFont systemFontOfSize:20 * scale]];
-    
-    [@"• you can zoom + draw at the same time" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 482), CGAffineTransformMakeScale(scale, scale))
-                                        withFont:[UIFont systemFontOfSize:20 * scale]];
-    
-    [@"• drag pages to left/right to change page" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 522), CGAffineTransformMakeScale(scale, scale))
+    [@"  or curves. Similar to Adobe's Napolean ruler." drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 468), CGAffineTransformMakeScale(scale, scale))
                                                   withFont:[UIFont systemFontOfSize:20 * scale]];
     
-    [@"• or drag two fingers from the right bezel to" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 562), CGAffineTransformMakeScale(scale, scale))
+    [@"• Two fingers from left bezel will move pages off the stack." drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 508), CGAffineTransformMakeScale(scale, scale))
+                                        withFont:[UIFont systemFontOfSize:20 * scale]];
+    
+    [@"• two fingers from either bezel works in ruler mode." drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 548), CGAffineTransformMakeScale(scale, scale))
+                                                  withFont:[UIFont systemFontOfSize:20 * scale]];
+    
+    [@"• Can move pages in list view with 1 finger long press." drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 588), CGAffineTransformMakeScale(scale, scale))
                                                                  withFont:[UIFont systemFontOfSize:20 * scale]];
-    [@"  change pages" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 588), CGAffineTransformMakeScale(scale, scale))
-                                                                      withFont:[UIFont systemFontOfSize:20 * scale]];
 
-    [@"• with system gestures off, you can grab pages" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 628), CGAffineTransformMakeScale(scale, scale))
+    [@"• lots of memory optimizations" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 628), CGAffineTransformMakeScale(scale, scale))
                                                           withFont:[UIFont systemFontOfSize:20 * scale]];
-    [@"  behind top page too" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 654), CGAffineTransformMakeScale(scale, scale))
-                                 withFont:[UIFont systemFontOfSize:20 * scale]];
     
-    [@"• pinch out to go to list view" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 694), CGAffineTransformMakeScale(scale, scale))
+    [@"• changed perspective a bit when zooming to list" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 668), CGAffineTransformMakeScale(scale, scale))
                                           withFont:[UIFont systemFontOfSize:20 * scale]];
+
+    [@"• thinner less smeared-looking pen" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 708), CGAffineTransformMakeScale(scale, scale))
+                                                            withFont:[UIFont systemFontOfSize:20 * scale]];
+
     
-    [@"• in list view, use two fingers to grab and" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 734), CGAffineTransformMakeScale(scale, scale))
-                                          withFont:[UIFont systemFontOfSize:20 * scale]];
-    [@"  reorder pages, or tap to open" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 760), CGAffineTransformMakeScale(scale, scale))
-                                                       withFont:[UIFont systemFontOfSize:20 * scale]];
-    
-    [@"• the disabled buttons will be added in future builds" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 800), CGAffineTransformMakeScale(scale, scale))
-                                          withFont:[UIFont systemFontOfSize:20 * scale]];
-    
+    [@"Not yet built:" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 760), CGAffineTransformMakeScale(scale, scale))
+                           withFont:[UIFont boldSystemFontOfSize:20 * scale]];
+
+    [@"• New undo/redo UIUX" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 800), CGAffineTransformMakeScale(scale, scale))
+                          withFont:[UIFont systemFontOfSize:20 * scale]];
+    [@"• Can't delete pages yet" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 840), CGAffineTransformMakeScale(scale, scale))
+                                withFont:[UIFont systemFontOfSize:20 * scale]];
 
     /**
      
@@ -324,6 +352,55 @@ dispatch_queue_t importThumbnailQueue;
     }
 }
 
+-(void) loadCachedPreview{
+    if(!cachedImgView.image && !isLoadingCachedImageFromDisk){
+        isLoadingCachedImageFromDisk = YES;
+        dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
+            @autoreleasepool {
+                UIImage* img = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
+                [NSThread performBlockOnMainThread:^{
+                    cachedImgView.image = img;
+                    isLoadingCachedImageFromDisk = NO;
+                }];
+            }
+        });
+    }
+}
+
+-(void) unloadCachedPreview{
+    // i have to do this on the dispatch queues, so
+    // that this will execute after loading if the loading
+    // hasn't executed yet
+    //
+    // i should probably make an nsoperationqueue or something
+    // so that i can cancel operations if they havne't run yet... (?)
+    dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
+        [NSThread performBlockOnMainThread:^{
+            cachedImgView.image = nil;
+        }];
+    });
+}
+
+
+
+#pragma mark - Ruler Tool
+
+/**
+ * the ruler gesture is firing
+ */
+-(void) didMoveRuler:(MMRulerToolGestureRecognizer*)gesture{
+    if(![delegate shouldAllowPan:self]){
+        if(gesture.state == UIGestureRecognizerStateFailed ||
+           gesture.state == UIGestureRecognizerStateCancelled ||
+           gesture.state == UIGestureRecognizerStateEnded){
+            [self.delegate didStopRuler:gesture];
+        }else if(gesture.state == UIGestureRecognizerStateBegan ||
+               gesture.state == UIGestureRecognizerStateChanged){
+            [self.delegate didMoveRuler:gesture];
+        }
+    }
+}
+
 #pragma mark - JotViewDelegate
 
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
@@ -370,6 +447,9 @@ dispatch_queue_t importThumbnailQueue;
     return [delegate rotationForSegment:segment fromPreviousSegment:previousSegment];;
 }
 
+-(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
+    return [delegate willAddElementsToStroke:elements fromPreviousElement:previousElement];
+}
 
 
 

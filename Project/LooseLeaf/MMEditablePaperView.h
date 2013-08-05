@@ -8,10 +8,12 @@
 
 #import "MMPaperView.h"
 #import <JotUI/JotUI.h>
+#import "MMRulerToolGestureRecognizer.h"
 
 @interface MMEditablePaperView : MMPaperView<JotViewDelegate>{
     UIImageView* cachedImgView;
     __weak JotView* drawableView;
+    MMRulerToolGestureRecognizer* rulerGesture;
 }
 
 @property (nonatomic, weak) JotView* drawableView;
@@ -19,6 +21,8 @@
 -(void) undo;
 -(void) redo;
 -(BOOL) hasEditsToSave;
+-(void) unloadCachedPreview;
+-(void) loadCachedPreview;
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(EAGLContext*)context andThen:(void (^)())block;
 -(void) setBackgroundTextureToStartPage;
 -(void) unloadState;

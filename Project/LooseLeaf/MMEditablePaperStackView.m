@@ -10,6 +10,7 @@
 #import "UIView+SubviewStacks.h"
 #import "TestFlight.h"
 #import "MMFeedbackView.h"
+#import "MMRulerView.h"
 
 @implementation MMEditablePaperStackView{
     MMEditablePaperView* currentEditablePage;
@@ -25,6 +26,9 @@
     if (self) {
         // Initialization code
 
+        self.delegate = self;
+        
+        pagesWithLoadedCacheImages = [NSMutableSet set];
         stateLoadedPages = [NSMutableArray array];
         
         stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
@@ -178,13 +182,13 @@
         
         
         pencilButton.selected = YES;
-//        handButton.selected = YES;
+        handButton.selected = YES;
         
         polygonButton.enabled = NO;
         insertImageButton.enabled = NO;
         scissorButton.enabled = NO;
-        handButton.enabled = NO;
-        rulerButton.enabled = NO;
+        handButton.enabled = YES;
+        rulerButton.enabled = YES;
         shareButton.enabled = NO;
         
         [NSThread performBlockInBackground:^{
@@ -195,6 +199,10 @@
             [[JotStylusManager sharedInstance] setEnabled:YES];
             [[JotStylusManager sharedInstance] setRejectMode:NO];
         }];
+        
+        
+        rulerView = [[MMRulerView alloc] initWithFrame:self.bounds];
+        [self addSubview:rulerView];
     }
     return self;
 }
@@ -215,7 +223,7 @@
     }
 }
 
-#pragma mark - Undo/Redo Button Actions
+#pragma mark - Tool Button Actions
 
 -(void) undo:(UIButton*)_button{
     id obj = [visibleStackHolder peekSubview];
@@ -233,9 +241,6 @@
     }
 }
 
-
-#pragma mark - Tool Button Actions
-
 -(void) penTapped:(UIButton*)_button{
     eraserButton.selected = NO;
     pencilButton.selected = YES;
@@ -252,15 +257,14 @@
     scissorButton.selected = NO;
 }
 
-
-#pragma mark - Gesture Button Actions
-
 -(void) handTapped:(UIButton*)_button{
+    [[visibleStackHolder peekSubview] cancelAllGestures];
     handButton.selected = YES;
     rulerButton.selected = NO;
 }
 
 -(void) rulerTapped:(UIButton*)_button{
+    [[visibleStackHolder peekSubview] cancelAllGestures];
     handButton.selected = NO;
     rulerButton.selected = YES;
 }
@@ -363,7 +367,8 @@
     // noop
 }
 
-#pragma mark - MMPaperViewDelegate - List View
+#pragma mark - MMPaperViewDelegate
+#pragma mark = List View
 
 -(void) isBeginningToScaleReallySmall:(MMPaperView *)page{
     // make sure the currently edited page is being saved
@@ -376,15 +381,16 @@
     }else{
         debug_NSLog(@"would save, but can't b/c its readonly page");
     }
-    
     // update UI for scaling small into list view
     [self setButtonsVisible:NO];
     [super isBeginningToScaleReallySmall:page];
+    [self updateVisiblePageImageCache];
 }
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     [super finishedScalingReallySmall:page];
     [self saveStacksToDisk];
     [TestFlight passCheckpoint:@"NAV_TO_LIST_FROM_PAGE"];
+    [rulerView setHidden:YES];
 }
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
     [self setButtonsVisible:YES];
@@ -397,13 +403,17 @@
         [pageToSave setEditable:YES];
         debug_NSLog(@"page %@ is editable", pageToSave.uuid);
     }
+    [rulerView setHidden:NO];
 }
 -(void) finishedScalingBackToPageView:(MMPaperView*)page{
     [self setButtonsVisible:YES];
     [super finishedScalingBackToPageView:page];
     [self saveStacksToDisk];
+    [rulerView setHidden:NO];
     [TestFlight passCheckpoint:@"NAV_TO_PAGE_FROM_LIST"];
 }
+
+#pragma mark = Saving and Editing
 
 -(void) didSavePage:(MMPaperView*)page{
     if(page.scale < kMinPageZoom){
@@ -422,6 +432,24 @@
 
 -(BOOL) isPageEditable:(MMPaperView*)page{
     return page == currentEditablePage;
+}
+
+#pragma mark = Ruler
+
+/**
+ * return YES if we're in hand mode, no otherwise
+ */
+-(BOOL) shouldAllowPan:(MMPaperView*)page{
+    return handButton.selected;
+}
+
+-(void) didMoveRuler:(MMRulerToolGestureRecognizer *)gesture{
+    [rulerView updateLineAt:[gesture point1InView:rulerView] to:[gesture point2InView:rulerView]
+           startingDistance:[gesture initialDistance]];
+}
+
+-(void) didStopRuler:(MMRulerToolGestureRecognizer *)gesture{
+    [rulerView liftRuler];
 }
 
 #pragma mark - Page Loading and Unloading
@@ -461,22 +489,45 @@
 }
 
 -(void) mayChangeTopPageTo:(MMPaperView*)page{
+    if([visibleStackHolder containsSubview:page]){
+        MMPaperView* pageBelow = [visibleStackHolder getPageBelow:page];
+        if([pageBelow isKindOfClass:[MMEditablePaperView class]]){
+            [(MMEditablePaperView*)pageBelow loadCachedPreview];
+            [pagesWithLoadedCacheImages addObject:pageBelow];
+        }
+    }
+    if([page isKindOfClass:[MMEditablePaperView class]]){
+        [(MMEditablePaperView*)page loadCachedPreview];
+        [pagesWithLoadedCacheImages addObject:page];
+        if([bezelStackHolder.subviews count] > 6){
+            MMPaperView* page = [bezelStackHolder.subviews objectAtIndex:[bezelStackHolder.subviews count] - 6];
+            if([page isKindOfClass:[MMEditablePaperView class]]){
+                // we have a pretty impressive bezel going on here,
+                // so start to unload the pages that are pretty much
+                // invisible in the bezel stack
+                [(MMEditablePaperView*)page unloadCachedPreview];
+            }
+        }
+    }
+    if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
+        [self loadStateForPage:page];
+    }
     [super mayChangeTopPageTo:page];
-    [self loadStateForPage:page];
 }
 
 -(void) willChangeTopPageTo:(MMPaperView*)page{
+    if(page && ![recentlyConfirmedPageUUID isEqualToString:page.uuid]){
+        [self loadStateForPage:page];
+    }
     [super willChangeTopPageTo:page];
-    debug_NSLog(@"will switch top page to %@", page.uuid);
-    [self loadStateForPage:page];
 }
 
 -(void) didChangeTopPage{
     CheckMainThread;
     [super didChangeTopPage];
-    debug_NSLog(@"did change top page");
     MMPaperView* topPage = [visibleStackHolder peekSubview];
     [self ensureTopPageIsLoaded:topPage];
+    [self updateVisiblePageImageCache];
 }
 
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
@@ -516,6 +567,7 @@
         [self saveStacksToDisk];
     }
     
+    // load the state for the top page in the visible stack
     [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
                                                      withSize:[drawableView pagePixelSize]
                                                    andContext:[drawableView context]
@@ -523,6 +575,15 @@
     
     if(isStart){
         [[visibleStackHolder peekSubview] setBackgroundTextureToStartPage];
+    }
+    
+    // only load the image previews for the pages that will be visible
+    // other page previews will load as the user turns the page,
+    // or as they scroll the list view
+    CGPoint scrollOffset = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
+    NSArray* visiblePages = [self findPagesInVisibleRowsOfListViewGivenOffset:scrollOffset];
+    for(MMEditablePaperView* page in visiblePages){
+        [page loadCachedPreview];
     }
     
     [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
@@ -540,10 +601,12 @@
 #pragma mark - JotViewDelegate
 
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+    [rulerView willBeginStrokeAt:[touch locationInView:rulerView]];
     return [[self activePen] willBeginStrokeWithTouch:touch];
 }
 
 -(void) willMoveStrokeWithTouch:(JotTouch*)touch{
+    [rulerView willMoveStrokeAt:[touch locationInView:rulerView]];
     [[self activePen] willMoveStrokeWithTouch:touch];
 }
 
@@ -573,9 +636,15 @@
 }
 
 -(CGFloat) rotationForSegment:(AbstractBezierPathElement *)segment fromPreviousSegment:(AbstractBezierPathElement *)previousSegment{
-    return [[self activePen] rotationForSegment:segment fromPreviousSegment:previousSegment];;
+    return [[self activePen] rotationForSegment:segment fromPreviousSegment:previousSegment];
 }
 
+-(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
+    return [rulerView willAddElementsToStroke:[[self activePen] willAddElementsToStroke:elements fromPreviousElement:previousElement] fromPreviousElement:previousElement];
+}
+
+
+#pragma mark - JotStylusManager Connection Notification
 
 -(void)connectionChange:(NSNotification *) note{
     NSString *text;
@@ -608,4 +677,34 @@
     }
     debug_NSLog(@"jot status: %@", text);
 }
+
+
+
+#pragma mark - UIScrollViewDelegate
+
+-(void) updateVisiblePageImageCache{
+    CGPoint visibleScrollOffset;
+    if(self.scrollEnabled){
+        visibleScrollOffset = self.contentOffset;
+    }else{
+        visibleScrollOffset = initialScrollOffsetFromTransitionToListView;
+    }
+    NSArray* visiblePages = [self findPagesInVisibleRowsOfListViewGivenOffset:visibleScrollOffset];
+    for(MMEditablePaperView* page in visiblePages){
+        [page loadCachedPreview];
+    }
+    NSSet* invisiblePages = [pagesWithLoadedCacheImages objectsPassingTest:^BOOL(id obj, BOOL*stop){
+        return ![visiblePages containsObject:obj];
+    }];
+    for(MMEditablePaperView* page in invisiblePages){
+        [page unloadCachedPreview];
+    }
+    [pagesWithLoadedCacheImages addObjectsFromArray:visiblePages];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [self updateVisiblePageImageCache];
+}
+
+
 @end

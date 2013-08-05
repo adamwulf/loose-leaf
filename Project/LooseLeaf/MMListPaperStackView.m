@@ -40,6 +40,12 @@
         pinchGesture.pinchDelegate = self;
         [self addGestureRecognizer:pinchGesture];
         
+        longPressGesture = [[MMLongPressFromListViewGestureRecognizer alloc] initWithTarget:self action:@selector(didHoldAPageInListView:)];
+        longPressGesture.enabled = NO;
+        longPressGesture.numberOfTouchesRequired = 1;
+        longPressGesture.pinchDelegate = self;
+        [self addGestureRecognizer:longPressGesture];
+        
         [NSThread performBlockInBackground:^{
             displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateScrollOffsetDuringDrag)];
             displayLink.paused = YES;
@@ -155,6 +161,7 @@
     [self setScrollEnabled:NO];
     [tapGesture setEnabled:NO];
     [pinchGesture setEnabled:NO];
+    [longPressGesture setEnabled:NO];
     [self moveAddButtonToBottom];
     //
     // ok, we're about to zoom out to list view, so save the frames
@@ -213,6 +220,9 @@
     if(!pinchGesture.pinchedPage){
         [pinchGesture setEnabled:NO];
     }
+    if(!longPressGesture.pinchedPage){
+        [longPressGesture setEnabled:NO];
+    }
     [self moveAddButtonToBottom];
     [visibleStackHolder.superview insertSubview:visibleStackHolder aboveSubview:hiddenStackHolder];
 }
@@ -229,6 +239,7 @@
     [self setScrollEnabled:YES];
     [tapGesture setEnabled:YES];
     [pinchGesture setEnabled:YES];
+    [longPressGesture setEnabled:YES];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
     [self moveAddButtonToTop];
 }
@@ -256,6 +267,7 @@
     [self setScrollEnabled:NO];
     [tapGesture setEnabled:NO];
     [pinchGesture setEnabled:NO];
+    [longPressGesture setEnabled:NO];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
     [visibleStackHolder.superview insertSubview:visibleStackHolder belowSubview:hiddenStackHolder];
     [self moveAddButtonToBottom];
@@ -319,7 +331,7 @@
         // ok, move all the soon to be visible pages into their
         // position
         CGFloat transitionDelay = 0;
-        for(MMPaperView* aPage in pagesThatWillBeVisibleAfterTransitionToListView){
+        for(MMPaperView* aPage in [pagesThatWillBeVisibleAfterTransitionToListView reverseObjectEnumerator]){
             if(aPage != page){
                 CGRect oldFrame = hiddenStackHolder.bounds;
                 NSValue* possibleCachedOriginalLocation = [setOfInitialFramesForPagesBeingZoomed objectForKey:aPage.uuid];
@@ -405,7 +417,7 @@
         // are currently visible, when the animation to list view begins
         // they'll begin from their current location intsead of the hidden
         // stack
-        [self emptyBezelStackToHiddenStackAnimated:NO andPreserveFrame:YES onComplete:nil];
+        [self emptyBezelStackToHiddenStackAnimated:NO andPreservePageFrame:YES onComplete:nil];
     }
     [self beginUITransitionFromPageView];
 }
@@ -468,8 +480,6 @@
                     }
                 }
             }
-            // gestures aren't allowed in list view
-            [aPage disableAllGestures];
         }
         //
         // find hidden stack pages that we can
@@ -544,6 +554,8 @@
                 aPage.frame = newFrame;
             };
             aPage.hidden = NO;
+            // gestures aren't allowed in list view
+            [aPage disableAllGestures];
         }
         // set our content height/offset for the pages
         [self setContentOffset:initialScrollOffsetFromTransitionToListView animated:NO];
@@ -637,6 +649,91 @@
 
 #pragma mark - MMPanAndPinchFromListViewGestureRecognizerDelegate - Tap Gesture
 
+-(void) didHoldAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture{
+    
+    void(^updatePageFrame)() = ^{
+        //
+        // ok, the top page is the only page that's being panned.
+        // and it's zoom is below the min page zoom, so we should
+        // start to move it's frame toward its resting place, and also
+        // move all the top two rows of pages to their resting place as well
+        //
+        // how close are we to list view? 1 is not close at all, 0 is list view
+        CGFloat scale = .28;
+        
+        //
+        // update the location of the dragged page
+        pageBeingDragged = gesture.pinchedPage;
+        CGPoint locatinInScrollView = [gesture locationInView:self];
+        NSInteger indexOfGesture = [self indexForPointInList:locatinInScrollView];
+        [self ensurePage:pageBeingDragged isAtIndex:indexOfGesture];
+        //
+        // scroll update for drag
+        lastDragPoint = CGPointMake(locatinInScrollView.x, locatinInScrollView.y - self.contentOffset.y);
+        if(displayLink.paused) displayLink.paused = NO;
+        
+        
+        //
+        // now, with our pan offset and new scale, we need to calculate the new frame location.
+        //
+        // first, find the location of the gesture at the size of the page before the gesture began.
+        // then, find the location of the gesture at the new scale of the page.
+        // since we're using the normalized location of the gesture, this will make sure the before/after
+        // location of the gesture is in the same place of the view after scaling the width/height.
+        // the difference in these locations is how muh we need to move the origin of the page to
+        // accomodate the new scale while maintaining the location of the gesture uner the user's fingers
+        //
+        // the, add the diff of the pan gesture to get the full displacement of the origin. also set the
+        // width and height to the new scale.
+        CGPoint lastLocationInSuper = [gesture locationInView:gesture.pinchedPage.superview];
+        CGSize superviewSize = self.superview.bounds.size;
+        CGPoint locationOfPinchAfterScale = CGPointMake(scale * gesture.normalizedLocationOfScale.x * superviewSize.width,
+                                                        scale * gesture.normalizedLocationOfScale.y * superviewSize.height);
+        CGSize newSizeOfView = CGSizeMake(superviewSize.width * scale, superviewSize.height * scale);
+        
+        
+        //
+        // now calculate our final frame given our pan and zoom
+        CGRect fr = self.frame;
+        fr.origin = CGPointMake(lastLocationInSuper.x - locationOfPinchAfterScale.x,
+                                lastLocationInSuper.y - locationOfPinchAfterScale.y);
+        fr.size = newSizeOfView;
+        gesture.pinchedPage.frame = fr;
+    };
+    
+    
+    
+    if(gesture.state == UIGestureRecognizerStateBegan){
+        [self setScrollEnabled:NO];
+        [self ensurePageIsAtTopOfVisibleStack:gesture.pinchedPage];
+        [self beginUITransitionFromListView];
+        [UIView animateWithDuration:.1 delay:0 options:UIViewAnimationOptionCurveLinear animations:updatePageFrame completion:nil];
+    }else if(gesture.state == UIGestureRecognizerStateEnded ||
+             gesture.state == UIGestureRecognizerStateFailed){
+        // properties for drag behavior
+        realizedThatPageIsBeingDragged = NO;
+        pageBeingDragged = nil;
+        
+        // go to page/list view
+        // based on how the gesture ended
+        [self setScrollEnabled:YES];
+        // the user has released their pinch, and the page is still really small,
+        // but they were *decreasing* the size of the page when they let go,
+        // so we'll decrease it back into list view
+        CGRect frameOfPage = [self frameForListViewForPage:gesture.pinchedPage];
+        [UIView animateWithDuration:.15
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseOut
+                         animations:^{
+                             gesture.pinchedPage.frame = frameOfPage;
+                         }
+                         completion:nil];
+        [self finishUITransitionToListView];
+    }else if(gesture.state == UIGestureRecognizerStateChanged){
+        updatePageFrame();
+    }
+}
+
 /**
  * called when a page is pinched in list view
  *
@@ -653,10 +750,81 @@
  * b) animate all views between the old/new index to their new home
  */
 -(void) didPinchAPageInListView:(MMPanAndPinchFromListViewGestureRecognizer*)gesture{
+    
+    void(^updatePageFrame)() = ^{
+        //
+        // ok, the top page is the only page that's being panned.
+        // and it's zoom is below the min page zoom, so we should
+        // start to move it's frame toward its resting place, and also
+        // move all the top two rows of pages to their resting place as well
+        //
+        // how close are we to list view? 1 is not close at all, 0 is list view
+        CGFloat percentageToTrustToFrame = gesture.scale / kMinPageZoom;
+        
+        CGFloat scale = gesture.scale;
+        
+        if(percentageToTrustToFrame > 1.0){
+            //
+            // the user has scaled the page above the kMinPageZoom threshhold,
+            // so auto-pull that page to full screen
+            //
+            // also, cancel the gesture so that it doesn't continue to fire
+            // after we've committed our animations
+            [gesture cancel];
+            [self immediatelyAnimateFromListViewToFullScreenView];
+            return;
+            
+        }else if(scale < gesture.initialPageScale + .03){
+            scale = gesture.initialPageScale + .03;
+        }
+        
+        //
+        // update the location of the dragged page
+        pageBeingDragged = gesture.pinchedPage;
+        CGPoint locatinInScrollView = [gesture locationInView:self];
+        NSInteger indexOfGesture = [self indexForPointInList:locatinInScrollView];
+        [self ensurePage:pageBeingDragged isAtIndex:indexOfGesture];
+        //
+        // scroll update for drag
+        lastDragPoint = CGPointMake(locatinInScrollView.x, locatinInScrollView.y - self.contentOffset.y);
+        if(displayLink.paused) displayLink.paused = NO;
+        
+        
+        //
+        // now, with our pan offset and new scale, we need to calculate the new frame location.
+        //
+        // first, find the location of the gesture at the size of the page before the gesture began.
+        // then, find the location of the gesture at the new scale of the page.
+        // since we're using the normalized location of the gesture, this will make sure the before/after
+        // location of the gesture is in the same place of the view after scaling the width/height.
+        // the difference in these locations is how muh we need to move the origin of the page to
+        // accomodate the new scale while maintaining the location of the gesture uner the user's fingers
+        //
+        // the, add the diff of the pan gesture to get the full displacement of the origin. also set the
+        // width and height to the new scale.
+        CGPoint lastLocationInSuper = [gesture locationInView:gesture.pinchedPage.superview];
+        CGSize superviewSize = self.superview.bounds.size;
+        CGPoint locationOfPinchAfterScale = CGPointMake(scale * gesture.normalizedLocationOfScale.x * superviewSize.width,
+                                                        scale * gesture.normalizedLocationOfScale.y * superviewSize.height);
+        CGSize newSizeOfView = CGSizeMake(superviewSize.width * scale, superviewSize.height * scale);
+        
+        
+        //
+        // now calculate our final frame given our pan and zoom
+        CGRect fr = self.frame;
+        fr.origin = CGPointMake(lastLocationInSuper.x - locationOfPinchAfterScale.x,
+                                lastLocationInSuper.y - locationOfPinchAfterScale.y);
+        fr.size = newSizeOfView;
+        gesture.pinchedPage.frame = fr;
+    };
+    
+    
+    
     if(gesture.state == UIGestureRecognizerStateBegan){
         [self setScrollEnabled:NO];
         [self ensurePageIsAtTopOfVisibleStack:gesture.pinchedPage];
         [self beginUITransitionFromListView];
+        [UIView animateWithDuration:.1 delay:0 options:UIViewAnimationOptionCurveLinear animations:updatePageFrame completion:nil];
     }else if(gesture.state == UIGestureRecognizerStateEnded ||
              gesture.state == UIGestureRecognizerStateFailed){
         // properties for drag behavior
@@ -687,70 +855,7 @@
             [self finishUITransitionToListView];
         }
     }else if(gesture.state == UIGestureRecognizerStateChanged){
-        //
-        // ok, the top page is the only page that's being panned.
-        // and it's zoom is below the min page zoom, so we should
-        // start to move it's frame toward its resting place, and also
-        // move all the top two rows of pages to their resting place as well
-        //
-        // how close are we to list view? 1 is not close at all, 0 is list view
-        CGFloat percentageToTrustToFrame = gesture.scale / kMinPageZoom;
-
-        CGFloat scale = gesture.scale;
-        
-        if(percentageToTrustToFrame > 1.0){
-            //
-            // the user has scaled the page above the kMinPageZoom threshhold,
-            // so auto-pull that page to full screen
-            //
-            // also, cancel the gesture so that it doesn't continue to fire
-            // after we've committed our animations
-            [gesture cancel];
-            [self immediatelyAnimateFromListViewToFullScreenView];
-            return;
-        
-        }else if(gesture.scale < gesture.initialPageScale){
-            scale = gesture.initialPageScale;
-        }
-        
-        //
-        // update the location of the dragged page
-        pageBeingDragged = gesture.pinchedPage;
-        CGPoint locatinInScrollView = [gesture locationInView:self];
-        NSInteger indexOfGesture = [self indexForPointInList:locatinInScrollView];
-        [self ensurePage:pageBeingDragged isAtIndex:indexOfGesture];
-        //
-        // scroll update for drag
-        lastDragPoint = CGPointMake(locatinInScrollView.x, locatinInScrollView.y - self.contentOffset.y);
-        if(displayLink.paused) displayLink.paused = NO;
-        
-
-        //
-        // now, with our pan offset and new scale, we need to calculate the new frame location.
-        //
-        // first, find the location of the gesture at the size of the page before the gesture began.
-        // then, find the location of the gesture at the new scale of the page.
-        // since we're using the normalized location of the gesture, this will make sure the before/after
-        // location of the gesture is in the same place of the view after scaling the width/height.
-        // the difference in these locations is how muh we need to move the origin of the page to
-        // accomodate the new scale while maintaining the location of the gesture uner the user's fingers
-        //
-        // the, add the diff of the pan gesture to get the full displacement of the origin. also set the
-        // width and height to the new scale.
-        CGPoint lastLocationInSuper = [gesture locationInView:gesture.pinchedPage.superview];
-        CGSize superviewSize = self.superview.bounds.size;
-        CGPoint locationOfPinchAfterScale = CGPointMake(scale * gesture.normalizedLocationOfScale.x * superviewSize.width,
-                                                        scale * gesture.normalizedLocationOfScale.y * superviewSize.height);
-        CGSize newSizeOfView = CGSizeMake(superviewSize.width * scale, superviewSize.height * scale);
-        
-        
-        //
-        // now calculate our final frame given our pan and zoom
-        CGRect fr = self.frame;
-        fr.origin = CGPointMake(lastLocationInSuper.x - locationOfPinchAfterScale.x,
-                                lastLocationInSuper.y - locationOfPinchAfterScale.y);
-        fr.size = newSizeOfView;
-        gesture.pinchedPage.frame = fr;
+        updatePageFrame();
     }
 }
 
@@ -1027,6 +1132,12 @@
         //
         // scrolling is enabled, so we need to return
         // the list of pages that are currently visible
+        //
+        // TODO: https://github.com/adamwulf/loose-leaf/issues/113
+        // i should probably hash each page into setOfFinalFramesForPagesBeingZoomed
+        // based on the 100px that the frame is in. then i know the visible min/max y,
+        // and use that to calc the 100px hashes i should look up. this way i don't need to
+        // iterate through every single page
         NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray array];
         for(MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
             CGRect frameOfPage = [self frameForListViewForPage:aPage];

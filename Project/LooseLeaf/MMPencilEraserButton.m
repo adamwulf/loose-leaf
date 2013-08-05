@@ -232,6 +232,9 @@
     [self drawDropshadowIfSelected];
 
     [super drawRect:rect];
+    
+    CGColorSpaceRelease(colorSpace);
+    CGGradientRelease(pencilFillGradient);
 }
 
 

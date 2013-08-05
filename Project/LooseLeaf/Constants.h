@@ -16,11 +16,19 @@
 #define debug_NSLog(__FORMAT__, ...) TFLog((@"%s [Line %d] " __FORMAT__), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 #endif
 
+#define SIGN(__var__) (__var__ / ABS(__var__))
+
 #define kAbstractMethodException [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)] userInfo:nil]
 
 #define kTestflightAppToken @"7cad2371-d0e0-4524-a833-dbc6cbc7a870"
 
 #define kAnimationDelay 0.05
+
+// Ruler
+#define kWidthOfRuler 70
+#define kRulerPinchBuffer 40
+#define kRulerSnapAngle M_PI / 45.0
+
 
 // List View
 #define kNumberOfColumnsInListView 3
@@ -28,7 +36,7 @@
 
 // List View Gesture
 #define kZoomToListPageZoom .4
-#define kMinPageZoom .7
+#define kMinPageZoom .8
 #define kMaxPageZoom 2.0
 #define kMaxPageResolution 1.5
 
@@ -47,6 +55,8 @@
 #define kUndoLimit 20
 
 CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
+
+CGFloat SquaredDistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
 
 enum {
     MMBezelDirectionNone = 0,

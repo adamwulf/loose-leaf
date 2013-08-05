@@ -37,14 +37,17 @@
 		663C188F1759B57800706A05 /* JotTouchSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66C38AC7175329160035B872 /* JotTouchSDK.framework */; };
 		663C1897175A89EF00706A05 /* MMRulerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C1896175A89ED00706A05 /* MMRulerButton.m */; };
 		664516B9159030FC0012FACA /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 664516B8159030FC0012FACA /* Constants.m */; };
-		66455F84175E938000C66DFA /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66A4BD181632170E00C45070 /* DrawKit-iOS.framework */; };
+		6648D21D178C9E5400BE3B37 /* UIColor+Shadow.m in Sources */ = {isa = PBXBuildFile; fileRef = 6648D21C178C9E5400BE3B37 /* UIColor+Shadow.m */; };
 		664C62F015A36DA40072736A /* MMListPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 664C62EF15A36DA40072736A /* MMListPaperStackView.m */; };
 		664F4139159063F8006F8B09 /* MMPlusIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F4138159063F8006F8B09 /* MMPlusIcon.m */; };
 		664F413D1590661F006F8B09 /* MMRightArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413C1590661F006F8B09 /* MMRightArrow.m */; };
 		664F414015906628006F8B09 /* MMLeftArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413F15906628006F8B09 /* MMLeftArrow.m */; };
+		66510835178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66510834178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m */; };
+		66510838178DFEE700A7A7DD /* MMRulerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66510837178DFEE700A7A7DD /* MMRulerView.m */; };
+		6651083C178F249C00A7A7DD /* MMVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6651083B178F249C00A7A7DD /* MMVector.m */; };
 		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
-		6661144716FD67F8005032B9 /* Loose-Leaf_72.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144616FD67F8005032B9 /* Loose-Leaf_72.png */; };
-		6661144A16FD67FA005032B9 /* Loose-Leaf_144.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144916FD67FA005032B9 /* Loose-Leaf_144.png */; };
+		6661144716FD67F8005032B9 /* Loose-Leaf-Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144616FD67F8005032B9 /* Loose-Leaf-Icon.png */; };
+		6661144A16FD67FA005032B9 /* Loose-Leaf-Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144916FD67FA005032B9 /* Loose-Leaf-Icon@2x.png */; };
 		66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* MMEditablePaperStackView.m */; };
 		6693295A15958A950033E557 /* MMShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MMShadowManager.m */; };
 		66932965159593C00033E557 /* MMRotationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66932964159593C00033E557 /* MMRotationManager.m */; };
@@ -60,6 +63,7 @@
 		6695B6F01751CC170069E61F /* Pen.m in Sources */ = {isa = PBXBuildFile; fileRef = 6695B6EF1751CC160069E61F /* Pen.m */; };
 		66A13D3A1631D9D9002F5428 /* MMObjectSelectLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D3F1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66A3A6BB1791F18900D8FE1D /* UIDevice+PPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3A6BA1791F18900D8FE1D /* UIDevice+PPI.m */; };
 		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; };
 		66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */; };
 		66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A55175AFCA70049F1AF /* MMHandButton.m */; };
@@ -67,6 +71,8 @@
 		66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A6B175E4A5A0049F1AF /* MMStackManager.m */; };
 		66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A75175E559E0049F1AF /* NSArray+Map.m */; };
 		66B21A7A175E595B0049F1AF /* MMBlockOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A79175E595B0049F1AF /* MMBlockOperation.m */; };
+		66B3522517A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B3522417A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m */; };
+		66B51A2A17AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B51A2917AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66BD6E301591B57B00D4544C /* MMPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* MMPaperButton.m */; };
 		66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E331591C37D00D4544C /* UIImage+MCDrawSubImage.m */; };
 		66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */; };
@@ -87,6 +93,7 @@
 		66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */; };
 		66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* MMListAddPageButton.m */; };
 		66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D33F4B15A6408A0044C809 /* MMShadowedView.m */; };
+		66D83FC51795EAB00093DB26 /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66D83FC01795EA740093DB26 /* DrawKit-iOS.framework */; };
 		66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
 		66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8C1581BCEF00B4918C /* Foundation.framework */; };
 		66DCFB8F1581BCEF00B4918C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */; };
@@ -100,29 +107,30 @@
 		66DCFBDF1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBDE1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DF0B7D159BC30200C5C652 /* UIView+Animations.m */; };
 		66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E88A361591853E001A6EBF /* MMPapersIcon.m */; };
+		66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		66455F82175E937500C66DFA /* PBXContainerItemProxy */ = {
+		66D83FBF1795EA740093DB26 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 667703EA1620F02900E764C0;
-			remoteInfo = "DrawKit-iOS";
-		};
-		66A4BD171632170E00C45070 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */;
+			containerPortal = 66D83FBA1795EA740093DB26 /* DrawKit-iOS.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 667703EB1620F02900E764C0;
 			remoteInfo = "DrawKit-iOS";
 		};
-		66A4BD191632170E00C45070 /* PBXContainerItemProxy */ = {
+		66D83FC11795EA740093DB26 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */;
+			containerPortal = 66D83FBA1795EA740093DB26 /* DrawKit-iOS.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 667703FC1620F02900E764C0;
 			remoteInfo = "DrawKit-iOSTests";
+		};
+		66D83FC31795EAA60093DB26 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 66D83FBA1795EA740093DB26 /* DrawKit-iOS.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 667703EA1620F02900E764C0;
+			remoteInfo = "DrawKit-iOS";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -173,6 +181,8 @@
 		663C1895175A89EB00706A05 /* MMRulerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRulerButton.h; sourceTree = "<group>"; };
 		663C1896175A89ED00706A05 /* MMRulerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRulerButton.m; sourceTree = "<group>"; };
 		664516B8159030FC0012FACA /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		6648D21B178C9E5400BE3B37 /* UIColor+Shadow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Shadow.h"; sourceTree = "<group>"; };
+		6648D21C178C9E5400BE3B37 /* UIColor+Shadow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Shadow.m"; sourceTree = "<group>"; };
 		664C62EE15A36DA40072736A /* MMListPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListPaperStackView.h; sourceTree = "<group>"; };
 		664C62EF15A36DA40072736A /* MMListPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListPaperStackView.m; sourceTree = "<group>"; };
 		664F4137159063F8006F8B09 /* MMPlusIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPlusIcon.h; sourceTree = "<group>"; };
@@ -181,10 +191,16 @@
 		664F413C1590661F006F8B09 /* MMRightArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRightArrow.m; sourceTree = "<group>"; };
 		664F413E15906628006F8B09 /* MMLeftArrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLeftArrow.h; sourceTree = "<group>"; };
 		664F413F15906628006F8B09 /* MMLeftArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLeftArrow.m; sourceTree = "<group>"; };
+		66510833178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRulerToolGestureRecognizer.h; sourceTree = "<group>"; };
+		66510834178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRulerToolGestureRecognizer.m; sourceTree = "<group>"; };
+		66510836178DFEE700A7A7DD /* MMRulerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRulerView.h; sourceTree = "<group>"; };
+		66510837178DFEE700A7A7DD /* MMRulerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRulerView.m; sourceTree = "<group>"; };
+		6651083A178F249C00A7A7DD /* MMVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMVector.h; sourceTree = "<group>"; };
+		6651083B178F249C00A7A7DD /* MMVector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMVector.m; sourceTree = "<group>"; };
 		6655E924176291C800E4F36A /* MMScissorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScissorButton.h; sourceTree = "<group>"; };
 		6655E925176291C800E4F36A /* MMScissorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorButton.m; sourceTree = "<group>"; };
-		6661144616FD67F8005032B9 /* Loose-Leaf_72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf_72.png"; path = "../Loose-Leaf_72.png"; sourceTree = "<group>"; };
-		6661144916FD67FA005032B9 /* Loose-Leaf_144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf_144.png"; path = "../Loose-Leaf_144.png"; sourceTree = "<group>"; };
+		6661144616FD67F8005032B9 /* Loose-Leaf-Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf-Icon.png"; path = "../Loose-Leaf-Icon.png"; sourceTree = "<group>"; };
+		6661144916FD67FA005032B9 /* Loose-Leaf-Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf-Icon@2x.png"; path = "../Loose-Leaf-Icon@2x.png"; sourceTree = "<group>"; };
 		66728713159515FC0018571A /* MMEditablePaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEditablePaperStackView.h; sourceTree = "<group>"; };
 		66728714159515FC0018571A /* MMEditablePaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEditablePaperStackView.m; sourceTree = "<group>"; };
 		6693295815958A950033E557 /* MMShadowManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShadowManager.h; sourceTree = "<group>"; };
@@ -213,9 +229,10 @@
 		66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMObjectSelectLongPressGestureRecognizer.m; sourceTree = "<group>"; };
 		66A13D3E1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImmovableTapGestureRecognizer.h; sourceTree = "<group>"; };
 		66A13D3F1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImmovableTapGestureRecognizer.m; sourceTree = "<group>"; };
+		66A3A6B91791F18900D8FE1D /* UIDevice+PPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+PPI.h"; sourceTree = "<group>"; };
+		66A3A6BA1791F18900D8FE1D /* UIDevice+PPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+PPI.m"; sourceTree = "<group>"; };
 		66A3AF8C15913B5E00F8A7A6 /* NSMutableSet+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableSet+Extras.h"; sourceTree = "<group>"; };
 		66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableSet+Extras.m"; sourceTree = "<group>"; };
-		66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "DrawKit-iOS.xcodeproj"; path = "../../DrawKit-iOS/DrawKit-iOS.xcodeproj"; sourceTree = "<group>"; };
 		66A4BD4416321ABC00C45070 /* NSThread+BlockAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSThread+BlockAdditions.h"; sourceTree = "<group>"; };
 		66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+BlockAdditions.m"; sourceTree = "<group>"; };
 		66AA212B16FBB31C00E86922 /* MMPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPopoverView.h; sourceTree = "<group>"; };
@@ -229,6 +246,10 @@
 		66B21A75175E559E0049F1AF /* NSArray+Map.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Map.m"; sourceTree = "<group>"; };
 		66B21A78175E595B0049F1AF /* MMBlockOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBlockOperation.h; sourceTree = "<group>"; };
 		66B21A79175E595B0049F1AF /* MMBlockOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBlockOperation.m; sourceTree = "<group>"; };
+		66B3522317A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIGestureRecognizer+GestureDebug.h"; sourceTree = "<group>"; };
+		66B3522417A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIGestureRecognizer+GestureDebug.m"; sourceTree = "<group>"; };
+		66B51A2817AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBezelInLeftGestureRecognizer.h; sourceTree = "<group>"; };
+		66B51A2917AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBezelInLeftGestureRecognizer.m; sourceTree = "<group>"; };
 		66BD6E2E1591B57B00D4544C /* MMPaperButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperButton.h; sourceTree = "<group>"; };
 		66BD6E2F1591B57B00D4544C /* MMPaperButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPaperButton.m; sourceTree = "<group>"; };
 		66BD6E321591C37D00D4544C /* UIImage+MCDrawSubImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MCDrawSubImage.h"; sourceTree = "<group>"; };
@@ -268,6 +289,7 @@
 		66D0905815F71941004D2CAF /* MMListAddPageButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButtonDelegate.h; sourceTree = "<group>"; };
 		66D33F4A15A6408A0044C809 /* MMShadowedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShadowedView.h; sourceTree = "<group>"; };
 		66D33F4B15A6408A0044C809 /* MMShadowedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShadowedView.m; sourceTree = "<group>"; };
+		66D83FBA1795EA740093DB26 /* DrawKit-iOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "DrawKit-iOS.xcodeproj"; path = "../Submodules/DrawKit-iOS/DrawKit-iOS.xcodeproj"; sourceTree = "<group>"; };
 		66DCFB861581BCEF00B4918C /* LooseLeaf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LooseLeaf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66DCFB8A1581BCEF00B4918C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		66DCFB8C1581BCEF00B4918C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -293,6 +315,8 @@
 		66DF0B7D159BC30200C5C652 /* UIView+Animations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Animations.m"; sourceTree = "<group>"; };
 		66E88A351591853E001A6EBF /* MMPapersIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPapersIcon.h; sourceTree = "<group>"; };
 		66E88A361591853E001A6EBF /* MMPapersIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPapersIcon.m; sourceTree = "<group>"; };
+		66F4B4B5178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLongPressFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
+		66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLongPressFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -300,9 +324,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66D83FC51795EAB00093DB26 /* DrawKit-iOS.framework in Frameworks */,
 				66C0C9CA1783645E009491B3 /* JotUI.framework in Frameworks */,
 				66150769178333D500B181F3 /* libz.dylib in Frameworks */,
-				66455F84175E938000C66DFA /* DrawKit-iOS.framework in Frameworks */,
 				663C188F1759B57800706A05 /* JotTouchSDK.framework in Frameworks */,
 				6695B6E81750088D0069E61F /* AudioToolbox.framework in Frameworks */,
 				6695B6E6175008840069E61F /* CoreBluetooth.framework in Frameworks */,
@@ -348,6 +372,10 @@
 				66DF0B7D159BC30200C5C652 /* UIView+Animations.m */,
 				66B21A74175E559E0049F1AF /* NSArray+Map.h */,
 				66B21A75175E559E0049F1AF /* NSArray+Map.m */,
+				6648D21B178C9E5400BE3B37 /* UIColor+Shadow.h */,
+				6648D21C178C9E5400BE3B37 /* UIColor+Shadow.m */,
+				66A3A6B91791F18900D8FE1D /* UIDevice+PPI.h */,
+				66A3A6BA1791F18900D8FE1D /* UIDevice+PPI.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -426,6 +454,19 @@
 				66C47DA5158EF03200E2CD0C /* MMPaperViewDelegate.h */,
 			);
 			name = MMPaperView;
+			sourceTree = "<group>";
+		};
+		66510831178DF9B900A7A7DD /* Ruler Tool */ = {
+			isa = PBXGroup;
+			children = (
+				66510833178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.h */,
+				66510834178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m */,
+				66510836178DFEE700A7A7DD /* MMRulerView.h */,
+				66510837178DFEE700A7A7DD /* MMRulerView.m */,
+				6651083A178F249C00A7A7DD /* MMVector.h */,
+				6651083B178F249C00A7A7DD /* MMVector.m */,
+			);
+			name = "Ruler Tool";
 			sourceTree = "<group>";
 		};
 		6693295715958A890033E557 /* Managers */ = {
@@ -514,20 +555,15 @@
 				66DCFBDE1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m */,
 				6693296B1596E0600033E557 /* MMBezelInRightGestureRecognizer.h */,
 				6693296C1596E0600033E557 /* MMBezelInRightGestureRecognizer.m */,
+				66B51A2817AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.h */,
+				66B51A2917AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m */,
 				6630ED9F15F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.h */,
 				6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */,
 				6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */,
+				66F4B4B5178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.h */,
+				66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */,
 			);
 			name = "Page Navigation";
-			sourceTree = "<group>";
-		};
-		66A4BD131632170E00C45070 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				66A4BD181632170E00C45070 /* DrawKit-iOS.framework */,
-				66A4BD1A1632170E00C45070 /* DrawKit-iOSTests.octest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		66A7462F176B85FD00466AA4 /* Unused */ = {
@@ -611,10 +647,19 @@
 			name = Tools;
 			sourceTree = "<group>";
 		};
+		66D83FBB1795EA740093DB26 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				66D83FC01795EA740093DB26 /* DrawKit-iOS.framework */,
+				66D83FC21795EA740093DB26 /* DrawKit-iOSTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		66DCFB7B1581BCED00B4918C = {
 			isa = PBXGroup;
 			children = (
-				66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */,
+				66D83FBA1795EA740093DB26 /* DrawKit-iOS.xcodeproj */,
 				66DCFB901581BCEF00B4918C /* Loose Leaf */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
 				66DCFB871581BCEF00B4918C /* Products */,
@@ -670,8 +715,8 @@
 				660E1DA6158FC6120001DA12 /* Categories */,
 				66B21A58175B0BF30049F1AF /* cloth.png */,
 				6693298015996C530033E557 /* Astronaut Images */,
-				6661144916FD67FA005032B9 /* Loose-Leaf_144.png */,
-				6661144616FD67F8005032B9 /* Loose-Leaf_72.png */,
+				6661144916FD67FA005032B9 /* Loose-Leaf-Icon@2x.png */,
+				6661144616FD67F8005032B9 /* Loose-Leaf-Icon.png */,
 				66DCFB921581BCEF00B4918C /* LooseLeaf-Info.plist */,
 				66DCFB931581BCEF00B4918C /* InfoPlist.strings */,
 				66DCFB961581BCEF00B4918C /* main.m */,
@@ -698,8 +743,11 @@
 		66DCFBDC1582BF1600B4918C /* Gestures */ = {
 			isa = PBXGroup;
 			children = (
+				66510831178DF9B900A7A7DD /* Ruler Tool */,
 				66A13D3D1631E075002F5428 /* Page Navigation */,
 				66A13D3C1631E06D002F5428 /* Object Selection */,
+				66B3522317A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.h */,
+				66B3522417A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m */,
 			);
 			name = Gestures;
 			sourceTree = "<group>";
@@ -719,7 +767,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				66455F83175E937500C66DFA /* PBXTargetDependency */,
+				66D83FC41795EAA60093DB26 /* PBXTargetDependency */,
 			);
 			name = LooseLeaf;
 			productName = "Paper Stack";
@@ -733,7 +781,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = MM;
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Milestone Made, LLC";
 			};
 			buildConfigurationList = 66DCFB801581BCED00B4918C /* Build configuration list for PBXProject "LooseLeaf" */;
@@ -748,8 +796,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 66A4BD131632170E00C45070 /* Products */;
-					ProjectRef = 66A4BD121632170E00C45070 /* DrawKit-iOS.xcodeproj */;
+					ProductGroup = 66D83FBB1795EA740093DB26 /* Products */;
+					ProjectRef = 66D83FBA1795EA740093DB26 /* DrawKit-iOS.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -760,18 +808,18 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		66A4BD181632170E00C45070 /* DrawKit-iOS.framework */ = {
+		66D83FC01795EA740093DB26 /* DrawKit-iOS.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework.static;
 			path = "DrawKit-iOS.framework";
-			remoteRef = 66A4BD171632170E00C45070 /* PBXContainerItemProxy */;
+			remoteRef = 66D83FBF1795EA740093DB26 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		66A4BD1A1632170E00C45070 /* DrawKit-iOSTests.octest */ = {
+		66D83FC21795EA740093DB26 /* DrawKit-iOSTests.octest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "DrawKit-iOSTests.octest";
-			remoteRef = 66A4BD191632170E00C45070 /* PBXContainerItemProxy */;
+			remoteRef = 66D83FC11795EA740093DB26 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -788,8 +836,8 @@
 				660E1DA1158FC4710001DA12 /* img03.jpg in Resources */,
 				660E1DA3158FC4750001DA12 /* img05.jpg in Resources */,
 				660E1DA5158FC47D0001DA12 /* img04.jpg in Resources */,
-				6661144716FD67F8005032B9 /* Loose-Leaf_72.png in Resources */,
-				6661144A16FD67FA005032B9 /* Loose-Leaf_144.png in Resources */,
+				6661144716FD67F8005032B9 /* Loose-Leaf-Icon.png in Resources */,
+				6661144A16FD67FA005032B9 /* Loose-Leaf-Icon@2x.png in Resources */,
 				66B21A59175B0BF30049F1AF /* cloth.png in Resources */,
 				661507661783338E00B181F3 /* release_notes.md in Resources */,
 				661507771783417100B181F3 /* StarEmpty.png in Resources */,
@@ -837,6 +885,7 @@
 				660E1DB0158FC7DB0001DA12 /* MMPaperIcon.m in Sources */,
 				660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */,
 				664516B9159030FC0012FACA /* Constants.m in Sources */,
+				66A3A6BB1791F18900D8FE1D /* UIDevice+PPI.m in Sources */,
 				664F4139159063F8006F8B09 /* MMPlusIcon.m in Sources */,
 				664F413D1590661F006F8B09 /* MMRightArrow.m in Sources */,
 				664F414015906628006F8B09 /* MMLeftArrow.m in Sources */,
@@ -865,37 +914,44 @@
 				66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */,
 				66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */,
 				66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */,
+				66B51A2A17AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m in Sources */,
 				66DCFBDF1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m in Sources */,
 				6693296D1596E0600033E557 /* MMBezelInRightGestureRecognizer.m in Sources */,
 				6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */,
+				6648D21D178C9E5400BE3B37 /* UIColor+Shadow.m in Sources */,
 				66A13D3A1631D9D9002F5428 /* MMObjectSelectLongPressGestureRecognizer.m in Sources */,
 				66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */,
 				6695B6EC17505FBF0069E61F /* MMEditablePaperView.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
+				66B3522517A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m in Sources */,
 				663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */,
 				663C187D1755B63D00706A05 /* Eraser.m in Sources */,
 				663C188B1759B51600706A05 /* MMUndoRedoButton.m in Sources */,
 				663C1897175A89EF00706A05 /* MMRulerButton.m in Sources */,
+				6651083C178F249C00A7A7DD /* MMVector.m in Sources */,
 				66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */,
 				66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */,
 				66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */,
 				66B21A7A175E595B0049F1AF /* MMBlockOperation.m in Sources */,
 				6655E926176291C800E4F36A /* MMScissorButton.m in Sources */,
+				66510838178DFEE700A7A7DD /* MMRulerView.m in Sources */,
 				6615076F1783390400B181F3 /* MMFeedbackView.m in Sources */,
 				661507721783410900B181F3 /* DYRateView.m in Sources */,
 				66150785178347A100B181F3 /* UIPlaceHolderTextView.m in Sources */,
+				66510835178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m in Sources */,
 				66C0C9D0178386B8009491B3 /* MMLikeButton.m in Sources */,
 				66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */,
+				66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		66455F83175E937500C66DFA /* PBXTargetDependency */ = {
+		66D83FC41795EAA60093DB26 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "DrawKit-iOS";
-			targetProxy = 66455F82175E937500C66DFA /* PBXContainerItemProxy */;
+			targetProxy = 66D83FC31795EAA60093DB26 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -915,12 +971,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Adam Wulf (569ACMP6SC)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Adam Wulf (569ACMP6SC)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -932,11 +989,13 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "992248CC-57C8-4552-B5BB-91F892685F60";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = 2;
@@ -947,22 +1006,24 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PRODUCT_NAME = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = 2;
@@ -984,6 +1045,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/TestFlightSDK\"",
@@ -994,8 +1056,8 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = LooseLeaf;
-				PROVISIONING_PROFILE = "38E2B8E5-D90F-4CD5-B0CB-49CCF3270DC6";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "38E2B8E5-D90F-4CD5-B0CB-49CCF3270DC6";
+				PROVISIONING_PROFILE = "E63AA607-A0D6-4500-923D-4FB57C5A48D4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E63AA607-A0D6-4500-923D-4FB57C5A48D4";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1014,6 +1076,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/TestFlightSDK\"",

@@ -27,6 +27,15 @@
     return lastObject;
 }
 
+-(void) insertSubview:(MMPaperView*)obj{
+    if(![self containsSubview:obj]){
+        if(obj.superview){
+            obj.frame = [self convertRect:obj.frame fromView:obj.superview];
+        }
+        [self insertSubview:obj atIndex:0];
+    }
+}
+
 - (void)pushSubview:(MMPaperView*)obj{
     if(![self containsSubview:obj]){
         if(obj.superview){
@@ -45,7 +54,9 @@
 
 - (void) addSubviewToBottomOfStack:(MMPaperView*)obj{
     if(obj.superview){
-        obj.frame = [self convertRect:obj.frame fromView:obj.superview];
+        CGRect currFrame = obj.frame;
+        CGRect adjustedFrame = [self convertRect:currFrame fromView:obj.superview];
+        obj.frame = adjustedFrame;
     }
     [self insertSubview:obj atIndex:0];
 }

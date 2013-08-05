@@ -16,6 +16,7 @@
 #import "MMLeftArrow.h"
 #import "MMRightArrow.h"
 #import "MMBezelInRightGestureRecognizer.h"
+#import "MMBezelInLeftGestureRecognizer.h"
 #import "UIView+SubviewStacks.h"
 #import "UIView+Debug.h"
 #import "UIView+Animations.h"
@@ -24,12 +25,15 @@
 #import "MMPopoverView.h"
 
 @interface MMPaperStackView : UIScrollView<MMPaperViewDelegate>{
-    @private
+
+@protected
     // this is the UUID of the page that has
     // most recently been suggested that it might
     // be the top page soon
     NSString* recentlySuggestedPageUUID;
+    NSString* recentlyConfirmedPageUUID;
     
+@private
     MMPapersIcon* papersIcon;
     MMPaperIcon* paperIcon;
     MMPlusIcon* plusIcon;
@@ -42,6 +46,7 @@
     
     @protected
     MMBezelInRightGestureRecognizer* fromRightBezelGesture;
+    MMBezelInLeftGestureRecognizer* fromLeftBezelGesture;
     
     UIView* visibleStackHolder;
     UIView* hiddenStackHolder;
@@ -56,7 +61,7 @@
 -(void) addPaperToBottomOfHiddenStack:(MMPaperView*)page;
 
 -(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated onComplete:(void(^)(BOOL finished))completionBlock;
--(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated andPreserveFrame:(BOOL)preserveFrame onComplete:(void(^)(BOOL finished))completionBlock;
+-(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated andPreservePageFrame:(BOOL)preserveFrame onComplete:(void(^)(BOOL finished))completionBlock;
 -(void) popTopPageOfHiddenStack;
 -(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(UIView*)stackView;
 -(void) realignPagesInVisibleStackExcept:(MMPaperView*)page animated:(BOOL)animated;
@@ -70,7 +75,8 @@
 -(void) willChangeTopPageTo:(MMPaperView*)page;
 -(void) didChangeTopPage;
 -(void) willNotChangeTopPageTo:(MMPaperView*)page;
--(void) isBezelingInWithGesture:(MMBezelInRightGestureRecognizer*)bezelGesture;
+-(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer*)bezelGesture;
+-(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture;
 -(void) saveStacksToDisk;
 
 @end

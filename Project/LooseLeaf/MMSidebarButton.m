@@ -90,6 +90,10 @@
                                     CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), 19,
                                     CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), 24.5,
                                     kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation);
+        
+        CGGradientRelease(gradient);
+        CGColorSpaceRelease(colorSpace);
+        
         CGContextRestoreGState(context);
     }
 }

@@ -15,6 +15,7 @@
 - (MMEditablePaperView*) peekSubview;
 - (MMEditablePaperView*) popSubview;
 - (MMEditablePaperView*) bottomSubview;
+- (void) insertSubview:(MMPaperView*)obj;
 - (void) pushSubview:(MMPaperView*)obj;
 - (void) addSubviewToBottomOfStack:(MMPaperView*)obj;
 - (NSArray*) peekSubviewFromSubview:(MMPaperView*)obj;

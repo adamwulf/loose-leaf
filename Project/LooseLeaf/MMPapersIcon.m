@@ -205,7 +205,7 @@
         CGContextSetBlendMode(context, kCGBlendModeNormal);
         UIImage *maskImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
-        context = UIGraphicsGetCurrentContext();
+
         // created number mask
         //
         
