@@ -1161,8 +1161,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Adam Wulf (569ACMP6SC)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Adam Wulf (569ACMP6SC)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../Submodules/JotUI/JotTouchSDK",
@@ -1182,7 +1181,6 @@
 				);
 				PRODUCT_NAME = LooseLeaf;
 				PROVISIONING_PROFILE = "E63AA607-A0D6-4500-923D-4FB57C5A48D4";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E63AA607-A0D6-4500-923D-4FB57C5A48D4";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1192,7 +1190,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../Submodules/JotUI/JotTouchSDK",
@@ -1210,7 +1207,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = LooseLeaf;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "E63AA607-A0D6-4500-923D-4FB57C5A48D4";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
