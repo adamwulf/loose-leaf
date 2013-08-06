@@ -9,8 +9,10 @@
 #import "MMEditablePaperView.h"
 #import <QuartzCore/QuartzCore.h>
 #import <JotUI/JotUI.h>
+#import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "NSThread+BlockAdditions.h"
 #import "TestFlight.h"
+#import "DrawKit-iOS.h"
 
 dispatch_queue_t loadUnloadStateQueue;
 dispatch_queue_t importThumbnailQueue;
@@ -326,8 +328,63 @@ dispatch_queue_t importThumbnailQueue;
     return [delegate rotationForSegment:segment fromPreviousSegment:previousSegment];;
 }
 
+
+
+
+
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
-    return [delegate willAddElementsToStroke:elements fromPreviousElement:previousElement];
+    
+    UIBezierPath* bounds = [UIBezierPath bezierPathWithRect:self.bounds];
+    
+    NSArray* modifiedElements = [self.delegate willAddElementsToStroke:elements fromPreviousElement:previousElement];
+    
+    NSMutableArray* croppedElements = [NSMutableArray array];
+    for(AbstractBezierPathElement* element in modifiedElements){
+        
+        if([element isKindOfClass:[CurveToPathElement class]]){
+            CurveToPathElement* curveElement = (CurveToPathElement*) element;
+            UIBezierPath* bez = [UIBezierPath bezierPath];
+            [bez moveToPoint:[element startPoint]];
+            [bez addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
+            
+            bez = [bez unclosedPathFromIntersectionWithPath:bounds];
+            
+            NSLog(@"element count: %d", [bez elementCount]);
+            
+            __block CGPoint previousEndpoint;
+            [bez iteratePathWithBlock:^(CGPathElement pathEle){
+                AbstractBezierPathElement* newElement = nil;
+                if(pathEle.type == kCGPathElementAddCurveToPoint){
+                    // curve
+                    newElement = [CurveToPathElement elementWithStart:previousEndpoint
+                                                           andCurveTo:pathEle.points[2]
+                                                          andControl1:pathEle.points[0]
+                                                          andControl2:pathEle.points[1]];
+                    previousEndpoint = pathEle.points[2];
+                }else if(pathEle.type == kCGPathElementMoveToPoint){
+                    newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
+                    previousEndpoint = pathEle.points[0];
+                }else if(pathEle.type == kCGPathElementAddLineToPoint){
+                    newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
+                    previousEndpoint = pathEle.points[0];
+                }
+                if(newElement){
+                    // be sure to set color/width/etc
+                    newElement.color = element.color;
+                    newElement.width = element.width;
+                    newElement.rotation = element.rotation;
+                    [croppedElements addObject:newElement];
+                }
+            }];
+        }else{
+            [croppedElements addObject:element];
+        }
+    }
+    
+    NSLog(@"elements: %@", elements);
+    NSLog(@"output:   %@", croppedElements);
+    
+    return croppedElements;
 }
 
 
