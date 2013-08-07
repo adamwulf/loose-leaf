@@ -754,23 +754,6 @@ static NSDate* lastRender;
         // see willMoveStrokeAt:
         mostRecentTouchPointInOpenGLCoord = element.endPoint;
         
-        // now if we have output, we need to connect
-        // these new strokes to anything the user has already
-        // drawn. so calc the diff between our start and the
-        // previousElement's end, and connect them.
-        if([output count]){
-            CGPoint oldBeginning = previousElement.endPoint;
-            if(previousElement && !CGPointEqualToPoint(oldBeginning, CGPointZero)){
-                // if we have a previous element, then we should adjust the start point
-                // of this element to start from the previous element's end.
-                //
-                // this way, if the ruler moves mid stroke, the stroke stays
-                // connected
-                CGPoint newBeginning = [[output firstObject] startPoint];
-                CGPoint adjustment = CGPointMake(oldBeginning.x - newBeginning.x, oldBeginning.y - newBeginning.y);
-                [[output firstObject] adjustStartBy:adjustment];
-            }
-        }
         // ok, return our adjusted elements
         return output;
     }

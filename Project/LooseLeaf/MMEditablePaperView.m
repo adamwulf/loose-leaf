@@ -347,12 +347,10 @@ dispatch_queue_t importThumbnailQueue;
             [bez moveToPoint:[element startPoint]];
             [bez addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
             
-            bez = [bez unclosedPathFromIntersectionWithPath:bounds];
-            
-            NSLog(@"element count: %d", [bez elementCount]);
-            
-            __block CGPoint previousEndpoint;
-            [bez iteratePathWithBlock:^(CGPathElement pathEle){
+            UIBezierPath* cropped = [bez unclosedPathFromIntersectionWithPath:bounds];
+
+            __block CGPoint previousEndpoint = curveElement.startPoint;
+            [cropped iteratePathWithBlock:^(CGPathElement pathEle){
                 AbstractBezierPathElement* newElement = nil;
                 if(pathEle.type == kCGPathElementAddCurveToPoint){
                     // curve
@@ -376,14 +374,14 @@ dispatch_queue_t importThumbnailQueue;
                     [croppedElements addObject:newElement];
                 }
             }];
+            if([croppedElements count] && [[croppedElements firstObject] isKindOfClass:[MoveToPathElement class]]){
+                [croppedElements removeObjectAtIndex:0];
+            }
         }else{
             [croppedElements addObject:element];
         }
     }
-    
-    NSLog(@"elements: %@", elements);
-    NSLog(@"output:   %@", croppedElements);
-    
+
     return croppedElements;
 }
 
