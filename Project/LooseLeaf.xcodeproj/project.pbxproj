@@ -65,6 +65,7 @@
 		66A3A6BB1791F18900D8FE1D /* UIDevice+PPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3A6BA1791F18900D8FE1D /* UIDevice+PPI.m */; };
 		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; };
 		66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */; };
+		66A83AF317B2BB3D00488E54 /* MMBackwardCompatible.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A83AF217B2BB3D00488E54 /* MMBackwardCompatible.m */; };
 		66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A55175AFCA70049F1AF /* MMHandButton.m */; };
 		66B21A59175B0BF30049F1AF /* cloth.png in Resources */ = {isa = PBXBuildFile; fileRef = 66B21A58175B0BF30049F1AF /* cloth.png */; };
 		66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A6B175E4A5A0049F1AF /* MMStackManager.m */; };
@@ -268,6 +269,8 @@
 		66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableSet+Extras.m"; sourceTree = "<group>"; };
 		66A4BD4416321ABC00C45070 /* NSThread+BlockAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSThread+BlockAdditions.h"; sourceTree = "<group>"; };
 		66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+BlockAdditions.m"; sourceTree = "<group>"; };
+		66A83AF117B2BB3D00488E54 /* MMBackwardCompatible.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMBackwardCompatible.h; path = "DrawKit-iOS/MMBackwardCompatible.h"; sourceTree = "<group>"; };
+		66A83AF217B2BB3D00488E54 /* MMBackwardCompatible.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMBackwardCompatible.m; path = "DrawKit-iOS/MMBackwardCompatible.m"; sourceTree = "<group>"; };
 		66AA212B16FBB31C00E86922 /* MMPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPopoverView.h; sourceTree = "<group>"; };
 		66AA212C16FBB31C00E86922 /* MMPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPopoverView.m; sourceTree = "<group>"; };
 		66B21A54175AFCA70049F1AF /* MMHandButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMHandButton.h; sourceTree = "<group>"; };
@@ -489,6 +492,8 @@
 			children = (
 				6648954217B0511D0001829C /* JRSwizzle.h */,
 				6648954317B0511D0001829C /* JRSwizzle.m */,
+				66A83AF117B2BB3D00488E54 /* MMBackwardCompatible.h */,
+				66A83AF217B2BB3D00488E54 /* MMBackwardCompatible.m */,
 			);
 			name = JRSwizzle;
 			path = "../../Submodules/DrawKit-iOS";
@@ -997,6 +1002,7 @@
 				660E1DB0158FC7DB0001DA12 /* MMPaperIcon.m in Sources */,
 				660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */,
 				664516B9159030FC0012FACA /* Constants.m in Sources */,
+				66A83AF317B2BB3D00488E54 /* MMBackwardCompatible.m in Sources */,
 				66A3A6BB1791F18900D8FE1D /* UIDevice+PPI.m in Sources */,
 				664F4139159063F8006F8B09 /* MMPlusIcon.m in Sources */,
 				664F413D1590661F006F8B09 /* MMRightArrow.m in Sources */,
