@@ -12,6 +12,8 @@
     UIColor* color;
 }
 
+@synthesize color;
+
 - (id)initWithColor:(UIColor*)_color andFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -29,8 +31,6 @@
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
     
-//    CGRect frame = [self drawableFrame];
-    
     //// Oval
     UIBezierPath* ovalPath = [self ovalPath];
     [ovalPath closePath];
@@ -45,5 +45,9 @@
     [super drawRect:rect];
 }
 
+-(void) setColor:(UIColor *)_color{
+    color = _color;
+    [self setNeedsDisplay];
+}
 
 @end

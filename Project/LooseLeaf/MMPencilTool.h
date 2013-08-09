@@ -14,6 +14,7 @@
 @interface MMPencilTool : UIView
 
 @property (nonatomic) BOOL selected;
+@property (readonly) UIColor* color;
 @property (nonatomic, weak) NSObject<MMPencilToolDelegate>* delegate;
 
 - (id)initWithButtonFrame:(CGRect)frame andScreenSize:(CGSize)totalSize;

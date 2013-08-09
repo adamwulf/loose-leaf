@@ -13,4 +13,6 @@
 
 -(void) penTapped:(UIButton*)button;
 
+-(void) didChangeColorTo:(UIColor*)color;
+
 @end
