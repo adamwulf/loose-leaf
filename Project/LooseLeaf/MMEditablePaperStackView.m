@@ -72,9 +72,8 @@
         
         
         
-        pencilTool = [[MMPencilTool alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        pencilTool = [[MMPencilTool alloc] initWithButtonFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton) andScreenSize:self.bounds.size];
         pencilTool.delegate = self;
-        [pencilTool addTarget:self action:@selector(penTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:pencilTool];
         
         eraserButton = [[MMPencilEraserButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
