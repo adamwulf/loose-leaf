@@ -239,6 +239,7 @@
 		665CAC1C17B578B0000BD505 /* MMColorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMColorButton.m; sourceTree = "<group>"; };
 		665CAC1F17B57B0B000BD505 /* MMPencilTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPencilTool.h; sourceTree = "<group>"; };
 		665CAC2017B57B0B000BD505 /* MMPencilTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPencilTool.m; sourceTree = "<group>"; };
+		665CAC2217B5803B000BD505 /* MMPencilToolDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPencilToolDelegate.h; sourceTree = "<group>"; };
 		6661144616FD67F8005032B9 /* Loose-Leaf-Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf-Icon.png"; path = "../Loose-Leaf-Icon.png"; sourceTree = "<group>"; };
 		6661144916FD67FA005032B9 /* Loose-Leaf-Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf-Icon@2x.png"; path = "../Loose-Leaf-Icon@2x.png"; sourceTree = "<group>"; };
 		66728713159515FC0018571A /* MMEditablePaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEditablePaperStackView.h; sourceTree = "<group>"; };
@@ -627,6 +628,7 @@
 			children = (
 				665CAC1F17B57B0B000BD505 /* MMPencilTool.h */,
 				665CAC2017B57B0B000BD505 /* MMPencilTool.m */,
+				665CAC2217B5803B000BD505 /* MMPencilToolDelegate.h */,
 				66BD6E9A15940D7300D4544C /* MMPencilButton.h */,
 				66BD6E9B15940D7400D4544C /* MMPencilButton.m */,
 				665CAC1B17B578B0000BD505 /* MMColorButton.h */,

@@ -11,6 +11,7 @@
 
 @implementation MMPencilTool{
     CGRect originalFrame;
+    NSObject<MMPencilToolDelegate>* delegate;
     MMPencilButton* pencilButton;
     MMColorButton* blackButton;
     MMColorButton* blueButton;
@@ -19,15 +20,15 @@
     MMColorButton* greenButton;
 }
 
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithButtonFrame:(CGRect)frame andScreenSize:(CGSize)totalSize
 {
     originalFrame = frame;
-    frame.origin.x -= 100;
-    frame.origin.y -= 100;
-    frame.size.width += 200;
-    frame.size.height += 200;
+    frame.origin.x = 0;
+    frame.origin.y = 0;
+    frame.size.width = totalSize.width;
+    frame.size.height = totalSize.height;
     
-    CGRect pencilButtonFrame = CGRectMake(100, 100, originalFrame.size.width, originalFrame.size.height);
+    CGRect pencilButtonFrame = CGRectMake(originalFrame.origin.x, originalFrame.origin.y, originalFrame.size.width, originalFrame.size.height);
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
@@ -35,11 +36,14 @@
         self.layer.borderWidth = 1;
         
         pencilButton = [[MMPencilButton alloc] initWithFrame:pencilButtonFrame];
+        [pencilButton addTarget:self action:@selector(penTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:pencilButton];
     }
     return self;
 }
 
+
+#pragma mark - Touch Events
 
 //
 // only return our button subviews,
@@ -52,20 +56,22 @@
     return nil;
 }
 
-
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event{
     return [pencilButton pointInside:[self convertPoint:point toView:pencilButton] withEvent:event];
 }
+
+#pragma MMSidebarButton
 
 -(void) setTransform:(CGAffineTransform)transform{
     [pencilButton setTransform:transform];
 }
 
--(NSObject<MMSidebarButtonDelegate>*)delegate{
-    return pencilButton.delegate;
+-(NSObject<MMPencilToolDelegate>*)delegate{
+    return delegate;
 }
 
--(void) setDelegate:(NSObject<MMSidebarButtonDelegate> *)delegate{
+-(void) setDelegate:(NSObject<MMPencilToolDelegate> *)_delegate{
+    delegate = _delegate;
     pencilButton.delegate = delegate;
 }
 
@@ -77,9 +83,15 @@
     return pencilButton.selected;
 }
 
-- (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents{
-    [pencilButton addTarget:target action:action forControlEvents:controlEvents];
-}
 
+#pragma Events
+
+-(void) penTapped:(UIButton*)button{
+    if(pencilButton.selected){
+        NSLog(@"show colors");
+    }else{
+        [self.delegate penTapped:button];
+    }
+}
 
 @end

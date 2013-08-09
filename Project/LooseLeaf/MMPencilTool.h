@@ -9,13 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "MMColorButton.h"
 #import "MMPencilButton.h"
-#import "MMSidebarButtonDelegate.h"
+#import "MMPencilToolDelegate.h"
 
 @interface MMPencilTool : UIView
 
 @property (nonatomic) BOOL selected;
-@property (nonatomic) NSObject<MMSidebarButtonDelegate>* delegate;
+@property (nonatomic, weak) NSObject<MMPencilToolDelegate>* delegate;
 
-- (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents;
+- (id)initWithButtonFrame:(CGRect)frame andScreenSize:(CGSize)totalSize;
 
 @end

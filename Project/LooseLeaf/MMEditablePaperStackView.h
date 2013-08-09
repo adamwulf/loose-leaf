@@ -25,7 +25,7 @@
 #import "MMScissorButton.h"
 #import "MMLikeButton.h"
 #import "MMAdonitButton.h"
-#import "MMSidebarButtonDelegate.h"
+#import "MMPencilToolDelegate.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMRotationManager.h"
 #import "MMRotationManagerDelegate.h"
@@ -39,7 +39,7 @@
  * this class is responsible for the editable buttons and controls that show
  * outside of a page's view subviews
  */
-@interface MMEditablePaperStackView : MMListPaperStackView<JotViewDelegate,MMSidebarButtonDelegate,MMRotationManagerDelegate,UIScrollViewDelegate>{
+@interface MMEditablePaperStackView : MMListPaperStackView<JotViewDelegate,MMPencilToolDelegate,MMRotationManagerDelegate,UIScrollViewDelegate>{
     
     // managers
     MMStackManager* stackManager;
