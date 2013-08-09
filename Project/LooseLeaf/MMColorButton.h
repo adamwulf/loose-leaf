@@ -10,6 +10,8 @@
 
 @interface MMColorButton : MMSidebarButton
 
+@property (nonatomic) UIColor* color;
+
 - (id)initWithColor:(UIColor*)color andFrame:(CGRect)frame;
 
 @end

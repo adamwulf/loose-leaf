@@ -248,6 +248,10 @@
     scissorButton.selected = NO;
 }
 
+-(void) didChangeColorTo:(UIColor*)color{
+    pen.color = color;
+}
+
 -(void) eraserTapped:(UIButton*)_button{
     eraserButton.selected = YES;
     pencilTool.selected = NO;
