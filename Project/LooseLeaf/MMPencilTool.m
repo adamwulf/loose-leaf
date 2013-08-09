@@ -9,6 +9,7 @@
 #import "MMPencilTool.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Constants.h"
+#import "UIColor+ColorWithHex.h"
 
 @implementation MMPencilTool{
     CGRect originalFrame;
@@ -53,19 +54,19 @@
         [blackButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:blackButton];
 
-        blueButton = [[MMColorButton alloc] initWithColor:[UIColor blueColor] andFrame:CGRectOffset(originalFrame, -kWidthOfSidebarButton * 2 + kWidthOfSidebarButtonBuffer, 0)];
+        blueButton = [[MMColorButton alloc] initWithColor:[UIColor colorWithHexString:@"3C7BFF"] andFrame:CGRectOffset(originalFrame, -kWidthOfSidebarButton * 2 + kWidthOfSidebarButtonBuffer, 0)];
         [blueButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:blueButton];
     
-        redButton = [[MMColorButton alloc] initWithColor:[UIColor redColor] andFrame:CGRectOffset(originalFrame, -kWidthOfSidebarButton * 3 + kWidthOfSidebarButtonBuffer, 0)];
+        redButton = [[MMColorButton alloc] initWithColor:[UIColor colorWithHexString:@"E8373E"] andFrame:CGRectOffset(originalFrame, -kWidthOfSidebarButton * 3 + kWidthOfSidebarButtonBuffer, 0)];
         [redButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:redButton];
         
-        yellowButton = [[MMColorButton alloc] initWithColor:[UIColor yellowColor] andFrame:CGRectOffset(originalFrame, -kWidthOfSidebarButton * 4 + kWidthOfSidebarButtonBuffer, 0)];
+        yellowButton = [[MMColorButton alloc] initWithColor:[UIColor colorWithHexString:@"FFE230"] andFrame:CGRectOffset(originalFrame, -kWidthOfSidebarButton * 4 + kWidthOfSidebarButtonBuffer, 0)];
         [yellowButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:yellowButton];
         
-        greenButton = [[MMColorButton alloc] initWithColor:[UIColor greenColor] andFrame:CGRectOffset(originalFrame, -kWidthOfSidebarButton * 5 + kWidthOfSidebarButtonBuffer, 0)];
+        greenButton = [[MMColorButton alloc] initWithColor:[UIColor colorWithHexString:@"5EF52E"] andFrame:CGRectOffset(originalFrame, -kWidthOfSidebarButton * 5 + kWidthOfSidebarButtonBuffer, 0)];
         [greenButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:greenButton];
         

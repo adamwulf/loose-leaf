@@ -7,3 +7,6 @@
 [submodule "Submodules/DrawKit-iOS"]
 	path = Submodules/DrawKit-iOS
 	url = git@github.com:adamwulf/DrawKit-iOS.git
+[submodule "Submodules/ColorWithHex"]
+	path = Submodules/ColorWithHex
+	url = git@github.com:anjerodesu/UIColor-ColorWithHex.git

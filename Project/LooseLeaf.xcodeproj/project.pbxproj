@@ -47,6 +47,7 @@
 		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
 		665CAC1D17B578B0000BD505 /* MMColorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 665CAC1C17B578B0000BD505 /* MMColorButton.m */; };
 		665CAC2117B57B0B000BD505 /* MMPencilTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 665CAC2017B57B0B000BD505 /* MMPencilTool.m */; };
+		665CAC2517B58FD3000BD505 /* UIColor+ColorWithHex.m in Sources */ = {isa = PBXBuildFile; fileRef = 665CAC2417B58FC8000BD505 /* UIColor+ColorWithHex.m */; };
 		6661144716FD67F8005032B9 /* Loose-Leaf-Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144616FD67F8005032B9 /* Loose-Leaf-Icon.png */; };
 		6661144A16FD67FA005032B9 /* Loose-Leaf-Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144916FD67FA005032B9 /* Loose-Leaf-Icon@2x.png */; };
 		66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* MMEditablePaperStackView.m */; };
@@ -240,6 +241,8 @@
 		665CAC1F17B57B0B000BD505 /* MMPencilTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPencilTool.h; sourceTree = "<group>"; };
 		665CAC2017B57B0B000BD505 /* MMPencilTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPencilTool.m; sourceTree = "<group>"; };
 		665CAC2217B5803B000BD505 /* MMPencilToolDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPencilToolDelegate.h; sourceTree = "<group>"; };
+		665CAC2317B58FC8000BD505 /* UIColor+ColorWithHex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIColor+ColorWithHex.h"; path = "../../Submodules/ColorWithHex/UIColor+ColorWithHex.h"; sourceTree = "<group>"; };
+		665CAC2417B58FC8000BD505 /* UIColor+ColorWithHex.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIColor+ColorWithHex.m"; path = "../../Submodules/ColorWithHex/UIColor+ColorWithHex.m"; sourceTree = "<group>"; };
 		6661144616FD67F8005032B9 /* Loose-Leaf-Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf-Icon.png"; path = "../Loose-Leaf-Icon.png"; sourceTree = "<group>"; };
 		6661144916FD67FA005032B9 /* Loose-Leaf-Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf-Icon@2x.png"; path = "../Loose-Leaf-Icon@2x.png"; sourceTree = "<group>"; };
 		66728713159515FC0018571A /* MMEditablePaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEditablePaperStackView.h; sourceTree = "<group>"; };
@@ -391,6 +394,8 @@
 		660E1DA6158FC6120001DA12 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				665CAC2317B58FC8000BD505 /* UIColor+ColorWithHex.h */,
+				665CAC2417B58FC8000BD505 /* UIColor+ColorWithHex.m */,
 				66A4BD4416321ABC00C45070 /* NSThread+BlockAdditions.h */,
 				66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */,
 				66A3AF8C15913B5E00F8A7A6 /* NSMutableSet+Extras.h */,
@@ -1040,6 +1045,7 @@
 				66BD6E911593DE4E00D4544C /* MMPolygonButton.m in Sources */,
 				66BD6E941593E1D800D4544C /* MMImageButton.m in Sources */,
 				66BD6E971593E98D00D4544C /* MMTextButton.m in Sources */,
+				665CAC2517B58FD3000BD505 /* UIColor+ColorWithHex.m in Sources */,
 				66BD6E9C15940D7500D4544C /* MMPencilButton.m in Sources */,
 				66BD6E9F15941B7B00D4544C /* MMShareButton.m in Sources */,
 				66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */,
