@@ -14,7 +14,9 @@
 #import "MMPolygonButton.h"
 #import "MMImageButton.h"
 #import "MMTextButton.h"
+#import "MMPencilTool.h"
 #import "MMPencilButton.h"
+#import "MMColorButton.h"
 #import "MMPencilEraserButton.h"
 #import "MMShareButton.h"
 #import "MMMapButton.h"
@@ -50,7 +52,7 @@
     MMImageButton* insertImageButton;
     MMScissorButton* scissorButton;
     MMTextButton* textButton;
-    MMPencilButton* pencilButton;
+    MMPencilTool* pencilTool;
     MMPencilEraserButton* eraserButton;
     MMShareButton* shareButton;
     MMLikeButton* feedbackButton;
