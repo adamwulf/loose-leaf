@@ -72,11 +72,10 @@
         
         
         
-        
-        pencilButton = [[MMPencilButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        pencilButton.delegate = self;
-        [pencilButton addTarget:self action:@selector(penTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:pencilButton];
+        pencilTool = [[MMPencilTool alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        pencilTool.delegate = self;
+        [pencilTool addTarget:self action:@selector(penTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:pencilTool];
         
         eraserButton = [[MMPencilEraserButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         eraserButton.delegate = self;
@@ -182,7 +181,7 @@
         self.delaysContentTouches = NO;
         
         
-        pencilButton.selected = YES;
+        pencilTool.selected = YES;
         handButton.selected = YES;
         
         polygonButton.enabled = NO;
@@ -244,7 +243,7 @@
 
 -(void) penTapped:(UIButton*)_button{
     eraserButton.selected = NO;
-    pencilButton.selected = YES;
+    pencilTool.selected = YES;
     polygonButton.selected = NO;
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
@@ -252,7 +251,7 @@
 
 -(void) eraserTapped:(UIButton*)_button{
     eraserButton.selected = YES;
-    pencilButton.selected = NO;
+    pencilTool.selected = NO;
     polygonButton.selected = NO;
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
@@ -323,7 +322,7 @@
         polygonButton.alpha = visible;
         insertImageButton.alpha = visible;
         textButton.alpha = visible;
-        pencilButton.alpha = visible;
+        pencilTool.alpha = visible;
         scissorButton.alpha = visible;
         eraserButton.alpha = visible;
         shareButton.alpha = visible;
@@ -347,7 +346,7 @@
         insertImageButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         textButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         scissorButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        pencilButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        pencilTool.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         eraserButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         shareButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         mapButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);

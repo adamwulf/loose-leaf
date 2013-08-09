@@ -14,6 +14,8 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
+    // adjust the frame so that 
+    
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
