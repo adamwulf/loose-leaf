@@ -43,8 +43,6 @@
         color = [UIColor blackColor];
         
         // Initialization code
-        self.layer.borderColor = [[UIColor redColor] CGColor];
-        self.layer.borderWidth = 1;
         
         pencilButton = [[MMPencilButton alloc] initWithFrame:originalFrame];
         [pencilButton addTarget:self action:@selector(penTapped:) forControlEvents:UIControlEventTouchUpInside];
