@@ -25,7 +25,11 @@
 
     UIColor* color;
     
-    UIView* colorHolder;
+    UIView* blackColorHolder;
+    UIView* blueColorHolder;
+    UIView* redColorHolder;
+    UIView* yellowColorHolder;
+    UIView* greenColorHolder;
     
     BOOL isShowingColorOptions;
 }
@@ -46,13 +50,6 @@
         
         CGPoint pencilLocInContentHolder = CGPointMake(120, 20);
         
-        colorHolder = [[UIView alloc] initWithFrame:CGRectMake(originalFrame.origin.x - pencilLocInContentHolder.x, originalFrame.origin.y - pencilLocInContentHolder.y, 200, 200)];
-//        colorHolder.layer.borderColor = [UIColor redColor].CGColor;
-//        colorHolder.layer.borderWidth = 1;
-        [self setAnchorPoint:CGPointMake((pencilLocInContentHolder.x + originalFrame.size.width / 2) / colorHolder.frame.size.width,
-                                         (pencilLocInContentHolder.y + originalFrame.size.height / 2) / colorHolder.frame.size.height) forView:colorHolder];
-        [self addSubview:colorHolder];
-        
         color = [UIColor blackColor];
         
         // Initialization code
@@ -61,28 +58,48 @@
         [pencilButton addTarget:self action:@selector(penTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:pencilButton];
         
+        blackColorHolder = [[UIView alloc] initWithFrame:CGRectMake(originalFrame.origin.x - pencilLocInContentHolder.x, originalFrame.origin.y - pencilLocInContentHolder.y, 200, 200)];
+        [self setAnchorPoint:CGPointMake((pencilLocInContentHolder.x + originalFrame.size.width / 2) / blackColorHolder.frame.size.width,
+                                         (pencilLocInContentHolder.y + originalFrame.size.height / 2) / blackColorHolder.frame.size.height) forView:blackColorHolder];
+        [self addSubview:blackColorHolder];
         blackButton = [[MMColorButton alloc] initWithColor:[UIColor blackColor] andFrame:CGRectMake(pencilLocInContentHolder.x + kWidthOfSidebarButtonBuffer - kWidthOfSidebarButton, pencilLocInContentHolder.y, originalFrame.size.width, originalFrame.size.height)];
         [blackButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [colorHolder addSubview:blackButton];
+        [blackColorHolder addSubview:blackButton];
 
         activeColorButton = [[MMColorButton alloc] initWithColor:[UIColor blackColor] andFrame:blackButton.originalFrame];
-        [colorHolder addSubview:activeColorButton];
+        [blackColorHolder addSubview:activeColorButton];
 
+        blueColorHolder = [[UIView alloc] initWithFrame:CGRectMake(originalFrame.origin.x - pencilLocInContentHolder.x, originalFrame.origin.y - pencilLocInContentHolder.y, 200, 200)];
+        [self setAnchorPoint:CGPointMake((pencilLocInContentHolder.x + originalFrame.size.width / 2) / blackColorHolder.frame.size.width,
+                                         (pencilLocInContentHolder.y + originalFrame.size.height / 2) / blackColorHolder.frame.size.height) forView:blueColorHolder];
+        [self addSubview:blueColorHolder];
         blueButton = [[MMColorButton alloc] initWithColor:[UIColor colorWithHexString:@"3C7BFF"] andFrame:CGRectMake(pencilLocInContentHolder.x - kWidthOfSidebarButton * cosf(M_PI / 3), pencilLocInContentHolder.y + kWidthOfSidebarButton * sinf(M_PI / 3), originalFrame.size.width, originalFrame.size.height)];
         [blueButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [colorHolder addSubview:blueButton];
+        [blueColorHolder addSubview:blueButton];
     
+        redColorHolder = [[UIView alloc] initWithFrame:CGRectMake(originalFrame.origin.x - pencilLocInContentHolder.x, originalFrame.origin.y - pencilLocInContentHolder.y, 200, 200)];
+        [self setAnchorPoint:CGPointMake((pencilLocInContentHolder.x + originalFrame.size.width / 2) / blackColorHolder.frame.size.width,
+                                         (pencilLocInContentHolder.y + originalFrame.size.height / 2) / blackColorHolder.frame.size.height) forView:redColorHolder];
+        [self addSubview:redColorHolder];
         redButton = [[MMColorButton alloc] initWithColor:[UIColor colorWithHexString:@"E8373E"] andFrame:CGRectMake(pencilLocInContentHolder.x - 1.8 * kWidthOfSidebarButton, pencilLocInContentHolder.y, originalFrame.size.width, originalFrame.size.height)];
         [redButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [colorHolder addSubview:redButton];
+        [redColorHolder addSubview:redButton];
         
+        yellowColorHolder = [[UIView alloc] initWithFrame:CGRectMake(originalFrame.origin.x - pencilLocInContentHolder.x, originalFrame.origin.y - pencilLocInContentHolder.y, 200, 200)];
+        [self setAnchorPoint:CGPointMake((pencilLocInContentHolder.x + originalFrame.size.width / 2) / blackColorHolder.frame.size.width,
+                                         (pencilLocInContentHolder.y + originalFrame.size.height / 2) / blackColorHolder.frame.size.height) forView:yellowColorHolder];
+        [self addSubview:yellowColorHolder];
         yellowButton = [[MMColorButton alloc] initWithColor:[UIColor colorWithHexString:@"FFE230"] andFrame:CGRectMake(pencilLocInContentHolder.x - 1.8 * kWidthOfSidebarButton * cosf(M_PI / 6), pencilLocInContentHolder.y + 1.8 * kWidthOfSidebarButton * sinf(M_PI / 6), originalFrame.size.width, originalFrame.size.height)];
         [yellowButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [colorHolder addSubview:yellowButton];
+        [yellowColorHolder addSubview:yellowButton];
         
+        greenColorHolder = [[UIView alloc] initWithFrame:CGRectMake(originalFrame.origin.x - pencilLocInContentHolder.x, originalFrame.origin.y - pencilLocInContentHolder.y, 200, 200)];
+        [self setAnchorPoint:CGPointMake((pencilLocInContentHolder.x + originalFrame.size.width / 2) / blackColorHolder.frame.size.width,
+                                         (pencilLocInContentHolder.y + originalFrame.size.height / 2) / blackColorHolder.frame.size.height) forView:greenColorHolder];
+        [self addSubview:greenColorHolder];
         greenButton = [[MMColorButton alloc] initWithColor:[UIColor colorWithHexString:@"5EF52E"] andFrame:CGRectMake(pencilLocInContentHolder.x - 1.8 * kWidthOfSidebarButton * cosf(M_PI / 3), pencilLocInContentHolder.y + 1.8 * kWidthOfSidebarButton * sinf(M_PI / 3), originalFrame.size.width, originalFrame.size.height)];
         [greenButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [colorHolder addSubview:greenButton];
+        [greenColorHolder addSubview:greenButton];
         
         
         // initialize alpha values
@@ -124,26 +141,19 @@
 // only return our button subviews,
 // never ourself
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event{
-    for(UIView* subview in colorHolder.subviews){
+    for(UIView* subview in [NSArray arrayWithObjects:pencilButton, blackButton, blueButton, redButton, yellowButton, greenButton, nil]){
         if([subview pointInside:[self convertPoint:point toView:subview] withEvent:event]){
             return subview;
         }
     }
-    if([pencilButton pointInside:[self convertPoint:point toView:pencilButton] withEvent:event]){
-        return pencilButton;
-    }
-    
     return nil;
 }
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event{
-    for(UIView* subview in colorHolder.subviews){
+    for(UIView* subview in [NSArray arrayWithObjects:pencilButton, blackButton, blueButton, redButton, yellowButton, greenButton, nil]){
         if([subview pointInside:[self convertPoint:point toView:subview] withEvent:event]){
             return YES;
         }
-    }
-    if([pencilButton pointInside:[self convertPoint:point toView:pencilButton] withEvent:event]){
-        return YES;
     }
     return NO;
 }
@@ -195,8 +205,12 @@
         isShowingColorOptions = NO;
         [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
             activeColorButton.color = color;
-            colorHolder.transform = CGAffineTransformIdentity;
-            
+            blackColorHolder.transform = CGAffineTransformIdentity;
+            blueColorHolder.transform = CGAffineTransformIdentity;
+            greenColorHolder.transform = CGAffineTransformIdentity;
+            yellowColorHolder.transform = CGAffineTransformIdentity;
+            redColorHolder.transform = CGAffineTransformIdentity;
+
             blackButton.frame = blackButton.originalFrame;
             blueButton.frame = blueButton.originalFrame;
             redButton.frame = redButton.originalFrame;
@@ -216,7 +230,7 @@
         isShowingColorOptions = YES;
         [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
             blackButton.color = [UIColor blackColor];
-            colorHolder.transform = CGAffineTransformRotate(CGAffineTransformIdentity, M_PI * 9 / 10);
+            blackColorHolder.transform = CGAffineTransformRotate(CGAffineTransformIdentity, M_PI * 9 / 10);
             
             blackButton.frame = CGRectMake(120 - kWidthOfSidebarButton, 20, originalFrame.size.width, originalFrame.size.height);
             blueButton.frame = blueButton.originalFrame;
@@ -224,10 +238,24 @@
             yellowButton.frame = yellowButton.originalFrame;
             greenButton.frame = greenButton.originalFrame;
             
-            blueButton.alpha = 1;
             greenButton.alpha = 1;
             activeColorButton.alpha = 0;
             blackButton.alpha = 1;
+        } completion:nil];
+        
+        [UIView animateWithDuration:.22 delay:.1 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
+            blueColorHolder.transform = CGAffineTransformRotate(CGAffineTransformIdentity, M_PI * 9 / 10);
+            blueButton.alpha = 1;
+        } completion:nil];
+        [UIView animateWithDuration:.19 delay:.15 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
+            greenColorHolder.transform = CGAffineTransformRotate(CGAffineTransformIdentity, M_PI * 9 / 10);
+            greenButton.alpha = 1;
+        } completion:nil];
+        [UIView animateWithDuration:.22 delay:.1 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
+            yellowColorHolder.transform = CGAffineTransformRotate(CGAffineTransformIdentity, M_PI * 9 / 10);
+        } completion:nil];
+        [UIView animateWithDuration:.25 delay:.05 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
+            redColorHolder.transform = CGAffineTransformRotate(CGAffineTransformIdentity, M_PI * 9 / 10);
         } completion:nil];
     }
 }
