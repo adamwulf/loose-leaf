@@ -217,12 +217,14 @@
             yellowButton.frame = yellowButton.originalFrame;
             greenButton.frame = greenButton.originalFrame;
 
-            blueButton.alpha = 0;
-            greenButton.alpha = 0;
             blackButton.alpha = 0;
             activeColorButton.alpha = 1;
         } completion:nil];
     }
+    [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
+        greenButton.alpha = 0;
+        blueButton.alpha = 0;
+    } completion:nil];
 }
 
 -(void) showColors{
@@ -238,18 +240,18 @@
             yellowButton.frame = yellowButton.originalFrame;
             greenButton.frame = greenButton.originalFrame;
             
-            greenButton.alpha = 1;
             activeColorButton.alpha = 0;
             blackButton.alpha = 1;
         } completion:nil];
-        
+        [UIView animateWithDuration:.1 delay:.15 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
+            blueButton.alpha = 1;
+            greenButton.alpha = 1;
+        } completion:nil];
         [UIView animateWithDuration:.22 delay:.1 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
             blueColorHolder.transform = CGAffineTransformRotate(CGAffineTransformIdentity, M_PI * 9 / 10);
-            blueButton.alpha = 1;
         } completion:nil];
         [UIView animateWithDuration:.19 delay:.15 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
             greenColorHolder.transform = CGAffineTransformRotate(CGAffineTransformIdentity, M_PI * 9 / 10);
-            greenButton.alpha = 1;
         } completion:nil];
         [UIView animateWithDuration:.22 delay:.1 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
             yellowColorHolder.transform = CGAffineTransformRotate(CGAffineTransformIdentity, M_PI * 9 / 10);
