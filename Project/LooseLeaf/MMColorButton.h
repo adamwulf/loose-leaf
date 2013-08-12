@@ -11,6 +11,7 @@
 @interface MMColorButton : MMSidebarButton
 
 @property (nonatomic) UIColor* color;
+@property (nonatomic) CGRect originalFrame;
 
 - (id)initWithColor:(UIColor*)color andFrame:(CGRect)frame;
 

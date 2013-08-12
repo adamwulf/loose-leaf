@@ -10,9 +10,11 @@
 
 @implementation MMColorButton{
     UIColor* color;
+    CGRect originalFrame;
 }
 
 @synthesize color;
+@synthesize originalFrame;
 
 - (id)initWithColor:(UIColor*)_color andFrame:(CGRect)frame
 {
@@ -20,6 +22,7 @@
     if (self) {
         // Initialization code
         color = _color;
+        originalFrame = frame;
     }
     return self;
 }
