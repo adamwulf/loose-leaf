@@ -27,6 +27,7 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
+				<string>Loose-Leaf-Icon7</string>
 				<string>Loose-Leaf-Icon</string>
 				<string>Loose-Leaf_144</string>
 				<string>Loose-Leaf_72.png</string>
