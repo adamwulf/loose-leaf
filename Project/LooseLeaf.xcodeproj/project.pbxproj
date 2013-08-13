@@ -27,6 +27,8 @@
 		664516B9159030FC0012FACA /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 664516B8159030FC0012FACA /* Constants.m */; };
 		6648D21D178C9E5400BE3B37 /* UIColor+Shadow.m in Sources */ = {isa = PBXBuildFile; fileRef = 6648D21C178C9E5400BE3B37 /* UIColor+Shadow.m */; };
 		664C62F015A36DA40072736A /* MMListPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 664C62EF15A36DA40072736A /* MMListPaperStackView.m */; };
+		664C721717B9EF7E00592CBA /* Loose-Leaf-Icon7.png in Resources */ = {isa = PBXBuildFile; fileRef = 664C721517B9EF7E00592CBA /* Loose-Leaf-Icon7.png */; };
+		664C721817B9EF7E00592CBA /* Loose-Leaf-Icon7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 664C721617B9EF7E00592CBA /* Loose-Leaf-Icon7@2x.png */; };
 		664F4139159063F8006F8B09 /* MMPlusIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F4138159063F8006F8B09 /* MMPlusIcon.m */; };
 		664F413D1590661F006F8B09 /* MMRightArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413C1590661F006F8B09 /* MMRightArrow.m */; };
 		664F414015906628006F8B09 /* MMLeftArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413F15906628006F8B09 /* MMLeftArrow.m */; };
@@ -198,6 +200,8 @@
 		6648D21C178C9E5400BE3B37 /* UIColor+Shadow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Shadow.m"; sourceTree = "<group>"; };
 		664C62EE15A36DA40072736A /* MMListPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListPaperStackView.h; sourceTree = "<group>"; };
 		664C62EF15A36DA40072736A /* MMListPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListPaperStackView.m; sourceTree = "<group>"; };
+		664C721517B9EF7E00592CBA /* Loose-Leaf-Icon7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Loose-Leaf-Icon7.png"; sourceTree = "<group>"; };
+		664C721617B9EF7E00592CBA /* Loose-Leaf-Icon7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Loose-Leaf-Icon7@2x.png"; sourceTree = "<group>"; };
 		664F4137159063F8006F8B09 /* MMPlusIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPlusIcon.h; sourceTree = "<group>"; };
 		664F4138159063F8006F8B09 /* MMPlusIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPlusIcon.m; sourceTree = "<group>"; };
 		664F413B1590661F006F8B09 /* MMRightArrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRightArrow.h; sourceTree = "<group>"; };
@@ -840,6 +844,8 @@
 				6661144616FD67F8005032B9 /* Loose-Leaf-Icon.png */,
 				66B843F517B05488008BF8B8 /* Loose-Leaf-Icon72.png */,
 				66B843F617B05488008BF8B8 /* Loose-Leaf-Icon144.png */,
+				664C721517B9EF7E00592CBA /* Loose-Leaf-Icon7.png */,
+				664C721617B9EF7E00592CBA /* Loose-Leaf-Icon7@2x.png */,
 				66DCFB921581BCEF00B4918C /* LooseLeaf-Info.plist */,
 				66DCFB931581BCEF00B4918C /* InfoPlist.strings */,
 				66DCFB961581BCEF00B4918C /* main.m */,
@@ -931,11 +937,13 @@
 				66DCFB951581BCEF00B4918C /* InfoPlist.strings in Resources */,
 				66DCFBD01582BC0E00B4918C /* img01.jpg in Resources */,
 				660E1D9C158FC4570001DA12 /* img02.jpg in Resources */,
+				664C721817B9EF7E00592CBA /* Loose-Leaf-Icon7@2x.png in Resources */,
 				660E1D9F158FC45E0001DA12 /* img06.jpg in Resources */,
 				660E1DA1158FC4710001DA12 /* img03.jpg in Resources */,
 				660E1DA3158FC4750001DA12 /* img05.jpg in Resources */,
 				660E1DA5158FC47D0001DA12 /* img04.jpg in Resources */,
 				6661144716FD67F8005032B9 /* Loose-Leaf-Icon.png in Resources */,
+				664C721717B9EF7E00592CBA /* Loose-Leaf-Icon7.png in Resources */,
 				6661144A16FD67FA005032B9 /* Loose-Leaf-Icon@2x.png in Resources */,
 				66B21A59175B0BF30049F1AF /* cloth.png in Resources */,
 				66B843F717B05488008BF8B8 /* Loose-Leaf-Icon72.png in Resources */,
