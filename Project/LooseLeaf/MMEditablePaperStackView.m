@@ -9,14 +9,12 @@
 #import "MMEditablePaperStackView.h"
 #import "UIView+SubviewStacks.h"
 #import "TestFlight.h"
-#import "MMFeedbackView.h"
 #import "MMRulerView.h"
 
 @implementation MMEditablePaperStackView{
     MMEditablePaperView* currentEditablePage;
     JotView* drawableView;
     NSMutableArray* stateLoadedPages;
-    MMFeedbackView* feedbackView;
     UIPopoverController* jotTouchPopover;
 }
 
@@ -58,11 +56,6 @@
         shareButton.delegate = self;
         [shareButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 //        [self addSubview:shareButton];
-        
-        feedbackButton = [[MMLikeButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60*2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        feedbackButton.delegate = self;
-        [feedbackButton addTarget:self action:@selector(feedbackButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:feedbackButton];
         
         settingsButton = [[MMAdonitButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         settingsButton.delegate = self;
@@ -301,17 +294,6 @@
     [TestFlight passCheckpoint:@"BUTTON_ADD_PAGE"];
 }
 
--(void) feedbackButtonTapped:(UIButton*)_button{
-    CGRect feedbackFrame = CGRectInset(self.bounds, 150, 200);
-    feedbackFrame.size.height -= 30;
-    if(!feedbackView){
-        feedbackView = [[MMFeedbackView alloc] initWithFrame:feedbackFrame];
-    }
-    feedbackView.frame = feedbackFrame;
-    [self addSubview:feedbackView];
-    [feedbackView show];
-}
-
 -(void) tempButtonTapped:(UIButton*)_button{
     debug_NSLog(@"temp button");
 }
@@ -319,7 +301,6 @@
 -(void) setButtonsVisible:(BOOL)visible{
     [UIView animateWithDuration:0.3 animations:^{
         addPageSidebarButton.alpha = visible;
-        feedbackButton.alpha = visible;
         documentBackgroundSidebarButton.alpha = visible;
         polylineButton.alpha = visible;
         polygonButton.alpha = visible;
@@ -357,7 +338,6 @@
         redoButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         rulerButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         handButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        feedbackButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         settingsButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
     }];
 }

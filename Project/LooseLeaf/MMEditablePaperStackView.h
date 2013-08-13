@@ -23,7 +23,6 @@
 #import "MMRulerButton.h"
 #import "MMHandButton.h"
 #import "MMScissorButton.h"
-#import "MMLikeButton.h"
 #import "MMAdonitButton.h"
 #import "MMPencilToolDelegate.h"
 #import "NSThread+BlockAdditions.h"
@@ -55,7 +54,6 @@
     MMPencilTool* pencilTool;
     MMPencilEraserButton* eraserButton;
     MMShareButton* shareButton;
-    MMLikeButton* feedbackButton;
     MMAdonitButton* settingsButton;
     MMMapButton* mapButton;
     
