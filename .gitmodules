@@ -7,3 +7,6 @@
 [submodule "Submodules/ColorWithHex"]
 	path = Submodules/ColorWithHex
 	url = git@github.com:anjerodesu/UIColor-ColorWithHex.git
+[submodule "Submodules/touch-chart"]
+	path = Submodules/touch-chart
+	url = git@github.com:adamwulf/touch-chart.git
