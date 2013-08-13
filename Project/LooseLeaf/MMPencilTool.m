@@ -81,7 +81,7 @@
         [self setAnchorPoint:CGPointMake((pencilLocInContentHolder.x + originalFrame.size.width / 2) / blackColorHolder.frame.size.width,
                                          (pencilLocInContentHolder.y + originalFrame.size.height / 2) / blackColorHolder.frame.size.height) forView:redColorHolder];
         [self addSubview:redColorHolder];
-        redButton = [[MMColorButton alloc] initWithColor:[UIColor colorWithHexString:@"E8373E"] andFrame:CGRectMake(pencilLocInContentHolder.x - 1.8 * kWidthOfSidebarButton, pencilLocInContentHolder.y, originalFrame.size.width, originalFrame.size.height)];
+        redButton = [[MMColorButton alloc] initWithColor:[UIColor colorWithHexString:@"E8373E"] andFrame:CGRectMake(pencilLocInContentHolder.x - 2 * kWidthOfSidebarButton, pencilLocInContentHolder.y, originalFrame.size.width, originalFrame.size.height)];
         [redButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [redColorHolder addSubview:redButton];
         
@@ -97,7 +97,7 @@
         [self setAnchorPoint:CGPointMake((pencilLocInContentHolder.x + originalFrame.size.width / 2) / blackColorHolder.frame.size.width,
                                          (pencilLocInContentHolder.y + originalFrame.size.height / 2) / blackColorHolder.frame.size.height) forView:greenColorHolder];
         [self addSubview:greenColorHolder];
-        greenButton = [[MMColorButton alloc] initWithColor:[UIColor colorWithHexString:@"5EF52E"] andFrame:CGRectMake(pencilLocInContentHolder.x - 1.8 * kWidthOfSidebarButton * cosf(M_PI / 3), pencilLocInContentHolder.y + 1.8 * kWidthOfSidebarButton * sinf(M_PI / 3), originalFrame.size.width, originalFrame.size.height)];
+        greenButton = [[MMColorButton alloc] initWithColor:[UIColor colorWithHexString:@"5EF52E"] andFrame:CGRectMake(pencilLocInContentHolder.x - 2 * kWidthOfSidebarButton * cosf(M_PI / 3), pencilLocInContentHolder.y + 2 * kWidthOfSidebarButton * sinf(M_PI / 3), originalFrame.size.width, originalFrame.size.height)];
         [greenButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [greenColorHolder addSubview:greenButton];
         
