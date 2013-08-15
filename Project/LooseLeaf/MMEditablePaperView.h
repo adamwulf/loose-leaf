@@ -8,11 +8,14 @@
 
 #import "MMPaperView.h"
 #import <JotUI/JotUI.h>
+#import <TouchShape/TouchShape.h>
 #import "MMRulerToolGestureRecognizer.h"
 
 @interface MMEditablePaperView : MMPaperView<JotViewDelegate>{
     UIImageView* cachedImgView;
     __weak JotView* drawableView;
+    SYPaintView* shapePaintView;
+    
     MMRulerToolGestureRecognizer* rulerGesture;
 }
 

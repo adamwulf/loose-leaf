@@ -60,6 +60,16 @@ dispatch_queue_t importThumbnailQueue;
 //        cachedImgView.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:.3];
         [self.contentView addSubview:cachedImgView];
         
+        shapePaintView = [[SYPaintView alloc] initWithFrame:self.contentView.bounds];
+        shapePaintView.frame = self.contentView.bounds;
+        shapePaintView.contentMode = UIViewContentModeScaleAspectFill;
+        shapePaintView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        shapePaintView.clipsToBounds = YES;
+        shapePaintView.opaque = NO;
+        shapePaintView.backgroundColor = [UIColor clearColor];
+        shapePaintView.hidden = YES;
+        [self.contentView addSubview:shapePaintView];
+        
         lastSavedUndoHash = [drawableView undoHash];
         
         //
@@ -173,7 +183,7 @@ dispatch_queue_t importThumbnailQueue;
                                           if([self.delegate isPageEditable:self]){
                                               [drawableView loadState:state];
                                               lastSavedUndoHash = [drawableView undoHash];
-                                              [self.contentView addSubview:drawableView];
+                                              [self.contentView insertSubview:drawableView belowSubview:shapePaintView];
                                               // anchor the view to the top left,
                                               // so that when we scale down, the drawable view
                                               // stays in place
@@ -298,9 +308,17 @@ dispatch_queue_t importThumbnailQueue;
     [delegate willMoveStrokeWithTouch:touch];
 }
 
+-(void) willEndStrokeWithTouch:(JotTouch*)touch{
+    [delegate willEndStrokeWithTouch:touch];
+}
+
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
     [delegate didEndStrokeWithTouch:touch];
     [self saveToDisk];
+}
+
+-(void) willCancelStrokeWithTouch:(JotTouch*)touch{
+    [delegate willCancelStrokeWithTouch:touch];
 }
 
 -(void) didCancelStrokeWithTouch:(JotTouch*)touch{

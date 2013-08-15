@@ -39,6 +39,8 @@
         
         eraser = [[Eraser alloc] init];
         
+        polygon = [[PolygonTool alloc] init];
+        
         // test code for custom popovers
         // ================================================================================
         //    MMPopoverView* popover = [[MMPopoverView alloc] initWithFrame:CGRectMake(100, 100, 300, 300)];
@@ -204,8 +206,10 @@
     return -([[MMRotationManager sharedInstace] currentRotationReading] + M_PI/2);
 }
 
--(Pen*) activePen{
-    if(eraserButton.selected){
+-(Tool*) activePen{
+    if(polygonButton.selected){
+        return polygon;
+    }else if(eraserButton.selected){
         return eraser;
     }else{
         return pen;
@@ -415,6 +419,7 @@
             }else{
                 debug_NSLog(@"page is done saving...");
                 [(MMEditablePaperView*)page setCanvasVisible:NO];
+                [(MMEditablePaperView*)page setEditable:NO];
                 debug_NSLog(@"thumb for %@ is visible", page.uuid);
             }
         }
@@ -582,9 +587,6 @@
 #pragma mark - JotViewDelegate
 
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
-    if(polygonButton.selected){
-        return NO;
-    }
     [rulerView willBeginStrokeAt:[touch locationInView:rulerView]];
     return [[self activePen] willBeginStrokeWithTouch:touch];
 }
@@ -594,8 +596,16 @@
     [[self activePen] willMoveStrokeWithTouch:touch];
 }
 
+-(void) willEndStrokeWithTouch:(JotTouch*)touch{
+    [[self activePen] willEndStrokeWithTouch:touch];
+}
+
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
     [[self activePen] didEndStrokeWithTouch:touch];
+}
+
+-(void) willCancelStrokeWithTouch:(JotTouch*)touch{
+    [[self activePen] willCancelStrokeWithTouch:touch];
 }
 
 -(void) didCancelStrokeWithTouch:(JotTouch*)touch{

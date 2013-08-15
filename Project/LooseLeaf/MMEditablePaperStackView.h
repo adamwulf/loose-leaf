@@ -32,6 +32,7 @@
 #import "Constants.h"
 #import "Pen.h"
 #import "Eraser.h"
+#import "PolygonTool.h"
 #import "MMRulerView.h"
 
 /**
@@ -65,6 +66,7 @@
 
     Pen* pen;
     Eraser* eraser;
+    PolygonTool* polygon;
     
     NSMutableSet* pagesWithLoadedCacheImages;
     MMRulerView* rulerView;
