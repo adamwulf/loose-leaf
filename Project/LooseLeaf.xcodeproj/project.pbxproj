@@ -36,6 +36,8 @@
 		66510838178DFEE700A7A7DD /* MMRulerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66510837178DFEE700A7A7DD /* MMRulerView.m */; };
 		6651083C178F249C00A7A7DD /* MMVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6651083B178F249C00A7A7DD /* MMVector.m */; };
 		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
+		665C592C17BD764A006DECBF /* TouchShape.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665C592B17BD764A006DECBF /* TouchShape.framework */; };
+		665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665C592D17BD7692006DECBF /* Accelerate.framework */; };
 		665CAC1D17B578B0000BD505 /* MMColorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 665CAC1C17B578B0000BD505 /* MMColorButton.m */; };
 		665CAC2117B57B0B000BD505 /* MMPencilTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 665CAC2017B57B0B000BD505 /* MMPencilTool.m */; };
 		665CAC2517B58FD3000BD505 /* UIColor+ColorWithHex.m in Sources */ = {isa = PBXBuildFile; fileRef = 665CAC2417B58FC8000BD505 /* UIColor+ColorWithHex.m */; };
@@ -216,6 +218,8 @@
 		6651083B178F249C00A7A7DD /* MMVector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMVector.m; sourceTree = "<group>"; };
 		6655E924176291C800E4F36A /* MMScissorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScissorButton.h; sourceTree = "<group>"; };
 		6655E925176291C800E4F36A /* MMScissorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorButton.m; sourceTree = "<group>"; };
+		665C592B17BD764A006DECBF /* TouchShape.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TouchShape.framework; path = "../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos/TouchShape.framework"; sourceTree = "<group>"; };
+		665C592D17BD7692006DECBF /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		665CAC1B17B578B0000BD505 /* MMColorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMColorButton.h; sourceTree = "<group>"; };
 		665CAC1C17B578B0000BD505 /* MMColorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMColorButton.m; sourceTree = "<group>"; };
 		665CAC1F17B57B0B000BD505 /* MMPencilTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPencilTool.h; sourceTree = "<group>"; };
@@ -352,6 +356,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */,
+				665C592C17BD764A006DECBF /* TouchShape.framework in Frameworks */,
 				663C188F1759B57800706A05 /* JotTouchSDK.framework in Frameworks */,
 				66C0C9CA1783645E009491B3 /* JotUI.framework in Frameworks */,
 				66150769178333D500B181F3 /* libz.dylib in Frameworks */,
@@ -590,6 +596,15 @@
 			name = "Ruler Tool";
 			sourceTree = "<group>";
 		};
+		665C592F17BD7697006DECBF /* TouchShape */ = {
+			isa = PBXGroup;
+			children = (
+				665C592D17BD7692006DECBF /* Accelerate.framework */,
+				665C592B17BD764A006DECBF /* TouchShape.framework */,
+			);
+			name = TouchShape;
+			sourceTree = "<group>";
+		};
 		665CAC1E17B57AEE000BD505 /* Pencil */ = {
 			isa = PBXGroup;
 			children = (
@@ -803,6 +818,7 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				665C592F17BD7697006DECBF /* TouchShape */,
 				6615075D1783338E00B181F3 /* TestFlightSDK */,
 				6695B6E1175008530069E61F /* JotUI */,
 				6695B6E41750086D0069E61F /* JotTouchSDK */,
@@ -1108,7 +1124,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;
@@ -1135,7 +1151,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PRODUCT_NAME = "";
@@ -1154,11 +1170,11 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../Submodules/JotUI/JotTouchSDK",
+					"$(SRCROOT)/../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/TestFlightSDK\"",
@@ -1182,11 +1198,11 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../Submodules/JotUI/JotTouchSDK",
+					"$(SRCROOT)/../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/TestFlightSDK\"",
