@@ -142,6 +142,10 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
     }
 }
 
+-(void) willEndStrokeWithTouch:(JotTouch*)touch{
+    // noop
+}
+
 /**
  * user is finished with a stroke. for our purposes
  * we don't need to do anything
@@ -150,6 +154,10 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
     // noop
 //    debug_NSLog(@"PEN velocity: %f", velocity);
     [lastStampPerTouch removeObjectForKey:@(touch.touch.hash)];
+}
+
+-(void) willCancelStrokeWithTouch:(JotTouch*)touch{
+    // noop
 }
 
 /**

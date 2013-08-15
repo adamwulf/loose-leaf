@@ -1597,7 +1597,15 @@
     @throw kAbstractMethodException;
 }
 
+-(void) willEndStrokeWithTouch:(JotTouch*)touch{
+    @throw kAbstractMethodException;
+}
+
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
+    @throw kAbstractMethodException;
+}
+
+-(void) willCancelStrokeWithTouch:(JotTouch*)touch{
     @throw kAbstractMethodException;
 }
 
