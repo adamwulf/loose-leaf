@@ -76,7 +76,7 @@
         
         polygonButton = [[MMPolygonButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         polygonButton.delegate = self;
-        [polygonButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [polygonButton addTarget:self action:@selector(polygonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:polygonButton];
         
         insertImageButton = [[MMImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
@@ -176,11 +176,8 @@
         pencilTool.selected = YES;
         handButton.selected = YES;
         
-        polygonButton.enabled = NO;
         insertImageButton.enabled = NO;
         scissorButton.enabled = NO;
-        handButton.enabled = YES;
-        rulerButton.enabled = YES;
         shareButton.enabled = NO;
         
         [NSThread performBlockInBackground:^{
@@ -252,6 +249,14 @@
     eraserButton.selected = YES;
     pencilTool.selected = NO;
     polygonButton.selected = NO;
+    insertImageButton.selected = NO;
+    scissorButton.selected = NO;
+}
+
+-(void) polygonTapped:(UIButton*)_button{
+    eraserButton.selected = NO;
+    pencilTool.selected = NO;
+    polygonButton.selected = YES;
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
 }
@@ -577,6 +582,9 @@
 #pragma mark - JotViewDelegate
 
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+    if(polygonButton.selected){
+        return NO;
+    }
     [rulerView willBeginStrokeAt:[touch locationInView:rulerView]];
     return [[self activePen] willBeginStrokeWithTouch:touch];
 }
