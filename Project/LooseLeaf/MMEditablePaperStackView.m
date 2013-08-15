@@ -243,6 +243,9 @@
 
 -(void) didChangeColorTo:(UIColor*)color{
     pen.color = color;
+    if(!pencilTool.selected){
+        [self penTapped:nil];
+    }
 }
 
 -(void) eraserTapped:(UIButton*)_button{
