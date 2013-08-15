@@ -60,12 +60,16 @@
     return [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 1.0), floor(CGRectGetHeight(frame) - 1.0))];
 }
 
+-(UIColor*) shadowColor{
+    return [UIColor colorWithRed: 77.0/255.0 green: 187.0/255.0 blue: 1.0 alpha: 0.5];
+}
+
 -(void) drawDropshadowIfSelected{
     if(self.selected){
         CGContextRef context = UIGraphicsGetCurrentContext();
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 
-        UIColor* selectedBlueFill = [UIColor colorWithRed: 77.0/255.0 green: 187.0/255.0 blue: 1.0 alpha: 0.5];
+        UIColor* selectedBlueFill = [self shadowColor];
         
         CGRect frame = [self drawableFrame];
         UIBezierPath* ovalPath = [self ovalPath];

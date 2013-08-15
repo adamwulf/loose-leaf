@@ -56,6 +56,7 @@
         
         pencilButton = [[MMPencilButton alloc] initWithFrame:originalFrame];
         [pencilButton addTarget:self action:@selector(penTapped:) forControlEvents:UIControlEventTouchUpInside];
+        pencilButton.tool = self;
         [self addSubview:pencilButton];
         
         blackColorHolder = [[UIView alloc] initWithFrame:CGRectMake(originalFrame.origin.x - pencilLocInContentHolder.x, originalFrame.origin.y - pencilLocInContentHolder.y, 200, 200)];
@@ -276,8 +277,8 @@
 
 -(void) colorTapped:(MMColorButton*)button{
     color = button.color;
-    [self hideColors];
     [self.delegate didChangeColorTo:color];
+    [pencilButton setNeedsDisplay];
 }
 
 @end
