@@ -101,5 +101,14 @@
     [super setBounds:[MMShadowedView expandBounds:bounds]];
 }
 
+- (CGPoint)convertPoint:(CGPoint)point toView:(UIView *)view{
+    CGPoint converted = [super convertPoint:point toView:view];
+    return CGPointMake(converted.x + 10, converted.y + 10);
+}
+- (CGPoint)convertPoint:(CGPoint)point fromView:(UIView *)view{
+    CGPoint converted = [super convertPoint:point fromView:view];
+    return CGPointMake(converted.x - 10, converted.y - 10);
+}
+
 
 @end
