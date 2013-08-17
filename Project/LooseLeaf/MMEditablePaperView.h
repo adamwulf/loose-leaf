@@ -11,11 +11,12 @@
 #import <TouchShape/TouchShape.h>
 #import "MMRulerToolGestureRecognizer.h"
 #import "PolygonToolDelegate.h"
+#import "MMPolygonDebugView.h"
 
 @interface MMEditablePaperView : MMPaperView<JotViewDelegate,PolygonToolDelegate>{
     UIImageView* cachedImgView;
     __weak JotView* drawableView;
-    SYPaintView* shapePaintView;
+    MMPolygonDebugView* polygonDebugView;
     
     MMRulerToolGestureRecognizer* rulerGesture;
 }

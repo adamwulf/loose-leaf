@@ -60,17 +60,16 @@ dispatch_queue_t importThumbnailQueue;
 //        cachedImgView.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:.3];
         [self.contentView addSubview:cachedImgView];
         
-        shapePaintView = [[SYPaintView alloc] initWithFrame:self.contentView.bounds];
-        shapePaintView.layer.borderColor = [UIColor redColor].CGColor;
-        shapePaintView.layer.borderWidth = 10;
-        shapePaintView.frame = self.contentView.bounds;
-        shapePaintView.contentMode = UIViewContentModeScaleAspectFill;
-        shapePaintView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        shapePaintView.clipsToBounds = YES;
-        shapePaintView.opaque = NO;
-        shapePaintView.backgroundColor = [UIColor clearColor];
-        shapePaintView.hidden = YES;
-        [self.contentView addSubview:shapePaintView];
+        polygonDebugView = [[MMPolygonDebugView alloc] initWithFrame:self.contentView.bounds];
+//        polygonDebugView.layer.borderColor = [UIColor redColor].CGColor;
+//        polygonDebugView.layer.borderWidth = 10;
+        polygonDebugView.frame = self.contentView.bounds;
+        polygonDebugView.contentMode = UIViewContentModeScaleAspectFill;
+        polygonDebugView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        polygonDebugView.clipsToBounds = YES;
+        polygonDebugView.opaque = NO;
+        polygonDebugView.backgroundColor = [UIColor clearColor];
+        [self.contentView addSubview:polygonDebugView];
         
         lastSavedUndoHash = [drawableView undoHash];
         
@@ -185,7 +184,7 @@ dispatch_queue_t importThumbnailQueue;
                                           if([self.delegate isPageEditable:self]){
                                               [drawableView loadState:state];
                                               lastSavedUndoHash = [drawableView undoHash];
-                                              [self.contentView insertSubview:drawableView belowSubview:shapePaintView];
+                                              [self.contentView addSubview:drawableView];
                                               // anchor the view to the top left,
                                               // so that when we scale down, the drawable view
                                               // stays in place
@@ -404,32 +403,37 @@ dispatch_queue_t importThumbnailQueue;
 #pragma mark - PolygonToolDelegate
 
 -(void) beginShapeWithTouch:(UITouch*)touch{
-    shapePaintView.hidden = NO;
     // send touch event to the view that
     // will display the drawn polygon line
+    NSLog(@"begin");
+    [polygonDebugView clear];
+    [polygonDebugView addTouchPoint:[touch locationInView:polygonDebugView]];
 }
 
 -(void) continueShapeWithTouch:(UITouch*)touch{
     // noop for now
     // send touch event to the view that
     // will display the drawn polygon line
+    [polygonDebugView addTouchPoint:[touch locationInView:polygonDebugView]];
 }
 
 -(void) finishShapeWithTouch:(UITouch*)touch{
-    shapePaintView.hidden = YES;
     // send touch event to the view that
     // will display the drawn polygon line
     //
     // and also process the touches into the new
     // scrap polygon shape, and add that shape
     // to the page
+    NSLog(@"finish");
+    [polygonDebugView addTouchPoint:[touch locationInView:polygonDebugView]];
+    [polygonDebugView complete];
 }
 
 -(void) cancelShapeWithTouch:(UITouch*)touch{
-    shapePaintView.hidden = YES;
     // we've cancelled the polygon (possibly b/c
     // it was a pan/pinch instead), so clear
     // the drawn polygon and reset.
+    NSLog(@"cancel");
 }
 
 
