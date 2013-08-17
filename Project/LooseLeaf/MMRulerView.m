@@ -48,6 +48,8 @@
     UIBezierPath* path2;
     UIBezierPath* path1Full;
     UIBezierPath* path2Full;
+    UIBezierPath* path1FullFlipped;
+    UIBezierPath* path2FullFlipped;
     
     BOOL nearestPathIsPath1;
     
@@ -152,7 +154,7 @@ static NSDate* lastRender;
             }];
             [self drawArcWithOriginalDistance:currentDistance * 5 / 3 currentDistance:currentDistance andPerpN:perpN withPoint1:br andPoint2:tr andScale:scale onComplete:^(UIBezierPath* clippedPath, UIBezierPath* circle, UIBezierPath* tickMarks){
                 path2 = clippedPath;
-                path2Full = circle;
+                path2FullFlipped = circle;
                 [ticks appendPath:tickMarks];
             }];
         }else if(currentDistance < oneDistance){
@@ -167,7 +169,7 @@ static NSDate* lastRender;
             }];
             [self drawArcWithOriginalDistance:initialDistance currentDistance:currentDistance andPerpN:perpN withPoint1:br andPoint2:tr andScale:1 onComplete:^(UIBezierPath* clippedPath, UIBezierPath* circle, UIBezierPath* tickMarks){
                 path2 = clippedPath;
-                path2Full = circle;
+                path2FullFlipped = circle;
                 [ticks appendPath:tickMarks];
             }];
         }else{
@@ -247,12 +249,15 @@ static NSDate* lastRender;
             [path2Full addLineToPoint:[vector pointFromPoint:tr distance:self.bounds.size.height]];
         }
         
+        path1FullFlipped = [path1Full copy];
+        path2FullFlipped = [path2Full copy];
+        
         //
         // path1Full and path2Full are used to calculate closest points
         // in OpenGL coordinate space, so we need to invert them from
         // CoreGraphics coordinate space
-        [path1Full applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
-        [path2Full applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+        [path1FullFlipped applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+        [path2FullFlipped applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
 
         [ticks appendPath:path1];
         [ticks appendPath:path2];
@@ -603,6 +608,8 @@ static NSDate* lastRender;
     path2 = nil;
     path1Full = nil;
     path2Full = nil;
+    path1FullFlipped = nil;
+    path2FullFlipped = nil;
     ticks = nil;
 }
 
@@ -679,6 +686,25 @@ static NSDate* lastRender;
     }
 }
 
+/**
+ * this will adjust points in core graphics space
+ */
+-(CGPoint) adjustPoint:(CGPoint)inputPoint{
+    UIBezierPath* closestPath = nil;
+    if(path1 && !CGPointEqualToPoint(mostRecentTouchPointInOpenGLCoord, CGPointZero)){
+        // the ruler is down and ready to adjust points
+        if(nearestPathIsPath1){
+            closestPath = path1Full;
+        }else{
+            closestPath = path2Full;
+        }
+
+        return  [closestPath closestPointOnPathTo:inputPoint];
+    }
+    
+    return  inputPoint;
+}
+
 
 #pragma mark - Private Helpers
 
@@ -691,9 +717,9 @@ static NSDate* lastRender;
     UIBezierPath* flippedPath;
     
     if(nearestPathIsPath1){
-        flippedPath = path1Full;
+        flippedPath = path1FullFlipped;
     }else{
-        flippedPath = path2Full;
+        flippedPath = path2FullFlipped;
     }
     UIBezierPath* newPath = [flippedPath bezierPathByTrimmingFromClosestPointOnPathFrom:nearestStart to:nearestEnd];
     if(newPath){

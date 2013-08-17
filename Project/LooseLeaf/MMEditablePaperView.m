@@ -407,6 +407,7 @@ dispatch_queue_t importThumbnailQueue;
     // will display the drawn polygon line
     NSLog(@"begin");
     [polygonDebugView clear];
+    
     [polygonDebugView addTouchPoint:[touch locationInView:polygonDebugView]];
 }
 
@@ -434,6 +435,10 @@ dispatch_queue_t importThumbnailQueue;
     // it was a pan/pinch instead), so clear
     // the drawn polygon and reset.
     NSLog(@"cancel");
+}
+
+-(void) addDebugPoint:(CGPoint)point{
+    [polygonDebugView addDebugPoint:point];
 }
 
 

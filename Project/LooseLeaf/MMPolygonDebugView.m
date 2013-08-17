@@ -11,6 +11,7 @@
 
 @implementation MMPolygonDebugView{
     NSMutableArray* touches;
+    NSMutableArray* ruleredTouches;
     UIBezierPath* shapePath;
 }
 
@@ -20,12 +21,14 @@
     if (self) {
         // Initialization code
         touches = [NSMutableArray array];
+        ruleredTouches = [NSMutableArray array];
     }
     return self;
 }
 
 -(void) clear{
     [touches removeAllObjects];
+    [ruleredTouches removeAllObjects];
     shapePath = nil;
     [self setNeedsDisplay];
 }
@@ -41,6 +44,13 @@
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
+    
+    [[UIColor greenColor] setFill];
+    for(NSValue* val in ruleredTouches){
+        CGPoint point = [val CGPointValue];
+        UIBezierPath* touchPoint = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x - 3, point.y - 3, 6, 6)];
+        [touchPoint fill];
+    }
     [[UIColor redColor] setFill];
     for(NSValue* val in touches){
         CGPoint point = [val CGPointValue];
@@ -68,6 +78,12 @@
     SYShape* shape = [shapeMaker getFigurePaintedWithTolerance:0.0000001 andContinuity:0];
     shapePath = [shape bezierPath];
     [self setNeedsDisplayInRect:shapePath.bounds];
+}
+
+
+-(void) addDebugPoint:(CGPoint)point{
+    [ruleredTouches addObject:[NSValue valueWithCGPoint:point]];
+    [self setNeedsDisplayInRect:CGRectMake(point.x - 10, point.y - 10, 20, 20)];
 }
 
 #pragma mark - Ignore Touches

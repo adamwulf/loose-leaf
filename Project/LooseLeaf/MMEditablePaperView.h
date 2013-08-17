@@ -34,4 +34,8 @@
 -(void) setCanvasVisible:(BOOL)isVisible;
 -(void) setEditable:(BOOL)isEditable;
 
+
+
+// debug
+-(void) addDebugPoint:(CGPoint)point;
 @end

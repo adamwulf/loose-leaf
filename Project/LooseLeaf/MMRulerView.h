@@ -21,5 +21,6 @@
 
 -(void) willBeginStrokeAt:(CGPoint)point;
 -(void) willMoveStrokeAt:(CGPoint)point;
+-(CGPoint) adjustPoint:(CGPoint)inputPoint;
 
 @end
