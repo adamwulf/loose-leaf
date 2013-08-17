@@ -154,7 +154,7 @@ static NSDate* lastRender;
             }];
             [self drawArcWithOriginalDistance:currentDistance * 5 / 3 currentDistance:currentDistance andPerpN:perpN withPoint1:br andPoint2:tr andScale:scale onComplete:^(UIBezierPath* clippedPath, UIBezierPath* circle, UIBezierPath* tickMarks){
                 path2 = clippedPath;
-                path2FullFlipped = circle;
+                path2Full = circle;
                 [ticks appendPath:tickMarks];
             }];
         }else if(currentDistance < oneDistance){
@@ -169,7 +169,7 @@ static NSDate* lastRender;
             }];
             [self drawArcWithOriginalDistance:initialDistance currentDistance:currentDistance andPerpN:perpN withPoint1:br andPoint2:tr andScale:1 onComplete:^(UIBezierPath* clippedPath, UIBezierPath* circle, UIBezierPath* tickMarks){
                 path2 = clippedPath;
-                path2FullFlipped = circle;
+                path2Full = circle;
                 [ticks appendPath:tickMarks];
             }];
         }else{
