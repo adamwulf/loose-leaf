@@ -6,14 +6,14 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMPencilTool.h"
+#import "MMPencilAndPaletteView.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Constants.h"
 #import "UIColor+ColorWithHex.h"
 
-@implementation MMPencilTool{
+@implementation MMPencilAndPaletteView{
     CGRect originalFrame;
-    NSObject<MMPencilToolDelegate>* delegate;
+    NSObject<MMPencilAndPaletteViewDelegate>* delegate;
     MMPencilButton* pencilButton;
     MMColorButton* blackButton;
     MMColorButton* blueButton;
@@ -165,11 +165,11 @@
     [pencilButton setTransform:transform];
 }
 
--(NSObject<MMPencilToolDelegate>*)delegate{
+-(NSObject<MMPencilAndPaletteViewDelegate>*)delegate{
     return delegate;
 }
 
--(void) setDelegate:(NSObject<MMPencilToolDelegate> *)_delegate{
+-(void) setDelegate:(NSObject<MMPencilAndPaletteViewDelegate> *)_delegate{
     delegate = _delegate;
     pencilButton.delegate = delegate;
 }

@@ -1,5 +1,5 @@
 //
-//  MMPencilToolDelegate.h
+//  MMPencilAndPaletteViewDelegate.h
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 8/9/13.
@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MMSidebarButtonDelegate.h"
 
-@protocol MMPencilToolDelegate <MMSidebarButtonDelegate>
+@protocol MMPencilAndPaletteViewDelegate <MMSidebarButtonDelegate>
 
 -(void) penTapped:(UIButton*)button;
 

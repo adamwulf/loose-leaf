@@ -14,7 +14,7 @@
 #import "MMPolygonButton.h"
 #import "MMImageButton.h"
 #import "MMTextButton.h"
-#import "MMPencilTool.h"
+#import "MMPencilAndPaletteView.h"
 #import "MMPencilButton.h"
 #import "MMColorButton.h"
 #import "MMPencilEraserButton.h"
@@ -24,7 +24,7 @@
 #import "MMHandButton.h"
 #import "MMScissorButton.h"
 #import "MMAdonitButton.h"
-#import "MMPencilToolDelegate.h"
+#import "MMPencilAndPaletteViewDelegate.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMRotationManager.h"
 #import "MMRotationManagerDelegate.h"
@@ -40,7 +40,7 @@
  * this class is responsible for the editable buttons and controls that show
  * outside of a page's view subviews
  */
-@interface MMEditablePaperStackView : MMListPaperStackView<JotViewDelegate,MMPencilToolDelegate,MMRotationManagerDelegate,UIScrollViewDelegate,PolygonToolDelegate>{
+@interface MMEditablePaperStackView : MMListPaperStackView<JotViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,UIScrollViewDelegate,PolygonToolDelegate>{
     
     // managers
     MMStackManager* stackManager;
@@ -53,7 +53,7 @@
     MMImageButton* insertImageButton;
     MMScissorButton* scissorButton;
     MMTextButton* textButton;
-    MMPencilTool* pencilTool;
+    MMPencilAndPaletteView* pencilTool;
     MMPencilEraserButton* eraserButton;
     MMShareButton* shareButton;
     MMAdonitButton* settingsButton;
