@@ -40,6 +40,7 @@
         eraser = [[Eraser alloc] init];
         
         polygon = [[PolygonTool alloc] init];
+        polygon.delegate = self;
         
         // test code for custom popovers
         // ================================================================================
@@ -363,6 +364,26 @@
 }
 
 #pragma mark - MMPaperViewDelegate
+
+-(CGRect) isBeginning:(BOOL)beginning toPanAndScalePage:(MMPaperView *)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withTouches:(NSArray*)touches{
+    
+    if(beginning){
+        // our gesture has began, so make sure to kill
+        // any touches that are being used to draw
+        //
+        // the stroke manager is the definitive source for all strokes.
+        // cancel through that manager, and it'll notify the appropriate
+        // view if need be
+        for(UITouch* touch in touches){
+            [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+            [polygon cancelPolygonForTouch:touch];
+        }
+    }
+    
+    return [super isBeginning:beginning toPanAndScalePage:page fromFrame:fromFrame toFrame:toFrame withTouches:touches];
+}
+
+
 #pragma mark = List View
 
 -(void) isBeginningToScaleReallySmall:(MMPaperView *)page{
@@ -635,6 +656,24 @@
 
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
     return [rulerView willAddElementsToStroke:[[self activePen] willAddElementsToStroke:elements fromPreviousElement:previousElement] fromPreviousElement:previousElement];
+}
+
+#pragma mark - PolygonToolDelegate
+
+-(void) beginShapeWithTouch:(UITouch*)touch{
+    [[visibleStackHolder peekSubview] beginShapeWithTouch:touch];
+}
+
+-(void) continueShapeWithTouch:(UITouch*)touch{
+    [[visibleStackHolder peekSubview] continueShapeWithTouch:touch];
+}
+
+-(void) finishShapeWithTouch:(UITouch*)touch{
+    [[visibleStackHolder peekSubview] finishShapeWithTouch:touch];
+}
+
+-(void) cancelShapeWithTouch:(UITouch*)touch{
+    [[visibleStackHolder peekSubview] cancelShapeWithTouch:touch];
 }
 
 

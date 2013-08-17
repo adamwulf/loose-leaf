@@ -10,8 +10,9 @@
 #import <JotUI/JotUI.h>
 #import <TouchShape/TouchShape.h>
 #import "MMRulerToolGestureRecognizer.h"
+#import "PolygonToolDelegate.h"
 
-@interface MMEditablePaperView : MMPaperView<JotViewDelegate>{
+@interface MMEditablePaperView : MMPaperView<JotViewDelegate,PolygonToolDelegate>{
     UIImageView* cachedImgView;
     __weak JotView* drawableView;
     SYPaintView* shapePaintView;

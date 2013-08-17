@@ -702,7 +702,7 @@
  * during a pan, we'll need to show different icons
  * depending on where they drag a page
  */
--(CGRect) isBeginning:(BOOL)isBeginningGesture toPanAndScalePage:(MMPaperView *)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
+-(CGRect) isBeginning:(BOOL)isBeginningGesture toPanAndScalePage:(MMPaperView *)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withTouches:(NSArray*)touches{
     BOOL isPanningTopPage = page == [visibleStackHolder peekSubview];
 
     if(page == [visibleStackHolder.subviews objectAtIndex:0]){

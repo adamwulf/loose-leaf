@@ -47,6 +47,10 @@ NSInteger const  minimumNumberOfTouches = 2;
     return self;
 }
 
+-(NSArray*)touches{
+    return [validTouches array];
+}
+
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
     return NO;
 }
@@ -96,15 +100,6 @@ NSInteger const  minimumNumberOfTouches = 2;
         [validTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
         if([validTouches count] >= minimumNumberOfTouches && self.state == UIGestureRecognizerStatePossible){
             self.state = UIGestureRecognizerStateBegan;
-            // our gesture has began, so make sure to kill
-            // any touches that are being used to draw
-            //
-            // the stroke manager is the definitive source for all strokes.
-            // cancel through that manager, and it'll notify the appropriate
-            // view if need be
-            for(UITouch* touch in validTouches){
-                [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
-            }
         }else if([validTouches count] <= minimumNumberOfTouches){
             didExitToBezel = MMBezelDirectionNone;
             //

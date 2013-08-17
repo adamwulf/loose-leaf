@@ -61,6 +61,8 @@ dispatch_queue_t importThumbnailQueue;
         [self.contentView addSubview:cachedImgView];
         
         shapePaintView = [[SYPaintView alloc] initWithFrame:self.contentView.bounds];
+        shapePaintView.layer.borderColor = [UIColor redColor].CGColor;
+        shapePaintView.layer.borderWidth = 10;
         shapePaintView.frame = self.contentView.bounds;
         shapePaintView.contentMode = UIViewContentModeScaleAspectFill;
         shapePaintView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -346,10 +348,6 @@ dispatch_queue_t importThumbnailQueue;
     return [delegate rotationForSegment:segment fromPreviousSegment:previousSegment];;
 }
 
-
-
-
-
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
     
     UIBezierPath* bounds = [UIBezierPath bezierPathWithRect:self.bounds];
@@ -401,6 +399,37 @@ dispatch_queue_t importThumbnailQueue;
     }
 
     return croppedElements;
+}
+
+#pragma mark - PolygonToolDelegate
+
+-(void) beginShapeWithTouch:(UITouch*)touch{
+    shapePaintView.hidden = NO;
+    // send touch event to the view that
+    // will display the drawn polygon line
+}
+
+-(void) continueShapeWithTouch:(UITouch*)touch{
+    // noop for now
+    // send touch event to the view that
+    // will display the drawn polygon line
+}
+
+-(void) finishShapeWithTouch:(UITouch*)touch{
+    shapePaintView.hidden = YES;
+    // send touch event to the view that
+    // will display the drawn polygon line
+    //
+    // and also process the touches into the new
+    // scrap polygon shape, and add that shape
+    // to the page
+}
+
+-(void) cancelShapeWithTouch:(UITouch*)touch{
+    shapePaintView.hidden = YES;
+    // we've cancelled the polygon (possibly b/c
+    // it was a pan/pinch instead), so clear
+    // the drawn polygon and reset.
 }
 
 

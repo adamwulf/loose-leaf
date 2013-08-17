@@ -272,7 +272,8 @@
             [self.delegate isBeginning:NO
                      toPanAndScalePage:self
                              fromFrame:frameOfPageAtBeginningOfGesture
-                               toFrame:frameOfPageAtBeginningOfGesture];
+                               toFrame:frameOfPageAtBeginningOfGesture
+                               withTouches:panGesture.touches];
         }
         //
         // the gesture requires 2 fingers. it may still say it only has 1 touch if the user
@@ -319,7 +320,8 @@
         [self.delegate isBeginning:panGesture.state == UIGestureRecognizerStateBegan
                  toPanAndScalePage:self
                          fromFrame:frameOfPageAtBeginningOfGesture
-                           toFrame:frameOfPageAtBeginningOfGesture];
+                           toFrame:frameOfPageAtBeginningOfGesture
+                           withTouches:panGesture.touches];
         return;
     }
     
@@ -387,9 +389,11 @@
     //
     // now, notify delegate that we're about to set the frame of the page during a gesture,
     // and give it a chance to modify the frame if at all needed.
-    fr = [self.delegate isBeginning:NO toPanAndScalePage:self
+    fr = [self.delegate isBeginning:NO
+                  toPanAndScalePage:self
                       fromFrame:frameOfPageAtBeginningOfGesture
-                        toFrame:fr];
+                        toFrame:fr
+                        withTouches:panGesture.touches];
     
     if(panGesture.state != UIGestureRecognizerStateCancelled &&
        panGesture.state != UIGestureRecognizerStateEnded &&
@@ -430,6 +434,7 @@
     NSInteger indexOfPage = [self.delegate indexOfPageInCompleteStack:self];
     return [self.delegate columnInListViewGivenIndex:indexOfPage];
 }
+
 
 #pragma mark - description
 
