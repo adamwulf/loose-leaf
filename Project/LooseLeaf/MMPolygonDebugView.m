@@ -45,10 +45,10 @@
 {
     // Drawing code
     
-    [[UIColor greenColor] setFill];
+    [[[UIColor greenColor] colorWithAlphaComponent:.5] setFill];
     for(NSValue* val in ruleredTouches){
         CGPoint point = [val CGPointValue];
-        UIBezierPath* touchPoint = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x - 3, point.y - 3, 6, 6)];
+        UIBezierPath* touchPoint = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x - 5, point.y - 5, 10, 10)];
         [touchPoint fill];
     }
     [[UIColor redColor] setFill];
