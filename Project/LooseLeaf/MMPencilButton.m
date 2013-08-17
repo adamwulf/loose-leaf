@@ -9,7 +9,7 @@
 #import "MMPencilButton.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Constants.h"
-#import "MMPencilTool.h"
+#import "MMPencilAndPaletteView.h"
 
 @implementation MMPencilButton
 

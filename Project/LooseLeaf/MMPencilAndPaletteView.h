@@ -9,13 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "MMColorButton.h"
 #import "MMPencilButton.h"
-#import "MMPencilToolDelegate.h"
+#import "MMPencilAndPaletteViewDelegate.h"
 
-@interface MMPencilTool : UIView
+@interface MMPencilAndPaletteView : UIView
 
 @property (nonatomic) BOOL selected;
 @property (readonly) UIColor* color;
-@property (nonatomic, weak) NSObject<MMPencilToolDelegate>* delegate;
+@property (nonatomic, weak) NSObject<MMPencilAndPaletteViewDelegate>* delegate;
 
 - (id)initWithButtonFrame:(CGRect)frame andScreenSize:(CGSize)totalSize;
 
