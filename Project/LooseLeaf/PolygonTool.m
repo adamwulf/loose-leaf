@@ -9,11 +9,23 @@
 #import "PolygonTool.h"
 #import "Constants.h"
 
-@implementation PolygonTool
+@implementation PolygonTool{
+    NSMutableSet* polygonTouches;
+}
+
+@synthesize delegate;
+
+-(id) init{
+    if(self = [super init]){
+        polygonTouches = [NSMutableSet set];
+    }
+    return self;
+}
 
 - (BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
-    debug_NSLog(@"will begin poly");
+    [delegate beginShapeWithTouch:touch.touch];
     // return that we _do not_ want the JotView to draw
+    [polygonTouches addObject:touch.touch];
     return NO;
 }
 
@@ -22,7 +34,9 @@
  * next touch
  */
 - (void) willMoveStrokeWithTouch:(JotTouch*)touch{
-    debug_NSLog(@"will move poly");
+    if([polygonTouches containsObject:touch.touch]){
+        [delegate continueShapeWithTouch:touch.touch];
+    }
 }
 
 /**
@@ -30,14 +44,24 @@
  * stroke
  */
 - (void) willEndStrokeWithTouch:(JotTouch*)touch{
-    debug_NSLog(@"will end poly");
+    if([polygonTouches containsObject:touch.touch]){
+        [delegate finishShapeWithTouch:touch.touch];
+        [polygonTouches removeObject:touch.touch];
+    }
 }
 
 /**
  * the stroke for the input touch will been cancelled.
  */
 - (void) willCancelStrokeWithTouch:(JotTouch*)touch{
-    debug_NSLog(@"will cancel poly");
+    [delegate cancelShapeWithTouch:touch.touch];
+    [polygonTouches removeObject:touch.touch];
+}
+
+
+-(void) cancelPolygonForTouch:(UITouch*)touch{
+    [polygonTouches removeObject:touch];
+    [delegate cancelShapeWithTouch:touch];
 }
 
 @end

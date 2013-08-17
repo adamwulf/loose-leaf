@@ -44,6 +44,7 @@
     BOOL secondToLastTouchDidBezel;
 }
 
+@property (readonly) NSArray* touches;
 @property (nonatomic, readonly) CGFloat scale;
 @property (nonatomic, readonly) CGPoint velocity;
 @property (nonatomic, assign) MMBezelDirection bezelDirectionMask;

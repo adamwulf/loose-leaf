@@ -192,7 +192,6 @@
         }else{
             [self showColors];
         }
-        NSLog(@"show colors");
     }else{
         [self.delegate penTapped:button];
     }

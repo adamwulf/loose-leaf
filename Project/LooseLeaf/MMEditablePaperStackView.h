@@ -34,12 +34,13 @@
 #import "Eraser.h"
 #import "PolygonTool.h"
 #import "MMRulerView.h"
+#import "PolygonToolDelegate.h"
 
 /**
  * this class is responsible for the editable buttons and controls that show
  * outside of a page's view subviews
  */
-@interface MMEditablePaperStackView : MMListPaperStackView<JotViewDelegate,MMPencilToolDelegate,MMRotationManagerDelegate,UIScrollViewDelegate>{
+@interface MMEditablePaperStackView : MMListPaperStackView<JotViewDelegate,MMPencilToolDelegate,MMRotationManagerDelegate,UIScrollViewDelegate,PolygonToolDelegate>{
     
     // managers
     MMStackManager* stackManager;

@@ -289,7 +289,7 @@
  * when that happens, we start to also move pages below the panned page to show that
  * transition animation
  */
--(CGRect) isBeginning:(BOOL)beginning toPanAndScalePage:(MMPaperView *)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
+-(CGRect) isBeginning:(BOOL)beginning toPanAndScalePage:(MMPaperView *)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withTouches:(NSArray*)touches{
     if([visibleStackHolder peekSubview].scale < kMinPageZoom && [visibleStackHolder peekSubview] == page){
         // make sure we're the top page being panned,
         // and that we're zooming into list view
@@ -374,7 +374,7 @@
         }
         return [self framePositionDuringTransitionForPage:page originalFrame:toFrame withTrust:percentageToTrustToFrame];
     }
-    return [super isBeginning:beginning toPanAndScalePage:page fromFrame:fromFrame toFrame:toFrame];
+    return [super isBeginning:beginning toPanAndScalePage:page fromFrame:fromFrame toFrame:toFrame withTouches:touches];
 }
 
 /**

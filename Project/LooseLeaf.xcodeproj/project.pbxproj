@@ -235,6 +235,7 @@
 		665CAC2417B58FC8000BD505 /* UIColor+ColorWithHex.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIColor+ColorWithHex.m"; path = "../../Submodules/ColorWithHex/UIColor+ColorWithHex.m"; sourceTree = "<group>"; };
 		6661144616FD67F8005032B9 /* Loose-Leaf-Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf-Icon.png"; path = "../Loose-Leaf-Icon.png"; sourceTree = "<group>"; };
 		6661144916FD67FA005032B9 /* Loose-Leaf-Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf-Icon@2x.png"; path = "../Loose-Leaf-Icon@2x.png"; sourceTree = "<group>"; };
+		6667480317BEEDD300D5C390 /* PolygonToolDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PolygonToolDelegate.h; sourceTree = "<group>"; };
 		66728713159515FC0018571A /* MMEditablePaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEditablePaperStackView.h; sourceTree = "<group>"; };
 		66728714159515FC0018571A /* MMEditablePaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEditablePaperStackView.m; sourceTree = "<group>"; };
 		6693295815958A950033E557 /* MMShadowManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShadowManager.h; sourceTree = "<group>"; };
@@ -797,6 +798,7 @@
 				665C593317BD7C42006DECBF /* Tool.m */,
 				665C593517BD7CD3006DECBF /* PolygonTool.h */,
 				665C593617BD7CD3006DECBF /* PolygonTool.m */,
+				6667480317BEEDD300D5C390 /* PolygonToolDelegate.h */,
 				6695B6EE1751CC160069E61F /* Pen.h */,
 				6695B6EF1751CC160069E61F /* Pen.m */,
 				663C187B1755B63D00706A05 /* Eraser.h */,
