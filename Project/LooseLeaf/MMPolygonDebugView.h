@@ -16,6 +16,4 @@
 
 -(void) complete;
 
--(void) addDebugPoint:(CGPoint)point;
-
 @end
