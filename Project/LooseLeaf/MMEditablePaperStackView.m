@@ -696,14 +696,24 @@
 #pragma mark - PolygonToolDelegate
 
 -(void) beginShapeWithTouch:(UITouch*)touch{
-    [[visibleStackHolder peekSubview] beginShapeWithTouch:touch];
+    [rulerView willBeginStrokeAt:[touch locationInView:rulerView]];
+    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
+    MMEditablePaperView* page = [visibleStackHolder peekSubview];
+    [page addDebugPoint:adjusted];
+    [page beginShapeWithTouch:touch];
 }
 
 -(void) continueShapeWithTouch:(UITouch*)touch{
+    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
+    MMEditablePaperView* page = [visibleStackHolder peekSubview];
+    [page addDebugPoint:adjusted];
     [[visibleStackHolder peekSubview] continueShapeWithTouch:touch];
 }
 
 -(void) finishShapeWithTouch:(UITouch*)touch{
+    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
+    MMEditablePaperView* page = [visibleStackHolder peekSubview];
+    [page addDebugPoint:adjusted];
     [[visibleStackHolder peekSubview] finishShapeWithTouch:touch];
 }
 
