@@ -41,5 +41,5 @@
 -(void) continueShapeAtPoint:(CGPoint)point;
 -(void) finishShapeAtPoint:(CGPoint)point;
 -(void) cancelShapeAtPoint:(CGPoint)point;
--(void) addDebugPoint:(CGPoint)point;
+
 @end

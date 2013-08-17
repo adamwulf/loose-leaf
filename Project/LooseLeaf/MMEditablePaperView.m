@@ -438,10 +438,6 @@ dispatch_queue_t importThumbnailQueue;
     [polygonDebugView clear];
 }
 
--(void) addDebugPoint:(CGPoint)point{
-    [polygonDebugView addDebugPoint:point];
-}
-
 
 
 #pragma mark - File Paths

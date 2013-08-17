@@ -700,20 +700,17 @@
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
     MMEditablePaperView* page = [visibleStackHolder peekSubview];
     [page beginShapeAtPoint:[page convertPoint:adjusted fromView:rulerView]];
-    [page addDebugPoint:[page convertPoint:adjusted fromView:rulerView]];
 }
 
 -(void) continueShapeWithTouch:(UITouch*)touch{
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
     MMEditablePaperView* page = [visibleStackHolder peekSubview];
-    [page addDebugPoint:[page convertPoint:adjusted fromView:rulerView]];
     [page continueShapeAtPoint:[page convertPoint:adjusted fromView:rulerView]];
 }
 
 -(void) finishShapeWithTouch:(UITouch*)touch{
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
     MMEditablePaperView* page = [visibleStackHolder peekSubview];
-    [page addDebugPoint:[page convertPoint:adjusted fromView:rulerView]];
     [page finishShapeAtPoint:[page convertPoint:adjusted fromView:rulerView]];
 }
 
