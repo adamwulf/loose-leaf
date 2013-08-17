@@ -13,7 +13,7 @@
 #import "PolygonToolDelegate.h"
 #import "MMPolygonDebugView.h"
 
-@interface MMEditablePaperView : MMPaperView<JotViewDelegate,PolygonToolDelegate>{
+@interface MMEditablePaperView : MMPaperView<JotViewDelegate>{
     UIImageView* cachedImgView;
     __weak JotView* drawableView;
     MMPolygonDebugView* polygonDebugView;
@@ -37,5 +37,9 @@
 
 
 // debug
+-(void) beginShapeAtPoint:(CGPoint)point;
+-(void) continueShapeAtPoint:(CGPoint)point;
+-(void) finishShapeAtPoint:(CGPoint)point;
+-(void) cancelShapeAtPoint:(CGPoint)point;
 -(void) addDebugPoint:(CGPoint)point;
 @end

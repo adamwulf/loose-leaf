@@ -402,23 +402,23 @@ dispatch_queue_t importThumbnailQueue;
 
 #pragma mark - PolygonToolDelegate
 
--(void) beginShapeWithTouch:(UITouch*)touch{
+-(void) beginShapeAtPoint:(CGPoint)point{
     // send touch event to the view that
     // will display the drawn polygon line
     NSLog(@"begin");
     [polygonDebugView clear];
     
-    [polygonDebugView addTouchPoint:[touch locationInView:polygonDebugView]];
+    [polygonDebugView addTouchPoint:point];
 }
 
--(void) continueShapeWithTouch:(UITouch*)touch{
+-(void) continueShapeAtPoint:(CGPoint)point{
     // noop for now
     // send touch event to the view that
     // will display the drawn polygon line
-    [polygonDebugView addTouchPoint:[touch locationInView:polygonDebugView]];
+    [polygonDebugView addTouchPoint:point];
 }
 
--(void) finishShapeWithTouch:(UITouch*)touch{
+-(void) finishShapeAtPoint:(CGPoint)point{
     // send touch event to the view that
     // will display the drawn polygon line
     //
@@ -426,15 +426,16 @@ dispatch_queue_t importThumbnailQueue;
     // scrap polygon shape, and add that shape
     // to the page
     NSLog(@"finish");
-    [polygonDebugView addTouchPoint:[touch locationInView:polygonDebugView]];
+    [polygonDebugView addTouchPoint:point];
     [polygonDebugView complete];
 }
 
--(void) cancelShapeWithTouch:(UITouch*)touch{
+-(void) cancelShapeAtPoint:(CGPoint)point{
     // we've cancelled the polygon (possibly b/c
     // it was a pan/pinch instead), so clear
     // the drawn polygon and reset.
     NSLog(@"cancel");
+    [polygonDebugView clear];
 }
 
 -(void) addDebugPoint:(CGPoint)point{
