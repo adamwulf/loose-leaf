@@ -31,6 +31,10 @@
     return [preventingGestureRecognizer isKindOfClass:[MMBezelInRightGestureRecognizer class]];
 }
 
+-(NSArray*)touches{
+    return [validTouches allObjects];
+}
+
 /**
  * finds the touch that is furthest left
  *
@@ -135,15 +139,6 @@
             firstKnownLocation = [self furthestLeftTouchLocation];
             firstKnownLocation.x = 0;
         }
-        // our gesture has began, so make sure to kill
-        // any touches that are being used to draw
-        //
-        // the stroke manager is the definitive source for all strokes.
-        // cancel through that manager, and it'll notify the appropriate
-        // view if need be
-        for(UITouch* touch in validTouches){
-            [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
-        }
         [dateOfLastBezelEnding release];
         dateOfLastBezelEnding = nil;
     }
@@ -170,15 +165,6 @@
             panDirection = panDirection | MMBezelDirectionUp;
         }
         lastKnownLocation = p;
-    }
-    // some strokes are started after our gesture gets the
-    // touchesBegan event, so we need to kill them here too
-    //
-    // the stroke manager is the definitive source for all strokes.
-    // cancel through that manager, and it'll notify the appropriate
-    // view if need be
-    for(UITouch* touch in validTouches){
-        [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
     }
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{

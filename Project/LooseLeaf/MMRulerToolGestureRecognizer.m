@@ -21,7 +21,7 @@
 @synthesize scale;
 @synthesize initialDistance;
 
-NSInteger const minimumNumberOfRulerTouches = 2;
+NSUInteger const minimumNumberOfRulerTouches = 2;
 
 
 -(id) init{
@@ -53,6 +53,10 @@ NSInteger const minimumNumberOfRulerTouches = 2;
            [preventingGestureRecognizer isKindOfClass:[MMBezelInLeftGestureRecognizer class]];
 }
 
+-(NSArray*)touches{
+    return [validTouches array];
+}
+
 -(BOOL) containsTouch:(UITouch*)touch{
     return [validTouches containsObject:touch];
 }
@@ -76,36 +80,33 @@ NSInteger const minimumNumberOfRulerTouches = 2;
     // ignore all the touches that could be bezel touches
     if([validTouchesCurrentlyBeginning count]){
         [validTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
-        if([validTouches count] >= minimumNumberOfRulerTouches && self.state == UIGestureRecognizerStatePossible){
-            // our gesture has began, so make sure to kill
-            // any touches that are being used to draw
-            //
-            // the stroke manager is the definitive source for all strokes.
-            // cancel through that manager, and it'll notify the appropriate
-            // view if need be
-            for(UITouch* touch in validTouches){
-                [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+        if(([validTouches count] >= minimumNumberOfRulerTouches)){
+            if(self.state == UIGestureRecognizerStatePossible){
+                initialDistance = [self distanceBetweenTouches:validTouches];
+                self.state = UIGestureRecognizerStateBegan;
             }
-            initialDistance = [self distanceBetweenTouches:validTouches];
-            self.state = UIGestureRecognizerStateBegan;
         }
     }
 }
+
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
     NSMutableOrderedSet* validTouchesCurrentlyMoving = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
     [validTouchesCurrentlyMoving intersectSet:touches];
     if([validTouchesCurrentlyMoving count]){
-        if(self.state == UIGestureRecognizerStateBegan){
-            initialDistance = 0;
+        if(self.state == UIGestureRecognizerStateBegan ||
+           self.state == UIGestureRecognizerStateChanged){
+            if(self.state == UIGestureRecognizerStateBegan){
+                initialDistance = 0;
+            }
+            if(self.numberOfTouches == 1){
+                initialDistance = 0;
+            }
+            if([validTouches count] >= 2 && !initialDistance){
+                initialDistance = [self distanceBetweenTouches:validTouches];
+            }
+            self.state = UIGestureRecognizerStateChanged;
         }
-        if(self.numberOfTouches == 1){
-            initialDistance = 0;
-        }
-        if([validTouches count] >= 2 && !initialDistance){
-            initialDistance = [self distanceBetweenTouches:validTouches];
-        }
-        self.state = UIGestureRecognizerStateChanged;
     }
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{

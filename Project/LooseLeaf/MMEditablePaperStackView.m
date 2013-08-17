@@ -363,6 +363,31 @@
     // noop
 }
 
+
+#pragma mark - Bezel Left and Right Gestures
+
+-(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
+    if(bezelGesture.state == UIGestureRecognizerStateBegan){
+        // cancel any strokes that this gesture is using
+        for(UITouch* touch in bezelGesture.touches){
+            [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+            [polygon cancelPolygonForTouch:touch];
+        }
+    }
+    [super isBezelingInLeftWithGesture:bezelGesture];
+}
+
+-(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
+    if(bezelGesture.state == UIGestureRecognizerStateBegan){
+        // cancel any strokes that this gesture is using
+        for(UITouch* touch in bezelGesture.touches){
+            [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+            [polygon cancelPolygonForTouch:touch];
+        }
+    }
+    [super isBezelingInRightWithGesture:bezelGesture];
+}
+
 #pragma mark - MMPaperViewDelegate
 
 -(CGRect) isBeginning:(BOOL)beginning toPanAndScalePage:(MMPaperView *)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withTouches:(NSArray*)touches{
@@ -461,6 +486,16 @@
 }
 
 -(void) didMoveRuler:(MMRulerToolGestureRecognizer *)gesture{
+    // our gesture has began, so make sure to kill
+    // any touches that are being used to draw
+    //
+    // the stroke manager is the definitive source for all strokes.
+    // cancel through that manager, and it'll notify the appropriate
+    // view if need be
+    for(UITouch* touch in gesture.touches){
+        [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+        [polygon cancelPolygonForTouch:touch];
+    }
     [rulerView updateLineAt:[gesture point1InView:rulerView] to:[gesture point2InView:rulerView]
            startingDistance:[gesture initialDistance]];
 }
