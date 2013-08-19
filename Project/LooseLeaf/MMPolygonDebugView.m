@@ -14,9 +14,7 @@
 @implementation MMPolygonDebugView{
     NSMutableArray* touches;
     NSMutableArray* shapePaths;
-    
-    
-    NSArray* intersections;
+    NSArray* pathsFromIntersectingTouches;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -32,7 +30,7 @@
 
 -(void) clear{
     [touches removeAllObjects];
-    intersections = nil;
+    pathsFromIntersectingTouches = nil;
     [shapePaths removeAllObjects];
     [self setNeedsDisplay];
 }
@@ -48,19 +46,30 @@
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
-//    [[UIColor redColor] setFill];
-//    for(NSValue* val in touches){
-//        CGPoint point = [val CGPointValue];
-//        UIBezierPath* touchPoint = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x - 3, point.y - 3, 6, 6)];
-//        [touchPoint fill];
-//    }
     
-    for(UIBezierPath* val in intersections){
+    // This block will draw red dots
+    // at al the touch points
+    [[UIColor redColor] setFill];
+    for(NSValue* val in touches){
+        CGPoint point = [val CGPointValue];
+        UIBezierPath* touchPoint = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x - 3, point.y - 3, 6, 6)];
+        [touchPoint fill];
+    }
+    
+    // this block will draw a 1px line
+    // with a random color for every
+    // path that we've tried to create
+    // a shape for. this connects the raw
+    // points sent to a TCShapeController
+    for(UIBezierPath* val in pathsFromIntersectingTouches){
         [[UIColor randomColor] setStroke];
         [val setLineWidth:1];
         [val stroke];
     }
     
+    // this will draw the output from each
+    // TCShapeController that produced a valid
+    // shape
     if([shapePaths count]){
         NSLog(@"drawing %d shapes", [shapePaths count]);
         NSInteger width = [shapePaths count] * 2 + 2;
@@ -72,7 +81,9 @@
         }
     }
     
-    for(UIBezierPath* val in intersections){
+    // this will draw circles at each point that we sent
+    // to the TCShapeController
+    for(UIBezierPath* val in pathsFromIntersectingTouches){
         [[UIColor randomColor] setFill];
         [val iteratePathWithBlock:^(CGPathElement element){
             CGPoint point = element.points[0];
@@ -87,46 +98,75 @@
 -(void) complete{
     if(![touches count]) return;
     
+    //
+    //
+    // at this point, all touch points from the user
+    // are stored in the _touches_ array.
+    //
+    // this method will send these points into the
+    // TCShapeController to get shape output.
+    //
+    // first we'll do a bit of preprocessing on these
+    // points. if the user draws a line that intersects
+    // itself, then we'll split it into two lines that
+    // don't intersect. this way, drawing a "figure 8"
+    // will generate two paths, one for each o of the 8.
     
-    // first, create a bezier path so we can detect
-    // self intersecting paths
-    UIBezierPath* allPath = [UIBezierPath bezierPath];
-
+    
+    
+    // first, create a single bezier path that connects
+    // all of the touch points from start to finish
+    UIBezierPath* pathOfAllTouchPoints = [UIBezierPath bezierPath];
     CGPoint firstPoint = [[touches objectAtIndex:0] CGPointValue];
-    [allPath moveToPoint:firstPoint];
+    [pathOfAllTouchPoints moveToPoint:firstPoint];
     for(int i=1;i < [touches count];i++){
         CGPoint point = [[touches objectAtIndex:i] CGPointValue];
-        [allPath addLineToPoint:point];
+        [pathOfAllTouchPoints addLineToPoint:point];
     }
     
-    intersections = [allPath pathsFromSelfIntersections];
+    
+    //
+    // now pathOfAllTouchPoints is a single line connecting all the touches.
+    // from here, split the path into multiple paths at each
+    // intersection point.
+    pathsFromIntersectingTouches = [pathOfAllTouchPoints pathsFromSelfIntersections];
     
     
-    for(UIBezierPath* singlePath in intersections){
-        // now loop through all of the bezier paths
-        // to turn them into proper shapes.
+    //
+    // now we'll loop over each sub-path, and send all the points
+    // to a new TCShapeController, so that we can interpret a shape
+    // for each non-intersecting path.
+    for(UIBezierPath* singlePath in pathsFromIntersectingTouches){
         TCShapeController* shapeMaker = [[TCShapeController alloc] init];
         __block CGPoint prevPoint = CGPointZero;
         __block NSInteger index = 0;
         NSInteger count = [singlePath elementCount];
         [singlePath iteratePathWithBlock:^(CGPathElement element){
+            // our path is only made of line-to segments
             if(element.type == kCGPathElementAddLineToPoint){
                 if(index == count - 1){
+                    // this is the last element of the path, so tell our
+                    // shape controller
                     [shapeMaker addLastPoint:element.points[0]];
                 }else{
+                    // this is a point inside the path, so tell the
+                    // shape controller about the previous point and this point
                     [shapeMaker addPoint:prevPoint andPoint:element.points[0]];
                 }
             }
             prevPoint = element.points[0];
             index++;
         }];
+        // the shape controller knows about all the points in this subpath,
+        // so see if it can recognize a shape
         SYShape* shape = [shapeMaker getFigurePaintedWithTolerance:0.0000001 andContinuity:0];
-        UIBezierPath* shapePath = [shape bezierPath];
-        if(shapePath){
+        if(shape){
+            UIBezierPath* shapePath = [shape bezierPath];
             [shapePaths addObject:shapePath];
             NSLog(@"got shape");
         }else{
-            shape = [shapeMaker getFigurePaintedWithTolerance:0.0000001 andContinuity:0];
+            // why does this happen so often? it seems to have a problem
+            // when the curve starts and stops on the exact same CGPoint
             NSLog(@"nil shape :(");
         }
     }
