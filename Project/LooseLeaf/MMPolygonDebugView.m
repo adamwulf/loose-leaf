@@ -9,10 +9,14 @@
 #import "MMPolygonDebugView.h"
 #import <TouchShape/TouchShape.h>
 #import "DrawKit-iOS.h"
+#import "UIColor+ColorWithHex.h"
 
 @implementation MMPolygonDebugView{
     NSMutableArray* touches;
-    UIBezierPath* shapePath;
+    NSMutableArray* shapePaths;
+    
+    
+    NSArray* intersections;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -21,13 +25,15 @@
     if (self) {
         // Initialization code
         touches = [NSMutableArray array];
+        shapePaths = [NSMutableArray array];
     }
     return self;
 }
 
 -(void) clear{
     [touches removeAllObjects];
-    shapePath = nil;
+    intersections = nil;
+    [shapePaths removeAllObjects];
     [self setNeedsDisplay];
 }
 
@@ -42,18 +48,40 @@
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
-    [[UIColor redColor] setFill];
-    for(NSValue* val in touches){
-        CGPoint point = [val CGPointValue];
-        UIBezierPath* touchPoint = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x - 3, point.y - 3, 6, 6)];
-        [touchPoint fill];
+//    [[UIColor redColor] setFill];
+//    for(NSValue* val in touches){
+//        CGPoint point = [val CGPointValue];
+//        UIBezierPath* touchPoint = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x - 3, point.y - 3, 6, 6)];
+//        [touchPoint fill];
+//    }
+    
+    for(UIBezierPath* val in intersections){
+        [[UIColor randomColor] setStroke];
+        [val setLineWidth:1];
+        [val stroke];
     }
     
-    if(shapePath){
-        [[UIColor blueColor] setStroke];
-        shapePath.lineWidth = 2;
-        [shapePath stroke];
+    if([shapePaths count]){
+        NSLog(@"drawing %d shapes", [shapePaths count]);
+        NSInteger width = [shapePaths count] * 2 + 2;
+        for(UIBezierPath* shapePath in shapePaths){
+            [[UIColor randomColor] setStroke];
+            shapePath.lineWidth = width;
+            [shapePath stroke];
+            width -= 2;
+        }
     }
+    
+    for(UIBezierPath* val in intersections){
+        [[UIColor randomColor] setFill];
+        [val iteratePathWithBlock:^(CGPathElement element){
+            CGPoint point = element.points[0];
+            UIBezierPath* touchPoint = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x - 3, point.y - 3, 6, 6)];
+            [touchPoint fill];
+        }];
+    }
+    
+    
 }
 
 -(void) complete{
@@ -71,29 +99,38 @@
         [allPath addLineToPoint:point];
     }
     
+    intersections = [allPath pathsFromSelfIntersections];
     
     
-    
-    // now loop through all of the bezier paths
-    // to turn them into proper shapes.
-    TCShapeController* shapeMaker = [[TCShapeController alloc] init];
-    __block CGPoint prevPoint = CGPointZero;
-    __block NSInteger index = 0;
-    NSInteger count = [allPath elementCount];
-    [allPath iteratePathWithBlock:^(CGPathElement element){
-        if(element.type == kCGPathElementAddLineToPoint){
-            if(index == count - 1){
-                [shapeMaker addLastPoint:element.points[0]];
-            }else{
-                [shapeMaker addPoint:prevPoint andPoint:element.points[0]];
+    for(UIBezierPath* singlePath in intersections){
+        // now loop through all of the bezier paths
+        // to turn them into proper shapes.
+        TCShapeController* shapeMaker = [[TCShapeController alloc] init];
+        __block CGPoint prevPoint = CGPointZero;
+        __block NSInteger index = 0;
+        NSInteger count = [singlePath elementCount];
+        [singlePath iteratePathWithBlock:^(CGPathElement element){
+            if(element.type == kCGPathElementAddLineToPoint){
+                if(index == count - 1){
+                    [shapeMaker addLastPoint:element.points[0]];
+                }else{
+                    [shapeMaker addPoint:prevPoint andPoint:element.points[0]];
+                }
             }
+            prevPoint = element.points[0];
+            index++;
+        }];
+        SYShape* shape = [shapeMaker getFigurePaintedWithTolerance:0.0000001 andContinuity:0];
+        UIBezierPath* shapePath = [shape bezierPath];
+        if(shapePath){
+            [shapePaths addObject:shapePath];
+            NSLog(@"got shape");
+        }else{
+            shape = [shapeMaker getFigurePaintedWithTolerance:0.0000001 andContinuity:0];
+            NSLog(@"nil shape :(");
         }
-        prevPoint = element.points[0];
-        index++;
-    }];
-    SYShape* shape = [shapeMaker getFigurePaintedWithTolerance:0.0000001 andContinuity:0];
-    shapePath = [shape bezierPath];
-    [self setNeedsDisplayInRect:shapePath.bounds];
+    }
+    [self setNeedsDisplay];
 }
 
 
