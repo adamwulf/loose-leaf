@@ -8,6 +8,7 @@
 
 #import "MMPolygonDebugView.h"
 #import <TouchShape/TouchShape.h>
+#import "DrawKit-iOS.h"
 
 @implementation MMPolygonDebugView{
     NSMutableArray* touches;
@@ -58,13 +59,38 @@
 -(void) complete{
     if(![touches count]) return;
     
-    TCShapeController* shapeMaker = [[TCShapeController alloc] init];
-    for(int i=1;i < [touches count] - 2;i++){
-        CGPoint prevPoint = [[touches objectAtIndex:i-1] CGPointValue];
+    
+    // first, create a bezier path so we can detect
+    // self intersecting paths
+    UIBezierPath* allPath = [UIBezierPath bezierPath];
+
+    CGPoint firstPoint = [[touches objectAtIndex:0] CGPointValue];
+    [allPath moveToPoint:firstPoint];
+    for(int i=1;i < [touches count];i++){
         CGPoint point = [[touches objectAtIndex:i] CGPointValue];
-        [shapeMaker addPoint:prevPoint andPoint:point];
+        [allPath addLineToPoint:point];
     }
-    [shapeMaker addLastPoint:[[touches lastObject] CGPointValue]];
+    
+    
+    
+    
+    // now loop through all of the bezier paths
+    // to turn them into proper shapes.
+    TCShapeController* shapeMaker = [[TCShapeController alloc] init];
+    __block CGPoint prevPoint = CGPointZero;
+    __block NSInteger index = 0;
+    NSInteger count = [allPath elementCount];
+    [allPath iteratePathWithBlock:^(CGPathElement element){
+        if(element.type == kCGPathElementAddLineToPoint){
+            if(index == count - 1){
+                [shapeMaker addLastPoint:element.points[0]];
+            }else{
+                [shapeMaker addPoint:prevPoint andPoint:element.points[0]];
+            }
+        }
+        prevPoint = element.points[0];
+        index++;
+    }];
     SYShape* shape = [shapeMaker getFigurePaintedWithTolerance:0.0000001 andContinuity:0];
     shapePath = [shape bezierPath];
     [self setNeedsDisplayInRect:shapePath.bounds];
