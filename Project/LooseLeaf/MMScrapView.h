@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MMScrap : UIView
+@interface MMScrapView : UIView
 
 - (id)initWithBezierPath:(UIBezierPath*)path;
 

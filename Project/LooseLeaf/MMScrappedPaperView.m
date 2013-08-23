@@ -9,7 +9,7 @@
 #import "MMScrappedPaperView.h"
 #import "PolygonToolDelegate.h"
 #import "UIColor+ColorWithHex.h"
-#import "MMScrap.h"
+#import "MMScrapView.h"
 
 @implementation MMScrappedPaperView{
     NSMutableArray* scraps;
@@ -31,7 +31,7 @@
  * bounds
  */
 -(void) addScrapWithPath:(UIBezierPath*)path{
-    UIView* newScrap = [[MMScrap alloc] initWithBezierPath:path];
+    UIView* newScrap = [[MMScrapView alloc] initWithBezierPath:path];
     [scraps addObject:newScrap];
     [self.contentView insertSubview:newScrap belowSubview:polygonDebugView];
 }
@@ -40,7 +40,7 @@
 #pragma mark - MMRotationManagerDelegate
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading{
-    for(MMScrap* scrap in scraps){
+    for(MMScrapView* scrap in scraps){
         [scrap didUpdateAccelerometerWithRawReading:-currentRawReading];
     }
 }
