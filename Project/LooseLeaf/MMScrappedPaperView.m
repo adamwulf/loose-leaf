@@ -9,6 +9,7 @@
 #import "MMScrappedPaperView.h"
 #import "PolygonToolDelegate.h"
 #import "UIColor+ColorWithHex.h"
+#import "MMScrap.h"
 
 @implementation MMScrappedPaperView
 
@@ -28,19 +29,8 @@
  * bounds
  */
 -(void) addScrapWithPath:(UIBezierPath*)path{
-    CGRect originalBounds = path.bounds;
-    [path applyTransform:CGAffineTransformMakeTranslation(-originalBounds.origin.x, -originalBounds.origin.y)];
-    
-    UIView* newScrap = [[UIView alloc] initWithFrame:originalBounds];
-    newScrap.backgroundColor = [UIColor randomColor];
-    CAShapeLayer* maskLayer = [CAShapeLayer layer];
-    [maskLayer setPath:path.CGPath];
-    newScrap.layer.mask = maskLayer;
-    newScrap.layer.borderColor = [UIColor redColor].CGColor;
-    newScrap.layer.borderWidth = 1;
-    [self.contentView addSubview:newScrap];
-    
-    NSLog(@"path: %@", path);
+    UIView* newScrap = [[MMScrap alloc] initWithBezierPath:path];
+    [self.contentView insertSubview:newScrap belowSubview:polygonDebugView];
 }
 
 
@@ -78,6 +68,7 @@
     for(UIBezierPath* shape in shapes){
         [self addScrapWithPath:[shape copy]];
     }
+    [polygonDebugView clear];
 }
 
 -(void) cancelShapeAtPoint:(CGPoint)point{
