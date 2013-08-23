@@ -74,10 +74,16 @@
     [polygonDebugView addTouchPoint:point];
     NSArray* shapes = [polygonDebugView complete];
     
-    for(UIBezierPath* shape in shapes){
-        [self addScrapWithPath:[shape copy]];
-    }
     [polygonDebugView clear];
+
+    for(UIBezierPath* shape in shapes){
+        if([scraps count]){
+            [[scraps objectAtIndex:0] intersect:shape];
+        }else{
+            [self addScrapWithPath:[shape copy]];
+        }
+    }
+    
 }
 
 -(void) cancelShapeAtPoint:(CGPoint)point{

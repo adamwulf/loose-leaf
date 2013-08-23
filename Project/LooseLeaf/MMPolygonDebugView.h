@@ -16,4 +16,6 @@
 
 -(NSArray*) complete;
 
+-(void) addPath:(UIBezierPath*)pathToDraw;
+
 @end

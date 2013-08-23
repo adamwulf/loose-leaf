@@ -9,7 +9,9 @@
 #import "MMScrapView.h"
 #import "UIColor+ColorWithHex.h"
 #import <CoreGraphics/CoreGraphics.h>
+#import <QuartzCore/QuartzCore.h>
 #import "MMRotationManager.h"
+#import "DrawKit-iOS.h"
 
 @implementation MMScrapView{
     UIBezierPath* path;
@@ -51,6 +53,30 @@
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading{
 //    NSLog(@"raw: %f  =>  %f,%f", currentRawReading, cosf(currentRawReading)*4, sinf(currentRawReading)*4);
     self.layer.shadowOffset = CGSizeMake(cosf(currentRawReading)*1, sinf(currentRawReading)*1);
+}
+
+
+
+// just a debug method to test difference and intersection
+// operations on a path
+-(UIBezierPath*) intersect:(UIBezierPath*)newPath{
+    newPath = [newPath copy];
+    [newPath applyTransform:CGAffineTransformMakeTranslation(-self.frame.origin.x, -self.frame.origin.y)];
+    
+    newPath = [path pathFromPath:newPath usingBooleanOperation:GPC_DIFF];
+    
+    self.layer.shadowPath = newPath.CGPath;
+
+    CAShapeLayer* maskLayer = [CAShapeLayer layer];
+    [maskLayer setPath:newPath.CGPath];
+    contentView.layer.mask = maskLayer;
+
+    
+    path = newPath;
+    
+    return newPath;
+    
+    
 }
 
 
