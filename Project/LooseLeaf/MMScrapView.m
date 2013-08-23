@@ -6,12 +6,12 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMScrap.h"
+#import "MMScrapView.h"
 #import "UIColor+ColorWithHex.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import "MMRotationManager.h"
 
-@implementation MMScrap{
+@implementation MMScrapView{
     UIBezierPath* path;
     UIView* contentView;
 }
