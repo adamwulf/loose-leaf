@@ -14,4 +14,6 @@
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
 
+-(UIBezierPath*) intersect:(UIBezierPath*)newPath;
+
 @end
