@@ -60,17 +60,6 @@ dispatch_queue_t importThumbnailQueue;
 //        cachedImgView.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:.3];
         [self.contentView addSubview:cachedImgView];
         
-        polygonDebugView = [[MMPolygonDebugView alloc] initWithFrame:self.contentView.bounds];
-//        polygonDebugView.layer.borderColor = [UIColor redColor].CGColor;
-//        polygonDebugView.layer.borderWidth = 10;
-        polygonDebugView.frame = self.contentView.bounds;
-        polygonDebugView.contentMode = UIViewContentModeScaleAspectFill;
-        polygonDebugView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        polygonDebugView.clipsToBounds = YES;
-        polygonDebugView.opaque = NO;
-        polygonDebugView.backgroundColor = [UIColor clearColor];
-        [self.contentView addSubview:polygonDebugView];
-        
         lastSavedUndoHash = [drawableView undoHash];
         
         //
@@ -171,10 +160,30 @@ dispatch_queue_t importThumbnailQueue;
     });
 }
 
+
+-(void) generateDebugView:(BOOL)create{
+    if(create){
+        polygonDebugView = [[MMPolygonDebugView alloc] initWithFrame:self.contentView.bounds];
+        //        polygonDebugView.layer.borderColor = [UIColor redColor].CGColor;
+        //        polygonDebugView.layer.borderWidth = 10;
+        polygonDebugView.frame = self.contentView.bounds;
+        polygonDebugView.contentMode = UIViewContentModeScaleAspectFill;
+        polygonDebugView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        polygonDebugView.clipsToBounds = YES;
+        polygonDebugView.opaque = NO;
+        polygonDebugView.backgroundColor = [UIColor clearColor];
+        [self.contentView addSubview:polygonDebugView];
+    }else{
+        [polygonDebugView removeFromSuperview];
+        polygonDebugView = nil;
+    }
+}
+
 -(void) setDrawableView:(JotView *)_drawableView{
     if(drawableView != _drawableView){
         drawableView = _drawableView;
         if(drawableView){
+            [self generateDebugView:YES];
             [self setFrame:self.frame];
             [self loadStateAsynchronously:YES
                                  withSize:[drawableView pagePixelSize]
@@ -196,6 +205,8 @@ dispatch_queue_t importThumbnailQueue;
                                           }
                                       }];
                                   }];
+        }else{
+            [self generateDebugView:NO];
         }
     }else if(drawableView && state){
         [self setCanvasVisible:YES];
