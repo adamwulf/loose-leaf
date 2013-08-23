@@ -12,4 +12,6 @@
 
 - (id)initWithBezierPath:(UIBezierPath*)path;
 
+-(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
+
 @end

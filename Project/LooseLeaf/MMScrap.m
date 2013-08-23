@@ -9,6 +9,7 @@
 #import "MMScrap.h"
 #import "UIColor+ColorWithHex.h"
 #import <CoreGraphics/CoreGraphics.h>
+#import "MMRotationManager.h"
 
 @implementation MMScrap{
     UIBezierPath* path;
@@ -29,21 +30,27 @@
         contentView = [[UIView alloc] initWithFrame:self.bounds];
         contentView.clipsToBounds = YES;
         contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        contentView.backgroundColor = [UIColor randomColor];
+        contentView.backgroundColor = [UIColor whiteColor];
         CAShapeLayer* maskLayer = [CAShapeLayer layer];
         [maskLayer setPath:path.CGPath];
         contentView.layer.mask = maskLayer;
         [self addSubview:contentView];
         
         self.layer.shadowPath = path.CGPath;
-        self.layer.shadowRadius = 2;
-        self.layer.shadowColor = [UIColor blackColor].CGColor;
-        self.layer.shadowOpacity = 1;
+        self.layer.shadowRadius = 1.5;
+        self.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.5].CGColor;
+        self.layer.shadowOpacity = .65;
         self.layer.shadowOffset = CGSizeMake(0, 0);
         
         self.clipsToBounds = YES;
+        [self didUpdateAccelerometerWithRawReading:[[MMRotationManager sharedInstace] currentRawRotationReading]];
     }
     return self;
+}
+
+-(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading{
+//    NSLog(@"raw: %f  =>  %f,%f", currentRawReading, cosf(currentRawReading)*4, sinf(currentRawReading)*4);
+    self.layer.shadowOffset = CGSizeMake(cosf(currentRawReading)*1, sinf(currentRawReading)*1);
 }
 
 

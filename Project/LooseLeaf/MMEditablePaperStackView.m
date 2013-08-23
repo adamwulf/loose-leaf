@@ -355,6 +355,11 @@
         settingsButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
     }];
 }
+-(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading{
+    [NSThread performBlockOnMainThread:^{
+        [[visibleStackHolder peekSubview] didUpdateAccelerometerWithRawReading:currentRawReading];
+    }];
+}
 
 -(void) willRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient{
     // noop

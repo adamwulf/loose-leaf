@@ -11,13 +11,15 @@
 #import "UIColor+ColorWithHex.h"
 #import "MMScrap.h"
 
-@implementation MMScrappedPaperView
+@implementation MMScrappedPaperView{
+    NSMutableArray* scraps;
+}
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
+    self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
         // Initialization code
+        scraps = [NSMutableArray array];
     }
     return self;
 }
@@ -30,11 +32,18 @@
  */
 -(void) addScrapWithPath:(UIBezierPath*)path{
     UIView* newScrap = [[MMScrap alloc] initWithBezierPath:path];
+    [scraps addObject:newScrap];
     [self.contentView insertSubview:newScrap belowSubview:polygonDebugView];
 }
 
 
+#pragma mark - MMRotationManagerDelegate
 
+-(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading{
+    for(MMScrap* scrap in scraps){
+        [scrap didUpdateAccelerometerWithRawReading:-currentRawReading];
+    }
+}
 
 #pragma mark - PolygonToolDelegate
 
