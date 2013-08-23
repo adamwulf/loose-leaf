@@ -12,6 +12,7 @@
 
 @synthesize delegate;
 @synthesize currentRotationReading;
+@synthesize currentRawRotationReading;
 
 static MMRotationManager* _instance = nil;
 
@@ -26,7 +27,7 @@ static MMRotationManager* _instance = nil;
         opQueue = [[NSOperationQueue alloc] init];
         [opQueue setMaxConcurrentOperationCount:1];
         motionManager = [[CMMotionManager alloc] init];
-        [motionManager setAccelerometerUpdateInterval:10.03];
+        [motionManager setAccelerometerUpdateInterval:0.03];
         [motionManager startAccelerometerUpdatesToQueue:opQueue withHandler:^(CMAccelerometerData* data, NSError* error){
             //
             // if z == -1, x == 0, y == 0
@@ -52,6 +53,8 @@ static MMRotationManager* _instance = nil;
                 isFirstReading = NO;
                 [self.delegate didUpdateAccelerometerWithReading:currentRotationReading];
             }
+            currentRawRotationReading = newRawReading;
+            [self.delegate didUpdateAccelerometerWithRawReading:currentRawRotationReading];
         }];
     }
     return _instance;

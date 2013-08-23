@@ -22,4 +22,6 @@
 -(void) cancelShapeAtPoint:(CGPoint)point;
 
 
+-(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
+
 @end

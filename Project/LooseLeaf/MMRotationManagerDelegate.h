@@ -18,4 +18,6 @@
 
 -(void) didUpdateAccelerometerWithReading:(CGFloat)currentRawReading;
 
+-(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
+
 @end
