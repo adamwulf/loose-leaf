@@ -65,6 +65,7 @@
 		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; };
 		66A471BE17C7DAA000C2A5B6 /* MMScrappedPaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A471BD17C7DAA000C2A5B6 /* MMScrappedPaperView.m */; };
 		66A471C217C7DEF200C2A5B6 /* SYShape+Bezier.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A471C117C7DEF200C2A5B6 /* SYShape+Bezier.m */; };
+		66A471C617C7E06B00C2A5B6 /* MMScrap.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A471C517C7E06B00C2A5B6 /* MMScrap.m */; };
 		66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */; };
 		66A83AF317B2BB3D00488E54 /* MMBackwardCompatible.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A83AF217B2BB3D00488E54 /* MMBackwardCompatible.m */; };
 		66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A55175AFCA70049F1AF /* MMHandButton.m */; };
@@ -278,6 +279,8 @@
 		66A471BD17C7DAA000C2A5B6 /* MMScrappedPaperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrappedPaperView.m; sourceTree = "<group>"; };
 		66A471C017C7DEF200C2A5B6 /* SYShape+Bezier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SYShape+Bezier.h"; sourceTree = "<group>"; };
 		66A471C117C7DEF200C2A5B6 /* SYShape+Bezier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SYShape+Bezier.m"; sourceTree = "<group>"; };
+		66A471C417C7E06B00C2A5B6 /* MMScrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrap.h; sourceTree = "<group>"; };
+		66A471C517C7E06B00C2A5B6 /* MMScrap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrap.m; sourceTree = "<group>"; };
 		66A4BD4416321ABC00C45070 /* NSThread+BlockAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSThread+BlockAdditions.h"; sourceTree = "<group>"; };
 		66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+BlockAdditions.m"; sourceTree = "<group>"; };
 		66A83AF117B2BB3D00488E54 /* MMBackwardCompatible.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMBackwardCompatible.h; path = "DrawKit-iOS/MMBackwardCompatible.h"; sourceTree = "<group>"; };
@@ -587,6 +590,7 @@
 		664C62F115A36DB00072736A /* MMPaperView */ = {
 			isa = PBXGroup;
 			children = (
+				66A471C317C7E05C00C2A5B6 /* Scraps */,
 				66D33F4A15A6408A0044C809 /* MMShadowedView.h */,
 				66D33F4B15A6408A0044C809 /* MMShadowedView.m */,
 				66DCFBCB1582BAED00B4918C /* MMPaperView.h */,
@@ -740,6 +744,15 @@
 				66A471C117C7DEF200C2A5B6 /* SYShape+Bezier.m */,
 			);
 			name = TouchShape;
+			sourceTree = "<group>";
+		};
+		66A471C317C7E05C00C2A5B6 /* Scraps */ = {
+			isa = PBXGroup;
+			children = (
+				66A471C417C7E06B00C2A5B6 /* MMScrap.h */,
+				66A471C517C7E06B00C2A5B6 /* MMScrap.m */,
+			);
+			name = Scraps;
 			sourceTree = "<group>";
 		};
 		66A7462F176B85FD00466AA4 /* Unused */ = {
@@ -1113,6 +1126,7 @@
 				66B843F217B052D4008BF8B8 /* point.cpp in Sources */,
 				66B843F317B052D4008BF8B8 /* rotate.cpp in Sources */,
 				66B843F417B052D4008BF8B8 /* transforms.cpp in Sources */,
+				66A471C617C7E06B00C2A5B6 /* MMScrap.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
