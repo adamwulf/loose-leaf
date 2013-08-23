@@ -10,6 +10,7 @@
 #import "UIView+SubviewStacks.h"
 #import "TestFlight.h"
 #import "MMRulerView.h"
+#import "MMScrappedPaperView.h"
 
 @implementation MMEditablePaperStackView{
     MMEditablePaperView* currentEditablePage;
@@ -298,7 +299,7 @@
  * without changing the hidden stack's contents
  */
 -(void) addPageButtonTapped:(UIButton*)_button{
-    MMEditablePaperView* page = [[MMEditablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+    MMEditablePaperView* page = [[MMScrappedPaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.isBrandNewPage = YES;
     page.delegate = self;
     [hiddenStackHolder pushSubview:page];
@@ -603,14 +604,14 @@
     
     if(![self hasPages]){
         for(int i=0;i<1;i++){
-            MMEditablePaperView* editable = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
+            MMEditablePaperView* editable = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
             [editable setEditable:YES];
             [self addPaperToBottomOfStack:editable];
-            MMEditablePaperView* paper = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
+            MMEditablePaperView* paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
             [self addPaperToBottomOfStack:paper];
-            paper = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
+            paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
             [self addPaperToBottomOfHiddenStack:paper];
-            paper = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
+            paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
             [self addPaperToBottomOfHiddenStack:paper];
         }
         [self saveStacksToDisk];
@@ -698,25 +699,25 @@
 -(void) beginShapeWithTouch:(UITouch*)touch{
     [rulerView willBeginStrokeAt:[touch locationInView:rulerView]];
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
-    MMEditablePaperView* page = [visibleStackHolder peekSubview];
+    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     [page beginShapeAtPoint:[page convertPoint:adjusted fromView:rulerView]];
 }
 
 -(void) continueShapeWithTouch:(UITouch*)touch{
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
-    MMEditablePaperView* page = [visibleStackHolder peekSubview];
+    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     [page continueShapeAtPoint:[page convertPoint:adjusted fromView:rulerView]];
 }
 
 -(void) finishShapeWithTouch:(UITouch*)touch{
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
-    MMEditablePaperView* page = [visibleStackHolder peekSubview];
+    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     [page finishShapeAtPoint:[page convertPoint:adjusted fromView:rulerView]];
 }
 
 -(void) cancelShapeWithTouch:(UITouch*)touch{
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
-    MMEditablePaperView* page = [visibleStackHolder peekSubview];
+    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     [page cancelShapeAtPoint:[page convertPoint:adjusted fromView:rulerView]];
 }
 

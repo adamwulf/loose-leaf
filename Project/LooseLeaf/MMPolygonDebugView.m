@@ -10,6 +10,7 @@
 #import <TouchShape/TouchShape.h>
 #import "DrawKit-iOS.h"
 #import "UIColor+ColorWithHex.h"
+#import "SYShape+Bezier.h"
 
 @implementation MMPolygonDebugView{
     NSMutableArray* touches;
@@ -78,6 +79,12 @@
             shapePath.lineWidth = width;
             [shapePath stroke];
             width -= 2;
+            
+            NSLog(@"origin: %f,%f", shapePath.bounds.origin.x, shapePath.bounds.origin.y);
+            
+            UIBezierPath* bounds = [UIBezierPath bezierPathWithRect:shapePath.bounds];
+            bounds.lineWidth = 1;
+            [bounds stroke];
         }
     }
     
@@ -95,8 +102,11 @@
     
 }
 
--(void) complete{
-    if(![touches count]) return;
+/**
+ * returns an array of all bezier paths created
+ */
+-(NSArray*) complete{
+    if(![touches count]) return nil;
     
     //
     //
@@ -171,6 +181,8 @@
         }
     }
     [self setNeedsDisplay];
+    
+    return [NSArray arrayWithArray:shapePaths];
 }
 
 
