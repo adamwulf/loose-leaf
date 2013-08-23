@@ -63,6 +63,8 @@
 		66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D3F1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A3A6BB1791F18900D8FE1D /* UIDevice+PPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3A6BA1791F18900D8FE1D /* UIDevice+PPI.m */; };
 		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; };
+		66A471BE17C7DAA000C2A5B6 /* MMScrappedPaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A471BD17C7DAA000C2A5B6 /* MMScrappedPaperView.m */; };
+		66A471C217C7DEF200C2A5B6 /* SYShape+Bezier.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A471C117C7DEF200C2A5B6 /* SYShape+Bezier.m */; };
 		66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */; };
 		66A83AF317B2BB3D00488E54 /* MMBackwardCompatible.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A83AF217B2BB3D00488E54 /* MMBackwardCompatible.m */; };
 		66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A55175AFCA70049F1AF /* MMHandButton.m */; };
@@ -272,6 +274,10 @@
 		66A3AF8C15913B5E00F8A7A6 /* NSMutableSet+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableSet+Extras.h"; sourceTree = "<group>"; };
 		66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableSet+Extras.m"; sourceTree = "<group>"; };
 		66A43CB917B96E4C0094EE62 /* com.milestonemade.looseleaf 2013-08-11 15.38.49.227.xcappdata */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "com.milestonemade.looseleaf 2013-08-11 15.38.49.227.xcappdata"; path = "../../TestData/com.milestonemade.looseleaf 2013-08-11 15.38.49.227.xcappdata"; sourceTree = "<group>"; };
+		66A471BC17C7DAA000C2A5B6 /* MMScrappedPaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrappedPaperView.h; sourceTree = "<group>"; };
+		66A471BD17C7DAA000C2A5B6 /* MMScrappedPaperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrappedPaperView.m; sourceTree = "<group>"; };
+		66A471C017C7DEF200C2A5B6 /* SYShape+Bezier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SYShape+Bezier.h"; sourceTree = "<group>"; };
+		66A471C117C7DEF200C2A5B6 /* SYShape+Bezier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SYShape+Bezier.m"; sourceTree = "<group>"; };
 		66A4BD4416321ABC00C45070 /* NSThread+BlockAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSThread+BlockAdditions.h"; sourceTree = "<group>"; };
 		66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+BlockAdditions.m"; sourceTree = "<group>"; };
 		66A83AF117B2BB3D00488E54 /* MMBackwardCompatible.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMBackwardCompatible.h; path = "DrawKit-iOS/MMBackwardCompatible.h"; sourceTree = "<group>"; };
@@ -588,6 +594,8 @@
 				6695B6EA17505FBF0069E61F /* MMEditablePaperView.h */,
 				6695B6EB17505FBF0069E61F /* MMEditablePaperView.m */,
 				66C47DA5158EF03200E2CD0C /* MMPaperViewDelegate.h */,
+				66A471BC17C7DAA000C2A5B6 /* MMScrappedPaperView.h */,
+				66A471BD17C7DAA000C2A5B6 /* MMScrappedPaperView.m */,
 			);
 			name = MMPaperView;
 			sourceTree = "<group>";
@@ -725,6 +733,15 @@
 			name = "Page Navigation";
 			sourceTree = "<group>";
 		};
+		66A471BF17C7DED500C2A5B6 /* TouchShape */ = {
+			isa = PBXGroup;
+			children = (
+				66A471C017C7DEF200C2A5B6 /* SYShape+Bezier.h */,
+				66A471C117C7DEF200C2A5B6 /* SYShape+Bezier.m */,
+			);
+			name = TouchShape;
+			sourceTree = "<group>";
+		};
 		66A7462F176B85FD00466AA4 /* Unused */ = {
 			isa = PBXGroup;
 			children = (
@@ -815,6 +832,7 @@
 		66DCFB7B1581BCED00B4918C = {
 			isa = PBXGroup;
 			children = (
+				66A471BF17C7DED500C2A5B6 /* TouchShape */,
 				6648954117B050F90001829C /* DrawKit */,
 				66DCFB901581BCEF00B4918C /* Loose Leaf */,
 				6641F9D617B81D630000489F /* Test Data */,
@@ -1063,6 +1081,7 @@
 				66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */,
 				6695B6EC17505FBF0069E61F /* MMEditablePaperView.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
+				66A471C217C7DEF200C2A5B6 /* SYShape+Bezier.m in Sources */,
 				66B3522517A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m in Sources */,
 				663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */,
 				663C187D1755B63D00706A05 /* Eraser.m in Sources */,
@@ -1083,6 +1102,7 @@
 				66B843E817B052A6008BF8B8 /* gpc.c in Sources */,
 				66B843E917B052B7008BF8B8 /* UIBezierPath+GPC.m in Sources */,
 				66B843EA17B052B7008BF8B8 /* UIBezierPath+Editing.m in Sources */,
+				66A471BE17C7DAA000C2A5B6 /* MMScrappedPaperView.m in Sources */,
 				66B843EB17B052B7008BF8B8 /* UIBezierPath+Geometry.m in Sources */,
 				66B843EC17B052B7008BF8B8 /* UIBezierPath+NSOSX.m in Sources */,
 				66B843ED17B052B7008BF8B8 /* UIBezierPath+Ahmed.m in Sources */,

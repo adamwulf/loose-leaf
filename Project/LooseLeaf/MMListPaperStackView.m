@@ -10,6 +10,7 @@
 #import "UIView+Debug.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMShadowManager.h"
+#import "MMScrappedPaperView.h"
 
 @implementation MMListPaperStackView
 
@@ -89,7 +90,7 @@
 -(void) didTapAddButtonInListView{
     //
     // this'll determine the resolution of the canvas too
-    MMEditablePaperView* paper = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
+    MMEditablePaperView* paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
     // now size it for display
     paper.frame = addPageButtonInListView.frame;
     [self addPaperToBottomOfHiddenStack:paper];

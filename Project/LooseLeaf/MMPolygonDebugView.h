@@ -14,6 +14,6 @@
 
 -(void) clear;
 
--(void) complete;
+-(NSArray*) complete;
 
 @end

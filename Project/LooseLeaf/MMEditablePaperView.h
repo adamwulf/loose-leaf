@@ -10,7 +10,6 @@
 #import <JotUI/JotUI.h>
 #import <TouchShape/TouchShape.h>
 #import "MMRulerToolGestureRecognizer.h"
-#import "PolygonToolDelegate.h"
 #import "MMPolygonDebugView.h"
 
 @interface MMEditablePaperView : MMPaperView<JotViewDelegate>{
@@ -35,11 +34,5 @@
 -(void) setEditable:(BOOL)isEditable;
 
 
-
-// debug
--(void) beginShapeAtPoint:(CGPoint)point;
--(void) continueShapeAtPoint:(CGPoint)point;
--(void) finishShapeAtPoint:(CGPoint)point;
--(void) cancelShapeAtPoint:(CGPoint)point;
 
 @end

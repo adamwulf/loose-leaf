@@ -11,6 +11,7 @@
 #import "MMShadowManager.h"
 #import "NSThread+BlockAdditions.h"
 #import "TestFlight.h"
+#import "MMScrappedPaperView.h"
 
 @implementation MMPaperStackView
 
@@ -74,7 +75,7 @@
  */
 -(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(UIView*)stackView{
     while([stackView.subviews count] < numberOfPagesToEnsure){
-        MMEditablePaperView* page = [[MMEditablePaperView alloc] initWithFrame:stackView.bounds];
+        MMEditablePaperView* page = [[MMScrappedPaperView alloc] initWithFrame:stackView.bounds];
         page.isBrandNewPage = YES;
         page.delegate = self;
         [stackView addSubviewToBottomOfStack:page];

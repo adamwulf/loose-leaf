@@ -57,7 +57,6 @@ dispatch_queue_t importThumbnailQueue;
         cachedImgView.contentMode = UIViewContentModeScaleAspectFill;
         cachedImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         cachedImgView.clipsToBounds = YES;
-//        cachedImgView.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:.3];
         [self.contentView addSubview:cachedImgView];
         
         lastSavedUndoHash = [drawableView undoHash];
@@ -193,7 +192,7 @@ dispatch_queue_t importThumbnailQueue;
                                           if([self.delegate isPageEditable:self]){
                                               [drawableView loadState:state];
                                               lastSavedUndoHash = [drawableView undoHash];
-                                              [self.contentView addSubview:drawableView];
+                                              [self.contentView insertSubview:drawableView aboveSubview:cachedImgView];
                                               // anchor the view to the top left,
                                               // so that when we scale down, the drawable view
                                               // stays in place
@@ -409,44 +408,6 @@ dispatch_queue_t importThumbnailQueue;
     }
 
     return croppedElements;
-}
-
-#pragma mark - PolygonToolDelegate
-
--(void) beginShapeAtPoint:(CGPoint)point{
-    // send touch event to the view that
-    // will display the drawn polygon line
-    NSLog(@"begin");
-    [polygonDebugView clear];
-    
-    [polygonDebugView addTouchPoint:point];
-}
-
--(void) continueShapeAtPoint:(CGPoint)point{
-    // noop for now
-    // send touch event to the view that
-    // will display the drawn polygon line
-    [polygonDebugView addTouchPoint:point];
-}
-
--(void) finishShapeAtPoint:(CGPoint)point{
-    // send touch event to the view that
-    // will display the drawn polygon line
-    //
-    // and also process the touches into the new
-    // scrap polygon shape, and add that shape
-    // to the page
-    NSLog(@"finish");
-    [polygonDebugView addTouchPoint:point];
-    [polygonDebugView complete];
-}
-
--(void) cancelShapeAtPoint:(CGPoint)point{
-    // we've cancelled the polygon (possibly b/c
-    // it was a pan/pinch instead), so clear
-    // the drawn polygon and reset.
-    NSLog(@"cancel");
-    [polygonDebugView clear];
 }
 
 
