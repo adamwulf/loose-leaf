@@ -16,7 +16,10 @@
 @implementation MMScrapView{
     UIBezierPath* path;
     UIView* contentView;
+    CGPoint unscaledOrigin;
 }
+
+@synthesize unscaledOrigin;
 
 - (id)initWithBezierPath:(UIBezierPath*)_path
 {
@@ -26,6 +29,7 @@
 
     // twice the shadow
     if ((self = [super initWithFrame:CGRectInset(originalBounds, -4, -4)])) {
+        unscaledOrigin = self.frame.origin;
         // Initialization code
         path = _path;
         

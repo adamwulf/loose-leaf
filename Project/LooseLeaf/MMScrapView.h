@@ -10,6 +10,8 @@
 
 @interface MMScrapView : UIView
 
+@property (readonly) CGPoint unscaledOrigin;
+
 - (id)initWithBezierPath:(UIBezierPath*)path;
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;

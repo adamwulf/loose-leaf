@@ -10,9 +10,11 @@
 #import "PolygonToolDelegate.h"
 #import "UIColor+ColorWithHex.h"
 #import "MMScrapView.h"
+#import "MMScrapContainerView.h"
 
 @implementation MMScrappedPaperView{
     NSMutableArray* scraps;
+    UIView* scrapContainerView;
 }
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
@@ -20,6 +22,13 @@
     if (self) {
         // Initialization code
         scraps = [NSMutableArray array];
+        scrapContainerView = [[MMScrapContainerView alloc] initWithFrame:self.bounds];
+        [self.contentView addSubview:scrapContainerView];
+        // anchor the view to the top left,
+        // so that when we scale down, the drawable view
+        // stays in place
+        scrapContainerView.layer.anchorPoint = CGPointMake(0,0);
+        scrapContainerView.layer.position = CGPointMake(0,0);
     }
     return self;
 }
@@ -33,9 +42,16 @@
 -(void) addScrapWithPath:(UIBezierPath*)path{
     UIView* newScrap = [[MMScrapView alloc] initWithBezierPath:path];
     [scraps addObject:newScrap];
-    [self.contentView insertSubview:newScrap belowSubview:polygonDebugView];
+    [scrapContainerView addSubview:newScrap];
 }
 
+#pragma mark - Pinch and Zoom
+
+-(void) setFrame:(CGRect)frame{
+    [super setFrame:frame];
+    CGFloat _scale = frame.size.width / self.superview.frame.size.width;
+    scrapContainerView.transform = CGAffineTransformMakeScale(_scale, _scale);
+}
 
 #pragma mark - MMRotationManagerDelegate
 
