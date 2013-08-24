@@ -17,9 +17,17 @@
     UIBezierPath* path;
     UIView* contentView;
     CGPoint unscaledOrigin;
+    CGFloat preGestureScale;
+    CGFloat preGestureRotation;
+    CGFloat scale;
+    CGFloat rotation;
 }
 
 @synthesize unscaledOrigin;
+@synthesize preGestureScale;
+@synthesize preGestureRotation;
+@synthesize scale;
+@synthesize rotation;
 
 - (id)initWithBezierPath:(UIBezierPath*)_path
 {
@@ -30,6 +38,7 @@
     // twice the shadow
     if ((self = [super initWithFrame:CGRectInset(originalBounds, -4, -4)])) {
         unscaledOrigin = self.frame.origin;
+        scale = 1;
         // Initialization code
         path = _path;
         
@@ -63,6 +72,23 @@
 -(BOOL) containsTouch:(UITouch*)touch{
     CGPoint locationOfTouch = [touch locationInView:self];
     return [path containsPoint:locationOfTouch];
+}
+
+-(void) setScale:(CGFloat)_scale{
+    if(_scale > 2) _scale = 2;
+    if(_scale * self.bounds.size.width < 100){
+        _scale = 100 / self.bounds.size.width;
+    }
+    if(_scale * self.bounds.size.height < 100){
+        _scale = 100 / self.bounds.size.height;
+    }
+    scale = _scale;
+    self.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(rotation),CGAffineTransformMakeScale(scale, scale));
+}
+
+-(void) setRotation:(CGFloat)_rotation{
+    rotation = _rotation;    
+    self.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(rotation),CGAffineTransformMakeScale(scale, scale));
 }
 
 

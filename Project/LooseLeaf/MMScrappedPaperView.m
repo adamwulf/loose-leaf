@@ -71,6 +71,8 @@
                 scrapContainsAllTouches = scrapContainsAllTouches && [scrap containsTouch:touch];
             }
             if(scrapContainsAllTouches){
+                scrap.preGestureScale = scrap.scale;
+                scrap.preGestureRotation = scrap.rotation;
                 _panGesture.scrap = scrap;
                 break;
             }
@@ -78,10 +80,16 @@
         
         if(_panGesture.scrap){
             NSLog(@"gotcha!");
-            [self.delegate isBeginning:(_panGesture.state == UIGestureRecognizerStateBegan) toPanAndScaleScrap:_panGesture.scrap withTouches:_panGesture.touches];
         }
     }
-    if(!_panGesture.scrap){
+    if(_panGesture.scrap){
+        // handle the scrap
+        MMScrapView* scrap = _panGesture.scrap;
+        scrap.scale = _panGesture.scale * scrap.preGestureScale;
+        scrap.rotation = _panGesture.rotation + scrap.preGestureRotation;
+        [self.delegate isBeginning:(_panGesture.state == UIGestureRecognizerStateBegan) toPanAndScaleScrap:_panGesture.scrap withTouches:_panGesture.touches];
+        NSLog(@"center: %f %f", scrap.center.x, scrap.center.y);
+    }else{
         [super panAndScale:_panGesture];
     }
 }

@@ -70,6 +70,10 @@
     return [MMVector vectorWithX:-y andY:x];
 }
 
+-(CGFloat) magnitude{
+    return sqrtf(self.x * self.x + self.y*self.y);
+}
+
 -(MMVector*) flip{
     // perp just swaps the x and y
     return [MMVector vectorWithX:-x andY:-y];
@@ -115,6 +119,26 @@
     y2  = b * (point.x - x0) - a*(point.y - y0) + y0;
     
     return CGPointMake(x2, y2);
+}
+
+-(CGFloat) angleBetween:(MMVector*)otherVector{
+    // angle with +ve x-axis, in the range (−π, π]
+    float thetaA = atan2(otherVector.x, otherVector.y);
+    float thetaB = atan2(self.x, self.y);
+    
+    float thetaAB = thetaB - thetaA;
+    
+    // get in range (−π, π]
+    while (thetaAB <= - M_PI)
+        thetaAB += 2 * M_PI;
+    
+    while (thetaAB > M_PI)
+        thetaAB -= 2 * M_PI;
+    
+    return thetaAB;
+    
+    CGFloat scaler = self.x * otherVector.x + self.y * otherVector.y;
+    return acosf(scaler / (self.magnitude * otherVector.magnitude));
 }
 
 

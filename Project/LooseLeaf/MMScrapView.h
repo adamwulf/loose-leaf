@@ -11,13 +11,16 @@
 @interface MMScrapView : UIView
 
 @property (readonly) CGPoint unscaledOrigin;
+@property (assign) CGFloat preGestureScale;
+@property (assign) CGFloat preGestureRotation;
+@property (nonatomic, assign) CGFloat scale;
+@property (nonatomic, assign) CGFloat rotation;
 
 - (id)initWithBezierPath:(UIBezierPath*)path;
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
 
 -(BOOL) containsTouch:(UITouch*)touch;
-
 
 #pragma mark - debug
 -(UIBezierPath*) intersect:(UIBezierPath*)newPath;

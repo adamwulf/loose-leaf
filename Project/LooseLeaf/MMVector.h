@@ -29,6 +29,8 @@
 
 -(MMVector*) flip;
 
+-(CGFloat) magnitude;
+
 -(CGFloat) angle;
 
 -(CGPoint) pointFromPoint:(CGPoint)point distance:(CGFloat)distance;
@@ -40,5 +42,7 @@
 -(MMVector*) mirrorAround:(MMVector*)normal;
 
 -(CGPoint) mirrorPoint:(CGPoint)point aroundPoint:(CGPoint)startPoint;
+
+-(CGFloat) angleBetween:(MMVector*)otherVector;
 
 @end

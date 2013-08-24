@@ -47,6 +47,7 @@
 
 @property (readonly) NSArray* touches;
 @property (nonatomic, readonly) CGFloat scale;
+@property (nonatomic, readonly) CGFloat rotation;
 @property (nonatomic, readonly) CGPoint velocity;
 @property (nonatomic, assign) MMBezelDirection bezelDirectionMask;
 @property (nonatomic, readonly) MMBezelDirection didExitToBezel;
