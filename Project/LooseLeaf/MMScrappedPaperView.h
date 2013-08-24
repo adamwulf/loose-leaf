@@ -15,6 +15,8 @@
  */
 @interface MMScrappedPaperView : MMEditablePaperView
 
+@property (readonly) NSArray* scraps;
+
 // debug
 -(void) beginShapeAtPoint:(CGPoint)point;
 -(void) continueShapeAtPoint:(CGPoint)point;

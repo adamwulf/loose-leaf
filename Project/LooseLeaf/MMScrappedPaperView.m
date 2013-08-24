@@ -34,6 +34,8 @@
 }
 
 
+#pragma mark - Scraps
+
 /**
  * the input path contains the offset
  * and size of the new scrap from its
@@ -45,6 +47,10 @@
     [scrapContainerView addSubview:newScrap];
 }
 
+-(NSArray*) scraps{
+    return [NSArray arrayWithArray:scraps];
+}
+
 #pragma mark - Pinch and Zoom
 
 -(void) setFrame:(CGRect)frame{
@@ -52,6 +58,34 @@
     CGFloat _scale = frame.size.width / self.superview.frame.size.width;
     scrapContainerView.transform = CGAffineTransformMakeScale(_scale, _scale);
 }
+
+#pragma mark - Pan and Scale
+
+-(void) panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture{
+    if(_panGesture.state == UIGestureRecognizerStateBegan){
+        // ok, we just started, let's decide if we're looking at a scrap
+        for(MMScrapView* scrap in scraps){
+            BOOL scrapContainsAllTouches = YES;
+            for(UITouch* touch in _panGesture.touches){
+                // decide if all these touches land in scrap
+                scrapContainsAllTouches = scrapContainsAllTouches && [scrap containsTouch:touch];
+            }
+            if(scrapContainsAllTouches){
+                _panGesture.scrap = scrap;
+                break;
+            }
+        }
+        
+        if(_panGesture.scrap){
+            NSLog(@"gotcha!");
+            [self.delegate isBeginning:(_panGesture.state == UIGestureRecognizerStateBegan) toPanAndScaleScrap:_panGesture.scrap withTouches:_panGesture.touches];
+        }
+    }
+    if(!_panGesture.scrap){
+        [super panAndScale:_panGesture];
+    }
+}
+
 
 #pragma mark - MMRotationManagerDelegate
 

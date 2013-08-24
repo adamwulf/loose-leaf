@@ -1139,6 +1139,10 @@
     }
 }
 
+-(void) isBeginning:(BOOL)isBeginningGesture toPanAndScaleScrap:(MMScrapView*)scrap withTouches:(NSArray*)touches{
+    // noop
+}
+
 -(void) isBeginningToScaleReallySmall:(MMPaperView *)page{
     [self updateIconAnimations];
 }

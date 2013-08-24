@@ -16,6 +16,10 @@
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
 
+-(BOOL) containsTouch:(UITouch*)touch;
+
+
+#pragma mark - debug
 -(UIBezierPath*) intersect:(UIBezierPath*)newPath;
 
 @end

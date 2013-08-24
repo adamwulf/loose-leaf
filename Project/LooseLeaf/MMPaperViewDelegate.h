@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <JotUI/JotUI.h>
 
-@class MMPaperView,MMRulerToolGestureRecognizer;
+@class MMPaperView,MMRulerToolGestureRecognizer,MMScrapView;
 
 @protocol MMPaperViewDelegate <JotViewDelegate>
 
@@ -37,6 +37,12 @@
  * animation of "throwing" the page can be calculated
  */
 -(void) finishedPanningAndScalingPage:(MMPaperView*)page intoBezel:(MMBezelDirection)direction fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withVelocity:(CGPoint)velocity;
+
+/**
+ * a notification that the page is beginning to move a scrap
+ * of paper on the page
+ */
+-(void) isBeginning:(BOOL)isBeginningGesture toPanAndScaleScrap:(MMScrapView*)scrap withTouches:(NSArray*)touches;
 
 /**
  * this is triggered when the page has been scaled small

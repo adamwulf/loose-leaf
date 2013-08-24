@@ -16,13 +16,16 @@
 #import "MMShadowedView.h"
 #import <JotUI/JotUI.h>
 
-@implementation MMPanAndPinchGestureRecognizer
+@implementation MMPanAndPinchGestureRecognizer{
+    MMScrapView* scrap;
+}
 
 @synthesize scale;
 @synthesize bezelDirectionMask;
 @synthesize didExitToBezel;
 @synthesize velocity = _averageVelocity;
 @synthesize scaleDirection;
+@synthesize scrap;
 
 NSInteger const  minimumNumberOfTouches = 2;
 
@@ -239,6 +242,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     scaleDirection = MMScaleDirectionNone;
     [velocities removeAllObjects];
     secondToLastTouchDidBezel = NO;
+    scrap = nil;
 }
 
 -(void) cancel{
