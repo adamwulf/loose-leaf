@@ -60,6 +60,14 @@
 }
 
 
+-(BOOL) containsTouch:(UITouch*)touch{
+    CGPoint locationOfTouch = [touch locationInView:self];
+    return [path containsPoint:locationOfTouch];
+}
+
+
+
+#pragma mark - Debug
 
 // just a debug method to test difference and intersection
 // operations on a path

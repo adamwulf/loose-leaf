@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "Constants.h"
+#import "MMScrapView.h"
 
 @interface MMPanAndPinchGestureRecognizer : UIGestureRecognizer{
     //
@@ -50,6 +51,7 @@
 @property (nonatomic, assign) MMBezelDirection bezelDirectionMask;
 @property (nonatomic, readonly) MMBezelDirection didExitToBezel;
 @property (nonatomic, readonly) MMBezelScaleDirection scaleDirection;
+@property (nonatomic, weak) MMScrapView* scrap;
 
 -(void) cancel;
 -(BOOL) containsTouch:(UITouch*)touch;
