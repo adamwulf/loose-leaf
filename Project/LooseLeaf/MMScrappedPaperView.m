@@ -77,11 +77,11 @@
     [polygonDebugView clear];
 
     for(UIBezierPath* shape in shapes){
-        if([scraps count]){
-            [[scraps objectAtIndex:0] intersect:shape];
-        }else{
+//        if([scraps count]){
+//            [[scraps objectAtIndex:0] intersect:shape];
+//        }else{
             [self addScrapWithPath:[shape copy]];
-        }
+//        }
     }
     
 }
