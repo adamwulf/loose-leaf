@@ -29,9 +29,8 @@
 			<array>
 				<string>Loose-Leaf-Icon7</string>
 				<string>Loose-Leaf-Icon</string>
-				<string>Loose-Leaf_144</string>
-				<string>Loose-Leaf_72.png</string>
-				<string>Loose-Leaf_144.png</string>
+				<string>Loose-Leaf-Icon144</string>
+				<string>Loose-Leaf-Icon72.png</string>
 			</array>
 			<key>UIPrerenderedIcon</key>
 			<true/>

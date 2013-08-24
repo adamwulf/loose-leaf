@@ -176,9 +176,13 @@
         // so see if it can recognize a shape
         SYShape* shape = [shapeMaker getFigurePaintedWithTolerance:0.0000001 andContinuity:0];
         if(shape){
-            UIBezierPath* shapePath = [shape bezierPath];
-            [shapePaths addObject:shapePath];
-            NSLog(@"got shape");
+            if(shape.closeCurve){
+                UIBezierPath* shapePath = [shape bezierPath];
+                [shapePaths addObject:shapePath];
+                NSLog(@"got shape");
+            }else{
+                NSLog(@"skipping unclosed shape");
+            }
         }else{
             // why does this happen so often? it seems to have a problem
             // when the curve starts and stops on the exact same CGPoint
