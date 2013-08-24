@@ -103,6 +103,9 @@
     [super setFrame:_frame];
 }
 
+
+#pragma mark - Gestures
+
 -(void) longPress:(UILongPressGestureRecognizer*)pressGesture{
     debug_NSLog(@"long press!!!!! %d", pressGesture.state);
 }
