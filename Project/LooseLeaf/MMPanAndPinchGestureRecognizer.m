@@ -15,9 +15,12 @@
 #import "NSArray+MapReduce.h"
 #import "MMShadowedView.h"
 #import <JotUI/JotUI.h>
+#import "MMVector.h"
 
 @implementation MMPanAndPinchGestureRecognizer{
     MMScrapView* scrap;
+    CGFloat rotation;
+    MMVector* initialTouchVector;
 }
 
 @synthesize scale;
@@ -26,6 +29,7 @@
 @synthesize velocity = _averageVelocity;
 @synthesize scaleDirection;
 @synthesize scrap;
+@synthesize rotation;
 
 NSInteger const  minimumNumberOfTouches = 2;
 
@@ -103,8 +107,15 @@ NSInteger const  minimumNumberOfTouches = 2;
         [validTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
         if([validTouches count] >= minimumNumberOfTouches && self.state == UIGestureRecognizerStatePossible){
             self.state = UIGestureRecognizerStateBegan;
+            
+            CGPoint p1 = [[validTouches firstObject] locationInView:self.view];
+            CGPoint p2 = [[validTouches objectAtIndex:1] locationInView:self.view];
+            initialTouchVector = [[MMVector alloc] initWithPoint:p1 andPoint:p2];
+            rotation = 0;
+            
         }else if([validTouches count] <= minimumNumberOfTouches){
             didExitToBezel = MMBezelDirectionNone;
+            initialTouchVector = nil;
             //
             // ok, they just bezelled and brought their second
             // touch back into the screen. reset the flag
@@ -141,6 +152,16 @@ NSInteger const  minimumNumberOfTouches = 2;
                 scaleDirection = MMScaleDirectionSmaller;
             }
             scale = newScale;
+        }
+        if([validTouches count] >= 2){
+            CGPoint p1 = [[validTouches firstObject] locationInView:self.view];
+            CGPoint p2 = [[validTouches objectAtIndex:1] locationInView:self.view];
+            MMVector* currentVector = [[MMVector alloc] initWithPoint:p1 andPoint:p2];
+            CGFloat diff = [initialTouchVector angleBetween:currentVector];
+            NSLog(@"diff angle: %f", diff);
+            rotation += diff;
+            initialTouchVector = currentVector;
+            
         }
     }
     [self calculateVelocity];
