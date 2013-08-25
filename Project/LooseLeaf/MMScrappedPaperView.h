@@ -7,6 +7,7 @@
 //
 
 #import "MMEditablePaperView.h"
+#import "MMPanAndPinchScrapGestureRecognizer.h"
 
 
 /**
