@@ -15,6 +15,7 @@
 @implementation MMScrappedPaperView{
     NSMutableArray* scraps;
     UIView* scrapContainerView;
+    MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture;
 }
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
@@ -29,6 +30,12 @@
         // stays in place
         scrapContainerView.layer.anchorPoint = CGPointMake(0,0);
         scrapContainerView.layer.position = CGPointMake(0,0);
+
+        panAndPinchScrapGesture = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
+        
+        [panAndPinchScrapGesture requireGestureRecognizerToFail:longPress];
+        [panAndPinchScrapGesture requireGestureRecognizerToFail:tap];
+        [self addGestureRecognizer:panAndPinchScrapGesture];
     }
     return self;
 }
@@ -59,38 +66,37 @@
     scrapContainerView.transform = CGAffineTransformMakeScale(_scale, _scale);
 }
 
-#pragma mark - Pan and Scale
+#pragma mark - Pan and Scale Scraps
 
--(void) panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture{
-    if(_panGesture.state == UIGestureRecognizerStateBegan){
+-(void) panAndScaleScrap:(MMPanAndPinchScrapGestureRecognizer*)_panGesture{
+    MMPanAndPinchScrapGestureRecognizer* gesture = (MMPanAndPinchScrapGestureRecognizer*)_panGesture;
+    if(gesture.state == UIGestureRecognizerStateBegan){
         // ok, we just started, let's decide if we're looking at a scrap
         for(MMScrapView* scrap in scraps){
             BOOL scrapContainsAllTouches = YES;
-            for(UITouch* touch in _panGesture.touches){
+            for(UITouch* touch in gesture.touches){
                 // decide if all these touches land in scrap
                 scrapContainsAllTouches = scrapContainsAllTouches && [scrap containsTouch:touch];
             }
             if(scrapContainsAllTouches){
                 scrap.preGestureScale = scrap.scale;
                 scrap.preGestureRotation = scrap.rotation;
-                _panGesture.scrap = scrap;
+                gesture.scrap = scrap;
                 break;
             }
         }
         
-        if(_panGesture.scrap){
+        if(gesture.scrap){
             NSLog(@"gotcha!");
         }
     }
-    if(_panGesture.scrap){
+    if(gesture.scrap){
         // handle the scrap
-        MMScrapView* scrap = _panGesture.scrap;
-        scrap.scale = _panGesture.scale * scrap.preGestureScale;
-        scrap.rotation = _panGesture.rotation + scrap.preGestureRotation;
-        [self.delegate isBeginning:(_panGesture.state == UIGestureRecognizerStateBegan) toPanAndScaleScrap:_panGesture.scrap withTouches:_panGesture.touches];
+        MMScrapView* scrap = gesture.scrap;
+        scrap.scale = gesture.scale * scrap.preGestureScale;
+        scrap.rotation = gesture.rotation + scrap.preGestureRotation;
+        [self.delegate isBeginning:(gesture.state == UIGestureRecognizerStateBegan) toPanAndScaleScrap:gesture.scrap withTouches:gesture.touches];
         NSLog(@"center: %f %f", scrap.center.x, scrap.center.y);
-    }else{
-        [super panAndScale:_panGesture];
     }
 }
 

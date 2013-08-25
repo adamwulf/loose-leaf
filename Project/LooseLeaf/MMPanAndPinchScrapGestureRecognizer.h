@@ -1,9 +1,9 @@
 //
-//  MMPanAndPinchGestureRecognizer.h
-//  Loose Leaf
+//  MMPanAndPinchScrapGestureRecognizer.h
+//  LooseLeaf
 //
-//  Created by Adam Wulf on 6/8/12.
-//  Copyright (c) 2012 Milestone Made, LLC. All rights reserved.
+//  Created by Adam Wulf on 8/25/13.
+//  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -11,16 +11,12 @@
 #import "Constants.h"
 #import "MMScrapView.h"
 
-@interface MMPanAndPinchGestureRecognizer : UIGestureRecognizer{
-    //
+@interface MMPanAndPinchScrapGestureRecognizer : UIGestureRecognizer{
     // the initial distance between
     // the touches. to be used to calculate
     // scale
     CGFloat initialDistance;
-    //
-    // the current scale of the gesture
-    CGFloat scale;
-    //
+
     // the collection of valid touches for this gesture
     NSMutableSet* ignoredTouches;
     NSMutableOrderedSet* validTouches;
@@ -33,12 +29,6 @@
     MMBezelScaleDirection scaleDirection;
     
     //
-    // store panning velocity so we can continue
-    // the animation after the gesture ends
-    NSMutableArray* velocities;
-    CGPoint _averageVelocity;
-
-    //
     // don't allow both the 2nd to last touch
     // and the last touch to trigger a repeat
     // of the bezel
@@ -47,12 +37,8 @@
 
 @property (readonly) NSArray* touches;
 @property (nonatomic, readonly) CGFloat scale;
-@property (nonatomic, readonly) CGPoint velocity;
-@property (nonatomic, assign) MMBezelDirection bezelDirectionMask;
-@property (nonatomic, readonly) MMBezelDirection didExitToBezel;
-@property (nonatomic, readonly) MMBezelScaleDirection scaleDirection;
+@property (nonatomic, readonly) CGFloat rotation;
+@property (nonatomic, weak) MMScrapView* scrap;
 
--(void) cancel;
--(BOOL) containsTouch:(UITouch*)touch;
 
 @end
