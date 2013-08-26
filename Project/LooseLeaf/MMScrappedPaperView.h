@@ -8,13 +8,14 @@
 
 #import "MMEditablePaperView.h"
 #import "MMPanAndPinchScrapGestureRecognizer.h"
+#import "MMPanAndPinchScrapGestureRecognizerDelegate.h"
 
 
 /**
  * the purpose of this subclass is to encompass all of the
  * scrap functionality for a page
  */
-@interface MMScrappedPaperView : MMEditablePaperView
+@interface MMScrappedPaperView : MMEditablePaperView<MMPanAndPinchScrapGestureRecognizerDelegate>
 
 @property (readonly) NSArray* scraps;
 

@@ -10,6 +10,7 @@
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "Constants.h"
 #import "MMScrapView.h"
+#import "MMPanAndPinchScrapGestureRecognizerDelegate.h"
 
 @interface MMPanAndPinchScrapGestureRecognizer : UIGestureRecognizer{
     // the initial distance between
@@ -33,8 +34,11 @@
     // and the last touch to trigger a repeat
     // of the bezel
     BOOL secondToLastTouchDidBezel;
+    
+    __weak NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>* scrapDelegate;
 }
 
+@property (nonatomic, weak) NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>* scrapDelegate;
 @property (readonly) NSArray* touches;
 @property (nonatomic, readonly) CGFloat scale;
 @property (nonatomic, readonly) CGFloat rotation;
