@@ -16,16 +16,10 @@
 @implementation MMScrapView{
     UIBezierPath* path;
     UIView* contentView;
-    CGPoint unscaledOrigin;
-    CGFloat preGestureScale;
-    CGFloat preGestureRotation;
     CGFloat scale;
     CGFloat rotation;
 }
 
-@synthesize unscaledOrigin;
-@synthesize preGestureScale;
-@synthesize preGestureRotation;
 @synthesize scale;
 @synthesize rotation;
 
@@ -37,7 +31,6 @@
 
     // twice the shadow
     if ((self = [super initWithFrame:CGRectInset(originalBounds, -4, -4)])) {
-        unscaledOrigin = self.frame.origin;
         scale = 1;
         // Initialization code
         path = _path;
@@ -61,6 +54,14 @@
         [self didUpdateAccelerometerWithRawReading:[[MMRotationManager sharedInstace] currentRawRotationReading]];
     }
     return self;
+}
+
+-(UIBezierPath*) bezierPath{
+    return path;
+}
+
+-(void) setBackgroundColor:(UIColor *)backgroundColor{
+    contentView.backgroundColor = backgroundColor;
 }
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading{

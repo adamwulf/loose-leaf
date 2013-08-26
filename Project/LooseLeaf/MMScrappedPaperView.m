@@ -11,6 +11,8 @@
 #import "UIColor+ColorWithHex.h"
 #import "MMScrapView.h"
 #import "MMScrapContainerView.h"
+#import "NSThread+BlockAdditions.h"
+
 
 @implementation MMScrappedPaperView{
     NSMutableArray* scraps;
@@ -79,8 +81,8 @@
                 scrapContainsAllTouches = scrapContainsAllTouches && [scrap containsTouch:touch];
             }
             if(scrapContainsAllTouches){
-                scrap.preGestureScale = scrap.scale;
-                scrap.preGestureRotation = scrap.rotation;
+                gesture.preGestureScale = scrap.scale;
+                gesture.preGestureRotation = scrap.rotation;
                 gesture.scrap = scrap;
                 
                 // set the anchor point so that it
@@ -92,23 +94,19 @@
                 break;
             }
         }
-        
-        if(gesture.scrap){
-            NSLog(@"gotcha!");
-        }
     }
     if(gesture.scrap){
         // handle the scrap
         MMScrapView* scrap = gesture.scrap;
-        scrap.scale = gesture.scale * scrap.preGestureScale;
-        scrap.rotation = gesture.rotation + scrap.preGestureRotation;
+        scrap.scale = gesture.scale * gesture.preGestureScale;
+        scrap.rotation = gesture.rotation + gesture.preGestureRotation;
         [self.delegate isBeginning:(gesture.state == UIGestureRecognizerStateBegan) toPanAndScaleScrap:gesture.scrap withTouches:gesture.touches];
-        NSLog(@"center: %f %f", scrap.center.x, scrap.center.y);
     }
-    if(gesture.state == UIGestureRecognizerStateEnded){
-        MMScrapView* scrap = gesture.scrap;
-        [_panGesture setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
-        NSLog(@"center: %f %f", scrap.center.x, scrap.center.y);
+    if(gesture.scrap && gesture.state == UIGestureRecognizerStateEnded){
+        // after possibly rotating the scrap, we need to reset it's anchor point
+        // and position, so that we can consistently determine it's position with
+        // the center property
+        [_panGesture setAnchorPoint:CGPointMake(.5, .5) forView:gesture.scrap];
     }
 }
 
