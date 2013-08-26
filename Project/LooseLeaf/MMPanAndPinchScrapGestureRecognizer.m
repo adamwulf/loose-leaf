@@ -116,6 +116,16 @@ NSInteger const  minimumNumberOfTouches = 2;
         
         for(MMScrapView* _scrap in scrapsToLookAt){
             NSSet* touchesInScrap = [_scrap matchingTouchesFrom:[possibleTouches set]];
+            if(self.scrap && ![touchesInScrap count]){
+                for(UITouch* touch in possibleTouches){
+                    if([scrap containsTouch:touch]){
+                        // we only need to worry about sets with one object
+                        // because if more than 1 possible touch matched,
+                        // then the matchingTouchesFrom: would have returned them
+                        touchesInScrap = [NSSet setWithObject:touch];
+                    }
+                }
+            }
             if([touchesInScrap count]){
                 // two+ possible touches match this scrap
                 self.scrap = _scrap;
@@ -270,8 +280,12 @@ NSInteger const  minimumNumberOfTouches = 2;
         // only 1 finger during this gesture, and it's exited
         // so it doesn't count for bezeling or pan/pinch
         [validTouches minusOrderedSet:validTouchesCurrentlyEnding];
+        [possibleTouches removeObjectsInSet:touches];
         [ignoredTouches removeObjectsInSet:touches];
-        self.state = UIGestureRecognizerStateFailed;
+        
+        if(![validTouches count] && ![possibleTouches count]){
+            self.state = UIGestureRecognizerStateFailed;
+        }
     }
 }
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -284,6 +298,7 @@ NSInteger const  minimumNumberOfTouches = 2;
             self.state = UIGestureRecognizerStateCancelled;
         }
         [validTouches minusOrderedSet:validTouchesCurrentlyCancelling];
+        [possibleTouches removeObjectsInSet:touches];
         [ignoredTouches removeObjectsInSet:touches];
     }
 }
@@ -311,6 +326,24 @@ NSInteger const  minimumNumberOfTouches = 2;
     if(self.enabled){
         self.enabled = NO;
         self.enabled = YES;
+    }
+}
+
+
+-(void) setState:(UIGestureRecognizerState)state{
+    [super setState:state];
+    if(self.state == UIGestureRecognizerStateBegan){
+        NSLog(@"began scrap pan");
+    }else if(self.state == UIGestureRecognizerStateEnded){
+        NSLog(@"ended scrap pan");
+    }else if(self.state == UIGestureRecognizerStateCancelled){
+        NSLog(@"cancelled scrap pan");
+    }else if(self.state == UIGestureRecognizerStateFailed){
+        NSLog(@"failed scrap pan");
+    }else if(self.state == UIGestureRecognizerStateChanged){
+        NSLog(@"changed scrap pan");
+    }else if(self.state == UIGestureRecognizerStatePossible){
+        NSLog(@"possible scrap pan");
     }
 }
 

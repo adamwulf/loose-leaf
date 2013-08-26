@@ -80,15 +80,6 @@
 
 
 -(void) panAndScale:(MMPanAndPinchGestureRecognizer *)_panGesture{
-    if(_panGesture.state == UIGestureRecognizerStateBegan){
-        NSLog(@"began pan");
-    }else if(_panGesture.state == UIGestureRecognizerStateEnded){
-        NSLog(@"ended pan");
-    }else if(_panGesture.state == UIGestureRecognizerStateCancelled){
-        NSLog(@"cancelled pan");
-    }else if(_panGesture.state == UIGestureRecognizerStateFailed){
-        NSLog(@"failed pan");
-    }
     [super panAndScale:_panGesture];
 }
 
