@@ -40,5 +40,6 @@
 @property (nonatomic, readonly) CGFloat rotation;
 @property (nonatomic, weak) MMScrapView* scrap;
 
+-(void)setAnchorPoint:(CGPoint)anchorPoint forView:(UIView *)view;
 
 @end

@@ -82,6 +82,13 @@
                 scrap.preGestureScale = scrap.scale;
                 scrap.preGestureRotation = scrap.rotation;
                 gesture.scrap = scrap;
+                
+                // set the anchor point so that it
+                // rotates around the point that we're
+                // gesturing
+                CGPoint p = [_panGesture locationInView:scrap];
+                p = CGPointMake(p.x / scrap.frame.size.width, p.y / scrap.frame.size.height);
+                [_panGesture setAnchorPoint:p forView:scrap];
                 break;
             }
         }
@@ -96,6 +103,11 @@
         scrap.scale = gesture.scale * scrap.preGestureScale;
         scrap.rotation = gesture.rotation + scrap.preGestureRotation;
         [self.delegate isBeginning:(gesture.state == UIGestureRecognizerStateBegan) toPanAndScaleScrap:gesture.scrap withTouches:gesture.touches];
+        NSLog(@"center: %f %f", scrap.center.x, scrap.center.y);
+    }
+    if(gesture.state == UIGestureRecognizerStateEnded){
+        MMScrapView* scrap = gesture.scrap;
+        [_panGesture setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
         NSLog(@"center: %f %f", scrap.center.x, scrap.center.y);
     }
 }
