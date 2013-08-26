@@ -43,6 +43,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     self = [super init];
     if(self){
         validTouches = [[NSMutableOrderedSet alloc] init];
+        possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
     }
     return self;
@@ -52,6 +53,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     self = [super initWithTarget:target action:action];
     if(self){
         validTouches = [[NSMutableOrderedSet alloc] init];
+        possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
     }
     return self;
@@ -100,32 +102,20 @@ NSInteger const  minimumNumberOfTouches = 2;
             scrapsToLookAt = scrapDelegate.scraps;
         }
         
-        BOOL scrapContainsAllTouches = YES;
+        
+        [possibleTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
+        
         for(MMScrapView* _scrap in scrapsToLookAt){
-            scrapContainsAllTouches = YES;
-            for(UITouch* touch in validTouchesCurrentlyBeginning){
-                // decide if all these touches land in scrap
-                scrapContainsAllTouches = scrapContainsAllTouches && [_scrap containsTouch:touch];
-            }
-            if(scrapContainsAllTouches){
+            NSSet* touchesInScrap = [_scrap matchingTouchesFrom:[possibleTouches set]];
+            if([touchesInScrap count]){
+                // two+ possible touches match this scrap
                 self.scrap = _scrap;
+                [validTouches addObjectsInSet:touchesInScrap];
+                [possibleTouches removeObjectsInSet:touchesInScrap];
                 break;
             }
         }
         
-        NSMutableSet* objsToRemove = [NSMutableSet set];
-        for(UITouch* touch in validTouchesCurrentlyBeginning){
-            // decide if all these touches land in scrap
-            if(![scrap containsTouch:touch]){
-                [objsToRemove addObject:touch];
-                [self ignoreTouch:touch forEvent:event];
-            }
-        }
-        [validTouchesCurrentlyBeginning removeObjectsInSet:objsToRemove];
-        
-        
-        
-        [validTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
         if([validTouches count] >= minimumNumberOfTouches && self.state == UIGestureRecognizerStatePossible){
             
             self.preGestureScale = scrap.scale;
@@ -161,9 +151,6 @@ NSInteger const  minimumNumberOfTouches = 2;
         }
     }
     
-    if(self.state == UIGestureRecognizerStatePossible && ![validTouches count]){
-        self.state = UIGestureRecognizerStateFailed;
-    }
     if(self.state == UIGestureRecognizerStateBegan){
         NSLog(@"began scrap pan");
     }else if(self.state == UIGestureRecognizerStateEnded){
@@ -308,6 +295,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     scale = 1;
     [validTouches removeAllObjects];
     [ignoredTouches removeAllObjects];
+    [possibleTouches removeAllObjects];
     didExitToBezel = MMBezelDirectionNone;
     scaleDirection = MMScaleDirectionNone;
     secondToLastTouchDidBezel = NO;
