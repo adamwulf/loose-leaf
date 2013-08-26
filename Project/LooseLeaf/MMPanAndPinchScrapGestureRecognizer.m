@@ -115,7 +115,7 @@ NSInteger const  minimumNumberOfTouches = 2;
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
     NSMutableOrderedSet* validTouchesCurrentlyMoving = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
     [validTouchesCurrentlyMoving intersectSet:touches];
-    if([validTouchesCurrentlyMoving count]){
+    if([validTouchesCurrentlyMoving count] >= minimumNumberOfTouches){
         if(self.state == UIGestureRecognizerStateBegan){
             initialDistance = 0;
         }
