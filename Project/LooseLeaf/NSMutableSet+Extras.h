@@ -23,4 +23,6 @@
 
 -(NSSet*) setByRemovingObject:(id)obj;
 
+-(void) addObjectsInSet:(NSSet*)set;
+
 @end

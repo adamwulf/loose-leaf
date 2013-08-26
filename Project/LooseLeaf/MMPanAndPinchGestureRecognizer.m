@@ -34,6 +34,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     self = [super init];
     if(self){
         validTouches = [[NSMutableOrderedSet alloc] init];
+        possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
         velocities = [[NSMutableArray alloc] init];
     }
@@ -44,6 +45,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     self = [super initWithTarget:target action:action];
     if(self){
         validTouches = [[NSMutableOrderedSet alloc] init];
+        possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
         velocities = [[NSMutableArray alloc] init];
     }
@@ -101,10 +103,21 @@ NSInteger const  minimumNumberOfTouches = 2;
         }
         [self.view.layer removeAllAnimations];
 
-        [validTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
         
-        for(MMScrapView* scrap in scrapDelegate.scraps){
-            [validTouches removeObjectsInSet:[scrap matchingTouchesFrom:[validTouches set]]];
+        
+        
+        [possibleTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
+        
+        for(MMScrapView* _scrap in scrapDelegate.scraps){
+            NSSet* touchesInScrap = [_scrap matchingTouchesFrom:[possibleTouches set]];
+            if([touchesInScrap count]){
+                // two+ possible touches match this scrap
+                [possibleTouches removeObjectsInSet:touchesInScrap];
+            }
+        }
+
+        if([possibleTouches count] >= minimumNumberOfTouches){
+            [validTouches addObjectsInSet:[possibleTouches set]];
         }
         
         
@@ -245,6 +258,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     initialDistance = 0;
     scale = 1;
     [validTouches removeAllObjects];
+    [possibleTouches removeAllObjects];
     [ignoredTouches removeAllObjects];
     didExitToBezel = MMBezelDirectionNone;
     scaleDirection = MMScaleDirectionNone;

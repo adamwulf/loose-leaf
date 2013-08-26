@@ -24,6 +24,7 @@
     //
     // the collection of valid touches for this gesture
     NSMutableSet* ignoredTouches;
+    NSMutableOrderedSet* possibleTouches;
     NSMutableOrderedSet* validTouches;
 
     // track which bezels our delegate cares about
