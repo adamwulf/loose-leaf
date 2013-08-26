@@ -10,9 +10,7 @@
 
 @interface MMScrapView : UIView
 
-@property (readonly) CGPoint unscaledOrigin;
-@property (assign) CGFloat preGestureScale;
-@property (assign) CGFloat preGestureRotation;
+@property (readonly) UIBezierPath* bezierPath;
 @property (nonatomic, assign) CGFloat scale;
 @property (nonatomic, assign) CGFloat rotation;
 

@@ -19,11 +19,15 @@
     MMVector* initialTouchVector;
     // the current scale of the gesture
     CGFloat scale;
+    CGFloat preGestureScale;
+    CGFloat preGestureRotation;
 }
 
 @synthesize scale;
 @synthesize scrap;
 @synthesize rotation;
+@synthesize preGestureScale;
+@synthesize preGestureRotation;
 
 
 NSInteger const  minimumNumberOfTouches = 2;
