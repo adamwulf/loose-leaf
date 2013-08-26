@@ -89,9 +89,11 @@
                 // rotates around the point that we're
                 // gesturing
                 CGPoint p = [_panGesture locationInView:scrap];
-                p = CGPointMake(p.x / scrap.frame.size.width, p.y / scrap.frame.size.height);
+                // the frame size includes the translation, but the locationInView does not
+                // and neither does the bounds. so we need to use bounds.size, not frame.size
+                // to determine where to set the anchor point
+                p = CGPointMake(p.x / scrap.bounds.size.width, p.y / scrap.bounds.size.height);
                 [_panGesture setAnchorPoint:p forView:scrap];
-                
                 _panGesture.preGestureCenter = scrap.center;
                 break;
             }
