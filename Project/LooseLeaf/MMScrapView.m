@@ -75,6 +75,19 @@
     return [path containsPoint:locationOfTouch];
 }
 
+-(NSSet*) matchingTouchesFrom:(NSSet*) touches{
+    NSMutableSet* outArray = [NSMutableSet set];
+    for(UITouch* touch in touches){
+        if([self containsTouch:touch]){
+            [outArray addObject:touch];
+        }
+    }
+    if([outArray count] >= 2){
+        return outArray;
+    }
+    return nil;
+}
+
 -(void) setScale:(CGFloat)_scale{
     if(_scale > 2) _scale = 2;
     if(_scale * self.bounds.size.width < 100){

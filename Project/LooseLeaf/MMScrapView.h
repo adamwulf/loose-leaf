@@ -20,6 +20,13 @@
 
 -(BOOL) containsTouch:(UITouch*)touch;
 
+/**
+ * will return the array of touches that this scrap
+ * contains, but only if more than one touch
+ * will match
+ */
+-(NSSet*) matchingTouchesFrom:(NSSet*) touches;
+
 #pragma mark - debug
 -(UIBezierPath*) intersect:(UIBezierPath*)newPath;
 

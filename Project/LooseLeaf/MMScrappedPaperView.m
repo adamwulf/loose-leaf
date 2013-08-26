@@ -39,6 +39,8 @@
         [panAndPinchScrapGesture requireGestureRecognizerToFail:tap];
         panAndPinchScrapGesture.scrapDelegate = self;
         [self addGestureRecognizer:panAndPinchScrapGesture];
+        
+        panGesture.scrapDelegate = self;
     }
     return self;
 }
@@ -86,6 +88,7 @@
 
 -(void) panAndScaleScrap:(MMPanAndPinchScrapGestureRecognizer*)_panGesture{
     MMPanAndPinchScrapGestureRecognizer* gesture = (MMPanAndPinchScrapGestureRecognizer*)_panGesture;
+    
     if(gesture.scrap){
         // handle the scrap
         MMScrapView* scrap = gesture.scrap;

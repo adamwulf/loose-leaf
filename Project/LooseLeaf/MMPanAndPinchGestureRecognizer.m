@@ -20,6 +20,7 @@
 
 @implementation MMPanAndPinchGestureRecognizer
 
+@synthesize scrapDelegate;
 @synthesize scale;
 @synthesize bezelDirectionMask;
 @synthesize didExitToBezel;
@@ -59,8 +60,7 @@ NSInteger const  minimumNumberOfTouches = 2;
 
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
     return [preventingGestureRecognizer isKindOfClass:[MMBezelInRightGestureRecognizer class]] ||
-           [preventingGestureRecognizer isKindOfClass:[MMBezelInLeftGestureRecognizer class]] ||
-           [preventingGestureRecognizer isKindOfClass:[MMPanAndPinchScrapGestureRecognizer class]];
+           [preventingGestureRecognizer isKindOfClass:[MMBezelInLeftGestureRecognizer class]];
 }
 
 -(BOOL) containsTouch:(UITouch*)touch{
@@ -102,6 +102,13 @@ NSInteger const  minimumNumberOfTouches = 2;
         [self.view.layer removeAllAnimations];
 
         [validTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
+        
+        for(MMScrapView* scrap in scrapDelegate.scraps){
+            [validTouches removeObjectsInSet:[scrap matchingTouchesFrom:[validTouches set]]];
+        }
+        
+        
+        
         if([validTouches count] >= minimumNumberOfTouches && self.state == UIGestureRecognizerStatePossible){
             self.state = UIGestureRecognizerStateBegan;
         }else if([validTouches count] <= minimumNumberOfTouches){
