@@ -37,6 +37,7 @@
         
         [panAndPinchScrapGesture requireGestureRecognizerToFail:longPress];
         [panAndPinchScrapGesture requireGestureRecognizerToFail:tap];
+        panAndPinchScrapGesture.scrapDelegate = self;
         [self addGestureRecognizer:panAndPinchScrapGesture];
     }
     return self;
@@ -72,33 +73,6 @@
 
 -(void) panAndScaleScrap:(MMPanAndPinchScrapGestureRecognizer*)_panGesture{
     MMPanAndPinchScrapGestureRecognizer* gesture = (MMPanAndPinchScrapGestureRecognizer*)_panGesture;
-    if(gesture.state == UIGestureRecognizerStateBegan){
-        // ok, we just started, let's decide if we're looking at a scrap
-        for(MMScrapView* scrap in scraps){
-            BOOL scrapContainsAllTouches = YES;
-            for(UITouch* touch in gesture.touches){
-                // decide if all these touches land in scrap
-                scrapContainsAllTouches = scrapContainsAllTouches && [scrap containsTouch:touch];
-            }
-            if(scrapContainsAllTouches){
-                gesture.preGestureScale = scrap.scale;
-                gesture.preGestureRotation = scrap.rotation;
-                gesture.scrap = scrap;
-                
-                // set the anchor point so that it
-                // rotates around the point that we're
-                // gesturing
-                CGPoint p = [_panGesture locationInView:scrap];
-                // the frame size includes the translation, but the locationInView does not
-                // and neither does the bounds. so we need to use bounds.size, not frame.size
-                // to determine where to set the anchor point
-                p = CGPointMake(p.x / scrap.bounds.size.width, p.y / scrap.bounds.size.height);
-                [_panGesture setAnchorPoint:p forView:scrap];
-                _panGesture.preGestureCenter = scrap.center;
-                break;
-            }
-        }
-    }
     if(gesture.scrap){
         // handle the scrap
         MMScrapView* scrap = gesture.scrap;

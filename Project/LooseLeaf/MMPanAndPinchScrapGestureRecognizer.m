@@ -33,6 +33,7 @@
 @synthesize preGestureScale;
 @synthesize preGestureRotation;
 @synthesize preGestureCenter;
+@synthesize scrapDelegate;
 
 
 NSInteger const  minimumNumberOfTouches = 2;
@@ -91,9 +92,55 @@ NSInteger const  minimumNumberOfTouches = 2;
     }
     // ignore all the touches that could be bezel touches
     if([validTouchesCurrentlyBeginning count]){
+        
+        NSArray* scrapsToLookAt;
+        if(self.scrap){
+            scrapsToLookAt = [NSArray arrayWithObject:scrap];
+        }else{
+            scrapsToLookAt = scrapDelegate.scraps;
+        }
+        
+        BOOL scrapContainsAllTouches = YES;
+        for(MMScrapView* _scrap in scrapsToLookAt){
+            scrapContainsAllTouches = YES;
+            for(UITouch* touch in validTouchesCurrentlyBeginning){
+                // decide if all these touches land in scrap
+                scrapContainsAllTouches = scrapContainsAllTouches && [_scrap containsTouch:touch];
+            }
+            if(scrapContainsAllTouches){
+                self.scrap = _scrap;
+                break;
+            }
+        }
+        
+        NSMutableSet* objsToRemove = [NSMutableSet set];
+        for(UITouch* touch in validTouchesCurrentlyBeginning){
+            // decide if all these touches land in scrap
+            if(![scrap containsTouch:touch]){
+                [objsToRemove addObject:touch];
+                [self ignoreTouch:touch forEvent:event];
+            }
+        }
+        [validTouchesCurrentlyBeginning removeObjectsInSet:objsToRemove];
+        
+        
+        
         [validTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
         if([validTouches count] >= minimumNumberOfTouches && self.state == UIGestureRecognizerStatePossible){
-            self.state = UIGestureRecognizerStateBegan;
+            
+            self.preGestureScale = scrap.scale;
+            self.preGestureRotation = scrap.rotation;
+            
+            // set the anchor point so that it
+            // rotates around the point that we're
+            // gesturing
+            CGPoint p = [self locationInView:scrap];
+            // the frame size includes the translation, but the locationInView does not
+            // and neither does the bounds. so we need to use bounds.size, not frame.size
+            // to determine where to set the anchor point
+            p = CGPointMake(p.x / scrap.bounds.size.width, p.y / scrap.bounds.size.height);
+            [self setAnchorPoint:p forView:scrap];
+            self.preGestureCenter = scrap.center;
             
             CGPoint p1 = [[validTouches firstObject] locationInView:self.view];
             CGPoint p2 = [[validTouches objectAtIndex:1] locationInView:self.view];
@@ -101,6 +148,9 @@ NSInteger const  minimumNumberOfTouches = 2;
             rotation = 0;
             gestureLocationAtStart = [self locationInView:self.view];
             translation = CGPointZero;
+            scale = 1;
+
+            self.state = UIGestureRecognizerStateBegan;
         }else if([validTouches count] <= minimumNumberOfTouches){
             didExitToBezel = MMBezelDirectionNone;
             initialTouchVector = nil;

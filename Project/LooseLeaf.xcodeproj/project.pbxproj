@@ -372,6 +372,7 @@
 		66E88A361591853E001A6EBF /* MMPapersIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPapersIcon.m; sourceTree = "<group>"; };
 		66EDA79417CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchScrapGestureRecognizer.h; sourceTree = "<group>"; };
 		66EDA79517CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchScrapGestureRecognizer.m; sourceTree = "<group>"; };
+		66EDA7AB17CBD8580067BA63 /* MMPanAndPinchScrapGestureRecognizerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchScrapGestureRecognizerDelegate.h; sourceTree = "<group>"; };
 		66F4B4B5178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLongPressFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
 		66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLongPressFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -959,6 +960,7 @@
 			children = (
 				66EDA79417CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.h */,
 				66EDA79517CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m */,
+				66EDA7AB17CBD8580067BA63 /* MMPanAndPinchScrapGestureRecognizerDelegate.h */,
 			);
 			name = Scraps;
 			sourceTree = "<group>";
