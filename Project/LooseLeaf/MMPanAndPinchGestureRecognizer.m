@@ -73,6 +73,7 @@ NSInteger const  minimumNumberOfTouches = 2;
  * to match that of the animation.
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSLog(@"touches began: %d", [touches count]);
     NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
     if(self.state != UIGestureRecognizerStatePossible &&
        [validTouches count] == minimumNumberOfTouches){

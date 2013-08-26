@@ -160,6 +160,20 @@ NSInteger const  minimumNumberOfTouches = 2;
             secondToLastTouchDidBezel = NO;
         }
     }
+    
+    if(self.state == UIGestureRecognizerStatePossible && ![validTouches count]){
+        self.state = UIGestureRecognizerStateFailed;
+    }
+    if(self.state == UIGestureRecognizerStateBegan){
+        NSLog(@"began scrap pan");
+    }else if(self.state == UIGestureRecognizerStateEnded){
+        NSLog(@"ended scrap pan");
+    }else if(self.state == UIGestureRecognizerStateCancelled){
+        NSLog(@"cancelled scrap pan");
+    }else if(self.state == UIGestureRecognizerStateFailed){
+        NSLog(@"failed scrap pan");
+    }
+
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -300,6 +314,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     scrap = nil;
     gestureLocationAtStart = CGPointZero;
     translation = CGPointZero;
+    NSLog(@"pan scrap reset");
 }
 
 -(void) cancel{
