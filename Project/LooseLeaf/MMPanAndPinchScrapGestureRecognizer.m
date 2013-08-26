@@ -62,7 +62,7 @@ NSInteger const  minimumNumberOfTouches = 2;
 }
 
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
-    return [preventedGestureRecognizer isKindOfClass:[MMPanAndPinchGestureRecognizer class]];
+    return NO;
 }
 
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
