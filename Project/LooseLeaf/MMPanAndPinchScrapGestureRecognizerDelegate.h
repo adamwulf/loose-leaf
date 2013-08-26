@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MMPanGestureDelegate.h"
 
-@protocol MMPanAndPinchScrapGestureRecognizerDelegate <NSObject>
+@protocol MMPanAndPinchScrapGestureRecognizerDelegate <MMPanGestureDelegate>
 
 -(NSArray*) scraps;
 

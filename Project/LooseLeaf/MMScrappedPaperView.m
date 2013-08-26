@@ -73,6 +73,12 @@
 
 #pragma mark - Pan and Scale Scraps
 
+-(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
+    [panGesture ownershipOfTouches:touches isGesture:gesture];
+    [panAndPinchScrapGesture ownershipOfTouches:touches isGesture:gesture];
+}
+
+
 -(void) panAndScale:(MMPanAndPinchGestureRecognizer *)_panGesture{
     if(_panGesture.state == UIGestureRecognizerStateBegan){
         NSLog(@"began pan");
@@ -120,7 +126,7 @@
 -(void) beginShapeAtPoint:(CGPoint)point{
     // send touch event to the view that
     // will display the drawn polygon line
-    NSLog(@"begin");
+//    NSLog(@"begin");
     [polygonDebugView clear];
     
     [polygonDebugView addTouchPoint:point];
@@ -140,7 +146,7 @@
     // and also process the touches into the new
     // scrap polygon shape, and add that shape
     // to the page
-    NSLog(@"finish");
+//    NSLog(@"finish");
     [polygonDebugView addTouchPoint:point];
     NSArray* shapes = [polygonDebugView complete];
     
@@ -160,7 +166,7 @@
     // we've cancelled the polygon (possibly b/c
     // it was a pan/pinch instead), so clear
     // the drawn polygon and reset.
-    NSLog(@"cancel");
+//    NSLog(@"cancel");
     [polygonDebugView clear];
 }
 

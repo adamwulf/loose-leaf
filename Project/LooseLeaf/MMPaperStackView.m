@@ -1556,7 +1556,7 @@
 -(void) mayChangeTopPageTo:(MMPaperView*)page{
     if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
         recentlySuggestedPageUUID = page.uuid;
-        debug_NSLog(@"may change top page to: %@", page.uuid);
+//        debug_NSLog(@"may change top page to: %@", page.uuid);
     }
 }
 
@@ -1570,13 +1570,13 @@
     if(page && ![recentlyConfirmedPageUUID isEqualToString:page.uuid]){
         recentlyConfirmedPageUUID = page.uuid;
         [self saveStacksToDisk];
-        debug_NSLog(@"will switch top page to %@", page.uuid);
+//        debug_NSLog(@"will switch top page to %@", page.uuid);
     }
 }
 
 -(void) didChangeTopPage{
     // noop
-    debug_NSLog(@"did change top page");
+//    debug_NSLog(@"did change top page");
 }
 
 /**
@@ -1586,7 +1586,7 @@
  * get this into static mode asap.
  */
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
-    debug_NSLog(@"will NOT change top page to: %@", page.uuid);
+//    debug_NSLog(@"will NOT change top page to: %@", page.uuid);
 }
 
 -(void) saveStacksToDisk{
