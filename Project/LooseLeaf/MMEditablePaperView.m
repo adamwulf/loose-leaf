@@ -243,7 +243,7 @@ dispatch_queue_t importThumbnailQueue;
                        onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* immutableState){
                            [NSThread performBlockOnMainThread:^{
                                lastSavedUndoHash = [immutableState undoHash];
-                               debug_NSLog(@"saving page %@ with hash %u", self.uuid, lastSavedUndoHash);
+//                               debug_NSLog(@"saving page %@ with hash %u", self.uuid, lastSavedUndoHash);
                                cachedImgView.image = thumbnail;
                                [self.delegate didSavePage:self];
                            }];

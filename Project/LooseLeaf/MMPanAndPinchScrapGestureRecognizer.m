@@ -76,6 +76,14 @@ NSInteger const  minimumNumberOfTouches = 2;
     return [validTouches containsObject:touch];
 }
 
+-(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
+    if(gesture != self){
+        [possibleTouches removeObjectsInSet:touches];
+        [ignoredTouches addObjectsInSet:touches];
+    }
+}
+
+
 /**
  * the first touch of a gesture.
  * this touch may interrupt an animation on this frame, so set the frame
@@ -104,12 +112,14 @@ NSInteger const  minimumNumberOfTouches = 2;
         
         
         [possibleTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
+        [possibleTouches removeObjectsInSet:ignoredTouches];
         
         for(MMScrapView* _scrap in scrapsToLookAt){
             NSSet* touchesInScrap = [_scrap matchingTouchesFrom:[possibleTouches set]];
             if([touchesInScrap count]){
                 // two+ possible touches match this scrap
                 self.scrap = _scrap;
+                [scrapDelegate ownershipOfTouches:touchesInScrap isGesture:self];
                 [validTouches addObjectsInSet:touchesInScrap];
                 [possibleTouches removeObjectsInSet:touchesInScrap];
                 break;
@@ -151,16 +161,8 @@ NSInteger const  minimumNumberOfTouches = 2;
         }
     }
     
-    if(self.state == UIGestureRecognizerStateBegan){
-        NSLog(@"began scrap pan");
-    }else if(self.state == UIGestureRecognizerStateEnded){
-        NSLog(@"ended scrap pan");
-    }else if(self.state == UIGestureRecognizerStateCancelled){
-        NSLog(@"cancelled scrap pan");
-    }else if(self.state == UIGestureRecognizerStateFailed){
-        NSLog(@"failed scrap pan");
-    }
-
+    
+    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{

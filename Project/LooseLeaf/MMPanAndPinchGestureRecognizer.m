@@ -69,6 +69,15 @@ NSInteger const  minimumNumberOfTouches = 2;
     return [validTouches containsObject:touch];
 }
 
+-(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
+    if(gesture != self){
+        [possibleTouches removeObjectsInSet:touches];
+        [ignoredTouches addObjectsInSet:touches];
+    }
+}
+
+
+
 /**
  * the first touch of a gesture.
  * this touch may interrupt an animation on this frame, so set the frame
@@ -107,7 +116,8 @@ NSInteger const  minimumNumberOfTouches = 2;
         
         
         [possibleTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
-        
+        [possibleTouches removeObjectsInSet:ignoredTouches];
+
         for(MMScrapView* _scrap in scrapDelegate.scraps){
             NSSet* touchesInScrap = [_scrap matchingTouchesFrom:[possibleTouches set]];
             if([touchesInScrap count]){
@@ -117,7 +127,9 @@ NSInteger const  minimumNumberOfTouches = 2;
         }
 
         if([possibleTouches count] >= minimumNumberOfTouches){
+            [scrapDelegate ownershipOfTouches:[possibleTouches set] isGesture:self];
             [validTouches addObjectsInSet:[possibleTouches set]];
+            [possibleTouches removeAllObjects];
         }
         
         
@@ -133,6 +145,8 @@ NSInteger const  minimumNumberOfTouches = 2;
         }
     }
     [self calculateVelocity];
+
+    NSLog(@"pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{

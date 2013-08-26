@@ -22,6 +22,13 @@
     return ret;
 }
 
+
+-(void) addObjectsInSet:(NSSet*)set{
+    for(id obj in set){
+        [self addObject:obj];
+    }
+}
+
 @end
 
 

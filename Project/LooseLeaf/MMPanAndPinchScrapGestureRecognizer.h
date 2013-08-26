@@ -50,5 +50,6 @@
 @property (assign) CGPoint preGestureCenter;
 
 -(void)setAnchorPoint:(CGPoint)anchorPoint forView:(UIView *)view;
+-(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 
 @end
