@@ -21,13 +21,18 @@
     CGFloat scale;
     CGFloat preGestureScale;
     CGFloat preGestureRotation;
+    CGPoint preGestureCenter;
+    CGPoint gestureLocationAtStart;
+    CGPoint translation;
 }
 
 @synthesize scale;
 @synthesize scrap;
 @synthesize rotation;
+@synthesize translation;
 @synthesize preGestureScale;
 @synthesize preGestureRotation;
+@synthesize preGestureCenter;
 
 
 NSInteger const  minimumNumberOfTouches = 2;
@@ -94,6 +99,8 @@ NSInteger const  minimumNumberOfTouches = 2;
             CGPoint p2 = [[validTouches objectAtIndex:1] locationInView:self.view];
             initialTouchVector = [[MMVector alloc] initWithPoint:p1 andPoint:p2];
             rotation = 0;
+            gestureLocationAtStart = [self locationInView:self.view];
+            translation = CGPointZero;
         }else if([validTouches count] <= minimumNumberOfTouches){
             didExitToBezel = MMBezelDirectionNone;
             initialTouchVector = nil;
@@ -138,13 +145,14 @@ NSInteger const  minimumNumberOfTouches = 2;
             CGPoint p2 = [[validTouches objectAtIndex:1] locationInView:self.view];
             MMVector* currentVector = [[MMVector alloc] initWithPoint:p1 andPoint:p2];
             CGFloat diff = [initialTouchVector angleBetween:currentVector];
-            NSLog(@"diff angle: %f", diff);
             rotation += diff;
             initialTouchVector = currentVector;
-            
+            CGPoint locInView = [self locationInView:self.view];
+            translation = CGPointMake(locInView.x - gestureLocationAtStart.x, locInView.y - gestureLocationAtStart.y);
         }
     }
 }
+
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     // pan and pinch and bezel
     BOOL cancelledFromBezel = NO;
@@ -240,6 +248,8 @@ NSInteger const  minimumNumberOfTouches = 2;
     scaleDirection = MMScaleDirectionNone;
     secondToLastTouchDidBezel = NO;
     scrap = nil;
+    gestureLocationAtStart = CGPointZero;
+    translation = CGPointZero;
 }
 
 -(void) cancel{
