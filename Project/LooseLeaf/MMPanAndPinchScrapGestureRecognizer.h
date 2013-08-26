@@ -38,9 +38,11 @@
 @property (readonly) NSArray* touches;
 @property (nonatomic, readonly) CGFloat scale;
 @property (nonatomic, readonly) CGFloat rotation;
+@property (nonatomic, readonly) CGPoint translation;
 @property (nonatomic, weak) MMScrapView* scrap;
 @property (assign) CGFloat preGestureScale;
 @property (assign) CGFloat preGestureRotation;
+@property (assign) CGPoint preGestureCenter;
 
 -(void)setAnchorPoint:(CGPoint)anchorPoint forView:(UIView *)view;
 

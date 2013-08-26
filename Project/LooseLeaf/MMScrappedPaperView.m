@@ -91,6 +91,8 @@
                 CGPoint p = [_panGesture locationInView:scrap];
                 p = CGPointMake(p.x / scrap.frame.size.width, p.y / scrap.frame.size.height);
                 [_panGesture setAnchorPoint:p forView:scrap];
+                
+                _panGesture.preGestureCenter = scrap.center;
                 break;
             }
         }
@@ -98,6 +100,8 @@
     if(gesture.scrap){
         // handle the scrap
         MMScrapView* scrap = gesture.scrap;
+        scrap.center = CGPointMake(gesture.translation.x + gesture.preGestureCenter.x,
+                                   gesture.translation.y + gesture.preGestureCenter.y);
         scrap.scale = gesture.scale * gesture.preGestureScale;
         scrap.rotation = gesture.rotation + gesture.preGestureRotation;
         [self.delegate isBeginning:(gesture.state == UIGestureRecognizerStateBegan) toPanAndScaleScrap:gesture.scrap withTouches:gesture.touches];
