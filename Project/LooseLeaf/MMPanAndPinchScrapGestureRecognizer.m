@@ -136,7 +136,7 @@ NSInteger const  minimumNumberOfTouches = 2;
             }
         }
         
-        if([validTouches count] >= minimumNumberOfTouches && self.state == UIGestureRecognizerStatePossible){
+        if([validTouches count] >= minimumNumberOfTouches){
             
             self.preGestureScale = scrap.scale;
             self.preGestureRotation = scrap.rotation;
@@ -157,6 +157,7 @@ NSInteger const  minimumNumberOfTouches = 2;
             initialTouchVector = [[MMVector alloc] initWithPoint:p1 andPoint:p2];
             rotation = 0;
             gestureLocationAtStart = [self locationInView:self.view];
+            initialDistance = [self distanceBetweenTouches:validTouches];
             translation = CGPointZero;
             scale = 1;
 
