@@ -70,8 +70,10 @@
 //                         completion:nil];
     }else{
         distTravelled = MIN(DistanceBetweenTwoPoints(lastPoint, point), 50);
-        [dottedPath addLineToPoint:point];
-        lastPoint = point;
+        if(distTravelled > 2){
+            [dottedPath addLineToPoint:point];
+            lastPoint = point;
+        }
         dot.hidden = NO;
     }
     [touches addObject:[NSValue valueWithCGPoint:point]];
