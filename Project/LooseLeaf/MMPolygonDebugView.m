@@ -11,11 +11,15 @@
 #import "DrawKit-iOS.h"
 #import "UIColor+ColorWithHex.h"
 #import "SYShape+Bezier.h"
+#import "MMDotView.h"
 
 @implementation MMPolygonDebugView{
     NSMutableArray* touches;
     NSMutableArray* shapePaths;
     NSArray* pathsFromIntersectingTouches;
+    
+    
+    UIView* dot;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -25,6 +29,10 @@
         // Initialization code
         touches = [NSMutableArray array];
         shapePaths = [NSMutableArray array];
+        
+        dot = [[MMDotView alloc] initWithFrame:CGRectMake(300, 300, 16, 16)];
+        dot.transform = CGAffineTransformIdentity;
+        [self addSubview:dot];
     }
     return self;
 }
@@ -33,10 +41,22 @@
     [touches removeAllObjects];
     pathsFromIntersectingTouches = nil;
     [shapePaths removeAllObjects];
+    [dot.layer removeAllAnimations];
+    dot.transform = CGAffineTransformIdentity;
     [self setNeedsDisplay];
 }
 
 -(void) addTouchPoint:(CGPoint)point{
+    if(![touches count]){
+        dot.transform = CGAffineTransformIdentity;
+        [UIView animateWithDuration:0.66f
+                              delay:0.0f
+                            options:(UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAutoreverse | UIViewAnimationOptionRepeat | UIViewAnimationOptionAllowUserInteraction)
+                         animations:^{
+                             dot.transform = CGAffineTransformMakeScale(0.8, 0.8);
+                         }
+                         completion:nil];
+    }
     [touches addObject:[NSValue valueWithCGPoint:point]];
     [self setNeedsDisplayInRect:CGRectMake(point.x - 10, point.y - 10, 20, 20)];
 }
