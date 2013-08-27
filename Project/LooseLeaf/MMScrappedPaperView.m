@@ -12,6 +12,7 @@
 #import "MMScrapView.h"
 #import "MMScrapContainerView.h"
 #import "NSThread+BlockAdditions.h"
+#import "NSArray+Extras.h"
 
 
 @implementation MMScrappedPaperView{
@@ -60,7 +61,7 @@
 }
 
 -(NSArray*) scraps{
-    return [NSArray arrayWithArray:scraps];
+    return [scrapContainerView.subviews reverseArray];
 }
 
 #pragma mark - Pinch and Zoom
