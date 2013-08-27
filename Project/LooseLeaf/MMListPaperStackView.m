@@ -530,7 +530,10 @@
                 // up above the visible page. we have to move it by the expanded frame
                 // because shadows count here too
                 CGRect newFrame = aPage.frame;
-                newFrame.origin.y = -[MMShadowedView expandFrame:newFrame].size.height;
+                // set the height 0.15 higher than the screen so that it moves out
+                // and finishes its potion of the animation slightly faster than
+                // the rest of the pages
+                newFrame.origin.y = -[MMShadowedView expandFrame:newFrame].size.height * 1.15;
                 aPage.frame = newFrame;
             }else{
                 // these views we're animating into place
