@@ -34,6 +34,8 @@
 @synthesize preGestureRotation;
 @synthesize preGestureCenter;
 @synthesize scrapDelegate;
+@synthesize didExitToBezel;
+@synthesize bezelDirectionMask;
 
 
 NSInteger const  minimumNumberOfTouches = 2;
@@ -160,9 +162,10 @@ NSInteger const  minimumNumberOfTouches = 2;
             initialDistance = [self distanceBetweenTouches:validTouches];
             translation = CGPointZero;
             scale = 1;
+            didExitToBezel = MMBezelDirectionNone;
 
             self.state = UIGestureRecognizerStateBegan;
-        }else if([validTouches count] <= minimumNumberOfTouches){
+        }else if([validTouches count] < minimumNumberOfTouches){
             didExitToBezel = MMBezelDirectionNone;
             initialTouchVector = nil;
             //
@@ -270,7 +273,7 @@ NSInteger const  minimumNumberOfTouches = 2;
             [ignoredTouches removeObjectsInSet:touches];
         }
         if([validTouches count] == 0 && self.state == UIGestureRecognizerStateChanged){
-            if(cancelledFromBezel){
+            if(!secondToLastTouchDidBezel){
                 self.state = UIGestureRecognizerStateCancelled;
             }else{
                 self.state = UIGestureRecognizerStateEnded;
