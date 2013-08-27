@@ -16,7 +16,7 @@
     if (self) {
         // Initialization code
         self.opaque = NO;
-        self.backgroundColor = [UIColor blackColor];
+        self.backgroundColor = [UIColor clearColor];
     }
     return self;
 }
@@ -30,7 +30,7 @@
     
     UIBezierPath* oval = [UIBezierPath bezierPathWithOvalInRect:CGRectInset(self.bounds, 1, 1)];
     
-    [[UIColor redColor] setFill];
+    [[UIColor blackColor] setFill];
     [oval fill];
 }
 
