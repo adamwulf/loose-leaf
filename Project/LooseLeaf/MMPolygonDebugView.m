@@ -30,8 +30,9 @@
         touches = [NSMutableArray array];
         shapePaths = [NSMutableArray array];
         
-        dot = [[MMDotView alloc] initWithFrame:CGRectMake(300, 300, 16, 16)];
+        dot = [[MMDotView alloc] initWithFrame:CGRectMake(300, 300, 20, 20)];
         dot.transform = CGAffineTransformIdentity;
+        dot.hidden = YES;
         [self addSubview:dot];
     }
     return self;
@@ -43,13 +44,16 @@
     [shapePaths removeAllObjects];
     [dot.layer removeAllAnimations];
     dot.transform = CGAffineTransformIdentity;
+    dot.hidden = YES;
     [self setNeedsDisplay];
 }
 
 -(void) addTouchPoint:(CGPoint)point{
     if(![touches count]){
+        dot.hidden = NO;
+        dot.center = point;
         dot.transform = CGAffineTransformIdentity;
-        [UIView animateWithDuration:0.66f
+        [UIView animateWithDuration:0.45f
                               delay:0.0f
                             options:(UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAutoreverse | UIViewAnimationOptionRepeat | UIViewAnimationOptionAllowUserInteraction)
                          animations:^{
