@@ -62,6 +62,7 @@
 		6695B6F01751CC170069E61F /* Pen.m in Sources */ = {isa = PBXBuildFile; fileRef = 6695B6EF1751CC160069E61F /* Pen.m */; };
 		66A13D3A1631D9D9002F5428 /* MMObjectSelectLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D3F1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66A3921817CC4EE000B4974D /* NSArray+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3921717CC4EE000B4974D /* NSArray+Extras.m */; };
 		66A3A6BB1791F18900D8FE1D /* UIDevice+PPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3A6BA1791F18900D8FE1D /* UIDevice+PPI.m */; };
 		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; };
 		66A471BE17C7DAA000C2A5B6 /* MMScrappedPaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A471BD17C7DAA000C2A5B6 /* MMScrappedPaperView.m */; };
@@ -275,6 +276,8 @@
 		66A13D3E1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImmovableTapGestureRecognizer.h; sourceTree = "<group>"; };
 		66A13D3F1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImmovableTapGestureRecognizer.m; sourceTree = "<group>"; };
 		66A3921517CC126D00B4974D /* MMPanGestureDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPanGestureDelegate.h; sourceTree = "<group>"; };
+		66A3921617CC4EE000B4974D /* NSArray+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Extras.h"; sourceTree = "<group>"; };
+		66A3921717CC4EE000B4974D /* NSArray+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Extras.m"; sourceTree = "<group>"; };
 		66A3A6B91791F18900D8FE1D /* UIDevice+PPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+PPI.h"; sourceTree = "<group>"; };
 		66A3A6BA1791F18900D8FE1D /* UIDevice+PPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+PPI.m"; sourceTree = "<group>"; };
 		66A3AF8C15913B5E00F8A7A6 /* NSMutableSet+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableSet+Extras.h"; sourceTree = "<group>"; };
@@ -423,6 +426,8 @@
 				660E1DAB158FC65C0001DA12 /* NSMutableArray+StackAdditions.m */,
 				660E1DB1159028560001DA12 /* NSArray+MapReduce.h */,
 				660E1DB2159028560001DA12 /* NSArray+MapReduce.m */,
+				66B21A74175E559E0049F1AF /* NSArray+Map.h */,
+				66B21A75175E559E0049F1AF /* NSArray+Map.m */,
 				66BD6E391592CFE500D4544C /* UIView+SubviewStacks.h */,
 				66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */,
 				6693296E1598E4DC0033E557 /* NSString+UUID.h */,
@@ -433,12 +438,12 @@
 				6693297D1599196E0033E557 /* UIFont+UIBezierCurve.m */,
 				66DF0B7C159BC30200C5C652 /* UIView+Animations.h */,
 				66DF0B7D159BC30200C5C652 /* UIView+Animations.m */,
-				66B21A74175E559E0049F1AF /* NSArray+Map.h */,
-				66B21A75175E559E0049F1AF /* NSArray+Map.m */,
 				6648D21B178C9E5400BE3B37 /* UIColor+Shadow.h */,
 				6648D21C178C9E5400BE3B37 /* UIColor+Shadow.m */,
 				66A3A6B91791F18900D8FE1D /* UIDevice+PPI.h */,
 				66A3A6BA1791F18900D8FE1D /* UIDevice+PPI.m */,
+				66A3921617CC4EE000B4974D /* NSArray+Extras.h */,
+				66A3921717CC4EE000B4974D /* NSArray+Extras.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -1100,6 +1105,7 @@
 				66932965159593C00033E557 /* MMRotationManager.m in Sources */,
 				6693296A1595A87E0033E557 /* MMMapButton.m in Sources */,
 				669329701598E4DC0033E557 /* NSString+UUID.m in Sources */,
+				66A3921817CC4EE000B4974D /* NSArray+Extras.m in Sources */,
 				669329731598EE210033E557 /* UIView+Debug.m in Sources */,
 				66EDA79617CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m in Sources */,
 				665C593417BD7C42006DECBF /* Tool.m in Sources */,
