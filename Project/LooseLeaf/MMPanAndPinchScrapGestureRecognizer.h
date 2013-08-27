@@ -39,6 +39,8 @@
     __weak NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>* scrapDelegate;
 }
 
+@property (nonatomic, assign) MMBezelDirection bezelDirectionMask;
+@property (nonatomic, readonly) MMBezelDirection didExitToBezel;
 @property (nonatomic, weak) NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>* scrapDelegate;
 @property (readonly) NSArray* touches;
 @property (nonatomic, readonly) CGFloat scale;

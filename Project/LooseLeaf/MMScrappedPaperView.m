@@ -35,7 +35,7 @@
         scrapContainerView.layer.position = CGPointMake(0,0);
 
         panAndPinchScrapGesture = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
-        
+        panAndPinchScrapGesture.bezelDirectionMask = MMBezelDirectionRight;
         [panAndPinchScrapGesture requireGestureRecognizerToFail:longPress];
         [panAndPinchScrapGesture requireGestureRecognizerToFail:tap];
         panAndPinchScrapGesture.scrapDelegate = self;
@@ -101,6 +101,12 @@
         // and position, so that we can consistently determine it's position with
         // the center property
         [_panGesture setAnchorPoint:CGPointMake(.5, .5) forView:gesture.scrap];
+        
+        if(_panGesture.didExitToBezel){
+            NSLog(@"exit to bezel!");
+        }else{
+            NSLog(@"didn't exit to bezel!");
+        }
     }
 }
 
