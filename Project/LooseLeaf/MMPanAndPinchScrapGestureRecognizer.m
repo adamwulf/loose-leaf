@@ -273,11 +273,7 @@ NSInteger const  minimumNumberOfTouches = 2;
             [ignoredTouches removeObjectsInSet:touches];
         }
         if([validTouches count] == 0 && self.state == UIGestureRecognizerStateChanged){
-            if(!secondToLastTouchDidBezel){
-                self.state = UIGestureRecognizerStateCancelled;
-            }else{
-                self.state = UIGestureRecognizerStateEnded;
-            }
+            self.state = UIGestureRecognizerStateEnded;
         }
     }else{
         //

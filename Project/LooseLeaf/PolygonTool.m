@@ -23,9 +23,11 @@
 }
 
 - (BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
-    [delegate beginShapeWithTouch:touch.touch];
-    // return that we _do not_ want the JotView to draw
-    [polygonTouches addObject:touch.touch];
+    if(![polygonTouches count]){
+        [delegate beginShapeWithTouch:touch.touch];
+        // return that we _do not_ want the JotView to draw
+        [polygonTouches addObject:touch.touch];
+    }
     return NO;
 }
 
