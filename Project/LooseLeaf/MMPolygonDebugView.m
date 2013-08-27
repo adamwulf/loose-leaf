@@ -160,6 +160,7 @@
             // our path is only made of line-to segments
             if(element.type == kCGPathElementAddLineToPoint){
                 if(index == count - 1){
+                }else if(index == count - 2){
                     // this is the last element of the path, so tell our
                     // shape controller
                     [shapeMaker addLastPoint:element.points[0]];
