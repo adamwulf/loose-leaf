@@ -93,13 +93,6 @@ NSInteger const  minimumNumberOfTouches = 2;
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
-    if(self.state != UIGestureRecognizerStatePossible &&
-       [validTouches count] == minimumNumberOfTouches){
-        //
-        // if we're already pinching
-        [ignoredTouches addObjectsInSet:touches];
-        return;
-    }
     // ignore all the touches that could be bezel touches
     if([validTouchesCurrentlyBeginning count]){
         
@@ -172,7 +165,6 @@ NSInteger const  minimumNumberOfTouches = 2;
             secondToLastTouchDidBezel = NO;
         }
     }
-    
     
     NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
@@ -288,6 +280,7 @@ NSInteger const  minimumNumberOfTouches = 2;
             self.state = UIGestureRecognizerStateFailed;
         }
     }
+    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
     NSMutableOrderedSet* validTouchesCurrentlyCancelling = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
@@ -303,6 +296,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     }
     [possibleTouches removeObjectsInSet:touches];
     [ignoredTouches removeObjectsInSet:touches];
+    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 -(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
     [ignoredTouches addObject:touch];
