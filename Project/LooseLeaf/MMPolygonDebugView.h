@@ -10,7 +10,7 @@
 
 @interface MMPolygonDebugView : UIView
 
--(void) addTouchPoint:(CGPoint)point;
+-(BOOL) addTouchPoint:(CGPoint)point;
 
 -(void) clear;
 

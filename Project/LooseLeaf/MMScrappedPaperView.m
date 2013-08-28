@@ -136,11 +136,15 @@
     [polygonDebugView addTouchPoint:point];
 }
 
--(void) continueShapeAtPoint:(CGPoint)point{
+-(BOOL) continueShapeAtPoint:(CGPoint)point{
     // noop for now
     // send touch event to the view that
     // will display the drawn polygon line
-    [polygonDebugView addTouchPoint:point];
+    if([polygonDebugView addTouchPoint:point]){
+        [self complete];
+        return NO;
+    }
+    return YES;
 }
 
 -(void) finishShapeAtPoint:(CGPoint)point{
@@ -152,16 +156,18 @@
     // to the page
 //    NSLog(@"finish");
     [polygonDebugView addTouchPoint:point];
-    NSArray* shapes = [polygonDebugView complete];
-    
-    [polygonDebugView clear];
+    [self complete];
+}
 
+-(void) complete{
+    NSArray* shapes = [polygonDebugView complete];
+    [polygonDebugView clear];
     for(UIBezierPath* shape in shapes){
-//        if([scraps count]){
-//            [[scraps objectAtIndex:0] intersect:shape];
-//        }else{
-            [self addScrapWithPath:[shape copy]];
-//        }
+        //        if([scraps count]){
+        //            [[scraps objectAtIndex:0] intersect:shape];
+        //        }else{
+        [self addScrapWithPath:[shape copy]];
+        //        }
     }
     
 }

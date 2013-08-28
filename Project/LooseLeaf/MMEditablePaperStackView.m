@@ -725,7 +725,9 @@
 -(void) continueShapeWithTouch:(UITouch*)touch{
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
-    [page continueShapeAtPoint:[page convertPoint:adjusted fromView:rulerView]];
+    if(![page continueShapeAtPoint:[page convertPoint:adjusted fromView:rulerView]]){
+        [polygon cancelPolygonForTouch:touch];
+    }
 }
 
 -(void) finishShapeWithTouch:(UITouch*)touch{
