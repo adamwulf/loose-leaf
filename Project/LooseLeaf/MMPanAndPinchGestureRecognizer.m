@@ -18,7 +18,9 @@
 #import <JotUI/JotUI.h>
 #import "MMVector.h"
 
-@implementation MMPanAndPinchGestureRecognizer
+@implementation MMPanAndPinchGestureRecognizer{
+    CGPoint locationAdjustment;
+}
 
 @synthesize scrapDelegate;
 @synthesize scale;
@@ -76,6 +78,15 @@ NSInteger const  minimumNumberOfTouches = 2;
     }
 }
 
+
+-(CGPoint)locationInView:(UIView *)view{
+    if([validTouches count] >= minimumNumberOfTouches){
+        CGPoint loc1 = [[validTouches firstObject] locationInView:view];
+        CGPoint loc2 = [[validTouches objectAtIndex:1] locationInView:view];
+        return CGPointMake((loc1.x + loc2.x) / 2 - locationAdjustment.x, (loc1.y + loc2.y) / 2 - locationAdjustment.y);
+    }
+    return [super locationInView:view];
+}
 
 
 /**
@@ -176,6 +187,9 @@ NSInteger const  minimumNumberOfTouches = 2;
     NSMutableOrderedSet* validTouchesCurrentlyEnding = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
     [validTouchesCurrentlyEnding intersectSet:touches];
     [validTouchesCurrentlyEnding minusSet:ignoredTouches];
+    
+    
+    CGPoint originalLocationInView = [self locationInView:self.view];
 
     if(self.state == UIGestureRecognizerStateBegan ||
        self.state == UIGestureRecognizerStateChanged){
@@ -250,6 +264,18 @@ NSInteger const  minimumNumberOfTouches = 2;
     if(![validTouches count] && ![possibleTouches count]){
         self.state = UIGestureRecognizerStateFailed;
     }
+
+    if([validTouches count] >= minimumNumberOfTouches){
+        // reset the location and the initial distance of the gesture
+        // so that the new first two touches position won't immediatley
+        // change where the page is or what its scale is
+        CGPoint newLocationInView = [self locationInView:self.view];
+        locationAdjustment = CGPointMake(locationAdjustment.x + (newLocationInView.x - originalLocationInView.x),
+                                         locationAdjustment.y + (newLocationInView.y - originalLocationInView.y));
+        initialDistance = [self distanceBetweenTouches:validTouches] / scale;
+    }
+
+
     NSLog(@"pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -303,6 +329,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     scaleDirection = MMScaleDirectionNone;
     [velocities removeAllObjects];
     secondToLastTouchDidBezel = NO;
+    locationAdjustment = CGPointZero;
 }
 
 -(void) cancel{
