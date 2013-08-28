@@ -97,9 +97,7 @@ NSInteger const  minimumNumberOfTouches = 2;
        [validTouches count] == minimumNumberOfTouches){
         //
         // if we're already pinching
-        [touches enumerateObjectsUsingBlock:^(id obj, BOOL* stop){
-            [self ignoreTouch:obj forEvent:event];
-        }];
+        [ignoredTouches addObjectsInSet:touches];
         return;
     }
     // ignore all the touches that could be bezel touches
@@ -182,6 +180,7 @@ NSInteger const  minimumNumberOfTouches = 2;
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
     NSMutableOrderedSet* validTouchesCurrentlyMoving = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
     [validTouchesCurrentlyMoving intersectSet:touches];
+    [validTouchesCurrentlyMoving minusSet:ignoredTouches];
     if([validTouchesCurrentlyMoving count] >= minimumNumberOfTouches){
         if(self.state == UIGestureRecognizerStateBegan){
             initialDistance = 0;
@@ -225,6 +224,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     BOOL cancelledFromBezel = NO;
     NSMutableOrderedSet* validTouchesCurrentlyEnding = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
     [validTouchesCurrentlyEnding intersectSet:touches];
+    [validTouchesCurrentlyEnding minusSet:ignoredTouches];
     
     if(self.state == UIGestureRecognizerStateBegan ||
        self.state == UIGestureRecognizerStateChanged){
@@ -270,6 +270,7 @@ NSInteger const  minimumNumberOfTouches = 2;
                 self.state = UIGestureRecognizerStatePossible;
             }
             [validTouches minusOrderedSet:validTouchesCurrentlyEnding];
+            [possibleTouches removeObjectsInSet:touches];
             [ignoredTouches removeObjectsInSet:touches];
         }
         if([validTouches count] == 0 && self.state == UIGestureRecognizerStateChanged){
@@ -291,6 +292,7 @@ NSInteger const  minimumNumberOfTouches = 2;
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
     NSMutableOrderedSet* validTouchesCurrentlyCancelling = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
     [validTouchesCurrentlyCancelling intersectSet:touches];
+    [validTouchesCurrentlyCancelling minusSet:ignoredTouches];
     if([validTouchesCurrentlyCancelling count]){
         if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
             self.state = UIGestureRecognizerStatePossible;
@@ -298,9 +300,9 @@ NSInteger const  minimumNumberOfTouches = 2;
             self.state = UIGestureRecognizerStateCancelled;
         }
         [validTouches minusOrderedSet:validTouchesCurrentlyCancelling];
-        [possibleTouches removeObjectsInSet:touches];
-        [ignoredTouches removeObjectsInSet:touches];
     }
+    [possibleTouches removeObjectsInSet:touches];
+    [ignoredTouches removeObjectsInSet:touches];
 }
 -(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
     [ignoredTouches addObject:touch];

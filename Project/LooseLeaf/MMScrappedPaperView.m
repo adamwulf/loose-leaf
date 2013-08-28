@@ -58,6 +58,12 @@
     UIView* newScrap = [[MMScrapView alloc] initWithBezierPath:path];
     [scraps addObject:newScrap];
     [scrapContainerView addSubview:newScrap];
+    
+    newScrap.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.03, 1.03);
+    
+    [UIView animateWithDuration:0.4 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        newScrap.transform = CGAffineTransformIdentity;
+    } completion:nil];
 }
 
 -(NSArray*) scraps{

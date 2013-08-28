@@ -61,13 +61,6 @@
         [dottedPath moveToPoint:point];
         dot.center = point;
         dot.transform = CGAffineTransformIdentity;
-//        [UIView animateWithDuration:0.45f
-//                              delay:0.0f
-//                            options:(UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAutoreverse | UIViewAnimationOptionRepeat | UIViewAnimationOptionAllowUserInteraction)
-//                         animations:^{
-//                             dot.transform = CGAffineTransformMakeScale(0.8, 0.8);
-//                         }
-//                         completion:nil];
     }else{
         distTravelled = MIN(DistanceBetweenTwoPoints(lastPoint, point), 50);
         if(distTravelled > 2){
@@ -107,7 +100,7 @@
     CGFloat dash[3];
     dash[0] = 12;
     dash[1] = 10;
-    dottedPath.lineWidth = 10;
+    dottedPath.lineWidth = 3;
     
     [dottedPath setLineDash:nil count:0 phase:0];
     [[UIColor whiteColor] setStroke];
