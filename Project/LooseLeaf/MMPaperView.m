@@ -320,7 +320,7 @@
                                                 lastLocationInSelf.y / self.frame.size.height);
 
         // notify the delegate of our state change
-        [self.delegate isBeginning:panGesture.state == UIGestureRecognizerStateBegan
+        [self.delegate isBeginning:YES
                  toPanAndScalePage:self
                          fromFrame:frameOfPageAtBeginningOfGesture
                            toFrame:frameOfPageAtBeginningOfGesture

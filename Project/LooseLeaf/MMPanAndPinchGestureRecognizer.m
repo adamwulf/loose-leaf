@@ -85,6 +85,7 @@ NSInteger const  minimumNumberOfTouches = 2;
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
+    BOOL isBeginning = [validTouches count] < minimumNumberOfTouches;
     // ignore all the touches that could be bezel touches
     if([validTouchesCurrentlyBeginning count]){
         // look at the presentation of the view (as would be seen during animation)
@@ -102,9 +103,6 @@ NSInteger const  minimumNumberOfTouches = 2;
         }
         [self.view.layer removeAllAnimations];
 
-        
-        
-        
         [possibleTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
         [possibleTouches removeObjectsInSet:ignoredTouches];
 
@@ -122,10 +120,10 @@ NSInteger const  minimumNumberOfTouches = 2;
             [possibleTouches removeAllObjects];
         }
         
-        
-        
-        if([validTouches count] >= minimumNumberOfTouches && self.state == UIGestureRecognizerStatePossible){
+        if([validTouches count] >= minimumNumberOfTouches && isBeginning){
             self.state = UIGestureRecognizerStateBegan;
+            initialDistance = 0;
+            scale = 1;
         }else if([validTouches count] <= minimumNumberOfTouches){
             didExitToBezel = MMBezelDirectionNone;
             //
@@ -222,11 +220,18 @@ NSInteger const  minimumNumberOfTouches = 2;
             if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
                 self.state = UIGestureRecognizerStatePossible;
             }
-            [validTouches minusOrderedSet:validTouchesCurrentlyEnding];
-            [possibleTouches removeObjectsInSet:touches];
-            [ignoredTouches removeObjectsInSet:touches];
         }
-        if([validTouches count] == 0 && self.state == UIGestureRecognizerStateChanged){
+        [validTouches minusOrderedSet:validTouchesCurrentlyEnding];
+        [possibleTouches removeObjectsInSet:touches];
+        [ignoredTouches removeObjectsInSet:touches];
+        if([validTouches count] == 1){
+            [possibleTouches addObjectsInSet:[validTouches set]];
+            [validTouches removeAllObjects];
+        }
+        if([validTouches count] == 0 &&
+           [possibleTouches count] == 0 &&
+           [ignoredTouches count] == 0 &&
+           self.state == UIGestureRecognizerStateChanged){
             if(cancelledFromBezel){
                 self.state = UIGestureRecognizerStateCancelled;
             }else{

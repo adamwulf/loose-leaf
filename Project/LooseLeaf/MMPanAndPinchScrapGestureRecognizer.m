@@ -261,11 +261,18 @@ NSInteger const  minimumNumberOfTouches = 2;
             if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
                 self.state = UIGestureRecognizerStatePossible;
             }
-            [validTouches minusOrderedSet:validTouchesCurrentlyEnding];
-            [possibleTouches removeObjectsInSet:touches];
-            [ignoredTouches removeObjectsInSet:touches];
         }
-        if([validTouches count] == 0 && self.state == UIGestureRecognizerStateChanged){
+        [validTouches minusOrderedSet:validTouchesCurrentlyEnding];
+        [possibleTouches removeObjectsInSet:touches];
+        [ignoredTouches removeObjectsInSet:touches];
+        if([validTouches count] == 1){
+            [possibleTouches addObjectsInSet:[validTouches set]];
+            [validTouches removeAllObjects];
+        }
+        if([validTouches count] == 0 &&
+           [possibleTouches count] == 0 &&
+           [ignoredTouches count] == 0 &&
+           self.state == UIGestureRecognizerStateChanged){
             self.state = UIGestureRecognizerStateEnded;
         }
     }else{
