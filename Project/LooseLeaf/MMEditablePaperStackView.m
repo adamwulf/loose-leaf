@@ -404,6 +404,7 @@
     // the stroke manager is the definitive source for all strokes.
     // cancel through that manager, and it'll notify the appropriate
     // view if need be
+    NSLog(@"isbeginning: %d", beginning);
     for(UITouch* touch in touches){
         [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
         [polygon cancelPolygonForTouch:touch];
