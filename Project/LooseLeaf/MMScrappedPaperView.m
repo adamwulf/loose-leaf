@@ -106,7 +106,7 @@
         // after possibly rotating the scrap, we need to reset it's anchor point
         // and position, so that we can consistently determine it's position with
         // the center property
-        [_panGesture setAnchorPoint:CGPointMake(.5, .5) forView:gesture.scrap];
+        [gesture giveUpScrap];
         
         if(_panGesture.didExitToBezel){
             NSLog(@"exit to bezel!");
