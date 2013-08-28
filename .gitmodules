@@ -10,3 +10,6 @@
 [submodule "Submodules/touch-chart"]
 	path = Submodules/touch-chart
 	url = git@github.com:adamwulf/touch-chart.git
+[submodule "Submodules/fishhook"]
+	path = Submodules/fishhook
+	url = git@github.com:facebook/fishhook.git
