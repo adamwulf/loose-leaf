@@ -24,12 +24,11 @@
     CGPoint preGestureCenter;
     CGPoint gestureLocationAtStart;
     CGPoint translation;
+    CGPoint locationAdjustment;
 }
 
 @synthesize scale;
 @synthesize scrap;
-@synthesize rotation;
-@synthesize translation;
 @synthesize preGestureScale;
 @synthesize preGestureRotation;
 @synthesize preGestureCenter;
@@ -65,6 +64,14 @@ NSInteger const  minimumNumberOfTouches = 2;
     return [validTouches array];
 }
 
+-(CGPoint) translation{
+    return CGPointMake(translation.x - locationAdjustment.x, translation.y - locationAdjustment.y);
+}
+
+-(CGFloat) rotation{
+    return rotation;
+}
+
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
     return NO;
 }
@@ -85,6 +92,14 @@ NSInteger const  minimumNumberOfTouches = 2;
     }
 }
 
+-(CGPoint)locationInView:(UIView *)view{
+    if([validTouches count] >= minimumNumberOfTouches){
+        CGPoint loc1 = [[validTouches firstObject] locationInView:view];
+        CGPoint loc2 = [[validTouches objectAtIndex:1] locationInView:view];
+        return CGPointMake((loc1.x + loc2.x) / 2 - locationAdjustment.x, (loc1.y + loc2.y) / 2 - locationAdjustment.y);
+    }
+    return [super locationInView:view];
+}
 
 /**
  * the first touch of a gesture.
@@ -131,28 +146,8 @@ NSInteger const  minimumNumberOfTouches = 2;
         
         if([validTouches count] >= minimumNumberOfTouches){
             
-            self.preGestureScale = scrap.scale;
-            self.preGestureRotation = scrap.rotation;
+            [self prepareGestureToBeginFresh];
             
-            // set the anchor point so that it
-            // rotates around the point that we're
-            // gesturing
-            CGPoint p = [self locationInView:scrap];
-            // the frame size includes the translation, but the locationInView does not
-            // and neither does the bounds. so we need to use bounds.size, not frame.size
-            // to determine where to set the anchor point
-            p = CGPointMake(p.x / scrap.bounds.size.width, p.y / scrap.bounds.size.height);
-            [self setAnchorPoint:p forView:scrap];
-            self.preGestureCenter = scrap.center;
-            
-            CGPoint p1 = [[validTouches firstObject] locationInView:self.view];
-            CGPoint p2 = [[validTouches objectAtIndex:1] locationInView:self.view];
-            initialTouchVector = [[MMVector alloc] initWithPoint:p1 andPoint:p2];
-            rotation = 0;
-            gestureLocationAtStart = [self locationInView:self.view];
-            initialDistance = [self distanceBetweenTouches:validTouches];
-            translation = CGPointZero;
-            scale = 1;
             didExitToBezel = MMBezelDirectionNone;
 
             self.state = UIGestureRecognizerStateBegan;
@@ -287,8 +282,22 @@ NSInteger const  minimumNumberOfTouches = 2;
             self.state = UIGestureRecognizerStateFailed;
         }
     }
+    if([validTouches count] >= minimumNumberOfTouches){
+        // reset the location and the initial distance of the gesture
+        // so that the new first two touches position won't immediatley
+        // change where the page is or what its scale is
+        [self setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
+        
+        [self prepareGestureToBeginFresh];
+        
+        NSLog(@"locationAdjustment: %f %f", locationAdjustment.x, locationAdjustment.y);
+    }
+    
     NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
+
+
+
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
     NSMutableOrderedSet* validTouchesCurrentlyCancelling = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
     [validTouchesCurrentlyCancelling intersectSet:touches];
@@ -296,7 +305,10 @@ NSInteger const  minimumNumberOfTouches = 2;
     if([validTouchesCurrentlyCancelling count]){
         if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
             self.state = UIGestureRecognizerStatePossible;
-        }else if([validTouches count] == 0 && self.state == UIGestureRecognizerStateChanged){
+        }else if([validTouches count] == 0 &&
+                 [possibleTouches count] == 0 &&
+                 [ignoredTouches count] == 0 &&
+                 self.state == UIGestureRecognizerStateChanged){
             self.state = UIGestureRecognizerStateCancelled;
         }
         [validTouches minusOrderedSet:validTouchesCurrentlyCancelling];
@@ -305,6 +317,66 @@ NSInteger const  minimumNumberOfTouches = 2;
     [ignoredTouches removeObjectsInSet:touches];
     NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
+
+/**
+ * during the gesture, we allow the user
+ * to lift fingers and effectively restart
+ * the gesture
+ *
+ * this method will reset the state of the
+ * gesture to whatever the top two touches
+ * are in validTouches.
+ *
+ * this way, we can remove/change the two touches
+ * that we're using to control the gesture, and
+ * reset the state of our gesture to the beginning
+ * without actually cycling the state of the gesture.
+ *
+ * this is important, b/c once the gesture state
+ * ends or cancels, even if touches are still on screen
+ * the gesture can't restart until *all* touches
+ * end on the screen.
+ *
+ * this way we don't have to wait
+ */
+-(void) prepareGestureToBeginFresh{
+    self.preGestureScale = scrap.scale;
+    self.preGestureRotation = scrap.rotation;
+    
+    // set the anchor point so that it
+    // rotates around the point that we're
+    // gesturing
+    CGPoint p = [self locationInView:scrap];
+    // the frame size includes the translation, but the locationInView does not
+    // and neither does the bounds. so we need to use bounds.size, not frame.size
+    // to determine where to set the anchor point
+    p = CGPointMake(p.x / scrap.bounds.size.width, p.y / scrap.bounds.size.height);
+    [self setAnchorPoint:p forView:scrap];
+    self.preGestureCenter = scrap.center;
+    
+    CGPoint p1 = [[validTouches firstObject] locationInView:self.view];
+    CGPoint p2 = [[validTouches objectAtIndex:1] locationInView:self.view];
+    initialTouchVector = [[MMVector alloc] initWithPoint:p1 andPoint:p2];
+    rotation = 0;
+    gestureLocationAtStart = [self locationInView:self.view];
+    initialDistance = [self distanceBetweenTouches:validTouches];
+    translation = CGPointZero;
+    scale = 1;
+}
+
+/**
+ * since we are adjusting the anchor point of the scrap
+ * during the gesture, this method should be called by
+ * our delegate after the gesture is complete. this gives us
+ * the opportunity to fix the anchor point of the scrap
+ * without having to expose anchor point methods
+ */
+-(void) giveUpScrap{
+    [self setAnchorPoint:CGPointMake(.5, .5) forView:self.scrap];
+    scrap = nil;
+}
+
+
 -(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
     [ignoredTouches addObject:touch];
     [super ignoreTouch:touch forEvent:event];
@@ -322,6 +394,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     scrap = nil;
     gestureLocationAtStart = CGPointZero;
     translation = CGPointZero;
+    locationAdjustment = CGPointZero;
     NSLog(@"pan scrap reset");
 }
 
