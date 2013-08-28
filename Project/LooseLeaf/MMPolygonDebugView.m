@@ -11,7 +11,6 @@
 #import "DrawKit-iOS.h"
 #import "UIColor+ColorWithHex.h"
 #import "SYShape+Bezier.h"
-#import "MMDotView.h"
 #import "Constants.h"
 
 @implementation MMPolygonDebugView{
@@ -22,8 +21,6 @@
     CGFloat phase;
     
     CGPoint lastPoint;
-    
-    UIView* dot;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -33,11 +30,6 @@
         // Initialization code
         touches = [NSMutableArray array];
         shapePaths = [NSMutableArray array];
-        
-        dot = [[MMDotView alloc] initWithFrame:CGRectMake(300, 300, 20, 20)];
-        dot.transform = CGAffineTransformIdentity;
-        dot.hidden = YES;
-        [self addSubview:dot];
     }
     return self;
 }
@@ -46,33 +38,65 @@
     [touches removeAllObjects];
     pathsFromIntersectingTouches = nil;
     [shapePaths removeAllObjects];
-    [dot.layer removeAllAnimations];
-    dot.transform = CGAffineTransformIdentity;
-    dot.hidden = YES;
     dottedPath = nil;
     [self setNeedsDisplay];
     phase = 0;
 }
 
--(void) addTouchPoint:(CGPoint)point{
+-(BOOL) addTouchPoint:(CGPoint)point{
+    __block BOOL didIntersectSelf = NO;
     CGFloat distTravelled = 0;
     if(![touches count]){
         dottedPath = [UIBezierPath bezierPath];
         [dottedPath moveToPoint:point];
-        dot.center = point;
-        dot.transform = CGAffineTransformIdentity;
     }else{
+        UIBezierPath* lastSegment = [UIBezierPath bezierPath];
+        [lastSegment moveToPoint:lastPoint];
+        [lastSegment addLineToPoint:point];
+
+        CGPoint p1 = lastPoint;
+        CGPoint p2 = point;
+        __block CGPoint p3, p4;
+        p3 = CGPointZero;
+        p4 = CGPointZero;
+        
+        [dottedPath iteratePathWithBlock:^(CGPathElement element){
+            // track the point from the previous element
+            // and look to see if it intersects with the
+            // last drawn element.
+            //
+            // we know that points[0] is the endpoint, since
+            // all of our segments are line segments or move to.
+            p4 = element.points[0];
+            
+            if(!CGPointEqualToPoint(p3, CGPointZero)){
+                // we have a p3 and a p4
+                CGPoint result = Intersection3(p1,p2,p4,p3);
+                if(!CGPointEqualToPoint(result, CGNotFoundPoint)){
+                    if(CGPointEqualToPoint(result, p1) ||
+                       CGPointEqualToPoint(result, p3)){
+                        // noop
+                    }else{
+                        didIntersectSelf = YES;
+                        NSLog(@"ding!");
+                    }
+                }
+            }
+            p3 = p4;
+        }];
+        
         distTravelled = MIN(DistanceBetweenTwoPoints(lastPoint, point), 50);
         if(distTravelled > 2){
             [dottedPath addLineToPoint:point];
             lastPoint = point;
         }
-        dot.hidden = NO;
     }
     [touches addObject:[NSValue valueWithCGPoint:point]];
     phase += distTravelled / 15;
     [self setNeedsDisplayInRect:CGRectInset(dottedPath.bounds, -15, -15)];
-//    [self setNeedsDisplayInRect:CGRectMake(point.x - 10, point.y - 10, 20, 20)];
+    
+
+    return didIntersectSelf;
 }
 
 

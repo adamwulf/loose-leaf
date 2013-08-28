@@ -21,7 +21,7 @@
 
 // debug
 -(void) beginShapeAtPoint:(CGPoint)point;
--(void) continueShapeAtPoint:(CGPoint)point;
+-(BOOL) continueShapeAtPoint:(CGPoint)point;
 -(void) finishShapeAtPoint:(CGPoint)point;
 -(void) cancelShapeAtPoint:(CGPoint)point;
 
