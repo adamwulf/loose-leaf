@@ -102,6 +102,14 @@
         scrap.rotation = gesture.rotation + gesture.preGestureRotation;
         [self.delegate isBeginning:(gesture.state == UIGestureRecognizerStateBegan) toPanAndScaleScrap:gesture.scrap withTouches:gesture.touches];
     }
+    if(gesture.state == UIGestureRecognizerStateBegan){
+        // glow blue
+        gesture.scrap.selected = YES;
+    }else if(gesture.state == UIGestureRecognizerStateEnded ||
+             gesture.state == UIGestureRecognizerStateCancelled){
+        // turn off glow
+        gesture.scrap.selected = NO;
+    }
     if(gesture.scrap && gesture.state == UIGestureRecognizerStateEnded){
         // after possibly rotating the scrap, we need to reset it's anchor point
         // and position, so that we can consistently determine it's position with
