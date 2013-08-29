@@ -10,7 +10,6 @@
 #import "MMScrapContainerView.h"
 
 @implementation MMScrapPaperStackView{
-    NSMutableOrderedSet* scrapsBeingHeld;
     MMScrapContainerView* scrapContainer;
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture;
 }
@@ -19,7 +18,6 @@
 - (id)initWithFrame:(CGRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
-        scrapsBeingHeld = [NSMutableOrderedSet orderedSet];
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds];
         [self addSubview:scrapContainer];
 
@@ -35,7 +33,56 @@
 }
 
 -(void) panAndScaleScrap:(MMPanAndPinchScrapGestureRecognizer*)_panGesture{
-    [[visibleStackHolder peekSubview] panAndScaleScrap:_panGesture];
+    MMPanAndPinchScrapGestureRecognizer* gesture = (MMPanAndPinchScrapGestureRecognizer*)_panGesture;
+    
+    if(gesture.state == UIGestureRecognizerStateBegan){
+        CGFloat pageScale = [visibleStackHolder peekSubview].scale;
+        gesture.preGestureScale *= pageScale;
+        CGPoint centerInPage = CGPointApplyAffineTransform(_panGesture.scrap.center, CGAffineTransformMakeScale(pageScale, pageScale));
+        gesture.preGestureCenter = [[visibleStackHolder peekSubview] convertPoint:centerInPage toView:scrapContainer];
+    }
+    
+    if(gesture.scrap){
+        // handle the scrap
+        MMScrapView* scrap = gesture.scrap;
+        scrap.center = CGPointMake(gesture.translation.x + gesture.preGestureCenter.x,
+                                   gesture.translation.y + gesture.preGestureCenter.y);
+        scrap.scale = gesture.scale * gesture.preGestureScale;
+        scrap.rotation = gesture.rotation + gesture.preGestureRotation;
+        if(![scrapContainer.subviews containsObject:scrap]){
+            [scrapContainer addSubview:scrap];
+        }
+        [self isBeginning:(gesture.state == UIGestureRecognizerStateBegan) toPanAndScaleScrap:gesture.scrap withTouches:gesture.touches];
+    }
+    if(gesture.state == UIGestureRecognizerStateBegan){
+        // glow blue
+        gesture.scrap.selected = YES;
+    }else if(gesture.state == UIGestureRecognizerStateEnded ||
+             gesture.state == UIGestureRecognizerStateCancelled){
+        // turn off glow
+        gesture.scrap.selected = NO;
+        
+        CGPoint containerCenter = [[visibleStackHolder peekSubview] convertPoint:gesture.scrap.center fromView:scrapContainer];
+        [[visibleStackHolder peekSubview] addScrap:gesture.scrap];
+        gesture.scrap.scale = gesture.scrap.scale / [visibleStackHolder peekSubview].scale;
+        CGFloat scale = [visibleStackHolder peekSubview].scale;
+        containerCenter = CGPointApplyAffineTransform(containerCenter, CGAffineTransformMakeScale(1/scale, 1/scale));
+        gesture.scrap.center = containerCenter;
+        
+        [self finishedPanningAndScalingScrap:gesture.scrap];
+    }
+    if(gesture.scrap && gesture.state == UIGestureRecognizerStateEnded){
+        // after possibly rotating the scrap, we need to reset it's anchor point
+        // and position, so that we can consistently determine it's position with
+        // the center property
+        [gesture giveUpScrap];
+        
+        if(_panGesture.didExitToBezel){
+            NSLog(@"exit to bezel!");
+        }else{
+            NSLog(@"didn't exit to bezel!");
+        }
+    }
 }
 
 #pragma mark - MMPanAndPinchScrapGestureRecognizerDelegate
@@ -52,21 +99,10 @@
 }
 
 -(void) isBeginning:(BOOL)isBeginningGesture toPanAndScaleScrap:(MMScrapView*)scrap withTouches:(NSArray*)touches{
-    if(isBeginningGesture){
-        [scrapsBeingHeld addObject:scrap];
-    }
-    if(![scrapContainer.subviews containsObject:scrap]){
-        CGPoint containerCenter = [[visibleStackHolder peekSubview] convertPoint:scrap.center toView:scrapContainer];
-        [scrapContainer addSubview:scrap];
-        scrap.center = containerCenter;
-    }
     return [super isBeginning:isBeginningGesture toPanAndScaleScrap:scrap withTouches:touches];
 }
 
 -(void) finishedPanningAndScalingScrap:(MMScrapView*)scrap{
-    CGPoint containerCenter = [[visibleStackHolder peekSubview] convertPoint:scrap.center fromView:scrapContainer];
-    [[visibleStackHolder peekSubview] addScrap:scrap];
-    scrap.center = containerCenter;
     [super finishedPanningAndScalingScrap:scrap];
 }
 

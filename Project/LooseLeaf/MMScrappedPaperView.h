@@ -29,6 +29,4 @@
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
 
--(void) panAndScaleScrap:(MMPanAndPinchScrapGestureRecognizer*)_panGesture;
-
 @end
