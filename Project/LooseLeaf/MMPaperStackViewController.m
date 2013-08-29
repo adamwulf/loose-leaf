@@ -37,7 +37,7 @@
     
         self.view.opaque = YES;
         
-        stackView = [[MMEditablePaperStackView alloc] initWithFrame:self.view.frame];
+        stackView = [[MMScrapPaperStackView alloc] initWithFrame:self.view.frame];
         stackView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self.view addSubview:stackView];
         

@@ -428,6 +428,10 @@
     return [super isBeginning:isBeginningGesture toPanAndScaleScrap:scrap withTouches:touches];
 }
 
+-(void) finishedPanningAndScalingScrap:(MMScrapView*)scrap{
+    // noop
+    [super finishedPanningAndScalingScrap:scrap];
+}
 
 #pragma mark = List View
 

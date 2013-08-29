@@ -44,6 +44,18 @@
  */
 -(void) isBeginning:(BOOL)isBeginningGesture toPanAndScaleScrap:(MMScrapView*)scrap withTouches:(NSArray*)touches;
 
+
+/**
+ * finished moving a scrap
+ */
+-(void) finishedPanningAndScalingScrap:(MMScrapView*)scrap;
+
+/**
+ * communicates when touches are owned by a scrap pan
+ * or a page pan
+ */
+-(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
+
 /**
  * this is triggered when the page has been scaled small
  * enough to begin transition into list view. the user will

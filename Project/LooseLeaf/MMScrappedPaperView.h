@@ -25,7 +25,10 @@
 -(void) finishShapeAtPoint:(CGPoint)point;
 -(void) cancelShapeAtPoint:(CGPoint)point;
 
+-(void) addScrap:(MMScrapView*)scrap;
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
+
+-(void) panAndScaleScrap:(MMPanAndPinchScrapGestureRecognizer*)_panGesture;
 
 @end
