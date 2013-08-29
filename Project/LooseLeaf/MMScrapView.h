@@ -13,6 +13,7 @@
 @property (readonly) UIBezierPath* bezierPath;
 @property (nonatomic, assign) CGFloat scale;
 @property (nonatomic, assign) CGFloat rotation;
+@property (nonatomic, assign) BOOL selected;
 
 - (id)initWithBezierPath:(UIBezierPath*)path;
 

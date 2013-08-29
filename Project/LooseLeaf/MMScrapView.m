@@ -12,16 +12,19 @@
 #import <QuartzCore/QuartzCore.h>
 #import "MMRotationManager.h"
 #import "DrawKit-iOS.h"
+#import "UIColor+Shadow.h"
 
 @implementation MMScrapView{
     UIBezierPath* path;
     UIView* contentView;
     CGFloat scale;
     CGFloat rotation;
+    BOOL selected;
 }
 
 @synthesize scale;
 @synthesize rotation;
+@synthesize selected;
 
 - (id)initWithBezierPath:(UIBezierPath*)_path
 {
@@ -58,6 +61,17 @@
 
 -(UIBezierPath*) bezierPath{
     return path;
+}
+
+-(void) setSelected:(BOOL)_selected{
+    selected = _selected;
+    if(selected){
+        self.layer.shadowColor = [[UIColor blueShadowColor] colorWithAlphaComponent:1].CGColor;
+        self.layer.shadowRadius = 2.5;
+    }else{
+        self.layer.shadowRadius = 1.5;
+        self.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.5].CGColor;
+    }
 }
 
 -(void) setBackgroundColor:(UIColor *)backgroundColor{

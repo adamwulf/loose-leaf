@@ -15,6 +15,7 @@
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "UIDevice+PPI.h"
+#import "UIColor+Shadow.h"
 
 @interface MMPointAndVector : NSObject
 @property (nonatomic) CGPoint point;
@@ -60,7 +61,7 @@
 @synthesize jotView;
 
 +(UIColor*) rulerColor{
-    return [UIColor colorWithRed: 77.0/255.0 green: 187.0/255.0 blue: 1.0 alpha: 1];
+    return [[UIColor blueShadowColor] colorWithAlphaComponent:1];
 }
 
 - (id)initWithFrame:(CGRect)frame
