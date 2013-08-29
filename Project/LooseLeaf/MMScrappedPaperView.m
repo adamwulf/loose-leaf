@@ -18,7 +18,6 @@
 @implementation MMScrappedPaperView{
     NSMutableArray* scraps;
     UIView* scrapContainerView;
-    MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture;
 }
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
@@ -34,13 +33,6 @@
         scrapContainerView.layer.anchorPoint = CGPointMake(0,0);
         scrapContainerView.layer.position = CGPointMake(0,0);
 
-        panAndPinchScrapGesture = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
-        panAndPinchScrapGesture.bezelDirectionMask = MMBezelDirectionRight;
-        [panAndPinchScrapGesture requireGestureRecognizerToFail:longPress];
-        [panAndPinchScrapGesture requireGestureRecognizerToFail:tap];
-        panAndPinchScrapGesture.scrapDelegate = self;
-        [self addGestureRecognizer:panAndPinchScrapGesture];
-        
         panGesture.scrapDelegate = self;
     }
     return self;
@@ -66,6 +58,10 @@
     } completion:nil];
 }
 
+-(void) addScrap:(MMScrapView*)scrap{
+    [scrapContainerView addSubview:scrap];
+}
+
 -(NSArray*) scraps{
     return [scrapContainerView.subviews reverseArray];
 }
@@ -82,7 +78,10 @@
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     [panGesture ownershipOfTouches:touches isGesture:gesture];
-    [panAndPinchScrapGesture ownershipOfTouches:touches isGesture:gesture];
+    if([gesture isKindOfClass:[MMPanAndPinchGestureRecognizer class]]){
+        // only notify of our own gestures
+        [self.delegate ownershipOfTouches:touches isGesture:gesture];
+    }
 }
 
 
@@ -109,6 +108,7 @@
              gesture.state == UIGestureRecognizerStateCancelled){
         // turn off glow
         gesture.scrap.selected = NO;
+        [self.delegate finishedPanningAndScalingScrap:gesture.scrap];
     }
     if(gesture.scrap && gesture.state == UIGestureRecognizerStateEnded){
         // after possibly rotating the scrap, we need to reset it's anchor point

@@ -1143,6 +1143,14 @@
     // noop
 }
 
+-(void) finishedPanningAndScalingScrap:(MMScrapView*)scrap{
+    // noop
+}
+
+-(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
+    // noop
+}
+
 -(void) isBeginningToScaleReallySmall:(MMPaperView *)page{
     [self updateIconAnimations];
 }
