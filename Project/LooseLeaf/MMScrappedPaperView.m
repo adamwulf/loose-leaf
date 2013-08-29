@@ -76,6 +76,25 @@
 
 #pragma mark - Pan and Scale Scraps
 
+/**
+ * this is an important method to ensure that panning scraps and panning pages
+ * don't step on each other.
+ *
+ * when panning, single touches are held as "possible" touches for both panning
+ * gestures. once two possible touches exist in the pan gestures, then one of the
+ * two gestures will own it.
+ *
+ * when a pan gesture takes ownership of a pair of touches, it needs to notify
+ * the other pan gestures that it owns it. Since the PanPage gesture is owned
+ * by the page and the PanScrap gesture is owned by the stack, we need these
+ * delegate calls to be passed from gesture -> the gesture delegate -> page or stack
+ * without causing an infinite loop of delegate calls.
+ *
+ * in this way, each gesture will notify its own delegate, either the stack or page.
+ * the stack and page will notify each other *only* of touch ownerships from gestures
+ * that they own. so the page will notify about PanPage ownership, and the stack
+ * will notify of PanScrap ownership
+ */
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     [panGesture ownershipOfTouches:touches isGesture:gesture];
     if([gesture isKindOfClass:[MMPanAndPinchGestureRecognizer class]]){
@@ -87,41 +106,6 @@
 
 -(void) panAndScale:(MMPanAndPinchGestureRecognizer *)_panGesture{
     [super panAndScale:_panGesture];
-}
-
--(void) panAndScaleScrap:(MMPanAndPinchScrapGestureRecognizer*)_panGesture{
-    MMPanAndPinchScrapGestureRecognizer* gesture = (MMPanAndPinchScrapGestureRecognizer*)_panGesture;
-    
-    if(gesture.scrap){
-        // handle the scrap
-        MMScrapView* scrap = gesture.scrap;
-        scrap.center = CGPointMake(gesture.translation.x + gesture.preGestureCenter.x,
-                                   gesture.translation.y + gesture.preGestureCenter.y);
-        scrap.scale = gesture.scale * gesture.preGestureScale;
-        scrap.rotation = gesture.rotation + gesture.preGestureRotation;
-        [self.delegate isBeginning:(gesture.state == UIGestureRecognizerStateBegan) toPanAndScaleScrap:gesture.scrap withTouches:gesture.touches];
-    }
-    if(gesture.state == UIGestureRecognizerStateBegan){
-        // glow blue
-        gesture.scrap.selected = YES;
-    }else if(gesture.state == UIGestureRecognizerStateEnded ||
-             gesture.state == UIGestureRecognizerStateCancelled){
-        // turn off glow
-        gesture.scrap.selected = NO;
-        [self.delegate finishedPanningAndScalingScrap:gesture.scrap];
-    }
-    if(gesture.scrap && gesture.state == UIGestureRecognizerStateEnded){
-        // after possibly rotating the scrap, we need to reset it's anchor point
-        // and position, so that we can consistently determine it's position with
-        // the center property
-        [gesture giveUpScrap];
-        
-        if(_panGesture.didExitToBezel){
-            NSLog(@"exit to bezel!");
-        }else{
-            NSLog(@"didn't exit to bezel!");
-        }
-    }
 }
 
 

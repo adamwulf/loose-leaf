@@ -266,7 +266,6 @@ NSInteger const  minimumNumberOfTouches = 2;
         }
         if([validTouches count] == 0 &&
            [possibleTouches count] == 0 &&
-           [ignoredTouches count] == 0 &&
            self.state == UIGestureRecognizerStateChanged){
             self.state = UIGestureRecognizerStateEnded;
         }

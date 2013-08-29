@@ -398,6 +398,11 @@
                         toFrame:fr
                         withTouches:panGesture.touches];
     
+    // now that our delegate has adjusted our frame
+    // let's set our scale to match exactly what our
+    // actual frame scale is
+    scale = fr.size.width / superviewSize.width;
+    
     if(panGesture.state != UIGestureRecognizerStateCancelled &&
        panGesture.state != UIGestureRecognizerStateEnded &&
        panGesture.state != UIGestureRecognizerStateFailed){
