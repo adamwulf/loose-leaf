@@ -52,7 +52,7 @@
         if(![scrapContainer.subviews containsObject:scrap]){
             [scrapContainer addSubview:scrap];
         }
-        [self isBeginning:(gesture.state == UIGestureRecognizerStateBegan) toPanAndScaleScrap:gesture.scrap withTouches:gesture.touches];
+        [self isBeginning:gesture.state == UIGestureRecognizerStateBegan toPanAndScaleScrap:gesture.scrap withTouches:gesture.touches];
     }
     if(gesture.state == UIGestureRecognizerStateBegan){
         // glow blue
@@ -99,11 +99,20 @@
 }
 
 -(void) isBeginning:(BOOL)isBeginningGesture toPanAndScaleScrap:(MMScrapView*)scrap withTouches:(NSArray*)touches{
-    return [super isBeginning:isBeginningGesture toPanAndScaleScrap:scrap withTouches:touches];
+    // our gesture has began, so make sure to kill
+    // any touches that are being used to draw
+    //
+    // the stroke manager is the definitive source for all strokes.
+    // cancel through that manager, and it'll notify the appropriate
+    // view if need be
+    for(UITouch* touch in touches){
+        [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+        [polygon cancelPolygonForTouch:touch];
+    }
 }
 
 -(void) finishedPanningAndScalingScrap:(MMScrapView*)scrap{
-    [super finishedPanningAndScalingScrap:scrap];
+    // noop
 }
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{

@@ -1139,14 +1139,6 @@
     }
 }
 
--(void) isBeginning:(BOOL)isBeginningGesture toPanAndScaleScrap:(MMScrapView*)scrap withTouches:(NSArray*)touches{
-    // noop
-}
-
--(void) finishedPanningAndScalingScrap:(MMScrapView*)scrap{
-    // noop
-}
-
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     // noop
 }

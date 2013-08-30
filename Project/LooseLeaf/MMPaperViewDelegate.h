@@ -39,18 +39,6 @@
 -(void) finishedPanningAndScalingPage:(MMPaperView*)page intoBezel:(MMBezelDirection)direction fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withVelocity:(CGPoint)velocity;
 
 /**
- * a notification that the page is beginning to move a scrap
- * of paper on the page
- */
--(void) isBeginning:(BOOL)isBeginningGesture toPanAndScaleScrap:(MMScrapView*)scrap withTouches:(NSArray*)touches;
-
-
-/**
- * finished moving a scrap
- */
--(void) finishedPanningAndScalingScrap:(MMScrapView*)scrap;
-
-/**
  * communicates when touches are owned by a scrap pan
  * or a page pan
  */
