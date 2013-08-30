@@ -11,6 +11,8 @@
 
 @implementation MMScrapPaperStackView{
     MMScrapContainerView* scrapContainer;
+    // we get two gestures here, so that we can support
+    // grabbing two scraps at the same time
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture;
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture2;
 }
