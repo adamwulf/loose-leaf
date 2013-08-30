@@ -115,6 +115,7 @@
 		66C0C9D0178386B8009491B3 /* MMLikeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C0C9CF178386B8009491B3 /* MMLikeButton.m */; };
 		66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */; };
 		66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11F617CFD8A600882275 /* MMScrapPaperStackView.m */; };
+		66CE11FA17D14CFB00882275 /* MMShakeScrapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11F917D14CFB00882275 /* MMShakeScrapGestureRecognizer.m */; };
 		66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* MMListAddPageButton.m */; };
 		66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D33F4B15A6408A0044C809 /* MMShadowedView.m */; };
 		66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
@@ -356,6 +357,8 @@
 		66CDB72E17CC0C7200C636C7 /* com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata"; path = "../../TestData/com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata"; sourceTree = "<group>"; };
 		66CE11F517CFD8A600882275 /* MMScrapPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapPaperStackView.h; sourceTree = "<group>"; };
 		66CE11F617CFD8A600882275 /* MMScrapPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapPaperStackView.m; sourceTree = "<group>"; };
+		66CE11F817D14CFB00882275 /* MMShakeScrapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShakeScrapGestureRecognizer.h; sourceTree = "<group>"; };
+		66CE11F917D14CFB00882275 /* MMShakeScrapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShakeScrapGestureRecognizer.m; sourceTree = "<group>"; };
 		66D0905415F7080F004D2CAF /* MMListAddPageButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButton.h; sourceTree = "<group>"; };
 		66D0905515F70810004D2CAF /* MMListAddPageButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListAddPageButton.m; sourceTree = "<group>"; };
 		66D0905815F71941004D2CAF /* MMListAddPageButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButtonDelegate.h; sourceTree = "<group>"; };
@@ -996,6 +999,8 @@
 				66EDA79417CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.h */,
 				66EDA79517CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m */,
 				66EDA7AB17CBD8580067BA63 /* MMPanAndPinchScrapGestureRecognizerDelegate.h */,
+				66CE11F817D14CFB00882275 /* MMShakeScrapGestureRecognizer.h */,
+				66CE11F917D14CFB00882275 /* MMShakeScrapGestureRecognizer.m */,
 			);
 			name = Scraps;
 			sourceTree = "<group>";
@@ -1174,6 +1179,7 @@
 				66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */,
 				66B843E717B0529D008BF8B8 /* JRSwizzle.m in Sources */,
 				66B843E817B052A6008BF8B8 /* gpc.c in Sources */,
+				66CE11FA17D14CFB00882275 /* MMShakeScrapGestureRecognizer.m in Sources */,
 				66B843E917B052B7008BF8B8 /* UIBezierPath+GPC.m in Sources */,
 				66B843EA17B052B7008BF8B8 /* UIBezierPath+Editing.m in Sources */,
 				66A471BE17C7DAA000C2A5B6 /* MMScrappedPaperView.m in Sources */,

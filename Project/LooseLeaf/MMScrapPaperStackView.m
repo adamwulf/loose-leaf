@@ -8,6 +8,7 @@
 
 #import "MMScrapPaperStackView.h"
 #import "MMScrapContainerView.h"
+#import "MMShakeScrapGestureRecognizer.h"
 
 @implementation MMScrapPaperStackView{
     MMScrapContainerView* scrapContainer;
@@ -15,6 +16,7 @@
     // grabbing two scraps at the same time
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture;
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture2;
+    MMShakeScrapGestureRecognizer* shakeScrapGesture;
 }
 
 
@@ -28,6 +30,9 @@
         panAndPinchScrapGesture.bezelDirectionMask = MMBezelDirectionRight;
         panAndPinchScrapGesture.scrapDelegate = self;
         [self addGestureRecognizer:panAndPinchScrapGesture];
+        
+        shakeScrapGesture = [[MMShakeScrapGestureRecognizer alloc] initWithTarget:self action:@selector(shakeScrap:)];
+        [self addGestureRecognizer:shakeScrapGesture];
         
         panAndPinchScrapGesture2 = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
         panAndPinchScrapGesture2.bezelDirectionMask = MMBezelDirectionRight;
@@ -244,6 +249,13 @@
     
     return pageToDropScrap;
 }
+
+#pragma mark - Shake Scraps
+
+-(void) shakeScrap:(MMShakeScrapGestureRecognizer*)gesture{
+    // noop for now
+}
+
 
 
 #pragma mark - MMPanAndPinchScrapGestureRecognizerDelegate
