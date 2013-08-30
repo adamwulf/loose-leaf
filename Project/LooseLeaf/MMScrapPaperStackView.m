@@ -12,6 +12,7 @@
 @implementation MMScrapPaperStackView{
     MMScrapContainerView* scrapContainer;
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture;
+    MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture2;
 }
 
 
@@ -23,11 +24,13 @@
 
         panAndPinchScrapGesture = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
         panAndPinchScrapGesture.bezelDirectionMask = MMBezelDirectionRight;
-//        [panAndPinchScrapGesture requireGestureRecognizerToFail:longPress];
-//        [panAndPinchScrapGesture requireGestureRecognizerToFail:tap];
         panAndPinchScrapGesture.scrapDelegate = self;
         [self addGestureRecognizer:panAndPinchScrapGesture];
         
+        panAndPinchScrapGesture2 = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
+        panAndPinchScrapGesture2.bezelDirectionMask = MMBezelDirectionRight;
+        panAndPinchScrapGesture2.scrapDelegate = self;
+        [self addGestureRecognizer:panAndPinchScrapGesture2];
     }
     return self;
 }
@@ -44,6 +47,12 @@
             [self panAndScaleScrap:panAndPinchScrapGesture];
         }
     }
+    if(panAndPinchScrapGesture2.scrap){
+        if(![scrapContainer.subviews containsObject:panAndPinchScrapGesture2.scrap]){
+            [scrapContainer addSubview:panAndPinchScrapGesture2.scrap];
+            [self panAndScaleScrap:panAndPinchScrapGesture2];
+        }
+    }
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
@@ -52,6 +61,12 @@
         if(![scrapContainer.subviews containsObject:panAndPinchScrapGesture.scrap]){
             [scrapContainer addSubview:panAndPinchScrapGesture.scrap];
             [self panAndScaleScrap:panAndPinchScrapGesture];
+        }
+    }
+    if(panAndPinchScrapGesture2.scrap){
+        if(![scrapContainer.subviews containsObject:panAndPinchScrapGesture2.scrap]){
+            [scrapContainer addSubview:panAndPinchScrapGesture2.scrap];
+            [self panAndScaleScrap:panAndPinchScrapGesture2];
         }
     }
 }
@@ -241,6 +256,7 @@
 -(CGRect) isBeginning:(BOOL)beginning toPanAndScalePage:(MMPaperView *)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withTouches:(NSArray*)touches{
     CGRect ret = [super isBeginning:beginning toPanAndScalePage:page fromFrame:fromFrame toFrame:toFrame withTouches:touches];
     [self panAndScaleScrap:panAndPinchScrapGesture];
+    [self panAndScaleScrap:panAndPinchScrapGesture2];
     return ret;
 }
 
@@ -268,6 +284,7 @@
         [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
     }
     [panAndPinchScrapGesture ownershipOfTouches:touches isGesture:gesture];
+    [panAndPinchScrapGesture2 ownershipOfTouches:touches isGesture:gesture];
 }
 
 
