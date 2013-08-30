@@ -62,12 +62,65 @@
         // turn off glow
         gesture.scrap.selected = NO;
         
-        CGPoint containerCenter = [[visibleStackHolder peekSubview] convertPoint:gesture.scrap.center fromView:scrapContainer];
-        [[visibleStackHolder peekSubview] addScrap:gesture.scrap];
-        gesture.scrap.scale = gesture.scrap.scale / [visibleStackHolder peekSubview].scale;
-        CGFloat scale = [visibleStackHolder peekSubview].scale;
-        containerCenter = CGPointApplyAffineTransform(containerCenter, CGAffineTransformMakeScale(1/scale, 1/scale));
-        gesture.scrap.center = containerCenter;
+        //
+        // notes for dropping scraps:
+        //
+        // my original idea was to see if the center of the scrap is inside the page, and if so
+        // then I'd add it. otherwise, i'd look behind it and add it to whatever page contained
+        // the center point.
+        //
+        // the problem is that if the scrap is moved "off" the page but still had ~30% of its
+        // shape inside the top page, then should it fall to the page behind or should it
+        // fall onto the top page since some visible content is still there.
+        //
+        // if i let the top page keep the scrap b/c some scrap is visible, then how much
+        // scrap is enough?
+        //
+        // one thought: maybe i use the location of the /gesture/ instead of the location of the scrap
+        // since the gesture location has to be inside the bounds of the scrap, then dropping the scrap
+        // on a page will work.
+        
+        MMScrappedPaperView* pageToDropScrap = nil;
+        CGFloat scrapScaleInPage;
+        CGPoint scrapCenterInPage;
+        CGRect pageBounds;
+        do{
+            if(!pageToDropScrap){
+                pageToDropScrap = [visibleStackHolder peekSubview];
+            }else{
+                pageToDropScrap = [visibleStackHolder getPageBelow:pageToDropScrap];
+                if(!pageToDropScrap){
+                    break;
+                }
+            }
+            CGFloat pageScale = pageToDropScrap.scale;
+            scrapScaleInPage = gesture.scrap.scale / pageScale;
+            
+            scrapCenterInPage = [pageToDropScrap convertPoint:gesture.scrap.center fromView:scrapContainer];
+            CGAffineTransform reverseScaleTransform = CGAffineTransformMakeScale(1/pageScale, 1/pageScale);
+            scrapCenterInPage = CGPointApplyAffineTransform(scrapCenterInPage, reverseScaleTransform);
+            
+            // bounds respects the transform, so we need to scale the
+            // bounds of the page too to see if the scrap is landing inside
+            // of it
+            pageBounds = pageToDropScrap.bounds;
+            pageBounds = CGRectApplyAffineTransform(pageBounds, reverseScaleTransform);
+            if(CGRectContainsPoint(pageBounds, scrapCenterInPage)){
+                NSLog(@"page %@ contains scrap center", pageToDropScrap.uuid);
+            }
+        }while(!CGRectContainsPoint(pageBounds, scrapCenterInPage));
+
+        if(pageToDropScrap){
+            NSLog(@"page %@ contains scrap center", pageToDropScrap.uuid);
+            [pageToDropScrap addScrap:gesture.scrap];
+            gesture.scrap.scale = scrapScaleInPage;
+            gesture.scrap.center = scrapCenterInPage;
+        }else{
+            NSLog(@"send scrap to sidebar");
+            [[visibleStackHolder peekSubview] addScrap:gesture.scrap];
+            gesture.scrap.scale = scrapScaleInPage;
+            gesture.scrap.center = [visibleStackHolder peekSubview].center;
+        }
         
         [self finishedPanningAndScalingScrap:gesture.scrap];
     }
