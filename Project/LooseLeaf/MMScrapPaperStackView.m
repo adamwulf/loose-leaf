@@ -111,9 +111,9 @@
                 // of it
                 pageBounds = pageToDropScrap.bounds;
                 pageBounds = CGRectApplyAffineTransform(pageBounds, reverseScaleTransform);
-                if(CGRectContainsPoint(pageBounds, scrapCenterInPage)){
-                    NSLog(@"page %@ contains scrap center", pageToDropScrap.uuid);
-                }
+//                if(CGRectContainsPoint(pageBounds, scrapCenterInPage)){
+//                    NSLog(@"page %@ contains scrap center", pageToDropScrap.uuid);
+//                }
             }while(!CGRectContainsPoint(pageBounds, scrapCenterInPage));
             
             if(pageToDropScrap){
@@ -143,8 +143,6 @@
         
         if(_panGesture.didExitToBezel){
             NSLog(@"exit to bezel!");
-        }else{
-            NSLog(@"didn't exit to bezel!");
         }
     }
 }

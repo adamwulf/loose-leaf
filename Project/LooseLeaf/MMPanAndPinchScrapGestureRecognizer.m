@@ -288,8 +288,6 @@ NSInteger const  minimumNumberOfTouches = 2;
         [self setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
         
         [self prepareGestureToBeginFresh];
-        
-        NSLog(@"locationAdjustment: %f %f", locationAdjustment.x, locationAdjustment.y);
     }
     
     NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
