@@ -20,6 +20,7 @@
 
 @implementation MMPanAndPinchGestureRecognizer{
     CGPoint locationAdjustment;
+    CGPoint lastLocationInView;
 }
 
 @synthesize scrapDelegate;
@@ -79,13 +80,14 @@ NSInteger const  minimumNumberOfTouches = 2;
 }
 
 
+
 -(CGPoint)locationInView:(UIView *)view{
     if([validTouches count] >= minimumNumberOfTouches){
-        CGPoint loc1 = [[validTouches firstObject] locationInView:view];
-        CGPoint loc2 = [[validTouches objectAtIndex:1] locationInView:view];
-        return CGPointMake((loc1.x + loc2.x) / 2 - locationAdjustment.x, (loc1.y + loc2.y) / 2 - locationAdjustment.y);
+        CGPoint loc1 = [[validTouches firstObject] locationInView:self.view];
+        CGPoint loc2 = [[validTouches objectAtIndex:1] locationInView:self.view];
+        lastLocationInView = CGPointMake((loc1.x + loc2.x) / 2 - locationAdjustment.x, (loc1.y + loc2.y) / 2 - locationAdjustment.y);
     }
-    return [super locationInView:view];
+    return [self.view convertPoint:lastLocationInView toView:view];
 }
 
 
@@ -113,24 +115,13 @@ NSInteger const  minimumNumberOfTouches = 2;
             self.view.frame = lFrame;
         }
         [self.view.layer removeAllAnimations];
+        
 
         [possibleTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
         [possibleTouches removeObjectsInSet:ignoredTouches];
-
-        for(MMScrapView* _scrap in scrapDelegate.scraps){
-            NSSet* touchesInScrap = [_scrap matchingTouchesFrom:[possibleTouches set]];
-            if([touchesInScrap count]){
-                // two+ possible touches match this scrap
-                [possibleTouches removeObjectsInSet:touchesInScrap];
-            }
-        }
-
-        if([possibleTouches count] >= minimumNumberOfTouches){
-            [scrapDelegate ownershipOfTouches:[possibleTouches set] isGesture:self];
-            [validTouches addObjectsInSet:[possibleTouches set]];
-            [possibleTouches removeAllObjects];
-        }
         
+        [self processPossibleTouches];
+
         if([validTouches count] >= minimumNumberOfTouches && isBeginning){
             self.state = UIGestureRecognizerStateBegan;
             initialDistance = 0;
@@ -146,6 +137,23 @@ NSInteger const  minimumNumberOfTouches = 2;
     [self calculateVelocity];
 
     NSLog(@"pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+}
+
+-(void) processPossibleTouches{
+    for(MMScrapView* _scrap in scrapDelegate.scraps){
+        NSSet* touchesInScrap = [_scrap matchingTouchesFrom:[possibleTouches set]];
+        if([touchesInScrap count]){
+            // two+ possible touches match this scrap
+            [ignoredTouches addObjectsInSet:touchesInScrap];
+            [possibleTouches removeObjectsInSet:touchesInScrap];
+        }
+    }
+    
+    if([possibleTouches count] >= minimumNumberOfTouches){
+        [scrapDelegate ownershipOfTouches:[possibleTouches set] isGesture:self];
+        [validTouches addObjectsInSet:[possibleTouches set]];
+        [possibleTouches removeAllObjects];
+    }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -262,8 +270,28 @@ NSInteger const  minimumNumberOfTouches = 2;
         [ignoredTouches removeObjectsInSet:touches];
     }
     if(![validTouches count] && ![possibleTouches count]){
-        self.state = UIGestureRecognizerStateFailed;
+        //
+        // i need to better handle the case where i have ignored touches
+        // but valid touches are released. the gesture should "end"
+        // but should stay alive just like the scrap pan gesture.
+        //
+        if(![ignoredTouches count]){
+            self.state = UIGestureRecognizerStateFailed;
+        }else{
+            // need to reset to initial state
+            // soft reset. keep the touches that we know
+            // about, but reset everything else
+            initialDistance = 0;
+            scale = 0;
+            didExitToBezel = MMBezelDirectionNone;
+            scaleDirection = MMScaleDirectionNone;
+            [velocities removeAllObjects];
+            secondToLastTouchDidBezel = NO;
+            locationAdjustment = CGPointZero;
+            lastLocationInView = CGPointZero;
+        }
     }
+    [self processPossibleTouches];
 
     if([validTouches count] >= minimumNumberOfTouches){
         // reset the location and the initial distance of the gesture
@@ -330,6 +358,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     [velocities removeAllObjects];
     secondToLastTouchDidBezel = NO;
     locationAdjustment = CGPointZero;
+    lastLocationInView = CGPointZero;
 }
 
 -(void) cancel{
