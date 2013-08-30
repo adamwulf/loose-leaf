@@ -62,6 +62,10 @@
     [scrapContainerView addSubview:scrap];
 }
 
+-(BOOL) hasScrap:(MMScrapView*)scrap{
+    return [[self scraps] containsObject:scrap];
+}
+
 -(NSArray*) scraps{
     return [scrapContainerView.subviews reverseArray];
 }

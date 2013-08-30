@@ -26,6 +26,7 @@
 -(void) cancelShapeAtPoint:(CGPoint)point;
 
 -(void) addScrap:(MMScrapView*)scrap;
+-(BOOL) hasScrap:(MMScrapView*)scrap;
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
 

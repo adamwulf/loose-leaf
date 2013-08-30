@@ -14,7 +14,9 @@
 #import "UIView+Debug.h"
 #import "TestFlight.h"
 
-@implementation MMPaperView
+@implementation MMPaperView{
+    CGRect originalUnscaledBounds;
+}
 
 @synthesize scale;
 @synthesize delegate;
@@ -33,6 +35,7 @@
     if (self) {
         // Initialization code
         uuid = _uuid;
+        originalUnscaledBounds = self.bounds;
         
         //////////////////////////////////////////////////////////////////////
         //
@@ -101,6 +104,10 @@
         debug_NSLog(@"zero width");
     }
     [super setFrame:_frame];
+    // now that our delegate has adjusted our frame
+    // let's set our scale to match exactly what our
+    // actual frame scale is
+    self.scale = _frame.size.width / originalUnscaledBounds.size.width;
 }
 
 
@@ -397,11 +404,6 @@
                       fromFrame:frameOfPageAtBeginningOfGesture
                         toFrame:fr
                         withTouches:panGesture.touches];
-    
-    // now that our delegate has adjusted our frame
-    // let's set our scale to match exactly what our
-    // actual frame scale is
-    scale = fr.size.width / superviewSize.width;
     
     if(panGesture.state != UIGestureRecognizerStateCancelled &&
        panGesture.state != UIGestureRecognizerStateEnded &&
