@@ -104,7 +104,7 @@
         debug_NSLog(@"zero width");
     }
     [super setFrame:_frame];
-    // now that our delegate has adjusted our frame
+    // now that we have adjusted our frame
     // let's set our scale to match exactly what our
     // actual frame scale is
     self.scale = _frame.size.width / originalUnscaledBounds.size.width;

@@ -32,6 +32,33 @@
     return self;
 }
 
+
+
+#pragma mark - Bezel Gestures
+
+-(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
+    [super isBezelingInLeftWithGesture:bezelGesture];
+    if(panAndPinchScrapGesture.scrap){
+        if(![scrapContainer.subviews containsObject:panAndPinchScrapGesture.scrap]){
+            [scrapContainer addSubview:panAndPinchScrapGesture.scrap];
+            [self panAndScaleScrap:panAndPinchScrapGesture];
+        }
+    }
+}
+
+-(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
+    [super isBezelingInRightWithGesture:bezelGesture];
+    if(panAndPinchScrapGesture.scrap){
+        if(![scrapContainer.subviews containsObject:panAndPinchScrapGesture.scrap]){
+            [scrapContainer addSubview:panAndPinchScrapGesture.scrap];
+            [self panAndScaleScrap:panAndPinchScrapGesture];
+        }
+    }
+}
+
+
+#pragma mark - Panning Scraps
+
 -(void) panAndScaleScrap:(MMPanAndPinchScrapGestureRecognizer*)_panGesture{
     MMPanAndPinchScrapGestureRecognizer* gesture = (MMPanAndPinchScrapGestureRecognizer*)_panGesture;
     
@@ -161,14 +188,24 @@
 -(MMScrappedPaperView*) pageWouldDropScrap:(MMScrapView*)scrap atCenter:(CGPoint*)scrapCenterInPage andScale:(CGFloat*)scrapScaleInPage{
     MMScrappedPaperView* pageToDropScrap = nil;
     CGRect pageBounds;
+    //
+    // we want to be able to drop scraps
+    // onto any page in the visible or bezel stack
+    //
+    // since the bezel pages are "above" the visible stack,
+    // we should check them first
+    //
+    // these pages are in reverse order, so the last object in the
+    // array is the top most visible page.
+    NSMutableArray* pages = [NSMutableArray arrayWithArray:visibleStackHolder.subviews];
+    [pages addObjectsFromArray:bezelStackHolder.subviews];
     do{
+        // fetch the most visible page
+        pageToDropScrap = [pages lastObject];
+        [pages removeLastObject];
         if(!pageToDropScrap){
-            pageToDropScrap = [visibleStackHolder peekSubview];
-        }else{
-            pageToDropScrap = [visibleStackHolder getPageBelow:pageToDropScrap];
-            if(!pageToDropScrap){
-                break;
-            }
+            // if we can't find a page, we're done
+            break;
         }
         CGFloat pageScale = pageToDropScrap.scale;
         CGAffineTransform reverseScaleTransform = CGAffineTransformMakeScale(1/pageScale, 1/pageScale);
@@ -187,8 +224,6 @@
 //            NSLog(@"page %@ contains scrap center", pageToDropScrap.uuid);
 //        }
     }while(!CGRectContainsPoint(pageBounds, *scrapCenterInPage));
-    
-    NSLog(@"scale of dropped page: %f", pageToDropScrap.scale);
     
     return pageToDropScrap;
 }
