@@ -1,0 +1,83 @@
+//
+//  MMScapBubbleContainerView.m
+//  LooseLeaf
+//
+//  Created by Adam Wulf on 8/31/13.
+//  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
+//
+
+#import "MMScapBubbleContainerView.h"
+#import "MMScrapBubbleView.h"
+#import "NSThread+BlockAdditions.h"
+
+@implementation MMScapBubbleContainerView{
+    CGFloat lastRotationReading;
+}
+
+
+
+-(void) addScrapAnimated:(MMScrapView *)scrap{
+    // exit the scrap to the bezel!
+    CGRect rect = CGRectMake(668, 240, 80, 80);
+    if([self.subviews count]){
+        // put it below the most recent bubble
+        // each bubble is ordered in subviews most recent -> least recent
+        rect.origin.y += 80 * [self.subviews count];
+    }
+    MMScrapBubbleView* bubble = [[MMScrapBubbleView alloc] initWithFrame:rect];
+    [self insertSubview:bubble atIndex:0];
+    [self insertSubview:scrap aboveSubview:bubble];
+    // keep the scrap in the bezel container during the animation, then
+    // push it into the bubble
+    bubble.alpha = 0;
+    bubble.scale = .9;
+    bubble.rotation = lastRotationReading;
+    
+    CGFloat animationDuration = 0.5;
+    [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        // animate the scrap into position
+        bubble.alpha = 1;
+        scrap.transform = CGAffineTransformConcat([MMScrapBubbleView idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
+        scrap.center = bubble.center;
+    } completion:^(BOOL finished){
+        // add it to the bubble and bounce
+        bubble.scrap = scrap;
+        [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            // scrap "hits" the bubble and pushes it down a bit
+            bubble.scale = .8;
+        } completion:^(BOOL finished){
+            [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                // bounce back
+                bubble.scale = 1.1;
+            } completion:^(BOOL finished){
+                [UIView animateWithDuration:animationDuration * .16 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                    // and done
+                    bubble.scale = 1.0;
+                } completion:nil];
+            }];
+        }];
+        
+    }];
+}
+
+#pragma mark - Rotation
+
+-(CGFloat) sidebarButtonRotationForReading:(CGFloat)currentReading{
+    return -(currentReading + M_PI/2);
+}
+
+-(void) didUpdateAccelerometerWithReading:(CGFloat)currentRawReading{
+    [NSThread performBlockOnMainThread:^{
+        for(MMScrapBubbleView* bubble in self.subviews){
+            if([bubble isKindOfClass:[MMScrapBubbleView class]]){
+                // during an animation, the scrap will also be a subview,
+                // so we need to make sure that we're rotating only the
+                // bubble button
+                lastRotationReading = currentRawReading;
+                bubble.rotation = [self sidebarButtonRotationForReading:currentRawReading];
+            }
+        }
+    }];
+}
+
+@end
