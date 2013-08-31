@@ -66,34 +66,33 @@
     scrap.transform = [MMScrapBubbleView idealTransformForScrap:scrap];
     UIBezierPath* path = [scrap.bezierPath copy];
     [path applyTransform:scrap.transform];
-    
-    CGFloat centerX = (self.bounds.size.width - path.bounds.size.width) / 2;
-    CGFloat centerY = (self.bounds.size.height - path.bounds.size.height) / 2;
-    NSLog(@"scrap %f %f", centerX, centerY);
-    NSLog(@"path %f %f", path.bounds.origin.x, path.bounds.origin.y);
-    CGFloat diffX = centerX - path.bounds.origin.x;
-    CGFloat diffY = centerY - path.bounds.origin.y;
-    
-    
-    
-    
+
+    // find the first point of the path compared
+    // to the first point of the scrap's path
+    // and line these up
     CGPoint firstscrappoint = [scrap firstPoint];
     firstscrappoint = [self convertPoint:firstscrappoint fromView:scrap];
-    NSLog(@"scrap first %f %f", firstscrappoint.x, firstscrappoint.y);
     CGPoint firstpathpoint = [path elementAtIndex:0].points[0];
-    NSLog(@"path %f %f", firstpathpoint.x, firstpathpoint.y);
-    
-    diffX = firstscrappoint.x - firstpathpoint.x;
-    diffY = firstscrappoint.y - firstpathpoint.y;
-
-    
+    CGFloat diffX = firstscrappoint.x - firstpathpoint.x;
+    CGFloat diffY = firstscrappoint.y - firstpathpoint.y;
     [path applyTransform:CGAffineTransformMakeTranslation(diffX, diffY)];
-    NSLog(@"path %f %f", path.bounds.origin.x, path.bounds.origin.y);
-    NSLog(@"scrap %f %f", scrap.center.x, scrap.center.y);
-    NSLog(@"path %f %f", path.bounds.origin.x + path.bounds.size.width/2, path.bounds.origin.y + path.bounds.size.height / 2);
-    
-    
-    
+    //
+    // now the path and the scrap are lined up, but the
+    // scrap's center and the path center don't actually
+    // agree out of the box (unknown why). things actually
+    // look better if we average their centers
+    //
+    // let's move the scrap and the path to the average
+    // of the two centers
+    CGPoint pathCenter = CGPointMake(path.bounds.origin.x + path.bounds.size.width/2, path.bounds.origin.y + path.bounds.size.height / 2);
+    diffX = scrap.center.x - pathCenter.x;
+    diffY = scrap.center.y - pathCenter.y;
+    CGAffineTransform centerTransform = CGAffineTransformMakeTranslation(diffX/2, diffY/2);
+    [path applyTransform:centerTransform];
+    scrap.center = CGPointApplyAffineTransform(scrap.center, centerTransform);
+
+    // now let the border know about it's path
+    // to draw
     [borderView setBezierPath:path];
 }
 
