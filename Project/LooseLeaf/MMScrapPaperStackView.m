@@ -201,12 +201,12 @@
             NSLog(@"exit to bezel!");
             CGRect rect = CGRectMake(668, 240, 80, 80);
             if([bezelScrapContainer.subviews count]){
-                rect = [[bezelScrapContainer.subviews lastObject] frame];
+                rect = [[bezelScrapContainer.subviews firstObject] frame];
                 rect = CGRectOffset(rect, 0, 80);
             }
             MMScrapBubbleView* bubble = [[MMScrapBubbleView alloc] initWithFrame:rect];
-            [bezelScrapContainer addSubview:bubble];
-            [bezelScrapContainer addSubview:scrap];
+            [bezelScrapContainer insertSubview:bubble atIndex:0];
+            [bezelScrapContainer insertSubview:scrap aboveSubview:bubble];
             bubble.alpha = 0;
             bubble.transform = CGAffineTransformMakeScale(.9, .9);
 
