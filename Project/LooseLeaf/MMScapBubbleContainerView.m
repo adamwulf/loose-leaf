@@ -68,12 +68,12 @@
 
 -(void) didUpdateAccelerometerWithReading:(CGFloat)currentRawReading{
     [NSThread performBlockOnMainThread:^{
+        lastRotationReading = currentRawReading;
         for(MMScrapBubbleView* bubble in self.subviews){
             if([bubble isKindOfClass:[MMScrapBubbleView class]]){
                 // during an animation, the scrap will also be a subview,
                 // so we need to make sure that we're rotating only the
                 // bubble button
-                lastRotationReading = currentRawReading;
                 bubble.rotation = [self sidebarButtonRotationForReading:currentRawReading];
             }
         }

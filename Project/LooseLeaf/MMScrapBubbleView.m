@@ -7,9 +7,12 @@
 //
 
 #import "MMScrapBubbleView.h"
+#import "MMScrapBorderView.h"
+#import "DrawKit-iOS.h"
 
 @implementation MMScrapBubbleView{
     CGFloat rotationAdjustment;
+    MMScrapBorderView* borderView;
 }
 
 @synthesize scrap;
@@ -26,6 +29,8 @@
         rotationAdjustment = 0;
         rotation = 0;
         scale = 1;
+        borderView = [[MMScrapBorderView alloc] initWithFrame:self.bounds];
+        [self addSubview:borderView];
     }
     return self;
 }
@@ -34,12 +39,14 @@
 
 -(void) setRotation:(CGFloat)_rotation{
     rotation = _rotation;
-    self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation(rotation - rotationAdjustment), scale, scale);
+    self.transform = CGAffineTransformMakeScale(scale, scale);
+//    self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation(rotation - rotationAdjustment), scale, scale);
 }
 
 -(void) setScale:(CGFloat)_scale{
     scale = _scale;
-    self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation(rotation - rotationAdjustment), scale, scale);
+    self.transform = CGAffineTransformMakeScale(scale, scale);
+//    self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation(rotation - rotationAdjustment), scale, scale);
 }
 
 #pragma mark - Scrap
@@ -52,10 +59,42 @@
 -(void) setScrap:(MMScrapView *)_scrap{
     scrap = _scrap;
     rotationAdjustment = rotation;
-    [self addSubview:scrap];
+    self.rotation = rotation; // force transform update
+
+    [self insertSubview:scrap belowSubview:borderView];
     scrap.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
     scrap.transform = [MMScrapBubbleView idealTransformForScrap:scrap];
-    self.rotation = rotation; // force transform update
+    UIBezierPath* path = [scrap.bezierPath copy];
+    [path applyTransform:scrap.transform];
+    
+    CGFloat centerX = (self.bounds.size.width - path.bounds.size.width) / 2;
+    CGFloat centerY = (self.bounds.size.height - path.bounds.size.height) / 2;
+    NSLog(@"scrap %f %f", centerX, centerY);
+    NSLog(@"path %f %f", path.bounds.origin.x, path.bounds.origin.y);
+    CGFloat diffX = centerX - path.bounds.origin.x;
+    CGFloat diffY = centerY - path.bounds.origin.y;
+    
+    
+    
+    
+    CGPoint firstscrappoint = [scrap firstPoint];
+    firstscrappoint = [self convertPoint:firstscrappoint fromView:scrap];
+    NSLog(@"scrap first %f %f", firstscrappoint.x, firstscrappoint.y);
+    CGPoint firstpathpoint = [path elementAtIndex:0].points[0];
+    NSLog(@"path %f %f", firstpathpoint.x, firstpathpoint.y);
+    
+    diffX = firstscrappoint.x - firstpathpoint.x;
+    diffY = firstscrappoint.y - firstpathpoint.y;
+
+    
+    [path applyTransform:CGAffineTransformMakeTranslation(diffX, diffY)];
+    NSLog(@"path %f %f", path.bounds.origin.x, path.bounds.origin.y);
+    NSLog(@"scrap %f %f", scrap.center.x, scrap.center.y);
+    NSLog(@"path %f %f", path.bounds.origin.x + path.bounds.size.width/2, path.bounds.origin.y + path.bounds.size.height / 2);
+    
+    
+    
+    [borderView setBezierPath:path];
 }
 
 
