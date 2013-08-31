@@ -11,12 +11,15 @@
 #import "MMShakeScrapGestureRecognizer.h"
 
 @implementation MMScrapPaperStackView{
+    MMScrapContainerView* bezelScrapContainer;
     MMScrapContainerView* scrapContainer;
     // we get two gestures here, so that we can support
     // grabbing two scraps at the same time
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture;
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture2;
     MMShakeScrapGestureRecognizer* shakeScrapGesture;
+    
+    NSMutableArray* bezelledScraps;
 }
 
 
@@ -25,19 +28,24 @@
     if ((self = [super initWithFrame:frame])) {
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds];
         [self addSubview:scrapContainer];
+        
+        bezelScrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds];
+        [self addSubview:bezelScrapContainer];
 
         panAndPinchScrapGesture = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
         panAndPinchScrapGesture.bezelDirectionMask = MMBezelDirectionRight;
         panAndPinchScrapGesture.scrapDelegate = self;
         [self addGestureRecognizer:panAndPinchScrapGesture];
         
-        shakeScrapGesture = [[MMShakeScrapGestureRecognizer alloc] initWithTarget:self action:@selector(shakeScrap:)];
-        [self addGestureRecognizer:shakeScrapGesture];
+//        shakeScrapGesture = [[MMShakeScrapGestureRecognizer alloc] initWithTarget:self action:@selector(shakeScrap:)];
+//        [self addGestureRecognizer:shakeScrapGesture];
         
         panAndPinchScrapGesture2 = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
         panAndPinchScrapGesture2.bezelDirectionMask = MMBezelDirectionRight;
         panAndPinchScrapGesture2.scrapDelegate = self;
         [self addGestureRecognizer:panAndPinchScrapGesture2];
+        
+        bezelledScraps = [NSMutableArray array];
     }
     return self;
 }
@@ -172,12 +180,10 @@
         if(shouldBezel){
             // TODO: bezel the scrap
             NSLog(@"send scrap to sidebar");
-            MMScrappedPaperView* pageToDropScrap = [visibleStackHolder peekSubview];
-            if(![pageToDropScrap hasScrap:gesture.scrap]){
-                [pageToDropScrap addScrap:gesture.scrap];
-            }
-            gesture.scrap.scale = gesture.scrap.scale / pageToDropScrap.scale;
-            gesture.scrap.center = pageToDropScrap.center;
+            [bezelledScraps addObject:gesture.scrap];
+            [bezelScrapContainer addSubview:gesture.scrap];
+            
+            
         }
         
         [self finishedPanningAndScalingScrap:gesture.scrap];
