@@ -17,6 +17,7 @@
 
 @property (nonatomic) MMScrapView* scrap;
 @property (nonatomic, assign) CGFloat rotation;
+@property (nonatomic, assign) CGFloat rotationAdjustment;
 @property (nonatomic, assign) CGFloat scale;
 
 +(CGAffineTransform) idealTransformForScrap:(MMScrapView*)scrap;

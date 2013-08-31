@@ -18,6 +18,7 @@
 @synthesize scrap;
 @synthesize rotation;
 @synthesize scale;
+@synthesize rotationAdjustment;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -39,14 +40,12 @@
 
 -(void) setRotation:(CGFloat)_rotation{
     rotation = _rotation;
-    self.transform = CGAffineTransformMakeScale(scale, scale);
-//    self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation(rotation - rotationAdjustment), scale, scale);
+    self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation(rotation - rotationAdjustment), scale, scale);
 }
 
 -(void) setScale:(CGFloat)_scale{
     scale = _scale;
-    self.transform = CGAffineTransformMakeScale(scale, scale);
-//    self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation(rotation - rotationAdjustment), scale, scale);
+    self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation(rotation - rotationAdjustment), scale, scale);
 }
 
 #pragma mark - Scrap
