@@ -10,6 +10,8 @@
 
 @implementation MMScrapBubbleView
 
+@synthesize scrap;
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -20,6 +22,24 @@
     }
     return self;
 }
+
+
+#pragma mark - Scrap
+
++(CGAffineTransform) idealTransformForScrap:(MMScrapView*)scrap{
+    CGFloat scale = 36.0 / MAX(scrap.originalBounds.size.width, scrap.originalBounds.size.height);
+    return CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.rotation),CGAffineTransformMakeScale(scale, scale));
+}
+
+-(void) setScrap:(MMScrapView *)_scrap{
+    scrap = _scrap;
+    [self addSubview:scrap];
+    scrap.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
+    scrap.transform = [MMScrapBubbleView idealTransformForScrap:scrap];
+}
+
+
+#pragma mark - Properties
 
 
 -(UIColor*) borderColor{

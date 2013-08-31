@@ -14,6 +14,7 @@
 @property (nonatomic, assign) CGFloat scale;
 @property (nonatomic, assign) CGFloat rotation;
 @property (nonatomic, assign) BOOL selected;
+@property (nonatomic, readonly) CGRect originalBounds;
 
 - (id)initWithBezierPath:(UIBezierPath*)path;
 

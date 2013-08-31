@@ -7,7 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMScrapView.h"
 
-@interface MMScrapBubbleView : UIView
+@interface MMScrapBubbleView : UIView{
+    MMScrapView* scrap;
+}
+
+@property (nonatomic) MMScrapView* scrap;
+
++(CGAffineTransform) idealTransformForScrap:(MMScrapView*)scrap;
 
 @end

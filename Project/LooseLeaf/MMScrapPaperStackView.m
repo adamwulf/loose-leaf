@@ -9,6 +9,7 @@
 #import "MMScrapPaperStackView.h"
 #import "MMScrapContainerView.h"
 #import "MMShakeScrapGestureRecognizer.h"
+#import "MMScrapBubbleView.h"
 
 @implementation MMScrapPaperStackView{
     MMScrapContainerView* bezelScrapContainer;
@@ -181,9 +182,6 @@
             // TODO: bezel the scrap
             NSLog(@"send scrap to sidebar");
             [bezelledScraps addObject:gesture.scrap];
-            [bezelScrapContainer addSubview:gesture.scrap];
-            
-            
         }
         
         [self finishedPanningAndScalingScrap:gesture.scrap];
@@ -194,10 +192,49 @@
         // after possibly rotating the scrap, we need to reset it's anchor point
         // and position, so that we can consistently determine it's position with
         // the center property
+        
+        MMScrapView* scrap = gesture.scrap;
+        
         [gesture giveUpScrap];
         
         if(_panGesture.didExitToBezel){
             NSLog(@"exit to bezel!");
+            CGRect rect = CGRectMake(668, 240, 80, 80);
+            if([bezelScrapContainer.subviews count]){
+                rect = [[bezelScrapContainer.subviews lastObject] frame];
+                rect = CGRectOffset(rect, 0, 80);
+            }
+            MMScrapBubbleView* bubble = [[MMScrapBubbleView alloc] initWithFrame:rect];
+            [bezelScrapContainer addSubview:bubble];
+            [bezelScrapContainer addSubview:scrap];
+            bubble.alpha = 0;
+            bubble.transform = CGAffineTransformMakeScale(.9, .9);
+
+            
+            CGFloat animationDuration = .5;
+            
+            
+            [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                bubble.alpha = 1;
+                scrap.transform = CGAffineTransformConcat([MMScrapBubbleView idealTransformForScrap:scrap], bubble.transform);
+                scrap.center = bubble.center;
+            } completion:^(BOOL finished){
+                NSLog(@"bounce");
+                bubble.scrap = scrap;
+                
+                [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                    bubble.transform = CGAffineTransformMakeScale(.9, .9);
+                } completion:^(BOOL finished){
+                    [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                        bubble.transform = CGAffineTransformMakeScale(1.2, 1.2);
+                    } completion:^(BOOL finished){
+                        [UIView animateWithDuration:animationDuration * .16 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                            bubble.transform = CGAffineTransformIdentity;
+                        } completion:nil];
+                    }];
+                }];
+                
+            }];
         }
     }
 }

@@ -20,16 +20,18 @@
     CGFloat scale;
     CGFloat rotation;
     BOOL selected;
+    CGRect originalBounds;
 }
 
 @synthesize scale;
 @synthesize rotation;
 @synthesize selected;
+@synthesize originalBounds;
 
 - (id)initWithBezierPath:(UIBezierPath*)_path
 {
     _path = [_path copy];
-    CGRect originalBounds = _path.bounds;
+    originalBounds = _path.bounds;
     [_path applyTransform:CGAffineTransformMakeTranslation(-originalBounds.origin.x + 4, -originalBounds.origin.y + 4)];
 
     // twice the shadow

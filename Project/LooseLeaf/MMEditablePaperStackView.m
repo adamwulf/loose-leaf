@@ -197,11 +197,6 @@
         
         rulerView = [[MMRulerView alloc] initWithFrame:self.bounds];
         [self addSubview:rulerView];
-        
-        
-        [self addSubview:[[MMScrapBubbleView alloc] initWithFrame:CGRectMake(628, 100, 120, 120)]];
-        [self addSubview:[[MMScrapBubbleView alloc] initWithFrame:CGRectMake(668, 240, 80, 80)]];
-        [self addSubview:[[MMScrapBubbleView alloc] initWithFrame:CGRectMake(648, 360, 100, 100)]];
     }
     return self;
 }
