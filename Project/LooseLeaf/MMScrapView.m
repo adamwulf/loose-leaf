@@ -61,6 +61,10 @@
     return self;
 }
 
+-(CGPoint) firstPoint{
+    return [path elementAtIndex:0].points[0];
+}
+
 -(UIBezierPath*) bezierPath{
     return path;
 }
