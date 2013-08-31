@@ -19,6 +19,9 @@
     return self;
 }
 
+-(UIColor*) borderColor{
+    return [UIColor colorWithRed: 0.26 green: 0.26 blue: 0.26 alpha: 0.35];
+}
 
 -(void) setBezierPath:(UIBezierPath*)path{
     bezierPath = [path copy];
@@ -31,7 +34,7 @@
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
-    [[UIColor blackColor] setStroke];
+    [[self borderColor] setStroke];
     bezierPath.lineWidth = 1;
     [bezierPath stroke];
 }
