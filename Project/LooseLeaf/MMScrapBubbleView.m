@@ -8,9 +8,13 @@
 
 #import "MMScrapBubbleView.h"
 
-@implementation MMScrapBubbleView
+@implementation MMScrapBubbleView{
+    CGFloat rotationAdjustment;
+}
 
 @synthesize scrap;
+@synthesize rotation;
+@synthesize scale;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -19,10 +23,24 @@
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
+        rotationAdjustment = 0;
+        rotation = 0;
+        scale = 1;
     }
     return self;
 }
 
+#pragma mark - Rotation
+
+-(void) setRotation:(CGFloat)_rotation{
+    rotation = _rotation;
+    self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation(rotation - rotationAdjustment), scale, scale);
+}
+
+-(void) setScale:(CGFloat)_scale{
+    scale = _scale;
+    self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation(rotation - rotationAdjustment), scale, scale);
+}
 
 #pragma mark - Scrap
 
@@ -33,9 +51,11 @@
 
 -(void) setScrap:(MMScrapView *)_scrap{
     scrap = _scrap;
+    rotationAdjustment = rotation;
     [self addSubview:scrap];
     scrap.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
     scrap.transform = [MMScrapBubbleView idealTransformForScrap:scrap];
+    self.rotation = rotation; // force transform update
 }
 
 

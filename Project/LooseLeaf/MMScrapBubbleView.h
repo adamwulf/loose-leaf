@@ -11,9 +11,13 @@
 
 @interface MMScrapBubbleView : UIView{
     MMScrapView* scrap;
+    CGFloat rotation;
+    CGFloat scale;
 }
 
 @property (nonatomic) MMScrapView* scrap;
+@property (nonatomic, assign) CGFloat rotation;
+@property (nonatomic, assign) CGFloat scale;
 
 +(CGAffineTransform) idealTransformForScrap:(MMScrapView*)scrap;
 

@@ -10,9 +10,10 @@
 #import "MMScrapContainerView.h"
 #import "MMShakeScrapGestureRecognizer.h"
 #import "MMScrapBubbleView.h"
+#import "MMScapBubbleContainerView.h"
 
 @implementation MMScrapPaperStackView{
-    MMScrapContainerView* bezelScrapContainer;
+    MMScapBubbleContainerView* bezelScrapContainer;
     MMScrapContainerView* scrapContainer;
     // we get two gestures here, so that we can support
     // grabbing two scraps at the same time
@@ -30,7 +31,7 @@
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds];
         [self addSubview:scrapContainer];
         
-        bezelScrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds];
+        bezelScrapContainer = [[MMScapBubbleContainerView alloc] initWithFrame:self.bounds];
         [self addSubview:bezelScrapContainer];
 
         panAndPinchScrapGesture = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
@@ -193,52 +194,19 @@
         // and position, so that we can consistently determine it's position with
         // the center property
         
-        MMScrapView* scrap = gesture.scrap;
         
+        // giving up the scrap will make sure
+        // its anchor point is back in the true
+        // center of the scrap. It'll also
+        // nil out the scrap in the gesture, so
+        // hang onto it
+        MMScrapView* scrap = gesture.scrap;
         [gesture giveUpScrap];
         
         if(_panGesture.didExitToBezel){
-            // exit the scrap to the bezel!
-            CGRect rect = CGRectMake(668, 240, 80, 80);
-            if([bezelScrapContainer.subviews count]){
-                // put it below the most recent bubble
-                // each bubble is ordered in subviews most recent -> least recent
-                rect = [[bezelScrapContainer.subviews firstObject] frame];
-                rect = CGRectOffset(rect, 0, 80);
-            }
-            MMScrapBubbleView* bubble = [[MMScrapBubbleView alloc] initWithFrame:rect];
-            [bezelScrapContainer insertSubview:bubble atIndex:0];
-            [bezelScrapContainer insertSubview:scrap aboveSubview:bubble];
-            // keep the scrap in the bezel container during the animation, then
-            // push it into the bubble
-            bubble.alpha = 0;
-            bubble.transform = CGAffineTransformMakeScale(.9, .9);
-
-            CGFloat animationDuration = .5;
-            [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                // animate the scrap into position
-                bubble.alpha = 1;
-                scrap.transform = CGAffineTransformConcat([MMScrapBubbleView idealTransformForScrap:scrap], bubble.transform);
-                scrap.center = bubble.center;
-            } completion:^(BOOL finished){
-                // add it to the bubble and bounce
-                bubble.scrap = scrap;
-                [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                    // scrap "hits" the bubble and pushes it down a bit
-                    bubble.transform = CGAffineTransformMakeScale(.8, .8);
-                } completion:^(BOOL finished){
-                    [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                        // bounce back
-                        bubble.transform = CGAffineTransformMakeScale(1.1, 1.1);
-                    } completion:^(BOOL finished){
-                        [UIView animateWithDuration:animationDuration * .16 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                            // and done
-                            bubble.transform = CGAffineTransformIdentity;
-                        } completion:nil];
-                    }];
-                }];
-                
-            }];
+            // if we've bezelled the scrap,
+            // add it to the bezel container
+            [bezelScrapContainer addScrapAnimated:scrap];
         }
     }
 }
@@ -348,6 +316,13 @@
     [panAndPinchScrapGesture2 ownershipOfTouches:touches isGesture:gesture];
 }
 
+
+#pragma mark - Rotation
+
+-(void) didUpdateAccelerometerWithReading:(CGFloat)currentRawReading{
+    [super didUpdateAccelerometerWithReading:currentRawReading];
+    [bezelScrapContainer didUpdateAccelerometerWithReading:currentRawReading];
+}
 
 
 @end
