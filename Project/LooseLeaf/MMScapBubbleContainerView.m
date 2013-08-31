@@ -30,9 +30,8 @@
     // keep the scrap in the bezel container during the animation, then
     // push it into the bubble
     bubble.alpha = 0;
-    bubble.scale = .9;
     bubble.rotation = lastRotationReading;
-    
+    bubble.scale = .9;
     CGFloat animationDuration = 0.5;
     [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         // animate the scrap into position
@@ -68,7 +67,7 @@
 
 -(void) didUpdateAccelerometerWithReading:(CGFloat)currentRawReading{
     [NSThread performBlockOnMainThread:^{
-        lastRotationReading = currentRawReading;
+        lastRotationReading = [self sidebarButtonRotationForReading:currentRawReading];
         for(MMScrapBubbleView* bubble in self.subviews){
             if([bubble isKindOfClass:[MMScrapBubbleView class]]){
                 // during an animation, the scrap will also be a subview,
