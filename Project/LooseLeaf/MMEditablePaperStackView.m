@@ -356,7 +356,7 @@
         settingsButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
     }];
 }
--(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading{
+-(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
     [NSThread performBlockOnMainThread:^{
         [[visibleStackHolder peekSubview] didUpdateAccelerometerWithRawReading:currentRawReading];
     }];

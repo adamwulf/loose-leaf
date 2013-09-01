@@ -54,7 +54,7 @@ static MMRotationManager* _instance = nil;
                 [self.delegate didUpdateAccelerometerWithReading:currentRotationReading];
             }
             currentRawRotationReading = newRawReading;
-            [self.delegate didUpdateAccelerometerWithRawReading:currentRawRotationReading];
+            [self.delegate didUpdateAccelerometerWithRawReading:currentRawRotationReading andX:accelerationX andY:accelerationY andZ:accelerationZ];
         }];
     }
     return _instance;
