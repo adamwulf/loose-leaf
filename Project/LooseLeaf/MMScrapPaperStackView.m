@@ -319,9 +319,9 @@
 
 #pragma mark - Rotation
 
--(void) didUpdateAccelerometerWithReading:(CGFloat)currentRawReading{
+-(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
     [super didUpdateAccelerometerWithReading:currentRawReading];
-    [bezelScrapContainer didUpdateAccelerometerWithReading:currentRawReading];
+    [bezelScrapContainer didUpdateAccelerometerWithRawReading:currentRawReading andX:xAccel andY:yAccel andZ:zAccel];
 }
 
 
