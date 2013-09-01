@@ -14,7 +14,7 @@
     CGFloat lastRotationReading;
 }
 
-
+@synthesize delegate;
 
 -(void) addScrapAnimated:(MMScrapView *)scrap{
     // exit the scrap to the bezel!
@@ -76,6 +76,7 @@
         bubble.alpha = 0;
     } completion:^(BOOL finished){
         [bubble removeFromSuperview];
+        [self.delegate didTapToAddScrapBackToPage:scrap];
     }];
 }
 

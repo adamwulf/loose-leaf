@@ -30,6 +30,7 @@
         [self addSubview:scrapContainer];
         
         bezelScrapContainer = [[MMScapBubbleContainerView alloc] initWithFrame:self.bounds];
+        bezelScrapContainer.delegate = self;
         [self addSubview:bezelScrapContainer];
 
         panAndPinchScrapGesture = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
@@ -317,6 +318,18 @@
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
     [super didUpdateAccelerometerWithReading:currentRawReading];
     [bezelScrapContainer didUpdateAccelerometerWithRawReading:currentRawReading andX:xAccel andY:yAccel andZ:zAccel];
+}
+
+#pragma mark - MMScapBubbleContainerViewDelegate
+
+-(void) didTapToAddScrapBackToPage:(MMScrapView *)scrap{
+    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+    [page addScrap:scrap];
+    //
+    // TODO:
+    // adjust for the page location and scale
+    // and also look to see if it should land in a bezel page
+    // or the visible stack
 }
 
 

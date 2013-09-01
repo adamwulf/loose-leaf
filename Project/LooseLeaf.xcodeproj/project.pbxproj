@@ -371,6 +371,7 @@
 		66CE11FF17D2772400882275 /* MMScrapBorderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBorderView.m; sourceTree = "<group>"; };
 		66CE120117D3AD7C00882275 /* MMBounceButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBounceButton.h; sourceTree = "<group>"; };
 		66CE120217D3AD7C00882275 /* MMBounceButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBounceButton.m; sourceTree = "<group>"; };
+		66CE120617D3BBCD00882275 /* MMScapBubbleContainerViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScapBubbleContainerViewDelegate.h; sourceTree = "<group>"; };
 		66D0905415F7080F004D2CAF /* MMListAddPageButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButton.h; sourceTree = "<group>"; };
 		66D0905515F70810004D2CAF /* MMListAddPageButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListAddPageButton.m; sourceTree = "<group>"; };
 		66D0905815F71941004D2CAF /* MMListAddPageButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButtonDelegate.h; sourceTree = "<group>"; };
@@ -906,6 +907,7 @@
 				66942DCF17C84356001E0150 /* MMScrapContainerView.m */,
 				66CE11FB17D2700E00882275 /* MMScapBubbleContainerView.h */,
 				66CE11FC17D2700E00882275 /* MMScapBubbleContainerView.m */,
+				66CE120617D3BBCD00882275 /* MMScapBubbleContainerViewDelegate.h */,
 			);
 			name = "Scrap Containers";
 			sourceTree = "<group>";
