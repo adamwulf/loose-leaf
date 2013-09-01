@@ -1567,16 +1567,17 @@
  * get this into static mode asap.
  */
 -(void) willChangeTopPageTo:(MMPaperView*)page{
-    if(page && ![recentlyConfirmedPageUUID isEqualToString:page.uuid]){
-        recentlyConfirmedPageUUID = page.uuid;
-        [self saveStacksToDisk];
 //        debug_NSLog(@"will switch top page to %@", page.uuid);
-    }
 }
 
 -(void) didChangeTopPage{
     // noop
-//    debug_NSLog(@"did change top page");
+    MMPaperView* topPage = [visibleStackHolder peekSubview];
+    if(topPage && ![recentlyConfirmedPageUUID isEqualToString:topPage.uuid]){
+        recentlyConfirmedPageUUID = topPage.uuid;
+        [self saveStacksToDisk];
+    }
+    debug_NSLog(@"did change top page");
 }
 
 /**
