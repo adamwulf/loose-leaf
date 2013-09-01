@@ -37,6 +37,7 @@
         panAndPinchScrapGesture = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
         panAndPinchScrapGesture.bezelDirectionMask = MMBezelDirectionRight;
         panAndPinchScrapGesture.scrapDelegate = self;
+        panAndPinchScrapGesture.cancelsTouchesInView = NO;
         [self addGestureRecognizer:panAndPinchScrapGesture];
         
 //        shakeScrapGesture = [[MMShakeScrapGestureRecognizer alloc] initWithTarget:self action:@selector(shakeScrap:)];
@@ -45,6 +46,7 @@
         panAndPinchScrapGesture2 = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
         panAndPinchScrapGesture2.bezelDirectionMask = MMBezelDirectionRight;
         panAndPinchScrapGesture2.scrapDelegate = self;
+        panAndPinchScrapGesture2.cancelsTouchesInView = NO;
         [self addGestureRecognizer:panAndPinchScrapGesture2];
         
         bezelledScraps = [NSMutableArray array];
@@ -52,12 +54,16 @@
     return self;
 }
 
+#pragma mark - Add Page
 
+-(void) addPageButtonTapped:(UIButton*)_button{
+    [self forceScrapToScrapContainerDuringGesture];
+    [super addPageButtonTapped:_button];
+}
 
 #pragma mark - Bezel Gestures
 
--(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
-    [super isBezelingInLeftWithGesture:bezelGesture];
+-(void) forceScrapToScrapContainerDuringGesture{
     if(panAndPinchScrapGesture.scrap){
         if(![scrapContainer.subviews containsObject:panAndPinchScrapGesture.scrap]){
             [scrapContainer addSubview:panAndPinchScrapGesture.scrap];
@@ -72,20 +78,14 @@
     }
 }
 
+-(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
+    [super isBezelingInLeftWithGesture:bezelGesture];
+    [self forceScrapToScrapContainerDuringGesture];
+}
+
 -(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
     [super isBezelingInRightWithGesture:bezelGesture];
-    if(panAndPinchScrapGesture.scrap){
-        if(![scrapContainer.subviews containsObject:panAndPinchScrapGesture.scrap]){
-            [scrapContainer addSubview:panAndPinchScrapGesture.scrap];
-            [self panAndScaleScrap:panAndPinchScrapGesture];
-        }
-    }
-    if(panAndPinchScrapGesture2.scrap){
-        if(![scrapContainer.subviews containsObject:panAndPinchScrapGesture2.scrap]){
-            [scrapContainer addSubview:panAndPinchScrapGesture2.scrap];
-            [self panAndScaleScrap:panAndPinchScrapGesture2];
-        }
-    }
+    [self forceScrapToScrapContainerDuringGesture];
 }
 
 
