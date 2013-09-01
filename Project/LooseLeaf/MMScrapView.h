@@ -24,6 +24,8 @@
 
 -(CGPoint) firstPoint;
 
+-(void) setScale:(CGFloat)scale andRotation:(CGFloat)rotation;
+
 /**
  * will return the array of touches that this scrap
  * contains, but only if more than one touch
