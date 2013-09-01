@@ -108,7 +108,7 @@
     return nil;
 }
 
--(void) setScale:(CGFloat)_scale{
+-(void) setScale:(CGFloat)_scale andRotation:(CGFloat)_rotation{
     if(_scale > 2) _scale = 2;
     if(_scale * self.bounds.size.width < 100){
         _scale = 100 / self.bounds.size.width;
@@ -117,12 +117,17 @@
         _scale = 100 / self.bounds.size.height;
     }
     scale = _scale;
+    rotation = _rotation;
+
     self.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(rotation),CGAffineTransformMakeScale(scale, scale));
 }
 
+-(void) setScale:(CGFloat)_scale{
+    [self setScale:_scale andRotation:self.rotation];
+}
+
 -(void) setRotation:(CGFloat)_rotation{
-    rotation = _rotation;    
-    self.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(rotation),CGAffineTransformMakeScale(scale, scale));
+    [self setScale:self.scale andRotation:_rotation];
 }
 
 

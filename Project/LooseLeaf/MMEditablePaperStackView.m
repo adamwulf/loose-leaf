@@ -11,7 +11,7 @@
 #import "TestFlight.h"
 #import "MMRulerView.h"
 #import "MMScrappedPaperView.h"
-#import "MMScrapBubbleView.h"
+#import "MMScrapBubbleButton.h"
 
 @implementation MMEditablePaperStackView{
     MMEditablePaperView* currentEditablePage;

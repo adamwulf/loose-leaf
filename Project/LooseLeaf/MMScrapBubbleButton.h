@@ -10,14 +10,16 @@
 #import "MMScrapView.h"
 #import "MMBounceButton.h"
 
-@interface MMScrapBubbleView : MMBounceButton{
+@interface MMScrapBubbleButton : MMBounceButton{
     MMScrapView* scrap;
     CGFloat scale;
+    CGFloat originalScrapScale;
 }
 
 @property (nonatomic) MMScrapView* scrap;
 @property (nonatomic, assign) CGFloat rotationAdjustment;
 @property (nonatomic, assign) CGFloat scale;
+@property (nonatomic, assign) CGFloat originalScrapScale;
 
 +(CGAffineTransform) idealTransformForScrap:(MMScrapView*)scrap;
 

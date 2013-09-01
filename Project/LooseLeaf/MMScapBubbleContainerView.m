@@ -7,7 +7,7 @@
 //
 
 #import "MMScapBubbleContainerView.h"
-#import "MMScrapBubbleView.h"
+#import "MMScrapBubbleButton.h"
 #import "NSThread+BlockAdditions.h"
 
 @implementation MMScapBubbleContainerView{
@@ -24,7 +24,9 @@
         // each bubble is ordered in subviews most recent -> least recent
         rect.origin.y += 80 * [self.subviews count];
     }
-    MMScrapBubbleView* bubble = [[MMScrapBubbleView alloc] initWithFrame:rect];
+    MMScrapBubbleButton* bubble = [[MMScrapBubbleButton alloc] initWithFrame:rect];
+    [bubble addTarget:self action:@selector(bubbleTapped:) forControlEvents:UIControlEventTouchUpInside];
+    bubble.originalScrapScale = scrap.scale;
     [self insertSubview:bubble atIndex:0];
     [self insertSubview:scrap aboveSubview:bubble];
     // keep the scrap in the bezel container during the animation, then
@@ -36,7 +38,7 @@
     [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         // animate the scrap into position
         bubble.alpha = 1;
-        scrap.transform = CGAffineTransformConcat([MMScrapBubbleView idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
+        scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
         scrap.center = bubble.center;
     } completion:^(BOOL finished){
         // add it to the bubble and bounce
@@ -59,6 +61,25 @@
     }];
 }
 
+#pragma mark - Button Tap
+
+-(void) bubbleTapped:(MMScrapBubbleButton*)bubble{
+    MMScrapView* scrap = bubble.scrap;
+    CGPoint centerInSelf = [self convertPoint:scrap.center fromView:scrap.superview];
+    [self addSubview:scrap];
+    scrap.center = centerInSelf;
+    scrap.rotation += (bubble.rotation - bubble.rotationAdjustment);
+    scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
+    [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        scrap.center = self.center;
+        [scrap setScale:bubble.originalScrapScale andRotation:scrap.rotation - .25];
+        bubble.alpha = 0;
+    } completion:^(BOOL finished){
+        [bubble removeFromSuperview];
+    }];
+}
+
+
 #pragma mark - Rotation
 
 -(CGFloat) sidebarButtonRotationForReading:(CGFloat)currentReading{
@@ -69,8 +90,8 @@
     if(1 - ABS(zAccel) > .03){
         [NSThread performBlockOnMainThread:^{
             lastRotationReading = [self sidebarButtonRotationForReading:currentRawReading];
-            for(MMScrapBubbleView* bubble in self.subviews){
-                if([bubble isKindOfClass:[MMScrapBubbleView class]]){
+            for(MMScrapBubbleButton* bubble in self.subviews){
+                if([bubble isKindOfClass:[MMScrapBubbleButton class]]){
                     // during an animation, the scrap will also be a subview,
                     // so we need to make sure that we're rotating only the
                     // bubble button
@@ -90,8 +111,8 @@
  * effectively pass through this view to the views behind it
  */
 -(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
-    for(MMScrapBubbleView* bubble in self.subviews){
-        if([bubble isKindOfClass:[MMScrapBubbleView class]]){
+    for(MMScrapBubbleButton* bubble in self.subviews){
+        if([bubble isKindOfClass:[MMScrapBubbleButton class]]){
             UIView* output = [bubble hitTest:[self convertPoint:point toView:bubble] withEvent:event];
             if(output) return output;
         }
@@ -100,8 +121,8 @@
 }
 
 -(BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
-    for(MMScrapBubbleView* bubble in self.subviews){
-        if([bubble isKindOfClass:[MMScrapBubbleView class]]){
+    for(MMScrapBubbleButton* bubble in self.subviews){
+        if([bubble isKindOfClass:[MMScrapBubbleButton class]]){
             if([bubble pointInside:[self convertPoint:point toView:bubble] withEvent:event]){
                 return YES;
             }

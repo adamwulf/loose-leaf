@@ -9,7 +9,7 @@
 #import "MMScrapPaperStackView.h"
 #import "MMScrapContainerView.h"
 #import "MMShakeScrapGestureRecognizer.h"
-#import "MMScrapBubbleView.h"
+#import "MMScrapBubbleButton.h"
 #import "MMScapBubbleContainerView.h"
 
 @implementation MMScrapPaperStackView{
@@ -20,8 +20,6 @@
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture;
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture2;
     MMShakeScrapGestureRecognizer* shakeScrapGesture;
-    
-    NSMutableArray* bezelledScraps;
 }
 
 
@@ -48,8 +46,6 @@
         panAndPinchScrapGesture2.scrapDelegate = self;
         panAndPinchScrapGesture2.cancelsTouchesInView = NO;
         [self addGestureRecognizer:panAndPinchScrapGesture2];
-        
-        bezelledScraps = [NSMutableArray array];
     }
     return self;
 }
@@ -182,7 +178,6 @@
         if(shouldBezel){
             // TODO: bezel the scrap
             NSLog(@"send scrap to sidebar");
-            [bezelledScraps addObject:gesture.scrap];
         }
         
         [self finishedPanningAndScalingScrap:gesture.scrap];

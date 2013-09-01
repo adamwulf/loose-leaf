@@ -6,11 +6,11 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMScrapBubbleView.h"
+#import "MMScrapBubbleButton.h"
 #import "MMScrapBorderView.h"
 #import "DrawKit-iOS.h"
 
-@implementation MMScrapBubbleView{
+@implementation MMScrapBubbleButton{
     CGFloat rotationAdjustment;
     MMScrapBorderView* borderView;
 }
@@ -18,6 +18,7 @@
 @synthesize scrap;
 @synthesize scale;
 @synthesize rotationAdjustment;
+@synthesize originalScrapScale;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -37,6 +38,11 @@
 
 #pragma mark - Rotation
 
+/**
+ * we need to adjust for our rotation when the scrap is added
+ * to the bubble. when the scrap is added, we need to be at
+ * rotation = 0, so the rotationAdjustment accounts for that
+ */
 -(CGAffineTransform) rotationTransform{
     return CGAffineTransformMakeRotation(self.rotation - rotationAdjustment);
 }
@@ -65,7 +71,7 @@
 
     [self insertSubview:scrap belowSubview:borderView];
     scrap.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
-    scrap.transform = [MMScrapBubbleView idealTransformForScrap:scrap];
+    scrap.transform = [MMScrapBubbleButton idealTransformForScrap:scrap];
     UIBezierPath* path = [scrap.bezierPath copy];
     [path applyTransform:scrap.transform];
 
