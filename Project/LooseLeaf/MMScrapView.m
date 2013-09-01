@@ -109,13 +109,13 @@
 }
 
 -(void) setScale:(CGFloat)_scale andRotation:(CGFloat)_rotation{
-    if(_scale > 2) _scale = 2;
-    if(_scale * self.bounds.size.width < 100){
-        _scale = 100 / self.bounds.size.width;
-    }
-    if(_scale * self.bounds.size.height < 100){
-        _scale = 100 / self.bounds.size.height;
-    }
+//    if(_scale > 2) _scale = 2;
+//    if(_scale * self.bounds.size.width < 100){
+//        _scale = 100 / self.bounds.size.width;
+//    }
+//    if(_scale * self.bounds.size.height < 100){
+//        _scale = 100 / self.bounds.size.height;
+//    }
     scale = _scale;
     rotation = _rotation;
 

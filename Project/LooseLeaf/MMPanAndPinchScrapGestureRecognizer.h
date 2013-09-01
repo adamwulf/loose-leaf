@@ -48,6 +48,7 @@
 @property (nonatomic, readonly) CGPoint translation;
 @property (nonatomic, weak) MMScrapView* scrap;
 @property (assign) CGFloat preGestureScale;
+@property (assign) CGFloat preGesturePageScale;
 @property (assign) CGFloat preGestureRotation;
 @property (assign) CGPoint preGestureCenter;
 
