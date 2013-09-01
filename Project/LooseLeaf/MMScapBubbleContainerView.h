@@ -8,9 +8,14 @@
 
 #import "MMScrapContainerView.h"
 #import "MMScrapView.h"
+#import "MMScapBubbleContainerViewDelegate.h"
 
 
-@interface MMScapBubbleContainerView : MMScrapContainerView
+@interface MMScapBubbleContainerView : MMScrapContainerView{
+    __weak NSObject<MMScapBubbleContainerViewDelegate>* delegate;
+}
+
+@property (nonatomic, weak) NSObject<MMScapBubbleContainerViewDelegate>* delegate;
 
 -(void) addScrapAnimated:(MMScrapView*)scrap;
 
