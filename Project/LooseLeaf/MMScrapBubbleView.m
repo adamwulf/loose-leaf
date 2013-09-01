@@ -16,7 +16,6 @@
 }
 
 @synthesize scrap;
-@synthesize rotation;
 @synthesize scale;
 @synthesize rotationAdjustment;
 
@@ -28,7 +27,7 @@
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
         rotationAdjustment = 0;
-        rotation = 0;
+        self.rotation = 0;
         scale = 1;
         borderView = [[MMScrapBorderView alloc] initWithFrame:self.bounds];
         [self addSubview:borderView];
@@ -38,14 +37,18 @@
 
 #pragma mark - Rotation
 
+-(CGAffineTransform) rotationTransform{
+    return CGAffineTransformMakeRotation(self.rotation - rotationAdjustment);
+}
+
 -(void) setRotation:(CGFloat)_rotation{
-    rotation = _rotation;
-    self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation(rotation - rotationAdjustment), scale, scale);
+    [super setRotation:_rotation];
+    self.transform = CGAffineTransformScale([self rotationTransform], scale, scale);
 }
 
 -(void) setScale:(CGFloat)_scale{
     scale = _scale;
-    self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation(rotation - rotationAdjustment), scale, scale);
+    self.transform = CGAffineTransformScale([self rotationTransform], scale, scale);
 }
 
 #pragma mark - Scrap
@@ -57,8 +60,8 @@
 
 -(void) setScrap:(MMScrapView *)_scrap{
     scrap = _scrap;
-    rotationAdjustment = rotation;
-    self.rotation = rotation; // force transform update
+    rotationAdjustment = self.rotation;
+    self.rotation = self.rotation; // force transform update
 
     [self insertSubview:scrap belowSubview:borderView];
     scrap.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
@@ -134,10 +137,6 @@
     [[self borderColor] setStroke];
     [tokenOvalPath stroke];
     
-    
-    
-    
-    
     //
     //
     // shadow
@@ -173,5 +172,19 @@
 
 }
 
+#pragma mark - Ignore Touches
+
+
+/**
+ * these two methods make sure that the ruler view
+ * can never intercept any touch input. instead it will
+ * effectively pass through this view to the views behind it
+ */
+-(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+    if([super hitTest:point withEvent:event]){
+        return self;
+    }
+    return nil;
+}
 
 @end

@@ -8,15 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "MMScrapView.h"
+#import "MMBounceButton.h"
 
-@interface MMScrapBubbleView : UIView{
+@interface MMScrapBubbleView : MMBounceButton{
     MMScrapView* scrap;
-    CGFloat rotation;
     CGFloat scale;
 }
 
 @property (nonatomic) MMScrapView* scrap;
-@property (nonatomic, assign) CGFloat rotation;
 @property (nonatomic, assign) CGFloat rotationAdjustment;
 @property (nonatomic, assign) CGFloat scale;
 

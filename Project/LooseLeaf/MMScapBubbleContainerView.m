@@ -66,17 +66,49 @@
 }
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
-    [NSThread performBlockOnMainThread:^{
-        lastRotationReading = [self sidebarButtonRotationForReading:currentRawReading];
-        for(MMScrapBubbleView* bubble in self.subviews){
-            if([bubble isKindOfClass:[MMScrapBubbleView class]]){
-                // during an animation, the scrap will also be a subview,
-                // so we need to make sure that we're rotating only the
-                // bubble button
-                bubble.rotation = [self sidebarButtonRotationForReading:currentRawReading];
+    if(1 - ABS(zAccel) > .03){
+        [NSThread performBlockOnMainThread:^{
+            lastRotationReading = [self sidebarButtonRotationForReading:currentRawReading];
+            for(MMScrapBubbleView* bubble in self.subviews){
+                if([bubble isKindOfClass:[MMScrapBubbleView class]]){
+                    // during an animation, the scrap will also be a subview,
+                    // so we need to make sure that we're rotating only the
+                    // bubble button
+                    bubble.rotation = [self sidebarButtonRotationForReading:currentRawReading];
+                }
+            }
+        }];
+    }
+}
+
+
+#pragma mark - Ignore Touches
+
+/**
+ * these two methods make sure that the ruler view
+ * can never intercept any touch input. instead it will
+ * effectively pass through this view to the views behind it
+ */
+-(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+    for(MMScrapBubbleView* bubble in self.subviews){
+        if([bubble isKindOfClass:[MMScrapBubbleView class]]){
+            UIView* output = [bubble hitTest:[self convertPoint:point toView:bubble] withEvent:event];
+            if(output) return output;
+        }
+    }
+    return nil;
+}
+
+-(BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
+    for(MMScrapBubbleView* bubble in self.subviews){
+        if([bubble isKindOfClass:[MMScrapBubbleView class]]){
+            if([bubble pointInside:[self convertPoint:point toView:bubble] withEvent:event]){
+                return YES;
             }
         }
-    }];
+    }
+    return NO;
 }
+
 
 @end
