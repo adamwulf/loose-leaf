@@ -20,6 +20,7 @@
     // the current scale of the gesture
     CGFloat scale;
     CGFloat preGestureScale;
+    CGFloat preGesturePageScale;
     CGFloat preGestureRotation;
     CGPoint preGestureCenter;
     CGPoint gestureLocationAtStart;
@@ -30,6 +31,7 @@
 @synthesize scale;
 @synthesize scrap;
 @synthesize preGestureScale;
+@synthesize preGesturePageScale;
 @synthesize preGestureRotation;
 @synthesize preGestureCenter;
 @synthesize scrapDelegate;

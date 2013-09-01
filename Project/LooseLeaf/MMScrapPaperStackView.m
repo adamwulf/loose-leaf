@@ -91,9 +91,23 @@
 -(void) panAndScaleScrap:(MMPanAndPinchScrapGestureRecognizer*)_panGesture{
     MMPanAndPinchScrapGestureRecognizer* gesture = (MMPanAndPinchScrapGestureRecognizer*)_panGesture;
     
+    //
+    // TODO: https://github.com/adamwulf/loose-leaf/issues/185
+    // the problem with picking up scraps during a scaled
+    // page is that I'm saving the state in the scrap itself.
+    //
+    // instead. when the gesture begins, i need to store the
+    // absolute scale and position of the scrap in scrapContainer
+    // space. Then, whenever the page position or scale changes,
+    // or the scrap gesture changes, I can calculate the scrap
+    // position in or out of a page starting from the original
+    // scale and position, adding the scrap gesture differences,
+    // and then converting to the page if needed.
+    
     if(gesture.state == UIGestureRecognizerStateBegan){
         CGFloat pageScale = [visibleStackHolder peekSubview].scale;
-        gesture.preGestureScale *= pageScale;
+//        gesture.preGestureScale *= pageScale;
+        gesture.preGesturePageScale = pageScale;
         CGPoint centerInPage = CGPointApplyAffineTransform(_panGesture.scrap.center, CGAffineTransformMakeScale(pageScale, pageScale));
         gesture.preGestureCenter = [[visibleStackHolder peekSubview] convertPoint:centerInPage toView:scrapContainer];
     }
