@@ -119,6 +119,7 @@
 		66CE11FA17D14CFB00882275 /* MMShakeScrapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11F917D14CFB00882275 /* MMShakeScrapGestureRecognizer.m */; };
 		66CE11FD17D2700E00882275 /* MMScapBubbleContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11FC17D2700E00882275 /* MMScapBubbleContainerView.m */; };
 		66CE120017D2772400882275 /* MMScrapBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11FF17D2772400882275 /* MMScrapBorderView.m */; };
+		66CE120317D3AD7C00882275 /* MMBounceButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE120217D3AD7C00882275 /* MMBounceButton.m */; };
 		66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* MMListAddPageButton.m */; };
 		66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D33F4B15A6408A0044C809 /* MMShadowedView.m */; };
 		66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
@@ -368,6 +369,8 @@
 		66CE11FC17D2700E00882275 /* MMScapBubbleContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScapBubbleContainerView.m; sourceTree = "<group>"; };
 		66CE11FE17D2772400882275 /* MMScrapBorderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBorderView.h; sourceTree = "<group>"; };
 		66CE11FF17D2772400882275 /* MMScrapBorderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBorderView.m; sourceTree = "<group>"; };
+		66CE120117D3AD7C00882275 /* MMBounceButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBounceButton.h; sourceTree = "<group>"; };
+		66CE120217D3AD7C00882275 /* MMBounceButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBounceButton.m; sourceTree = "<group>"; };
 		66D0905415F7080F004D2CAF /* MMListAddPageButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButton.h; sourceTree = "<group>"; };
 		66D0905515F70810004D2CAF /* MMListAddPageButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListAddPageButton.m; sourceTree = "<group>"; };
 		66D0905815F71941004D2CAF /* MMListAddPageButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButtonDelegate.h; sourceTree = "<group>"; };
@@ -831,6 +834,8 @@
 		66A74630176B860900466AA4 /* Used */ = {
 			isa = PBXGroup;
 			children = (
+				66CE120117D3AD7C00882275 /* MMBounceButton.h */,
+				66CE120217D3AD7C00882275 /* MMBounceButton.m */,
 				66BD6E7E1593AF4100D4544C /* MMSidebarButton.h */,
 				66BD6E7F1593AF4100D4544C /* MMSidebarButton.m */,
 				66BD6E8B1593C3FF00D4544C /* MMSidebarButtonDelegate.h */,
@@ -1139,6 +1144,7 @@
 				6667480617C0166100D5C390 /* MMPolygonDebugView.m in Sources */,
 				66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */,
 				66A6836F17CE66B0007EE218 /* QuietAssertMacros.c in Sources */,
+				66CE120317D3AD7C00882275 /* MMBounceButton.m in Sources */,
 				66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */,
 				66BD6E701593A8CC00D4544C /* MMPlusButton.m in Sources */,
 				66BD6E801593AF4200D4544C /* MMSidebarButton.m in Sources */,

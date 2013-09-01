@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "MMSidebarButtonDelegate.h"
+#import "MMBounceButton.h"
 
-@interface MMSidebarButton : UIButton{
+@interface MMSidebarButton : MMBounceButton{
     NSObject<MMSidebarButtonDelegate>* __weak delegate;
 }
 
@@ -17,7 +18,6 @@
 @property (nonatomic, readonly) UIColor* backgroundColor;
 @property (nonatomic, readonly) UIColor* borderColor;
 
--(CGPoint) midPointOfPath:(UIBezierPath*)path;
 -(CGPoint) perpendicularUnitVectorForPoint:(CGPoint)p1 andPoint:(CGPoint) p2;
 -(UIBezierPath*) pathForLineGivePoint:(CGPoint)p1 andPoint:(CGPoint) p2 andVector:(CGPoint)pv andWidth:(CGFloat)width;
 
