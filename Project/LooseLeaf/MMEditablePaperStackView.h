@@ -79,4 +79,8 @@
 
 -(BOOL) hasPages;
 
+// protected
+
+-(void) addPageButtonTapped:(UIButton*)_button;
+
 @end
