@@ -37,6 +37,7 @@
 @synthesize scrapDelegate;
 @synthesize didExitToBezel;
 @synthesize bezelDirectionMask;
+@synthesize shouldReset;
 
 
 NSInteger const  minimumNumberOfTouches = 2;
@@ -152,6 +153,7 @@ NSInteger const  minimumNumberOfTouches = 2;
             
             didExitToBezel = MMBezelDirectionNone;
 
+            self.shouldReset = YES;
             self.state = UIGestureRecognizerStateBegan;
         }else if([validTouches count] < minimumNumberOfTouches){
             didExitToBezel = MMBezelDirectionNone;
@@ -360,6 +362,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     initialDistance = [self distanceBetweenTouches:validTouches];
     translation = CGPointZero;
     scale = 1;
+    self.shouldReset = YES;
 }
 
 /**
@@ -393,6 +396,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     gestureLocationAtStart = CGPointZero;
     translation = CGPointZero;
     locationAdjustment = CGPointZero;
+    self.shouldReset = NO;
     NSLog(@"pan scrap reset");
 }
 

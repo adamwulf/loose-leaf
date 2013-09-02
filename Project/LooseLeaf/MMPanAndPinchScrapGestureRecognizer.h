@@ -37,8 +37,10 @@
     BOOL secondToLastTouchDidBezel;
     
     __weak NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>* scrapDelegate;
+    
 }
 
+@property (nonatomic, assign) BOOL shouldReset;
 @property (nonatomic, assign) MMBezelDirection bezelDirectionMask;
 @property (nonatomic, readonly) MMBezelDirection didExitToBezel;
 @property (nonatomic, weak) NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>* scrapDelegate;
