@@ -42,11 +42,11 @@
 //        shakeScrapGesture = [[MMShakeScrapGestureRecognizer alloc] initWithTarget:self action:@selector(shakeScrap:)];
 //        [self addGestureRecognizer:shakeScrapGesture];
         
-//        panAndPinchScrapGesture2 = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
-//        panAndPinchScrapGesture2.bezelDirectionMask = MMBezelDirectionRight;
-//        panAndPinchScrapGesture2.scrapDelegate = self;
-//        panAndPinchScrapGesture2.cancelsTouchesInView = NO;
-//        [self addGestureRecognizer:panAndPinchScrapGesture2];
+        panAndPinchScrapGesture2 = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
+        panAndPinchScrapGesture2.bezelDirectionMask = MMBezelDirectionRight;
+        panAndPinchScrapGesture2.scrapDelegate = self;
+        panAndPinchScrapGesture2.cancelsTouchesInView = NO;
+        [self addGestureRecognizer:panAndPinchScrapGesture2];
     }
     return self;
 }
@@ -92,19 +92,15 @@
     MMPanAndPinchScrapGestureRecognizer* gesture = (MMPanAndPinchScrapGestureRecognizer*)_panGesture;
     
     //
-    // TODO: https://github.com/adamwulf/loose-leaf/issues/185
-    // the problem with picking up scraps during a scaled
-    // page is that I'm saving the state in the scrap itself.
+    // when a gesture begins, I need to store its
+    // pregesture scale + location in the /scrapContainer/
+    // when as the gesture scales or moves, we'll convert
+    // these coordinates back to the page coordinate space
+    // if the scrap is still inside the page. otherwise
+    // we'll just use the scrapContainer properties directly
     //
-    // instead. when the gesture begins, i need to store the
-    // absolute scale and position of the scrap in scrapContainer
-    // space. Then, whenever the page position or scale changes,
-    // or the scrap gesture changes, I can calculate the scrap
-    // position in or out of a page starting from the original
-    // scale and position, adding the scrap gesture differences,
-    // and then converting to the page if needed.
-    
-
+    // the gesture.shouldReset is a bit ugly, and should be fixed
+    // in
     if(gesture.state == UIGestureRecognizerStateBegan || gesture.shouldReset){
         gesture.shouldReset = NO;
         CGFloat pageScale = [visibleStackHolder peekSubview].scale;
