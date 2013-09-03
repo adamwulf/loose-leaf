@@ -256,8 +256,8 @@
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
        panGesture.state == UIGestureRecognizerStateEnded ||
        panGesture.state == UIGestureRecognizerStateFailed){
-        if(scale < kMinPageZoom && panGesture.didExitToBezel == MMBezelDirectionNone){
-            isBeingPannedAndZoomed = NO;
+        isBeingPannedAndZoomed = NO;
+        if(scale < (kMinPageZoom + kZoomToListPageZoom)/2 && panGesture.didExitToBezel == MMBezelDirectionNone){
             if((_panGesture.scaleDirection & MMScaleDirectionSmaller) == MMScaleDirectionSmaller){
                 [self.delegate finishedScalingReallySmall:self];
             }else{
@@ -273,8 +273,6 @@
                                                  toFrame:self.frame
                                             withVelocity:velocity];
         }
-        
-        isBeingPannedAndZoomed = NO;
         return;
     }else if(panGesture.numberOfTouches == 1){
         if(lastNumberOfTouchesForPanGesture != 1){
