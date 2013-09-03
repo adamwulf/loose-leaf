@@ -31,7 +31,8 @@
  * contains, but only if more than one touch
  * will match
  */
--(NSSet*) matchingTouchesFrom:(NSSet*) touches;
+-(NSSet*) matchingPairTouchesFrom:(NSSet*) touches;
+-(NSSet*) allMatchingTouchesFrom:(NSSet*) touches;
 
 #pragma mark - debug
 -(UIBezierPath*) intersect:(UIBezierPath*)newPath;
