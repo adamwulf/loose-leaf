@@ -250,8 +250,10 @@ NSInteger const  minimumNumberOfTouches = 2;
         // make sure we've actually seen two fingers on the page
         // before we change state or worry about bezeling
         if([validTouchesCurrentlyEnding count]){
+            // looking at the velocity and then adding a fraction
+            // of a second to the bezel width will help determine if
+            // we're bezelling the gesture or not
             CGFloat pxVelocity = _averageVelocity.x * .05; // velocity per fraction of a second
-            NSLog(@"avg velocity: %f  px: %f", _averageVelocity.x, pxVelocity);
             for(UITouch* touch in validTouchesCurrentlyEnding){
                 CGPoint point = [touch locationInView:self.view.superview];
                 BOOL bezelDirHasLeft = ((self.bezelDirectionMask & MMBezelDirectionLeft) == MMBezelDirectionLeft);
