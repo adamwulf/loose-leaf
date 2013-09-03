@@ -37,6 +37,10 @@
     CGFloat preGesturePageScale;
     CGFloat preGestureRotation;
     CGPoint preGestureCenter;
+    
+    // track velocity of touches
+    NSMutableDictionary* lastStampPerTouch;
+    NSMutableDictionary* lastVelocityPerTouch;
 }
 
 @synthesize scale;
@@ -52,6 +56,10 @@
 
 
 NSInteger const  minimumNumberOfTouches = 2;
+#define           SCRAP_VELOCITY_CLAMP_MIN 20
+#define           SCRAP_VELOCITY_CLAMP_MAX 2000
+
+static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
 
 
 -(id) init{
@@ -60,6 +68,8 @@ NSInteger const  minimumNumberOfTouches = 2;
         validTouches = [[NSMutableOrderedSet alloc] init];
         possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
+        lastStampPerTouch = [NSMutableDictionary dictionary];
+        lastVelocityPerTouch = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -70,6 +80,8 @@ NSInteger const  minimumNumberOfTouches = 2;
         validTouches = [[NSMutableOrderedSet alloc] init];
         possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
+        lastStampPerTouch = [NSMutableDictionary dictionary];
+        lastVelocityPerTouch = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -128,6 +140,9 @@ NSInteger const  minimumNumberOfTouches = 2;
  * to match that of the animation.
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    for(UITouch* touch in touches){
+        [self calculateVelocityForTouch:touch];
+    }
     NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
     // ignore all the touches that could be bezel touches
     if([validTouchesCurrentlyBeginning count]){
@@ -192,6 +207,9 @@ NSInteger const  minimumNumberOfTouches = 2;
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
+    for(UITouch* t in touches){
+        [self calculateVelocityForTouch:t];
+    }
     NSMutableOrderedSet* validTouchesCurrentlyMoving = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
     [validTouchesCurrentlyMoving intersectSet:touches];
     [validTouchesCurrentlyMoving minusSet:ignoredTouches];
@@ -234,11 +252,17 @@ NSInteger const  minimumNumberOfTouches = 2;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSLog(@"ended: %d", [touches count]);
+    for (UITouch* t in touches) {
+        CGPoint point = [t locationInView:self.view.superview];
+        NSLog(@"x: %f  y: %f", point.x, point.y);
+    }
     // pan and pinch and bezel
     BOOL cancelledFromBezel = NO;
     NSMutableOrderedSet* validTouchesCurrentlyEnding = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
     [validTouchesCurrentlyEnding intersectSet:touches];
     [validTouchesCurrentlyEnding minusSet:ignoredTouches];
+    
     
     if(self.state == UIGestureRecognizerStateBegan ||
        self.state == UIGestureRecognizerStateChanged){
@@ -248,6 +272,16 @@ NSInteger const  minimumNumberOfTouches = 2;
         if([validTouchesCurrentlyEnding count]){
             for(UITouch* touch in validTouchesCurrentlyEnding){
                 CGPoint point = [touch locationInView:self.view.superview];
+                
+                
+                CGFloat distanceToBezel = point.x - (self.view.superview.frame.size.width - kBezelInGestureWidth);
+                NSLog(@"distance: %f", distanceToBezel);
+
+                CGFloat velocity = [[lastVelocityPerTouch objectForKey:@(touch.hash)] floatValue];
+                CGFloat pxVelocity = velocity * SCRAP_VELOCITY_CLAMP_MAX * .05; // velocity per fraction of a second
+                NSLog(@"velocity: %d %f    => %f", (int)touch, velocity, pxVelocity);
+
+                
                 BOOL bezelDirHasLeft = ((bezelDirectionMask & MMBezelDirectionLeft) == MMBezelDirectionLeft);
                 BOOL bezelDirHasRight = ((bezelDirectionMask & MMBezelDirectionRight) == MMBezelDirectionRight);
                 BOOL bezelDirHasUp = ((bezelDirectionMask & MMBezelDirectionUp) == MMBezelDirectionUp);
@@ -258,10 +292,10 @@ NSInteger const  minimumNumberOfTouches = 2;
                 }else if(point.y < kBezelInGestureWidth && bezelDirHasUp){
                     didExitToBezel = didExitToBezel | MMBezelDirectionUp;
                     cancelledFromBezel = YES;
-                }else if(point.x > self.view.superview.frame.size.width - kBezelInGestureWidth && bezelDirHasRight){
+                }else if(point.x > self.view.superview.frame.size.width - kBezelInGestureWidth - pxVelocity && bezelDirHasRight){
                     didExitToBezel = didExitToBezel | MMBezelDirectionRight;
                     cancelledFromBezel = YES;
-                }else if(point.y > self.view.superview.frame.size.height - kBezelInGestureWidth && bezelDirHasDown){
+                }else if(point.y > self.view.superview.frame.size.height - kBezelInGestureWidth - pxVelocity && bezelDirHasDown){
                     didExitToBezel = didExitToBezel | MMBezelDirectionDown;
                     cancelledFromBezel = YES;
                 }
@@ -315,6 +349,10 @@ NSInteger const  minimumNumberOfTouches = 2;
         [self prepareGestureToBeginFresh];
     }
     NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+    for(UITouch* touch in touches){
+        [lastStampPerTouch removeObjectForKey:@(touch.hash)];
+        [lastVelocityPerTouch removeObjectForKey:@(touch.hash)];
+    }
 }
 
 
@@ -337,6 +375,11 @@ NSInteger const  minimumNumberOfTouches = 2;
     [possibleTouches removeObjectsInSet:touches];
     [ignoredTouches removeObjectsInSet:touches];
     NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+
+    for(UITouch* touch in touches){
+        [lastStampPerTouch removeObjectForKey:@(touch.hash)];
+        [lastVelocityPerTouch removeObjectForKey:@(touch.hash)];
+    }
 }
 
 /**
@@ -413,7 +456,6 @@ NSInteger const  minimumNumberOfTouches = 2;
     gestureLocationAtStart = CGPointZero;
     translation = CGPointZero;
     self.shouldReset = NO;
-    NSLog(@"pan scrap reset");
 }
 
 
@@ -471,6 +513,41 @@ NSInteger const  minimumNumberOfTouches = 2;
     
     view.layer.position = position;
     view.layer.anchorPoint = anchorPoint;
+}
+
+
+/**
+ * helper method to calculate the velocity of the
+ * input touch. it calculates the distance travelled
+ * from the previous touch over the duration elapsed
+ * between touches
+ */
+-(void) calculateVelocityForTouch:(UITouch*)touch{
+    //
+    // first, find the current and previous location of the touch
+    CGPoint l = [touch locationInView:nil];
+    CGPoint previousPoint = [touch previousLocationInView:nil];
+    // find how far we've travelled
+    float distanceFromPrevious = sqrtf((l.x - previousPoint.x) * (l.x - previousPoint.x) + (l.y - previousPoint.y) * (l.y - previousPoint.y));
+    // how long did it take?
+    NSTimeInterval duration = [self durationForTouchBang:touch];
+    // velocity is distance/time
+    CGFloat velocityMagnitude = distanceFromPrevious/duration;
+    
+    // we need to make sure we keep velocity inside our min/max values
+    float clampedVelocityMagnitude = clamp(SCRAP_VELOCITY_CLAMP_MIN, SCRAP_VELOCITY_CLAMP_MAX, velocityMagnitude);
+    // now normalize it, so we return a value between 0 and 1
+    float normalizedVelocity = (clampedVelocityMagnitude - SCRAP_VELOCITY_CLAMP_MIN) / (SCRAP_VELOCITY_CLAMP_MAX - SCRAP_VELOCITY_CLAMP_MIN);
+    
+    [lastVelocityPerTouch setObject:@(normalizedVelocity) forKey:@(touch.hash)];
+}
+
+-(NSTimeInterval) durationForTouchBang:(UITouch*)touch{
+    NSNumber* val = [lastStampPerTouch objectForKey:@(touch.hash)];
+    NSTimeInterval lastTime = [val doubleValue];
+    NSTimeInterval currTime = touch.timestamp;
+    [lastStampPerTouch setObject:[NSNumber numberWithDouble:currTime] forKey:@(touch.hash)];
+    return currTime - lastTime;
 }
 
 

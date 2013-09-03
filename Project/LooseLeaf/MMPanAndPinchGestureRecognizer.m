@@ -126,6 +126,8 @@ NSInteger const  minimumNumberOfTouches = 2;
             self.state = UIGestureRecognizerStateBegan;
             initialDistance = 0;
             scale = 1;
+            secondToLastTouchDidBezel = NO;
+            didExitToBezel = MMBezelDirectionNone;
         }else if([validTouches count] <= minimumNumberOfTouches){
             didExitToBezel = MMBezelDirectionNone;
             //
@@ -180,17 +182,54 @@ NSInteger const  minimumNumberOfTouches = 2;
             }
             scale = 1;
         }
+        BOOL adjustInitialDistance = NO;
         if([validTouches count] >= 2 && !initialDistance){
             initialDistance = [self distanceBetweenTouches:validTouches];
+            // if we've just adjusted our initial distance, then
+            // we need to flag it in case we also have a finger
+            // near the bezel, which would reduce our accuracy
+            // of the gesture's initial scale
+            adjustInitialDistance = YES;
         }
         if([validTouches count] >= 2 && initialDistance){
-            CGFloat newScale = [self distanceBetweenTouches:validTouches] / initialDistance;
-            if(newScale > scale){
-                scaleDirection = MMScaleDirectionLarger;
-            }else if(newScale < scale){
-                scaleDirection = MMScaleDirectionSmaller;
+            BOOL tooCloseHuh = NO;
+            for(UITouch* touch in validTouches){
+                CGPoint point = [touch locationInView:self.view.superview];
+                if(point.x < kBezelInGestureWidth ||
+                   point.y < kBezelInGestureWidth ||
+                   point.x > self.view.superview.frame.size.width - kBezelInGestureWidth ||
+                   point.y > self.view.superview.frame.size.height - kBezelInGestureWidth){
+                    // at least one of the touches is very close
+                    // to the bezel, which will reduce our accuracy.
+                    // so flag that here
+                    tooCloseHuh = YES;
+                }
             }
-            scale = newScale;
+            if(!tooCloseHuh){
+                // only allow scale change if the touches are
+                // not on the edge of the screen. This is because
+                // the location of the touch on the edge isn't very accurate
+                // which messes up our scale accuracy
+                CGFloat newScale = [self distanceBetweenTouches:validTouches] / initialDistance;
+                if(newScale > scale){
+                    scaleDirection = MMScaleDirectionLarger;
+                }else if(newScale < scale){
+                    scaleDirection = MMScaleDirectionSmaller;
+                }
+                scale = newScale;
+            }else{
+                // the finger is too close to the edge,
+                // which changes the accuracy of the touch location
+                if(adjustInitialDistance){
+                    // if we're beginning the gesture by pulling
+                    // a finger in from the bezel, then the
+                    // initial distance is artificially too small
+                    // because the lack of accuracy in the touch
+                    // location. so adjust by the bezel width to
+                    // get closer to truth
+                    initialDistance += kBezelInGestureWidth;
+                }
+            }
         }
     }
     [self calculateVelocity];
@@ -211,19 +250,21 @@ NSInteger const  minimumNumberOfTouches = 2;
         // make sure we've actually seen two fingers on the page
         // before we change state or worry about bezeling
         if([validTouchesCurrentlyEnding count]){
+            CGFloat pxVelocity = _averageVelocity.x * .05; // velocity per fraction of a second
+            NSLog(@"avg velocity: %f  px: %f", _averageVelocity.x, pxVelocity);
             for(UITouch* touch in validTouchesCurrentlyEnding){
                 CGPoint point = [touch locationInView:self.view.superview];
                 BOOL bezelDirHasLeft = ((self.bezelDirectionMask & MMBezelDirectionLeft) == MMBezelDirectionLeft);
                 BOOL bezelDirHasRight = ((self.bezelDirectionMask & MMBezelDirectionRight) == MMBezelDirectionRight);
                 BOOL bezelDirHasUp = ((self.bezelDirectionMask & MMBezelDirectionUp) == MMBezelDirectionUp);
                 BOOL bezelDirHasDown = ((self.bezelDirectionMask & MMBezelDirectionDown) == MMBezelDirectionDown);
-                if(point.x < kBezelInGestureWidth && bezelDirHasLeft){
+                if(point.x < kBezelInGestureWidth + pxVelocity && bezelDirHasLeft){
                     didExitToBezel = didExitToBezel | MMBezelDirectionLeft;
                     cancelledFromBezel = YES;
                 }else if(point.y < kBezelInGestureWidth && bezelDirHasUp){
                     didExitToBezel = didExitToBezel | MMBezelDirectionUp;
                     cancelledFromBezel = YES;
-                }else if(point.x > self.view.superview.frame.size.width - kBezelInGestureWidth && bezelDirHasRight){
+                }else if(point.x > self.view.superview.frame.size.width - kBezelInGestureWidth - pxVelocity && bezelDirHasRight){
                     didExitToBezel = didExitToBezel | MMBezelDirectionRight;
                     cancelledFromBezel = YES;
                 }else if(point.y > self.view.superview.frame.size.height - kBezelInGestureWidth && bezelDirHasDown){
