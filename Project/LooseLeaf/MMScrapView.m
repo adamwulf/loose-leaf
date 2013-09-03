@@ -95,17 +95,23 @@
     return [path containsPoint:locationOfTouch];
 }
 
--(NSSet*) matchingTouchesFrom:(NSSet*) touches{
+-(NSSet*) matchingPairTouchesFrom:(NSSet*) touches{
+    NSSet* outArray = [self allMatchingTouchesFrom:touches];
+    if([outArray count] >= 2){
+        return outArray;
+    }
+    return nil;
+}
+
+
+-(NSSet*) allMatchingTouchesFrom:(NSSet*) touches{
     NSMutableSet* outArray = [NSMutableSet set];
     for(UITouch* touch in touches){
         if([self containsTouch:touch]){
             [outArray addObject:touch];
         }
     }
-    if([outArray count] >= 2){
-        return outArray;
-    }
-    return nil;
+    return outArray;
 }
 
 -(void) setScale:(CGFloat)_scale andRotation:(CGFloat)_rotation{

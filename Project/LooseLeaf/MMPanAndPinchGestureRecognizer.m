@@ -140,12 +140,18 @@ NSInteger const  minimumNumberOfTouches = 2;
 }
 
 -(void) processPossibleTouches{
+    NSMutableSet* allPossibleTouches = [NSMutableSet setWithSet:[possibleTouches set]];
     for(MMScrapView* _scrap in scrapDelegate.scraps){
-        NSSet* touchesInScrap = [_scrap matchingTouchesFrom:[possibleTouches set]];
+        NSSet* touchesInScrap = [_scrap matchingPairTouchesFrom:allPossibleTouches];
         if([touchesInScrap count]){
             // two+ possible touches match this scrap
             [ignoredTouches addObjectsInSet:touchesInScrap];
             [possibleTouches removeObjectsInSet:touchesInScrap];
+        }else{
+            // remove all touches from allPossibleTouches that match this scrap
+            // since grabbing a scrap requires that it hit the visible portion of the scrap,
+            // this will remove any touches that don't grab a scrap but do land in a scrap
+            [allPossibleTouches removeObjectsInSet:[_scrap allMatchingTouchesFrom:allPossibleTouches]];
         }
     }
     
