@@ -56,5 +56,6 @@
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 -(void) giveUpScrap;
+-(void) cancel;
 
 @end

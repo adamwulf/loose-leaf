@@ -177,16 +177,21 @@
         if(gesture.didExitToBezel){
             shouldBezel = YES;
         }else if([scrapContainer.subviews containsObject:gesture.scrap]){
-            CGFloat scrapScaleInPage;
-            CGPoint scrapCenterInPage;
-            MMScrappedPaperView* pageToDropScrap = [self pageWouldDropScrap:gesture.scrap atCenter:&scrapCenterInPage andScale:&scrapScaleInPage];
-            if(pageToDropScrap){
-                [pageToDropScrap addScrap:gesture.scrap];
-                gesture.scrap.scale = scrapScaleInPage;
-                gesture.scrap.center = scrapCenterInPage;
-            }else{
-                // couldn't find a page to catch it
+            if(gesture.state == UIGestureRecognizerStateCancelled){
+                // bezel
                 shouldBezel = YES;
+            }else{
+                CGFloat scrapScaleInPage;
+                CGPoint scrapCenterInPage;
+                MMScrappedPaperView* pageToDropScrap = [self pageWouldDropScrap:gesture.scrap atCenter:&scrapCenterInPage andScale:&scrapScaleInPage];
+                if(pageToDropScrap){
+                    [pageToDropScrap addScrap:gesture.scrap];
+                    gesture.scrap.scale = scrapScaleInPage;
+                    gesture.scrap.center = scrapCenterInPage;
+                }else{
+                    // couldn't find a page to catch it
+                    shouldBezel = YES;
+                }
             }
         }
         if(shouldBezel){
@@ -351,5 +356,17 @@
     // or the visible stack
 }
 
+
+#pragma mark - List View
+
+-(void) finishedScalingReallySmall:(MMPaperView *)page{
+    if(panAndPinchScrapGesture.scrap){
+        [panAndPinchScrapGesture cancel];
+    }
+    if(panAndPinchScrapGesture2.scrap){
+        [panAndPinchScrapGesture2 cancel];
+    }
+    [super finishedScalingReallySmall:page];
+}
 
 @end
