@@ -74,6 +74,13 @@ NSInteger const  minimumNumberOfTouches = 2;
     return self;
 }
 
+-(void) cancel{
+    if(self.enabled){
+        self.enabled = NO;
+        self.enabled = YES;
+    }
+}
+
 -(NSArray*)touches{
     return [validTouches array];
 }
@@ -401,13 +408,6 @@ NSInteger const  minimumNumberOfTouches = 2;
     translation = CGPointZero;
     self.shouldReset = NO;
     NSLog(@"pan scrap reset");
-}
-
--(void) cancel{
-    if(self.enabled){
-        self.enabled = NO;
-        self.enabled = YES;
-    }
 }
 
 
