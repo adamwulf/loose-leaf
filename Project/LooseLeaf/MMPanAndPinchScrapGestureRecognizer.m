@@ -153,7 +153,6 @@ NSInteger const  minimumNumberOfTouches = 2;
             
             didExitToBezel = MMBezelDirectionNone;
 
-            self.shouldReset = YES;
             self.state = UIGestureRecognizerStateBegan;
         }else if([validTouches count] < minimumNumberOfTouches){
             didExitToBezel = MMBezelDirectionNone;
@@ -284,15 +283,13 @@ NSInteger const  minimumNumberOfTouches = 2;
             self.state = UIGestureRecognizerStateFailed;
         }
     }
-    if([validTouches count] >= minimumNumberOfTouches){
+    if([validTouches count] >= minimumNumberOfTouches && [validTouchesCurrentlyEnding count]){
         // reset the location and the initial distance of the gesture
         // so that the new first two touches position won't immediatley
         // change where the page is or what its scale is
         [self setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
-        
         [self prepareGestureToBeginFresh];
     }
-    
     NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 
@@ -412,6 +409,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     [super setState:state];
     if(self.state == UIGestureRecognizerStateBegan){
         NSLog(@"began scrap pan");
+        self.shouldReset = YES;
     }else if(self.state == UIGestureRecognizerStateEnded){
         NSLog(@"ended scrap pan");
     }else if(self.state == UIGestureRecognizerStateCancelled){

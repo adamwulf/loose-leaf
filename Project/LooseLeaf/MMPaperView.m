@@ -98,10 +98,6 @@
     scale = _scale;
 }
 
--(CGFloat) scale{
-    return self.bounds.size.width / originalUnscaledBounds.size.width;
-}
-
 
 -(void) setFrame:(CGRect)_frame{
     if(!_frame.size.width){
