@@ -99,17 +99,19 @@
     // if the scrap is still inside the page. otherwise
     // we'll just use the scrapContainer properties directly
     //
-    // the gesture.shouldReset is a bit ugly, and should be fixed
-    // in
-    if(gesture.state == UIGestureRecognizerStateBegan || gesture.shouldReset){
+    // gesture.shouldReset is a flag for when the gesture will
+    // re-begin it's state w/o triggering a UIGestureRecognizerStateBegan
+    // since the state can only change between certain values
+    BOOL didReset = NO;
+    if(gesture.shouldReset){
         gesture.shouldReset = NO;
+        didReset = YES;
         CGFloat pageScale = [visibleStackHolder peekSubview].scale;
         gesture.preGesturePageScale = pageScale;
         CGPoint centerInPage = _panGesture.scrap.center;
-//        NSLog(@"pre center in page: %f %f", centerInPage.x, centerInPage.y);
         centerInPage = CGPointApplyAffineTransform(centerInPage, CGAffineTransformMakeScale(pageScale, pageScale));
         gesture.preGestureCenter = [[visibleStackHolder peekSubview] convertPoint:centerInPage toView:scrapContainer];
-//        NSLog(@"pre gesture center: %f %f", gesture.preGestureCenter.x, gesture.preGestureCenter.y);
+        NSLog(@"should reset: %d", gesture.state);
     }
     
     if(gesture.scrap){
@@ -125,15 +127,10 @@
         // find the center, scale, and rotation for the scrap
         // independent of any page
         MMScrapView* scrap = gesture.scrap;
-//        NSLog(@"translation: %f %f", gesture.translation.x, gesture.translation.y);
         scrap.center = CGPointMake(gesture.translation.x + gesture.preGestureCenter.x,
                                    gesture.translation.y + gesture.preGestureCenter.y);
         scrap.scale = gesture.preGestureScale * gesture.scale * gesture.preGesturePageScale;
         scrap.rotation = gesture.rotation + gesture.preGestureRotation;
-
-//        NSLog(@"page scale: %f", [[visibleStackHolder peekSubview] scale]);
-//        NSLog(@"scrap scale: %f", scrap.scale);
-//        NSLog(@"center: %f %f    scale: %f", scrap.center.x, scrap.center.y, scrap.scale);
 
         //
         // now determine if it should be inside of a page,
@@ -155,13 +152,11 @@
             // it onto a page once the gesture is complete.
             gesture.scrap.scale = scrapScaleInPage;
             gesture.scrap.center = scrapCenterInPage;
-            
-//            NSLog(@"scale in page: %f", scrapScaleInPage);
-//            NSLog(@"center in page: %f %f", scrapCenterInPage.x, scrapCenterInPage.y);
         }
         [self isBeginning:gesture.state == UIGestureRecognizerStateBegan toPanAndScaleScrap:gesture.scrap withTouches:gesture.touches];
     }
-    if(gesture.state == UIGestureRecognizerStateBegan){
+    BOOL shouldBezel = NO;
+    if(gesture.scrap && didReset){
         // glow blue
         gesture.scrap.selected = YES;
     }else if(gesture.state == UIGestureRecognizerStateEnded ||
@@ -177,14 +172,11 @@
         // is inside of a page, and make sure to add the scrap
         // to that page.
         
-        BOOL shouldBezel = NO;
         if(gesture.didExitToBezel){
-//            NSLog(@"did bezel the scrap");
             shouldBezel = YES;
         }else if([scrapContainer.subviews containsObject:gesture.scrap]){
             CGFloat scrapScaleInPage;
             CGPoint scrapCenterInPage;
-//            NSLog(@"center: %f %f", gesture.scrap.center.x, gesture.scrap.center.y);
             MMScrappedPaperView* pageToDropScrap = [self pageWouldDropScrap:gesture.scrap atCenter:&scrapCenterInPage andScale:&scrapScaleInPage];
             if(pageToDropScrap){
                 [pageToDropScrap addScrap:gesture.scrap];
@@ -218,7 +210,7 @@
         MMScrapView* scrap = gesture.scrap;
         [gesture giveUpScrap];
         
-        if(_panGesture.didExitToBezel){
+        if(shouldBezel){
             // if we've bezelled the scrap,
             // add it to the bezel container
             [bezelScrapContainer addScrapAnimated:scrap];
