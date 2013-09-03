@@ -14,18 +14,29 @@
 #import "NSMutableSet+Extras.h"
 
 @implementation MMPanAndPinchScrapGestureRecognizer{
+    // the scrap being held
     __weak MMScrapView* scrap;
-    CGFloat rotation;
+    // the initial vector between the two
+    // gesture touches, helpful when determining
+    // rotation
     MMVector* initialTouchVector;
+    // the amount that the gesture has rotated
+    CGFloat rotation;
     // the current scale of the gesture
     CGFloat scale;
+    // the location that the gesture begins,
+    // so that we can determine the translation
+    CGPoint gestureLocationAtStart;
+    // the amount the gesture has moved
+    CGPoint translation;
+    
+    // helper properties so that the gesture's
+    // delegate can see how the center/scale/etc
+    // have changed during the gesture
     CGFloat preGestureScale;
     CGFloat preGesturePageScale;
     CGFloat preGestureRotation;
     CGPoint preGestureCenter;
-    CGPoint gestureLocationAtStart;
-    CGPoint translation;
-    CGPoint locationAdjustment;
 }
 
 @synthesize scale;
@@ -68,7 +79,7 @@ NSInteger const  minimumNumberOfTouches = 2;
 }
 
 -(CGPoint) translation{
-    return CGPointMake(translation.x - locationAdjustment.x, translation.y - locationAdjustment.y);
+    return CGPointMake(translation.x, translation.y);
 }
 
 -(CGFloat) rotation{
@@ -99,7 +110,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     if([validTouches count] >= minimumNumberOfTouches){
         CGPoint loc1 = [[validTouches firstObject] locationInView:view];
         CGPoint loc2 = [[validTouches objectAtIndex:1] locationInView:view];
-        return CGPointMake((loc1.x + loc2.x) / 2 - locationAdjustment.x, (loc1.y + loc2.y) / 2 - locationAdjustment.y);
+        return CGPointMake((loc1.x + loc2.x) / 2, (loc1.y + loc2.y) / 2);
     }
     return [super locationInView:view];
 }
@@ -337,9 +348,6 @@ NSInteger const  minimumNumberOfTouches = 2;
  * this way we don't have to wait
  */
 -(void) prepareGestureToBeginFresh{
-    self.preGestureScale = scrap.scale;
-    self.preGestureRotation = scrap.rotation;
-    
     // set the anchor point so that it
     // rotates around the point that we're
     // gesturing
@@ -349,8 +357,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     // to determine where to set the anchor point
     p = CGPointMake(p.x / scrap.bounds.size.width, p.y / scrap.bounds.size.height);
     [self setAnchorPoint:p forView:scrap];
-    self.preGestureCenter = scrap.center;
-    
+
     CGPoint p1 = [[validTouches firstObject] locationInView:self.view];
     CGPoint p2 = [[validTouches objectAtIndex:1] locationInView:self.view];
     initialTouchVector = [[MMVector alloc] initWithPoint:p1 andPoint:p2];
@@ -392,7 +399,6 @@ NSInteger const  minimumNumberOfTouches = 2;
     scrap = nil;
     gestureLocationAtStart = CGPointZero;
     translation = CGPointZero;
-    locationAdjustment = CGPointZero;
     self.shouldReset = NO;
     NSLog(@"pan scrap reset");
 }

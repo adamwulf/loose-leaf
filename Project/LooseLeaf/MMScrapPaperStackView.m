@@ -106,6 +106,8 @@
     if(gesture.shouldReset){
         gesture.shouldReset = NO;
         didReset = YES;
+        gesture.preGestureScale = gesture.scrap.scale;
+        gesture.preGestureRotation = gesture.scrap.rotation;
         CGFloat pageScale = [visibleStackHolder peekSubview].scale;
         gesture.preGesturePageScale = pageScale;
         CGPoint centerInPage = _panGesture.scrap.center;
