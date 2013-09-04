@@ -306,7 +306,15 @@
     }
     [self panAndScaleScrap:panAndPinchScrapGesture];
     [self panAndScaleScrap:panAndPinchScrapGesture2];
+
     return ret;
+}
+
+-(void) setButtonsVisible:(BOOL)visible{
+    [UIView animateWithDuration:.3 animations:^{
+        bezelScrapContainer.alpha = visible ? 1 : 0;
+    }];
+    [super setButtonsVisible:visible];
 }
 
 

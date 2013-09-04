@@ -83,4 +83,6 @@
 
 -(void) addPageButtonTapped:(UIButton*)_button;
 
+-(void) setButtonsVisible:(BOOL)visible;
+
 @end
