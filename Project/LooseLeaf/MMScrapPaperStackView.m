@@ -346,7 +346,7 @@
 
 #pragma mark - MMScapBubbleContainerViewDelegate
 
--(void) didTapToAddScrapBackToPage:(MMScrapView *)scrap{
+-(void) didAddScrapBackToPage:(MMScrapView *)scrap{
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     [page addScrap:scrap];
     //
@@ -355,6 +355,15 @@
     // and also look to see if it should land in a bezel page
     // or the visible stack
 }
+
+-(CGPoint) positionOnScreenToScaleScrapTo:(MMScrapView*)scrap{
+    return [visibleStackHolder center];
+}
+
+-(CGFloat) scaleOnScreenToScaleScrapTo:(MMScrapView*)scrap givenOriginalScale:(CGFloat)originalScale{
+    return originalScale * [visibleStackHolder peekSubview].scale;
+}
+
 
 
 #pragma mark - List View

@@ -11,6 +11,10 @@
 
 @protocol MMScapBubbleContainerViewDelegate <NSObject>
 
--(void) didTapToAddScrapBackToPage:(MMScrapView*)scrap;
+-(void) didAddScrapBackToPage:(MMScrapView*)scrap;
+
+-(CGPoint) positionOnScreenToScaleScrapTo:(MMScrapView*)scrap;
+
+-(CGFloat) scaleOnScreenToScaleScrapTo:(MMScrapView*)scrap givenOriginalScale:(CGFloat)originalScale;
 
 @end
