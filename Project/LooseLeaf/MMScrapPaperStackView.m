@@ -347,16 +347,18 @@
 #pragma mark - MMScapBubbleContainerViewDelegate
 
 -(void) didAddScrapBackToPage:(MMScrapView *)scrap{
-    // TODO: find the right page to add the scrap to
-    // https://github.com/adamwulf/loose-leaf/issues/149
-    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
-    [page addScrap:scrap];
+    // first, find the page to add the scrap to.
+    // this will check visible + bezelled pages to see
+    // which page should get the scrap, and it'll tell us
+    // the center/scale to use
+    CGPoint center;
+    CGFloat scale;
+    MMScrappedPaperView* page = [self pageWouldDropScrap:scrap atCenter:&center andScale:&scale];
 
-    scrap.scale /= page.scale;
-    CGPoint center = scrap.center;
-    center = [page convertPoint:center fromView:self];
-    center = CGPointApplyAffineTransform(center, CGAffineTransformMakeScale(1/page.scale, 1/page.scale));
+    // ok, done, just set it
+    [page addScrap:scrap];
     scrap.center = center;
+    scrap.scale = scale;
 }
 
 -(CGPoint) positionOnScreenToScaleScrapTo:(MMScrapView*)scrap{
