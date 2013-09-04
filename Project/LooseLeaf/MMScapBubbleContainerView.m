@@ -70,13 +70,16 @@
     scrap.center = centerInSelf;
     scrap.rotation += (bubble.rotation - bubble.rotationAdjustment);
     scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
+    
+    CGPoint positionOnScreenToScaleTo = [self.delegate positionOnScreenToScaleScrapTo:scrap];
+    CGFloat scaleOnScreenToScaleTo = [self.delegate scaleOnScreenToScaleScrapTo:scrap givenOriginalScale:bubble.originalScrapScale];
     [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        scrap.center = self.center;
-        [scrap setScale:bubble.originalScrapScale andRotation:scrap.rotation - .25];
+        scrap.center = positionOnScreenToScaleTo;
+        [scrap setScale:scaleOnScreenToScaleTo andRotation:scrap.rotation - .25];
         bubble.alpha = 0;
     } completion:^(BOOL finished){
         [bubble removeFromSuperview];
-        [self.delegate didTapToAddScrapBackToPage:scrap];
+        [self.delegate didAddScrapBackToPage:scrap];
     }];
 }
 
