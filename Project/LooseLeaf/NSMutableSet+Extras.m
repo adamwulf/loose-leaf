@@ -8,7 +8,7 @@
 
 #import "NSMutableSet+Extras.h"
 
-@implementation NSMutableSet (Extras)
+@implementation NSMutableSet (LooseLeafExtras)
 
 -(void) removeObjectsInSet:(NSSet*)set{
     for(id obj in set){
@@ -32,7 +32,7 @@
 @end
 
 
-@implementation NSMutableOrderedSet (Extras)
+@implementation NSMutableOrderedSet (LooseLeafExtras)
 
 -(void) removeObjectsInSet:(NSSet*)set{
     for(id obj in set){

@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
+#import "NSMutableSet+Extras.h"
+#import <JotUI/JotUI.h>
 
 /**
  *
@@ -41,8 +43,8 @@
  *
  *
  */
-@interface MMObjectSelectLongPressGestureRecognizer : UILongPressGestureRecognizer{
-    NSMutableDictionary* touchLocations;
-}
+@interface MMObjectSelectLongPressGestureRecognizer : UILongPressGestureRecognizer
+
+@property (readonly) NSSet* activeTouches;
 
 @end

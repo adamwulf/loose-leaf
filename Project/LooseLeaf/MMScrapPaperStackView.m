@@ -293,6 +293,10 @@
     return [[visibleStackHolder peekSubview] scraps];
 }
 
+-(BOOL) panScrapRequiresLongPress{
+    return rulerButton.selected;
+}
+
 
 #pragma mark - MMPaperViewDelegate
 
@@ -342,6 +346,21 @@
     }
     [panAndPinchScrapGesture ownershipOfTouches:touches isGesture:gesture];
     [panAndPinchScrapGesture2 ownershipOfTouches:touches isGesture:gesture];
+}
+
+-(void) didLongPressPage:(MMPaperView*)page withTouches:(NSSet*)touches{
+    // if we're in ruler mode, then
+    // let the pan scrap gestures know that they can move the scrap
+    if([self panScrapRequiresLongPress]){
+        //
+        // if a long press happens, give the touches to
+        // whichever scrap pan gesture doesn't have a scrap
+        if(!panAndPinchScrapGesture.scrap){
+            [panAndPinchScrapGesture blessTouches:touches];
+        }else{
+            [panAndPinchScrapGesture2 blessTouches:touches];
+        }
+    }
 }
 
 

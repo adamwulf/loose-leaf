@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSMutableSet (Extras)
+@interface NSMutableSet (LooseLeafExtras)
 
 -(void) removeObjectsInSet:(NSSet*)set;
 
@@ -19,7 +19,7 @@
 @end
 
 
-@interface NSMutableOrderedSet (Extras)
+@interface NSMutableOrderedSet (LooseLeafExtras)
 
 -(void) removeObjectsInSet:(NSSet*)set;
 

@@ -9,6 +9,8 @@
 #import "MMObjectSelectLongPressGestureRecognizer.h"
 #import "MMPanAndPinchGestureRecognizer.h"
 #import "Constants.h"
+#import "NSMutableSet+Extras.h"
+#import <JotUI/JotUI.h>
 
 @interface MMObjectSelectLongPressGestureRecognizer (Private)
 
@@ -16,10 +18,28 @@
  * track the locations of each touch in this gesture
  */
 @property (nonatomic, readonly) NSMutableDictionary* touchLocations;
+@property (nonatomic, readonly) NSMutableSet* activeTouches;
 
 @end
 
-@implementation MMObjectSelectLongPressGestureRecognizer
+@implementation MMObjectSelectLongPressGestureRecognizer{
+    NSMutableDictionary* touchLocations;
+    NSMutableSet* activeTouches;
+}
+
+-(id) init{
+    if(self = [super init]){
+        activeTouches = [[NSMutableSet alloc] init];
+    }
+    return self;
+}
+
+-(id) initWithTarget:(id)target action:(SEL)action{
+    if(self = [super initWithTarget:target action:action]){
+        activeTouches = [[NSMutableSet alloc] init];
+    }
+    return self;
+}
 
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
     return NO;
@@ -29,6 +49,9 @@
     return NO;
 }
 
+-(NSSet*) activeTouches{
+    return activeTouches;
+}
 
 
 -(NSMutableDictionary*)touchLocations{
@@ -47,11 +70,12 @@
  * not conform to NSCopying
  */
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    [super touchesBegan:touches withEvent:event];
     for(UITouch* touch in touches){
         [self.touchLocations setObject:[NSValue valueWithCGPoint:[touch locationInView:self.view]]
                                 forKey:@([touch hash])];
     }
+    [activeTouches addObjectsInSet:touches];
+    [super touchesBegan:touches withEvent:event];
 }
 
 /**
@@ -85,20 +109,22 @@
  * if a touch is cancelled, remove it from our cache of locations.
  */
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
-    [super touchesCancelled:touches withEvent:event];
     for(UITouch* touch in touches){
         [self.touchLocations removeObjectForKey:@([touch hash])];
     }
+    [activeTouches removeObjectsInSet:touches];
+    [super touchesCancelled:touches withEvent:event];
 }
 
 /**
  * if a touch is ended, remove it from our cache of locations.
  */
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
-    [super touchesEnded:touches withEvent:event];
     for(UITouch* touch in touches){
         [self.touchLocations removeObjectForKey:@([touch hash])];
     }
+    [activeTouches removeObjectsInSet:touches];
+    [super touchesEnded:touches withEvent:event];
 }
 
 /**
@@ -112,12 +138,14 @@
        state == UIGestureRecognizerStateFailed ||
        state == UIGestureRecognizerStateCancelled){
         [self.touchLocations removeAllObjects];
+        [activeTouches removeAllObjects];
     }
 }
 
 -(void)reset{
     [super reset];
     [self.touchLocations removeAllObjects];
+    [activeTouches removeAllObjects];
 }
 
 @end
