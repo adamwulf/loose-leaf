@@ -139,6 +139,11 @@ dispatch_queue_t importThumbnailQueue;
     
     void (^block2)() = ^(void) {
         @autoreleasepool {
+            if(![[NSFileManager defaultManager] fileExistsAtPath:[self inkPath]]){
+                NSLog(@"should build a page");
+                [self setBackgroundTextureToStartPage:pagePixelSize];
+            }
+            
             if(!state){
                 state = [[JotViewState alloc] initWithImageFile:[self inkPath]
                                                    andStateFile:[self plistPath]
@@ -159,6 +164,41 @@ dispatch_queue_t importThumbnailQueue;
     dispatch_async([MMEditablePaperView loadUnloadStateQueue], ^(void) {
         state = nil;
     });
+}
+
+
+
+-(void) setBackgroundTextureToStartPage:(CGSize)pagePixelSize{
+    UIGraphicsBeginImageContext(pagePixelSize);
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    
+    
+    NSString* allLetters = @"aaaabbbbcddddefghijklmnopqrstuvwxyz";
+    int letterIndex = rand() % [allLetters length];
+    NSString* lowerCase = [allLetters substringWithRange:NSMakeRange(letterIndex, 1)];
+    NSString* upperCase = [lowerCase uppercaseString];
+    UIFont* font = [UIFont fontWithName:@"Trace" size:200];
+    
+    int x = 130;
+    int width = [lowerCase sizeWithFont:font].width;
+    while(x + width + 30 < pagePixelSize.width){
+        [lowerCase drawAtPoint:CGPointMake(x * scale, 100 * scale) withFont:font];
+        x += width;
+        x += 40; // spacing
+    }
+
+    x = 130;
+    width = [upperCase sizeWithFont:font].width;
+    while(x + width + 20 < pagePixelSize.width){
+        [upperCase drawAtPoint:CGPointMake(x * scale, 500 * scale) withFont:font];
+        x += [upperCase sizeWithFont:font].width;
+        x += 40; // spacing
+    }
+    
+    UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    [UIImagePNGRepresentation(image) writeToFile:[self inkPath] atomically:YES];
 }
 
 

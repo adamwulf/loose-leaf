@@ -201,6 +201,11 @@
     return self;
 }
 
+
+
+
+
+
 /**
  * returns the value in radians that the sidebar buttons
  * should be rotated to stay pointed "down"
