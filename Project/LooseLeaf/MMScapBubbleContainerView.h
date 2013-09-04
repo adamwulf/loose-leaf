@@ -17,7 +17,7 @@
 
 @property (nonatomic, weak) NSObject<MMScapBubbleContainerViewDelegate>* delegate;
 
--(void) addScrapAnimated:(MMScrapView*)scrap;
+-(void) addScrapToBezelSidebarAnimated:(MMScrapView*)scrap;
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel;
 
