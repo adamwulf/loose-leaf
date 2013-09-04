@@ -16,7 +16,7 @@
 
 @synthesize delegate;
 
--(void) addScrapAnimated:(MMScrapView *)scrap{
+-(void) addScrapToBezelSidebarAnimated:(MMScrapView *)scrap{
     // exit the scrap to the bezel!
     CGRect rect = CGRectMake(668, 240, 80, 80);
     if([self.subviews count]){
@@ -54,10 +54,11 @@
                 [UIView animateWithDuration:animationDuration * .16 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
                     // and done
                     bubble.scale = 1.0;
-                } completion:nil];
+                } completion:^(BOOL finished){
+                    [self.delegate didAddScrapToBezelSidebar:scrap];
+                }];
             }];
         }];
-        
     }];
 }
 

@@ -220,7 +220,7 @@
         if(shouldBezel){
             // if we've bezelled the scrap,
             // add it to the bezel container
-            [bezelScrapContainer addScrapAnimated:scrap];
+            [bezelScrapContainer addScrapToBezelSidebarAnimated:scrap];
         }
     }
 }
@@ -345,6 +345,10 @@
 }
 
 #pragma mark - MMScapBubbleContainerViewDelegate
+
+-(void) didAddScrapToBezelSidebar:(MMScrapView *)scrap{
+    // noop
+}
 
 -(void) didAddScrapBackToPage:(MMScrapView *)scrap{
     // first, find the page to add the scrap to.
