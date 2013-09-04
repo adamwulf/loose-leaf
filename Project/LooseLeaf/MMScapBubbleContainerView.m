@@ -12,9 +12,30 @@
 
 @implementation MMScapBubbleContainerView{
     CGFloat lastRotationReading;
+    CGFloat targetAlpha;
 }
 
 @synthesize delegate;
+
+-(id) initWithFrame:(CGRect)frame{
+    if(self = [super initWithFrame:frame]){
+        targetAlpha = 1;
+    }
+    return self;
+}
+
+-(CGFloat) alpha{
+    return targetAlpha;
+}
+
+-(void) setAlpha:(CGFloat)alpha{
+    targetAlpha = alpha;
+    for(UIView* subview in self.subviews){
+        if([subview isKindOfClass:[MMScrapBubbleButton class]]){
+            subview.alpha = targetAlpha;
+        }
+    }
+}
 
 -(void) addScrapToBezelSidebarAnimated:(MMScrapView *)scrap{
     // exit the scrap to the bezel!
@@ -46,6 +67,7 @@
         [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             // scrap "hits" the bubble and pushes it down a bit
             bubble.scale = .8;
+            bubble.alpha = targetAlpha;
         } completion:^(BOOL finished){
             [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
                 // bounce back
