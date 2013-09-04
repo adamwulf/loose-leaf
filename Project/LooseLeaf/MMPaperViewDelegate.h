@@ -45,6 +45,15 @@
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 
 /**
+ * notifies when a longpress happens, so that we can tell 
+ * the scrap selection gestures which touches they're
+ * allowed to use in ruler mode
+ */
+-(void) didLongPressPage:(MMPaperView*)page withTouches:(NSSet*)touches;
+
+-(BOOL) panScrapRequiresLongPress;
+
+/**
  * this is triggered when the page has been scaled small
  * enough to begin transition into list view. the user will
  * still have control of the page's zoom, but other pages will

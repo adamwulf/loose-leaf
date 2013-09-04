@@ -639,9 +639,9 @@
 				66D33F4B15A6408A0044C809 /* MMShadowedView.m */,
 				66DCFBCB1582BAED00B4918C /* MMPaperView.h */,
 				66DCFBCC1582BAED00B4918C /* MMPaperView.m */,
+				66C47DA5158EF03200E2CD0C /* MMPaperViewDelegate.h */,
 				6695B6EA17505FBF0069E61F /* MMEditablePaperView.h */,
 				6695B6EB17505FBF0069E61F /* MMEditablePaperView.m */,
-				66C47DA5158EF03200E2CD0C /* MMPaperViewDelegate.h */,
 				66A471BC17C7DAA000C2A5B6 /* MMScrappedPaperView.h */,
 				66A471BD17C7DAA000C2A5B6 /* MMScrappedPaperView.m */,
 			);

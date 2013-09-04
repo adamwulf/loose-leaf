@@ -107,6 +107,9 @@
     }
 }
 
+-(BOOL) panScrapRequiresLongPress{
+    return [self.delegate panScrapRequiresLongPress];
+}
 
 -(void) panAndScale:(MMPanAndPinchGestureRecognizer *)_panGesture{
     [super panAndScale:_panGesture];

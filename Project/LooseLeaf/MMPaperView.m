@@ -64,6 +64,7 @@
         // an object in one gesture
         longPress = [[MMObjectSelectLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
         longPress.numberOfTouchesRequired = 2;
+        longPress.allowableMovement = 20;
         [self addGestureRecognizer:longPress];
         //
         // allow the user to select an object by tapping on the page
@@ -113,8 +114,10 @@
 
 #pragma mark - Gestures
 
--(void) longPress:(UILongPressGestureRecognizer*)pressGesture{
-    debug_NSLog(@"long press!!!!! %d", pressGesture.state);
+-(void) longPress:(MMObjectSelectLongPressGestureRecognizer*)pressGesture{
+    if(pressGesture.state == UIGestureRecognizerStateBegan){
+        [self.delegate didLongPressPage:self withTouches:pressGesture.activeTouches];
+    }
 }
 
 -(void) doubleFingerDoubleTap:(UITapGestureRecognizer*)tapGesture{

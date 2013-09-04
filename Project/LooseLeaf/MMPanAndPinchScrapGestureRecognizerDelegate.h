@@ -13,4 +13,6 @@
 
 -(NSArray*) scraps;
 
+-(BOOL) panScrapRequiresLongPress;
+
 @end

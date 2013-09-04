@@ -134,6 +134,16 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
     return [super locationInView:view];
 }
 
+
+-(void) blessTouches:(NSSet*)touches{
+    NSMutableSet* newPossibleTouches = [NSMutableSet setWithSet:ignoredTouches];
+    [newPossibleTouches intersectSet:touches];
+    [possibleTouches addObjectsInSet:newPossibleTouches];
+    [ignoredTouches removeObjectsInSet:newPossibleTouches];
+    self.shouldReset = YES;
+    [self touchesBegan:newPossibleTouches withEvent:nil];
+}
+
 /**
  * the first touch of a gesture.
  * this touch may interrupt an animation on this frame, so set the frame
@@ -142,6 +152,10 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     for(UITouch* touch in touches){
         [self calculateVelocityForTouch:touch];
+    }
+    if([self.scrapDelegate panScrapRequiresLongPress] && ![possibleTouches intersectsSet:touches]){
+        [ignoredTouches addObjectsInSet:touches];
+        return;
     }
     NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
     // ignore all the touches that could be bezel touches
@@ -248,6 +262,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
             CGPoint locInView = [self locationInView:self.view];
             translation = CGPointMake(locInView.x - gestureLocationAtStart.x, locInView.y - gestureLocationAtStart.y);
         }
+        self.state = UIGestureRecognizerStateChanged;
     }
 }
 
@@ -337,7 +352,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
         [possibleTouches removeObjectsInSet:touches];
         [ignoredTouches removeObjectsInSet:touches];
         
-        if(![validTouches count] && ![possibleTouches count]){
+        if(![validTouches count] && ![possibleTouches count] && ![ignoredTouches count]){
             self.state = UIGestureRecognizerStateFailed;
         }
     }
@@ -471,7 +486,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
     }else if(self.state == UIGestureRecognizerStateFailed){
         NSLog(@"failed scrap pan");
     }else if(self.state == UIGestureRecognizerStateChanged){
-        NSLog(@"changed scrap pan");
+//        NSLog(@"changed scrap pan");
     }else if(self.state == UIGestureRecognizerStatePossible){
         NSLog(@"possible scrap pan");
     }

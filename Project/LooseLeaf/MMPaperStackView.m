@@ -675,6 +675,21 @@
 #pragma mark - MMPaperViewDelegate
 
 /**
+ * notify that we just long pressed
+ */
+-(void) didLongPressPage:(MMPaperView*)page withTouches:(NSSet*)touches{
+    @throw kAbstractMethodException;
+}
+
+/**
+ * return true if we should require a long press
+ * before picking up a scrap
+ */
+-(BOOL) panScrapRequiresLongPress{
+    @throw kAbstractMethodException;
+}
+
+/**
  * these are implemented in MMEditablePaperStackView
  */
 -(void) didMoveRuler:(MMRulerToolGestureRecognizer *)gesture{
