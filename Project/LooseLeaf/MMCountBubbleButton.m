@@ -20,14 +20,9 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        count = 8;
-        [self addTarget:self action:@selector(inc:) forControlEvents:UIControlEventTouchUpInside];
+        count = 0;
     }
     return self;
-}
-
--(void) inc:(id)foo{
-    self.count++;
 }
 
 -(void) setCount:(NSInteger)_count{
