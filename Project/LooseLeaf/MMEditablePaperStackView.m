@@ -9,14 +9,14 @@
 #import "MMEditablePaperStackView.h"
 #import "UIView+SubviewStacks.h"
 #import "TestFlight.h"
-#import "MMFeedbackView.h"
 #import "MMRulerView.h"
+#import "MMScrappedPaperView.h"
+#import "MMScrapBubbleButton.h"
 
 @implementation MMEditablePaperStackView{
     MMEditablePaperView* currentEditablePage;
     JotView* drawableView;
     NSMutableArray* stateLoadedPages;
-    MMFeedbackView* feedbackView;
     UIPopoverController* jotTouchPopover;
 }
 
@@ -40,6 +40,9 @@
         
         eraser = [[Eraser alloc] init];
         
+        polygon = [[PolygonTool alloc] init];
+        polygon.delegate = self;
+        
         // test code for custom popovers
         // ================================================================================
         //    MMPopoverView* popover = [[MMPopoverView alloc] initWithFrame:CGRectMake(100, 100, 300, 300)];
@@ -58,11 +61,6 @@
         [shareButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 //        [self addSubview:shareButton];
         
-        feedbackButton = [[MMLikeButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60*2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        feedbackButton.delegate = self;
-        [feedbackButton addTarget:self action:@selector(feedbackButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:feedbackButton];
-        
         settingsButton = [[MMAdonitButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         settingsButton.delegate = self;
         [settingsButton addTarget:self action:@selector(jotSettingsTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -71,11 +69,9 @@
         
         
         
-        
-        pencilButton = [[MMPencilButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        pencilButton.delegate = self;
-        [pencilButton addTarget:self action:@selector(penTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:pencilButton];
+        pencilTool = [[MMPencilAndPaletteView alloc] initWithButtonFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton) andScreenSize:self.bounds.size];
+        pencilTool.delegate = self;
+        [self addSubview:pencilTool];
         
         eraserButton = [[MMPencilEraserButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         eraserButton.delegate = self;
@@ -84,7 +80,7 @@
         
         polygonButton = [[MMPolygonButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         polygonButton.delegate = self;
-        [polygonButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [polygonButton addTarget:self action:@selector(polygonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:polygonButton];
         
         insertImageButton = [[MMImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
@@ -181,14 +177,11 @@
         self.delaysContentTouches = NO;
         
         
-        pencilButton.selected = YES;
+        pencilTool.selected = YES;
         handButton.selected = YES;
         
-        polygonButton.enabled = NO;
         insertImageButton.enabled = NO;
         scissorButton.enabled = NO;
-        handButton.enabled = YES;
-        rulerButton.enabled = YES;
         shareButton.enabled = NO;
         
         [NSThread performBlockInBackground:^{
@@ -207,6 +200,11 @@
     return self;
 }
 
+
+
+
+
+
 /**
  * returns the value in radians that the sidebar buttons
  * should be rotated to stay pointed "down"
@@ -215,8 +213,10 @@
     return -([[MMRotationManager sharedInstace] currentRotationReading] + M_PI/2);
 }
 
--(Pen*) activePen{
-    if(eraserButton.selected){
+-(Tool*) activePen{
+    if(polygonButton.selected){
+        return polygon;
+    }else if(eraserButton.selected){
         return eraser;
     }else{
         return pen;
@@ -243,16 +243,31 @@
 
 -(void) penTapped:(UIButton*)_button{
     eraserButton.selected = NO;
-    pencilButton.selected = YES;
+    pencilTool.selected = YES;
     polygonButton.selected = NO;
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
 }
 
+-(void) didChangeColorTo:(UIColor*)color{
+    pen.color = color;
+    if(!pencilTool.selected){
+        [self penTapped:nil];
+    }
+}
+
 -(void) eraserTapped:(UIButton*)_button{
     eraserButton.selected = YES;
-    pencilButton.selected = NO;
+    pencilTool.selected = NO;
     polygonButton.selected = NO;
+    insertImageButton.selected = NO;
+    scissorButton.selected = NO;
+}
+
+-(void) polygonTapped:(UIButton*)_button{
+    eraserButton.selected = NO;
+    pencilTool.selected = NO;
+    polygonButton.selected = YES;
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
 }
@@ -289,24 +304,13 @@
  * without changing the hidden stack's contents
  */
 -(void) addPageButtonTapped:(UIButton*)_button{
-    MMEditablePaperView* page = [[MMEditablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+    MMEditablePaperView* page = [[MMScrappedPaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.isBrandNewPage = YES;
     page.delegate = self;
     [hiddenStackHolder pushSubview:page];
     [[visibleStackHolder peekSubview] enableAllGestures];
     [self popTopPageOfHiddenStack];
     [TestFlight passCheckpoint:@"BUTTON_ADD_PAGE"];
-}
-
--(void) feedbackButtonTapped:(UIButton*)_button{
-    CGRect feedbackFrame = CGRectInset(self.bounds, 150, 200);
-    feedbackFrame.size.height -= 30;
-    if(!feedbackView){
-        feedbackView = [[MMFeedbackView alloc] initWithFrame:feedbackFrame];
-    }
-    feedbackView.frame = feedbackFrame;
-    [self addSubview:feedbackView];
-    [feedbackView show];
 }
 
 -(void) tempButtonTapped:(UIButton*)_button{
@@ -316,13 +320,12 @@
 -(void) setButtonsVisible:(BOOL)visible{
     [UIView animateWithDuration:0.3 animations:^{
         addPageSidebarButton.alpha = visible;
-        feedbackButton.alpha = visible;
         documentBackgroundSidebarButton.alpha = visible;
         polylineButton.alpha = visible;
         polygonButton.alpha = visible;
         insertImageButton.alpha = visible;
         textButton.alpha = visible;
-        pencilButton.alpha = visible;
+        pencilTool.alpha = visible;
         scissorButton.alpha = visible;
         eraserButton.alpha = visible;
         shareButton.alpha = visible;
@@ -346,7 +349,7 @@
         insertImageButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         textButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         scissorButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        pencilButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        pencilTool.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         eraserButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         shareButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         mapButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
@@ -354,8 +357,12 @@
         redoButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         rulerButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         handButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        feedbackButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         settingsButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+    }];
+}
+-(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
+    [NSThread performBlockOnMainThread:^{
+        [[visibleStackHolder peekSubview] didUpdateAccelerometerWithRawReading:currentRawReading];
     }];
 }
 
@@ -367,7 +374,49 @@
     // noop
 }
 
+
+#pragma mark - Bezel Left and Right Gestures
+
+-(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
+    if(bezelGesture.state == UIGestureRecognizerStateBegan){
+        // cancel any strokes that this gesture is using
+        for(UITouch* touch in bezelGesture.touches){
+            [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+            [polygon cancelPolygonForTouch:touch];
+        }
+    }
+    [super isBezelingInLeftWithGesture:bezelGesture];
+}
+
+-(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
+    if(bezelGesture.state == UIGestureRecognizerStateBegan){
+        // cancel any strokes that this gesture is using
+        for(UITouch* touch in bezelGesture.touches){
+            [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+            [polygon cancelPolygonForTouch:touch];
+        }
+    }
+    [super isBezelingInRightWithGesture:bezelGesture];
+}
+
 #pragma mark - MMPaperViewDelegate
+
+-(CGRect) isBeginning:(BOOL)beginning toPanAndScalePage:(MMPaperView *)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withTouches:(NSArray*)touches{
+    
+    // our gesture has began, so make sure to kill
+    // any touches that are being used to draw
+    //
+    // the stroke manager is the definitive source for all strokes.
+    // cancel through that manager, and it'll notify the appropriate
+    // view if need be
+    for(UITouch* touch in touches){
+        [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+        [polygon cancelPolygonForTouch:touch];
+    }
+    
+    return [super isBeginning:beginning toPanAndScalePage:page fromFrame:fromFrame toFrame:toFrame withTouches:touches];
+}
+
 #pragma mark = List View
 
 -(void) isBeginningToScaleReallySmall:(MMPaperView *)page{
@@ -424,6 +473,7 @@
             }else{
                 debug_NSLog(@"page is done saving...");
                 [(MMEditablePaperView*)page setCanvasVisible:NO];
+                [(MMEditablePaperView*)page setEditable:NO];
                 debug_NSLog(@"thumb for %@ is visible", page.uuid);
             }
         }
@@ -444,6 +494,16 @@
 }
 
 -(void) didMoveRuler:(MMRulerToolGestureRecognizer *)gesture{
+    // our gesture has began, so make sure to kill
+    // any touches that are being used to draw
+    //
+    // the stroke manager is the definitive source for all strokes.
+    // cancel through that manager, and it'll notify the appropriate
+    // view if need be
+    for(UITouch* touch in gesture.touches){
+        [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+        [polygon cancelPolygonForTouch:touch];
+    }
     [rulerView updateLineAt:[gesture point1InView:rulerView] to:[gesture point2InView:rulerView]
            startingDistance:[gesture initialDistance]];
 }
@@ -554,14 +614,14 @@
     if(![self hasPages]){
         isStart = YES;
         for(int i=0;i<1;i++){
-            MMEditablePaperView* editable = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
+            MMEditablePaperView* editable = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
             [editable setEditable:YES];
             [self addPaperToBottomOfStack:editable];
-            MMEditablePaperView* paper = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
+            MMEditablePaperView* paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
             [self addPaperToBottomOfStack:paper];
-            paper = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
+            paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
             [self addPaperToBottomOfHiddenStack:paper];
-            paper = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
+            paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
             [self addPaperToBottomOfHiddenStack:paper];
         }
         [self saveStacksToDisk];
@@ -610,8 +670,16 @@
     [[self activePen] willMoveStrokeWithTouch:touch];
 }
 
+-(void) willEndStrokeWithTouch:(JotTouch*)touch{
+    [[self activePen] willEndStrokeWithTouch:touch];
+}
+
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
     [[self activePen] didEndStrokeWithTouch:touch];
+}
+
+-(void) willCancelStrokeWithTouch:(JotTouch*)touch{
+    [[self activePen] willCancelStrokeWithTouch:touch];
 }
 
 -(void) didCancelStrokeWithTouch:(JotTouch*)touch{
@@ -641,6 +709,35 @@
 
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
     return [rulerView willAddElementsToStroke:[[self activePen] willAddElementsToStroke:elements fromPreviousElement:previousElement] fromPreviousElement:previousElement];
+}
+
+#pragma mark - PolygonToolDelegate
+
+-(void) beginShapeWithTouch:(UITouch*)touch{
+    [rulerView willBeginStrokeAt:[touch locationInView:rulerView]];
+    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
+    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+    [page beginShapeAtPoint:[page convertPoint:adjusted fromView:rulerView]];
+}
+
+-(void) continueShapeWithTouch:(UITouch*)touch{
+    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
+    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+    if(![page continueShapeAtPoint:[page convertPoint:adjusted fromView:rulerView]]){
+        [polygon cancelPolygonForTouch:touch];
+    }
+}
+
+-(void) finishShapeWithTouch:(UITouch*)touch{
+    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
+    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+    [page finishShapeAtPoint:[page convertPoint:adjusted fromView:rulerView]];
+}
+
+-(void) cancelShapeWithTouch:(UITouch*)touch{
+    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
+    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+    [page cancelShapeAtPoint:[page convertPoint:adjusted fromView:rulerView]];
 }
 
 

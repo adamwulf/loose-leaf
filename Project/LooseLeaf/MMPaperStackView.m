@@ -11,6 +11,7 @@
 #import "MMShadowManager.h"
 #import "NSThread+BlockAdditions.h"
 #import "TestFlight.h"
+#import "MMScrappedPaperView.h"
 
 @implementation MMPaperStackView
 
@@ -74,7 +75,7 @@
  */
 -(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(UIView*)stackView{
     while([stackView.subviews count] < numberOfPagesToEnsure){
-        MMEditablePaperView* page = [[MMEditablePaperView alloc] initWithFrame:stackView.bounds];
+        MMEditablePaperView* page = [[MMScrappedPaperView alloc] initWithFrame:stackView.bounds];
         page.isBrandNewPage = YES;
         page.delegate = self;
         [stackView addSubviewToBottomOfStack:page];
@@ -674,6 +675,21 @@
 #pragma mark - MMPaperViewDelegate
 
 /**
+ * notify that we just long pressed
+ */
+-(void) didLongPressPage:(MMPaperView*)page withTouches:(NSSet*)touches{
+    @throw kAbstractMethodException;
+}
+
+/**
+ * return true if we should require a long press
+ * before picking up a scrap
+ */
+-(BOOL) panScrapRequiresLongPress{
+    @throw kAbstractMethodException;
+}
+
+/**
  * these are implemented in MMEditablePaperStackView
  */
 -(void) didMoveRuler:(MMRulerToolGestureRecognizer *)gesture{
@@ -702,7 +718,7 @@
  * during a pan, we'll need to show different icons
  * depending on where they drag a page
  */
--(CGRect) isBeginning:(BOOL)isBeginningGesture toPanAndScalePage:(MMPaperView *)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
+-(CGRect) isBeginning:(BOOL)isBeginningGesture toPanAndScalePage:(MMPaperView *)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withTouches:(NSArray*)touches{
     BOOL isPanningTopPage = page == [visibleStackHolder peekSubview];
 
     if(page == [visibleStackHolder.subviews objectAtIndex:0]){
@@ -1138,6 +1154,10 @@
     }
 }
 
+-(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
+    // noop
+}
+
 -(void) isBeginningToScaleReallySmall:(MMPaperView *)page{
     [self updateIconAnimations];
 }
@@ -1551,7 +1571,7 @@
 -(void) mayChangeTopPageTo:(MMPaperView*)page{
     if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
         recentlySuggestedPageUUID = page.uuid;
-        debug_NSLog(@"may change top page to: %@", page.uuid);
+//        debug_NSLog(@"may change top page to: %@", page.uuid);
     }
 }
 
@@ -1562,15 +1582,16 @@
  * get this into static mode asap.
  */
 -(void) willChangeTopPageTo:(MMPaperView*)page{
-    if(page && ![recentlyConfirmedPageUUID isEqualToString:page.uuid]){
-        recentlyConfirmedPageUUID = page.uuid;
-        [self saveStacksToDisk];
-        debug_NSLog(@"will switch top page to %@", page.uuid);
-    }
+//        debug_NSLog(@"will switch top page to %@", page.uuid);
 }
 
 -(void) didChangeTopPage{
     // noop
+    MMPaperView* topPage = [visibleStackHolder peekSubview];
+    if(topPage && ![recentlyConfirmedPageUUID isEqualToString:topPage.uuid]){
+        recentlyConfirmedPageUUID = topPage.uuid;
+        [self saveStacksToDisk];
+    }
     debug_NSLog(@"did change top page");
 }
 
@@ -1581,7 +1602,7 @@
  * get this into static mode asap.
  */
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
-    debug_NSLog(@"will NOT change top page to: %@", page.uuid);
+//    debug_NSLog(@"will NOT change top page to: %@", page.uuid);
 }
 
 -(void) saveStacksToDisk{
@@ -1597,7 +1618,15 @@
     @throw kAbstractMethodException;
 }
 
+-(void) willEndStrokeWithTouch:(JotTouch*)touch{
+    @throw kAbstractMethodException;
+}
+
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
+    @throw kAbstractMethodException;
+}
+
+-(void) willCancelStrokeWithTouch:(JotTouch*)touch{
     @throw kAbstractMethodException;
 }
 

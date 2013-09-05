@@ -17,6 +17,7 @@
     CGFloat accelerationY;
     CGFloat accelerationZ;
     CGFloat currentRotationReading;
+    CGFloat currentRawRotationReading;
 
     NSObject<MMRotationManagerDelegate>* __weak delegate;
     NSOperationQueue* opQueue;
@@ -24,6 +25,7 @@
 }
 
 @property (nonatomic, readonly) CGFloat currentRotationReading;
+@property (nonatomic, readonly) CGFloat currentRawRotationReading;
 @property (nonatomic, weak) NSObject<MMRotationManagerDelegate>* delegate;
 
 

@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "Constants.h"
+#import "MMScrapView.h"
+#import "MMPanAndPinchScrapGestureRecognizerDelegate.h"
 
 @interface MMPanAndPinchGestureRecognizer : UIGestureRecognizer{
     //
@@ -22,6 +24,7 @@
     //
     // the collection of valid touches for this gesture
     NSMutableSet* ignoredTouches;
+    NSMutableOrderedSet* possibleTouches;
     NSMutableOrderedSet* validTouches;
 
     // track which bezels our delegate cares about
@@ -42,8 +45,12 @@
     // and the last touch to trigger a repeat
     // of the bezel
     BOOL secondToLastTouchDidBezel;
+    
+    __weak NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>* scrapDelegate;
 }
 
+@property (nonatomic, weak) NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>* scrapDelegate;
+@property (readonly) NSArray* touches;
 @property (nonatomic, readonly) CGFloat scale;
 @property (nonatomic, readonly) CGPoint velocity;
 @property (nonatomic, assign) MMBezelDirection bezelDirectionMask;
@@ -52,5 +59,6 @@
 
 -(void) cancel;
 -(BOOL) containsTouch:(UITouch*)touch;
+-(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 
 @end

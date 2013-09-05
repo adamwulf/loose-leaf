@@ -10,6 +10,7 @@
 #import "UIView+Debug.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMShadowManager.h"
+#import "MMScrappedPaperView.h"
 
 @implementation MMListPaperStackView
 
@@ -89,7 +90,7 @@
 -(void) didTapAddButtonInListView{
     //
     // this'll determine the resolution of the canvas too
-    MMEditablePaperView* paper = [[MMEditablePaperView alloc] initWithFrame:self.bounds];
+    MMEditablePaperView* paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
     // now size it for display
     paper.frame = addPageButtonInListView.frame;
     [self addPaperToBottomOfHiddenStack:paper];
@@ -289,7 +290,7 @@
  * when that happens, we start to also move pages below the panned page to show that
  * transition animation
  */
--(CGRect) isBeginning:(BOOL)beginning toPanAndScalePage:(MMPaperView *)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame{
+-(CGRect) isBeginning:(BOOL)beginning toPanAndScalePage:(MMPaperView *)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withTouches:(NSArray*)touches{
     if([visibleStackHolder peekSubview].scale < kMinPageZoom && [visibleStackHolder peekSubview] == page){
         // make sure we're the top page being panned,
         // and that we're zooming into list view
@@ -374,7 +375,7 @@
         }
         return [self framePositionDuringTransitionForPage:page originalFrame:toFrame withTrust:percentageToTrustToFrame];
     }
-    return [super isBeginning:beginning toPanAndScalePage:page fromFrame:fromFrame toFrame:toFrame];
+    return [super isBeginning:beginning toPanAndScalePage:page fromFrame:fromFrame toFrame:toFrame withTouches:touches];
 }
 
 /**
@@ -529,7 +530,10 @@
                 // up above the visible page. we have to move it by the expanded frame
                 // because shadows count here too
                 CGRect newFrame = aPage.frame;
-                newFrame.origin.y = -[MMShadowedView expandFrame:newFrame].size.height;
+                // set the height 0.15 higher than the screen so that it moves out
+                // and finishes its potion of the animation slightly faster than
+                // the rest of the pages
+                newFrame.origin.y = -[MMShadowedView expandFrame:newFrame].size.height * 1.15;
                 aPage.frame = newFrame;
             }else{
                 // these views we're animating into place

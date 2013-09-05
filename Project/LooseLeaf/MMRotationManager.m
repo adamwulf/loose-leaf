@@ -12,6 +12,7 @@
 
 @synthesize delegate;
 @synthesize currentRotationReading;
+@synthesize currentRawRotationReading;
 
 static MMRotationManager* _instance = nil;
 
@@ -52,6 +53,8 @@ static MMRotationManager* _instance = nil;
                 isFirstReading = NO;
                 [self.delegate didUpdateAccelerometerWithReading:currentRotationReading];
             }
+            currentRawRotationReading = newRawReading;
+            [self.delegate didUpdateAccelerometerWithRawReading:currentRawRotationReading andX:accelerationX andY:accelerationY andZ:accelerationZ];
         }];
     }
     return _instance;

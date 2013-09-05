@@ -8,11 +8,15 @@
 
 #import "MMPaperView.h"
 #import <JotUI/JotUI.h>
+#import <TouchShape/TouchShape.h>
 #import "MMRulerToolGestureRecognizer.h"
+#import "MMPolygonDebugView.h"
 
 @interface MMEditablePaperView : MMPaperView<JotViewDelegate>{
     UIImageView* cachedImgView;
     __weak JotView* drawableView;
+    MMPolygonDebugView* polygonDebugView;
+    
     MMRulerToolGestureRecognizer* rulerGesture;
 }
 
@@ -30,5 +34,7 @@
 -(void) saveToDisk;
 -(void) setCanvasVisible:(BOOL)isVisible;
 -(void) setEditable:(BOOL)isEditable;
+
+
 
 @end

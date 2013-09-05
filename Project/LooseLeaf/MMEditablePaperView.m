@@ -9,8 +9,10 @@
 #import "MMEditablePaperView.h"
 #import <QuartzCore/QuartzCore.h>
 #import <JotUI/JotUI.h>
+#import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "NSThread+BlockAdditions.h"
 #import "TestFlight.h"
+#import "DrawKit-iOS.h"
 
 dispatch_queue_t loadUnloadStateQueue;
 dispatch_queue_t importThumbnailQueue;
@@ -62,6 +64,7 @@ dispatch_queue_t importThumbnailQueue;
         //
         // This pan gesture is used to pan/scale the page itself.
         rulerGesture = [[MMRulerToolGestureRecognizer alloc] initWithTarget:self action:@selector(didMoveRuler:)];
+        
         //
         // This gesture is only allowed to run if the user is not
         // acting on an object on the page. defer to the long press
@@ -70,6 +73,7 @@ dispatch_queue_t importThumbnailQueue;
         [rulerGesture requireGestureRecognizerToFail:longPress];
         [rulerGesture requireGestureRecognizerToFail:tap];
         [self addGestureRecognizer:rulerGesture];
+        
     }
     return self;
 }
@@ -135,6 +139,11 @@ dispatch_queue_t importThumbnailQueue;
     
     void (^block2)() = ^(void) {
         @autoreleasepool {
+            if(![[NSFileManager defaultManager] fileExistsAtPath:[self inkPath]]){
+                NSLog(@"should build a page");
+                [self setBackgroundTextureToStartPage:pagePixelSize];
+            }
+            
             if(!state){
                 state = [[JotViewState alloc] initWithImageFile:[self inkPath]
                                                    andStateFile:[self plistPath]
@@ -157,128 +166,64 @@ dispatch_queue_t importThumbnailQueue;
     });
 }
 
--(void) setBackgroundTextureToStartPage{
-    UIGraphicsBeginImageContext(state.backgroundTexture.pixelSize);
+
+-(void) setBackgroundTextureToStartPage:(CGSize)pagePixelSize{
+    UIGraphicsBeginImageContext(pagePixelSize);
     CGFloat scale = [[UIScreen mainScreen] scale];
     
-    CGFloat textStartX = 110;
+    
+    NSString* allLetters = @"aaaabbbbcddddefghijklmnopqrstuvwxyz";
+    int letterIndex = rand() % [allLetters length];
+    NSString* lowerCase = [allLetters substringWithRange:NSMakeRange(letterIndex, 1)];
+    NSString* upperCase = [lowerCase uppercaseString];
+    UIFont* font = [UIFont fontWithName:@"Trace" size:200];
+    
+    int x = 130;
+    int width = [lowerCase sizeWithFont:font].width;
+    while(x + width + 30 < pagePixelSize.width){
+        [lowerCase drawAtPoint:CGPointMake(x * scale, 100 * scale) withFont:font];
+        x += width;
+        x += 40; // spacing
+    }
 
-    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 18), CGAffineTransformMakeScale(scale, scale))
-                            withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"New Blank Page" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 25), CGAffineTransformMakeScale(scale, scale))
-                          withFont:[UIFont systemFontOfSize:16 * scale]];
+    x = 130;
+    width = [upperCase sizeWithFont:font].width;
+    while(x + width + 20 < pagePixelSize.width){
+        [upperCase drawAtPoint:CGPointMake(x * scale, 500 * scale) withFont:font];
+        x += [upperCase sizeWithFont:font].width;
+        x += 40; // spacing
+    }
     
-    
-    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 18 + 60), CGAffineTransformMakeScale(scale, scale))
-             withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Jot Touch Settings" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 25 + 60), CGAffineTransformMakeScale(scale, scale))
-                          withFont:[UIFont systemFontOfSize:16 * scale]];
-    
-
-    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 18 + 60*2), CGAffineTransformMakeScale(scale, scale))
-             withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Send Adam your Alpha Feedback!" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 25 + 60*2), CGAffineTransformMakeScale(scale, scale))
-                              withFont:[UIFont systemFontOfSize:16 * scale]];
-    
-
-    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 298), CGAffineTransformMakeScale(scale, scale))
-             withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Pen" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 310), CGAffineTransformMakeScale(scale, scale))
-                                          withFont:[UIFont systemFontOfSize:16 * scale]];
-    
-
-    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 298 + 60), CGAffineTransformMakeScale(scale, scale))
-             withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Eraser" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 310 + 60), CGAffineTransformMakeScale(scale, scale))
-                                          withFont:[UIFont systemFontOfSize:16 * scale]];
-    
-    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 330 + 60 * 5), CGAffineTransformMakeScale(scale, scale))
-             withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Grab" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 342 + 60 * 5), CGAffineTransformMakeScale(scale, scale))
-                  withFont:[UIFont systemFontOfSize:16 * scale]];
-
-    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 330 + 60 * 6), CGAffineTransformMakeScale(scale, scale))
-             withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Ruler" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 342 + 60 * 6), CGAffineTransformMakeScale(scale, scale))
-                     withFont:[UIFont systemFontOfSize:16 * scale]];
-
-
-    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 902), CGAffineTransformMakeScale(scale, scale))
-             withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Undo" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 914), CGAffineTransformMakeScale(scale, scale))
-                  withFont:[UIFont systemFontOfSize:16 * scale]];
-    
-    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 902 + 60), CGAffineTransformMakeScale(scale, scale))
-             withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Redo" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 914 + 60), CGAffineTransformMakeScale(scale, scale))
-                withFont:[UIFont systemFontOfSize:16 * scale]];
-    
-    
-    
-
-    [@"Thanks for helping test Loose Leaf!" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 342), CGAffineTransformMakeScale(scale, scale))
-                                withFont:[UIFont boldSystemFontOfSize:20 * scale]];
-    
-    
-    [@"New this build:" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 402), CGAffineTransformMakeScale(scale, scale))
-             withFont:[UIFont boldSystemFontOfSize:20 * scale]];
-    
-    [@"• New Ruler mode lets you draw super straight lines" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 442), CGAffineTransformMakeScale(scale, scale))
-                  withFont:[UIFont systemFontOfSize:20 * scale]];
-    [@"  or curves. Similar to Adobe's Napolean ruler." drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 468), CGAffineTransformMakeScale(scale, scale))
-                                                  withFont:[UIFont systemFontOfSize:20 * scale]];
-    
-    [@"• Two fingers from left bezel will move pages off the stack." drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 508), CGAffineTransformMakeScale(scale, scale))
-                                        withFont:[UIFont systemFontOfSize:20 * scale]];
-    
-    [@"• two fingers from either bezel works in ruler mode." drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 548), CGAffineTransformMakeScale(scale, scale))
-                                                  withFont:[UIFont systemFontOfSize:20 * scale]];
-    
-    [@"• Can move pages in list view with 1 finger long press." drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 588), CGAffineTransformMakeScale(scale, scale))
-                                                                 withFont:[UIFont systemFontOfSize:20 * scale]];
-
-    [@"• lots of memory optimizations" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 628), CGAffineTransformMakeScale(scale, scale))
-                                                          withFont:[UIFont systemFontOfSize:20 * scale]];
-    
-    [@"• changed perspective a bit when zooming to list" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 668), CGAffineTransformMakeScale(scale, scale))
-                                          withFont:[UIFont systemFontOfSize:20 * scale]];
-
-    [@"• thinner less smeared-looking pen" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 708), CGAffineTransformMakeScale(scale, scale))
-                                                            withFont:[UIFont systemFontOfSize:20 * scale]];
-
-    
-    [@"Not yet built:" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 760), CGAffineTransformMakeScale(scale, scale))
-                           withFont:[UIFont boldSystemFontOfSize:20 * scale]];
-
-    [@"• New undo/redo UIUX" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 800), CGAffineTransformMakeScale(scale, scale))
-                          withFont:[UIFont systemFontOfSize:20 * scale]];
-    [@"• Can't delete pages yet" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 840), CGAffineTransformMakeScale(scale, scale))
-                                withFont:[UIFont systemFontOfSize:20 * scale]];
-
-    /**
-     
-     Thanks for helping to test Loose Leaf!
-     
-     • one finger will draw
-     
-     • two fingers will pinch/grab a page
-     
-     • you can pinch and draw at the same time
-     
-     
-     */
-
     UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    state.backgroundTexture = [[JotGLTexture alloc] initForImage:image withSize:state.backgroundTexture.pixelSize];
-    lastSavedUndoHash = 0;
+    [UIImagePNGRepresentation(image) writeToFile:[self inkPath] atomically:YES];
+}
+
+
+-(void) generateDebugView:(BOOL)create{
+    if(create){
+        polygonDebugView = [[MMPolygonDebugView alloc] initWithFrame:self.contentView.bounds];
+        //        polygonDebugView.layer.borderColor = [UIColor redColor].CGColor;
+        //        polygonDebugView.layer.borderWidth = 10;
+        polygonDebugView.frame = self.contentView.bounds;
+        polygonDebugView.contentMode = UIViewContentModeScaleAspectFill;
+        polygonDebugView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        polygonDebugView.clipsToBounds = YES;
+        polygonDebugView.opaque = NO;
+        polygonDebugView.backgroundColor = [UIColor clearColor];
+        [self.contentView addSubview:polygonDebugView];
+    }else{
+        [polygonDebugView removeFromSuperview];
+        polygonDebugView = nil;
+    }
 }
 
 -(void) setDrawableView:(JotView *)_drawableView{
     if(drawableView != _drawableView){
         drawableView = _drawableView;
         if(drawableView){
+            [self generateDebugView:YES];
             [self setFrame:self.frame];
             [self loadStateAsynchronously:YES
                                  withSize:[drawableView pagePixelSize]
@@ -288,7 +233,7 @@ dispatch_queue_t importThumbnailQueue;
                                           if([self.delegate isPageEditable:self]){
                                               [drawableView loadState:state];
                                               lastSavedUndoHash = [drawableView undoHash];
-                                              [self.contentView addSubview:drawableView];
+                                              [self.contentView insertSubview:drawableView aboveSubview:cachedImgView];
                                               // anchor the view to the top left,
                                               // so that when we scale down, the drawable view
                                               // stays in place
@@ -300,6 +245,8 @@ dispatch_queue_t importThumbnailQueue;
                                           }
                                       }];
                                   }];
+        }else{
+            [self generateDebugView:NO];
         }
     }else if(drawableView && state){
         [self setCanvasVisible:YES];
@@ -339,7 +286,7 @@ dispatch_queue_t importThumbnailQueue;
                        onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* immutableState){
                            [NSThread performBlockOnMainThread:^{
                                lastSavedUndoHash = [immutableState undoHash];
-                               debug_NSLog(@"saving page %@ with hash %u", self.uuid, lastSavedUndoHash);
+//                               debug_NSLog(@"saving page %@ with hash %u", self.uuid, lastSavedUndoHash);
                                cachedImgView.image = thumbnail;
                                [self.delegate didSavePage:self];
                            }];
@@ -417,9 +364,17 @@ dispatch_queue_t importThumbnailQueue;
     [delegate willMoveStrokeWithTouch:touch];
 }
 
+-(void) willEndStrokeWithTouch:(JotTouch*)touch{
+    [delegate willEndStrokeWithTouch:touch];
+}
+
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
     [delegate didEndStrokeWithTouch:touch];
     [self saveToDisk];
+}
+
+-(void) willCancelStrokeWithTouch:(JotTouch*)touch{
+    [delegate willCancelStrokeWithTouch:touch];
 }
 
 -(void) didCancelStrokeWithTouch:(JotTouch*)touch{
@@ -448,7 +403,56 @@ dispatch_queue_t importThumbnailQueue;
 }
 
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
-    return [delegate willAddElementsToStroke:elements fromPreviousElement:previousElement];
+    
+    UIBezierPath* bounds = [UIBezierPath bezierPathWithRect:self.bounds];
+    
+    NSArray* modifiedElements = [self.delegate willAddElementsToStroke:elements fromPreviousElement:previousElement];
+    
+    NSMutableArray* croppedElements = [NSMutableArray array];
+    for(AbstractBezierPathElement* element in modifiedElements){
+        
+        if([element isKindOfClass:[CurveToPathElement class]]){
+            CurveToPathElement* curveElement = (CurveToPathElement*) element;
+            UIBezierPath* bez = [UIBezierPath bezierPath];
+            [bez moveToPoint:[element startPoint]];
+            [bez addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
+            
+            UIBezierPath* cropped = [bez unclosedPathFromIntersectionWithPath:bounds];
+
+            __block CGPoint previousEndpoint = curveElement.startPoint;
+            [cropped iteratePathWithBlock:^(CGPathElement pathEle){
+                AbstractBezierPathElement* newElement = nil;
+                if(pathEle.type == kCGPathElementAddCurveToPoint){
+                    // curve
+                    newElement = [CurveToPathElement elementWithStart:previousEndpoint
+                                                           andCurveTo:pathEle.points[2]
+                                                          andControl1:pathEle.points[0]
+                                                          andControl2:pathEle.points[1]];
+                    previousEndpoint = pathEle.points[2];
+                }else if(pathEle.type == kCGPathElementMoveToPoint){
+                    newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
+                    previousEndpoint = pathEle.points[0];
+                }else if(pathEle.type == kCGPathElementAddLineToPoint){
+                    newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
+                    previousEndpoint = pathEle.points[0];
+                }
+                if(newElement){
+                    // be sure to set color/width/etc
+                    newElement.color = element.color;
+                    newElement.width = element.width;
+                    newElement.rotation = element.rotation;
+                    [croppedElements addObject:newElement];
+                }
+            }];
+            if([croppedElements count] && [[croppedElements firstObject] isKindOfClass:[MoveToPathElement class]]){
+                [croppedElements removeObjectAtIndex:0];
+            }
+        }else{
+            [croppedElements addObject:element];
+        }
+    }
+
+    return croppedElements;
 }
 
 

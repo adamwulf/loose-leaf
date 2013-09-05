@@ -9,6 +9,7 @@
 #import "MMPolylineButton.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Constants.h"
+#import "DrawKit-iOS.h"
 
 @implementation MMPolylineButton
 
@@ -56,10 +57,10 @@
     //
     // calculate connections between dots
     
-    CGPoint midPoint1 = [self midPointOfPath:dot1Path];
-    CGPoint midPoint2 = [self midPointOfPath:dot2Path];
-    CGPoint midPoint3 = [self midPointOfPath:dot3Path];
-    CGPoint midPoint4 = [self midPointOfPath:dot4Path];
+    CGPoint midPoint1 = dot1Path.center;
+    CGPoint midPoint2 = dot2Path.center;
+    CGPoint midPoint3 = dot3Path.center;
+    CGPoint midPoint4 = dot4Path.center;
     
     CGPoint per1 = [self perpendicularUnitVectorForPoint:midPoint1 andPoint:midPoint2];
     CGPoint per2 = [self perpendicularUnitVectorForPoint:midPoint2 andPoint:midPoint3];

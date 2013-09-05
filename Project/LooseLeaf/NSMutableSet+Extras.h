@@ -8,19 +8,23 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSMutableSet (Extras)
+@interface NSMutableSet (LooseLeafExtras)
 
 -(void) removeObjectsInSet:(NSSet*)set;
 
 -(NSSet*) setByRemovingObject:(id)obj;
+
+-(void) addObjectsInSet:(NSSet*)set;
 
 @end
 
 
-@interface NSMutableOrderedSet (Extras)
+@interface NSMutableOrderedSet (LooseLeafExtras)
 
 -(void) removeObjectsInSet:(NSSet*)set;
 
 -(NSSet*) setByRemovingObject:(id)obj;
+
+-(void) addObjectsInSet:(NSSet*)set;
 
 @end

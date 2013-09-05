@@ -11,12 +11,21 @@
 @implementation UIColor (Shadow)
 
 static UIColor* shadowColor;
+static UIColor* blueShadowColor;
 +(UIColor*)shadowColor{
     if(shadowColor){
         return shadowColor;
     }
     shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.75];
     return shadowColor;
+}
+
++(UIColor*) blueShadowColor{
+    if(blueShadowColor){
+        return blueShadowColor;
+    }
+    blueShadowColor = [UIColor colorWithRed: 77.0/255.0 green: 187.0/255.0 blue: 1.0 alpha: 0.5];
+    return blueShadowColor;
 }
 
 
