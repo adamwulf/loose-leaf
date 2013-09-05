@@ -28,7 +28,6 @@
 -(void) unloadCachedPreview;
 -(void) loadCachedPreview;
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(EAGLContext*)context andThen:(void (^)())block;
--(void) setBackgroundTextureToStartPage;
 -(void) unloadState;
 -(void) forceSaveToDisk;
 -(void) saveToDisk;

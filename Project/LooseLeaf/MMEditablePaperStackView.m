@@ -633,10 +633,6 @@
                                                    andContext:[drawableView context]
                                                       andThen:nil];
     
-    if(isStart){
-        [[visibleStackHolder peekSubview] setBackgroundTextureToStartPage];
-    }
-    
     // only load the image previews for the pages that will be visible
     // other page previews will load as the user turns the page,
     // or as they scroll the list view
