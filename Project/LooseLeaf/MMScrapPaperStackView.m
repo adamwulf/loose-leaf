@@ -113,7 +113,6 @@
         CGPoint centerInPage = _panGesture.scrap.center;
         centerInPage = CGPointApplyAffineTransform(centerInPage, CGAffineTransformMakeScale(pageScale, pageScale));
         gesture.preGestureCenter = [[visibleStackHolder peekSubview] convertPoint:centerInPage toView:scrapContainer];
-        NSLog(@"should reset: %d", gesture.state);
     }
     
     if(gesture.scrap){
@@ -193,10 +192,6 @@
                     shouldBezel = YES;
                 }
             }
-        }
-        if(shouldBezel){
-            // TODO: bezel the scrap
-            NSLog(@"send scrap to sidebar");
         }
         
         [self finishedPanningAndScalingScrap:gesture.scrap];

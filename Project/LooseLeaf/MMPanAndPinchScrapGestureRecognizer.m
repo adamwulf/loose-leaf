@@ -217,7 +217,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
         }
     }
     
-    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+//    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -267,11 +267,6 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSLog(@"ended: %d", [touches count]);
-    for (UITouch* t in touches) {
-        CGPoint point = [t locationInView:self.view.superview];
-        NSLog(@"x: %f  y: %f", point.x, point.y);
-    }
     // pan and pinch and bezel
     BOOL cancelledFromBezel = NO;
     NSMutableOrderedSet* validTouchesCurrentlyEnding = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
@@ -289,12 +284,12 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
                 CGPoint point = [touch locationInView:self.view.superview];
                 
                 
-                CGFloat distanceToBezel = point.x - (self.view.superview.frame.size.width - kBezelInGestureWidth);
-                NSLog(@"distance: %f", distanceToBezel);
+//                CGFloat distanceToBezel = point.x - (self.view.superview.frame.size.width - kBezelInGestureWidth);
+//                NSLog(@"distance: %f", distanceToBezel);
 
                 CGFloat velocity = [[lastVelocityPerTouch objectForKey:@(touch.hash)] floatValue];
                 CGFloat pxVelocity = velocity * SCRAP_VELOCITY_CLAMP_MAX * .05; // velocity per fraction of a second
-                NSLog(@"velocity: %d %f    => %f", (int)touch, velocity, pxVelocity);
+//                NSLog(@"velocity: %d %f    => %f", (int)touch, velocity, pxVelocity);
 
                 
                 BOOL bezelDirHasLeft = ((bezelDirectionMask & MMBezelDirectionLeft) == MMBezelDirectionLeft);
@@ -363,7 +358,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
         [self setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
         [self prepareGestureToBeginFresh];
     }
-    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+//    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
     for(UITouch* touch in touches){
         [lastStampPerTouch removeObjectForKey:@(touch.hash)];
         [lastVelocityPerTouch removeObjectForKey:@(touch.hash)];
@@ -389,7 +384,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
     }
     [possibleTouches removeObjectsInSet:touches];
     [ignoredTouches removeObjectsInSet:touches];
-    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+//    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 
     for(UITouch* touch in touches){
         [lastStampPerTouch removeObjectForKey:@(touch.hash)];
@@ -477,18 +472,18 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
 -(void) setState:(UIGestureRecognizerState)state{
     [super setState:state];
     if(self.state == UIGestureRecognizerStateBegan){
-        NSLog(@"began scrap pan");
+//        NSLog(@"began scrap pan");
         self.shouldReset = YES;
     }else if(self.state == UIGestureRecognizerStateEnded){
-        NSLog(@"ended scrap pan");
+//        NSLog(@"ended scrap pan");
     }else if(self.state == UIGestureRecognizerStateCancelled){
-        NSLog(@"cancelled scrap pan");
+//        NSLog(@"cancelled scrap pan");
     }else if(self.state == UIGestureRecognizerStateFailed){
-        NSLog(@"failed scrap pan");
+//        NSLog(@"failed scrap pan");
     }else if(self.state == UIGestureRecognizerStateChanged){
 //        NSLog(@"changed scrap pan");
     }else if(self.state == UIGestureRecognizerStatePossible){
-        NSLog(@"possible scrap pan");
+//        NSLog(@"possible scrap pan");
     }
 }
 
