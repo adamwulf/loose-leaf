@@ -62,27 +62,29 @@
     
     [scrapsHeldInBezel addObject:scrap];
     
-    [countButton setCount:[scrapsHeldInBezel count]];
-    
     // exit the scrap to the bezel!
     CGRect rect = [self frameForBubbleAtIndex:[scrapsHeldInBezel count] - 1];
     
+    // prep the animation by creating the new bubble for the scrap
+    // and initializing it's probable location (may change if count > 6)
+    // and set it's alpha/rotation/scale to prepare for the animation
+    MMScrapBubbleButton* bubble = [[MMScrapBubbleButton alloc] initWithFrame:rect];
+    [bubble addTarget:self action:@selector(bubbleTapped:) forControlEvents:UIControlEventTouchUpInside];
+    bubble.originalScrapScale = scrap.scale;
+    [self insertSubview:bubble atIndex:0];
+    [self insertSubview:scrap aboveSubview:bubble];
+    // keep the scrap in the bezel container during the animation, then
+    // push it into the bubble
+    bubble.alpha = 0;
+    bubble.rotation = lastRotationReading;
+    bubble.scale = .9;
+    CGFloat animationDuration = 0.5;
+
     if([scrapsHeldInBezel count] < kMaxScrapsInBezel + 1){
         // allow adding to 6 in the sidebar, otherwise
         // we need to pull them all into 1 button w/
         // a menu
         
-        MMScrapBubbleButton* bubble = [[MMScrapBubbleButton alloc] initWithFrame:rect];
-        [bubble addTarget:self action:@selector(bubbleTapped:) forControlEvents:UIControlEventTouchUpInside];
-        bubble.originalScrapScale = scrap.scale;
-        [self insertSubview:bubble atIndex:0];
-        [self insertSubview:scrap aboveSubview:bubble];
-        // keep the scrap in the bezel container during the animation, then
-        // push it into the bubble
-        bubble.alpha = 0;
-        bubble.rotation = lastRotationReading;
-        bubble.scale = .9;
-        CGFloat animationDuration = 0.5;
         [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             // animate the scrap into position
             bubble.alpha = 1;
@@ -96,6 +98,7 @@
                 bubble.scale = .8;
                 bubble.alpha = targetAlpha;
             } completion:^(BOOL finished){
+                [countButton setCount:[scrapsHeldInBezel count]];
                 [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
                     // bounce back
                     bubble.scale = 1.1;
@@ -112,19 +115,8 @@
     }else if([scrapsHeldInBezel count] >= kMaxScrapsInBezel + 1){
         // we need to merge all the bubbles together into
         // a single button during the bezel animation
-        NSLog(@"merge all buttons");
-        
-        MMScrapBubbleButton* bubble = [[MMScrapBubbleButton alloc] initWithFrame:countButton.frame];
-        [bubble addTarget:self action:@selector(bubbleTapped:) forControlEvents:UIControlEventTouchUpInside];
-        bubble.originalScrapScale = scrap.scale;
-        [self insertSubview:bubble atIndex:0];
-        [self insertSubview:scrap aboveSubview:bubble];
-        // keep the scrap in the bezel container during the animation, then
-        // push it into the bubble
-        bubble.alpha = 0;
-        bubble.rotation = lastRotationReading;
-        bubble.scale = .9;
-        CGFloat animationDuration = 0.5;
+        bubble.frame = countButton.frame;
+        bubble.scale = 1;
         [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             // animate the scrap into position
             for(MMScrapBubbleButton* bubble in self.subviews){
@@ -144,6 +136,7 @@
                 // scrap "hits" the bubble and pushes it down a bit
                 countButton.scale = .8;
             } completion:^(BOOL finished){
+                [countButton setCount:[scrapsHeldInBezel count]];
                 [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
                     // bounce back
                     countButton.scale = 1.1;
@@ -157,52 +150,6 @@
                 }];
             }];
         }];
-
-        
-    }else if([scrapsHeldInBezel count] > kMaxScrapsInBezel + 1){
-        // all of the scraps are already in a single menu-button
-        // and we should animate this new scrap into that one
-        // button
-        NSLog(@"animate into menu button");
-
-    
-        MMScrapBubbleButton* bubble = [[MMScrapBubbleButton alloc] initWithFrame:countButton.frame];
-        [bubble addTarget:self action:@selector(bubbleTapped:) forControlEvents:UIControlEventTouchUpInside];
-        bubble.originalScrapScale = scrap.scale;
-        [self insertSubview:bubble atIndex:0];
-        [self insertSubview:scrap aboveSubview:bubble];
-        // keep the scrap in the bezel container during the animation, then
-        // push it into the bubble
-        bubble.alpha = 0;
-        bubble.rotation = lastRotationReading;
-        bubble.scale = .9;
-        CGFloat animationDuration = 0.5;
-        [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-            // animate the scrap into position
-            scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
-            scrap.center = bubble.center;
-        } completion:^(BOOL finished){
-            // add it to the bubble and bounce
-            bubble.scrap = scrap;
-            [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                // scrap "hits" the bubble and pushes it down a bit
-                countButton.scale = .8;
-            } completion:^(BOOL finished){
-                [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                    // bounce back
-                    countButton.scale = 1.1;
-                } completion:^(BOOL finished){
-                    [UIView animateWithDuration:animationDuration * .16 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                        // and done
-                        countButton.scale = 1.0;
-                    } completion:^(BOOL finished){
-                        [self.delegate didAddScrapToBezelSidebar:scrap];
-                    }];
-                }];
-            }];
-        }];
-        
-
     }
 }
 

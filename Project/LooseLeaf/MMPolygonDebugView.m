@@ -78,7 +78,9 @@
                         // noop
                     }else{
                         didIntersectSelf = YES;
-                        NSLog(@"ding!");
+                        // we self intersected! let our
+                        // caller know so it can stop
+                        // recognition if need be
                     }
                 }
             }
@@ -253,16 +255,19 @@
         SYShape* shape = [shapeMaker getFigurePaintedWithTolerance:0.0000001 andContinuity:0];
         if(shape){
             if(shape.closeCurve){
+                // shape is a closed path,
+                // so create a scrap from it
                 UIBezierPath* shapePath = [shape bezierPath];
                 [shapePaths addObject:shapePath];
-                NSLog(@"got shape");
             }else{
-                NSLog(@"skipping unclosed shape");
+                // shape is unclosed, so don't add
+                // it as a scrap
             }
         }else{
-            // why does this happen so often? it seems to have a problem
-            // when the curve starts and stops on the exact same CGPoint
-            NSLog(@"nil shape :(");
+            // this is more rare than it used to be. this will
+            // trigger when we can't determine any shape from a path,
+            // usually when the user draws an unclosed path that's
+            // not close enough to self-close
         }
     }
     [self setNeedsDisplay];

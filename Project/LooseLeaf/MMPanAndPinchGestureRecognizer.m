@@ -138,7 +138,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     }
     [self calculateVelocity];
 
-    NSLog(@"pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+//    NSLog(@"pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 
 -(void) processPossibleTouches{
@@ -351,9 +351,7 @@ NSInteger const  minimumNumberOfTouches = 2;
                                          locationAdjustment.y + (newLocationInView.y - originalLocationInView.y));
         initialDistance = [self distanceBetweenTouches:validTouches] / scale;
     }
-
-
-    NSLog(@"pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+//    NSLog(@"pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
     NSMutableOrderedSet* validTouchesCurrentlyCancelling = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
@@ -371,7 +369,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     [possibleTouches removeObjectsInSet:touches];
     [ignoredTouches removeObjectsInSet:touches];
     [self calculateVelocity];
-    NSLog(@"pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+//    NSLog(@"pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 -(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
     [ignoredTouches addObject:touch];
@@ -379,23 +377,22 @@ NSInteger const  minimumNumberOfTouches = 2;
 }
 -(void) setState:(UIGestureRecognizerState)state{
     [super setState:state];
-    if(self.state == UIGestureRecognizerStateBegan){
-        NSLog(@"began page pan");
-    }else if(self.state == UIGestureRecognizerStateEnded){
-        NSLog(@"ended page pan");
-    }else if(self.state == UIGestureRecognizerStateCancelled){
-        NSLog(@"cancelled page pan");
-    }else if(self.state == UIGestureRecognizerStateFailed){
-        NSLog(@"failed page pan");
-    }else if(self.state == UIGestureRecognizerStateChanged){
-        NSLog(@"changed page pan");
-    }else if(self.state == UIGestureRecognizerStatePossible){
-        NSLog(@"possible page pan");
-    }
+//    if(self.state == UIGestureRecognizerStateBegan){
+//        NSLog(@"began page pan");
+//    }else if(self.state == UIGestureRecognizerStateEnded){
+//        NSLog(@"ended page pan");
+//    }else if(self.state == UIGestureRecognizerStateCancelled){
+//        NSLog(@"cancelled page pan");
+//    }else if(self.state == UIGestureRecognizerStateFailed){
+//        NSLog(@"failed page pan");
+//    }else if(self.state == UIGestureRecognizerStateChanged){
+//        NSLog(@"changed page pan");
+//    }else if(self.state == UIGestureRecognizerStatePossible){
+//        NSLog(@"possible page pan");
+//    }
 }
 
 - (void)reset{
-    NSLog(@"page page reset");
     [super reset];
     initialDistance = 0;
     scale = 1;
