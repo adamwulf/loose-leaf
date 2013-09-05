@@ -9,6 +9,7 @@
 #import "MMScapBubbleContainerView.h"
 #import "MMScrapBubbleButton.h"
 #import "NSThread+BlockAdditions.h"
+#import "MMCountBubbleButton.h"
 
 #define kMaxScrapsInBezel 6
 
@@ -24,6 +25,9 @@
     if(self = [super initWithFrame:frame]){
         targetAlpha = 1;
         scrapsHeldInBezel = [NSMutableOrderedSet orderedSet];
+        
+        MMCountBubbleButton* numberTest = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(300, 300, 80, 80)];
+        [self addSubview:numberTest];
     }
     return self;
 }
