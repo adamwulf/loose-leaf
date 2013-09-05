@@ -634,7 +634,6 @@
 			children = (
 				66A471C317C7E05C00C2A5B6 /* Scraps */,
 				66CE120517D3B6C200882275 /* Scrap Bubble */,
-				66CE120417D3B6A400882275 /* Scrap Containers */,
 				66D33F4A15A6408A0044C809 /* MMShadowedView.h */,
 				66D33F4B15A6408A0044C809 /* MMShadowedView.m */,
 				66DCFBCB1582BAED00B4918C /* MMPaperView.h */,
@@ -1004,6 +1003,7 @@
 		66DCFBBF1581C7F400B4918C /* MMPaperStack */ = {
 			isa = PBXGroup;
 			children = (
+				66CE120417D3B6A400882275 /* Scrap Containers */,
 				66C38AC51753226F0035B872 /* Tools */,
 				66DCFBC01581C85B00B4918C /* MMPaperStackView.h */,
 				66DCFBC11581C85B00B4918C /* MMPaperStackView.m */,

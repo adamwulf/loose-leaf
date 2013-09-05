@@ -10,9 +10,12 @@
 #import "MMScrapBubbleButton.h"
 #import "NSThread+BlockAdditions.h"
 
+#define kMaxScrapsInBezel 6
+
 @implementation MMScapBubbleContainerView{
     CGFloat lastRotationReading;
     CGFloat targetAlpha;
+    NSMutableOrderedSet* scrapsHeldInBezel;
 }
 
 @synthesize delegate;
@@ -20,6 +23,7 @@
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
         targetAlpha = 1;
+        scrapsHeldInBezel = [NSMutableOrderedSet orderedSet];
     }
     return self;
 }
@@ -37,56 +41,78 @@
     }
 }
 
--(void) addScrapToBezelSidebarAnimated:(MMScrapView *)scrap{
-    // exit the scrap to the bezel!
+-(CGRect) frameForBubbleAtIndex:(NSInteger)index{
     CGRect rect = CGRectMake(668, 240, 80, 80);
-    if([self.subviews count]){
-        // put it below the most recent bubble
-        // each bubble is ordered in subviews most recent -> least recent
-        rect.origin.y += 80 * [self.subviews count];
-    }
-    MMScrapBubbleButton* bubble = [[MMScrapBubbleButton alloc] initWithFrame:rect];
-    [bubble addTarget:self action:@selector(bubbleTapped:) forControlEvents:UIControlEventTouchUpInside];
-    bubble.originalScrapScale = scrap.scale;
-    [self insertSubview:bubble atIndex:0];
-    [self insertSubview:scrap aboveSubview:bubble];
-    // keep the scrap in the bezel container during the animation, then
-    // push it into the bubble
-    bubble.alpha = 0;
-    bubble.rotation = lastRotationReading;
-    bubble.scale = .9;
-    CGFloat animationDuration = 0.5;
-    [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        // animate the scrap into position
-        bubble.alpha = 1;
-        scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
-        scrap.center = bubble.center;
-    } completion:^(BOOL finished){
-        // add it to the bubble and bounce
-        bubble.scrap = scrap;
-        [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-            // scrap "hits" the bubble and pushes it down a bit
-            bubble.scale = .8;
-            bubble.alpha = targetAlpha;
+    rect.origin.y += 80 * index;
+    return rect;
+}
+
+-(void) addScrapToBezelSidebarAnimated:(MMScrapView *)scrap{
+    
+    [scrapsHeldInBezel addObject:scrap];
+    
+    // exit the scrap to the bezel!
+    CGRect rect = [self frameForBubbleAtIndex:[scrapsHeldInBezel count] - 1];
+    
+    if([scrapsHeldInBezel count] < kMaxScrapsInBezel + 1 || YES){
+        // allow adding to 6 in the sidebar, otherwise
+        // we need to pull them all into 1 button w/
+        // a menu
+        
+        MMScrapBubbleButton* bubble = [[MMScrapBubbleButton alloc] initWithFrame:rect];
+        [bubble addTarget:self action:@selector(bubbleTapped:) forControlEvents:UIControlEventTouchUpInside];
+        bubble.originalScrapScale = scrap.scale;
+        [self insertSubview:bubble atIndex:0];
+        [self insertSubview:scrap aboveSubview:bubble];
+        // keep the scrap in the bezel container during the animation, then
+        // push it into the bubble
+        bubble.alpha = 0;
+        bubble.rotation = lastRotationReading;
+        bubble.scale = .9;
+        CGFloat animationDuration = 0.5;
+        [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            // animate the scrap into position
+            bubble.alpha = 1;
+            scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
+            scrap.center = bubble.center;
         } completion:^(BOOL finished){
-            [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                // bounce back
-                bubble.scale = 1.1;
+            // add it to the bubble and bounce
+            bubble.scrap = scrap;
+            [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                // scrap "hits" the bubble and pushes it down a bit
+                bubble.scale = .8;
+                bubble.alpha = targetAlpha;
             } completion:^(BOOL finished){
-                [UIView animateWithDuration:animationDuration * .16 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                    // and done
-                    bubble.scale = 1.0;
+                [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                    // bounce back
+                    bubble.scale = 1.1;
                 } completion:^(BOOL finished){
-                    [self.delegate didAddScrapToBezelSidebar:scrap];
+                    [UIView animateWithDuration:animationDuration * .16 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                        // and done
+                        bubble.scale = 1.0;
+                    } completion:^(BOOL finished){
+                        [self.delegate didAddScrapToBezelSidebar:scrap];
+                    }];
                 }];
             }];
         }];
-    }];
+    }else if([scrapsHeldInBezel count] == kMaxScrapsInBezel + 1){
+        // we need to merge all the bubbles together into
+        // a single button during the bezel animation
+        NSLog(@"merge all buttons");
+    }else if([scrapsHeldInBezel count] > kMaxScrapsInBezel + 1){
+        // all of the scraps are already in a single menu-button
+        // and we should animate this new scrap into that one
+        // button
+        NSLog(@"animate into menu button");
+    }
 }
 
 #pragma mark - Button Tap
 
 -(void) bubbleTapped:(MMScrapBubbleButton*)bubble{
+    [scrapsHeldInBezel removeObject:bubble.scrap];
+
     MMScrapView* scrap = bubble.scrap;
     CGPoint centerInSelf = [self convertPoint:scrap.center fromView:scrap.superview];
     [self addSubview:scrap];
@@ -98,8 +124,18 @@
     CGFloat scaleOnScreenToScaleTo = [self.delegate scaleOnScreenToScaleScrapTo:scrap givenOriginalScale:bubble.originalScrapScale];
     [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         scrap.center = positionOnScreenToScaleTo;
-        [scrap setScale:scaleOnScreenToScaleTo andRotation:scrap.rotation - .25];
+        [scrap setScale:scaleOnScreenToScaleTo andRotation:scrap.rotation];
         bubble.alpha = 0;
+
+        NSInteger index = 0;
+        for(MMScrapBubbleButton* otherBubble in [self.subviews reverseObjectEnumerator]){
+            if([otherBubble isKindOfClass:[MMScrapBubbleButton class]]){
+                if(otherBubble != bubble){
+                    otherBubble.frame = [self frameForBubbleAtIndex:index];
+                    index++;
+                }
+            }
+        }
     } completion:^(BOOL finished){
         [bubble removeFromSuperview];
         [self.delegate didAddScrapBackToPage:scrap];
