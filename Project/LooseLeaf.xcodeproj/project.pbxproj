@@ -138,6 +138,7 @@
 		66EDA79617CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDA79517CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m */; };
 		66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */; };
+		66F4FB2617D912730086E21C /* MMScrapBezelMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2517D912730086E21C /* MMScrapBezelMenuView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -410,6 +411,8 @@
 		66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLongPressFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		66F4FB2117D8FE600086E21C /* MMCountBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCountBubbleButton.h; sourceTree = "<group>"; };
 		66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCountBubbleButton.m; sourceTree = "<group>"; };
+		66F4FB2417D912730086E21C /* MMScrapBezelMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBezelMenuView.h; sourceTree = "<group>"; };
+		66F4FB2517D912730086E21C /* MMScrapBezelMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBezelMenuView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -910,6 +913,8 @@
 				66CE11FB17D2700E00882275 /* MMScapBubbleContainerView.h */,
 				66CE11FC17D2700E00882275 /* MMScapBubbleContainerView.m */,
 				66CE120617D3BBCD00882275 /* MMScapBubbleContainerViewDelegate.h */,
+				66F4FB2417D912730086E21C /* MMScrapBezelMenuView.h */,
+				66F4FB2517D912730086E21C /* MMScrapBezelMenuView.m */,
 			);
 			name = "Scrap Containers";
 			sourceTree = "<group>";
@@ -1214,6 +1219,7 @@
 				66CE11FD17D2700E00882275 /* MMScapBubbleContainerView.m in Sources */,
 				663C1897175A89EF00706A05 /* MMRulerButton.m in Sources */,
 				6651083C178F249C00A7A7DD /* MMVector.m in Sources */,
+				66F4FB2617D912730086E21C /* MMScrapBezelMenuView.m in Sources */,
 				66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */,
 				66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */,
 				66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */,

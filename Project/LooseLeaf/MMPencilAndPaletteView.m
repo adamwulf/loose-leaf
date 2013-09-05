@@ -189,8 +189,10 @@
     if(pencilButton.selected){
         if([self isShowingColors]){
             [self hideColors];
+            [self.delegate colorMenuToggled];
         }else{
             [self showColors];
+            [self.delegate colorMenuToggled];
         }
     }else{
         [self.delegate penTapped:button];
