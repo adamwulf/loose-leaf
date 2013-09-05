@@ -10,6 +10,7 @@
 #import "MMScrapBubbleButton.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMCountBubbleButton.h"
+#import "MMScrapBezelMenuView.h"
 
 #define kMaxScrapsInBezel 6
 
@@ -18,6 +19,8 @@
     CGFloat targetAlpha;
     NSMutableOrderedSet* scrapsHeldInBezel;
     MMCountBubbleButton* countButton;
+    MMScrapBezelMenuView* scrapMenu;
+    UIButton* closeMenuView;
 }
 
 @synthesize delegate;
@@ -31,7 +34,17 @@
         CGFloat midPointY = (frame.size.height - 3*80) / 2;
         countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY, 80, 80)];
         countButton.alpha = 0;
+        [countButton addTarget:self action:@selector(countButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:countButton];
+        
+        closeMenuView = [UIButton buttonWithType:UIButtonTypeCustom];
+        closeMenuView.frame = self.bounds;
+        [closeMenuView addTarget:self action:@selector(closeMenuTapped:) forControlEvents:UIControlEventTouchUpInside];
+        closeMenuView.hidden = YES;
+        [self addSubview:closeMenuView];
+        scrapMenu = [[MMScrapBezelMenuView alloc] initWithFrame:CGRectMake(rightBezelSide - 300, midPointY - 150, 280, 380)];
+        scrapMenu.alpha = 0;
+        [self addSubview:scrapMenu];
     }
     return self;
 }
@@ -115,6 +128,7 @@
     }else if([scrapsHeldInBezel count] >= kMaxScrapsInBezel + 1){
         // we need to merge all the bubbles together into
         // a single button during the bezel animation
+        [countButton setCount:[scrapsHeldInBezel count] - 1];
         bubble.frame = countButton.frame;
         bubble.scale = 1;
         [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -188,6 +202,36 @@
 }
 
 
+// count button was tapped,
+// so show or hide the menu
+// so the user can choose a scrap to add
+-(void) countButtonTapped:(id)button{
+    if(scrapMenu.alpha){
+        [self closeMenuTapped:nil];
+    }else{
+        scrapMenu.transform = CGAffineTransformMakeTranslation(20, 0);
+        closeMenuView.hidden = NO;
+        [UIView animateWithDuration:.2
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseOut
+                         animations:^{
+                             scrapMenu.alpha = 1;
+                             scrapMenu.transform = CGAffineTransformIdentity;
+                         }
+                         completion:nil];
+    }
+}
+
+-(void) closeMenuTapped:(id)button{
+    closeMenuView.hidden = YES;
+    scrapMenu.alpha = 0;
+}
+
+-(void) hideMenuIfNeeded{
+    [self closeMenuTapped:nil];
+}
+
+
 #pragma mark - Rotation
 
 -(CGFloat) sidebarButtonRotationForReading:(CGFloat)currentReading{
@@ -224,6 +268,14 @@
             UIView* output = [bubble hitTest:[self convertPoint:point toView:bubble] withEvent:event];
             if(output) return output;
         }
+    }
+    if(scrapMenu.alpha){
+        UIView* output = [scrapMenu hitTest:[self convertPoint:point toView:scrapMenu] withEvent:event];
+        if(output) return output;
+    }
+    if(!closeMenuView.hidden){
+        UIView* output = [closeMenuView hitTest:[self convertPoint:point toView:closeMenuView] withEvent:event];
+        if(output) return output;
     }
     return nil;
 }

@@ -27,11 +27,11 @@
 {
     if ((self = [super initWithFrame:frame])) {
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds];
-        [self addSubview:scrapContainer];
+        [self insertSubview:scrapContainer belowSubview:addPageSidebarButton];
         
         bezelScrapContainer = [[MMScapBubbleContainerView alloc] initWithFrame:self.bounds];
         bezelScrapContainer.delegate = self;
-        [self addSubview:bezelScrapContainer];
+        [self insertSubview:bezelScrapContainer belowSubview:addPageSidebarButton];
 
         panAndPinchScrapGesture = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
         panAndPinchScrapGesture.bezelDirectionMask = MMBezelDirectionRight;
@@ -47,6 +47,14 @@
         panAndPinchScrapGesture2.scrapDelegate = self;
         panAndPinchScrapGesture2.cancelsTouchesInView = NO;
         [self addGestureRecognizer:panAndPinchScrapGesture2];
+        
+        
+        // make sure sidebar buttons hide the scrap menu
+        for(MMSidebarButton* possibleSidebarButton in self.subviews){
+            if([possibleSidebarButton isKindOfClass:[MMSidebarButton class]]){
+                [possibleSidebarButton addTarget:self action:@selector(anySidebarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+            }
+        }
     }
     return self;
 }
@@ -56,6 +64,27 @@
 -(void) addPageButtonTapped:(UIButton*)_button{
     [self forceScrapToScrapContainerDuringGesture];
     [super addPageButtonTapped:_button];
+}
+
+-(void) anySidebarButtonTapped:(id)button{
+    [bezelScrapContainer hideMenuIfNeeded];
+}
+
+#pragma mark - MMPencilAndPaletteViewDelegate
+
+-(void) penTapped:(UIButton*)_button{
+    [super penTapped:_button];
+    [self anySidebarButtonTapped:nil];
+}
+
+-(void) colorMenuToggled{
+    [super colorMenuToggled];
+    [self anySidebarButtonTapped:nil];
+}
+
+-(void) didChangeColorTo:(UIColor*)color{
+    [super didChangeColorTo:color];
+    [self anySidebarButtonTapped:nil];
 }
 
 #pragma mark - Bezel Gestures

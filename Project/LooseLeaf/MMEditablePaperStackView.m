@@ -219,6 +219,27 @@
     }
 }
 
+#pragma mark - MMPencilAndPaletteViewDelegate
+
+-(void) penTapped:(UIButton*)_button{
+    eraserButton.selected = NO;
+    pencilTool.selected = YES;
+    polygonButton.selected = NO;
+    insertImageButton.selected = NO;
+    scissorButton.selected = NO;
+}
+
+-(void) colorMenuToggled{
+    // noop
+}
+
+-(void) didChangeColorTo:(UIColor*)color{
+    pen.color = color;
+    if(!pencilTool.selected){
+        [self penTapped:nil];
+    }
+}
+
 #pragma mark - Tool Button Actions
 
 -(void) undo:(UIButton*)_button{
@@ -234,21 +255,6 @@
     if([obj respondsToSelector:@selector(redo)]){
         [obj redo];
         [TestFlight passCheckpoint:@"BUTTON_REDO"];
-    }
-}
-
--(void) penTapped:(UIButton*)_button{
-    eraserButton.selected = NO;
-    pencilTool.selected = YES;
-    polygonButton.selected = NO;
-    insertImageButton.selected = NO;
-    scissorButton.selected = NO;
-}
-
--(void) didChangeColorTo:(UIColor*)color{
-    pen.color = color;
-    if(!pencilTool.selected){
-        [self penTapped:nil];
     }
 }
 

@@ -15,4 +15,6 @@
 
 -(void) didChangeColorTo:(UIColor*)color;
 
+-(void) colorMenuToggled;
+
 @end
