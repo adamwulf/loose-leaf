@@ -110,6 +110,7 @@
         CGFloat x = step * ((index % 2) + 1) + (index % 2) * sizeOfScrap;
         CGFloat y = index / 2 * (sizeOfScrap + sizeOfBuffer) + sizeOfBuffer;
         MMScrapMenuButton* imgV = [[MMScrapMenuButton alloc] initWithFrame:CGRectMake(x, y, sizeOfScrap, sizeOfScrap)];
+        [imgV addTarget:self action:@selector(tappedOnScrapButton:) forControlEvents:UIControlEventTouchUpInside];
         imgV.scrap = scrap;
         [scrollView addSubview:imgV];
         index++;
@@ -123,6 +124,12 @@
 
 -(void) flashScrollIndicators{
     [scrollView flashScrollIndicators];
+}
+
+#pragma mark - UIButton
+
+-(void) tappedOnScrapButton:(MMScrapMenuButton*) button{
+    [self.delegate didTapOnScrapFromMenu:button.scrap];
 }
 
 @end

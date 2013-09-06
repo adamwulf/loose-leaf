@@ -7,9 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MMScrapView.h"
 
 @protocol MMScrapBezelMenuViewDelegate <NSObject>
 
 -(NSOrderedSet*) scraps;
+
+-(void) didTapOnScrapFromMenu:(MMScrapView*)scrap;
 
 @end
