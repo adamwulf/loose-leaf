@@ -60,6 +60,7 @@
 #pragma mark - Scrap
 
 +(CGAffineTransform) idealTransformForScrap:(MMScrapView*)scrap{
+    // aim to get the border into 36 px
     CGFloat scale = 36.0 / MAX(scrap.originalBounds.size.width, scrap.originalBounds.size.height);
     return CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.rotation),CGAffineTransformMakeScale(scale, scale));
 }

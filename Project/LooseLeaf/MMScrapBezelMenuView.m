@@ -8,6 +8,7 @@
 
 #import "MMScrapBezelMenuView.h"
 #import "MMScrapView.h"
+#import "MMScrapMenuButton.h"
 
 @implementation MMScrapBezelMenuView{
     UIScrollView* scrollView;
@@ -94,7 +95,7 @@
     
     // very basic for now. just remove all old scraps
     for (UIView* subview in [[scrollView subviews] copy]) {
-        if(subview.tag == 999){
+        if([subview isKindOfClass:[MMScrapMenuButton class]]){
             [subview removeFromSuperview];
         }
     }
@@ -108,10 +109,8 @@
         CGFloat step = (scrollView.bounds.size.width - 2*sizeOfScrap) / 3;
         CGFloat x = step * ((index % 2) + 1) + (index % 2) * sizeOfScrap;
         CGFloat y = index / 2 * (sizeOfScrap + sizeOfBuffer) + sizeOfBuffer;
-        UIImageView* imgV = [[UIImageView alloc] initWithFrame:CGRectMake(x, y, sizeOfScrap, sizeOfScrap)];
-        imgV.layer.borderColor = [UIColor whiteColor].CGColor;
-        imgV.layer.borderWidth = 1;
-        imgV.tag = 999;
+        MMScrapMenuButton* imgV = [[MMScrapMenuButton alloc] initWithFrame:CGRectMake(x, y, sizeOfScrap, sizeOfScrap)];
+        imgV.scrap = scrap;
         [scrollView addSubview:imgV];
         index++;
     }
