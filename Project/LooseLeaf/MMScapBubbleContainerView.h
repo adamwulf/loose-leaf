@@ -24,4 +24,6 @@
 
 -(void) hideMenuIfNeeded;
 
+-(void) animateAndAddScrapBackToPage:(MMScrapView*)scrap;
+
 @end
