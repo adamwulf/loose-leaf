@@ -46,6 +46,7 @@
 -(BOOL) addTouchPoint:(CGPoint)point{
     __block BOOL didIntersectSelf = NO;
     CGFloat distTravelled = 0;
+    
     if(![touches count]){
         dottedPath = [UIBezierPath bezierPath];
         [dottedPath moveToPoint:point];
@@ -53,7 +54,7 @@
         UIBezierPath* lastSegment = [UIBezierPath bezierPath];
         [lastSegment moveToPoint:lastPoint];
         [lastSegment addLineToPoint:point];
-
+        
         CGPoint p1 = lastPoint;
         CGPoint p2 = point;
         __block CGPoint p3, p4;
@@ -92,10 +93,10 @@
             [dottedPath addLineToPoint:point];
             lastPoint = point;
         }
+        [self setNeedsDisplayInRect:CGRectInset(dottedPath.bounds, -10, -10)];
     }
     [touches addObject:[NSValue valueWithCGPoint:point]];
     phase += distTravelled / 15;
-    [self setNeedsDisplayInRect:CGRectInset(dottedPath.bounds, -15, -15)];
     
 
     return didIntersectSelf;

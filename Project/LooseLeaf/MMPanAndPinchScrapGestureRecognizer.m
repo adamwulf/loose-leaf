@@ -13,6 +13,14 @@
 #import "MMPanAndPinchGestureRecognizer.h"
 #import "NSMutableSet+Extras.h"
 
+#define kMaxSimultaneousTouchesAllowedToTrack 20
+
+struct TouchInterval{
+    NSUInteger touchHash;
+    NSTimeInterval lastTimestamp;
+    float normalizedVelocity;
+};
+
 @implementation MMPanAndPinchScrapGestureRecognizer{
     // the scrap being held
     __weak MMScrapView* scrap;
@@ -38,10 +46,9 @@
     CGFloat preGestureRotation;
     CGPoint preGestureCenter;
     
-    // track velocity of touches
-    NSMutableDictionary* lastStampPerTouch;
-    NSMutableDictionary* lastVelocityPerTouch;
+    struct TouchInterval touchIntervals[kMaxSimultaneousTouchesAllowedToTrack];
 }
+
 
 @synthesize scale;
 @synthesize scrap;
@@ -68,8 +75,9 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
         validTouches = [[NSMutableOrderedSet alloc] init];
         possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
-        lastStampPerTouch = [NSMutableDictionary dictionary];
-        lastVelocityPerTouch = [NSMutableDictionary dictionary];
+        for(int i=0;i<100;i++){
+            touchIntervals[i].touchHash = 0;
+        }
     }
     return self;
 }
@@ -80,8 +88,6 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
         validTouches = [[NSMutableOrderedSet alloc] init];
         possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
-        lastStampPerTouch = [NSMutableDictionary dictionary];
-        lastVelocityPerTouch = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -224,7 +230,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
     for(UITouch* t in touches){
         [self calculateVelocityForTouch:t];
     }
-    NSMutableOrderedSet* validTouchesCurrentlyMoving = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
+    NSMutableOrderedSet* validTouchesCurrentlyMoving = [validTouches mutableCopy];
     [validTouchesCurrentlyMoving intersectSet:touches];
     [validTouchesCurrentlyMoving minusSet:ignoredTouches];
     if([validTouchesCurrentlyMoving count] >= minimumNumberOfTouches){
@@ -287,7 +293,15 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
 //                CGFloat distanceToBezel = point.x - (self.view.superview.frame.size.width - kBezelInGestureWidth);
 //                NSLog(@"distance: %f", distanceToBezel);
 
-                CGFloat velocity = [[lastVelocityPerTouch objectForKey:@(touch.hash)] floatValue];
+                // look up our velocity from our cache
+                CGFloat velocity = 0;
+                for(int i=0;i<kMaxSimultaneousTouchesAllowedToTrack;i++){
+                    if(touchIntervals[i].touchHash == touch.hash){
+                        velocity = touchIntervals[i].normalizedVelocity;
+                        break;
+                    }
+                }
+
                 CGFloat pxVelocity = velocity * SCRAP_VELOCITY_CLAMP_MAX * .05; // velocity per fraction of a second
 //                NSLog(@"velocity: %d %f    => %f", (int)touch, velocity, pxVelocity);
 
@@ -360,8 +374,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
     }
 //    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
     for(UITouch* touch in touches){
-        [lastStampPerTouch removeObjectForKey:@(touch.hash)];
-        [lastVelocityPerTouch removeObjectForKey:@(touch.hash)];
+        [self clearCacheForTouch:touch];
     }
 }
 
@@ -387,8 +400,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
 //    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 
     for(UITouch* touch in touches){
-        [lastStampPerTouch removeObjectForKey:@(touch.hash)];
-        [lastVelocityPerTouch removeObjectForKey:@(touch.hash)];
+        [self clearCacheForTouch:touch];
     }
 }
 
@@ -450,6 +462,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
 
 -(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
     [ignoredTouches addObject:touch];
+    [self clearCacheForTouch:touch];
     [super ignoreTouch:touch forEvent:event];
 }
 - (void)reset{
@@ -540,7 +553,8 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
     // find how far we've travelled
     float distanceFromPrevious = sqrtf((l.x - previousPoint.x) * (l.x - previousPoint.x) + (l.y - previousPoint.y) * (l.y - previousPoint.y));
     // how long did it take?
-    NSTimeInterval duration = [self durationForTouchBang:touch];
+    int indexOfTouchInCache;
+    NSTimeInterval duration = [self durationForTouchBang:touch withIndex:&indexOfTouchInCache];
     // velocity is distance/time
     CGFloat velocityMagnitude = distanceFromPrevious/duration;
     
@@ -549,15 +563,39 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
     // now normalize it, so we return a value between 0 and 1
     float normalizedVelocity = (clampedVelocityMagnitude - SCRAP_VELOCITY_CLAMP_MIN) / (SCRAP_VELOCITY_CLAMP_MAX - SCRAP_VELOCITY_CLAMP_MIN);
     
-    [lastVelocityPerTouch setObject:@(normalizedVelocity) forKey:@(touch.hash)];
+    touchIntervals[indexOfTouchInCache].normalizedVelocity = normalizedVelocity;
 }
 
--(NSTimeInterval) durationForTouchBang:(UITouch*)touch{
-    NSNumber* val = [lastStampPerTouch objectForKey:@(touch.hash)];
-    NSTimeInterval lastTime = [val doubleValue];
+-(NSTimeInterval) durationForTouchBang:(UITouch*)touch withIndex:(int*)index{
+    NSTimeInterval lastTime = 0;
+    int indexOfTouch = -1;
+    for(int i=0;i<kMaxSimultaneousTouchesAllowedToTrack;i++){
+        if(indexOfTouch == -1 && touchIntervals[i].touchHash == 0){
+            indexOfTouch = i;
+        }else if(touchIntervals[i].touchHash == touch.hash){
+            // touch matches
+            lastTime = touchIntervals[i].lastTimestamp;
+            indexOfTouch = i;
+            break;
+        }
+    }
+
     NSTimeInterval currTime = touch.timestamp;
-    [lastStampPerTouch setObject:[NSNumber numberWithDouble:currTime] forKey:@(touch.hash)];
+    if(indexOfTouch != -1){
+        touchIntervals[indexOfTouch].touchHash = touch.hash;
+        touchIntervals[indexOfTouch].lastTimestamp = currTime;
+    }
+    index[0] = indexOfTouch;
     return currTime - lastTime;
+}
+
+-(void) clearCacheForTouch:(UITouch*)touch{
+    for(int i=0;i<kMaxSimultaneousTouchesAllowedToTrack;i++){
+        if(touchIntervals[i].touchHash == touch.hash){
+            touchIntervals[i].touchHash = 0;
+            break;
+        }
+    }
 }
 
 
