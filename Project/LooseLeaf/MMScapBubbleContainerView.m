@@ -138,7 +138,11 @@
     }else if([scrapsHeldInBezel count] > kMaxScrapsInBezel){
         // we need to merge all the bubbles together into
         // a single button during the bezel animation
-        [countButton setCount:[scrapsHeldInBezel count] - 1];
+        if([scrapsHeldInBezel count] - 1 != kMaxScrapsInBezel){
+            [countButton setCount:[scrapsHeldInBezel count] - 1];
+        }else{
+            [countButton setCount:[scrapsHeldInBezel count]];
+        }
         bubble.center = countButton.center;
         bubble.scale = 1;
         [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
