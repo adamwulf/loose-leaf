@@ -9,9 +9,10 @@
 #import "MMScrapContainerView.h"
 #import "MMScrapView.h"
 #import "MMScapBubbleContainerViewDelegate.h"
+#import "MMScrapBezelMenuViewDelegate.h"
 
 
-@interface MMScapBubbleContainerView : MMScrapContainerView{
+@interface MMScapBubbleContainerView : MMScrapContainerView<MMScrapBezelMenuViewDelegate>{
     __weak NSObject<MMScapBubbleContainerViewDelegate>* delegate;
 }
 
