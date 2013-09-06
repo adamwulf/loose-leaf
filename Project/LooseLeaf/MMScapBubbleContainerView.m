@@ -32,7 +32,7 @@
         
         CGFloat rightBezelSide = frame.size.width - 100;
         CGFloat midPointY = (frame.size.height - 3*80) / 2;
-        countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY, 80, 80)];
+        countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
         countButton.alpha = 0;
         [countButton addTarget:self action:@selector(countButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:countButton];
@@ -42,7 +42,7 @@
         [closeMenuView addTarget:self action:@selector(closeMenuTapped:) forControlEvents:UIControlEventTouchUpInside];
         closeMenuView.hidden = YES;
         [self addSubview:closeMenuView];
-        scrapMenu = [[MMScrapBezelMenuView alloc] initWithFrame:CGRectMake(rightBezelSide - 300, midPointY - 150, 280, 380)];
+        scrapMenu = [[MMScrapBezelMenuView alloc] initWithFrame:CGRectMake(rightBezelSide - 306, midPointY - 150, 300, 380)];
         scrapMenu.alpha = 0;
         [self addSubview:scrapMenu];
     }
@@ -55,9 +55,13 @@
 
 -(void) setAlpha:(CGFloat)alpha{
     targetAlpha = alpha;
-    for(UIView* subview in self.subviews){
-        if([subview isKindOfClass:[MMScrapBubbleButton class]]){
-            subview.alpha = targetAlpha;
+    if([scrapsHeldInBezel count] > kMaxScrapsInBezel){
+        countButton.alpha = targetAlpha;
+    }else{
+        for(UIView* subview in self.subviews){
+            if(subview != countButton && [subview isKindOfClass:[MMScrapBubbleButton class]]){
+                subview.alpha = targetAlpha;
+            }
         }
     }
 }
