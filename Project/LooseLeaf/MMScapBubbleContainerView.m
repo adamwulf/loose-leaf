@@ -45,6 +45,8 @@
         scrapMenu = [[MMScrapBezelMenuView alloc] initWithFrame:CGRectMake(rightBezelSide - 306, midPointY - 150, 300, 380)];
         scrapMenu.alpha = 0;
         [self addSubview:scrapMenu];
+        
+        scrapMenu.delegate = self;
     }
     return self;
 }
@@ -215,12 +217,14 @@
     }else{
         scrapMenu.transform = CGAffineTransformMakeTranslation(20, 0);
         closeMenuView.hidden = NO;
+        [scrapMenu prepareMenu];
         [UIView animateWithDuration:.2
                               delay:0
                             options:UIViewAnimationOptionCurveEaseOut
                          animations:^{
                              scrapMenu.alpha = 1;
                              scrapMenu.transform = CGAffineTransformIdentity;
+                             [scrapMenu flashScrollIndicators];
                          }
                          completion:nil];
     }
@@ -295,5 +299,11 @@
     return NO;
 }
 
+
+#pragma mark - MMScrapBezelMenuViewDelegate
+
+-(NSOrderedSet*) scraps{
+    return [[NSOrderedSet alloc] initWithOrderedSet:scrapsHeldInBezel];
+}
 
 @end

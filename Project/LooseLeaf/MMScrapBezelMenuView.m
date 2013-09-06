@@ -7,12 +7,13 @@
 //
 
 #import "MMScrapBezelMenuView.h"
+#import "MMScrapView.h"
 
 @implementation MMScrapBezelMenuView{
     UIScrollView* scrollView;
 }
 
-
+@synthesize delegate;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -66,22 +67,62 @@
         self.opaque = NO;
         self.backgroundColor = [UIColor clearColor];
 
-        scrollView = [[UIScrollView alloc] initWithFrame:CGRectInset(background.bounds, -15, -15)];
+        scrollView = [[UIScrollView alloc] initWithFrame:CGRectInset(background.bounds, 15, 15)];
         scrollView.opaque = NO;
-        scrollView.backgroundColor = [UIColor clearColor];
+        scrollView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0];
         scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
         scrollView.showsHorizontalScrollIndicator = NO;
         scrollView.showsVerticalScrollIndicator = YES;
         
         scrollView.contentSize = CGSizeMake(self.bounds.size.width, 500);
-        scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(24, 0, 24, 24);
+        scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(6, 0, 6, 0);
         [self addSubview:scrollView];
     }
     return self;
 }
 
+-(void) prepareMenu{
+    CGFloat sizeOfScrap = 100;
+    CGFloat sizeOfBuffer = 10;
+    CGFloat contentHeight =  ([[self.delegate scraps] count] - 1) / 2 * (sizeOfScrap + sizeOfBuffer) + (sizeOfScrap + sizeOfBuffer) + sizeOfBuffer;
+    scrollView.contentSize = CGSizeMake(scrollView.bounds.size.width, contentHeight);
+    if(scrollView.contentOffset.y + scrollView.bounds.size.height > contentHeight){
+        CGFloat newOffset = contentHeight - scrollView.bounds.size.height;
+        if(newOffset < 0) newOffset = 0;
+        scrollView.contentOffset = CGPointMake(0, newOffset);
+    }
+    
+    // very basic for now. just remove all old scraps
+    for (UIView* subview in [[scrollView subviews] copy]) {
+        if(subview.tag == 999){
+            [subview removeFromSuperview];
+        }
+    }
+    
+    // then add a new uiimage for every scrap
+    // TODO: add caching / optimize
+    
+    
+    NSInteger index = 0;
+    for (MMScrapView* scrap in self.delegate.scraps) {
+        CGFloat step = (scrollView.bounds.size.width - 2*sizeOfScrap) / 3;
+        CGFloat x = step * ((index % 2) + 1) + (index % 2) * sizeOfScrap;
+        CGFloat y = index / 2 * (sizeOfScrap + sizeOfBuffer) + sizeOfBuffer;
+        UIImageView* imgV = [[UIImageView alloc] initWithFrame:CGRectMake(x, y, sizeOfScrap, sizeOfScrap)];
+        imgV.layer.borderColor = [UIColor whiteColor].CGColor;
+        imgV.layer.borderWidth = 1;
+        imgV.tag = 999;
+        [scrollView addSubview:imgV];
+        index++;
+    }
+    
+}
+
 -(void) setAlpha:(CGFloat)alpha{
     [super setAlpha:alpha];
+}
+
+-(void) flashScrollIndicators{
     [scrollView flashScrollIndicators];
 }
 

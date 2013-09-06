@@ -413,6 +413,7 @@
 		66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCountBubbleButton.m; sourceTree = "<group>"; };
 		66F4FB2417D912730086E21C /* MMScrapBezelMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBezelMenuView.h; sourceTree = "<group>"; };
 		66F4FB2517D912730086E21C /* MMScrapBezelMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBezelMenuView.m; sourceTree = "<group>"; };
+		66F4FB2717DA53DE0086E21C /* MMScrapBezelMenuViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScrapBezelMenuViewDelegate.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -915,6 +916,7 @@
 				66CE120617D3BBCD00882275 /* MMScapBubbleContainerViewDelegate.h */,
 				66F4FB2417D912730086E21C /* MMScrapBezelMenuView.h */,
 				66F4FB2517D912730086E21C /* MMScrapBezelMenuView.m */,
+				66F4FB2717DA53DE0086E21C /* MMScrapBezelMenuViewDelegate.h */,
 			);
 			name = "Scrap Containers";
 			sourceTree = "<group>";

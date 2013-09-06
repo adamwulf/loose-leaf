@@ -7,7 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMScrapBezelMenuViewDelegate.h"
 
-@interface MMScrapBezelMenuView : UIView
+@interface MMScrapBezelMenuView : UIView{
+    __weak NSObject<MMScrapBezelMenuViewDelegate>* delegate;
+}
+
+@property (nonatomic, weak) NSObject<MMScrapBezelMenuViewDelegate>* delegate;
+
+-(void) prepareMenu;
+
+-(void) flashScrollIndicators;
 
 @end
