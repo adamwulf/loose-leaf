@@ -272,12 +272,33 @@
     //
     // these pages are in reverse order, so the last object in the
     // array is the top most visible page.
-    NSMutableArray* pages = [NSMutableArray arrayWithArray:visibleStackHolder.subviews];
-    [pages addObjectsFromArray:bezelStackHolder.subviews];
+    
+    //
+    // I used to just create an NSMutableArray that contained the
+    // combined visible and bezel stacks of subviews. but that was
+    // fairly resource intensive for a method that needs to be extremely
+    // quick.
+    //
+    // instead of an NSMutableArray, i create a C array pointing to
+    // the arrays we already have. then our do:while loop will walk
+    // backwards on the 2nd array, then walk backwards on the first
+    // array until a page is found.
+    NSArray* arrayOfArrayOfViews[2];
+    arrayOfArrayOfViews[0] = visibleStackHolder.subviews;
+    arrayOfArrayOfViews[1] = bezelStackHolder.subviews;
+    int arrayNum = 1;
+    int indexNum = [bezelStackHolder.subviews count] - 1;
+
     do{
+        if(indexNum < 0){
+            // if our index is less than zero, then we haven't been able
+            // to find a page in our current array. move to the next array
+            // of views further back in the view, and start checking those
+            arrayNum -= 1;
+            indexNum = [(arrayOfArrayOfViews[arrayNum]) count] - 1;
+        }
         // fetch the most visible page
-        pageToDropScrap = [pages lastObject];
-        [pages removeLastObject];
+        pageToDropScrap = [(arrayOfArrayOfViews[arrayNum]) objectAtIndex:indexNum];
         if(!pageToDropScrap){
             // if we can't find a page, we're done
             break;
@@ -298,6 +319,7 @@
 //        if(CGRectContainsPoint(pageBounds, scrapCenterInPage)){
 //            NSLog(@"page %@ contains scrap center", pageToDropScrap.uuid);
 //        }
+        indexNum -= 1;
     }while(!CGRectContainsPoint(pageBounds, *scrapCenterInPage));
     
     return pageToDropScrap;

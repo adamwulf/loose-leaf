@@ -66,8 +66,19 @@
     return [[self scraps] containsObject:scrap];
 }
 
+/**
+ * returns all subviews in back-to-front
+ * order
+ */
 -(NSArray*) scraps{
-    return [scrapContainerView.subviews reverseArray];
+    // we'll be calling this method quite often,
+    // so don't create a new auto-released array
+    // all the time. instead, just return our subview
+    // array, so that if the caller just needs count
+    // or to iterate on the main thread, we don't
+    // spend unnecessary resources copying a potentially
+    // long array.
+    return scrapContainerView.subviews;
 }
 
 #pragma mark - Pinch and Zoom
