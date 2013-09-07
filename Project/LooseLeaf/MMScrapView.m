@@ -43,7 +43,16 @@
         contentLayer = [CAShapeLayer layer];
         [contentLayer setPath:path.CGPath];
         contentLayer.fillColor = [UIColor whiteColor].CGColor;
+        contentLayer.masksToBounds = YES;
+        contentLayer.frame = self.layer.bounds;
         [self.layer addSublayer:contentLayer];
+        
+        
+        CALayer* fakeContent = [CALayer layer];
+        fakeContent.frame = CGRectMake(0, 0, 500, 100);
+        fakeContent.backgroundColor = [UIColor redColor].CGColor;
+        [contentLayer addSublayer:fakeContent];
+        
         
         self.layer.shadowPath = path.CGPath;
         self.layer.shadowRadius = 1.5;
