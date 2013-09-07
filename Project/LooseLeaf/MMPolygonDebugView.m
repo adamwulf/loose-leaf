@@ -51,10 +51,6 @@
         dottedPath = [UIBezierPath bezierPath];
         [dottedPath moveToPoint:point];
     }else{
-        UIBezierPath* lastSegment = [UIBezierPath bezierPath];
-        [lastSegment moveToPoint:lastPoint];
-        [lastSegment addLineToPoint:point];
-        
         CGPoint p1 = lastPoint;
         CGPoint p2 = point;
         __block CGPoint p3, p4;

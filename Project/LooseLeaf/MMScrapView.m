@@ -16,7 +16,7 @@
 
 @implementation MMScrapView{
     UIBezierPath* path;
-    UIView* contentView;
+    CAShapeLayer* contentLayer;
     CGFloat scale;
     CGFloat rotation;
     BOOL selected;
@@ -40,14 +40,10 @@
         // Initialization code
         path = _path;
         
-        contentView = [[UIView alloc] initWithFrame:self.bounds];
-        contentView.clipsToBounds = YES;
-        contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        contentView.backgroundColor = [UIColor whiteColor];
-        CAShapeLayer* maskLayer = [CAShapeLayer layer];
-        [maskLayer setPath:path.CGPath];
-        contentView.layer.mask = maskLayer;
-        [self addSubview:contentView];
+        contentLayer = [CAShapeLayer layer];
+        [contentLayer setPath:path.CGPath];
+        contentLayer.fillColor = [UIColor whiteColor].CGColor;
+        [self.layer addSublayer:contentLayer];
         
         self.layer.shadowPath = path.CGPath;
         self.layer.shadowRadius = 1.5;
@@ -55,6 +51,7 @@
         self.layer.shadowOpacity = .65;
         self.layer.shadowOffset = CGSizeMake(0, 0);
         
+        self.opaque = NO;
         self.clipsToBounds = YES;
         [self didUpdateAccelerometerWithRawReading:[[MMRotationManager sharedInstace] currentRawRotationReading]];
     }
@@ -81,7 +78,7 @@
 }
 
 -(void) setBackgroundColor:(UIColor *)backgroundColor{
-    contentView.backgroundColor = backgroundColor;
+    contentLayer.fillColor = backgroundColor.CGColor;
 }
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading{
@@ -149,17 +146,11 @@
     newPath = [path pathFromPath:newPath usingBooleanOperation:GPC_DIFF];
     
     self.layer.shadowPath = newPath.CGPath;
-
-    CAShapeLayer* maskLayer = [CAShapeLayer layer];
-    [maskLayer setPath:newPath.CGPath];
-    contentView.layer.mask = maskLayer;
-
+    [contentLayer setPath:newPath.CGPath];
     
     path = newPath;
     
     return newPath;
-    
-    
 }
 
 
