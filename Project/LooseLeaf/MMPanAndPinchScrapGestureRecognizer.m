@@ -179,7 +179,9 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
         [possibleTouches removeObjectsInSet:ignoredTouches];
         
         NSMutableSet* allPossibleTouches = [NSMutableSet setWithSet:[possibleTouches set]];
-        for(MMScrapView* _scrap in scrapsToLookAt){
+        // scraps are returned back to front, so we need to reverse
+        // enumerate them so that we check front to back
+        for(MMScrapView* _scrap in [scrapsToLookAt reverseObjectEnumerator]){
             NSSet* touchesInScrap = [_scrap matchingPairTouchesFrom:allPossibleTouches];
             if(self.scrap && ![touchesInScrap count]){
                 for(UITouch* touch in possibleTouches){
