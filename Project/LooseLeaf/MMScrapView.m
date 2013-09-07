@@ -48,10 +48,10 @@
         [self.layer addSublayer:contentLayer];
         
         
-        CALayer* fakeContent = [CALayer layer];
-        fakeContent.frame = CGRectMake(0, 0, 500, 100);
-        fakeContent.backgroundColor = [UIColor redColor].CGColor;
-        [contentLayer addSublayer:fakeContent];
+//        CALayer* fakeContent = [CALayer layer];
+//        fakeContent.frame = CGRectMake(0, 0, 500, 100);
+//        fakeContent.backgroundColor = [UIColor redColor].CGColor;
+//        [contentLayer addSublayer:fakeContent];
         
         
         self.layer.shadowPath = path.CGPath;

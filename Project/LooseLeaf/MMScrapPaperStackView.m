@@ -11,6 +11,7 @@
 #import "MMShakeScrapGestureRecognizer.h"
 #import "MMScrapBubbleButton.h"
 #import "MMScapBubbleContainerView.h"
+#import "MMDebugDrawView.h"
 
 @implementation MMScrapPaperStackView{
     MMScapBubbleContainerView* bezelScrapContainer;
@@ -55,6 +56,10 @@
                 [possibleSidebarButton addTarget:self action:@selector(anySidebarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
             }
         }
+        
+        
+        [MMDebugDrawView sharedInstace].frame = self.bounds;
+        [self addSubview:[MMDebugDrawView sharedInstace]];
     }
     return self;
 }
