@@ -13,3 +13,6 @@
 [submodule "Submodules/fishhook"]
 	path = Submodules/fishhook
 	url = git@github.com:facebook/fishhook.git
+[submodule "Submodules/vectorboolean"]
+	path = Submodules/vectorboolean
+	url = git@github.com:adamwulf/vectorboolean.git
