@@ -19,6 +19,7 @@
 		661507641783338E00B181F3 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6615075E1783338E00B181F3 /* libTestFlight.a */; };
 		66150769178333D500B181F3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66150768178333D500B181F3 /* libz.dylib */; };
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		663916B317E11AAE000DEC67 /* UIBezierPath+Clipping.mm in Sources */ = {isa = PBXBuildFile; fileRef = 663916B217E11AAE000DEC67 /* UIBezierPath+Clipping.mm */; };
 		663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C1877175538A800706A05 /* MMPencilEraserButton.m */; };
 		663C187D1755B63D00706A05 /* Eraser.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C187C1755B63D00706A05 /* Eraser.m */; };
 		663C188B1759B51600706A05 /* MMUndoRedoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C188A1759B51600706A05 /* MMUndoRedoButton.m */; };
@@ -167,6 +168,10 @@
 		6630ED9F15F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
 		6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizerDelegate.h; sourceTree = "<group>"; };
+		663916AF17E11AAE000DEC67 /* choose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = choose.h; sourceTree = "<group>"; };
+		663916B017E11AAE000DEC67 /* interval.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = interval.h; sourceTree = "<group>"; };
+		663916B117E11AAE000DEC67 /* UIBezierPath+Clipping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+Clipping.h"; sourceTree = "<group>"; };
+		663916B217E11AAE000DEC67 /* UIBezierPath+Clipping.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "UIBezierPath+Clipping.mm"; sourceTree = "<group>"; };
 		663C1876175538A800706A05 /* MMPencilEraserButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPencilEraserButton.h; sourceTree = "<group>"; };
 		663C1877175538A800706A05 /* MMPencilEraserButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPencilEraserButton.m; sourceTree = "<group>"; };
 		663C187B1755B63D00706A05 /* Eraser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Eraser.h; sourceTree = "<group>"; };
@@ -565,6 +570,10 @@
 		6648955517B0511D0001829C /* UIBezierPath Categories */ = {
 			isa = PBXGroup;
 			children = (
+				663916AF17E11AAE000DEC67 /* choose.h */,
+				663916B017E11AAE000DEC67 /* interval.h */,
+				663916B117E11AAE000DEC67 /* UIBezierPath+Clipping.h */,
+				663916B217E11AAE000DEC67 /* UIBezierPath+Clipping.mm */,
 				6648954817B0511D0001829C /* UIBezierPath+GPC.h */,
 				6648954917B0511D0001829C /* UIBezierPath+GPC.m */,
 				6648954A17B0511D0001829C /* UIBezierPath+Editing.h */,
@@ -1191,6 +1200,7 @@
 				66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */,
 				66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */,
 				66BD6E301591B57B00D4544C /* MMPaperButton.m in Sources */,
+				663916B317E11AAE000DEC67 /* UIBezierPath+Clipping.mm in Sources */,
 				6667480617C0166100D5C390 /* MMPolygonDebugView.m in Sources */,
 				66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */,
 				66A6836F17CE66B0007EE218 /* QuietAssertMacros.c in Sources */,
