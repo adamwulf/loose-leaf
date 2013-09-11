@@ -59,21 +59,6 @@
     } completion:nil];
 
     [path closePath];
-    
-    NSLog(@"UIBezierPath* foobar = [UIBezierPath bezierPath];");
-    [path iteratePathWithBlock:^(CGPathElement element){
-        if(element.type == kCGPathElementMoveToPoint){
-            NSLog(@"[foobar moveToPoint:CGPointMake(%f,%f)];", element.points[0].x, element.points[0].y);
-        }else if(element.type == kCGPathElementAddLineToPoint){
-            NSLog(@"[foobar addLineToPoint:CGPointMake(%f,%f)];", element.points[0].x, element.points[0].y);
-        }else if(element.type == kCGPathElementAddCurveToPoint){
-            NSLog(@"[foobar addCurveToPoint:CGPointMake(%f,%f) controlPoint1:CGPointMake(%f,%f) controlPoint2:CGPointMake(%f,%f)];",
-                  element.points[2].x, element.points[2].y, element.points[0].x, element.points[0].y, element.points[1].x, element.points[1].y);
-        }else if(element.type == kCGPathElementCloseSubpath){
-            NSLog(@"[path closePath];");
-        }
-        
-    }];
 }
 
 -(void) addScrap:(MMScrapView*)scrap{
@@ -145,6 +130,76 @@
 }
 
 #pragma mark - JotViewDelegate
+
+
+
+-(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
+    NSArray* strokes = [super willAddElementsToStroke:elements fromPreviousElement:previousElement];
+    
+    if(![self.scraps count]){
+        return strokes;
+    }
+    
+    NSMutableArray* strokesToCrop = [NSMutableArray arrayWithArray:strokes];
+    
+    for(MMScrapView* scrap in self.scraps){
+        // find the bounding box of the scrap, so we can determine
+        // quickly if they even possibly intersect
+        UIBezierPath* scrapPath = [scrap.bezierPath copy];
+        [scrapPath applyTransform:CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.rotation),CGAffineTransformMakeScale(scrap.scale, scrap.scale))];
+        [scrapPath applyTransform:CGAffineTransformMakeTranslation(scrap.center.x - scrapPath.center.x, scrap.center.y - scrapPath.center.y)];
+        CGAffineTransform flipVertical = CGAffineTransformMake(1, 0, 0, -1, 0, self.bounds.size.height);
+        [scrapPath applyTransform:flipVertical];
+        CGRect boundsOfScrap = scrapPath.bounds;
+        
+
+        NSMutableArray* newStrokesToScrop = [NSMutableArray array];
+        for(AbstractBezierPathElement* element in strokesToCrop){
+            if([element isKindOfClass:[CurveToPathElement class]]){
+                CurveToPathElement* curveElement = (CurveToPathElement*)element;
+
+                UIBezierPath* strokePath = [UIBezierPath bezierPath];
+                [strokePath moveToPoint:curveElement.startPoint];
+                [strokePath addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
+                
+                NSArray* output = [strokePath clipToClosedPath:scrapPath];
+                UIBezierPath* diff = [output lastObject];
+                
+                __block CGPoint previousEndpoint = strokePath.firstPoint;
+                [diff iteratePathWithBlock:^(CGPathElement pathEle){
+                    AbstractBezierPathElement* newElement = nil;
+                    if(pathEle.type == kCGPathElementAddCurveToPoint){
+                        // curve
+                        newElement = [CurveToPathElement elementWithStart:previousEndpoint
+                                                               andCurveTo:pathEle.points[2]
+                                                              andControl1:pathEle.points[0]
+                                                              andControl2:pathEle.points[1]];
+                        previousEndpoint = pathEle.points[2];
+                    }else if(pathEle.type == kCGPathElementMoveToPoint){
+                        newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
+                        previousEndpoint = pathEle.points[0];
+                    }else if(pathEle.type == kCGPathElementAddLineToPoint){
+                        newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
+                        previousEndpoint = pathEle.points[0];
+                    }
+                    if(newElement){
+                        // be sure to set color/width/etc
+                        newElement.color = element.color;
+                        newElement.width = element.width;
+                        newElement.rotation = element.rotation;
+                        [newStrokesToScrop addObject:newElement];
+                    }
+                }];
+            }else{
+                [newStrokesToScrop addObject:element];
+            }
+        }
+        
+        strokesToCrop = newStrokesToScrop;
+    }
+    
+    return strokesToCrop;
+}
 
 
 
