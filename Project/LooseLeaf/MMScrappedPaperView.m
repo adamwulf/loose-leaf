@@ -57,6 +57,23 @@
     [UIView animateWithDuration:0.4 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         newScrap.transform = CGAffineTransformIdentity;
     } completion:nil];
+
+    [path closePath];
+    
+    NSLog(@"UIBezierPath* foobar = [UIBezierPath bezierPath];");
+    [path iteratePathWithBlock:^(CGPathElement element){
+        if(element.type == kCGPathElementMoveToPoint){
+            NSLog(@"[foobar moveToPoint:CGPointMake(%f,%f)];", element.points[0].x, element.points[0].y);
+        }else if(element.type == kCGPathElementAddLineToPoint){
+            NSLog(@"[foobar addLineToPoint:CGPointMake(%f,%f)];", element.points[0].x, element.points[0].y);
+        }else if(element.type == kCGPathElementAddCurveToPoint){
+            NSLog(@"[foobar addCurveToPoint:CGPointMake(%f,%f) controlPoint1:CGPointMake(%f,%f) controlPoint2:CGPointMake(%f,%f)];",
+                  element.points[2].x, element.points[2].y, element.points[0].x, element.points[0].y, element.points[1].x, element.points[1].y);
+        }else if(element.type == kCGPathElementCloseSubpath){
+            NSLog(@"[path closePath];");
+        }
+        
+    }];
 }
 
 -(void) addScrap:(MMScrapView*)scrap{
@@ -129,7 +146,9 @@
 
 #pragma mark - JotViewDelegate
 
--(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
+
+
+-(NSArray*) willAddElementsToStroke2:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
     NSArray* strokes = [super willAddElementsToStroke:elements fromPreviousElement:previousElement];
     
     if(![self.scraps count]){
