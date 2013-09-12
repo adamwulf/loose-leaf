@@ -126,6 +126,8 @@
 }
 
 -(void) panAndScale:(MMPanAndPinchGestureRecognizer *)_panGesture{
+    [[MMDebugDrawView sharedInstace] clear];
+    
     [super panAndScale:_panGesture];
 }
 
@@ -140,19 +142,37 @@
         return strokes;
     }
     
+    
+    
     NSMutableArray* strokesToCrop = [NSMutableArray arrayWithArray:strokes];
     
     for(MMScrapView* scrap in self.scraps){
         // find the bounding box of the scrap, so we can determine
         // quickly if they even possibly intersect
+        
         UIBezierPath* scrapPath = [scrap.bezierPath copy];
-        [scrapPath applyTransform:CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.rotation),CGAffineTransformMakeScale(scrap.scale, scrap.scale))];
-        [scrapPath applyTransform:CGAffineTransformMakeTranslation(scrap.center.x - scrapPath.center.x, scrap.center.y - scrapPath.center.y)];
-        CGAffineTransform flipVertical = CGAffineTransformMake(1, 0, 0, -1, 0, self.bounds.size.height);
-        [scrapPath applyTransform:flipVertical];
+
+        // when we pick up a scrap with a two finger gesture, we also
+        // change the position and anchor (which change the center), so
+        // that it rotates underneath the gesture correctly.
+        //
+        // we need to re-caculate the true center of the scrap as if it
+        // was not being held, so that we can position our path correctly
+        // over it.
+        CGPoint actualScrapCenter = CGPointMake( CGRectGetMidX(scrap.frame), CGRectGetMidY(scrap.frame));
+
+        // first, align the center of the scrap to the center of the path
+        [scrapPath applyTransform:CGAffineTransformMakeTranslation(actualScrapCenter.x - scrapPath.center.x, actualScrapCenter.y - scrapPath.center.y)];
+        // now we need to rotate the path around it's new center
+        CGPoint scrapPathCenter = scrapPath.center;
+        CGAffineTransform rotateAndScale = CGAffineTransformConcat(CGAffineTransformMakeTranslation(-scrapPathCenter.x, -scrapPathCenter.y),
+                                                                   CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.rotation),CGAffineTransformMakeScale(scrap.scale, scrap.scale)));
+        rotateAndScale = CGAffineTransformConcat(rotateAndScale, CGAffineTransformMakeTranslation(scrapPathCenter.x, scrapPathCenter.y));
+        rotateAndScale = CGAffineTransformConcat(rotateAndScale, CGAffineTransformMake(1, 0, 0, -1, 0, self.bounds.size.height));
+        [scrapPath applyTransform:rotateAndScale];
+        
         CGRect boundsOfScrap = scrapPath.bounds;
         
-
         NSMutableArray* newStrokesToScrop = [NSMutableArray array];
         for(AbstractBezierPathElement* element in strokesToCrop){
             if(!CGRectIntersectsRect(element.bounds, boundsOfScrap)){
@@ -163,7 +183,7 @@
                 UIBezierPath* strokePath = [UIBezierPath bezierPath];
                 [strokePath moveToPoint:curveElement.startPoint];
                 [strokePath addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
-                
+
                 NSArray* output = [strokePath clipToClosedPath:scrapPath];
                 UIBezierPath* diff = [output lastObject];
                 
@@ -201,101 +221,6 @@
     }
     
     return strokesToCrop;
-}
-
-
-
--(NSArray*) willAddElementsToStroke2:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
-    NSArray* strokes = [super willAddElementsToStroke:elements fromPreviousElement:previousElement];
-    
-    if(![self.scraps count]){
-        return strokes;
-    }
-    
-    NSMutableArray* croppedElements = [NSMutableArray array];
-    
-    [[MMDebugDrawView sharedInstace] clear];
-    
-    // now crop to scraps
-    for (AbstractBezierPathElement* element in strokes) {
-        UIBezierPath* bez = [UIBezierPath bezierPath];
-        CGRect boundsOfCurve;
-        if([element isKindOfClass:[CurveToPathElement class]]){
-            CurveToPathElement* curveElement = (CurveToPathElement*) element;
-            [bez moveToPoint:[curveElement startPoint]];
-            [bez addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
-            boundsOfCurve = bez.bounds;
-        }else{
-            // moveto
-            [bez moveToPoint:[element startPoint]];
-            boundsOfCurve = CGRectMake(element.startPoint.x, element.startPoint.y, 0, 0);
-        }
-        // the curve is in OpenGL coordinates with the y=0 at the bottom,
-        // we need to flip it into CoreGraphics coordinates with y=0 at the top
-        // to match the scraps.
-
-        // find the box curve of the stroke element
-        CGFloat maxStrokeSize = MAX(previousElement.width, element.width);
-        boundsOfCurve = CGRectInset(boundsOfCurve, -maxStrokeSize, -maxStrokeSize);
-        [[MMDebugDrawView sharedInstace] addCurve:[UIBezierPath bezierPathWithRect:boundsOfCurve]];
-        
-        // now we have the bounding box of the stroke, so we need to iterate
-        // through all the scraps to see if it may intersect it
-        for(MMScrapView* scrap in self.scraps){
-            // find the bounding box of the scrap, so we can determine
-            // quickly if they even possibly intersect
-            UIBezierPath* scrapPath = [scrap.bezierPath copy];
-            [scrapPath applyTransform:CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.rotation),CGAffineTransformMakeScale(scrap.scale, scrap.scale))];
-            [scrapPath applyTransform:CGAffineTransformMakeTranslation(scrap.center.x - scrapPath.center.x, scrap.center.y - scrapPath.center.y)];
-            CGAffineTransform flipVertical = CGAffineTransformMake(1, 0, 0, -1, 0, self.bounds.size.height);
-            [scrapPath applyTransform:flipVertical];
-            CGRect boundsOfScrap = scrapPath.bounds;
-            
-            [[MMDebugDrawView sharedInstace] addCurve:[UIBezierPath bezierPathWithRect:boundsOfScrap]];
-
-            if(YES || CGRectIntersectsRect(boundsOfCurve, boundsOfScrap)){
-                if([element isKindOfClass:[CurveToPathElement class]]){
-                    UIBezierPath* cropped = [bez unclosedPathFromDifferenceWithPath:scrapPath];
-                    
-                    __block CGPoint previousEndpoint = [bez firstPoint];
-                    [cropped iteratePathWithBlock:^(CGPathElement pathEle){
-                        AbstractBezierPathElement* newElement = nil;
-                        if(pathEle.type == kCGPathElementAddCurveToPoint){
-                            // curve
-                            newElement = [CurveToPathElement elementWithStart:previousEndpoint
-                                                                   andCurveTo:pathEle.points[2]
-                                                                  andControl1:pathEle.points[0]
-                                                                  andControl2:pathEle.points[1]];
-                            previousEndpoint = pathEle.points[2];
-                        }else if(pathEle.type == kCGPathElementMoveToPoint){
-                            newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
-                            previousEndpoint = pathEle.points[0];
-                        }else if(pathEle.type == kCGPathElementAddLineToPoint){
-                            newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
-                            previousEndpoint = pathEle.points[0];
-                        }
-                        if(newElement){
-                            // be sure to set color/width/etc
-                            newElement.color = element.color;
-                            newElement.width = element.width;
-                            newElement.rotation = element.rotation;
-                            [croppedElements addObject:newElement];
-                        }
-                    }];
-                    if([croppedElements count] && [[croppedElements firstObject] isKindOfClass:[MoveToPathElement class]]){
-                        [croppedElements removeObjectAtIndex:0];
-                    }
-                }else{
-                    [croppedElements addObject:element];
-                }
-            }
-        }
-        
-        previousElement = element;
-    }
-    
-    
-    return croppedElements;
 }
 
 

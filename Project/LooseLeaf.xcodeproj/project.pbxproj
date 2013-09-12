@@ -50,6 +50,7 @@
 		66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* MMEditablePaperStackView.m */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
+		66924CF517E23D5100D0F860 /* UIBezierPathIntersectionPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 66924CF417E23D5100D0F860 /* UIBezierPathIntersectionPoint.m */; };
 		6693295A15958A950033E557 /* MMShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MMShadowManager.m */; };
 		66932965159593C00033E557 /* MMRotationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66932964159593C00033E557 /* MMRotationManager.m */; };
 		6693296A1595A87E0033E557 /* MMMapButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329691595A87E0033E557 /* MMMapButton.m */; };
@@ -269,6 +270,8 @@
 		6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBubbleButton.m; sourceTree = "<group>"; };
 		6690EF1517CC6F710009A0AC /* MMDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDotView.h; sourceTree = "<group>"; };
 		6690EF1617CC6F710009A0AC /* MMDotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDotView.m; sourceTree = "<group>"; };
+		66924CF317E23D5100D0F860 /* UIBezierPathIntersectionPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIBezierPathIntersectionPoint.h; sourceTree = "<group>"; };
+		66924CF417E23D5100D0F860 /* UIBezierPathIntersectionPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIBezierPathIntersectionPoint.m; sourceTree = "<group>"; };
 		6693295815958A950033E557 /* MMShadowManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShadowManager.h; sourceTree = "<group>"; };
 		6693295915958A950033E557 /* MMShadowManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShadowManager.m; sourceTree = "<group>"; };
 		66932963159593C00033E557 /* MMRotationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRotationManager.h; sourceTree = "<group>"; };
@@ -570,6 +573,8 @@
 		6648955517B0511D0001829C /* UIBezierPath Categories */ = {
 			isa = PBXGroup;
 			children = (
+				66924CF317E23D5100D0F860 /* UIBezierPathIntersectionPoint.h */,
+				66924CF417E23D5100D0F860 /* UIBezierPathIntersectionPoint.m */,
 				663916AF17E11AAE000DEC67 /* choose.h */,
 				663916B017E11AAE000DEC67 /* interval.h */,
 				663916B117E11AAE000DEC67 /* UIBezierPath+Clipping.h */,
@@ -1233,6 +1238,7 @@
 				66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */,
 				6699715217DBA02700E81467 /* MMDebugDrawView.m in Sources */,
 				66B51A2A17AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m in Sources */,
+				66924CF517E23D5100D0F860 /* UIBezierPathIntersectionPoint.m in Sources */,
 				66DCFBDF1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m in Sources */,
 				6693296D1596E0600033E557 /* MMBezelInRightGestureRecognizer.m in Sources */,
 				6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */,
