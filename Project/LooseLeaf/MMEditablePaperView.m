@@ -374,7 +374,9 @@ dispatch_queue_t importThumbnailQueue;
             [bez moveToPoint:[element startPoint]];
             [bez addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
             
-            UIBezierPath* cropped = [bez unclosedPathFromIntersectionWithPath:bounds];
+            NSArray* output = [bez clipToClosedPath:bounds];
+//            UIBezierPath* cropped = [bez unclosedPathFromIntersectionWithPath:bounds];
+            UIBezierPath* cropped = [output firstObject];
 
             __block CGPoint previousEndpoint = curveElement.startPoint;
             [cropped iteratePathWithBlock:^(CGPathElement pathEle){
