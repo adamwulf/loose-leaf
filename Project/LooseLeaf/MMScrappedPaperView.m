@@ -155,7 +155,9 @@
 
         NSMutableArray* newStrokesToScrop = [NSMutableArray array];
         for(AbstractBezierPathElement* element in strokesToCrop){
-            if([element isKindOfClass:[CurveToPathElement class]]){
+            if(!CGRectIntersectsRect(element.bounds, boundsOfScrap)){
+                [newStrokesToScrop addObject:element];
+            }else if([element isKindOfClass:[CurveToPathElement class]]){
                 CurveToPathElement* curveElement = (CurveToPathElement*)element;
 
                 UIBezierPath* strokePath = [UIBezierPath bezierPath];
