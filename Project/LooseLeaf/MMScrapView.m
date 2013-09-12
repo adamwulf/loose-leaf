@@ -23,6 +23,7 @@
     CGFloat rotation;
     BOOL selected;
     CGRect originalBounds;
+    JotView* drawableView;
 }
 
 @synthesize scale;
@@ -42,6 +43,10 @@
         scale = 1;
         // Initialization code
         path = _path;
+        
+        drawableView = [[JotView alloc] initWithFrame:self.bounds];
+        drawableView.layer.borderColor = [UIColor redColor].CGColor;
+        drawableView.layer.borderWidth = 1;
         
         contentLayer = [CAShapeLayer layer];
         [contentLayer setPath:path.CGPath];
@@ -67,6 +72,8 @@
         self.clipsToBounds = YES;
         [self didUpdateAccelerometerWithRawReading:[[MMRotationManager sharedInstace] currentRawRotationReading]];
         needsClippingPathUpdate = YES;
+        
+        [self addSubview:drawableView];
     }
     return self;
 }
@@ -195,6 +202,14 @@
     CGFloat height = self.superview.bounds.size.height;
     rotateAndScale = CGAffineTransformConcat(rotateAndScale, CGAffineTransformMake(1, 0, 0, -1, 0, height));
     [clippingPath applyTransform:rotateAndScale];
+}
+
+
+
+#pragma mark - JotView
+
+-(void) addElement:(AbstractBezierPathElement *)element{
+    [drawableView addElement:element];
 }
 
 

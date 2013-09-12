@@ -167,7 +167,6 @@
                 NSArray* output = [strokePath clipToClosedPath:scrapClippingPath];
                 
                 UIBezierPath* diff = [output lastObject];
-                
                 __block CGPoint previousEndpoint = strokePath.firstPoint;
                 [diff iteratePathWithBlock:^(CGPathElement pathEle){
                     AbstractBezierPathElement* newElement = nil;
@@ -193,6 +192,41 @@
                         [newStrokesToScrop addObject:newElement];
                     }
                 }];
+                
+                
+                
+                UIBezierPath* inter = [output firstObject];
+                previousEndpoint = strokePath.firstPoint;
+                [inter iteratePathWithBlock:^(CGPathElement pathEle){
+                    AbstractBezierPathElement* newElement = nil;
+                    if(pathEle.type == kCGPathElementAddCurveToPoint){
+                        // curve
+                        newElement = [CurveToPathElement elementWithStart:previousEndpoint
+                                                               andCurveTo:pathEle.points[2]
+                                                              andControl1:pathEle.points[0]
+                                                              andControl2:pathEle.points[1]];
+                        previousEndpoint = pathEle.points[2];
+                    }else if(pathEle.type == kCGPathElementMoveToPoint){
+                        newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
+                        previousEndpoint = pathEle.points[0];
+                    }else if(pathEle.type == kCGPathElementAddLineToPoint){
+                        newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
+                        previousEndpoint = pathEle.points[0];
+                    }
+                    if(newElement){
+                        // be sure to set color/width/etc
+                        newElement.color = element.color;
+                        newElement.width = element.width;
+                        newElement.rotation = element.rotation;
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [scrap addElement:newElement];
+                        });
+                    }
+                }];
+                
+                
+                
             }else{
                 [newStrokesToScrop addObject:element];
             }
