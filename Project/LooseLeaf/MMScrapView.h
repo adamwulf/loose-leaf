@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <JotUI/JotUI.h>
 
 @interface MMScrapView : UIView
 
@@ -34,6 +35,8 @@
  */
 -(NSSet*) matchingPairTouchesFrom:(NSSet*) touches;
 -(NSSet*) allMatchingTouchesFrom:(NSSet*) touches;
+
+-(void) addElement:(AbstractBezierPathElement*)element;
 
 #pragma mark - debug
 -(UIBezierPath*) intersect:(UIBezierPath*)newPath;
