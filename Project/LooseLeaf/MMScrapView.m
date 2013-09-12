@@ -16,6 +16,8 @@
 
 @implementation MMScrapView{
     UIBezierPath* path;
+    UIBezierPath* clippingPath;
+    BOOL needsClippingPathUpdate;
     CAShapeLayer* contentLayer;
     CGFloat scale;
     CGFloat rotation;
@@ -27,6 +29,7 @@
 @synthesize rotation;
 @synthesize selected;
 @synthesize originalBounds;
+@synthesize clippingPath;
 
 - (id)initWithBezierPath:(UIBezierPath*)_path
 {
@@ -63,6 +66,7 @@
         self.opaque = NO;
         self.clipsToBounds = YES;
         [self didUpdateAccelerometerWithRawReading:[[MMRotationManager sharedInstace] currentRawRotationReading]];
+        needsClippingPathUpdate = YES;
     }
     return self;
 }
@@ -130,7 +134,7 @@
 //    }
     scale = _scale;
     rotation = _rotation;
-
+    needsClippingPathUpdate = YES;
     self.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(rotation),CGAffineTransformMakeScale(scale, scale));
 }
 
@@ -142,6 +146,56 @@
     [self setScale:self.scale andRotation:_rotation];
 }
 
+-(void) setFrame:(CGRect)frame{
+    [super setFrame:frame];
+    needsClippingPathUpdate = YES;
+}
+
+-(void) setBounds:(CGRect)bounds{
+    [super setBounds:bounds];
+    needsClippingPathUpdate = YES;
+}
+
+-(void) setCenter:(CGPoint)center{
+    [super setCenter:center];
+    needsClippingPathUpdate = YES;
+}
+
+-(UIBezierPath*) clippingPath{
+    if(needsClippingPathUpdate){
+        [self commitEditsAndUpdateClippingPath];
+        needsClippingPathUpdate = NO;
+    }
+    return clippingPath;
+}
+
+-(void) commitEditsAndUpdateClippingPath{
+    // find the bounding box of the scrap, so we can determine
+    // quickly if they even possibly intersect
+    
+    clippingPath = [self.bezierPath copy];
+    
+    // when we pick up a scrap with a two finger gesture, we also
+    // change the position and anchor (which change the center), so
+    // that it rotates underneath the gesture correctly.
+    //
+    // we need to re-caculate the true center of the scrap as if it
+    // was not being held, so that we can position our path correctly
+    // over it.
+    CGPoint actualScrapCenter = CGPointMake( CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
+    CGPoint clippingPathCenter = clippingPath.center;
+    
+    // first, align the center of the scrap to the center of the path
+    [clippingPath applyTransform:CGAffineTransformMakeTranslation(actualScrapCenter.x - clippingPathCenter.x, actualScrapCenter.y - clippingPathCenter.y)];
+    // now we need to rotate the path around it's new center
+    clippingPathCenter = clippingPath.center;
+    CGAffineTransform rotateAndScale = CGAffineTransformConcat(CGAffineTransformMakeTranslation(-clippingPathCenter.x, -clippingPathCenter.y),
+                                                               CGAffineTransformConcat(CGAffineTransformMakeRotation(self.rotation),CGAffineTransformMakeScale(self.scale, self.scale)));
+    rotateAndScale = CGAffineTransformConcat(rotateAndScale, CGAffineTransformMakeTranslation(clippingPathCenter.x, clippingPathCenter.y));
+    CGFloat height = self.superview.bounds.size.height;
+    rotateAndScale = CGAffineTransformConcat(rotateAndScale, CGAffineTransformMake(1, 0, 0, -1, 0, height));
+    [clippingPath applyTransform:rotateAndScale];
+}
 
 
 #pragma mark - Debug

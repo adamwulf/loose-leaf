@@ -13,7 +13,16 @@
 
 static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
 
-@implementation Pen
+struct DurationCacheObject{
+    NSUInteger hash;
+    NSTimeInterval timestamp;
+};
+
+#define kDurationTouchHashSize 20
+
+@implementation Pen{
+    struct DurationCacheObject durationCache[kDurationTouchHashSize];
+}
 
 @synthesize minSize;
 @synthesize maxSize;
@@ -33,7 +42,6 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
         defaultMinSize = minSize;
         defaultMaxSize = maxSize;
         color = [UIColor blackColor];
-        lastStampPerTouch = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -111,11 +119,37 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
  * (from using ! in function names with side effects in Scheme...)
  */
 -(NSTimeInterval) durationForTouchBang:(JotTouch*)touch{
-    NSNumber* val = [lastStampPerTouch objectForKey:@(touch.touch.hash)];
-    NSTimeInterval lastTime = [val doubleValue];
+    int firstFreeSlot = -1;
+    NSUInteger touchHash = touch.touch.hash;
+    NSTimeInterval lastTime = 0;
     NSTimeInterval currTime = touch.timestamp;
-    [lastStampPerTouch setObject:[NSNumber numberWithDouble:currTime] forKey:@(touch.touch.hash)];
+    BOOL found = NO;
+    for(int i=0;i<kDurationTouchHashSize;i++){
+        if(durationCache[i].hash == touchHash){
+            lastTime = durationCache[i].timestamp;
+            durationCache[i].timestamp = currTime;
+            found = YES;
+            break;
+        }
+        if(firstFreeSlot == -1 && durationCache[i].hash == 0){
+            firstFreeSlot = i;
+        }
+    }
+    if(!found){
+        durationCache[firstFreeSlot].hash = touchHash;
+        durationCache[firstFreeSlot].timestamp = currTime;
+    }
     return currTime - lastTime;
+}
+
+-(void) removeDurationCacheFor:(JotTouch*)touch{
+    NSUInteger touchHash = touch.touch.hash;
+    for(int i=0;i<kDurationTouchHashSize;i++){
+        if(durationCache[i].hash == touchHash){
+            durationCache[i].hash = 0;
+            break;
+        }
+    }
 }
 
 /**
@@ -151,9 +185,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
  * we don't need to do anything
  */
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
-    // noop
-//    debug_NSLog(@"PEN velocity: %f", velocity);
-    [lastStampPerTouch removeObjectForKey:@(touch.touch.hash)];
+    [self removeDurationCacheFor:touch];
 }
 
 -(void) willCancelStrokeWithTouch:(JotTouch*)touch{
@@ -164,8 +196,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
  * the user cancelled the touch
  */
 -(void) didCancelStrokeWithTouch:(JotTouch*)touch{
-    // noop
-    [lastStampPerTouch removeObjectForKey:@(touch.touch.hash)];
+    [self removeDurationCacheFor:touch];
 }
 
 /**

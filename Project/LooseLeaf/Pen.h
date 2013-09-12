@@ -26,8 +26,6 @@
     CGFloat velocity;
     
     UIColor* color;
-    
-    NSMutableDictionary* lastStampPerTouch;
 }
 
 @property (nonatomic, assign) CGFloat minSize;

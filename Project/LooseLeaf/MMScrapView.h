@@ -10,6 +10,7 @@
 
 @interface MMScrapView : UIView
 
+@property (readonly) UIBezierPath* clippingPath;
 @property (readonly) UIBezierPath* bezierPath;
 @property (nonatomic, assign) CGFloat scale;
 @property (nonatomic, assign) CGFloat rotation;
