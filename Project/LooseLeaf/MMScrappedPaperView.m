@@ -149,29 +149,9 @@
     for(MMScrapView* scrap in self.scraps){
         // find the bounding box of the scrap, so we can determine
         // quickly if they even possibly intersect
+        UIBezierPath* scrapClippingPath = scrap.clippingPath;
         
-        UIBezierPath* scrapPath = [scrap.bezierPath copy];
-
-        // when we pick up a scrap with a two finger gesture, we also
-        // change the position and anchor (which change the center), so
-        // that it rotates underneath the gesture correctly.
-        //
-        // we need to re-caculate the true center of the scrap as if it
-        // was not being held, so that we can position our path correctly
-        // over it.
-        CGPoint actualScrapCenter = CGPointMake( CGRectGetMidX(scrap.frame), CGRectGetMidY(scrap.frame));
-
-        // first, align the center of the scrap to the center of the path
-        [scrapPath applyTransform:CGAffineTransformMakeTranslation(actualScrapCenter.x - scrapPath.center.x, actualScrapCenter.y - scrapPath.center.y)];
-        // now we need to rotate the path around it's new center
-        CGPoint scrapPathCenter = scrapPath.center;
-        CGAffineTransform rotateAndScale = CGAffineTransformConcat(CGAffineTransformMakeTranslation(-scrapPathCenter.x, -scrapPathCenter.y),
-                                                                   CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.rotation),CGAffineTransformMakeScale(scrap.scale, scrap.scale)));
-        rotateAndScale = CGAffineTransformConcat(rotateAndScale, CGAffineTransformMakeTranslation(scrapPathCenter.x, scrapPathCenter.y));
-        rotateAndScale = CGAffineTransformConcat(rotateAndScale, CGAffineTransformMake(1, 0, 0, -1, 0, self.bounds.size.height));
-        [scrapPath applyTransform:rotateAndScale];
-        
-        CGRect boundsOfScrap = scrapPath.bounds;
+        CGRect boundsOfScrap = scrapClippingPath.bounds;
         
         NSMutableArray* newStrokesToScrop = [NSMutableArray array];
         for(AbstractBezierPathElement* element in strokesToCrop){
@@ -184,7 +164,8 @@
                 [strokePath moveToPoint:curveElement.startPoint];
                 [strokePath addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
 
-                NSArray* output = [strokePath clipToClosedPath:scrapPath];
+                NSArray* output = [strokePath clipToClosedPath:scrapClippingPath];
+                
                 UIBezierPath* diff = [output lastObject];
                 
                 __block CGPoint previousEndpoint = strokePath.firstPoint;

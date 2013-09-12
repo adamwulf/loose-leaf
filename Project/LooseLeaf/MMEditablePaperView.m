@@ -29,6 +29,7 @@ dispatch_queue_t importThumbnailQueue;
     NSString* thumbnailPath;
     
     BOOL isLoadingCachedImageFromDisk;
+    UIBezierPath* boundsPath;
 }
 
 @synthesize drawableView;
@@ -51,6 +52,10 @@ dispatch_queue_t importThumbnailQueue;
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
+        // used for clipping strokes to our bounds so that we don't generate
+        // vertex data for anything that'll never be visible
+        boundsPath = [UIBezierPath bezierPathWithRect:self.bounds];
+        
         // create the cache view
         cachedImgView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
         cachedImgView.frame = self.contentView.bounds;
@@ -361,8 +366,6 @@ dispatch_queue_t importThumbnailQueue;
 
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
     
-    UIBezierPath* bounds = [UIBezierPath bezierPathWithRect:self.bounds];
-    
     NSArray* modifiedElements = [self.delegate willAddElementsToStroke:elements fromPreviousElement:previousElement];
     
     NSMutableArray* croppedElements = [NSMutableArray array];
@@ -374,7 +377,7 @@ dispatch_queue_t importThumbnailQueue;
             [bez moveToPoint:[element startPoint]];
             [bez addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
             
-            NSArray* output = [bez clipToClosedPath:bounds];
+            NSArray* output = [bez clipToClosedPath:boundsPath];
 //            UIBezierPath* cropped = [bez unclosedPathFromIntersectionWithPath:bounds];
             UIBezierPath* cropped = [output firstObject];
 
