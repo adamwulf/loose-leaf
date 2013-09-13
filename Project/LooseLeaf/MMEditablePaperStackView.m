@@ -12,6 +12,7 @@
 #import "MMRulerView.h"
 #import "MMScrappedPaperView.h"
 #import "MMScrapBubbleButton.h"
+#import "MMTouchVelocityGestureRecognizer.h"
 
 @implementation MMEditablePaperStackView{
     MMEditablePaperView* currentEditablePage;
@@ -197,6 +198,9 @@
         
         rulerView = [[MMRulerView alloc] initWithFrame:self.bounds];
         [self addSubview:rulerView];
+        
+        
+        [self addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstace]];
     }
     return self;
 }
