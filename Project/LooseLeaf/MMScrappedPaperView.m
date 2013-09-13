@@ -219,9 +219,7 @@
                         newElement.width = element.width;
                         newElement.rotation = element.rotation;
                         
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [scrap addElement:newElement];
-                        });
+                        [scrap addElement:newElement];
                     }
                 }];
                 
