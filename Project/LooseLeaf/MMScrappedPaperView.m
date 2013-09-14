@@ -142,8 +142,6 @@
         return strokes;
     }
     
-    
-    
     NSMutableArray* strokesToCrop = [NSMutableArray arrayWithArray:strokes];
     
     for(MMScrapView* scrap in self.scraps){
@@ -193,10 +191,25 @@
                     }
                 }];
                 
-                
-                
                 UIBezierPath* inter = [output firstObject];
                 previousEndpoint = strokePath.firstPoint;
+                
+                
+                // find the scrap location in open gl
+                CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, self.bounds.size.height);
+                CGPoint scrapCenterInOpenGL = CGPointApplyAffineTransform(scrap.center, flipTransform);
+                // center the stroke around the scrap center,
+                // so that any scale/rotate happens in relation to the scrap
+                [inter applyTransform:CGAffineTransformMakeTranslation(-scrapCenterInOpenGL.x, -scrapCenterInOpenGL.y)];
+                
+                [inter applyTransform:CGAffineTransformMakeScale(1.0/scrap.scale, 1.0/scrap.scale)];
+                
+                // move the stroke so that zero zero is the corner
+                // of the stroke. i may need to transform this too (?)
+                CGPoint recenter = CGPointMake(scrap.bounds.size.width/2, scrap.bounds.size.height/2);
+                [inter applyTransform:CGAffineTransformMakeTranslation(recenter.x, recenter.y)];
+                
+                
                 [inter iteratePathWithBlock:^(CGPathElement pathEle){
                     AbstractBezierPathElement* newElement = nil;
                     if(pathEle.type == kCGPathElementAddCurveToPoint){
@@ -222,8 +235,6 @@
                         [scrap addElement:newElement];
                     }
                 }];
-                
-                
                 
             }else{
                 [newStrokesToScrop addObject:element];

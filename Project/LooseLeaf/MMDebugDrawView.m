@@ -43,6 +43,11 @@ static MMDebugDrawView* _instance = nil;
 }
 
 -(void) addCurve:(UIBezierPath*)path{
+    
+    path = [path copy];
+    CGAffineTransform flippedTransform = CGAffineTransformMake(1, 0, 0, -1, 0, self.bounds.size.height);
+    [path applyTransform:flippedTransform];
+    
     [curves addObject:path];
     if([curves count] > [colors count]){
         [colors addObject:[UIColor randomColor]];

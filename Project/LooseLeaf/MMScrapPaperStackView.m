@@ -56,10 +56,6 @@
                 [possibleSidebarButton addTarget:self action:@selector(anySidebarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
             }
         }
-        
-        
-        [MMDebugDrawView sharedInstace].frame = self.bounds;
-        [self addSubview:[MMDebugDrawView sharedInstace]];
     }
     return self;
 }
