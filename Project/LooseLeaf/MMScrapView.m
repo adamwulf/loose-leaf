@@ -13,9 +13,14 @@
 #import "MMRotationManager.h"
 #import "DrawKit-iOS.h"
 #import "UIColor+Shadow.h"
+#import "MMDebugDrawView.h"
+
+
+#import <JotUI/AbstractBezierPathElement-Protected.h>
 
 @implementation MMScrapView{
     UIBezierPath* path;
+    CGAffineTransform clippingPathTransform;
     UIBezierPath* clippingPath;
     BOOL needsClippingPathUpdate;
     CAShapeLayer* contentLayer;
@@ -31,6 +36,7 @@
 @synthesize selected;
 @synthesize originalBounds;
 @synthesize clippingPath;
+@synthesize clippingPathTransform;
 
 - (id)initWithBezierPath:(UIBezierPath*)_path
 {
@@ -74,6 +80,53 @@
         needsClippingPathUpdate = YES;
         
         [self addSubview:drawableView];
+
+        [MMDebugDrawView sharedInstace].frame = self.bounds;
+        [self addSubview:[MMDebugDrawView sharedInstace]];
+        
+        
+        CurveToPathElement* curveTo = [CurveToPathElement elementWithStart:CGPointMake(10, 10)
+                                                                 andLineTo:CGPointMake(self.bounds.size.width-10, 10)];
+        curveTo.width = 10;
+        curveTo.color = [UIColor blackColor];
+        curveTo.rotation = 0;
+        [drawableView addElement:curveTo];
+
+        curveTo = [CurveToPathElement elementWithStart:CGPointMake(self.bounds.size.width-10, 10)
+                                             andLineTo:CGPointMake(self.bounds.size.width-10, self.bounds.size.height - 10)];
+        curveTo.width = 10;
+        curveTo.color = [UIColor blackColor];
+        curveTo.rotation = 0;
+        [drawableView addElement:curveTo];
+
+        curveTo = [CurveToPathElement elementWithStart:CGPointMake(self.bounds.size.width-10, self.bounds.size.height - 10)
+                                   andLineTo:CGPointMake(10, self.bounds.size.height - 10)];
+        curveTo.width = 10;
+        curveTo.color = [UIColor blackColor];
+        curveTo.rotation = 0;
+        [drawableView addElement:curveTo];
+        
+        curveTo = [CurveToPathElement elementWithStart:CGPointMake(10, self.bounds.size.height - 10)
+                                   andLineTo:CGPointMake(10, 10)];
+        curveTo.width = 10;
+        curveTo.color = [UIColor blackColor];
+        curveTo.rotation = 0;
+        [drawableView addElement:curveTo];
+        
+        curveTo = [CurveToPathElement elementWithStart:CGPointMake(10, 10)
+                                   andLineTo:CGPointMake(self.bounds.size.width-10, self.bounds.size.height - 10)];
+        curveTo.width = 10;
+        curveTo.color = [UIColor blackColor];
+        curveTo.rotation = 0;
+        [drawableView addElement:curveTo];
+        
+        curveTo = [CurveToPathElement elementWithStart:CGPointMake(10, self.bounds.size.height - 10)
+                                   andLineTo:CGPointMake(self.bounds.size.width - 10, 10)];
+        curveTo.width = 10;
+        curveTo.color = [UIColor blackColor];
+        curveTo.rotation = 0;
+        [drawableView addElement:curveTo];
+
     }
     return self;
 }
@@ -193,15 +246,24 @@
     CGPoint clippingPathCenter = clippingPath.center;
     
     // first, align the center of the scrap to the center of the path
-    [clippingPath applyTransform:CGAffineTransformMakeTranslation(actualScrapCenter.x - clippingPathCenter.x, actualScrapCenter.y - clippingPathCenter.y)];
+    CGAffineTransform reCenterTransform = CGAffineTransformMakeTranslation(actualScrapCenter.x - clippingPathCenter.x, actualScrapCenter.y - clippingPathCenter.y);
+    clippingPathCenter = CGPointApplyAffineTransform(clippingPathCenter, reCenterTransform);
+    
+    
     // now we need to rotate the path around it's new center
-    clippingPathCenter = clippingPath.center;
-    CGAffineTransform rotateAndScale = CGAffineTransformConcat(CGAffineTransformMakeTranslation(-clippingPathCenter.x, -clippingPathCenter.y),
-                                                               CGAffineTransformConcat(CGAffineTransformMakeRotation(self.rotation),CGAffineTransformMakeScale(self.scale, self.scale)));
-    rotateAndScale = CGAffineTransformConcat(rotateAndScale, CGAffineTransformMakeTranslation(clippingPathCenter.x, clippingPathCenter.y));
-    CGFloat height = self.superview.bounds.size.height;
-    rotateAndScale = CGAffineTransformConcat(rotateAndScale, CGAffineTransformMake(1, 0, 0, -1, 0, height));
-    [clippingPath applyTransform:rotateAndScale];
+    CGAffineTransform moveFromCenter = CGAffineTransformMakeTranslation(-clippingPathCenter.x, -clippingPathCenter.y);
+    CGAffineTransform rotateAndScale = CGAffineTransformConcat(CGAffineTransformMakeRotation(self.rotation),CGAffineTransformMakeScale(self.scale, self.scale));
+    CGAffineTransform moveToCenter = CGAffineTransformMakeTranslation(clippingPathCenter.x, clippingPathCenter.y);
+    
+    CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, self.superview.bounds.size.height);
+    
+    clippingPathTransform = reCenterTransform;
+    clippingPathTransform = CGAffineTransformConcat(clippingPathTransform, moveFromCenter);
+    clippingPathTransform = CGAffineTransformConcat(clippingPathTransform, rotateAndScale);
+    clippingPathTransform = CGAffineTransformConcat(clippingPathTransform, moveToCenter);
+    clippingPathTransform = CGAffineTransformConcat(clippingPathTransform, flipTransform);
+    
+    [clippingPath applyTransform:clippingPathTransform];
 }
 
 

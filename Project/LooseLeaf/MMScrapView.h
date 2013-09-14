@@ -11,6 +11,7 @@
 
 @interface MMScrapView : UIView
 
+@property (readonly) CGAffineTransform clippingPathTransform;
 @property (readonly) UIBezierPath* clippingPath;
 @property (readonly) UIBezierPath* bezierPath;
 @property (nonatomic, assign) CGFloat scale;
