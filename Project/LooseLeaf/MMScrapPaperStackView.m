@@ -56,8 +56,20 @@
                 [possibleSidebarButton addTarget:self action:@selector(anySidebarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
             }
         }
+        
+        
+        UIButton* goButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        goButton.titleLabel.text = @"Go";
+        [goButton addTarget:self action:@selector(drawX) forControlEvents:UIControlEventTouchUpInside];
+        goButton.frame = CGRectMake(100, 100, 200, 60);
+        goButton.backgroundColor = [UIColor blueColor];
+        [self addSubview:goButton];
     }
     return self;
+}
+
+-(void) drawX{
+    [[[visibleStackHolder peekSubview].scraps objectAtIndex:0] drawX];
 }
 
 #pragma mark - Add Page

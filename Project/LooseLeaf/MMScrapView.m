@@ -84,51 +84,59 @@
         [MMDebugDrawView sharedInstace].frame = self.bounds;
         [self addSubview:[MMDebugDrawView sharedInstace]];
         
-        
-        CurveToPathElement* curveTo = [CurveToPathElement elementWithStart:CGPointMake(10, 10)
-                                                                 andLineTo:CGPointMake(self.bounds.size.width-10, 10)];
-        curveTo.width = 10;
-        curveTo.color = [UIColor blackColor];
-        curveTo.rotation = 0;
-        [drawableView addElement:curveTo];
-
-        curveTo = [CurveToPathElement elementWithStart:CGPointMake(self.bounds.size.width-10, 10)
-                                             andLineTo:CGPointMake(self.bounds.size.width-10, self.bounds.size.height - 10)];
-        curveTo.width = 10;
-        curveTo.color = [UIColor blackColor];
-        curveTo.rotation = 0;
-        [drawableView addElement:curveTo];
-
-        curveTo = [CurveToPathElement elementWithStart:CGPointMake(self.bounds.size.width-10, self.bounds.size.height - 10)
-                                   andLineTo:CGPointMake(10, self.bounds.size.height - 10)];
-        curveTo.width = 10;
-        curveTo.color = [UIColor blackColor];
-        curveTo.rotation = 0;
-        [drawableView addElement:curveTo];
-        
-        curveTo = [CurveToPathElement elementWithStart:CGPointMake(10, self.bounds.size.height - 10)
-                                   andLineTo:CGPointMake(10, 10)];
-        curveTo.width = 10;
-        curveTo.color = [UIColor blackColor];
-        curveTo.rotation = 0;
-        [drawableView addElement:curveTo];
-        
-        curveTo = [CurveToPathElement elementWithStart:CGPointMake(10, 10)
-                                   andLineTo:CGPointMake(self.bounds.size.width-10, self.bounds.size.height - 10)];
-        curveTo.width = 10;
-        curveTo.color = [UIColor blackColor];
-        curveTo.rotation = 0;
-        [drawableView addElement:curveTo];
-        
-        curveTo = [CurveToPathElement elementWithStart:CGPointMake(10, self.bounds.size.height - 10)
-                                   andLineTo:CGPointMake(self.bounds.size.width - 10, 10)];
-        curveTo.width = 10;
-        curveTo.color = [UIColor blackColor];
-        curveTo.rotation = 0;
-        [drawableView addElement:curveTo];
+        [self drawX];
 
     }
     return self;
+}
+
+
+
+-(void) drawX{
+    
+    UIColor* color = [UIColor randomColor];
+    
+    CurveToPathElement* curveTo = [CurveToPathElement elementWithStart:CGPointMake(10, 10)
+                                                             andLineTo:CGPointMake(self.bounds.size.width-10, 10)];
+    curveTo.width = 10;
+    curveTo.color = color;
+    curveTo.rotation = 0;
+    [drawableView addElement:curveTo];
+    
+    curveTo = [CurveToPathElement elementWithStart:CGPointMake(self.bounds.size.width-10, 10)
+                                         andLineTo:CGPointMake(self.bounds.size.width-10, self.bounds.size.height - 10)];
+    curveTo.width = 10;
+    curveTo.color = color;
+    curveTo.rotation = 0;
+    [drawableView addElement:curveTo];
+    
+    curveTo = [CurveToPathElement elementWithStart:CGPointMake(self.bounds.size.width-10, self.bounds.size.height - 10)
+                                         andLineTo:CGPointMake(10, self.bounds.size.height - 10)];
+    curveTo.width = 10;
+    curveTo.color = color;
+    curveTo.rotation = 0;
+    [drawableView addElement:curveTo];
+    
+    curveTo = [CurveToPathElement elementWithStart:CGPointMake(10, self.bounds.size.height - 10)
+                                         andLineTo:CGPointMake(10, 10)];
+    curveTo.width = 10;
+    curveTo.color = color;
+    curveTo.rotation = 0;
+    [drawableView addElement:curveTo];
+    
+    curveTo = [CurveToPathElement elementWithStart:CGPointMake(10, 10)
+                                         andLineTo:CGPointMake(self.bounds.size.width-10, self.bounds.size.height - 10)];
+    curveTo.width = 10;
+    curveTo.color = color;
+    curveTo.rotation = 0;
+    [drawableView addElement:curveTo];
+    
+    curveTo = [CurveToPathElement elementWithStart:CGPointMake(10, self.bounds.size.height - 10)
+                                         andLineTo:CGPointMake(self.bounds.size.width - 10, 10)];
+    curveTo.width = 10;
+    curveTo.color = color;
+    curveTo.rotation = 0;
+    [drawableView addElement:curveTo];
 }
 
 -(CGPoint) firstPoint{
