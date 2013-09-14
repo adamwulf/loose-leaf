@@ -203,6 +203,7 @@
                 [inter applyTransform:CGAffineTransformMakeTranslation(-scrapCenterInOpenGL.x, -scrapCenterInOpenGL.y)];
                 
                 [inter applyTransform:CGAffineTransformMakeScale(1.0/scrap.scale, 1.0/scrap.scale)];
+//                [inter applyTransform:CGAffineTransformMakeRotation(-scrap.rotation)];
                 
                 // move the stroke so that zero zero is the corner
                 // of the stroke. i may need to transform this too (?)
