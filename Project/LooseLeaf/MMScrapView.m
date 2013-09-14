@@ -83,8 +83,6 @@
 
         [MMDebugDrawView sharedInstace].frame = self.bounds;
         [self addSubview:[MMDebugDrawView sharedInstace]];
-        
-        [self drawX];
 
     }
     return self;
@@ -92,6 +90,9 @@
 
 
 
+/**
+ * for debugging
+ */
 -(void) drawX{
     
     UIColor* color = [UIColor randomColor];

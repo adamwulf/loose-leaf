@@ -58,12 +58,13 @@
         }
         
         
-        UIButton* goButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        goButton.titleLabel.text = @"Go";
-        [goButton addTarget:self action:@selector(drawX) forControlEvents:UIControlEventTouchUpInside];
-        goButton.frame = CGRectMake(100, 100, 200, 60);
-        goButton.backgroundColor = [UIColor blueColor];
-        [self addSubview:goButton];
+//        UIButton* goButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//        goButton.titleLabel.text = @"Go";
+//        [goButton addTarget:self action:@selector(drawX) forControlEvents:UIControlEventTouchUpInside];
+//        goButton.frame = CGRectMake(100, 100, 200, 60);
+//        goButton.backgroundColor = [UIColor blueColor];
+//        [self addSubview:goButton];
+//        [self drawX];
     }
     return self;
 }
