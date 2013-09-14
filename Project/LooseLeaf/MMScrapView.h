@@ -29,6 +29,8 @@
 
 -(void) setScale:(CGFloat)scale andRotation:(CGFloat)rotation;
 
+-(void) drawX;
+
 /**
  * will return the array of touches that this scrap
  * contains, but only if more than one touch
