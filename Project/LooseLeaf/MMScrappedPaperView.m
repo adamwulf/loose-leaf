@@ -201,16 +201,28 @@
                 // center the stroke around the scrap center,
                 // so that any scale/rotate happens in relation to the scrap
                 [inter applyTransform:CGAffineTransformMakeTranslation(-scrapCenterInOpenGL.x, -scrapCenterInOpenGL.y)];
-                
+                // now scale and rotate the scrap
+                // we reverse the scale, b/c the scrap itself is scaled. these two together will make the
+                // path have a scale of 1 after it's added
                 [inter applyTransform:CGAffineTransformMakeScale(1.0/scrap.scale, 1.0/scrap.scale)];
+                // this one confuses me honestly. i would think that
+                // i'd need to rotate by -scrap.rotation so that with the
+                // scrap's rotation it'd end up not rotated at all. somehow the
+                // scrap has an effective rotation of -rotation (?).
+                //
+                // either way, when i rotate the path by scrap.rotation, it ends up
+                // in the correct visible space. it works!
                 [inter applyTransform:CGAffineTransformMakeRotation(scrap.rotation)];
                 
-                // move the stroke so that zero zero is the corner
-                // of the stroke. i may need to transform this too (?)
+                // before this line, the path is in the correct place for a scrap
+                // that has (0,0) in it's center. now move everything so that
+                // (0,0) is in the bottom/left of the scrap. (this might also
+                // help w/ the rotation somehow, since the rotate happens before the
+                // translate (?)
                 CGPoint recenter = CGPointMake(scrap.bounds.size.width/2, scrap.bounds.size.height/2);
                 [inter applyTransform:CGAffineTransformMakeTranslation(recenter.x, recenter.y)];
                 
-                
+                // now add it to the scrap!
                 [inter iteratePathWithBlock:^(CGPathElement pathEle){
                     AbstractBezierPathElement* newElement = nil;
                     if(pathEle.type == kCGPathElementAddCurveToPoint){
