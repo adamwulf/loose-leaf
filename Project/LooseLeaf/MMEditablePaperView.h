@@ -27,7 +27,7 @@
 -(BOOL) hasEditsToSave;
 -(void) unloadCachedPreview;
 -(void) loadCachedPreview;
--(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(JotGLContext*)context andThen:(void (^)())block;
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andThen:(void (^)())block;
 -(void) unloadState;
 -(void) saveToDisk;
 -(void) setCanvasVisible:(BOOL)isVisible;

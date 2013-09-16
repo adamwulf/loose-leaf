@@ -136,7 +136,7 @@ dispatch_queue_t importThumbnailQueue;
     }
 }
 
--(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(JotGLContext*)context andThen:(void (^)())block{
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andThen:(void (^)())block{
     if(state){
         if(block) block();
         return;
@@ -148,7 +148,7 @@ dispatch_queue_t importThumbnailQueue;
                 state = [[JotViewState alloc] initWithImageFile:[self inkPath]
                                                    andStateFile:[self plistPath]
                                                     andPageSize:pagePixelSize
-                                                   andGLContext:context];
+                                                   andGLContext:drawableView.context];
             }
             if(block) block();
         }
@@ -193,7 +193,6 @@ dispatch_queue_t importThumbnailQueue;
             [self setFrame:self.frame];
             [self loadStateAsynchronously:YES
                                  withSize:[drawableView pagePixelSize]
-                               andContext:[drawableView context]
                                   andThen:^{
                                       [NSThread performBlockOnMainThread:^{
                                           if([self.delegate isPageEditable:self]){
