@@ -144,7 +144,7 @@
     
     NSMutableArray* strokesToCrop = [NSMutableArray arrayWithArray:strokes];
     
-    for(MMScrapView* scrap in self.scraps){
+    for(MMScrapView* scrap in [self.scraps reverseObjectEnumerator]){
         // find the bounding box of the scrap, so we can determine
         // quickly if they even possibly intersect
         UIBezierPath* scrapClippingPath = scrap.clippingPath;
