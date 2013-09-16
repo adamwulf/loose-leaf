@@ -162,7 +162,7 @@
                 [strokePath moveToPoint:curveElement.startPoint];
                 [strokePath addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
 
-                NSArray* output = [strokePath clipToClosedPath:scrapClippingPath];
+                NSArray* output = [strokePath clipUnclosedPathToClosedPath:scrapClippingPath];
                 
                 UIBezierPath* diff = [output lastObject];
                 __block CGPoint previousEndpoint = strokePath.firstPoint;
