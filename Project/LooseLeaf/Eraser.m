@@ -23,7 +23,7 @@
  */
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
     [super willBeginStrokeWithTouch:touch];
-//    velocity = 0;
+    velocity = 0;
     return YES;
 }
 

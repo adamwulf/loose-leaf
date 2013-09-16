@@ -9,11 +9,16 @@
 #import "MMPencilButton.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Constants.h"
+#import "MMPencilAndPaletteView.h"
 
 @implementation MMPencilButton
 
+@synthesize tool;
+
 - (id)initWithFrame:(CGRect)frame
 {
+    // adjust the frame so that 
+    
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
@@ -23,6 +28,9 @@
     return self;
 }
 
+-(UIColor*) shadowColor{
+    return [tool.color colorWithAlphaComponent:.5];
+}
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

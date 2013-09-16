@@ -8,6 +8,8 @@
 
 #import "MMSidebarButton.h"
 #import "Constants.h"
+#import "UIColor+Shadow.h"
+#import "DrawKit-iOS.h"
 #import <QuartzCore/QuartzCore.h>
 
 @implementation MMSidebarButton
@@ -21,7 +23,6 @@
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
-        [self addTarget:self action:@selector(bounceButton:) forControlEvents:UIControlEventTouchUpInside];
         self.adjustsImageWhenDisabled = NO;
         self.adjustsImageWhenHighlighted = NO;
     }
@@ -65,7 +66,7 @@
         CGContextRef context = UIGraphicsGetCurrentContext();
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 
-        UIColor* selectedBlueFill = [UIColor colorWithRed: 77.0/255.0 green: 187.0/255.0 blue: 1.0 alpha: 0.5];
+        UIColor* selectedBlueFill = [UIColor blueShadowColor];
         
         CGRect frame = [self drawableFrame];
         UIBezierPath* ovalPath = [self ovalPath];
@@ -99,55 +100,7 @@
 }
 
 
--(void) bounceButton:(id)sender{
-    if(self.enabled){
-        self.center = self.center;
-        
-        // run animation for a fraction of a second
-        CGFloat duration = .30;
-        
-        ////////////////////////////////////////////////////////
-        // Animate the button!
-        
-        // Create a keyframe animation to follow a path back to the center
-        CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
-        bounceAnimation.removedOnCompletion = YES;
-        
-        CATransform3D rotation = CATransform3DMakeAffineTransform(CGAffineTransformMakeRotation([self rotation]));
-        
-        NSMutableArray* keyTimes = [NSMutableArray arrayWithObjects:
-                                    [NSNumber numberWithFloat:0.0],
-                                    [NSNumber numberWithFloat:0.4],
-                                    [NSNumber numberWithFloat:0.7],
-                                    [NSNumber numberWithFloat:1.0], nil];
-        bounceAnimation.keyTimes = keyTimes;
-        bounceAnimation.values = [NSArray arrayWithObjects:
-                                  [NSValue valueWithCATransform3D:CATransform3DConcat(rotation, CATransform3DMakeScale(1.0, 1.0, 1.0))],
-                                  [NSValue valueWithCATransform3D:CATransform3DConcat(rotation, CATransform3DMakeScale(1.4, 1.4, 1.0))],
-                                  [NSValue valueWithCATransform3D:CATransform3DConcat(rotation, CATransform3DMakeScale(0.8, 0.8, 1.0))],
-                                  [NSValue valueWithCATransform3D:CATransform3DConcat(rotation, CATransform3DMakeScale(1.0, 1.0, 1.0))],
-                                  nil];
-        bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
-                                           [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut], 
-                                           [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut], 
-                                           [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn], nil];
-        
-        bounceAnimation.duration = duration;
-        
-        ///////////////////////////////////////////////
-        // Add the animations to the layers
-        [self.layer addAnimation:bounceAnimation forKey:@"animateSize"];
-    }
 
-}
-
-/**
- * returns the midpoint of a bezier curve
- */
--(CGPoint) midPointOfPath:(UIBezierPath*)path{
-    CGRect bounds = path.bounds;
-    return CGPointMake(bounds.origin.x + bounds.size.width / 2, bounds.origin.y + bounds.size.height / 2);
-}
 
 /**
  * returns a unit vector that's perpendicular to the line
@@ -160,12 +113,6 @@
     dx /= dist;
     dy /= dist;
     return CGPointMake(dx, dy);
-    /*
-     CGFloat x3 = x1 + (N/2)*dy;
-     CGFloat y3 = y1 - (N/2)*dx;
-     CGFloat x4 = x1 - (N/2)*dy;
-     CGFloat y4 = y1 + (N/2)*dx;
-     */
 }
 
 -(CGFloat) rotation{

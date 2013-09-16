@@ -15,6 +15,7 @@
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "UIDevice+PPI.h"
+#import "UIColor+Shadow.h"
 
 @interface MMPointAndVector : NSObject
 @property (nonatomic) CGPoint point;
@@ -48,6 +49,8 @@
     UIBezierPath* path2;
     UIBezierPath* path1Full;
     UIBezierPath* path2Full;
+    UIBezierPath* path1FullFlipped;
+    UIBezierPath* path2FullFlipped;
     
     BOOL nearestPathIsPath1;
     
@@ -58,7 +61,7 @@
 @synthesize jotView;
 
 +(UIColor*) rulerColor{
-    return [UIColor colorWithRed: 77.0/255.0 green: 187.0/255.0 blue: 1.0 alpha: 1];
+    return [[UIColor blueShadowColor] colorWithAlphaComponent:1];
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -247,12 +250,15 @@ static NSDate* lastRender;
             [path2Full addLineToPoint:[vector pointFromPoint:tr distance:self.bounds.size.height]];
         }
         
+        path1FullFlipped = [path1Full copy];
+        path2FullFlipped = [path2Full copy];
+        
         //
         // path1Full and path2Full are used to calculate closest points
         // in OpenGL coordinate space, so we need to invert them from
         // CoreGraphics coordinate space
-        [path1Full applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
-        [path2Full applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+        [path1FullFlipped applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
+        [path2FullFlipped applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.frame.size.height)];
 
         [ticks appendPath:path1];
         [ticks appendPath:path2];
@@ -603,6 +609,8 @@ static NSDate* lastRender;
     path2 = nil;
     path1Full = nil;
     path2Full = nil;
+    path1FullFlipped = nil;
+    path2FullFlipped = nil;
     ticks = nil;
 }
 
@@ -679,6 +687,25 @@ static NSDate* lastRender;
     }
 }
 
+/**
+ * this will adjust points in core graphics space
+ */
+-(CGPoint) adjustPoint:(CGPoint)inputPoint{
+    UIBezierPath* closestPath = nil;
+    if(path1 && !CGPointEqualToPoint(mostRecentTouchPointInOpenGLCoord, CGPointZero)){
+        // the ruler is down and ready to adjust points
+        if(nearestPathIsPath1){
+            closestPath = path1Full;
+        }else{
+            closestPath = path2Full;
+        }
+
+        return  [closestPath closestPointOnPathTo:inputPoint];
+    }
+    
+    return  inputPoint;
+}
+
 
 #pragma mark - Private Helpers
 
@@ -691,9 +718,9 @@ static NSDate* lastRender;
     UIBezierPath* flippedPath;
     
     if(nearestPathIsPath1){
-        flippedPath = path1Full;
+        flippedPath = path1FullFlipped;
     }else{
-        flippedPath = path2Full;
+        flippedPath = path2FullFlipped;
     }
     UIBezierPath* newPath = [flippedPath bezierPathByTrimmingFromClosestPointOnPathFrom:nearestStart to:nearestEnd];
     if(newPath){
@@ -754,23 +781,6 @@ static NSDate* lastRender;
         // see willMoveStrokeAt:
         mostRecentTouchPointInOpenGLCoord = element.endPoint;
         
-        // now if we have output, we need to connect
-        // these new strokes to anything the user has already
-        // drawn. so calc the diff between our start and the
-        // previousElement's end, and connect them.
-        if([output count]){
-            CGPoint oldBeginning = previousElement.endPoint;
-            if(previousElement && !CGPointEqualToPoint(oldBeginning, CGPointZero)){
-                // if we have a previous element, then we should adjust the start point
-                // of this element to start from the previous element's end.
-                //
-                // this way, if the ruler moves mid stroke, the stroke stays
-                // connected
-                CGPoint newBeginning = [[output firstObject] startPoint];
-                CGPoint adjustment = CGPointMake(oldBeginning.x - newBeginning.x, oldBeginning.y - newBeginning.y);
-                [[output firstObject] adjustStartBy:adjustment];
-            }
-        }
         // ok, return our adjusted elements
         return output;
     }

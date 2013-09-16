@@ -25,6 +25,7 @@
     NSInteger numberOfRepeatingBezels;
 }
 
+@property (readonly) NSArray* touches;
 @property (nonatomic, readonly) MMBezelDirection panDirection;
 @property (nonatomic, readonly) NSInteger numberOfRepeatingBezels;
 

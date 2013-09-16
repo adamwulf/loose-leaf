@@ -10,8 +10,7 @@
 #import "Constants.h"
 #import "TestFlight.h"
 #import <JotUI/JotUI.h>
-
-static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
+#import "MMTouchVelocityGestureRecognizer.h"
 
 @implementation Pen
 
@@ -20,7 +19,6 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
 @synthesize minAlpha;
 @synthesize maxAlpha;
 @synthesize velocity;
-
 @synthesize color;
 
 -(id) initWithMinSize:(CGFloat)_minSize andMaxSize:(CGFloat)_maxSize andMinAlpha:(CGFloat)_minAlpha andMaxAlpha:(CGFloat)_maxAlpha{
@@ -33,9 +31,14 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
         defaultMinSize = minSize;
         defaultMaxSize = maxSize;
         color = [UIColor blackColor];
-        lastStampPerTouch = [NSMutableDictionary dictionary];
+        NSLog(@"set to: %@", color);
     }
     return self;
+}
+
+-(void) setColor:(UIColor *)_color{
+    color = [_color colorWithAlphaComponent:1];
+    NSLog(@"set to: %@", color);
 }
 
 -(id) init{
@@ -69,54 +72,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
     maxSize = _maxSize;
 }
 
-#pragma mark - Private Helper
-
-
-/**
- * helper method to calculate the velocity of the
- * input touch. it calculates the distance travelled
- * from the previous touch over the duration elapsed
- * between touches
- */
--(CGFloat) velocityForTouch:(JotTouch*)touch{
-    //
-    // first, find the current and previous location of the touch
-    CGPoint l = [touch.touch locationInView:nil];
-    CGPoint previousPoint = [touch.touch previousLocationInView:nil];
-    // find how far we've travelled
-    float distanceFromPrevious = sqrtf((l.x - previousPoint.x) * (l.x - previousPoint.x) + (l.y - previousPoint.y) * (l.y - previousPoint.y));
-    // how long did it take?
-    NSTimeInterval duration = [self durationForTouchBang:touch];
-    // velocity is distance/time
-    CGFloat velocityMagnitude = distanceFromPrevious/duration;
-    
-    // we need to make sure we keep velocity inside our min/max values
-    float clampedVelocityMagnitude = clamp(VELOCITY_CLAMP_MIN, VELOCITY_CLAMP_MAX, velocityMagnitude);
-    // now normalize it, so we return a value between 0 and 1
-    float normalizedVelocity = (clampedVelocityMagnitude - VELOCITY_CLAMP_MIN) / (VELOCITY_CLAMP_MAX - VELOCITY_CLAMP_MIN);
-    
-    return normalizedVelocity;
-}
-
 #pragma mark - JotViewDelegate
-
-/**
- * this will return the previous duration of a touch
- * AND will set our cache to the touch's current timestamp.
- *
- * this means that if you call this function twice w/o the touch
- * having been udpated, this method will start to return 0!
- *
- * the Bang in the method name signifies this
- * (from using ! in function names with side effects in Scheme...)
- */
--(NSTimeInterval) durationForTouchBang:(JotTouch*)touch{
-    NSNumber* val = [lastStampPerTouch objectForKey:@(touch.touch.hash)];
-    NSTimeInterval lastTime = [val doubleValue];
-    NSTimeInterval currTime = touch.timestamp;
-    [lastStampPerTouch setObject:[NSNumber numberWithDouble:currTime] forKey:@(touch.touch.hash)];
-    return currTime - lastTime;
-}
 
 /**
  * delegate method - a notification from the JotView
@@ -134,12 +90,11 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
  * our velocity model and state info for this new touch
  */
 -(void) willMoveStrokeWithTouch:(JotTouch*)touch{
-    CGFloat velCalc;
-    if((velCalc = [self velocityForTouch:touch])){
-        velocity = velCalc;
-    }else{
-        // noop
-    }
+    velocity = [[MMTouchVelocityGestureRecognizer sharedInstace] normalizedVelocityForTouch:touch.touch];
+}
+
+-(void) willEndStrokeWithTouch:(JotTouch*)touch{
+    // noop
 }
 
 /**
@@ -148,8 +103,10 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
  */
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
     // noop
-//    debug_NSLog(@"PEN velocity: %f", velocity);
-    [lastStampPerTouch removeObjectForKey:@(touch.touch.hash)];
+}
+
+-(void) willCancelStrokeWithTouch:(JotTouch*)touch{
+    // noop
 }
 
 /**
@@ -157,7 +114,6 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
  */
 -(void) didCancelStrokeWithTouch:(JotTouch*)touch{
     // noop
-    [lastStampPerTouch removeObjectForKey:@(touch.touch.hash)];
 }
 
 /**
@@ -169,18 +125,20 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
  * is the look we're going for.
  */
 -(UIColor*) colorForTouch:(JotTouch*)touch{
-    CGFloat width = [self widthForTouch:touch];
     if(self.shouldUseVelocity){
         CGFloat segmentAlpha = (velocity - 1);
         if(segmentAlpha > 0) segmentAlpha = 0;
         segmentAlpha = minAlpha + ABS(segmentAlpha) * (maxAlpha - minAlpha);
-        return [color colorWithAlphaComponent:segmentAlpha];
-        return [color colorWithAlphaComponent:segmentAlpha/(width/5)];
+        
+        UIColor* currColor = color;
+        currColor = [UIColor colorWithCGColor:currColor.CGColor];
+        UIColor* ret = [currColor colorWithAlphaComponent:segmentAlpha];
+        return ret;
     }else{
         CGFloat segmentAlpha = minAlpha + (maxAlpha-minAlpha) * touch.pressure / JOT_MAX_PRESSURE;
         if(segmentAlpha < minAlpha) segmentAlpha = minAlpha;
-        return [color colorWithAlphaComponent:segmentAlpha];
-        return [color colorWithAlphaComponent:segmentAlpha/(width/5)];
+        UIColor* ret = [color colorWithAlphaComponent:segmentAlpha];
+        return ret;
     }
 }
 

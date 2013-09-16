@@ -1,9 +1,18 @@
 [submodule "Submodules/JotUI"]
 	path = Submodules/JotUI
 	url = git@github.com:adamwulf/JotUI.git
-[submodule "Submodules/DYRateView"]
-	path = Submodules/DYRateView
-	url = git@github.com:dyang/DYRateView.git
 [submodule "Submodules/DrawKit-iOS"]
 	path = Submodules/DrawKit-iOS
 	url = git@github.com:adamwulf/DrawKit-iOS.git
+[submodule "Submodules/ColorWithHex"]
+	path = Submodules/ColorWithHex
+	url = git@github.com:anjerodesu/UIColor-ColorWithHex.git
+[submodule "Submodules/touch-chart"]
+	path = Submodules/touch-chart
+	url = git@github.com:adamwulf/touch-chart.git
+[submodule "Submodules/fishhook"]
+	path = Submodules/fishhook
+	url = git@github.com:facebook/fishhook.git
+[submodule "Submodules/vectorboolean"]
+	path = Submodules/vectorboolean
+	url = git@github.com:adamwulf/vectorboolean.git

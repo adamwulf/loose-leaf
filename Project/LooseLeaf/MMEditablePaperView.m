@@ -9,8 +9,10 @@
 #import "MMEditablePaperView.h"
 #import <QuartzCore/QuartzCore.h>
 #import <JotUI/JotUI.h>
+#import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "NSThread+BlockAdditions.h"
 #import "TestFlight.h"
+#import "DrawKit-iOS.h"
 
 dispatch_queue_t loadUnloadStateQueue;
 dispatch_queue_t importThumbnailQueue;
@@ -27,6 +29,7 @@ dispatch_queue_t importThumbnailQueue;
     NSString* thumbnailPath;
     
     BOOL isLoadingCachedImageFromDisk;
+    UIBezierPath* boundsPath;
 }
 
 @synthesize drawableView;
@@ -49,6 +52,10 @@ dispatch_queue_t importThumbnailQueue;
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
+        // used for clipping strokes to our bounds so that we don't generate
+        // vertex data for anything that'll never be visible
+        boundsPath = [UIBezierPath bezierPathWithRect:self.bounds];
+        
         // create the cache view
         cachedImgView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
         cachedImgView.frame = self.contentView.bounds;
@@ -62,6 +69,7 @@ dispatch_queue_t importThumbnailQueue;
         //
         // This pan gesture is used to pan/scale the page itself.
         rulerGesture = [[MMRulerToolGestureRecognizer alloc] initWithTarget:self action:@selector(didMoveRuler:)];
+        
         //
         // This gesture is only allowed to run if the user is not
         // acting on an object on the page. defer to the long press
@@ -70,6 +78,7 @@ dispatch_queue_t importThumbnailQueue;
         [rulerGesture requireGestureRecognizerToFail:longPress];
         [rulerGesture requireGestureRecognizerToFail:tap];
         [self addGestureRecognizer:rulerGesture];
+        
     }
     return self;
 }
@@ -274,11 +283,31 @@ dispatch_queue_t importThumbnailQueue;
     state.backgroundTexture = [[JotGLTexture alloc] initForImage:image withSize:state.backgroundTexture.pixelSize];
     lastSavedUndoHash = 0;
 }
+    
+    
+-(void) generateDebugView:(BOOL)create{
+    if(create){
+        polygonDebugView = [[MMPolygonDebugView alloc] initWithFrame:self.contentView.bounds];
+        //        polygonDebugView.layer.borderColor = [UIColor redColor].CGColor;
+        //        polygonDebugView.layer.borderWidth = 10;
+        polygonDebugView.frame = self.contentView.bounds;
+        polygonDebugView.contentMode = UIViewContentModeScaleAspectFill;
+        polygonDebugView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        polygonDebugView.clipsToBounds = YES;
+        polygonDebugView.opaque = NO;
+        polygonDebugView.backgroundColor = [UIColor clearColor];
+        [self.contentView addSubview:polygonDebugView];
+    }else{
+        [polygonDebugView removeFromSuperview];
+        polygonDebugView = nil;
+    }
+}
 
 -(void) setDrawableView:(JotView *)_drawableView{
     if(drawableView != _drawableView){
         drawableView = _drawableView;
         if(drawableView){
+            [self generateDebugView:YES];
             [self setFrame:self.frame];
             [self loadStateAsynchronously:YES
                                  withSize:[drawableView pagePixelSize]
@@ -288,7 +317,7 @@ dispatch_queue_t importThumbnailQueue;
                                           if([self.delegate isPageEditable:self]){
                                               [drawableView loadState:state];
                                               lastSavedUndoHash = [drawableView undoHash];
-                                              [self.contentView addSubview:drawableView];
+                                              [self.contentView insertSubview:drawableView aboveSubview:cachedImgView];
                                               // anchor the view to the top left,
                                               // so that when we scale down, the drawable view
                                               // stays in place
@@ -300,6 +329,8 @@ dispatch_queue_t importThumbnailQueue;
                                           }
                                       }];
                                   }];
+        }else{
+            [self generateDebugView:NO];
         }
     }else if(drawableView && state){
         [self setCanvasVisible:YES];
@@ -339,7 +370,7 @@ dispatch_queue_t importThumbnailQueue;
                        onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* immutableState){
                            [NSThread performBlockOnMainThread:^{
                                lastSavedUndoHash = [immutableState undoHash];
-                               debug_NSLog(@"saving page %@ with hash %u", self.uuid, lastSavedUndoHash);
+//                               debug_NSLog(@"saving page %@ with hash %u", self.uuid, lastSavedUndoHash);
                                cachedImgView.image = thumbnail;
                                [self.delegate didSavePage:self];
                            }];
@@ -417,9 +448,17 @@ dispatch_queue_t importThumbnailQueue;
     [delegate willMoveStrokeWithTouch:touch];
 }
 
+-(void) willEndStrokeWithTouch:(JotTouch*)touch{
+    [delegate willEndStrokeWithTouch:touch];
+}
+
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
     [delegate didEndStrokeWithTouch:touch];
     [self saveToDisk];
+}
+
+-(void) willCancelStrokeWithTouch:(JotTouch*)touch{
+    [delegate willCancelStrokeWithTouch:touch];
 }
 
 -(void) didCancelStrokeWithTouch:(JotTouch*)touch{
@@ -448,7 +487,56 @@ dispatch_queue_t importThumbnailQueue;
 }
 
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
-    return [delegate willAddElementsToStroke:elements fromPreviousElement:previousElement];
+    
+    NSArray* modifiedElements = [self.delegate willAddElementsToStroke:elements fromPreviousElement:previousElement];
+    
+    NSMutableArray* croppedElements = [NSMutableArray array];
+    for(AbstractBezierPathElement* element in modifiedElements){
+        
+        if([element isKindOfClass:[CurveToPathElement class]]){
+            CurveToPathElement* curveElement = (CurveToPathElement*) element;
+            UIBezierPath* bez = [UIBezierPath bezierPath];
+            [bez moveToPoint:[element startPoint]];
+            [bez addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
+            
+            NSArray* output = [bez clipToClosedPath:boundsPath];
+//            UIBezierPath* cropped = [bez unclosedPathFromIntersectionWithPath:bounds];
+            UIBezierPath* cropped = [output firstObject];
+
+            __block CGPoint previousEndpoint = curveElement.startPoint;
+            [cropped iteratePathWithBlock:^(CGPathElement pathEle){
+                AbstractBezierPathElement* newElement = nil;
+                if(pathEle.type == kCGPathElementAddCurveToPoint){
+                    // curve
+                    newElement = [CurveToPathElement elementWithStart:previousEndpoint
+                                                           andCurveTo:pathEle.points[2]
+                                                          andControl1:pathEle.points[0]
+                                                          andControl2:pathEle.points[1]];
+                    previousEndpoint = pathEle.points[2];
+                }else if(pathEle.type == kCGPathElementMoveToPoint){
+                    newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
+                    previousEndpoint = pathEle.points[0];
+                }else if(pathEle.type == kCGPathElementAddLineToPoint){
+                    newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
+                    previousEndpoint = pathEle.points[0];
+                }
+                if(newElement){
+                    // be sure to set color/width/etc
+                    newElement.color = element.color;
+                    newElement.width = element.width;
+                    newElement.rotation = element.rotation;
+                    [croppedElements addObject:newElement];
+                }
+            }];
+            if([croppedElements count] && [[croppedElements firstObject] isKindOfClass:[MoveToPathElement class]]){
+                [croppedElements removeObjectAtIndex:0];
+            }
+        }else{
+            [croppedElements addObject:element];
+        }
+    }
+
+    return croppedElements;
 }
 
 

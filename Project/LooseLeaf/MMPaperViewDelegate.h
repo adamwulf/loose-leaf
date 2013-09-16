@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <JotUI/JotUI.h>
 
-@class MMPaperView,MMRulerToolGestureRecognizer;
+@class MMPaperView,MMRulerToolGestureRecognizer,MMScrapView;
 
 @protocol MMPaperViewDelegate <JotViewDelegate>
 
@@ -27,7 +27,7 @@
  * being scaled and moved from the fromFrame to the
  * toFrame
  */
--(CGRect) isBeginning:(BOOL)isBeginningGesture toPanAndScalePage:(MMPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame;
+-(CGRect) isBeginning:(BOOL)isBeginningGesture toPanAndScalePage:(MMPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withTouches:(NSArray*)touches;
 
 /**
  * this notification is triggered when the user finishes
@@ -37,6 +37,21 @@
  * animation of "throwing" the page can be calculated
  */
 -(void) finishedPanningAndScalingPage:(MMPaperView*)page intoBezel:(MMBezelDirection)direction fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withVelocity:(CGPoint)velocity;
+
+/**
+ * communicates when touches are owned by a scrap pan
+ * or a page pan
+ */
+-(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
+
+/**
+ * notifies when a longpress happens, so that we can tell 
+ * the scrap selection gestures which touches they're
+ * allowed to use in ruler mode
+ */
+-(void) didLongPressPage:(MMPaperView*)page withTouches:(NSSet*)touches;
+
+-(BOOL) panScrapRequiresLongPress;
 
 /**
  * this is triggered when the page has been scaled small

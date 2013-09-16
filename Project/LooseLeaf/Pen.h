@@ -8,11 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import <JotUI/JotUI.h>
+#import "Tool.h"
 
 #define           VELOCITY_CLAMP_MIN 20
 #define           VELOCITY_CLAMP_MAX 1000
 
-@interface Pen : NSObject<JotViewDelegate>{
+@interface Pen : Tool{
 
     CGFloat defaultMinSize;
     CGFloat defaultMaxSize;
@@ -24,16 +25,14 @@
     
     CGFloat velocity;
     
-    UIColor* color;
-    
-    NSMutableDictionary* lastStampPerTouch;
+    __strong UIColor* color;
 }
 
 @property (nonatomic, assign) CGFloat minSize;
 @property (nonatomic, assign) CGFloat maxSize;
 @property (nonatomic, assign) CGFloat minAlpha;
 @property (nonatomic, assign) CGFloat maxAlpha;
-@property (nonatomic) __strong UIColor* color;
+@property (nonatomic, strong) UIColor* color;
 @property (nonatomic, readonly) UIImage* texture;
 /**
  * the velocity of the last touch, between 0 and 1

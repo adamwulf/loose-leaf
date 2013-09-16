@@ -8,6 +8,10 @@
 
 #import "MMSidebarButton.h"
 
+@class MMPencilAndPaletteView;
+
 @interface MMPencilButton : MMSidebarButton
+
+@property (weak) MMPencilAndPaletteView* tool;
 
 @end

@@ -14,7 +14,9 @@
 #import "UIView+Debug.h"
 #import "TestFlight.h"
 
-@implementation MMPaperView
+@implementation MMPaperView{
+    CGRect originalUnscaledBounds;
+}
 
 @synthesize scale;
 @synthesize delegate;
@@ -33,6 +35,7 @@
     if (self) {
         // Initialization code
         uuid = _uuid;
+        originalUnscaledBounds = self.bounds;
         
         [self.layer setMasksToBounds:YES ];
         preGestureScale = 1;
@@ -45,6 +48,7 @@
         // an object in one gesture
         longPress = [[MMObjectSelectLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
         longPress.numberOfTouchesRequired = 2;
+        longPress.allowableMovement = 20;
         [self addGestureRecognizer:longPress];
         //
         // allow the user to select an object by tapping on the page
@@ -85,10 +89,19 @@
         debug_NSLog(@"zero width");
     }
     [super setFrame:_frame];
+    // now that we have adjusted our frame
+    // let's set our scale to match exactly what our
+    // actual frame scale is
+    self.scale = _frame.size.width / originalUnscaledBounds.size.width;
 }
 
--(void) longPress:(UILongPressGestureRecognizer*)pressGesture{
-    debug_NSLog(@"long press!!!!! %d", pressGesture.state);
+
+#pragma mark - Gestures
+
+-(void) longPress:(MMObjectSelectLongPressGestureRecognizer*)pressGesture{
+    if(pressGesture.state == UIGestureRecognizerStateBegan){
+        [self.delegate didLongPressPage:self withTouches:pressGesture.activeTouches];
+    }
 }
 
 -(void) doubleFingerDoubleTap:(UITapGestureRecognizer*)tapGesture{
@@ -230,8 +243,8 @@
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
        panGesture.state == UIGestureRecognizerStateEnded ||
        panGesture.state == UIGestureRecognizerStateFailed){
-        if(scale < kMinPageZoom && panGesture.didExitToBezel == MMBezelDirectionNone){
-            isBeingPannedAndZoomed = NO;
+        isBeingPannedAndZoomed = NO;
+        if(scale < (kMinPageZoom + kZoomToListPageZoom)/2 && panGesture.didExitToBezel == MMBezelDirectionNone){
             if((_panGesture.scaleDirection & MMScaleDirectionSmaller) == MMScaleDirectionSmaller){
                 [self.delegate finishedScalingReallySmall:self];
             }else{
@@ -247,8 +260,6 @@
                                                  toFrame:self.frame
                                             withVelocity:velocity];
         }
-        
-        isBeingPannedAndZoomed = NO;
         return;
     }else if(panGesture.numberOfTouches == 1){
         if(lastNumberOfTouchesForPanGesture != 1){
@@ -256,7 +267,8 @@
             [self.delegate isBeginning:NO
                      toPanAndScalePage:self
                              fromFrame:frameOfPageAtBeginningOfGesture
-                               toFrame:frameOfPageAtBeginningOfGesture];
+                               toFrame:frameOfPageAtBeginningOfGesture
+                               withTouches:panGesture.touches];
         }
         //
         // the gesture requires 2 fingers. it may still say it only has 1 touch if the user
@@ -300,10 +312,11 @@
                                                 lastLocationInSelf.y / self.frame.size.height);
 
         // notify the delegate of our state change
-        [self.delegate isBeginning:panGesture.state == UIGestureRecognizerStateBegan
+        [self.delegate isBeginning:YES
                  toPanAndScalePage:self
                          fromFrame:frameOfPageAtBeginningOfGesture
-                           toFrame:frameOfPageAtBeginningOfGesture];
+                           toFrame:frameOfPageAtBeginningOfGesture
+                           withTouches:panGesture.touches];
         return;
     }
     
@@ -371,9 +384,11 @@
     //
     // now, notify delegate that we're about to set the frame of the page during a gesture,
     // and give it a chance to modify the frame if at all needed.
-    fr = [self.delegate isBeginning:NO toPanAndScalePage:self
+    fr = [self.delegate isBeginning:NO
+                  toPanAndScalePage:self
                       fromFrame:frameOfPageAtBeginningOfGesture
-                        toFrame:fr];
+                        toFrame:fr
+                        withTouches:panGesture.touches];
     
     if(panGesture.state != UIGestureRecognizerStateCancelled &&
        panGesture.state != UIGestureRecognizerStateEnded &&
@@ -414,6 +429,7 @@
     NSInteger indexOfPage = [self.delegate indexOfPageInCompleteStack:self];
     return [self.delegate columnInListViewGivenIndex:indexOfPage];
 }
+
 
 #pragma mark - description
 
