@@ -44,8 +44,18 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
 +(MMTouchVelocityGestureRecognizer*) sharedInstace{
     if(!_instance){
         _instance = [[MMTouchVelocityGestureRecognizer alloc]init];
+        _instance.delegate = _instance;
     }
     return _instance;
+}
+
+
+-(BOOL) canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
+    return NO;
+}
+
+-(BOOL) shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return NO;
 }
 
 
@@ -85,8 +95,9 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
 
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
     [self updateStateInformationForTouches:touches];
+    NSSet* touchesToKill = [NSSet setWithSet:touches];
     dispatch_async(dispatch_get_main_queue(),^{
-        [self killStateInformationForTouches:touches];
+        [self killStateInformationForTouches:touchesToKill];
     });
 }
 
@@ -111,6 +122,14 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
     for(UITouch* touch in touches){
         [self removeCacheFor:touch];
     }
+    
+    int c = 0;
+    for(int i=0;i<kDurationTouchHashSize;i++){
+        if(durationCache[i].hash != 0){
+            c++;
+        }
+    }
+    NSLog(@"still %d in cache", c);
 }
 
 /**
@@ -132,7 +151,7 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
         }
     }
     if(firstFreeSlot == -1){
-        NSLog(@"what");
+        NSLog(@"what3");
     }
     durationCache[firstFreeSlot].hash = touchHash;
     durationCache[firstFreeSlot].normalizedVelocity = 0;
@@ -215,5 +234,20 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
     }
 }
 
+
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return NO;
+}
 
 @end
