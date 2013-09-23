@@ -136,7 +136,7 @@ dispatch_queue_t importThumbnailQueue;
     }
 }
 
--(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(EAGLContext*)context andThen:(void (^)())block{
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(JotGLContext*)context andThen:(void (^)())block{
     if(state){
         if(block) block();
         return;

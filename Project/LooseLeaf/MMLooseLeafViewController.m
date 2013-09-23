@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMPaperStackViewController.h"
+#import "MMLooseLeafViewController.h"
 #import "MMShadowManager.h"
 #import "MMEditablePaperView.h"
 #import "TestFlight.h"
