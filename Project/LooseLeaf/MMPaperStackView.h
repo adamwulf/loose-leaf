@@ -24,7 +24,7 @@
 #import "Constants.h"
 #import "MMPopoverView.h"
 
-@interface MMPaperStackView : UIScrollView<MMPaperViewDelegate>{
+@interface MMPaperStackView : UIScrollView<MMEditablePaperViewDelegate>{
 
 @protected
     // this is the UUID of the page that has

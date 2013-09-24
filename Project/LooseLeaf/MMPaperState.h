@@ -27,6 +27,6 @@
 
 -(BOOL) hasEditsToSave;
 
--(void) saveToDisk;
+-(void) wasSavedAtImmutableState:(JotViewImmutableState*)immutableState;
 
 @end

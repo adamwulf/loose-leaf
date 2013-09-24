@@ -78,6 +78,7 @@ dispatch_queue_t importThumbnailQueue;
         
         // initialize our state manager
         paperState = [[MMPaperState alloc] initWithInkPath:[self inkPath] andPlistPath:[self plistPath]];
+        paperState.delegate = self;
         
     }
     return self;
@@ -167,6 +168,9 @@ dispatch_queue_t importThumbnailQueue;
 }
 
 -(void) setDrawableView:(JotView *)_drawableView{
+    if(_drawableView && ![paperState isStateLoaded]){
+        NSLog(@"oh no");
+    }
     if(drawableView != _drawableView){
         drawableView = _drawableView;
         if(drawableView){
@@ -186,10 +190,6 @@ dispatch_queue_t importThumbnailQueue;
                     [self setEditable:YES];
                 }
             }];
-
-            [self loadStateAsynchronously:YES
-                                 withSize:[drawableView pagePixelSize]
-                               andContext:[drawableView context]];
         }else{
             [self generateDebugView:NO];
         }
@@ -208,6 +208,10 @@ dispatch_queue_t importThumbnailQueue;
     return [paperState hasEditsToSave];
 }
 
+-(BOOL) hasStateLoaded{
+    return [paperState isStateLoaded];
+}
+
 /**
  * write the thumbnail, backing texture, and entire undo
  * state to disk, and notify our delegate when done
@@ -218,7 +222,6 @@ dispatch_queue_t importThumbnailQueue;
     
     // find out what our current undo state looks like.
     if([self hasEditsToSave]){
-        [paperState saveToDisk];
         // something has changed since the last time we saved,
         // so ask the JotView to save out the png of its data
         [drawableView exportImageTo:[self inkPath]
@@ -226,7 +229,7 @@ dispatch_queue_t importThumbnailQueue;
                        andStateTo:[self plistPath]
                        onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* immutableState){
                            [NSThread performBlockOnMainThread:^{
-                               lastSavedUndoHash = [immutableState undoHash];
+                               [paperState wasSavedAtImmutableState:immutableState];
 //                               debug_NSLog(@"saving page %@ with hash %u", self.uuid, lastSavedUndoHash);
                                cachedImgView.image = thumbnail;
                                [self.delegate didSavePage:self];
@@ -439,16 +442,16 @@ dispatch_queue_t importThumbnailQueue;
 
 #pragma mark - MMPaperStateDelegate
 
--(BOOL) didLoadState:(MMPaperState*)state{
-    [self.delegate didLoadStateForPage:self];
+-(void) didLoadState:(MMPaperState*)state{
+    [NSThread performBlockOnMainThread:^{
+        [self.delegate didLoadStateForPage:self];
+    }];
 }
 
--(BOOL) didUnloadState:(MMPaperState *)state{
-    [self.delegate didUnloadStateForPage:self];
-}
-
--(BOOL) didSaveState:(MMPaperState *)state{
-    [self.delegate didSavePage:self];
+-(void) didUnloadState:(MMPaperState *)state{
+    [NSThread performBlockOnMainThread:^{
+        [self.delegate didUnloadStateForPage:self];
+    }];
 }
 
 @end

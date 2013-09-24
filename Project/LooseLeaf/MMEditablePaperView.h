@@ -30,6 +30,7 @@
 -(void) undo;
 -(void) redo;
 -(BOOL) hasEditsToSave;
+-(BOOL) hasStateLoaded;
 -(void) unloadCachedPreview;
 -(void) loadCachedPreview;
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(JotGLContext*)context;

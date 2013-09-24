@@ -484,6 +484,7 @@
             }
         }
     }
+    [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
 }
 
 -(BOOL) isPageEditable:(MMPaperView*)page{
@@ -540,16 +541,23 @@
 -(void) ensureTopPageIsLoaded:(MMPaperView*)topPage{
     if([topPage isKindOfClass:[MMEditablePaperView class]]){
         MMEditablePaperView* editableTopPage = (MMEditablePaperView*)topPage;
+        
         if(currentEditablePage != editableTopPage){
-            [currentEditablePage setDrawableView:nil];
-            [currentEditablePage setEditable:NO];
-            [currentEditablePage setCanvasVisible:NO];
-            currentEditablePage = editableTopPage;
-            debug_NSLog(@"did switch top page to %@", currentEditablePage.uuid);
-        }
-        if([currentEditablePage isKindOfClass:[MMEditablePaperView class]]){
-            [self loadStateForPage:currentEditablePage];
-            [currentEditablePage setDrawableView:drawableView];
+            // only care if the page is changing
+            if(![currentEditablePage hasEditsToSave] && [editableTopPage hasStateLoaded]){
+                // the outgoing page is saved to disk
+                // and the incoming page has its
+                // state loaded
+                [currentEditablePage setDrawableView:nil];
+                [currentEditablePage setEditable:NO];
+                [currentEditablePage setCanvasVisible:NO];
+                currentEditablePage = editableTopPage;
+                debug_NSLog(@"did switch top page to %@", currentEditablePage.uuid);
+                [currentEditablePage setDrawableView:drawableView];
+            }else{
+                debug_NSLog(@"load state for future top page: %@", editableTopPage.uuid);
+                [self loadStateForPage:editableTopPage];
+            }
         }
     }
 }
@@ -798,16 +806,17 @@
     [self updateVisiblePageImageCache];
 }
 
+
 #pragma mark - MMEditablePaperViewDelegate
 
 -(void) didLoadStateForPage:(MMEditablePaperView *)page{
-    NSLog(@"here");
-    
+    NSLog(@"didLoadStateForPage: %@", page.uuid);
+    [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
 }
 
 -(void) didUnloadStateForPage:(MMEditablePaperView*) page{
-    NSLog(@"here");
-    
+    NSLog(@"didUnloadStateForPage: %@", page.uuid);
+    [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
 }
 
 @end

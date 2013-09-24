@@ -77,8 +77,8 @@
     }
 }
 
--(void) saveToDisk{
-    
+-(void) wasSavedAtImmutableState:(JotViewImmutableState*)immutableState{
+    lastSavedUndoHash = [immutableState undoHash];
 }
 
 -(void) unload{
