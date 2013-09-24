@@ -13,23 +13,22 @@
 #import "NSThread+BlockAdditions.h"
 #import "TestFlight.h"
 #import "DrawKit-iOS.h"
+#import "MMPaperState.h"
 
 dispatch_queue_t loadUnloadStateQueue;
 dispatch_queue_t importThumbnailQueue;
 
 
 @implementation MMEditablePaperView{
-    NSUInteger lastSavedUndoHash;
-    
-    JotViewState* state;
     // cached static values
     NSString* pagesPath;
     NSString* inkPath;
     NSString* plistPath;
     NSString* thumbnailPath;
-    
-    BOOL isLoadingCachedImageFromDisk;
     UIBezierPath* boundsPath;
+    BOOL isLoadingCachedImageFromDisk;
+    
+    MMPaperState* paperState;
 }
 
 @synthesize drawableView;
@@ -64,8 +63,6 @@ dispatch_queue_t importThumbnailQueue;
         cachedImgView.clipsToBounds = YES;
         [self.contentView addSubview:cachedImgView];
         
-        lastSavedUndoHash = [drawableView undoHash];
-        
         //
         // This pan gesture is used to pan/scale the page itself.
         rulerGesture = [[MMRulerToolGestureRecognizer alloc] initWithTarget:self action:@selector(didMoveRuler:)];
@@ -78,6 +75,9 @@ dispatch_queue_t importThumbnailQueue;
         [rulerGesture requireGestureRecognizerToFail:longPress];
         [rulerGesture requireGestureRecognizerToFail:tap];
         [self addGestureRecognizer:rulerGesture];
+        
+        // initialize our state manager
+        paperState = [[MMPaperState alloc] initWithInkPath:[self inkPath] andPlistPath:[self plistPath]];
         
     }
     return self;
@@ -136,34 +136,15 @@ dispatch_queue_t importThumbnailQueue;
     }
 }
 
--(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(JotGLContext*)context andThen:(void (^)())block{
-    if(state){
-        if(block) block();
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context{
+    if([paperState isStateLoaded]){
+        [self.delegate didLoadStateForPage:self];
         return;
     }
-    
-    void (^block2)() = ^(void) {
-        @autoreleasepool {
-            if(!state){
-                state = [[JotViewState alloc] initWithImageFile:[self inkPath]
-                                                   andStateFile:[self plistPath]
-                                                    andPageSize:pagePixelSize
-                                                   andGLContext:context];
-            }
-            if(block) block();
-        }
-    };
-    
-    if(async){
-        dispatch_async([MMEditablePaperView loadUnloadStateQueue], block2);
-    }else{
-        block2();
-    }
+    [paperState loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
 }
 -(void) unloadState{
-    dispatch_async([MMEditablePaperView loadUnloadStateQueue], ^(void) {
-        state = nil;
-    });
+    [paperState unload];
 }
 
 
@@ -191,30 +172,28 @@ dispatch_queue_t importThumbnailQueue;
         if(drawableView){
             [self generateDebugView:YES];
             [self setFrame:self.frame];
+            [NSThread performBlockOnMainThread:^{
+                if([self.delegate isPageEditable:self] && [paperState isStateLoaded]){
+                    [drawableView loadState:paperState.jotViewState];
+                    [self.contentView insertSubview:drawableView aboveSubview:cachedImgView];
+                    // anchor the view to the top left,
+                    // so that when we scale down, the drawable view
+                    // stays in place
+                    drawableView.layer.anchorPoint = CGPointMake(0,0);
+                    drawableView.layer.position = CGPointMake(0,0);
+                    drawableView.delegate = self;
+                    [self setCanvasVisible:YES];
+                    [self setEditable:YES];
+                }
+            }];
+
             [self loadStateAsynchronously:YES
                                  withSize:[drawableView pagePixelSize]
-                               andContext:[drawableView context]
-                                  andThen:^{
-                                      [NSThread performBlockOnMainThread:^{
-                                          if([self.delegate isPageEditable:self]){
-                                              [drawableView loadState:state];
-                                              lastSavedUndoHash = [drawableView undoHash];
-                                              [self.contentView insertSubview:drawableView aboveSubview:cachedImgView];
-                                              // anchor the view to the top left,
-                                              // so that when we scale down, the drawable view
-                                              // stays in place
-                                              drawableView.layer.anchorPoint = CGPointMake(0,0);
-                                              drawableView.layer.position = CGPointMake(0,0);
-                                              drawableView.delegate = self;
-                                              [self setCanvasVisible:YES];
-                                              [self setEditable:YES];
-                                          }
-                                      }];
-                                  }];
+                               andContext:[drawableView context]];
         }else{
             [self generateDebugView:NO];
         }
-    }else if(drawableView && state){
+    }else if(drawableView && [paperState isStateLoaded]){
         [self setCanvasVisible:YES];
         [self setEditable:YES];
     }
@@ -226,8 +205,7 @@ dispatch_queue_t importThumbnailQueue;
  * currently saved hash
  */
 -(BOOL) hasEditsToSave{
-//    debug_NSLog(@"checking if edits to save %u vs %u", [drawableView undoHash], lastSavedUndoHash);
-    return [drawableView undoHash] != lastSavedUndoHash;
+    return [paperState hasEditsToSave];
 }
 
 /**
@@ -240,6 +218,7 @@ dispatch_queue_t importThumbnailQueue;
     
     // find out what our current undo state looks like.
     if([self hasEditsToSave]){
+        [paperState saveToDisk];
         // something has changed since the last time we saved,
         // so ask the JotView to save out the png of its data
         [drawableView exportImageTo:[self inkPath]
@@ -455,5 +434,21 @@ dispatch_queue_t importThumbnailQueue;
     return thumbnailPath;
 }
 
+
+
+
+#pragma mark - MMPaperStateDelegate
+
+-(BOOL) didLoadState:(MMPaperState*)state{
+    [self.delegate didLoadStateForPage:self];
+}
+
+-(BOOL) didUnloadState:(MMPaperState *)state{
+    [self.delegate didUnloadStateForPage:self];
+}
+
+-(BOOL) didSaveState:(MMPaperState *)state{
+    [self.delegate didSavePage:self];
+}
 
 @end
