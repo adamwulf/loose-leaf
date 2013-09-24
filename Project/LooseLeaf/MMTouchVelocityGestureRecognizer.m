@@ -129,7 +129,6 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
             c++;
         }
     }
-    NSLog(@"still %d in cache", c);
 }
 
 /**

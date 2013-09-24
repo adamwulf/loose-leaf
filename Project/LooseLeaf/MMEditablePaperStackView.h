@@ -35,12 +35,13 @@
 #import "PolygonTool.h"
 #import "MMRulerView.h"
 #import "PolygonToolDelegate.h"
+#import "MMEditablePaperViewDelegate.h"
 
 /**
  * this class is responsible for the editable buttons and controls that show
  * outside of a page's view subviews
  */
-@interface MMEditablePaperStackView : MMListPaperStackView<JotViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,UIScrollViewDelegate,PolygonToolDelegate>{
+@interface MMEditablePaperStackView : MMListPaperStackView<MMEditablePaperViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,UIScrollViewDelegate,PolygonToolDelegate>{
     
     // managers
     MMStackManager* stackManager;
@@ -84,5 +85,6 @@
 -(void) addPageButtonTapped:(UIButton*)_button;
 
 -(void) setButtonsVisible:(BOOL)visible;
+
 
 @end

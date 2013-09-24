@@ -533,7 +533,7 @@
     }
     if([page isKindOfClass:[MMEditablePaperView class]]){
         MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
-        [editablePage loadStateAsynchronously:YES withSize:[drawableView pagePixelSize] andContext:[drawableView context] andThen:nil];
+        [editablePage loadStateAsynchronously:YES withSize:[drawableView pagePixelSize] andContext:[drawableView context]];
     }
 }
 
@@ -633,8 +633,7 @@
     // load the state for the top page in the visible stack
     [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
                                                      withSize:[drawableView pagePixelSize]
-                                                   andContext:[drawableView context]
-                                                      andThen:nil];
+                                                   andContext:[drawableView context]];
     
     
     // only load the image previews for the pages that will be visible
@@ -799,5 +798,16 @@
     [self updateVisiblePageImageCache];
 }
 
+#pragma mark - MMEditablePaperViewDelegate
+
+-(void) didLoadStateForPage:(MMEditablePaperView *)page{
+    NSLog(@"here");
+    
+}
+
+-(void) didUnloadStateForPage:(MMEditablePaperView*) page{
+    NSLog(@"here");
+    
+}
 
 @end
