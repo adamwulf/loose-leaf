@@ -12,10 +12,8 @@
 
 @protocol MMPaperStateDelegate <NSObject>
 
--(BOOL) didLoadState:(MMPaperState*)state;
+-(void) didLoadState:(MMPaperState*)state;
 
--(BOOL) didUnloadState:(MMPaperState*)state;
-
--(BOOL) didSaveState:(MMPaperState*)state;
+-(void) didUnloadState:(MMPaperState*)state;
 
 @end
