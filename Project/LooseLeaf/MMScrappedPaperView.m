@@ -151,10 +151,10 @@
         
         CGRect boundsOfScrap = scrapClippingPath.bounds;
         
-        NSMutableArray* newStrokesToScrop = [NSMutableArray array];
+        NSMutableArray* newStrokesToCrop = [NSMutableArray array];
         for(AbstractBezierPathElement* element in strokesToCrop){
             if(!CGRectIntersectsRect(element.bounds, boundsOfScrap)){
-                [newStrokesToScrop addObject:element];
+                [newStrokesToCrop addObject:element];
             }else if([element isKindOfClass:[CurveToPathElement class]]){
                 CurveToPathElement* curveElement = (CurveToPathElement*)element;
 
@@ -164,6 +164,11 @@
 
                 NSArray* output = [strokePath clipToClosedPath:scrapClippingPath];
                 
+                //
+                // now we've taken our stroke segment, and computed the intersection
+                // and difference with the scrap. we'll add the difference here to
+                // our "strokes to newStrokesToCrop array. we'll crop these with scraps
+                // below this current scrap on our next loop.
                 UIBezierPath* diff = [output lastObject];
                 __block CGPoint previousEndpoint = strokePath.firstPoint;
                 [diff iteratePathWithBlock:^(CGPathElement pathEle){
@@ -187,10 +192,13 @@
                         newElement.color = element.color;
                         newElement.width = element.width;
                         newElement.rotation = element.rotation;
-                        [newStrokesToScrop addObject:newElement];
+                        [newStrokesToCrop addObject:newElement];
                     }
                 }];
                 
+                // this UIBezierPath represents the intersection of our input
+                // stroke over our scrap. this path needs to be adjusted into
+                // the scrap's coordinate system and then added to the scrap
                 UIBezierPath* inter = [output firstObject];
                 previousEndpoint = strokePath.firstPoint;
                 
@@ -250,13 +258,15 @@
                 }];
                 
             }else{
-                [newStrokesToScrop addObject:element];
+                [newStrokesToCrop addObject:element];
             }
         }
         
-        strokesToCrop = newStrokesToScrop;
+        strokesToCrop = newStrokesToCrop;
     }
     
+    // anything that's left over at this point
+    // is fair game for to add to the page itself
     return strokesToCrop;
 }
 

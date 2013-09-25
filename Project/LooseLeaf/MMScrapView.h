@@ -11,21 +11,18 @@
 
 @interface MMScrapView : UIView
 
-@property (readonly) CGAffineTransform clippingPathTransform;
 @property (readonly) UIBezierPath* clippingPath;
 @property (readonly) UIBezierPath* bezierPath;
 @property (nonatomic, assign) CGFloat scale;
 @property (nonatomic, assign) CGFloat rotation;
 @property (nonatomic, assign) BOOL selected;
-@property (nonatomic, readonly) CGRect originalBounds;
+@property (nonatomic, readonly) CGSize originalSize;
 
 - (id)initWithBezierPath:(UIBezierPath*)path;
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
 
 -(BOOL) containsTouch:(UITouch*)touch;
-
--(CGPoint) firstPoint;
 
 -(void) setScale:(CGFloat)scale andRotation:(CGFloat)rotation;
 
@@ -40,8 +37,5 @@
 -(NSSet*) allMatchingTouchesFrom:(NSSet*) touches;
 
 -(void) addElement:(AbstractBezierPathElement*)element;
-
-#pragma mark - debug
--(UIBezierPath*) intersect:(UIBezierPath*)newPath;
 
 @end
