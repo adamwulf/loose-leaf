@@ -151,19 +151,19 @@ dispatch_queue_t importThumbnailQueue;
 
 -(void) generateDebugView:(BOOL)create{
     if(create){
-        polygonDebugView = [[MMPolygonDebugView alloc] initWithFrame:self.contentView.bounds];
+        shapeBuilderView = [[MMShapeBuilderView alloc] initWithFrame:self.contentView.bounds];
         //        polygonDebugView.layer.borderColor = [UIColor redColor].CGColor;
         //        polygonDebugView.layer.borderWidth = 10;
-        polygonDebugView.frame = self.contentView.bounds;
-        polygonDebugView.contentMode = UIViewContentModeScaleAspectFill;
-        polygonDebugView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        polygonDebugView.clipsToBounds = YES;
-        polygonDebugView.opaque = NO;
-        polygonDebugView.backgroundColor = [UIColor clearColor];
-        [self.contentView addSubview:polygonDebugView];
+        shapeBuilderView.frame = self.contentView.bounds;
+        shapeBuilderView.contentMode = UIViewContentModeScaleAspectFill;
+        shapeBuilderView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        shapeBuilderView.clipsToBounds = YES;
+        shapeBuilderView.opaque = NO;
+        shapeBuilderView.backgroundColor = [UIColor clearColor];
+        [self.contentView addSubview:shapeBuilderView];
     }else{
-        [polygonDebugView removeFromSuperview];
-        polygonDebugView = nil;
+        [shapeBuilderView removeFromSuperview];
+        shapeBuilderView = nil;
     }
 }
 

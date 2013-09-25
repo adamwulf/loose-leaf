@@ -275,16 +275,16 @@
     // send touch event to the view that
     // will display the drawn polygon line
 //    NSLog(@"begin");
-    [polygonDebugView clear];
+    [shapeBuilderView clear];
     
-    [polygonDebugView addTouchPoint:point];
+    [shapeBuilderView addTouchPoint:point];
 }
 
 -(BOOL) continueShapeAtPoint:(CGPoint)point{
     // noop for now
     // send touch event to the view that
     // will display the drawn polygon line
-    if([polygonDebugView addTouchPoint:point]){
+    if([shapeBuilderView addTouchPoint:point]){
         [self complete];
         return NO;
     }
@@ -299,13 +299,13 @@
     // scrap polygon shape, and add that shape
     // to the page
 //    NSLog(@"finish");
-    [polygonDebugView addTouchPoint:point];
+    [shapeBuilderView addTouchPoint:point];
     [self complete];
 }
 
 -(void) complete{
-    NSArray* shapes = [polygonDebugView complete];
-    [polygonDebugView clear];
+    NSArray* shapes = [shapeBuilderView completeAndGenerateShapes];
+    [shapeBuilderView clear];
     for(UIBezierPath* shape in shapes){
         //        if([scraps count]){
         //            [[scraps objectAtIndex:0] intersect:shape];
@@ -321,7 +321,7 @@
     // it was a pan/pinch instead), so clear
     // the drawn polygon and reset.
 //    NSLog(@"cancel");
-    [polygonDebugView clear];
+    [shapeBuilderView clear];
 }
 
 

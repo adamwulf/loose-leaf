@@ -6,21 +6,26 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMPolygonDebugView.h"
+#import "MMShapeBuilderView.h"
 #import <TouchShape/TouchShape.h>
 #import "DrawKit-iOS.h"
 #import "UIColor+ColorWithHex.h"
 #import "SYShape+Bezier.h"
 #import "Constants.h"
 
-@implementation MMPolygonDebugView{
-    NSMutableArray* touches;
-    NSMutableArray* shapePaths;
-    NSArray* pathsFromIntersectingTouches;
-    UIBezierPath* dottedPath;
-    CGFloat phase;
+@implementation MMShapeBuilderView{
     
-    CGPoint lastPoint;
+    // the array of touches used to build
+    // the dashed path
+    NSMutableArray* touches;
+    
+    // the dashed path
+    UIBezierPath* dottedPath;
+    
+    // phrase track where the dotted line will
+    // start, so that it looks like it's
+    // following your finger
+    CGFloat phase;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -29,20 +34,24 @@
     if (self) {
         // Initialization code
         touches = [NSMutableArray array];
-        shapePaths = [NSMutableArray array];
     }
     return self;
 }
 
 -(void) clear{
     [touches removeAllObjects];
-    pathsFromIntersectingTouches = nil;
-    [shapePaths removeAllObjects];
     dottedPath = nil;
     [self setNeedsDisplay];
     phase = 0;
 }
 
+/**
+ * add the touch point to the shape
+ * that the user is drawing
+ *
+ * return if the user has drawn a self intersecting
+ * shape.
+ */
 -(BOOL) addTouchPoint:(CGPoint)point{
     __block BOOL didIntersectSelf = NO;
     CGFloat distTravelled = 0;
@@ -51,12 +60,18 @@
         dottedPath = [UIBezierPath bezierPath];
         [dottedPath moveToPoint:point];
     }else{
-        CGPoint p1 = lastPoint;
+        CGPoint lastTouchPoint = [[touches lastObject] CGPointValue];
+        CGPoint p1 = lastTouchPoint;
         CGPoint p2 = point;
         __block CGPoint p3, p4;
         p3 = CGPointZero;
         p4 = CGPointZero;
         
+        /**
+         * this will look at the most recent line segment
+         * that the user drew, and will check to see if it
+         * intersects any of the other line segments
+         */
         [dottedPath iteratePathWithBlock:^(CGPathElement element){
             // track the point from the previous element
             // and look to see if it intersects with the
@@ -84,42 +99,29 @@
             p3 = p4;
         }];
         
-        distTravelled = MIN(DistanceBetweenTwoPoints(lastPoint, point), 50);
+        distTravelled = MIN(DistanceBetweenTwoPoints(lastTouchPoint, point), 50);
         if(distTravelled > 2){
+            // only add a line if it's more than 2pts drawn,
+            // otherwise it's a mess and would self intersect
+            // way too soon
             [dottedPath addLineToPoint:point];
-            lastPoint = point;
         }
         [self setNeedsDisplayInRect:CGRectInset(dottedPath.bounds, -10, -10)];
     }
     [touches addObject:[NSValue valueWithCGPoint:point]];
     phase += distTravelled / 15;
-    
 
     return didIntersectSelf;
 }
 
-
--(void) addPath:(UIBezierPath*)pathToDraw{
-    if(!pathToDraw) return;
-    [shapePaths addObject:[pathToDraw copy]];
-}
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
-    
-    // This block will draw red dots
-    // at al the touch points
-//    [[UIColor redColor] setFill];
-//    for(NSValue* val in touches){
-//        CGPoint point = [val CGPointValue];
-//        UIBezierPath* touchPoint = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x - 3, point.y - 3, 6, 6)];
-//        [touchPoint fill];
-//    }
-    
-    
+    //
+    // this draws a white and black dashed line
     CGFloat dash[3];
     dash[0] = 12;
     dash[1] = 10;
@@ -134,57 +136,12 @@
     [[UIColor blackColor] setStroke];
     [dottedPath stroke];
 
-    
-    
-//    // this block will draw a 1px line
-//    // with a random color for every
-//    // path that we've tried to create
-//    // a shape for. this connects the raw
-//    // points sent to a TCShapeController
-//    for(UIBezierPath* val in pathsFromIntersectingTouches){
-//        [[UIColor randomColor] setStroke];
-//        [val setLineWidth:1];
-//        [val stroke];
-//    }
-//    
-//    // this will draw the output from each
-//    // TCShapeController that produced a valid
-//    // shape
-//    if([shapePaths count]){
-//        NSLog(@"drawing %d shapes", [shapePaths count]);
-//        NSInteger width = [shapePaths count] * 2 + 2;
-//        for(UIBezierPath* shapePath in shapePaths){
-//            [[UIColor randomColor] setStroke];
-//            shapePath.lineWidth = width;
-//            [shapePath stroke];
-//            width -= 2;
-//            
-//            NSLog(@"origin: %f,%f", shapePath.bounds.origin.x, shapePath.bounds.origin.y);
-//            
-//            UIBezierPath* bounds = [UIBezierPath bezierPathWithRect:shapePath.bounds];
-//            bounds.lineWidth = 1;
-//            [bounds stroke];
-//        }
-//    }
-//    
-//    // this will draw circles at each point that we sent
-//    // to the TCShapeController
-//    for(UIBezierPath* val in pathsFromIntersectingTouches){
-//        [[UIColor randomColor] setFill];
-//        [val iteratePathWithBlock:^(CGPathElement element){
-//            CGPoint point = element.points[0];
-//            UIBezierPath* touchPoint = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(point.x - 3, point.y - 3, 6, 6)];
-//            [touchPoint fill];
-//        }];
-//    }
-    
-    
 }
 
 /**
  * returns an array of all bezier paths created
  */
--(NSArray*) complete{
+-(NSArray*) completeAndGenerateShapes{
     if(![touches count]) return nil;
     
     //
@@ -218,13 +175,14 @@
     // now pathOfAllTouchPoints is a single line connecting all the touches.
     // from here, split the path into multiple paths at each
     // intersection point.
-    pathsFromIntersectingTouches = [pathOfAllTouchPoints pathsFromSelfIntersections];
+    NSArray* pathsFromIntersectingTouches = [pathOfAllTouchPoints pathsFromSelfIntersections];
     
-    
+
     //
     // now we'll loop over each sub-path, and send all the points
     // to a new TCShapeController, so that we can interpret a shape
     // for each non-intersecting path.
+    NSMutableArray* shapePaths = [NSMutableArray array];
     for(UIBezierPath* singlePath in pathsFromIntersectingTouches){
         TCShapeController* shapeMaker = [[TCShapeController alloc] init];
         __block CGPoint prevPoint = CGPointZero;

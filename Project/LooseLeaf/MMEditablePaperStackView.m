@@ -810,13 +810,17 @@
 #pragma mark - MMEditablePaperViewDelegate
 
 -(void) didLoadStateForPage:(MMEditablePaperView *)page{
-    NSLog(@"didLoadStateForPage: %@", page.uuid);
-    [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
+    if(page == [visibleStackHolder peekSubview] || page == currentEditablePage){
+        NSLog(@"didLoadStateForPage: %@", page.uuid);
+        [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
+    }
 }
 
 -(void) didUnloadStateForPage:(MMEditablePaperView*) page{
-    NSLog(@"didUnloadStateForPage: %@", page.uuid);
-    [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
+    if(page == [visibleStackHolder peekSubview] || page == currentEditablePage){
+        NSLog(@"didUnloadStateForPage: %@", page.uuid);
+        [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
+    }
 }
 
 @end
