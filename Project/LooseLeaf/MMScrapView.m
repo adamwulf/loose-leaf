@@ -51,8 +51,6 @@
         path = _path;
         
         drawableView = [[JotView alloc] initWithFrame:self.bounds];
-        drawableView.layer.borderColor = [UIColor redColor].CGColor;
-        drawableView.layer.borderWidth = 1;
         
         contentLayer = [CAShapeLayer layer];
         [contentLayer setPath:path.CGPath];

@@ -10,14 +10,14 @@
 #import <JotUI/JotUI.h>
 #import <TouchShape/TouchShape.h>
 #import "MMRulerToolGestureRecognizer.h"
-#import "MMPolygonDebugView.h"
+#import "MMShapeBuilderView.h"
 #import "MMPaperStateDelegate.h"
 #import "MMEditablePaperViewDelegate.h"
 
 @interface MMEditablePaperView : MMPaperView<JotViewDelegate,MMPaperStateDelegate>{
     UIImageView* cachedImgView;
     __weak JotView* drawableView;
-    MMPolygonDebugView* polygonDebugView;
+    MMShapeBuilderView* shapeBuilderView;
     
     MMRulerToolGestureRecognizer* rulerGesture;
 }
