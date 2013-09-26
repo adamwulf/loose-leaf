@@ -17,7 +17,9 @@
 @property (nonatomic, assign) CGFloat rotation;
 @property (nonatomic, assign) BOOL selected;
 @property (nonatomic, readonly) CGSize originalSize;
+@property (nonatomic, readonly) NSString* uuid;
 
+-(id) initWithUUID:(NSString*)uuid;
 - (id)initWithBezierPath:(UIBezierPath*)path;
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
@@ -37,5 +39,8 @@
 -(NSSet*) allMatchingTouchesFrom:(NSSet*) touches;
 
 -(void) addElement:(AbstractBezierPathElement*)element;
+
+-(void) saveToDisk;
+
 
 @end

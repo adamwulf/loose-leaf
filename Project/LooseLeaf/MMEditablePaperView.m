@@ -137,17 +137,6 @@ dispatch_queue_t importThumbnailQueue;
     }
 }
 
--(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context{
-    if([paperState isStateLoaded]){
-        [self.delegate didLoadStateForPage:self];
-        return;
-    }
-    [paperState loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
-}
--(void) unloadState{
-    [paperState unload];
-}
-
 
 -(void) generateDebugView:(BOOL)create{
     if(create){
@@ -208,15 +197,34 @@ dispatch_queue_t importThumbnailQueue;
     return [paperState hasEditsToSave];
 }
 
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context{
+    if([paperState isStateLoaded]){
+        [self didLoadState:paperState];
+        return;
+    }
+    [paperState loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
+}
+-(void) unloadState{
+    [paperState unload];
+}
+
 -(BOOL) hasStateLoaded{
     return [paperState isStateLoaded];
+}
+
+
+/**
+ * subclass should override and call into saveToDisk:
+ */
+-(void) saveToDisk{
+    @throw kAbstractMethodException;
 }
 
 /**
  * write the thumbnail, backing texture, and entire undo
  * state to disk, and notify our delegate when done
  */
--(void) saveToDisk{
+-(void) saveToDisk:(void (^)(void))onComplete{
     // Sanity checks to generate our directory structure if needed
     [self pagesPath];
     
@@ -228,21 +236,26 @@ dispatch_queue_t importThumbnailQueue;
                    andThumbnailTo:[self thumbnailPath]
                        andStateTo:[self plistPath]
                        onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* immutableState){
+                           [paperState wasSavedAtImmutableState:immutableState];
+                           onComplete();
                            [NSThread performBlockOnMainThread:^{
-                               [paperState wasSavedAtImmutableState:immutableState];
-//                               debug_NSLog(@"saving page %@ with hash %u", self.uuid, lastSavedUndoHash);
                                cachedImgView.image = thumbnail;
-                               [self.delegate didSavePage:self];
                            }];
                        }];
     }else{
         // already saved, but don't need to write
         // anything new to disk
         debug_NSLog(@"no edits to save with hash %u", [drawableView undoHash]);
-        [self.delegate didSavePage:self];
+        onComplete();
     }
 }
 
+/**
+ * this preview is used when the list view is scrolling.
+ * the goal is to have possibly thousands of pages on disk,
+ * and we load the preview for pages only when they become visible
+ * in the scroll view or by gestures in page view.
+ */
 -(void) loadCachedPreview{
     if(!cachedImgView.image && !isLoadingCachedImageFromDisk){
         isLoadingCachedImageFromDisk = YES;
@@ -258,6 +271,11 @@ dispatch_queue_t importThumbnailQueue;
     }
 }
 
+/**
+ * this page is no longer visible in either page view
+ * (from gestures showing it behind a visible page
+ * or on the bezel stack) or in the list view.
+ */
 -(void) unloadCachedPreview{
     // i have to do this on the dispatch queues, so
     // that this will execute after loading if the loading

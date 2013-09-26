@@ -30,4 +30,6 @@
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
 
+-(void) saveToDisk;
+
 @end

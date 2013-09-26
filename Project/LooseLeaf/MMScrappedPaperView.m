@@ -21,6 +21,7 @@
 
 @implementation MMScrappedPaperView{
     UIView* scrapContainerView;
+    NSString* scrapIDsPath;
 }
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
@@ -335,6 +336,128 @@
 }
 
 
+#pragma mark - Save and Load
+
+/**
+ * TODO: when our drawable view is set, our state
+ * should already be 100% loaded, including scrap views
+ *
+ * ask super to set our drawable view, and we need to set
+ * our scrap views
+ */
+-(void) setDrawableView:(JotView *)_drawableView{
+    [super setDrawableView:_drawableView];
+}
+
+-(BOOL) hasEditsToSave{
+    return [super hasEditsToSave];
+}
+
+-(void) saveToDisk{
+    
+    // track if our back ground page has saved
+    dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+    // track if all of our scraps have saved
+    dispatch_semaphore_t sema2 = dispatch_semaphore_create(0);
+
+    // save our backing page
+    [super saveToDisk:^{
+        dispatch_semaphore_signal(sema1);
+    }];
+    
+    [NSThread performBlockInBackground:^{
+        if([self.scraps count]){
+            NSMutableArray* scrapUUIDs = [NSMutableArray array];
+            for(MMScrapView* scrap in self.scraps){
+                NSMutableDictionary* properties = [NSMutableDictionary dictionary];
+                [properties setObject:scrap.uuid forKey:@"uuid"];
+                [properties setObject:[NSNumber numberWithFloat:scrap.center.x] forKey:@"center.x"];
+                [properties setObject:[NSNumber numberWithFloat:scrap.center.y] forKey:@"center.y"];
+                [properties setObject:[NSNumber numberWithFloat:scrap.rotation] forKey:@"rotation"];
+                [properties setObject:[NSNumber numberWithFloat:scrap.scale] forKey:@"scale"];
+                
+                [scrap saveToDisk];
+                
+                // save scraps
+                [scrapUUIDs addObject:properties];
+            }
+            [scrapUUIDs writeToFile:self.scrapIDsPath atomically:YES];
+        }else{
+            [[NSFileManager defaultManager] removeItemAtPath:self.scrapIDsPath error:nil];
+        }
+        dispatch_semaphore_signal(sema2);
+    }];
+
+    [NSThread performBlockInBackground:^{
+        dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+        dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
+        [NSThread performBlockOnMainThread:^{
+            [self.delegate didSavePage:self];
+        }];
+    }];
+}
+
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context{
+    [super loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
+    
+    NSArray* scrapProps = [NSArray arrayWithContentsOfFile:self.scrapIDsPath];
+    for(NSDictionary* scrapProperties in scrapProps){
+        MMScrapView* scrap = [[MMScrapView alloc] initWithUUID:[scrapProperties objectForKey:@"uuid"]];
+        [scrapContainerView addSubview:scrap];
+        scrap.center = CGPointMake([[scrapProperties objectForKey:@"center.x"] floatValue], [[scrapProperties objectForKey:@"center.y"] floatValue]);
+        scrap.rotation = [[scrapProperties objectForKey:@"rotation"] floatValue];
+        scrap.scale = [[scrapProperties objectForKey:@"scale"] floatValue];
+    }
+}
+
+-(void) unloadState{
+    [super unloadState];
+    [scrapContainerView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+}
+
+-(BOOL) hasStateLoaded{
+    return [super hasStateLoaded];
+}
+
+/**
+ * load any scrap previews, if applicable.
+ * not sure if i'll just draw these into the
+ * page preview or not
+ */
+-(void) loadCachedPreview{
+    [super loadCachedPreview];
+}
+
+-(void) unloadCachedPreview{
+    [super unloadCachedPreview];
+}
+
+#pragma mark - MMPaperStateDelegate
+
+/**
+ * TODO: only fire off these state methods
+ * if we have also loaded state for our scraps
+ */
+-(void) didLoadState:(MMPaperState*)state{
+    [NSThread performBlockOnMainThread:^{
+        [self.delegate didLoadStateForPage:self];
+    }];
+}
+
+-(void) didUnloadState:(MMPaperState *)state{
+    [NSThread performBlockOnMainThread:^{
+        [self.delegate didUnloadStateForPage:self];
+    }];
+}
+
+#pragma mark - Paths
+
+-(NSString*) scrapIDsPath{
+    if(!scrapIDsPath){
+        scrapIDsPath = [[[self pagesPath] stringByAppendingPathComponent:@"scrapIDs"] stringByAppendingPathExtension:@"plist"];
+    }
+    return scrapIDsPath;
+}
 
 
 @end
