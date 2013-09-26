@@ -8,6 +8,9 @@
 
 #import "MMScrapBorderView.h"
 
+/**
+ * used to draw a border around a scrap in a bezel button
+ */
 @implementation MMScrapBorderView{
     UIBezierPath* bezierPath;
 }

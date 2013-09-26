@@ -65,10 +65,12 @@
     } completion:nil];
 
     [path closePath];
+    [self saveToDisk];
 }
 
 -(void) addScrap:(MMScrapView*)scrap{
     [scrapContainerView addSubview:scrap];
+    [self saveToDisk];
 }
 
 -(BOOL) hasScrap:(MMScrapView*)scrap{
