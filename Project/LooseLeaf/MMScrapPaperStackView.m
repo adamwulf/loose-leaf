@@ -261,7 +261,7 @@
         if(shouldBezel){
             // if we've bezelled the scrap,
             // add it to the bezel container
-            [bezelScrapContainer addScrapToBezelSidebarAnimated:scrap];
+            [bezelScrapContainer addScrapToBezelSidebar:scrap animated:YES];
         }
     }
     if(scrapViewIfFinished){
@@ -450,6 +450,8 @@
 
 -(void) didAddScrapToBezelSidebar:(MMScrapView *)scrap{
     // noop
+    NSLog(@"added a scrap to bezel");
+    [bezelScrapContainer saveToDisk];
 }
 
 -(void) didAddScrapBackToPage:(MMScrapView *)scrap{
@@ -465,6 +467,7 @@
     [page addScrap:scrap];
     scrap.center = center;
     scrap.scale = scale;
+    [bezelScrapContainer saveToDisk];
 }
 
 -(CGPoint) positionOnScreenToScaleScrapTo:(MMScrapView*)scrap{
