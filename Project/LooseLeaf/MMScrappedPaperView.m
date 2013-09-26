@@ -17,11 +17,13 @@
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "MMDebugDrawView.h"
+#import "MMScrapState.h"
 
 
 @implementation MMScrappedPaperView{
     UIView* scrapContainerView;
     NSString* scrapIDsPath;
+    MMScrapState* scrapState;
 }
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
@@ -37,6 +39,9 @@
         scrapContainerView.layer.position = CGPointMake(0,0);
 
         panGesture.scrapDelegate = self;
+        
+        scrapState = [[MMScrapState alloc] initWithScrapIDsPath:self.scrapIDsPath];
+        scrapState.delegate = self;
     }
     return self;
 }
@@ -366,25 +371,7 @@
     }];
     
     [NSThread performBlockInBackground:^{
-        if([self.scraps count]){
-            NSMutableArray* scrapUUIDs = [NSMutableArray array];
-            for(MMScrapView* scrap in self.scraps){
-                NSMutableDictionary* properties = [NSMutableDictionary dictionary];
-                [properties setObject:scrap.uuid forKey:@"uuid"];
-                [properties setObject:[NSNumber numberWithFloat:scrap.center.x] forKey:@"center.x"];
-                [properties setObject:[NSNumber numberWithFloat:scrap.center.y] forKey:@"center.y"];
-                [properties setObject:[NSNumber numberWithFloat:scrap.rotation] forKey:@"rotation"];
-                [properties setObject:[NSNumber numberWithFloat:scrap.scale] forKey:@"scale"];
-                
-                [scrap saveToDisk];
-                
-                // save scraps
-                [scrapUUIDs addObject:properties];
-            }
-            [scrapUUIDs writeToFile:self.scrapIDsPath atomically:YES];
-        }else{
-            [[NSFileManager defaultManager] removeItemAtPath:self.scrapIDsPath error:nil];
-        }
+        [scrapState saveToDisk];
         dispatch_semaphore_signal(sema2);
     }];
 
@@ -399,24 +386,21 @@
 
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context{
     [super loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
-    
-    NSArray* scrapProps = [NSArray arrayWithContentsOfFile:self.scrapIDsPath];
-    for(NSDictionary* scrapProperties in scrapProps){
-        MMScrapView* scrap = [[MMScrapView alloc] initWithUUID:[scrapProperties objectForKey:@"uuid"]];
-        [scrapContainerView addSubview:scrap];
-        scrap.center = CGPointMake([[scrapProperties objectForKey:@"center.x"] floatValue], [[scrapProperties objectForKey:@"center.y"] floatValue]);
-        scrap.rotation = [[scrapProperties objectForKey:@"rotation"] floatValue];
-        scrap.scale = [[scrapProperties objectForKey:@"scale"] floatValue];
-    }
+    [scrapState loadStateAsynchronously:async];
 }
 
 -(void) unloadState{
     [super unloadState];
+    [scrapState unload];
     [scrapContainerView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 }
 
 -(BOOL) hasStateLoaded{
     return [super hasStateLoaded];
+}
+
+-(void) didLoadScrap:(MMScrapView*)scrap{
+    [scrapContainerView addSubview:scrap];
 }
 
 /**

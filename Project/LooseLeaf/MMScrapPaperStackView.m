@@ -396,7 +396,8 @@
 }
 
 -(void) finishedPanningAndScalingScrap:(MMScrapView*)scrap{
-    // noop
+    // save page if we're not holding any scraps
+    [[visibleStackHolder peekSubview] saveToDisk];
 }
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
