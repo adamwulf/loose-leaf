@@ -309,6 +309,12 @@
             // to find a page in our current array. move to the next array
             // of views further back in the view, and start checking those
             arrayNum -= 1;
+            if(arrayNum == -1){
+                // failsafe.
+                // this may happen if the user picks up two scraps with system gestures turned on.
+                // the system may exit our app, leaving us in an unknown state
+                return [visibleStackHolder peekSubview];
+            }
             indexNum = [(arrayOfArrayOfViews[arrayNum]) count] - 1;
         }
         // fetch the most visible page
@@ -397,7 +403,23 @@
 
 -(void) finishedPanningAndScalingScrap:(MMScrapView*)scrap{
     // save page if we're not holding any scraps
-    [[visibleStackHolder peekSubview] saveToDisk];
+    if((panAndPinchScrapGesture.state == UIGestureRecognizerStateCancelled ||
+       panAndPinchScrapGesture.state == UIGestureRecognizerStateEnded ||
+       panAndPinchScrapGesture.state == UIGestureRecognizerStateFailed ||
+       panAndPinchScrapGesture.state == UIGestureRecognizerStatePossible) &&
+       (panAndPinchScrapGesture2.state == UIGestureRecognizerStateCancelled ||
+        panAndPinchScrapGesture2.state == UIGestureRecognizerStateEnded ||
+        panAndPinchScrapGesture2.state == UIGestureRecognizerStateFailed ||
+        panAndPinchScrapGesture2.state == UIGestureRecognizerStatePossible)){
+           // not the most graceful if statement, but this'll check if our gestures
+           // are all finished with holding scraps.
+           //
+           // i can't check if panAndPinchScrapGesture.scrap exists, because this
+           // method is called before the panAndPinchScrapGesture is cleaned up
+           // when it finishes, so its panAndPinchScrapGesture2.scrap still exists,
+           // even though its finished
+           [[visibleStackHolder peekSubview] saveToDisk];
+    }
 }
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
