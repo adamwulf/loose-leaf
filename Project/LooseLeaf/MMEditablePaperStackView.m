@@ -558,6 +558,9 @@
                 debug_NSLog(@"load state for future top page: %@", editableTopPage.uuid);
                 [self loadStateForPage:editableTopPage];
             }
+        }else{
+            // just double check that we're in editable state
+            [currentEditablePage setDrawableView:drawableView];
         }
     }
 }

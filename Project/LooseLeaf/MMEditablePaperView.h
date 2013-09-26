@@ -35,10 +35,12 @@
 -(void) loadCachedPreview;
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(JotGLContext*)context;
 -(void) unloadState;
--(void) saveToDisk;
+-(void) saveToDisk:(void (^)(void))onComplete;
 -(void) setCanvasVisible:(BOOL)isVisible;
 -(void) setEditable:(BOOL)isEditable;
 
-
+// abstract
+-(void) saveToDisk;
+-(NSString*) pagesPath;
 
 @end
