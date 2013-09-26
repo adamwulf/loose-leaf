@@ -199,6 +199,9 @@
         }
         [self isBeginning:gesture.state == UIGestureRecognizerStateBegan toPanAndScaleScrap:gesture.scrap withTouches:gesture.touches];
     }
+    
+    MMScrapView* scrapViewIfFinished = nil;
+    
     BOOL shouldBezel = NO;
     if(gesture.scrap && didReset){
         // glow blue
@@ -237,7 +240,7 @@
             }
         }
         
-        [self finishedPanningAndScalingScrap:gesture.scrap];
+        scrapViewIfFinished = gesture.scrap;
     }
     if(gesture.scrap && (gesture.state == UIGestureRecognizerStateEnded ||
                          gesture.state == UIGestureRecognizerStateFailed ||
@@ -260,6 +263,9 @@
             // add it to the bezel container
             [bezelScrapContainer addScrapToBezelSidebarAnimated:scrap];
         }
+    }
+    if(scrapViewIfFinished){
+        [self finishedPanningAndScalingScrap:scrapViewIfFinished];
     }
 }
 
@@ -403,21 +409,7 @@
 
 -(void) finishedPanningAndScalingScrap:(MMScrapView*)scrap{
     // save page if we're not holding any scraps
-    if((panAndPinchScrapGesture.state == UIGestureRecognizerStateCancelled ||
-       panAndPinchScrapGesture.state == UIGestureRecognizerStateEnded ||
-       panAndPinchScrapGesture.state == UIGestureRecognizerStateFailed ||
-       panAndPinchScrapGesture.state == UIGestureRecognizerStatePossible) &&
-       (panAndPinchScrapGesture2.state == UIGestureRecognizerStateCancelled ||
-        panAndPinchScrapGesture2.state == UIGestureRecognizerStateEnded ||
-        panAndPinchScrapGesture2.state == UIGestureRecognizerStateFailed ||
-        panAndPinchScrapGesture2.state == UIGestureRecognizerStatePossible)){
-           // not the most graceful if statement, but this'll check if our gestures
-           // are all finished with holding scraps.
-           //
-           // i can't check if panAndPinchScrapGesture.scrap exists, because this
-           // method is called before the panAndPinchScrapGesture is cleaned up
-           // when it finishes, so its panAndPinchScrapGesture2.scrap still exists,
-           // even though its finished
+    if(!panAndPinchScrapGesture.scrap && !panAndPinchScrapGesture2.scrap){
            [[visibleStackHolder peekSubview] saveToDisk];
     }
 }
