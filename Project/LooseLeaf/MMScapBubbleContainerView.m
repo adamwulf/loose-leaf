@@ -104,7 +104,11 @@
 -(void) addScrapToBezelSidebar:(MMScrapView *)scrap animated:(BOOL)animated{
     
     // make sure we've saved its current state
-    [scrap saveToDisk];
+    if(animated){
+        // only save when it's animated. non-animated is loading
+        // from disk at start up
+        [scrap saveToDisk];
+    }
     
     [scrapsHeldInBezel addObject:scrap];
     

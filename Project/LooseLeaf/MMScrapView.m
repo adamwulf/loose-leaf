@@ -15,6 +15,7 @@
 #import "UIColor+Shadow.h"
 #import "MMDebugDrawView.h"
 #import "NSString+UUID.h"
+#import "NSThread+BlockAdditions.h"
 
 
 #import <JotUI/AbstractBezierPathElement-Protected.h>
@@ -83,6 +84,18 @@
 
         if(self = [self initWithBezierPath:path andUUID:_uuid]){
             // load drawable view information here
+            
+            
+            
+            
+            NSString* inkImageFile = [pathForUUID stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
+            NSString* stateFile = [pathForUUID stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
+            JotViewState* state = [[JotViewState alloc] initWithImageFile:inkImageFile
+                                                             andStateFile:stateFile
+                                                              andPageSize:[drawableView pagePixelSize]
+                                                             andGLContext:[drawableView context]];
+            [drawableView loadState:state];
+            
         }
     }
     return self;
@@ -354,6 +367,21 @@
     [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
     
     [savedProperties writeToFile:plistPath atomically:YES];
+    
+
+    NSString* pathForUUID = [MMScrapView scrapPathForUUID:self.uuid];
+    NSString* inkImageFile = [pathForUUID stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
+    NSString* thumbImageFile = [pathForUUID stringByAppendingPathComponent:[@"thumb" stringByAppendingPathExtension:@"png"]];
+    NSString* stateFile = [pathForUUID stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
+    
+    
+    dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+    [NSThread performBlockOnMainThread:^{
+        [drawableView exportImageTo:inkImageFile andThumbnailTo:thumbImageFile andStateTo:stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
+            dispatch_semaphore_signal(sema1);
+        }];
+    }];
+    dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
 }
 
 #pragma mark - Debug
