@@ -48,8 +48,10 @@
 }
 
 -(void) setRotation:(CGFloat)_rotation{
-    [super setRotation:_rotation];
-    self.transform = CGAffineTransformScale([self rotationTransform], scale, scale);
+    if(ABS(self.rotation - _rotation) >= .01){
+        [super setRotation:_rotation];
+        self.transform = CGAffineTransformScale([self rotationTransform], scale, scale);
+    }
 }
 
 -(void) setScale:(CGFloat)_scale{

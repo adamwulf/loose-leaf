@@ -348,22 +348,23 @@
 
 -(void) didUpdateAccelerometerWithReading:(CGFloat)currentRawReading{
     [NSThread performBlockOnMainThread:^{
-        addPageSidebarButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        documentBackgroundSidebarButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        polylineButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        polygonButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        insertImageButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        textButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        scissorButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        pencilTool.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        eraserButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        shareButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        mapButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        undoButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        redoButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        rulerButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        handButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        settingsButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        addPageSidebarButton.transform = rotationTransform;
+        documentBackgroundSidebarButton.transform = rotationTransform;
+        polylineButton.transform = rotationTransform;
+        polygonButton.transform = rotationTransform;
+        insertImageButton.transform = rotationTransform;
+        textButton.transform = rotationTransform;
+        scissorButton.transform = rotationTransform;
+        pencilTool.transform = rotationTransform;
+        eraserButton.transform = rotationTransform;
+        shareButton.transform = rotationTransform;
+        mapButton.transform = rotationTransform;
+        undoButton.transform = rotationTransform;
+        redoButton.transform = rotationTransform;
+        rulerButton.transform = rotationTransform;
+        handButton.transform = rotationTransform;
+        settingsButton.transform = rotationTransform;
     }];
 }
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
