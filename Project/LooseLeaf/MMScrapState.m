@@ -8,6 +8,7 @@
 
 #import "MMScrapState.h"
 #import "MMScrapView.h"
+#import "MMImmutableScrapState.h"
 
 /**
  * similar to the MMPaperState, this object will
@@ -19,6 +20,7 @@
 }
 
 @synthesize delegate;
+@synthesize scrapIDsPath;
 
 -(id) initWithScrapIDsPath:(NSString*)_scrapIDsPath{
     if(self = [super init]){
@@ -47,33 +49,15 @@
 
 -(void) unload{
     if([self isStateLoaded]){
-        [self saveToDisk];
         isLoaded = NO;
     }
 }
 
--(void) saveToDisk{
+-(MMImmutableScrapState*) immutableState{
     if([self isStateLoaded]){
-        if([self.delegate.scraps count]){
-            NSMutableArray* scrapUUIDs = [NSMutableArray array];
-            for(MMScrapView* scrap in self.delegate.scraps){
-                NSMutableDictionary* properties = [NSMutableDictionary dictionary];
-                [properties setObject:scrap.uuid forKey:@"uuid"];
-                [properties setObject:[NSNumber numberWithFloat:scrap.center.x] forKey:@"center.x"];
-                [properties setObject:[NSNumber numberWithFloat:scrap.center.y] forKey:@"center.y"];
-                [properties setObject:[NSNumber numberWithFloat:scrap.rotation] forKey:@"rotation"];
-                [properties setObject:[NSNumber numberWithFloat:scrap.scale] forKey:@"scale"];
-                
-                [scrap saveToDisk];
-                
-                // save scraps
-                [scrapUUIDs addObject:properties];
-            }
-            [scrapUUIDs writeToFile:scrapIDsPath atomically:YES];
-        }else{
-            [[NSFileManager defaultManager] removeItemAtPath:scrapIDsPath error:nil];
-        }
+        return [[MMImmutableScrapState alloc] initWithScrapIDsPath:self.scrapIDsPath andScraps:self.delegate.scraps];
     }
+    return nil;
 }
 
 @end

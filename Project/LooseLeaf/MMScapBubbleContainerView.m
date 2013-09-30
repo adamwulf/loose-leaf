@@ -12,6 +12,7 @@
 #import "MMCountBubbleButton.h"
 #import "MMScrapBezelMenuView.h"
 #import "MMScrapState.h"
+#import "MMImmutableScrapState.h"
 
 #define kMaxScrapsInBezel 6
 
@@ -398,7 +399,7 @@
 #pragma mark - Save and Load
 
 -(void) saveToDisk{
-    [scrapState saveToDisk];
+    [[scrapState immutableState] saveToDisk];
 }
 
 
