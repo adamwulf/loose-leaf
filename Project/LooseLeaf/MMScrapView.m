@@ -63,6 +63,10 @@
     
     // the path where we store our data
     NSString* scrapPath;
+    
+    // the undoHash of the drawable view from
+    // when it was last saved
+    NSUInteger lastSavedUndoHash;
 }
 
 @synthesize uuid;
@@ -85,9 +89,6 @@
         if(self = [self initWithBezierPath:path andUUID:_uuid]){
             // load drawable view information here
             
-            
-            
-            
             NSString* inkImageFile = [pathForUUID stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
             NSString* stateFile = [pathForUUID stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
             JotViewState* state = [[JotViewState alloc] initWithImageFile:inkImageFile
@@ -96,6 +97,7 @@
                                                              andGLContext:[drawableView context]];
             [drawableView loadState:state];
             
+            lastSavedUndoHash = [drawableView undoHash];
         }
     }
     return self;
@@ -155,6 +157,7 @@
         [MMDebugDrawView sharedInstace].frame = self.bounds;
         [self addSubview:[MMDebugDrawView sharedInstace]];
 
+        lastSavedUndoHash = -1;
     }
     return self;
 }
@@ -361,27 +364,31 @@
 }
 
 -(void) saveToDisk{
-    NSString* plistPath = [self.scrapPath stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
-    
-    NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
-    [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
-    
-    [savedProperties writeToFile:plistPath atomically:YES];
-    
+    if(lastSavedUndoHash != [drawableView undoHash]){
+        NSString* plistPath = [self.scrapPath stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
+        NSString* pathForUUID = [MMScrapView scrapPathForUUID:self.uuid];
+        NSString* inkImageFile = [pathForUUID stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
+        NSString* thumbImageFile = [pathForUUID stringByAppendingPathComponent:[@"thumb" stringByAppendingPathExtension:@"png"]];
+        NSString* stateFile = [pathForUUID stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
+        
+        dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+        [NSThread performBlockOnMainThread:^{
+            // save path
+            // this needs to be saved at the exact same time as the drawable view
+            // so that we can guarentee that there is no race condition
+            // for saving state vs content
+            NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
+            [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
+            [savedProperties writeToFile:plistPath atomically:YES];
 
-    NSString* pathForUUID = [MMScrapView scrapPathForUUID:self.uuid];
-    NSString* inkImageFile = [pathForUUID stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
-    NSString* thumbImageFile = [pathForUUID stringByAppendingPathComponent:[@"thumb" stringByAppendingPathExtension:@"png"]];
-    NSString* stateFile = [pathForUUID stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
-    
-    
-    dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
-    [NSThread performBlockOnMainThread:^{
-        [drawableView exportImageTo:inkImageFile andThumbnailTo:thumbImageFile andStateTo:stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
-            dispatch_semaphore_signal(sema1);
+            // now export the drawn content
+            [drawableView exportImageTo:inkImageFile andThumbnailTo:thumbImageFile andStateTo:stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
+                dispatch_semaphore_signal(sema1);
+                lastSavedUndoHash = [state undoHash];
+            }];
         }];
-    }];
-    dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+        dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+    }
 }
 
 #pragma mark - Debug
