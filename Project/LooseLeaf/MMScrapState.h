@@ -9,11 +9,15 @@
 #import <Foundation/Foundation.h>
 #import "MMScrapStateDelegate.h"
 
+@class MMImmutableScrapState;
+
 @interface MMScrapState : NSObject{
     __weak NSObject<MMScrapStateDelegate>* delegate;
 }
 
 @property (nonatomic, weak) NSObject<MMScrapStateDelegate>* delegate;
+@property (readonly) NSString* scrapIDsPath;
+
 
 -(id) initWithScrapIDsPath:(NSString*)scrapIDsPath;
 
@@ -23,6 +27,6 @@
 
 -(void) unload;
 
--(void) saveToDisk;
+-(MMImmutableScrapState*) immutableState;
 
 @end

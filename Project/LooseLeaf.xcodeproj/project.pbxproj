@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		66052A0317FA170600A94531 /* MMImmutableScrapState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66052A0217FA170600A94531 /* MMImmutableScrapState.m */; };
 		660E1D9C158FC4570001DA12 /* img02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 660E1D9B158FC4570001DA12 /* img02.jpg */; };
 		660E1D9F158FC45E0001DA12 /* img06.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 660E1D9E158FC45E0001DA12 /* img06.jpg */; };
 		660E1DA1158FC4710001DA12 /* img03.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 660E1DA0158FC4710001DA12 /* img03.jpg */; };
@@ -149,6 +150,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		66052A0117FA170600A94531 /* MMImmutableScrapState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImmutableScrapState.h; sourceTree = "<group>"; };
+		66052A0217FA170600A94531 /* MMImmutableScrapState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImmutableScrapState.m; sourceTree = "<group>"; };
 		660E1D9B158FC4570001DA12 /* img02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img02.jpg; sourceTree = "<group>"; };
 		660E1D9E158FC45E0001DA12 /* img06.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img06.jpg; sourceTree = "<group>"; };
 		660E1DA0158FC4710001DA12 /* img03.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img03.jpg; sourceTree = "<group>"; };
@@ -856,6 +859,8 @@
 				66AE5AA617F4D064009F82B6 /* MMScrapState.h */,
 				66AE5AA717F4D064009F82B6 /* MMScrapState.m */,
 				66AE5AA917F4D124009F82B6 /* MMScrapStateDelegate.h */,
+				66052A0117FA170600A94531 /* MMImmutableScrapState.h */,
+				66052A0217FA170600A94531 /* MMImmutableScrapState.m */,
 			);
 			name = Scraps;
 			sourceTree = "<group>";
@@ -1314,6 +1319,7 @@
 				66B843E917B052B7008BF8B8 /* UIBezierPath+GPC.m in Sources */,
 				66B843EA17B052B7008BF8B8 /* UIBezierPath+Editing.m in Sources */,
 				66A471BE17C7DAA000C2A5B6 /* MMScrappedPaperView.m in Sources */,
+				66052A0317FA170600A94531 /* MMImmutableScrapState.m in Sources */,
 				66B843EB17B052B7008BF8B8 /* UIBezierPath+Geometry.m in Sources */,
 				66AE5AA817F4D064009F82B6 /* MMScrapState.m in Sources */,
 				66B843EC17B052B7008BF8B8 /* UIBezierPath+NSOSX.m in Sources */,

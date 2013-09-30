@@ -18,6 +18,7 @@
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "MMDebugDrawView.h"
 #import "MMScrapState.h"
+#import "MMImmutableScrapState.h"
 
 
 @implementation MMScrappedPaperView{
@@ -373,7 +374,7 @@
     }];
     
     [NSThread performBlockInBackground:^{
-        [scrapState saveToDisk];
+        [[scrapState immutableState] saveToDisk];
         dispatch_semaphore_signal(sema2);
     }];
 
@@ -393,7 +394,7 @@
 
 -(void) unloadState{
     [super unloadState];
-    [scrapState unload];
+    [[scrapState immutableState] unload];
     [scrapContainerView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 }
 
