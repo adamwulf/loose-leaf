@@ -146,7 +146,6 @@ NSInteger const  minimumNumberOfTouches = 2;
         NSMutableSet* allPossibleTouches = [NSMutableSet setWithSet:[possibleTouches set]];
         for(MMScrapView* _scrap in scrapDelegate.scraps){
             NSSet* touchesInScrap = [_scrap matchingPairTouchesFrom:allPossibleTouches];
-            NSLog(@"found %d matchign touches", [touchesInScrap count]);
             if([touchesInScrap count]){
                 // two+ possible touches match this scrap
                 [ignoredTouches addObjectsInSet:touchesInScrap];
