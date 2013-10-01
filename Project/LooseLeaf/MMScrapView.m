@@ -16,21 +16,11 @@
 #import "MMDebugDrawView.h"
 #import "NSString+UUID.h"
 #import "NSThread+BlockAdditions.h"
-
+#import "MMScrapViewState.h"
 
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 
 @implementation MMScrapView{
-    // **
-    // we'll need to save these properties to disk
-    //
-    // the path used to clip the scrap, includes buffer for shadow
-    UIBezierPath* bezierPath;
-    // the original size of the input path, this size represents scale of 1
-    CGSize originalSize;
-    // our drawable backing view
-    JotView* drawableView;
-
     // **
     // these properties will be saved by the page that holds us, if any
     //
@@ -46,7 +36,7 @@
     // boolean to say if the user is currently holding this scrap. used for blue border
     BOOL selected;
     // the layer used for our white background. won't clip sub-content
-    CAShapeLayer* contentLayer;
+    CAShapeLayer* backgroundColorLayer;
 
     
     // these properties are calculated, and
@@ -61,46 +51,28 @@
     
     NSString* uuid;
     
-    // the path where we store our data
-    NSString* scrapPath;
-    
-    // the undoHash of the drawable view from
-    // when it was last saved
-    NSUInteger lastSavedUndoHash;
+    MMScrapViewState* scrapState;
 }
 
 @synthesize uuid;
 @synthesize scale;
-@synthesize originalSize;
 @synthesize rotation;
 @synthesize selected;
 @synthesize clippingPath;
-@synthesize bezierPath;
 
 
 -(id) initWithUUID:(NSString*)_uuid{
-    NSString* pathForUUID = [MMScrapView scrapDirectoryPathForUUID:_uuid];
-    if([[NSFileManager defaultManager] fileExistsAtPath:pathForUUID]){
-        NSString* plistPath = [pathForUUID stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
-        NSDictionary* properties = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-        
-        UIBezierPath *path = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
-
-        if(self = [self initWithBezierPath:path andUUID:_uuid]){
-            // load drawable view information here
-            
-            NSString* inkImageFile = [pathForUUID stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
-            NSString* stateFile = [pathForUUID stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
-            JotViewState* state = [[JotViewState alloc] initWithImageFile:inkImageFile
-                                                             andStateFile:stateFile
-                                                              andPageSize:[drawableView pagePixelSize]
-                                                             andGLContext:[drawableView context]];
-            [drawableView loadState:state];
-            
-            lastSavedUndoHash = [drawableView undoHash];
+    
+    scrapState = [[MMScrapViewState alloc] initWithUUID:_uuid];
+    
+    if(scrapState.bezierPath){
+        if(self = [self initWithBezierPath:scrapState.bezierPath andUUID:_uuid]){
+            // TODO: load in thumbnail image view while state loads
         }
+        return self;
     }
-    return self;
+    // can't find any information about that scrap
+    return nil;
 }
 
 - (id)initWithBezierPath:(UIBezierPath *)path{
@@ -113,51 +85,57 @@
  */
 - (id)initWithBezierPath:(UIBezierPath*)_path andUUID:(NSString*)_uuid
 {
-    _path = [_path copy];
-    CGRect originalBounds = _path.bounds;
-    [_path applyTransform:CGAffineTransformMakeTranslation(-originalBounds.origin.x + 4, -originalBounds.origin.y + 4)];
+    UIBezierPath* originalPath = [_path copy];
 
+    if(!scrapState){
+        // one of our other [init] methods may have already created a state
+        // for us, but if not, then go ahead and build one
+        scrapState = [[MMScrapViewState alloc] initWithUUID:_uuid andBezierPath:originalPath];
+    }
+    
     // -4 b/c twice the 2px shadow
-    if ((self = [super initWithFrame:CGRectInset(originalBounds, -4, -4)])) {
+    if ((self = [super initWithFrame:scrapState.drawableBounds])){
+        self.center = _path.center;
         uuid = _uuid;
         scale = 1;
-        // Initialization code
-        bezierPath = _path;
-        originalSize = originalBounds.size;
         
-        drawableView = [[JotView alloc] initWithFrame:self.bounds];
+        //
+        // this is our white background
+        backgroundColorLayer = [CAShapeLayer layer];
+        [backgroundColorLayer setPath:scrapState.bezierPath.CGPath];
+        backgroundColorLayer.fillColor = [UIColor whiteColor].CGColor;
+        backgroundColorLayer.masksToBounds = YES;
+        backgroundColorLayer.frame = self.layer.bounds;
+        [self.layer addSublayer:backgroundColorLayer];
         
-        contentLayer = [CAShapeLayer layer];
-        [contentLayer setPath:bezierPath.CGPath];
-        contentLayer.fillColor = [UIColor whiteColor].CGColor;
-        contentLayer.masksToBounds = YES;
-        contentLayer.frame = self.layer.bounds;
-        [self.layer addSublayer:contentLayer];
-        
-        
-//        CALayer* fakeContent = [CALayer layer];
-//        fakeContent.frame = CGRectMake(0, 0, 500, 100);
-//        fakeContent.backgroundColor = [UIColor redColor].CGColor;
-//        [contentLayer addSublayer:fakeContent];
-        
-        
-        self.layer.shadowPath = bezierPath.CGPath;
+        // now we need to show our shadow.
+        // this is done just as we do with Shadowed view
+        // our view clips to bounds, and our shadow is
+        // displayed inside our bounds. this way we dont
+        // need to do any offscreen rendering when displaying
+        // this view
+        self.layer.shadowPath = scrapState.bezierPath.CGPath;
         self.layer.shadowRadius = 1.5;
         self.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.5].CGColor;
         self.layer.shadowOpacity = .65;
         self.layer.shadowOffset = CGSizeMake(0, 0);
         
+        // only the path contents are opaque, but outside the path needs to be transparent
         self.opaque = NO;
+        // yes clip to bounds so we keep good performance
         self.clipsToBounds = YES;
+        // update our shadow rotation
         [self didUpdateAccelerometerWithRawReading:[[MMRotationManager sharedInstace] currentRawRotationReading]];
         needsClippingPathUpdate = YES;
         
-        [self addSubview:drawableView];
+        //
+        // TODO: add this to our subviews only when our state
+        // is loaded, otherwise show an image preview instead.
+        [self addSubview:scrapState.contentView];
 
         [MMDebugDrawView sharedInstace].frame = self.bounds;
         [self addSubview:[MMDebugDrawView sharedInstace]];
 
-        lastSavedUndoHash = -1;
     }
     return self;
 }
@@ -174,7 +152,7 @@
 }
 
 -(void) setBackgroundColor:(UIColor *)backgroundColor{
-    contentLayer.fillColor = backgroundColor.CGColor;
+    backgroundColorLayer.fillColor = backgroundColor.CGColor;
 }
 
 /**
@@ -193,7 +171,7 @@
 
 -(BOOL) containsTouch:(UITouch*)touch{
     CGPoint locationOfTouch = [touch locationInView:self];
-    return [bezierPath containsPoint:locationOfTouch];
+    return [scrapState.bezierPath containsPoint:locationOfTouch];
 }
 
 -(NSSet*) matchingPairTouchesFrom:(NSSet*) touches{
@@ -284,7 +262,7 @@
  */
 -(void) commitEditsAndUpdateClippingPath{
     // start with our original path
-    clippingPath = [self.bezierPath copy];
+    clippingPath = [scrapState.bezierPath copy];
     
     // when we pick up a scrap with a two finger gesture, we also
     // change the position and anchor (which change the center), so
@@ -322,7 +300,7 @@
 #pragma mark - JotView
 
 -(void) addElement:(AbstractBezierPathElement *)element{
-    [drawableView addElement:element];
+    [scrapState addElement:element];
 }
 
 
@@ -344,48 +322,8 @@
 
 #pragma mark - Saving
 
-+(NSString*) scrapDirectoryPathForUUID:(NSString*)uuid{
-    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString* documentsPath = [paths objectAtIndex:0];
-    NSString* scrapPath = [[documentsPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
-    return scrapPath;
-}
-
--(NSString*) scrapPath{
-    if(!scrapPath){
-        scrapPath = [MMScrapView scrapDirectoryPathForUUID:[self uuid]];
-        if(![[NSFileManager defaultManager] fileExistsAtPath:scrapPath]){
-            [[NSFileManager defaultManager] createDirectoryAtPath:scrapPath withIntermediateDirectories:YES attributes:nil error:nil];
-        }
-    }
-    return scrapPath;
-}
-
 -(void) saveToDisk{
-    if(lastSavedUndoHash != [drawableView undoHash]){
-        NSString* plistPath = [self.scrapPath stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
-        NSString* inkImageFile = [self.scrapPath stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
-        NSString* thumbImageFile = [self.scrapPath stringByAppendingPathComponent:[@"thumb" stringByAppendingPathExtension:@"png"]];
-        NSString* stateFile = [self.scrapPath stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
-        
-        dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
-        [NSThread performBlockOnMainThread:^{
-            // save path
-            // this needs to be saved at the exact same time as the drawable view
-            // so that we can guarentee that there is no race condition
-            // for saving state vs content
-            NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
-            [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
-            [savedProperties writeToFile:plistPath atomically:YES];
-
-            // now export the drawn content
-            [drawableView exportImageTo:inkImageFile andThumbnailTo:thumbImageFile andStateTo:stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
-                dispatch_semaphore_signal(sema1);
-                lastSavedUndoHash = [state undoHash];
-            }];
-        }];
-        dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-    }
+    [scrapState saveToDisk];
 }
 
 
@@ -393,13 +331,23 @@
 #pragma mark - State
 
 -(void) loadStateAsynchronously:(BOOL)async{
-    
+    [scrapState loadStateAsynchronously:async];
 }
 
 -(void) unloadState{
-    
+    [scrapState unloadState];
 }
 
+
+#pragma mark - Properties
+
+-(UIBezierPath*) bezierPath{
+    return scrapState.bezierPath;
+}
+
+-(CGSize) originalSize{
+    return scrapState.originalSize;
+}
 
 
 #pragma mark - Debug
@@ -417,42 +365,42 @@
     curveTo.width = 10;
     curveTo.color = color;
     curveTo.rotation = 0;
-    [drawableView addElement:curveTo];
+    [scrapState addElement:curveTo];
     
     curveTo = [CurveToPathElement elementWithStart:CGPointMake(self.bounds.size.width-10, 10)
                                          andLineTo:CGPointMake(self.bounds.size.width-10, self.bounds.size.height - 10)];
     curveTo.width = 10;
     curveTo.color = color;
     curveTo.rotation = 0;
-    [drawableView addElement:curveTo];
+    [scrapState addElement:curveTo];
     
     curveTo = [CurveToPathElement elementWithStart:CGPointMake(self.bounds.size.width-10, self.bounds.size.height - 10)
                                          andLineTo:CGPointMake(10, self.bounds.size.height - 10)];
     curveTo.width = 10;
     curveTo.color = color;
     curveTo.rotation = 0;
-    [drawableView addElement:curveTo];
+    [scrapState addElement:curveTo];
     
     curveTo = [CurveToPathElement elementWithStart:CGPointMake(10, self.bounds.size.height - 10)
                                          andLineTo:CGPointMake(10, 10)];
     curveTo.width = 10;
     curveTo.color = color;
     curveTo.rotation = 0;
-    [drawableView addElement:curveTo];
+    [scrapState addElement:curveTo];
     
     curveTo = [CurveToPathElement elementWithStart:CGPointMake(10, 10)
                                          andLineTo:CGPointMake(self.bounds.size.width-10, self.bounds.size.height - 10)];
     curveTo.width = 10;
     curveTo.color = color;
     curveTo.rotation = 0;
-    [drawableView addElement:curveTo];
+    [scrapState addElement:curveTo];
     
     curveTo = [CurveToPathElement elementWithStart:CGPointMake(10, self.bounds.size.height - 10)
                                          andLineTo:CGPointMake(self.bounds.size.width - 10, 10)];
     curveTo.width = 10;
     curveTo.color = color;
     curveTo.rotation = 0;
-    [drawableView addElement:curveTo];
+    [scrapState addElement:curveTo];
 }
 
 
