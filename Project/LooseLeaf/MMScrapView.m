@@ -79,7 +79,7 @@
 
 
 -(id) initWithUUID:(NSString*)_uuid{
-    NSString* pathForUUID = [MMScrapView scrapPathForUUID:_uuid];
+    NSString* pathForUUID = [MMScrapView scrapDirectoryPathForUUID:_uuid];
     if([[NSFileManager defaultManager] fileExistsAtPath:pathForUUID]){
         NSString* plistPath = [pathForUUID stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
         NSDictionary* properties = [NSDictionary dictionaryWithContentsOfFile:plistPath];
@@ -344,18 +344,16 @@
 
 #pragma mark - Saving
 
-+(NSString*) scrapPathForUUID:(NSString*)uuid{
++(NSString*) scrapDirectoryPathForUUID:(NSString*)uuid{
     NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString* documentsPath = [paths objectAtIndex:0];
     NSString* scrapPath = [[documentsPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
     return scrapPath;
 }
 
-
-
 -(NSString*) scrapPath{
     if(!scrapPath){
-        scrapPath = [MMScrapView scrapPathForUUID:[self uuid]];
+        scrapPath = [MMScrapView scrapDirectoryPathForUUID:[self uuid]];
         if(![[NSFileManager defaultManager] fileExistsAtPath:scrapPath]){
             [[NSFileManager defaultManager] createDirectoryAtPath:scrapPath withIntermediateDirectories:YES attributes:nil error:nil];
         }
@@ -366,10 +364,9 @@
 -(void) saveToDisk{
     if(lastSavedUndoHash != [drawableView undoHash]){
         NSString* plistPath = [self.scrapPath stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
-        NSString* pathForUUID = [MMScrapView scrapPathForUUID:self.uuid];
-        NSString* inkImageFile = [pathForUUID stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
-        NSString* thumbImageFile = [pathForUUID stringByAppendingPathComponent:[@"thumb" stringByAppendingPathExtension:@"png"]];
-        NSString* stateFile = [pathForUUID stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
+        NSString* inkImageFile = [self.scrapPath stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
+        NSString* thumbImageFile = [self.scrapPath stringByAppendingPathComponent:[@"thumb" stringByAppendingPathExtension:@"png"]];
+        NSString* stateFile = [self.scrapPath stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
         
         dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
         [NSThread performBlockOnMainThread:^{
@@ -390,6 +387,20 @@
         dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
     }
 }
+
+
+
+#pragma mark - State
+
+-(void) loadStateAsynchronously:(BOOL)async{
+    
+}
+
+-(void) unloadState{
+    
+}
+
+
 
 #pragma mark - Debug
 

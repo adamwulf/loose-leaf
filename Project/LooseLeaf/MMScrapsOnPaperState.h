@@ -1,5 +1,5 @@
 //
-//  MMScrapState.h
+//  MMScrapsOnPaperState.h
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 9/26/13.

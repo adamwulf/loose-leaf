@@ -1,5 +1,5 @@
 //
-//  MMScrapStateDelegate.h
+//  MMScrapsOnPaperStateDelegate.h
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 9/26/13.

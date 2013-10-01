@@ -1,5 +1,5 @@
 //
-//  MMScrapState.m
+//  MMScrapsOnPaperState.m
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 9/26/13.
@@ -42,6 +42,8 @@
             scrap.rotation = [[scrapProperties objectForKey:@"rotation"] floatValue];
             scrap.scale = [[scrapProperties objectForKey:@"scale"] floatValue];
             [self.delegate didLoadScrap:scrap];
+            
+            [scrap loadStateAsynchronously:async];
         }
         isLoaded = YES;
     }
@@ -49,7 +51,9 @@
 
 -(void) unload{
     if([self isStateLoaded]){
-        
+        for(MMScrapView* scrap in self.delegate.scraps){
+            [scrap unloadState];
+        }
         isLoaded = NO;
     }
 }
