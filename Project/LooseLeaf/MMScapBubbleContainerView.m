@@ -11,8 +11,8 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMCountBubbleButton.h"
 #import "MMScrapBezelMenuView.h"
-#import "MMScrapState.h"
-#import "MMImmutableScrapState.h"
+#import "MMScrapsOnPaperState.h"
+#import "MMImmutableScrapsOnPaperState.h"
 
 #define kMaxScrapsInBezel 6
 
@@ -24,7 +24,7 @@
     MMCountBubbleButton* countButton;
     MMScrapBezelMenuView* scrapMenu;
     UIButton* closeMenuView;
-    MMScrapState* scrapState;
+    MMScrapsOnPaperState* scrapState;
     NSString* scrapIDsPath;
 }
 
@@ -54,7 +54,7 @@
         
         scrapMenu.delegate = self;
         
-        scrapState = [[MMScrapState alloc] initWithScrapIDsPath:self.scrapIDsPath];
+        scrapState = [[MMScrapsOnPaperState alloc] initWithScrapIDsPath:self.scrapIDsPath];
         scrapState.delegate = self;
         [scrapState loadStateAsynchronously:YES];
     }
