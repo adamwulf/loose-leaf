@@ -7,15 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MMScrapStateDelegate.h"
+#import "MMScrapsOnPaperStateDelegate.h"
 
 @class MMImmutableScrapsOnPaperState;
 
 @interface MMScrapsOnPaperState : NSObject{
-    __weak NSObject<MMScrapStateDelegate>* delegate;
+    __weak NSObject<MMScrapsOnPaperStateDelegate>* delegate;
 }
 
-@property (nonatomic, weak) NSObject<MMScrapStateDelegate>* delegate;
+@property (nonatomic, weak) NSObject<MMScrapsOnPaperStateDelegate>* delegate;
 @property (readonly) NSString* scrapIDsPath;
 
 
