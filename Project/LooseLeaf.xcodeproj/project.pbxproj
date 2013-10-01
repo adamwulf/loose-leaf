@@ -337,7 +337,7 @@
 		66AA212C16FBB31C00E86922 /* MMPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPopoverView.m; sourceTree = "<group>"; };
 		66AE5AA617F4D064009F82B6 /* MMScrapsOnPaperState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapsOnPaperState.h; sourceTree = "<group>"; };
 		66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapsOnPaperState.m; sourceTree = "<group>"; };
-		66AE5AA917F4D124009F82B6 /* MMScrapStateDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScrapStateDelegate.h; sourceTree = "<group>"; };
+		66AE5AA917F4D124009F82B6 /* MMScrapsOnPaperStateDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScrapsOnPaperStateDelegate.h; sourceTree = "<group>"; };
 		66B21A54175AFCA70049F1AF /* MMHandButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMHandButton.h; sourceTree = "<group>"; };
 		66B21A55175AFCA70049F1AF /* MMHandButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMHandButton.m; sourceTree = "<group>"; };
 		66B21A58175B0BF30049F1AF /* cloth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloth.png; sourceTree = "<group>"; };
@@ -858,7 +858,7 @@
 				66A471C517C7E06B00C2A5B6 /* MMScrapView.m */,
 				66AE5AA617F4D064009F82B6 /* MMScrapsOnPaperState.h */,
 				66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */,
-				66AE5AA917F4D124009F82B6 /* MMScrapStateDelegate.h */,
+				66AE5AA917F4D124009F82B6 /* MMScrapsOnPaperStateDelegate.h */,
 				66052A0117FA170600A94531 /* MMImmutableScrapsOnPaperState.h */,
 				66052A0217FA170600A94531 /* MMImmutableScrapsOnPaperState.m */,
 			);

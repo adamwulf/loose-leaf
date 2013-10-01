@@ -10,7 +10,7 @@
 
 @class MMScrapView;
 
-@protocol MMScrapStateDelegate <NSObject>
+@protocol MMScrapsOnPaperStateDelegate <NSObject>
 
 -(NSArray*) scraps;
 
