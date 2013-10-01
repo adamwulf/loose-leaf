@@ -403,7 +403,7 @@
 }
 
 
-#pragma mark - MMScrapStateDelegate & MMScrapBezelMenuViewDelegate
+#pragma mark - MMScrapsOnPaperStateDelegate & MMScrapBezelMenuViewDelegate
 
 -(NSArray*) scraps{
     return  [scrapsHeldInBezel array];

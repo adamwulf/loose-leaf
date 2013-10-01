@@ -81,6 +81,7 @@
 		66A6836F17CE66B0007EE218 /* QuietAssertMacros.c in Sources */ = {isa = PBXBuildFile; fileRef = 66A6836E17CE66B0007EE218 /* QuietAssertMacros.c */; };
 		66A83AF317B2BB3D00488E54 /* MMBackwardCompatible.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A83AF217B2BB3D00488E54 /* MMBackwardCompatible.m */; };
 		66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */; };
+		66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B0FA5F17FB68410079E7A3 /* MMScrapViewState.m */; };
 		66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A55175AFCA70049F1AF /* MMHandButton.m */; };
 		66B21A59175B0BF30049F1AF /* cloth.png in Resources */ = {isa = PBXBuildFile; fileRef = 66B21A58175B0BF30049F1AF /* cloth.png */; };
 		66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A6B175E4A5A0049F1AF /* MMStackManager.m */; };
@@ -338,6 +339,8 @@
 		66AE5AA617F4D064009F82B6 /* MMScrapsOnPaperState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapsOnPaperState.h; sourceTree = "<group>"; };
 		66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapsOnPaperState.m; sourceTree = "<group>"; };
 		66AE5AA917F4D124009F82B6 /* MMScrapsOnPaperStateDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScrapsOnPaperStateDelegate.h; sourceTree = "<group>"; };
+		66B0FA5E17FB68410079E7A3 /* MMScrapViewState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapViewState.h; sourceTree = "<group>"; };
+		66B0FA5F17FB68410079E7A3 /* MMScrapViewState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapViewState.m; sourceTree = "<group>"; };
 		66B21A54175AFCA70049F1AF /* MMHandButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMHandButton.h; sourceTree = "<group>"; };
 		66B21A55175AFCA70049F1AF /* MMHandButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMHandButton.m; sourceTree = "<group>"; };
 		66B21A58175B0BF30049F1AF /* cloth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloth.png; sourceTree = "<group>"; };
@@ -683,7 +686,7 @@
 		664C62F115A36DB00072736A /* MMPaperView */ = {
 			isa = PBXGroup;
 			children = (
-				66B62C4B17F245E6006D31EB /* State */,
+				66B62C4B17F245E6006D31EB /* Page State */,
 				66A471C317C7E05C00C2A5B6 /* Scraps */,
 				66CE120517D3B6C200882275 /* Scrap Bubble */,
 				66D33F4A15A6408A0044C809 /* MMShadowedView.h */,
@@ -856,11 +859,8 @@
 			children = (
 				66A471C417C7E06B00C2A5B6 /* MMScrapView.h */,
 				66A471C517C7E06B00C2A5B6 /* MMScrapView.m */,
-				66AE5AA617F4D064009F82B6 /* MMScrapsOnPaperState.h */,
-				66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */,
-				66AE5AA917F4D124009F82B6 /* MMScrapsOnPaperStateDelegate.h */,
-				66052A0117FA170600A94531 /* MMImmutableScrapsOnPaperState.h */,
-				66052A0217FA170600A94531 /* MMImmutableScrapsOnPaperState.m */,
+				66B0FA5E17FB68410079E7A3 /* MMScrapViewState.h */,
+				66B0FA5F17FB68410079E7A3 /* MMScrapViewState.m */,
 			);
 			name = Scraps;
 			sourceTree = "<group>";
@@ -937,14 +937,19 @@
 			name = Operations;
 			sourceTree = "<group>";
 		};
-		66B62C4B17F245E6006D31EB /* State */ = {
+		66B62C4B17F245E6006D31EB /* Page State */ = {
 			isa = PBXGroup;
 			children = (
 				66B62C4C17F245F3006D31EB /* MMPaperState.h */,
 				66B62C4D17F245F3006D31EB /* MMPaperState.m */,
 				66B62C4F17F24777006D31EB /* MMPaperStateDelegate.h */,
+				66AE5AA617F4D064009F82B6 /* MMScrapsOnPaperState.h */,
+				66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */,
+				66AE5AA917F4D124009F82B6 /* MMScrapsOnPaperStateDelegate.h */,
+				66052A0117FA170600A94531 /* MMImmutableScrapsOnPaperState.h */,
+				66052A0217FA170600A94531 /* MMImmutableScrapsOnPaperState.m */,
 			);
-			name = State;
+			name = "Page State";
 			sourceTree = "<group>";
 		};
 		66BD6E811593AF4500D4544C /* Buttons */ = {
@@ -1263,6 +1268,7 @@
 				665CAC2517B58FD3000BD505 /* UIColor+ColorWithHex.m in Sources */,
 				66BD6E9C15940D7500D4544C /* MMPencilButton.m in Sources */,
 				66BD6E9F15941B7B00D4544C /* MMShareButton.m in Sources */,
+				66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */,
 				66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */,
 				6693295A15958A950033E557 /* MMShadowManager.m in Sources */,
 				66932965159593C00033E557 /* MMRotationManager.m in Sources */,

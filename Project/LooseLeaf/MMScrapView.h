@@ -43,4 +43,8 @@
 -(void) saveToDisk;
 
 
+-(void) loadStateAsynchronously:(BOOL)async;
+
+-(void) unloadState;
+
 @end
