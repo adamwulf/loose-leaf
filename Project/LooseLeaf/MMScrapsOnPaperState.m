@@ -38,12 +38,14 @@
         NSArray* scrapProps = [NSArray arrayWithContentsOfFile:scrapIDsPath];
         for(NSDictionary* scrapProperties in scrapProps){
             MMScrapView* scrap = [[MMScrapView alloc] initWithUUID:[scrapProperties objectForKey:@"uuid"]];
-            scrap.center = CGPointMake([[scrapProperties objectForKey:@"center.x"] floatValue], [[scrapProperties objectForKey:@"center.y"] floatValue]);
-            scrap.rotation = [[scrapProperties objectForKey:@"rotation"] floatValue];
-            scrap.scale = [[scrapProperties objectForKey:@"scale"] floatValue];
-            [self.delegate didLoadScrap:scrap];
-            
-            [scrap loadStateAsynchronously:async];
+            if(scrap){
+                scrap.center = CGPointMake([[scrapProperties objectForKey:@"center.x"] floatValue], [[scrapProperties objectForKey:@"center.y"] floatValue]);
+                scrap.rotation = [[scrapProperties objectForKey:@"rotation"] floatValue];
+                scrap.scale = [[scrapProperties objectForKey:@"scale"] floatValue];
+                [self.delegate didLoadScrap:scrap];
+                
+                [scrap loadStateAsynchronously:async];
+            }
         }
         isLoaded = YES;
     }

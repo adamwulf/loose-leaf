@@ -7,9 +7,29 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <JotUI/JotUI.h>
 
 @interface MMScrapViewState : NSObject
 
+@property (readonly) UIBezierPath* bezierPath;
+@property (readonly) CGSize originalSize;
+@property (readonly) UIView* contentView;
+@property (readonly) CGRect drawableBounds;
+
 -(id) initWithUUID:(NSString*)uuid;
+
+-(id) initWithUUID:(NSString*)uuid andBezierPath:(UIBezierPath*)bezierPath;
+
+-(void) saveToDisk;
+
+-(void) loadStateAsynchronously:(BOOL)async;
+
+-(void) unloadState;
+
+
+
+
+// TODO: clean up how elements are added to a scrap
+-(void) addElement:(AbstractBezierPathElement*)element;
 
 @end
