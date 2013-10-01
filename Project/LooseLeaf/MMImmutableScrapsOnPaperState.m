@@ -6,10 +6,10 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMImmutableScrapState.h"
+#import "MMImmutableScrapsOnPaperState.h"
 #import "MMScrapView.h"
 
-@implementation MMImmutableScrapState{
+@implementation MMImmutableScrapsOnPaperState{
     NSArray* scraps;
 }
 

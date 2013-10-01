@@ -6,15 +6,15 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMScrapState.h"
+#import "MMScrapsOnPaperState.h"
 #import "MMScrapView.h"
-#import "MMImmutableScrapState.h"
+#import "MMImmutableScrapsOnPaperState.h"
 
 /**
  * similar to the MMPaperState, this object will
  * track the state for all scraps within a single page
  */
-@implementation MMScrapState{
+@implementation MMScrapsOnPaperState{
     NSString* scrapIDsPath;
     BOOL isLoaded;
 }
@@ -49,13 +49,14 @@
 
 -(void) unload{
     if([self isStateLoaded]){
+        
         isLoaded = NO;
     }
 }
 
--(MMImmutableScrapState*) immutableState{
+-(MMImmutableScrapsOnPaperState*) immutableState{
     if([self isStateLoaded]){
-        return [[MMImmutableScrapState alloc] initWithScrapIDsPath:self.scrapIDsPath andScraps:self.delegate.scraps];
+        return [[MMImmutableScrapsOnPaperState alloc] initWithScrapIDsPath:self.scrapIDsPath andScraps:self.delegate.scraps];
     }
     return nil;
 }

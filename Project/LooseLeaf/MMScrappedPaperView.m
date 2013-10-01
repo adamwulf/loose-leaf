@@ -17,14 +17,14 @@
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "MMDebugDrawView.h"
-#import "MMScrapState.h"
-#import "MMImmutableScrapState.h"
+#import "MMScrapsOnPaperState.h"
+#import "MMImmutableScrapsOnPaperState.h"
 
 
 @implementation MMScrappedPaperView{
     UIView* scrapContainerView;
     NSString* scrapIDsPath;
-    MMScrapState* scrapState;
+    MMScrapsOnPaperState* scrapState;
 }
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
@@ -41,7 +41,7 @@
 
         panGesture.scrapDelegate = self;
         
-        scrapState = [[MMScrapState alloc] initWithScrapIDsPath:self.scrapIDsPath];
+        scrapState = [[MMScrapsOnPaperState alloc] initWithScrapIDsPath:self.scrapIDsPath];
         scrapState.delegate = self;
     }
     return self;
@@ -394,7 +394,8 @@
 
 -(void) unloadState{
     [super unloadState];
-    [[scrapState immutableState] unload];
+    [[scrapState immutableState] saveToDisk];
+    [scrapState unload];
     [scrapContainerView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 }
 

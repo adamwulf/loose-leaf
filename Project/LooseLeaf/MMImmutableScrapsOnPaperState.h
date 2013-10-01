@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMScrapState.h"
+#import "MMScrapsOnPaperState.h"
 
-@interface MMImmutableScrapState : MMScrapState
+@interface MMImmutableScrapsOnPaperState : MMScrapsOnPaperState
 
 -(id) initWithScrapIDsPath:(NSString *)scrapIDsPath andScraps:(NSArray*)scraps;
 

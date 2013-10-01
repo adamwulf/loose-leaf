@@ -9,9 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "MMScrapStateDelegate.h"
 
-@class MMImmutableScrapState;
+@class MMImmutableScrapsOnPaperState;
 
-@interface MMScrapState : NSObject{
+@interface MMScrapsOnPaperState : NSObject{
     __weak NSObject<MMScrapStateDelegate>* delegate;
 }
 
@@ -27,6 +27,6 @@
 
 -(void) unload;
 
--(MMImmutableScrapState*) immutableState;
+-(MMImmutableScrapsOnPaperState*) immutableState;
 
 @end
