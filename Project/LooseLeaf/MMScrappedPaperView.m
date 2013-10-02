@@ -56,8 +56,9 @@
  * bounds
  */
 -(void) addScrapWithPath:(UIBezierPath*)path{
-    UIView* newScrap = [[MMScrapView alloc] initWithBezierPath:path];
+    MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path];
     [scrapContainerView addSubview:newScrap];
+    [newScrap loadStateAsynchronously:NO];
     
     newScrap.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.03, 1.03);
     
@@ -373,18 +374,18 @@
         dispatch_semaphore_signal(sema1);
     }];
     
-    [NSThread performBlockInBackground:^{
+    dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         [[scrapState immutableState] saveToDisk];
         dispatch_semaphore_signal(sema2);
-    }];
+    });
 
-    [NSThread performBlockInBackground:^{
+    dispatch_async([MMScrapsOnPaperState concurrentBackgroundQueue], ^(void) {
         dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
         dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
         [NSThread performBlockOnMainThread:^{
             [self.delegate didSavePage:self];
         }];
-    }];
+    });
 }
 
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context{

@@ -49,9 +49,10 @@
         @autoreleasepool {
             if(!jotViewState){
                 jotViewState = [[JotViewState alloc] initWithImageFile:inkPath
-                                                   andStateFile:plistPath
-                                                    andPageSize:pagePixelSize
-                                                   andGLContext:context];
+                                                          andStateFile:plistPath
+                                                           andPageSize:pagePixelSize
+                                                          andGLContext:context
+                                                      andBufferManager:[JotBufferManager sharedInstace]];
                 lastSavedUndoHash = [jotViewState undoHash];
                 @synchronized(self){
                     isLoadingState = NO;

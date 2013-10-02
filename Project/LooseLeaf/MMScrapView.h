@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <JotUI/JotUI.h>
+#import "MMScrapViewStateDelegate.h"
 
-@interface MMScrapView : UIView
+@interface MMScrapView : UIView<MMScrapViewStateDelegate>
 
 @property (readonly) UIBezierPath* clippingPath;
 @property (readonly) UIBezierPath* bezierPath;
