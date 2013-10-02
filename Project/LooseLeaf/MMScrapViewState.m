@@ -30,6 +30,8 @@
     
     CGSize originalSize;
     CGRect drawableBounds;
+    
+    UIImageView* thumbnailView;
 }
 
 @synthesize bezierPath;
@@ -92,6 +94,18 @@ static dispatch_queue_t importExportScrapStateQueue;
         contentView = [[UIView alloc] initWithFrame:drawableBounds];
         [contentView setClipsToBounds:YES];
         [contentView setBackgroundColor:[UIColor clearColor]];
+        contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        
+        
+        UIImage* thumb = [UIImage imageWithContentsOfFile:self.thumbImageFile];
+        thumbnailView = [[UIImageView alloc] initWithImage:thumb];
+        thumbnailView.contentMode = UIViewContentModeScaleAspectFit;
+        thumbnailView.clipsToBounds = YES;
+        thumbnailView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [contentView addSubview:thumbnailView];
+        thumbnailView.frame = contentView.bounds;
+        
+        NSLog(@"size: %f %f vs %f %f", thumb.size.width, thumb.size.height, thumbnailView.bounds.size.width, thumbnailView.bounds.size.height);
         
         // create a blank drawable view
         lastSavedUndoHash = -1;
@@ -122,6 +136,7 @@ static dispatch_queue_t importExportScrapStateQueue;
                 
                 // now export the drawn content
                 [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
+                    thumbnailView.image = thumb;
                     dispatch_semaphore_signal(sema1);
                     lastSavedUndoHash = [state undoHash];
                 }];
@@ -170,6 +185,7 @@ static dispatch_queue_t importExportScrapStateQueue;
                     isLoadingState = NO;
                     if(shouldKeepStateLoaded){
                         [contentView addSubview:drawableView];
+                        thumbnailView.hidden = YES;
                         if(drawableViewState){
                             [drawableView loadState:drawableViewState];
                             lastSavedUndoHash = [drawableView undoHash];
@@ -218,6 +234,7 @@ static dispatch_queue_t importExportScrapStateQueue;
                     [drawableView removeFromSuperview];
                     drawableView = nil;
                     lastSavedUndoHash = [drawableView undoHash]; // zero out the lastSavedUndoHash so we don't try to save
+                    thumbnailView.hidden = NO;
                 }
             }
         }
