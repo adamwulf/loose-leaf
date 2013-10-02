@@ -134,7 +134,7 @@
         // TODO: add this to our subviews only when our state
         // is loaded, otherwise show an image preview instead.
         [self addSubview:scrapState.contentView];
-
+        
         [MMDebugDrawView sharedInstace].frame = self.bounds;
         [self addSubview:[MMDebugDrawView sharedInstace]];
 
