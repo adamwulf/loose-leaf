@@ -8,9 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import <JotUI/JotUI.h>
+#import "MMScrapViewStateDelegate.h"
 
-@interface MMScrapViewState : NSObject
+@interface MMScrapViewState : NSObject{
+    __weak NSObject<MMScrapViewStateDelegate>* delegate;
+}
 
+@property (weak) NSObject<MMScrapViewStateDelegate>* delegate;
 @property (readonly) UIBezierPath* bezierPath;
 @property (readonly) CGSize originalSize;
 @property (readonly) UIView* contentView;

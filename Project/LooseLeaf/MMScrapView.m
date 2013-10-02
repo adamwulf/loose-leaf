@@ -64,7 +64,8 @@
 -(id) initWithUUID:(NSString*)_uuid{
     
     scrapState = [[MMScrapViewState alloc] initWithUUID:_uuid];
-    
+    scrapState.delegate = self;
+
     if(scrapState.bezierPath){
         if(self = [self initWithBezierPath:scrapState.bezierPath andUUID:_uuid]){
             // TODO: load in thumbnail image view while state loads
@@ -91,6 +92,7 @@
         // one of our other [init] methods may have already created a state
         // for us, but if not, then go ahead and build one
         scrapState = [[MMScrapViewState alloc] initWithUUID:_uuid andBezierPath:originalPath];
+        scrapState.delegate = self;
     }
     
     // -4 b/c twice the 2px shadow
@@ -302,6 +304,15 @@
 -(void) addElement:(AbstractBezierPathElement *)element{
     [scrapState addElement:element];
 }
+
+
+#pragma mark - MMScrapViewStateDelegate
+
+-(void) didLoadScrapViewState:(MMScrapViewState*)state{
+    // noop
+}
+
+
 
 
 #pragma mark - Ignore Touches

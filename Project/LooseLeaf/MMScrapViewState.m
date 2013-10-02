@@ -17,6 +17,9 @@
     NSUInteger lastSavedUndoHash;
     UIView* contentView;
     JotView* drawableView;
+    JotViewState* drawableViewState;
+    BOOL shouldKeepStateLoaded;
+    BOOL isLoadingState;
     UIBezierPath* bezierPath;
     
     // private vars
@@ -32,6 +35,19 @@
 @synthesize bezierPath;
 @synthesize contentView;
 @synthesize drawableBounds;
+@synthesize delegate;
+
+static dispatch_queue_t importExportScrapStateQueue;
+
++(dispatch_queue_t) importExportScrapStateQueue{
+    @synchronized([MMScrapViewState class]){
+        if(!importExportScrapStateQueue){
+            importExportScrapStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.importExportScrapStateQueue", DISPATCH_QUEUE_SERIAL);
+        }
+    }
+    return importExportScrapStateQueue;
+}
+
 
 -(id) initWithUUID:(NSString*)_uuid{
     if(self = [super init]){
@@ -78,26 +94,8 @@
         [contentView setBackgroundColor:[UIColor clearColor]];
         
         // create a blank drawable view
-        drawableView = [[JotView alloc] initWithFrame:drawableBounds];
         lastSavedUndoHash = -1;
         
-        // add our drawable view to our contents
-        [contentView addSubview:drawableView];
-        
-        // load state, if we have any.
-        // TODO: make this async later when possible
-        if([[NSFileManager defaultManager] fileExistsAtPath:self.stateFile]){
-            
-            // load drawable view information here
-            JotViewState* state = [[JotViewState alloc] initWithImageFile:self.inkImageFile
-                                                             andStateFile:self.stateFile
-                                                              andPageSize:[drawableView pagePixelSize]
-                                                             andGLContext:[drawableView context]];
-            
-            [drawableView loadState:state];
-            
-            lastSavedUndoHash = [drawableView undoHash];
-        }
     }
     return self;
 }
@@ -110,34 +108,120 @@
 }
 
 -(void) saveToDisk{
-    if(lastSavedUndoHash != [drawableView undoHash]){
-        dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
-        [NSThread performBlockOnMainThread:^{
-            // save path
-            // this needs to be saved at the exact same time as the drawable view
-            // so that we can guarentee that there is no race condition
-            // for saving state vs content
-            NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
-            [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
-            [savedProperties writeToFile:self.plistPath atomically:YES];
-            
-            // now export the drawn content
-            [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
-                dispatch_semaphore_signal(sema1);
-                lastSavedUndoHash = [state undoHash];
+    if(drawableViewState && lastSavedUndoHash != [drawableView undoHash]){
+        dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
+            dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+            [NSThread performBlockOnMainThread:^{
+                // save path
+                // this needs to be saved at the exact same time as the drawable view
+                // so that we can guarentee that there is no race condition
+                // for saving state vs content
+                NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
+                [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
+                [savedProperties writeToFile:self.plistPath atomically:YES];
+                
+                // now export the drawn content
+                [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
+                    dispatch_semaphore_signal(sema1);
+                    lastSavedUndoHash = [state undoHash];
+                }];
             }];
-        }];
-        dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+            dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+        });
     }
 }
 
 
 -(void) loadStateAsynchronously:(BOOL)async{
-    
+    @synchronized(self){
+        // if we're already loading our
+        // state, then bail early
+        if(isLoadingState) return;
+        // if we already have our state,
+        // then bail early
+        if(drawableViewState) return;
+        
+        shouldKeepStateLoaded = YES;
+        isLoadingState = YES;
+    }
+
+    void (^loadBlock)() = ^(void) {
+        @autoreleasepool {
+            
+            dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+            [NSThread performBlockOnMainThread:^{
+                // add our drawable view to our contents
+                drawableView = [[JotView alloc] initWithFrame:drawableBounds];
+                dispatch_semaphore_signal(sema1);
+            }];
+            
+
+            // load state, if we have any.
+            dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+            // load drawable view information here
+            drawableViewState = [[JotViewState alloc] initWithImageFile:self.inkImageFile
+                                                           andStateFile:self.stateFile
+                                                            andPageSize:[drawableView pagePixelSize]
+                                                           andGLContext:[drawableView context]
+                                                       andBufferManager:[[JotBufferManager alloc] init]];
+            
+            [NSThread performBlockOnMainThread:^{
+                @synchronized(self){
+                    isLoadingState = NO;
+                    if(shouldKeepStateLoaded){
+                        [contentView addSubview:drawableView];
+                        if(drawableViewState){
+                            [drawableView loadState:drawableViewState];
+                            lastSavedUndoHash = [drawableView undoHash];
+                        }
+                        
+                        // nothing changed in our goals since we started
+                        // to load state, so notify our delegate
+                        [self.delegate didLoadScrapViewState:self];
+                    }else{
+                        // when loading state, we were actually
+                        // told that we didn't really need the
+                        // state after all, so just throw it away :(
+                        drawableViewState = nil;
+                        drawableView = nil;
+                    }
+                }
+                dispatch_semaphore_signal(sema1);
+            }];
+            dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+        }
+    };
+
+    if(async){
+        dispatch_async([MMScrapViewState importExportScrapStateQueue], loadBlock);
+    }else{
+        NSLog(@"loading: %@", uuid);
+        loadBlock();
+    }
 }
 
 -(void) unloadState{
-    
+    dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
+        @synchronized(self){
+            if(drawableViewState && lastSavedUndoHash != [drawableView undoHash]){
+                // we want to unload, but we're not saved.
+                dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
+                    [self saveToDisk];
+                });
+                dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
+                    [self unloadState];
+                });
+            }else{
+                shouldKeepStateLoaded = NO;
+                if(!isLoadingState && drawableViewState){
+                    drawableViewState = nil;
+                    [drawableView removeFromSuperview];
+                    drawableView = nil;
+                    lastSavedUndoHash = [drawableView undoHash]; // zero out the lastSavedUndoHash so we don't try to save
+                }
+            }
+        }
+    });
 }
 
 
