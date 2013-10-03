@@ -228,7 +228,15 @@
                 // scrap's rotation it'd end up not rotated at all. somehow the
                 // scrap has an effective rotation of -rotation (?).
                 //
-                // either way, when i rotate the path by scrap.rotation, it ends up
+                // thinking about it some more, I think the issue is that
+                // scrap.rotation is defined as the rotation in Core Graphics
+                // coordinate space, but since OpenGL is flipped, then the
+                // rotation flips.
+                //
+                // think of a spinning clock. it spins in different directions
+                // if you look at it from the top or bottom.
+                //
+                // either way, when i rotate the path by -scrap.rotation, it ends up
                 // in the correct visible space. it works!
                 [inter applyTransform:CGAffineTransformMakeRotation(scrap.rotation)];
                 
