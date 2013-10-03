@@ -142,6 +142,7 @@ static dispatch_queue_t importExportScrapStateQueue;
                 }];
             }];
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+            dispatch_release(sema1);
         });
     }
 }
@@ -205,6 +206,7 @@ static dispatch_queue_t importExportScrapStateQueue;
                 dispatch_semaphore_signal(sema1);
             }];
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+            dispatch_release(sema1);
         }
     };
 
