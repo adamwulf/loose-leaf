@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMScapBubbleContainerView.h"
+#import "MMScrapBubbleContainerView.h"
 #import "MMScrapBubbleButton.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMCountBubbleButton.h"
@@ -16,7 +16,7 @@
 
 #define kMaxScrapsInBezel 6
 
-@implementation MMScapBubbleContainerView{
+@implementation MMScrapBubbleContainerView{
     CGFloat lastRotationReading;
     CGFloat targetAlpha;
     NSMutableOrderedSet* scrapsHeldInBezel;
@@ -26,6 +26,8 @@
     UIButton* closeMenuView;
     MMScrapsOnPaperState* scrapState;
     NSString* scrapIDsPath;
+    
+    NSMutableDictionary* rotationAdjustments;
 }
 
 @synthesize delegate;
@@ -54,6 +56,12 @@
         
         scrapMenu.delegate = self;
         
+        NSDictionary* loadedRotationValues = [NSDictionary dictionaryWithContentsOfFile:[MMScrapBubbleContainerView pathToPlist]];
+        rotationAdjustments = [NSMutableDictionary dictionary];
+        if(loadedRotationValues){
+            [rotationAdjustments addEntriesFromDictionary:loadedRotationValues];
+        }
+
         scrapState = [[MMScrapsOnPaperState alloc] initWithScrapIDsPath:self.scrapIDsPath];
         scrapState.delegate = self;
         [scrapState loadStateAsynchronously:YES];
@@ -130,7 +138,7 @@
     bubble.alpha = 0;
     bubble.rotation = lastRotationReading;
     bubble.scale = .9;
-    [bubbleForScrap setObject:bubble forKey:@(scrap.hash)];
+    [bubbleForScrap setObject:bubble forKey:scrap.uuid];
     
     
     //
@@ -154,6 +162,7 @@
             } completion:^(BOOL finished){
                 // add it to the bubble and bounce
                 bubble.scrap = scrap;
+                [rotationAdjustments setObject:@(bubble.rotationAdjustment) forKey:scrap.uuid];
                 [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                     // scrap "hits" the bubble and pushes it down a bit
                     bubble.scale = .8;
@@ -253,7 +262,8 @@
     
     [self animateAndAddScrapBackToPage:scrap];
 
-    [bubbleForScrap removeObjectForKey:@(bubble.scrap.hash)];
+    [bubbleForScrap removeObjectForKey:scrap.uuid];
+    [rotationAdjustments removeObjectForKey:scrap.uuid];
 }
 
 -(void) didTapOnScrapFromMenu:(MMScrapView*)scrap{
@@ -266,11 +276,11 @@
     [self animateAndAddScrapBackToPage:scrap];
     [countButton setCount:[scrapsHeldInBezel count]];
 
-    [bubbleForScrap removeObjectForKey:@(scrap.hash)];
+    [bubbleForScrap removeObjectForKey:scrap.uuid];
 }
 
 -(void) animateAndAddScrapBackToPage:(MMScrapView*)scrap{
-    MMScrapBubbleButton* bubble = [bubbleForScrap objectForKey:@(scrap.hash)];
+    MMScrapBubbleButton* bubble = [bubbleForScrap objectForKey:scrap.uuid];
     [scrap loadStateAsynchronously:YES];
     
     CGPoint positionOnScreenToScaleTo = [self.delegate positionOnScreenToScaleScrapTo:scrap];
@@ -333,7 +343,7 @@
 -(void) hideMenuIfNeeded{
     [self closeMenuTapped:nil];
     for (MMScrapView* scrap in scrapsHeldInBezel) {
-        MMScrapBubbleButton* bubble = [bubbleForScrap objectForKey:@(scrap.hash)];
+        MMScrapBubbleButton* bubble = [bubbleForScrap objectForKey:scrap.uuid];
         bubble.scrap = scrap;
     }
 }
@@ -402,8 +412,29 @@
 
 #pragma mark - Save and Load
 
+
+static NSString* bezelStatePath;
+
+
++(NSString*) pathToPlist{
+    if(!bezelStatePath){
+        NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString* documentsPath = [paths objectAtIndex:0];
+        NSString* bezelStateDirectory = [documentsPath stringByAppendingPathComponent:@"BezelState"];
+        
+        if(![[NSFileManager defaultManager] fileExistsAtPath:bezelStateDirectory]){
+            [[NSFileManager defaultManager] createDirectoryAtPath:bezelStateDirectory withIntermediateDirectories:YES attributes:nil error:nil];
+        }
+        
+        bezelStatePath = [[bezelStateDirectory stringByAppendingPathComponent:@"info"] stringByAppendingPathExtension:@"plist"];
+    }
+    return bezelStatePath;
+}
+
 -(void) saveToDisk{
     [[scrapState immutableState] saveToDisk];
+    
+    [[rotationAdjustments copy] writeToFile:[MMScrapBubbleContainerView pathToPlist] atomically:YES];
 }
 
 
@@ -415,6 +446,8 @@
 
 -(void) didLoadScrap:(MMScrapView *)scrap{
     // add to the bezel
+    NSNumber* rotationAdjustment = [rotationAdjustments objectForKey:scrap.uuid];
+    scrap.rotation += [rotationAdjustment floatValue];
     [self addScrapToBezelSidebar:scrap animated:NO];
 }
 

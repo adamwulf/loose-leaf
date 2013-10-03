@@ -126,7 +126,7 @@
 		66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */; };
 		66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11F617CFD8A600882275 /* MMScrapPaperStackView.m */; };
 		66CE11FA17D14CFB00882275 /* MMShakeScrapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11F917D14CFB00882275 /* MMShakeScrapGestureRecognizer.m */; };
-		66CE11FD17D2700E00882275 /* MMScapBubbleContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11FC17D2700E00882275 /* MMScapBubbleContainerView.m */; };
+		66CE11FD17D2700E00882275 /* MMScrapBubbleContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11FC17D2700E00882275 /* MMScrapBubbleContainerView.m */; };
 		66CE120017D2772400882275 /* MMScrapBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11FF17D2772400882275 /* MMScrapBorderView.m */; };
 		66CE120317D3AD7C00882275 /* MMBounceButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE120217D3AD7C00882275 /* MMBounceButton.m */; };
 		66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* MMListAddPageButton.m */; };
@@ -400,8 +400,8 @@
 		66CE11F617CFD8A600882275 /* MMScrapPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapPaperStackView.m; sourceTree = "<group>"; };
 		66CE11F817D14CFB00882275 /* MMShakeScrapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShakeScrapGestureRecognizer.h; sourceTree = "<group>"; };
 		66CE11F917D14CFB00882275 /* MMShakeScrapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShakeScrapGestureRecognizer.m; sourceTree = "<group>"; };
-		66CE11FB17D2700E00882275 /* MMScapBubbleContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScapBubbleContainerView.h; sourceTree = "<group>"; };
-		66CE11FC17D2700E00882275 /* MMScapBubbleContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScapBubbleContainerView.m; sourceTree = "<group>"; };
+		66CE11FB17D2700E00882275 /* MMScrapBubbleContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBubbleContainerView.h; sourceTree = "<group>"; };
+		66CE11FC17D2700E00882275 /* MMScrapBubbleContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBubbleContainerView.m; sourceTree = "<group>"; };
 		66CE11FE17D2772400882275 /* MMScrapBorderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBorderView.h; sourceTree = "<group>"; };
 		66CE11FF17D2772400882275 /* MMScrapBorderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBorderView.m; sourceTree = "<group>"; };
 		66CE120117D3AD7C00882275 /* MMBounceButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBounceButton.h; sourceTree = "<group>"; };
@@ -988,8 +988,8 @@
 			children = (
 				66942DCE17C84356001E0150 /* MMScrapContainerView.h */,
 				66942DCF17C84356001E0150 /* MMScrapContainerView.m */,
-				66CE11FB17D2700E00882275 /* MMScapBubbleContainerView.h */,
-				66CE11FC17D2700E00882275 /* MMScapBubbleContainerView.m */,
+				66CE11FB17D2700E00882275 /* MMScrapBubbleContainerView.h */,
+				66CE11FC17D2700E00882275 /* MMScrapBubbleContainerView.m */,
 				66CE120617D3BBCD00882275 /* MMScapBubbleContainerViewDelegate.h */,
 				66F4FB2417D912730086E21C /* MMScrapBezelMenuView.h */,
 				66F4FB2517D912730086E21C /* MMScrapBezelMenuView.m */,
@@ -1306,7 +1306,7 @@
 				663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */,
 				663C187D1755B63D00706A05 /* Eraser.m in Sources */,
 				663C188B1759B51600706A05 /* MMUndoRedoButton.m in Sources */,
-				66CE11FD17D2700E00882275 /* MMScapBubbleContainerView.m in Sources */,
+				66CE11FD17D2700E00882275 /* MMScrapBubbleContainerView.m in Sources */,
 				663C1897175A89EF00706A05 /* MMRulerButton.m in Sources */,
 				6651083C178F249C00A7A7DD /* MMVector.m in Sources */,
 				66F4FB2617D912730086E21C /* MMScrapBezelMenuView.m in Sources */,

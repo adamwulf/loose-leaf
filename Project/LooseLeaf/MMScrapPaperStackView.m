@@ -10,11 +10,11 @@
 #import "MMScrapContainerView.h"
 #import "MMShakeScrapGestureRecognizer.h"
 #import "MMScrapBubbleButton.h"
-#import "MMScapBubbleContainerView.h"
+#import "MMScrapBubbleContainerView.h"
 #import "MMDebugDrawView.h"
 
 @implementation MMScrapPaperStackView{
-    MMScapBubbleContainerView* bezelScrapContainer;
+    MMScrapBubbleContainerView* bezelScrapContainer;
     MMScrapContainerView* scrapContainer;
     // we get two gestures here, so that we can support
     // grabbing two scraps at the same time
@@ -30,7 +30,7 @@
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds];
         [self insertSubview:scrapContainer belowSubview:addPageSidebarButton];
         
-        bezelScrapContainer = [[MMScapBubbleContainerView alloc] initWithFrame:self.bounds];
+        bezelScrapContainer = [[MMScrapBubbleContainerView alloc] initWithFrame:self.bounds];
         bezelScrapContainer.delegate = self;
         [self insertSubview:bezelScrapContainer belowSubview:addPageSidebarButton];
 
