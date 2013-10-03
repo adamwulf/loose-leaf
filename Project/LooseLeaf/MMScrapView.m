@@ -313,8 +313,6 @@
 }
 
 
-
-
 #pragma mark - Ignore Touches
 
 /**

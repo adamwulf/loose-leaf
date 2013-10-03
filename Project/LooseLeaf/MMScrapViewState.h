@@ -30,7 +30,7 @@
 
 -(void) unloadState;
 
-
+-(BOOL) isStateLoaded;
 
 
 // TODO: clean up how elements are added to a scrap

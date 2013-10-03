@@ -18,6 +18,7 @@
 @implementation MMScrapsOnPaperState{
     NSString* scrapIDsPath;
     BOOL isLoaded;
+    BOOL isLoading;
 }
 
 @synthesize delegate;
@@ -53,11 +54,15 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) loadStateAsynchronously:(BOOL)async{
-    if(![self isStateLoaded]){
+    if(![self isStateLoaded] && !isLoading){
         __block NSArray* scrapProps;
+        @synchronized(self){
+            isLoading = YES;
+        }
         
         void (^block2)() = ^(void) {
             @autoreleasepool {
+                dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                 scrapProps = [NSArray arrayWithContentsOfFile:scrapIDsPath];
                 [NSThread performBlockOnMainThread:^{
                     for(NSDictionary* scrapProperties in scrapProps){
@@ -71,8 +76,15 @@ static dispatch_queue_t concurrentBackgroundQueue;
                             [scrap loadStateAsynchronously:async];
                         }
                     }
+                    @synchronized(self){
+                        isLoaded = YES;
+                        isLoading = NO;
+                    }
+                    [self.delegate didLoadAllScrapsFor:self];
+                    dispatch_semaphore_signal(sema1);
                 }];
-                isLoaded = YES;
+                dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+                dispatch_release(sema1);
             }
         };
 
@@ -90,7 +102,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
             for(MMScrapView* scrap in self.delegate.scraps){
                 [scrap unloadState];
             }
-            isLoaded = NO;
+            @synchronized(self){
+                isLoaded = NO;
+            }
         }
     });
 }

@@ -8,12 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-@class MMScrapView;
+@class MMScrapView, MMScrapsOnPaperState;
 
 @protocol MMScrapsOnPaperStateDelegate <NSObject>
 
 -(NSArray*) scraps;
 
 -(void) didLoadScrap:(MMScrapView*)scrap;
+
+-(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState;
 
 @end

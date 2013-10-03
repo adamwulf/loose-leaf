@@ -451,4 +451,8 @@ static NSString* bezelStatePath;
     [self addScrapToBezelSidebar:scrap animated:NO];
 }
 
+-(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
+    // noop
+}
+
 @end
