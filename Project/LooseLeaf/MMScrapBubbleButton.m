@@ -70,7 +70,11 @@
 -(void) setScrap:(MMScrapView *)_scrap{
     scrap = _scrap;
     rotationAdjustment = self.rotation;
-    self.rotation = self.rotation; // force transform update
+    
+    // force transform update
+    CGFloat foo = self.rotation;
+    self.rotation = -foo;
+    self.rotation = foo;
 
     [self insertSubview:scrap belowSubview:borderView];
     scrap.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
