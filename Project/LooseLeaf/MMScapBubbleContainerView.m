@@ -133,7 +133,10 @@
     [bubbleForScrap setObject:bubble forKey:@(scrap.hash)];
     
     
-    
+    //
+    // unload the scrap state
+    [scrap unloadState];
+
     
     if(animated){
         CGFloat animationDuration = 0.5;
@@ -268,6 +271,7 @@
 
 -(void) animateAndAddScrapBackToPage:(MMScrapView*)scrap{
     MMScrapBubbleButton* bubble = [bubbleForScrap objectForKey:@(scrap.hash)];
+    [scrap loadStateAsynchronously:YES];
     
     CGPoint positionOnScreenToScaleTo = [self.delegate positionOnScreenToScaleScrapTo:scrap];
     CGFloat scaleOnScreenToScaleTo = [self.delegate scaleOnScreenToScaleScrapTo:scrap givenOriginalScale:bubble.originalScrapScale];
@@ -361,7 +365,7 @@
 #pragma mark - Ignore Touches
 
 /**
- * these two methods make sure that the ruler view
+ * these two methods make sure that this scrap container view
  * can never intercept any touch input. instead it will
  * effectively pass through this view to the views behind it
  */
