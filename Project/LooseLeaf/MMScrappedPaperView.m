@@ -19,6 +19,7 @@
 #import "MMDebugDrawView.h"
 #import "MMScrapsOnPaperState.h"
 #import "MMImmutableScrapsOnPaperState.h"
+#import "MMPaperState.h"
 
 
 @implementation MMScrappedPaperView{
@@ -418,6 +419,11 @@
     [scrapContainerView addSubview:scrap];
 }
 
+-(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
+    // check to see if we've also loaded
+    [self didLoadState:self.paperState];
+}
+
 /**
  * load any scrap previews, if applicable.
  * not sure if i'll just draw these into the
@@ -438,9 +444,11 @@
  * if we have also loaded state for our scraps
  */
 -(void) didLoadState:(MMPaperState*)state{
-    [NSThread performBlockOnMainThread:^{
-        [self.delegate didLoadStateForPage:self];
-    }];
+    if([self hasStateLoaded]){
+        [NSThread performBlockOnMainThread:^{
+            [self.delegate didLoadStateForPage:self];
+        }];
+    }
 }
 
 -(void) didUnloadState:(MMPaperState *)state{

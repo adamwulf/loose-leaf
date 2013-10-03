@@ -32,6 +32,7 @@ dispatch_queue_t importThumbnailQueue;
 }
 
 @synthesize drawableView;
+@synthesize paperState;
 
 +(dispatch_queue_t) loadUnloadStateQueue{
     if(!loadUnloadStateQueue){
@@ -157,7 +158,7 @@ dispatch_queue_t importThumbnailQueue;
 }
 
 -(void) setDrawableView:(JotView *)_drawableView{
-    if(_drawableView && ![paperState isStateLoaded]){
+    if(_drawableView && ![self hasStateLoaded]){
         NSLog(@"oh no");
     }
     if(drawableView != _drawableView){
@@ -166,7 +167,7 @@ dispatch_queue_t importThumbnailQueue;
             [self generateDebugView:YES];
             [self setFrame:self.frame];
             [NSThread performBlockOnMainThread:^{
-                if([self.delegate isPageEditable:self] && [paperState isStateLoaded]){
+                if([self.delegate isPageEditable:self] && [self hasStateLoaded]){
                     [drawableView loadState:paperState.jotViewState];
                     [self.contentView insertSubview:drawableView aboveSubview:cachedImgView];
                     // anchor the view to the top left,
@@ -182,7 +183,7 @@ dispatch_queue_t importThumbnailQueue;
         }else{
             [self generateDebugView:NO];
         }
-    }else if(drawableView && [paperState isStateLoaded]){
+    }else if(drawableView && [self hasStateLoaded]){
         [self setCanvasVisible:YES];
         [self setEditable:YES];
     }

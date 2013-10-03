@@ -136,9 +136,11 @@ static dispatch_queue_t importExportScrapStateQueue;
                 
                 // now export the drawn content
                 [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
-                    thumbnailView.image = thumb;
-                    dispatch_semaphore_signal(sema1);
+                    [NSThread performBlockOnMainThread:^{
+                        thumbnailView.image = thumb;
+                    }];
                     lastSavedUndoHash = [state undoHash];
+                    dispatch_semaphore_signal(sema1);
                 }];
             }];
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
@@ -170,7 +172,6 @@ static dispatch_queue_t importExportScrapStateQueue;
                 drawableView = [[JotView alloc] initWithFrame:drawableBounds];
                 dispatch_semaphore_signal(sema1);
             }];
-            
 
             // load state, if we have any.
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
@@ -243,6 +244,9 @@ static dispatch_queue_t importExportScrapStateQueue;
     });
 }
 
+-(BOOL) isStateLoaded{
+    return drawableViewState != nil;
+}
 
 
 #pragma mark - TODO
