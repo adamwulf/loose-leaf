@@ -12,7 +12,7 @@
 #import "MMScrapBezelMenuViewDelegate.h"
 #import "MMScrapsOnPaperStateDelegate.h"
 
-@interface MMScapBubbleContainerView : MMScrapContainerView<MMScrapBezelMenuViewDelegate,MMScrapsOnPaperStateDelegate>{
+@interface MMScrapBubbleContainerView : MMScrapContainerView<MMScrapBezelMenuViewDelegate,MMScrapsOnPaperStateDelegate>{
     __weak NSObject<MMScapBubbleContainerViewDelegate>* delegate;
 }
 
