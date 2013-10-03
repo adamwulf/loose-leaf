@@ -172,7 +172,7 @@
                 [strokePath moveToPoint:curveElement.startPoint];
                 [strokePath addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
 
-                NSArray* output = [strokePath clipToClosedPath:scrapClippingPath];
+                NSArray* output = [strokePath clipUnclosedPathToClosedPath:scrapClippingPath];
                 
                 //
                 // now we've taken our stroke segment, and computed the intersection
@@ -390,6 +390,8 @@
     dispatch_async([MMScrapsOnPaperState concurrentBackgroundQueue], ^(void) {
         dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
         dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
+        dispatch_release(sema1);
+        dispatch_release(sema2);
         [NSThread performBlockOnMainThread:^{
             [self.delegate didSavePage:self];
         }];
