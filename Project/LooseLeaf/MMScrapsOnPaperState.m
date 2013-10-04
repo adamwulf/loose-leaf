@@ -80,9 +80,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 // load all the states async
                 for(NSDictionary* scrapProperties in scrapProps){
                     MMScrapViewState* state = [[MMScrapViewState alloc] initWithUUID:[scrapProperties objectForKey:@"uuid"]];
-                    NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
-                    [props setObject:state forKey:@"state"];
-                    [scrapPropsWithState addObject:props];
+                    if(state){
+                        NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
+                        [props setObject:state forKey:@"state"];
+                        [scrapPropsWithState addObject:props];
+                    }
                 }
                 
                 
