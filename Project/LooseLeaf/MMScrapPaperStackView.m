@@ -184,7 +184,11 @@
         if(gesture.isShaking){
             // if the gesture is shaking, then pull the scrap to the top if
             // it's not already. otherwise send it to the back
-            if(gesture.scrap == [gesture.scrap.superview.subviews lastObject]){
+            if([pageToDropScrap isEqual:[visibleStackHolder peekSubview]] &&
+               ![pageToDropScrap hasScrap:scrap]){
+                [pageToDropScrap addScrap:scrap];
+                [gesture.scrap.superview insertSubview:gesture.scrap atIndex:0];
+            }else if(gesture.scrap == [gesture.scrap.superview.subviews lastObject]){
                 [gesture.scrap.superview insertSubview:gesture.scrap atIndex:0];
             }else{
                 [gesture.scrap.superview addSubview:gesture.scrap];
