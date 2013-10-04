@@ -347,25 +347,23 @@
 #pragma mark - MMRotationManagerDelegate
 
 -(void) didUpdateAccelerometerWithReading:(CGFloat)currentRawReading{
-    [NSThread performBlockOnMainThread:^{
-        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        addPageSidebarButton.transform = rotationTransform;
-        documentBackgroundSidebarButton.transform = rotationTransform;
-        polylineButton.transform = rotationTransform;
-        polygonButton.transform = rotationTransform;
-        insertImageButton.transform = rotationTransform;
-        textButton.transform = rotationTransform;
-        scissorButton.transform = rotationTransform;
-        pencilTool.transform = rotationTransform;
-        eraserButton.transform = rotationTransform;
-        shareButton.transform = rotationTransform;
-        mapButton.transform = rotationTransform;
-        undoButton.transform = rotationTransform;
-        redoButton.transform = rotationTransform;
-        rulerButton.transform = rotationTransform;
-        handButton.transform = rotationTransform;
-        settingsButton.transform = rotationTransform;
-    }];
+    CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+    addPageSidebarButton.transform = rotationTransform;
+    documentBackgroundSidebarButton.transform = rotationTransform;
+    polylineButton.transform = rotationTransform;
+    polygonButton.transform = rotationTransform;
+    insertImageButton.transform = rotationTransform;
+    textButton.transform = rotationTransform;
+    scissorButton.transform = rotationTransform;
+    pencilTool.transform = rotationTransform;
+    eraserButton.transform = rotationTransform;
+    shareButton.transform = rotationTransform;
+    mapButton.transform = rotationTransform;
+    undoButton.transform = rotationTransform;
+    redoButton.transform = rotationTransform;
+    rulerButton.transform = rotationTransform;
+    handButton.transform = rotationTransform;
+    settingsButton.transform = rotationTransform;
 }
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
     [NSThread performBlockOnMainThread:^{
@@ -466,6 +464,11 @@
     [super finishedScalingBackToPageView:page];
     [self saveStacksToDisk];
     [rulerView setHidden:NO];
+    MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
+    if(![editablePage hasEditsToSave]){
+        [editablePage setCanvasVisible:NO];
+        [editablePage setEditable:NO];
+    }
     [TestFlight passCheckpoint:@"NAV_TO_PAGE_FROM_LIST"];
 }
 
@@ -484,8 +487,10 @@
                 debug_NSLog(@"thumb for %@ is visible", page.uuid);
             }
         }
+    }else{
+        // only load top page not in list view
+        [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
     }
-    [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
 }
 
 -(BOOL) isPageEditable:(MMPaperView*)page{
@@ -816,14 +821,18 @@
 -(void) didLoadStateForPage:(MMEditablePaperView *)page{
     if(page == [visibleStackHolder peekSubview] || page == currentEditablePage){
 //        NSLog(@"didLoadStateForPage: %@", page.uuid);
-        [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
+        if(page.scale > kMinPageZoom){
+            [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
+        }
     }
 }
 
 -(void) didUnloadStateForPage:(MMEditablePaperView*) page{
     if(page == [visibleStackHolder peekSubview] || page == currentEditablePage){
 //        NSLog(@"didUnloadStateForPage: %@", page.uuid);
-        [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
+        if(page.scale > kMinPageZoom){
+            [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
+        }
     }
 }
 

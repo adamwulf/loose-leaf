@@ -31,6 +31,8 @@
 
 -(void) drawX;
 
+-(void) setShouldShowShadow:(BOOL)shouldShowShadow;
+
 /**
  * will return the array of touches that this scrap
  * contains, but only if more than one touch
