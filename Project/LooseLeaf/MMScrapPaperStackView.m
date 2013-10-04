@@ -8,7 +8,6 @@
 
 #import "MMScrapPaperStackView.h"
 #import "MMScrapContainerView.h"
-#import "MMShakeScrapGestureRecognizer.h"
 #import "MMScrapBubbleButton.h"
 #import "MMScrapBubbleContainerView.h"
 #import "MMDebugDrawView.h"
@@ -20,7 +19,6 @@
     // grabbing two scraps at the same time
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture;
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture2;
-    MMShakeScrapGestureRecognizer* shakeScrapGesture;
 }
 
 
@@ -39,9 +37,6 @@
         panAndPinchScrapGesture.scrapDelegate = self;
         panAndPinchScrapGesture.cancelsTouchesInView = NO;
         [self addGestureRecognizer:panAndPinchScrapGesture];
-        
-//        shakeScrapGesture = [[MMShakeScrapGestureRecognizer alloc] initWithTarget:self action:@selector(shakeScrap:)];
-//        [self addGestureRecognizer:shakeScrapGesture];
         
         panAndPinchScrapGesture2 = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
         panAndPinchScrapGesture2.bezelDirectionMask = MMBezelDirectionRight;
@@ -159,6 +154,7 @@
     }
     
     if(gesture.scrap){
+        
         // handle the scrap.
         //
         // if the scrap is hovering over the page that it
@@ -350,13 +346,6 @@
     
     return pageToDropScrap;
 }
-
-#pragma mark - Shake Scraps
-
--(void) shakeScrap:(MMShakeScrapGestureRecognizer*)gesture{
-    // noop for now
-}
-
 
 
 #pragma mark - MMPanAndPinchScrapGestureRecognizerDelegate

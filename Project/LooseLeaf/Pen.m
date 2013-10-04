@@ -31,14 +31,12 @@
         defaultMinSize = minSize;
         defaultMaxSize = maxSize;
         color = [UIColor blackColor];
-        NSLog(@"set to: %@", color);
     }
     return self;
 }
 
 -(void) setColor:(UIColor *)_color{
     color = [_color colorWithAlphaComponent:1];
-    NSLog(@"set to: %@", color);
 }
 
 -(id) init{
