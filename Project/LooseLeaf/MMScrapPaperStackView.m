@@ -51,21 +51,8 @@
                 [possibleSidebarButton addTarget:self action:@selector(anySidebarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
             }
         }
-        
-        
-//        UIButton* goButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//        goButton.titleLabel.text = @"Go";
-//        [goButton addTarget:self action:@selector(drawX) forControlEvents:UIControlEventTouchUpInside];
-//        goButton.frame = CGRectMake(100, 100, 200, 60);
-//        goButton.backgroundColor = [UIColor blueColor];
-//        [self addSubview:goButton];
-//        [self drawX];
     }
     return self;
-}
-
--(void) drawX{
-    [[[visibleStackHolder peekSubview].scraps objectAtIndex:0] drawX];
 }
 
 #pragma mark - Add Page
@@ -193,6 +180,18 @@
             gesture.scrap.scale = scrapScaleInPage;
             gesture.scrap.center = scrapCenterInPage;
         }
+        
+        if(gesture.isShaking){
+            // if the gesture is shaking, then pull the scrap to the top if
+            // it's not already. otherwise send it to the back
+            if(gesture.scrap == [gesture.scrap.superview.subviews lastObject]){
+                [gesture.scrap.superview insertSubview:gesture.scrap atIndex:0];
+            }else{
+                [gesture.scrap.superview addSubview:gesture.scrap];
+            }
+        }
+        
+        
         [self isBeginning:gesture.state == UIGestureRecognizerStateBegan toPanAndScaleScrap:gesture.scrap withTouches:gesture.touches];
     }
     

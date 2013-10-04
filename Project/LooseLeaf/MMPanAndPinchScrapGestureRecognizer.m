@@ -14,7 +14,8 @@
 #import "NSMutableSet+Extras.h"
 
 #define kMaxSimultaneousTouchesAllowedToTrack 20
-#define kNumberOfDirectionChangesToDetermineShake 3
+#define kNumberOfDirectionChangesToDetermineShake 2
+#define kVelocityLowPass 0.7
 
 struct TouchInterval{
     NSUInteger touchHash;
@@ -23,7 +24,6 @@ struct TouchInterval{
     CGPoint directionOfTouch;
     NSInteger numberOfDirectionChanges;
     BOOL hasProcessedShake;
-    NSTimeInterval shakeBeganTimestamp;
     CGFloat avgNormalizedVelocity;
 };
 
@@ -55,7 +55,7 @@ struct TouchInterval{
     
     struct TouchInterval touchIntervals[kMaxSimultaneousTouchesAllowedToTrack];
     
-    NSMutableDictionary* shakeData;
+    BOOL isShaking;
 }
 
 
@@ -69,6 +69,7 @@ struct TouchInterval{
 @synthesize didExitToBezel;
 @synthesize bezelDirectionMask;
 @synthesize shouldReset;
+@synthesize isShaking;
 
 
 NSInteger const  minimumNumberOfTouches = 2;
@@ -165,6 +166,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
  * to match that of the animation.
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    isShaking = NO;
     for(UITouch* touch in touches){
         [self calculateVelocityForTouch:touch];
     }
@@ -238,6 +240,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
+    isShaking = NO;
     for(UITouch* t in touches){
         [self calculateVelocityForTouch:t];
     }
@@ -278,37 +281,57 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
             initialTouchVector = currentVector;
             CGPoint locInView = [self locationInView:self.view];
             translation = CGPointMake(locInView.x - gestureLocationAtStart.x, locInView.y - gestureLocationAtStart.y);
+
+        
+            if(self.scrap){
+                //
+                // only calculate shaking if we're currently
+                // holding a scrap
+                //
+                // our touch information includes the number of
+                // times that a particular touch has been shaken.
+                // this data ensures that the touch has changed direction
+                // only back and forth, that it has kept a fast velocity,
+                // and if we have ever actually processed that shake yet
+                int numberOfShakingTouches = 0;
+                for(UITouch* touch in validTouches){
+                    for(int i=0;i<kMaxSimultaneousTouchesAllowedToTrack;i++){
+                        if(touchIntervals[i].touchHash == touch.hash){
+                            if(touchIntervals[i].numberOfDirectionChanges >= kNumberOfDirectionChangesToDetermineShake &&
+                               !touchIntervals[i].hasProcessedShake){
+                                // only count shakes that have
+                                // changed direction enough times, and
+                                // that we haven't processed yet
+                                numberOfShakingTouches ++;
+                            }
+                            break;
+                        }
+                    }
+                }
+                // check to see if we have enough touches
+                // that are both being shaked + so far unprocessed
+                if(numberOfShakingTouches >= minimumNumberOfTouches){
+                    isShaking = YES;
+                    // now we need to tell that we've processed the shakes
+                    // so that we don't use this same shake gesture to
+                    // repeat immediately
+                    for(UITouch* touch in validTouches){
+                        for(int i=0;i<kMaxSimultaneousTouchesAllowedToTrack;i++){
+                            if(touchIntervals[i].touchHash == touch.hash){
+                                touchIntervals[i].hasProcessedShake = YES;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
         self.state = UIGestureRecognizerStateChanged;
-        
-
-        int numberOfShakingTouches = 0;
-        for(UITouch* touch in validTouches){
-            for(int i=0;i<kMaxSimultaneousTouchesAllowedToTrack;i++){
-                if(touchIntervals[i].touchHash == touch.hash){
-                    if(touchIntervals[i].numberOfDirectionChanges >= kNumberOfDirectionChangesToDetermineShake &&
-                       !touchIntervals[i].hasProcessedShake){
-                        numberOfShakingTouches ++;
-                    }
-                    break;
-                }
-            }
-        }
-        if(numberOfShakingTouches >= minimumNumberOfTouches){
-            NSLog(@"shake!!!!!!! %d", numberOfShakingTouches);
-            for(UITouch* touch in validTouches){
-                for(int i=0;i<kMaxSimultaneousTouchesAllowedToTrack;i++){
-                    if(touchIntervals[i].touchHash == touch.hash){
-                        touchIntervals[i].hasProcessedShake = YES;
-                        break;
-                    }
-                }
-            }
-        }
     }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    isShaking = NO;
     // pan and pinch and bezel
     BOOL cancelledFromBezel = NO;
     NSMutableOrderedSet* validTouchesCurrentlyEnding = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
@@ -606,7 +629,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
     //
     // this will low-pass filter our velocity data to give us an average velocity
     // over the past 10 touches
-    touchIntervals[indexOfTouchInCache].avgNormalizedVelocity = .9*touchIntervals[indexOfTouchInCache].avgNormalizedVelocity + .1*normalizedVelocity;
+    touchIntervals[indexOfTouchInCache].avgNormalizedVelocity = kVelocityLowPass*touchIntervals[indexOfTouchInCache].avgNormalizedVelocity + (1-kVelocityLowPass)*normalizedVelocity;
 
     if([currVec magnitude] > 5){
         CGPoint oldVectorOfMotion = touchIntervals[indexOfTouchInCache].directionOfTouch;
@@ -624,7 +647,6 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
             // too slow
             // or angle too wide
             touchIntervals[indexOfTouchInCache].numberOfDirectionChanges = 0;
-            touchIntervals[indexOfTouchInCache].shakeBeganTimestamp = touch.timestamp;
             touchIntervals[indexOfTouchInCache].hasProcessedShake = NO;
         }else if(deltaAngle < 0.2){
             // same direction
@@ -658,7 +680,6 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
     if(indexOfTouch != -1){
         if(!touchIntervals[indexOfTouch].touchHash){
             touchIntervals[indexOfTouch].touchHash = touch.hash;
-            touchIntervals[indexOfTouch].shakeBeganTimestamp = currTime;
         }
         touchIntervals[indexOfTouch].lastTimestamp = currTime;
     }
