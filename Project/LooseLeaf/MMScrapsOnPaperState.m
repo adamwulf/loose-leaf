@@ -24,6 +24,7 @@
 
 @synthesize delegate;
 @synthesize scrapIDsPath;
+@synthesize shouldShowShadows;
 
 static dispatch_queue_t importExportStateQueue;
 static dispatch_queue_t concurrentBackgroundQueue;
@@ -54,6 +55,12 @@ static dispatch_queue_t concurrentBackgroundQueue;
     return isLoaded;
 }
 
+-(void) setShouldShowShadows:(BOOL)_shouldShowShadows{
+    shouldShowShadows = _shouldShowShadows;
+    for(MMScrapView* scrap in self.delegate.scraps){
+        [scrap setShouldShowShadow:shouldShowShadows];
+    }
+}
 
 
 -(void) loadStateAsynchronously:(BOOL)async andMakeEditable:(BOOL)makeEditable{
@@ -92,6 +99,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                             if(makeEditable){
                                 [scrap loadStateAsynchronously:async];
                             }
+                            [scrap setShouldShowShadow:shouldShowShadows];
                         }
                     }
                     @synchronized(self){

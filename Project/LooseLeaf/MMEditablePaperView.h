@@ -39,6 +39,7 @@
 -(void) saveToDisk:(void (^)(void))onComplete;
 -(void) setCanvasVisible:(BOOL)isVisible;
 -(void) setEditable:(BOOL)isEditable;
+-(BOOL) isEditable;
 
 // abstract
 -(void) saveToDisk;

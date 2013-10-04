@@ -60,6 +60,7 @@
     MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path];
     [scrapContainerView addSubview:newScrap];
     [newScrap loadStateAsynchronously:NO];
+    [newScrap setShouldShowShadow:[self isEditable]];
     
     newScrap.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.03, 1.03);
     
@@ -73,6 +74,7 @@
 
 -(void) addScrap:(MMScrapView*)scrap{
     [scrapContainerView addSubview:scrap];
+    [scrap setShouldShowShadow:[self isEditable]];
     [self saveToDisk];
 }
 
@@ -366,6 +368,12 @@
 -(void) setDrawableView:(JotView *)_drawableView{
     [super setDrawableView:_drawableView];
 }
+
+-(void) setEditable:(BOOL)isEditable{
+    [super setEditable:isEditable];
+    [scrapState setShouldShowShadows:isEditable];
+}
+
 
 -(BOOL) hasEditsToSave{
     return [super hasEditsToSave];

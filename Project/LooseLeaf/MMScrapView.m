@@ -152,7 +152,7 @@
         // displayed inside our bounds. this way we dont
         // need to do any offscreen rendering when displaying
         // this view
-        [self setUpShadow:NO];
+        [self setShouldShowShadow:NO];
     }
     return self;
 }
@@ -164,7 +164,7 @@
  * i should unload shadows when the page isn't on the
  * top and when any page is in list view.
  */
--(void) setUpShadow:(BOOL)shouldShowShadow{
+-(void) setShouldShowShadow:(BOOL)shouldShowShadow{
     if(shouldShowShadow){
         self.layer.shadowPath = scrapState.bezierPath.CGPath;
         self.layer.shadowRadius = 1.5;

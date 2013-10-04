@@ -73,6 +73,8 @@ dispatch_queue_t importThumbnailQueue;
         cachedImgView.contentMode = UIViewContentModeScaleAspectFill;
         cachedImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         cachedImgView.clipsToBounds = YES;
+        cachedImgView.opaque = YES;
+        cachedImgView.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:cachedImgView];
         
         //
@@ -132,9 +134,11 @@ dispatch_queue_t importThumbnailQueue;
     if(isCanvasVisible){
         cachedImgView.hidden = YES;
         drawableView.hidden = NO;
+        shapeBuilderView.hidden = NO;
     }else{
         cachedImgView.hidden = NO;
         drawableView.hidden = YES;
+        shapeBuilderView.hidden = YES;
     }
 }
 
@@ -149,6 +153,9 @@ dispatch_queue_t importThumbnailQueue;
     }
 }
 
+-(BOOL) isEditable{
+    return drawableView.userInteractionEnabled;
+}
 
 -(void) generateDebugView:(BOOL)create{
     if(create){

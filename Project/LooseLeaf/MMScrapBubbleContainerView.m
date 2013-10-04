@@ -357,18 +357,14 @@
 }
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
-    if(1 - ABS(zAccel) > .03){
-        [NSThread performBlockOnMainThread:^{
-            lastRotationReading = [self sidebarButtonRotationForReading:currentRawReading];
-            for(MMScrapBubbleButton* bubble in self.subviews){
-                if([bubble isKindOfClass:[MMScrapBubbleButton class]]){
-                    // during an animation, the scrap will also be a subview,
-                    // so we need to make sure that we're rotating only the
-                    // bubble button
-                    bubble.rotation = [self sidebarButtonRotationForReading:currentRawReading];
-                }
-            }
-        }];
+    lastRotationReading = [self sidebarButtonRotationForReading:currentRawReading];
+    for(MMScrapBubbleButton* bubble in self.subviews){
+        if([bubble isKindOfClass:[MMScrapBubbleButton class]]){
+            // during an animation, the scrap will also be a subview,
+            // so we need to make sure that we're rotating only the
+            // bubble button
+            bubble.rotation = [self sidebarButtonRotationForReading:currentRawReading];
+        }
     }
 }
 

@@ -13,10 +13,12 @@
 
 @interface MMScrapsOnPaperState : NSObject{
     __weak NSObject<MMScrapsOnPaperStateDelegate>* delegate;
+    BOOL shouldShowShadows;
 }
 
 @property (nonatomic, weak) NSObject<MMScrapsOnPaperStateDelegate>* delegate;
 @property (readonly) NSString* scrapIDsPath;
+@property (nonatomic, assign) BOOL shouldShowShadows;
 
 +(dispatch_queue_t) importExportStateQueue;
 
