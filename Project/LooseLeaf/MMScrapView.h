@@ -29,8 +29,6 @@
 
 -(void) setScale:(CGFloat)scale andRotation:(CGFloat)rotation;
 
--(void) drawX;
-
 -(void) setShouldShowShadow:(BOOL)shouldShowShadow;
 
 /**
