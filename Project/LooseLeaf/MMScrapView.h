@@ -20,7 +20,7 @@
 @property (nonatomic, readonly) CGSize originalSize;
 @property (nonatomic, readonly) NSString* uuid;
 
--(id) initWithUUID:(NSString*)uuid;
+-(id) initWithScrapViewState:(MMScrapViewState*)scrapState;
 - (id)initWithBezierPath:(UIBezierPath*)path;
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;

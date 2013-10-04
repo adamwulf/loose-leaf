@@ -17,6 +17,7 @@
 #import "NSString+UUID.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMScrapViewState.h"
+#import "MMScrapBorderView.h"
 
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 
@@ -52,6 +53,16 @@
     NSString* uuid;
     
     MMScrapViewState* scrapState;
+    
+    //
+    // TODO: I think I need to have this
+    // border view be ideally scaled to the list
+    // size. possibly have a 2nd border view
+    // that's ideally scaled to the page size?
+    //
+    // this way the border is crisp when scrolling
+    // in list view
+    MMScrapBorderView* borderView;
 }
 
 @synthesize uuid;
@@ -61,19 +72,21 @@
 @synthesize clippingPath;
 
 
--(id) initWithUUID:(NSString*)_uuid{
+-(id) initWithScrapViewState:(MMScrapViewState*)_scrapState{
     
-    scrapState = [[MMScrapViewState alloc] initWithUUID:_uuid];
+    scrapState = _scrapState;
     scrapState.delegate = self;
-
+    
     if(scrapState.bezierPath){
-        if(self = [self initWithBezierPath:scrapState.bezierPath andUUID:_uuid]){
+        if(self = [self initWithBezierPath:scrapState.bezierPath andUUID:scrapState.uuid]){
             // TODO: load in thumbnail image view while state loads
         }
         return self;
     }
     // can't find any information about that scrap
     return nil;
+    
+    return self;
 }
 
 - (id)initWithBezierPath:(UIBezierPath *)path{
@@ -110,17 +123,6 @@
         backgroundColorLayer.frame = self.layer.bounds;
         [self.layer addSublayer:backgroundColorLayer];
         
-        // now we need to show our shadow.
-        // this is done just as we do with Shadowed view
-        // our view clips to bounds, and our shadow is
-        // displayed inside our bounds. this way we dont
-        // need to do any offscreen rendering when displaying
-        // this view
-        self.layer.shadowPath = scrapState.bezierPath.CGPath;
-        self.layer.shadowRadius = 1.5;
-        self.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.5].CGColor;
-        self.layer.shadowOpacity = .65;
-        self.layer.shadowOffset = CGSizeMake(0, 0);
         
         // only the path contents are opaque, but outside the path needs to be transparent
         self.opaque = NO;
@@ -138,8 +140,42 @@
         [MMDebugDrawView sharedInstace].frame = self.bounds;
         [self addSubview:[MMDebugDrawView sharedInstace]];
 
+        borderView = [[MMScrapBorderView alloc] initWithFrame:self.bounds];
+        borderView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        [borderView setBezierPath:self.bezierPath];
+        [self addSubview:borderView];
+        borderView.hidden = YES;
+        
+        // now we need to show our shadow.
+        // this is done just as we do with Shadowed view
+        // our view clips to bounds, and our shadow is
+        // displayed inside our bounds. this way we dont
+        // need to do any offscreen rendering when displaying
+        // this view
+        [self setUpShadow:NO];
     }
     return self;
+}
+
+
+/**
+ * shadows cause lag during scrolling
+ * 
+ * i should unload shadows when the page isn't on the
+ * top and when any page is in list view.
+ */
+-(void) setUpShadow:(BOOL)shouldShowShadow{
+    if(shouldShowShadow){
+        self.layer.shadowPath = scrapState.bezierPath.CGPath;
+        self.layer.shadowRadius = 1.5;
+        self.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.5].CGColor;
+        self.layer.shadowOpacity = .65;
+        self.layer.shadowOffset = CGSizeMake(0, 0);
+        borderView.hidden = YES;
+    }else{
+        self.layer.shadowPath = nil;
+        borderView.hidden = NO;
+    }
 }
 
 -(void) setSelected:(BOOL)_selected{

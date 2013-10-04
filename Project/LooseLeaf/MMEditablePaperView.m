@@ -29,6 +29,17 @@ dispatch_queue_t importThumbnailQueue;
     BOOL isLoadingCachedImageFromDisk;
     
     MMPaperState* paperState;
+    
+    // we want to be able to track extremely
+    // efficiently 1) if we have a thumbnail loaded,
+    // and 2) if we have (or don't) a thumbnail at all
+    UIImage* cachedImgViewImage;
+    // this defaults to NO, which means we'll try to
+    // load a thumbnail. if an image does not exist
+    // on disk, then we'll set this to YES which will
+    // prevent any more thumbnail loads until this page
+    // is saved
+    BOOL definitelyDoesNotHaveAThumbnail;
 }
 
 @synthesize drawableView;
@@ -237,10 +248,12 @@ dispatch_queue_t importThumbnailQueue;
                    andThumbnailTo:[self thumbnailPath]
                        andStateTo:[self plistPath]
                        onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* immutableState){
+                           definitelyDoesNotHaveAThumbnail = NO;
                            [paperState wasSavedAtImmutableState:immutableState];
                            onComplete();
                            [NSThread performBlockOnMainThread:^{
-                               cachedImgView.image = thumbnail;
+                               cachedImgViewImage = thumbnail;
+                               cachedImgView.image = cachedImgViewImage;
                            }];
                        }];
     }else{
@@ -257,15 +270,31 @@ dispatch_queue_t importThumbnailQueue;
  * and we load the preview for pages only when they become visible
  * in the scroll view or by gestures in page view.
  */
+
+// static count to help debug how many times I'm actually
+// going to disk trying to load a thumbnail
+static int count = 0;
 -(void) loadCachedPreview{
-    if(!cachedImgView.image && !isLoadingCachedImageFromDisk){
+    // if we might have a thumbnail (!definitelyDoesNotHaveAThumbnail)
+    // and we don't have one cached (!cachedImgViewImage) and
+    // we're not already tryign to load it form disk (!isLoadingCachedImageFromDisk)
+    // then try to load it and store the results.
+    if(!definitelyDoesNotHaveAThumbnail && !cachedImgViewImage && !isLoadingCachedImageFromDisk){
         isLoadingCachedImageFromDisk = YES;
+        count++;
         dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
             @autoreleasepool {
-                UIImage* img = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
+                //
+                // load thumbnails into a cache for faster repeat loading
+                // https://github.com/adamwulf/loose-leaf/issues/227
+                UIImage* thumbnail = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
+                if(!thumbnail){
+                    definitelyDoesNotHaveAThumbnail = YES;
+                }
+                isLoadingCachedImageFromDisk = NO;
                 [NSThread performBlockOnMainThread:^{
-                    cachedImgView.image = img;
-                    isLoadingCachedImageFromDisk = NO;
+                    cachedImgViewImage = thumbnail;
+                    cachedImgView.image = cachedImgViewImage;
                 }];
             }
         });
@@ -284,11 +313,16 @@ dispatch_queue_t importThumbnailQueue;
     //
     // i should probably make an nsoperationqueue or something
     // so that i can cancel operations if they havne't run yet... (?)
-    dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
-        [NSThread performBlockOnMainThread:^{
-            cachedImgView.image = nil;
-        }];
-    });
+    if(cachedImgViewImage || isLoadingCachedImageFromDisk){
+        // adding to these thread queues will make sure I unload
+        // after any in progress load
+        dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
+            [NSThread performBlockOnMainThread:^{
+                cachedImgViewImage = nil;
+                cachedImgView.image = cachedImgViewImage;
+            }];
+        });
+    }
 }
 
 

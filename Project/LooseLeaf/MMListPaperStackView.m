@@ -19,8 +19,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        setOfInitialFramesForPagesBeingZoomed = [[NSMutableDictionary alloc] init];
-        setOfFinalFramesForPagesBeingZoomed = [[NSMutableDictionary alloc] init];
+        setOfInitialFramesForPagesBeingZoomed = [[NSMutableDictionary alloc] initWithCapacity:100];
+        setOfFinalFramesForPagesBeingZoomed = [[NSMutableDictionary alloc] initWithCapacity:100];
         [self setScrollEnabled:NO];
         //
         // screen and column constants
@@ -1142,16 +1142,35 @@
         // based on the 100px that the frame is in. then i know the visible min/max y,
         // and use that to calc the 100px hashes i should look up. this way i don't need to
         // iterate through every single page
+        
+        CGFloat selfContentOffsetY = self.contentOffset.y;
+        CGFloat setFrameSizeHeight = self.frame.size.height;
+        
         NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray array];
-        for(MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
+        
+        NSArray* arraysOfSubviews[2];
+        arraysOfSubviews[0] = visibleStackHolder.subviews;
+        arraysOfSubviews[1] = hiddenStackHolder.subviews;
+        int arrayIndex = 1;
+        int i = 0;
+        
+//        for(MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:]){
+        while(arrayIndex > -1){
+            if(i >= [arraysOfSubviews[arrayIndex] count]){
+                i = 0;
+                arrayIndex -= 1;
+                continue;
+            }
+            MMPaperView* aPage = [arraysOfSubviews[arrayIndex] objectAtIndex:i];
             CGRect frameOfPage = [self frameForListViewForPage:aPage];
             // we have to expand the frame, because we want to count pages even if
             // just their shadow is visible
             frameOfPage = [MMShadowedView expandFrame:frameOfPage];
-            if(frameOfPage.origin.y < self.contentOffset.y + self.frame.size.height &&
-               frameOfPage.origin.y + frameOfPage.size.height > self.contentOffset.y){
+            if(frameOfPage.origin.y < selfContentOffsetY + setFrameSizeHeight &&
+               frameOfPage.origin.y + frameOfPage.size.height > selfContentOffsetY){
                 [pagesThatWouldBeVisible addObject:aPage];
             }
+            i++;
         }
         return pagesThatWouldBeVisible;
     }

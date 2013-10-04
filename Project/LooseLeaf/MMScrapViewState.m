@@ -38,6 +38,7 @@
 @synthesize contentView;
 @synthesize drawableBounds;
 @synthesize delegate;
+@synthesize uuid;
 
 static dispatch_queue_t importExportScrapStateQueue;
 
@@ -96,17 +97,25 @@ static dispatch_queue_t importExportScrapStateQueue;
         [contentView setBackgroundColor:[UIColor clearColor]];
         contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
-        
-        UIImage* thumb = [UIImage imageWithContentsOfFile:self.thumbImageFile];
-        thumbnailView = [[UIImageView alloc] initWithImage:thumb];
+        // create our thumbnail view,
+        // and load the actual thumbnail async
+        thumbnailView = [[UIImageView alloc] initWithFrame:contentView.bounds];
         thumbnailView.contentMode = UIViewContentModeScaleAspectFit;
         thumbnailView.clipsToBounds = YES;
         thumbnailView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [contentView addSubview:thumbnailView];
         thumbnailView.frame = contentView.bounds;
-        
-        NSLog(@"size: %f %f vs %f %f", thumb.size.width, thumb.size.height, thumbnailView.bounds.size.width, thumbnailView.bounds.size.height);
-        
+
+        // don't load from disk on the main thread.
+        dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
+            @autoreleasepool {
+                UIImage* thumb = [UIImage imageWithContentsOfFile:self.thumbImageFile];
+                [NSThread performBlockOnMainThread:^{
+                    thumbnailView.image = thumb;
+                }];
+            }
+        });
+
         // create a blank drawable view
         lastSavedUndoHash = -1;
         
@@ -124,27 +133,31 @@ static dispatch_queue_t importExportScrapStateQueue;
 -(void) saveToDisk{
     if(drawableViewState && lastSavedUndoHash != [drawableView undoHash]){
         dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
-            dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
-            [NSThread performBlockOnMainThread:^{
-                // save path
-                // this needs to be saved at the exact same time as the drawable view
-                // so that we can guarentee that there is no race condition
-                // for saving state vs content
-                NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
-                [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
-                [savedProperties writeToFile:self.plistPath atomically:YES];
-                
-                // now export the drawn content
-                [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
-                    [NSThread performBlockOnMainThread:^{
-                        thumbnailView.image = thumb;
-                    }];
-                    lastSavedUndoHash = [state undoHash];
-                    dispatch_semaphore_signal(sema1);
+            @autoreleasepool {
+                dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+                [NSThread performBlockOnMainThread:^{
+                    @autoreleasepool {
+                        // save path
+                        // this needs to be saved at the exact same time as the drawable view
+                        // so that we can guarentee that there is no race condition
+                        // for saving state vs content
+                        NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
+                        [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
+                        [savedProperties writeToFile:self.plistPath atomically:YES];
+                        
+                        // now export the drawn content
+                        [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
+                            [NSThread performBlockOnMainThread:^{
+                                thumbnailView.image = thumb;
+                            }];
+                            lastSavedUndoHash = [state undoHash];
+                            dispatch_semaphore_signal(sema1);
+                        }];
+                    }
                 }];
-            }];
-            dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-            dispatch_release(sema1);
+                dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+                dispatch_release(sema1);
+            }
         });
     }
 }
@@ -221,23 +234,29 @@ static dispatch_queue_t importExportScrapStateQueue;
 
 -(void) unloadState{
     dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
-        @synchronized(self){
-            if(drawableViewState && lastSavedUndoHash != [drawableView undoHash]){
-                // we want to unload, but we're not saved.
-                dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
-                    [self saveToDisk];
-                });
-                dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
-                    [self unloadState];
-                });
-            }else{
-                shouldKeepStateLoaded = NO;
-                if(!isLoadingState && drawableViewState){
-                    drawableViewState = nil;
-                    [drawableView removeFromSuperview];
-                    drawableView = nil;
-                    lastSavedUndoHash = [drawableView undoHash]; // zero out the lastSavedUndoHash so we don't try to save
-                    thumbnailView.hidden = NO;
+        @autoreleasepool {
+            @synchronized(self){
+                if(drawableViewState && lastSavedUndoHash != [drawableView undoHash]){
+                    // we want to unload, but we're not saved.
+                    dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
+                        @autoreleasepool {
+                            [self saveToDisk];
+                        }
+                    });
+                    dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
+                        @autoreleasepool {
+                            [self unloadState];
+                        }
+                    });
+                }else{
+                    shouldKeepStateLoaded = NO;
+                    if(!isLoadingState && drawableViewState){
+                        drawableViewState = nil;
+                        [drawableView removeFromSuperview];
+                        drawableView = nil;
+                        lastSavedUndoHash = [drawableView undoHash]; // zero out the lastSavedUndoHash so we don't try to save
+                        thumbnailView.hidden = NO;
+                    }
                 }
             }
         }

@@ -19,6 +19,7 @@
 @property (readonly) CGSize originalSize;
 @property (readonly) UIView* contentView;
 @property (readonly) CGRect drawableBounds;
+@property (readonly) NSString* uuid;
 
 -(id) initWithUUID:(NSString*)uuid;
 

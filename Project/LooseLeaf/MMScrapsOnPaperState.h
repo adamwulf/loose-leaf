@@ -26,7 +26,7 @@
 
 -(BOOL) isStateLoaded;
 
--(void) loadStateAsynchronously:(BOOL)async;
+-(void) loadStateAsynchronously:(BOOL)async andMakeEditable:(BOOL)makeEditable;
 
 -(void) unload;
 
