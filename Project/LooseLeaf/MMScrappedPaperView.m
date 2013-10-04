@@ -384,31 +384,36 @@
     }];
     
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
-        [[scrapState immutableState] saveToDisk];
-        dispatch_semaphore_signal(sema2);
+        @autoreleasepool {
+            [[scrapState immutableState] saveToDisk];
+            dispatch_semaphore_signal(sema2);
+        }
     });
 
     dispatch_async([MMScrapsOnPaperState concurrentBackgroundQueue], ^(void) {
-        dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-        dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
-        dispatch_release(sema1);
-        dispatch_release(sema2);
-        [NSThread performBlockOnMainThread:^{
-            [self.delegate didSavePage:self];
-        }];
+        @autoreleasepool {
+            dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+            dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
+            dispatch_release(sema1);
+            dispatch_release(sema2);
+            [NSThread performBlockOnMainThread:^{
+                [self.delegate didSavePage:self];
+            }];
+        }
     });
 }
 
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context{
     [super loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
-    [scrapState loadStateAsynchronously:async];
+    [scrapState loadStateAsynchronously:async andMakeEditable:YES];
 }
 
 -(void) unloadState{
     [super unloadState];
     [[scrapState immutableState] saveToDisk];
+    // unloading the scrap state will also remove them
+    // from their superview (us)
     [scrapState unload];
-    [scrapContainerView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 }
 
 -(BOOL) hasStateLoaded{
@@ -430,11 +435,17 @@
  * page preview or not
  */
 -(void) loadCachedPreview{
+    // make sure our thumbnail is loaded
     [super loadCachedPreview];
+    // make sure our scraps' thumbnails are loaded
+    [scrapState loadStateAsynchronously:YES andMakeEditable:NO];
 }
 
 -(void) unloadCachedPreview{
+    // free our preview memory
     [super unloadCachedPreview];
+    // free all scraps from memory too
+    [scrapState unload];
 }
 
 #pragma mark - MMPaperStateDelegate

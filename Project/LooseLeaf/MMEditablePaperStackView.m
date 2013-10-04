@@ -815,14 +815,14 @@
 
 -(void) didLoadStateForPage:(MMEditablePaperView *)page{
     if(page == [visibleStackHolder peekSubview] || page == currentEditablePage){
-        NSLog(@"didLoadStateForPage: %@", page.uuid);
+//        NSLog(@"didLoadStateForPage: %@", page.uuid);
         [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
     }
 }
 
 -(void) didUnloadStateForPage:(MMEditablePaperView*) page{
     if(page == [visibleStackHolder peekSubview] || page == currentEditablePage){
-        NSLog(@"didUnloadStateForPage: %@", page.uuid);
+//        NSLog(@"didUnloadStateForPage: %@", page.uuid);
         [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
     }
 }

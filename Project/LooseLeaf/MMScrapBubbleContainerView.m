@@ -64,7 +64,7 @@
 
         scrapState = [[MMScrapsOnPaperState alloc] initWithScrapIDsPath:self.scrapIDsPath];
         scrapState.delegate = self;
-        [scrapState loadStateAsynchronously:YES];
+        [scrapState loadStateAsynchronously:YES andMakeEditable:NO];
     }
     return self;
 }
@@ -142,7 +142,8 @@
     
     
     //
-    // unload the scrap state
+    // unload the scrap state, so that it shows the
+    // image preview instead of an editable state
     [scrap unloadState];
 
     
