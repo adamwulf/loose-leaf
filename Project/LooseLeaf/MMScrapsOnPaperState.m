@@ -142,10 +142,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
         dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
             @autoreleasepool {
                 if([self isStateLoaded]){
-                    for(MMScrapView* scrap in [self.delegate.scraps copy]){
+                    NSArray* scraps = [self.delegate.scraps copy];
+                    for(MMScrapView* scrap in scraps){
                         [scrap unloadState];
-                        [scrap removeFromSuperview];
                     }
+                    [NSThread performBlockOnMainThread:^{
+                        [scraps makeObjectsPerformSelector:@selector(removeFromSuperview)];
+                    }];
                     @synchronized(self){
                         isLoaded = NO;
                     }
