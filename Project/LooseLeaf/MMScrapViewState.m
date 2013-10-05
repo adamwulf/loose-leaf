@@ -83,6 +83,7 @@ static dispatch_queue_t importExportScrapStateQueue;
             bezierPath = _path;
 
             //save initial bezier path to disk
+            // not the most elegant solution, but it works and is fast enough for now
             NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
             [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
             [savedProperties writeToFile:self.plistPath atomically:YES];
