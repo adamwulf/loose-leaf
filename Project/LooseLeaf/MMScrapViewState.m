@@ -81,6 +81,11 @@ static dispatch_queue_t importExportScrapStateQueue;
             CGRect originalBounds = _path.bounds;
             [_path applyTransform:CGAffineTransformMakeTranslation(-originalBounds.origin.x + 4, -originalBounds.origin.y + 4)];
             bezierPath = _path;
+
+            //save initial bezier path to disk
+            NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
+            [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
+            [savedProperties writeToFile:self.plistPath atomically:YES];
         }
 
         // find drawable view bounds
