@@ -204,6 +204,12 @@
 
 -(void) hideColors{
     if([self isShowingColors]){
+        blackButton.selected = NO;
+        blueButton.selected = NO;
+        redButton.selected = NO;
+        yellowButton.selected = NO;
+        greenButton.selected = NO;
+
         isShowingColorOptions = NO;
         [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
             activeColorButton.color = color;
@@ -242,6 +248,18 @@
             yellowButton.frame = yellowButton.originalFrame;
             greenButton.frame = greenButton.originalFrame;
             
+            if(activeColorButton.color == blackButton.color){
+                blackButton.selected = YES;
+            }else if(activeColorButton.color == blueButton.color){
+                blueButton.selected = YES;
+            }else if(activeColorButton.color == redButton.color){
+                redButton.selected = YES;
+            }else if(activeColorButton.color == yellowButton.color){
+                yellowButton.selected = YES;
+            }else if(activeColorButton.color == greenButton.color){
+                greenButton.selected = YES;
+            }
+            
             activeColorButton.alpha = 0;
             blackButton.alpha = 1;
         } completion:nil];
@@ -277,6 +295,14 @@
 #pragma mark - Choose Color
 
 -(void) colorTapped:(MMColorButton*)button{
+    
+    blackButton.selected = NO;
+    blueButton.selected = NO;
+    redButton.selected = NO;
+    yellowButton.selected = NO;
+    greenButton.selected = NO;
+    button.selected = YES;
+    
     color = button.color;
     [self.delegate didChangeColorTo:color];
     [pencilButton setNeedsDisplay];
