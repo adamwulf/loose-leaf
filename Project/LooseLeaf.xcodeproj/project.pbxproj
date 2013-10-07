@@ -52,7 +52,7 @@
 		66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* MMEditablePaperStackView.m */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
-		66924CF517E23D5100D0F860 /* UIBezierPathIntersectionPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 66924CF417E23D5100D0F860 /* UIBezierPathIntersectionPoint.m */; };
+		66924CF517E23D5100D0F860 /* DKUIBezierPathIntersectionPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 66924CF417E23D5100D0F860 /* DKUIBezierPathIntersectionPoint.m */; };
 		6693295A15958A950033E557 /* MMShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MMShadowManager.m */; };
 		66932965159593C00033E557 /* MMRotationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66932964159593C00033E557 /* MMRotationManager.m */; };
 		6693296A1595A87E0033E557 /* MMMapButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329691595A87E0033E557 /* MMMapButton.m */; };
@@ -124,6 +124,8 @@
 		66C0C9CA1783645E009491B3 /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66C0C9C91783645E009491B3 /* JotUI.framework */; };
 		66C0C9D0178386B8009491B3 /* MMLikeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C0C9CF178386B8009491B3 /* MMLikeButton.m */; };
 		66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */; };
+		66C152F7180362B000F21A2C /* DKUIBezierPathClippedSegmentTPair.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C152F6180362B000F21A2C /* DKUIBezierPathClippedSegmentTPair.m */; };
+		66C152FA1803637A00F21A2C /* DKUIBezierPathClippingResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C152F91803637A00F21A2C /* DKUIBezierPathClippingResult.m */; };
 		66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11F617CFD8A600882275 /* MMScrapPaperStackView.m */; };
 		66CE11FD17D2700E00882275 /* MMScrapBubbleContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11FC17D2700E00882275 /* MMScrapBubbleContainerView.m */; };
 		66CE120017D2772400882275 /* MMScrapBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11FF17D2772400882275 /* MMScrapBorderView.m */; };
@@ -279,8 +281,8 @@
 		6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBubbleButton.m; sourceTree = "<group>"; };
 		6690EF1517CC6F710009A0AC /* MMDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDotView.h; sourceTree = "<group>"; };
 		6690EF1617CC6F710009A0AC /* MMDotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDotView.m; sourceTree = "<group>"; };
-		66924CF317E23D5100D0F860 /* UIBezierPathIntersectionPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIBezierPathIntersectionPoint.h; sourceTree = "<group>"; };
-		66924CF417E23D5100D0F860 /* UIBezierPathIntersectionPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIBezierPathIntersectionPoint.m; sourceTree = "<group>"; };
+		66924CF317E23D5100D0F860 /* DKUIBezierPathIntersectionPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKUIBezierPathIntersectionPoint.h; sourceTree = "<group>"; };
+		66924CF417E23D5100D0F860 /* DKUIBezierPathIntersectionPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKUIBezierPathIntersectionPoint.m; sourceTree = "<group>"; };
 		6693295815958A950033E557 /* MMShadowManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShadowManager.h; sourceTree = "<group>"; };
 		6693295915958A950033E557 /* MMShadowManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShadowManager.m; sourceTree = "<group>"; };
 		66932963159593C00033E557 /* MMRotationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRotationManager.h; sourceTree = "<group>"; };
@@ -392,6 +394,10 @@
 		66C0C9CF178386B8009491B3 /* MMLikeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLikeButton.m; sourceTree = "<group>"; };
 		66C0C9D61783EEEB009491B3 /* MMAdonitButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAdonitButton.h; sourceTree = "<group>"; };
 		66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAdonitButton.m; sourceTree = "<group>"; };
+		66C152F5180362B000F21A2C /* DKUIBezierPathClippedSegmentTPair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKUIBezierPathClippedSegmentTPair.h; sourceTree = "<group>"; };
+		66C152F6180362B000F21A2C /* DKUIBezierPathClippedSegmentTPair.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKUIBezierPathClippedSegmentTPair.m; sourceTree = "<group>"; };
+		66C152F81803637A00F21A2C /* DKUIBezierPathClippingResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKUIBezierPathClippingResult.h; sourceTree = "<group>"; };
+		66C152F91803637A00F21A2C /* DKUIBezierPathClippingResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKUIBezierPathClippingResult.m; sourceTree = "<group>"; };
 		66C38AC7175329160035B872 /* JotTouchSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotTouchSDK.framework; path = ../Submodules/JotUI/JotTouchSDK/JotTouchSDK.framework; sourceTree = "<group>"; };
 		66C47DA5158EF03200E2CD0C /* MMPaperViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperViewDelegate.h; sourceTree = "<group>"; };
 		66CDB72E17CC0C7200C636C7 /* com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata"; path = "../../TestData/com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata"; sourceTree = "<group>"; };
@@ -598,8 +604,12 @@
 		6648955517B0511D0001829C /* UIBezierPath Categories */ = {
 			isa = PBXGroup;
 			children = (
-				66924CF317E23D5100D0F860 /* UIBezierPathIntersectionPoint.h */,
-				66924CF417E23D5100D0F860 /* UIBezierPathIntersectionPoint.m */,
+				66C152F5180362B000F21A2C /* DKUIBezierPathClippedSegmentTPair.h */,
+				66C152F6180362B000F21A2C /* DKUIBezierPathClippedSegmentTPair.m */,
+				66C152F81803637A00F21A2C /* DKUIBezierPathClippingResult.h */,
+				66C152F91803637A00F21A2C /* DKUIBezierPathClippingResult.m */,
+				66924CF317E23D5100D0F860 /* DKUIBezierPathIntersectionPoint.h */,
+				66924CF417E23D5100D0F860 /* DKUIBezierPathIntersectionPoint.m */,
 				663916AF17E11AAE000DEC67 /* choose.h */,
 				663916B017E11AAE000DEC67 /* interval.h */,
 				663916B117E11AAE000DEC67 /* UIBezierPath+Clipping.h */,
@@ -1226,6 +1236,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				66DCFB971581BCEF00B4918C /* main.m in Sources */,
+				66C152F7180362B000F21A2C /* DKUIBezierPathClippedSegmentTPair.m in Sources */,
 				66DCFB9B1581BCEF00B4918C /* MMAppDelegate.m in Sources */,
 				66DCFB9E1581BCEF00B4918C /* MMLooseLeafViewController.m in Sources */,
 				66DCFBC21581C85B00B4918C /* MMPaperStackView.m in Sources */,
@@ -1285,7 +1296,7 @@
 				66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */,
 				6699715217DBA02700E81467 /* MMDebugDrawView.m in Sources */,
 				66B51A2A17AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m in Sources */,
-				66924CF517E23D5100D0F860 /* UIBezierPathIntersectionPoint.m in Sources */,
+				66924CF517E23D5100D0F860 /* DKUIBezierPathIntersectionPoint.m in Sources */,
 				66DCFBDF1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m in Sources */,
 				6693296D1596E0600033E557 /* MMBezelInRightGestureRecognizer.m in Sources */,
 				6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */,
@@ -1329,6 +1340,7 @@
 				66B843EE17B052C4008BF8B8 /* DKGeometryUtilities.m in Sources */,
 				66B843EF17B052D4008BF8B8 /* CurveFit.mm in Sources */,
 				66B843F017B052D4008BF8B8 /* bezier-utils.cpp in Sources */,
+				66C152FA1803637A00F21A2C /* DKUIBezierPathClippingResult.m in Sources */,
 				66B843F117B052D4008BF8B8 /* matrix.cpp in Sources */,
 				66B843F217B052D4008BF8B8 /* point.cpp in Sources */,
 				66B843F317B052D4008BF8B8 /* rotate.cpp in Sources */,

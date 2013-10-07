@@ -175,7 +175,7 @@
                 [strokePath moveToPoint:curveElement.startPoint];
                 [strokePath addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
 
-                UIBezierPathClippingResult* output = [strokePath clipUnclosedPathToClosedPath:scrapClippingPath];
+                DKUIBezierPathClippingResult* output = [strokePath clipUnclosedPathToClosedPath:scrapClippingPath];
                 
                 //
                 // now we've taken our stroke segment, and computed the intersection
