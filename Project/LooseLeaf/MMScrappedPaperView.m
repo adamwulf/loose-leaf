@@ -21,6 +21,7 @@
 #import "MMImmutableScrapsOnPaperState.h"
 #import "MMPaperState.h"
 #import "DKUIBezierPathClippedSegmentTPair.h"
+#import <JotUI/UIColor+JotHelper.h>
 
 
 @implementation MMScrappedPaperView{
@@ -167,19 +168,37 @@
         
         NSMutableArray* newStrokesToCrop = [NSMutableArray array];
         
-        
+        // the first step is to loop over all of the strokes
+        // to see where and if they intersect with our scraps.
+        //
+        // if they intersect, then we'll split that element into pieces
+        // and add some pieces to the scrap and return the rest.
         AbstractBezierPathElement* previousElement = _previousElement;
         for(AbstractBezierPathElement* element in strokesToCrop){
             if(!CGRectIntersectsRect(element.bounds, boundsOfScrap)){
+                // if we don't intersect the bounds of a scrap, then we definitely
+                // don't intersect it's path, so just add it to our return value
+                // (which we'll check on other scraps too)
                 [newStrokesToCrop addObject:element];
             }else if([element isKindOfClass:[CurveToPathElement class]]){
+                // ok, we intersect at least the bounds of the scrap, so check
+                // to see if we intersect its path and if we should split it
                 CurveToPathElement* curveElement = (CurveToPathElement*)element;
 
+                // create a imple uibezier path that represents just the path
+                // of this single element
                 UIBezierPath* strokePath = [UIBezierPath bezierPath];
                 [strokePath moveToPoint:curveElement.startPoint];
                 [strokePath addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
 
-                DKUIBezierPathClippingResult* output = [strokePath clipUnclosedPathToClosedPath:scrapClippingPath];
+                // now find out where this element intersects the scrap.
+                // this return value will give us the paths of the intersection
+                // and the difference, as well as the tvalues on our element
+                // path (strokePath) that the intersections happen.
+                //
+                // this will let us calcualte how much the width/color/rotation
+                // change during each split
+                DKUIBezierPathClippingResult* clippingAndIntersectionMetaInformation = [strokePath clipUnclosedPathToClosedPath:scrapClippingPath];
                 
                 
                 //
@@ -191,14 +210,53 @@
                 
                 //
                 // information to track changes in width and color
+                // the index will traack which info in clippingAndIntersectionMetaInformation
+                // is relevant to our difference
                 __block int clippingInformationIndex = 0;
+                // this is the total width difference along our original element,
+                // and we'll use this to calculate what our width should be along
+                // our chopped difference/intersection
                 CGFloat widthDiff = element.width - previousElement.width;
-                
-                [output.difference iteratePathWithBlock:^(CGPathElement pathEle){
+                CGFloat rotationDiff = element.rotation - previousElement.rotation;
+                GLfloat _prevColor[4], elementColor[4];
+                GLfloat _colorDiff[4];
+                CGFloat* prevColor = (CGFloat*)_prevColor;
+                CGFloat* colorDiff = (CGFloat*)_colorDiff;
+                [previousElement.color getRGBAComponents:prevColor];
+                [element.color getRGBAComponents:elementColor];
+                colorDiff[0] = elementColor[0] - prevColor[0];
+                colorDiff[1] = elementColor[1] - prevColor[1];
+                colorDiff[2] = elementColor[2] - prevColor[2];
+                colorDiff[3] = elementColor[3] - prevColor[3];
+                [clippingAndIntersectionMetaInformation.difference iteratePathWithBlock:^(CGPathElement pathEle){
                     AbstractBezierPathElement* newElement = nil;
-                    DKUIBezierPathClippedSegmentTPair* clippingInformation = [output.differenceTValues objectAtIndex:clippingInformationIndex];
-                    if(pathEle.type == kCGPathElementAddCurveToPoint ||
+                    DKUIBezierPathClippedSegmentTPair* clippingInformation = [clippingAndIntersectionMetaInformation.differenceTValues objectAtIndex:clippingInformationIndex];
+                    //
+                    // there are two possibilities - either it's a move to
+                    // or a curve/line to.
+                    if(pathEle.type == kCGPathElementMoveToPoint){
+                        // if it's a move to, then we're just beginning this next segment.
+                        // create the MoveTo element and initialize it's width/color/rotation
+                        // to what it would have been at that location if we hand't split
+                        newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
+                        previousEndpoint = pathEle.points[0];
+
+                        CGFloat tValueAtStartPoint = clippingInformation.tValueStart.tValue1;
+                        CGFloat red = prevColor[0] + colorDiff[0] * tValueAtStartPoint;
+                        CGFloat green = prevColor[1] + colorDiff[1] * tValueAtStartPoint;
+                        CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtStartPoint;
+                        CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtStartPoint;
+                        newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+                        newElement.width = previousElement.width + widthDiff*tValueAtStartPoint;
+                        newElement.rotation = previousElement.rotation + rotationDiff*tValueAtStartPoint;
+                    }else if(pathEle.type == kCGPathElementAddCurveToPoint ||
                        pathEle.type == kCGPathElementAddLineToPoint){
+                        // if i'ts a curve/line to, then this is the meat of the
+                        // curve. create the element, and set it's width/color/rotation
+                        // to what it would have been at the end of this peice.
+                        //
+                        // when this is rendered, it'll draw a line with the attributes
+                        // interpolating between the MoveTo defined above, and this curveTo
                         if(pathEle.type == kCGPathElementAddCurveToPoint){
                             // curve
                             newElement = [CurveToPathElement elementWithStart:previousEndpoint
@@ -211,19 +269,17 @@
                             previousEndpoint = pathEle.points[0];
                         }
                         
-                        NSLog(@"clipping info: %@", clippingInformation);
                         // be sure to set color/width/etc
-                        newElement.color = element.color;
-                        newElement.width = previousElement.width + widthDiff*clippingInformation.tValueEnd.tValue1;
-                        newElement.rotation = element.rotation;
+                        CGFloat tValueAtEndPoint = clippingInformation.tValueEnd.tValue1;
+                        CGFloat red = prevColor[0] + colorDiff[0] * tValueAtEndPoint;
+                        CGFloat green = prevColor[1] + colorDiff[1] * tValueAtEndPoint;
+                        CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtEndPoint;
+                        CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtEndPoint;
+                        newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+                        newElement.width = previousElement.width + widthDiff*tValueAtEndPoint;
+                        newElement.rotation = previousElement.rotation + rotationDiff*tValueAtEndPoint;
                         
                         clippingInformationIndex++;
-                    }else if(pathEle.type == kCGPathElementMoveToPoint){
-                        newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
-                        previousEndpoint = pathEle.points[0];
-                        newElement.color = element.color;
-                        newElement.width = previousElement.width + widthDiff*clippingInformation.tValueStart.tValue1;
-                        newElement.rotation = element.rotation;
                     }
                     if(newElement){
                         [newStrokesToCrop addObject:newElement];
@@ -237,7 +293,7 @@
                 // I'm applying transforms to this path below, so if i were to
                 // reuse this path I'd want to [copy] it. but i don't need to
                 // because I only use it once.
-                UIBezierPath* inter = output.intersection;
+                UIBezierPath* inter = clippingAndIntersectionMetaInformation.intersection;
                 previousEndpoint = strokePath.firstPoint;
                 
                 // find the scrap location in open gl
@@ -277,12 +333,22 @@
                 
                 // here's our meta for the segment tvalue information
                 clippingInformationIndex = 0;
-                widthDiff = element.width - previousElement.width;
                 // now add it to the scrap!
                 [inter iteratePathWithBlock:^(CGPathElement pathEle){
                     AbstractBezierPathElement* newElement = nil;
-                    DKUIBezierPathClippedSegmentTPair* clippingInformation = [output.intersectionTValues objectAtIndex:clippingInformationIndex];
-                    if(pathEle.type == kCGPathElementAddCurveToPoint ||
+                    DKUIBezierPathClippedSegmentTPair* clippingInformation = [clippingAndIntersectionMetaInformation.intersectionTValues objectAtIndex:clippingInformationIndex];
+                    if(pathEle.type == kCGPathElementMoveToPoint){
+                        newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
+                        previousEndpoint = pathEle.points[0];
+                        CGFloat tValueAtStartPoint = clippingInformation.tValueStart.tValue1;
+                        CGFloat red = prevColor[0] + colorDiff[0] * tValueAtStartPoint;
+                        CGFloat green = prevColor[1] + colorDiff[1] * tValueAtStartPoint;
+                        CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtStartPoint;
+                        CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtStartPoint;
+                        newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+                        newElement.width = previousElement.width + widthDiff*tValueAtStartPoint;
+                        newElement.rotation = previousElement.rotation + rotationDiff*tValueAtStartPoint;
+                    }else if(pathEle.type == kCGPathElementAddCurveToPoint ||
                        pathEle.type == kCGPathElementAddLineToPoint){
                         if(pathEle.type == kCGPathElementAddCurveToPoint){
                             // curve
@@ -295,17 +361,16 @@
                             newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
                             previousEndpoint = pathEle.points[0];
                         }
-                        newElement.color = element.color;
-                        newElement.width = previousElement.width + widthDiff*clippingInformation.tValueEnd.tValue1;
-                        newElement.rotation = element.rotation;
+                        CGFloat tValueAtEndPoint = clippingInformation.tValueEnd.tValue1;
+                        CGFloat red = prevColor[0] + colorDiff[0] * tValueAtEndPoint;
+                        CGFloat green = prevColor[1] + colorDiff[1] * tValueAtEndPoint;
+                        CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtEndPoint;
+                        CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtEndPoint;
+                        newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+                        newElement.width = previousElement.width + widthDiff*tValueAtEndPoint;
+                        newElement.rotation = previousElement.rotation + rotationDiff*tValueAtEndPoint;
                         
                         clippingInformationIndex++;
-                    }else if(pathEle.type == kCGPathElementMoveToPoint){
-                        newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
-                        previousEndpoint = pathEle.points[0];
-                        newElement.color = element.color;
-                        newElement.width = previousElement.width + widthDiff*clippingInformation.tValueStart.tValue1;
-                        newElement.rotation = element.rotation;
                     }
                     if(newElement){
                         [scrap addElement:newElement];
