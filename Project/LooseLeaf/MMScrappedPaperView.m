@@ -175,16 +175,15 @@
                 [strokePath moveToPoint:curveElement.startPoint];
                 [strokePath addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
 
-                NSArray* output = [strokePath clipUnclosedPathToClosedPath:scrapClippingPath];
+                UIBezierPathClippingResult* output = [strokePath clipUnclosedPathToClosedPath:scrapClippingPath];
                 
                 //
                 // now we've taken our stroke segment, and computed the intersection
                 // and difference with the scrap. we'll add the difference here to
                 // our "strokes to newStrokesToCrop array. we'll crop these with scraps
                 // below this current scrap on our next loop.
-                UIBezierPath* diff = [output lastObject];
                 __block CGPoint previousEndpoint = strokePath.firstPoint;
-                [diff iteratePathWithBlock:^(CGPathElement pathEle){
+                [output.difference iteratePathWithBlock:^(CGPathElement pathEle){
                     AbstractBezierPathElement* newElement = nil;
                     if(pathEle.type == kCGPathElementAddCurveToPoint){
                         // curve
@@ -212,9 +211,12 @@
                 // this UIBezierPath represents the intersection of our input
                 // stroke over our scrap. this path needs to be adjusted into
                 // the scrap's coordinate system and then added to the scrap
-                UIBezierPath* inter = [output firstObject];
+                //
+                // I'm applying transforms to this path below, so if i were to
+                // reuse this path I'd want to [copy] it. but i don't need to
+                // because I only use it once.
+                UIBezierPath* inter = output.intersection;
                 previousEndpoint = strokePath.firstPoint;
-                
                 
                 // find the scrap location in open gl
                 CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, self.bounds.size.height);

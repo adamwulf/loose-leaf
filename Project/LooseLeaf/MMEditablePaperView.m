@@ -14,6 +14,7 @@
 #import "TestFlight.h"
 #import "DrawKit-iOS.h"
 #import "MMPaperState.h"
+#import "UIBezierPath+Clipping.h"
 
 dispatch_queue_t loadUnloadStateQueue;
 dispatch_queue_t importThumbnailQueue;
@@ -419,12 +420,10 @@ static int count = 0;
             [bez moveToPoint:[element startPoint]];
             [bez addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
             
-            NSArray* output = [bez clipUnclosedPathToClosedPath:boundsPath];
-//            UIBezierPath* cropped = [bez unclosedPathFromIntersectionWithPath:bounds];
-            UIBezierPath* cropped = [output firstObject];
+            UIBezierPathClippingResult* output = [bez clipUnclosedPathToClosedPath:boundsPath];
 
             __block CGPoint previousEndpoint = curveElement.startPoint;
-            [cropped iteratePathWithBlock:^(CGPathElement pathEle){
+            [output.intersection iteratePathWithBlock:^(CGPathElement pathEle){
                 AbstractBezierPathElement* newElement = nil;
                 if(pathEle.type == kCGPathElementAddCurveToPoint){
                     // curve
