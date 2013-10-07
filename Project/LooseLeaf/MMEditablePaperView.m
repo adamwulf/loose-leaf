@@ -420,7 +420,7 @@ static int count = 0;
             [bez moveToPoint:[element startPoint]];
             [bez addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
             
-            UIBezierPathClippingResult* output = [bez clipUnclosedPathToClosedPath:boundsPath];
+            DKUIBezierPathClippingResult* output = [bez clipUnclosedPathToClosedPath:boundsPath];
 
             __block CGPoint previousEndpoint = curveElement.startPoint;
             [output.intersection iteratePathWithBlock:^(CGPathElement pathEle){
