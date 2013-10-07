@@ -20,6 +20,7 @@
 #import "MMScrapsOnPaperState.h"
 #import "MMImmutableScrapsOnPaperState.h"
 #import "MMPaperState.h"
+#import "DKUIBezierPathClippedSegmentTPair.h"
 
 
 @implementation MMScrappedPaperView{
@@ -148,14 +149,14 @@
 
 
 
--(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
-    NSArray* strokes = [super willAddElementsToStroke:elements fromPreviousElement:previousElement];
+-(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)_previousElement{
+    NSArray* strokeElementsToDraw = [super willAddElementsToStroke:elements fromPreviousElement:_previousElement];
     
     if(![self.scraps count]){
-        return strokes;
+        return strokeElementsToDraw;
     }
     
-    NSMutableArray* strokesToCrop = [NSMutableArray arrayWithArray:strokes];
+    NSMutableArray* strokesToCrop = [NSMutableArray arrayWithArray:strokeElementsToDraw];
     
     for(MMScrapView* scrap in [self.scraps reverseObjectEnumerator]){
         // find the bounding box of the scrap, so we can determine
@@ -165,6 +166,9 @@
         CGRect boundsOfScrap = scrapClippingPath.bounds;
         
         NSMutableArray* newStrokesToCrop = [NSMutableArray array];
+        
+        
+        AbstractBezierPathElement* previousElement = _previousElement;
         for(AbstractBezierPathElement* element in strokesToCrop){
             if(!CGRectIntersectsRect(element.bounds, boundsOfScrap)){
                 [newStrokesToCrop addObject:element];
@@ -177,33 +181,51 @@
 
                 DKUIBezierPathClippingResult* output = [strokePath clipUnclosedPathToClosedPath:scrapClippingPath];
                 
+                
                 //
                 // now we've taken our stroke segment, and computed the intersection
                 // and difference with the scrap. we'll add the difference here to
                 // our "strokes to newStrokesToCrop array. we'll crop these with scraps
                 // below this current scrap on our next loop.
                 __block CGPoint previousEndpoint = strokePath.firstPoint;
+                
+                //
+                // information to track changes in width and color
+                __block int clippingInformationIndex = 0;
+                CGFloat widthDiff = element.width - previousElement.width;
+                
                 [output.difference iteratePathWithBlock:^(CGPathElement pathEle){
                     AbstractBezierPathElement* newElement = nil;
-                    if(pathEle.type == kCGPathElementAddCurveToPoint){
-                        // curve
-                        newElement = [CurveToPathElement elementWithStart:previousEndpoint
-                                                               andCurveTo:pathEle.points[2]
-                                                              andControl1:pathEle.points[0]
-                                                              andControl2:pathEle.points[1]];
-                        previousEndpoint = pathEle.points[2];
+                    DKUIBezierPathClippedSegmentTPair* clippingInformation = [output.differenceTValues objectAtIndex:clippingInformationIndex];
+                    if(pathEle.type == kCGPathElementAddCurveToPoint ||
+                       pathEle.type == kCGPathElementAddLineToPoint){
+                        if(pathEle.type == kCGPathElementAddCurveToPoint){
+                            // curve
+                            newElement = [CurveToPathElement elementWithStart:previousEndpoint
+                                                                   andCurveTo:pathEle.points[2]
+                                                                  andControl1:pathEle.points[0]
+                                                                  andControl2:pathEle.points[1]];
+                            previousEndpoint = pathEle.points[2];
+                        }else if(pathEle.type == kCGPathElementAddLineToPoint){
+                            newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
+                            previousEndpoint = pathEle.points[0];
+                        }
+                        
+                        NSLog(@"clipping info: %@", clippingInformation);
+                        // be sure to set color/width/etc
+                        newElement.color = element.color;
+                        newElement.width = previousElement.width + widthDiff*clippingInformation.tValueEnd.tValue1;
+                        newElement.rotation = element.rotation;
+                        
+                        clippingInformationIndex++;
                     }else if(pathEle.type == kCGPathElementMoveToPoint){
                         newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
                         previousEndpoint = pathEle.points[0];
-                    }else if(pathEle.type == kCGPathElementAddLineToPoint){
-                        newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
-                        previousEndpoint = pathEle.points[0];
+                        newElement.color = element.color;
+                        newElement.width = previousElement.width + widthDiff*clippingInformation.tValueStart.tValue1;
+                        newElement.rotation = element.rotation;
                     }
                     if(newElement){
-                        // be sure to set color/width/etc
-                        newElement.color = element.color;
-                        newElement.width = element.width;
-                        newElement.rotation = element.rotation;
                         [newStrokesToCrop addObject:newElement];
                     }
                 }];
@@ -253,29 +275,39 @@
                 CGPoint recenter = CGPointMake(scrap.bounds.size.width/2, scrap.bounds.size.height/2);
                 [inter applyTransform:CGAffineTransformMakeTranslation(recenter.x, recenter.y)];
                 
+                // here's our meta for the segment tvalue information
+                clippingInformationIndex = 0;
+                widthDiff = element.width - previousElement.width;
                 // now add it to the scrap!
                 [inter iteratePathWithBlock:^(CGPathElement pathEle){
                     AbstractBezierPathElement* newElement = nil;
-                    if(pathEle.type == kCGPathElementAddCurveToPoint){
-                        // curve
-                        newElement = [CurveToPathElement elementWithStart:previousEndpoint
-                                                               andCurveTo:pathEle.points[2]
-                                                              andControl1:pathEle.points[0]
-                                                              andControl2:pathEle.points[1]];
-                        previousEndpoint = pathEle.points[2];
+                    DKUIBezierPathClippedSegmentTPair* clippingInformation = [output.intersectionTValues objectAtIndex:clippingInformationIndex];
+                    if(pathEle.type == kCGPathElementAddCurveToPoint ||
+                       pathEle.type == kCGPathElementAddLineToPoint){
+                        if(pathEle.type == kCGPathElementAddCurveToPoint){
+                            // curve
+                            newElement = [CurveToPathElement elementWithStart:previousEndpoint
+                                                                   andCurveTo:pathEle.points[2]
+                                                                  andControl1:pathEle.points[0]
+                                                                  andControl2:pathEle.points[1]];
+                            previousEndpoint = pathEle.points[2];
+                        }else if(pathEle.type == kCGPathElementAddLineToPoint){
+                            newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
+                            previousEndpoint = pathEle.points[0];
+                        }
+                        newElement.color = element.color;
+                        newElement.width = previousElement.width + widthDiff*clippingInformation.tValueEnd.tValue1;
+                        newElement.rotation = element.rotation;
+                        
+                        clippingInformationIndex++;
                     }else if(pathEle.type == kCGPathElementMoveToPoint){
                         newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
                         previousEndpoint = pathEle.points[0];
-                    }else if(pathEle.type == kCGPathElementAddLineToPoint){
-                        newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
-                        previousEndpoint = pathEle.points[0];
+                        newElement.color = element.color;
+                        newElement.width = previousElement.width + widthDiff*clippingInformation.tValueStart.tValue1;
+                        newElement.rotation = element.rotation;
                     }
                     if(newElement){
-                        // be sure to set color/width/etc
-                        newElement.color = element.color;
-                        newElement.width = element.width;
-                        newElement.rotation = element.rotation;
-                        
                         [scrap addElement:newElement];
                     }
                 }];
@@ -283,6 +315,8 @@
             }else{
                 [newStrokesToCrop addObject:element];
             }
+            
+            previousElement = element;
         }
         
         strokesToCrop = newStrokesToCrop;
