@@ -19,12 +19,24 @@
     // grabbing two scraps at the same time
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture;
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture2;
+    
+    
+    NSTimer* debugTimer;
 }
 
 
 - (id)initWithFrame:(CGRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
+        
+        
+        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
+                                                                  target:self
+                                                                selector:@selector(timerDidFire:)
+                                                                userInfo:nil
+                                                                 repeats:YES];
+
+        
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds];
         [self insertSubview:scrapContainer belowSubview:addPageSidebarButton];
         
@@ -60,10 +72,33 @@
         drawLongElementButton.layer.borderColor = [UIColor blackColor].CGColor;
         drawLongElementButton.layer.borderWidth = 1;
         [self addSubview:drawLongElementButton];
-        
-
     }
     return self;
+}
+
+
+-(void) timerDidFire:(NSTimer*)timer{
+
+    NSLog(@" ");
+    NSLog(@" ");
+    NSLog(@" ");
+    NSLog(@"begin");
+
+    for(UIGestureRecognizer* gesture in self.gestureRecognizers){
+        UIGestureRecognizerState st = gesture.state;
+        NSLog(@"%@ %d", NSStringFromClass([gesture class]), st);
+    }
+    
+    for(UIGestureRecognizer* gesture in [visibleStackHolder peekSubview].gestureRecognizers){
+        UIGestureRecognizerState st = gesture.state;
+        NSLog(@"%@ %d", NSStringFromClass([gesture class]), st);
+    }
+
+    for(UIGestureRecognizer* gesture in [visibleStackHolder peekSubview].drawableView.gestureRecognizers){
+        UIGestureRecognizerState st = gesture.state;
+        NSLog(@"%@ %d", NSStringFromClass([gesture class]), st);
+    }
+    NSLog(@"done");
 }
 
 -(void) drawLine{

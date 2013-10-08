@@ -895,6 +895,7 @@
     [self updateIconAnimations];
     
     if(justFinishedPanningTheTopPage && (bezelDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft){
+        NSLog(@"finished bezelling top page left %d %d", (bezelDirection & MMBezelDirectionLeft), (bezelDirection & MMBezelDirectionRight));
         //
         // CASE 1:
         // left bezel by top page
@@ -919,9 +920,18 @@
             [self emptyBezelStackToVisibleStackOnComplete:^(BOOL finished){
                 [self updateIconAnimations];
             }];
+        }else{
+            // accident. we don't have a page in the bezel, but we think
+            // we're bezeling a page left.
+            // instead just bounce the top page
+            NSLog(@"graaceful fail: trying to bezel left, but nothing in the bezel holder. realigning stack.");
+            [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
+            [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
+            [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:nil];
         }
         return;
     }else if(justFinishedPanningTheTopPage && [setOfPagesBeingPanned count]){
+        NSLog(@"finished top page, but still holding other pages");
         //
         // CASE 2:
         // they released the top page, but are still panning
@@ -949,6 +959,7 @@
         }];
         return;
     }else if(!justFinishedPanningTheTopPage && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
+        NSLog(@"didn't release top page but need to pop a page");
         //
         // TODO: check if this was cancelled or finished on purpose
         //
@@ -975,6 +986,7 @@
         [self mayChangeTopPageTo:[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]]];
         return;
     }else if((bezelDirection & MMBezelDirectionRight) == MMBezelDirectionRight){
+        NSLog(@"finished top page, bezel right");
         //
         // CASE 4:
         // right bezel by any page
@@ -1024,6 +1036,7 @@
         }
         return;
     }else if(!justFinishedPanningTheTopPage){
+        NSLog(@"finished panning non-top page");
         //
         // CASE 5:
         //
@@ -1053,6 +1066,8 @@
         return;
     }
 
+    NSLog(@"just relased the top page, and no other pages being panned");
+    
     //
     // CASE 6:
     //
@@ -1109,9 +1124,12 @@
         // bezelStackHolder debugging DONE
         //
         // bounce it back to full screen
+        NSLog(@"bounce it back to full page");
         [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
-        [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:nil];
+        [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:^(BOOL finished){
+            NSLog(@"animation is done %d", finished);
+        }];
     }else{
         //
         // bezelStackHolder debugging DONE

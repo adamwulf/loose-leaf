@@ -18,6 +18,11 @@
 #import <JotUI/JotUI.h>
 #import "MMVector.h"
 
+
+static float clamp_helper(min, max, value) { return fmaxf(min, fminf(max, value)); }
+#define           VELOCITY_CLAMP_MIN 20
+#define           VELOCITY_CLAMP_MAX 1000
+
 @implementation MMPanAndPinchGestureRecognizer{
     CGPoint locationAdjustment;
     CGPoint lastLocationInView;
@@ -304,7 +309,8 @@ NSInteger const  minimumNumberOfTouches = 2;
         if([validTouches count] == 0 &&
            [possibleTouches count] == 0 &&
            [ignoredTouches count] == 0 &&
-           self.state == UIGestureRecognizerStateChanged){
+           (self.state == UIGestureRecognizerStateChanged ||
+            self.state == UIGestureRecognizerStateBegan)){
             if(cancelledFromBezel){
                 self.state = UIGestureRecognizerStateCancelled;
             }else{
@@ -353,17 +359,18 @@ NSInteger const  minimumNumberOfTouches = 2;
                                          locationAdjustment.y + (newLocationInView.y - originalLocationInView.y));
         initialDistance = [self distanceBetweenTouches:validTouches] / scale;
     }
-//    NSLog(@"pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+//    NSLog(@"end pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
     NSMutableOrderedSet* validTouchesCurrentlyCancelling = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
     [validTouchesCurrentlyCancelling intersectSet:touches];
     [validTouchesCurrentlyCancelling minusSet:ignoredTouches];
     
+//    NSLog(@"pan cancelled touches %d vs %d", [validTouchesCurrentlyCancelling count], [touches count]);
     if([validTouchesCurrentlyCancelling count]){
-        if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
+        if(self.numberOfTouches == 1 && (self.state == UIGestureRecognizerStateChanged || self.state == UIGestureRecognizerStateBegan)){
             self.state = UIGestureRecognizerStatePossible;
-        }else if([validTouches count] == 0 && self.state == UIGestureRecognizerStateChanged){
+        }else if([validTouches count] == [validTouchesCurrentlyCancelling count] && (self.state == UIGestureRecognizerStateChanged || self.state == UIGestureRecognizerStateBegan)){
             self.state = UIGestureRecognizerStateCancelled;
         }
         [validTouches minusOrderedSet:validTouchesCurrentlyCancelling];
@@ -371,27 +378,25 @@ NSInteger const  minimumNumberOfTouches = 2;
     [possibleTouches removeObjectsInSet:touches];
     [ignoredTouches removeObjectsInSet:touches];
     [self calculateVelocity];
-//    NSLog(@"pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+    
+    if([validTouches count] == 0 && [possibleTouches count] == 0){
+        if((self.state == UIGestureRecognizerStateChanged || self.state == UIGestureRecognizerStateBegan)){
+            // if we've just lifted our last touch, and we don't have any
+            // touches left on screen that could revive this gesture,
+            // then set us to cancelled.
+            //
+            // this may happen if:
+            // - valid gesture w/ 2 touches
+            // - end 1 touch
+            // - cancel last 1 touch
+            self.state = UIGestureRecognizerStateCancelled;
+        }
+    }
+//    NSLog(@"cancel pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 -(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
     [ignoredTouches addObject:touch];
     [super ignoreTouch:touch forEvent:event];
-}
--(void) setState:(UIGestureRecognizerState)state{
-    [super setState:state];
-//    if(self.state == UIGestureRecognizerStateBegan){
-//        NSLog(@"began page pan");
-//    }else if(self.state == UIGestureRecognizerStateEnded){
-//        NSLog(@"ended page pan");
-//    }else if(self.state == UIGestureRecognizerStateCancelled){
-//        NSLog(@"cancelled page pan");
-//    }else if(self.state == UIGestureRecognizerStateFailed){
-//        NSLog(@"failed page pan");
-//    }else if(self.state == UIGestureRecognizerStateChanged){
-//        NSLog(@"changed page pan");
-//    }else if(self.state == UIGestureRecognizerStatePossible){
-//        NSLog(@"possible page pan");
-//    }
 }
 
 - (void)reset{
@@ -472,6 +477,10 @@ NSInteger const  minimumNumberOfTouches = 2;
             CGPoint curVel = [obj CGPointValue];
             avgVel.x = (avgVel.x * index + curVel.x) / (index + 1);
             avgVel.y = (avgVel.y * index + curVel.y) / (index + 1);
+            
+            avgVel.x = clamp_helper(VELOCITY_CLAMP_MIN, VELOCITY_CLAMP_MAX, avgVel.x);
+            avgVel.y = clamp_helper(VELOCITY_CLAMP_MIN, VELOCITY_CLAMP_MAX, avgVel.x);
+            
             return [NSValue valueWithCGPoint:avgVel];
         }] CGPointValue];
         _averageVelocity = avgVel;
