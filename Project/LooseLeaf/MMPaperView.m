@@ -182,6 +182,9 @@
 -(void) cancelAllGestures{
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         if([gesture respondsToSelector:@selector(cancel)]){
+            if(gesture.enabled && gesture.state != UIGestureRecognizerStatePossible){
+                NSLog(@"gesture is active %@", gesture);
+            }
             [(MMPanAndPinchGestureRecognizer*)gesture cancel];
         }
     }
@@ -191,6 +194,9 @@
  */
 -(void) disableAllGestures{
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
+        if(gesture.enabled && gesture.state != UIGestureRecognizerStatePossible){
+            NSLog(@"gesture is active %@ %d", gesture, gesture.state);
+        }
         [gesture setEnabled:NO];
     }
     textLabel.text = @"disabled";
@@ -255,6 +261,10 @@
     
 //    debug_NSLog(@"pan: %d %f %f", panGesture.state, lastLocationInSuper.x, lastLocationInSuper.y);
     
+//    NSLog(@"panAndScale cancelled: %d   ended: %d   began: %d   failed: %d", panGesture.state == UIGestureRecognizerStateCancelled,
+//          panGesture.state == UIGestureRecognizerStateEnded, panGesture.state == UIGestureRecognizerStateBegan,
+//          panGesture.state == UIGestureRecognizerStateFailed);
+    
     CGPoint velocity = [_panGesture velocity];
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
        panGesture.state == UIGestureRecognizerStateEnded ||
@@ -270,6 +280,7 @@
             if(scale < kMinPageZoom){
                 [self.delegate cancelledScalingReallySmall:self];
             }
+            NSLog(@"finished panning page, telling delegate");
             [self.delegate finishedPanningAndScalingPage:self 
                                                intoBezel:panGesture.didExitToBezel
                                                fromFrame:frameOfPageAtBeginningOfGesture

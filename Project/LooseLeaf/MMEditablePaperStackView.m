@@ -430,7 +430,7 @@
     if([page isKindOfClass:[MMEditablePaperView class]]){
         __block MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
         [pageToSave setEditable:NO];
-        debug_NSLog(@"page %@ isn't editable", pageToSave.uuid);
+//        debug_NSLog(@"page %@ isn't editable", pageToSave.uuid);
         [[visibleStackHolder peekSubview] saveToDisk];
     }else{
         debug_NSLog(@"would save, but can't b/c its readonly page");
@@ -455,7 +455,7 @@
         MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
         [pageToSave setCanvasVisible:YES];
         [pageToSave setEditable:YES];
-        debug_NSLog(@"page %@ is editable", pageToSave.uuid);
+//        debug_NSLog(@"page %@ is editable", pageToSave.uuid);
     }
     [rulerView setHidden:NO];
 }
@@ -479,12 +479,12 @@
         if([page isKindOfClass:[MMEditablePaperView class]]){
             MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
             if([editablePage hasEditsToSave]){
-                debug_NSLog(@"page still has edits to save...");
+//                debug_NSLog(@"page still has edits to save...");
             }else{
-                debug_NSLog(@"page is done saving...");
+//                debug_NSLog(@"page is done saving...");
                 [(MMEditablePaperView*)page setCanvasVisible:NO];
                 [(MMEditablePaperView*)page setEditable:NO];
-                debug_NSLog(@"thumb for %@ is visible", page.uuid);
+//                debug_NSLog(@"thumb for %@ is visible", page.uuid);
             }
         }
     }else{
@@ -561,8 +561,13 @@
                 debug_NSLog(@"did switch top page to %@", currentEditablePage.uuid);
                 [currentEditablePage setDrawableView:drawableView];
             }else{
-                debug_NSLog(@"load state for future top page: %@", editableTopPage.uuid);
-                [self loadStateForPage:editableTopPage];
+                if(![editableTopPage hasStateLoaded]){
+                    // load the state for the new top page
+                    debug_NSLog(@"load state for future top page: %@", editableTopPage.uuid);
+                    [self loadStateForPage:editableTopPage];
+                }else{
+                    // we're saving the top page to disk
+                }
             }
         }else{
             // just double check that we're in editable state
