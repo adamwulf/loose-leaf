@@ -347,6 +347,7 @@
                         CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtStartPoint;
                         newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
                         newElement.width = previousElement.width + widthDiff*tValueAtStartPoint;
+                        newElement.width /= scrap.scale;
                         newElement.rotation = previousElement.rotation + rotationDiff*tValueAtStartPoint;
                     }else if(pathEle.type == kCGPathElementAddCurveToPoint ||
                        pathEle.type == kCGPathElementAddLineToPoint){
@@ -368,6 +369,7 @@
                         CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtEndPoint;
                         newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
                         newElement.width = previousElement.width + widthDiff*tValueAtEndPoint;
+                        newElement.width /= scrap.scale;
                         newElement.rotation = previousElement.rotation + rotationDiff*tValueAtEndPoint;
                         
                         clippingInformationIndex++;
