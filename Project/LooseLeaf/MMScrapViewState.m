@@ -8,6 +8,7 @@
 
 #import "MMScrapViewState.h"
 #import "NSThread+BlockAdditions.h"
+#import "MMLoadImageCache.h"
 
 @implementation MMScrapViewState{
     NSString* uuid;
@@ -115,7 +116,7 @@ static dispatch_queue_t importExportScrapStateQueue;
         // don't load from disk on the main thread.
         dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
             @autoreleasepool {
-                UIImage* thumb = [UIImage imageWithContentsOfFile:self.thumbImageFile];
+                UIImage* thumb = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
                 [NSThread performBlockOnMainThread:^{
                     thumbnailView.image = thumb;
                 }];
@@ -153,6 +154,7 @@ static dispatch_queue_t importExportScrapStateQueue;
                         
                         // now export the drawn content
                         [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
+                            [[MMLoadImageCache sharedInstace] updateCacheForPath:self.thumbImageFile toImage:thumb];
                             [NSThread performBlockOnMainThread:^{
                                 thumbnailView.image = thumb;
                             }];

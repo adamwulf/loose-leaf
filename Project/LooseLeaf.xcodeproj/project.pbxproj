@@ -80,6 +80,7 @@
 		66A6836D17CE668C007EE218 /* fishhook.c in Sources */ = {isa = PBXBuildFile; fileRef = 66A6836B17CE668C007EE218 /* fishhook.c */; };
 		66A6836F17CE66B0007EE218 /* QuietAssertMacros.c in Sources */ = {isa = PBXBuildFile; fileRef = 66A6836E17CE66B0007EE218 /* QuietAssertMacros.c */; };
 		66A83AF317B2BB3D00488E54 /* MMBackwardCompatible.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A83AF217B2BB3D00488E54 /* MMBackwardCompatible.m */; };
+		66AC153D1805F2F8005315C8 /* MMLoadImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC153C1805F2F8005315C8 /* MMLoadImageCache.m */; };
 		66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */; };
 		66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B0FA5F17FB68410079E7A3 /* MMScrapViewState.m */; };
 		66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A55175AFCA70049F1AF /* MMHandButton.m */; };
@@ -338,6 +339,8 @@
 		66A83AF217B2BB3D00488E54 /* MMBackwardCompatible.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMBackwardCompatible.m; path = "DrawKit-iOS/MMBackwardCompatible.m"; sourceTree = "<group>"; };
 		66AA212B16FBB31C00E86922 /* MMPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPopoverView.h; sourceTree = "<group>"; };
 		66AA212C16FBB31C00E86922 /* MMPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPopoverView.m; sourceTree = "<group>"; };
+		66AC153B1805F2F8005315C8 /* MMLoadImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLoadImageCache.h; sourceTree = "<group>"; };
+		66AC153C1805F2F8005315C8 /* MMLoadImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLoadImageCache.m; sourceTree = "<group>"; };
 		66AE5AA617F4D064009F82B6 /* MMScrapsOnPaperState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapsOnPaperState.h; sourceTree = "<group>"; };
 		66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapsOnPaperState.m; sourceTree = "<group>"; };
 		66AE5AA917F4D124009F82B6 /* MMScrapsOnPaperStateDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScrapsOnPaperStateDelegate.h; sourceTree = "<group>"; };
@@ -757,6 +760,8 @@
 				66932967159594A60033E557 /* MMRotationManagerDelegate.h */,
 				66B21A6A175E4A5A0049F1AF /* MMStackManager.h */,
 				66B21A6B175E4A5A0049F1AF /* MMStackManager.m */,
+				66AC153B1805F2F8005315C8 /* MMLoadImageCache.h */,
+				66AC153C1805F2F8005315C8 /* MMLoadImageCache.m */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -1293,6 +1298,7 @@
 				66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */,
 				66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */,
 				6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */,
+				66AC153D1805F2F8005315C8 /* MMLoadImageCache.m in Sources */,
 				66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */,
 				6699715217DBA02700E81467 /* MMDebugDrawView.m in Sources */,
 				66B51A2A17AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m in Sources */,
