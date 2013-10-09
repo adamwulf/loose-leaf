@@ -42,10 +42,18 @@ static int count = 0;
 -(UIImage*) imageAtPath:(NSString*)path{
     UIImage* cachedImage = [loadedImages objectForKey:path];
     if(!cachedImage){
+        if([orderedKeys containsObject:path]){
+            // we don't have an image, but our path is
+            // in cache. this means there was nothing on disk
+            return nil;
+        }
+        
         cachedImage = [UIImage imageWithContentsOfFile:path];
         count++;
         @synchronized(self){
-            [loadedImages setObject:cachedImage forKey:path];
+            if(cachedImage){
+                [loadedImages setObject:cachedImage forKey:path];
+            }
             [orderedKeys removeObject:path];
             [orderedKeys insertObject:path atIndex:0];
             [self ensureCacheSize];
@@ -73,7 +81,11 @@ static int count = 0;
 -(void) updateCacheForPath:(NSString*)path toImage:(UIImage*)image{
     @synchronized(self){
         [self clearCacheForPath:path];
-        [loadedImages setObject:image forKey:path];
+        if(image){
+            [loadedImages setObject:image forKey:path];
+        }else{
+            [loadedImages removeObjectForKey:path];
+        }
         [orderedKeys insertObject:path atIndex:0];
         [self ensureCacheSize];
     }
