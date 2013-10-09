@@ -11,7 +11,7 @@
 
 @protocol MMScrapBezelMenuViewDelegate <NSObject>
 
--(NSOrderedSet*) scraps;
+-(NSArray*) scraps;
 
 -(void) didTapOnScrapFromMenu:(MMScrapView*)scrap;
 

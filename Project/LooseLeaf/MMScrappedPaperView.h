@@ -9,13 +9,13 @@
 #import "MMEditablePaperView.h"
 #import "MMPanAndPinchScrapGestureRecognizer.h"
 #import "MMPanAndPinchScrapGestureRecognizerDelegate.h"
-
+#import "MMScrapsOnPaperStateDelegate.h"
 
 /**
  * the purpose of this subclass is to encompass all of the
  * scrap functionality for a page
  */
-@interface MMScrappedPaperView : MMEditablePaperView<MMPanAndPinchScrapGestureRecognizerDelegate>
+@interface MMScrappedPaperView : MMEditablePaperView<MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapsOnPaperStateDelegate>
 
 @property (readonly) NSArray* scraps;
 
@@ -29,5 +29,7 @@
 -(BOOL) hasScrap:(MMScrapView*)scrap;
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
+
+-(void) saveToDisk;
 
 @end

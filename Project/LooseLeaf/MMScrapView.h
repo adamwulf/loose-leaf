@@ -8,28 +8,28 @@
 
 #import <UIKit/UIKit.h>
 #import <JotUI/JotUI.h>
+#import "MMScrapViewStateDelegate.h"
 
-@interface MMScrapView : UIView
+@interface MMScrapView : UIView<MMScrapViewStateDelegate>
 
-@property (readonly) CGAffineTransform clippingPathTransform;
 @property (readonly) UIBezierPath* clippingPath;
 @property (readonly) UIBezierPath* bezierPath;
 @property (nonatomic, assign) CGFloat scale;
 @property (nonatomic, assign) CGFloat rotation;
 @property (nonatomic, assign) BOOL selected;
-@property (nonatomic, readonly) CGRect originalBounds;
+@property (nonatomic, readonly) CGSize originalSize;
+@property (nonatomic, readonly) NSString* uuid;
 
+-(id) initWithScrapViewState:(MMScrapViewState*)scrapState;
 - (id)initWithBezierPath:(UIBezierPath*)path;
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
 
 -(BOOL) containsTouch:(UITouch*)touch;
 
--(CGPoint) firstPoint;
-
 -(void) setScale:(CGFloat)scale andRotation:(CGFloat)rotation;
 
--(void) drawX;
+-(void) setShouldShowShadow:(BOOL)shouldShowShadow;
 
 /**
  * will return the array of touches that this scrap
@@ -41,7 +41,11 @@
 
 -(void) addElement:(AbstractBezierPathElement*)element;
 
-#pragma mark - debug
--(UIBezierPath*) intersect:(UIBezierPath*)newPath;
+-(void) saveToDisk;
+
+
+-(void) loadStateAsynchronously:(BOOL)async;
+
+-(void) unloadState;
 
 @end

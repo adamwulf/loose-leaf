@@ -8,14 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MMPolygonDebugView : UIView
+@interface MMShapeBuilderView : UIView
 
 -(BOOL) addTouchPoint:(CGPoint)point;
 
 -(void) clear;
 
--(NSArray*) complete;
-
--(void) addPath:(UIBezierPath*)pathToDraw;
+-(NSArray*) completeAndGenerateShapes;
 
 @end

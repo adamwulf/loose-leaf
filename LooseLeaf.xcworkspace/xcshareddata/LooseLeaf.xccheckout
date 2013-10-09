@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>3A8BB72D-AC45-4E7A-9A11-70A72C2456EB</string>
 	<key>IDESourceControlProjectName</key>
@@ -54,33 +56,9 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>BC8ADFAC-BC7E-461B-B1A2-081D8AB6C365</string>
-			<key>IDESourceControlWCCName</key>
-			<string>JotUI</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>2AAA6635-4510-4E3D-90E1-4CB3521ADC4B</string>
 			<key>IDESourceControlWCCName</key>
 			<string>DrawKit-iOS</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>F29D9E2E-F440-4F73-A871-4B5801D69250</string>
-			<key>IDESourceControlWCCName</key>
-			<string>Loose Leaf</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>14C6FF5D-B518-4BDF-95FA-B405B8BC64B8</string>
-			<key>IDESourceControlWCCName</key>
-			<string>JotTouchSDK</string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
@@ -94,9 +72,17 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>5148601B-759B-4B3D-8C4E-83D206A92ED2</string>
+			<string>14C6FF5D-B518-4BDF-95FA-B405B8BC64B8</string>
 			<key>IDESourceControlWCCName</key>
-			<string>painting-demo</string>
+			<string>JotTouchSDK</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>BC8ADFAC-BC7E-461B-B1A2-081D8AB6C365</string>
+			<key>IDESourceControlWCCName</key>
+			<string>JotUI</string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
@@ -105,6 +91,22 @@
 			<string>AD2028FA-458E-4976-B726-9499C781146E</string>
 			<key>IDESourceControlWCCName</key>
 			<string>jrswizzle</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>F29D9E2E-F440-4F73-A871-4B5801D69250</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Loose Leaf</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>5148601B-759B-4B3D-8C4E-83D206A92ED2</string>
+			<key>IDESourceControlWCCName</key>
+			<string>painting-demo</string>
 		</dict>
 	</array>
 </dict>

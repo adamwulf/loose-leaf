@@ -13,26 +13,38 @@
 #import "NSThread+BlockAdditions.h"
 #import "TestFlight.h"
 #import "DrawKit-iOS.h"
+#import "MMPaperState.h"
+#import "UIBezierPath+Clipping.h"
 
 dispatch_queue_t loadUnloadStateQueue;
 dispatch_queue_t importThumbnailQueue;
 
 
 @implementation MMEditablePaperView{
-    NSUInteger lastSavedUndoHash;
-    
-    JotViewState* state;
     // cached static values
     NSString* pagesPath;
     NSString* inkPath;
     NSString* plistPath;
     NSString* thumbnailPath;
-    
-    BOOL isLoadingCachedImageFromDisk;
     UIBezierPath* boundsPath;
+    BOOL isLoadingCachedImageFromDisk;
+    
+    MMPaperState* paperState;
+    
+    // we want to be able to track extremely
+    // efficiently 1) if we have a thumbnail loaded,
+    // and 2) if we have (or don't) a thumbnail at all
+    UIImage* cachedImgViewImage;
+    // this defaults to NO, which means we'll try to
+    // load a thumbnail. if an image does not exist
+    // on disk, then we'll set this to YES which will
+    // prevent any more thumbnail loads until this page
+    // is saved
+    BOOL definitelyDoesNotHaveAThumbnail;
 }
 
 @synthesize drawableView;
+@synthesize paperState;
 
 +(dispatch_queue_t) loadUnloadStateQueue{
     if(!loadUnloadStateQueue){
@@ -62,9 +74,9 @@ dispatch_queue_t importThumbnailQueue;
         cachedImgView.contentMode = UIViewContentModeScaleAspectFill;
         cachedImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         cachedImgView.clipsToBounds = YES;
+        cachedImgView.opaque = YES;
+        cachedImgView.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:cachedImgView];
-        
-        lastSavedUndoHash = [drawableView undoHash];
         
         //
         // This pan gesture is used to pan/scale the page itself.
@@ -78,6 +90,10 @@ dispatch_queue_t importThumbnailQueue;
         [rulerGesture requireGestureRecognizerToFail:longPress];
         [rulerGesture requireGestureRecognizerToFail:tap];
         [self addGestureRecognizer:rulerGesture];
+        
+        // initialize our state manager
+        paperState = [[MMPaperState alloc] initWithInkPath:[self inkPath] andPlistPath:[self plistPath]];
+        paperState.delegate = self;
         
     }
     return self;
@@ -119,9 +135,11 @@ dispatch_queue_t importThumbnailQueue;
     if(isCanvasVisible){
         cachedImgView.hidden = YES;
         drawableView.hidden = NO;
+        shapeBuilderView.hidden = NO;
     }else{
         cachedImgView.hidden = NO;
         drawableView.hidden = YES;
+        shapeBuilderView.hidden = YES;
     }
 }
 
@@ -136,203 +154,57 @@ dispatch_queue_t importThumbnailQueue;
     }
 }
 
--(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(EAGLContext*)context andThen:(void (^)())block{
-    if(state){
-        if(block) block();
-        return;
-    }
-    
-    void (^block2)() = ^(void) {
-        @autoreleasepool {
-            if(!state){
-                state = [[JotViewState alloc] initWithImageFile:[self inkPath]
-                                                   andStateFile:[self plistPath]
-                                                    andPageSize:pagePixelSize
-                                                   andGLContext:context];
-            }
-            if(block) block();
-        }
-    };
-    
-    if(async){
-        dispatch_async([MMEditablePaperView loadUnloadStateQueue], block2);
-    }else{
-        block2();
-    }
-}
--(void) unloadState{
-    dispatch_async([MMEditablePaperView loadUnloadStateQueue], ^(void) {
-        state = nil;
-    });
+-(BOOL) isEditable{
+    return drawableView.userInteractionEnabled;
 }
 
--(void) setBackgroundTextureToStartPage{
-    UIGraphicsBeginImageContext(state.backgroundTexture.pixelSize);
-    CGFloat scale = [[UIScreen mainScreen] scale];
-    
-    CGFloat textStartX = 110;
 
-    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 18), CGAffineTransformMakeScale(scale, scale))
-                            withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"New Blank Page" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 25), CGAffineTransformMakeScale(scale, scale))
-                          withFont:[UIFont systemFontOfSize:16 * scale]];
-    
-    
-    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 18 + 60), CGAffineTransformMakeScale(scale, scale))
-             withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Jot Touch Settings" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 25 + 60), CGAffineTransformMakeScale(scale, scale))
-                          withFont:[UIFont systemFontOfSize:16 * scale]];
-    
-
-    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 18 + 60*2), CGAffineTransformMakeScale(scale, scale))
-             withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Send Adam your Alpha Feedback!" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 25 + 60*2), CGAffineTransformMakeScale(scale, scale))
-                              withFont:[UIFont systemFontOfSize:16 * scale]];
-    
-
-    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 298), CGAffineTransformMakeScale(scale, scale))
-             withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Pen" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 310), CGAffineTransformMakeScale(scale, scale))
-                                          withFont:[UIFont systemFontOfSize:16 * scale]];
-    
-
-    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 298 + 60), CGAffineTransformMakeScale(scale, scale))
-             withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Eraser" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 310 + 60), CGAffineTransformMakeScale(scale, scale))
-                                          withFont:[UIFont systemFontOfSize:16 * scale]];
-    
-    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 330 + 60 * 5), CGAffineTransformMakeScale(scale, scale))
-             withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Grab" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 342 + 60 * 5), CGAffineTransformMakeScale(scale, scale))
-                  withFont:[UIFont systemFontOfSize:16 * scale]];
-
-    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 330 + 60 * 6), CGAffineTransformMakeScale(scale, scale))
-             withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Ruler" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 342 + 60 * 6), CGAffineTransformMakeScale(scale, scale))
-                     withFont:[UIFont systemFontOfSize:16 * scale]];
-
-
-    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 902), CGAffineTransformMakeScale(scale, scale))
-             withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Undo" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 914), CGAffineTransformMakeScale(scale, scale))
-                  withFont:[UIFont systemFontOfSize:16 * scale]];
-    
-    [@"←" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(70, 902 + 60), CGAffineTransformMakeScale(scale, scale))
-             withFont:[UIFont systemFontOfSize:32 * scale]];
-    [@"Redo" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(textStartX, 914 + 60), CGAffineTransformMakeScale(scale, scale))
-                withFont:[UIFont systemFontOfSize:16 * scale]];
-    
-    
-    
-
-    [@"Thanks for helping test Loose Leaf!" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 342), CGAffineTransformMakeScale(scale, scale))
-                                withFont:[UIFont boldSystemFontOfSize:20 * scale]];
-    
-    
-    [@"New this build:" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 402), CGAffineTransformMakeScale(scale, scale))
-             withFont:[UIFont boldSystemFontOfSize:20 * scale]];
-    
-    [@"• New Ruler mode lets you draw super straight lines" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 442), CGAffineTransformMakeScale(scale, scale))
-                  withFont:[UIFont systemFontOfSize:20 * scale]];
-    [@"  or curves. Similar to Adobe's Napolean ruler." drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 468), CGAffineTransformMakeScale(scale, scale))
-                                                  withFont:[UIFont systemFontOfSize:20 * scale]];
-    
-    [@"• Two fingers from left bezel will move pages off the stack." drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 508), CGAffineTransformMakeScale(scale, scale))
-                                        withFont:[UIFont systemFontOfSize:20 * scale]];
-    
-    [@"• two fingers from either bezel works in ruler mode." drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 548), CGAffineTransformMakeScale(scale, scale))
-                                                  withFont:[UIFont systemFontOfSize:20 * scale]];
-    
-    [@"• Can move pages in list view with 1 finger long press." drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 588), CGAffineTransformMakeScale(scale, scale))
-                                                                 withFont:[UIFont systemFontOfSize:20 * scale]];
-
-    [@"• lots of memory optimizations" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 628), CGAffineTransformMakeScale(scale, scale))
-                                                          withFont:[UIFont systemFontOfSize:20 * scale]];
-    
-    [@"• changed perspective a bit when zooming to list" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 668), CGAffineTransformMakeScale(scale, scale))
-                                          withFont:[UIFont systemFontOfSize:20 * scale]];
-
-    [@"• thinner less smeared-looking pen" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 708), CGAffineTransformMakeScale(scale, scale))
-                                                            withFont:[UIFont systemFontOfSize:20 * scale]];
-
-    
-    [@"Not yet built:" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 760), CGAffineTransformMakeScale(scale, scale))
-                           withFont:[UIFont boldSystemFontOfSize:20 * scale]];
-
-    [@"• New undo/redo UIUX" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 800), CGAffineTransformMakeScale(scale, scale))
-                          withFont:[UIFont systemFontOfSize:20 * scale]];
-    [@"• Can't delete pages yet" drawAtPoint:CGPointApplyAffineTransform(CGPointMake(250, 840), CGAffineTransformMakeScale(scale, scale))
-                                withFont:[UIFont systemFontOfSize:20 * scale]];
-
-    /**
-     
-     Thanks for helping to test Loose Leaf!
-     
-     • one finger will draw
-     
-     • two fingers will pinch/grab a page
-     
-     • you can pinch and draw at the same time
-     
-     
-     */
-
-    UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    state.backgroundTexture = [[JotGLTexture alloc] initForImage:image withSize:state.backgroundTexture.pixelSize];
-    lastSavedUndoHash = 0;
-}
-    
     
 -(void) generateDebugView:(BOOL)create{
     if(create){
-        polygonDebugView = [[MMPolygonDebugView alloc] initWithFrame:self.contentView.bounds];
+        shapeBuilderView = [[MMShapeBuilderView alloc] initWithFrame:self.contentView.bounds];
         //        polygonDebugView.layer.borderColor = [UIColor redColor].CGColor;
         //        polygonDebugView.layer.borderWidth = 10;
-        polygonDebugView.frame = self.contentView.bounds;
-        polygonDebugView.contentMode = UIViewContentModeScaleAspectFill;
-        polygonDebugView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        polygonDebugView.clipsToBounds = YES;
-        polygonDebugView.opaque = NO;
-        polygonDebugView.backgroundColor = [UIColor clearColor];
-        [self.contentView addSubview:polygonDebugView];
+        shapeBuilderView.frame = self.contentView.bounds;
+        shapeBuilderView.contentMode = UIViewContentModeScaleAspectFill;
+        shapeBuilderView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        shapeBuilderView.clipsToBounds = YES;
+        shapeBuilderView.opaque = NO;
+        shapeBuilderView.backgroundColor = [UIColor clearColor];
+        [self.contentView addSubview:shapeBuilderView];
     }else{
-        [polygonDebugView removeFromSuperview];
-        polygonDebugView = nil;
+        [shapeBuilderView removeFromSuperview];
+        shapeBuilderView = nil;
     }
 }
 
 -(void) setDrawableView:(JotView *)_drawableView{
+    if(_drawableView && ![self hasStateLoaded]){
+        NSLog(@"oh no");
+    }
     if(drawableView != _drawableView){
         drawableView = _drawableView;
         if(drawableView){
             [self generateDebugView:YES];
             [self setFrame:self.frame];
-            [self loadStateAsynchronously:YES
-                                 withSize:[drawableView pagePixelSize]
-                               andContext:[drawableView context]
-                                  andThen:^{
-                                      [NSThread performBlockOnMainThread:^{
-                                          if([self.delegate isPageEditable:self]){
-                                              [drawableView loadState:state];
-                                              lastSavedUndoHash = [drawableView undoHash];
-                                              [self.contentView insertSubview:drawableView aboveSubview:cachedImgView];
-                                              // anchor the view to the top left,
-                                              // so that when we scale down, the drawable view
-                                              // stays in place
-                                              drawableView.layer.anchorPoint = CGPointMake(0,0);
-                                              drawableView.layer.position = CGPointMake(0,0);
-                                              drawableView.delegate = self;
-                                              [self setCanvasVisible:YES];
-                                              [self setEditable:YES];
-                                          }
-                                      }];
-                                  }];
+            [NSThread performBlockOnMainThread:^{
+                if([self.delegate isPageEditable:self] && [self hasStateLoaded]){
+                    [drawableView loadState:paperState.jotViewState];
+                    [self.contentView insertSubview:drawableView aboveSubview:cachedImgView];
+                    // anchor the view to the top left,
+                    // so that when we scale down, the drawable view
+                    // stays in place
+                    drawableView.layer.anchorPoint = CGPointMake(0,0);
+                    drawableView.layer.position = CGPointMake(0,0);
+                    drawableView.delegate = self;
+                    [self setCanvasVisible:YES];
+                    [self setEditable:YES];
+                }
+            }];
         }else{
             [self generateDebugView:NO];
         }
-    }else if(drawableView && state){
+    }else if(drawableView && [self hasStateLoaded]){
         [self setCanvasVisible:YES];
         [self setEditable:YES];
     }
@@ -344,19 +216,37 @@ dispatch_queue_t importThumbnailQueue;
  * currently saved hash
  */
 -(BOOL) hasEditsToSave{
-//    debug_NSLog(@"checking if edits to save %u vs %u", [drawableView undoHash], lastSavedUndoHash);
-    return [drawableView undoHash] != lastSavedUndoHash;
+    return [paperState hasEditsToSave];
+}
+
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context andStartPage:(BOOL)startPage{
+    if([paperState isStateLoaded]){
+        [self didLoadState:paperState];
+        return;
+    }
+    [paperState loadStateAsynchronously:async withSize:pagePixelSize andContext:context andStartPage:startPage];
+}
+-(void) unloadState{
+    [paperState unload];
+}
+
+-(BOOL) hasStateLoaded{
+    return [paperState isStateLoaded];
+}
+
+
+/**
+ * subclass should override and call into saveToDisk:
+ */
+-(void) saveToDisk{
+    @throw kAbstractMethodException;
 }
 
 /**
  * write the thumbnail, backing texture, and entire undo
  * state to disk, and notify our delegate when done
  */
--(void) forceSaveToDisk{
-    lastSavedUndoHash = 0;
-    [self saveToDisk];
-}
--(void) saveToDisk{
+-(void) saveToDisk:(void (^)(void))onComplete{
     // Sanity checks to generate our directory structure if needed
     [self pagesPath];
     
@@ -368,36 +258,64 @@ dispatch_queue_t importThumbnailQueue;
                    andThumbnailTo:[self thumbnailPath]
                        andStateTo:[self plistPath]
                        onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* immutableState){
+                           definitelyDoesNotHaveAThumbnail = NO;
+                           [paperState wasSavedAtImmutableState:immutableState];
+                           onComplete();
                            [NSThread performBlockOnMainThread:^{
-                               lastSavedUndoHash = [immutableState undoHash];
-//                               debug_NSLog(@"saving page %@ with hash %u", self.uuid, lastSavedUndoHash);
-                               cachedImgView.image = thumbnail;
-                               [self.delegate didSavePage:self];
+                               cachedImgViewImage = thumbnail;
+                               cachedImgView.image = cachedImgViewImage;
                            }];
                        }];
     }else{
         // already saved, but don't need to write
         // anything new to disk
         debug_NSLog(@"no edits to save with hash %u", [drawableView undoHash]);
-        [self.delegate didSavePage:self];
+        onComplete();
     }
 }
 
+/**
+ * this preview is used when the list view is scrolling.
+ * the goal is to have possibly thousands of pages on disk,
+ * and we load the preview for pages only when they become visible
+ * in the scroll view or by gestures in page view.
+ */
+
+// static count to help debug how many times I'm actually
+// going to disk trying to load a thumbnail
+static int count = 0;
 -(void) loadCachedPreview{
-    if(!cachedImgView.image && !isLoadingCachedImageFromDisk){
+    // if we might have a thumbnail (!definitelyDoesNotHaveAThumbnail)
+    // and we don't have one cached (!cachedImgViewImage) and
+    // we're not already tryign to load it form disk (!isLoadingCachedImageFromDisk)
+    // then try to load it and store the results.
+    if(!definitelyDoesNotHaveAThumbnail && !cachedImgViewImage && !isLoadingCachedImageFromDisk){
         isLoadingCachedImageFromDisk = YES;
+        count++;
         dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
             @autoreleasepool {
-                UIImage* img = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
+                //
+                // load thumbnails into a cache for faster repeat loading
+                // https://github.com/adamwulf/loose-leaf/issues/227
+                UIImage* thumbnail = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
+                if(!thumbnail){
+                    definitelyDoesNotHaveAThumbnail = YES;
+                }
+                isLoadingCachedImageFromDisk = NO;
                 [NSThread performBlockOnMainThread:^{
-                    cachedImgView.image = img;
-                    isLoadingCachedImageFromDisk = NO;
+                    cachedImgViewImage = thumbnail;
+                    cachedImgView.image = cachedImgViewImage;
                 }];
             }
         });
     }
 }
 
+/**
+ * this page is no longer visible in either page view
+ * (from gestures showing it behind a visible page
+ * or on the bezel stack) or in the list view.
+ */
 -(void) unloadCachedPreview{
     // i have to do this on the dispatch queues, so
     // that this will execute after loading if the loading
@@ -405,11 +323,16 @@ dispatch_queue_t importThumbnailQueue;
     //
     // i should probably make an nsoperationqueue or something
     // so that i can cancel operations if they havne't run yet... (?)
-    dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
-        [NSThread performBlockOnMainThread:^{
-            cachedImgView.image = nil;
-        }];
-    });
+    if(cachedImgViewImage || isLoadingCachedImageFromDisk){
+        // adding to these thread queues will make sure I unload
+        // after any in progress load
+        dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
+            [NSThread performBlockOnMainThread:^{
+                cachedImgViewImage = nil;
+                cachedImgView.image = cachedImgViewImage;
+            }];
+        });
+    }
 }
 
 
@@ -499,12 +422,10 @@ dispatch_queue_t importThumbnailQueue;
             [bez moveToPoint:[element startPoint]];
             [bez addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
             
-            NSArray* output = [bez clipToClosedPath:boundsPath];
-//            UIBezierPath* cropped = [bez unclosedPathFromIntersectionWithPath:bounds];
-            UIBezierPath* cropped = [output firstObject];
+            DKUIBezierPathClippingResult* output = [bez clipUnclosedPathToClosedPath:boundsPath];
 
             __block CGPoint previousEndpoint = curveElement.startPoint;
-            [cropped iteratePathWithBlock:^(CGPathElement pathEle){
+            [output.intersection iteratePathWithBlock:^(CGPathElement pathEle){
                 AbstractBezierPathElement* newElement = nil;
                 if(pathEle.type == kCGPathElementAddCurveToPoint){
                     // curve
@@ -577,5 +498,21 @@ dispatch_queue_t importThumbnailQueue;
     return thumbnailPath;
 }
 
+
+
+
+#pragma mark - MMPaperStateDelegate
+
+-(void) didLoadState:(MMPaperState*)state{
+    [NSThread performBlockOnMainThread:^{
+        [self.delegate didLoadStateForPage:self];
+    }];
+}
+
+-(void) didUnloadState:(MMPaperState *)state{
+    [NSThread performBlockOnMainThread:^{
+        [self.delegate didUnloadStateForPage:self];
+    }];
+}
 
 @end

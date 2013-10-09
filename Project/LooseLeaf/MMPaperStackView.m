@@ -1655,4 +1655,15 @@
 }
 
 
+#pragma mark - MMEditablePaperViewDelegate
+
+-(void) didLoadStateForPage:(MMEditablePaperView *)page{
+    @throw kAbstractMethodException;
+}
+
+-(void) didUnloadStateForPage:(MMEditablePaperView*) page{
+    @throw kAbstractMethodException;
+}
+
+
 @end

@@ -10,7 +10,7 @@
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "Constants.h"
 
-@interface MMTouchVelocityGestureRecognizer : UIGestureRecognizer
+@interface MMTouchVelocityGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>
 
 +(MMTouchVelocityGestureRecognizer*) sharedInstace;
 

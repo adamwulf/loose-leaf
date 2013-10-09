@@ -8,19 +8,17 @@
 
 #import "MMScrapPaperStackView.h"
 #import "MMScrapContainerView.h"
-#import "MMShakeScrapGestureRecognizer.h"
 #import "MMScrapBubbleButton.h"
-#import "MMScapBubbleContainerView.h"
+#import "MMScrapBubbleContainerView.h"
 #import "MMDebugDrawView.h"
 
 @implementation MMScrapPaperStackView{
-    MMScapBubbleContainerView* bezelScrapContainer;
+    MMScrapBubbleContainerView* bezelScrapContainer;
     MMScrapContainerView* scrapContainer;
     // we get two gestures here, so that we can support
     // grabbing two scraps at the same time
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture;
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture2;
-    MMShakeScrapGestureRecognizer* shakeScrapGesture;
 }
 
 
@@ -30,7 +28,7 @@
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds];
         [self insertSubview:scrapContainer belowSubview:addPageSidebarButton];
         
-        bezelScrapContainer = [[MMScapBubbleContainerView alloc] initWithFrame:self.bounds];
+        bezelScrapContainer = [[MMScrapBubbleContainerView alloc] initWithFrame:self.bounds];
         bezelScrapContainer.delegate = self;
         [self insertSubview:bezelScrapContainer belowSubview:addPageSidebarButton];
 
@@ -39,9 +37,6 @@
         panAndPinchScrapGesture.scrapDelegate = self;
         panAndPinchScrapGesture.cancelsTouchesInView = NO;
         [self addGestureRecognizer:panAndPinchScrapGesture];
-        
-//        shakeScrapGesture = [[MMShakeScrapGestureRecognizer alloc] initWithTarget:self action:@selector(shakeScrap:)];
-//        [self addGestureRecognizer:shakeScrapGesture];
         
         panAndPinchScrapGesture2 = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
         panAndPinchScrapGesture2.bezelDirectionMask = MMBezelDirectionRight;
@@ -56,21 +51,23 @@
                 [possibleSidebarButton addTarget:self action:@selector(anySidebarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
             }
         }
+    
+//        UIButton* drawLongElementButton = [[UIButton alloc] initWithFrame:CGRectMake(100, 100, 200, 60)];
+//        [drawLongElementButton addTarget:self action:@selector(drawLine) forControlEvents:UIControlEventTouchUpInside];
+//        [drawLongElementButton setTitle:@"Draw Line" forState:UIControlStateNormal];
+//        drawLongElementButton.backgroundColor = [UIColor whiteColor];
+//        drawLongElementButton.layer.borderColor = [UIColor blackColor].CGColor;
+//        drawLongElementButton.layer.borderWidth = 1;
+//        [self addSubview:drawLongElementButton];
         
-        
-//        UIButton* goButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//        goButton.titleLabel.text = @"Go";
-//        [goButton addTarget:self action:@selector(drawX) forControlEvents:UIControlEventTouchUpInside];
-//        goButton.frame = CGRectMake(100, 100, 200, 60);
-//        goButton.backgroundColor = [UIColor blueColor];
-//        [self addSubview:goButton];
-//        [self drawX];
     }
     return self;
 }
 
--(void) drawX{
-    [[[visibleStackHolder peekSubview].scraps objectAtIndex:0] drawX];
+-(void) drawLine{
+    NSLog(@"drawing");
+    [[[visibleStackHolder peekSubview] drawableView] drawLongLine];
+    
 }
 
 #pragma mark - Add Page
@@ -159,6 +156,7 @@
     }
     
     if(gesture.scrap){
+        
         // handle the scrap.
         //
         // if the scrap is hovering over the page that it
@@ -197,8 +195,27 @@
             gesture.scrap.scale = scrapScaleInPage;
             gesture.scrap.center = scrapCenterInPage;
         }
+        
+        if(gesture.isShaking){
+            // if the gesture is shaking, then pull the scrap to the top if
+            // it's not already. otherwise send it to the back
+            if([pageToDropScrap isEqual:[visibleStackHolder peekSubview]] &&
+               ![pageToDropScrap hasScrap:scrap]){
+                [pageToDropScrap addScrap:scrap];
+                [gesture.scrap.superview insertSubview:gesture.scrap atIndex:0];
+            }else if(gesture.scrap == [gesture.scrap.superview.subviews lastObject]){
+                [gesture.scrap.superview insertSubview:gesture.scrap atIndex:0];
+            }else{
+                [gesture.scrap.superview addSubview:gesture.scrap];
+            }
+        }
+        
+        
         [self isBeginning:gesture.state == UIGestureRecognizerStateBegan toPanAndScaleScrap:gesture.scrap withTouches:gesture.touches];
     }
+    
+    MMScrapView* scrapViewIfFinished = nil;
+    
     BOOL shouldBezel = NO;
     if(gesture.scrap && didReset){
         // glow blue
@@ -237,7 +254,7 @@
             }
         }
         
-        [self finishedPanningAndScalingScrap:gesture.scrap];
+        scrapViewIfFinished = gesture.scrap;
     }
     if(gesture.scrap && (gesture.state == UIGestureRecognizerStateEnded ||
                          gesture.state == UIGestureRecognizerStateFailed ||
@@ -258,8 +275,11 @@
         if(shouldBezel){
             // if we've bezelled the scrap,
             // add it to the bezel container
-            [bezelScrapContainer addScrapToBezelSidebarAnimated:scrap];
+            [bezelScrapContainer addScrapToBezelSidebar:scrap animated:YES];
         }
+    }
+    if(scrapViewIfFinished){
+        [self finishedPanningAndScalingScrap:scrapViewIfFinished];
     }
 }
 
@@ -309,6 +329,12 @@
             // to find a page in our current array. move to the next array
             // of views further back in the view, and start checking those
             arrayNum -= 1;
+            if(arrayNum == -1){
+                // failsafe.
+                // this may happen if the user picks up two scraps with system gestures turned on.
+                // the system may exit our app, leaving us in an unknown state
+                return [visibleStackHolder peekSubview];
+            }
             indexNum = [(arrayOfArrayOfViews[arrayNum]) count] - 1;
         }
         // fetch the most visible page
@@ -338,13 +364,6 @@
     
     return pageToDropScrap;
 }
-
-#pragma mark - Shake Scraps
-
--(void) shakeScrap:(MMShakeScrapGestureRecognizer*)gesture{
-    // noop for now
-}
-
 
 
 #pragma mark - MMPanAndPinchScrapGestureRecognizerDelegate
@@ -396,7 +415,10 @@
 }
 
 -(void) finishedPanningAndScalingScrap:(MMScrapView*)scrap{
-    // noop
+    // save page if we're not holding any scraps
+    if(!panAndPinchScrapGesture.scrap && !panAndPinchScrapGesture2.scrap){
+           [[visibleStackHolder peekSubview] saveToDisk];
+    }
 }
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
@@ -427,14 +449,21 @@
 #pragma mark - Rotation
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
-    [super didUpdateAccelerometerWithReading:currentRawReading];
-    [bezelScrapContainer didUpdateAccelerometerWithRawReading:currentRawReading andX:xAccel andY:yAccel andZ:zAccel];
+    if(1 - ABS(zAccel) > .03){
+        [NSThread performBlockOnMainThread:^{
+            [super didUpdateAccelerometerWithReading:currentRawReading];
+            [bezelScrapContainer didUpdateAccelerometerWithRawReading:currentRawReading andX:xAccel andY:yAccel andZ:zAccel];
+            [[visibleStackHolder peekSubview] didUpdateAccelerometerWithRawReading:currentRawReading];
+        }];
+    }
 }
 
 #pragma mark - MMScapBubbleContainerViewDelegate
 
 -(void) didAddScrapToBezelSidebar:(MMScrapView *)scrap{
     // noop
+    NSLog(@"added a scrap to bezel");
+    [bezelScrapContainer saveToDisk];
 }
 
 -(void) didAddScrapBackToPage:(MMScrapView *)scrap{
@@ -450,6 +479,7 @@
     [page addScrap:scrap];
     scrap.center = center;
     scrap.scale = scale;
+    [bezelScrapContainer saveToDisk];
 }
 
 -(CGPoint) positionOnScreenToScaleScrapTo:(MMScrapView*)scrap{

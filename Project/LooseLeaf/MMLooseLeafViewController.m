@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMPaperStackViewController.h"
+#import "MMLooseLeafViewController.h"
 #import "MMShadowManager.h"
 #import "MMEditablePaperView.h"
 #import "TestFlight.h"
@@ -45,11 +45,6 @@
         
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth.png"]]];
         
-        
-        NSUserDefaults* def = [NSUserDefaults standardUserDefaults];
-        NSDictionary* alldef = [def dictionaryRepresentation];
-        
-        [self printKeys:alldef atlevel:1];
     }
     return self;
 }

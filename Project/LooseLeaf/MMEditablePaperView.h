@@ -10,31 +10,39 @@
 #import <JotUI/JotUI.h>
 #import <TouchShape/TouchShape.h>
 #import "MMRulerToolGestureRecognizer.h"
-#import "MMPolygonDebugView.h"
+#import "MMShapeBuilderView.h"
+#import "MMPaperStateDelegate.h"
+#import "MMEditablePaperViewDelegate.h"
 
-@interface MMEditablePaperView : MMPaperView<JotViewDelegate>{
+@interface MMEditablePaperView : MMPaperView<JotViewDelegate,MMPaperStateDelegate>{
     UIImageView* cachedImgView;
     __weak JotView* drawableView;
-    MMPolygonDebugView* polygonDebugView;
+    MMShapeBuilderView* shapeBuilderView;
     
     MMRulerToolGestureRecognizer* rulerGesture;
 }
 
 @property (nonatomic, weak) JotView* drawableView;
+@property (nonatomic, weak) NSObject<MMEditablePaperViewDelegate>* delegate;
+@property (readonly) MMPaperState* paperState;
+
++(dispatch_queue_t) loadUnloadStateQueue;
 
 -(void) undo;
 -(void) redo;
 -(BOOL) hasEditsToSave;
+-(BOOL) hasStateLoaded;
 -(void) unloadCachedPreview;
 -(void) loadCachedPreview;
--(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(EAGLContext*)context andThen:(void (^)())block;
--(void) setBackgroundTextureToStartPage;
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(JotGLContext*)context andStartPage:(BOOL)startPage;
 -(void) unloadState;
--(void) forceSaveToDisk;
--(void) saveToDisk;
+-(void) saveToDisk:(void (^)(void))onComplete;
 -(void) setCanvasVisible:(BOOL)isVisible;
 -(void) setEditable:(BOOL)isEditable;
+-(BOOL) isEditable;
 
-
+// abstract
+-(void) saveToDisk;
+-(NSString*) pagesPath;
 
 @end

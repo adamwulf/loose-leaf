@@ -13,6 +13,7 @@
 #import "MMScrappedPaperView.h"
 #import "MMScrapBubbleButton.h"
 #import "MMTouchVelocityGestureRecognizer.h"
+#import "MMPaperState.h"
 
 @implementation MMEditablePaperStackView{
     MMEditablePaperView* currentEditablePage;
@@ -346,24 +347,23 @@
 #pragma mark - MMRotationManagerDelegate
 
 -(void) didUpdateAccelerometerWithReading:(CGFloat)currentRawReading{
-    [NSThread performBlockOnMainThread:^{
-        addPageSidebarButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        documentBackgroundSidebarButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        polylineButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        polygonButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        insertImageButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        textButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        scissorButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        pencilTool.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        eraserButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        shareButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        mapButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        undoButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        redoButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        rulerButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        handButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        settingsButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-    }];
+    CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+    addPageSidebarButton.transform = rotationTransform;
+    documentBackgroundSidebarButton.transform = rotationTransform;
+    polylineButton.transform = rotationTransform;
+    polygonButton.transform = rotationTransform;
+    insertImageButton.transform = rotationTransform;
+    textButton.transform = rotationTransform;
+    scissorButton.transform = rotationTransform;
+    pencilTool.transform = rotationTransform;
+    eraserButton.transform = rotationTransform;
+    shareButton.transform = rotationTransform;
+    mapButton.transform = rotationTransform;
+    undoButton.transform = rotationTransform;
+    redoButton.transform = rotationTransform;
+    rulerButton.transform = rotationTransform;
+    handButton.transform = rotationTransform;
+    settingsButton.transform = rotationTransform;
 }
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
     [NSThread performBlockOnMainThread:^{
@@ -464,6 +464,11 @@
     [super finishedScalingBackToPageView:page];
     [self saveStacksToDisk];
     [rulerView setHidden:NO];
+    MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
+    if(![editablePage hasEditsToSave]){
+        [editablePage setCanvasVisible:NO];
+        [editablePage setEditable:NO];
+    }
     [TestFlight passCheckpoint:@"NAV_TO_PAGE_FROM_LIST"];
 }
 
@@ -482,6 +487,9 @@
                 debug_NSLog(@"thumb for %@ is visible", page.uuid);
             }
         }
+    }else{
+        // only load top page not in list view
+        [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
     }
 }
 
@@ -532,22 +540,32 @@
     }
     if([page isKindOfClass:[MMEditablePaperView class]]){
         MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
-        [editablePage loadStateAsynchronously:YES withSize:[drawableView pagePixelSize] andContext:[drawableView context] andThen:nil];
+        [editablePage loadStateAsynchronously:YES withSize:[drawableView pagePixelSize] andContext:[drawableView context] andStartPage:NO];
     }
 }
 
 -(void) ensureTopPageIsLoaded:(MMPaperView*)topPage{
     if([topPage isKindOfClass:[MMEditablePaperView class]]){
         MMEditablePaperView* editableTopPage = (MMEditablePaperView*)topPage;
+        
         if(currentEditablePage != editableTopPage){
-            [currentEditablePage setDrawableView:nil];
-            [currentEditablePage setEditable:NO];
-            [currentEditablePage setCanvasVisible:NO];
-            currentEditablePage = editableTopPage;
-            debug_NSLog(@"did switch top page to %@", currentEditablePage.uuid);
-        }
-        if([currentEditablePage isKindOfClass:[MMEditablePaperView class]]){
-            [self loadStateForPage:currentEditablePage];
+            // only care if the page is changing
+            if(![currentEditablePage hasEditsToSave] && [editableTopPage hasStateLoaded]){
+                // the outgoing page is saved to disk
+                // and the incoming page has its
+                // state loaded
+                [currentEditablePage setDrawableView:nil];
+                [currentEditablePage setEditable:NO];
+                [currentEditablePage setCanvasVisible:NO];
+                currentEditablePage = editableTopPage;
+                debug_NSLog(@"did switch top page to %@", currentEditablePage.uuid);
+                [currentEditablePage setDrawableView:drawableView];
+            }else{
+                debug_NSLog(@"load state for future top page: %@", editableTopPage.uuid);
+                [self loadStateForPage:editableTopPage];
+            }
+        }else{
+            // just double check that we're in editable state
             [currentEditablePage setDrawableView:drawableView];
         }
     }
@@ -636,11 +654,7 @@
     [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
                                                      withSize:[drawableView pagePixelSize]
                                                    andContext:[drawableView context]
-                                                      andThen:nil];
-    
-    if(isStart){
-        [[visibleStackHolder peekSubview] setBackgroundTextureToStartPage];
-    }
+                                                 andStartPage:isStart];
     
     // only load the image previews for the pages that will be visible
     // other page previews will load as the user turns the page,
@@ -655,7 +669,7 @@
     [self didChangeTopPage];
 
     if(isStart){
-        [[visibleStackHolder peekSubview] forceSaveToDisk];
+        [[visibleStackHolder peekSubview] saveToDisk];
     }
 }
 
@@ -808,5 +822,25 @@
     [self updateVisiblePageImageCache];
 }
 
+
+#pragma mark - MMEditablePaperViewDelegate
+
+-(void) didLoadStateForPage:(MMEditablePaperView *)page{
+    if(page == [visibleStackHolder peekSubview] || page == currentEditablePage){
+//        NSLog(@"didLoadStateForPage: %@", page.uuid);
+        if(page.scale > kMinPageZoom){
+            [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
+        }
+    }
+}
+
+-(void) didUnloadStateForPage:(MMEditablePaperView*) page{
+    if(page == [visibleStackHolder peekSubview] || page == currentEditablePage){
+//        NSLog(@"didUnloadStateForPage: %@", page.uuid);
+        if(page.scale > kMinPageZoom){
+            [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
+        }
+    }
+}
 
 @end
