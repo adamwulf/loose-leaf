@@ -271,11 +271,15 @@
                         
                         // be sure to set color/width/etc
                         CGFloat tValueAtEndPoint = clippingInformation.tValueEnd.tValue1;
-                        CGFloat red = prevColor[0] + colorDiff[0] * tValueAtEndPoint;
-                        CGFloat green = prevColor[1] + colorDiff[1] * tValueAtEndPoint;
-                        CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtEndPoint;
-                        CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtEndPoint;
-                        newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+                        if(element.color){
+                            CGFloat red = prevColor[0] + colorDiff[0] * tValueAtEndPoint;
+                            CGFloat green = prevColor[1] + colorDiff[1] * tValueAtEndPoint;
+                            CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtEndPoint;
+                            CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtEndPoint;
+                            newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+                        }else{
+                            newElement.color = nil;
+                        }
                         newElement.width = previousElement.width + widthDiff*tValueAtEndPoint;
                         newElement.rotation = previousElement.rotation + rotationDiff*tValueAtEndPoint;
                         
@@ -341,11 +345,13 @@
                         newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
                         previousEndpoint = pathEle.points[0];
                         CGFloat tValueAtStartPoint = clippingInformation.tValueStart.tValue1;
-                        CGFloat red = prevColor[0] + colorDiff[0] * tValueAtStartPoint;
-                        CGFloat green = prevColor[1] + colorDiff[1] * tValueAtStartPoint;
-                        CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtStartPoint;
-                        CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtStartPoint;
-                        newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+                        if(newElement.color){
+                            CGFloat red = prevColor[0] + colorDiff[0] * tValueAtStartPoint;
+                            CGFloat green = prevColor[1] + colorDiff[1] * tValueAtStartPoint;
+                            CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtStartPoint;
+                            CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtStartPoint;
+                            newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+                        }
                         newElement.width = previousElement.width + widthDiff*tValueAtStartPoint;
                         newElement.width /= scrap.scale;
                         newElement.rotation = previousElement.rotation + rotationDiff*tValueAtStartPoint;
@@ -363,11 +369,13 @@
                             previousEndpoint = pathEle.points[0];
                         }
                         CGFloat tValueAtEndPoint = clippingInformation.tValueEnd.tValue1;
-                        CGFloat red = prevColor[0] + colorDiff[0] * tValueAtEndPoint;
-                        CGFloat green = prevColor[1] + colorDiff[1] * tValueAtEndPoint;
-                        CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtEndPoint;
-                        CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtEndPoint;
-                        newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+                        if(element.color){
+                            CGFloat red = prevColor[0] + colorDiff[0] * tValueAtEndPoint;
+                            CGFloat green = prevColor[1] + colorDiff[1] * tValueAtEndPoint;
+                            CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtEndPoint;
+                            CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtEndPoint;
+                            newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+                        }
                         newElement.width = previousElement.width + widthDiff*tValueAtEndPoint;
                         newElement.width /= scrap.scale;
                         newElement.rotation = previousElement.rotation + rotationDiff*tValueAtEndPoint;
