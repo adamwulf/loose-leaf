@@ -101,7 +101,6 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
     });
 }
 
-
 -(void) updateStateInformationForTouches:(NSSet*)touches{
     for(UITouch* touch in touches){
         int indexOfTouch = [self indexForTouchInCache:touch];

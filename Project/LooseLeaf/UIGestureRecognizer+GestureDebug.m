@@ -18,7 +18,7 @@
     }else if(state == UIGestureRecognizerStateCancelled){
         NSLog(@"%@ cancelled", [self class]);
     }else if(state == UIGestureRecognizerStateEnded){
-        NSLog(@"%@ cancelled", [self class]);
+        NSLog(@"%@ ended", [self class]);
     }
 
     [self swizzle_setState:state];
@@ -26,10 +26,10 @@
 
 
 +(void)load{
-//    NSError *error = nil;
-//	[UIGestureRecognizer jr_swizzleMethod:@selector(setState:)
-//                        withMethod:@selector(swizzle_setState:)
-//                             error:&error];
+    NSError *error = nil;
+	[UIGestureRecognizer jr_swizzleMethod:@selector(setState:)
+                        withMethod:@selector(swizzle_setState:)
+                             error:&error];
 }
 
 
