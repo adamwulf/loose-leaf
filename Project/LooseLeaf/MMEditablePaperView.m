@@ -88,7 +88,7 @@ dispatch_queue_t importThumbnailQueue;
         // and the tap gesture, and only allow page pan/scale if
         // these fail
         [rulerGesture requireGestureRecognizerToFail:longPress];
-        [rulerGesture requireGestureRecognizerToFail:tap];
+//        [rulerGesture requireGestureRecognizerToFail:tap];
         [self addGestureRecognizer:rulerGesture];
         
         // initialize our state manager
@@ -454,11 +454,17 @@ static int count = 0;
             [croppedElements addObject:element];
         }
     }
-
     return croppedElements;
 }
 
 
+-(void) jotSuggestsToDisableGestures{
+    NSLog(@"disable gestures!");
+}
+
+-(void) jotSuggestsToEnableGestures{
+    NSLog(@"enable gestures!");
+}
 
 #pragma mark - File Paths
 
