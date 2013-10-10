@@ -345,7 +345,7 @@
                         newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
                         previousEndpoint = pathEle.points[0];
                         CGFloat tValueAtStartPoint = clippingInformation.tValueStart.tValue1;
-                        if(newElement.color){
+                        if(element.color){
                             CGFloat red = prevColor[0] + colorDiff[0] * tValueAtStartPoint;
                             CGFloat green = prevColor[1] + colorDiff[1] * tValueAtStartPoint;
                             CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtStartPoint;

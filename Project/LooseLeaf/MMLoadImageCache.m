@@ -38,6 +38,15 @@ static MMLoadImageCache* _instance = nil;
 
 #pragma mark - Load Images
 
+-(BOOL) containsPathInCache:(NSString*)path{
+    BOOL contains = NO;
+    @synchronized(self){
+        contains = [orderedKeys containsObject:path];
+    }
+    return contains;
+}
+
+
 static int count = 0;
 -(UIImage*) imageAtPath:(NSString*)path{
     UIImage* cachedImage = [loadedImages objectForKey:path];

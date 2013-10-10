@@ -26,10 +26,10 @@
 
 
 +(void)load{
-    NSError *error = nil;
-	[UIGestureRecognizer jr_swizzleMethod:@selector(setState:)
-                        withMethod:@selector(swizzle_setState:)
-                             error:&error];
+//    NSError *error = nil;
+//	[UIGestureRecognizer jr_swizzleMethod:@selector(setState:)
+//                        withMethod:@selector(swizzle_setState:)
+//                             error:&error];
 }
 
 

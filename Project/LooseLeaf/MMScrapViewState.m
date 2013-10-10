@@ -113,15 +113,21 @@ static dispatch_queue_t importExportScrapStateQueue;
         [contentView addSubview:thumbnailView];
         thumbnailView.frame = contentView.bounds;
 
-        // don't load from disk on the main thread.
-        dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
-            @autoreleasepool {
-                UIImage* thumb = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
-                [NSThread performBlockOnMainThread:^{
-                    thumbnailView.image = thumb;
-                }];
-            }
-        });
+        
+        if([[MMLoadImageCache sharedInstace] containsPathInCache:self.thumbImageFile]){
+            // load if we can
+            thumbnailView.image = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
+        }else{
+            // don't load from disk on the main thread.
+            dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
+                @autoreleasepool {
+                    UIImage* thumb = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
+                    [NSThread performBlockOnMainThread:^{
+                        thumbnailView.image = thumb;
+                    }];
+                }
+            });
+        }
 
         // create a blank drawable view
         lastSavedUndoHash = -1;
