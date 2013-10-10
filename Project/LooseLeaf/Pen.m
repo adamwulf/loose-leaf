@@ -40,7 +40,7 @@
 }
 
 -(id) init{
-    return [self initWithMinSize:6.0 andMaxSize:12.0 andMinAlpha:0.6 andMaxAlpha:0.8];
+    return [self initWithMinSize:4.0 andMaxSize:8.0 andMinAlpha:0.75 andMaxAlpha:0.9];
 }
 
 -(UIImage*) texture{
