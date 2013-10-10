@@ -18,7 +18,7 @@
     }else if(state == UIGestureRecognizerStateCancelled){
         NSLog(@"%@ cancelled", [self class]);
     }else if(state == UIGestureRecognizerStateEnded){
-        NSLog(@"%@ cancelled", [self class]);
+        NSLog(@"%@ ended", [self class]);
     }
 
     [self swizzle_setState:state];

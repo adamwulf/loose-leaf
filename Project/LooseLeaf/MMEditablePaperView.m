@@ -94,7 +94,6 @@ dispatch_queue_t importThumbnailQueue;
         // initialize our state manager
         paperState = [[MMPaperState alloc] initWithInkPath:[self inkPath] andPlistPath:[self plistPath]];
         paperState.delegate = self;
-        
     }
     return self;
 }
@@ -456,11 +455,17 @@ static int count = 0;
             [croppedElements addObject:element];
         }
     }
-
     return croppedElements;
 }
 
 
+-(void) jotSuggestsToDisableGestures{
+    NSLog(@"disable gestures!");
+}
+
+-(void) jotSuggestsToEnableGestures{
+    NSLog(@"enable gestures!");
+}
 
 #pragma mark - File Paths
 

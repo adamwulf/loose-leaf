@@ -18,7 +18,7 @@ struct DurationCacheObject{
 
 #define kDurationTouchHashSize 20
 #define           VELOCITY_CLAMP_MIN 20
-#define           VELOCITY_CLAMP_MAX 1000
+#define           VELOCITY_CLAMP_MAX 800
 
 
 @implementation MMTouchVelocityGestureRecognizer{
@@ -100,7 +100,6 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
         [self killStateInformationForTouches:touchesToKill];
     });
 }
-
 
 -(void) updateStateInformationForTouches:(NSSet*)touches{
     for(UITouch* touch in touches){
