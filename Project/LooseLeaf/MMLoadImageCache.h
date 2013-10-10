@@ -18,4 +18,6 @@
 
 -(void) updateCacheForPath:(NSString*)path toImage:(UIImage*)image;
 
+-(BOOL) containsPathInCache:(NSString*)path;
+
 @end
