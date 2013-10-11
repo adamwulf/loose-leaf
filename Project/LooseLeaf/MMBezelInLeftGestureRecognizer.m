@@ -7,8 +7,9 @@
 //
 
 #import "MMBezelInLeftGestureRecognizer.h"
-#import <JotUI/JotUI.h>
+#import "MMTouchVelocityGestureRecognizer.h"
 #import "MMBezelInRightGestureRecognizer.h"
+#import <JotUI/JotUI.h>
 
 @implementation MMBezelInLeftGestureRecognizer
 @synthesize panDirection;
@@ -149,13 +150,14 @@
  * is moving and record it
  */
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
+    CGFloat xDirection = [self directionOfTouchesInXAxis];
     CGPoint p = [self furthestRightTouchLocation];
     if(p.x != lastKnownLocation.x){
         panDirection = MMBezelDirectionNone;
-        if(p.x < lastKnownLocation.x){
+        if(xDirection < 0){
             panDirection = panDirection | MMBezelDirectionLeft;
         }
-        if(p.x > lastKnownLocation.x){
+        if(xDirection > 0){
             panDirection = panDirection | MMBezelDirectionRight;
         }
         if(p.y > lastKnownLocation.y){
@@ -222,4 +224,36 @@
     [dateOfLastBezelEnding release];
     dateOfLastBezelEnding = nil;
 }
+
+
+
+/**
+ * calculates the pixel velocity
+ * per fraction of a second (1/20)
+ * to helper determine how wide to make
+ * the bezel
+ *
+ * since directionOfTouch is only updated
+ * if the touch moves significantly, this
+ * helps filter out very small direction changes
+ */
+-(CGFloat) directionOfTouchesInXAxis{
+    // calculate the average X direction velocity
+    // so we can determine how wide to make the bezel
+    // exit of the gesture. this helps us work with
+    // really fast bezelling without accidentally zooming
+    // into list view or missing the bezel altogether
+    int count = 0;
+    CGPoint averageVelocity = CGPointZero;
+    for(UITouch* touch in validTouches){
+        struct DurationCacheObject cache = [[MMTouchVelocityGestureRecognizer sharedInstace] velocityInformationForTouch:touch withIndex:nil];
+        averageVelocity.x = averageVelocity.x * count + cache.directionOfTouch.x;
+        count += 1;
+        averageVelocity.x /= count;
+    }
+    // calculate the pixels moved per 20th of a second
+    // and add that to the bezel that we'll allow
+    return averageVelocity.x; // velocity per fraction of a second
+}
+
 @end
