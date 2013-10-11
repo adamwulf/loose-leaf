@@ -883,8 +883,7 @@
 -(void) finishedPanningAndScalingPage:(MMPaperView*)page
                             intoBezel:(MMBezelDirection)bezelDirection
                             fromFrame:(CGRect)fromFrame
-                              toFrame:(CGRect)toFrame
-                         withVelocity:(CGPoint)velocity{
+                              toFrame:(CGRect)toFrame{
     // check if we finished the in progress bezel
     if(page == inProgressOfBezeling) inProgressOfBezeling = nil;
     // check if we finished the top page

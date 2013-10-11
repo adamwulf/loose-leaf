@@ -36,6 +36,10 @@ struct DurationCacheObject{
 
 +(MMTouchVelocityGestureRecognizer*) sharedInstace;
 
++(int) cacheSize;
+
++(int) maxVelocity;
+
 -(CGFloat) normalizedVelocityForTouch:(UITouch*)touch;
 
 -(struct DurationCacheObject) velocityInformationForTouch:(UITouch*)touch withIndex:(int*)index;

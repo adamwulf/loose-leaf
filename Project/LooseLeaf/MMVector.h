@@ -45,4 +45,5 @@
 
 -(CGFloat) angleBetween:(MMVector*)otherVector;
 
+-(CGPoint) asCGPoint;
 @end

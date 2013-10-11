@@ -72,15 +72,23 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
     if(indexOfTouch == -1){
         struct DurationCacheObject empty;
         empty.hash = -1;
-        index[0] = -1;
+        if(index){
+            index[0] = -1;
+        }
         return empty;
     }
-    index[0] = indexOfTouch;
+    if(index){
+        index[0] = indexOfTouch;
+    }
     return durationCache[indexOfTouch];
 }
 
--(int) cacheSize{
++(int) cacheSize{
     return kDurationTouchHashSize;
+}
+
++(int) maxVelocity{
+    return VELOCITY_CLAMP_MAX;
 }
 
 
@@ -150,7 +158,8 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
             // only update the direction if our magnitude is high enough.
             // this way very small adjustments don't radically change
             // our direction
-            durationCache[indexOfTouch].directionOfTouch = vectorOfMotion;
+            MMVector* normalDirectionVec = [currVec normal];
+            durationCache[indexOfTouch].directionOfTouch = [normalDirectionVec asCGPoint];
             
             // find angle between current and previous directions.
             // the is normalized for (0,1). 0 means it's moving in the

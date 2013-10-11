@@ -141,6 +141,9 @@
     return acosf(scaler / (self.magnitude * otherVector.magnitude));
 }
 
+-(CGPoint) asCGPoint{
+    return CGPointMake(self.x, self.y);
+}
 
 -(NSString*) description{
     return [@"[MMVector: " stringByAppendingFormat:@"%f %f]", self.x, self.y];
