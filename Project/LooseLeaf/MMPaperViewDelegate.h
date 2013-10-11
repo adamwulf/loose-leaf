@@ -36,7 +36,7 @@
  * included. the velocity of the page is also sent in, so that any
  * animation of "throwing" the page can be calculated
  */
--(void) finishedPanningAndScalingPage:(MMPaperView*)page intoBezel:(MMBezelDirection)direction fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withVelocity:(CGPoint)velocity;
+-(void) finishedPanningAndScalingPage:(MMPaperView*)page intoBezel:(MMBezelDirection)direction fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame;
 
 /**
  * communicates when touches are owned by a scrap pan

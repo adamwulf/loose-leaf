@@ -265,7 +265,6 @@
 //          panGesture.state == UIGestureRecognizerStateEnded, panGesture.state == UIGestureRecognizerStateBegan,
 //          panGesture.state == UIGestureRecognizerStateFailed);
     
-    CGPoint velocity = [_panGesture velocity];
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
        panGesture.state == UIGestureRecognizerStateEnded ||
        panGesture.state == UIGestureRecognizerStateFailed){
@@ -284,8 +283,7 @@
             [self.delegate finishedPanningAndScalingPage:self 
                                                intoBezel:panGesture.didExitToBezel
                                                fromFrame:frameOfPageAtBeginningOfGesture
-                                                 toFrame:self.frame
-                                            withVelocity:velocity];
+                                                 toFrame:self.frame];
         }
         return;
     }else if(panGesture.numberOfTouches == 1){
