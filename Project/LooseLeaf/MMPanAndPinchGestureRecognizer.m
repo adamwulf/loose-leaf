@@ -162,6 +162,33 @@ NSInteger const  minimumNumberOfTouches = 2;
     }
 }
 
+
+/**
+ * calculates the pixel velocity
+ * per fraction of a second (1/20)
+ * to helper determine how wide to make
+ * the bezel
+ */
+-(CGFloat) pxVelocity{
+    // calculate the average X direction velocity
+    // so we can determine how wide to make the bezel
+    // exit of the gesture. this helps us work with
+    // really fast bezelling without accidentally zooming
+    // into list view or missing the bezel altogether
+    int count = 0;
+    CGPoint averageVelocity = CGPointZero;
+    for(UITouch* touch in validTouches){
+        struct DurationCacheObject cache = [[MMTouchVelocityGestureRecognizer sharedInstace] velocityInformationForTouch:touch withIndex:nil];
+        averageVelocity.x = averageVelocity.x * count + cache.directionOfTouch.x;
+        count += 1;
+        averageVelocity.x /= count;
+    }
+    // calculate the pixels moved per 20th of a second
+    // and add that to the bezel that we'll allow
+    CGFloat pxVelocity = averageVelocity.x * [MMTouchVelocityGestureRecognizer maxVelocity] * 0.05; // velocity per fraction of a second
+    return pxVelocity;
+}
+
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
     NSMutableOrderedSet* validTouchesCurrentlyMoving = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
     [validTouchesCurrentlyMoving intersectSet:touches];
@@ -191,11 +218,13 @@ NSInteger const  minimumNumberOfTouches = 2;
         }
         if([validTouches count] >= 2 && initialDistance){
             BOOL tooCloseHuh = NO;
+
+            CGFloat pxVelocity = [self pxVelocity];
             for(UITouch* touch in validTouches){
                 CGPoint point = [touch locationInView:self.view.superview];
-                if(point.x < kBezelInGestureWidth ||
+                if(point.x < kBezelInGestureWidth + pxVelocity ||
                    point.y < kBezelInGestureWidth ||
-                   point.x > self.view.superview.frame.size.width - kBezelInGestureWidth ||
+                   point.x > self.view.superview.frame.size.width - kBezelInGestureWidth - pxVelocity ||
                    point.y > self.view.superview.frame.size.height - kBezelInGestureWidth){
                     // at least one of the touches is very close
                     // to the bezel, which will reduce our accuracy.
@@ -251,23 +280,7 @@ NSInteger const  minimumNumberOfTouches = 2;
             // of a second to the bezel width will help determine if
             // we're bezelling the gesture or not
             
-            // calculate the average X direction velocity
-            // so we can determine how wide to make the bezel
-            // exit of the gesture. this helps us work with
-            // really fast bezelling without accidentally zooming
-            // into list view or missing the bezel altogether
-            int count = 0;
-            CGPoint averageVelocity = CGPointZero;
-            for(UITouch* touch in validTouches){
-                struct DurationCacheObject cache = [[MMTouchVelocityGestureRecognizer sharedInstace] velocityInformationForTouch:touch withIndex:nil];
-                averageVelocity.x = averageVelocity.x * count + cache.directionOfTouch.x;
-                count += 1;
-                averageVelocity.x /= count;
-            }
-            
-            // calculate the pixels moved per 20th of a second
-            // and add that to the bezel that we'll allow
-            CGFloat pxVelocity = averageVelocity.x * [MMTouchVelocityGestureRecognizer maxVelocity] * 0.05; // velocity per fraction of a second
+            CGFloat pxVelocity = [self pxVelocity];
             for(UITouch* touch in validTouchesCurrentlyEnding){
                 CGPoint point = [touch locationInView:self.view.superview];
                 BOOL bezelDirHasLeft = ((self.bezelDirectionMask & MMBezelDirectionLeft) == MMBezelDirectionLeft);
