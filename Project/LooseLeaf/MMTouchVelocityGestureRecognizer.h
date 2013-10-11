@@ -10,10 +10,36 @@
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "Constants.h"
 
+struct DurationCacheObject{
+    // hash uniquely identifying a touch,
+    // 0 if this record is free to use
+    NSUInteger hash;
+    // the most recent timestamp of that touch
+    NSTimeInterval lastTimestamp;
+    // the normalized velocity of the touch
+    // from it's most recent movement
+    CGFloat instantaneousNormalizedVelocity;
+    // the normalized and average velocity
+    // of the touch
+    CGFloat avgNormalizedVelocity;
+    // the direction vector of the touch
+    // most recently
+    CGPoint directionOfTouch;
+    // the angle delta between this direction
+    // and the last direction
+    CGFloat deltaAngle;
+    // most recent distance travelled
+    CGFloat distanceFromPrevious;
+};
+
 @interface MMTouchVelocityGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>
 
 +(MMTouchVelocityGestureRecognizer*) sharedInstace;
 
 -(CGFloat) normalizedVelocityForTouch:(UITouch*)touch;
+
+-(struct DurationCacheObject) velocityInformationForTouch:(UITouch*)touch withIndex:(int*)index;
+
+-(int) indexForTouchInCacheIfExists:(UITouch*)touch;
 
 @end

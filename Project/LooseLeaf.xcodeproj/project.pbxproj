@@ -8,11 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		66052A0317FA170600A94531 /* MMImmutableScrapsOnPaperState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66052A0217FA170600A94531 /* MMImmutableScrapsOnPaperState.m */; };
-		660E1D9C158FC4570001DA12 /* img02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 660E1D9B158FC4570001DA12 /* img02.jpg */; };
-		660E1D9F158FC45E0001DA12 /* img06.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 660E1D9E158FC45E0001DA12 /* img06.jpg */; };
-		660E1DA1158FC4710001DA12 /* img03.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 660E1DA0158FC4710001DA12 /* img03.jpg */; };
-		660E1DA3158FC4750001DA12 /* img05.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 660E1DA2158FC4750001DA12 /* img05.jpg */; };
-		660E1DA5158FC47D0001DA12 /* img04.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 660E1DA4158FC47D0001DA12 /* img04.jpg */; };
 		660E1DA9158FC6300001DA12 /* NSMutableArray+QueueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DA8158FC6300001DA12 /* NSMutableArray+QueueAdditions.m */; };
 		660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAB158FC65C0001DA12 /* NSMutableArray+StackAdditions.m */; };
 		660E1DB0158FC7DB0001DA12 /* MMPaperIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAF158FC7DB0001DA12 /* MMPaperIcon.m */; };
@@ -140,7 +135,6 @@
 		66DCFB9E1581BCEF00B4918C /* MMLooseLeafViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFB9D1581BCEF00B4918C /* MMLooseLeafViewController.m */; };
 		66DCFBC21581C85B00B4918C /* MMPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBC11581C85B00B4918C /* MMPaperStackView.m */; };
 		66DCFBCD1582BAED00B4918C /* MMPaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBCC1582BAED00B4918C /* MMPaperView.m */; };
-		66DCFBD01582BC0E00B4918C /* img01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 66DCFBCF1582BC0E00B4918C /* img01.jpg */; };
 		66DCFBDF1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBDE1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DF0B7D159BC30200C5C652 /* UIView+Animations.m */; };
 		66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E88A361591853E001A6EBF /* MMPapersIcon.m */; };
@@ -153,11 +147,6 @@
 /* Begin PBXFileReference section */
 		66052A0117FA170600A94531 /* MMImmutableScrapsOnPaperState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImmutableScrapsOnPaperState.h; sourceTree = "<group>"; };
 		66052A0217FA170600A94531 /* MMImmutableScrapsOnPaperState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImmutableScrapsOnPaperState.m; sourceTree = "<group>"; };
-		660E1D9B158FC4570001DA12 /* img02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img02.jpg; sourceTree = "<group>"; };
-		660E1D9E158FC45E0001DA12 /* img06.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img06.jpg; sourceTree = "<group>"; };
-		660E1DA0158FC4710001DA12 /* img03.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img03.jpg; sourceTree = "<group>"; };
-		660E1DA2158FC4750001DA12 /* img05.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img05.jpg; sourceTree = "<group>"; };
-		660E1DA4158FC47D0001DA12 /* img04.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img04.jpg; sourceTree = "<group>"; };
 		660E1DA7158FC6300001DA12 /* NSMutableArray+QueueAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+QueueAdditions.h"; sourceTree = "<group>"; };
 		660E1DA8158FC6300001DA12 /* NSMutableArray+QueueAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+QueueAdditions.m"; sourceTree = "<group>"; };
 		660E1DAA158FC65C0001DA12 /* NSMutableArray+StackAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+StackAdditions.h"; sourceTree = "<group>"; };
@@ -432,7 +421,6 @@
 		66DCFBC11581C85B00B4918C /* MMPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPaperStackView.m; sourceTree = "<group>"; };
 		66DCFBCB1582BAED00B4918C /* MMPaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperView.h; sourceTree = "<group>"; };
 		66DCFBCC1582BAED00B4918C /* MMPaperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPaperView.m; sourceTree = "<group>"; };
-		66DCFBCF1582BC0E00B4918C /* img01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img01.jpg; sourceTree = "<group>"; };
 		66DCFBDB1582BE3900B4918C /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		66DCFBDD1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchGestureRecognizer.h; sourceTree = "<group>"; };
 		66DCFBDE1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchGestureRecognizer.m; sourceTree = "<group>"; };
@@ -763,19 +751,6 @@
 			name = Managers;
 			sourceTree = "<group>";
 		};
-		6693298015996C530033E557 /* Astronaut Images */ = {
-			isa = PBXGroup;
-			children = (
-				66DCFBCF1582BC0E00B4918C /* img01.jpg */,
-				660E1D9B158FC4570001DA12 /* img02.jpg */,
-				660E1DA0158FC4710001DA12 /* img03.jpg */,
-				660E1DA4158FC47D0001DA12 /* img04.jpg */,
-				660E1DA2158FC4750001DA12 /* img05.jpg */,
-				660E1D9E158FC45E0001DA12 /* img06.jpg */,
-			);
-			name = "Astronaut Images";
-			sourceTree = "<group>";
-		};
 		6693298115996C6A0033E557 /* Controller and App Delegate */ = {
 			isa = PBXGroup;
 			children = (
@@ -1084,8 +1059,6 @@
 				66B21A77175E59490049F1AF /* Operations */,
 				660E1DA6158FC6120001DA12 /* Categories */,
 				66B21A58175B0BF30049F1AF /* cloth.png */,
-				667F8AF217B0222300A0C7F8 /* Loose-Leaf-Icon7.png */,
-				667F8AF317B0222300A0C7F8 /* Loose-Leaf-Icon7@2x.png */,
 				6661144616FD67F8005032B9 /* Loose-Leaf-Icon.png */,
 				6661144916FD67FA005032B9 /* Loose-Leaf-Icon@2x.png */,
 				66B843F517B05488008BF8B8 /* Loose-Leaf-Icon72.png */,
@@ -1197,8 +1170,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				66DCFB951581BCEF00B4918C /* InfoPlist.strings in Resources */,
-				667F8AF417B0222300A0C7F8 /* Loose-Leaf-Icon7.png in Resources */,
-				667F8AF517B0222300A0C7F8 /* Loose-Leaf-Icon7@2x.png in Resources */,
 				6661144716FD67F8005032B9 /* Loose-Leaf-Icon.png in Resources */,
 				6661144A16FD67FA005032B9 /* Loose-Leaf-Icon@2x.png in Resources */,
 				66B21A59175B0BF30049F1AF /* cloth.png in Resources */,
