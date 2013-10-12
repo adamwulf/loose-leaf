@@ -165,17 +165,17 @@
  * top and when any page is in list view.
  */
 -(void) setShouldShowShadow:(BOOL)shouldShowShadow{
-    if(shouldShowShadow){
-        self.layer.shadowPath = scrapState.bezierPath.CGPath;
-        self.layer.shadowRadius = 1.5;
-        self.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.5].CGColor;
-        self.layer.shadowOpacity = .65;
-        self.layer.shadowOffset = CGSizeMake(0, 0);
-        borderView.hidden = YES;
-    }else{
+//    if(shouldShowShadow){
+//        self.layer.shadowPath = scrapState.bezierPath.CGPath;
+//        self.layer.shadowRadius = 1.5;
+//        self.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.5].CGColor;
+//        self.layer.shadowOpacity = .65;
+//        self.layer.shadowOffset = CGSizeMake(0, 0);
+//        borderView.hidden = YES;
+//    }else{
         self.layer.shadowPath = nil;
         borderView.hidden = NO;
-    }
+//    }
 }
 
 -(void) setSelected:(BOOL)_selected{
