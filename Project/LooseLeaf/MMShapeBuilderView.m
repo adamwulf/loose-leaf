@@ -35,6 +35,7 @@
         // Initialization code
         touches = [NSMutableArray array];
         self.clearsContextBeforeDrawing = NO;
+        self.contentScaleFactor = 1.0;
     }
     return self;
 }

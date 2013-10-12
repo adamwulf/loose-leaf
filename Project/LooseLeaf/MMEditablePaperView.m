@@ -163,7 +163,6 @@ dispatch_queue_t importThumbnailQueue;
         CGRect boundsForShapeBuilder = self.contentView.bounds;
         boundsForShapeBuilder = CGRectApplyAffineTransform(boundsForShapeBuilder, CGAffineTransformMakeScale(1/scale, 1/scale));
         shapeBuilderView = [[MMShapeBuilderView alloc] initWithFrame:boundsForShapeBuilder];
-        shapeBuilderView.contentScaleFactor = 1.0;
         shapeBuilderView.transform = CGAffineTransformMakeScale(scale, scale);
         //        polygonDebugView.layer.borderColor = [UIColor redColor].CGColor;
         //        polygonDebugView.layer.borderWidth = 10;

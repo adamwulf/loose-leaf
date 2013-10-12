@@ -452,7 +452,9 @@
         //        if([scraps count]){
         //            [[scraps objectAtIndex:0] intersect:shape];
         //        }else{
-        [self addScrapWithPath:[shape copy]];
+        UIBezierPath* shapePath = [shape copy];
+        [shapePath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
+        [self addScrapWithPath:shapePath];
         //        }
     }
     
