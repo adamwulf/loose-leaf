@@ -34,6 +34,7 @@
     if (self) {
         // Initialization code
         touches = [NSMutableArray array];
+        self.clearsContextBeforeDrawing = NO;
     }
     return self;
 }
@@ -56,9 +57,15 @@
     __block BOOL didIntersectSelf = NO;
     CGFloat distTravelled = 0;
     
+    
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    CGAffineTransform scaleDown = CGAffineTransformMakeScale(1/scale, 1/scale);
+    point = CGPointApplyAffineTransform(point, scaleDown);
+
     if(![touches count]){
         dottedPath = [UIBezierPath bezierPath];
         [dottedPath moveToPoint:point];
+        [touches addObject:[NSValue valueWithCGPoint:point]];
     }else{
         CGPoint lastTouchPoint = [[touches lastObject] CGPointValue];
         CGPoint p1 = lastTouchPoint;
@@ -100,15 +107,15 @@
         }];
         
         distTravelled = MIN(DistanceBetweenTwoPoints(lastTouchPoint, point), 50);
-        if(distTravelled > 2){
+        if(distTravelled > 2 || ![touches count]){
             // only add a line if it's more than 2pts drawn,
             // otherwise it's a mess and would self intersect
             // way too soon
             [dottedPath addLineToPoint:point];
+            [touches addObject:[NSValue valueWithCGPoint:point]];
+            [self setNeedsDisplayInRect:CGRectInset(dottedPath.bounds, -10, -10)];
         }
-        [self setNeedsDisplayInRect:CGRectInset(dottedPath.bounds, -10, -10)];
     }
-    [touches addObject:[NSValue valueWithCGPoint:point]];
     phase += distTravelled / 15;
 
     return didIntersectSelf;
@@ -123,16 +130,15 @@
     //
     // this draws a white and black dashed line
     CGFloat dash[3];
-    dash[0] = 12;
-    dash[1] = 10;
-    dottedPath.lineWidth = 3;
+    dash[0] = 6;
+    dash[1] = 5;
+    dottedPath.lineWidth = 1;
     
     [dottedPath setLineDash:nil count:0 phase:0];
     [[UIColor whiteColor] setStroke];
     [dottedPath stroke];
 
-    NSInteger phaseInt = ((int)phase) % 22;
-    [dottedPath setLineDash:dash count:2 phase:22 - phaseInt];
+    [dottedPath setLineDash:dash count:2 phase:phase];
     [[UIColor blackColor] setStroke];
     [dottedPath stroke];
 
@@ -177,6 +183,8 @@
     // intersection point.
     NSArray* pathsFromIntersectingTouches = [pathOfAllTouchPoints pathsFromSelfIntersections];
     
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    CGAffineTransform scaleUp = CGAffineTransformMakeScale(scale, scale);
 
     //
     // now we'll loop over each sub-path, and send all the points
@@ -213,6 +221,7 @@
                 // shape is a closed path,
                 // so create a scrap from it
                 UIBezierPath* shapePath = [shape bezierPath];
+                [shapePath applyTransform:scaleUp];
                 [shapePaths addObject:shapePath];
             }else{
                 // shape is unclosed, so don't add
