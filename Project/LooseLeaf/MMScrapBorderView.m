@@ -18,6 +18,7 @@
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
         self.opaque = NO;
+        self.contentScaleFactor = 1.0;
     }
     return self;
 }
