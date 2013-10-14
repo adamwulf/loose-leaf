@@ -35,6 +35,6 @@
 
 
 // TODO: clean up how elements are added to a scrap
--(void) addElement:(AbstractBezierPathElement*)element;
+-(void) addElements:(NSArray*)elements;
 
 @end

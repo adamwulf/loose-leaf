@@ -298,6 +298,8 @@
                 // reuse this path I'd want to [copy] it. but i don't need to
                 // because I only use it once.
                 UIBezierPath* inter = clippingAndIntersectionMetaInformation.intersection;
+                // if the intersection contains any segments at all
+                
                 previousEndpoint = strokePath.firstPoint;
                 
                 // find the scrap location in open gl
@@ -335,6 +337,9 @@
                 CGPoint recenter = CGPointMake(scrap.bounds.size.width/2, scrap.bounds.size.height/2);
                 [inter applyTransform:CGAffineTransformMakeTranslation(recenter.x, recenter.y)];
                 
+                
+                NSMutableArray* elementsToAddToScrap = [NSMutableArray array];
+                
                 // here's our meta for the segment tvalue information
                 clippingInformationIndex = 0;
                 // now add it to the scrap!
@@ -356,7 +361,7 @@
                         newElement.width /= scrap.scale;
                         newElement.rotation = previousElement.rotation + rotationDiff*tValueAtStartPoint;
                     }else if(pathEle.type == kCGPathElementAddCurveToPoint ||
-                       pathEle.type == kCGPathElementAddLineToPoint){
+                             pathEle.type == kCGPathElementAddLineToPoint){
                         if(pathEle.type == kCGPathElementAddCurveToPoint){
                             // curve
                             newElement = [CurveToPathElement elementWithStart:previousEndpoint
@@ -383,10 +388,12 @@
                         clippingInformationIndex++;
                     }
                     if(newElement){
-                        [scrap addElement:newElement];
+                        [elementsToAddToScrap addObject:newElement];
                     }
                 }];
-                
+                if([elementsToAddToScrap count]){
+                    [scrap addElements:elementsToAddToScrap];
+                }
             }else{
                 [newStrokesToCrop addObject:element];
             }
