@@ -39,7 +39,7 @@
 -(NSSet*) matchingPairTouchesFrom:(NSSet*) touches;
 -(NSSet*) allMatchingTouchesFrom:(NSSet*) touches;
 
--(void) addElement:(AbstractBezierPathElement*)element;
+-(void) addElements:(NSArray*)elements;
 
 -(void) saveToDisk;
 

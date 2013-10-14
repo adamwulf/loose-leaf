@@ -284,8 +284,8 @@ static dispatch_queue_t importExportScrapStateQueue;
 
 #pragma mark - TODO
 
--(void) addElement:(AbstractBezierPathElement*)element{
-    [drawableView addElement:element];
+-(void) addElements:(NSArray*)elements{
+    [drawableView addElements:elements];
 }
 
 

@@ -337,8 +337,8 @@
 
 #pragma mark - JotView
 
--(void) addElement:(AbstractBezierPathElement *)element{
-    [scrapState addElement:element];
+-(void) addElements:(NSArray*)elements{
+    [scrapState addElements:elements];
 }
 
 
