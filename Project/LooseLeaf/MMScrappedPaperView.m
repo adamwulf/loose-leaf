@@ -589,6 +589,7 @@
 /**
  * TODO: only fire off these state methods
  * if we have also loaded state for our scraps
+ * https://github.com/adamwulf/loose-leaf/issues/254
  */
 -(void) didLoadState:(MMPaperState*)state{
     if([self hasStateLoaded]){

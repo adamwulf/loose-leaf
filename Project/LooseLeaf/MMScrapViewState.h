@@ -33,8 +33,6 @@
 
 -(BOOL) isStateLoaded;
 
-
-// TODO: clean up how elements are added to a scrap
 -(void) addElements:(NSArray*)elements;
 
 @end

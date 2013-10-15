@@ -960,9 +960,6 @@
     }else if(!justFinishedPanningTheTopPage && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
         NSLog(@"didn't release top page but need to pop a page");
         //
-        // TODO: check if this was cancelled or finished on purpose
-        //
-        //
         // CASE 3:
         // they release a non-top page near the right bezel (but didn't bezel)
         // send the page to hidden stack
