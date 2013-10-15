@@ -795,8 +795,6 @@ static NSDate* lastRender;
  * (old points).
  */
 -(void) updateRectForPoint:(CGPoint)p1 andPoint:(CGPoint)p2{
-    CGPoint minP = CGPointMake(MIN(MIN(MIN(p1.x, p2.x), old_p1.x), old_p2.x), MIN(MIN(MIN(p1.y, p2.y), old_p1.y), old_p2.y));
-    CGPoint maxP = CGPointMake(MAX(MAX(MAX(p1.x, p2.x), old_p1.x), old_p2.x), MAX(MAX(MAX(p1.y, p2.y), old_p1.y), old_p2.y));
     [self setNeedsDisplay];
     NSTimeInterval lastRenderStamp = [lastRender timeIntervalSinceNow];
     if(lastRenderStamp < -.03){
