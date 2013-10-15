@@ -797,13 +797,6 @@ static NSDate* lastRender;
 -(void) updateRectForPoint:(CGPoint)p1 andPoint:(CGPoint)p2{
     CGPoint minP = CGPointMake(MIN(MIN(MIN(p1.x, p2.x), old_p1.x), old_p2.x), MIN(MIN(MIN(p1.y, p2.y), old_p1.y), old_p2.y));
     CGPoint maxP = CGPointMake(MAX(MAX(MAX(p1.x, p2.x), old_p1.x), old_p2.x), MAX(MAX(MAX(p1.y, p2.y), old_p1.y), old_p2.y));
-    CGRect needsDisp = CGRectMake(minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y);
-    needsDisp = CGRectUnion(needsDisp, [path1 bounds]);
-    needsDisp = CGRectUnion(needsDisp, [path2 bounds]);
-    needsDisp = CGRectInset(needsDisp, -80, -80);
-    [self setNeedsDisplayInRect:needsDisp];
-    // TODO: remove setNeedsDisplay
-    // https://github.com/adamwulf/loose-leaf/issues/253
     [self setNeedsDisplay];
     NSTimeInterval lastRenderStamp = [lastRender timeIntervalSinceNow];
     if(lastRenderStamp < -.03){
