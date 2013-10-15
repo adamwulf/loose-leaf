@@ -79,7 +79,7 @@
     
     if(scrapState.bezierPath){
         if(self = [self initWithBezierPath:scrapState.bezierPath andUUID:scrapState.uuid]){
-            // TODO: load in thumbnail image view while state loads
+            // noop
         }
         return self;
     }
@@ -133,8 +133,8 @@
         needsClippingPathUpdate = YES;
         
         //
-        // TODO: add this to our subviews only when our state
-        // is loaded, otherwise show an image preview instead.
+        // the state content view will show a thumbnail while
+        // the drawable view loads
         [self addSubview:scrapState.contentView];
         
         [MMDebugDrawView sharedInstace].frame = self.bounds;

@@ -348,10 +348,10 @@ NSInteger const  minimumNumberOfTouches = 2;
                 int indexOfTouch;
                 struct DurationCacheObject cacheInfo = [[MMTouchVelocityGestureRecognizer sharedInstace] velocityInformationForTouch:touch withIndex:&indexOfTouch];
                 velocity = cacheInfo.instantaneousNormalizedVelocity;
-                // TODO: test with average velocity instead of instant velocity
-
+                // this uses instant velocity to calculate the extra bezel width to
+                // use. if this ends up too finicky, then we can use average velocity
+                // instead.
                 CGFloat pxVelocity = velocity * SCRAP_VELOCITY_CLAMP_MAX * .05; // velocity per fraction of a second
-//                NSLog(@"velocity: %d %f    => %f", (int)touch, velocity, pxVelocity);
                 
                 BOOL bezelDirHasLeft = ((bezelDirectionMask & MMBezelDirectionLeft) == MMBezelDirectionLeft);
                 BOOL bezelDirHasRight = ((bezelDirectionMask & MMBezelDirectionRight) == MMBezelDirectionRight);

@@ -803,6 +803,7 @@ static NSDate* lastRender;
     needsDisp = CGRectInset(needsDisp, -80, -80);
     [self setNeedsDisplayInRect:needsDisp];
     // TODO: remove setNeedsDisplay
+    // https://github.com/adamwulf/loose-leaf/issues/253
     [self setNeedsDisplay];
     NSTimeInterval lastRenderStamp = [lastRender timeIntervalSinceNow];
     if(lastRenderStamp < -.03){
