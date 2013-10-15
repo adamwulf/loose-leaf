@@ -246,7 +246,11 @@
                         CGFloat green = prevColor[1] + colorDiff[1] * tValueAtStartPoint;
                         CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtStartPoint;
                         CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtStartPoint;
-                        newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+                        if(element.color){
+                            newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+                        }else{
+                            newElement.color = nil;
+                        }
                         newElement.width = previousElement.width + widthDiff*tValueAtStartPoint;
                         newElement.rotation = previousElement.rotation + rotationDiff*tValueAtStartPoint;
                     }else if(pathEle.type == kCGPathElementAddCurveToPoint ||
@@ -356,6 +360,8 @@
                             CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtStartPoint;
                             CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtStartPoint;
                             newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+                        }else{
+                            newElement.color = nil;
                         }
                         newElement.width = previousElement.width + widthDiff*tValueAtStartPoint;
                         newElement.width /= scrap.scale;
@@ -380,6 +386,8 @@
                             CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtEndPoint;
                             CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtEndPoint;
                             newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+                        }else{
+                            newElement.color = nil;
                         }
                         newElement.width = previousElement.width + widthDiff*tValueAtEndPoint;
                         newElement.width /= scrap.scale;
