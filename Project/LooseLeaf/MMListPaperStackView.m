@@ -108,7 +108,6 @@
     if(finalFrame){
         return [finalFrame CGRectValue];
     }
-    
     //
     // fetching the index of a page can be moderately expensive,
     // so do this once and then generate the row/column from that.
