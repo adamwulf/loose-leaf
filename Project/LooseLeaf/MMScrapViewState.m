@@ -33,6 +33,8 @@
     CGRect drawableBounds;
     
     UIImageView* thumbnailView;
+    
+    dispatch_queue_t importExportScrapStateQueue;
 }
 
 @synthesize bezierPath;
@@ -41,13 +43,9 @@
 @synthesize delegate;
 @synthesize uuid;
 
-static dispatch_queue_t importExportScrapStateQueue;
-
-+(dispatch_queue_t) importExportScrapStateQueue{
-    @synchronized([MMScrapViewState class]){
-        if(!importExportScrapStateQueue){
-            importExportScrapStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.importExportScrapStateQueue", DISPATCH_QUEUE_SERIAL);
-        }
+-(dispatch_queue_t) importExportScrapStateQueue{
+    if(!importExportScrapStateQueue){
+        importExportScrapStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.importExportScrapStateQueue", DISPATCH_QUEUE_SERIAL);
     }
     return importExportScrapStateQueue;
 }
@@ -119,7 +117,7 @@ static dispatch_queue_t importExportScrapStateQueue;
             thumbnailView.image = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
         }else{
             // don't load from disk on the main thread.
-            dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
+            dispatch_async([self importExportScrapStateQueue], ^{
                 @autoreleasepool {
                     UIImage* thumb = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
                     [NSThread performBlockOnMainThread:^{
@@ -145,7 +143,7 @@ static dispatch_queue_t importExportScrapStateQueue;
 
 -(void) saveToDisk{
     if(drawableViewState && lastSavedUndoHash != [drawableView undoHash]){
-        dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
+        dispatch_async([self importExportScrapStateQueue], ^{
             @autoreleasepool {
                 dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                 [NSThread performBlockOnMainThread:^{
@@ -239,7 +237,7 @@ static dispatch_queue_t importExportScrapStateQueue;
     };
 
     if(async){
-        dispatch_async([MMScrapViewState importExportScrapStateQueue], loadBlock);
+        dispatch_async([self importExportScrapStateQueue], loadBlock);
     }else{
         NSLog(@"loading: %@", uuid);
         loadBlock();
@@ -247,17 +245,17 @@ static dispatch_queue_t importExportScrapStateQueue;
 }
 
 -(void) unloadState{
-    dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
+    dispatch_async([self importExportScrapStateQueue], ^{
         @autoreleasepool {
             @synchronized(self){
                 if(drawableViewState && lastSavedUndoHash != [drawableView undoHash]){
                     // we want to unload, but we're not saved.
-                    dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
+                    dispatch_async([self importExportScrapStateQueue], ^{
                         @autoreleasepool {
                             [self saveToDisk];
                         }
                     });
-                    dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
+                    dispatch_async([self importExportScrapStateQueue], ^{
                         @autoreleasepool {
                             [self unloadState];
                         }
