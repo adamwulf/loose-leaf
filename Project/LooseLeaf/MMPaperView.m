@@ -183,7 +183,7 @@
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         if([gesture respondsToSelector:@selector(cancel)]){
             if(gesture.enabled && gesture.state != UIGestureRecognizerStatePossible){
-                NSLog(@"gesture is active %@", gesture);
+//                NSLog(@"gesture is active %@", gesture);
             }
             [(MMPanAndPinchGestureRecognizer*)gesture cancel];
         }
@@ -195,7 +195,7 @@
 -(void) disableAllGestures{
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         if(gesture.enabled && gesture.state != UIGestureRecognizerStatePossible){
-            NSLog(@"gesture is active %@ %d", gesture, gesture.state);
+//            NSLog(@"gesture is active %@ %d", gesture, gesture.state);
         }
         [gesture setEnabled:NO];
     }
