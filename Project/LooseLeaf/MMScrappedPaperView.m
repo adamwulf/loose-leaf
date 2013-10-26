@@ -30,6 +30,15 @@
     MMScrapsOnPaperState* scrapState;
 }
 
+
+static dispatch_queue_t concurrentBackgroundQueue;
++(dispatch_queue_t) concurrentBackgroundQueue{
+    if(!concurrentBackgroundQueue){
+        concurrentBackgroundQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.concurrentBackgroundQueue", DISPATCH_QUEUE_CONCURRENT);
+    }
+    return concurrentBackgroundQueue;
+}
+
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
@@ -539,12 +548,19 @@
         }
     });
 
-    dispatch_async([MMScrapsOnPaperState concurrentBackgroundQueue], ^(void) {
+    dispatch_async([MMScrappedPaperView concurrentBackgroundQueue], ^(void) {
         @autoreleasepool {
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
             dispatch_release(sema1);
             dispatch_release(sema2);
+            if([self hasEditsToSave]){
+                // our save failed. this may happen if we
+                // call [saveToDisk] in very quick succession
+                // so that the 1st call is still saving, and the
+                // 2nd ends early b/c it knows the 1st is still going
+                return;
+            }
             [NSThread performBlockOnMainThread:^{
                 [self.delegate didSavePage:self];
             }];
