@@ -145,30 +145,44 @@
     if(drawableViewState && lastSavedUndoHash != [drawableView undoHash]){
         dispatch_async([self importExportScrapStateQueue], ^{
             @autoreleasepool {
-                dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
-                [NSThread performBlockOnMainThread:^{
-                    @autoreleasepool {
-                        // save path
-                        // this needs to be saved at the exact same time as the drawable view
-                        // so that we can guarentee that there is no race condition
-                        // for saving state vs content
-                        NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
-                        [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
-                        [savedProperties writeToFile:self.plistPath atomically:YES];
-                        
-                        // now export the drawn content
-                        [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
-                            [[MMLoadImageCache sharedInstace] updateCacheForPath:self.thumbImageFile toImage:thumb];
-                            [NSThread performBlockOnMainThread:^{
-                                thumbnailView.image = thumb;
-                            }];
-                            lastSavedUndoHash = [state undoHash];
-                            dispatch_semaphore_signal(sema1);
-                        }];
-                    }
-                }];
-                dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-                dispatch_release(sema1);
+                if(drawableViewState && lastSavedUndoHash != [drawableView undoHash]){
+                    dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+                    [NSThread performBlockOnMainThread:^{
+                        @autoreleasepool {
+                            if(drawableView && lastSavedUndoHash != [drawableView undoHash]){
+                                // save path
+                                // this needs to be saved at the exact same time as the drawable view
+                                // so that we can guarentee that there is no race condition
+                                // for saving state vs content
+                                NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
+                                [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
+                                [savedProperties writeToFile:self.plistPath atomically:YES];
+                                
+                                // now export the drawn content
+                                [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
+                                    if(state){
+                                        [[MMLoadImageCache sharedInstace] updateCacheForPath:self.thumbImageFile toImage:thumb];
+                                        [NSThread performBlockOnMainThread:^{
+                                            thumbnailView.image = thumb;
+                                        }];
+                                        lastSavedUndoHash = [state undoHash];
+                                    }
+                                    dispatch_semaphore_signal(sema1);
+                                }];
+                            }else{
+                                dispatch_semaphore_signal(sema1);
+                            }
+                        }
+                    }];
+                    dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+                    dispatch_release(sema1);
+                }else{
+                    // sometimes, this method is called in very quick succession.
+                    // that means that the first time it runs and saves, it'll
+                    // finish all of the export and drawableViewState will be nil
+                    // next time it runs. so we double check our save state to determine
+                    // if in fact we still need to save or not
+                }
             }
         });
     }

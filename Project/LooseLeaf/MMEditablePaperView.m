@@ -259,13 +259,24 @@ dispatch_queue_t importThumbnailQueue;
                    andThumbnailTo:[self thumbnailPath]
                        andStateTo:[self plistPath]
                        onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* immutableState){
-                           definitelyDoesNotHaveAThumbnail = NO;
-                           [paperState wasSavedAtImmutableState:immutableState];
-                           onComplete();
-                           [NSThread performBlockOnMainThread:^{
-                               cachedImgViewImage = thumbnail;
-                               cachedImgView.image = cachedImgViewImage;
-                           }];
+                           if(immutableState){
+                               // sometimes, if we try to export multiple times
+                               // very very quickly, the 3+ exports will fail
+                               // with all arguments=nil because the first export
+                               // is still going (and a 2nd export is already waiting
+                               // in queue)
+                               // so only trigger our save action if we did in fact
+                               // save
+                               definitelyDoesNotHaveAThumbnail = NO;
+                               [paperState wasSavedAtImmutableState:immutableState];
+                               onComplete();
+                               [NSThread performBlockOnMainThread:^{
+                                   cachedImgViewImage = thumbnail;
+                                   cachedImgView.image = cachedImgViewImage;
+                               }];
+                           }else{
+                               onComplete();
+                           }
                        }];
     }else{
         // already saved, but don't need to write
