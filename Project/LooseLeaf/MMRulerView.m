@@ -638,12 +638,17 @@ static NSDate* lastRender;
  * to realign all the input elements to the ruler
  */
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
-    NSMutableArray* output = [NSMutableArray array];
-    for(AbstractBezierPathElement* element in elements){
-        [output addObjectsFromArray:[self adjustElement:element fromPreviousElement:previousElement]];
-        previousElement = element;
+    if(path1){
+        // only adjust the strokes to the ruler if
+        // we actually have a path for the ruler
+        NSMutableArray* output = [NSMutableArray array];
+        for(AbstractBezierPathElement* element in elements){
+            [output addObjectsFromArray:[self adjustElement:element fromPreviousElement:previousElement]];
+            previousElement = element;
+        }
+        return output;
     }
-    return output;
+    return elements;
 }
 
 /**
