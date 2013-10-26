@@ -170,6 +170,9 @@
                                     dispatch_semaphore_signal(sema1);
                                 }];
                             }else{
+                                // was asked to save, but we were asked to save
+                                // multiple times extremely quickly, so just signal
+                                // that we're done
                                 dispatch_semaphore_signal(sema1);
                             }
                         }
