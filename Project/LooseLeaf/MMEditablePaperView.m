@@ -425,31 +425,40 @@ static int count = 0;
             
             DKUIBezierPathClippingResult* output = [bez clipUnclosedPathToClosedPath:boundsPath];
 
-            __block CGPoint previousEndpoint = curveElement.startPoint;
-            [output.intersection iteratePathWithBlock:^(CGPathElement pathEle){
-                AbstractBezierPathElement* newElement = nil;
-                if(pathEle.type == kCGPathElementAddCurveToPoint){
-                    // curve
-                    newElement = [CurveToPathElement elementWithStart:previousEndpoint
-                                                           andCurveTo:pathEle.points[2]
-                                                          andControl1:pathEle.points[0]
-                                                          andControl2:pathEle.points[1]];
-                    previousEndpoint = pathEle.points[2];
-                }else if(pathEle.type == kCGPathElementMoveToPoint){
-                    newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
-                    previousEndpoint = pathEle.points[0];
-                }else if(pathEle.type == kCGPathElementAddLineToPoint){
-                    newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
-                    previousEndpoint = pathEle.points[0];
-                }
-                if(newElement){
-                    // be sure to set color/width/etc
-                    newElement.color = element.color;
-                    newElement.width = element.width;
-                    newElement.rotation = element.rotation;
-                    [croppedElements addObject:newElement];
-                }
-            }];
+            if([output.difference isEmpty]){
+                // if the difference is empty, then that means that the entire
+                // element landed in the intersection. so just add the entire element
+                // to our output
+                [croppedElements addObject:element];
+            }else{
+                // if the element was chopped up somehow, then interate
+                // through the intersection and build new element objects
+                __block CGPoint previousEndpoint = curveElement.startPoint;
+                [output.intersection iteratePathWithBlock:^(CGPathElement pathEle){
+                    AbstractBezierPathElement* newElement = nil;
+                    if(pathEle.type == kCGPathElementAddCurveToPoint){
+                        // curve
+                        newElement = [CurveToPathElement elementWithStart:previousEndpoint
+                                                               andCurveTo:pathEle.points[2]
+                                                              andControl1:pathEle.points[0]
+                                                              andControl2:pathEle.points[1]];
+                        previousEndpoint = pathEle.points[2];
+                    }else if(pathEle.type == kCGPathElementMoveToPoint){
+                        newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
+                        previousEndpoint = pathEle.points[0];
+                    }else if(pathEle.type == kCGPathElementAddLineToPoint){
+                        newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
+                        previousEndpoint = pathEle.points[0];
+                    }
+                    if(newElement){
+                        // be sure to set color/width/etc
+                        newElement.color = element.color;
+                        newElement.width = element.width;
+                        newElement.rotation = element.rotation;
+                        [croppedElements addObject:newElement];
+                    }
+                }];
+            }
             if([croppedElements count] && [[croppedElements firstObject] isKindOfClass:[MoveToPathElement class]]){
                 [croppedElements removeObjectAtIndex:0];
             }
