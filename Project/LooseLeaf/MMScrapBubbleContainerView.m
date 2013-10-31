@@ -57,7 +57,8 @@
         CGFloat midPointY = (frame.size.height - 3*80) / 2;
         countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
         countButton.alpha = 0;
-        [countButton addTarget:self action:@selector(countButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        UITapGestureRecognizer* tappy = [[MMSidebarButtonTapGestureRecognizer alloc] initWithTarget:self action:@selector(countButtonTapped:)];
+        [countButton addGestureRecognizer:tappy];
         [self addSubview:countButton];
         
         closeMenuView = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -113,6 +114,9 @@
                 subview.alpha = targetAlpha;
             }
         }
+    }
+    if(!targetAlpha){
+        [self hideMenuIfNeeded];
     }
 }
 
@@ -342,26 +346,33 @@
 // count button was tapped,
 // so show or hide the menu
 // so the user can choose a scrap to add
--(void) countButtonTapped:(id)button{
-    if(scrapMenu.alpha){
-        [self closeMenuTapped:nil];
-    }else{
-        scrapMenu.transform = CGAffineTransformMakeTranslation(20, 0);
-        closeMenuView.hidden = NO;
-        [scrapMenu prepareMenu];
-        [UIView animateWithDuration:.2
-                              delay:0
-                            options:UIViewAnimationOptionCurveEaseOut
-                         animations:^{
-                             scrapMenu.alpha = 1;
-                             scrapMenu.transform = CGAffineTransformIdentity;
-                             [scrapMenu flashScrollIndicators];
-                         }
-                         completion:nil];
+-(void) countButtonTapped:(UITapGestureRecognizer*)tapGesture{
+    if(tapGesture.view.alpha){
+        // only run teh tap if the button is visible.
+        // it might be invisible if it's in the process
+        // of hiding from a pinch to list view
+        // https://github.com/adamwulf/loose-leaf/issues/262
+        if(scrapMenu.alpha){
+            [self closeMenuTapped:nil];
+        }else{
+            scrapMenu.transform = CGAffineTransformMakeTranslation(20, 0);
+            closeMenuView.hidden = NO;
+            [scrapMenu prepareMenu];
+            [UIView animateWithDuration:.2
+                                  delay:0
+                                options:UIViewAnimationOptionCurveEaseOut
+                             animations:^{
+                                 scrapMenu.alpha = 1;
+                                 scrapMenu.transform = CGAffineTransformIdentity;
+                                 [scrapMenu flashScrollIndicators];
+                             }
+                             completion:nil];
+        }
     }
 }
 
 -(void) closeMenuTapped:(id)button{
+    [scrapMenu.layer removeAllAnimations];
     closeMenuView.hidden = YES;
     scrapMenu.alpha = 0;
 }
