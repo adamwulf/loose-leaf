@@ -253,18 +253,20 @@
 #pragma mark - Button Tap
 
 -(void) bubbleTapped:(MMScrapBubbleButton*)bubble{
-    [scrapsHeldInBezel removeObject:bubble.scrap];
-
-    MMScrapView* scrap = bubble.scrap;
-    scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
-    scrap.rotation += (bubble.rotation - bubble.rotationAdjustment);
-    scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
-    [self insertSubview:scrap atIndex:0];
-    
-    [self animateAndAddScrapBackToPage:scrap];
-
-    [bubbleForScrap removeObjectForKey:scrap.uuid];
-    [rotationAdjustments removeObjectForKey:scrap.uuid];
+    if([scrapsHeldInBezel containsObject:bubble.scrap]){
+        [scrapsHeldInBezel removeObject:bubble.scrap];
+        
+        MMScrapView* scrap = bubble.scrap;
+        scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
+        scrap.rotation += (bubble.rotation - bubble.rotationAdjustment);
+        scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
+        [self insertSubview:scrap atIndex:0];
+        
+        [self animateAndAddScrapBackToPage:scrap];
+        
+        [bubbleForScrap removeObjectForKey:scrap.uuid];
+        [rotationAdjustments removeObjectForKey:scrap.uuid];
+    }
 }
 
 -(void) didTapOnScrapFromMenu:(MMScrapView*)scrap{
