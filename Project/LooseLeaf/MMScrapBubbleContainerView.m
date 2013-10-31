@@ -13,8 +13,23 @@
 #import "MMScrapBezelMenuView.h"
 #import "MMScrapsOnPaperState.h"
 #import "MMImmutableScrapsOnPaperState.h"
+#import <UIKit/UIGestureRecognizerSubclass.h>
 
 #define kMaxScrapsInBezel 6
+
+@interface MMSidebarButtonTapGestureRecognizer : UITapGestureRecognizer
+
+@end
+
+@implementation MMSidebarButtonTapGestureRecognizer
+
+-(BOOL) canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
+    return NO;
+}
+
+@end
+
+
 
 @implementation MMScrapBubbleContainerView{
     CGFloat lastRotationReading;
@@ -129,7 +144,14 @@
     // and set it's alpha/rotation/scale to prepare for the animation
     MMScrapBubbleButton* bubble = [[MMScrapBubbleButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
     bubble.center = center;
-    [bubble addTarget:self action:@selector(bubbleTapped:) forControlEvents:UIControlEventTouchUpInside];
+    //
+    // iOS7 changes how buttons can be tapped during a gesture (i think).
+    // so adding our gesture recognizer explicitly, and disallowing it to
+    // be prevented ensures that buttons can be tapped while other gestures
+    // are in flight.
+//    [bubble addTarget:self action:@selector(bubbleTapped:) forControlEvents:UIControlEventTouchUpInside];
+    UITapGestureRecognizer* tappy = [[MMSidebarButtonTapGestureRecognizer alloc] initWithTarget:self action:@selector(bubbleTapped:)];
+    [bubble addGestureRecognizer:tappy];
     bubble.originalScrapScale = scrap.scale;
     [self insertSubview:bubble atIndex:0];
     [self insertSubview:scrap aboveSubview:bubble];
@@ -252,7 +274,8 @@
 
 #pragma mark - Button Tap
 
--(void) bubbleTapped:(MMScrapBubbleButton*)bubble{
+-(void) bubbleTapped:(UITapGestureRecognizer*)gesture{
+    MMScrapBubbleButton* bubble = (MMScrapBubbleButton*) gesture.view;
     if([scrapsHeldInBezel containsObject:bubble.scrap]){
         [scrapsHeldInBezel removeObject:bubble.scrap];
         
