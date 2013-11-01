@@ -68,15 +68,66 @@ static dispatch_queue_t concurrentBackgroundQueue;
  * bounds
  */
 -(void) addScrapWithPath:(UIBezierPath*)path{
+    // find our current "best" of an unrotated path
+    CGRect pathBounds = path.bounds;
+    CGFloat lastBestSize = pathBounds.size.width * pathBounds.size.height;
+    CGFloat lastBestRotation = 0;
+    
+    // now copy the path, and we'll rotate this to
+    // find the best rotation that'll give us the
+    // minimum (or very close to min) square pixels
+    // to use as the backing
+    UIBezierPath* rotatedPath = [path copy];
+    
+    CGFloat numberOfSteps = 30.0;
+    CGAffineTransform rotationTransform = CGAffineTransformMakeRotation(M_PI / numberOfSteps);
+    CGFloat currentStepRotation = 0;
+    for(int i=0;i<numberOfSteps;i++){
+        // rotate the path, and track what that rotation value is:
+        currentStepRotation += M_PI / numberOfSteps;
+        [rotatedPath applyTransform:rotationTransform];
+        // now calculate how many square pixels we'd need
+        // to store that new path
+        CGRect rotatedPathBounds = rotatedPath.bounds;
+        CGFloat rotatedPxSize = rotatedPathBounds.size.width * rotatedPathBounds.size.height;
+        // if it's fewer square pixels, then save
+        // that rotation value
+        if(rotatedPxSize < lastBestSize){
+            lastBestRotation = currentStepRotation;
+            lastBestSize = rotatedPxSize;
+        }
+    }
+    
+    
+    if(lastBestRotation){
+        // ok, we have a rotation that'll give us a smaller square pixels
+        // for the scrap's backing texture. make sure to rotate the
+        // scrap around its center.
+        CGPoint pathCenter = path.center;
+        // first, translate to the center, then rotate,
+        CGAffineTransform rotateAroundCenterTransform = CGAffineTransformConcat(CGAffineTransformMakeTranslation(-pathCenter.x, -pathCenter.y), CGAffineTransformMakeRotation(lastBestRotation));
+        // then translate back to its position
+        rotateAroundCenterTransform = CGAffineTransformConcat(rotateAroundCenterTransform, CGAffineTransformMakeTranslation(pathCenter.x, pathCenter.y));
+        [path applyTransform:rotateAroundCenterTransform];
+    }
+
+    //
+    // at this point, we have the correct path and rotation that will
+    // give us the minimal square px. For instance, drawing a thin diagonal
+    // strip of paper will create a thin texture and rotate it, instead of
+    // an unrotated thick rectangle.
+    
     MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path];
     [scrapContainerView addSubview:newScrap];
     [newScrap loadStateAsynchronously:NO];
     [newScrap setShouldShowShadow:[self isEditable]];
     
-    newScrap.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.03, 1.03);
+    [newScrap setRotation:-lastBestRotation];
+    [newScrap setScale:1.03];
     
     [UIView animateWithDuration:0.4 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        newScrap.transform = CGAffineTransformIdentity;
+        [newScrap setRotation:-lastBestRotation];
+        [newScrap setScale:1];
     } completion:nil];
 
     [path closePath];

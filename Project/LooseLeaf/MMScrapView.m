@@ -153,6 +153,9 @@
         // need to do any offscreen rendering when displaying
         // this view
         [self setShouldShowShadow:NO];
+        
+//        self.layer.borderColor = [UIColor redColor].CGColor;
+//        self.layer.borderWidth = 1;
     }
     return self;
 }
