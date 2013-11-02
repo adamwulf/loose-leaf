@@ -71,7 +71,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
     // find our current "best" of an unrotated path
     CGRect pathBounds = path.bounds;
-    CGFloat lastBestSize = pathBounds.size.width * pathBounds.size.height;
+    CGFloat initialSize = pathBounds.size.width * pathBounds.size.height;
+    CGFloat lastBestSize = initialSize;
     CGFloat lastBestRotation = 0;
     
     // now copy the path, and we'll rotate this to
@@ -98,6 +99,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
             lastBestSize = rotatedPxSize;
         }
     }
+    
+//    NSLog(@"memory savings of: %f", (1 - lastBestSize / initialSize));
     
     if(lastBestRotation){
         // ok, we have a rotation that'll give us a smaller square pixels
