@@ -154,8 +154,9 @@
         // this view
         [self setShouldShowShadow:NO];
         
-//        self.layer.borderColor = [UIColor redColor].CGColor;
-//        self.layer.borderWidth = 1;
+        self.layer.borderColor = [UIColor redColor].CGColor;
+        self.layer.borderWidth = 1;
+        self.alpha = .5;
     }
     return self;
 }
