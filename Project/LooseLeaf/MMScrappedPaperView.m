@@ -68,9 +68,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
  * bounds
  */
 -(void) addScrapWithPath:(UIBezierPath*)path{
-    CGPoint originalPathCenter = path.center;
-
-    MMScrapView* scrap1 = [self addScrapWithPath:[path copy] andRotation:0];
+    [self addScrapWithPath:[path copy] andRotation:0];
 
     // find our current "best" of an unrotated path
     CGRect pathBounds = path.bounds;
@@ -102,50 +100,50 @@ static dispatch_queue_t concurrentBackgroundQueue;
         }
     }
     
-    CGPoint adjustment = CGPointZero;
-    CGPoint rotatedAdjustment = CGPointZero;
-    CGPoint rotatedAdjustment2 = CGPointZero;
-    CGPoint firstPointAdjustment = CGPointZero;
-
     if(lastBestRotation){
         // ok, we have a rotation that'll give us a smaller square pixels
         // for the scrap's backing texture. make sure to rotate the
         // scrap around its center.
         CGPoint pathCenter = path.center;
-        CGRect pathBounds = path.bounds;
-        // first, translate to the center, then rotate,
-//        CGAffineTransform rotateAroundCenterTransform = CGAffineTransformConcat(CGAffineTransformMakeTranslation(-pathCenter.x, -pathCenter.y), CGAffineTransformMakeRotation(lastBestRotation));
-//        // then translate back to its position
-//        rotateAroundCenterTransform = CGAffineTransformConcat(rotateAroundCenterTransform, CGAffineTransformMakeTranslation(pathCenter.x, pathCenter.y));
-        
         CGPoint initialFirstPoint = path.firstPoint;
-        
-        [path applyTransform:CGAffineTransformMakeTranslation(-pathCenter.x, -pathCenter.y)];
-        [path applyTransform:CGAffineTransformMakeRotation(lastBestRotation)];
-        [path applyTransform:CGAffineTransformMakeTranslation(pathCenter.x, pathCenter.y)];
+        // first, translate to the center,
+        CGAffineTransform rotateAroundCenterTransform = CGAffineTransformMakeTranslation(-pathCenter.x, -pathCenter.y);
+        // then rotate,
+        rotateAroundCenterTransform = CGAffineTransformConcat(rotateAroundCenterTransform, CGAffineTransformMakeRotation(lastBestRotation));
+        // then translate back to its position
+        rotateAroundCenterTransform = CGAffineTransformConcat(rotateAroundCenterTransform, CGAffineTransformMakeTranslation(pathCenter.x, pathCenter.y));
+        [path applyTransform:rotateAroundCenterTransform];
 
-        
-        // rotate the back back around its new center (as it will rotate in its scrap form)
+        // the next bit is to calculate how much to move the
+        // scrap so that it's new center will align the path
+        // to it's old position.
+        //
+        // rotate the path back around its new center (as it will rotate in its scrap form)
         // this path now needs to be re-aligned with its old center'd path.
         // so look at how far the firstPoint moved in each path, and adjust the rotated
         // smaller bounded path by that much, so that the rotated scrap will appear
         // on top of the original unrotated input path
-        UIBezierPath* adjustmentPath = [path copy];
-        CGPoint adjustmentPathCenter = adjustmentPath.center;
-        [adjustmentPath applyTransform:CGAffineTransformMakeTranslation(-adjustmentPathCenter.x, -adjustmentPathCenter.y)];
-        [adjustmentPath applyTransform:CGAffineTransformMakeRotation(-lastBestRotation)];
-        [adjustmentPath applyTransform:CGAffineTransformMakeTranslation(adjustmentPathCenter.x, adjustmentPathCenter.y)];
-        CGPoint afterFirstPoint = adjustmentPath.firstPoint;
-        adjustment = CGPointMake(initialFirstPoint.x - afterFirstPoint.x, initialFirstPoint.y - afterFirstPoint.y);
+        UIBezierPath* adjustmentCalculationPath = [path copy];
+        CGPoint adjustmentPathCenter = adjustmentCalculationPath.center;
+        [adjustmentCalculationPath applyTransform:CGAffineTransformMakeTranslation(-adjustmentPathCenter.x, -adjustmentPathCenter.y)];
+        [adjustmentCalculationPath applyTransform:CGAffineTransformMakeRotation(-lastBestRotation)];
+        [adjustmentCalculationPath applyTransform:CGAffineTransformMakeTranslation(adjustmentPathCenter.x, adjustmentPathCenter.y)];
+        CGPoint afterFirstPoint = adjustmentCalculationPath.firstPoint;
+        CGPoint adjustment = CGPointMake(initialFirstPoint.x - afterFirstPoint.x, initialFirstPoint.y - afterFirstPoint.y);
 
+        // this adjustment will account for the fact that the scrap
+        // has a different center point than the input path
+        // to this method.
+        //
+        // the scrap rotates around adjustmentPathCenter. so we need to
+        // move the scrap so that an rotated scrap with the new path
+        // would line up with the original unrotated scrap
         [path applyTransform:CGAffineTransformMakeTranslation(adjustment.x, adjustment.y)];
     }
 
+    // now add the scrap, and rotate it to counter-act
+    // the rotation we added to the path itself
     [self addScrapWithPath:path andRotation:-lastBestRotation];
-
-    NSLog(@"adjust1: %f %f", adjustment.x, adjustment.y);
-    
-    NSLog(@"what");
 }
 
 
