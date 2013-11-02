@@ -68,7 +68,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
  * bounds
  */
 -(void) addScrapWithPath:(UIBezierPath*)path{
-    [self addScrapWithPath:[path copy] andRotation:0];
 
     // find our current "best" of an unrotated path
     CGRect pathBounds = path.bounds;
