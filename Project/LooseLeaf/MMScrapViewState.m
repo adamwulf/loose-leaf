@@ -10,6 +10,8 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMLoadImageCache.h"
 
+#define kScrapShadowBufferSize 4
+
 @implementation MMScrapViewState{
     NSString* uuid;
     // the path where we store our data
@@ -78,7 +80,7 @@
 
         if(!bezierPath){
             CGRect originalBounds = _path.bounds;
-            [_path applyTransform:CGAffineTransformMakeTranslation(-originalBounds.origin.x + 4, -originalBounds.origin.y + 4)];
+            [_path applyTransform:CGAffineTransformMakeTranslation(-originalBounds.origin.x + kScrapShadowBufferSize, -originalBounds.origin.y + kScrapShadowBufferSize)];
             bezierPath = _path;
 
             //save initial bezier path to disk
@@ -90,7 +92,7 @@
 
         // find drawable view bounds
         drawableBounds = bezierPath.bounds;
-        drawableBounds = CGRectInset(drawableBounds, -4, -4);
+        drawableBounds = CGRectInset(drawableBounds, -kScrapShadowBufferSize, -kScrapShadowBufferSize);
         drawableBounds.origin = CGPointMake(0, 0);
         
         // this content view will be used by the MMScrapView to show
