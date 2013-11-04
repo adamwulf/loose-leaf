@@ -23,8 +23,7 @@
 
 @implementation MMScrapView{
     // **
-    // these properties will be saved by the page that holds us, if any
-    //
+    // these properties will be saved by the page that holds us, if any:
     // our current scale
     CGFloat scale;
     // our current rotation around our center
@@ -32,8 +31,8 @@
 
     
     // these properties are UI only, and
-    // don't need to be persisted
-    
+    // don't need to be persisted:
+    //
     // boolean to say if the user is currently holding this scrap. used for blue border
     BOOL selected;
     // the layer used for our white background. won't clip sub-content

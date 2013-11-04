@@ -19,7 +19,7 @@
 #import "MMDebugDrawView.h"
 #import "MMScrapsOnPaperState.h"
 #import "MMImmutableScrapsOnPaperState.h"
-#import "MMPaperState.h"
+#import "JotViewStateProxy.h"
 #import "DKUIBezierPathClippedSegmentTPair.h"
 #import <JotUI/UIColor+JotHelper.h>
 
@@ -728,7 +728,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
  * if we have also loaded state for our scraps
  * https://github.com/adamwulf/loose-leaf/issues/254
  */
--(void) didLoadState:(MMPaperState*)state{
+-(void) didLoadState:(JotViewStateProxy*)state{
     if([self hasStateLoaded]){
         [NSThread performBlockOnMainThread:^{
             [self.delegate didLoadStateForPage:self];
@@ -736,7 +736,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     }
 }
 
--(void) didUnloadState:(MMPaperState *)state{
+-(void) didUnloadState:(JotViewStateProxy *)state{
     [NSThread performBlockOnMainThread:^{
         [self.delegate didUnloadStateForPage:self];
     }];

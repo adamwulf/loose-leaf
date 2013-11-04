@@ -13,14 +13,16 @@
 #define kScrapShadowBufferSize 4
 
 @implementation MMScrapViewState{
+    // scrap ID and UI
     NSString* uuid;
-    // the path where we store our data
     NSString* scrapPath;
-    
-    NSUInteger lastSavedUndoHash;
     UIView* contentView;
+    UIImageView* thumbnailView;
     JotView* drawableView;
+    
+    // state
     JotViewState* drawableViewState;
+    NSUInteger lastSavedUndoHash;
     BOOL shouldKeepStateLoaded;
     BOOL isLoadingState;
     UIBezierPath* bezierPath;
@@ -30,12 +32,12 @@
     NSString* inkImageFile;
     NSString* thumbImageFile;
     NSString* stateFile;
-    
+
+    // helper vars
     CGSize originalSize;
     CGRect drawableBounds;
     
-    UIImageView* thumbnailView;
-    
+    // queue
     dispatch_queue_t importExportScrapStateQueue;
 }
 

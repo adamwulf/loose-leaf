@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-@class MMPaperState;
+@class JotViewStateProxy;
 
 @protocol MMPaperStateDelegate <NSObject>
 
--(void) didLoadState:(MMPaperState*)state;
+-(void) didLoadState:(JotViewStateProxy*)state;
 
--(void) didUnloadState:(MMPaperState*)state;
+-(void) didUnloadState:(JotViewStateProxy*)state;
 
 @end

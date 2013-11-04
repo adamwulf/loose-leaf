@@ -13,7 +13,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "TestFlight.h"
 #import "DrawKit-iOS.h"
-#import "MMPaperState.h"
+#import "JotViewStateProxy.h"
 #import "UIBezierPath+Clipping.h"
 
 dispatch_queue_t loadUnloadStateQueue;
@@ -29,7 +29,7 @@ dispatch_queue_t importThumbnailQueue;
     UIBezierPath* boundsPath;
     BOOL isLoadingCachedImageFromDisk;
     
-    MMPaperState* paperState;
+    JotViewStateProxy* paperState;
     
     // we want to be able to track extremely
     // efficiently 1) if we have a thumbnail loaded,
@@ -92,7 +92,7 @@ dispatch_queue_t importThumbnailQueue;
         [self addGestureRecognizer:rulerGesture];
         
         // initialize our state manager
-        paperState = [[MMPaperState alloc] initWithInkPath:[self inkPath] andPlistPath:[self plistPath]];
+        paperState = [[JotViewStateProxy alloc] initWithInkPath:[self inkPath] andPlistPath:[self plistPath]];
         paperState.delegate = self;
     }
     return self;
@@ -530,13 +530,13 @@ static int count = 0;
 
 #pragma mark - MMPaperStateDelegate
 
--(void) didLoadState:(MMPaperState*)state{
+-(void) didLoadState:(JotViewStateProxy*)state{
     [NSThread performBlockOnMainThread:^{
         [self.delegate didLoadStateForPage:self];
     }];
 }
 
--(void) didUnloadState:(MMPaperState *)state{
+-(void) didUnloadState:(JotViewStateProxy *)state{
     [NSThread performBlockOnMainThread:^{
         [self.delegate didUnloadStateForPage:self];
     }];
