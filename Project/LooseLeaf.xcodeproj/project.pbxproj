@@ -84,7 +84,6 @@
 		66B21A7A175E595B0049F1AF /* MMBlockOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A79175E595B0049F1AF /* MMBlockOperation.m */; };
 		66B3522517A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B3522417A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m */; };
 		66B51A2A17AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B51A2917AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		66B62C4E17F245F3006D31EB /* JotViewStateProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B62C4D17F245F3006D31EB /* JotViewStateProxy.m */; };
 		66B843E717B0529D008BF8B8 /* JRSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 6648954317B0511D0001829C /* JRSwizzle.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66B843E817B052A6008BF8B8 /* gpc.c in Sources */ = {isa = PBXBuildFile; fileRef = 6648954617B0511D0001829C /* gpc.c */; };
 		66B843E917B052B7008BF8B8 /* UIBezierPath+GPC.m in Sources */ = {isa = PBXBuildFile; fileRef = 6648954917B0511D0001829C /* UIBezierPath+GPC.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -345,9 +344,6 @@
 		66B3522417A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIGestureRecognizer+GestureDebug.m"; sourceTree = "<group>"; };
 		66B51A2817AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBezelInLeftGestureRecognizer.h; sourceTree = "<group>"; };
 		66B51A2917AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBezelInLeftGestureRecognizer.m; sourceTree = "<group>"; };
-		66B62C4C17F245F3006D31EB /* JotViewStateProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JotViewStateProxy.h; sourceTree = "<group>"; };
-		66B62C4D17F245F3006D31EB /* JotViewStateProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JotViewStateProxy.m; sourceTree = "<group>"; };
-		66B62C4F17F24777006D31EB /* MMPaperStateDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPaperStateDelegate.h; sourceTree = "<group>"; };
 		66B62C5017F247B7006D31EB /* MMEditablePaperViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEditablePaperViewDelegate.h; sourceTree = "<group>"; };
 		66B843F517B05488008BF8B8 /* Loose-Leaf-Icon72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Loose-Leaf-Icon72.png"; sourceTree = SOURCE_ROOT; };
 		66B843F617B05488008BF8B8 /* Loose-Leaf-Icon144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Loose-Leaf-Icon144.png"; sourceTree = SOURCE_ROOT; };
@@ -926,9 +922,6 @@
 		66B62C4B17F245E6006D31EB /* Page State */ = {
 			isa = PBXGroup;
 			children = (
-				66B62C4C17F245F3006D31EB /* JotViewStateProxy.h */,
-				66B62C4D17F245F3006D31EB /* JotViewStateProxy.m */,
-				66B62C4F17F24777006D31EB /* MMPaperStateDelegate.h */,
 				66AE5AA617F4D064009F82B6 /* MMScrapsOnPaperState.h */,
 				66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */,
 				66AE5AA917F4D124009F82B6 /* MMScrapsOnPaperStateDelegate.h */,
@@ -1223,7 +1216,6 @@
 				664F4139159063F8006F8B09 /* MMPlusIcon.m in Sources */,
 				664F413D1590661F006F8B09 /* MMRightArrow.m in Sources */,
 				66A6836D17CE668C007EE218 /* fishhook.c in Sources */,
-				66B62C4E17F245F3006D31EB /* JotViewStateProxy.m in Sources */,
 				664F414015906628006F8B09 /* MMLeftArrow.m in Sources */,
 				66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */,
 				66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */,

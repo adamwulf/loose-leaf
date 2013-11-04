@@ -13,10 +13,8 @@
 #import "NSThread+BlockAdditions.h"
 #import "TestFlight.h"
 #import "DrawKit-iOS.h"
-#import "JotViewStateProxy.h"
 #import "UIBezierPath+Clipping.h"
 
-dispatch_queue_t loadUnloadStateQueue;
 dispatch_queue_t importThumbnailQueue;
 
 
@@ -45,13 +43,6 @@ dispatch_queue_t importThumbnailQueue;
 
 @synthesize drawableView;
 @synthesize paperState;
-
-+(dispatch_queue_t) loadUnloadStateQueue{
-    if(!loadUnloadStateQueue){
-        loadUnloadStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.loadUnloadStateQueue", DISPATCH_QUEUE_SERIAL);
-    }
-    return loadUnloadStateQueue;
-}
 
 +(dispatch_queue_t) importThumbnailQueue{
     if(!importThumbnailQueue){
@@ -190,7 +181,7 @@ dispatch_queue_t importThumbnailQueue;
             [self setFrame:self.frame];
             [NSThread performBlockOnMainThread:^{
                 if([self.delegate isPageEditable:self] && [self hasStateLoaded]){
-                    [drawableView loadState:paperState.jotViewState];
+                    [drawableView loadState:paperState];
                     [self.contentView insertSubview:drawableView aboveSubview:cachedImgView];
                     // anchor the view to the top left,
                     // so that when we scale down, the drawable view
@@ -225,7 +216,7 @@ dispatch_queue_t importThumbnailQueue;
         [self didLoadState:paperState];
         return;
     }
-    [paperState loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
+    [paperState loadStateAsynchronously:async withSize:pagePixelSize andContext:context andBufferManager:[JotBufferManager sharedInstace]];
 }
 -(void) unloadState{
     [paperState unload];
@@ -528,7 +519,11 @@ static int count = 0;
 
 
 
-#pragma mark - MMPaperStateDelegate
+#pragma mark - JotViewStateProxyDelegate
+
+-(void) jotStrokeWasCancelled:(JotStroke *)stroke{
+    NSLog(@"MMEditablePaperView jotStrokeWasCancelled:");
+}
 
 -(void) didLoadState:(JotViewStateProxy*)state{
     [NSThread performBlockOnMainThread:^{

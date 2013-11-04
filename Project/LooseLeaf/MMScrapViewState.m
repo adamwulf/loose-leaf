@@ -21,7 +21,7 @@
     JotView* drawableView;
     
     // state
-    JotViewState* drawableViewState;
+    JotViewStateProxy* drawableViewState;
     NSUInteger lastSavedUndoHash;
     BOOL shouldKeepStateLoaded;
     BOOL isLoadingState;
@@ -222,12 +222,11 @@
             // load state, if we have any.
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             // load drawable view information here
-            drawableViewState = [[JotViewState alloc] initWithImageFile:self.inkImageFile
-                                                           andStateFile:self.stateFile
-                                                            andPageSize:[drawableView pagePixelSize]
-                                                           andGLContext:[drawableView context]
-                                                       andBufferManager:[[JotBufferManager alloc] init]];
-            
+            drawableViewState = [[JotViewStateProxy alloc] initWithInkPath:self.inkImageFile andPlistPath:self.stateFile];
+            [drawableViewState loadStateAsynchronously:NO
+                                              withSize:[drawableView pagePixelSize]
+                                            andContext:[drawableView context]
+                                      andBufferManager:[[JotBufferManager alloc] init]];
             [NSThread performBlockOnMainThread:^{
                 @synchronized(self){
                     isLoadingState = NO;
