@@ -19,7 +19,6 @@
 #import "MMDebugDrawView.h"
 #import "MMScrapsOnPaperState.h"
 #import "MMImmutableScrapsOnPaperState.h"
-#import "JotViewStateProxy.h"
 #import "DKUIBezierPathClippedSegmentTPair.h"
 #import <JotUI/UIColor+JotHelper.h>
 
@@ -721,7 +720,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [scrapState unload];
 }
 
-#pragma mark - MMPaperStateDelegate
+#pragma mark - JotViewStateProxyDelegate
 
 /**
  * TODO: only fire off these state methods
