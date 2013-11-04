@@ -24,7 +24,7 @@
 
 @property (nonatomic, weak) JotView* drawableView;
 @property (nonatomic, weak) NSObject<MMEditablePaperViewDelegate>* delegate;
-@property (readonly) MMPaperState* paperState;
+@property (readonly) JotViewStateProxy* paperState;
 
 +(dispatch_queue_t) loadUnloadStateQueue;
 

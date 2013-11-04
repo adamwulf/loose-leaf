@@ -10,7 +10,7 @@
 #import <JotUI/JotUI.h>
 #import "MMPaperStateDelegate.h"
 
-@interface MMPaperState : NSObject{
+@interface JotViewStateProxy : NSObject{
     NSObject<MMPaperStateDelegate>* delegate;
 }
 

@@ -6,19 +6,21 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMPaperState.h"
+#import "JotViewStateProxy.h"
 #import <JotUI/JotUI.h>
 #import "MMEditablePaperView.h"
 
-@implementation MMPaperState{
+@implementation JotViewStateProxy{
+    // paths to save/load state
+    NSString* inkPath;
+    NSString* plistPath;
+
+    // ideal state
     BOOL shouldKeepStateLoaded;
     BOOL isLoadingState;
     
     NSUInteger lastSavedUndoHash;
     JotViewState* jotViewState;
-    
-    NSString* inkPath;
-    NSString* plistPath;
 }
 
 @synthesize delegate;
