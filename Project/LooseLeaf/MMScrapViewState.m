@@ -22,7 +22,6 @@
     
     // state
     JotViewStateProxy* drawableViewState;
-    NSUInteger lastSavedUndoHash;
     BOOL shouldKeepStateLoaded;
     BOOL isLoadingState;
     UIBezierPath* bezierPath;
@@ -130,10 +129,6 @@
                 }
             });
         }
-
-        // create a blank drawable view
-        lastSavedUndoHash = -1;
-        
     }
     return self;
 }
@@ -146,14 +141,15 @@
 }
 
 -(void) saveToDisk{
-    if(drawableViewState && lastSavedUndoHash != [drawableView undoHash]){
+    if(drawableViewState && [drawableViewState hasEditsToSave]){
         dispatch_async([self importExportScrapStateQueue], ^{
             @autoreleasepool {
-                if(drawableViewState && lastSavedUndoHash != [drawableView undoHash]){
+                NSLog(@"saving: %@ %d", uuid, (int)drawableView);
+                if(drawableViewState && [drawableViewState hasEditsToSave]){
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                     [NSThread performBlockOnMainThread:^{
                         @autoreleasepool {
-                            if(drawableView && lastSavedUndoHash != [drawableView undoHash]){
+                            if(drawableView && [drawableViewState hasEditsToSave]){
                                 // save path
                                 // this needs to be saved at the exact same time as the drawable view
                                 // so that we can guarentee that there is no race condition
@@ -169,11 +165,19 @@
                                         [NSThread performBlockOnMainThread:^{
                                             thumbnailView.image = thumb;
                                         }];
-                                        lastSavedUndoHash = [state undoHash];
+                                        [drawableViewState wasSavedAtImmutableState:state];
+                                        NSLog(@"scrap saved at: %d with thumb: %d", state.undoHash, (int)thumb);
                                     }
                                     dispatch_semaphore_signal(sema1);
                                 }];
                             }else{
+                                if(!drawableView && ![drawableViewState hasEditsToSave]){
+                                    NSLog(@"no drawable view or edits");
+                                }else if(!drawableView){
+                                    NSLog(@"no drawable view");
+                                }else if(![drawableViewState hasEditsToSave]){
+                                    NSLog(@"no edits to save in state");
+                                }
                                 // was asked to save, but we were asked to save
                                 // multiple times extremely quickly, so just signal
                                 // that we're done
@@ -183,12 +187,14 @@
                     }];
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
                     dispatch_release(sema1);
+                    NSLog(@"done saving: %@ %d", uuid, (int)drawableView);
                 }else{
                     // sometimes, this method is called in very quick succession.
                     // that means that the first time it runs and saves, it'll
                     // finish all of the export and drawableViewState will be nil
                     // next time it runs. so we double check our save state to determine
                     // if in fact we still need to save or not
+                    NSLog(@"no edits to save in state2");
                 }
             }
         });
@@ -211,7 +217,7 @@
 
     void (^loadBlock)() = ^(void) {
         @autoreleasepool {
-            
+            NSLog(@"loading: %@ %d", uuid, (int) drawableView);
             dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
             [NSThread performBlockOnMainThread:^{
                 // add our drawable view to our contents
@@ -235,7 +241,6 @@
                         thumbnailView.hidden = YES;
                         if(drawableViewState){
                             [drawableView loadState:drawableViewState];
-                            lastSavedUndoHash = [drawableView undoHash];
                         }
                         
                         // nothing changed in our goals since we started
@@ -259,7 +264,6 @@
     if(async){
         dispatch_async([self importExportScrapStateQueue], loadBlock);
     }else{
-        NSLog(@"loading: %@", uuid);
         loadBlock();
     }
 }
@@ -268,7 +272,7 @@
     dispatch_async([self importExportScrapStateQueue], ^{
         @autoreleasepool {
             @synchronized(self){
-                if(drawableViewState && lastSavedUndoHash != [drawableView undoHash]){
+                if(drawableViewState && [drawableViewState hasEditsToSave]){
                     // we want to unload, but we're not saved.
                     dispatch_async([self importExportScrapStateQueue], ^{
                         @autoreleasepool {
@@ -281,12 +285,14 @@
                         }
                     });
                 }else{
+                    if([drawableViewState hasEditsToSave]){
+                        NSLog(@"how did we get here?");
+                    }
                     shouldKeepStateLoaded = NO;
                     if(!isLoadingState && drawableViewState){
                         drawableViewState = nil;
                         [drawableView removeFromSuperview];
                         drawableView = nil;
-                        lastSavedUndoHash = [drawableView undoHash]; // zero out the lastSavedUndoHash so we don't try to save
                         thumbnailView.hidden = NO;
                     }
                 }
