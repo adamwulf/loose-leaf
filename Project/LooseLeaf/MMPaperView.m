@@ -25,6 +25,7 @@
 @synthesize isBrandNewPage;
 @synthesize uuid;
 @synthesize unitShadowPath;
+@synthesize originalUnscaledBounds;
 
 - (id)initWithFrame:(CGRect)frame{
     return [self initWithFrame:frame andUUID:[NSString createStringUUID]];
