@@ -437,7 +437,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     previousEndpoint = strokePath.firstPoint;
                     
                     // find the scrap location in open gl
-                    CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, self.bounds.size.height);
+                    CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height);
                     CGPoint scrapCenterInOpenGL = CGPointApplyAffineTransform(scrap.center, flipTransform);
                     // center the stroke around the scrap center,
                     // so that any scale/rotate happens in relation to the scrap
