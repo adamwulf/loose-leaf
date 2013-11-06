@@ -20,6 +20,9 @@
             [output appendPath:[geom bezierPath]];
         }
     }
+    if(self.isClosedCurve){
+        [output closePath];
+    }
     return output;
 }
 

@@ -184,10 +184,11 @@
     // intersection point.
     NSArray* pathsFromIntersectingTouches = [pathOfAllTouchPoints pathsFromSelfIntersections];
     
+    // in high res screens, we show a low-res shape builder dotted line
+    // so this will scale the low-res path up to high res size.
     CGFloat scale = [[UIScreen mainScreen] scale];
-    CGAffineTransform scaleUp = CGAffineTransformMakeScale(scale, scale);
+    CGAffineTransform scaleToScreenSize = CGAffineTransformMakeScale(scale, scale);
 
-    //
     // now we'll loop over each sub-path, and send all the points
     // to a new TCShapeController, so that we can interpret a shape
     // for each non-intersecting path.
@@ -218,16 +219,10 @@
         // so see if it can recognize a shape
         SYShape* shape = [shapeMaker getFigurePaintedWithTolerance:0.0000001 andContinuity:0];
         if(shape){
-            if(shape.closeCurve){
-                // shape is a closed path,
-                // so create a scrap from it
-                UIBezierPath* shapePath = [shape bezierPath];
-                [shapePath applyTransform:scaleUp];
-                [shapePaths addObject:shapePath];
-            }else{
-                // shape is unclosed, so don't add
-                // it as a scrap
-            }
+            // return all successful shapes
+            UIBezierPath* shapePath = [shape bezierPath];
+            [shapePath applyTransform:scaleToScreenSize];
+            [shapePaths addObject:shapePath];
         }else{
             // this is more rare than it used to be. this will
             // trigger when we can't determine any shape from a path,

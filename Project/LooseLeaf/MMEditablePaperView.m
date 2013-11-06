@@ -418,7 +418,6 @@ static int count = 0;
     
     NSMutableArray* croppedElements = [NSMutableArray array];
     for(AbstractBezierPathElement* element in modifiedElements){
-        
         if([element isKindOfClass:[CurveToPathElement class]]){
             CurveToPathElement* curveElement = (CurveToPathElement*) element;
             UIBezierPath* bez = [UIBezierPath bezierPath];

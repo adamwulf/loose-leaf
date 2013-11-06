@@ -563,23 +563,20 @@ static dispatch_queue_t concurrentBackgroundQueue;
     }
 }
 
-#pragma mark - PolygonToolDelegate
+#pragma mark - Polygon and Scrap builder
 
 -(void) beginShapeAtPoint:(CGPoint)point{
     // send touch event to the view that
     // will display the drawn polygon line
-//    NSLog(@"begin");
     [shapeBuilderView clear];
-    
     [shapeBuilderView addTouchPoint:point];
 }
 
 -(BOOL) continueShapeAtPoint:(CGPoint)point{
-    // noop for now
     // send touch event to the view that
     // will display the drawn polygon line
     if([shapeBuilderView addTouchPoint:point]){
-        [self complete];
+        [self completeBuildingNewScrap];
         return NO;
     }
     return YES;
@@ -592,32 +589,115 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // and also process the touches into the new
     // scrap polygon shape, and add that shape
     // to the page
-//    NSLog(@"finish");
     [shapeBuilderView addTouchPoint:point];
-    [self complete];
-}
-
--(void) complete{
-    NSArray* shapes = [shapeBuilderView completeAndGenerateShapes];
-    [shapeBuilderView clear];
-    for(UIBezierPath* shape in shapes){
-        //        if([scraps count]){
-        //            [[scraps objectAtIndex:0] intersect:shape];
-        //        }else{
-        UIBezierPath* shapePath = [shape copy];
-        [shapePath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
-        [self addScrapWithPath:shapePath];
-        //        }
-    }
-    
+    [self completeBuildingNewScrap];
 }
 
 -(void) cancelShapeAtPoint:(CGPoint)point{
     // we've cancelled the polygon (possibly b/c
     // it was a pan/pinch instead), so clear
     // the drawn polygon and reset.
-//    NSLog(@"cancel");
     [shapeBuilderView clear];
+}
+
+-(void) completeBuildingNewScrap{
+    NSArray* shapes = [shapeBuilderView completeAndGenerateShapes];
+    [shapeBuilderView clear];
+    for(UIBezierPath* shape in shapes){
+        if(shape.isPathClosed){
+            UIBezierPath* shapePath = [shape copy];
+            [shapePath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
+            [self addScrapWithPath:shapePath];
+        }
+    }
+}
+
+
+#pragma mark - Scissors
+
+
+-(void) beginScissorAtPoint:(CGPoint)point{
+    // send touch event to the view that
+    // will display the drawn polygon line
+    [shapeBuilderView clear];
+    [shapeBuilderView addTouchPoint:point];
+}
+
+-(BOOL) continueScissorAtPoint:(CGPoint)point{
+    // send touch event to the view that
+    // will display the drawn polygon line
+    if([shapeBuilderView addTouchPoint:point]){
+        [self completeScissorsCut];
+        return NO;
+    }
+    return YES;
+}
+
+-(void) finishScissorAtPoint:(CGPoint)point{
+    // send touch event to the view that
+    // will display the drawn polygon line
+    //
+    // and also process the touches into the new
+    // scrap polygon shape, and add that shape
+    // to the page
+    [shapeBuilderView addTouchPoint:point];
+    [self completeScissorsCut];
+}
+
+-(void) cancelScissorAtPoint:(CGPoint)point{
+    // we've cancelled the polygon (possibly b/c
+    // it was a pan/pinch instead), so clear
+    // the drawn polygon and reset.
+    [shapeBuilderView clear];
+}
+
+
+-(void) completeScissorsCut{
+    // in this debug version of the scissor, it will draw
+    // a thick black line where it would do the cut
+    //
+    // this is just to prove that we can take the path
+    // (closed or unclosed) and do something productive
+    // with it
+    NSArray* shapes = [shapeBuilderView completeAndGenerateShapes];
+    [shapeBuilderView clear];
+    NSMutableArray* elements = [NSMutableArray array];
+    for(UIBezierPath* shape in shapes){
+        UIBezierPath* shapePath = [shape copy];
+        [shapePath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
+        
+        // flip from CoreGraphics to OpenGL coordinates
+        CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height);
+        [shapePath applyTransform:flipTransform];
+        
+        __block CGPoint previousEndpoint = shapePath.firstPoint;
+        [shapePath iteratePathWithBlock:^(CGPathElement pathEle){
+            AbstractBezierPathElement* newElement = nil;
+            if(pathEle.type == kCGPathElementAddCurveToPoint){
+                // curve
+                newElement = [CurveToPathElement elementWithStart:previousEndpoint
+                                                       andCurveTo:pathEle.points[2]
+                                                      andControl1:pathEle.points[0]
+                                                      andControl2:pathEle.points[1]];
+                previousEndpoint = pathEle.points[2];
+            }else if(pathEle.type == kCGPathElementMoveToPoint){
+                newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
+                previousEndpoint = pathEle.points[0];
+            }else if(pathEle.type == kCGPathElementAddLineToPoint){
+                newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
+                previousEndpoint = pathEle.points[0];
+            }
+            if(newElement){
+                // be sure to set color/width/etc
+                newElement.color = [UIColor blackColor];
+                newElement.width = 10.0;
+                newElement.rotation = 0;
+                [elements addObject:newElement];
+            }
+        }];
+    }
+    
+    [drawableView addElements:[self willAddElementsToStroke:elements fromPreviousElement:nil]];
 }
 
 
