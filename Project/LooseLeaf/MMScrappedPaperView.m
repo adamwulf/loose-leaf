@@ -435,10 +435,17 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     // if the intersection contains any segments at all
                     
                     previousEndpoint = strokePath.firstPoint;
+
+                    // since a scrap's center point is changed if the scrap is being
+                    // held, we can't just use scrap.center to adjust the path for
+                    // rotations etc. we need to calculate the center of a scrap
+                    // so that it doesn't matter if it's position/anchor have been
+                    // changed or not.
+                    CGPoint calculatedScrapCenter = [scrap convertPoint:CGPointMake(scrap.bounds.size.width/2, scrap.bounds.size.height/2) toView:scrap.superview];
                     
                     // find the scrap location in open gl
                     CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height);
-                    CGPoint scrapCenterInOpenGL = CGPointApplyAffineTransform(scrap.center, flipTransform);
+                    CGPoint scrapCenterInOpenGL = CGPointApplyAffineTransform(calculatedScrapCenter, flipTransform);
                     // center the stroke around the scrap center,
                     // so that any scale/rotate happens in relation to the scrap
                     [inter applyTransform:CGAffineTransformMakeTranslation(-scrapCenterInOpenGL.x, -scrapCenterInOpenGL.y)];
@@ -468,6 +475,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     // (0,0) is in the bottom/left of the scrap. (this might also
                     // help w/ the rotation somehow, since the rotate happens before the
                     // translate (?)
+                    
                     CGPoint recenter = CGPointMake(scrap.bounds.size.width/2, scrap.bounds.size.height/2);
                     [inter applyTransform:CGAffineTransformMakeTranslation(recenter.x, recenter.y)];
                     
