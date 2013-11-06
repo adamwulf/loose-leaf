@@ -400,6 +400,7 @@
         for(UITouch* touch in bezelGesture.touches){
             [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
             [polygon cancelPolygonForTouch:touch];
+            [scissor cancelPolygonForTouch:touch];
         }
     }
     [super isBezelingInLeftWithGesture:bezelGesture];
@@ -411,6 +412,7 @@
         for(UITouch* touch in bezelGesture.touches){
             [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
             [polygon cancelPolygonForTouch:touch];
+            [scissor cancelPolygonForTouch:touch];
         }
     }
     [super isBezelingInRightWithGesture:bezelGesture];
@@ -429,6 +431,7 @@
     for(UITouch* touch in touches){
         [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
         [polygon cancelPolygonForTouch:touch];
+        [scissor cancelPolygonForTouch:touch];
     }
     
     return [super isBeginning:beginning toPanAndScalePage:page fromFrame:fromFrame toFrame:toFrame withTouches:touches];
@@ -528,6 +531,7 @@
     for(UITouch* touch in gesture.touches){
         [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
         [polygon cancelPolygonForTouch:touch];
+        [scissor cancelPolygonForTouch:touch];
     }
     [rulerView updateLineAt:[gesture point1InView:rulerView] to:[gesture point2InView:rulerView]
            startingDistance:[gesture initialDistance]];
@@ -761,10 +765,12 @@
     if(tool == polygon){
         if(![page continueShapeAtPoint:adjustedPoint]){
             [polygon cancelPolygonForTouch:touch];
+            [scissor cancelPolygonForTouch:touch];
         }
     }else{
         if(![page continueScissorAtPoint:adjustedPoint]){
             [polygon cancelPolygonForTouch:touch];
+            [scissor cancelPolygonForTouch:touch];
         }
     }
 }
