@@ -1,0 +1,8 @@
+AGG License
+
+Used for smoothing drawing, based on code from:
+http://www.effectiveui.com/blog/2011/12/02/how-to-build-a-simple-painting-app-for-ios/
+based on:
+http://www.antigrain.com/research/bezier_interpolation/
+
+http://www.antigrain.com/license/index.html#PAGE_LICENSE
