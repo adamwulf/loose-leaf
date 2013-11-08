@@ -41,6 +41,9 @@
 		6661144716FD67F8005032B9 /* Loose-Leaf-Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144616FD67F8005032B9 /* Loose-Leaf-Icon.png */; };
 		6661144A16FD67FA005032B9 /* Loose-Leaf-Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144916FD67FA005032B9 /* Loose-Leaf-Icon@2x.png */; };
 		6667480617C0166100D5C390 /* MMShapeBuilderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6667480517C0166100D5C390 /* MMShapeBuilderView.m */; };
+		66684B31182D887E005A27B4 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 66684B30182D887E005A27B4 /* Settings.bundle */; };
+		66684B3B182D9624005A27B4 /* othertest.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B3A182D9624005A27B4 /* othertest.license */; };
+		66684B3E182DA177005A27B4 /* sample.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B3D182DA177005A27B4 /* sample.license */; };
 		66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* MMEditablePaperStackView.m */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
@@ -260,6 +263,11 @@
 		6667480317BEEDD300D5C390 /* PolygonToolDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PolygonToolDelegate.h; sourceTree = "<group>"; };
 		6667480417C0166100D5C390 /* MMShapeBuilderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShapeBuilderView.h; sourceTree = "<group>"; };
 		6667480517C0166100D5C390 /* MMShapeBuilderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShapeBuilderView.m; sourceTree = "<group>"; };
+		66684B30182D887E005A27B4 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		66684B37182D95EA005A27B4 /* generateLicenses.pl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = generateLicenses.pl; sourceTree = "<group>"; };
+		66684B39182D961A005A27B4 /* test.license */ = {isa = PBXFileReference; lastKnownFileType = text; path = test.license; sourceTree = "<group>"; };
+		66684B3A182D9624005A27B4 /* othertest.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = othertest.license; sourceTree = "<group>"; };
+		66684B3D182DA177005A27B4 /* sample.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sample.license; sourceTree = "<group>"; };
 		66728713159515FC0018571A /* MMEditablePaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEditablePaperStackView.h; sourceTree = "<group>"; };
 		66728714159515FC0018571A /* MMEditablePaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEditablePaperStackView.m; sourceTree = "<group>"; };
 		6690EF1217CC64630009A0AC /* MMScrapBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBubbleButton.h; sourceTree = "<group>"; };
@@ -731,6 +739,26 @@
 			name = Pencil;
 			sourceTree = "<group>";
 		};
+		66684B2F182D8869005A27B4 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				66684B36182D95CB005A27B4 /* Licenses */,
+				66684B30182D887E005A27B4 /* Settings.bundle */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
+		66684B36182D95CB005A27B4 /* Licenses */ = {
+			isa = PBXGroup;
+			children = (
+				66684B37182D95EA005A27B4 /* generateLicenses.pl */,
+				66684B39182D961A005A27B4 /* test.license */,
+				66684B3A182D9624005A27B4 /* othertest.license */,
+				66684B3D182DA177005A27B4 /* sample.license */,
+			);
+			name = Licenses;
+			sourceTree = "<group>";
+		};
 		6693295715958A890033E557 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
@@ -1048,6 +1076,7 @@
 		66DCFB911581BCEF00B4918C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				66684B2F182D8869005A27B4 /* Settings */,
 				66A6836A17CE6672007EE218 /* External */,
 				66B21A77175E59490049F1AF /* Operations */,
 				660E1DA6158FC6120001DA12 /* Categories */,
@@ -1116,6 +1145,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 66DCFBB91581BCF000B4918C /* Build configuration list for PBXNativeTarget "LooseLeaf" */;
 			buildPhases = (
+				66684B3C182DA0D3005A27B4 /* ShellScript */,
 				66C0C9D217838C91009491B3 /* ShellScript */,
 				66DCFB821581BCEF00B4918C /* Sources */,
 				66DCFB831581BCEF00B4918C /* Frameworks */,
@@ -1164,16 +1194,32 @@
 			files = (
 				66DCFB951581BCEF00B4918C /* InfoPlist.strings in Resources */,
 				6661144716FD67F8005032B9 /* Loose-Leaf-Icon.png in Resources */,
+				66684B3E182DA177005A27B4 /* sample.license in Resources */,
 				6661144A16FD67FA005032B9 /* Loose-Leaf-Icon@2x.png in Resources */,
 				66B21A59175B0BF30049F1AF /* cloth.png in Resources */,
+				66684B3B182D9624005A27B4 /* othertest.license in Resources */,
 				66B843F717B05488008BF8B8 /* Loose-Leaf-Icon72.png in Resources */,
 				66B843F817B05488008BF8B8 /* Loose-Leaf-Icon144.png in Resources */,
+				66684B31182D887E005A27B4 /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		66684B3C182DA0D3005A27B4 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"$SRCROOT/LooseLeaf\"\n./generateLicenses.pl\ntouch Settings.bundle";
+		};
 		66C0C9D217838C91009491B3 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
