@@ -51,8 +51,6 @@
 		66684B48182DAD05005A27B4 /* 2Geom.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B47182DAD05005A27B4 /* 2Geom.license */; };
 		66684B4A182DAEBC005A27B4 /* UIImageRoundedCorner.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B49182DAEBC005A27B4 /* UIImageRoundedCorner.license */; };
 		66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* MMEditablePaperStackView.m */; };
-		6673C685182E1350005CEFAF /* QuietAssertMacros.c in Sources */ = {isa = PBXBuildFile; fileRef = 66A6836E17CE66B0007EE218 /* QuietAssertMacros.c */; };
-		6673C686182E1353005CEFAF /* fishhook.c in Sources */ = {isa = PBXBuildFile; fileRef = 66A6836B17CE668C007EE218 /* fishhook.c */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
 		66924CF517E23D5100D0F860 /* DKUIBezierPathIntersectionPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 66924CF417E23D5100D0F860 /* DKUIBezierPathIntersectionPoint.m */; };
@@ -336,9 +334,6 @@
 		66A471C517C7E06B00C2A5B6 /* MMScrapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapView.m; sourceTree = "<group>"; };
 		66A4BD4416321ABC00C45070 /* NSThread+BlockAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSThread+BlockAdditions.h"; sourceTree = "<group>"; };
 		66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+BlockAdditions.m"; sourceTree = "<group>"; };
-		66A6836B17CE668C007EE218 /* fishhook.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fishhook.c; path = ../../Submodules/fishhook/fishhook.c; sourceTree = "<group>"; };
-		66A6836C17CE668C007EE218 /* fishhook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fishhook.h; path = ../../Submodules/fishhook/fishhook.h; sourceTree = "<group>"; };
-		66A6836E17CE66B0007EE218 /* QuietAssertMacros.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = QuietAssertMacros.c; sourceTree = "<group>"; };
 		66A83AF117B2BB3D00488E54 /* MMBackwardCompatible.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMBackwardCompatible.h; path = "DrawKit-iOS/MMBackwardCompatible.h"; sourceTree = "<group>"; };
 		66A83AF217B2BB3D00488E54 /* MMBackwardCompatible.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMBackwardCompatible.m; path = "DrawKit-iOS/MMBackwardCompatible.m"; sourceTree = "<group>"; };
 		66AA212B16FBB31C00E86922 /* MMPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPopoverView.h; sourceTree = "<group>"; };
@@ -893,16 +888,6 @@
 			name = Scraps;
 			sourceTree = "<group>";
 		};
-		66A6836A17CE6672007EE218 /* External */ = {
-			isa = PBXGroup;
-			children = (
-				66A6836B17CE668C007EE218 /* fishhook.c */,
-				66A6836C17CE668C007EE218 /* fishhook.h */,
-				66A6836E17CE66B0007EE218 /* QuietAssertMacros.c */,
-			);
-			name = External;
-			sourceTree = "<group>";
-		};
 		66A7462F176B85FD00466AA4 /* Unused */ = {
 			isa = PBXGroup;
 			children = (
@@ -1095,7 +1080,6 @@
 			isa = PBXGroup;
 			children = (
 				66684B2F182D8869005A27B4 /* Settings */,
-				66A6836A17CE6672007EE218 /* External */,
 				66B21A77175E59490049F1AF /* Operations */,
 				660E1DA6158FC6120001DA12 /* Categories */,
 				66B21A58175B0BF30049F1AF /* cloth.png */,
@@ -1301,7 +1285,6 @@
 				664F413D1590661F006F8B09 /* MMRightArrow.m in Sources */,
 				664F414015906628006F8B09 /* MMLeftArrow.m in Sources */,
 				66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */,
-				6673C686182E1353005CEFAF /* fishhook.c in Sources */,
 				66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */,
 				66BD6E301591B57B00D4544C /* MMPaperButton.m in Sources */,
 				663916B317E11AAE000DEC67 /* UIBezierPath+Clipping.mm in Sources */,
@@ -1384,7 +1367,6 @@
 				66B843EF17B052D4008BF8B8 /* CurveFit.mm in Sources */,
 				66B843F017B052D4008BF8B8 /* bezier-utils.cpp in Sources */,
 				66C152FA1803637A00F21A2C /* DKUIBezierPathClippingResult.m in Sources */,
-				6673C685182E1350005CEFAF /* QuietAssertMacros.c in Sources */,
 				66B843F117B052D4008BF8B8 /* matrix.cpp in Sources */,
 				66B843F217B052D4008BF8B8 /* point.cpp in Sources */,
 				66B843F317B052D4008BF8B8 /* rotate.cpp in Sources */,
