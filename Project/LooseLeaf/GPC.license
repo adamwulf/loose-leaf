@@ -1,3 +1,19 @@
-GPC License
+General Polygon Clipper Library License
 
-Notice of commercial license for GPC: http://www.cs.man.ac.uk/~toby/alan/software/
+http://www.cs.man.ac.uk/~toby/alan/software/
+
+Special thanks to Alan Murta and Toby Howard
+
+Commercial license purchased on 10-09-12
+
+This licence agreement permits the unrestricted use of the Generic Polygon Clipper (GPC) software library by The Licensee. In particular it permits:
+
+• The use the GPC software library for any software development purposes, including its use within any product or service provided by The Licensee.
+
+• Full exemption from the requirement to retain the GPC source copyright notices within The Licensee’s product releases.
+
+The intellectual property rights of the algorithms used within the GPC library are unaffected by this agreement, and remain with The University of Manchester Advanced Interfaces Group.
+
+No explicit support services are provided by The University of Manchester as part of this agreement. There is no warranty or other guarantee of fitness of the GPC software for any purpose. It is provided solely “as is”.
+
+This agreement applies both to the current release of GPC, as well as any future versions of the GPC library which may be developed.
