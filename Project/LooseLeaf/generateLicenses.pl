@@ -44,7 +44,7 @@ for my $i (sort glob("*.license"))
             print $plistfh "<string>$keynum</string>\n";
             print $outfh "\"$keynum\" = \"$str\";\n";
         }else{
-            $fullstr .= "\n" . $str;
+            $fullstr .= "\n\n" . $str;
         }
         
         $keynum = $key.(++$cnt);
