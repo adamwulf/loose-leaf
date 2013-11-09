@@ -41,6 +41,14 @@
 		6661144716FD67F8005032B9 /* Loose-Leaf-Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144616FD67F8005032B9 /* Loose-Leaf-Icon.png */; };
 		6661144A16FD67FA005032B9 /* Loose-Leaf-Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144916FD67FA005032B9 /* Loose-Leaf-Icon@2x.png */; };
 		6667480617C0166100D5C390 /* MMShapeBuilderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6667480517C0166100D5C390 /* MMShapeBuilderView.m */; };
+		66684B31182D887E005A27B4 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 66684B30182D887E005A27B4 /* Settings.bundle */; };
+		66684B3B182D9624005A27B4 /* AGG.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B3A182D9624005A27B4 /* AGG.license */; };
+		66684B3E182DA177005A27B4 /* GPC.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B3D182DA177005A27B4 /* GPC.license */; };
+		66684B40182DAAC0005A27B4 /* UIColorWithHex.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B3F182DAAC0005A27B4 /* UIColorWithHex.license */; };
+		66684B44182DAC9B005A27B4 /* CurveFit.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B43182DAC9B005A27B4 /* CurveFit.license */; };
+		66684B46182DACAE005A27B4 /* DrawKit.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B45182DACAE005A27B4 /* DrawKit.license */; };
+		66684B48182DAD05005A27B4 /* 2Geom.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B47182DAD05005A27B4 /* 2Geom.license */; };
+		66684B4A182DAEBC005A27B4 /* UIImageRoundedCorner.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B49182DAEBC005A27B4 /* UIImageRoundedCorner.license */; };
 		66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* MMEditablePaperStackView.m */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
@@ -69,8 +77,6 @@
 		66A471C217C7DEF200C2A5B6 /* SYShape+Bezier.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A471C117C7DEF200C2A5B6 /* SYShape+Bezier.m */; };
 		66A471C617C7E06B00C2A5B6 /* MMScrapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A471C517C7E06B00C2A5B6 /* MMScrapView.m */; };
 		66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */; };
-		66A6836D17CE668C007EE218 /* fishhook.c in Sources */ = {isa = PBXBuildFile; fileRef = 66A6836B17CE668C007EE218 /* fishhook.c */; };
-		66A6836F17CE66B0007EE218 /* QuietAssertMacros.c in Sources */ = {isa = PBXBuildFile; fileRef = 66A6836E17CE66B0007EE218 /* QuietAssertMacros.c */; };
 		66A83AF317B2BB3D00488E54 /* MMBackwardCompatible.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A83AF217B2BB3D00488E54 /* MMBackwardCompatible.m */; };
 		66AC153D1805F2F8005315C8 /* MMLoadImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC153C1805F2F8005315C8 /* MMLoadImageCache.m */; };
 		66AC154C18076C23005315C8 /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66C0C9C91783645E009491B3 /* JotUI.framework */; };
@@ -260,6 +266,16 @@
 		6667480317BEEDD300D5C390 /* PolygonToolDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PolygonToolDelegate.h; sourceTree = "<group>"; };
 		6667480417C0166100D5C390 /* MMShapeBuilderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShapeBuilderView.h; sourceTree = "<group>"; };
 		6667480517C0166100D5C390 /* MMShapeBuilderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShapeBuilderView.m; sourceTree = "<group>"; };
+		66684B30182D887E005A27B4 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		66684B37182D95EA005A27B4 /* generateLicenses.pl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = generateLicenses.pl; sourceTree = "<group>"; };
+		66684B39182D961A005A27B4 /* JRSwizzle.license */ = {isa = PBXFileReference; lastKnownFileType = text; path = JRSwizzle.license; sourceTree = "<group>"; };
+		66684B3A182D9624005A27B4 /* AGG.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AGG.license; sourceTree = "<group>"; };
+		66684B3D182DA177005A27B4 /* GPC.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GPC.license; sourceTree = "<group>"; };
+		66684B3F182DAAC0005A27B4 /* UIColorWithHex.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UIColorWithHex.license; sourceTree = "<group>"; };
+		66684B43182DAC9B005A27B4 /* CurveFit.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CurveFit.license; sourceTree = "<group>"; };
+		66684B45182DACAE005A27B4 /* DrawKit.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DrawKit.license; sourceTree = "<group>"; };
+		66684B47182DAD05005A27B4 /* 2Geom.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 2Geom.license; sourceTree = "<group>"; };
+		66684B49182DAEBC005A27B4 /* UIImageRoundedCorner.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UIImageRoundedCorner.license; sourceTree = "<group>"; };
 		66728713159515FC0018571A /* MMEditablePaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEditablePaperStackView.h; sourceTree = "<group>"; };
 		66728714159515FC0018571A /* MMEditablePaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEditablePaperStackView.m; sourceTree = "<group>"; };
 		6690EF1217CC64630009A0AC /* MMScrapBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBubbleButton.h; sourceTree = "<group>"; };
@@ -316,9 +332,6 @@
 		66A471C517C7E06B00C2A5B6 /* MMScrapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapView.m; sourceTree = "<group>"; };
 		66A4BD4416321ABC00C45070 /* NSThread+BlockAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSThread+BlockAdditions.h"; sourceTree = "<group>"; };
 		66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSThread+BlockAdditions.m"; sourceTree = "<group>"; };
-		66A6836B17CE668C007EE218 /* fishhook.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fishhook.c; path = ../../Submodules/fishhook/fishhook.c; sourceTree = "<group>"; };
-		66A6836C17CE668C007EE218 /* fishhook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fishhook.h; path = ../../Submodules/fishhook/fishhook.h; sourceTree = "<group>"; };
-		66A6836E17CE66B0007EE218 /* QuietAssertMacros.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = QuietAssertMacros.c; sourceTree = "<group>"; };
 		66A83AF117B2BB3D00488E54 /* MMBackwardCompatible.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMBackwardCompatible.h; path = "DrawKit-iOS/MMBackwardCompatible.h"; sourceTree = "<group>"; };
 		66A83AF217B2BB3D00488E54 /* MMBackwardCompatible.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMBackwardCompatible.m; path = "DrawKit-iOS/MMBackwardCompatible.m"; sourceTree = "<group>"; };
 		66AA212B16FBB31C00E86922 /* MMPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPopoverView.h; sourceTree = "<group>"; };
@@ -731,6 +744,31 @@
 			name = Pencil;
 			sourceTree = "<group>";
 		};
+		66684B2F182D8869005A27B4 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				66684B36182D95CB005A27B4 /* Licenses */,
+				66684B30182D887E005A27B4 /* Settings.bundle */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
+		66684B36182D95CB005A27B4 /* Licenses */ = {
+			isa = PBXGroup;
+			children = (
+				66684B37182D95EA005A27B4 /* generateLicenses.pl */,
+				66684B39182D961A005A27B4 /* JRSwizzle.license */,
+				66684B3A182D9624005A27B4 /* AGG.license */,
+				66684B3D182DA177005A27B4 /* GPC.license */,
+				66684B3F182DAAC0005A27B4 /* UIColorWithHex.license */,
+				66684B43182DAC9B005A27B4 /* CurveFit.license */,
+				66684B45182DACAE005A27B4 /* DrawKit.license */,
+				66684B47182DAD05005A27B4 /* 2Geom.license */,
+				66684B49182DAEBC005A27B4 /* UIImageRoundedCorner.license */,
+			);
+			name = Licenses;
+			sourceTree = "<group>";
+		};
 		6693295715958A890033E557 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
@@ -845,16 +883,6 @@
 				6629058B17FE0C4700FA680B /* MMScrapViewStateDelegate.h */,
 			);
 			name = Scraps;
-			sourceTree = "<group>";
-		};
-		66A6836A17CE6672007EE218 /* External */ = {
-			isa = PBXGroup;
-			children = (
-				66A6836B17CE668C007EE218 /* fishhook.c */,
-				66A6836C17CE668C007EE218 /* fishhook.h */,
-				66A6836E17CE66B0007EE218 /* QuietAssertMacros.c */,
-			);
-			name = External;
 			sourceTree = "<group>";
 		};
 		66A7462F176B85FD00466AA4 /* Unused */ = {
@@ -1048,7 +1076,7 @@
 		66DCFB911581BCEF00B4918C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				66A6836A17CE6672007EE218 /* External */,
+				66684B2F182D8869005A27B4 /* Settings */,
 				66B21A77175E59490049F1AF /* Operations */,
 				660E1DA6158FC6120001DA12 /* Categories */,
 				66B21A58175B0BF30049F1AF /* cloth.png */,
@@ -1117,9 +1145,11 @@
 			buildConfigurationList = 66DCFBB91581BCF000B4918C /* Build configuration list for PBXNativeTarget "LooseLeaf" */;
 			buildPhases = (
 				66C0C9D217838C91009491B3 /* ShellScript */,
+				66684B3C182DA0D3005A27B4 /* ShellScript */,
 				66DCFB821581BCEF00B4918C /* Sources */,
 				66DCFB831581BCEF00B4918C /* Frameworks */,
 				66DCFB841581BCEF00B4918C /* Resources */,
+				6673C684182E0EA0005CEFAF /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1163,17 +1193,51 @@
 			buildActionMask = 2147483647;
 			files = (
 				66DCFB951581BCEF00B4918C /* InfoPlist.strings in Resources */,
+				66684B40182DAAC0005A27B4 /* UIColorWithHex.license in Resources */,
 				6661144716FD67F8005032B9 /* Loose-Leaf-Icon.png in Resources */,
+				66684B3E182DA177005A27B4 /* GPC.license in Resources */,
+				66684B48182DAD05005A27B4 /* 2Geom.license in Resources */,
 				6661144A16FD67FA005032B9 /* Loose-Leaf-Icon@2x.png in Resources */,
 				66B21A59175B0BF30049F1AF /* cloth.png in Resources */,
+				66684B4A182DAEBC005A27B4 /* UIImageRoundedCorner.license in Resources */,
+				66684B46182DACAE005A27B4 /* DrawKit.license in Resources */,
+				66684B3B182D9624005A27B4 /* AGG.license in Resources */,
 				66B843F717B05488008BF8B8 /* Loose-Leaf-Icon72.png in Resources */,
+				66684B44182DAC9B005A27B4 /* CurveFit.license in Resources */,
 				66B843F817B05488008BF8B8 /* Loose-Leaf-Icon144.png in Resources */,
+				66684B31182D887E005A27B4 /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		66684B3C182DA0D3005A27B4 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"$SRCROOT/LooseLeaf\"\n./generateLicenses.pl\n\ntouch \"$SRCROOT/LooseLeaf/Settings.bundle/Root.plist\"\ntouch \"$SRCROOT/LooseLeaf/Settings.bundle\"\n\n#GIT_RELEASE_VERSION=`git describe --tags`\n\n#echo \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\"\n#echo \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\"\n\n#open \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\"\n\n#/usr/libexec/PlistBuddy \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\" -c \"set PreferenceSpecifiers:4:DefaultValue $GIT_RELEASE_VERSION\"\n";
+		};
+		6673C684182E0EA0005CEFAF /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "GIT_RELEASE_VERSION=`git describe --tags`\n\n#echo \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\"\n#echo \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\"\n\n#open \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\"\n\n/usr/libexec/PlistBuddy \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\" -c \"set PreferenceSpecifiers:4:DefaultValue $GIT_RELEASE_VERSION\"";
+		};
 		66C0C9D217838C91009491B3 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1185,7 +1249,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Update the CFBundleShortVersionString in the generated Info.plist using the most recent Git tag.\n# Idea taken from http://tinyurl.com/3usjj9d by Joachim Bondo.\n\n# Get the current release description from Git.\nGIT_RELEASE_SHORT_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\nGIT_RELEASE_VERSION=`git describe --tags`\n\n# Set the CFBundleShortVersionString in the generated Info.plist (stripping off the leading \"v\").\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleShortVersionString\" \"${GIT_RELEASE_SHORT_VERSION#*v}\"\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleVersion\" \"${GIT_RELEASE_VERSION#*v}\"";
+			shellScript = "# Update the CFBundleShortVersionString in the generated Info.plist using the most recent Git tag.\n# Idea taken from http://tinyurl.com/3usjj9d by Joachim Bondo.\n\n# Get the current release description from Git.\nGIT_RELEASE_SHORT_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\nGIT_RELEASE_VERSION=`git describe --tags`\n\n# Set the CFBundleShortVersionString in the generated Info.plist (stripping off the leading \"v\").\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleShortVersionString\" \"$GIT_RELEASE_SHORT_VERSION\"\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleVersion\" \"$GIT_RELEASE_VERSION\"\n\ntouch \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}.plist\"";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1215,7 +1279,6 @@
 				66A3A6BB1791F18900D8FE1D /* UIDevice+PPI.m in Sources */,
 				664F4139159063F8006F8B09 /* MMPlusIcon.m in Sources */,
 				664F413D1590661F006F8B09 /* MMRightArrow.m in Sources */,
-				66A6836D17CE668C007EE218 /* fishhook.c in Sources */,
 				664F414015906628006F8B09 /* MMLeftArrow.m in Sources */,
 				66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */,
 				66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */,
@@ -1223,7 +1286,6 @@
 				663916B317E11AAE000DEC67 /* UIBezierPath+Clipping.mm in Sources */,
 				6667480617C0166100D5C390 /* MMShapeBuilderView.m in Sources */,
 				66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */,
-				66A6836F17CE66B0007EE218 /* QuietAssertMacros.c in Sources */,
 				66CE120317D3AD7C00882275 /* MMBounceButton.m in Sources */,
 				66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */,
 				66BD6E701593A8CC00D4544C /* MMPlusButton.m in Sources */,
