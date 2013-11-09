@@ -45,7 +45,6 @@
 		66684B3B182D9624005A27B4 /* AGG.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B3A182D9624005A27B4 /* AGG.license */; };
 		66684B3E182DA177005A27B4 /* GPC.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B3D182DA177005A27B4 /* GPC.license */; };
 		66684B40182DAAC0005A27B4 /* UIColorWithHex.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B3F182DAAC0005A27B4 /* UIColorWithHex.license */; };
-		66684B42182DAB2F005A27B4 /* fishhook.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B41182DAB2F005A27B4 /* fishhook.license */; };
 		66684B44182DAC9B005A27B4 /* CurveFit.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B43182DAC9B005A27B4 /* CurveFit.license */; };
 		66684B46182DACAE005A27B4 /* DrawKit.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B45182DACAE005A27B4 /* DrawKit.license */; };
 		66684B48182DAD05005A27B4 /* 2Geom.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B47182DAD05005A27B4 /* 2Geom.license */; };
@@ -273,7 +272,6 @@
 		66684B3A182D9624005A27B4 /* AGG.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AGG.license; sourceTree = "<group>"; };
 		66684B3D182DA177005A27B4 /* GPC.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GPC.license; sourceTree = "<group>"; };
 		66684B3F182DAAC0005A27B4 /* UIColorWithHex.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UIColorWithHex.license; sourceTree = "<group>"; };
-		66684B41182DAB2F005A27B4 /* fishhook.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fishhook.license; sourceTree = "<group>"; };
 		66684B43182DAC9B005A27B4 /* CurveFit.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CurveFit.license; sourceTree = "<group>"; };
 		66684B45182DACAE005A27B4 /* DrawKit.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DrawKit.license; sourceTree = "<group>"; };
 		66684B47182DAD05005A27B4 /* 2Geom.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 2Geom.license; sourceTree = "<group>"; };
@@ -763,7 +761,6 @@
 				66684B3A182D9624005A27B4 /* AGG.license */,
 				66684B3D182DA177005A27B4 /* GPC.license */,
 				66684B3F182DAAC0005A27B4 /* UIColorWithHex.license */,
-				66684B41182DAB2F005A27B4 /* fishhook.license */,
 				66684B43182DAC9B005A27B4 /* CurveFit.license */,
 				66684B45182DACAE005A27B4 /* DrawKit.license */,
 				66684B47182DAD05005A27B4 /* 2Geom.license */,
@@ -1195,7 +1192,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66684B42182DAB2F005A27B4 /* fishhook.license in Resources */,
 				66DCFB951581BCEF00B4918C /* InfoPlist.strings in Resources */,
 				66684B40182DAAC0005A27B4 /* UIColorWithHex.license in Resources */,
 				6661144716FD67F8005032B9 /* Loose-Leaf-Icon.png in Resources */,
