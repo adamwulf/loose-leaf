@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>New item</key>
+	<string>shellScript = "cd \"$SRCROOT/LooseLeaf\"\n./generateLicenses.pl\ntouch Settings.bundle";</string>
 	<key>PreferenceSpecifiers</key>
 	<array>
 		<dict>
@@ -34,7 +36,7 @@
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
-			<string>0.1.0</string>
+			<string>1.1.0</string>
 			<key>Key</key>
 			<string>version_preference</string>
 			<key>Title</key>
