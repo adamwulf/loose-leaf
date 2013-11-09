@@ -2,40 +2,50 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Title</key>
-	<string>Loose Leaf</string>
 	<key>PreferenceSpecifiers</key>
 	<array>
 		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>Special Thanks</string>
 			<key>FooterText</key>
 			<string>Thanks</string>
-		</dict>
-		<dict>
+			<key>Title</key>
+			<string>Special Thanks</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
 			<key>Title</key>
 			<string>License</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSChildPaneSpecifier</string>
-			<key>Title</key>
-			<string>Licenses and Acknowledgements</string>
-			<key>File</key>
-			<string>Acknowledgements</string>
-		</dict>
-		<dict>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>File</key>
+			<string>Acknowledgements</string>
+			<key>Title</key>
+			<string>Licenses and Acknowledgements</string>
+			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+		</dict>
+		<dict>
 			<key>Title</key>
 			<string>Copyright 2013 Milestone Made, LLC</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>DefaultValue</key>
+			<string>0.1.0</string>
+			<key>Key</key>
+			<string>version_preference</string>
+			<key>Title</key>
+			<string>Version</string>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
 		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Root</string>
+	<key>Title</key>
+	<string>Loose Leaf</string>
 </dict>
 </plist>
