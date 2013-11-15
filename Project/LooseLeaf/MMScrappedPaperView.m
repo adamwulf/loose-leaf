@@ -466,7 +466,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     // think of a spinning clock. it spins in different directions
                     // if you look at it from the top or bottom.
                     //
-                    // either way, when i rotate the path by -scrap.rotation, it ends up
+                    // either way, when i rotate the path by scrap.rotation, it ends up
                     // in the correct visible space. it works!
                     [inter applyTransform:CGAffineTransformMakeRotation(scrap.rotation)];
                     
