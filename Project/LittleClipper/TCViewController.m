@@ -8,8 +8,10 @@
 
 #import "TCViewController.h"
 #import <TouchShape/TouchShape.h>
+#import <DrawKit-iOS/DrawKit-iOS.h>
 #import "SYSaveMessageView.h"
 #import "SYTableBase.h"
+#import "SYShape+Bezier.h"
 
 @interface TCViewController () 
 
@@ -210,11 +212,22 @@
             NSArray* shapes = [NSArray arrayWithArray:vectorView.shapeList];
             [vectorView clear:nil];
             if([shapes count]){
-                [vectorView addShape:[shapes firstObject]];
+                SYShape* shape = [shapes firstObject];
+
+                [vectorView addShape:shape];
                 // scissor
                 [self drawRecentlyReducedKeyPoints];
                 [vectorView addShape:possibleShape];
                 [vectorView setNeedsDisplay];
+                
+                UIBezierPath* shapePath = shape.bezierPath;
+                UIBezierPath* scissorPath = possibleShape.bezierPath;
+                
+                
+                NSArray* subShapePaths = [shapePath subshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
+                NSArray* foundShapes = [subShapePaths firstObject];
+
+                NSLog(@"found %d shapes", [foundShapes count]);
             }
         }
     }

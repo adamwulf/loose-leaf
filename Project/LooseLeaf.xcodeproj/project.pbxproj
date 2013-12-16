@@ -98,6 +98,7 @@
 		66999065185F75D3005581D9 /* TouchShape.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66999064185F75D3005581D9 /* TouchShape.framework */; };
 		66999066185F75F0005581D9 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66CA1A8B185E77F50013505A /* libc++.dylib */; };
 		6699906A185F77C1005581D9 /* ListGlyphs.png in Resources */ = {isa = PBXBuildFile; fileRef = 66999069185F77C1005581D9 /* ListGlyphs.png */; };
+		6699906B185FB589005581D9 /* SYShape+Bezier.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A471C117C7DEF200C2A5B6 /* SYShape+Bezier.m */; };
 		66A13D3A1631D9D9002F5428 /* MMObjectSelectLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D3F1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A3921817CC4EE000B4974D /* NSArray+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3921717CC4EE000B4974D /* NSArray+Extras.m */; };
@@ -1291,6 +1292,7 @@
 				663DC6D6185F714500FAFE29 /* SYUnitPreview.m in Sources */,
 				663DC6D5185F714500FAFE29 /* SYUnitTestController.m in Sources */,
 				663DC6DC185F715400FAFE29 /* SYSaveMessageView.m in Sources */,
+				6699906B185FB589005581D9 /* SYShape+Bezier.m in Sources */,
 				663DC67D185F6BC800FAFE29 /* MMAppDelegate.m in Sources */,
 				663DC679185F6BC800FAFE29 /* main.m in Sources */,
 				663DC6DD185F715400FAFE29 /* SYTableBase.m in Sources */,
