@@ -12,8 +12,7 @@
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "NSThread+BlockAdditions.h"
 #import "TestFlight.h"
-#import "DrawKit-iOS.h"
-#import "UIBezierPath+Clipping.h"
+#import <DrawKit-iOS/DrawKit-iOS.h>
 
 dispatch_queue_t importThumbnailQueue;
 
@@ -424,9 +423,11 @@ static int count = 0;
             [bez moveToPoint:[element startPoint]];
             [bez addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
             
-            DKUIBezierPathClippingResult* output = [bez clipUnclosedPathToClosedPath:boundsPath];
+            BOOL beginsInside = NO;
+            NSArray* intersections = [bez findIntersectionsWithClosedPath:boundsPath andBeginsInside:&beginsInside];
+            DKUIBezierPathClippingResult* output = [bez clipUnclosedPathToClosedPath:boundsPath usingIntersectionPoints:intersections andBeginsInside:beginsInside];
 
-            if([output.difference isEmpty]){
+            if([output.entireDifferencePath isEmpty]){
                 // if the difference is empty, then that means that the entire
                 // element landed in the intersection. so just add the entire element
                 // to our output
@@ -435,7 +436,7 @@ static int count = 0;
                 // if the element was chopped up somehow, then interate
                 // through the intersection and build new element objects
                 __block CGPoint previousEndpoint = curveElement.startPoint;
-                [output.intersection iteratePathWithBlock:^(CGPathElement pathEle){
+                [output.entireIntersectionPath iteratePathWithBlock:^(CGPathElement pathEle){
                     AbstractBezierPathElement* newElement = nil;
                     if(pathEle.type == kCGPathElementAddCurveToPoint){
                         // curve

@@ -8,6 +8,9 @@
       location = "group:Submodules/touch-chart/TouchChart/TouchChart.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:Submodules/DrawKit-iOS/DrawKit-iOS.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "container:Project/LooseLeaf.xcodeproj">
    </FileRef>
 </Workspace>

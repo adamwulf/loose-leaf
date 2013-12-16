@@ -13,14 +13,13 @@
 #import "MMScrapContainerView.h"
 #import "NSThread+BlockAdditions.h"
 #import "NSArray+Extras.h"
-#import "DrawKit-iOS.h"
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "MMDebugDrawView.h"
 #import "MMScrapsOnPaperState.h"
 #import "MMImmutableScrapsOnPaperState.h"
-#import "DKUIBezierPathClippedSegmentTPair.h"
 #import <JotUI/UIColor+JotHelper.h>
+#import <DrawKit-iOS/DrawKit-iOS.h>
 
 
 @implementation MMScrappedPaperView{
@@ -314,13 +313,15 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 //
                 // this will let us calcualte how much the width/color/rotation
                 // change during each split
-                DKUIBezierPathClippingResult* clippingAndIntersectionMetaInformation = [strokePath clipUnclosedPathToClosedPath:scrapClippingPath];
+                BOOL beginsInside = NO;
+                NSArray* intersections = [strokePath findIntersectionsWithClosedPath:scrapClippingPath andBeginsInside:&beginsInside];
+                DKUIBezierPathClippingResult* clippingAndIntersectionMetaInformation = [strokePath clipUnclosedPathToClosedPath:scrapClippingPath usingIntersectionPoints:intersections andBeginsInside:beginsInside];
                 
                 // track which elements we should add to the scrap
                 // instead of continue to chop and add to the page / other scrap
                 NSMutableArray* elementsToAddToScrap = [NSMutableArray array];
 
-                if([clippingAndIntersectionMetaInformation.intersection isEmpty]){
+                if([clippingAndIntersectionMetaInformation.entireIntersectionPath isEmpty]){
                     //
                     // we can't make the same optimization for [.difference isEmpty],
                     // because the element needs to be transformed into the scrap's
@@ -358,9 +359,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     colorDiff[1] = elementColor[1] - prevColor[1];
                     colorDiff[2] = elementColor[2] - prevColor[2];
                     colorDiff[3] = elementColor[3] - prevColor[3];
-                    [clippingAndIntersectionMetaInformation.difference iteratePathWithBlock:^(CGPathElement pathEle){
+                    [clippingAndIntersectionMetaInformation.entireDifferencePath iteratePathWithBlock:^(CGPathElement pathEle){
                         AbstractBezierPathElement* newElement = nil;
-                        DKUIBezierPathClippedSegmentTPair* clippingInformation = [clippingAndIntersectionMetaInformation.differenceTValues objectAtIndex:clippingInformationIndex];
+                        DKUIBezierPathClippedSegment* clippingInformation = [clippingAndIntersectionMetaInformation.differenceSegments objectAtIndex:clippingInformationIndex];
                         //
                         // there are two possibilities - either it's a move to
                         // or a curve/line to.
@@ -371,7 +372,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                             newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
                             previousEndpoint = pathEle.points[0];
                             
-                            CGFloat tValueAtStartPoint = clippingInformation.tValueStart.tValue1;
+                            CGFloat tValueAtStartPoint = clippingInformation.startIntersection.tValue1;
                             CGFloat red = prevColor[0] + colorDiff[0] * tValueAtStartPoint;
                             CGFloat green = prevColor[1] + colorDiff[1] * tValueAtStartPoint;
                             CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtStartPoint;
@@ -404,7 +405,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                             }
                             
                             // be sure to set color/width/etc
-                            CGFloat tValueAtEndPoint = clippingInformation.tValueEnd.tValue1;
+                            CGFloat tValueAtEndPoint = clippingInformation.endIntersection.tValue1;
                             if(element.color){
                                 CGFloat red = prevColor[0] + colorDiff[0] * tValueAtEndPoint;
                                 CGFloat green = prevColor[1] + colorDiff[1] * tValueAtEndPoint;
@@ -431,7 +432,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     // I'm applying transforms to this path below, so if i were to
                     // reuse this path I'd want to [copy] it. but i don't need to
                     // because I only use it once.
-                    UIBezierPath* inter = clippingAndIntersectionMetaInformation.intersection;
+                    UIBezierPath* inter = clippingAndIntersectionMetaInformation.entireIntersectionPath;
                     // if the intersection contains any segments at all
                     
                     previousEndpoint = strokePath.firstPoint;
@@ -485,11 +486,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     // now add it to the scrap!
                     [inter iteratePathWithBlock:^(CGPathElement pathEle){
                         AbstractBezierPathElement* newElement = nil;
-                        DKUIBezierPathClippedSegmentTPair* clippingInformation = [clippingAndIntersectionMetaInformation.intersectionTValues objectAtIndex:clippingInformationIndex];
+                        DKUIBezierPathClippedSegment* clippingInformation = [clippingAndIntersectionMetaInformation.intersectionSegments objectAtIndex:clippingInformationIndex];
                         if(pathEle.type == kCGPathElementMoveToPoint){
                             newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
                             previousEndpoint = pathEle.points[0];
-                            CGFloat tValueAtStartPoint = clippingInformation.tValueStart.tValue1;
+                            CGFloat tValueAtStartPoint = clippingInformation.startIntersection.tValue1;
                             if(element.color){
                                 CGFloat red = prevColor[0] + colorDiff[0] * tValueAtStartPoint;
                                 CGFloat green = prevColor[1] + colorDiff[1] * tValueAtStartPoint;
@@ -515,7 +516,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                                 newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
                                 previousEndpoint = pathEle.points[0];
                             }
-                            CGFloat tValueAtEndPoint = clippingInformation.tValueEnd.tValue1;
+                            CGFloat tValueAtEndPoint = clippingInformation.endIntersection.tValue1;
                             if(element.color){
                                 CGFloat red = prevColor[0] + colorDiff[0] * tValueAtEndPoint;
                                 CGFloat green = prevColor[1] + colorDiff[1] * tValueAtEndPoint;
