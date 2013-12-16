@@ -4,15 +4,15 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>LittleClipper.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>7</integer>
+		</dict>
 		<key>Loose Leaf.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
-		</dict>
-		<key>LooseLeaf-Alt.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>7</integer>
 		</dict>
 		<key>LooseLeaf.xcscheme</key>
 		<dict>
@@ -22,6 +22,16 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>663DC66D185F6BC800FAFE29</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>663DC683185F6BC800FAFE29</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>666F099F185E64B10074CE6B</key>
 		<dict>
 			<key>primary</key>

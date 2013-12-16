@@ -30,7 +30,7 @@
 @synthesize didExitToBezel;
 @synthesize scaleDirection;
 
-NSInteger const  minimumNumberOfTouches = 2;
+NSInteger const  mmMinimumNumberOfTouches = 2;
 
 
 -(id) init{
@@ -80,7 +80,7 @@ NSInteger const  minimumNumberOfTouches = 2;
 
 
 -(CGPoint)locationInView:(UIView *)view{
-    if([validTouches count] >= minimumNumberOfTouches){
+    if([validTouches count] >= mmMinimumNumberOfTouches){
         CGPoint loc1 = [[validTouches firstObject] locationInView:self.view];
         CGPoint loc2 = [[validTouches objectAtIndex:1] locationInView:self.view];
         lastLocationInView = CGPointMake((loc1.x + loc2.x) / 2 - locationAdjustment.x, (loc1.y + loc2.y) / 2 - locationAdjustment.y);
@@ -96,7 +96,7 @@ NSInteger const  minimumNumberOfTouches = 2;
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
-    BOOL isBeginning = [validTouches count] < minimumNumberOfTouches;
+    BOOL isBeginning = [validTouches count] < mmMinimumNumberOfTouches;
     // ignore all the touches that could be bezel touches
     if([validTouchesCurrentlyBeginning count]){
         // look at the presentation of the view (as would be seen during animation)
@@ -120,13 +120,13 @@ NSInteger const  minimumNumberOfTouches = 2;
         
         [self processPossibleTouches];
 
-        if([validTouches count] >= minimumNumberOfTouches && isBeginning){
+        if([validTouches count] >= mmMinimumNumberOfTouches && isBeginning){
             self.state = UIGestureRecognizerStateBegan;
             initialDistance = 0;
             scale = 1;
             secondToLastTouchDidBezel = NO;
             didExitToBezel = MMBezelDirectionNone;
-        }else if([validTouches count] <= minimumNumberOfTouches){
+        }else if([validTouches count] <= mmMinimumNumberOfTouches){
             didExitToBezel = MMBezelDirectionNone;
             //
             // ok, they just bezelled and brought their second
@@ -154,7 +154,7 @@ NSInteger const  minimumNumberOfTouches = 2;
             }
         }
         
-        if([possibleTouches count] >= minimumNumberOfTouches){
+        if([possibleTouches count] >= mmMinimumNumberOfTouches){
             [scrapDelegate ownershipOfTouches:[possibleTouches set] isGesture:self];
             [validTouches addObjectsInSet:[possibleTouches set]];
             [possibleTouches removeAllObjects];
@@ -307,7 +307,7 @@ NSInteger const  minimumNumberOfTouches = 2;
             // double counting the last two touches.
             if(didExitToBezel != MMBezelDirectionNone &&
                !secondToLastTouchDidBezel &&
-               ([validTouches count] - [validTouchesCurrentlyEnding count]) < minimumNumberOfTouches){
+               ([validTouches count] - [validTouchesCurrentlyEnding count]) < mmMinimumNumberOfTouches){
                 if([validTouches count] - [validTouchesCurrentlyEnding count] == 1){
                     // that was the 2nd to last touch!
                     // set this flag so we don't double count it when the last
@@ -368,7 +368,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     }
     [self processPossibleTouches];
 
-    if([validTouches count] >= minimumNumberOfTouches){
+    if([validTouches count] >= mmMinimumNumberOfTouches){
         // reset the location and the initial distance of the gesture
         // so that the new first two touches position won't immediatley
         // change where the page is or what its scale is

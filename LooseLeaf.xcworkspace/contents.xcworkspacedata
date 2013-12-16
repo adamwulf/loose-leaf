@@ -5,7 +5,7 @@
       location = "group:Project/../Submodules/JotUI/JotUI/JotUI.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Submodules/touch-chart/TouchChart/TouchChart.xcodeproj">
+      location = "group:Submodules/touch-chart/TouchChart/TouchShape.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Submodules/DrawKit-iOS/DrawKit-iOS.xcodeproj">
