@@ -18,6 +18,8 @@
 
 @interface TCViewController : UIViewController <SYUnitTestDelegate,SYPaintViewDelegate> {
     
+    IBOutlet UISegmentedControl* shapeVsScissorChooser;
+    
     // Views
     IBOutlet SYPaintView *paintView;        // Get the points from the finger touch
     IBOutlet SYVectorView *vectorView;      // Will draw the final shape

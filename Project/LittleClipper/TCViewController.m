@@ -196,15 +196,34 @@
 {
     SYShape* possibleShape = [shapeController getFigurePaintedWithTolerance:[toleranceSlider value]*0.0001 andContinuity:[continuitySlider value]];
     if(possibleShape){
-        [self drawRecentlyReducedKeyPoints];
-        [vectorView addShape:possibleShape];
-        [vectorView setNeedsDisplay];
+        if(shapeVsScissorChooser.selectedSegmentIndex == 0){
+            // shape
+            [vectorView clear:nil];
+            // must be closed
+            if(possibleShape.isClosedCurve){
+                [self drawRecentlyReducedKeyPoints];
+                [vectorView addShape:possibleShape];
+                [vectorView setNeedsDisplay];
+            }
+        }else{
+            
+            NSArray* shapes = [NSArray arrayWithArray:vectorView.shapeList];
+            [vectorView clear:nil];
+            if([shapes count]){
+                [vectorView addShape:[shapes firstObject]];
+                // scissor
+                [self drawRecentlyReducedKeyPoints];
+                [vectorView addShape:possibleShape];
+                [vectorView setNeedsDisplay];
+            }
+        }
     }
     return possibleShape;
 }
 
 
 - (void) drawRecentlyReducedKeyPoints{
+    return;
     NSDictionary* output = [shapeController recentlyReducedKeyPoints];
     // --------------------------------------------------------------------------
     

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="4471.1" systemVersion="12E55" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="4510" systemVersion="13A603" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none">
     <dependencies>
-        <deployment defaultVersion="1280" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3697.3"/>
+        <deployment defaultVersion="1792" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TCViewController">
@@ -12,6 +12,7 @@
                 <outlet property="nameTextField" destination="47" id="54"/>
                 <outlet property="paintView" destination="17" id="100"/>
                 <outlet property="selectCaseNameView" destination="44" id="55"/>
+                <outlet property="shapeVsScissorChooser" destination="KX6-wU-SF2" id="hHV-Ys-K1g"/>
                 <outlet property="tableBase" destination="73" id="81"/>
                 <outlet property="toleranceLabel" destination="123" id="125"/>
                 <outlet property="toleranceSlider" destination="119" id="121"/>
@@ -87,6 +88,14 @@
                         <action selector="clear:" destination="25" eventType="touchUpInside" id="103"/>
                     </connections>
                 </button>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="KX6-wU-SF2">
+                    <rect key="frame" x="824" y="17" width="155" height="29"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                    <segments>
+                        <segment title="Shape"/>
+                        <segment title="Scissor"/>
+                    </segments>
+                </segmentedControl>
                 <view contentMode="scaleToFill" id="73" userLabel="Unit Test" customClass="SYTableBase">
                     <rect key="frame" x="0.0" y="0.0" width="1024" height="748"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -106,7 +115,7 @@
                                 <action selector="switchShowTable:" destination="65" eventType="touchUpInside" id="113"/>
                             </connections>
                         </button>
-                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" rowHeight="77" sectionHeaderHeight="22" sectionFooterHeight="22" id="76">
+                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="77" sectionHeaderHeight="22" sectionFooterHeight="22" id="76">
                             <rect key="frame" x="36" y="81" width="450" height="473"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
