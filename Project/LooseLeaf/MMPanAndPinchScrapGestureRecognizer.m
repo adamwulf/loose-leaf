@@ -412,7 +412,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
             self.state = UIGestureRecognizerStateFailed;
         }
     }
-    if([validTouches count] >= mmMinimumNumberOfScrapTouchesmmMinimumNumberOfScrapTouches && [validTouchesCurrentlyEnding count]){
+    if([validTouches count] >= mmMinimumNumberOfScrapTouches && [validTouchesCurrentlyEnding count]){
         // reset the location and the initial distance of the gesture
         // so that the new first two touches position won't immediatley
         // change where the page is or what its scale is

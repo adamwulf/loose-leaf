@@ -7,15 +7,25 @@
 //
 
 #import "MMAppDelegate.h"
+#import "TCViewController.h"
+#import <Parse/Parse.h>
 
 @implementation MMAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [Parse setApplicationId:@"76bwsqt4o4rd86YA5yP721x40U9GeVHKmT1SMrYj"
+                  clientKey:@"I5yKuzzsYl1eAepzv5LiFVhrdkpPCxJ21atftyVK"];
+    
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+
     // Override point for customization after application launch.
-    self.window.backgroundColor = [UIColor whiteColor];
+    self.viewController = [[TCViewController alloc] initWithNibName:@"LittleClipper" bundle:nil];
+    
+    self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
+    
     return YES;
 }
 

@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+@class TCViewController;
+
 @interface MMAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) TCViewController *viewController;
 
 @end
