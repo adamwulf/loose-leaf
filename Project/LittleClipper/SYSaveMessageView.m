@@ -94,17 +94,22 @@
     CGContextRestoreGState(context);
     
     
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+    paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+    paragraphStyle.alignment = NSTextAlignmentCenter;
     
     // Title Drawing
     CGRect titleRect = CGRectMake(1, 24, 323, 32);
-    [[UIColor whiteColor] setFill];
-    [titleContent drawInRect:titleRect withFont: [UIFont fontWithName: @"HelveticaNeue-Bold" size: 16] lineBreakMode: NSLineBreakByWordWrapping alignment:NSTextAlignmentCenter];
+    [titleContent drawInRect:titleRect withAttributes:@{ NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Bold" size: 16],
+                                                         NSForegroundColorAttributeName: [UIColor whiteColor],
+                                                         NSParagraphStyleAttributeName: paragraphStyle}];
     
     
     // Subtitle Drawing
     CGRect subtitleRect = CGRectMake(1, 52, 323, 32);
-    [[UIColor whiteColor] setFill];
-    [subtitleContent drawInRect: subtitleRect withFont: [UIFont fontWithName: @"HelveticaNeue" size: [UIFont systemFontSize]] lineBreakMode: NSLineBreakByWordWrapping alignment: NSTextAlignmentCenter];
+    [subtitleContent drawInRect:subtitleRect withAttributes:@{ NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue" size: [UIFont systemFontSize]],
+                                                               NSForegroundColorAttributeName: [UIColor whiteColor],
+                                                               NSParagraphStyleAttributeName: paragraphStyle}];
     
     
     // Button Normal Outter Stroke Drawing
@@ -131,7 +136,9 @@
     CGContextSaveGState(context);
     CGContextSetShadowWithColor(context, buttonLabelShadowOffset, buttonLabelShadowBlurRadius, buttonLabelShadow.CGColor);
     [[UIColor whiteColor] setFill];
-    [buttonNormalLabelContent drawInRect: buttonNormalLabelRect withFont: [UIFont fontWithName: @"HelveticaNeue-Bold" size: 13] lineBreakMode: NSLineBreakByWordWrapping alignment: NSTextAlignmentCenter];
+    [buttonNormalLabelContent drawInRect:buttonNormalLabelRect withAttributes:@{ NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Bold" size: 13],
+                                                                                 NSForegroundColorAttributeName: [UIColor whiteColor],
+                                                                                 NSParagraphStyleAttributeName: paragraphStyle}];
     CGContextRestoreGState(context);
     
     
@@ -160,7 +167,9 @@
     CGContextSaveGState(context);
     CGContextSetShadowWithColor(context, buttonLabelShadowOffset, buttonLabelShadowBlurRadius, buttonLabelShadow.CGColor);
     [[UIColor whiteColor] setFill];
-    [buttonHighlightLabelContent drawInRect: buttonHighlightLabelRect withFont: [UIFont fontWithName: @"HelveticaNeue-Bold" size: 13] lineBreakMode: NSLineBreakByWordWrapping alignment: NSTextAlignmentCenter];
+    [buttonHighlightLabelContent drawInRect:buttonHighlightLabelRect withAttributes:@{ NSFontAttributeName: [UIFont fontWithName: @"HelveticaNeue-Bold" size: 13],
+                                                                                       NSForegroundColorAttributeName: [UIColor whiteColor],
+                                                                                       NSParagraphStyleAttributeName: paragraphStyle}];
     CGContextRestoreGState(context);
     
     
