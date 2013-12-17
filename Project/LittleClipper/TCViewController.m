@@ -197,6 +197,7 @@
 - (SYShape*) getFigurePainted
 {
     SYShape* possibleShape = [shapeController getFigurePaintedWithTolerance:[toleranceSlider value]*0.0001 andContinuity:[continuitySlider value]];
+    [filledShapeView clear];
     if(possibleShape){
         if(shapeVsScissorChooser.selectedSegmentIndex == 0){
             // shape
@@ -226,8 +227,15 @@
                 
                 NSArray* subShapePaths = [shapePath subshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
                 NSArray* foundShapes = [subShapePaths firstObject];
+                
+                NSLog(@"Cutting Shape: %@", shapePath);
+                NSLog(@"With Scissor: %@", scissorPath);
 
                 NSLog(@"found %d shapes", [foundShapes count]);
+                
+                for(DKUIBezierPathShape* cutShapePath in foundShapes){
+                    [filledShapeView addShapePath:cutShapePath.fullPath];
+                }
             }
         }
     }

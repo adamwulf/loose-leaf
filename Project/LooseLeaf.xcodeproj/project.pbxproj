@@ -99,6 +99,8 @@
 		66999066185F75F0005581D9 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66CA1A8B185E77F50013505A /* libc++.dylib */; };
 		6699906A185F77C1005581D9 /* ListGlyphs.png in Resources */ = {isa = PBXBuildFile; fileRef = 66999069185F77C1005581D9 /* ListGlyphs.png */; };
 		6699906B185FB589005581D9 /* SYShape+Bezier.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A471C117C7DEF200C2A5B6 /* SYShape+Bezier.m */; };
+		6699906F185FB682005581D9 /* MMFilledShapeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6699906E185FB682005581D9 /* MMFilledShapeView.m */; };
+		66999070185FBA6E005581D9 /* UIColor+ColorWithHex.m in Sources */ = {isa = PBXBuildFile; fileRef = 665CAC2417B58FC8000BD505 /* UIColor+ColorWithHex.m */; };
 		66A13D3A1631D9D9002F5428 /* MMObjectSelectLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D3F1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A3921817CC4EE000B4974D /* NSArray+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3921717CC4EE000B4974D /* NSArray+Extras.m */; };
@@ -316,6 +318,8 @@
 		66999062185F758A005581D9 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		66999064185F75D3005581D9 /* TouchShape.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TouchShape.framework; path = "../Submodules/touch-chart/TouchChart/build/Debug-iphoneos/TouchShape.framework"; sourceTree = "<group>"; };
 		66999069185F77C1005581D9 /* ListGlyphs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ListGlyphs.png; sourceTree = "<group>"; };
+		6699906D185FB682005581D9 /* MMFilledShapeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFilledShapeView.h; sourceTree = "<group>"; };
+		6699906E185FB682005581D9 /* MMFilledShapeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFilledShapeView.m; sourceTree = "<group>"; };
 		66A13D381631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMObjectSelectLongPressGestureRecognizer.h; sourceTree = "<group>"; };
 		66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMObjectSelectLongPressGestureRecognizer.m; sourceTree = "<group>"; };
 		66A13D3E1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImmovableTapGestureRecognizer.h; sourceTree = "<group>"; };
@@ -575,6 +579,7 @@
 		663DC672185F6BC800FAFE29 /* LittleClipper */ = {
 			isa = PBXGroup;
 			children = (
+				6699906C185FB667005581D9 /* ShapeFillerView */,
 				663DC6D7185F714A00FAFE29 /* Paint Code */,
 				663DC6D0185F713C00FAFE29 /* Test Classes */,
 				663DC6CF185F712900FAFE29 /* View Controllers */,
@@ -837,6 +842,15 @@
 				666F09B8185E64B20074CE6B /* XCTest.framework */,
 			);
 			name = LooseLeaf;
+			sourceTree = "<group>";
+		};
+		6699906C185FB667005581D9 /* ShapeFillerView */ = {
+			isa = PBXGroup;
+			children = (
+				6699906D185FB682005581D9 /* MMFilledShapeView.h */,
+				6699906E185FB682005581D9 /* MMFilledShapeView.m */,
+			);
+			name = ShapeFillerView;
 			sourceTree = "<group>";
 		};
 		66A13D3C1631E06D002F5428 /* Object Selection */ = {
@@ -1289,7 +1303,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				663DC6CE185F712700FAFE29 /* TCViewController.m in Sources */,
+				6699906F185FB682005581D9 /* MMFilledShapeView.m in Sources */,
 				663DC6D6185F714500FAFE29 /* SYUnitPreview.m in Sources */,
+				66999070185FBA6E005581D9 /* UIColor+ColorWithHex.m in Sources */,
 				663DC6D5185F714500FAFE29 /* SYUnitTestController.m in Sources */,
 				663DC6DC185F715400FAFE29 /* SYSaveMessageView.m in Sources */,
 				6699906B185FB589005581D9 /* SYShape+Bezier.m in Sources */,

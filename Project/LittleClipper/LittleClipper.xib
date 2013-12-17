@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="continuityLabel" destination="122" id="124"/>
                 <outlet property="continuitySlider" destination="114" id="115"/>
+                <outlet property="filledShapeView" destination="u8b-wO-8ks" id="SqN-m8-pJr"/>
                 <outlet property="nameTextField" destination="47" id="54"/>
                 <outlet property="paintView" destination="17" id="100"/>
                 <outlet property="selectCaseNameView" destination="44" id="55"/>
@@ -25,21 +26,26 @@
             <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" id="17" customClass="SYPaintView">
+                <view opaque="NO" contentMode="scaleToFill" id="17" customClass="SYPaintView">
                     <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <subviews>
-                        <view userInteractionEnabled="NO" contentMode="scaleToFill" id="25" customClass="SYVectorView">
+                        <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" id="25" customClass="SYVectorView">
                             <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <connections>
                         <outlet property="delegate" destination="-1" id="brr-iF-OTt"/>
                         <outlet property="unitTestController" destination="65" id="101"/>
                     </connections>
+                </view>
+                <view contentMode="scaleToFill" id="u8b-wO-8ks" customClass="MMFilledShapeView">
+                    <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="89" userLabel="Button List">
                     <rect key="frame" x="47" y="0.0" width="56" height="53"/>

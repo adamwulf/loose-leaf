@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import <TouchShape/TouchShape.h>
+#import <DrawKit-iOS/DrawKit-iOS.h>
 #import "SYUnitTestController.h"
+#import "MMFilledShapeView.h"
 
 @class SYSaveMessageView;
 @class SYPaintView;
@@ -19,6 +21,7 @@
 @interface TCViewController : UIViewController <SYUnitTestDelegate,SYPaintViewDelegate> {
     
     IBOutlet UISegmentedControl* shapeVsScissorChooser;
+    IBOutlet MMFilledShapeView* filledShapeView;
     
     // Views
     IBOutlet SYPaintView *paintView;        // Get the points from the finger touch
