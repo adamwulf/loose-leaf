@@ -10,15 +10,15 @@
 #import <QuartzCore/QuartzCore.h>
 #import <TouchShape/TouchShape.h>
 #import <DrawKit-iOS/DrawKit-iOS.h>
-#import "SYUnitTestController.h"
 #import "MMFilledShapeView.h"
+#import <MessageUI/MFMailComposeViewController.h>
 
 @class SYSaveMessageView;
 @class SYPaintView;
 @class SYVectorView;
 @class SYTableBase;
 
-@interface TCViewController : UIViewController <SYUnitTestDelegate,SYPaintViewDelegate> {
+@interface TCViewController : UIViewController <MFMailComposeViewControllerDelegate,SYPaintViewDelegate> {
     
     IBOutlet UISegmentedControl* shapeVsScissorChooser;
     IBOutlet MMFilledShapeView* filledShapeView;
@@ -26,11 +26,6 @@
     // Views
     IBOutlet SYPaintView *paintView;        // Get the points from the finger touch
     IBOutlet SYVectorView *vectorView;      // Will draw the final shape
-
-    // Test
-    IBOutlet SYTableBase *tableBase;
-    IBOutlet SYSaveMessageView *selectCaseNameView;
-    IBOutlet UITextField *nameTextField;
     
     IBOutlet UISlider *continuitySlider;
     IBOutlet UISlider *toleranceSlider;
@@ -40,10 +35,7 @@
 }
 
 // Test Methods
-- (IBAction) selectName:(id)sender;
 - (IBAction) saveCase:(id)sender;
-- (IBAction) cancelCase:(id)sender;
-- (void) importCase:(NSArray *) allPoints;
 
 - (SYShape*) getFigurePainted;
 

@@ -30,8 +30,6 @@
 		663DC67F185F6BC800FAFE29 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 663DC67E185F6BC800FAFE29 /* Images.xcassets */; };
 		663DC6CB185F709200FAFE29 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663DC6CA185F709200FAFE29 /* Parse.framework */; };
 		663DC6CE185F712700FAFE29 /* TCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 663DC6CD185F712700FAFE29 /* TCViewController.m */; };
-		663DC6D5185F714500FAFE29 /* SYUnitTestController.m in Sources */ = {isa = PBXBuildFile; fileRef = 663DC6D2185F714500FAFE29 /* SYUnitTestController.m */; };
-		663DC6D6185F714500FAFE29 /* SYUnitPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = 663DC6D4185F714500FAFE29 /* SYUnitPreview.m */; };
 		663DC6DC185F715400FAFE29 /* SYSaveMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 663DC6D9185F715400FAFE29 /* SYSaveMessageView.m */; };
 		663DC6DD185F715400FAFE29 /* SYTableBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 663DC6DB185F715400FAFE29 /* SYTableBase.m */; };
 		663DC6E4185F724D00FAFE29 /* UnitTestCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 663DC6E3185F724D00FAFE29 /* UnitTestCell.xib */; };
@@ -101,6 +99,7 @@
 		6699906B185FB589005581D9 /* SYShape+Bezier.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A471C117C7DEF200C2A5B6 /* SYShape+Bezier.m */; };
 		6699906F185FB682005581D9 /* MMFilledShapeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6699906E185FB682005581D9 /* MMFilledShapeView.m */; };
 		66999070185FBA6E005581D9 /* UIColor+ColorWithHex.m in Sources */ = {isa = PBXBuildFile; fileRef = 665CAC2417B58FC8000BD505 /* UIColor+ColorWithHex.m */; };
+		6699907418615D50005581D9 /* UIBezierPath+Description.m in Sources */ = {isa = PBXBuildFile; fileRef = 6699907318615D50005581D9 /* UIBezierPath+Description.m */; };
 		66A13D3A1631D9D9002F5428 /* MMObjectSelectLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D3F1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A3921817CC4EE000B4974D /* NSArray+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3921717CC4EE000B4974D /* NSArray+Extras.m */; };
@@ -120,6 +119,8 @@
 		66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A75175E559E0049F1AF /* NSArray+Map.m */; };
 		66B21A7A175E595B0049F1AF /* MMBlockOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A79175E595B0049F1AF /* MMBlockOperation.m */; };
 		66B3522517A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B3522417A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m */; };
+		66B50FCC1862B5E00032F704 /* 110-bug.png in Resources */ = {isa = PBXBuildFile; fileRef = 66B50FCB1862B5E00032F704 /* 110-bug.png */; };
+		66B50FCE1862B7D30032F704 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66B50FCD1862B7D30032F704 /* MessageUI.framework */; };
 		66B51A2A17AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B51A2917AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66B843F717B05488008BF8B8 /* Loose-Leaf-Icon72.png in Resources */ = {isa = PBXBuildFile; fileRef = 66B843F517B05488008BF8B8 /* Loose-Leaf-Icon72.png */; };
 		66B843F817B05488008BF8B8 /* Loose-Leaf-Icon144.png in Resources */ = {isa = PBXBuildFile; fileRef = 66B843F617B05488008BF8B8 /* Loose-Leaf-Icon144.png */; };
@@ -209,10 +210,6 @@
 		663DC6CA185F709200FAFE29 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = "../Submodules/touch-chart/TouchChart/Parse.framework"; sourceTree = "<group>"; };
 		663DC6CC185F712700FAFE29 /* TCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCViewController.h; sourceTree = "<group>"; };
 		663DC6CD185F712700FAFE29 /* TCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCViewController.m; sourceTree = "<group>"; };
-		663DC6D1185F714500FAFE29 /* SYUnitTestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYUnitTestController.h; sourceTree = "<group>"; };
-		663DC6D2185F714500FAFE29 /* SYUnitTestController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYUnitTestController.m; sourceTree = "<group>"; };
-		663DC6D3185F714500FAFE29 /* SYUnitPreview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYUnitPreview.h; sourceTree = "<group>"; };
-		663DC6D4185F714500FAFE29 /* SYUnitPreview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYUnitPreview.m; sourceTree = "<group>"; };
 		663DC6D8185F715400FAFE29 /* SYSaveMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYSaveMessageView.h; sourceTree = "<group>"; };
 		663DC6D9185F715400FAFE29 /* SYSaveMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYSaveMessageView.m; sourceTree = "<group>"; };
 		663DC6DA185F715400FAFE29 /* SYTableBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYTableBase.h; sourceTree = "<group>"; };
@@ -320,6 +317,8 @@
 		66999069185F77C1005581D9 /* ListGlyphs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ListGlyphs.png; sourceTree = "<group>"; };
 		6699906D185FB682005581D9 /* MMFilledShapeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFilledShapeView.h; sourceTree = "<group>"; };
 		6699906E185FB682005581D9 /* MMFilledShapeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFilledShapeView.m; sourceTree = "<group>"; };
+		6699907218615D50005581D9 /* UIBezierPath+Description.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+Description.h"; sourceTree = "<group>"; };
+		6699907318615D50005581D9 /* UIBezierPath+Description.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+Description.m"; sourceTree = "<group>"; };
 		66A13D381631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMObjectSelectLongPressGestureRecognizer.h; sourceTree = "<group>"; };
 		66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMObjectSelectLongPressGestureRecognizer.m; sourceTree = "<group>"; };
 		66A13D3E1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImmovableTapGestureRecognizer.h; sourceTree = "<group>"; };
@@ -360,6 +359,8 @@
 		66B21A79175E595B0049F1AF /* MMBlockOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBlockOperation.m; sourceTree = "<group>"; };
 		66B3522317A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIGestureRecognizer+GestureDebug.h"; sourceTree = "<group>"; };
 		66B3522417A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIGestureRecognizer+GestureDebug.m"; sourceTree = "<group>"; };
+		66B50FCB1862B5E00032F704 /* 110-bug.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "110-bug.png"; sourceTree = "<group>"; };
+		66B50FCD1862B7D30032F704 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		66B51A2817AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBezelInLeftGestureRecognizer.h; sourceTree = "<group>"; };
 		66B51A2917AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBezelInLeftGestureRecognizer.m; sourceTree = "<group>"; };
 		66B62C5017F247B7006D31EB /* MMEditablePaperViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEditablePaperViewDelegate.h; sourceTree = "<group>"; };
@@ -457,6 +458,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66B50FCE1862B7D30032F704 /* MessageUI.framework in Frameworks */,
 				66999066185F75F0005581D9 /* libc++.dylib in Frameworks */,
 				66999065185F75D3005581D9 /* TouchShape.framework in Frameworks */,
 				66999063185F758A005581D9 /* libsqlite3.dylib in Frameworks */,
@@ -579,9 +581,9 @@
 		663DC672185F6BC800FAFE29 /* LittleClipper */ = {
 			isa = PBXGroup;
 			children = (
+				6699907118615D42005581D9 /* Categories */,
 				6699906C185FB667005581D9 /* ShapeFillerView */,
 				663DC6D7185F714A00FAFE29 /* Paint Code */,
-				663DC6D0185F713C00FAFE29 /* Test Classes */,
 				663DC6CF185F712900FAFE29 /* View Controllers */,
 				663DC67B185F6BC800FAFE29 /* MMAppDelegate.h */,
 				663DC67C185F6BC800FAFE29 /* MMAppDelegate.m */,
@@ -594,6 +596,7 @@
 		663DC673185F6BC800FAFE29 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				66B50FCB1862B5E00032F704 /* 110-bug.png */,
 				66999069185F77C1005581D9 /* ListGlyphs.png */,
 				663DC6E8185F72DE00FAFE29 /* LittleClipper.xib */,
 				663DC6E3185F724D00FAFE29 /* UnitTestCell.xib */,
@@ -612,17 +615,6 @@
 				663DC6CD185F712700FAFE29 /* TCViewController.m */,
 			);
 			name = "View Controllers";
-			sourceTree = "<group>";
-		};
-		663DC6D0185F713C00FAFE29 /* Test Classes */ = {
-			isa = PBXGroup;
-			children = (
-				663DC6D1185F714500FAFE29 /* SYUnitTestController.h */,
-				663DC6D2185F714500FAFE29 /* SYUnitTestController.m */,
-				663DC6D3185F714500FAFE29 /* SYUnitPreview.h */,
-				663DC6D4185F714500FAFE29 /* SYUnitPreview.m */,
-			);
-			name = "Test Classes";
 			sourceTree = "<group>";
 		};
 		663DC6D7185F714A00FAFE29 /* Paint Code */ = {
@@ -853,6 +845,15 @@
 			name = ShapeFillerView;
 			sourceTree = "<group>";
 		};
+		6699907118615D42005581D9 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				6699907218615D50005581D9 /* UIBezierPath+Description.h */,
+				6699907318615D50005581D9 /* UIBezierPath+Description.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
 		66A13D3C1631E06D002F5428 /* Object Selection */ = {
 			isa = PBXGroup;
 			children = (
@@ -1062,6 +1063,7 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				66B50FCD1862B7D30032F704 /* MessageUI.framework */,
 				6699904C185F74C1005581D9 /* LittleClipper */,
 				6699904D185F74DC005581D9 /* LooseLeaf */,
 			);
@@ -1225,6 +1227,7 @@
 				663DC677185F6BC800FAFE29 /* InfoPlist.strings in Resources */,
 				663DC6E4185F724D00FAFE29 /* UnitTestCell.xib in Resources */,
 				663DC67F185F6BC800FAFE29 /* Images.xcassets in Resources */,
+				66B50FCC1862B5E00032F704 /* 110-bug.png in Resources */,
 				6699906A185F77C1005581D9 /* ListGlyphs.png in Resources */,
 				663DC6E9185F72DE00FAFE29 /* LittleClipper.xib in Resources */,
 			);
@@ -1304,11 +1307,10 @@
 			files = (
 				663DC6CE185F712700FAFE29 /* TCViewController.m in Sources */,
 				6699906F185FB682005581D9 /* MMFilledShapeView.m in Sources */,
-				663DC6D6185F714500FAFE29 /* SYUnitPreview.m in Sources */,
 				66999070185FBA6E005581D9 /* UIColor+ColorWithHex.m in Sources */,
-				663DC6D5185F714500FAFE29 /* SYUnitTestController.m in Sources */,
 				663DC6DC185F715400FAFE29 /* SYSaveMessageView.m in Sources */,
 				6699906B185FB589005581D9 /* SYShape+Bezier.m in Sources */,
+				6699907418615D50005581D9 /* UIBezierPath+Description.m in Sources */,
 				663DC67D185F6BC800FAFE29 /* MMAppDelegate.m in Sources */,
 				663DC679185F6BC800FAFE29 /* main.m in Sources */,
 				663DC6DD185F715400FAFE29 /* SYTableBase.m in Sources */,

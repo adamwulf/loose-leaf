@@ -28,10 +28,6 @@
 {
     [super viewDidLoad];
     
-    // Hide table
-    [tableBase setAlpha:.0];
-    [tableBase setHidden:YES];
-    
     [self resetData];
     
 }// viewDidLoad
@@ -48,133 +44,26 @@
 }// viewDidUnload
 
 
-- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return YES;
-    
-}// shouldAutorotateToInterfaceOrientation:
-
-
-- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{    
-    [selectCaseNameView setAlpha:.0];
-    [vectorView setNeedsDisplay];
-    
-}// willRotateToInterfaceOrientation:duration:
-
-
-- (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication]statusBarOrientation];
-    
-    // Set message view position
-    if (orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown)
-        [selectCaseNameView setFrame:CGRectMake(240.0, 382.0, selectCaseNameView.frame.size.width, selectCaseNameView.frame.size.height)];
-    else
-        [selectCaseNameView setFrame:CGRectMake(369.0, 217.0, selectCaseNameView.frame.size.width, selectCaseNameView.frame.size.height)];
-    
-    [selectCaseNameView setNeedsDisplay];
-    
-    [UIView animateWithDuration:0.3 animations:^{
-        [selectCaseNameView setAlpha:1.0];
-    }];
-    
-}// didRotateFromInterfaceOrientation:
-
-
-
-#pragma mark - Unit Test Methods
-
-- (IBAction) selectName:(id)sender
-{
-    if (![shapeController hasPointData]) {
-        // Avisa del error obtenido
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Draw Something"
-                                                        message:@"You must draw a valid shape before"
-                                                       delegate:self
-                                              cancelButtonTitle:@"Accept"
-                                              otherButtonTitles:nil];
-        [alert show];
-        return;
-    }
-    
-    // Set message view position
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication]statusBarOrientation];
-    if (orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown)
-        [selectCaseNameView setFrame:CGRectMake(240.0, 382.0, selectCaseNameView.frame.size.width, selectCaseNameView.frame.size.height)];
-    else
-        [selectCaseNameView setFrame:CGRectMake(369.0, 217.0, selectCaseNameView.frame.size.width, selectCaseNameView.frame.size.height)];
-    
-    
-    [nameTextField becomeFirstResponder];
-    [selectCaseNameView setAlpha:.0];
-    [selectCaseNameView setHidden:NO];
-    [UIView animateWithDuration:0.4 animations:^{
-        [selectCaseNameView setAlpha:1.0];
-    }];
-    
-}// selectName:
-
 
 - (IBAction) saveCase:(id)sender
 {
-    // If the user doesn't write name
-    if ([[nameTextField text]length] == 0 || ![shapeController hasPointData])
-        return;
     
-    // Store new case
-    [nameTextField resignFirstResponder];
-    [UIView animateWithDuration:0.4 animations:^{
-        [selectCaseNameView setAlpha:.0];
-    }completion:^(BOOL finished){
-        [selectCaseNameView setHidden:YES];
-        nameTextField.text = @"";
-    }];
+    NSString* textForEmail = @"Shapes in view:\n\n";
     
-    // Send notification to Test controller
-    NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:paintView.allPoints, @"allPoints", nameTextField.text, @"name", nil];
-    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-    [nc postNotificationName:@"saveListPoints" object:self userInfo:d];
-        
-}// saveCase:
-
-
-- (IBAction) cancelCase:(id)sender
-{
-    [nameTextField resignFirstResponder];
-    [UIView animateWithDuration:0.4 animations:^{
-        [selectCaseNameView setAlpha:.0];
-    }completion:^(BOOL finished){
-        [selectCaseNameView setHidden:YES];
-    }];
+    NSArray* subArray = [vectorView.shapeList subarrayWithRange:NSMakeRange(0, MIN([vectorView.shapeList count], 2))];
     
-}// cancelCase
-
-
-#pragma mark - Unit Test Operations
-
-- (void) importCase:(NSArray *) allPoints
-{
-    // Clear Paint
-    [paintView clearPaint];
-    
-    // Init Data
-    [self resetData];
-    
-    for (NSUInteger i = 1 ; i < [allPoints count]-1 ; i++) {
-        // Add these new points
-        CGPoint touchPreviousLocation = [[allPoints objectAtIndex:i-1]CGPointValue];
-        CGPoint touchLocation = [[allPoints objectAtIndex:i]CGPointValue];
-        [shapeController addPoint:touchPreviousLocation andPoint:touchLocation];
+    for(SYShape* shape in subArray){
+        textForEmail = [textForEmail stringByAppendingFormat:@"shape:\n%@\n\n\n", shape.bezierPath];
     }
     
-    CGPoint touchLocation = [[allPoints lastObject]CGPointValue];
-    [shapeController addLastPoint:touchLocation];
-    
-    // Analyze a recognize the figure
-    [self getFigurePainted];
-    
-}// importCase
+    MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
+    [controller setMailComposeDelegate:self];
+    [controller setToRecipients:[NSArray arrayWithObject:@"adam.wulf@gmail.com"]];
+    [controller setSubject:@"Shape Clipping Test Case"];
+    [controller setMessageBody:textForEmail isHTML:NO];
+    [self presentViewController:controller animated:YES completion:nil];
+}// saveCase:
+
 
 
 #pragma mark - Calculate Shapes
@@ -221,20 +110,25 @@
                 [vectorView addShape:possibleShape];
                 [vectorView setNeedsDisplay];
                 
-                UIBezierPath* shapePath = shape.bezierPath;
-                UIBezierPath* scissorPath = possibleShape.bezierPath;
                 
-                
-                NSArray* subShapePaths = [shapePath subshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
-                NSArray* foundShapes = [subShapePaths firstObject];
-                
-                NSLog(@"Cutting Shape: %@", shapePath);
-                NSLog(@"With Scissor: %@", scissorPath);
-
-                NSLog(@"found %d shapes", [foundShapes count]);
-                
-                for(DKUIBezierPathShape* cutShapePath in foundShapes){
-                    [filledShapeView addShapePath:cutShapePath.fullPath];
+                @try{
+                    UIBezierPath* shapePath = shape.bezierPath;
+                    UIBezierPath* scissorPath = possibleShape.bezierPath;
+                    
+                    
+                    NSArray* subShapePaths = [shapePath subshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
+                    NSArray* foundShapes = [subShapePaths firstObject];
+                    
+                    NSLog(@"Cutting Shape: %@", shapePath);
+                    NSLog(@"With Scissor: %@", scissorPath);
+                    
+                    NSLog(@"found %d shapes", [foundShapes count]);
+                    
+                    for(DKUIBezierPathShape* cutShapePath in foundShapes){
+                        [filledShapeView addShapePath:cutShapePath.fullPath];
+                    }
+                }@catch (id exc) {
+                    [self saveCase:nil];
                 }
             }
         }
@@ -278,4 +172,10 @@
     
 }// addLastPoint:
 
+
+#pragma mark - MFMailComposeViewControllerDelegate
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 @end
