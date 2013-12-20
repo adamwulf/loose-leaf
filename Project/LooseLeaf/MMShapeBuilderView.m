@@ -217,7 +217,7 @@
         }];
         // the shape controller knows about all the points in this subpath,
         // so see if it can recognize a shape
-        SYShape* shape = [shapeMaker getFigurePaintedWithTolerance:0.0000001 andContinuity:0];
+        SYShape* shape = [shapeMaker getFigurePaintedWithTolerance:0.0000001 andContinuity:0 forceOpen:NO];
         if(shape){
             // return all successful shapes
             UIBezierPath* shapePath = [shape bezierPath];
