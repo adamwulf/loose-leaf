@@ -20,6 +20,8 @@
 
 @implementation TCViewController{
     TCShapeController* shapeController;
+    int bugsReportedCount;
+    int scissorsDrawnCount;
 }
 
 #pragma mark - Lifecycle Methods
@@ -181,8 +183,8 @@
 - (SYShape*) getFigurePainted
 {
     SYShape* possibleShape = [shapeController getFigurePaintedWithTolerance:[toleranceSlider value]*0.0001 andContinuity:[continuitySlider value] forceOpen:(shapeVsScissorChooser.selectedSegmentIndex != 0)];
-    [filledShapeView clear];
     if(possibleShape){
+        [filledShapeView clear];
         
         if([self shapeIsSelfIntersecting:possibleShape]){
             if(shapeVsScissorChooser.selectedSegmentIndex == 0){
@@ -199,9 +201,6 @@
             }
             return nil;
         }
-        
-        
-        
         
         if(shapeVsScissorChooser.selectedSegmentIndex == 0){
             // shape
@@ -234,14 +233,17 @@
                     NSArray* subShapePaths = [shapePath subshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
                     NSArray* foundShapes = [subShapePaths firstObject];
                     
-                    NSLog(@"Cutting Shape: %@", shapePath);
-                    NSLog(@"With Scissor: %@", scissorPath);
-                    
-                    NSLog(@"found %d shapes", [foundShapes count]);
+//                    NSLog(@"Cutting Shape: %@", shapePath);
+//                    NSLog(@"With Scissor: %@", scissorPath);
+//                    
+//                    NSLog(@"found %d shapes", [foundShapes count]);
                     
                     for(DKUIBezierPathShape* cutShapePath in foundShapes){
                         [filledShapeView addShapePath:cutShapePath.fullPath];
                     }
+                    
+                    scissorsDrawnCount++;
+                    [self updateBugReport];
                 }@catch (id exc) {
                     [self saveCase:nil];
                 }
@@ -249,6 +251,10 @@
         }
     }
     return possibleShape;
+}
+
+-(IBAction) redrawFilledShape{
+    [filledShapeView setNeedsDisplay];
 }
 
 
@@ -287,10 +293,20 @@
     
 }// addLastPoint:
 
+#pragma mark - Bug Reports
+
+-(void) updateBugReport{
+    successRateLabel.text = [NSString stringWithFormat:@"%d / %d", bugsReportedCount, scissorsDrawnCount];
+}
 
 #pragma mark - MFMailComposeViewControllerDelegate
 
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error{
     [self dismissViewControllerAnimated:YES completion:nil];
+    if(result == MFMailComposeResultSaved ||
+       result == MFMailComposeResultSent){
+        bugsReportedCount++;
+        [self updateBugReport];
+    }
 }
 @end

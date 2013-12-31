@@ -12,6 +12,7 @@
                 <outlet property="filledShapeView" destination="u8b-wO-8ks" id="SqN-m8-pJr"/>
                 <outlet property="paintView" destination="17" id="100"/>
                 <outlet property="shapeVsScissorChooser" destination="KX6-wU-SF2" id="hHV-Ys-K1g"/>
+                <outlet property="successRateLabel" destination="XMB-8O-e7E" id="Eoe-Ta-gyf"/>
                 <outlet property="toleranceLabel" destination="123" id="125"/>
                 <outlet property="toleranceSlider" destination="119" id="121"/>
                 <outlet property="vectorView" destination="25" id="28"/>
@@ -38,12 +39,19 @@
                         <outlet property="delegate" destination="-1" id="brr-iF-OTt"/>
                     </connections>
                 </view>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="XMB-8O-e7E" userLabel="Success Rate Label">
+                    <rect key="frame" x="112" y="25" width="70" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
                 <view contentMode="scaleToFill" id="u8b-wO-8ks" customClass="MMFilledShapeView">
                     <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="91">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="91" userLabel="Bug Button">
                     <rect key="frame" x="6" y="13" width="45" height="45"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="30"/>
@@ -56,6 +64,15 @@
                     </state>
                     <connections>
                         <action selector="saveCase:" destination="-1" eventType="touchUpInside" id="q6y-5B-o4J"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="8Bp-sB-18a" userLabel="Refresh Button">
+                    <rect key="frame" x="59" y="13" width="45" height="45"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                    <state key="normal" image="01-refresh.png"/>
+                    <connections>
+                        <action selector="redrawFilledShape" destination="-1" eventType="touchUpInside" id="ZTk-v0-lv9"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="102">
@@ -130,6 +147,7 @@
         </view>
     </objects>
     <resources>
+        <image name="01-refresh.png" width="24" height="26"/>
         <image name="110-bug.png" width="22" height="23"/>
     </resources>
 </document>

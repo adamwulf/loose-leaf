@@ -32,6 +32,8 @@
     IBOutlet UILabel *continuityLabel;
     IBOutlet UILabel *toleranceLabel;
     
+    IBOutlet UILabel *successRateLabel;
+    
 }
 
 // Test Methods
