@@ -238,10 +238,17 @@
 //                    
 //                    NSLog(@"found %d shapes", [foundShapes count]);
                     
+                    BOOL allAreClosed = YES;
                     for(DKUIBezierPathShape* cutShapePath in foundShapes){
                         [filledShapeView addShapePath:cutShapePath.fullPath];
+                        if(!cutShapePath.isClosed){
+                            // force saving a bug
+                            allAreClosed = NO;
+                        }
                     }
-                    
+                    if(!allAreClosed){
+                        [self saveCase:nil];
+                    }
                     scissorsDrawnCount++;
                     [self updateBugReport];
                 }@catch (id exc) {
