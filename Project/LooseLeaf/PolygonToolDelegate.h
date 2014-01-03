@@ -8,14 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
+@class PolygonTool;
+
 @protocol PolygonToolDelegate <NSObject>
 
--(void) beginShapeWithTouch:(UITouch*)touch;
+-(void) beginShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool;
 
--(void) continueShapeWithTouch:(UITouch*)touch;
+-(void) continueShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool;
 
--(void) finishShapeWithTouch:(UITouch*)touch;
+-(void) finishShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool;
 
--(void) cancelShapeWithTouch:(UITouch*)touch;
+-(void) cancelShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool;
 
 @end

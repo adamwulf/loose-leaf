@@ -8,7 +8,7 @@
 
 #import "MMScrapBubbleButton.h"
 #import "MMScrapBorderView.h"
-#import "DrawKit-iOS.h"
+#import <DrawKit-iOS/DrawKit-iOS.h>
 
 @implementation MMScrapBubbleButton{
     CGFloat rotationAdjustment;

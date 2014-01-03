@@ -11,7 +11,7 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
 #import "MMRotationManager.h"
-#import "DrawKit-iOS.h"
+#import <DrawKit-iOS/DrawKit-iOS.h>
 #import "UIColor+Shadow.h"
 #import "MMDebugDrawView.h"
 #import "NSString+UUID.h"

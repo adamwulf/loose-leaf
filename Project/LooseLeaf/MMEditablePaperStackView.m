@@ -45,6 +45,9 @@
         polygon = [[PolygonTool alloc] init];
         polygon.delegate = self;
         
+        scissor = [[MMScissorTool alloc] init];
+        scissor.delegate = self;
+        
         // test code for custom popovers
         // ================================================================================
         //    MMPopoverView* popover = [[MMPopoverView alloc] initWithFrame:CGRectMake(100, 100, 300, 300)];
@@ -93,7 +96,7 @@
         CGRect scissorButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 4, kWidthOfSidebarButton, kWidthOfSidebarButton);
         scissorButton = [[MMScissorButton alloc] initWithFrame:scissorButtonFrame];
         scissorButton.delegate = self;
-        [scissorButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [scissorButton addTarget:self action:@selector(scissorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:scissorButton];
         
         
@@ -183,7 +186,6 @@
         handButton.selected = YES;
         
         insertImageButton.enabled = NO;
-        scissorButton.enabled = NO;
         shareButton.enabled = NO;
         
         [NSThread performBlockInBackground:^{
@@ -214,7 +216,9 @@
 }
 
 -(Tool*) activePen{
-    if(polygonButton.selected){
+    if(scissorButton.selected){
+        return scissor;
+    }else if(polygonButton.selected){
         return polygon;
     }else if(eraserButton.selected){
         return eraser;
@@ -276,6 +280,14 @@
     polygonButton.selected = YES;
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
+}
+
+-(void) scissorTapped:(UIButton*)_button{
+    eraserButton.selected = NO;
+    pencilTool.selected = NO;
+    polygonButton.selected = NO;
+    insertImageButton.selected = NO;
+    scissorButton.selected = YES;
 }
 
 -(void) handTapped:(UIButton*)_button{
@@ -388,6 +400,7 @@
         for(UITouch* touch in bezelGesture.touches){
             [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
             [polygon cancelPolygonForTouch:touch];
+            [scissor cancelPolygonForTouch:touch];
         }
     }
     [super isBezelingInLeftWithGesture:bezelGesture];
@@ -399,6 +412,7 @@
         for(UITouch* touch in bezelGesture.touches){
             [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
             [polygon cancelPolygonForTouch:touch];
+            [scissor cancelPolygonForTouch:touch];
         }
     }
     [super isBezelingInRightWithGesture:bezelGesture];
@@ -417,6 +431,7 @@
     for(UITouch* touch in touches){
         [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
         [polygon cancelPolygonForTouch:touch];
+        [scissor cancelPolygonForTouch:touch];
     }
     
     return [super isBeginning:beginning toPanAndScalePage:page fromFrame:fromFrame toFrame:toFrame withTouches:touches];
@@ -516,6 +531,7 @@
     for(UITouch* touch in gesture.touches){
         [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
         [polygon cancelPolygonForTouch:touch];
+        [scissor cancelPolygonForTouch:touch];
     }
     [rulerView updateLineAt:[gesture point1InView:rulerView] to:[gesture point2InView:rulerView]
            startingDistance:[gesture initialDistance]];
@@ -726,31 +742,55 @@
 
 #pragma mark - PolygonToolDelegate
 
--(void) beginShapeWithTouch:(UITouch*)touch{
+-(void) beginShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool{
     [rulerView willBeginStrokeAt:[touch locationInView:rulerView]];
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
-    [page beginShapeAtPoint:[page convertPoint:adjusted fromView:rulerView]];
-}
-
--(void) continueShapeWithTouch:(UITouch*)touch{
-    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
-    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
-    if(![page continueShapeAtPoint:[page convertPoint:adjusted fromView:rulerView]]){
-        [polygon cancelPolygonForTouch:touch];
+    CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
+    if(tool == polygon){
+        [page beginShapeAtPoint:adjustedPoint];
+    }else{
+        [page beginScissorAtPoint:adjustedPoint];
     }
 }
 
--(void) finishShapeWithTouch:(UITouch*)touch{
+-(void) continueShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool{
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
-    [page finishShapeAtPoint:[page convertPoint:adjusted fromView:rulerView]];
+    CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
+    if(tool == polygon){
+        if(![page continueShapeAtPoint:adjustedPoint]){
+            [polygon cancelPolygonForTouch:touch];
+            [scissor cancelPolygonForTouch:touch];
+        }
+    }else{
+        if(![page continueScissorAtPoint:adjustedPoint]){
+            [polygon cancelPolygonForTouch:touch];
+            [scissor cancelPolygonForTouch:touch];
+        }
+    }
 }
 
--(void) cancelShapeWithTouch:(UITouch*)touch{
+-(void) finishShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool{
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
-    [page cancelShapeAtPoint:[page convertPoint:adjusted fromView:rulerView]];
+    CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
+    if(tool == polygon){
+        [page finishShapeAtPoint:adjustedPoint];
+    }else{
+        [page finishScissorAtPoint:adjustedPoint];
+    }
+}
+
+-(void) cancelShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool{
+    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
+    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+    CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
+    if(tool == polygon){
+        [page cancelShapeAtPoint:adjustedPoint];
+    }else{
+        [page cancelScissorAtPoint:adjustedPoint];
+    }
 }
 
 

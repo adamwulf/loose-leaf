@@ -9,9 +9,7 @@
 #import "MMRulerView.h"
 #import "Constants.h"
 #import "MMVector.h"
-#import "UIBezierPath+NSOSX.h"
-#import "UIBezierPath+Editing.h"
-#import "UIBezierPath+Ahmed.h"
+#import <DrawKit-iOS/DrawKit-iOS.h>
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "UIDevice+PPI.h"

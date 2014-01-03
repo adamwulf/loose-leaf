@@ -12,11 +12,31 @@
 		<key>LooseLeaf.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>6</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>663DC66D185F6BC800FAFE29</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>663DC683185F6BC800FAFE29</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>666F099F185E64B10074CE6B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>666F09B6185E64B10074CE6B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>66DCFB851581BCEF00B4918C</key>
 		<dict>
 			<key>primary</key>

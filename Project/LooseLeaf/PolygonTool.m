@@ -24,7 +24,7 @@
 
 - (BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
     if(![polygonTouches count]){
-        [delegate beginShapeWithTouch:touch.touch];
+        [delegate beginShapeWithTouch:touch.touch withTool:self];
         // return that we _do not_ want the JotView to draw
         [polygonTouches addObject:touch.touch];
     }
@@ -37,7 +37,7 @@
  */
 - (void) willMoveStrokeWithTouch:(JotTouch*)touch{
     if([polygonTouches containsObject:touch.touch]){
-        [delegate continueShapeWithTouch:touch.touch];
+        [delegate continueShapeWithTouch:touch.touch withTool:self];
     }
 }
 
@@ -47,7 +47,7 @@
  */
 - (void) willEndStrokeWithTouch:(JotTouch*)touch{
     if([polygonTouches containsObject:touch.touch]){
-        [delegate finishShapeWithTouch:touch.touch];
+        [delegate finishShapeWithTouch:touch.touch withTool:self];
         [polygonTouches removeObject:touch.touch];
     }
 }
@@ -57,7 +57,7 @@
  */
 - (void) willCancelStrokeWithTouch:(JotTouch*)touch{
     if([polygonTouches containsObject:touch.touch]){
-        [delegate cancelShapeWithTouch:touch.touch];
+        [delegate cancelShapeWithTouch:touch.touch withTool:self];
         [polygonTouches removeObject:touch.touch];
     }
 }
@@ -65,7 +65,7 @@
 
 -(void) cancelPolygonForTouch:(UITouch*)touch{
     if([polygonTouches containsObject:touch]){
-        [delegate cancelShapeWithTouch:touch];
+        [delegate cancelShapeWithTouch:touch withTool:self];
         [polygonTouches removeObject:touch];
     }
 }

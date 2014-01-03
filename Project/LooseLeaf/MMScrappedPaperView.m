@@ -13,14 +13,13 @@
 #import "MMScrapContainerView.h"
 #import "NSThread+BlockAdditions.h"
 #import "NSArray+Extras.h"
-#import "DrawKit-iOS.h"
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "MMDebugDrawView.h"
 #import "MMScrapsOnPaperState.h"
 #import "MMImmutableScrapsOnPaperState.h"
-#import "DKUIBezierPathClippedSegmentTPair.h"
 #import <JotUI/UIColor+JotHelper.h>
+#import <DrawKit-iOS/DrawKit-iOS.h>
 
 
 @implementation MMScrappedPaperView{
@@ -311,13 +310,15 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 //
                 // this will let us calcualte how much the width/color/rotation
                 // change during each split
-                DKUIBezierPathClippingResult* clippingAndIntersectionMetaInformation = [strokePath clipUnclosedPathToClosedPath:scrapClippingPath];
+                BOOL beginsInside = NO;
+                NSArray* intersections = [strokePath findIntersectionsWithClosedPath:scrapClippingPath andBeginsInside:&beginsInside];
+                DKUIBezierPathClippingResult* clippingAndIntersectionMetaInformation = [strokePath clipUnclosedPathToClosedPath:scrapClippingPath usingIntersectionPoints:intersections andBeginsInside:beginsInside];
                 
                 // track which elements we should add to the scrap
                 // instead of continue to chop and add to the page / other scrap
                 NSMutableArray* elementsToAddToScrap = [NSMutableArray array];
 
-                if([clippingAndIntersectionMetaInformation.intersection isEmpty]){
+                if([clippingAndIntersectionMetaInformation.entireIntersectionPath isEmpty]){
                     // we can't make the same optimization for [.difference isEmpty],
                     // because the element needs to be transformed into the scrap's
                     // coordinate space no matter what. this means that we can't
@@ -351,9 +352,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     colorDiff[1] = elementColor[1] - prevColor[1];
                     colorDiff[2] = elementColor[2] - prevColor[2];
                     colorDiff[3] = elementColor[3] - prevColor[3];
-                    [clippingAndIntersectionMetaInformation.difference iteratePathWithBlock:^(CGPathElement pathEle){
+                    [clippingAndIntersectionMetaInformation.entireDifferencePath iteratePathWithBlock:^(CGPathElement pathEle){
                         AbstractBezierPathElement* newElement = nil;
-                        DKUIBezierPathClippedSegmentTPair* clippingInformation = [clippingAndIntersectionMetaInformation.differenceTValues objectAtIndex:clippingInformationIndex];
+                        DKUIBezierPathClippedSegment* clippingInformation = [clippingAndIntersectionMetaInformation.differenceSegments objectAtIndex:clippingInformationIndex];
                         //
                         // there are two possibilities - either it's a move to
                         // or a curve/line to.
@@ -364,7 +365,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                             newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
                             previousEndpoint = pathEle.points[0];
                             
-                            CGFloat tValueAtStartPoint = clippingInformation.tValueStart.tValue1;
+                            CGFloat tValueAtStartPoint = clippingInformation.startIntersection.tValue1;
                             CGFloat red = prevColor[0] + colorDiff[0] * tValueAtStartPoint;
                             CGFloat green = prevColor[1] + colorDiff[1] * tValueAtStartPoint;
                             CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtStartPoint;
@@ -396,7 +397,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                             }
                             
                             // be sure to set color/width/etc
-                            CGFloat tValueAtEndPoint = clippingInformation.tValueEnd.tValue1;
+                            CGFloat tValueAtEndPoint = clippingInformation.endIntersection.tValue1;
                             if(element.color){
                                 CGFloat red = prevColor[0] + colorDiff[0] * tValueAtEndPoint;
                                 CGFloat green = prevColor[1] + colorDiff[1] * tValueAtEndPoint;
@@ -422,7 +423,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     // I'm applying transforms to this path below, so if i were to
                     // reuse this path I'd want to [copy] it. but i don't need to
                     // because I only use it once.
-                    UIBezierPath* inter = clippingAndIntersectionMetaInformation.intersection;
+                    UIBezierPath* inter = clippingAndIntersectionMetaInformation.entireIntersectionPath;
                     // if the intersection contains any segments at all
                     
                     previousEndpoint = strokePath.firstPoint;
@@ -457,7 +458,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     // think of a spinning clock. it spins in different directions
                     // if you look at it from the top or bottom.
                     //
-                    // either way, when i rotate the path by -scrap.rotation, it ends up
+                    // either way, when i rotate the path by scrap.rotation, it ends up
                     // in the correct visible space. it works!
                     [inter applyTransform:CGAffineTransformMakeRotation(scrap.rotation)];
                     
@@ -476,11 +477,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     // now add it to the scrap!
                     [inter iteratePathWithBlock:^(CGPathElement pathEle){
                         AbstractBezierPathElement* newElement = nil;
-                        DKUIBezierPathClippedSegmentTPair* clippingInformation = [clippingAndIntersectionMetaInformation.intersectionTValues objectAtIndex:clippingInformationIndex];
+                        DKUIBezierPathClippedSegment* clippingInformation = [clippingAndIntersectionMetaInformation.intersectionSegments objectAtIndex:clippingInformationIndex];
                         if(pathEle.type == kCGPathElementMoveToPoint){
                             newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
                             previousEndpoint = pathEle.points[0];
-                            CGFloat tValueAtStartPoint = clippingInformation.tValueStart.tValue1;
+                            CGFloat tValueAtStartPoint = clippingInformation.startIntersection.tValue1;
                             if(element.color){
                                 CGFloat red = prevColor[0] + colorDiff[0] * tValueAtStartPoint;
                                 CGFloat green = prevColor[1] + colorDiff[1] * tValueAtStartPoint;
@@ -505,7 +506,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                                 newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
                                 previousEndpoint = pathEle.points[0];
                             }
-                            CGFloat tValueAtEndPoint = clippingInformation.tValueEnd.tValue1;
+                            CGFloat tValueAtEndPoint = clippingInformation.endIntersection.tValue1;
                             if(element.color){
                                 CGFloat red = prevColor[0] + colorDiff[0] * tValueAtEndPoint;
                                 CGFloat green = prevColor[1] + colorDiff[1] * tValueAtEndPoint;
@@ -552,23 +553,20 @@ static dispatch_queue_t concurrentBackgroundQueue;
     }
 }
 
-#pragma mark - PolygonToolDelegate
+#pragma mark - Polygon and Scrap builder
 
 -(void) beginShapeAtPoint:(CGPoint)point{
     // send touch event to the view that
     // will display the drawn polygon line
-//    NSLog(@"begin");
     [shapeBuilderView clear];
-    
     [shapeBuilderView addTouchPoint:point];
 }
 
 -(BOOL) continueShapeAtPoint:(CGPoint)point{
-    // noop for now
     // send touch event to the view that
     // will display the drawn polygon line
     if([shapeBuilderView addTouchPoint:point]){
-        [self complete];
+        [self completeBuildingNewScrap];
         return NO;
     }
     return YES;
@@ -581,32 +579,109 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // and also process the touches into the new
     // scrap polygon shape, and add that shape
     // to the page
-//    NSLog(@"finish");
     [shapeBuilderView addTouchPoint:point];
-    [self complete];
-}
-
--(void) complete{
-    NSArray* shapes = [shapeBuilderView completeAndGenerateShapes];
-    [shapeBuilderView clear];
-    for(UIBezierPath* shape in shapes){
-        //        if([scraps count]){
-        //            [[scraps objectAtIndex:0] intersect:shape];
-        //        }else{
-        UIBezierPath* shapePath = [shape copy];
-        [shapePath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
-        [self addScrapWithPath:shapePath];
-        //        }
-    }
-    
+    [self completeBuildingNewScrap];
 }
 
 -(void) cancelShapeAtPoint:(CGPoint)point{
     // we've cancelled the polygon (possibly b/c
     // it was a pan/pinch instead), so clear
     // the drawn polygon and reset.
-//    NSLog(@"cancel");
     [shapeBuilderView clear];
+}
+
+-(void) completeBuildingNewScrap{
+    UIBezierPath* shape = [shapeBuilderView completeAndGenerateShape];
+    [shapeBuilderView clear];
+    if(shape.isPathClosed){
+        UIBezierPath* shapePath = [shape copy];
+        [shapePath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
+        [self addScrapWithPath:shapePath];
+    }
+}
+
+
+#pragma mark - Scissors
+
+
+-(void) beginScissorAtPoint:(CGPoint)point{
+    // send touch event to the view that
+    // will display the drawn polygon line
+    [shapeBuilderView clear];
+    [shapeBuilderView addTouchPoint:point];
+}
+
+-(BOOL) continueScissorAtPoint:(CGPoint)point{
+    // send touch event to the view that
+    // will display the drawn polygon line
+    if([shapeBuilderView addTouchPoint:point]){
+        [self completeScissorsCut];
+        return NO;
+    }
+    return YES;
+}
+
+-(void) finishScissorAtPoint:(CGPoint)point{
+    // send touch event to the view that
+    // will display the drawn polygon line
+    //
+    // and also process the touches into the new
+    // scrap polygon shape, and add that shape
+    // to the page
+    [shapeBuilderView addTouchPoint:point];
+    [self completeScissorsCut];
+}
+
+-(void) cancelScissorAtPoint:(CGPoint)point{
+    // we've cancelled the polygon (possibly b/c
+    // it was a pan/pinch instead), so clear
+    // the drawn polygon and reset.
+    [shapeBuilderView clear];
+}
+
+
+-(void) completeScissorsCut{
+    // in this debug version of the scissor, it will draw
+    // a thick black line where it would do the cut
+    //
+    // this is just to prove that we can take the path
+    // (closed or unclosed) and do something productive
+    // with it
+    UIBezierPath* shapePath = [shapeBuilderView completeAndGenerateShape];
+    [shapeBuilderView clear];
+    NSMutableArray* elements = [NSMutableArray array];
+    [shapePath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
+    
+    // flip from CoreGraphics to OpenGL coordinates
+    CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height);
+    [shapePath applyTransform:flipTransform];
+    
+    __block CGPoint previousEndpoint = shapePath.firstPoint;
+    [shapePath iteratePathWithBlock:^(CGPathElement pathEle){
+        AbstractBezierPathElement* newElement = nil;
+        if(pathEle.type == kCGPathElementAddCurveToPoint){
+            // curve
+            newElement = [CurveToPathElement elementWithStart:previousEndpoint
+                                                   andCurveTo:pathEle.points[2]
+                                                  andControl1:pathEle.points[0]
+                                                  andControl2:pathEle.points[1]];
+            previousEndpoint = pathEle.points[2];
+        }else if(pathEle.type == kCGPathElementMoveToPoint){
+            newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
+            previousEndpoint = pathEle.points[0];
+        }else if(pathEle.type == kCGPathElementAddLineToPoint){
+            newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
+            previousEndpoint = pathEle.points[0];
+        }
+        if(newElement){
+            // be sure to set color/width/etc
+            newElement.color = [UIColor blackColor];
+            newElement.width = 10.0;
+            [elements addObject:newElement];
+        }
+    }];
+    
+    [drawableView addElements:[self willAddElementsToStroke:elements fromPreviousElement:nil]];
 }
 
 

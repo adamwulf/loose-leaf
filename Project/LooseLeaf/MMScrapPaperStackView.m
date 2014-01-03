@@ -450,6 +450,7 @@
     for(UITouch* touch in touches){
         [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
         [polygon cancelPolygonForTouch:touch];
+        [scissor cancelPolygonForTouch:touch];
     }
 }
 

@@ -67,7 +67,7 @@ struct TouchInterval{
 @synthesize isShaking;
 
 
-NSInteger const  minimumNumberOfTouches = 2;
+NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 #define           SCRAP_VELOCITY_CLAMP_MIN 20 // px / sec
 #define           SCRAP_VELOCITY_CLAMP_MAX 2000 // px / sec
 
@@ -132,7 +132,7 @@ NSInteger const  minimumNumberOfTouches = 2;
 }
 
 -(CGPoint)locationInView:(UIView *)view{
-    if([validTouches count] >= minimumNumberOfTouches){
+    if([validTouches count] >= mmMinimumNumberOfScrapTouches){
         CGPoint loc1 = [[validTouches firstObject] locationInView:view];
         CGPoint loc2 = [[validTouches objectAtIndex:1] locationInView:view];
         return CGPointMake((loc1.x + loc2.x) / 2, (loc1.y + loc2.y) / 2);
@@ -209,14 +209,14 @@ NSInteger const  minimumNumberOfTouches = 2;
             }
         }
         
-        if([validTouches count] >= minimumNumberOfTouches){
+        if([validTouches count] >= mmMinimumNumberOfScrapTouches){
             
             [self prepareGestureToBeginFresh];
             
             didExitToBezel = MMBezelDirectionNone;
 
             self.state = UIGestureRecognizerStateBegan;
-        }else if([validTouches count] < minimumNumberOfTouches){
+        }else if([validTouches count] < mmMinimumNumberOfScrapTouches){
             didExitToBezel = MMBezelDirectionNone;
             initialTouchVector = nil;
             //
@@ -237,7 +237,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     NSMutableOrderedSet* validTouchesCurrentlyMoving = [validTouches mutableCopy];
     [validTouchesCurrentlyMoving intersectSet:touches];
     [validTouchesCurrentlyMoving minusSet:ignoredTouches];
-    if([validTouchesCurrentlyMoving count] >= minimumNumberOfTouches){
+    if([validTouchesCurrentlyMoving count] >= mmMinimumNumberOfScrapTouches){
         if(self.state == UIGestureRecognizerStateBegan){
             initialDistance = 0;
         }
@@ -300,7 +300,7 @@ NSInteger const  minimumNumberOfTouches = 2;
                 }
                 // check to see if we have enough touches
                 // that are both being shaked + so far unprocessed
-                if(numberOfShakingTouches >= minimumNumberOfTouches){
+                if(numberOfShakingTouches >= mmMinimumNumberOfScrapTouches){
                     isShaking = YES;
                     // now we need to tell that we've processed the shakes
                     // so that we don't use this same shake gesture to
@@ -377,7 +377,7 @@ NSInteger const  minimumNumberOfTouches = 2;
             // double counting the last two touches.
             if(didExitToBezel != MMBezelDirectionNone &&
                !secondToLastTouchDidBezel &&
-               ([validTouches count] - [validTouchesCurrentlyEnding count]) < minimumNumberOfTouches){
+               ([validTouches count] - [validTouchesCurrentlyEnding count]) < mmMinimumNumberOfScrapTouches){
                 if([validTouches count] - [validTouchesCurrentlyEnding count] == 1){
                     // that was the 2nd to last touch!
                     // set this flag so we don't double count it when the last
@@ -412,7 +412,7 @@ NSInteger const  minimumNumberOfTouches = 2;
             self.state = UIGestureRecognizerStateFailed;
         }
     }
-    if([validTouches count] >= minimumNumberOfTouches && [validTouchesCurrentlyEnding count]){
+    if([validTouches count] >= mmMinimumNumberOfScrapTouches && [validTouchesCurrentlyEnding count]){
         // reset the location and the initial distance of the gesture
         // so that the new first two touches position won't immediatley
         // change where the page is or what its scale is

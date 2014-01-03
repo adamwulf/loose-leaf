@@ -7,7 +7,7 @@
 //
 
 #import "SYShape+Bezier.h"
-#import "DrawKit-iOS.h"
+#import <DrawKit-iOS/DrawKit-iOS.h>
 
 @implementation SYShape (Bezier)
 
@@ -19,6 +19,9 @@
         }else{
             [output appendPath:[geom bezierPath]];
         }
+    }
+    if(self.isClosedCurve){
+        [output closePath];
     }
     return output;
 }
