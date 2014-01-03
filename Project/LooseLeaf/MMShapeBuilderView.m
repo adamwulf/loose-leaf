@@ -148,7 +148,7 @@
 /**
  * returns an array of all bezier paths created
  */
--(NSArray*) completeAndGenerateShapes{
+-(UIBezierPath*) completeAndGenerateShape{
     if(![touches count]) return nil;
     
     //
@@ -231,8 +231,10 @@
         }
     }
     [self setNeedsDisplay];
-    
-    return [NSArray arrayWithArray:shapePaths];
+
+    //
+    // only return 1 path
+    return [shapePaths firstObject];
 }
 
 

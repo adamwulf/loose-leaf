@@ -602,14 +602,12 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) completeBuildingNewScrap{
-    NSArray* shapes = [shapeBuilderView completeAndGenerateShapes];
+    UIBezierPath* shape = [shapeBuilderView completeAndGenerateShape];
     [shapeBuilderView clear];
-    for(UIBezierPath* shape in shapes){
-        if(shape.isPathClosed){
-            UIBezierPath* shapePath = [shape copy];
-            [shapePath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
-            [self addScrapWithPath:shapePath];
-        }
+    if(shape.isPathClosed){
+        UIBezierPath* shapePath = [shape copy];
+        [shapePath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
+        [self addScrapWithPath:shapePath];
     }
 }
 
@@ -660,43 +658,40 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // this is just to prove that we can take the path
     // (closed or unclosed) and do something productive
     // with it
-    NSArray* shapes = [shapeBuilderView completeAndGenerateShapes];
+    UIBezierPath* shapePath = [shapeBuilderView completeAndGenerateShape];
     [shapeBuilderView clear];
     NSMutableArray* elements = [NSMutableArray array];
-    for(UIBezierPath* shape in shapes){
-        UIBezierPath* shapePath = [shape copy];
-        [shapePath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
-        
-        // flip from CoreGraphics to OpenGL coordinates
-        CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height);
-        [shapePath applyTransform:flipTransform];
-        
-        __block CGPoint previousEndpoint = shapePath.firstPoint;
-        [shapePath iteratePathWithBlock:^(CGPathElement pathEle){
-            AbstractBezierPathElement* newElement = nil;
-            if(pathEle.type == kCGPathElementAddCurveToPoint){
-                // curve
-                newElement = [CurveToPathElement elementWithStart:previousEndpoint
-                                                       andCurveTo:pathEle.points[2]
-                                                      andControl1:pathEle.points[0]
-                                                      andControl2:pathEle.points[1]];
-                previousEndpoint = pathEle.points[2];
-            }else if(pathEle.type == kCGPathElementMoveToPoint){
-                newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
-                previousEndpoint = pathEle.points[0];
-            }else if(pathEle.type == kCGPathElementAddLineToPoint){
-                newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
-                previousEndpoint = pathEle.points[0];
-            }
-            if(newElement){
-                // be sure to set color/width/etc
-                newElement.color = [UIColor blackColor];
-                newElement.width = 10.0;
-                newElement.rotation = 0;
-                [elements addObject:newElement];
-            }
-        }];
-    }
+    [shapePath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
+    
+    // flip from CoreGraphics to OpenGL coordinates
+    CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height);
+    [shapePath applyTransform:flipTransform];
+    
+    __block CGPoint previousEndpoint = shapePath.firstPoint;
+    [shapePath iteratePathWithBlock:^(CGPathElement pathEle){
+        AbstractBezierPathElement* newElement = nil;
+        if(pathEle.type == kCGPathElementAddCurveToPoint){
+            // curve
+            newElement = [CurveToPathElement elementWithStart:previousEndpoint
+                                                   andCurveTo:pathEle.points[2]
+                                                  andControl1:pathEle.points[0]
+                                                  andControl2:pathEle.points[1]];
+            previousEndpoint = pathEle.points[2];
+        }else if(pathEle.type == kCGPathElementMoveToPoint){
+            newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
+            previousEndpoint = pathEle.points[0];
+        }else if(pathEle.type == kCGPathElementAddLineToPoint){
+            newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
+            previousEndpoint = pathEle.points[0];
+        }
+        if(newElement){
+            // be sure to set color/width/etc
+            newElement.color = [UIColor blackColor];
+            newElement.width = 10.0;
+            newElement.rotation = 0;
+            [elements addObject:newElement];
+        }
+    }];
     
     [drawableView addElements:[self willAddElementsToStroke:elements fromPreviousElement:nil]];
 }
