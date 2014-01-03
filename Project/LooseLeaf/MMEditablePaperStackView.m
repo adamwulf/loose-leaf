@@ -720,10 +720,6 @@
     return [[self activePen] smoothnessForTouch:touch];
 }
 
--(CGFloat) rotationForSegment:(AbstractBezierPathElement *)segment fromPreviousSegment:(AbstractBezierPathElement *)previousSegment{
-    return [[self activePen] rotationForSegment:segment fromPreviousSegment:previousSegment];
-}
-
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
     return [rulerView willAddElementsToStroke:[[self activePen] willAddElementsToStroke:elements fromPreviousElement:previousElement] fromPreviousElement:previousElement];
 }

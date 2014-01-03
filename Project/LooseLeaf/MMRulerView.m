@@ -776,7 +776,6 @@ static NSDate* lastRender;
                 // be sure to set color/width/etc
                 newElement.color = element.color;
                 newElement.width = element.width;
-                newElement.rotation = element.rotation;
                 [output addObject:newElement];
             }
         }];

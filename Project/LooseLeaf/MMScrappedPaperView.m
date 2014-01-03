@@ -282,7 +282,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         
         CGRect boundsOfScrap = scrapClippingPath.bounds;
         
-        NSMutableArray* newStrokesToCrop = [NSMutableArray array];
+        NSMutableArray* nextStrokesToCrop = [NSMutableArray array];
         
         // the first step is to loop over all of the strokes
         // to see where and if they intersect with our scraps.
@@ -295,17 +295,14 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 // if we don't intersect the bounds of a scrap, then we definitely
                 // don't intersect it's path, so just add it to our return value
                 // (which we'll check on other scraps too)
-                [newStrokesToCrop addObject:element];
+                [nextStrokesToCrop addObject:element];
             }else if([element isKindOfClass:[CurveToPathElement class]]){
                 // ok, we intersect at least the bounds of the scrap, so check
                 // to see if we intersect its path and if we should split it
-                CurveToPathElement* curveElement = (CurveToPathElement*)element;
 
-                // create a imple uibezier path that represents just the path
+                // create a simple uibezier path that represents just the path
                 // of this single element
-                UIBezierPath* strokePath = [UIBezierPath bezierPath];
-                [strokePath moveToPoint:curveElement.startPoint];
-                [strokePath addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
+                UIBezierPath* strokePath = [element bezierPathSegment];
 
                 // now find out where this element intersects the scrap.
                 // this return value will give us the paths of the intersection
@@ -321,7 +318,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 NSMutableArray* elementsToAddToScrap = [NSMutableArray array];
 
                 if([clippingAndIntersectionMetaInformation.intersection isEmpty]){
-                    //
                     // we can't make the same optimization for [.difference isEmpty],
                     // because the element needs to be transformed into the scrap's
                     // coordinate space no matter what. this means that we can't
@@ -329,16 +325,14 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     //
                     // if the entire element lands in the difference (intersection is empty)
                     // then add the entire element to the page/other scraps to look at
-                    [newStrokesToCrop addObject:element];
+                    [nextStrokesToCrop addObject:element];
                 }else{
-                    //
                     // now we've taken our stroke segment, and computed the intersection
                     // and difference with the scrap. we'll add the difference here to
                     // our "strokes to newStrokesToCrop array. we'll crop these with scraps
                     // below this current scrap on our next loop.
                     __block CGPoint previousEndpoint = strokePath.firstPoint;
                     
-                    //
                     // information to track changes in width and color
                     // the index will traack which info in clippingAndIntersectionMetaInformation
                     // is relevant to our difference
@@ -347,7 +341,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     // and we'll use this to calculate what our width should be along
                     // our chopped difference/intersection
                     CGFloat widthDiff = element.width - previousElement.width;
-                    CGFloat rotationDiff = element.rotation - previousElement.rotation;
                     GLfloat _prevColor[4], elementColor[4];
                     GLfloat _colorDiff[4];
                     CGFloat* prevColor = (CGFloat*)_prevColor;
@@ -382,7 +375,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
                                 newElement.color = nil;
                             }
                             newElement.width = previousElement.width + widthDiff*tValueAtStartPoint;
-                            newElement.rotation = previousElement.rotation + rotationDiff*tValueAtStartPoint;
                         }else if(pathEle.type == kCGPathElementAddCurveToPoint ||
                                  pathEle.type == kCGPathElementAddLineToPoint){
                             // if i'ts a curve/line to, then this is the meat of the
@@ -415,12 +407,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
                                 newElement.color = nil;
                             }
                             newElement.width = previousElement.width + widthDiff*tValueAtEndPoint;
-                            newElement.rotation = previousElement.rotation + rotationDiff*tValueAtEndPoint;
                             
                             clippingInformationIndex++;
                         }
                         if(newElement){
-                            [newStrokesToCrop addObject:newElement];
+                            [nextStrokesToCrop addObject:newElement];
                         }
                     }];
                     
@@ -501,7 +492,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
                             }
                             newElement.width = previousElement.width + widthDiff*tValueAtStartPoint;
                             newElement.width /= scrap.scale;
-                            newElement.rotation = previousElement.rotation + rotationDiff*tValueAtStartPoint;
                         }else if(pathEle.type == kCGPathElementAddCurveToPoint ||
                                  pathEle.type == kCGPathElementAddLineToPoint){
                             if(pathEle.type == kCGPathElementAddCurveToPoint){
@@ -527,7 +517,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
                             }
                             newElement.width = previousElement.width + widthDiff*tValueAtEndPoint;
                             newElement.width /= scrap.scale;
-                            newElement.rotation = previousElement.rotation + rotationDiff*tValueAtEndPoint;
                             
                             clippingInformationIndex++;
                         }
@@ -540,13 +529,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     [scrap addElements:elementsToAddToScrap];
                 }
             }else{
-                [newStrokesToCrop addObject:element];
+                [nextStrokesToCrop addObject:element];
             }
             
             previousElement = element;
         }
         
-        strokesToCrop = newStrokesToCrop;
+        strokesToCrop = nextStrokesToCrop;
     }
     
     // anything that's left over at this point

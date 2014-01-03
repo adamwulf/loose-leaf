@@ -408,10 +408,6 @@ static int count = 0;
     return [delegate smoothnessForTouch:touch];
 }
 
--(CGFloat) rotationForSegment:(AbstractBezierPathElement *)segment fromPreviousSegment:(AbstractBezierPathElement *)previousSegment{
-    return [delegate rotationForSegment:segment fromPreviousSegment:previousSegment];;
-}
-
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
     
     NSArray* modifiedElements = [self.delegate willAddElementsToStroke:elements fromPreviousElement:previousElement];
@@ -456,7 +452,6 @@ static int count = 0;
                         // be sure to set color/width/etc
                         newElement.color = element.color;
                         newElement.width = element.width;
-                        newElement.rotation = element.rotation;
                         [croppedElements addObject:newElement];
                     }
                 }];
