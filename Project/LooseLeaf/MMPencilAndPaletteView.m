@@ -9,7 +9,7 @@
 #import "MMPencilAndPaletteView.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Constants.h"
-#import "UIColor+ColorWithHex.h"
+#import "AVHexColor.h"
 
 @implementation MMPencilAndPaletteView{
     CGRect originalFrame;
@@ -74,7 +74,7 @@
         [self setAnchorPoint:CGPointMake((pencilLocInContentHolder.x + originalFrame.size.width / 2) / blackColorHolder.frame.size.width,
                                          (pencilLocInContentHolder.y + originalFrame.size.height / 2) / blackColorHolder.frame.size.height) forView:blueColorHolder];
         [self addSubview:blueColorHolder];
-        blueButton = [[MMColorButton alloc] initWithColor:[UIColor colorWithHexString:@"3C7BFF"] andFrame:CGRectMake(pencilLocInContentHolder.x - kWidthOfSidebarButton * cosf(M_PI / 3), pencilLocInContentHolder.y + kWidthOfSidebarButton * sinf(M_PI / 3), originalFrame.size.width, originalFrame.size.height)];
+        blueButton = [[MMColorButton alloc] initWithColor:[AVHexColor colorWithHexString:@"3C7BFF"] andFrame:CGRectMake(pencilLocInContentHolder.x - kWidthOfSidebarButton * cosf(M_PI / 3), pencilLocInContentHolder.y + kWidthOfSidebarButton * sinf(M_PI / 3), originalFrame.size.width, originalFrame.size.height)];
         [blueButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [blueColorHolder addSubview:blueButton];
     
@@ -82,7 +82,7 @@
         [self setAnchorPoint:CGPointMake((pencilLocInContentHolder.x + originalFrame.size.width / 2) / blackColorHolder.frame.size.width,
                                          (pencilLocInContentHolder.y + originalFrame.size.height / 2) / blackColorHolder.frame.size.height) forView:redColorHolder];
         [self addSubview:redColorHolder];
-        redButton = [[MMColorButton alloc] initWithColor:[UIColor colorWithHexString:@"E8373E"] andFrame:CGRectMake(pencilLocInContentHolder.x - 2 * kWidthOfSidebarButton, pencilLocInContentHolder.y, originalFrame.size.width, originalFrame.size.height)];
+        redButton = [[MMColorButton alloc] initWithColor:[AVHexColor colorWithHexString:@"E8373E"] andFrame:CGRectMake(pencilLocInContentHolder.x - 2 * kWidthOfSidebarButton, pencilLocInContentHolder.y, originalFrame.size.width, originalFrame.size.height)];
         [redButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [redColorHolder addSubview:redButton];
         
@@ -90,7 +90,7 @@
         [self setAnchorPoint:CGPointMake((pencilLocInContentHolder.x + originalFrame.size.width / 2) / blackColorHolder.frame.size.width,
                                          (pencilLocInContentHolder.y + originalFrame.size.height / 2) / blackColorHolder.frame.size.height) forView:yellowColorHolder];
         [self addSubview:yellowColorHolder];
-        yellowButton = [[MMColorButton alloc] initWithColor:[UIColor colorWithHexString:@"FFE230"] andFrame:CGRectMake(pencilLocInContentHolder.x - 1.8 * kWidthOfSidebarButton * cosf(M_PI / 6), pencilLocInContentHolder.y + 1.8 * kWidthOfSidebarButton * sinf(M_PI / 6), originalFrame.size.width, originalFrame.size.height)];
+        yellowButton = [[MMColorButton alloc] initWithColor:[AVHexColor colorWithHexString:@"FFE230"] andFrame:CGRectMake(pencilLocInContentHolder.x - 1.8 * kWidthOfSidebarButton * cosf(M_PI / 6), pencilLocInContentHolder.y + 1.8 * kWidthOfSidebarButton * sinf(M_PI / 6), originalFrame.size.width, originalFrame.size.height)];
         [yellowButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [yellowColorHolder addSubview:yellowButton];
         
@@ -98,7 +98,7 @@
         [self setAnchorPoint:CGPointMake((pencilLocInContentHolder.x + originalFrame.size.width / 2) / blackColorHolder.frame.size.width,
                                          (pencilLocInContentHolder.y + originalFrame.size.height / 2) / blackColorHolder.frame.size.height) forView:greenColorHolder];
         [self addSubview:greenColorHolder];
-        greenButton = [[MMColorButton alloc] initWithColor:[UIColor colorWithHexString:@"5EF52E"] andFrame:CGRectMake(pencilLocInContentHolder.x - 2 * kWidthOfSidebarButton * cosf(M_PI / 3), pencilLocInContentHolder.y + 2 * kWidthOfSidebarButton * sinf(M_PI / 3), originalFrame.size.width, originalFrame.size.height)];
+        greenButton = [[MMColorButton alloc] initWithColor:[AVHexColor colorWithHexString:@"5EF52E"] andFrame:CGRectMake(pencilLocInContentHolder.x - 2 * kWidthOfSidebarButton * cosf(M_PI / 3), pencilLocInContentHolder.y + 2 * kWidthOfSidebarButton * sinf(M_PI / 3), originalFrame.size.width, originalFrame.size.height)];
         [greenButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [greenColorHolder addSubview:greenButton];
         

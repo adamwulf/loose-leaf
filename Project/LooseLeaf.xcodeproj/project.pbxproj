@@ -37,7 +37,6 @@
 		665C593717BD7CD3006DECBF /* PolygonTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 665C593617BD7CD3006DECBF /* PolygonTool.m */; };
 		665CAC1D17B578B0000BD505 /* MMColorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 665CAC1C17B578B0000BD505 /* MMColorButton.m */; };
 		665CAC2117B57B0B000BD505 /* MMPencilAndPaletteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 665CAC2017B57B0B000BD505 /* MMPencilAndPaletteView.m */; };
-		665CAC2517B58FD3000BD505 /* UIColor+ColorWithHex.m in Sources */ = {isa = PBXBuildFile; fileRef = 665CAC2417B58FC8000BD505 /* UIColor+ColorWithHex.m */; };
 		6661144716FD67F8005032B9 /* Loose-Leaf-Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144616FD67F8005032B9 /* Loose-Leaf-Icon.png */; };
 		6661144A16FD67FA005032B9 /* Loose-Leaf-Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144916FD67FA005032B9 /* Loose-Leaf-Icon@2x.png */; };
 		6667480617C0166100D5C390 /* MMShapeBuilderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6667480517C0166100D5C390 /* MMShapeBuilderView.m */; };
@@ -71,6 +70,7 @@
 		66999051185F7501005581D9 /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66999050185F7501005581D9 /* DrawKit-iOS.framework */; };
 		66A13D3A1631D9D9002F5428 /* MMObjectSelectLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D3F1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66A2904B187773E70036E4B7 /* AVHexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A2904A187773E70036E4B7 /* AVHexColor.m */; };
 		66A3921817CC4EE000B4974D /* NSArray+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3921717CC4EE000B4974D /* NSArray+Extras.m */; };
 		66A3A6BB1791F18900D8FE1D /* UIDevice+PPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3A6BA1791F18900D8FE1D /* UIDevice+PPI.m */; };
 		66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */; };
@@ -199,8 +199,6 @@
 		665CAC1F17B57B0B000BD505 /* MMPencilAndPaletteView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPencilAndPaletteView.h; sourceTree = "<group>"; };
 		665CAC2017B57B0B000BD505 /* MMPencilAndPaletteView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPencilAndPaletteView.m; sourceTree = "<group>"; };
 		665CAC2217B5803B000BD505 /* MMPencilAndPaletteViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPencilAndPaletteViewDelegate.h; sourceTree = "<group>"; };
-		665CAC2317B58FC8000BD505 /* UIColor+ColorWithHex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIColor+ColorWithHex.h"; path = "../../Submodules/ColorWithHex/UIColor+ColorWithHex.h"; sourceTree = "<group>"; };
-		665CAC2417B58FC8000BD505 /* UIColor+ColorWithHex.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIColor+ColorWithHex.m"; path = "../../Submodules/ColorWithHex/UIColor+ColorWithHex.m"; sourceTree = "<group>"; };
 		6661144616FD67F8005032B9 /* Loose-Leaf-Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf-Icon.png"; path = "../Loose-Leaf-Icon.png"; sourceTree = "<group>"; };
 		6661144916FD67FA005032B9 /* Loose-Leaf-Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf-Icon@2x.png"; path = "../Loose-Leaf-Icon@2x.png"; sourceTree = "<group>"; };
 		6667480317BEEDD300D5C390 /* PolygonToolDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PolygonToolDelegate.h; sourceTree = "<group>"; };
@@ -269,6 +267,8 @@
 		66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMObjectSelectLongPressGestureRecognizer.m; sourceTree = "<group>"; };
 		66A13D3E1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImmovableTapGestureRecognizer.h; sourceTree = "<group>"; };
 		66A13D3F1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImmovableTapGestureRecognizer.m; sourceTree = "<group>"; };
+		66A29049187773E70036E4B7 /* AVHexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AVHexColor.h; path = ../../Submodules/ColorWithHex/AVHexColor.h; sourceTree = "<group>"; };
+		66A2904A187773E70036E4B7 /* AVHexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AVHexColor.m; path = ../../Submodules/ColorWithHex/AVHexColor.m; sourceTree = "<group>"; };
 		66A3921517CC126D00B4974D /* MMPanGestureDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPanGestureDelegate.h; sourceTree = "<group>"; };
 		66A3921617CC4EE000B4974D /* NSArray+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Extras.h"; sourceTree = "<group>"; };
 		66A3921717CC4EE000B4974D /* NSArray+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Extras.m"; sourceTree = "<group>"; };
@@ -430,8 +430,8 @@
 		660E1DA6158FC6120001DA12 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				665CAC2317B58FC8000BD505 /* UIColor+ColorWithHex.h */,
-				665CAC2417B58FC8000BD505 /* UIColor+ColorWithHex.m */,
+				66A29049187773E70036E4B7 /* AVHexColor.h */,
+				66A2904A187773E70036E4B7 /* AVHexColor.m */,
 				66A4BD4416321ABC00C45070 /* NSThread+BlockAdditions.h */,
 				66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */,
 				66A3A6B91791F18900D8FE1D /* UIDevice+PPI.h */,
@@ -1154,10 +1154,10 @@
 				66BD6E701593A8CC00D4544C /* MMPlusButton.m in Sources */,
 				66BD6E801593AF4200D4544C /* MMSidebarButton.m in Sources */,
 				66BD6E8E1593D18800D4544C /* MMPolylineButton.m in Sources */,
+				66A2904B187773E70036E4B7 /* AVHexColor.m in Sources */,
 				66BD6E911593DE4E00D4544C /* MMPolygonButton.m in Sources */,
 				66BD6E941593E1D800D4544C /* MMImageButton.m in Sources */,
 				66BD6E971593E98D00D4544C /* MMTextButton.m in Sources */,
-				665CAC2517B58FD3000BD505 /* UIColor+ColorWithHex.m in Sources */,
 				66BD6E9C15940D7500D4544C /* MMPencilButton.m in Sources */,
 				66BD6E9F15941B7B00D4544C /* MMShareButton.m in Sources */,
 				66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */,
