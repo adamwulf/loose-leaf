@@ -9,7 +9,6 @@
 #import "MMShapeBuilderView.h"
 #import <TouchShape/TouchShape.h>
 #import "DrawKit-iOS.h"
-#import "UIColor+ColorWithHex.h"
 #import "SYShape+Bezier.h"
 #import "Constants.h"
 

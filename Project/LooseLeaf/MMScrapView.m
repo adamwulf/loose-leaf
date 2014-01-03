@@ -7,7 +7,6 @@
 //
 
 #import "MMScrapView.h"
-#import "UIColor+ColorWithHex.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
 #import "MMRotationManager.h"

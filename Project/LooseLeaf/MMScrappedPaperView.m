@@ -8,7 +8,6 @@
 
 #import "MMScrappedPaperView.h"
 #import "PolygonToolDelegate.h"
-#import "UIColor+ColorWithHex.h"
 #import "MMScrapView.h"
 #import "MMScrapContainerView.h"
 #import "NSThread+BlockAdditions.h"
