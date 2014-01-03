@@ -11,6 +11,9 @@
       location = "group:Submodules/DrawKit-iOS/DrawKit-iOS.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:LittleClipper/LittleClipper.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "container:Project/LooseLeaf.xcodeproj">
    </FileRef>
 </Workspace>
