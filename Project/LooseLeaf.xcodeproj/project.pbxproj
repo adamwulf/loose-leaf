@@ -89,6 +89,7 @@
 		66B21A7A175E595B0049F1AF /* MMBlockOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A79175E595B0049F1AF /* MMBlockOperation.m */; };
 		66B3522517A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B3522417A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m */; };
 		66B51A2A17AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B51A2917AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66B75DB51877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B75DB41877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.m */; };
 		66B843F717B05488008BF8B8 /* Loose-Leaf-Icon72.png in Resources */ = {isa = PBXBuildFile; fileRef = 66B843F517B05488008BF8B8 /* Loose-Leaf-Icon72.png */; };
 		66B843F817B05488008BF8B8 /* Loose-Leaf-Icon144.png in Resources */ = {isa = PBXBuildFile; fileRef = 66B843F617B05488008BF8B8 /* Loose-Leaf-Icon144.png */; };
 		66BD6E301591B57B00D4544C /* MMPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* MMPaperButton.m */; };
@@ -309,6 +310,8 @@
 		66B51A2817AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBezelInLeftGestureRecognizer.h; sourceTree = "<group>"; };
 		66B51A2917AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBezelInLeftGestureRecognizer.m; sourceTree = "<group>"; };
 		66B62C5017F247B7006D31EB /* MMEditablePaperViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEditablePaperViewDelegate.h; sourceTree = "<group>"; };
+		66B75DB31877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DKUIBezierPathClippedSegment+PathElement.h"; sourceTree = "<group>"; };
+		66B75DB41877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DKUIBezierPathClippedSegment+PathElement.m"; sourceTree = "<group>"; };
 		66B843F517B05488008BF8B8 /* Loose-Leaf-Icon72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Loose-Leaf-Icon72.png"; sourceTree = SOURCE_ROOT; };
 		66B843F617B05488008BF8B8 /* Loose-Leaf-Icon144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Loose-Leaf-Icon144.png"; sourceTree = SOURCE_ROOT; };
 		66BD6E2E1591B57B00D4544C /* MMPaperButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperButton.h; sourceTree = "<group>"; };
@@ -430,6 +433,8 @@
 		660E1DA6158FC6120001DA12 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				66B75DB21877ADAF00EF0A48 /* DrawKit */,
+				66A471BF17C7DED500C2A5B6 /* TouchShape */,
 				66A29049187773E70036E4B7 /* AVHexColor.h */,
 				66A2904A187773E70036E4B7 /* AVHexColor.m */,
 				66A4BD4416321ABC00C45070 /* NSThread+BlockAdditions.h */,
@@ -742,6 +747,7 @@
 				66A471C117C7DEF200C2A5B6 /* SYShape+Bezier.m */,
 			);
 			name = TouchShape;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		66A471C317C7E05C00C2A5B6 /* Scraps */ = {
@@ -830,6 +836,15 @@
 			name = "Page State";
 			sourceTree = "<group>";
 		};
+		66B75DB21877ADAF00EF0A48 /* DrawKit */ = {
+			isa = PBXGroup;
+			children = (
+				66B75DB31877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.h */,
+				66B75DB41877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.m */,
+			);
+			name = DrawKit;
+			sourceTree = "<group>";
+		};
 		66BD6E811593AF4500D4544C /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
@@ -894,7 +909,6 @@
 		66DCFB7B1581BCED00B4918C = {
 			isa = PBXGroup;
 			children = (
-				66A471BF17C7DED500C2A5B6 /* TouchShape */,
 				66DCFB901581BCEF00B4918C /* Loose Leaf */,
 				6641F9D617B81D630000489F /* Test Data */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
@@ -1157,6 +1171,7 @@
 				66A2904B187773E70036E4B7 /* AVHexColor.m in Sources */,
 				66BD6E911593DE4E00D4544C /* MMPolygonButton.m in Sources */,
 				66BD6E941593E1D800D4544C /* MMImageButton.m in Sources */,
+				66B75DB51877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.m in Sources */,
 				66BD6E971593E98D00D4544C /* MMTextButton.m in Sources */,
 				66BD6E9C15940D7500D4544C /* MMPencilButton.m in Sources */,
 				66BD6E9F15941B7B00D4544C /* MMShareButton.m in Sources */,

@@ -19,6 +19,7 @@
 #import "MMImmutableScrapsOnPaperState.h"
 #import <JotUI/UIColor+JotHelper.h>
 #import <DrawKit-iOS/DrawKit-iOS.h>
+#import "DKUIBezierPathClippedSegment+PathElement.h"
 
 
 @implementation MMScrappedPaperView{
@@ -302,6 +303,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 // of this single element
                 UIBezierPath* strokePath = [element bezierPathSegment];
 
+                // track which elements we should add to the scrap
+                // instead of continue to chop and add to the page / other scrap
+                NSMutableArray* elementsToAddToScrap = [NSMutableArray array];
+
                 // now find out where this element intersects the scrap.
                 // this return value will give us the paths of the intersection
                 // and the difference, as well as the tvalues on our element
@@ -309,15 +314,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 //
                 // this will let us calcualte how much the width/color/rotation
                 // change during each split
-                BOOL beginsInside = NO;
-                NSArray* intersections = [strokePath findIntersectionsWithClosedPath:scrapClippingPath andBeginsInside:&beginsInside];
-                DKUIBezierPathClippingResult* clippingAndIntersectionMetaInformation = [strokePath clipUnclosedPathToClosedPath:scrapClippingPath usingIntersectionPoints:intersections andBeginsInside:beginsInside];
+                NSArray* redAndBlueSegments = [UIBezierPath redAndGreenAndBlueSegmentsCreatedFrom:scrapClippingPath bySlicingWithPath:strokePath];
+                NSArray* redSegments = [redAndBlueSegments firstObject]; // intersection
+                NSArray* greenSegments = [redAndBlueSegments objectAtIndex:1]; // difference
                 
-                // track which elements we should add to the scrap
-                // instead of continue to chop and add to the page / other scrap
-                NSMutableArray* elementsToAddToScrap = [NSMutableArray array];
-
-                if([clippingAndIntersectionMetaInformation.entireIntersectionPath isEmpty]){
+                if(![redSegments count]){
                     // we can't make the same optimization for [.difference isEmpty],
                     // because the element needs to be transformed into the scrap's
                     // coordinate space no matter what. this means that we can't
@@ -327,105 +328,17 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     // then add the entire element to the page/other scraps to look at
                     [nextStrokesToCrop addObject:element];
                 }else{
-                    // now we've taken our stroke segment, and computed the intersection
-                    // and difference with the scrap. we'll add the difference here to
-                    // our "strokes to newStrokesToCrop array. we'll crop these with scraps
-                    // below this current scrap on our next loop.
-                    __block CGPoint previousEndpoint = strokePath.firstPoint;
+                    // take the difference of the drawn stroke, and send those elements
+                    // to the next scrap beneath us to clip them smaller still.
+                    // any unclipped elements will be passed back up to the page
+                    // itself
+                    for(DKUIBezierPathClippedSegment* segment in greenSegments){
+                        [nextStrokesToCrop addObjectsFromArray:[segment convertToPathElementsFromColor:previousElement.color
+                                                                                             toColor:element.color
+                                                                                           fromWidth:previousElement.width
+                                                                                             toWidth:element.width]];
+                    }
                     
-                    // information to track changes in width and color
-                    // the index will traack which info in clippingAndIntersectionMetaInformation
-                    // is relevant to our difference
-                    __block int clippingInformationIndex = 0;
-                    // this is the total width difference along our original element,
-                    // and we'll use this to calculate what our width should be along
-                    // our chopped difference/intersection
-                    CGFloat widthDiff = element.width - previousElement.width;
-                    GLfloat _prevColor[4], elementColor[4];
-                    GLfloat _colorDiff[4];
-                    CGFloat* prevColor = (CGFloat*)_prevColor;
-                    CGFloat* colorDiff = (CGFloat*)_colorDiff;
-                    [previousElement.color getRGBAComponents:prevColor];
-                    [element.color getRGBAComponents:elementColor];
-                    colorDiff[0] = elementColor[0] - prevColor[0];
-                    colorDiff[1] = elementColor[1] - prevColor[1];
-                    colorDiff[2] = elementColor[2] - prevColor[2];
-                    colorDiff[3] = elementColor[3] - prevColor[3];
-                    [clippingAndIntersectionMetaInformation.entireDifferencePath iteratePathWithBlock:^(CGPathElement pathEle){
-                        AbstractBezierPathElement* newElement = nil;
-                        DKUIBezierPathClippedSegment* clippingInformation = [clippingAndIntersectionMetaInformation.differenceSegments objectAtIndex:clippingInformationIndex];
-                        //
-                        // there are two possibilities - either it's a move to
-                        // or a curve/line to.
-                        if(pathEle.type == kCGPathElementMoveToPoint){
-                            // if it's a move to, then we're just beginning this next segment.
-                            // create the MoveTo element and initialize it's width/color/rotation
-                            // to what it would have been at that location if we hand't split
-                            newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
-                            previousEndpoint = pathEle.points[0];
-                            
-                            CGFloat tValueAtStartPoint = clippingInformation.startIntersection.tValue1;
-                            CGFloat red = prevColor[0] + colorDiff[0] * tValueAtStartPoint;
-                            CGFloat green = prevColor[1] + colorDiff[1] * tValueAtStartPoint;
-                            CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtStartPoint;
-                            CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtStartPoint;
-                            if(element.color){
-                                newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
-                            }else{
-                                newElement.color = nil;
-                            }
-                            newElement.width = previousElement.width + widthDiff*tValueAtStartPoint;
-                        }else if(pathEle.type == kCGPathElementAddCurveToPoint ||
-                                 pathEle.type == kCGPathElementAddLineToPoint){
-                            // if i'ts a curve/line to, then this is the meat of the
-                            // curve. create the element, and set it's width/color/rotation
-                            // to what it would have been at the end of this peice.
-                            //
-                            // when this is rendered, it'll draw a line with the attributes
-                            // interpolating between the MoveTo defined above, and this curveTo
-                            if(pathEle.type == kCGPathElementAddCurveToPoint){
-                                // curve
-                                newElement = [CurveToPathElement elementWithStart:previousEndpoint
-                                                                       andCurveTo:pathEle.points[2]
-                                                                      andControl1:pathEle.points[0]
-                                                                      andControl2:pathEle.points[1]];
-                                previousEndpoint = pathEle.points[2];
-                            }else if(pathEle.type == kCGPathElementAddLineToPoint){
-                                newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
-                                previousEndpoint = pathEle.points[0];
-                            }
-                            
-                            // be sure to set color/width/etc
-                            CGFloat tValueAtEndPoint = clippingInformation.endIntersection.tValue1;
-                            if(element.color){
-                                CGFloat red = prevColor[0] + colorDiff[0] * tValueAtEndPoint;
-                                CGFloat green = prevColor[1] + colorDiff[1] * tValueAtEndPoint;
-                                CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtEndPoint;
-                                CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtEndPoint;
-                                newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
-                            }else{
-                                newElement.color = nil;
-                            }
-                            newElement.width = previousElement.width + widthDiff*tValueAtEndPoint;
-                            
-                            clippingInformationIndex++;
-                        }
-                        if(newElement){
-                            [nextStrokesToCrop addObject:newElement];
-                        }
-                    }];
-                    
-                    // this UIBezierPath represents the intersection of our input
-                    // stroke over our scrap. this path needs to be adjusted into
-                    // the scrap's coordinate system and then added to the scrap
-                    //
-                    // I'm applying transforms to this path below, so if i were to
-                    // reuse this path I'd want to [copy] it. but i don't need to
-                    // because I only use it once.
-                    UIBezierPath* inter = clippingAndIntersectionMetaInformation.entireIntersectionPath;
-                    // if the intersection contains any segments at all
-                    
-                    previousEndpoint = strokePath.firstPoint;
 
                     // since a scrap's center point is changed if the scrap is being
                     // held, we can't just use scrap.center to adjust the path for
@@ -434,16 +347,20 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     // changed or not.
                     CGPoint calculatedScrapCenter = [scrap convertPoint:CGPointMake(scrap.bounds.size.width/2, scrap.bounds.size.height/2) toView:scrap.superview];
                     
+                    // determine the tranlsation that we need to make on the path
+                    // so that it's moved into the scrap's coordinate space
+                    CGAffineTransform entireTransform = CGAffineTransformIdentity;
+                    
                     // find the scrap location in open gl
                     CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height);
                     CGPoint scrapCenterInOpenGL = CGPointApplyAffineTransform(calculatedScrapCenter, flipTransform);
                     // center the stroke around the scrap center,
                     // so that any scale/rotate happens in relation to the scrap
-                    [inter applyTransform:CGAffineTransformMakeTranslation(-scrapCenterInOpenGL.x, -scrapCenterInOpenGL.y)];
+                    entireTransform = CGAffineTransformConcat(entireTransform, CGAffineTransformMakeTranslation(-scrapCenterInOpenGL.x, -scrapCenterInOpenGL.y));
                     // now scale and rotate the scrap
                     // we reverse the scale, b/c the scrap itself is scaled. these two together will make the
                     // path have a scale of 1 after it's added
-                    [inter applyTransform:CGAffineTransformMakeScale(1.0/scrap.scale, 1.0/scrap.scale)];
+                    entireTransform = CGAffineTransformConcat(entireTransform, CGAffineTransformMakeScale(1.0/scrap.scale, 1.0/scrap.scale));
                     // this one confuses me honestly. i would think that
                     // i'd need to rotate by -scrap.rotation so that with the
                     // scrap's rotation it'd end up not rotated at all. somehow the
@@ -459,71 +376,28 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     //
                     // either way, when i rotate the path by scrap.rotation, it ends up
                     // in the correct visible space. it works!
-                    [inter applyTransform:CGAffineTransformMakeRotation(scrap.rotation)];
+                    entireTransform = CGAffineTransformConcat(entireTransform, CGAffineTransformMakeRotation(scrap.rotation));
                     
                     // before this line, the path is in the correct place for a scrap
                     // that has (0,0) in it's center. now move everything so that
                     // (0,0) is in the bottom/left of the scrap. (this might also
                     // help w/ the rotation somehow, since the rotate happens before the
                     // translate (?)
-                    
                     CGPoint recenter = CGPointMake(scrap.bounds.size.width/2, scrap.bounds.size.height/2);
-                    [inter applyTransform:CGAffineTransformMakeTranslation(recenter.x, recenter.y)];
+                    entireTransform = CGAffineTransformConcat(entireTransform, CGAffineTransformMakeTranslation(recenter.x, recenter.y));
                     
-                    
-                    // here's our meta for the segment tvalue information
-                    clippingInformationIndex = 0;
-                    // now add it to the scrap!
-                    [inter iteratePathWithBlock:^(CGPathElement pathEle){
-                        AbstractBezierPathElement* newElement = nil;
-                        DKUIBezierPathClippedSegment* clippingInformation = [clippingAndIntersectionMetaInformation.intersectionSegments objectAtIndex:clippingInformationIndex];
-                        if(pathEle.type == kCGPathElementMoveToPoint){
-                            newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
-                            previousEndpoint = pathEle.points[0];
-                            CGFloat tValueAtStartPoint = clippingInformation.startIntersection.tValue1;
-                            if(element.color){
-                                CGFloat red = prevColor[0] + colorDiff[0] * tValueAtStartPoint;
-                                CGFloat green = prevColor[1] + colorDiff[1] * tValueAtStartPoint;
-                                CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtStartPoint;
-                                CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtStartPoint;
-                                newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
-                            }else{
-                                newElement.color = nil;
-                            }
-                            newElement.width = previousElement.width + widthDiff*tValueAtStartPoint;
-                            newElement.width /= scrap.scale;
-                        }else if(pathEle.type == kCGPathElementAddCurveToPoint ||
-                                 pathEle.type == kCGPathElementAddLineToPoint){
-                            if(pathEle.type == kCGPathElementAddCurveToPoint){
-                                // curve
-                                newElement = [CurveToPathElement elementWithStart:previousEndpoint
-                                                                       andCurveTo:pathEle.points[2]
-                                                                      andControl1:pathEle.points[0]
-                                                                      andControl2:pathEle.points[1]];
-                                previousEndpoint = pathEle.points[2];
-                            }else if(pathEle.type == kCGPathElementAddLineToPoint){
-                                newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
-                                previousEndpoint = pathEle.points[0];
-                            }
-                            CGFloat tValueAtEndPoint = clippingInformation.endIntersection.tValue1;
-                            if(element.color){
-                                CGFloat red = prevColor[0] + colorDiff[0] * tValueAtEndPoint;
-                                CGFloat green = prevColor[1] + colorDiff[1] * tValueAtEndPoint;
-                                CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtEndPoint;
-                                CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtEndPoint;
-                                newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
-                            }else{
-                                newElement.color = nil;
-                            }
-                            newElement.width = previousElement.width + widthDiff*tValueAtEndPoint;
-                            newElement.width /= scrap.scale;
-                            
-                            clippingInformationIndex++;
-                        }
-                        if(newElement){
-                            [elementsToAddToScrap addObject:newElement];
-                        }
-                    }];
+                    // take the difference of the drawn stroke, and send those elements
+                    // to the next scrap beneath us to clip them smaller still.
+                    // any unclipped elements will be passed back up to the page
+                    // itself
+                    for(DKUIBezierPathClippedSegment* segment in redSegments){
+                        [elementsToAddToScrap addObjectsFromArray:[segment convertToPathElementsFromColor:previousElement.color
+                                                                                               toColor:element.color
+                                                                                             fromWidth:previousElement.width
+                                                                                               toWidth:element.width
+                                                                                         withTransform:entireTransform
+                                                                                                 andScale:scrap.scale]];
+                    }
                 }
                 if([elementsToAddToScrap count]){
                     [scrap addElements:elementsToAddToScrap];

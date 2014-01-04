@@ -13,6 +13,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "TestFlight.h"
 #import <DrawKit-iOS/DrawKit-iOS.h>
+#import "DKUIBezierPathClippedSegment+PathElement.h"
 
 dispatch_queue_t importThumbnailQueue;
 
@@ -414,16 +415,13 @@ static int count = 0;
     NSMutableArray* croppedElements = [NSMutableArray array];
     for(AbstractBezierPathElement* element in modifiedElements){
         if([element isKindOfClass:[CurveToPathElement class]]){
-            CurveToPathElement* curveElement = (CurveToPathElement*) element;
-            UIBezierPath* bez = [UIBezierPath bezierPath];
-            [bez moveToPoint:[element startPoint]];
-            [bez addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
+            UIBezierPath* bez = [element bezierPathSegment];
             
-            BOOL beginsInside = NO;
-            NSArray* intersections = [bez findIntersectionsWithClosedPath:boundsPath andBeginsInside:&beginsInside];
-            DKUIBezierPathClippingResult* output = [bez clipUnclosedPathToClosedPath:boundsPath usingIntersectionPoints:intersections andBeginsInside:beginsInside];
+            NSArray* redAndBlueSegments = [UIBezierPath redAndGreenAndBlueSegmentsCreatedFrom:boundsPath bySlicingWithPath:bez];
+            NSArray* redSegments = [redAndBlueSegments firstObject];
+            NSArray* greenSegments = [redAndBlueSegments objectAtIndex:1];
 
-            if([output.entireDifferencePath isEmpty]){
+            if(![greenSegments count]){
                 // if the difference is empty, then that means that the entire
                 // element landed in the intersection. so just add the entire element
                 // to our output
@@ -431,30 +429,13 @@ static int count = 0;
             }else{
                 // if the element was chopped up somehow, then interate
                 // through the intersection and build new element objects
-                __block CGPoint previousEndpoint = curveElement.startPoint;
-                [output.entireIntersectionPath iteratePathWithBlock:^(CGPathElement pathEle){
-                    AbstractBezierPathElement* newElement = nil;
-                    if(pathEle.type == kCGPathElementAddCurveToPoint){
-                        // curve
-                        newElement = [CurveToPathElement elementWithStart:previousEndpoint
-                                                               andCurveTo:pathEle.points[2]
-                                                              andControl1:pathEle.points[0]
-                                                              andControl2:pathEle.points[1]];
-                        previousEndpoint = pathEle.points[2];
-                    }else if(pathEle.type == kCGPathElementMoveToPoint){
-                        newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
-                        previousEndpoint = pathEle.points[0];
-                    }else if(pathEle.type == kCGPathElementAddLineToPoint){
-                        newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
-                        previousEndpoint = pathEle.points[0];
-                    }
-                    if(newElement){
-                        // be sure to set color/width/etc
-                        newElement.color = element.color;
-                        newElement.width = element.width;
-                        [croppedElements addObject:newElement];
-                    }
-                }];
+                for(DKUIBezierPathClippedSegment* segment in redSegments){
+                    [croppedElements addObjectsFromArray:[segment convertToPathElementsFromColor:previousElement.color
+                                                                                         toColor:element.color
+                                                                                       fromWidth:previousElement.width
+                                                                                         toWidth:element.width]];
+                    
+                }
             }
             if([croppedElements count] && [[croppedElements firstObject] isKindOfClass:[MoveToPathElement class]]){
                 [croppedElements removeObjectAtIndex:0];
@@ -462,6 +443,7 @@ static int count = 0;
         }else{
             [croppedElements addObject:element];
         }
+        previousElement = element;
     }
     return croppedElements;
 }
