@@ -9,6 +9,7 @@
 #import "MMScrapViewState.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMLoadImageCache.h"
+#import <DrawKit-iOS/DrawKit-iOS.h>
 
 #define kScrapShadowBufferSize 4
 
@@ -83,6 +84,8 @@
             CGRect originalBounds = _path.bounds;
             [_path applyTransform:CGAffineTransformMakeTranslation(-originalBounds.origin.x + kScrapShadowBufferSize, -originalBounds.origin.y + kScrapShadowBufferSize)];
             bezierPath = _path;
+            
+            NSLog(@"(%f %f %f %f) (%f %f)", bezierPath.bounds.origin.x, bezierPath.bounds.origin.y, bezierPath.bounds.size.width, bezierPath.bounds.size.height, bezierPath.center.x, bezierPath.center.y);
 
             //save initial bezier path to disk
             // not the most elegant solution, but it works and is fast enough for now

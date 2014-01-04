@@ -76,7 +76,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
  * and size of the new scrap from its
  * bounds
  */
--(void) addScrapWithPath:(UIBezierPath*)path{
+-(MMScrapView*) addScrapWithPath:(UIBezierPath*)path{
 
     // find our current "best" of an unrotated path
     CGRect pathBounds = path.bounds;
@@ -112,49 +112,12 @@ static dispatch_queue_t concurrentBackgroundQueue;
 //    NSLog(@"memory savings of: %f", (1 - lastBestSize / initialSize));
     
     if(lastBestRotation){
-        // ok, we have a rotation that'll give us a smaller square pixels
-        // for the scrap's backing texture. make sure to rotate the
-        // scrap around its center.
-        CGPoint pathCenter = path.center;
-        CGPoint initialFirstPoint = path.firstPoint;
-        // first, translate to the center,
-        CGAffineTransform rotateAroundCenterTransform = CGAffineTransformMakeTranslation(-pathCenter.x, -pathCenter.y);
-        // then rotate,
-        rotateAroundCenterTransform = CGAffineTransformConcat(rotateAroundCenterTransform, CGAffineTransformMakeRotation(lastBestRotation));
-        // then translate back to its position
-        rotateAroundCenterTransform = CGAffineTransformConcat(rotateAroundCenterTransform, CGAffineTransformMakeTranslation(pathCenter.x, pathCenter.y));
-        [path applyTransform:rotateAroundCenterTransform];
-
-        // the next bit is to calculate how much to move the
-        // scrap so that it's new center will align the path
-        // to it's old position.
-        //
-        // rotate the path back around its new center (as it will rotate in its scrap form)
-        // this path now needs to be re-aligned with its old center'd path.
-        // so look at how far the firstPoint moved in each path, and adjust the rotated
-        // smaller bounded path by that much, so that the rotated scrap will appear
-        // on top of the original unrotated input path
-        UIBezierPath* adjustmentCalculationPath = [path copy];
-        CGPoint adjustmentPathCenter = adjustmentCalculationPath.center;
-        [adjustmentCalculationPath applyTransform:CGAffineTransformMakeTranslation(-adjustmentPathCenter.x, -adjustmentPathCenter.y)];
-        [adjustmentCalculationPath applyTransform:CGAffineTransformMakeRotation(-lastBestRotation)];
-        [adjustmentCalculationPath applyTransform:CGAffineTransformMakeTranslation(adjustmentPathCenter.x, adjustmentPathCenter.y)];
-        CGPoint afterFirstPoint = adjustmentCalculationPath.firstPoint;
-        CGPoint adjustment = CGPointMake(initialFirstPoint.x - afterFirstPoint.x, initialFirstPoint.y - afterFirstPoint.y);
-
-        // this adjustment will account for the fact that the scrap
-        // has a different center point than the input path
-        // to this method.
-        //
-        // the scrap rotates around adjustmentPathCenter. so we need to
-        // move the scrap so that an rotated scrap with the new path
-        // would line up with the original unrotated scrap
-        [path applyTransform:CGAffineTransformMakeTranslation(adjustment.x, adjustment.y)];
+        [path rotateAndAlignCenter:lastBestRotation];
     }
 
     // now add the scrap, and rotate it to counter-act
     // the rotation we added to the path itself
-    [self addScrapWithPath:path andRotation:-lastBestRotation];
+    return [self addScrapWithPath:path andRotation:-lastBestRotation];
 }
 
 
@@ -488,13 +451,20 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 -(IBAction) duplicateTopScrap:(id)sender{
     
-    MMScrapView* scrap = [self.scraps firstObject];
-    CGAffineTransform transformToScrap = [scrap pageToScrapTransformWithPageOriginalUnscaledBounds:self.originalUnscaledBounds];
-    CGAffineTransform transformFromScrap = CGAffineTransformInvert(transformToScrap);
+    MMScrapView* scrap = [self.scraps lastObject];
 
     UIBezierPath* subshapePath = [[scrap bezierPath] copy];
-//    [subshapePath applyTransform:transformFromScrap];
-    [self addScrapWithPath:subshapePath];
+
+    //
+    // the scrap's center was adjusted when it was first added
+    // to account for the path rotation (see [addScrapWithPath:])
+    //
+    // so the path's center and the scrap's center will be slightly different
+    // because the scrap could be rotated.
+    MMScrapView* addedScrap = [self addScrapWithPath:subshapePath];
+    addedScrap.scale = scrap.scale;
+    addedScrap.rotation += scrap.rotation;
+    addedScrap.center = scrap.center;
 }
 
 

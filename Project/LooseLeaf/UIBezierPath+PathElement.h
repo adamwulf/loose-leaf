@@ -13,6 +13,8 @@
 
 @interface UIBezierPath (PathElement)
 
+-(void) rotateAndAlignCenter:(CGFloat)rotation;
+
 -(NSArray*) convertToPathElementsFromTValue:(CGFloat)fromTValue
                                    toTValue:(CGFloat)toTValue
                                   fromColor:(UIColor*)fromColor
