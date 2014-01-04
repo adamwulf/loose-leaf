@@ -48,4 +48,6 @@
 
 -(void) unloadState;
 
+-(CGAffineTransform) pageToScrapTransformWithPageOriginalUnscaledBounds:(CGRect)originalUnscaledBounds;
+
 @end

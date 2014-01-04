@@ -152,8 +152,8 @@
         // this view
         [self setShouldShowShadow:NO];
         
-//        self.layer.borderColor = [UIColor redColor].CGColor;
-//        self.layer.borderWidth = 1;
+        self.layer.borderColor = [UIColor redColor].CGColor;
+        self.layer.borderWidth = 1;
 //        self.alpha = .5;
     }
     return self;
@@ -318,7 +318,6 @@
     CGAffineTransform reCenterTransform = CGAffineTransformMakeTranslation(actualScrapCenter.x - clippingPathCenter.x, actualScrapCenter.y - clippingPathCenter.y);
     clippingPathCenter = CGPointApplyAffineTransform(clippingPathCenter, reCenterTransform);
     
-    
     // now we need to rotate the path around it's new center
     CGAffineTransform moveFromCenter = CGAffineTransformMakeTranslation(-clippingPathCenter.x, -clippingPathCenter.y);
     CGAffineTransform rotateAndScale = CGAffineTransformConcat(CGAffineTransformMakeRotation(self.rotation),CGAffineTransformMakeScale(self.scale, self.scale));
@@ -333,6 +332,59 @@
     clippingPathTransform = CGAffineTransformConcat(clippingPathTransform, flipTransform);
     
     [clippingPath applyTransform:clippingPathTransform];
+}
+
+/**
+ * this will return the transform required to take
+ * a coordinate and transform it from the page's 
+ * coordinate space and into the scrap's coordinate space
+ */
+-(CGAffineTransform) pageToScrapTransformWithPageOriginalUnscaledBounds:(CGRect)originalUnscaledBounds{
+    // since a scrap's center point is changed if the scrap is being
+    // held, we can't just use scrap.center to adjust the path for
+    // rotations etc. we need to calculate the center of a scrap
+    // so that it doesn't matter if it's position/anchor have been
+    // changed or not.
+    CGPoint calculatedScrapCenter = [self convertPoint:CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2) toView:self.superview];
+    
+    // determine the tranlsation that we need to make on the path
+    // so that it's moved into the scrap's coordinate space
+    CGAffineTransform entireTransform = CGAffineTransformIdentity;
+    
+    // find the scrap location in open gl
+    CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, originalUnscaledBounds.size.height);
+    CGPoint scrapCenterInOpenGL = CGPointApplyAffineTransform(calculatedScrapCenter, flipTransform);
+    // center the stroke around the scrap center,
+    // so that any scale/rotate happens in relation to the scrap
+    entireTransform = CGAffineTransformConcat(entireTransform, CGAffineTransformMakeTranslation(-scrapCenterInOpenGL.x, -scrapCenterInOpenGL.y));
+    // now scale and rotate the scrap
+    // we reverse the scale, b/c the scrap itself is scaled. these two together will make the
+    // path have a scale of 1 after it's added
+    entireTransform = CGAffineTransformConcat(entireTransform, CGAffineTransformMakeScale(1.0/self.scale, 1.0/self.scale));
+    // this one confuses me honestly. i would think that
+    // i'd need to rotate by -scrap.rotation so that with the
+    // scrap's rotation it'd end up not rotated at all. somehow the
+    // scrap has an effective rotation of -rotation (?).
+    //
+    // thinking about it some more, I think the issue is that
+    // scrap.rotation is defined as the rotation in Core Graphics
+    // coordinate space, but since OpenGL is flipped, then the
+    // rotation flips.
+    //
+    // think of a spinning clock. it spins in different directions
+    // if you look at it from the top or bottom.
+    //
+    // either way, when i rotate the path by scrap.rotation, it ends up
+    // in the correct visible space. it works!
+    entireTransform = CGAffineTransformConcat(entireTransform, CGAffineTransformMakeRotation(self.rotation));
+    
+    // before this line, the path is in the correct place for a scrap
+    // that has (0,0) in it's center. now move everything so that
+    // (0,0) is in the bottom/left of the scrap. (this might also
+    // help w/ the rotation somehow, since the rotate happens before the
+    // translate (?)
+    CGPoint recenter = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
+    return CGAffineTransformConcat(entireTransform, CGAffineTransformMakeTranslation(recenter.x, recenter.y));
 }
 
 

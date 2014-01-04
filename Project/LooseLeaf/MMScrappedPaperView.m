@@ -54,6 +54,16 @@ static dispatch_queue_t concurrentBackgroundQueue;
         
         scrapState = [[MMScrapsOnPaperState alloc] initWithScrapIDsPath:self.scrapIDsPath];
         scrapState.delegate = self;
+        
+        
+        UIButton* dupScrapButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [dupScrapButton addTarget:self action:@selector(duplicateTopScrap:) forControlEvents:UIControlEventTouchUpInside];
+        [dupScrapButton setTitle:@"Duplicate Scrap" forState:UIControlStateNormal];
+        [dupScrapButton sizeToFit];
+        [self addSubview:dupScrapButton];
+        CGRect fr = dupScrapButton.frame;
+        fr.origin = CGPointMake(100, 100);
+        dupScrapButton.frame = fr;
     }
     return self;
 }
@@ -342,53 +352,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
                                                                                            fromWidth:previousElement.width
                                                                                              toWidth:element.width]];
                     }
-                    
-
-                    // since a scrap's center point is changed if the scrap is being
-                    // held, we can't just use scrap.center to adjust the path for
-                    // rotations etc. we need to calculate the center of a scrap
-                    // so that it doesn't matter if it's position/anchor have been
-                    // changed or not.
-                    CGPoint calculatedScrapCenter = [scrap convertPoint:CGPointMake(scrap.bounds.size.width/2, scrap.bounds.size.height/2) toView:scrap.superview];
-                    
                     // determine the tranlsation that we need to make on the path
                     // so that it's moved into the scrap's coordinate space
-                    CGAffineTransform entireTransform = CGAffineTransformIdentity;
-                    
-                    // find the scrap location in open gl
-                    CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height);
-                    CGPoint scrapCenterInOpenGL = CGPointApplyAffineTransform(calculatedScrapCenter, flipTransform);
-                    // center the stroke around the scrap center,
-                    // so that any scale/rotate happens in relation to the scrap
-                    entireTransform = CGAffineTransformConcat(entireTransform, CGAffineTransformMakeTranslation(-scrapCenterInOpenGL.x, -scrapCenterInOpenGL.y));
-                    // now scale and rotate the scrap
-                    // we reverse the scale, b/c the scrap itself is scaled. these two together will make the
-                    // path have a scale of 1 after it's added
-                    entireTransform = CGAffineTransformConcat(entireTransform, CGAffineTransformMakeScale(1.0/scrap.scale, 1.0/scrap.scale));
-                    // this one confuses me honestly. i would think that
-                    // i'd need to rotate by -scrap.rotation so that with the
-                    // scrap's rotation it'd end up not rotated at all. somehow the
-                    // scrap has an effective rotation of -rotation (?).
-                    //
-                    // thinking about it some more, I think the issue is that
-                    // scrap.rotation is defined as the rotation in Core Graphics
-                    // coordinate space, but since OpenGL is flipped, then the
-                    // rotation flips.
-                    //
-                    // think of a spinning clock. it spins in different directions
-                    // if you look at it from the top or bottom.
-                    //
-                    // either way, when i rotate the path by scrap.rotation, it ends up
-                    // in the correct visible space. it works!
-                    entireTransform = CGAffineTransformConcat(entireTransform, CGAffineTransformMakeRotation(scrap.rotation));
-                    
-                    // before this line, the path is in the correct place for a scrap
-                    // that has (0,0) in it's center. now move everything so that
-                    // (0,0) is in the bottom/left of the scrap. (this might also
-                    // help w/ the rotation somehow, since the rotate happens before the
-                    // translate (?)
-                    CGPoint recenter = CGPointMake(scrap.bounds.size.width/2, scrap.bounds.size.height/2);
-                    entireTransform = CGAffineTransformConcat(entireTransform, CGAffineTransformMakeTranslation(recenter.x, recenter.y));
+                    CGAffineTransform entireTransform = [scrap pageToScrapTransformWithPageOriginalUnscaledBounds:self.originalUnscaledBounds];
                     
                     // take the difference of the drawn stroke, and send those elements
                     // to the next scrap beneath us to clip them smaller still.
@@ -517,6 +483,21 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 
+
+
+
+-(IBAction) duplicateTopScrap:(id)sender{
+    
+    MMScrapView* scrap = [self.scraps firstObject];
+    CGAffineTransform transformToScrap = [scrap pageToScrapTransformWithPageOriginalUnscaledBounds:self.originalUnscaledBounds];
+    CGAffineTransform transformFromScrap = CGAffineTransformInvert(transformToScrap);
+
+    UIBezierPath* subshapePath = [[scrap bezierPath] copy];
+//    [subshapePath applyTransform:transformFromScrap];
+    [self addScrapWithPath:subshapePath];
+}
+
+
 -(void) completeScissorsCut{
     // in this debug version of the scissor, it will draw
     // a thick black line where it would do the cut
@@ -524,22 +505,45 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // this is just to prove that we can take the path
     // (closed or unclosed) and do something productive
     // with it
-    UIBezierPath* shapePath = [shapeBuilderView completeAndGenerateShape];
+    UIBezierPath* scissorPath = [shapeBuilderView completeAndGenerateShape];
     [shapeBuilderView clear];
     NSMutableArray* elements = [NSMutableArray array];
-    [shapePath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
+    [scissorPath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
     
     // flip from CoreGraphics to OpenGL coordinates
     CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height);
-    [shapePath applyTransform:flipTransform];
+    [scissorPath applyTransform:flipTransform];
     
     
-    [elements addObjectsFromArray:[shapePath convertToPathElementsFromTValue:0 toTValue:1 fromColor:[UIColor blackColor] toColor:[UIColor blackColor] fromWidth:10 toWidth:10 withTransform:CGAffineTransformIdentity andScale:1]];
+    [elements addObjectsFromArray:[scissorPath convertToPathElementsFromTValue:0 toTValue:1 fromColor:[UIColor blackColor] toColor:[UIColor blackColor] fromWidth:10 toWidth:10 withTransform:CGAffineTransformIdentity andScale:1]];
     
-    NSLog(@"scissor: %@", shapePath);
+    NSLog(@"scissor: %@", scissorPath);
     
     for(MMScrapView* scrap in self.scraps){
-        NSLog(@"scrap %f: %@", scrap.rotation, scrap.bezierPath);
+        // determine the tranlsation that we need to make on the path
+        // so that it's moved into the scrap's coordinate space
+        CGAffineTransform transformToScrap = [scrap pageToScrapTransformWithPageOriginalUnscaledBounds:self.originalUnscaledBounds];
+        CGAffineTransform transformFromScrap = CGAffineTransformInvert(transformToScrap);
+        UIBezierPath* scrapPath = scrap.bezierPath;
+        UIBezierPath* scissorPathInScrapCoords = [scissorPath copy];
+        [scissorPathInScrapCoords applyTransform:transformToScrap];
+        
+        NSLog(@"scrap %f: %@ \n\n %@", scrap.rotation, scrapPath, scissorPathInScrapCoords);
+        
+        NSArray* intersections = [scrapPath findIntersectionsWithClosedPath:scissorPathInScrapCoords andBeginsInside:nil];
+        if([intersections count]){
+            NSLog(@"***** Intersects %d!!", [intersections count]);
+            
+            NSArray* subshapes = [[scrapPath subshapesCreatedFromSlicingWithUnclosedPath:scissorPathInScrapCoords] firstObject];
+            
+            for(DKUIBezierPathShape* subshape in subshapes){
+                UIBezierPath* subshapePath = [subshape fullPath];
+                [subshapePath applyTransform:transformFromScrap];
+                [self addScrapWithPath:subshapePath];
+            }
+        }
+        
+        [UIBezierPath redAndGreenAndBlueSegmentsCreatedFrom:scrapPath bySlicingWithPath:scissorPath];
     }
     
     //
@@ -549,10 +553,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // to slice, convert the path to the shape's coordinate space, clip the shape,
     // re-convert each new shape to the page's coordinate space, and add new scraps.
     
-    
-    
-    
-    [drawableView addElements:[self willAddElementsToStroke:elements fromPreviousElement:nil]];
+//    [drawableView addElements:[self willAddElementsToStroke:elements fromPreviousElement:nil]];
 }
 
 
