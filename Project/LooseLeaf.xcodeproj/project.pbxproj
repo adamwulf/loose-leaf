@@ -90,6 +90,7 @@
 		66B3522517A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B3522417A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m */; };
 		66B51A2A17AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B51A2917AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66B75DB51877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B75DB41877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.m */; };
+		66B75DB81877D93000EF0A48 /* UIBezierPath+PathElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B75DB71877D93000EF0A48 /* UIBezierPath+PathElement.m */; };
 		66B843F717B05488008BF8B8 /* Loose-Leaf-Icon72.png in Resources */ = {isa = PBXBuildFile; fileRef = 66B843F517B05488008BF8B8 /* Loose-Leaf-Icon72.png */; };
 		66B843F817B05488008BF8B8 /* Loose-Leaf-Icon144.png in Resources */ = {isa = PBXBuildFile; fileRef = 66B843F617B05488008BF8B8 /* Loose-Leaf-Icon144.png */; };
 		66BD6E301591B57B00D4544C /* MMPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* MMPaperButton.m */; };
@@ -312,6 +313,8 @@
 		66B62C5017F247B7006D31EB /* MMEditablePaperViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEditablePaperViewDelegate.h; sourceTree = "<group>"; };
 		66B75DB31877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DKUIBezierPathClippedSegment+PathElement.h"; sourceTree = "<group>"; };
 		66B75DB41877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DKUIBezierPathClippedSegment+PathElement.m"; sourceTree = "<group>"; };
+		66B75DB61877D93000EF0A48 /* UIBezierPath+PathElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+PathElement.h"; sourceTree = "<group>"; };
+		66B75DB71877D93000EF0A48 /* UIBezierPath+PathElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+PathElement.m"; sourceTree = "<group>"; };
 		66B843F517B05488008BF8B8 /* Loose-Leaf-Icon72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Loose-Leaf-Icon72.png"; sourceTree = SOURCE_ROOT; };
 		66B843F617B05488008BF8B8 /* Loose-Leaf-Icon144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Loose-Leaf-Icon144.png"; sourceTree = SOURCE_ROOT; };
 		66BD6E2E1591B57B00D4544C /* MMPaperButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperButton.h; sourceTree = "<group>"; };
@@ -435,6 +438,8 @@
 			children = (
 				66B75DB21877ADAF00EF0A48 /* DrawKit */,
 				66A471BF17C7DED500C2A5B6 /* TouchShape */,
+				66B75DB61877D93000EF0A48 /* UIBezierPath+PathElement.h */,
+				66B75DB71877D93000EF0A48 /* UIBezierPath+PathElement.m */,
 				66A29049187773E70036E4B7 /* AVHexColor.h */,
 				66A2904A187773E70036E4B7 /* AVHexColor.m */,
 				66A4BD4416321ABC00C45070 /* NSThread+BlockAdditions.h */,
@@ -1141,6 +1146,7 @@
 				66DCFB971581BCEF00B4918C /* main.m in Sources */,
 				66DCFB9B1581BCEF00B4918C /* MMAppDelegate.m in Sources */,
 				661EBA57182AF1AD00893274 /* MMScissorTool.m in Sources */,
+				66B75DB81877D93000EF0A48 /* UIBezierPath+PathElement.m in Sources */,
 				66DCFB9E1581BCEF00B4918C /* MMLooseLeafViewController.m in Sources */,
 				66DCFBC21581C85B00B4918C /* MMPaperStackView.m in Sources */,
 				6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */,

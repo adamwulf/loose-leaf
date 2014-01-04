@@ -20,6 +20,7 @@
 #import <JotUI/UIColor+JotHelper.h>
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import "DKUIBezierPathClippedSegment+PathElement.h"
+#import "UIBezierPath+PathElement.h"
 
 
 @implementation MMScrappedPaperView{
@@ -289,6 +290,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
         // if they intersect, then we'll split that element into pieces
         // and add some pieces to the scrap and return the rest.
         AbstractBezierPathElement* previousElement = _previousElement;
+        if(!previousElement){
+            previousElement = [strokesToCrop firstObject];
+        }
         for(AbstractBezierPathElement* element in strokesToCrop){
             if(!CGRectIntersectsRect(element.bounds, boundsOfScrap)){
                 // if we don't intersect the bounds of a scrap, then we definitely
@@ -529,30 +533,24 @@ static dispatch_queue_t concurrentBackgroundQueue;
     CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height);
     [shapePath applyTransform:flipTransform];
     
-    __block CGPoint previousEndpoint = shapePath.firstPoint;
-    [shapePath iteratePathWithBlock:^(CGPathElement pathEle){
-        AbstractBezierPathElement* newElement = nil;
-        if(pathEle.type == kCGPathElementAddCurveToPoint){
-            // curve
-            newElement = [CurveToPathElement elementWithStart:previousEndpoint
-                                                   andCurveTo:pathEle.points[2]
-                                                  andControl1:pathEle.points[0]
-                                                  andControl2:pathEle.points[1]];
-            previousEndpoint = pathEle.points[2];
-        }else if(pathEle.type == kCGPathElementMoveToPoint){
-            newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
-            previousEndpoint = pathEle.points[0];
-        }else if(pathEle.type == kCGPathElementAddLineToPoint){
-            newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
-            previousEndpoint = pathEle.points[0];
-        }
-        if(newElement){
-            // be sure to set color/width/etc
-            newElement.color = [UIColor blackColor];
-            newElement.width = 10.0;
-            [elements addObject:newElement];
-        }
-    }];
+    
+    [elements addObjectsFromArray:[shapePath convertToPathElementsFromTValue:0 toTValue:1 fromColor:[UIColor blackColor] toColor:[UIColor blackColor] fromWidth:10 toWidth:10 withTransform:CGAffineTransformIdentity andScale:1]];
+    
+    NSLog(@"scissor: %@", shapePath);
+    
+    for(MMScrapView* scrap in self.scraps){
+        NSLog(@"scrap %f: %@", scrap.rotation, scrap.bezierPath);
+    }
+    
+    //
+    // convert the shapePath into each scrap's coordinate space and see if there are
+    // any intersections. if so, then quit the loop and slice that scrap.
+    //
+    // to slice, convert the path to the shape's coordinate space, clip the shape,
+    // re-convert each new shape to the page's coordinate space, and add new scraps.
+    
+    
+    
     
     [drawableView addElements:[self willAddElementsToStroke:elements fromPreviousElement:nil]];
 }
