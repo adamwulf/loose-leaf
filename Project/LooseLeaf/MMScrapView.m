@@ -135,9 +135,6 @@
         // the drawable view loads
         [self addSubview:scrapState.contentView];
         
-        [MMDebugDrawView sharedInstace].frame = self.bounds;
-        [self addSubview:[MMDebugDrawView sharedInstace]];
-
         borderView = [[MMScrapBorderView alloc] initWithFrame:self.bounds];
         borderView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [borderView setBezierPath:self.bezierPath];
@@ -304,6 +301,10 @@
     // start with our original path
     clippingPath = [scrapState.bezierPath copy];
     
+    [clippingPath applyTransform:self.clippingPathTransform];
+}
+
+-(CGAffineTransform) clippingPathTransform{
     // when we pick up a scrap with a two finger gesture, we also
     // change the position and anchor (which change the center), so
     // that it rotates underneath the gesture correctly.
@@ -330,8 +331,7 @@
     clippingPathTransform = CGAffineTransformConcat(clippingPathTransform, rotateAndScale);
     clippingPathTransform = CGAffineTransformConcat(clippingPathTransform, moveToCenter);
     clippingPathTransform = CGAffineTransformConcat(clippingPathTransform, flipTransform);
-    
-    [clippingPath applyTransform:clippingPathTransform];
+    return clippingPathTransform;
 }
 
 /**

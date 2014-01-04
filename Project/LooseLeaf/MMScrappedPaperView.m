@@ -453,8 +453,16 @@ static dispatch_queue_t concurrentBackgroundQueue;
     
     MMScrapView* scrap = [self.scraps lastObject];
 
-    UIBezierPath* subshapePath = [[scrap bezierPath] copy];
+    UIBezierPath* subshapePath = [[scrap clippingPath] copy];
 
+    [MMDebugDrawView sharedInstace].frame = self.contentView.bounds;
+    [self.contentView addSubview:[MMDebugDrawView sharedInstace]];
+
+    [[MMDebugDrawView sharedInstace] clear];
+    [[MMDebugDrawView sharedInstace] addCurve:subshapePath];
+    
+    [subshapePath applyTransform:CGAffineTransformInvert(scrap.clippingPathTransform)];
+    
     //
     // the scrap's center was adjusted when it was first added
     // to account for the path rotation (see [addScrapWithPath:])
@@ -462,8 +470,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // so the path's center and the scrap's center will be slightly different
     // because the scrap could be rotated.
     MMScrapView* addedScrap = [self addScrapWithPath:subshapePath];
-    addedScrap.scale = scrap.scale;
-    addedScrap.rotation += scrap.rotation;
     addedScrap.center = scrap.center;
 }
 
