@@ -460,8 +460,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
     [[MMDebugDrawView sharedInstace] clear];
     [[MMDebugDrawView sharedInstace] addCurve:subshapePath];
-    
-    [subshapePath applyTransform:CGAffineTransformInvert(scrap.clippingPathTransform)];
+
+
+    [subshapePath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height)];
     
     //
     // the scrap's center was adjusted when it was first added
