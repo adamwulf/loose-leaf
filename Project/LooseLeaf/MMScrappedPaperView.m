@@ -21,6 +21,7 @@
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import "DKUIBezierPathClippedSegment+PathElement.h"
 #import "UIBezierPath+PathElement.h"
+#import "UIBezierPath+Description.h"
 
 
 @implementation MMScrappedPaperView{
@@ -248,6 +249,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     
     NSMutableArray* strokesToCrop = [NSMutableArray arrayWithArray:strokeElementsToDraw];
     
+    
     for(MMScrapView* scrap in [self.scraps reverseObjectEnumerator]){
         // find the bounding box of the scrap, so we can determine
         // quickly if they even possibly intersect
@@ -275,15 +277,15 @@ static dispatch_queue_t concurrentBackgroundQueue;
             }else if([element isKindOfClass:[CurveToPathElement class]]){
                 // ok, we intersect at least the bounds of the scrap, so check
                 // to see if we intersect its path and if we should split it
-
+                
                 // create a simple uibezier path that represents just the path
                 // of this single element
                 UIBezierPath* strokePath = [element bezierPathSegment];
-
+                
                 // track which elements we should add to the scrap
                 // instead of continue to chop and add to the page / other scrap
                 NSMutableArray* elementsToAddToScrap = [NSMutableArray array];
-
+                
                 // now find out where this element intersects the scrap.
                 // this return value will give us the paths of the intersection
                 // and the difference, as well as the tvalues on our element
@@ -291,7 +293,35 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 //
                 // this will let us calcualte how much the width/color/rotation
                 // change during each split
-                NSArray* redAndBlueSegments = [UIBezierPath redAndGreenAndBlueSegmentsCreatedFrom:scrapClippingPath bySlicingWithPath:strokePath];
+                NSArray* redAndBlueSegments = nil;
+                @try {
+                    redAndBlueSegments = [UIBezierPath redAndGreenAndBlueSegmentsCreatedFrom:scrapClippingPath bySlicingWithPath:strokePath];
+                }@catch (id exc) {
+                    //        NSAssert(NO, @"need to log this");
+                    NSLog(@"need to mail the paths");
+                    
+                    NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
+                    
+                    [dateFormater setDateFormat:@"yyyy-MM-DD HH:mm:ss"];
+                    NSString *convertedDateString = [dateFormater stringFromDate:[NSDate date]];
+                    
+                    NSString* textForEmail = @"Shapes in view:\n\n";
+                    textForEmail = [textForEmail stringByAppendingFormat:@"scissor:\n%@\n\n\n", strokePath];
+                    textForEmail = [textForEmail stringByAppendingFormat:@"shape:\n%@\n\n\n", scrapClippingPath];
+                    
+                    MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
+                    [controller setMailComposeDelegate:self];
+                    [controller setToRecipients:[NSArray arrayWithObject:@"adam.wulf@gmail.com"]];
+                    [controller setSubject:[NSString stringWithFormat:@"Shape Clipping Test Case %@", convertedDateString]];
+                    [controller setMessageBody:textForEmail isHTML:NO];
+                    //        [controller addAttachmentData:imageData mimeType:@"image/png" fileName:@"screenshot.png"];
+                    
+                    if(controller){
+                        UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+                        [rootController presentViewController:controller animated:YES completion:nil];
+                    }
+                }
+                
                 NSArray* redSegments = [redAndBlueSegments firstObject]; // intersection
                 NSArray* greenSegments = [redAndBlueSegments objectAtIndex:1]; // difference
                 
@@ -311,9 +341,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     // itself
                     for(DKUIBezierPathClippedSegment* segment in greenSegments){
                         [nextStrokesToCrop addObjectsFromArray:[segment convertToPathElementsFromColor:previousElement.color
-                                                                                             toColor:element.color
-                                                                                           fromWidth:previousElement.width
-                                                                                             toWidth:element.width]];
+                                                                                               toColor:element.color
+                                                                                             fromWidth:previousElement.width
+                                                                                               toWidth:element.width]];
                     }
                     // determine the tranlsation that we need to make on the path
                     // so that it's moved into the scrap's coordinate space
@@ -325,10 +355,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     // itself
                     for(DKUIBezierPathClippedSegment* segment in redSegments){
                         [elementsToAddToScrap addObjectsFromArray:[segment convertToPathElementsFromColor:previousElement.color
-                                                                                               toColor:element.color
-                                                                                             fromWidth:previousElement.width
-                                                                                               toWidth:element.width
-                                                                                         withTransform:entireTransform
+                                                                                                  toColor:element.color
+                                                                                                fromWidth:previousElement.width
+                                                                                                  toWidth:element.width
+                                                                                            withTransform:entireTransform
                                                                                                  andScale:scrap.scale]];
                     }
                 }
@@ -450,7 +480,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 
 -(IBAction) duplicateTopScrap:(id)sender{
-    
     MMScrapView* scrap = [self.scraps lastObject];
 
     UIBezierPath* subshapePath = [[scrap clippingPath] copy];
@@ -476,61 +505,21 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 
 -(void) completeScissorsCut{
-    // in this debug version of the scissor, it will draw
-    // a thick black line where it would do the cut
-    //
-    // this is just to prove that we can take the path
-    // (closed or unclosed) and do something productive
-    // with it
     UIBezierPath* scissorPath = [shapeBuilderView completeAndGenerateShape];
-    [shapeBuilderView clear];
-    NSMutableArray* elements = [NSMutableArray array];
     [scissorPath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
+    MMScrapView* scrap = [self.scraps lastObject];
     
-    // flip from CoreGraphics to OpenGL coordinates
-    CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height);
-    [scissorPath applyTransform:flipTransform];
+    UIBezierPath* subshapePath = [[scrap clippingPath] copy];
+    [subshapePath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height)];
     
-    
-    [elements addObjectsFromArray:[scissorPath convertToPathElementsFromTValue:0 toTValue:1 fromColor:[UIColor blackColor] toColor:[UIColor blackColor] fromWidth:10 toWidth:10 withTransform:CGAffineTransformIdentity andScale:1]];
-    
-    NSLog(@"scissor: %@", scissorPath);
-    
-    for(MMScrapView* scrap in self.scraps){
-        // determine the tranlsation that we need to make on the path
-        // so that it's moved into the scrap's coordinate space
-        CGAffineTransform transformToScrap = [scrap pageToScrapTransformWithPageOriginalUnscaledBounds:self.originalUnscaledBounds];
-        CGAffineTransform transformFromScrap = CGAffineTransformInvert(transformToScrap);
-        UIBezierPath* scrapPath = scrap.bezierPath;
-        UIBezierPath* scissorPathInScrapCoords = [scissorPath copy];
-        [scissorPathInScrapCoords applyTransform:transformToScrap];
-        
-        NSLog(@"scrap %f: %@ \n\n %@", scrap.rotation, scrapPath, scissorPathInScrapCoords);
-        
-        NSArray* intersections = [scrapPath findIntersectionsWithClosedPath:scissorPathInScrapCoords andBeginsInside:nil];
-        if([intersections count]){
-            NSLog(@"***** Intersects %d!!", [intersections count]);
-            
-            NSArray* subshapes = [[scrapPath subshapesCreatedFromSlicingWithUnclosedPath:scissorPathInScrapCoords] firstObject];
-            
-            for(DKUIBezierPathShape* subshape in subshapes){
-                UIBezierPath* subshapePath = [subshape fullPath];
-                [subshapePath applyTransform:transformFromScrap];
-                [self addScrapWithPath:subshapePath];
-            }
-        }
-        
-        [UIBezierPath redAndGreenAndBlueSegmentsCreatedFrom:scrapPath bySlicingWithPath:scissorPath];
+    NSArray* subshapes = [[subshapePath subshapesCreatedFromSlicingWithUnclosedPath:scissorPath] firstObject];
+    for(DKUIBezierPathShape* shape in subshapes){
+        UIBezierPath* subshapePath = shape.fullPath;
+        [self addScrapWithPath:subshapePath];
     }
     
-    //
-    // convert the shapePath into each scrap's coordinate space and see if there are
-    // any intersections. if so, then quit the loop and slice that scrap.
-    //
-    // to slice, convert the path to the shape's coordinate space, clip the shape,
-    // re-convert each new shape to the page's coordinate space, and add new scraps.
     
-//    [drawableView addElements:[self willAddElementsToStroke:elements fromPreviousElement:nil]];
+    [shapeBuilderView clear];
 }
 
 
@@ -669,6 +658,14 @@ static dispatch_queue_t concurrentBackgroundQueue;
         scrapIDsPath = [[[self pagesPath] stringByAppendingPathComponent:@"scrapIDs"] stringByAppendingPathExtension:@"plist"];
     }
     return scrapIDsPath;
+}
+
+
+#pragma mark - MFMailComposeViewControllerDelegate
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error{
+    UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+    [rootController dismissViewControllerAnimated:YES completion:nil];
 }
 
 

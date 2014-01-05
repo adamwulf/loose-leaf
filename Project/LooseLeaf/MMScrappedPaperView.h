@@ -10,12 +10,13 @@
 #import "MMPanAndPinchScrapGestureRecognizer.h"
 #import "MMPanAndPinchScrapGestureRecognizerDelegate.h"
 #import "MMScrapsOnPaperStateDelegate.h"
+#import <MessageUI/MFMailComposeViewController.h>
 
 /**
  * the purpose of this subclass is to encompass all of the
  * scrap functionality for a page
  */
-@interface MMScrappedPaperView : MMEditablePaperView<MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapsOnPaperStateDelegate>
+@interface MMScrappedPaperView : MMEditablePaperView<MFMailComposeViewControllerDelegate,MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapsOnPaperStateDelegate>
 
 @property (readonly) NSArray* scraps;
 
