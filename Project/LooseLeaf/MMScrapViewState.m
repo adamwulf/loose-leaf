@@ -220,7 +220,7 @@
 
     void (^loadBlock)() = ^(void) {
         @autoreleasepool {
-            NSLog(@"loading: %@ %d", uuid, (int) drawableView);
+//            NSLog(@"loading: %@ %d", uuid, (int) drawableView);
             dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
             [NSThread performBlockOnMainThread:^{
                 // add our drawable view to our contents
