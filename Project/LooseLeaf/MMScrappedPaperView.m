@@ -507,18 +507,23 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) completeScissorsCut{
     UIBezierPath* scissorPath = [shapeBuilderView completeAndGenerateShape];
     [scissorPath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
-    MMScrapView* scrap = [self.scraps lastObject];
-    
-    UIBezierPath* subshapePath = [[scrap clippingPath] copy];
-    [subshapePath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height)];
-    
-    NSArray* subshapes = [[subshapePath subshapesCreatedFromSlicingWithUnclosedPath:scissorPath] firstObject];
-    for(DKUIBezierPathShape* shape in subshapes){
-        UIBezierPath* subshapePath = shape.fullPath;
-        [self addScrapWithPath:subshapePath];
+
+    for(MMScrapView* scrap in [self.scraps reverseObjectEnumerator]){
+        UIBezierPath* subshapePath = [[scrap clippingPath] copy];
+        [subshapePath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height)];
+        
+        NSArray* subshapes = [subshapePath uniqueSubshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
+        for(DKUIBezierPathShape* shape in subshapes){
+            UIBezierPath* subshapePath = shape.fullPath;
+            [self addScrapWithPath:subshapePath];
+        }
+        if([subshapes count]){
+            // clip out the portion of the scissor path that
+            // intersects with the scrap we just cut
+            scissorPath = [scissorPath differenceOfPathTo:subshapePath];
+            [scrap removeFromSuperview];
+        }
     }
-    
-    
     [shapeBuilderView clear];
 }
 

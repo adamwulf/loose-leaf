@@ -1,0 +1,7 @@
+Pomax License
+
+https://github.com/pomax/bezierinfo
+
+This repository houses "A Primer on Bezier Curves", written using LaTeX formulae for the mathy bits, and Processing.js sketches for the interactive graphics.
+
+"All the .pde source code is in the public domain. If you want to use it, for whatever purpose, go for it."
