@@ -513,36 +513,48 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) completeScissorsCut{
     UIBezierPath* scissorPath = [shapeBuilderView completeAndGenerateShape];
     [scissorPath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
-
-    NSMutableArray* seenPaths = [NSMutableArray array];
-    for(MMScrapView* scrap in [self.scraps reverseArray]){
+    
+    
+    NSString* fullText = @"";
+    
+    for(MMScrapView* scrap in [self.scraps reverseObjectEnumerator]){
         UIBezierPath* subshapePath = [[scrap clippingPath] copy];
         [subshapePath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height)];
         
-        BOOL isTopmost = YES;
-        for(UIBezierPath* alreadySeenPath in seenPaths){
-            NSArray* intersections = [alreadySeenPath findIntersectionsWithClosedPath:subshapePath andBeginsInside:nil];
-            if([intersections count]){
-                isTopmost = NO;
-                break;
-            }
+        NSArray* subshapes = [subshapePath uniqueSubshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
+        fullText = [fullText stringByAppendingFormat:@"shape:\n %@ scissor:\n %@ \n\n\n\n", subshapePath, scissorPath];
+        for(DKUIBezierPathShape* shape in subshapes){
+            UIBezierPath* subshapePath = shape.fullPath;
+            [self addScrapWithPath:subshapePath];
+        }
+        if([subshapes count]){
+            // clip out the portion of the scissor path that
+            // intersects with the scrap we just cut
+            scissorPath = [scissorPath differenceOfPathTo:subshapePath];
+            [scrap removeFromSuperview];
         }
         
-        if(isTopmost){
-            NSArray* subshapes = [subshapePath uniqueSubshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
-            for(DKUIBezierPathShape* shape in subshapes){
-                UIBezierPath* subshapePath = shape.fullPath;
-                [self addScrapWithPath:subshapePath];
-            }
-            if([subshapes count]){
-                @synchronized(scrapContainerView){
-                    [scrap removeFromSuperview];
-                }
-            }
-        }
-        [seenPaths addObject:subshapePath];
     }
     [shapeBuilderView clear];
+    
+    
+    NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
+    
+    [dateFormater setDateFormat:@"yyyy-MM-DD HH:mm:ss"];
+    NSString *convertedDateString = [dateFormater stringFromDate:[NSDate date]];
+    
+    MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
+    [controller setMailComposeDelegate:self];
+    [controller setToRecipients:[NSArray arrayWithObject:@"adam.wulf@gmail.com"]];
+    [controller setSubject:[NSString stringWithFormat:@"Shape Clipping Test Case %@", convertedDateString]];
+    [controller setMessageBody:fullText isHTML:NO];
+    //        [controller addAttachmentData:imageData mimeType:@"image/png" fileName:@"screenshot.png"];
+    
+    if(controller){
+        UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+        [rootController presentViewController:controller animated:YES completion:nil];
+    }
+    
 }
 
 
