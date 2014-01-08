@@ -55,16 +55,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
         
         scrapState = [[MMScrapsOnPaperState alloc] initWithScrapIDsPath:self.scrapIDsPath];
         scrapState.delegate = self;
-        
-        
-        UIButton* dupScrapButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [dupScrapButton addTarget:self action:@selector(duplicateTopScrap:) forControlEvents:UIControlEventTouchUpInside];
-        [dupScrapButton setTitle:@"Duplicate Scrap" forState:UIControlStateNormal];
-        [dupScrapButton sizeToFit];
-        [self addSubview:dupScrapButton];
-        CGRect fr = dupScrapButton.frame;
-        fr.origin = CGPointMake(100, 100);
-        dupScrapButton.frame = fr;
     }
     return self;
 }
@@ -480,35 +470,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // the drawn polygon and reset.
     [shapeBuilderView clear];
 }
-
-
-
-
-
--(IBAction) duplicateTopScrap:(id)sender{
-    MMScrapView* scrap = [self.scraps lastObject];
-
-    UIBezierPath* subshapePath = [[scrap clippingPath] copy];
-
-    [MMDebugDrawView sharedInstace].frame = self.contentView.bounds;
-    [self.contentView addSubview:[MMDebugDrawView sharedInstace]];
-
-    [[MMDebugDrawView sharedInstace] clear];
-    [[MMDebugDrawView sharedInstace] addCurve:subshapePath];
-
-
-    [subshapePath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height)];
-    
-    //
-    // the scrap's center was adjusted when it was first added
-    // to account for the path rotation (see [addScrapWithPath:])
-    //
-    // so the path's center and the scrap's center will be slightly different
-    // because the scrap could be rotated.
-    MMScrapView* addedScrap = [self addScrapWithPath:subshapePath];
-    addedScrap.center = scrap.center;
-}
-
 
 -(void) completeScissorsCut{
     UIBezierPath* scissorPath = [shapeBuilderView completeAndGenerateShape];
