@@ -139,7 +139,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
     CGPoint pathCenter = path.center;
     
     MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path];
-    [scrapContainerView addSubview:newScrap];
+    @synchronized(scrapContainerView){
+        [scrapContainerView addSubview:newScrap];
+    }
     [newScrap loadStateAsynchronously:NO];
     [newScrap setShouldShowShadow:[self isEditable]];
     
@@ -165,7 +167,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 
 -(void) addScrap:(MMScrapView*)scrap{
-    [scrapContainerView addSubview:scrap];
+    @synchronized(scrapContainerView){
+        [scrapContainerView addSubview:scrap];
+    }
     [scrap setShouldShowShadow:[self isEditable]];
     [self saveToDisk];
 }
@@ -186,7 +190,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // or to iterate on the main thread, we don't
     // spend unnecessary resources copying a potentially
     // long array.
-    return scrapContainerView.subviews;
+    @synchronized(scrapContainerView){
+        return scrapContainerView.subviews;
+    }
 }
 
 #pragma mark - Pinch and Zoom
@@ -508,21 +514,33 @@ static dispatch_queue_t concurrentBackgroundQueue;
     UIBezierPath* scissorPath = [shapeBuilderView completeAndGenerateShape];
     [scissorPath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
 
-    for(MMScrapView* scrap in [self.scraps reverseObjectEnumerator]){
+    NSMutableArray* seenPaths = [NSMutableArray array];
+    for(MMScrapView* scrap in [self.scraps reverseArray]){
         UIBezierPath* subshapePath = [[scrap clippingPath] copy];
         [subshapePath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height)];
         
-        NSArray* subshapes = [subshapePath uniqueSubshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
-        for(DKUIBezierPathShape* shape in subshapes){
-            UIBezierPath* subshapePath = shape.fullPath;
-            [self addScrapWithPath:subshapePath];
+        BOOL isTopmost = YES;
+        for(UIBezierPath* alreadySeenPath in seenPaths){
+            NSArray* intersections = [alreadySeenPath findIntersectionsWithClosedPath:subshapePath andBeginsInside:nil];
+            if([intersections count]){
+                isTopmost = NO;
+                break;
+            }
         }
-        if([subshapes count]){
-            // clip out the portion of the scissor path that
-            // intersects with the scrap we just cut
-            scissorPath = [scissorPath differenceOfPathTo:subshapePath];
-            [scrap removeFromSuperview];
+        
+        if(isTopmost){
+            NSArray* subshapes = [subshapePath uniqueSubshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
+            for(DKUIBezierPathShape* shape in subshapes){
+                UIBezierPath* subshapePath = shape.fullPath;
+                [self addScrapWithPath:subshapePath];
+            }
+            if([subshapes count]){
+                @synchronized(scrapContainerView){
+                    [scrap removeFromSuperview];
+                }
+            }
         }
+        [seenPaths addObject:subshapePath];
     }
     [shapeBuilderView clear];
 }
@@ -608,7 +626,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) didLoadScrap:(MMScrapView*)scrap{
-    [scrapContainerView addSubview:scrap];
+    @synchronized(scrapContainerView){
+        [scrapContainerView addSubview:scrap];
+    }
 }
 
 -(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
