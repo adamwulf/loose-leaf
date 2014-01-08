@@ -512,18 +512,30 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 -(void) completeScissorsCut{
     UIBezierPath* scissorPath = [shapeBuilderView completeAndGenerateShape];
+    // scale the scissors into the zoom of the page, in case the user is
+    // pinching and zooming the page our scissor path will be in page coordinates
+    // instead of screen coordinates
     [scissorPath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
     
+    // track path information for debugging
+    NSString* debugFullText = @"";
     
-    NSString* fullText = @"";
-    
+    // iterate over the scraps from the visibly top scraps
+    // to the bottom of the stack
     for(MMScrapView* scrap in [self.scraps reverseObjectEnumerator]){
+        // get the clipping path of the scrap and convert it into
+        // CoreGraphics coordinate system
         UIBezierPath* subshapePath = [[scrap clippingPath] copy];
         [subshapePath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height)];
         
+        // cut the shape and get all unique shapes
         NSArray* subshapes = [subshapePath uniqueSubshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
-        fullText = [fullText stringByAppendingFormat:@"shape:\n %@ scissor:\n %@ \n\n\n\n", subshapePath, scissorPath];
+        debugFullText = [debugFullText stringByAppendingFormat:@"shape:\n %@ scissor:\n %@ \n\n\n\n", subshapePath, scissorPath];
         for(DKUIBezierPathShape* shape in subshapes){
+            // TODO: these scraps should be scaled to match the 1:1 scale of the
+            // original scrap. right now, if a scrap is pinched larger and then
+            // cut, then the new subscraps will have a higher resolution. instead
+            // they should match the resolution of the original scrap
             UIBezierPath* subshapePath = shape.fullPath;
             [self addScrapWithPath:subshapePath];
         }
@@ -533,11 +545,16 @@ static dispatch_queue_t concurrentBackgroundQueue;
             scissorPath = [scissorPath differenceOfPathTo:subshapePath];
             [scrap removeFromSuperview];
         }
-        
     }
+    // clear the dotted line of the scissor
     [shapeBuilderView clear];
     
     
+    //
+    //
+    // DEBUG
+    //
+    // send an email with the paths that we cut
     NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
     
     [dateFormater setDateFormat:@"yyyy-MM-DD HH:mm:ss"];
@@ -547,14 +564,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [controller setMailComposeDelegate:self];
     [controller setToRecipients:[NSArray arrayWithObject:@"adam.wulf@gmail.com"]];
     [controller setSubject:[NSString stringWithFormat:@"Shape Clipping Test Case %@", convertedDateString]];
-    [controller setMessageBody:fullText isHTML:NO];
+    [controller setMessageBody:debugFullText isHTML:NO];
     //        [controller addAttachmentData:imageData mimeType:@"image/png" fileName:@"screenshot.png"];
     
     if(controller){
         UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
         [rootController presentViewController:controller animated:YES completion:nil];
     }
-    
 }
 
 
