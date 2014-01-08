@@ -472,14 +472,32 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) completeScissorsCut{
+    // get scissor path
+    // TODO: check for self intersections of this path
     UIBezierPath* scissorPath = [shapeBuilderView completeAndGenerateShape];
+    // scale the scissor path from screen coordinates into page coordinates
     [scissorPath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
 
+    // track which scrap paths we've looked at, so that we can check if
+    // a next path is visibly on the top of its stack
     NSMutableArray* seenPaths = [NSMutableArray array];
+    // iterate scraps backwards so that scraps visually on top
+    // are looked at first
     for(MMScrapView* scrap in [self.scraps reverseArray]){
+        // get the scrap's path in CoreGraphics coordinate system
         UIBezierPath* subshapePath = [[scrap clippingPath] copy];
         [subshapePath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height)];
         
+        // check to see if this scrap intersects with anything else
+        // we've seen before
+        // TODO: this means that any non-top scrap is uncuttable :(
+        //       instead, we should only track paths that:
+        //       1) intersect the scissors
+        //       2) intersect something in the list (as opposed to something seen at all)
+        //
+        // this way, if the scissor doesn't intersect the topmost scrap,
+        // then that scrap will be entirely ignored, and scraps below it have
+        // a chance to get cut if possible.
         BOOL isTopmost = YES;
         for(UIBezierPath* alreadySeenPath in seenPaths){
             NSArray* intersections = [alreadySeenPath findIntersectionsWithClosedPath:subshapePath andBeginsInside:nil];
@@ -490,9 +508,14 @@ static dispatch_queue_t concurrentBackgroundQueue;
         }
         
         if(isTopmost){
+            // if the scrap is the topmost scrap with a possibility of being cut,
+            // then check to see if we get any shapes out of the cut
             NSArray* subshapes = [subshapePath uniqueSubshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
             for(DKUIBezierPathShape* shape in subshapes){
                 UIBezierPath* subshapePath = shape.fullPath;
+                //
+                // TODO: the cut scraps should be inserted at
+                // the same index as the scrap they're cut from
                 [self addScrapWithPath:subshapePath];
             }
             if([subshapes count]){
@@ -501,6 +524,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 }
             }
         }
+        // TODO: see above comment about tracking seen paths
         [seenPaths addObject:subshapePath];
     }
     [shapeBuilderView clear];
