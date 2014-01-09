@@ -63,13 +63,13 @@
             }
         }
     
-        UIButton* drawLongElementButton = [[UIButton alloc] initWithFrame:CGRectMake(100, 100, 200, 60)];
-        [drawLongElementButton addTarget:self action:@selector(drawLine) forControlEvents:UIControlEventTouchUpInside];
-        [drawLongElementButton setTitle:@"Draw Line" forState:UIControlStateNormal];
-        drawLongElementButton.backgroundColor = [UIColor whiteColor];
-        drawLongElementButton.layer.borderColor = [UIColor blackColor].CGColor;
-        drawLongElementButton.layer.borderWidth = 1;
-        [self addSubview:drawLongElementButton];
+//        UIButton* drawLongElementButton = [[UIButton alloc] initWithFrame:CGRectMake(100, 100, 200, 60)];
+//        [drawLongElementButton addTarget:self action:@selector(drawLine) forControlEvents:UIControlEventTouchUpInside];
+//        [drawLongElementButton setTitle:@"Draw Line" forState:UIControlStateNormal];
+//        drawLongElementButton.backgroundColor = [UIColor whiteColor];
+//        drawLongElementButton.layer.borderColor = [UIColor blackColor].CGColor;
+//        drawLongElementButton.layer.borderWidth = 1;
+//        [self addSubview:drawLongElementButton];
         
     }
     return self;
