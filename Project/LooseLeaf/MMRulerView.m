@@ -68,7 +68,7 @@
     if (self) {
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
-        unitLength = [UIDevice ppc];
+        unitLength = [UIDevice idealUnitLength];
     }
     return self;
 }
@@ -586,6 +586,10 @@ static NSDate* lastRender;
         old_p2.y = old_p1.y;
     }
 
+    if(initialDistance == 0){
+        // update the unit whenever the ruler is first touched down
+        unitLength = [UIDevice idealUnitLength];
+    }
     initialDistance = distance;
 }
 
