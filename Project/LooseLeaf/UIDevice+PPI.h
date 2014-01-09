@@ -14,4 +14,6 @@
 
 +(CGFloat) ppc;
 
++(CGFloat) idealUnitLength;
+
 @end

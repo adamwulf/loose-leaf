@@ -539,6 +539,7 @@
 		664C62F115A36DB00072736A /* MMPaperView */ = {
 			isa = PBXGroup;
 			children = (
+				66E47E22187F278A000AFD18 /* Ruler */,
 				66B62C4B17F245E6006D31EB /* Page State */,
 				66A471C317C7E05C00C2A5B6 /* Scraps */,
 				66CE120517D3B6C200882275 /* Scrap Bubble */,
@@ -561,10 +562,6 @@
 			children = (
 				66510833178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.h */,
 				66510834178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m */,
-				66510836178DFEE700A7A7DD /* MMRulerView.h */,
-				66510837178DFEE700A7A7DD /* MMRulerView.m */,
-				6651083A178F249C00A7A7DD /* MMVector.h */,
-				6651083B178F249C00A7A7DD /* MMVector.m */,
 			);
 			name = "Ruler Tool";
 			sourceTree = "<group>";
@@ -1017,6 +1014,17 @@
 				66A3921517CC126D00B4974D /* MMPanGestureDelegate.h */,
 			);
 			name = Gestures;
+			sourceTree = "<group>";
+		};
+		66E47E22187F278A000AFD18 /* Ruler */ = {
+			isa = PBXGroup;
+			children = (
+				66510836178DFEE700A7A7DD /* MMRulerView.h */,
+				66510837178DFEE700A7A7DD /* MMRulerView.m */,
+				6651083A178F249C00A7A7DD /* MMVector.h */,
+				6651083B178F249C00A7A7DD /* MMVector.m */,
+			);
+			name = Ruler;
 			sourceTree = "<group>";
 		};
 		66EDA79317CA87D20067BA63 /* Scraps */ = {

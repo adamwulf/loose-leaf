@@ -19,4 +19,16 @@
     return [UIDevice ppi] / 2.54;
 }
 
+// will return points per in/cm depending
+// on user's locale
++(CGFloat) idealUnitLength{
+    NSLocale *locale = [NSLocale currentLocale];
+    BOOL isMetric = [[locale objectForKey:NSLocaleUsesMetricSystem] boolValue];
+    if(isMetric){
+        return [self ppc];
+    }else{
+        return [self ppi];
+    }
+}
+
 @end
