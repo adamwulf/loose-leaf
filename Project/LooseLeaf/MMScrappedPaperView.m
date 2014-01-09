@@ -498,7 +498,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
             // cut, then the new subscraps will have a higher resolution. instead
             // they should match the resolution of the original scrap
             UIBezierPath* subshapePath = shape.fullPath;
-            [self addScrapWithPath:subshapePath];
+            MMScrapView* addedScrap = [self addScrapWithPath:subshapePath];
+            @synchronized(scrapContainerView){
+                [scrapContainerView insertSubview:addedScrap belowSubview:scrap];
+            }
         }
         if([subshapes count]){
             // clip out the portion of the scissor path that
