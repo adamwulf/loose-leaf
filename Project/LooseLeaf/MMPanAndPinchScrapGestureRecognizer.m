@@ -443,7 +443,10 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     NSMutableOrderedSet* validTouchesCurrentlyCancelling = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
     [validTouchesCurrentlyCancelling intersectSet:touches];
     [validTouchesCurrentlyCancelling minusSet:ignoredTouches];
+    [possibleTouches removeObjectsInSet:touches];
+    [ignoredTouches removeObjectsInSet:touches];
     if([validTouchesCurrentlyCancelling count]){
+        [validTouches minusOrderedSet:validTouchesCurrentlyCancelling];
         if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
             self.state = UIGestureRecognizerStatePossible;
         }else if([validTouches count] == 0 &&
@@ -452,10 +455,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
                  self.state == UIGestureRecognizerStateChanged){
             self.state = UIGestureRecognizerStateCancelled;
         }
-        [validTouches minusOrderedSet:validTouchesCurrentlyCancelling];
     }
-    [possibleTouches removeObjectsInSet:touches];
-    [ignoredTouches removeObjectsInSet:touches];
 //    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 
     for(UITouch* touch in touches){
@@ -521,7 +521,9 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 -(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
     [ignoredTouches addObject:touch];
     [self clearCacheForTouch:touch];
-    [super ignoreTouch:touch forEvent:event];
+    // dont' send to super, or we'll stop getting
+    // update events for these touches. we'll manually
+    // ignore them by tracking ignoredTouches ourselves
 }
 - (void)reset{
     [super reset];
