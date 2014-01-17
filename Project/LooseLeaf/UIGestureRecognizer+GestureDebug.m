@@ -9,6 +9,7 @@
 #import "UIGestureRecognizer+GestureDebug.h"
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import <DrawKit-iOS/DrawKit-iOS.h>
+#import <DrawKit-iOS/JRSwizzle.h>
 
 @implementation UIGestureRecognizer (GestureDebug)
 

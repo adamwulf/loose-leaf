@@ -154,11 +154,15 @@
 }
 
 -(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
+    [panAndPinchScrapGesture ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
+    [panAndPinchScrapGesture2 ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
     [super isBezelingInLeftWithGesture:bezelGesture];
     [self forceScrapToScrapContainerDuringGesture];
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
+    [panAndPinchScrapGesture ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
+    [panAndPinchScrapGesture2 ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
     [super isBezelingInRightWithGesture:bezelGesture];
     [self forceScrapToScrapContainerDuringGesture];
 }
@@ -274,21 +278,22 @@
         if(gesture.didExitToBezel){
             shouldBezel = YES;
         }else if([scrapContainer.subviews containsObject:gesture.scrap]){
+            CGFloat scrapScaleInPage;
+            CGPoint scrapCenterInPage;
+            MMScrappedPaperView* pageToDropScrap;
             if(gesture.state == UIGestureRecognizerStateCancelled){
-                // bezel
-                shouldBezel = YES;
+                pageToDropScrap = [visibleStackHolder peekSubview];
+                [self scaledCenter:&scrapCenterInPage andScale:&scrapScaleInPage forScrap:gesture.scrap onPage:pageToDropScrap];
             }else{
-                CGFloat scrapScaleInPage;
-                CGPoint scrapCenterInPage;
-                MMScrappedPaperView* pageToDropScrap = [self pageWouldDropScrap:gesture.scrap atCenter:&scrapCenterInPage andScale:&scrapScaleInPage];
-                if(pageToDropScrap){
-                    [pageToDropScrap addScrap:gesture.scrap];
-                    gesture.scrap.scale = scrapScaleInPage;
-                    gesture.scrap.center = scrapCenterInPage;
-                }else{
-                    // couldn't find a page to catch it
-                    shouldBezel = YES;
-                }
+                pageToDropScrap = [self pageWouldDropScrap:gesture.scrap atCenter:&scrapCenterInPage andScale:&scrapScaleInPage];
+            }
+            if(pageToDropScrap){
+                [pageToDropScrap addScrap:gesture.scrap];
+                gesture.scrap.scale = scrapScaleInPage;
+                gesture.scrap.center = scrapCenterInPage;
+            }else{
+                // couldn't find a page to catch it
+                shouldBezel = YES;
             }
         }
         
@@ -381,17 +386,13 @@
             // if we can't find a page, we're done
             break;
         }
-        CGFloat pageScale = pageToDropScrap.scale;
-        CGAffineTransform reverseScaleTransform = CGAffineTransformMakeScale(1/pageScale, 1/pageScale);
-        *scrapScaleInPage = scrap.scale;
-        *scrapCenterInPage = scrap.center;
-        *scrapScaleInPage = *scrapScaleInPage / pageScale;
-        *scrapCenterInPage = [pageToDropScrap convertPoint:*scrapCenterInPage fromView:scrapContainer];
-        *scrapCenterInPage = CGPointApplyAffineTransform(*scrapCenterInPage, reverseScaleTransform);
+        [self scaledCenter:scrapCenterInPage andScale:scrapScaleInPage forScrap:scrap onPage:pageToDropScrap];
         // bounds respects the transform, so we need to scale the
         // bounds of the page too to see if the scrap is landing inside
         // of it
         pageBounds = pageToDropScrap.bounds;
+        CGFloat pageScale = pageToDropScrap.scale;
+        CGAffineTransform reverseScaleTransform = CGAffineTransformMakeScale(1/pageScale, 1/pageScale);
         pageBounds = CGRectApplyAffineTransform(pageBounds, reverseScaleTransform);
 
 //        if(CGRectContainsPoint(pageBounds, scrapCenterInPage)){
@@ -401,6 +402,16 @@
     }while(!CGRectContainsPoint(pageBounds, *scrapCenterInPage));
     
     return pageToDropScrap;
+}
+
+-(void) scaledCenter:(CGPoint*)scrapCenterInPage andScale:(CGFloat*)scrapScaleInPage forScrap:(MMScrapView*)scrap onPage:(MMScrappedPaperView*)pageToDropScrap{
+    CGFloat pageScale = pageToDropScrap.scale;
+    CGAffineTransform reverseScaleTransform = CGAffineTransformMakeScale(1/pageScale, 1/pageScale);
+    *scrapScaleInPage = scrap.scale;
+    *scrapCenterInPage = scrap.center;
+    *scrapScaleInPage = *scrapScaleInPage / pageScale;
+    *scrapCenterInPage = [pageToDropScrap convertPoint:*scrapCenterInPage fromView:scrapContainer];
+    *scrapCenterInPage = CGPointApplyAffineTransform(*scrapCenterInPage, reverseScaleTransform);
 }
 
 

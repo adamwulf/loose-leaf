@@ -78,6 +78,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         validTouches = [[NSMutableOrderedSet alloc] init];
         possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
+        self.delaysTouchesEnded = NO;
     }
     return self;
 }
@@ -88,6 +89,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         validTouches = [[NSMutableOrderedSet alloc] init];
         possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
+        self.delaysTouchesEnded = NO;
     }
     return self;
 }
@@ -128,8 +130,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 }
 
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return [preventingGestureRecognizer isKindOfClass:[MMBezelInRightGestureRecognizer class]] ||
-    [preventingGestureRecognizer isKindOfClass:[MMBezelInLeftGestureRecognizer class]];
+    return NO;
 }
 
 -(BOOL) containsTouch:(UITouch*)touch{
@@ -140,6 +141,22 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     if(gesture != self){
         [possibleTouches removeObjectsInSet:touches];
         [ignoredTouches addObjectsInSet:touches];
+        BOOL needsToFixValidTouches = NO;
+        for(UITouch* t in touches){
+            if([validTouches containsObject:t]){
+                NSLog(@"gotcha");
+                [validTouches removeObject:t];
+                needsToFixValidTouches = YES;
+            }
+        }
+        if(needsToFixValidTouches){
+            // what do i do if a valid touch is
+            // stolen from us?
+            // this can happen if the user bezels
+            // from teh right, and both bezel touches
+            // also begin on top of the same scrap
+            self.state = UIGestureRecognizerStateCancelled;
+        }
     }
 }
 
@@ -337,8 +354,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     NSMutableOrderedSet* validTouchesCurrentlyEnding = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
     [validTouchesCurrentlyEnding intersectSet:touches];
     [validTouchesCurrentlyEnding minusSet:ignoredTouches];
-    
-    
+
     if(self.state == UIGestureRecognizerStateBegan ||
        self.state == UIGestureRecognizerStateChanged){
         //
@@ -519,11 +535,13 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 }
 
 -(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
-    [ignoredTouches addObject:touch];
-    [self clearCacheForTouch:touch];
-    // dont' send to super, or we'll stop getting
-    // update events for these touches. we'll manually
-    // ignore them by tracking ignoredTouches ourselves
+    if(![ignoredTouches containsObject:touch]){
+        [ignoredTouches addObject:touch];
+        [self clearCacheForTouch:touch];
+        // dont' send to super, or we'll stop getting
+        // update events for these touches. we'll manually
+        // ignore them by tracking ignoredTouches ourselves
+    }
 }
 - (void)reset{
     [super reset];
