@@ -29,11 +29,11 @@
 {
     if ((self = [super initWithFrame:frame])) {
         
-//        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
-//                                                                  target:self
-//                                                                selector:@selector(timerDidFire:)
-//                                                                userInfo:nil
-//                                                                 repeats:YES];
+        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
+                                                                  target:self
+                                                                selector:@selector(timerDidFire:)
+                                                                userInfo:nil
+                                                                 repeats:YES];
 
         
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds];
@@ -85,18 +85,14 @@
 
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         UIGestureRecognizerState st = gesture.state;
-        NSLog(@"%@ %d", NSStringFromClass([gesture class]), st);
+        if([gesture isKindOfClass:[MMPanAndPinchScrapGestureRecognizer class]]){
+            MMPanAndPinchScrapGestureRecognizer* pan = (MMPanAndPinchScrapGestureRecognizer*)gesture;
+            NSLog(@"%@ %d %d %d %d", NSStringFromClass([pan class]), st, [pan.touches count], [pan.ignoredTouches count], [pan.possibleTouches count]);
+        }else{
+            NSLog(@"%@ %d", NSStringFromClass([gesture class]), st);
+        }
     }
     
-    for(UIGestureRecognizer* gesture in [visibleStackHolder peekSubview].gestureRecognizers){
-        UIGestureRecognizerState st = gesture.state;
-        NSLog(@"%@ %d", NSStringFromClass([gesture class]), st);
-    }
-
-    for(UIGestureRecognizer* gesture in [visibleStackHolder peekSubview].drawableView.gestureRecognizers){
-        UIGestureRecognizerState st = gesture.state;
-        NSLog(@"%@ %d", NSStringFromClass([gesture class]), st);
-    }
     NSLog(@"done");
 }
 

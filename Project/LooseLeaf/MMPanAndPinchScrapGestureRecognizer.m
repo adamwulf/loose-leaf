@@ -99,6 +99,18 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     }
 }
 
+-(NSArray*) possibleTouches{
+    return [possibleTouches array];
+}
+
+-(NSArray*) ignoredTouches{
+    NSMutableArray* ret = [NSMutableArray array];
+    for(NSObject* obj in ignoredTouches){
+        [ret addObject:obj];
+    }
+    return ret;
+}
+
 -(NSArray*)touches{
     return [validTouches array];
 }
