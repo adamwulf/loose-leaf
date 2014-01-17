@@ -46,4 +46,6 @@ struct DurationCacheObject{
 
 -(int) indexForTouchInCacheIfExists:(UITouch*)touch;
 
+-(int) numberOfActiveTouches;
+
 @end

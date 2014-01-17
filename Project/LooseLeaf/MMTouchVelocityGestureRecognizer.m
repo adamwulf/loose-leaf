@@ -221,6 +221,16 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
     return firstFreeSlot;
 }
 
+-(int) numberOfActiveTouches{
+    int count = 0;
+    for(int i=0;i<kDurationTouchHashSize;i++){
+        if(durationCache[i].hash == 0){
+            count++;
+        }
+    }
+    return kDurationTouchHashSize - count;
+}
+
 /**
  * fetch the index for the input touch.
  */

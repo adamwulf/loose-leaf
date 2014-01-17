@@ -11,6 +11,7 @@
 #import "MMScrapBubbleButton.h"
 #import "MMScrapBubbleContainerView.h"
 #import "MMDebugDrawView.h"
+#import "MMTouchVelocityGestureRecognizer.h"
 
 @implementation MMScrapPaperStackView{
     MMScrapBubbleContainerView* bezelScrapContainer;
@@ -92,6 +93,7 @@
             NSLog(@"%@ %d", NSStringFromClass([gesture class]), st);
         }
     }
+    NSLog(@"velocity gesture sees: %d", [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]);
     
     NSLog(@"done");
 }
