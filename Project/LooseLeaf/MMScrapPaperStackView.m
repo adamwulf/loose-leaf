@@ -72,8 +72,22 @@
 //        drawLongElementButton.layer.borderWidth = 1;
 //        [self addSubview:drawLongElementButton];
         
+        UISlider* slider = [[UISlider alloc] initWithFrame:CGRectMake(100, 100, 400, 40)];
+        slider.minimumValue = 0;
+        slider.maximumValue = 2 * M_PI;
+        slider.value = 0;
+        slider.continuous = YES;
+        [slider addTarget:self
+                          action:@selector(myAction:)
+                forControlEvents:UIControlEventValueChanged];
+        [self addSubview:slider];
+        
     }
     return self;
+}
+
+-(void) myAction:(UISlider*)slider{
+    [[[visibleStackHolder peekSubview] drawableView] redrawWithAngle:slider.value];
 }
 
 
