@@ -503,6 +503,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 @synchronized(scrapContainerView){
                     [scrapContainerView insertSubview:addedScrap belowSubview:scrap];
                 }
+                [scrap stampContentsOnto:addedScrap];
             }
             if([subshapes count]){
                 // clip out the portion of the scissor path that

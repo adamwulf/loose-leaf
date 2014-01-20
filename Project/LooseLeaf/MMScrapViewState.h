@@ -35,4 +35,7 @@
 
 -(void) addElements:(NSArray*)elements;
 
+-(JotGLTexture*) generateTexture;
+-(void) importTexture:(JotGLTexture*)texture;
+
 @end

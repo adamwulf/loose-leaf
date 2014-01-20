@@ -449,4 +449,16 @@
 }
 
 
+#pragma mark - Sub-scrap content
+
+-(void) stampContentsOnto:(MMScrapView*)otherScrap{
+    JotGLTexture* myTexture = [scrapState generateTexture];
+    [otherScrap drawTexture:myTexture];
+}
+
+
+-(void) drawTexture:(JotGLTexture*) texture{
+    [scrapState importTexture:texture];
+}
+
 @end

@@ -51,4 +51,8 @@
 
 -(CGAffineTransform) pageToScrapTransformWithPageOriginalUnscaledBounds:(CGRect)originalUnscaledBounds;
 
+
+-(void) stampContentsOnto:(MMScrapView*)otherScrap;
+-(void) drawTexture:(JotGLTexture*) texture;
+
 @end

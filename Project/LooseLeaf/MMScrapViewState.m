@@ -370,6 +370,14 @@
     return scrapPath;
 }
 
+#pragma mark - OpenGL
 
+-(JotGLTexture*) generateTexture{
+    return [drawableView generateTexture];
+}
+
+-(void) importTexture:(JotGLTexture*)texture{
+    [drawableView drawBackingTexture:texture];
+}
 
 @end
