@@ -455,29 +455,30 @@
 
 #pragma mark - Sub-scrap content
 
+/**
+ * this will take self's drawn contents and 
+ * stamp them onto the input otherScrap in the
+ * exact same place they are visually on the page
+ */
 -(void) stampContentsOnto:(MMScrapView*)otherScrap{
+    // step 1: generate a gl texture of my entire contents
     JotGLTexture* myTexture = [scrapState generateTexture];
     
-    NSLog(@"self: %f  other: %f", self.rotation, otherScrap.rotation);
-    NSLog(@"diff: %f", otherScrap.rotation - self.rotation);
-    CGFloat diffRotation = self.rotation - otherScrap.rotation;
-    
-    CGPoint translate = CGPointMake(self.center.x - otherScrap.center.x, self.center.y - otherScrap.center.y);
-    
-    translate = CGPointApplyAffineTransform(translate, CGAffineTransformMakeRotation(-diffRotation));
-
-    CGRect bounds = otherScrap.state.drawableView.bounds;
 
     // opengl coordinates
     // when a texture is drawn, it's drawn in these coordinates
-    // from coregraphics top left clockwise around.
+    // from coregraphics top left counter clockwise around.
     //    { 0.0, fullPixelSize.height},
     //    { fullPixelSize.width, fullPixelSize.height},
     //    { 0.0, 0.0},
     //    { fullPixelSize.width, 0.0}
+    //
+    // this is equivelant to starting in top left (0,0) in
+    // core graphics. and moving clockwise.
 
     // get the coordinates of the new scrap in the old
-    // scrap's coordinate space
+    // scrap's coordinate space.
+    CGRect bounds = otherScrap.state.drawableView.bounds;
     CGPoint p1 = [self.state.drawableView convertPoint:bounds.origin fromView:otherScrap.state.drawableView];
     CGPoint p2 = [self.state.drawableView convertPoint:CGPointMake(bounds.size.width, 0) fromView:otherScrap.state.drawableView];
     CGPoint p3 = [self.state.drawableView convertPoint:CGPointMake(0, bounds.size.height) fromView:otherScrap.state.drawableView];
@@ -501,11 +502,15 @@
     p3 = CGPointApplyAffineTransform(p3, flipTransform);
     p4 = CGPointApplyAffineTransform(p4, flipTransform);
 
-    // draw!
+    // now tamp our texture onto the other scrap using these
+    // texture coordinates
     [otherScrap drawTexture:myTexture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
 }
 
-
+/**
+ * this method allows us to stamp an arbitrary texture onto the scrap, using the input
+ * texture coordinates
+ */
 -(void) drawTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4{
     [scrapState importTexture:texture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
 }
