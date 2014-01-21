@@ -498,11 +498,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
             NSArray* subshapes = [subshapePath uniqueSubshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
             debugFullText = [debugFullText stringByAppendingFormat:@"shape:\n %@ scissor:\n %@ \n\n\n\n", subshapePath, scissorPath];
             for(DKUIBezierPathShape* shape in subshapes){
-                // TODO: these scraps should be scaled to match the 1:1 scale of the
-                // original scrap. right now, if a scrap is pinched larger and then
-                // cut, then the new subscraps will have a higher resolution. instead
-                // they should match the resolution of the original scrap
+                // fetch the path from the shape builder,
                 UIBezierPath* subshapePath = [shape.fullPath copy];
+                // and add the scrap so that it's scale matches the scrap that its built from
                 MMScrapView* addedScrap = [self addScrapWithPath:subshapePath andScale:scrap.scale];
                 @synchronized(scrapContainerView){
                     [scrapContainerView insertSubview:addedScrap belowSubview:scrap];
@@ -518,6 +516,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         }
         // clear the dotted line of the scissor
         [shapeBuilderView clear];
+        [self saveToDisk];
     }
     @catch (NSException *exception) {
         //

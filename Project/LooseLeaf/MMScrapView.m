@@ -463,7 +463,6 @@
 -(void) stampContentsOnto:(MMScrapView*)otherScrap{
     // step 1: generate a gl texture of my entire contents
     JotGLTexture* myTexture = [scrapState generateTexture];
-    
 
     // opengl coordinates
     // when a texture is drawn, it's drawn in these coordinates
