@@ -25,6 +25,8 @@
 
 -(MMVector*) normal;
 
+-(MMVector*) normalizedTo:(CGFloat)someLength;
+
 -(MMVector*) perpendicular;
 
 -(MMVector*) flip;

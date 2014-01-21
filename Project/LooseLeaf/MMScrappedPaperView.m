@@ -22,6 +22,7 @@
 #import "DKUIBezierPathClippedSegment+PathElement.h"
 #import "UIBezierPath+PathElement.h"
 #import "UIBezierPath+Description.h"
+#import "MMVector.h"
 
 
 @implementation MMScrappedPaperView{
@@ -494,6 +495,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
             // to fix this, we need to scale this path to 1.0 scale so that our new
             // scrap is built with the correct initial resolution
             
+            CGFloat maxDist = 0;
+            NSMutableArray* vectors = [NSMutableArray array];
+            NSMutableArray* scraps = [NSMutableArray array];
+            
             // cut the shape and get all unique shapes
             NSArray* subshapes = [subshapePath uniqueSubshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
             debugFullText = [debugFullText stringByAppendingFormat:@"shape:\n %@ scissor:\n %@ \n\n\n\n", subshapePath, scissorPath];
@@ -506,6 +511,14 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     [scrapContainerView insertSubview:addedScrap belowSubview:scrap];
                 }
                 [scrap stampContentsOnto:addedScrap];
+                
+                CGFloat addedScrapDist = distance(scrap.center, addedScrap.center);
+                if(addedScrapDist > maxDist){
+                    maxDist = addedScrapDist;
+                }
+                [vectors addObject:[MMVector vectorWithPoint:scrap.center andPoint:addedScrap.center]];
+                [scraps addObject:addedScrap];
+                
             }
             if([subshapes count]){
                 // clip out the portion of the scissor path that
@@ -513,10 +526,23 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 scissorPath = [scissorPath differenceOfPathTo:subshapePath];
                 [scrap removeFromSuperview];
             }
+            [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                                 for(int i=0;i<[vectors count];i++){
+                                     MMVector* vector = [vectors objectAtIndex:i];
+                                     vector = [vector normalizedTo:maxDist];
+                                     MMScrapView* scrap = [scraps objectAtIndex:i];
+                                     
+                                     CGPoint newC = [vector pointFromPoint:scrap.center distance:10];
+                                     scrap.center = newC;
+                                 }
+                             }
+                             completion:nil];
         }
         // clear the dotted line of the scissor
         [shapeBuilderView clear];
         [self saveToDisk];
+        
+        
     }
     @catch (NSException *exception) {
         //

@@ -65,6 +65,10 @@
     return [MMVector vectorWithX:(x / length) andY:(y / length)];
 }
 
+-(MMVector*) normalizedTo:(CGFloat)someLength{
+    return [MMVector vectorWithX:(x / someLength) andY:(y / someLength)];
+}
+
 -(MMVector*) perpendicular{
     // perp just swaps the x and y
     return [MMVector vectorWithX:-y andY:x];
