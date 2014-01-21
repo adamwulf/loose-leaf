@@ -111,10 +111,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     return [self addScrapWithPath:path andRotation:-lastBestRotation andScale:scale];
 }
 
--(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)lastBestRotation{
-    return [self addScrapWithPath:path andRotation:lastBestRotation andScale:1.0];
-}
-
 
 /**
  * the input path contains the offset and size of the new scrap from its
@@ -132,13 +128,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // give us the minimal square px. For instance, drawing a thin diagonal
     // strip of paper will create a thin texture and rotate it, instead of
     // an unrotated thick rectangle.
-    
     CGPoint pathC = path.center;
     CGAffineTransform scalePathToFullResTransform = CGAffineTransformMakeTranslation(pathC.x, pathC.y);
     scalePathToFullResTransform = CGAffineTransformScale(scalePathToFullResTransform, 1/scale, 1/scale);
     scalePathToFullResTransform = CGAffineTransformTranslate(scalePathToFullResTransform, -pathC.x, -pathC.y);
     [path applyTransform:scalePathToFullResTransform];
-    
     
     MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path];
     @synchronized(scrapContainerView){
@@ -150,11 +144,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [newScrap setScale:scale];
     [newScrap setRotation:lastBestRotation];
 
-    //    [UIView animateWithDuration:0.4 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-    //        [newScrap setRotation:-lastBestRotation];
-    //        [newScrap setScale:1];
-    //    } completion:nil];
-    
     [self saveToDisk];
     return newScrap;
 }
@@ -504,8 +493,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
             //
             // to fix this, we need to scale this path to 1.0 scale so that our new
             // scrap is built with the correct initial resolution
-            
-            
             
             // cut the shape and get all unique shapes
             NSArray* subshapes = [subshapePath uniqueSubshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
