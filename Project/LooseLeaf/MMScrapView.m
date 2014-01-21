@@ -469,35 +469,40 @@
     CGRect bounds = otherScrap.state.drawableView.bounds;
 
     // opengl coordinates
-//    { 0.0, fullPixelSize.height},
-//    { fullPixelSize.width, fullPixelSize.height},
-//    { 0.0, 0.0},
-//    { fullPixelSize.width, 0.0}
-    
+    // when a texture is drawn, it's drawn in these coordinates
+    // from coregraphics top left clockwise around.
+    //    { 0.0, fullPixelSize.height},
+    //    { fullPixelSize.width, fullPixelSize.height},
+    //    { 0.0, 0.0},
+    //    { fullPixelSize.width, 0.0}
+
+    // get the coordinates of the new scrap in the old
+    // scrap's coordinate space
     CGPoint p1 = [self.state.drawableView convertPoint:bounds.origin fromView:otherScrap.state.drawableView];
     CGPoint p2 = [self.state.drawableView convertPoint:CGPointMake(bounds.size.width, 0) fromView:otherScrap.state.drawableView];
     CGPoint p3 = [self.state.drawableView convertPoint:CGPointMake(0, bounds.size.height) fromView:otherScrap.state.drawableView];
     CGPoint p4 = [self.state.drawableView convertPoint:CGPointMake(bounds.size.width, bounds.size.height) fromView:otherScrap.state.drawableView];
     
-    // normalize
+    // normalize the coordinates to get texture
+    // coordinate space of 0 to 1
     p1.x /= self.state.drawableView.bounds.size.width;
     p2.x /= self.state.drawableView.bounds.size.width;
     p3.x /= self.state.drawableView.bounds.size.width;
     p4.x /= self.state.drawableView.bounds.size.width;
-    
     p1.y /= self.state.drawableView.bounds.size.height;
     p2.y /= self.state.drawableView.bounds.size.height;
     p3.y /= self.state.drawableView.bounds.size.height;
     p4.y /= self.state.drawableView.bounds.size.height;
-    
+
+    // now flip from core graphics to opengl coordinates
     CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, 1.0);
     p1 = CGPointApplyAffineTransform(p1, flipTransform);
     p2 = CGPointApplyAffineTransform(p2, flipTransform);
     p3 = CGPointApplyAffineTransform(p3, flipTransform);
     p4 = CGPointApplyAffineTransform(p4, flipTransform);
 
+    // draw!
     [otherScrap drawTexture:myTexture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
-
 }
 
 
