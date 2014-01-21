@@ -20,6 +20,7 @@
 @property (readonly) UIView* contentView;
 @property (readonly) CGRect drawableBounds;
 @property (readonly) NSString* uuid;
+@property (readonly) JotView* drawableView;
 
 -(id) initWithUUID:(NSString*)uuid;
 
@@ -36,6 +37,6 @@
 -(void) addElements:(NSArray*)elements;
 
 -(JotGLTexture*) generateTexture;
--(void) importTexture:(JotGLTexture*)texture;
+-(void) importTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4;
 
 @end

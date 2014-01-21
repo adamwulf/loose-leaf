@@ -126,8 +126,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // strip of paper will create a thin texture and rotate it, instead of
     // an unrotated thick rectangle.
     
-    CGPoint pathCenter = path.center;
-    
     MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path];
     @synchronized(scrapContainerView){
         [scrapContainerView addSubview:newScrap];
@@ -138,11 +136,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [newScrap setScale:1.00];
     [newScrap setRotation:lastBestRotation];
 
-    CGPoint scrapCenter = newScrap.center;
-    
-    NSLog(@"pc: %f %f", pathCenter.x, pathCenter.y);
-    NSLog(@"xc: %f %f", scrapCenter.x, scrapCenter.y);
-    
     //    [UIView animateWithDuration:0.4 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
     //        [newScrap setRotation:-lastBestRotation];
     //        [newScrap setScale:1];
@@ -498,7 +491,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 // original scrap. right now, if a scrap is pinched larger and then
                 // cut, then the new subscraps will have a higher resolution. instead
                 // they should match the resolution of the original scrap
-                UIBezierPath* subshapePath = shape.fullPath;
+                UIBezierPath* subshapePath = [shape.fullPath copy];
                 MMScrapView* addedScrap = [self addScrapWithPath:subshapePath];
                 @synchronized(scrapContainerView){
                     [scrapContainerView insertSubview:addedScrap belowSubview:scrap];

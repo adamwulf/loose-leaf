@@ -20,6 +20,7 @@
 @property (nonatomic, assign) BOOL selected;
 @property (nonatomic, readonly) CGSize originalSize;
 @property (nonatomic, readonly) NSString* uuid;
+@property (nonatomic, readonly) MMScrapViewState* state;
 
 -(id) initWithScrapViewState:(MMScrapViewState*)scrapState;
 - (id)initWithBezierPath:(UIBezierPath*)path;
@@ -53,6 +54,6 @@
 
 
 -(void) stampContentsOnto:(MMScrapView*)otherScrap;
--(void) drawTexture:(JotGLTexture*) texture;
+-(void) drawTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4;
 
 @end

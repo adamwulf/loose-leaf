@@ -448,17 +448,61 @@
     return scrapState.originalSize;
 }
 
+-(MMScrapViewState*) state{
+    return  scrapState;
+}
+
 
 #pragma mark - Sub-scrap content
 
 -(void) stampContentsOnto:(MMScrapView*)otherScrap{
     JotGLTexture* myTexture = [scrapState generateTexture];
-    [otherScrap drawTexture:myTexture];
+    
+    NSLog(@"self: %f  other: %f", self.rotation, otherScrap.rotation);
+    NSLog(@"diff: %f", otherScrap.rotation - self.rotation);
+    CGFloat diffRotation = self.rotation - otherScrap.rotation;
+    
+    CGPoint translate = CGPointMake(self.center.x - otherScrap.center.x, self.center.y - otherScrap.center.y);
+    
+    translate = CGPointApplyAffineTransform(translate, CGAffineTransformMakeRotation(-diffRotation));
+
+    CGRect bounds = otherScrap.state.drawableView.bounds;
+
+    // opengl coordinates
+//    { 0.0, fullPixelSize.height},
+//    { fullPixelSize.width, fullPixelSize.height},
+//    { 0.0, 0.0},
+//    { fullPixelSize.width, 0.0}
+    
+    CGPoint p1 = [self.state.drawableView convertPoint:bounds.origin fromView:otherScrap.state.drawableView];
+    CGPoint p2 = [self.state.drawableView convertPoint:CGPointMake(bounds.size.width, 0) fromView:otherScrap.state.drawableView];
+    CGPoint p3 = [self.state.drawableView convertPoint:CGPointMake(0, bounds.size.height) fromView:otherScrap.state.drawableView];
+    CGPoint p4 = [self.state.drawableView convertPoint:CGPointMake(bounds.size.width, bounds.size.height) fromView:otherScrap.state.drawableView];
+    
+    // normalize
+    p1.x /= self.state.drawableView.bounds.size.width;
+    p2.x /= self.state.drawableView.bounds.size.width;
+    p3.x /= self.state.drawableView.bounds.size.width;
+    p4.x /= self.state.drawableView.bounds.size.width;
+    
+    p1.y /= self.state.drawableView.bounds.size.height;
+    p2.y /= self.state.drawableView.bounds.size.height;
+    p3.y /= self.state.drawableView.bounds.size.height;
+    p4.y /= self.state.drawableView.bounds.size.height;
+    
+    CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, 1.0);
+    p1 = CGPointApplyAffineTransform(p1, flipTransform);
+    p2 = CGPointApplyAffineTransform(p2, flipTransform);
+    p3 = CGPointApplyAffineTransform(p3, flipTransform);
+    p4 = CGPointApplyAffineTransform(p4, flipTransform);
+
+    [otherScrap drawTexture:myTexture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
+
 }
 
 
--(void) drawTexture:(JotGLTexture*) texture{
-    [scrapState importTexture:texture];
+-(void) drawTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4{
+    [scrapState importTexture:texture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
 }
 
 @end
