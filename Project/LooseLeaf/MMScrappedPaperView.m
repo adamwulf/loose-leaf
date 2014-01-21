@@ -67,7 +67,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
  * and size of the new scrap from its
  * bounds
  */
--(MMScrapView*) addScrapWithPath:(UIBezierPath*)path{
+-(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andScale:(CGFloat)scale{
 
     // find our current "best" of an unrotated path
     CGRect pathBounds = path.bounds;
@@ -108,23 +108,37 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
     // now add the scrap, and rotate it to counter-act
     // the rotation we added to the path itself
-    return [self addScrapWithPath:path andRotation:-lastBestRotation];
+    return [self addScrapWithPath:path andRotation:-lastBestRotation andScale:scale];
+}
+
+-(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)lastBestRotation{
+    return [self addScrapWithPath:path andRotation:lastBestRotation andScale:1.0];
 }
 
 
-
-
 /**
- * the input path contains the offset
- * and size of the new scrap from its
- * bounds
+ * the input path contains the offset and size of the new scrap from its
+ * bounds. the input scale attribute tells us what the scale should be for
+ * it's given size. the scrap should exactly fit the input path, but already
+ * have the input scale. this lets us create higher resolution scraps
+ * at specific paths.
+ *
+ * so, an input scale of 2.0 will not change the visible size of the added scrap, but it
+ * will have twice the resolution in both dimensions.
  */
--(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)lastBestRotation{
+-(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)lastBestRotation andScale:(CGFloat)scale{
     //
     // at this point, we have the correct path and rotation that will
     // give us the minimal square px. For instance, drawing a thin diagonal
     // strip of paper will create a thin texture and rotate it, instead of
     // an unrotated thick rectangle.
+    
+    CGPoint pathC = path.center;
+    CGAffineTransform scalePathToFullResTransform = CGAffineTransformMakeTranslation(pathC.x, pathC.y);
+    scalePathToFullResTransform = CGAffineTransformScale(scalePathToFullResTransform, 1/scale, 1/scale);
+    scalePathToFullResTransform = CGAffineTransformTranslate(scalePathToFullResTransform, -pathC.x, -pathC.y);
+    [path applyTransform:scalePathToFullResTransform];
+    
     
     MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path];
     @synchronized(scrapContainerView){
@@ -133,7 +147,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [newScrap loadStateAsynchronously:NO];
     [newScrap setShouldShowShadow:[self isEditable]];
     
-    [newScrap setScale:1.00];
+    [newScrap setScale:scale];
     [newScrap setRotation:lastBestRotation];
 
     //    [UIView animateWithDuration:0.4 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -421,7 +435,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     if(shape.isPathClosed){
         UIBezierPath* shapePath = [shape copy];
         [shapePath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
-        [self addScrapWithPath:shapePath];
+        [self addScrapWithPath:shapePath andScale:1.0];
     }
 }
 
@@ -483,6 +497,16 @@ static dispatch_queue_t concurrentBackgroundQueue;
             UIBezierPath* subshapePath = [[scrap clippingPath] copy];
             [subshapePath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height)];
             
+            //
+            // this subshape path is based on the scrap's current scale, which may or
+            // may not be 1.0. if it's not 1.0 scale, then the new scrap would be built
+            // with the incorrect initial resolution.
+            //
+            // to fix this, we need to scale this path to 1.0 scale so that our new
+            // scrap is built with the correct initial resolution
+            
+            
+            
             // cut the shape and get all unique shapes
             NSArray* subshapes = [subshapePath uniqueSubshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
             debugFullText = [debugFullText stringByAppendingFormat:@"shape:\n %@ scissor:\n %@ \n\n\n\n", subshapePath, scissorPath];
@@ -492,7 +516,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 // cut, then the new subscraps will have a higher resolution. instead
                 // they should match the resolution of the original scrap
                 UIBezierPath* subshapePath = [shape.fullPath copy];
-                MMScrapView* addedScrap = [self addScrapWithPath:subshapePath];
+                MMScrapView* addedScrap = [self addScrapWithPath:subshapePath andScale:scrap.scale];
                 @synchronized(scrapContainerView){
                     [scrapContainerView insertSubview:addedScrap belowSubview:scrap];
                 }
