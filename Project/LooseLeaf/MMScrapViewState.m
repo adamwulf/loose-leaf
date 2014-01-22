@@ -389,4 +389,12 @@
     [drawableView forceAddEmptyStroke];
 }
 
+#pragma mark - dealloc
+
+-(void) dealloc{
+    [[MMLoadImageCache sharedInstace] clearCacheForPath:self.thumbImageFile];
+    dispatch_release(importExportScrapStateQueue);
+    importExportScrapStateQueue = nil;
+}
+
 @end
