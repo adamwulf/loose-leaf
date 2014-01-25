@@ -225,10 +225,21 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
             }
             if([touchesInScrap count]){
                 // two+ possible touches match this scrap
-                self.scrap = _scrap;
-                [scrapDelegate ownershipOfTouches:touchesInScrap isGesture:self];
-                [validTouches addObjectsInSet:touchesInScrap];
-                [possibleTouches removeObjectsInSet:touchesInScrap];
+                if([validTouches count] < mmMinimumNumberOfScrapTouches){
+                    self.scrap = _scrap;
+                    [scrapDelegate ownershipOfTouches:touchesInScrap isGesture:self];
+                    [validTouches addObjectsInSet:touchesInScrap];
+                    [possibleTouches removeObjectsInSet:touchesInScrap];
+                }else{
+                    // if our gesture already has two fingers on the scrap,
+                    // then ignore any additioanl touches on the scrap.
+                    //
+                    // this will allow the other scrap gesture to also
+                    // hang onto this scrap (which we'll use to duplicate
+                    // the scrap later).
+                    [ignoredTouches addObjectsInSet:touchesInScrap];
+                    [possibleTouches removeObjectsInSet:touchesInScrap];
+                }
                 break;
             }else{
                 // remove all touches from allPossibleTouches that match this scrap
