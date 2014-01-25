@@ -482,6 +482,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         // iterate over the scraps from the visibly top scraps
         // to the bottom of the stack
         for(MMScrapView* scrap in [self.scraps reverseObjectEnumerator]){
+            debugFullText = @"";
             // get the clipping path of the scrap and convert it into
             // CoreGraphics coordinate system
             UIBezierPath* subshapePath = [[scrap clippingPath] copy];
@@ -501,26 +502,26 @@ static dispatch_queue_t concurrentBackgroundQueue;
             @autoreleasepool {
                 // cut the shape and get all unique shapes
                 NSArray* subshapes = [subshapePath uniqueSubshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
-                debugFullText = [debugFullText stringByAppendingFormat:@"shape:\n %@ scissor:\n %@ \n\n\n\n", subshapePath, scissorPath];
-                for(DKUIBezierPathShape* shape in subshapes){
-                    // fetch the path from the shape builder,
-                    UIBezierPath* subshapePath = [shape.fullPath copy];
-                    // and add the scrap so that it's scale matches the scrap that its built from
-                    MMScrapView* addedScrap = [self addScrapWithPath:subshapePath andScale:scrap.scale];
-                    @synchronized(scrapContainerView){
-                        [scrapContainerView insertSubview:addedScrap belowSubview:scrap];
+                if([subshapes count] > 1){
+                    debugFullText = [debugFullText stringByAppendingFormat:@"shape:\n %@ scissor:\n %@ \n\n\n\n", subshapePath, scissorPath];
+                    for(DKUIBezierPathShape* shape in subshapes){
+                        // fetch the path from the shape builder,
+                        UIBezierPath* subshapePath = [shape.fullPath copy];
+                        // and add the scrap so that it's scale matches the scrap that its built from
+                        MMScrapView* addedScrap = [self addScrapWithPath:subshapePath andScale:scrap.scale];
+                        @synchronized(scrapContainerView){
+                            [scrapContainerView insertSubview:addedScrap belowSubview:scrap];
+                        }
+                        [scrap stampContentsOnto:addedScrap];
+                        
+                        CGFloat addedScrapDist = distance(scrap.center, addedScrap.center);
+                        if(addedScrapDist > maxDist){
+                            maxDist = addedScrapDist;
+                        }
+                        [vectors addObject:[MMVector vectorWithPoint:scrap.center andPoint:addedScrap.center]];
+                        [scraps addObject:addedScrap];
+                        
                     }
-                    [scrap stampContentsOnto:addedScrap];
-                    
-                    CGFloat addedScrapDist = distance(scrap.center, addedScrap.center);
-                    if(addedScrapDist > maxDist){
-                        maxDist = addedScrapDist;
-                    }
-                    [vectors addObject:[MMVector vectorWithPoint:scrap.center andPoint:addedScrap.center]];
-                    [scraps addObject:addedScrap];
-                    
-                }
-                if([subshapes count]){
                     // clip out the portion of the scissor path that
                     // intersects with the scrap we just cut
                     scissorPath = [scissorPath differenceOfPathTo:subshapePath];
