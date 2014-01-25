@@ -522,11 +522,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
                         [scraps addObject:addedScrap];
                         
                     }
-                    // clip out the portion of the scissor path that
-                    // intersects with the scrap we just cut
-                    scissorPath = [scissorPath differenceOfPathTo:subshapePath];
                     [scrap removeFromSuperview];
                 }
+                // clip out the portion of the scissor path that
+                // intersects with the scrap we just cut
+                scissorPath = [scissorPath differenceOfPathTo:subshapePath];
             }
             [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                                  for(int i=0;i<[vectors count];i++){
