@@ -503,10 +503,21 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 // cut the shape and get all unique shapes
                 NSArray* subshapes = [subshapePath uniqueShapesCreatedFromSlicingWithUnclosedPath:scissorPath];
                 if([subshapes count] > 1){
-                    debugFullText = [debugFullText stringByAppendingFormat:@"shape:\n %@ scissor:\n %@ \n\n\n\n", subshapePath, scissorPath];
+                    
+                    NSMutableArray* sortedArrayOfNewSubpaths = [NSMutableArray array];
                     for(DKUIBezierPathShape* shape in subshapes){
-                        // fetch the path from the shape builder,
-                        UIBezierPath* subshapePath = [shape.fullPath copy];
+                        [sortedArrayOfNewSubpaths addObject:[shape.fullPath copy]];
+                    }
+                    [sortedArrayOfNewSubpaths sortUsingComparator:^(id obj1, id obj2){
+                        UIBezierPath* p1 = obj1;
+                        UIBezierPath* p2 = obj2;
+                        CGFloat s1 = p1.bounds.size.width * p1.bounds.size.height;
+                        CGFloat s2 = p2.bounds.size.width * p2.bounds.size.height;
+                        return s1 > s2 ? NSOrderedAscending : NSOrderedDescending;
+                    }];
+                    
+                    debugFullText = [debugFullText stringByAppendingFormat:@"shape:\n %@ scissor:\n %@ \n\n\n\n", subshapePath, scissorPath];
+                    for(UIBezierPath* subshapePath in sortedArrayOfNewSubpaths){
                         // and add the scrap so that it's scale matches the scrap that its built from
                         MMScrapView* addedScrap = [self addScrapWithPath:subshapePath andScale:scrap.scale];
                         @synchronized(scrapContainerView){
@@ -520,7 +531,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
                         }
                         [vectors addObject:[MMVector vectorWithPoint:scrap.center andPoint:addedScrap.center]];
                         [scraps addObject:addedScrap];
-                        
                     }
                     [scrap removeFromSuperview];
                 }
@@ -543,8 +553,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
         // clear the dotted line of the scissor
         [shapeBuilderView clear];
         [self saveToDisk];
-        
-        
     }
     @catch (NSException *exception) {
         //
