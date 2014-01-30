@@ -417,7 +417,7 @@ static int count = 0;
         if([element isKindOfClass:[CurveToPathElement class]]){
             UIBezierPath* bez = [element bezierPathSegment];
             
-            NSArray* redAndBlueSegments = [UIBezierPath redAndGreenAndBlueSegmentsCreatedFrom:boundsPath bySlicingWithPath:bez];
+            NSArray* redAndBlueSegments = [UIBezierPath redAndGreenAndBlueSegmentsCreatedFrom:boundsPath bySlicingWithPath:bez andNumberOfBlueShellSegments:nil];
             NSArray* redSegments = [redAndBlueSegments firstObject];
             NSArray* greenSegments = [redAndBlueSegments objectAtIndex:1];
 

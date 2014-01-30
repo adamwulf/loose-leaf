@@ -230,7 +230,7 @@
                     UIBezierPath* scissorPath = possibleShape.bezierPath;
                     
                     
-                    NSArray* subShapePaths = [shapePath subshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
+                    NSArray* subShapePaths = [shapePath uniqueSubshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
                     NSArray* foundShapes = [subShapePaths firstObject];
                     
 //                    NSLog(@"Cutting Shape: %@", shapePath);

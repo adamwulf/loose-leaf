@@ -288,7 +288,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 // change during each split
                 NSArray* redAndBlueSegments = nil;
                 @try {
-                    redAndBlueSegments = [UIBezierPath redAndGreenAndBlueSegmentsCreatedFrom:scrapClippingPath bySlicingWithPath:strokePath];
+                    redAndBlueSegments = [UIBezierPath redAndGreenAndBlueSegmentsCreatedFrom:scrapClippingPath bySlicingWithPath:strokePath andNumberOfBlueShellSegments:nil];
                 }@catch (id exc) {
                     //        NSAssert(NO, @"need to log this");
                     NSLog(@"need to mail the paths");
@@ -501,7 +501,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
             NSMutableArray* scraps = [NSMutableArray array];
             @autoreleasepool {
                 // cut the shape and get all unique shapes
-                NSArray* subshapes = [subshapePath uniqueSubshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
+                NSArray* subshapes = [subshapePath uniqueShapesCreatedFromSlicingWithUnclosedPath:scissorPath];
                 if([subshapes count] > 1){
                     debugFullText = [debugFullText stringByAppendingFormat:@"shape:\n %@ scissor:\n %@ \n\n\n\n", subshapePath, scissorPath];
                     for(DKUIBezierPathShape* shape in subshapes){
