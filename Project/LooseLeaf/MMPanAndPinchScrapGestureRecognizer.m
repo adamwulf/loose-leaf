@@ -476,12 +476,13 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         [validTouches minusOrderedSet:validTouchesCurrentlyCancelling];
         if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
             self.state = UIGestureRecognizerStatePossible;
-        }else if([validTouches count] == 0 &&
-                 [possibleTouches count] == 0 &&
-                 [ignoredTouches count] == 0 &&
-                 self.state == UIGestureRecognizerStateChanged){
-            self.state = UIGestureRecognizerStateCancelled;
         }
+    }
+    if([validTouches count] == 0 &&
+       [possibleTouches count] == 0 &&
+       [ignoredTouches count] == 0 &&
+       (self.state == UIGestureRecognizerStateChanged || self.state == UIGestureRecognizerStateBegan)){
+        self.state = UIGestureRecognizerStateCancelled;
     }
 //    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 
