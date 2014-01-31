@@ -22,8 +22,6 @@
 
 +(dispatch_queue_t) importExportStateQueue;
 
-+(dispatch_queue_t) concurrentBackgroundQueue;
-
 -(id) initWithScrapIDsPath:(NSString*)scrapIDsPath;
 
 -(BOOL) isStateLoaded;

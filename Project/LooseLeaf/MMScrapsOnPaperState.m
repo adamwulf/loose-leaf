@@ -27,7 +27,6 @@
 @synthesize shouldShowShadows;
 
 static dispatch_queue_t importExportStateQueue;
-static dispatch_queue_t concurrentBackgroundQueue;
 
 +(dispatch_queue_t) importExportStateQueue{
     if(!importExportStateQueue){
@@ -35,13 +34,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
         importExportStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.importExportStateQueue", DISPATCH_QUEUE_SERIAL);
     }
     return importExportStateQueue;
-}
-
-+(dispatch_queue_t) concurrentBackgroundQueue{
-    if(!concurrentBackgroundQueue){
-        concurrentBackgroundQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.concurrentBackgroundQueue", DISPATCH_QUEUE_CONCURRENT);
-    }
-    return concurrentBackgroundQueue;
 }
 
 -(id) initWithScrapIDsPath:(NSString*)_scrapIDsPath{

@@ -25,6 +25,7 @@
 @synthesize isBrandNewPage;
 @synthesize uuid;
 @synthesize unitShadowPath;
+@synthesize originalUnscaledBounds;
 
 - (id)initWithFrame:(CGRect)frame{
     return [self initWithFrame:frame andUUID:[NSString createStringUUID]];
@@ -167,7 +168,7 @@
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         if([gesture respondsToSelector:@selector(cancel)]){
             if(gesture.enabled && gesture.state != UIGestureRecognizerStatePossible){
-                NSLog(@"gesture is active %@", gesture);
+//                NSLog(@"gesture is active %@", gesture);
             }
             [(MMPanAndPinchGestureRecognizer*)gesture cancel];
         }
@@ -179,7 +180,7 @@
 -(void) disableAllGestures{
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         if(gesture.enabled && gesture.state != UIGestureRecognizerStatePossible){
-            NSLog(@"gesture is active %@ %d", gesture, gesture.state);
+//            NSLog(@"gesture is active %@ %d", gesture, gesture.state);
         }
         [gesture setEnabled:NO];
     }
@@ -249,7 +250,6 @@
 //          panGesture.state == UIGestureRecognizerStateEnded, panGesture.state == UIGestureRecognizerStateBegan,
 //          panGesture.state == UIGestureRecognizerStateFailed);
     
-    CGPoint velocity = [_panGesture velocity];
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
        panGesture.state == UIGestureRecognizerStateEnded ||
        panGesture.state == UIGestureRecognizerStateFailed){
@@ -268,8 +268,7 @@
             [self.delegate finishedPanningAndScalingPage:self 
                                                intoBezel:panGesture.didExitToBezel
                                                fromFrame:frameOfPageAtBeginningOfGesture
-                                                 toFrame:self.frame
-                                            withVelocity:velocity];
+                                                 toFrame:self.frame];
         }
         return;
     }else if(panGesture.numberOfTouches == 1){

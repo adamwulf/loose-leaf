@@ -11,6 +11,7 @@
 #import "MMScrapBubbleButton.h"
 #import "MMScrapBubbleContainerView.h"
 #import "MMDebugDrawView.h"
+#import "MMTouchVelocityGestureRecognizer.h"
 
 @implementation MMScrapPaperStackView{
     MMScrapBubbleContainerView* bezelScrapContainer;
@@ -29,11 +30,11 @@
 {
     if ((self = [super initWithFrame:frame])) {
         
-//        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
-//                                                                  target:self
-//                                                                selector:@selector(timerDidFire:)
-//                                                                userInfo:nil
-//                                                                 repeats:YES];
+        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
+                                                                  target:self
+                                                                selector:@selector(timerDidFire:)
+                                                                userInfo:nil
+                                                                 repeats:YES];
 
         
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds];
@@ -70,7 +71,6 @@
 //        drawLongElementButton.layer.borderColor = [UIColor blackColor].CGColor;
 //        drawLongElementButton.layer.borderWidth = 1;
 //        [self addSubview:drawLongElementButton];
-        
     }
     return self;
 }
@@ -86,17 +86,18 @@
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         UIGestureRecognizerState st = gesture.state;
         NSLog(@"%@ %d", NSStringFromClass([gesture class]), st);
+        if([gesture respondsToSelector:@selector(touches)]){
+            NSLog(@"   touches: %d", [[gesture performSelector:@selector(touches)] count]);
+        }
+        if([gesture respondsToSelector:@selector(possibleTouches)]){
+            NSLog(@"   possibleTouches: %d", [[gesture performSelector:@selector(possibleTouches)] count]);
+        }
+        if([gesture respondsToSelector:@selector(ignoredTouches)]){
+            NSLog(@"   ignoredTouches: %d", [[gesture performSelector:@selector(ignoredTouches)] count]);
+        }
     }
+    NSLog(@"velocity gesture sees: %d", [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]);
     
-    for(UIGestureRecognizer* gesture in [visibleStackHolder peekSubview].gestureRecognizers){
-        UIGestureRecognizerState st = gesture.state;
-        NSLog(@"%@ %d", NSStringFromClass([gesture class]), st);
-    }
-
-    for(UIGestureRecognizer* gesture in [visibleStackHolder peekSubview].drawableView.gestureRecognizers){
-        UIGestureRecognizerState st = gesture.state;
-        NSLog(@"%@ %d", NSStringFromClass([gesture class]), st);
-    }
     NSLog(@"done");
 }
 
@@ -152,11 +153,15 @@
 }
 
 -(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
+    [panAndPinchScrapGesture ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
+    [panAndPinchScrapGesture2 ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
     [super isBezelingInLeftWithGesture:bezelGesture];
     [self forceScrapToScrapContainerDuringGesture];
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
+    [panAndPinchScrapGesture ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
+    [panAndPinchScrapGesture2 ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
     [super isBezelingInRightWithGesture:bezelGesture];
     [self forceScrapToScrapContainerDuringGesture];
 }
@@ -272,21 +277,22 @@
         if(gesture.didExitToBezel){
             shouldBezel = YES;
         }else if([scrapContainer.subviews containsObject:gesture.scrap]){
+            CGFloat scrapScaleInPage;
+            CGPoint scrapCenterInPage;
+            MMScrappedPaperView* pageToDropScrap;
             if(gesture.state == UIGestureRecognizerStateCancelled){
-                // bezel
-                shouldBezel = YES;
+                pageToDropScrap = [visibleStackHolder peekSubview];
+                [self scaledCenter:&scrapCenterInPage andScale:&scrapScaleInPage forScrap:gesture.scrap onPage:pageToDropScrap];
             }else{
-                CGFloat scrapScaleInPage;
-                CGPoint scrapCenterInPage;
-                MMScrappedPaperView* pageToDropScrap = [self pageWouldDropScrap:gesture.scrap atCenter:&scrapCenterInPage andScale:&scrapScaleInPage];
-                if(pageToDropScrap){
-                    [pageToDropScrap addScrap:gesture.scrap];
-                    gesture.scrap.scale = scrapScaleInPage;
-                    gesture.scrap.center = scrapCenterInPage;
-                }else{
-                    // couldn't find a page to catch it
-                    shouldBezel = YES;
-                }
+                pageToDropScrap = [self pageWouldDropScrap:gesture.scrap atCenter:&scrapCenterInPage andScale:&scrapScaleInPage];
+            }
+            if(pageToDropScrap){
+                [pageToDropScrap addScrap:gesture.scrap];
+                gesture.scrap.scale = scrapScaleInPage;
+                gesture.scrap.center = scrapCenterInPage;
+            }else{
+                // couldn't find a page to catch it
+                shouldBezel = YES;
             }
         }
         
@@ -379,17 +385,13 @@
             // if we can't find a page, we're done
             break;
         }
-        CGFloat pageScale = pageToDropScrap.scale;
-        CGAffineTransform reverseScaleTransform = CGAffineTransformMakeScale(1/pageScale, 1/pageScale);
-        *scrapScaleInPage = scrap.scale;
-        *scrapCenterInPage = scrap.center;
-        *scrapScaleInPage = *scrapScaleInPage / pageScale;
-        *scrapCenterInPage = [pageToDropScrap convertPoint:*scrapCenterInPage fromView:scrapContainer];
-        *scrapCenterInPage = CGPointApplyAffineTransform(*scrapCenterInPage, reverseScaleTransform);
+        [self scaledCenter:scrapCenterInPage andScale:scrapScaleInPage forScrap:scrap onPage:pageToDropScrap];
         // bounds respects the transform, so we need to scale the
         // bounds of the page too to see if the scrap is landing inside
         // of it
         pageBounds = pageToDropScrap.bounds;
+        CGFloat pageScale = pageToDropScrap.scale;
+        CGAffineTransform reverseScaleTransform = CGAffineTransformMakeScale(1/pageScale, 1/pageScale);
         pageBounds = CGRectApplyAffineTransform(pageBounds, reverseScaleTransform);
 
 //        if(CGRectContainsPoint(pageBounds, scrapCenterInPage)){
@@ -399,6 +401,16 @@
     }while(!CGRectContainsPoint(pageBounds, *scrapCenterInPage));
     
     return pageToDropScrap;
+}
+
+-(void) scaledCenter:(CGPoint*)scrapCenterInPage andScale:(CGFloat*)scrapScaleInPage forScrap:(MMScrapView*)scrap onPage:(MMScrappedPaperView*)pageToDropScrap{
+    CGFloat pageScale = pageToDropScrap.scale;
+    CGAffineTransform reverseScaleTransform = CGAffineTransformMakeScale(1/pageScale, 1/pageScale);
+    *scrapScaleInPage = scrap.scale;
+    *scrapCenterInPage = scrap.center;
+    *scrapScaleInPage = *scrapScaleInPage / pageScale;
+    *scrapCenterInPage = [pageToDropScrap convertPoint:*scrapCenterInPage fromView:scrapContainer];
+    *scrapCenterInPage = CGPointApplyAffineTransform(*scrapCenterInPage, reverseScaleTransform);
 }
 
 
@@ -416,6 +428,9 @@
 #pragma mark - MMPaperViewDelegate
 
 -(CGRect) isBeginning:(BOOL)beginning toPanAndScalePage:(MMPaperView *)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withTouches:(NSArray*)touches{
+    if(beginning){
+        NSLog(@"panning page");
+    }
     CGRect ret = [super isBeginning:beginning toPanAndScalePage:page fromFrame:fromFrame toFrame:toFrame withTouches:touches];
     if(panAndPinchScrapGesture.state == UIGestureRecognizerStateBegan){
         panAndPinchScrapGesture.state = UIGestureRecognizerStateChanged;
@@ -447,6 +462,7 @@
     for(UITouch* touch in touches){
         [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
         [polygon cancelPolygonForTouch:touch];
+        [scissor cancelPolygonForTouch:touch];
     }
 }
 
@@ -539,5 +555,6 @@
     }
     [super finishedScalingReallySmall:page];
 }
+
 
 @end

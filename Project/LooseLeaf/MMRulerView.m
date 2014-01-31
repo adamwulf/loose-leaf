@@ -9,9 +9,7 @@
 #import "MMRulerView.h"
 #import "Constants.h"
 #import "MMVector.h"
-#import "UIBezierPath+NSOSX.h"
-#import "UIBezierPath+Editing.h"
-#import "UIBezierPath+Ahmed.h"
+#import <DrawKit-iOS/DrawKit-iOS.h>
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "UIDevice+PPI.h"
@@ -70,7 +68,7 @@
     if (self) {
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
-        unitLength = [UIDevice ppc];
+        unitLength = [UIDevice idealUnitLength];
     }
     return self;
 }
@@ -588,6 +586,10 @@ static NSDate* lastRender;
         old_p2.y = old_p1.y;
     }
 
+    if(initialDistance == 0){
+        // update the unit whenever the ruler is first touched down
+        unitLength = [UIDevice idealUnitLength];
+    }
     initialDistance = distance;
 }
 
@@ -638,12 +640,17 @@ static NSDate* lastRender;
  * to realign all the input elements to the ruler
  */
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
-    NSMutableArray* output = [NSMutableArray array];
-    for(AbstractBezierPathElement* element in elements){
-        [output addObjectsFromArray:[self adjustElement:element fromPreviousElement:previousElement]];
-        previousElement = element;
+    if(path1){
+        // only adjust the strokes to the ruler if
+        // we actually have a path for the ruler
+        NSMutableArray* output = [NSMutableArray array];
+        for(AbstractBezierPathElement* element in elements){
+            [output addObjectsFromArray:[self adjustElement:element fromPreviousElement:previousElement]];
+            previousElement = element;
+        }
+        return output;
     }
-    return output;
+    return elements;
 }
 
 /**
@@ -771,7 +778,6 @@ static NSDate* lastRender;
                 // be sure to set color/width/etc
                 newElement.color = element.color;
                 newElement.width = element.width;
-                newElement.rotation = element.rotation;
                 [output addObject:newElement];
             }
         }];
@@ -795,14 +801,6 @@ static NSDate* lastRender;
  * (old points).
  */
 -(void) updateRectForPoint:(CGPoint)p1 andPoint:(CGPoint)p2{
-    CGPoint minP = CGPointMake(MIN(MIN(MIN(p1.x, p2.x), old_p1.x), old_p2.x), MIN(MIN(MIN(p1.y, p2.y), old_p1.y), old_p2.y));
-    CGPoint maxP = CGPointMake(MAX(MAX(MAX(p1.x, p2.x), old_p1.x), old_p2.x), MAX(MAX(MAX(p1.y, p2.y), old_p1.y), old_p2.y));
-    CGRect needsDisp = CGRectMake(minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y);
-    needsDisp = CGRectUnion(needsDisp, [path1 bounds]);
-    needsDisp = CGRectUnion(needsDisp, [path2 bounds]);
-    needsDisp = CGRectInset(needsDisp, -80, -80);
-    [self setNeedsDisplayInRect:needsDisp];
-    // TODO: remove setNeedsDisplay
     [self setNeedsDisplay];
     NSTimeInterval lastRenderStamp = [lastRender timeIntervalSinceNow];
     if(lastRenderStamp < -.03){

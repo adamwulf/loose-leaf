@@ -9,7 +9,7 @@
 #import "MMSidebarButton.h"
 #import "Constants.h"
 #import "UIColor+Shadow.h"
-#import "DrawKit-iOS.h"
+#import <DrawKit-iOS/DrawKit-iOS.h>
 #import <QuartzCore/QuartzCore.h>
 
 @implementation MMSidebarButton

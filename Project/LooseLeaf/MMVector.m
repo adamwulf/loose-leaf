@@ -65,6 +65,10 @@
     return [MMVector vectorWithX:(x / length) andY:(y / length)];
 }
 
+-(MMVector*) normalizedTo:(CGFloat)someLength{
+    return [MMVector vectorWithX:(x / someLength) andY:(y / someLength)];
+}
+
 -(MMVector*) perpendicular{
     // perp just swaps the x and y
     return [MMVector vectorWithX:-y andY:x];
@@ -141,6 +145,9 @@
     return acosf(scaler / (self.magnitude * otherVector.magnitude));
 }
 
+-(CGPoint) asCGPoint{
+    return CGPointMake(self.x, self.y);
+}
 
 -(NSString*) description{
     return [@"[MMVector: " stringByAppendingFormat:@"%f %f]", self.x, self.y];

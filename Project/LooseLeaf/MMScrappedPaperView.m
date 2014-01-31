@@ -8,26 +8,36 @@
 
 #import "MMScrappedPaperView.h"
 #import "PolygonToolDelegate.h"
-#import "UIColor+ColorWithHex.h"
 #import "MMScrapView.h"
 #import "MMScrapContainerView.h"
 #import "NSThread+BlockAdditions.h"
 #import "NSArray+Extras.h"
-#import "DrawKit-iOS.h"
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "MMDebugDrawView.h"
 #import "MMScrapsOnPaperState.h"
 #import "MMImmutableScrapsOnPaperState.h"
-#import "MMPaperState.h"
-#import "DKUIBezierPathClippedSegmentTPair.h"
 #import <JotUI/UIColor+JotHelper.h>
+#import <DrawKit-iOS/DrawKit-iOS.h>
+#import "DKUIBezierPathClippedSegment+PathElement.h"
+#import "UIBezierPath+PathElement.h"
+#import "UIBezierPath+Description.h"
+#import "MMVector.h"
 
 
 @implementation MMScrappedPaperView{
     UIView* scrapContainerView;
     NSString* scrapIDsPath;
     MMScrapsOnPaperState* scrapState;
+}
+
+
+static dispatch_queue_t concurrentBackgroundQueue;
++(dispatch_queue_t) concurrentBackgroundQueue{
+    if(!concurrentBackgroundQueue){
+        concurrentBackgroundQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.concurrentBackgroundQueue", DISPATCH_QUEUE_CONCURRENT);
+    }
+    return concurrentBackgroundQueue;
 }
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
@@ -58,24 +68,95 @@
  * and size of the new scrap from its
  * bounds
  */
--(void) addScrapWithPath:(UIBezierPath*)path{
+-(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andScale:(CGFloat)scale{
+
+    // find our current "best" of an unrotated path
+    CGRect pathBounds = path.bounds;
+    CGFloat initialSize = pathBounds.size.width * pathBounds.size.height;
+    CGFloat lastBestSize = initialSize;
+    CGFloat lastBestRotation = 0;
+    
+    // now copy the path, and we'll rotate this to
+    // find the best rotation that'll give us the
+    // minimum (or very close to min) square pixels
+    // to use as the backing
+    UIBezierPath* rotatedPath = [path copy];
+    
+    CGFloat numberOfSteps = 30.0;
+    CGAffineTransform rotationTransform = CGAffineTransformMakeRotation(M_PI / 2.0 / numberOfSteps);
+    CGFloat currentStepRotation = 0;
+    for(int i=0;i<numberOfSteps;i++){
+        // rotate the path, and track what that rotation value is:
+        currentStepRotation += M_PI / 2.0 / numberOfSteps;
+        [rotatedPath applyTransform:rotationTransform];
+        // now calculate how many square pixels we'd need
+        // to store that new path
+        CGRect rotatedPathBounds = rotatedPath.bounds;
+        CGFloat rotatedPxSize = rotatedPathBounds.size.width * rotatedPathBounds.size.height;
+        // if it's fewer square pixels, then save
+        // that rotation value
+        if(rotatedPxSize < lastBestSize){
+            lastBestRotation = currentStepRotation;
+            lastBestSize = rotatedPxSize;
+        }
+    }
+    
+//    NSLog(@"memory savings of: %f", (1 - lastBestSize / initialSize));
+    
+    if(lastBestRotation){
+        [path rotateAndAlignCenter:lastBestRotation];
+    }
+
+    // now add the scrap, and rotate it to counter-act
+    // the rotation we added to the path itself
+    return [self addScrapWithPath:path andRotation:-lastBestRotation andScale:scale];
+}
+
+
+/**
+ * the input path contains the offset and size of the new scrap from its
+ * bounds. the input scale attribute tells us what the scale should be for
+ * it's given size. the scrap should exactly fit the input path, but already
+ * have the input scale. this lets us create higher resolution scraps
+ * at specific paths.
+ *
+ * so, an input scale of 2.0 will not change the visible size of the added scrap, but it
+ * will have twice the resolution in both dimensions.
+ */
+-(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)lastBestRotation andScale:(CGFloat)scale{
+    //
+    // at this point, we have the correct path and rotation that will
+    // give us the minimal square px. For instance, drawing a thin diagonal
+    // strip of paper will create a thin texture and rotate it, instead of
+    // an unrotated thick rectangle.
+    CGPoint pathC = path.center;
+    CGAffineTransform scalePathToFullResTransform = CGAffineTransformMakeTranslation(pathC.x, pathC.y);
+    scalePathToFullResTransform = CGAffineTransformScale(scalePathToFullResTransform, 1/scale, 1/scale);
+    scalePathToFullResTransform = CGAffineTransformTranslate(scalePathToFullResTransform, -pathC.x, -pathC.y);
+    [path applyTransform:scalePathToFullResTransform];
+    
     MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path];
-    [scrapContainerView addSubview:newScrap];
+    @synchronized(scrapContainerView){
+        [scrapContainerView addSubview:newScrap];
+    }
     [newScrap loadStateAsynchronously:NO];
     [newScrap setShouldShowShadow:[self isEditable]];
     
-    newScrap.transform = CGAffineTransformScale(CGAffineTransformIdentity, 1.03, 1.03);
-    
-    [UIView animateWithDuration:0.4 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        newScrap.transform = CGAffineTransformIdentity;
-    } completion:nil];
+    [newScrap setScale:scale];
+    [newScrap setRotation:lastBestRotation];
 
-    [path closePath];
     [self saveToDisk];
+    return newScrap;
 }
 
+
+
+
+
 -(void) addScrap:(MMScrapView*)scrap{
-    [scrapContainerView addSubview:scrap];
+    @synchronized(scrapContainerView){
+        [scrapContainerView addSubview:scrap];
+    }
     [scrap setShouldShowShadow:[self isEditable]];
     [self saveToDisk];
 }
@@ -96,7 +177,9 @@
     // or to iterate on the main thread, we don't
     // spend unnecessary resources copying a potentially
     // long array.
-    return scrapContainerView.subviews;
+    @synchronized(scrapContainerView){
+        return scrapContainerView.subviews;
+    }
 }
 
 #pragma mark - Pinch and Zoom
@@ -159,6 +242,7 @@
     
     NSMutableArray* strokesToCrop = [NSMutableArray arrayWithArray:strokeElementsToDraw];
     
+    
     for(MMScrapView* scrap in [self.scraps reverseObjectEnumerator]){
         // find the bounding box of the scrap, so we can determine
         // quickly if they even possibly intersect
@@ -166,7 +250,7 @@
         
         CGRect boundsOfScrap = scrapClippingPath.bounds;
         
-        NSMutableArray* newStrokesToCrop = [NSMutableArray array];
+        NSMutableArray* nextStrokesToCrop = [NSMutableArray array];
         
         // the first step is to loop over all of the strokes
         // to see where and if they intersect with our scraps.
@@ -174,23 +258,27 @@
         // if they intersect, then we'll split that element into pieces
         // and add some pieces to the scrap and return the rest.
         AbstractBezierPathElement* previousElement = _previousElement;
+        if(!previousElement){
+            previousElement = [strokesToCrop firstObject];
+        }
         for(AbstractBezierPathElement* element in strokesToCrop){
             if(!CGRectIntersectsRect(element.bounds, boundsOfScrap)){
                 // if we don't intersect the bounds of a scrap, then we definitely
                 // don't intersect it's path, so just add it to our return value
                 // (which we'll check on other scraps too)
-                [newStrokesToCrop addObject:element];
+                [nextStrokesToCrop addObject:element];
             }else if([element isKindOfClass:[CurveToPathElement class]]){
                 // ok, we intersect at least the bounds of the scrap, so check
                 // to see if we intersect its path and if we should split it
-                CurveToPathElement* curveElement = (CurveToPathElement*)element;
-
-                // create a imple uibezier path that represents just the path
+                
+                // create a simple uibezier path that represents just the path
                 // of this single element
-                UIBezierPath* strokePath = [UIBezierPath bezierPath];
-                [strokePath moveToPoint:curveElement.startPoint];
-                [strokePath addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
-
+                UIBezierPath* strokePath = [element bezierPathSegment];
+                
+                // track which elements we should add to the scrap
+                // instead of continue to chop and add to the page / other scrap
+                NSMutableArray* elementsToAddToScrap = [NSMutableArray array];
+                
                 // now find out where this element intersects the scrap.
                 // this return value will give us the paths of the intersection
                 // and the difference, as well as the tvalues on our element
@@ -198,203 +286,86 @@
                 //
                 // this will let us calcualte how much the width/color/rotation
                 // change during each split
-                DKUIBezierPathClippingResult* clippingAndIntersectionMetaInformation = [strokePath clipUnclosedPathToClosedPath:scrapClippingPath];
+                NSArray* redAndBlueSegments = nil;
+                @try {
+                    redAndBlueSegments = [UIBezierPath redAndGreenAndBlueSegmentsCreatedFrom:scrapClippingPath bySlicingWithPath:strokePath andNumberOfBlueShellSegments:nil];
+                }@catch (id exc) {
+                    //        NSAssert(NO, @"need to log this");
+                    NSLog(@"need to mail the paths");
+                    
+                    NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
+                    
+                    [dateFormater setDateFormat:@"yyyy-MM-DD HH:mm:ss"];
+                    NSString *convertedDateString = [dateFormater stringFromDate:[NSDate date]];
+                    
+                    NSString* textForEmail = @"Shapes in view:\n\n";
+                    textForEmail = [textForEmail stringByAppendingFormat:@"scissor:\n%@\n\n\n", strokePath];
+                    textForEmail = [textForEmail stringByAppendingFormat:@"shape:\n%@\n\n\n", scrapClippingPath];
+                    
+                    MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
+                    [controller setMailComposeDelegate:self];
+                    [controller setToRecipients:[NSArray arrayWithObject:@"adam.wulf@gmail.com"]];
+                    [controller setSubject:[NSString stringWithFormat:@"Shape Clipping Test Case %@", convertedDateString]];
+                    [controller setMessageBody:textForEmail isHTML:NO];
+                    //        [controller addAttachmentData:imageData mimeType:@"image/png" fileName:@"screenshot.png"];
+                    
+                    if(controller){
+                        UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+                        [rootController presentViewController:controller animated:YES completion:nil];
+                    }
+                }
                 
+                NSArray* redSegments = [redAndBlueSegments firstObject]; // intersection
+                NSArray* greenSegments = [redAndBlueSegments objectAtIndex:1]; // difference
                 
-                //
-                // now we've taken our stroke segment, and computed the intersection
-                // and difference with the scrap. we'll add the difference here to
-                // our "strokes to newStrokesToCrop array. we'll crop these with scraps
-                // below this current scrap on our next loop.
-                __block CGPoint previousEndpoint = strokePath.firstPoint;
-                
-                //
-                // information to track changes in width and color
-                // the index will traack which info in clippingAndIntersectionMetaInformation
-                // is relevant to our difference
-                __block int clippingInformationIndex = 0;
-                // this is the total width difference along our original element,
-                // and we'll use this to calculate what our width should be along
-                // our chopped difference/intersection
-                CGFloat widthDiff = element.width - previousElement.width;
-                CGFloat rotationDiff = element.rotation - previousElement.rotation;
-                GLfloat _prevColor[4], elementColor[4];
-                GLfloat _colorDiff[4];
-                CGFloat* prevColor = (CGFloat*)_prevColor;
-                CGFloat* colorDiff = (CGFloat*)_colorDiff;
-                [previousElement.color getRGBAComponents:prevColor];
-                [element.color getRGBAComponents:elementColor];
-                colorDiff[0] = elementColor[0] - prevColor[0];
-                colorDiff[1] = elementColor[1] - prevColor[1];
-                colorDiff[2] = elementColor[2] - prevColor[2];
-                colorDiff[3] = elementColor[3] - prevColor[3];
-                [clippingAndIntersectionMetaInformation.difference iteratePathWithBlock:^(CGPathElement pathEle){
-                    AbstractBezierPathElement* newElement = nil;
-                    DKUIBezierPathClippedSegmentTPair* clippingInformation = [clippingAndIntersectionMetaInformation.differenceTValues objectAtIndex:clippingInformationIndex];
+                if(![redSegments count]){
+                    // we can't make the same optimization for [.difference isEmpty],
+                    // because the element needs to be transformed into the scrap's
+                    // coordinate space no matter what. this means that we can't
+                    // simply add the element to elementsToAddToScrap
                     //
-                    // there are two possibilities - either it's a move to
-                    // or a curve/line to.
-                    if(pathEle.type == kCGPathElementMoveToPoint){
-                        // if it's a move to, then we're just beginning this next segment.
-                        // create the MoveTo element and initialize it's width/color/rotation
-                        // to what it would have been at that location if we hand't split
-                        newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
-                        previousEndpoint = pathEle.points[0];
-
-                        CGFloat tValueAtStartPoint = clippingInformation.tValueStart.tValue1;
-                        CGFloat red = prevColor[0] + colorDiff[0] * tValueAtStartPoint;
-                        CGFloat green = prevColor[1] + colorDiff[1] * tValueAtStartPoint;
-                        CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtStartPoint;
-                        CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtStartPoint;
-                        newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
-                        newElement.width = previousElement.width + widthDiff*tValueAtStartPoint;
-                        newElement.rotation = previousElement.rotation + rotationDiff*tValueAtStartPoint;
-                    }else if(pathEle.type == kCGPathElementAddCurveToPoint ||
-                       pathEle.type == kCGPathElementAddLineToPoint){
-                        // if i'ts a curve/line to, then this is the meat of the
-                        // curve. create the element, and set it's width/color/rotation
-                        // to what it would have been at the end of this peice.
-                        //
-                        // when this is rendered, it'll draw a line with the attributes
-                        // interpolating between the MoveTo defined above, and this curveTo
-                        if(pathEle.type == kCGPathElementAddCurveToPoint){
-                            // curve
-                            newElement = [CurveToPathElement elementWithStart:previousEndpoint
-                                                                   andCurveTo:pathEle.points[2]
-                                                                  andControl1:pathEle.points[0]
-                                                                  andControl2:pathEle.points[1]];
-                            previousEndpoint = pathEle.points[2];
-                        }else if(pathEle.type == kCGPathElementAddLineToPoint){
-                            newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
-                            previousEndpoint = pathEle.points[0];
-                        }
-                        
-                        // be sure to set color/width/etc
-                        CGFloat tValueAtEndPoint = clippingInformation.tValueEnd.tValue1;
-                        if(element.color){
-                            CGFloat red = prevColor[0] + colorDiff[0] * tValueAtEndPoint;
-                            CGFloat green = prevColor[1] + colorDiff[1] * tValueAtEndPoint;
-                            CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtEndPoint;
-                            CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtEndPoint;
-                            newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
-                        }else{
-                            newElement.color = nil;
-                        }
-                        newElement.width = previousElement.width + widthDiff*tValueAtEndPoint;
-                        newElement.rotation = previousElement.rotation + rotationDiff*tValueAtEndPoint;
-                        
-                        clippingInformationIndex++;
+                    // if the entire element lands in the difference (intersection is empty)
+                    // then add the entire element to the page/other scraps to look at
+                    [nextStrokesToCrop addObject:element];
+                }else{
+                    // take the difference of the drawn stroke, and send those elements
+                    // to the next scrap beneath us to clip them smaller still.
+                    // any unclipped elements will be passed back up to the page
+                    // itself
+                    for(DKUIBezierPathClippedSegment* segment in greenSegments){
+                        [nextStrokesToCrop addObjectsFromArray:[segment convertToPathElementsFromColor:previousElement.color
+                                                                                               toColor:element.color
+                                                                                             fromWidth:previousElement.width
+                                                                                               toWidth:element.width]];
                     }
-                    if(newElement){
-                        [newStrokesToCrop addObject:newElement];
+                    // determine the tranlsation that we need to make on the path
+                    // so that it's moved into the scrap's coordinate space
+                    CGAffineTransform entireTransform = [scrap pageToScrapTransformWithPageOriginalUnscaledBounds:self.originalUnscaledBounds];
+                    
+                    // take the difference of the drawn stroke, and send those elements
+                    // to the next scrap beneath us to clip them smaller still.
+                    // any unclipped elements will be passed back up to the page
+                    // itself
+                    for(DKUIBezierPathClippedSegment* segment in redSegments){
+                        [elementsToAddToScrap addObjectsFromArray:[segment convertToPathElementsFromColor:previousElement.color
+                                                                                                  toColor:element.color
+                                                                                                fromWidth:previousElement.width
+                                                                                                  toWidth:element.width
+                                                                                            withTransform:entireTransform
+                                                                                                 andScale:scrap.scale]];
                     }
-                }];
-                
-                // this UIBezierPath represents the intersection of our input
-                // stroke over our scrap. this path needs to be adjusted into
-                // the scrap's coordinate system and then added to the scrap
-                //
-                // I'm applying transforms to this path below, so if i were to
-                // reuse this path I'd want to [copy] it. but i don't need to
-                // because I only use it once.
-                UIBezierPath* inter = clippingAndIntersectionMetaInformation.intersection;
-                previousEndpoint = strokePath.firstPoint;
-                
-                // find the scrap location in open gl
-                CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, self.bounds.size.height);
-                CGPoint scrapCenterInOpenGL = CGPointApplyAffineTransform(scrap.center, flipTransform);
-                // center the stroke around the scrap center,
-                // so that any scale/rotate happens in relation to the scrap
-                [inter applyTransform:CGAffineTransformMakeTranslation(-scrapCenterInOpenGL.x, -scrapCenterInOpenGL.y)];
-                // now scale and rotate the scrap
-                // we reverse the scale, b/c the scrap itself is scaled. these two together will make the
-                // path have a scale of 1 after it's added
-                [inter applyTransform:CGAffineTransformMakeScale(1.0/scrap.scale, 1.0/scrap.scale)];
-                // this one confuses me honestly. i would think that
-                // i'd need to rotate by -scrap.rotation so that with the
-                // scrap's rotation it'd end up not rotated at all. somehow the
-                // scrap has an effective rotation of -rotation (?).
-                //
-                // thinking about it some more, I think the issue is that
-                // scrap.rotation is defined as the rotation in Core Graphics
-                // coordinate space, but since OpenGL is flipped, then the
-                // rotation flips.
-                //
-                // think of a spinning clock. it spins in different directions
-                // if you look at it from the top or bottom.
-                //
-                // either way, when i rotate the path by -scrap.rotation, it ends up
-                // in the correct visible space. it works!
-                [inter applyTransform:CGAffineTransformMakeRotation(scrap.rotation)];
-                
-                // before this line, the path is in the correct place for a scrap
-                // that has (0,0) in it's center. now move everything so that
-                // (0,0) is in the bottom/left of the scrap. (this might also
-                // help w/ the rotation somehow, since the rotate happens before the
-                // translate (?)
-                CGPoint recenter = CGPointMake(scrap.bounds.size.width/2, scrap.bounds.size.height/2);
-                [inter applyTransform:CGAffineTransformMakeTranslation(recenter.x, recenter.y)];
-                
-                // here's our meta for the segment tvalue information
-                clippingInformationIndex = 0;
-                // now add it to the scrap!
-                [inter iteratePathWithBlock:^(CGPathElement pathEle){
-                    AbstractBezierPathElement* newElement = nil;
-                    DKUIBezierPathClippedSegmentTPair* clippingInformation = [clippingAndIntersectionMetaInformation.intersectionTValues objectAtIndex:clippingInformationIndex];
-                    if(pathEle.type == kCGPathElementMoveToPoint){
-                        newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
-                        previousEndpoint = pathEle.points[0];
-                        CGFloat tValueAtStartPoint = clippingInformation.tValueStart.tValue1;
-                        if(element.color){
-                            CGFloat red = prevColor[0] + colorDiff[0] * tValueAtStartPoint;
-                            CGFloat green = prevColor[1] + colorDiff[1] * tValueAtStartPoint;
-                            CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtStartPoint;
-                            CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtStartPoint;
-                            newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
-                        }
-                        newElement.width = previousElement.width + widthDiff*tValueAtStartPoint;
-                        newElement.width /= scrap.scale;
-                        newElement.rotation = previousElement.rotation + rotationDiff*tValueAtStartPoint;
-                    }else if(pathEle.type == kCGPathElementAddCurveToPoint ||
-                       pathEle.type == kCGPathElementAddLineToPoint){
-                        if(pathEle.type == kCGPathElementAddCurveToPoint){
-                            // curve
-                            newElement = [CurveToPathElement elementWithStart:previousEndpoint
-                                                                   andCurveTo:pathEle.points[2]
-                                                                  andControl1:pathEle.points[0]
-                                                                  andControl2:pathEle.points[1]];
-                            previousEndpoint = pathEle.points[2];
-                        }else if(pathEle.type == kCGPathElementAddLineToPoint){
-                            newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
-                            previousEndpoint = pathEle.points[0];
-                        }
-                        CGFloat tValueAtEndPoint = clippingInformation.tValueEnd.tValue1;
-                        if(element.color){
-                            CGFloat red = prevColor[0] + colorDiff[0] * tValueAtEndPoint;
-                            CGFloat green = prevColor[1] + colorDiff[1] * tValueAtEndPoint;
-                            CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtEndPoint;
-                            CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtEndPoint;
-                            newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
-                        }
-                        newElement.width = previousElement.width + widthDiff*tValueAtEndPoint;
-                        newElement.width /= scrap.scale;
-                        newElement.rotation = previousElement.rotation + rotationDiff*tValueAtEndPoint;
-                        
-                        clippingInformationIndex++;
-                    }
-                    if(newElement){
-                        [scrap addElement:newElement];
-                    }
-                }];
-                
+                }
+                if([elementsToAddToScrap count]){
+                    [scrap addElements:elementsToAddToScrap];
+                }
             }else{
-                [newStrokesToCrop addObject:element];
+                [nextStrokesToCrop addObject:element];
             }
             
             previousElement = element;
         }
         
-        strokesToCrop = newStrokesToCrop;
+        strokesToCrop = nextStrokesToCrop;
     }
     
     // anything that's left over at this point
@@ -411,23 +382,20 @@
     }
 }
 
-#pragma mark - PolygonToolDelegate
+#pragma mark - Polygon and Scrap builder
 
 -(void) beginShapeAtPoint:(CGPoint)point{
     // send touch event to the view that
     // will display the drawn polygon line
-//    NSLog(@"begin");
     [shapeBuilderView clear];
-    
     [shapeBuilderView addTouchPoint:point];
 }
 
 -(BOOL) continueShapeAtPoint:(CGPoint)point{
-    // noop for now
     // send touch event to the view that
     // will display the drawn polygon line
     if([shapeBuilderView addTouchPoint:point]){
-        [self complete];
+        [self completeBuildingNewScrap];
         return NO;
     }
     return YES;
@@ -440,30 +408,175 @@
     // and also process the touches into the new
     // scrap polygon shape, and add that shape
     // to the page
-//    NSLog(@"finish");
     [shapeBuilderView addTouchPoint:point];
-    [self complete];
-}
-
--(void) complete{
-    NSArray* shapes = [shapeBuilderView completeAndGenerateShapes];
-    [shapeBuilderView clear];
-    for(UIBezierPath* shape in shapes){
-        //        if([scraps count]){
-        //            [[scraps objectAtIndex:0] intersect:shape];
-        //        }else{
-        [self addScrapWithPath:[shape copy]];
-        //        }
-    }
-    
+    [self completeBuildingNewScrap];
 }
 
 -(void) cancelShapeAtPoint:(CGPoint)point{
     // we've cancelled the polygon (possibly b/c
     // it was a pan/pinch instead), so clear
     // the drawn polygon and reset.
-//    NSLog(@"cancel");
     [shapeBuilderView clear];
+}
+
+-(void) completeBuildingNewScrap{
+    UIBezierPath* shape = [shapeBuilderView completeAndGenerateShape];
+    [shapeBuilderView clear];
+    if(shape.isPathClosed){
+        UIBezierPath* shapePath = [shape copy];
+        [shapePath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
+        [self addScrapWithPath:shapePath andScale:1.0];
+    }
+}
+
+
+#pragma mark - Scissors
+
+
+-(void) beginScissorAtPoint:(CGPoint)point{
+    // send touch event to the view that
+    // will display the drawn polygon line
+    [shapeBuilderView clear];
+    [shapeBuilderView addTouchPoint:point];
+}
+
+-(BOOL) continueScissorAtPoint:(CGPoint)point{
+    // send touch event to the view that
+    // will display the drawn polygon line
+    if([shapeBuilderView addTouchPoint:point]){
+        [self completeScissorsCut];
+        return NO;
+    }
+    return YES;
+}
+
+-(void) finishScissorAtPoint:(CGPoint)point{
+    // send touch event to the view that
+    // will display the drawn polygon line
+    //
+    // and also process the touches into the new
+    // scrap polygon shape, and add that shape
+    // to the page
+    [shapeBuilderView addTouchPoint:point];
+    [self completeScissorsCut];
+}
+
+-(void) cancelScissorAtPoint:(CGPoint)point{
+    // we've cancelled the polygon (possibly b/c
+    // it was a pan/pinch instead), so clear
+    // the drawn polygon and reset.
+    [shapeBuilderView clear];
+}
+
+-(void) completeScissorsCut{
+    // track path information for debugging
+    NSString* debugFullText = @"";
+    
+    @try {
+        UIBezierPath* scissorPath = [shapeBuilderView completeAndGenerateShape];
+        // scale the scissors into the zoom of the page, in case the user is
+        // pinching and zooming the page our scissor path will be in page coordinates
+        // instead of screen coordinates
+        [scissorPath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
+        
+        // iterate over the scraps from the visibly top scraps
+        // to the bottom of the stack
+        for(MMScrapView* scrap in [self.scraps reverseObjectEnumerator]){
+            debugFullText = @"";
+            // get the clipping path of the scrap and convert it into
+            // CoreGraphics coordinate system
+            UIBezierPath* subshapePath = [[scrap clippingPath] copy];
+            [subshapePath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height)];
+            
+            //
+            // this subshape path is based on the scrap's current scale, which may or
+            // may not be 1.0. if it's not 1.0 scale, then the new scrap would be built
+            // with the incorrect initial resolution.
+            //
+            // to fix this, we need to scale this path to 1.0 scale so that our new
+            // scrap is built with the correct initial resolution
+            
+            CGFloat maxDist = 0;
+            NSMutableArray* vectors = [NSMutableArray array];
+            NSMutableArray* scraps = [NSMutableArray array];
+            @autoreleasepool {
+                // cut the shape and get all unique shapes
+                NSArray* subshapes = [subshapePath uniqueShapesCreatedFromSlicingWithUnclosedPath:scissorPath];
+                if([subshapes count] > 1){
+                    
+                    NSMutableArray* sortedArrayOfNewSubpaths = [NSMutableArray array];
+                    for(DKUIBezierPathShape* shape in subshapes){
+                        [sortedArrayOfNewSubpaths addObject:[shape.fullPath copy]];
+                    }
+                    [sortedArrayOfNewSubpaths sortUsingComparator:^(id obj1, id obj2){
+                        UIBezierPath* p1 = obj1;
+                        UIBezierPath* p2 = obj2;
+                        CGFloat s1 = p1.bounds.size.width * p1.bounds.size.height;
+                        CGFloat s2 = p2.bounds.size.width * p2.bounds.size.height;
+                        return s1 > s2 ? NSOrderedAscending : NSOrderedDescending;
+                    }];
+                    
+                    debugFullText = [debugFullText stringByAppendingFormat:@"shape:\n %@ scissor:\n %@ \n\n\n\n", subshapePath, scissorPath];
+                    for(UIBezierPath* subshapePath in sortedArrayOfNewSubpaths){
+                        // and add the scrap so that it's scale matches the scrap that its built from
+                        MMScrapView* addedScrap = [self addScrapWithPath:subshapePath andScale:scrap.scale];
+                        @synchronized(scrapContainerView){
+                            [scrapContainerView insertSubview:addedScrap belowSubview:scrap];
+                        }
+                        [scrap stampContentsOnto:addedScrap];
+                        
+                        CGFloat addedScrapDist = distance(scrap.center, addedScrap.center);
+                        if(addedScrapDist > maxDist){
+                            maxDist = addedScrapDist;
+                        }
+                        [vectors addObject:[MMVector vectorWithPoint:scrap.center andPoint:addedScrap.center]];
+                        [scraps addObject:addedScrap];
+                    }
+                    [scrap removeFromSuperview];
+                }
+                // clip out the portion of the scissor path that
+                // intersects with the scrap we just cut
+                scissorPath = [scissorPath differenceOfPathTo:subshapePath];
+            }
+            [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                                 for(int i=0;i<[vectors count];i++){
+                                     MMVector* vector = [vectors objectAtIndex:i];
+                                     vector = [vector normalizedTo:maxDist];
+                                     MMScrapView* scrap = [scraps objectAtIndex:i];
+                                     
+                                     CGPoint newC = [vector pointFromPoint:scrap.center distance:10];
+                                     scrap.center = newC;
+                                 }
+                             }
+                             completion:nil];
+        }
+        // clear the dotted line of the scissor
+        [shapeBuilderView clear];
+        [self saveToDisk];
+    }
+    @catch (NSException *exception) {
+        //
+        //
+        // DEBUG
+        //
+        // send an email with the paths that we cut
+        NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
+        
+        [dateFormater setDateFormat:@"yyyy-MM-DD HH:mm:ss"];
+        NSString *convertedDateString = [dateFormater stringFromDate:[NSDate date]];
+        
+        MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
+        [controller setMailComposeDelegate:self];
+        [controller setToRecipients:[NSArray arrayWithObject:@"adam.wulf@gmail.com"]];
+        [controller setSubject:[NSString stringWithFormat:@"Shape Clipping Test Case %@", convertedDateString]];
+        [controller setMessageBody:debugFullText isHTML:NO];
+        //        [controller addAttachmentData:imageData mimeType:@"image/png" fileName:@"screenshot.png"];
+        
+        if(controller){
+            UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+            [rootController presentViewController:controller animated:YES completion:nil];
+        }
+    }
 }
 
 
@@ -509,12 +622,19 @@
         }
     });
 
-    dispatch_async([MMScrapsOnPaperState concurrentBackgroundQueue], ^(void) {
+    dispatch_async([MMScrappedPaperView concurrentBackgroundQueue], ^(void) {
         @autoreleasepool {
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
             dispatch_release(sema1);
             dispatch_release(sema2);
+            if([self hasEditsToSave]){
+                // our save failed. this may happen if we
+                // call [saveToDisk] in very quick succession
+                // so that the 1st call is still saving, and the
+                // 2nd ends early b/c it knows the 1st is still going
+                return;
+            }
             [NSThread performBlockOnMainThread:^{
                 [self.delegate didSavePage:self];
             }];
@@ -522,8 +642,8 @@
     });
 }
 
--(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context andStartPage:(BOOL)startPage{
-    [super loadStateAsynchronously:async withSize:pagePixelSize andContext:context andStartPage:startPage];
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context{
+    [super loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
     [scrapState loadStateAsynchronously:async andMakeEditable:YES];
 }
 
@@ -540,7 +660,9 @@
 }
 
 -(void) didLoadScrap:(MMScrapView*)scrap{
-    [scrapContainerView addSubview:scrap];
+    @synchronized(scrapContainerView){
+        [scrapContainerView addSubview:scrap];
+    }
 }
 
 -(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
@@ -567,13 +689,14 @@
     [scrapState unload];
 }
 
-#pragma mark - MMPaperStateDelegate
+#pragma mark - JotViewStateProxyDelegate
 
 /**
  * TODO: only fire off these state methods
  * if we have also loaded state for our scraps
+ * https://github.com/adamwulf/loose-leaf/issues/254
  */
--(void) didLoadState:(MMPaperState*)state{
+-(void) didLoadState:(JotViewStateProxy*)state{
     if([self hasStateLoaded]){
         [NSThread performBlockOnMainThread:^{
             [self.delegate didLoadStateForPage:self];
@@ -581,7 +704,7 @@
     }
 }
 
--(void) didUnloadState:(MMPaperState *)state{
+-(void) didUnloadState:(JotViewStateProxy *)state{
     [NSThread performBlockOnMainThread:^{
         [self.delegate didUnloadStateForPage:self];
     }];
@@ -594,6 +717,14 @@
         scrapIDsPath = [[[self pagesPath] stringByAppendingPathComponent:@"scrapIDs"] stringByAppendingPathExtension:@"plist"];
     }
     return scrapIDsPath;
+}
+
+
+#pragma mark - MFMailComposeViewControllerDelegate
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error{
+    UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+    [rootController dismissViewControllerAnimated:YES completion:nil];
 }
 
 

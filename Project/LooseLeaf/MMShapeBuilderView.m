@@ -8,8 +8,7 @@
 
 #import "MMShapeBuilderView.h"
 #import <TouchShape/TouchShape.h>
-#import "DrawKit-iOS.h"
-#import "UIColor+ColorWithHex.h"
+#import <DrawKit-iOS/DrawKit-iOS.h>
 #import "SYShape+Bezier.h"
 #import "Constants.h"
 
@@ -34,6 +33,8 @@
     if (self) {
         // Initialization code
         touches = [NSMutableArray array];
+        self.clearsContextBeforeDrawing = NO;
+        self.contentScaleFactor = 1.0;
     }
     return self;
 }
@@ -56,9 +57,15 @@
     __block BOOL didIntersectSelf = NO;
     CGFloat distTravelled = 0;
     
+    
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    CGAffineTransform scaleDown = CGAffineTransformMakeScale(1/scale, 1/scale);
+    point = CGPointApplyAffineTransform(point, scaleDown);
+
     if(![touches count]){
         dottedPath = [UIBezierPath bezierPath];
         [dottedPath moveToPoint:point];
+        [touches addObject:[NSValue valueWithCGPoint:point]];
     }else{
         CGPoint lastTouchPoint = [[touches lastObject] CGPointValue];
         CGPoint p1 = lastTouchPoint;
@@ -100,15 +107,15 @@
         }];
         
         distTravelled = MIN(DistanceBetweenTwoPoints(lastTouchPoint, point), 50);
-        if(distTravelled > 2){
+        if(distTravelled > 2 || ![touches count]){
             // only add a line if it's more than 2pts drawn,
             // otherwise it's a mess and would self intersect
             // way too soon
             [dottedPath addLineToPoint:point];
+            [touches addObject:[NSValue valueWithCGPoint:point]];
+            [self setNeedsDisplayInRect:CGRectInset(dottedPath.bounds, -10, -10)];
         }
-        [self setNeedsDisplayInRect:CGRectInset(dottedPath.bounds, -10, -10)];
     }
-    [touches addObject:[NSValue valueWithCGPoint:point]];
     phase += distTravelled / 15;
 
     return didIntersectSelf;
@@ -123,16 +130,15 @@
     //
     // this draws a white and black dashed line
     CGFloat dash[3];
-    dash[0] = 12;
-    dash[1] = 10;
-    dottedPath.lineWidth = 3;
+    dash[0] = 6;
+    dash[1] = 5;
+    dottedPath.lineWidth = 1;
     
     [dottedPath setLineDash:nil count:0 phase:0];
     [[UIColor whiteColor] setStroke];
     [dottedPath stroke];
 
-    NSInteger phaseInt = ((int)phase) % 22;
-    [dottedPath setLineDash:dash count:2 phase:22 - phaseInt];
+    [dottedPath setLineDash:dash count:2 phase:phase];
     [[UIColor blackColor] setStroke];
     [dottedPath stroke];
 
@@ -141,7 +147,7 @@
 /**
  * returns an array of all bezier paths created
  */
--(NSArray*) completeAndGenerateShapes{
+-(UIBezierPath*) completeAndGenerateShape{
     if(![touches count]) return nil;
     
     //
@@ -177,8 +183,11 @@
     // intersection point.
     NSArray* pathsFromIntersectingTouches = [pathOfAllTouchPoints pathsFromSelfIntersections];
     
+    // in high res screens, we show a low-res shape builder dotted line
+    // so this will scale the low-res path up to high res size.
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    CGAffineTransform scaleToScreenSize = CGAffineTransformMakeScale(scale, scale);
 
-    //
     // now we'll loop over each sub-path, and send all the points
     // to a new TCShapeController, so that we can interpret a shape
     // for each non-intersecting path.
@@ -207,17 +216,12 @@
         }];
         // the shape controller knows about all the points in this subpath,
         // so see if it can recognize a shape
-        SYShape* shape = [shapeMaker getFigurePaintedWithTolerance:0.0000001 andContinuity:0];
+        SYShape* shape = [shapeMaker getFigurePaintedWithTolerance:0.0000001 andContinuity:0 forceOpen:NO];
         if(shape){
-            if(shape.closeCurve){
-                // shape is a closed path,
-                // so create a scrap from it
-                UIBezierPath* shapePath = [shape bezierPath];
-                [shapePaths addObject:shapePath];
-            }else{
-                // shape is unclosed, so don't add
-                // it as a scrap
-            }
+            // return all successful shapes
+            UIBezierPath* shapePath = [shape bezierPath];
+            [shapePath applyTransform:scaleToScreenSize];
+            [shapePaths addObject:shapePath];
         }else{
             // this is more rare than it used to be. this will
             // trigger when we can't determine any shape from a path,
@@ -226,8 +230,10 @@
         }
     }
     [self setNeedsDisplay];
-    
-    return [NSArray arrayWithArray:shapePaths];
+
+    //
+    // only return 1 path
+    return [shapePaths firstObject];
 }
 
 

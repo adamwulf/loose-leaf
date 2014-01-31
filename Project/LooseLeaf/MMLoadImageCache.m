@@ -51,10 +51,12 @@ static int count = 0;
 -(UIImage*) imageAtPath:(NSString*)path{
     UIImage* cachedImage = [loadedImages objectForKey:path];
     if(!cachedImage){
-        if([orderedKeys containsObject:path]){
-            // we don't have an image, but our path is
-            // in cache. this means there was nothing on disk
-            return nil;
+        @synchronized(self){
+            if([orderedKeys containsObject:path]){
+                // we don't have an image, but our path is
+                // in cache. this means there was nothing on disk
+                return nil;
+            }
         }
         
         cachedImage = [UIImage imageWithContentsOfFile:path];

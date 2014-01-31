@@ -60,4 +60,7 @@
 -(void) cancel;
 -(void) blessTouches:(NSSet*)touches;
 
+-(NSArray*) possibleTouches;
+-(NSArray*) ignoredTouches;
+
 @end

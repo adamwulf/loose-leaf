@@ -12,11 +12,9 @@
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "NSThread+BlockAdditions.h"
 #import "TestFlight.h"
-#import "DrawKit-iOS.h"
-#import "MMPaperState.h"
-#import "UIBezierPath+Clipping.h"
+#import <DrawKit-iOS/DrawKit-iOS.h>
+#import "DKUIBezierPathClippedSegment+PathElement.h"
 
-dispatch_queue_t loadUnloadStateQueue;
 dispatch_queue_t importThumbnailQueue;
 
 
@@ -29,7 +27,7 @@ dispatch_queue_t importThumbnailQueue;
     UIBezierPath* boundsPath;
     BOOL isLoadingCachedImageFromDisk;
     
-    MMPaperState* paperState;
+    JotViewStateProxy* paperState;
     
     // we want to be able to track extremely
     // efficiently 1) if we have a thumbnail loaded,
@@ -45,13 +43,6 @@ dispatch_queue_t importThumbnailQueue;
 
 @synthesize drawableView;
 @synthesize paperState;
-
-+(dispatch_queue_t) loadUnloadStateQueue{
-    if(!loadUnloadStateQueue){
-        loadUnloadStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.loadUnloadStateQueue", DISPATCH_QUEUE_SERIAL);
-    }
-    return loadUnloadStateQueue;
-}
 
 +(dispatch_queue_t) importThumbnailQueue{
     if(!importThumbnailQueue){
@@ -92,7 +83,7 @@ dispatch_queue_t importThumbnailQueue;
         [self addGestureRecognizer:rulerGesture];
         
         // initialize our state manager
-        paperState = [[MMPaperState alloc] initWithInkPath:[self inkPath] andPlistPath:[self plistPath]];
+        paperState = [[JotViewStateProxy alloc] initWithInkPath:[self inkPath] andPlistPath:[self plistPath]];
         paperState.delegate = self;
     }
     return self;
@@ -161,7 +152,11 @@ dispatch_queue_t importThumbnailQueue;
     
 -(void) generateDebugView:(BOOL)create{
     if(create){
-        shapeBuilderView = [[MMShapeBuilderView alloc] initWithFrame:self.contentView.bounds];
+        CGFloat scale = [[UIScreen mainScreen] scale];
+        CGRect boundsForShapeBuilder = self.contentView.bounds;
+        boundsForShapeBuilder = CGRectApplyAffineTransform(boundsForShapeBuilder, CGAffineTransformMakeScale(1/scale, 1/scale));
+        shapeBuilderView = [[MMShapeBuilderView alloc] initWithFrame:boundsForShapeBuilder];
+        shapeBuilderView.transform = CGAffineTransformMakeScale(scale, scale);
         //        polygonDebugView.layer.borderColor = [UIColor redColor].CGColor;
         //        polygonDebugView.layer.borderWidth = 10;
         shapeBuilderView.frame = self.contentView.bounds;
@@ -188,7 +183,7 @@ dispatch_queue_t importThumbnailQueue;
             [self setFrame:self.frame];
             [NSThread performBlockOnMainThread:^{
                 if([self.delegate isPageEditable:self] && [self hasStateLoaded]){
-                    [drawableView loadState:paperState.jotViewState];
+                    [drawableView loadState:paperState];
                     [self.contentView insertSubview:drawableView aboveSubview:cachedImgView];
                     // anchor the view to the top left,
                     // so that when we scale down, the drawable view
@@ -218,12 +213,12 @@ dispatch_queue_t importThumbnailQueue;
     return [paperState hasEditsToSave];
 }
 
--(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context andStartPage:(BOOL)startPage{
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context{
     if([paperState isStateLoaded]){
         [self didLoadState:paperState];
         return;
     }
-    [paperState loadStateAsynchronously:async withSize:pagePixelSize andContext:context andStartPage:startPage];
+    [paperState loadStateAsynchronously:async withSize:pagePixelSize andContext:context andBufferManager:[JotBufferManager sharedInstace]];
 }
 -(void) unloadState{
     [paperState unload];
@@ -257,13 +252,24 @@ dispatch_queue_t importThumbnailQueue;
                    andThumbnailTo:[self thumbnailPath]
                        andStateTo:[self plistPath]
                        onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* immutableState){
-                           definitelyDoesNotHaveAThumbnail = NO;
-                           [paperState wasSavedAtImmutableState:immutableState];
-                           onComplete();
-                           [NSThread performBlockOnMainThread:^{
-                               cachedImgViewImage = thumbnail;
-                               cachedImgView.image = cachedImgViewImage;
-                           }];
+                           if(immutableState){
+                               // sometimes, if we try to export multiple times
+                               // very very quickly, the 3+ exports will fail
+                               // with all arguments=nil because the first export
+                               // is still going (and a 2nd export is already waiting
+                               // in queue)
+                               // so only trigger our save action if we did in fact
+                               // save
+                               definitelyDoesNotHaveAThumbnail = NO;
+                               [paperState wasSavedAtImmutableState:immutableState];
+                               onComplete();
+                               [NSThread performBlockOnMainThread:^{
+                                   cachedImgViewImage = thumbnail;
+                                   cachedImgView.image = cachedImgViewImage;
+                               }];
+                           }else{
+                               onComplete();
+                           }
                        }];
     }else{
         // already saved, but don't need to write
@@ -404,56 +410,42 @@ static int count = 0;
     return [delegate smoothnessForTouch:touch];
 }
 
--(CGFloat) rotationForSegment:(AbstractBezierPathElement *)segment fromPreviousSegment:(AbstractBezierPathElement *)previousSegment{
-    return [delegate rotationForSegment:segment fromPreviousSegment:previousSegment];;
-}
-
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
     
     NSArray* modifiedElements = [self.delegate willAddElementsToStroke:elements fromPreviousElement:previousElement];
     
     NSMutableArray* croppedElements = [NSMutableArray array];
     for(AbstractBezierPathElement* element in modifiedElements){
-        
         if([element isKindOfClass:[CurveToPathElement class]]){
-            CurveToPathElement* curveElement = (CurveToPathElement*) element;
-            UIBezierPath* bez = [UIBezierPath bezierPath];
-            [bez moveToPoint:[element startPoint]];
-            [bez addCurveToPoint:curveElement.endPoint controlPoint1:curveElement.ctrl1 controlPoint2:curveElement.ctrl2];
+            UIBezierPath* bez = [element bezierPathSegment];
             
-            DKUIBezierPathClippingResult* output = [bez clipUnclosedPathToClosedPath:boundsPath];
+            NSArray* redAndBlueSegments = [UIBezierPath redAndGreenAndBlueSegmentsCreatedFrom:boundsPath bySlicingWithPath:bez andNumberOfBlueShellSegments:nil];
+            NSArray* redSegments = [redAndBlueSegments firstObject];
+            NSArray* greenSegments = [redAndBlueSegments objectAtIndex:1];
 
-            __block CGPoint previousEndpoint = curveElement.startPoint;
-            [output.intersection iteratePathWithBlock:^(CGPathElement pathEle){
-                AbstractBezierPathElement* newElement = nil;
-                if(pathEle.type == kCGPathElementAddCurveToPoint){
-                    // curve
-                    newElement = [CurveToPathElement elementWithStart:previousEndpoint
-                                                           andCurveTo:pathEle.points[2]
-                                                          andControl1:pathEle.points[0]
-                                                          andControl2:pathEle.points[1]];
-                    previousEndpoint = pathEle.points[2];
-                }else if(pathEle.type == kCGPathElementMoveToPoint){
-                    newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
-                    previousEndpoint = pathEle.points[0];
-                }else if(pathEle.type == kCGPathElementAddLineToPoint){
-                    newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
-                    previousEndpoint = pathEle.points[0];
+            if(![greenSegments count]){
+                // if the difference is empty, then that means that the entire
+                // element landed in the intersection. so just add the entire element
+                // to our output
+                [croppedElements addObject:element];
+            }else{
+                // if the element was chopped up somehow, then interate
+                // through the intersection and build new element objects
+                for(DKUIBezierPathClippedSegment* segment in redSegments){
+                    [croppedElements addObjectsFromArray:[segment convertToPathElementsFromColor:previousElement.color
+                                                                                         toColor:element.color
+                                                                                       fromWidth:previousElement.width
+                                                                                         toWidth:element.width]];
+                    
                 }
-                if(newElement){
-                    // be sure to set color/width/etc
-                    newElement.color = element.color;
-                    newElement.width = element.width;
-                    newElement.rotation = element.rotation;
-                    [croppedElements addObject:newElement];
-                }
-            }];
+            }
             if([croppedElements count] && [[croppedElements firstObject] isKindOfClass:[MoveToPathElement class]]){
                 [croppedElements removeObjectAtIndex:0];
             }
         }else{
             [croppedElements addObject:element];
         }
+        previousElement = element;
     }
     return croppedElements;
 }
@@ -506,15 +498,19 @@ static int count = 0;
 
 
 
-#pragma mark - MMPaperStateDelegate
+#pragma mark - JotViewStateProxyDelegate
 
--(void) didLoadState:(MMPaperState*)state{
+-(void) jotStrokeWasCancelled:(JotStroke *)stroke{
+    NSLog(@"MMEditablePaperView jotStrokeWasCancelled:");
+}
+
+-(void) didLoadState:(JotViewStateProxy*)state{
     [NSThread performBlockOnMainThread:^{
         [self.delegate didLoadStateForPage:self];
     }];
 }
 
--(void) didUnloadState:(MMPaperState *)state{
+-(void) didUnloadState:(JotViewStateProxy *)state{
     [NSThread performBlockOnMainThread:^{
         [self.delegate didUnloadStateForPage:self];
     }];

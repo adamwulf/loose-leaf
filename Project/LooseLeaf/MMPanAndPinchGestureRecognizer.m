@@ -12,16 +12,14 @@
 #import "MMBezelInLeftGestureRecognizer.h"
 #import "MMObjectSelectLongPressGestureRecognizer.h"
 #import "MMPanAndPinchScrapGestureRecognizer.h"
+#import "MMTouchVelocityGestureRecognizer.h"
 #import "NSMutableSet+Extras.h"
 #import "NSArray+MapReduce.h"
 #import "MMShadowedView.h"
 #import <JotUI/JotUI.h>
 #import "MMVector.h"
 
-
-static float clamp_helper(min, max, value) { return fmaxf(min, fminf(max, value)); }
-#define           VELOCITY_CLAMP_MIN 20
-#define           VELOCITY_CLAMP_MAX 1000
+#define kMinimumNumberOfTouches 2
 
 @implementation MMPanAndPinchGestureRecognizer{
     CGPoint locationAdjustment;
@@ -32,10 +30,7 @@ static float clamp_helper(min, max, value) { return fmaxf(min, fminf(max, value)
 @synthesize scale;
 @synthesize bezelDirectionMask;
 @synthesize didExitToBezel;
-@synthesize velocity = _averageVelocity;
 @synthesize scaleDirection;
-
-NSInteger const  minimumNumberOfTouches = 2;
 
 
 -(id) init{
@@ -44,7 +39,6 @@ NSInteger const  minimumNumberOfTouches = 2;
         validTouches = [[NSMutableOrderedSet alloc] init];
         possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
-        velocities = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -55,7 +49,6 @@ NSInteger const  minimumNumberOfTouches = 2;
         validTouches = [[NSMutableOrderedSet alloc] init];
         possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
-        velocities = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -87,7 +80,7 @@ NSInteger const  minimumNumberOfTouches = 2;
 
 
 -(CGPoint)locationInView:(UIView *)view{
-    if([validTouches count] >= minimumNumberOfTouches){
+    if([validTouches count] >= kMinimumNumberOfTouches){
         CGPoint loc1 = [[validTouches firstObject] locationInView:self.view];
         CGPoint loc2 = [[validTouches objectAtIndex:1] locationInView:self.view];
         lastLocationInView = CGPointMake((loc1.x + loc2.x) / 2 - locationAdjustment.x, (loc1.y + loc2.y) / 2 - locationAdjustment.y);
@@ -103,7 +96,7 @@ NSInteger const  minimumNumberOfTouches = 2;
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
-    BOOL isBeginning = [validTouches count] < minimumNumberOfTouches;
+    BOOL isBeginning = [validTouches count] < kMinimumNumberOfTouches;
     // ignore all the touches that could be bezel touches
     if([validTouchesCurrentlyBeginning count]){
         // look at the presentation of the view (as would be seen during animation)
@@ -127,13 +120,13 @@ NSInteger const  minimumNumberOfTouches = 2;
         
         [self processPossibleTouches];
 
-        if([validTouches count] >= minimumNumberOfTouches && isBeginning){
+        if([validTouches count] >= kMinimumNumberOfTouches && isBeginning){
             self.state = UIGestureRecognizerStateBegan;
             initialDistance = 0;
             scale = 1;
             secondToLastTouchDidBezel = NO;
             didExitToBezel = MMBezelDirectionNone;
-        }else if([validTouches count] <= minimumNumberOfTouches){
+        }else if([validTouches count] <= kMinimumNumberOfTouches){
             didExitToBezel = MMBezelDirectionNone;
             //
             // ok, they just bezelled and brought their second
@@ -141,8 +134,6 @@ NSInteger const  minimumNumberOfTouches = 2;
             secondToLastTouchDidBezel = NO;
         }
     }
-    [self calculateVelocity];
-
 //    NSLog(@"pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 
@@ -163,12 +154,39 @@ NSInteger const  minimumNumberOfTouches = 2;
             }
         }
         
-        if([possibleTouches count] >= minimumNumberOfTouches){
+        if([possibleTouches count] >= kMinimumNumberOfTouches){
             [scrapDelegate ownershipOfTouches:[possibleTouches set] isGesture:self];
             [validTouches addObjectsInSet:[possibleTouches set]];
             [possibleTouches removeAllObjects];
         }
     }
+}
+
+
+/**
+ * calculates the pixel velocity
+ * per fraction of a second (1/20)
+ * to helper determine how wide to make
+ * the bezel
+ */
+-(CGFloat) pxVelocity{
+    // calculate the average X direction velocity
+    // so we can determine how wide to make the bezel
+    // exit of the gesture. this helps us work with
+    // really fast bezelling without accidentally zooming
+    // into list view or missing the bezel altogether
+    int count = 0;
+    CGPoint averageVelocity = CGPointZero;
+    for(UITouch* touch in validTouches){
+        struct DurationCacheObject cache = [[MMTouchVelocityGestureRecognizer sharedInstace] velocityInformationForTouch:touch withIndex:nil];
+        averageVelocity.x = averageVelocity.x * count + cache.directionOfTouch.x;
+        count += 1;
+        averageVelocity.x /= count;
+    }
+    // calculate the pixels moved per 20th of a second
+    // and add that to the bezel that we'll allow
+    CGFloat pxVelocity = averageVelocity.x * [MMTouchVelocityGestureRecognizer maxVelocity] * 0.05; // velocity per fraction of a second
+    return pxVelocity;
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -179,6 +197,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     if([validTouchesCurrentlyMoving count]){
         if(self.state == UIGestureRecognizerStateBegan){
             initialDistance = 0;
+            self.state = UIGestureRecognizerStateChanged;
         }
         if(self.numberOfTouches == 1){
             initialDistance = 0;
@@ -200,11 +219,13 @@ NSInteger const  minimumNumberOfTouches = 2;
         }
         if([validTouches count] >= 2 && initialDistance){
             BOOL tooCloseHuh = NO;
+
+            CGFloat pxVelocity = [self pxVelocity];
             for(UITouch* touch in validTouches){
                 CGPoint point = [touch locationInView:self.view.superview];
-                if(point.x < kBezelInGestureWidth ||
+                if(point.x < kBezelInGestureWidth + pxVelocity ||
                    point.y < kBezelInGestureWidth ||
-                   point.x > self.view.superview.frame.size.width - kBezelInGestureWidth ||
+                   point.x > self.view.superview.frame.size.width - kBezelInGestureWidth - pxVelocity ||
                    point.y > self.view.superview.frame.size.height - kBezelInGestureWidth){
                     // at least one of the touches is very close
                     // to the bezel, which will reduce our accuracy.
@@ -218,6 +239,10 @@ NSInteger const  minimumNumberOfTouches = 2;
                 // the location of the touch on the edge isn't very accurate
                 // which messes up our scale accuracy
                 CGFloat newScale = [self distanceBetweenTouches:validTouches] / initialDistance;
+                if(initialDistance < 130){
+                    // don't alow scaling if the original pinch was very close together
+                    newScale = 1.0;
+                }
                 if(newScale > scale){
                     scaleDirection = MMScaleDirectionLarger;
                 }else if(newScale < scale){
@@ -239,7 +264,6 @@ NSInteger const  minimumNumberOfTouches = 2;
             }
         }
     }
-    [self calculateVelocity];
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     // pan and pinch and bezel
@@ -260,7 +284,8 @@ NSInteger const  minimumNumberOfTouches = 2;
             // looking at the velocity and then adding a fraction
             // of a second to the bezel width will help determine if
             // we're bezelling the gesture or not
-            CGFloat pxVelocity = _averageVelocity.x * .05; // velocity per fraction of a second
+            
+            CGFloat pxVelocity = [self pxVelocity];
             for(UITouch* touch in validTouchesCurrentlyEnding){
                 CGPoint point = [touch locationInView:self.view.superview];
                 BOOL bezelDirHasLeft = ((self.bezelDirectionMask & MMBezelDirectionLeft) == MMBezelDirectionLeft);
@@ -287,7 +312,7 @@ NSInteger const  minimumNumberOfTouches = 2;
             // double counting the last two touches.
             if(didExitToBezel != MMBezelDirectionNone &&
                !secondToLastTouchDidBezel &&
-               ([validTouches count] - [validTouchesCurrentlyEnding count]) < minimumNumberOfTouches){
+               ([validTouches count] - [validTouchesCurrentlyEnding count]) < kMinimumNumberOfTouches){
                 if([validTouches count] - [validTouchesCurrentlyEnding count] == 1){
                     // that was the 2nd to last touch!
                     // set this flag so we don't double count it when the last
@@ -317,7 +342,6 @@ NSInteger const  minimumNumberOfTouches = 2;
                 self.state = UIGestureRecognizerStateEnded;
             }
         }
-        [self calculateVelocity];
     }else{
         //
         // only 1 finger during this gesture, and it's exited
@@ -342,7 +366,6 @@ NSInteger const  minimumNumberOfTouches = 2;
             scale = 0;
             didExitToBezel = MMBezelDirectionNone;
             scaleDirection = MMScaleDirectionNone;
-            [velocities removeAllObjects];
             secondToLastTouchDidBezel = NO;
             locationAdjustment = CGPointZero;
             lastLocationInView = CGPointZero;
@@ -350,7 +373,7 @@ NSInteger const  minimumNumberOfTouches = 2;
     }
     [self processPossibleTouches];
 
-    if([validTouches count] >= minimumNumberOfTouches){
+    if([validTouches count] >= kMinimumNumberOfTouches){
         // reset the location and the initial distance of the gesture
         // so that the new first two touches position won't immediatley
         // change where the page is or what its scale is
@@ -377,7 +400,6 @@ NSInteger const  minimumNumberOfTouches = 2;
     }
     [possibleTouches removeObjectsInSet:touches];
     [ignoredTouches removeObjectsInSet:touches];
-    [self calculateVelocity];
     
     if([validTouches count] == 0 && [possibleTouches count] == 0){
         if((self.state == UIGestureRecognizerStateChanged || self.state == UIGestureRecognizerStateBegan)){
@@ -408,7 +430,6 @@ NSInteger const  minimumNumberOfTouches = 2;
     [ignoredTouches removeAllObjects];
     didExitToBezel = MMBezelDirectionNone;
     scaleDirection = MMScaleDirectionNone;
-    [velocities removeAllObjects];
     secondToLastTouchDidBezel = NO;
     locationAdjustment = CGPointZero;
     lastLocationInView = CGPointZero;
@@ -430,68 +451,6 @@ NSInteger const  minimumNumberOfTouches = 2;
         return DistanceBetweenTwoPoints(initialPoint1, initialPoint2);
     }
     return 0;
-}
-
-/**
- * this function processes each step of the pan gesture, and uses
- * it to caclulate the velocity when the user lifts their finger.
- *
- * we use this to have the paper slide when the user swipes quickly
- */
-- (CGPoint)calculateVelocity{
-//    if([validTouches count] < 2) return _averageVelocity;
-    CGPoint translate = [self locationInView:self.view.superview];
-    static NSTimeInterval lastTime;
-    static NSTimeInterval currTime;
-    static CGPoint currTranslate;
-    static CGPoint lastTranslate;
-    
-    if (self.state == UIGestureRecognizerStateBegan)
-    {
-        currTime = [NSDate timeIntervalSinceReferenceDate];
-        currTranslate = translate;
-    }
-    else if (self.state == UIGestureRecognizerStateChanged)
-    {
-        lastTime = currTime;
-        lastTranslate = currTranslate;
-        currTime = [NSDate timeIntervalSinceReferenceDate];
-        currTranslate = translate;
-        //
-        // calculate the current velocity for this moment,
-        // add add it to the velocities array. we'll average
-        // them later
-        NSTimeInterval seconds = [NSDate timeIntervalSinceReferenceDate] - lastTime;
-        CGPoint currVel = CGPointMake((translate.x - lastTranslate.x) / seconds, (translate.y - lastTranslate.y) / seconds);
-        [velocities addObject:[NSValue valueWithCGPoint:currVel]];
-        if([velocities count] > 10){
-            [velocities removeObjectAtIndex:0];
-        }
-    }
-    if ([velocities count] > 1)
-    {
-        //
-        // calculate the average velocity
-        CGPoint avgVel = [[velocities reduce:^id(id obj, NSUInteger index, id accum){
-            CGPoint avgVel = [accum CGPointValue];
-            CGPoint curVel = [obj CGPointValue];
-            avgVel.x = (avgVel.x * index + curVel.x) / (index + 1);
-            avgVel.y = (avgVel.y * index + curVel.y) / (index + 1);
-            
-            avgVel.x = clamp_helper(VELOCITY_CLAMP_MIN, VELOCITY_CLAMP_MAX, avgVel.x);
-            avgVel.y = clamp_helper(VELOCITY_CLAMP_MIN, VELOCITY_CLAMP_MAX, avgVel.x);
-            
-            return [NSValue valueWithCGPoint:avgVel];
-        }] CGPointValue];
-        _averageVelocity = avgVel;
-        return avgVel;
-    }
-    /*
-     // let's calculate where that flick would take us this far in the future
-     float inertiaSeconds = 1.0;
-     CGPoint final = CGPointMake(translate.x + swipeVelocity.x * inertiaSeconds, translate.y + swipeVelocity.y * inertiaSeconds);
-     */
-    return CGPointZero;
 }
 
 

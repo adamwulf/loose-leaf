@@ -52,6 +52,9 @@
 @property (nonatomic, readonly) UILabel* textLabel;
 @property (nonatomic, assign) BOOL isBrandNewPage;
 
+// read only props
+@property (nonatomic, readonly) CGRect originalUnscaledBounds;
+
 // List View
 @property (nonatomic, readonly) NSInteger rowInListView;
 @property (nonatomic, readonly) NSInteger columnInListView;

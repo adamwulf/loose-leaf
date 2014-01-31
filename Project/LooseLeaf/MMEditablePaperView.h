@@ -11,10 +11,9 @@
 #import <TouchShape/TouchShape.h>
 #import "MMRulerToolGestureRecognizer.h"
 #import "MMShapeBuilderView.h"
-#import "MMPaperStateDelegate.h"
 #import "MMEditablePaperViewDelegate.h"
 
-@interface MMEditablePaperView : MMPaperView<JotViewDelegate,MMPaperStateDelegate>{
+@interface MMEditablePaperView : MMPaperView<JotViewDelegate,JotViewStateProxyDelegate>{
     UIImageView* cachedImgView;
     __weak JotView* drawableView;
     MMShapeBuilderView* shapeBuilderView;
@@ -24,9 +23,7 @@
 
 @property (nonatomic, weak) JotView* drawableView;
 @property (nonatomic, weak) NSObject<MMEditablePaperViewDelegate>* delegate;
-@property (readonly) MMPaperState* paperState;
-
-+(dispatch_queue_t) loadUnloadStateQueue;
+@property (readonly) JotViewStateProxy* paperState;
 
 -(void) undo;
 -(void) redo;
@@ -34,7 +31,7 @@
 -(BOOL) hasStateLoaded;
 -(void) unloadCachedPreview;
 -(void) loadCachedPreview;
--(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(JotGLContext*)context andStartPage:(BOOL)startPage;
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(JotGLContext*)context;
 -(void) unloadState;
 -(void) saveToDisk:(void (^)(void))onComplete;
 -(void) setCanvasVisible:(BOOL)isVisible;

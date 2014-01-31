@@ -7,7 +7,7 @@
 //
 
 #import "MMDebugDrawView.h"
-#import "UIColor+ColorWithHex.h"
+#import "AVHexColor.h"
 
 @implementation MMDebugDrawView{
     NSMutableArray* curves;
@@ -50,7 +50,7 @@ static MMDebugDrawView* _instance = nil;
     
     [curves addObject:path];
     if([curves count] > [colors count]){
-        [colors addObject:[UIColor randomColor]];
+        [colors addObject:[AVHexColor randomColor]];
     }
     [self setNeedsDisplayInRect:path.bounds];
 }

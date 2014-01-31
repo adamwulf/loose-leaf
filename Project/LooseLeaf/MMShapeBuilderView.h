@@ -14,6 +14,6 @@
 
 -(void) clear;
 
--(NSArray*) completeAndGenerateShapes;
+-(UIBezierPath*) completeAndGenerateShape;
 
 @end

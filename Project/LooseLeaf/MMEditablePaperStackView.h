@@ -32,6 +32,7 @@
 #import "Constants.h"
 #import "Pen.h"
 #import "Eraser.h"
+#import "MMScissorTool.h"
 #import "PolygonTool.h"
 #import "MMRulerView.h"
 #import "PolygonToolDelegate.h"
@@ -69,6 +70,7 @@
     Pen* pen;
     Eraser* eraser;
     PolygonTool* polygon;
+    MMScissorTool* scissor;
     
     NSMutableSet* pagesWithLoadedCacheImages;
     MMRulerView* rulerView;

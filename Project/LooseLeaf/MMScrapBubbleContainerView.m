@@ -13,8 +13,23 @@
 #import "MMScrapBezelMenuView.h"
 #import "MMScrapsOnPaperState.h"
 #import "MMImmutableScrapsOnPaperState.h"
+#import <UIKit/UIGestureRecognizerSubclass.h>
 
 #define kMaxScrapsInBezel 6
+
+@interface MMSidebarButtonTapGestureRecognizer : UITapGestureRecognizer
+
+@end
+
+@implementation MMSidebarButtonTapGestureRecognizer
+
+-(BOOL) canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
+    return NO;
+}
+
+@end
+
+
 
 @implementation MMScrapBubbleContainerView{
     CGFloat lastRotationReading;
@@ -42,7 +57,8 @@
         CGFloat midPointY = (frame.size.height - 3*80) / 2;
         countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
         countButton.alpha = 0;
-        [countButton addTarget:self action:@selector(countButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        UITapGestureRecognizer* tappy = [[MMSidebarButtonTapGestureRecognizer alloc] initWithTarget:self action:@selector(countButtonTapped:)];
+        [countButton addGestureRecognizer:tappy];
         [self addSubview:countButton];
         
         closeMenuView = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -99,6 +115,9 @@
             }
         }
     }
+    if(!targetAlpha){
+        [self hideMenuIfNeeded];
+    }
 }
 
 -(CGPoint) centerForBubbleAtIndex:(NSInteger)index{
@@ -129,7 +148,14 @@
     // and set it's alpha/rotation/scale to prepare for the animation
     MMScrapBubbleButton* bubble = [[MMScrapBubbleButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
     bubble.center = center;
-    [bubble addTarget:self action:@selector(bubbleTapped:) forControlEvents:UIControlEventTouchUpInside];
+    //
+    // iOS7 changes how buttons can be tapped during a gesture (i think).
+    // so adding our gesture recognizer explicitly, and disallowing it to
+    // be prevented ensures that buttons can be tapped while other gestures
+    // are in flight.
+//    [bubble addTarget:self action:@selector(bubbleTapped:) forControlEvents:UIControlEventTouchUpInside];
+    UITapGestureRecognizer* tappy = [[MMSidebarButtonTapGestureRecognizer alloc] initWithTarget:self action:@selector(bubbleTapped:)];
+    [bubble addGestureRecognizer:tappy];
     bubble.originalScrapScale = scrap.scale;
     [self insertSubview:bubble atIndex:0];
     [self insertSubview:scrap aboveSubview:bubble];
@@ -252,19 +278,22 @@
 
 #pragma mark - Button Tap
 
--(void) bubbleTapped:(MMScrapBubbleButton*)bubble{
-    [scrapsHeldInBezel removeObject:bubble.scrap];
-
-    MMScrapView* scrap = bubble.scrap;
-    scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
-    scrap.rotation += (bubble.rotation - bubble.rotationAdjustment);
-    scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
-    [self insertSubview:scrap atIndex:0];
-    
-    [self animateAndAddScrapBackToPage:scrap];
-
-    [bubbleForScrap removeObjectForKey:scrap.uuid];
-    [rotationAdjustments removeObjectForKey:scrap.uuid];
+-(void) bubbleTapped:(UITapGestureRecognizer*)gesture{
+    MMScrapBubbleButton* bubble = (MMScrapBubbleButton*) gesture.view;
+    if([scrapsHeldInBezel containsObject:bubble.scrap]){
+        [scrapsHeldInBezel removeObject:bubble.scrap];
+        
+        MMScrapView* scrap = bubble.scrap;
+        scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
+        scrap.rotation += (bubble.rotation - bubble.rotationAdjustment);
+        scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
+        [self insertSubview:scrap atIndex:0];
+        
+        [self animateAndAddScrapBackToPage:scrap];
+        
+        [bubbleForScrap removeObjectForKey:scrap.uuid];
+        [rotationAdjustments removeObjectForKey:scrap.uuid];
+    }
 }
 
 -(void) didTapOnScrapFromMenu:(MMScrapView*)scrap{
@@ -317,26 +346,33 @@
 // count button was tapped,
 // so show or hide the menu
 // so the user can choose a scrap to add
--(void) countButtonTapped:(id)button{
-    if(scrapMenu.alpha){
-        [self closeMenuTapped:nil];
-    }else{
-        scrapMenu.transform = CGAffineTransformMakeTranslation(20, 0);
-        closeMenuView.hidden = NO;
-        [scrapMenu prepareMenu];
-        [UIView animateWithDuration:.2
-                              delay:0
-                            options:UIViewAnimationOptionCurveEaseOut
-                         animations:^{
-                             scrapMenu.alpha = 1;
-                             scrapMenu.transform = CGAffineTransformIdentity;
-                             [scrapMenu flashScrollIndicators];
-                         }
-                         completion:nil];
+-(void) countButtonTapped:(UITapGestureRecognizer*)tapGesture{
+    if(tapGesture.view.alpha){
+        // only run teh tap if the button is visible.
+        // it might be invisible if it's in the process
+        // of hiding from a pinch to list view
+        // https://github.com/adamwulf/loose-leaf/issues/262
+        if(scrapMenu.alpha){
+            [self closeMenuTapped:nil];
+        }else{
+            scrapMenu.transform = CGAffineTransformMakeTranslation(20, 0);
+            closeMenuView.hidden = NO;
+            [scrapMenu prepareMenu];
+            [UIView animateWithDuration:.2
+                                  delay:0
+                                options:UIViewAnimationOptionCurveEaseOut
+                             animations:^{
+                                 scrapMenu.alpha = 1;
+                                 scrapMenu.transform = CGAffineTransformIdentity;
+                                 [scrapMenu flashScrollIndicators];
+                             }
+                             completion:nil];
+        }
     }
 }
 
 -(void) closeMenuTapped:(id)button{
+    [scrapMenu.layer removeAllAnimations];
     closeMenuView.hidden = YES;
     scrapMenu.alpha = 0;
 }

@@ -20,6 +20,7 @@
 @property (readonly) UIView* contentView;
 @property (readonly) CGRect drawableBounds;
 @property (readonly) NSString* uuid;
+@property (readonly) JotView* drawableView;
 
 -(id) initWithUUID:(NSString*)uuid;
 
@@ -33,8 +34,9 @@
 
 -(BOOL) isStateLoaded;
 
+-(void) addElements:(NSArray*)elements;
 
-// TODO: clean up how elements are added to a scrap
--(void) addElement:(AbstractBezierPathElement*)element;
+-(JotGLTexture*) generateTexture;
+-(void) importTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4;
 
 @end

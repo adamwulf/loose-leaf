@@ -25,6 +25,8 @@
 
 -(MMVector*) normal;
 
+-(MMVector*) normalizedTo:(CGFloat)someLength;
+
 -(MMVector*) perpendicular;
 
 -(MMVector*) flip;
@@ -45,4 +47,5 @@
 
 -(CGFloat) angleBetween:(MMVector*)otherVector;
 
+-(CGPoint) asCGPoint;
 @end

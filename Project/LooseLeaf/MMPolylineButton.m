@@ -9,7 +9,7 @@
 #import "MMPolylineButton.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Constants.h"
-#import "DrawKit-iOS.h"
+#import <DrawKit-iOS/DrawKit-iOS.h>
 
 @implementation MMPolylineButton
 

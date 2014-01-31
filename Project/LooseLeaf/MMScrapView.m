@@ -7,11 +7,10 @@
 //
 
 #import "MMScrapView.h"
-#import "UIColor+ColorWithHex.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
 #import "MMRotationManager.h"
-#import "DrawKit-iOS.h"
+#import <DrawKit-iOS/DrawKit-iOS.h>
 #import "UIColor+Shadow.h"
 #import "MMDebugDrawView.h"
 #import "NSString+UUID.h"
@@ -23,8 +22,7 @@
 
 @implementation MMScrapView{
     // **
-    // these properties will be saved by the page that holds us, if any
-    //
+    // these properties will be saved by the page that holds us, if any:
     // our current scale
     CGFloat scale;
     // our current rotation around our center
@@ -32,8 +30,8 @@
 
     
     // these properties are UI only, and
-    // don't need to be persisted
-    
+    // don't need to be persisted:
+    //
     // boolean to say if the user is currently holding this scrap. used for blue border
     BOOL selected;
     // the layer used for our white background. won't clip sub-content
@@ -79,7 +77,7 @@
     
     if(scrapState.bezierPath){
         if(self = [self initWithBezierPath:scrapState.bezierPath andUUID:scrapState.uuid]){
-            // TODO: load in thumbnail image view while state loads
+            // noop
         }
         return self;
     }
@@ -133,13 +131,10 @@
         needsClippingPathUpdate = YES;
         
         //
-        // TODO: add this to our subviews only when our state
-        // is loaded, otherwise show an image preview instead.
+        // the state content view will show a thumbnail while
+        // the drawable view loads
         [self addSubview:scrapState.contentView];
         
-        [MMDebugDrawView sharedInstace].frame = self.bounds;
-        [self addSubview:[MMDebugDrawView sharedInstace]];
-
         borderView = [[MMScrapBorderView alloc] initWithFrame:self.bounds];
         borderView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [borderView setBezierPath:self.bezierPath];
@@ -153,6 +148,10 @@
         // need to do any offscreen rendering when displaying
         // this view
         [self setShouldShowShadow:NO];
+        
+//        self.layer.borderColor = [UIColor redColor].CGColor;
+//        self.layer.borderWidth = 1;
+//        self.alpha = .5;
     }
     return self;
 }
@@ -302,6 +301,10 @@
     // start with our original path
     clippingPath = [scrapState.bezierPath copy];
     
+    [clippingPath applyTransform:self.clippingPathTransform];
+}
+
+-(CGAffineTransform) clippingPathTransform{
     // when we pick up a scrap with a two finger gesture, we also
     // change the position and anchor (which change the center), so
     // that it rotates underneath the gesture correctly.
@@ -316,7 +319,6 @@
     CGAffineTransform reCenterTransform = CGAffineTransformMakeTranslation(actualScrapCenter.x - clippingPathCenter.x, actualScrapCenter.y - clippingPathCenter.y);
     clippingPathCenter = CGPointApplyAffineTransform(clippingPathCenter, reCenterTransform);
     
-    
     // now we need to rotate the path around it's new center
     CGAffineTransform moveFromCenter = CGAffineTransformMakeTranslation(-clippingPathCenter.x, -clippingPathCenter.y);
     CGAffineTransform rotateAndScale = CGAffineTransformConcat(CGAffineTransformMakeRotation(self.rotation),CGAffineTransformMakeScale(self.scale, self.scale));
@@ -329,16 +331,68 @@
     clippingPathTransform = CGAffineTransformConcat(clippingPathTransform, rotateAndScale);
     clippingPathTransform = CGAffineTransformConcat(clippingPathTransform, moveToCenter);
     clippingPathTransform = CGAffineTransformConcat(clippingPathTransform, flipTransform);
+    return clippingPathTransform;
+}
+
+/**
+ * this will return the transform required to take
+ * a coordinate and transform it from the page's 
+ * coordinate space and into the scrap's coordinate space
+ */
+-(CGAffineTransform) pageToScrapTransformWithPageOriginalUnscaledBounds:(CGRect)originalUnscaledBounds{
+    // since a scrap's center point is changed if the scrap is being
+    // held, we can't just use scrap.center to adjust the path for
+    // rotations etc. we need to calculate the center of a scrap
+    // so that it doesn't matter if it's position/anchor have been
+    // changed or not.
+    CGPoint calculatedScrapCenter = [self convertPoint:CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2) toView:self.superview];
     
-    [clippingPath applyTransform:clippingPathTransform];
+    // determine the tranlsation that we need to make on the path
+    // so that it's moved into the scrap's coordinate space
+    CGAffineTransform entireTransform = CGAffineTransformIdentity;
+    
+    // find the scrap location in open gl
+    CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, originalUnscaledBounds.size.height);
+    CGPoint scrapCenterInOpenGL = CGPointApplyAffineTransform(calculatedScrapCenter, flipTransform);
+    // center the stroke around the scrap center,
+    // so that any scale/rotate happens in relation to the scrap
+    entireTransform = CGAffineTransformConcat(entireTransform, CGAffineTransformMakeTranslation(-scrapCenterInOpenGL.x, -scrapCenterInOpenGL.y));
+    // now scale and rotate the scrap
+    // we reverse the scale, b/c the scrap itself is scaled. these two together will make the
+    // path have a scale of 1 after it's added
+    entireTransform = CGAffineTransformConcat(entireTransform, CGAffineTransformMakeScale(1.0/self.scale, 1.0/self.scale));
+    // this one confuses me honestly. i would think that
+    // i'd need to rotate by -scrap.rotation so that with the
+    // scrap's rotation it'd end up not rotated at all. somehow the
+    // scrap has an effective rotation of -rotation (?).
+    //
+    // thinking about it some more, I think the issue is that
+    // scrap.rotation is defined as the rotation in Core Graphics
+    // coordinate space, but since OpenGL is flipped, then the
+    // rotation flips.
+    //
+    // think of a spinning clock. it spins in different directions
+    // if you look at it from the top or bottom.
+    //
+    // either way, when i rotate the path by scrap.rotation, it ends up
+    // in the correct visible space. it works!
+    entireTransform = CGAffineTransformConcat(entireTransform, CGAffineTransformMakeRotation(self.rotation));
+    
+    // before this line, the path is in the correct place for a scrap
+    // that has (0,0) in it's center. now move everything so that
+    // (0,0) is in the bottom/left of the scrap. (this might also
+    // help w/ the rotation somehow, since the rotate happens before the
+    // translate (?)
+    CGPoint recenter = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
+    return CGAffineTransformConcat(entireTransform, CGAffineTransformMakeTranslation(recenter.x, recenter.y));
 }
 
 
 
 #pragma mark - JotView
 
--(void) addElement:(AbstractBezierPathElement *)element{
-    [scrapState addElement:element];
+-(void) addElements:(NSArray*)elements{
+    [scrapState addElements:elements];
 }
 
 
@@ -394,5 +448,74 @@
     return scrapState.originalSize;
 }
 
+-(MMScrapViewState*) state{
+    return  scrapState;
+}
+
+
+#pragma mark - Sub-scrap content
+
+/**
+ * this will take self's drawn contents and 
+ * stamp them onto the input otherScrap in the
+ * exact same place they are visually on the page
+ */
+-(void) stampContentsOnto:(MMScrapView*)otherScrap{
+    // step 1: generate a gl texture of my entire contents
+    JotGLTexture* myTexture = [scrapState generateTexture];
+
+    // opengl coordinates
+    // when a texture is drawn, it's drawn in these coordinates
+    // from coregraphics top left counter clockwise around.
+    //    { 0.0, fullPixelSize.height},
+    //    { fullPixelSize.width, fullPixelSize.height},
+    //    { 0.0, 0.0},
+    //    { fullPixelSize.width, 0.0}
+    //
+    // this is equivelant to starting in top left (0,0) in
+    // core graphics. and moving clockwise.
+
+    // get the coordinates of the new scrap in the old
+    // scrap's coordinate space.
+    CGRect bounds = otherScrap.state.drawableView.bounds;
+    CGPoint p1 = [self.state.drawableView convertPoint:bounds.origin fromView:otherScrap.state.drawableView];
+    CGPoint p2 = [self.state.drawableView convertPoint:CGPointMake(bounds.size.width, 0) fromView:otherScrap.state.drawableView];
+    CGPoint p3 = [self.state.drawableView convertPoint:CGPointMake(0, bounds.size.height) fromView:otherScrap.state.drawableView];
+    CGPoint p4 = [self.state.drawableView convertPoint:CGPointMake(bounds.size.width, bounds.size.height) fromView:otherScrap.state.drawableView];
+    
+    // normalize the coordinates to get texture
+    // coordinate space of 0 to 1
+    p1.x /= self.state.drawableView.bounds.size.width;
+    p2.x /= self.state.drawableView.bounds.size.width;
+    p3.x /= self.state.drawableView.bounds.size.width;
+    p4.x /= self.state.drawableView.bounds.size.width;
+    p1.y /= self.state.drawableView.bounds.size.height;
+    p2.y /= self.state.drawableView.bounds.size.height;
+    p3.y /= self.state.drawableView.bounds.size.height;
+    p4.y /= self.state.drawableView.bounds.size.height;
+
+    // now flip from core graphics to opengl coordinates
+    CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, 1.0);
+    p1 = CGPointApplyAffineTransform(p1, flipTransform);
+    p2 = CGPointApplyAffineTransform(p2, flipTransform);
+    p3 = CGPointApplyAffineTransform(p3, flipTransform);
+    p4 = CGPointApplyAffineTransform(p4, flipTransform);
+
+    // now tamp our texture onto the other scrap using these
+    // texture coordinates
+    [otherScrap drawTexture:myTexture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
+}
+
+/**
+ * this method allows us to stamp an arbitrary texture onto the scrap, using the input
+ * texture coordinates
+ */
+-(void) drawTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4{
+    [scrapState importTexture:texture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
+}
+
+-(void) dealloc{
+    NSLog(@"scrap dealloc");
+}
 
 @end
