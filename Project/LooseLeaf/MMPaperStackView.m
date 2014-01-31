@@ -1311,6 +1311,10 @@
  * these pages will be pushed over to the invisible stack
  */
 -(void) popStackUntilPage:(MMPaperView*)page onComplete:(void(^)(BOOL finished))completionBlock{
+    if(page == nil){
+        NSLog(@"what");
+        @throw [NSException exceptionWithName:@"popping to nil page" reason:@"unknown" userInfo:nil];
+    }
     if([visibleStackHolder.subviews containsObject:page] || page == nil){
         // list of pages from bottom to top
         NSArray* pages = [visibleStackHolder peekSubviewFromSubview:page];
@@ -1596,6 +1600,10 @@
  * get this into static mode asap.
  */
 -(void) willChangeTopPageTo:(MMPaperView*)page{
+    if(!page){
+        NSLog(@"what");
+        @throw [NSException exceptionWithName:@"will change to nil page" reason:@"unknown" userInfo:nil];
+    }
 //        debug_NSLog(@"will switch top page to %@", page.uuid);
 }
 

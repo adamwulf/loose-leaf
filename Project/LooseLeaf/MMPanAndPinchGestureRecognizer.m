@@ -197,6 +197,7 @@
     if([validTouchesCurrentlyMoving count]){
         if(self.state == UIGestureRecognizerStateBegan){
             initialDistance = 0;
+            self.state = UIGestureRecognizerStateChanged;
         }
         if(self.numberOfTouches == 1){
             initialDistance = 0;
@@ -238,6 +239,10 @@
                 // the location of the touch on the edge isn't very accurate
                 // which messes up our scale accuracy
                 CGFloat newScale = [self distanceBetweenTouches:validTouches] / initialDistance;
+                if(initialDistance < 130){
+                    // don't alow scaling if the original pinch was very close together
+                    newScale = 1.0;
+                }
                 if(newScale > scale){
                     scaleDirection = MMScaleDirectionLarger;
                 }else if(newScale < scale){
