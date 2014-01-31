@@ -359,23 +359,25 @@
 #pragma mark - MMRotationManagerDelegate
 
 -(void) didUpdateAccelerometerWithReading:(CGFloat)currentRawReading{
-    CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-    addPageSidebarButton.transform = rotationTransform;
-    documentBackgroundSidebarButton.transform = rotationTransform;
-    polylineButton.transform = rotationTransform;
-    polygonButton.transform = rotationTransform;
-    insertImageButton.transform = rotationTransform;
-    textButton.transform = rotationTransform;
-    scissorButton.transform = rotationTransform;
-    pencilTool.transform = rotationTransform;
-    eraserButton.transform = rotationTransform;
-    shareButton.transform = rotationTransform;
-    mapButton.transform = rotationTransform;
-    undoButton.transform = rotationTransform;
-    redoButton.transform = rotationTransform;
-    rulerButton.transform = rotationTransform;
-    handButton.transform = rotationTransform;
-    settingsButton.transform = rotationTransform;
+    [NSThread performBlockOnMainThread:^{
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        addPageSidebarButton.transform = rotationTransform;
+        documentBackgroundSidebarButton.transform = rotationTransform;
+        polylineButton.transform = rotationTransform;
+        polygonButton.transform = rotationTransform;
+        insertImageButton.transform = rotationTransform;
+        textButton.transform = rotationTransform;
+        scissorButton.transform = rotationTransform;
+        pencilTool.transform = rotationTransform;
+        eraserButton.transform = rotationTransform;
+        shareButton.transform = rotationTransform;
+        mapButton.transform = rotationTransform;
+        undoButton.transform = rotationTransform;
+        redoButton.transform = rotationTransform;
+        rulerButton.transform = rotationTransform;
+        handButton.transform = rotationTransform;
+        settingsButton.transform = rotationTransform;
+    }];
 }
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
     [NSThread performBlockOnMainThread:^{
