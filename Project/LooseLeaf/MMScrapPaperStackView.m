@@ -82,6 +82,18 @@
     NSLog(@" ");
     NSLog(@" ");
     NSLog(@"begin");
+    
+    NSLog(@"page being panned %d", [setOfPagesBeingPanned count]);
+    for(MMPaperView* page in setOfPagesBeingPanned){
+        if([visibleStackHolder containsSubview:page]){
+            NSLog(@"  1 page in visible stack");
+        }else if([bezelStackHolder containsSubview:page]){
+            NSLog(@"  1 page in bezel stack");
+        }else if([hiddenStackHolder containsSubview:page]){
+            NSLog(@"  1 page in hidden stack");
+        }
+    }
+    
 
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         UIGestureRecognizerState st = gesture.state;

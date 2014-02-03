@@ -8,6 +8,9 @@
 
 #import "MMLoadImageCache.h"
 
+// TODO: possibly use this tutorial for threadsafe cache
+// https://mikeash.com/pyblog/friday-qa-2011-10-14-whats-new-in-gcd.html
+
 #define kThumbCacheSize 30
 
 @implementation MMLoadImageCache{

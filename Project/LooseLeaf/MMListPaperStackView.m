@@ -587,6 +587,10 @@
  */
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
     [super cancelledScalingReallySmall:page];
+    //
+    // clean up gesture state
+    [setOfPagesBeingPanned removeObject:page];
+    
     [self finishUITransitionToPageView];
     if(![page isBeingPannedAndZoomed]){
         [self animatePageToFullScreen:[visibleStackHolder peekSubview] withDelay:0 withBounce:YES onComplete:^(BOOL finished){
