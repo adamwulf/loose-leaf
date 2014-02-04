@@ -12,6 +12,7 @@
 #import "MMScrapBubbleContainerView.h"
 #import "MMDebugDrawView.h"
 #import "MMTouchVelocityGestureRecognizer.h"
+#import <JotUI/AbstractBezierPathElement-Protected.h>
 
 @implementation MMScrapPaperStackView{
     MMScrapBubbleContainerView* bezelScrapContainer;
@@ -23,6 +24,7 @@
     
     
     NSTimer* debugTimer;
+    NSTimer* drawTimer;
 }
 
 
@@ -35,6 +37,13 @@
                                                                 selector:@selector(timerDidFire:)
                                                                 userInfo:nil
                                                                  repeats:YES];
+
+        
+        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5
+                                                      target:self
+                                                    selector:@selector(drawTimerDidFire:)
+                                                    userInfo:nil
+                                                     repeats:YES];
 
         
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds];
@@ -73,6 +82,50 @@
 //        [self addSubview:drawLongElementButton];
     }
     return self;
+}
+
+
+static int numLines = 0;
+BOOL skipOnce = NO;
+int skipAll = NO;
+
+-(void) drawTimerDidFire:(NSTimer*)timer{
+    if(skipOnce){
+        skipOnce = NO;
+        return;
+    }
+    
+    MMEditablePaperView* page = [visibleStackHolder peekSubview];
+    
+    MoveToPathElement* moveTo = [MoveToPathElement elementWithMoveTo:CGPointMake(rand() % (int) page.bounds.size.width, rand() % (int) page.bounds.size.height)];
+    moveTo.width = 3;
+    moveTo.color = [UIColor blackColor];
+    
+    CurveToPathElement* curveTo = [CurveToPathElement elementWithStart:moveTo.startPoint
+                                                             andLineTo:CGPointMake(rand() % (int) page.bounds.size.width, rand() % (int) page.bounds.size.height)];
+    curveTo.width = 3;
+    curveTo.color = [UIColor blackColor];
+    
+    NSArray* shortLine = [NSArray arrayWithObjects:
+                          moveTo,
+                          curveTo,
+                          nil];
+    
+    [page.drawableView addElements:shortLine];
+    
+    [page saveToDisk];
+    
+    numLines++;
+    
+    
+    CGFloat strokesPerPage = 300;
+    
+    if(numLines % (int)strokesPerPage == 0){
+        [self addPageButtonTapped:nil];
+        skipOnce = YES;
+    }
+    
+    NSLog(@"auto-lines: %d   pages: %d", numLines, (int) floor(numLines / strokesPerPage));
 }
 
 
