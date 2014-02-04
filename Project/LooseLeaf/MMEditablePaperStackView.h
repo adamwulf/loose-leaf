@@ -51,7 +51,6 @@
     MMPaperButton* documentBackgroundSidebarButton;
     MMPlusButton* addPageSidebarButton;
     MMPolylineButton* polylineButton;
-    MMPolygonButton* polygonButton;
     MMImageButton* insertImageButton;
     MMScissorButton* scissorButton;
     MMTextButton* textButton;
@@ -69,7 +68,6 @@
 
     Pen* pen;
     Eraser* eraser;
-    PolygonTool* polygon;
     MMScissorTool* scissor;
     
     NSMutableSet* pagesWithLoadedCacheImages;

@@ -382,53 +382,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     }
 }
 
-#pragma mark - Polygon and Scrap builder
-
--(void) beginShapeAtPoint:(CGPoint)point{
-    // send touch event to the view that
-    // will display the drawn polygon line
-    [shapeBuilderView clear];
-    [shapeBuilderView addTouchPoint:point];
-}
-
--(BOOL) continueShapeAtPoint:(CGPoint)point{
-    // send touch event to the view that
-    // will display the drawn polygon line
-    if([shapeBuilderView addTouchPoint:point]){
-        [self completeBuildingNewScrap];
-        return NO;
-    }
-    return YES;
-}
-
--(void) finishShapeAtPoint:(CGPoint)point{
-    // send touch event to the view that
-    // will display the drawn polygon line
-    //
-    // and also process the touches into the new
-    // scrap polygon shape, and add that shape
-    // to the page
-    [shapeBuilderView addTouchPoint:point];
-    [self completeBuildingNewScrap];
-}
-
--(void) cancelShapeAtPoint:(CGPoint)point{
-    // we've cancelled the polygon (possibly b/c
-    // it was a pan/pinch instead), so clear
-    // the drawn polygon and reset.
-    [shapeBuilderView clear];
-}
-
--(void) completeBuildingNewScrap{
-    UIBezierPath* shape = [shapeBuilderView completeAndGenerateShape];
-    [shapeBuilderView clear];
-    if(shape.isPathClosed){
-        UIBezierPath* shapePath = [shape copy];
-        [shapePath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
-        [self addScrapWithPath:shapePath andScale:1.0];
-    }
-}
-
 
 #pragma mark - Scissors
 
