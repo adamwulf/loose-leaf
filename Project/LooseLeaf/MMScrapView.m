@@ -455,6 +455,61 @@
 
 #pragma mark - Sub-scrap content
 
+
+/**
+ * this will take self's drawn contents and
+ * stamp them onto the input otherScrap in the
+ * exact same place they are visually on the page
+ */
+-(void) stampContentsFrom:(JotView*)otherDrawableView{
+    // step 1: generate a gl texture of my entire contents
+    JotGLTexture* otherTexture = [otherDrawableView generateTexture];
+    
+    // opengl coordinates
+    // when a texture is drawn, it's drawn in these coordinates
+    // from coregraphics top left counter clockwise around.
+    //    { 0.0, fullPixelSize.height},
+    //    { fullPixelSize.width, fullPixelSize.height},
+    //    { 0.0, 0.0},
+    //    { fullPixelSize.width, 0.0}
+    //
+    // this is equivelant to starting in top left (0,0) in
+    // core graphics. and moving clockwise.
+    
+    // get the coordinates of the new scrap in the old
+    // scrap's coordinate space.
+    CGRect bounds = self.state.drawableView.bounds;
+    CGPoint p1 = [otherDrawableView convertPoint:bounds.origin fromView:self.state.drawableView];
+    CGPoint p2 = [otherDrawableView convertPoint:CGPointMake(bounds.size.width, 0) fromView:self.state.drawableView];
+    CGPoint p3 = [otherDrawableView convertPoint:CGPointMake(0, bounds.size.height) fromView:self.state.drawableView];
+    CGPoint p4 = [otherDrawableView convertPoint:CGPointMake(bounds.size.width, bounds.size.height) fromView:self.state.drawableView];
+    
+    // normalize the coordinates to get texture
+    // coordinate space of 0 to 1
+    p1.x /= otherDrawableView.bounds.size.width;
+    p2.x /= otherDrawableView.bounds.size.width;
+    p3.x /= otherDrawableView.bounds.size.width;
+    p4.x /= otherDrawableView.bounds.size.width;
+    p1.y /= otherDrawableView.bounds.size.height;
+    p2.y /= otherDrawableView.bounds.size.height;
+    p3.y /= otherDrawableView.bounds.size.height;
+    p4.y /= otherDrawableView.bounds.size.height;
+    
+    // now flip from core graphics to opengl coordinates
+    CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, 1.0);
+    p1 = CGPointApplyAffineTransform(p1, flipTransform);
+    p2 = CGPointApplyAffineTransform(p2, flipTransform);
+    p3 = CGPointApplyAffineTransform(p3, flipTransform);
+    p4 = CGPointApplyAffineTransform(p4, flipTransform);
+    
+    // now tamp our texture onto the other scrap using these
+    // texture coordinates
+    [self drawTexture:otherTexture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
+}
+
+
+
+
 /**
  * this will take self's drawn contents and 
  * stamp them onto the input otherScrap in the

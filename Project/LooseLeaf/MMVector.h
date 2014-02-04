@@ -13,11 +13,11 @@
 @property (nonatomic) CGFloat x;
 @property (nonatomic) CGFloat y;
 
-+(id) vectorWithPoint:(CGPoint)p1 andPoint:(CGPoint)p2;
++(MMVector*) vectorWithPoint:(CGPoint)p1 andPoint:(CGPoint)p2;
 
-+(id) vectorWithX:(CGFloat)x andY:(CGFloat)y;
++(MMVector*) vectorWithX:(CGFloat)x andY:(CGFloat)y;
 
-+(id) vectorWithAngle:(CGFloat)angle;
++(MMVector*) vectorWithAngle:(CGFloat)angle;
 
 -(id) initWithPoint:(CGPoint)p1 andPoint:(CGPoint)p2;
 

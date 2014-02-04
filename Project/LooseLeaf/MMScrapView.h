@@ -33,6 +33,8 @@
 
 -(void) setShouldShowShadow:(BOOL)shouldShowShadow;
 
+-(void) stampContentsFrom:(JotView*)otherDrawableView;
+
 /**
  * will return the array of touches that this scrap
  * contains, but only if more than one touch

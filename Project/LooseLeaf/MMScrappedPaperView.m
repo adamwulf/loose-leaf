@@ -479,6 +479,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
         // instead of screen coordinates
         [scissorPath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
         
+        BOOL hasBuiltAnyScraps = NO;
+        
         // iterate over the scraps from the visibly top scraps
         // to the bottom of the stack
         for(MMScrapView* scrap in [self.scraps reverseObjectEnumerator]){
@@ -538,18 +540,41 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 // intersects with the scrap we just cut
                 scissorPath = [scissorPath differenceOfPathTo:subshapePath];
             }
-            [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                                 for(int i=0;i<[vectors count];i++){
-                                     MMVector* vector = [vectors objectAtIndex:i];
-                                     vector = [vector normalizedTo:maxDist];
-                                     MMScrapView* scrap = [scraps objectAtIndex:i];
-                                     
-                                     CGPoint newC = [vector pointFromPoint:scrap.center distance:10];
-                                     scrap.center = newC;
-                                 }
-                             }
-                             completion:nil];
+            if([scraps count]){
+                hasBuiltAnyScraps = YES;
+                [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                    for(int i=0;i<[vectors count];i++){
+                        MMVector* vector = [vectors objectAtIndex:i];
+                        vector = [vector normalizedTo:maxDist];
+                        MMScrapView* scrap = [scraps objectAtIndex:i];
+                        
+                        CGPoint newC = [vector pointFromPoint:scrap.center distance:10];
+                        scrap.center = newC;
+                    }
+                } completion:nil];
+            }
         }
+        
+        
+        if(!hasBuiltAnyScraps && [scissorPath isClosed]){
+            NSLog(@"didn't cut any scraps, so make one");
+            MMScrapView* addedScrap = [self addScrapWithPath:scissorPath andScale:1.0];
+            [addedScrap stampContentsFrom:self.drawableView];
+            
+            CGFloat randX = (rand() % 100 - 50) / 50.0;
+            CGFloat randY = (rand() % 100 - 50) / 50.0;
+            
+            MMVector* vector = [[MMVector vectorWithX:randX andY:randY] normal];
+            
+            [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                CGPoint newC = [vector pointFromPoint:addedScrap.center distance:10];
+                addedScrap.center = newC;
+            } completion:nil];
+            
+            
+        }
+        
+        
         // clear the dotted line of the scissor
         [shapeBuilderView clear];
         [self saveToDisk];

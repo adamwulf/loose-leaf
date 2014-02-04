@@ -17,15 +17,15 @@
 
 @synthesize x, y;
 
-+(id) vectorWithPoint:(CGPoint)p1 andPoint:(CGPoint)p2{
++(MMVector*) vectorWithPoint:(CGPoint)p1 andPoint:(CGPoint)p2{
     return [[MMVector alloc] initWithPoint:p1 andPoint:p2];
 }
 
-+(id) vectorWithX:(CGFloat)x andY:(CGFloat)y{
++(MMVector*) vectorWithX:(CGFloat)x andY:(CGFloat)y{
     return [[MMVector alloc] initWithX:x andY:y];
 }
 
-+(id) vectorWithAngle:(CGFloat)angle{
++(MMVector*) vectorWithAngle:(CGFloat)angle{
     return [[MMVector alloc] initWithX:cosf(angle) andY:sinf(angle)];
 }
 
