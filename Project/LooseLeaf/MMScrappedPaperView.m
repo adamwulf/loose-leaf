@@ -23,6 +23,7 @@
 #import "UIBezierPath+PathElement.h"
 #import "UIBezierPath+Description.h"
 #import "MMVector.h"
+#import "MMScrapViewState.h"
 
 
 @implementation MMScrappedPaperView{
@@ -478,7 +479,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                         @synchronized(scrapContainerView){
                             [scrapContainerView insertSubview:addedScrap belowSubview:scrap];
                         }
-                        [scrap stampContentsOnto:addedScrap];
+                        [addedScrap stampContentsFrom:scrap.state.drawableView];
                         
                         CGFloat addedScrapDist = distance(scrap.center, addedScrap.center);
                         if(addedScrapDist > maxDist){

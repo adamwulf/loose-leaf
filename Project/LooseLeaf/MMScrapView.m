@@ -507,60 +507,6 @@
     [self drawTexture:otherTexture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
 }
 
-
-
-
-/**
- * this will take self's drawn contents and 
- * stamp them onto the input otherScrap in the
- * exact same place they are visually on the page
- */
--(void) stampContentsOnto:(MMScrapView*)otherScrap{
-    // step 1: generate a gl texture of my entire contents
-    JotGLTexture* myTexture = [scrapState generateTexture];
-
-    // opengl coordinates
-    // when a texture is drawn, it's drawn in these coordinates
-    // from coregraphics top left counter clockwise around.
-    //    { 0.0, fullPixelSize.height},
-    //    { fullPixelSize.width, fullPixelSize.height},
-    //    { 0.0, 0.0},
-    //    { fullPixelSize.width, 0.0}
-    //
-    // this is equivelant to starting in top left (0,0) in
-    // core graphics. and moving clockwise.
-
-    // get the coordinates of the new scrap in the old
-    // scrap's coordinate space.
-    CGRect bounds = otherScrap.state.drawableView.bounds;
-    CGPoint p1 = [self.state.drawableView convertPoint:bounds.origin fromView:otherScrap.state.drawableView];
-    CGPoint p2 = [self.state.drawableView convertPoint:CGPointMake(bounds.size.width, 0) fromView:otherScrap.state.drawableView];
-    CGPoint p3 = [self.state.drawableView convertPoint:CGPointMake(0, bounds.size.height) fromView:otherScrap.state.drawableView];
-    CGPoint p4 = [self.state.drawableView convertPoint:CGPointMake(bounds.size.width, bounds.size.height) fromView:otherScrap.state.drawableView];
-    
-    // normalize the coordinates to get texture
-    // coordinate space of 0 to 1
-    p1.x /= self.state.drawableView.bounds.size.width;
-    p2.x /= self.state.drawableView.bounds.size.width;
-    p3.x /= self.state.drawableView.bounds.size.width;
-    p4.x /= self.state.drawableView.bounds.size.width;
-    p1.y /= self.state.drawableView.bounds.size.height;
-    p2.y /= self.state.drawableView.bounds.size.height;
-    p3.y /= self.state.drawableView.bounds.size.height;
-    p4.y /= self.state.drawableView.bounds.size.height;
-
-    // now flip from core graphics to opengl coordinates
-    CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, 1.0);
-    p1 = CGPointApplyAffineTransform(p1, flipTransform);
-    p2 = CGPointApplyAffineTransform(p2, flipTransform);
-    p3 = CGPointApplyAffineTransform(p3, flipTransform);
-    p4 = CGPointApplyAffineTransform(p4, flipTransform);
-
-    // now tamp our texture onto the other scrap using these
-    // texture coordinates
-    [otherScrap drawTexture:myTexture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
-}
-
 /**
  * this method allows us to stamp an arbitrary texture onto the scrap, using the input
  * texture coordinates
