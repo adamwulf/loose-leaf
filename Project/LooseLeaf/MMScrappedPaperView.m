@@ -563,12 +563,15 @@ static dispatch_queue_t concurrentBackgroundQueue;
             
             CGFloat randX = (rand() % 100 - 50) / 50.0;
             CGFloat randY = (rand() % 100 - 50) / 50.0;
+            CGFloat randTurn = (rand() % 10 - 5) / 5.0;
+            randTurn = randTurn * M_PI / 180; // convert to radians
             
             MMVector* vector = [[MMVector vectorWithX:randX andY:randY] normal];
             
             [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                 CGPoint newC = [vector pointFromPoint:addedScrap.center distance:10];
                 addedScrap.center = newC;
+                addedScrap.rotation = addedScrap.rotation + randTurn;
             } completion:nil];
             
             
