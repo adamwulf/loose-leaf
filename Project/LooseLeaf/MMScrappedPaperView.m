@@ -528,7 +528,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 addedScrap.rotation = addedScrap.rotation + randTurn;
             } completion:nil];
             
-            
+            // now we need to add a stroke to the underlying page that
+            // will erase the area below the new scrap
+            [drawableView forceAddStrokeForFilledPath:scissorPath];
         }
         
         
