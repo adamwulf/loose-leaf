@@ -551,13 +551,14 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
             [[NSThread mainThread] performBlock:^{
                 [drawableView forceAddStrokeForFilledPath:scissorPath andP1:p1 andP2:p2 andP3:p3 andP4:p4];
+                [self saveToDisk];
             } afterDelay:.01];
+        }else{
+            [self saveToDisk];
         }
-        
         
         // clear the dotted line of the scissor
         [shapeBuilderView clear];
-        [self saveToDisk];
     }
     @catch (NSException *exception) {
         //
