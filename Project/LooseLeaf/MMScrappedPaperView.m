@@ -435,6 +435,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
         
         BOOL hasBuiltAnyScraps = NO;
         
+        CGAffineTransform verticalFlip = CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height);
+        
         // iterate over the scraps from the visibly top scraps
         // to the bottom of the stack
         for(MMScrapView* scrap in [self.scraps reverseObjectEnumerator]){
@@ -442,7 +444,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
             // get the clipping path of the scrap and convert it into
             // CoreGraphics coordinate system
             UIBezierPath* subshapePath = [[scrap clippingPath] copy];
-            [subshapePath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height)];
+            [subshapePath applyTransform:verticalFlip];
             
             //
             // this subshape path is based on the scrap's current scale, which may or
@@ -522,15 +524,35 @@ static dispatch_queue_t concurrentBackgroundQueue;
             
             MMVector* vector = [[MMVector vectorWithX:randX andY:randY] normal];
             
+            // now we need to add a stroke to the underlying page that
+            // will erase the area below the new scrap
+            CGPoint p1 = addedScrap.bounds.origin;
+            CGPoint p2 = addedScrap.bounds.origin;
+            p2.x += addedScrap.bounds.size.width;
+            CGPoint p3 = addedScrap.bounds.origin;
+            p3.y += addedScrap.bounds.size.height;
+            CGPoint p4 = addedScrap.bounds.origin;
+            p4.x += addedScrap.bounds.size.width;
+            p4.y += addedScrap.bounds.size.height;
+            
+            p1 = [drawableView convertPoint:p1 fromView:addedScrap];
+            p2 = [drawableView convertPoint:p2 fromView:addedScrap];
+            p3 = [drawableView convertPoint:p3 fromView:addedScrap];
+            p4 = [drawableView convertPoint:p4 fromView:addedScrap];
+            
+            p1 = CGPointApplyAffineTransform(p1, verticalFlip);
+            p2 = CGPointApplyAffineTransform(p2, verticalFlip);
+            p3 = CGPointApplyAffineTransform(p3, verticalFlip);
+            p4 = CGPointApplyAffineTransform(p4, verticalFlip);
+            
             [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                 CGPoint newC = [vector pointFromPoint:addedScrap.center distance:10];
                 addedScrap.center = newC;
                 addedScrap.rotation = addedScrap.rotation + randTurn;
             } completion:nil];
             
-            // now we need to add a stroke to the underlying page that
-            // will erase the area below the new scrap
-            [drawableView forceAddStrokeForFilledPath:scissorPath];
+
+            [drawableView forceAddStrokeForFilledPath:scissorPath andP1:p1 andP2:p2 andP3:p3 andP4:p4];
         }
         
         
