@@ -151,9 +151,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 
-
-
-
 -(void) addScrap:(MMScrapView*)scrap{
     @synchronized(scrapContainerView){
         [scrapContainerView addSubview:scrap];
@@ -552,7 +549,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
             } completion:nil];
             
 
-            [drawableView forceAddStrokeForFilledPath:scissorPath andP1:p1 andP2:p2 andP3:p3 andP4:p4];
+            [[NSThread mainThread] performBlock:^{
+                [drawableView forceAddStrokeForFilledPath:scissorPath andP1:p1 andP2:p2 andP3:p3 andP4:p4];
+            } afterDelay:.01];
         }
         
         
