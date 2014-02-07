@@ -419,12 +419,18 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [shapeBuilderView clear];
 }
 
+
 -(void) completeScissorsCut{
+    UIBezierPath* scissorPath = [shapeBuilderView completeAndGenerateShape];
+    [self completeScissorsCutWithPath:scissorPath];
+}
+
+
+-(void) completeScissorsCutWithPath:(UIBezierPath*)scissorPath{
     // track path information for debugging
     NSString* debugFullText = @"";
     
     @try {
-        UIBezierPath* scissorPath = [shapeBuilderView completeAndGenerateShape];
         // scale the scissors into the zoom of the page, in case the user is
         // pinching and zooming the page our scissor path will be in page coordinates
         // instead of screen coordinates

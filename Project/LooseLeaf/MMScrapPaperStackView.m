@@ -118,8 +118,11 @@ int skipAll = NO;
     numLines++;
     
     
-    CGFloat strokesPerPage = 300;
+    CGFloat strokesPerPage = 15;
     
+    if(numLines % (int)strokesPerPage == 12){
+        [[visibleStackHolder peekSubview] completeScissorsCutWithPath:[UIBezierPath bezierPathWithRect:CGRectMake(300, 300, 200, 200)]];
+    }
     if(numLines % (int)strokesPerPage == 0){
         [self addPageButtonTapped:nil];
         skipOnce = YES;

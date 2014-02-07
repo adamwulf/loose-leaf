@@ -37,4 +37,6 @@
 
 -(void) cancelScissorAtPoint:(CGPoint)point;
 
+-(void) completeScissorsCutWithPath:(UIBezierPath*)scissorPath;
+
 @end
