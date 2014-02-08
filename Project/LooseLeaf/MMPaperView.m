@@ -49,6 +49,10 @@
 //        UILabel* label = [[UILabel alloc] initWithFrame:self.bounds];
 //        label.text = uuid;
 //        [label sizeToFit];
+//        CGRect fr = label.frame;
+//        fr.origin.x += 100;
+//        fr.origin.y += 100;
+//        label.frame = fr;
 //        [self.contentView addSubview:label];
         //
         // end debug image

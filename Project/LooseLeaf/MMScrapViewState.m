@@ -288,9 +288,6 @@
                         }
                     });
                 }else{
-                    if([drawableViewState hasEditsToSave]){
-                        NSLog(@"how did we get here?");
-                    }
                     shouldKeepStateLoaded = NO;
                     if(!isLoadingState && drawableViewState){
                         drawableViewState = nil;

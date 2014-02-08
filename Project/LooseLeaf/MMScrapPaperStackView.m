@@ -32,11 +32,11 @@
 {
     if ((self = [super initWithFrame:frame])) {
         
-        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
-                                                                  target:self
-                                                                selector:@selector(timerDidFire:)
-                                                                userInfo:nil
-                                                                 repeats:YES];
+//        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
+//                                                                  target:self
+//                                                                selector:@selector(timerDidFire:)
+//                                                                userInfo:nil
+//                                                                 repeats:YES];
 
         
 //        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5
@@ -178,6 +178,7 @@ int skipAll = NO;
 #pragma mark - Add Page
 
 -(void) addPageButtonTapped:(UIButton*)_button{
+    NSLog(@"Add Button Tapped");
     [self forceScrapToScrapContainerDuringGesture];
     [super addPageButtonTapped:_button];
 }

@@ -71,7 +71,6 @@
 
 
 -(id) initWithScrapViewState:(MMScrapViewState*)_scrapState{
-    
     scrapState = _scrapState;
     scrapState.delegate = self;
     
