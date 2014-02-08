@@ -78,7 +78,6 @@
 }
 
 
-
 -(CGPoint)locationInView:(UIView *)view{
     if([validTouches count] >= kMinimumNumberOfTouches){
         CGPoint loc1 = [[validTouches firstObject] locationInView:self.view];

@@ -354,6 +354,11 @@ static int count = 0;
         }else if(gesture.state == UIGestureRecognizerStateBegan ||
                gesture.state == UIGestureRecognizerStateChanged){
             [self.delegate didMoveRuler:gesture];
+            if([gesture.touches count] < 2){
+                [self.delegate didStopRuler:gesture];
+            }else{
+                [self.delegate didMoveRuler:gesture];
+            }
         }
     }
 }
