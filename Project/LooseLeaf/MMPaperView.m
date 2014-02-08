@@ -308,7 +308,7 @@
         lastNumberOfTouchesForPanGesture = 1;
         isBeingPannedAndZoomed = NO;
         return;
-    }else if(lastNumberOfTouchesForPanGesture == 1 ||
+    }else if(lastNumberOfTouchesForPanGesture < 2 ||
              panGesture.state == UIGestureRecognizerStateBegan){
         isBeingPannedAndZoomed = YES;
         //
@@ -386,6 +386,14 @@
         }
     }
     
+    if(CGPointEqualToPoint(normalizedLocationOfScale, CGPointZero)){
+        // somehow the pan gesture doesn't always get initialized above as it
+        // should when it changes from < 2 touches to 2 touches. i'm having a very
+        // hard time reproing after the last fix (chaging to < 2 from == 1 above)
+        // but occassionally the page still jumps when panning while drawing.
+        @throw [NSException exceptionWithName:@"Pan Exception" reason:@"location of pan gesture is unknown" userInfo:nil];
+    }
+    
     //
     // now, with our pan offset and new scale, we need to calculate the new frame location.
     //
@@ -407,8 +415,9 @@
     //
     // now calculate our final frame given our pan and zoom
     CGRect fr = self.frame;
-    fr.origin = CGPointMake(lastLocationInSuper.x - locationOfPinchAfterScale.x,
-                            lastLocationInSuper.y - locationOfPinchAfterScale.y);
+    CGPoint newOriginOfView = CGPointMake(lastLocationInSuper.x - locationOfPinchAfterScale.x,
+                                 lastLocationInSuper.y - locationOfPinchAfterScale.y);
+    fr.origin = newOriginOfView;
     fr.size = newSizeOfView;
     
     //

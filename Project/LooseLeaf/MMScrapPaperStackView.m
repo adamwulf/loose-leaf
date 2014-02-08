@@ -222,15 +222,13 @@ int skipAll = NO;
 }
 
 -(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
-    [panAndPinchScrapGesture ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
-    [panAndPinchScrapGesture2 ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
+    [self ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
     [super isBezelingInLeftWithGesture:bezelGesture];
     [self forceScrapToScrapContainerDuringGesture];
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
-    [panAndPinchScrapGesture ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
-    [panAndPinchScrapGesture2 ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
+    [self ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
     [super isBezelingInRightWithGesture:bezelGesture];
     [self forceScrapToScrapContainerDuringGesture];
 }
@@ -542,6 +540,7 @@ int skipAll = NO;
 }
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
+    [super ownershipOfTouches:touches isGesture:gesture];
     if([gesture isKindOfClass:[MMPanAndPinchScrapGestureRecognizer class]]){
         // only notify of our own gestures
         [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];

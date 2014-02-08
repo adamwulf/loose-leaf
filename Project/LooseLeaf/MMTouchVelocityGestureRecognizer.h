@@ -30,6 +30,8 @@ struct DurationCacheObject{
     CGFloat deltaAngle;
     // most recent distance travelled
     CGFloat distanceFromPrevious;
+    // total distance travelled
+    CGFloat totalDistance;
 };
 
 @interface MMTouchVelocityGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>

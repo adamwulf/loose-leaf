@@ -123,9 +123,6 @@
         [self addSubview:redoButton];
        
         
-        
-        
-        
         //
         // accelerometer for rotating buttons
         // ================================================================================
@@ -195,6 +192,10 @@
         
         
         [self addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstace]];
+        
+        [[MMDrawingTouchGestureRecognizer sharedInstace] setTouchDelegate:self];
+        [self addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstace]];
+
     }
     return self;
 }
@@ -515,6 +516,16 @@
 -(void) didStopRuler:(MMRulerToolGestureRecognizer *)gesture{
     [rulerView liftRuler];
 }
+
+-(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
+    [super ownershipOfTouches:touches isGesture:gesture];
+    if([gesture isKindOfClass:[MMDrawingTouchGestureRecognizer class]]){
+        // only notify of our own gestures
+        [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
+    }
+    [[MMDrawingTouchGestureRecognizer sharedInstace] ownershipOfTouches:touches isGesture:gesture];
+}
+
 
 #pragma mark - Page Loading and Unloading
 

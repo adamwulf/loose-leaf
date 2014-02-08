@@ -119,6 +119,7 @@
 		66CE120317D3AD7C00882275 /* MMBounceButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE120217D3AD7C00882275 /* MMBounceButton.m */; };
 		66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* MMListAddPageButton.m */; };
 		66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D33F4B15A6408A0044C809 /* MMShadowedView.m */; };
+		66D7496318A6DB010015650E /* MMDrawingTouchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D7496218A6DB010015650E /* MMDrawingTouchGestureRecognizer.m */; };
 		66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
 		66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8C1581BCEF00B4918C /* Foundation.framework */; };
 		66DCFB8F1581BCEF00B4918C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */; };
@@ -372,6 +373,8 @@
 		66D0905815F71941004D2CAF /* MMListAddPageButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButtonDelegate.h; sourceTree = "<group>"; };
 		66D33F4A15A6408A0044C809 /* MMShadowedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShadowedView.h; sourceTree = "<group>"; };
 		66D33F4B15A6408A0044C809 /* MMShadowedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShadowedView.m; sourceTree = "<group>"; };
+		66D7496118A6DB010015650E /* MMDrawingTouchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDrawingTouchGestureRecognizer.h; sourceTree = "<group>"; };
+		66D7496218A6DB010015650E /* MMDrawingTouchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDrawingTouchGestureRecognizer.m; sourceTree = "<group>"; };
 		66DCFB861581BCEF00B4918C /* LooseLeaf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LooseLeaf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66DCFB8A1581BCEF00B4918C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		66DCFB8C1581BCEF00B4918C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -917,6 +920,15 @@
 			name = "Scrap Bubble";
 			sourceTree = "<group>";
 		};
+		66D7496018A6DA670015650E /* Drawing */ = {
+			isa = PBXGroup;
+			children = (
+				66D7496118A6DB010015650E /* MMDrawingTouchGestureRecognizer.h */,
+				66D7496218A6DB010015650E /* MMDrawingTouchGestureRecognizer.m */,
+			);
+			name = Drawing;
+			sourceTree = "<group>";
+		};
 		66DCFB7B1581BCED00B4918C = {
 			isa = PBXGroup;
 			children = (
@@ -1004,6 +1016,7 @@
 		66DCFBDC1582BF1600B4918C /* Gestures */ = {
 			isa = PBXGroup;
 			children = (
+				66D7496018A6DA670015650E /* Drawing */,
 				6640E6D617E390A800EB3F7D /* Velocity */,
 				66EDA79317CA87D20067BA63 /* Scraps */,
 				66510831178DF9B900A7A7DD /* Ruler Tool */,
@@ -1244,6 +1257,7 @@
 				66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */,
 				66B21A7A175E595B0049F1AF /* MMBlockOperation.m in Sources */,
 				6655E926176291C800E4F36A /* MMScissorButton.m in Sources */,
+				66D7496318A6DB010015650E /* MMDrawingTouchGestureRecognizer.m in Sources */,
 				66510838178DFEE700A7A7DD /* MMRulerView.m in Sources */,
 				66510835178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m in Sources */,
 				66CE120017D2772400882275 /* MMScrapBorderView.m in Sources */,
