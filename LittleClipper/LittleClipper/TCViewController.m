@@ -184,6 +184,7 @@
 {
     SYShape* possibleShape = [shapeController getFigurePaintedWithTolerance:[toleranceSlider value]*0.0001 andContinuity:[continuitySlider value] forceOpen:(shapeVsScissorChooser.selectedSegmentIndex != 0)];
     if(possibleShape){
+        @throw [NSException exceptionWithName:@"Test Target Exception" reason:@"testing crashlytics" userInfo:nil];
         [filledShapeView clear];
         
         if([self shapeIsSelfIntersecting:possibleShape]){
@@ -229,9 +230,7 @@
                     UIBezierPath* shapePath = shape.bezierPath;
                     UIBezierPath* scissorPath = possibleShape.bezierPath;
                     
-                    
-                    NSArray* subShapePaths = [shapePath uniqueSubshapesCreatedFromSlicingWithUnclosedPath:scissorPath];
-                    NSArray* foundShapes = [subShapePaths firstObject];
+                    NSArray* foundShapes = [shapePath uniqueShapesCreatedFromSlicingWithUnclosedPath:scissorPath];
                     
 //                    NSLog(@"Cutting Shape: %@", shapePath);
 //                    NSLog(@"With Scissor: %@", scissorPath);
