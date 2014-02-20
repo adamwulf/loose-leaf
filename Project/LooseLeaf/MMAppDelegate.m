@@ -9,6 +9,7 @@
 #import "MMAppDelegate.h"
 
 #import "MMLooseLeafViewController.h"
+#import <Crashlytics/Crashlytics.h>
 
 @implementation MMAppDelegate
 
@@ -17,6 +18,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.viewController = [[MMLooseLeafViewController alloc] init];
