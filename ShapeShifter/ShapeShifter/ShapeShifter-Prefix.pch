@@ -10,6 +10,10 @@
 #warning "This project uses features only available in iOS SDK 3.0 and later."
 #endif
 
+#ifdef __cplusplus
+#import <opencv2/opencv.hpp>
+#endif
+
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>

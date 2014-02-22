@@ -20,8 +20,12 @@
 		66AF169318B812D500A92F7F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66AF169118B812D500A92F7F /* InfoPlist.strings */; };
 		66AF169518B812D500A92F7F /* ShapeShifterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AF169418B812D500A92F7F /* ShapeShifterTests.m */; };
 		66AF16A018B8143400A92F7F /* MMShapeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AF169F18B8143400A92F7F /* MMShapeViewController.m */; };
-		66AF16A418B8154800A92F7F /* MMStretchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AF16A318B8154800A92F7F /* MMStretchGestureRecognizer.m */; };
-		66AF16A718B8167700A92F7F /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AF16A618B8167700A92F7F /* Constants.m */; };
+		66AF16A418B8154800A92F7F /* MMStretchGestureRecognizer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 66AF16A318B8154800A92F7F /* MMStretchGestureRecognizer.mm */; };
+		66CD1BD818B820060091489C /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66CD1BD718B820060091489C /* opencv2.framework */; };
+		66CD1BDB18B822E10091489C /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CD1BDA18B822E10091489C /* Constants.m */; };
+		66CD1BDD18B823680091489C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66CD1BDC18B823680091489C /* AVFoundation.framework */; };
+		66CD1BDF18B823760091489C /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66CD1BDE18B823760091489C /* AssetsLibrary.framework */; };
+		66CD1BE518B823D20091489C /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66CD1BE418B823D20091489C /* CoreMedia.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,9 +58,15 @@
 		66AF169E18B8143400A92F7F /* MMShapeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShapeViewController.h; sourceTree = "<group>"; };
 		66AF169F18B8143400A92F7F /* MMShapeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShapeViewController.m; sourceTree = "<group>"; };
 		66AF16A218B8154800A92F7F /* MMStretchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStretchGestureRecognizer.h; sourceTree = "<group>"; };
-		66AF16A318B8154800A92F7F /* MMStretchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStretchGestureRecognizer.m; sourceTree = "<group>"; };
-		66AF16A518B8167700A92F7F /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
-		66AF16A618B8167700A92F7F /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		66AF16A318B8154800A92F7F /* MMStretchGestureRecognizer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MMStretchGestureRecognizer.mm; sourceTree = "<group>"; };
+		66CD1BD718B820060091489C /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = ../../../../../Downloads/opencv2.framework; sourceTree = "<group>"; };
+		66CD1BD918B822E10091489C /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		66CD1BDA18B822E10091489C /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		66CD1BDC18B823680091489C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		66CD1BDE18B823760091489C /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		66CD1BE018B8239F0091489C /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		66CD1BE218B823B10091489C /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		66CD1BE418B823D20091489C /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +74,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66CD1BE518B823D20091489C /* CoreMedia.framework in Frameworks */,
+				66CD1BDF18B823760091489C /* AssetsLibrary.framework in Frameworks */,
+				66CD1BDD18B823680091489C /* AVFoundation.framework in Frameworks */,
+				66CD1BD818B820060091489C /* opencv2.framework in Frameworks */,
 				66AF167218B812D500A92F7F /* CoreGraphics.framework in Frameworks */,
 				66AF167418B812D500A92F7F /* UIKit.framework in Frameworks */,
 				66AF167018B812D500A92F7F /* Foundation.framework in Frameworks */,
@@ -86,6 +100,8 @@
 		66AF166318B812D500A92F7F = {
 			isa = PBXGroup;
 			children = (
+				66CD1BD918B822E10091489C /* Constants.h */,
+				66CD1BDA18B822E10091489C /* Constants.m */,
 				66AF167518B812D500A92F7F /* ShapeShifter */,
 				66AF168E18B812D500A92F7F /* ShapeShifterTests */,
 				66AF166E18B812D500A92F7F /* Frameworks */,
@@ -105,6 +121,12 @@
 		66AF166E18B812D500A92F7F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				66CD1BE418B823D20091489C /* CoreMedia.framework */,
+				66CD1BE218B823B10091489C /* CoreVideo.framework */,
+				66CD1BE018B8239F0091489C /* ImageIO.framework */,
+				66CD1BDE18B823760091489C /* AssetsLibrary.framework */,
+				66CD1BDC18B823680091489C /* AVFoundation.framework */,
+				66CD1BD718B820060091489C /* opencv2.framework */,
 				66AF166F18B812D500A92F7F /* Foundation.framework */,
 				66AF167118B812D500A92F7F /* CoreGraphics.framework */,
 				66AF167318B812D500A92F7F /* UIKit.framework */,
@@ -116,8 +138,6 @@
 		66AF167518B812D500A92F7F /* ShapeShifter */ = {
 			isa = PBXGroup;
 			children = (
-				66AF16A518B8167700A92F7F /* Constants.h */,
-				66AF16A618B8167700A92F7F /* Constants.m */,
 				66AF16A118B8153600A92F7F /* Gestures */,
 				66AF169E18B8143400A92F7F /* MMShapeViewController.h */,
 				66AF169F18B8143400A92F7F /* MMShapeViewController.m */,
@@ -162,7 +182,7 @@
 			isa = PBXGroup;
 			children = (
 				66AF16A218B8154800A92F7F /* MMStretchGestureRecognizer.h */,
-				66AF16A318B8154800A92F7F /* MMStretchGestureRecognizer.m */,
+				66AF16A318B8154800A92F7F /* MMStretchGestureRecognizer.mm */,
 			);
 			name = Gestures;
 			sourceTree = "<group>";
@@ -263,9 +283,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66AF16A718B8167700A92F7F /* Constants.m in Sources */,
+				66CD1BDB18B822E10091489C /* Constants.m in Sources */,
 				66AF16A018B8143400A92F7F /* MMShapeViewController.m in Sources */,
-				66AF16A418B8154800A92F7F /* MMStretchGestureRecognizer.m in Sources */,
+				66AF16A418B8154800A92F7F /* MMStretchGestureRecognizer.mm in Sources */,
 				66AF168018B812D500A92F7F /* MMAppDelegate.m in Sources */,
 				66AF167C18B812D500A92F7F /* main.m in Sources */,
 			);
@@ -388,9 +408,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/adam/Downloads,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ShapeShifter/ShapeShifter-Prefix.pch";
 				INFOPLIST_FILE = "ShapeShifter/ShapeShifter-Info.plist";
+				OTHER_LDFLAGS = (
+					"-ObjC++",
+					"-lstdc++",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -401,9 +429,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/adam/Downloads,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ShapeShifter/ShapeShifter-Prefix.pch";
 				INFOPLIST_FILE = "ShapeShifter/ShapeShifter-Info.plist";
+				OTHER_LDFLAGS = (
+					"-ObjC++",
+					"-lstdc++",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -470,6 +506,7 @@
 				66AF169A18B812D500A92F7F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		66AF169B18B812D500A92F7F /* Build configuration list for PBXNativeTarget "ShapeShifterTests" */ = {
 			isa = XCConfigurationList;
@@ -478,6 +515,7 @@
 				66AF169D18B812D500A92F7F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
