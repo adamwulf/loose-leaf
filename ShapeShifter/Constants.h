@@ -13,10 +13,18 @@
 extern "C" {
 #endif
 
-extern CGFloat SSDistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
+    extern CGFloat SSDistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
 
-extern CGFloat SSSquaredDistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
+    extern CGFloat SSSquaredDistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
 
+    typedef struct Quadrilateral{
+        CGPoint upperLeft;
+        CGPoint upperRight;
+        CGPoint lowerRight;
+        CGPoint lowerLeft;
+    } Quadrilateral;
+
+    
 #ifdef __cplusplus
 }  // extern "C"
 #endif

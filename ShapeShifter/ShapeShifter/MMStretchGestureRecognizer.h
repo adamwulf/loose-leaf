@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
+#import "Constants.h"
+
 
 @interface MMStretchGestureRecognizer : UIGestureRecognizer{
     // the collection of valid touches for this gesture
@@ -15,5 +17,7 @@
     NSMutableOrderedSet* possibleTouches;
     NSMutableOrderedSet* validTouches;
 }
+
++ (CATransform3D)transformQuadrilateral:(Quadrilateral)origin toQuadrilateral:(Quadrilateral)destination;
 
 @end

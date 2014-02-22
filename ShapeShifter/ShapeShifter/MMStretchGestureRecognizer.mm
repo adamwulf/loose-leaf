@@ -9,13 +9,6 @@
 #import "MMStretchGestureRecognizer.h"
 #import "Constants.h"
 
-typedef struct Quadrilateral{
-    CGPoint upperLeft;
-    CGPoint upperRight;
-    CGPoint lowerRight;
-    CGPoint lowerLeft;
-} Quadrilateral;
-
 
 
 @implementation MMStretchGestureRecognizer
@@ -133,7 +126,7 @@ typedef struct Quadrilateral{
 
 #pragma mark - OpenCV Transform
 
-
+// http://stackoverflow.com/questions/9470493/transforming-a-rectangle-image-into-a-quadrilateral-using-a-catransform3d
 
 + (CATransform3D)transformQuadrilateral:(Quadrilateral)origin toQuadrilateral:(Quadrilateral)destination {
     

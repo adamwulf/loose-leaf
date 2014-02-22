@@ -26,6 +26,7 @@
 		66CD1BDF18B823760091489C /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66CD1BDE18B823760091489C /* AssetsLibrary.framework */; };
 		66CD1BE518B823D20091489C /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66CD1BE418B823D20091489C /* CoreMedia.framework */; };
 		66CD1BE818B8247F0091489C /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66CD1BE618B824710091489C /* opencv2.framework */; };
+		66CD1BEA18B85FB00091489C /* space.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 66CD1BE918B85FB00091489C /* space.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		66CD1BE218B823B10091489C /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		66CD1BE418B823D20091489C /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		66CD1BE618B824710091489C /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		66CD1BE918B85FB00091489C /* space.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = space.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +154,7 @@
 		66AF167618B812D500A92F7F /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				66CD1BE918B85FB00091489C /* space.jpg */,
 				66AF167718B812D500A92F7F /* ShapeShifter-Info.plist */,
 				66AF167818B812D500A92F7F /* InfoPlist.strings */,
 				66AF167B18B812D500A92F7F /* main.m */,
@@ -265,6 +268,7 @@
 			files = (
 				66AF167A18B812D500A92F7F /* InfoPlist.strings in Resources */,
 				66AF168218B812D500A92F7F /* Images.xcassets in Resources */,
+				66CD1BEA18B85FB00091489C /* space.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -416,10 +420,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ShapeShifter/ShapeShifter-Prefix.pch";
 				INFOPLIST_FILE = "ShapeShifter/ShapeShifter-Info.plist";
-				OTHER_LDFLAGS = (
-					"-ObjC++",
-					"-lstdc++",
-				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -438,10 +439,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ShapeShifter/ShapeShifter-Prefix.pch";
 				INFOPLIST_FILE = "ShapeShifter/ShapeShifter-Info.plist";
-				OTHER_LDFLAGS = (
-					"-ObjC++",
-					"-lstdc++",
-				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
