@@ -19,6 +19,9 @@
     UIView* bl;
     
     CGPoint adjust;
+    
+    
+    Quadrilateral firstQ;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -57,7 +60,8 @@
     bl.backgroundColor = [UIColor redColor];
 
     
-    [draggable addGestureRecognizer:[[MMStretchGestureRecognizer alloc] initWithTarget:self action:@selector(didStretch:)]];
+    [self.view addGestureRecognizer:[[MMStretchGestureRecognizer alloc] initWithTarget:self action:@selector(didStretch:)]];
+    self.view.userInteractionEnabled = YES;
     
     [self.view addSubview:slider];
     [self.view addSubview:draggable];
@@ -68,15 +72,15 @@
     [self.view addSubview:bl];
     
     adjust = draggable.frame.origin;
-    
+
     [self setAnchorPoint:CGPointMake(0, 0) forView:draggable];
     [self didChangeTo:slider];
 }
 
 -(void) send:(UIView*)v to:(CGPoint)point{
     CGRect fr = v.frame;
-    fr.origin = CGPointMake(adjust.x + point.x - v.bounds.size.width/2,
-                            adjust.y + point.y - v.bounds.size.height/2);
+    fr.origin = CGPointMake(point.x - v.bounds.size.width/2,
+                            point.y - v.bounds.size.height/2);
     v.frame = fr;
 }
 
@@ -95,16 +99,7 @@
     q2.lowerRight = CGPointMake(draggable.bounds.size.width * (1 + .3*val), draggable.bounds.size.height * (1 + .5*val));
     q2.lowerLeft = CGPointMake(-10*val, draggable.bounds.size.height * (1 + .3*val));
     
-    [self send:ul to:q2.upperLeft];
-    [self send:ur to:q2.upperRight];
-    [self send:br to:q2.lowerRight];
-    [self send:bl to:q2.lowerLeft];
-    
-    
     CATransform3D skewTransform = [MMStretchGestureRecognizer transformQuadrilateral:q1 toQuadrilateral:q2];
-    
-    
-    [self setAnchorPoint:CGPointMake(0, 0) forView:draggable];
     draggable.layer.transform = skewTransform;
 }
 
@@ -144,19 +139,67 @@
 -(void) didStretch:(MMStretchGestureRecognizer*)gesture{
     if(gesture.state == UIGestureRecognizerStateBegan){
         NSLog(@"began");
+        firstQ = [gesture getQuad];
     }else if(gesture.state == UIGestureRecognizerStateCancelled){
         NSLog(@"cancelled");
+        draggable.layer.transform = CATransform3DIdentity;
     }else if(gesture.state == UIGestureRecognizerStateChanged){
         NSLog(@"changed");
+        
+        
+        
+        Quadrilateral secondQ = [gesture getQuad];
+        
+        
+        NSLog(@"first: (%f,%f) (%f,%f) (%f,%f) (%f,%f)",
+              firstQ.upperLeft.x,firstQ.upperLeft.y,
+              firstQ.upperRight.x,firstQ.upperRight.y,
+              firstQ.lowerRight.x,firstQ.lowerRight.y,
+              firstQ.lowerLeft.x,firstQ.lowerLeft.y);
+        NSLog(@"second: (%f,%f) (%f,%f) (%f,%f) (%f,%f)",
+              secondQ.upperLeft.x,secondQ.upperLeft.y,
+              secondQ.upperRight.x,secondQ.upperRight.y,
+              secondQ.lowerRight.x,secondQ.lowerRight.y,
+              secondQ.lowerLeft.x,secondQ.lowerLeft.y);
+        
+        [self send:ul to:firstQ.upperLeft];
+        [self send:ur to:firstQ.upperRight];
+        [self send:br to:firstQ.lowerRight];
+        [self send:bl to:firstQ.lowerLeft];
+        
+
+        Quadrilateral q1 = [self adjustedQuad:firstQ by:adjust];
+        Quadrilateral q2 = [self adjustedQuad:secondQ by:adjust];
+        
+        CATransform3D skewTransform = [MMStretchGestureRecognizer transformQuadrilateral:q1 toQuadrilateral:q2];
+        draggable.layer.transform = skewTransform;
+
+        
+        
     }else if(gesture.state == UIGestureRecognizerStateEnded){
         NSLog(@"ended");
+        draggable.layer.transform = CATransform3DIdentity;
     }else if(gesture.state == UIGestureRecognizerStateFailed){
         NSLog(@"failed");
+        draggable.layer.transform = CATransform3DIdentity;
     }else if(gesture.state == UIGestureRecognizerStatePossible){
         NSLog(@"possible");
-    }else if(gesture.state == UIGestureRecognizerStateRecognized){
-        NSLog(@"recognzied");
+        draggable.layer.transform = CATransform3DIdentity;
     }
+}
+
+-(Quadrilateral) adjustedQuad:(Quadrilateral)a by:(CGPoint)p{
+    Quadrilateral output = a;
+    output.upperLeft.x -= p.x;
+    output.upperLeft.y -= p.y;
+    output.upperRight.x -= p.x;
+    output.upperRight.y -= p.y;
+    output.lowerRight.x -= p.x;
+    output.lowerRight.y -= p.y;
+    output.lowerLeft.x -= p.x;
+    output.lowerLeft.y -= p.y;
+    
+    return output;
 }
 
 @end

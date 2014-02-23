@@ -20,4 +20,6 @@
 
 + (CATransform3D)transformQuadrilateral:(Quadrilateral)origin toQuadrilateral:(Quadrilateral)destination;
 
+-(Quadrilateral) getQuad;
+
 @end

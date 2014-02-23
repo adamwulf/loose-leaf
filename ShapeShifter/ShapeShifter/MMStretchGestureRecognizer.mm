@@ -8,7 +8,7 @@
 
 #import "MMStretchGestureRecognizer.h"
 #import "Constants.h"
-
+#import "NSMutableSet+Extras.h"
 
 
 @implementation MMStretchGestureRecognizer
@@ -59,6 +59,23 @@
     return [validTouches array];
 }
 
+-(Quadrilateral) getQuad{
+    __block Quadrilateral output;
+    [[self touches] enumerateObjectsUsingBlock:^(UITouch* touch, NSUInteger idx, BOOL* stop){
+        CGPoint location = [touch locationInView:self.view];
+        if(idx == 0){
+            output.upperLeft = location;
+        }else if(idx == 1){
+            output.upperRight = location;
+        }else if(idx == 2){
+            output.lowerRight = location;
+        }else if(idx == 3){
+            output.lowerLeft = location;
+        }
+    }];
+    return output;
+}
+
 
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
     return NO;
@@ -75,23 +92,10 @@
     [possibleTouches removeAllObjects];
 }
 
-/**
- * helper to calculate distance between input touches
- * to help us track initial vs moving scale
- */
--(CGFloat) distanceBetweenTouches:(NSOrderedSet*) touches{
-    if([touches count] >= 2){
-        UITouch* touch1 = [touches objectAtIndex:0];
-        UITouch* touch2 = [touches objectAtIndex:1];
-        CGPoint initialPoint1 = [touch1 locationInView:self.view.superview];
-        CGPoint initialPoint2 = [touch2 locationInView:self.view.superview];
-        return SSDistanceBetweenTwoPoints(initialPoint1, initialPoint2);
-    }
-    return 0;
-}
-
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    [possibleTouches addObject:touches];
+    [touches enumerateObjectsUsingBlock:^(id touch, BOOL* stop){
+        [possibleTouches addObject:touch];
+    }];
     [self checkStatus];
 }
 
@@ -119,7 +123,56 @@
 
 
 -(void) checkStatus{
-    
+    if([possibleTouches count] == 4){
+        NSLog(@"begin!");
+        [validTouches addObjectsInOrderedSet:possibleTouches];
+        [possibleTouches removeAllObjects];
+        [self sortValidTouches];
+    }else if([validTouches count] < 4){
+        if(self.state != UIGestureRecognizerStatePossible){
+            self.state = UIGestureRecognizerStateEnded;
+        }
+    }else{
+        NSLog(@"changing from: %d", self.state);
+        if(self.state == UIGestureRecognizerStatePossible){
+            self.state = UIGestureRecognizerStateBegan;
+        }else{
+            self.state = UIGestureRecognizerStateChanged;
+        }
+    }
+}
+
+-(void) sortValidTouches{
+    __block CGPoint center = CGPointZero;
+    [validTouches enumerateObjectsUsingBlock:^(UITouch* touch, NSUInteger idx, BOOL *stop){
+        CGPoint location = [touch locationInView:self.view];
+        center.x += location.x / [validTouches count];
+        center.y += location.y / [validTouches count];
+    }];
+    [validTouches sortedArrayUsingComparator:^NSComparisonResult(UITouch* obj1, UITouch* obj2){
+        CGPoint a = [obj1 locationInView:self.view];
+        CGPoint b = [obj2 locationInView:self.view];
+        if (a.x-center.x >= 0 && b.x-center.x < 0)
+            return NSOrderedAscending;
+        if (a.x-center.x == 0 && b.x-center.x == 0) {
+            if (a.y-center.y >= 0 || b.y-center.y >= 0)
+                return a.y > b.y ? NSOrderedAscending : NSOrderedDescending;
+            return b.y > a.y ? NSOrderedAscending : NSOrderedDescending;
+        }
+        
+        // compute the cross product of vectors (center -> a) x (center -> b)
+        int det = (a.x-center.x) * (b.y-center.y) - (b.x - center.x) * (a.y - center.y);
+        if (det < 0)
+            return NSOrderedAscending;
+        if (det > 0)
+            return NSOrderedDescending;
+        
+        // points a and b are on the same line from the center
+        // check which point is closer to the center
+        int d1 = (a.x-center.x) * (a.x-center.x) + (a.y-center.y) * (a.y-center.y);
+        int d2 = (b.x-center.x) * (b.x-center.x) + (b.y-center.y) * (b.y-center.y);
+        return d1 > d2 ? NSOrderedAscending : NSOrderedDescending;
+    }];
 }
 
 
