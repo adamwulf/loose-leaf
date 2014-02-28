@@ -22,7 +22,15 @@
     
     
     Quadrilateral firstQ;
+    
+    UILabel* convexLabel;
 }
+
+const int INDETERMINANT = 0;
+const int CONCAVE = -1;
+const int CONVEX = 1;
+const int COLINEAR = 0;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -37,6 +45,10 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    
+    
+    convexLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 700, 200, 40)];
+    [self.view addSubview:convexLabel];
     
     UISlider* slider = [[UISlider alloc] initWithFrame:CGRectMake(50, 50, 300, 40)];
     [slider addTarget:self action:@selector(didChangeTo:) forControlEvents:UIControlEventValueChanged];
@@ -75,6 +87,18 @@
 
     [self setAnchorPoint:CGPointMake(0, 0) forView:draggable];
     [self didChangeTo:slider];
+
+
+
+    CGPoint points[4];
+    points[0] = CGPointMake(0, 0);
+    points[1] = CGPointMake(10, 0);
+    points[2] = CGPointMake(20, 0);
+    points[3] = CGPointMake(10, 10);
+
+    int convexTest = Convex(points);
+    
+    NSLog(@"test result: %d", convexTest);
 }
 
 -(void) send:(UIView*)v to:(CGPoint)point{
@@ -101,6 +125,25 @@
     
     CATransform3D skewTransform = [MMStretchGestureRecognizer transformQuadrilateral:q1 toQuadrilateral:q2];
     draggable.layer.transform = skewTransform;
+    
+    
+    NSString* text = @"co-linear";
+    CGPoint points[4];
+    points[0] = q2.upperLeft;
+    points[1] = q2.upperRight;
+    points[2] = q2.lowerRight;
+    points[3] = q2.lowerLeft;
+    
+    int convexTest = Convex(points);
+    if(convexTest == CONVEX){
+        text = @"convex";
+    }else if(convexTest == CONCAVE){
+        text = @"concave";
+    }else{
+        text = @"co-linear";
+    }
+    
+    convexLabel.text = text;
 }
 
 /**
@@ -202,4 +245,45 @@
     return output;
 }
 
+
+
+
+
+/*
+ Return whether a polygon in 2D is concave or convex
+ return 0 for incomputables eg: colinear points
+ CONVEX == 1
+ CONCAVE == -1
+ It is assumed that the polygon is simple
+ (does not intersect itself or have holes)
+ */
+
+int Convex(CGPoint p[4])
+{
+    int len = 4;
+    int i,j,k;
+    int flag = 0;
+    double z;
+    
+    for (i=0;i<len;i++) {
+        j = (i + 1) % len;
+        k = (i + 2) % len;
+        z  = (p[j].x - p[i].x) * (p[k].y - p[j].y);
+        z -= (p[j].y - p[i].y) * (p[k].x - p[j].x);
+        if (z == 0){
+            return(COLINEAR);
+        }else if (z < 0){
+            flag |= 1;
+        }else if (z > 0){
+            flag |= 2;
+        }
+        if (flag == 3){
+            return(CONCAVE);
+        }
+    }
+    if (flag != 0)
+        return(CONVEX);
+    else
+        return(0);
+}
 @end
