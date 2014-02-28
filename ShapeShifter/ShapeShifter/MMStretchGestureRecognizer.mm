@@ -149,16 +149,9 @@
         center.x += location.x / [validTouches count];
         center.y += location.y / [validTouches count];
     }];
-    [validTouches sortedArrayUsingComparator:^NSComparisonResult(UITouch* obj1, UITouch* obj2){
+    [validTouches sortUsingComparator:^NSComparisonResult(UITouch* obj1, UITouch* obj2){
         CGPoint a = [obj1 locationInView:self.view];
         CGPoint b = [obj2 locationInView:self.view];
-        if (a.x-center.x >= 0 && b.x-center.x < 0)
-            return NSOrderedAscending;
-        if (a.x-center.x == 0 && b.x-center.x == 0) {
-            if (a.y-center.y >= 0 || b.y-center.y >= 0)
-                return a.y > b.y ? NSOrderedAscending : NSOrderedDescending;
-            return b.y > a.y ? NSOrderedAscending : NSOrderedDescending;
-        }
         
         // compute the cross product of vectors (center -> a) x (center -> b)
         int det = (a.x-center.x) * (b.y-center.y) - (b.x - center.x) * (a.y - center.y);
@@ -173,6 +166,8 @@
         int d2 = (b.x-center.x) * (b.x-center.x) + (b.y-center.y) * (b.y-center.y);
         return d1 > d2 ? NSOrderedAscending : NSOrderedDescending;
     }];
+    
+    NSLog(@"%@", validTouches);
 }
 
 

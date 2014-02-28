@@ -58,18 +58,18 @@ const int COLINEAR = 0;
     
     draggable = [[UIImageView alloc] initWithFrame:CGRectMake(100, 300, 300, 200)];
     draggable.contentMode = UIViewContentModeScaleAspectFill;
-    draggable.clipsToBounds = YES;
+//    draggable.clipsToBounds = YES;
     draggable.image = [UIImage imageNamed:@"space.jpg"];
 
     
     ul = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
     ul.backgroundColor = [UIColor redColor];
     ur = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
-    ur.backgroundColor = [UIColor redColor];
+    ur.backgroundColor = [UIColor blueColor];
     br = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
-    br.backgroundColor = [UIColor redColor];
+    br.backgroundColor = [UIColor purpleColor];
     bl = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
-    bl.backgroundColor = [UIColor redColor];
+    bl.backgroundColor = [UIColor greenColor];
 
     
     [self.view addGestureRecognizer:[[MMStretchGestureRecognizer alloc] initWithTarget:self action:@selector(didStretch:)]];
@@ -87,18 +87,8 @@ const int COLINEAR = 0;
 
     [self setAnchorPoint:CGPointMake(0, 0) forView:draggable];
     [self didChangeTo:slider];
-
-
-
-    CGPoint points[4];
-    points[0] = CGPointMake(0, 0);
-    points[1] = CGPointMake(10, 0);
-    points[2] = CGPointMake(20, 0);
-    points[3] = CGPointMake(10, 10);
-
-    int convexTest = Convex(points);
     
-    NSLog(@"test result: %d", convexTest);
+    draggable.layer.zPosition = 9000;
 }
 
 -(void) send:(UIView*)v to:(CGPoint)point{
@@ -122,11 +112,14 @@ const int COLINEAR = 0;
     q2.upperRight = CGPointMake(draggable.bounds.size.width * (1 - .2*val), 350*val);
     q2.lowerRight = CGPointMake(draggable.bounds.size.width * (1 + .3*val), draggable.bounds.size.height * (1 + .5*val));
     q2.lowerLeft = CGPointMake(-10*val, draggable.bounds.size.height * (1 + .3*val));
-    
+
     CATransform3D skewTransform = [MMStretchGestureRecognizer transformQuadrilateral:q1 toQuadrilateral:q2];
     draggable.layer.transform = skewTransform;
     
-    
+    [self updateLabelFor:q2];
+}
+
+-(void) updateLabelFor:(Quadrilateral)q2{
     NSString* text = @"co-linear";
     CGPoint points[4];
     points[0] = q2.upperLeft;
@@ -205,16 +198,20 @@ const int COLINEAR = 0;
               secondQ.lowerRight.x,secondQ.lowerRight.y,
               secondQ.lowerLeft.x,secondQ.lowerLeft.y);
         
-        [self send:ul to:firstQ.upperLeft];
-        [self send:ur to:firstQ.upperRight];
-        [self send:br to:firstQ.lowerRight];
-        [self send:bl to:firstQ.lowerLeft];
+        [self send:ul to:secondQ.upperLeft];
+        [self send:ur to:secondQ.upperRight];
+        [self send:br to:secondQ.lowerRight];
+        [self send:bl to:secondQ.lowerLeft];
         
+        [self updateLabelFor:secondQ];
 
         Quadrilateral q1 = [self adjustedQuad:firstQ by:adjust];
         Quadrilateral q2 = [self adjustedQuad:secondQ by:adjust];
         
         CATransform3D skewTransform = [MMStretchGestureRecognizer transformQuadrilateral:q1 toQuadrilateral:q2];
+
+        NSLog(@"transform %f", skewTransform.m34);
+        
         draggable.layer.transform = skewTransform;
 
         
