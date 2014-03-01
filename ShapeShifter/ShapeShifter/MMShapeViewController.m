@@ -54,12 +54,6 @@ const int COLINEAR = 0;
     convexLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 700, 100, 30)];
     convexLabel.backgroundColor = [UIColor whiteColor];
     
-    UISlider* slider = [[UISlider alloc] initWithFrame:CGRectMake(50, 50, 300, 40)];
-    [slider addTarget:self action:@selector(didChangeTo:) forControlEvents:UIControlEventValueChanged];
-    slider.minimumValue = 0;
-    slider.maximumValue = 1;
-    slider.value = 0;
-    
     draggable = [[UIImageView alloc] initWithFrame:CGRectMake(100, 300, 300, 200)];
     draggable.contentMode = UIViewContentModeScaleAspectFill;
 //    draggable.clipsToBounds = YES;
@@ -79,7 +73,6 @@ const int COLINEAR = 0;
     [self.view addGestureRecognizer:[[MMStretchGestureRecognizer2 alloc] initWithTarget:self action:@selector(didStretch:)]];
     self.view.userInteractionEnabled = YES;
     
-    [self.view addSubview:slider];
     [self.view addSubview:draggable];
     
     [self.view addSubview:ul];
@@ -90,7 +83,6 @@ const int COLINEAR = 0;
     adjust = draggable.frame.origin;
 
     [self setAnchorPoint:CGPointMake(0, 0) forView:draggable];
-    [self didChangeTo:slider];
     [self.view addSubview:debugView];
     [debugView addSubview:convexLabel];
 }
@@ -100,28 +92,6 @@ const int COLINEAR = 0;
     fr.origin = CGPointMake(point.x - v.bounds.size.width/2,
                             point.y - v.bounds.size.height/2);
     v.frame = fr;
-}
-
--(void) didChangeTo:(UISlider*)slider{
-    Quadrilateral q1, q2;
-    
-    CGFloat val = slider.value;
-    
-    q1.upperLeft = CGPointMake(0, 0);
-    q1.upperRight = CGPointMake(draggable.bounds.size.width, 0);
-    q1.lowerRight = CGPointMake(draggable.bounds.size.width, draggable.bounds.size.height);
-    q1.lowerLeft = CGPointMake(0, draggable.bounds.size.height);
-    
-    q2.upperLeft = CGPointMake(140*val,75*val);
-    q2.upperRight = CGPointMake(draggable.bounds.size.width * (1 - .2*val), 350*val);
-    q2.lowerRight = CGPointMake(draggable.bounds.size.width * (1 + .3*val), draggable.bounds.size.height * (1 + .5*val));
-    q2.lowerLeft = CGPointMake(-10*val, draggable.bounds.size.height * (1 + .3*val));
-
-    CATransform3D skewTransform = [MMStretchGestureRecognizer transformQuadrilateral:q1 toQuadrilateral:q2];
-    draggable.layer.transform = skewTransform;
-    
-    [self updateLabelFor:q2];
-    
 }
 
 -(void) updateLabelFor:(Quadrilateral)q2{
