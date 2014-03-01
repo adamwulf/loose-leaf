@@ -7,10 +7,13 @@
 //
 
 #import "MMShapeViewController.h"
+#import "MMDebugQuadrilateralView.h"
 #import "MMStretchGestureRecognizer.h"
+#import "MMStretchGestureRecognizer2.h"
 #import "Constants.h"
 
 @implementation MMShapeViewController{
+    MMDebugQuadrilateralView* debugView;
     UIImageView* draggable;
     
     UIView* ul;
@@ -46,9 +49,10 @@ const int COLINEAR = 0;
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
+    debugView = [[MMDebugQuadrilateralView alloc] initWithFrame:self.view.bounds];
     
-    convexLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 700, 200, 40)];
-    [self.view addSubview:convexLabel];
+    convexLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 700, 100, 30)];
+    convexLabel.backgroundColor = [UIColor whiteColor];
     
     UISlider* slider = [[UISlider alloc] initWithFrame:CGRectMake(50, 50, 300, 40)];
     [slider addTarget:self action:@selector(didChangeTo:) forControlEvents:UIControlEventValueChanged];
@@ -72,7 +76,7 @@ const int COLINEAR = 0;
     bl.backgroundColor = [UIColor greenColor];
 
     
-    [self.view addGestureRecognizer:[[MMStretchGestureRecognizer alloc] initWithTarget:self action:@selector(didStretch:)]];
+    [self.view addGestureRecognizer:[[MMStretchGestureRecognizer2 alloc] initWithTarget:self action:@selector(didStretch:)]];
     self.view.userInteractionEnabled = YES;
     
     [self.view addSubview:slider];
@@ -87,8 +91,8 @@ const int COLINEAR = 0;
 
     [self setAnchorPoint:CGPointMake(0, 0) forView:draggable];
     [self didChangeTo:slider];
-    
-    draggable.layer.zPosition = 9000;
+    [self.view addSubview:debugView];
+    [debugView addSubview:convexLabel];
 }
 
 -(void) send:(UIView*)v to:(CGPoint)point{
@@ -117,6 +121,7 @@ const int COLINEAR = 0;
     draggable.layer.transform = skewTransform;
     
     [self updateLabelFor:q2];
+    
 }
 
 -(void) updateLabelFor:(Quadrilateral)q2{
@@ -204,6 +209,7 @@ const int COLINEAR = 0;
         [self send:bl to:secondQ.lowerLeft];
         
         [self updateLabelFor:secondQ];
+        [debugView setQuadrilateral:secondQ];
 
         Quadrilateral q1 = [self adjustedQuad:firstQ by:adjust];
         Quadrilateral q2 = [self adjustedQuad:secondQ by:adjust];
