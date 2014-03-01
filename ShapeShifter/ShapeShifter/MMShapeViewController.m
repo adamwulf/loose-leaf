@@ -15,6 +15,8 @@
 @implementation MMShapeViewController{
     MMDebugQuadrilateralView* debugView;
     UIImageView* draggable;
+    MMStretchGestureRecognizer* gesture1;
+    MMStretchGestureRecognizer2* gesture2;
     
     UIView* ul;
     UIView* ur;
@@ -49,6 +51,9 @@ const int COLINEAR = 0;
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
+    UISegmentedControl* gestureChooser = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"exact", @"average", nil]];
+    [gestureChooser addTarget:self action:@selector(chooseGesture:) forControlEvents:UIControlEventValueChanged];
+    
     debugView = [[MMDebugQuadrilateralView alloc] initWithFrame:self.view.bounds];
     
     convexLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 700, 100, 30)];
@@ -69,8 +74,10 @@ const int COLINEAR = 0;
     bl = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
     bl.backgroundColor = [UIColor greenColor];
 
-    
-    [self.view addGestureRecognizer:[[MMStretchGestureRecognizer2 alloc] initWithTarget:self action:@selector(didStretch:)]];
+    gesture1 = [[MMStretchGestureRecognizer alloc] initWithTarget:self action:@selector(didStretch:)];
+    gesture2 = [[MMStretchGestureRecognizer2 alloc] initWithTarget:self action:@selector(didStretch:)];
+    [self.view addGestureRecognizer:gesture1];
+    [self.view addGestureRecognizer:gesture2];
     self.view.userInteractionEnabled = YES;
     
     [self.view addSubview:draggable];
@@ -85,6 +92,21 @@ const int COLINEAR = 0;
     [self setAnchorPoint:CGPointMake(0, 0) forView:draggable];
     [self.view addSubview:debugView];
     [debugView addSubview:convexLabel];
+    [self.view addSubview:gestureChooser];
+    
+    gestureChooser.frame = CGRectMake(100, 50, 300, 50);
+    gestureChooser.selectedSegmentIndex = 0;
+    [self chooseGesture:gestureChooser];
+}
+
+-(void) chooseGesture:(UISegmentedControl*)control{
+    if(control.selectedSegmentIndex == 0){
+        gesture1.enabled = YES;
+        gesture2.enabled = NO;
+    }else{
+        gesture1.enabled = NO;
+        gesture2.enabled = YES;
+    }
 }
 
 -(void) send:(UIView*)v to:(CGPoint)point{
