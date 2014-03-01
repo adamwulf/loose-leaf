@@ -44,6 +44,7 @@
     CGFloat angleVRotation = [startVVector angleBetween:currVVector];
     CGFloat angleAvg = (angleHRotation + angleVRotation) / 2;
     
+    // chose the angle with the most change
     angleAvg = ABS(angleHRotation) > ABS(angleVRotation) ? angleHRotation : angleVRotation;
 //    NSLog(@"angle rotation: %f  and %f  avg: %f", angleHRotation, angleVRotation, angle);
 //    NSLog(@"ah:  %f  av: %f", angleHRotation, angleVRotation);
