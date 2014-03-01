@@ -13,6 +13,7 @@
 
 @interface MMStretchGestureRecognizer2 (Private)
 
+-(Quadrilateral) getRawQuad;
 -(Quadrilateral) generateAverageQuadFor:(Quadrilateral)q;
 -(void) checkStatus;
 
@@ -42,10 +43,13 @@
     CGFloat angleHRotation = [startHVector angleBetween:currHVector];
     CGFloat angleVRotation = [startVVector angleBetween:currVVector];
     CGFloat angleAvg = (angleHRotation + angleVRotation) / 2;
+    
+    angleAvg = ABS(angleHRotation) > ABS(angleVRotation) ? angleHRotation : angleVRotation;
 //    NSLog(@"angle rotation: %f  and %f  avg: %f", angleHRotation, angleVRotation, angle);
 //    NSLog(@"ah:  %f  av: %f", angleHRotation, angleVRotation);
 //    NSLog(@"cos: %f  and %f", cosf(angleHRotation), cosf(angleVRotation));
 //    NSLog(@"sin: %f  and %f", sinf(angleHRotation), sinf(angleVRotation));
+    NSLog(@"%f + %f = %f     cos: %f  sin: %f", angleHRotation, angleVRotation, angleAvg, cosf(angleAvg), sinf(angleAvg));
     
     
     
@@ -70,7 +74,7 @@
     [super checkStatus];
 
     if(self.state == UIGestureRecognizerStateBegan){
-        Quadrilateral currQuad = [self getQuad];
+        Quadrilateral currQuad = [self getRawQuad];
         startHVector = [self vectorHForQuad:currQuad];
         startVVector = [self vectorVForQuad:currQuad];
     }

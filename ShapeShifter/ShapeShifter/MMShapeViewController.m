@@ -99,7 +99,7 @@ const int COLINEAR = 0;
     [self.view addSubview:gestureChooser];
     
     gestureChooser.frame = CGRectMake(100, 50, 300, 50);
-    gestureChooser.selectedSegmentIndex = 2;
+    gestureChooser.selectedSegmentIndex = 0;
     [self chooseGesture:gestureChooser];
 }
 

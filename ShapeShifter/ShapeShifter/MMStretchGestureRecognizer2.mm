@@ -59,7 +59,7 @@
     return [validTouches array];
 }
 
--(Quadrilateral) getQuad{
+-(Quadrilateral) getRawQuad{
     __block Quadrilateral output;
     [[self touches] enumerateObjectsUsingBlock:^(UITouch* touch, NSUInteger idx, BOOL* stop){
         CGPoint location = [touch locationInView:self.view];
@@ -73,7 +73,12 @@
             output.lowerLeft = location;
         }
     }];
-    return [self generateAverageQuadFor:output];
+    return output;
+}
+
+
+-(Quadrilateral) getQuad{
+    return [self generateAverageQuadFor:[self getRawQuad]];
 }
 
 -(Quadrilateral) generateAverageQuadFor:(Quadrilateral)q{
