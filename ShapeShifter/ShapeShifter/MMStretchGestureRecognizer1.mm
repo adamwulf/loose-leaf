@@ -6,12 +6,12 @@
 //  Copyright (c) 2014 Adam Wulf. All rights reserved.
 //
 
-#import "MMStretchGestureRecognizer.h"
+#import "MMStretchGestureRecognizer1.h"
 #import "Constants.h"
 #import "NSMutableSet+Extras.h"
 
 
-@implementation MMStretchGestureRecognizer
+@implementation MMStretchGestureRecognizer1
 
 
 -(id) init{
@@ -124,7 +124,6 @@
 
 -(void) checkStatus{
     if([possibleTouches count] == 4){
-        NSLog(@"begin!");
         [validTouches addObjectsInOrderedSet:possibleTouches];
         [possibleTouches removeAllObjects];
         [self sortValidTouches];
@@ -133,7 +132,6 @@
             self.state = UIGestureRecognizerStateEnded;
         }
     }else{
-        NSLog(@"changing from: %d", self.state);
         if(self.state == UIGestureRecognizerStatePossible){
             self.state = UIGestureRecognizerStateBegan;
         }else{
@@ -166,8 +164,6 @@
         int d2 = (b.x-center.x) * (b.x-center.x) + (b.y-center.y) * (b.y-center.y);
         return d1 > d2 ? NSOrderedAscending : NSOrderedDescending;
     }];
-    
-    NSLog(@"%@", validTouches);
 }
 
 

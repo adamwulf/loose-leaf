@@ -8,15 +8,17 @@
 
 #import "MMShapeViewController.h"
 #import "MMDebugQuadrilateralView.h"
-#import "MMStretchGestureRecognizer.h"
+#import "MMStretchGestureRecognizer1.h"
 #import "MMStretchGestureRecognizer2.h"
+#import "MMStretchGestureRecognizer3.h"
 #import "Constants.h"
 
 @implementation MMShapeViewController{
     MMDebugQuadrilateralView* debugView;
     UIImageView* draggable;
-    MMStretchGestureRecognizer* gesture1;
+    MMStretchGestureRecognizer1* gesture1;
     MMStretchGestureRecognizer2* gesture2;
+    MMStretchGestureRecognizer3* gesture3;
     
     UIView* ul;
     UIView* ur;
@@ -51,7 +53,7 @@ const int COLINEAR = 0;
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    UISegmentedControl* gestureChooser = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"exact", @"average", nil]];
+    UISegmentedControl* gestureChooser = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"exact", @"average", @"oriented", nil]];
     [gestureChooser addTarget:self action:@selector(chooseGesture:) forControlEvents:UIControlEventValueChanged];
     
     debugView = [[MMDebugQuadrilateralView alloc] initWithFrame:self.view.bounds];
@@ -74,10 +76,12 @@ const int COLINEAR = 0;
     bl = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
     bl.backgroundColor = [UIColor greenColor];
 
-    gesture1 = [[MMStretchGestureRecognizer alloc] initWithTarget:self action:@selector(didStretch:)];
+    gesture1 = [[MMStretchGestureRecognizer1 alloc] initWithTarget:self action:@selector(didStretch:)];
     gesture2 = [[MMStretchGestureRecognizer2 alloc] initWithTarget:self action:@selector(didStretch:)];
+    gesture3 = [[MMStretchGestureRecognizer3 alloc] initWithTarget:self action:@selector(didStretch:)];
     [self.view addGestureRecognizer:gesture1];
     [self.view addGestureRecognizer:gesture2];
+    [self.view addGestureRecognizer:gesture3];
     self.view.userInteractionEnabled = YES;
     
     [self.view addSubview:draggable];
@@ -95,7 +99,7 @@ const int COLINEAR = 0;
     [self.view addSubview:gestureChooser];
     
     gestureChooser.frame = CGRectMake(100, 50, 300, 50);
-    gestureChooser.selectedSegmentIndex = 0;
+    gestureChooser.selectedSegmentIndex = 2;
     [self chooseGesture:gestureChooser];
 }
 
@@ -103,9 +107,15 @@ const int COLINEAR = 0;
     if(control.selectedSegmentIndex == 0){
         gesture1.enabled = YES;
         gesture2.enabled = NO;
-    }else{
+        gesture3.enabled = NO;
+    }else if(control.selectedSegmentIndex == 1){
         gesture1.enabled = NO;
         gesture2.enabled = YES;
+        gesture3.enabled = NO;
+    }else if(control.selectedSegmentIndex == 2){
+        gesture1.enabled = NO;
+        gesture2.enabled = NO;
+        gesture3.enabled = YES;
     }
 }
 
@@ -169,32 +179,17 @@ const int COLINEAR = 0;
 }
 
 
--(void) didStretch:(MMStretchGestureRecognizer*)gesture{
+-(void) didStretch:(MMStretchGestureRecognizer1*)gesture{
     if(gesture.state == UIGestureRecognizerStateBegan){
-        NSLog(@"began");
+//        NSLog(@"began");
         firstQ = [gesture getQuad];
     }else if(gesture.state == UIGestureRecognizerStateCancelled){
-        NSLog(@"cancelled");
+//        NSLog(@"cancelled");
         draggable.layer.transform = CATransform3DIdentity;
     }else if(gesture.state == UIGestureRecognizerStateChanged){
-        NSLog(@"changed");
-        
-        
-        
+//        NSLog(@"changed");
         Quadrilateral secondQ = [gesture getQuad];
-        
-        
-        NSLog(@"first: (%f,%f) (%f,%f) (%f,%f) (%f,%f)",
-              firstQ.upperLeft.x,firstQ.upperLeft.y,
-              firstQ.upperRight.x,firstQ.upperRight.y,
-              firstQ.lowerRight.x,firstQ.lowerRight.y,
-              firstQ.lowerLeft.x,firstQ.lowerLeft.y);
-        NSLog(@"second: (%f,%f) (%f,%f) (%f,%f) (%f,%f)",
-              secondQ.upperLeft.x,secondQ.upperLeft.y,
-              secondQ.upperRight.x,secondQ.upperRight.y,
-              secondQ.lowerRight.x,secondQ.lowerRight.y,
-              secondQ.lowerLeft.x,secondQ.lowerLeft.y);
-        
+
         [self send:ul to:secondQ.upperLeft];
         [self send:ur to:secondQ.upperRight];
         [self send:br to:secondQ.lowerRight];
@@ -206,22 +201,20 @@ const int COLINEAR = 0;
         Quadrilateral q1 = [self adjustedQuad:firstQ by:adjust];
         Quadrilateral q2 = [self adjustedQuad:secondQ by:adjust];
         
-        CATransform3D skewTransform = [MMStretchGestureRecognizer transformQuadrilateral:q1 toQuadrilateral:q2];
-
-        NSLog(@"transform %f", skewTransform.m34);
+        CATransform3D skewTransform = [MMStretchGestureRecognizer1 transformQuadrilateral:q1 toQuadrilateral:q2];
         
         draggable.layer.transform = skewTransform;
 
         
         
     }else if(gesture.state == UIGestureRecognizerStateEnded){
-        NSLog(@"ended");
+//        NSLog(@"ended");
         draggable.layer.transform = CATransform3DIdentity;
     }else if(gesture.state == UIGestureRecognizerStateFailed){
-        NSLog(@"failed");
+//        NSLog(@"failed");
         draggable.layer.transform = CATransform3DIdentity;
     }else if(gesture.state == UIGestureRecognizerStatePossible){
-        NSLog(@"possible");
+//        NSLog(@"possible");
         draggable.layer.transform = CATransform3DIdentity;
     }
 }
