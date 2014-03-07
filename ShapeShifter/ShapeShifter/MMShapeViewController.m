@@ -109,7 +109,7 @@ const int COLINEAR = 0;
     [self.view addSubview:gestureChooser];
     
     gestureChooser.frame = CGRectMake(100, 50, 300, 50);
-    gestureChooser.selectedSegmentIndex = 2;
+    gestureChooser.selectedSegmentIndex = 1;
     [self chooseGesture:gestureChooser];
 }
 
@@ -197,11 +197,11 @@ const int COLINEAR = 0;
 CATransform3D startTransform;
 -(void) didStretch:(MMStretchGestureRecognizer1*)gesture{
     CGFloat angle = [(NSNumber *)[draggable valueForKeyPath:@"layer.transform.rotation.z"] floatValue];
+    
     if(gesture.state == UIGestureRecognizerStateBegan){
 //        NSLog(@"began");
         firstQ = [gesture getQuad];
         startTransform = draggable.layer.transform;
-        
         
         NSLog(@"begin angle: %f", angle); // 0.020000
     }else if(gesture.state == UIGestureRecognizerStateCancelled){
@@ -225,8 +225,13 @@ CATransform3D startTransform;
         
         CATransform3D skewTransform = [MMStretchGestureRecognizer1 transformQuadrilateral:q1 toQuadrilateral:q2];
         
-        draggable.layer.transform = CATransform3DConcat(startTransform, skewTransform);
         
+        CGFloat scalex = sqrtf((skewTransform.m11 * skewTransform.m11 ) + (skewTransform.m12 * skewTransform.m12) + (skewTransform.m13 * skewTransform.m13));
+        CGFloat scaley = sqrtf((skewTransform.m21 * skewTransform.m21 ) + (skewTransform.m22 * skewTransform.m22) + (skewTransform.m23 * skewTransform.m23));
+        NSLog(@"scales: %f %f and rotation: %f", scalex, scaley, angle);
+        
+        
+        draggable.layer.transform = CATransform3DConcat(startTransform, skewTransform);
     }else if(gesture.state == UIGestureRecognizerStateEnded){
 //        NSLog(@"ended");
         draggable.layer.transform = startTransform;
