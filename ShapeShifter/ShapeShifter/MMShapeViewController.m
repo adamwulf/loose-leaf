@@ -60,6 +60,13 @@ const int COLINEAR = 0;
     
     convexLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 700, 100, 30)];
     convexLabel.backgroundColor = [UIColor whiteColor];
+
+    
+    UIView* unrotated = [[UIView alloc] initWithFrame:CGRectMake(100, 300, 300, 200)];
+    unrotated.layer.borderColor = [UIColor redColor].CGColor;
+    unrotated.layer.borderWidth = 1;
+    
+    
     
     draggable = [[UIImageView alloc] initWithFrame:CGRectMake(100, 300, 300, 200)];
     draggable.contentMode = UIViewContentModeScaleAspectFill;
@@ -84,6 +91,7 @@ const int COLINEAR = 0;
     [self.view addGestureRecognizer:gesture3];
     self.view.userInteractionEnabled = YES;
     
+    [self.view addSubview:unrotated];
     [self.view addSubview:draggable];
     
     [self.view addSubview:ul];
@@ -92,6 +100,8 @@ const int COLINEAR = 0;
     [self.view addSubview:bl];
     
     adjust = draggable.frame.origin;
+    
+    draggable.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(.2),CGAffineTransformMakeScale(1.2, 1.2));
 
     [self setAnchorPoint:CGPointMake(0, 0) forView:draggable];
     [self.view addSubview:debugView];
@@ -99,7 +109,7 @@ const int COLINEAR = 0;
     [self.view addSubview:gestureChooser];
     
     gestureChooser.frame = CGRectMake(100, 50, 300, 50);
-    gestureChooser.selectedSegmentIndex = 0;
+    gestureChooser.selectedSegmentIndex = 2;
     [self chooseGesture:gestureChooser];
 }
 
@@ -116,6 +126,10 @@ const int COLINEAR = 0;
         gesture1.enabled = NO;
         gesture2.enabled = NO;
         gesture3.enabled = YES;
+    }else if(control.selectedSegmentIndex == 3){
+        gesture1.enabled = NO;
+        gesture2.enabled = NO;
+        gesture3.enabled = NO;
     }
 }
 
@@ -179,13 +193,21 @@ const int COLINEAR = 0;
 }
 
 
+
+CATransform3D startTransform;
 -(void) didStretch:(MMStretchGestureRecognizer1*)gesture{
+    CGFloat angle = [(NSNumber *)[draggable valueForKeyPath:@"layer.transform.rotation.z"] floatValue];
     if(gesture.state == UIGestureRecognizerStateBegan){
 //        NSLog(@"began");
         firstQ = [gesture getQuad];
+        startTransform = draggable.layer.transform;
+        
+        
+        NSLog(@"begin angle: %f", angle); // 0.020000
     }else if(gesture.state == UIGestureRecognizerStateCancelled){
 //        NSLog(@"cancelled");
-        draggable.layer.transform = CATransform3DIdentity;
+        draggable.layer.transform = startTransform;
+        NSLog(@"cancelled angle: %f", angle); // 0.020000
     }else if(gesture.state == UIGestureRecognizerStateChanged){
 //        NSLog(@"changed");
         Quadrilateral secondQ = [gesture getQuad];
@@ -203,19 +225,19 @@ const int COLINEAR = 0;
         
         CATransform3D skewTransform = [MMStretchGestureRecognizer1 transformQuadrilateral:q1 toQuadrilateral:q2];
         
-        draggable.layer.transform = skewTransform;
-
-        
+        draggable.layer.transform = CATransform3DConcat(startTransform, skewTransform);
         
     }else if(gesture.state == UIGestureRecognizerStateEnded){
 //        NSLog(@"ended");
-        draggable.layer.transform = CATransform3DIdentity;
+        draggable.layer.transform = startTransform;
+        NSLog(@"ended angle: %f", angle); // 0.020000
     }else if(gesture.state == UIGestureRecognizerStateFailed){
 //        NSLog(@"failed");
-        draggable.layer.transform = CATransform3DIdentity;
+        draggable.layer.transform = startTransform;
+        NSLog(@"failed angle: %f", angle); // 0.020000
     }else if(gesture.state == UIGestureRecognizerStatePossible){
 //        NSLog(@"possible");
-        draggable.layer.transform = CATransform3DIdentity;
+        draggable.layer.transform = startTransform;
     }
 }
 
