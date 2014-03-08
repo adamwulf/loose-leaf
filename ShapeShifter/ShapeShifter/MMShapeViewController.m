@@ -99,9 +99,8 @@ const int COLINEAR = 0;
     [self.view addSubview:br];
     [self.view addSubview:bl];
     
-    adjust = draggable.frame.origin;
-    
-    draggable.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(.2),CGAffineTransformMakeScale(1.2, 1.2));
+    draggable.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(0.3),CGAffineTransformMakeScale(1.2, 1.2));
+    adjust =  [draggable convertPoint:draggable.bounds.origin toView:self.view];
 
     [self setAnchorPoint:CGPointMake(0, 0) forView:draggable];
     [self.view addSubview:debugView];
