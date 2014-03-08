@@ -99,10 +99,8 @@ const int COLINEAR = 0;
     [self.view addSubview:br];
     [self.view addSubview:bl];
     
-    draggable.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(0.3),CGAffineTransformMakeScale(1.2, 1.2));
-    adjust =  [draggable convertPoint:draggable.bounds.origin toView:self.view];
+    draggable.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(M_PI / 4),CGAffineTransformMakeScale(1.2, 1.2));
 
-    [self setAnchorPoint:CGPointMake(0, 0) forView:draggable];
     [self.view addSubview:debugView];
     [debugView addSubview:convexLabel];
     [self.view addSubview:gestureChooser];
@@ -195,20 +193,26 @@ const int COLINEAR = 0;
 
 CATransform3D startTransform;
 -(void) didStretch:(MMStretchGestureRecognizer1*)gesture{
-    CGFloat angle = [(NSNumber *)[draggable valueForKeyPath:@"layer.transform.rotation.z"] floatValue];
-    
+    // first, set our anchor point to 0,0 if we're
+    // beginning the gesture
     if(gesture.state == UIGestureRecognizerStateBegan){
-//        NSLog(@"began");
+        [self setAnchorPoint:CGPointMake(0, 0) forView:draggable];
+        adjust =  [draggable convertPoint:draggable.bounds.origin toView:self.view];
+    }
+
+    
+    // calculate the rotation of the gesture.
+    // we can use the angle when the gesture ends to
+    // set a standard 2d transform if we'd like
+    CGFloat angle = [(NSNumber *)[draggable valueForKeyPath:@"layer.transform.rotation.z"] floatValue];
+    if(gesture.state == UIGestureRecognizerStateBegan){
         firstQ = [gesture getQuad];
         startTransform = draggable.layer.transform;
-        
         NSLog(@"begin angle: %f", angle); // 0.020000
     }else if(gesture.state == UIGestureRecognizerStateCancelled){
-//        NSLog(@"cancelled");
         draggable.layer.transform = startTransform;
         NSLog(@"cancelled angle: %f", angle); // 0.020000
     }else if(gesture.state == UIGestureRecognizerStateChanged){
-//        NSLog(@"changed");
         Quadrilateral secondQ = [gesture getQuad];
 
         [self send:ul to:secondQ.upperLeft];
@@ -219,12 +223,20 @@ CATransform3D startTransform;
         [self updateLabelFor:secondQ];
         [debugView setQuadrilateral:secondQ];
 
+        // we want the transformed quad and our transformed view
+        // to each begin at the exact same point.
         Quadrilateral q1 = [self adjustedQuad:firstQ by:adjust];
         Quadrilateral q2 = [self adjustedQuad:secondQ by:adjust];
         
+        // generate the actual transform between the two quads
         CATransform3D skewTransform = [MMStretchGestureRecognizer1 transformQuadrilateral:q1 toQuadrilateral:q2];
         
-        
+        // we can watch these scales to see how different
+        // the x vs y scales are. if they are extremely different,
+        // then that will look like a very stretched image.
+        //
+        // it's a stretch if x or y is larger than its value at the
+        // beginning. it's a squish if its smaller than it's value.
         CGFloat scalex = sqrtf((skewTransform.m11 * skewTransform.m11 ) + (skewTransform.m12 * skewTransform.m12) + (skewTransform.m13 * skewTransform.m13));
         CGFloat scaley = sqrtf((skewTransform.m21 * skewTransform.m21 ) + (skewTransform.m22 * skewTransform.m22) + (skewTransform.m23 * skewTransform.m23));
         NSLog(@"scales: %f %f and rotation: %f", scalex, scaley, angle);
@@ -232,16 +244,24 @@ CATransform3D startTransform;
         
         draggable.layer.transform = CATransform3DConcat(startTransform, skewTransform);
     }else if(gesture.state == UIGestureRecognizerStateEnded){
-//        NSLog(@"ended");
         draggable.layer.transform = startTransform;
         NSLog(@"ended angle: %f", angle); // 0.020000
     }else if(gesture.state == UIGestureRecognizerStateFailed){
-//        NSLog(@"failed");
         draggable.layer.transform = startTransform;
         NSLog(@"failed angle: %f", angle); // 0.020000
     }else if(gesture.state == UIGestureRecognizerStatePossible){
-//        NSLog(@"possible");
         draggable.layer.transform = startTransform;
+    }
+    
+
+    
+    // if we've ended the gesture, then move our
+    // anchor back to 0.5,0.5
+    if(gesture.state == UIGestureRecognizerStateCancelled ||
+       gesture.state == UIGestureRecognizerStateEnded ||
+       gesture.state == UIGestureRecognizerStateFailed){
+        
+        [self setAnchorPoint:CGPointMake(.5, .5) forView:draggable];
     }
 }
 
