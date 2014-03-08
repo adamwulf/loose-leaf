@@ -41,6 +41,11 @@
 		6661144716FD67F8005032B9 /* Loose-Leaf-Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144616FD67F8005032B9 /* Loose-Leaf-Icon.png */; };
 		6661144A16FD67FA005032B9 /* Loose-Leaf-Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6661144916FD67FA005032B9 /* Loose-Leaf-Icon@2x.png */; };
 		666425B718CBA9EC00A306C1 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 666425B618CBA9EC00A306C1 /* Crashlytics.framework */; };
+		666425BA18CBC20000A306C1 /* MMStretchScrapGestureRecognizer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 666425B918CBC20000A306C1 /* MMStretchScrapGestureRecognizer.mm */; };
+		666425BC18CBC37700A306C1 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 666425BB18CBC37700A306C1 /* opencv2.framework */; };
+		666425BE18CBC3DD00A306C1 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 666425BD18CBC3DD00A306C1 /* AVFoundation.framework */; };
+		666425C018CBC3EF00A306C1 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 666425BF18CBC3EF00A306C1 /* AssetsLibrary.framework */; };
+		666425C218CBC40000A306C1 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 666425C118CBC40000A306C1 /* CoreMedia.framework */; };
 		6667480617C0166100D5C390 /* MMShapeBuilderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6667480517C0166100D5C390 /* MMShapeBuilderView.m */; };
 		66684B31182D887E005A27B4 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 66684B30182D887E005A27B4 /* Settings.bundle */; };
 		66684B3B182D9624005A27B4 /* AGG.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B3A182D9624005A27B4 /* AGG.license */; };
@@ -210,6 +215,12 @@
 		6661144616FD67F8005032B9 /* Loose-Leaf-Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf-Icon.png"; path = "../Loose-Leaf-Icon.png"; sourceTree = "<group>"; };
 		6661144916FD67FA005032B9 /* Loose-Leaf-Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf-Icon@2x.png"; path = "../Loose-Leaf-Icon@2x.png"; sourceTree = "<group>"; };
 		666425B618CBA9EC00A306C1 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		666425B818CBC20000A306C1 /* MMStretchScrapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMStretchScrapGestureRecognizer.h; path = ../MMStretchScrapGestureRecognizer.h; sourceTree = "<group>"; };
+		666425B918CBC20000A306C1 /* MMStretchScrapGestureRecognizer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MMStretchScrapGestureRecognizer.mm; path = ../MMStretchScrapGestureRecognizer.mm; sourceTree = "<group>"; };
+		666425BB18CBC37700A306C1 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		666425BD18CBC3DD00A306C1 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		666425BF18CBC3EF00A306C1 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		666425C118CBC40000A306C1 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		6667480317BEEDD300D5C390 /* PolygonToolDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PolygonToolDelegate.h; sourceTree = "<group>"; };
 		6667480417C0166100D5C390 /* MMShapeBuilderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShapeBuilderView.h; sourceTree = "<group>"; };
 		6667480517C0166100D5C390 /* MMShapeBuilderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShapeBuilderView.m; sourceTree = "<group>"; };
@@ -420,6 +431,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				666425C218CBC40000A306C1 /* CoreMedia.framework in Frameworks */,
+				666425C018CBC3EF00A306C1 /* AssetsLibrary.framework in Frameworks */,
+				666425BE18CBC3DD00A306C1 /* AVFoundation.framework in Frameworks */,
 				6616CCD218B6AEB100CAD0F3 /* JotTouchSDK.framework in Frameworks */,
 				6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */,
 				66C2C15B1879EFED00804123 /* MessageUI.framework in Frameworks */,
@@ -435,6 +449,7 @@
 				666425B718CBA9EC00A306C1 /* Crashlytics.framework in Frameworks */,
 				66BD6E831593B12500D4544C /* CoreMotion.framework in Frameworks */,
 				66BD6E7D1593ACD400D4544C /* QuartzCore.framework in Frameworks */,
+				666425BC18CBC37700A306C1 /* opencv2.framework in Frameworks */,
 				66BD6E65159316CF00D4544C /* CoreImage.framework in Frameworks */,
 				66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */,
 				66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */,
@@ -709,6 +724,7 @@
 		6699904D185F74DC005581D9 /* LooseLeaf */ = {
 			isa = PBXGroup;
 			children = (
+				666425BB18CBC37700A306C1 /* opencv2.framework */,
 				666425B618CBA9EC00A306C1 /* Crashlytics.framework */,
 				66999050185F7501005581D9 /* DrawKit-iOS.framework */,
 				6699904E185F74F8005581D9 /* TouchShape.framework */,
@@ -955,6 +971,9 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				666425C118CBC40000A306C1 /* CoreMedia.framework */,
+				666425BF18CBC3EF00A306C1 /* AssetsLibrary.framework */,
+				666425BD18CBC3DD00A306C1 /* AVFoundation.framework */,
 				6616CCD018B6AE9700CAD0F3 /* JotUI.framework */,
 				66B50FCD1862B7D30032F704 /* MessageUI.framework */,
 				6699904C185F74C1005581D9 /* LittleClipper */,
@@ -1049,6 +1068,8 @@
 		66EDA79317CA87D20067BA63 /* Scraps */ = {
 			isa = PBXGroup;
 			children = (
+				666425B818CBC20000A306C1 /* MMStretchScrapGestureRecognizer.h */,
+				666425B918CBC20000A306C1 /* MMStretchScrapGestureRecognizer.mm */,
 				66EDA79417CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.h */,
 				66EDA79517CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m */,
 				66EDA7AB17CBD8580067BA63 /* MMPanAndPinchScrapGestureRecognizerDelegate.h */,
@@ -1210,6 +1231,7 @@
 				665CAC2117B57B0B000BD505 /* MMPencilAndPaletteView.m in Sources */,
 				660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */,
 				665CAC1D17B578B0000BD505 /* MMColorButton.m in Sources */,
+				666425BA18CBC20000A306C1 /* MMStretchScrapGestureRecognizer.mm in Sources */,
 				664516B9159030FC0012FACA /* Constants.m in Sources */,
 				66A3A6BB1791F18900D8FE1D /* UIDevice+PPI.m in Sources */,
 				664F4139159063F8006F8B09 /* MMPlusIcon.m in Sources */,

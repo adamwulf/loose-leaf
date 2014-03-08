@@ -75,4 +75,21 @@ enum {
 typedef NSUInteger MMBezelScaleDirection;
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+    
+    typedef struct Quadrilateral{
+        CGPoint upperLeft;
+        CGPoint upperRight;
+        CGPoint lowerRight;
+        CGPoint lowerLeft;
+    } Quadrilateral;
+    
+#ifdef __cplusplus
+}  // extern "C"
+#endif
+
+
+
 #endif

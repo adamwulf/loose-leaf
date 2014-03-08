@@ -12,3 +12,7 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
+
+#ifdef __cplusplus
+    #import <opencv2/opencv.hpp>
+#endif

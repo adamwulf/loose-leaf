@@ -21,6 +21,8 @@
 
 @interface NSMutableOrderedSet (LooseLeafExtras)
 
+-(void) addObjectsInOrderedSet:(NSOrderedSet*)set;
+
 -(void) removeObjectsInSet:(NSSet*)set;
 
 -(NSSet*) setByRemovingObject:(id)obj;
