@@ -10,6 +10,7 @@
 #import "Constants.h"
 #import "NSMutableSet+Extras.h"
 #import "MMVector.h"
+#import "MMPanAndPinchScrapGestureRecognizer.h"
 
 @implementation MMStretchScrapGestureRecognizer
 
@@ -57,6 +58,22 @@
 
 -(NSArray*)validTouches{
     return [validTouches array];
+}
+
+-(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
+    if(gesture != self){
+        if(![gesture isKindOfClass:[MMPanAndPinchScrapGestureRecognizer class]]){
+            // we're only allowed to work on scrap pinch gesture touches
+            [possibleTouches removeObjectsInSet:touches];
+            [ignoredTouches addObjectsInSet:touches];
+            [validTouches removeObjectsInSet:touches];
+            [self updateValidTouches];
+            if([validTouches intersectsSet:touches]){
+                NSLog(@"hrm, valid stretch touches are owned by %@", NSStringFromClass([gesture class]));
+                NSLog(@"possible: %d  ignored: %d  valid: %d", [possibleTouches count], [ignoredTouches count], [validTouches count]);
+            }
+        }
+    }
 }
 
 
@@ -120,24 +137,43 @@
 }
 
 
-// this method looks at our internal state for the gesture, and updates
-// the UIGestureRecognizer.state to match
--(void) updateState{
+-(void) updateValidTouches{
+    if([validTouches count] > 0 &&
+       [validTouches count] != 4){
+        // valid touches must be exactly 4
+        [possibleTouches addObjectsInOrderedSet:validTouches];
+        [validTouches removeAllObjects];
+    }
     if([possibleTouches count] == 4){
+        // if we have 4 valid, then add them
         [validTouches addObjectsInOrderedSet:possibleTouches];
         [possibleTouches removeAllObjects];
         [self sortValidTouches];
-    }else if([validTouches count] < 4){
-        if(self.state != UIGestureRecognizerStatePossible){
-            self.state = UIGestureRecognizerStateEnded;
-        }
-    }else{
-        if(self.state == UIGestureRecognizerStatePossible){
-            self.state = UIGestureRecognizerStateBegan;
-        }else{
-            self.state = UIGestureRecognizerStateChanged;
-        }
     }
+    if([validTouches count] == 4){
+        NSLog(@"is stretching!");
+    }else{
+        NSLog(@"is NOT stretching!");
+    }
+}
+
+// this method looks at our internal state for the gesture, and updates
+// the UIGestureRecognizer.state to match
+-(void) updateState{
+    if(self.state == UIGestureRecognizerStatePossible){
+        if([ignoredTouches count] > 0 ||
+           [possibleTouches count] > 0 ||
+           [validTouches count] > 0){
+            self.state = UIGestureRecognizerStateBegan;
+        }
+    }else if([possibleTouches count] == 0 &&
+           [ignoredTouches count] == 0 &&
+           [validTouches count] == 0){
+        self.state = UIGestureRecognizerStateEnded;
+    }else{
+        self.state = UIGestureRecognizerStateChanged;
+    }
+    [self updateValidTouches];
 }
 
 //

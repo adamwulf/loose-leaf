@@ -20,6 +20,8 @@
 
 + (CATransform3D)transformQuadrilateral:(Quadrilateral)origin toQuadrilateral:(Quadrilateral)destination;
 
+-(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
+
 -(Quadrilateral) getQuad;
 
 @end

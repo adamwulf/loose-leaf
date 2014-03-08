@@ -563,6 +563,7 @@ int skipAll = NO;
     }
     [panAndPinchScrapGesture ownershipOfTouches:touches isGesture:gesture];
     [panAndPinchScrapGesture2 ownershipOfTouches:touches isGesture:gesture];
+    [stretchScrapGesture ownershipOfTouches:touches isGesture:gesture];
 }
 
 -(void) didLongPressPage:(MMPaperView*)page withTouches:(NSSet*)touches{

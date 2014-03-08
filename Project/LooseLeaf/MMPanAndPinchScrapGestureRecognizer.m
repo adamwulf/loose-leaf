@@ -144,7 +144,6 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         BOOL needsToFixValidTouches = NO;
         for(UITouch* t in touches){
             if([validTouches containsObject:t]){
-                NSLog(@"gotcha");
                 [validTouches removeObject:t];
                 needsToFixValidTouches = YES;
             }
