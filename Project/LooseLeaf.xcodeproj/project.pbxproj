@@ -46,6 +46,7 @@
 		666425BE18CBC3DD00A306C1 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 666425BD18CBC3DD00A306C1 /* AVFoundation.framework */; };
 		666425C018CBC3EF00A306C1 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 666425BF18CBC3EF00A306C1 /* AssetsLibrary.framework */; };
 		666425C218CBC40000A306C1 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 666425C118CBC40000A306C1 /* CoreMedia.framework */; };
+		666425C418CBC61200A306C1 /* opencv.license in Resources */ = {isa = PBXBuildFile; fileRef = 666425C318CBC61200A306C1 /* opencv.license */; };
 		6667480617C0166100D5C390 /* MMShapeBuilderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6667480517C0166100D5C390 /* MMShapeBuilderView.m */; };
 		66684B31182D887E005A27B4 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 66684B30182D887E005A27B4 /* Settings.bundle */; };
 		66684B3B182D9624005A27B4 /* AGG.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B3A182D9624005A27B4 /* AGG.license */; };
@@ -221,6 +222,7 @@
 		666425BD18CBC3DD00A306C1 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		666425BF18CBC3EF00A306C1 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		666425C118CBC40000A306C1 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		666425C318CBC61200A306C1 /* opencv.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = opencv.license; sourceTree = "<group>"; };
 		6667480317BEEDD300D5C390 /* PolygonToolDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PolygonToolDelegate.h; sourceTree = "<group>"; };
 		6667480417C0166100D5C390 /* MMShapeBuilderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShapeBuilderView.h; sourceTree = "<group>"; };
 		6667480517C0166100D5C390 /* MMShapeBuilderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShapeBuilderView.m; sourceTree = "<group>"; };
@@ -633,6 +635,7 @@
 				66684B47182DAD05005A27B4 /* 2Geom.license */,
 				66684B49182DAEBC005A27B4 /* UIImageRoundedCorner.license */,
 				66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */,
+				666425C318CBC61200A306C1 /* opencv.license */,
 			);
 			name = Licenses;
 			sourceTree = "<group>";
@@ -1143,6 +1146,7 @@
 				66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */,
 				66684B4A182DAEBC005A27B4 /* UIImageRoundedCorner.license in Resources */,
 				66684B46182DACAE005A27B4 /* DrawKit.license in Resources */,
+				666425C418CBC61200A306C1 /* opencv.license in Resources */,
 				66684B3B182D9624005A27B4 /* AGG.license in Resources */,
 				66B843F717B05488008BF8B8 /* Loose-Leaf-Icon72.png in Resources */,
 				66684B44182DAC9B005A27B4 /* CurveFit.license in Resources */,
