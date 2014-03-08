@@ -10,7 +10,7 @@
 		6662019B18C15523006A58AA /* MMStretchGestureRecognizer2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6662019A18C15523006A58AA /* MMStretchGestureRecognizer2.mm */; };
 		6662019F18C15648006A58AA /* MMDebugQuadrilateralView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6662019E18C15648006A58AA /* MMDebugQuadrilateralView.m */; };
 		666201A218C15820006A58AA /* MMVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 666201A118C15820006A58AA /* MMVector.m */; };
-		666201A618C15F5D006A58AA /* MMStretchGestureRecognizer3.m in Sources */ = {isa = PBXBuildFile; fileRef = 666201A518C15F5D006A58AA /* MMStretchGestureRecognizer3.m */; };
+		666201A618C15F5D006A58AA /* MMStretchGestureRecognizer3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 666201A518C15F5D006A58AA /* MMStretchGestureRecognizer3.mm */; };
 		66AF167018B812D500A92F7F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66AF166F18B812D500A92F7F /* Foundation.framework */; };
 		66AF167218B812D500A92F7F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66AF167118B812D500A92F7F /* CoreGraphics.framework */; };
 		66AF167418B812D500A92F7F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66AF167318B812D500A92F7F /* UIKit.framework */; };
@@ -52,7 +52,7 @@
 		666201A018C15820006A58AA /* MMVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMVector.h; path = ../MMVector.h; sourceTree = "<group>"; };
 		666201A118C15820006A58AA /* MMVector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMVector.m; path = ../MMVector.m; sourceTree = "<group>"; };
 		666201A418C15F5D006A58AA /* MMStretchGestureRecognizer3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStretchGestureRecognizer3.h; sourceTree = "<group>"; };
-		666201A518C15F5D006A58AA /* MMStretchGestureRecognizer3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStretchGestureRecognizer3.m; sourceTree = "<group>"; };
+		666201A518C15F5D006A58AA /* MMStretchGestureRecognizer3.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = MMStretchGestureRecognizer3.mm; sourceTree = "<group>"; };
 		66AF166C18B812D500A92F7F /* ShapeShifter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShapeShifter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66AF166F18B812D500A92F7F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		66AF167118B812D500A92F7F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -226,7 +226,7 @@
 				6662019918C15523006A58AA /* MMStretchGestureRecognizer2.h */,
 				6662019A18C15523006A58AA /* MMStretchGestureRecognizer2.mm */,
 				666201A418C15F5D006A58AA /* MMStretchGestureRecognizer3.h */,
-				666201A518C15F5D006A58AA /* MMStretchGestureRecognizer3.m */,
+				666201A518C15F5D006A58AA /* MMStretchGestureRecognizer3.mm */,
 			);
 			name = Gestures;
 			sourceTree = "<group>";
@@ -333,7 +333,7 @@
 				66AF16A418B8154800A92F7F /* MMStretchGestureRecognizer1.mm in Sources */,
 				66B46AC318BA8FEC0059172F /* NSMutableSet+Extras.m in Sources */,
 				6662019F18C15648006A58AA /* MMDebugQuadrilateralView.m in Sources */,
-				666201A618C15F5D006A58AA /* MMStretchGestureRecognizer3.m in Sources */,
+				666201A618C15F5D006A58AA /* MMStretchGestureRecognizer3.mm in Sources */,
 				66AF168018B812D500A92F7F /* MMAppDelegate.m in Sources */,
 				66AF167C18B812D500A92F7F /* main.m in Sources */,
 				6662019B18C15523006A58AA /* MMStretchGestureRecognizer2.mm in Sources */,
