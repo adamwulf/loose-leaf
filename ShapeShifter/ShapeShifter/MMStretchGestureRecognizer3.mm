@@ -11,11 +11,19 @@
 #import "NSMutableSet+Extras.h"
 #import "MMVector.h"
 
+
+@interface MMStretchGestureRecognizer3 (Private)
+
+-(MMVector*) vectorHForQuad:(Quadrilateral)q;
+-(MMVector*) vectorVForQuad:(Quadrilateral)q;
+
+@end
+
+
 @implementation MMStretchGestureRecognizer3{
     MMVector* startHVector;
     MMVector* startVVector;
 }
-
 
 -(id) init{
     self = [super init];
@@ -62,6 +70,12 @@
     return [validTouches array];
 }
 
+
+-(Quadrilateral) getQuad{
+    return [self generateAverageQuadWithRotationFor:[self getRawQuad]];
+}
+
+
 -(Quadrilateral) getRawQuad{
     __block Quadrilateral output;
     [[self touches] enumerateObjectsUsingBlock:^(UITouch* touch, NSUInteger idx, BOOL* stop){
@@ -77,34 +91,6 @@
         }
     }];
     return output;
-}
-
-
--(Quadrilateral) getQuad{
-    return [self generateAverageQuadWithRotationFor:[self getRawQuad]];
-}
-
--(Quadrilateral) generateAverageQuadFor:(Quadrilateral)q{
-    
-    Quadrilateral ret;
-    
-    
-    CGPoint midLeft = CGPointMake((q.upperLeft.x + q.lowerLeft.x)/2, (q.upperLeft.y + q.lowerLeft.y)/2);
-    CGPoint midRight = CGPointMake((q.upperRight.x + q.lowerRight.x)/2, (q.upperRight.y + q.lowerRight.y)/2);
-    
-    MMVector* lengthVector = [MMVector vectorWithPoint:midLeft andPoint:midRight];
-    
-    CGPoint midTop = CGPointMake((q.upperLeft.x + q.upperRight.x)/2, (q.upperLeft.y + q.upperRight.y)/2);
-    CGPoint midLow = CGPointMake((q.lowerLeft.x + q.lowerRight.x)/2, (q.lowerLeft.y + q.lowerRight.y)/2);
-    
-    
-    ret.upperLeft = [lengthVector pointFromPoint:midTop distance:-0.5];
-    ret.upperRight = [lengthVector pointFromPoint:midTop distance:0.5];
-    ret.lowerRight = [lengthVector pointFromPoint:midLow distance:0.5];
-    ret.lowerLeft = [lengthVector pointFromPoint:midLow distance:-0.5];
-    
-    
-    return ret;
 }
 
 -(Quadrilateral) generateAverageQuadWithRotationFor:(Quadrilateral)q{
@@ -144,6 +130,28 @@
     return ret;
 }
 
+
+-(Quadrilateral) generateAverageQuadFor:(Quadrilateral)q{
+    
+    Quadrilateral ret;
+    
+    
+    CGPoint midLeft = CGPointMake((q.upperLeft.x + q.lowerLeft.x)/2, (q.upperLeft.y + q.lowerLeft.y)/2);
+    CGPoint midRight = CGPointMake((q.upperRight.x + q.lowerRight.x)/2, (q.upperRight.y + q.lowerRight.y)/2);
+    
+    MMVector* lengthVector = [MMVector vectorWithPoint:midLeft andPoint:midRight];
+    
+    CGPoint midTop = CGPointMake((q.upperLeft.x + q.upperRight.x)/2, (q.upperLeft.y + q.upperRight.y)/2);
+    CGPoint midLow = CGPointMake((q.lowerLeft.x + q.lowerRight.x)/2, (q.lowerLeft.y + q.lowerRight.y)/2);
+    
+    
+    ret.upperLeft = [lengthVector pointFromPoint:midTop distance:-0.5];
+    ret.upperRight = [lengthVector pointFromPoint:midTop distance:0.5];
+    ret.lowerRight = [lengthVector pointFromPoint:midLow distance:0.5];
+    ret.lowerLeft = [lengthVector pointFromPoint:midLow distance:-0.5];
+    
+    return ret;
+}
 
 
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{

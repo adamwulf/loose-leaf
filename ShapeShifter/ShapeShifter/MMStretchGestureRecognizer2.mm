@@ -55,13 +55,25 @@
     return ret;
 }
 
--(NSArray*)touches{
+-(NSArray*)validTouches{
     return [validTouches array];
 }
 
+
+#pragma mark - Quadrilateral
+
+-(Quadrilateral) getQuad{
+    return [self generateAverageQuadFor:[self getRawQuad]];
+}
+
+// this generates a Quadrilateral struct from the clockwise touch locations.
+// note. the touches are only sorted at the beginning of the gesture. so this means
+// that the touches are guaranteed form a clockwise quad only at the very beginning of
+// the gesture, but the user can spin, flip, and mix their fingers to create self
+// intersecting quads.
 -(Quadrilateral) getRawQuad{
     __block Quadrilateral output;
-    [[self touches] enumerateObjectsUsingBlock:^(UITouch* touch, NSUInteger idx, BOOL* stop){
+    [[self validTouches] enumerateObjectsUsingBlock:^(UITouch* touch, NSUInteger idx, BOOL* stop){
         CGPoint location = [touch locationInView:self.view];
         if(idx == 0){
             output.upperLeft = location;
@@ -76,15 +88,19 @@
     return output;
 }
 
-
--(Quadrilateral) getQuad{
-    return [self generateAverageQuadFor:[self getRawQuad]];
-}
-
+// if we use the getRawQuad only, then the transform we create by skewing that
+// raw quad will manipulate dramatically in 3d. This transform ends up to give
+// terrible results if the quad is manipulated by the user to be concave.
+//
+// this methods helps get around these awkward transforms by created an average of the
+// user's finger positions instead of exact quad transforms.
+//
+// 1. find the midpoints along each edge of the quad.
+// 2. find the vectors beteween opposite midpoints
+// 3. create new quad endpoints using these vectors
+// 4. this will create an output parallelogram from the input quad
 -(Quadrilateral) generateAverageQuadFor:(Quadrilateral)q{
-    
     Quadrilateral ret;
-    
     
     CGPoint midLeft = CGPointMake((q.upperLeft.x + q.lowerLeft.x)/2, (q.upperLeft.y + q.lowerLeft.y)/2);
     CGPoint midRight = CGPointMake((q.upperRight.x + q.lowerRight.x)/2, (q.upperRight.y + q.lowerRight.y)/2);
@@ -100,57 +116,13 @@
     ret.lowerRight = [lengthVector pointFromPoint:midLow distance:0.5];
     ret.lowerLeft = [lengthVector pointFromPoint:midLow distance:-0.5];
     
-    
     return ret;
 }
 
 
-- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
-    return NO;
-}
-
-- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return NO;
-}
-
-- (void)reset{
-    [super reset];
-    [validTouches removeAllObjects];
-    [ignoredTouches removeAllObjects];
-    [possibleTouches removeAllObjects];
-}
-
--(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    [touches enumerateObjectsUsingBlock:^(id touch, BOOL* stop){
-        [possibleTouches addObject:touch];
-    }];
-    [self checkStatus];
-}
-
--(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
-    [self checkStatus];
-}
-
--(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
-    [touches enumerateObjectsUsingBlock:^(id touch, BOOL* stop){
-        [possibleTouches removeObject:touch];
-        [validTouches removeObject:touch];
-        [ignoredTouches removeObject:touch];
-    }];
-    [self checkStatus];
-}
-
--(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
-    [touches enumerateObjectsUsingBlock:^(id touch, BOOL* stop){
-        [possibleTouches removeObject:touch];
-        [validTouches removeObject:touch];
-        [ignoredTouches removeObject:touch];
-    }];
-    [self checkStatus];
-}
-
-
--(void) checkStatus{
+// this method looks at our internal state for the gesture, and updates
+// the UIGestureRecognizer.state to match
+-(void) updateState{
     if([possibleTouches count] == 4){
         [validTouches addObjectsInOrderedSet:possibleTouches];
         [possibleTouches removeAllObjects];
@@ -168,6 +140,9 @@
     }
 }
 
+//
+// this method takes all valid touches, and sorts them in the OrderedSet
+// so that their touch locations are in clockwise order
 -(void) sortValidTouches{
     __block CGPoint center = CGPointZero;
     [validTouches enumerateObjectsUsingBlock:^(UITouch* touch, NSUInteger idx, BOOL *stop){
@@ -194,6 +169,52 @@
     }];
 }
 
+
+#pragma mark - UIGestureRecognizer
+
+- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
+    return NO;
+}
+
+- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
+    return NO;
+}
+
+- (void)reset{
+    [super reset];
+    [validTouches removeAllObjects];
+    [ignoredTouches removeAllObjects];
+    [possibleTouches removeAllObjects];
+}
+
+-(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [touches enumerateObjectsUsingBlock:^(id touch, BOOL* stop){
+        [possibleTouches addObject:touch];
+    }];
+    [self updateState];
+}
+
+-(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self updateState];
+}
+
+-(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+    [touches enumerateObjectsUsingBlock:^(id touch, BOOL* stop){
+        [possibleTouches removeObject:touch];
+        [validTouches removeObject:touch];
+        [ignoredTouches removeObject:touch];
+    }];
+    [self updateState];
+}
+
+-(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    [touches enumerateObjectsUsingBlock:^(id touch, BOOL* stop){
+        [possibleTouches removeObject:touch];
+        [validTouches removeObject:touch];
+        [ignoredTouches removeObject:touch];
+    }];
+    [self updateState];
+}
 
 
 #pragma mark - OpenCV Transform
