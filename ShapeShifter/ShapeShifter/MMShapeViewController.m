@@ -237,10 +237,17 @@ CATransform3D startTransform;
         //
         // it's a stretch if x or y is larger than its value at the
         // beginning. it's a squish if its smaller than it's value.
-        CGFloat scalex = sqrtf((skewTransform.m11 * skewTransform.m11 ) + (skewTransform.m12 * skewTransform.m12) + (skewTransform.m13 * skewTransform.m13));
-        CGFloat scaley = sqrtf((skewTransform.m21 * skewTransform.m21 ) + (skewTransform.m22 * skewTransform.m22) + (skewTransform.m23 * skewTransform.m23));
+        //
+        // to find the stretch over x and y, we need to undo the rotation
+        // of the transform.
+        CATransform3D transformForScale = CATransform3DRotate(skewTransform, -angle, 0, 0, 1);
+        CGFloat scalex = sqrtf((transformForScale.m11 * transformForScale.m11 ) +
+                               (transformForScale.m12 * transformForScale.m12) +
+                               (transformForScale.m13 * transformForScale.m13));
+        CGFloat scaley = sqrtf((transformForScale.m21 * transformForScale.m21 ) +
+                               (transformForScale.m22 * transformForScale.m22) +
+                               (transformForScale.m23 * transformForScale.m23));
         NSLog(@"scales: %f %f and rotation: %f", scalex, scaley, angle);
-        
         
         draggable.layer.transform = CATransform3DConcat(startTransform, skewTransform);
     }else if(gesture.state == UIGestureRecognizerStateEnded){
@@ -253,8 +260,6 @@ CATransform3D startTransform;
         draggable.layer.transform = startTransform;
     }
     
-
-    
     // if we've ended the gesture, then move our
     // anchor back to 0.5,0.5
     if(gesture.state == UIGestureRecognizerStateCancelled ||
@@ -265,6 +270,7 @@ CATransform3D startTransform;
     }
 }
 
+// move the quad by the input point amount
 -(Quadrilateral) adjustedQuad:(Quadrilateral)a by:(CGPoint)p{
     Quadrilateral output = a;
     output.upperLeft.x -= p.x;
@@ -290,8 +296,9 @@ CATransform3D startTransform;
  CONCAVE == -1
  It is assumed that the polygon is simple
  (does not intersect itself or have holes)
+ 
+ http://paulbourke.net/geometry/polygonmesh/source2.c
  */
-
 int Convex(CGPoint p[4])
 {
     int len = 4;
