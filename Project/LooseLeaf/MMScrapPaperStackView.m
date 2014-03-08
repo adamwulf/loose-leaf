@@ -12,6 +12,7 @@
 #import "MMScrapBubbleContainerView.h"
 #import "MMDebugDrawView.h"
 #import "MMTouchVelocityGestureRecognizer.h"
+#import "MMStretchScrapGestureRecognizer.h"
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 
 @implementation MMScrapPaperStackView{
@@ -21,7 +22,7 @@
     // grabbing two scraps at the same time
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture;
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture2;
-    
+    MMStretchScrapGestureRecognizer* stretchScrapGesture;
     
     NSTimer* debugTimer;
     NSTimer* drawTimer;
@@ -65,6 +66,8 @@
         panAndPinchScrapGesture2.cancelsTouchesInView = NO;
         [self addGestureRecognizer:panAndPinchScrapGesture2];
         
+        stretchScrapGesture = [[MMStretchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(stretchGesture:)];
+        [self addGestureRecognizer:stretchScrapGesture];
         
         // make sure sidebar buttons hide the scrap menu
         for(MMSidebarButton* possibleSidebarButton in self.subviews){
@@ -491,6 +494,19 @@ int skipAll = NO;
     return rulerButton.selected;
 }
 
+
+#pragma mark - MMStretchScrapGestureRecognizer
+
+-(void) stretchGesture:(MMStretchScrapGestureRecognizer*)gesture{
+    if(gesture.state == UIGestureRecognizerStateBegan){
+        NSLog(@"stretch began");
+    }else if(gesture.state == UIGestureRecognizerStateCancelled ||
+             gesture.state == UIGestureRecognizerStateFailed){
+        NSLog(@"stretch failed or cancelled");
+    }else if(gesture.state == UIGestureRecognizerStateEnded){
+        NSLog(@"stretch ended");
+    }
+}
 
 #pragma mark - MMPaperViewDelegate
 
