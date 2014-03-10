@@ -165,13 +165,17 @@
         // generate the actual transform between the two quads
         skewTransform = [MMStretchScrapGestureRecognizer transformQuadrilateral:q1 toQuadrilateral:q2];
     }
-    if([validTouches count] > 0 &&
-       [validTouches count] != 4){
+    if([validTouches count] != 4 && scrap){
         // valid touches must be exactly 4, otherwise
         // we should stop the stretching
         [possibleTouches addObjectsInOrderedSet:validTouches];
         [validTouches removeAllObjects];
         [self.scrapDelegate endStretchForScrap:scrap];
+        if(pinchScrapGesture1.scrap == scrap){
+            [pinchScrapGesture1 blessTouches:[possibleTouches set]];
+        }else if(pinchScrapGesture2.scrap == scrap){
+            [pinchScrapGesture2 blessTouches:[possibleTouches set]];
+        }
         scrap = nil;
     }
     if([possibleTouches count] == 4){

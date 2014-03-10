@@ -518,13 +518,37 @@ int skipAll = NO;
     scrap.selected = YES;
     [self setAnchorPoint:CGPointMake(0, 0) forView:scrap];
     startSkewTransform = scrap.layer.transform;
+    [panAndPinchScrapGesture cancel];
+    [panAndPinchScrapGesture2 cancel];
     return [scrap convertPoint:scrap.bounds.origin toView:visibleStackHolder];
 }
 
 -(void) endStretchForScrap:(MMScrapView*)scrap{
     scrap.selected = NO;
-    stretchScrapGesture.scrap.layer.transform = startSkewTransform;
-    [self setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
+    
+    CGFloat maxDim = MAX(scrap.bounds.size.width, scrap.bounds.size.height);
+    CGFloat smallScale = maxDim > 200 ? (maxDim - 20) / maxDim : .9;
+    CGFloat largeScale = maxDim > 200 ? (maxDim + 20) / maxDim : 1.1;
+    
+    CATransform3D smallTransform = CATransform3DConcat(startSkewTransform, CATransform3DMakeScale(smallScale, smallScale, 1));
+    CATransform3D largeTransform = CATransform3DConcat(startSkewTransform, CATransform3DMakeScale(largeScale, largeScale, 1));
+    
+    // i need to keep the anchor point at 0,0 during
+    // the transition back to the normal scale/rotate
+    // transform. after that i can recenter it and then
+    // complete the bounce.
+    [UIView animateWithDuration:.2 animations:^{
+        scrap.layer.transform = smallTransform;
+    } completion:^(BOOL finished){
+        [self setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
+        [UIView animateWithDuration:.1 animations:^{
+            scrap.layer.transform = largeTransform;
+        } completion:^(BOOL finished){
+            [UIView animateWithDuration:.1 animations:^{
+                scrap.layer.transform = startSkewTransform;
+            }];
+        }];
+    }];
 }
 
 /**
