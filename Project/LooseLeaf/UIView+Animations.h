@@ -12,4 +12,6 @@
 
 -(void) removeAllAnimationsAndPreservePresentationFrame;
 
++(void)setAnchorPoint:(CGPoint)anchorPoint forView:(UIView *)view;
+
 @end

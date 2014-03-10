@@ -156,31 +156,6 @@ const int COLINEAR = 0;
     convexLabel.text = text;
 }
 
-/**
- * this will set the anchor point for a scrap, so that it rotates
- * underneath the gesture realistically, instead of always from
- * it's center
- */
--(void)setAnchorPoint:(CGPoint)anchorPoint forView:(UIView *)view
-{
-    CGPoint newPoint = CGPointMake(view.bounds.size.width * anchorPoint.x, view.bounds.size.height * anchorPoint.y);
-    CGPoint oldPoint = CGPointMake(view.bounds.size.width * view.layer.anchorPoint.x, view.bounds.size.height * view.layer.anchorPoint.y);
-    
-    newPoint = CGPointApplyAffineTransform(newPoint, view.transform);
-    oldPoint = CGPointApplyAffineTransform(oldPoint, view.transform);
-    
-    CGPoint position = view.layer.position;
-    
-    position.x -= oldPoint.x;
-    position.x += newPoint.x;
-    
-    position.y -= oldPoint.y;
-    position.y += newPoint.y;
-    
-    view.layer.position = position;
-    view.layer.anchorPoint = anchorPoint;
-}
-
 
 - (void)didReceiveMemoryWarning
 {
@@ -194,7 +169,7 @@ const int COLINEAR = 0;
     // first, set our anchor point to 0,0 if we're
     // beginning the gesture
     if(gesture.state == UIGestureRecognizerStateBegan){
-        [self setAnchorPoint:CGPointMake(0, 0) forView:draggable];
+        [UIView setAnchorPoint:CGPointMake(0, 0) forView:draggable];
         adjust =  [draggable convertPoint:draggable.bounds.origin toView:self.view];
     }
 
@@ -264,7 +239,7 @@ const int COLINEAR = 0;
        gesture.state == UIGestureRecognizerStateEnded ||
        gesture.state == UIGestureRecognizerStateFailed){
         
-        [self setAnchorPoint:CGPointMake(.5, .5) forView:draggable];
+        [UIView setAnchorPoint:CGPointMake(.5, .5) forView:draggable];
     }
 }
 

@@ -14,6 +14,7 @@
 #import "NSMutableSet+Extras.h"
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "MMStretchScrapGestureRecognizer.h"
+#import "UIView+Animations.h"
 
 #define kMaxSimultaneousTouchesAllowedToTrack 20
 #define kNumberOfDirectionChangesToDetermineShake 2
@@ -447,7 +448,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         // reset the location and the initial distance of the gesture
         // so that the new first two touches position won't immediatley
         // change where the page is or what its scale is
-        [self setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
+        [UIView setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
         [self prepareGestureToBeginFresh];
     }
 //    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
@@ -513,7 +514,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     // and neither does the bounds. so we need to use bounds.size, not frame.size
     // to determine where to set the anchor point
     p = CGPointMake(p.x / scrap.bounds.size.width, p.y / scrap.bounds.size.height);
-    [self setAnchorPoint:p forView:scrap];
+    [UIView setAnchorPoint:p forView:scrap];
 
     CGPoint p1 = [[validTouches firstObject] locationInView:self.view];
     CGPoint p2 = [[validTouches objectAtIndex:1] locationInView:self.view];
@@ -534,7 +535,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
  * without having to expose anchor point methods
  */
 -(void) giveUpScrap{
-    [self setAnchorPoint:CGPointMake(.5, .5) forView:self.scrap];
+    [UIView setAnchorPoint:CGPointMake(.5, .5) forView:self.scrap];
     scrap = nil;
 }
 
@@ -577,31 +578,6 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     }
     return 0;
 }
-
-/**
- * this will set the anchor point for a scrap, so that it rotates
- * underneath the gesture realistically, instead of always from
- * it's center
- */
--(void)setAnchorPoint:(CGPoint)anchorPoint forView:(UIView *)view{
-    CGPoint newPoint = CGPointMake(view.bounds.size.width * anchorPoint.x, view.bounds.size.height * anchorPoint.y);
-    CGPoint oldPoint = CGPointMake(view.bounds.size.width * view.layer.anchorPoint.x, view.bounds.size.height * view.layer.anchorPoint.y);
-    
-    newPoint = CGPointApplyAffineTransform(newPoint, view.transform);
-    oldPoint = CGPointApplyAffineTransform(oldPoint, view.transform);
-    
-    CGPoint position = view.layer.position;
-    
-    position.x -= oldPoint.x;
-    position.x += newPoint.x;
-    
-    position.y -= oldPoint.y;
-    position.y += newPoint.y;
-    
-    view.layer.position = position;
-    view.layer.anchorPoint = anchorPoint;
-}
-
 
 #pragma mark - Shake Helpers
 

@@ -506,7 +506,8 @@ int skipAll = NO;
         if(!CGPointEqualToPoint(gesture.scrap.layer.anchorPoint, CGPointZero)){
             // the anchor point can get reset by the pan/pinch gesture ending,
             // so we need to force it back to our 0,0 for the stretch
-            [self setAnchorPoint:CGPointMake(0, 0) forView:gesture.scrap];
+            // TODO: handle the pan gesture during stetch better
+            [UIView setAnchorPoint:CGPointMake(0, 0) forView:gesture.scrap];
         }
         [self isBeginning:gesture.state == UIGestureRecognizerStateBegan toPanAndScaleScrap:gesture.scrap withTouches:gesture.validTouches];
         // generate the actual transform between the two quads
@@ -515,21 +516,35 @@ int skipAll = NO;
 }
 
 -(CGPoint) beginStretchForScrap:(MMScrapView*)scrap{
+    // the user has just now begun to hold a scrap
+    // with four fingers and is stretching it.
+    // set the anchor point to 0,0 for the skew transform
+    // and keep our initial scale/rotate transform so
+    // we can animate back to it when we're done
     scrap.selected = YES;
-    [self setAnchorPoint:CGPointMake(0, 0) forView:scrap];
+    [UIView setAnchorPoint:CGPointMake(0, 0) forView:scrap];
     startSkewTransform = scrap.layer.transform;
+    // TODO: hand off properly to the pan gestures when we're
+    // done instead of killing them entirely during a stretch
     [panAndPinchScrapGesture cancel];
     [panAndPinchScrapGesture2 cancel];
     return [scrap convertPoint:scrap.bounds.origin toView:visibleStackHolder];
 }
 
 -(void) endStretchForScrap:(MMScrapView*)scrap{
+    // kill the blue highlight
+    // TODO: don't kill highlight if its going to be held
+    // by a pan scrap gesture
     scrap.selected = NO;
     
+    // these calculations help us determine a bounce scale that'll keep
+    // the bounce to 10px on every side of the scrap (20px total)
     CGFloat maxDim = MAX(scrap.bounds.size.width, scrap.bounds.size.height);
     CGFloat smallScale = maxDim > 200 ? (maxDim - 20) / maxDim : .9;
     CGFloat largeScale = maxDim > 200 ? (maxDim + 20) / maxDim : 1.1;
     
+    // these two transforms will be used to
+    // bounce the scrap back to its initial position
     CATransform3D smallTransform = CATransform3DConcat(startSkewTransform, CATransform3DMakeScale(smallScale, smallScale, 1));
     CATransform3D largeTransform = CATransform3DConcat(startSkewTransform, CATransform3DMakeScale(largeScale, largeScale, 1));
     
@@ -540,7 +555,7 @@ int skipAll = NO;
     [UIView animateWithDuration:.2 animations:^{
         scrap.layer.transform = smallTransform;
     } completion:^(BOOL finished){
-        [self setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
+        [UIView setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
         [UIView animateWithDuration:.1 animations:^{
             scrap.layer.transform = largeTransform;
         } completion:^(BOOL finished){
@@ -549,31 +564,6 @@ int skipAll = NO;
             }];
         }];
     }];
-}
-
-/**
- * this will set the anchor point for a scrap, so that it rotates
- * underneath the gesture realistically, instead of always from
- * it's center
- */
--(void)setAnchorPoint:(CGPoint)anchorPoint forView:(UIView *)view
-{
-    CGPoint newPoint = CGPointMake(view.bounds.size.width * anchorPoint.x, view.bounds.size.height * anchorPoint.y);
-    CGPoint oldPoint = CGPointMake(view.bounds.size.width * view.layer.anchorPoint.x, view.bounds.size.height * view.layer.anchorPoint.y);
-    
-    newPoint = CGPointApplyAffineTransform(newPoint, view.transform);
-    oldPoint = CGPointApplyAffineTransform(oldPoint, view.transform);
-    
-    CGPoint position = view.layer.position;
-    
-    position.x -= oldPoint.x;
-    position.x += newPoint.x;
-    
-    position.y -= oldPoint.y;
-    position.y += newPoint.y;
-    
-    view.layer.position = position;
-    view.layer.anchorPoint = anchorPoint;
 }
 
 
