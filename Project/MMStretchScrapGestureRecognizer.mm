@@ -22,6 +22,7 @@
 @synthesize pinchScrapGesture1;
 @synthesize pinchScrapGesture2;
 @synthesize scrapDelegate;
+@synthesize scrap = scrap;
 
 -(id) init{
     self = [super init];
@@ -76,10 +77,6 @@
             [ignoredTouches addObjectsInSet:touches];
             [validTouches removeObjectsInSet:touches];
             [self updateValidTouches];
-            if([validTouches intersectsSet:touches]){
-                NSLog(@"hrm, valid stretch touches are owned by %@", NSStringFromClass([gesture class]));
-                NSLog(@"possible: %d  ignored: %d  valid: %d", [possibleTouches count], [ignoredTouches count], [validTouches count]);
-            }
         }
     }
 }
@@ -185,11 +182,6 @@
         }
         [self sortValidTouches];
     }
-    if(scrap){
-        NSLog(@"is stretching!");
-    }else{
-        NSLog(@"is NOT stretching! %d %d %d", [ignoredTouches count], [possibleTouches count], [validTouches count]);
-    }
 }
 
 // this method looks at our internal state for the gesture, and updates
@@ -248,6 +240,14 @@
 }
 
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
+    return NO;
+}
+
+- (BOOL)shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return NO;
+}
+
+- (BOOL)shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
     return NO;
 }
 

@@ -17,6 +17,8 @@
 @property (nonatomic, weak) MMPanAndPinchScrapGestureRecognizer* pinchScrapGesture1;
 @property (nonatomic, weak) MMPanAndPinchScrapGestureRecognizer* pinchScrapGesture2;
 @property (nonatomic, weak) NSObject<MMStretchScrapGestureRecognizerDelegate>* scrapDelegate;
+@property (readonly) MMScrapView* scrap;
+@property (readonly) NSArray* validTouches;
 
 
 + (CATransform3D)transformQuadrilateral:(Quadrilateral)origin toQuadrilateral:(Quadrilateral)destination;

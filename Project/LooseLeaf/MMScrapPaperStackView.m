@@ -58,18 +58,21 @@
         panAndPinchScrapGesture.bezelDirectionMask = MMBezelDirectionRight;
         panAndPinchScrapGesture.scrapDelegate = self;
         panAndPinchScrapGesture.cancelsTouchesInView = NO;
+        panAndPinchScrapGesture.delegate = self;
         [self addGestureRecognizer:panAndPinchScrapGesture];
         
         panAndPinchScrapGesture2 = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
         panAndPinchScrapGesture2.bezelDirectionMask = MMBezelDirectionRight;
         panAndPinchScrapGesture2.scrapDelegate = self;
         panAndPinchScrapGesture2.cancelsTouchesInView = NO;
+        panAndPinchScrapGesture2.delegate = self;
         [self addGestureRecognizer:panAndPinchScrapGesture2];
         
         stretchScrapGesture = [[MMStretchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(stretchGesture:)];
         stretchScrapGesture.scrapDelegate = self;
         stretchScrapGesture.pinchScrapGesture1 = panAndPinchScrapGesture;
         stretchScrapGesture.pinchScrapGesture2 = panAndPinchScrapGesture2;
+        stretchScrapGesture.delegate = self;
         [self addGestureRecognizer:stretchScrapGesture];
         
         // make sure sidebar buttons hide the scrap menu
@@ -269,7 +272,7 @@ int skipAll = NO;
         gesture.preGestureCenter = [[visibleStackHolder peekSubview] convertPoint:centerInPage toView:scrapContainer];
     }
     
-    if(gesture.scrap){
+    if(gesture.scrap && (gesture.scrap != stretchScrapGesture.scrap)){
         
         // handle the scrap.
         //
@@ -486,18 +489,6 @@ int skipAll = NO;
     *scrapCenterInPage = CGPointApplyAffineTransform(*scrapCenterInPage, reverseScaleTransform);
 }
 
-
-#pragma mark - MMPanAndPinchScrapGestureRecognizerDelegate
-
--(NSArray*) scraps{
-    return [[visibleStackHolder peekSubview] scraps];
-}
-
--(BOOL) panScrapRequiresLongPress{
-    return rulerButton.selected;
-}
-
-
 #pragma mark - MMStretchScrapGestureRecognizer
 
 -(void) stretchGesture:(MMStretchScrapGestureRecognizer*)gesture{
@@ -509,7 +500,23 @@ int skipAll = NO;
     }else if(gesture.state == UIGestureRecognizerStateEnded){
         NSLog(@"stretch ended");
     }
+    
+    if(gesture.scrap){
+        [self isBeginning:gesture.state == UIGestureRecognizerStateBegan toPanAndScaleScrap:gesture.scrap withTouches:gesture.validTouches];
+    }
 }
+
+
+#pragma mark - MMPanAndPinchScrapGestureRecognizerDelegate
+
+-(NSArray*) scraps{
+    return [[visibleStackHolder peekSubview] scraps];
+}
+
+-(BOOL) panScrapRequiresLongPress{
+    return rulerButton.selected;
+}
+
 
 #pragma mark - MMPaperViewDelegate
 
