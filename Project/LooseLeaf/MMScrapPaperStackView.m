@@ -23,6 +23,10 @@
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture;
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture2;
     MMStretchScrapGestureRecognizer* stretchScrapGesture;
+
+    // this is the initial transform of a scrap
+    // before it's started to be stretched.
+    CATransform3D startSkewTransform;
     
     NSTimer* debugTimer;
     NSTimer* drawTimer;
@@ -498,17 +502,6 @@ int skipAll = NO;
 #pragma mark - MMStretchScrapGestureRecognizer
 
 -(void) stretchGesture:(MMStretchScrapGestureRecognizer*)gesture{
-    if(gesture.state == UIGestureRecognizerStateBegan){
-        NSLog(@"stretch began");
-    }else if(gesture.state == UIGestureRecognizerStateCancelled ||
-             gesture.state == UIGestureRecognizerStateFailed){
-        NSLog(@"stretch failed or cancelled");
-        gesture.scrap.selected = NO;
-    }else if(gesture.state == UIGestureRecognizerStateEnded){
-        NSLog(@"stretch ended");
-        gesture.scrap.selected = NO;
-    }
-    
     if(gesture.scrap){
         if(!CGPointEqualToPoint(gesture.scrap.layer.anchorPoint, CGPointZero)){
             // the anchor point can get reset by the pan/pinch gesture ending,
@@ -516,31 +509,21 @@ int skipAll = NO;
             [self setAnchorPoint:CGPointMake(0, 0) forView:gesture.scrap];
         }
         [self isBeginning:gesture.state == UIGestureRecognizerStateBegan toPanAndScaleScrap:gesture.scrap withTouches:gesture.validTouches];
-        Quadrilateral secondQ = [gesture getQuad];
-        Quadrilateral q1 = [self adjustedQuad:firstQ by:adjust];
-        Quadrilateral q2 = [self adjustedQuad:secondQ by:adjust];
-        
         // generate the actual transform between the two quads
-        CATransform3D skewTransform = [MMStretchScrapGestureRecognizer transformQuadrilateral:q1 toQuadrilateral:q2];
-        gesture.scrap.layer.transform = CATransform3DConcat(startTransform, skewTransform);
+        gesture.scrap.layer.transform = CATransform3DConcat(startSkewTransform, [gesture skewTransform]);
     }
 }
 
-CGPoint adjust;
-Quadrilateral firstQ;
-CATransform3D startTransform;
-
--(void) beginStretchForScrap:(MMScrapView*)scrap{
+-(CGPoint) beginStretchForScrap:(MMScrapView*)scrap{
     scrap.selected = YES;
     [self setAnchorPoint:CGPointMake(0, 0) forView:scrap];
-    adjust = [scrap convertPoint:scrap.bounds.origin toView:visibleStackHolder];
-    firstQ = [stretchScrapGesture getQuad];
-    startTransform = scrap.layer.transform;
+    startSkewTransform = scrap.layer.transform;
+    return [scrap convertPoint:scrap.bounds.origin toView:visibleStackHolder];
 }
 
 -(void) endStretchForScrap:(MMScrapView*)scrap{
     scrap.selected = NO;
-    stretchScrapGesture.scrap.layer.transform = startTransform;
+    stretchScrapGesture.scrap.layer.transform = startSkewTransform;
     [self setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
 }
 
@@ -568,24 +551,6 @@ CATransform3D startTransform;
     view.layer.position = position;
     view.layer.anchorPoint = anchorPoint;
 }
-
-
-// move the quad by the input point amount
--(Quadrilateral) adjustedQuad:(Quadrilateral)a by:(CGPoint)p{
-    Quadrilateral output = a;
-    output.upperLeft.x -= p.x;
-    output.upperLeft.y -= p.y;
-    output.upperRight.x -= p.x;
-    output.upperRight.y -= p.y;
-    output.lowerRight.x -= p.x;
-    output.lowerRight.y -= p.y;
-    output.lowerLeft.x -= p.x;
-    output.lowerLeft.y -= p.y;
-    
-    return output;
-}
-
-
 
 
 #pragma mark - MMPanAndPinchScrapGestureRecognizerDelegate
@@ -641,8 +606,8 @@ CATransform3D startTransform;
 
 -(void) finishedPanningAndScalingScrap:(MMScrapView*)scrap{
     // save page if we're not holding any scraps
-    if(!panAndPinchScrapGesture.scrap && !panAndPinchScrapGesture2.scrap){
-           [[visibleStackHolder peekSubview] saveToDisk];
+    if(!panAndPinchScrapGesture.scrap && !panAndPinchScrapGesture2.scrap && !stretchScrapGesture.scrap){
+        [[visibleStackHolder peekSubview] saveToDisk];
     }
 }
 

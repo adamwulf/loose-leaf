@@ -19,7 +19,7 @@
 @property (nonatomic, weak) NSObject<MMStretchScrapGestureRecognizerDelegate>* scrapDelegate;
 @property (readonly) MMScrapView* scrap;
 @property (readonly) NSArray* validTouches;
-
+@property (readonly) CATransform3D skewTransform;
 
 + (CATransform3D)transformQuadrilateral:(Quadrilateral)origin toQuadrilateral:(Quadrilateral)destination;
 

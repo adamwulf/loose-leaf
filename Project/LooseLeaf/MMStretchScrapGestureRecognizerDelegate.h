@@ -18,7 +18,7 @@
 -(NSArray*) scraps;
 
 
--(void) beginStretchForScrap:(MMScrapView*)scrap;
+-(CGPoint) beginStretchForScrap:(MMScrapView*)scrap;
 
 -(void) endStretchForScrap:(MMScrapView*)scrap;
 

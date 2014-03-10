@@ -17,12 +17,18 @@
     NSMutableOrderedSet* possibleTouches;
     NSMutableOrderedSet* validTouches;
     MMScrapView* scrap;
+
+    // these are used to create the transform for the scrap
+    CGPoint adjust;
+    Quadrilateral firstQ;
+    CATransform3D skewTransform;
 }
 
 @synthesize pinchScrapGesture1;
 @synthesize pinchScrapGesture2;
 @synthesize scrapDelegate;
 @synthesize scrap = scrap;
+@synthesize skewTransform = skewTransform;
 
 -(id) init{
     self = [super init];
@@ -151,6 +157,14 @@
 
 
 -(void) updateValidTouches{
+    if([validTouches count] == 4){
+        Quadrilateral secondQ = [self getQuad];
+        Quadrilateral q1 = [self adjustedQuad:firstQ by:adjust];
+        Quadrilateral q2 = [self adjustedQuad:secondQ by:adjust];
+        
+        // generate the actual transform between the two quads
+        skewTransform = [MMStretchScrapGestureRecognizer transformQuadrilateral:q1 toQuadrilateral:q2];
+    }
     if([validTouches count] > 0 &&
        [validTouches count] != 4){
         // valid touches must be exactly 4, otherwise
@@ -167,7 +181,6 @@
         // delegate lets us filter out any touches that are
         // within the bounds of the scrap but would land on some
         // other scrap that's above it in view
-        NSLog(@"scrap is same %d", pinchScrapGesture1.scrap == pinchScrapGesture2.scrap);
         NSArray* scrapsToLookAt = scrapDelegate.scraps;
         NSMutableSet* allPossibleTouches = [NSMutableSet setWithSet:[possibleTouches set]];
         for(MMScrapView* pinchedScrap in [scrapsToLookAt reverseObjectEnumerator]){
@@ -195,7 +208,9 @@
                     scrap = pinchedScrap;
                     [self sortValidTouches];
                     [self.scrapDelegate ownershipOfTouches:[validTouches set] isGesture:self];
-                    [self.scrapDelegate beginStretchForScrap:scrap];
+                    skewTransform = CATransform3DIdentity;
+                    adjust = [self.scrapDelegate beginStretchForScrap:scrap];
+                    firstQ = [self getQuad];
                     break;
                 }else{
                     [allPossibleTouches removeObjectsInSet:touchesInScrap];
@@ -256,6 +271,20 @@
     }];
 }
 
+// move the quad by the input point amount
+-(Quadrilateral) adjustedQuad:(Quadrilateral)a by:(CGPoint)p{
+    Quadrilateral output = a;
+    output.upperLeft.x -= p.x;
+    output.upperLeft.y -= p.y;
+    output.upperRight.x -= p.x;
+    output.upperRight.y -= p.y;
+    output.lowerRight.x -= p.x;
+    output.lowerRight.y -= p.y;
+    output.lowerLeft.x -= p.x;
+    output.lowerLeft.y -= p.y;
+    
+    return output;
+}
 
 #pragma mark - UIGestureRecognizer
 
