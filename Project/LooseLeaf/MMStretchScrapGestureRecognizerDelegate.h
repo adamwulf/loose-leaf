@@ -9,8 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "Constants.h"
+#import "MMPanGestureDelegate.h"
 
-@protocol MMStretchScrapGestureRecognizerDelegate <NSObject>
+@protocol MMStretchScrapGestureRecognizerDelegate <MMPanGestureDelegate>
 
 -(NSArray*) scraps;
 

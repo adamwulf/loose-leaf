@@ -158,8 +158,6 @@
         // delegate lets us filter out any touches that are
         // within the bounds of the scrap but would land on some
         // other scrap that's above it in view
-        NSLog(@"possible is %d", [possibleTouches count]);
-        NSLog(@"active scrap gestures %d %d", [pinchScrapGesture1.validTouches count], [pinchScrapGesture2.validTouches count]);
         NSLog(@"scrap is same %d", pinchScrapGesture1.scrap == pinchScrapGesture2.scrap);
         NSArray* scrapsToLookAt = scrapDelegate.scraps;
         NSMutableSet* allPossibleTouches = [NSMutableSet setWithSet:[possibleTouches set]];
@@ -169,16 +167,13 @@
                 // dont steal touches from other pinch gesture
                 if(pinchScrapGesture1.scrap != pinchScrapGesture2.scrap){
                     [touchesInScrap removeObjectsInArray:pinchScrapGesture2.validTouches];
-                    NSLog(@"removing pinch gesture 2");
                 }
             }else if(pinchedScrap == pinchScrapGesture2.scrap){
                 // dont steal touches from other pinch gesture
                 if(pinchScrapGesture1.scrap != pinchScrapGesture2.scrap){
                     [touchesInScrap removeObjectsInArray:pinchScrapGesture1.validTouches];
-                    NSLog(@"removing pinch gesture 1");
                 }
             }
-            NSLog(@"found %d touches in scrap", [touchesInScrap count]);
             if(pinchedScrap == pinchScrapGesture1.scrap ||
                pinchedScrap == pinchScrapGesture2.scrap){
                 while([touchesInScrap count] > 4){

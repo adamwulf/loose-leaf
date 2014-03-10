@@ -229,6 +229,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
                     [scrapDelegate ownershipOfTouches:touchesInScrap isGesture:self];
                     [validTouches addObjectsInSet:touchesInScrap];
                     [possibleTouches removeObjectsInSet:touchesInScrap];
+                    [self.scrapDelegate ownershipOfTouches:[validTouches set] isGesture:self];
                 }else{
                     // if our gesture already has two fingers on the scrap,
                     // then ignore any additioanl touches on the scrap.
