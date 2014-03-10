@@ -189,6 +189,8 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         [self calculateShakesForTouch:touch];
     }
     if([self.scrapDelegate panScrapRequiresLongPress] && ![possibleTouches intersectsSet:touches]){
+        // ignore touches in the possible set, b/c if they're already in there during
+        // this Began method call, then that means they've been blessed
         [ignoredTouches addObjectsInSet:touches];
         return;
     }

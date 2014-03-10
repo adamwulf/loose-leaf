@@ -13,6 +13,8 @@
 
 @protocol MMStretchScrapGestureRecognizerDelegate <MMPanGestureDelegate>
 
+-(BOOL) panScrapRequiresLongPress;
+
 -(NSArray*) scraps;
 
 @end

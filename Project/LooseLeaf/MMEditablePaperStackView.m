@@ -680,6 +680,17 @@
 #pragma mark - JotViewDelegate
 
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+    if([[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count] > 0){
+        return NO;
+    }
+    if([drawableView.state.currentStrokes count]){
+        return NO;
+    }
+    for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scraps]){
+        if([scrap.state.drawableView.state.currentStrokes count]){
+            return NO;
+        }
+    }
     [rulerView willBeginStrokeAt:[touch locationInView:rulerView]];
     return [[self activePen] willBeginStrokeWithTouch:touch];
 }

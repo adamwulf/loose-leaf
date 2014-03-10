@@ -27,4 +27,6 @@
 
 -(Quadrilateral) getQuad;
 
+-(void) blessTouches:(NSSet*)touches;
+
 @end

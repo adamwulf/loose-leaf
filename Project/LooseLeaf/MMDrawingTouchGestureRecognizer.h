@@ -18,6 +18,7 @@
 }
 
 @property (nonatomic, weak) NSObject<MMPanGestureDelegate>* touchDelegate;
+@property (readonly) NSArray* validTouches;
 
 +(MMDrawingTouchGestureRecognizer*) sharedInstace;
 

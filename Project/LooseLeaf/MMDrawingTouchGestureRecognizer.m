@@ -40,6 +40,11 @@ static MMDrawingTouchGestureRecognizer* _instance = nil;
     return _instance;
 }
 
+-(NSArray*)validTouches{
+    return [validTouches array];
+}
+
+
 #pragma mark - UIGestureRecognizer
 
 -(BOOL) canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
@@ -64,6 +69,10 @@ static MMDrawingTouchGestureRecognizer* _instance = nil;
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
     for(UITouch* touch in touches){
         if([possibleTouches containsObject:touch]){
+            if([validTouches count] > 0){
+                [possibleTouches removeObject:touch];
+                [ignoredTouches addObject:touch];
+            }
             struct DurationCacheObject velInfo = [[MMTouchVelocityGestureRecognizer sharedInstace] velocityInformationForTouch:touch withIndex:nil];
             if(velInfo.totalDistance > 100){
                 [validTouches addObject:touch];

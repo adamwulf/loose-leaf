@@ -591,6 +591,7 @@ int skipAll = NO;
         }else{
             [panAndPinchScrapGesture2 blessTouches:touches];
         }
+        [stretchScrapGesture blessTouches:touches];
     }
 }
 

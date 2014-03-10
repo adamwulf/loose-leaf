@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <JotUI/JotUI.h>
 #import "MMScrapViewStateDelegate.h"
+#import "MMScrapViewState.h"
 
 @interface MMScrapView : UIView<MMScrapViewStateDelegate>
 

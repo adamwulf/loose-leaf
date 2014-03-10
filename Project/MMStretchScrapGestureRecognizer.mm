@@ -81,6 +81,14 @@
     }
 }
 
+-(void) blessTouches:(NSSet*)touches{
+    NSMutableSet* newPossibleTouches = [NSMutableSet setWithSet:ignoredTouches];
+    [newPossibleTouches intersectSet:touches];
+    [possibleTouches addObjectsInSet:newPossibleTouches];
+    [ignoredTouches removeObjectsInSet:newPossibleTouches];
+    [self touchesBegan:newPossibleTouches withEvent:nil];
+}
+
 
 #pragma mark - Quadrilateral
 
@@ -272,6 +280,12 @@
 }
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    if([self.scrapDelegate panScrapRequiresLongPress] && ![possibleTouches intersectsSet:touches]){
+        // ignore touches in the possible set, b/c if they're already in there during
+        // this Began method call, then that means they've been blessed
+        [ignoredTouches addObjectsInSet:touches];
+        return;
+    }
     [touches enumerateObjectsUsingBlock:^(id touch, BOOL* stop){
         [possibleTouches addObject:touch];
     }];
