@@ -163,6 +163,9 @@ int skipAll = NO;
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         UIGestureRecognizerState st = gesture.state;
         NSLog(@"%@ %d", NSStringFromClass([gesture class]), st);
+        if([gesture respondsToSelector:@selector(validTouches)]){
+            NSLog(@"   validTouches: %d", [[gesture performSelector:@selector(validTouches)] count]);
+        }
         if([gesture respondsToSelector:@selector(touches)]){
             NSLog(@"   touches: %d", [[gesture performSelector:@selector(touches)] count]);
         }
@@ -328,7 +331,7 @@ int skipAll = NO;
         }
         
         
-        [self isBeginning:gesture.state == UIGestureRecognizerStateBegan toPanAndScaleScrap:gesture.scrap withTouches:gesture.touches];
+        [self isBeginning:gesture.state == UIGestureRecognizerStateBegan toPanAndScaleScrap:gesture.scrap withTouches:gesture.validTouches];
     }
     
     MMScrapView* scrapViewIfFinished = nil;

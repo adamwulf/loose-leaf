@@ -113,7 +113,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     return ret;
 }
 
--(NSArray*)touches{
+-(NSArray*)validTouches{
     return [validTouches array];
 }
 

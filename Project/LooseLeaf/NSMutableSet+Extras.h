@@ -14,6 +14,8 @@
 
 -(NSSet*) setByRemovingObject:(id)obj;
 
+-(void) removeObjectsInArray:(NSArray*)arr;
+
 -(void) addObjectsInSet:(NSSet*)set;
 
 @end

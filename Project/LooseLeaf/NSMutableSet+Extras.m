@@ -23,6 +23,12 @@
 }
 
 
+-(void) removeObjectsInArray:(NSArray*)arr{
+    for(id obj in arr){
+        [self removeObject:obj];
+    }
+}
+
 -(void) addObjectsInSet:(NSSet*)set{
     for(id obj in set){
         [self addObject:obj];

@@ -44,7 +44,7 @@
 @property (nonatomic, assign) MMBezelDirection bezelDirectionMask;
 @property (nonatomic, readonly) MMBezelDirection didExitToBezel;
 @property (nonatomic, weak) NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>* scrapDelegate;
-@property (readonly) NSArray* touches;
+@property (readonly) NSArray* validTouches;
 @property (nonatomic, readonly) CGFloat scale;
 @property (nonatomic, readonly) CGFloat rotation;
 @property (nonatomic, readonly) CGPoint translation;
