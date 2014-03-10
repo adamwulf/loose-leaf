@@ -33,7 +33,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		6616CCD318B6AF1A00CAD0F3 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = ../Frameworks/Crashlytics.framework; sourceTree = "<group>"; };
+		6616CCD318B6AF1A00CAD0F3 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = ../Project/Crashlytics.framework; sourceTree = "<group>"; };
 		6651CAD818775B1500A95F2F /* SYShape+Bezier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SYShape+Bezier.h"; path = "../../Project/SYShape+Bezier.h"; sourceTree = "<group>"; };
 		6651CAD918775B1500A95F2F /* SYShape+Bezier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SYShape+Bezier.m"; path = "../../Project/SYShape+Bezier.m"; sourceTree = "<group>"; };
 		6651CADC18775B5D00A95F2F /* UIColor+ColorWithHex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+ColorWithHex.h"; sourceTree = "<group>"; };

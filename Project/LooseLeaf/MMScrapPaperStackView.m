@@ -510,17 +510,82 @@ int skipAll = NO;
     }
     
     if(gesture.scrap){
+        if(!CGPointEqualToPoint(gesture.scrap.layer.anchorPoint, CGPointZero)){
+            // the anchor point can get reset by the pan/pinch gesture ending,
+            // so we need to force it back to our 0,0 for the stretch
+            [self setAnchorPoint:CGPointMake(0, 0) forView:gesture.scrap];
+        }
         [self isBeginning:gesture.state == UIGestureRecognizerStateBegan toPanAndScaleScrap:gesture.scrap withTouches:gesture.validTouches];
+        Quadrilateral secondQ = [gesture getQuad];
+        Quadrilateral q1 = [self adjustedQuad:firstQ by:adjust];
+        Quadrilateral q2 = [self adjustedQuad:secondQ by:adjust];
+        
+        // generate the actual transform between the two quads
+        CATransform3D skewTransform = [MMStretchScrapGestureRecognizer transformQuadrilateral:q1 toQuadrilateral:q2];
+        gesture.scrap.layer.transform = CATransform3DConcat(startTransform, skewTransform);
     }
 }
 
+CGPoint adjust;
+Quadrilateral firstQ;
+CATransform3D startTransform;
+
 -(void) beginStretchForScrap:(MMScrapView*)scrap{
     scrap.selected = YES;
+    [self setAnchorPoint:CGPointMake(0, 0) forView:scrap];
+    adjust = [scrap convertPoint:scrap.bounds.origin toView:visibleStackHolder];
+    firstQ = [stretchScrapGesture getQuad];
+    startTransform = scrap.layer.transform;
 }
 
 -(void) endStretchForScrap:(MMScrapView*)scrap{
     scrap.selected = NO;
+    stretchScrapGesture.scrap.layer.transform = startTransform;
+    [self setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
 }
+
+/**
+ * this will set the anchor point for a scrap, so that it rotates
+ * underneath the gesture realistically, instead of always from
+ * it's center
+ */
+-(void)setAnchorPoint:(CGPoint)anchorPoint forView:(UIView *)view
+{
+    CGPoint newPoint = CGPointMake(view.bounds.size.width * anchorPoint.x, view.bounds.size.height * anchorPoint.y);
+    CGPoint oldPoint = CGPointMake(view.bounds.size.width * view.layer.anchorPoint.x, view.bounds.size.height * view.layer.anchorPoint.y);
+    
+    newPoint = CGPointApplyAffineTransform(newPoint, view.transform);
+    oldPoint = CGPointApplyAffineTransform(oldPoint, view.transform);
+    
+    CGPoint position = view.layer.position;
+    
+    position.x -= oldPoint.x;
+    position.x += newPoint.x;
+    
+    position.y -= oldPoint.y;
+    position.y += newPoint.y;
+    
+    view.layer.position = position;
+    view.layer.anchorPoint = anchorPoint;
+}
+
+
+// move the quad by the input point amount
+-(Quadrilateral) adjustedQuad:(Quadrilateral)a by:(CGPoint)p{
+    Quadrilateral output = a;
+    output.upperLeft.x -= p.x;
+    output.upperLeft.y -= p.y;
+    output.upperRight.x -= p.x;
+    output.upperRight.y -= p.y;
+    output.lowerRight.x -= p.x;
+    output.lowerRight.y -= p.y;
+    output.lowerLeft.x -= p.x;
+    output.lowerLeft.y -= p.y;
+    
+    return output;
+}
+
+
 
 
 #pragma mark - MMPanAndPinchScrapGestureRecognizerDelegate

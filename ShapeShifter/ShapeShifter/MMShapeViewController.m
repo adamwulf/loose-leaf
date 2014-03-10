@@ -26,10 +26,9 @@
     UIView* bl;
     
     CGPoint adjust;
-    
-    
     Quadrilateral firstQ;
-    
+    CATransform3D startTransform;
+
     UILabel* convexLabel;
 }
 
@@ -191,7 +190,6 @@ const int COLINEAR = 0;
 
 
 
-CATransform3D startTransform;
 -(void) didStretch:(MMStretchGestureRecognizer1*)gesture{
     // first, set our anchor point to 0,0 if we're
     // beginning the gesture

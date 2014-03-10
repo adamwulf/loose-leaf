@@ -193,6 +193,7 @@
                     [validTouches addObjectsInSet:touchesInScrap];
                     [possibleTouches removeObjectsInSet:touchesInScrap];
                     scrap = pinchedScrap;
+                    [self sortValidTouches];
                     [self.scrapDelegate ownershipOfTouches:[validTouches set] isGesture:self];
                     [self.scrapDelegate beginStretchForScrap:scrap];
                     break;
@@ -204,7 +205,6 @@
                 [allPossibleTouches removeObjectsInSet:touchesInScrap];
             }
         }
-        [self sortValidTouches];
     }
 }
 
