@@ -12,8 +12,16 @@
 #import "MMVector.h"
 #import "MMPanAndPinchScrapGestureRecognizer.h"
 
-@implementation MMStretchScrapGestureRecognizer
+@implementation MMStretchScrapGestureRecognizer{
+    NSMutableSet* ignoredTouches;
+    NSMutableOrderedSet* possibleTouches;
+    NSMutableOrderedSet* validTouches;
+    MMScrapView* scrap;
+}
 
+@synthesize pinchScrapGesture1;
+@synthesize pinchScrapGesture2;
+@synthesize scrapDelegate;
 
 -(id) init{
     self = [super init];
@@ -140,20 +148,47 @@
 -(void) updateValidTouches{
     if([validTouches count] > 0 &&
        [validTouches count] != 4){
-        // valid touches must be exactly 4
+        // valid touches must be exactly 4, otherwise
+        // we should stop the stretching
         [possibleTouches addObjectsInOrderedSet:validTouches];
         [validTouches removeAllObjects];
+        scrap = nil;
     }
     if([possibleTouches count] == 4){
-        // if we have 4 valid, then add them
-        [validTouches addObjectsInOrderedSet:possibleTouches];
-        [possibleTouches removeAllObjects];
+        // if we have 4 possible touches, then we should
+        // check the scrap panning gestures to see if either
+        // of them hold all 4 touches. calling out to our
+        // delegate lets us filter out any touches that are
+        // within the bounds of the scrap but would land on some
+        // other scrap that's above it in view
+        NSArray* scrapsToLookAt = scrapDelegate.scraps;
+        NSMutableSet* allPossibleTouches = [NSMutableSet setWithSet:[possibleTouches set]];
+        for(MMScrapView* pinchedScrap in [scrapsToLookAt reverseObjectEnumerator]){
+            NSMutableSet* touchesInScrap = [NSMutableSet setWithSet:[pinchedScrap allMatchingTouchesFrom:allPossibleTouches]];
+            if(pinchedScrap == pinchScrapGesture1.scrap ||
+               pinchedScrap == pinchScrapGesture2.scrap){
+                while([touchesInScrap count] > 4){
+                    // remove some random touches so that we have exactly 4
+                    [touchesInScrap removeObject:[touchesInScrap anyObject]];
+                }
+                if([touchesInScrap count] == 4){
+                    [validTouches addObjectsInSet:touchesInScrap];
+                    [possibleTouches removeObjectsInSet:touchesInScrap];
+                    scrap = pinchedScrap;
+                }else{
+                    [allPossibleTouches removeObjectsInSet:touchesInScrap];
+                }
+            }else{
+                // don't allow touches in any scrap that's above our target scrap
+                [allPossibleTouches removeObjectsInSet:touchesInScrap];
+            }
+        }
         [self sortValidTouches];
     }
-    if([validTouches count] == 4){
+    if(scrap){
         NSLog(@"is stretching!");
     }else{
-        NSLog(@"is NOT stretching!");
+        NSLog(@"is NOT stretching! %d %d %d", [ignoredTouches count], [possibleTouches count], [validTouches count]);
     }
 }
 

@@ -67,6 +67,9 @@
         [self addGestureRecognizer:panAndPinchScrapGesture2];
         
         stretchScrapGesture = [[MMStretchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(stretchGesture:)];
+        stretchScrapGesture.scrapDelegate = self;
+        stretchScrapGesture.pinchScrapGesture1 = panAndPinchScrapGesture;
+        stretchScrapGesture.pinchScrapGesture2 = panAndPinchScrapGesture2;
         [self addGestureRecognizer:stretchScrapGesture];
         
         // make sure sidebar buttons hide the scrap menu
@@ -640,5 +643,13 @@ int skipAll = NO;
     [super finishedScalingReallySmall:page];
 }
 
+
+#pragma mark - MMStretchScrapGestureRecognizerDelegate
+
+// return all touches that fall within the input scrap's boundary
+// and don't fall within any scrap above the input scrap
+-(NSSet*) setOfTouchesFrom:(NSOrderedSet *)touches inScrap:(MMScrapView *)scrap{
+    return nil;
+}
 
 @end

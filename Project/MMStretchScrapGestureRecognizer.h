@@ -9,14 +9,15 @@
 #import <UIKit/UIKit.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "Constants.h"
+#import "MMPanAndPinchScrapGestureRecognizer.h"
+#import "MMStretchScrapGestureRecognizerDelegate.h"
 
+@interface MMStretchScrapGestureRecognizer : UIGestureRecognizer
 
-@interface MMStretchScrapGestureRecognizer : UIGestureRecognizer{
-    // the collection of valid touches for this gesture
-    NSMutableSet* ignoredTouches;
-    NSMutableOrderedSet* possibleTouches;
-    NSMutableOrderedSet* validTouches;
-}
+@property (nonatomic, weak) MMPanAndPinchScrapGestureRecognizer* pinchScrapGesture1;
+@property (nonatomic, weak) MMPanAndPinchScrapGestureRecognizer* pinchScrapGesture2;
+@property (nonatomic, weak) NSObject<MMStretchScrapGestureRecognizerDelegate>* scrapDelegate;
+
 
 + (CATransform3D)transformQuadrilateral:(Quadrilateral)origin toQuadrilateral:(Quadrilateral)destination;
 
