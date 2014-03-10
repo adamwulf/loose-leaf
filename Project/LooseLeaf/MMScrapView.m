@@ -165,8 +165,7 @@
 -(void) setShouldShowShadow:(BOOL)shouldShowShadow{
     if(shouldShowShadow){
         self.layer.shadowPath = scrapState.bezierPath.CGPath;
-        self.layer.shadowRadius = 1.5;
-        self.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.5].CGColor;
+        [self setSelected:selected]; // reset shadow
         self.layer.shadowOpacity = .65;
         self.layer.shadowOffset = CGSizeMake(0, 0);
         borderView.hidden = YES;

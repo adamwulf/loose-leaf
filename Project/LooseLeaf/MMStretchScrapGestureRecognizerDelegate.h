@@ -17,4 +17,9 @@
 
 -(NSArray*) scraps;
 
+
+-(void) beginStretchForScrap:(MMScrapView*)scrap;
+
+-(void) endStretchForScrap:(MMScrapView*)scrap;
+
 @end

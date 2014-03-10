@@ -343,7 +343,10 @@ int skipAll = NO;
     }else if(gesture.state == UIGestureRecognizerStateEnded ||
              gesture.state == UIGestureRecognizerStateCancelled){
         // turn off glow
-        gesture.scrap.selected = NO;
+        if(!stretchScrapGesture.scrap){
+            // only if that scrap isn't being stretched
+            gesture.scrap.selected = NO;
+        }
         
         //
         // notes for dropping scraps:
@@ -500,13 +503,23 @@ int skipAll = NO;
     }else if(gesture.state == UIGestureRecognizerStateCancelled ||
              gesture.state == UIGestureRecognizerStateFailed){
         NSLog(@"stretch failed or cancelled");
+        gesture.scrap.selected = NO;
     }else if(gesture.state == UIGestureRecognizerStateEnded){
         NSLog(@"stretch ended");
+        gesture.scrap.selected = NO;
     }
     
     if(gesture.scrap){
         [self isBeginning:gesture.state == UIGestureRecognizerStateBegan toPanAndScaleScrap:gesture.scrap withTouches:gesture.validTouches];
     }
+}
+
+-(void) beginStretchForScrap:(MMScrapView*)scrap{
+    scrap.selected = YES;
+}
+
+-(void) endStretchForScrap:(MMScrapView*)scrap{
+    scrap.selected = NO;
 }
 
 

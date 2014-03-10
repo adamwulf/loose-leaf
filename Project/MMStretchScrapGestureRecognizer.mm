@@ -157,6 +157,7 @@
         // we should stop the stretching
         [possibleTouches addObjectsInOrderedSet:validTouches];
         [validTouches removeAllObjects];
+        [self.scrapDelegate endStretchForScrap:scrap];
         scrap = nil;
     }
     if([possibleTouches count] == 4){
@@ -192,6 +193,8 @@
                     [validTouches addObjectsInSet:touchesInScrap];
                     [possibleTouches removeObjectsInSet:touchesInScrap];
                     scrap = pinchedScrap;
+                    [self.scrapDelegate ownershipOfTouches:[validTouches set] isGesture:self];
+                    [self.scrapDelegate beginStretchForScrap:scrap];
                     break;
                 }else{
                     [allPossibleTouches removeObjectsInSet:touchesInScrap];
@@ -280,9 +283,11 @@
 }
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    if([self.scrapDelegate panScrapRequiresLongPress] && ![possibleTouches intersectsSet:touches]){
+    if([self.scrapDelegate panScrapRequiresLongPress] && ![possibleTouches intersectsSet:touches] &&
+       !pinchScrapGesture1.scrap && !pinchScrapGesture2.scrap){
         // ignore touches in the possible set, b/c if they're already in there during
-        // this Began method call, then that means they've been blessed
+        // this Began method call, then that means they've been blessed. also allow
+        // all touches if a scrap is already being panned
         [ignoredTouches addObjectsInSet:touches];
         return;
     }

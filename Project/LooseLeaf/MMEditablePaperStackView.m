@@ -680,6 +680,7 @@
 #pragma mark - JotViewDelegate
 
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+    // dont start a new stroke if one already exists
     if([[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count] > 0){
         return NO;
     }
