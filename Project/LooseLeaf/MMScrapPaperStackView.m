@@ -539,6 +539,12 @@ CGPoint gestureLocationAfterAnimation;
 
 -(CGPoint) beginStretchForScrap:(MMScrapView*)scrap{
     
+    // when a scrap is beginning to be stretched, we need to
+    // track it's anchor point before we begin the stretch.
+    // this will be the anchor of the pan gesture.
+    // TODO: what happens if i grab this scrap with 4 fingers immediately
+    // the scrap.center will be calcualted based on this
+    // gesture specific anchor point
     scrapAnchorAtStretchStart = scrap.layer.anchorPoint;
     
     // to calculate the initial position and transform we
@@ -549,7 +555,9 @@ CGPoint gestureLocationAfterAnimation;
                                                 gesture.translation.y + gesture.preGestureCenter.y);
     
     
-    
+    // now, for our stretch gesture, we need the anchor point
+    // to be at the 0,0 point of the scrap so that the transform
+    // works properly to stretch the scrap.
     [UIView setAnchorPoint:CGPointMake(0, 0) forView:scrap];
     // the user has just now begun to hold a scrap
     // with four fingers and is stretching it.
@@ -558,21 +566,31 @@ CGPoint gestureLocationAfterAnimation;
     // we can animate back to it when we're done
     scrap.selected = YES;
     startSkewTransform = scrap.layer.transform;
-//    // TODO: hand off properly to the pan gestures when we're
-//    // done instead of killing them entirely during a stretch
-//    [panAndPinchScrapGesture cancel];
-//    [panAndPinchScrapGesture2 cancel];
+    //
+    // keep the pan gestures alive, just pause them from
+    // updating until after the stretch gesture so we can
+    // handoff the newly stretched/moved/adjusted scrap
+    // seemlessly
     [panAndPinchScrapGesture pause];
     [panAndPinchScrapGesture2 pause];
     return [scrap convertPoint:scrap.bounds.origin toView:visibleStackHolder];
 }
 
 -(void) endStretchForScrap:(MMScrapView*)scrap{
+    // now that the scrap has finished a stretch, we can recalculate
+    // where the center is for it's currently stretched out state.
+    // these values will help inform us to build a new transform that
+    // we'll use to bounce animate the scrap into position.
     [UIView setAnchorPoint:scrapAnchorAtStretchStart forView:scrap];
     MMPanAndPinchScrapGestureRecognizer* gesture = panAndPinchScrapGesture.scrap == scrap ? panAndPinchScrapGesture : panAndPinchScrapGesture2;
     scrapLocationAtStretchEnd = scrap.center;
     gestureLocationAtStretchEnd = CGPointMake(gesture.translation.x + gesture.preGestureCenter.x,
                                                 gesture.translation.y + gesture.preGestureCenter.y);
+    
+    // now that we've calcualted the current position for our
+    // reference anchor point, we should now adjust our anchor
+    // back to 0,0 during the next transforms to bounce
+    // the scrap back to its new place.
     [UIView setAnchorPoint:CGPointMake(0, 0) forView:scrap];
 
     
@@ -589,6 +607,10 @@ CGPoint gestureLocationAfterAnimation;
     
     // these two transforms will be used to
     // bounce the scrap back to its initial position
+    // TODO: since these transforms run with the anchor set to 0,0,
+    // the bounce isn't centered in the scrap. an alternative would be to
+    // use the firstQ to generate new scaled Quads and create transforms
+    // from those instead of trying to scale the initial unstretched transform.
     CATransform3D smallTransform = CATransform3DConcat(startSkewTransform, CATransform3DMakeScale(smallScale, smallScale, 1));
     CATransform3D largeTransform = CATransform3DConcat(startSkewTransform, CATransform3DMakeScale(largeScale, largeScale, 1));
     
@@ -607,19 +629,23 @@ CGPoint gestureLocationAfterAnimation;
             scrap.layer.transform = largeTransform;
         } completion:^(BOOL finished){
             [UIView animateWithDuration:.1 animations:^{
-//                scrap.layer.transform = startSkewTransform;
-                [scrap setRotation:scrap.rotation];
-                [scrap setScale:scrap.scale];
+                scrap.layer.transform = startSkewTransform;
             } completion:^(BOOL finished){
-                NSLog(@"beginning pinch again");
                 // reset the anchor point to the scrap pan gesture's anchor
                 [UIView setAnchorPoint:scrapAnchorAtStretchStart forView:scrap];
                 
+                // calcualte our scrap center. for now, this will be the
+                // exact center that the scrap was at before we started
+                // to stretch it.
+                // TODO: this center should be the new location of the pan
+                // gesture so that the scrap is handed off seemlessly.
+                // i'll need to handle what happens if the gesture has moved during
+                // animation. perhaps i should calculate a new anchorpoint
+                // etc for the gesture so that any gesture movement would
+                // "stick" only after the animation is complete.
                 scrapLocationAfterAnimation = scrap.center;
                 gestureLocationAfterAnimation = CGPointMake(gesture.translation.x + gesture.preGestureCenter.x,
                                                           gesture.translation.y + gesture.preGestureCenter.y);
-
-                
                 
                 NSLog(@"scrapAnchorAtStretchStart: %f %f", scrapAnchorAtStretchStart.x, scrapAnchorAtStretchStart.y);
                 NSLog(@"scrapLocationAtStretchStart:   %f %f", scrapLocationAtStretchStart.x, scrapLocationAtStretchStart.y);
@@ -629,8 +655,7 @@ CGPoint gestureLocationAfterAnimation;
                 NSLog(@"gestureLocationAtStretchEnd:   %f %f", gestureLocationAtStretchEnd.x, gestureLocationAtStretchEnd.y);
                 NSLog(@"gestureLocationAfterAnimation: %f %f", gestureLocationAfterAnimation.x, gestureLocationAfterAnimation.y);
                 
-                
-                
+                NSLog(@"beginning pinch again");
                 [panAndPinchScrapGesture begin];
                 [panAndPinchScrapGesture2 begin];
             }];
