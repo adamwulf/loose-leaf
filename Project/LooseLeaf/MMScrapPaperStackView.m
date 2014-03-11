@@ -416,6 +416,9 @@ int skipAll = NO;
     if(scrapViewIfFinished){
         [self finishedPanningAndScalingScrap:scrapViewIfFinished];
     }
+    
+    
+    NSLog(@"pan scrap center: %f %f", gesture.scrap.center.x, gesture.scrap.center.y);
 }
 
 
@@ -522,14 +525,38 @@ int skipAll = NO;
     }
 }
 
+
+
+CGPoint scrapAnchorAtStretchStart;
+CGPoint scrapLocationAtStretchStart;
+CGPoint scrapLocationAtStretchEnd;
+
+CGPoint gestureLocationAtStretchStart;
+CGPoint gestureLocationAtStretchEnd;
+
+CGPoint scrapLocationAfterAnimation;
+CGPoint gestureLocationAfterAnimation;
+
 -(CGPoint) beginStretchForScrap:(MMScrapView*)scrap{
+    
+    scrapAnchorAtStretchStart = scrap.layer.anchorPoint;
+    
+    // to calculate the initial position and transform we
+    // need to have the anchor in the center
+    MMPanAndPinchScrapGestureRecognizer* gesture = panAndPinchScrapGesture.scrap == scrap ? panAndPinchScrapGesture : panAndPinchScrapGesture2;
+    scrapLocationAtStretchStart = scrap.center;
+    gestureLocationAtStretchStart = CGPointMake(gesture.translation.x + gesture.preGestureCenter.x,
+                                                gesture.translation.y + gesture.preGestureCenter.y);
+    
+    
+    
+    [UIView setAnchorPoint:CGPointMake(0, 0) forView:scrap];
     // the user has just now begun to hold a scrap
     // with four fingers and is stretching it.
     // set the anchor point to 0,0 for the skew transform
     // and keep our initial scale/rotate transform so
     // we can animate back to it when we're done
     scrap.selected = YES;
-    [UIView setAnchorPoint:CGPointMake(0, 0) forView:scrap];
     startSkewTransform = scrap.layer.transform;
 //    // TODO: hand off properly to the pan gestures when we're
 //    // done instead of killing them entirely during a stretch
@@ -541,6 +568,14 @@ int skipAll = NO;
 }
 
 -(void) endStretchForScrap:(MMScrapView*)scrap{
+    [UIView setAnchorPoint:scrapAnchorAtStretchStart forView:scrap];
+    MMPanAndPinchScrapGestureRecognizer* gesture = panAndPinchScrapGesture.scrap == scrap ? panAndPinchScrapGesture : panAndPinchScrapGesture2;
+    scrapLocationAtStretchEnd = scrap.center;
+    gestureLocationAtStretchEnd = CGPointMake(gesture.translation.x + gesture.preGestureCenter.x,
+                                                gesture.translation.y + gesture.preGestureCenter.y);
+    [UIView setAnchorPoint:CGPointMake(0, 0) forView:scrap];
+
+    
     // kill the blue highlight
     // TODO: don't kill highlight if its going to be held
     // by a pan scrap gesture
@@ -568,14 +603,34 @@ int skipAll = NO;
     [UIView animateWithDuration:.2 animations:^{
         scrap.layer.transform = smallTransform;
     } completion:^(BOOL finished){
-        [UIView setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
         [UIView animateWithDuration:.1 animations:^{
             scrap.layer.transform = largeTransform;
         } completion:^(BOOL finished){
             [UIView animateWithDuration:.1 animations:^{
-                scrap.layer.transform = startSkewTransform;
+//                scrap.layer.transform = startSkewTransform;
+                [scrap setRotation:scrap.rotation];
+                [scrap setScale:scrap.scale];
             } completion:^(BOOL finished){
                 NSLog(@"beginning pinch again");
+                // reset the anchor point to the scrap pan gesture's anchor
+                [UIView setAnchorPoint:scrapAnchorAtStretchStart forView:scrap];
+                
+                scrapLocationAfterAnimation = scrap.center;
+                gestureLocationAfterAnimation = CGPointMake(gesture.translation.x + gesture.preGestureCenter.x,
+                                                          gesture.translation.y + gesture.preGestureCenter.y);
+
+                
+                
+                NSLog(@"scrapAnchorAtStretchStart: %f %f", scrapAnchorAtStretchStart.x, scrapAnchorAtStretchStart.y);
+                NSLog(@"scrapLocationAtStretchStart:   %f %f", scrapLocationAtStretchStart.x, scrapLocationAtStretchStart.y);
+                NSLog(@"scrapLocationAtStretchEnd:     %f %f", scrapLocationAtStretchEnd.x, scrapLocationAtStretchEnd.y);
+                NSLog(@"scrapLocationAfterAnimation:   %f %f", scrapLocationAfterAnimation.x, scrapLocationAfterAnimation.y);
+                NSLog(@"gestureLocationAtStretchStart: %f %f", gestureLocationAtStretchStart.x, gestureLocationAtStretchStart.y);
+                NSLog(@"gestureLocationAtStretchEnd:   %f %f", gestureLocationAtStretchEnd.x, gestureLocationAtStretchEnd.y);
+                NSLog(@"gestureLocationAfterAnimation: %f %f", gestureLocationAfterAnimation.x, gestureLocationAfterAnimation.y);
+                
+                
+                
                 [panAndPinchScrapGesture begin];
                 [panAndPinchScrapGesture2 begin];
             }];
