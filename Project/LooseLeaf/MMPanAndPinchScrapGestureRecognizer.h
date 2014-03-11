@@ -64,4 +64,8 @@
 -(NSArray*) ignoredTouches;
 
 
+-(BOOL) paused;
+-(void) pause;
+-(void) begin;
+
 @end

@@ -254,7 +254,14 @@ int skipAll = NO;
 
 -(void) panAndScaleScrap:(MMPanAndPinchScrapGestureRecognizer*)_panGesture{
     MMPanAndPinchScrapGestureRecognizer* gesture = (MMPanAndPinchScrapGestureRecognizer*)_panGesture;
-    
+
+    if(_panGesture.paused){
+        return;
+    }
+    // TODO:
+    // the first time the gesture comes back unpaused,
+    // we need to make sure the scrap is in the correct place
+
     //
     // when a gesture begins, I need to store its
     // pregesture scale + location in the /scrapContainer/
@@ -524,10 +531,12 @@ int skipAll = NO;
     scrap.selected = YES;
     [UIView setAnchorPoint:CGPointMake(0, 0) forView:scrap];
     startSkewTransform = scrap.layer.transform;
-    // TODO: hand off properly to the pan gestures when we're
-    // done instead of killing them entirely during a stretch
-    [panAndPinchScrapGesture cancel];
-    [panAndPinchScrapGesture2 cancel];
+//    // TODO: hand off properly to the pan gestures when we're
+//    // done instead of killing them entirely during a stretch
+//    [panAndPinchScrapGesture cancel];
+//    [panAndPinchScrapGesture2 cancel];
+    [panAndPinchScrapGesture pause];
+    [panAndPinchScrapGesture2 pause];
     return [scrap convertPoint:scrap.bounds.origin toView:visibleStackHolder];
 }
 
@@ -552,6 +561,10 @@ int skipAll = NO;
     // the transition back to the normal scale/rotate
     // transform. after that i can recenter it and then
     // complete the bounce.
+    //
+    // TODO: get figure out how to animate the scrap
+    // into the new position to hand it off to the
+    // pinch gesture
     [UIView animateWithDuration:.2 animations:^{
         scrap.layer.transform = smallTransform;
     } completion:^(BOOL finished){
@@ -561,6 +574,10 @@ int skipAll = NO;
         } completion:^(BOOL finished){
             [UIView animateWithDuration:.1 animations:^{
                 scrap.layer.transform = startSkewTransform;
+            } completion:^(BOOL finished){
+                NSLog(@"beginning pinch again");
+                [panAndPinchScrapGesture begin];
+                [panAndPinchScrapGesture2 begin];
             }];
         }];
     }];

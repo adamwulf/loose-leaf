@@ -53,6 +53,7 @@ struct TouchInterval{
     struct TouchInterval touchIntervals[kMaxSimultaneousTouchesAllowedToTrack];
     
     BOOL isShaking;
+    BOOL paused;
 }
 
 
@@ -263,6 +264,8 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
+    if(paused) return;
+    
     isShaking = NO;
     for(UITouch* t in touches){
         [self calculateShakesForTouch:t];
@@ -352,6 +355,12 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    if(paused){
+        [validTouches removeObjectsInSet:touches];
+        [ignoredTouches removeObjectsInSet:touches];
+        [possibleTouches removeObjectsInSet:touches];
+        return;
+    }
     isShaking = NO;
     // pan and pinch and bezel
     BOOL cancelledFromBezel = NO;
@@ -460,6 +469,12 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+    if(paused){
+        [validTouches removeObjectsInSet:touches];
+        [ignoredTouches removeObjectsInSet:touches];
+        [possibleTouches removeObjectsInSet:touches];
+        return;
+    }
     NSMutableOrderedSet* validTouchesCurrentlyCancelling = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
     [validTouchesCurrentlyCancelling intersectSet:touches];
     [validTouchesCurrentlyCancelling minusSet:ignoredTouches];
@@ -614,5 +629,31 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     }
 }
 
+
+
+-(BOOL) paused{
+    return paused;
+}
+
+CGPoint prevLocation;
+-(void) pause{
+    prevLocation = [self locationInView:self.view];
+    paused = YES;
+}
+
+-(void) begin{
+    paused = NO;
+    if([validTouches count] >= mmMinimumNumberOfScrapTouches){
+        CGPoint currLocation = [self locationInView:self.view];
+        CGPoint diff = CGPointMake(currLocation.x - prevLocation.x, currLocation.y - prevLocation.y);
+        NSLog(@"dist: %f %f", diff.x, diff.y);
+        NSLog(@"gestureLocationAtStart: %f %f", gestureLocationAtStart.x, gestureLocationAtStart.y);
+        NSLog(@"translation: %f %f", translation.x, translation.y);
+    }else{
+        NSLog(@"valid    %d", [validTouches count]);
+        NSLog(@"possible %d", [possibleTouches count]);
+        NSLog(@"ignored  %d", [ignoredTouches count]);
+    }
+}
 
 @end
