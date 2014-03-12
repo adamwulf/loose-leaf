@@ -97,7 +97,8 @@
 - (id)initWithBezierPath:(UIBezierPath*)_path andUUID:(NSString*)_uuid
 {
     UIBezierPath* originalPath = [_path copy];
-
+    
+    
     if(!scrapState){
         // one of our other [init] methods may have already created a state
         // for us, but if not, then go ahead and build one
@@ -152,6 +153,11 @@
 //        self.layer.borderWidth = 1;
 //        self.alpha = .5;
     }
+    CALayer* cornerTag = [CALayer layer];
+    cornerTag.bounds = CGRectMake(10, 10, 10, 10);
+    cornerTag.backgroundColor = [UIColor redColor].CGColor;
+    [self.layer addSublayer:cornerTag];
+    
     return self;
 }
 

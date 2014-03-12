@@ -56,6 +56,7 @@
 @property (assign) CGPoint preGestureCenter;
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
+-(void) relinquishOwnershipOfTouches:(NSSet*)touches;
 -(void) giveUpScrap;
 -(void) cancel;
 -(void) blessTouches:(NSSet*)touches;

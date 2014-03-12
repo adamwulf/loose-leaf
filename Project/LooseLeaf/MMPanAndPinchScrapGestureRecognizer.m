@@ -152,7 +152,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
                 needsToFixValidTouches = YES;
             }
         }
-        if(needsToFixValidTouches){
+        if(needsToFixValidTouches && [validTouches count] < mmMinimumNumberOfScrapTouches){
             // what do i do if a valid touch is
             // stolen from us?
             // this can happen if the user bezels
@@ -161,6 +161,18 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
             self.state = UIGestureRecognizerStateCancelled;
         }
     }
+}
+
+/**
+ * called when someone else decides that we need to
+ * relenquish ownership of some touches.
+ * this is called when a stretch gesture completes
+ * and we need to swap which pan gestures own which
+ * touches
+ */
+-(void) relinquishOwnershipOfTouches:(NSSet*)touches{
+    [validTouches removeObjectsInSet:touches];
+    [ignoredTouches addObjectsInSet:touches];
 }
 
 -(CGPoint)locationInView:(UIView *)view{

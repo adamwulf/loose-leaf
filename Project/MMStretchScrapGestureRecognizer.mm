@@ -349,6 +349,8 @@
         [validTouches removeObject:touch];
         [ignoredTouches removeObject:touch];
     }];
+    [pinchScrapGesture1 relinquishOwnershipOfTouches:touches];
+    [pinchScrapGesture2 relinquishOwnershipOfTouches:touches];
     [self updateState];
 }
 
