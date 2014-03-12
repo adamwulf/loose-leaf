@@ -37,11 +37,11 @@
 {
     if ((self = [super initWithFrame:frame])) {
         
-//        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
-//                                                                  target:self
-//                                                                selector:@selector(timerDidFire:)
-//                                                                userInfo:nil
-//                                                                 repeats:YES];
+        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
+                                                                  target:self
+                                                                selector:@selector(timerDidFire:)
+                                                                userInfo:nil
+                                                                 repeats:YES];
 
         
 //        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5
@@ -183,6 +183,11 @@ int skipAll = NO;
     NSLog(@"velocity gesture sees: %d", [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]);
     
     NSLog(@"done");
+    
+    
+    for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scraps]){
+        NSLog(@"scrap: %f %f", scrap.layer.anchorPoint.x, scrap.layer.anchorPoint.y);
+    }
 }
 
 -(void) drawLine{
@@ -496,7 +501,6 @@ int skipAll = NO;
         if(!CGPointEqualToPoint(gesture.scrap.layer.anchorPoint, CGPointZero)){
             // the anchor point can get reset by the pan/pinch gesture ending,
             // so we need to force it back to our 0,0 for the stretch
-            // TODO: handle the pan gesture during stetch better
             [UIView setAnchorPoint:CGPointMake(0, 0) forView:gesture.scrap];
         }
         [self isBeginning:gesture.state == UIGestureRecognizerStateBegan toPanAndScaleScrap:gesture.scrap withTouches:gesture.validTouches];
@@ -681,8 +685,13 @@ CGPoint gestureLocationAfterAnimation;
                 NSLog(@"gestureLocationInPageAtStretchStart: %f %f", gestureLocationInPageAtStretchStart.x, gestureLocationInPageAtStretchStart.y);
                 NSLog(@"gestureLocationInScrapAtStretchEnd: %f %f", gestureLocationInScrapAtStretchEnd.x, gestureLocationInScrapAtStretchEnd.y);
                 NSLog(@"gestureLocationInPageAtStretchEnd: %f %f", gestureLocationInPageAtStretchEnd.x, gestureLocationInPageAtStretchEnd.y);
-                [panAndPinchScrapGesture begin];
-                [panAndPinchScrapGesture2 begin];
+                BOOL didBegin = [panAndPinchScrapGesture begin];
+                didBegin = didBegin || [panAndPinchScrapGesture2 begin];
+                if(!didBegin){
+                    // reset our anchor to the scrap center if a pan
+                    // isn't going to take over
+                    [UIView setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
+                }
             }];
         }];
     }];

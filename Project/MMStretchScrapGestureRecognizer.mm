@@ -344,6 +344,10 @@
         [validTouches removeObject:touch];
         [ignoredTouches removeObject:touch];
     }];
+    if(pinchScrapGesture1.paused){
+        [pinchScrapGesture1 relinquishOwnershipOfTouches:touches];
+        [pinchScrapGesture2 relinquishOwnershipOfTouches:touches];
+    }
     [self updateState];
 }
 

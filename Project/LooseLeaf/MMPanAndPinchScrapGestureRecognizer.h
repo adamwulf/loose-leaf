@@ -67,6 +67,6 @@
 
 -(BOOL) paused;
 -(void) pause;
--(void) begin;
+-(BOOL) begin;
 
 @end

@@ -178,15 +178,18 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     [validTouches removeObjectsInSet:touches];
     [ignoredTouches addObjectsInSet:validTouchesToRelinquish];
     
+    // if we only have 2 touches, then their sort
+    // order doesn't matter
+    if([validTouches count] <= 2) return;
+    
     // now sort valid touches by relative distance,
-    // with closest first
+    // with closest first. this nested for loop
+    // will caculate the distance between every touch
+    // with every other touch.
     int count = [validTouches count];
-    
-    if(count <= 2) return;
-    
     CGFloat dist[count][count];
     for(int i=0;i<count;i++){
-        for(int j=0;j<count;j++){
+        for(int j=i;j<count;j++){
             if(i == j){
                 dist[i][j] = 0;
             }else{
@@ -195,23 +198,36 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
                 CGPoint initialPoint1 = [touch1 locationInView:self.view.superview];
                 CGPoint initialPoint2 = [touch2 locationInView:self.view.superview];
                 dist[i][j] = DistanceBetweenTwoPoints(initialPoint1, initialPoint2);
+                dist[j][i] = dist[i][j];
             }
         }
     }
     
+    // we'll then average the distance for every touch
+    // with all others.
     CGFloat avgDist[count];
     for(int i=0;i<count;i++){
         for(int j=0;j<count;j++){
             avgDist[i] += dist[i][j] / count;
         }
     }
-    CGFloat* blockedAvgDist = avgDist;
     
+    CGFloat* blockedAvgDist = avgDist;
     [validTouches sortUsingComparator:^NSComparisonResult(id obj1, id obj2){
         NSInteger idx1 = [validTouches indexOfObject:obj1];
         NSInteger idx2 = [validTouches indexOfObject:obj2];
         return blockedAvgDist[idx1] < blockedAvgDist[idx2] ? NSOrderedAscending : NSOrderedDescending;
     }];
+    //
+    // at this point, the two valid touches at the beginning of the set
+    // are also the closest to each other.
+    //
+    // this helps when a scrap is stretched with 4 fingers, and only 1
+    // finger is lifted, then the remaining 3 touches will be sorted
+    // so that the first two are closest. this way the closest touches
+    // will inherit the panning of the scrap. this'll also ensure
+    // that the locations calculated from these touches will be correct
+    // for the animation after the stretch gesture.
 }
 
 -(CGPoint)locationInView:(UIView *)view{
@@ -415,6 +431,10 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         [validTouches removeObjectsInSet:touches];
         [ignoredTouches removeObjectsInSet:touches];
         [possibleTouches removeObjectsInSet:touches];
+        if(![validTouches count] && ![ignoredTouches count] && ![possibleTouches count] &&
+           self.state != UIGestureRecognizerStatePossible){
+            self.state = UIGestureRecognizerStateEnded;
+        }
         return;
     }
     
@@ -530,6 +550,10 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         [validTouches removeObjectsInSet:touches];
         [ignoredTouches removeObjectsInSet:touches];
         [possibleTouches removeObjectsInSet:touches];
+        if(![validTouches count] && ![ignoredTouches count] && ![possibleTouches count] &&
+           self.state != UIGestureRecognizerStatePossible){
+            self.state = UIGestureRecognizerStateEnded;
+        }
         return;
     }
     NSMutableOrderedSet* validTouchesCurrentlyCancelling = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
@@ -722,11 +746,13 @@ CGPoint prevLocation;
     paused = YES;
 }
 
--(void) begin{
+-(BOOL) begin{
     paused = NO;
     if([validTouches count] >= mmMinimumNumberOfScrapTouches){
         [self prepareGestureToBeginFresh];
+        return YES;
     }
+    return NO;
 }
 
 @end
