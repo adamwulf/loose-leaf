@@ -13,4 +13,6 @@
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 
+-(NSArray*) scraps;
+
 @end

@@ -263,27 +263,10 @@ int skipAll = NO;
     // we need to make sure the scrap is in the correct place
 
     //
-    // when a gesture begins, I need to store its
-    // pregesture scale + location in the /scrapContainer/
-    // when as the gesture scales or moves, we'll convert
-    // these coordinates back to the page coordinate space
-    // if the scrap is still inside the page. otherwise
-    // we'll just use the scrapContainer properties directly
-    //
-    // gesture.shouldReset is a flag for when the gesture will
-    // re-begin it's state w/o triggering a UIGestureRecognizerStateBegan
-    // since the state can only change between certain values
     BOOL didReset = NO;
     if(gesture.shouldReset){
         gesture.shouldReset = NO;
         didReset = YES;
-        gesture.preGestureScale = gesture.scrap.scale;
-        gesture.preGestureRotation = gesture.scrap.rotation;
-        CGFloat pageScale = [visibleStackHolder peekSubview].scale;
-        gesture.preGesturePageScale = pageScale;
-        CGPoint centerInPage = _panGesture.scrap.center;
-        centerInPage = CGPointApplyAffineTransform(centerInPage, CGAffineTransformMakeScale(pageScale, pageScale));
-        gesture.preGestureCenter = [[visibleStackHolder peekSubview] convertPoint:centerInPage toView:scrapContainer];
     }
     
     if(gesture.scrap && (gesture.scrap != stretchScrapGesture.scrap)){
@@ -416,9 +399,6 @@ int skipAll = NO;
     if(scrapViewIfFinished){
         [self finishedPanningAndScalingScrap:scrapViewIfFinished];
     }
-    
-    
-    NSLog(@"pan scrap center: %f %f", gesture.scrap.center.x, gesture.scrap.center.y);
 }
 
 
@@ -672,6 +652,21 @@ CGPoint gestureLocationAfterAnimation;
 
 -(BOOL) panScrapRequiresLongPress{
     return rulerButton.selected;
+}
+
+-(CGFloat) topVisiblePageScale{
+    return [visibleStackHolder peekSubview].scale;
+}
+
+-(CGPoint) convertScrapCenterToScrapContainerCoordinate:(CGPoint)scrapCenter{
+    CGFloat pageScale = [self topVisiblePageScale];
+    // because the page uses a transform to scale itself, the scrap center will always
+    // be in page scale = 1.0 form. if the user picks up a scrap while also scaling the page,
+    // then we need to transform that coordinate into the visible scale of the zoomed page.
+    scrapCenter = CGPointApplyAffineTransform(scrapCenter, CGAffineTransformMakeScale(pageScale, pageScale));
+    // now that the coordinate is in the visible scale, we can convert that directly to the
+    // scapContainer's coodinate system
+    return [[visibleStackHolder peekSubview] convertPoint:scrapCenter toView:scrapContainer];
 }
 
 

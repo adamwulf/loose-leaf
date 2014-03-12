@@ -517,6 +517,8 @@
     [rulerView liftRuler];
 }
 
+#pragma mark - MMPanGestureDelegate
+
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     [super ownershipOfTouches:touches isGesture:gesture];
     if([gesture isKindOfClass:[MMDrawingTouchGestureRecognizer class]]){
@@ -524,6 +526,10 @@
         [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
     }
     [[MMDrawingTouchGestureRecognizer sharedInstace] ownershipOfTouches:touches isGesture:gesture];
+}
+
+-(NSArray*) scraps{
+    @throw kAbstractMethodException;
 }
 
 

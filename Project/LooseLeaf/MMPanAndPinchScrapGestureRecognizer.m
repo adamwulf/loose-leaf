@@ -177,8 +177,8 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     [newPossibleTouches intersectSet:touches];
     [possibleTouches addObjectsInSet:newPossibleTouches];
     [ignoredTouches removeObjectsInSet:newPossibleTouches];
-    self.shouldReset = YES;
     [self touchesBegan:newPossibleTouches withEvent:nil];
+    [self softReset];
 }
 
 /**
@@ -539,7 +539,33 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     initialDistance = [self distanceBetweenTouches:validTouches];
     translation = CGPointZero;
     scale = 1;
+    [self softReset];
+}
+
+
+// when a gesture begins, I need to store its
+// pregesture scale + location in the /scrapContainer/
+// when as the gesture scales or moves, we'll convert
+// these coordinates back to the page coordinate space
+// if the scrap is still inside the page. otherwise
+// we'll just use the scrapContainer properties directly
+//
+// gesture.shouldReset is a flag for when the gesture will
+// re-begin it's state w/o triggering a UIGestureRecognizerStateBegan
+// since the state can only change between certain values.
+// the target of this gesture can watch this flag and restart
+// the gesture whenever this flag is set to YES.
+//
+// this lets us restart a gesture w/o needing to formally
+// End it with its state. this lets us restart a gesture
+// while other gestures are still mid-flight w/ touches
+// on the screen.
+-(void) softReset{
     self.shouldReset = YES;
+    self.preGestureScale = self.scrap.scale;
+    self.preGestureRotation = self.scrap.rotation;
+    self.preGesturePageScale = [scrapDelegate topVisiblePageScale];
+    self.preGestureCenter = [scrapDelegate convertScrapCenterToScrapContainerCoordinate:self.scrap.center];
 }
 
 /**

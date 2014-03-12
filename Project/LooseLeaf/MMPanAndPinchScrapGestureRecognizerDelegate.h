@@ -9,10 +9,16 @@
 #import <Foundation/Foundation.h>
 #import "MMPanGestureDelegate.h"
 
+@class MMPaperView;
+
 @protocol MMPanAndPinchScrapGestureRecognizerDelegate <MMPanGestureDelegate>
 
 -(NSArray*) scraps;
 
 -(BOOL) panScrapRequiresLongPress;
+
+-(CGFloat) topVisiblePageScale;
+
+-(CGPoint) convertScrapCenterToScrapContainerCoordinate:(CGPoint)scrapCenter;
 
 @end
