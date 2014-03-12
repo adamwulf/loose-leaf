@@ -141,6 +141,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 }
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
+    NSLog(@"ownership of %d is %@", [touches count], NSStringFromClass([gesture class]));
     if(gesture != self && ![gesture isKindOfClass:[MMStretchScrapGestureRecognizer class]]){
         [possibleTouches removeObjectsInSet:touches];
         [ignoredTouches addObjectsInSet:touches];
@@ -201,23 +202,26 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     // ignore all the touches that could be bezel touches
     if([validTouchesCurrentlyBeginning count]){
         
-        NSArray* scrapsToLookAt;
+        NSArray* scrapsToLookAt = scrapDelegate.scraps;
         if(self.scrap){
-            scrapsToLookAt = [NSArray arrayWithObject:scrap];
-        }else{
-            scrapsToLookAt = scrapDelegate.scraps;
+            NSUInteger indx = [scrapsToLookAt indexOfObject:self.scrap];
+            if(indx == NSNotFound){
+                scrapsToLookAt = [NSArray arrayWithObject:scrap];
+            }else{
+                scrapsToLookAt = [scrapsToLookAt subarrayWithRange:NSMakeRange(indx, [scrapsToLookAt count] - indx)];
+            }
         }
         
         
         [possibleTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
         [possibleTouches removeObjectsInSet:ignoredTouches];
-        
+
         NSMutableSet* allPossibleTouches = [NSMutableSet setWithSet:[possibleTouches set]];
         // scraps are returned back to front, so we need to reverse
         // enumerate them so that we check front to back
         for(MMScrapView* _scrap in [scrapsToLookAt reverseObjectEnumerator]){
             NSSet* touchesInScrap = [_scrap matchingPairTouchesFrom:allPossibleTouches];
-            if(self.scrap && ![touchesInScrap count]){
+            if(self.scrap && self.scrap == _scrap && ![touchesInScrap count]){
                 for(UITouch* touch in possibleTouches){
                     if([scrap containsTouch:touch]){
                         // we only need to worry about sets with one object
@@ -227,7 +231,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
                     }
                 }
             }
-            if([touchesInScrap count]){
+            if([touchesInScrap count] && (!self.scrap || self.scrap == _scrap)){
                 // two+ possible touches match this scrap
                 self.scrap = _scrap;
                 [scrapDelegate ownershipOfTouches:touchesInScrap isGesture:self];
@@ -241,6 +245,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
                 // this will remove any touches that don't grab a scrap but do land in a scrap
                 [allPossibleTouches removeObjectsInSet:[_scrap allMatchingTouchesFrom:allPossibleTouches]];
             }
+            if(![allPossibleTouches count]) break;
         }
         
         if([validTouches count] >= mmMinimumNumberOfScrapTouches){
