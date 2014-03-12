@@ -79,9 +79,13 @@
     if(gesture != self){
         if(![gesture isKindOfClass:[MMPanAndPinchScrapGestureRecognizer class]]){
             // we're only allowed to work on scrap pinch gesture touches
-            [possibleTouches removeObjectsInSet:touches];
-            [ignoredTouches addObjectsInSet:touches];
-            [validTouches removeObjectsInSet:touches];
+            [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
+                if([possibleTouches containsObject:touch] || [validTouches containsObject:touch]){
+                    [possibleTouches removeObjectsInSet:touches];
+                    [ignoredTouches addObjectsInSet:touches];
+                    [validTouches removeObjectsInSet:touches];
+                }
+            }];
             [self updateValidTouches];
         }
     }
@@ -349,8 +353,10 @@
         [validTouches removeObject:touch];
         [ignoredTouches removeObject:touch];
     }];
-    [pinchScrapGesture1 relinquishOwnershipOfTouches:touches];
-    [pinchScrapGesture2 relinquishOwnershipOfTouches:touches];
+    if(pinchScrapGesture1.paused){
+        [pinchScrapGesture1 relinquishOwnershipOfTouches:touches];
+        [pinchScrapGesture2 relinquishOwnershipOfTouches:touches];
+    }
     [self updateState];
 }
 

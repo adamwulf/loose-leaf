@@ -141,17 +141,18 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 }
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
-    NSLog(@"ownership of %d is %@", [touches count], NSStringFromClass([gesture class]));
     if(gesture != self && ![gesture isKindOfClass:[MMStretchScrapGestureRecognizer class]]){
-        [possibleTouches removeObjectsInSet:touches];
-        [ignoredTouches addObjectsInSet:touches];
-        BOOL needsToFixValidTouches = NO;
-        for(UITouch* t in touches){
-            if([validTouches containsObject:t]){
-                [validTouches removeObject:t];
+        __block BOOL needsToFixValidTouches = NO;
+        [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
+            if([validTouches containsObject:touch]){
                 needsToFixValidTouches = YES;
             }
-        }
+            if([possibleTouches containsObject:touch] || [validTouches containsObject:touch]){
+                [possibleTouches removeObjectsInSet:touches];
+                [ignoredTouches addObjectsInSet:touches];
+                [validTouches removeObjectsInSet:touches];
+            }
+        }];
         if(needsToFixValidTouches && [validTouches count] < mmMinimumNumberOfScrapTouches){
             // what do i do if a valid touch is
             // stolen from us?
@@ -171,8 +172,46 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
  * touches
  */
 -(void) relinquishOwnershipOfTouches:(NSSet*)touches{
+    NSMutableSet* validTouchesToRelinquish = [NSMutableSet setWithSet:[validTouches set]];
+    [validTouchesToRelinquish intersectSet:touches];
+
     [validTouches removeObjectsInSet:touches];
-    [ignoredTouches addObjectsInSet:touches];
+    [ignoredTouches addObjectsInSet:validTouchesToRelinquish];
+    
+    // now sort valid touches by relative distance,
+    // with closest first
+    int count = [validTouches count];
+    
+    if(count <= 2) return;
+    
+    CGFloat dist[count][count];
+    for(int i=0;i<count;i++){
+        for(int j=0;j<count;j++){
+            if(i == j){
+                dist[i][j] = 0;
+            }else{
+                UITouch* touch1 = [validTouches objectAtIndex:i];
+                UITouch* touch2 = [validTouches objectAtIndex:j];
+                CGPoint initialPoint1 = [touch1 locationInView:self.view.superview];
+                CGPoint initialPoint2 = [touch2 locationInView:self.view.superview];
+                dist[i][j] = DistanceBetweenTwoPoints(initialPoint1, initialPoint2);
+            }
+        }
+    }
+    
+    CGFloat avgDist[count];
+    for(int i=0;i<count;i++){
+        for(int j=0;j<count;j++){
+            avgDist[i] += dist[i][j] / count;
+        }
+    }
+    CGFloat* blockedAvgDist = avgDist;
+    
+    [validTouches sortUsingComparator:^NSComparisonResult(id obj1, id obj2){
+        NSInteger idx1 = [validTouches indexOfObject:obj1];
+        NSInteger idx2 = [validTouches indexOfObject:obj2];
+        return blockedAvgDist[idx1] < blockedAvgDist[idx2] ? NSOrderedAscending : NSOrderedDescending;
+    }];
 }
 
 -(CGPoint)locationInView:(UIView *)view{
@@ -378,6 +417,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         [possibleTouches removeObjectsInSet:touches];
         return;
     }
+    
     isShaking = NO;
     // pan and pinch and bezel
     BOOL cancelledFromBezel = NO;
@@ -539,6 +579,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
  */
 -(void) prepareGestureToBeginFresh{
     if(paused) return;
+
     // set the anchor point so that it
     // rotates around the point that we're
     // gesturing
@@ -685,15 +726,6 @@ CGPoint prevLocation;
     paused = NO;
     if([validTouches count] >= mmMinimumNumberOfScrapTouches){
         [self prepareGestureToBeginFresh];
-        CGPoint currLocation = [self locationInView:self.view];
-        CGPoint diff = CGPointMake(currLocation.x - prevLocation.x, currLocation.y - prevLocation.y);
-        NSLog(@"dist: %f %f", diff.x, diff.y);
-        NSLog(@"gestureLocationAtStart: %f %f", gestureLocationAtStart.x, gestureLocationAtStart.y);
-        NSLog(@"translation: %f %f", translation.x, translation.y);
-    }else{
-        NSLog(@"valid    %d", [validTouches count]);
-        NSLog(@"possible %d", [possibleTouches count]);
-        NSLog(@"ignored  %d", [ignoredTouches count]);
     }
 }
 
