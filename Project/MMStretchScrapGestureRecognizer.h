@@ -29,5 +29,6 @@
 
 -(void) blessTouches:(NSSet*)touches;
 
+-(CATransform3D) transformForBounceAtScale:(CGFloat) scale;
 
 @end

@@ -353,6 +353,27 @@
 }
 
 
+#pragma mark - Transforms for bounce
+
+-(CATransform3D) transformForBounceAtScale:(CGFloat) scale{
+    CGPoint centerOfQ = CGPointMake(firstQ.upperLeft.x / 4 + firstQ.upperRight.x / 4 + firstQ.lowerRight.x / 4 + firstQ.lowerLeft.x / 4,
+                                    firstQ.upperLeft.y / 4 + firstQ.upperRight.y / 4 + firstQ.lowerRight.y / 4 + firstQ.lowerLeft.y / 4);
+    
+    CGAffineTransform translateFromCenter = CGAffineTransformMakeTranslation(-centerOfQ.x, -centerOfQ.y);
+    CGAffineTransform translateToCenter = CGAffineTransformMakeTranslation(centerOfQ.x, centerOfQ.y);
+    CGAffineTransform scaleSmall = CGAffineTransformMakeScale(scale, scale);
+    
+    CGAffineTransform scalePointAroundCenterTransform = CGAffineTransformConcat(CGAffineTransformConcat(translateFromCenter, scaleSmall), translateToCenter);
+    
+    Quadrilateral scaledQ;
+    scaledQ.upperLeft = CGPointApplyAffineTransform(firstQ.upperLeft, scalePointAroundCenterTransform);
+    scaledQ.upperRight = CGPointApplyAffineTransform(firstQ.upperRight, scalePointAroundCenterTransform);
+    scaledQ.lowerLeft = CGPointApplyAffineTransform(firstQ.lowerLeft, scalePointAroundCenterTransform);
+    scaledQ.lowerRight = CGPointApplyAffineTransform(firstQ.lowerRight, scalePointAroundCenterTransform);
+    
+    return [MMStretchScrapGestureRecognizer transformQuadrilateral:[self adjustedQuad:firstQ by:adjust] toQuadrilateral:[self adjustedQuad:scaledQ by:adjust]];
+}
+
 #pragma mark - OpenCV Transform
 
 // http://stackoverflow.com/questions/9470493/transforming-a-rectangle-image-into-a-quadrilateral-using-a-catransform3d

@@ -586,14 +586,11 @@ CGPoint gestureLocationAfterAnimation;
     CGFloat smallScale = maxDim > 200 ? (maxDim - 20) / maxDim : .9;
     CGFloat largeScale = maxDim > 200 ? (maxDim + 20) / maxDim : 1.1;
     
+    
     // these two transforms will be used to
     // bounce the scrap back to its initial position
-    // TODO: since these transforms run with the anchor set to 0,0,
-    // the bounce isn't centered in the scrap. an alternative would be to
-    // use the firstQ to generate new scaled Quads and create transforms
-    // from those instead of trying to scale the initial unstretched transform.
-    CATransform3D smallTransform = CATransform3DConcat(startSkewTransform, CATransform3DMakeScale(smallScale, smallScale, 1));
-    CATransform3D largeTransform = CATransform3DConcat(startSkewTransform, CATransform3DMakeScale(largeScale, largeScale, 1));
+    CATransform3D smallTransform = CATransform3DConcat(startSkewTransform, [stretchScrapGesture transformForBounceAtScale:smallScale]);
+    CATransform3D largeTransform = CATransform3DConcat(startSkewTransform, [stretchScrapGesture transformForBounceAtScale:largeScale]);
     
     // i need to keep the anchor point at 0,0 during
     // the transition back to the normal scale/rotate
