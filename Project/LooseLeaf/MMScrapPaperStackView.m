@@ -572,6 +572,7 @@ CGPoint gestureLocationAfterAnimation;
     // back to 0,0 during the next transforms to bounce
     // the scrap back to its new place.
     [UIView setAnchorPoint:CGPointMake(0, 0) forView:scrap];
+    NSLog(@"just set the anchor to 0,0");
 
     
     // kill the blue highlight

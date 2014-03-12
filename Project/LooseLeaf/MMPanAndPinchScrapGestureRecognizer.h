@@ -68,9 +68,4 @@
 -(void) pause;
 -(void) begin;
 
-
-
-// debug resetting
--(void) softReset;
-
 @end
