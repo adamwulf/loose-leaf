@@ -179,6 +179,9 @@ int skipAll = NO;
         if([gesture respondsToSelector:@selector(ignoredTouches)]){
             NSLog(@"   ignoredTouches: %d", [[gesture performSelector:@selector(ignoredTouches)] count]);
         }
+        if([gesture respondsToSelector:@selector(paused)]){
+            NSLog(@"   paused: %d", [gesture performSelector:@selector(paused)] ? 1 : 0);
+        }
     }
     NSLog(@"velocity gesture sees: %d", [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]);
     
@@ -611,7 +614,7 @@ CGPoint gestureLocationAfterAnimation;
     // into the new position to hand it off to the
     // pinch gesture
     
-    const CGFloat GestureDuration = 0.4; // 0.4
+    const CGFloat GestureDuration = 0.3;
     
     
     NSLog(@"valid touches: %d", [gesture.validTouches count]);
@@ -685,8 +688,9 @@ CGPoint gestureLocationAfterAnimation;
                 NSLog(@"gestureLocationInPageAtStretchStart: %f %f", gestureLocationInPageAtStretchStart.x, gestureLocationInPageAtStretchStart.y);
                 NSLog(@"gestureLocationInScrapAtStretchEnd: %f %f", gestureLocationInScrapAtStretchEnd.x, gestureLocationInScrapAtStretchEnd.y);
                 NSLog(@"gestureLocationInPageAtStretchEnd: %f %f", gestureLocationInPageAtStretchEnd.x, gestureLocationInPageAtStretchEnd.y);
-                BOOL didBegin = [panAndPinchScrapGesture begin];
-                didBegin = didBegin || [panAndPinchScrapGesture2 begin];
+                BOOL didBegin1 = [panAndPinchScrapGesture begin];
+                BOOL didBegin2 = [panAndPinchScrapGesture2 begin];
+                BOOL didBegin = didBegin1 || didBegin2; // can't just call the method here, b/c it would short circuit
                 if(!didBegin){
                     // reset our anchor to the scrap center if a pan
                     // isn't going to take over
