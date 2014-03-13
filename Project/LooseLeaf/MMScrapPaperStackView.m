@@ -514,6 +514,14 @@ int skipAll = NO;
         // generate the actual transform between the two quads
         gesture.scrap.layer.transform = CATransform3DConcat(startSkewTransform, [gesture skewTransform]);
     }
+    NSLog(@"pan1: %d %d %d %d", (int) panAndPinchScrapGesture.scrap,
+          [panAndPinchScrapGesture.validTouches count],
+          [panAndPinchScrapGesture.possibleTouches count],
+          [panAndPinchScrapGesture.ignoredTouches count]);
+    NSLog(@"pan2: %d %d %d %d", (int) panAndPinchScrapGesture2.scrap,
+          [panAndPinchScrapGesture2.validTouches count],
+          [panAndPinchScrapGesture2.possibleTouches count],
+          [panAndPinchScrapGesture2.ignoredTouches count]);
 }
 
 
