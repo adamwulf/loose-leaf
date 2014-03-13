@@ -602,6 +602,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
  * our scrap views
  */
 -(void) setDrawableView:(JotView *)_drawableView{
+    NSLog(@"%@: %d", [self uuid], (int)_drawableView);
     [super setDrawableView:_drawableView];
 }
 

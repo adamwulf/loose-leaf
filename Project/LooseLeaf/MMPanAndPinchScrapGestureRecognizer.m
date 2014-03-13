@@ -160,6 +160,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
             // from teh right, and both bezel touches
             // also begin on top of the same scrap
             self.state = UIGestureRecognizerStateCancelled;
+            NSLog(@"MMPanAndPinchScrap UIGestureRecognizerStateCancelled");
         }
     }
 }
@@ -301,7 +302,6 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
             if([touchesInScrap count] && (!self.scrap || self.scrap == _scrap)){
                 // two+ possible touches match this scrap
                 self.scrap = _scrap;
-                [scrapDelegate ownershipOfTouches:touchesInScrap isGesture:self];
                 [validTouches addObjectsInSet:touchesInScrap];
                 [possibleTouches removeObjectsInSet:touchesInScrap];
                 [self.scrapDelegate ownershipOfTouches:[validTouches set] isGesture:self];
@@ -321,6 +321,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
             
             didExitToBezel = MMBezelDirectionNone;
 
+            NSLog(@"MMPanAndPinchScrap UIGestureRecognizerStateBegan");
             self.state = UIGestureRecognizerStateBegan;
         }else if([validTouches count] < mmMinimumNumberOfScrapTouches){
             didExitToBezel = MMBezelDirectionNone;
@@ -571,6 +572,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
        [possibleTouches count] == 0 &&
        [ignoredTouches count] == 0 &&
        (self.state == UIGestureRecognizerStateChanged || self.state == UIGestureRecognizerStateBegan)){
+        NSLog(@"MMPanAndPinchScrap UIGestureRecognizerStateCancelled2");
         self.state = UIGestureRecognizerStateCancelled;
     }
 //    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);

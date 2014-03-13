@@ -196,7 +196,6 @@ int skipAll = NO;
 -(void) drawLine{
     NSLog(@"drawing");
     [[[visibleStackHolder peekSubview] drawableView] drawLongLine];
-    
 }
 
 #pragma mark - Add Page
@@ -231,13 +230,14 @@ int skipAll = NO;
 #pragma mark - Bezel Gestures
 
 -(void) forceScrapToScrapContainerDuringGesture{
-    if(panAndPinchScrapGesture.scrap){
+    // if the gesture is cancelled, then don't move the scrap
+    if(panAndPinchScrapGesture.scrap && panAndPinchScrapGesture.state != UIGestureRecognizerStateCancelled){
         if(![scrapContainer.subviews containsObject:panAndPinchScrapGesture.scrap]){
             [scrapContainer addSubview:panAndPinchScrapGesture.scrap];
             [self panAndScaleScrap:panAndPinchScrapGesture];
         }
     }
-    if(panAndPinchScrapGesture2.scrap){
+    if(panAndPinchScrapGesture2.scrap && panAndPinchScrapGesture2.state != UIGestureRecognizerStateCancelled){
         if(![scrapContainer.subviews containsObject:panAndPinchScrapGesture2.scrap]){
             [scrapContainer addSubview:panAndPinchScrapGesture2.scrap];
             [self panAndScaleScrap:panAndPinchScrapGesture2];
@@ -246,6 +246,7 @@ int skipAll = NO;
 }
 
 -(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
+    NSLog(@"bezel left scrap: %d", bezelGesture.state);
     [self ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
     [super isBezelingInLeftWithGesture:bezelGesture];
     [self forceScrapToScrapContainerDuringGesture];
@@ -262,7 +263,7 @@ int skipAll = NO;
 
 -(void) panAndScaleScrap:(MMPanAndPinchScrapGestureRecognizer*)_panGesture{
     MMPanAndPinchScrapGestureRecognizer* gesture = (MMPanAndPinchScrapGestureRecognizer*)_panGesture;
-
+    NSLog(@"pan scrap: %d", _panGesture.state);
     if(_panGesture.paused){
         return;
     }
@@ -277,7 +278,7 @@ int skipAll = NO;
         didReset = YES;
     }
     
-    if(gesture.scrap && (gesture.scrap != stretchScrapGesture.scrap)){
+    if(gesture.scrap && (gesture.scrap != stretchScrapGesture.scrap) && gesture.state != UIGestureRecognizerStateCancelled){
         
         // handle the scrap.
         //
@@ -307,6 +308,7 @@ int skipAll = NO;
             // then add it to the scrap container view.
             if(![scrapContainer.subviews containsObject:scrap]){
                 // just keep it in the scrap container
+                NSLog(@"adding to scrapContainer with state: %d", gesture.state);
                 [scrapContainer addSubview:scrap];
             }
         }else if(pageToDropScrap && [pageToDropScrap hasScrap:scrap]){
@@ -339,10 +341,7 @@ int skipAll = NO;
     MMScrapView* scrapViewIfFinished = nil;
     
     BOOL shouldBezel = NO;
-    if(gesture.scrap && didReset){
-        // glow blue
-        gesture.scrap.selected = YES;
-    }else if(gesture.state == UIGestureRecognizerStateEnded ||
+    if(gesture.state == UIGestureRecognizerStateEnded ||
              gesture.state == UIGestureRecognizerStateCancelled){
         // turn off glow
         if(!stretchScrapGesture.scrap){
@@ -358,9 +357,12 @@ int skipAll = NO;
         // is inside of a page, and make sure to add the scrap
         // to that page.
         
+        NSArray* scrapsInContainer = scrapContainer.subviews;
+        
         if(gesture.didExitToBezel){
             shouldBezel = YES;
-        }else if([scrapContainer.subviews containsObject:gesture.scrap]){
+        }else if([scrapsInContainer containsObject:gesture.scrap]){
+            NSLog(@"scrap container owns the scrap");
             CGFloat scrapScaleInPage;
             CGPoint scrapCenterInPage;
             MMScrappedPaperView* pageToDropScrap;
@@ -381,6 +383,9 @@ int skipAll = NO;
         }
         
         scrapViewIfFinished = gesture.scrap;
+    }else if(gesture.scrap && didReset){
+        // glow blue
+        gesture.scrap.selected = YES;
     }
     if(gesture.scrap && (gesture.state == UIGestureRecognizerStateEnded ||
                          gesture.state == UIGestureRecognizerStateFailed ||

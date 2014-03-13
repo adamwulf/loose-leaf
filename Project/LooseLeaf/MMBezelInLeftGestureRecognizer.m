@@ -136,6 +136,7 @@
             numberOfRepeatingBezels = 1;
         }
         if(self.state == UIGestureRecognizerStatePossible){
+            NSLog(@"BezelLeft UIGestureRecognizerStateBegan");
             self.state = UIGestureRecognizerStateBegan;
             firstKnownLocation = [self furthestLeftTouchLocation];
             firstKnownLocation.x = 0;

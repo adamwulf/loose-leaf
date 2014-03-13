@@ -341,7 +341,7 @@
         } completion:nil];
     }else if(bezelGesture.state == UIGestureRecognizerStateCancelled ||
              bezelGesture.state == UIGestureRecognizerStateFailed ||
-             (bezelGesture.state == UIGestureRecognizerStateEnded && ((bezelGesture.panDirection & MMBezelDirectionRight) != MMBezelDirectionRight))){
+             (bezelGesture.state == UIGestureRecognizerStateEnded && ((bezelGesture.panDirection & MMBezelDirectionLeft) != MMBezelDirectionLeft))){
         //
         // they cancelled the bezel. so push all the views from the bezel back
         // onto the visible stack, then animate them back into position.
@@ -355,37 +355,36 @@
         // haven't completed.
         if([bezelStackHolder.subviews count]){
             [self willNotChangeTopPageTo:[bezelStackHolder peekSubview]];
-            [self emptyBezelStackToVisibleStackOnComplete:nil];
+            [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
             [[visibleStackHolder peekSubview] enableAllGestures];
         }
     }else if(bezelGesture.state == UIGestureRecognizerStateEnded &&
-             ((bezelGesture.panDirection & MMBezelDirectionRight) == MMBezelDirectionRight)){
+             ((bezelGesture.panDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft)){
         if([bezelStackHolder.subviews count]){
             //
             // ok, the user has completed a bezel gesture, so we should take all
-            // the pages in the bezel view and push them onto the hidden stack
+            // the pages in the bezel view and push them onto the visible stack
             //
-            // to do that, we'll move them back onto the visible frame (and retain their visible frame)
-            // and then use our animation functions to pop them off the visible stack onto
-            // the hidden stack
+            // to do that, we'll move them back onto the hidden frame (and retain their visible frame)
+            // and then use our animation functions to pop them off the hidden stack onto
+            // the visible stack
             //
             // this'll let us move the bezel frame back to its hidden place above the hidden stack
             // immediately
-            MMPaperView* newTopVisiblePage = [visibleStackHolder peekSubview];
             [[visibleStackHolder peekSubview] enableAllGestures];
-            [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
+            [self willChangeTopPageTo:[bezelStackHolder peekSubview]];
             while([bezelStackHolder.subviews count]){
                 // this will translate the frame from the bezel stack to the
                 // hidden stack, so that the pages appear in the same place
                 // to the user, the pop calls next will animate them to the
                 // visible stack
-                [visibleStackHolder pushSubview:[bezelStackHolder.subviews firstObject]];
+                [hiddenStackHolder pushSubview:[bezelStackHolder peekSubview]];
             }
             void(^finishedBlock)(BOOL finished)  = ^(BOOL finished){
                 bezelStackHolder.frame = hiddenStackHolder.frame;
                 [self didChangeTopPage];
             };
-            [self popStackUntilPage:newTopVisiblePage onComplete:finishedBlock];
+            [self popHiddenStackForPages:bezelGesture.numberOfRepeatingBezels onComplete:finishedBlock];
             
             //
             // successful gesture complete, so reset the gesture count
