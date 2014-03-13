@@ -182,6 +182,9 @@ int skipAll = NO;
         if([gesture respondsToSelector:@selector(paused)]){
             NSLog(@"   paused: %d", [gesture performSelector:@selector(paused)] ? 1 : 0);
         }
+        if([gesture respondsToSelector:@selector(scrap)]){
+            NSLog(@"   has scrap: %d", [gesture performSelector:@selector(scrap)] ? 1 : 0);
+        }
     }
     NSLog(@"velocity gesture sees: %d", [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]);
     

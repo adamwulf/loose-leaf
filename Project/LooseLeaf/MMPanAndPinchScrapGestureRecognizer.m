@@ -173,15 +173,34 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
  * touches
  */
 -(void) relinquishOwnershipOfTouches:(NSSet*)touches{
+    
+    if([validTouches count] == 3 && [touches count] == 2){
+        NSLog(@"what");
+    }
+    
     NSMutableSet* validTouchesToRelinquish = [NSMutableSet setWithSet:[validTouches set]];
     [validTouchesToRelinquish intersectSet:touches];
 
     [validTouches removeObjectsInSet:touches];
     [ignoredTouches addObjectsInSet:validTouchesToRelinquish];
     
+    if([validTouches count] < mmMinimumNumberOfScrapTouches && self.scrap){
+        NSLog(@"promote possible touch? %d %d %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+        NSLog(@"demoting valid touches");
+        [possibleTouches addObjectsInSet:[validTouches set]];
+        [validTouches removeAllObjects];
+        self.scrap = nil;
+    }
+    
+    if([validTouches count] == 0 && self.scrap){
+        NSLog(@"relenquish scrap? %d %d %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+        self.scrap = nil;
+    }
+    
+
     // if we only have 2 touches, then their sort
     // order doesn't matter
-    if([validTouches count] <= 2) return;
+    if([validTouches count] <= mmMinimumNumberOfScrapTouches) return;
     
     // now sort valid touches by relative distance,
     // with closest first. this nested for loop
@@ -436,6 +455,9 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
            self.state != UIGestureRecognizerStatePossible){
             self.state = UIGestureRecognizerStateEnded;
         }
+        if([validTouches count] < mmMinimumNumberOfScrapTouches && self.scrap){
+            NSLog(@"what");
+        }
         return;
     }
     
@@ -554,6 +576,9 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         if(![validTouches count] && ![ignoredTouches count] && ![possibleTouches count] &&
            self.state != UIGestureRecognizerStatePossible){
             self.state = UIGestureRecognizerStateEnded;
+        }
+        if([validTouches count] < mmMinimumNumberOfScrapTouches && self.scrap){
+            NSLog(@"what");
         }
         return;
     }
