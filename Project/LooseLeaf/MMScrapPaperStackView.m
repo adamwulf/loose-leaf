@@ -246,7 +246,6 @@ int skipAll = NO;
 }
 
 -(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
-    NSLog(@"bezel left scrap: %d", bezelGesture.state);
     [self ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
     [super isBezelingInLeftWithGesture:bezelGesture];
     [self forceScrapToScrapContainerDuringGesture];
@@ -263,7 +262,6 @@ int skipAll = NO;
 
 -(void) panAndScaleScrap:(MMPanAndPinchScrapGestureRecognizer*)_panGesture{
     MMPanAndPinchScrapGestureRecognizer* gesture = (MMPanAndPinchScrapGestureRecognizer*)_panGesture;
-    NSLog(@"pan scrap: %d", _panGesture.state);
     if(_panGesture.paused){
         return;
     }
@@ -308,7 +306,6 @@ int skipAll = NO;
             // then add it to the scrap container view.
             if(![scrapContainer.subviews containsObject:scrap]){
                 // just keep it in the scrap container
-                NSLog(@"adding to scrapContainer with state: %d", gesture.state);
                 [scrapContainer addSubview:scrap];
             }
         }else if(pageToDropScrap && [pageToDropScrap hasScrap:scrap]){
@@ -362,7 +359,6 @@ int skipAll = NO;
         if(gesture.didExitToBezel){
             shouldBezel = YES;
         }else if([scrapsInContainer containsObject:gesture.scrap]){
-            NSLog(@"scrap container owns the scrap");
             CGFloat scrapScaleInPage;
             CGPoint scrapCenterInPage;
             MMScrappedPaperView* pageToDropScrap;
@@ -533,8 +529,8 @@ CGPoint gestureLocationAtStretchEnd;
 CGPoint scrapLocationAfterAnimation;
 CGPoint gestureLocationAfterAnimation;
 
+
 -(CGPoint) beginStretchForScrap:(MMScrapView*)scrap{
-    
     // when a scrap is beginning to be stretched, we need to
     // track it's anchor point before we begin the stretch.
     // this will be the anchor of the pan gesture.
