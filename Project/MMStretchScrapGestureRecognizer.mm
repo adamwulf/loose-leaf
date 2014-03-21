@@ -348,14 +348,14 @@
         [pinchScrapGesture1 relinquishOwnershipOfTouches:touches];
         [pinchScrapGesture2 relinquishOwnershipOfTouches:touches];
     }
-    NSLog(@"pinchScrapGesture1: %d %d %d %d", [pinchScrapGesture1.validTouches count],
-          [pinchScrapGesture1.possibleTouches count],
-          [pinchScrapGesture1.ignoredTouches count],
-          (int)pinchScrapGesture1.scrap);
-    NSLog(@"pinchScrapGesture2: %d %d %d %d", [pinchScrapGesture2.validTouches count],
-          [pinchScrapGesture2.possibleTouches count],
-          [pinchScrapGesture2.ignoredTouches count],
-          (int)pinchScrapGesture2.scrap);
+    NSLog(@"pinchScrapGesture1: %lu %lu %lu %lu", (unsigned long)[pinchScrapGesture1.validTouches count],
+          (unsigned long)[pinchScrapGesture1.possibleTouches count],
+          (unsigned long)[pinchScrapGesture1.ignoredTouches count],
+          (unsigned long) pinchScrapGesture1.scrap);
+    NSLog(@"pinchScrapGesture2: %lu %lu %lu %lu", (unsigned long)[pinchScrapGesture2.validTouches count],
+          (unsigned long)[pinchScrapGesture2.possibleTouches count],
+          (unsigned long)[pinchScrapGesture2.ignoredTouches count],
+          (unsigned long) pinchScrapGesture2.scrap);
     [self updateState];
 }
 
@@ -369,14 +369,14 @@
         [pinchScrapGesture1 relinquishOwnershipOfTouches:touches];
         [pinchScrapGesture2 relinquishOwnershipOfTouches:touches];
     }
-    NSLog(@"pinchScrapGesture1: %d %d %d %d", [pinchScrapGesture1.validTouches count],
-          [pinchScrapGesture1.possibleTouches count],
-          [pinchScrapGesture1.ignoredTouches count],
-          (int)pinchScrapGesture1.scrap);
-    NSLog(@"pinchScrapGesture2: %d %d %d %d", [pinchScrapGesture2.validTouches count],
-          [pinchScrapGesture2.possibleTouches count],
-          [pinchScrapGesture2.ignoredTouches count],
-          (int)pinchScrapGesture2.scrap);
+    NSLog(@"pinchScrapGesture1: %lu %lu %lu %lu", (unsigned long)[pinchScrapGesture1.validTouches count],
+          (unsigned long)[pinchScrapGesture1.possibleTouches count],
+          (unsigned long)[pinchScrapGesture1.ignoredTouches count],
+          (unsigned long) pinchScrapGesture1.scrap);
+    NSLog(@"pinchScrapGesture2: %lu %lu %lu %lu", (unsigned long)[pinchScrapGesture2.validTouches count],
+          (unsigned long)[pinchScrapGesture2.possibleTouches count],
+          (unsigned long)[pinchScrapGesture2.ignoredTouches count],
+          (unsigned long) pinchScrapGesture2.scrap);
     [self updateState];
 }
 

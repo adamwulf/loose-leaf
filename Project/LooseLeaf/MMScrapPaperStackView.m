@@ -164,7 +164,7 @@ int skipAll = NO;
     }
     
 
-    for(UIGestureRecognizer* gesture in self.gestureRecognizers){
+    for(UIGestureRecognizer* gesture in [self.gestureRecognizers arrayByAddingObjectsFromArray:[[visibleStackHolder peekSubview] gestureRecognizers]]){
         UIGestureRecognizerState st = gesture.state;
         NSLog(@"%@ %d", NSStringFromClass([gesture class]), st);
         if([gesture respondsToSelector:@selector(validTouches)]){
@@ -514,14 +514,6 @@ int skipAll = NO;
         // generate the actual transform between the two quads
         gesture.scrap.layer.transform = CATransform3DConcat(startSkewTransform, [gesture skewTransform]);
     }
-    NSLog(@"pan1: %d %d %d %d", (int) panAndPinchScrapGesture.scrap,
-          [panAndPinchScrapGesture.validTouches count],
-          [panAndPinchScrapGesture.possibleTouches count],
-          [panAndPinchScrapGesture.ignoredTouches count]);
-    NSLog(@"pan2: %d %d %d %d", (int) panAndPinchScrapGesture2.scrap,
-          [panAndPinchScrapGesture2.validTouches count],
-          [panAndPinchScrapGesture2.possibleTouches count],
-          [panAndPinchScrapGesture2.ignoredTouches count]);
 }
 
 
@@ -545,7 +537,6 @@ CGPoint gestureLocationAfterAnimation;
     // when a scrap is beginning to be stretched, we need to
     // track it's anchor point before we begin the stretch.
     // this will be the anchor of the pan gesture.
-    // TODO: what happens if i grab this scrap with 4 fingers immediately
     // the scrap.center will be calcualted based on this
     // gesture specific anchor point
     scrapAnchorAtStretchStart = scrap.layer.anchorPoint;
@@ -621,10 +612,6 @@ CGPoint gestureLocationAfterAnimation;
     // the transition back to the normal scale/rotate
     // transform. after that i can recenter it and then
     // complete the bounce.
-    //
-    // TODO: get figure out how to animate the scrap
-    // into the new position to hand it off to the
-    // pinch gesture
     
     const CGFloat GestureDuration = 0.3;
     
@@ -717,7 +704,8 @@ CGPoint gestureLocationAfterAnimation;
 #pragma mark - MMPanAndPinchScrapGestureRecognizerDelegate
 
 -(NSArray*) scraps{
-    return [[visibleStackHolder peekSubview] scraps];
+    return [[[visibleStackHolder peekSubview] scraps] arrayByAddingObjectsFromArray:scrapContainer.subviews];
+    
 }
 
 -(BOOL) panScrapRequiresLongPress{

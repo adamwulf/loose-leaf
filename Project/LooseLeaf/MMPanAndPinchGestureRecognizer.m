@@ -57,6 +57,10 @@
     return [validTouches array];
 }
 
+-(NSUInteger) numberOfValidTouches{
+    return [validTouches count];
+}
+
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
     return NO;
 }
@@ -74,6 +78,9 @@
     if(gesture != self){
         [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
             if([possibleTouches containsObject:touch] || [validTouches containsObject:touch]){
+                if([validTouches containsObject:touch]){
+                    NSLog(@"touches stolen from pan/pinch");
+                }
                 [possibleTouches removeObjectsInSet:touches];
                 [ignoredTouches addObjectsInSet:touches];
                 [validTouches removeObjectsInSet:touches];
@@ -203,7 +210,7 @@
             initialDistance = 0;
             self.state = UIGestureRecognizerStateChanged;
         }
-        if(self.numberOfTouches == 1){
+        if(self.numberOfValidTouches == 1){
             initialDistance = 0;
             if(scale < 1){
                 scaleDirection = MMScaleDirectionLarger;
@@ -324,7 +331,7 @@
                     secondToLastTouchDidBezel = YES;
                 }
             }
-            if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
+            if(self.numberOfValidTouches == 1 && self.state == UIGestureRecognizerStateChanged){
                 self.state = UIGestureRecognizerStatePossible;
             }
         }
@@ -395,7 +402,7 @@
     
 //    NSLog(@"pan cancelled touches %d vs %d", [validTouchesCurrentlyCancelling count], [touches count]);
     if([validTouchesCurrentlyCancelling count]){
-        if(self.numberOfTouches == 1 && (self.state == UIGestureRecognizerStateChanged || self.state == UIGestureRecognizerStateBegan)){
+        if(self.numberOfValidTouches == 1 && (self.state == UIGestureRecognizerStateChanged || self.state == UIGestureRecognizerStateBegan)){
             self.state = UIGestureRecognizerStatePossible;
         }else if([validTouches count] == [validTouchesCurrentlyCancelling count] && (self.state == UIGestureRecognizerStateChanged || self.state == UIGestureRecognizerStateBegan)){
             self.state = UIGestureRecognizerStateCancelled;

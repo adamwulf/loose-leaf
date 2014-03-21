@@ -1,70 +1,80 @@
-## 1.3
+## 3.0.0 - February 18, 2014
 
-### 1.3.0-beta.7
+- Remove checkpoints, feedback, and logs from production apps.
 
-- Do not automatically start a session on `+takeOff:`.
+## 2.2.2 - February 5, 2014
 
-  With iOS 7 and more background modes, there are more chances for apps to be launched in the background and a session shouldn't start if the user is not using the app. For apps with special session needs please see "TestFlight+ManualSessions.h".
+- Remove `+ (void)setDeviceIdentifier:(NSString *)deviceIdentifer`, it is no longer used
+- On start up, if unsent events are found only attempt to send some of them (this is in case a device doesn't have internet for a while and unsent events build up)
+- Fix crash if you try to run `TFLog(nil)` (thanks Florian!)
 
-### 1.3.0-beta.6
+## 2.2.1 - January 16, 2014
 
-- Fix bug with crash reporting in iOS 7
+- Consolidate both SDK versions into one which removes all access to `ASIdentifierManager`
 
-### 1.3.0-beta.5
+## 2.2 - December 17, 2013
 
-Improvements
+- Restore In App Updates
+- Automatic identification of beta testers
 
-- Size of SDK reduced by 50%
-- New In App Update UI in an alert with landscape support. Should work for all different types of apps.
-- Manual Sessions: You can manually control session start and end. See `TestFlight+ManualSessions.h` for more information
-- Combining of back to back sessions. If a session starts less than 30 seconds from the last session which ended, the previous session is continued. You may change the time limit (or turn this off) using the `TFOptionSessionKeepAliveTimeout` option key.
-- `TFOptionReportCrashes` option to not install crash handlers
+## 2.1.3 - November 25, 2013
 
-Bugs Fixed
+- Fix bug in 2.1.2-noadid which caused adid to be collected
 
-- Fixed possible `-[TFAirTrafficController getNumberOrNilFrom:withKey:]` crash when bad data is received.
+## 2.1.2 - November 19, 2013
 
-### 1.3.0-beta.4
+- Fix for bug that caused events to not get sent properly when using the `TFOptionSessionKeepAliveTimeout` option
+- Fix for bug that caused logs that were sent immediately after start session to sometimes not be sent to server
 
-- Removed all access to mac address
-- Added AdSupport.framework requirement
-    - AdSupport.framework is automatically loaded on iOS 6.0+ if not weak linked with app
-    
-### 1.3.0-beta.3
+## 2.1.1 - October 2, 2013
 
-Improvements
+- Create sdk version that removes all access to `ASIdentifierManager`
+- Add UIDevice's `identifierForVendor`
 
-- Add format attribute to TFLog to show warnings for wrong format specifiers or not using a format string
+## 2.1 - September 30, 2013
 
-Bugs Fixed
+- Full support for the iPhone 5s’ ARM64 processor while still supporting down to iOS 4.3
 
-- TF Permissions were not always respected
-- Persist session information in case of uncatchable crash (so we can properly end the session on next startup)
-- Fix some msgpack bugs
+## 2.0.2 - August 30, 2013
 
-### 1.3.0-beta.2
+- Fixed a bug where the sdk would cause an app's CPU usage to rise significantly if the device had no internet connection when the app started
 
-- Pause all network traffic if server is not reachable
+## 2.0.1 - August 22, 2013
 
-Bugs Fixed
+- Fixed rare `8badf00d` crash in TFNetworkManager that happened when the app was in the background
 
-- CoreTelephony crash work around: this is a workaround of a iOS bug that causes deallocated instances of `CTTelephonyNetworkInfo` to receive notifications which causes crashes. Core Telephony is used to retrieve the device's mobile carrier.
-- Fixed addrinfo memory leak
-
-### 1.3.0-beta.1
+## 2.0 - August 12, 2013
 
 Improvements
 
 - ARC
 - All public TestFlight methods may be called from any thread or dispatch_queue
-- All public TestFlight methods (except for TFLog) are asynchronous, so there is never a wait on them
+- All public TestFlight methods (except for `TFLog` and `takeOff:`) are asynchronous, so there is never a wait on them
 - TestFlight never uses more than 1 network connection at a time
 - All network traffic is grouped together, sent at once, and transferred in MessagePack. This results in using less bandwidth and less network calls.
+- All network traffic if server is not reachable
+- Size of SDK reduced by 70%
+- New In App Update UI in an alert with landscape support. Should work for all different types of apps.
+- Manual Sessions: You can manually control session start and end. See `TestFlight+ManualSessions.h` for more information
+- Combining of back to back sessions. If a session starts less than 30 seconds from the last session which ended, the previous session is continued. You may change the time limit (or turn this off) using the `TFOptionSessionKeepAliveTimeout` option key.
+- No longer automatically starts a session on `+takeOff:` in order to support new background modes that might launch an app in the background.
+- `TFOptionReportCrashes` option to not install crash handlers
+- Remove all calls to `dispatch_get_current_queue`, it is deprecated
 
-Removed
+Changes
 
+- Removed all access to mac address
+- Added AdSupport.framework requirement (as a replacement for mac address to get accurate user counts)
+- Add format attribute to TFLog to show warnings for wrong format specifiers or not using a format string
 - Removed Questions
 - Removed Feedback View (along with backtrace option)
+
+Bug Fixes
+
+- Fixed addrinfo memory leak
+- Fixed possible `-[TFAirTrafficController getNumberOrNilFrom:withKey:]` crash when bad data is received.
+- CoreTelephony crash work around: this is a workaround of a iOS bug that causes deallocated instances of `CTTelephonyNetworkInfo` to receive notifications which causes crashes. Core Telephony is used to retrieve the device's mobile carrier.
+- Fix bug with crash reporting in iOS 7
 
 
 ## 1.2.4 - February 19, 2013

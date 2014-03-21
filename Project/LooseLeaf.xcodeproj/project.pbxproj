@@ -215,7 +215,7 @@
 		665CAC2217B5803B000BD505 /* MMPencilAndPaletteViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPencilAndPaletteViewDelegate.h; sourceTree = "<group>"; };
 		6661144616FD67F8005032B9 /* Loose-Leaf-Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf-Icon.png"; path = "../Loose-Leaf-Icon.png"; sourceTree = "<group>"; };
 		6661144916FD67FA005032B9 /* Loose-Leaf-Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf-Icon@2x.png"; path = "../Loose-Leaf-Icon@2x.png"; sourceTree = "<group>"; };
-		666425B618CBA9EC00A306C1 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		666425B618CBA9EC00A306C1 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = ../Frameworks/Crashlytics.framework; sourceTree = "<group>"; };
 		666425B818CBC20000A306C1 /* MMStretchScrapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMStretchScrapGestureRecognizer.h; path = ../MMStretchScrapGestureRecognizer.h; sourceTree = "<group>"; };
 		666425B918CBC20000A306C1 /* MMStretchScrapGestureRecognizer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MMStretchScrapGestureRecognizer.mm; path = ../MMStretchScrapGestureRecognizer.mm; sourceTree = "<group>"; };
 		666425BB18CBC37700A306C1 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
@@ -1113,7 +1113,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = MM;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Milestone Made, LLC";
 			};
 			buildConfigurationList = 66DCFB801581BCED00B4918C /* Build configuration list for PBXProject "LooseLeaf" */;
@@ -1364,6 +1364,7 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
@@ -1374,6 +1375,7 @@
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = 2;
+				VALID_ARCHS = "armv7 armv7s";
 			};
 			name = Debug;
 		};
@@ -1401,6 +1403,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
@@ -1413,6 +1416,7 @@
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "armv7 armv7s";
 			};
 			name = Release;
 		};

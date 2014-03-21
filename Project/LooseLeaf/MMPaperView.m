@@ -159,7 +159,7 @@
         return NO;
     }
     BOOL isBezel = (panGesture.didExitToBezel & bezelDirection) != MMBezelDirectionNone;
-    return isBezel && (panGesture.state == UIGestureRecognizerStateChanged) && panGesture.numberOfTouches == 1;
+    return isBezel && (panGesture.state == UIGestureRecognizerStateChanged) && panGesture.numberOfValidTouches == 1;
 }
 
 /**
@@ -256,6 +256,9 @@
  * pan gestures use proper state control etc to zoom a page in and out.
  */
 -(void) panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture{
+    if(![_panGesture.touches count]){
+        NSLog(@"skipping pan gesture: has %d valid touches and %d number", [_panGesture.touches count], _panGesture.numberOfValidTouches);
+    }
     if(![self.delegate shouldAllowPan:self]){
         return;
     }
@@ -291,7 +294,7 @@
                                                  toFrame:self.frame];
         }
         return;
-    }else if(panGesture.numberOfTouches == 1){
+    }else if(panGesture.numberOfValidTouches == 1){
         if(lastNumberOfTouchesForPanGesture != 1){
             // notify the delegate of our state change
             [self.delegate isBeginning:NO
@@ -308,7 +311,7 @@
         lastNumberOfTouchesForPanGesture = 1;
         isBeingPannedAndZoomed = NO;
         return;
-    }else if(lastNumberOfTouchesForPanGesture < 2 ||
+    }else if((lastNumberOfTouchesForPanGesture < 2 && panGesture.numberOfValidTouches == 2) ||
              panGesture.state == UIGestureRecognizerStateBegan){
         isBeingPannedAndZoomed = YES;
         //
@@ -349,7 +352,6 @@
                            withTouches:panGesture.touches];
         return;
     }
-    
     
     //
     // to track panning, we collect the first location of the pan gesture, and calculate the offset
