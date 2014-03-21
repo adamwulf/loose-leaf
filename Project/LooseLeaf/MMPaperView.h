@@ -20,13 +20,6 @@
     
     NSObject<MMPaperViewDelegate>* __weak delegate;
     
-    // properties for pinch gesture
-    CGFloat preGestureScale;
-    CGPoint normalizedLocationOfScale;
-    
-    // properties for pan gesture
-    CGPoint firstLocationOfPanGestureInSuperView;
-    CGRect frameOfPageAtBeginningOfGesture;
     NSInteger lastNumberOfTouchesForPanGesture;
 
     BOOL isBeingPannedAndZoomed;

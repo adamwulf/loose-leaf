@@ -34,25 +34,25 @@
     // track the direction of the scale
     MMBezelScaleDirection scaleDirection;
     
-    //
-    // don't allow both the 2nd to last touch
-    // and the last touch to trigger a repeat
-    // of the bezel
-    BOOL secondToLastTouchDidBezel;
-    
     __weak NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>* scrapDelegate;
 }
 
 @property (nonatomic, weak) NSObject<MMPanGestureDelegate>* scrapDelegate;
-@property (readonly) NSArray* touches;
+@property (readonly) NSArray* validTouches;
 @property (nonatomic, readonly) CGFloat scale;
 @property (nonatomic, assign) MMBezelDirection bezelDirectionMask;
 @property (nonatomic, readonly) MMBezelDirection didExitToBezel;
 @property (nonatomic, readonly) MMBezelScaleDirection scaleDirection;
+@property (nonatomic, readonly) UIGestureRecognizerState subState;
+
+@property (nonatomic, readonly) CGFloat preGestureScale;
+@property (nonatomic, readonly) CGPoint normalizedLocationOfScale;
+@property (nonatomic, readonly) CGPoint firstLocationOfPanGestureInSuperView;
+@property (nonatomic, readonly) CGRect frameOfPageAtBeginningOfGesture;
+
 
 -(void) cancel;
 -(BOOL) containsTouch:(UITouch*)touch;
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
--(NSUInteger) numberOfValidTouches;
 
 @end

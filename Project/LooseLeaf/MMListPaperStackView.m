@@ -368,6 +368,7 @@
         // the cancelled state will be caught in MMPaperStackView, so
         // the frame is not adjusted after we animate the page to
         // it's resting place
+        NSLog(@"scale: %f", [visibleStackHolder peekSubview].scale);
         if([visibleStackHolder peekSubview].scale < kZoomToListPageZoom){
             [[visibleStackHolder peekSubview] cancelAllGestures];
             return fromFrame;
