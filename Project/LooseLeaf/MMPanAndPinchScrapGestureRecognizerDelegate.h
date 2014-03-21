@@ -17,8 +17,8 @@
 
 -(BOOL) panScrapRequiresLongPress;
 
--(CGFloat) topVisiblePageScale;
+-(CGFloat) topVisiblePageScaleForScrap:(MMScrapView*)scrap;
 
--(CGPoint) convertScrapCenterToScrapContainerCoordinate:(CGPoint)scrapCenter;
+-(CGPoint) convertScrapCenterToScrapContainerCoordinate:(MMScrapView*)scrap;
 
 @end

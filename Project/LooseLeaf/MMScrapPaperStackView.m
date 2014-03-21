@@ -748,19 +748,28 @@ CGPoint gestureLocationAfterAnimation;
     return rulerButton.selected;
 }
 
--(CGFloat) topVisiblePageScale{
-    return [visibleStackHolder peekSubview].scale;
+-(CGFloat) topVisiblePageScaleForScrap:(MMScrapView*)scrap{
+    if([scrapContainer.subviews containsObject:scrap]){
+        return 1;
+    }else{
+        return [visibleStackHolder peekSubview].scale;
+    }
 }
 
--(CGPoint) convertScrapCenterToScrapContainerCoordinate:(CGPoint)scrapCenter{
-    CGFloat pageScale = [self topVisiblePageScale];
-    // because the page uses a transform to scale itself, the scrap center will always
-    // be in page scale = 1.0 form. if the user picks up a scrap while also scaling the page,
-    // then we need to transform that coordinate into the visible scale of the zoomed page.
-    scrapCenter = CGPointApplyAffineTransform(scrapCenter, CGAffineTransformMakeScale(pageScale, pageScale));
-    // now that the coordinate is in the visible scale, we can convert that directly to the
-    // scapContainer's coodinate system
-    return [[visibleStackHolder peekSubview] convertPoint:scrapCenter toView:scrapContainer];
+-(CGPoint) convertScrapCenterToScrapContainerCoordinate:(MMScrapView*)scrap{
+    CGPoint scrapCenter = scrap.center;
+    if([scrapContainer.subviews containsObject:scrap]){
+        return scrapCenter;
+    }else{
+        CGFloat pageScale = [visibleStackHolder peekSubview].scale;
+        // because the page uses a transform to scale itself, the scrap center will always
+        // be in page scale = 1.0 form. if the user picks up a scrap while also scaling the page,
+        // then we need to transform that coordinate into the visible scale of the zoomed page.
+        scrapCenter = CGPointApplyAffineTransform(scrapCenter, CGAffineTransformMakeScale(pageScale, pageScale));
+        // now that the coordinate is in the visible scale, we can convert that directly to the
+        // scapContainer's coodinate system
+        return [[visibleStackHolder peekSubview] convertPoint:scrapCenter toView:scrapContainer];
+    }
 }
 
 

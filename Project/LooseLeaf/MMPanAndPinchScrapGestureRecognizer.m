@@ -631,6 +631,8 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 -(void) prepareGestureToBeginFresh{
     if(paused) return;
 
+    NSLog(@"preparing to begin fresh");
+    
     // set the anchor point so that it
     // rotates around the point that we're
     // gesturing
@@ -670,8 +672,8 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     self.shouldReset = YES;
     self.preGestureScale = self.scrap.scale;
     self.preGestureRotation = self.scrap.rotation;
-    self.preGesturePageScale = [scrapDelegate topVisiblePageScale];
-    self.preGestureCenter = [scrapDelegate convertScrapCenterToScrapContainerCoordinate:self.scrap.center];
+    self.preGesturePageScale = [scrapDelegate topVisiblePageScaleForScrap:self.scrap];
+    self.preGestureCenter = [scrapDelegate convertScrapCenterToScrapContainerCoordinate:self.scrap];
 }
 
 /**

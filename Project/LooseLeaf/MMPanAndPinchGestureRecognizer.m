@@ -100,14 +100,12 @@
 // this will make sure that the substate transitions
 // into a valid state and doesn't repeat a Began/End/Cancelled/etc
 -(void) processSubStateForNextIteration{
-    NSLog(@"processing w/ state: %d", self.state);
     if(subState == UIGestureRecognizerStateEnded ||
        subState == UIGestureRecognizerStateCancelled ||
        subState == UIGestureRecognizerStateFailed){
         subState = UIGestureRecognizerStatePossible;
     }else if(subState == UIGestureRecognizerStateBegan){
         subState = UIGestureRecognizerStateChanged;
-        NSLog(@"substate UIGestureRecognizerStateChanged");
     }
 }
 
@@ -286,7 +284,6 @@
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSLog(@"touches moved");
     [self processSubStateForNextIteration];
 
     if(subState == UIGestureRecognizerStatePossible){
