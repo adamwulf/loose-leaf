@@ -128,17 +128,18 @@
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     if(gesture != self){
+        __block BOOL touchesWereStolen = NO;
         [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
             if([possibleTouches containsObject:touch] || [validTouches containsObject:touch]){
                 if([validTouches containsObject:touch]){
-                    NSLog(@"touches stolen from pan/pinch");
+                    touchesWereStolen = YES;
                 }
                 [possibleTouches removeObjectsInSet:touches];
                 [ignoredTouches addObjectsInSet:touches];
                 [validTouches removeObjectsInSet:touches];
             }
         }];
-        if([validTouches count] == 1){
+        if([validTouches count] < 2 && touchesWereStolen){
             // uh oh, we have valid touches, but not enough
             subState = UIGestureRecognizerStatePossible;
             [possibleTouches addObjectsInOrderedSet:validTouches];
@@ -235,7 +236,6 @@
  * to match that of the animation.
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSLog(@"touches began");
     [self processSubStateForNextIteration];
     
     NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
