@@ -214,6 +214,7 @@
                     [validTouches addObjectsInSet:touchesInScrap];
                     [possibleTouches removeObjectsInSet:touchesInScrap];
                     scrap = pinchedScrap;
+                    [scrap.layer removeAllAnimations];
                     [self sortValidTouches];
                     [self.scrapDelegate ownershipOfTouches:[validTouches set] isGesture:self];
                     skewTransform = CATransform3DIdentity;
