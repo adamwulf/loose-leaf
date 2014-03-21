@@ -140,6 +140,12 @@
                 [validTouches removeObjectsInSet:touches];
             }
         }];
+        if([validTouches count] == 1){
+            // uh oh, we have valid touches, but not enough
+            subState = UIGestureRecognizerStatePossible;
+            [possibleTouches addObjectsInOrderedSet:validTouches];
+            [validTouches removeAllObjects];
+        }
     }
 }
 

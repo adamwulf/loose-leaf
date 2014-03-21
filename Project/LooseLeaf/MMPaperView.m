@@ -271,8 +271,6 @@
 //          panGesture.state == UIGestureRecognizerStateEnded, panGesture.state == UIGestureRecognizerStateBegan,
 //          panGesture.state == UIGestureRecognizerStateFailed);
     
-    NSLog(@"panAndScale:%d,%d", panGesture.state, panGesture.subState);
-    
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
        panGesture.state == UIGestureRecognizerStateEnded ||
        panGesture.state == UIGestureRecognizerStateFailed){
@@ -288,7 +286,6 @@
                 if(scale < kMinPageZoom){
                     [self.delegate cancelledScalingReallySmall:self];
                 }
-                NSLog(@"finished panning page, telling delegate");
                 [self.delegate finishedPanningAndScalingPage:self
                                                    intoBezel:panGesture.didExitToBezel
                                                    fromFrame:panGesture.frameOfPageAtBeginningOfGesture
@@ -336,7 +333,7 @@
         return;
     }
     
-    if(![_panGesture.validTouches count]){
+    if([_panGesture.validTouches count] < 2){
         NSLog(@"skipping pan gesture: has %d valid touches and substate %d", [_panGesture.validTouches count], _panGesture.subState);
         return;
     }

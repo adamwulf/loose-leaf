@@ -343,7 +343,8 @@ int skipAll = NO;
     
     BOOL shouldBezel = NO;
     if(gesture.state == UIGestureRecognizerStateEnded ||
-             gesture.state == UIGestureRecognizerStateCancelled){
+       gesture.state == UIGestureRecognizerStateCancelled ||
+       ![gesture.validTouches count]){
         // turn off glow
         if(!stretchScrapGesture.scrap){
             // only if that scrap isn't being stretched
@@ -389,7 +390,8 @@ int skipAll = NO;
     }
     if(gesture.scrap && (gesture.state == UIGestureRecognizerStateEnded ||
                          gesture.state == UIGestureRecognizerStateFailed ||
-                         gesture.state == UIGestureRecognizerStateCancelled)){
+                         gesture.state == UIGestureRecognizerStateCancelled ||
+                         ![gesture.validTouches count])){
         // after possibly rotating the scrap, we need to reset it's anchor point
         // and position, so that we can consistently determine it's position with
         // the center property
