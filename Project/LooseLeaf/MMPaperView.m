@@ -273,7 +273,8 @@
     
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
        panGesture.state == UIGestureRecognizerStateEnded ||
-       panGesture.state == UIGestureRecognizerStateFailed){
+       panGesture.state == UIGestureRecognizerStateFailed ||
+       ([_panGesture.validTouches count] == 0 && isBeingPannedAndZoomed)){
         if(panGesture.hasPannedOrScaled){
             isBeingPannedAndZoomed = NO;
             if(scale < (kMinPageZoom + kZoomToListPageZoom)/2 && panGesture.didExitToBezel == MMBezelDirectionNone){
@@ -294,20 +295,11 @@
         }
         return;
     }else if(panGesture.subState == UIGestureRecognizerStatePossible){
-        if(lastNumberOfTouchesForPanGesture != 1){
-            // notify the delegate of our state change
-            [self.delegate isBeginning:NO
-                     toPanAndScalePage:self
-                             fromFrame:panGesture.frameOfPageAtBeginningOfGesture
-                               toFrame:panGesture.frameOfPageAtBeginningOfGesture
-                               withTouches:panGesture.validTouches];
-        }
         //
         // the gesture requires 2 fingers. it may still say it only has 1 touch if the user
         // started the gesture with 2 fingers but then lifted a finger. in that case, 
         // don't continue the gesture at all, just wait till they finish it proper or re-put
         // that 2nd touch down
-        lastNumberOfTouchesForPanGesture = 1;
         isBeingPannedAndZoomed = NO;
         return;
     }else if(!isBeingPannedAndZoomed && (panGesture.subState == UIGestureRecognizerStateBegan ||
@@ -320,9 +312,6 @@
         //
         // to test. begin pan/zoom in bottom left, then lift 1 finger and move to the top right
         // of the page, then re-pan/zoom on the top right. it should "just work".
-        
-        lastNumberOfTouchesForPanGesture = 2;
-        
 
         // notify the delegate of our state change
         [self.delegate isBeginning:YES

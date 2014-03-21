@@ -733,7 +733,9 @@
     if([page numberOfTimesExitedBezel] > 0){
         inProgressOfBezeling = page;
     }
-    [setOfPagesBeingPanned addObject:page];
+    if(![setOfPagesBeingPanned containsObject:page]){
+        [setOfPagesBeingPanned addObject:page];
+    }
     [self updateIconAnimations];
     
     //

@@ -72,7 +72,7 @@
         panAndPinchScrapGesture2.delegate = self;
         [self addGestureRecognizer:panAndPinchScrapGesture2];
         
-        stretchScrapGesture = [[MMStretchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(stretchGesture:)];
+        stretchScrapGesture = [[MMStretchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(stretchScrapGesture:)];
         stretchScrapGesture.scrapDelegate = self;
         stretchScrapGesture.pinchScrapGesture1 = panAndPinchScrapGesture;
         stretchScrapGesture.pinchScrapGesture2 = panAndPinchScrapGesture2;
@@ -233,7 +233,7 @@ int skipAll = NO;
 #pragma mark - Bezel Gestures
 
 -(void) forceScrapToScrapContainerDuringGesture{
-    // if the gesture is cancelled, then don't move the scrap
+    // if the gesture is cancelled, then don't move the scrap. to fix bezelling left over a scrap
     if(panAndPinchScrapGesture.scrap && panAndPinchScrapGesture.state != UIGestureRecognizerStateCancelled){
         if(![scrapContainer.subviews containsObject:panAndPinchScrapGesture.scrap]){
             [scrapContainer addSubview:panAndPinchScrapGesture.scrap];
@@ -506,7 +506,7 @@ int skipAll = NO;
 
 #pragma mark - MMStretchScrapGestureRecognizer
 
--(void) stretchGesture:(MMStretchScrapGestureRecognizer*)gesture{
+-(void) stretchScrapGesture:(MMStretchScrapGestureRecognizer*)gesture{
     if(gesture.scrap){
         [gesture.scrap.layer removeAllAnimations];
         if(!CGPointEqualToPoint(gesture.scrap.layer.anchorPoint, CGPointZero)){
@@ -545,6 +545,15 @@ CGPoint gestureLocationAfterAnimation;
     // gesture specific anchor point
     scrapAnchorAtStretchStart = scrap.layer.anchorPoint;
     
+    if(![scrapContainer.subviews containsObject:scrap]){
+        MMPanAndPinchScrapGestureRecognizer* owningPan = panAndPinchScrapGesture.scrap == scrap ? panAndPinchScrapGesture : panAndPinchScrapGesture2;
+        scrap.center = CGPointMake(owningPan.translation.x + owningPan.preGestureCenter.x,
+                                   owningPan.translation.y + owningPan.preGestureCenter.y);
+        scrap.scale = owningPan.preGestureScale * owningPan.scale * owningPan.preGesturePageScale;
+        scrap.rotation = owningPan.rotation + owningPan.preGestureRotation;
+        [scrapContainer addSubview:scrap];
+    }
+    
     // to calculate the initial position and transform we
     // need to have the anchor in the center
     MMPanAndPinchScrapGestureRecognizer* gesture = panAndPinchScrapGesture.scrap == scrap ? panAndPinchScrapGesture : panAndPinchScrapGesture2;
@@ -566,6 +575,7 @@ CGPoint gestureLocationAfterAnimation;
     // we can animate back to it when we're done
     scrap.selected = YES;
     startSkewTransform = scrap.layer.transform;
+    
     //
     // keep the pan gestures alive, just pause them from
     // updating until after the stretch gesture so we can

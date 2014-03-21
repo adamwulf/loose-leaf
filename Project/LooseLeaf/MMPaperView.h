@@ -20,8 +20,6 @@
     
     NSObject<MMPaperViewDelegate>* __weak delegate;
     
-    NSInteger lastNumberOfTouchesForPanGesture;
-
     BOOL isBeingPannedAndZoomed;
     
     UILabel* textLabel;
