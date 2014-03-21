@@ -653,7 +653,7 @@ CGPoint gestureLocationAfterAnimation;
     
     BOOL shouldBounceAnimate = NO;
     if(!shouldBounceAnimate){
-        scrap.layer.transform = smallTransform;
+//        scrap.layer.transform = smallTransform;
         scrap.center = CGPointMake(scrap.center.x + entireTranslation.x, scrap.center.y + entireTranslation.y);
         scrap.layer.transform = startSkewTransform;
         [UIView setAnchorPoint:scrapAnchorAtStretchStart forView:scrap];

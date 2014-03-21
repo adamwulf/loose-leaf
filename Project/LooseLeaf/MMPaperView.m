@@ -256,9 +256,6 @@
  * pan gestures use proper state control etc to zoom a page in and out.
  */
 -(void) panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture{
-    if(![_panGesture.touches count]){
-        NSLog(@"skipping pan gesture: has %d valid touches and %d number", [_panGesture.touches count], _panGesture.numberOfValidTouches);
-    }
     if(![self.delegate shouldAllowPan:self]){
         return;
     }
@@ -353,6 +350,11 @@
         return;
     }
     
+    if(![_panGesture.touches count]){
+        NSLog(@"skipping pan gesture: has %d valid touches and %d number", [_panGesture.touches count], _panGesture.numberOfValidTouches);
+        return;
+    }
+
     //
     // to track panning, we collect the first location of the pan gesture, and calculate the offset
     // of the current location of the gesture. that distance is the amount moved for the pan.
