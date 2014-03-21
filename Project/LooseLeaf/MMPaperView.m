@@ -276,22 +276,24 @@
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
        panGesture.state == UIGestureRecognizerStateEnded ||
        panGesture.state == UIGestureRecognizerStateFailed){
-        isBeingPannedAndZoomed = NO;
-        if(scale < (kMinPageZoom + kZoomToListPageZoom)/2 && panGesture.didExitToBezel == MMBezelDirectionNone){
-            if((_panGesture.scaleDirection & MMScaleDirectionSmaller) == MMScaleDirectionSmaller){
-                [self.delegate finishedScalingReallySmall:self];
+        if(panGesture.hasPannedOrScaled){
+            isBeingPannedAndZoomed = NO;
+            if(scale < (kMinPageZoom + kZoomToListPageZoom)/2 && panGesture.didExitToBezel == MMBezelDirectionNone){
+                if((_panGesture.scaleDirection & MMScaleDirectionSmaller) == MMScaleDirectionSmaller){
+                    [self.delegate finishedScalingReallySmall:self];
+                }else{
+                    [self.delegate cancelledScalingReallySmall:self];
+                }
             }else{
-                [self.delegate cancelledScalingReallySmall:self];
+                if(scale < kMinPageZoom){
+                    [self.delegate cancelledScalingReallySmall:self];
+                }
+                NSLog(@"finished panning page, telling delegate");
+                [self.delegate finishedPanningAndScalingPage:self
+                                                   intoBezel:panGesture.didExitToBezel
+                                                   fromFrame:panGesture.frameOfPageAtBeginningOfGesture
+                                                     toFrame:self.frame];
             }
-        }else{
-            if(scale < kMinPageZoom){
-                [self.delegate cancelledScalingReallySmall:self];
-            }
-            NSLog(@"finished panning page, telling delegate");
-            [self.delegate finishedPanningAndScalingPage:self 
-                                               intoBezel:panGesture.didExitToBezel
-                                               fromFrame:panGesture.frameOfPageAtBeginningOfGesture
-                                                 toFrame:self.frame];
         }
         return;
     }else if(panGesture.subState == UIGestureRecognizerStatePossible){

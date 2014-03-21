@@ -49,7 +49,7 @@
 @property (nonatomic, readonly) CGPoint normalizedLocationOfScale;
 @property (nonatomic, readonly) CGPoint firstLocationOfPanGestureInSuperView;
 @property (nonatomic, readonly) CGRect frameOfPageAtBeginningOfGesture;
-
+@property (nonatomic, readonly) BOOL hasPannedOrScaled;
 
 -(void) cancel;
 -(BOOL) containsTouch:(UITouch*)touch;

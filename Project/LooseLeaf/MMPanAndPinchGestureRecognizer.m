@@ -34,6 +34,8 @@
     // properties for pan gesture
     CGPoint firstLocationOfPanGestureInSuperView;
     CGRect frameOfPageAtBeginningOfGesture;
+    
+    BOOL hasPannedOrScaled;
 }
 
 @synthesize scrapDelegate;
@@ -46,6 +48,8 @@
 @synthesize normalizedLocationOfScale;
 @synthesize firstLocationOfPanGestureInSuperView;
 @synthesize frameOfPageAtBeginningOfGesture;
+
+@synthesize hasPannedOrScaled;
 
 -(id) init{
     self = [super init];
@@ -176,6 +180,7 @@
             [validTouches addObjectsInSet:claimedTouches];
             [possibleTouches removeObjectsInSet:claimedTouches];
             subState = UIGestureRecognizerStateBegan;
+            hasPannedOrScaled = YES;
             
             // reset the location and the initial distance of the gesture
             // so that the new first two touches position won't immediatley
@@ -508,6 +513,7 @@
     scaleDirection = MMScaleDirectionNone;
     locationAdjustment = CGPointZero;
     lastLocationInView = CGPointZero;
+    hasPannedOrScaled = NO;
 }
 
 -(void) cancel{
