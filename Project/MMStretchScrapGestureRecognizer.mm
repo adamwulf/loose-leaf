@@ -11,6 +11,7 @@
 #import "NSMutableSet+Extras.h"
 #import "MMVector.h"
 #import "MMPanAndPinchScrapGestureRecognizer.h"
+#import "MMPanAndPinchGestureRecognizer.h"
 
 @implementation MMStretchScrapGestureRecognizer{
     NSMutableSet* ignoredTouches;
@@ -77,14 +78,15 @@
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     if(gesture != self){
-        if(![gesture isKindOfClass:[MMPanAndPinchScrapGestureRecognizer class]]){
+        if(![gesture isKindOfClass:[MMPanAndPinchScrapGestureRecognizer class]] &&
+           ![gesture isKindOfClass:[MMPanAndPinchGestureRecognizer class]]){
             // we're only allowed to work on scrap pinch gesture touches
             [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
                 if([possibleTouches containsObject:touch] || [validTouches containsObject:touch]){
                     [possibleTouches removeObjectsInSet:touches];
-                    [ignoredTouches addObjectsInSet:touches];
                     [validTouches removeObjectsInSet:touches];
                 }
+                [ignoredTouches addObjectsInSet:touches];
             }];
             [self updateValidTouches];
         }
@@ -216,6 +218,7 @@
                     scrap = pinchedScrap;
                     [scrap.layer removeAllAnimations];
                     [self sortValidTouches];
+                    NSLog(@"stretch scrap claiming %d touches", [validTouches count]);
                     [self.scrapDelegate ownershipOfTouches:[validTouches set] isGesture:self];
                     skewTransform = CATransform3DIdentity;
                     adjust = [self.scrapDelegate beginStretchForScrap:scrap];

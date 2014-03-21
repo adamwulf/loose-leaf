@@ -149,9 +149,9 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
             }
             if([possibleTouches containsObject:touch] || [validTouches containsObject:touch]){
                 [possibleTouches removeObjectsInSet:touches];
-                [ignoredTouches addObjectsInSet:touches];
                 [validTouches removeObjectsInSet:touches];
             }
+            [ignoredTouches addObjectsInSet:touches];
         }];
         if(needsToFixValidTouches && [validTouches count] < mmMinimumNumberOfScrapTouches){
             // what do i do if a valid touch is
