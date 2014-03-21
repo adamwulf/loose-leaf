@@ -505,7 +505,7 @@
     // the stroke manager is the definitive source for all strokes.
     // cancel through that manager, and it'll notify the appropriate
     // view if need be
-    for(UITouch* touch in gesture.touches){
+    for(UITouch* touch in gesture.validTouches){
         [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
         [scissor cancelPolygonForTouch:touch];
     }

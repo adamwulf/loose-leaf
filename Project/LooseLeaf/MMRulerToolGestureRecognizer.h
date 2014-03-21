@@ -14,7 +14,6 @@
 @interface MMRulerToolGestureRecognizer : MMPanAndPinchGestureRecognizer
 
 
-@property (readonly) NSArray* touches;
 @property (nonatomic, readonly) CGFloat initialDistance;
 @property (nonatomic, readonly) CGFloat scale;
 
