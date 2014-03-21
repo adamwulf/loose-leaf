@@ -508,7 +508,6 @@ int skipAll = NO;
 
 -(void) stretchScrapGesture:(MMStretchScrapGestureRecognizer*)gesture{
     if(gesture.scrap){
-        NSLog(@"stretching %@!!!", gesture.scrap);
         [gesture.scrap.layer removeAllAnimations];
         if(!CGPointEqualToPoint(gesture.scrap.layer.anchorPoint, CGPointZero)){
             // the anchor point can get reset by the pan/pinch gesture ending,
@@ -539,7 +538,6 @@ CGPoint gestureLocationAfterAnimation;
 
 
 -(CGPoint) beginStretchForScrap:(MMScrapView*)scrap{
-    NSLog(@"beginStretchForScrap %d!!!", (int) scrap);
     // when a scrap is beginning to be stretched, we need to
     // track it's anchor point before we begin the stretch.
     // this will be the anchor of the pan gesture.
@@ -589,7 +587,6 @@ CGPoint gestureLocationAfterAnimation;
 }
 
 -(void) endStretchForScrap:(MMScrapView*)scrap{
-    NSLog(@"endStretchForScrap %d!!!", (int) scrap);
     // now that the scrap has finished a stretch, we can recalculate
     // where the center is for it's currently stretched out state.
     // these values will help inform us to build a new transform that

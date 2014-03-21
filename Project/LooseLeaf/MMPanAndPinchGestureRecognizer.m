@@ -220,9 +220,6 @@
             CGPoint beginningLocationInView = [self locationInView:self.view];
             normalizedLocationOfScale = CGPointMake(beginningLocationInView.x / self.view.frame.size.width,
                                                     beginningLocationInView.y / self.view.frame.size.height);
-
-            
-            NSLog(@"substate UIGestureRecognizerStateBegan");
         }
     }
 }
@@ -421,11 +418,9 @@
             if(cancelledFromBezel){
                 subState = UIGestureRecognizerStateCancelled;
                 self.state = UIGestureRecognizerStateCancelled;
-                NSLog(@"pan cancelled");
             }else{
                 subState = UIGestureRecognizerStateEnded;
                 self.state = UIGestureRecognizerStateEnded;
-                NSLog(@"pan ended");
             }
         }
     }else{
@@ -437,7 +432,6 @@
         [ignoredTouches removeObjectsInSet:touches];
         if(![validTouches count] && ![possibleTouches count] && ![ignoredTouches count]){
             self.state = UIGestureRecognizerStateFailed;
-            NSLog(@"pan failed");
         }
     }
     if(![validTouches count] && [possibleTouches count]){

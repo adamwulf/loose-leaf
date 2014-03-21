@@ -220,7 +220,6 @@
                     skewTransform = CATransform3DIdentity;
                     adjust = [self.scrapDelegate beginStretchForScrap:scrap];
                     firstQ = [self getQuad];
-                    NSLog(@"stretching!!!!");
                     break;
                 }else{
                     [allPossibleTouches removeObjectsInSet:touchesInScrap];

@@ -160,7 +160,6 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
             // from teh right, and both bezel touches
             // also begin on top of the same scrap
             self.state = UIGestureRecognizerStateCancelled;
-            NSLog(@"MMPanAndPinchScrap UIGestureRecognizerStateCancelled");
             if([gesture isKindOfClass:[MMPanAndPinchScrapGestureRecognizer class]]){
                 if([(MMPanAndPinchScrapGestureRecognizer*)gesture scrap] == scrap){
                     // if the other pan/pinch gesture owns this scrap, then let
@@ -356,7 +355,6 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
             
             didExitToBezel = MMBezelDirectionNone;
 
-            NSLog(@"MMPanAndPinchScrap UIGestureRecognizerStateBegan");
             self.state = UIGestureRecognizerStateBegan;
         }else if([validTouches count] < mmMinimumNumberOfScrapTouches){
             didExitToBezel = MMBezelDirectionNone;
@@ -613,7 +611,6 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
        [possibleTouches count] == 0 &&
        [ignoredTouches count] == 0 &&
        (self.state == UIGestureRecognizerStateChanged || self.state == UIGestureRecognizerStateBegan)){
-        NSLog(@"MMPanAndPinchScrap UIGestureRecognizerStateCancelled2");
         self.state = UIGestureRecognizerStateCancelled;
     }
 //    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
@@ -646,8 +643,6 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
  */
 -(void) prepareGestureToBeginFresh{
     if(paused) return;
-
-    NSLog(@"preparing to begin fresh");
     
     // set the anchor point so that it
     // rotates around the point that we're
