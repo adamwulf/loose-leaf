@@ -161,12 +161,26 @@
     return ret;
 }
 
+-(CGFloat) distanceBetweenPoint:(CGPoint)point1 andPoint:(CGPoint)point2
+{
+    CGFloat dx = point2.x - point1.x;
+    CGFloat dy = point2.y - point1.y;
+    return sqrt(dx*dx + dy*dy );
+};
 
 -(void) updateValidTouches{
     if([validTouches count] == 4){
         Quadrilateral secondQ = [self getQuad];
         Quadrilateral q1 = [self adjustedQuad:firstQ by:adjust];
         Quadrilateral q2 = [self adjustedQuad:secondQ by:adjust];
+        
+        CGFloat distX = [self distanceBetweenPoint:secondQ.upperLeft andPoint:secondQ.upperRight] /
+                        [self distanceBetweenPoint:firstQ.upperLeft andPoint:firstQ.upperRight];
+        CGFloat distY = [self distanceBetweenPoint:secondQ.upperLeft andPoint:secondQ.lowerLeft] /
+                        [self distanceBetweenPoint:firstQ.upperLeft andPoint:firstQ.lowerLeft];
+        
+        NSLog(@"stretch %f %f", distX, distY);
+        
         
         // generate the actual transform between the two quads
         skewTransform = [MMStretchScrapGestureRecognizer transformQuadrilateral:q1 toQuadrilateral:q2];
@@ -352,14 +366,14 @@
         [pinchScrapGesture1 relinquishOwnershipOfTouches:touches];
         [pinchScrapGesture2 relinquishOwnershipOfTouches:touches];
     }
-    NSLog(@"pinchScrapGesture1: %lu %lu %lu %lu", (unsigned long)[pinchScrapGesture1.validTouches count],
-          (unsigned long)[pinchScrapGesture1.possibleTouches count],
-          (unsigned long)[pinchScrapGesture1.ignoredTouches count],
-          (unsigned long) pinchScrapGesture1.scrap);
-    NSLog(@"pinchScrapGesture2: %lu %lu %lu %lu", (unsigned long)[pinchScrapGesture2.validTouches count],
-          (unsigned long)[pinchScrapGesture2.possibleTouches count],
-          (unsigned long)[pinchScrapGesture2.ignoredTouches count],
-          (unsigned long) pinchScrapGesture2.scrap);
+//    NSLog(@"pinchScrapGesture1: %lu %lu %lu %lu", (unsigned long)[pinchScrapGesture1.validTouches count],
+//          (unsigned long)[pinchScrapGesture1.possibleTouches count],
+//          (unsigned long)[pinchScrapGesture1.ignoredTouches count],
+//          (unsigned long) pinchScrapGesture1.scrap);
+//    NSLog(@"pinchScrapGesture2: %lu %lu %lu %lu", (unsigned long)[pinchScrapGesture2.validTouches count],
+//          (unsigned long)[pinchScrapGesture2.possibleTouches count],
+//          (unsigned long)[pinchScrapGesture2.ignoredTouches count],
+//          (unsigned long) pinchScrapGesture2.scrap);
     [self updateState];
 }
 
@@ -373,14 +387,14 @@
         [pinchScrapGesture1 relinquishOwnershipOfTouches:touches];
         [pinchScrapGesture2 relinquishOwnershipOfTouches:touches];
     }
-    NSLog(@"pinchScrapGesture1: %lu %lu %lu %lu", (unsigned long)[pinchScrapGesture1.validTouches count],
-          (unsigned long)[pinchScrapGesture1.possibleTouches count],
-          (unsigned long)[pinchScrapGesture1.ignoredTouches count],
-          (unsigned long) pinchScrapGesture1.scrap);
-    NSLog(@"pinchScrapGesture2: %lu %lu %lu %lu", (unsigned long)[pinchScrapGesture2.validTouches count],
-          (unsigned long)[pinchScrapGesture2.possibleTouches count],
-          (unsigned long)[pinchScrapGesture2.ignoredTouches count],
-          (unsigned long) pinchScrapGesture2.scrap);
+//    NSLog(@"pinchScrapGesture1: %lu %lu %lu %lu", (unsigned long)[pinchScrapGesture1.validTouches count],
+//          (unsigned long)[pinchScrapGesture1.possibleTouches count],
+//          (unsigned long)[pinchScrapGesture1.ignoredTouches count],
+//          (unsigned long) pinchScrapGesture1.scrap);
+//    NSLog(@"pinchScrapGesture2: %lu %lu %lu %lu", (unsigned long)[pinchScrapGesture2.validTouches count],
+//          (unsigned long)[pinchScrapGesture2.possibleTouches count],
+//          (unsigned long)[pinchScrapGesture2.ignoredTouches count],
+//          (unsigned long) pinchScrapGesture2.scrap);
     [self updateState];
 }
 

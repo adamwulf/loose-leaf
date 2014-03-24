@@ -515,8 +515,25 @@ int skipAll = NO;
             [UIView setAnchorPoint:CGPointMake(0, 0) forView:gesture.scrap];
         }
         [self isBeginningToPanAndScaleScrap:gesture.scrap withTouches:gesture.validTouches];
+        
+        
+        CATransform3D stretchTransform = [gesture skewTransform];
+        CATransform3D unrotatedStretchTransform = stretchTransform;
+        
+        CGFloat angle = atan2(unrotatedStretchTransform.m12, unrotatedStretchTransform.m11);
+        unrotatedStretchTransform = CATransform3DRotate(unrotatedStretchTransform, angle, 0, 0, 1.0);
+        CGFloat scalex = sqrtf((unrotatedStretchTransform.m11 * unrotatedStretchTransform.m11 ) +
+                               (unrotatedStretchTransform.m12 * unrotatedStretchTransform.m12) +
+                               (unrotatedStretchTransform.m13 * unrotatedStretchTransform.m13));
+        CGFloat scaley = sqrtf((unrotatedStretchTransform.m21 * unrotatedStretchTransform.m21 ) +
+                               (unrotatedStretchTransform.m22 * unrotatedStretchTransform.m22) +
+                               (unrotatedStretchTransform.m23 * unrotatedStretchTransform.m23));
+        NSLog(@"scales: %f %f  angle: %f", scalex, scaley, angle);
+
+        
+        
         // generate the actual transform between the two quads
-        gesture.scrap.layer.transform = CATransform3DConcat(startSkewTransform, [gesture skewTransform]);
+        gesture.scrap.layer.transform = CATransform3DConcat(startSkewTransform, stretchTransform);
     }
 }
 
