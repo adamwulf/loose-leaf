@@ -786,9 +786,6 @@ CGPoint gestureLocationAfterAnimation;
 #pragma mark - MMPaperViewDelegate
 
 -(CGRect) isBeginning:(BOOL)beginning toPanAndScalePage:(MMPaperView *)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withTouches:(NSArray*)touches{
-    if(beginning){
-        NSLog(@"panning page");
-    }
     CGRect ret = [super isBeginning:beginning toPanAndScalePage:page fromFrame:fromFrame toFrame:toFrame withTouches:touches];
     if(panAndPinchScrapGesture.state == UIGestureRecognizerStateBegan){
         panAndPinchScrapGesture.state = UIGestureRecognizerStateChanged;

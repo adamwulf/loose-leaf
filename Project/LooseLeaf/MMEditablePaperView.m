@@ -68,7 +68,7 @@ dispatch_queue_t importThumbnailQueue;
         cachedImgView.opaque = YES;
         cachedImgView.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:cachedImgView];
-        /*
+
         //
         // This pan gesture is used to pan/scale the page itself.
         rulerGesture = [[MMRulerToolGestureRecognizer alloc] initWithTarget:self action:@selector(didMoveRuler:)];
@@ -81,7 +81,7 @@ dispatch_queue_t importThumbnailQueue;
         [rulerGesture requireGestureRecognizerToFail:longPress];
         [rulerGesture requireGestureRecognizerToFail:tap];
         [self addGestureRecognizer:rulerGesture];
-        */
+
         
         // initialize our state manager
         paperState = [[JotViewStateProxy alloc] initWithInkPath:[self inkPath] andPlistPath:[self plistPath]];
