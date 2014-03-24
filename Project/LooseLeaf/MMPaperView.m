@@ -276,21 +276,23 @@
        panGesture.state == UIGestureRecognizerStateFailed ||
        ([_panGesture.validTouches count] == 0 && isBeingPannedAndZoomed)){
         if(panGesture.hasPannedOrScaled){
-            isBeingPannedAndZoomed = NO;
-            if(scale < (kMinPageZoom + kZoomToListPageZoom)/2 && panGesture.didExitToBezel == MMBezelDirectionNone){
-                if((_panGesture.scaleDirection & MMScaleDirectionSmaller) == MMScaleDirectionSmaller){
-                    [self.delegate finishedScalingReallySmall:self];
+            if(isBeingPannedAndZoomed){
+                isBeingPannedAndZoomed = NO;
+                if(scale < (kMinPageZoom + kZoomToListPageZoom)/2 && panGesture.didExitToBezel == MMBezelDirectionNone){
+                    if((_panGesture.scaleDirection & MMScaleDirectionSmaller) == MMScaleDirectionSmaller){
+                        [self.delegate finishedScalingReallySmall:self];
+                    }else{
+                        [self.delegate cancelledScalingReallySmall:self];
+                    }
                 }else{
-                    [self.delegate cancelledScalingReallySmall:self];
+                    if(scale < kMinPageZoom){
+                        [self.delegate cancelledScalingReallySmall:self];
+                    }
+                    [self.delegate finishedPanningAndScalingPage:self
+                                                       intoBezel:panGesture.didExitToBezel
+                                                       fromFrame:panGesture.frameOfPageAtBeginningOfGesture
+                                                         toFrame:self.frame];
                 }
-            }else{
-                if(scale < kMinPageZoom){
-                    [self.delegate cancelledScalingReallySmall:self];
-                }
-                [self.delegate finishedPanningAndScalingPage:self
-                                                   intoBezel:panGesture.didExitToBezel
-                                                   fromFrame:panGesture.frameOfPageAtBeginningOfGesture
-                                                     toFrame:self.frame];
             }
         }
         return;
