@@ -54,10 +54,21 @@
 #define kBezelInGestureWidth 20
 #define kUndoLimit 20
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
 
 CGFloat SquaredDistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
 
+    
+#ifdef __cplusplus
+}
+#endif
+
+    
 enum {
     MMBezelDirectionNone = 0,
     MMBezelDirectionRight  = 1 << 0,

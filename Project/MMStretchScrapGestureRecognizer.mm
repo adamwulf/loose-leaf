@@ -161,12 +161,6 @@
     return ret;
 }
 
--(CGFloat) distanceBetweenPoint:(CGPoint)point1 andPoint:(CGPoint)point2
-{
-    CGFloat dx = point2.x - point1.x;
-    CGFloat dy = point2.y - point1.y;
-    return sqrt(dx*dx + dy*dy );
-};
 
 -(void) updateValidTouches{
     if([validTouches count] == 4){
@@ -179,10 +173,10 @@
         //
         // now, determine if our stretch should pull the scrap into two pieces.
         // this should happen if either stretch is 2.0 times the other direction
-        CGFloat scaleW = [self distanceBetweenPoint:secondQ.upperLeft andPoint:secondQ.upperRight] /
-                        [self distanceBetweenPoint:firstQ.upperLeft andPoint:firstQ.upperRight];
-        CGFloat scaleH = [self distanceBetweenPoint:secondQ.upperLeft andPoint:secondQ.lowerLeft] /
-                        [self distanceBetweenPoint:firstQ.upperLeft andPoint:firstQ.lowerLeft];
+        CGFloat scaleW = DistanceBetweenTwoPoints(secondQ.upperLeft, secondQ.upperRight) /
+                         DistanceBetweenTwoPoints(firstQ.upperLeft, firstQ.upperRight);
+        CGFloat scaleH = DistanceBetweenTwoPoints(secondQ.upperLeft, secondQ.lowerLeft) /
+                         DistanceBetweenTwoPoints(firstQ.upperLeft, firstQ.lowerLeft);
         
         // normalize the scales so that they are always
         // multiples of each other. 1.0:2.0 or 2.0:1.0 means
