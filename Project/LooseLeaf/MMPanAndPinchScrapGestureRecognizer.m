@@ -274,8 +274,11 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     [self touchesBegan:newPossibleTouches withEvent:nil];
     
     [self processPossibleTouches];
-    if([validTouches count]){
+    if([validTouches count] >= mmMinimumNumberOfScrapTouches){
         [self prepareGestureToBeginFresh];
+    }else{
+        [possibleTouches addObjectsInOrderedSet:validTouches];
+        self.scrap = nil;
     }
 }
 

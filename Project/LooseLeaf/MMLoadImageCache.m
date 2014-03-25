@@ -52,7 +52,10 @@ static MMLoadImageCache* _instance = nil;
 
 static int count = 0;
 -(UIImage*) imageAtPath:(NSString*)path{
-    UIImage* cachedImage = [loadedImages objectForKey:path];
+    UIImage* cachedImage = nil;
+    @synchronized(self){
+        cachedImage = [loadedImages objectForKey:path];
+    }
     if(!cachedImage){
         @synchronized(self){
             if([orderedKeys containsObject:path]){

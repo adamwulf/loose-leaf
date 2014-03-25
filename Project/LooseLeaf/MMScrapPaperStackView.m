@@ -782,6 +782,10 @@ CGPoint gestureLocationAfterAnimation;
 
 // time to duplicate the scraps! it's been pulled into two pieces
 -(void) stretchShouldSplitScrap:(MMScrapView*)scrap toTouches:(NSOrderedSet*)touches1 andTouches:(NSOrderedSet*)touches2{
+    
+    CGPoint centerDuringStretch = scrap.center;
+    CATransform3D transformDuringStretch = scrap.layer.transform;
+    
     // sending the original scrap is easy, just send it to a gesture and be done.
     [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[touches1 set]];
     
@@ -794,11 +798,23 @@ CGPoint gestureLocationAfterAnimation;
     CGAffineTransform verticalFlip = CGAffineTransformMake(1, 0, 0, -1, 0, page.originalUnscaledBounds.size.height);
     UIBezierPath* subshapePath = [[scrap clippingPath] copy];
     [subshapePath applyTransform:verticalFlip];
-    MMScrapView* clonedScrap = [page addScrapWithPath:subshapePath andScale:scrap.scale];
-    //
+    
+//    MMScrapView* clonedScrap2 = [page addScrapWithPath:subshapePath andScale:scrap.scale];
+    
+    
+    // we need to send in scale 1.0 because the *path* scale we're sending in is for the 1.0 scaled path.
+    // if we sent the scale into this method, it would assume that the input path was *already at* the input
+    // scale, so it would transform the path to a 1.0 scale before adding the scrap. this would result in incorrect
+    // resolution for the new scrap. so set the rotation to make sure we're getting the smallest bounding
+    // box, and we'll set the scrap's scale to match after we add it to the page.
+    MMScrapView* clonedScrap = [page addScrapWithPath:[scrap.bezierPath copy] andRotation:scrap.rotation andScale:1.0];
+    // ok, now the scrap is added with the correct path and resolution, so set it's scale to match
+    // the original scrap.
+    clonedScrap.scale = scrap.scale;
     // next match it's location exactly on top of the original scrap:
     [UIView setAnchorPoint:scrap.layer.anchorPoint forView:clonedScrap];
     clonedScrap.center = scrap.center;
+    
     // next, clone the contents onto the new scrap. at this point i have a duplicate scrap
     // but it's in the wrong place.
     [clonedScrap stampContentsFrom:scrap.state.drawableView];
@@ -814,6 +830,11 @@ CGPoint gestureLocationAfterAnimation;
     CGPoint p1 = [[touches2 objectAtIndex:0] locationInView:self];
     CGPoint p2 = [[touches2 objectAtIndex:1] locationInView:self];
     clonedScrap.center = CGPointMake((p1.x + p2.x) / 2, (p1.y + p2.y)/2);
+
+    
+    [UIView setAnchorPoint:CGPointMake(0, 0) forView:clonedScrap];
+    clonedScrap.center = centerDuringStretch;
+    clonedScrap.layer.transform = transformDuringStretch;
 
     // now the scrap is in the right place, so hand it off to the pan gesture
     [self sendStretchedScrap:clonedScrap toPanGesture:panAndPinchScrapGesture2 withTouches:[touches2 set]];

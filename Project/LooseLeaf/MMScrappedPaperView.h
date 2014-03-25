@@ -22,6 +22,7 @@
 
 -(void) addScrap:(MMScrapView*)scrap;
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andScale:(CGFloat)scale;
+-(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)lastBestRotation andScale:(CGFloat)scale;
 -(BOOL) hasScrap:(MMScrapView*)scrap;
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;

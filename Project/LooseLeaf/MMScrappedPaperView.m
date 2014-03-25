@@ -222,7 +222,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) panAndScale:(MMPanAndPinchGestureRecognizer *)_panGesture{
-    [[MMDebugDrawView sharedInstace] clear];
+//    [[MMDebugDrawView sharedInstace] clear];
     
     [super panAndScale:_panGesture];
 }
@@ -602,7 +602,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
  * our scrap views
  */
 -(void) setDrawableView:(JotView *)_drawableView{
-    NSLog(@"%@: %d", [self uuid], (int)_drawableView);
+    NSLog(@"setting drawable %@: %d", [self uuid], (int)_drawableView);
     [super setDrawableView:_drawableView];
 }
 

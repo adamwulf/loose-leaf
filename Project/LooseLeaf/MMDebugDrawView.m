@@ -52,6 +52,7 @@ static MMDebugDrawView* _instance = nil;
     if([curves count] > [colors count]){
         [colors addObject:[AVHexColor randomColor]];
     }
+    [self setNeedsDisplay];
     [self setNeedsDisplayInRect:path.bounds];
 }
 
