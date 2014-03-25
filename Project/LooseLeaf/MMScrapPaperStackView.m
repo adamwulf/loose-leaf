@@ -688,10 +688,7 @@ CGPoint gestureLocationAfterAnimation;
         scrap.center = CGPointMake(scrap.center.x + entireTranslation.x, scrap.center.y + entireTranslation.y);
         scrap.layer.transform = startSkewTransform;
         [UIView setAnchorPoint:scrapAnchorAtStretchStart forView:scrap];
-        BOOL didBegin1 = [panAndPinchScrapGesture begin];
-        BOOL didBegin2 = [panAndPinchScrapGesture2 begin];
-        BOOL didBegin = didBegin1 || didBegin2; // can't just call the method here, b/c it would short circuit
-        if(!didBegin){
+        if(![panScrapGesture begin]){
             // reset our anchor to the scrap center if a pan
             // isn't going to take over
             [UIView setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
@@ -748,10 +745,7 @@ CGPoint gestureLocationAfterAnimation;
                                 NSLog(@"gestureLocationInPageAtStretchStart: %f %f", gestureLocationInPageAtStretchStart.x, gestureLocationInPageAtStretchStart.y);
                                 NSLog(@"gestureLocationInScrapAtStretchEnd: %f %f", gestureLocationInScrapAtStretchEnd.x, gestureLocationInScrapAtStretchEnd.y);
                                 NSLog(@"gestureLocationInPageAtStretchEnd: %f %f", gestureLocationInPageAtStretchEnd.x, gestureLocationInPageAtStretchEnd.y);
-                                BOOL didBegin1 = [panAndPinchScrapGesture begin];
-                                BOOL didBegin2 = [panAndPinchScrapGesture2 begin];
-                                BOOL didBegin = didBegin1 || didBegin2; // can't just call the method here, b/c it would short circuit
-                                if(!didBegin){
+                                if(![panScrapGesture begin]){
                                     // reset our anchor to the scrap center if a pan
                                     // isn't going to take over
                                     [UIView setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
@@ -783,25 +777,12 @@ CGPoint gestureLocationAfterAnimation;
 // time to duplicate the scraps! it's been pulled into two pieces
 -(void) stretchShouldSplitScrap:(MMScrapView*)scrap toTouches:(NSOrderedSet*)touches1 andTouches:(NSOrderedSet*)touches2{
     
-    CGPoint centerDuringStretch = scrap.center;
-    CATransform3D transformDuringStretch = scrap.layer.transform;
-    
     // sending the original scrap is easy, just send it to a gesture and be done.
     [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[touches1 set]];
     
-    
-    // the new scrap is tougher.
-    // first, create a scrap with the correct path and scale.
-    // TODO: i should probably use the original scrap's path, scale, and rotation.
-    // that'd make it so that the resolution wouldn't get fuzzier as i create clones.
+
+    // next, add the new scrap to the same page as the stretched scrap
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
-    CGAffineTransform verticalFlip = CGAffineTransformMake(1, 0, 0, -1, 0, page.originalUnscaledBounds.size.height);
-    UIBezierPath* subshapePath = [[scrap clippingPath] copy];
-    [subshapePath applyTransform:verticalFlip];
-    
-//    MMScrapView* clonedScrap2 = [page addScrapWithPath:subshapePath andScale:scrap.scale];
-    
-    
     // we need to send in scale 1.0 because the *path* scale we're sending in is for the 1.0 scaled path.
     // if we sent the scale into this method, it would assume that the input path was *already at* the input
     // scale, so it would transform the path to a 1.0 scale before adding the scrap. this would result in incorrect
@@ -830,11 +811,6 @@ CGPoint gestureLocationAfterAnimation;
     CGPoint p1 = [[touches2 objectAtIndex:0] locationInView:self];
     CGPoint p2 = [[touches2 objectAtIndex:1] locationInView:self];
     clonedScrap.center = CGPointMake((p1.x + p2.x) / 2, (p1.y + p2.y)/2);
-
-    
-    [UIView setAnchorPoint:CGPointMake(0, 0) forView:clonedScrap];
-    clonedScrap.center = centerDuringStretch;
-    clonedScrap.layer.transform = transformDuringStretch;
 
     // now the scrap is in the right place, so hand it off to the pan gesture
     [self sendStretchedScrap:clonedScrap toPanGesture:panAndPinchScrapGesture2 withTouches:[touches2 set]];
