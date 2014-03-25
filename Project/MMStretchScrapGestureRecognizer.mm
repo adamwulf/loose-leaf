@@ -29,6 +29,12 @@
     // the currently computed skew transform throughout the gesture
     CATransform3D skewTransform;
     
+    // these help us determine the normalized location
+    // of all of the valid touches. when handing off
+    // the scrap back to a pan gesture after a failed
+    // stretch, the remaining valid touches will map
+    // to these, which inform which corners of the
+    // normalFirstQ to use as the normalized anchor point
     UITouch* upperLeftTouch;
     UITouch* upperRightTouch;
     UITouch* lowerLeftTouch;
@@ -114,6 +120,9 @@
 
 #pragma mark - Quadrilateral
 
+// this quad is used as the basis of our transform. it averages
+// out all of the touch points into a parallelogram instead of
+// a generic quad
 -(Quadrilateral) getQuad{
     return [self generateAverageQuadFor:[self getRawQuad]];
 }
@@ -140,6 +149,10 @@
     return output;
 }
 
+// this maps all of the initial 4 touch points into normalized
+// touch points inside the scrap. this data becomes useful later
+// when the stretch ends to help us calculate the new anchor
+// point for the pan gesture
 -(Quadrilateral) getNormalizedRawQuad{
     __block Quadrilateral output;
     [[self validTouches] enumerateObjectsUsingBlock:^(UITouch* touch, NSUInteger idx, BOOL* stop){
@@ -189,7 +202,12 @@
     return ret;
 }
 
-
+// valid touches are updated whenever our state updates
+// or we are told of touch ownership updates. this method
+// ensures that we own all of our valid touches, and if for
+// any reason valid touches < 4, then it reverts back to a
+// non active state and keeps all known touches in either
+// possible or ignored
 -(void) updateValidTouches{
     if([validTouches count] == 4){
         Quadrilateral secondQ = [self getQuad];
@@ -216,9 +234,6 @@
             scaleH /= scaleH;
         }
 
-        
-        NSLog(@"stretch %f %f", scaleW, scaleH);
-
         // if we should split the scrap, pull the touches
         // into two sets based on the direction of the stretch
         NSOrderedSet* touches1 = nil;
@@ -226,13 +241,13 @@
         CGPoint normalCenter1 = CGPointZero;
         CGPoint normalCenter2 = CGPointZero;
         if(scaleW > scaleH * 2){
-            NSLog(@"scaling wide");
+            // scaling the quad wide
             touches1 = [NSOrderedSet orderedSetWithObjects:[validTouches objectAtIndex:0], [validTouches objectAtIndex:3], nil];
             touches2 = [NSOrderedSet orderedSetWithObjects:[validTouches objectAtIndex:1], [validTouches objectAtIndex:2], nil];
             normalCenter1 = AveragePoints(normalFirstQ.upperLeft, normalFirstQ.lowerLeft);
             normalCenter2 = AveragePoints(normalFirstQ.upperRight, normalFirstQ.lowerRight);
         }else if(scaleH > scaleW * 2){
-            NSLog(@"scaling wide");
+            // scaling the quad tall
             touches1 = [NSOrderedSet orderedSetWithObjects:[validTouches objectAtIndex:0], [validTouches objectAtIndex:1], nil];
             touches2 = [NSOrderedSet orderedSetWithObjects:[validTouches objectAtIndex:2], [validTouches objectAtIndex:3], nil];
             normalCenter1 = AveragePoints(normalFirstQ.upperLeft, normalFirstQ.upperRight);
@@ -242,7 +257,7 @@
         if(touches1){
             // if we have touches, then we should split the scrap.
             // tell our delegate and finish this out.
-            [self.scrapDelegate stretchShouldSplitScrap:scrap toTouches:touches1 atNormalPoint:normalCenter1 andTouches:touches2 atNormalPoint:normalCenter2];
+            [self.scrapDelegate endStretchBySplittingScrap:scrap toTouches:touches1 atNormalPoint:normalCenter1 andTouches:touches2 atNormalPoint:normalCenter2];
             [possibleTouches addObjectsInOrderedSet:validTouches];
             [validTouches removeAllObjects];
             scrap = nil;
@@ -251,7 +266,7 @@
     if([validTouches count] != 4 && scrap){
         // valid touches must be exactly 4, otherwise
         // we should stop the stretching
-        [self.scrapDelegate endStretchForScrap:scrap atNormalPoint:[self normalizedLocationOfValidTouches]];
+        [self.scrapDelegate endStretchWithoutSplittingScrap:scrap atNormalPoint:[self normalizedLocationOfValidTouches]];
         [possibleTouches addObjectsInOrderedSet:validTouches];
         [validTouches removeAllObjects];
         scrap = nil;
@@ -285,16 +300,35 @@
                     [touchesInScrap removeObject:[touchesInScrap anyObject]];
                 }
                 if([touchesInScrap count] == 4){
+                    // at this point we know that a panned scrap
+                    // contains all four touches. we need to
+                    // steal that scrap from the pan, and trigger
+                    // the beginning of the stretch gesture
                     [validTouches addObjectsInSet:touchesInScrap];
                     [possibleTouches removeObjectsInSet:touchesInScrap];
+                    // set the stretched scrap
                     scrap = pinchedScrap;
                     [scrap.layer removeAllAnimations];
+                    // sort the valid touches into clockwise order
                     [self sortValidTouches];
-                    NSLog(@"stretch scrap claiming %d touches", [validTouches count]);
+                    // let everyone know that we own these 4 touches now
                     [self.scrapDelegate ownershipOfTouches:[validTouches set] isGesture:self];
+                    // skew begins with identity. as the touches move,
+                    // the average quad will be transformed and stored
+                    // into skewTransform
                     skewTransform = CATransform3DIdentity;
+                    // since the skew must begin from 0,0, the adjust
+                    // stores the offset of the scrap's origin point
+                    // inside of its container. this way, we can know
+                    // where the scrap's 0,0 should be in reference
+                    // to the transform we're making
                     adjust = [self.scrapDelegate beginStretchForScrap:scrap];
                     firstQ = [self getQuad];
+                    // the normalized raw quad will store the normalized
+                    // points of the touches inside the scrap. this is
+                    // useful after the stretch ends to ensure that
+                    // any pan gesture's anchor is in the correct place
+                    // for its touches
                     normalFirstQ = [self getNormalizedRawQuad];
                     break;
                 }else{
@@ -308,6 +342,12 @@
     }
 }
 
+// this will return the average normalized location
+// of the first 2 valid touches. these are the two touches
+// that will be used in the pan gesture if the stretch
+// gesture fails. this normalized location will match
+// the anchor point that the pan gesture should use for
+// those 2 touches.
 -(CGPoint) normalizedLocationOfValidTouches{
     __block CGPoint ret = CGPointZero;
     int count = MIN([validTouches count], 2);
@@ -352,7 +392,6 @@
     [self updateValidTouches];
 }
 
-//
 // this method takes all valid touches, and sorts them in the OrderedSet
 // so that their touch locations are in clockwise order
 -(void) sortValidTouches{
@@ -386,7 +425,9 @@
     lowerLeftTouch = [validTouches objectAtIndex:3];
 }
 
-// move the quad by the input point amount
+// move the quad by the input point amount.
+// this is useful to move our quad to a meaningful
+// 0,0 point when we calculate our transform
 -(Quadrilateral) adjustedQuad:(Quadrilateral)a by:(CGPoint)p{
     Quadrilateral output = a;
     output.upperLeft.x -= p.x;
@@ -474,14 +515,6 @@
         [pinchScrapGesture1 relinquishOwnershipOfTouches:touches];
         [pinchScrapGesture2 relinquishOwnershipOfTouches:touches];
     }
-//    NSLog(@"pinchScrapGesture1: %lu %lu %lu %lu", (unsigned long)[pinchScrapGesture1.validTouches count],
-//          (unsigned long)[pinchScrapGesture1.possibleTouches count],
-//          (unsigned long)[pinchScrapGesture1.ignoredTouches count],
-//          (unsigned long) pinchScrapGesture1.scrap);
-//    NSLog(@"pinchScrapGesture2: %lu %lu %lu %lu", (unsigned long)[pinchScrapGesture2.validTouches count],
-//          (unsigned long)[pinchScrapGesture2.possibleTouches count],
-//          (unsigned long)[pinchScrapGesture2.ignoredTouches count],
-//          (unsigned long) pinchScrapGesture2.scrap);
     [self updateState];
 }
 
@@ -496,14 +529,6 @@
         [pinchScrapGesture1 relinquishOwnershipOfTouches:touches];
         [pinchScrapGesture2 relinquishOwnershipOfTouches:touches];
     }
-//    NSLog(@"pinchScrapGesture1: %lu %lu %lu %lu", (unsigned long)[pinchScrapGesture1.validTouches count],
-//          (unsigned long)[pinchScrapGesture1.possibleTouches count],
-//          (unsigned long)[pinchScrapGesture1.ignoredTouches count],
-//          (unsigned long) pinchScrapGesture1.scrap);
-//    NSLog(@"pinchScrapGesture2: %lu %lu %lu %lu", (unsigned long)[pinchScrapGesture2.validTouches count],
-//          (unsigned long)[pinchScrapGesture2.possibleTouches count],
-//          (unsigned long)[pinchScrapGesture2.ignoredTouches count],
-//          (unsigned long) pinchScrapGesture2.scrap);
     [self updateState];
 }
 

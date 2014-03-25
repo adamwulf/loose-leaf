@@ -180,10 +180,6 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
  */
 -(void) relinquishOwnershipOfTouches:(NSSet*)touches{
     
-    if([validTouches count] == 3 && [touches count] == 2){
-        NSLog(@"what");
-    }
-    
     NSMutableSet* validTouchesToRelinquish = [NSMutableSet setWithSet:[validTouches set]];
     [validTouchesToRelinquish intersectSet:touches];
 
@@ -197,7 +193,6 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         [validTouches removeAllObjects];
         self.scrap = nil;
     }
-    
     if([validTouches count] == 0 && self.scrap){
         NSLog(@"relenquish scrap? %d %d %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
         self.scrap = nil;
@@ -474,6 +469,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         }
         if([validTouches count] < mmMinimumNumberOfScrapTouches && self.scrap){
             NSLog(@"what");
+            self.scrap = nil;
         }
         return;
     }

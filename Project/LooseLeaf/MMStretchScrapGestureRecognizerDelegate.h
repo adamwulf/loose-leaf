@@ -20,7 +20,7 @@
 
 -(CGPoint) beginStretchForScrap:(MMScrapView*)scrap;
 
--(void) endStretchForScrap:(MMScrapView*)scrap atNormalPoint:(CGPoint)np;
+-(void) endStretchWithoutSplittingScrap:(MMScrapView*)scrap atNormalPoint:(CGPoint)np;
 
 
 /**
@@ -29,7 +29,7 @@
  * the touches for the two resulting scraps
  * to be panned
  */
--(void) stretchShouldSplitScrap:(MMScrapView*)scrap toTouches:(NSOrderedSet*)touches1 atNormalPoint:(CGPoint)np1 andTouches:(NSOrderedSet*)touches2  atNormalPoint:(CGPoint)np2;
+-(void) endStretchBySplittingScrap:(MMScrapView*)scrap toTouches:(NSOrderedSet*)touches1 atNormalPoint:(CGPoint)np1 andTouches:(NSOrderedSet*)touches2  atNormalPoint:(CGPoint)np2;
 
 
 @end

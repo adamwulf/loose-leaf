@@ -337,7 +337,7 @@ int skipAll = NO;
         }
         
         
-        [self isBeginningToPanAndScaleScrap:gesture.scrap withTouches:gesture.validTouches];
+        [self isBeginningToPanAndScaleScrapWithTouches:gesture.validTouches];
     }
     
     MMScrapView* scrapViewIfFinished = nil;
@@ -507,34 +507,26 @@ int skipAll = NO;
 
 #pragma mark - MMStretchScrapGestureRecognizer
 
+// this is called through the stretch of a
+// scrap.
 -(void) stretchScrapGesture:(MMStretchScrapGestureRecognizer*)gesture{
     if(gesture.scrap){
+        // don't allow animations during a stretch
         [gesture.scrap.layer removeAllAnimations];
         if(!CGPointEqualToPoint(gesture.scrap.layer.anchorPoint, CGPointZero)){
             // the anchor point can get reset by the pan/pinch gesture ending,
             // so we need to force it back to our 0,0 for the stretch
             [UIView setAnchorPoint:CGPointMake(0, 0) forView:gesture.scrap];
         }
-        [self isBeginningToPanAndScaleScrap:gesture.scrap withTouches:gesture.validTouches];
+        // cancel any strokes etc happening with these touches
+        [self isBeginningToPanAndScaleScrapWithTouches:gesture.validTouches];
         
         // generate the actual transform between the two quads
         gesture.scrap.layer.transform = CATransform3DConcat(startSkewTransform, [gesture skewTransform]);
     }
 }
 
-
-
-CGPoint scrapAnchorAtStretchStart;
-
-
 -(CGPoint) beginStretchForScrap:(MMScrapView*)scrap{
-    // when a scrap is beginning to be stretched, we need to
-    // track it's anchor point before we begin the stretch.
-    // this will be the anchor of the pan gesture.
-    // the scrap.center will be calcualted based on this
-    // gesture specific anchor point
-    scrapAnchorAtStretchStart = scrap.layer.anchorPoint;
-    
     if(![scrapContainer.subviews containsObject:scrap]){
         MMPanAndPinchScrapGestureRecognizer* owningPan = panAndPinchScrapGesture.scrap == scrap ? panAndPinchScrapGesture : panAndPinchScrapGesture2;
         scrap.center = CGPointMake(owningPan.translation.x + owningPan.preGestureCenter.x,
@@ -566,65 +558,22 @@ CGPoint scrapAnchorAtStretchStart;
     return [scrap convertPoint:scrap.bounds.origin toView:visibleStackHolder];
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--(void) sendStretchedScrap:(MMScrapView*)scrap toPanGesture:(MMPanAndPinchScrapGestureRecognizer*)panScrapGesture withTouches:(NSArray*)touches withAnchor:(CGPoint)scrapAnchor{
-
-    // bless the touches
-    [panScrapGesture blessTouches:[NSSet setWithArray:touches]];
-    
-    // now that we've calcualted the current position for our
-    // reference anchor point, we should now adjust our anchor
-    // back to 0,0 during the next transforms to bounce
-    // the scrap back to its new place.
-    [UIView setAnchorPoint:CGPointMake(0, 0) forView:scrap];
-    scrap.layer.transform = startSkewTransform;
-    
-    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
-    CGPoint locationInPage = AveragePoints([[touches objectAtIndex:0] locationInView:page],
-                                           [[touches objectAtIndex:1] locationInView:page]);
-    
-    // the goal is to align the locationInPage with the scrapAnchor
-    
-    
-    
-    [UIView setAnchorPoint:scrapAnchor forView:scrap];
-    scrap.center = CGPointMake(locationInPage.x, locationInPage.y);
-    if(![panScrapGesture begin]){
-        // reset our anchor to the scrap center if a pan
-        // isn't going to take over
-        [UIView setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
-        // kill highlight since it's not being held
-        scrap.selected = NO;
-    }else{
-        scrap.selected = YES;
-    }
-}
-
-
-
-
--(void) endStretchForScrap:(MMScrapView*)scrap atNormalPoint:(CGPoint)np{
+// the stretch failed or ended before splitting, so give
+// the pan gesture back it's scrap if its still alive
+-(void) endStretchWithoutSplittingScrap:(MMScrapView*)scrap atNormalPoint:(CGPoint)np{
+    // check the gestures first to see if they're still alive,
+    // and give the scrap back if possible.
     if(panAndPinchScrapGesture.scrap == scrap){
+        // gesture 1 owns it, so give it back and turn gesture 2 back on
         [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[stretchScrapGesture validTouches] withAnchor:np];
         [panAndPinchScrapGesture2 begin];
     }else if(panAndPinchScrapGesture2.scrap == scrap){
+        // gesture 2 owns it, so give it back and turn gesture 1 back on
         [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture2 withTouches:[stretchScrapGesture validTouches] withAnchor:np];
         [panAndPinchScrapGesture begin];
     }else{
+        // otherwise, unpause both gestures and just
+        // put the scrap back into the page
         [panAndPinchScrapGesture begin];
         [panAndPinchScrapGesture2 begin];
         scrap.layer.transform = startSkewTransform;
@@ -640,16 +589,57 @@ CGPoint scrapAnchorAtStretchStart;
     }
 }
 
+// this is a helper method to give a scrap back to a particular
+// pan gesture. this should trigger any animations necessary
+// on the scrap, and facilitate the transition from the possibly
+// stretched transform of the scrap back to it's pre-stretched
+// transform.
+-(void) sendStretchedScrap:(MMScrapView*)scrap toPanGesture:(MMPanAndPinchScrapGestureRecognizer*)panScrapGesture withTouches:(NSArray*)touches withAnchor:(CGPoint)scrapAnchor{
+    
+    if([touches count] < 2){
+        @throw [NSException exceptionWithName:@"NotEnoughTouchesForPan" reason:@"streching a scrap ended, but doesn't have enough touches to give back to a pan gesture" userInfo:nil];
+    }
+    
 
-
+    // bless the touches so that the pan gesture
+    // can pick them up
+    [panScrapGesture blessTouches:[NSSet setWithArray:touches]];
+    
+    // now that we've calcualted the current position for our
+    // reference anchor point, we should now adjust our anchor
+    // back to 0,0 during the next transforms to bounce
+    // the scrap back to its new place.
+    [UIView setAnchorPoint:CGPointMake(0, 0) forView:scrap];
+    scrap.layer.transform = startSkewTransform;
+    
+    // find out where the location should be inside the page
+    // for the input two (at most) touches
+    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+    CGPoint locationInPage = AveragePoints([[touches objectAtIndex:0] locationInView:page],
+                                           [[touches objectAtIndex:1] locationInView:page]);
+    
+    // by setting the anchor point, the .center property will
+    // automaticaly align the locationInPage to scrapAnchor
+    [UIView setAnchorPoint:scrapAnchor forView:scrap];
+    scrap.center = CGPointMake(locationInPage.x, locationInPage.y);
+    if([panScrapGesture begin]){
+        // if the pan gesture picked up the scrap,
+        // then set it as still selected
+        scrap.selected = YES;
+    }else{
+        // reset our anchor to the scrap center if a pan
+        // isn't going to take over
+        [UIView setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
+        // kill highlight since it's not being held
+        scrap.selected = NO;
+    }
+}
 
 // time to duplicate the scraps! it's been pulled into two pieces
--(void) stretchShouldSplitScrap:(MMScrapView*)scrap toTouches:(NSOrderedSet*)touches1 atNormalPoint:(CGPoint)np1
+-(void) endStretchBySplittingScrap:(MMScrapView*)scrap toTouches:(NSOrderedSet*)touches1 atNormalPoint:(CGPoint)np1
                      andTouches:(NSOrderedSet*)touches2  atNormalPoint:(CGPoint)np2{
-    
     // sending the original scrap is easy, just send it to a gesture and be done.
     [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[touches1 array] withAnchor:np1];
-    
 
     // next, add the new scrap to the same page as the stretched scrap
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
@@ -742,7 +732,7 @@ CGPoint scrapAnchorAtStretchStart;
 }
 
 
--(void) isBeginningToPanAndScaleScrap:(MMScrapView*)scrap withTouches:(NSArray*)touches{
+-(void) isBeginningToPanAndScaleScrapWithTouches:(NSArray*)touches{
     // our gesture has began, so make sure to kill
     // any touches that are being used to draw
     //
