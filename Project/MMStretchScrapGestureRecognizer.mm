@@ -184,6 +184,9 @@
         CGFloat scaleH = [self distanceBetweenPoint:secondQ.upperLeft andPoint:secondQ.lowerLeft] /
                         [self distanceBetweenPoint:firstQ.upperLeft andPoint:firstQ.lowerLeft];
         
+        // normalize the scales so that they are always
+        // multiples of each other. 1.0:2.0 or 2.0:1.0 means
+        // we should duplicate the scrap
         if(scaleW < scaleH){
             scaleH /= scaleW;
             scaleW /= scaleW;
@@ -192,8 +195,11 @@
             scaleH /= scaleH;
         }
 
+        
         NSLog(@"stretch %f %f", scaleW, scaleH);
 
+        // if we should split the scrap, pull the touches
+        // into two sets based on the direction of the stretch
         NSOrderedSet* touches1 = nil;
         NSOrderedSet* touches2 = nil;
         if(scaleW > scaleH * 2){
@@ -207,6 +213,8 @@
         }
         
         if(touches1){
+            // if we have touches, then we should split the scrap.
+            // tell our delegate and finish this out.
             [self.scrapDelegate stretchShouldSplitScrap:scrap toTouches:touches1 andTouches:touches2];
             [possibleTouches addObjectsInOrderedSet:validTouches];
             [validTouches removeAllObjects];

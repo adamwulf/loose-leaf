@@ -782,23 +782,40 @@ CGPoint gestureLocationAfterAnimation;
 
 // time to duplicate the scraps! it's been pulled into two pieces
 -(void) stretchShouldSplitScrap:(MMScrapView*)scrap toTouches:(NSOrderedSet*)touches1 andTouches:(NSOrderedSet*)touches2{
+    // sending the original scrap is easy, just send it to a gesture and be done.
     [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[touches1 set]];
     
+    
+    // the new scrap is tougher.
+    // first, create a scrap with the correct path and scale.
+    // TODO: i should probably use the original scrap's path, scale, and rotation.
+    // that'd make it so that the resolution wouldn't get fuzzier as i create clones.
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     CGAffineTransform verticalFlip = CGAffineTransformMake(1, 0, 0, -1, 0, page.originalUnscaledBounds.size.height);
     UIBezierPath* subshapePath = [[scrap clippingPath] copy];
     [subshapePath applyTransform:verticalFlip];
     MMScrapView* clonedScrap = [page addScrapWithPath:subshapePath andScale:scrap.scale];
+    //
+    // next match it's location exactly on top of the original scrap:
     [UIView setAnchorPoint:scrap.layer.anchorPoint forView:clonedScrap];
     clonedScrap.center = scrap.center;
+    // next, clone the contents onto the new scrap. at this point i have a duplicate scrap
+    // but it's in the wrong place.
     [clonedScrap stampContentsFrom:scrap.state.drawableView];
     panAndPinchScrapGesture2.scrap = clonedScrap;
 
+    // move it to the new gesture location under it's scrap
+    // TODO: this should use normalized locations for each touch
+    // instead of the average location of touches.
+    //
+    // really, i should be setting it's anchor, center, and transform
+    // so that it visually matches the stretched scrap.
     [UIView setAnchorPoint:CGPointMake(.5, .5) forView:clonedScrap];
     CGPoint p1 = [[touches2 objectAtIndex:0] locationInView:self];
     CGPoint p2 = [[touches2 objectAtIndex:1] locationInView:self];
     clonedScrap.center = CGPointMake((p1.x + p2.x) / 2, (p1.y + p2.y)/2);
 
+    // now the scrap is in the right place, so hand it off to the pan gesture
     [self sendStretchedScrap:clonedScrap toPanGesture:panAndPinchScrapGesture2 withTouches:[touches2 set]];
 }
 
