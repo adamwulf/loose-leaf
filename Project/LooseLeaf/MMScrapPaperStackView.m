@@ -635,6 +635,42 @@ int skipAll = NO;
     }
 }
 
+-(void) bounceScrap:(MMScrapView*)scrap fromTransform:(CATransform3D)startTransform{
+    // these calculations help us determine a bounce scale that'll keep
+    // the bounce to 10px on every side of the scrap (20px total)
+    CGFloat maxDim = MAX(scrap.bounds.size.width, scrap.bounds.size.height) * scrap.scale;
+    CGFloat smallScale = maxDim > 200 ? (maxDim - 20) / maxDim : .9;
+    CGFloat largeScale = maxDim > 200 ? (maxDim + 20) / maxDim : 1.1;
+    
+    // these two transforms will be used to
+    // bounce the scrap back to its initial position
+    CATransform3D smallTransform = CATransform3DConcat(startTransform, CATransform3DMakeScale(smallScale, smallScale, 1.0));
+    CATransform3D largeTransform = CATransform3DConcat(startTransform, CATransform3DMakeScale(largeScale, largeScale, 1.0));
+    CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+    bounceAnimation.removedOnCompletion = YES;
+    NSMutableArray* keyTimes = [NSMutableArray arrayWithObjects:
+                                [NSNumber numberWithFloat:0.0],
+                                [NSNumber numberWithFloat:0.4],
+                                [NSNumber numberWithFloat:0.7],
+                                [NSNumber numberWithFloat:1.0], nil];
+    bounceAnimation.keyTimes = keyTimes;
+    bounceAnimation.values = [NSArray arrayWithObjects:
+                              [NSValue valueWithCATransform3D:startTransform],
+                              [NSValue valueWithCATransform3D:smallTransform],
+                              [NSValue valueWithCATransform3D:largeTransform],
+                              [NSValue valueWithCATransform3D:startTransform],
+                              nil];
+    bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
+                                       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut],
+                                       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+                                       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn], nil];
+    bounceAnimation.duration = 1;
+    
+    ///////////////////////////////////////////////
+    // Add the animations to the layers
+    [scrap.layer addAnimation:bounceAnimation forKey:@"animateSize"];
+}
+
 // time to duplicate the scraps! it's been pulled into two pieces
 -(void) endStretchBySplittingScrap:(MMScrapView*)scrap toTouches:(NSOrderedSet*)touches1 atNormalPoint:(CGPoint)np1
                      andTouches:(NSOrderedSet*)touches2  atNormalPoint:(CGPoint)np2{
@@ -669,6 +705,12 @@ int skipAll = NO;
 
     // now the scrap is in the right place, so hand it off to the pan gesture
     [self sendStretchedScrap:clonedScrap toPanGesture:panAndPinchScrapGesture2 withTouches:[touches2 array] withAnchor:np2];
+    
+//    
+//    [[NSThread mainThread] performBlock:^{
+//        [self bounceScrap:scrap fromTransform:startSkewTransform];
+//        [self bounceScrap:clonedScrap fromTransform:startSkewTransform];
+//    } afterDelay:.1];
 }
 
 
