@@ -21,7 +21,12 @@
 
     // these are used to create the transform for the scrap
     CGPoint adjust;
+    // the average quad at the beginning of the gesture
     Quadrilateral firstQ;
+    // the normalized locations of each touch at the beginning
+    // of the gesture
+    Quadrilateral normalFirstQ;
+    // the currently computed skew transform throughout the gesture
     CATransform3D skewTransform;
 }
 
@@ -130,6 +135,24 @@
     return output;
 }
 
+-(Quadrilateral) getNormalizedRawQuad{
+    __block Quadrilateral output;
+    [[self validTouches] enumerateObjectsUsingBlock:^(UITouch* touch, NSUInteger idx, BOOL* stop){
+        CGPoint location = [touch locationInView:self.scrap];
+        location = NormalizePointTo(location, scrap.bounds.size);
+        if(idx == 0){
+            output.upperLeft = location;
+        }else if(idx == 1){
+            output.upperRight = location;
+        }else if(idx == 2){
+            output.lowerRight = location;
+        }else if(idx == 3){
+            output.lowerLeft = location;
+        }
+    }];
+    return output;
+}
+
 // if we use the getRawQuad only, then the transform we create by skewing that
 // raw quad will manipulate dramatically in 3d. This transform ends up to give
 // terrible results if the quad is manipulated by the user to be concave.
@@ -196,20 +219,26 @@
         // into two sets based on the direction of the stretch
         NSOrderedSet* touches1 = nil;
         NSOrderedSet* touches2 = nil;
+        CGPoint normalCenter1 = CGPointZero;
+        CGPoint normalCenter2 = CGPointZero;
         if(scaleW > scaleH * 2){
             NSLog(@"scaling wide");
             touches1 = [NSOrderedSet orderedSetWithObjects:[validTouches objectAtIndex:0], [validTouches objectAtIndex:3], nil];
             touches2 = [NSOrderedSet orderedSetWithObjects:[validTouches objectAtIndex:1], [validTouches objectAtIndex:2], nil];
+            normalCenter1 = AveragePoints(normalFirstQ.upperLeft, normalFirstQ.lowerLeft);
+            normalCenter2 = AveragePoints(normalFirstQ.upperRight, normalFirstQ.lowerRight);
         }else if(scaleH > scaleW * 2){
             NSLog(@"scaling wide");
             touches1 = [NSOrderedSet orderedSetWithObjects:[validTouches objectAtIndex:0], [validTouches objectAtIndex:1], nil];
             touches2 = [NSOrderedSet orderedSetWithObjects:[validTouches objectAtIndex:2], [validTouches objectAtIndex:3], nil];
+            normalCenter1 = AveragePoints(normalFirstQ.upperLeft, normalFirstQ.upperRight);
+            normalCenter2 = AveragePoints(normalFirstQ.lowerRight, normalFirstQ.lowerLeft);
         }
         
         if(touches1){
             // if we have touches, then we should split the scrap.
             // tell our delegate and finish this out.
-            [self.scrapDelegate stretchShouldSplitScrap:scrap toTouches:touches1 andTouches:touches2];
+            [self.scrapDelegate stretchShouldSplitScrap:scrap toTouches:touches1 atNormalPoint:normalCenter1 andTouches:touches2 atNormalPoint:normalCenter2];
             [possibleTouches addObjectsInOrderedSet:validTouches];
             [validTouches removeAllObjects];
             scrap = nil;
@@ -262,6 +291,7 @@
                     skewTransform = CATransform3DIdentity;
                     adjust = [self.scrapDelegate beginStretchForScrap:scrap];
                     firstQ = [self getQuad];
+                    normalFirstQ = [self getNormalizedRawQuad];
                     break;
                 }else{
                     [allPossibleTouches removeObjectsInSet:touchesInScrap];

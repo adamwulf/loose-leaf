@@ -24,3 +24,13 @@ CGFloat SquaredDistanceBetweenTwoPoints(CGPoint point1,CGPoint point2)
 };
 
 
+CGPoint NormalizePointTo(CGPoint point1, CGSize size)
+{
+    return CGPointMake(point1.x / size.width, point1.y / size.height);
+};
+
+
+CGPoint AveragePoints(CGPoint point1, CGPoint point2)
+{
+    return CGPointMake((point1.x + point2.x)/2, (point1.y + point2.y)/2);
+};

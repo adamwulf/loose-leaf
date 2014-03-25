@@ -766,8 +766,10 @@ CGPoint gestureLocationAfterAnimation;
     NSArray* possibleTouches = [stretchScrapGesture validTouches];
     if(panAndPinchScrapGesture.scrap == scrap){
         [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[NSSet setWithArray:possibleTouches]];
+        [panAndPinchScrapGesture2 begin];
     }else if(panAndPinchScrapGesture2.scrap == scrap){
         [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture2 withTouches:[NSSet setWithArray:possibleTouches]];
+        [panAndPinchScrapGesture begin];
     }
 }
 
@@ -775,7 +777,8 @@ CGPoint gestureLocationAfterAnimation;
 
 
 // time to duplicate the scraps! it's been pulled into two pieces
--(void) stretchShouldSplitScrap:(MMScrapView*)scrap toTouches:(NSOrderedSet*)touches1 andTouches:(NSOrderedSet*)touches2{
+-(void) stretchShouldSplitScrap:(MMScrapView*)scrap toTouches:(NSOrderedSet*)touches1 atNormalPoint:(CGPoint)np1
+                     andTouches:(NSOrderedSet*)touches2  atNormalPoint:(CGPoint)np2{
     
     CGPoint centerDuringStretch = scrap.center;
     CATransform3D transformDuringStretch = scrap.layer.transform;
@@ -818,6 +821,11 @@ CGPoint gestureLocationAfterAnimation;
     [UIView setAnchorPoint:CGPointMake(0, 0) forView:clonedScrap];
     clonedScrap.center = centerDuringStretch;
     clonedScrap.layer.transform = transformDuringStretch;
+    
+    
+    
+    NSLog(@"normal1: %f %f", np1.x, np1.y);
+    NSLog(@"normal2: %f %f", np2.x, np2.y);
     
     // now the scrap is in the right place, so hand it off to the pan gesture
     [self sendStretchedScrap:clonedScrap toPanGesture:panAndPinchScrapGesture2 withTouches:[touches2 set]];

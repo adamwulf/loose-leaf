@@ -59,10 +59,13 @@ extern "C" {
 #endif
 
 
-CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
+    CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
 
-CGFloat SquaredDistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
+    CGFloat SquaredDistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
 
+    CGPoint NormalizePointTo(CGPoint point1, CGSize size);
+    
+    CGPoint AveragePoints(CGPoint point1, CGPoint point2);
     
 #ifdef __cplusplus
 }
