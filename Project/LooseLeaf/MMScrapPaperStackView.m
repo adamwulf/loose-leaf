@@ -777,6 +777,9 @@ CGPoint gestureLocationAfterAnimation;
 // time to duplicate the scraps! it's been pulled into two pieces
 -(void) stretchShouldSplitScrap:(MMScrapView*)scrap toTouches:(NSOrderedSet*)touches1 andTouches:(NSOrderedSet*)touches2{
     
+    CGPoint centerDuringStretch = scrap.center;
+    CATransform3D transformDuringStretch = scrap.layer.transform;
+    
     // sending the original scrap is easy, just send it to a gesture and be done.
     [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[touches1 set]];
     
@@ -812,6 +815,10 @@ CGPoint gestureLocationAfterAnimation;
     CGPoint p2 = [[touches2 objectAtIndex:1] locationInView:self];
     clonedScrap.center = CGPointMake((p1.x + p2.x) / 2, (p1.y + p2.y)/2);
 
+    [UIView setAnchorPoint:CGPointMake(0, 0) forView:clonedScrap];
+    clonedScrap.center = centerDuringStretch;
+    clonedScrap.layer.transform = transformDuringStretch;
+    
     // now the scrap is in the right place, so hand it off to the pan gesture
     [self sendStretchedScrap:clonedScrap toPanGesture:panAndPinchScrapGesture2 withTouches:[touches2 set]];
 }
