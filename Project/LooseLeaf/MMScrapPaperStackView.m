@@ -647,9 +647,6 @@ CGPoint scrapAnchorAtStretchStart;
 -(void) stretchShouldSplitScrap:(MMScrapView*)scrap toTouches:(NSOrderedSet*)touches1 atNormalPoint:(CGPoint)np1
                      andTouches:(NSOrderedSet*)touches2  atNormalPoint:(CGPoint)np2{
     
-    CGPoint centerDuringStretch = scrap.center;
-    CATransform3D transformDuringStretch = scrap.layer.transform;
-    
     // sending the original scrap is easy, just send it to a gesture and be done.
     [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[touches1 array] withAnchor:np1];
     
@@ -675,25 +672,11 @@ CGPoint scrapAnchorAtStretchStart;
     panAndPinchScrapGesture2.scrap = clonedScrap;
 
     // move it to the new gesture location under it's scrap
-    // TODO: this should use normalized locations for each touch
-    // instead of the average location of touches.
-    //
-    // really, i should be setting it's anchor, center, and transform
-    // so that it visually matches the stretched scrap.
     [UIView setAnchorPoint:CGPointMake(.5, .5) forView:clonedScrap];
     CGPoint p1 = [[touches2 objectAtIndex:0] locationInView:self];
     CGPoint p2 = [[touches2 objectAtIndex:1] locationInView:self];
-    clonedScrap.center = CGPointMake((p1.x + p2.x) / 2, (p1.y + p2.y)/2);
+    clonedScrap.center = AveragePoints(p1, p2);
 
-    [UIView setAnchorPoint:CGPointMake(0, 0) forView:clonedScrap];
-    clonedScrap.center = centerDuringStretch;
-    clonedScrap.layer.transform = transformDuringStretch;
-    
-    
-    
-    NSLog(@"normal1: %f %f", np1.x, np1.y);
-    NSLog(@"normal2: %f %f", np2.x, np2.y);
-    
     // now the scrap is in the right place, so hand it off to the pan gesture
     [self sendStretchedScrap:clonedScrap toPanGesture:panAndPinchScrapGesture2 withTouches:[touches2 array] withAnchor:np2];
 }
