@@ -173,29 +173,52 @@
         Quadrilateral secondQ = [self getQuad];
         Quadrilateral q1 = [self adjustedQuad:firstQ by:adjust];
         Quadrilateral q2 = [self adjustedQuad:secondQ by:adjust];
-        
-        CGFloat distX = [self distanceBetweenPoint:secondQ.upperLeft andPoint:secondQ.upperRight] /
-                        [self distanceBetweenPoint:firstQ.upperLeft andPoint:firstQ.upperRight];
-        CGFloat distY = [self distanceBetweenPoint:secondQ.upperLeft andPoint:secondQ.lowerLeft] /
-                        [self distanceBetweenPoint:firstQ.upperLeft andPoint:firstQ.lowerLeft];
-        
-        NSLog(@"stretch %f %f", distX, distY);
-        
-        
         // generate the actual transform between the two quads
         skewTransform = [MMStretchScrapGestureRecognizer transformQuadrilateral:q1 toQuadrilateral:q2];
+
+        //
+        // now, determine if our stretch should pull the scrap into two pieces.
+        // this should happen if either stretch is 2.0 times the other direction
+        CGFloat scaleW = [self distanceBetweenPoint:secondQ.upperLeft andPoint:secondQ.upperRight] /
+                        [self distanceBetweenPoint:firstQ.upperLeft andPoint:firstQ.upperRight];
+        CGFloat scaleH = [self distanceBetweenPoint:secondQ.upperLeft andPoint:secondQ.lowerLeft] /
+                        [self distanceBetweenPoint:firstQ.upperLeft andPoint:firstQ.lowerLeft];
+        
+        if(scaleW < scaleH){
+            scaleH /= scaleW;
+            scaleW /= scaleW;
+        }else{
+            scaleW /= scaleH;
+            scaleH /= scaleH;
+        }
+
+        NSLog(@"stretch %f %f", scaleW, scaleH);
+
+        NSOrderedSet* touches1 = nil;
+        NSOrderedSet* touches2 = nil;
+        if(scaleW > scaleH * 2){
+            NSLog(@"scaling wide");
+            touches1 = [NSOrderedSet orderedSetWithObjects:[validTouches objectAtIndex:0], [validTouches objectAtIndex:3], nil];
+            touches2 = [NSOrderedSet orderedSetWithObjects:[validTouches objectAtIndex:1], [validTouches objectAtIndex:2], nil];
+        }else if(scaleH > scaleW * 2){
+            NSLog(@"scaling wide");
+            touches1 = [NSOrderedSet orderedSetWithObjects:[validTouches objectAtIndex:0], [validTouches objectAtIndex:1], nil];
+            touches2 = [NSOrderedSet orderedSetWithObjects:[validTouches objectAtIndex:2], [validTouches objectAtIndex:3], nil];
+        }
+        
+        if(touches1){
+            [self.scrapDelegate stretchShouldSplitScrap:scrap toTouches:touches1 andTouches:touches2];
+            [possibleTouches addObjectsInOrderedSet:validTouches];
+            [validTouches removeAllObjects];
+            scrap = nil;
+        }
     }
     if([validTouches count] != 4 && scrap){
         // valid touches must be exactly 4, otherwise
         // we should stop the stretching
+        [self.scrapDelegate endStretchForScrap:scrap];
         [possibleTouches addObjectsInOrderedSet:validTouches];
         [validTouches removeAllObjects];
-        [self.scrapDelegate endStretchForScrap:scrap];
-        if(pinchScrapGesture1.scrap == scrap){
-            [pinchScrapGesture1 blessTouches:[possibleTouches set]];
-        }else if(pinchScrapGesture2.scrap == scrap){
-            [pinchScrapGesture2 blessTouches:[possibleTouches set]];
-        }
         scrap = nil;
     }
     if([possibleTouches count] == 4){

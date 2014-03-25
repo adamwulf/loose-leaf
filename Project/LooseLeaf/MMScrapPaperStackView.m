@@ -516,24 +516,8 @@ int skipAll = NO;
         }
         [self isBeginningToPanAndScaleScrap:gesture.scrap withTouches:gesture.validTouches];
         
-        
-        CATransform3D stretchTransform = [gesture skewTransform];
-        CATransform3D unrotatedStretchTransform = stretchTransform;
-        
-        CGFloat angle = atan2(unrotatedStretchTransform.m12, unrotatedStretchTransform.m11);
-        unrotatedStretchTransform = CATransform3DRotate(unrotatedStretchTransform, angle, 0, 0, 1.0);
-        CGFloat scalex = sqrtf((unrotatedStretchTransform.m11 * unrotatedStretchTransform.m11 ) +
-                               (unrotatedStretchTransform.m12 * unrotatedStretchTransform.m12) +
-                               (unrotatedStretchTransform.m13 * unrotatedStretchTransform.m13));
-        CGFloat scaley = sqrtf((unrotatedStretchTransform.m21 * unrotatedStretchTransform.m21 ) +
-                               (unrotatedStretchTransform.m22 * unrotatedStretchTransform.m22) +
-                               (unrotatedStretchTransform.m23 * unrotatedStretchTransform.m23));
-        NSLog(@"scales: %f %f  angle: %f", scalex, scaley, angle);
-
-        
-        
         // generate the actual transform between the two quads
-        gesture.scrap.layer.transform = CATransform3DConcat(startSkewTransform, stretchTransform);
+        gesture.scrap.layer.transform = CATransform3DConcat(startSkewTransform, [gesture skewTransform]);
     }
 }
 
@@ -603,16 +587,34 @@ CGPoint gestureLocationAfterAnimation;
     return [scrap convertPoint:scrap.bounds.origin toView:visibleStackHolder];
 }
 
--(void) endStretchForScrap:(MMScrapView*)scrap{
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-(void) sendStretchedScrap:(MMScrapView*)scrap toPanGesture:(MMPanAndPinchScrapGestureRecognizer*)panScrapGesture withTouches:(NSSet*)touches{
+    // bless the touches
+    [panScrapGesture blessTouches:touches];
+    
     // now that the scrap has finished a stretch, we can recalculate
     // where the center is for it's currently stretched out state.
     // these values will help inform us to build a new transform that
     // we'll use to bounce animate the scrap into position.
     [UIView setAnchorPoint:scrapAnchorAtStretchStart forView:scrap];
-    MMPanAndPinchScrapGestureRecognizer* gesture = panAndPinchScrapGesture.scrap == scrap ? panAndPinchScrapGesture : panAndPinchScrapGesture2;
+    
     scrapLocationAtStretchEnd = scrap.center;
-    gestureLocationAtStretchEnd = CGPointMake(gesture.translation.x + gesture.preGestureCenter.x,
-                                                gesture.translation.y + gesture.preGestureCenter.y);
+    gestureLocationAtStretchEnd = CGPointMake(panScrapGesture.translation.x + panScrapGesture.preGestureCenter.x,
+                                              panScrapGesture.translation.y + panScrapGesture.preGestureCenter.y);
     
     // now that we've calcualted the current position for our
     // reference anchor point, we should now adjust our anchor
@@ -620,7 +622,7 @@ CGPoint gestureLocationAfterAnimation;
     // the scrap back to its new place.
     [UIView setAnchorPoint:CGPointMake(0, 0) forView:scrap];
     NSLog(@"just set the anchor to 0,0");
-
+    
     
     // kill the blue highlight
     // TODO: don't kill highlight if its going to be held
@@ -647,9 +649,9 @@ CGPoint gestureLocationAfterAnimation;
     const CGFloat GestureDuration = 0.3;
     
     
-    NSLog(@"valid touches: %d", [gesture.validTouches count]);
-    gestureLocationInScrapAtStretchEnd = [gesture locationInView:scrap];
-    gestureLocationInPageAtStretchEnd = [gesture locationInView:[visibleStackHolder peekSubview]];
+    NSLog(@"valid touches: %d", [panScrapGesture.validTouches count]);
+    gestureLocationInScrapAtStretchEnd = [panScrapGesture locationInView:scrap];
+    gestureLocationInPageAtStretchEnd = [panScrapGesture locationInView:[visibleStackHolder peekSubview]];
     
     
     
@@ -675,14 +677,14 @@ CGPoint gestureLocationAfterAnimation;
     NSLog(@"scale: %f  rotation: %f", scrap.scale, scrap.rotation);
     NSLog(@"panGestureTranslationInScrap: %f %f", panGestureTranslationInScrap.x, panGestureTranslationInScrap.y);
     NSLog(@"panGestureTranslationInPage: %f %f", panGestureTranslationInPage.x, panGestureTranslationInPage.y);
-
+    
     CGPoint entireTranslation = CGPointMake(panGestureTranslationInPage.x - panGestureTranslationInScrap.x,
                                             panGestureTranslationInPage.y - panGestureTranslationInScrap.y);
     
     
     BOOL shouldBounceAnimate = NO;
     if(!shouldBounceAnimate){
-//        scrap.layer.transform = smallTransform;
+        //        scrap.layer.transform = smallTransform;
         scrap.center = CGPointMake(scrap.center.x + entireTranslation.x, scrap.center.y + entireTranslation.y);
         scrap.layer.transform = startSkewTransform;
         [UIView setAnchorPoint:scrapAnchorAtStretchStart forView:scrap];
@@ -731,8 +733,8 @@ CGPoint gestureLocationAfterAnimation;
                                 // etc for the gesture so that any gesture movement would
                                 // "stick" only after the animation is complete.
                                 scrapLocationAfterAnimation = scrap.center;
-                                gestureLocationAfterAnimation = CGPointMake(gesture.translation.x + gesture.preGestureCenter.x,
-                                                                            gesture.translation.y + gesture.preGestureCenter.y);
+                                gestureLocationAfterAnimation = CGPointMake(panScrapGesture.translation.x + panScrapGesture.preGestureCenter.x,
+                                                                            panScrapGesture.translation.y + panScrapGesture.preGestureCenter.y);
                                 
                                 NSLog(@"scrapAnchorAtStretchStart: %f %f", scrapAnchorAtStretchStart.x, scrapAnchorAtStretchStart.y);
                                 NSLog(@"scrapLocationAtStretchStart:   %f %f", scrapLocationAtStretchStart.x, scrapLocationAtStretchStart.y);
@@ -761,6 +763,43 @@ CGPoint gestureLocationAfterAnimation;
             }
         }];
     }
+}
+
+
+
+
+-(void) endStretchForScrap:(MMScrapView*)scrap{
+    NSArray* possibleTouches = [stretchScrapGesture validTouches];
+    if(panAndPinchScrapGesture.scrap == scrap){
+        [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[NSSet setWithArray:possibleTouches]];
+    }else if(panAndPinchScrapGesture2.scrap == scrap){
+        [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture2 withTouches:[NSSet setWithArray:possibleTouches]];
+    }
+}
+
+
+
+
+// time to duplicate the scraps! it's been pulled into two pieces
+-(void) stretchShouldSplitScrap:(MMScrapView*)scrap toTouches:(NSOrderedSet*)touches1 andTouches:(NSOrderedSet*)touches2{
+    [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[touches1 set]];
+    
+    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+    CGAffineTransform verticalFlip = CGAffineTransformMake(1, 0, 0, -1, 0, page.originalUnscaledBounds.size.height);
+    UIBezierPath* subshapePath = [[scrap clippingPath] copy];
+    [subshapePath applyTransform:verticalFlip];
+    MMScrapView* clonedScrap = [page addScrapWithPath:subshapePath andScale:scrap.scale];
+    [UIView setAnchorPoint:scrap.layer.anchorPoint forView:clonedScrap];
+    clonedScrap.center = scrap.center;
+    [clonedScrap stampContentsFrom:scrap.state.drawableView];
+    panAndPinchScrapGesture2.scrap = clonedScrap;
+
+    [UIView setAnchorPoint:CGPointMake(.5, .5) forView:clonedScrap];
+    CGPoint p1 = [[touches2 objectAtIndex:0] locationInView:self];
+    CGPoint p2 = [[touches2 objectAtIndex:1] locationInView:self];
+    clonedScrap.center = CGPointMake((p1.x + p2.x) / 2, (p1.y + p2.y)/2);
+
+    [self sendStretchedScrap:clonedScrap toPanGesture:panAndPinchScrapGesture2 withTouches:[touches2 set]];
 }
 
 

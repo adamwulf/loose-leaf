@@ -21,6 +21,7 @@
 @property (readonly) NSArray* scraps;
 
 -(void) addScrap:(MMScrapView*)scrap;
+-(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andScale:(CGFloat)scale;
 -(BOOL) hasScrap:(MMScrapView*)scrap;
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
