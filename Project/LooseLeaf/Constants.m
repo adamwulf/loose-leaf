@@ -29,6 +29,11 @@ CGPoint NormalizePointTo(CGPoint point1, CGSize size)
     return CGPointMake(point1.x / size.width, point1.y / size.height);
 };
 
+CGPoint DenormalizePointTo(CGPoint point1, CGSize size)
+{
+    return CGPointMake(point1.x * size.width, point1.y * size.height);
+};
+
 
 CGPoint AveragePoints(CGPoint point1, CGPoint point2)
 {

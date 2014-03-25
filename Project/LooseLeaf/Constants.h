@@ -65,6 +65,8 @@ extern "C" {
 
     CGPoint NormalizePointTo(CGPoint point1, CGSize size);
     
+    CGPoint DenormalizePointTo(CGPoint point1, CGSize size);
+    
     CGPoint AveragePoints(CGPoint point1, CGPoint point2);
     
 #ifdef __cplusplus

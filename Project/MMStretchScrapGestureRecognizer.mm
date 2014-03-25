@@ -28,6 +28,11 @@
     Quadrilateral normalFirstQ;
     // the currently computed skew transform throughout the gesture
     CATransform3D skewTransform;
+    
+    UITouch* upperLeftTouch;
+    UITouch* upperRightTouch;
+    UITouch* lowerLeftTouch;
+    UITouch* lowerRightTouch;
 }
 
 @synthesize pinchScrapGesture1;
@@ -193,7 +198,6 @@
         // generate the actual transform between the two quads
         skewTransform = [MMStretchScrapGestureRecognizer transformQuadrilateral:q1 toQuadrilateral:q2];
 
-        //
         // now, determine if our stretch should pull the scrap into two pieces.
         // this should happen if either stretch is 2.0 times the other direction
         CGFloat scaleW = DistanceBetweenTwoPoints(secondQ.upperLeft, secondQ.upperRight) /
@@ -247,7 +251,7 @@
     if([validTouches count] != 4 && scrap){
         // valid touches must be exactly 4, otherwise
         // we should stop the stretching
-        [self.scrapDelegate endStretchForScrap:scrap];
+        [self.scrapDelegate endStretchForScrap:scrap atNormalPoint:[self normalizedLocationOfValidTouches]];
         [possibleTouches addObjectsInOrderedSet:validTouches];
         [validTouches removeAllObjects];
         scrap = nil;
@@ -304,6 +308,31 @@
     }
 }
 
+-(CGPoint) normalizedLocationOfValidTouches{
+    __block CGPoint ret = CGPointZero;
+    int count = MIN([validTouches count], 2);
+    [validTouches enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL*stop){
+        if(obj == upperLeftTouch){
+            ret = CGPointMake(ret.x + normalFirstQ.upperLeft.x / count,
+                              ret.y + normalFirstQ.upperLeft.y / count);
+        }else if(obj == upperRightTouch){
+            ret = CGPointMake(ret.x + normalFirstQ.upperRight.x / count,
+                              ret.y + normalFirstQ.upperRight.y / count);
+        }else if(obj == lowerRightTouch){
+            ret = CGPointMake(ret.x + normalFirstQ.lowerRight.x / count,
+                              ret.y + normalFirstQ.lowerRight.y / count);
+        }else if(obj == lowerLeftTouch){
+            ret = CGPointMake(ret.x + normalFirstQ.lowerLeft.x / count,
+                              ret.y + normalFirstQ.lowerLeft.y / count);
+        }
+        if(idx == 1){
+            stop[0] = YES;
+            return;
+        }
+    }];
+    return ret;
+}
+
 // this method looks at our internal state for the gesture, and updates
 // the UIGestureRecognizer.state to match
 -(void) updateState{
@@ -350,6 +379,11 @@
         int d2 = (b.x-center.x) * (b.x-center.x) + (b.y-center.y) * (b.y-center.y);
         return d1 > d2 ? NSOrderedAscending : NSOrderedDescending;
     }];
+    
+    upperLeftTouch = [validTouches objectAtIndex:0];
+    upperRightTouch = [validTouches objectAtIndex:1];
+    lowerRightTouch = [validTouches objectAtIndex:2];
+    lowerLeftTouch = [validTouches objectAtIndex:3];
 }
 
 // move the quad by the input point amount
@@ -390,6 +424,24 @@
     [validTouches removeAllObjects];
     [ignoredTouches removeAllObjects];
     [possibleTouches removeAllObjects];
+
+    upperLeftTouch = nil;
+    upperRightTouch = nil;
+    lowerLeftTouch = nil;
+    lowerRightTouch = nil;
+}
+
+
+-(void) removeTouchFromStoredQuadTouches:(UITouch*)t{
+    if(t == upperLeftTouch){
+        upperLeftTouch = nil;
+    }else if(t == upperRightTouch){
+        upperRightTouch = nil;
+    }else if(t == lowerRightTouch){
+        lowerRightTouch = nil;
+    }else if(t == lowerLeftTouch){
+        lowerLeftTouch = nil;
+    }
 }
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -416,6 +468,7 @@
         [possibleTouches removeObject:touch];
         [validTouches removeObject:touch];
         [ignoredTouches removeObject:touch];
+        [self removeTouchFromStoredQuadTouches:touch];
     }];
     if(pinchScrapGesture1.paused){
         [pinchScrapGesture1 relinquishOwnershipOfTouches:touches];
@@ -437,6 +490,7 @@
         [possibleTouches removeObject:touch];
         [validTouches removeObject:touch];
         [ignoredTouches removeObject:touch];
+        [self removeTouchFromStoredQuadTouches:touch];
     }];
     if(pinchScrapGesture1.paused){
         [pinchScrapGesture1 relinquishOwnershipOfTouches:touches];

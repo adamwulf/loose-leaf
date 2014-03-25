@@ -20,7 +20,7 @@
 
 -(CGPoint) beginStretchForScrap:(MMScrapView*)scrap;
 
--(void) endStretchForScrap:(MMScrapView*)scrap;
+-(void) endStretchForScrap:(MMScrapView*)scrap atNormalPoint:(CGPoint)np;
 
 
 /**

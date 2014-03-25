@@ -10,7 +10,7 @@
 
 @implementation NSArray (Extras)
 
--(NSArray*) reverseArray{
+-(NSArray*) reversedArray{
     NSMutableArray* outArray = [NSMutableArray array];
     for(id obj in self.reverseObjectEnumerator){
         [outArray addObject:obj];
