@@ -224,6 +224,9 @@
                    //
                    // show pages icon w/ numbers if the user is exiting
                    // bezel more than once
+                   if(numberOfTimesTheTopPageHasExitedBezel > 50){
+                       @throw [NSException exceptionWithName:@"BezelException" reason:@"Too many pages being bezeled" userInfo:nil];
+                   }
                    papersIcon.numberToShowIfApplicable = numberOfTimesTheTopPageHasExitedBezel;
                    papersIconAlpha = 1;
                    paperIconAlpha = 0;
@@ -735,6 +738,7 @@
         inProgressOfBezeling = page;
     }
     if(![setOfPagesBeingPanned containsObject:page]){
+        NSLog(@"adding1 %p", page);
         [setOfPagesBeingPanned addObject:page];
     }
     [self updateIconAnimations];
@@ -892,6 +896,7 @@
     // check if we finished the top page
     BOOL justFinishedPanningTheTopPage = [visibleStackHolder peekSubview] == page;
     // this finished page isn't panned anymore...
+    NSLog(@"removing3 %p", page);
     [setOfPagesBeingPanned removeObject:page];
     // ok, update the icons
     [self updateIconAnimations];
@@ -1126,9 +1131,7 @@
         NSLog(@"bounce it back to full page");
         [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
-        [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:^(BOOL finished){
-            NSLog(@"animation is done %d", finished);
-        }];
+        [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:nil];
     }else{
         //
         // bezelStackHolder debugging DONE

@@ -368,7 +368,7 @@
         // the cancelled state will be caught in MMPaperStackView, so
         // the frame is not adjusted after we animate the page to
         // it's resting place
-        NSLog(@"scale: %f", [visibleStackHolder peekSubview].scale);
+//        NSLog(@"scale: %f", [visibleStackHolder peekSubview].scale);
         if([visibleStackHolder peekSubview].scale < kZoomToListPageZoom){
             [[visibleStackHolder peekSubview] cancelAllGestures];
             return fromFrame;
@@ -442,6 +442,7 @@
     [super finishedScalingReallySmall:page];
     //
     // clean up gesture state
+    NSLog(@"removing1 %p", page);
     [setOfPagesBeingPanned removeObject:page];
 
     CGFloat duration = 0.3;
@@ -590,6 +591,7 @@
     [super cancelledScalingReallySmall:page];
     //
     // clean up gesture state
+    NSLog(@"removing2 %p", page);
     [setOfPagesBeingPanned removeObject:page];
     
     [self finishUITransitionToPageView];

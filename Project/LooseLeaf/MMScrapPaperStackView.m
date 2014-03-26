@@ -153,7 +153,6 @@ int skipAll = NO;
     NSLog(@" ");
     NSLog(@"begin");
     
-    NSLog(@"page being panned %d", [setOfPagesBeingPanned count]);
     for(MMPaperView* page in setOfPagesBeingPanned){
         if([visibleStackHolder containsSubview:page]){
             NSLog(@"  1 page in visible stack");
@@ -188,7 +187,8 @@ int skipAll = NO;
         }
     }
     NSLog(@"velocity gesture sees: %d", [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]);
-    
+    NSLog(@"pages being panned %d", [setOfPagesBeingPanned count]);
+
     NSLog(@"done");
     
     
@@ -661,15 +661,15 @@ int skipAll = NO;
     for (UITouch* t in gesture.ignoredTouches) {
         ignoredOut = [ignoredOut stringByAppendingFormat:@" %p", t];
     }
-    NSLog(@"%@ (%p) knows about:\n%@\n%@\n%@ ", prefix, gesture, validOut, possibleOut, ignoredOut);
+//    NSLog(@"%@ (%p) knows about:\n%@\n%@\n%@ ", prefix, gesture, validOut, possibleOut, ignoredOut);
 }
 
 
 // time to duplicate the scraps! it's been pulled into two pieces
 -(void) endStretchBySplittingScrap:(MMScrapView*)scrap toTouches:(NSOrderedSet*)touches1 atNormalPoint:(CGPoint)np1
                      andTouches:(NSOrderedSet*)touches2  atNormalPoint:(CGPoint)np2{
-    NSLog(@"gesture 1 gets %p %p", [touches1 firstObject], [touches1 lastObject]);
-    NSLog(@"gesture 2 gets %p %p", [touches2 firstObject], [touches2 lastObject]);
+//    NSLog(@"gesture 1 gets %p %p", [touches1 firstObject], [touches1 lastObject]);
+//    NSLog(@"gesture 2 gets %p %p", [touches2 firstObject], [touches2 lastObject]);
 
     [self outputGestureTouchOwnership:@"before gesture 1" gesture:panAndPinchScrapGesture];
     [self outputGestureTouchOwnership:@"before gesture 2" gesture:panAndPinchScrapGesture2];
@@ -681,10 +681,10 @@ int skipAll = NO;
     [self outputGestureTouchOwnership:@"relenquished gesture 2" gesture:panAndPinchScrapGesture2];
     
     
-    NSLog(@"resetting original scrap");
+//    NSLog(@"resetting original scrap");
     // sending the original scrap is easy, just send it to a gesture and be done.
     [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[touches1 array] withAnchor:np1];
-    NSLog(@"done resetting original cloned scrap");
+//    NSLog(@"done resetting original cloned scrap");
     
     [self outputGestureTouchOwnership:@"after 1 set gesture 1" gesture:panAndPinchScrapGesture];
     [self outputGestureTouchOwnership:@"after 1 set gesture 2" gesture:panAndPinchScrapGesture2];
@@ -720,19 +720,19 @@ int skipAll = NO;
     CGPoint p2 = [[touches2 objectAtIndex:1] locationInView:self];
     clonedScrap.center = AveragePoints(p1, p2);
 
-    NSLog(@"resetting original cloned scrap");
+//    NSLog(@"resetting original cloned scrap");
     // now the scrap is in the right place, so hand it off to the pan gesture
     [self sendStretchedScrap:clonedScrap toPanGesture:panAndPinchScrapGesture2 withTouches:[touches2 array] withAnchor:np2];
-    NSLog(@"done resetting original cloned scrap");
+//    NSLog(@"done resetting original cloned scrap");
     
     [self outputGestureTouchOwnership:@"after 2 set gesture 1" gesture:panAndPinchScrapGesture];
     [self outputGestureTouchOwnership:@"after 2 set gesture 2" gesture:panAndPinchScrapGesture2];
 
     
-    NSLog(@"scale: %f vs %f", scrap.scale, clonedScrap.scale);
-    NSLog(@"rotation: %f vs %f", scrap.rotation, clonedScrap.rotation);
-    NSLog(@"width: %f vs %f", scrap.bounds.size.width, clonedScrap.bounds.size.width);
-    NSLog(@"height: %f vs %f", scrap.bounds.size.height, clonedScrap.bounds.size.height);
+//    NSLog(@"scale: %f vs %f", scrap.scale, clonedScrap.scale);
+//    NSLog(@"rotation: %f vs %f", scrap.rotation, clonedScrap.rotation);
+//    NSLog(@"width: %f vs %f", scrap.bounds.size.width, clonedScrap.bounds.size.width);
+//    NSLog(@"height: %f vs %f", scrap.bounds.size.height, clonedScrap.bounds.size.height);
     if([panAndPinchScrapGesture.initialTouchVector isEqual:panAndPinchScrapGesture2.initialTouchVector]){
         NSLog(@"what");
     }
@@ -742,8 +742,8 @@ int skipAll = NO;
         NSLog(@"what");
     }
     
-    NSLog(@"success? %d %p,  %d %p", [panAndPinchScrapGesture.validTouches count], panAndPinchScrapGesture.scrap,
-          [panAndPinchScrapGesture2.validTouches count], panAndPinchScrapGesture2.scrap);
+//    NSLog(@"success? %d %p,  %d %p", [panAndPinchScrapGesture.validTouches count], panAndPinchScrapGesture.scrap,
+//          [panAndPinchScrapGesture2.validTouches count], panAndPinchScrapGesture2.scrap);
     
     
     
