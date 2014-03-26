@@ -68,6 +68,7 @@ struct TouchInterval{
 @synthesize bezelDirectionMask;
 @synthesize shouldReset;
 @synthesize isShaking;
+@synthesize initialTouchVector;
 
 
 NSInteger const  mmMinimumNumberOfScrapTouches = 2;
@@ -407,6 +408,8 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
             CGPoint p2 = [[validTouches objectAtIndex:1] locationInView:self.view];
             MMVector* currentVector = [[MMVector alloc] initWithPoint:p1 andPoint:p2];
             CGFloat diff = [initialTouchVector angleBetween:currentVector];
+            NSLog(@"pan scrap %p adding %f to rotation %f", self, diff, rotation);
+            NSLog(@" using touches %p and %p", [validTouches firstObject], [validTouches objectAtIndex:1]);
             rotation += diff;
             initialTouchVector = currentVector;
             CGPoint locInView = [self locationInView:self.view];
@@ -657,6 +660,8 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     CGPoint p2 = [[validTouches objectAtIndex:1] locationInView:self.view];
     initialTouchVector = [[MMVector alloc] initWithPoint:p1 andPoint:p2];
     rotation = 0;
+    NSLog(@"pan scrap %p setting vector to %@ and rotation to %f", self, initialTouchVector, rotation);
+    NSLog(@" using touches %p and %p", [validTouches firstObject], [validTouches objectAtIndex:1]);
     gestureLocationAtStart = [self locationInView:self.view];
     initialDistance = [self distanceBetweenTouches:validTouches];
     translation = CGPointZero;
@@ -781,11 +786,16 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 
 CGPoint prevLocation;
 -(void) pause{
+    NSLog(@"pan scrap gesture %p paused", self);
     prevLocation = [self locationInView:self.view];
     paused = YES;
 }
 
 -(BOOL) begin{
+    NSLog(@"pan scrap gesture %p began", self);
+    if(!paused){
+        NSLog(@"what");
+    }
     paused = NO;
     if([validTouches count] >= mmMinimumNumberOfScrapTouches){
         [self prepareGestureToBeginFresh];

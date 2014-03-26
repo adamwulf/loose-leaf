@@ -11,6 +11,7 @@
 #import "Constants.h"
 #import "MMScrapView.h"
 #import "MMPanAndPinchScrapGestureRecognizerDelegate.h"
+#import "MMVector.h"
 
 @interface MMPanAndPinchScrapGestureRecognizer : UIGestureRecognizer{
     // the initial distance between
@@ -54,6 +55,7 @@
 @property (assign) CGFloat preGesturePageScale;
 @property (assign) CGFloat preGestureRotation;
 @property (assign) CGPoint preGestureCenter;
+@property (readonly) MMVector* initialTouchVector;
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 -(void) relinquishOwnershipOfTouches:(NSSet*)touches;

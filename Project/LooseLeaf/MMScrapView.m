@@ -254,6 +254,9 @@
 }
 
 -(void) setRotation:(CGFloat)_rotation{
+    if(ABS(_rotation - rotation) > .3 && rotation != 0){
+        NSLog(@"what");
+    }
     [self setScale:self.scale andRotation:_rotation];
 }
 

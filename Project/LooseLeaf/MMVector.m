@@ -153,4 +153,14 @@
     return [@"[MMVector: " stringByAppendingFormat:@"%f %f]", self.x, self.y];
 }
 
+-(BOOL) isEqual:(id)object{
+    if(object == self){
+        return YES;
+    }
+    if([object isKindOfClass:[MMVector class]]){
+        return self.x == [(MMVector*)object x] && self.y == [(MMVector*)object y];
+    }
+    return NO;
+}
+
 @end

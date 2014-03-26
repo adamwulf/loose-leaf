@@ -128,7 +128,7 @@
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     if(gesture != self){
-        NSLog(@"pagepan sees %@ owning %d touches", NSStringFromClass([gesture class]), [touches count]);
+//        NSLog(@"pagepan sees %@ owning %d touches", NSStringFromClass([gesture class]), [touches count]);
         __block BOOL touchesWereStolen = NO;
         [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
             if([possibleTouches containsObject:touch] || [validTouches containsObject:touch]){
@@ -182,7 +182,7 @@
         if([possibleTouches count] >= kMinimumNumberOfTouches){
             NSArray* firstTwoPossibleTouches = [[possibleTouches array] subarrayWithRange:NSMakeRange(0, 2)];
             NSSet* claimedTouches = [NSSet setWithArray:firstTwoPossibleTouches];
-            NSLog(@"pan page claiming %d touches", [claimedTouches count]);
+//            NSLog(@"pan page claiming %d touches", [claimedTouches count]);
             [scrapDelegate ownershipOfTouches:claimedTouches isGesture:self];
             [validTouches addObjectsInSet:claimedTouches];
             [possibleTouches removeObjectsInSet:claimedTouches];
@@ -239,7 +239,7 @@
     
     NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
     [validTouchesCurrentlyBeginning removeObjectsInSet:ignoredTouches];
-    NSLog(@"input: %d  ignored: %d  possiblyValid: %d", [touches count], [ignoredTouches count], [validTouchesCurrentlyBeginning count]);
+//    NSLog(@"input: %d  ignored: %d  possiblyValid: %d", [touches count], [ignoredTouches count], [validTouchesCurrentlyBeginning count]);
 
     [possibleTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
     if([possibleTouches count] && subState == UIGestureRecognizerStatePossible){

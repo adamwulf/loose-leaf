@@ -290,6 +290,9 @@ int skipAll = NO;
         // inside that page so that picking up a scrap
         // doesn't change the order of the scrap in the page
 
+        NSLog(@"pan scrap gesture %p triggering", gesture);
+        
+        
         //
         // first step:
         // find the center, scale, and rotation for the scrap
@@ -635,47 +638,79 @@ int skipAll = NO;
     }
 }
 
--(void) bounceScrap:(MMScrapView*)scrap fromTransform:(CATransform3D)startTransform{
-    // these calculations help us determine a bounce scale that'll keep
-    // the bounce to 10px on every side of the scrap (20px total)
-    CGFloat maxDim = MAX(scrap.bounds.size.width, scrap.bounds.size.height) * scrap.scale;
-    CGFloat smallScale = maxDim > 200 ? (maxDim - 20) / maxDim : .9;
-    CGFloat largeScale = maxDim > 200 ? (maxDim + 20) / maxDim : 1.1;
-    
-    // these two transforms will be used to
-    // bounce the scrap back to its initial position
-    CATransform3D smallTransform = CATransform3DConcat(startTransform, CATransform3DMakeScale(smallScale, smallScale, 1.0));
-    CATransform3D largeTransform = CATransform3DConcat(startTransform, CATransform3DMakeScale(largeScale, largeScale, 1.0));
-    CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
-    bounceAnimation.removedOnCompletion = YES;
-    NSMutableArray* keyTimes = [NSMutableArray arrayWithObjects:
-                                [NSNumber numberWithFloat:0.0],
-                                [NSNumber numberWithFloat:0.4],
-                                [NSNumber numberWithFloat:0.7],
-                                [NSNumber numberWithFloat:1.0], nil];
-    bounceAnimation.keyTimes = keyTimes;
-    bounceAnimation.values = [NSArray arrayWithObjects:
-                              [NSValue valueWithCATransform3D:startTransform],
-                              [NSValue valueWithCATransform3D:smallTransform],
-                              [NSValue valueWithCATransform3D:largeTransform],
-                              [NSValue valueWithCATransform3D:startTransform],
-                              nil];
-    bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
-                                       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut],
-                                       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
-                                       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn], nil];
-    bounceAnimation.duration = 1;
-    
-    ///////////////////////////////////////////////
-    // Add the animations to the layers
-    [scrap.layer addAnimation:bounceAnimation forKey:@"animateSize"];
-}
 
 // time to duplicate the scraps! it's been pulled into two pieces
 -(void) endStretchBySplittingScrap:(MMScrapView*)scrap toTouches:(NSOrderedSet*)touches1 atNormalPoint:(CGPoint)np1
                      andTouches:(NSOrderedSet*)touches2  atNormalPoint:(CGPoint)np2{
+    
+    
+    NSLog(@"before set check");
+    if([panAndPinchScrapGesture.validTouches count] >= 2){
+        NSLog(@"gesture 1 owns %p %p", [panAndPinchScrapGesture.validTouches objectAtIndex:0], [panAndPinchScrapGesture.validTouches objectAtIndex:1]);
+    }
+    NSLog(@"gesture 1 gets %p %p", [touches1 firstObject], [touches1 lastObject]);
+    if([panAndPinchScrapGesture2.validTouches count] >= 2){
+        NSLog(@"gesture 2 owns %p %p", [panAndPinchScrapGesture2.validTouches objectAtIndex:0], [panAndPinchScrapGesture2.validTouches objectAtIndex:1]);
+    }
+    NSLog(@"gesture 2 gets %p %p", [touches2 firstObject], [touches2 lastObject]);
+    
+    
+    
+    if([panAndPinchScrapGesture2.validTouches count] >= 2 &&
+       [[touches1 set] isSubsetOfSet:[NSSet setWithArray:[panAndPinchScrapGesture2.validTouches subarrayWithRange:NSMakeRange(0, 2)]]]){
+        NSLog(@"************************ gotcha");
+        NSOrderedSet* swapS = touches1;
+        touches1 = touches2;
+        touches2 = swapS;
+        CGPoint swapP = np1;
+        np1 = np2;
+        np2 = swapP;
+    }else if([panAndPinchScrapGesture2.validTouches count] >= 2){
+        NSLog(@"gesture 2 %p %p != %p %p", [panAndPinchScrapGesture2.validTouches objectAtIndex:0],
+              [panAndPinchScrapGesture2.validTouches objectAtIndex:1],
+              [touches1 firstObject], [touches1 lastObject]);
+        NSLog(@"set1: %@", [NSSet setWithArray:panAndPinchScrapGesture2.validTouches]);
+        NSLog(@"set2: %@", [touches1 set]);
+
+    }
+    if([panAndPinchScrapGesture.validTouches count] >= 2 &&
+       [[touches2 set] isSubsetOfSet:[NSSet setWithArray:[panAndPinchScrapGesture.validTouches subarrayWithRange:NSMakeRange(0, 2)]]]){
+        NSLog(@"************************ gotcha2");
+        NSOrderedSet* swapS = touches1;
+        touches1 = touches2;
+        touches2 = swapS;
+        CGPoint swapP = np1;
+        np1 = np2;
+        np2 = swapP;
+    }else if([panAndPinchScrapGesture.validTouches count] >= 2){
+        NSLog(@"gesture 1 %p %p != %p %p", [panAndPinchScrapGesture.validTouches objectAtIndex:0],
+              [panAndPinchScrapGesture.validTouches objectAtIndex:1],
+              [touches2 firstObject], [touches2 lastObject]);
+        NSLog(@"set1: %@", [NSSet setWithArray:panAndPinchScrapGesture.validTouches]);
+        NSLog(@"set2: %@", [touches2 set]);
+    }
+    
+    NSLog(@"after set check");
+    if([panAndPinchScrapGesture.validTouches count] >= 2){
+        NSLog(@"gesture 1 owns %p %p", [panAndPinchScrapGesture.validTouches objectAtIndex:0], [panAndPinchScrapGesture.validTouches objectAtIndex:1]);
+    }
+    NSLog(@"gesture 1 gets %p %p", [touches1 firstObject], [touches1 lastObject]);
+    if([panAndPinchScrapGesture2.validTouches count] >= 2){
+        NSLog(@"gesture 2 owns %p %p", [panAndPinchScrapGesture2.validTouches objectAtIndex:0], [panAndPinchScrapGesture2.validTouches objectAtIndex:1]);
+    }
+    NSLog(@"gesture 2 gets %p %p", [touches2 firstObject], [touches2 lastObject]);
+    
+    
+    
+    NSLog(@"resetting original scrap");
     // sending the original scrap is easy, just send it to a gesture and be done.
     [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[touches1 array] withAnchor:np1];
+    NSLog(@"done resetting original cloned scrap");
+    
+    if([touches1 isEqualToOrderedSet:touches2] || [touches1 isEqualToOrderedSet:[touches2 reversedOrderedSet]]){
+        NSLog(@"what");
+    }
+    
 
     // next, add the new scrap to the same page as the stretched scrap
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
@@ -703,14 +738,27 @@ int skipAll = NO;
     CGPoint p2 = [[touches2 objectAtIndex:1] locationInView:self];
     clonedScrap.center = AveragePoints(p1, p2);
 
+    NSLog(@"resetting original cloned scrap");
     // now the scrap is in the right place, so hand it off to the pan gesture
     [self sendStretchedScrap:clonedScrap toPanGesture:panAndPinchScrapGesture2 withTouches:[touches2 array] withAnchor:np2];
+    NSLog(@"done resetting original cloned scrap");
     
-//    
-//    [[NSThread mainThread] performBlock:^{
-//        [self bounceScrap:scrap fromTransform:startSkewTransform];
-//        [self bounceScrap:clonedScrap fromTransform:startSkewTransform];
-//    } afterDelay:.1];
+    
+    NSLog(@"scale: %f vs %f", scrap.scale, clonedScrap.scale);
+    NSLog(@"rotation: %f vs %f", scrap.rotation, clonedScrap.rotation);
+    NSLog(@"width: %f vs %f", scrap.bounds.size.width, clonedScrap.bounds.size.width);
+    NSLog(@"height: %f vs %f", scrap.bounds.size.height, clonedScrap.bounds.size.height);
+    if([panAndPinchScrapGesture.initialTouchVector isEqual:panAndPinchScrapGesture2.initialTouchVector]){
+        NSLog(@"what");
+    }
+    
+    if(scrap.scale != clonedScrap.scale ||
+       scrap.rotation != clonedScrap.rotation){
+        NSLog(@"what");
+    }
+    
+    NSLog(@"success? %d %p,  %d %p", [panAndPinchScrapGesture.validTouches count], panAndPinchScrapGesture.scrap,
+          [panAndPinchScrapGesture2.validTouches count], panAndPinchScrapGesture2.scrap);
 }
 
 
