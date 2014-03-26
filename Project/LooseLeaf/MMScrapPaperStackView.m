@@ -302,9 +302,6 @@ int skipAll = NO;
         // inside that page so that picking up a scrap
         // doesn't change the order of the scrap in the page
 
-        NSLog(@"pan scrap gesture %p triggering", gesture);
-        
-        
         //
         // first step:
         // find the center, scale, and rotation for the scrap

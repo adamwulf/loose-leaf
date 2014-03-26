@@ -188,14 +188,14 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     [ignoredTouches addObjectsInSet:validTouchesToRelinquish];
     
     if([validTouches count] < mmMinimumNumberOfScrapTouches && self.scrap){
-        NSLog(@"promote possible touch? %d %d %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
-        NSLog(@"demoting valid touches");
+//        NSLog(@"promote possible touch? %d %d %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+//        NSLog(@"demoting valid touches");
         [possibleTouches addObjectsInSet:[validTouches set]];
         [validTouches removeAllObjects];
         self.scrap = nil;
     }
     if([validTouches count] == 0 && self.scrap){
-        NSLog(@"relenquish scrap? %d %d %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+//        NSLog(@"relenquish scrap? %d %d %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
         self.scrap = nil;
     }
     
@@ -357,7 +357,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     for (UITouch*t in touches) {
         str = [str stringByAppendingFormat:@" %p", t];
     }
-    NSLog(@"%p %@ %@", self, prefix, str);
+//    NSLog(@"%p %@ %@", self, prefix, str);
 }
 
 /**
@@ -446,8 +446,8 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
             CGPoint p2 = [[validTouches objectAtIndex:1] locationInView:self.view];
             MMVector* currentVector = [[MMVector alloc] initWithPoint:p1 andPoint:p2];
             CGFloat diff = [initialTouchVector angleBetween:currentVector];
-            NSLog(@"pan scrap %p adding %f to rotation %f", self, diff, rotation);
-            NSLog(@" using touches %p and %p", [validTouches firstObject], [validTouches objectAtIndex:1]);
+//            NSLog(@"pan scrap %p adding %f to rotation %f", self, diff, rotation);
+//            NSLog(@" using touches %p and %p", [validTouches firstObject], [validTouches objectAtIndex:1]);
             rotation += diff;
             initialTouchVector = currentVector;
             CGPoint locInView = [self locationInView:self.view];
@@ -700,8 +700,8 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     CGPoint p2 = [[validTouches objectAtIndex:1] locationInView:self.view];
     initialTouchVector = [[MMVector alloc] initWithPoint:p1 andPoint:p2];
     rotation = 0;
-    NSLog(@"pan scrap %p setting vector to %@ and rotation to %f", self, initialTouchVector, rotation);
-    NSLog(@" using touches %p and %p", [validTouches firstObject], [validTouches objectAtIndex:1]);
+//    NSLog(@"pan scrap %p setting vector to %@ and rotation to %f", self, initialTouchVector, rotation);
+//    NSLog(@" using touches %p and %p", [validTouches firstObject], [validTouches objectAtIndex:1]);
     gestureLocationAtStart = [self locationInView:self.view];
     initialDistance = [self distanceBetweenTouches:validTouches];
     translation = CGPointZero;
@@ -826,13 +826,13 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 
 CGPoint prevLocation;
 -(void) pause{
-    NSLog(@"pan scrap gesture %p paused", self);
+//    NSLog(@"pan scrap gesture %p paused", self);
     prevLocation = [self locationInView:self.view];
     paused = YES;
 }
 
 -(BOOL) begin{
-    NSLog(@"pan scrap gesture %p began", self);
+//    NSLog(@"pan scrap gesture %p began", self);
     if(!paused){
         NSLog(@"what");
     }
