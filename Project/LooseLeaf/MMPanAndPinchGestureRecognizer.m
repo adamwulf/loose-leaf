@@ -385,13 +385,13 @@
             BOOL bezelDirHasRight = ((self.bezelDirectionMask & MMBezelDirectionRight) == MMBezelDirectionRight);
             BOOL bezelDirHasUp = ((self.bezelDirectionMask & MMBezelDirectionUp) == MMBezelDirectionUp);
             BOOL bezelDirHasDown = ((self.bezelDirectionMask & MMBezelDirectionDown) == MMBezelDirectionDown);
-            if(point.x < kBezelInGestureWidth + pxVelocity && bezelDirHasLeft){
+            if(point.x < kBezelInGestureWidth + ABS(pxVelocity) && bezelDirHasLeft){
                 didExitToBezel = didExitToBezel | MMBezelDirectionLeft;
                 cancelledFromBezel = YES;
             }else if(point.y < kBezelInGestureWidth && bezelDirHasUp){
                 didExitToBezel = didExitToBezel | MMBezelDirectionUp;
                 cancelledFromBezel = YES;
-            }else if(point.x > self.view.superview.frame.size.width - kBezelInGestureWidth - pxVelocity && bezelDirHasRight){
+            }else if(point.x > self.view.superview.frame.size.width - kBezelInGestureWidth - ABS(pxVelocity) && bezelDirHasRight){
                 didExitToBezel = didExitToBezel | MMBezelDirectionRight;
                 cancelledFromBezel = YES;
             }else if(point.y > self.view.superview.frame.size.height - kBezelInGestureWidth && bezelDirHasDown){
@@ -413,7 +413,11 @@
             // we can't pan the page anymore, but we still have touches
             // active, so put us back into possible state and we may
             // pick the page back up again later
-            subState = UIGestureRecognizerStatePossible;
+            if(cancelledFromBezel){
+                subState = UIGestureRecognizerStateCancelled;
+            }else{
+                subState = UIGestureRecognizerStatePossible;
+            }
         }
 
         if([validTouches count] == 0 && [possibleTouches count] == 0 && [ignoredTouches count] == 0 &&
@@ -437,7 +441,7 @@
             self.state = UIGestureRecognizerStateFailed;
         }
     }
-    if(![validTouches count] && [possibleTouches count]){
+    if(![validTouches count] && [possibleTouches count] && subState != UIGestureRecognizerStateCancelled){
         // need to reset to initial state
         // soft reset. keep the touches that we know
         // about, but reset everything else

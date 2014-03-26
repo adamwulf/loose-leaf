@@ -164,7 +164,9 @@ int skipAll = NO;
     }
     
 
-    for(UIGestureRecognizer* gesture in [self.gestureRecognizers arrayByAddingObjectsFromArray:[[visibleStackHolder peekSubview] gestureRecognizers]]){
+    NSArray* allGesturesAndTopTwoPages = [self.gestureRecognizers arrayByAddingObjectsFromArray:[[visibleStackHolder peekSubview] gestureRecognizers]];
+    allGesturesAndTopTwoPages = [allGesturesAndTopTwoPages arrayByAddingObjectsFromArray:[[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]] gestureRecognizers]];
+    for(UIGestureRecognizer* gesture in allGesturesAndTopTwoPages){
         UIGestureRecognizerState st = gesture.state;
         NSLog(@"%@ %d", NSStringFromClass([gesture class]), st);
         if([gesture respondsToSelector:@selector(validTouches)]){

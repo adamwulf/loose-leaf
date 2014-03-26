@@ -26,6 +26,7 @@
 @synthesize uuid;
 @synthesize unitShadowPath;
 @synthesize originalUnscaledBounds;
+@synthesize panGesture;
 
 - (id)initWithFrame:(CGRect)frame{
     return [self initWithFrame:frame andUUID:[NSString createStringUUID]];

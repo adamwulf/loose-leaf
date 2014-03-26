@@ -722,7 +722,7 @@
  * depending on where they drag a page
  */
 -(CGRect) isBeginning:(BOOL)isBeginningGesture toPanAndScalePage:(MMPaperView *)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withTouches:(NSArray*)touches{
-    
+
     BOOL isPanningTopPage = page == [visibleStackHolder peekSubview];
 
     if(page == [visibleStackHolder.subviews objectAtIndex:0]){
@@ -932,9 +932,10 @@
             // we're bezeling a page left.
             // instead just bounce the top page
             NSLog(@"graaceful fail: trying to bezel left, but nothing in the bezel holder. realigning stack.");
-            [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
-            [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
-            [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:nil];
+            [self willChangeTopPageTo:[hiddenStackHolder peekSubview]];
+            [self popHiddenStackForPages:1 onComplete:^(BOOL completed){
+                page.frame = self.bounds;
+            }];
         }
         return;
     }else if(justFinishedPanningTheTopPage && [setOfPagesBeingPanned count]){

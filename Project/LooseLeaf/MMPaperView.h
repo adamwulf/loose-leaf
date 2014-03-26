@@ -42,6 +42,7 @@
 @property (nonatomic, readonly) NSInteger numberOfTimesExitedBezel;
 @property (nonatomic, readonly) UILabel* textLabel;
 @property (nonatomic, assign) BOOL isBrandNewPage;
+@property (nonatomic, readonly) MMPanAndPinchGestureRecognizer* panGesture;
 
 // read only props
 @property (nonatomic, readonly) CGRect originalUnscaledBounds;
