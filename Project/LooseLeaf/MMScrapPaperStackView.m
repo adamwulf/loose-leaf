@@ -577,15 +577,20 @@ int skipAll = NO;
 -(void) endStretchWithoutSplittingScrap:(MMScrapView*)scrap atNormalPoint:(CGPoint)np{
     // check the gestures first to see if they're still alive,
     // and give the scrap back if possible.
+    NSSet* validTouches = [NSSet setWithArray:[stretchScrapGesture validTouches]];
     if(panAndPinchScrapGesture.scrap == scrap){
         // gesture 1 owns it, so give it back and turn gesture 2 back on
+        [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:validTouches];
         [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[stretchScrapGesture validTouches] withAnchor:np];
         [panAndPinchScrapGesture2 begin];
     }else if(panAndPinchScrapGesture2.scrap == scrap){
         // gesture 2 owns it, so give it back and turn gesture 1 back on
+        [panAndPinchScrapGesture relinquishOwnershipOfTouches:validTouches];
         [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture2 withTouches:[stretchScrapGesture validTouches] withAnchor:np];
         [panAndPinchScrapGesture begin];
     }else{
+        [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:validTouches];
+        [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:validTouches];
         // otherwise, unpause both gestures and just
         // put the scrap back into the page
         [panAndPinchScrapGesture begin];
