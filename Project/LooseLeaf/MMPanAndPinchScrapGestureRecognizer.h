@@ -62,6 +62,7 @@
 -(void) giveUpScrap;
 -(void) cancel;
 -(void) blessTouches:(NSSet*)touches;
+-(void) forceBlessTouches:(NSSet*)touches forScrap:(MMScrapView*)_scrap;
 
 -(NSArray*) possibleTouches;
 -(NSArray*) ignoredTouches;

@@ -606,7 +606,7 @@ int skipAll = NO;
 
     // bless the touches so that the pan gesture
     // can pick them up
-    [panScrapGesture blessTouches:[NSSet setWithArray:touches]];
+    [panScrapGesture forceBlessTouches:[NSSet setWithArray:touches] forScrap:scrap];
     
     // now that we've calcualted the current position for our
     // reference anchor point, we should now adjust our anchor
@@ -639,67 +639,37 @@ int skipAll = NO;
 }
 
 
+-(void) outputGestureTouchOwnership:(NSString*) prefix gesture:(MMPanAndPinchScrapGestureRecognizer*)gesture{
+    NSString* validOut = @"valid:";
+    for (UITouch* t in gesture.validTouches) {
+        validOut = [validOut stringByAppendingFormat:@" %p", t];
+    }
+    NSString* possibleOut = @"possible:";
+    for (UITouch* t in gesture.possibleTouches) {
+        possibleOut = [possibleOut stringByAppendingFormat:@" %p", t];
+    }
+    NSString* ignoredOut = @"ignored:";
+    for (UITouch* t in gesture.ignoredTouches) {
+        ignoredOut = [ignoredOut stringByAppendingFormat:@" %p", t];
+    }
+    NSLog(@"%@ (%p) knows about:\n%@\n%@\n%@ ", prefix, gesture, validOut, possibleOut, ignoredOut);
+}
+
+
 // time to duplicate the scraps! it's been pulled into two pieces
 -(void) endStretchBySplittingScrap:(MMScrapView*)scrap toTouches:(NSOrderedSet*)touches1 atNormalPoint:(CGPoint)np1
                      andTouches:(NSOrderedSet*)touches2  atNormalPoint:(CGPoint)np2{
-    
-    
-    NSLog(@"before set check");
-    if([panAndPinchScrapGesture.validTouches count] >= 2){
-        NSLog(@"gesture 1 owns %p %p", [panAndPinchScrapGesture.validTouches objectAtIndex:0], [panAndPinchScrapGesture.validTouches objectAtIndex:1]);
-    }
     NSLog(@"gesture 1 gets %p %p", [touches1 firstObject], [touches1 lastObject]);
-    if([panAndPinchScrapGesture2.validTouches count] >= 2){
-        NSLog(@"gesture 2 owns %p %p", [panAndPinchScrapGesture2.validTouches objectAtIndex:0], [panAndPinchScrapGesture2.validTouches objectAtIndex:1]);
-    }
     NSLog(@"gesture 2 gets %p %p", [touches2 firstObject], [touches2 lastObject]);
-    
-    
-    
-    if([panAndPinchScrapGesture2.validTouches count] >= 2 &&
-       [[touches1 set] isSubsetOfSet:[NSSet setWithArray:[panAndPinchScrapGesture2.validTouches subarrayWithRange:NSMakeRange(0, 2)]]]){
-        NSLog(@"************************ gotcha");
-        NSOrderedSet* swapS = touches1;
-        touches1 = touches2;
-        touches2 = swapS;
-        CGPoint swapP = np1;
-        np1 = np2;
-        np2 = swapP;
-    }else if([panAndPinchScrapGesture2.validTouches count] >= 2){
-        NSLog(@"gesture 2 %p %p != %p %p", [panAndPinchScrapGesture2.validTouches objectAtIndex:0],
-              [panAndPinchScrapGesture2.validTouches objectAtIndex:1],
-              [touches1 firstObject], [touches1 lastObject]);
-        NSLog(@"set1: %@", [NSSet setWithArray:panAndPinchScrapGesture2.validTouches]);
-        NSLog(@"set2: %@", [touches1 set]);
 
-    }
-    if([panAndPinchScrapGesture.validTouches count] >= 2 &&
-       [[touches2 set] isSubsetOfSet:[NSSet setWithArray:[panAndPinchScrapGesture.validTouches subarrayWithRange:NSMakeRange(0, 2)]]]){
-        NSLog(@"************************ gotcha2");
-        NSOrderedSet* swapS = touches1;
-        touches1 = touches2;
-        touches2 = swapS;
-        CGPoint swapP = np1;
-        np1 = np2;
-        np2 = swapP;
-    }else if([panAndPinchScrapGesture.validTouches count] >= 2){
-        NSLog(@"gesture 1 %p %p != %p %p", [panAndPinchScrapGesture.validTouches objectAtIndex:0],
-              [panAndPinchScrapGesture.validTouches objectAtIndex:1],
-              [touches2 firstObject], [touches2 lastObject]);
-        NSLog(@"set1: %@", [NSSet setWithArray:panAndPinchScrapGesture.validTouches]);
-        NSLog(@"set2: %@", [touches2 set]);
-    }
+    [self outputGestureTouchOwnership:@"before gesture 1" gesture:panAndPinchScrapGesture];
+    [self outputGestureTouchOwnership:@"before gesture 2" gesture:panAndPinchScrapGesture2];
     
-    NSLog(@"after set check");
-    if([panAndPinchScrapGesture.validTouches count] >= 2){
-        NSLog(@"gesture 1 owns %p %p", [panAndPinchScrapGesture.validTouches objectAtIndex:0], [panAndPinchScrapGesture.validTouches objectAtIndex:1]);
-    }
-    NSLog(@"gesture 1 gets %p %p", [touches1 firstObject], [touches1 lastObject]);
-    if([panAndPinchScrapGesture2.validTouches count] >= 2){
-        NSLog(@"gesture 2 owns %p %p", [panAndPinchScrapGesture2.validTouches objectAtIndex:0], [panAndPinchScrapGesture2.validTouches objectAtIndex:1]);
-    }
-    NSLog(@"gesture 2 gets %p %p", [touches2 firstObject], [touches2 lastObject]);
+    [panAndPinchScrapGesture relinquishOwnershipOfTouches:[touches2 set]];
+    [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:[touches1 set]];
     
+    [self outputGestureTouchOwnership:@"relenquished gesture 1" gesture:panAndPinchScrapGesture];
+    [self outputGestureTouchOwnership:@"relenquished gesture 2" gesture:panAndPinchScrapGesture2];
     
     
     NSLog(@"resetting original scrap");
@@ -707,6 +677,9 @@ int skipAll = NO;
     [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[touches1 array] withAnchor:np1];
     NSLog(@"done resetting original cloned scrap");
     
+    [self outputGestureTouchOwnership:@"after 1 set gesture 1" gesture:panAndPinchScrapGesture];
+    [self outputGestureTouchOwnership:@"after 1 set gesture 2" gesture:panAndPinchScrapGesture2];
+
     if([touches1 isEqualToOrderedSet:touches2] || [touches1 isEqualToOrderedSet:[touches2 reversedOrderedSet]]){
         NSLog(@"what");
     }
@@ -743,6 +716,9 @@ int skipAll = NO;
     [self sendStretchedScrap:clonedScrap toPanGesture:panAndPinchScrapGesture2 withTouches:[touches2 array] withAnchor:np2];
     NSLog(@"done resetting original cloned scrap");
     
+    [self outputGestureTouchOwnership:@"after 2 set gesture 1" gesture:panAndPinchScrapGesture];
+    [self outputGestureTouchOwnership:@"after 2 set gesture 2" gesture:panAndPinchScrapGesture2];
+
     
     NSLog(@"scale: %f vs %f", scrap.scale, clonedScrap.scale);
     NSLog(@"rotation: %f vs %f", scrap.rotation, clonedScrap.rotation);
@@ -759,6 +735,18 @@ int skipAll = NO;
     
     NSLog(@"success? %d %p,  %d %p", [panAndPinchScrapGesture.validTouches count], panAndPinchScrapGesture.scrap,
           [panAndPinchScrapGesture2.validTouches count], panAndPinchScrapGesture2.scrap);
+    
+    
+    
+    if([panAndPinchScrapGesture.validTouches count] < 2){
+        [self outputGestureTouchOwnership:@"gesture 1 failed gesture 1" gesture:panAndPinchScrapGesture];
+        [self outputGestureTouchOwnership:@"gesture 1 failed gesture 2" gesture:panAndPinchScrapGesture2];
+    }
+    if([panAndPinchScrapGesture2.validTouches count] < 2){
+        [self outputGestureTouchOwnership:@"gesture 2 failed gesture 1" gesture:panAndPinchScrapGesture];
+        [self outputGestureTouchOwnership:@"gesture 2 failed gesture 2" gesture:panAndPinchScrapGesture2];
+    }
+    
 }
 
 

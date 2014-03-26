@@ -262,6 +262,34 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 }
 
 
+
+
+-(void) forceBlessTouches:(NSSet*)touches forScrap:(MMScrapView*)_scrap{
+    // force scrap to the input, and force
+    // input touches to valid
+    scrap = _scrap;
+    [validTouches addObjectsInSet:touches];
+    [possibleTouches removeObjectsInSet:touches];
+    [ignoredTouches removeObjectsInSet:touches];
+    [self touchesBegan:touches withEvent:nil];
+    
+    
+    [self.scrapDelegate ownershipOfTouches:[validTouches set] isGesture:self];
+
+    
+    if([validTouches count] >= mmMinimumNumberOfScrapTouches){
+        [self prepareGestureToBeginFresh];
+    }else{
+        [possibleTouches addObjectsInOrderedSet:validTouches];
+        [validTouches removeAllObjects];
+        self.scrap = nil;
+    }
+}
+
+
+
+
+
 -(void) blessTouches:(NSSet*)touches{
     NSMutableSet* newPossibleTouches = [NSMutableSet setWithSet:ignoredTouches];
     [newPossibleTouches intersectSet:touches];
@@ -274,6 +302,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         [self prepareGestureToBeginFresh];
     }else{
         [possibleTouches addObjectsInOrderedSet:validTouches];
+        [validTouches removeAllObjects];
         self.scrap = nil;
     }
 }
@@ -323,12 +352,21 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     }
 }
 
+-(void) say:(NSString*)prefix ISee:(NSSet*)touches{
+    NSString* str = @"";
+    for (UITouch*t in touches) {
+        str = [str stringByAppendingFormat:@" %p", t];
+    }
+    NSLog(@"%p %@ %@", self, prefix, str);
+}
+
 /**
  * the first touch of a gesture.
  * this touch may interrupt an animation on this frame, so set the frame
  * to match that of the animation.
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self say:@"began" ISee:touches];
     isShaking = NO;
     for(UITouch* touch in touches){
         [self calculateShakesForTouch:touch];
@@ -462,6 +500,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self say:@"ended" ISee:touches];
     if(paused){
         [validTouches removeObjectsInSet:touches];
         [ignoredTouches removeObjectsInSet:touches];
@@ -585,6 +624,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self say:@"cancelled" ISee:touches];
     if(paused){
         [validTouches removeObjectsInSet:touches];
         [ignoredTouches removeObjectsInSet:touches];
