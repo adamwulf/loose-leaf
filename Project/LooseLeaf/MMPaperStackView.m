@@ -1050,8 +1050,7 @@
         // send it anywhere. just exit as long
         // as we're still holding the top page
         // ============================================================================
-        MMPaperView* topPage = [visibleStackHolder peekSubview];
-        if(![topPage isBeingPannedAndZoomed]){
+        if(![[visibleStackHolder peekSubview] isBeingPannedAndZoomed]){
             //
             // TODO: log this to analytics
             //
@@ -1064,8 +1063,11 @@
             // though no fingers are touching the screen
             //
             // just realign and log
-            debug_NSLog(@"ERROR: released non-top page while top page was not held.");
-            [self realignPagesInVisibleStackExcept:nil animated:YES];
+            @throw [NSException exceptionWithName:@"InvalidPageStack" reason:@"released non-top page while top page was not held" userInfo:nil];
+            //
+            // as a backup, i think realignPagesInVisibleStackExcept:nil: would have "worked"... but hard to test
+            // so better to kill the app and debug properly.
+//            [self realignPagesInVisibleStackExcept:nil animated:YES];
         }
         return;
     }
