@@ -250,13 +250,25 @@ int skipAll = NO;
 }
 
 -(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
-    [self ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
+    if(bezelGesture.state == UIGestureRecognizerStateBegan ||
+       bezelGesture.state == UIGestureRecognizerStateChanged){
+        // we're only allowed to notify ownership of touches if those touches
+        // are still alive. if the gesture is ending/cancelled/etc, then its
+        // touches are also dying, so we shouldn't notify of ownership
+        [self ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
+    }
     [super isBezelingInLeftWithGesture:bezelGesture];
     [self forceScrapToScrapContainerDuringGesture];
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
-    [self ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
+    if(bezelGesture.state == UIGestureRecognizerStateBegan ||
+       bezelGesture.state == UIGestureRecognizerStateChanged){
+        // we're only allowed to notify ownership of touches if those touches
+        // are still alive. if the gesture is ending/cancelled/etc, then its
+        // touches are also dying, so we shouldn't notify of ownership
+        [self ownershipOfTouches:[NSSet setWithArray:bezelGesture.touches] isGesture:bezelGesture];
+    }
     [super isBezelingInRightWithGesture:bezelGesture];
     [self forceScrapToScrapContainerDuringGesture];
 }

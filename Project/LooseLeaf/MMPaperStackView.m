@@ -570,10 +570,11 @@
         // c) add correct number of pages to the bezelStackHolder
         // d) update the offset for the bezelStackHolder so they all move in tandem
         BOOL needsAnimationUpdate = bezelGesture.numberOfRepeatingBezels != [bezelStackHolder.subviews count];
-        while(bezelGesture.numberOfRepeatingBezels != [bezelStackHolder.subviews count] && [hiddenStackHolder.subviews count]){
-            //
+        while(bezelGesture.numberOfRepeatingBezels > [bezelStackHolder.subviews count] && [hiddenStackHolder.subviews count]){
+            // if we want more pages than are in the stack, then
             // we need to add another page
             [bezelStackHolder pushSubview:[hiddenStackHolder peekSubview]];
+            NSLog(@"bezel stack size: %d vs goal %d", [bezelStackHolder.subviews count], bezelGesture.numberOfRepeatingBezels);
         }
         if(needsAnimationUpdate){
             //
