@@ -32,6 +32,8 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
     UIColor* halfGreyFill = [self backgroundColor];
@@ -40,25 +42,33 @@
     
     //// Oval
     UIBezierPath* ovalPath = [self ovalPath];
-    [ovalPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.4 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.2 * CGRectGetHeight(frame))];
-    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.4 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.4 * CGRectGetHeight(frame))];
-    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.2 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.4 * CGRectGetHeight(frame))];
-    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.2 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.6 * CGRectGetHeight(frame))];
-    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.4 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.6 * CGRectGetHeight(frame))];
-    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.4 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.8 * CGRectGetHeight(frame))];
-    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.6 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.8 * CGRectGetHeight(frame))];
-    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.6 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.6 * CGRectGetHeight(frame))];
-    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.8 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.6 * CGRectGetHeight(frame))];
-    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.8 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.4 * CGRectGetHeight(frame))];
-    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.6 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.4 * CGRectGetHeight(frame))];
-    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.6 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.2 * CGRectGetHeight(frame))];
-    [ovalPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.4 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.2 * CGRectGetHeight(frame))];
-    [ovalPath closePath];
     [halfGreyFill setFill];
     [ovalPath fill];
     [darkerGreyBorder setStroke];
     ovalPath.lineWidth = 1;
     [ovalPath stroke];
+    
+    
+    
+    UIBezierPath* leftArrowIconPath = [UIBezierPath bezierPath];
+    [leftArrowIconPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.43750 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.21250 * CGRectGetHeight(frame))];
+    [leftArrowIconPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.22500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.50000 * CGRectGetHeight(frame))];
+    [leftArrowIconPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.43750 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.78750 * CGRectGetHeight(frame))];
+    [leftArrowIconPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.68750 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.78750 * CGRectGetHeight(frame))];
+    [leftArrowIconPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.43750 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.50000 * CGRectGetHeight(frame))];
+    [leftArrowIconPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.68750 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.21250 * CGRectGetHeight(frame))];
+    [leftArrowIconPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.43750 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.21250 * CGRectGetHeight(frame))];
+    [leftArrowIconPath closePath];
+
+    CGContextSetBlendMode(context, kCGBlendModeClear);
+    [[UIColor whiteColor] setFill];
+    [leftArrowIconPath fill];
+    CGContextSetBlendMode(context, kCGBlendModeNormal);
+
+    leftArrowIconPath.lineWidth = 1;
+    [darkerGreyBorder setStroke];
+    [leftArrowIconPath stroke];
+    
     
     [self drawDropshadowIfSelected];
     
