@@ -12,6 +12,7 @@
 #import "MMVector.h"
 #import "MMPanAndPinchScrapGestureRecognizer.h"
 #import "MMPanAndPinchGestureRecognizer.h"
+#import "UIGestureRecognizer+GestureDebug.h"
 
 @implementation MMStretchScrapGestureRecognizer{
     NSMutableSet* ignoredTouches;
@@ -484,15 +485,6 @@
         lowerLeftTouch = nil;
     }
 }
-
--(void) say:(NSString*)prefix ISee:(NSSet*)touches{
-    NSString* str = @"";
-    for (UITouch*t in touches) {
-        str = [str stringByAppendingFormat:@" %p", t];
-    }
-    NSLog(@"%p %@ %@", self, prefix, str);
-}
-
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     if([self.scrapDelegate panScrapRequiresLongPress] && ![possibleTouches intersectsSet:touches] &&

@@ -31,7 +31,4 @@
 
 -(CATransform3D) transformForBounceAtScale:(CGFloat) scale;
 
-
--(void) say:(NSString*)prefix ISee:(NSSet*)touches;
-
 @end

@@ -72,5 +72,4 @@
 -(void) pause;
 -(BOOL) begin;
 
--(void) say:(NSString*)prefix ISee:(NSSet*)touches;
 @end

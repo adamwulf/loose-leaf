@@ -15,6 +15,8 @@
 #import "MMStretchScrapGestureRecognizer.h"
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "NSMutableSet+Extras.h"
+#import "UIGestureRecognizer+GestureDebug.h"
+
 
 @implementation MMScrapPaperStackView{
     MMScrapBubbleContainerView* bezelScrapContainer;
@@ -200,14 +202,12 @@ int skipAll = NO;
 }
 
 -(void) drawLine{
-    NSLog(@"drawing");
     [[[visibleStackHolder peekSubview] drawableView] drawLongLine];
 }
 
 #pragma mark - Add Page
 
 -(void) addPageButtonTapped:(UIButton*)_button{
-    NSLog(@"Add Button Tapped");
     [self forceScrapToScrapContainerDuringGesture];
     [super addPageButtonTapped:_button];
 }
@@ -500,9 +500,6 @@ int skipAll = NO;
         CGAffineTransform reverseScaleTransform = CGAffineTransformMakeScale(1/pageScale, 1/pageScale);
         pageBounds = CGRectApplyAffineTransform(pageBounds, reverseScaleTransform);
 
-//        if(CGRectContainsPoint(pageBounds, scrapCenterInPage)){
-//            NSLog(@"page %@ contains scrap center", pageToDropScrap.uuid);
-//        }
         indexNum -= 1;
     }while(!CGRectContainsPoint(pageBounds, *scrapCenterInPage));
     
@@ -581,7 +578,6 @@ int skipAll = NO;
 // the stretch failed or ended before splitting, so give
 // the pan gesture back it's scrap if its still alive
 -(void) endStretchWithoutSplittingScrap:(MMScrapView*)scrap atNormalPoint:(CGPoint)np{
-    NSLog(@"endStretchWithoutSplittingScrap");
     [stretchScrapGesture say:@"ending start" ISee:[NSSet setWithArray:stretchScrapGesture.validTouches]];
     
     // check the gestures first to see if they're still alive,
@@ -600,14 +596,14 @@ int skipAll = NO;
         [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture2 withTouches:[stretchScrapGesture validTouches] withAnchor:np];
         [panAndPinchScrapGesture begin];
     }else if([stretchScrapGesture.validTouches count] >= 2){
-        NSLog(@"neither has a scrap, but i have at least 2 touches to give away");
+        // neither has a scrap, but i have at least 2 touches to give away
         [panAndPinchScrapGesture say:@"ending start" ISee:[NSSet setWithArray:panAndPinchScrapGesture.validTouches]];
         // gesture 1 owns it, so give it back and turn gesture 2 back on
         [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:validTouches];
         [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[stretchScrapGesture validTouches] withAnchor:np];
         [panAndPinchScrapGesture2 begin];
     }else{
-        NSLog(@"neither has a scrap");
+        // neither has a scrap, and i don't have enough touches to give it away
         [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:validTouches];
         [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:validTouches];
         // otherwise, unpause both gestures and just
@@ -674,7 +670,8 @@ int skipAll = NO;
 }
 
 
--(void) outputGestureTouchOwnership:(NSString*) prefix gesture:(MMPanAndPinchScrapGestureRecognizer*)gesture{
+-(void) logOutputGestureTouchOwnership:(NSString*) prefix gesture:(MMPanAndPinchScrapGestureRecognizer*)gesture{
+    return;
     NSString* validOut = @"valid:";
     for (UITouch* t in gesture.validTouches) {
         validOut = [validOut stringByAppendingFormat:@" %p", t];
@@ -687,37 +684,28 @@ int skipAll = NO;
     for (UITouch* t in gesture.ignoredTouches) {
         ignoredOut = [ignoredOut stringByAppendingFormat:@" %p", t];
     }
-//    NSLog(@"%@ (%p) knows about:\n%@\n%@\n%@ ", prefix, gesture, validOut, possibleOut, ignoredOut);
+    NSLog(@"%@ (%p) knows about:\n%@\n%@\n%@ ", prefix, gesture, validOut, possibleOut, ignoredOut);
 }
 
 
 // time to duplicate the scraps! it's been pulled into two pieces
 -(void) endStretchBySplittingScrap:(MMScrapView*)scrap toTouches:(NSOrderedSet*)touches1 atNormalPoint:(CGPoint)np1
                      andTouches:(NSOrderedSet*)touches2  atNormalPoint:(CGPoint)np2{
-    NSLog(@"\ngesture 1 gets %p %p\ngesture 2 gets %p %p", [touches1 firstObject], [touches1 lastObject], [touches2 firstObject], [touches2 lastObject]);
 
-    [self outputGestureTouchOwnership:@"before gesture 1" gesture:panAndPinchScrapGesture];
-    [self outputGestureTouchOwnership:@"before gesture 2" gesture:panAndPinchScrapGesture2];
+    [self logOutputGestureTouchOwnership:@"before gesture 1" gesture:panAndPinchScrapGesture];
+    [self logOutputGestureTouchOwnership:@"before gesture 2" gesture:panAndPinchScrapGesture2];
     
     [panAndPinchScrapGesture relinquishOwnershipOfTouches:[touches2 set]];
     [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:[touches1 set]];
     
-    [self outputGestureTouchOwnership:@"relenquished gesture 1" gesture:panAndPinchScrapGesture];
-    [self outputGestureTouchOwnership:@"relenquished gesture 2" gesture:panAndPinchScrapGesture2];
+    [self logOutputGestureTouchOwnership:@"relenquished gesture 1" gesture:panAndPinchScrapGesture];
+    [self logOutputGestureTouchOwnership:@"relenquished gesture 2" gesture:panAndPinchScrapGesture2];
     
-    
-//    NSLog(@"resetting original scrap");
-    // sending the original scrap is easy, just send it to a gesture and be done.
     [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[touches1 array] withAnchor:np1];
-//    NSLog(@"done resetting original cloned scrap");
     
-    [self outputGestureTouchOwnership:@"after 1 set gesture 1" gesture:panAndPinchScrapGesture];
-    [self outputGestureTouchOwnership:@"after 1 set gesture 2" gesture:panAndPinchScrapGesture2];
+    [self logOutputGestureTouchOwnership:@"after 1 set gesture 1" gesture:panAndPinchScrapGesture];
+    [self logOutputGestureTouchOwnership:@"after 1 set gesture 2" gesture:panAndPinchScrapGesture2];
 
-    if([touches1 isEqualToOrderedSet:touches2] || [touches1 isEqualToOrderedSet:[touches2 reversedOrderedSet]]){
-        NSLog(@"what");
-    }
-    
 
     // next, add the new scrap to the same page as the stretched scrap
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
@@ -745,42 +733,39 @@ int skipAll = NO;
     CGPoint p2 = [[touches2 objectAtIndex:1] locationInView:self];
     clonedScrap.center = AveragePoints(p1, p2);
 
-//    NSLog(@"resetting original cloned scrap");
+    // time to reset the gesture for the cloned scrap
     // now the scrap is in the right place, so hand it off to the pan gesture
     [self sendStretchedScrap:clonedScrap toPanGesture:panAndPinchScrapGesture2 withTouches:[touches2 array] withAnchor:np2];
-//    NSLog(@"done resetting original cloned scrap");
     
-    [self outputGestureTouchOwnership:@"after 2 set gesture 1" gesture:panAndPinchScrapGesture];
-    [self outputGestureTouchOwnership:@"after 2 set gesture 2" gesture:panAndPinchScrapGesture2];
+    [self logOutputGestureTouchOwnership:@"after 2 set gesture 1" gesture:panAndPinchScrapGesture];
+    [self logOutputGestureTouchOwnership:@"after 2 set gesture 2" gesture:panAndPinchScrapGesture2];
 
     
-//    NSLog(@"scale: %f vs %f", scrap.scale, clonedScrap.scale);
-//    NSLog(@"rotation: %f vs %f", scrap.rotation, clonedScrap.rotation);
-//    NSLog(@"width: %f vs %f", scrap.bounds.size.width, clonedScrap.bounds.size.width);
-//    NSLog(@"height: %f vs %f", scrap.bounds.size.height, clonedScrap.bounds.size.height);
-    if([panAndPinchScrapGesture.initialTouchVector isEqual:panAndPinchScrapGesture2.initialTouchVector]){
-        NSLog(@"what");
+    if(!panAndPinchScrapGesture.scrap || !panAndPinchScrapGesture2.scrap){
+        // sanity checks.
+        // we should never enter here
+        if([panAndPinchScrapGesture.initialTouchVector isEqual:panAndPinchScrapGesture2.initialTouchVector]){
+            NSLog(@"what");
+        }
+        
+        if(scrap.scale != clonedScrap.scale ||
+           scrap.rotation != clonedScrap.rotation){
+            NSLog(@"what");
+        }
+        
+        NSLog(@"success? %d %p,  %d %p", [panAndPinchScrapGesture.validTouches count], panAndPinchScrapGesture.scrap,
+              [panAndPinchScrapGesture2.validTouches count], panAndPinchScrapGesture2.scrap);
+
+        if([panAndPinchScrapGesture.validTouches count] < 2){
+            [self logOutputGestureTouchOwnership:@"gesture 1 failed gesture 1" gesture:panAndPinchScrapGesture];
+            [self logOutputGestureTouchOwnership:@"gesture 1 failed gesture 2" gesture:panAndPinchScrapGesture2];
+        }
+        if([panAndPinchScrapGesture2.validTouches count] < 2){
+            [self logOutputGestureTouchOwnership:@"gesture 2 failed gesture 1" gesture:panAndPinchScrapGesture];
+            [self logOutputGestureTouchOwnership:@"gesture 2 failed gesture 2" gesture:panAndPinchScrapGesture2];
+        }
+        @throw [NSException exceptionWithName:@"DroppedSplitScrap" reason:@"split scrap was dropped by pan gestures" userInfo:nil];
     }
-    
-    if(scrap.scale != clonedScrap.scale ||
-       scrap.rotation != clonedScrap.rotation){
-        NSLog(@"what");
-    }
-    
-    NSLog(@"success? %d %p,  %d %p", [panAndPinchScrapGesture.validTouches count], panAndPinchScrapGesture.scrap,
-          [panAndPinchScrapGesture2.validTouches count], panAndPinchScrapGesture2.scrap);
-    
-    
-    
-    if([panAndPinchScrapGesture.validTouches count] < 2){
-        [self outputGestureTouchOwnership:@"gesture 1 failed gesture 1" gesture:panAndPinchScrapGesture];
-        [self outputGestureTouchOwnership:@"gesture 1 failed gesture 2" gesture:panAndPinchScrapGesture2];
-    }
-    if([panAndPinchScrapGesture2.validTouches count] < 2){
-        [self outputGestureTouchOwnership:@"gesture 2 failed gesture 1" gesture:panAndPinchScrapGesture];
-        [self outputGestureTouchOwnership:@"gesture 2 failed gesture 2" gesture:panAndPinchScrapGesture2];
-    }
-    
 }
 
 
@@ -908,8 +893,6 @@ int skipAll = NO;
 #pragma mark - MMScapBubbleContainerViewDelegate
 
 -(void) didAddScrapToBezelSidebar:(MMScrapView *)scrap{
-    // noop
-    NSLog(@"added a scrap to bezel");
     [bezelScrapContainer saveToDisk];
 }
 
