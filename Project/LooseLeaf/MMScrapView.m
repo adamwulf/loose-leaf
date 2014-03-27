@@ -153,10 +153,10 @@
 //        self.layer.borderWidth = 1;
 //        self.alpha = .5;
     }
-    CALayer* cornerTag = [CALayer layer];
-    cornerTag.bounds = CGRectMake(10, 10, 10, 10);
-    cornerTag.backgroundColor = [UIColor redColor].CGColor;
-    [self.layer addSublayer:cornerTag];
+//    CALayer* cornerTag = [CALayer layer];
+//    cornerTag.bounds = CGRectMake(10, 10, 10, 10);
+//    cornerTag.backgroundColor = [UIColor redColor].CGColor;
+//    [self.layer addSublayer:cornerTag];
     
     return self;
 }
