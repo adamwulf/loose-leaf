@@ -11,6 +11,7 @@
 #import "NSArray+Map.h"
 #import "MMBlockOperation.h"
 #import "MMScrappedPaperView.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 
 @implementation MMStackManager
 
@@ -27,14 +28,12 @@
 }
 
 -(NSString*) visiblePlistPath{
-    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString* documentsPath = [paths objectAtIndex:0];
+    NSString* documentsPath = [NSFileManager documentsPath];
     return [[documentsPath stringByAppendingPathComponent:@"visiblePages"] stringByAppendingPathExtension:@"plist"];
 }
 
 -(NSString*) hiddenPlistPath{
-    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString* documentsPath = [paths objectAtIndex:0];
+    NSString* documentsPath = [NSFileManager documentsPath];
     return [[documentsPath stringByAppendingPathComponent:@"hiddenPages"] stringByAppendingPathExtension:@"plist"];
 }
 
@@ -74,6 +73,8 @@
     NSArray* visiblePagesToCreate = [[NSArray alloc] initWithContentsOfFile:[self visiblePlistPath]];
     NSArray* hiddenPagesToCreate = [[NSArray alloc] initWithContentsOfFile:[self hiddenPlistPath]];
     
+    NSLog(@"starting up with %d visible and %d hidden", [visiblePagesToCreate count], [hiddenPagesToCreate count]);
+
     NSMutableArray* visiblePages = [NSMutableArray array];
     NSMutableArray* hiddenPages = [NSMutableArray array];
     

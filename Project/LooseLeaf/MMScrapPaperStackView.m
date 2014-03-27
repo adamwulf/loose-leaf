@@ -16,7 +16,7 @@
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "NSMutableSet+Extras.h"
 #import "UIGestureRecognizer+GestureDebug.h"
-
+#import "NSFileManager+DirectoryOptimizations.h"
 
 @implementation MMScrapPaperStackView{
     MMScrapBubbleContainerView* bezelScrapContainer;

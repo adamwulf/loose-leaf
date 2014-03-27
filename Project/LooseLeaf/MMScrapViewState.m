@@ -10,6 +10,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMLoadImageCache.h"
 #import <DrawKit-iOS/DrawKit-iOS.h>
+#import "NSFileManager+DirectoryOptimizations.h"
 
 #define kScrapShadowBufferSize 4
 
@@ -355,8 +356,7 @@
 #pragma mark - Private
 
 +(NSString*) scrapDirectoryPathForUUID:(NSString*)uuid{
-    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString* documentsPath = [paths objectAtIndex:0];
+    NSString* documentsPath = [NSFileManager documentsPath];
     NSString* scrapPath = [[documentsPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
     return scrapPath;
 }
@@ -364,9 +364,7 @@
 -(NSString*) scrapPath{
     if(!scrapPath){
         scrapPath = [MMScrapViewState scrapDirectoryPathForUUID:uuid];
-        if(![[NSFileManager defaultManager] fileExistsAtPath:scrapPath]){
-            [[NSFileManager defaultManager] createDirectoryAtPath:scrapPath withIntermediateDirectories:YES attributes:nil error:nil];
-        }
+        [NSFileManager ensureDirectoryExistsAtPath:scrapPath];
     }
     return scrapPath;
 }

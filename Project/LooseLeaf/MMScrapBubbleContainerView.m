@@ -14,6 +14,7 @@
 #import "MMScrapsOnPaperState.h"
 #import "MMImmutableScrapsOnPaperState.h"
 #import <UIKit/UIGestureRecognizerSubclass.h>
+#import "NSFileManager+DirectoryOptimizations.h"
 
 #define kMaxScrapsInBezel 6
 
@@ -87,13 +88,9 @@
 
 -(NSString*) scrapIDsPath{
     if(!scrapIDsPath){
-        NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString* documentsPath = [paths objectAtIndex:0];
+        NSString* documentsPath = [NSFileManager documentsPath];
         NSString* pagesPath = [documentsPath stringByAppendingPathComponent:@"Bezel"];
-        
-        if(![[NSFileManager defaultManager] fileExistsAtPath:pagesPath]){
-            [[NSFileManager defaultManager] createDirectoryAtPath:pagesPath withIntermediateDirectories:YES attributes:nil error:nil];
-        }
+        [NSFileManager ensureDirectoryExistsAtPath:pagesPath];
         scrapIDsPath = [[pagesPath stringByAppendingPathComponent:@"scrapIDs"] stringByAppendingPathExtension:@"plist"];
     }
     return scrapIDsPath;
@@ -451,14 +448,10 @@ static NSString* bezelStatePath;
 
 +(NSString*) pathToPlist{
     if(!bezelStatePath){
-        NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString* documentsPath = [paths objectAtIndex:0];
+        NSString* documentsPath = [NSFileManager documentsPath];
         NSString* bezelStateDirectory = [documentsPath stringByAppendingPathComponent:@"BezelState"];
         
-        if(![[NSFileManager defaultManager] fileExistsAtPath:bezelStateDirectory]){
-            [[NSFileManager defaultManager] createDirectoryAtPath:bezelStateDirectory withIntermediateDirectories:YES attributes:nil error:nil];
-        }
-        
+        [NSFileManager ensureDirectoryExistsAtPath:bezelStateDirectory];
         bezelStatePath = [[bezelStateDirectory stringByAppendingPathComponent:@"info"] stringByAppendingPathExtension:@"plist"];
     }
     return bezelStatePath;

@@ -13,6 +13,7 @@
 #import "MMScrappedPaperView.h"
 #import "MMScrapBubbleButton.h"
 #import "MMTouchVelocityGestureRecognizer.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 
 @implementation MMEditablePaperStackView{
     MMEditablePaperView* currentEditablePage;
@@ -26,6 +27,9 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+
+        [[NSFileManager defaultManager] preCacheDirectoryListingAt:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Pages"]];
+        
 
         self.delegate = self;
         

@@ -14,6 +14,7 @@
 #import "TestFlight.h"
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import "DKUIBezierPathClippedSegment+PathElement.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 
 dispatch_queue_t importThumbnailQueue;
 
@@ -467,13 +468,9 @@ static int count = 0;
 
 -(NSString*) pagesPath{
     if(!pagesPath){
-        NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString* documentsPath = [paths objectAtIndex:0];
+        NSString* documentsPath = [NSFileManager documentsPath];
         pagesPath = [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:[self uuid]];
-        
-        if(![[NSFileManager defaultManager] fileExistsAtPath:pagesPath]){
-            [[NSFileManager defaultManager] createDirectoryAtPath:pagesPath withIntermediateDirectories:YES attributes:nil error:nil];
-        }
+        [NSFileManager ensureDirectoryExistsAtPath:pagesPath];
     }
     return pagesPath;
 }

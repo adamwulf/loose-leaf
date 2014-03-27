@@ -138,6 +138,7 @@
 		66DCFBCD1582BAED00B4918C /* MMPaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBCC1582BAED00B4918C /* MMPaperView.m */; };
 		66DCFBDF1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBDE1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DF0B7D159BC30200C5C652 /* UIView+Animations.m */; };
+		66E769CE18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E769CD18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m */; };
 		66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E88A361591853E001A6EBF /* MMPapersIcon.m */; };
 		66EDA79617CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDA79517CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m */; };
 		66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -414,6 +415,8 @@
 		66DCFBDE1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchGestureRecognizer.m; sourceTree = "<group>"; };
 		66DF0B7C159BC30200C5C652 /* UIView+Animations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Animations.h"; sourceTree = "<group>"; };
 		66DF0B7D159BC30200C5C652 /* UIView+Animations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Animations.m"; sourceTree = "<group>"; };
+		66E769CC18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+DirectoryOptimizations.h"; sourceTree = "<group>"; };
+		66E769CD18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+DirectoryOptimizations.m"; sourceTree = "<group>"; };
 		66E88A351591853E001A6EBF /* MMPapersIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPapersIcon.h; sourceTree = "<group>"; };
 		66E88A361591853E001A6EBF /* MMPapersIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPapersIcon.m; sourceTree = "<group>"; };
 		66EDA79417CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchScrapGestureRecognizer.h; sourceTree = "<group>"; };
@@ -505,6 +508,8 @@
 				66DF0B7D159BC30200C5C652 /* UIView+Animations.m */,
 				66A3921617CC4EE000B4974D /* NSArray+Extras.h */,
 				66A3921717CC4EE000B4974D /* NSArray+Extras.m */,
+				66E769CC18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.h */,
+				66E769CD18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -1272,6 +1277,7 @@
 				665C593417BD7C42006DECBF /* Tool.m in Sources */,
 				6693297E1599196E0033E557 /* UIFont+UIBezierCurve.m in Sources */,
 				66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */,
+				66E769CE18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m in Sources */,
 				664C62F015A36DA40072736A /* MMListPaperStackView.m in Sources */,
 				6640E6D917E390BE00EB3F7D /* MMTouchVelocityGestureRecognizer.m in Sources */,
 				66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */,
