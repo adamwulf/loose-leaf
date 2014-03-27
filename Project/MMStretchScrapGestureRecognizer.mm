@@ -485,6 +485,15 @@
     }
 }
 
+-(void) say:(NSString*)prefix ISee:(NSSet*)touches{
+    NSString* str = @"";
+    for (UITouch*t in touches) {
+        str = [str stringByAppendingFormat:@" %p", t];
+    }
+    NSLog(@"%p %@ %@", self, prefix, str);
+}
+
+
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     if([self.scrapDelegate panScrapRequiresLongPress] && ![possibleTouches intersectsSet:touches] &&
        !pinchScrapGesture1.scrap && !pinchScrapGesture2.scrap){
@@ -498,6 +507,7 @@
         [possibleTouches addObject:touch];
     }];
     [self updateState];
+    [self say:@"sbegan" ISee:touches];
 }
 
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -516,6 +526,7 @@
         [pinchScrapGesture2 relinquishOwnershipOfTouches:touches];
     }
     [self updateState];
+    [self say:@"scancelled" ISee:touches];
 }
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -530,6 +541,7 @@
         [pinchScrapGesture2 relinquishOwnershipOfTouches:touches];
     }
     [self updateState];
+    [self say:@"sended" ISee:touches];
 }
 
 
