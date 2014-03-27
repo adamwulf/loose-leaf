@@ -14,12 +14,14 @@
 #import "MMScrapBubbleButton.h"
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMSidebarImagePicker.h"
 
 @implementation MMEditablePaperStackView{
     MMEditablePaperView* currentEditablePage;
     JotView* drawableView;
     NSMutableArray* stateLoadedPages;
     UIPopoverController* jotTouchPopover;
+    MMSidebarImagePicker* imagePicker;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -92,7 +94,7 @@
         
         insertImageButton = [[MMImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         insertImageButton.delegate = self;
-        [insertImageButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [insertImageButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:insertImageButton];
         
         
@@ -178,7 +180,6 @@
         pencilTool.selected = YES;
         handButton.selected = YES;
         
-        insertImageButton.enabled = NO;
         shareButton.enabled = NO;
         
         [NSThread performBlockInBackground:^{
@@ -199,6 +200,11 @@
         
         [[MMDrawingTouchGestureRecognizer sharedInstace] setTouchDelegate:self];
         [self addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstace]];
+        
+        CGRect imagePickerBounds = self.bounds;
+        imagePickerBounds.size.width = ceilf(imagePickerBounds.size.width / 2);
+        imagePicker = [[MMSidebarImagePicker alloc] initWithFrame:imagePickerBounds forButton:insertImageButton];
+        [self addSubview:imagePicker];
 
     }
     return self;
@@ -338,6 +344,14 @@
         settingsButton.alpha = visible;
     }];
 }
+
+#pragma mark - Image Import
+
+-(void) insertImageButtonTapped:(UIButton*)_button{
+    
+}
+
+
 
 #pragma mark - MMRotationManagerDelegate
 
