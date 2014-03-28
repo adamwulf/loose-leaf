@@ -8,7 +8,6 @@
 
 #import "MMScrapPaperStackView.h"
 #import "MMScrapContainerView.h"
-#import "MMScrapBubbleButton.h"
 #import "MMScrapBubbleContainerView.h"
 #import "MMDebugDrawView.h"
 #import "MMTouchVelocityGestureRecognizer.h"

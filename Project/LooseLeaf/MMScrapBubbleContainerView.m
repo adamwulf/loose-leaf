@@ -319,6 +319,7 @@
                     otherBubble.center = [self centerForBubbleAtIndex:index];
                     index++;
                     if([scrapsHeldInBezel count] <= kMaxScrapsInBezel){
+                        otherBubble.scrap = otherBubble.scrap; // reset it
                         otherBubble.alpha = 1;
                     }
                 }

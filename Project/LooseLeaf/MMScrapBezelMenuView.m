@@ -61,14 +61,15 @@
     // TODO: add caching / optimize
     
     NSInteger index = 0;
+    CGFloat height = sizeOfBuffer;
     for (MMScrapView* scrap in [self.delegate.scraps reverseObjectEnumerator]) {
         CGFloat x = 0;
-        CGFloat y = index * (sizeOfScrap + sizeOfBuffer) + sizeOfBuffer;
-        MMScrapMenuButton* imgV = [[MMScrapMenuButton alloc] initWithFrame:CGRectMake(x, y, sizeOfScrap, sizeOfScrap)];
+        MMScrapMenuButton* imgV = [[MMScrapMenuButton alloc] initWithFrame:CGRectMake(x, height, sizeOfScrap, sizeOfScrap)];
         [imgV addTarget:self action:@selector(tappedOnScrapButton:) forControlEvents:UIControlEventTouchUpInside];
         imgV.scrap = scrap;
         [scrollView addSubview:imgV];
         index++;
+        height += imgV.bounds.size.height + sizeOfBuffer;
     }
 }
 

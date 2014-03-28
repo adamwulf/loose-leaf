@@ -23,19 +23,66 @@
     return self;
 }
 
+
++(CGFloat) scaleOfRowForScrap:(MMScrapView*)scrap forWidth:(CGFloat)width{
+    CGFloat maxDim = MAX(scrap.frame.size.width, scrap.frame.size.height);
+    return width / maxDim;
+}
+
++(CGSize) sizeOfRowForScrap:(MMScrapView*)scrap forWidth:(CGFloat)width{
+    CGFloat scale = [MMScrapMenuButton scaleOfRowForScrap:scrap forWidth:width];
+    CGSize s = CGSizeMake(scrap.frame.size.width * scale, scrap.frame.size.height*scale);
+    if(s.width < s.height){
+        s.width = s.height;
+    }
+    return s;
+}
+
 -(void) setScrap:(MMScrapView *)_scrap{
     scrap = _scrap;
     
-    CGAffineTransform transform = CGAffineTransformIdentity;
-    transform = CGAffineTransformConcat(transform, CGAffineTransformMakeRotation(scrap.rotation));
-    CGFloat scale = (self.bounds.size.width - 10) / MAX(scrap.bounds.size.width, scrap.bounds.size.height);
-    transform = CGAffineTransformConcat(transform, CGAffineTransformMakeScale(scale, scale));
-    scrap.transform = transform;
+    CGRect fr = self.frame;
+    fr.size = [MMScrapMenuButton sizeOfRowForScrap:scrap forWidth:self.bounds.size.width];
+    self.frame = fr;
     
-    [self addSubview:scrap];
+    // remove anything in our button
+    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
+    // reset scrap to it's normal transform
+    scrap.scale = scrap.scale;
+    
+    UIView* transformView = [[UIView alloc] initWithFrame:scrap.bounds];
+    
+    [transformView addSubview:scrap];
+    scrap.center = transformView.center;
+    
+    [self addSubview:transformView];
+    CGFloat scale = [MMScrapMenuButton scaleOfRowForScrap:scrap forWidth:self.bounds.size.width];
+    transformView.transform = CGAffineTransformMakeScale(scale, scale);
+    transformView.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
+
+    [self addSubview:transformView];
     
     [self setNeedsDisplay];
 }
 
+
+#pragma mark - Touch Ownership
+
+/**
+ * these two methods make sure that this scrap container view
+ * can never intercept any touch input. instead it will
+ * effectively pass through this view to the views behind it
+ */
+-(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+    if([super hitTest:point withEvent:event]){
+        return self;
+    }
+    return nil;
+}
+
+-(BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
+    return [super pointInside:point withEvent:event];
+}
 
 @end
