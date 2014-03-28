@@ -34,6 +34,10 @@
     [super setTransform:transform];
 }
 
+-(void) setAlpha:(CGFloat)alpha{
+    [super setAlpha:alpha];
+}
+
 
 - (void)drawRect:(CGRect)rect
 {

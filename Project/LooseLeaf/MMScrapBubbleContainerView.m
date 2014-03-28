@@ -218,10 +218,9 @@
             bubble.scale = 1;
             [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                 // animate the scrap into position
+                countButton.alpha = 1;
                 for(MMScrapBubbleButton* bubble in self.subviews){
-                    if(bubble == countButton){
-                        bubble.alpha = 1;
-                    }else if([bubble isKindOfClass:[MMScrapBubbleButton class]]){
+                    if([bubble isKindOfClass:[MMScrapBubbleButton class]]){
                         bubble.alpha = 0;
                         bubble.center = countButton.center;
                     }
@@ -258,10 +257,9 @@
             bubble.scrap = scrap;
         }else{
             [countButton setCount:[scrapsHeldInBezel count] - 1];
+            countButton.alpha = 1;
             for(MMScrapBubbleButton* bubble in self.subviews){
-                if(bubble == countButton){
-                    bubble.alpha = 1;
-                }else if([bubble isKindOfClass:[MMScrapBubbleButton class]]){
+                if([bubble isKindOfClass:[MMScrapBubbleButton class]]){
                     bubble.alpha = 0;
                     bubble.center = countButton.center;
                 }
@@ -330,9 +328,10 @@
                         otherBubble.alpha = 1;
                     }
                 }
-            }else if(otherBubble == countButton && [scrapsHeldInBezel count] <= kMaxScrapsInBezel){
-                countButton.alpha = 0;
             }
+        }
+        if([scrapsHeldInBezel count] <= kMaxScrapsInBezel){
+            countButton.alpha = 0;
         }
     } completion:^(BOOL finished){
         [bubble removeFromSuperview];
