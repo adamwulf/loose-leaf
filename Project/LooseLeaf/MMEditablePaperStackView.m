@@ -202,6 +202,7 @@
         [self addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstace]];
         
         imagePicker = [[MMSlidingSidebarView alloc] initWithFrame:self.bounds forButton:insertImageButton animateFromLeft:YES];
+        imagePicker.delegate = self;
         [imagePicker hide:NO];
         [self addSubview:imagePicker];
 
@@ -281,6 +282,7 @@
 
 
 -(void) insertImageButtonTapped:(UIButton*)_button{
+    [self setButtonsVisible:NO withDuration:0.15];
     [imagePicker show:YES];
 }
 
@@ -330,7 +332,11 @@
 }
 
 -(void) setButtonsVisible:(BOOL)visible{
-    [UIView animateWithDuration:0.3 animations:^{
+    [self setButtonsVisible:visible withDuration:0.3];
+}
+
+-(void) setButtonsVisible:(BOOL)visible withDuration:(CGFloat)duration{
+    [UIView animateWithDuration:duration animations:^{
         addPageSidebarButton.alpha = visible;
         documentBackgroundSidebarButton.alpha = visible;
         polylineButton.alpha = visible;
@@ -885,5 +891,12 @@
     }
     return YES;
 }
+
+#pragma mark - MMSidebarImagePickerDelegate
+
+-(void) sidebarCloseButtonWasTapped{
+    [self setButtonsVisible:YES];
+}
+
 
 @end

@@ -9,9 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "MMSidebarButton.h"
 #import "MMSlidingSidebarContentView.h"
-#import "MMSidebarImagePickerDelegate.h"
+#import "MMSlidingSidebarViewDelegate.h"
 
-@interface MMSlidingSidebarView : UIView<MMSlidingSidebarContentViewDelegate>
+@interface MMSlidingSidebarView : UIView<MMSlidingSidebarViewDelegate>{
+    __weak NSObject<MMSlidingSidebarViewDelegate>* delegate;
+}
+
+@property (nonatomic, weak) NSObject<MMSlidingSidebarViewDelegate>* delegate;
 
 - (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft;
 

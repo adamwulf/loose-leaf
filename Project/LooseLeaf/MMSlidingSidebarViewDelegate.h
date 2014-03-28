@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol MMSlidingSidebarContentViewDelegate <NSObject>
+@protocol MMSlidingSidebarViewDelegate <NSObject>
 
 -(void) sidebarCloseButtonWasTapped;
 

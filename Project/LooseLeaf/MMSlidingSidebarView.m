@@ -9,13 +9,15 @@
 #import "MMSlidingSidebarView.h"
 #import "UIView+Animations.h"
 
-#define kAnimationDuration 3
+#define kAnimationDuration 0.3
 
 @implementation MMSlidingSidebarView{
     MMSlidingSidebarContentView* sidebarContentView;
     UIButton* dismissButton;
     BOOL directionIsFromLeft;
 }
+
+@synthesize delegate;
 
 - (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft{
     self = [super initWithFrame:frame];
@@ -28,7 +30,7 @@
         // handle any touches not in the sidebar
         dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
         dismissButton.frame = self.bounds;
-        [dismissButton addTarget:self action:@selector(hide:) forControlEvents:UIControlEventTouchUpInside];
+        [dismissButton addTarget:self action:@selector(sidebarCloseButtonWasTapped) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:dismissButton];
         
         // the sidebar content view will hold all of the content and menus
@@ -192,6 +194,7 @@
 
 -(void) sidebarCloseButtonWasTapped{
     [self hide:YES];
+    [self.delegate sidebarCloseButtonWasTapped];
 }
 
 
