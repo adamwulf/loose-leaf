@@ -9,16 +9,21 @@
 #import "MMImagePicker.h"
 #import "UIView+Animations.h"
 
+#define kAnimationDuration 3
 
 @implementation MMImagePicker{
     MMSidebarImagePicker* sidebar;
     UIButton* dismissButton;
+    BOOL directionIsFromLeft;
 }
 
 - (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button
 {
     self = [super initWithFrame:frame];
     if (self) {
+        
+        directionIsFromLeft = NO;
+        
         // Initialization code
         dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
         dismissButton.frame = self.bounds;
@@ -27,7 +32,7 @@
         
         CGRect imagePickerBounds = self.bounds;
         imagePickerBounds.size.width = ceilf(imagePickerBounds.size.width / 2) + 2*kBounceWidth;
-        sidebar = [[MMSidebarImagePicker alloc] initWithFrame:imagePickerBounds forButton:_button];
+        sidebar = [[MMSidebarImagePicker alloc] initWithFrame:imagePickerBounds forButton:_button animateFromLeft:directionIsFromLeft];
         sidebar.delegate = self;
         [self addSubview:sidebar];
         
@@ -52,12 +57,16 @@
         dismissButton.alpha = 0;
         CGRect imagePickerBounds = self.bounds;
         imagePickerBounds.size.width = ceilf(imagePickerBounds.size.width / 2) + 2*kBounceWidth;
-        imagePickerBounds.origin.x = -imagePickerBounds.size.width;
+        if(directionIsFromLeft){
+            imagePickerBounds.origin.x = -imagePickerBounds.size.width;
+        }else{
+            imagePickerBounds.origin.x = self.bounds.size.width;
+        }
         sidebar.frame = imagePickerBounds;
     };
     
     if(animated){
-        [UIView animateWithDuration:.3 animations:hideBlock];
+        [UIView animateWithDuration:kAnimationDuration animations:hideBlock];
     }else{
         hideBlock();
     }
@@ -71,7 +80,7 @@
     
     if(animated){
         [CATransaction begin];
-        CGFloat duration = .3;
+        
         ////////////////////////////////////////////////////////
         // Animate the sidebar!
 
@@ -81,14 +90,21 @@
                                     [NSNumber numberWithFloat:0.0],
                                     [NSNumber numberWithFloat:0.7],
                                     [NSNumber numberWithFloat:.95], nil];
-        bounceAnimation.values = [NSArray arrayWithObjects:
-                                  [NSValue valueWithCGPoint:CGPointMake(-sidebar.frame.size.width, 0)],
-                                  [NSValue valueWithCGPoint:CGPointMake(0, 0)],
-                                  [NSValue valueWithCGPoint:CGPointMake(-kBounceWidth, 0)], nil];
+        if(directionIsFromLeft){
+            bounceAnimation.values = [NSArray arrayWithObjects:
+                                      [NSValue valueWithCGPoint:CGPointMake(-sidebar.frame.size.width, 0)],
+                                      [NSValue valueWithCGPoint:CGPointMake(0, 0)],
+                                      [NSValue valueWithCGPoint:CGPointMake(-kBounceWidth, 0)], nil];
+        }else{
+            bounceAnimation.values = [NSArray arrayWithObjects:
+                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width, 0)],
+                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-sidebar.frame.size.width, 0)],
+                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-sidebar.frame.size.width+kBounceWidth, 0)], nil];
+        }
         bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
                                            [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut],
                                            [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn], nil];
-        bounceAnimation.duration = duration;
+        [bounceAnimation setDuration:kAnimationDuration];
 
         
         ////////////////////////////////////////////////////////
@@ -97,10 +113,12 @@
         CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
         opacityAnimation.removedOnCompletion = YES;
         [opacityAnimation setToValue:[NSNumber numberWithFloat:0.0]];
-        [opacityAnimation setDuration:duration];
+        [opacityAnimation setDuration:kAnimationDuration];
 
+        ////////////////////////////////////////////////////////
+        // Animate bounce of sidebar button
         
-        [sidebar bounceAnimationForButtonWithDuration:duration];
+        [sidebar bounceAnimationForButtonWithDuration:kAnimationDuration];
         
         ///////////////////////////////////////////////
         // Add the animations to the layers
@@ -115,7 +133,11 @@
     hideBlock();
     
     CGRect fr = sidebar.frame;
-    fr.origin = CGPointMake(-kBounceWidth, 0);
+    if(directionIsFromLeft){
+        fr.origin = CGPointMake(-kBounceWidth, 0);
+    }else{
+        fr.origin = CGPointMake(self.bounds.size.width-sidebar.frame.size.width+kBounceWidth, 0);
+    }
     sidebar.frame = fr;
 }
 

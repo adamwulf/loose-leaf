@@ -19,8 +19,8 @@
 
 @property (nonatomic, weak) NSObject<MMSidebarImagePickerDelegate>* delegate;
 
-- (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)button;
+- (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft;
 
-- (void)bounceAnimationForButtonWithDuration:(CGFloat)duration;
+- (void)bounceAnimationForButtonWithDuration:(CGFloat)animationDuration;
 
 @end

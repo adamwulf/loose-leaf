@@ -14,16 +14,18 @@
     MMSidebarButton* referenceButton;
     MMLeftCloseButton* closeButton;
     CGFloat borderSize;
+    BOOL directionIsFromLeft;
 }
 
 @synthesize delegate;
 
-- (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button
+- (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft
 {
     self = [super initWithFrame:frame];
     if (self) {
         borderSize = 4;
         
+        directionIsFromLeft = fromLeft;
         referenceButton = _button;
         // Initialization code
         self.opaque = NO;
@@ -33,6 +35,13 @@
         closeButton.frame = [self rectForButton];
         [closeButton addTarget:self action:@selector(closeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:closeButton];
+        
+        
+        self.layer.borderWidth = 1;
+        self.layer.borderColor = [UIColor redColor].CGColor;
+        
+        closeButton.layer.borderColor = [UIColor blueColor].CGColor;
+        closeButton.layer.borderWidth = 1;
     }
     return self;
 }
@@ -44,19 +53,29 @@
 
 -(CGRect) contentBounds{
     CGRect contentBounds = self.bounds;
-    contentBounds.origin.x = 2*kBounceWidth;
     contentBounds.size.width -= 2*kBounceWidth;
+    if(directionIsFromLeft){
+        contentBounds.origin.x = 2*kBounceWidth;
+    }else{
+        contentBounds.origin.x += [referenceButton drawableFrame].size.width;
+    }
     contentBounds.size.width -= [referenceButton drawableFrame].size.width;
     return contentBounds;
 }
 
 -(CGRect) rectForButton{
     CGRect fr = referenceButton.frame;
-    fr.origin.x = [self contentBounds].origin.x + [self contentBounds].size.width;
-    fr.origin.x -= kBounceWidth;
-    fr.origin.x -= [referenceButton drawableFrame].size.width * 2 / 5;
-    fr.origin.y = ceilf(fr.origin.y);
+    if(directionIsFromLeft){
+        fr.origin.x = [self contentBounds].origin.x + [self contentBounds].size.width;
+        fr.origin.x -= kBounceWidth;
+        fr.origin.x -= [referenceButton drawableFrame].size.width * 2 / 5;
+    }else{
+        fr.origin.x = [self contentBounds].origin.x - referenceButton.frame.size.width;
+        fr.origin.x += kBounceWidth;
+        fr.origin.x += [referenceButton drawableFrame].size.width * 2 / 5;
+    }
     fr.origin.x = ceilf(fr.origin.x);
+    fr.origin.y = ceilf(fr.origin.y);
     return fr;
 }
 
@@ -81,13 +100,23 @@
 
     // draw the dark background for the sidebar
     CGRect leftDarkArea = [self contentBounds];
-    leftDarkArea.origin.x = 0;
-    leftDarkArea.size.width += kBounceWidth;
+    if(directionIsFromLeft){
+        leftDarkArea.origin.x = 0;
+        leftDarkArea.size.width += kBounceWidth;
+    }else{
+        leftDarkArea.origin.x += kBounceWidth;
+        leftDarkArea.size.width += kBounceWidth;
+    }
     CGContextSetFillColorWithColor(context, [MMSidebarImagePicker backgroundColor].CGColor);
     CGContextFillRect(context, leftDarkArea);
     
     // right light border line
-    CGRect lightBorderLineRect = CGRectMake(leftDarkArea.size.width, 0, borderSize/2, leftDarkArea.size.height);
+    CGRect lightBorderLineRect;
+    if(directionIsFromLeft){
+        lightBorderLineRect = CGRectMake(leftDarkArea.size.width, 0, borderSize/2, leftDarkArea.size.height);
+    }else{
+        lightBorderLineRect = CGRectMake(leftDarkArea.origin.x - borderSize/2, 0, borderSize/2, leftDarkArea.size.height);
+    }
     CGContextSetFillColorWithColor(context, [MMSidebarImagePicker lightBackgroundColor].CGColor);
     CGContextFillRect(context, lightBorderLineRect);
     
@@ -108,7 +137,12 @@
     [innerCircleCropPath fill];
 
     // right dark border line
-    CGRect darkBorderLineRect = CGRectMake(leftDarkArea.size.width + borderSize/2, 0, borderSize/2, leftDarkArea.size.height);
+    CGRect darkBorderLineRect;
+    if(directionIsFromLeft){
+        darkBorderLineRect = CGRectMake(leftDarkArea.size.width + borderSize/2, 0, borderSize/2, leftDarkArea.size.height);
+    }else{
+        darkBorderLineRect = CGRectMake(leftDarkArea.origin.x - borderSize, 0, borderSize/2, leftDarkArea.size.height);
+    }
     // fill right border
     UIBezierPath* stripeRRectPath = [UIBezierPath bezierPathWithRect:darkBorderLineRect];
     [self erase:stripeRRectPath atContext:context];
@@ -120,16 +154,26 @@
     UIBezierPath* buttonCircleCropPath = [UIBezierPath bezierPathWithOvalInRect:buttonCircleCrop];
     [self erase:buttonCircleCropPath atContext:context];
     
-    // clip everything to the right of our border
-    CGRect rightOfSidebarRect = CGRectMake(darkBorderLineRect.origin.x + darkBorderLineRect.size.width, 0,
-                                           referenceButton.bounds.size.width, self.bounds.size.height);
-    UIBezierPath* rightOfBorderPath = [UIBezierPath bezierPathWithRect:rightOfSidebarRect];
-    [self erase:rightOfBorderPath atContext:context];
+    CGRect outsideOfSidebarRect;
+    if(directionIsFromLeft){
+        // clip everything to the right of our border
+        outsideOfSidebarRect = CGRectMake(darkBorderLineRect.origin.x + darkBorderLineRect.size.width, 0,
+                                          referenceButton.bounds.size.width, self.bounds.size.height);
+    }else{
+        outsideOfSidebarRect = CGRectMake(0, 0,darkBorderLineRect.origin.x, self.bounds.size.height);
+    }
+    UIBezierPath* outsideOfSidebarPath = [UIBezierPath bezierPathWithRect:outsideOfSidebarRect];
+    [self erase:outsideOfSidebarPath atContext:context];
     
+    
+    
+    UIBezierPath* contentBounds = [UIBezierPath bezierPathWithRect:[self contentBounds]];
+    [[UIColor orangeColor] setStroke];
+    [contentBounds stroke];
 
 }
 
-- (void)bounceAnimationForButtonWithDuration:(CGFloat)duration{
+- (void)bounceAnimationForButtonWithDuration:(CGFloat)animationDuration{
     CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
     bounceAnimation.removedOnCompletion = YES;
     
@@ -141,18 +185,27 @@
                                 [NSNumber numberWithFloat:0.8],
                                 [NSNumber numberWithFloat:0.95],
                                 [NSNumber numberWithFloat:1.0], nil];
-    bounceAnimation.values = [NSArray arrayWithObjects:
-                              [NSValue valueWithCGPoint:startP],
-                              [NSValue valueWithCGPoint:startP],
-                              [NSValue valueWithCGPoint:CGPointMake(startP.x + kBounceWidth/2, startP.y)],
-                              [NSValue valueWithCGPoint:CGPointMake(startP.x - kBounceWidth/5, startP.y)],
-                              [NSValue valueWithCGPoint:startP], nil];
+    if(directionIsFromLeft){
+        bounceAnimation.values = [NSArray arrayWithObjects:
+                                  [NSValue valueWithCGPoint:startP],
+                                  [NSValue valueWithCGPoint:startP],
+                                  [NSValue valueWithCGPoint:CGPointMake(startP.x + kBounceWidth/2, startP.y)],
+                                  [NSValue valueWithCGPoint:CGPointMake(startP.x - kBounceWidth/5, startP.y)],
+                                  [NSValue valueWithCGPoint:startP], nil];
+    }else{
+        bounceAnimation.values = [NSArray arrayWithObjects:
+                                  [NSValue valueWithCGPoint:startP],
+                                  [NSValue valueWithCGPoint:startP],
+                                  [NSValue valueWithCGPoint:CGPointMake(startP.x - kBounceWidth/2, startP.y)],
+                                  [NSValue valueWithCGPoint:CGPointMake(startP.x + kBounceWidth/5, startP.y)],
+                                  [NSValue valueWithCGPoint:startP], nil];
+    }
     bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
                                        [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear],
                                        [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut],
                                        [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
                                        [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn], nil];
-    bounceAnimation.duration = duration;
+    bounceAnimation.duration = animationDuration;
 
     [closeButton.layer addAnimation:bounceAnimation forKey:@"bounceAnimation"];
 }
