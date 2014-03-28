@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
+#import "MMSlidingSidebarView.h"
 #import "MMScrapContainerView.h"
 #import "MMScrapView.h"
 #import "MMScapBubbleContainerViewDelegate.h"
@@ -13,11 +14,11 @@
 #import "MMScrapsOnPaperStateDelegate.h"
 #import "MMCountBubbleButton.h"
 
-@interface MMScrapBubbleContainerView : MMScrapContainerView<MMScrapBezelMenuViewDelegate,MMScrapsOnPaperStateDelegate>{
-    __weak NSObject<MMScapBubbleContainerViewDelegate>* delegate;
+@interface MMScrapBubbleContainerView : MMSlidingSidebarView<MMScrapBezelMenuViewDelegate,MMScrapsOnPaperStateDelegate>{
+    __weak NSObject<MMScapBubbleContainerViewDelegate>* bubbleDelegate;
 }
 
-@property (nonatomic, weak) NSObject<MMScapBubbleContainerViewDelegate>* delegate;
+@property (nonatomic, weak) NSObject<MMScapBubbleContainerViewDelegate>* bubbleDelegate;
 @property (nonatomic, strong) MMCountBubbleButton* countButton;
 
 -(id) initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton *)countButton;

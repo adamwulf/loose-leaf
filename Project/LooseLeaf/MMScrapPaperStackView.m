@@ -69,6 +69,7 @@
 
         bezelScrapContainer = [[MMScrapBubbleContainerView alloc] initWithFrame:self.bounds andCountButton:countButton];
         bezelScrapContainer.delegate = self;
+        bezelScrapContainer.bubbleDelegate = self;
         [self insertSubview:bezelScrapContainer belowSubview:countButton];
         [bezelScrapContainer setCountButton:countButton];
         
@@ -226,7 +227,9 @@ int skipAll = NO;
 }
 
 -(void) anySidebarButtonTapped:(id)button{
-    [bezelScrapContainer hideMenuIfNeeded];
+    if(button != countButton){
+        [bezelScrapContainer hideMenuIfNeeded];
+    }
 }
 
 #pragma mark - MMPencilAndPaletteViewDelegate

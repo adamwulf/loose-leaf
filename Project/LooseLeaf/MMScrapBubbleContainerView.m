@@ -45,11 +45,11 @@
     NSMutableDictionary* rotationAdjustments;
 }
 
-@synthesize delegate;
+@synthesize bubbleDelegate;
 @synthesize countButton;
 
 -(id) initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton *)_countButton{
-    if(self = [super initWithFrame:frame]){
+    if(self = [super initWithFrame:frame forButton:_countButton animateFromLeft:NO]){
         targetAlpha = 1;
         scrapsHeldInBezel = [NSMutableOrderedSet orderedSet];
         bubbleForScrap = [NSMutableDictionary dictionary];
@@ -117,8 +117,9 @@
     if([scrapsHeldInBezel count] > kMaxScrapsInBezel){
         countButton.alpha = targetAlpha;
     }else{
+        countButton.alpha = 0;
         for(UIView* subview in self.subviews){
-            if(subview != countButton && [subview isKindOfClass:[MMScrapBubbleButton class]]){
+            if([subview isKindOfClass:[MMScrapBubbleButton class]]){
                 subview.alpha = targetAlpha;
             }
         }
@@ -206,7 +207,7 @@
                             // and done
                             bubble.scale = 1.0;
                         } completion:^(BOOL finished){
-                            [self.delegate didAddScrapToBezelSidebar:scrap];
+                            [self.bubbleDelegate didAddScrapToBezelSidebar:scrap];
                         }];
                     }];
                 }];
@@ -214,11 +215,7 @@
         }else if([scrapsHeldInBezel count] > kMaxScrapsInBezel){
             // we need to merge all the bubbles together into
             // a single button during the bezel animation
-            if([scrapsHeldInBezel count] - 1 != kMaxScrapsInBezel){
-                [countButton setCount:[scrapsHeldInBezel count] - 1];
-            }else{
-                [countButton setCount:[scrapsHeldInBezel count]];
-            }
+            [countButton setCount:[scrapsHeldInBezel count]];
             bubble.center = countButton.center;
             bubble.scale = 1;
             [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -248,7 +245,7 @@
                             // and done
                             countButton.scale = 1.0;
                         } completion:^(BOOL finished){
-                            [self.delegate didAddScrapToBezelSidebar:scrap];
+                            [self.bubbleDelegate didAddScrapToBezelSidebar:scrap];
                         }];
                     }];
                 }];
@@ -261,7 +258,7 @@
             scrap.center = bubble.center;
             bubble.scrap = scrap;
         }else{
-            [countButton setCount:[scrapsHeldInBezel count] - 1];
+            [countButton setCount:[scrapsHeldInBezel count]];
             countButton.alpha = 1;
             for(MMScrapBubbleButton* bubble in self.subviews){
                 if([bubble isKindOfClass:[MMScrapBubbleButton class]]){
@@ -313,13 +310,13 @@
     MMScrapBubbleButton* bubble = [bubbleForScrap objectForKey:scrap.uuid];
     [scrap loadStateAsynchronously:YES];
     
-    CGPoint positionOnScreenToScaleTo = [self.delegate positionOnScreenToScaleScrapTo:scrap];
-    CGFloat scaleOnScreenToScaleTo = [self.delegate scaleOnScreenToScaleScrapTo:scrap givenOriginalScale:bubble.originalScrapScale];
+    CGPoint positionOnScreenToScaleTo = [self.bubbleDelegate positionOnScreenToScaleScrapTo:scrap];
+    CGFloat scaleOnScreenToScaleTo = [self.bubbleDelegate scaleOnScreenToScaleScrapTo:scrap givenOriginalScale:bubble.originalScrapScale];
     [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         scrap.center = positionOnScreenToScaleTo;
         [scrap setScale:scaleOnScreenToScaleTo andRotation:scrap.rotation];
     } completion:^(BOOL finished){
-        [self.delegate didAddScrapBackToPage:scrap];
+        [self.bubbleDelegate didAddScrapBackToPage:scrap];
     }];
     [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         bubble.alpha = 0;
@@ -349,6 +346,11 @@
 // so the user can choose a scrap to add
 -(void) countButtonTapped:(UIButton*)button{
     if(countButton.alpha){
+        countButton.alpha = 0;
+        [self show:YES];
+        return;
+        
+        
         // only run teh tap if the button is visible.
         // it might be invisible if it's in the process
         // of hiding from a pinch to list view
@@ -356,6 +358,7 @@
         if(scrapMenu.alpha){
             [self closeMenuTapped:nil];
         }else{
+            
             scrapMenu.transform = CGAffineTransformMakeTranslation(20, 0);
             closeMenuView.hidden = NO;
             [scrapMenu prepareMenu];
@@ -428,7 +431,7 @@
         UIView* output = [closeMenuView hitTest:[self convertPoint:point toView:closeMenuView] withEvent:event];
         if(output) return output;
     }
-    return nil;
+    return [super hitTest:point withEvent:event];
 }
 
 -(BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
@@ -439,7 +442,7 @@
             }
         }
     }
-    return NO;
+    return [super pointInside:point withEvent:event];
 }
 
 
