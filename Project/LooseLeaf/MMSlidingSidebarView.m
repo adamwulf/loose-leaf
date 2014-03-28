@@ -12,7 +12,6 @@
 #define kAnimationDuration 0.3
 
 @implementation MMSlidingSidebarView{
-    MMSlidingSidebarContentView* sidebarContentView;
     UIButton* dismissButton;
     BOOL directionIsFromLeft;
 }

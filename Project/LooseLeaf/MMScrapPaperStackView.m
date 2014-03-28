@@ -228,7 +228,7 @@ int skipAll = NO;
 
 -(void) anySidebarButtonTapped:(id)button{
     if(button != countButton){
-        [bezelScrapContainer hideMenuIfNeeded];
+        [bezelScrapContainer sidebarCloseButtonWasTapped];
     }
 }
 

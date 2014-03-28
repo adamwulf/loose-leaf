@@ -38,7 +38,6 @@
     NSMutableDictionary* bubbleForScrap;
     MMCountBubbleButton* countButton;
     MMScrapBezelMenuView* scrapMenu;
-    UIButton* closeMenuView;
     MMScrapsOnPaperState* scrapState;
     NSString* scrapIDsPath;
     
@@ -54,25 +53,15 @@
         scrapsHeldInBezel = [NSMutableOrderedSet orderedSet];
         bubbleForScrap = [NSMutableDictionary dictionary];
         
-        closeMenuView = [UIButton buttonWithType:UIButtonTypeCustom];
-        closeMenuView.frame = self.bounds;
-        [closeMenuView addTarget:self action:@selector(closeMenuTapped:) forControlEvents:UIControlEventTouchUpInside];
-        closeMenuView.hidden = YES;
-        [self addSubview:closeMenuView];
-        scrapMenu = [[MMScrapBezelMenuView alloc] initWithFrame:CGRectMake(0, 0, 300, 380)];
-        scrapMenu.alpha = 0;
-        [self addSubview:scrapMenu];
-        
+        scrapMenu = [[MMScrapBezelMenuView alloc] initWithFrame:[sidebarContentView contentBounds]];
+        scrapMenu.delegate = self;
+        [sidebarContentView addSubview:scrapMenu];
+
         countButton = _countButton;
         [countButton addTarget:self action:@selector(countButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        CGRect fr = scrapMenu.frame;
-        fr.origin.x = countButton.frame.origin.x - 306;
-        fr.origin.y = countButton.frame.origin.y - 90;
-        scrapMenu.frame = fr;
         //        UITapGestureRecognizer* tappy = [[MMSidebarButtonTapGestureRecognizer alloc] initWithTarget:self action:@selector(countButtonTapped:)];
         //        [countButton addGestureRecognizer:tappy];
 
-        scrapMenu.delegate = self;
         
         NSDictionary* loadedRotationValues = [NSDictionary dictionaryWithContentsOfFile:[MMScrapBubbleContainerView pathToPlist]];
         rotationAdjustments = [NSMutableDictionary dictionary];
@@ -83,6 +72,9 @@
         scrapState = [[MMScrapsOnPaperState alloc] initWithScrapIDsPath:self.scrapIDsPath];
         scrapState.delegate = self;
         [scrapState loadStateAsynchronously:YES andMakeEditable:NO];
+        
+        
+        
     }
     return self;
 }
@@ -125,7 +117,7 @@
         }
     }
     if(!targetAlpha){
-        [self hideMenuIfNeeded];
+        [self sidebarCloseButtonWasTapped];
     }
 }
 
@@ -299,7 +291,7 @@
     scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
     [self insertSubview:scrap atIndex:0];
     
-    [self hideMenuIfNeeded];
+    [self sidebarCloseButtonWasTapped];
     [self animateAndAddScrapBackToPage:scrap];
     [countButton setCount:[scrapsHeldInBezel count]];
 
@@ -347,48 +339,10 @@
 -(void) countButtonTapped:(UIButton*)button{
     if(countButton.alpha){
         countButton.alpha = 0;
+        [scrapMenu prepareMenu];
         [self show:YES];
-        return;
-        
-        
-        // only run teh tap if the button is visible.
-        // it might be invisible if it's in the process
-        // of hiding from a pinch to list view
-        // https://github.com/adamwulf/loose-leaf/issues/262
-        if(scrapMenu.alpha){
-            [self closeMenuTapped:nil];
-        }else{
-            
-            scrapMenu.transform = CGAffineTransformMakeTranslation(20, 0);
-            closeMenuView.hidden = NO;
-            [scrapMenu prepareMenu];
-            [UIView animateWithDuration:.2
-                                  delay:0
-                                options:UIViewAnimationOptionCurveEaseOut
-                             animations:^{
-                                 scrapMenu.alpha = 1;
-                                 scrapMenu.transform = CGAffineTransformIdentity;
-                                 [scrapMenu flashScrollIndicators];
-                             }
-                             completion:nil];
-        }
     }
 }
-
--(void) closeMenuTapped:(id)button{
-    [scrapMenu.layer removeAllAnimations];
-    closeMenuView.hidden = YES;
-    scrapMenu.alpha = 0;
-}
-
--(void) hideMenuIfNeeded{
-    [self closeMenuTapped:nil];
-    for (MMScrapView* scrap in scrapsHeldInBezel) {
-        MMScrapBubbleButton* bubble = [bubbleForScrap objectForKey:scrap.uuid];
-        bubble.scrap = scrap;
-    }
-}
-
 
 #pragma mark - Rotation
 
@@ -425,10 +379,6 @@
     }
     if(scrapMenu.alpha){
         UIView* output = [scrapMenu hitTest:[self convertPoint:point toView:scrapMenu] withEvent:event];
-        if(output) return output;
-    }
-    if(!closeMenuView.hidden){
-        UIView* output = [closeMenuView hitTest:[self convertPoint:point toView:closeMenuView] withEvent:event];
         if(output) return output;
     }
     return [super hitTest:point withEvent:event];

@@ -12,6 +12,7 @@
 #import "MMSlidingSidebarViewDelegate.h"
 
 @interface MMSlidingSidebarView : UIView<MMSlidingSidebarViewDelegate>{
+    MMSlidingSidebarContentView* sidebarContentView;
     __weak NSObject<MMSlidingSidebarViewDelegate>* delegate;
 }
 
@@ -24,6 +25,5 @@
 -(void) hide:(BOOL)animated;
 
 -(void) show:(BOOL)animated;
-
 
 @end

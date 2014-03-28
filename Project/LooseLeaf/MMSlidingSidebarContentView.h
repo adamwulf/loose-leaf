@@ -23,4 +23,6 @@
 
 - (void)bounceAnimationForButtonWithDuration:(CGFloat)animationDuration;
 
+-(CGRect) contentBounds;
+
 @end

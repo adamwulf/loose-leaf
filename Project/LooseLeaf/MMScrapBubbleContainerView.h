@@ -27,8 +27,6 @@
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel;
 
--(void) hideMenuIfNeeded;
-
 -(void) animateAndAddScrapBackToPage:(MMScrapView*)scrap;
 
 -(void) saveToDisk;
