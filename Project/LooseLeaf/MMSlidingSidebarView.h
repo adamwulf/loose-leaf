@@ -15,6 +15,8 @@
 
 - (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft;
 
+-(BOOL) isVisible;
+
 -(void) hide:(BOOL)animated;
 
 -(void) show:(BOOL)animated;

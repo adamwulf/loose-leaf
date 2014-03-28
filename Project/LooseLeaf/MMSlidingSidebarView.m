@@ -9,10 +9,10 @@
 #import "MMSlidingSidebarView.h"
 #import "UIView+Animations.h"
 
-#define kAnimationDuration .3
+#define kAnimationDuration 3
 
 @implementation MMSlidingSidebarView{
-    MMSlidingSidebarContentView* sidebar;
+    MMSlidingSidebarContentView* sidebarContentView;
     UIButton* dismissButton;
     BOOL directionIsFromLeft;
 }
@@ -21,24 +21,30 @@
     self = [super initWithFrame:frame];
     if (self) {
         
+        // this direction controls if the sidebar will slide from the left or right
         directionIsFromLeft = fromLeft;
         
-        // Initialization code
+        // this button is full screen and invisible, and will
+        // handle any touches not in the sidebar
         dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
         dismissButton.frame = self.bounds;
         [dismissButton addTarget:self action:@selector(hide:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:dismissButton];
         
-        CGRect imagePickerBounds = self.bounds;
-        imagePickerBounds.size.width = ceilf(imagePickerBounds.size.width / 2) + 2*kBounceWidth;
-        sidebar = [[MMSlidingSidebarContentView alloc] initWithFrame:imagePickerBounds forButton:_button animateFromLeft:directionIsFromLeft];
-        sidebar.delegate = self;
-        [self addSubview:sidebar];
+        // the sidebar content view will hold all of the content and menus
+        CGRect imagePickerBounds = [self defaultSidebarFrame];
+        sidebarContentView = [[MMSlidingSidebarContentView alloc] initWithFrame:imagePickerBounds forButton:_button animateFromLeft:directionIsFromLeft];
+        sidebarContentView.delegate = self;
+        [self addSubview:sidebarContentView];
         
+        // a few properties on the view for clarity
         self.clipsToBounds = YES;
+        self.opaque = NO;
         
-        [UIView setAnchorPoint:CGPointZero forView:sidebar];
+        // set the anchor to 0,0 for the sliding animations
+        [UIView setAnchorPoint:CGPointZero forView:sidebarContentView];
         
+        // init the view positions
         [self hide:NO];
     }
     return self;
@@ -46,22 +52,31 @@
 
 #pragma mark - Show and Hide
 
+// YES if we're showing the sidebar menu,
+// NO otherwise
 -(BOOL) isVisible{
     return (BOOL) dismissButton.alpha;
 }
 
+// hide the sidebar and optionally
+// animate the change
 -(void) hide:(BOOL)animated{
+    // ignore if we're hidden
     if(![self isVisible]) return;
+    // keep our property changes in a block
+    // to pass to UIView or just run
     void (^hideBlock)(void) = ^{
+        // this button's alpha determines our
+        // visibility property
         dismissButton.alpha = 0;
-        CGRect imagePickerBounds = self.bounds;
-        imagePickerBounds.size.width = ceilf(imagePickerBounds.size.width / 2) + 2*kBounceWidth;
+        // animate the position of the sidebar offscreen
+        CGRect imagePickerBounds = [self defaultSidebarFrame];
         if(directionIsFromLeft){
             imagePickerBounds.origin.x = -imagePickerBounds.size.width;
         }else{
             imagePickerBounds.origin.x = self.bounds.size.width;
         }
-        sidebar.frame = imagePickerBounds;
+        sidebarContentView.frame = imagePickerBounds;
     };
     
     if(animated){
@@ -72,10 +87,8 @@
 }
 
 -(void) show:(BOOL)animated{
+    // ignore if we're already visible
     if([self isVisible]) return;
-    void (^hideBlock)(void) = ^{
-        dismissButton.alpha = 1;
-    };
     
     if(animated){
         [CATransaction begin];
@@ -91,14 +104,14 @@
                                     [NSNumber numberWithFloat:.90], nil];
         if(directionIsFromLeft){
             bounceAnimation.values = [NSArray arrayWithObjects:
-                                      [NSValue valueWithCGPoint:CGPointMake(-sidebar.frame.size.width, 0)],
+                                      [NSValue valueWithCGPoint:CGPointMake(-sidebarContentView.frame.size.width, 0)],
                                       [NSValue valueWithCGPoint:CGPointMake(0, 0)],
                                       [NSValue valueWithCGPoint:CGPointMake(-kBounceWidth, 0)], nil];
         }else{
             bounceAnimation.values = [NSArray arrayWithObjects:
                                       [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width, 0)],
-                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-sidebar.frame.size.width, 0)],
-                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-sidebar.frame.size.width+kBounceWidth, 0)], nil];
+                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width, 0)],
+                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width+kBounceWidth, 0)], nil];
         }
         bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
                                            [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut],
@@ -117,11 +130,12 @@
         ////////////////////////////////////////////////////////
         // Animate bounce of sidebar button
         
-        [sidebar bounceAnimationForButtonWithDuration:kAnimationDuration];
+        // tell the content view to trigger it's animation as well
+        [sidebarContentView bounceAnimationForButtonWithDuration:kAnimationDuration];
         
         ///////////////////////////////////////////////
         // Add the animations to the layers
-        [sidebar.layer addAnimation:bounceAnimation forKey:@"showImagePicker"];
+        [sidebarContentView.layer addAnimation:bounceAnimation forKey:@"showImagePicker"];
         
         [dismissButton.layer addAnimation:opacityAnimation forKey:@"alpha"];
         
@@ -129,18 +143,29 @@
         [CATransaction commit];
         
     }
-    hideBlock();
     
-    CGRect fr = sidebar.frame;
+    // set all of the properties. if we're animating
+    // these will affect only take effect after the
+    // animation completes. notice the removedOnCompletion
+    // on the animations
+    dismissButton.alpha = 1;
+    CGRect fr = sidebarContentView.frame;
     if(directionIsFromLeft){
         fr.origin = CGPointMake(-kBounceWidth, 0);
     }else{
-        fr.origin = CGPointMake(self.bounds.size.width-sidebar.frame.size.width+kBounceWidth, 0);
+        fr.origin = CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width+kBounceWidth, 0);
     }
-    sidebar.frame = fr;
+    sidebarContentView.frame = fr;
 }
 
 
+#pragma mark - Helper Methods
+
+-(CGRect) defaultSidebarFrame{
+    CGRect imagePickerBounds = self.bounds;
+    imagePickerBounds.size.width = ceilf(imagePickerBounds.size.width / 2) + 2*kBounceWidth;
+    return imagePickerBounds;
+}
 
 #pragma mark - Ignore Touches
 

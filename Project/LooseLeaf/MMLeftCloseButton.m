@@ -8,7 +8,9 @@
 
 #import "MMLeftCloseButton.h"
 
-@implementation MMLeftCloseButton
+@implementation MMLeftCloseButton{
+    CGFloat rotation;
+}
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -26,6 +28,16 @@
 -(UIColor*) backgroundColor{
     return [UIColor colorWithRed: 0.84 green: 0.84 blue: 0.84 alpha: 0.5];
 }
+
+-(CGFloat) rotation{
+    return rotation;
+}
+
+-(void) setRotation:(CGFloat)_rotation{
+    rotation = _rotation;
+    self.transform = [self rotationTransform];
+}
+
 
 
 // Only override drawRect: if you perform custom drawing.
