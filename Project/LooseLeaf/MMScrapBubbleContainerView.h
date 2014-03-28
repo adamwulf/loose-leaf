@@ -11,12 +11,14 @@
 #import "MMScapBubbleContainerViewDelegate.h"
 #import "MMScrapBezelMenuViewDelegate.h"
 #import "MMScrapsOnPaperStateDelegate.h"
+#import "MMCountBubbleButton.h"
 
 @interface MMScrapBubbleContainerView : MMScrapContainerView<MMScrapBezelMenuViewDelegate,MMScrapsOnPaperStateDelegate>{
     __weak NSObject<MMScapBubbleContainerViewDelegate>* delegate;
 }
 
 @property (nonatomic, weak) NSObject<MMScapBubbleContainerViewDelegate>* delegate;
+@property (nonatomic, strong) MMCountBubbleButton* countButton;
 
 -(void) addScrapToBezelSidebar:(MMScrapView *)scrap animated:(BOOL)animated;
 

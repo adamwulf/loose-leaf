@@ -9,7 +9,6 @@
 #import "MMScrapBubbleContainerView.h"
 #import "MMScrapBubbleButton.h"
 #import "NSThread+BlockAdditions.h"
-#import "MMCountBubbleButton.h"
 #import "MMScrapBezelMenuView.h"
 #import "MMScrapsOnPaperState.h"
 #import "MMImmutableScrapsOnPaperState.h"
@@ -47,6 +46,7 @@
 }
 
 @synthesize delegate;
+@synthesize countButton;
 
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
@@ -54,20 +54,12 @@
         scrapsHeldInBezel = [NSMutableOrderedSet orderedSet];
         bubbleForScrap = [NSMutableDictionary dictionary];
         
-        CGFloat rightBezelSide = frame.size.width - 100;
-        CGFloat midPointY = (frame.size.height - 3*80) / 2;
-        countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
-        countButton.alpha = 0;
-        UITapGestureRecognizer* tappy = [[MMSidebarButtonTapGestureRecognizer alloc] initWithTarget:self action:@selector(countButtonTapped:)];
-        [countButton addGestureRecognizer:tappy];
-        [self addSubview:countButton];
-        
         closeMenuView = [UIButton buttonWithType:UIButtonTypeCustom];
         closeMenuView.frame = self.bounds;
         [closeMenuView addTarget:self action:@selector(closeMenuTapped:) forControlEvents:UIControlEventTouchUpInside];
         closeMenuView.hidden = YES;
         [self addSubview:closeMenuView];
-        scrapMenu = [[MMScrapBezelMenuView alloc] initWithFrame:CGRectMake(rightBezelSide - 306, midPointY - 150, 300, 380)];
+        scrapMenu = [[MMScrapBezelMenuView alloc] initWithFrame:CGRectMake(0, 0, 300, 380)];
         scrapMenu.alpha = 0;
         [self addSubview:scrapMenu];
         
@@ -84,6 +76,20 @@
         [scrapState loadStateAsynchronously:YES andMakeEditable:NO];
     }
     return self;
+}
+
+-(void) setCountButton:(MMCountBubbleButton *)_countButton{
+    if(countButton){
+        [countButton removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
+    }
+    countButton = _countButton;
+    [countButton addTarget:self action:@selector(countButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    CGRect fr = scrapMenu.frame;
+    fr.origin.x = countButton.frame.origin.x - 306;
+    fr.origin.y = countButton.frame.origin.y - 90;
+    scrapMenu.frame = fr;
+    //        UITapGestureRecognizer* tappy = [[MMSidebarButtonTapGestureRecognizer alloc] initWithTarget:self action:@selector(countButtonTapped:)];
+    //        [countButton addGestureRecognizer:tappy];
 }
 
 -(NSString*) scrapIDsPath{
@@ -342,8 +348,8 @@
 // count button was tapped,
 // so show or hide the menu
 // so the user can choose a scrap to add
--(void) countButtonTapped:(UITapGestureRecognizer*)tapGesture{
-    if(tapGesture.view.alpha){
+-(void) countButtonTapped:(UIButton*)button{
+    if(countButton.alpha){
         // only run teh tap if the button is visible.
         // it might be invisible if it's in the process
         // of hiding from a pinch to list view
