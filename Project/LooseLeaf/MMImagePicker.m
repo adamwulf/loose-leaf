@@ -9,7 +9,7 @@
 #import "MMImagePicker.h"
 #import "UIView+Animations.h"
 
-#define kAnimationDuration 3
+#define kAnimationDuration .3
 
 @implementation MMImagePicker{
     MMSidebarImagePicker* sidebar;
@@ -17,12 +17,11 @@
     BOOL directionIsFromLeft;
 }
 
-- (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button
-{
+- (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft{
     self = [super initWithFrame:frame];
     if (self) {
         
-        directionIsFromLeft = NO;
+        directionIsFromLeft = fromLeft;
         
         // Initialization code
         dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -89,7 +88,7 @@
         bounceAnimation.keyTimes = [NSArray arrayWithObjects:
                                     [NSNumber numberWithFloat:0.0],
                                     [NSNumber numberWithFloat:0.7],
-                                    [NSNumber numberWithFloat:.95], nil];
+                                    [NSNumber numberWithFloat:.90], nil];
         if(directionIsFromLeft){
             bounceAnimation.values = [NSArray arrayWithObjects:
                                       [NSValue valueWithCGPoint:CGPointMake(-sidebar.frame.size.width, 0)],

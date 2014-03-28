@@ -35,13 +35,6 @@
         closeButton.frame = [self rectForButton];
         [closeButton addTarget:self action:@selector(closeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:closeButton];
-        
-        
-        self.layer.borderWidth = 1;
-        self.layer.borderColor = [UIColor redColor].CGColor;
-        
-        closeButton.layer.borderColor = [UIColor blueColor].CGColor;
-        closeButton.layer.borderWidth = 1;
     }
     return self;
 }
@@ -57,9 +50,11 @@
     if(directionIsFromLeft){
         contentBounds.origin.x = 2*kBounceWidth;
     }else{
-        contentBounds.origin.x += [referenceButton drawableFrame].size.width;
+        contentBounds.origin.x = kBounceWidth;
+        contentBounds.origin.x += referenceButton.frame.size.width;
     }
-    contentBounds.size.width -= [referenceButton drawableFrame].size.width;
+    contentBounds.size.width -= kBounceWidth;
+    contentBounds.size.width -= referenceButton.frame.size.width;
     return contentBounds;
 }
 
@@ -67,12 +62,10 @@
     CGRect fr = referenceButton.frame;
     if(directionIsFromLeft){
         fr.origin.x = [self contentBounds].origin.x + [self contentBounds].size.width;
-        fr.origin.x -= kBounceWidth;
-        fr.origin.x -= [referenceButton drawableFrame].size.width * 2 / 5;
+        fr.origin.x -= kBounceWidth / 2;
     }else{
         fr.origin.x = [self contentBounds].origin.x - referenceButton.frame.size.width;
-        fr.origin.x += kBounceWidth;
-        fr.origin.x += [referenceButton drawableFrame].size.width * 2 / 5;
+        fr.origin.x += kBounceWidth / 2;
     }
     fr.origin.x = ceilf(fr.origin.x);
     fr.origin.y = ceilf(fr.origin.y);
@@ -101,11 +94,11 @@
     // draw the dark background for the sidebar
     CGRect leftDarkArea = [self contentBounds];
     if(directionIsFromLeft){
+        leftDarkArea.size.width += 3*kBounceWidth;
         leftDarkArea.origin.x = 0;
-        leftDarkArea.size.width += kBounceWidth;
     }else{
-        leftDarkArea.origin.x += kBounceWidth;
-        leftDarkArea.size.width += kBounceWidth;
+        leftDarkArea.origin.x -= kBounceWidth;
+        leftDarkArea.size.width += 3*kBounceWidth;
     }
     CGContextSetFillColorWithColor(context, [MMSidebarImagePicker backgroundColor].CGColor);
     CGContextFillRect(context, leftDarkArea);
@@ -164,13 +157,6 @@
     }
     UIBezierPath* outsideOfSidebarPath = [UIBezierPath bezierPathWithRect:outsideOfSidebarRect];
     [self erase:outsideOfSidebarPath atContext:context];
-    
-    
-    
-    UIBezierPath* contentBounds = [UIBezierPath bezierPathWithRect:[self contentBounds]];
-    [[UIColor orangeColor] setStroke];
-    [contentBounds stroke];
-
 }
 
 - (void)bounceAnimationForButtonWithDuration:(CGFloat)animationDuration{

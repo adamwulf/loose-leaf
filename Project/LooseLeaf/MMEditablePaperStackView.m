@@ -201,7 +201,7 @@
         [[MMDrawingTouchGestureRecognizer sharedInstace] setTouchDelegate:self];
         [self addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstace]];
         
-        imagePicker = [[MMImagePicker alloc] initWithFrame:self.bounds forButton:insertImageButton];
+        imagePicker = [[MMImagePicker alloc] initWithFrame:self.bounds forButton:insertImageButton animateFromLeft:YES];
         [imagePicker hide:NO];
         [self addSubview:imagePicker];
 

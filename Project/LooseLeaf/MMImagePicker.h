@@ -13,7 +13,7 @@
 
 @interface MMImagePicker : UIView<MMSidebarImagePickerDelegate>
 
-- (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)button;
+- (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft;
 
 -(void) hide:(BOOL)animated;
 
