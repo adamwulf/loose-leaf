@@ -13,11 +13,11 @@
 #define kBounceWidth 10.0
 
 
-@interface MMSidebarImagePicker : UIView{
-    __weak NSObject<MMSidebarImagePickerDelegate>* delegate;
+@interface MMSlidingSidebarContentView : UIView{
+    __weak NSObject<MMSlidingSidebarContentViewDelegate>* delegate;
 }
 
-@property (nonatomic, weak) NSObject<MMSidebarImagePickerDelegate>* delegate;
+@property (nonatomic, weak) NSObject<MMSlidingSidebarContentViewDelegate>* delegate;
 
 - (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft;
 

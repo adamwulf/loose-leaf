@@ -1,18 +1,18 @@
 //
-//  MMImagePicker.m
+//  MMSlidingSidebarView.m
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 3/27/14.
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMImagePicker.h"
+#import "MMSlidingSidebarView.h"
 #import "UIView+Animations.h"
 
 #define kAnimationDuration .3
 
-@implementation MMImagePicker{
-    MMSidebarImagePicker* sidebar;
+@implementation MMSlidingSidebarView{
+    MMSlidingSidebarContentView* sidebar;
     UIButton* dismissButton;
     BOOL directionIsFromLeft;
 }
@@ -31,7 +31,7 @@
         
         CGRect imagePickerBounds = self.bounds;
         imagePickerBounds.size.width = ceilf(imagePickerBounds.size.width / 2) + 2*kBounceWidth;
-        sidebar = [[MMSidebarImagePicker alloc] initWithFrame:imagePickerBounds forButton:_button animateFromLeft:directionIsFromLeft];
+        sidebar = [[MMSlidingSidebarContentView alloc] initWithFrame:imagePickerBounds forButton:_button animateFromLeft:directionIsFromLeft];
         sidebar.delegate = self;
         [self addSubview:sidebar];
         

@@ -1,5 +1,5 @@
 //
-//  MMImagePicker.h
+//  MMSlidingSidebarView.h
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 3/27/14.
@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "MMSidebarButton.h"
-#import "MMSidebarImagePicker.h"
+#import "MMSlidingSidebarContentView.h"
 #import "MMSidebarImagePickerDelegate.h"
 
-@interface MMImagePicker : UIView<MMSidebarImagePickerDelegate>
+@interface MMSlidingSidebarView : UIView<MMSlidingSidebarContentViewDelegate>
 
 - (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft;
 
