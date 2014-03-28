@@ -61,15 +61,15 @@
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds];
         [self insertSubview:scrapContainer belowSubview:addPageSidebarButton];
         
-        bezelScrapContainer = [[MMScrapBubbleContainerView alloc] initWithFrame:self.bounds];
-        bezelScrapContainer.delegate = self;
-        [self insertSubview:bezelScrapContainer belowSubview:addPageSidebarButton];
-        
         CGFloat rightBezelSide = frame.size.width - 100;
         CGFloat midPointY = (frame.size.height - 3*80) / 2;
         countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
         countButton.alpha = 0;
         [self insertSubview:countButton belowSubview:addPageSidebarButton];
+
+        bezelScrapContainer = [[MMScrapBubbleContainerView alloc] initWithFrame:self.bounds andCountButton:countButton];
+        bezelScrapContainer.delegate = self;
+        [self insertSubview:bezelScrapContainer belowSubview:countButton];
         [bezelScrapContainer setCountButton:countButton];
         
 

@@ -48,7 +48,7 @@
 @synthesize delegate;
 @synthesize countButton;
 
--(id) initWithFrame:(CGRect)frame{
+-(id) initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton *)_countButton{
     if(self = [super initWithFrame:frame]){
         targetAlpha = 1;
         scrapsHeldInBezel = [NSMutableOrderedSet orderedSet];
@@ -63,6 +63,15 @@
         scrapMenu.alpha = 0;
         [self addSubview:scrapMenu];
         
+        countButton = _countButton;
+        [countButton addTarget:self action:@selector(countButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        CGRect fr = scrapMenu.frame;
+        fr.origin.x = countButton.frame.origin.x - 306;
+        fr.origin.y = countButton.frame.origin.y - 90;
+        scrapMenu.frame = fr;
+        //        UITapGestureRecognizer* tappy = [[MMSidebarButtonTapGestureRecognizer alloc] initWithTarget:self action:@selector(countButtonTapped:)];
+        //        [countButton addGestureRecognizer:tappy];
+
         scrapMenu.delegate = self;
         
         NSDictionary* loadedRotationValues = [NSDictionary dictionaryWithContentsOfFile:[MMScrapBubbleContainerView pathToPlist]];
@@ -78,19 +87,7 @@
     return self;
 }
 
--(void) setCountButton:(MMCountBubbleButton *)_countButton{
-    if(countButton){
-        [countButton removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
-    }
-    countButton = _countButton;
-    [countButton addTarget:self action:@selector(countButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    CGRect fr = scrapMenu.frame;
-    fr.origin.x = countButton.frame.origin.x - 306;
-    fr.origin.y = countButton.frame.origin.y - 90;
-    scrapMenu.frame = fr;
-    //        UITapGestureRecognizer* tappy = [[MMSidebarButtonTapGestureRecognizer alloc] initWithTarget:self action:@selector(countButtonTapped:)];
-    //        [countButton addGestureRecognizer:tappy];
-}
+#pragma mark - Helper Methods
 
 -(NSString*) scrapIDsPath{
     if(!scrapIDsPath){
@@ -102,6 +99,14 @@
     return scrapIDsPath;
 }
 
+-(CGPoint) centerForBubbleAtIndex:(NSInteger)index{
+    CGFloat rightBezelSide = self.bounds.size.width - 100;
+    // midpoint calculates for 6 buttons
+    CGFloat midPointY = (self.bounds.size.height - 6*80) / 2;
+    CGPoint ret = CGPointMake(rightBezelSide + 40, midPointY + 40);
+    ret.y += 80 * index;
+    return ret;
+}
 
 -(CGFloat) alpha{
     return targetAlpha;
@@ -123,14 +128,8 @@
     }
 }
 
--(CGPoint) centerForBubbleAtIndex:(NSInteger)index{
-    CGFloat rightBezelSide = self.bounds.size.width - 100;
-    // midpoint calculates for 6 buttons
-    CGFloat midPointY = (self.bounds.size.height - 6*80) / 2;
-    CGPoint ret = CGPointMake(rightBezelSide + 40, midPointY + 40);
-    ret.y += 80 * index;
-    return ret;
-}
+
+#pragma mark - Scrap Animations
 
 -(void) addScrapToBezelSidebar:(MMScrapView *)scrap animated:(BOOL)animated{
     
