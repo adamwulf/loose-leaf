@@ -133,10 +133,10 @@
         [scrap saveToDisk];
     }
     
-    [scrapsHeldInBezel addObject:scrap];
+    [scrapsHeldInBezel insertObject:scrap atIndex:0];
     
     // exit the scrap to the bezel!
-    CGPoint center = [self centerForBubbleAtIndex:[scrapsHeldInBezel count] - 1];
+    CGPoint center = [self centerForBubbleAtIndex:0];
     
     // prep the animation by creating the new bubble for the scrap
     // and initializing it's probable location (may change if count > 6)
@@ -181,6 +181,15 @@
                 bubble.alpha = 1;
                 scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
                 scrap.center = bubble.center;
+                for(MMScrapBubbleButton* otherBubble in self.subviews){
+                    if(otherBubble != bubble){
+                        if([otherBubble isKindOfClass:[MMScrapBubbleButton class]]){
+                            int index = [scrapsHeldInBezel indexOfObject:otherBubble.scrap];
+                            otherBubble.center = [self centerForBubbleAtIndex:index];
+                        }
+                    }
+                }
+
             } completion:^(BOOL finished){
                 // add it to the bubble and bounce
                 bubble.scrap = scrap;
@@ -249,6 +258,12 @@
             scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
             scrap.center = bubble.center;
             bubble.scrap = scrap;
+            for(MMScrapBubbleButton* anyBubble in self.subviews){
+                if([anyBubble isKindOfClass:[MMScrapBubbleButton class]]){
+                    int index = [scrapsHeldInBezel indexOfObject:anyBubble.scrap];
+                    anyBubble.center = [self centerForBubbleAtIndex:index];
+                }
+            }
         }else{
             [countButton setCount:[scrapsHeldInBezel count]];
             countButton.alpha = 1;
@@ -312,12 +327,11 @@
     }];
     [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         bubble.alpha = 0;
-        NSInteger index = 0;
-        for(MMScrapBubbleButton* otherBubble in [self.subviews reverseObjectEnumerator]){
+        for(MMScrapBubbleButton* otherBubble in self.subviews){
             if(otherBubble != countButton && [otherBubble isKindOfClass:[MMScrapBubbleButton class]]){
                 if(otherBubble != bubble){
+                    int index = [scrapsHeldInBezel indexOfObject:otherBubble.scrap];
                     otherBubble.center = [self centerForBubbleAtIndex:index];
-                    index++;
                     if([scrapsHeldInBezel count] <= kMaxScrapsInBezel){
                         otherBubble.scrap = otherBubble.scrap; // reset it
                         otherBubble.alpha = 1;

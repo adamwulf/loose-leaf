@@ -68,6 +68,9 @@
 }
 
 -(void) setScrap:(MMScrapView *)_scrap{
+    if(!_scrap){
+        NSLog(@"what");
+    }
     scrap = _scrap;
     rotationAdjustment = self.rotation;
     

@@ -62,7 +62,7 @@
     
     NSInteger index = 0;
     CGFloat height = sizeOfBuffer;
-    for (MMScrapView* scrap in [self.delegate.scraps reverseObjectEnumerator]) {
+    for (MMScrapView* scrap in self.delegate.scraps) {
         CGFloat x = 0;
         MMScrapMenuButton* imgV = [[MMScrapMenuButton alloc] initWithFrame:CGRectMake(x, height, sizeOfScrap, sizeOfScrap)];
         [imgV addTarget:self action:@selector(tappedOnScrapButton:) forControlEvents:UIControlEventTouchUpInside];
