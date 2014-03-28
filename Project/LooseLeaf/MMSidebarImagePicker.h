@@ -7,10 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MMBounceButton.h"
+#import "MMSidebarButton.h"
+#import "MMSidebarImagePickerDelegate.h"
 
-@interface MMSidebarImagePicker : UIView
+#define kBounceWidth 10.0
 
-- (id)initWithFrame:(CGRect)frame forButton:(MMBounceButton*)button;
+
+@interface MMSidebarImagePicker : UIView{
+    __weak NSObject<MMSidebarImagePickerDelegate>* delegate;
+}
+
+@property (nonatomic, weak) NSObject<MMSidebarImagePickerDelegate>* delegate;
+
+- (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)button;
+
+- (void)bounceAnimationForButtonWithDuration:(CGFloat)duration;
 
 @end

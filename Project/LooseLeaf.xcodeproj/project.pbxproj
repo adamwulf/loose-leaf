@@ -67,6 +67,7 @@
 		6693297E1599196E0033E557 /* UIFont+UIBezierCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693297D1599196E0033E557 /* UIFont+UIBezierCurve.m */; };
 		6693C94618E4BCD90054FF41 /* MMSidebarImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693C94518E4BCD90054FF41 /* MMSidebarImagePicker.m */; };
 		6693C94918E4C55B0054FF41 /* MMLeftCloseButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693C94818E4C55B0054FF41 /* MMLeftCloseButton.m */; };
+		6693C94C18E4E7860054FF41 /* MMImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693C94B18E4E7860054FF41 /* MMImagePicker.m */; };
 		66942DD017C84356001E0150 /* MMScrapContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66942DCF17C84356001E0150 /* MMScrapContainerView.m */; };
 		6695B6E3175008680069E61F /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6E2175008680069E61F /* OpenGLES.framework */; };
 		6695B6E6175008840069E61F /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6E5175008840069E61F /* CoreBluetooth.framework */; };
@@ -267,6 +268,9 @@
 		6693C94518E4BCD90054FF41 /* MMSidebarImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMSidebarImagePicker.m; sourceTree = "<group>"; };
 		6693C94718E4C55B0054FF41 /* MMLeftCloseButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLeftCloseButton.h; sourceTree = "<group>"; };
 		6693C94818E4C55B0054FF41 /* MMLeftCloseButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLeftCloseButton.m; sourceTree = "<group>"; };
+		6693C94A18E4E7860054FF41 /* MMImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImagePicker.h; sourceTree = "<group>"; };
+		6693C94B18E4E7860054FF41 /* MMImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImagePicker.m; sourceTree = "<group>"; };
+		6693C94D18E52D0D0054FF41 /* MMSidebarImagePickerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMSidebarImagePickerDelegate.h; sourceTree = "<group>"; };
 		66942DCE17C84356001E0150 /* MMScrapContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapContainerView.h; sourceTree = "<group>"; };
 		66942DCF17C84356001E0150 /* MMScrapContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapContainerView.m; sourceTree = "<group>"; };
 		6695B6E2175008680069E61F /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -693,6 +697,9 @@
 			children = (
 				6693C94418E4BCD90054FF41 /* MMSidebarImagePicker.h */,
 				6693C94518E4BCD90054FF41 /* MMSidebarImagePicker.m */,
+				6693C94D18E52D0D0054FF41 /* MMSidebarImagePickerDelegate.h */,
+				6693C94A18E4E7860054FF41 /* MMImagePicker.h */,
+				6693C94B18E4E7860054FF41 /* MMImagePicker.m */,
 			);
 			name = "Image Picker";
 			sourceTree = "<group>";
@@ -1340,6 +1347,7 @@
 				66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */,
 				66A471BE17C7DAA000C2A5B6 /* MMScrappedPaperView.m in Sources */,
 				66052A0317FA170600A94531 /* MMImmutableScrapsOnPaperState.m in Sources */,
+				6693C94C18E4E7860054FF41 /* MMImagePicker.m in Sources */,
 				66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */,
 				66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */,
 				66A471C617C7E06B00C2A5B6 /* MMScrapView.m in Sources */,
