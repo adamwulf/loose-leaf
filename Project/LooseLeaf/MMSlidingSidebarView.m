@@ -192,8 +192,10 @@
 #pragma mark - MMSidebarImagePickerDelegate
 
 -(void) sidebarCloseButtonWasTapped{
-    [self hide:YES];
-    [self.delegate sidebarCloseButtonWasTapped];
+    if([self isVisible]){
+        [self hide:YES];
+        [self.delegate sidebarCloseButtonWasTapped];
+    }
 }
 
 

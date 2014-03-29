@@ -701,7 +701,7 @@
 			name = Experiments;
 			sourceTree = "<group>";
 		};
-		6693C94318E4BCC70054FF41 /* Image Picker */ = {
+		6693C94318E4BCC70054FF41 /* Sliding Sidebar */ = {
 			isa = PBXGroup;
 			children = (
 				6693C94A18E4E7860054FF41 /* MMSlidingSidebarView.h */,
@@ -710,7 +710,7 @@
 				6693C94518E4BCD90054FF41 /* MMSlidingSidebarContentView.m */,
 				6693C94D18E52D0D0054FF41 /* MMSlidingSidebarViewDelegate.h */,
 			);
-			name = "Image Picker";
+			name = "Sliding Sidebar";
 			sourceTree = "<group>";
 		};
 		6695B6E1175008530069E61F /* JotUI */ = {
@@ -1064,7 +1064,7 @@
 		66DCFBBF1581C7F400B4918C /* MMPaperStack */ = {
 			isa = PBXGroup;
 			children = (
-				6693C94318E4BCC70054FF41 /* Image Picker */,
+				6693C94318E4BCC70054FF41 /* Sliding Sidebar */,
 				66CE120417D3B6A400882275 /* Scrap Containers */,
 				66C38AC51753226F0035B872 /* Tools */,
 				66DCFBC01581C85B00B4918C /* MMPaperStackView.h */,

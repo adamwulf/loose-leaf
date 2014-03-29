@@ -59,8 +59,6 @@
 
         countButton = _countButton;
         [countButton addTarget:self action:@selector(countButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        //        UITapGestureRecognizer* tappy = [[MMSidebarButtonTapGestureRecognizer alloc] initWithTarget:self action:@selector(countButtonTapped:)];
-        //        [countButton addGestureRecognizer:tappy];
 
         
         NSDictionary* loadedRotationValues = [NSDictionary dictionaryWithContentsOfFile:[MMScrapSlidingSidebarView pathToPlist]];
