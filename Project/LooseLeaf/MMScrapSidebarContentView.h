@@ -15,7 +15,7 @@
 
 @property (nonatomic, weak) NSObject<MMScrapSidebarContentViewDelegate>* delegate;
 
--(void) prepareMenu;
+-(void) prepareContentView;
 
 -(void) flashScrollIndicators;
 

@@ -354,7 +354,7 @@
 -(void) countButtonTapped:(UIButton*)button{
     if(countButton.alpha){
         countButton.alpha = 0;
-        [scrapMenu prepareMenu];
+        [scrapMenu prepareContentView];
         [self show:YES];
     }
 }
