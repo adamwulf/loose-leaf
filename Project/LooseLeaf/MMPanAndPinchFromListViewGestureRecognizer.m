@@ -128,8 +128,10 @@
 }
 
 -(void) cancel{
-    self.enabled = NO;
-    self.enabled = YES;
+    if(self.enabled){
+        self.enabled = NO;
+        self.enabled = YES;
+    }
 }
 
 

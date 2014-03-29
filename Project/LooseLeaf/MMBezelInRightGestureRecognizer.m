@@ -37,6 +37,13 @@
     return [validTouches allObjects];
 }
 
+-(void) cancel{
+    if(self.enabled){
+        self.enabled = NO;
+        self.enabled = YES;
+    }
+}
+
 /**
  * finds the touch that is furthest left
  *

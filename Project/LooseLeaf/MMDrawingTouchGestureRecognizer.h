@@ -24,5 +24,6 @@
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 
+-(void) cancel;
 
 @end

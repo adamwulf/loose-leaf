@@ -33,4 +33,6 @@
 
 -(void) resetPageCount;
 
+-(void) cancel;
+
 @end

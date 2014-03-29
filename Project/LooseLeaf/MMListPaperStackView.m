@@ -62,6 +62,21 @@
     return self;
 }
 
+
+#pragma mark - Gesture Helpers
+
+-(void) cancelAllGestures{
+    [super cancelAllGestures];
+    if(tapGesture.enabled){
+        // cancel tap w/o requiring subclass
+        tapGesture.enabled = NO;
+        tapGesture.enabled = YES;
+    }
+    [pinchGesture cancel];
+    [longPressGesture cancel];
+}
+
+
 #pragma mark - Add Button in List View
 
 -(CGRect) frameForAddPageButton{
@@ -249,6 +264,7 @@
  * transition into page view from the transition state
  */
 -(void) finishUITransitionToPageView{
+    NSLog(@"finishUITransitionToPageView");
     for(MMPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
         if(aPage != [visibleStackHolder peekSubview]){
             [aPage enableAllGestures];

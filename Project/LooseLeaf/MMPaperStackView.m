@@ -67,6 +67,14 @@
     return self;
 }
 
+
+#pragma mark - Gesture Helpers
+
+-(void) cancelAllGestures{
+    [fromLeftBezelGesture cancel];
+    [fromRightBezelGesture cancel];
+}
+
 #pragma mark - Future Model Methods
 
 /**

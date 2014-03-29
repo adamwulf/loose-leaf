@@ -64,6 +64,7 @@
         CGFloat midPointY = (frame.size.height - 3*80) / 2;
         countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
         countButton.alpha = 0;
+        [countButton addTarget:self action:@selector(showScrapSidebar:) forControlEvents:UIControlEventTouchUpInside];
         [self insertSubview:countButton belowSubview:addPageSidebarButton];
 
         bezelScrapContainer = [[MMScrapSlidingSidebarView alloc] initWithFrame:self.bounds andCountButton:countButton];
@@ -111,6 +112,15 @@
 //        [self addSubview:drawLongElementButton];
     }
     return self;
+}
+
+#pragma mark - Gesture Helpers
+
+-(void) cancelAllGestures{
+    [super cancelAllGestures];
+    [panAndPinchScrapGesture cancel];
+    [panAndPinchScrapGesture2 cancel];
+    [stretchScrapGesture cancel];
 }
 
 
@@ -906,6 +916,13 @@ int skipAll = NO;
 }
 
 #pragma mark - MMScrapSidebarViewDelegate
+
+-(void) showScrapSidebar:(UIButton*)button{
+    // showing the actual sidebar is handled inside
+    // the MMScrapSlidingSidebarView, which adds
+    // its own target to the button
+    [self cancelAllGestures];
+}
 
 -(void) didAddScrapToBezelSidebar:(MMScrapView *)scrap{
     [bezelScrapContainer saveToDisk];

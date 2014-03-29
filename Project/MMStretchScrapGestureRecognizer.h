@@ -31,4 +31,6 @@
 
 -(CATransform3D) transformForBounceAtScale:(CGFloat) scale;
 
+-(void) cancel;
+
 @end

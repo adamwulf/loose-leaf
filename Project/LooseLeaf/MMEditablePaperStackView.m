@@ -210,6 +210,14 @@
     return self;
 }
 
+
+#pragma mark - Gesture Helpers
+
+-(void) cancelAllGestures{
+    [super cancelAllGestures];
+    [[MMDrawingTouchGestureRecognizer sharedInstace] cancel];
+}
+
 /**
  * returns the value in radians that the sidebar buttons
  * should be rotated to stay pointed "down"
@@ -282,6 +290,8 @@
 
 
 -(void) insertImageButtonTapped:(UIButton*)_button{
+    [self cancelAllGestures];
+    [[visibleStackHolder peekSubview] cancelAllGestures];
     [self setButtonsVisible:NO withDuration:0.15];
     [imagePicker show:YES];
 }
