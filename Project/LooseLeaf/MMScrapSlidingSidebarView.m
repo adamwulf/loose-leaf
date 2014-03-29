@@ -37,7 +37,7 @@
     NSMutableOrderedSet* scrapsHeldInBezel;
     NSMutableDictionary* bubbleForScrap;
     MMCountBubbleButton* countButton;
-    MMScrapSidebarContentView* scrapMenu;
+    MMScrapSidebarContentView* contentView;
     MMScrapsOnPaperState* scrapState;
     NSString* scrapIDsPath;
     
@@ -53,9 +53,9 @@
         scrapsHeldInBezel = [NSMutableOrderedSet orderedSet];
         bubbleForScrap = [NSMutableDictionary dictionary];
         
-        scrapMenu = [[MMScrapSidebarContentView alloc] initWithFrame:[sidebarContentView contentBounds]];
-        scrapMenu.delegate = self;
-        [sidebarContentView addSubview:scrapMenu];
+        contentView = [[MMScrapSidebarContentView alloc] initWithFrame:[sidebarContentView contentBounds]];
+        contentView.delegate = self;
+        [sidebarContentView addSubview:contentView];
 
         countButton = _countButton;
         [countButton addTarget:self action:@selector(countButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -352,7 +352,7 @@
 -(void) countButtonTapped:(UIButton*)button{
     if(countButton.alpha){
         countButton.alpha = 0;
-        [scrapMenu prepareContentView];
+        [contentView prepareContentView];
         [self show:YES];
     }
 }
@@ -390,8 +390,8 @@
             if(output) return output;
         }
     }
-    if(scrapMenu.alpha){
-        UIView* output = [scrapMenu hitTest:[self convertPoint:point toView:scrapMenu] withEvent:event];
+    if(contentView.alpha){
+        UIView* output = [contentView hitTest:[self convertPoint:point toView:contentView] withEvent:event];
         if(output) return output;
     }
     return [super hitTest:point withEvent:event];
