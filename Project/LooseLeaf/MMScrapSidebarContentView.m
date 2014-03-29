@@ -125,22 +125,6 @@
     }
 }
 
--(void) setHidden:(BOOL)hidden{
-    [super setHidden:hidden];
-}
-
--(void) setAlpha:(CGFloat)alpha{
-    [super setAlpha:alpha];
-}
-
--(void) removeFromSuperview{
-    [super removeFromSuperview];
-}
-
--(void) setFrame:(CGRect)frame{
-    [super setFrame:frame];
-}
-
 -(void) flashScrollIndicators{
     [scrollView flashScrollIndicators];
 }
