@@ -7,10 +7,10 @@
 //
 
 #import "MMImageSidebarContainerView.h"
-#import "MMScrapSidebarContentView.h"
+#import "MMImageSidebarContentView.h"
 
 @implementation MMImageSidebarContainerView{
-    MMScrapSidebarContentView* contentView;
+    MMImageSidebarContentView* contentView;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -18,7 +18,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        contentView = [[MMScrapSidebarContentView alloc] initWithFrame:[sidebarContentView contentBounds]];
+        contentView = [[MMImageSidebarContentView alloc] initWithFrame:[sidebarContentView contentBounds]];
         contentView.delegate = self;
         [sidebarContentView addSubview:contentView];
     }
