@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MMScrapView.h"
 
-@interface MMScrapMenuButton : UIButton
+@interface MMScrapSidebarButton : UIButton
 
 @property (nonatomic) MMScrapView* scrap;
 

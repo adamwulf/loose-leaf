@@ -74,7 +74,7 @@
 		6695B6E81750088D0069E61F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6E71750088D0069E61F /* AudioToolbox.framework */; };
 		6695B6EC17505FBF0069E61F /* MMEditablePaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6695B6EB17505FBF0069E61F /* MMEditablePaperView.m */; };
 		6695B6F01751CC170069E61F /* Pen.m in Sources */ = {isa = PBXBuildFile; fileRef = 6695B6EF1751CC160069E61F /* Pen.m */; };
-		6699714D17DA5EDB00E81467 /* MMScrapMenuButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6699714C17DA5EDB00E81467 /* MMScrapMenuButton.m */; };
+		6699714D17DA5EDB00E81467 /* MMScrapSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6699714C17DA5EDB00E81467 /* MMScrapSidebarButton.m */; };
 		6699715217DBA02700E81467 /* MMDebugDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6699715117DBA02700E81467 /* MMDebugDrawView.m */; };
 		6699904F185F74F8005581D9 /* TouchShape.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6699904E185F74F8005581D9 /* TouchShape.framework */; };
 		66999051185F7501005581D9 /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66999050185F7501005581D9 /* DrawKit-iOS.framework */; };
@@ -123,7 +123,7 @@
 		66C2C1651879F3F200804123 /* UIBezierPath+Description.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C2C1641879F3F200804123 /* UIBezierPath+Description.m */; };
 		66CA1A8D185E78030013505A /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66CA1A8B185E77F50013505A /* libc++.dylib */; };
 		66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11F617CFD8A600882275 /* MMScrapPaperStackView.m */; };
-		66CE11FD17D2700E00882275 /* MMScrapSidebarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11FC17D2700E00882275 /* MMScrapSidebarView.m */; };
+		66CE11FD17D2700E00882275 /* MMScrapSlidingSidebarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11FC17D2700E00882275 /* MMScrapSlidingSidebarView.m */; };
 		66CE120017D2772400882275 /* MMScrapBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11FF17D2772400882275 /* MMScrapBorderView.m */; };
 		66CE120317D3AD7C00882275 /* MMBounceButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE120217D3AD7C00882275 /* MMBounceButton.m */; };
 		66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* MMListAddPageButton.m */; };
@@ -280,8 +280,8 @@
 		6695B6EB17505FBF0069E61F /* MMEditablePaperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEditablePaperView.m; sourceTree = "<group>"; };
 		6695B6EE1751CC160069E61F /* Pen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pen.h; sourceTree = "<group>"; };
 		6695B6EF1751CC160069E61F /* Pen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Pen.m; sourceTree = "<group>"; };
-		6699714B17DA5EDB00E81467 /* MMScrapMenuButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapMenuButton.h; sourceTree = "<group>"; };
-		6699714C17DA5EDB00E81467 /* MMScrapMenuButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapMenuButton.m; sourceTree = "<group>"; };
+		6699714B17DA5EDB00E81467 /* MMScrapSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapSidebarButton.h; sourceTree = "<group>"; };
+		6699714C17DA5EDB00E81467 /* MMScrapSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapSidebarButton.m; sourceTree = "<group>"; };
 		6699715017DBA02700E81467 /* MMDebugDrawView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDebugDrawView.h; sourceTree = "<group>"; };
 		6699715117DBA02700E81467 /* MMDebugDrawView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDebugDrawView.m; sourceTree = "<group>"; };
 		6699904A185F74BD005581D9 /* DrawKit-iOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "DrawKit-iOS.framework"; path = "../Submodules/DrawKit-iOS/build/Debug-iphoneos/DrawKit-iOS.framework"; sourceTree = "<group>"; };
@@ -388,13 +388,13 @@
 		66CDB72E17CC0C7200C636C7 /* com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata"; path = "../../TestData/com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata"; sourceTree = "<group>"; };
 		66CE11F517CFD8A600882275 /* MMScrapPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapPaperStackView.h; sourceTree = "<group>"; };
 		66CE11F617CFD8A600882275 /* MMScrapPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapPaperStackView.m; sourceTree = "<group>"; };
-		66CE11FB17D2700E00882275 /* MMScrapSidebarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapSidebarView.h; sourceTree = "<group>"; };
-		66CE11FC17D2700E00882275 /* MMScrapSidebarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapSidebarView.m; sourceTree = "<group>"; };
+		66CE11FB17D2700E00882275 /* MMScrapSlidingSidebarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapSlidingSidebarView.h; sourceTree = "<group>"; };
+		66CE11FC17D2700E00882275 /* MMScrapSlidingSidebarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapSlidingSidebarView.m; sourceTree = "<group>"; };
 		66CE11FE17D2772400882275 /* MMScrapBorderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBorderView.h; sourceTree = "<group>"; };
 		66CE11FF17D2772400882275 /* MMScrapBorderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBorderView.m; sourceTree = "<group>"; };
 		66CE120117D3AD7C00882275 /* MMBounceButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBounceButton.h; sourceTree = "<group>"; };
 		66CE120217D3AD7C00882275 /* MMBounceButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBounceButton.m; sourceTree = "<group>"; };
-		66CE120617D3BBCD00882275 /* MMScrapSidebarViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScrapSidebarViewDelegate.h; sourceTree = "<group>"; };
+		66CE120617D3BBCD00882275 /* MMScrapSlidingSidebarViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScrapSlidingSidebarViewDelegate.h; sourceTree = "<group>"; };
 		66D0905415F7080F004D2CAF /* MMListAddPageButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButton.h; sourceTree = "<group>"; };
 		66D0905515F70810004D2CAF /* MMListAddPageButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListAddPageButton.m; sourceTree = "<group>"; };
 		66D0905815F71941004D2CAF /* MMListAddPageButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButtonDelegate.h; sourceTree = "<group>"; };
@@ -956,14 +956,14 @@
 		66CE120417D3B6A400882275 /* Scrap Containers */ = {
 			isa = PBXGroup;
 			children = (
-				66CE11FB17D2700E00882275 /* MMScrapSidebarView.h */,
-				66CE11FC17D2700E00882275 /* MMScrapSidebarView.m */,
-				66CE120617D3BBCD00882275 /* MMScrapSidebarViewDelegate.h */,
+				66CE11FB17D2700E00882275 /* MMScrapSlidingSidebarView.h */,
+				66CE11FC17D2700E00882275 /* MMScrapSlidingSidebarView.m */,
+				66CE120617D3BBCD00882275 /* MMScrapSlidingSidebarViewDelegate.h */,
 				66F4FB2417D912730086E21C /* MMScrapSidebarContentView.h */,
 				66F4FB2517D912730086E21C /* MMScrapSidebarContentView.m */,
 				66F4FB2717DA53DE0086E21C /* MMScrapSidebarContentViewDelegate.h */,
-				6699714B17DA5EDB00E81467 /* MMScrapMenuButton.h */,
-				6699714C17DA5EDB00E81467 /* MMScrapMenuButton.m */,
+				6699714B17DA5EDB00E81467 /* MMScrapSidebarButton.h */,
+				6699714C17DA5EDB00E81467 /* MMScrapSidebarButton.m */,
 			);
 			name = "Scrap Containers";
 			sourceTree = "<group>";
@@ -1267,7 +1267,7 @@
 				6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */,
 				66DCFBCD1582BAED00B4918C /* MMPaperView.m in Sources */,
 				660E1DA9158FC6300001DA12 /* NSMutableArray+QueueAdditions.m in Sources */,
-				6699714D17DA5EDB00E81467 /* MMScrapMenuButton.m in Sources */,
+				6699714D17DA5EDB00E81467 /* MMScrapSidebarButton.m in Sources */,
 				66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */,
 				66C2C1651879F3F200804123 /* UIBezierPath+Description.m in Sources */,
 				660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */,
@@ -1335,7 +1335,7 @@
 				663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */,
 				663C187D1755B63D00706A05 /* Eraser.m in Sources */,
 				663C188B1759B51600706A05 /* MMUndoRedoButton.m in Sources */,
-				66CE11FD17D2700E00882275 /* MMScrapSidebarView.m in Sources */,
+				66CE11FD17D2700E00882275 /* MMScrapSlidingSidebarView.m in Sources */,
 				663C1897175A89EF00706A05 /* MMRulerButton.m in Sources */,
 				6651083C178F249C00A7A7DD /* MMVector.m in Sources */,
 				66F4FB2617D912730086E21C /* MMScrapSidebarContentView.m in Sources */,

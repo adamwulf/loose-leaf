@@ -8,7 +8,7 @@
 
 #import "MMScrapSidebarContentView.h"
 #import "MMScrapView.h"
-#import "MMScrapMenuButton.h"
+#import "MMScrapSidebarButton.h"
 
 
 #define kColumnMargin 10.0
@@ -50,7 +50,7 @@
 
     // very basic for now. just remove all old scraps
     for (UIView* subview in [[scrollView subviews] copy]) {
-        if([subview isKindOfClass:[MMScrapMenuButton class]]){
+        if([subview isKindOfClass:[MMScrapSidebarButton class]]){
             [subview removeFromSuperview];
         }
     }
@@ -78,7 +78,7 @@
         // place the left scrap. it should have 10 px left margin
         // (left margin already accounted for with our bounds)
         // and 10px in the middle between it at the right
-        MMScrapMenuButton* leftScrapButton = [[MMScrapMenuButton alloc] initWithFrame:CGRectMake(0, contentHeight, sizeOfScrap, sizeOfScrap)];
+        MMScrapSidebarButton* leftScrapButton = [[MMScrapSidebarButton alloc] initWithFrame:CGRectMake(0, contentHeight, sizeOfScrap, sizeOfScrap)];
         [leftScrapButton addTarget:self action:@selector(tappedOnScrapButton:) forControlEvents:UIControlEventTouchUpInside];
         leftScrapButton.scrap = leftScrap;
         [scrollView addSubview:leftScrapButton];
@@ -89,7 +89,7 @@
             // (left margin already accounted for with our bounds)
             // and 10px in the middle between it at the right
             CGFloat x = self.bounds.size.width - sizeOfScrap;
-            MMScrapMenuButton* rightScrapButton = [[MMScrapMenuButton alloc] initWithFrame:CGRectMake(x, contentHeight, sizeOfScrap, sizeOfScrap)];
+            MMScrapSidebarButton* rightScrapButton = [[MMScrapSidebarButton alloc] initWithFrame:CGRectMake(x, contentHeight, sizeOfScrap, sizeOfScrap)];
             [rightScrapButton addTarget:self action:@selector(tappedOnScrapButton:) forControlEvents:UIControlEventTouchUpInside];
             rightScrapButton.scrap = rightScrap;
             [scrollView addSubview:rightScrapButton];
@@ -147,7 +147,7 @@
 
 #pragma mark - UIButton
 
--(void) tappedOnScrapButton:(MMScrapMenuButton*) button{
+-(void) tappedOnScrapButton:(MMScrapSidebarButton*) button{
     [self.delegate didTapOnScrapFromMenu:button.scrap];
 }
 

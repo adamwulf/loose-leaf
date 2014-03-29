@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMScrapSidebarView.h"
+#import "MMScrapSlidingSidebarView.h"
 #import "MMScrapBubbleButton.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMScrapSidebarContentView.h"
@@ -31,7 +31,7 @@
 
 
 
-@implementation MMScrapSidebarView{
+@implementation MMScrapSlidingSidebarView{
     CGFloat lastRotationReading;
     CGFloat targetAlpha;
     NSMutableOrderedSet* scrapsHeldInBezel;
@@ -63,7 +63,7 @@
         //        [countButton addGestureRecognizer:tappy];
 
         
-        NSDictionary* loadedRotationValues = [NSDictionary dictionaryWithContentsOfFile:[MMScrapSidebarView pathToPlist]];
+        NSDictionary* loadedRotationValues = [NSDictionary dictionaryWithContentsOfFile:[MMScrapSlidingSidebarView pathToPlist]];
         rotationAdjustments = [NSMutableDictionary dictionary];
         if(loadedRotationValues){
             [rotationAdjustments addEntriesFromDictionary:loadedRotationValues];
@@ -429,7 +429,7 @@ static NSString* bezelStatePath;
 -(void) saveToDisk{
     [[scrapState immutableState] saveToDisk];
     
-    [[rotationAdjustments copy] writeToFile:[MMScrapSidebarView pathToPlist] atomically:YES];
+    [[rotationAdjustments copy] writeToFile:[MMScrapSlidingSidebarView pathToPlist] atomically:YES];
 }
 
 

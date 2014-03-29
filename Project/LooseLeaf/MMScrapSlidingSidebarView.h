@@ -9,16 +9,16 @@
 #import "MMSlidingSidebarView.h"
 #import "MMUntouchableView.h"
 #import "MMScrapView.h"
-#import "MMScrapSidebarViewDelegate.h"
+#import "MMScrapSlidingSidebarViewDelegate.h"
 #import "MMScrapSidebarContentViewDelegate.h"
 #import "MMScrapsOnPaperStateDelegate.h"
 #import "MMCountBubbleButton.h"
 
-@interface MMScrapSidebarView : MMSlidingSidebarView<MMScrapSidebarContentViewDelegate,MMScrapsOnPaperStateDelegate>{
-    __weak NSObject<MMScrapSidebarViewDelegate>* bubbleDelegate;
+@interface MMScrapSlidingSidebarView : MMSlidingSidebarView<MMScrapSidebarContentViewDelegate,MMScrapsOnPaperStateDelegate>{
+    __weak NSObject<MMScrapSlidingSidebarViewDelegate>* bubbleDelegate;
 }
 
-@property (nonatomic, weak) NSObject<MMScrapSidebarViewDelegate>* bubbleDelegate;
+@property (nonatomic, weak) NSObject<MMScrapSlidingSidebarViewDelegate>* bubbleDelegate;
 @property (nonatomic, strong) MMCountBubbleButton* countButton;
 
 -(id) initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton *)countButton;

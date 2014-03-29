@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMScrapMenuButton.h"
+#import "MMScrapSidebarButton.h"
 
-@implementation MMScrapMenuButton{
+@implementation MMScrapSidebarButton{
     MMScrapView* scrap;
 }
 
@@ -30,7 +30,7 @@
 }
 
 +(CGSize) sizeOfRowForScrap:(MMScrapView*)scrap forWidth:(CGFloat)width{
-    CGFloat scale = [MMScrapMenuButton scaleOfRowForScrap:scrap forWidth:width];
+    CGFloat scale = [MMScrapSidebarButton scaleOfRowForScrap:scrap forWidth:width];
     CGSize s = CGSizeMake(scrap.frame.size.width * scale, scrap.frame.size.height*scale);
     if(s.width < s.height){
         s.width = s.height;
@@ -42,7 +42,7 @@
     scrap = _scrap;
     
     CGRect fr = self.frame;
-    fr.size = [MMScrapMenuButton sizeOfRowForScrap:scrap forWidth:self.bounds.size.width];
+    fr.size = [MMScrapSidebarButton sizeOfRowForScrap:scrap forWidth:self.bounds.size.width];
     self.frame = fr;
     
     // remove anything in our button
@@ -57,7 +57,7 @@
     scrap.center = transformView.center;
     
     [self addSubview:transformView];
-    CGFloat scale = [MMScrapMenuButton scaleOfRowForScrap:scrap forWidth:self.bounds.size.width];
+    CGFloat scale = [MMScrapSidebarButton scaleOfRowForScrap:scrap forWidth:self.bounds.size.width];
     transformView.transform = CGAffineTransformMakeScale(scale, scale);
     transformView.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
 

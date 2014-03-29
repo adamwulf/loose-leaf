@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MMScrapView.h"
 
-@protocol MMScrapSidebarViewDelegate <NSObject>
+@protocol MMScrapSlidingSidebarViewDelegate <NSObject>
 
 -(void) didAddScrapToBezelSidebar:(MMScrapView*)scrap;
 

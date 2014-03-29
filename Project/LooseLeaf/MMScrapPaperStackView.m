@@ -8,7 +8,7 @@
 
 #import "MMScrapPaperStackView.h"
 #import "MMUntouchableView.h"
-#import "MMScrapSidebarView.h"
+#import "MMScrapSlidingSidebarView.h"
 #import "MMDebugDrawView.h"
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "MMStretchScrapGestureRecognizer.h"
@@ -18,7 +18,7 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 
 @implementation MMScrapPaperStackView{
-    MMScrapSidebarView* bezelScrapContainer;
+    MMScrapSlidingSidebarView* bezelScrapContainer;
     MMUntouchableView* scrapContainer;
     // we get two gestures here, so that we can support
     // grabbing two scraps at the same time
@@ -66,7 +66,7 @@
         countButton.alpha = 0;
         [self insertSubview:countButton belowSubview:addPageSidebarButton];
 
-        bezelScrapContainer = [[MMScrapSidebarView alloc] initWithFrame:self.bounds andCountButton:countButton];
+        bezelScrapContainer = [[MMScrapSlidingSidebarView alloc] initWithFrame:self.bounds andCountButton:countButton];
         bezelScrapContainer.delegate = self;
         bezelScrapContainer.bubbleDelegate = self;
         [self insertSubview:bezelScrapContainer belowSubview:countButton];
