@@ -6,10 +6,10 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMImageSlidingSidebarView.h"
+#import "MMImageSidebarContainerView.h"
 #import "MMScrapSidebarContentView.h"
 
-@implementation MMImageSlidingSidebarView{
+@implementation MMImageSidebarContainerView{
     MMScrapSidebarContentView* contentView;
 }
 

@@ -6,11 +6,12 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMSlidingSidebarContentView.h"
+#import "MMSlidingSidebarView.h"
 #import "MMLeftCloseButton.h"
 #import "UIView+Animations.h"
+#import "MMSlidingSidebarContainerView.h"
 
-@implementation MMSlidingSidebarContentView{
+@implementation MMSlidingSidebarView{
     // this is the button that'll trigger the sidebar
     MMSidebarButton* referenceButton;
     // this is our button inside the sidebar
@@ -49,6 +50,10 @@
         self.clipsToBounds = YES;
     }
     return self;
+}
+
+-(BOOL) isVisible{
+    return [self.delegate isVisible];
 }
 
 // the contentBounds defines what area inside of this view
@@ -119,7 +124,7 @@
         leftDarkArea.origin.x -= kBounceWidth;
         leftDarkArea.size.width += 3*kBounceWidth;
     }
-    CGContextSetFillColorWithColor(context, [MMSlidingSidebarContentView backgroundColor].CGColor);
+    CGContextSetFillColorWithColor(context, [MMSlidingSidebarView backgroundColor].CGColor);
     CGContextFillRect(context, leftDarkArea);
     
     // right light border line
@@ -129,7 +134,7 @@
     }else{
         lightBorderLineRect = CGRectMake(leftDarkArea.origin.x - borderSize, 0, borderSize, leftDarkArea.size.height);
     }
-    CGContextSetFillColorWithColor(context, [MMSlidingSidebarContentView lightBackgroundColor].CGColor);
+    CGContextSetFillColorWithColor(context, [MMSlidingSidebarView lightBackgroundColor].CGColor);
     CGContextFillRect(context, lightBorderLineRect);
     
     // clip light border circle section
@@ -137,7 +142,7 @@
     UIBezierPath* circleCropPath = [UIBezierPath bezierPathWithOvalInRect:circleCrop];
     [self erase:circleCropPath atContext:context];
     // draw curved light border
-    [[MMSlidingSidebarContentView lightBackgroundColor] setFill];
+    [[MMSlidingSidebarView lightBackgroundColor] setFill];
     [circleCropPath fill];
 
     // clip dark border circle section
@@ -145,7 +150,7 @@
     UIBezierPath* innerCircleCropPath = [UIBezierPath bezierPathWithOvalInRect:innerCircleCrop];
     [self erase:innerCircleCropPath atContext:context];
     // draw dark curved border
-    [[MMSlidingSidebarContentView backgroundColor] setFill];
+    [[MMSlidingSidebarView backgroundColor] setFill];
     [innerCircleCropPath fill];
 
     // right dark border line
@@ -158,7 +163,7 @@
     // fill right border
     UIBezierPath* stripeRRectPath = [UIBezierPath bezierPathWithRect:darkBorderLineRect];
     [self erase:stripeRRectPath atContext:context];
-    [[MMSlidingSidebarContentView backgroundColor] setFill];
+    [[MMSlidingSidebarView backgroundColor] setFill];
     [stripeRRectPath fill];
 
     // clip where the button will rest

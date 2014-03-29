@@ -8,9 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "MMScrapView.h"
-#import "MMSlidingSidebarContentViewDelegate.h"
 
-@protocol MMScrapSidebarContentViewDelegate <MMSlidingSidebarContentViewDelegate>
+@protocol MMScrapSidebarContentViewDelegate <NSObject>
 
 -(NSArray*) scraps;
 

@@ -14,14 +14,14 @@
 #import "MMScrapBubbleButton.h"
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "NSFileManager+DirectoryOptimizations.h"
-#import "MMImageSlidingSidebarView.h"
+#import "MMImageSidebarContainerView.h"
 
 @implementation MMEditablePaperStackView{
     MMEditablePaperView* currentEditablePage;
     JotView* drawableView;
     NSMutableArray* stateLoadedPages;
     UIPopoverController* jotTouchPopover;
-    MMImageSlidingSidebarView* imagePicker;
+    MMImageSidebarContainerView* imagePicker;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -201,7 +201,7 @@
         [[MMDrawingTouchGestureRecognizer sharedInstace] setTouchDelegate:self];
         [self addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstace]];
         
-        imagePicker = [[MMImageSlidingSidebarView alloc] initWithFrame:self.bounds forButton:insertImageButton animateFromLeft:YES];
+        imagePicker = [[MMImageSidebarContainerView alloc] initWithFrame:self.bounds forButton:insertImageButton animateFromLeft:YES];
         imagePicker.delegate = self;
         [imagePicker hide:NO];
         [self addSubview:imagePicker];

@@ -34,7 +34,7 @@
         
         // the sidebar content view will hold all of the content and menus
         CGRect imagePickerBounds = [self defaultSidebarFrame];
-        sidebarContentView = [[MMSlidingSidebarContentView alloc] initWithFrame:imagePickerBounds forButton:_button animateFromLeft:directionIsFromLeft];
+        sidebarContentView = [[MMSlidingSidebarView alloc] initWithFrame:imagePickerBounds forButton:_button animateFromLeft:directionIsFromLeft];
         sidebarContentView.delegate = self;
         [self addSubview:sidebarContentView];
         

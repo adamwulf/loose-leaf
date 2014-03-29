@@ -8,12 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "MMScrapSidebarContentViewDelegate.h"
+#import "MMSlidingSidebarContainerView.h"
 
 @interface MMScrapSidebarContentView : UIView{
-    __weak NSObject<MMScrapSidebarContentViewDelegate>* delegate;
+    __weak MMSlidingSidebarContainerView<MMScrapSidebarContentViewDelegate>* delegate;
 }
 
-@property (nonatomic, weak) NSObject<MMScrapSidebarContentViewDelegate>* delegate;
+@property (nonatomic, weak) MMSlidingSidebarContainerView<MMScrapSidebarContentViewDelegate>* delegate;
 @property (nonatomic, assign) NSInteger columnCount;
 
 -(void) prepareContentView;

@@ -8,12 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "MMSidebarButton.h"
-#import "MMSlidingSidebarContentView.h"
+#import "MMSlidingSidebarView.h"
 #import "MMSlidingSidebarContainerViewDelegate.h"
-#import "MMSlidingSidebarContentViewDelegate.h"
 
-@interface MMSlidingSidebarContainerView : UIView<MMSlidingSidebarContainerViewDelegate,MMSlidingSidebarContentViewDelegate>{
-    MMSlidingSidebarContentView* sidebarContentView;
+@interface MMSlidingSidebarContainerView : UIView<MMSlidingSidebarContainerViewDelegate>{
+    MMSlidingSidebarView* sidebarContentView;
     __weak NSObject<MMSlidingSidebarContainerViewDelegate>* delegate;
 }
 

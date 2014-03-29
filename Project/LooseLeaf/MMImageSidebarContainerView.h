@@ -8,6 +8,6 @@
 
 #import "MMSlidingSidebarContainerView.h"
 
-@interface MMImageSlidingSidebarView : MMSlidingSidebarContainerView
+@interface MMImageSidebarContainerView : MMSlidingSidebarContainerView
 
 @end

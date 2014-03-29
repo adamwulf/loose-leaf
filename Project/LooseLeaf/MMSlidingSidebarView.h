@@ -8,21 +8,23 @@
 
 #import <UIKit/UIKit.h>
 #import "MMSidebarButton.h"
-#import "MMSlidingSidebarContainerViewDelegate.h"
 
 #define kBounceWidth 10.0
 
+@class MMSlidingSidebarContainerView;
 
-@interface MMSlidingSidebarContentView : UIView{
-    __weak NSObject<MMSlidingSidebarContainerViewDelegate>* delegate;
+@interface MMSlidingSidebarView : UIView{
+    __weak MMSlidingSidebarContainerView* delegate;
 }
 
-@property (nonatomic, weak) NSObject<MMSlidingSidebarContainerViewDelegate>* delegate;
+@property (nonatomic, weak) MMSlidingSidebarContainerView* delegate;
 
 - (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft;
 
 - (void)bounceAnimationForButtonWithDuration:(CGFloat)animationDuration;
 
 -(CGRect) contentBounds;
+
+-(BOOL) isVisible;
 
 @end
