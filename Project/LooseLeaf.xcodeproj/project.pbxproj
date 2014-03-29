@@ -67,7 +67,7 @@
 		6693297E1599196E0033E557 /* UIFont+UIBezierCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693297D1599196E0033E557 /* UIFont+UIBezierCurve.m */; };
 		6693C94618E4BCD90054FF41 /* MMSlidingSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693C94518E4BCD90054FF41 /* MMSlidingSidebarContentView.m */; };
 		6693C94918E4C55B0054FF41 /* MMLeftCloseButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693C94818E4C55B0054FF41 /* MMLeftCloseButton.m */; };
-		6693C94C18E4E7860054FF41 /* MMSlidingSidebarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693C94B18E4E7860054FF41 /* MMSlidingSidebarView.m */; };
+		6693C94C18E4E7860054FF41 /* MMSlidingSidebarContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693C94B18E4E7860054FF41 /* MMSlidingSidebarContainerView.m */; };
 		66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66942DCF17C84356001E0150 /* MMUntouchableView.m */; };
 		6695B6E3175008680069E61F /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6E2175008680069E61F /* OpenGLES.framework */; };
 		6695B6E6175008840069E61F /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6E5175008840069E61F /* CoreBluetooth.framework */; };
@@ -89,6 +89,7 @@
 		66A471C617C7E06B00C2A5B6 /* MMScrapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A471C517C7E06B00C2A5B6 /* MMScrapView.m */; };
 		66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A4BD4516321ABC00C45070 /* NSThread+BlockAdditions.m */; };
 		66AC153D1805F2F8005315C8 /* MMLoadImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC153C1805F2F8005315C8 /* MMLoadImageCache.m */; };
+		66AC8D7918E7506A00A65036 /* MMImageSlidingSidebarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC8D7818E7506A00A65036 /* MMImageSlidingSidebarView.m */; };
 		66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */; };
 		66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B0FA5F17FB68410079E7A3 /* MMScrapViewState.m */; };
 		66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A55175AFCA70049F1AF /* MMHandButton.m */; };
@@ -268,9 +269,9 @@
 		6693C94518E4BCD90054FF41 /* MMSlidingSidebarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMSlidingSidebarContentView.m; sourceTree = "<group>"; };
 		6693C94718E4C55B0054FF41 /* MMLeftCloseButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLeftCloseButton.h; sourceTree = "<group>"; };
 		6693C94818E4C55B0054FF41 /* MMLeftCloseButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLeftCloseButton.m; sourceTree = "<group>"; };
-		6693C94A18E4E7860054FF41 /* MMSlidingSidebarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMSlidingSidebarView.h; sourceTree = "<group>"; };
-		6693C94B18E4E7860054FF41 /* MMSlidingSidebarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMSlidingSidebarView.m; sourceTree = "<group>"; };
-		6693C94D18E52D0D0054FF41 /* MMSlidingSidebarViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMSlidingSidebarViewDelegate.h; sourceTree = "<group>"; };
+		6693C94A18E4E7860054FF41 /* MMSlidingSidebarContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMSlidingSidebarContainerView.h; sourceTree = "<group>"; };
+		6693C94B18E4E7860054FF41 /* MMSlidingSidebarContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMSlidingSidebarContainerView.m; sourceTree = "<group>"; };
+		6693C94D18E52D0D0054FF41 /* MMSlidingSidebarContainerViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMSlidingSidebarContainerViewDelegate.h; sourceTree = "<group>"; };
 		66942DCE17C84356001E0150 /* MMUntouchableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUntouchableView.h; sourceTree = "<group>"; };
 		66942DCF17C84356001E0150 /* MMUntouchableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUntouchableView.m; sourceTree = "<group>"; };
 		6695B6E2175008680069E61F /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -322,6 +323,9 @@
 		66AA212C16FBB31C00E86922 /* MMPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPopoverView.m; sourceTree = "<group>"; };
 		66AC153B1805F2F8005315C8 /* MMLoadImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLoadImageCache.h; sourceTree = "<group>"; };
 		66AC153C1805F2F8005315C8 /* MMLoadImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLoadImageCache.m; sourceTree = "<group>"; };
+		66AC8D7718E7506A00A65036 /* MMImageSlidingSidebarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImageSlidingSidebarView.h; sourceTree = "<group>"; };
+		66AC8D7818E7506A00A65036 /* MMImageSlidingSidebarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImageSlidingSidebarView.m; sourceTree = "<group>"; };
+		66AC8D7A18E7514B00A65036 /* MMSlidingSidebarContentViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMSlidingSidebarContentViewDelegate.h; sourceTree = "<group>"; };
 		66AE5AA617F4D064009F82B6 /* MMScrapsOnPaperState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapsOnPaperState.h; sourceTree = "<group>"; };
 		66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapsOnPaperState.m; sourceTree = "<group>"; };
 		66AE5AA917F4D124009F82B6 /* MMScrapsOnPaperStateDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScrapsOnPaperStateDelegate.h; sourceTree = "<group>"; };
@@ -581,6 +585,7 @@
 			children = (
 				66942DCE17C84356001E0150 /* MMUntouchableView.h */,
 				66942DCF17C84356001E0150 /* MMUntouchableView.m */,
+				6693C94318E4BCC70054FF41 /* Sliding Sidebar */,
 			);
 			name = "Helper Classes";
 			sourceTree = "<group>";
@@ -591,7 +596,6 @@
 				66E47E22187F278A000AFD18 /* Ruler */,
 				66B62C4B17F245E6006D31EB /* Page State */,
 				66A471C317C7E05C00C2A5B6 /* Scraps */,
-				66CE120517D3B6C200882275 /* Scrap Bubble */,
 				66D33F4A15A6408A0044C809 /* MMShadowedView.h */,
 				66D33F4B15A6408A0044C809 /* MMShadowedView.m */,
 				66DCFBCB1582BAED00B4918C /* MMPaperView.h */,
@@ -704,11 +708,12 @@
 		6693C94318E4BCC70054FF41 /* Sliding Sidebar */ = {
 			isa = PBXGroup;
 			children = (
-				6693C94A18E4E7860054FF41 /* MMSlidingSidebarView.h */,
-				6693C94B18E4E7860054FF41 /* MMSlidingSidebarView.m */,
+				6693C94A18E4E7860054FF41 /* MMSlidingSidebarContainerView.h */,
+				6693C94B18E4E7860054FF41 /* MMSlidingSidebarContainerView.m */,
+				6693C94D18E52D0D0054FF41 /* MMSlidingSidebarContainerViewDelegate.h */,
 				6693C94418E4BCD90054FF41 /* MMSlidingSidebarContentView.h */,
 				6693C94518E4BCD90054FF41 /* MMSlidingSidebarContentView.m */,
-				6693C94D18E52D0D0054FF41 /* MMSlidingSidebarViewDelegate.h */,
+				66AC8D7A18E7514B00A65036 /* MMSlidingSidebarContentViewDelegate.h */,
 			);
 			name = "Sliding Sidebar";
 			sourceTree = "<group>";
@@ -892,6 +897,15 @@
 			name = Used;
 			sourceTree = "<group>";
 		};
+		66AC8D7618E7504D00A65036 /* Image Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				66AC8D7718E7506A00A65036 /* MMImageSlidingSidebarView.h */,
+				66AC8D7818E7506A00A65036 /* MMImageSlidingSidebarView.m */,
+			);
+			name = "Image Sidebar";
+			sourceTree = "<group>";
+		};
 		66B21A77175E59490049F1AF /* Operations */ = {
 			isa = PBXGroup;
 			children = (
@@ -953,9 +967,10 @@
 			name = Tools;
 			sourceTree = "<group>";
 		};
-		66CE120417D3B6A400882275 /* Scrap Containers */ = {
+		66CE120417D3B6A400882275 /* Scrap Sidebar */ = {
 			isa = PBXGroup;
 			children = (
+				66CE120517D3B6C200882275 /* Scrap Bubble */,
 				66CE11FB17D2700E00882275 /* MMScrapSlidingSidebarView.h */,
 				66CE11FC17D2700E00882275 /* MMScrapSlidingSidebarView.m */,
 				66CE120617D3BBCD00882275 /* MMScrapSlidingSidebarViewDelegate.h */,
@@ -965,7 +980,7 @@
 				6699714B17DA5EDB00E81467 /* MMScrapSidebarButton.h */,
 				6699714C17DA5EDB00E81467 /* MMScrapSidebarButton.m */,
 			);
-			name = "Scrap Containers";
+			name = "Scrap Sidebar";
 			sourceTree = "<group>";
 		};
 		66CE120517D3B6C200882275 /* Scrap Bubble */ = {
@@ -1064,8 +1079,8 @@
 		66DCFBBF1581C7F400B4918C /* MMPaperStack */ = {
 			isa = PBXGroup;
 			children = (
-				6693C94318E4BCC70054FF41 /* Sliding Sidebar */,
-				66CE120417D3B6A400882275 /* Scrap Containers */,
+				66AC8D7618E7504D00A65036 /* Image Sidebar */,
+				66CE120417D3B6A400882275 /* Scrap Sidebar */,
 				66C38AC51753226F0035B872 /* Tools */,
 				66DCFBC01581C85B00B4918C /* MMPaperStackView.h */,
 				66DCFBC11581C85B00B4918C /* MMPaperStackView.m */,
@@ -1330,6 +1345,7 @@
 				6695B6EC17505FBF0069E61F /* MMEditablePaperView.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
 				66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */,
+				66AC8D7918E7506A00A65036 /* MMImageSlidingSidebarView.m in Sources */,
 				66A471C217C7DEF200C2A5B6 /* SYShape+Bezier.m in Sources */,
 				66B3522517A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m in Sources */,
 				663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */,
@@ -1355,7 +1371,7 @@
 				66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */,
 				66A471BE17C7DAA000C2A5B6 /* MMScrappedPaperView.m in Sources */,
 				66052A0317FA170600A94531 /* MMImmutableScrapsOnPaperState.m in Sources */,
-				6693C94C18E4E7860054FF41 /* MMSlidingSidebarView.m in Sources */,
+				6693C94C18E4E7860054FF41 /* MMSlidingSidebarContainerView.m in Sources */,
 				66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */,
 				66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */,
 				66A471C617C7E06B00C2A5B6 /* MMScrapView.m in Sources */,

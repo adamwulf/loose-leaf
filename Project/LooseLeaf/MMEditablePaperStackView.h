@@ -38,13 +38,13 @@
 #import "PolygonToolDelegate.h"
 #import "MMEditablePaperViewDelegate.h"
 #import "MMDrawingTouchGestureRecognizer.h"
-#import "MMSlidingSidebarViewDelegate.h"
+#import "MMSlidingSidebarContainerViewDelegate.h"
 
 /**
  * this class is responsible for the editable buttons and controls that show
  * outside of a page's view subviews
  */
-@interface MMEditablePaperStackView : MMListPaperStackView<MMEditablePaperViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,UIScrollViewDelegate,PolygonToolDelegate,MMPanGestureDelegate,UIGestureRecognizerDelegate,MMSlidingSidebarViewDelegate>{
+@interface MMEditablePaperStackView : MMListPaperStackView<MMEditablePaperViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,UIScrollViewDelegate,PolygonToolDelegate,MMPanGestureDelegate,UIGestureRecognizerDelegate,MMSlidingSidebarContainerViewDelegate>{
     
     // managers
     MMStackManager* stackManager;

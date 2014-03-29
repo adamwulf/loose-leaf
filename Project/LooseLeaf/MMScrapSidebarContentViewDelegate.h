@@ -8,13 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "MMScrapView.h"
+#import "MMSlidingSidebarContentViewDelegate.h"
 
-@protocol MMScrapSidebarContentViewDelegate <NSObject>
+@protocol MMScrapSidebarContentViewDelegate <MMSlidingSidebarContentViewDelegate>
 
 -(NSArray*) scraps;
 
 -(void) didTapOnScrapFromMenu:(MMScrapView*)scrap;
-
--(BOOL) isVisible;
 
 @end

@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMSlidingSidebarView.h"
+#import "MMSlidingSidebarContainerView.h"
 #import "MMUntouchableView.h"
 #import "MMScrapView.h"
 #import "MMScrapSlidingSidebarViewDelegate.h"
@@ -14,7 +14,7 @@
 #import "MMScrapsOnPaperStateDelegate.h"
 #import "MMCountBubbleButton.h"
 
-@interface MMScrapSlidingSidebarView : MMSlidingSidebarView<MMScrapSidebarContentViewDelegate,MMScrapsOnPaperStateDelegate>{
+@interface MMScrapSlidingSidebarView : MMSlidingSidebarContainerView<MMScrapSidebarContentViewDelegate,MMScrapsOnPaperStateDelegate>{
     __weak NSObject<MMScrapSlidingSidebarViewDelegate>* bubbleDelegate;
 }
 

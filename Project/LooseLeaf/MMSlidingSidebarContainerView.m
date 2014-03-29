@@ -6,12 +6,12 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMSlidingSidebarView.h"
+#import "MMSlidingSidebarContainerView.h"
 #import "UIView+Animations.h"
 
 #define kAnimationDuration 0.3
 
-@implementation MMSlidingSidebarView{
+@implementation MMSlidingSidebarContainerView{
     UIButton* dismissButton;
     BOOL directionIsFromLeft;
 }
