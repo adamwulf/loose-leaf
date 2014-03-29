@@ -15,4 +15,6 @@
 
 -(void) didTapOnScrapFromMenu:(MMScrapView*)scrap;
 
+-(BOOL) isVisible;
+
 @end

@@ -704,11 +704,11 @@
 		6693C94318E4BCC70054FF41 /* Image Picker */ = {
 			isa = PBXGroup;
 			children = (
+				6693C94A18E4E7860054FF41 /* MMSlidingSidebarView.h */,
+				6693C94B18E4E7860054FF41 /* MMSlidingSidebarView.m */,
 				6693C94418E4BCD90054FF41 /* MMSlidingSidebarContentView.h */,
 				6693C94518E4BCD90054FF41 /* MMSlidingSidebarContentView.m */,
 				6693C94D18E52D0D0054FF41 /* MMSlidingSidebarViewDelegate.h */,
-				6693C94A18E4E7860054FF41 /* MMSlidingSidebarView.h */,
-				6693C94B18E4E7860054FF41 /* MMSlidingSidebarView.m */,
 			);
 			name = "Image Picker";
 			sourceTree = "<group>";

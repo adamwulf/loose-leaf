@@ -14,6 +14,7 @@
 }
 
 @property (nonatomic, weak) NSObject<MMScrapSidebarContentViewDelegate>* delegate;
+@property (nonatomic, assign) NSInteger columnCount;
 
 -(void) prepareContentView;
 

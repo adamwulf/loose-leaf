@@ -11,13 +11,16 @@
 #import "MMScrapSidebarButton.h"
 
 
-#define kColumnMargin 10.0
+#define kColumnSideMargin 10.0
+#define kColumnTopMargin 10.0
 
 @implementation MMScrapSidebarContentView{
     UIScrollView* scrollView;
+    NSInteger columnCount;
 }
 
 @synthesize delegate;
+@synthesize columnCount;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -32,7 +35,10 @@
         scrollView.showsVerticalScrollIndicator = YES;
         scrollView.contentSize = CGSizeMake(self.bounds.size.width, 500);
         scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(6, 0, 6, 0);
+        scrollView.alwaysBounceVertical = YES;
         [self addSubview:scrollView];
+        
+        columnCount = 2;
         
         // for clarity
         self.clipsToBounds = YES;
@@ -42,12 +48,17 @@
     return self;
 }
 
+-(void) setColumnCount:(NSInteger)_columnCount{
+    columnCount = _columnCount;
+    if([self.delegate isVisible]){
+        [self prepareContentView];
+    }
+}
 
 
 
 // TODO: add caching / optimize
 -(void) prepareContentView{
-
     // very basic for now. just remove all old scraps
     for (UIView* subview in [[scrollView subviews] copy]) {
         if([subview isKindOfClass:[MMScrapSidebarButton class]]){
@@ -58,63 +69,45 @@
     // determine the variables that will affect
     // our layout
     NSArray* allScraps = [self.delegate scraps];
-    int rowCount = ceilf([allScraps count] / 2.0);
-    CGFloat sizeOfScrap = (self.bounds.size.width - kColumnMargin) / 2;
-    CGFloat sizeOfBuffer = 10;
+    int rowCount = ceilf([allScraps count] / columnCount);
+    CGFloat sizeOfScrap = (self.bounds.size.width - kColumnSideMargin) / columnCount;
     
     
     // then add a new uiimage for every scrap
-    CGFloat contentHeight = 5*sizeOfBuffer;
+    CGFloat contentHeight = 5*kColumnTopMargin;
     for(int row = 0; row<rowCount; row++){
         // determine the index and scrap objects
-        int leftIndex = row * 2;
-        int rightIndex = leftIndex + 1;
-        MMScrapView* leftScrap = [allScraps objectAtIndex:leftIndex];
-        MMScrapView* rightScrap = nil;
-        if(rightIndex < [allScraps count]){
-            rightScrap = [allScraps objectAtIndex:rightIndex];
-        }
-        
-        // place the left scrap. it should have 10 px left margin
-        // (left margin already accounted for with our bounds)
-        // and 10px in the middle between it at the right
-        MMScrapSidebarButton* leftScrapButton = [[MMScrapSidebarButton alloc] initWithFrame:CGRectMake(0, contentHeight, sizeOfScrap, sizeOfScrap)];
-        [leftScrapButton addTarget:self action:@selector(tappedOnScrapButton:) forControlEvents:UIControlEventTouchUpInside];
-        leftScrapButton.scrap = leftScrap;
-        [scrollView addSubview:leftScrapButton];
-        CGFloat maxHeightOfBothScraps = leftScrapButton.bounds.size.height + sizeOfBuffer;
-
-        if(rightScrap){
-            // place the right scrap. it should have 10 px left margin
-            // (left margin already accounted for with our bounds)
-            // and 10px in the middle between it at the right
-            CGFloat x = self.bounds.size.width - sizeOfScrap;
-            MMScrapSidebarButton* rightScrapButton = [[MMScrapSidebarButton alloc] initWithFrame:CGRectMake(x, contentHeight, sizeOfScrap, sizeOfScrap)];
-            [rightScrapButton addTarget:self action:@selector(tappedOnScrapButton:) forControlEvents:UIControlEventTouchUpInside];
-            rightScrapButton.scrap = rightScrap;
-            [scrollView addSubview:rightScrapButton];
-            CGFloat oldMaxHeight = maxHeightOfBothScraps;
-            CGFloat rightHeight = rightScrapButton.bounds.size.height + sizeOfBuffer;
-            if(maxHeightOfBothScraps < rightHeight){
-                maxHeightOfBothScraps = rightHeight;
-                // i'm taller, so move the left guy down slightly to center him
-                CGFloat heightDiff = (maxHeightOfBothScraps - oldMaxHeight) / 2;
-                CGRect fr = leftScrapButton.frame;
-                fr.origin.y += heightDiff;
-                leftScrapButton.frame = fr;
-            }else{
-                // left side is taller, center the right guy
-                CGFloat heightDiff = (maxHeightOfBothScraps - rightHeight) / 2;
-                CGRect fr = rightScrapButton.frame;
-                fr.origin.y += heightDiff;
-                rightScrapButton.frame = fr;
+        CGFloat maxHeightOfScrapsInRow = 0;
+        NSMutableArray* currRow = [NSMutableArray array];
+        for(int index = row * columnCount; index < row * columnCount + columnCount; index++){
+            if(index < [allScraps count]){
+                MMScrapView* currentScrap = [allScraps objectAtIndex:index];
+                // place the left scrap. it should have 10 px left margin
+                // (left margin already accounted for with our bounds)
+                // and 10px in the middle between it at the right
+                CGFloat x = (index - row * columnCount) * (sizeOfScrap + kColumnSideMargin);
+                MMScrapSidebarButton* leftScrapButton = [[MMScrapSidebarButton alloc] initWithFrame:CGRectMake(x, contentHeight, sizeOfScrap, sizeOfScrap)];
+                [leftScrapButton addTarget:self action:@selector(tappedOnScrapButton:) forControlEvents:UIControlEventTouchUpInside];
+                leftScrapButton.scrap = currentScrap;
+                [scrollView addSubview:leftScrapButton];
+                CGFloat heightOfCurrScrap = leftScrapButton.bounds.size.height + kColumnTopMargin;
+                if(heightOfCurrScrap > maxHeightOfScrapsInRow){
+                    maxHeightOfScrapsInRow = heightOfCurrScrap;
+                }
+                [currRow addObject:leftScrapButton];
             }
         }
-        contentHeight += maxHeightOfBothScraps;
+        // center row items vertically
+        for(MMScrapSidebarButton* button in currRow){
+            CGRect fr = button.frame;
+            fr.origin.y += (maxHeightOfScrapsInRow - fr.size.height) / 2;
+            button.frame = fr;
+        }
+        contentHeight += maxHeightOfScrapsInRow;
     }
     // only adding 4, b/c the row in the for loop
     // above added 1 buffer at the end of the row
-    contentHeight += 4*sizeOfBuffer;
+    contentHeight += 4*kColumnTopMargin;
     
     // set our content offset and make sure it's still valid
     scrollView.contentSize = CGSizeMake(scrollView.bounds.size.width, contentHeight);
