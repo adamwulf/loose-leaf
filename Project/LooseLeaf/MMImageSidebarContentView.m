@@ -22,4 +22,10 @@
 }
 
 
+//
+// this view will contain the main image import picker
+// (photos / camera / dropbox / etc) as well as the
+// sub-container view for each type.
+
+
 @end
