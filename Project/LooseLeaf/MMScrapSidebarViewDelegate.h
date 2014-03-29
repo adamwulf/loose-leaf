@@ -1,5 +1,5 @@
 //
-//  MMScapBubbleContainerViewDelegate.h
+//  MMScrapSidebarViewDelegate.h
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 9/1/13.
@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MMScrapView.h"
 
-@protocol MMScapBubbleContainerViewDelegate <NSObject>
+@protocol MMScrapSidebarViewDelegate <NSObject>
 
 -(void) didAddScrapToBezelSidebar:(MMScrapView*)scrap;
 

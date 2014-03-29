@@ -9,7 +9,7 @@
 #import "MMScrappedPaperView.h"
 #import "PolygonToolDelegate.h"
 #import "MMScrapView.h"
-#import "MMScrapContainerView.h"
+#import "MMUntouchableView.h"
 #import "NSThread+BlockAdditions.h"
 #import "NSArray+Extras.h"
 #import <JotUI/JotUI.h>
@@ -45,7 +45,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
         // Initialization code
-        scrapContainerView = [[MMScrapContainerView alloc] initWithFrame:self.bounds];
+        scrapContainerView = [[MMUntouchableView alloc] initWithFrame:self.bounds];
         [self.contentView addSubview:scrapContainerView];
         // anchor the view to the top left,
         // so that when we scale down, the drawable view

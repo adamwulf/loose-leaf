@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MMScrapView.h"
 
-@protocol MMScrapBezelMenuViewDelegate <NSObject>
+@protocol MMScrapSidebarContentViewDelegate <NSObject>
 
 -(NSArray*) scraps;
 

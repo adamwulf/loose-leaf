@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MMScrapContainerView : UIView
+@interface MMUntouchableView : UIView
 
 @end

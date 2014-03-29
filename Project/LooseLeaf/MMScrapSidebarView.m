@@ -6,10 +6,10 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMScrapBubbleContainerView.h"
+#import "MMScrapSidebarView.h"
 #import "MMScrapBubbleButton.h"
 #import "NSThread+BlockAdditions.h"
-#import "MMScrapBezelMenuView.h"
+#import "MMScrapSidebarContentView.h"
 #import "MMScrapsOnPaperState.h"
 #import "MMImmutableScrapsOnPaperState.h"
 #import <UIKit/UIGestureRecognizerSubclass.h>
@@ -31,13 +31,13 @@
 
 
 
-@implementation MMScrapBubbleContainerView{
+@implementation MMScrapSidebarView{
     CGFloat lastRotationReading;
     CGFloat targetAlpha;
     NSMutableOrderedSet* scrapsHeldInBezel;
     NSMutableDictionary* bubbleForScrap;
     MMCountBubbleButton* countButton;
-    MMScrapBezelMenuView* scrapMenu;
+    MMScrapSidebarContentView* scrapMenu;
     MMScrapsOnPaperState* scrapState;
     NSString* scrapIDsPath;
     
@@ -53,7 +53,7 @@
         scrapsHeldInBezel = [NSMutableOrderedSet orderedSet];
         bubbleForScrap = [NSMutableDictionary dictionary];
         
-        scrapMenu = [[MMScrapBezelMenuView alloc] initWithFrame:[sidebarContentView contentBounds]];
+        scrapMenu = [[MMScrapSidebarContentView alloc] initWithFrame:[sidebarContentView contentBounds]];
         scrapMenu.delegate = self;
         [sidebarContentView addSubview:scrapMenu];
 
@@ -63,7 +63,7 @@
         //        [countButton addGestureRecognizer:tappy];
 
         
-        NSDictionary* loadedRotationValues = [NSDictionary dictionaryWithContentsOfFile:[MMScrapBubbleContainerView pathToPlist]];
+        NSDictionary* loadedRotationValues = [NSDictionary dictionaryWithContentsOfFile:[MMScrapSidebarView pathToPlist]];
         rotationAdjustments = [NSMutableDictionary dictionary];
         if(loadedRotationValues){
             [rotationAdjustments addEntriesFromDictionary:loadedRotationValues];
@@ -432,7 +432,7 @@ static NSString* bezelStatePath;
 -(void) saveToDisk{
     [[scrapState immutableState] saveToDisk];
     
-    [[rotationAdjustments copy] writeToFile:[MMScrapBubbleContainerView pathToPlist] atomically:YES];
+    [[rotationAdjustments copy] writeToFile:[MMScrapSidebarView pathToPlist] atomically:YES];
 }
 
 

@@ -6,11 +6,11 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMScrapBezelMenuView.h"
+#import "MMScrapSidebarContentView.h"
 #import "MMScrapView.h"
 #import "MMScrapMenuButton.h"
 
-@implementation MMScrapBezelMenuView{
+@implementation MMScrapSidebarContentView{
     UIScrollView* scrollView;
 }
 

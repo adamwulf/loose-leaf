@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMScrapContainerView.h"
+#import "MMUntouchableView.h"
 
-@implementation MMScrapContainerView
+@implementation MMUntouchableView
 
 - (id)initWithFrame:(CGRect)frame
 {

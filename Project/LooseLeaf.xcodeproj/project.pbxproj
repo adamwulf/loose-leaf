@@ -68,7 +68,7 @@
 		6693C94618E4BCD90054FF41 /* MMSlidingSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693C94518E4BCD90054FF41 /* MMSlidingSidebarContentView.m */; };
 		6693C94918E4C55B0054FF41 /* MMLeftCloseButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693C94818E4C55B0054FF41 /* MMLeftCloseButton.m */; };
 		6693C94C18E4E7860054FF41 /* MMSlidingSidebarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693C94B18E4E7860054FF41 /* MMSlidingSidebarView.m */; };
-		66942DD017C84356001E0150 /* MMScrapContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66942DCF17C84356001E0150 /* MMScrapContainerView.m */; };
+		66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66942DCF17C84356001E0150 /* MMUntouchableView.m */; };
 		6695B6E3175008680069E61F /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6E2175008680069E61F /* OpenGLES.framework */; };
 		6695B6E6175008840069E61F /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6E5175008840069E61F /* CoreBluetooth.framework */; };
 		6695B6E81750088D0069E61F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6E71750088D0069E61F /* AudioToolbox.framework */; };
@@ -123,7 +123,7 @@
 		66C2C1651879F3F200804123 /* UIBezierPath+Description.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C2C1641879F3F200804123 /* UIBezierPath+Description.m */; };
 		66CA1A8D185E78030013505A /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66CA1A8B185E77F50013505A /* libc++.dylib */; };
 		66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11F617CFD8A600882275 /* MMScrapPaperStackView.m */; };
-		66CE11FD17D2700E00882275 /* MMScrapBubbleContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11FC17D2700E00882275 /* MMScrapBubbleContainerView.m */; };
+		66CE11FD17D2700E00882275 /* MMScrapSidebarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11FC17D2700E00882275 /* MMScrapSidebarView.m */; };
 		66CE120017D2772400882275 /* MMScrapBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11FF17D2772400882275 /* MMScrapBorderView.m */; };
 		66CE120317D3AD7C00882275 /* MMBounceButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE120217D3AD7C00882275 /* MMBounceButton.m */; };
 		66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* MMListAddPageButton.m */; };
@@ -146,7 +146,7 @@
 		66EDA79617CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDA79517CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m */; };
 		66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */; };
-		66F4FB2617D912730086E21C /* MMScrapBezelMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2517D912730086E21C /* MMScrapBezelMenuView.m */; };
+		66F4FB2617D912730086E21C /* MMScrapSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2517D912730086E21C /* MMScrapSidebarContentView.m */; };
 		66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */ = {isa = PBXBuildFile; fileRef = 66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */; };
 /* End PBXBuildFile section */
 
@@ -271,8 +271,8 @@
 		6693C94A18E4E7860054FF41 /* MMSlidingSidebarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMSlidingSidebarView.h; sourceTree = "<group>"; };
 		6693C94B18E4E7860054FF41 /* MMSlidingSidebarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMSlidingSidebarView.m; sourceTree = "<group>"; };
 		6693C94D18E52D0D0054FF41 /* MMSlidingSidebarViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMSlidingSidebarViewDelegate.h; sourceTree = "<group>"; };
-		66942DCE17C84356001E0150 /* MMScrapContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapContainerView.h; sourceTree = "<group>"; };
-		66942DCF17C84356001E0150 /* MMScrapContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapContainerView.m; sourceTree = "<group>"; };
+		66942DCE17C84356001E0150 /* MMUntouchableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUntouchableView.h; sourceTree = "<group>"; };
+		66942DCF17C84356001E0150 /* MMUntouchableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUntouchableView.m; sourceTree = "<group>"; };
 		6695B6E2175008680069E61F /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		6695B6E5175008840069E61F /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		6695B6E71750088D0069E61F /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -388,13 +388,13 @@
 		66CDB72E17CC0C7200C636C7 /* com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata"; path = "../../TestData/com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata"; sourceTree = "<group>"; };
 		66CE11F517CFD8A600882275 /* MMScrapPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapPaperStackView.h; sourceTree = "<group>"; };
 		66CE11F617CFD8A600882275 /* MMScrapPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapPaperStackView.m; sourceTree = "<group>"; };
-		66CE11FB17D2700E00882275 /* MMScrapBubbleContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBubbleContainerView.h; sourceTree = "<group>"; };
-		66CE11FC17D2700E00882275 /* MMScrapBubbleContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBubbleContainerView.m; sourceTree = "<group>"; };
+		66CE11FB17D2700E00882275 /* MMScrapSidebarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapSidebarView.h; sourceTree = "<group>"; };
+		66CE11FC17D2700E00882275 /* MMScrapSidebarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapSidebarView.m; sourceTree = "<group>"; };
 		66CE11FE17D2772400882275 /* MMScrapBorderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBorderView.h; sourceTree = "<group>"; };
 		66CE11FF17D2772400882275 /* MMScrapBorderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBorderView.m; sourceTree = "<group>"; };
 		66CE120117D3AD7C00882275 /* MMBounceButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBounceButton.h; sourceTree = "<group>"; };
 		66CE120217D3AD7C00882275 /* MMBounceButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBounceButton.m; sourceTree = "<group>"; };
-		66CE120617D3BBCD00882275 /* MMScapBubbleContainerViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScapBubbleContainerViewDelegate.h; sourceTree = "<group>"; };
+		66CE120617D3BBCD00882275 /* MMScrapSidebarViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScrapSidebarViewDelegate.h; sourceTree = "<group>"; };
 		66D0905415F7080F004D2CAF /* MMListAddPageButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButton.h; sourceTree = "<group>"; };
 		66D0905515F70810004D2CAF /* MMListAddPageButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListAddPageButton.m; sourceTree = "<group>"; };
 		66D0905815F71941004D2CAF /* MMListAddPageButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButtonDelegate.h; sourceTree = "<group>"; };
@@ -436,9 +436,9 @@
 		66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLongPressFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		66F4FB2117D8FE600086E21C /* MMCountBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCountBubbleButton.h; sourceTree = "<group>"; };
 		66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCountBubbleButton.m; sourceTree = "<group>"; };
-		66F4FB2417D912730086E21C /* MMScrapBezelMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBezelMenuView.h; sourceTree = "<group>"; };
-		66F4FB2517D912730086E21C /* MMScrapBezelMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBezelMenuView.m; sourceTree = "<group>"; };
-		66F4FB2717DA53DE0086E21C /* MMScrapBezelMenuViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScrapBezelMenuViewDelegate.h; sourceTree = "<group>"; };
+		66F4FB2417D912730086E21C /* MMScrapSidebarContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapSidebarContentView.h; sourceTree = "<group>"; };
+		66F4FB2517D912730086E21C /* MMScrapSidebarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapSidebarContentView.m; sourceTree = "<group>"; };
+		66F4FB2717DA53DE0086E21C /* MMScrapSidebarContentViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScrapSidebarContentViewDelegate.h; sourceTree = "<group>"; };
 		66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = basegfxbezierclip.license; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -574,6 +574,15 @@
 			);
 			name = "Test Data";
 			path = LooseLeaf;
+			sourceTree = "<group>";
+		};
+		664B025E18E6711D00325EF2 /* Helper Classes */ = {
+			isa = PBXGroup;
+			children = (
+				66942DCE17C84356001E0150 /* MMUntouchableView.h */,
+				66942DCF17C84356001E0150 /* MMUntouchableView.m */,
+			);
+			name = "Helper Classes";
 			sourceTree = "<group>";
 		};
 		664C62F115A36DB00072736A /* MMPaperView */ = {
@@ -947,14 +956,12 @@
 		66CE120417D3B6A400882275 /* Scrap Containers */ = {
 			isa = PBXGroup;
 			children = (
-				66942DCE17C84356001E0150 /* MMScrapContainerView.h */,
-				66942DCF17C84356001E0150 /* MMScrapContainerView.m */,
-				66CE11FB17D2700E00882275 /* MMScrapBubbleContainerView.h */,
-				66CE11FC17D2700E00882275 /* MMScrapBubbleContainerView.m */,
-				66CE120617D3BBCD00882275 /* MMScapBubbleContainerViewDelegate.h */,
-				66F4FB2417D912730086E21C /* MMScrapBezelMenuView.h */,
-				66F4FB2517D912730086E21C /* MMScrapBezelMenuView.m */,
-				66F4FB2717DA53DE0086E21C /* MMScrapBezelMenuViewDelegate.h */,
+				66CE11FB17D2700E00882275 /* MMScrapSidebarView.h */,
+				66CE11FC17D2700E00882275 /* MMScrapSidebarView.m */,
+				66CE120617D3BBCD00882275 /* MMScrapSidebarViewDelegate.h */,
+				66F4FB2417D912730086E21C /* MMScrapSidebarContentView.h */,
+				66F4FB2517D912730086E21C /* MMScrapSidebarContentView.m */,
+				66F4FB2717DA53DE0086E21C /* MMScrapSidebarContentViewDelegate.h */,
 				6699714B17DA5EDB00E81467 /* MMScrapMenuButton.h */,
 				6699714C17DA5EDB00E81467 /* MMScrapMenuButton.m */,
 			);
@@ -1023,6 +1030,7 @@
 				66BD6E811593AF4500D4544C /* Buttons */,
 				660E1DAD158FC7CA0001DA12 /* Icons */,
 				66DCFBDC1582BF1600B4918C /* Gestures */,
+				664B025E18E6711D00325EF2 /* Helper Classes */,
 				664C62F115A36DB00072736A /* MMPaperView */,
 				66DCFBBF1581C7F400B4918C /* MMPaperStack */,
 				6693298115996C6A0033E557 /* Controller and App Delegate */,
@@ -1321,16 +1329,16 @@
 				66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */,
 				6695B6EC17505FBF0069E61F /* MMEditablePaperView.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
-				66942DD017C84356001E0150 /* MMScrapContainerView.m in Sources */,
+				66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */,
 				66A471C217C7DEF200C2A5B6 /* SYShape+Bezier.m in Sources */,
 				66B3522517A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m in Sources */,
 				663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */,
 				663C187D1755B63D00706A05 /* Eraser.m in Sources */,
 				663C188B1759B51600706A05 /* MMUndoRedoButton.m in Sources */,
-				66CE11FD17D2700E00882275 /* MMScrapBubbleContainerView.m in Sources */,
+				66CE11FD17D2700E00882275 /* MMScrapSidebarView.m in Sources */,
 				663C1897175A89EF00706A05 /* MMRulerButton.m in Sources */,
 				6651083C178F249C00A7A7DD /* MMVector.m in Sources */,
-				66F4FB2617D912730086E21C /* MMScrapBezelMenuView.m in Sources */,
+				66F4FB2617D912730086E21C /* MMScrapSidebarContentView.m in Sources */,
 				66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */,
 				66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */,
 				66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */,

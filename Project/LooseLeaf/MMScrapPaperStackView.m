@@ -7,8 +7,8 @@
 //
 
 #import "MMScrapPaperStackView.h"
-#import "MMScrapContainerView.h"
-#import "MMScrapBubbleContainerView.h"
+#import "MMUntouchableView.h"
+#import "MMScrapSidebarView.h"
 #import "MMDebugDrawView.h"
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "MMStretchScrapGestureRecognizer.h"
@@ -18,8 +18,8 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 
 @implementation MMScrapPaperStackView{
-    MMScrapBubbleContainerView* bezelScrapContainer;
-    MMScrapContainerView* scrapContainer;
+    MMScrapSidebarView* bezelScrapContainer;
+    MMUntouchableView* scrapContainer;
     // we get two gestures here, so that we can support
     // grabbing two scraps at the same time
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture;
@@ -57,7 +57,7 @@
 //                                                     repeats:YES];
 
         
-        scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds];
+        scrapContainer = [[MMUntouchableView alloc] initWithFrame:self.bounds];
         [self insertSubview:scrapContainer belowSubview:addPageSidebarButton];
         
         CGFloat rightBezelSide = frame.size.width - 100;
@@ -66,7 +66,7 @@
         countButton.alpha = 0;
         [self insertSubview:countButton belowSubview:addPageSidebarButton];
 
-        bezelScrapContainer = [[MMScrapBubbleContainerView alloc] initWithFrame:self.bounds andCountButton:countButton];
+        bezelScrapContainer = [[MMScrapSidebarView alloc] initWithFrame:self.bounds andCountButton:countButton];
         bezelScrapContainer.delegate = self;
         bezelScrapContainer.bubbleDelegate = self;
         [self insertSubview:bezelScrapContainer belowSubview:countButton];
@@ -905,7 +905,7 @@ int skipAll = NO;
     }
 }
 
-#pragma mark - MMScapBubbleContainerViewDelegate
+#pragma mark - MMScrapSidebarViewDelegate
 
 -(void) didAddScrapToBezelSidebar:(MMScrapView *)scrap{
     [bezelScrapContainer saveToDisk];
