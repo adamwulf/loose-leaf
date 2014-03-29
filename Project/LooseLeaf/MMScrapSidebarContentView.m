@@ -64,7 +64,7 @@
     
     
     // then add a new uiimage for every scrap
-    CGFloat contentHeight = sizeOfBuffer;
+    CGFloat contentHeight = 5*sizeOfBuffer;
     for(int row = 0; row<rowCount; row++){
         // determine the index and scrap objects
         int leftIndex = row * 2;
@@ -112,6 +112,9 @@
         }
         contentHeight += maxHeightOfBothScraps;
     }
+    // only adding 4, b/c the row in the for loop
+    // above added 1 buffer at the end of the row
+    contentHeight += 4*sizeOfBuffer;
     
     // set our content offset and make sure it's still valid
     scrollView.contentSize = CGSizeMake(scrollView.bounds.size.width, contentHeight);

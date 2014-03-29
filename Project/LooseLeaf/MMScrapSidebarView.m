@@ -72,9 +72,6 @@
         scrapState = [[MMScrapsOnPaperState alloc] initWithScrapIDsPath:self.scrapIDsPath];
         scrapState.delegate = self;
         [scrapState loadStateAsynchronously:YES andMakeEditable:NO];
-        
-        
-        
     }
     return self;
 }
@@ -446,11 +443,15 @@ static NSString* bezelStatePath;
     // add to the bezel
     NSNumber* rotationAdjustment = [rotationAdjustments objectForKey:scrap.uuid];
     scrap.rotation += [rotationAdjustment floatValue];
-    [self addScrapToBezelSidebar:scrap animated:NO];
+    [scrapsHeldInBezel addObject:scrap];
 }
 
 -(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
-    // noop
+    NSArray* allScraps = [scrapsHeldInBezel copy];
+    [scrapsHeldInBezel removeAllObjects];
+    for(MMScrapView* scrap in [allScraps reverseObjectEnumerator]){
+        [self addScrapToBezelSidebar:scrap animated:NO];
+    }
 }
 
 @end
