@@ -26,9 +26,9 @@ static MMPhotoManager* _instance = nil;
     if(_instance) return _instance;
     if((self = [super init])){
         _instance = self;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(albumAdded:) name:ALAssetLibraryInsertedAssetGroupsKey object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(albumUpdated:) name:ALAssetLibraryUpdatedAssetGroupsKey object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(albumDeleted:) name:ALAssetLibraryDeletedAssetGroupsKey object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(libraryChanged:)
+                                                     name:ALAssetsLibraryChangedNotification
+                                                   object:[self assetsLibrary]];
     }
     return _instance;
 }
@@ -38,6 +38,10 @@ static MMPhotoManager* _instance = nil;
         _instance = [[MMPhotoManager alloc]init];
     }
     return _instance;
+}
+
+- (void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:ALAssetsLibraryChangedNotification object:nil];
 }
 
 #pragma mark - Properties
@@ -71,6 +75,23 @@ static MMPhotoManager* _instance = nil;
 
 #pragma mark - Notifications
 
+-(void) libraryChanged:(NSNotification*)note{
+    NSDictionary* info = [note userInfo];
+    NSLog(@"library changed: %@", info);
+    NSSet *updatedAssetGroup = [info objectForKey:ALAssetLibraryUpdatedAssetGroupsKey];
+    NSSet *deletedAssetGroup = [info objectForKey:ALAssetLibraryDeletedAssetGroupsKey];
+    NSSet *insertedAssetGroup = [info objectForKey:ALAssetLibraryInsertedAssetGroupsKey];
+    for(NSURL* url in updatedAssetGroup){
+        [self albumUpdated:url];
+    }
+    for(NSURL* url in deletedAssetGroup){
+        [self albumDeleted:url];
+    }
+    for(NSURL* url in insertedAssetGroup){
+        [self albumAdded:url];
+    }
+}
+
 NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NSArray* arr, NSURL* url){
     NSMutableArray* retArr = [NSMutableArray array];
     for(id obj in arr){
@@ -94,6 +115,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                               }else if(addedAlbum.type == ALAssetsGroupSavedPhotos){
                                   cameraRoll = addedAlbum;
                               }
+                              [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
                           }
                          failureBlock:^(NSError *error) {
                              [self processError:error];
@@ -113,6 +135,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                               }else if(addedAlbum.type == ALAssetsGroupSavedPhotos){
                                   cameraRoll = addedAlbum;
                               }
+                              [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
                           }
                          failureBlock:^(NSError *error) {
                              [self processError:error];
@@ -123,6 +146,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
     albums = arrayByRemovingObjectWithURL(albums, urlOfUpdatedAlbum);
     events = arrayByRemovingObjectWithURL(events, urlOfUpdatedAlbum);
     faces = arrayByRemovingObjectWithURL(faces, urlOfUpdatedAlbum);
+    [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
 }
 
 
