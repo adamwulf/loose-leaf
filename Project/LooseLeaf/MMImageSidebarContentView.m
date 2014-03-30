@@ -32,7 +32,7 @@
 
 -(void) show:(BOOL)animated{
     NSLog(@"loading photos");
-    [[MMPhotoManager sharedInstace] refreshAlbumCache:nil];
+    [[MMPhotoManager sharedInstace] initializeAlbumCache:nil];
 }
 
 -(void) hide:(BOOL)animated{

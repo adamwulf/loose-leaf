@@ -22,6 +22,7 @@
         album.delegate = self;
         photoViews = [NSArray array];
         [album loadPreviewPhotos];
+        [self loadedPreviewPhotos];
         
         // clarity
         self.opaque = NO;
@@ -57,10 +58,6 @@
         
         dist += (self.bounds.size.width - self.bounds.size.height - 4) / 4;
     }
-    
-//    UILabel* nameLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, imageHeight, self.bounds.size.width, 15)];
-//    nameLbl.text = [NSString stringWithFormat:@"%@ %d/%d", album.name, [album.previewPhotos count], album.numberOfPhotos];
-//    [self addSubview:nameLbl];
 }
 
 

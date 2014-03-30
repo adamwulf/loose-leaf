@@ -43,24 +43,28 @@
 }
 
 -(void) loadPreviewPhotos{
-    NSMutableArray* updatedPreviewPhotos = [NSMutableArray array];
-    [[[MMPhotoManager sharedInstace] assetsLibrary] groupForURL:assetURL resultBlock:^(ALAssetsGroup* group){
-        [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
-            if(result){
-                [updatedPreviewPhotos addObject:[UIImage imageWithCGImage:result.thumbnail]];
-                if([updatedPreviewPhotos count] >= 5){
-                    stop[0] = YES;
+    if(![previewPhotos count]){
+        NSMutableArray* updatedPreviewPhotos = [NSMutableArray array];
+        [[[MMPhotoManager sharedInstace] assetsLibrary] groupForURL:assetURL resultBlock:^(ALAssetsGroup* group){
+            [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+                if(result){
+                    [updatedPreviewPhotos addObject:[UIImage imageWithCGImage:result.thumbnail]];
+                    if([updatedPreviewPhotos count] >= 5){
+                        stop[0] = YES;
+                        previewPhotos = updatedPreviewPhotos;
+                        [delegate loadedPreviewPhotos];
+                    }
+                }else{
                     previewPhotos = updatedPreviewPhotos;
                     [delegate loadedPreviewPhotos];
                 }
-            }else{
-                previewPhotos = updatedPreviewPhotos;
-                [delegate loadedPreviewPhotos];
-            }
+            }];
+        } failureBlock:^(NSError* err){
+            NSLog(@"can't get images");
         }];
-    } failureBlock:^(NSError* err){
-        NSLog(@"can't get images");
-    }];
+    }else{
+        [delegate loadedPreviewPhotos];
+    }
 }
 
 
