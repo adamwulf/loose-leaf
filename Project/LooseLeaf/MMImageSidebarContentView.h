@@ -8,11 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import "MMSlidingSidebarContainerViewDelegate.h"
+#import "MMPhotoManagerDelegate.h"
 
-@interface MMImageSidebarContentView : UIView{
+@interface MMImageSidebarContentView : UIView<MMPhotoManagerDelegate>{
     __weak NSObject<MMSlidingSidebarContainerViewDelegate>* delegate;
 }
 
 @property (nonatomic, weak) NSObject<MMSlidingSidebarContainerViewDelegate>* delegate;
 
+-(void) show:(BOOL)animated;
+
+-(void) hide:(BOOL)animated;
+    
 @end

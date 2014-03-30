@@ -13,9 +13,8 @@
     MMImageSidebarContentView* contentView;
 }
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
+- (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton *)_button animateFromLeft:(BOOL)fromLeft{
+    self = [super initWithFrame:frame forButton:_button animateFromLeft:fromLeft];
     if (self) {
         // Initialization code
         contentView = [[MMImageSidebarContentView alloc] initWithFrame:[sidebarContentView contentBounds]];
@@ -25,6 +24,15 @@
     return self;
 }
 
+-(void) show:(BOOL)animated{
+    [super show:animated];
+    [contentView show:animated];
+}
+
+-(void) hide:(BOOL)animated{
+    [super hide:animated];
+    [contentView hide:animated];
+}
 
 
 @end
