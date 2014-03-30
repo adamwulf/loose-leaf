@@ -45,7 +45,7 @@
 -(void) loadPreviewPhotos{
     NSMutableArray* updatedPreviewPhotos = [NSMutableArray array];
     [[[MMPhotoManager sharedInstace] assetsLibrary] groupForURL:assetURL resultBlock:^(ALAssetsGroup* group){
-        [group enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+        [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
             if(result){
                 [updatedPreviewPhotos addObject:[UIImage imageWithCGImage:result.thumbnail]];
                 if([updatedPreviewPhotos count] >= 5){
