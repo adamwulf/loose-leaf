@@ -27,4 +27,6 @@
 
 -(void) loadPreviewPhotos;
 
+-(void) refreshAlbumContents;
+
 @end

@@ -78,8 +78,6 @@ static MMPhotoManager* _instance = nil;
 -(void) libraryChanged:(NSNotification*)note{
     NSDictionary* info = [note userInfo];
     NSLog(@"library changed: %@", info);
-    [self initializeAlbumCache:nil];
-    return;
     NSSet *updatedAssetGroup = [info objectForKey:ALAssetLibraryUpdatedAssetGroupsKey];
     NSSet *deletedAssetGroup = [info objectForKey:ALAssetLibraryDeletedAssetGroupsKey];
     NSSet *insertedAssetGroup = [info objectForKey:ALAssetLibraryInsertedAssetGroupsKey];
@@ -96,8 +94,8 @@ static MMPhotoManager* _instance = nil;
 
 NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NSArray* arr, NSURL* url){
     NSMutableArray* retArr = [NSMutableArray array];
-    for(id obj in arr){
-        if(![url isEqual:obj]){
+    for(MMPhotoAlbum* obj in arr){
+        if(![url isEqual:obj.assetURL]){
             [retArr addObject:obj];
         }
     }
@@ -108,6 +106,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
     [[self assetsLibrary] groupForURL:urlOfUpdatedAlbum
                           resultBlock:^(ALAssetsGroup *group) {
                               MMPhotoAlbum* addedAlbum = [[MMPhotoAlbum alloc] initWithAssetGroup:group];
+                              NSLog(@"added group: %@", addedAlbum.name);
                               if(addedAlbum.type == ALAssetsGroupAlbum){
                                   albums = [self sortArrayByAlbumName:[albums arrayByAddingObject:addedAlbum]];
                               }else if(addedAlbum.type == ALAssetsGroupEvent){
@@ -127,17 +126,8 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
 -(void) albumUpdated:(NSURL*)urlOfUpdatedAlbum{
     [[self assetsLibrary] groupForURL:urlOfUpdatedAlbum
                           resultBlock:^(ALAssetsGroup *group) {
-                              MMPhotoAlbum* addedAlbum = [[MMPhotoAlbum alloc] initWithAssetGroup:group];
-                              if(addedAlbum.type == ALAssetsGroupAlbum){
-                                  albums = [self sortArrayByAlbumName:[arrayByRemovingObjectWithURL(albums, urlOfUpdatedAlbum) arrayByAddingObject:addedAlbum]];
-                              }else if(addedAlbum.type == ALAssetsGroupEvent){
-                                  events = [self sortArrayByAlbumName:[arrayByRemovingObjectWithURL(events, urlOfUpdatedAlbum) arrayByAddingObject:addedAlbum]];
-                              }else if(addedAlbum.type == ALAssetsGroupFaces){
-                                  faces = [self sortArrayByAlbumName:[arrayByRemovingObjectWithURL(faces, urlOfUpdatedAlbum) arrayByAddingObject:addedAlbum]];
-                              }else if(addedAlbum.type == ALAssetsGroupSavedPhotos){
-                                  cameraRoll = addedAlbum;
-                              }
-                              [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
+                              MMPhotoAlbum* addedAlbum = [self albumWithURL:group.url];
+                              [addedAlbum refreshAlbumContents];
                           }
                          failureBlock:^(NSError *error) {
                              [self processError:error];
@@ -166,6 +156,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
         return cameraRoll;
     }
     for (MMPhotoAlbum* album in [[albums arrayByAddingObjectsFromArray:events] arrayByAddingObjectsFromArray:faces]) {
+        NSLog(@"%@ vs %@", album.assetURL, url);
         if([album.assetURL isEqual:url]){
             return album;
         }
@@ -184,7 +175,6 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
     
     [[self assetsLibrary] enumerateGroupsWithTypes:ALAssetsGroupAlbum | ALAssetsGroupEvent | ALAssetsGroupFaces | ALAssetsGroupSavedPhotos
                                  usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
-                                     [group setAssetsFilter:[ALAssetsFilter allPhotos]];
                                      if(!group){
                                          // there is no group if we're all done iterating.
                                          // sort our results and create an array of all our albums
