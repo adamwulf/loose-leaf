@@ -10,6 +10,6 @@
 
 @interface MMBufferedImageView : UIView
 
-- (id)initWithImage:(UIImage*)_img;
+@property (nonatomic, strong) UIImage* image;
 
 @end

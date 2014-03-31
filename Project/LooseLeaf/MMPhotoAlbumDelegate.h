@@ -8,8 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+@class MMPhotoAlbum;
+
 @protocol MMPhotoAlbumDelegate <NSObject>
 
--(void) loadedPreviewPhotos;
+-(void) loadedPreviewPhotosFor:(MMPhotoAlbum*)album;
 
 @end

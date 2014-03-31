@@ -16,13 +16,13 @@
 - (id)init{
     if(self = [super init]){
         
-        [NSThread performBlockInBackground:^{
-            [TestFlight takeOff:kTestflightAppToken];
-            [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
-            [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
-            [TestFlight setOptions:@{ TFOptionLogOnCheckpoint : @NO }];
-            [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
-        }];
+//        [NSThread performBlockInBackground:^{
+//            [TestFlight takeOff:kTestflightAppToken];
+//            [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
+//            [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
+//            [TestFlight setOptions:@{ TFOptionLogOnCheckpoint : @NO }];
+//            [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
+//        }];
 
         // Do any additional setup after loading the view, typically from a nib.
         srand ( time(NULL) );

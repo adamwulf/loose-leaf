@@ -9,39 +9,59 @@
 #import "MMBufferedImageView.h"
 
 @implementation MMBufferedImageView{
-    UIImage* img;
+    UIImage* image;
 }
+
+@synthesize image;
 
 CGFloat buffer = 2;
 
-- (id)initWithImage:(UIImage*)_img
+- (id)initWithFrame:(CGRect)frame
 {
-    if (self = [super initWithFrame:CGRectInset(CGRectMake(0,0, _img.size.width, _img.size.height), -buffer, -buffer)]) {
-        img = _img;
+    if (self = [super initWithFrame:frame]) {
         self.clipsToBounds = YES;
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
+        self.clearsContextBeforeDrawing = YES;
     }
     return self;
 }
 
--(void) drawRect:(CGRect)rect{
+-(void) setImage:(UIImage *)_image{
+    image = _image;
+    [self setNeedsDisplay];
+}
 
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextSetAllowsAntialiasing(context, true);
-    CGContextSetShouldAntialias(context, true);
-    
-    [img drawAtPoint:CGPointMake(buffer, buffer)];
-    
-    CGRect r = CGRectMake(buffer, buffer, img.size.width, img.size.height);
-    
-    CGContextSetLineWidth(context, 1);
-    CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
-    CGContextStrokeRect(context, r);
-    
-    CGContextSetStrokeColorWithColor(context, [UIColor whiteColor].CGColor);
-    CGContextStrokeRect(context, CGRectInset(r, 1, 1));
+-(void) drawRect:(CGRect)rect{
+    if(image){
+        CGFloat maxDim = self.bounds.size.height - 2*buffer;
+        CGSize sizeToDraw = image.size;
+        CGFloat scaleToDraw = 1.0;
+        if(sizeToDraw.width >= sizeToDraw.height && sizeToDraw.width > maxDim){
+            scaleToDraw = maxDim / sizeToDraw.width;
+            sizeToDraw.height *= maxDim / sizeToDraw.width;
+            sizeToDraw.width = maxDim;
+        }else if(sizeToDraw.height >= sizeToDraw.width && sizeToDraw.height > maxDim){
+            scaleToDraw = maxDim / sizeToDraw.height;
+            sizeToDraw.width *= maxDim / sizeToDraw.height;
+            sizeToDraw.height = maxDim;
+        }
+        
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        
+        CGContextSetAllowsAntialiasing(context, true);
+        CGContextSetShouldAntialias(context, true);
+        
+        CGRect r = CGRectMake(buffer, buffer + (maxDim - sizeToDraw.height)/2, sizeToDraw.width, sizeToDraw.height);
+        [image drawInRect:r];
+        
+        CGContextSetLineWidth(context, 1);
+        CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
+        CGContextStrokeRect(context, CGRectInset(r, .5, .5));
+        
+        CGContextSetStrokeColorWithColor(context, [UIColor whiteColor].CGColor);
+        CGContextStrokeRect(context, CGRectInset(r, 1.5, 1.5));
+    }
 }
 
 @end

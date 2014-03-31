@@ -8,6 +8,7 @@
 
 #import "MMPhotoAlbum.h"
 #import "MMPhotoManager.h"
+#import "ALAsset+Thumbnail.h"
 
 @implementation MMPhotoAlbum{
     ALAssetsGroup* group; // required strong ref so we get updates from asset manager
@@ -55,7 +56,7 @@
 }
 
 -(void) loadPreviewPhotos{
-    [self loadPreviewPhotos:NO];
+    [self performSelectorInBackground:@selector(loadPreviewPhotos:) withObject:nil];
 }
 
 -(void) loadPreviewPhotos:(BOOL)force{
@@ -64,19 +65,17 @@
         [group setAssetsFilter:[ALAssetsFilter allPhotos]];
         [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
             if(result){
-                [updatedPreviewPhotos addObject:[UIImage imageWithCGImage:result.thumbnail]];
+                [updatedPreviewPhotos addObject:[UIImage imageWithCGImage:result.aspectRatioThumbnail]];
                 if([updatedPreviewPhotos count] >= 5){
                     stop[0] = YES;
-                    previewPhotos = updatedPreviewPhotos;
-                    [delegate loadedPreviewPhotos];
                 }
             }else{
                 previewPhotos = updatedPreviewPhotos;
-                [delegate performSelectorOnMainThread:@selector(loadedPreviewPhotos) withObject:nil waitUntilDone:NO];
+                [delegate performSelectorOnMainThread:@selector(loadedPreviewPhotosFor:) withObject:self waitUntilDone:NO];
             }
         }];
     }else{
-        [delegate performSelectorOnMainThread:@selector(loadedPreviewPhotos) withObject:nil waitUntilDone:NO];
+        [delegate performSelectorOnMainThread:@selector(loadedPreviewPhotosFor:) withObject:self waitUntilDone:NO];
     }
 }
 

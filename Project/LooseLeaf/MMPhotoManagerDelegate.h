@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MMPhotoAlbumDelegate.h"
 
-@protocol MMPhotoManagerDelegate <NSObject>
+@protocol MMPhotoManagerDelegate <MMPhotoAlbumDelegate>
 
 -(void) doneLoadingPhotoAlbums;
 

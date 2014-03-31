@@ -10,8 +10,10 @@
 #import "MMPhotoAlbumDelegate.h"
 #import "MMPhotoAlbum.h"
 
-@interface MMAlbumRowView : UIView<MMPhotoAlbumDelegate>
+@interface MMAlbumRowView : UIView
 
-- (id)initWithFrame:(CGRect)frame andAlbum:(MMPhotoAlbum*)_album;
+@property (nonatomic, strong) MMPhotoAlbum* album;
+
+-(void) loadedPreviewPhotos;
 
 @end

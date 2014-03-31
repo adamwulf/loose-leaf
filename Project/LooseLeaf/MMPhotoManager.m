@@ -77,7 +77,6 @@ static MMPhotoManager* _instance = nil;
 
 -(void) libraryChanged:(NSNotification*)note{
     NSDictionary* info = [note userInfo];
-    NSLog(@"library changed: %@", info);
     NSSet *updatedAssetGroup = [info objectForKey:ALAssetLibraryUpdatedAssetGroupsKey];
     NSSet *deletedAssetGroup = [info objectForKey:ALAssetLibraryDeletedAssetGroupsKey];
     NSSet *insertedAssetGroup = [info objectForKey:ALAssetLibraryInsertedAssetGroupsKey];
@@ -114,7 +113,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
     [[self assetsLibrary] groupForURL:urlOfUpdatedAlbum
                           resultBlock:^(ALAssetsGroup *group) {
                               MMPhotoAlbum* addedAlbum = [[MMPhotoAlbum alloc] initWithAssetGroup:group];
-                              NSLog(@"added group: %@", addedAlbum.name);
+                              addedAlbum.delegate = self;
                               if(addedAlbum.type == ALAssetsGroupAlbum){
                                   albums = [self sortArrayByAlbumName:[albums arrayByAddingObject:addedAlbum]];
                               }else if(addedAlbum.type == ALAssetsGroupEvent){
@@ -134,7 +133,6 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
 -(void) albumUpdated:(NSURL*)urlOfUpdatedAlbum{
     [[self assetsLibrary] groupForURL:urlOfUpdatedAlbum
                           resultBlock:^(ALAssetsGroup *group) {
-                              NSLog(@"group updated: %@", group.name);
                               MMPhotoAlbum* addedAlbum = [self albumWithURL:group.url];
                               [addedAlbum refreshAlbumContentsWithGroup:group];
                               [self resortAlbums];
@@ -166,7 +164,6 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
         return cameraRoll;
     }
     for (MMPhotoAlbum* album in [[albums arrayByAddingObjectsFromArray:events] arrayByAddingObjectsFromArray:faces]) {
-        NSLog(@"%@ vs %@", album.assetURL, url);
         if([album.assetURL isEqual:url]){
             return album;
         }
@@ -199,6 +196,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                          MMPhotoAlbum* addedAlbum = [self albumWithURL:group.url];
                                          if(!addedAlbum){
                                              addedAlbum = [[MMPhotoAlbum alloc] initWithAssetGroup:group];
+                                             addedAlbum.delegate = self;
                                          }
                                          if(group.type == ALAssetsGroupAlbum){
                                              [updatedAlbumsList addObject:addedAlbum];
@@ -238,6 +236,10 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
 
 }
 
+#pragma mark - MMPhotoAlbumDelegate
 
+-(void) loadedPreviewPhotosFor:(MMPhotoAlbum *)album{
+    [delegate loadedPreviewPhotosFor:album];
+}
 
 @end

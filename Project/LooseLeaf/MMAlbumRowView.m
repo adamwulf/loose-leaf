@@ -12,18 +12,28 @@
 
 @implementation MMAlbumRowView{
     MMPhotoAlbum* album;
-    NSArray* photoViews;
+    UILabel* name;
 }
 
-- (id)initWithFrame:(CGRect)frame andAlbum:(MMPhotoAlbum*)_album{
+@synthesize album;
+
+- (id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
-        album = _album;
-        album.delegate = self;
-        photoViews = [NSArray array];
-        [album loadPreviewPhotos];
-        [self loadedPreviewPhotos];
-        
+        // load 5 preview image views
+        CGFloat maxDim = self.bounds.size.height;
+        CGFloat stepX = (self.bounds.size.width - maxDim) / 4;
+        CGFloat currX = 0;
+        for(int i=0;i<5;i++){
+            MMBufferedImageView* imgView = [[MMBufferedImageView alloc] initWithFrame:CGRectMake(currX, 0, maxDim, maxDim)];
+            int maxRotDeg = 20;
+            CGFloat angle = (rand() % maxRotDeg - maxRotDeg/2) / 360.0 * M_PI;
+            imgView.transform = CGAffineTransformMakeRotation(angle);
+            currX += stepX;
+            [self addSubview:imgView];
+        }
+        name = [[UILabel alloc] initWithFrame:self.bounds];
+        [self addSubview:name];
         // clarity
         self.opaque = NO;
         self.clipsToBounds = YES;
@@ -31,32 +41,26 @@
     return self;
 }
 
--(void) dealloc{
-    album.delegate = nil;
+-(void) setAlbum:(MMPhotoAlbum *)_album{
+    if(album != _album){
+        album = _album;
+        [album loadPreviewPhotos];
+        name.text = album.name;
+        if(!album){
+            [self loadedPreviewPhotos];
+        }
+    }
 }
 
 #pragma mark - MMPhotoAlbumDelegate;
 
 -(void) loadedPreviewPhotos{
-    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    
-    CGFloat imageHeight = self.bounds.size.height - 4;
-    CGFloat dist = 2;
-    for(UIImage* img in album.previewPhotos){
-        MMBufferedImageView* imgView = [[MMBufferedImageView alloc] initWithImage:img];
-        [self insertSubview:imgView atIndex:0];
-        CGRect fr = imgView.frame;
-        fr.origin.y = 2;
-        fr.origin.x = dist;
-        if(fr.size.height > imageHeight){
-            fr.size.width *= imageHeight / fr.size.height;
-            fr.size.height = imageHeight;
+    for(int i=0;i<5;i++){
+        UIImage* img = nil;
+        if(i<[album.previewPhotos count]){
+            img = [album.previewPhotos objectAtIndex:i];
         }
-        imgView.frame = fr;
-        CGFloat angle = (rand() % 20 - 10) / 360.0 * M_PI;
-        imgView.transform = CGAffineTransformMakeRotation(angle);
-        
-        dist += (self.bounds.size.width - self.bounds.size.height - 4) / 4;
+        [(MMBufferedImageView*)[self.subviews objectAtIndex:i] setImage:img];
     }
 }
 

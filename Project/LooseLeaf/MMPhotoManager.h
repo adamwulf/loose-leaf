@@ -10,10 +10,11 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "MMPhotoManagerDelegate.h"
 #import "MMPhotoAlbum.h"
+#import "MMPhotoAlbumDelegate.h"
 
 #define kPermissionDeniedError 401
 
-@interface MMPhotoManager : NSObject{
+@interface MMPhotoManager : NSObject<MMPhotoAlbumDelegate>{
     __weak NSObject<MMPhotoManagerDelegate>* delegate;
 }
 
