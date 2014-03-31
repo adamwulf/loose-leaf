@@ -78,6 +78,8 @@ static MMPhotoManager* _instance = nil;
 -(void) libraryChanged:(NSNotification*)note{
     NSDictionary* info = [note userInfo];
     NSLog(@"library changed: %@", info);
+    [self initializeAlbumCache:nil];
+    return;
     NSSet *updatedAssetGroup = [info objectForKey:ALAssetLibraryUpdatedAssetGroupsKey];
     NSSet *deletedAssetGroup = [info objectForKey:ALAssetLibraryDeletedAssetGroupsKey];
     NSSet *insertedAssetGroup = [info objectForKey:ALAssetLibraryInsertedAssetGroupsKey];
@@ -159,18 +161,22 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
     return [arrayToSort sortedArrayUsingComparator:sortByName];
 }
 
+-(MMPhotoAlbum*) albumWithURL:(NSURL*)url{
+    if([cameraRoll.assetURL isEqual:url]){
+        return cameraRoll;
+    }
+    for (MMPhotoAlbum* album in [[albums arrayByAddingObjectsFromArray:events] arrayByAddingObjectsFromArray:faces]) {
+        if([album.assetURL isEqual:url]){
+            return album;
+        }
+    }
+    return nil;
+}
+
 /**
  * initialize the repository of photo albums
  */
 -(void) initializeAlbumCache:(NSError**)err{
-    if(hasEverInitailized){
-        // if i've initialized once, then i'm done
-        // just notify that we've got all our stuff
-        // loaded
-        [self.delegate doneLoadingPhotoAlbums];
-        return;
-    }
-    
     NSMutableArray* updatedAlbumsList = [NSMutableArray array];
     NSMutableArray* updatedEventsList = [NSMutableArray array];
     NSMutableArray* updatedFacesList = [NSMutableArray array];
@@ -188,16 +194,20 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                          faces = [self sortArrayByAlbumName:updatedFacesList];
                                          cameraRoll = savedPhotos;
                                          hasEverInitailized = YES;
-                                         [self.delegate doneLoadingPhotoAlbums];
+                                         [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
                                      }else if ([group numberOfAssets] > 0){
+                                         MMPhotoAlbum* addedAlbum = [self albumWithURL:group.url];
+                                         if(!addedAlbum){
+                                             addedAlbum = [[MMPhotoAlbum alloc] initWithAssetGroup:group];
+                                         }
                                          if(group.type == ALAssetsGroupAlbum){
-                                             [updatedAlbumsList addObject:[[MMPhotoAlbum alloc] initWithAssetGroup:group]];
+                                             [updatedAlbumsList addObject:addedAlbum];
                                          }else if(group.type == ALAssetsGroupEvent){
-                                             [updatedEventsList addObject:[[MMPhotoAlbum alloc] initWithAssetGroup:group]];
+                                             [updatedEventsList addObject:addedAlbum];
                                          }else if(group.type == ALAssetsGroupFaces){
-                                             [updatedFacesList addObject:[[MMPhotoAlbum alloc] initWithAssetGroup:group]];
+                                             [updatedFacesList addObject:addedAlbum];
                                          }else if(group.type == ALAssetsGroupSavedPhotos){
-                                             savedPhotos = [[MMPhotoAlbum alloc] initWithAssetGroup:group];
+                                             savedPhotos = addedAlbum;
                                          }
                                      }
                                  }
