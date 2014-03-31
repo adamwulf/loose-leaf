@@ -58,15 +58,15 @@ static MMPhotoManager* _instance = nil;
 }
 
 -(NSArray*) albums{
-    return [NSArray arrayWithArray:albums];
+    return albums;
 }
 
 -(NSArray*) events{
-    return [NSArray arrayWithArray:events];
+    return events;
 }
 
 -(NSArray*) faces{
-    return [NSArray arrayWithArray:faces];
+    return faces;
 }
 
 -(MMPhotoAlbum*) cameraRoll{
