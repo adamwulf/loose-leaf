@@ -52,15 +52,30 @@
 -(void) refreshAlbumContentsWithGroup:(ALAssetsGroup*)_group{
     group = _group;
     name = group.name;
-    [self loadPreviewPhotos:YES];
+    if(shouldLoad){
+        [self loadPreviewPhotos:YES];
+    }
+}
+
+BOOL shouldLoad = NO;
+
+-(void) unloadPreviewPhotos{
+    shouldLoad = NO;
+    previewPhotos = [NSArray array];
 }
 
 -(void) loadPreviewPhotos{
-    [self performSelectorInBackground:@selector(loadPreviewPhotos:) withObject:nil];
+    shouldLoad = YES;
+    if(![previewPhotos count]){
+        [self performSelectorInBackground:@selector(loadPreviewPhotos:) withObject:nil];
+    }else{
+        [delegate loadedPreviewPhotosFor:self];
+    }
 }
 
 -(void) loadPreviewPhotos:(BOOL)force{
     if(![previewPhotos count] || force){
+        NSLog(@"running query for %@", self.name);
         NSMutableArray* updatedPreviewPhotos = [NSMutableArray array];
         [group setAssetsFilter:[ALAssetsFilter allPhotos]];
         [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {

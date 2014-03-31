@@ -168,6 +168,7 @@
             [row removeFromSuperview];
             if(row.album){
                 [currentRowForAlbum removeObjectForKey:row.album.persistentId];
+                [row.album unloadPreviewPhotos];
             }
             [currentRowAtIndex removeObjectForKey:[NSNumber numberWithInt:row.tag]];
             row.album = nil;

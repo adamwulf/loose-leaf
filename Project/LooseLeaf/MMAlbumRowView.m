@@ -60,7 +60,13 @@
         if(i<[album.previewPhotos count]){
             img = [album.previewPhotos objectAtIndex:i];
         }
-        [(MMBufferedImageView*)[self.subviews objectAtIndex:i] setImage:img];
+        MMBufferedImageView* v = (MMBufferedImageView*)[self.subviews objectAtIndex:i];
+        if(img){
+            [v setImage:img];
+            v.hidden = NO;
+        }else{
+            v.hidden = YES;
+        }
     }
 }
 
