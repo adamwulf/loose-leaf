@@ -92,6 +92,14 @@ static MMPhotoManager* _instance = nil;
     }
 }
 
+-(void) resortAlbums{
+    // name may have changed, resort
+    albums = [self sortArrayByAlbumName:albums];
+    events = [self sortArrayByAlbumName:events];
+    faces = [self sortArrayByAlbumName:faces];
+    [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
+}
+
 NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NSArray* arr, NSURL* url){
     NSMutableArray* retArr = [NSMutableArray array];
     for(MMPhotoAlbum* obj in arr){
@@ -126,8 +134,10 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
 -(void) albumUpdated:(NSURL*)urlOfUpdatedAlbum{
     [[self assetsLibrary] groupForURL:urlOfUpdatedAlbum
                           resultBlock:^(ALAssetsGroup *group) {
+                              NSLog(@"group updated: %@", group.name);
                               MMPhotoAlbum* addedAlbum = [self albumWithURL:group.url];
-                              [addedAlbum refreshAlbumContents];
+                              [addedAlbum refreshAlbumContentsWithGroup:group];
+                              [self resortAlbums];
                           }
                          failureBlock:^(NSError *error) {
                              [self processError:error];

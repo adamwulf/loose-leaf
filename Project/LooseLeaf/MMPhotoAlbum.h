@@ -27,6 +27,6 @@
 
 -(void) loadPreviewPhotos;
 
--(void) refreshAlbumContents;
+-(void) refreshAlbumContentsWithGroup:(ALAssetsGroup*)_group;
 
 @end

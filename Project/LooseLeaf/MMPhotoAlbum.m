@@ -48,7 +48,9 @@
 // refreshes preview photos as well as
 // the full contents if the full contents
 // are in cache
--(void) refreshAlbumContents{
+-(void) refreshAlbumContentsWithGroup:(ALAssetsGroup*)_group{
+    group = _group;
+    name = group.name;
     [self loadPreviewPhotos:YES];
 }
 
@@ -78,5 +80,8 @@
     }
 }
 
+-(NSString*) description{
+    return [NSString stringWithFormat:@"[MMPhotoAlbum(%p): %@ %@]", self, self.name, self.persistentId];
+}
 
 @end
