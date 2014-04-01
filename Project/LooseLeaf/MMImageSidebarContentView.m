@@ -33,7 +33,7 @@
         currentRowAtIndex = [NSMutableDictionary dictionary];
         [MMPhotoManager sharedInstace].delegate = self;
         scrollView = [[MMPhotoAlbumListScrollView alloc] initWithFrame:self.bounds withRowHeight:ceilf(self.bounds.size.width / 3) andMargins:kTopBottomMargin];
-        scrollView.delegate = self;
+        scrollView.dataSource = self;
         [self addSubview:scrollView];
     }
     return self;
@@ -53,20 +53,20 @@
 #pragma mark - MMPhotoManagerDelegate
 
 -(void) doneLoadingPhotoAlbums{
-    [self validateRowsForCurrentOffset];
+    [scrollView refreshVisibleRows];
 }
 
 -(void) loadedPreviewPhotosFor:(MMPhotoAlbum *)album{
     NSInteger index = [self indexForAlbum:album];
     if([scrollView rowIndexIsVisible:index]){
-        MMAlbumRowView* row = [self rowAtIndex:index];
+        MMAlbumRowView* row = (MMAlbumRowView*) [self rowAtIndex:index];
         [row loadedPreviewPhotos];
     }
 }
 
 #pragma mark - Row Management
 
--(MMAlbumRowView*) rowAtIndex:(NSInteger) index{
+-(UIView*) rowAtIndex:(NSInteger) index{
     MMAlbumRowView* row = [currentRowAtIndex objectForKey:[NSNumber numberWithInt:index]];
     if(!row){
         CGRect fr = CGRectMake(0, kTopBottomMargin + index * scrollView.rowHeight, self.bounds.size.width, scrollView.rowHeight);
@@ -136,47 +136,6 @@
     return nil;
 }
 
--(void) validateRowsForCurrentOffset{
-    // remove invisible rows
-    for(MMAlbumRowView* row in scrollView.subviews){
-        if(![scrollView rowIndexIsVisible:row.tag]){
-            row.hidden = YES;
-            if(row.album){
-                [currentRowForAlbum removeObjectForKey:row.album.persistentId];
-                [row.album unloadPreviewPhotos];
-            }
-            [currentRowAtIndex removeObjectForKey:[NSNumber numberWithInt:row.tag]];
-            row.album = nil;
-            [bufferOfUnusedAlbumRows addObject:row];
-        }
-    }
-    
-    // loop through visible albums
-    // and make sure row is at the right place
-    CGFloat currOffset = scrollView.contentOffset.y;
-    while([scrollView rowIndexIsVisible:[scrollView rowIndexForY:currOffset]]){
-        NSInteger currIndex = [scrollView rowIndexForY:currOffset];
-        if(currIndex >= 0){
-            // load the row
-            [self rowAtIndex:currIndex];
-        }
-        currOffset += scrollView.rowHeight;
-    }
-    
-    
-    NSInteger totalAlbumCount = [[[MMPhotoManager sharedInstace] albums] count] +
-                                [[[MMPhotoManager sharedInstace] events] count] +
-                                [[[MMPhotoManager sharedInstace] faces] count];
-    CGFloat contentHeight = 2*kTopBottomMargin + scrollView.rowHeight * totalAlbumCount;
-    scrollView.contentSize = CGSizeMake(self.bounds.size.width, contentHeight);
-}
-
-
-#pragma mark - UIScrollViewDelegate
-
--(void) scrollViewDidScroll:(UIScrollView *)_scrollView{
-    [self validateRowsForCurrentOffset];
-}
 
 #pragma mark - MMAlbumRowViewDelegate
 
@@ -184,5 +143,32 @@
     NSLog(@"row was tapped: %@", row.album.name);
 }
 
+#pragma mark - MMPhotoAlbumListScrollViewDataSource
+
+-(NSInteger) numberOfRowsFor:(MMPhotoAlbumListScrollView*)scrollView{
+    return [[[MMPhotoManager sharedInstace] albums] count] +
+    [[[MMPhotoManager sharedInstace] events] count] +
+    [[[MMPhotoManager sharedInstace] faces] count];
+}
+
+// called when a row is hidden in the scrollview
+// and may be re-used with different model data later
+-(void) prepareRowForReuse:(UIView*)aRow forScrollView:(MMPhotoAlbumListScrollView*)scrollView{
+    MMAlbumRowView* row = (MMAlbumRowView*)aRow;
+    if(row.album){
+        [currentRowForAlbum removeObjectForKey:row.album.persistentId];
+        [row.album unloadPreviewPhotos];
+        row.album = nil;
+    }
+}
+
+
+-(NSMutableArray*) bufferOfUnusedAlbumRows{
+    return bufferOfUnusedAlbumRows;
+}
+
+-(NSMutableDictionary*) currentRowAtIndex{
+    return currentRowAtIndex;
+}
 
 @end

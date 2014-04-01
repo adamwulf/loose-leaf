@@ -7,15 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMPhotoAlbumListScrollViewDataSource.h"
 
-@interface MMPhotoAlbumListScrollView : UIScrollView
+@interface MMPhotoAlbumListScrollView : UIScrollView<UIScrollViewDelegate>{
+    __weak NSObject<MMPhotoAlbumListScrollViewDataSource>* dataSource;
+}
 
+@property (nonatomic, weak) NSObject<MMPhotoAlbumListScrollViewDataSource>* dataSource;
 @property (readonly) CGFloat rowHeight;
 
-- (id)initWithFrame:(CGRect)frame withRowHeight:(CGFloat)_rowHeight andMargins:(CGFloat)topBottomMargin;
+- (id)initWithFrame:(CGRect)frame withRowHeight:(CGFloat)rowHeight andMargins:(CGFloat)topBottomMargin;
 
 -(NSInteger) rowIndexForY:(CGFloat)y;
 
 -(BOOL) rowIndexIsVisible:(NSInteger)index;
+
+-(void) refreshVisibleRows;
 
 @end

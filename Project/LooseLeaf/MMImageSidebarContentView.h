@@ -8,12 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "MMSlidingSidebarContainerViewDelegate.h"
+#import "MMPhotoAlbumListScrollViewDataSource.h"
 #import "MMPhotoManagerDelegate.h"
 #import "MMAlbumRowViewDelegate.h"
 
 @class MMImageSidebarContainerView;
 
-@interface MMImageSidebarContentView : UIView<MMPhotoManagerDelegate,UIScrollViewDelegate,MMAlbumRowViewDelegate>{
+@interface MMImageSidebarContentView : UIView<MMPhotoManagerDelegate,MMAlbumRowViewDelegate,MMPhotoAlbumListScrollViewDataSource>{
     __weak MMImageSidebarContainerView* delegate;
 }
 
