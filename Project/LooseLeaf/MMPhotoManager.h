@@ -20,7 +20,7 @@
 
 @property (nonatomic, weak) NSObject<MMPhotoManagerDelegate>* delegate;
 @property (readonly) NSUInteger countOfAlbums;
-@property (readonly) NSArray* albums;
+@property (atomic, readonly) NSArray* albums;
 @property (readonly) NSArray* events;
 @property (readonly) NSArray* faces;
 @property (readonly) MMPhotoAlbum* cameraRoll;

@@ -47,6 +47,7 @@
 
 -(void) setAlbum:(MMPhotoAlbum *)_album{
     if(album != _album){
+        MMPhotoAlbum* oldAlbum = album;
         album = _album;
         [album loadPreviewPhotos];
         name.text = album.name;

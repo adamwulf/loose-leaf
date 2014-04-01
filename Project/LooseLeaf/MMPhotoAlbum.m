@@ -9,6 +9,7 @@
 #import "MMPhotoAlbum.h"
 #import "MMPhotoManager.h"
 #import "ALAsset+Thumbnail.h"
+#import "NSThread+BlockAdditions.h"
 
 dispatch_queue_t fetchThumbnailQueue;
 
@@ -82,15 +83,22 @@ dispatch_queue_t fetchThumbnailQueue;
             [self loadPreviewPhotos:NO];
         });
     }else{
-        [delegate loadedPreviewPhotosFor:self];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [delegate loadedPreviewPhotosFor:self];
+        });
     }
 }
 
+BOOL isEnumerating = NO;
 -(void) loadPreviewPhotos:(BOOL)force{
     if(![previewPhotos count] || force){
         NSMutableArray* updatedPreviewPhotos = [NSMutableArray array];
-        [group setAssetsFilter:[ALAssetsFilter allPhotos]];
-        [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+        @synchronized(self){
+            isEnumerating = YES;
+        }
+        __block ALAssetsGroup* groupToEnumerate = group;
+        [groupToEnumerate setAssetsFilter:[ALAssetsFilter allPhotos]];
+        [groupToEnumerate enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
             if(result){
                 [updatedPreviewPhotos addObject:[UIImage imageWithCGImage:result.aspectRatioThumbnail]];
                 if([updatedPreviewPhotos count] >= 5){
@@ -99,10 +107,23 @@ dispatch_queue_t fetchThumbnailQueue;
             }else{
                 previewPhotos = updatedPreviewPhotos;
                 [delegate performSelectorOnMainThread:@selector(loadedPreviewPhotosFor:) withObject:self waitUntilDone:NO];
+                @synchronized(self){
+                    isEnumerating = NO;
+                    ALAssetsGroup* gr = groupToEnumerate;
+                    groupToEnumerate = gr;
+                }
             }
         }];
     }else{
         [delegate performSelectorOnMainThread:@selector(loadedPreviewPhotosFor:) withObject:self waitUntilDone:NO];
+    }
+}
+
+-(void) dealloc{
+    @synchronized(self){
+        if(isEnumerating){
+            NSLog(@"haha what");
+        }
     }
 }
 

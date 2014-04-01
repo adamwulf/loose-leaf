@@ -54,23 +54,43 @@ static MMPhotoManager* _instance = nil;
 }
 
 -(NSUInteger) countOfAlbums{
-    return [albums count] + [events count] + [faces count];
+    NSUInteger count = 0;
+    @synchronized(self){
+        count = [albums count] + [events count] + [faces count];
+    }
+    return count;
 }
 
 -(NSArray*) albums{
-    return albums;
+    NSArray* ret = nil;
+    @synchronized(self){
+        ret = albums;
+    }
+    return ret;
 }
 
 -(NSArray*) events{
-    return events;
+    NSArray* ret = nil;
+    @synchronized(self){
+        ret = events;
+    }
+    return ret;
 }
 
 -(NSArray*) faces{
-    return faces;
+    NSArray* ret = nil;
+    @synchronized(self){
+        ret = faces;
+    }
+    return ret;
 }
 
 -(MMPhotoAlbum*) cameraRoll{
-    return cameraRoll;
+    MMPhotoAlbum* ret = nil;
+    @synchronized(self){
+        ret = cameraRoll;
+    }
+    return ret;
 }
 
 #pragma mark - Notifications
@@ -93,9 +113,11 @@ static MMPhotoManager* _instance = nil;
 
 -(void) resortAlbums{
     // name may have changed, resort
-    albums = [self sortArrayByAlbumName:albums];
-    events = [self sortArrayByAlbumName:events];
-    faces = [self sortArrayByAlbumName:faces];
+    @synchronized(self){
+        albums = [self sortArrayByAlbumName:albums];
+        events = [self sortArrayByAlbumName:events];
+        faces = [self sortArrayByAlbumName:faces];
+    }
     [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
 }
 
@@ -114,14 +136,16 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                           resultBlock:^(ALAssetsGroup *group) {
                               MMPhotoAlbum* addedAlbum = [[MMPhotoAlbum alloc] initWithAssetGroup:group];
                               addedAlbum.delegate = self;
-                              if(addedAlbum.type == ALAssetsGroupAlbum){
-                                  albums = [self sortArrayByAlbumName:[albums arrayByAddingObject:addedAlbum]];
-                              }else if(addedAlbum.type == ALAssetsGroupEvent){
-                                  events = [self sortArrayByAlbumName:[events arrayByAddingObject:addedAlbum]];
-                              }else if(addedAlbum.type == ALAssetsGroupFaces){
-                                  faces = [self sortArrayByAlbumName:[faces arrayByAddingObject:addedAlbum]];
-                              }else if(addedAlbum.type == ALAssetsGroupSavedPhotos){
-                                  cameraRoll = addedAlbum;
+                              @synchronized(self){
+                                  if(addedAlbum.type == ALAssetsGroupAlbum){
+                                      albums = [self sortArrayByAlbumName:[albums arrayByAddingObject:addedAlbum]];
+                                  }else if(addedAlbum.type == ALAssetsGroupEvent){
+                                      events = [self sortArrayByAlbumName:[events arrayByAddingObject:addedAlbum]];
+                                  }else if(addedAlbum.type == ALAssetsGroupFaces){
+                                      faces = [self sortArrayByAlbumName:[faces arrayByAddingObject:addedAlbum]];
+                                  }else if(addedAlbum.type == ALAssetsGroupSavedPhotos){
+                                      cameraRoll = addedAlbum;
+                                  }
                               }
                               [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
                           }
@@ -143,9 +167,11 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
 }
 
 -(void) albumDeleted:(NSURL*)urlOfUpdatedAlbum{
-    albums = arrayByRemovingObjectWithURL(albums, urlOfUpdatedAlbum);
-    events = arrayByRemovingObjectWithURL(events, urlOfUpdatedAlbum);
-    faces = arrayByRemovingObjectWithURL(faces, urlOfUpdatedAlbum);
+    @synchronized(self){
+        albums = arrayByRemovingObjectWithURL(albums, urlOfUpdatedAlbum);
+        events = arrayByRemovingObjectWithURL(events, urlOfUpdatedAlbum);
+        faces = arrayByRemovingObjectWithURL(faces, urlOfUpdatedAlbum);
+    }
     [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
 }
 
@@ -163,7 +189,11 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
     if([cameraRoll.assetURL isEqual:url]){
         return cameraRoll;
     }
-    for (MMPhotoAlbum* album in [[albums arrayByAddingObjectsFromArray:events] arrayByAddingObjectsFromArray:faces]) {
+    NSArray* allItems = nil;
+    @synchronized(self){
+        allItems = [[albums arrayByAddingObjectsFromArray:events] arrayByAddingObjectsFromArray:faces];
+    }
+    for (MMPhotoAlbum* album in allItems) {
         if([album.assetURL isEqual:url]){
             return album;
         }
@@ -186,10 +216,12 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                          // there is no group if we're all done iterating.
                                          // sort our results and create an array of all our albums
                                          // from albums -> events -> faces order
-                                         albums = [self sortArrayByAlbumName:updatedAlbumsList];
-                                         events = [self sortArrayByAlbumName:updatedEventsList];
-                                         faces = [self sortArrayByAlbumName:updatedFacesList];
-                                         cameraRoll = savedPhotos;
+                                         @synchronized(self){
+                                             albums = [self sortArrayByAlbumName:updatedAlbumsList];
+                                             events = [self sortArrayByAlbumName:updatedEventsList];
+                                             faces = [self sortArrayByAlbumName:updatedFacesList];
+                                             cameraRoll = savedPhotos;
+                                         }
                                          hasEverInitailized = YES;
                                          [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
                                      }else if ([group numberOfAssets] > 0){
@@ -226,11 +258,13 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
             errorMessage = @"Reason unknown.";
             break;
     }
-    hasEverInitailized = NO;
-    faces = nil;
-    events = nil;
-    albums = nil;
-    cameraRoll = nil;
+    @synchronized(self){
+        hasEverInitailized = NO;
+        faces = nil;
+        events = nil;
+        albums = nil;
+        cameraRoll = nil;
+    }
 
     return [NSError errorWithDomain:@"com.milestonemade.looseleaf" code:kPermissionDeniedError userInfo:nil];
 

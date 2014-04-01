@@ -16,13 +16,6 @@
 
 -(void) prepareRowForReuse:(UIView*)aRow forScrollView:(MMPhotoAlbumListScrollView*)scrollView;
 
-
-
-// to remove from delegate
-
--(UIView*) rowAtIndex:(NSInteger) index;
-
--(NSMutableArray*) bufferOfUnusedAlbumRows;
--(NSMutableDictionary*) currentRowAtIndex;
+-(UIView*) updateRow:(UIView*)currentRow atIndex:(NSInteger)index forFrame:(CGRect)frame;
 
 @end

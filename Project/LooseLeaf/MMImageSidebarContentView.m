@@ -16,9 +16,7 @@
 
 @implementation MMImageSidebarContentView{
     MMPhotoAlbumListScrollView* scrollView;
-    NSMutableArray* bufferOfUnusedAlbumRows;
     NSMutableDictionary* currentRowForAlbum;
-    NSMutableDictionary* currentRowAtIndex;
 }
 
 @synthesize delegate;
@@ -28,9 +26,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        bufferOfUnusedAlbumRows = [NSMutableArray array];
         currentRowForAlbum = [NSMutableDictionary dictionary];
-        currentRowAtIndex = [NSMutableDictionary dictionary];
         [MMPhotoManager sharedInstace].delegate = self;
         scrollView = [[MMPhotoAlbumListScrollView alloc] initWithFrame:self.bounds withRowHeight:ceilf(self.bounds.size.width / 3) andMargins:kTopBottomMargin];
         scrollView.dataSource = self;
@@ -53,51 +49,47 @@
 #pragma mark - MMPhotoManagerDelegate
 
 -(void) doneLoadingPhotoAlbums{
+    NSLog(@"refreshing table rows");
     [scrollView refreshVisibleRows];
+    [scrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [self updateRow:obj atIndex:idx forFrame:[obj frame]];
+    }];
 }
 
 -(void) loadedPreviewPhotosFor:(MMPhotoAlbum *)album{
     NSInteger index = [self indexForAlbum:album];
     if([scrollView rowIndexIsVisible:index]){
-        MMAlbumRowView* row = (MMAlbumRowView*) [self rowAtIndex:index];
+        MMAlbumRowView* row = (MMAlbumRowView*) [scrollView rowAtIndex:index];
         [row loadedPreviewPhotos];
     }
 }
 
 #pragma mark - Row Management
 
--(UIView*) rowAtIndex:(NSInteger) index{
-    MMAlbumRowView* row = [currentRowAtIndex objectForKey:[NSNumber numberWithInt:index]];
-    if(!row){
-        CGRect fr = CGRectMake(0, kTopBottomMargin + index * scrollView.rowHeight, self.bounds.size.width, scrollView.rowHeight);
-        if([bufferOfUnusedAlbumRows count]){
-            row = [bufferOfUnusedAlbumRows lastObject];
-            [bufferOfUnusedAlbumRows removeLastObject];
-            row.frame = fr;
-        }else{
-            row = [[MMAlbumRowView alloc] initWithFrame:fr];
-            row.delegate = self;
-            [scrollView addSubview:row];
-        }
-        row.tag = index;
-        [currentRowAtIndex setObject:row forKey:[NSNumber numberWithInt:index]];
-        row.hidden = NO;
-        if([scrollView rowIndexIsVisible:index]){
-            // make sure the album is set, but only if it's visible
-            // and if we need to
-            MMPhotoAlbum* album = [self albumAtIndex:index];
-            if(row.album != album){
-                if(row.album){
-                    [currentRowForAlbum removeObjectForKey:row.album.persistentId];
-                }
-                row.album = album;
-                if(row.album){
-                    [currentRowForAlbum setObject:row forKey:row.album.persistentId];
-                }
+// currentRow may or maynot be nil. if nil, then
+// create a view and return it. otehrwise use the
+// existing view, update it, and return it
+-(UIView*) updateRow:(UIView*)currentRow atIndex:(NSInteger)index forFrame:(CGRect)frame{
+    MMAlbumRowView* currentAlbumRow = (MMAlbumRowView*)currentRow;
+    if(!currentAlbumRow){
+        currentAlbumRow = [[MMAlbumRowView alloc] initWithFrame:frame];
+        currentAlbumRow.delegate = self;
+    }
+    if([scrollView rowIndexIsVisible:index]){
+        // make sure the album is set, but only if it's visible
+        // and if we need to
+        MMPhotoAlbum* album = [self albumAtIndex:index];
+        if(currentAlbumRow.album != album){
+            if(currentAlbumRow.album){
+                [currentRowForAlbum removeObjectForKey:currentAlbumRow.album.persistentId];
+            }
+            currentAlbumRow.album = album;
+            if(currentAlbumRow.album){
+                [currentRowForAlbum setObject:currentAlbumRow forKey:currentAlbumRow.album.persistentId];
             }
         }
     }
-    return row;
+    return currentAlbumRow;
 }
 
 -(NSInteger) indexForAlbum:(MMPhotoAlbum*)album{
@@ -160,15 +152,6 @@
         [row.album unloadPreviewPhotos];
         row.album = nil;
     }
-}
-
-
--(NSMutableArray*) bufferOfUnusedAlbumRows{
-    return bufferOfUnusedAlbumRows;
-}
-
--(NSMutableDictionary*) currentRowAtIndex{
-    return currentRowAtIndex;
 }
 
 @end

@@ -18,9 +18,13 @@
 
 - (id)initWithFrame:(CGRect)frame withRowHeight:(CGFloat)rowHeight andMargins:(CGFloat)topBottomMargin;
 
+-(void) enumerateVisibleRowsWithBlock:(void (^)(id obj, NSUInteger idx, BOOL *stop))block;
+
 -(NSInteger) rowIndexForY:(CGFloat)y;
 
 -(BOOL) rowIndexIsVisible:(NSInteger)index;
+
+-(UIView*) rowAtIndex:(NSInteger) index;
 
 -(void) refreshVisibleRows;
 
