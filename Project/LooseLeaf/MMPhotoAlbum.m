@@ -10,6 +10,8 @@
 #import "MMPhotoManager.h"
 #import "ALAsset+Thumbnail.h"
 
+dispatch_queue_t fetchThumbnailQueue;
+
 @implementation MMPhotoAlbum{
     ALAssetsGroup* group; // required strong ref so we get updates from asset manager
     NSURL* assetURL;
@@ -27,6 +29,13 @@
 @synthesize persistentId;
 @synthesize type;
 @synthesize numberOfPhotos;
+
++(dispatch_queue_t) fetchThumbnailQueue{
+    if(!fetchThumbnailQueue){
+        fetchThumbnailQueue = dispatch_queue_create("com.milestonemade.looseleaf.fetchThumbnailQueue", DISPATCH_QUEUE_SERIAL);
+    }
+    return fetchThumbnailQueue;
+}
 
 -(id) initWithAssetGroup:(ALAssetsGroup *)_group{
     if(self = [super init]){
@@ -53,7 +62,9 @@
     group = _group;
     name = group.name;
     if(shouldLoad){
-        [self loadPreviewPhotos:YES];
+        dispatch_async([MMPhotoAlbum fetchThumbnailQueue], ^{
+            [self loadPreviewPhotos:YES];
+        });
     }
 }
 
@@ -67,7 +78,9 @@ BOOL shouldLoad = NO;
 -(void) loadPreviewPhotos{
     shouldLoad = YES;
     if(![previewPhotos count]){
-        [self performSelectorInBackground:@selector(loadPreviewPhotos:) withObject:nil];
+        dispatch_async([MMPhotoAlbum fetchThumbnailQueue], ^{
+            [self loadPreviewPhotos:NO];
+        });
     }else{
         [delegate loadedPreviewPhotosFor:self];
     }
@@ -75,7 +88,6 @@ BOOL shouldLoad = NO;
 
 -(void) loadPreviewPhotos:(BOOL)force{
     if(![previewPhotos count] || force){
-        NSLog(@"running query for %@", self.name);
         NSMutableArray* updatedPreviewPhotos = [NSMutableArray array];
         [group setAssetsFilter:[ALAssetsFilter allPhotos]];
         [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
