@@ -159,6 +159,7 @@
         }
     }else{
         // noop
+        NSLog(@"prepaing %p for reuse", aRow);
     }
 }
 
@@ -190,6 +191,7 @@
     }else{
         if(!currentRow){
             currentRow = [[MMPhotoRowView alloc] initWithFrame:frame];
+            
         }
         return currentRow;
     }

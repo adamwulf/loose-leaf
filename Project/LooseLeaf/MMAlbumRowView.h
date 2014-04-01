@@ -16,6 +16,7 @@
 
 @property (nonatomic, weak) NSObject<MMAlbumRowViewDelegate>* delegate;
 @property (nonatomic, strong) MMPhotoAlbum* album;
+@property (readonly) NSArray* bufferedImageViews;
 
 -(void) loadedPreviewPhotos;
 

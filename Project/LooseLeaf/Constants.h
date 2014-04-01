@@ -54,6 +54,11 @@
 #define kBezelInGestureWidth 20
 #define kUndoLimit 20
 
+// photo album
+#define kMaxPhotoRotationInDegrees 20
+
+#define RandomPhotoRotation (rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees/2) / 360.0 * M_PI
+
 #ifdef __cplusplus
 extern "C" {
 #endif
