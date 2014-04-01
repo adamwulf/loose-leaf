@@ -15,6 +15,7 @@
 @implementation MMAlbumRowView{
     MMPhotoAlbum* album;
     UILabel* name;
+    NSArray* bufferedImageViews;
 }
 
 @synthesize album;
@@ -34,6 +35,7 @@
             [self insertSubview:imgView atIndex:0];
             currX += stepX;
         }
+        bufferedImageViews = [NSArray arrayWithArray:self.subviews];
         
         UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)];
         [self addGestureRecognizer:tap];
@@ -65,7 +67,7 @@
         if(indexOfPhoto<[album.previewPhotos count]){
             img = [album.previewPhotos objectAtIndex:indexOfPhoto];
         }
-        MMBufferedImageView* v = (MMBufferedImageView*)[self.subviews objectAtIndex:i];
+        MMBufferedImageView* v = [bufferedImageViews objectAtIndex:i];
         if(img){
             [v setImage:img];
             v.hidden = NO;

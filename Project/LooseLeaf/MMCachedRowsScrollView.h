@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MMPhotoAlbumListScrollViewDataSource.h"
+#import "MMCachedRowsScrollViewDataSource.h"
 
 @interface MMCachedRowsScrollView : UIScrollView<UIScrollViewDelegate>{
     __weak NSObject<MMCachedRowsScrollViewDataSource>* dataSource;
