@@ -13,8 +13,6 @@
 @implementation MMAlbumRowView{
     MMPhotoAlbum* album;
     UILabel* name;
-    NSMutableArray* drawnSubviews;
-    CGAffineTransform rotations[5];
 }
 
 @synthesize album;
@@ -22,7 +20,6 @@
 - (id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
-        drawnSubviews = [NSMutableArray array];
         // load 5 preview image views
         CGFloat maxDim = self.bounds.size.height;
         CGFloat stepX = (self.bounds.size.width - maxDim) / 4;
@@ -31,18 +28,11 @@
             MMBufferedImageView* imgView = [[MMBufferedImageView alloc] initWithFrame:CGRectMake(currX, 0, maxDim, maxDim)];
             int maxRotDeg = 20;
             CGFloat angle = (rand() % maxRotDeg - maxRotDeg/2) / 360.0 * M_PI;
-            CGAffineTransform transform = CGAffineTransformMakeTranslation(maxDim/2.0, maxDim/2.0);
-            transform = CGAffineTransformRotate(transform, angle);
-            transform = CGAffineTransformTranslate(transform,-maxDim/2.0,-maxDim/2.0);
-            rotations[i] = transform;
+            imgView.transform = CGAffineTransformMakeRotation(angle);
+            [self insertSubview:imgView atIndex:0];
             currX += stepX;
-            [self addSubview:imgView];
-            [drawnSubviews addObject:imgView];
         }
         
-        
-//        name = [[UILabel alloc] initWithFrame:self.bounds];
-//        [self addSubview:name];
         // clarity
         self.opaque = NO;
         self.clipsToBounds = YES;
@@ -66,8 +56,9 @@
 -(void) loadedPreviewPhotos{
     for(int i=0;i<5;i++){
         UIImage* img = nil;
-        if(i<[album.previewPhotos count]){
-            img = [album.previewPhotos objectAtIndex:i];
+        int indexOfPhoto = 4-i;
+        if(indexOfPhoto<[album.previewPhotos count]){
+            img = [album.previewPhotos objectAtIndex:indexOfPhoto];
         }
         MMBufferedImageView* v = (MMBufferedImageView*)[self.subviews objectAtIndex:i];
         if(img){
@@ -76,25 +67,8 @@
         }else{
             v.hidden = YES;
         }
-        [self setNeedsDisplay];
     }
 }
-
--(void) drawRect:(CGRect)rect{
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    for(int i=[drawnSubviews count]-1;i>=0;i--){
-        UIView* v = [drawnSubviews objectAtIndex:i];
-        if(!v.hidden){
-            CGRect fr = v.frame;
-            CGContextTranslateCTM(context, fr.origin.x, fr.origin.y);
-            CGContextConcatCTM(context, rotations[i]);
-            [v drawRect:fr];
-            CGContextConcatCTM(context, CGAffineTransformInvert(rotations[i]));
-            CGContextTranslateCTM(context, -fr.origin.x, -fr.origin.y);
-        }
-    }
-}
-
 
 
 @end

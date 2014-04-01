@@ -11,6 +11,8 @@
 @implementation MMBufferedImageView{
     UIImage* image;
     CGFloat targetSize;
+    CALayer* layer;
+    CALayer* whiteBorderLayer;
 }
 
 @synthesize image;
@@ -25,50 +27,59 @@ CGFloat buffer = 2;
         self.opaque = NO;
         self.clearsContextBeforeDrawing = YES;
         targetSize = self.bounds.size.height - 2*buffer;
+        
+        layer = [[CALayer alloc] init];
+        layer.edgeAntialiasingMask = kCALayerLeftEdge | kCALayerRightEdge | kCALayerBottomEdge | kCALayerTopEdge;
+        layer.frame = CGRectInset(self.bounds, 10, 10);
+        layer.shouldRasterize = YES;
+        [self.layer addSublayer:layer];
+        
+        // black outer border
+        layer.borderColor = [UIColor blackColor].CGColor;
+        layer.borderWidth = 3;
+        
+        // white border, which will
+        // draw on top of the black border
+        whiteBorderLayer = [[CALayer alloc] init];
+        whiteBorderLayer.borderColor = [UIColor whiteColor].CGColor;
+        whiteBorderLayer.borderWidth = 2;
+        whiteBorderLayer.shouldRasterize = YES;
+        [self.layer addSublayer:whiteBorderLayer];
     }
     return self;
 }
 
 -(void) setImage:(UIImage *)_image{
     image = _image;
-//    [self setNeedsDisplay];
+    
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    
+    CGRect fr = CGRectInset(self.bounds, 8, 8);
+    CGSize scaledImageSize = image.size;
+    CGFloat maxDim = MAX(scaledImageSize.width, scaledImageSize.height);
+    scaledImageSize.width = scaledImageSize.width / maxDim * fr.size.width;
+    scaledImageSize.height = scaledImageSize.height / maxDim * fr.size.height;
+    
+    fr.origin.x += (fr.size.width - scaledImageSize.width) / 2;
+    fr.origin.y += (fr.size.height - scaledImageSize.height) / 2;
+    fr.size = scaledImageSize;
+    layer.frame = fr;
+    
+    CGRect whiteFrame = CGRectInset(layer.frame, 1, 1);
+    whiteBorderLayer.frame = whiteFrame;
+    
+    layer.contents = (id)image.CGImage;
+    
+    [CATransaction commit];
 }
 
--(void) drawRect:(CGRect)rect{
-    if(image){
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        
-        CGFloat maxDim = self.bounds.size.height - 2*buffer;
-        CGSize sizeToDraw = image.size;
-        CGFloat scaleToDraw = 1.0;
-        if(sizeToDraw.width >= sizeToDraw.height && sizeToDraw.width > maxDim){
-            scaleToDraw = maxDim / sizeToDraw.width;
-            sizeToDraw.height *= maxDim / sizeToDraw.width;
-            sizeToDraw.width = maxDim;
-        }else if(sizeToDraw.height >= sizeToDraw.width && sizeToDraw.height > maxDim){
-            scaleToDraw = maxDim / sizeToDraw.height;
-            sizeToDraw.width *= maxDim / sizeToDraw.height;
-            sizeToDraw.height = maxDim;
-        }
-        
-        CGContextSetAllowsAntialiasing(context, true);
-        CGContextSetShouldAntialias(context, true);
-        
-        CGRect r = CGRectMake(buffer + (maxDim - sizeToDraw.width)/2, buffer + (maxDim - sizeToDraw.height)/2, sizeToDraw.width, sizeToDraw.height);
-        
-        CGContextSaveGState(context);
-        CGContextTranslateCTM(context, r.origin.x, r.origin.y);
-        CGContextScaleCTM(context, scaleToDraw, scaleToDraw);
-        [image drawAtPoint:CGPointZero];
-        
-        CGContextRestoreGState(context);
-        
-        CGContextSetLineWidth(context, 1);
-        CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);
-        CGContextStrokeRect(context, CGRectInset(r, .5, .5));
-        CGContextSetStrokeColorWithColor(context, [UIColor whiteColor].CGColor);
-        CGContextStrokeRect(context, CGRectInset(r, 1.5, 1.5));
+-(void) setHidden:(BOOL)hidden{
+    [super setHidden:hidden];
+    if(hidden){
+        layer.contents = nil;
     }
 }
+
 
 @end
