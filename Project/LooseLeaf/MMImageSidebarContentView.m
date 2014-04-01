@@ -8,7 +8,7 @@
 
 #import "MMImageSidebarContentView.h"
 #import "MMPhotoManager.h"
-#import "MMPhotoAlbumListScrollView.h"
+#import "MMCachedRowsScrollView.h"
 #import "MMAlbumRowView.h"
 #import "MMPhotoRowView.h"
 #import "MMImageSidebarContainerView.h"
@@ -16,8 +16,8 @@
 #define kTopBottomMargin 50
 
 @implementation MMImageSidebarContentView{
-    MMPhotoAlbumListScrollView* albumListScrollView;
-    MMPhotoAlbumListScrollView* photoListScrollView;
+    MMCachedRowsScrollView* albumListScrollView;
+    MMCachedRowsScrollView* photoListScrollView;
     NSMutableDictionary* currentRowForAlbum;
     
     MMPhotoAlbum* currentAlbum;
@@ -32,10 +32,10 @@
         // Initialization code
         currentRowForAlbum = [NSMutableDictionary dictionary];
         [MMPhotoManager sharedInstace].delegate = self;
-        albumListScrollView = [[MMPhotoAlbumListScrollView alloc] initWithFrame:self.bounds withRowHeight:ceilf(self.bounds.size.width / 3) andMargins:kTopBottomMargin];
+        albumListScrollView = [[MMCachedRowsScrollView alloc] initWithFrame:self.bounds withRowHeight:ceilf(self.bounds.size.width / 3) andMargins:kTopBottomMargin];
         albumListScrollView.dataSource = self;
         
-        photoListScrollView = [[MMPhotoAlbumListScrollView alloc] initWithFrame:self.bounds withRowHeight:ceilf(self.bounds.size.width / 2) andMargins:kTopBottomMargin];
+        photoListScrollView = [[MMCachedRowsScrollView alloc] initWithFrame:self.bounds withRowHeight:ceilf(self.bounds.size.width / 2) andMargins:kTopBottomMargin];
         photoListScrollView.dataSource = self;
         photoListScrollView.alpha = 0;
         
@@ -137,7 +137,7 @@
 
 #pragma mark - MMPhotoAlbumListScrollViewDataSource
 
--(NSInteger) numberOfRowsFor:(MMPhotoAlbumListScrollView*)scrollView{
+-(NSInteger) numberOfRowsFor:(MMCachedRowsScrollView*)scrollView{
     if(scrollView == albumListScrollView){
         return [[[MMPhotoManager sharedInstace] albums] count] +
         [[[MMPhotoManager sharedInstace] events] count] +
@@ -149,7 +149,7 @@
 
 // called when a row is hidden in the scrollview
 // and may be re-used with different model data later
--(void) prepareRowForReuse:(UIView*)aRow forScrollView:(MMPhotoAlbumListScrollView*)scrollView{
+-(void) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView{
     if(scrollView == albumListScrollView){
         MMAlbumRowView* row = (MMAlbumRowView*)aRow;
         if(row.album){
@@ -165,7 +165,7 @@
 // currentRow may or maynot be nil. if nil, then
 // create a view and return it. otehrwise use the
 // existing view, update it, and return it
--(UIView*) updateRow:(UIView*)currentRow atIndex:(NSInteger)index forFrame:(CGRect)frame forScrollView:(MMPhotoAlbumListScrollView*)scrollView{
+-(UIView*) updateRow:(UIView*)currentRow atIndex:(NSInteger)index forFrame:(CGRect)frame forScrollView:(MMCachedRowsScrollView*)scrollView{
     if(scrollView == albumListScrollView){
         MMAlbumRowView* currentAlbumRow = (MMAlbumRowView*)currentRow;
         if(!currentAlbumRow){

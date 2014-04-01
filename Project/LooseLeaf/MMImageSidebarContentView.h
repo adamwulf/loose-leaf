@@ -14,7 +14,7 @@
 
 @class MMImageSidebarContainerView;
 
-@interface MMImageSidebarContentView : UIView<MMPhotoManagerDelegate,MMAlbumRowViewDelegate,MMPhotoAlbumListScrollViewDataSource>{
+@interface MMImageSidebarContentView : UIView<MMPhotoManagerDelegate,MMAlbumRowViewDelegate,MMCachedRowsScrollViewDataSource>{
     __weak MMImageSidebarContainerView* delegate;
 }
 

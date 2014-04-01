@@ -9,11 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "MMPhotoAlbumListScrollViewDataSource.h"
 
-@interface MMPhotoAlbumListScrollView : UIScrollView<UIScrollViewDelegate>{
-    __weak NSObject<MMPhotoAlbumListScrollViewDataSource>* dataSource;
+@interface MMCachedRowsScrollView : UIScrollView<UIScrollViewDelegate>{
+    __weak NSObject<MMCachedRowsScrollViewDataSource>* dataSource;
 }
 
-@property (nonatomic, weak) NSObject<MMPhotoAlbumListScrollViewDataSource>* dataSource;
+@property (nonatomic, weak) NSObject<MMCachedRowsScrollViewDataSource>* dataSource;
 @property (readonly) CGFloat rowHeight;
 
 - (id)initWithFrame:(CGRect)frame withRowHeight:(CGFloat)rowHeight andMargins:(CGFloat)topBottomMargin;

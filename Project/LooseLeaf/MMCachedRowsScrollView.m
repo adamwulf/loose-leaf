@@ -6,13 +6,13 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMPhotoAlbumListScrollView.h"
+#import "MMCachedRowsScrollView.h"
 
-@implementation MMPhotoAlbumListScrollView{
+@implementation MMCachedRowsScrollView{
     CGFloat rowHeight;
     CGFloat topBottomMargin;
     NSMutableDictionary* currentRowAtIndex;
-    NSMutableArray* bufferOfUnusedAlbumRows;
+    NSMutableArray* bufferOfUnusedRows;
 }
 
 @synthesize rowHeight;
@@ -24,7 +24,7 @@
         rowHeight = _rowHeight;
         topBottomMargin = _topBottomMargin;
         currentRowAtIndex = [NSMutableDictionary dictionary];
-        bufferOfUnusedAlbumRows = [NSMutableArray array];
+        bufferOfUnusedRows = [NSMutableArray array];
         // Initialization code
         self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
@@ -53,9 +53,9 @@
     if(!row){
         CGRect fr = CGRectMake(0, topBottomMargin + index * self.rowHeight, self.bounds.size.width, self.rowHeight);
         BOOL needsAddedSubview = NO;
-        if([bufferOfUnusedAlbumRows count]){
-            row = [bufferOfUnusedAlbumRows lastObject];
-            [bufferOfUnusedAlbumRows removeLastObject];
+        if([bufferOfUnusedRows count]){
+            row = [bufferOfUnusedRows lastObject];
+            [bufferOfUnusedRows removeLastObject];
             row.frame = fr;
         }else{
             needsAddedSubview = YES;
@@ -101,15 +101,15 @@
             row.hidden = YES;
             [self.dataSource prepareRowForReuse:row forScrollView:self];
             [currentRowAtIndex removeObjectForKey:[NSNumber numberWithInt:row.tag]];
-            [bufferOfUnusedAlbumRows addObject:row];
+            [bufferOfUnusedRows addObject:row];
         }
     }
     
-    // loop through visible albums
+    // loop through visible rowss
     // and make sure row is at the right place
     CGFloat currOffset = self.contentOffset.y;
-    NSInteger totalAlbumCount = [self.dataSource numberOfRowsFor:self];
-    while([self rowIndexIsVisible:[self rowIndexForY:currOffset]] && [self rowIndexForY:currOffset] < totalAlbumCount){
+    NSInteger totalRowCount = [self.dataSource numberOfRowsFor:self];
+    while([self rowIndexIsVisible:[self rowIndexForY:currOffset]] && [self rowIndexForY:currOffset] < totalRowCount){
         NSInteger currIndex = [self rowIndexForY:currOffset];
         if(currIndex >= 0){
             // load the row
@@ -118,7 +118,7 @@
         currOffset += self.rowHeight;
     }
     
-    CGFloat contentHeight = 2*topBottomMargin + self.rowHeight * totalAlbumCount;
+    CGFloat contentHeight = 2*topBottomMargin + self.rowHeight * totalRowCount;
     self.contentSize = CGSizeMake(self.bounds.size.width, contentHeight);
 }
 
