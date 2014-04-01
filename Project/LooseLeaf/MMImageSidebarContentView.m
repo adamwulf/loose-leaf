@@ -32,7 +32,7 @@
         currentRowForAlbum = [NSMutableDictionary dictionary];
         currentRowAtIndex = [NSMutableDictionary dictionary];
         [MMPhotoManager sharedInstace].delegate = self;
-        scrollView = [[MMPhotoAlbumListScrollView alloc] initWithFrame:self.bounds];
+        scrollView = [[MMPhotoAlbumListScrollView alloc] initWithFrame:self.bounds withRowHeight:ceilf(self.bounds.size.width / 3)];
         scrollView.delegate = self;
         [self addSubview:scrollView];
     }
@@ -66,13 +66,9 @@
 
 #pragma mark - Row Management
 
--(CGFloat) rowHeight{
-    return ceilf(self.bounds.size.width / 3);
-}
-
 -(BOOL) indexIsVisible:(NSInteger)index{
-    CGFloat minY = kTopBottomMargin + index * [self rowHeight];
-    CGFloat maxY = minY + [self rowHeight];
+    CGFloat minY = kTopBottomMargin + index * scrollView.rowHeight;
+    CGFloat maxY = minY + scrollView.rowHeight;
     if(minY < scrollView.contentOffset.y + scrollView.bounds.size.height &&
        maxY > scrollView.contentOffset.y){
         return YES;
@@ -94,7 +90,7 @@
             r = [bufferOfUnusedAlbumRows lastObject];
             [bufferOfUnusedAlbumRows removeLastObject];
         }else{
-            r = [[MMAlbumRowView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, [self rowHeight])];
+            r = [[MMAlbumRowView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, scrollView.rowHeight)];
         }
         r.album = album;
         [currentRowForAlbum setObject:r forKey:album.persistentId];
@@ -105,7 +101,7 @@
 -(MMAlbumRowView*) rowAtIndex:(NSInteger) index{
     MMAlbumRowView* r = [currentRowAtIndex objectForKey:[NSNumber numberWithInt:index]];
     if(!r){
-        CGRect fr = CGRectMake(0, kTopBottomMargin + index * [self rowHeight], self.bounds.size.width, [self rowHeight]);
+        CGRect fr = CGRectMake(0, kTopBottomMargin + index * scrollView.rowHeight, self.bounds.size.width, scrollView.rowHeight);
         if([bufferOfUnusedAlbumRows count]){
             r = [bufferOfUnusedAlbumRows lastObject];
             [bufferOfUnusedAlbumRows removeLastObject];
@@ -122,7 +118,7 @@
 }
 
 -(NSInteger) indexForY:(CGFloat)y{
-    NSInteger currIndex = floorf((y - kTopBottomMargin) / [self rowHeight]);
+    NSInteger currIndex = floorf((y - kTopBottomMargin) / scrollView.rowHeight);
     return currIndex;
 }
 
@@ -196,14 +192,14 @@
                 }
             }
         }
-        currOffset += [self rowHeight];
+        currOffset += scrollView.rowHeight;
     }
     
     
     NSInteger totalAlbumCount = [[[MMPhotoManager sharedInstace] albums] count] +
                                 [[[MMPhotoManager sharedInstace] events] count] +
                                 [[[MMPhotoManager sharedInstace] faces] count];
-    CGFloat contentHeight = 2*kTopBottomMargin + [self rowHeight] * totalAlbumCount;
+    CGFloat contentHeight = 2*kTopBottomMargin + scrollView.rowHeight * totalAlbumCount;
     scrollView.contentSize = CGSizeMake(self.bounds.size.width, contentHeight);
 }
 

@@ -8,12 +8,17 @@
 
 #import "MMPhotoAlbumListScrollView.h"
 
-@implementation MMPhotoAlbumListScrollView
+@implementation MMPhotoAlbumListScrollView{
+    CGFloat rowHeight;
+}
 
-- (id)initWithFrame:(CGRect)frame
+@synthesize rowHeight;
+
+- (id)initWithFrame:(CGRect)frame withRowHeight:(CGFloat)_rowHeight
 {
     self = [super initWithFrame:frame];
     if (self) {
+        rowHeight = _rowHeight;
         // Initialization code
         self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;

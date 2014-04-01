@@ -10,4 +10,8 @@
 
 @interface MMPhotoAlbumListScrollView : UIScrollView
 
+@property (readonly) CGFloat rowHeight;
+
+- (id)initWithFrame:(CGRect)frame withRowHeight:(CGFloat)_rowHeight;
+
 @end
