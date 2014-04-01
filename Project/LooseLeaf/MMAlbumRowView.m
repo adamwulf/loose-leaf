@@ -8,7 +8,7 @@
 
 #import "MMAlbumRowView.h"
 #import "MMPhotoManager.h"
-#import "MMBufferedImageView.h"
+#import "MMBufferedImage.h"
 
 @implementation MMAlbumRowView{
     MMPhotoAlbum* album;
@@ -28,7 +28,7 @@
         CGFloat stepX = (self.bounds.size.width - maxDim) / 4;
         CGFloat currX = 0;
         for(int i=0;i<5;i++){
-            MMBufferedImageView* imgView = [[MMBufferedImageView alloc] initWithFrame:CGRectMake(currX, 0, maxDim, maxDim)];
+            MMBufferedImage* imgView = [[MMBufferedImage alloc] initWithFrame:CGRectMake(currX, 0, maxDim, maxDim)];
             int maxRotDeg = 20;
             CGFloat angle = (rand() % maxRotDeg - maxRotDeg/2) / 360.0 * M_PI;
             CGAffineTransform transform = CGAffineTransformMakeTranslation(maxDim/2.0, maxDim/2.0);
@@ -36,7 +36,7 @@
             transform = CGAffineTransformTranslate(transform,-maxDim/2.0,-maxDim/2.0);
             rotations[i] = transform;
             currX += stepX;
-            [self addSubview:imgView];
+//            [self addSubview:imgView];
             [drawnSubviews addObject:imgView];
         }
         
@@ -69,7 +69,7 @@
         if(i<[album.previewPhotos count]){
             img = [album.previewPhotos objectAtIndex:i];
         }
-        MMBufferedImageView* v = (MMBufferedImageView*)[self.subviews objectAtIndex:i];
+        MMBufferedImage* v = (MMBufferedImage*)[drawnSubviews objectAtIndex:i];
         if(img){
             [v setImage:img];
             v.hidden = NO;
@@ -83,7 +83,7 @@
 -(void) drawRect:(CGRect)rect{
     CGContextRef context = UIGraphicsGetCurrentContext();
     for(int i=[drawnSubviews count]-1;i>=0;i--){
-        UIView* v = [drawnSubviews objectAtIndex:i];
+        MMBufferedImage* v = [drawnSubviews objectAtIndex:i];
         if(!v.hidden){
             CGRect fr = v.frame;
             CGContextTranslateCTM(context, fr.origin.x, fr.origin.y);

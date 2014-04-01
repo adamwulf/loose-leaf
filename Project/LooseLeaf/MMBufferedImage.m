@@ -6,25 +6,26 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMBufferedImageView.h"
+#import "MMBufferedImage.h"
 
-@implementation MMBufferedImageView{
+@implementation MMBufferedImage{
     UIImage* image;
     CGFloat targetSize;
+    BOOL hidden;
+    CGRect frame;
 }
 
+@synthesize hidden;
 @synthesize image;
+@synthesize frame;
 
 CGFloat buffer = 2;
 
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithFrame:(CGRect)_frame
 {
-    if (self = [super initWithFrame:frame]) {
-        self.clipsToBounds = YES;
-        self.backgroundColor = [UIColor clearColor];
-        self.opaque = NO;
-        self.clearsContextBeforeDrawing = YES;
-        targetSize = self.bounds.size.height - 2*buffer;
+    if (self = [super init]) {
+        self.frame = _frame;
+        targetSize = self.frame.size.height - 2*buffer;
     }
     return self;
 }
@@ -38,7 +39,7 @@ CGFloat buffer = 2;
     if(image){
         CGContextRef context = UIGraphicsGetCurrentContext();
         
-        CGFloat maxDim = self.bounds.size.height - 2*buffer;
+        CGFloat maxDim = self.frame.size.height - 2*buffer;
         CGSize sizeToDraw = image.size;
         CGFloat scaleToDraw = 1.0;
         if(sizeToDraw.width >= sizeToDraw.height && sizeToDraw.width > maxDim){

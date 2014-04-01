@@ -7,9 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-@interface MMBufferedImageView : UIView
+@interface MMBufferedImage : NSObject
 
+@property (nonatomic, assign) BOOL hidden;
+@property (nonatomic, assign) CGRect frame;
 @property (nonatomic, strong) UIImage* image;
+
+- (id)initWithFrame:(CGRect)frame;
+
+-(void) drawRect:(CGRect)rect;
 
 @end
