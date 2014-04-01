@@ -12,4 +12,8 @@
 
 -(void) sidebarCloseButtonWasTapped;
 
+-(void) sidebarWillShow;
+
+-(void) sidebarWillHide;
+
 @end

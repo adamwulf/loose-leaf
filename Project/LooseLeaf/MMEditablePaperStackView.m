@@ -902,10 +902,41 @@
     return YES;
 }
 
-#pragma mark - MMSidebarImagePickerDelegate
+#pragma mark - MMSlidingSidebarContainerViewDelegate
 
 -(void) sidebarCloseButtonWasTapped{
     [self setButtonsVisible:YES];
+}
+
+-(void) sidebarWillShow{
+    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+}
+
+-(void) sidebarWillHide{
+    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
+}
+
+
+#pragma mark - gestures for list view
+
+-(void) beginUITransitionFromPageView{
+    [super beginUITransitionFromPageView];
+    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+}
+
+-(void) beginUITransitionFromListView{
+    [super beginUITransitionFromListView];
+    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+}
+
+-(void) finishUITransitionToListView{
+    [super finishUITransitionToListView];
+    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+}
+
+-(void) finishUITransitionToPageView{
+    [super finishUITransitionToPageView];
+    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
 }
 
 

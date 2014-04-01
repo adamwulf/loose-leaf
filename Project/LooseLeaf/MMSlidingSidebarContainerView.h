@@ -11,7 +11,7 @@
 #import "MMSlidingSidebarView.h"
 #import "MMSlidingSidebarContainerViewDelegate.h"
 
-@interface MMSlidingSidebarContainerView : UIView<MMSlidingSidebarContainerViewDelegate>{
+@interface MMSlidingSidebarContainerView : UIView{
     MMSlidingSidebarView* sidebarContentView;
     __weak NSObject<MMSlidingSidebarContainerViewDelegate>* delegate;
 }
@@ -19,6 +19,8 @@
 @property (nonatomic, weak) NSObject<MMSlidingSidebarContainerViewDelegate>* delegate;
 
 - (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft;
+
+-(void) sidebarCloseButtonWasTapped;
 
 -(BOOL) isVisible;
 

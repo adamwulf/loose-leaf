@@ -64,6 +64,7 @@
 -(void) hide:(BOOL)animated{
     // ignore if we're hidden
     if(![self isVisible]) return;
+    [delegate sidebarWillHide];
     // keep our property changes in a block
     // to pass to UIView or just run
     void (^hideBlock)(void) = ^{
@@ -91,6 +92,8 @@
     // ignore if we're already visible
     if([self isVisible]) return;
     
+    [delegate sidebarWillShow];
+
     if(animated){
         [CATransaction begin];
         
