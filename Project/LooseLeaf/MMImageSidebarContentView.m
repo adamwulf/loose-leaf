@@ -32,7 +32,7 @@
         currentRowForAlbum = [NSMutableDictionary dictionary];
         currentRowAtIndex = [NSMutableDictionary dictionary];
         [MMPhotoManager sharedInstace].delegate = self;
-        scrollView = [[MMPhotoAlbumListScrollView alloc] initWithFrame:self.bounds withRowHeight:ceilf(self.bounds.size.width / 3)];
+        scrollView = [[MMPhotoAlbumListScrollView alloc] initWithFrame:self.bounds withRowHeight:ceilf(self.bounds.size.width / 3) andMargins:kTopBottomMargin];
         scrollView.delegate = self;
         [self addSubview:scrollView];
     }
@@ -58,30 +58,13 @@
 
 -(void) loadedPreviewPhotosFor:(MMPhotoAlbum *)album{
     NSInteger index = [self indexForAlbum:album];
-    if([self indexIsVisible:index]){
+    if([scrollView rowIndexIsVisible:index]){
         MMAlbumRowView* row = [self rowAtIndex:index];
         [row loadedPreviewPhotos];
     }
 }
 
 #pragma mark - Row Management
-
--(BOOL) indexIsVisible:(NSInteger)index{
-    CGFloat minY = kTopBottomMargin + index * scrollView.rowHeight;
-    CGFloat maxY = minY + scrollView.rowHeight;
-    if(minY < scrollView.contentOffset.y + scrollView.bounds.size.height &&
-       maxY > scrollView.contentOffset.y){
-        return YES;
-    }
-    return NO;
-}
-
--(BOOL) isRowVisible:(MMAlbumRowView*)row{
-    if(row.superview && [self indexIsVisible:row.tag]){
-        return YES;
-    }
-    return NO;
-}
 
 -(MMAlbumRowView*) rowForAlbum:(MMPhotoAlbum*)album{
     MMAlbumRowView* r = [currentRowForAlbum objectForKey:album.persistentId];
@@ -115,11 +98,6 @@
         r.hidden = NO;
     }
     return r;
-}
-
--(NSInteger) indexForY:(CGFloat)y{
-    NSInteger currIndex = floorf((y - kTopBottomMargin) / scrollView.rowHeight);
-    return currIndex;
 }
 
 -(NSInteger) indexForAlbum:(MMPhotoAlbum*)album{
@@ -159,10 +137,9 @@
 }
 
 -(void) validateRowsForCurrentOffset{
-
     // remove invisible rows
     for(MMAlbumRowView* row in scrollView.subviews){
-        if(![self isRowVisible:row]){
+        if(![scrollView rowIndexIsVisible:row.tag]){
             row.hidden = YES;
             if(row.album){
                 [currentRowForAlbum removeObjectForKey:row.album.persistentId];
@@ -177,8 +154,8 @@
     // loop through visible albums
     // and make sure row is at the right place
     CGFloat currOffset = scrollView.contentOffset.y;
-    while([self indexIsVisible:[self indexForY:currOffset]]){
-        NSInteger currIndex = [self indexForY:currOffset];
+    while([scrollView rowIndexIsVisible:[scrollView rowIndexForY:currOffset]]){
+        NSInteger currIndex = [scrollView rowIndexForY:currOffset];
         if(currIndex >= 0){
             MMAlbumRowView* row = [self rowAtIndex:currIndex];
             MMPhotoAlbum* album = [self albumAtIndex:currIndex];

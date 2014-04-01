@@ -12,6 +12,10 @@
 
 @property (readonly) CGFloat rowHeight;
 
-- (id)initWithFrame:(CGRect)frame withRowHeight:(CGFloat)_rowHeight;
+- (id)initWithFrame:(CGRect)frame withRowHeight:(CGFloat)_rowHeight andMargins:(CGFloat)topBottomMargin;
+
+-(NSInteger) rowIndexForY:(CGFloat)y;
+
+-(BOOL) rowIndexIsVisible:(NSInteger)index;
 
 @end
