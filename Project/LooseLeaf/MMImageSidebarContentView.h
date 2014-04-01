@@ -10,11 +10,13 @@
 #import "MMSlidingSidebarContainerViewDelegate.h"
 #import "MMPhotoManagerDelegate.h"
 
+@class MMImageSidebarContainerView;
+
 @interface MMImageSidebarContentView : UIView<MMPhotoManagerDelegate,UIScrollViewDelegate>{
-    __weak NSObject<MMSlidingSidebarContainerViewDelegate>* delegate;
+    __weak MMImageSidebarContainerView* delegate;
 }
 
-@property (nonatomic, weak) NSObject<MMSlidingSidebarContainerViewDelegate>* delegate;
+@property (nonatomic, weak) MMImageSidebarContainerView* delegate;
 
 -(void) show:(BOOL)animated;
 

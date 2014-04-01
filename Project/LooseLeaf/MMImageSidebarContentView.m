@@ -10,6 +10,7 @@
 #import "MMPhotoManager.h"
 #import "MMPhotoAlbumListScrollView.h"
 #import "MMAlbumRowView.h"
+#import "MMImageSidebarContainerView.h"
 
 #define kTopBottomMargin 50
 

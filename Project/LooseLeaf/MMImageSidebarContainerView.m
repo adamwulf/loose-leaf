@@ -34,5 +34,6 @@
     [contentView hide:animated];
 }
 
+#pragma mark - MMSlidingSidebarContainerViewDelegate
 
 @end
