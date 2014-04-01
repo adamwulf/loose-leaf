@@ -29,6 +29,7 @@ CGFloat buffer = 2;
         targetSize = self.bounds.size.height - 2*buffer;
         
         layer = [[CALayer alloc] init];
+        layer.backgroundColor = [UIColor whiteColor].CGColor;
         layer.edgeAntialiasingMask = kCALayerLeftEdge | kCALayerRightEdge | kCALayerBottomEdge | kCALayerTopEdge;
         layer.frame = CGRectInset(self.bounds, 10, 10);
         layer.shouldRasterize = YES;

@@ -19,8 +19,8 @@ dispatch_queue_t fetchThumbnailQueue;
     NSString* persistentId;
     ALAssetsGroupType type;
     NSInteger numberOfPhotos;
-    UIImage* poster;
     NSArray* previewPhotos;
+    BOOL previewPhotosAreLoaded;
 }
 
 @synthesize delegate;
@@ -46,7 +46,7 @@ dispatch_queue_t fetchThumbnailQueue;
         persistentId = group.persistentId;
         type = group.type;
         numberOfPhotos = group.numberOfAssets;
-        poster = [UIImage imageWithCGImage:group.posterImage];
+        previewPhotosAreLoaded = NO;
     }
     return self;
 }
@@ -61,22 +61,22 @@ dispatch_queue_t fetchThumbnailQueue;
 -(void) refreshAlbumContentsWithGroup:(ALAssetsGroup*)_group{
     group = _group;
     name = group.name;
-    if(shouldLoad){
+    if(previewPhotosAreLoaded){
+        // we have photos loaded, but need to refresh them
         dispatch_async([MMPhotoAlbum fetchThumbnailQueue], ^{
             [self loadPreviewPhotos:YES];
         });
     }
 }
 
-BOOL shouldLoad = NO;
 
 -(void) unloadPreviewPhotos{
-    shouldLoad = NO;
+    previewPhotosAreLoaded = NO;
     previewPhotos = [NSArray array];
 }
 
 -(void) loadPreviewPhotos{
-    shouldLoad = YES;
+    previewPhotosAreLoaded = YES;
     if(![previewPhotos count]){
         dispatch_async([MMPhotoAlbum fetchThumbnailQueue], ^{
             [self loadPreviewPhotos:NO];

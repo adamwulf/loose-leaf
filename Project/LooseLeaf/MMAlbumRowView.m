@@ -10,6 +10,8 @@
 #import "MMPhotoManager.h"
 #import "MMBufferedImageView.h"
 
+#define kMaxRotationInDegrees 20
+
 @implementation MMAlbumRowView{
     MMPhotoAlbum* album;
     UILabel* name;
@@ -26,8 +28,7 @@
         CGFloat currX = 0;
         for(int i=0;i<5;i++){
             MMBufferedImageView* imgView = [[MMBufferedImageView alloc] initWithFrame:CGRectMake(currX, 0, maxDim, maxDim)];
-            int maxRotDeg = 20;
-            CGFloat angle = (rand() % maxRotDeg - maxRotDeg/2) / 360.0 * M_PI;
+            CGFloat angle = (rand() % kMaxRotationInDegrees - kMaxRotationInDegrees/2) / 360.0 * M_PI;
             imgView.transform = CGAffineTransformMakeRotation(angle);
             [self insertSubview:imgView atIndex:0];
             currX += stepX;

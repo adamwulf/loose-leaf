@@ -112,10 +112,11 @@
             r.frame = fr;
         }else{
             r = [[MMAlbumRowView alloc] initWithFrame:fr];
+            [scrollView addSubview:r];
         }
         r.tag = index;
         [currentRowAtIndex setObject:r forKey:[NSNumber numberWithInt:index]];
-        [scrollView addSubview:r];
+        r.hidden = NO;
     }
     return r;
 }
@@ -166,7 +167,7 @@
     // remove invisible rows
     for(MMAlbumRowView* row in scrollView.subviews){
         if(![self isRowVisible:row]){
-            [row removeFromSuperview];
+            row.hidden = YES;
             if(row.album){
                 [currentRowForAlbum removeObjectForKey:row.album.persistentId];
                 [row.album unloadPreviewPhotos];
