@@ -64,22 +64,35 @@
 #pragma mark - MMPhotoAlbumDelegate;
 
 -(void) loadedPreviewPhotos{
+    
+    [self.layer.sublayers makeObjectsPerformSelector:@selector(removeFromSuperlayer)];
+    
     for(int i=0;i<5;i++){
         UIImage* img = nil;
         if(i<[album.previewPhotos count]){
             img = [album.previewPhotos objectAtIndex:i];
         }
         MMBufferedImage* v = (MMBufferedImage*)[drawnSubviews objectAtIndex:i];
-        if(img){
-            [v setImage:img];
-            v.hidden = NO;
-        }else{
-            v.hidden = YES;
-        }
-        [self setNeedsDisplay];
+//        if(img){
+//            [v setImage:img];
+//            v.hidden = NO;
+//        }else{
+//            v.hidden = YES;
+//        }
+        
+        CALayer* layer = [[CALayer alloc] init];
+        layer.edgeAntialiasingMask = kCALayerLeftEdge | kCALayerRightEdge | kCALayerBottomEdge | kCALayerTopEdge;
+        layer.frame = v.frame;
+        layer.contents = (id)img.CGImage;
+        layer.transform = CATransform3DMakeRotation(.3, 0, 0, 1);
+        layer.shouldRasterize = YES;
+        [self.layer addSublayer:layer];
+        
+//        [self setNeedsDisplay];
     }
 }
 
+/*
 -(void) drawRect:(CGRect)rect{
     CGContextRef context = UIGraphicsGetCurrentContext();
     for(int i=[drawnSubviews count]-1;i>=0;i--){
@@ -94,7 +107,7 @@
         }
     }
 }
-
+*/
 
 
 @end
