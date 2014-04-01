@@ -7,11 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MMPhotoAlbumDelegate.h"
+#import "MMAlbumRowViewDelegate.h"
 #import "MMPhotoAlbum.h"
 
-@interface MMAlbumRowView : UIView
+@interface MMAlbumRowView : UIView{
+    __weak NSObject<MMAlbumRowViewDelegate>* delegate;
+}
 
+@property (nonatomic, weak) NSObject<MMAlbumRowViewDelegate>* delegate;
 @property (nonatomic, strong) MMPhotoAlbum* album;
 
 -(void) loadedPreviewPhotos;

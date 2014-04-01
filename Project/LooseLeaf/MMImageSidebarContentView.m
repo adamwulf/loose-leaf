@@ -66,21 +66,6 @@
 
 #pragma mark - Row Management
 
--(MMAlbumRowView*) rowForAlbum:(MMPhotoAlbum*)album{
-    MMAlbumRowView* r = [currentRowForAlbum objectForKey:album.persistentId];
-    if(!r){
-        if([bufferOfUnusedAlbumRows count]){
-            r = [bufferOfUnusedAlbumRows lastObject];
-            [bufferOfUnusedAlbumRows removeLastObject];
-        }else{
-            r = [[MMAlbumRowView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, scrollView.rowHeight)];
-        }
-        r.album = album;
-        [currentRowForAlbum setObject:r forKey:album.persistentId];
-    }
-    return r;
-}
-
 -(MMAlbumRowView*) rowAtIndex:(NSInteger) index{
     MMAlbumRowView* r = [currentRowAtIndex objectForKey:[NSNumber numberWithInt:index]];
     if(!r){
@@ -91,6 +76,7 @@
             r.frame = fr;
         }else{
             r = [[MMAlbumRowView alloc] initWithFrame:fr];
+            r.delegate = self;
             [scrollView addSubview:r];
         }
         r.tag = index;
@@ -186,5 +172,12 @@
 -(void) scrollViewDidScroll:(UIScrollView *)_scrollView{
     [self validateRowsForCurrentOffset];
 }
+
+#pragma mark - MMAlbumRowViewDelegate
+
+-(void) rowWasTapped:(MMAlbumRowView*)row{
+    NSLog(@"row was tapped: %@", row.album.name);
+}
+
 
 @end

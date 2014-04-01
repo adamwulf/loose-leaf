@@ -18,6 +18,7 @@
 }
 
 @synthesize album;
+@synthesize delegate;
 
 - (id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
@@ -33,6 +34,9 @@
             [self insertSubview:imgView atIndex:0];
             currX += stepX;
         }
+        
+        UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)];
+        [self addGestureRecognizer:tap];
         
         // clarity
         self.opaque = NO;
@@ -71,5 +75,10 @@
     }
 }
 
+#pragma mark UIGestureRecgonizer
+
+-(void) tapped:(UIGestureRecognizer*)gesture{
+    [self.delegate rowWasTapped:self];
+}
 
 @end
