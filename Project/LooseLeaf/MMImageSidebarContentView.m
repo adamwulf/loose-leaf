@@ -67,23 +67,37 @@
 #pragma mark - Row Management
 
 -(MMAlbumRowView*) rowAtIndex:(NSInteger) index{
-    MMAlbumRowView* r = [currentRowAtIndex objectForKey:[NSNumber numberWithInt:index]];
-    if(!r){
+    MMAlbumRowView* row = [currentRowAtIndex objectForKey:[NSNumber numberWithInt:index]];
+    if(!row){
         CGRect fr = CGRectMake(0, kTopBottomMargin + index * scrollView.rowHeight, self.bounds.size.width, scrollView.rowHeight);
         if([bufferOfUnusedAlbumRows count]){
-            r = [bufferOfUnusedAlbumRows lastObject];
+            row = [bufferOfUnusedAlbumRows lastObject];
             [bufferOfUnusedAlbumRows removeLastObject];
-            r.frame = fr;
+            row.frame = fr;
         }else{
-            r = [[MMAlbumRowView alloc] initWithFrame:fr];
-            r.delegate = self;
-            [scrollView addSubview:r];
+            row = [[MMAlbumRowView alloc] initWithFrame:fr];
+            row.delegate = self;
+            [scrollView addSubview:row];
         }
-        r.tag = index;
-        [currentRowAtIndex setObject:r forKey:[NSNumber numberWithInt:index]];
-        r.hidden = NO;
+        row.tag = index;
+        [currentRowAtIndex setObject:row forKey:[NSNumber numberWithInt:index]];
+        row.hidden = NO;
+        if([scrollView rowIndexIsVisible:index]){
+            // make sure the album is set, but only if it's visible
+            // and if we need to
+            MMPhotoAlbum* album = [self albumAtIndex:index];
+            if(row.album != album){
+                if(row.album){
+                    [currentRowForAlbum removeObjectForKey:row.album.persistentId];
+                }
+                row.album = album;
+                if(row.album){
+                    [currentRowForAlbum setObject:row forKey:row.album.persistentId];
+                }
+            }
+        }
     }
-    return r;
+    return row;
 }
 
 -(NSInteger) indexForAlbum:(MMPhotoAlbum*)album{
@@ -143,17 +157,8 @@
     while([scrollView rowIndexIsVisible:[scrollView rowIndexForY:currOffset]]){
         NSInteger currIndex = [scrollView rowIndexForY:currOffset];
         if(currIndex >= 0){
-            MMAlbumRowView* row = [self rowAtIndex:currIndex];
-            MMPhotoAlbum* album = [self albumAtIndex:currIndex];
-            if(row.album != album){
-                if(row.album){
-                    [currentRowForAlbum removeObjectForKey:row.album.persistentId];
-                }
-                row.album = album;
-                if(row.album){
-                    [currentRowForAlbum setObject:row forKey:row.album.persistentId];
-                }
-            }
+            // load the row
+            [self rowAtIndex:currIndex];
         }
         currOffset += scrollView.rowHeight;
     }
