@@ -63,7 +63,7 @@
         // we might not have the row object yet. so tell
         // our datasource to update the row and/or create
         // it if need be.
-        row = [self.dataSource updateRow:row atIndex:index forFrame:fr];
+        row = [self.dataSource updateRow:row atIndex:index forFrame:fr forScrollView:self];
         if(needsAddedSubview){
             [self addSubview:row];
         }
@@ -81,7 +81,8 @@
 
 -(void) enumerateVisibleRowsWithBlock:(void (^)(id obj, NSUInteger idx, BOOL *stop))block{
     CGFloat currOffset = self.contentOffset.y;
-    while([self rowIndexIsVisible:[self rowIndexForY:currOffset]]){
+    NSInteger numberOfRows = [self.dataSource numberOfRowsFor:self];
+    while([self rowIndexIsVisible:[self rowIndexForY:currOffset]] && [self rowIndexForY:currOffset] < numberOfRows){
         NSInteger currIndex = [self rowIndexForY:currOffset];
         BOOL stop = NO;
         if(currIndex >= 0){
@@ -107,7 +108,8 @@
     // loop through visible albums
     // and make sure row is at the right place
     CGFloat currOffset = self.contentOffset.y;
-    while([self rowIndexIsVisible:[self rowIndexForY:currOffset]]){
+    NSInteger totalAlbumCount = [self.dataSource numberOfRowsFor:self];
+    while([self rowIndexIsVisible:[self rowIndexForY:currOffset]] && [self rowIndexForY:currOffset] < totalAlbumCount){
         NSInteger currIndex = [self rowIndexForY:currOffset];
         if(currIndex >= 0){
             // load the row
@@ -116,7 +118,6 @@
         currOffset += self.rowHeight;
     }
     
-    NSInteger totalAlbumCount = [self.dataSource numberOfRowsFor:self];
     CGFloat contentHeight = 2*topBottomMargin + self.rowHeight * totalAlbumCount;
     self.contentSize = CGSizeMake(self.bounds.size.width, contentHeight);
 }

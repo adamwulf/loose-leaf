@@ -153,6 +153,7 @@
 		66E769CE18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E769CD18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m */; };
 		66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E88A361591853E001A6EBF /* MMPapersIcon.m */; };
 		66EDA79617CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDA79517CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m */; };
+		66F4517E18EB7C3C00A57C95 /* MMPhotoRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4517D18EB7C3C00A57C95 /* MMPhotoRowView.m */; };
 		66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */; };
 		66F4FB2617D912730086E21C /* MMScrapSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2517D912730086E21C /* MMScrapSidebarContentView.m */; };
@@ -463,6 +464,8 @@
 		66EDA79517CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchScrapGestureRecognizer.m; sourceTree = "<group>"; };
 		66EDA7AB17CBD8580067BA63 /* MMPanAndPinchScrapGestureRecognizerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchScrapGestureRecognizerDelegate.h; sourceTree = "<group>"; };
 		66F4517A18EB4C1700A57C95 /* MMPhotoAlbumListScrollViewDataSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPhotoAlbumListScrollViewDataSource.h; sourceTree = "<group>"; };
+		66F4517C18EB7C3C00A57C95 /* MMPhotoRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPhotoRowView.h; sourceTree = "<group>"; };
+		66F4517D18EB7C3C00A57C95 /* MMPhotoRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPhotoRowView.m; sourceTree = "<group>"; };
 		66F4B4B5178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLongPressFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
 		66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLongPressFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		66F4FB2117D8FE600086E21C /* MMCountBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCountBubbleButton.h; sourceTree = "<group>"; };
@@ -821,7 +824,7 @@
 			name = LooseLeaf;
 			sourceTree = "<group>";
 		};
-		669B765E18EB47EA0041DAE7 /* Row Views */ = {
+		669B765E18EB47EA0041DAE7 /* Album Row Views */ = {
 			isa = PBXGroup;
 			children = (
 				66AC8D9018E8A90900A65036 /* MMBufferedImageView.h */,
@@ -830,7 +833,7 @@
 				66AC8D8D18E89C9800A65036 /* MMAlbumRowView.m */,
 				669B765F18EB48470041DAE7 /* MMAlbumRowViewDelegate.h */,
 			);
-			name = "Row Views";
+			name = "Album Row Views";
 			sourceTree = "<group>";
 		};
 		66A13D3C1631E06D002F5428 /* Object Selection */ = {
@@ -942,7 +945,8 @@
 		66AC8D7618E7504D00A65036 /* Image Sidebar */ = {
 			isa = PBXGroup;
 			children = (
-				669B765E18EB47EA0041DAE7 /* Row Views */,
+				66F4517B18EB7C2800A57C95 /* Photo Row Views */,
+				669B765E18EB47EA0041DAE7 /* Album Row Views */,
 				66AC8D7718E7506A00A65036 /* MMImageSidebarContainerView.h */,
 				66AC8D7818E7506A00A65036 /* MMImageSidebarContainerView.m */,
 				66AC8D7B18E754FE00A65036 /* MMImageSidebarContentView.h */,
@@ -1197,6 +1201,15 @@
 			name = Scraps;
 			sourceTree = "<group>";
 		};
+		66F4517B18EB7C2800A57C95 /* Photo Row Views */ = {
+			isa = PBXGroup;
+			children = (
+				66F4517C18EB7C3C00A57C95 /* MMPhotoRowView.h */,
+				66F4517D18EB7C3C00A57C95 /* MMPhotoRowView.m */,
+			);
+			name = "Photo Row Views";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1379,6 +1392,7 @@
 				66BD6E9F15941B7B00D4544C /* MMShareButton.m in Sources */,
 				66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */,
 				66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */,
+				66F4517E18EB7C3C00A57C95 /* MMPhotoRowView.m in Sources */,
 				6693295A15958A950033E557 /* MMShadowManager.m in Sources */,
 				66932965159593C00033E557 /* MMRotationManager.m in Sources */,
 				6693296A1595A87E0033E557 /* MMMapButton.m in Sources */,

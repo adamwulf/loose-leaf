@@ -53,39 +53,47 @@ dispatch_queue_t fetchThumbnailQueue;
 }
 
 -(NSArray*) previewPhotos{
-    return [NSArray arrayWithArray:previewPhotos];
+    @synchronized(self){
+        return [NSArray arrayWithArray:previewPhotos];
+    }
 }
 
 // refreshes preview photos as well as
 // the full contents if the full contents
 // are in cache
 -(void) refreshAlbumContentsWithGroup:(ALAssetsGroup*)_group{
-    group = _group;
-    name = group.name;
-    if(previewPhotosAreLoaded){
-        // we have photos loaded, but need to refresh them
-        dispatch_async([MMPhotoAlbum fetchThumbnailQueue], ^{
-            [self loadPreviewPhotos:YES];
-        });
+    @synchronized(self){
+        group = _group;
+        name = group.name;
+        if(previewPhotosAreLoaded){
+            // we have photos loaded, but need to refresh them
+            dispatch_async([MMPhotoAlbum fetchThumbnailQueue], ^{
+                [self loadPreviewPhotos:YES];
+            });
+        }
     }
 }
 
 
 -(void) unloadPreviewPhotos{
-    previewPhotosAreLoaded = NO;
-    previewPhotos = [NSArray array];
+    @synchronized(self){
+        previewPhotosAreLoaded = NO;
+        previewPhotos = [NSArray array];
+    }
 }
 
 -(void) loadPreviewPhotos{
-    previewPhotosAreLoaded = YES;
-    if(![previewPhotos count]){
-        dispatch_async([MMPhotoAlbum fetchThumbnailQueue], ^{
-            [self loadPreviewPhotos:NO];
-        });
-    }else{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [delegate loadedPreviewPhotosFor:self];
-        });
+    @synchronized(self){
+        previewPhotosAreLoaded = YES;
+        if(![previewPhotos count]){
+            dispatch_async([MMPhotoAlbum fetchThumbnailQueue], ^{
+                [self loadPreviewPhotos:NO];
+            });
+        }else{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [delegate loadedPreviewPhotosFor:self];
+            });
+        }
     }
 }
 
@@ -95,25 +103,22 @@ BOOL isEnumerating = NO;
         NSMutableArray* updatedPreviewPhotos = [NSMutableArray array];
         @synchronized(self){
             isEnumerating = YES;
+            [group setAssetsFilter:[ALAssetsFilter allPhotos]];
+            [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+                if(result){
+                    [updatedPreviewPhotos addObject:[UIImage imageWithCGImage:result.aspectRatioThumbnail]];
+                    if([updatedPreviewPhotos count] >= 5){
+                        stop[0] = YES;
+                    }
+                }else{
+                    @synchronized(self){
+                        previewPhotos = updatedPreviewPhotos;
+                        isEnumerating = NO;
+                    }
+                    [delegate performSelectorOnMainThread:@selector(loadedPreviewPhotosFor:) withObject:self waitUntilDone:NO];
+                }
+            }];
         }
-        __block ALAssetsGroup* groupToEnumerate = group;
-        [groupToEnumerate setAssetsFilter:[ALAssetsFilter allPhotos]];
-        [groupToEnumerate enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
-            if(result){
-                [updatedPreviewPhotos addObject:[UIImage imageWithCGImage:result.aspectRatioThumbnail]];
-                if([updatedPreviewPhotos count] >= 5){
-                    stop[0] = YES;
-                }
-            }else{
-                previewPhotos = updatedPreviewPhotos;
-                [delegate performSelectorOnMainThread:@selector(loadedPreviewPhotosFor:) withObject:self waitUntilDone:NO];
-                @synchronized(self){
-                    isEnumerating = NO;
-                    ALAssetsGroup* gr = groupToEnumerate;
-                    groupToEnumerate = gr;
-                }
-            }
-        }];
     }else{
         [delegate performSelectorOnMainThread:@selector(loadedPreviewPhotosFor:) withObject:self waitUntilDone:NO];
     }
