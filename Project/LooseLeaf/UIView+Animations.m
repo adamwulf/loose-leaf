@@ -96,7 +96,7 @@
 }
 
 -(void) bounce{
-    [self bounceWithTransform:CGAffineTransformIdentity];
+    [self bounceWithTransform:self.transform];
 }
 
 @end

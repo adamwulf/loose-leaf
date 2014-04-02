@@ -14,14 +14,12 @@
 #import "MMScrapBubbleButton.h"
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "NSFileManager+DirectoryOptimizations.h"
-#import "MMImageSidebarContainerView.h"
 
 @implementation MMEditablePaperStackView{
     MMEditablePaperView* currentEditablePage;
     JotView* drawableView;
     NSMutableArray* stateLoadedPages;
     UIPopoverController* jotTouchPopover;
-    MMImageSidebarContainerView* imagePicker;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -75,8 +73,6 @@
         [self addSubview:settingsButton];
         
         
-        
-        
         pencilTool = [[MMPencilAndPaletteView alloc] initWithButtonFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton) andScreenSize:self.bounds.size];
         pencilTool.delegate = self;
         [self addSubview:pencilTool];
@@ -94,7 +90,6 @@
         
         insertImageButton = [[MMImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         insertImageButton.delegate = self;
-        [insertImageButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:insertImageButton];
         
         
@@ -201,11 +196,6 @@
         [[MMDrawingTouchGestureRecognizer sharedInstace] setTouchDelegate:self];
         [self addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstace]];
         
-        imagePicker = [[MMImageSidebarContainerView alloc] initWithFrame:self.bounds forButton:insertImageButton animateFromLeft:YES];
-        imagePicker.delegate = self;
-        [imagePicker hide:NO];
-        [self addSubview:imagePicker];
-
     }
     return self;
 }
@@ -288,13 +278,6 @@
     scissorButton.selected = YES;
 }
 
-
--(void) insertImageButtonTapped:(UIButton*)_button{
-    [self cancelAllGestures];
-    [[visibleStackHolder peekSubview] cancelAllGestures];
-    [self setButtonsVisible:NO withDuration:0.15];
-    [imagePicker show:YES];
-}
 
 -(void) handTapped:(UIButton*)_button{
     [[visibleStackHolder peekSubview] cancelAllGestures];
@@ -901,21 +884,6 @@
     }
     return YES;
 }
-
-#pragma mark - MMSlidingSidebarContainerViewDelegate
-
--(void) sidebarCloseButtonWasTapped{
-    [self setButtonsVisible:YES];
-}
-
--(void) sidebarWillShow{
-    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
-}
-
--(void) sidebarWillHide{
-    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
-}
-
 
 #pragma mark - gestures for list view
 

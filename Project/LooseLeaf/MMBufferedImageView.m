@@ -46,6 +46,10 @@ CGFloat buffer = 2;
         whiteBorderLayer.borderWidth = 2;
         whiteBorderLayer.shouldRasterize = YES;
         [self.layer addSublayer:whiteBorderLayer];
+        
+        // debug
+        self.layer.borderColor = [UIColor redColor].CGColor;
+        self.layer.borderWidth = 1;
     }
     return self;
 }

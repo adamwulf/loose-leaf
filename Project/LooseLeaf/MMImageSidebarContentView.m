@@ -13,7 +13,6 @@
 #import "MMPhotoRowView.h"
 #import "MMBufferedImageView.h"
 #import "MMImageSidebarContainerView.h"
-#import "UIView+Animations.h"
 #import "ALAsset+Thumbnail.h"
 
 #define kTopBottomMargin 50
@@ -150,8 +149,7 @@
 #pragma mark - MMPhotoRowViewDelegate
 
 -(void) photoRowWasTapped:(MMPhotoRowView*)row forAsset:(ALAsset *)asset forImage:(MMBufferedImageView *)bufferedImage{
-    NSLog(@"photo tapped at %f %f for index %@", bufferedImage.center.x, bufferedImage.center.y, asset.url);
-    [bufferedImage bounce];
+    [delegate photoWasTapped:asset fromView:bufferedImage];
 }
 
 #pragma mark - MMPhotoAlbumListScrollViewDataSource

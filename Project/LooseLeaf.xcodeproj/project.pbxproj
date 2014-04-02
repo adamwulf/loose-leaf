@@ -828,8 +828,6 @@
 		669B765E18EB47EA0041DAE7 /* Album Row Views */ = {
 			isa = PBXGroup;
 			children = (
-				66AC8D9018E8A90900A65036 /* MMBufferedImageView.h */,
-				66AC8D9118E8A90900A65036 /* MMBufferedImageView.m */,
 				66AC8D8C18E89C9800A65036 /* MMAlbumRowView.h */,
 				66AC8D8D18E89C9800A65036 /* MMAlbumRowView.m */,
 				669B765F18EB48470041DAE7 /* MMAlbumRowViewDelegate.h */,
@@ -949,6 +947,8 @@
 				66AC8D8918E89A9C00A65036 /* MMCachedRowsScrollView.h */,
 				66AC8D8A18E89A9C00A65036 /* MMCachedRowsScrollView.m */,
 				66F4517A18EB4C1700A57C95 /* MMCachedRowsScrollViewDataSource.h */,
+				66AC8D9018E8A90900A65036 /* MMBufferedImageView.h */,
+				66AC8D9118E8A90900A65036 /* MMBufferedImageView.m */,
 				66F4517B18EB7C2800A57C95 /* Photo Row Views */,
 				669B765E18EB47EA0041DAE7 /* Album Row Views */,
 				66AC8D7718E7506A00A65036 /* MMImageSidebarContainerView.h */,

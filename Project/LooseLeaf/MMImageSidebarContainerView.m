@@ -36,4 +36,9 @@
     [contentView hide:animated];
 }
 
+-(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage{
+    [self.delegate photoWasTapped:asset fromView:bufferedImage];
+}
+
+
 @end

@@ -16,6 +16,8 @@
 #import "NSMutableSet+Extras.h"
 #import "UIGestureRecognizer+GestureDebug.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMImageSidebarContainerView.h"
+#import "MMBufferedImageView.h"
 
 @implementation MMScrapPaperStackView{
     MMScrapSidebarContainerView* bezelScrapContainer;
@@ -34,6 +36,9 @@
     // in the right sidebar
     MMCountBubbleButton* countButton;
     
+    // image picker sidebar
+    MMImageSidebarContainerView* imagePicker;
+
     NSTimer* debugTimer;
     NSTimer* drawTimer;
 }
@@ -110,8 +115,69 @@
 //        drawLongElementButton.layer.borderColor = [UIColor blackColor].CGColor;
 //        drawLongElementButton.layer.borderWidth = 1;
 //        [self addSubview:drawLongElementButton];
+        
+        [insertImageButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+
+        imagePicker = [[MMImageSidebarContainerView alloc] initWithFrame:self.bounds forButton:insertImageButton animateFromLeft:YES];
+        imagePicker.delegate = self;
+        [imagePicker hide:NO];
+        [self addSubview:imagePicker];
     }
     return self;
+}
+
+
+#pragma mark - Insert Image
+
+-(void) insertImageButtonTapped:(UIButton*)_button{
+    [self cancelAllGestures];
+    [[visibleStackHolder peekSubview] cancelAllGestures];
+    [self setButtonsVisible:NO withDuration:0.15];
+    [imagePicker show:YES];
+}
+
+#pragma mark - MMImageSidebarContainerViewDelegate
+
+-(void) sidebarCloseButtonWasTapped{
+    [self setButtonsVisible:YES];
+}
+
+-(void) sidebarWillShow{
+    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+}
+
+-(void) sidebarWillHide{
+    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
+}
+
+-(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage{
+    NSLog(@"photo tapped %@", asset.url);
+    
+    CGRect scrapRect = bufferedImage.bounds;
+    CGPoint tl = [self convertPoint:CGPointZero fromView:bufferedImage];
+    scrapRect = CGRectOffset(scrapRect, tl.x, tl.y);
+    UIBezierPath* path = [UIBezierPath bezierPathWithRect:scrapRect];
+    
+    // rotate it around its top left corner
+    // this is because we're creating the rect to align
+    // with the point tl above, which when converted
+    // into our coordinate system accounts for the view's
+    // rotation.
+    //
+    // so at this moment, we have a squared off CGRect
+    // that aligns it's top left corner to the rotated
+    // bufferedImage's top left corner
+    CGAffineTransform rotate = CGAffineTransformMakeTranslation(-scrapRect.origin.x, -scrapRect.origin.y);
+    rotate = CGAffineTransformConcat(rotate, bufferedImage.transform);
+    rotate = CGAffineTransformConcat(rotate, CGAffineTransformMakeTranslation(scrapRect.origin.x, scrapRect.origin.y));
+    [path applyTransform:rotate];
+    
+    MMScrapView* scrap = [[visibleStackHolder peekSubview] addScrapWithPath:path andScale:1.0];
+    
+//    [UIView animateWithDuration:1 animations:^{
+//        scrap.center = [visibleStackHolder peekSubview].center;
+//    }];
+    
 }
 
 #pragma mark - Gesture Helpers
@@ -217,7 +283,6 @@ int skipAll = NO;
     NSLog(@"pages being panned %d", [setOfPagesBeingPanned count]);
 
     NSLog(@"done");
-    
     
     for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scraps]){
         NSLog(@"scrap: %f %f", scrap.layer.anchorPoint.x, scrap.layer.anchorPoint.y);

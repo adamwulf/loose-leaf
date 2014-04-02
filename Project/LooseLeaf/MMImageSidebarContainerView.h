@@ -8,9 +8,12 @@
 
 #import "MMSlidingSidebarContainerView.h"
 #import "MMImageSidebarContainerViewDelegate.h"
+#import "ALAsset+Thumbnail.h"
 
 @interface MMImageSidebarContainerView : MMSlidingSidebarContainerView
 
 @property (nonatomic, weak) NSObject<MMImageSidebarContainerViewDelegate>* delegate;
+
+-(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage;
 
 @end

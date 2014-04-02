@@ -10,8 +10,10 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "MMSlidingSidebarContainerViewDelegate.h"
 
+@class MMBufferedImageView;
+
 @protocol MMImageSidebarContainerViewDelegate <MMSlidingSidebarContainerViewDelegate>
 
-//-(void) imageViewTapped:(MMBufferedImageView*)imageView forAsset:()
+-(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage;
 
 @end
