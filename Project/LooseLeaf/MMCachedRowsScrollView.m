@@ -95,9 +95,11 @@
 }
 
 -(void) refreshVisibleRows{
+    NSInteger totalRowCount = [self.dataSource numberOfRowsFor:self];
+
     // remove invisible rows
     for(UIView* row in self.subviews){
-        if(!row.hidden && ![self rowIndexIsVisible:row.tag]){
+        if(!row.hidden && (![self rowIndexIsVisible:row.tag] || row.tag >= totalRowCount)){
             row.hidden = YES;
             [self.dataSource prepareRowForReuse:row forScrollView:self];
             [currentRowAtIndex removeObjectForKey:[NSNumber numberWithInt:row.tag]];
@@ -108,12 +110,12 @@
     // loop through visible rowss
     // and make sure row is at the right place
     CGFloat currOffset = self.contentOffset.y;
-    NSInteger totalRowCount = [self.dataSource numberOfRowsFor:self];
-    while([self rowIndexIsVisible:[self rowIndexForY:currOffset]] && [self rowIndexForY:currOffset] < totalRowCount){
+    while([self rowIndexIsVisible:[self rowIndexForY:currOffset]]){
         NSInteger currIndex = [self rowIndexForY:currOffset];
+        UIView* row = nil;
         if(currIndex >= 0){
             // load the row
-            [self rowAtIndex:currIndex];
+            row = [self rowAtIndex:currIndex];
         }
         currOffset += self.rowHeight;
     }

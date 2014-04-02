@@ -56,19 +56,21 @@ CGFloat buffer = 2;
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
     
-    CGRect fr = CGRectInset(self.bounds, 8, 8);
-    CGSize scaledImageSize = image.size;
-    CGFloat maxDim = MAX(scaledImageSize.width, scaledImageSize.height);
-    scaledImageSize.width = scaledImageSize.width / maxDim * fr.size.width;
-    scaledImageSize.height = scaledImageSize.height / maxDim * fr.size.height;
-    
-    fr.origin.x += (fr.size.width - scaledImageSize.width) / 2;
-    fr.origin.y += (fr.size.height - scaledImageSize.height) / 2;
-    fr.size = scaledImageSize;
-    layer.frame = fr;
-    
-    CGRect whiteFrame = CGRectInset(layer.frame, 1, 1);
-    whiteBorderLayer.frame = whiteFrame;
+    if(image){
+        CGRect fr = CGRectInset(self.bounds, 8, 8);
+        CGSize scaledImageSize = image.size;
+        CGFloat maxDim = MAX(scaledImageSize.width, scaledImageSize.height);
+        scaledImageSize.width = scaledImageSize.width / maxDim * fr.size.width;
+        scaledImageSize.height = scaledImageSize.height / maxDim * fr.size.height;
+        
+        fr.origin.x += (fr.size.width - scaledImageSize.width) / 2;
+        fr.origin.y += (fr.size.height - scaledImageSize.height) / 2;
+        fr.size = scaledImageSize;
+        layer.frame = fr;
+        
+        CGRect whiteFrame = CGRectInset(layer.frame, 1, 1);
+        whiteBorderLayer.frame = whiteFrame;
+    }
     
     layer.contents = (id)image.CGImage;
     

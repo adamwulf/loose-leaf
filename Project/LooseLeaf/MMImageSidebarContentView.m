@@ -68,6 +68,15 @@
     [albumListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [self updateRow:obj atIndex:idx forFrame:[obj frame] forScrollView:albumListScrollView];
     }];
+    if(photoListScrollView.alpha){
+        [photoListScrollView refreshVisibleRows];
+        [photoListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            // force invalidate the row's cache
+            [(MMPhotoRowView*)obj unload];
+            // now load the proper row info again
+            [self updateRow:obj atIndex:idx forFrame:[obj frame] forScrollView:photoListScrollView];
+        }];
+    }
 }
 
 -(void) loadedPreviewPhotosFor:(MMPhotoAlbum *)album{
@@ -159,7 +168,8 @@
         }
     }else{
         // noop
-        NSLog(@"prepaing %p for reuse", aRow);
+        MMPhotoRowView* row = (MMPhotoRowView*)aRow;
+        [row unload];
     }
 }
 
@@ -189,11 +199,12 @@
         }
         return currentAlbumRow;
     }else{
-        if(!currentRow){
-            currentRow = [[MMPhotoRowView alloc] initWithFrame:frame];
-            
+        MMPhotoRowView* currentPhotoRow = (MMPhotoRowView*)currentRow;
+        if(!currentPhotoRow){
+            currentPhotoRow = [[MMPhotoRowView alloc] initWithFrame:frame];
         }
-        return currentRow;
+        [currentPhotoRow loadPhotosFromAlbum:currentAlbum atRow:index];
+        return currentPhotoRow;
     }
 }
 

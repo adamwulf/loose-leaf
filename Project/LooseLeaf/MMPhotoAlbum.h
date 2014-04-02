@@ -31,4 +31,6 @@
 
 -(void) unloadPreviewPhotos;
 
+-(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(ALAssetsGroupEnumerationResultsBlock)enumerationBlock;
+
 @end

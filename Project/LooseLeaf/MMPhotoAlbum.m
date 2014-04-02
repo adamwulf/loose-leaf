@@ -124,6 +124,14 @@ BOOL isEnumerating = NO;
     }
 }
 
+
+-(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(ALAssetsGroupEnumerationResultsBlock)enumerationBlock{
+    @synchronized(self){
+        [group setAssetsFilter:[ALAssetsFilter allPhotos]];
+        [group enumerateAssetsAtIndexes:indexSet options:NSEnumerationReverse usingBlock:enumerationBlock];
+    }
+}
+
 -(void) dealloc{
     @synchronized(self){
         if(isEnumerating){
