@@ -139,7 +139,7 @@
 #pragma mark - MMImageSidebarContainerViewDelegate
 
 -(void) sidebarCloseButtonWasTapped{
-    [self setButtonsVisible:YES];
+    // noop
 }
 
 -(void) sidebarWillShow{
@@ -147,6 +147,7 @@
 }
 
 -(void) sidebarWillHide{
+    [self setButtonsVisible:YES];
     [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
 }
 
@@ -157,8 +158,10 @@
     scrapRect.origin = [self convertPoint:[bufferedImage visibleImageOrigin] fromView:bufferedImage];
     scrapRect.size = [bufferedImage visibleImageSize];
     UIBezierPath* path = [UIBezierPath bezierPathWithRect:scrapRect];
-    
-    // rotate it around its top left corner
+
+    //
+    // to exactly align the scrap with a rotation,
+    // i would need to rotate it around its top left corner
     // this is because we're creating the rect to align
     // with the point tl above, which when converted
     // into our coordinate system accounts for the view's
@@ -167,14 +170,10 @@
     // so at this moment, we have a squared off CGRect
     // that aligns it's top left corner to the rotated
     // bufferedImage's top left corner
-    CGAffineTransform rotate = CGAffineTransformMakeTranslation(-scrapRect.origin.x, -scrapRect.origin.y);
-    rotate = CGAffineTransformConcat(rotate, bufferedImage.transform);
-    rotate = CGAffineTransformConcat(rotate, CGAffineTransformMakeTranslation(scrapRect.origin.x, scrapRect.origin.y));
-    [path applyTransform:rotate];
     
     
     // max image size in any direction is 300pts
-    CGFloat maxDim = 300;
+    CGFloat maxDim = 600;
     
     CGSize fullScale = [[asset defaultRepresentation] dimensions];
     if(fullScale.width >= fullScale.height && fullScale.width > maxDim){
@@ -192,15 +191,36 @@
     NSLog(@"calc size: %f %f", fullScale.width, fullScale.height);
     NSLog(@"actual size: %f %f", scrapBacking.size.width, scrapBacking.size.height);
     
-    MMScrapView* scrap = [[visibleStackHolder peekSubview] addScrapWithPath:path andScale:startingScale];
+    MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
+    MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:0 andScale:startingScale];
     [scrap setBackingImage:scrapBacking];
+    scrap.center = [self convertPoint:CGPointMake(bufferedImage.bounds.size.width/2, bufferedImage.bounds.size.height/2) fromView:bufferedImage];
+    scrap.rotation = bufferedImage.rotation;
     
-    [UIView animateWithDuration:1 animations:^{
-        scrap.center = [visibleStackHolder peekSubview].center;
-        scrap.scale = 1.0;
-        scrap.rotation += RandomPhotoRotation;
-    }];
+    [imagePicker hide:YES];
     
+    
+    // bounce by 20px (10 on each side)
+    CGFloat bounceScale = 20 / MAX(fullScale.width, fullScale.height);
+    
+    [UIView animateWithDuration:.2
+                          delay:.1
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         scrap.center = [visibleStackHolder peekSubview].center;
+                         [scrap setScale:(1+bounceScale) andRotation:RandomPhotoRotation];
+                     }
+                     completion:^(BOOL finished){
+                         [UIView animateWithDuration:.1
+                                               delay:0
+                                             options:UIViewAnimationOptionCurveEaseIn
+                                          animations:^{
+                                              [scrap setScale:1];
+                                          }
+                                          completion:^(BOOL finished){
+                                              [topPage saveToDisk];
+                                          }];
+                     }];
 }
 
 #pragma mark - Gesture Helpers

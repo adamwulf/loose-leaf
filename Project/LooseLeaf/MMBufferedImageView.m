@@ -13,9 +13,11 @@
     CGFloat targetSize;
     CALayer* layer;
     CALayer* whiteBorderLayer;
+    CGFloat rotation;
 }
 
 @synthesize image;
+@synthesize rotation;
 
 CGFloat buffer = 2;
 
@@ -46,12 +48,13 @@ CGFloat buffer = 2;
         whiteBorderLayer.borderWidth = 2;
         whiteBorderLayer.shouldRasterize = YES;
         [self.layer addSublayer:whiteBorderLayer];
-        
-        // debug
-        self.layer.borderColor = [UIColor redColor].CGColor;
-        self.layer.borderWidth = 1;
     }
     return self;
+}
+
+-(void) setRotation:(CGFloat)_rotation{
+    rotation = _rotation;
+    self.transform = CGAffineTransformMakeRotation(rotation);
 }
 
 -(void) setImage:(UIImage *)_image{

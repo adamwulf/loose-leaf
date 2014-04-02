@@ -61,9 +61,13 @@
 
 #pragma mark - Scrap
 
++(CGFloat) idealScaleForScrap:(MMScrapView*)scrap{
+    return 36.0 / MAX(scrap.originalSize.width, scrap.originalSize.height);
+}
+
 +(CGAffineTransform) idealTransformForScrap:(MMScrapView*)scrap{
     // aim to get the border into 36 px
-    CGFloat scale = 36.0 / MAX(scrap.originalSize.width, scrap.originalSize.height);
+    CGFloat scale = [MMScrapBubbleButton idealScaleForScrap:scrap];
     return CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.rotation),CGAffineTransformMakeScale(scale, scale));
 }
 

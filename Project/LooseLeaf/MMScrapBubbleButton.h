@@ -21,6 +21,7 @@
 @property (nonatomic, assign) CGFloat scale;
 @property (nonatomic, assign) CGFloat originalScrapScale;
 
++(CGFloat) idealScaleForScrap:(MMScrapView*)scrap;
 +(CGAffineTransform) idealTransformForScrap:(MMScrapView*)scrap;
 
 @end

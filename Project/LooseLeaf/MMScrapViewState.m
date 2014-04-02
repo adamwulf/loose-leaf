@@ -111,8 +111,6 @@
         [contentView setClipsToBounds:YES];
         [contentView setBackgroundColor:[UIColor clearColor]];
         contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        contentView.layer.borderColor = [UIColor redColor].CGColor;
-        contentView.layer.borderWidth = 1;
         
         // create our thumbnail view,
         // and load the actual thumbnail async
@@ -129,8 +127,6 @@
         backingContentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [contentView addSubview:backingContentView];
         backingContentView.frame = contentView.bounds;
-        backingContentView.layer.borderColor = [UIColor orangeColor].CGColor;
-        backingContentView.layer.borderWidth = 1;
 
         CAShapeLayer* backgroundColorLayer = [CAShapeLayer layer];
         [backgroundColorLayer setPath:bezierPath.CGPath];

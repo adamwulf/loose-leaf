@@ -30,11 +30,11 @@
         CGFloat maxDim = self.bounds.size.height;
 
         leftImageView = [[MMBufferedImageView alloc] initWithFrame:CGRectInset(CGRectMake(0, 0, maxDim, maxDim), 2, 2)];
-        leftImageView.transform = CGAffineTransformMakeRotation(RandomPhotoRotation);
+        leftImageView.rotation = RandomPhotoRotation;
         [self addSubview:leftImageView];
 
         rightImageView = [[MMBufferedImageView alloc] initWithFrame:CGRectInset(CGRectMake(self.bounds.size.width - maxDim, 0, maxDim, maxDim), 2, 2)];
-        rightImageView.transform = CGAffineTransformMakeRotation(RandomPhotoRotation);
+        rightImageView.rotation = RandomPhotoRotation;
         [self addSubview:rightImageView];
 
         UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)];

@@ -10,6 +10,7 @@
 
 @interface MMBufferedImageView : UIView
 
+@property (nonatomic, assign) CGFloat rotation;
 @property (nonatomic, strong) UIImage* image;
 
 -(CGSize) visibleImageSize;

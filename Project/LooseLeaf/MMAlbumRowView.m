@@ -30,7 +30,7 @@
         CGFloat currX = 0;
         for(int i=0;i<5;i++){
             MMBufferedImageView* imgView = [[MMBufferedImageView alloc] initWithFrame:CGRectMake(currX, 0, maxDim, maxDim)];
-            imgView.transform = CGAffineTransformMakeRotation(RandomPhotoRotation);
+            imgView.rotation = RandomPhotoRotation;
             [self insertSubview:imgView atIndex:0];
             currX += stepX;
         }

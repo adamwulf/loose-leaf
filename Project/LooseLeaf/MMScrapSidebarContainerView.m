@@ -313,6 +313,10 @@
     MMScrapBubbleButton* bubble = [bubbleForScrap objectForKey:scrap.uuid];
     [scrap loadStateAsynchronously:YES];
     
+    if([scrapsHeldInBezel count] > kMaxScrapsInBezel){
+        scrap.scale = scrap.scale * [MMScrapBubbleButton idealScaleForScrap:scrap];
+    }
+    
     CGPoint positionOnScreenToScaleTo = [self.bubbleDelegate positionOnScreenToScaleScrapTo:scrap];
     CGFloat scaleOnScreenToScaleTo = [self.bubbleDelegate scaleOnScreenToScaleScrapTo:scrap givenOriginalScale:bubble.originalScrapScale];
     [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
