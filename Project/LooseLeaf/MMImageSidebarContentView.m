@@ -63,7 +63,6 @@
 #pragma mark - MMPhotoManagerDelegate
 
 -(void) doneLoadingPhotoAlbums{
-    NSLog(@"refreshing table rows");
     [albumListScrollView refreshVisibleRows];
     [albumListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [self updateRow:obj atIndex:idx forFrame:[obj frame] forScrollView:albumListScrollView];

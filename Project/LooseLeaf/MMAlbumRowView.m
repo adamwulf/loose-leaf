@@ -77,7 +77,10 @@
 #pragma mark UIGestureRecgonizer
 
 -(void) tapped:(UIGestureRecognizer*)gesture{
-    [self.delegate rowWasTapped:self];
+    NSLog(@"gesture %d", gesture.state);
+    if(gesture.state == UIGestureRecognizerStateRecognized){
+        [self.delegate rowWasTapped:self];
+    }
 }
 
 @end

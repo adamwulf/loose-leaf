@@ -27,19 +27,4 @@
     return [self valueForProperty:ALAssetsGroupPropertyURL];
 }
 
--(void) swizzle_dealloc{
-    NSLog(@"dealloc %p:%@", self, self.name);
-    [self swizzle_dealloc];
-}
-
-+(void)load{
-    @autoreleasepool {
-        NSError *error = nil;
-        [ALAssetsGroup jr_swizzleMethod:NSSelectorFromString(@"dealloc")
-                            withMethod:@selector(swizzle_dealloc)
-                                 error:&error];
-    }
-}
-
-
 @end
