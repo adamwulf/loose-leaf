@@ -52,34 +52,67 @@
         
         // now flip the index so we load
         // in reverse order
-        rowIndex = (ceilf(album.numberOfPhotos / 2.0) - 1) - rowIndex;
+        NSInteger numberOfPhotos = album.numberOfPhotos;
+        NSInteger numberOfRows = ceilf(numberOfPhotos / 2.0);
+        NSInteger indexOfLastRow = numberOfRows - 1;
+        rowIndex = indexOfLastRow - rowIndex;
         if(!loadedAlbum){
             leftImageView.hidden = YES;
             rightImageView.hidden = YES;
         }else{
             NSIndexSet* assetsToLoad = nil;
-            NSInteger firstIndex = rowIndex*2;
-            if(rowIndex >= ceilf(album.numberOfPhotos / 2.0) || rowIndex < 0){
+            if(rowIndex >= ceilf(numberOfPhotos / 2.0) || rowIndex < 0){
                 leftImageView.image = nil;
                 rightImageView.image = nil;
                 rightImageView.hidden = YES;
                 leftImageView.hidden = YES;
             }else{
                 leftImageView.hidden = NO;
-                if(firstIndex == album.numberOfPhotos - 1){
+                
+                // num images = 4
+                // num rows = 2
+                // rowIndex = 0
+                // trueRow = (2 - 1) - rowIndex
+                // index = 2,3
+                //
+                // num images = 4
+                // num rows = 2
+                // rowIndex = 1
+                // index = 0,1
+                //
+                // num images = 3
+                // num rows = 2
+                // row index = 0
+                // index = 1,2
+                // album.numberOfPhotos - index*2
+                //
+                // num images = 3
+                // num rows = 2
+                // rowIndex = 1
+                // index = 0
+                
+                NSInteger leftIndex = rowIndex*2;
+                if(numberOfPhotos % 2 == 0){
+                    // if we're even, then add one
+                    leftIndex += 1;
+                }
+                NSInteger rightIndex = leftIndex - 1;
+                if(rightIndex < 0) rightIndex = leftIndex;
+                
+                if(rightIndex == leftIndex){
                     // we only show 1 photo
-                    assetsToLoad = [[NSIndexSet alloc] initWithIndex:rowIndex*2];
+                    assetsToLoad = [[NSIndexSet alloc] initWithIndex:leftIndex];
                     rightImageView.hidden = YES;
                 }else{
                     // we show 2 photos
-                    assetsToLoad = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(rowIndex*2, 2)];
+                    assetsToLoad = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(rightIndex, 2)];
                     rightImageView.hidden = NO;
                 }
                 leftImageView.image = nil;
                 rightImageView.image = nil;
                 [album loadPhotosAtIndexes:assetsToLoad usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
                     if(result){
-                        if(index % 2 || [assetsToLoad count] == 1){
+                        if(index == leftIndex || [assetsToLoad count] == 1){
                             leftImageView.image = [UIImage imageWithCGImage:result.aspectRatioThumbnail];
                             leftImageView.hidden = NO;
                         }else{

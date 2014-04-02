@@ -24,7 +24,6 @@ dispatch_queue_t fetchThumbnailQueue;
     BOOL previewPhotosAreLoaded;
 }
 
-@synthesize delegate;
 @synthesize assetURL;
 @synthesize name;
 @synthesize persistentId;
@@ -65,11 +64,10 @@ dispatch_queue_t fetchThumbnailQueue;
     @synchronized(self){
         group = _group;
         name = group.name;
+        numberOfPhotos = group.numberOfAssets;
         if(previewPhotosAreLoaded){
             // we have photos loaded, but need to refresh them
-            dispatch_async([MMPhotoAlbum fetchThumbnailQueue], ^{
-                [self loadPreviewPhotos:YES];
-            });
+            [self loadPreviewPhotos:YES];
         }
     }
 }
@@ -86,13 +84,7 @@ dispatch_queue_t fetchThumbnailQueue;
     @synchronized(self){
         previewPhotosAreLoaded = YES;
         if(![previewPhotos count]){
-            dispatch_async([MMPhotoAlbum fetchThumbnailQueue], ^{
-                [self loadPreviewPhotos:NO];
-            });
-        }else{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [delegate loadedPreviewPhotosFor:self];
-            });
+            [self loadPreviewPhotos:NO];
         }
     }
 }
@@ -115,12 +107,9 @@ BOOL isEnumerating = NO;
                         previewPhotos = updatedPreviewPhotos;
                         isEnumerating = NO;
                     }
-                    [delegate performSelectorOnMainThread:@selector(loadedPreviewPhotosFor:) withObject:self waitUntilDone:NO];
                 }
             }];
         }
-    }else{
-        [delegate performSelectorOnMainThread:@selector(loadedPreviewPhotosFor:) withObject:self waitUntilDone:NO];
     }
 }
 

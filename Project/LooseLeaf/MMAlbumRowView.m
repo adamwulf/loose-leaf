@@ -51,9 +51,7 @@
         album = _album;
         [album loadPreviewPhotos];
         name.text = album.name;
-        if(!album){
-            [self loadedPreviewPhotos];
-        }
+        [self loadedPreviewPhotos];
     }
 }
 

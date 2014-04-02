@@ -79,7 +79,7 @@
     }
 }
 
--(void) loadedPreviewPhotosFor:(MMPhotoAlbum *)album{
+-(void) albumUpdated:(MMPhotoAlbum *)album{
     NSInteger index = [self indexForAlbum:album];
     if([albumListScrollView rowIndexIsVisible:index]){
         MMAlbumRowView* row = (MMAlbumRowView*) [albumListScrollView rowAtIndex:index];

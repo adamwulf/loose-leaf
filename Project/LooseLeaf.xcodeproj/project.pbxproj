@@ -350,7 +350,6 @@
 		66AC8D8A18E89A9C00A65036 /* MMCachedRowsScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCachedRowsScrollView.m; sourceTree = "<group>"; };
 		66AC8D8C18E89C9800A65036 /* MMAlbumRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAlbumRowView.h; sourceTree = "<group>"; };
 		66AC8D8D18E89C9800A65036 /* MMAlbumRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAlbumRowView.m; sourceTree = "<group>"; };
-		66AC8D8F18E89D1C00A65036 /* MMPhotoAlbumDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPhotoAlbumDelegate.h; sourceTree = "<group>"; };
 		66AC8D9018E8A90900A65036 /* MMBufferedImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBufferedImageView.h; sourceTree = "<group>"; };
 		66AC8D9118E8A90900A65036 /* MMBufferedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBufferedImageView.m; sourceTree = "<group>"; };
 		66AE5AA617F4D064009F82B6 /* MMScrapsOnPaperState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapsOnPaperState.h; sourceTree = "<group>"; };
@@ -966,7 +965,6 @@
 				66AC8D8718E8939800A65036 /* MMPhotoManagerDelegate.h */,
 				66AC8D8118E88F4700A65036 /* MMPhotoAlbum.h */,
 				66AC8D8218E88F4700A65036 /* MMPhotoAlbum.m */,
-				66AC8D8F18E89D1C00A65036 /* MMPhotoAlbumDelegate.h */,
 			);
 			name = "Photo Manager";
 			sourceTree = "<group>";

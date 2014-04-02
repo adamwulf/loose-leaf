@@ -9,13 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "ALAssetsGroup+Properties.h"
-#import "MMPhotoAlbumDelegate.h"
 
-@interface MMPhotoAlbum : NSObject{
-    __weak NSObject<MMPhotoAlbumDelegate>* delegate;
-}
+@interface MMPhotoAlbum : NSObject
 
-@property (nonatomic, weak) NSObject<MMPhotoAlbumDelegate>* delegate;
 @property (readonly) NSURL* assetURL;
 @property (readonly) NSString* name;
 @property (readonly) NSString* persistentId;

@@ -7,10 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MMPhotoAlbumDelegate.h"
 
-@protocol MMPhotoManagerDelegate <MMPhotoAlbumDelegate>
+@class MMPhotoAlbum;
+
+@protocol MMPhotoManagerDelegate <NSObject>
 
 -(void) doneLoadingPhotoAlbums;
+
+-(void) albumUpdated:(MMPhotoAlbum*)updatedAlbum;
 
 @end

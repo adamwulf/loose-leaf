@@ -135,7 +135,6 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
     [[self assetsLibrary] groupForURL:urlOfUpdatedAlbum
                           resultBlock:^(ALAssetsGroup *group) {
                               MMPhotoAlbum* addedAlbum = [[MMPhotoAlbum alloc] initWithAssetGroup:group];
-                              addedAlbum.delegate = self;
                               @synchronized(self){
                                   if(addedAlbum.type == ALAssetsGroupAlbum){
                                       albums = [self sortArrayByAlbumName:[albums arrayByAddingObject:addedAlbum]];
@@ -157,9 +156,10 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
 -(void) albumUpdated:(NSURL*)urlOfUpdatedAlbum{
     [[self assetsLibrary] groupForURL:urlOfUpdatedAlbum
                           resultBlock:^(ALAssetsGroup *group) {
-                              MMPhotoAlbum* addedAlbum = [self albumWithURL:group.url];
-                              [addedAlbum refreshAlbumContentsWithGroup:group];
+                              MMPhotoAlbum* updatedAlbum = [self albumWithURL:group.url];
+                              [updatedAlbum refreshAlbumContentsWithGroup:group];
                               [self resortAlbums];
+                              [self.delegate albumUpdated:updatedAlbum];
                           }
                          failureBlock:^(NSError *error) {
                              [self processError:error];
@@ -228,7 +228,6 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                          MMPhotoAlbum* addedAlbum = [self albumWithURL:group.url];
                                          if(!addedAlbum){
                                              addedAlbum = [[MMPhotoAlbum alloc] initWithAssetGroup:group];
-                                             addedAlbum.delegate = self;
                                          }
                                          if(group.type == ALAssetsGroupAlbum){
                                              [updatedAlbumsList addObject:addedAlbum];
@@ -268,12 +267,6 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
 
     return [NSError errorWithDomain:@"com.milestonemade.looseleaf" code:kPermissionDeniedError userInfo:nil];
 
-}
-
-#pragma mark - MMPhotoAlbumDelegate
-
--(void) loadedPreviewPhotosFor:(MMPhotoAlbum *)album{
-    [delegate loadedPreviewPhotosFor:album];
 }
 
 @end
