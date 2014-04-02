@@ -62,9 +62,6 @@
 //                                                     repeats:YES];
 
         
-        scrapContainer = [[MMUntouchableView alloc] initWithFrame:self.bounds];
-        [self insertSubview:scrapContainer belowSubview:addPageSidebarButton];
-        
         CGFloat rightBezelSide = frame.size.width - 100;
         CGFloat midPointY = (frame.size.height - 3*80) / 2;
         countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
@@ -122,6 +119,9 @@
         imagePicker.delegate = self;
         [imagePicker hide:NO];
         [self addSubview:imagePicker];
+        
+        scrapContainer = [[MMUntouchableView alloc] initWithFrame:self.bounds];
+        [self addSubview:scrapContainer];
     }
     return self;
 }
