@@ -58,4 +58,45 @@
     view.layer.anchorPoint = anchorPoint;
 }
 
+-(void) bounceWithTransform:(CGAffineTransform)transform{
+    // run animation for a fraction of a second
+    CGFloat duration = .30;
+    
+    ////////////////////////////////////////////////////////
+    // Animate the button!
+    
+    // Create a keyframe animation to follow a path back to the center
+    CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+    bounceAnimation.removedOnCompletion = YES;
+    
+    CATransform3D transform3d = CATransform3DMakeAffineTransform(transform);
+    
+    NSMutableArray* keyTimes = [NSMutableArray arrayWithObjects:
+                                [NSNumber numberWithFloat:0.0],
+                                [NSNumber numberWithFloat:0.4],
+                                [NSNumber numberWithFloat:0.7],
+                                [NSNumber numberWithFloat:1.0], nil];
+    bounceAnimation.keyTimes = keyTimes;
+    bounceAnimation.values = [NSArray arrayWithObjects:
+                              [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.0, 1.0, 1.0))],
+                              [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.4, 1.4, 1.0))],
+                              [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(0.8, 0.8, 1.0))],
+                              [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.0, 1.0, 1.0))],
+                              nil];
+    bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
+                                       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut],
+                                       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+                                       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn], nil];
+    
+    bounceAnimation.duration = duration;
+    
+    ///////////////////////////////////////////////
+    // Add the animations to the layers
+    [self.layer addAnimation:bounceAnimation forKey:@"animateSize"];
+}
+
+-(void) bounce{
+    [self bounceWithTransform:CGAffineTransformIdentity];
+}
+
 @end

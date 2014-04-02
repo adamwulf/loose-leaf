@@ -11,10 +11,11 @@
 #import "MMCachedRowsScrollViewDataSource.h"
 #import "MMPhotoManagerDelegate.h"
 #import "MMAlbumRowViewDelegate.h"
+#import "MMPhotoRowViewDelegate.h"
 
 @class MMImageSidebarContainerView;
 
-@interface MMImageSidebarContentView : UIView<MMPhotoManagerDelegate,MMAlbumRowViewDelegate,MMCachedRowsScrollViewDataSource>{
+@interface MMImageSidebarContentView : UIView<MMPhotoManagerDelegate,MMAlbumRowViewDelegate,MMPhotoRowViewDelegate,MMCachedRowsScrollViewDataSource>{
     __weak MMImageSidebarContainerView* delegate;
 }
 

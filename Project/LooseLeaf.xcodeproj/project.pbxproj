@@ -465,6 +465,8 @@
 		66F4517A18EB4C1700A57C95 /* MMCachedRowsScrollViewDataSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMCachedRowsScrollViewDataSource.h; sourceTree = "<group>"; };
 		66F4517C18EB7C3C00A57C95 /* MMPhotoRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPhotoRowView.h; sourceTree = "<group>"; };
 		66F4517D18EB7C3C00A57C95 /* MMPhotoRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPhotoRowView.m; sourceTree = "<group>"; };
+		66F4518018EC5AD000A57C95 /* MMImageSidebarContainerViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMImageSidebarContainerViewDelegate.h; sourceTree = "<group>"; };
+		66F4518118EC5C7300A57C95 /* MMPhotoRowViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPhotoRowViewDelegate.h; sourceTree = "<group>"; };
 		66F4B4B5178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLongPressFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
 		66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLongPressFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		66F4FB2117D8FE600086E21C /* MMCountBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCountBubbleButton.h; sourceTree = "<group>"; };
@@ -951,6 +953,7 @@
 				669B765E18EB47EA0041DAE7 /* Album Row Views */,
 				66AC8D7718E7506A00A65036 /* MMImageSidebarContainerView.h */,
 				66AC8D7818E7506A00A65036 /* MMImageSidebarContainerView.m */,
+				66F4518018EC5AD000A57C95 /* MMImageSidebarContainerViewDelegate.h */,
 				66AC8D7B18E754FE00A65036 /* MMImageSidebarContentView.h */,
 				66AC8D7C18E754FE00A65036 /* MMImageSidebarContentView.m */,
 			);
@@ -1204,6 +1207,7 @@
 			children = (
 				66F4517C18EB7C3C00A57C95 /* MMPhotoRowView.h */,
 				66F4517D18EB7C3C00A57C95 /* MMPhotoRowView.m */,
+				66F4518118EC5C7300A57C95 /* MMPhotoRowViewDelegate.h */,
 			);
 			name = "Photo Row Views";
 			sourceTree = "<group>";

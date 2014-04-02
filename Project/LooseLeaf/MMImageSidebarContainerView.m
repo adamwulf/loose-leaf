@@ -13,6 +13,8 @@
     MMImageSidebarContentView* contentView;
 }
 
+@dynamic delegate;
+
 - (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton *)_button animateFromLeft:(BOOL)fromLeft{
     self = [super initWithFrame:frame forButton:_button animateFromLeft:fromLeft];
     if (self) {
@@ -33,7 +35,5 @@
     [super hide:animated];
     [contentView hide:animated];
 }
-
-#pragma mark - MMSlidingSidebarContainerViewDelegate
 
 @end

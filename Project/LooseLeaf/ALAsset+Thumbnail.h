@@ -8,7 +8,25 @@
 
 #import <AssetsLibrary/AssetsLibrary.h>
 
+@class CLLocation;
+
 @interface ALAsset (Thumbnail)
+
+-(NSString*) type;
+
+-(NSURL*) url;
+
+-(NSDictionary*) urls;
+
+-(CLLocation*) location;
+
+-(NSNumber*) duration;
+
+-(NSNumber*) orientation;
+
+-(NSDate*) date;
+
+-(NSArray*) representations;
 
 - (UIImage *)aspectThumbnailWithMaxPixelSize:(NSUInteger)size;
 

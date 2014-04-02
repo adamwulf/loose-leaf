@@ -7,7 +7,10 @@
 //
 
 #import "MMSlidingSidebarContainerView.h"
+#import "MMImageSidebarContainerViewDelegate.h"
 
 @interface MMImageSidebarContainerView : MMSlidingSidebarContainerView
+
+@property (nonatomic, weak) NSObject<MMImageSidebarContainerViewDelegate>* delegate;
 
 @end

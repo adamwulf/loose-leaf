@@ -78,7 +78,7 @@
 
 -(void) tapped:(UIGestureRecognizer*)gesture{
     if(gesture.state == UIGestureRecognizerStateRecognized){
-        [self.delegate rowWasTapped:self];
+        [self.delegate albumRowWasTapped:self];
     }
 }
 

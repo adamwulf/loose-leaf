@@ -11,7 +11,10 @@
 #import "MMCachedRowsScrollView.h"
 #import "MMAlbumRowView.h"
 #import "MMPhotoRowView.h"
+#import "MMBufferedImageView.h"
 #import "MMImageSidebarContainerView.h"
+#import "UIView+Animations.h"
+#import "ALAsset+Thumbnail.h"
 
 #define kTopBottomMargin 50
 
@@ -127,7 +130,7 @@
 
 #pragma mark - MMAlbumRowViewDelegate
 
--(void) rowWasTapped:(MMAlbumRowView*)row{
+-(void) albumRowWasTapped:(MMAlbumRowView*)row{
     [self setUserInteractionEnabled:NO];
     NSLog(@"row was tapped: %@", row.album.name);
     currentAlbum = row.album;
@@ -142,6 +145,13 @@
     }  completion:^(BOOL finished){
         [self setUserInteractionEnabled:YES];
     }];
+}
+
+#pragma mark - MMPhotoRowViewDelegate
+
+-(void) photoRowWasTapped:(MMPhotoRowView*)row forAsset:(ALAsset *)asset forImage:(MMBufferedImageView *)bufferedImage{
+    NSLog(@"photo tapped at %f %f for index %@", bufferedImage.center.x, bufferedImage.center.y, asset.url);
+    [bufferedImage bounce];
 }
 
 #pragma mark - MMPhotoAlbumListScrollViewDataSource
@@ -202,6 +212,7 @@
         MMPhotoRowView* currentPhotoRow = (MMPhotoRowView*)currentRow;
         if(!currentPhotoRow){
             currentPhotoRow = [[MMPhotoRowView alloc] initWithFrame:frame];
+            currentPhotoRow.delegate = self;
         }
         [currentPhotoRow loadPhotosFromAlbum:currentAlbum atRow:index];
         return currentPhotoRow;

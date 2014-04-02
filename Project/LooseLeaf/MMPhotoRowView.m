@@ -17,7 +17,12 @@
     
     MMPhotoAlbum* loadedAlbum;
     NSInteger loadedIndex;
+    
+    ALAsset* leftAsset;
+    ALAsset* rightAsset;
 }
+
+@synthesize delegate;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -32,6 +37,9 @@
         rightImageView.transform = CGAffineTransformMakeRotation(RandomPhotoRotation);
         [self addSubview:rightImageView];
 
+        UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)];
+        [self addGestureRecognizer:tap];
+        
 //        leftImageView.layer.borderColor = [UIColor orangeColor].CGColor;
 //        leftImageView.layer.borderWidth = 1;
 //        
@@ -59,6 +67,8 @@
         if(!loadedAlbum){
             leftImageView.hidden = YES;
             rightImageView.hidden = YES;
+            leftAsset = nil;
+            rightAsset = nil;
         }else{
             NSIndexSet* assetsToLoad = nil;
             if(rowIndex >= ceilf(numberOfPhotos / 2.0) || rowIndex < 0){
@@ -66,6 +76,8 @@
                 rightImageView.image = nil;
                 rightImageView.hidden = YES;
                 leftImageView.hidden = YES;
+                leftAsset = nil;
+                rightAsset = nil;
             }else{
                 leftImageView.hidden = NO;
                 
@@ -103,21 +115,26 @@
                     // we only show 1 photo
                     assetsToLoad = [[NSIndexSet alloc] initWithIndex:leftIndex];
                     rightImageView.hidden = YES;
+                    rightAsset = nil;
                 }else{
                     // we show 2 photos
                     assetsToLoad = [[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(rightIndex, 2)];
                     rightImageView.hidden = NO;
                 }
                 leftImageView.image = nil;
+                leftImageView.tag = leftIndex;
                 rightImageView.image = nil;
+                rightImageView.tag = rightIndex;
                 [album loadPhotosAtIndexes:assetsToLoad usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
                     if(result){
                         if(index == leftIndex || [assetsToLoad count] == 1){
                             leftImageView.image = [UIImage imageWithCGImage:result.aspectRatioThumbnail];
                             leftImageView.hidden = NO;
+                            leftAsset = result;
                         }else{
                             rightImageView.image = [UIImage imageWithCGImage:result.aspectRatioThumbnail];
                             rightImageView.hidden = NO;
+                            rightAsset = result;
                         }
                     }
                 }];
@@ -133,6 +150,20 @@
     rightImageView.image = nil;
     leftImageView.hidden = YES;
     rightImageView.hidden = YES;
+}
+
+#pragma mark UIGestureRecgonizer
+
+-(void) tapped:(UIGestureRecognizer*)gesture{
+    if(gesture.state == UIGestureRecognizerStateRecognized){
+        if([gesture locationInView:self].x < self.bounds.size.width/2){
+            // tapped left
+            [self.delegate photoRowWasTapped:self forAsset:leftAsset forImage:leftImageView];
+        }else{
+            // tapped right
+            [self.delegate photoRowWasTapped:self forAsset:rightAsset forImage:rightImageView];
+        }
+    }
 }
 
 @end

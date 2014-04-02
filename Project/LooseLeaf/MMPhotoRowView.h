@@ -8,8 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "MMPhotoAlbum.h"
+#import "MMPhotoRowViewDelegate.h"
 
-@interface MMPhotoRowView : UIView
+@interface MMPhotoRowView : UIView{
+    __weak NSObject<MMPhotoRowViewDelegate>* delegate;
+}
+
+@property (nonatomic, weak) NSObject<MMPhotoRowViewDelegate>* delegate;
 
 -(void) loadPhotosFromAlbum:(MMPhotoAlbum*)album atRow:(NSInteger)rowIndex;
 

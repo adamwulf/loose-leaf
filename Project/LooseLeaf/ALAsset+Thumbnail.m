@@ -11,6 +11,44 @@
 @implementation ALAsset (Thumbnail)
 
 
+-(NSString*) type{
+    return [self valueForProperty:ALAssetPropertyType];
+}
+
+-(NSURL*) url{
+    return [self valueForProperty:ALAssetPropertyAssetURL];
+}
+
+-(NSDictionary*) urls{
+    return [self valueForProperty:ALAssetPropertyURLs];
+}
+
+-(CLLocation*) location{
+    return [self valueForProperty:ALAssetPropertyLocation];
+}
+
+-(NSNumber*) duration{
+    NSNumber* ret = [self valueForProperty:ALAssetPropertyDuration];
+    if([ALErrorInvalidProperty isEqual:ret]){
+        return nil;
+    }
+    return ret;
+}
+
+-(NSNumber*) orientation{
+    return [self valueForProperty:ALAssetPropertyOrientation];
+}
+
+-(NSDate*) date{
+    return [self valueForProperty:ALAssetPropertyDate];
+}
+
+-(NSArray*) representations{
+    return [self valueForProperty:ALAssetPropertyRepresentations];
+}
+
+
+
 // See http://mindsea.com/2012/12/18/downscaling-huge-alassets-without-fear-of-sigkill for details
 
 #import <AssetsLibrary/AssetsLibrary.h>
