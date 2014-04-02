@@ -153,9 +153,9 @@
 -(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage{
     NSLog(@"photo tapped %@", asset.url);
     
-    CGRect scrapRect = bufferedImage.bounds;
-    CGPoint tl = [self convertPoint:CGPointZero fromView:bufferedImage];
-    scrapRect = CGRectOffset(scrapRect, tl.x, tl.y);
+    CGRect scrapRect = CGRectZero;
+    scrapRect.origin = [self convertPoint:[bufferedImage visibleImageOrigin] fromView:bufferedImage];
+    scrapRect.size = [bufferedImage visibleImageSize];
     UIBezierPath* path = [UIBezierPath bezierPathWithRect:scrapRect];
     
     // rotate it around its top left corner

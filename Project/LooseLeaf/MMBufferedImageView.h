@@ -12,4 +12,8 @@
 
 @property (nonatomic, strong) UIImage* image;
 
+-(CGSize) visibleImageSize;
+
+-(CGPoint) visibleImageOrigin;
+
 @end

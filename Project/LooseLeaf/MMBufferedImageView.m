@@ -88,5 +88,13 @@ CGFloat buffer = 2;
     }
 }
 
+-(CGSize) visibleImageSize{
+    return layer.bounds.size;
+}
+
+-(CGPoint) visibleImageOrigin{
+    return layer.frame.origin;
+}
+
 
 @end
