@@ -40,6 +40,9 @@
     
     // queue
     dispatch_queue_t importExportScrapStateQueue;
+    
+    
+    UIImageView* backingContentView;
 }
 
 @synthesize bezierPath;
@@ -108,6 +111,8 @@
         [contentView setClipsToBounds:YES];
         [contentView setBackgroundColor:[UIColor clearColor]];
         contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        contentView.layer.borderColor = [UIColor redColor].CGColor;
+        contentView.layer.borderWidth = 1;
         
         // create our thumbnail view,
         // and load the actual thumbnail async
@@ -118,6 +123,19 @@
         [contentView addSubview:thumbnailView];
         thumbnailView.frame = contentView.bounds;
 
+        backingContentView = [[UIImageView alloc] initWithFrame:contentView.bounds];
+        backingContentView.contentMode = UIViewContentModeScaleAspectFit;
+        backingContentView.clipsToBounds = YES;
+        backingContentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [contentView addSubview:backingContentView];
+        backingContentView.frame = contentView.bounds;
+        backingContentView.layer.borderColor = [UIColor orangeColor].CGColor;
+        backingContentView.layer.borderWidth = 1;
+
+        CAShapeLayer* backgroundColorLayer = [CAShapeLayer layer];
+        [backgroundColorLayer setPath:bezierPath.CGPath];
+        backgroundColorLayer.frame = backingContentView.bounds;
+        backingContentView.layer.mask = backgroundColorLayer;
         
         if([[MMLoadImageCache sharedInstace] containsPathInCache:self.thumbImageFile]){
             // load if we can
@@ -135,6 +153,14 @@
         }
     }
     return self;
+}
+
+-(void) setBackingImage:(UIImage*)img{
+    backingContentView.image = img;
+}
+
+-(UIImage*) backingImage{
+    return backingContentView.image;
 }
 
 -(CGSize) originalSize{

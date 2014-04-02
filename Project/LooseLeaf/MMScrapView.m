@@ -161,6 +161,14 @@
     return self;
 }
 
+-(void) setBackingImage:(UIImage*)img{
+    [scrapState setBackingImage:img];
+}
+
+-(UIImage*) backingImage{
+    return scrapState.backingImage;
+}
+
 
 /**
  * shadows cause lag during scrolling

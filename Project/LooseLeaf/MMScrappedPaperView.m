@@ -491,6 +491,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                             maxDist = addedScrapDist;
                         }
                         [vectors addObject:[MMVector vectorWithPoint:scrap.center andPoint:addedScrap.center]];
+                        [addedScrap setBackingImage:scrap.backingImage];
                         [scraps addObject:addedScrap];
                     }
                     [scrap removeFromSuperview];

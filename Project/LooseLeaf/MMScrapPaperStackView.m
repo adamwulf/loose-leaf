@@ -177,21 +177,29 @@
     CGFloat maxDim = 300;
     
     CGSize fullScale = [[asset defaultRepresentation] dimensions];
-    if(fullScale.width > fullScale.height && fullScale.width > maxDim){
+    if(fullScale.width >= fullScale.height && fullScale.width > maxDim){
         fullScale.height = fullScale.height / fullScale.width * maxDim;
         fullScale.width = maxDim;
-    }else if(fullScale.height > fullScale.width && fullScale.height > maxDim){
+    }else if(fullScale.height >= fullScale.width && fullScale.height > maxDim){
         fullScale.width = fullScale.width / fullScale.height * maxDim;
         fullScale.height = maxDim;
     }
     
     CGFloat startingScale = scrapRect.size.width / fullScale.width;
     
-    MMScrapView* scrap = [[visibleStackHolder peekSubview] addScrapWithPath:path andScale:startingScale];
+    UIImage* scrapBacking = [asset aspectThumbnailWithMaxPixelSize:300];
     
-//    [UIView animateWithDuration:1 animations:^{
-//        scrap.center = [visibleStackHolder peekSubview].center;
-//    }];
+    NSLog(@"calc size: %f %f", fullScale.width, fullScale.height);
+    NSLog(@"actual size: %f %f", scrapBacking.size.width, scrapBacking.size.height);
+    
+    MMScrapView* scrap = [[visibleStackHolder peekSubview] addScrapWithPath:path andScale:startingScale];
+    [scrap setBackingImage:scrapBacking];
+    
+    [UIView animateWithDuration:1 animations:^{
+        scrap.center = [visibleStackHolder peekSubview].center;
+        scrap.scale = 1.0;
+        scrap.rotation += RandomPhotoRotation;
+    }];
     
 }
 

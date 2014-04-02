@@ -48,6 +48,8 @@
 
 -(void) saveToDisk;
 
+-(UIImage*) backingImage;
+-(void) setBackingImage:(UIImage*)img;
 
 -(void) loadStateAsynchronously:(BOOL)async;
 
