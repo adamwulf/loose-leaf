@@ -132,6 +132,7 @@
     [self setUserInteractionEnabled:NO];
     NSLog(@"row was tapped: %@", row.album.name);
     currentAlbum = row.album;
+    photoListScrollView.contentOffset = CGPointZero;
     [photoListScrollView refreshVisibleRows];
     [photoListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [self updateRow:obj atIndex:idx forFrame:[obj frame] forScrollView:photoListScrollView];

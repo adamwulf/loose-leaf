@@ -24,22 +24,22 @@
     if (self = [super initWithFrame:frame]) {
         CGFloat maxDim = self.bounds.size.height;
 
-        leftImageView = [[MMBufferedImageView alloc] initWithFrame:CGRectInset(CGRectMake(0, 0, maxDim, maxDim), 10, 10)];
+        leftImageView = [[MMBufferedImageView alloc] initWithFrame:CGRectInset(CGRectMake(0, 0, maxDim, maxDim), 2, 2)];
         leftImageView.transform = CGAffineTransformMakeRotation(RandomPhotoRotation);
         [self addSubview:leftImageView];
 
-        rightImageView = [[MMBufferedImageView alloc] initWithFrame:CGRectInset(CGRectMake(self.bounds.size.width - maxDim, 0, maxDim, maxDim), 10, 10)];
+        rightImageView = [[MMBufferedImageView alloc] initWithFrame:CGRectInset(CGRectMake(self.bounds.size.width - maxDim, 0, maxDim, maxDim), 2, 2)];
         rightImageView.transform = CGAffineTransformMakeRotation(RandomPhotoRotation);
         [self addSubview:rightImageView];
 
-        leftImageView.layer.borderColor = [UIColor orangeColor].CGColor;
-        leftImageView.layer.borderWidth = 1;
-        
-        rightImageView.layer.borderColor = [UIColor purpleColor].CGColor;
-        rightImageView.layer.borderWidth = 1;
-        
-        self.layer.borderColor = [UIColor redColor].CGColor;
-        self.layer.borderWidth = 1;
+//        leftImageView.layer.borderColor = [UIColor orangeColor].CGColor;
+//        leftImageView.layer.borderWidth = 1;
+//        
+//        rightImageView.layer.borderColor = [UIColor purpleColor].CGColor;
+//        rightImageView.layer.borderWidth = 1;
+//        
+//        self.layer.borderColor = [UIColor redColor].CGColor;
+//        self.layer.borderWidth = 1;
     }
     return self;
 }
