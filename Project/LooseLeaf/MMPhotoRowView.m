@@ -159,11 +159,9 @@
         if([gesture locationInView:self].x < self.bounds.size.width/2){
             // tapped left
             [self.delegate photoRowWasTapped:self forAsset:leftAsset forImage:leftImageView];
-            leftImageView.hidden = YES;
         }else{
             // tapped right
             [self.delegate photoRowWasTapped:self forAsset:rightAsset forImage:rightImageView];
-            rightImageView.hidden = YES;
         }
     }
 }

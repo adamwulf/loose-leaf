@@ -199,6 +199,8 @@
     
     [imagePicker hide:YES];
     
+    // hide the photo in the row
+    bufferedImage.alpha = 0;
     
     // bounce by 20px (10 on each side)
     CGFloat bounceScale = 20 / MAX(fullScale.width, fullScale.height);
@@ -218,6 +220,7 @@
                                               [scrap setScale:1];
                                           }
                                           completion:^(BOOL finished){
+                                              bufferedImage.alpha = 1;
                                               [topPage saveToDisk];
                                           }];
                      }];
