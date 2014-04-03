@@ -522,6 +522,10 @@
         [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
         [scissor cancelPolygonForTouch:touch];
     }
+    if(gesture.subState == UIGestureRecognizerStateBegan ||
+       (gesture.state == UIGestureRecognizerStateBegan && gesture.subState == UIGestureRecognizerStateChanged)){
+           [self ownershipOfTouches:[NSSet setWithArray:gesture.validTouches] isGesture:gesture];
+    }
     [rulerView updateLineAt:[gesture point1InView:rulerView] to:[gesture point2InView:rulerView]
            startingDistance:[gesture initialDistance]];
 }
@@ -702,6 +706,7 @@
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
     // dont start a new stroke if one already exists
     if([[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count] > 0){
+        NSLog(@"stroke already exists: %d", [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
         return NO;
     }
     if([drawableView.state.currentStrokes count]){
