@@ -43,6 +43,7 @@
     
     
     UIImageView* backingContentView;
+    CGFloat backgroundRotation;
 }
 
 @synthesize bezierPath;
@@ -128,10 +129,10 @@
         [contentView addSubview:backingContentView];
         backingContentView.frame = contentView.bounds;
 
-        CAShapeLayer* backgroundColorLayer = [CAShapeLayer layer];
-        [backgroundColorLayer setPath:bezierPath.CGPath];
-        backgroundColorLayer.frame = backingContentView.bounds;
-        backingContentView.layer.mask = backgroundColorLayer;
+//        CAShapeLayer* backgroundColorLayer = [CAShapeLayer layer];
+//        [backgroundColorLayer setPath:bezierPath.CGPath];
+//        backgroundColorLayer.frame = backingContentView.bounds;
+//        backingContentView.layer.mask = backgroundColorLayer;
         
         if([[MMLoadImageCache sharedInstace] containsPathInCache:self.thumbImageFile]){
             // load if we can
@@ -153,10 +154,24 @@
 
 -(void) setBackingImage:(UIImage*)img{
     backingContentView.image = img;
+    CGRect r = backingContentView.frame;
+    r.size = img.size;
+    backingContentView.frame = r;
+    backingContentView.center = CGPointMake(contentView.bounds.size.width/2, contentView.bounds.size.height/2);
+    [self setBackgroundRotation:0];
 }
 
 -(UIImage*) backingImage{
     return backingContentView.image;
+}
+
+-(void) setBackgroundRotation:(CGFloat)rotation{
+    backgroundRotation = rotation;
+    backingContentView.transform = CGAffineTransformMakeRotation(backgroundRotation);
+}
+
+-(CGFloat) backgroundRotation{
+    return backgroundRotation;
 }
 
 -(CGSize) originalSize{

@@ -48,9 +48,6 @@
 
 -(void) saveToDisk;
 
--(UIImage*) backingImage;
--(void) setBackingImage:(UIImage*)img;
-
 -(void) loadStateAsynchronously:(BOOL)async;
 
 -(void) unloadState;
@@ -59,5 +56,11 @@
 
 
 -(void) drawTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4;
+
+
+-(UIImage*) backingImage;
+-(void) setBackingImage:(UIImage*)img;
+-(void) setBackgroundRotation:(CGFloat)rotation;
+-(CGFloat) backgroundRotation;
 
 @end

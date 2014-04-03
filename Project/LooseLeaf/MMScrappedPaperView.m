@@ -491,10 +491,19 @@ static dispatch_queue_t concurrentBackgroundQueue;
                             maxDist = addedScrapDist;
                         }
                         [vectors addObject:[MMVector vectorWithPoint:scrap.center andPoint:addedScrap.center]];
+                        CGFloat orgRot = scrap.rotation;
+                        CGFloat newRot = addedScrap.rotation;
+                        CGFloat rotDiff = orgRot - newRot;
+                        
+                        CGPoint orgC = scrap.center;
+                        CGPoint newC = addedScrap.center;
+                        CGPoint moveC = CGPointMake(newC.x - orgC.x, newC.y - orgC.y);
+                        
                         [addedScrap setBackingImage:scrap.backingImage];
+                        [addedScrap setBackgroundRotation:scrap.backgroundRotation + rotDiff];
                         [scraps addObject:addedScrap];
                     }
-                    [scrap removeFromSuperview];
+//                    [scrap removeFromSuperview];
                 }
                 // clip out the portion of the scissor path that
                 // intersects with the scrap we just cut
@@ -502,16 +511,16 @@ static dispatch_queue_t concurrentBackgroundQueue;
             }
             if([scraps count]){
                 hasBuiltAnyScraps = YES;
-                [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                    for(int i=0;i<[vectors count];i++){
-                        MMVector* vector = [vectors objectAtIndex:i];
-                        vector = [vector normalizedTo:maxDist];
-                        MMScrapView* scrap = [scraps objectAtIndex:i];
-                        
-                        CGPoint newC = [vector pointFromPoint:scrap.center distance:10];
-                        scrap.center = newC;
-                    }
-                } completion:nil];
+//                [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+//                    for(int i=0;i<[vectors count];i++){
+//                        MMVector* vector = [vectors objectAtIndex:i];
+//                        vector = [vector normalizedTo:maxDist];
+//                        MMScrapView* scrap = [scraps objectAtIndex:i];
+//                        
+//                        CGPoint newC = [vector pointFromPoint:scrap.center distance:10];
+//                        scrap.center = newC;
+//                    }
+//                } completion:nil];
             }
         }
         
