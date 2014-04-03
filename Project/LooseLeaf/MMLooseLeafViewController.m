@@ -39,7 +39,7 @@
         
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth.png"]]];
         
-        [self.view addSubview:[MMDebugDrawView sharedInstace]];
+//        [self.view addSubview:[MMDebugDrawView sharedInstace]];
         
     }
     return self;

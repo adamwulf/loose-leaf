@@ -14,7 +14,6 @@
 #import "NSArray+Extras.h"
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
-#import "MMDebugDrawView.h"
 #import "MMScrapsOnPaperState.h"
 #import "MMImmutableScrapsOnPaperState.h"
 #import <JotUI/UIColor+JotHelper.h>
@@ -222,8 +221,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) panAndScale:(MMPanAndPinchGestureRecognizer *)_panGesture{
-//    [[MMDebugDrawView sharedInstace] clear];
-    
     [super panAndScale:_panGesture];
 }
 
@@ -429,8 +426,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) completeScissorsCutWithPath:(UIBezierPath*)scissorPath{
     // track path information for debugging
     NSString* debugFullText = @"";
-    [[MMDebugDrawView sharedInstace] clear];
-    
 
     @try {
         // scale the scissors into the zoom of the page, in case the user is
@@ -505,9 +500,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
                         CGPoint refPoint = CGPointMake(addedScrap.state.contentView.bounds.size.width/2,
                                                        addedScrap.state.contentView.bounds.size.height/2);
                         CGPoint moveC2 = CGPointMake(convertedC.x - refPoint.x, convertedC.y - refPoint.y);
-                        
-                        [[MMDebugDrawView sharedInstace] drawPoint:orgC];
-                        [[MMDebugDrawView sharedInstace] drawPoint:newC];
                         
                         // we have the correct adjustment value,
                         // but now we need to account for the fact
