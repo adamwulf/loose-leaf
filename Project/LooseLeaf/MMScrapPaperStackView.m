@@ -193,6 +193,7 @@
     
     MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
     MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:0 andScale:startingScale];
+    [scrapContainer addSubview:scrap];
     
     CGSize fullScaleScrapSize = scrapRect.size;
     fullScaleScrapSize.width /= startingScale;
@@ -229,6 +230,7 @@
                                           }
                                           completion:^(BOOL finished){
                                               bufferedImage.alpha = 1;
+                                              [topPage addScrap:scrap];
                                               [topPage saveToDisk];
                                           }];
                      }];

@@ -522,16 +522,16 @@ static dispatch_queue_t concurrentBackgroundQueue;
             }
             if([scraps count]){
                 hasBuiltAnyScraps = YES;
-//                [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-//                    for(int i=0;i<[vectors count];i++){
-//                        MMVector* vector = [vectors objectAtIndex:i];
-//                        vector = [vector normalizedTo:maxDist];
-//                        MMScrapView* scrap = [scraps objectAtIndex:i];
-//                        
-//                        CGPoint newC = [vector pointFromPoint:scrap.center distance:10];
-//                        scrap.center = newC;
-//                    }
-//                } completion:nil];
+                [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                    for(int i=0;i<[vectors count];i++){
+                        MMVector* vector = [vectors objectAtIndex:i];
+                        vector = [vector normalizedTo:maxDist];
+                        MMScrapView* scrap = [scraps objectAtIndex:i];
+                        
+                        CGPoint newC = [vector pointFromPoint:scrap.center distance:10];
+                        scrap.center = newC;
+                    }
+                } completion:nil];
             }
         }
         

@@ -27,6 +27,9 @@
     // [[MMLooseLeafViewController alloc] initWithNibName:@"MMPaperStackViewController" bundle:nil];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
+    
+//    [self.window.layer setSpeed:.5f];
+    
     return YES;
 }
 
