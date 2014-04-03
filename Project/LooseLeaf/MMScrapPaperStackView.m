@@ -48,11 +48,11 @@
 {
     if ((self = [super initWithFrame:frame])) {
         
-        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
-                                                                  target:self
-                                                                selector:@selector(timerDidFire:)
-                                                                userInfo:nil
-                                                                 repeats:YES];
+//        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
+//                                                                  target:self
+//                                                                selector:@selector(timerDidFire:)
+//                                                                userInfo:nil
+//                                                                 repeats:YES];
 
         
 //        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5
@@ -861,6 +861,13 @@ int skipAll = NO;
     // but it's in the wrong place.
     [clonedScrap stampContentsFrom:scrap.state.drawableView];
     panAndPinchScrapGesture2.scrap = clonedScrap;
+    
+    // clone background contents too
+    [clonedScrap setBackingImage:scrap.backingImage];
+    [clonedScrap setBackgroundRotation:scrap.backgroundRotation];
+    [clonedScrap setBackgroundScale:scrap.backgroundScale];
+    [clonedScrap setBackgroundOffset:scrap.backgroundOffset];
+    
 
     // move it to the new gesture location under it's scrap
     [UIView setAnchorPoint:CGPointMake(.5, .5) forView:clonedScrap];
