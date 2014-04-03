@@ -746,7 +746,6 @@
         inProgressOfBezeling = page;
     }
     if(![setOfPagesBeingPanned containsObject:page]){
-        NSLog(@"adding1 %p", page);
         [setOfPagesBeingPanned addObject:page];
     }
     [self updateIconAnimations];
@@ -904,7 +903,6 @@
     // check if we finished the top page
     BOOL justFinishedPanningTheTopPage = [visibleStackHolder peekSubview] == page;
     // this finished page isn't panned anymore...
-    NSLog(@"removing3 %p", page);
     [setOfPagesBeingPanned removeObject:page];
     // ok, update the icons
     [self updateIconAnimations];

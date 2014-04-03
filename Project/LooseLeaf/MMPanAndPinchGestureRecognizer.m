@@ -142,7 +142,9 @@
         }];
         if([validTouches count] < 2 && touchesWereStolen){
             // uh oh, we have valid touches, but not enough
-            subState = UIGestureRecognizerStatePossible;
+            if(subState != UIGestureRecognizerStatePossible){
+                subState = UIGestureRecognizerStateCancelled;
+            }
             [possibleTouches addObjectsInOrderedSet:validTouches];
             [validTouches removeAllObjects];
         }

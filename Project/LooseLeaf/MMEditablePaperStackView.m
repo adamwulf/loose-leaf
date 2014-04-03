@@ -534,7 +534,8 @@
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     [super ownershipOfTouches:touches isGesture:gesture];
-    if([gesture isKindOfClass:[MMDrawingTouchGestureRecognizer class]]){
+    if([gesture isKindOfClass:[MMDrawingTouchGestureRecognizer class]] ||
+       [gesture isKindOfClass:[MMBezelInRightGestureRecognizer class]]){
         // only notify of our own gestures
         [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
     }
