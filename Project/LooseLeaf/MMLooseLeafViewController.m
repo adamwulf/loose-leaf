@@ -10,6 +10,7 @@
 #import "MMShadowManager.h"
 #import "MMEditablePaperView.h"
 #import "TestFlight.h"
+#import "MMDebugDrawView.h"
 
 @implementation MMLooseLeafViewController
 
@@ -37,6 +38,8 @@
         [stackView loadStacksFromDisk];
         
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth.png"]]];
+        
+        [self.view addSubview:[MMDebugDrawView sharedInstace]];
         
     }
     return self;

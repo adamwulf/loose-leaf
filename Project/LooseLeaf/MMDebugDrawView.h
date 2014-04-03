@@ -16,4 +16,6 @@
 
 -(void) addCurve:(UIBezierPath*)path;
 
+-(void) drawPoint:(CGPoint)p;
+
 @end

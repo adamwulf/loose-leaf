@@ -429,7 +429,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) completeScissorsCutWithPath:(UIBezierPath*)scissorPath{
     // track path information for debugging
     NSString* debugFullText = @"";
+    [[MMDebugDrawView sharedInstace] clear];
     
+
     @try {
         // scale the scissors into the zoom of the page, in case the user is
         // pinching and zooming the page our scissor path will be in page coordinates
@@ -499,12 +501,28 @@ static dispatch_queue_t concurrentBackgroundQueue;
                         CGPoint newC = addedScrap.center;
                         CGPoint moveC = CGPointMake(newC.x - orgC.x, newC.y - orgC.y);
                         
+                        CGPoint convertedC = [addedScrap.state.contentView convertPoint:scrap.state.backingContentView.center fromView:scrap.state.contentView];
+                        CGPoint refPoint = CGPointMake(addedScrap.state.contentView.bounds.size.width/2,
+                                                       addedScrap.state.contentView.bounds.size.height/2);
+                        CGPoint moveC2 = CGPointMake(convertedC.x - refPoint.x, convertedC.y - refPoint.y);
+                        
+                        [[MMDebugDrawView sharedInstace] drawPoint:orgC];
+                        [[MMDebugDrawView sharedInstace] drawPoint:newC];
+                        
+                        // we have the correct adjustment value,
+                        // but now we need to account for the fact
+                        // that the new scrap has a different rotation
+                        // than the start scrap
+                        
+                        moveC = CGPointApplyAffineTransform(moveC, CGAffineTransformMakeRotation(scrap.rotation - addedScrap.rotation));
+                        
                         [addedScrap setBackingImage:scrap.backingImage];
                         [addedScrap setBackgroundRotation:scrap.backgroundRotation + rotDiff];
                         [addedScrap setBackgroundScale:scrap.backgroundScale];
+                        [addedScrap setBackgroundOffset:moveC2];
                         [scraps addObject:addedScrap];
                     }
-//                    [scrap removeFromSuperview];
+                    [scrap removeFromSuperview];
                 }
                 // clip out the portion of the scissor path that
                 // intersects with the scrap we just cut

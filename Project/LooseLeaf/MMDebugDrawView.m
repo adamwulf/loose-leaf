@@ -24,13 +24,15 @@ static MMDebugDrawView* _instance = nil;
         colors = [NSMutableArray array];
         self.opaque = NO;
         self.backgroundColor = [UIColor clearColor];
+        self.layer.borderColor = [UIColor redColor].CGColor;
+        self.layer.borderWidth = 5;
     }
     return _instance;
 }
 
 +(MMDebugDrawView*) sharedInstace{
     if(!_instance){
-        _instance = [[MMDebugDrawView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+        _instance = [[MMDebugDrawView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     }
     return _instance;
 }
@@ -47,7 +49,7 @@ static MMDebugDrawView* _instance = nil;
     path = [path copy];
     CGAffineTransform flippedTransform = CGAffineTransformMake(1, 0, 0, -1, 0, self.bounds.size.height);
     [path applyTransform:flippedTransform];
-    
+
     [curves addObject:path];
     if([curves count] > [colors count]){
         [colors addObject:[AVHexColor randomColor]];
@@ -64,6 +66,15 @@ static MMDebugDrawView* _instance = nil;
         path.lineWidth = 1;
         [path stroke];
     }
+}
+
+-(void) drawPoint:(CGPoint)p{
+    UIBezierPath* path = [UIBezierPath bezierPathWithArcCenter:p radius:2 startAngle:0 endAngle:2*M_PI clockwise:YES];
+    [curves addObject:path];
+    if([curves count] > [colors count]){
+        [colors addObject:[AVHexColor randomColor]];
+    }
+    [self setNeedsDisplay];
 }
 
 #pragma mark - Ignore Touches

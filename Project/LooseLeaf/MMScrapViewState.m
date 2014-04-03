@@ -45,6 +45,7 @@
     UIImageView* backingContentView;
     CGFloat backgroundRotation;
     CGFloat backgroundScale;
+    CGPoint backgroundOffset;
 }
 
 @synthesize bezierPath;
@@ -163,7 +164,7 @@
     CGRect r = backingContentView.frame;
     r.size = CGSizeMake(img.size.width, img.size.height);
     backingContentView.frame = r;
-    backingContentView.center = CGPointMake(contentView.bounds.size.width/2, contentView.bounds.size.height/2);
+    [self setBackgroundOffset:CGPointZero];
     [self setBackgroundRotation:0];
 }
 
@@ -193,6 +194,22 @@
     return backgroundScale;
 }
 
+-(void) setBackgroundOffset:(CGPoint)bgOffset{
+    backgroundOffset = bgOffset;
+    backingContentView.center = CGPointMake(contentView.bounds.size.width/2 + backgroundOffset.x,
+                                            contentView.bounds.size.height/2 + backgroundOffset.y);
+}
+
+-(CGPoint) backgroundOffset{
+    return backgroundOffset;
+}
+
+-(UIView*) contentView{
+    return contentView;
+}
+-(UIView*) backingContentView{
+    return backingContentView;
+}
 
 
 

@@ -64,5 +64,7 @@
 -(CGFloat) backgroundRotation;
 -(void) setBackgroundScale:(CGFloat)_backgroundScale;
 -(CGFloat) backgroundScale;
+-(void) setBackgroundOffset:(CGPoint)bgOffset;
+-(CGPoint) backgroundOffset;
 
 @end

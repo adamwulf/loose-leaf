@@ -200,6 +200,14 @@
     return scrapState.backgroundScale;
 }
 
+-(void) setBackgroundOffset:(CGPoint)bgOffset{
+    [scrapState setBackgroundOffset:bgOffset];
+}
+
+-(CGPoint) backgroundOffset{
+    return [scrapState backgroundOffset];
+}
+
 /**
  * shadows cause lag during scrolling
  * 
