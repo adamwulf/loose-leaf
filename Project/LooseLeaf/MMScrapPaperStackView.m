@@ -193,7 +193,15 @@
     
     MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
     MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:0 andScale:startingScale];
+    
+    CGSize fullScaleScrapSize = scrapRect.size;
+    fullScaleScrapSize.width /= startingScale;
+    fullScaleScrapSize.height /= startingScale;
+    
+    CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width;
+    
     [scrap setBackingImage:scrapBacking];
+    [scrap setBackgroundScale:scaleUpOfImage];
     scrap.center = [self convertPoint:CGPointMake(bufferedImage.bounds.size.width/2, bufferedImage.bounds.size.height/2) fromView:bufferedImage];
     scrap.rotation = bufferedImage.rotation;
     

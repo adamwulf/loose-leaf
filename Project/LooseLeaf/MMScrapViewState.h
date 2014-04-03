@@ -45,5 +45,7 @@
 -(void) setBackingImage:(UIImage*)img;
 -(void) setBackgroundRotation:(CGFloat)rotation;
 -(CGFloat) backgroundRotation;
+-(void) setBackgroundScale:(CGFloat)_backgroundScale;
+-(CGFloat) backgroundScale;
 
 @end

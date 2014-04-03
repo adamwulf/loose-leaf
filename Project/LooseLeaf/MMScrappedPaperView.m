@@ -501,6 +501,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                         
                         [addedScrap setBackingImage:scrap.backingImage];
                         [addedScrap setBackgroundRotation:scrap.backgroundRotation + rotDiff];
+                        [addedScrap setBackgroundScale:scrap.backgroundScale];
                         [scraps addObject:addedScrap];
                     }
 //                    [scrap removeFromSuperview];

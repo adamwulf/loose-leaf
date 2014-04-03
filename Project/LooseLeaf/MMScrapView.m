@@ -191,6 +191,15 @@
     return scrapState.backgroundRotation;
 }
 
+-(void) setBackgroundScale:(CGFloat)_backgroundScale{
+    [scrapState setBackgroundScale:_backgroundScale];
+    [self updateDBLabel];
+}
+
+-(CGFloat) backgroundScale{
+    return scrapState.backgroundScale;
+}
+
 /**
  * shadows cause lag during scrolling
  * 

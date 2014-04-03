@@ -44,6 +44,7 @@
     
     UIImageView* backingContentView;
     CGFloat backgroundRotation;
+    CGFloat backgroundScale;
 }
 
 @synthesize bezierPath;
@@ -160,7 +161,7 @@
 -(void) setBackingImage:(UIImage*)img{
     backingContentView.image = img;
     CGRect r = backingContentView.frame;
-    r.size = CGSizeMake(img.size.width*3, img.size.height*3);
+    r.size = CGSizeMake(img.size.width, img.size.height);
     backingContentView.frame = r;
     backingContentView.center = CGPointMake(contentView.bounds.size.width/2, contentView.bounds.size.height/2);
     [self setBackgroundRotation:0];
@@ -170,14 +171,30 @@
     return backingContentView.image;
 }
 
--(void) setBackgroundRotation:(CGFloat)rotation{
-    backgroundRotation = rotation;
-    backingContentView.transform = CGAffineTransformMakeRotation(backgroundRotation);
+-(void) setBackgroundScale:(CGFloat)_scale andRotation:(CGFloat)_rotation{
+    backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(_rotation),CGAffineTransformMakeScale(_scale, _scale));
+}
+
+-(void) setBackgroundRotation:(CGFloat)_backgroundRotation{
+    backgroundRotation = _backgroundRotation;
+    [self setBackgroundScale:backgroundScale andRotation:backgroundRotation];
 }
 
 -(CGFloat) backgroundRotation{
     return backgroundRotation;
 }
+
+-(void) setBackgroundScale:(CGFloat)_backgroundScale{
+    backgroundScale = _backgroundScale;
+    [self setBackgroundScale:backgroundScale andRotation:backgroundRotation];
+}
+
+-(CGFloat) backgroundScale{
+    return backgroundScale;
+}
+
+
+
 
 -(CGSize) originalSize{
     if(CGSizeEqualToSize(originalSize, CGSizeZero)){
