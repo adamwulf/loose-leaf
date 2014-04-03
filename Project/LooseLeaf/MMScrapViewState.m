@@ -122,17 +122,22 @@
         [contentView addSubview:thumbnailView];
         thumbnailView.frame = contentView.bounds;
 
+        
         backingContentView = [[UIImageView alloc] initWithFrame:contentView.bounds];
         backingContentView.contentMode = UIViewContentModeScaleAspectFit;
         backingContentView.clipsToBounds = YES;
         backingContentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [contentView addSubview:backingContentView];
         backingContentView.frame = contentView.bounds;
 
-//        CAShapeLayer* backgroundColorLayer = [CAShapeLayer layer];
-//        [backgroundColorLayer setPath:bezierPath.CGPath];
-//        backgroundColorLayer.frame = backingContentView.bounds;
-//        backingContentView.layer.mask = backgroundColorLayer;
+        UIView* clippedBackgroundView = [[UIView alloc] initWithFrame:contentView.bounds];
+        clippedBackgroundView.clipsToBounds = YES;
+        clippedBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        CAShapeLayer* backgroundColorLayer = [CAShapeLayer layer];
+        [backgroundColorLayer setPath:bezierPath.CGPath];
+        backgroundColorLayer.frame = backingContentView.bounds;
+        clippedBackgroundView.layer.mask = backgroundColorLayer;
+        [contentView addSubview:clippedBackgroundView];
+        [clippedBackgroundView addSubview:backingContentView];
         
         if([[MMLoadImageCache sharedInstace] containsPathInCache:self.thumbImageFile]){
             // load if we can
@@ -155,7 +160,7 @@
 -(void) setBackingImage:(UIImage*)img{
     backingContentView.image = img;
     CGRect r = backingContentView.frame;
-    r.size = img.size;
+    r.size = CGSizeMake(img.size.width*3, img.size.height*3);
     backingContentView.frame = r;
     backingContentView.center = CGPointMake(contentView.bounds.size.width/2, contentView.bounds.size.height/2);
     [self setBackgroundRotation:0];
