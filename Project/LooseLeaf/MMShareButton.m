@@ -29,9 +29,6 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
-    // Create the context
-    CGContextRef context = UIGraphicsGetCurrentContext();
-
     //
     // Notes for this button
     //

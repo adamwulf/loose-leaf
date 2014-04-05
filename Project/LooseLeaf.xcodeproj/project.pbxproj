@@ -98,6 +98,8 @@
 		66AC8D8B18E89A9C00A65036 /* MMCachedRowsScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC8D8A18E89A9C00A65036 /* MMCachedRowsScrollView.m */; };
 		66AC8D8E18E89C9800A65036 /* MMAlbumRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC8D8D18E89C9800A65036 /* MMAlbumRowView.m */; };
 		66AC8D9218E8A90900A65036 /* MMBufferedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC8D9118E8A90900A65036 /* MMBufferedImageView.m */; };
+		66ADF8E618F072FD0088B235 /* MMTouchDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66ADF8E518F072FD0088B235 /* MMTouchDotView.m */; };
+		66ADF8E918F073280088B235 /* MMTouchDotGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66ADF8E818F073280088B235 /* MMTouchDotGestureRecognizer.m */; };
 		66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */; };
 		66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B0FA5F17FB68410079E7A3 /* MMScrapViewState.m */; };
 		66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A55175AFCA70049F1AF /* MMHandButton.m */; };
@@ -352,6 +354,10 @@
 		66AC8D8D18E89C9800A65036 /* MMAlbumRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAlbumRowView.m; sourceTree = "<group>"; };
 		66AC8D9018E8A90900A65036 /* MMBufferedImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBufferedImageView.h; sourceTree = "<group>"; };
 		66AC8D9118E8A90900A65036 /* MMBufferedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBufferedImageView.m; sourceTree = "<group>"; };
+		66ADF8E418F072FD0088B235 /* MMTouchDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTouchDotView.h; sourceTree = "<group>"; };
+		66ADF8E518F072FD0088B235 /* MMTouchDotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTouchDotView.m; sourceTree = "<group>"; };
+		66ADF8E718F073280088B235 /* MMTouchDotGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTouchDotGestureRecognizer.h; sourceTree = "<group>"; };
+		66ADF8E818F073280088B235 /* MMTouchDotGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTouchDotGestureRecognizer.m; sourceTree = "<group>"; };
 		66AE5AA617F4D064009F82B6 /* MMScrapsOnPaperState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapsOnPaperState.h; sourceTree = "<group>"; };
 		66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapsOnPaperState.m; sourceTree = "<group>"; };
 		66AE5AA917F4D124009F82B6 /* MMScrapsOnPaperStateDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScrapsOnPaperStateDelegate.h; sourceTree = "<group>"; };
@@ -972,6 +978,17 @@
 			name = "Photo Manager";
 			sourceTree = "<group>";
 		};
+		66ADF8E318F072E50088B235 /* MMTouchDotView */ = {
+			isa = PBXGroup;
+			children = (
+				66ADF8E418F072FD0088B235 /* MMTouchDotView.h */,
+				66ADF8E518F072FD0088B235 /* MMTouchDotView.m */,
+				66ADF8E718F073280088B235 /* MMTouchDotGestureRecognizer.h */,
+				66ADF8E818F073280088B235 /* MMTouchDotGestureRecognizer.m */,
+			);
+			name = MMTouchDotView;
+			sourceTree = "<group>";
+		};
 		66B21A77175E59490049F1AF /* Operations */ = {
 			isa = PBXGroup;
 			children = (
@@ -1106,6 +1123,7 @@
 		66DCFB901581BCEF00B4918C /* Loose Leaf */ = {
 			isa = PBXGroup;
 			children = (
+				66ADF8E318F072E50088B235 /* MMTouchDotView */,
 				66932995159984090033E557 /* Experiments */,
 				6693295715958A890033E557 /* Managers */,
 				66BD6E811593AF4500D4544C /* Buttons */,
@@ -1456,8 +1474,10 @@
 				66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */,
 				66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */,
 				66A471BE17C7DAA000C2A5B6 /* MMScrappedPaperView.m in Sources */,
+				66ADF8E618F072FD0088B235 /* MMTouchDotView.m in Sources */,
 				66052A0317FA170600A94531 /* MMImmutableScrapsOnPaperState.m in Sources */,
 				6693C94C18E4E7860054FF41 /* MMSlidingSidebarContainerView.m in Sources */,
+				66ADF8E918F073280088B235 /* MMTouchDotGestureRecognizer.m in Sources */,
 				66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */,
 				66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */,
 				66A471C617C7E06B00C2A5B6 /* MMScrapView.m in Sources */,

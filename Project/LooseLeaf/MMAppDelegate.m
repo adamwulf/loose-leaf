@@ -9,6 +9,7 @@
 #import "MMAppDelegate.h"
 
 #import "MMLooseLeafViewController.h"
+#import "MMTouchDotView.h"
 #import <Crashlytics/Crashlytics.h>
 
 @implementation MMAppDelegate
@@ -29,6 +30,8 @@
     [self.window makeKeyAndVisible];
     
 //    [self.window.layer setSpeed:.5f];
+    MMTouchDotView* blueDots = [[MMTouchDotView alloc] initWithFrame:self.window.bounds];
+    [self.window addSubview:blueDots];
     
     return YES;
 }
