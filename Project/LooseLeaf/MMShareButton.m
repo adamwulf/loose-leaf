@@ -48,39 +48,6 @@
     //// Oval
     UIBezierPath* ovalPath = [self ovalPath];
     
-    //// Box Drawing
-    UIBezierPath* boxPath = [UIBezierPath bezierPath];
-    [boxPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.55 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.31 * CGRectGetHeight(frame))];
-    [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.24 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.31 * CGRectGetHeight(frame))];
-    [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.24 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.71 * CGRectGetHeight(frame))];
-    [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.76 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.71 * CGRectGetHeight(frame))];
-    [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.76 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.56 * CGRectGetHeight(frame))];
-    [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.71 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.61 * CGRectGetHeight(frame))];
-    [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.71 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.66 * CGRectGetHeight(frame))];
-    [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.29 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.66 * CGRectGetHeight(frame))];
-    [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.29 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.36 * CGRectGetHeight(frame))];
-    [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.45 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.36 * CGRectGetHeight(frame))];
-    [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.55 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.31 * CGRectGetHeight(frame))];
-    [boxPath closePath];
-    boxPath.lineJoinStyle = kCGLineJoinRound;
-    
-    
-    //// Arrow Drawing
-    UIBezierPath* arrowPath = [UIBezierPath bezierPath];
-    [arrowPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.66 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.35 * CGRectGetHeight(frame))];
-    [arrowPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.66 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.24 * CGRectGetHeight(frame))];
-    [arrowPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.84 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.41 * CGRectGetHeight(frame))];
-    [arrowPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.66 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.59 * CGRectGetHeight(frame))];
-    [arrowPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.66 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.47 * CGRectGetHeight(frame))];
-    [arrowPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.64 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.47 * CGRectGetHeight(frame))];
-    [arrowPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.46 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.54 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.64 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.47 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.51 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.5 * CGRectGetHeight(frame))];
-    [arrowPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.36 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.61 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.41 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.57 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.36 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.61 * CGRectGetHeight(frame))];
-    [arrowPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.46 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.42 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.36 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.61 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.4 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.48 * CGRectGetHeight(frame))];
-    [arrowPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.64 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.35 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.52 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.37 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.64 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.35 * CGRectGetHeight(frame))];
-    [arrowPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.66 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.35 * CGRectGetHeight(frame))];
-    [arrowPath closePath];
-
-    
     //// Oval Drawing
     ovalPath.lineWidth = 1;
     [darkerGreyBorder setStroke];
@@ -88,18 +55,37 @@
     [halfGreyFill setFill];
     [ovalPath fill];
 
-    //
-    // clear the arrow and box, then fill with
-    // border color
-    CGContextSetBlendMode(context, kCGBlendModeClear);
-    [[UIColor whiteColor] setFill];
-    [arrowPath fill];
-    [boxPath fill];
-    CGContextSetBlendMode(context, kCGBlendModeNormal);
+    UIBezierPath* boxPath = [UIBezierPath bezierPath];
+    [boxPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.42500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.38750 * CGRectGetHeight(frame))];
+    [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.32500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.38750 * CGRectGetHeight(frame))];
+    [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.32500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.73750 * CGRectGetHeight(frame))];
+    [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.67500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.73750 * CGRectGetHeight(frame))];
+    [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.67500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.38750 * CGRectGetHeight(frame))];
+    [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.57500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.38750 * CGRectGetHeight(frame))];
+    [darkerGreyBorder setStroke];
+    boxPath.lineWidth = 2;
+    [boxPath stroke];
     
-    [darkerGreyBorder setFill];
-    [arrowPath fill];
-    [boxPath fill];
+    
+    //// arrow head Drawing
+    UIBezierPath* arrowHeadPath = [UIBezierPath bezierPath];
+    [arrowHeadPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.40000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.28750 * CGRectGetHeight(frame))];
+    [arrowHeadPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.50000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.18750 * CGRectGetHeight(frame))];
+    [arrowHeadPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.60000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.28750 * CGRectGetHeight(frame))];
+    [darkerGreyBorder setStroke];
+    arrowHeadPath.lineWidth = 2;
+    [arrowHeadPath stroke];
+    
+    
+    //// arrow body Drawing
+    UIBezierPath* arrowBodyPath = [UIBezierPath bezierPath];
+    [arrowBodyPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.50000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.56250 * CGRectGetHeight(frame))];
+    [arrowBodyPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.50000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.21250 * CGRectGetHeight(frame))];
+    [darkerGreyBorder setStroke];
+    arrowBodyPath.lineWidth = 2;
+    [arrowBodyPath stroke];
+    
+    
 
     [self drawDropshadowIfSelected];
 
