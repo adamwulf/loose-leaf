@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMTouchDotGestureRecognizerDelegate.h"
 
-@interface MMTouchDotView : UIView
+@interface MMTouchDotView : UIView<MMTouchDotGestureRecognizerDelegate>
 
 @end

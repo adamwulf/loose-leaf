@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMTouchDotGestureRecognizerDelegate.h"
 
-@interface MMTouchDotGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>
+@interface MMTouchDotGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>{
+    __weak NSObject<MMTouchDotGestureRecognizerDelegate>* touchDelegate;
+}
 
-+(MMTouchDotGestureRecognizer*) sharedInstace;
+@property (nonatomic, weak) NSObject<MMTouchDotGestureRecognizerDelegate>* touchDelegate;
 
 @property (readonly) NSSet* activeTouches;
 

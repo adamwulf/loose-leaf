@@ -13,30 +13,20 @@
     NSMutableSet* activeTouches;
 }
 
-static MMTouchDotGestureRecognizer* _instance = nil;
+@synthesize touchDelegate;
 
 -(id) init{
-    if(_instance) return _instance;
     if((self = [super init])){
-        _instance = self;
         self.delaysTouchesBegan = NO;
         self.delaysTouchesEnded = NO;
         self.cancelsTouchesInView = NO;
         
         activeTouches = [NSMutableSet set];
     }
-    return _instance;
+    return self;
 }
 
 @synthesize activeTouches;
-
-+(MMTouchDotGestureRecognizer*) sharedInstace{
-    if(!_instance){
-        _instance = [[MMTouchDotGestureRecognizer alloc]init];
-        _instance.delegate = _instance;
-    }
-    return _instance;
-}
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [activeTouches unionSet:touches];
@@ -45,10 +35,12 @@ static MMTouchDotGestureRecognizer* _instance = nil;
     }else{
         self.state = UIGestureRecognizerStateChanged;
     }
+    [touchDelegate touchesBegan:touches withEvent:event];
 }
 
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
     self.state = UIGestureRecognizerStateChanged;
+    [touchDelegate touchesMoved:touches withEvent:event];
 }
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -56,6 +48,7 @@ static MMTouchDotGestureRecognizer* _instance = nil;
     if(![activeTouches count]){
         self.state = UIGestureRecognizerStateEnded;
     }
+    [touchDelegate touchesEnded:touches withEvent:event];
 }
 
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -63,6 +56,7 @@ static MMTouchDotGestureRecognizer* _instance = nil;
     if(![activeTouches count]){
         self.state = UIGestureRecognizerStateEnded;
     }
+    [touchDelegate touchesCancelled:touches withEvent:event];
 }
 
 #pragma mark - UIGestureRecognizer

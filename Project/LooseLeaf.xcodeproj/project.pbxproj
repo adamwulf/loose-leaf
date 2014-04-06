@@ -358,6 +358,7 @@
 		66ADF8E518F072FD0088B235 /* MMTouchDotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTouchDotView.m; sourceTree = "<group>"; };
 		66ADF8E718F073280088B235 /* MMTouchDotGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTouchDotGestureRecognizer.h; sourceTree = "<group>"; };
 		66ADF8E818F073280088B235 /* MMTouchDotGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTouchDotGestureRecognizer.m; sourceTree = "<group>"; };
+		66ADF90018F1C7150088B235 /* MMTouchDotGestureRecognizerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMTouchDotGestureRecognizerDelegate.h; sourceTree = "<group>"; };
 		66AE5AA617F4D064009F82B6 /* MMScrapsOnPaperState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapsOnPaperState.h; sourceTree = "<group>"; };
 		66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapsOnPaperState.m; sourceTree = "<group>"; };
 		66AE5AA917F4D124009F82B6 /* MMScrapsOnPaperStateDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScrapsOnPaperStateDelegate.h; sourceTree = "<group>"; };
@@ -985,6 +986,7 @@
 				66ADF8E518F072FD0088B235 /* MMTouchDotView.m */,
 				66ADF8E718F073280088B235 /* MMTouchDotGestureRecognizer.h */,
 				66ADF8E818F073280088B235 /* MMTouchDotGestureRecognizer.m */,
+				66ADF90018F1C7150088B235 /* MMTouchDotGestureRecognizerDelegate.h */,
 			);
 			name = MMTouchDotView;
 			sourceTree = "<group>";
