@@ -234,6 +234,7 @@
                                           completion:^(BOOL finished){
                                               bufferedImage.alpha = 1;
                                               [topPage addScrap:scrap];
+                                              [scrap saveToDisk];
                                               [topPage saveToDisk];
                                           }];
                      }];
