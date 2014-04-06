@@ -21,7 +21,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        touchGesture = [[MMTouchDotGestureRecognizer alloc] init];
+        touchGesture = [MMTouchDotGestureRecognizer sharedInstace];
         [touchGesture setTouchDelegate:self];
         dots = [NSMutableDictionary dictionary];
         dotWidth = 20;
@@ -76,25 +76,25 @@
     [self.superview addGestureRecognizer:touchGesture];
 }
 
--(void) touchesBegan:(NSSet *)touches{
+-(void) dotTouchesBegan:(NSSet *)touches{
     for(UITouch* t in touches){
         [self updateTouch:t];
     }
 }
 
--(void) touchesMoved:(NSSet *)touches{
+-(void) dotTouchesMoved:(NSSet *)touches{
     for(UITouch* t in touches){
         [self updateTouch:t];
     }
 }
 
--(void) touchesEnded:(NSSet *)touches{
+-(void) dotTouchesEnded:(NSSet *)touches{
     for(UITouch* t in touches){
         [self removeViewFor:t];
     }
 }
 
--(void) touchesCancelled:(NSSet *)touches{
+-(void) dotTouchesCancelled:(NSSet *)touches{
     for(UITouch* t in touches){
         [self removeViewFor:t];
     }

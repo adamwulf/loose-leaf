@@ -13,6 +13,8 @@
     __weak NSObject<MMTouchDotGestureRecognizerDelegate>* touchDelegate;
 }
 
++(MMTouchDotGestureRecognizer*) sharedInstace;
+
 @property (nonatomic, weak) NSObject<MMTouchDotGestureRecognizerDelegate>* touchDelegate;
 
 @property (readonly) NSSet* activeTouches;

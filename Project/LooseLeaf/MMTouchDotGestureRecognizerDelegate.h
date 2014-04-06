@@ -10,12 +10,12 @@
 
 @protocol MMTouchDotGestureRecognizerDelegate <NSObject>
 
--(void) touchesBegan:(NSSet *)touches;
+-(void) dotTouchesBegan:(NSSet *)touches;
 
--(void) touchesMoved:(NSSet *)touches;
+-(void) dotTouchesMoved:(NSSet *)touches;
 
--(void) touchesEnded:(NSSet *)touches;
+-(void) dotTouchesEnded:(NSSet *)touches;
 
--(void) touchesCancelled:(NSSet *)touches;
+-(void) dotTouchesCancelled:(NSSet *)touches;
 
 @end
