@@ -35,12 +35,12 @@
     }else{
         self.state = UIGestureRecognizerStateChanged;
     }
-    [touchDelegate touchesBegan:touches withEvent:event];
+    [touchDelegate touchesBegan:touches];
 }
 
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
     self.state = UIGestureRecognizerStateChanged;
-    [touchDelegate touchesMoved:touches withEvent:event];
+    [touchDelegate touchesMoved:touches];
 }
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -48,7 +48,7 @@
     if(![activeTouches count]){
         self.state = UIGestureRecognizerStateEnded;
     }
-    [touchDelegate touchesEnded:touches withEvent:event];
+    [touchDelegate touchesEnded:touches];
 }
 
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -56,7 +56,7 @@
     if(![activeTouches count]){
         self.state = UIGestureRecognizerStateEnded;
     }
-    [touchDelegate touchesCancelled:touches withEvent:event];
+    [touchDelegate touchesCancelled:touches];
 }
 
 #pragma mark - UIGestureRecognizer

@@ -26,6 +26,7 @@
         dots = [NSMutableDictionary dictionary];
         dotWidth = 20;
         dotColor = [UIColor colorWithRed: 62.0/255.0 green: 151.0/255.0 blue: 0.8 alpha: 1.0];
+        self.userInteractionEnabled = NO;
     }
     return self;
 }
@@ -75,25 +76,25 @@
     [self.superview addGestureRecognizer:touchGesture];
 }
 
--(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+-(void) touchesBegan:(NSSet *)touches{
     for(UITouch* t in touches){
         [self updateTouch:t];
     }
 }
 
--(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
+-(void) touchesMoved:(NSSet *)touches{
     for(UITouch* t in touches){
         [self updateTouch:t];
     }
 }
 
--(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+-(void) touchesEnded:(NSSet *)touches{
     for(UITouch* t in touches){
         [self removeViewFor:t];
     }
 }
 
--(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+-(void) touchesCancelled:(NSSet *)touches{
     for(UITouch* t in touches){
         [self removeViewFor:t];
     }
