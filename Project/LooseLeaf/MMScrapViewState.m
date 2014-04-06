@@ -157,7 +157,11 @@
         
         if([[MMLoadImageCache sharedInstace] containsPathInCache:self.thumbImageFile]){
             // load if we can
-            thumbnailView.image = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
+            UIImage* thumb = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
+            [NSThread performBlockOnMainThread:^{
+                thumbnailView.image = thumb;
+                NSLog(@"setting thumbnail to1: %p %d", thumbnailView.image, [NSThread isMainThread]);
+            }];
         }else{
             // don't load from disk on the main thread.
             dispatch_async([self importExportScrapStateQueue], ^{
@@ -165,6 +169,7 @@
                     UIImage* thumb = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
                     [NSThread performBlockOnMainThread:^{
                         thumbnailView.image = thumb;
+                        NSLog(@"setting thumbnail to2: %p %d", thumbnailView.image, [NSThread isMainThread]);
                     }];
                 }
             });
@@ -274,6 +279,7 @@
                                             [[MMLoadImageCache sharedInstace] updateCacheForPath:self.thumbImageFile toImage:thumb];
                                             [NSThread performBlockOnMainThread:^{
                                                 thumbnailView.image = thumb;
+                                                NSLog(@"setting thumbnail image to3: %p %d", thumbnailView.image, [NSThread isMainThread]);
                                             }];
                                             [drawableViewState wasSavedAtImmutableState:state];
                                             NSLog(@"scrap saved at: %d with thumb: %d", state.undoHash, (int)thumb);
@@ -345,7 +351,6 @@
                                             andContext:[drawableView context]
                                       andBufferManager:[[JotBufferManager alloc] init]];
             
-            
             UIImage* backgroundImage = [UIImage imageWithContentsOfFile:[self bgImagePath]];
             if(backgroundImage){
                 NSDictionary* properties = [NSDictionary dictionaryWithContentsOfFile:self.plistPath];
@@ -354,7 +359,6 @@
                 backgroundOffset.x = [[properties objectForKey:@"backgroundOffset.x"] floatValue];
                 backgroundOffset.y = [[properties objectForKey:@"backgroundOffset.y"] floatValue];
             }
-
             
             [NSThread performBlockOnMainThread:^{
                 @synchronized(self){
@@ -363,6 +367,7 @@
                     if(shouldKeepStateLoaded){
                         [contentView addSubview:drawableView];
                         thumbnailView.hidden = YES;
+                        NSLog(@"hiding thumbnail");
                         if(drawableViewState){
                             [drawableView loadState:drawableViewState];
                         }
@@ -412,9 +417,13 @@
                     shouldKeepStateLoaded = NO;
                     if(!isLoadingState && drawableViewState){
                         drawableViewState = nil;
-                        [drawableView removeFromSuperview];
+                        UIView* drawableViewToRemove = drawableView;
                         drawableView = nil;
-                        thumbnailView.hidden = NO;
+                        [NSThread performBlockOnMainThread:^{
+                            [drawableViewToRemove removeFromSuperview];
+                            NSLog(@"showing thumbnail %d", [NSThread isMainThread]);
+                            thumbnailView.hidden = NO;
+                        }];
                     }
                 }
             }
