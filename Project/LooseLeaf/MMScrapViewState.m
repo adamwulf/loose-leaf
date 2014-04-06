@@ -81,6 +81,9 @@
                 backgroundScale = [[properties objectForKey:@"backgroundScale"] floatValue];
                 backgroundOffset.x = [[properties objectForKey:@"backgroundOffset.x"] floatValue];
                 backgroundOffset.y = [[properties objectForKey:@"backgroundOffset.y"] floatValue];
+                [self setBackgroundRotation:backgroundRotation];
+                [self setBackgroundScale:backgroundScale];
+                [self setBackgroundOffset:backgroundOffset];
             }else{
                 backingContentView.image = nil;
             }
@@ -363,6 +366,9 @@
             [NSThread performBlockOnMainThread:^{
                 @synchronized(self){
                     backingContentView.image = backgroundImage;
+                    [self setBackgroundRotation:backgroundRotation];
+                    [self setBackgroundScale:backgroundScale];
+                    [self setBackgroundOffset:backgroundOffset];
                     isLoadingState = NO;
                     if(shouldKeepStateLoaded){
                         [contentView addSubview:drawableView];
