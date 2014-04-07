@@ -59,11 +59,24 @@
     NSLock* lock;
 }
 
+#pragma mark - Properties
+
 @synthesize bezierPath;
 @synthesize contentView;
 @synthesize drawableBounds;
 @synthesize delegate;
 @synthesize uuid;
+
+-(CGSize) originalSize{
+    if(CGSizeEqualToSize(originalSize, CGSizeZero)){
+        // performance optimization, only load it when asked for
+        // and then cache it
+        originalSize = self.bezierPath.bounds.size;
+    }
+    return originalSize;
+}
+
+#pragma mark - Dispatch Queue
 
 -(dispatch_queue_t) importExportScrapStateQueue{
     if(!importExportScrapStateQueue){
@@ -72,6 +85,7 @@
     return importExportScrapStateQueue;
 }
 
+#pragma mark - Init
 
 -(id) initWithUUID:(NSString*)_uuid{
     if(self = [super init]){
@@ -171,6 +185,8 @@
     return self;
 }
 
+#pragma mark - Backing Image
+
 -(void) setBackingImage:(UIImage*)img{
     backingContentView.image = img;
     CGRect r = backingContentView.frame;
@@ -216,21 +232,11 @@
     return backgroundOffset;
 }
 
--(UIView*) contentView{
-    return contentView;
-}
 -(UIView*) backingContentView{
     return backingContentView;
 }
 
-
-
--(CGSize) originalSize{
-    if(CGSizeEqualToSize(originalSize, CGSizeZero)){
-        originalSize = self.bezierPath.bounds.size;
-    }
-    return originalSize;
-}
+#pragma mark - State Saving and Loading
 
 -(void) saveToDisk{
     if(drawableViewState && [drawableViewState hasEditsToSave]){
@@ -411,21 +417,6 @@
 }
 
 
-#pragma mark - TODO
-
--(void) addElements:(NSArray*)elements{
-    if(!drawableViewState){
-        // https://github.com/adamwulf/loose-leaf/issues/258
-        NSLog(@"tryign to draw on an unloaded scrap");
-    }
-    [drawableView addElements:elements];
-}
-
--(JotView*) drawableView{
-    return drawableView;
-}
-
-
 #pragma mark - Paths
 
 -(NSString*)plistPath{
@@ -474,6 +465,18 @@
 }
 
 #pragma mark - OpenGL
+
+-(void) addElements:(NSArray*)elements{
+    if(!drawableViewState){
+        // https://github.com/adamwulf/loose-leaf/issues/258
+        NSLog(@"tryign to draw on an unloaded scrap");
+    }
+    [drawableView addElements:elements];
+}
+
+-(JotView*) drawableView{
+    return drawableView;
+}
 
 -(JotGLTexture*) generateTexture{
     return [drawableView generateTexture];

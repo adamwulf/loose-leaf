@@ -34,8 +34,8 @@
 
 -(BOOL) isStateLoaded;
 
--(void) addElements:(NSArray*)elements;
 
+-(void) addElements:(NSArray*)elements;
 -(JotGLTexture*) generateTexture;
 -(void) importTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4;
 
@@ -50,7 +50,8 @@
 -(void) setBackgroundOffset:(CGPoint)bgOffset;
 -(CGPoint) backgroundOffset;
 
--(UIView*) contentView;
 -(UIView*) backingContentView;
+
+-(UIView*) contentView;
 
 @end
