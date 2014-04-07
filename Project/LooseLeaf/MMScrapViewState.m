@@ -162,8 +162,9 @@
         [backgroundColorLayer setPath:bezierPath.CGPath];
         backgroundColorLayer.frame = backingContentView.bounds;
         clippedBackgroundView.layer.mask = backgroundColorLayer;
-        [contentView addSubview:clippedBackgroundView];
         [clippedBackgroundView addSubview:backingContentView];
+
+        [contentView addSubview:clippedBackgroundView];
         
         if([[MMLoadImageCache sharedInstace] containsPathInCache:self.thumbImageFile]){
             // load if we can
@@ -187,26 +188,31 @@
 
 #pragma mark - Backing Image
 
+-(void) updateBackingImageLocation{
+    
+    backingContentView.center = CGPointMake(contentView.bounds.size.width/2 + backgroundOffset.x,
+                                            contentView.bounds.size.height/2 + backgroundOffset.y);
+    backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(backgroundRotation),CGAffineTransformMakeScale(backgroundScale, backgroundScale));
+}
+
 -(void) setBackingImage:(UIImage*)img{
     backingContentView.image = img;
     CGRect r = backingContentView.frame;
     r.size = CGSizeMake(img.size.width, img.size.height);
     backingContentView.frame = r;
-    [self setBackgroundOffset:CGPointZero];
-    [self setBackgroundRotation:0];
+    backgroundOffset = CGPointZero;
+    backgroundRotation = 0;
+    backgroundScale = 1.0;
+    [self updateBackingImageLocation];
 }
 
 -(UIImage*) backingImage{
     return backingContentView.image;
 }
 
--(void) setBackgroundScale:(CGFloat)_scale andRotation:(CGFloat)_rotation{
-    backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(_rotation),CGAffineTransformMakeScale(_scale, _scale));
-}
-
 -(void) setBackgroundRotation:(CGFloat)_backgroundRotation{
     backgroundRotation = _backgroundRotation;
-    [self setBackgroundScale:backgroundScale andRotation:backgroundRotation];
+    [self updateBackingImageLocation];
 }
 
 -(CGFloat) backgroundRotation{
@@ -215,7 +221,7 @@
 
 -(void) setBackgroundScale:(CGFloat)_backgroundScale{
     backgroundScale = _backgroundScale;
-    [self setBackgroundScale:backgroundScale andRotation:backgroundRotation];
+    [self updateBackingImageLocation];
 }
 
 -(CGFloat) backgroundScale{
@@ -224,8 +230,7 @@
 
 -(void) setBackgroundOffset:(CGPoint)bgOffset{
     backgroundOffset = bgOffset;
-    backingContentView.center = CGPointMake(contentView.bounds.size.width/2 + backgroundOffset.x,
-                                            contentView.bounds.size.height/2 + backgroundOffset.y);
+    [self updateBackingImageLocation];
 }
 
 -(CGPoint) backgroundOffset{
@@ -257,7 +262,10 @@
                                 [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
                                 [savedProperties writeToFile:self.plistPath atomically:YES];
                                 
-                                // now export the drawn content
+                                
+                                // now export the drawn content. this will create an immutable state
+                                // object and export in the background. this means that everything at this
+                                // instant on the thread will be synced to the content in this drawable view
                                 [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
                                     if(state){
                                         [[MMLoadImageCache sharedInstace] updateCacheForPath:self.thumbImageFile toImage:thumb];
@@ -443,6 +451,13 @@
 -(NSString*) stateFile{
     if(!stateFile){
         stateFile = [self.scrapPath stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
+    }
+    return stateFile;
+}
+
+-(NSString*) backgroundFile{
+    if(!stateFile){
+        stateFile = [self.scrapPath stringByAppendingPathComponent:[@"background" stringByAppendingPathExtension:@"png"]];
     }
     return stateFile;
 }
