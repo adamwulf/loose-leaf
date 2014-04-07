@@ -197,7 +197,11 @@
     fullScaleScrapSize.width /= startingScale;
     fullScaleScrapSize.height /= startingScale;
     
-    CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width;
+    // zoom the background in an extra pixel
+    // so that the border of the image exceeds the
+    // path of the scrap. this'll give us a nice smooth
+    // edge from the mask of the CAShapeLayer
+    CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width + 2.0/scrapBacking.size.width; // extra pixel
     
     [scrap setBackingImage:scrapBacking];
     [scrap setBackgroundScale:scaleUpOfImage];
