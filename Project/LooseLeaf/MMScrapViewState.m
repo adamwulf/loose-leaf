@@ -50,6 +50,7 @@
     dispatch_queue_t importExportScrapStateQueue;
     
     // image background
+    BOOL backingViewHasChanged;
     UIImageView* backingContentView;
     CGFloat backgroundRotation;
     CGFloat backgroundScale;
@@ -112,6 +113,7 @@
         // save our UUID, everything depends on this
         uuid = _uuid;
         lock = [[NSLock alloc] init];
+        backingViewHasChanged = NO;
 
         if(!bezierPath){
             CGRect originalBounds = _path.bounds;
@@ -192,6 +194,7 @@
     backingContentView.center = CGPointMake(contentView.bounds.size.width/2 + backgroundOffset.x,
                                             contentView.bounds.size.height/2 + backgroundOffset.y);
     backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(backgroundRotation),CGAffineTransformMakeScale(backgroundScale, backgroundScale));
+    backingViewHasChanged = YES;
     NSLog(@"(%@) setting background properties", self.uuid);
 }
 
@@ -244,16 +247,17 @@
 #pragma mark - State Saving and Loading
 
 -(void) saveToDisk{
-    if(drawableViewState && [drawableViewState hasEditsToSave]){
+    if(drawableViewState && ([drawableViewState hasEditsToSave] || backingViewHasChanged)){
         dispatch_async([self importExportScrapStateQueue], ^{
             @autoreleasepool {
                 [lock lock];
-                NSLog(@"(%@) saving: %d", uuid, (int)drawableView);
-                if(drawableViewState && [drawableViewState hasEditsToSave]){
+                NSLog(@"(%@) saving with background: %d %d", uuid, (int)drawableView, backingViewHasChanged);
+                if(drawableViewState && ([drawableViewState hasEditsToSave] || backingViewHasChanged)){
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                     [NSThread performBlockOnMainThread:^{
                         @autoreleasepool {
-                            if(drawableView && [drawableViewState hasEditsToSave]){
+                            if(drawableView && ([drawableViewState hasEditsToSave] || backingViewHasChanged)){
+                                NSLog(@"(%@) saving with background: %d", uuid, backingViewHasChanged);
                                 // save path
                                 // this needs to be saved at the exact same time as the drawable view
                                 // so that we can guarentee that there is no race condition
@@ -262,6 +266,7 @@
                                 [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
                                 [savedProperties writeToFile:self.plistPath atomically:YES];
                                 
+                                backingViewHasChanged = NO;
                                 
                                 // now export the drawn content. this will create an immutable state
                                 // object and export in the background. this means that everything at this
