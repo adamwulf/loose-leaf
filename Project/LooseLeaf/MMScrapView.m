@@ -564,7 +564,7 @@
 }
 
 -(void) dealloc{
-    NSLog(@"scrap dealloc");
+    NSLog(@"scrap %@ dealloc", scrapState.uuid);
 }
 
 @end

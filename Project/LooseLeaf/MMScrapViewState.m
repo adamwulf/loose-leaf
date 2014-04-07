@@ -237,7 +237,7 @@
         dispatch_async([self importExportScrapStateQueue], ^{
             @autoreleasepool {
                 [lock lock];
-                NSLog(@"saving: %@ %d", uuid, (int)drawableView);
+                NSLog(@"(%@) saving: %d", uuid, (int)drawableView);
                 if(drawableViewState && [drawableViewState hasEditsToSave]){
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                     [NSThread performBlockOnMainThread:^{
@@ -259,17 +259,17 @@
                                             thumbnailView.image = thumb;
                                         }];
                                         [drawableViewState wasSavedAtImmutableState:state];
-                                        NSLog(@"scrap saved at: %d with thumb: %d", state.undoHash, (int)thumb);
+                                        NSLog(@"(%@) scrap saved at: %d with thumb: %d", uuid, state.undoHash, (int)thumb);
                                     }
                                     dispatch_semaphore_signal(sema1);
                                 }];
                             }else{
                                 if(!drawableView && ![drawableViewState hasEditsToSave]){
-                                    NSLog(@"no drawable view or edits");
+                                    NSLog(@"(%@) no drawable view or edits", uuid);
                                 }else if(!drawableView){
-                                    NSLog(@"no drawable view");
+                                    NSLog(@"(%@) no drawable view", uuid);
                                 }else if(![drawableViewState hasEditsToSave]){
-                                    NSLog(@"no edits to save in state");
+                                    NSLog(@"(%@) no edits to save in state", uuid);
                                 }
                                 // was asked to save, but we were asked to save
                                 // multiple times extremely quickly, so just signal
@@ -280,18 +280,20 @@
                     }];
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
                     dispatch_release(sema1);
-                    NSLog(@"done saving: %@ %d", uuid, (int)drawableView);
+                    NSLog(@"(%@) done saving: %d", uuid, (int)drawableView);
                 }else{
                     // sometimes, this method is called in very quick succession.
                     // that means that the first time it runs and saves, it'll
                     // finish all of the export and drawableViewState will be nil
                     // next time it runs. so we double check our save state to determine
                     // if in fact we still need to save or not
-                    NSLog(@"no edits to save in state2");
+                    NSLog(@"(%@) no edits to save in state2", uuid);
                 }
                 [lock unlock];
             }
         });
+    }else{
+        NSLog(@"(%@) no edits to save in state3", uuid);
     }
 }
 
@@ -300,20 +302,22 @@
     @synchronized(self){
         // if we're already loading our
         // state, then bail early
-        if(isLoadingState) return;
         // if we already have our state,
         // then bail early
-        if(drawableViewState) return;
+        if(isLoadingState || drawableViewState){
+            NSLog(@"(%@) already loaded", uuid);
+            return;
+        }
         
         targetIsLoadedState = YES;
         isLoadingState = YES;
     }
 
-    NSLog(@"loading1: %@ %d %d", uuid, targetIsLoadedState, isLoadingState);
+    NSLog(@"(%@) loading1: %d %d", uuid, targetIsLoadedState, isLoadingState);
     void (^loadBlock)() = ^(void) {
         @autoreleasepool {
             [lock lock];
-            NSLog(@"loading2: %@ %d %d", uuid, targetIsLoadedState, isLoadingState);
+            NSLog(@"(%@) loading2: %d %d", uuid, targetIsLoadedState, isLoadingState);
             dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
             [NSThread performBlockOnMainThread:^{
                 @synchronized(self){
@@ -373,6 +377,7 @@
             [lock lock];
             @synchronized(self){
                 if(drawableViewState && [drawableViewState hasEditsToSave]){
+                    NSLog(@"(%@) unload failed, will retry", uuid);
                     // we want to unload, but we're not saved.
                     // save, then try to unload again
                     dispatch_async([self importExportScrapStateQueue], ^{
@@ -386,6 +391,7 @@
                         }
                     });
                 }else{
+                    NSLog(@"(%@) unload success", uuid);
                     targetIsLoadedState = NO;
                     if(!isLoadingState && drawableViewState){
                         drawableViewState = nil;
@@ -485,6 +491,7 @@
 #pragma mark - dealloc
 
 -(void) dealloc{
+    NSLog(@"(%@) dealloc", uuid);
     [[MMLoadImageCache sharedInstace] clearCacheForPath:self.thumbImageFile];
     dispatch_release(importExportScrapStateQueue);
     importExportScrapStateQueue = nil;
