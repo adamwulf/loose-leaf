@@ -155,8 +155,6 @@
 }
 
 -(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage{
-    NSLog(@"photo tapped %@", asset.url);
-    
     CGRect scrapRect = CGRectZero;
     scrapRect.origin = [self convertPoint:[bufferedImage visibleImageOrigin] fromView:bufferedImage];
     scrapRect.size = [bufferedImage visibleImageSize];
@@ -190,9 +188,6 @@
     CGFloat startingScale = scrapRect.size.width / fullScale.width;
     
     UIImage* scrapBacking = [asset aspectThumbnailWithMaxPixelSize:300];
-    
-    NSLog(@"calc size: %f %f", fullScale.width, fullScale.height);
-    NSLog(@"actual size: %f %f", scrapBacking.size.width, scrapBacking.size.height);
     
     MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
     MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:0 andScale:startingScale];

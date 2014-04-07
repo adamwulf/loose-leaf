@@ -131,7 +131,6 @@
 
 -(void) albumRowWasTapped:(MMAlbumRowView*)row{
     [self setUserInteractionEnabled:NO];
-    NSLog(@"row was tapped: %@", row.album.name);
     currentAlbum = row.album;
     photoListScrollView.contentOffset = CGPointZero;
     [photoListScrollView refreshVisibleRows];

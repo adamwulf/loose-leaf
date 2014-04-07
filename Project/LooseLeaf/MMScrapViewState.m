@@ -189,10 +189,10 @@
 #pragma mark - Backing Image
 
 -(void) updateBackingImageLocation{
-    
     backingContentView.center = CGPointMake(contentView.bounds.size.width/2 + backgroundOffset.x,
                                             contentView.bounds.size.height/2 + backgroundOffset.y);
     backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(backgroundRotation),CGAffineTransformMakeScale(backgroundScale, backgroundScale));
+    NSLog(@"(%@) setting background properties", self.uuid);
 }
 
 -(void) setBackingImage:(UIImage*)img{
