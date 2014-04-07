@@ -1137,7 +1137,7 @@
         // bezelStackHolder debugging DONE
         //
         // bounce it back to full screen
-        NSLog(@"bounce it back to full page");
+//        NSLog(@"bounce it back to full page");
         [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
         [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:nil];
@@ -1629,7 +1629,7 @@
         recentlyConfirmedPageUUID = topPage.uuid;
         [self saveStacksToDisk];
     }
-    debug_NSLog(@"did change top page");
+//    debug_NSLog(@"did change top page");
 }
 
 /**
