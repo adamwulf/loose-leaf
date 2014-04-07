@@ -41,6 +41,7 @@
     NSString* inkImageFile;
     NSString* thumbImageFile;
     NSString* stateFile;
+    NSString* backgroundFile;
 
     // helper vars
     CGSize originalSize;
@@ -97,6 +98,10 @@
         if([[NSFileManager defaultManager] fileExistsAtPath:self.plistPath]){
             NSDictionary* properties = [NSDictionary dictionaryWithContentsOfFile:self.plistPath];
             bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
+            backgroundRotation = [[properties objectForKey:@"backgroundRotation"] floatValue];
+            backgroundScale = [[properties objectForKey:@"backgroundScale"] floatValue];
+            backgroundOffset.x = [[properties objectForKey:@"backgroundOffset.x"] floatValue];
+            backgroundOffset.y = [[properties objectForKey:@"backgroundOffset.y"] floatValue];
             return [self initWithUUID:uuid andBezierPath:bezierPath];
         }else{
             // we don't have a file that we should have, so don't load the scrap
@@ -170,7 +175,13 @@
         
         if([[MMLoadImageCache sharedInstace] containsPathInCache:self.thumbImageFile]){
             // load if we can
-            thumbnailView.image = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
+            if([NSThread isMainThread]){
+                thumbnailView.image = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
+            }else{
+                [NSThread performBlockOnMainThread:^{
+                    thumbnailView.image = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
+                }];
+            }
         }else{
             // don't load from disk on the main thread.
             dispatch_async([self importExportScrapStateQueue], ^{
@@ -184,6 +195,14 @@
                 [lock unlock];
             });
         }
+        
+        if([[NSFileManager defaultManager] fileExistsAtPath:[self backgroundJPGFile]]){
+            NSLog(@"should be loading background");
+            UIImage* image = [UIImage imageWithContentsOfFile:[self backgroundJPGFile]];
+            [NSThread performBlockOnMainThread:^{
+                [self setBackingImage:image];
+            }];
+        }
     }
     return self;
 }
@@ -195,7 +214,7 @@
                                             contentView.bounds.size.height/2 + backgroundOffset.y);
     backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(backgroundRotation),CGAffineTransformMakeScale(backgroundScale, backgroundScale));
     backingViewHasChanged = YES;
-    NSLog(@"(%@) setting background properties", self.uuid);
+    NSLog(@"(%@) updating background properties", self.uuid);
 }
 
 -(void) setBackingImage:(UIImage*)img{
@@ -203,9 +222,6 @@
     CGRect r = backingContentView.frame;
     r.size = CGSizeMake(img.size.width, img.size.height);
     backingContentView.frame = r;
-    backgroundOffset = CGPointZero;
-    backgroundRotation = 0;
-    backgroundScale = 1.0;
     [self updateBackingImageLocation];
 }
 
@@ -257,31 +273,48 @@
                     [NSThread performBlockOnMainThread:^{
                         @autoreleasepool {
                             if(drawableView && ([drawableViewState hasEditsToSave] || backingViewHasChanged)){
-                                NSLog(@"(%@) saving with background: %d", uuid, backingViewHasChanged);
+                                NSLog(@"(%@) saving background: %d", uuid, backingViewHasChanged);
                                 // save path
                                 // this needs to be saved at the exact same time as the drawable view
                                 // so that we can guarentee that there is no race condition
                                 // for saving state vs content
                                 NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
                                 [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
+                                [savedProperties setObject:[NSNumber numberWithFloat:backgroundRotation] forKey:@"backgroundRotation"];
+                                [savedProperties setObject:[NSNumber numberWithFloat:backgroundScale] forKey:@"backgroundScale"];
+                                [savedProperties setObject:[NSNumber numberWithFloat:backgroundOffset.x] forKey:@"backgroundOffset.x"];
+                                [savedProperties setObject:[NSNumber numberWithFloat:backgroundOffset.y] forKey:@"backgroundOffset.y"];
                                 [savedProperties writeToFile:self.plistPath atomically:YES];
-                                
-                                backingViewHasChanged = NO;
-                                
-                                // now export the drawn content. this will create an immutable state
-                                // object and export in the background. this means that everything at this
-                                // instant on the thread will be synced to the content in this drawable view
-                                [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
-                                    if(state){
-                                        [[MMLoadImageCache sharedInstace] updateCacheForPath:self.thumbImageFile toImage:thumb];
-                                        [NSThread performBlockOnMainThread:^{
-                                            thumbnailView.image = thumb;
-                                        }];
-                                        [drawableViewState wasSavedAtImmutableState:state];
-                                        NSLog(@"(%@) scrap saved at: %d with thumb: %d", uuid, state.undoHash, (int)thumb);
+
+                                if(backingViewHasChanged && ![[NSFileManager defaultManager] fileExistsAtPath:[self backgroundJPGFile]]){
+                                    if(backingContentView.image){
+                                        NSLog(@"orientation: %d", backingContentView.image.imageOrientation);
+                                        [UIImageJPEGRepresentation(backingContentView.image, .9) writeToFile:[self backgroundJPGFile] atomically:YES];
                                     }
+                                    backingViewHasChanged = NO;
+                                }
+                                
+
+                                if([drawableViewState hasEditsToSave]){
+                                    NSLog(@"(%@) saving strokes: %d", uuid, backingViewHasChanged);
+                                    // now export the drawn content. this will create an immutable state
+                                    // object and export in the background. this means that everything at this
+                                    // instant on the thread will be synced to the content in this drawable view
+                                    [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
+                                        if(state){
+                                            [[MMLoadImageCache sharedInstace] updateCacheForPath:self.thumbImageFile toImage:thumb];
+                                            [NSThread performBlockOnMainThread:^{
+                                                thumbnailView.image = thumb;
+                                            }];
+                                            [drawableViewState wasSavedAtImmutableState:state];
+                                            NSLog(@"(%@) scrap saved at: %d with thumb: %d", uuid, state.undoHash, (int)thumb);
+                                        }
+                                        dispatch_semaphore_signal(sema1);
+                                    }];
+                                }else{
+                                    NSLog(@"(%@) skipped saving strokes: %d", uuid, backingViewHasChanged);
                                     dispatch_semaphore_signal(sema1);
-                                }];
+                                }
                             }else{
                                 if(!drawableView && ![drawableViewState hasEditsToSave]){
                                     NSLog(@"(%@) no drawable view or edits", uuid);
@@ -460,13 +493,12 @@
     return stateFile;
 }
 
--(NSString*) backgroundFile{
-    if(!stateFile){
-        stateFile = [self.scrapPath stringByAppendingPathComponent:[@"background" stringByAppendingPathExtension:@"png"]];
+-(NSString*) backgroundJPGFile{
+    if(!backgroundFile){
+        backgroundFile = [self.scrapPath stringByAppendingPathComponent:[@"background" stringByAppendingPathExtension:@"jpg"]];
     }
-    return stateFile;
+    return backgroundFile;
 }
-
 
 #pragma mark - Private
 
