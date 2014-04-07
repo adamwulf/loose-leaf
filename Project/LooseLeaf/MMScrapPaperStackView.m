@@ -155,8 +155,6 @@
 }
 
 -(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage{
-    NSLog(@"photo tapped %@", asset.url);
-    
     CGRect scrapRect = CGRectZero;
     scrapRect.origin = [self convertPoint:[bufferedImage visibleImageOrigin] fromView:bufferedImage];
     scrapRect.size = [bufferedImage visibleImageSize];
@@ -191,9 +189,6 @@
     
     UIImage* scrapBacking = [asset aspectThumbnailWithMaxPixelSize:300];
     
-    NSLog(@"calc size: %f %f", fullScale.width, fullScale.height);
-    NSLog(@"actual size: %f %f", scrapBacking.size.width, scrapBacking.size.height);
-    
     MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
     MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:0 andScale:startingScale];
     [scrapContainer addSubview:scrap];
@@ -202,7 +197,11 @@
     fullScaleScrapSize.width /= startingScale;
     fullScaleScrapSize.height /= startingScale;
     
-    CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width;
+    // zoom the background in an extra pixel
+    // so that the border of the image exceeds the
+    // path of the scrap. this'll give us a nice smooth
+    // edge from the mask of the CAShapeLayer
+    CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width + 2.0/scrapBacking.size.width; // extra pixel
     
     [scrap setBackingImage:scrapBacking];
     [scrap setBackgroundScale:scaleUpOfImage];

@@ -274,7 +274,7 @@ dispatch_queue_t importThumbnailQueue;
     }else{
         // already saved, but don't need to write
         // anything new to disk
-        debug_NSLog(@"no edits to save with hash %u", [drawableView undoHash]);
+//        debug_NSLog(@"no edits to save with hash %u", [drawableView undoHash]);
         onComplete();
     }
 }

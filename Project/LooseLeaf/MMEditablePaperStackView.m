@@ -250,7 +250,7 @@
     id obj = [visibleStackHolder peekSubview];
     if([obj respondsToSelector:@selector(undo)]){
         [obj undo];
-        [TestFlight passCheckpoint:@"BUTTON_UNDO"];
+//        [TestFlight passCheckpoint:@"BUTTON_UNDO"];
     }
 }
 
@@ -258,7 +258,7 @@
     id obj = [visibleStackHolder peekSubview];
     if([obj respondsToSelector:@selector(redo)]){
         [obj redo];
-        [TestFlight passCheckpoint:@"BUTTON_REDO"];
+//        [TestFlight passCheckpoint:@"BUTTON_REDO"];
     }
 }
 
@@ -315,7 +315,7 @@
     [hiddenStackHolder pushSubview:page];
     [[visibleStackHolder peekSubview] enableAllGestures];
     [self popTopPageOfHiddenStack];
-    [TestFlight passCheckpoint:@"BUTTON_ADD_PAGE"];
+//    [TestFlight passCheckpoint:@"BUTTON_ADD_PAGE"];
 }
 
 -(void) tempButtonTapped:(UIButton*)_button{
@@ -446,7 +446,7 @@
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     [super finishedScalingReallySmall:page];
     [self saveStacksToDisk];
-    [TestFlight passCheckpoint:@"NAV_TO_LIST_FROM_PAGE"];
+//    [TestFlight passCheckpoint:@"NAV_TO_LIST_FROM_PAGE"];
     [rulerView setHidden:YES];
 }
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
@@ -472,7 +472,7 @@
         [editablePage setCanvasVisible:NO];
         [editablePage setEditable:NO];
     }
-    [TestFlight passCheckpoint:@"NAV_TO_PAGE_FROM_LIST"];
+//    [TestFlight passCheckpoint:@"NAV_TO_PAGE_FROM_LIST"];
 }
 
 #pragma mark = Saving and Editing
@@ -582,12 +582,12 @@
                 [currentEditablePage setEditable:NO];
                 [currentEditablePage setCanvasVisible:NO];
                 currentEditablePage = editableTopPage;
-                debug_NSLog(@"did switch top page to %@", currentEditablePage.uuid);
+//                debug_NSLog(@"did switch top page to %@", currentEditablePage.uuid);
                 [currentEditablePage setDrawableView:drawableView];
             }else{
                 if(![editableTopPage hasStateLoaded]){
                     // load the state for the new top page
-                    debug_NSLog(@"load state for future top page: %@", editableTopPage.uuid);
+//                    debug_NSLog(@"load state for future top page: %@", editableTopPage.uuid);
                     [self loadStateForPage:editableTopPage];
                 }else{
                     // we're saving the top page to disk
@@ -644,7 +644,7 @@
 
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
     [super willNotChangeTopPageTo:page];
-    debug_NSLog(@"won't change to: %@", page.uuid);
+//    debug_NSLog(@"won't change to: %@", page.uuid);
 }
 
 

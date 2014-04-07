@@ -163,19 +163,14 @@
 //    
 //    debugLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 20)];
 //    debugLabel.backgroundColor = [UIColor whiteColor];
-//    debugLabel.text = @"foo";
+//    debugLabel.text = uuid;
 //    [self addSubview:debugLabel];
     return self;
 }
 
 
--(void) updateDBLabel{
-    debugLabel.text = [NSString stringWithFormat:@"r: %.2f bgr: %.2f", self.rotation, self.backgroundRotation];
-}
-
 -(void) setBackingImage:(UIImage*)img{
     [scrapState setBackingImage:img];
-    [self updateDBLabel];
 }
 
 -(UIImage*) backingImage{
@@ -184,7 +179,6 @@
 
 -(void) setBackgroundRotation:(CGFloat)_rotation{
     [scrapState setBackgroundRotation:_rotation];
-    [self updateDBLabel];
 }
 
 -(CGFloat) backgroundRotation{
@@ -193,7 +187,6 @@
 
 -(void) setBackgroundScale:(CGFloat)_backgroundScale{
     [scrapState setBackgroundScale:_backgroundScale];
-    [self updateDBLabel];
 }
 
 -(CGFloat) backgroundScale{
@@ -293,7 +286,6 @@
     rotation = _rotation;
     needsClippingPathUpdate = YES;
     self.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(rotation),CGAffineTransformMakeScale(scale, scale));
-    [self updateDBLabel];
 }
 
 -(void) setScale:(CGFloat)_scale{
@@ -476,18 +468,20 @@
 #pragma mark - Saving
 
 -(void) saveToDisk{
+    NSLog(@"asking scrap %@ to save", scrapState.uuid);
     [scrapState saveToDisk];
 }
 
 
-
 #pragma mark - State
 
--(void) loadStateAsynchronously:(BOOL)async{
-    [scrapState loadStateAsynchronously:async];
+-(void) loadScrapStateAsynchronously:(BOOL)async{
+    NSLog(@"asking scrap %@ to load async %d", scrapState.uuid, async);
+    [scrapState loadScrapStateAsynchronously:async];
 }
 
 -(void) unloadState{
+    NSLog(@"asking scrap %@ to unload", scrapState.uuid);
     [scrapState unloadState];
 }
 
@@ -503,7 +497,7 @@
 }
 
 -(MMScrapViewState*) state{
-    return  scrapState;
+    return scrapState;
 }
 
 
@@ -570,7 +564,7 @@
 }
 
 -(void) dealloc{
-    NSLog(@"scrap dealloc");
+    NSLog(@"scrap %@ dealloc", scrapState.uuid);
 }
 
 @end

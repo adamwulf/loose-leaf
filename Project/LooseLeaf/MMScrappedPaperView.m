@@ -139,7 +139,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     @synchronized(scrapContainerView){
         [scrapContainerView addSubview:newScrap];
     }
-    [newScrap loadStateAsynchronously:NO];
+    [newScrap loadScrapStateAsynchronously:NO];
     [newScrap setShouldShowShadow:[self isEditable]];
     
     [newScrap setScale:scale];
@@ -623,7 +623,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
  * our scrap views
  */
 -(void) setDrawableView:(JotView *)_drawableView{
-    NSLog(@"setting drawable %@: %d", [self uuid], (int)_drawableView);
+//    NSLog(@"setting drawable %@: %d", [self uuid], (int)_drawableView);
     [super setDrawableView:_drawableView];
 }
 

@@ -79,15 +79,27 @@ CGFloat buffer = 2;
         whiteBorderLayer.frame = whiteFrame;
     }
     
-    layer.contents = (id)image.CGImage;
+    [self updateLayerContentsWith:image.CGImage];
     
     [CATransaction commit];
+}
+
+-(void)updateLayerContentsWith:(CGImageRef)imageRef{
+    if(imageRef){
+        CFRetain(imageRef);
+    }
+    CGImageRef oldImageRef = (__bridge CGImageRef)(layer.contents);
+    // bridge, so ARC doesn't own the object, i'll manage retains myself
+    layer.contents = (__bridge id)(imageRef);
+    if(oldImageRef){
+        CFRelease(oldImageRef);
+    }
 }
 
 -(void) setHidden:(BOOL)hidden{
     [super setHidden:hidden];
     if(hidden){
-        layer.contents = nil;
+        [self updateLayerContentsWith:nil];
     }
 }
 
@@ -97,6 +109,10 @@ CGFloat buffer = 2;
 
 -(CGPoint) visibleImageOrigin{
     return layer.frame.origin;
+}
+
+-(void) dealloc{
+    [self updateLayerContentsWith:nil];
 }
 
 

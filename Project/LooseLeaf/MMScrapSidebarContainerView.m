@@ -311,7 +311,7 @@
 
 -(void) animateAndAddScrapBackToPage:(MMScrapView*)scrap{
     MMScrapBubbleButton* bubble = [bubbleForScrap objectForKey:scrap.uuid];
-    [scrap loadStateAsynchronously:YES];
+    [scrap loadScrapStateAsynchronously:YES];
     
     if([scrapsHeldInBezel count] > kMaxScrapsInBezel){
         scrap.scale = scrap.scale * [MMScrapBubbleButton idealScaleForScrap:scrap];

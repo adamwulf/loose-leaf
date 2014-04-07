@@ -91,7 +91,7 @@ static dispatch_queue_t importExportStateQueue;
                             [self.delegate didLoadScrap:scrap];
                             
                             if(makeEditable){
-                                [scrap loadStateAsynchronously:async];
+                                [scrap loadScrapStateAsynchronously:async];
                             }
                             [scrap setShouldShowShadow:shouldShowShadows];
                         }
@@ -117,7 +117,7 @@ static dispatch_queue_t importExportStateQueue;
         void (^block2)() = ^(void) {
             if([self isStateLoaded]){
                 for(MMScrapView* scrap in self.delegate.scraps){
-                    [scrap loadStateAsynchronously:async];
+                    [scrap loadScrapStateAsynchronously:async];
                 }
             }
         };
