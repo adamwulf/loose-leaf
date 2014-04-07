@@ -22,11 +22,19 @@
     UIImageView* thumbnailView;
     JotView* drawableView;
     
-    // state
-    JotViewStateProxy* drawableViewState;
-    BOOL shouldKeepStateLoaded;
-    BOOL isLoadingState;
+    // permanent state
+    // this state is never unloaded and is
+    // alive for the duration of this object
     UIBezierPath* bezierPath;
+    
+    // unloadable state
+    // this state can be loaded and unloaded
+    // to conserve memeory as needed
+    JotViewStateProxy* drawableViewState;
+    // YES if our goal is to be loaded, NO otherwise
+    BOOL targetIsLoadedState;
+    // YES if we're currently loading our state, NO otherwise
+    BOOL isLoadingState;
     
     // private vars
     NSString* plistPath;
@@ -41,11 +49,14 @@
     // queue
     dispatch_queue_t importExportScrapStateQueue;
     
-    
+    // image background
     UIImageView* backingContentView;
     CGFloat backgroundRotation;
     CGFloat backgroundScale;
     CGPoint backgroundOffset;
+    
+    // lock to control threading
+    NSLock* lock;
 }
 
 @synthesize bezierPath;
@@ -86,14 +97,13 @@
         
         // save our UUID, everything depends on this
         uuid = _uuid;
+        lock = [[NSLock alloc] init];
 
         if(!bezierPath){
             CGRect originalBounds = _path.bounds;
             [_path applyTransform:CGAffineTransformMakeTranslation(-originalBounds.origin.x + kScrapShadowBufferSize, -originalBounds.origin.y + kScrapShadowBufferSize)];
             bezierPath = _path;
             
-//            NSLog(@"(%f %f %f %f) (%f %f)", bezierPath.bounds.origin.x, bezierPath.bounds.origin.y, bezierPath.bounds.size.width, bezierPath.bounds.size.height, bezierPath.center.x, bezierPath.center.y);
-
             //save initial bezier path to disk
             // not the most elegant solution, but it works and is fast enough for now
             NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
@@ -147,12 +157,14 @@
         }else{
             // don't load from disk on the main thread.
             dispatch_async([self importExportScrapStateQueue], ^{
+                [lock lock];
                 @autoreleasepool {
                     UIImage* thumb = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
                     [NSThread performBlockOnMainThread:^{
                         thumbnailView.image = thumb;
                     }];
                 }
+                [lock unlock];
             });
         }
     }
@@ -224,6 +236,7 @@
     if(drawableViewState && [drawableViewState hasEditsToSave]){
         dispatch_async([self importExportScrapStateQueue], ^{
             @autoreleasepool {
+                [lock lock];
                 NSLog(@"saving: %@ %d", uuid, (int)drawableView);
                 if(drawableViewState && [drawableViewState hasEditsToSave]){
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
@@ -276,13 +289,14 @@
                     // if in fact we still need to save or not
                     NSLog(@"no edits to save in state2");
                 }
+                [lock unlock];
             }
         });
     }
 }
 
 
--(void) loadStateAsynchronously:(BOOL)async{
+-(void) loadScrapStateAsynchronously:(BOOL)async{
     @synchronized(self){
         // if we're already loading our
         // state, then bail early
@@ -291,17 +305,21 @@
         // then bail early
         if(drawableViewState) return;
         
-        shouldKeepStateLoaded = YES;
+        targetIsLoadedState = YES;
         isLoadingState = YES;
     }
 
+    NSLog(@"loading1: %@ %d %d", uuid, targetIsLoadedState, isLoadingState);
     void (^loadBlock)() = ^(void) {
         @autoreleasepool {
-//            NSLog(@"loading: %@ %d", uuid, (int) drawableView);
+            [lock lock];
+            NSLog(@"loading2: %@ %d %d", uuid, targetIsLoadedState, isLoadingState);
             dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
             [NSThread performBlockOnMainThread:^{
-                // add our drawable view to our contents
-                drawableView = [[JotView alloc] initWithFrame:drawableBounds];
+                @synchronized(self){
+                    // add our drawable view to our contents
+                    drawableView = [[JotView alloc] initWithFrame:drawableBounds];
+                }
                 dispatch_semaphore_signal(sema1);
             }];
 
@@ -316,7 +334,7 @@
             [NSThread performBlockOnMainThread:^{
                 @synchronized(self){
                     isLoadingState = NO;
-                    if(shouldKeepStateLoaded){
+                    if(targetIsLoadedState){
                         [contentView addSubview:drawableView];
                         thumbnailView.hidden = YES;
                         if(drawableViewState){
@@ -338,6 +356,7 @@
             }];
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             dispatch_release(sema1);
+            [lock unlock];
         }
     };
 
@@ -351,9 +370,11 @@
 -(void) unloadState{
     dispatch_async([self importExportScrapStateQueue], ^{
         @autoreleasepool {
+            [lock lock];
             @synchronized(self){
                 if(drawableViewState && [drawableViewState hasEditsToSave]){
                     // we want to unload, but we're not saved.
+                    // save, then try to unload again
                     dispatch_async([self importExportScrapStateQueue], ^{
                         @autoreleasepool {
                             [self saveToDisk];
@@ -365,7 +386,7 @@
                         }
                     });
                 }else{
-                    shouldKeepStateLoaded = NO;
+                    targetIsLoadedState = NO;
                     if(!isLoadingState && drawableViewState){
                         drawableViewState = nil;
                         [drawableView removeFromSuperview];
@@ -374,6 +395,7 @@
                     }
                 }
             }
+            [lock unlock];
         }
     });
 }

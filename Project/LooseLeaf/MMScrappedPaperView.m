@@ -139,7 +139,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     @synchronized(scrapContainerView){
         [scrapContainerView addSubview:newScrap];
     }
-    [newScrap loadStateAsynchronously:NO];
+    [newScrap loadScrapStateAsynchronously:NO];
     [newScrap setShouldShowShadow:[self isEditable]];
     
     [newScrap setScale:scale];

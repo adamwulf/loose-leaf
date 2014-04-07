@@ -28,7 +28,7 @@
 
 -(void) saveToDisk;
 
--(void) loadStateAsynchronously:(BOOL)async;
+-(void) loadScrapStateAsynchronously:(BOOL)async;
 
 -(void) unloadState;
 
