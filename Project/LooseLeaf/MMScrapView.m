@@ -161,10 +161,10 @@
 //    [self.layer addSublayer:cornerTag];
 //    
 //    
-    debugLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 20)];
-    debugLabel.backgroundColor = [UIColor whiteColor];
-    debugLabel.text = uuid;
-    [self addSubview:debugLabel];
+//    debugLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 20)];
+//    debugLabel.backgroundColor = [UIColor whiteColor];
+//    debugLabel.text = uuid;
+//    [self addSubview:debugLabel];
     return self;
 }
 
