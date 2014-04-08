@@ -13,7 +13,7 @@
 #ifdef DEBUG
 #define debug_NSLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
 #else
-#define debug_NSLog(__FORMAT__, ...) TFLog((@"%s [Line %d] " __FORMAT__), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define debug_NSLog(__FORMAT__, ...)
 #endif
 
 #define SIGN(__var__) (__var__ / ABS(__var__))
