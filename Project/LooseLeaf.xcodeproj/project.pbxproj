@@ -100,6 +100,9 @@
 		66AC8D9218E8A90900A65036 /* MMBufferedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC8D9118E8A90900A65036 /* MMBufferedImageView.m */; };
 		66ADF8E618F072FD0088B235 /* MMTouchDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66ADF8E518F072FD0088B235 /* MMTouchDotView.m */; };
 		66ADF8E918F073280088B235 /* MMTouchDotGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66ADF8E818F073280088B235 /* MMTouchDotGestureRecognizer.m */; };
+		66ADF90218F365710088B235 /* loose leaf video.xcappdata in Resources */ = {isa = PBXBuildFile; fileRef = 66ADF90118F365710088B235 /* loose leaf video.xcappdata */; };
+		66ADF90418F3670C0088B235 /* loose leaf video2.xcappdata in Resources */ = {isa = PBXBuildFile; fileRef = 66ADF90318F3670C0088B235 /* loose leaf video2.xcappdata */; };
+		66ADF90618F368570088B235 /* loose leaf video3.xcappdata in Resources */ = {isa = PBXBuildFile; fileRef = 66ADF90518F368570088B235 /* loose leaf video3.xcappdata */; };
 		66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */; };
 		66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B0FA5F17FB68410079E7A3 /* MMScrapViewState.m */; };
 		66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A55175AFCA70049F1AF /* MMHandButton.m */; };
@@ -359,6 +362,9 @@
 		66ADF8E718F073280088B235 /* MMTouchDotGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTouchDotGestureRecognizer.h; sourceTree = "<group>"; };
 		66ADF8E818F073280088B235 /* MMTouchDotGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTouchDotGestureRecognizer.m; sourceTree = "<group>"; };
 		66ADF90018F1C7150088B235 /* MMTouchDotGestureRecognizerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMTouchDotGestureRecognizerDelegate.h; sourceTree = "<group>"; };
+		66ADF90118F365710088B235 /* loose leaf video.xcappdata */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "loose leaf video.xcappdata"; path = "../../../../../../Desktop/loose leaf video.xcappdata"; sourceTree = "<group>"; };
+		66ADF90318F3670C0088B235 /* loose leaf video2.xcappdata */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "loose leaf video2.xcappdata"; path = "../../../../../../Desktop/loose leaf video2.xcappdata"; sourceTree = "<group>"; };
+		66ADF90518F368570088B235 /* loose leaf video3.xcappdata */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "loose leaf video3.xcappdata"; path = "../../../../../../Desktop/loose leaf video3.xcappdata"; sourceTree = "<group>"; };
 		66AE5AA617F4D064009F82B6 /* MMScrapsOnPaperState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapsOnPaperState.h; sourceTree = "<group>"; };
 		66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapsOnPaperState.m; sourceTree = "<group>"; };
 		66AE5AA917F4D124009F82B6 /* MMScrapsOnPaperStateDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScrapsOnPaperStateDelegate.h; sourceTree = "<group>"; };
@@ -647,6 +653,9 @@
 				6695B6EB17505FBF0069E61F /* MMEditablePaperView.m */,
 				66B62C5017F247B7006D31EB /* MMEditablePaperViewDelegate.h */,
 				66A471BC17C7DAA000C2A5B6 /* MMScrappedPaperView.h */,
+				66ADF90318F3670C0088B235 /* loose leaf video2.xcappdata */,
+				66ADF90518F368570088B235 /* loose leaf video3.xcappdata */,
+				66ADF90118F365710088B235 /* loose leaf video.xcappdata */,
 				66A471BD17C7DAA000C2A5B6 /* MMScrappedPaperView.m */,
 			);
 			name = MMPaperView;
@@ -1296,12 +1305,15 @@
 				6661144A16FD67FA005032B9 /* Loose-Leaf-Icon@2x.png in Resources */,
 				66B21A59175B0BF30049F1AF /* cloth.png in Resources */,
 				66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */,
+				66ADF90418F3670C0088B235 /* loose leaf video2.xcappdata in Resources */,
 				66684B4A182DAEBC005A27B4 /* UIImageRoundedCorner.license in Resources */,
 				66684B46182DACAE005A27B4 /* DrawKit.license in Resources */,
+				66ADF90618F368570088B235 /* loose leaf video3.xcappdata in Resources */,
 				666425C418CBC61200A306C1 /* opencv.license in Resources */,
 				66684B3B182D9624005A27B4 /* AGG.license in Resources */,
 				66B843F717B05488008BF8B8 /* Loose-Leaf-Icon72.png in Resources */,
 				66684B44182DAC9B005A27B4 /* CurveFit.license in Resources */,
+				66ADF90218F365710088B235 /* loose leaf video.xcappdata in Resources */,
 				66B843F817B05488008BF8B8 /* Loose-Leaf-Icon144.png in Resources */,
 				66684B31182D887E005A27B4 /* Settings.bundle in Resources */,
 			);
