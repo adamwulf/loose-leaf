@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6616CC9818B684F600CAD0F3 /* TouchShape.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6693BBD9187755EC002898D6 /* TouchShape.framework */; };
+		6616CCD418B6AF1A00CAD0F3 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6616CCD318B6AF1A00CAD0F3 /* Crashlytics.framework */; };
 		6651CADA18775B1500A95F2F /* SYShape+Bezier.m in Sources */ = {isa = PBXBuildFile; fileRef = 6651CAD918775B1500A95F2F /* SYShape+Bezier.m */; };
 		6651CADE18775B5D00A95F2F /* UIColor+ColorWithHex.m in Sources */ = {isa = PBXBuildFile; fileRef = 6651CADD18775B5D00A95F2F /* UIColor+ColorWithHex.m */; };
 		6651CADF18775B7800A95F2F /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6693BBD7187755E1002898D6 /* libc++.dylib */; };
@@ -28,10 +30,10 @@
 		6693BBD31877559E002898D6 /* LittleClipper.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6693BBCE1877559E002898D6 /* LittleClipper.xib */; };
 		6693BBD41877559E002898D6 /* UnitTestCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6693BBCF1877559E002898D6 /* UnitTestCell.xib */; };
 		6693BBF11877567C002898D6 /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6693BBEF18775653002898D6 /* DrawKit-iOS.framework */; };
-		6693BBF3187756B6002898D6 /* TouchShape.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6693BBF2187756B6002898D6 /* TouchShape.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6616CCD318B6AF1A00CAD0F3 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = ../Project/Crashlytics.framework; sourceTree = "<group>"; };
 		6651CAD818775B1500A95F2F /* SYShape+Bezier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SYShape+Bezier.h"; path = "../../Project/SYShape+Bezier.h"; sourceTree = "<group>"; };
 		6651CAD918775B1500A95F2F /* SYShape+Bezier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SYShape+Bezier.m"; path = "../../Project/SYShape+Bezier.m"; sourceTree = "<group>"; };
 		6651CADC18775B5D00A95F2F /* UIColor+ColorWithHex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+ColorWithHex.h"; sourceTree = "<group>"; };
@@ -85,12 +87,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6616CC9818B684F600CAD0F3 /* TouchShape.framework in Frameworks */,
 				6651CADF18775B7800A95F2F /* libc++.dylib in Frameworks */,
-				6693BBF3187756B6002898D6 /* TouchShape.framework in Frameworks */,
 				6693BBF11877567C002898D6 /* DrawKit-iOS.framework in Frameworks */,
 				6693BB7118775521002898D6 /* CoreGraphics.framework in Frameworks */,
 				6693BB7318775521002898D6 /* UIKit.framework in Frameworks */,
 				6693BB6F18775521002898D6 /* Foundation.framework in Frameworks */,
+				6616CCD418B6AF1A00CAD0F3 /* Crashlytics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,6 +138,7 @@
 		6693BB6D18775521002898D6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6616CCD318B6AF1A00CAD0F3 /* Crashlytics.framework */,
 				6693BBF2187756B6002898D6 /* TouchShape.framework */,
 				6693BBEF18775653002898D6 /* DrawKit-iOS.framework */,
 				6693BBED18775642002898D6 /* AudioToolbox.framework */,
@@ -243,6 +247,7 @@
 				6693BB6718775521002898D6 /* Sources */,
 				6693BB6818775521002898D6 /* Frameworks */,
 				6693BB6918775521002898D6 /* Resources */,
+				6616CC9718B6847B00CAD0F3 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -296,6 +301,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6616CC9718B6847B00CAD0F3 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./../Frameworks/Crashlytics.framework/run 9e59cb6d909c971a2db30c84cb9be7f37273a7af 0e5d6861b92a7859ecb87362f5b611251a8128c79cc2af6283e5e9ef13d1e59e";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		6693BB6718775521002898D6 /* Sources */ = {
@@ -407,7 +428,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/LooseLeaf-hhwdxgyoymgwhwezrbyabmvqherf/Build/Products/Debug-iphoneos",
+					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/LittleClipper",
+					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LittleClipper/LittleClipper-Prefix.pch";
 				INFOPLIST_FILE = "LittleClipper/LittleClipper-Info.plist";
@@ -425,7 +451,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/LooseLeaf-hhwdxgyoymgwhwezrbyabmvqherf/Build/Products/Debug-iphoneos",
+					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/LittleClipper",
+					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LittleClipper/LittleClipper-Prefix.pch";
 				INFOPLIST_FILE = "LittleClipper/LittleClipper-Info.plist";

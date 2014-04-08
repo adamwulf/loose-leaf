@@ -9,23 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "Constants.h"
+#import "MMPanAndPinchGestureRecognizer.h"
 
-@interface MMRulerToolGestureRecognizer : UIGestureRecognizer{
-    //
-    // the initial distance between
-    // the touches. to be used to calculate
-    // scale
-    CGFloat initialDistance;
-    //
-    // the current scale of the gesture
-    CGFloat scale;
-    //
-    // the collection of valid touches for this gesture
-    NSMutableSet* ignoredTouches;
-    NSMutableOrderedSet* validTouches;
-}
+@interface MMRulerToolGestureRecognizer : MMPanAndPinchGestureRecognizer
 
-@property (readonly) NSArray* touches;
+
 @property (nonatomic, readonly) CGFloat initialDistance;
 @property (nonatomic, readonly) CGFloat scale;
 

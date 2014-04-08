@@ -16,26 +16,18 @@
  * the purpose of this subclass is to encompass all of the
  * scrap functionality for a page
  */
-@interface MMScrappedPaperView : MMEditablePaperView<MFMailComposeViewControllerDelegate,MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapsOnPaperStateDelegate>
+@interface MMScrappedPaperView : MMEditablePaperView<MFMailComposeViewControllerDelegate,MMPanGestureDelegate,MMScrapsOnPaperStateDelegate>
 
 @property (readonly) NSArray* scraps;
 
 -(void) addScrap:(MMScrapView*)scrap;
+-(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andScale:(CGFloat)scale;
+-(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)lastBestRotation andScale:(CGFloat)scale;
 -(BOOL) hasScrap:(MMScrapView*)scrap;
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
 
 -(void) saveToDisk;
-
-#pragma mark - Polygon
-
--(void) beginShapeAtPoint:(CGPoint)point;
-
--(BOOL) continueShapeAtPoint:(CGPoint)point;
-
--(void) finishShapeAtPoint:(CGPoint)point;
-
--(void) cancelShapeAtPoint:(CGPoint)point;
 
 #pragma mark - Scissors
 
@@ -46,5 +38,7 @@
 -(void) finishScissorAtPoint:(CGPoint)point;
 
 -(void) cancelScissorAtPoint:(CGPoint)point;
+
+-(void) completeScissorsCutWithPath:(UIBezierPath*)scissorPath;
 
 @end

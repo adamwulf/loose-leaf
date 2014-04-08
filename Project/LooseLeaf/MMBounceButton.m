@@ -7,6 +7,7 @@
 //
 
 #import "MMBounceButton.h"
+#import "UIView+Animations.h"
 
 @implementation MMBounceButton{
     CGFloat rotation;
@@ -43,43 +44,8 @@
 -(void) bounceButton:(id)sender{
     if(self.enabled){
         self.center = self.center;
-        
-        // run animation for a fraction of a second
-        CGFloat duration = .30;
-        
-        ////////////////////////////////////////////////////////
-        // Animate the button!
-        
-        // Create a keyframe animation to follow a path back to the center
-        CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
-        bounceAnimation.removedOnCompletion = YES;
-        
-        CATransform3D rotationTransform = CATransform3DMakeAffineTransform([self rotationTransform]);
-        
-        NSMutableArray* keyTimes = [NSMutableArray arrayWithObjects:
-                                    [NSNumber numberWithFloat:0.0],
-                                    [NSNumber numberWithFloat:0.4],
-                                    [NSNumber numberWithFloat:0.7],
-                                    [NSNumber numberWithFloat:1.0], nil];
-        bounceAnimation.keyTimes = keyTimes;
-        bounceAnimation.values = [NSArray arrayWithObjects:
-                                  [NSValue valueWithCATransform3D:CATransform3DConcat(rotationTransform, CATransform3DMakeScale(1.0, 1.0, 1.0))],
-                                  [NSValue valueWithCATransform3D:CATransform3DConcat(rotationTransform, CATransform3DMakeScale(1.4, 1.4, 1.0))],
-                                  [NSValue valueWithCATransform3D:CATransform3DConcat(rotationTransform, CATransform3DMakeScale(0.8, 0.8, 1.0))],
-                                  [NSValue valueWithCATransform3D:CATransform3DConcat(rotationTransform, CATransform3DMakeScale(1.0, 1.0, 1.0))],
-                                  nil];
-        bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
-                                           [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut],
-                                           [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
-                                           [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn], nil];
-        
-        bounceAnimation.duration = duration;
-        
-        ///////////////////////////////////////////////
-        // Add the animations to the layers
-        [self.layer addAnimation:bounceAnimation forKey:@"animateSize"];
+        [self bounceWithTransform:[self rotationTransform]];
     }
-    
 }
 
 @end

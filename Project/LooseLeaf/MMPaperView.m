@@ -26,6 +26,7 @@
 @synthesize uuid;
 @synthesize unitShadowPath;
 @synthesize originalUnscaledBounds;
+@synthesize panGesture;
 
 - (id)initWithFrame:(CGRect)frame{
     return [self initWithFrame:frame andUUID:[NSString createStringUUID]];
@@ -39,7 +40,6 @@
         originalUnscaledBounds = self.bounds;
         
         [self.layer setMasksToBounds:YES ];
-        preGestureScale = 1;
         self.scale = 1;
         
 
@@ -81,6 +81,9 @@
 
 
 -(void) setScale:(CGFloat)_scale{
+    if(_scale == 0){
+        NSLog(@"what");
+    }
     scale = _scale;
 }
 
@@ -139,7 +142,7 @@
         return NO;
     }
     BOOL isBezel = (panGesture.didExitToBezel & bezelDirection) != MMBezelDirectionNone;
-    return isBezel && (panGesture.state == UIGestureRecognizerStateChanged) && panGesture.numberOfTouches == 1;
+    return isBezel && (panGesture.subState != UIGestureRecognizerStateChanged);
 }
 
 /**
@@ -241,7 +244,6 @@
     }
     //
     // procede with the pan gesture
-    CGPoint lastLocationInSelf = [panGesture locationInView:self];
     CGPoint lastLocationInSuper = [panGesture locationInView:self.superview];
     
 //    debug_NSLog(@"pan: %d %f %f", panGesture.state, lastLocationInSuper.x, lastLocationInSuper.y);
@@ -252,44 +254,39 @@
     
     if(panGesture.state == UIGestureRecognizerStateCancelled ||
        panGesture.state == UIGestureRecognizerStateEnded ||
-       panGesture.state == UIGestureRecognizerStateFailed){
-        isBeingPannedAndZoomed = NO;
-        if(scale < (kMinPageZoom + kZoomToListPageZoom)/2 && panGesture.didExitToBezel == MMBezelDirectionNone){
-            if((_panGesture.scaleDirection & MMScaleDirectionSmaller) == MMScaleDirectionSmaller){
-                [self.delegate finishedScalingReallySmall:self];
-            }else{
-                [self.delegate cancelledScalingReallySmall:self];
+       panGesture.state == UIGestureRecognizerStateFailed ||
+       ([_panGesture.validTouches count] == 0 && isBeingPannedAndZoomed)){
+        if(panGesture.hasPannedOrScaled){
+            if(isBeingPannedAndZoomed){
+                isBeingPannedAndZoomed = NO;
+                if(scale < (kMinPageZoom + kZoomToListPageZoom)/2 && panGesture.didExitToBezel == MMBezelDirectionNone){
+                    if((_panGesture.scaleDirection & MMScaleDirectionSmaller) == MMScaleDirectionSmaller){
+                        [self.delegate finishedScalingReallySmall:self];
+                    }else{
+                        [self.delegate cancelledScalingReallySmall:self];
+                    }
+                }else{
+                    if(scale < kMinPageZoom){
+                        [self.delegate cancelledScalingReallySmall:self];
+                    }
+                    [self.delegate finishedPanningAndScalingPage:self
+                                                       intoBezel:panGesture.didExitToBezel
+                                                       fromFrame:panGesture.frameOfPageAtBeginningOfGesture
+                                                         toFrame:self.frame];
+                }
             }
-        }else{
-            if(scale < kMinPageZoom){
-                [self.delegate cancelledScalingReallySmall:self];
-            }
-            NSLog(@"finished panning page, telling delegate");
-            [self.delegate finishedPanningAndScalingPage:self 
-                                               intoBezel:panGesture.didExitToBezel
-                                               fromFrame:frameOfPageAtBeginningOfGesture
-                                                 toFrame:self.frame];
         }
         return;
-    }else if(panGesture.numberOfTouches == 1){
-        if(lastNumberOfTouchesForPanGesture != 1){
-            // notify the delegate of our state change
-            [self.delegate isBeginning:NO
-                     toPanAndScalePage:self
-                             fromFrame:frameOfPageAtBeginningOfGesture
-                               toFrame:frameOfPageAtBeginningOfGesture
-                               withTouches:panGesture.touches];
-        }
+    }else if(panGesture.subState == UIGestureRecognizerStatePossible){
         //
         // the gesture requires 2 fingers. it may still say it only has 1 touch if the user
         // started the gesture with 2 fingers but then lifted a finger. in that case, 
         // don't continue the gesture at all, just wait till they finish it proper or re-put
         // that 2nd touch down
-        lastNumberOfTouchesForPanGesture = 1;
         isBeingPannedAndZoomed = NO;
         return;
-    }else if(lastNumberOfTouchesForPanGesture == 1 ||
-             panGesture.state == UIGestureRecognizerStateBegan){
+    }else if(!isBeingPannedAndZoomed && (panGesture.subState == UIGestureRecognizerStateBegan ||
+                                         panGesture.subState == UIGestureRecognizerStateChanged)){
         isBeingPannedAndZoomed = YES;
         //
         // if the user had 1 finger down and re-touches with the 2nd finger, then this
@@ -298,45 +295,27 @@
         //
         // to test. begin pan/zoom in bottom left, then lift 1 finger and move to the top right
         // of the page, then re-pan/zoom on the top right. it should "just work".
-        
-        // Reset Panning
-        // ====================================================================================
-        // we know a valid gesture has 2 touches down
-        lastNumberOfTouchesForPanGesture = 2;
-        // find the location of the first touch in relation to the superview.
-        // since the superview doesn't move, this'll give us a static coordinate system to
-        // measure panning distance from
-        firstLocationOfPanGestureInSuperView = [panGesture locationInView:self.superview];
-        // note the origin of the frame before the gesture begins.
-        // all adjustments of panning/zooming will be offset from this origin.
-        frameOfPageAtBeginningOfGesture = self.frame;
-        
-        // Reset Scaling
-        // ====================================================================================
-        // remember the scale of the view before the gesture begins. we'll normalize the gesture's
-        // scale value to the superview location by multiplying it to the page's current scale
-        preGestureScale = self.scale;
-        // the normalized location of the gesture is (0 < x < 1, 0 < y < 1).
-        // this lets us locate where the gesture should be in the view from any width or height
-        normalizedLocationOfScale = CGPointMake(lastLocationInSelf.x / self.frame.size.width,
-                                                lastLocationInSelf.y / self.frame.size.height);
 
         // notify the delegate of our state change
         [self.delegate isBeginning:YES
                  toPanAndScalePage:self
-                         fromFrame:frameOfPageAtBeginningOfGesture
-                           toFrame:frameOfPageAtBeginningOfGesture
-                           withTouches:panGesture.touches];
+                         fromFrame:panGesture.frameOfPageAtBeginningOfGesture
+                           toFrame:panGesture.frameOfPageAtBeginningOfGesture
+                           withTouches:panGesture.validTouches];
         return;
     }
     
-    
+    if([_panGesture.validTouches count] < 2){
+        NSLog(@"skipping pan gesture: has %d valid touches and substate %d", [_panGesture.validTouches count], _panGesture.subState);
+        return;
+    }
+
     //
     // to track panning, we collect the first location of the pan gesture, and calculate the offset
     // of the current location of the gesture. that distance is the amount moved for the pan.
     if([self.delegate allowsScaleForPage:self]){
         CGFloat gestureScale = panGesture.scale;
-        CGFloat targetScale = preGestureScale * gestureScale;
+        CGFloat targetScale = panGesture.preGestureScale * gestureScale;
         CGFloat scaleDiff = ABS((float)(targetScale - scale));
         
         //
@@ -366,6 +345,14 @@
         }
     }
     
+    if(CGPointEqualToPoint(panGesture.normalizedLocationOfScale, CGPointZero)){
+        // somehow the pan gesture doesn't always get initialized above as it
+        // should when it changes from < 2 touches to 2 touches. i'm having a very
+        // hard time reproing after the last fix (chaging to < 2 from == 1 above)
+        // but occassionally the page still jumps when panning while drawing.
+        @throw [NSException exceptionWithName:@"Pan Exception" reason:@"location of pan gesture is unknown" userInfo:nil];
+    }
+    
     //
     // now, with our pan offset and new scale, we need to calculate the new frame location.
     //
@@ -379,16 +366,17 @@
     // the, add the diff of the pan gesture to get the full displacement of the origin. also set the
     // width and height to the new scale.
     CGSize superviewSize = self.superview.bounds.size;
-    CGPoint locationOfPinchAfterScale = CGPointMake(scale * normalizedLocationOfScale.x * superviewSize.width,
-                                                    scale * normalizedLocationOfScale.y * superviewSize.height);
+    CGPoint locationOfPinchAfterScale = CGPointMake(scale * panGesture.normalizedLocationOfScale.x * superviewSize.width,
+                                                    scale * panGesture.normalizedLocationOfScale.y * superviewSize.height);
     CGSize newSizeOfView = CGSizeMake(superviewSize.width * scale, superviewSize.height * scale);
 
     
     //
     // now calculate our final frame given our pan and zoom
     CGRect fr = self.frame;
-    fr.origin = CGPointMake(lastLocationInSuper.x - locationOfPinchAfterScale.x,
-                            lastLocationInSuper.y - locationOfPinchAfterScale.y);
+    CGPoint newOriginOfView = CGPointMake(lastLocationInSuper.x - locationOfPinchAfterScale.x,
+                                 lastLocationInSuper.y - locationOfPinchAfterScale.y);
+    fr.origin = newOriginOfView;
     fr.size = newSizeOfView;
     
     //
@@ -396,9 +384,9 @@
     // and give it a chance to modify the frame if at all needed.
     fr = [self.delegate isBeginning:NO
                   toPanAndScalePage:self
-                      fromFrame:frameOfPageAtBeginningOfGesture
+                      fromFrame:panGesture.frameOfPageAtBeginningOfGesture
                         toFrame:fr
-                        withTouches:panGesture.touches];
+                        withTouches:panGesture.validTouches];
     
     if(panGesture.state != UIGestureRecognizerStateCancelled &&
        panGesture.state != UIGestureRecognizerStateEnded &&
@@ -407,7 +395,8 @@
         // now we're ready, set the frame!
         //
         // only set it if a delegate didn't change our state to
-        // complete the gesture
+        // complete the gesture. this can happen if the gesture
+        // is cancelled
         self.frame = fr;
     }
 }

@@ -47,6 +47,7 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
     return _instance;
 }
 
+#pragma mark - UIGestureRecognizer
 
 -(BOOL) canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
     return NO;
@@ -100,6 +101,7 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
         int indexOfTouch = [self indexForTouchInCache:touch];
         durationCache[indexOfTouch].instantaneousNormalizedVelocity = 1;
         durationCache[indexOfTouch].lastTimestamp = touch.timestamp;
+        durationCache[indexOfTouch].totalDistance = 0;
     }
 }
 
@@ -130,7 +132,6 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
         NSTimeInterval currTime = touch.timestamp;
         NSTimeInterval lastTime = durationCache[indexOfTouch].lastTimestamp;
         NSTimeInterval duration = currTime - lastTime;
-
         
         // calc velocity
         //
@@ -171,6 +172,7 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
         
         // distance
         durationCache[indexOfTouch].distanceFromPrevious = distanceFromPrevious;
+        durationCache[indexOfTouch].totalDistance += distanceFromPrevious;
         
         // average velocity
         durationCache[indexOfTouch].avgNormalizedVelocity = kVelocityLowPass*durationCache[indexOfTouch].avgNormalizedVelocity + (1-kVelocityLowPass)*normalizedVelocity;
@@ -244,30 +246,6 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
     return -1;
 }
 
-
-/**
- * this will return the previous duration of a touch
- * AND will set our cache to the touch's current timestamp.
- *
- * this means that if you call this function twice w/o the touch
- * having been udpated, this method will start to return 0!
- *
- * the Bang in the method name signifies this
- * (from using ! in function names with side effects in Scheme...)
- */
--(NSTimeInterval) durationForTouchBang:(UITouch*)touch{
-    int indexOfTouch = [self indexForTouchInCache:touch];
-    if(indexOfTouch == -1){
-        return 0;
-    }
-    // get the two values
-    NSTimeInterval currTime = touch.timestamp;
-    NSTimeInterval lastTime = durationCache[indexOfTouch].lastTimestamp;
-    // now update
-    durationCache[indexOfTouch].lastTimestamp = currTime;
-    // done
-    return currTime - lastTime;
-}
 
 -(void) removeCacheFor:(UITouch*)touch{
     int indexOfTouch = [self indexForTouchInCache:touch];

@@ -12,4 +12,10 @@
 
 -(void) removeAllAnimationsAndPreservePresentationFrame;
 
++(void)setAnchorPoint:(CGPoint)anchorPoint forView:(UIView *)view;
+
+-(void) bounceWithTransform:(CGAffineTransform)transform;
+
+-(void) bounce;
+
 @end

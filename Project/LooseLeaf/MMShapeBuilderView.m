@@ -126,13 +126,14 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
+    CGFloat scale = [[UIScreen mainScreen] scale];
     // Drawing code
     //
     // this draws a white and black dashed line
     CGFloat dash[3];
-    dash[0] = 6;
-    dash[1] = 5;
-    dottedPath.lineWidth = 1;
+    dash[0] = 6 / scale;
+    dash[1] = 5 / scale;
+    dottedPath.lineWidth = 1 / scale;
     
     [dottedPath setLineDash:nil count:0 phase:0];
     [[UIColor whiteColor] setStroke];

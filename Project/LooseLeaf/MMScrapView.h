@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <JotUI/JotUI.h>
 #import "MMScrapViewStateDelegate.h"
+#import "MMScrapViewState.h"
 
 @interface MMScrapView : UIView<MMScrapViewStateDelegate>
 
@@ -33,6 +34,8 @@
 
 -(void) setShouldShowShadow:(BOOL)shouldShowShadow;
 
+-(void) stampContentsFrom:(JotView*)otherDrawableView;
+
 /**
  * will return the array of touches that this scrap
  * contains, but only if more than one touch
@@ -45,15 +48,23 @@
 
 -(void) saveToDisk;
 
-
--(void) loadStateAsynchronously:(BOOL)async;
+-(void) loadScrapStateAsynchronously:(BOOL)async;
 
 -(void) unloadState;
 
 -(CGAffineTransform) pageToScrapTransformWithPageOriginalUnscaledBounds:(CGRect)originalUnscaledBounds;
 
 
--(void) stampContentsOnto:(MMScrapView*)otherScrap;
 -(void) drawTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4;
+
+
+-(UIImage*) backingImage;
+-(void) setBackingImage:(UIImage*)img;
+-(void) setBackgroundRotation:(CGFloat)rotation;
+-(CGFloat) backgroundRotation;
+-(void) setBackgroundScale:(CGFloat)_backgroundScale;
+-(CGFloat) backgroundScale;
+-(void) setBackgroundOffset:(CGPoint)bgOffset;
+-(CGPoint) backgroundOffset;
 
 @end

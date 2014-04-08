@@ -10,6 +10,7 @@
 #import "MMShadowManager.h"
 #import "MMEditablePaperView.h"
 #import "TestFlight.h"
+#import "MMDebugDrawView.h"
 
 @implementation MMLooseLeafViewController
 
@@ -17,13 +18,6 @@
     if(self = [super init]){
         
         [NSThread performBlockInBackground:^{
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wundeclared-selector"
-            if([[UIDevice currentDevice] respondsToSelector:@selector(uniqueIdentifier)]){
-                [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] performSelector:@selector(uniqueIdentifier)]];
-            }
-#pragma clang diagnostic pop
             [TestFlight takeOff:kTestflightAppToken];
             [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
             [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
@@ -44,6 +38,8 @@
         [stackView loadStacksFromDisk];
         
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth.png"]]];
+        
+//        [self.view addSubview:[MMDebugDrawView sharedInstace]];
         
     }
     return self;

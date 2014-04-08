@@ -54,10 +54,31 @@
 #define kBezelInGestureWidth 20
 #define kUndoLimit 20
 
-CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
+// photo album
+#define kMaxPhotoRotationInDegrees 20
 
-CGFloat SquaredDistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
+#define RandomPhotoRotation (rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees/2) / 360.0 * M_PI
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+    CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
+
+    CGFloat SquaredDistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
+
+    CGPoint NormalizePointTo(CGPoint point1, CGSize size);
+    
+    CGPoint DenormalizePointTo(CGPoint point1, CGSize size);
+    
+    CGPoint AveragePoints(CGPoint point1, CGPoint point2);
+    
+#ifdef __cplusplus
+}
+#endif
+
+    
 enum {
     MMBezelDirectionNone = 0,
     MMBezelDirectionRight  = 1 << 0,
@@ -73,6 +94,23 @@ enum {
     MMScaleDirectionSmaller   = 1 << 1
 };
 typedef NSUInteger MMBezelScaleDirection;
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+    
+    typedef struct Quadrilateral{
+        CGPoint upperLeft;
+        CGPoint upperRight;
+        CGPoint lowerRight;
+        CGPoint lowerLeft;
+    } Quadrilateral;
+    
+#ifdef __cplusplus
+}  // extern "C"
+#endif
+
 
 
 #endif

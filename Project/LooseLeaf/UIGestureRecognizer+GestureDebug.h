@@ -10,4 +10,6 @@
 
 @interface UIGestureRecognizer (GestureDebug)
 
+-(void) say:(NSString*)prefix ISee:(NSSet*)touches;
+
 @end

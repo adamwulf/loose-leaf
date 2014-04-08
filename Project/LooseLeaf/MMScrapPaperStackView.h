@@ -7,8 +7,10 @@
 //
 
 #import "MMEditablePaperStackView.h"
-#import "MMScapBubbleContainerViewDelegate.h"
+#import "MMScrapSidebarContainerViewDelegate.h"
+#import "MMStretchScrapGestureRecognizerDelegate.h"
+#import "MMImageSidebarContainerViewDelegate.h"
 
-@interface MMScrapPaperStackView : MMEditablePaperStackView<MMPanAndPinchScrapGestureRecognizerDelegate,MMScapBubbleContainerViewDelegate>
+@interface MMScrapPaperStackView : MMEditablePaperStackView<MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapSidebarContainerViewDelegate,MMStretchScrapGestureRecognizerDelegate,MMImageSidebarContainerViewDelegate>
 
 @end

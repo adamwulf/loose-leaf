@@ -23,6 +23,12 @@
 }
 
 
+-(void) removeObjectsInArray:(NSArray*)arr{
+    for(id obj in arr){
+        [self removeObject:obj];
+    }
+}
+
 -(void) addObjectsInSet:(NSSet*)set{
     for(id obj in set){
         [self addObject:obj];
@@ -32,7 +38,20 @@
 @end
 
 
-@implementation NSMutableOrderedSet (LooseLeafExtras)
+
+@implementation NSMutableOrderedSet (Extras)
+
+-(void) addObjectsInOrderedSet:(NSOrderedSet*)set{
+    for(id obj in set){
+        [self addObject:obj];
+    }
+}
+
+-(void) addObjectsInSet:(NSSet*)set{
+    for(id obj in set){
+        [self addObject:obj];
+    }
+}
 
 -(void) removeObjectsInSet:(NSSet*)set{
     for(id obj in set){
@@ -41,15 +60,9 @@
 }
 
 -(NSOrderedSet*) setByRemovingObject:(id)obj{
-    NSMutableOrderedSet* ret = [obj copy];
+    NSMutableOrderedSet* ret = [NSMutableOrderedSet orderedSetWithOrderedSet:self];
     [ret removeObject:obj];
     return ret;
-}
-
--(void) addObjectsInSet:(NSSet*)set{
-    for(id obj in set){
-        [self addObject:obj];
-    }
 }
 
 @end

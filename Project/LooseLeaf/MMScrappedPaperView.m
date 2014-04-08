@@ -9,12 +9,11 @@
 #import "MMScrappedPaperView.h"
 #import "PolygonToolDelegate.h"
 #import "MMScrapView.h"
-#import "MMScrapContainerView.h"
+#import "MMUntouchableView.h"
 #import "NSThread+BlockAdditions.h"
 #import "NSArray+Extras.h"
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
-#import "MMDebugDrawView.h"
 #import "MMScrapsOnPaperState.h"
 #import "MMImmutableScrapsOnPaperState.h"
 #import <JotUI/UIColor+JotHelper.h>
@@ -23,6 +22,7 @@
 #import "UIBezierPath+PathElement.h"
 #import "UIBezierPath+Description.h"
 #import "MMVector.h"
+#import "MMScrapViewState.h"
 
 
 @implementation MMScrappedPaperView{
@@ -44,7 +44,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
         // Initialization code
-        scrapContainerView = [[MMScrapContainerView alloc] initWithFrame:self.bounds];
+        scrapContainerView = [[MMUntouchableView alloc] initWithFrame:self.bounds];
         [self.contentView addSubview:scrapContainerView];
         // anchor the view to the top left,
         // so that when we scale down, the drawable view
@@ -139,7 +139,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     @synchronized(scrapContainerView){
         [scrapContainerView addSubview:newScrap];
     }
-    [newScrap loadStateAsynchronously:NO];
+    [newScrap loadScrapStateAsynchronously:NO];
     [newScrap setShouldShowShadow:[self isEditable]];
     
     [newScrap setScale:scale];
@@ -148,9 +148,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [self saveToDisk];
     return newScrap;
 }
-
-
-
 
 
 -(void) addScrap:(MMScrapView*)scrap{
@@ -224,8 +221,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) panAndScale:(MMPanAndPinchGestureRecognizer *)_panGesture{
-    [[MMDebugDrawView sharedInstace] clear];
-    
     [super panAndScale:_panGesture];
 }
 
@@ -382,53 +377,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     }
 }
 
-#pragma mark - Polygon and Scrap builder
-
--(void) beginShapeAtPoint:(CGPoint)point{
-    // send touch event to the view that
-    // will display the drawn polygon line
-    [shapeBuilderView clear];
-    [shapeBuilderView addTouchPoint:point];
-}
-
--(BOOL) continueShapeAtPoint:(CGPoint)point{
-    // send touch event to the view that
-    // will display the drawn polygon line
-    if([shapeBuilderView addTouchPoint:point]){
-        [self completeBuildingNewScrap];
-        return NO;
-    }
-    return YES;
-}
-
--(void) finishShapeAtPoint:(CGPoint)point{
-    // send touch event to the view that
-    // will display the drawn polygon line
-    //
-    // and also process the touches into the new
-    // scrap polygon shape, and add that shape
-    // to the page
-    [shapeBuilderView addTouchPoint:point];
-    [self completeBuildingNewScrap];
-}
-
--(void) cancelShapeAtPoint:(CGPoint)point{
-    // we've cancelled the polygon (possibly b/c
-    // it was a pan/pinch instead), so clear
-    // the drawn polygon and reset.
-    [shapeBuilderView clear];
-}
-
--(void) completeBuildingNewScrap{
-    UIBezierPath* shape = [shapeBuilderView completeAndGenerateShape];
-    [shapeBuilderView clear];
-    if(shape.isPathClosed){
-        UIBezierPath* shapePath = [shape copy];
-        [shapePath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
-        [self addScrapWithPath:shapePath andScale:1.0];
-    }
-}
-
 
 #pragma mark - Scissors
 
@@ -468,16 +416,26 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [shapeBuilderView clear];
 }
 
+
 -(void) completeScissorsCut{
+    UIBezierPath* scissorPath = [shapeBuilderView completeAndGenerateShape];
+    [self completeScissorsCutWithPath:scissorPath];
+}
+
+
+-(void) completeScissorsCutWithPath:(UIBezierPath*)scissorPath{
     // track path information for debugging
     NSString* debugFullText = @"";
-    
+
     @try {
-        UIBezierPath* scissorPath = [shapeBuilderView completeAndGenerateShape];
         // scale the scissors into the zoom of the page, in case the user is
         // pinching and zooming the page our scissor path will be in page coordinates
         // instead of screen coordinates
         [scissorPath applyTransform:CGAffineTransformMakeScale(1/self.scale, 1/self.scale)];
+        
+        BOOL hasBuiltAnyScraps = NO;
+        
+        CGAffineTransform verticalFlip = CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height);
         
         // iterate over the scraps from the visibly top scraps
         // to the bottom of the stack
@@ -486,7 +444,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
             // get the clipping path of the scrap and convert it into
             // CoreGraphics coordinate system
             UIBezierPath* subshapePath = [[scrap clippingPath] copy];
-            [subshapePath applyTransform:CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height)];
+            [subshapePath applyTransform:verticalFlip];
             
             //
             // this subshape path is based on the scrap's current scale, which may or
@@ -523,13 +481,37 @@ static dispatch_queue_t concurrentBackgroundQueue;
                         @synchronized(scrapContainerView){
                             [scrapContainerView insertSubview:addedScrap belowSubview:scrap];
                         }
-                        [scrap stampContentsOnto:addedScrap];
+                        [addedScrap stampContentsFrom:scrap.state.drawableView];
                         
                         CGFloat addedScrapDist = distance(scrap.center, addedScrap.center);
                         if(addedScrapDist > maxDist){
                             maxDist = addedScrapDist;
                         }
                         [vectors addObject:[MMVector vectorWithPoint:scrap.center andPoint:addedScrap.center]];
+                        CGFloat orgRot = scrap.rotation;
+                        CGFloat newRot = addedScrap.rotation;
+                        CGFloat rotDiff = orgRot - newRot;
+                        
+                        CGPoint orgC = scrap.center;
+                        CGPoint newC = addedScrap.center;
+                        CGPoint moveC = CGPointMake(newC.x - orgC.x, newC.y - orgC.y);
+                        
+                        CGPoint convertedC = [addedScrap.state.contentView convertPoint:scrap.state.backingContentView.center fromView:scrap.state.contentView];
+                        CGPoint refPoint = CGPointMake(addedScrap.state.contentView.bounds.size.width/2,
+                                                       addedScrap.state.contentView.bounds.size.height/2);
+                        CGPoint moveC2 = CGPointMake(convertedC.x - refPoint.x, convertedC.y - refPoint.y);
+                        
+                        // we have the correct adjustment value,
+                        // but now we need to account for the fact
+                        // that the new scrap has a different rotation
+                        // than the start scrap
+                        
+                        moveC = CGPointApplyAffineTransform(moveC, CGAffineTransformMakeRotation(scrap.rotation - addedScrap.rotation));
+                        
+                        [addedScrap setBackingImage:scrap.backingImage];
+                        [addedScrap setBackgroundRotation:scrap.backgroundRotation + rotDiff];
+                        [addedScrap setBackgroundScale:scrap.backgroundScale];
+                        [addedScrap setBackgroundOffset:moveC2];
                         [scraps addObject:addedScrap];
                     }
                     [scrap removeFromSuperview];
@@ -538,21 +520,72 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 // intersects with the scrap we just cut
                 scissorPath = [scissorPath differenceOfPathTo:subshapePath];
             }
-            [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                                 for(int i=0;i<[vectors count];i++){
-                                     MMVector* vector = [vectors objectAtIndex:i];
-                                     vector = [vector normalizedTo:maxDist];
-                                     MMScrapView* scrap = [scraps objectAtIndex:i];
-                                     
-                                     CGPoint newC = [vector pointFromPoint:scrap.center distance:10];
-                                     scrap.center = newC;
-                                 }
-                             }
-                             completion:nil];
+            if([scraps count]){
+                hasBuiltAnyScraps = YES;
+                [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                    for(int i=0;i<[vectors count];i++){
+                        MMVector* vector = [vectors objectAtIndex:i];
+                        vector = [vector normalizedTo:maxDist];
+                        MMScrapView* scrap = [scraps objectAtIndex:i];
+                        
+                        CGPoint newC = [vector pointFromPoint:scrap.center distance:10];
+                        scrap.center = newC;
+                    }
+                } completion:nil];
+            }
         }
+        
+        
+        if(!hasBuiltAnyScraps && [scissorPath isClosed]){
+            NSLog(@"didn't cut any scraps, so make one");
+            MMScrapView* addedScrap = [self addScrapWithPath:scissorPath andScale:1.0];
+            [addedScrap stampContentsFrom:self.drawableView];
+            
+            CGFloat randX = (rand() % 100 - 50) / 50.0;
+            CGFloat randY = (rand() % 100 - 50) / 50.0;
+            CGFloat randTurn = (rand() % 10 - 5) / 5.0;
+            randTurn = randTurn * M_PI / 180; // convert to radians
+            
+            MMVector* vector = [[MMVector vectorWithX:randX andY:randY] normal];
+            
+            // now we need to add a stroke to the underlying page that
+            // will erase the area below the new scrap
+            CGPoint p1 = addedScrap.bounds.origin;
+            CGPoint p2 = addedScrap.bounds.origin;
+            p2.x += addedScrap.bounds.size.width;
+            CGPoint p3 = addedScrap.bounds.origin;
+            p3.y += addedScrap.bounds.size.height;
+            CGPoint p4 = addedScrap.bounds.origin;
+            p4.x += addedScrap.bounds.size.width;
+            p4.y += addedScrap.bounds.size.height;
+            
+            p1 = [drawableView convertPoint:p1 fromView:addedScrap];
+            p2 = [drawableView convertPoint:p2 fromView:addedScrap];
+            p3 = [drawableView convertPoint:p3 fromView:addedScrap];
+            p4 = [drawableView convertPoint:p4 fromView:addedScrap];
+            
+            p1 = CGPointApplyAffineTransform(p1, verticalFlip);
+            p2 = CGPointApplyAffineTransform(p2, verticalFlip);
+            p3 = CGPointApplyAffineTransform(p3, verticalFlip);
+            p4 = CGPointApplyAffineTransform(p4, verticalFlip);
+            
+            [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                CGPoint newC = [vector pointFromPoint:addedScrap.center distance:10];
+                addedScrap.center = newC;
+                addedScrap.rotation = addedScrap.rotation + randTurn;
+            } completion:nil];
+            
+
+            [[NSThread mainThread] performBlock:^{
+                [drawableView forceAddStrokeForFilledPath:scissorPath andP1:p1 andP2:p2 andP3:p3 andP4:p4];
+                [self saveToDisk];
+            } afterDelay:.01];
+        }else{
+            [self saveToDisk];
+        }
+        
         // clear the dotted line of the scissor
         [shapeBuilderView clear];
-        [self saveToDisk];
     }
     @catch (NSException *exception) {
         //
@@ -590,6 +623,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
  * our scrap views
  */
 -(void) setDrawableView:(JotView *)_drawableView{
+//    NSLog(@"setting drawable %@: %d", [self uuid], (int)_drawableView);
     [super setDrawableView:_drawableView];
 }
 
@@ -685,6 +719,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) unloadCachedPreview{
     // free our preview memory
     [super unloadCachedPreview];
+    // save if needed
+    // currently this will always save to disk. in the future #338
+    // we should only save if this has changed.
+    [[scrapState immutableState] saveToDisk];
     // free all scraps from memory too
     [scrapState unload];
 }

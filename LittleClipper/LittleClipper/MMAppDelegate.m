@@ -8,6 +8,7 @@
 
 #import "MMAppDelegate.h"
 #import "TCViewController.h"
+#import <Crashlytics/Crashlytics.h>
 
 @implementation MMAppDelegate
 
@@ -20,6 +21,8 @@
     
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
+    
+    [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
     
     return YES;
 }

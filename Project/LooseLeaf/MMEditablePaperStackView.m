@@ -13,6 +13,7 @@
 #import "MMScrappedPaperView.h"
 #import "MMScrapBubbleButton.h"
 #import "MMTouchVelocityGestureRecognizer.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 
 @implementation MMEditablePaperStackView{
     MMEditablePaperView* currentEditablePage;
@@ -27,6 +28,9 @@
     if (self) {
         // Initialization code
 
+        [[NSFileManager defaultManager] preCacheDirectoryListingAt:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Pages"]];
+        
+
         self.delegate = self;
         
         pagesWithLoadedCacheImages = [NSMutableSet set];
@@ -40,9 +44,6 @@
         pen = [[Pen alloc] init];
         
         eraser = [[Eraser alloc] init];
-        
-        polygon = [[PolygonTool alloc] init];
-        polygon.delegate = self;
         
         scissor = [[MMScissorTool alloc] init];
         scissor.delegate = self;
@@ -63,14 +64,12 @@
         shareButton = [[MMShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         shareButton.delegate = self;
         [shareButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-//        [self addSubview:shareButton];
+        [self addSubview:shareButton];
         
         settingsButton = [[MMAdonitButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         settingsButton.delegate = self;
         [settingsButton addTarget:self action:@selector(jotSettingsTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:settingsButton];
-        
-        
+//        [self addSubview:settingsButton];
         
         
         pencilTool = [[MMPencilAndPaletteView alloc] initWithButtonFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton) andScreenSize:self.bounds.size];
@@ -82,21 +81,15 @@
         [eraserButton addTarget:self action:@selector(eraserTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:eraserButton];
         
-        polygonButton = [[MMPolygonButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        polygonButton.delegate = self;
-        [polygonButton addTarget:self action:@selector(polygonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:polygonButton];
-        
-        insertImageButton = [[MMImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        insertImageButton.delegate = self;
-        [insertImageButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:insertImageButton];
-        
-        CGRect scissorButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 4, kWidthOfSidebarButton, kWidthOfSidebarButton);
+        CGRect scissorButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton);
         scissorButton = [[MMScissorButton alloc] initWithFrame:scissorButtonFrame];
         scissorButton.delegate = self;
         [scissorButton addTarget:self action:@selector(scissorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:scissorButton];
+        
+        insertImageButton = [[MMImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        insertImageButton.delegate = self;
+        [self addSubview:insertImageButton];
         
         
         
@@ -129,9 +122,6 @@
         [redoButton addTarget:self action:@selector(redo:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:redoButton];
        
-        
-        
-        
         
         //
         // accelerometer for rotating buttons
@@ -184,9 +174,6 @@
         pencilTool.selected = YES;
         handButton.selected = YES;
         
-        insertImageButton.enabled = NO;
-        shareButton.enabled = NO;
-        
         [NSThread performBlockInBackground:^{
             [[NSNotificationCenter defaultCenter] addObserver: self
                                                      selector:@selector(connectionChange:)
@@ -202,8 +189,20 @@
         
         
         [self addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstace]];
+        
+        [[MMDrawingTouchGestureRecognizer sharedInstace] setTouchDelegate:self];
+        [self addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstace]];
+        
     }
     return self;
+}
+
+
+#pragma mark - Gesture Helpers
+
+-(void) cancelAllGestures{
+    [super cancelAllGestures];
+    [[MMDrawingTouchGestureRecognizer sharedInstace] cancel];
 }
 
 /**
@@ -217,8 +216,6 @@
 -(Tool*) activePen{
     if(scissorButton.selected){
         return scissor;
-    }else if(polygonButton.selected){
-        return polygon;
     }else if(eraserButton.selected){
         return eraser;
     }else{
@@ -231,7 +228,6 @@
 -(void) penTapped:(UIButton*)_button{
     eraserButton.selected = NO;
     pencilTool.selected = YES;
-    polygonButton.selected = NO;
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
 }
@@ -253,7 +249,7 @@
     id obj = [visibleStackHolder peekSubview];
     if([obj respondsToSelector:@selector(undo)]){
         [obj undo];
-        [TestFlight passCheckpoint:@"BUTTON_UNDO"];
+//        [TestFlight passCheckpoint:@"BUTTON_UNDO"];
     }
 }
 
@@ -261,22 +257,13 @@
     id obj = [visibleStackHolder peekSubview];
     if([obj respondsToSelector:@selector(redo)]){
         [obj redo];
-        [TestFlight passCheckpoint:@"BUTTON_REDO"];
+//        [TestFlight passCheckpoint:@"BUTTON_REDO"];
     }
 }
 
 -(void) eraserTapped:(UIButton*)_button{
     eraserButton.selected = YES;
     pencilTool.selected = NO;
-    polygonButton.selected = NO;
-    insertImageButton.selected = NO;
-    scissorButton.selected = NO;
-}
-
--(void) polygonTapped:(UIButton*)_button{
-    eraserButton.selected = NO;
-    pencilTool.selected = NO;
-    polygonButton.selected = YES;
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
 }
@@ -284,10 +271,10 @@
 -(void) scissorTapped:(UIButton*)_button{
     eraserButton.selected = NO;
     pencilTool.selected = NO;
-    polygonButton.selected = NO;
     insertImageButton.selected = NO;
     scissorButton.selected = YES;
 }
+
 
 -(void) handTapped:(UIButton*)_button{
     [[visibleStackHolder peekSubview] cancelAllGestures];
@@ -327,7 +314,7 @@
     [hiddenStackHolder pushSubview:page];
     [[visibleStackHolder peekSubview] enableAllGestures];
     [self popTopPageOfHiddenStack];
-    [TestFlight passCheckpoint:@"BUTTON_ADD_PAGE"];
+//    [TestFlight passCheckpoint:@"BUTTON_ADD_PAGE"];
 }
 
 -(void) tempButtonTapped:(UIButton*)_button{
@@ -335,11 +322,14 @@
 }
 
 -(void) setButtonsVisible:(BOOL)visible{
-    [UIView animateWithDuration:0.3 animations:^{
+    [self setButtonsVisible:visible withDuration:0.3];
+}
+
+-(void) setButtonsVisible:(BOOL)visible withDuration:(CGFloat)duration{
+    [UIView animateWithDuration:duration animations:^{
         addPageSidebarButton.alpha = visible;
         documentBackgroundSidebarButton.alpha = visible;
         polylineButton.alpha = visible;
-        polygonButton.alpha = visible;
         insertImageButton.alpha = visible;
         textButton.alpha = visible;
         pencilTool.alpha = visible;
@@ -363,7 +353,6 @@
         addPageSidebarButton.transform = rotationTransform;
         documentBackgroundSidebarButton.transform = rotationTransform;
         polylineButton.transform = rotationTransform;
-        polygonButton.transform = rotationTransform;
         insertImageButton.transform = rotationTransform;
         textButton.transform = rotationTransform;
         scissorButton.transform = rotationTransform;
@@ -400,7 +389,6 @@
         // cancel any strokes that this gesture is using
         for(UITouch* touch in bezelGesture.touches){
             [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
-            [polygon cancelPolygonForTouch:touch];
             [scissor cancelPolygonForTouch:touch];
         }
     }
@@ -412,7 +400,6 @@
         // cancel any strokes that this gesture is using
         for(UITouch* touch in bezelGesture.touches){
             [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
-            [polygon cancelPolygonForTouch:touch];
             [scissor cancelPolygonForTouch:touch];
         }
     }
@@ -431,7 +418,6 @@
     // view if need be
     for(UITouch* touch in touches){
         [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
-        [polygon cancelPolygonForTouch:touch];
         [scissor cancelPolygonForTouch:touch];
     }
     
@@ -459,7 +445,7 @@
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     [super finishedScalingReallySmall:page];
     [self saveStacksToDisk];
-    [TestFlight passCheckpoint:@"NAV_TO_LIST_FROM_PAGE"];
+//    [TestFlight passCheckpoint:@"NAV_TO_LIST_FROM_PAGE"];
     [rulerView setHidden:YES];
 }
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
@@ -485,7 +471,7 @@
         [editablePage setCanvasVisible:NO];
         [editablePage setEditable:NO];
     }
-    [TestFlight passCheckpoint:@"NAV_TO_PAGE_FROM_LIST"];
+//    [TestFlight passCheckpoint:@"NAV_TO_PAGE_FROM_LIST"];
 }
 
 #pragma mark = Saving and Editing
@@ -529,10 +515,13 @@
     // the stroke manager is the definitive source for all strokes.
     // cancel through that manager, and it'll notify the appropriate
     // view if need be
-    for(UITouch* touch in gesture.touches){
+    for(UITouch* touch in gesture.validTouches){
         [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
-        [polygon cancelPolygonForTouch:touch];
         [scissor cancelPolygonForTouch:touch];
+    }
+    if(gesture.subState == UIGestureRecognizerStateBegan ||
+       (gesture.state == UIGestureRecognizerStateBegan && gesture.subState == UIGestureRecognizerStateChanged)){
+           [self ownershipOfTouches:[NSSet setWithArray:gesture.validTouches] isGesture:gesture];
     }
     [rulerView updateLineAt:[gesture point1InView:rulerView] to:[gesture point2InView:rulerView]
            startingDistance:[gesture initialDistance]];
@@ -541,6 +530,23 @@
 -(void) didStopRuler:(MMRulerToolGestureRecognizer *)gesture{
     [rulerView liftRuler];
 }
+
+#pragma mark - MMPanGestureDelegate
+
+-(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
+    [super ownershipOfTouches:touches isGesture:gesture];
+    if([gesture isKindOfClass:[MMDrawingTouchGestureRecognizer class]] ||
+       [gesture isKindOfClass:[MMBezelInRightGestureRecognizer class]]){
+        // only notify of our own gestures
+        [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
+    }
+    [[MMDrawingTouchGestureRecognizer sharedInstace] ownershipOfTouches:touches isGesture:gesture];
+}
+
+-(NSArray*) scraps{
+    @throw kAbstractMethodException;
+}
+
 
 #pragma mark - Page Loading and Unloading
 
@@ -575,12 +581,12 @@
                 [currentEditablePage setEditable:NO];
                 [currentEditablePage setCanvasVisible:NO];
                 currentEditablePage = editableTopPage;
-                debug_NSLog(@"did switch top page to %@", currentEditablePage.uuid);
+//                debug_NSLog(@"did switch top page to %@", currentEditablePage.uuid);
                 [currentEditablePage setDrawableView:drawableView];
             }else{
                 if(![editableTopPage hasStateLoaded]){
                     // load the state for the new top page
-                    debug_NSLog(@"load state for future top page: %@", editableTopPage.uuid);
+//                    debug_NSLog(@"load state for future top page: %@", editableTopPage.uuid);
                     [self loadStateForPage:editableTopPage];
                 }else{
                     // we're saving the top page to disk
@@ -637,7 +643,7 @@
 
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
     [super willNotChangeTopPageTo:page];
-    debug_NSLog(@"won't change to: %@", page.uuid);
+//    debug_NSLog(@"won't change to: %@", page.uuid);
 }
 
 
@@ -701,6 +707,19 @@
 #pragma mark - JotViewDelegate
 
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+    // dont start a new stroke if one already exists
+    if([[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count] > 0){
+        NSLog(@"stroke already exists: %d", [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
+        return NO;
+    }
+    if([drawableView.state.currentStrokes count]){
+        return NO;
+    }
+    for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scraps]){
+        if([scrap.state.drawableView.state.currentStrokes count]){
+            return NO;
+        }
+    }
     [rulerView willBeginStrokeAt:[touch locationInView:rulerView]];
     return [[self activePen] willBeginStrokeWithTouch:touch];
 }
@@ -754,27 +773,15 @@
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
-    if(tool == polygon){
-        [page beginShapeAtPoint:adjustedPoint];
-    }else{
-        [page beginScissorAtPoint:adjustedPoint];
-    }
+    [page beginScissorAtPoint:adjustedPoint];
 }
 
 -(void) continueShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool{
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
-    if(tool == polygon){
-        if(![page continueShapeAtPoint:adjustedPoint]){
-            [polygon cancelPolygonForTouch:touch];
-            [scissor cancelPolygonForTouch:touch];
-        }
-    }else{
-        if(![page continueScissorAtPoint:adjustedPoint]){
-            [polygon cancelPolygonForTouch:touch];
-            [scissor cancelPolygonForTouch:touch];
-        }
+    if(![page continueScissorAtPoint:adjustedPoint]){
+        [scissor cancelPolygonForTouch:touch];
     }
 }
 
@@ -782,22 +789,14 @@
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
-    if(tool == polygon){
-        [page finishShapeAtPoint:adjustedPoint];
-    }else{
-        [page finishScissorAtPoint:adjustedPoint];
-    }
+    [page finishScissorAtPoint:adjustedPoint];
 }
 
 -(void) cancelShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool{
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
-    if(tool == polygon){
-        [page cancelShapeAtPoint:adjustedPoint];
-    }else{
-        [page cancelScissorAtPoint:adjustedPoint];
-    }
+    [page cancelScissorAtPoint:adjustedPoint];
 }
 
 
@@ -883,5 +882,39 @@
         }
     }
 }
+
+
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    
+    // Disallow recognition of tap gestures in the segmented control.
+    if ([touch.view isKindOfClass:[UIControl class]]) {//change it to your condition
+        return NO;
+    }
+    return YES;
+}
+
+#pragma mark - gestures for list view
+
+-(void) beginUITransitionFromPageView{
+    [super beginUITransitionFromPageView];
+    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+}
+
+-(void) beginUITransitionFromListView{
+    [super beginUITransitionFromListView];
+    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+}
+
+-(void) finishUITransitionToListView{
+    [super finishUITransitionToListView];
+    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+}
+
+-(void) finishUITransitionToPageView{
+    [super finishUITransitionToPageView];
+    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
+}
+
 
 @end

@@ -28,15 +28,30 @@
 
 -(void) saveToDisk;
 
--(void) loadStateAsynchronously:(BOOL)async;
+-(void) loadScrapStateAsynchronously:(BOOL)async;
 
 -(void) unloadState;
 
 -(BOOL) isStateLoaded;
 
--(void) addElements:(NSArray*)elements;
 
+-(void) addElements:(NSArray*)elements;
 -(JotGLTexture*) generateTexture;
 -(void) importTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4;
+
+
+
+-(UIImage*) backingImage;
+-(void) setBackingImage:(UIImage*)img;
+-(void) setBackgroundRotation:(CGFloat)rotation;
+-(CGFloat) backgroundRotation;
+-(void) setBackgroundScale:(CGFloat)_backgroundScale;
+-(CGFloat) backgroundScale;
+-(void) setBackgroundOffset:(CGPoint)bgOffset;
+-(CGPoint) backgroundOffset;
+
+-(UIView*) backingContentView;
+
+-(UIView*) contentView;
 
 @end

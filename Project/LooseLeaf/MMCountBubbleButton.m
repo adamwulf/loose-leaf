@@ -30,10 +30,6 @@
     [self setNeedsDisplay];
 }
 
--(void) setTransform:(CGAffineTransform)transform{
-    [super setTransform:transform];
-}
-
 
 - (void)drawRect:(CGRect)rect
 {
@@ -128,7 +124,6 @@
         // done draw number
         
     }
-
 }
 
 @end

@@ -10,7 +10,7 @@
 
 @interface MMBounceButton : UIButton
 
-@property (nonatomic) CGFloat rotation;
+@property (nonatomic, assign) CGFloat rotation;
 
 -(UIColor*) borderColor;
 

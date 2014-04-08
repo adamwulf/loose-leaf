@@ -62,6 +62,21 @@
     return self;
 }
 
+
+#pragma mark - Gesture Helpers
+
+-(void) cancelAllGestures{
+    [super cancelAllGestures];
+    if(tapGesture.enabled){
+        // cancel tap w/o requiring subclass
+        tapGesture.enabled = NO;
+        tapGesture.enabled = YES;
+    }
+    [pinchGesture cancel];
+    [longPressGesture cancel];
+}
+
+
 #pragma mark - Add Button in List View
 
 -(CGRect) frameForAddPageButton{
@@ -249,6 +264,7 @@
  * transition into page view from the transition state
  */
 -(void) finishUITransitionToPageView{
+    NSLog(@"finishUITransitionToPageView");
     for(MMPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
         if(aPage != [visibleStackHolder peekSubview]){
             [aPage enableAllGestures];
@@ -368,6 +384,7 @@
         // the cancelled state will be caught in MMPaperStackView, so
         // the frame is not adjusted after we animate the page to
         // it's resting place
+//        NSLog(@"scale: %f", [visibleStackHolder peekSubview].scale);
         if([visibleStackHolder peekSubview].scale < kZoomToListPageZoom){
             [[visibleStackHolder peekSubview] cancelAllGestures];
             return fromFrame;
@@ -441,6 +458,7 @@
     [super finishedScalingReallySmall:page];
     //
     // clean up gesture state
+    NSLog(@"removing1 %p", page);
     [setOfPagesBeingPanned removeObject:page];
 
     CGFloat duration = 0.3;
@@ -587,6 +605,11 @@
  */
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
     [super cancelledScalingReallySmall:page];
+    //
+    // clean up gesture state
+    NSLog(@"removing2 %p", page);
+    [setOfPagesBeingPanned removeObject:page];
+    
     [self finishUITransitionToPageView];
     if(![page isBeingPannedAndZoomed]){
         [self animatePageToFullScreen:[visibleStackHolder peekSubview] withDelay:0 withBounce:YES onComplete:^(BOOL finished){

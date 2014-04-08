@@ -15,6 +15,7 @@
 @implementation MMBezelInRightGestureRecognizer
 @synthesize panDirection;
 @synthesize numberOfRepeatingBezels;
+@synthesize panDelegate;
 
 -(id) initWithTarget:(id)target action:(SEL)action{
     self = [super initWithTarget:target action:action];
@@ -35,6 +36,13 @@
 
 -(NSArray*)touches{
     return [validTouches allObjects];
+}
+
+-(void) cancel{
+    if(self.enabled){
+        self.enabled = NO;
+        self.enabled = YES;
+    }
 }
 
 /**
@@ -137,6 +145,7 @@
             numberOfRepeatingBezels = 1;
         }
         if(self.state == UIGestureRecognizerStatePossible){
+            [self.panDelegate ownershipOfTouches:validTouches isGesture:self];
             self.state = UIGestureRecognizerStateBegan;
             firstKnownLocation = [self furthestRightTouchLocation];
             firstKnownLocation.x = self.view.bounds.size.width;

@@ -61,6 +61,8 @@
     // this way the border is crisp when scrolling
     // in list view
     MMScrapBorderView* borderView;
+    
+    UILabel* debugLabel;
 }
 
 @synthesize uuid;
@@ -71,7 +73,6 @@
 
 
 -(id) initWithScrapViewState:(MMScrapViewState*)_scrapState{
-    
     scrapState = _scrapState;
     scrapState.delegate = self;
     
@@ -98,7 +99,8 @@
 - (id)initWithBezierPath:(UIBezierPath*)_path andUUID:(NSString*)_uuid
 {
     UIBezierPath* originalPath = [_path copy];
-
+    
+    
     if(!scrapState){
         // one of our other [init] methods may have already created a state
         // for us, but if not, then go ahead and build one
@@ -153,9 +155,51 @@
 //        self.layer.borderWidth = 1;
 //        self.alpha = .5;
     }
+//    CALayer* cornerTag = [CALayer layer];
+//    cornerTag.bounds = CGRectMake(10, 10, 10, 10);
+//    cornerTag.backgroundColor = [UIColor redColor].CGColor;
+//    [self.layer addSublayer:cornerTag];
+//    
+//    
+//    debugLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 20)];
+//    debugLabel.backgroundColor = [UIColor whiteColor];
+//    debugLabel.text = uuid;
+//    [self addSubview:debugLabel];
     return self;
 }
 
+
+-(void) setBackingImage:(UIImage*)img{
+    [scrapState setBackingImage:img];
+}
+
+-(UIImage*) backingImage{
+    return scrapState.backingImage;
+}
+
+-(void) setBackgroundRotation:(CGFloat)_rotation{
+    [scrapState setBackgroundRotation:_rotation];
+}
+
+-(CGFloat) backgroundRotation{
+    return scrapState.backgroundRotation;
+}
+
+-(void) setBackgroundScale:(CGFloat)_backgroundScale{
+    [scrapState setBackgroundScale:_backgroundScale];
+}
+
+-(CGFloat) backgroundScale{
+    return scrapState.backgroundScale;
+}
+
+-(void) setBackgroundOffset:(CGPoint)bgOffset{
+    [scrapState setBackgroundOffset:bgOffset];
+}
+
+-(CGPoint) backgroundOffset{
+    return [scrapState backgroundOffset];
+}
 
 /**
  * shadows cause lag during scrolling
@@ -166,8 +210,7 @@
 -(void) setShouldShowShadow:(BOOL)shouldShowShadow{
     if(shouldShowShadow){
         self.layer.shadowPath = scrapState.bezierPath.CGPath;
-        self.layer.shadowRadius = 1.5;
-        self.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.5].CGColor;
+        [self setSelected:selected]; // reset shadow
         self.layer.shadowOpacity = .65;
         self.layer.shadowOffset = CGSizeMake(0, 0);
         borderView.hidden = YES;
@@ -250,6 +293,9 @@
 }
 
 -(void) setRotation:(CGFloat)_rotation{
+    if(ABS(_rotation - rotation) > .3 && rotation != 0){
+        NSLog(@"what");
+    }
     [self setScale:self.scale andRotation:_rotation];
 }
 
@@ -422,18 +468,20 @@
 #pragma mark - Saving
 
 -(void) saveToDisk{
+    NSLog(@"asking scrap %@ to save", scrapState.uuid);
     [scrapState saveToDisk];
 }
 
 
-
 #pragma mark - State
 
--(void) loadStateAsynchronously:(BOOL)async{
-    [scrapState loadStateAsynchronously:async];
+-(void) loadScrapStateAsynchronously:(BOOL)async{
+    NSLog(@"asking scrap %@ to load async %d", scrapState.uuid, async);
+    [scrapState loadScrapStateAsynchronously:async];
 }
 
 -(void) unloadState{
+    NSLog(@"asking scrap %@ to unload", scrapState.uuid);
     [scrapState unloadState];
 }
 
@@ -449,21 +497,22 @@
 }
 
 -(MMScrapViewState*) state{
-    return  scrapState;
+    return scrapState;
 }
 
 
 #pragma mark - Sub-scrap content
 
+
 /**
- * this will take self's drawn contents and 
+ * this will take self's drawn contents and
  * stamp them onto the input otherScrap in the
  * exact same place they are visually on the page
  */
--(void) stampContentsOnto:(MMScrapView*)otherScrap{
+-(void) stampContentsFrom:(JotView*)otherDrawableView{
     // step 1: generate a gl texture of my entire contents
-    JotGLTexture* myTexture = [scrapState generateTexture];
-
+    JotGLTexture* otherTexture = [otherDrawableView generateTexture];
+    
     // opengl coordinates
     // when a texture is drawn, it's drawn in these coordinates
     // from coregraphics top left counter clockwise around.
@@ -474,36 +523,36 @@
     //
     // this is equivelant to starting in top left (0,0) in
     // core graphics. and moving clockwise.
-
+    
     // get the coordinates of the new scrap in the old
     // scrap's coordinate space.
-    CGRect bounds = otherScrap.state.drawableView.bounds;
-    CGPoint p1 = [self.state.drawableView convertPoint:bounds.origin fromView:otherScrap.state.drawableView];
-    CGPoint p2 = [self.state.drawableView convertPoint:CGPointMake(bounds.size.width, 0) fromView:otherScrap.state.drawableView];
-    CGPoint p3 = [self.state.drawableView convertPoint:CGPointMake(0, bounds.size.height) fromView:otherScrap.state.drawableView];
-    CGPoint p4 = [self.state.drawableView convertPoint:CGPointMake(bounds.size.width, bounds.size.height) fromView:otherScrap.state.drawableView];
+    CGRect bounds = self.state.drawableView.bounds;
+    CGPoint p1 = [otherDrawableView convertPoint:bounds.origin fromView:self.state.drawableView];
+    CGPoint p2 = [otherDrawableView convertPoint:CGPointMake(bounds.size.width, 0) fromView:self.state.drawableView];
+    CGPoint p3 = [otherDrawableView convertPoint:CGPointMake(0, bounds.size.height) fromView:self.state.drawableView];
+    CGPoint p4 = [otherDrawableView convertPoint:CGPointMake(bounds.size.width, bounds.size.height) fromView:self.state.drawableView];
     
     // normalize the coordinates to get texture
     // coordinate space of 0 to 1
-    p1.x /= self.state.drawableView.bounds.size.width;
-    p2.x /= self.state.drawableView.bounds.size.width;
-    p3.x /= self.state.drawableView.bounds.size.width;
-    p4.x /= self.state.drawableView.bounds.size.width;
-    p1.y /= self.state.drawableView.bounds.size.height;
-    p2.y /= self.state.drawableView.bounds.size.height;
-    p3.y /= self.state.drawableView.bounds.size.height;
-    p4.y /= self.state.drawableView.bounds.size.height;
-
+    p1.x /= otherDrawableView.bounds.size.width;
+    p2.x /= otherDrawableView.bounds.size.width;
+    p3.x /= otherDrawableView.bounds.size.width;
+    p4.x /= otherDrawableView.bounds.size.width;
+    p1.y /= otherDrawableView.bounds.size.height;
+    p2.y /= otherDrawableView.bounds.size.height;
+    p3.y /= otherDrawableView.bounds.size.height;
+    p4.y /= otherDrawableView.bounds.size.height;
+    
     // now flip from core graphics to opengl coordinates
     CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, 1.0);
     p1 = CGPointApplyAffineTransform(p1, flipTransform);
     p2 = CGPointApplyAffineTransform(p2, flipTransform);
     p3 = CGPointApplyAffineTransform(p3, flipTransform);
     p4 = CGPointApplyAffineTransform(p4, flipTransform);
-
+    
     // now tamp our texture onto the other scrap using these
     // texture coordinates
-    [otherScrap drawTexture:myTexture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
+    [self drawTexture:otherTexture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
 }
 
 /**
@@ -515,7 +564,7 @@
 }
 
 -(void) dealloc{
-    NSLog(@"scrap dealloc");
+    NSLog(@"scrap %@ dealloc", scrapState.uuid);
 }
 
 @end

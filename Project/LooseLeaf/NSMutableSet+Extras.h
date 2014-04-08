@@ -14,12 +14,16 @@
 
 -(NSSet*) setByRemovingObject:(id)obj;
 
+-(void) removeObjectsInArray:(NSArray*)arr;
+
 -(void) addObjectsInSet:(NSSet*)set;
 
 @end
 
 
 @interface NSMutableOrderedSet (LooseLeafExtras)
+
+-(void) addObjectsInOrderedSet:(NSOrderedSet*)set;
 
 -(void) removeObjectsInSet:(NSSet*)set;
 

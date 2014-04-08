@@ -14,6 +14,7 @@
 #import "TestFlight.h"
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import "DKUIBezierPathClippedSegment+PathElement.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 
 dispatch_queue_t importThumbnailQueue;
 
@@ -68,7 +69,7 @@ dispatch_queue_t importThumbnailQueue;
         cachedImgView.opaque = YES;
         cachedImgView.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:cachedImgView];
-        
+
         //
         // This pan gesture is used to pan/scale the page itself.
         rulerGesture = [[MMRulerToolGestureRecognizer alloc] initWithTarget:self action:@selector(didMoveRuler:)];
@@ -81,6 +82,7 @@ dispatch_queue_t importThumbnailQueue;
         [rulerGesture requireGestureRecognizerToFail:longPress];
         [rulerGesture requireGestureRecognizerToFail:tap];
         [self addGestureRecognizer:rulerGesture];
+
         
         // initialize our state manager
         paperState = [[JotViewStateProxy alloc] initWithInkPath:[self inkPath] andPlistPath:[self plistPath]];
@@ -274,7 +276,7 @@ dispatch_queue_t importThumbnailQueue;
     }else{
         // already saved, but don't need to write
         // anything new to disk
-        debug_NSLog(@"no edits to save with hash %u", [drawableView undoHash]);
+//        debug_NSLog(@"no edits to save with hash %u", [drawableView undoHash]);
         onComplete();
     }
 }
@@ -356,6 +358,11 @@ static int count = 0;
         }else if(gesture.state == UIGestureRecognizerStateBegan ||
                gesture.state == UIGestureRecognizerStateChanged){
             [self.delegate didMoveRuler:gesture];
+            if([gesture.validTouches count] < 2){
+                [self.delegate didStopRuler:gesture];
+            }else{
+                [self.delegate didMoveRuler:gesture];
+            }
         }
     }
 }
@@ -463,13 +470,9 @@ static int count = 0;
 
 -(NSString*) pagesPath{
     if(!pagesPath){
-        NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString* documentsPath = [paths objectAtIndex:0];
+        NSString* documentsPath = [NSFileManager documentsPath];
         pagesPath = [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:[self uuid]];
-        
-        if(![[NSFileManager defaultManager] fileExistsAtPath:pagesPath]){
-            [[NSFileManager defaultManager] createDirectoryAtPath:pagesPath withIntermediateDirectories:YES attributes:nil error:nil];
-        }
+        [NSFileManager ensureDirectoryExistsAtPath:pagesPath];
     }
     return pagesPath;
 }

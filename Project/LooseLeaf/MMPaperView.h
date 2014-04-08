@@ -20,15 +20,6 @@
     
     NSObject<MMPaperViewDelegate>* __weak delegate;
     
-    // properties for pinch gesture
-    CGFloat preGestureScale;
-    CGPoint normalizedLocationOfScale;
-    
-    // properties for pan gesture
-    CGPoint firstLocationOfPanGestureInSuperView;
-    CGRect frameOfPageAtBeginningOfGesture;
-    NSInteger lastNumberOfTouchesForPanGesture;
-
     BOOL isBeingPannedAndZoomed;
     
     UILabel* textLabel;
@@ -51,6 +42,7 @@
 @property (nonatomic, readonly) NSInteger numberOfTimesExitedBezel;
 @property (nonatomic, readonly) UILabel* textLabel;
 @property (nonatomic, assign) BOOL isBrandNewPage;
+@property (nonatomic, readonly) MMPanAndPinchGestureRecognizer* panGesture;
 
 // read only props
 @property (nonatomic, readonly) CGRect originalUnscaledBounds;

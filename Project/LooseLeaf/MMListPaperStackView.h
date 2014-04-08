@@ -52,4 +52,14 @@
 -(NSArray*) findPagesInVisibleRowsOfListViewGivenOffset:(CGPoint)eventualOffsetOfListView;
 
 
+// protected
+
+-(void) beginUITransitionFromPageView;
+
+-(void) beginUITransitionFromListView;
+
+-(void) finishUITransitionToListView;
+
+-(void) finishUITransitionToPageView;
+
 @end

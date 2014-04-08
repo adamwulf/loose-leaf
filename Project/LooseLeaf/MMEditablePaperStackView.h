@@ -37,12 +37,13 @@
 #import "MMRulerView.h"
 #import "PolygonToolDelegate.h"
 #import "MMEditablePaperViewDelegate.h"
+#import "MMDrawingTouchGestureRecognizer.h"
 
 /**
  * this class is responsible for the editable buttons and controls that show
  * outside of a page's view subviews
  */
-@interface MMEditablePaperStackView : MMListPaperStackView<MMEditablePaperViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,UIScrollViewDelegate,PolygonToolDelegate>{
+@interface MMEditablePaperStackView : MMListPaperStackView<MMEditablePaperViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,UIScrollViewDelegate,PolygonToolDelegate,MMPanGestureDelegate,UIGestureRecognizerDelegate>{
     
     // managers
     MMStackManager* stackManager;
@@ -51,7 +52,6 @@
     MMPaperButton* documentBackgroundSidebarButton;
     MMPlusButton* addPageSidebarButton;
     MMPolylineButton* polylineButton;
-    MMPolygonButton* polygonButton;
     MMImageButton* insertImageButton;
     MMScissorButton* scissorButton;
     MMTextButton* textButton;
@@ -69,7 +69,6 @@
 
     Pen* pen;
     Eraser* eraser;
-    PolygonTool* polygon;
     MMScissorTool* scissor;
     
     NSMutableSet* pagesWithLoadedCacheImages;
@@ -87,6 +86,8 @@
 -(void) addPageButtonTapped:(UIButton*)_button;
 
 -(void) setButtonsVisible:(BOOL)visible;
+
+-(void) setButtonsVisible:(BOOL)visible withDuration:(CGFloat)duration;
 
 
 @end

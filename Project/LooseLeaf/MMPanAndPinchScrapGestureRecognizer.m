@@ -13,6 +13,9 @@
 #import "MMPanAndPinchGestureRecognizer.h"
 #import "NSMutableSet+Extras.h"
 #import "MMTouchVelocityGestureRecognizer.h"
+#import "MMStretchScrapGestureRecognizer.h"
+#import "UIView+Animations.h"
+#import "UIGestureRecognizer+GestureDebug.h"
 
 #define kMaxSimultaneousTouchesAllowedToTrack 20
 #define kNumberOfDirectionChangesToDetermineShake 2
@@ -51,6 +54,7 @@ struct TouchInterval{
     struct TouchInterval touchIntervals[kMaxSimultaneousTouchesAllowedToTrack];
     
     BOOL isShaking;
+    BOOL paused;
 }
 
 
@@ -65,6 +69,7 @@ struct TouchInterval{
 @synthesize bezelDirectionMask;
 @synthesize shouldReset;
 @synthesize isShaking;
+@synthesize initialTouchVector;
 
 
 NSInteger const  mmMinimumNumberOfScrapTouches = 2;
@@ -113,7 +118,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     return ret;
 }
 
--(NSArray*)touches{
+-(NSArray*)validTouches{
     return [validTouches array];
 }
 
@@ -138,26 +143,114 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 }
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
-    if(gesture != self){
-        [possibleTouches removeObjectsInSet:touches];
-        [ignoredTouches addObjectsInSet:touches];
-        BOOL needsToFixValidTouches = NO;
-        for(UITouch* t in touches){
-            if([validTouches containsObject:t]){
-                NSLog(@"gotcha");
-                [validTouches removeObject:t];
+    if(gesture != self && ![gesture isKindOfClass:[MMStretchScrapGestureRecognizer class]]){
+        __block BOOL needsToFixValidTouches = NO;
+        [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
+            if([validTouches containsObject:touch]){
                 needsToFixValidTouches = YES;
             }
-        }
-        if(needsToFixValidTouches){
+            if([possibleTouches containsObject:touch] || [validTouches containsObject:touch]){
+                [possibleTouches removeObjectsInSet:touches];
+                [validTouches removeObjectsInSet:touches];
+            }
+            [ignoredTouches addObjectsInSet:touches];
+        }];
+        if(needsToFixValidTouches && [validTouches count] < mmMinimumNumberOfScrapTouches){
             // what do i do if a valid touch is
             // stolen from us?
             // this can happen if the user bezels
             // from teh right, and both bezel touches
             // also begin on top of the same scrap
             self.state = UIGestureRecognizerStateCancelled;
+            if([gesture isKindOfClass:[MMPanAndPinchScrapGestureRecognizer class]]){
+                if([(MMPanAndPinchScrapGestureRecognizer*)gesture scrap] == scrap){
+                    // if the other pan/pinch gesture owns this scrap, then let
+                    // it handle it and we'll give up our scrap silently
+                    scrap = nil;
+                }
+            }
         }
     }
+}
+
+/**
+ * called when someone else decides that we need to
+ * relenquish ownership of some touches.
+ * this is called when a stretch gesture completes
+ * and we need to swap which pan gestures own which
+ * touches
+ */
+-(void) relinquishOwnershipOfTouches:(NSSet*)touches{
+    
+    NSMutableSet* validTouchesToRelinquish = [NSMutableSet setWithSet:[validTouches set]];
+    [validTouchesToRelinquish intersectSet:touches];
+
+    [validTouches removeObjectsInSet:touches];
+    [ignoredTouches addObjectsInSet:validTouchesToRelinquish];
+    
+    if([validTouches count] < mmMinimumNumberOfScrapTouches && self.scrap){
+//        NSLog(@"promote possible touch? %d %d %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+//        NSLog(@"demoting valid touches");
+        [possibleTouches addObjectsInSet:[validTouches set]];
+        [validTouches removeAllObjects];
+        self.scrap = nil;
+    }
+    if([validTouches count] == 0 && self.scrap){
+//        NSLog(@"relenquish scrap? %d %d %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+        self.scrap = nil;
+    }
+    
+
+    // if we only have 2 touches, then their sort
+    // order doesn't matter
+    if([validTouches count] <= mmMinimumNumberOfScrapTouches) return;
+    
+    // now sort valid touches by relative distance,
+    // with closest first. this nested for loop
+    // will caculate the distance between every touch
+    // with every other touch.
+    int count = [validTouches count];
+    CGFloat dist[count][count];
+    for(int i=0;i<count;i++){
+        for(int j=i;j<count;j++){
+            if(i == j){
+                dist[i][j] = 0;
+            }else{
+                UITouch* touch1 = [validTouches objectAtIndex:i];
+                UITouch* touch2 = [validTouches objectAtIndex:j];
+                CGPoint initialPoint1 = [touch1 locationInView:self.view.superview];
+                CGPoint initialPoint2 = [touch2 locationInView:self.view.superview];
+                dist[i][j] = DistanceBetweenTwoPoints(initialPoint1, initialPoint2);
+                dist[j][i] = dist[i][j];
+            }
+        }
+    }
+    
+    // we'll then average the distance for every touch
+    // with all others.
+    CGFloat avgDist[count];
+    for(int i=0;i<count;i++){
+        for(int j=0;j<count;j++){
+            avgDist[i] += dist[i][j] / count;
+        }
+    }
+    
+    CGFloat* blockedAvgDist = avgDist;
+    [validTouches sortUsingComparator:^NSComparisonResult(id obj1, id obj2){
+        NSInteger idx1 = [validTouches indexOfObject:obj1];
+        NSInteger idx2 = [validTouches indexOfObject:obj2];
+        return blockedAvgDist[idx1] < blockedAvgDist[idx2] ? NSOrderedAscending : NSOrderedDescending;
+    }];
+    //
+    // at this point, the two valid touches at the beginning of the set
+    // are also the closest to each other.
+    //
+    // this helps when a scrap is stretched with 4 fingers, and only 1
+    // finger is lifted, then the remaining 3 touches will be sorted
+    // so that the first two are closest. this way the closest touches
+    // will inherit the panning of the scrap. this'll also ensure
+    // that the locations calculated from these touches will be correct
+    // for the animation after the stretch gesture.
 }
 
 -(CGPoint)locationInView:(UIView *)view{
@@ -170,13 +263,94 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 }
 
 
+
+
+-(void) forceBlessTouches:(NSSet*)touches forScrap:(MMScrapView*)_scrap{
+    // force scrap to the input, and force
+    // input touches to valid
+    scrap = _scrap;
+    [validTouches addObjectsInSet:touches];
+    [possibleTouches removeObjectsInSet:touches];
+    [ignoredTouches removeObjectsInSet:touches];
+    [self touchesBegan:touches withEvent:nil];
+    
+    
+    [self.scrapDelegate ownershipOfTouches:[validTouches set] isGesture:self];
+
+    
+    if([validTouches count] >= mmMinimumNumberOfScrapTouches){
+        [self prepareGestureToBeginFresh];
+    }else{
+        [possibleTouches addObjectsInOrderedSet:validTouches];
+        [validTouches removeAllObjects];
+        self.scrap = nil;
+    }
+}
+
+
+
+
+
 -(void) blessTouches:(NSSet*)touches{
     NSMutableSet* newPossibleTouches = [NSMutableSet setWithSet:ignoredTouches];
     [newPossibleTouches intersectSet:touches];
     [possibleTouches addObjectsInSet:newPossibleTouches];
     [ignoredTouches removeObjectsInSet:newPossibleTouches];
-    self.shouldReset = YES;
     [self touchesBegan:newPossibleTouches withEvent:nil];
+    
+    [self processPossibleTouches];
+    if([validTouches count] >= mmMinimumNumberOfScrapTouches){
+        [self prepareGestureToBeginFresh];
+    }else{
+        [possibleTouches addObjectsInOrderedSet:validTouches];
+        [validTouches removeAllObjects];
+        self.scrap = nil;
+    }
+}
+
+
+
+-(void) processPossibleTouches{
+    NSArray* scrapsToLookAt = scrapDelegate.scraps;
+    if(self.scrap){
+        NSUInteger indx = [scrapsToLookAt indexOfObject:self.scrap];
+        if(indx == NSNotFound){
+            scrapsToLookAt = [NSArray arrayWithObject:scrap];
+        }else{
+            scrapsToLookAt = [scrapsToLookAt subarrayWithRange:NSMakeRange(indx, [scrapsToLookAt count] - indx)];
+        }
+    }
+    
+    NSMutableSet* allPossibleTouches = [NSMutableSet setWithSet:[possibleTouches set]];
+    // scraps are returned back to front, so we need to reverse
+    // enumerate them so that we check front to back
+    for(MMScrapView* _scrap in [scrapsToLookAt reverseObjectEnumerator]){
+        NSSet* touchesInScrap = [_scrap matchingPairTouchesFrom:allPossibleTouches];
+        if(self.scrap && self.scrap == _scrap && ![touchesInScrap count]){
+            for(UITouch* touch in possibleTouches){
+                if([scrap containsTouch:touch]){
+                    // we only need to worry about sets with one object
+                    // because if more than 1 possible touch matched,
+                    // then the matchingTouchesFrom: would have returned them
+                    touchesInScrap = [NSSet setWithObject:touch];
+                }
+            }
+        }
+        if([touchesInScrap count] && (!self.scrap || self.scrap == _scrap)){
+            // two+ possible touches match this scrap
+            self.scrap = _scrap;
+            [validTouches addObjectsInSet:touchesInScrap];
+            [possibleTouches removeObjectsInSet:touchesInScrap];
+            [self.scrapDelegate ownershipOfTouches:[validTouches set] isGesture:self];
+            break;
+        }else{
+            // remove all touches from allPossibleTouches that match this scrap
+            // since grabbing a scrap requires that it hit the visible portion of the scrap,
+            // this will remove any touches that don't grab a scrap but do land in a scrap
+            [allPossibleTouches removeObjectsInSet:[_scrap allMatchingTouchesFrom:allPossibleTouches]];
+        }
+        if(![allPossibleTouches count]) break;
+    }
 }
 
 /**
@@ -185,11 +359,14 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
  * to match that of the animation.
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self say:@"began" ISee:touches];
     isShaking = NO;
     for(UITouch* touch in touches){
         [self calculateShakesForTouch:touch];
     }
     if([self.scrapDelegate panScrapRequiresLongPress] && ![possibleTouches intersectsSet:touches]){
+        // ignore touches in the possible set, b/c if they're already in there during
+        // this Began method call, then that means they've been blessed
         [ignoredTouches addObjectsInSet:touches];
         return;
     }
@@ -197,58 +374,11 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     // ignore all the touches that could be bezel touches
     if([validTouchesCurrentlyBeginning count]){
         
-        NSArray* scrapsToLookAt;
-        if(self.scrap){
-            scrapsToLookAt = [NSArray arrayWithObject:scrap];
-        }else{
-            scrapsToLookAt = scrapDelegate.scraps;
-        }
-        
-        
         [possibleTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
         [possibleTouches removeObjectsInSet:ignoredTouches];
         
-        NSMutableSet* allPossibleTouches = [NSMutableSet setWithSet:[possibleTouches set]];
-        // scraps are returned back to front, so we need to reverse
-        // enumerate them so that we check front to back
-        for(MMScrapView* _scrap in [scrapsToLookAt reverseObjectEnumerator]){
-            NSSet* touchesInScrap = [_scrap matchingPairTouchesFrom:allPossibleTouches];
-            if(self.scrap && ![touchesInScrap count]){
-                for(UITouch* touch in possibleTouches){
-                    if([scrap containsTouch:touch]){
-                        // we only need to worry about sets with one object
-                        // because if more than 1 possible touch matched,
-                        // then the matchingTouchesFrom: would have returned them
-                        touchesInScrap = [NSSet setWithObject:touch];
-                    }
-                }
-            }
-            if([touchesInScrap count]){
-                // two+ possible touches match this scrap
-                if([validTouches count] < mmMinimumNumberOfScrapTouches){
-                    self.scrap = _scrap;
-                    [scrapDelegate ownershipOfTouches:touchesInScrap isGesture:self];
-                    [validTouches addObjectsInSet:touchesInScrap];
-                    [possibleTouches removeObjectsInSet:touchesInScrap];
-                }else{
-                    // if our gesture already has two fingers on the scrap,
-                    // then ignore any additioanl touches on the scrap.
-                    //
-                    // this will allow the other scrap gesture to also
-                    // hang onto this scrap (which we'll use to duplicate
-                    // the scrap later).
-                    [ignoredTouches addObjectsInSet:touchesInScrap];
-                    [possibleTouches removeObjectsInSet:touchesInScrap];
-                }
-                break;
-            }else{
-                // remove all touches from allPossibleTouches that match this scrap
-                // since grabbing a scrap requires that it hit the visible portion of the scrap,
-                // this will remove any touches that don't grab a scrap but do land in a scrap
-                [allPossibleTouches removeObjectsInSet:[_scrap allMatchingTouchesFrom:allPossibleTouches]];
-            }
-        }
-        
+        [self processPossibleTouches];
+ 
         if([validTouches count] >= mmMinimumNumberOfScrapTouches){
             
             [self prepareGestureToBeginFresh];
@@ -270,6 +400,8 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
+    if(paused) return;
+    
     isShaking = NO;
     for(UITouch* t in touches){
         [self calculateShakesForTouch:t];
@@ -307,6 +439,8 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
             CGPoint p2 = [[validTouches objectAtIndex:1] locationInView:self.view];
             MMVector* currentVector = [[MMVector alloc] initWithPoint:p1 andPoint:p2];
             CGFloat diff = [initialTouchVector angleBetween:currentVector];
+//            NSLog(@"pan scrap %p adding %f to rotation %f", self, diff, rotation);
+//            NSLog(@" using touches %p and %p", [validTouches firstObject], [validTouches objectAtIndex:1]);
             rotation += diff;
             initialTouchVector = currentVector;
             CGPoint locInView = [self locationInView:self.view];
@@ -359,6 +493,22 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self say:@"ended" ISee:touches];
+    if(paused){
+        [validTouches removeObjectsInSet:touches];
+        [ignoredTouches removeObjectsInSet:touches];
+        [possibleTouches removeObjectsInSet:touches];
+        if(![validTouches count] && ![ignoredTouches count] && ![possibleTouches count] &&
+           self.state != UIGestureRecognizerStatePossible){
+            self.state = UIGestureRecognizerStateEnded;
+        }
+        if([validTouches count] < mmMinimumNumberOfScrapTouches && self.scrap){
+//            NSLog(@"what");
+            self.scrap = nil;
+        }
+        return;
+    }
+    
     isShaking = NO;
     // pan and pinch and bezel
     BOOL cancelledFromBezel = NO;
@@ -455,7 +605,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         // reset the location and the initial distance of the gesture
         // so that the new first two touches position won't immediatley
         // change where the page is or what its scale is
-        [self setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
+        [UIView setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
         [self prepareGestureToBeginFresh];
     }
 //    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
@@ -467,6 +617,21 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self say:@"cancelled" ISee:touches];
+    if(paused){
+        [validTouches removeObjectsInSet:touches];
+        [ignoredTouches removeObjectsInSet:touches];
+        [possibleTouches removeObjectsInSet:touches];
+        if(![validTouches count] && ![ignoredTouches count] && ![possibleTouches count] &&
+           self.state != UIGestureRecognizerStatePossible){
+            self.state = UIGestureRecognizerStateEnded;
+        }
+        if([validTouches count] < mmMinimumNumberOfScrapTouches && self.scrap){
+//            NSLog(@"what");
+            scrap = nil;
+        }
+        return;
+    }
     NSMutableOrderedSet* validTouchesCurrentlyCancelling = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
     [validTouchesCurrentlyCancelling intersectSet:touches];
     [validTouchesCurrentlyCancelling minusSet:ignoredTouches];
@@ -513,6 +678,8 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
  * this way we don't have to wait
  */
 -(void) prepareGestureToBeginFresh{
+    if(paused) return;
+    
     // set the anchor point so that it
     // rotates around the point that we're
     // gesturing
@@ -521,17 +688,41 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     // and neither does the bounds. so we need to use bounds.size, not frame.size
     // to determine where to set the anchor point
     p = CGPointMake(p.x / scrap.bounds.size.width, p.y / scrap.bounds.size.height);
-    [self setAnchorPoint:p forView:scrap];
+    [UIView setAnchorPoint:p forView:scrap];
 
     CGPoint p1 = [[validTouches firstObject] locationInView:self.view];
     CGPoint p2 = [[validTouches objectAtIndex:1] locationInView:self.view];
     initialTouchVector = [[MMVector alloc] initWithPoint:p1 andPoint:p2];
     rotation = 0;
+//    NSLog(@"pan scrap %p setting vector to %@ and rotation to %f", self, initialTouchVector, rotation);
+//    NSLog(@" using touches %p and %p", [validTouches firstObject], [validTouches objectAtIndex:1]);
     gestureLocationAtStart = [self locationInView:self.view];
     initialDistance = [self distanceBetweenTouches:validTouches];
     translation = CGPointZero;
     scale = 1;
+
+    // when a gesture begins, I need to store its
+    // pregesture scale + location in the /scrapContainer/
+    // when as the gesture scales or moves, we'll convert
+    // these coordinates back to the page coordinate space
+    // if the scrap is still inside the page. otherwise
+    // we'll just use the scrapContainer properties directly
+    //
+    // gesture.shouldReset is a flag for when the gesture will
+    // re-begin it's state w/o triggering a UIGestureRecognizerStateBegan
+    // since the state can only change between certain values.
+    // the target of this gesture can watch this flag and restart
+    // the gesture whenever this flag is set to YES.
+    //
+    // this lets us restart a gesture w/o needing to formally
+    // End it with its state. this lets us restart a gesture
+    // while other gestures are still mid-flight w/ touches
+    // on the screen.
     self.shouldReset = YES;
+    self.preGestureScale = self.scrap.scale;
+    self.preGestureRotation = self.scrap.rotation;
+    self.preGesturePageScale = [scrapDelegate topVisiblePageScaleForScrap:self.scrap];
+    self.preGestureCenter = [scrapDelegate convertScrapCenterToScrapContainerCoordinate:self.scrap];
 }
 
 /**
@@ -542,7 +733,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
  * without having to expose anchor point methods
  */
 -(void) giveUpScrap{
-    [self setAnchorPoint:CGPointMake(.5, .5) forView:self.scrap];
+    [UIView setAnchorPoint:CGPointMake(.5, .5) forView:self.scrap];
     scrap = nil;
 }
 
@@ -586,32 +777,6 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     return 0;
 }
 
-/**
- * this will set the anchor point for a scrap, so that it rotates
- * underneath the gesture realistically, instead of always from
- * it's center
- */
--(void)setAnchorPoint:(CGPoint)anchorPoint forView:(UIView *)view
-{
-    CGPoint newPoint = CGPointMake(view.bounds.size.width * anchorPoint.x, view.bounds.size.height * anchorPoint.y);
-    CGPoint oldPoint = CGPointMake(view.bounds.size.width * view.layer.anchorPoint.x, view.bounds.size.height * view.layer.anchorPoint.y);
-    
-    newPoint = CGPointApplyAffineTransform(newPoint, view.transform);
-    oldPoint = CGPointApplyAffineTransform(oldPoint, view.transform);
-    
-    CGPoint position = view.layer.position;
-    
-    position.x -= oldPoint.x;
-    position.x += newPoint.x;
-    
-    position.y -= oldPoint.y;
-    position.y += newPoint.y;
-    
-    view.layer.position = position;
-    view.layer.anchorPoint = anchorPoint;
-}
-
-
 #pragma mark - Shake Helpers
 
 -(void) calculateShakesForTouch:(UITouch*)touch{
@@ -647,5 +812,30 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     }
 }
 
+
+
+-(BOOL) paused{
+    return paused;
+}
+
+CGPoint prevLocation;
+-(void) pause{
+//    NSLog(@"pan scrap gesture %p paused", self);
+    prevLocation = [self locationInView:self.view];
+    paused = YES;
+}
+
+-(BOOL) begin{
+//    NSLog(@"pan scrap gesture %p began", self);
+    if(!paused){
+        NSLog(@"what");
+    }
+    paused = NO;
+    if([validTouches count] >= mmMinimumNumberOfScrapTouches){
+        [self prepareGestureToBeginFresh];
+        return YES;
+    }
+    return NO;
+}
 
 @end

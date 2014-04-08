@@ -11,6 +11,7 @@
 #import "Constants.h"
 #import "MMScrapView.h"
 #import "MMPanAndPinchScrapGestureRecognizerDelegate.h"
+#import "MMVector.h"
 
 @interface MMPanAndPinchScrapGestureRecognizer : UIGestureRecognizer{
     // the initial distance between
@@ -44,7 +45,7 @@
 @property (nonatomic, assign) MMBezelDirection bezelDirectionMask;
 @property (nonatomic, readonly) MMBezelDirection didExitToBezel;
 @property (nonatomic, weak) NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>* scrapDelegate;
-@property (readonly) NSArray* touches;
+@property (readonly) NSArray* validTouches;
 @property (nonatomic, readonly) CGFloat scale;
 @property (nonatomic, readonly) CGFloat rotation;
 @property (nonatomic, readonly) CGPoint translation;
@@ -54,13 +55,21 @@
 @property (assign) CGFloat preGesturePageScale;
 @property (assign) CGFloat preGestureRotation;
 @property (assign) CGPoint preGestureCenter;
+@property (readonly) MMVector* initialTouchVector;
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
+-(void) relinquishOwnershipOfTouches:(NSSet*)touches;
 -(void) giveUpScrap;
 -(void) cancel;
 -(void) blessTouches:(NSSet*)touches;
+-(void) forceBlessTouches:(NSSet*)touches forScrap:(MMScrapView*)_scrap;
 
 -(NSArray*) possibleTouches;
 -(NSArray*) ignoredTouches;
+
+
+-(BOOL) paused;
+-(void) pause;
+-(BOOL) begin;
 
 @end

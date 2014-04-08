@@ -8,6 +8,9 @@
 
 #import "MMLoadImageCache.h"
 
+// TODO: possibly use this tutorial for threadsafe cache
+// https://mikeash.com/pyblog/friday-qa-2011-10-14-whats-new-in-gcd.html
+
 #define kThumbCacheSize 30
 
 @implementation MMLoadImageCache{
@@ -49,7 +52,10 @@ static MMLoadImageCache* _instance = nil;
 
 static int count = 0;
 -(UIImage*) imageAtPath:(NSString*)path{
-    UIImage* cachedImage = [loadedImages objectForKey:path];
+    UIImage* cachedImage = nil;
+    @synchronized(self){
+        cachedImage = [loadedImages objectForKey:path];
+    }
     if(!cachedImage){
         @synchronized(self){
             if([orderedKeys containsObject:path]){
