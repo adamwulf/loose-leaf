@@ -8,9 +8,12 @@
 
 #import "MMImageSidebarContainerView.h"
 #import "MMImageSidebarContentView.h"
+#import "MMImageViewButton.h"
+#import "Constants.h"
 
 @implementation MMImageSidebarContainerView{
     MMImageSidebarContentView* contentView;
+    MMImageViewButton* photoAlbumButton;
 }
 
 @dynamic delegate;
@@ -18,10 +21,26 @@
 - (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton *)_button animateFromLeft:(BOOL)fromLeft{
     self = [super initWithFrame:frame forButton:_button animateFromLeft:fromLeft];
     if (self) {
+        
+        CGRect contentBounds = [sidebarContentView contentBounds];
+        
+        CGRect buttonBounds = contentBounds;
+        buttonBounds.origin.y = [UIApplication sharedApplication].statusBarFrame.size.height;
+        buttonBounds.size.height = kWidthOfSidebarButton; // includes spacing buffer
+        
+        contentBounds.origin.y = buttonBounds.origin.y + buttonBounds.size.height;
+        contentBounds.size.height -= buttonBounds.size.height;
+        
         // Initialization code
-        contentView = [[MMImageSidebarContentView alloc] initWithFrame:[sidebarContentView contentBounds]];
+        contentView = [[MMImageSidebarContentView alloc] initWithFrame:contentBounds];
         contentView.delegate = self;
         [sidebarContentView addSubview:contentView];
+        
+        photoAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x, buttonBounds.origin.y,
+                                                                               kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        [photoAlbumButton setImage:[UIImage imageNamed:@"photoalbum"]];
+        
+        [sidebarContentView addSubview:photoAlbumButton];
     }
     return self;
 }

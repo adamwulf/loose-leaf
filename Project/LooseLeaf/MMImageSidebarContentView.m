@@ -15,7 +15,7 @@
 #import "MMImageSidebarContainerView.h"
 #import "ALAsset+Thumbnail.h"
 
-#define kTopBottomMargin 50
+#define kTopBottomMargin 20
 
 @implementation MMImageSidebarContentView{
     MMCachedRowsScrollView* albumListScrollView;
@@ -45,6 +45,36 @@
         
         [self addSubview:albumListScrollView];
         [self addSubview:photoListScrollView];
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        NSObject * transparent = (NSObject *) [[UIColor colorWithWhite:0 alpha:0] CGColor];
+        NSObject * opaque = (NSObject *) [[UIColor colorWithWhite:0 alpha:1] CGColor];
+        
+        CALayer * maskLayer = [CALayer layer];
+        maskLayer.frame = self.bounds;
+        
+        CAGradientLayer * gradientLayer = [CAGradientLayer layer];
+        gradientLayer.frame = CGRectMake(self.bounds.origin.x, 0,
+                                         self.bounds.size.width, self.bounds.size.height);
+        
+        gradientLayer.colors = [NSArray arrayWithObjects: transparent, opaque, nil];
+        
+        CGFloat fadePercentage = kTopBottomMargin / self.bounds.size.height;
+        // Set percentage of scrollview that fades at top & bottom
+        gradientLayer.locations = [NSArray arrayWithObjects:
+                                   [NSNumber numberWithFloat:0],
+                                   [NSNumber numberWithFloat:fadePercentage], nil];
+        
+        [maskLayer addSublayer:gradientLayer];
+        self.layer.mask = maskLayer;
+
     }
     return self;
 }

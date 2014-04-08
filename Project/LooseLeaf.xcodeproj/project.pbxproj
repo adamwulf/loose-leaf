@@ -30,6 +30,9 @@
 		664F413D1590661F006F8B09 /* MMRightArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413C1590661F006F8B09 /* MMRightArrow.m */; };
 		664F414015906628006F8B09 /* MMLeftArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413F15906628006F8B09 /* MMLeftArrow.m */; };
 		6650DD0F18F46D5100ADF591 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6650DD0E18F46D5100ADF591 /* Images.xcassets */; };
+		6650DD1218F4843400ADF591 /* photoalbum@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6650DD1118F4843400ADF591 /* photoalbum@2x.png */; };
+		6650DD1418F4843D00ADF591 /* photoalbum.png in Resources */ = {isa = PBXBuildFile; fileRef = 6650DD1318F4843D00ADF591 /* photoalbum.png */; };
+		6650DD1718F4849800ADF591 /* MMImageViewButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6650DD1618F4849800ADF591 /* MMImageViewButton.m */; };
 		66510835178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66510834178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m */; };
 		66510838178DFEE700A7A7DD /* MMRulerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66510837178DFEE700A7A7DD /* MMRulerView.m */; };
 		6651083C178F249C00A7A7DD /* MMVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6651083B178F249C00A7A7DD /* MMVector.m */; };
@@ -207,6 +210,10 @@
 		664F413E15906628006F8B09 /* MMLeftArrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLeftArrow.h; sourceTree = "<group>"; };
 		664F413F15906628006F8B09 /* MMLeftArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLeftArrow.m; sourceTree = "<group>"; };
 		6650DD0E18F46D5100ADF591 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = LooseLeaf/Images.xcassets; sourceTree = "<group>"; };
+		6650DD1118F4843400ADF591 /* photoalbum@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photoalbum@2x.png"; sourceTree = "<group>"; };
+		6650DD1318F4843D00ADF591 /* photoalbum.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = photoalbum.png; sourceTree = "<group>"; };
+		6650DD1518F4849800ADF591 /* MMImageViewButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImageViewButton.h; sourceTree = "<group>"; };
+		6650DD1618F4849800ADF591 /* MMImageViewButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImageViewButton.m; sourceTree = "<group>"; };
 		66510833178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRulerToolGestureRecognizer.h; sourceTree = "<group>"; };
 		66510834178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRulerToolGestureRecognizer.m; sourceTree = "<group>"; };
 		66510836178DFEE700A7A7DD /* MMRulerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRulerView.h; sourceTree = "<group>"; };
@@ -639,6 +646,15 @@
 			name = MMPaperView;
 			sourceTree = "<group>";
 		};
+		6650DD1018F4842E00ADF591 /* photo album */ = {
+			isa = PBXGroup;
+			children = (
+				6650DD1318F4843D00ADF591 /* photoalbum.png */,
+				6650DD1118F4843400ADF591 /* photoalbum@2x.png */,
+			);
+			name = "photo album";
+			sourceTree = "<group>";
+		};
 		66510831178DF9B900A7A7DD /* Ruler Tool */ = {
 			isa = PBXGroup;
 			children = (
@@ -900,11 +916,14 @@
 		66A74630176B860900466AA4 /* Used */ = {
 			isa = PBXGroup;
 			children = (
+				6650DD1018F4842E00ADF591 /* photo album */,
 				66CE120117D3AD7C00882275 /* MMBounceButton.h */,
 				66CE120217D3AD7C00882275 /* MMBounceButton.m */,
 				66BD6E7E1593AF4100D4544C /* MMSidebarButton.h */,
 				66BD6E7F1593AF4100D4544C /* MMSidebarButton.m */,
 				66BD6E8B1593C3FF00D4544C /* MMSidebarButtonDelegate.h */,
+				6650DD1518F4849800ADF591 /* MMImageViewButton.h */,
+				6650DD1618F4849800ADF591 /* MMImageViewButton.m */,
 				66BD6E6E1593A8CC00D4544C /* MMPlusButton.h */,
 				66BD6E6F1593A8CC00D4544C /* MMPlusButton.m */,
 				66BD6E9D15941B7A00D4544C /* MMShareButton.h */,
@@ -1259,7 +1278,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6650DD1418F4843D00ADF591 /* photoalbum.png in Resources */,
 				66DCFB951581BCEF00B4918C /* InfoPlist.strings in Resources */,
+				6650DD1218F4843400ADF591 /* photoalbum@2x.png in Resources */,
 				66684B40182DAAC0005A27B4 /* UIColorWithHex.license in Resources */,
 				66684B3E182DA177005A27B4 /* GPC.license in Resources */,
 				66684B48182DAD05005A27B4 /* 2Geom.license in Resources */,
@@ -1340,6 +1361,7 @@
 			files = (
 				66DCFB971581BCEF00B4918C /* main.m in Sources */,
 				66DCFB9B1581BCEF00B4918C /* MMAppDelegate.m in Sources */,
+				6650DD1718F4849800ADF591 /* MMImageViewButton.m in Sources */,
 				661EBA57182AF1AD00893274 /* MMScissorTool.m in Sources */,
 				66B75DB81877D93000EF0A48 /* UIBezierPath+PathElement.m in Sources */,
 				66DCFB9E1581BCEF00B4918C /* MMLooseLeafViewController.m in Sources */,
