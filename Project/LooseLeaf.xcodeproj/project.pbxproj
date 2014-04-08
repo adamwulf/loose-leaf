@@ -33,6 +33,14 @@
 		6650DD1218F4843400ADF591 /* photoalbum@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6650DD1118F4843400ADF591 /* photoalbum@2x.png */; };
 		6650DD1418F4843D00ADF591 /* photoalbum.png in Resources */ = {isa = PBXBuildFile; fileRef = 6650DD1318F4843D00ADF591 /* photoalbum.png */; };
 		6650DD1718F4849800ADF591 /* MMImageViewButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6650DD1618F4849800ADF591 /* MMImageViewButton.m */; };
+		6650DD1918F48D7500ADF591 /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 6650DD1818F48D7500ADF591 /* camera.png */; };
+		6650DD1B18F48D7A00ADF591 /* camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6650DD1A18F48D7A00ADF591 /* camera@2x.png */; };
+		6650DD1D18F48E3F00ADF591 /* twitter.png in Resources */ = {isa = PBXBuildFile; fileRef = 6650DD1C18F48E3F00ADF591 /* twitter.png */; };
+		6650DD1F18F48E4200ADF591 /* twitter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6650DD1E18F48E4200ADF591 /* twitter@2x.png */; };
+		6650DD2118F48F7F00ADF591 /* facebook.png in Resources */ = {isa = PBXBuildFile; fileRef = 6650DD2018F48F7F00ADF591 /* facebook.png */; };
+		6650DD2318F48F8300ADF591 /* facebook@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6650DD2218F48F8300ADF591 /* facebook@2x.png */; };
+		6650DD2518F491B700ADF591 /* evernote.png in Resources */ = {isa = PBXBuildFile; fileRef = 6650DD2418F491B700ADF591 /* evernote.png */; };
+		6650DD2718F491BA00ADF591 /* evernote@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6650DD2618F491BA00ADF591 /* evernote@2x.png */; };
 		66510835178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66510834178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m */; };
 		66510838178DFEE700A7A7DD /* MMRulerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66510837178DFEE700A7A7DD /* MMRulerView.m */; };
 		6651083C178F249C00A7A7DD /* MMVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6651083B178F249C00A7A7DD /* MMVector.m */; };
@@ -214,6 +222,14 @@
 		6650DD1318F4843D00ADF591 /* photoalbum.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = photoalbum.png; sourceTree = "<group>"; };
 		6650DD1518F4849800ADF591 /* MMImageViewButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImageViewButton.h; sourceTree = "<group>"; };
 		6650DD1618F4849800ADF591 /* MMImageViewButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImageViewButton.m; sourceTree = "<group>"; };
+		6650DD1818F48D7500ADF591 /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera.png; sourceTree = "<group>"; };
+		6650DD1A18F48D7A00ADF591 /* camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@2x.png"; sourceTree = "<group>"; };
+		6650DD1C18F48E3F00ADF591 /* twitter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = twitter.png; sourceTree = "<group>"; };
+		6650DD1E18F48E4200ADF591 /* twitter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "twitter@2x.png"; sourceTree = "<group>"; };
+		6650DD2018F48F7F00ADF591 /* facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = facebook.png; sourceTree = "<group>"; };
+		6650DD2218F48F8300ADF591 /* facebook@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook@2x.png"; sourceTree = "<group>"; };
+		6650DD2418F491B700ADF591 /* evernote.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = evernote.png; sourceTree = "<group>"; };
+		6650DD2618F491BA00ADF591 /* evernote@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "evernote@2x.png"; sourceTree = "<group>"; };
 		66510833178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRulerToolGestureRecognizer.h; sourceTree = "<group>"; };
 		66510834178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRulerToolGestureRecognizer.m; sourceTree = "<group>"; };
 		66510836178DFEE700A7A7DD /* MMRulerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRulerView.h; sourceTree = "<group>"; };
@@ -649,6 +665,14 @@
 		6650DD1018F4842E00ADF591 /* photo album */ = {
 			isa = PBXGroup;
 			children = (
+				6650DD2418F491B700ADF591 /* evernote.png */,
+				6650DD2618F491BA00ADF591 /* evernote@2x.png */,
+				6650DD2018F48F7F00ADF591 /* facebook.png */,
+				6650DD2218F48F8300ADF591 /* facebook@2x.png */,
+				6650DD1C18F48E3F00ADF591 /* twitter.png */,
+				6650DD1E18F48E4200ADF591 /* twitter@2x.png */,
+				6650DD1818F48D7500ADF591 /* camera.png */,
+				6650DD1A18F48D7A00ADF591 /* camera@2x.png */,
 				6650DD1318F4843D00ADF591 /* photoalbum.png */,
 				6650DD1118F4843400ADF591 /* photoalbum@2x.png */,
 			);
@@ -1279,18 +1303,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				6650DD1418F4843D00ADF591 /* photoalbum.png in Resources */,
+				6650DD2518F491B700ADF591 /* evernote.png in Resources */,
 				66DCFB951581BCEF00B4918C /* InfoPlist.strings in Resources */,
 				6650DD1218F4843400ADF591 /* photoalbum@2x.png in Resources */,
 				66684B40182DAAC0005A27B4 /* UIColorWithHex.license in Resources */,
 				66684B3E182DA177005A27B4 /* GPC.license in Resources */,
 				66684B48182DAD05005A27B4 /* 2Geom.license in Resources */,
+				6650DD1918F48D7500ADF591 /* camera.png in Resources */,
 				66B21A59175B0BF30049F1AF /* cloth.png in Resources */,
+				6650DD1B18F48D7A00ADF591 /* camera@2x.png in Resources */,
 				66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */,
 				66684B4A182DAEBC005A27B4 /* UIImageRoundedCorner.license in Resources */,
 				66684B46182DACAE005A27B4 /* DrawKit.license in Resources */,
 				666425C418CBC61200A306C1 /* opencv.license in Resources */,
 				6650DD0F18F46D5100ADF591 /* Images.xcassets in Resources */,
 				66684B3B182D9624005A27B4 /* AGG.license in Resources */,
+				6650DD1D18F48E3F00ADF591 /* twitter.png in Resources */,
+				6650DD2318F48F8300ADF591 /* facebook@2x.png in Resources */,
+				6650DD1F18F48E4200ADF591 /* twitter@2x.png in Resources */,
+				6650DD2118F48F7F00ADF591 /* facebook.png in Resources */,
+				6650DD2718F491BA00ADF591 /* evernote@2x.png in Resources */,
 				66684B44182DAC9B005A27B4 /* CurveFit.license in Resources */,
 				66684B31182D887E005A27B4 /* Settings.bundle in Resources */,
 			);

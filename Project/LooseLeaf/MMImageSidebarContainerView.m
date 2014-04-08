@@ -14,6 +14,10 @@
 @implementation MMImageSidebarContainerView{
     MMImageSidebarContentView* contentView;
     MMImageViewButton* photoAlbumButton;
+    MMImageViewButton* cameraAlbumButton;
+    MMImageViewButton* twitterAlbumButton;
+    MMImageViewButton* facebookAlbumButton;
+    MMImageViewButton* evernoteAlbumButton;
 }
 
 @dynamic delegate;
@@ -39,9 +43,30 @@
         photoAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x, buttonBounds.origin.y,
                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [photoAlbumButton setImage:[UIImage imageNamed:@"photoalbum"]];
-        
         [sidebarContentView addSubview:photoAlbumButton];
-    }
+
+        cameraAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + kWidthOfSidebarButton, buttonBounds.origin.y,
+                                                                               kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        [cameraAlbumButton setImage:[UIImage imageNamed:@"camera"]];
+        [sidebarContentView addSubview:cameraAlbumButton];
+
+        
+        twitterAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 2*kWidthOfSidebarButton, buttonBounds.origin.y,
+                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        [twitterAlbumButton setImage:[UIImage imageNamed:@"twitter"]];
+        [sidebarContentView addSubview:twitterAlbumButton];
+        
+        facebookAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 3*kWidthOfSidebarButton, buttonBounds.origin.y,
+                                                                                 kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        [facebookAlbumButton setImage:[UIImage imageNamed:@"facebook"]];
+        [sidebarContentView addSubview:facebookAlbumButton];
+        
+        evernoteAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4*kWidthOfSidebarButton, buttonBounds.origin.y,
+                                                                                  kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        [evernoteAlbumButton setImage:[UIImage imageNamed:@"evernote"]];
+        [sidebarContentView addSubview:evernoteAlbumButton];
+        
+}
     return self;
 }
 
