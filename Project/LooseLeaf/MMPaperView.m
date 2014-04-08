@@ -12,7 +12,6 @@
 #import "MMShadowManager.h"
 #import "NSString+UUID.h"
 #import "UIView+Debug.h"
-#import "TestFlight.h"
 
 @implementation MMPaperView{
     CGRect originalUnscaledBounds;
