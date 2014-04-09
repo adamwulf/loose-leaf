@@ -70,6 +70,7 @@
 		666E253418F5DDFD00C17295 /* clearphotoalbum@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 666E253318F5DDFD00C17295 /* clearphotoalbum@2x.png */; };
 		666E253C18F5E15F00C17295 /* clearcamera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 666E253B18F5E15F00C17295 /* clearcamera@2x.png */; };
 		666E253E18F5E19100C17295 /* clearcamera.png in Resources */ = {isa = PBXBuildFile; fileRef = 666E253D18F5E19100C17295 /* clearcamera.png */; };
+		666E254118F5E43600C17295 /* MMPalmTreeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E254018F5E43600C17295 /* MMPalmTreeButton.m */; };
 		66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* MMEditablePaperStackView.m */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
@@ -279,6 +280,8 @@
 		666E253318F5DDFD00C17295 /* clearphotoalbum@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clearphotoalbum@2x.png"; sourceTree = "<group>"; };
 		666E253B18F5E15F00C17295 /* clearcamera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clearcamera@2x.png"; sourceTree = "<group>"; };
 		666E253D18F5E19100C17295 /* clearcamera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clearcamera.png; sourceTree = "<group>"; };
+		666E253F18F5E43600C17295 /* MMPalmTreeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPalmTreeButton.h; sourceTree = "<group>"; };
+		666E254018F5E43600C17295 /* MMPalmTreeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPalmTreeButton.m; sourceTree = "<group>"; };
 		666F099A185E62A80074CE6B /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		666F09A2185E64B10074CE6B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		666F09B8185E64B20074CE6B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -991,6 +994,8 @@
 				6693C94818E4C55B0054FF41 /* MMLeftCloseButton.m */,
 				666E252E18F5D9F100C17295 /* MMFaceButton.h */,
 				666E252F18F5D9F100C17295 /* MMFaceButton.m */,
+				666E253F18F5E43600C17295 /* MMPalmTreeButton.h */,
+				666E254018F5E43600C17295 /* MMPalmTreeButton.m */,
 			);
 			name = Used;
 			sourceTree = "<group>";
@@ -1437,6 +1442,7 @@
 				664F413D1590661F006F8B09 /* MMRightArrow.m in Sources */,
 				664F414015906628006F8B09 /* MMLeftArrow.m in Sources */,
 				66AC8D7D18E754FE00A65036 /* MMImageSidebarContentView.m in Sources */,
+				666E254118F5E43600C17295 /* MMPalmTreeButton.m in Sources */,
 				66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */,
 				66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */,
 				66BD6E301591B57B00D4544C /* MMPaperButton.m in Sources */,
