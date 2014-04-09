@@ -758,6 +758,13 @@
     }else if(gesture.state == UIGestureRecognizerStateChanged){
         updatePageFrame();
     }
+    
+    if(gesture.state == UIGestureRecognizerStateCancelled){
+        // we cancelled, so some other gesture is going to
+        // handle the transition
+        realizedThatPageIsBeingDragged = NO;
+        pageBeingDragged = nil;
+    }
 }
 
 /**
@@ -882,6 +889,12 @@
         }
     }else if(gesture.state == UIGestureRecognizerStateChanged){
         updatePageFrame();
+    }
+    if(gesture.state == UIGestureRecognizerStateCancelled){
+        // we cancelled, so some other gesture is going to
+        // handle the transition
+        realizedThatPageIsBeingDragged = NO;
+        pageBeingDragged = nil;
     }
 }
 
