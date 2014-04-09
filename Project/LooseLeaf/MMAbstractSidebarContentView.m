@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMImageSidebarContentView.h"
+#import "MMAbstractSidebarContentView.h"
 #import "MMPhotoManager.h"
 #import "MMCachedRowsScrollView.h"
 #import "MMAlbumRowView.h"
@@ -17,7 +17,7 @@
 
 #define kTopBottomMargin 20
 
-@implementation MMImageSidebarContentView{
+@implementation MMAbstractSidebarContentView{
     MMCachedRowsScrollView* albumListScrollView;
     MMCachedRowsScrollView* photoListScrollView;
     NSMutableDictionary* currentRowForAlbum;
@@ -45,13 +45,6 @@
         
         [self addSubview:albumListScrollView];
         [self addSubview:photoListScrollView];
-        
-        
-        
-        
-        
-        
-        
         
         
         NSObject * transparent = (NSObject *) [[UIColor colorWithWhite:0 alpha:0] CGColor];

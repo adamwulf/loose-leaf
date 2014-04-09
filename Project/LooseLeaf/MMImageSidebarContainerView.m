@@ -7,14 +7,14 @@
 //
 
 #import "MMImageSidebarContainerView.h"
-#import "MMImageSidebarContentView.h"
+#import "MMAbstractSidebarContentView.h"
 #import "MMImageViewButton.h"
 #import "MMFaceButton.h"
 #import "MMPalmTreeButton.h"
 #import "Constants.h"
 
 @implementation MMImageSidebarContainerView{
-    MMImageSidebarContentView* contentView;
+    MMAbstractSidebarContentView* contentView;
     MMImageViewButton* photoAlbumButton;
     MMImageViewButton* cameraAlbumButton;
     MMImageViewButton* twitterAlbumButton;
@@ -40,7 +40,7 @@
         contentBounds.size.height -= buttonBounds.size.height;
         
         // Initialization code
-        contentView = [[MMImageSidebarContentView alloc] initWithFrame:contentBounds];
+        contentView = [[MMAbstractSidebarContentView alloc] initWithFrame:contentBounds];
         contentView.delegate = self;
         [sidebarContentView addSubview:contentView];
         
