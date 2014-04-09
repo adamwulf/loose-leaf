@@ -9,6 +9,7 @@
 #import "MMImageSidebarContainerView.h"
 #import "MMImageSidebarContentView.h"
 #import "MMImageViewButton.h"
+#import "MMFaceButton.h"
 #import "Constants.h"
 
 @implementation MMImageSidebarContainerView{
@@ -18,6 +19,7 @@
     MMImageViewButton* twitterAlbumButton;
     MMImageViewButton* facebookAlbumButton;
     MMImageViewButton* evernoteAlbumButton;
+    MMFaceButton* faceButton;
 }
 
 @dynamic delegate;
@@ -40,21 +42,26 @@
         contentView.delegate = self;
         [sidebarContentView addSubview:contentView];
         
-        photoAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x, buttonBounds.origin.y,
+        cameraAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x, buttonBounds.origin.y,
                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        [photoAlbumButton setImage:[UIImage imageNamed:@"photoalbum"]];
-        [sidebarContentView addSubview:photoAlbumButton];
-
-        cameraAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + kWidthOfSidebarButton, buttonBounds.origin.y,
-                                                                               kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        [cameraAlbumButton setImage:[UIImage imageNamed:@"camera"]];
+        cameraAlbumButton.darkBg = YES;
+        [cameraAlbumButton setImage:[UIImage imageNamed:@"clearcamera"]];
         [sidebarContentView addSubview:cameraAlbumButton];
 
+        photoAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + kWidthOfSidebarButton, buttonBounds.origin.y,
+                                                                               kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        [photoAlbumButton setImage:[UIImage imageNamed:@"clearphotoalbum"]];
+        [sidebarContentView addSubview:photoAlbumButton];
         
-        twitterAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 2*kWidthOfSidebarButton, buttonBounds.origin.y,
-                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        [twitterAlbumButton setImage:[UIImage imageNamed:@"twitter"]];
-        [sidebarContentView addSubview:twitterAlbumButton];
+        faceButton = [[MMFaceButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 2* kWidthOfSidebarButton, buttonBounds.origin.y,
+                                                                               kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        [sidebarContentView addSubview:faceButton];
+        
+        
+//        twitterAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 2*kWidthOfSidebarButton, buttonBounds.origin.y,
+//                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
+//        [twitterAlbumButton setImage:[UIImage imageNamed:@"twitter"]];
+//        [sidebarContentView addSubview:twitterAlbumButton];
         
         facebookAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 3*kWidthOfSidebarButton, buttonBounds.origin.y,
                                                                                  kWidthOfSidebarButton, kWidthOfSidebarButton)];

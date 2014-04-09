@@ -65,6 +65,11 @@
 		66684B46182DACAE005A27B4 /* DrawKit.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B45182DACAE005A27B4 /* DrawKit.license */; };
 		66684B48182DAD05005A27B4 /* 2Geom.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B47182DAD05005A27B4 /* 2Geom.license */; };
 		66684B4A182DAEBC005A27B4 /* UIImageRoundedCorner.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B49182DAEBC005A27B4 /* UIImageRoundedCorner.license */; };
+		666E253018F5D9F100C17295 /* MMFaceButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E252F18F5D9F100C17295 /* MMFaceButton.m */; };
+		666E253218F5DDF100C17295 /* clearphotoalbum.png in Resources */ = {isa = PBXBuildFile; fileRef = 666E253118F5DDF100C17295 /* clearphotoalbum.png */; };
+		666E253418F5DDFD00C17295 /* clearphotoalbum@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 666E253318F5DDFD00C17295 /* clearphotoalbum@2x.png */; };
+		666E253C18F5E15F00C17295 /* clearcamera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 666E253B18F5E15F00C17295 /* clearcamera@2x.png */; };
+		666E253E18F5E19100C17295 /* clearcamera.png in Resources */ = {isa = PBXBuildFile; fileRef = 666E253D18F5E19100C17295 /* clearcamera.png */; };
 		66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* MMEditablePaperStackView.m */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
@@ -268,6 +273,12 @@
 		66684B45182DACAE005A27B4 /* DrawKit.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DrawKit.license; sourceTree = "<group>"; };
 		66684B47182DAD05005A27B4 /* 2Geom.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 2Geom.license; sourceTree = "<group>"; };
 		66684B49182DAEBC005A27B4 /* UIImageRoundedCorner.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UIImageRoundedCorner.license; sourceTree = "<group>"; };
+		666E252E18F5D9F100C17295 /* MMFaceButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFaceButton.h; sourceTree = "<group>"; };
+		666E252F18F5D9F100C17295 /* MMFaceButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFaceButton.m; sourceTree = "<group>"; };
+		666E253118F5DDF100C17295 /* clearphotoalbum.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clearphotoalbum.png; sourceTree = "<group>"; };
+		666E253318F5DDFD00C17295 /* clearphotoalbum@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clearphotoalbum@2x.png"; sourceTree = "<group>"; };
+		666E253B18F5E15F00C17295 /* clearcamera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clearcamera@2x.png"; sourceTree = "<group>"; };
+		666E253D18F5E19100C17295 /* clearcamera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clearcamera.png; sourceTree = "<group>"; };
 		666F099A185E62A80074CE6B /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		666F09A2185E64B10074CE6B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		666F09B8185E64B20074CE6B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -665,6 +676,8 @@
 		6650DD1018F4842E00ADF591 /* photo album */ = {
 			isa = PBXGroup;
 			children = (
+				666E253D18F5E19100C17295 /* clearcamera.png */,
+				666E253B18F5E15F00C17295 /* clearcamera@2x.png */,
 				6650DD2418F491B700ADF591 /* evernote.png */,
 				6650DD2618F491BA00ADF591 /* evernote@2x.png */,
 				6650DD2018F48F7F00ADF591 /* facebook.png */,
@@ -675,6 +688,8 @@
 				6650DD1A18F48D7A00ADF591 /* camera@2x.png */,
 				6650DD1318F4843D00ADF591 /* photoalbum.png */,
 				6650DD1118F4843400ADF591 /* photoalbum@2x.png */,
+				666E253318F5DDFD00C17295 /* clearphotoalbum@2x.png */,
+				666E253118F5DDF100C17295 /* clearphotoalbum.png */,
 			);
 			name = "photo album";
 			sourceTree = "<group>";
@@ -974,6 +989,8 @@
 				66D0905815F71941004D2CAF /* MMListAddPageButtonDelegate.h */,
 				6693C94718E4C55B0054FF41 /* MMLeftCloseButton.h */,
 				6693C94818E4C55B0054FF41 /* MMLeftCloseButton.m */,
+				666E252E18F5D9F100C17295 /* MMFaceButton.h */,
+				666E252F18F5D9F100C17295 /* MMFaceButton.m */,
 			);
 			name = Used;
 			sourceTree = "<group>";
@@ -1310,6 +1327,7 @@
 				66684B3E182DA177005A27B4 /* GPC.license in Resources */,
 				66684B48182DAD05005A27B4 /* 2Geom.license in Resources */,
 				6650DD1918F48D7500ADF591 /* camera.png in Resources */,
+				666E253218F5DDF100C17295 /* clearphotoalbum.png in Resources */,
 				66B21A59175B0BF30049F1AF /* cloth.png in Resources */,
 				6650DD1B18F48D7A00ADF591 /* camera@2x.png in Resources */,
 				66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */,
@@ -1320,8 +1338,11 @@
 				66684B3B182D9624005A27B4 /* AGG.license in Resources */,
 				6650DD1D18F48E3F00ADF591 /* twitter.png in Resources */,
 				6650DD2318F48F8300ADF591 /* facebook@2x.png in Resources */,
+				666E253418F5DDFD00C17295 /* clearphotoalbum@2x.png in Resources */,
 				6650DD1F18F48E4200ADF591 /* twitter@2x.png in Resources */,
 				6650DD2118F48F7F00ADF591 /* facebook.png in Resources */,
+				666E253C18F5E15F00C17295 /* clearcamera@2x.png in Resources */,
+				666E253E18F5E19100C17295 /* clearcamera.png in Resources */,
 				6650DD2718F491BA00ADF591 /* evernote@2x.png in Resources */,
 				66684B44182DAC9B005A27B4 /* CurveFit.license in Resources */,
 				66684B31182D887E005A27B4 /* Settings.bundle in Resources */,
@@ -1496,6 +1517,7 @@
 				66CE120017D2772400882275 /* MMScrapBorderView.m in Sources */,
 				66C0C9D0178386B8009491B3 /* MMLikeButton.m in Sources */,
 				66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */,
+				666E253018F5D9F100C17295 /* MMFaceButton.m in Sources */,
 				66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */,
 				66A471BE17C7DAA000C2A5B6 /* MMScrappedPaperView.m in Sources */,
 				66052A0317FA170600A94531 /* MMImmutableScrapsOnPaperState.m in Sources */,

@@ -8,7 +8,11 @@
 
 #import "MMSidebarButton.h"
 
-@interface MMImageViewButton : MMSidebarButton
+@interface MMImageViewButton : MMSidebarButton{
+    BOOL darkBg;
+}
+
+@property (assign, getter = isDarkBg) BOOL darkBg;
 
 -(void) setImage:(UIImage*)img;
 
