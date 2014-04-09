@@ -239,7 +239,7 @@
  * scraps will show the shadow move ever so slightly as the device is turned
  */
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading{
-    self.layer.shadowOffset = CGSizeMake(cosf(currentRawReading)*1, sinf(currentRawReading)*1);
+    self.layer.shadowOffset = CGSizeMake(-sinf(currentRawReading)*1, cosf(currentRawReading)*1);
 }
 
 #pragma mark - UITouch Helper methods
