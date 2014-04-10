@@ -9,6 +9,7 @@
 #import "MMImageSidebarContainerView.h"
 #import "MMAlbumSidebarContentView.h"
 #import "MMFaceSidebarContentView.h"
+#import "MMEventSidebarContentView.h"
 #import "MMPhotoManager.h"
 #import "MMImageViewButton.h"
 #import "MMFaceButton.h"
@@ -18,14 +19,15 @@
 @implementation MMImageSidebarContainerView{
     MMAbstractSidebarContentView* albumListContentView;
     MMAbstractSidebarContentView* faceListContentView;
+    MMEventSidebarContentView* eventListContentView;
     
-    MMImageViewButton* photoAlbumButton;
+    MMImageViewButton* albumButton;
     MMImageViewButton* cameraAlbumButton;
     MMImageViewButton* twitterAlbumButton;
     MMImageViewButton* facebookAlbumButton;
     MMImageViewButton* evernoteAlbumButton;
     MMFaceButton* faceButton;
-    MMPalmTreeButton* palmTreeButton;
+    MMPalmTreeButton* eventButton;
 }
 
 @dynamic delegate;
@@ -55,39 +57,50 @@
         [sidebarContentView addSubview:faceListContentView];
         faceListContentView.hidden = YES;
         
+        eventListContentView = [[MMEventSidebarContentView alloc] initWithFrame:contentBounds];
+        eventListContentView.delegate = self;
+        [sidebarContentView addSubview:eventListContentView];
+        eventListContentView.hidden = YES;
+        
         cameraAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x, buttonBounds.origin.y,
                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
         cameraAlbumButton.darkBg = YES;
         [cameraAlbumButton setImage:[UIImage imageNamed:@"clearcamera"]];
         [sidebarContentView addSubview:cameraAlbumButton];
 
-        photoAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + kWidthOfSidebarButton, buttonBounds.origin.y,
+        // albums
+        albumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + kWidthOfSidebarButton, buttonBounds.origin.y,
                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        [photoAlbumButton setImage:[UIImage imageNamed:@"clearphotoalbum"]];
-        [photoAlbumButton addTarget:self action:@selector(albumButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [sidebarContentView addSubview:photoAlbumButton];
+        [albumButton setImage:[UIImage imageNamed:@"clearphotoalbum"]];
+        [albumButton addTarget:self action:@selector(albumButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [sidebarContentView addSubview:albumButton];
         
+        // faces button
         faceButton = [[MMFaceButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 2* kWidthOfSidebarButton, buttonBounds.origin.y,
                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [faceButton addTarget:self action:@selector(faceButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [sidebarContentView addSubview:faceButton];
         
-        palmTreeButton = [[MMPalmTreeButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 3* kWidthOfSidebarButton, buttonBounds.origin.y,
+        // event button
+        eventButton = [[MMPalmTreeButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 3* kWidthOfSidebarButton, buttonBounds.origin.y,
                                                                     kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        [sidebarContentView addSubview:palmTreeButton];
+        [eventButton addTarget:self action:@selector(eventButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [sidebarContentView addSubview:eventButton];
         
         
+        // facebook
+        facebookAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4*kWidthOfSidebarButton, buttonBounds.origin.y,
+                                                                                 kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        [facebookAlbumButton setImage:[UIImage imageNamed:@"facebook"]];
+        [sidebarContentView addSubview:facebookAlbumButton];
+
         
 //        twitterAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 2*kWidthOfSidebarButton, buttonBounds.origin.y,
 //                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
 //        [twitterAlbumButton setImage:[UIImage imageNamed:@"twitter"]];
 //        [sidebarContentView addSubview:twitterAlbumButton];
-        
-        facebookAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4*kWidthOfSidebarButton, buttonBounds.origin.y,
-                                                                                 kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        [facebookAlbumButton setImage:[UIImage imageNamed:@"facebook"]];
-        [sidebarContentView addSubview:facebookAlbumButton];
-        
+
+
 //        evernoteAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4*kWidthOfSidebarButton, buttonBounds.origin.y,
 //                                                                                  kWidthOfSidebarButton, kWidthOfSidebarButton)];
 //        [evernoteAlbumButton setImage:[UIImage imageNamed:@"evernote"]];
@@ -106,8 +119,10 @@
     [super hide:animated];
     albumListContentView.hidden = NO;
     faceListContentView.hidden = YES;
+    eventListContentView.hidden = YES;
     [albumListContentView hide:animated];
     [faceListContentView hide:animated];
+    [eventListContentView hide:animated];
 }
 
 -(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage{
@@ -118,28 +133,42 @@
 -(void) albumButtonTapped:(UIButton*)button{
     albumListContentView.hidden = NO;
     faceListContentView.hidden = YES;
+    eventListContentView.hidden = YES;
     [albumListContentView show:NO];
     [faceListContentView hide:NO];
+    [eventListContentView hide:NO];
 }
 
 -(void) faceButtonTapped:(UIButton*)button{
     albumListContentView.hidden = YES;
     faceListContentView.hidden = NO;
+    eventListContentView.hidden = YES;
     [albumListContentView hide:NO];
     [faceListContentView show:NO];
+    [eventListContentView hide:NO];
 }
 
+-(void) eventButtonTapped:(UIButton*)button{
+    albumListContentView.hidden = YES;
+    faceListContentView.hidden = YES;
+    eventListContentView.hidden = NO;
+    [albumListContentView hide:NO];
+    [faceListContentView hide:NO];
+    [eventListContentView show:NO];
+}
 
 #pragma mark - MMPhotoManagerDelegate
 
 -(void) doneLoadingPhotoAlbums;{
     [albumListContentView doneLoadingPhotoAlbums];
     [faceListContentView doneLoadingPhotoAlbums];
+    [eventListContentView doneLoadingPhotoAlbums];
 }
 
 -(void) albumUpdated:(MMPhotoAlbum*)updatedAlbum{
     [albumListContentView albumUpdated:updatedAlbum];
     [faceListContentView albumUpdated:updatedAlbum];
+    [eventListContentView albumUpdated:updatedAlbum];
 }
 
 @end

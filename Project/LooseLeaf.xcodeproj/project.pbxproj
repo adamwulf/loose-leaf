@@ -73,6 +73,7 @@
 		666E254118F5E43600C17295 /* MMPalmTreeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E254018F5E43600C17295 /* MMPalmTreeButton.m */; };
 		666E254518F60F3E00C17295 /* MMAlbumSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E254418F60F3E00C17295 /* MMAlbumSidebarContentView.m */; };
 		666E254918F613FA00C17295 /* MMFaceSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E254818F613FA00C17295 /* MMFaceSidebarContentView.m */; };
+		666E254C18F618B000C17295 /* MMEventSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E254B18F618B000C17295 /* MMEventSidebarContentView.m */; };
 		66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* MMEditablePaperStackView.m */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
@@ -288,6 +289,8 @@
 		666E254418F60F3E00C17295 /* MMAlbumSidebarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAlbumSidebarContentView.m; sourceTree = "<group>"; };
 		666E254718F613FA00C17295 /* MMFaceSidebarContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFaceSidebarContentView.h; sourceTree = "<group>"; };
 		666E254818F613FA00C17295 /* MMFaceSidebarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFaceSidebarContentView.m; sourceTree = "<group>"; };
+		666E254A18F618B000C17295 /* MMEventSidebarContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEventSidebarContentView.h; sourceTree = "<group>"; };
+		666E254B18F618B000C17295 /* MMEventSidebarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEventSidebarContentView.m; sourceTree = "<group>"; };
 		666F099A185E62A80074CE6B /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		666F09A2185E64B10074CE6B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		666F09B8185E64B20074CE6B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -1041,6 +1044,8 @@
 				666E254418F60F3E00C17295 /* MMAlbumSidebarContentView.m */,
 				666E254718F613FA00C17295 /* MMFaceSidebarContentView.h */,
 				666E254818F613FA00C17295 /* MMFaceSidebarContentView.m */,
+				666E254A18F618B000C17295 /* MMEventSidebarContentView.h */,
+				666E254B18F618B000C17295 /* MMEventSidebarContentView.m */,
 			);
 			name = "Image Sidebar";
 			sourceTree = "<group>";
@@ -1474,6 +1479,7 @@
 				66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */,
 				66BD6E301591B57B00D4544C /* MMPaperButton.m in Sources */,
 				6667480617C0166100D5C390 /* MMShapeBuilderView.m in Sources */,
+				666E254C18F618B000C17295 /* MMEventSidebarContentView.m in Sources */,
 				66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */,
 				66CE120317D3AD7C00882275 /* MMBounceButton.m in Sources */,
 				66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */,
