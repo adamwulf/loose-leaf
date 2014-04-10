@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MMSlidingSidebarContainerViewDelegate.h"
 #import "MMCachedRowsScrollViewDataSource.h"
+#import "MMCachedRowsScrollView.h"
 #import "MMPhotoManagerDelegate.h"
 #import "MMAlbumRowViewDelegate.h"
 #import "MMPhotoRowViewDelegate.h"

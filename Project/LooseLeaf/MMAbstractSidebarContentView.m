@@ -161,7 +161,6 @@
             row.album = nil;
         }
     }else{
-        // noop
         MMPhotoRowView* row = (MMPhotoRowView*)aRow;
         [row unload];
     }
