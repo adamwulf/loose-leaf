@@ -10,7 +10,9 @@
 #import "MMPhotoManager.h"
 #import "MMPhotoRowView.h"
 
-@implementation MMCameraSidebarContentView
+@implementation MMCameraSidebarContentView{
+    UILabel* cameraRow;
+}
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -23,6 +25,10 @@
         photoListScrollView.alpha = 1;
         
         currentAlbum = [[MMPhotoManager sharedInstace] cameraRoll];
+        
+        cameraRow = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, photoListScrollView.rowHeight * 2)];
+        cameraRow.backgroundColor = [UIColor whiteColor];
+        cameraRow.text = @"camera here";
     }
     return self;
 }
@@ -46,10 +52,16 @@
     if(photoListScrollView.alpha){
         [photoListScrollView refreshVisibleRows];
         [photoListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            // force invalidate the row's cache
-            [(MMPhotoRowView*)obj unload];
-            // now load the proper row info again
-            [self updateRow:obj atIndex:idx forFrame:[obj frame] forScrollView:photoListScrollView];
+            if(![obj isEqual:[NSNull null]]){
+                // force invalidate the row's cache
+                if([obj respondsToSelector:@selector(unload)]){
+                    [(MMPhotoRowView*)obj unload];
+                }
+                // now load the proper row info again
+                [self updateRow:obj atIndex:idx forFrame:[obj frame] forScrollView:photoListScrollView];
+            }else if(idx == 1){
+                [self updateRow:nil atIndex:0 forFrame:CGRectZero forScrollView:photoListScrollView];
+            }
         }];
     }
 }
@@ -65,15 +77,26 @@
 #pragma mark - MMCachedRowsScrollViewDataSource
 
 -(NSInteger) numberOfRowsFor:(MMCachedRowsScrollView*)scrollView{
-    return ceilf([[MMPhotoManager sharedInstace] cameraRoll].numberOfPhotos / 2.0);
+    // add two for the camera row at the top
+    return 2 + ceilf([[MMPhotoManager sharedInstace] cameraRoll].numberOfPhotos / 2.0);
 }
 
--(void) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView{
+-(BOOL) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView{
+    if(aRow.tag == 0 || aRow.tag == 1){
+        return NO;
+    }
     return [super prepareRowForReuse:aRow forScrollView:scrollView];
 }
 
 -(UIView*) updateRow:(UIView*)currentRow atIndex:(NSInteger)index forFrame:(CGRect)frame forScrollView:(MMCachedRowsScrollView*)scrollView{
-    return [super updateRow:currentRow atIndex:index forFrame:frame forScrollView:scrollView];
+    NSLog(@"fetching photo row for index: %d", index);
+    if(index == 0 || index == 1){
+        // this space is taken up by the camera row, so
+        // return nil
+        return cameraRow;
+    }
+    // adjust for the 2 extra rows that are taken up by the camera input
+    return [super updateRow:currentRow atIndex:index - 2 forFrame:frame forScrollView:scrollView];
 }
 
 

@@ -46,7 +46,7 @@
     }
 }
 
--(void) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView{
+-(BOOL) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView{
     return [super prepareRowForReuse:aRow forScrollView:scrollView];
 }
 

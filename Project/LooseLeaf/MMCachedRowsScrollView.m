@@ -65,6 +65,11 @@
         // our datasource to update the row and/or create
         // it if need be.
         row = [self.dataSource updateRow:row atIndex:index forFrame:fr forScrollView:self];
+        // rows might be nil if our datasource wants
+        // the row's space to be there but no content
+        // to show up.
+        // so we need to double check that we actually have
+        // a row here to work with
         if(needsAddedSubview){
             [self addSubview:row];
         }
@@ -101,10 +106,11 @@
     // remove invisible rows
     for(UIView* row in self.subviews){
         if(!row.hidden && (![self rowIndexIsVisible:row.tag] || row.tag >= totalRowCount)){
-            row.hidden = YES;
-            [self.dataSource prepareRowForReuse:row forScrollView:self];
-            [currentRowAtIndex removeObjectForKey:[NSNumber numberWithInt:row.tag]];
-            [bufferOfUnusedRows addObject:row];
+            if([self.dataSource prepareRowForReuse:row forScrollView:self]){
+                row.hidden = YES;
+                [currentRowAtIndex removeObjectForKey:[NSNumber numberWithInt:row.tag]];
+                [bufferOfUnusedRows addObject:row];
+            }
         }
     }
     

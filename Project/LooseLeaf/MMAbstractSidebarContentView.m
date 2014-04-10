@@ -152,7 +152,7 @@
 
 // called when a row is hidden in the scrollview
 // and may be re-used with different model data later
--(void) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView{
+-(BOOL) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView{
     if(scrollView == albumListScrollView){
         MMAlbumRowView* row = (MMAlbumRowView*)aRow;
         if(row.album){
@@ -164,6 +164,7 @@
         MMPhotoRowView* row = (MMPhotoRowView*)aRow;
         [row unload];
     }
+    return YES;
 }
 
 // currentRow may or maynot be nil. if nil, then
