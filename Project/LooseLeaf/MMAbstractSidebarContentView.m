@@ -14,15 +14,12 @@
 #import "MMBufferedImageView.h"
 #import "MMImageSidebarContainerView.h"
 #import "ALAsset+Thumbnail.h"
+#import "Constants.h"
 
 #define kTopBottomMargin 20
 
 @implementation MMAbstractSidebarContentView{
-    MMCachedRowsScrollView* albumListScrollView;
-    MMCachedRowsScrollView* photoListScrollView;
     NSMutableDictionary* currentRowForAlbum;
-    
-    MMPhotoAlbum* currentAlbum;
 }
 
 @synthesize delegate;
@@ -33,7 +30,6 @@
     if (self) {
         // Initialization code
         currentRowForAlbum = [NSMutableDictionary dictionary];
-        [MMPhotoManager sharedInstace].delegate = self;
         albumListScrollView = [[MMCachedRowsScrollView alloc] initWithFrame:self.bounds withRowHeight:ceilf(self.bounds.size.width / 3) andMargins:kTopBottomMargin];
         albumListScrollView.dataSource = self;
         
@@ -80,6 +76,8 @@
 }
 
 -(void) hide:(BOOL)animated{
+    albumListScrollView.alpha = 1;
+    photoListScrollView.alpha = 0;
     currentAlbum = nil;
 }
 
@@ -114,39 +112,11 @@
 #pragma mark - Row Management
 
 -(NSInteger) indexForAlbum:(MMPhotoAlbum*)album{
-    if(album.type == ALAssetsGroupAlbum){
-        return [[[MMPhotoManager sharedInstace] albums] indexOfObject:album];
-    }
-    if(album.type == ALAssetsGroupEvent){
-        return [[[MMPhotoManager sharedInstace] events] indexOfObject:album] + [[[MMPhotoManager sharedInstace] albums] count];
-    }
-    if(album.type == ALAssetsGroupFaces){
-        return [[[MMPhotoManager sharedInstace] faces] indexOfObject:album] +
-                [[[MMPhotoManager sharedInstace] albums] count] +
-                [[[MMPhotoManager sharedInstace] events] count];
-    }
-    return -1;
+    @throw kAbstractMethodException;
 }
 
 -(MMPhotoAlbum*) albumAtIndex:(NSInteger)index{
-    if(index >= [[[MMPhotoManager sharedInstace] albums] count]){
-        index -= [[[MMPhotoManager sharedInstace] albums] count];
-    }else{
-        return [[[MMPhotoManager sharedInstace] albums] objectAtIndex:index];
-    }
-
-    if(index >= [[[MMPhotoManager sharedInstace] events] count]){
-        index -= [[[MMPhotoManager sharedInstace] events] count];
-    }else{
-        return [[[MMPhotoManager sharedInstace] events] objectAtIndex:index];
-    }
-
-    if(index >= [[[MMPhotoManager sharedInstace] faces] count]){
-        index -= [[[MMPhotoManager sharedInstace] faces] count];
-    }else{
-        return [[[MMPhotoManager sharedInstace] faces] objectAtIndex:index];
-    }
-    return nil;
+    @throw kAbstractMethodException;
 }
 
 
@@ -174,16 +144,10 @@
     [delegate photoWasTapped:asset fromView:bufferedImage];
 }
 
-#pragma mark - MMPhotoAlbumListScrollViewDataSource
+#pragma mark - MMCachedRowsScrollViewDataSource
 
 -(NSInteger) numberOfRowsFor:(MMCachedRowsScrollView*)scrollView{
-    if(scrollView == albumListScrollView){
-        return [[[MMPhotoManager sharedInstace] albums] count] +
-        [[[MMPhotoManager sharedInstace] events] count] +
-        [[[MMPhotoManager sharedInstace] faces] count];
-    }else{
-        return ceilf(currentAlbum.numberOfPhotos / 2.0);
-    }
+    @throw kAbstractMethodException;
 }
 
 // called when a row is hidden in the scrollview

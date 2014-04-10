@@ -7,14 +7,18 @@
 //
 
 #import "MMImageSidebarContainerView.h"
-#import "MMAbstractSidebarContentView.h"
+#import "MMAlbumSidebarContentView.h"
+#import "MMFaceSidebarContentView.h"
+#import "MMPhotoManager.h"
 #import "MMImageViewButton.h"
 #import "MMFaceButton.h"
 #import "MMPalmTreeButton.h"
 #import "Constants.h"
 
 @implementation MMImageSidebarContainerView{
-    MMAbstractSidebarContentView* contentView;
+    MMAbstractSidebarContentView* albumListContentView;
+    MMAbstractSidebarContentView* faceListContentView;
+    
     MMImageViewButton* photoAlbumButton;
     MMImageViewButton* cameraAlbumButton;
     MMImageViewButton* twitterAlbumButton;
@@ -31,7 +35,9 @@
     if (self) {
         
         CGRect contentBounds = [sidebarContentView contentBounds];
-        
+
+        [MMPhotoManager sharedInstace].delegate = self;
+
         CGRect buttonBounds = contentBounds;
         buttonBounds.origin.y = [UIApplication sharedApplication].statusBarFrame.size.height;
         buttonBounds.size.height = kWidthOfSidebarButton; // includes spacing buffer
@@ -40,9 +46,14 @@
         contentBounds.size.height -= buttonBounds.size.height;
         
         // Initialization code
-        contentView = [[MMAbstractSidebarContentView alloc] initWithFrame:contentBounds];
-        contentView.delegate = self;
-        [sidebarContentView addSubview:contentView];
+        albumListContentView = [[MMAlbumSidebarContentView alloc] initWithFrame:contentBounds];
+        albumListContentView.delegate = self;
+        [sidebarContentView addSubview:albumListContentView];
+        
+        faceListContentView = [[MMFaceSidebarContentView alloc] initWithFrame:contentBounds];
+        faceListContentView.delegate = self;
+        [sidebarContentView addSubview:faceListContentView];
+        faceListContentView.hidden = YES;
         
         cameraAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x, buttonBounds.origin.y,
                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
@@ -53,10 +64,12 @@
         photoAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + kWidthOfSidebarButton, buttonBounds.origin.y,
                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [photoAlbumButton setImage:[UIImage imageNamed:@"clearphotoalbum"]];
+        [photoAlbumButton addTarget:self action:@selector(albumButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [sidebarContentView addSubview:photoAlbumButton];
         
         faceButton = [[MMFaceButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 2* kWidthOfSidebarButton, buttonBounds.origin.y,
                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        [faceButton addTarget:self action:@selector(faceButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [sidebarContentView addSubview:faceButton];
         
         palmTreeButton = [[MMPalmTreeButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 3* kWidthOfSidebarButton, buttonBounds.origin.y,
@@ -86,17 +99,47 @@
 
 -(void) show:(BOOL)animated{
     [super show:animated];
-    [contentView show:animated];
+    [self albumButtonTapped:nil];
 }
 
 -(void) hide:(BOOL)animated{
     [super hide:animated];
-    [contentView hide:animated];
+    albumListContentView.hidden = NO;
+    faceListContentView.hidden = YES;
+    [albumListContentView hide:animated];
+    [faceListContentView hide:animated];
 }
 
 -(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage{
     [self.delegate photoWasTapped:asset fromView:bufferedImage];
 }
 
+
+-(void) albumButtonTapped:(UIButton*)button{
+    albumListContentView.hidden = NO;
+    faceListContentView.hidden = YES;
+    [albumListContentView show:NO];
+    [faceListContentView hide:NO];
+}
+
+-(void) faceButtonTapped:(UIButton*)button{
+    albumListContentView.hidden = YES;
+    faceListContentView.hidden = NO;
+    [albumListContentView hide:NO];
+    [faceListContentView show:NO];
+}
+
+
+#pragma mark - MMPhotoManagerDelegate
+
+-(void) doneLoadingPhotoAlbums;{
+    [albumListContentView doneLoadingPhotoAlbums];
+    [faceListContentView doneLoadingPhotoAlbums];
+}
+
+-(void) albumUpdated:(MMPhotoAlbum*)updatedAlbum{
+    [albumListContentView albumUpdated:updatedAlbum];
+    [faceListContentView albumUpdated:updatedAlbum];
+}
 
 @end

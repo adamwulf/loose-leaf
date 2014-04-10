@@ -49,6 +49,7 @@
 }
 
 -(UIView*) rowAtIndex:(NSInteger) index{
+    if(index < 0) return nil; // no negative index
     UIView* row = [currentRowAtIndex objectForKey:[NSNumber numberWithInt:index]];
     if(!row){
         CGRect fr = CGRectMake(0, topBottomMargin + index * self.rowHeight, self.bounds.size.width, self.rowHeight);
@@ -112,8 +113,8 @@
     CGFloat currOffset = self.contentOffset.y;
     while([self rowIndexIsVisible:[self rowIndexForY:currOffset]]){
         NSInteger currIndex = [self rowIndexForY:currOffset];
-        UIView* row = nil;
-        if(currIndex >= 0){
+        if(currIndex < totalRowCount){
+            UIView* row = nil;
             // load the row
             row = [self rowAtIndex:currIndex];
         }

@@ -8,9 +8,10 @@
 
 #import "MMSlidingSidebarContainerView.h"
 #import "MMImageSidebarContainerViewDelegate.h"
+#import "MMPhotoManagerDelegate.h"
 #import "ALAsset+Thumbnail.h"
 
-@interface MMImageSidebarContainerView : MMSlidingSidebarContainerView
+@interface MMImageSidebarContainerView : MMSlidingSidebarContainerView<MMPhotoManagerDelegate>
 
 @property (nonatomic, weak) NSObject<MMImageSidebarContainerViewDelegate>* delegate;
 

@@ -16,6 +16,9 @@
 @class MMImageSidebarContainerView;
 
 @interface MMAbstractSidebarContentView : UIView<MMPhotoManagerDelegate,MMAlbumRowViewDelegate,MMPhotoRowViewDelegate,MMCachedRowsScrollViewDataSource>{
+    MMPhotoAlbum* currentAlbum;
+    MMCachedRowsScrollView* albumListScrollView;
+    MMCachedRowsScrollView* photoListScrollView;
     __weak MMImageSidebarContainerView* delegate;
 }
 
@@ -24,5 +27,12 @@
 -(void) show:(BOOL)animated;
 
 -(void) hide:(BOOL)animated;
-    
+
+
+// abstract
+
+-(NSInteger) indexForAlbum:(MMPhotoAlbum*)album;
+
+-(MMPhotoAlbum*) albumAtIndex:(NSInteger)index;
+
 @end
