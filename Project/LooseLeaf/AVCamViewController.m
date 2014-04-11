@@ -53,7 +53,6 @@
 #import "AVCamPreviewView.h"
 
 static void * CapturingStillImageContext = &CapturingStillImageContext;
-static void * RecordingContext = &RecordingContext;
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
 
 @interface AVCamViewController () <AVCaptureFileOutputRecordingDelegate>{
@@ -224,7 +223,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         NSLog(@"adding observers");
 		[self addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
 		[self addObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:CapturingStillImageContext];
-		[self addObserver:self forKeyPath:@"movieFileOutput.recording" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:RecordingContext];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:[[self videoDeviceInput] device]];
 		
 		__weak AVCamViewController *weakSelf = self;
@@ -249,7 +247,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 		
 		[self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
 		[self removeObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" context:CapturingStillImageContext];
-		[self removeObserver:self forKeyPath:@"movieFileOutput.recording" context:RecordingContext];
 	});
 }
 
@@ -279,21 +276,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 		{
 			[self runStillImageCaptureAnimation];
 		}
-	}
-	else if (context == RecordingContext)
-	{
-		BOOL isRecording = [change[NSKeyValueChangeNewKey] boolValue];
-		
-		dispatch_async(dispatch_get_main_queue(), ^{
-			if (isRecording)
-			{
-				[[self cameraButton] setEnabled:NO];
-			}
-			else
-			{
-				[[self cameraButton] setEnabled:YES];
-			}
-		});
 	}
 	else if (context == SessionRunningAndDeviceAuthorizedContext)
 	{
