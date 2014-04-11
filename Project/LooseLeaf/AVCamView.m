@@ -45,7 +45,7 @@
  
  */
 
-#import "AVCamViewController.h"
+#import "AVCamView.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
@@ -55,7 +55,7 @@
 static void * CapturingStillImageContext = &CapturingStillImageContext;
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
 
-@interface AVCamViewController (){
+@interface AVCamView (){
     AVCamPreviewView *previewView;
 }
 
@@ -83,7 +83,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 @end
 
-@implementation AVCamViewController
+@implementation AVCamView
 
 @synthesize previewView;
 
@@ -91,9 +91,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     if(self = [super initWithFrame:fr]){
         previewView = [[AVCamPreviewView alloc] initWithFrame:self.bounds];
         previewView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        previewView.layer.borderColor = [UIColor purpleColor].CGColor;
-        previewView.layer.borderWidth = 2;
-        previewView.backgroundColor = [UIColor orangeColor];
+        previewView.backgroundColor = [UIColor blackColor];
         [self addSubview:previewView];
         
         
@@ -139,7 +137,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             
             NSError *error = nil;
             
-            AVCaptureDevice *videoDevice = [AVCamViewController deviceWithMediaType:AVMediaTypeVideo preferringPosition:AVCaptureDevicePositionBack];
+            AVCaptureDevice *videoDevice = [AVCamView deviceWithMediaType:AVMediaTypeVideo preferringPosition:AVCaptureDevicePositionBack];
             AVCaptureDeviceInput *videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
             
             if (error)
@@ -180,9 +178,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             [self addObserver:_stillImageOutput forKeyPath:@"capturingStillImage" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:CapturingStillImageContext];
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:[[self videoDeviceInput] device]];
             
-            __weak AVCamViewController *weakSelf = self;
+            __weak AVCamView *weakSelf = self;
             [self setRuntimeErrorHandlingObserver:[[NSNotificationCenter defaultCenter] addObserverForName:AVCaptureSessionRuntimeErrorNotification object:[self session] queue:nil usingBlock:^(NSNotification *note) {
-                AVCamViewController *strongSelf = weakSelf;
+                AVCamView *strongSelf = weakSelf;
                 dispatch_async([strongSelf sessionQueue], ^{
                     // Manually restarting the session since it must have been stopped due to an error.
                     [[strongSelf session] startRunning];
@@ -292,7 +290,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 				break;
 		}
 		
-		AVCaptureDevice *videoDevice = [AVCamViewController deviceWithMediaType:AVMediaTypeVideo preferringPosition:preferredPosition];
+		AVCaptureDevice *videoDevice = [AVCamView deviceWithMediaType:AVMediaTypeVideo preferringPosition:preferredPosition];
 		AVCaptureDeviceInput *videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:nil];
 		
 		[[self session] beginConfiguration];
@@ -302,7 +300,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 		{
 			[[NSNotificationCenter defaultCenter] removeObserver:self name:AVCaptureDeviceSubjectAreaDidChangeNotification object:currentVideoDevice];
 			
-			[AVCamViewController setFlashMode:AVCaptureFlashModeAuto forDevice:videoDevice];
+			[AVCamView setFlashMode:AVCaptureFlashModeAuto forDevice:videoDevice];
 			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:videoDevice];
 			
 			[[self session] addInput:videoDeviceInput];
@@ -329,7 +327,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 		[[[self stillImageOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:[[(AVCaptureVideoPreviewLayer *)[[self previewView] layer] connection] videoOrientation]];
 		
 		// Flash set to Auto for Still Capture
-		[AVCamViewController setFlashMode:AVCaptureFlashModeAuto forDevice:[[self videoDeviceInput] device]];
+		[AVCamView setFlashMode:AVCaptureFlashModeAuto forDevice:[[self videoDeviceInput] device]];
 		
 		// Capture a still image.
 		[[self stillImageOutput] captureStillImageAsynchronouslyFromConnection:[[self stillImageOutput] connectionWithMediaType:AVMediaTypeVideo] completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {

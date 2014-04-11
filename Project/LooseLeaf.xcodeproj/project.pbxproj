@@ -75,8 +75,9 @@
 		666E254918F613FA00C17295 /* MMFaceSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E254818F613FA00C17295 /* MMFaceSidebarContentView.m */; };
 		666E254C18F618B000C17295 /* MMEventSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E254B18F618B000C17295 /* MMEventSidebarContentView.m */; };
 		666E254F18F72BCF00C17295 /* MMCameraSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E254E18F72BCF00C17295 /* MMCameraSidebarContentView.m */; };
-		666E255518F8880800C17295 /* AVCamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E255218F8880800C17295 /* AVCamViewController.m */; };
+		666E255518F8880800C17295 /* AVCamView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E255218F8880800C17295 /* AVCamView.m */; };
 		666E255618F8880800C17295 /* AVCamPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E255418F8880800C17295 /* AVCamPreviewView.m */; };
+		666E255918F89B1B00C17295 /* MMBorderedCamView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E255818F89B1B00C17295 /* MMBorderedCamView.m */; };
 		66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* MMEditablePaperStackView.m */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
@@ -296,10 +297,12 @@
 		666E254B18F618B000C17295 /* MMEventSidebarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEventSidebarContentView.m; sourceTree = "<group>"; };
 		666E254D18F72BCF00C17295 /* MMCameraSidebarContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCameraSidebarContentView.h; sourceTree = "<group>"; };
 		666E254E18F72BCF00C17295 /* MMCameraSidebarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCameraSidebarContentView.m; sourceTree = "<group>"; };
-		666E255118F8880800C17295 /* AVCamViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVCamViewController.h; sourceTree = "<group>"; };
-		666E255218F8880800C17295 /* AVCamViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVCamViewController.m; sourceTree = "<group>"; };
+		666E255118F8880800C17295 /* AVCamView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVCamView.h; sourceTree = "<group>"; };
+		666E255218F8880800C17295 /* AVCamView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVCamView.m; sourceTree = "<group>"; };
 		666E255318F8880800C17295 /* AVCamPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVCamPreviewView.h; sourceTree = "<group>"; };
 		666E255418F8880800C17295 /* AVCamPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVCamPreviewView.m; sourceTree = "<group>"; };
+		666E255718F89B1B00C17295 /* MMBorderedCamView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBorderedCamView.h; sourceTree = "<group>"; };
+		666E255818F89B1B00C17295 /* MMBorderedCamView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBorderedCamView.m; sourceTree = "<group>"; };
 		666F099A185E62A80074CE6B /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		666F09A2185E64B10074CE6B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		666F09B8185E64B20074CE6B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -799,10 +802,12 @@
 		666E255018F887FF00C17295 /* Camera */ = {
 			isa = PBXGroup;
 			children = (
-				666E255118F8880800C17295 /* AVCamViewController.h */,
-				666E255218F8880800C17295 /* AVCamViewController.m */,
+				666E255118F8880800C17295 /* AVCamView.h */,
+				666E255218F8880800C17295 /* AVCamView.m */,
 				666E255318F8880800C17295 /* AVCamPreviewView.h */,
 				666E255418F8880800C17295 /* AVCamPreviewView.m */,
+				666E255718F89B1B00C17295 /* MMBorderedCamView.h */,
+				666E255818F89B1B00C17295 /* MMBorderedCamView.m */,
 			);
 			name = Camera;
 			sourceTree = "<group>";
@@ -1554,7 +1559,7 @@
 				665C593717BD7CD3006DECBF /* PolygonTool.m in Sources */,
 				66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */,
 				66AC8D8B18E89A9C00A65036 /* MMCachedRowsScrollView.m in Sources */,
-				666E255518F8880800C17295 /* AVCamViewController.m in Sources */,
+				666E255518F8880800C17295 /* AVCamView.m in Sources */,
 				6695B6EC17505FBF0069E61F /* MMEditablePaperView.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
 				66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */,
@@ -1581,6 +1586,7 @@
 				66510835178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m in Sources */,
 				6693C94618E4BCD90054FF41 /* MMSlidingSidebarView.m in Sources */,
 				66CE120017D2772400882275 /* MMScrapBorderView.m in Sources */,
+				666E255918F89B1B00C17295 /* MMBorderedCamView.m in Sources */,
 				66C0C9D0178386B8009491B3 /* MMLikeButton.m in Sources */,
 				66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */,
 				666E253018F5D9F100C17295 /* MMFaceButton.m in Sources */,

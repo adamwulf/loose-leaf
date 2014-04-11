@@ -30,16 +30,15 @@ CGFloat buffer = 2;
         self.clearsContextBeforeDrawing = YES;
         targetSize = self.bounds.size.height - 2*buffer;
         
+        // black outer border
         layer = [[CALayer alloc] init];
         layer.backgroundColor = [UIColor whiteColor].CGColor;
         layer.edgeAntialiasingMask = kCALayerLeftEdge | kCALayerRightEdge | kCALayerBottomEdge | kCALayerTopEdge;
         layer.frame = CGRectInset(self.bounds, 10, 10);
         layer.shouldRasterize = YES;
-        [self.layer addSublayer:layer];
-        
-        // black outer border
         layer.borderColor = [UIColor blackColor].CGColor;
         layer.borderWidth = 3;
+        [self.layer addSublayer:layer];
         
         // white border, which will
         // draw on top of the black border

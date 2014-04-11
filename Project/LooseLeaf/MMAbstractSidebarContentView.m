@@ -16,8 +16,6 @@
 #import "ALAsset+Thumbnail.h"
 #import "Constants.h"
 
-#define kTopBottomMargin 20
-
 @implementation MMAbstractSidebarContentView{
     NSMutableDictionary* currentRowForAlbum;
 }

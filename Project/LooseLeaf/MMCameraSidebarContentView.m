@@ -9,11 +9,14 @@
 #import "MMCameraSidebarContentView.h"
 #import "MMPhotoManager.h"
 #import "MMPhotoRowView.h"
-#import "AVCamViewController.h"
+#import "AVCamView.h"
+#import "MMBorderedCamView.h"
+#import "Constants.h"
+
+#define kCameraMargin 10
 
 @implementation MMCameraSidebarContentView{
-    UIView* cameraRow;
-    AVCamViewController* cameraController;
+    MMBorderedCamView* cameraRow;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -30,16 +33,12 @@
         
         CGFloat ratio = [UIScreen mainScreen].bounds.size.width / [UIScreen mainScreen].bounds.size.height;
         CGRect cameraViewFr = CGRectZero;
-        cameraViewFr.size.width = ratio * photoListScrollView.rowHeight * 2;
-        cameraViewFr.size.height = photoListScrollView.rowHeight * 2;
+        cameraViewFr.size.width = ratio * (photoListScrollView.rowHeight - kCameraMargin) * 2;
+        cameraViewFr.size.height = (photoListScrollView.rowHeight - kCameraMargin) * 2;
         
-        cameraRow = [[UIView alloc] initWithFrame:cameraViewFr];
-        cameraRow.backgroundColor = [UIColor whiteColor];
-        cameraRow.layer.borderColor = [UIColor redColor].CGColor;
-        cameraRow.layer.borderWidth = 2;
-        
-        cameraController = [[AVCamViewController alloc] initWithFrame:cameraRow.bounds];
-        [cameraRow addSubview:cameraController];
+        cameraRow = [[MMBorderedCamView alloc] initWithFrame:cameraViewFr];
+
+        cameraRow.transform = CGAffineTransformMakeRotation(RandomPhotoRotation/2);
     }
     return self;
 }
@@ -104,6 +103,7 @@
     if(index == 0 || index == 1){
         // this space is taken up by the camera row, so
         // return nil
+        cameraRow.center = CGPointMake(self.frame.size.width/2, kCameraMargin + frame.size.height/2);
         return cameraRow;
     }
     // adjust for the 2 extra rows that are taken up by the camera input
