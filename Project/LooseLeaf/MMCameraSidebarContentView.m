@@ -28,14 +28,18 @@
         
         currentAlbum = [[MMPhotoManager sharedInstace] cameraRoll];
         
-        cameraRow = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, photoListScrollView.rowHeight * 2)];
+        CGFloat ratio = [UIScreen mainScreen].bounds.size.width / [UIScreen mainScreen].bounds.size.height;
+        CGRect cameraViewFr = CGRectZero;
+        cameraViewFr.size.width = ratio * photoListScrollView.rowHeight * 2;
+        cameraViewFr.size.height = photoListScrollView.rowHeight * 2;
+        
+        cameraRow = [[UIView alloc] initWithFrame:cameraViewFr];
         cameraRow.backgroundColor = [UIColor whiteColor];
         cameraRow.layer.borderColor = [UIColor redColor].CGColor;
         cameraRow.layer.borderWidth = 2;
         
         cameraController = [[AVCamViewController alloc] initWithFrame:cameraRow.bounds];
-        [cameraRow addSubview:cameraController.view];
-        cameraController.view.frame = cameraRow.bounds;
+        [cameraRow addSubview:cameraController];
     }
     return self;
 }

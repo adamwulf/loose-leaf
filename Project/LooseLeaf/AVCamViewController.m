@@ -55,7 +55,7 @@
 static void * CapturingStillImageContext = &CapturingStillImageContext;
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
 
-@interface AVCamViewController () <AVCaptureFileOutputRecordingDelegate>{
+@interface AVCamViewController (){
     AVCamPreviewView *previewView;
 }
 
@@ -88,17 +88,108 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 @synthesize previewView;
 
 -(id) initWithFrame:(CGRect)fr{
-    if(self = [super init]){
-        CGRect bounds = fr;
-        bounds.origin = CGPointZero;
-        previewView = [[AVCamPreviewView alloc] initWithFrame:bounds];
+    if(self = [super initWithFrame:fr]){
+        previewView = [[AVCamPreviewView alloc] initWithFrame:self.bounds];
         previewView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         previewView.layer.borderColor = [UIColor purpleColor].CGColor;
         previewView.layer.borderWidth = 2;
         previewView.backgroundColor = [UIColor orangeColor];
-
-        self.view.frame = fr;
-        [self.view insertSubview:previewView atIndex:0];
+        [self addSubview:previewView];
+        
+        
+        UIButton* tempButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 200, 40)];
+        tempButton.backgroundColor = [UIColor whiteColor];
+        [tempButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [tempButton setTitle:@"Camera" forState:UIControlStateNormal];
+        [tempButton addTarget:self action:@selector(changeCamera:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:tempButton];
+        self.cameraButton = tempButton;
+        
+        tempButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 60, 200, 40)];
+        tempButton.backgroundColor = [UIColor whiteColor];
+        [tempButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [tempButton setTitle:@"Take Picture" forState:UIControlStateNormal];
+        [tempButton addTarget:self action:@selector(snapStillImage:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:tempButton];
+        self.stillButton = tempButton;
+        
+        
+        
+        // Create the AVCaptureSession
+        AVCaptureSession *session = [[AVCaptureSession alloc] init];
+        session.sessionPreset = AVCaptureSessionPresetPhoto;
+        [self setSession:session];
+        
+        // Setup the preview view
+        [[self previewView] setSession:session];
+        
+        // Check for device authorization
+        [self checkDeviceAuthorizationStatus];
+        
+        // In general it is not safe to mutate an AVCaptureSession or any of its inputs, outputs, or connections from multiple threads at the same time.
+        // Why not do all of this on the main queue?
+        // -[AVCaptureSession startRunning] is a blocking call which can take a long time. We dispatch session setup to the sessionQueue so that the main queue isn't blocked (which keeps the UI responsive).
+        
+        dispatch_queue_t sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL);
+        [self setSessionQueue:sessionQueue];
+        
+        dispatch_async(sessionQueue, ^{
+            NSLog(@"beginning session queue");
+            [self setBackgroundRecordingID:UIBackgroundTaskInvalid];
+            
+            NSError *error = nil;
+            
+            AVCaptureDevice *videoDevice = [AVCamViewController deviceWithMediaType:AVMediaTypeVideo preferringPosition:AVCaptureDevicePositionBack];
+            AVCaptureDeviceInput *videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
+            
+            if (error)
+            {
+                NSLog(@"%@", error);
+            }
+            
+            if ([session canAddInput:videoDeviceInput])
+            {
+                NSLog(@"added video device");
+                [session addInput:videoDeviceInput];
+                [self setVideoDeviceInput:videoDeviceInput];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSLog(@"setting main view orientation");
+                    // Why are we dispatching this to the main queue?
+                    // Because AVCaptureVideoPreviewLayer is the backing layer for AVCamPreviewView and UIView can only be manipulated on main thread.
+                    // Note: As an exception to the above rule, it is not necessary to serialize video orientation changes on the AVCaptureVideoPreviewLayer’s connection with other session manipulation.
+                    
+                    [[(AVCaptureVideoPreviewLayer *)[[self previewView] layer] connection] setVideoOrientation:AVCaptureVideoOrientationPortrait];
+                });
+            }
+            
+            AVCaptureStillImageOutput *stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
+            if ([session canAddOutput:stillImageOutput])
+            {
+                NSLog(@"adding picture file output");
+                [stillImageOutput setOutputSettings:@{AVVideoCodecKey : AVVideoCodecJPEG}];
+                [session addOutput:stillImageOutput];
+                [self setStillImageOutput:stillImageOutput];
+            }
+        });
+        
+        
+        dispatch_async([self sessionQueue], ^{
+            NSLog(@"adding observers");
+            [self addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
+            [self addObserver:_stillImageOutput forKeyPath:@"capturingStillImage" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:CapturingStillImageContext];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:[[self videoDeviceInput] device]];
+            
+            __weak AVCamViewController *weakSelf = self;
+            [self setRuntimeErrorHandlingObserver:[[NSNotificationCenter defaultCenter] addObserverForName:AVCaptureSessionRuntimeErrorNotification object:[self session] queue:nil usingBlock:^(NSNotification *note) {
+                AVCamViewController *strongSelf = weakSelf;
+                dispatch_async([strongSelf sessionQueue], ^{
+                    // Manually restarting the session since it must have been stopped due to an error.
+                    [[strongSelf session] startRunning];
+                });
+            }]];
+            [[self session] startRunning];
+        });
     }
     return self;
 }
@@ -113,104 +204,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 	return [NSSet setWithObjects:@"session.running", @"deviceAuthorized", nil];
 }
 
-- (void)viewDidLoad
-{
-	[super viewDidLoad];
-    
-    UIButton* tempButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 200, 40)];
-    tempButton.backgroundColor = [UIColor whiteColor];
-    [tempButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [tempButton setTitle:@"Camera" forState:UIControlStateNormal];
-    [tempButton addTarget:self action:@selector(changeCamera:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:tempButton];
-    self.cameraButton = tempButton;
-	
-    tempButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 60, 200, 40)];
-    tempButton.backgroundColor = [UIColor whiteColor];
-    [tempButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [tempButton setTitle:@"Take Picture" forState:UIControlStateNormal];
-    [tempButton addTarget:self action:@selector(snapStillImage:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:tempButton];
-    self.stillButton = tempButton;
-
-	
-    
-	// Create the AVCaptureSession
-	AVCaptureSession *session = [[AVCaptureSession alloc] init];
-	[self setSession:session];
-	
-	// Setup the preview view
-	[[self previewView] setSession:session];
-	
-	// Check for device authorization
-	[self checkDeviceAuthorizationStatus];
-	
-	// In general it is not safe to mutate an AVCaptureSession or any of its inputs, outputs, or connections from multiple threads at the same time.
-	// Why not do all of this on the main queue?
-	// -[AVCaptureSession startRunning] is a blocking call which can take a long time. We dispatch session setup to the sessionQueue so that the main queue isn't blocked (which keeps the UI responsive).
-	
-	dispatch_queue_t sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL);
-	[self setSessionQueue:sessionQueue];
-	
-	dispatch_async(sessionQueue, ^{
-        NSLog(@"beginning session queue");
-		[self setBackgroundRecordingID:UIBackgroundTaskInvalid];
-		
-		NSError *error = nil;
-		
-		AVCaptureDevice *videoDevice = [AVCamViewController deviceWithMediaType:AVMediaTypeVideo preferringPosition:AVCaptureDevicePositionBack];
-		AVCaptureDeviceInput *videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
-		
-		if (error)
-		{
-			NSLog(@"%@", error);
-		}
-		
-		if ([session canAddInput:videoDeviceInput])
-		{
-            NSLog(@"added video device");
-			[session addInput:videoDeviceInput];
-			[self setVideoDeviceInput:videoDeviceInput];
-
-			dispatch_async(dispatch_get_main_queue(), ^{
-                NSLog(@"setting main view orientation");
-				// Why are we dispatching this to the main queue?
-				// Because AVCaptureVideoPreviewLayer is the backing layer for AVCamPreviewView and UIView can only be manipulated on main thread.
-				// Note: As an exception to the above rule, it is not necessary to serialize video orientation changes on the AVCaptureVideoPreviewLayer’s connection with other session manipulation.
-  
-				[[(AVCaptureVideoPreviewLayer *)[[self previewView] layer] connection] setVideoOrientation:(AVCaptureVideoOrientation)[self interfaceOrientation]];
-			});
-		}
-		
-		AVCaptureStillImageOutput *stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
-		if ([session canAddOutput:stillImageOutput])
-		{
-            NSLog(@"adding picture file output");
-			[stillImageOutput setOutputSettings:@{AVVideoCodecKey : AVVideoCodecJPEG}];
-			[session addOutput:stillImageOutput];
-			[self setStillImageOutput:stillImageOutput];
-		}
-	});
-
-    
-	dispatch_async([self sessionQueue], ^{
-        NSLog(@"adding observers");
-		[self addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
-		[self addObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:CapturingStillImageContext];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:[[self videoDeviceInput] device]];
-		
-		__weak AVCamViewController *weakSelf = self;
-		[self setRuntimeErrorHandlingObserver:[[NSNotificationCenter defaultCenter] addObserverForName:AVCaptureSessionRuntimeErrorNotification object:[self session] queue:nil usingBlock:^(NSNotification *note) {
-			AVCamViewController *strongSelf = weakSelf;
-			dispatch_async([strongSelf sessionQueue], ^{
-				// Manually restarting the session since it must have been stopped due to an error.
-				[[strongSelf session] startRunning];
-			});
-		}]];
-		[[self session] startRunning];
-	});
-}
-
 - (void)dealloc{
     NSLog(@"killing observers");
 	dispatch_async([self sessionQueue], ^{
@@ -220,7 +213,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 		[[NSNotificationCenter defaultCenter] removeObserver:[self runtimeErrorHandlingObserver]];
 		
 		[self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
-		[self removeObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" context:CapturingStillImageContext];
+		[self removeObserver:_stillImageOutput forKeyPath:@"capturingStillImage" context:CapturingStillImageContext];
 	});
 }
 

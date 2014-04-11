@@ -31,7 +31,6 @@
     
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
-    UIColor* halfGreyFill = [self backgroundColor];
     UIColor* barelyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.25];
     UIColor* mostlyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.65];
     UIColor* darkerGrey = [UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.25];
@@ -75,10 +74,6 @@
     circleClipPath.usesEvenOddFillRule = YES;
     
     
-    
-    
-    //// Button Drawing
-    UIBezierPath* buttonPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + floor(CGRectGetWidth(frame) * 0.17500 + 0.5), CGRectGetMinY(frame) + floor(CGRectGetHeight(frame) * 0.70000 + 0.5), floor(CGRectGetWidth(frame) * 0.25000 + 0.5) - floor(CGRectGetWidth(frame) * 0.17500 + 0.5), floor(CGRectGetHeight(frame) * 0.77500 + 0.5) - floor(CGRectGetHeight(frame) * 0.70000 + 0.5))];
     
     
     //// hand Drawing

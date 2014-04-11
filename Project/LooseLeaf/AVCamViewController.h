@@ -47,7 +47,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AVCamViewController : UIViewController
+@interface AVCamViewController : UIView
 
 -(id) initWithFrame:(CGRect)fr;
 

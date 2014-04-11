@@ -58,10 +58,6 @@
 
     
     
-    //// Button Drawing
-    UIBezierPath* buttonPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + floor(CGRectGetWidth(frame) * 0.17500 + 0.5), CGRectGetMinY(frame) + floor(CGRectGetHeight(frame) * 0.70000 + 0.5), floor(CGRectGetWidth(frame) * 0.25000 + 0.5) - floor(CGRectGetWidth(frame) * 0.17500 + 0.5), floor(CGRectGetHeight(frame) * 0.77500 + 0.5) - floor(CGRectGetHeight(frame) * 0.70000 + 0.5))];
-    
-    
     //// hand Drawing
     UIBezierPath* facePath = [UIBezierPath bezierPath];
     [facePath moveToPoint: CGPointMake(7.5, 62.5)];
