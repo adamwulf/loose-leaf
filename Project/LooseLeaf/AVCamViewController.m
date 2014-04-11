@@ -72,7 +72,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 @property (nonatomic) dispatch_queue_t sessionQueue; // Communicate with the session and other session objects on this queue.
 @property (nonatomic) AVCaptureSession *session;
 @property (nonatomic) AVCaptureDeviceInput *videoDeviceInput;
-@property (nonatomic) AVCaptureMovieFileOutput *movieFileOutput;
 @property (nonatomic) AVCaptureStillImageOutput *stillImageOutput;
 
 // Utilities.
@@ -181,31 +180,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   
 				[[(AVCaptureVideoPreviewLayer *)[[self previewView] layer] connection] setVideoOrientation:(AVCaptureVideoOrientation)[self interfaceOrientation]];
 			});
-		}
-		
-		AVCaptureDevice *audioDevice = [[AVCaptureDevice devicesWithMediaType:AVMediaTypeAudio] firstObject];
-		AVCaptureDeviceInput *audioDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:audioDevice error:&error];
-		
-		if (error)
-		{
-			NSLog(@"%@", error);
-		}
-		
-		if ([session canAddInput:audioDeviceInput])
-		{
-            NSLog(@"adding audio input");
-			[session addInput:audioDeviceInput];
-		}
-		
-		AVCaptureMovieFileOutput *movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
-		if ([session canAddOutput:movieFileOutput])
-		{
-            NSLog(@"adding movie file output");
-			[session addOutput:movieFileOutput];
-			AVCaptureConnection *connection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
-			if ([connection isVideoStabilizationSupported])
-				[connection setEnablesVideoStabilizationWhenAvailable:YES];
-			[self setMovieFileOutput:movieFileOutput];
 		}
 		
 		AVCaptureStillImageOutput *stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
@@ -389,29 +363,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 	[self focusWithMode:AVCaptureFocusModeContinuousAutoFocus exposeWithMode:AVCaptureExposureModeContinuousAutoExposure atDevicePoint:devicePoint monitorSubjectAreaChange:NO];
 }
 
-#pragma mark File Output Delegate
-
-- (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error
-{
-	if (error)
-		NSLog(@"%@", error);
-	
-	[self setLockInterfaceRotation:NO];
-	
-	// Note the backgroundRecordingID for use in the ALAssetsLibrary completion handler to end the background task associated with this recording. This allows a new recording to be started, associated with a new UIBackgroundTaskIdentifier, once the movie file output's -isRecording is back to NO — which happens sometime after this method returns.
-	UIBackgroundTaskIdentifier backgroundRecordingID = [self backgroundRecordingID];
-	[self setBackgroundRecordingID:UIBackgroundTaskInvalid];
-	
-	[[[ALAssetsLibrary alloc] init] writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:^(NSURL *assetURL, NSError *error) {
-		if (error)
-			NSLog(@"%@", error);
-		
-		[[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
-		
-		if (backgroundRecordingID != UIBackgroundTaskInvalid)
-			[[UIApplication sharedApplication] endBackgroundTask:backgroundRecordingID];
-	}];
-}
 
 #pragma mark Device Configuration
 

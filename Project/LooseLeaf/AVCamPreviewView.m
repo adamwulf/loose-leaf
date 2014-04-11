@@ -50,6 +50,14 @@
 
 @implementation AVCamPreviewView
 
+-(id) initWithFrame:(CGRect)frame{
+    if(self = [super initWithFrame:frame]){
+        AVCaptureVideoPreviewLayer* layer = (AVCaptureVideoPreviewLayer*) self.layer;
+        layer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    }
+    return self;
+}
+
 + (Class)layerClass
 {
 	return [AVCaptureVideoPreviewLayer class];
