@@ -9,9 +9,11 @@
 #import "MMCameraSidebarContentView.h"
 #import "MMPhotoManager.h"
 #import "MMPhotoRowView.h"
+#import "AVCamViewController.h"
 
 @implementation MMCameraSidebarContentView{
-    UILabel* cameraRow;
+    UIView* cameraRow;
+    AVCamViewController* cameraController;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -26,9 +28,14 @@
         
         currentAlbum = [[MMPhotoManager sharedInstace] cameraRoll];
         
-        cameraRow = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, photoListScrollView.rowHeight * 2)];
+        cameraRow = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, photoListScrollView.rowHeight * 2)];
         cameraRow.backgroundColor = [UIColor whiteColor];
-        cameraRow.text = @"camera here";
+        cameraRow.layer.borderColor = [UIColor redColor].CGColor;
+        cameraRow.layer.borderWidth = 2;
+        
+        cameraController = [[AVCamViewController alloc] initWithFrame:cameraRow.bounds];
+        [cameraRow addSubview:cameraController.view];
+        cameraController.view.frame = cameraRow.bounds;
     }
     return self;
 }
