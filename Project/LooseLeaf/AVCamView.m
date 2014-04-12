@@ -64,7 +64,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 @property (nonatomic) UIButton *stillButton;
 
 - (IBAction)snapStillImage:(id)sender;
-- (IBAction)focusAndExposeTap:(UIGestureRecognizer *)gestureRecognizer;
 
 // Session management.
 @property (nonatomic) dispatch_queue_t sessionQueue; // Communicate with the session and other session objects on this queue.
@@ -305,12 +304,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 			}
 		}];
 	});
-}
-
-- (IBAction)focusAndExposeTap:(UIGestureRecognizer *)gestureRecognizer
-{
-	CGPoint devicePoint = [(AVCaptureVideoPreviewLayer *)[[self previewView] layer] captureDevicePointOfInterestForPoint:[gestureRecognizer locationInView:[gestureRecognizer view]]];
-	[self focusWithMode:AVCaptureFocusModeAutoFocus exposeWithMode:AVCaptureExposureModeAutoExpose atDevicePoint:devicePoint monitorSubjectAreaChange:YES];
 }
 
 - (void)subjectAreaDidChange:(NSNotification *)notification
