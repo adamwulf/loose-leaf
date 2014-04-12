@@ -14,6 +14,7 @@
 #import "Constants.h"
 #import "MMFlipCameraButton.h"
 #import "MMImageSidebarContainerView.h"
+#import "NSThread+BlockAdditions.h"
 
 #define kCameraMargin 10
 
@@ -34,33 +35,66 @@
         
         currentAlbum = [[MMPhotoManager sharedInstace] cameraRoll];
         
-        CGFloat ratio = [UIScreen mainScreen].bounds.size.width / [UIScreen mainScreen].bounds.size.height;
-        CGRect cameraViewFr = CGRectZero;
-        cameraViewFr.size.width = ratio * (photoListScrollView.rowHeight - kCameraMargin) * 2;
-        cameraViewFr.size.height = (photoListScrollView.rowHeight - kCameraMargin) * 2;
+        CGRect cameraViewFr = [self cameraViewFr];
         
-        cameraRow = [[MMBorderedCamView alloc] initWithFrame:cameraViewFr];
-        cameraRow.delegate = self;
-        cameraRow.rotation = RandomPhotoRotation/2;
         
         flipButton = [[MMFlipCameraButton alloc] initWithFrame:CGRectMake(self.frame.size.width - kWidthOfSidebarButton - kWidthOfSidebarButtonBuffer,
-                                                                          floorf((cameraRow.frame.size.height - kWidthOfSidebarButton) / 2),
+                                                                          floorf((cameraViewFr.size.height - kWidthOfSidebarButton) / 2),
                                                                           kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        [flipButton addTarget:cameraRow action:@selector(changeCamera) forControlEvents:UIControlEventTouchUpInside];
+        [flipButton addTarget:self action:@selector(changeCamera) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:flipButton];
     }
     return self;
 }
 
+-(CGRect) cameraViewFr{
+    CGFloat ratio = [UIScreen mainScreen].bounds.size.width / [UIScreen mainScreen].bounds.size.height;
+    CGRect cameraViewFr = CGRectZero;
+    cameraViewFr.size.width = ratio * (photoListScrollView.rowHeight - kCameraMargin) * 2;
+    cameraViewFr.size.height = (photoListScrollView.rowHeight - kCameraMargin) * 2;
+    return cameraViewFr;
+}
+
 -(void) show:(BOOL)animated{
+    
+    cameraRow = [[MMBorderedCamView alloc] initWithFrame:[self cameraViewFr]];
+    cameraRow.delegate = self;
+    cameraRow.rotation = RandomPhotoRotation/2;
+    cameraRow.center = CGPointMake((self.frame.size.width-kWidthOfSidebarButton)/2, kCameraMargin + cameraRow.bounds.size.height/2);
+    [photoListScrollView addSubview:cameraRow];
+    
     albumListScrollView.alpha = 0;
     photoListScrollView.alpha = 1;
     [[MMPhotoManager sharedInstace] initializeAlbumCache:nil];
+    
+    [[NSThread mainThread] performBlock:^{
+        currentAlbum = [[MMPhotoManager sharedInstace] cameraRoll];
+        [self doneLoadingPhotoAlbums];
+    } afterDelay:.1];
 }
 
 -(void) hide:(BOOL)animated{
     albumListScrollView.alpha = 0;
     photoListScrollView.alpha = 1;
+    
+    [cameraRow removeFromSuperview];
+    cameraRow.delegate = nil;
+    cameraRow = nil;
+
+    [[NSThread mainThread] performBlock:^{
+        [photoListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            if(![obj isEqual:[NSNull null]]){
+                // force invalidate the row's cache
+                if([obj respondsToSelector:@selector(unload)]){
+                    [(MMPhotoRowView*)obj unload];
+                }
+            }
+        }];
+    } afterDelay:.1];
+}
+
+-(void) changeCamera{
+    [cameraRow changeCamera];
 }
 
 
@@ -68,7 +102,7 @@
 
 -(void) doneLoadingPhotoAlbums{
     currentAlbum = [[MMPhotoManager sharedInstace] cameraRoll];
-    if(photoListScrollView.alpha){
+    if(cameraRow && photoListScrollView.alpha){
         [photoListScrollView refreshVisibleRows];
         [photoListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             if(![obj isEqual:[NSNull null]]){
@@ -108,12 +142,11 @@
 }
 
 -(UIView*) updateRow:(UIView*)currentRow atIndex:(NSInteger)index forFrame:(CGRect)frame forScrollView:(MMCachedRowsScrollView*)scrollView{
-    NSLog(@"fetching photo row for index: %d", index);
+//    NSLog(@"fetching photo row for index: %d", index);
     if(index == 0 || index == 1){
         // this space is taken up by the camera row, so
         // return nil
-        cameraRow.center = CGPointMake((self.frame.size.width-kWidthOfSidebarButton)/2, kCameraMargin + frame.size.height/2);
-        return cameraRow;
+        return nil;
     }
     // adjust for the 2 extra rows that are taken up by the camera input
     return [super updateRow:currentRow atIndex:index - 2 forFrame:frame forScrollView:scrollView];

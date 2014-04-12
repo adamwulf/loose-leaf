@@ -71,4 +71,8 @@
     cameraController.delegate = delegate;
 }
 
+-(void) dealloc{
+    NSLog(@"yep");
+}
+
 @end

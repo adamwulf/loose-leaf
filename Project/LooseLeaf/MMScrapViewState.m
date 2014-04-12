@@ -197,7 +197,7 @@
         }
         
         if([[NSFileManager defaultManager] fileExistsAtPath:[self backgroundJPGFile]]){
-            NSLog(@"should be loading background");
+//            NSLog(@"should be loading background");
             UIImage* image = [UIImage imageWithContentsOfFile:[self backgroundJPGFile]];
             [NSThread performBlockOnMainThread:^{
                 [self setBackingImage:image];
@@ -214,7 +214,7 @@
                                             contentView.bounds.size.height/2 + backgroundOffset.y);
     backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(backgroundRotation),CGAffineTransformMakeScale(backgroundScale, backgroundScale));
     backingViewHasChanged = YES;
-    NSLog(@"(%@) updating background properties", self.uuid);
+//    NSLog(@"(%@) updating background properties", self.uuid);
 }
 
 -(void) setBackingImage:(UIImage*)img{

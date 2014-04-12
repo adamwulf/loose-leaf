@@ -184,15 +184,20 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)dealloc{
     NSLog(@"killing observers");
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVCaptureDeviceSubjectAreaDidChangeNotification object:[[self videoDeviceInput] device]];
+    [[NSNotificationCenter defaultCenter] removeObserver:[self runtimeErrorHandlingObserver]];
+    
+    [self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
+    [self removeObserver:_stillImageOutput forKeyPath:@"capturingStillImage" context:CapturingStillImageContext];
+
+    AVCaptureSession* session = [self session];
 	dispatch_async([self sessionQueue], ^{
-		[[self session] stopRunning];
-		
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:AVCaptureDeviceSubjectAreaDidChangeNotification object:[[self videoDeviceInput] device]];
-		[[NSNotificationCenter defaultCenter] removeObserver:[self runtimeErrorHandlingObserver]];
-		
-		[self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
-		[self removeObserver:_stillImageOutput forKeyPath:@"capturingStillImage" context:CapturingStillImageContext];
+		[session stopRunning];
 	});
+    if(self.sessionQueue){
+        dispatch_release(self.sessionQueue);
+    }
+    self.sessionQueue = nil;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context

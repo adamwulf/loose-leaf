@@ -73,4 +73,8 @@
 	[(AVCaptureVideoPreviewLayer *)[self layer] setSession:session];
 }
 
+-(void) dealloc{
+	[(AVCaptureVideoPreviewLayer *)[self layer] setSession:nil];
+}
+
 @end

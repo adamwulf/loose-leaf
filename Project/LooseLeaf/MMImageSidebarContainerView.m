@@ -131,6 +131,9 @@
 
 -(void) hide:(BOOL)animated{
     [super hide:animated];
+    if(!cameraListContentView.hidden){
+        [cameraListContentView hide:NO];
+    }
     cameraListContentView.hidden = YES;
     albumListContentView.hidden = NO;
     faceListContentView.hidden = YES;
@@ -149,6 +152,7 @@
 }
 
 -(void) cameraButtonTapped:(UIButton*)button{
+    [cameraListContentView show:NO];
     cameraListContentView.hidden = NO;
     albumListContentView.hidden = YES;
     faceListContentView.hidden = YES;
@@ -159,6 +163,9 @@
 }
 
 -(void) albumButtonTapped:(UIButton*)button{
+    if(!cameraListContentView.hidden){
+        [cameraListContentView hide:NO];
+    }
     cameraListContentView.hidden = YES;
     albumListContentView.hidden = NO;
     faceListContentView.hidden = YES;
@@ -169,6 +176,9 @@
 }
 
 -(void) faceButtonTapped:(UIButton*)button{
+    if(!cameraListContentView.hidden){
+        [cameraListContentView hide:NO];
+    }
     cameraListContentView.hidden = YES;
     albumListContentView.hidden = YES;
     faceListContentView.hidden = NO;
@@ -179,6 +189,9 @@
 }
 
 -(void) eventButtonTapped:(UIButton*)button{
+    if(!cameraListContentView.hidden){
+        [cameraListContentView hide:NO];
+    }
     cameraListContentView.hidden = YES;
     albumListContentView.hidden = YES;
     faceListContentView.hidden = YES;
