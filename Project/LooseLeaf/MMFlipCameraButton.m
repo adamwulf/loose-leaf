@@ -170,4 +170,61 @@
     
     [super drawRect:rect];
 }
+
+
+
+#pragma mark - Flip Bounce
+
+
+-(void) bounceWithTransform:(CGAffineTransform)transform{
+    // run animation for a fraction of a second
+    CGFloat duration = .60;
+    
+    ////////////////////////////////////////////////////////
+    // Animate the button!
+    
+    // Create a keyframe animation to follow a path back to the center
+    CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+    bounceAnimation.removedOnCompletion = YES;
+    
+    CATransform3D transform3d = CATransform3DMakeAffineTransform(transform);
+    
+    CATransform3D stepOneTransform = CATransform3DConcat(transform3d, CATransform3DMakeRotation(0, 0, 1, 0));
+    stepOneTransform.m34 = 1.0/400.0;
+    
+    CATransform3D stepTwoTransform = CATransform3DConcat(transform3d, CATransform3DMakeRotation(1*M_PI, 0, 1, 0));
+    stepTwoTransform = CATransform3DConcat(stepTwoTransform, CATransform3DMakeScale(1.2, 1.2, 1.0));
+    stepTwoTransform.m34 = 1.0/400.0;
+    
+    CATransform3D stepThreeTransform = CATransform3DConcat(transform3d, CATransform3DMakeRotation(2*M_PI, 0, 1, 0));
+    stepThreeTransform.m34 = 1.0/400.0;
+    
+//    CATransform3D stepFourTransform = CATransform3DConcat(transform3d, CATransform3DMakeRotation(3*M_PI, 0, 1, 0));
+//    stepFourTransform.m34 = 1.0/400.0;
+    
+    
+    NSMutableArray* keyTimes = [NSMutableArray arrayWithObjects:
+                                [NSNumber numberWithFloat:0.0],
+                                [NSNumber numberWithFloat:0.4],
+//                                [NSNumber numberWithFloat:0.7],
+                                [NSNumber numberWithFloat:1.0], nil];
+    bounceAnimation.keyTimes = keyTimes;
+    bounceAnimation.values = [NSArray arrayWithObjects:
+                              [NSValue valueWithCATransform3D:stepOneTransform],
+                              [NSValue valueWithCATransform3D:stepTwoTransform],
+                              [NSValue valueWithCATransform3D:stepThreeTransform],
+//                              [NSValue valueWithCATransform3D:stepFourTransform],
+                              nil];
+    bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
+                                       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn],
+//                                       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut],
+                                       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut], nil];
+    
+    bounceAnimation.duration = duration;
+    
+    ///////////////////////////////////////////////
+    // Add the animations to the layers
+    [self.layer addAnimation:bounceAnimation forKey:@"animateSize"];
+}
+
 @end
