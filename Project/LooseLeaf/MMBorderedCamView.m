@@ -49,4 +49,8 @@
     return self;
 }
 
+-(void) changeCamera{
+    [cameraController changeCamera];
+}
+
 @end

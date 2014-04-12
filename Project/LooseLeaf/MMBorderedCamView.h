@@ -10,4 +10,6 @@
 
 @interface MMBorderedCamView : UIView
 
+-(void) changeCamera;
+
 @end

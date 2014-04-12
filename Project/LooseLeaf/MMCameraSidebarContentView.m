@@ -41,7 +41,10 @@
         cameraRow = [[MMBorderedCamView alloc] initWithFrame:cameraViewFr];
         cameraRow.transform = CGAffineTransformMakeRotation(RandomPhotoRotation/2);
         
-        flipButton = [[MMFlipCameraButton alloc] initWithFrame:CGRectMake(self.frame.size.width - kWidthOfSidebarButton - kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        flipButton = [[MMFlipCameraButton alloc] initWithFrame:CGRectMake(self.frame.size.width - kWidthOfSidebarButton - kWidthOfSidebarButtonBuffer,
+                                                                          floorf((cameraRow.frame.size.height - kWidthOfSidebarButton) / 2),
+                                                                          kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        [flipButton addTarget:cameraRow action:@selector(changeCamera) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:flipButton];
     }
     return self;

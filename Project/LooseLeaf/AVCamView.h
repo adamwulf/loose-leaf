@@ -51,4 +51,6 @@
 
 -(id) initWithFrame:(CGRect)fr;
 
+-(void) changeCamera;
+
 @end

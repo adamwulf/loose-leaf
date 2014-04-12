@@ -61,10 +61,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 // For use in the storyboards.
 @property (nonatomic) AVCamPreviewView *previewView;
-@property (nonatomic) UIButton *cameraButton;
 @property (nonatomic) UIButton *stillButton;
 
-- (IBAction)changeCamera:(id)sender;
 - (IBAction)snapStillImage:(id)sender;
 - (IBAction)focusAndExposeTap:(UIGestureRecognizer *)gestureRecognizer;
 
@@ -94,23 +92,11 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         previewView.backgroundColor = [UIColor blackColor];
         [self addSubview:previewView];
         
-        
-        UIButton* tempButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 200, 40)];
-        tempButton.backgroundColor = [UIColor whiteColor];
-        [tempButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [tempButton setTitle:@"Camera" forState:UIControlStateNormal];
-        [tempButton addTarget:self action:@selector(changeCamera:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:tempButton];
-        self.cameraButton = tempButton;
-        
-        tempButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 60, 200, 40)];
-        tempButton.backgroundColor = [UIColor whiteColor];
-        [tempButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [tempButton setTitle:@"Take Picture" forState:UIControlStateNormal];
+        UIButton* tempButton = [[UIButton alloc] initWithFrame:self.bounds];
+        tempButton.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [tempButton addTarget:self action:@selector(snapStillImage:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:tempButton];
         self.stillButton = tempButton;
-        
         
         
         // Create the AVCaptureSession
@@ -249,12 +235,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 		dispatch_async(dispatch_get_main_queue(), ^{
 			if (isRunning)
 			{
-				[[self cameraButton] setEnabled:YES];
 				[[self stillButton] setEnabled:YES];
 			}
 			else
 			{
-				[[self cameraButton] setEnabled:NO];
 				[[self stillButton] setEnabled:NO];
 			}
 		});
@@ -267,9 +251,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 #pragma mark Actions
 
-- (IBAction)changeCamera:(id)sender
-{
-	[[self cameraButton] setEnabled:NO];
+- (IBAction)changeCamera{
 	[[self stillButton] setEnabled:NO];
 	
 	dispatch_async([self sessionQueue], ^{
@@ -314,7 +296,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 		[[self session] commitConfiguration];
 		
 		dispatch_async(dispatch_get_main_queue(), ^{
-			[[self cameraButton] setEnabled:YES];
 			[[self stillButton] setEnabled:YES];
 		});
 	});
