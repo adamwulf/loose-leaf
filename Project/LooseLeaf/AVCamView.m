@@ -101,7 +101,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         
         // Create the AVCaptureSession
         AVCaptureSession *session = [[AVCaptureSession alloc] init];
-        session.sessionPreset = AVCaptureSessionPresetPhoto;
+        session.sessionPreset = AVCaptureSessionPresetMedium;
         [self setSession:session];
         
         // Setup the preview view
