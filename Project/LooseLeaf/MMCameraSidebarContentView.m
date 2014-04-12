@@ -12,11 +12,13 @@
 #import "AVCamView.h"
 #import "MMBorderedCamView.h"
 #import "Constants.h"
+#import "MMFlipCameraButton.h"
 
 #define kCameraMargin 10
 
 @implementation MMCameraSidebarContentView{
     MMBorderedCamView* cameraRow;
+    MMFlipCameraButton* flipButton;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -37,8 +39,10 @@
         cameraViewFr.size.height = (photoListScrollView.rowHeight - kCameraMargin) * 2;
         
         cameraRow = [[MMBorderedCamView alloc] initWithFrame:cameraViewFr];
-
         cameraRow.transform = CGAffineTransformMakeRotation(RandomPhotoRotation/2);
+        
+        flipButton = [[MMFlipCameraButton alloc] initWithFrame:CGRectMake(self.frame.size.width - kWidthOfSidebarButton - kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        [self addSubview:flipButton];
     }
     return self;
 }
@@ -103,7 +107,7 @@
     if(index == 0 || index == 1){
         // this space is taken up by the camera row, so
         // return nil
-        cameraRow.center = CGPointMake(self.frame.size.width/2, kCameraMargin + frame.size.height/2);
+        cameraRow.center = CGPointMake((self.frame.size.width-kWidthOfSidebarButton)/2, kCameraMargin + frame.size.height/2);
         return cameraRow;
     }
     // adjust for the 2 extra rows that are taken up by the camera input

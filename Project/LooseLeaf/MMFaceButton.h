@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMSidebarButton.h"
+#import "MMDarkSidebarButton.h"
 
-@interface MMFaceButton : MMSidebarButton
+@interface MMFaceButton : MMDarkSidebarButton
 
 @end

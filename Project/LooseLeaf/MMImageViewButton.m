@@ -32,6 +32,8 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
     UIColor* halfGreyFill = [self backgroundColor];
@@ -54,10 +56,18 @@
     circleClipPath.usesEvenOddFillRule = YES;
 
     
+    CGContextSaveGState(context);
     [ovalPath addClip];
     [image drawInRect:frame];
+    CGContextRestoreGState(context);
     
     
+    // clip end of sleeve
+    CGContextSetBlendMode(context, kCGBlendModeClear);
+    [[UIColor whiteColor] setFill];
+    [circleClipPath fill];
+    CGContextSetBlendMode(context, kCGBlendModeNormal);
+
     // stroke circle
     [darkerGreyBorder setStroke];
     ovalPath.lineWidth = 1;

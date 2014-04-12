@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMSidebarButton.h"
+#import "MMDarkSidebarButton.h"
 
-@interface MMImageViewButton : MMSidebarButton{
+@interface MMImageViewButton : MMDarkSidebarButton{
     BOOL darkBg;
 }
 
