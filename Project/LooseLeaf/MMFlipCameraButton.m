@@ -26,16 +26,12 @@
 - (void)drawRect:(CGRect)rect
 {
     //// General Declarations
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
     UIColor* halfGreyFill = [self backgroundColor];
     UIColor* barelyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.25];
-    UIColor* mostlyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.65];
-    UIColor* darkerGrey = [UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.25];
-    UIColor* treeHighlight = [UIColor colorWithRed: 0.471 green: 0.471 blue: 0.471 alpha: 0.294];
     
     CGRect frame = [self drawableFrame];
     

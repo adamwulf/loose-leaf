@@ -73,7 +73,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 @property (nonatomic) AVCaptureStillImageOutput *stillImageOutput;
 
 // Utilities.
-@property (nonatomic) UIBackgroundTaskIdentifier backgroundRecordingID;
 @property (nonatomic, getter = isDeviceAuthorized) BOOL deviceAuthorized;
 @property (nonatomic, readonly, getter = isSessionRunningAndDeviceAuthorized) BOOL sessionRunningAndDeviceAuthorized;
 @property (nonatomic) BOOL lockInterfaceRotation;
@@ -84,6 +83,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 @implementation AVCamView
 
 @synthesize previewView;
+@synthesize delegate;
 
 -(id) initWithFrame:(CGRect)fr{
     if(self = [super initWithFrame:fr]){
@@ -119,7 +119,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         
         dispatch_async(sessionQueue, ^{
             NSLog(@"beginning session queue");
-            [self setBackgroundRecordingID:UIBackgroundTaskInvalid];
             
             NSError *error = nil;
             
@@ -183,11 +182,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 	return [[self session] isRunning] && [self isDeviceAuthorized];
 }
 
-+ (NSSet *)keyPathsForValuesAffectingSessionRunningAndDeviceAuthorized
-{
-	return [NSSet setWithObjects:@"session.running", @"deviceAuthorized", nil];
-}
-
 - (void)dealloc{
     NSLog(@"killing observers");
 	dispatch_async([self sessionQueue], ^{
@@ -199,22 +193,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 		[self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
 		[self removeObserver:_stillImageOutput forKeyPath:@"capturingStillImage" context:CapturingStillImageContext];
 	});
-}
-
-- (BOOL)prefersStatusBarHidden
-{
-	return YES;
-}
-
-- (BOOL)shouldAutorotate
-{
-	// Disable autorotation of the interface when recording is in progress.
-	return NO;
-}
-
-- (NSUInteger)supportedInterfaceOrientations
-{
-	return UIInterfaceOrientationPortrait;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -317,6 +295,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 			{
 				NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
 				UIImage *image = [[UIImage alloc] initWithData:imageData];
+                [delegate didTakePicture:image];
 				[[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:nil];
 			}
 		}];

@@ -13,6 +13,7 @@
 #import "MMBorderedCamView.h"
 #import "Constants.h"
 #import "MMFlipCameraButton.h"
+#import "MMImageSidebarContainerView.h"
 
 #define kCameraMargin 10
 
@@ -39,7 +40,8 @@
         cameraViewFr.size.height = (photoListScrollView.rowHeight - kCameraMargin) * 2;
         
         cameraRow = [[MMBorderedCamView alloc] initWithFrame:cameraViewFr];
-        cameraRow.transform = CGAffineTransformMakeRotation(RandomPhotoRotation/2);
+        cameraRow.delegate = self;
+        cameraRow.rotation = RandomPhotoRotation/2;
         
         flipButton = [[MMFlipCameraButton alloc] initWithFrame:CGRectMake(self.frame.size.width - kWidthOfSidebarButton - kWidthOfSidebarButtonBuffer,
                                                                           floorf((cameraRow.frame.size.height - kWidthOfSidebarButton) / 2),
@@ -115,6 +117,13 @@
     }
     // adjust for the 2 extra rows that are taken up by the camera input
     return [super updateRow:currentRow atIndex:index - 2 forFrame:frame forScrollView:scrollView];
+}
+
+#pragma mark - MMCamViewDelegate
+
+-(void) didTakePicture:(UIImage*)img{
+    NSLog(@"got picture %p", img);
+    [self.delegate pictureTakeWithCamera:img fromView:cameraRow];
 }
 
 

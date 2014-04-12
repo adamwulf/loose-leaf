@@ -15,6 +15,8 @@
 
 @property (nonatomic, weak) NSObject<MMImageSidebarContainerViewDelegate>* delegate;
 
+-(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView;
+
 -(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage;
 
 @end

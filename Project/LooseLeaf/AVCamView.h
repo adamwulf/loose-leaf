@@ -46,8 +46,14 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "MMCamViewDelegate.h"
 
-@interface AVCamView : UIView
+@interface AVCamView : UIView{
+    __weak NSObject<MMCamViewDelegate>* delegate;
+}
+
+@property (nonatomic, weak) NSObject<MMCamViewDelegate>* delegate;
+
 
 -(id) initWithFrame:(CGRect)fr;
 

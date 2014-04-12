@@ -12,7 +12,10 @@
 
 @implementation MMBorderedCamView{
     AVCamView* cameraController;
+    CGFloat rotation;
 }
+
+@synthesize rotation;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -49,8 +52,23 @@
     return self;
 }
 
+-(void) setRotation:(CGFloat)_rotation{
+    rotation = _rotation;
+    self.transform = CGAffineTransformMakeRotation(rotation);
+}
+
 -(void) changeCamera{
     [cameraController changeCamera];
+}
+
+#pragma mark - Delegate
+
+-(NSObject<MMCamViewDelegate>*)delegate{
+    return cameraController.delegate;
+}
+
+-(void) setDelegate:(NSObject<MMCamViewDelegate> *)delegate{
+    cameraController.delegate = delegate;
 }
 
 @end

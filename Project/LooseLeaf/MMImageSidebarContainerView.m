@@ -140,6 +140,10 @@
     [eventListContentView hide:animated];
 }
 
+-(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
+    [self.delegate pictureTakeWithCamera:img fromView:cameraView];
+}
+
 -(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage{
     [self.delegate photoWasTapped:asset fromView:bufferedImage];
 }

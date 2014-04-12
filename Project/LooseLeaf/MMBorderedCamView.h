@@ -7,8 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMCamViewDelegate.h"
 
 @interface MMBorderedCamView : UIView
+
+@property (nonatomic, weak) NSObject<MMCamViewDelegate>* delegate;
+@property (nonatomic, assign) CGFloat rotation;
 
 -(void) changeCamera;
 
