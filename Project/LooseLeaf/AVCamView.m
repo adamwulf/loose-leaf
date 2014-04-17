@@ -46,6 +46,7 @@
  */
 
 #import "AVCamView.h"
+#import "MMRotationManager.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
@@ -283,9 +284,59 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 	});
 }
 
-- (IBAction)snapStillImage:(id)sender
-{
+-(AVCaptureVideoOrientation) orientationForSnappedPhoto{
+    UIDeviceOrientation device = [[MMRotationManager sharedInstance] currentDeviceOrientation];
+    if(device == UIDeviceOrientationLandscapeLeft){
+        NSLog(@"taking left");
+        return AVCaptureVideoOrientationLandscapeLeft;
+    }else if(device == UIDeviceOrientationLandscapeRight){
+        NSLog(@"taking right");
+        return AVCaptureVideoOrientationLandscapeRight;
+    }else if(device == UIDeviceOrientationPortraitUpsideDown){
+        NSLog(@"taking upside down");
+        return AVCaptureVideoOrientationPortraitUpsideDown;
+    }else{
+        NSLog(@"taking portrait");
+        return AVCaptureVideoOrientationPortrait;
+    }
+}
+
+-(void) echoOrientation:(ALAssetOrientation)orient{
+    if(orient == ALAssetOrientationDown ||
+       orient == ALAssetOrientationDownMirrored){
+        NSLog(@"image is down");
+    }else if(orient == ALAssetOrientationUp ||
+             orient == ALAssetOrientationUpMirrored){
+        NSLog(@"image is up");
+    }else if(orient == ALAssetOrientationLeft ||
+             orient == ALAssetOrientationLeftMirrored){
+        NSLog(@"image is left");
+    }else if(orient == ALAssetOrientationRight ||
+             orient == ALAssetOrientationRightMirrored){
+        NSLog(@"image is right");
+    }
+}
+
+-(ALAssetOrientation) assetOrientation{
+    UIDeviceOrientation device = [[MMRotationManager sharedInstance] currentDeviceOrientation];
+    if(device == UIDeviceOrientationLandscapeLeft){
+        NSLog(@"taking left");
+        return ALAssetOrientationLeft;
+    }else if(device == UIDeviceOrientationLandscapeRight){
+        NSLog(@"taking right");
+        return ALAssetOrientationRight;
+    }else if(device == UIDeviceOrientationPortraitUpsideDown){
+        NSLog(@"taking upside down");
+        return ALAssetOrientationDown;
+    }else{
+        NSLog(@"taking portrait");
+        return ALAssetOrientationUp;
+    }
+}
+
+- (IBAction)snapStillImage:(id)sender{
 	dispatch_async([self sessionQueue], ^{
+        AVCaptureVideoOrientation orientation = [self orientationForSnappedPhoto];
 		// Update the orientation on the still image output video connection before capturing.
 		[[[self stillImageOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:[[(AVCaptureVideoPreviewLayer *)[[self previewView] layer] connection] videoOrientation]];
 		
@@ -300,6 +351,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 				NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
 				UIImage *image = [[UIImage alloc] initWithData:imageData];
                 [delegate didTakePicture:image];
+                [self echoOrientation:(ALAssetOrientation)[image imageOrientation]];
 				[[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:nil];
 			}
 		}];

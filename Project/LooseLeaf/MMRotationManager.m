@@ -60,7 +60,7 @@ static MMRotationManager* _instance = nil;
     return _instance;
 }
 
-+(MMRotationManager*) sharedInstace{
++(MMRotationManager*) sharedInstance{
     if(!_instance){
         _instance = [[MMRotationManager alloc]init];
     }

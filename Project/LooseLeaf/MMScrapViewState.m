@@ -267,7 +267,7 @@
         dispatch_async([self importExportScrapStateQueue], ^{
             @autoreleasepool {
                 [lock lock];
-                NSLog(@"(%@) saving with background: %d %d", uuid, (int)drawableView, backingViewHasChanged);
+//                NSLog(@"(%@) saving with background: %d %d", uuid, (int)drawableView, backingViewHasChanged);
                 if(drawableViewState && ([drawableViewState hasEditsToSave] || backingViewHasChanged)){
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                     [NSThread performBlockOnMainThread:^{
@@ -332,20 +332,20 @@
                     }];
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
                     dispatch_release(sema1);
-                    NSLog(@"(%@) done saving: %d", uuid, (int)drawableView);
+//                    NSLog(@"(%@) done saving: %d", uuid, (int)drawableView);
                 }else{
                     // sometimes, this method is called in very quick succession.
                     // that means that the first time it runs and saves, it'll
                     // finish all of the export and drawableViewState will be nil
                     // next time it runs. so we double check our save state to determine
                     // if in fact we still need to save or not
-                    NSLog(@"(%@) no edits to save in state2", uuid);
+//                    NSLog(@"(%@) no edits to save in state2", uuid);
                 }
                 [lock unlock];
             }
         });
     }else{
-        NSLog(@"(%@) no edits to save in state3", uuid);
+//        NSLog(@"(%@) no edits to save in state3", uuid);
     }
 }
 
@@ -357,7 +357,7 @@
         // if we already have our state,
         // then bail early
         if(isLoadingState || drawableViewState){
-            NSLog(@"(%@) already loaded", uuid);
+//            NSLog(@"(%@) already loaded", uuid);
             return;
         }
         
@@ -365,11 +365,11 @@
         isLoadingState = YES;
     }
 
-    NSLog(@"(%@) loading1: %d %d", uuid, targetIsLoadedState, isLoadingState);
+//    NSLog(@"(%@) loading1: %d %d", uuid, targetIsLoadedState, isLoadingState);
     void (^loadBlock)() = ^(void) {
         @autoreleasepool {
             [lock lock];
-            NSLog(@"(%@) loading2: %d %d", uuid, targetIsLoadedState, isLoadingState);
+//            NSLog(@"(%@) loading2: %d %d", uuid, targetIsLoadedState, isLoadingState);
             dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
             [NSThread performBlockOnMainThread:^{
                 @synchronized(self){
@@ -443,7 +443,7 @@
                         }
                     });
                 }else{
-                    NSLog(@"(%@) unload success", uuid);
+//                    NSLog(@"(%@) unload success", uuid);
                     targetIsLoadedState = NO;
                     if(!isLoadingState && drawableViewState){
                         drawableViewState = nil;
@@ -546,7 +546,7 @@
 #pragma mark - dealloc
 
 -(void) dealloc{
-    NSLog(@"(%@) dealloc", uuid);
+//    NSLog(@"(%@) dealloc", uuid);
     [[MMLoadImageCache sharedInstace] clearCacheForPath:self.thumbImageFile];
     dispatch_release(importExportScrapStateQueue);
     importExportScrapStateQueue = nil;

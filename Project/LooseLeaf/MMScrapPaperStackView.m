@@ -43,6 +43,8 @@
 
     NSTimer* debugTimer;
     NSTimer* drawTimer;
+    
+    UIImageView* debugImgView;
 }
 
 
@@ -127,6 +129,13 @@
         
         
         fromRightBezelGesture.panDelegate = self;
+        
+//        debugImgView = [[UIImageView alloc] initWithFrame:CGRectMake(100, 100, 400, 400)];
+//        debugImgView.layer.borderColor = [UIColor redColor].CGColor;
+//        debugImgView.layer.borderWidth = 2;
+//        debugImgView.backgroundColor = [UIColor orangeColor];
+//        debugImgView.contentMode = UIViewContentModeScaleAspectFit;
+//        [self addSubview:debugImgView];
     }
     return self;
 }
@@ -157,6 +166,9 @@
 }
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
+    
+    debugImgView.image = img;
+    
     CGRect scrapRect = CGRectZero;
     scrapRect.origin = [self convertPoint:cameraView.layer.bounds.origin fromView:cameraView];
     scrapRect.size = cameraView.bounds.size;

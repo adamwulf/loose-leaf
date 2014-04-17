@@ -29,7 +29,7 @@
 @property (nonatomic, weak) NSObject<MMRotationManagerDelegate>* delegate;
 
 
-+(MMRotationManager*) sharedInstace;
++(MMRotationManager*) sharedInstance;
 
 -(UIDeviceOrientation) currentDeviceOrientation;
 

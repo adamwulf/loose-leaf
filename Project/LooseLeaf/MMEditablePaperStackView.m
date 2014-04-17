@@ -128,7 +128,7 @@
         // accelerometer for rotating buttons
         // ================================================================================
         
-        [[MMRotationManager sharedInstace] setDelegate:self];
+        [[MMRotationManager sharedInstance] setDelegate:self];
         
         
         
@@ -211,7 +211,7 @@
  * should be rotated to stay pointed "down"
  */
 -(CGFloat) sidebarButtonRotation{
-    return -([[MMRotationManager sharedInstace] currentRotationReading] + M_PI/2);
+    return -([[MMRotationManager sharedInstance] currentRotationReading] + M_PI/2);
 }
 
 -(Tool*) activePen{
