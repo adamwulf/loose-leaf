@@ -60,6 +60,7 @@
         albumListContentView = [[MMAlbumSidebarContentView alloc] initWithFrame:contentBounds];
         albumListContentView.delegate = self;
         [sidebarContentView addSubview:albumListContentView];
+        albumListContentView.hidden = YES;
         
         faceListContentView = [[MMFaceSidebarContentView alloc] initWithFrame:contentBounds];
         faceListContentView.delegate = self;
@@ -126,18 +127,23 @@
 
 -(void) show:(BOOL)animated{
     [super show:animated];
-    [self albumButtonTapped:nil];
+    if(!cameraListContentView.hidden){
+        [cameraListContentView show:animated];
+    }
+    if(!albumListContentView.hidden){
+        [albumListContentView show:animated];
+    }
+    if(!faceListContentView.hidden){
+        [faceListContentView show:animated];
+    }
+    if(!eventListContentView.hidden){
+        [eventListContentView show:animated];
+    }
 }
 
 -(void) hide:(BOOL)animated{
     [super hide:animated];
-    if(!cameraListContentView.hidden){
-        [cameraListContentView hide:NO];
-    }
-    cameraListContentView.hidden = YES;
-    albumListContentView.hidden = NO;
-    faceListContentView.hidden = YES;
-    eventListContentView.hidden = YES;
+    [cameraListContentView hide:animated];
     [albumListContentView hide:animated];
     [faceListContentView hide:animated];
     [eventListContentView hide:animated];
