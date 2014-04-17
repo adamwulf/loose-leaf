@@ -468,7 +468,7 @@
 #pragma mark - Saving
 
 -(void) saveToDisk{
-    NSLog(@"asking scrap %@ to save", scrapState.uuid);
+//    NSLog(@"asking scrap %@ to save", scrapState.uuid);
     [scrapState saveToDisk];
 }
 
@@ -476,12 +476,12 @@
 #pragma mark - State
 
 -(void) loadScrapStateAsynchronously:(BOOL)async{
-    NSLog(@"asking scrap %@ to load async %d", scrapState.uuid, async);
+//    NSLog(@"asking scrap %@ to load async %d", scrapState.uuid, async);
     [scrapState loadScrapStateAsynchronously:async];
 }
 
 -(void) unloadState{
-    NSLog(@"asking scrap %@ to unload", scrapState.uuid);
+//    NSLog(@"asking scrap %@ to unload", scrapState.uuid);
     [scrapState unloadState];
 }
 

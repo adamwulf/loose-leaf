@@ -1,6 +1,15 @@
+//
+//  CaptureSessionManager.m
+//  LooseLeaf
+//
+//  Created by Adam Wulf on 4/11/14.
+//  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
+//
+
+
 #import "CaptureSessionManager.h"
 #import <AssetsLibrary/AssetsLibrary.h>
-
+#import "MMRotationManager.h"
 
 @implementation CaptureSessionManager{
     AVCaptureVideoPreviewLayer *previewLayer;
@@ -122,11 +131,67 @@ dispatch_queue_t sessionQueue;
 	[layer addSublayer:previewLayerHolder];
 }
 
+-(NSString*) logImageOrientation:(UIImageOrientation)orient{
+    if(orient == UIImageOrientationDown){
+        return @"image down";
+    }else if(orient == UIImageOrientationLeft){
+        return @"image left";
+    }else if(orient == UIImageOrientationRight){
+        return @"image right";
+    }else if(orient == UIImageOrientationUp){
+        return @"image up";
+    }
+    return @"image unknown";
+}
+
+-(NSString*) logVideoOrientation:(AVCaptureVideoOrientation)orient{
+    if(orient == AVCaptureVideoOrientationPortraitUpsideDown){
+        return @"image down";
+    }else if(orient == AVCaptureVideoOrientationLandscapeLeft){
+        return @"image left";
+    }else if(orient == AVCaptureVideoOrientationLandscapeRight){
+        return @"image right";
+    }else if(orient == AVCaptureVideoOrientationPortrait){
+        return @"image up";
+    }
+    return @"video unknown";
+}
+
+-(NSString*) logAssetOrientation:(ALAssetOrientation)orient{
+    if(orient == ALAssetOrientationDown){
+        return @"image down";
+    }else if(orient == ALAssetOrientationLeft){
+        return @"image left";
+    }else if(orient == ALAssetOrientationRight){
+        return @"image right";
+    }else if(orient == ALAssetOrientationUp){
+        return @"image up";
+    }
+    return @"video unknown";
+}
+
+-(ALAssetOrientation) currentDeviceOrientation{
+    UIDeviceOrientation deviceOrientation = [[MMRotationManager sharedInstace] currentDeviceOrientation];
+    if(deviceOrientation == UIDeviceOrientationLandscapeLeft){
+        NSLog(@"i think i should save left");
+        return ALAssetOrientationUp;
+    }else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown){
+        NSLog(@"i think i should save upside down");
+        return ALAssetOrientationRight;
+    }else if(deviceOrientation == UIDeviceOrientationLandscapeRight){
+        NSLog(@"i think i should save right");
+        return ALAssetOrientationDown;
+    }else{
+        NSLog(@"i think i should save portrait");
+        return ALAssetOrientationRight;
+    }
+}
+
 -(void) snapPicture{
 	dispatch_async([CaptureSessionManager sessionQueue], ^{
 		// Update the orientation on the still image output video connection before capturing.
 		[[stillImageOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:[[(AVCaptureVideoPreviewLayer *)[self previewLayer] connection] videoOrientation]];
-		
+
 		// Flash set to Auto for Still Capture
 		[CaptureSessionManager setFlashMode:AVCaptureFlashModeAuto forDevice:currDevice];
 		
@@ -138,11 +203,19 @@ dispatch_queue_t sessionQueue;
 				NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
 				UIImage *image = [[UIImage alloc] initWithData:imageData];
                 
-                NSLog(@"gotcha %p", image);
+                
+                CGSize sizeOfImage = image.size;
+                UIImageOrientation orient = image.imageOrientation;
+                AVCaptureVideoOrientation captureOrient = [[(AVCaptureVideoPreviewLayer *)[self previewLayer] connection] videoOrientation];
+                
+                NSLog(@"gotcha %f,%f %@ %@ %@", sizeOfImage.width, sizeOfImage.height, [self logImageOrientation:orient], [self logVideoOrientation:captureOrient], [self logAssetOrientation:[self currentDeviceOrientation]]);
                 
                 [delegate didTakePicture:image];
                 
-				[[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:nil];
+                // rotate the image that we save
+				[[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage]
+                                                                 orientation:[self currentDeviceOrientation]
+                                                             completionBlock:nil];
 			}
 		}];
 	});
