@@ -12,6 +12,15 @@
 @synthesize captureSession;
 @synthesize previewLayer;
 
+dispatch_queue_t sessionQueue;
+
++(dispatch_queue_t) sessionQueue{
+    if(!sessionQueue){
+        sessionQueue = dispatch_queue_create("CaptureSessionManager.session.queue", DISPATCH_QUEUE_SERIAL);
+    }
+    return sessionQueue;
+}
+
 #pragma mark Capture Session Configuration
 
 - (id)init {
@@ -19,19 +28,22 @@
 		captureSession = [[AVCaptureSession alloc] init];
         captureSession.sessionPreset = AVCaptureSessionPresetMedium;
         
-        [self changeCamera]; // default camera
-        
         self.previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:[self captureSession]];
         [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
         
-        stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
-        if ([captureSession canAddOutput:stillImageOutput])
-        {
-            NSLog(@"adding picture file output");
-            [stillImageOutput setOutputSettings:@{AVVideoCodecKey : AVVideoCodecJPEG}];
-            [captureSession addOutput:stillImageOutput];
-        }
-
+        dispatch_async([CaptureSessionManager sessionQueue], ^{
+            stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
+            if ([captureSession canAddOutput:stillImageOutput]){
+                NSLog(@"adding picture file output");
+                [stillImageOutput setOutputSettings:@{AVVideoCodecKey : AVVideoCodecJPEG}];
+                [captureSession addOutput:stillImageOutput];
+            }
+        });
+        
+        [self changeCamera]; // default camera
+        dispatch_async([CaptureSessionManager sessionQueue], ^{
+            [captureSession startRunning];
+        });
 	}
 	return self;
 }
@@ -39,32 +51,34 @@
 #pragma mark - Public Interface
 
 -(void) changeCamera{
-    NSArray* currentInputs = [[self captureSession] inputs];
-    AVCaptureDeviceInput* currInput = [currentInputs firstObject];
-    if([currentInputs count]){
-        // remove if we have one
-        [[self captureSession] removeInput:currInput];
-    }
-    AVCaptureDevice* nextDevice = [self oppositeDeviceFrom:currDevice];
-	if (nextDevice) {
-		NSError *error;
-        AVCaptureDeviceInput *videoIn = [AVCaptureDeviceInput deviceInputWithDevice:nextDevice error:&error];
-        if(!error){
-            if ([[self captureSession] canAddInput:videoIn]){
-                currDevice = nextDevice;
-                [[self captureSession] addInput:videoIn];
+    dispatch_async([CaptureSessionManager sessionQueue], ^{
+        NSArray* currentInputs = [[self captureSession] inputs];
+        AVCaptureDeviceInput* currInput = [currentInputs firstObject];
+        if([currentInputs count]){
+            // remove if we have one
+            [[self captureSession] removeInput:currInput];
+        }
+        AVCaptureDevice* nextDevice = [self oppositeDeviceFrom:currDevice];
+        if (nextDevice) {
+            NSError *error;
+            AVCaptureDeviceInput *videoIn = [AVCaptureDeviceInput deviceInputWithDevice:nextDevice error:&error];
+            if(!error){
+                if ([[self captureSession] canAddInput:videoIn]){
+                    currDevice = nextDevice;
+                    [[self captureSession] addInput:videoIn];
+                }else{
+                    NSLog(@"Couldn't create video input");
+                    currDevice = nil;
+                }
             }else{
                 NSLog(@"Couldn't create video input");
                 currDevice = nil;
             }
         }else{
-            NSLog(@"Couldn't create video input");
+            NSLog(@"Couldn't create video capture device");
             currDevice = nil;
         }
-    }else{
-        NSLog(@"Couldn't create video capture device");
-        currDevice = nil;
-    }
+    });
 }
 
 -(void) addPreviewLayerTo:(CALayer*)layer{
@@ -75,7 +89,7 @@
 }
 
 -(void) snapPicture{
-//	dispatch_async([self sessionQueue], ^{
+	dispatch_async([CaptureSessionManager sessionQueue], ^{
 		// Update the orientation on the still image output video connection before capturing.
 		[[stillImageOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:[[(AVCaptureVideoPreviewLayer *)[self previewLayer] connection] videoOrientation]];
 		
@@ -97,7 +111,7 @@
 				[[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:nil];
 			}
 		}];
-//	});
+	});
 }
 
 #pragma mark - Private

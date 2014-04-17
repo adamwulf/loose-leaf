@@ -49,6 +49,7 @@
         // define bounds that'll hold the camera
         CALayer* camHolderLayer = [[CALayer alloc] init];
         camHolderLayer.frame = CGRectInset(self.bounds, 3, 3);
+        camHolderLayer.backgroundColor = [UIColor blackColor].CGColor;
         [self.layer addSublayer:camHolderLayer];
         
 //        cameraController = [[AVCamView alloc] initWithFrame:CGRectInset(self.bounds, 3, 3)];
@@ -59,8 +60,6 @@
 
         [self addSubview:borderView];
         
-        [[cameraSession captureSession] startRunning];
-
         UIButton* tempButton = [[UIButton alloc] initWithFrame:self.bounds];
         tempButton.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [tempButton addTarget:self action:@selector(snapStillImage:) forControlEvents:UIControlEventTouchUpInside];
