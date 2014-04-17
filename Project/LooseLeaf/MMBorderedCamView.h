@@ -7,12 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 #import "MMCamViewDelegate.h"
 
-@interface MMBorderedCamView : UIView
+@interface MMBorderedCamView : UIView<MMCamViewDelegate>{
+    __weak NSObject<MMCamViewDelegate>* delegate;
+}
 
 @property (nonatomic, weak) NSObject<MMCamViewDelegate>* delegate;
 @property (nonatomic, assign) CGFloat rotation;
+
+- (id)initWithFrame:(CGRect)frame andCameraPosition:(AVCaptureDevicePosition)preferredPosition;
 
 -(void) changeCamera;
 

@@ -17,10 +17,10 @@
     CaptureSessionManager* cameraSession;
 }
 
+@synthesize delegate;
 @synthesize rotation;
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame andCameraPosition:(AVCaptureDevicePosition)preferredPosition{
     self = [super initWithFrame:frame];
     if (self) {
         
@@ -55,8 +55,11 @@
 //        cameraController = [[AVCamView alloc] initWithFrame:CGRectInset(self.bounds, 3, 3)];
 //        [self addSubview:cameraController];
         
-        cameraSession = [[CaptureSessionManager alloc] init];
+        cameraSession = [[CaptureSessionManager alloc] initWithPosition:preferredPosition];
+        cameraSession.delegate = self;
+        NSLog(@"adding layer");
         [cameraSession addPreviewLayerTo:camHolderLayer];
+        NSLog(@"added layer");
 
         [self addSubview:borderView];
         
@@ -81,19 +84,18 @@
     [cameraSession snapPicture];
 }
 
-#pragma mark - Delegate
+#pragma mark - MMCamViewDelegate
 
--(NSObject<MMCamViewDelegate>*)delegate{
-//    return cameraController.delegate;
-    return nil;
+-(void) didTakePicture:(UIImage*)img{
+    [delegate didTakePicture:img];
 }
 
--(void) setDelegate:(NSObject<MMCamViewDelegate> *)delegate{
-//    cameraController.delegate = delegate;
+-(void) didChangeCameraTo:(AVCaptureDevicePosition)preferredPosition{
+    [delegate didChangeCameraTo:preferredPosition];
 }
 
--(void) dealloc{
-    NSLog(@"yep");
+-(void) sessionStarted{
+    [delegate sessionStarted];
 }
 
 @end

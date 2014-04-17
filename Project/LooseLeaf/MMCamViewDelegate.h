@@ -7,9 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 
 @protocol MMCamViewDelegate <NSObject>
 
 -(void) didTakePicture:(UIImage*)img;
+
+-(void) didChangeCameraTo:(AVCaptureDevicePosition)preferredPosition;
+
+-(void) sessionStarted;
 
 @end

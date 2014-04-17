@@ -17,6 +17,7 @@
 #import "NSThread+BlockAdditions.h"
 
 #define kCameraMargin 10
+#define kCameraPositionUserDefaultKey @"com.milestonemade.preferredCameraPosition"
 
 @implementation MMCameraSidebarContentView{
     MMBorderedCamView* cameraRow;
@@ -57,7 +58,9 @@
 
 -(void) show:(BOOL)animated{
     
-    cameraRow = [[MMBorderedCamView alloc] initWithFrame:[self cameraViewFr]];
+    AVCaptureDevicePosition preferredPosition = [[NSUserDefaults standardUserDefaults] integerForKey:kCameraPositionUserDefaultKey];
+    
+    cameraRow = [[MMBorderedCamView alloc] initWithFrame:[self cameraViewFr] andCameraPosition:preferredPosition];
     cameraRow.delegate = self;
     cameraRow.rotation = RandomPhotoRotation/2;
     cameraRow.center = CGPointMake((self.frame.size.width-kWidthOfSidebarButton)/2, kCameraMargin + cameraRow.bounds.size.height/2);
@@ -159,5 +162,12 @@
     [self.delegate pictureTakeWithCamera:img fromView:cameraRow];
 }
 
+-(void) didChangeCameraTo:(AVCaptureDevicePosition)preferredPosition{
+    [[NSUserDefaults standardUserDefaults] setInteger:preferredPosition forKey:kCameraPositionUserDefaultKey];
+}
+
+-(void) sessionStarted{
+    // noop
+}
 
 @end

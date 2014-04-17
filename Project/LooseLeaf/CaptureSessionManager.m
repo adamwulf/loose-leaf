@@ -7,10 +7,12 @@
     AVCaptureSession *captureSession;
     AVCaptureStillImageOutput* stillImageOutput;
     AVCaptureDevice* currDevice;
+    CALayer* previewLayerHolder;
 }
 
 @synthesize captureSession;
 @synthesize previewLayer;
+@synthesize delegate;
 
 dispatch_queue_t sessionQueue;
 
@@ -23,13 +25,14 @@ dispatch_queue_t sessionQueue;
 
 #pragma mark Capture Session Configuration
 
-- (id)init {
+- (id)initWithPosition:(AVCaptureDevicePosition)preferredPosition{
 	if ((self = [super init])) {
 		captureSession = [[AVCaptureSession alloc] init];
         captureSession.sessionPreset = AVCaptureSessionPresetMedium;
         
-        self.previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:[self captureSession]];
-        [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+        [captureSession addObserver:self forKeyPath:@"isInterrupted" options:NSKeyValueObservingOptionNew context:nil];
+        
+        previewLayerHolder = [[CALayer alloc] init];
         
         dispatch_async([CaptureSessionManager sessionQueue], ^{
             stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
@@ -38,14 +41,39 @@ dispatch_queue_t sessionQueue;
                 [stillImageOutput setOutputSettings:@{AVVideoCodecKey : AVVideoCodecJPEG}];
                 [captureSession addOutput:stillImageOutput];
             }
-        });
-        
-        [self changeCamera]; // default camera
-        dispatch_async([CaptureSessionManager sessionQueue], ^{
+            
+            [self changeCameraToDevice:[self deviceForPosition:preferredPosition]];
+
             [captureSession startRunning];
+            [self sessionStarted];
         });
 	}
 	return self;
+}
+
+-(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    if([keyPath isEqualToString:@"isInterrupted"]){
+        NSLog(@"interrupted!");
+    }else{
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
+
+-(void) sessionStarted{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if(previewLayer){
+            [previewLayer removeFromSuperlayer];
+        }
+        previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:captureSession];
+        [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+        CGRect layerRect = [previewLayerHolder bounds];
+        layerRect.size.width = floorf(layerRect.size.width);
+        layerRect.size.height = floorf(layerRect.size.height);
+        [previewLayer setBounds:layerRect];
+        [previewLayer setPosition:CGPointMake(CGRectGetMidX(layerRect),CGRectGetMidY(layerRect))];
+        [previewLayerHolder addSublayer:previewLayer];
+    });
+    [delegate sessionStarted];
 }
 
 #pragma mark - Public Interface
@@ -59,33 +87,39 @@ dispatch_queue_t sessionQueue;
             [[self captureSession] removeInput:currInput];
         }
         AVCaptureDevice* nextDevice = [self oppositeDeviceFrom:currDevice];
-        if (nextDevice) {
-            NSError *error;
-            AVCaptureDeviceInput *videoIn = [AVCaptureDeviceInput deviceInputWithDevice:nextDevice error:&error];
-            if(!error){
-                if ([[self captureSession] canAddInput:videoIn]){
-                    currDevice = nextDevice;
-                    [[self captureSession] addInput:videoIn];
-                }else{
-                    NSLog(@"Couldn't create video input");
-                    currDevice = nil;
-                }
+        [self changeCameraToDevice:nextDevice];
+    });
+}
+
+-(void) changeCameraToDevice:(AVCaptureDevice*)nextDevice{
+    if (nextDevice) {
+        NSError *error;
+        AVCaptureDeviceInput *videoIn = [AVCaptureDeviceInput deviceInputWithDevice:nextDevice error:&error];
+        if(!error){
+            if ([[self captureSession] canAddInput:videoIn]){
+                currDevice = nextDevice;
+                [[self captureSession] addInput:videoIn];
+                [self.delegate didChangeCameraTo:videoIn.device.position];
             }else{
                 NSLog(@"Couldn't create video input");
                 currDevice = nil;
             }
         }else{
-            NSLog(@"Couldn't create video capture device");
+            NSLog(@"Couldn't create video input");
             currDevice = nil;
         }
-    });
+    }else{
+        NSLog(@"Couldn't create video capture device");
+        currDevice = nil;
+    }
 }
+
 
 -(void) addPreviewLayerTo:(CALayer*)layer{
     CGRect layerRect = [layer bounds];
-	[[self previewLayer] setBounds:layerRect];
-	[[self previewLayer] setPosition:CGPointMake(CGRectGetMidX(layerRect),CGRectGetMidY(layerRect))];
-	[layer addSublayer:[self previewLayer]];
+	[previewLayerHolder setBounds:layerRect];
+	[previewLayerHolder setPosition:CGPointMake(CGRectGetMidX(layerRect),CGRectGetMidY(layerRect))];
+	[layer addSublayer:previewLayerHolder];
 }
 
 -(void) snapPicture{
@@ -106,7 +140,7 @@ dispatch_queue_t sessionQueue;
                 
                 NSLog(@"gotcha %p", image);
                 
-//                [delegate didTakePicture:image];
+                [delegate didTakePicture:image];
                 
 				[[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:nil];
 			}
@@ -131,8 +165,13 @@ dispatch_queue_t sessionQueue;
             break;
     }
     
+    return [self deviceForPosition:preferredPosition];
+}
+
+-(AVCaptureDevice*) deviceForPosition:(AVCaptureDevicePosition)preferredPosition{
     return [CaptureSessionManager deviceWithMediaType:AVMediaTypeVideo preferringPosition:preferredPosition];
 }
+
 
 + (AVCaptureDevice *)deviceWithMediaType:(NSString *)mediaType preferringPosition:(AVCaptureDevicePosition)position
 {
@@ -170,6 +209,7 @@ dispatch_queue_t sessionQueue;
 
 - (void)dealloc {
 	[[self captureSession] stopRunning];
+    [captureSession removeObserver:self forKeyPath:@"isInterrupted"];
 }
 
 @end
