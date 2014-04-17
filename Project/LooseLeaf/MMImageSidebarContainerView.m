@@ -16,6 +16,7 @@
 #import "MMFaceButton.h"
 #import "MMPalmTreeButton.h"
 #import "Constants.h"
+#import "NSThread+BlockAdditions.h"
 
 @implementation MMImageSidebarContainerView{
     MMCameraSidebarContentView* cameraListContentView;
@@ -143,10 +144,12 @@
 
 -(void) hide:(BOOL)animated{
     [super hide:animated];
-    [cameraListContentView hide:animated];
-    [albumListContentView hide:animated];
-    [faceListContentView hide:animated];
-    [eventListContentView hide:animated];
+    [[NSThread mainThread] performBlock:^{
+        [cameraListContentView hide:animated];
+        [albumListContentView hide:animated];
+        [faceListContentView hide:animated];
+        [eventListContentView hide:animated];
+    } afterDelay:.1];
 }
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
