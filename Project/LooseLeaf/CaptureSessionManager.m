@@ -19,7 +19,8 @@
 		captureSession = [[AVCaptureSession alloc] init];
         captureSession.sessionPreset = AVCaptureSessionPresetMedium;
         
-        [self addVideoInput];
+        [self changeCamera]; // default camera
+        
         self.previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:[self captureSession]];
         [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
         
@@ -45,11 +46,23 @@
         [[self captureSession] removeInput:currInput];
     }
     AVCaptureDevice* nextDevice = [self oppositeDeviceFrom:currDevice];
-    AVCaptureDeviceInput *videoIn = [AVCaptureDeviceInput deviceInputWithDevice:nextDevice error:nil];
-    if ([[self captureSession] canAddInput:videoIn]){
-        currDevice = nextDevice;
-        [[self captureSession] addInput:videoIn];
+	if (nextDevice) {
+		NSError *error;
+        AVCaptureDeviceInput *videoIn = [AVCaptureDeviceInput deviceInputWithDevice:nextDevice error:&error];
+        if(!error){
+            if ([[self captureSession] canAddInput:videoIn]){
+                currDevice = nextDevice;
+                [[self captureSession] addInput:videoIn];
+            }else{
+                NSLog(@"Couldn't create video input");
+                currDevice = nil;
+            }
+        }else{
+            NSLog(@"Couldn't create video input");
+            currDevice = nil;
+        }
     }else{
+        NSLog(@"Couldn't create video capture device");
         currDevice = nil;
     }
 }
@@ -139,26 +152,6 @@
 			NSLog(@"%@", error);
 		}
 	}
-}
-
-- (void)addVideoInput {
-	AVCaptureDevice *videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];	
-	if (videoDevice) {
-		NSError *error;
-		AVCaptureDeviceInput *videoIn = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
-		if (!error) {
-			if ([[self captureSession] canAddInput:videoIn]){
-				[[self captureSession] addInput:videoIn];
-                currDevice = videoDevice;
-            }
-			else
-				NSLog(@"Couldn't add video input");		
-		}
-		else
-			NSLog(@"Couldn't create video input");
-	}
-	else
-		NSLog(@"Couldn't create video capture device");
 }
 
 - (void)dealloc {

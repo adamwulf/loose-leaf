@@ -204,17 +204,21 @@
 #pragma mark - MMPhotoManagerDelegate
 
 -(void) doneLoadingPhotoAlbums;{
-    [cameraListContentView doneLoadingPhotoAlbums];
-    [albumListContentView doneLoadingPhotoAlbums];
-    [faceListContentView doneLoadingPhotoAlbums];
-    [eventListContentView doneLoadingPhotoAlbums];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [cameraListContentView doneLoadingPhotoAlbums];
+        [albumListContentView doneLoadingPhotoAlbums];
+        [faceListContentView doneLoadingPhotoAlbums];
+        [eventListContentView doneLoadingPhotoAlbums];
+    });
 }
 
 -(void) albumUpdated:(MMPhotoAlbum*)updatedAlbum{
-    [cameraListContentView albumUpdated:updatedAlbum];
-    [albumListContentView albumUpdated:updatedAlbum];
-    [faceListContentView albumUpdated:updatedAlbum];
-    [eventListContentView albumUpdated:updatedAlbum];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [cameraListContentView albumUpdated:updatedAlbum];
+        [albumListContentView albumUpdated:updatedAlbum];
+        [faceListContentView albumUpdated:updatedAlbum];
+        [eventListContentView albumUpdated:updatedAlbum];
+    });
 }
 
 @end
