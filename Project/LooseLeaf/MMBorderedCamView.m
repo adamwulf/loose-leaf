@@ -60,6 +60,11 @@
         [self addSubview:borderView];
         
         [[cameraSession captureSession] startRunning];
+
+        UIButton* tempButton = [[UIButton alloc] initWithFrame:self.bounds];
+        tempButton.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        [tempButton addTarget:self action:@selector(snapStillImage:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:tempButton];
     }
     return self;
 }
@@ -70,7 +75,11 @@
 }
 
 -(void) changeCamera{
-//    [cameraController changeCamera];
+    [cameraSession changeCamera];
+}
+
+-(void) snapStillImage:(UIButton*)button{
+    [cameraSession snapPicture];
 }
 
 #pragma mark - Delegate

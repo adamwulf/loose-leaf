@@ -7,6 +7,8 @@
 @property (retain) AVCaptureVideoPreviewLayer *previewLayer;
 @property (retain) AVCaptureSession *captureSession;
 
+-(void) changeCamera;
+-(void) snapPicture;
 -(void) addPreviewLayerTo:(CALayer*)layer;
 
 @end
