@@ -234,7 +234,13 @@
 
 -(void) updatePhotoRotation{
     if(!cameraListContentView.hidden){
-        [cameraListContentView updatePhotoRotation];
+        [cameraListContentView updatePhotoRotation:YES];
+    }else if(!albumListContentView.hidden){
+        [albumListContentView updatePhotoRotation:YES];
+    }else if(!faceListContentView.hidden){
+        [faceListContentView updatePhotoRotation:YES];
+    }else if(!eventListContentView.hidden){
+        [eventListContentView updatePhotoRotation:YES];
     }
 }
 

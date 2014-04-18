@@ -72,6 +72,7 @@
     albumListScrollView.alpha = 1;
     photoListScrollView.alpha = 0;
     [[MMPhotoManager sharedInstace] initializeAlbumCache:nil];
+    [self updatePhotoRotation:NO];
 }
 
 -(void) hide:(BOOL)animated{
@@ -189,6 +190,7 @@
                     [currentRowForAlbum setObject:currentAlbumRow forKey:currentAlbumRow.album.persistentId];
                 }
             }
+            [currentAlbumRow updatePhotoRotation];
         }
         return currentAlbumRow;
     }else{
@@ -198,26 +200,44 @@
             currentPhotoRow.delegate = self;
         }
         [currentPhotoRow loadPhotosFromAlbum:currentAlbum atRow:index];
+        [currentPhotoRow updatePhotoRotation];
         return currentPhotoRow;
     }
 }
 
 #pragma mark - Rotation
 
--(void) updatePhotoRotation{
-    [[NSThread mainThread] performBlock:^{
-        [UIView animateWithDuration:.15 delay:0 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
-            if(photoListScrollView.alpha){
-                [photoListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                    if([obj respondsToSelector:@selector(updatePhotoRotation)]){
-                        [obj updatePhotoRotation];
-                    }
-                }];
-            }else if(albumListScrollView.alpha){
-                
-            }
-        } completion:nil];
-    }];
+-(void) updatePhotoRotation:(BOOL)animated{
+    
+    void(^updateVisibleRowsWithRotation)() = ^{
+        if(photoListScrollView.alpha){
+            [photoListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                if([obj respondsToSelector:@selector(updatePhotoRotation)]){
+                    [obj updatePhotoRotation];
+                }
+            }];
+        }else if(albumListScrollView.alpha){
+            [albumListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                if([obj respondsToSelector:@selector(updatePhotoRotation)]){
+                    [obj updatePhotoRotation];
+                }
+            }];
+        }
+    };
+    
+    if(animated){
+        [[NSThread mainThread] performBlock:^{
+            [UIView animateWithDuration:.15
+                                  delay:0
+                                options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState
+                             animations:updateVisibleRowsWithRotation
+                             completion:nil];
+        }];
+    }else{
+        [[NSThread mainThread] performBlock:^{
+            updateVisibleRowsWithRotation();
+        }];
+    }
 }
 
 @end

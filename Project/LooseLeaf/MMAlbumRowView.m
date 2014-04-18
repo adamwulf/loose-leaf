@@ -10,11 +10,13 @@
 #import "MMPhotoManager.h"
 #import "Constants.h"
 #import "MMBufferedImageView.h"
+#import "MMRotationManager.h"
 
 @implementation MMAlbumRowView{
     MMPhotoAlbum* album;
     UILabel* name;
     NSArray* bufferedImageViews;
+    CGFloat visiblePhotoRotation;
 }
 
 @synthesize album;
@@ -81,5 +83,26 @@
         [self.delegate albumRowWasTapped:self];
     }
 }
+
+#pragma mark - Rotation
+
+-(void) updatePhotoRotation{
+    
+    UIDeviceOrientation orient = [[MMRotationManager sharedInstace] currentDeviceOrientation];
+    if(orient == UIDeviceOrientationLandscapeLeft){
+        visiblePhotoRotation = M_PI / 2;
+    }else if(orient == UIDeviceOrientationPortraitUpsideDown){
+        visiblePhotoRotation = M_PI;
+    }else if(orient == UIDeviceOrientationLandscapeRight){
+        visiblePhotoRotation = -M_PI / 2;
+    }else{
+        visiblePhotoRotation = 0;
+    }
+    
+    for (MMBufferedImageView* imageView in bufferedImageViews) {
+        imageView.rotation = visiblePhotoRotation + RandomPhotoRotation;
+    }
+}
+
 
 @end

@@ -31,7 +31,7 @@
 
 -(void) hide:(BOOL)animated;
 
--(void) updatePhotoRotation;
+-(void) updatePhotoRotation:(BOOL)animated;
 
 // abstract
 
