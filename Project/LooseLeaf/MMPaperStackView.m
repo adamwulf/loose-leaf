@@ -67,6 +67,10 @@
     return self;
 }
 
+-(NSString*) activeGestureSummary{
+    @throw kAbstractMethodException;
+}
+
 
 #pragma mark - Gesture Helpers
 
@@ -1070,7 +1074,11 @@
             // though no fingers are touching the screen
             //
             // just realign and log
-            @throw [NSException exceptionWithName:@"InvalidPageStack" reason:@"released non-top page while top page was not held" userInfo:nil];
+            
+            NSString* reasonAndDebugInfo = [self activeGestureSummary];
+            reasonAndDebugInfo = [NSString stringWithFormat:@"released non-top page while top page was not held\n%@", reasonAndDebugInfo];
+            
+            @throw [NSException exceptionWithName:@"InvalidPageStack" reason:reasonAndDebugInfo userInfo:nil];
             //
             // as a backup, i think realignPagesInVisibleStackExcept:nil: would have "worked"... but hard to test
             // so better to kill the app and debug properly.
@@ -1615,6 +1623,9 @@
  * get this into static mode asap.
  */
 -(void) willChangeTopPageTo:(MMPaperView*)page{
+    if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
+        recentlySuggestedPageUUID = page.uuid;
+    }
     if(!page){
         NSLog(@"what");
         @throw [NSException exceptionWithName:@"will change to nil page" reason:@"unknown" userInfo:nil];
