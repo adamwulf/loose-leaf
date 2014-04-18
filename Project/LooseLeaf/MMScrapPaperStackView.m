@@ -13,11 +13,13 @@
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "MMStretchScrapGestureRecognizer.h"
 #import <JotUI/AbstractBezierPathElement-Protected.h>
+#import <JotUI/UIImage+Resize.h>
 #import "NSMutableSet+Extras.h"
 #import "UIGestureRecognizer+GestureDebug.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMImageSidebarContainerView.h"
 #import "MMBufferedImageView.h"
+#import "MMBorderedCamView.h"
 
 @implementation MMScrapPaperStackView{
     MMScrapSidebarContainerView* bezelScrapContainer;
@@ -154,7 +156,91 @@
     [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
 }
 
--(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage{
+-(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
+    CGRect scrapRect = CGRectZero;
+    scrapRect.origin = [self convertPoint:cameraView.layer.bounds.origin fromView:cameraView];
+    scrapRect.size = cameraView.bounds.size;
+    UIBezierPath* path = [UIBezierPath bezierPathWithRect:scrapRect];
+    
+    //
+    // to exactly align the scrap with a rotation,
+    // i would need to rotate it around its top left corner
+    // this is because we're creating the rect to align
+    // with the point tl above, which when converted
+    // into our coordinate system accounts for the view's
+    // rotation.
+    //
+    // so at this moment, we have a squared off CGRect
+    // that aligns it's top left corner to the rotated
+    // bufferedImage's top left corner
+    
+    
+    // max image size in any direction is 300pts
+    CGFloat maxDim = 600;
+    
+    CGSize fullScale = img.size;
+    if(fullScale.width >= fullScale.height && fullScale.width > maxDim){
+        fullScale.height = fullScale.height / fullScale.width * maxDim;
+        fullScale.width = maxDim;
+    }else if(fullScale.height >= fullScale.width && fullScale.height > maxDim){
+        fullScale.width = fullScale.width / fullScale.height * maxDim;
+        fullScale.height = maxDim;
+    }
+    
+    CGFloat startingScale = scrapRect.size.width / fullScale.width;
+    
+    UIImage* scrapBacking = [img resizedImage:CGSizeMake(ceilf(fullScale.width/2), ceilf(fullScale.height/2)) interpolationQuality:kCGInterpolationMedium];
+    
+    MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
+    MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:0 andScale:startingScale];
+    [scrapContainer addSubview:scrap];
+    
+    CGSize fullScaleScrapSize = scrapRect.size;
+    fullScaleScrapSize.width /= startingScale;
+    fullScaleScrapSize.height /= startingScale;
+    
+    // zoom the background in an extra pixel
+    // so that the border of the image exceeds the
+    // path of the scrap. this'll give us a nice smooth
+    // edge from the mask of the CAShapeLayer
+    CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width + 2.0/scrapBacking.size.width; // extra pixel
+    
+    [scrap setBackingImage:scrapBacking];
+    [scrap setBackgroundScale:scaleUpOfImage];
+    scrap.center = [self convertPoint:CGPointMake(cameraView.bounds.size.width/2, cameraView.bounds.size.height/2) fromView:cameraView];
+    scrap.rotation = cameraView.rotation;
+    
+    [imagePicker hide:YES];
+    
+    // hide the photo in the row
+    cameraView.alpha = 0;
+    
+    // bounce by 20px (10 on each side)
+    CGFloat bounceScale = 20 / MAX(fullScale.width, fullScale.height);
+    
+    [UIView animateWithDuration:.2
+                          delay:.1
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         scrap.center = [visibleStackHolder peekSubview].center;
+                         [scrap setScale:(1+bounceScale) andRotation:RandomPhotoRotation];
+                     }
+                     completion:^(BOOL finished){
+                         [UIView animateWithDuration:.1
+                                               delay:0
+                                             options:UIViewAnimationOptionCurveEaseIn
+                                          animations:^{
+                                              [scrap setScale:1];
+                                          }
+                                          completion:^(BOOL finished){
+                                              cameraView.alpha = 1;
+                                              [topPage addScrap:scrap];
+                                              [topPage saveToDisk];
+                                          }];
+                     }];
+}
+
+-(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation{
     CGRect scrapRect = CGRectZero;
     scrapRect.origin = [self convertPoint:[bufferedImage visibleImageOrigin] fromView:bufferedImage];
     scrapRect.size = [bufferedImage visibleImageSize];
@@ -221,7 +307,7 @@
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          scrap.center = [visibleStackHolder peekSubview].center;
-                         [scrap setScale:(1+bounceScale) andRotation:RandomPhotoRotation];
+                         [scrap setScale:(1+bounceScale) andRotation:scrap.rotation + RandomPhotoRotation];
                      }
                      completion:^(BOOL finished){
                          [UIView animateWithDuration:.1
@@ -295,56 +381,60 @@ int skipAll = NO;
 }
 
 
--(void) timerDidFire:(NSTimer*)timer{
-
-    NSLog(@" ");
-    NSLog(@" ");
-    NSLog(@" ");
-    NSLog(@"begin");
+-(NSString*) activeGestureSummary{
+    
+    NSMutableString* str = [NSMutableString stringWithString:@"\n\n\n"];
+    [str appendString:@"begin\n"];
     
     for(MMPaperView* page in setOfPagesBeingPanned){
         if([visibleStackHolder containsSubview:page]){
-            NSLog(@"  1 page in visible stack");
+            [str appendString:@"  1 page in visible stack\n"];
         }else if([bezelStackHolder containsSubview:page]){
-            NSLog(@"  1 page in bezel stack");
+            [str appendString:@"  1 page in bezel stack\n"];
         }else if([hiddenStackHolder containsSubview:page]){
-            NSLog(@"  1 page in hidden stack");
+            [str appendString:@"  1 page in hidden stack\n"];
         }
     }
     
-
+    
     NSArray* allGesturesAndTopTwoPages = [self.gestureRecognizers arrayByAddingObjectsFromArray:[[visibleStackHolder peekSubview] gestureRecognizers]];
     allGesturesAndTopTwoPages = [allGesturesAndTopTwoPages arrayByAddingObjectsFromArray:[[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]] gestureRecognizers]];
     for(UIGestureRecognizer* gesture in allGesturesAndTopTwoPages){
         UIGestureRecognizerState st = gesture.state;
-        NSLog(@"%@ %d", NSStringFromClass([gesture class]), st);
+        [str appendFormat:@"%@ %d", NSStringFromClass([gesture class]), st];
         if([gesture respondsToSelector:@selector(validTouches)]){
-            NSLog(@"   validTouches: %d", [[gesture performSelector:@selector(validTouches)] count]);
+            [str appendFormat:@"   validTouches: %d", [[gesture performSelector:@selector(validTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(touches)]){
-            NSLog(@"   touches: %d", [[gesture performSelector:@selector(touches)] count]);
+            [str appendFormat:@"   touches: %d", [[gesture performSelector:@selector(touches)] count]];
         }
         if([gesture respondsToSelector:@selector(possibleTouches)]){
-            NSLog(@"   possibleTouches: %d", [[gesture performSelector:@selector(possibleTouches)] count]);
+            [str appendFormat:@"   possibleTouches: %d", [[gesture performSelector:@selector(possibleTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(ignoredTouches)]){
-            NSLog(@"   ignoredTouches: %d", [[gesture performSelector:@selector(ignoredTouches)] count]);
+            [str appendFormat:@"   ignoredTouches: %d", [[gesture performSelector:@selector(ignoredTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(paused)]){
-            NSLog(@"   paused: %d", [gesture performSelector:@selector(paused)] ? 1 : 0);
+            [str appendFormat:@"   paused: %d", [gesture performSelector:@selector(paused)] ? 1 : 0];
         }
         if([gesture respondsToSelector:@selector(scrap)]){
-            NSLog(@"   has scrap: %d", [gesture performSelector:@selector(scrap)] ? 1 : 0);
+            [str appendFormat:@"   has scrap: %d", [gesture performSelector:@selector(scrap)] ? 1 : 0];
         }
     }
-    NSLog(@"velocity gesture sees: %d", [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]);
-    NSLog(@"pages being panned %d", [setOfPagesBeingPanned count]);
-
-    NSLog(@"done");
+    [str appendFormat:@"velocity gesture sees: %d", [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]];
+    [str appendFormat:@"pages being panned %d", [setOfPagesBeingPanned count]];
+    
+    [str appendFormat:@"done"];
     
     for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scraps]){
-        NSLog(@"scrap: %f %f", scrap.layer.anchorPoint.x, scrap.layer.anchorPoint.y);
+        [str appendFormat:@"scrap: %f %f", scrap.layer.anchorPoint.x, scrap.layer.anchorPoint.y];
     }
+    return str;
+}
+
+
+-(void) timerDidFire:(NSTimer*)timer{
+    NSLog(@"%@", [self activeGestureSummary]);
 }
 
 -(void) drawLine{
@@ -1089,6 +1179,12 @@ int skipAll = NO;
 // and don't fall within any scrap above the input scrap
 -(NSSet*) setOfTouchesFrom:(NSOrderedSet *)touches inScrap:(MMScrapView *)scrap{
     return nil;
+}
+
+#pragma mark - MMRotationManagerDelegate
+
+-(void) didRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient{
+    [imagePicker updatePhotoRotation];
 }
 
 @end

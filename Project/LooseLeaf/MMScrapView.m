@@ -239,7 +239,7 @@
  * scraps will show the shadow move ever so slightly as the device is turned
  */
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading{
-    self.layer.shadowOffset = CGSizeMake(cosf(currentRawReading)*1, sinf(currentRawReading)*1);
+    self.layer.shadowOffset = CGSizeMake(-sinf(currentRawReading)*1, cosf(currentRawReading)*1);
 }
 
 #pragma mark - UITouch Helper methods
@@ -468,7 +468,7 @@
 #pragma mark - Saving
 
 -(void) saveToDisk{
-    NSLog(@"asking scrap %@ to save", scrapState.uuid);
+//    NSLog(@"asking scrap %@ to save", scrapState.uuid);
     [scrapState saveToDisk];
 }
 
@@ -476,12 +476,12 @@
 #pragma mark - State
 
 -(void) loadScrapStateAsynchronously:(BOOL)async{
-    NSLog(@"asking scrap %@ to load async %d", scrapState.uuid, async);
+//    NSLog(@"asking scrap %@ to load async %d", scrapState.uuid, async);
     [scrapState loadScrapStateAsynchronously:async];
 }
 
 -(void) unloadState{
-    NSLog(@"asking scrap %@ to unload", scrapState.uuid);
+//    NSLog(@"asking scrap %@ to unload", scrapState.uuid);
     [scrapState unloadState];
 }
 

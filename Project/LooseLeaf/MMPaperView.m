@@ -40,7 +40,6 @@
         
         [self.layer setMasksToBounds:YES ];
         self.scale = 1;
-        
 
         //
         // allow the user to select an object by long pressing

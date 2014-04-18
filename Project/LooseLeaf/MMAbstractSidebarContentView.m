@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMImageSidebarContentView.h"
+#import "MMAbstractSidebarContentView.h"
 #import "MMPhotoManager.h"
 #import "MMCachedRowsScrollView.h"
 #import "MMAlbumRowView.h"
@@ -14,15 +14,11 @@
 #import "MMBufferedImageView.h"
 #import "MMImageSidebarContainerView.h"
 #import "ALAsset+Thumbnail.h"
+#import "Constants.h"
+#import "NSThread+BlockAdditions.h"
 
-#define kTopBottomMargin 50
-
-@implementation MMImageSidebarContentView{
-    MMCachedRowsScrollView* albumListScrollView;
-    MMCachedRowsScrollView* photoListScrollView;
+@implementation MMAbstractSidebarContentView{
     NSMutableDictionary* currentRowForAlbum;
-    
-    MMPhotoAlbum* currentAlbum;
 }
 
 @synthesize delegate;
@@ -33,7 +29,6 @@
     if (self) {
         // Initialization code
         currentRowForAlbum = [NSMutableDictionary dictionary];
-        [MMPhotoManager sharedInstace].delegate = self;
         albumListScrollView = [[MMCachedRowsScrollView alloc] initWithFrame:self.bounds withRowHeight:ceilf(self.bounds.size.width / 3) andMargins:kTopBottomMargin];
         albumListScrollView.dataSource = self;
         
@@ -45,6 +40,29 @@
         
         [self addSubview:albumListScrollView];
         [self addSubview:photoListScrollView];
+        
+        
+        NSObject * transparent = (NSObject *) [[UIColor colorWithWhite:0 alpha:0] CGColor];
+        NSObject * opaque = (NSObject *) [[UIColor colorWithWhite:0 alpha:1] CGColor];
+        
+        CALayer * maskLayer = [CALayer layer];
+        maskLayer.frame = self.bounds;
+        
+        CAGradientLayer * gradientLayer = [CAGradientLayer layer];
+        gradientLayer.frame = CGRectMake(self.bounds.origin.x, 0,
+                                         self.bounds.size.width, self.bounds.size.height);
+        
+        gradientLayer.colors = [NSArray arrayWithObjects: transparent, opaque, nil];
+        
+        CGFloat fadePercentage = kTopBottomMargin / self.bounds.size.height;
+        // Set percentage of scrollview that fades at top & bottom
+        gradientLayer.locations = [NSArray arrayWithObjects:
+                                   [NSNumber numberWithFloat:0],
+                                   [NSNumber numberWithFloat:fadePercentage], nil];
+        
+        [maskLayer addSublayer:gradientLayer];
+        self.layer.mask = maskLayer;
+
     }
     return self;
 }
@@ -54,9 +72,12 @@
     albumListScrollView.alpha = 1;
     photoListScrollView.alpha = 0;
     [[MMPhotoManager sharedInstace] initializeAlbumCache:nil];
+    [self updatePhotoRotation:NO];
 }
 
 -(void) hide:(BOOL)animated{
+    albumListScrollView.alpha = 1;
+    photoListScrollView.alpha = 0;
     currentAlbum = nil;
 }
 
@@ -91,39 +112,11 @@
 #pragma mark - Row Management
 
 -(NSInteger) indexForAlbum:(MMPhotoAlbum*)album{
-    if(album.type == ALAssetsGroupAlbum){
-        return [[[MMPhotoManager sharedInstace] albums] indexOfObject:album];
-    }
-    if(album.type == ALAssetsGroupEvent){
-        return [[[MMPhotoManager sharedInstace] events] indexOfObject:album] + [[[MMPhotoManager sharedInstace] albums] count];
-    }
-    if(album.type == ALAssetsGroupFaces){
-        return [[[MMPhotoManager sharedInstace] faces] indexOfObject:album] +
-                [[[MMPhotoManager sharedInstace] albums] count] +
-                [[[MMPhotoManager sharedInstace] events] count];
-    }
-    return -1;
+    @throw kAbstractMethodException;
 }
 
 -(MMPhotoAlbum*) albumAtIndex:(NSInteger)index{
-    if(index >= [[[MMPhotoManager sharedInstace] albums] count]){
-        index -= [[[MMPhotoManager sharedInstace] albums] count];
-    }else{
-        return [[[MMPhotoManager sharedInstace] albums] objectAtIndex:index];
-    }
-
-    if(index >= [[[MMPhotoManager sharedInstace] events] count]){
-        index -= [[[MMPhotoManager sharedInstace] events] count];
-    }else{
-        return [[[MMPhotoManager sharedInstace] events] objectAtIndex:index];
-    }
-
-    if(index >= [[[MMPhotoManager sharedInstace] faces] count]){
-        index -= [[[MMPhotoManager sharedInstace] faces] count];
-    }else{
-        return [[[MMPhotoManager sharedInstace] faces] objectAtIndex:index];
-    }
-    return nil;
+    @throw kAbstractMethodException;
 }
 
 
@@ -147,25 +140,19 @@
 
 #pragma mark - MMPhotoRowViewDelegate
 
--(void) photoRowWasTapped:(MMPhotoRowView*)row forAsset:(ALAsset *)asset forImage:(MMBufferedImageView *)bufferedImage{
-    [delegate photoWasTapped:asset fromView:bufferedImage];
+-(void) photoRowWasTapped:(MMPhotoRowView*)row forAsset:(ALAsset *)asset forImage:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation{
+    [delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation];
 }
 
-#pragma mark - MMPhotoAlbumListScrollViewDataSource
+#pragma mark - MMCachedRowsScrollViewDataSource
 
 -(NSInteger) numberOfRowsFor:(MMCachedRowsScrollView*)scrollView{
-    if(scrollView == albumListScrollView){
-        return [[[MMPhotoManager sharedInstace] albums] count] +
-        [[[MMPhotoManager sharedInstace] events] count] +
-        [[[MMPhotoManager sharedInstace] faces] count];
-    }else{
-        return ceilf(currentAlbum.numberOfPhotos / 2.0);
-    }
+    @throw kAbstractMethodException;
 }
 
 // called when a row is hidden in the scrollview
 // and may be re-used with different model data later
--(void) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView{
+-(BOOL) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView{
     if(scrollView == albumListScrollView){
         MMAlbumRowView* row = (MMAlbumRowView*)aRow;
         if(row.album){
@@ -174,10 +161,10 @@
             row.album = nil;
         }
     }else{
-        // noop
         MMPhotoRowView* row = (MMPhotoRowView*)aRow;
         [row unload];
     }
+    return YES;
 }
 
 // currentRow may or maynot be nil. if nil, then
@@ -203,6 +190,7 @@
                     [currentRowForAlbum setObject:currentAlbumRow forKey:currentAlbumRow.album.persistentId];
                 }
             }
+            [currentAlbumRow updatePhotoRotation];
         }
         return currentAlbumRow;
     }else{
@@ -212,7 +200,43 @@
             currentPhotoRow.delegate = self;
         }
         [currentPhotoRow loadPhotosFromAlbum:currentAlbum atRow:index];
+        [currentPhotoRow updatePhotoRotation];
         return currentPhotoRow;
+    }
+}
+
+#pragma mark - Rotation
+
+-(void) updatePhotoRotation:(BOOL)animated{
+    
+    void(^updateVisibleRowsWithRotation)() = ^{
+        if(photoListScrollView.alpha){
+            [photoListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                if([obj respondsToSelector:@selector(updatePhotoRotation)]){
+                    [obj updatePhotoRotation];
+                }
+            }];
+        }else if(albumListScrollView.alpha){
+            [albumListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                if([obj respondsToSelector:@selector(updatePhotoRotation)]){
+                    [obj updatePhotoRotation];
+                }
+            }];
+        }
+    };
+    
+    if(animated){
+        [[NSThread mainThread] performBlock:^{
+            [UIView animateWithDuration:.15
+                                  delay:0
+                                options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState
+                             animations:updateVisibleRowsWithRotation
+                             completion:nil];
+        }];
+    }else{
+        [[NSThread mainThread] performBlock:^{
+            updateVisibleRowsWithRotation();
+        }];
     }
 }
 

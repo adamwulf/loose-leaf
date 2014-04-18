@@ -622,13 +622,16 @@
     }
     if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
         [self loadStateForPage:page];
+        debug_NSLog(@"may change to: %@", page.uuid);
     }
     [super mayChangeTopPageTo:page];
 }
 
 -(void) willChangeTopPageTo:(MMPaperView*)page{
-    if(page && ![recentlyConfirmedPageUUID isEqualToString:page.uuid]){
+    if(page && !([recentlySuggestedPageUUID isEqualToString:page.uuid] ||
+                [recentlyConfirmedPageUUID isEqualToString:page.uuid])){
         [self loadStateForPage:page];
+        debug_NSLog(@"will change to: %@", page.uuid);
     }
     [super willChangeTopPageTo:page];
 }
@@ -639,11 +642,12 @@
     MMPaperView* topPage = [visibleStackHolder peekSubview];
     [self ensureTopPageIsLoaded:topPage];
     [self updateVisiblePageImageCache];
+    debug_NSLog(@"did change to: %@", topPage.uuid);
 }
 
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
     [super willNotChangeTopPageTo:page];
-//    debug_NSLog(@"won't change to: %@", page.uuid);
+    debug_NSLog(@"won't change to: %@", page.uuid);
 }
 
 
@@ -845,6 +849,7 @@
     }else{
         visibleScrollOffset = initialScrollOffsetFromTransitionToListView;
     }
+    
     NSArray* visiblePages = [self findPagesInVisibleRowsOfListViewGivenOffset:visibleScrollOffset];
     for(MMEditablePaperView* page in visiblePages){
         [page loadCachedPreview];

@@ -14,7 +14,7 @@
 
 -(NSInteger) numberOfRowsFor:(MMCachedRowsScrollView*)scrollView;
 
--(void) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView;
+-(BOOL) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView;
 
 -(UIView*) updateRow:(UIView*)currentRow atIndex:(NSInteger)index forFrame:(CGRect)frame forScrollView:(MMCachedRowsScrollView*)scrollView;
 

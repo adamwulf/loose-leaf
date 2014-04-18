@@ -264,7 +264,6 @@
  * transition into page view from the transition state
  */
 -(void) finishUITransitionToPageView{
-    NSLog(@"finishUITransitionToPageView");
     for(MMPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
         if(aPage != [visibleStackHolder peekSubview]){
             [aPage enableAllGestures];
@@ -458,7 +457,7 @@
     [super finishedScalingReallySmall:page];
     //
     // clean up gesture state
-    NSLog(@"removing1 %p", page);
+//    NSLog(@"removing1 %p", page);
     [setOfPagesBeingPanned removeObject:page];
 
     CGFloat duration = 0.3;
@@ -758,6 +757,13 @@
     }else if(gesture.state == UIGestureRecognizerStateChanged){
         updatePageFrame();
     }
+    
+    if(gesture.state == UIGestureRecognizerStateCancelled){
+        // we cancelled, so some other gesture is going to
+        // handle the transition
+        realizedThatPageIsBeingDragged = NO;
+        pageBeingDragged = nil;
+    }
 }
 
 /**
@@ -882,6 +888,12 @@
         }
     }else if(gesture.state == UIGestureRecognizerStateChanged){
         updatePageFrame();
+    }
+    if(gesture.state == UIGestureRecognizerStateCancelled){
+        // we cancelled, so some other gesture is going to
+        // handle the transition
+        realizedThatPageIsBeingDragged = NO;
+        pageBeingDragged = nil;
     }
 }
 
@@ -1302,9 +1314,15 @@
         }
         // set our content height/offset for the pages
         [self beginUITransitionFromListView];
+        // https://github.com/adamwulf/loose-leaf/issues/394
+        // setting scrollEnabled needs to happen before setting
+        // the content offset. when setting the offset, the
+        // scrollViewDidScroll: fires immediately, and without
+        // the [updateVisiblePageImageCache] will cache/uncache
+        // the wrong pages in list view
+        [self setScrollEnabled:NO];
         [self setContentOffset:CGPointZero animated:NO];
         [self setContentSize:CGSizeMake(screenWidth, screenHeight)];
-        [self setScrollEnabled:NO];
         [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
         [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
         

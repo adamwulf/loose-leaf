@@ -197,7 +197,7 @@
         }
         
         if([[NSFileManager defaultManager] fileExistsAtPath:[self backgroundJPGFile]]){
-            NSLog(@"should be loading background");
+//            NSLog(@"should be loading background");
             UIImage* image = [UIImage imageWithContentsOfFile:[self backgroundJPGFile]];
             [NSThread performBlockOnMainThread:^{
                 [self setBackingImage:image];
@@ -214,7 +214,7 @@
                                             contentView.bounds.size.height/2 + backgroundOffset.y);
     backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(backgroundRotation),CGAffineTransformMakeScale(backgroundScale, backgroundScale));
     backingViewHasChanged = YES;
-    NSLog(@"(%@) updating background properties", self.uuid);
+//    NSLog(@"(%@) updating background properties", self.uuid);
 }
 
 -(void) setBackingImage:(UIImage*)img{
@@ -267,13 +267,13 @@
         dispatch_async([self importExportScrapStateQueue], ^{
             @autoreleasepool {
                 [lock lock];
-                NSLog(@"(%@) saving with background: %d %d", uuid, (int)drawableView, backingViewHasChanged);
+//                NSLog(@"(%@) saving with background: %d %d", uuid, (int)drawableView, backingViewHasChanged);
                 if(drawableViewState && ([drawableViewState hasEditsToSave] || backingViewHasChanged)){
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                     [NSThread performBlockOnMainThread:^{
                         @autoreleasepool {
                             if(drawableView && ([drawableViewState hasEditsToSave] || backingViewHasChanged)){
-                                NSLog(@"(%@) saving background: %d", uuid, backingViewHasChanged);
+//                                NSLog(@"(%@) saving background: %d", uuid, backingViewHasChanged);
                                 // save path
                                 // this needs to be saved at the exact same time as the drawable view
                                 // so that we can guarentee that there is no race condition
@@ -296,7 +296,7 @@
                                 
 
                                 if([drawableViewState hasEditsToSave]){
-                                    NSLog(@"(%@) saving strokes: %d", uuid, backingViewHasChanged);
+//                                    NSLog(@"(%@) saving strokes: %d", uuid, backingViewHasChanged);
                                     // now export the drawn content. this will create an immutable state
                                     // object and export in the background. this means that everything at this
                                     // instant on the thread will be synced to the content in this drawable view
@@ -307,22 +307,22 @@
                                                 thumbnailView.image = thumb;
                                             }];
                                             [drawableViewState wasSavedAtImmutableState:state];
-                                            NSLog(@"(%@) scrap saved at: %d with thumb: %d", uuid, state.undoHash, (int)thumb);
+//                                            NSLog(@"(%@) scrap saved at: %d with thumb: %d", uuid, state.undoHash, (int)thumb);
                                         }
                                         dispatch_semaphore_signal(sema1);
                                     }];
                                 }else{
-                                    NSLog(@"(%@) skipped saving strokes: %d", uuid, backingViewHasChanged);
+//                                    NSLog(@"(%@) skipped saving strokes: %d", uuid, backingViewHasChanged);
                                     dispatch_semaphore_signal(sema1);
                                 }
                             }else{
-                                if(!drawableView && ![drawableViewState hasEditsToSave]){
-                                    NSLog(@"(%@) no drawable view or edits", uuid);
-                                }else if(!drawableView){
-                                    NSLog(@"(%@) no drawable view", uuid);
-                                }else if(![drawableViewState hasEditsToSave]){
-                                    NSLog(@"(%@) no edits to save in state", uuid);
-                                }
+//                                if(!drawableView && ![drawableViewState hasEditsToSave]){
+//                                    NSLog(@"(%@) no drawable view or edits", uuid);
+//                                }else if(!drawableView){
+//                                    NSLog(@"(%@) no drawable view", uuid);
+//                                }else if(![drawableViewState hasEditsToSave]){
+//                                    NSLog(@"(%@) no edits to save in state", uuid);
+//                                }
                                 // was asked to save, but we were asked to save
                                 // multiple times extremely quickly, so just signal
                                 // that we're done
@@ -332,20 +332,20 @@
                     }];
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
                     dispatch_release(sema1);
-                    NSLog(@"(%@) done saving: %d", uuid, (int)drawableView);
+//                    NSLog(@"(%@) done saving: %d", uuid, (int)drawableView);
                 }else{
                     // sometimes, this method is called in very quick succession.
                     // that means that the first time it runs and saves, it'll
                     // finish all of the export and drawableViewState will be nil
                     // next time it runs. so we double check our save state to determine
                     // if in fact we still need to save or not
-                    NSLog(@"(%@) no edits to save in state2", uuid);
+//                    NSLog(@"(%@) no edits to save in state2", uuid);
                 }
                 [lock unlock];
             }
         });
     }else{
-        NSLog(@"(%@) no edits to save in state3", uuid);
+//        NSLog(@"(%@) no edits to save in state3", uuid);
     }
 }
 
@@ -357,7 +357,7 @@
         // if we already have our state,
         // then bail early
         if(isLoadingState || drawableViewState){
-            NSLog(@"(%@) already loaded", uuid);
+//            NSLog(@"(%@) already loaded", uuid);
             return;
         }
         
@@ -365,11 +365,11 @@
         isLoadingState = YES;
     }
 
-    NSLog(@"(%@) loading1: %d %d", uuid, targetIsLoadedState, isLoadingState);
+//    NSLog(@"(%@) loading1: %d %d", uuid, targetIsLoadedState, isLoadingState);
     void (^loadBlock)() = ^(void) {
         @autoreleasepool {
             [lock lock];
-            NSLog(@"(%@) loading2: %d %d", uuid, targetIsLoadedState, isLoadingState);
+//            NSLog(@"(%@) loading2: %d %d", uuid, targetIsLoadedState, isLoadingState);
             dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
             [NSThread performBlockOnMainThread:^{
                 @synchronized(self){
@@ -429,7 +429,7 @@
             [lock lock];
             @synchronized(self){
                 if(drawableViewState && [drawableViewState hasEditsToSave]){
-                    NSLog(@"(%@) unload failed, will retry", uuid);
+//                    NSLog(@"(%@) unload failed, will retry", uuid);
                     // we want to unload, but we're not saved.
                     // save, then try to unload again
                     dispatch_async([self importExportScrapStateQueue], ^{
@@ -443,7 +443,7 @@
                         }
                     });
                 }else{
-                    NSLog(@"(%@) unload success", uuid);
+//                    NSLog(@"(%@) unload success", uuid);
                     targetIsLoadedState = NO;
                     if(!isLoadingState && drawableViewState){
                         drawableViewState = nil;
@@ -521,7 +521,7 @@
 -(void) addElements:(NSArray*)elements{
     if(!drawableViewState){
         // https://github.com/adamwulf/loose-leaf/issues/258
-        NSLog(@"tryign to draw on an unloaded scrap");
+        NSLog(@"trying to draw on an unloaded scrap");
     }
     [drawableView addElements:elements];
 }
@@ -546,7 +546,7 @@
 #pragma mark - dealloc
 
 -(void) dealloc{
-    NSLog(@"(%@) dealloc", uuid);
+    NSLog(@"scrap state (%@) dealloc", uuid);
     [[MMLoadImageCache sharedInstace] clearCacheForPath:self.thumbImageFile];
     dispatch_release(importExportScrapStateQueue);
     importExportScrapStateQueue = nil;
