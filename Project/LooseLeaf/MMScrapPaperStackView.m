@@ -381,56 +381,60 @@ int skipAll = NO;
 }
 
 
--(void) timerDidFire:(NSTimer*)timer{
-
-    NSLog(@" ");
-    NSLog(@" ");
-    NSLog(@" ");
-    NSLog(@"begin");
+-(NSString*) activeGestureSummary{
+    
+    NSMutableString* str = [NSMutableString stringWithString:@"\n\n\n"];
+    [str appendString:@"begin\n"];
     
     for(MMPaperView* page in setOfPagesBeingPanned){
         if([visibleStackHolder containsSubview:page]){
-            NSLog(@"  1 page in visible stack");
+            [str appendString:@"  1 page in visible stack\n"];
         }else if([bezelStackHolder containsSubview:page]){
-            NSLog(@"  1 page in bezel stack");
+            [str appendString:@"  1 page in bezel stack\n"];
         }else if([hiddenStackHolder containsSubview:page]){
-            NSLog(@"  1 page in hidden stack");
+            [str appendString:@"  1 page in hidden stack\n"];
         }
     }
     
-
+    
     NSArray* allGesturesAndTopTwoPages = [self.gestureRecognizers arrayByAddingObjectsFromArray:[[visibleStackHolder peekSubview] gestureRecognizers]];
     allGesturesAndTopTwoPages = [allGesturesAndTopTwoPages arrayByAddingObjectsFromArray:[[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]] gestureRecognizers]];
     for(UIGestureRecognizer* gesture in allGesturesAndTopTwoPages){
         UIGestureRecognizerState st = gesture.state;
-        NSLog(@"%@ %d", NSStringFromClass([gesture class]), st);
+        [str appendFormat:@"%@ %d", NSStringFromClass([gesture class]), st];
         if([gesture respondsToSelector:@selector(validTouches)]){
-            NSLog(@"   validTouches: %d", [[gesture performSelector:@selector(validTouches)] count]);
+            [str appendFormat:@"   validTouches: %d", [[gesture performSelector:@selector(validTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(touches)]){
-            NSLog(@"   touches: %d", [[gesture performSelector:@selector(touches)] count]);
+            [str appendFormat:@"   touches: %d", [[gesture performSelector:@selector(touches)] count]];
         }
         if([gesture respondsToSelector:@selector(possibleTouches)]){
-            NSLog(@"   possibleTouches: %d", [[gesture performSelector:@selector(possibleTouches)] count]);
+            [str appendFormat:@"   possibleTouches: %d", [[gesture performSelector:@selector(possibleTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(ignoredTouches)]){
-            NSLog(@"   ignoredTouches: %d", [[gesture performSelector:@selector(ignoredTouches)] count]);
+            [str appendFormat:@"   ignoredTouches: %d", [[gesture performSelector:@selector(ignoredTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(paused)]){
-            NSLog(@"   paused: %d", [gesture performSelector:@selector(paused)] ? 1 : 0);
+            [str appendFormat:@"   paused: %d", [gesture performSelector:@selector(paused)] ? 1 : 0];
         }
         if([gesture respondsToSelector:@selector(scrap)]){
-            NSLog(@"   has scrap: %d", [gesture performSelector:@selector(scrap)] ? 1 : 0);
+            [str appendFormat:@"   has scrap: %d", [gesture performSelector:@selector(scrap)] ? 1 : 0];
         }
     }
-    NSLog(@"velocity gesture sees: %d", [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]);
-    NSLog(@"pages being panned %d", [setOfPagesBeingPanned count]);
-
-    NSLog(@"done");
+    [str appendFormat:@"velocity gesture sees: %d", [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]];
+    [str appendFormat:@"pages being panned %d", [setOfPagesBeingPanned count]];
+    
+    [str appendFormat:@"done"];
     
     for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scraps]){
-        NSLog(@"scrap: %f %f", scrap.layer.anchorPoint.x, scrap.layer.anchorPoint.y);
+        [str appendFormat:@"scrap: %f %f", scrap.layer.anchorPoint.x, scrap.layer.anchorPoint.y];
     }
+    return str;
+}
+
+
+-(void) timerDidFire:(NSTimer*)timer{
+    NSLog(@"%@", [self activeGestureSummary]);
 }
 
 -(void) drawLine{
