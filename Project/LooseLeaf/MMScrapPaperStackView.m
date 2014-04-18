@@ -240,7 +240,7 @@
                      }];
 }
 
--(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage{
+-(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation{
     CGRect scrapRect = CGRectZero;
     scrapRect.origin = [self convertPoint:[bufferedImage visibleImageOrigin] fromView:bufferedImage];
     scrapRect.size = [bufferedImage visibleImageSize];
@@ -307,7 +307,7 @@
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          scrap.center = [visibleStackHolder peekSubview].center;
-                         [scrap setScale:(1+bounceScale) andRotation:RandomPhotoRotation];
+                         [scrap setScale:(1+bounceScale) andRotation:scrap.rotation + RandomPhotoRotation];
                      }
                      completion:^(BOOL finished){
                          [UIView animateWithDuration:.1
@@ -1175,6 +1175,12 @@ int skipAll = NO;
 // and don't fall within any scrap above the input scrap
 -(NSSet*) setOfTouchesFrom:(NSOrderedSet *)touches inScrap:(MMScrapView *)scrap{
     return nil;
+}
+
+#pragma mark - MMRotationManagerDelegate
+
+-(void) didRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient{
+    [imagePicker updatePhotoRotation];
 }
 
 @end

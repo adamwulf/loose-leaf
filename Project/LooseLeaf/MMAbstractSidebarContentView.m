@@ -15,6 +15,7 @@
 #import "MMImageSidebarContainerView.h"
 #import "ALAsset+Thumbnail.h"
 #import "Constants.h"
+#import "NSThread+BlockAdditions.h"
 
 @implementation MMAbstractSidebarContentView{
     NSMutableDictionary* currentRowForAlbum;
@@ -138,8 +139,8 @@
 
 #pragma mark - MMPhotoRowViewDelegate
 
--(void) photoRowWasTapped:(MMPhotoRowView*)row forAsset:(ALAsset *)asset forImage:(MMBufferedImageView *)bufferedImage{
-    [delegate photoWasTapped:asset fromView:bufferedImage];
+-(void) photoRowWasTapped:(MMPhotoRowView*)row forAsset:(ALAsset *)asset forImage:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation{
+    [delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation];
 }
 
 #pragma mark - MMCachedRowsScrollViewDataSource
@@ -199,6 +200,24 @@
         [currentPhotoRow loadPhotosFromAlbum:currentAlbum atRow:index];
         return currentPhotoRow;
     }
+}
+
+#pragma mark - Rotation
+
+-(void) updatePhotoRotation{
+    [[NSThread mainThread] performBlock:^{
+        [UIView animateWithDuration:.15 delay:0 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
+            if(photoListScrollView.alpha){
+                [photoListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    if([obj respondsToSelector:@selector(updatePhotoRotation)]){
+                        [obj updatePhotoRotation];
+                    }
+                }];
+            }else if(albumListScrollView.alpha){
+                
+            }
+        } completion:nil];
+    }];
 }
 
 @end

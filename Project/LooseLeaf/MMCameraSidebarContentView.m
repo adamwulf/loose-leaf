@@ -9,7 +9,6 @@
 #import "MMCameraSidebarContentView.h"
 #import "MMPhotoManager.h"
 #import "MMPhotoRowView.h"
-#import "AVCamView.h"
 #import "MMBorderedCamView.h"
 #import "Constants.h"
 #import "MMFlipCameraButton.h"

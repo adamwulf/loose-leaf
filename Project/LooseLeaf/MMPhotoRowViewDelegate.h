@@ -14,6 +14,6 @@
 
 @protocol MMPhotoRowViewDelegate <NSObject>
 
--(void) photoRowWasTapped:(MMPhotoRowView*)row forAsset:(ALAsset*)index forImage:(MMBufferedImageView*)bufferedImage;
+-(void) photoRowWasTapped:(MMPhotoRowView*)row forAsset:(ALAsset*)index forImage:(MMBufferedImageView*)bufferedImage withRotation:(CGFloat)rotation;
 
 @end

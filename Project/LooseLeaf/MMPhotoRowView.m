@@ -10,6 +10,7 @@
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMBufferedImageView.h"
+#import "MMRotationManager.h"
 
 @implementation MMPhotoRowView{
     MMBufferedImageView* leftImageView;
@@ -20,6 +21,8 @@
     
     ALAsset* leftAsset;
     ALAsset* rightAsset;
+    
+    CGFloat visiblePhotoRotation;
 }
 
 @synthesize delegate;
@@ -158,12 +161,31 @@
     if(gesture.state == UIGestureRecognizerStateRecognized){
         if([gesture locationInView:self].x < self.bounds.size.width/2){
             // tapped left
-            [self.delegate photoRowWasTapped:self forAsset:leftAsset forImage:leftImageView];
+            [self.delegate photoRowWasTapped:self forAsset:leftAsset forImage:leftImageView withRotation:visiblePhotoRotation];
         }else{
             // tapped right
-            [self.delegate photoRowWasTapped:self forAsset:rightAsset forImage:rightImageView];
+            [self.delegate photoRowWasTapped:self forAsset:rightAsset forImage:rightImageView withRotation:visiblePhotoRotation];
         }
     }
+}
+
+#pragma mark - Rotation
+
+-(void) updatePhotoRotation{
+    
+    UIDeviceOrientation orient = [[MMRotationManager sharedInstace] currentDeviceOrientation];
+    if(orient == UIDeviceOrientationLandscapeLeft){
+        visiblePhotoRotation = M_PI / 2;
+    }else if(orient == UIDeviceOrientationPortraitUpsideDown){
+        visiblePhotoRotation = M_PI;
+    }else if(orient == UIDeviceOrientationLandscapeRight){
+        visiblePhotoRotation = -M_PI / 2;
+    }else{
+        visiblePhotoRotation = 0;
+    }
+    
+    leftImageView.rotation = visiblePhotoRotation + RandomPhotoRotation;
+    rightImageView.rotation = visiblePhotoRotation + RandomPhotoRotation;
 }
 
 @end

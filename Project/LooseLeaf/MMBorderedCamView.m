@@ -7,12 +7,10 @@
 //
 
 #import "MMBorderedCamView.h"
-#import "AVCamView.h"
 #import "MMUntouchableView.h"
 #import "CaptureSessionManager.h"
 
 @implementation MMBorderedCamView{
-    AVCamView* cameraController;
     CGFloat rotation;
     CaptureSessionManager* cameraSession;
 }

@@ -156,8 +156,8 @@
     [self.delegate pictureTakeWithCamera:img fromView:cameraView];
 }
 
--(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage{
-    [self.delegate photoWasTapped:asset fromView:bufferedImage];
+-(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation{
+    [self.delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation];
 }
 
 -(void) cameraButtonTapped:(UIButton*)button{
@@ -228,6 +228,14 @@
         [faceListContentView albumUpdated:updatedAlbum];
         [eventListContentView albumUpdated:updatedAlbum];
     });
+}
+
+#pragma mark - Rotation
+
+-(void) updatePhotoRotation{
+    if(!cameraListContentView.hidden){
+        [cameraListContentView updatePhotoRotation];
+    }
 }
 
 @end

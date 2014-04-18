@@ -203,14 +203,12 @@ dispatch_queue_t sessionQueue;
 				NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
 				UIImage *image = [[UIImage alloc] initWithData:imageData];
                 
+                [delegate didTakePicture:image];
                 
                 CGSize sizeOfImage = image.size;
                 UIImageOrientation orient = image.imageOrientation;
                 AVCaptureVideoOrientation captureOrient = [[(AVCaptureVideoPreviewLayer *)[self previewLayer] connection] videoOrientation];
-                
                 NSLog(@"gotcha %f,%f %@ %@ %@", sizeOfImage.width, sizeOfImage.height, [self logImageOrientation:orient], [self logVideoOrientation:captureOrient], [self logAssetOrientation:[self currentDeviceOrientation]]);
-                
-                [delegate didTakePicture:image];
                 
                 // rotate the image that we save
 				[[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage]

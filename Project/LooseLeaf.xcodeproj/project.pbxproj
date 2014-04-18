@@ -78,8 +78,6 @@
 		666E254918F613FA00C17295 /* MMFaceSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E254818F613FA00C17295 /* MMFaceSidebarContentView.m */; };
 		666E254C18F618B000C17295 /* MMEventSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E254B18F618B000C17295 /* MMEventSidebarContentView.m */; };
 		666E254F18F72BCF00C17295 /* MMCameraSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E254E18F72BCF00C17295 /* MMCameraSidebarContentView.m */; };
-		666E255518F8880800C17295 /* AVCamView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E255218F8880800C17295 /* AVCamView.m */; };
-		666E255618F8880800C17295 /* AVCamPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E255418F8880800C17295 /* AVCamPreviewView.m */; };
 		666E255918F89B1B00C17295 /* MMBorderedCamView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E255818F89B1B00C17295 /* MMBorderedCamView.m */; };
 		66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* MMEditablePaperStackView.m */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
@@ -307,10 +305,6 @@
 		666E254B18F618B000C17295 /* MMEventSidebarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEventSidebarContentView.m; sourceTree = "<group>"; };
 		666E254D18F72BCF00C17295 /* MMCameraSidebarContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCameraSidebarContentView.h; sourceTree = "<group>"; };
 		666E254E18F72BCF00C17295 /* MMCameraSidebarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCameraSidebarContentView.m; sourceTree = "<group>"; };
-		666E255118F8880800C17295 /* AVCamView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVCamView.h; sourceTree = "<group>"; };
-		666E255218F8880800C17295 /* AVCamView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVCamView.m; sourceTree = "<group>"; };
-		666E255318F8880800C17295 /* AVCamPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVCamPreviewView.h; sourceTree = "<group>"; };
-		666E255418F8880800C17295 /* AVCamPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVCamPreviewView.m; sourceTree = "<group>"; };
 		666E255718F89B1B00C17295 /* MMBorderedCamView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBorderedCamView.h; sourceTree = "<group>"; };
 		666E255818F89B1B00C17295 /* MMBorderedCamView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBorderedCamView.m; sourceTree = "<group>"; };
 		666F099A185E62A80074CE6B /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
@@ -812,10 +806,6 @@
 		666E255018F887FF00C17295 /* Camera */ = {
 			isa = PBXGroup;
 			children = (
-				666E255118F8880800C17295 /* AVCamView.h */,
-				666E255218F8880800C17295 /* AVCamView.m */,
-				666E255318F8880800C17295 /* AVCamPreviewView.h */,
-				666E255418F8880800C17295 /* AVCamPreviewView.m */,
 				6627DFA519003DF900592EEF /* CaptureSessionManager.h */,
 				6627DFA619003DF900592EEF /* CaptureSessionManager.m */,
 				666E255718F89B1B00C17295 /* MMBorderedCamView.h */,
@@ -1569,7 +1559,6 @@
 				66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */,
 				6699715217DBA02700E81467 /* MMDebugDrawView.m in Sources */,
 				66B51A2A17AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m in Sources */,
-				666E255618F8880800C17295 /* AVCamPreviewView.m in Sources */,
 				66DCFBDF1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m in Sources */,
 				6693296D1596E0600033E557 /* MMBezelInRightGestureRecognizer.m in Sources */,
 				6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */,
@@ -1578,7 +1567,6 @@
 				665C593717BD7CD3006DECBF /* PolygonTool.m in Sources */,
 				66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */,
 				66AC8D8B18E89A9C00A65036 /* MMCachedRowsScrollView.m in Sources */,
-				666E255518F8880800C17295 /* AVCamView.m in Sources */,
 				6695B6EC17505FBF0069E61F /* MMEditablePaperView.m in Sources */,
 				661885D418F9AED50016A333 /* MMDarkSidebarButton.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
