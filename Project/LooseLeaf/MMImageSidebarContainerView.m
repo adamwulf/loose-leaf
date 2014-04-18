@@ -233,6 +233,7 @@
 #pragma mark - Rotation
 
 -(void) updatePhotoRotation{
+    if(![self isVisible]) return;
     if(!cameraListContentView.hidden){
         [cameraListContentView updatePhotoRotation:YES];
     }else if(!albumListContentView.hidden){
