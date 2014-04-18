@@ -521,7 +521,7 @@
 -(void) addElements:(NSArray*)elements{
     if(!drawableViewState){
         // https://github.com/adamwulf/loose-leaf/issues/258
-        NSLog(@"tryign to draw on an unloaded scrap");
+        NSLog(@"trying to draw on an unloaded scrap");
     }
     [drawableView addElements:elements];
 }
@@ -546,7 +546,7 @@
 #pragma mark - dealloc
 
 -(void) dealloc{
-    NSLog(@"(%@) dealloc", uuid);
+    NSLog(@"scrap state (%@) dealloc", uuid);
     [[MMLoadImageCache sharedInstace] clearCacheForPath:self.thumbImageFile];
     dispatch_release(importExportScrapStateQueue);
     importExportScrapStateQueue = nil;

@@ -53,14 +53,13 @@
 //        fr.origin.x += 100;
 //        fr.origin.y += 100;
 //        label.frame = fr;
-//        [self.contentView addSubview:label];
+//        [self addSubview:label];
         //
         // end debug image
         //
         //////////////////////////////////////////////////////////////////////
         [self.layer setMasksToBounds:YES ];
         self.scale = 1;
-        
 
         //
         // allow the user to select an object by long pressing
