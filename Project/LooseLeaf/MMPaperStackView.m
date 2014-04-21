@@ -13,7 +13,18 @@
 #import "TestFlight.h"
 #import "MMScrappedPaperView.h"
 
-@implementation MMPaperStackView
+@implementation MMPaperStackView{
+    MMPapersIcon* papersIcon;
+    MMPaperIcon* paperIcon;
+    MMPlusIcon* plusIcon;
+    MMLeftArrow* leftArrow;
+    MMRightArrow* rightArrow;
+    
+    // track if we're currently pulling in a page
+    // from the bezel
+    MMPaperView* inProgressOfBezeling;
+    
+}
 
 @synthesize stackHolder = visibleStackHolder;
 
@@ -1610,10 +1621,7 @@
  * to disk
  */
 -(void) mayChangeTopPageTo:(MMPaperView*)page{
-    if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
-        recentlySuggestedPageUUID = page.uuid;
-//        debug_NSLog(@"may change top page to: %@", page.uuid);
-    }
+    [[MMPageCacheManager sharedInstace] mayChangeTopPageTo:page];
 }
 
 /**
@@ -1623,24 +1631,14 @@
  * get this into static mode asap.
  */
 -(void) willChangeTopPageTo:(MMPaperView*)page{
-    if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
-        recentlySuggestedPageUUID = page.uuid;
-    }
-    if(!page){
-        NSLog(@"what");
-        @throw [NSException exceptionWithName:@"will change to nil page" reason:@"unknown" userInfo:nil];
-    }
-//        debug_NSLog(@"will switch top page to %@", page.uuid);
+    [[MMPageCacheManager sharedInstace] willChangeTopPageTo:page];
 }
 
 -(void) didChangeTopPage{
-    // noop
     MMPaperView* topPage = [visibleStackHolder peekSubview];
-    if(topPage && ![recentlyConfirmedPageUUID isEqualToString:topPage.uuid]){
-        recentlyConfirmedPageUUID = topPage.uuid;
+    if([[MMPageCacheManager sharedInstace] didChangeToTopPage:topPage]){
         [self saveStacksToDisk];
     }
-//    debug_NSLog(@"did change top page");
 }
 
 /**
@@ -1650,7 +1648,7 @@
  * get this into static mode asap.
  */
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
-//    debug_NSLog(@"will NOT change top page to: %@", page.uuid);
+    [[MMPageCacheManager sharedInstace] willNotChangeTopPageTo:page];
 }
 
 -(void) saveStacksToDisk{
@@ -1699,17 +1697,6 @@
 }
 
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
-    @throw kAbstractMethodException;
-}
-
-
-#pragma mark - MMEditablePaperViewDelegate
-
--(void) didLoadStateForPage:(MMEditablePaperView *)page{
-    @throw kAbstractMethodException;
-}
-
--(void) didUnloadStateForPage:(MMEditablePaperView*) page{
     @throw kAbstractMethodException;
 }
 

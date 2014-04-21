@@ -23,6 +23,7 @@
 #import "UIBezierPath+Description.h"
 #import "MMVector.h"
 #import "MMScrapViewState.h"
+#import "MMPageCacheManager.h"
 
 
 @implementation MMScrappedPaperView{
@@ -737,14 +738,14 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) didLoadState:(JotViewStateProxy*)state{
     if([self hasStateLoaded]){
         [NSThread performBlockOnMainThread:^{
-            [self.delegate didLoadStateForPage:self];
+            [[MMPageCacheManager sharedInstace] didLoadStateForPage:self];
         }];
     }
 }
 
 -(void) didUnloadState:(JotViewStateProxy *)state{
     [NSThread performBlockOnMainThread:^{
-        [self.delegate didUnloadStateForPage:self];
+        [[MMPageCacheManager sharedInstace] didUnloadStateForPage:self];
     }];
 }
 

@@ -16,9 +16,6 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 
 @implementation MMEditablePaperStackView{
-    MMEditablePaperView* currentEditablePage;
-    JotView* drawableView;
-    NSMutableArray* stateLoadedPages;
     UIPopoverController* jotTouchPopover;
 }
 
@@ -30,17 +27,17 @@
 
         [[NSFileManager defaultManager] preCacheDirectoryListingAt:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Pages"]];
         
+        [MMPageCacheManager sharedInstace].delegate = self;
 
         self.delegate = self;
         
         pagesWithLoadedCacheImages = [NSMutableSet set];
-        stateLoadedPages = [NSMutableArray array];
         
         stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
         
-        drawableView = [[JotView alloc] initWithFrame:self.bounds];
-//        drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
-        [[JotStylusManager sharedInstance] setPalmRejectorDelegate:drawableView];
+        [MMPageCacheManager sharedInstace].drawableView = [[JotView alloc] initWithFrame:self.bounds];
+//        [MMPageCacheManager sharedInstace].drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
+        [[JotStylusManager sharedInstance] setPalmRejectorDelegate:[MMPageCacheManager sharedInstace].drawableView];
 
         pen = [[Pen alloc] init];
         
@@ -491,13 +488,12 @@
             }
         }
     }else{
-        // only load top page not in list view
-        [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
+        [[MMPageCacheManager sharedInstace] didChangeToTopPage:[visibleStackHolder peekSubview]];
     }
 }
 
 -(BOOL) isPageEditable:(MMPaperView*)page{
-    return page == currentEditablePage;
+    return page == [MMPageCacheManager sharedInstace].currentEditablePage;
 }
 
 #pragma mark = Ruler
@@ -551,55 +547,6 @@
 
 #pragma mark - Page Loading and Unloading
 
--(void) loadStateForPage:(MMPaperView*)page{
-    [stateLoadedPages removeObject:page];
-    [stateLoadedPages insertObject:page atIndex:0];
-    if(currentEditablePage){
-        [stateLoadedPages removeObject:currentEditablePage];
-        [stateLoadedPages insertObject:currentEditablePage atIndex:0];
-    }
-    if([stateLoadedPages count] > 5){
-        [[stateLoadedPages lastObject] unloadState];
-        [stateLoadedPages removeLastObject];
-    }
-    if([page isKindOfClass:[MMEditablePaperView class]]){
-        MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
-        [editablePage loadStateAsynchronously:YES withSize:[drawableView pagePixelSize] andContext:[drawableView context]];
-    }
-}
-
--(void) ensureTopPageIsLoaded:(MMPaperView*)topPage{
-    if([topPage isKindOfClass:[MMEditablePaperView class]]){
-        MMEditablePaperView* editableTopPage = (MMEditablePaperView*)topPage;
-        
-        if(currentEditablePage != editableTopPage){
-            // only care if the page is changing
-            if(![currentEditablePage hasEditsToSave] && [editableTopPage hasStateLoaded]){
-                // the outgoing page is saved to disk
-                // and the incoming page has its
-                // state loaded
-                [currentEditablePage setDrawableView:nil];
-                [currentEditablePage setEditable:NO];
-                [currentEditablePage setCanvasVisible:NO];
-                currentEditablePage = editableTopPage;
-//                debug_NSLog(@"did switch top page to %@", currentEditablePage.uuid);
-                [currentEditablePage setDrawableView:drawableView];
-            }else{
-                if(![editableTopPage hasStateLoaded]){
-                    // load the state for the new top page
-//                    debug_NSLog(@"load state for future top page: %@", editableTopPage.uuid);
-                    [self loadStateForPage:editableTopPage];
-                }else{
-                    // we're saving the top page to disk
-                }
-            }
-        }else{
-            // just double check that we're in editable state
-            [currentEditablePage setDrawableView:drawableView];
-        }
-    }
-}
-
 -(void) mayChangeTopPageTo:(MMPaperView*)page{
     if([visibleStackHolder containsSubview:page]){
         MMPaperView* pageBelow = [visibleStackHolder getPageBelow:page];
@@ -621,19 +568,10 @@
             }
         }
     }
-    if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
-        [self loadStateForPage:page];
-        debug_NSLog(@"may change to: %@", page.uuid);
-    }
     [super mayChangeTopPageTo:page];
 }
 
 -(void) willChangeTopPageTo:(MMPaperView*)page{
-    if(page && !([recentlySuggestedPageUUID isEqualToString:page.uuid] ||
-                [recentlyConfirmedPageUUID isEqualToString:page.uuid])){
-        [self loadStateForPage:page];
-        debug_NSLog(@"will change to: %@", page.uuid);
-    }
     [super willChangeTopPageTo:page];
 }
 
@@ -641,7 +579,7 @@
     CheckMainThread;
     [super didChangeTopPage];
     MMPaperView* topPage = [visibleStackHolder peekSubview];
-    [self ensureTopPageIsLoaded:topPage];
+    [[MMPageCacheManager sharedInstace] didChangeToTopPage:topPage];
     [self updateVisiblePageImageCache];
     debug_NSLog(@"did change to: %@", topPage.uuid);
 }
@@ -651,6 +589,7 @@
     debug_NSLog(@"won't change to: %@", page.uuid);
 }
 
+#pragma mark - Stack Loading and Saving
 
 -(void) saveStacksToDisk{
     [stackManager saveToDisk];
@@ -682,8 +621,8 @@
     
     // load the state for the top page in the visible stack
     [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
-                                                     withSize:[drawableView pagePixelSize]
-                                                   andContext:[drawableView context]];
+                                                     withSize:[[MMPageCacheManager sharedInstace].drawableView pagePixelSize]
+                                                   andContext:[[MMPageCacheManager sharedInstace].drawableView context]];
     
     
     // only load the image previews for the pages that will be visible
@@ -711,7 +650,7 @@
         NSLog(@"stroke already exists: %d", [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
         return NO;
     }
-    if([drawableView.state.currentStrokes count]){
+    if([[MMPageCacheManager sharedInstace].drawableView.state.currentStrokes count]){
         return NO;
     }
     for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scraps]){
@@ -860,27 +799,6 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     [self updateVisiblePageImageCache];
-}
-
-
-#pragma mark - MMEditablePaperViewDelegate
-
--(void) didLoadStateForPage:(MMEditablePaperView *)page{
-    if(page == [visibleStackHolder peekSubview] || page == currentEditablePage){
-//        NSLog(@"didLoadStateForPage: %@", page.uuid);
-        if(page.scale > kMinPageZoom){
-            [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
-        }
-    }
-}
-
--(void) didUnloadStateForPage:(MMEditablePaperView*) page{
-    if(page == [visibleStackHolder peekSubview] || page == currentEditablePage){
-//        NSLog(@"didUnloadStateForPage: %@", page.uuid);
-        if(page.scale > kMinPageZoom){
-            [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
-        }
-    }
 }
 
 

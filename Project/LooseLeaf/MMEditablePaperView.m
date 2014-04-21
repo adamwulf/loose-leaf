@@ -15,6 +15,7 @@
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import "DKUIBezierPathClippedSegment+PathElement.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMPageCacheManager.h"
 
 dispatch_queue_t importThumbnailQueue;
 
@@ -507,13 +508,13 @@ static int count = 0;
 
 -(void) didLoadState:(JotViewStateProxy*)state{
     [NSThread performBlockOnMainThread:^{
-        [self.delegate didLoadStateForPage:self];
+        [[MMPageCacheManager sharedInstace] didLoadStateForPage:self];
     }];
 }
 
 -(void) didUnloadState:(JotViewStateProxy *)state{
     [NSThread performBlockOnMainThread:^{
-        [self.delegate didUnloadStateForPage:self];
+        [[MMPageCacheManager sharedInstace] didUnloadStateForPage:self];
     }];
 }
 

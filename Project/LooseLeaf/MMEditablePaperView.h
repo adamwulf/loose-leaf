@@ -11,7 +11,6 @@
 #import <TouchShape/TouchShape.h>
 #import "MMRulerToolGestureRecognizer.h"
 #import "MMShapeBuilderView.h"
-#import "MMEditablePaperViewDelegate.h"
 
 @interface MMEditablePaperView : MMPaperView<JotViewDelegate,JotViewStateProxyDelegate>{
     UIImageView* cachedImgView;
@@ -22,7 +21,6 @@
 }
 
 @property (nonatomic, weak) JotView* drawableView;
-@property (nonatomic, weak) NSObject<MMEditablePaperViewDelegate>* delegate;
 @property (readonly) JotViewStateProxy* paperState;
 
 -(void) undo;
