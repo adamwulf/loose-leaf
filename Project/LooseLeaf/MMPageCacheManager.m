@@ -75,7 +75,7 @@ static MMPageCacheManager* _instance = nil;
         return YES;
     }
     return NO;
-    debug_NSLog(@"did change top page");
+    debug_NSLog(@"did change top page to %@", topPage.uuid);
 }
 
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{

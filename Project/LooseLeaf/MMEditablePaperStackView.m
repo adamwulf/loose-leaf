@@ -488,6 +488,10 @@
             }
         }
     }else{
+        // we might be mid gesture here, so assuming that the
+        // top page should actually be the top visible page isn't necessarily
+        // true. instead, i should ask the PageCacheManager to recheck
+        // if it can hand the currently top page the drawable view.
         [[MMPageCacheManager sharedInstace] didChangeToTopPage:[visibleStackHolder peekSubview]];
     }
 }
@@ -578,15 +582,11 @@
 -(void) didChangeTopPage{
     CheckMainThread;
     [super didChangeTopPage];
-    MMPaperView* topPage = [visibleStackHolder peekSubview];
-    [[MMPageCacheManager sharedInstace] didChangeToTopPage:topPage];
     [self updateVisiblePageImageCache];
-    debug_NSLog(@"did change to: %@", topPage.uuid);
 }
 
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
     [super willNotChangeTopPageTo:page];
-    debug_NSLog(@"won't change to: %@", page.uuid);
 }
 
 #pragma mark - Stack Loading and Saving
