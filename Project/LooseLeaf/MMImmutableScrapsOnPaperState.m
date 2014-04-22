@@ -24,6 +24,10 @@
     return YES;
 }
 
+-(NSArray*) scraps{
+    return scraps;
+}
+
 -(void) saveToDisk{
     if([scraps count]){
         NSMutableArray* scrapUUIDs = [NSMutableArray array];

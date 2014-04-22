@@ -638,6 +638,49 @@ static dispatch_queue_t concurrentBackgroundQueue;
     return [super hasEditsToSave];
 }
 
+-(void) updateFullPageThumbnail:(MMImmutableScrapsOnPaperState*)immutableScrapState{
+    UIImage* thumb = [self cachedImgViewImage];
+    
+    UIGraphicsBeginImageContextWithOptions(thumb.size, NO, 0.0);
+    
+    // get context
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    // push context to make it current
+    // (need to do this manually because we are not drawing in a UIView)
+//    UIGraphicsPushContext(context);
+
+    [[UIColor whiteColor] setFill];
+    CGContextFillRect(context, CGRectMake(0, 0, thumb.size.width, thumb.size.height));
+
+    // drawing code comes here- look at CGContext reference
+    // for available operations
+    // this example draws the inputImage into the context
+    [thumb drawInRect:CGRectMake(0, 0, thumb.size.width, thumb.size.height)];
+    
+    
+    CGRect rect = CGRectMake(10, 10, 40, 40);
+    for(MMScrapView* scrap in immutableScrapState.scraps){
+        [scrap drawRect:rect];
+        NSLog(@"writing scrap: %p", scrap);
+        rect.origin.x += 30;
+        rect.origin.y += 20;
+    }
+    
+    
+    
+    // pop context
+//    UIGraphicsPopContext();
+    
+    // get a UIImage from the image context- enjoy!!!
+    UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    [self.delegate showPreviewThumb:outputImage];
+    
+    // clean up drawing environment
+    UIGraphicsEndImageContext();
+    
+}
+
 -(void) saveToDisk{
     
     // track if our back ground page has saved
@@ -650,9 +693,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
         dispatch_semaphore_signal(sema1);
     }];
     
+    __block MMImmutableScrapsOnPaperState* immutableScrapState;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
-            [[scrapState immutableState] saveToDisk];
+            immutableScrapState = [scrapState immutableState];
+            [immutableScrapState saveToDisk];
             dispatch_semaphore_signal(sema2);
         }
     });
@@ -670,6 +715,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 // 2nd ends early b/c it knows the 1st is still going
                 return;
             }
+            
+            [self updateFullPageThumbnail:immutableScrapState];
+            
             [NSThread performBlockOnMainThread:^{
                 [self.delegate didSavePage:self];
             }];

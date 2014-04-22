@@ -43,6 +43,7 @@
 
     NSTimer* debugTimer;
     NSTimer* drawTimer;
+    UIImageView* debugImgView;
 }
 
 
@@ -127,6 +128,14 @@
         
         
         fromRightBezelGesture.panDelegate = self;
+
+    
+        debugImgView = [[UIImageView alloc] initWithFrame:CGRectMake(80, 80, self.bounds.size.width / 3, self.bounds.size.height/3)];
+        debugImgView.layer.borderWidth = 5;
+        debugImgView.layer.borderColor = [UIColor redColor].CGColor;
+        debugImgView.contentMode = UIViewContentModeScaleAspectFit;
+        debugImgView.backgroundColor = [UIColor orangeColor];
+        [self addSubview:debugImgView];
     }
     return self;
 }
@@ -1185,6 +1194,15 @@ int skipAll = NO;
 
 -(void) didRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient{
     [imagePicker updatePhotoRotation];
+}
+
+
+#pragma mark - debug
+
+-(void) showPreviewThumb:(UIImage*)img{
+    [[NSThread mainThread] performBlock:^{
+        debugImgView.image = img;
+    }];
 }
 
 @end

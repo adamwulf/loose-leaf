@@ -341,6 +341,10 @@ static int count = 0;
     }
 }
 
+-(UIImage*) cachedImgViewImage{
+    return cachedImgViewImage;
+}
+
 
 
 #pragma mark - Ruler Tool
