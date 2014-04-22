@@ -382,6 +382,7 @@
         if([bezelStackHolder.subviews count]){
             [self willNotChangeTopPageTo:[bezelStackHolder peekSubview]];
             [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
+            [self didChangeTopPage];
             [[visibleStackHolder peekSubview] enableAllGestures];
         }
     }else if(bezelGesture.state == UIGestureRecognizerStateEnded &&

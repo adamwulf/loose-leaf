@@ -97,10 +97,10 @@ static MMPageCacheManager* _instance = nil;
         recentlyConfirmedPageUUID = topPage.uuid;
         currentlyTopPage = (MMEditablePaperView*) topPage;
         [self updateVisiblePageImageCache];
+        debug_NSLog(@"did change top page to %@", topPage.uuid);
         return YES;
     }
     return NO;
-    debug_NSLog(@"did change top page to %@", topPage.uuid);
 }
 
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
@@ -202,6 +202,7 @@ static MMPageCacheManager* _instance = nil;
         if(![stateLoadedPages containsObject:page]){
             // only allowed to unload pages that we haven't
             // asked to load their full state
+            NSLog(@"unloading cached preview for: %@", page.uuid);
             [page unloadCachedPreview];
         }
     }
