@@ -152,7 +152,6 @@
         thumbnailView.contentMode = UIViewContentModeScaleAspectFit;
         thumbnailView.clipsToBounds = YES;
         thumbnailView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [contentView addSubview:thumbnailView];
         thumbnailView.frame = contentView.bounds;
 
         
@@ -172,7 +171,8 @@
         [clippedBackgroundView addSubview:backingContentView];
 
         [contentView addSubview:clippedBackgroundView];
-        
+        [contentView addSubview:thumbnailView];
+
         if([[MMLoadImageCache sharedInstace] containsPathInCache:self.thumbImageFile]){
             // load if we can
             if([NSThread isMainThread]){
@@ -446,10 +446,16 @@
 //                    NSLog(@"(%@) unload success", uuid);
                     targetIsLoadedState = NO;
                     if(!isLoadingState && drawableViewState){
-                        drawableViewState = nil;
-                        [drawableView removeFromSuperview];
-                        drawableView = nil;
-                        thumbnailView.hidden = NO;
+                        dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+                        [NSThread performBlockOnMainThread:^{
+                            drawableViewState = nil;
+                            [drawableView removeFromSuperview];
+                            drawableView = nil;
+                            thumbnailView.hidden = NO;
+                            dispatch_semaphore_signal(sema1);
+                        }];
+                        dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+                        dispatch_release(sema1);
                     }
                 }
             }

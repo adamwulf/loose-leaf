@@ -208,7 +208,6 @@ static MMPageCacheManager* _instance = nil;
         if(![stateLoadedPages containsObject:page]){
             // only allowed to unload pages that we haven't
             // asked to load their full state
-            NSLog(@"unloading cached preview for: %@", page.uuid);
             [page unloadCachedPreview];
             [pagesWithLoadedCacheImages removeObject:page];
         }
