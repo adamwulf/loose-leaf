@@ -31,8 +31,6 @@
 
         self.delegate = self;
         
-        pagesWithLoadedCacheImages = [NSMutableSet set];
-        
         stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
         
         [MMPageCacheManager sharedInstace].drawableView = [[JotView alloc] initWithFrame:self.bounds];
@@ -438,7 +436,7 @@
     // update UI for scaling small into list view
     [self setButtonsVisible:NO];
     [super isBeginningToScaleReallySmall:page];
-    [self updateVisiblePageImageCache];
+    [[MMPageCacheManager sharedInstace] updateVisiblePageImageCache];
 }
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     [super finishedScalingReallySmall:page];
@@ -551,27 +549,25 @@
 
 #pragma mark - Page Loading and Unloading
 
+-(BOOL) isPageInVisibleStack:(MMPaperView*)page{
+    return [visibleStackHolder containsSubview:page];
+}
+
+-(MMPaperView*) getPageBelow:(MMPaperView*)page{
+    return [visibleStackHolder getPageBelow:page];
+}
+
+-(NSArray*) findPagesInVisibleRowsOfListView{
+    CGPoint visibleScrollOffset;
+    if(self.scrollEnabled){
+        visibleScrollOffset = self.contentOffset;
+    }else{
+        visibleScrollOffset = initialScrollOffsetFromTransitionToListView;
+    }
+    return [self findPagesInVisibleRowsOfListViewGivenOffset:visibleScrollOffset];
+}
+
 -(void) mayChangeTopPageTo:(MMPaperView*)page{
-    if([visibleStackHolder containsSubview:page]){
-        MMPaperView* pageBelow = [visibleStackHolder getPageBelow:page];
-        if([pageBelow isKindOfClass:[MMEditablePaperView class]]){
-            [(MMEditablePaperView*)pageBelow loadCachedPreview];
-            [pagesWithLoadedCacheImages addObject:pageBelow];
-        }
-    }
-    if([page isKindOfClass:[MMEditablePaperView class]]){
-        [(MMEditablePaperView*)page loadCachedPreview];
-        [pagesWithLoadedCacheImages addObject:page];
-        if([bezelStackHolder.subviews count] > 6){
-            MMPaperView* page = [bezelStackHolder.subviews objectAtIndex:[bezelStackHolder.subviews count] - 6];
-            if([page isKindOfClass:[MMEditablePaperView class]]){
-                // we have a pretty impressive bezel going on here,
-                // so start to unload the pages that are pretty much
-                // invisible in the bezel stack
-                [(MMEditablePaperView*)page unloadCachedPreview];
-            }
-        }
-    }
     [super mayChangeTopPageTo:page];
 }
 
@@ -582,7 +578,6 @@
 -(void) didChangeTopPage{
     CheckMainThread;
     [super didChangeTopPage];
-    [self updateVisiblePageImageCache];
 }
 
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
@@ -776,29 +771,8 @@
 
 #pragma mark - UIScrollViewDelegate
 
--(void) updateVisiblePageImageCache{
-    CGPoint visibleScrollOffset;
-    if(self.scrollEnabled){
-        visibleScrollOffset = self.contentOffset;
-    }else{
-        visibleScrollOffset = initialScrollOffsetFromTransitionToListView;
-    }
-    
-    NSArray* visiblePages = [self findPagesInVisibleRowsOfListViewGivenOffset:visibleScrollOffset];
-    for(MMEditablePaperView* page in visiblePages){
-        [page loadCachedPreview];
-    }
-    NSSet* invisiblePages = [pagesWithLoadedCacheImages objectsPassingTest:^BOOL(id obj, BOOL*stop){
-        return ![visiblePages containsObject:obj];
-    }];
-    for(MMEditablePaperView* page in invisiblePages){
-        [page unloadCachedPreview];
-    }
-    [pagesWithLoadedCacheImages addObjectsFromArray:visiblePages];
-}
-
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    [self updateVisiblePageImageCache];
+    [[MMPageCacheManager sharedInstace] updateVisiblePageImageCache];
 }
 
 

@@ -12,5 +12,10 @@
 
 @protocol MMPageCacheManagerDelegate <NSObject>
 
+-(BOOL) isPageInVisibleStack:(MMPaperView*)page;
+
+-(MMPaperView*) getPageBelow:(MMPaperView*)page;
+
+-(NSArray*) findPagesInVisibleRowsOfListView;
 
 @end

@@ -38,4 +38,6 @@
 
 -(void) didSavePage:(MMPaperView*)page;
 
+-(void) updateVisiblePageImageCache;
+
 @end

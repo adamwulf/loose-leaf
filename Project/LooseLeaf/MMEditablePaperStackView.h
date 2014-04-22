@@ -71,7 +71,6 @@
     Eraser* eraser;
     MMScissorTool* scissor;
     
-    NSMutableSet* pagesWithLoadedCacheImages;
     MMRulerView* rulerView;
 }
 

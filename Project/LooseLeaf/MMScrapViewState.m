@@ -546,7 +546,7 @@
 #pragma mark - dealloc
 
 -(void) dealloc{
-    NSLog(@"scrap state (%@) dealloc", uuid);
+//    NSLog(@"scrap state (%@) dealloc", uuid);
     [[MMLoadImageCache sharedInstace] clearCacheForPath:self.thumbImageFile];
     dispatch_release(importExportScrapStateQueue);
     importExportScrapStateQueue = nil;

@@ -17,6 +17,7 @@
     MMEditablePaperView* currentlyTopPage;
     MMEditablePaperView* currentEditablePage;
     NSMutableArray* stateLoadedPages;
+    NSMutableSet* pagesWithLoadedCacheImages;
 }
 
 @synthesize delegate;
@@ -30,6 +31,8 @@ static MMPageCacheManager* _instance = nil;
     if((self = [super init])){
         _instance = self;
         stateLoadedPages = [NSMutableArray array];
+        pagesWithLoadedCacheImages = [NSMutableSet set];
+        
     }
     return _instance;
 }
@@ -44,6 +47,27 @@ static MMPageCacheManager* _instance = nil;
 #pragma mark - Public
 
 -(void) mayChangeTopPageTo:(MMPaperView*)page{
+    if([self.delegate isPageInVisibleStack:page]){
+        MMPaperView* pageBelow = [self.delegate getPageBelow:page];
+        if([pageBelow isKindOfClass:[MMEditablePaperView class]]){
+            [(MMEditablePaperView*)pageBelow loadCachedPreview];
+            [pagesWithLoadedCacheImages addObject:pageBelow];
+        }
+    }
+    if([page isKindOfClass:[MMEditablePaperView class]]){
+        [(MMEditablePaperView*)page loadCachedPreview];
+        [pagesWithLoadedCacheImages addObject:page];
+//        if([bezelStackHolder.subviews count] > 6){
+//            MMPaperView* page = [bezelStackHolder.subviews objectAtIndex:[bezelStackHolder.subviews count] - 6];
+//            if([page isKindOfClass:[MMEditablePaperView class]]){
+//                // we have a pretty impressive bezel going on here,
+//                // so start to unload the pages that are pretty much
+//                // invisible in the bezel stack
+//                [(MMEditablePaperView*)page unloadCachedPreview];
+//            }
+//        }
+    }
+
     if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
         recentlySuggestedPageUUID = page.uuid;
         [self loadStateForPage:page];
@@ -72,6 +96,7 @@ static MMPageCacheManager* _instance = nil;
     if(topPage && ![recentlyConfirmedPageUUID isEqualToString:topPage.uuid]){
         recentlyConfirmedPageUUID = topPage.uuid;
         currentlyTopPage = (MMEditablePaperView*) topPage;
+        [self updateVisiblePageImageCache];
         return YES;
     }
     return NO;
@@ -84,6 +109,7 @@ static MMPageCacheManager* _instance = nil;
 
 
 
+#pragma mark - Page Saving Notifications
 
 -(void) didSavePage:(MMPaperView*)page{
     if(currentlyTopPage.scale < kMinPageZoom){
@@ -163,5 +189,23 @@ static MMPageCacheManager* _instance = nil;
     }
 }
 
+
+-(void) updateVisiblePageImageCache{
+    NSArray* visiblePages = [self.delegate findPagesInVisibleRowsOfListView];
+    for(MMEditablePaperView* page in visiblePages){
+        [page loadCachedPreview];
+    }
+    NSSet* invisiblePages = [pagesWithLoadedCacheImages objectsPassingTest:^BOOL(id obj, BOOL*stop){
+        return ![visiblePages containsObject:obj];
+    }];
+    for(MMEditablePaperView* page in invisiblePages){
+        if(![stateLoadedPages containsObject:page]){
+            // only allowed to unload pages that we haven't
+            // asked to load their full state
+            [page unloadCachedPreview];
+        }
+    }
+    [pagesWithLoadedCacheImages addObjectsFromArray:visiblePages];
+}
 
 @end

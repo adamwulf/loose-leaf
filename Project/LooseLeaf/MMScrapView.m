@@ -563,8 +563,4 @@
     [scrapState importTexture:texture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
 }
 
--(void) dealloc{
-    NSLog(@"scrap %@ dealloc", scrapState.uuid);
-}
-
 @end
