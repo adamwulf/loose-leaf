@@ -131,7 +131,7 @@
 
     
         debugImgView = [[UIImageView alloc] initWithFrame:CGRectMake(80, 80, self.bounds.size.width / 3, self.bounds.size.height/3)];
-        debugImgView.layer.borderWidth = 5;
+        debugImgView.layer.borderWidth = 1;
         debugImgView.layer.borderColor = [UIColor redColor].CGColor;
         debugImgView.contentMode = UIViewContentModeScaleAspectFit;
         debugImgView.backgroundColor = [UIColor orangeColor];

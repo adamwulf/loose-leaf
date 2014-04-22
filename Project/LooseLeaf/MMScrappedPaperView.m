@@ -638,6 +638,39 @@ static dispatch_queue_t concurrentBackgroundQueue;
     return [super hasEditsToSave];
 }
 
+
+
+-(void) drawScrap:(MMScrapView*)scrap intoContext:(CGContextRef)context withSize:(CGSize)contextSize{
+    CGContextSaveGState(context);
+    
+    CGPoint center = scrap.center;
+    CGFloat scale = contextSize.width / self.originalUnscaledBounds.size.width;
+    
+    center = CGPointApplyAffineTransform(center, CGAffineTransformMakeScale(scale, scale));
+    
+    UIBezierPath* p = [UIBezierPath bezierPathWithArcCenter:center radius:2 startAngle:0 endAngle:2*M_PI clockwise:YES];
+    [[UIColor redColor] setFill];
+    [p fill];
+    
+    
+    UIBezierPath* path = [scrap.bezierPath copy];
+    // move to scrap center
+    [path applyTransform:CGAffineTransformMakeTranslation(-scrap.bounds.size.width/2, -scrap.bounds.size.height/2)];
+    // rotate
+    [path applyTransform:CGAffineTransformMakeRotation(scrap.rotation)];
+    // scale it
+    [path applyTransform:CGAffineTransformMakeScale(scale * scrap.scale, scale * scrap.scale)];
+    // move to position
+    [path applyTransform:CGAffineTransformMakeTranslation(center.x, center.y)];
+    
+    [[UIColor blueColor] setStroke];
+    [path stroke];
+    
+    
+    CGContextRestoreGState(context);
+}
+
+
 -(void) updateFullPageThumbnail:(MMImmutableScrapsOnPaperState*)immutableScrapState{
     UIImage* thumb = [self cachedImgViewImage];
     
@@ -645,9 +678,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     
     // get context
     CGContextRef context = UIGraphicsGetCurrentContext();
-    // push context to make it current
-    // (need to do this manually because we are not drawing in a UIView)
-//    UIGraphicsPushContext(context);
 
     [[UIColor whiteColor] setFill];
     CGContextFillRect(context, CGRectMake(0, 0, thumb.size.width, thumb.size.height));
@@ -658,18 +688,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [thumb drawInRect:CGRectMake(0, 0, thumb.size.width, thumb.size.height)];
     
     
-    CGRect rect = CGRectMake(10, 10, 40, 40);
     for(MMScrapView* scrap in immutableScrapState.scraps){
-        [scrap drawRect:rect];
-        NSLog(@"writing scrap: %p", scrap);
-        rect.origin.x += 30;
-        rect.origin.y += 20;
+        [self drawScrap:scrap intoContext:context withSize:thumb.size];
     }
-    
-    
-    
-    // pop context
-//    UIGraphicsPopContext();
     
     // get a UIImage from the image context- enjoy!!!
     UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
