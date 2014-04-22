@@ -720,12 +720,14 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) unloadCachedPreview{
     // free our preview memory
     [super unloadCachedPreview];
-    // save if needed
-    // currently this will always save to disk. in the future #338
-    // we should only save if this has changed.
-    [[scrapState immutableState] saveToDisk];
-    // free all scraps from memory too
-    [scrapState unload];
+    if([scrapState isStateLoaded]){
+        // save if needed
+        // currently this will always save to disk. in the future #338
+        // we should only save if this has changed.
+        [[scrapState immutableState] saveToDisk];
+        // free all scraps from memory too
+        [scrapState unload];
+    }
 }
 
 #pragma mark - JotViewStateProxyDelegate

@@ -55,9 +55,7 @@
         
         cameraSession = [[CaptureSessionManager alloc] initWithPosition:preferredPosition];
         cameraSession.delegate = self;
-        NSLog(@"adding layer");
         [cameraSession addPreviewLayerTo:camHolderLayer];
-        NSLog(@"added layer");
 
         [self addSubview:borderView];
         

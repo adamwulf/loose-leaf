@@ -71,8 +71,8 @@ static MMPageCacheManager* _instance = nil;
     if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
         recentlySuggestedPageUUID = page.uuid;
         [self loadStateForPage:page];
+        debug_NSLog(@"may change top page to: %@ %d", page.uuid, [stateLoadedPages count]);
     }
-    debug_NSLog(@"may change top page to: %@", page.uuid);
 }
 
 -(void) willChangeTopPageTo:(MMPaperView*)page{
@@ -85,8 +85,8 @@ static MMPageCacheManager* _instance = nil;
     }
     if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
         recentlySuggestedPageUUID = page.uuid;
+        debug_NSLog(@"will switch top page to %@", page.uuid);
     }
-    debug_NSLog(@"will switch top page to %@", page.uuid);
 }
 
 // returns YES if we changed the top cached page
@@ -141,17 +141,23 @@ static MMPageCacheManager* _instance = nil;
 
 
 -(void) loadStateForPage:(MMPaperView*)page{
+    // add the page to the beginning
     [stateLoadedPages removeObject:page];
     [stateLoadedPages insertObject:page atIndex:0];
     if(currentEditablePage){
+        // ensure the currently editable page never
+        // gets kicked out of the cache. it's always
+        // the most recent
         [stateLoadedPages removeObject:currentEditablePage];
         [stateLoadedPages insertObject:currentEditablePage atIndex:0];
     }
     if([stateLoadedPages count] > 5){
+        // too many pages, kick one out
         [[stateLoadedPages lastObject] unloadState];
         [stateLoadedPages removeLastObject];
     }
     if([page isKindOfClass:[MMEditablePaperView class]]){
+        // finally, tell that page to load its state
         MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
         [editablePage loadStateAsynchronously:YES withSize:[drawableView pagePixelSize] andContext:[drawableView context]];
     }
@@ -204,6 +210,7 @@ static MMPageCacheManager* _instance = nil;
             // asked to load their full state
             NSLog(@"unloading cached preview for: %@", page.uuid);
             [page unloadCachedPreview];
+            [pagesWithLoadedCacheImages removeObject:page];
         }
     }
     [pagesWithLoadedCacheImages addObjectsFromArray:visiblePages];
