@@ -46,7 +46,7 @@
 
 -(void) addElements:(NSArray*)elements;
 
--(void) saveToDisk;
+-(void) saveToDisk:(void(^)())doneSavingBlock;
 
 -(void) loadScrapStateAsynchronously:(BOOL)async;
 

@@ -257,7 +257,7 @@
 
 #pragma mark - State Saving and Loading
 
--(void) saveToDisk{
+-(void) saveToDisk:(void(^)())doneSavingBlock{
     if(drawableViewState && ([drawableViewState hasEditsToSave] || backingViewHasChanged)){
         dispatch_async([self importExportScrapStateQueue], ^{
             @autoreleasepool {
@@ -326,6 +326,7 @@
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
                     dispatch_release(sema1);
                     NSLog(@"(%@) done saving scrap: %d", uuid, (int)drawableView);
+                    doneSavingBlock();
                 }else{
                     // sometimes, this method is called in very quick succession.
                     // that means that the first time it runs and saves, it'll
@@ -333,11 +334,13 @@
                     // next time it runs. so we double check our save state to determine
                     // if in fact we still need to save or not
 //                    NSLog(@"(%@) no edits to save in state2", uuid);
+                    doneSavingBlock();
                 }
                 [lock unlock];
             }
         });
     }else{
+        doneSavingBlock();
 //        NSLog(@"(%@) no edits to save in state3", uuid);
     }
 }
@@ -427,7 +430,7 @@
                     // save, then try to unload again
                     dispatch_async([self importExportScrapStateQueue], ^{
                         @autoreleasepool {
-                            [self saveToDisk];
+                            [self saveToDisk:nil];
                         }
                     });
                     dispatch_async([self importExportScrapStateQueue], ^{

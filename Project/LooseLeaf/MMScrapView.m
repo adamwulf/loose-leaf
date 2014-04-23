@@ -467,9 +467,9 @@
 
 #pragma mark - Saving
 
--(void) saveToDisk{
+-(void) saveToDisk:(void(^)())doneSavingBlock{
 //    NSLog(@"asking scrap %@ to save", scrapState.uuid);
-    [scrapState saveToDisk];
+    [scrapState saveToDisk:doneSavingBlock];
 }
 
 

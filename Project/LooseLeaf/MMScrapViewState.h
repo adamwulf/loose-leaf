@@ -26,7 +26,7 @@
 
 -(id) initWithUUID:(NSString*)uuid andBezierPath:(UIBezierPath*)bezierPath;
 
--(void) saveToDisk;
+-(void) saveToDisk:(void(^)())doneSavingBlock;
 
 -(void) loadScrapStateAsynchronously:(BOOL)async;
 

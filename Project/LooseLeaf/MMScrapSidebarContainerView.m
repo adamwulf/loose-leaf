@@ -126,7 +126,7 @@
     if(animated){
         // only save when it's animated. non-animated is loading
         // from disk at start up
-        [scrap saveToDisk];
+        [scrap saveToDisk:nil];
     }
     
     [scrapsHeldInBezel insertObject:scrap atIndex:0];
