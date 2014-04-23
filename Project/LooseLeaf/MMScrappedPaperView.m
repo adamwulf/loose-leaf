@@ -645,12 +645,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
     
     CGPoint center = scrap.center;
     CGFloat scale = contextSize.width / self.originalUnscaledBounds.size.width;
-    
+
+    // calculate the center of the scrap, scaled to our smaller thumbnail context
     center = CGPointApplyAffineTransform(center, CGAffineTransformMakeScale(scale, scale));
-    
-    UIBezierPath* p = [UIBezierPath bezierPathWithArcCenter:center radius:2 startAngle:0 endAngle:2*M_PI clockwise:YES];
-    [[UIColor redColor] setFill];
-    [p fill];
     
     // transform into the scrap's coordinate system
     //
@@ -662,27 +659,55 @@ static dispatch_queue_t concurrentBackgroundQueue;
     transform = CGAffineTransformConcat(transform, CGAffineTransformMakeScale(scale * scrap.scale, scale * scrap.scale));
     // move to position
     transform = CGAffineTransformConcat(transform, CGAffineTransformMakeTranslation(center.x, center.y));
-
+    // apply transform, now we're in the scrap's coordinate system
     CGContextConcatCTM(context, transform);
 
     // work with the scrap's path
     UIBezierPath* path = [scrap.bezierPath copy];
 
-    // clip to it
+    // clip to the scrap's path
     CGContextSaveGState(context);
     [path addClip];
-    CGContextRestoreGState(context);
     [[UIColor whiteColor] setFill];
     [path fill];
+
+    // background
+    //
+    // draw the scrap's background, if it has an image background
+    if(scrap.backingImage){
+        // save our scrap's coordinate system
+        CGContextSaveGState(context);
+        // move to scrap center
+        CGAffineTransform backingTransform = CGAffineTransformMakeTranslation(scrap.bounds.size.width / 2, scrap.bounds.size.height / 2);
+        // move to background center
+        backingTransform = CGAffineTransformConcat(backingTransform, CGAffineTransformMakeTranslation(scrap.backgroundOffset.x, scrap.backgroundOffset.y));
+        // scale and rotate into background's coordinate space
+        CGContextConcatCTM(context, backingTransform);
+        // rotate and scale
+        CGContextConcatCTM(context, CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.backgroundRotation),CGAffineTransformMakeScale(scrap.backgroundScale, scrap.backgroundScale)));
+        // draw the image, and keep the images center at cgpointzero
+        UIImage* backingImage = scrap.backingImage;
+        [backingImage drawAtPoint:CGPointMake(-backingImage.size.width / 2, -backingImage.size.height/2)];
+        // restore us back to the scrap's coordinate system
+        CGContextRestoreGState(context);
+    }
     
+    // ink
+    //
     // draw the scrap's strokes
-    [scrap.state.activeThumbnailImage drawInRect:scrap.bounds];
+    if(scrap.state.activeThumbnailImage){
+        [scrap.state.activeThumbnailImage drawInRect:scrap.bounds];
+    }else{
+        NSLog(@"hrmph");
+    }
+    
+    // restore the state, no more clip
+    CGContextRestoreGState(context);
     
     // stroke the scrap path
-    [[UIColor blueColor] setStroke];
+    CGContextSetLineWidth(context, 1);
+    [[UIColor grayColor] setStroke];
     [path stroke];
-    
-
     
     CGContextRestoreGState(context);
 }
