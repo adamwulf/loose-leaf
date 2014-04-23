@@ -130,7 +130,7 @@
         fromRightBezelGesture.panDelegate = self;
 
     
-        debugImgView = [[UIImageView alloc] initWithFrame:CGRectMake(80, 80, self.bounds.size.width / 3, self.bounds.size.height/3)];
+        debugImgView = [[UIImageView alloc] initWithFrame:CGRectMake(380, 80, self.bounds.size.width / 3, self.bounds.size.height/3)];
         debugImgView.layer.borderWidth = 1;
         debugImgView.layer.borderColor = [UIColor redColor].CGColor;
         debugImgView.contentMode = UIViewContentModeScaleAspectFit;

@@ -652,20 +652,37 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [[UIColor redColor] setFill];
     [p fill];
     
-    
-    UIBezierPath* path = [scrap.bezierPath copy];
+    // transform into the scrap's coordinate system
+    //
     // move to scrap center
-    [path applyTransform:CGAffineTransformMakeTranslation(-scrap.bounds.size.width/2, -scrap.bounds.size.height/2)];
+    CGAffineTransform transform = CGAffineTransformMakeTranslation(-scrap.bounds.size.width/2, -scrap.bounds.size.height/2);
     // rotate
-    [path applyTransform:CGAffineTransformMakeRotation(scrap.rotation)];
+    transform = CGAffineTransformConcat(transform, CGAffineTransformMakeRotation(scrap.rotation));
     // scale it
-    [path applyTransform:CGAffineTransformMakeScale(scale * scrap.scale, scale * scrap.scale)];
+    transform = CGAffineTransformConcat(transform, CGAffineTransformMakeScale(scale * scrap.scale, scale * scrap.scale));
     // move to position
-    [path applyTransform:CGAffineTransformMakeTranslation(center.x, center.y)];
+    transform = CGAffineTransformConcat(transform, CGAffineTransformMakeTranslation(center.x, center.y));
+
+    CGContextConcatCTM(context, transform);
+
+    // work with the scrap's path
+    UIBezierPath* path = [scrap.bezierPath copy];
+
+    // clip to it
+    CGContextSaveGState(context);
+    [path addClip];
+    CGContextRestoreGState(context);
+    [[UIColor whiteColor] setFill];
+    [path fill];
     
+    // draw the scrap's strokes
+    [scrap.state.activeThumbnailImage drawInRect:scrap.bounds];
+    
+    // stroke the scrap path
     [[UIColor blueColor] setStroke];
     [path stroke];
     
+
     
     CGContextRestoreGState(context);
 }

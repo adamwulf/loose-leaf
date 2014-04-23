@@ -264,8 +264,8 @@ dispatch_queue_t importThumbnailQueue;
                                definitelyDoesNotHaveAThumbnail = NO;
                                [paperState wasSavedAtImmutableState:immutableState];
                                onComplete();
+                               cachedImgViewImage = thumbnail;
                                [NSThread performBlockOnMainThread:^{
-                                   cachedImgViewImage = thumbnail;
                                    cachedImgView.image = cachedImgViewImage;
                                }];
                            }else{
@@ -308,8 +308,8 @@ static int count = 0;
                     definitelyDoesNotHaveAThumbnail = YES;
                 }
                 isLoadingCachedImageFromDisk = NO;
+                cachedImgViewImage = thumbnail;
                 [NSThread performBlockOnMainThread:^{
-                    cachedImgViewImage = thumbnail;
                     cachedImgView.image = cachedImgViewImage;
                 }];
             }
@@ -333,8 +333,8 @@ static int count = 0;
         // adding to these thread queues will make sure I unload
         // after any in progress load
         dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
+            cachedImgViewImage = nil;
             [NSThread performBlockOnMainThread:^{
-                cachedImgViewImage = nil;
                 cachedImgView.image = cachedImgViewImage;
             }];
         });

@@ -34,6 +34,7 @@
 
 -(BOOL) isStateLoaded;
 
+-(UIImage*) activeThumbnailImage;
 
 -(void) addElements:(NSArray*)elements;
 -(JotGLTexture*) generateTexture;

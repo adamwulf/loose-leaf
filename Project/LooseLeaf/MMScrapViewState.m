@@ -50,6 +50,9 @@
     // queue
     dispatch_queue_t importExportScrapStateQueue;
     
+    // thumbnail
+    UIImage* activeThumbnailImage;
+    
     // image background
     BOOL backingViewHasChanged;
     UIImageView* backingContentView;
@@ -175,22 +178,14 @@
 
         if([[MMLoadImageCache sharedInstace] containsPathInCache:self.thumbImageFile]){
             // load if we can
-            if([NSThread isMainThread]){
-                thumbnailView.image = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
-            }else{
-                [NSThread performBlockOnMainThread:^{
-                    thumbnailView.image = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
-                }];
-            }
+            [self setActiveThumbnailImage:[[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile]];
         }else{
             // don't load from disk on the main thread.
             dispatch_async([self importExportScrapStateQueue], ^{
                 [lock lock];
                 @autoreleasepool {
                     UIImage* thumb = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
-                    [NSThread performBlockOnMainThread:^{
-                        thumbnailView.image = thumb;
-                    }];
+                    [self setActiveThumbnailImage:thumb];
                 }
                 [lock unlock];
             });
@@ -303,9 +298,7 @@
                                     [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
                                         if(state){
                                             [[MMLoadImageCache sharedInstace] updateCacheForPath:self.thumbImageFile toImage:thumb];
-                                            [NSThread performBlockOnMainThread:^{
-                                                thumbnailView.image = thumb;
-                                            }];
+                                            [self setActiveThumbnailImage:thumb];
                                             [drawableViewState wasSavedAtImmutableState:state];
 //                                            NSLog(@"(%@) scrap saved at: %d with thumb: %d", uuid, state.undoHash, (int)thumb);
                                         }
@@ -466,6 +459,19 @@
 
 -(BOOL) isStateLoaded{
     return drawableViewState != nil;
+}
+
+// returns the loaded thumbnail image,
+// if any
+-(UIImage*) activeThumbnailImage{
+    return activeThumbnailImage;
+}
+
+-(void) setActiveThumbnailImage:(UIImage*)img{
+    activeThumbnailImage = img;
+    [NSThread performBlockOnMainThread:^{
+        thumbnailView.image = activeThumbnailImage;
+    }];
 }
 
 
