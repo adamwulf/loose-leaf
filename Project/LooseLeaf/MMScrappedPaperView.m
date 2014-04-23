@@ -697,8 +697,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // draw the scrap's strokes
     if(scrap.state.activeThumbnailImage){
         [scrap.state.activeThumbnailImage drawInRect:scrap.bounds];
-    }else{
-        NSLog(@"hrmph");
     }
     
     // restore the state, no more clip
@@ -714,6 +712,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 
 -(void) updateFullPageThumbnail:(MMImmutableScrapsOnPaperState*)immutableScrapState{
+    NSLog(@"updateFullPageThumbnail");
     UIImage* thumb = [self cachedImgViewImage];
     
     UIGraphicsBeginImageContextWithOptions(thumb.size, NO, 0.0);
@@ -782,6 +781,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
             [self updateFullPageThumbnail:immutableScrapState];
             
             [NSThread performBlockOnMainThread:^{
+                NSLog(@"notifying did save page %@", self.uuid);
                 [self.delegate didSavePage:self];
             }];
         }

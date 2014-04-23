@@ -48,6 +48,7 @@
     }else{
         [[NSFileManager defaultManager] removeItemAtPath:self.scrapIDsPath error:nil];
     }
+    NSLog(@"done saving immutable scraps on paper state");
 }
 
 -(void) unload{

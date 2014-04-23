@@ -325,7 +325,7 @@
                     }];
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
                     dispatch_release(sema1);
-//                    NSLog(@"(%@) done saving: %d", uuid, (int)drawableView);
+                    NSLog(@"(%@) done saving scrap: %d", uuid, (int)drawableView);
                 }else{
                     // sometimes, this method is called in very quick succession.
                     // that means that the first time it runs and saves, it'll
