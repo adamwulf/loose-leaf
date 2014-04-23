@@ -714,23 +714,27 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) updateFullPageThumbnail:(MMImmutableScrapsOnPaperState*)immutableScrapState{
     NSLog(@"updateFullPageThumbnail");
     UIImage* thumb = [self cachedImgViewImage];
+    CGSize thumbSize = self.originalUnscaledBounds.size;
+    thumbSize.width /= 2;
+    thumbSize.height /= 2;
     
-    UIGraphicsBeginImageContextWithOptions(thumb.size, NO, 0.0);
+    
+    UIGraphicsBeginImageContextWithOptions(thumbSize, NO, 0.0);
     
     // get context
     CGContextRef context = UIGraphicsGetCurrentContext();
 
     [[UIColor whiteColor] setFill];
-    CGContextFillRect(context, CGRectMake(0, 0, thumb.size.width, thumb.size.height));
+    CGContextFillRect(context, CGRectMake(0, 0, thumbSize.width, thumbSize.height));
 
     // drawing code comes here- look at CGContext reference
     // for available operations
     // this example draws the inputImage into the context
-    [thumb drawInRect:CGRectMake(0, 0, thumb.size.width, thumb.size.height)];
+    [thumb drawInRect:CGRectMake(0, 0, thumbSize.width, thumbSize.height)];
     
     
     for(MMScrapView* scrap in immutableScrapState.scraps){
-        [self drawScrap:scrap intoContext:context withSize:thumb.size];
+        [self drawScrap:scrap intoContext:context withSize:thumbSize];
     }
     
     // get a UIImage from the image context- enjoy!!!
@@ -750,8 +754,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // track if all of our scraps have saved
     dispatch_semaphore_t sema2 = dispatch_semaphore_create(0);
 
+    
+    __block BOOL pageHadBeenChanged = NO;
+    __block BOOL scrapsHadBeenChanged = NO;
+    
     // save our backing page
-    [super saveToDisk:^{
+    [super saveToDisk:^(BOOL hadEditsToSave){
+        pageHadBeenChanged = hadEditsToSave;
         dispatch_semaphore_signal(sema1);
     }];
     
@@ -759,7 +768,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
             immutableScrapState = [scrapState immutableState];
-            [immutableScrapState saveToDisk];
+            scrapsHadBeenChanged = [immutableScrapState saveToDisk];
             dispatch_semaphore_signal(sema2);
         }
     });
@@ -778,6 +787,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 return;
             }
             
+            
+            NSLog(@"something actually had changed %d %d", pageHadBeenChanged, scrapsHadBeenChanged);
             [self updateFullPageThumbnail:immutableScrapState];
             
             [NSThread performBlockOnMainThread:^{

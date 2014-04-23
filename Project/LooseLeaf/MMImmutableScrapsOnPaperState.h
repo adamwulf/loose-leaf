@@ -14,6 +14,8 @@
 
 -(id) initWithScrapIDsPath:(NSString *)scrapIDsPath andScraps:(NSArray*)scraps;
 
--(void) saveToDisk;
+// returns YES if any changes actually saved,
+// NO otherwise
+-(BOOL) saveToDisk;
 
 @end

@@ -241,7 +241,7 @@ dispatch_queue_t importThumbnailQueue;
  * write the thumbnail, backing texture, and entire undo
  * state to disk, and notify our delegate when done
  */
--(void) saveToDisk:(void (^)(void))onComplete{
+-(void) saveToDisk:(void (^)(BOOL didSaveEdits))onComplete{
     // Sanity checks to generate our directory structure if needed
     [self pagesPath];
     
@@ -263,20 +263,20 @@ dispatch_queue_t importThumbnailQueue;
                                // save
                                definitelyDoesNotHaveAThumbnail = NO;
                                [paperState wasSavedAtImmutableState:immutableState];
-                               onComplete();
                                cachedImgViewImage = thumbnail;
+                               onComplete(YES);
                                [NSThread performBlockOnMainThread:^{
                                    cachedImgView.image = cachedImgViewImage;
                                }];
                            }else{
-                               onComplete();
+                               onComplete(NO);
                            }
                        }];
     }else{
         // already saved, but don't need to write
         // anything new to disk
 //        debug_NSLog(@"no edits to save with hash %u", [drawableView undoHash]);
-        onComplete();
+        onComplete(NO);
     }
 }
 

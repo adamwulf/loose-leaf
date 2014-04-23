@@ -28,14 +28,15 @@
     return scraps;
 }
 
--(void) saveToDisk{
+-(BOOL) saveToDisk{
+    __block BOOL hadAnyEditsToSaveAtAll = NO;
     if([scraps count]){
-        
         dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
 
         __block NSInteger savedScraps = 0;
-        void(^doneSavingScrapBlock)(void) = ^{
+        void(^doneSavingScrapBlock)(BOOL) = ^(BOOL hadEditsToSave){
             savedScraps ++;
+            hadAnyEditsToSaveAtAll = hadAnyEditsToSaveAtAll || hadEditsToSave;
             if(savedScraps == [scraps count]){
                 // just saved the last scrap, signal
                 dispatch_semaphore_signal(sema1);
@@ -65,6 +66,7 @@
         [[NSFileManager defaultManager] removeItemAtPath:self.scrapIDsPath error:nil];
     }
     NSLog(@"done saving immutable scraps on paper state");
+    return hadAnyEditsToSaveAtAll;
 }
 
 -(void) unload{
