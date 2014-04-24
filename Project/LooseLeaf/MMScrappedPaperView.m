@@ -31,6 +31,13 @@
     NSString* scrapIDsPath;
     MMScrapsOnPaperState* scrapState;
     UIImage* scrappedImgViewImage;
+    // this defaults to NO, which means we'll try to
+    // load a thumbnail. if an image does not exist
+    // on disk, then we'll set this to YES which will
+    // prevent any more thumbnail loads until this page
+    // is saved
+    BOOL definitelyDoesNotHaveAScrappedThumbnail;
+    BOOL isLoadingCachedScrappedThumbnailFromDisk;
 }
 
 
@@ -746,8 +753,12 @@ static dispatch_queue_t concurrentBackgroundQueue;
     
     // get a UIImage from the image context- enjoy!!!
     scrappedImgViewImage = UIGraphicsGetImageFromCurrentImageContext();
+    [[NSThread mainThread] performBlock:^{
+        cachedImgView.image = scrappedImgViewImage;
+    }];
     
     [UIImagePNGRepresentation(scrappedImgViewImage) writeToFile:[self scrappedThumbnailPath] atomically:YES];
+    definitelyDoesNotHaveAScrappedThumbnail = NO;
     
     [self.delegate showPreviewThumb:scrappedImgViewImage];
     
@@ -847,14 +858,17 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) loadCachedPreview{
     // make sure our thumbnail is loaded
     [super loadCachedPreview];
-    if(!definitelyDoesNotHaveAThumbnail && !scrappedImgViewImage && !isLoadingCachedImageFromDisk){
-        isLoadingCachedImageFromDisk = YES;
+    if(!definitelyDoesNotHaveAScrappedThumbnail && !scrappedImgViewImage && !isLoadingCachedScrappedThumbnailFromDisk){
+        isLoadingCachedScrappedThumbnailFromDisk = YES;
         dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
             @autoreleasepool {
                 scrappedImgViewImage = [UIImage imageWithContentsOfFile:[self scrappedThumbnailPath]];
+                if(!scrappedImgViewImage){
+                    definitelyDoesNotHaveAScrappedThumbnail = YES;
+                }
                 [NSThread performBlockOnMainThread:^{
                     cachedImgView.image = scrappedImgViewImage;
-                    isLoadingCachedImageFromDisk = NO;
+                    isLoadingCachedScrappedThumbnailFromDisk = NO;
                 }];
             }
         });

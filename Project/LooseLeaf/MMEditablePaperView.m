@@ -34,6 +34,13 @@ dispatch_queue_t importThumbnailQueue;
     // efficiently 1) if we have a thumbnail loaded,
     // and 2) if we have (or don't) a thumbnail at all
     UIImage* cachedImgViewImage;
+    // this defaults to NO, which means we'll try to
+    // load a thumbnail. if an image does not exist
+    // on disk, then we'll set this to YES which will
+    // prevent any more thumbnail loads until this page
+    // is saved
+    BOOL definitelyDoesNotHaveAnInkThumbnail;
+    BOOL isLoadingCachedInkThumbnailFromDisk;
 }
 
 @synthesize drawableView;
@@ -254,7 +261,7 @@ dispatch_queue_t importThumbnailQueue;
                                // in queue)
                                // so only trigger our save action if we did in fact
                                // save
-                               definitelyDoesNotHaveAThumbnail = NO;
+                               definitelyDoesNotHaveAnInkThumbnail = NO;
                                [paperState wasSavedAtImmutableState:immutableState];
                                cachedImgViewImage = thumbnail;
                                [NSThread performBlockOnMainThread:^{
@@ -288,8 +295,8 @@ static int count = 0;
     // and we don't have one cached (!cachedImgViewImage) and
     // we're not already tryign to load it form disk (!isLoadingCachedImageFromDisk)
     // then try to load it and store the results.
-    if(!definitelyDoesNotHaveAThumbnail && !cachedImgViewImage && !isLoadingCachedImageFromDisk){
-        isLoadingCachedImageFromDisk = YES;
+    if(!definitelyDoesNotHaveAnInkThumbnail && !cachedImgViewImage && !isLoadingCachedInkThumbnailFromDisk){
+        isLoadingCachedInkThumbnailFromDisk = YES;
         count++;
         dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
             @autoreleasepool {
@@ -298,9 +305,9 @@ static int count = 0;
                 // https://github.com/adamwulf/loose-leaf/issues/227
                 UIImage* thumbnail = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
                 if(!thumbnail){
-                    definitelyDoesNotHaveAThumbnail = YES;
+                    definitelyDoesNotHaveAnInkThumbnail = YES;
                 }
-                isLoadingCachedImageFromDisk = NO;
+                isLoadingCachedInkThumbnailFromDisk = NO;
                 cachedImgViewImage = thumbnail;
                 [NSThread performBlockOnMainThread:^{
                     cachedImgView.image = cachedImgViewImage;
@@ -322,7 +329,7 @@ static int count = 0;
     //
     // i should probably make an nsoperationqueue or something
     // so that i can cancel operations if they havne't run yet... (?)
-    if(cachedImgViewImage || isLoadingCachedImageFromDisk){
+    if(cachedImgViewImage || isLoadingCachedInkThumbnailFromDisk){
         // adding to these thread queues will make sure I unload
         // after any in progress load
         dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
