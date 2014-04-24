@@ -17,7 +17,7 @@
     MMEditablePaperView* currentlyTopPage;
     MMEditablePaperView* currentEditablePage;
     NSMutableArray* stateLoadedPages;
-    NSMutableSet* pagesWithLoadedCacheImages;
+    NSMutableOrderedSet* pagesWithLoadedCacheImages;
 }
 
 @synthesize delegate;
@@ -31,7 +31,7 @@ static MMPageCacheManager* _instance = nil;
     if((self = [super init])){
         _instance = self;
         stateLoadedPages = [NSMutableArray array];
-        pagesWithLoadedCacheImages = [NSMutableSet set];
+        pagesWithLoadedCacheImages = [NSMutableOrderedSet orderedSet];
         
     }
     return _instance;
@@ -57,6 +57,18 @@ static MMPageCacheManager* _instance = nil;
     if([page isKindOfClass:[MMEditablePaperView class]]){
         [(MMEditablePaperView*)page loadCachedPreview];
         [pagesWithLoadedCacheImages addObject:page];
+        if([[self.delegate pagesInCurrentBezelGesture] count] > 6 &&
+           [pagesWithLoadedCacheImages count] > 6){
+            // fetch and unload middle ish object
+            MMPaperView* page = [pagesWithLoadedCacheImages objectAtIndex:[pagesWithLoadedCacheImages count] / 2];
+            if([page isKindOfClass:[MMEditablePaperView class]]){
+                // we have a pretty impressive bezel going on here,
+                // so start to unload the pages that are pretty much
+                // invisible in the bezel stack
+                [(MMEditablePaperView*)page unloadCachedPreview];
+                [pagesWithLoadedCacheImages removeObject:page];
+            }
+        }
 //        if([bezelStackHolder.subviews count] > 6){
 //            MMPaperView* page = [bezelStackHolder.subviews objectAtIndex:[bezelStackHolder.subviews count] - 6];
 //            if([page isKindOfClass:[MMEditablePaperView class]]){
@@ -201,9 +213,10 @@ static MMPageCacheManager* _instance = nil;
     for(MMEditablePaperView* page in visiblePages){
         [page loadCachedPreview];
     }
-    NSSet* invisiblePages = [pagesWithLoadedCacheImages objectsPassingTest:^BOOL(id obj, BOOL*stop){
+    NSIndexSet* indexes = [pagesWithLoadedCacheImages indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger indx, BOOL*stop){
         return ![visiblePages containsObject:obj];
     }];
+    NSArray* invisiblePages = [pagesWithLoadedCacheImages objectsAtIndexes:indexes];
     for(MMEditablePaperView* page in invisiblePages){
         if(![stateLoadedPages containsObject:page]){
             // only allowed to unload pages that we haven't

@@ -553,6 +553,10 @@
     return [visibleStackHolder containsSubview:page];
 }
 
+-(NSArray*) pagesInCurrentBezelGesture{
+    return bezelStackHolder.subviews;
+}
+
 -(MMPaperView*) getPageBelow:(MMPaperView*)page{
     return [visibleStackHolder getPageBelow:page];
 }

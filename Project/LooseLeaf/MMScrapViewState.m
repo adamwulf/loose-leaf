@@ -10,6 +10,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMLoadImageCache.h"
 #import <DrawKit-iOS/DrawKit-iOS.h>
+#import <JotUI/JotUI.h>
 #import "NSFileManager+DirectoryOptimizations.h"
 
 #define kScrapShadowBufferSize 4
@@ -446,6 +447,7 @@
                         [NSThread performBlockOnMainThread:^{
                             drawableViewState = nil;
                             [drawableView removeFromSuperview];
+                            [[JotTrashManager sharedInstace] addObjectToDealloc:drawableView];
                             drawableView = nil;
                             thumbnailView.hidden = NO;
                             dispatch_semaphore_signal(sema1);
