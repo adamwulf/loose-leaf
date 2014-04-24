@@ -27,7 +27,6 @@ dispatch_queue_t importThumbnailQueue;
     NSString* plistPath;
     NSString* thumbnailPath;
     UIBezierPath* boundsPath;
-    BOOL isLoadingCachedImageFromDisk;
     
     JotViewStateProxy* paperState;
     
@@ -35,12 +34,6 @@ dispatch_queue_t importThumbnailQueue;
     // efficiently 1) if we have a thumbnail loaded,
     // and 2) if we have (or don't) a thumbnail at all
     UIImage* cachedImgViewImage;
-    // this defaults to NO, which means we'll try to
-    // load a thumbnail. if an image does not exist
-    // on disk, then we'll set this to YES which will
-    // prevent any more thumbnail loads until this page
-    // is saved
-    BOOL definitelyDoesNotHaveAThumbnail;
 }
 
 @synthesize drawableView;
@@ -264,10 +257,10 @@ dispatch_queue_t importThumbnailQueue;
                                definitelyDoesNotHaveAThumbnail = NO;
                                [paperState wasSavedAtImmutableState:immutableState];
                                cachedImgViewImage = thumbnail;
-                               onComplete(YES);
                                [NSThread performBlockOnMainThread:^{
                                    cachedImgView.image = cachedImgViewImage;
                                }];
+                               onComplete(YES);
                            }else{
                                onComplete(NO);
                            }

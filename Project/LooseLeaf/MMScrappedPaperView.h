@@ -41,4 +41,6 @@
 
 -(void) completeScissorsCutWithPath:(UIBezierPath*)scissorPath;
 
+-(NSString*) scrappedThumbnailPath;
+
 @end

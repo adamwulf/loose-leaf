@@ -30,6 +30,7 @@
     UIView* scrapContainerView;
     NSString* scrapIDsPath;
     MMScrapsOnPaperState* scrapState;
+    UIImage* scrappedImgViewImage;
 }
 
 
@@ -710,6 +711,12 @@ static dispatch_queue_t concurrentBackgroundQueue;
     CGContextRestoreGState(context);
 }
 
+-(NSString*) scrappedThumbnailPath{
+    return [[[self pagesPath] stringByAppendingPathComponent:[@"scrapped" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
+}
+-(UIImage*) scrappedImgViewImage{
+    return scrappedImgViewImage;
+}
 
 -(void) updateFullPageThumbnail:(MMImmutableScrapsOnPaperState*)immutableScrapState{
     NSLog(@"updateFullPageThumbnail");
@@ -738,9 +745,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
     }
     
     // get a UIImage from the image context- enjoy!!!
-    UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
+    scrappedImgViewImage = UIGraphicsGetImageFromCurrentImageContext();
     
-    [self.delegate showPreviewThumb:outputImage];
+    [UIImagePNGRepresentation(scrappedImgViewImage) writeToFile:[self scrappedThumbnailPath] atomically:YES];
+    
+    [self.delegate showPreviewThumb:scrappedImgViewImage];
     
     // clean up drawing environment
     UIGraphicsEndImageContext();
@@ -806,10 +815,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 -(void) unloadState{
     [super unloadState];
-    [[scrapState immutableState] saveToDisk];
-    // unloading the scrap state will also remove them
-    // from their superview (us)
-    [scrapState unload];
+    MMScrapsOnPaperState* strongScrapState = scrapState;
+    dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
+        [[strongScrapState immutableState] saveToDisk];
+        // unloading the scrap state will also remove them
+        // from their superview (us)
+        [strongScrapState unload];
+    });
 }
 
 -(BOOL) hasStateLoaded{
@@ -835,20 +847,40 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) loadCachedPreview{
     // make sure our thumbnail is loaded
     [super loadCachedPreview];
+    if(!definitelyDoesNotHaveAThumbnail && !scrappedImgViewImage && !isLoadingCachedImageFromDisk){
+        isLoadingCachedImageFromDisk = YES;
+        dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
+            @autoreleasepool {
+                scrappedImgViewImage = [UIImage imageWithContentsOfFile:[self scrappedThumbnailPath]];
+                [NSThread performBlockOnMainThread:^{
+                    cachedImgView.image = scrappedImgViewImage;
+                    isLoadingCachedImageFromDisk = NO;
+                }];
+            }
+        });
+    }
     // make sure our scraps' thumbnails are loaded
-    [scrapState loadStateAsynchronously:YES andMakeEditable:NO];
+//    [scrapState loadStateAsynchronously:YES andMakeEditable:NO];
 }
 
 -(void) unloadCachedPreview{
     // free our preview memory
     [super unloadCachedPreview];
+    if(scrappedImgViewImage){
+        scrappedImgViewImage = nil;
+    }
     if([scrapState isStateLoaded]){
-        // save if needed
-        // currently this will always save to disk. in the future #338
-        // we should only save if this has changed.
-        [[scrapState immutableState] saveToDisk];
-        // free all scraps from memory too
-        [scrapState unload];
+        MMScrapsOnPaperState* strongScrapState = scrapState;
+        dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
+            @autoreleasepool {
+                // save if needed
+                // currently this will always save to disk. in the future #338
+                // we should only save if this has changed.
+                [[strongScrapState immutableState] saveToDisk];
+                // free all scraps from memory too
+                [strongScrapState unload];
+            }
+        });
     }
 }
 

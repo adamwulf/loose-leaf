@@ -326,7 +326,7 @@
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
                     dispatch_release(sema1);
                     NSLog(@"(%@) done saving scrap: %d", uuid, (int)drawableView);
-                    doneSavingBlock(YES);
+                    if(doneSavingBlock) doneSavingBlock(YES);
                 }else{
                     // sometimes, this method is called in very quick succession.
                     // that means that the first time it runs and saves, it'll
@@ -334,13 +334,13 @@
                     // next time it runs. so we double check our save state to determine
                     // if in fact we still need to save or not
 //                    NSLog(@"(%@) no edits to save in state2", uuid);
-                    doneSavingBlock(NO);
+                    if(doneSavingBlock) doneSavingBlock(NO);
                 }
                 [lock unlock];
             }
         });
     }else{
-        doneSavingBlock(NO);
+        if(doneSavingBlock) doneSavingBlock(NO);
 //        NSLog(@"(%@) no edits to save in state3", uuid);
     }
 }
