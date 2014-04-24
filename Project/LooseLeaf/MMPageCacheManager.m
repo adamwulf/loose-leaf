@@ -69,15 +69,6 @@ static MMPageCacheManager* _instance = nil;
                 [pagesWithLoadedCacheImages removeObject:page];
             }
         }
-//        if([bezelStackHolder.subviews count] > 6){
-//            MMPaperView* page = [bezelStackHolder.subviews objectAtIndex:[bezelStackHolder.subviews count] - 6];
-//            if([page isKindOfClass:[MMEditablePaperView class]]){
-//                // we have a pretty impressive bezel going on here,
-//                // so start to unload the pages that are pretty much
-//                // invisible in the bezel stack
-//                [(MMEditablePaperView*)page unloadCachedPreview];
-//            }
-//        }
     }
 
     if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
