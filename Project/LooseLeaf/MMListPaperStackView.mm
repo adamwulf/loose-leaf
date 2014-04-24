@@ -1214,41 +1214,40 @@
 
         NSInteger actualStart = -1;
         NSInteger actualEnd = -1;
-//        for(MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:]){
-//        while(arrayIndex > -1){
+
+        // iterate over the visible indexes in the list
         for(int indexInList=startIndex;indexInList<endIndex;indexInList++){
             int i=indexInList;
             if(i<countOfSubviews[0]){
+                // index is in visible stack
                 arrayIndex = 0;
             }else{
+                // index is in hidden stack
+                // make sure to reverse the indexes
+                // when inside the hidden stack
                 arrayIndex = 1;
                 i -= countOfSubviews[0];
                 i = countOfSubviews[1] - i - 1; // reverse the hidden stack
             }
-//            if(i >= countOfSubviews[arrayIndex]){
-//                i = 0;
-//                arrayIndex -= 1;
-//                continue;
-//            }
-            MMPaperView* aPage = [arraysOfSubviews[arrayIndex] objectAtIndex:i];
-//            CGRect frameOfPage = [self frameForListViewForPage:aPage];
-//            NSInteger indexInList = i;
-//            if(arrayIndex == 1){
-//                indexInList = countOfSubviews[0] + countOfSubviews[1] - i;
-//            }
-            CGRect frameOfPage = [self frameForIndexInList:indexInList];
-            // we have to expand the frame, because we want to count pages even if
-            // just their shadow is visible
-            frameOfPage = [MMShadowedView expandFrame:frameOfPage];
-            if(frameOfPage.origin.y < selfContentOffsetY + selfFrameSizeHeight &&
-               frameOfPage.origin.y + frameOfPage.size.height > selfContentOffsetY){
-                [pagesThatWouldBeVisible addObject:aPage];
-                if(actualEnd == -1){
-                    actualEnd = indexInList;
+            if(i >= 0){
+                // the index calculations don't respect the number of pages,
+                // it's just a blind calculation of which indexes in the list
+                // view are visible at the given offset, so make sure
+                // that the index is actually valid
+                MMPaperView* aPage = [arraysOfSubviews[arrayIndex] objectAtIndex:i];
+                CGRect frameOfPage = [self frameForIndexInList:indexInList];
+                // we have to expand the frame, because we want to count pages even if
+                // just their shadow is visible
+                frameOfPage = [MMShadowedView expandFrame:frameOfPage];
+                if(frameOfPage.origin.y < selfContentOffsetY + selfFrameSizeHeight &&
+                   frameOfPage.origin.y + frameOfPage.size.height > selfContentOffsetY){
+                    [pagesThatWouldBeVisible addObject:aPage];
+                    if(actualEnd == -1){
+                        actualEnd = indexInList;
+                    }
+                    actualStart = indexInList;
                 }
-                actualStart = indexInList;
             }
-            i++;
         }
         
         return pagesThatWouldBeVisible;
