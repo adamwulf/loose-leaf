@@ -13,7 +13,6 @@
 #import "MMShapeBuilderView.h"
 
 @interface MMEditablePaperView : MMPaperView<JotViewDelegate,JotViewStateProxyDelegate>{
-    UIImageView* cachedImgView;
     __weak JotView* drawableView;
     MMShapeBuilderView* shapeBuilderView;
     
@@ -43,5 +42,6 @@
 -(NSString*) pagesPath;
 -(NSString*) thumbnailPath;
 -(UIImage*) cachedImgViewImage;
+-(void) addDrawableViewToContentView;
 
 @end

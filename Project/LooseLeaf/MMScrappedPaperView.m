@@ -52,6 +52,16 @@ static dispatch_queue_t concurrentBackgroundQueue;
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
+        // create the cache thumbnail view
+        cachedImgView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
+        cachedImgView.frame = self.contentView.bounds;
+        cachedImgView.contentMode = UIViewContentModeScaleAspectFill;
+        cachedImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        cachedImgView.clipsToBounds = YES;
+        cachedImgView.opaque = YES;
+        cachedImgView.backgroundColor = [UIColor whiteColor];
+        [self.contentView addSubview:cachedImgView];
+
         // Initialization code
         scrapContainerView = [[MMUntouchableView alloc] initWithFrame:self.bounds];
         [self.contentView addSubview:scrapContainerView];
@@ -67,6 +77,25 @@ static dispatch_queue_t concurrentBackgroundQueue;
         scrapState.delegate = self;
     }
     return self;
+}
+
+#pragma mark - Public Methods
+
+-(void) setCanvasVisible:(BOOL)isCanvasVisible{
+    [super setCanvasVisible:isCanvasVisible];
+    if(isCanvasVisible){
+        cachedImgView.hidden = YES;
+    }else{
+        cachedImgView.hidden = NO;
+    }
+}
+
+#pragma mark - Protected Methods
+
+-(void) addDrawableViewToContentView{
+    // default will be to just append drawable view. subclasses
+    // can (and will) change behavior
+    [self.contentView insertSubview:drawableView aboveSubview:cachedImgView];
 }
 
 
@@ -882,6 +911,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [super unloadCachedPreview];
     if(scrappedImgViewImage){
         scrappedImgViewImage = nil;
+        // cachedImgView.image is already set to nil in super
+        [NSThread performBlockOnMainThread:^{
+            cachedImgView.image = nil;
+        }];
     }
     if([scrapState isStateLoaded]){
         MMScrapsOnPaperState* strongScrapState = scrapState;

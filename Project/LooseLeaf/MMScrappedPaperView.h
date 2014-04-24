@@ -16,7 +16,9 @@
  * the purpose of this subclass is to encompass all of the
  * scrap functionality for a page
  */
-@interface MMScrappedPaperView : MMEditablePaperView<MFMailComposeViewControllerDelegate,MMPanGestureDelegate,MMScrapsOnPaperStateDelegate>
+@interface MMScrappedPaperView : MMEditablePaperView<MFMailComposeViewControllerDelegate,MMPanGestureDelegate,MMScrapsOnPaperStateDelegate>{
+    UIImageView* cachedImgView;
+}
 
 @property (readonly) NSArray* scraps;
 

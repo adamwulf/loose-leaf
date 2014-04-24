@@ -61,16 +61,6 @@ dispatch_queue_t importThumbnailQueue;
         // vertex data for anything that'll never be visible
         boundsPath = [UIBezierPath bezierPathWithRect:self.bounds];
         
-        // create the cache view
-        cachedImgView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
-        cachedImgView.frame = self.contentView.bounds;
-        cachedImgView.contentMode = UIViewContentModeScaleAspectFill;
-        cachedImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        cachedImgView.clipsToBounds = YES;
-        cachedImgView.opaque = YES;
-        cachedImgView.backgroundColor = [UIColor whiteColor];
-        [self.contentView addSubview:cachedImgView];
-
         //
         // This pan gesture is used to pan/scale the page itself.
         rulerGesture = [[MMRulerToolGestureRecognizer alloc] initWithTarget:self action:@selector(didMoveRuler:)];
@@ -126,11 +116,9 @@ dispatch_queue_t importThumbnailQueue;
 
 -(void) setCanvasVisible:(BOOL)isCanvasVisible{
     if(isCanvasVisible){
-        cachedImgView.hidden = YES;
         drawableView.hidden = NO;
         shapeBuilderView.hidden = NO;
     }else{
-        cachedImgView.hidden = NO;
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;
     }
@@ -173,6 +161,12 @@ dispatch_queue_t importThumbnailQueue;
     }
 }
 
+-(void) addDrawableViewToContentView{
+//    [self.contentView addSubview:drawableView];
+    // add the drawableView to the contentView
+    @throw kAbstractMethodException;
+}
+
 -(void) setDrawableView:(JotView *)_drawableView{
     if(_drawableView && ![self hasStateLoaded]){
         NSLog(@"oh no");
@@ -185,7 +179,7 @@ dispatch_queue_t importThumbnailQueue;
             [NSThread performBlockOnMainThread:^{
                 if([self.delegate isPageEditable:self] && [self hasStateLoaded]){
                     [drawableView loadState:paperState];
-                    [self.contentView insertSubview:drawableView aboveSubview:cachedImgView];
+                    [self addDrawableViewToContentView];
                     // anchor the view to the top left,
                     // so that when we scale down, the drawable view
                     // stays in place
@@ -264,9 +258,6 @@ dispatch_queue_t importThumbnailQueue;
                                definitelyDoesNotHaveAnInkThumbnail = NO;
                                [paperState wasSavedAtImmutableState:immutableState];
                                cachedImgViewImage = thumbnail;
-                               [NSThread performBlockOnMainThread:^{
-                                   cachedImgView.image = cachedImgViewImage;
-                               }];
                                onComplete(YES);
                            }else{
                                onComplete(NO);
@@ -309,9 +300,6 @@ static int count = 0;
                 }
                 isLoadingCachedInkThumbnailFromDisk = NO;
                 cachedImgViewImage = thumbnail;
-                [NSThread performBlockOnMainThread:^{
-                    cachedImgView.image = cachedImgViewImage;
-                }];
             }
         });
     }
@@ -334,9 +322,6 @@ static int count = 0;
         // after any in progress load
         dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
             cachedImgViewImage = nil;
-            [NSThread performBlockOnMainThread:^{
-                cachedImgView.image = cachedImgViewImage;
-            }];
         });
     }
 }
