@@ -45,4 +45,6 @@
 
 -(NSString*) scrappedThumbnailPath;
 
+-(UIImage*) scrappedImgViewImage;
+
 @end

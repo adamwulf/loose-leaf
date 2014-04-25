@@ -44,6 +44,9 @@
     NSTimer* debugTimer;
     NSTimer* drawTimer;
     UIImageView* debugImgView;
+    
+    // flag if we're waiting on a page to save
+    MMPaperView* wantsExport;
 }
 
 
@@ -455,6 +458,25 @@ int skipAll = NO;
 -(void) addPageButtonTapped:(UIButton*)_button{
     [self forceScrapToScrapContainerDuringGesture];
     [super addPageButtonTapped:_button];
+}
+
+-(void) shareButtonTapped:(UIButton*)_button{
+    if([[visibleStackHolder peekSubview] hasEditsToSave]){
+        wantsExport = [visibleStackHolder peekSubview];
+    }else{
+        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
+        [composer setMailComposeDelegate:self];
+        if([MFMailComposeViewController canSendMail]) {
+            [composer setSubject:@"Quick sketch from Loose Leaf"];
+            [composer setMessageBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
+            [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+            
+            NSData *data = UIImagePNGRepresentation([visibleStackHolder peekSubview].scrappedImgViewImage);
+            [composer addAttachmentData:data  mimeType:@"image/png" fileName:@"LooseLeaf.png"];
+            
+            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentModalViewController:composer animated:YES];
+        }
+    }
 }
 
 -(void) anySidebarButtonTapped:(id)button{
@@ -1204,5 +1226,22 @@ int skipAll = NO;
         debugImgView.image = img;
     }];
 }
+
+#pragma mark = Saving and Editing
+
+-(void) didSavePage:(MMPaperView*)page{
+    [super didSavePage:page];
+    if(wantsExport == page){
+        wantsExport = nil;
+        [self shareButtonTapped:nil];
+    }
+}
+
+#pragma mark - MFMailComposeViewControllerDelegate
+
+-(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
+    [[[[UIApplication sharedApplication] keyWindow] rootViewController] dismissViewControllerAnimated:YES completion:nil];
+}
+
 
 @end
