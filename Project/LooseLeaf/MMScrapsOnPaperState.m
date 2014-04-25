@@ -140,6 +140,7 @@ static dispatch_queue_t importExportStateQueue;
                     }
                     [NSThread performBlockOnMainThread:^{
                         [scraps makeObjectsPerformSelector:@selector(removeFromSuperview)];
+                        [self.delegate didUnloadAllScrapsFor:self];
                     }];
                     @synchronized(self){
                         isLoaded = NO;

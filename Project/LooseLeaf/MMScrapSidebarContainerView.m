@@ -457,4 +457,8 @@ static NSString* bezelStatePath;
     }
 }
 
+-(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState *)scrapState{
+    // noop
+}
+
 @end

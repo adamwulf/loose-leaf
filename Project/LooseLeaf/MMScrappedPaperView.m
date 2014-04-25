@@ -862,11 +862,16 @@ static dispatch_queue_t concurrentBackgroundQueue;
         // from their superview (us)
         [strongScrapState unload];
     });
+    [[NSThread mainThread] performBlock:^{
+        
+    }];
 }
 
 -(BOOL) hasStateLoaded{
     return [super hasStateLoaded];
 }
+
+#pragma mark - MMScrapsOnPaperStateDelegate
 
 -(void) didLoadScrap:(MMScrapView*)scrap{
     @synchronized(scrapContainerView){
@@ -877,6 +882,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
     // check to see if we've also loaded
     [self didLoadState:self.paperState];
+    cachedImgView.image = [self cachedImgViewImage];
+}
+
+-(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
+    cachedImgView.image = scrappedImgViewImage;
 }
 
 /**
@@ -942,6 +952,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     if([self hasStateLoaded]){
         [NSThread performBlockOnMainThread:^{
             [[MMPageCacheManager sharedInstace] didLoadStateForPage:self];
+            cachedImgView.image = scrappedImgViewImage;
         }];
     }
 }

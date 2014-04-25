@@ -1199,9 +1199,6 @@
         countOfSubviews[0] = [visibleStackHolder.subviews count];
         countOfSubviews[1] = [hiddenStackHolder.subviews count];
         int arrayIndex = 1;
-        int i = 0;
-        
-        
         
         NSInteger startRow = floor(selfContentOffsetY) / (bufferWidth + rowHeight);
         NSInteger startIndex = startRow * kNumberOfColumnsInListView;
