@@ -1263,21 +1263,24 @@
     //
     // now we need to make sure that page is on the top
     // of the visible stack
-    [self willChangeTopPageTo:aPage];
-    if([self isInVisibleStack:aPage]){
-        // the page is in teh visible stack, so pop pages
-        // onto the hidden stack so that this page is the
-        // top visible page
-        while([visibleStackHolder peekSubview] != aPage){
-            [hiddenStackHolder pushSubview:[visibleStackHolder peekSubview]];
+    if([visibleStackHolder peekSubview] != aPage){
+        [self willChangeTopPageTo:aPage];
+        if([self isInVisibleStack:aPage]){
+            // the page is in teh visible stack, so pop pages
+            // onto the hidden stack so that this page is the
+            // top visible page
+            while([visibleStackHolder peekSubview] != aPage){
+                [hiddenStackHolder pushSubview:[visibleStackHolder peekSubview]];
+            }
+        }else{
+            // the page is in the hidden stack, so pop pages
+            // onto the visible stack so that this page is the
+            // top visible page
+            while([visibleStackHolder peekSubview] != aPage){
+                [visibleStackHolder pushSubview:[hiddenStackHolder peekSubview]];
+            }
         }
-    }else{
-        // the page is in the hidden stack, so pop pages
-        // onto the visible stack so that this page is the
-        // top visible page
-        while([visibleStackHolder peekSubview] != aPage){
-            [visibleStackHolder pushSubview:[hiddenStackHolder peekSubview]];
-        }
+        [self didChangeTopPage];
     }
 }
 

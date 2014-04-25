@@ -61,11 +61,11 @@
         
         dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
         dispatch_release(sema1);
-        NSLog(@"done saving %d scraps", [scraps count]);
+//        NSLog(@"done saving %d scraps", [scraps count]);
     }else{
         [[NSFileManager defaultManager] removeItemAtPath:self.scrapIDsPath error:nil];
     }
-    NSLog(@"done saving immutable scraps on paper state");
+//    NSLog(@"done saving immutable scraps on paper state");
     return hadAnyEditsToSaveAtAll;
 }
 
