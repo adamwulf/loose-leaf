@@ -205,7 +205,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
 /**
  * initialize the repository of photo albums
  */
--(void) initializeAlbumCache:(NSError**)err{
+-(void) initializeAlbumCache{
     if(hasEverInitailized){
         return;
     }
@@ -214,42 +214,45 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
     NSMutableArray* updatedFacesList = [NSMutableArray array];
     __block MMPhotoAlbum* updatedCameraRoll = nil;
     
-    [NSThread performBlockInBackground:^{
-        [[self assetsLibrary] enumerateGroupsWithTypes:ALAssetsGroupAlbum | ALAssetsGroupEvent | ALAssetsGroupFaces | ALAssetsGroupSavedPhotos
-                                            usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
-                                                if(!group){
-                                                    // there is no group if we're all done iterating.
-                                                    // sort our results and create an array of all our albums
-                                                    // from albums -> events -> faces order
-                                                    @synchronized(self){
-                                                        albums = [self sortArrayByAlbumName:updatedAlbumsList];
-                                                        events = [self sortArrayByAlbumName:updatedEventsList];
-                                                        faces = [self sortArrayByAlbumName:updatedFacesList];
-                                                        cameraRoll = updatedCameraRoll;
-                                                    }
-                                                    hasEverInitailized = YES;
-                                                    [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
-                                                }else if ([group numberOfAssets] > 0){
-                                                    MMPhotoAlbum* addedAlbum = [self albumWithURL:group.url];
-                                                    if(!addedAlbum){
-                                                        addedAlbum = [[MMPhotoAlbum alloc] initWithAssetGroup:group];
-                                                    }
-                                                    if(group.type == ALAssetsGroupAlbum){
-                                                        [updatedAlbumsList addObject:addedAlbum];
-                                                    }else if(group.type == ALAssetsGroupEvent){
-                                                        [updatedEventsList addObject:addedAlbum];
-                                                    }else if(group.type == ALAssetsGroupFaces){
-                                                        [updatedFacesList addObject:addedAlbum];
-                                                    }else if(group.type == ALAssetsGroupSavedPhotos){
-                                                        updatedCameraRoll = addedAlbum;
+    if([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized){
+        [NSThread performBlockInBackground:^{
+            [[self assetsLibrary] enumerateGroupsWithTypes:ALAssetsGroupAlbum | ALAssetsGroupEvent | ALAssetsGroupFaces | ALAssetsGroupSavedPhotos
+                                                usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+                                                    if(!group){
+                                                        // there is no group if we're all done iterating.
+                                                        // sort our results and create an array of all our albums
+                                                        // from albums -> events -> faces order
+                                                        @synchronized(self){
+                                                            albums = [self sortArrayByAlbumName:updatedAlbumsList];
+                                                            events = [self sortArrayByAlbumName:updatedEventsList];
+                                                            faces = [self sortArrayByAlbumName:updatedFacesList];
+                                                            cameraRoll = updatedCameraRoll;
+                                                        }
+                                                        hasEverInitailized = YES;
+                                                        [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
+                                                    }else if ([group numberOfAssets] > 0){
+                                                        MMPhotoAlbum* addedAlbum = [self albumWithURL:group.url];
+                                                        if(!addedAlbum){
+                                                            addedAlbum = [[MMPhotoAlbum alloc] initWithAssetGroup:group];
+                                                        }
+                                                        if(group.type == ALAssetsGroupAlbum){
+                                                            [updatedAlbumsList addObject:addedAlbum];
+                                                        }else if(group.type == ALAssetsGroupEvent){
+                                                            [updatedEventsList addObject:addedAlbum];
+                                                        }else if(group.type == ALAssetsGroupFaces){
+                                                            [updatedFacesList addObject:addedAlbum];
+                                                        }else if(group.type == ALAssetsGroupSavedPhotos){
+                                                            updatedCameraRoll = addedAlbum;
+                                                        }
                                                     }
                                                 }
-                                            }
-                                          failureBlock:^(NSError *error) {
-                                              *err = [self processError:error];
-                                          }];
-
-    }];
+                                              failureBlock:^(NSError *error) {
+                                                  NSError* err;
+                                                  err = [self processError:error];
+                                              }];
+            
+        }];
+    }
 }
 
 

@@ -67,7 +67,7 @@
     
     albumListScrollView.alpha = 0;
     photoListScrollView.alpha = 1;
-    [[MMPhotoManager sharedInstace] initializeAlbumCache:nil];
+    [[MMPhotoManager sharedInstace] initializeAlbumCache];
     
     [[NSThread mainThread] performBlock:^{
         currentAlbum = [[MMPhotoManager sharedInstace] cameraRoll];

@@ -27,6 +27,6 @@
 
 +(MMPhotoManager*) sharedInstace;
 
--(void) initializeAlbumCache:(NSError**)err;
+-(void) initializeAlbumCache;
 
 @end

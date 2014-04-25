@@ -71,7 +71,7 @@
 -(void) show:(BOOL)animated{
     albumListScrollView.alpha = 1;
     photoListScrollView.alpha = 0;
-    [[MMPhotoManager sharedInstace] initializeAlbumCache:nil];
+    [[MMPhotoManager sharedInstace] initializeAlbumCache];
     [self updatePhotoRotation:NO];
 }
 
