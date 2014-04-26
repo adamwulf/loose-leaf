@@ -496,9 +496,7 @@ static int count = 0;
 }
 
 -(void) didLoadState:(JotViewStateProxy*)state{
-    [NSThread performBlockOnMainThread:^{
-        [[MMPageCacheManager sharedInstace] didLoadStateForPage:self];
-    }];
+    @throw kAbstractMethodException;
 }
 
 -(void) didUnloadState:(JotViewStateProxy *)state{
