@@ -12,8 +12,7 @@
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import <JotUI/JotUI.h>
 #import "NSFileManager+DirectoryOptimizations.h"
-
-#define kScrapShadowBufferSize 4
+#import "Constants.h"
 
 @implementation MMScrapViewState{
     // scrap ID and UI

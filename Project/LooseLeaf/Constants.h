@@ -54,6 +54,10 @@
 #define kBezelInGestureWidth 20
 #define kUndoLimit 20
 
+// Scraps
+#define kScrapShadowBufferSize 4
+
+
 // photo album
 #define kMaxPhotoRotationInDegrees 20
 

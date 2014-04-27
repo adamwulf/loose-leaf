@@ -614,8 +614,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
 //            } completion:nil];
             
 
+            [scissorPath applyTransform:CGAffineTransformMakeTranslation(-scissorPath.bounds.origin.x + kScrapShadowBufferSize, -scissorPath.bounds.origin.y + kScrapShadowBufferSize)];
             [[NSThread mainThread] performBlock:^{
-                [drawableView forceAddStrokeForFilledPath:scissorPath andP1:p1 andP2:p2 andP3:p3 andP4:p4];
+                [drawableView forceAddStrokeForFilledPath:scissorPath andP1:p1 andP2:p2 andP3:p3 andP4:p4 andSize:addedScrap.bounds.size];
                 [self saveToDisk];
             } afterDelay:.01];
         }else{
