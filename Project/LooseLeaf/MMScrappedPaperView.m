@@ -606,12 +606,12 @@ static dispatch_queue_t concurrentBackgroundQueue;
             p2 = CGPointApplyAffineTransform(p2, verticalFlip);
             p3 = CGPointApplyAffineTransform(p3, verticalFlip);
             p4 = CGPointApplyAffineTransform(p4, verticalFlip);
-            
-            [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                CGPoint newC = [vector pointFromPoint:addedScrap.center distance:10];
-                addedScrap.center = newC;
-                addedScrap.rotation = addedScrap.rotation + randTurn;
-            } completion:nil];
+//            
+//            [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+//                CGPoint newC = [vector pointFromPoint:addedScrap.center distance:10];
+//                addedScrap.center = newC;
+//                addedScrap.rotation = addedScrap.rotation + randTurn;
+//            } completion:nil];
             
 
             [[NSThread mainThread] performBlock:^{

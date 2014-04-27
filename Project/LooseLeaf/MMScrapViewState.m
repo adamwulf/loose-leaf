@@ -556,7 +556,11 @@
  * texture coordinates. the size of the stamp is always assumed to be our entire view.
  */
 -(void) importTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4{
-    [drawableView drawBackingTexture:texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4 clippingPath:self.bezierPath];
+    CGSize roundedDrawableBounds = self.drawableBounds.size;
+    roundedDrawableBounds.width = ceilf(roundedDrawableBounds.width);
+    roundedDrawableBounds.height = ceilf(roundedDrawableBounds.height);
+    [drawableView drawBackingTexture:texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4 clippingPath:self.bezierPath
+                     andClippingSize:roundedDrawableBounds];
     [drawableView forceAddEmptyStroke];
 }
 
