@@ -150,5 +150,4 @@
  */
 -(void) didStopRuler:(MMRulerToolGestureRecognizer*)gesture;
 
-
 @end

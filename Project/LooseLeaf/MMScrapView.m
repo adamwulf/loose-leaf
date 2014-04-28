@@ -159,7 +159,7 @@
 //    cornerTag.bounds = CGRectMake(10, 10, 10, 10);
 //    cornerTag.backgroundColor = [UIColor redColor].CGColor;
 //    [self.layer addSublayer:cornerTag];
-//    
+//
 //    
 //    debugLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 20)];
 //    debugLabel.backgroundColor = [UIColor whiteColor];
@@ -467,9 +467,9 @@
 
 #pragma mark - Saving
 
--(void) saveToDisk{
+-(void) saveToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock{
 //    NSLog(@"asking scrap %@ to save", scrapState.uuid);
-    [scrapState saveToDisk];
+    [scrapState saveToDisk:doneSavingBlock];
 }
 
 
@@ -561,10 +561,6 @@
  */
 -(void) drawTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4{
     [scrapState importTexture:texture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
-}
-
--(void) dealloc{
-    NSLog(@"scrap %@ dealloc", scrapState.uuid);
 }
 
 @end

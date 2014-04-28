@@ -11,16 +11,21 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMShadowManager.h"
 #import "MMScrappedPaperView.h"
+#include <map>
+#include <iterator>
 
-@implementation MMListPaperStackView
+@implementation MMListPaperStackView{
+    std::map<NSUInteger,CGRect> * mapOfFinalFramesForPagesBeingZoomed; //All data pointers have same size,
+}
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
+        mapOfFinalFramesForPagesBeingZoomed = new std::map<NSUInteger,CGRect>;
+        
         // Initialization code
         setOfInitialFramesForPagesBeingZoomed = [[NSMutableDictionary alloc] initWithCapacity:100];
-        setOfFinalFramesForPagesBeingZoomed = [[NSMutableDictionary alloc] initWithCapacity:100];
         [self setScrollEnabled:NO];
         //
         // screen and column constants
@@ -115,36 +120,41 @@
 
 #pragma mark - Local Frame Cache
 
+-(CGRect) frameForIndexInList:(NSInteger)indexOfPage{
+    NSInteger column = [self columnInListViewGivenIndex:indexOfPage];
+    NSInteger row = [self rowInListViewGivenIndex:indexOfPage];
+    CGRect frameOfPage = CGRectZero;
+    frameOfPage.origin.x = bufferWidth + bufferWidth * column + columnWidth * column;
+    frameOfPage.origin.y = bufferWidth + (bufferWidth + rowHeight) * row;
+    frameOfPage.size.width = columnWidth;
+    frameOfPage.size.height = rowHeight;
+    return frameOfPage;
+}
+
 //
 // for any given gesture, the frameForListViewForPage: for any page
 // will be the same, so let's cache that for this gesture
 -(CGRect) frameForListViewForPage:(MMPaperView*)page{
-    NSValue* finalFrame = [setOfFinalFramesForPagesBeingZoomed objectForKey:page.uuid];
-    if(finalFrame){
-        return [finalFrame CGRectValue];
+    std::map<NSUInteger, CGRect>::const_iterator found = mapOfFinalFramesForPagesBeingZoomed->find(page.uuid.hash);
+    if (found != mapOfFinalFramesForPagesBeingZoomed->end()){
+        return found->second;
     }
+
     //
     // fetching the index of a page can be moderately expensive,
     // so do this once and then generate the row/column from that.
     // instead of using the row/column getters on the page object
     NSInteger indexOfPage = [self indexOfPageInCompleteStack:page];
-    NSInteger column = [self columnInListViewGivenIndex:indexOfPage];
-    NSInteger row = [self rowInListViewGivenIndex:indexOfPage];
-    CGRect frameOfPage = CGRectZero;
-    frameOfPage.origin.x = bufferWidth + bufferWidth * column + columnWidth * column;
-    frameOfPage.origin.y = bufferWidth + bufferWidth * row + rowHeight * row;
-    frameOfPage.size.width = columnWidth;
-    frameOfPage.size.height = rowHeight;
-    
-    [setOfFinalFramesForPagesBeingZoomed setObject:[NSValue valueWithCGRect:frameOfPage] forKey:page.uuid];
+    CGRect frameOfPage = [self frameForIndexInList:indexOfPage];
+    (*mapOfFinalFramesForPagesBeingZoomed)[page.uuid.hash] = frameOfPage;
     return frameOfPage;
 }
 -(void) clearFrameCacheForPage:(MMPaperView*)page{
-    [setOfFinalFramesForPagesBeingZoomed removeObjectForKey:page.uuid];
+    mapOfFinalFramesForPagesBeingZoomed->erase(page.uuid.hash);
 }
 
 -(NSInteger) rowInListViewGivenIndex:(NSInteger) indexOfPage{
-    NSInteger rowOfPage = floor(indexOfPage / kNumberOfColumnsInListView);
+    NSInteger rowOfPage = indexOfPage / kNumberOfColumnsInListView;
     return rowOfPage;
 }
 
@@ -164,7 +174,7 @@
  */
 -(void) beginUITransitionFromPageView{
     // clear our cache of frame locations
-    [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
+    mapOfFinalFramesForPagesBeingZoomed->clear();
     // ok, now we can get offset
     initialScrollOffsetFromTransitionToListView = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
     // from offset/height, we know which views will be visible
@@ -221,7 +231,7 @@
         return;
     }
     // clear our cache of frame locations
-    [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
+    mapOfFinalFramesForPagesBeingZoomed->clear();
     // ok, now we can get offset
     initialScrollOffsetFromTransitionToListView = self.contentOffset;
     // from offset/height, we know which views will be visible
@@ -581,7 +591,7 @@
         [self setContentOffset:initialScrollOffsetFromTransitionToListView animated:NO];
         [self setContentSize:CGSizeMake(screenWidth, [self contentHeightForAllPages])];
         [self finishUITransitionToListView];
-        [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
+        mapOfFinalFramesForPagesBeingZoomed->clear();
         [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
         addPageButtonInListView.frame = [self frameForAddPageButton];
         [self moveAddButtonToTop];
@@ -637,7 +647,7 @@
             }
         }
     }
-    [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
+    mapOfFinalFramesForPagesBeingZoomed->clear();
 }
 
 /**
@@ -1178,34 +1188,65 @@
         // iterate through every single page
         
         CGFloat selfContentOffsetY = self.contentOffset.y;
-        CGFloat setFrameSizeHeight = self.frame.size.height;
+        CGFloat selfFrameSizeHeight = self.frame.size.height;
         
         NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray array];
         
         NSArray* arraysOfSubviews[2];
         arraysOfSubviews[0] = visibleStackHolder.subviews;
         arraysOfSubviews[1] = hiddenStackHolder.subviews;
+        NSUInteger countOfSubviews[2];
+        countOfSubviews[0] = [visibleStackHolder.subviews count];
+        countOfSubviews[1] = [hiddenStackHolder.subviews count];
         int arrayIndex = 1;
-        int i = 0;
         
-//        for(MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:]){
-        while(arrayIndex > -1){
-            if(i >= [arraysOfSubviews[arrayIndex] count]){
-                i = 0;
-                arrayIndex -= 1;
-                continue;
-            }
-            MMPaperView* aPage = [arraysOfSubviews[arrayIndex] objectAtIndex:i];
-            CGRect frameOfPage = [self frameForListViewForPage:aPage];
-            // we have to expand the frame, because we want to count pages even if
-            // just their shadow is visible
-            frameOfPage = [MMShadowedView expandFrame:frameOfPage];
-            if(frameOfPage.origin.y < selfContentOffsetY + setFrameSizeHeight &&
-               frameOfPage.origin.y + frameOfPage.size.height > selfContentOffsetY){
-                [pagesThatWouldBeVisible addObject:aPage];
-            }
-            i++;
+        NSInteger startRow = floor(selfContentOffsetY) / (bufferWidth + rowHeight);
+        NSInteger startIndex = startRow * kNumberOfColumnsInListView;
+
+        NSInteger endRow = floor(selfContentOffsetY + selfFrameSizeHeight - bufferWidth) / (bufferWidth + rowHeight);
+        if(endRow < countOfSubviews[0] + countOfSubviews[1]){
+            endRow += 1;
         }
+        NSInteger endIndex = endRow * kNumberOfColumnsInListView;
+
+        NSInteger actualStart = -1;
+        NSInteger actualEnd = -1;
+
+        // iterate over the visible indexes in the list
+        for(int indexInList=startIndex;indexInList<endIndex;indexInList++){
+            int i=indexInList;
+            if(i<countOfSubviews[0]){
+                // index is in visible stack
+                arrayIndex = 0;
+            }else{
+                // index is in hidden stack
+                // make sure to reverse the indexes
+                // when inside the hidden stack
+                arrayIndex = 1;
+                i -= countOfSubviews[0];
+                i = countOfSubviews[1] - i - 1; // reverse the hidden stack
+            }
+            if(i >= 0){
+                // the index calculations don't respect the number of pages,
+                // it's just a blind calculation of which indexes in the list
+                // view are visible at the given offset, so make sure
+                // that the index is actually valid
+                MMPaperView* aPage = [arraysOfSubviews[arrayIndex] objectAtIndex:i];
+                CGRect frameOfPage = [self frameForIndexInList:indexInList];
+                // we have to expand the frame, because we want to count pages even if
+                // just their shadow is visible
+                frameOfPage = [MMShadowedView expandFrame:frameOfPage];
+                if(frameOfPage.origin.y < selfContentOffsetY + selfFrameSizeHeight &&
+                   frameOfPage.origin.y + frameOfPage.size.height > selfContentOffsetY){
+                    [pagesThatWouldBeVisible addObject:aPage];
+                    if(actualEnd == -1){
+                        actualEnd = indexInList;
+                    }
+                    actualStart = indexInList;
+                }
+            }
+        }
+        
         return pagesThatWouldBeVisible;
     }
 }
@@ -1222,21 +1263,24 @@
     //
     // now we need to make sure that page is on the top
     // of the visible stack
-    [self willChangeTopPageTo:aPage];
-    if([self isInVisibleStack:aPage]){
-        // the page is in teh visible stack, so pop pages
-        // onto the hidden stack so that this page is the
-        // top visible page
-        while([visibleStackHolder peekSubview] != aPage){
-            [hiddenStackHolder pushSubview:[visibleStackHolder peekSubview]];
+    if([visibleStackHolder peekSubview] != aPage){
+        [self willChangeTopPageTo:aPage];
+        if([self isInVisibleStack:aPage]){
+            // the page is in teh visible stack, so pop pages
+            // onto the hidden stack so that this page is the
+            // top visible page
+            while([visibleStackHolder peekSubview] != aPage){
+                [hiddenStackHolder pushSubview:[visibleStackHolder peekSubview]];
+            }
+        }else{
+            // the page is in the hidden stack, so pop pages
+            // onto the visible stack so that this page is the
+            // top visible page
+            while([visibleStackHolder peekSubview] != aPage){
+                [visibleStackHolder pushSubview:[hiddenStackHolder peekSubview]];
+            }
         }
-    }else{
-        // the page is in the hidden stack, so pop pages
-        // onto the visible stack so that this page is the
-        // top visible page
-        while([visibleStackHolder peekSubview] != aPage){
-            [visibleStackHolder pushSubview:[hiddenStackHolder peekSubview]];
-        }
+        [self didChangeTopPage];
     }
 }
 
@@ -1323,7 +1367,7 @@
         [self setScrollEnabled:NO];
         [self setContentOffset:CGPointZero animated:NO];
         [self setContentSize:CGSizeMake(screenWidth, screenHeight)];
-        [setOfFinalFramesForPagesBeingZoomed removeAllObjects];
+        mapOfFinalFramesForPagesBeingZoomed->clear();
         [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
         
         [pagesThatNeedAnimating addObjectsFromArray:pagesThatWillBeVisibleAfterTransitionToListView];

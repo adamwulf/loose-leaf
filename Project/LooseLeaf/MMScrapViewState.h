@@ -26,7 +26,7 @@
 
 -(id) initWithUUID:(NSString*)uuid andBezierPath:(UIBezierPath*)bezierPath;
 
--(void) saveToDisk;
+-(void) saveToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock;
 
 -(void) loadScrapStateAsynchronously:(BOOL)async;
 
@@ -34,6 +34,7 @@
 
 -(BOOL) isStateLoaded;
 
+-(UIImage*) activeThumbnailImage;
 
 -(void) addElements:(NSArray*)elements;
 -(JotGLTexture*) generateTexture;

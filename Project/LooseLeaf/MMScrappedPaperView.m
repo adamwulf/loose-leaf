@@ -23,12 +23,21 @@
 #import "UIBezierPath+Description.h"
 #import "MMVector.h"
 #import "MMScrapViewState.h"
+#import "MMPageCacheManager.h"
 
 
 @implementation MMScrappedPaperView{
     UIView* scrapContainerView;
     NSString* scrapIDsPath;
     MMScrapsOnPaperState* scrapState;
+    UIImage* scrappedImgViewImage;
+    // this defaults to NO, which means we'll try to
+    // load a thumbnail. if an image does not exist
+    // on disk, then we'll set this to YES which will
+    // prevent any more thumbnail loads until this page
+    // is saved
+    BOOL definitelyDoesNotHaveAScrappedThumbnail;
+    BOOL isLoadingCachedScrappedThumbnailFromDisk;
 }
 
 
@@ -43,6 +52,16 @@ static dispatch_queue_t concurrentBackgroundQueue;
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
+        // create the cache thumbnail view
+        cachedImgView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
+        cachedImgView.frame = self.contentView.bounds;
+        cachedImgView.contentMode = UIViewContentModeScaleAspectFill;
+        cachedImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        cachedImgView.clipsToBounds = YES;
+        cachedImgView.opaque = YES;
+        cachedImgView.backgroundColor = [UIColor whiteColor];
+        [self.contentView addSubview:cachedImgView];
+
         // Initialization code
         scrapContainerView = [[MMUntouchableView alloc] initWithFrame:self.bounds];
         [self.contentView addSubview:scrapContainerView];
@@ -58,6 +77,25 @@ static dispatch_queue_t concurrentBackgroundQueue;
         scrapState.delegate = self;
     }
     return self;
+}
+
+#pragma mark - Public Methods
+
+-(void) setCanvasVisible:(BOOL)isCanvasVisible{
+    [super setCanvasVisible:isCanvasVisible];
+    if(isCanvasVisible){
+        cachedImgView.hidden = YES;
+    }else{
+        cachedImgView.hidden = NO;
+    }
+}
+
+#pragma mark - Protected Methods
+
+-(void) addDrawableViewToContentView{
+    // default will be to just append drawable view. subclasses
+    // can (and will) change behavior
+    [self.contentView insertSubview:drawableView aboveSubview:cachedImgView];
 }
 
 
@@ -541,13 +579,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
             MMScrapView* addedScrap = [self addScrapWithPath:scissorPath andScale:1.0];
             [addedScrap stampContentsFrom:self.drawableView];
             
-            CGFloat randX = (rand() % 100 - 50) / 50.0;
-            CGFloat randY = (rand() % 100 - 50) / 50.0;
-            CGFloat randTurn = (rand() % 10 - 5) / 5.0;
-            randTurn = randTurn * M_PI / 180; // convert to radians
-            
-            MMVector* vector = [[MMVector vectorWithX:randX andY:randY] normal];
-            
             // now we need to add a stroke to the underlying page that
             // will erase the area below the new scrap
             CGPoint p1 = addedScrap.bounds.origin;
@@ -569,6 +600,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
             p3 = CGPointApplyAffineTransform(p3, verticalFlip);
             p4 = CGPointApplyAffineTransform(p4, verticalFlip);
             
+            // push the added scrap onto the page, and rotate it slightly into position
+            CGFloat randX = (rand() % 100 - 50) / 50.0;
+            CGFloat randY = (rand() % 100 - 50) / 50.0;
+            CGFloat randTurn = (rand() % 10 - 5) / 5.0;
+            randTurn = randTurn * M_PI / 180; // convert to radians
+            MMVector* vector = [[MMVector vectorWithX:randX andY:randY] normal];
+            
             [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                 CGPoint newC = [vector pointFromPoint:addedScrap.center distance:10];
                 addedScrap.center = newC;
@@ -576,8 +614,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
             } completion:nil];
             
 
+            [scissorPath applyTransform:CGAffineTransformMakeTranslation(-scissorPath.bounds.origin.x + kScrapShadowBufferSize, -scissorPath.bounds.origin.y + kScrapShadowBufferSize)];
             [[NSThread mainThread] performBlock:^{
-                [drawableView forceAddStrokeForFilledPath:scissorPath andP1:p1 andP2:p2 andP3:p3 andP4:p4];
+                [drawableView forceAddStrokeForFilledPath:scissorPath andP1:p1 andP2:p2 andP3:p3 andP4:p4 andSize:addedScrap.bounds.size];
                 [self saveToDisk];
             } afterDelay:.01];
         }else{
@@ -637,6 +676,125 @@ static dispatch_queue_t concurrentBackgroundQueue;
     return [super hasEditsToSave];
 }
 
+
+
+-(void) drawScrap:(MMScrapView*)scrap intoContext:(CGContextRef)context withSize:(CGSize)contextSize{
+    CGContextSaveGState(context);
+    
+    CGPoint center = scrap.center;
+    CGFloat scale = contextSize.width / self.originalUnscaledBounds.size.width;
+
+    // calculate the center of the scrap, scaled to our smaller thumbnail context
+    center = CGPointApplyAffineTransform(center, CGAffineTransformMakeScale(scale, scale));
+    
+    // transform into the scrap's coordinate system
+    //
+    // move to scrap center
+    CGAffineTransform transform = CGAffineTransformMakeTranslation(-scrap.bounds.size.width/2, -scrap.bounds.size.height/2);
+    // rotate
+    transform = CGAffineTransformConcat(transform, CGAffineTransformMakeRotation(scrap.rotation));
+    // scale it
+    transform = CGAffineTransformConcat(transform, CGAffineTransformMakeScale(scale * scrap.scale, scale * scrap.scale));
+    // move to position
+    transform = CGAffineTransformConcat(transform, CGAffineTransformMakeTranslation(center.x, center.y));
+    // apply transform, now we're in the scrap's coordinate system
+    CGContextConcatCTM(context, transform);
+
+    // work with the scrap's path
+    UIBezierPath* path = [scrap.bezierPath copy];
+
+    // clip to the scrap's path
+    CGContextSaveGState(context);
+    [path addClip];
+    [[UIColor whiteColor] setFill];
+    [path fill];
+
+    // background
+    //
+    // draw the scrap's background, if it has an image background
+    if(scrap.backingImage){
+        // save our scrap's coordinate system
+        CGContextSaveGState(context);
+        // move to scrap center
+        CGAffineTransform backingTransform = CGAffineTransformMakeTranslation(scrap.bounds.size.width / 2, scrap.bounds.size.height / 2);
+        // move to background center
+        backingTransform = CGAffineTransformConcat(backingTransform, CGAffineTransformMakeTranslation(scrap.backgroundOffset.x, scrap.backgroundOffset.y));
+        // scale and rotate into background's coordinate space
+        CGContextConcatCTM(context, backingTransform);
+        // rotate and scale
+        CGContextConcatCTM(context, CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.backgroundRotation),CGAffineTransformMakeScale(scrap.backgroundScale, scrap.backgroundScale)));
+        // draw the image, and keep the images center at cgpointzero
+        UIImage* backingImage = scrap.backingImage;
+        [backingImage drawAtPoint:CGPointMake(-backingImage.size.width / 2, -backingImage.size.height/2)];
+        // restore us back to the scrap's coordinate system
+        CGContextRestoreGState(context);
+    }
+    
+    // ink
+    //
+    // draw the scrap's strokes
+    if(scrap.state.activeThumbnailImage){
+        [scrap.state.activeThumbnailImage drawInRect:scrap.bounds];
+    }
+    
+    // restore the state, no more clip
+    CGContextRestoreGState(context);
+    
+    // stroke the scrap path
+    CGContextSetLineWidth(context, 1);
+    [[UIColor grayColor] setStroke];
+    [path stroke];
+    
+    CGContextRestoreGState(context);
+}
+
+-(NSString*) scrappedThumbnailPath{
+    return [[[self pagesPath] stringByAppendingPathComponent:[@"scrapped" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
+}
+-(UIImage*) scrappedImgViewImage{
+    return scrappedImgViewImage;
+}
+
+-(void) updateFullPageThumbnail:(MMImmutableScrapsOnPaperState*)immutableScrapState{
+    NSLog(@"updateFullPageThumbnail");
+    UIImage* thumb = [self cachedImgViewImage];
+    CGSize thumbSize = self.originalUnscaledBounds.size;
+    thumbSize.width /= 2;
+    thumbSize.height /= 2;
+    
+    
+    UIGraphicsBeginImageContextWithOptions(thumbSize, NO, 0.0);
+    
+    // get context
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
+    [[UIColor whiteColor] setFill];
+    CGContextFillRect(context, CGRectMake(0, 0, thumbSize.width, thumbSize.height));
+
+    // drawing code comes here- look at CGContext reference
+    // for available operations
+    // this example draws the inputImage into the context
+    [thumb drawInRect:CGRectMake(0, 0, thumbSize.width, thumbSize.height)];
+    
+    
+    for(MMScrapView* scrap in immutableScrapState.scraps){
+        [self drawScrap:scrap intoContext:context withSize:thumbSize];
+    }
+    
+    // get a UIImage from the image context- enjoy!!!
+    scrappedImgViewImage = UIGraphicsGetImageFromCurrentImageContext();
+    [[NSThread mainThread] performBlock:^{
+        cachedImgView.image = scrappedImgViewImage;
+    }];
+    
+    [UIImagePNGRepresentation(scrappedImgViewImage) writeToFile:[self scrappedThumbnailPath] atomically:YES];
+    definitelyDoesNotHaveAScrappedThumbnail = NO;
+    
+    // clean up drawing environment
+    UIGraphicsEndImageContext();
+    
+}
+
 -(void) saveToDisk{
     
     // track if our back ground page has saved
@@ -644,14 +802,23 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // track if all of our scraps have saved
     dispatch_semaphore_t sema2 = dispatch_semaphore_create(0);
 
+    
+    __block BOOL pageHadBeenChanged = NO;
+    __block BOOL scrapsHadBeenChanged = NO;
+    
     // save our backing page
-    [super saveToDisk:^{
+    [super saveToDisk:^(BOOL hadEditsToSave){
+        pageHadBeenChanged = hadEditsToSave;
         dispatch_semaphore_signal(sema1);
     }];
     
+    // need to keep reference to immutableScrapState so that
+    // we can update the thumbnail after the save
+    __block MMImmutableScrapsOnPaperState* immutableScrapState;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
-            [[scrapState immutableState] saveToDisk];
+            immutableScrapState = [scrapState immutableState];
+            scrapsHadBeenChanged = [immutableScrapState saveToDisk];
             dispatch_semaphore_signal(sema2);
         }
     });
@@ -669,7 +836,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 // 2nd ends early b/c it knows the 1st is still going
                 return;
             }
+            
+            
+            NSLog(@"something actually had changed %d %d", pageHadBeenChanged, scrapsHadBeenChanged);
+            [self updateFullPageThumbnail:immutableScrapState];
+            
             [NSThread performBlockOnMainThread:^{
+                NSLog(@"notifying did save page %@", self.uuid);
                 [self.delegate didSavePage:self];
             }];
         }
@@ -683,15 +856,23 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 -(void) unloadState{
     [super unloadState];
-    [[scrapState immutableState] saveToDisk];
-    // unloading the scrap state will also remove them
-    // from their superview (us)
-    [scrapState unload];
+    MMScrapsOnPaperState* strongScrapState = scrapState;
+    dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
+        [[strongScrapState immutableState] saveToDisk];
+        // unloading the scrap state will also remove them
+        // from their superview (us)
+        [strongScrapState unload];
+    });
+    [[NSThread mainThread] performBlock:^{
+        
+    }];
 }
 
 -(BOOL) hasStateLoaded{
     return [super hasStateLoaded];
 }
+
+#pragma mark - MMScrapsOnPaperStateDelegate
 
 -(void) didLoadScrap:(MMScrapView*)scrap{
     @synchronized(scrapContainerView){
@@ -702,6 +883,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
     // check to see if we've also loaded
     [self didLoadState:self.paperState];
+    cachedImgView.image = [self cachedImgViewImage];
+}
+
+-(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
+    cachedImgView.image = scrappedImgViewImage;
 }
 
 /**
@@ -712,19 +898,48 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) loadCachedPreview{
     // make sure our thumbnail is loaded
     [super loadCachedPreview];
+    if(!definitelyDoesNotHaveAScrappedThumbnail && !scrappedImgViewImage && !isLoadingCachedScrappedThumbnailFromDisk){
+        isLoadingCachedScrappedThumbnailFromDisk = YES;
+        dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
+            @autoreleasepool {
+                scrappedImgViewImage = [UIImage imageWithContentsOfFile:[self scrappedThumbnailPath]];
+                if(!scrappedImgViewImage){
+                    definitelyDoesNotHaveAScrappedThumbnail = YES;
+                }
+                [NSThread performBlockOnMainThread:^{
+                    cachedImgView.image = scrappedImgViewImage;
+                    isLoadingCachedScrappedThumbnailFromDisk = NO;
+                }];
+            }
+        });
+    }
     // make sure our scraps' thumbnails are loaded
-    [scrapState loadStateAsynchronously:YES andMakeEditable:NO];
+//    [scrapState loadStateAsynchronously:YES andMakeEditable:NO];
 }
 
 -(void) unloadCachedPreview{
     // free our preview memory
     [super unloadCachedPreview];
-    // save if needed
-    // currently this will always save to disk. in the future #338
-    // we should only save if this has changed.
-    [[scrapState immutableState] saveToDisk];
-    // free all scraps from memory too
-    [scrapState unload];
+    if(scrappedImgViewImage){
+        scrappedImgViewImage = nil;
+        // cachedImgView.image is already set to nil in super
+        [NSThread performBlockOnMainThread:^{
+            cachedImgView.image = nil;
+        }];
+    }
+    if([scrapState isStateLoaded]){
+        MMScrapsOnPaperState* strongScrapState = scrapState;
+        dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
+            @autoreleasepool {
+                // save if needed
+                // currently this will always save to disk. in the future #338
+                // we should only save if this has changed.
+                [[strongScrapState immutableState] saveToDisk];
+                // free all scraps from memory too
+                [strongScrapState unload];
+            }
+        });
+    }
 }
 
 #pragma mark - JotViewStateProxyDelegate
@@ -737,14 +952,15 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) didLoadState:(JotViewStateProxy*)state{
     if([self hasStateLoaded]){
         [NSThread performBlockOnMainThread:^{
-            [self.delegate didLoadStateForPage:self];
+            [[MMPageCacheManager sharedInstace] didLoadStateForPage:self];
+            cachedImgView.image = scrappedImgViewImage;
         }];
     }
 }
 
 -(void) didUnloadState:(JotViewStateProxy *)state{
     [NSThread performBlockOnMainThread:^{
-        [self.delegate didUnloadStateForPage:self];
+        [[MMPageCacheManager sharedInstace] didUnloadStateForPage:self];
     }];
 }
 
