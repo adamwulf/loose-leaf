@@ -812,6 +812,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
         dispatch_semaphore_signal(sema1);
     }];
     
+    // need to keep reference to immutableScrapState so that
+    // we can update the thumbnail after the save
     __block MMImmutableScrapsOnPaperState* immutableScrapState;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
