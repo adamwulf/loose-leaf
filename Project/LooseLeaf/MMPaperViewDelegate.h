@@ -150,10 +150,4 @@
  */
 -(void) didStopRuler:(MMRulerToolGestureRecognizer*)gesture;
 
-
-
-// TODO: remove debug
-
--(void) showPreviewThumb:(UIImage*)img;
-
 @end

@@ -1219,14 +1219,6 @@ int skipAll = NO;
 }
 
 
-#pragma mark - debug
-
--(void) showPreviewThumb:(UIImage*)img{
-    [[NSThread mainThread] performBlock:^{
-        debugImgView.image = img;
-    }];
-}
-
 #pragma mark = Saving and Editing
 
 -(void) didSavePage:(MMPaperView*)page{

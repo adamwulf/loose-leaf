@@ -579,13 +579,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
             MMScrapView* addedScrap = [self addScrapWithPath:scissorPath andScale:1.0];
             [addedScrap stampContentsFrom:self.drawableView];
             
-            CGFloat randX = (rand() % 100 - 50) / 50.0;
-            CGFloat randY = (rand() % 100 - 50) / 50.0;
-            CGFloat randTurn = (rand() % 10 - 5) / 5.0;
-            randTurn = randTurn * M_PI / 180; // convert to radians
-            
-            MMVector* vector = [[MMVector vectorWithX:randX andY:randY] normal];
-            
             // now we need to add a stroke to the underlying page that
             // will erase the area below the new scrap
             CGPoint p1 = addedScrap.bounds.origin;
@@ -606,12 +599,19 @@ static dispatch_queue_t concurrentBackgroundQueue;
             p2 = CGPointApplyAffineTransform(p2, verticalFlip);
             p3 = CGPointApplyAffineTransform(p3, verticalFlip);
             p4 = CGPointApplyAffineTransform(p4, verticalFlip);
-//            
-//            [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-//                CGPoint newC = [vector pointFromPoint:addedScrap.center distance:10];
-//                addedScrap.center = newC;
-//                addedScrap.rotation = addedScrap.rotation + randTurn;
-//            } completion:nil];
+            
+            // push the added scrap onto the page, and rotate it slightly into position
+            CGFloat randX = (rand() % 100 - 50) / 50.0;
+            CGFloat randY = (rand() % 100 - 50) / 50.0;
+            CGFloat randTurn = (rand() % 10 - 5) / 5.0;
+            randTurn = randTurn * M_PI / 180; // convert to radians
+            MMVector* vector = [[MMVector vectorWithX:randX andY:randY] normal];
+            
+            [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                CGPoint newC = [vector pointFromPoint:addedScrap.center distance:10];
+                addedScrap.center = newC;
+                addedScrap.rotation = addedScrap.rotation + randTurn;
+            } completion:nil];
             
 
             [scissorPath applyTransform:CGAffineTransformMakeTranslation(-scissorPath.bounds.origin.x + kScrapShadowBufferSize, -scissorPath.bounds.origin.y + kScrapShadowBufferSize)];
@@ -789,8 +789,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     
     [UIImagePNGRepresentation(scrappedImgViewImage) writeToFile:[self scrappedThumbnailPath] atomically:YES];
     definitelyDoesNotHaveAScrappedThumbnail = NO;
-    
-    [self.delegate showPreviewThumb:scrappedImgViewImage];
     
     // clean up drawing environment
     UIGraphicsEndImageContext();
