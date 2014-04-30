@@ -1162,7 +1162,7 @@ int skipAll = NO;
 }
 
 -(void) didAddScrapToBezelSidebar:(MMScrapView *)scrap{
-    [bezelScrapContainer saveToDisk];
+    [bezelScrapContainer saveScrapContainerToDisk];
 }
 
 -(void) didAddScrapBackToPage:(MMScrapView *)scrap{
@@ -1178,7 +1178,7 @@ int skipAll = NO;
     [page addScrap:scrap];
     scrap.center = center;
     scrap.scale = scale;
-    [bezelScrapContainer saveToDisk];
+    [bezelScrapContainer saveScrapContainerToDisk];
 }
 
 -(CGPoint) positionOnScreenToScaleScrapTo:(MMScrapView*)scrap{

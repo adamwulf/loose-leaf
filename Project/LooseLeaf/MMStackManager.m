@@ -38,7 +38,7 @@
 }
 
 
--(void) saveToDisk{
+-(void) saveStacksToDisk{
     [NSThread performBlockOnMainThread:^{
         // must use main thread to get the stack
         // of UIViews to save to disk

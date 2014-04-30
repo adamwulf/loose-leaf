@@ -797,6 +797,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 -(void) saveToDisk{
     
+    CheckMainThread;
+    
     // track if our back ground page has saved
     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
     // track if all of our scraps have saved
@@ -818,7 +820,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
             immutableScrapState = [scrapState immutableState];
-            scrapsHadBeenChanged = [immutableScrapState saveToDisk];
+            scrapsHadBeenChanged = [immutableScrapState saveStateToDiskBlocking];
             dispatch_semaphore_signal(sema2);
         }
     });
@@ -858,7 +860,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [super unloadState];
     MMScrapsOnPaperState* strongScrapState = scrapState;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
-        [[strongScrapState immutableState] saveToDisk];
+        [[strongScrapState immutableState] saveStateToDiskBlocking];
         // unloading the scrap state will also remove them
         // from their superview (us)
         [strongScrapState unload];
@@ -934,7 +936,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 // save if needed
                 // currently this will always save to disk. in the future #338
                 // we should only save if this has changed.
-                [[strongScrapState immutableState] saveToDisk];
+                [[strongScrapState immutableState] saveStateToDiskBlocking];
                 // free all scraps from memory too
                 [strongScrapState unload];
             }

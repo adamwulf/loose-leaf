@@ -594,7 +594,7 @@
 #pragma mark - Stack Loading and Saving
 
 -(void) saveStacksToDisk{
-    [stackManager saveToDisk];
+    [stackManager saveStacksToDisk];
 }
 
 -(void) loadStacksFromDisk{

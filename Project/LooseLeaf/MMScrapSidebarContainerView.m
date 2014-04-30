@@ -126,7 +126,7 @@
     if(animated){
         // only save when it's animated. non-animated is loading
         // from disk at start up
-        [scrap saveToDisk:nil];
+        [scrap saveScrapToDisk:nil];
     }
     
     [scrapsHeldInBezel insertObject:scrap atIndex:0];
@@ -429,11 +429,11 @@ static NSString* bezelStatePath;
     return bezelStatePath;
 }
 
--(void) saveToDisk{
+-(void) saveScrapContainerToDisk{
     MMImmutableScrapsOnPaperState* immutableState = [scrapState immutableState];
     NSMutableDictionary* writeableAdjustments = [rotationAdjustments copy];
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
-        [immutableState saveToDisk];
+        [immutableState saveStateToDiskBlocking];
         [writeableAdjustments writeToFile:[MMScrapSidebarContainerView pathToPlist] atomically:YES];
     });
 }

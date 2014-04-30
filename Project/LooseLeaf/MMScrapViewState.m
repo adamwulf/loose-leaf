@@ -257,7 +257,7 @@
 
 #pragma mark - State Saving and Loading
 
--(void) saveToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock{
+-(void) saveScrapStateToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock{
     if(drawableViewState && ([drawableViewState hasEditsToSave] || backingViewHasChanged)){
         dispatch_async([self importExportScrapStateQueue], ^{
             @autoreleasepool {
@@ -430,7 +430,7 @@
                     // save, then try to unload again
                     dispatch_async([self importExportScrapStateQueue], ^{
                         @autoreleasepool {
-                            [self saveToDisk:nil];
+                            [self saveScrapStateToDisk:nil];
                         }
                     });
                     dispatch_async([self importExportScrapStateQueue], ^{
