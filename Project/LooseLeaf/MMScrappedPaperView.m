@@ -183,7 +183,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [newScrap setScale:scale];
     [newScrap setRotation:lastBestRotation];
 
-    [self saveToDisk];
     return newScrap;
 }
 
@@ -193,7 +192,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
         [scrapContainerView addSubview:scrap];
     }
     [scrap setShouldShowShadow:[self isEditable]];
-    [self saveToDisk];
 }
 
 -(BOOL) hasScrap:(MMScrapView*)scrap{

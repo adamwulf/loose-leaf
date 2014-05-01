@@ -598,6 +598,7 @@ int skipAll = NO;
                ![pageToDropScrap hasScrap:scrap]){
                 [pageToDropScrap addScrap:scrap];
                 [gesture.scrap.superview insertSubview:gesture.scrap atIndex:0];
+                [pageToDropScrap saveToDisk];
             }else if(gesture.scrap == [gesture.scrap.superview.subviews lastObject]){
                 [gesture.scrap.superview insertSubview:gesture.scrap atIndex:0];
             }else{
@@ -647,6 +648,7 @@ int skipAll = NO;
                 [pageToDropScrap addScrap:gesture.scrap];
                 gesture.scrap.scale = scrapScaleInPage;
                 gesture.scrap.center = scrapCenterInPage;
+                [pageToDropScrap saveToDisk];
             }else{
                 // couldn't find a page to catch it
                 shouldBezel = YES;
@@ -874,6 +876,7 @@ int skipAll = NO;
             // the scrap was dropped by the stretch gesture,
             // so just add it back to the top page
             [[visibleStackHolder peekSubview] addScrap:scrap];
+            [[visibleStackHolder peekSubview] saveToDisk];
         }
     }
 }
@@ -995,6 +998,11 @@ int skipAll = NO;
     CGPoint p2 = [[touches2 objectAtIndex:1] locationInView:self];
     clonedScrap.center = AveragePoints(p1, p2);
 
+    // now that the scrap is where it should be,
+    // and contains its background, etc, then
+    // save everything
+    [page saveToDisk];
+    
     // time to reset the gesture for the cloned scrap
     // now the scrap is in the right place, so hand it off to the pan gesture
     [self sendStretchedScrap:clonedScrap toPanGesture:panAndPinchScrapGesture2 withTouches:[touches2 array] withAnchor:np2];
@@ -1178,6 +1186,7 @@ int skipAll = NO;
     [page addScrap:scrap];
     scrap.center = center;
     scrap.scale = scale;
+    [page saveToDisk];
     [bezelScrapContainer saveScrapContainerToDisk];
 }
 
