@@ -180,6 +180,14 @@ static NSDate* lastRender;
             bl = [perpN pointFromPoint:old_p2 distance:kWidthOfRuler * ratio];
             br = [perpN pointFromPoint:old_p2 distance:-kWidthOfRuler * ratio];
             
+            CGFloat percentOfAdditionalLength = MAX(1-ratio, 0) * 2;
+            CGFloat extraLength = 100.0f;
+            tl = [normal pointFromPoint:tl distance:-extraLength * percentOfAdditionalLength];
+            bl = [normal pointFromPoint:bl distance:extraLength * percentOfAdditionalLength];
+            tr = [normal pointFromPoint:tr distance:-extraLength * percentOfAdditionalLength];
+            br = [normal pointFromPoint:br distance:extraLength * percentOfAdditionalLength];
+            
+            
             CGFloat lengthOfRuler = DistanceBetweenTwoPoints(tl, bl);
             CGPoint leftMidPoint = [normal pointFromPoint:tl distance:lengthOfRuler/2];
             CGPoint rightMidPoint = [normal pointFromPoint:tr distance:lengthOfRuler/2];
