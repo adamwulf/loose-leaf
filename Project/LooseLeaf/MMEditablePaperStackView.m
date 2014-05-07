@@ -173,7 +173,7 @@
         [NSThread performBlockInBackground:^{
             [[NSNotificationCenter defaultCenter] addObserver: self
                                                      selector:@selector(connectionChange:)
-                                                         name: JotStylusManagerDidChangeConnectionStatus
+                                                         name:JotStylusManagerDidChangeConnectionStatus
                                                        object:nil];
             [[JotStylusManager sharedInstance] setEnabled:YES];
             [[JotStylusManager sharedInstance] setRejectMode:NO];

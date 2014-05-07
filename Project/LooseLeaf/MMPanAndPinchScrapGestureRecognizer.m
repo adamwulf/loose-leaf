@@ -84,6 +84,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
         self.delaysTouchesEnded = NO;
+        self.cancelsTouchesInView = NO;
     }
     return self;
 }
@@ -95,6 +96,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
         self.delaysTouchesEnded = NO;
+        self.cancelsTouchesInView = NO;
     }
     return self;
 }
