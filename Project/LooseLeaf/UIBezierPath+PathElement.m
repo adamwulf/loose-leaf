@@ -81,9 +81,9 @@
     
     
     CGFloat widthDiff = toWidth - fromWidth;
-    GLfloat _prevColor[4], elementColor[4];
+    GLfloat prevColor[4], elementColor[4];
     GLfloat _colorDiff[4];
-    CGFloat* prevColor = (CGFloat*)_prevColor;
+    GLfloat* prevColorPtr = (GLfloat*) prevColor;
     CGFloat* colorDiff = (CGFloat*)_colorDiff;
     [fromColor getRGBAComponents:prevColor];
     [toColor getRGBAComponents:elementColor];
@@ -114,10 +114,10 @@
         if(newElement){
             // be sure to set color/width/etc
             if(toColor){
-                CGFloat red = prevColor[0] + colorDiff[0] * tValueAtEndPoint;
-                CGFloat green = prevColor[1] + colorDiff[1] * tValueAtEndPoint;
-                CGFloat blue = prevColor[2] + colorDiff[2] * tValueAtEndPoint;
-                CGFloat alpha = prevColor[3] + colorDiff[3] * tValueAtEndPoint;
+                CGFloat red = prevColorPtr[0] + colorDiff[0] * tValueAtEndPoint;
+                CGFloat green = prevColorPtr[1] + colorDiff[1] * tValueAtEndPoint;
+                CGFloat blue = prevColorPtr[2] + colorDiff[2] * tValueAtEndPoint;
+                CGFloat alpha = prevColorPtr[3] + colorDiff[3] * tValueAtEndPoint;
                 newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
             }else{
                 newElement.color = nil;
