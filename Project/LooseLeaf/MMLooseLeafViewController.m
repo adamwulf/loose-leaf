@@ -26,7 +26,7 @@
 //        }];
 
         // Do any additional setup after loading the view, typically from a nib.
-        srand ( time(NULL) );
+        srand ((uint) time(NULL) );
         [[MMShadowManager sharedInstace] beginGeneratingShadows];
     
         self.view.opaque = YES;
@@ -57,7 +57,7 @@
             [self printKeys:obj atlevel:level+1];
         }else{
             if([obj isKindOfClass:[NSArray class]]){
-                NSLog(@"%@ %@ - %@ [%d]", space, key, [obj class], [obj count]);
+                NSLog(@"%@ %@ - %@ [%lu]", space, key, [obj class], (unsigned long)[obj count]);
             }else{
                 NSLog(@"%@ %@ - %@", space, key, [obj class]);
             }
