@@ -180,7 +180,7 @@
                 for(MMScrapBubbleButton* otherBubble in self.subviews){
                     if(otherBubble != bubble){
                         if([otherBubble isKindOfClass:[MMScrapBubbleButton class]]){
-                            int index = [scrapsHeldInBezel indexOfObject:otherBubble.scrap];
+                            int index = (int) [scrapsHeldInBezel indexOfObject:otherBubble.scrap];
                             otherBubble.center = [self centerForBubbleAtIndex:index];
                         }
                     }
@@ -256,7 +256,7 @@
             bubble.scrap = scrap;
             for(MMScrapBubbleButton* anyBubble in self.subviews){
                 if([anyBubble isKindOfClass:[MMScrapBubbleButton class]]){
-                    int index = [scrapsHeldInBezel indexOfObject:anyBubble.scrap];
+                    int index = (int) [scrapsHeldInBezel indexOfObject:anyBubble.scrap];
                     anyBubble.center = [self centerForBubbleAtIndex:index];
                 }
             }
@@ -330,7 +330,7 @@
         for(MMScrapBubbleButton* otherBubble in self.subviews){
             if(otherBubble != countButton && [otherBubble isKindOfClass:[MMScrapBubbleButton class]]){
                 if(otherBubble != bubble){
-                    int index = [scrapsHeldInBezel indexOfObject:otherBubble.scrap];
+                    int index = (int) [scrapsHeldInBezel indexOfObject:otherBubble.scrap];
                     otherBubble.center = [self centerForBubbleAtIndex:index];
                     if([scrapsHeldInBezel count] <= kMaxScrapsInBezel){
                         otherBubble.scrap = otherBubble.scrap; // reset it

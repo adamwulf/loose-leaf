@@ -44,7 +44,7 @@
 
     CGFloat largest = MAX(self.bounds.size.width, self.bounds.size.height);
 
-    UIBezierPath* glyphPath = glyphPath = [[UIFont boldSystemFontOfSize:(int)(largest * 2 / 3)] bezierPathForString:[NSString stringWithFormat:@"%d", count]];
+    UIBezierPath* glyphPath = glyphPath = [[UIFont boldSystemFontOfSize:(int)(largest * 2 / 3)] bezierPathForString:[NSString stringWithFormat:@"%d", (int) count]];
     CGRect glyphRect = [glyphPath bounds];
     CGFloat iconWidth = self.bounds.size.width * 4 / 8.0;
     CGFloat iconHeight = self.bounds.size.height * 3 / 8.0;

@@ -100,7 +100,7 @@
     
     UIBezierPath* glyphPath = nil;
     if(self.numberToShowIfApplicable > 1){
-        glyphPath = [[UIFont boldSystemFontOfSize:(int)(largest * 2 / 3)] bezierPathForString:[NSString stringWithFormat:@"%d", numberToShowIfApplicable]];
+        glyphPath = [[UIFont boldSystemFontOfSize:(int)(largest * 2 / 3)] bezierPathForString:[NSString stringWithFormat:@"%d", (int) numberToShowIfApplicable]];
         CGRect glyphRect = [glyphPath bounds];
         CGFloat iconWidth = [bezierPath bounds].size.width;
         CGFloat iconHeight = [bezierPath bounds].size.height;

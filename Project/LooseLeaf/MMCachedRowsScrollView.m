@@ -50,7 +50,7 @@
 
 -(UIView*) rowAtIndex:(NSInteger) index{
     if(index < 0) return nil; // no negative index
-    UIView* row = [currentRowAtIndex objectForKey:[NSNumber numberWithInt:index]];
+    UIView* row = [currentRowAtIndex objectForKey:[NSNumber numberWithInteger:index]];
     if(!row){
         CGRect fr = CGRectMake(0, topBottomMargin + index * self.rowHeight, self.bounds.size.width, self.rowHeight);
         BOOL needsAddedSubview = NO;
@@ -76,7 +76,7 @@
             }
             // now we definitely have the row, so set its tag and cache it
             row.tag = index;
-            [currentRowAtIndex setObject:row forKey:[NSNumber numberWithInt:index]];
+            [currentRowAtIndex setObject:row forKey:[NSNumber numberWithInteger:index]];
             if([self rowIndexIsVisible:index]){
                 row.hidden = NO;
             }else{
@@ -110,7 +110,7 @@
         if(!row.hidden && (![self rowIndexIsVisible:row.tag] || row.tag >= totalRowCount)){
             if([self.dataSource prepareRowForReuse:row forScrollView:self]){
                 row.hidden = YES;
-                [currentRowAtIndex removeObjectForKey:[NSNumber numberWithInt:row.tag]];
+                [currentRowAtIndex removeObjectForKey:[NSNumber numberWithInteger:row.tag]];
                 [bufferOfUnusedRows addObject:row];
                 row.tag = -1;
             }

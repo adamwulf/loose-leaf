@@ -1200,8 +1200,8 @@
         countOfSubviews[1] = (int) [hiddenStackHolder.subviews count];
         int arrayIndex = 1;
         
-        NSInteger startRow = floor(selfContentOffsetY) / (bufferWidth + rowHeight);
-        NSInteger startIndex = startRow * kNumberOfColumnsInListView;
+        int startRow = floor(selfContentOffsetY) / (bufferWidth + rowHeight);
+        int startIndex = startRow * kNumberOfColumnsInListView;
 
         NSInteger endRow = floor(selfContentOffsetY + selfFrameSizeHeight - bufferWidth) / (bufferWidth + rowHeight);
         if(endRow < countOfSubviews[0] + countOfSubviews[1]){

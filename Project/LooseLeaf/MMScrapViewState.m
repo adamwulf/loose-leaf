@@ -283,7 +283,7 @@
 
                                 if(backingViewHasChanged && ![[NSFileManager defaultManager] fileExistsAtPath:[self backgroundJPGFile]]){
                                     if(backingContentView.image){
-                                        NSLog(@"orientation: %d", backingContentView.image.imageOrientation);
+                                        NSLog(@"orientation: %d", (int) backingContentView.image.imageOrientation);
                                         [UIImageJPEGRepresentation(backingContentView.image, .9) writeToFile:[self backgroundJPGFile] atomically:YES];
                                     }
                                     backingViewHasChanged = NO;

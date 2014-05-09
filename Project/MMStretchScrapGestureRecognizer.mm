@@ -353,7 +353,7 @@
 // those 2 touches.
 -(CGPoint) normalizedLocationOfValidTouches{
     __block CGPoint ret = CGPointZero;
-    int count = MIN([validTouches count], 2);
+    int count = MIN((int)[validTouches count], 2);
     [validTouches enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL*stop){
         if(obj == upperLeftTouch){
             ret = CGPointMake(ret.x + normalFirstQ.upperLeft.x / count,

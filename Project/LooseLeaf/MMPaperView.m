@@ -127,7 +127,7 @@
 }
 
 -(void) doubleFingerDoubleTap:(UITapGestureRecognizer*)tapGesture{
-    debug_NSLog(@"tap! %d", tapGesture.state);
+    debug_NSLog(@"tap! %d", (int) tapGesture.state);
 }
 
 
@@ -324,7 +324,7 @@
     }
     
     if([_panGesture.validTouches count] < 2){
-        NSLog(@"skipping pan gesture: has %d valid touches and substate %d", [_panGesture.validTouches count], _panGesture.subState);
+        NSLog(@"skipping pan gesture: has %d valid touches and substate %d", (int) [_panGesture.validTouches count], (int) _panGesture.subState);
         return;
     }
 
