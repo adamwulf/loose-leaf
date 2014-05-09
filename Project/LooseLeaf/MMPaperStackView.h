@@ -39,6 +39,7 @@
 }
 
 @property (nonatomic, readonly) UIView* visibleStackHolder;
+@property (nonatomic, readonly) UIView* hiddenStackHolder;
 
 -(void) addPaperToBottomOfStack:(MMPaperView*)page;
 -(void) addPaperToBottomOfHiddenStack:(MMPaperView*)page;

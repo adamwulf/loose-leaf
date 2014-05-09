@@ -39,9 +39,8 @@
         [stackView loadStacksFromDisk];
         
         [[Mixpanel sharedInstance] track:@"App Launch" properties:@{
-                                                                       @"Visible Stack Size": @"Female",
-                                                                       @"Hidden StacSize": @([stackView.visibleStackHolder.subviews count])
-                                                                       
+                                                                       @"Visible Stack Size": @([stackView.visibleStackHolder.subviews count]),
+                                                                       @"Hidden StacSize": @([stackView.hiddenStackHolder.subviews count])
                                                                        }];
         
 

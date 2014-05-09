@@ -27,6 +27,7 @@
 }
 
 @synthesize visibleStackHolder = visibleStackHolder;
+@synthesize hiddenStackHolder = hiddenStackHolder;
 
 - (id)initWithFrame:(CGRect)frame
 {
