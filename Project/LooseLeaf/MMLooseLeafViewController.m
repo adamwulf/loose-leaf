@@ -11,6 +11,7 @@
 #import "MMEditablePaperView.h"
 #import "TestFlight.h"
 #import "MMDebugDrawView.h"
+#import "Mixpanel.h"
 
 @implementation MMLooseLeafViewController
 
@@ -37,6 +38,13 @@
         
         [stackView loadStacksFromDisk];
         
+        [[Mixpanel sharedInstance] track:@"App Launch" properties:@{
+                                                                       @"Visible Stack Size": @"Female",
+                                                                       @"Hidden StacSize": @([stackView.visibleStackHolder.subviews count])
+                                                                       
+                                                                       }];
+        
+
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth.png"]]];
         
 //        [self.view addSubview:[MMDebugDrawView sharedInstace]];

@@ -10,6 +10,7 @@
 
 #import "MMLooseLeafViewController.h"
 #import <Crashlytics/Crashlytics.h>
+#import "Mixpanel.h"
 
 @implementation MMAppDelegate
 
@@ -20,6 +21,7 @@
 {
     NSLog(@"launching");
     [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
+    [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
