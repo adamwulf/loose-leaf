@@ -84,7 +84,6 @@ static MMDrawingTouchGestureRecognizer* _instance = nil;
                 [validTouches addObject:touch];
                 [possibleTouches removeObject:touch];
                 [self.touchDelegate ownershipOfTouches:[NSSet setWithObject:touch] isGesture:self];
-//                NSLog(@"found a drawing touch");
             }
         }
     }

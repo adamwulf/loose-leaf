@@ -10,9 +10,9 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMLoadImageCache.h"
 #import <DrawKit-iOS/DrawKit-iOS.h>
+#import <JotUI/JotUI.h>
 #import "NSFileManager+DirectoryOptimizations.h"
-
-#define kScrapShadowBufferSize 4
+#import "Constants.h"
 
 @implementation MMScrapViewState{
     // scrap ID and UI
@@ -49,6 +49,9 @@
     
     // queue
     dispatch_queue_t importExportScrapStateQueue;
+    
+    // thumbnail
+    UIImage* activeThumbnailImage;
     
     // image background
     BOOL backingViewHasChanged;
@@ -152,7 +155,6 @@
         thumbnailView.contentMode = UIViewContentModeScaleAspectFit;
         thumbnailView.clipsToBounds = YES;
         thumbnailView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        [contentView addSubview:thumbnailView];
         thumbnailView.frame = contentView.bounds;
 
         
@@ -172,25 +174,18 @@
         [clippedBackgroundView addSubview:backingContentView];
 
         [contentView addSubview:clippedBackgroundView];
-        
+        [contentView addSubview:thumbnailView];
+
         if([[MMLoadImageCache sharedInstace] containsPathInCache:self.thumbImageFile]){
             // load if we can
-            if([NSThread isMainThread]){
-                thumbnailView.image = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
-            }else{
-                [NSThread performBlockOnMainThread:^{
-                    thumbnailView.image = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
-                }];
-            }
+            [self setActiveThumbnailImage:[[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile]];
         }else{
             // don't load from disk on the main thread.
             dispatch_async([self importExportScrapStateQueue], ^{
                 [lock lock];
                 @autoreleasepool {
                     UIImage* thumb = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
-                    [NSThread performBlockOnMainThread:^{
-                        thumbnailView.image = thumb;
-                    }];
+                    [self setActiveThumbnailImage:thumb];
                 }
                 [lock unlock];
             });
@@ -262,7 +257,7 @@
 
 #pragma mark - State Saving and Loading
 
--(void) saveToDisk{
+-(void) saveScrapStateToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock{
     if(drawableViewState && ([drawableViewState hasEditsToSave] || backingViewHasChanged)){
         dispatch_async([self importExportScrapStateQueue], ^{
             @autoreleasepool {
@@ -303,9 +298,7 @@
                                     [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
                                         if(state){
                                             [[MMLoadImageCache sharedInstace] updateCacheForPath:self.thumbImageFile toImage:thumb];
-                                            [NSThread performBlockOnMainThread:^{
-                                                thumbnailView.image = thumb;
-                                            }];
+                                            [self setActiveThumbnailImage:thumb];
                                             [drawableViewState wasSavedAtImmutableState:state];
 //                                            NSLog(@"(%@) scrap saved at: %d with thumb: %d", uuid, state.undoHash, (int)thumb);
                                         }
@@ -316,13 +309,13 @@
                                     dispatch_semaphore_signal(sema1);
                                 }
                             }else{
-                                if(!drawableView && ![drawableViewState hasEditsToSave]){
+//                                if(!drawableView && ![drawableViewState hasEditsToSave]){
 //                                    NSLog(@"(%@) no drawable view or edits", uuid);
-                                }else if(!drawableView){
+//                                }else if(!drawableView){
 //                                    NSLog(@"(%@) no drawable view", uuid);
-                                }else if(![drawableViewState hasEditsToSave]){
+//                                }else if(![drawableViewState hasEditsToSave]){
 //                                    NSLog(@"(%@) no edits to save in state", uuid);
-                                }
+//                                }
                                 // was asked to save, but we were asked to save
                                 // multiple times extremely quickly, so just signal
                                 // that we're done
@@ -332,7 +325,8 @@
                     }];
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
                     dispatch_release(sema1);
-//                    NSLog(@"(%@) done saving: %d", uuid, (int)drawableView);
+//                    NSLog(@"(%@) done saving scrap: %d", uuid, (int)drawableView);
+                    if(doneSavingBlock) doneSavingBlock(YES);
                 }else{
                     // sometimes, this method is called in very quick succession.
                     // that means that the first time it runs and saves, it'll
@@ -340,11 +334,13 @@
                     // next time it runs. so we double check our save state to determine
                     // if in fact we still need to save or not
 //                    NSLog(@"(%@) no edits to save in state2", uuid);
+                    if(doneSavingBlock) doneSavingBlock(NO);
                 }
                 [lock unlock];
             }
         });
     }else{
+        if(doneSavingBlock) doneSavingBlock(NO);
 //        NSLog(@"(%@) no edits to save in state3", uuid);
     }
 }
@@ -434,7 +430,7 @@
                     // save, then try to unload again
                     dispatch_async([self importExportScrapStateQueue], ^{
                         @autoreleasepool {
-                            [self saveToDisk];
+                            [self saveScrapStateToDisk:nil];
                         }
                     });
                     dispatch_async([self importExportScrapStateQueue], ^{
@@ -446,10 +442,17 @@
 //                    NSLog(@"(%@) unload success", uuid);
                     targetIsLoadedState = NO;
                     if(!isLoadingState && drawableViewState){
-                        drawableViewState = nil;
-                        [drawableView removeFromSuperview];
-                        drawableView = nil;
-                        thumbnailView.hidden = NO;
+                        dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+                        [NSThread performBlockOnMainThread:^{
+                            drawableViewState = nil;
+                            [drawableView removeFromSuperview];
+                            [[JotTrashManager sharedInstace] addObjectToDealloc:drawableView];
+                            drawableView = nil;
+                            thumbnailView.hidden = NO;
+                            dispatch_semaphore_signal(sema1);
+                        }];
+                        dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+                        dispatch_release(sema1);
                     }
                 }
             }
@@ -460,6 +463,19 @@
 
 -(BOOL) isStateLoaded{
     return drawableViewState != nil;
+}
+
+// returns the loaded thumbnail image,
+// if any
+-(UIImage*) activeThumbnailImage{
+    return activeThumbnailImage;
+}
+
+-(void) setActiveThumbnailImage:(UIImage*)img{
+    activeThumbnailImage = img;
+    [NSThread performBlockOnMainThread:^{
+        thumbnailView.image = activeThumbnailImage;
+    }];
 }
 
 
@@ -539,14 +555,17 @@
  * texture coordinates. the size of the stamp is always assumed to be our entire view.
  */
 -(void) importTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4{
-    [drawableView drawBackingTexture:texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4 clippingPath:self.bezierPath];
+    CGSize roundedDrawableBounds = self.drawableBounds.size;
+    roundedDrawableBounds.width = ceilf(roundedDrawableBounds.width);
+    roundedDrawableBounds.height = ceilf(roundedDrawableBounds.height);
+    [drawableView drawBackingTexture:texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4 clippingPath:self.bezierPath
+                     andClippingSize:roundedDrawableBounds];
     [drawableView forceAddEmptyStroke];
 }
 
 #pragma mark - dealloc
 
 -(void) dealloc{
-//    NSLog(@"(%@) dealloc", uuid);
     [[MMLoadImageCache sharedInstace] clearCacheForPath:self.thumbImageFile];
     dispatch_release(importExportScrapStateQueue);
     importExportScrapStateQueue = nil;

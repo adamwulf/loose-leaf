@@ -84,6 +84,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
         self.delaysTouchesEnded = NO;
+        self.cancelsTouchesInView = NO;
     }
     return self;
 }
@@ -95,6 +96,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
         self.delaysTouchesEnded = NO;
+        self.cancelsTouchesInView = NO;
     }
     return self;
 }
@@ -209,7 +211,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     // with closest first. this nested for loop
     // will caculate the distance between every touch
     // with every other touch.
-    int count = [validTouches count];
+    int count = (int) [validTouches count];
     CGFloat dist[count][count];
     for(int i=0;i<count;i++){
         for(int j=i;j<count;j++){

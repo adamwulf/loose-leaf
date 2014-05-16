@@ -11,6 +11,7 @@
 #import "MMEditablePaperView.h"
 #import "TestFlight.h"
 #import "MMDebugDrawView.h"
+#import "Mixpanel.h"
 
 @implementation MMLooseLeafViewController
 
@@ -26,7 +27,7 @@
 //        }];
 
         // Do any additional setup after loading the view, typically from a nib.
-        srand ( time(NULL) );
+        srand ((uint) time(NULL) );
         [[MMShadowManager sharedInstace] beginGeneratingShadows];
     
         self.view.opaque = YES;
@@ -37,6 +38,12 @@
         
         [stackView loadStacksFromDisk];
         
+        [[Mixpanel sharedInstance] track:@"App Launch" properties:@{
+                                                                       @"Visible Stack Size": @([stackView.visibleStackHolder.subviews count]),
+                                                                       @"Hidden Stack Size": @([stackView.hiddenStackHolder.subviews count])
+                                                                       }];
+        
+
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth.png"]]];
         
 //        [self.view addSubview:[MMDebugDrawView sharedInstace]];
@@ -57,7 +64,7 @@
             [self printKeys:obj atlevel:level+1];
         }else{
             if([obj isKindOfClass:[NSArray class]]){
-                NSLog(@"%@ %@ - %@ [%d]", space, key, [obj class], [obj count]);
+                NSLog(@"%@ %@ - %@ [%lu]", space, key, [obj class], (unsigned long)[obj count]);
             }else{
                 NSLog(@"%@ %@ - %@", space, key, [obj class]);
             }

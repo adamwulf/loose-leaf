@@ -8,12 +8,17 @@
 
 #import "MMSlidingSidebarContainerView.h"
 #import "MMImageSidebarContainerViewDelegate.h"
+#import "MMPhotoManagerDelegate.h"
 #import "ALAsset+Thumbnail.h"
 
-@interface MMImageSidebarContainerView : MMSlidingSidebarContainerView
+@interface MMImageSidebarContainerView : MMSlidingSidebarContainerView<MMPhotoManagerDelegate>
 
 @property (nonatomic, weak) NSObject<MMImageSidebarContainerViewDelegate>* delegate;
 
--(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage;
+-(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView;
+
+-(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation;
+
+-(void) updatePhotoRotation;
 
 @end

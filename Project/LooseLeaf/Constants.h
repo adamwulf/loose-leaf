@@ -11,6 +11,13 @@
 
 
 #ifdef DEBUG
+#define MIXPANEL_TOKEN @"YOUR_DEBUG_MIXPANEL_TOKEN"
+#else
+#define MIXPANEL_TOKEN @"YOUR_PROD_MIXPANEL_TOKEN"
+#endif
+
+
+#ifdef DEBUG
 #define debug_NSLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
 #else
 #define debug_NSLog(__FORMAT__, ...)
@@ -53,6 +60,10 @@
 #define kShadowBend 3
 #define kBezelInGestureWidth 20
 #define kUndoLimit 20
+
+// Scraps
+#define kScrapShadowBufferSize 4
+
 
 // photo album
 #define kMaxPhotoRotationInDegrees 20

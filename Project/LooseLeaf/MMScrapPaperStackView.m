@@ -13,11 +13,13 @@
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "MMStretchScrapGestureRecognizer.h"
 #import <JotUI/AbstractBezierPathElement-Protected.h>
+#import <JotUI/UIImage+Resize.h>
 #import "NSMutableSet+Extras.h"
 #import "UIGestureRecognizer+GestureDebug.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMImageSidebarContainerView.h"
 #import "MMBufferedImageView.h"
+#import "MMBorderedCamView.h"
 
 @implementation MMScrapPaperStackView{
     MMScrapSidebarContainerView* bezelScrapContainer;
@@ -41,6 +43,10 @@
 
     NSTimer* debugTimer;
     NSTimer* drawTimer;
+    UIImageView* debugImgView;
+    
+    // flag if we're waiting on a page to save
+    MMPaperView* wantsExport;
 }
 
 
@@ -80,14 +86,12 @@
         panAndPinchScrapGesture = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
         panAndPinchScrapGesture.bezelDirectionMask = MMBezelDirectionRight;
         panAndPinchScrapGesture.scrapDelegate = self;
-        panAndPinchScrapGesture.cancelsTouchesInView = NO;
         panAndPinchScrapGesture.delegate = self;
         [self addGestureRecognizer:panAndPinchScrapGesture];
         
         panAndPinchScrapGesture2 = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
         panAndPinchScrapGesture2.bezelDirectionMask = MMBezelDirectionRight;
         panAndPinchScrapGesture2.scrapDelegate = self;
-        panAndPinchScrapGesture2.cancelsTouchesInView = NO;
         panAndPinchScrapGesture2.delegate = self;
         [self addGestureRecognizer:panAndPinchScrapGesture2];
         
@@ -125,6 +129,14 @@
         
         
         fromRightBezelGesture.panDelegate = self;
+
+    
+//        debugImgView = [[UIImageView alloc] initWithFrame:CGRectMake(380, 80, self.bounds.size.width / 3, self.bounds.size.height/3)];
+//        debugImgView.layer.borderWidth = 1;
+//        debugImgView.layer.borderColor = [UIColor redColor].CGColor;
+//        debugImgView.contentMode = UIViewContentModeScaleAspectFit;
+//        debugImgView.backgroundColor = [UIColor orangeColor];
+//        [self addSubview:debugImgView];
     }
     return self;
 }
@@ -154,7 +166,91 @@
     [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
 }
 
--(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage{
+-(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
+    CGRect scrapRect = CGRectZero;
+    scrapRect.origin = [self convertPoint:cameraView.layer.bounds.origin fromView:cameraView];
+    scrapRect.size = cameraView.bounds.size;
+    UIBezierPath* path = [UIBezierPath bezierPathWithRect:scrapRect];
+    
+    //
+    // to exactly align the scrap with a rotation,
+    // i would need to rotate it around its top left corner
+    // this is because we're creating the rect to align
+    // with the point tl above, which when converted
+    // into our coordinate system accounts for the view's
+    // rotation.
+    //
+    // so at this moment, we have a squared off CGRect
+    // that aligns it's top left corner to the rotated
+    // bufferedImage's top left corner
+    
+    
+    // max image size in any direction is 300pts
+    CGFloat maxDim = 600;
+    
+    CGSize fullScale = img.size;
+    if(fullScale.width >= fullScale.height && fullScale.width > maxDim){
+        fullScale.height = fullScale.height / fullScale.width * maxDim;
+        fullScale.width = maxDim;
+    }else if(fullScale.height >= fullScale.width && fullScale.height > maxDim){
+        fullScale.width = fullScale.width / fullScale.height * maxDim;
+        fullScale.height = maxDim;
+    }
+    
+    CGFloat startingScale = scrapRect.size.width / fullScale.width;
+    
+    UIImage* scrapBacking = [img resizedImage:CGSizeMake(ceilf(fullScale.width/2), ceilf(fullScale.height/2)) interpolationQuality:kCGInterpolationMedium];
+    
+    MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
+    MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:0 andScale:startingScale];
+    [scrapContainer addSubview:scrap];
+    
+    CGSize fullScaleScrapSize = scrapRect.size;
+    fullScaleScrapSize.width /= startingScale;
+    fullScaleScrapSize.height /= startingScale;
+    
+    // zoom the background in an extra pixel
+    // so that the border of the image exceeds the
+    // path of the scrap. this'll give us a nice smooth
+    // edge from the mask of the CAShapeLayer
+    CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width + 2.0/scrapBacking.size.width; // extra pixel
+    
+    [scrap setBackingImage:scrapBacking];
+    [scrap setBackgroundScale:scaleUpOfImage];
+    scrap.center = [self convertPoint:CGPointMake(cameraView.bounds.size.width/2, cameraView.bounds.size.height/2) fromView:cameraView];
+    scrap.rotation = cameraView.rotation;
+    
+    [imagePicker hide:YES];
+    
+    // hide the photo in the row
+    cameraView.alpha = 0;
+    
+    // bounce by 20px (10 on each side)
+    CGFloat bounceScale = 20 / MAX(fullScale.width, fullScale.height);
+    
+    [UIView animateWithDuration:.2
+                          delay:.1
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         scrap.center = [visibleStackHolder peekSubview].center;
+                         [scrap setScale:(1+bounceScale) andRotation:RandomPhotoRotation];
+                     }
+                     completion:^(BOOL finished){
+                         [UIView animateWithDuration:.1
+                                               delay:0
+                                             options:UIViewAnimationOptionCurveEaseIn
+                                          animations:^{
+                                              [scrap setScale:1];
+                                          }
+                                          completion:^(BOOL finished){
+                                              cameraView.alpha = 1;
+                                              [topPage addScrap:scrap];
+                                              [topPage saveToDisk];
+                                          }];
+                     }];
+}
+
+-(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation{
     CGRect scrapRect = CGRectZero;
     scrapRect.origin = [self convertPoint:[bufferedImage visibleImageOrigin] fromView:bufferedImage];
     scrapRect.size = [bufferedImage visibleImageSize];
@@ -221,7 +317,7 @@
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          scrap.center = [visibleStackHolder peekSubview].center;
-                         [scrap setScale:(1+bounceScale) andRotation:RandomPhotoRotation];
+                         [scrap setScale:(1+bounceScale) andRotation:scrap.rotation + RandomPhotoRotation];
                      }
                      completion:^(BOOL finished){
                          [UIView animateWithDuration:.1
@@ -295,56 +391,60 @@ int skipAll = NO;
 }
 
 
--(void) timerDidFire:(NSTimer*)timer{
-
-    NSLog(@" ");
-    NSLog(@" ");
-    NSLog(@" ");
-    NSLog(@"begin");
+-(NSString*) activeGestureSummary{
+    
+    NSMutableString* str = [NSMutableString stringWithString:@"\n\n\n"];
+    [str appendString:@"begin\n"];
     
     for(MMPaperView* page in setOfPagesBeingPanned){
         if([visibleStackHolder containsSubview:page]){
-            NSLog(@"  1 page in visible stack");
+            [str appendString:@"  1 page in visible stack\n"];
         }else if([bezelStackHolder containsSubview:page]){
-            NSLog(@"  1 page in bezel stack");
+            [str appendString:@"  1 page in bezel stack\n"];
         }else if([hiddenStackHolder containsSubview:page]){
-            NSLog(@"  1 page in hidden stack");
+            [str appendString:@"  1 page in hidden stack\n"];
         }
     }
     
-
+    
     NSArray* allGesturesAndTopTwoPages = [self.gestureRecognizers arrayByAddingObjectsFromArray:[[visibleStackHolder peekSubview] gestureRecognizers]];
     allGesturesAndTopTwoPages = [allGesturesAndTopTwoPages arrayByAddingObjectsFromArray:[[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]] gestureRecognizers]];
     for(UIGestureRecognizer* gesture in allGesturesAndTopTwoPages){
         UIGestureRecognizerState st = gesture.state;
-        NSLog(@"%@ %d", NSStringFromClass([gesture class]), st);
+        [str appendFormat:@"%@ %d", NSStringFromClass([gesture class]), (int)st];
         if([gesture respondsToSelector:@selector(validTouches)]){
-            NSLog(@"   validTouches: %d", [[gesture performSelector:@selector(validTouches)] count]);
+            [str appendFormat:@"   validTouches: %d", (int)[[gesture performSelector:@selector(validTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(touches)]){
-            NSLog(@"   touches: %d", [[gesture performSelector:@selector(touches)] count]);
+            [str appendFormat:@"   touches: %d", (int)[[gesture performSelector:@selector(touches)] count]];
         }
         if([gesture respondsToSelector:@selector(possibleTouches)]){
-            NSLog(@"   possibleTouches: %d", [[gesture performSelector:@selector(possibleTouches)] count]);
+            [str appendFormat:@"   possibleTouches: %d", (int)[[gesture performSelector:@selector(possibleTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(ignoredTouches)]){
-            NSLog(@"   ignoredTouches: %d", [[gesture performSelector:@selector(ignoredTouches)] count]);
+            [str appendFormat:@"   ignoredTouches: %d", (int)[[gesture performSelector:@selector(ignoredTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(paused)]){
-            NSLog(@"   paused: %d", [gesture performSelector:@selector(paused)] ? 1 : 0);
+            [str appendFormat:@"   paused: %d", [gesture performSelector:@selector(paused)] ? 1 : 0];
         }
         if([gesture respondsToSelector:@selector(scrap)]){
-            NSLog(@"   has scrap: %d", [gesture performSelector:@selector(scrap)] ? 1 : 0);
+            [str appendFormat:@"   has scrap: %d", [gesture performSelector:@selector(scrap)] ? 1 : 0];
         }
     }
-    NSLog(@"velocity gesture sees: %d", [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]);
-    NSLog(@"pages being panned %d", [setOfPagesBeingPanned count]);
-
-    NSLog(@"done");
+    [str appendFormat:@"velocity gesture sees: %d", [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]];
+    [str appendFormat:@"pages being panned %d", (int)[setOfPagesBeingPanned count]];
+    
+    [str appendFormat:@"done"];
     
     for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scraps]){
-        NSLog(@"scrap: %f %f", scrap.layer.anchorPoint.x, scrap.layer.anchorPoint.y);
+        [str appendFormat:@"scrap: %f %f", scrap.layer.anchorPoint.x, scrap.layer.anchorPoint.y];
     }
+    return str;
+}
+
+
+-(void) timerDidFire:(NSTimer*)timer{
+    NSLog(@"%@", [self activeGestureSummary]);
 }
 
 -(void) drawLine{
@@ -356,6 +456,25 @@ int skipAll = NO;
 -(void) addPageButtonTapped:(UIButton*)_button{
     [self forceScrapToScrapContainerDuringGesture];
     [super addPageButtonTapped:_button];
+}
+
+-(void) shareButtonTapped:(UIButton*)_button{
+    if([[visibleStackHolder peekSubview] hasEditsToSave]){
+        wantsExport = [visibleStackHolder peekSubview];
+    }else{
+        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
+        [composer setMailComposeDelegate:self];
+        if([MFMailComposeViewController canSendMail]) {
+            [composer setSubject:@"Quick sketch from Loose Leaf"];
+            [composer setMessageBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
+            [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+            
+            NSData *data = UIImagePNGRepresentation([visibleStackHolder peekSubview].scrappedImgViewImage);
+            [composer addAttachmentData:data  mimeType:@"image/png" fileName:@"LooseLeaf.png"];
+            
+            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentModalViewController:composer animated:YES];
+        }
+    }
 }
 
 -(void) anySidebarButtonTapped:(id)button{
@@ -477,6 +596,7 @@ int skipAll = NO;
                ![pageToDropScrap hasScrap:scrap]){
                 [pageToDropScrap addScrap:scrap];
                 [gesture.scrap.superview insertSubview:gesture.scrap atIndex:0];
+                [pageToDropScrap saveToDisk];
             }else if(gesture.scrap == [gesture.scrap.superview.subviews lastObject]){
                 [gesture.scrap.superview insertSubview:gesture.scrap atIndex:0];
             }else{
@@ -526,6 +646,7 @@ int skipAll = NO;
                 [pageToDropScrap addScrap:gesture.scrap];
                 gesture.scrap.scale = scrapScaleInPage;
                 gesture.scrap.center = scrapCenterInPage;
+                [pageToDropScrap saveToDisk];
             }else{
                 // couldn't find a page to catch it
                 shouldBezel = YES;
@@ -603,7 +724,7 @@ int skipAll = NO;
     arrayOfArrayOfViews[0] = visibleStackHolder.subviews;
     arrayOfArrayOfViews[1] = bezelStackHolder.subviews;
     int arrayNum = 1;
-    int indexNum = [bezelStackHolder.subviews count] - 1;
+    int indexNum = (int)[bezelStackHolder.subviews count] - 1;
 
     do{
         if(indexNum < 0){
@@ -617,7 +738,7 @@ int skipAll = NO;
                 // the system may exit our app, leaving us in an unknown state
                 return [visibleStackHolder peekSubview];
             }
-            indexNum = [(arrayOfArrayOfViews[arrayNum]) count] - 1;
+            indexNum = (int)[(arrayOfArrayOfViews[arrayNum]) count] - 1;
         }
         // fetch the most visible page
         pageToDropScrap = [(arrayOfArrayOfViews[arrayNum]) objectAtIndex:indexNum];
@@ -753,6 +874,7 @@ int skipAll = NO;
             // the scrap was dropped by the stretch gesture,
             // so just add it back to the top page
             [[visibleStackHolder peekSubview] addScrap:scrap];
+            [[visibleStackHolder peekSubview] saveToDisk];
         }
     }
 }
@@ -874,6 +996,11 @@ int skipAll = NO;
     CGPoint p2 = [[touches2 objectAtIndex:1] locationInView:self];
     clonedScrap.center = AveragePoints(p1, p2);
 
+    // now that the scrap is where it should be,
+    // and contains its background, etc, then
+    // save everything
+    [page saveToDisk];
+    
     // time to reset the gesture for the cloned scrap
     // now the scrap is in the right place, so hand it off to the pan gesture
     [self sendStretchedScrap:clonedScrap toPanGesture:panAndPinchScrapGesture2 withTouches:[touches2 array] withAnchor:np2];
@@ -894,8 +1021,8 @@ int skipAll = NO;
             NSLog(@"what");
         }
         
-        NSLog(@"success? %d %p,  %d %p", [panAndPinchScrapGesture.validTouches count], panAndPinchScrapGesture.scrap,
-              [panAndPinchScrapGesture2.validTouches count], panAndPinchScrapGesture2.scrap);
+        NSLog(@"success? %d %p,  %d %p", (int)[panAndPinchScrapGesture.validTouches count], panAndPinchScrapGesture.scrap,
+              (int)[panAndPinchScrapGesture2.validTouches count], panAndPinchScrapGesture2.scrap);
 
         if([panAndPinchScrapGesture.validTouches count] < 2){
             [self logOutputGestureTouchOwnership:@"gesture 1 failed gesture 1" gesture:panAndPinchScrapGesture];
@@ -1041,7 +1168,7 @@ int skipAll = NO;
 }
 
 -(void) didAddScrapToBezelSidebar:(MMScrapView *)scrap{
-    [bezelScrapContainer saveToDisk];
+    [bezelScrapContainer saveScrapContainerToDisk];
 }
 
 -(void) didAddScrapBackToPage:(MMScrapView *)scrap{
@@ -1057,7 +1184,8 @@ int skipAll = NO;
     [page addScrap:scrap];
     scrap.center = center;
     scrap.scale = scale;
-    [bezelScrapContainer saveToDisk];
+    [page saveToDisk];
+    [bezelScrapContainer saveScrapContainerToDisk];
 }
 
 -(CGPoint) positionOnScreenToScaleScrapTo:(MMScrapView*)scrap{
@@ -1090,5 +1218,29 @@ int skipAll = NO;
 -(NSSet*) setOfTouchesFrom:(NSOrderedSet *)touches inScrap:(MMScrapView *)scrap{
     return nil;
 }
+
+#pragma mark - MMRotationManagerDelegate
+
+-(void) didRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient{
+    [imagePicker updatePhotoRotation];
+}
+
+
+#pragma mark = Saving and Editing
+
+-(void) didSavePage:(MMPaperView*)page{
+    [super didSavePage:page];
+    if(wantsExport == page){
+        wantsExport = nil;
+        [self shareButtonTapped:nil];
+    }
+}
+
+#pragma mark - MFMailComposeViewControllerDelegate
+
+-(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
+    [[[[UIApplication sharedApplication] keyWindow] rootViewController] dismissViewControllerAnimated:YES completion:nil];
+}
+
 
 @end

@@ -16,3 +16,6 @@
 [submodule "Submodules/vectorboolean"]
 	path = Submodules/vectorboolean
 	url = git@github.com:adamwulf/vectorboolean.git
+[submodule "Submodules/mixpanel"]
+	path = Submodules/mixpanel
+	url = git@github.com:mixpanel/mixpanel-iphone.git

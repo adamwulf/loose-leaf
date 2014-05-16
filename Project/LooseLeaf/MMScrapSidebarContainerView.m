@@ -126,7 +126,7 @@
     if(animated){
         // only save when it's animated. non-animated is loading
         // from disk at start up
-        [scrap saveToDisk];
+        [scrap saveScrapToDisk:nil];
     }
     
     [scrapsHeldInBezel insertObject:scrap atIndex:0];
@@ -180,7 +180,7 @@
                 for(MMScrapBubbleButton* otherBubble in self.subviews){
                     if(otherBubble != bubble){
                         if([otherBubble isKindOfClass:[MMScrapBubbleButton class]]){
-                            int index = [scrapsHeldInBezel indexOfObject:otherBubble.scrap];
+                            int index = (int) [scrapsHeldInBezel indexOfObject:otherBubble.scrap];
                             otherBubble.center = [self centerForBubbleAtIndex:index];
                         }
                     }
@@ -256,7 +256,7 @@
             bubble.scrap = scrap;
             for(MMScrapBubbleButton* anyBubble in self.subviews){
                 if([anyBubble isKindOfClass:[MMScrapBubbleButton class]]){
-                    int index = [scrapsHeldInBezel indexOfObject:anyBubble.scrap];
+                    int index = (int) [scrapsHeldInBezel indexOfObject:anyBubble.scrap];
                     anyBubble.center = [self centerForBubbleAtIndex:index];
                 }
             }
@@ -330,7 +330,7 @@
         for(MMScrapBubbleButton* otherBubble in self.subviews){
             if(otherBubble != countButton && [otherBubble isKindOfClass:[MMScrapBubbleButton class]]){
                 if(otherBubble != bubble){
-                    int index = [scrapsHeldInBezel indexOfObject:otherBubble.scrap];
+                    int index = (int) [scrapsHeldInBezel indexOfObject:otherBubble.scrap];
                     otherBubble.center = [self centerForBubbleAtIndex:index];
                     if([scrapsHeldInBezel count] <= kMaxScrapsInBezel){
                         otherBubble.scrap = otherBubble.scrap; // reset it
@@ -429,10 +429,13 @@ static NSString* bezelStatePath;
     return bezelStatePath;
 }
 
--(void) saveToDisk{
-    [[scrapState immutableState] saveToDisk];
-    
-    [[rotationAdjustments copy] writeToFile:[MMScrapSidebarContainerView pathToPlist] atomically:YES];
+-(void) saveScrapContainerToDisk{
+    MMImmutableScrapsOnPaperState* immutableState = [scrapState immutableState];
+    NSMutableDictionary* writeableAdjustments = [rotationAdjustments copy];
+    dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
+        [immutableState saveStateToDiskBlocking];
+        [writeableAdjustments writeToFile:[MMScrapSidebarContainerView pathToPlist] atomically:YES];
+    });
 }
 
 
@@ -455,6 +458,10 @@ static NSString* bezelStatePath;
     for(MMScrapView* scrap in [allScraps reverseObjectEnumerator]){
         [self addScrapToBezelSidebar:scrap animated:NO];
     }
+}
+
+-(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState *)scrapState{
+    // noop
 }
 
 @end

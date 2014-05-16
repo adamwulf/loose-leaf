@@ -20,4 +20,6 @@
 
 -(void) loadedPreviewPhotos;
 
+-(void) updatePhotoRotation;
+
 @end

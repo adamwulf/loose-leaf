@@ -13,9 +13,21 @@
 #import "TestFlight.h"
 #import "MMScrappedPaperView.h"
 
-@implementation MMPaperStackView
+@implementation MMPaperStackView{
+    MMPapersIcon* papersIcon;
+    MMPaperIcon* paperIcon;
+    MMPlusIcon* plusIcon;
+    MMLeftArrow* leftArrow;
+    MMRightArrow* rightArrow;
+    
+    // track if we're currently pulling in a page
+    // from the bezel
+    MMPaperView* inProgressOfBezeling;
+    
+}
 
-@synthesize stackHolder = visibleStackHolder;
+@synthesize visibleStackHolder = visibleStackHolder;
+@synthesize hiddenStackHolder = hiddenStackHolder;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -65,6 +77,10 @@
         [self addGestureRecognizer:fromLeftBezelGesture];
     }
     return self;
+}
+
+-(NSString*) activeGestureSummary{
+    @throw kAbstractMethodException;
 }
 
 
@@ -367,6 +383,7 @@
         if([bezelStackHolder.subviews count]){
             [self willNotChangeTopPageTo:[bezelStackHolder peekSubview]];
             [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
+            [self didChangeTopPage];
             [[visibleStackHolder peekSubview] enableAllGestures];
         }
     }else if(bezelGesture.state == UIGestureRecognizerStateEnded &&
@@ -585,7 +602,7 @@
             // if we want more pages than are in the stack, then
             // we need to add another page
             [bezelStackHolder pushSubview:[hiddenStackHolder peekSubview]];
-            NSLog(@"bezel stack size: %d vs goal %d", [bezelStackHolder.subviews count], bezelGesture.numberOfRepeatingBezels);
+            NSLog(@"bezel stack size: %d vs goal %d", (int)[bezelStackHolder.subviews count], (int)bezelGesture.numberOfRepeatingBezels);
         }
         if(needsAnimationUpdate){
             //
@@ -908,7 +925,7 @@
     [self updateIconAnimations];
     
     if(justFinishedPanningTheTopPage && (bezelDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft){
-        NSLog(@"finished bezelling top page left %d %d", (bezelDirection & MMBezelDirectionLeft), (bezelDirection & MMBezelDirectionRight));
+        NSLog(@"finished bezelling top page left %d %d", (int) (bezelDirection & MMBezelDirectionLeft), (int) (bezelDirection & MMBezelDirectionRight));
         //
         // CASE 1:
         // left bezel by top page
@@ -1070,7 +1087,11 @@
             // though no fingers are touching the screen
             //
             // just realign and log
-            @throw [NSException exceptionWithName:@"InvalidPageStack" reason:@"released non-top page while top page was not held" userInfo:nil];
+            
+            NSString* reasonAndDebugInfo = [self activeGestureSummary];
+            reasonAndDebugInfo = [NSString stringWithFormat:@"released non-top page while top page was not held\n%@", reasonAndDebugInfo];
+            
+            @throw [NSException exceptionWithName:@"InvalidPageStack" reason:reasonAndDebugInfo userInfo:nil];
             //
             // as a backup, i think realignPagesInVisibleStackExcept:nil: would have "worked"... but hard to test
             // so better to kill the app and debug properly.
@@ -1602,10 +1623,7 @@
  * to disk
  */
 -(void) mayChangeTopPageTo:(MMPaperView*)page{
-    if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
-        recentlySuggestedPageUUID = page.uuid;
-//        debug_NSLog(@"may change top page to: %@", page.uuid);
-    }
+    [[MMPageCacheManager sharedInstace] mayChangeTopPageTo:page];
 }
 
 /**
@@ -1615,21 +1633,14 @@
  * get this into static mode asap.
  */
 -(void) willChangeTopPageTo:(MMPaperView*)page{
-    if(!page){
-        NSLog(@"what");
-        @throw [NSException exceptionWithName:@"will change to nil page" reason:@"unknown" userInfo:nil];
-    }
-//        debug_NSLog(@"will switch top page to %@", page.uuid);
+    [[MMPageCacheManager sharedInstace] willChangeTopPageTo:page];
 }
 
 -(void) didChangeTopPage{
-    // noop
     MMPaperView* topPage = [visibleStackHolder peekSubview];
-    if(topPage && ![recentlyConfirmedPageUUID isEqualToString:topPage.uuid]){
-        recentlyConfirmedPageUUID = topPage.uuid;
+    if([[MMPageCacheManager sharedInstace] didChangeToTopPage:topPage]){
         [self saveStacksToDisk];
     }
-//    debug_NSLog(@"did change top page");
 }
 
 /**
@@ -1639,7 +1650,7 @@
  * get this into static mode asap.
  */
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
-//    debug_NSLog(@"will NOT change top page to: %@", page.uuid);
+    [[MMPageCacheManager sharedInstace] willNotChangeTopPageTo:page];
 }
 
 -(void) saveStacksToDisk{
@@ -1688,17 +1699,6 @@
 }
 
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
-    @throw kAbstractMethodException;
-}
-
-
-#pragma mark - MMEditablePaperViewDelegate
-
--(void) didLoadStateForPage:(MMEditablePaperView *)page{
-    @throw kAbstractMethodException;
-}
-
--(void) didUnloadStateForPage:(MMEditablePaperView*) page{
     @throw kAbstractMethodException;
 }
 

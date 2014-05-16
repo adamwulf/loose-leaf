@@ -28,6 +28,6 @@
 
 -(NSArray*) representations;
 
-- (UIImage *)aspectThumbnailWithMaxPixelSize:(NSUInteger)size;
+- (UIImage *)aspectThumbnailWithMaxPixelSize:(int)size;
 
 @end

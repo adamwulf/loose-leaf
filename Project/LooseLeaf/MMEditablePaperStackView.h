@@ -36,14 +36,14 @@
 #import "PolygonTool.h"
 #import "MMRulerView.h"
 #import "PolygonToolDelegate.h"
-#import "MMEditablePaperViewDelegate.h"
 #import "MMDrawingTouchGestureRecognizer.h"
+#import "MMPageCacheManagerDelegate.h"
 
 /**
  * this class is responsible for the editable buttons and controls that show
  * outside of a page's view subviews
  */
-@interface MMEditablePaperStackView : MMListPaperStackView<MMEditablePaperViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,UIScrollViewDelegate,PolygonToolDelegate,MMPanGestureDelegate,UIGestureRecognizerDelegate>{
+@interface MMEditablePaperStackView : MMListPaperStackView<MMPaperViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,UIScrollViewDelegate,PolygonToolDelegate,MMPanGestureDelegate,UIGestureRecognizerDelegate,MMPageCacheManagerDelegate>{
     
     // managers
     MMStackManager* stackManager;
@@ -71,7 +71,6 @@
     Eraser* eraser;
     MMScissorTool* scissor;
     
-    NSMutableSet* pagesWithLoadedCacheImages;
     MMRulerView* rulerView;
 }
 

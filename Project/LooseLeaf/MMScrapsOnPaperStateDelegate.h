@@ -18,4 +18,6 @@
 
 -(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState;
 
+-(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState;
+
 @end

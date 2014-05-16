@@ -20,7 +20,7 @@
 
 -(id) initWithVisibleStack:(UIView*)_visibleStack andHiddenStack:(UIView*)_hiddenStack andBezelStack:(UIView*)_bezelStack;
 
--(void) saveToDisk;
+-(void) saveStacksToDisk;
 
 -(NSDictionary*) loadFromDiskWithBounds:(CGRect)bounds;
 

@@ -16,9 +16,6 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 
 @implementation MMEditablePaperStackView{
-    MMEditablePaperView* currentEditablePage;
-    JotView* drawableView;
-    NSMutableArray* stateLoadedPages;
     UIPopoverController* jotTouchPopover;
 }
 
@@ -30,17 +27,15 @@
 
         [[NSFileManager defaultManager] preCacheDirectoryListingAt:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Pages"]];
         
+        [MMPageCacheManager sharedInstace].delegate = self;
 
         self.delegate = self;
         
-        pagesWithLoadedCacheImages = [NSMutableSet set];
-        stateLoadedPages = [NSMutableArray array];
-        
         stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
         
-        drawableView = [[JotView alloc] initWithFrame:self.bounds];
-//        drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
-        [[JotStylusManager sharedInstance] setPalmRejectorDelegate:drawableView];
+        [MMPageCacheManager sharedInstace].drawableView = [[JotView alloc] initWithFrame:self.bounds];
+//        [MMPageCacheManager sharedInstace].drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
+        [[JotStylusManager sharedInstance] setPalmRejectorDelegate:[MMPageCacheManager sharedInstace].drawableView];
 
         pen = [[Pen alloc] init];
         
@@ -64,7 +59,7 @@
         
         shareButton = [[MMShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         shareButton.delegate = self;
-        [shareButton addTarget:self action:@selector(tempButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:shareButton];
         
         settingsButton = [[MMAdonitButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
@@ -178,7 +173,7 @@
         [NSThread performBlockInBackground:^{
             [[NSNotificationCenter defaultCenter] addObserver: self
                                                      selector:@selector(connectionChange:)
-                                                         name: JotStylusManagerDidChangeConnectionStatus
+                                                         name:JotStylusManagerDidChangeConnectionStatus
                                                        object:nil];
             [[JotStylusManager sharedInstance] setEnabled:YES];
             [[JotStylusManager sharedInstance] setRejectMode:NO];
@@ -315,7 +310,10 @@
     [hiddenStackHolder pushSubview:page];
     [[visibleStackHolder peekSubview] enableAllGestures];
     [self popTopPageOfHiddenStack];
-//    [TestFlight passCheckpoint:@"BUTTON_ADD_PAGE"];
+}
+
+-(void) shareButtonTapped:(UIButton*)_button{
+    @throw kAbstractMethodException;
 }
 
 -(void) tempButtonTapped:(UIButton*)_button{
@@ -441,7 +439,7 @@
     // update UI for scaling small into list view
     [self setButtonsVisible:NO];
     [super isBeginningToScaleReallySmall:page];
-    [self updateVisiblePageImageCache];
+    [[MMPageCacheManager sharedInstace] updateVisiblePageImageCache];
 }
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     [super finishedScalingReallySmall:page];
@@ -491,13 +489,16 @@
             }
         }
     }else{
-        // only load top page not in list view
-        [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
+        // we might be mid gesture here, so assuming that the
+        // top page should actually be the top visible page isn't necessarily
+        // true. instead, i should ask the PageCacheManager to recheck
+        // if it can hand the currently top page the drawable view.
+        [[MMPageCacheManager sharedInstace] didChangeToTopPage:[visibleStackHolder peekSubview]];
     }
 }
 
 -(BOOL) isPageEditable:(MMPaperView*)page{
-    return page == currentEditablePage;
+    return page == [MMPageCacheManager sharedInstace].currentEditablePage;
 }
 
 #pragma mark = Ruler
@@ -551,105 +552,49 @@
 
 #pragma mark - Page Loading and Unloading
 
--(void) loadStateForPage:(MMPaperView*)page{
-    [stateLoadedPages removeObject:page];
-    [stateLoadedPages insertObject:page atIndex:0];
-    if(currentEditablePage){
-        [stateLoadedPages removeObject:currentEditablePage];
-        [stateLoadedPages insertObject:currentEditablePage atIndex:0];
-    }
-    if([stateLoadedPages count] > 5){
-        [[stateLoadedPages lastObject] unloadState];
-        [stateLoadedPages removeLastObject];
-    }
-    if([page isKindOfClass:[MMEditablePaperView class]]){
-        MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
-        [editablePage loadStateAsynchronously:YES withSize:[drawableView pagePixelSize] andContext:[drawableView context]];
-    }
+-(BOOL) isPageInVisibleStack:(MMPaperView*)page{
+    return [visibleStackHolder containsSubview:page];
 }
 
--(void) ensureTopPageIsLoaded:(MMPaperView*)topPage{
-    if([topPage isKindOfClass:[MMEditablePaperView class]]){
-        MMEditablePaperView* editableTopPage = (MMEditablePaperView*)topPage;
-        
-        if(currentEditablePage != editableTopPage){
-            // only care if the page is changing
-            if(![currentEditablePage hasEditsToSave] && [editableTopPage hasStateLoaded]){
-                // the outgoing page is saved to disk
-                // and the incoming page has its
-                // state loaded
-                [currentEditablePage setDrawableView:nil];
-                [currentEditablePage setEditable:NO];
-                [currentEditablePage setCanvasVisible:NO];
-                currentEditablePage = editableTopPage;
-//                debug_NSLog(@"did switch top page to %@", currentEditablePage.uuid);
-                [currentEditablePage setDrawableView:drawableView];
-            }else{
-                if(![editableTopPage hasStateLoaded]){
-                    // load the state for the new top page
-//                    debug_NSLog(@"load state for future top page: %@", editableTopPage.uuid);
-                    [self loadStateForPage:editableTopPage];
-                }else{
-                    // we're saving the top page to disk
-                }
-            }
-        }else{
-            // just double check that we're in editable state
-            [currentEditablePage setDrawableView:drawableView];
-        }
+-(NSArray*) pagesInCurrentBezelGesture{
+    return bezelStackHolder.subviews;
+}
+
+-(MMPaperView*) getPageBelow:(MMPaperView*)page{
+    return [visibleStackHolder getPageBelow:page];
+}
+
+-(NSArray*) findPagesInVisibleRowsOfListView{
+    CGPoint visibleScrollOffset;
+    if(self.scrollEnabled){
+        visibleScrollOffset = self.contentOffset;
+    }else{
+        visibleScrollOffset = initialScrollOffsetFromTransitionToListView;
     }
+    return [self findPagesInVisibleRowsOfListViewGivenOffset:visibleScrollOffset];
 }
 
 -(void) mayChangeTopPageTo:(MMPaperView*)page{
-    if([visibleStackHolder containsSubview:page]){
-        MMPaperView* pageBelow = [visibleStackHolder getPageBelow:page];
-        if([pageBelow isKindOfClass:[MMEditablePaperView class]]){
-            [(MMEditablePaperView*)pageBelow loadCachedPreview];
-            [pagesWithLoadedCacheImages addObject:pageBelow];
-        }
-    }
-    if([page isKindOfClass:[MMEditablePaperView class]]){
-        [(MMEditablePaperView*)page loadCachedPreview];
-        [pagesWithLoadedCacheImages addObject:page];
-        if([bezelStackHolder.subviews count] > 6){
-            MMPaperView* page = [bezelStackHolder.subviews objectAtIndex:[bezelStackHolder.subviews count] - 6];
-            if([page isKindOfClass:[MMEditablePaperView class]]){
-                // we have a pretty impressive bezel going on here,
-                // so start to unload the pages that are pretty much
-                // invisible in the bezel stack
-                [(MMEditablePaperView*)page unloadCachedPreview];
-            }
-        }
-    }
-    if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
-        [self loadStateForPage:page];
-    }
     [super mayChangeTopPageTo:page];
 }
 
 -(void) willChangeTopPageTo:(MMPaperView*)page{
-    if(page && ![recentlyConfirmedPageUUID isEqualToString:page.uuid]){
-        [self loadStateForPage:page];
-    }
     [super willChangeTopPageTo:page];
 }
 
 -(void) didChangeTopPage{
     CheckMainThread;
     [super didChangeTopPage];
-    MMPaperView* topPage = [visibleStackHolder peekSubview];
-    [self ensureTopPageIsLoaded:topPage];
-    [self updateVisiblePageImageCache];
 }
 
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
     [super willNotChangeTopPageTo:page];
-//    debug_NSLog(@"won't change to: %@", page.uuid);
 }
 
+#pragma mark - Stack Loading and Saving
 
 -(void) saveStacksToDisk{
-    [stackManager saveToDisk];
+    [stackManager saveStacksToDisk];
 }
 
 -(void) loadStacksFromDisk{
@@ -678,8 +623,8 @@
     
     // load the state for the top page in the visible stack
     [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
-                                                     withSize:[drawableView pagePixelSize]
-                                                   andContext:[drawableView context]];
+                                                     withSize:[[MMPageCacheManager sharedInstace].drawableView pagePixelSize]
+                                                   andContext:[[MMPageCacheManager sharedInstace].drawableView context]];
     
     
     // only load the image previews for the pages that will be visible
@@ -704,10 +649,10 @@
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
     // dont start a new stroke if one already exists
     if([[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count] > 0){
-        NSLog(@"stroke already exists: %d", [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
+        NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
         return NO;
     }
-    if([drawableView.state.currentStrokes count]){
+    if([[MMPageCacheManager sharedInstace].drawableView.state.currentStrokes count]){
         return NO;
     }
     for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scraps]){
@@ -833,49 +778,8 @@
 
 #pragma mark - UIScrollViewDelegate
 
--(void) updateVisiblePageImageCache{
-    CGPoint visibleScrollOffset;
-    if(self.scrollEnabled){
-        visibleScrollOffset = self.contentOffset;
-    }else{
-        visibleScrollOffset = initialScrollOffsetFromTransitionToListView;
-    }
-    NSArray* visiblePages = [self findPagesInVisibleRowsOfListViewGivenOffset:visibleScrollOffset];
-    for(MMEditablePaperView* page in visiblePages){
-        [page loadCachedPreview];
-    }
-    NSSet* invisiblePages = [pagesWithLoadedCacheImages objectsPassingTest:^BOOL(id obj, BOOL*stop){
-        return ![visiblePages containsObject:obj];
-    }];
-    for(MMEditablePaperView* page in invisiblePages){
-        [page unloadCachedPreview];
-    }
-    [pagesWithLoadedCacheImages addObjectsFromArray:visiblePages];
-}
-
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    [self updateVisiblePageImageCache];
-}
-
-
-#pragma mark - MMEditablePaperViewDelegate
-
--(void) didLoadStateForPage:(MMEditablePaperView *)page{
-    if(page == [visibleStackHolder peekSubview] || page == currentEditablePage){
-//        NSLog(@"didLoadStateForPage: %@", page.uuid);
-        if(page.scale > kMinPageZoom){
-            [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
-        }
-    }
-}
-
--(void) didUnloadStateForPage:(MMEditablePaperView*) page{
-    if(page == [visibleStackHolder peekSubview] || page == currentEditablePage){
-//        NSLog(@"didUnloadStateForPage: %@", page.uuid);
-        if(page.scale > kMinPageZoom){
-            [self ensureTopPageIsLoaded:[visibleStackHolder peekSubview]];
-        }
-    }
+    [[MMPageCacheManager sharedInstace] updateVisiblePageImageCache];
 }
 
 

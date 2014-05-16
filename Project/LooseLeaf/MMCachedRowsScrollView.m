@@ -49,7 +49,8 @@
 }
 
 -(UIView*) rowAtIndex:(NSInteger) index{
-    UIView* row = [currentRowAtIndex objectForKey:[NSNumber numberWithInt:index]];
+    if(index < 0) return nil; // no negative index
+    UIView* row = [currentRowAtIndex objectForKey:[NSNumber numberWithInteger:index]];
     if(!row){
         CGRect fr = CGRectMake(0, topBottomMargin + index * self.rowHeight, self.bounds.size.width, self.rowHeight);
         BOOL needsAddedSubview = NO;
@@ -64,16 +65,23 @@
         // our datasource to update the row and/or create
         // it if need be.
         row = [self.dataSource updateRow:row atIndex:index forFrame:fr forScrollView:self];
-        if(needsAddedSubview){
-            [self addSubview:row];
-        }
-        // now we definitely have the row, so set its tag and cache it
-        row.tag = index;
-        [currentRowAtIndex setObject:row forKey:[NSNumber numberWithInt:index]];
-        if([self rowIndexIsVisible:index]){
-            row.hidden = NO;
-        }else{
-            row.hidden = YES;
+        if(row){
+            // rows might be nil if our datasource wants
+            // the row's space to be there but no content
+            // to show up.
+            // so we need to double check that we actually have
+            // a row here to work with
+            if(needsAddedSubview){
+                [self addSubview:row];
+            }
+            // now we definitely have the row, so set its tag and cache it
+            row.tag = index;
+            [currentRowAtIndex setObject:row forKey:[NSNumber numberWithInteger:index]];
+            if([self rowIndexIsVisible:index]){
+                row.hidden = NO;
+            }else{
+                row.hidden = YES;
+            }
         }
     }
     return row;
@@ -100,10 +108,12 @@
     // remove invisible rows
     for(UIView* row in self.subviews){
         if(!row.hidden && (![self rowIndexIsVisible:row.tag] || row.tag >= totalRowCount)){
-            row.hidden = YES;
-            [self.dataSource prepareRowForReuse:row forScrollView:self];
-            [currentRowAtIndex removeObjectForKey:[NSNumber numberWithInt:row.tag]];
-            [bufferOfUnusedRows addObject:row];
+            if([self.dataSource prepareRowForReuse:row forScrollView:self]){
+                row.hidden = YES;
+                [currentRowAtIndex removeObjectForKey:[NSNumber numberWithInteger:row.tag]];
+                [bufferOfUnusedRows addObject:row];
+                row.tag = -1;
+            }
         }
     }
     
@@ -112,8 +122,8 @@
     CGFloat currOffset = self.contentOffset.y;
     while([self rowIndexIsVisible:[self rowIndexForY:currOffset]]){
         NSInteger currIndex = [self rowIndexForY:currOffset];
-        UIView* row = nil;
-        if(currIndex >= 0){
+        if(currIndex < totalRowCount){
+            UIView* row = nil;
             // load the row
             row = [self rowAtIndex:currIndex];
         }

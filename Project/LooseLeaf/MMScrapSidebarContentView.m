@@ -79,7 +79,7 @@
         // determine the index and scrap objects
         CGFloat maxHeightOfScrapsInRow = 0;
         NSMutableArray* currRow = [NSMutableArray array];
-        for(int index = row * columnCount; index < row * columnCount + columnCount; index++){
+        for(int index = row * (int)columnCount; index < row * columnCount + columnCount; index++){
             if(index < [allScraps count]){
                 MMScrapView* currentScrap = [allScraps objectAtIndex:index];
                 // place the left scrap. it should have 10 px left margin

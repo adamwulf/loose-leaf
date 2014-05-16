@@ -24,8 +24,25 @@
     return YES;
 }
 
--(void) saveToDisk{
+-(NSArray*) scraps{
+    return scraps;
+}
+
+-(BOOL) saveStateToDiskBlocking{
+    __block BOOL hadAnyEditsToSaveAtAll = NO;
     if([scraps count]){
+        dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+
+        __block NSInteger savedScraps = 0;
+        void(^doneSavingScrapBlock)(BOOL) = ^(BOOL hadEditsToSave){
+            savedScraps ++;
+            hadAnyEditsToSaveAtAll = hadAnyEditsToSaveAtAll || hadEditsToSave;
+            if(savedScraps == [scraps count]){
+                // just saved the last scrap, signal
+                dispatch_semaphore_signal(sema1);
+            }
+        };
+
         NSMutableArray* scrapUUIDs = [NSMutableArray array];
         for(MMScrapView* scrap in scraps){
             NSMutableDictionary* properties = [NSMutableDictionary dictionary];
@@ -35,20 +52,26 @@
             [properties setObject:[NSNumber numberWithFloat:scrap.rotation] forKey:@"rotation"];
             [properties setObject:[NSNumber numberWithFloat:scrap.scale] forKey:@"scale"];
             
-            [scrap saveToDisk];
+            [scrap saveScrapToDisk:doneSavingScrapBlock];
             
             // save scraps
             [scrapUUIDs addObject:properties];
         }
         [scrapUUIDs writeToFile:self.scrapIDsPath atomically:YES];
+        
+        dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+        dispatch_release(sema1);
+//        NSLog(@"done saving %d scraps", [scraps count]);
     }else{
         [[NSFileManager defaultManager] removeItemAtPath:self.scrapIDsPath error:nil];
     }
+//    NSLog(@"done saving immutable scraps on paper state");
+    return hadAnyEditsToSaveAtAll;
 }
 
 -(void) unload{
     if([self isStateLoaded]){
-        [self saveToDisk];
+        [self saveStateToDiskBlocking];
     }
     [super unload];
 }

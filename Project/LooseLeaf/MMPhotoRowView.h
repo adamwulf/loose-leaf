@@ -20,4 +20,6 @@
 
 -(void) unload;
 
+-(void) updatePhotoRotation;
+
 @end

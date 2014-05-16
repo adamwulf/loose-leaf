@@ -9,13 +9,19 @@
 #import <UIKit/UIKit.h>
 #import "MMSlidingSidebarContainerViewDelegate.h"
 #import "MMCachedRowsScrollViewDataSource.h"
+#import "MMCachedRowsScrollView.h"
 #import "MMPhotoManagerDelegate.h"
 #import "MMAlbumRowViewDelegate.h"
 #import "MMPhotoRowViewDelegate.h"
 
+#define kTopBottomMargin 20
+
 @class MMImageSidebarContainerView;
 
-@interface MMImageSidebarContentView : UIView<MMPhotoManagerDelegate,MMAlbumRowViewDelegate,MMPhotoRowViewDelegate,MMCachedRowsScrollViewDataSource>{
+@interface MMAbstractSidebarContentView : UIView<MMPhotoManagerDelegate,MMAlbumRowViewDelegate,MMPhotoRowViewDelegate,MMCachedRowsScrollViewDataSource>{
+    MMPhotoAlbum* currentAlbum;
+    MMCachedRowsScrollView* albumListScrollView;
+    MMCachedRowsScrollView* photoListScrollView;
     __weak MMImageSidebarContainerView* delegate;
 }
 
@@ -24,5 +30,13 @@
 -(void) show:(BOOL)animated;
 
 -(void) hide:(BOOL)animated;
-    
+
+-(void) updatePhotoRotation:(BOOL)animated;
+
+// abstract
+
+-(NSInteger) indexForAlbum:(MMPhotoAlbum*)album;
+
+-(MMPhotoAlbum*) albumAtIndex:(NSInteger)index;
+
 @end

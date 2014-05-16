@@ -11,9 +11,12 @@
 #import "MMSlidingSidebarContainerViewDelegate.h"
 
 @class MMBufferedImageView;
+@class MMBorderedCamView;
 
 @protocol MMImageSidebarContainerViewDelegate <MMSlidingSidebarContainerViewDelegate>
 
--(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage;
+-(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView;
+
+-(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation;
 
 @end

@@ -57,6 +57,7 @@
         validTouches = [[NSMutableOrderedSet alloc] init];
         possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
+        self.cancelsTouchesInView = NO;
     }
     return self;
 }
@@ -67,6 +68,7 @@
         validTouches = [[NSMutableOrderedSet alloc] init];
         possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
+        self.cancelsTouchesInView = NO;
     }
     return self;
 }

@@ -15,6 +15,7 @@
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import "DKUIBezierPathClippedSegment+PathElement.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMPageCacheManager.h"
 
 dispatch_queue_t importThumbnailQueue;
 
@@ -26,7 +27,6 @@ dispatch_queue_t importThumbnailQueue;
     NSString* plistPath;
     NSString* thumbnailPath;
     UIBezierPath* boundsPath;
-    BOOL isLoadingCachedImageFromDisk;
     
     JotViewStateProxy* paperState;
     
@@ -39,7 +39,8 @@ dispatch_queue_t importThumbnailQueue;
     // on disk, then we'll set this to YES which will
     // prevent any more thumbnail loads until this page
     // is saved
-    BOOL definitelyDoesNotHaveAThumbnail;
+    BOOL definitelyDoesNotHaveAnInkThumbnail;
+    BOOL isLoadingCachedInkThumbnailFromDisk;
 }
 
 @synthesize drawableView;
@@ -60,16 +61,6 @@ dispatch_queue_t importThumbnailQueue;
         // vertex data for anything that'll never be visible
         boundsPath = [UIBezierPath bezierPathWithRect:self.bounds];
         
-        // create the cache view
-        cachedImgView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
-        cachedImgView.frame = self.contentView.bounds;
-        cachedImgView.contentMode = UIViewContentModeScaleAspectFill;
-        cachedImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        cachedImgView.clipsToBounds = YES;
-        cachedImgView.opaque = YES;
-        cachedImgView.backgroundColor = [UIColor whiteColor];
-        [self.contentView addSubview:cachedImgView];
-
         //
         // This pan gesture is used to pan/scale the page itself.
         rulerGesture = [[MMRulerToolGestureRecognizer alloc] initWithTarget:self action:@selector(didMoveRuler:)];
@@ -125,11 +116,9 @@ dispatch_queue_t importThumbnailQueue;
 
 -(void) setCanvasVisible:(BOOL)isCanvasVisible{
     if(isCanvasVisible){
-        cachedImgView.hidden = YES;
         drawableView.hidden = NO;
         shapeBuilderView.hidden = NO;
     }else{
-        cachedImgView.hidden = NO;
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;
     }
@@ -172,6 +161,12 @@ dispatch_queue_t importThumbnailQueue;
     }
 }
 
+-(void) addDrawableViewToContentView{
+//    [self.contentView addSubview:drawableView];
+    // add the drawableView to the contentView
+    @throw kAbstractMethodException;
+}
+
 -(void) setDrawableView:(JotView *)_drawableView{
     if(_drawableView && ![self hasStateLoaded]){
         NSLog(@"oh no");
@@ -184,7 +179,7 @@ dispatch_queue_t importThumbnailQueue;
             [NSThread performBlockOnMainThread:^{
                 if([self.delegate isPageEditable:self] && [self hasStateLoaded]){
                     [drawableView loadState:paperState];
-                    [self.contentView insertSubview:drawableView aboveSubview:cachedImgView];
+                    [self addDrawableViewToContentView];
                     // anchor the view to the top left,
                     // so that when we scale down, the drawable view
                     // stays in place
@@ -240,7 +235,7 @@ dispatch_queue_t importThumbnailQueue;
  * write the thumbnail, backing texture, and entire undo
  * state to disk, and notify our delegate when done
  */
--(void) saveToDisk:(void (^)(void))onComplete{
+-(void) saveToDisk:(void (^)(BOOL didSaveEdits))onComplete{
     // Sanity checks to generate our directory structure if needed
     [self pagesPath];
     
@@ -260,22 +255,19 @@ dispatch_queue_t importThumbnailQueue;
                                // in queue)
                                // so only trigger our save action if we did in fact
                                // save
-                               definitelyDoesNotHaveAThumbnail = NO;
+                               definitelyDoesNotHaveAnInkThumbnail = NO;
                                [paperState wasSavedAtImmutableState:immutableState];
-                               onComplete();
-                               [NSThread performBlockOnMainThread:^{
-                                   cachedImgViewImage = thumbnail;
-                                   cachedImgView.image = cachedImgViewImage;
-                               }];
+                               cachedImgViewImage = thumbnail;
+                               onComplete(YES);
                            }else{
-                               onComplete();
+                               onComplete(NO);
                            }
                        }];
     }else{
         // already saved, but don't need to write
         // anything new to disk
 //        debug_NSLog(@"no edits to save with hash %u", [drawableView undoHash]);
-        onComplete();
+        onComplete(NO);
     }
 }
 
@@ -294,8 +286,8 @@ static int count = 0;
     // and we don't have one cached (!cachedImgViewImage) and
     // we're not already tryign to load it form disk (!isLoadingCachedImageFromDisk)
     // then try to load it and store the results.
-    if(!definitelyDoesNotHaveAThumbnail && !cachedImgViewImage && !isLoadingCachedImageFromDisk){
-        isLoadingCachedImageFromDisk = YES;
+    if(!definitelyDoesNotHaveAnInkThumbnail && !cachedImgViewImage && !isLoadingCachedInkThumbnailFromDisk){
+        isLoadingCachedInkThumbnailFromDisk = YES;
         count++;
         dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
             @autoreleasepool {
@@ -304,13 +296,10 @@ static int count = 0;
                 // https://github.com/adamwulf/loose-leaf/issues/227
                 UIImage* thumbnail = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
                 if(!thumbnail){
-                    definitelyDoesNotHaveAThumbnail = YES;
+                    definitelyDoesNotHaveAnInkThumbnail = YES;
                 }
-                isLoadingCachedImageFromDisk = NO;
-                [NSThread performBlockOnMainThread:^{
-                    cachedImgViewImage = thumbnail;
-                    cachedImgView.image = cachedImgViewImage;
-                }];
+                isLoadingCachedInkThumbnailFromDisk = NO;
+                cachedImgViewImage = thumbnail;
             }
         });
     }
@@ -328,16 +317,17 @@ static int count = 0;
     //
     // i should probably make an nsoperationqueue or something
     // so that i can cancel operations if they havne't run yet... (?)
-    if(cachedImgViewImage || isLoadingCachedImageFromDisk){
+    if(cachedImgViewImage || isLoadingCachedInkThumbnailFromDisk){
         // adding to these thread queues will make sure I unload
         // after any in progress load
         dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
-            [NSThread performBlockOnMainThread:^{
-                cachedImgViewImage = nil;
-                cachedImgView.image = cachedImgViewImage;
-            }];
+            cachedImgViewImage = nil;
         });
     }
+}
+
+-(UIImage*) cachedImgViewImage{
+    return cachedImgViewImage;
 }
 
 
@@ -506,14 +496,12 @@ static int count = 0;
 }
 
 -(void) didLoadState:(JotViewStateProxy*)state{
-    [NSThread performBlockOnMainThread:^{
-        [self.delegate didLoadStateForPage:self];
-    }];
+    @throw kAbstractMethodException;
 }
 
 -(void) didUnloadState:(JotViewStateProxy *)state{
     [NSThread performBlockOnMainThread:^{
-        [self.delegate didUnloadStateForPage:self];
+        [[MMPageCacheManager sharedInstace] didUnloadStateForPage:self];
     }];
 }
 

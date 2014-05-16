@@ -23,39 +23,23 @@
 #import "NSMutableSet+Extras.h"
 #import "Constants.h"
 #import "MMPopoverView.h"
+#import "MMPageCacheManager.h"
 
-@interface MMPaperStackView : UIScrollView<MMEditablePaperViewDelegate>{
+@interface MMPaperStackView : UIScrollView<MMPaperViewDelegate>{
 
 @protected
-    // this is the UUID of the page that has
-    // most recently been suggested that it might
-    // be the top page soon
-    NSString* recentlySuggestedPageUUID;
-    NSString* recentlyConfirmedPageUUID;
-    
-@private
-    MMPapersIcon* papersIcon;
-    MMPaperIcon* paperIcon;
-    MMPlusIcon* plusIcon;
-    MMLeftArrow* leftArrow;
-    MMRightArrow* rightArrow;
-    
-    // track if we're currently pulling in a page
-    // from the bezel
-    MMPaperView* inProgressOfBezeling;
-    
-    @protected
     MMBezelInRightGestureRecognizer* fromRightBezelGesture;
     MMBezelInLeftGestureRecognizer* fromLeftBezelGesture;
     
     UIView* visibleStackHolder;
     UIView* hiddenStackHolder;
     UIView* bezelStackHolder;
-
+    
     NSMutableSet* setOfPagesBeingPanned;
 }
 
-@property (nonatomic, readonly) UIView* stackHolder;
+@property (nonatomic, readonly) UIView* visibleStackHolder;
+@property (nonatomic, readonly) UIView* hiddenStackHolder;
 
 -(void) addPaperToBottomOfStack:(MMPaperView*)page;
 -(void) addPaperToBottomOfHiddenStack:(MMPaperView*)page;
