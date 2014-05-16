@@ -40,7 +40,7 @@
         
         [[Mixpanel sharedInstance] track:@"App Launch" properties:@{
                                                                        @"Visible Stack Size": @([stackView.visibleStackHolder.subviews count]),
-                                                                       @"Hidden StacSize": @([stackView.hiddenStackHolder.subviews count])
+                                                                       @"Hidden Stack Size": @([stackView.hiddenStackHolder.subviews count])
                                                                        }];
         
 
