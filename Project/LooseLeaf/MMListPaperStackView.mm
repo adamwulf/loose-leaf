@@ -1195,13 +1195,13 @@
         NSArray* arraysOfSubviews[2];
         arraysOfSubviews[0] = visibleStackHolder.subviews;
         arraysOfSubviews[1] = hiddenStackHolder.subviews;
-        NSUInteger countOfSubviews[2];
-        countOfSubviews[0] = [visibleStackHolder.subviews count];
-        countOfSubviews[1] = [hiddenStackHolder.subviews count];
+        int countOfSubviews[2]; // can't be NSUInteger, or -1 < count will be false
+        countOfSubviews[0] = (int) [visibleStackHolder.subviews count];
+        countOfSubviews[1] = (int) [hiddenStackHolder.subviews count];
         int arrayIndex = 1;
         
-        NSInteger startRow = floor(selfContentOffsetY) / (bufferWidth + rowHeight);
-        NSInteger startIndex = startRow * kNumberOfColumnsInListView;
+        int startRow = floor(selfContentOffsetY) / (bufferWidth + rowHeight);
+        int startIndex = startRow * kNumberOfColumnsInListView;
 
         NSInteger endRow = floor(selfContentOffsetY + selfFrameSizeHeight - bufferWidth) / (bufferWidth + rowHeight);
         if(endRow < countOfSubviews[0] + countOfSubviews[1]){

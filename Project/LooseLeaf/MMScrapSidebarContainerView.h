@@ -29,6 +29,6 @@
 
 -(void) animateAndAddScrapBackToPage:(MMScrapView*)scrap;
 
--(void) saveToDisk;
+-(void) saveScrapContainerToDisk;
 
 @end

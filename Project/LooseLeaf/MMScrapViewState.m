@@ -257,7 +257,7 @@
 
 #pragma mark - State Saving and Loading
 
--(void) saveToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock{
+-(void) saveScrapStateToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock{
     if(drawableViewState && ([drawableViewState hasEditsToSave] || backingViewHasChanged)){
         dispatch_async([self importExportScrapStateQueue], ^{
             @autoreleasepool {
@@ -283,7 +283,7 @@
 
                                 if(backingViewHasChanged && ![[NSFileManager defaultManager] fileExistsAtPath:[self backgroundJPGFile]]){
                                     if(backingContentView.image){
-                                        NSLog(@"orientation: %d", backingContentView.image.imageOrientation);
+                                        NSLog(@"orientation: %d", (int) backingContentView.image.imageOrientation);
                                         [UIImageJPEGRepresentation(backingContentView.image, .9) writeToFile:[self backgroundJPGFile] atomically:YES];
                                     }
                                     backingViewHasChanged = NO;
@@ -430,7 +430,7 @@
                     // save, then try to unload again
                     dispatch_async([self importExportScrapStateQueue], ^{
                         @autoreleasepool {
-                            [self saveToDisk:nil];
+                            [self saveScrapStateToDisk:nil];
                         }
                     });
                     dispatch_async([self importExportScrapStateQueue], ^{

@@ -28,7 +28,7 @@
     return scraps;
 }
 
--(BOOL) saveToDisk{
+-(BOOL) saveStateToDiskBlocking{
     __block BOOL hadAnyEditsToSaveAtAll = NO;
     if([scraps count]){
         dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
@@ -52,7 +52,7 @@
             [properties setObject:[NSNumber numberWithFloat:scrap.rotation] forKey:@"rotation"];
             [properties setObject:[NSNumber numberWithFloat:scrap.scale] forKey:@"scale"];
             
-            [scrap saveToDisk:doneSavingScrapBlock];
+            [scrap saveScrapToDisk:doneSavingScrapBlock];
             
             // save scraps
             [scrapUUIDs addObject:properties];
@@ -71,7 +71,7 @@
 
 -(void) unload{
     if([self isStateLoaded]){
-        [self saveToDisk];
+        [self saveStateToDiskBlocking];
     }
     [super unload];
 }

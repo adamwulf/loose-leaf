@@ -79,7 +79,7 @@ static void releaseAssetCallback(void *info) {
 // The resulting UIImage will be already rotated to UIImageOrientationUp, so its CGImageRef
 // can be used directly without additional rotation handling.
 // This is done synchronously, so you should call this method on a background queue/thread.
-- (UIImage *)aspectThumbnailWithMaxPixelSize:(NSUInteger)size {
+- (UIImage *)aspectThumbnailWithMaxPixelSize:(int)size {
     NSParameterAssert(size > 0);
     
     ALAssetRepresentation *rep = [self defaultRepresentation];

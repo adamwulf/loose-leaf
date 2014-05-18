@@ -86,14 +86,12 @@
         panAndPinchScrapGesture = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
         panAndPinchScrapGesture.bezelDirectionMask = MMBezelDirectionRight;
         panAndPinchScrapGesture.scrapDelegate = self;
-        panAndPinchScrapGesture.cancelsTouchesInView = NO;
         panAndPinchScrapGesture.delegate = self;
         [self addGestureRecognizer:panAndPinchScrapGesture];
         
         panAndPinchScrapGesture2 = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
         panAndPinchScrapGesture2.bezelDirectionMask = MMBezelDirectionRight;
         panAndPinchScrapGesture2.scrapDelegate = self;
-        panAndPinchScrapGesture2.cancelsTouchesInView = NO;
         panAndPinchScrapGesture2.delegate = self;
         [self addGestureRecognizer:panAndPinchScrapGesture2];
         
@@ -413,18 +411,18 @@ int skipAll = NO;
     allGesturesAndTopTwoPages = [allGesturesAndTopTwoPages arrayByAddingObjectsFromArray:[[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]] gestureRecognizers]];
     for(UIGestureRecognizer* gesture in allGesturesAndTopTwoPages){
         UIGestureRecognizerState st = gesture.state;
-        [str appendFormat:@"%@ %d", NSStringFromClass([gesture class]), st];
+        [str appendFormat:@"%@ %d", NSStringFromClass([gesture class]), (int)st];
         if([gesture respondsToSelector:@selector(validTouches)]){
-            [str appendFormat:@"   validTouches: %d", [[gesture performSelector:@selector(validTouches)] count]];
+            [str appendFormat:@"   validTouches: %d", (int)[[gesture performSelector:@selector(validTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(touches)]){
-            [str appendFormat:@"   touches: %d", [[gesture performSelector:@selector(touches)] count]];
+            [str appendFormat:@"   touches: %d", (int)[[gesture performSelector:@selector(touches)] count]];
         }
         if([gesture respondsToSelector:@selector(possibleTouches)]){
-            [str appendFormat:@"   possibleTouches: %d", [[gesture performSelector:@selector(possibleTouches)] count]];
+            [str appendFormat:@"   possibleTouches: %d", (int)[[gesture performSelector:@selector(possibleTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(ignoredTouches)]){
-            [str appendFormat:@"   ignoredTouches: %d", [[gesture performSelector:@selector(ignoredTouches)] count]];
+            [str appendFormat:@"   ignoredTouches: %d", (int)[[gesture performSelector:@selector(ignoredTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(paused)]){
             [str appendFormat:@"   paused: %d", [gesture performSelector:@selector(paused)] ? 1 : 0];
@@ -434,7 +432,7 @@ int skipAll = NO;
         }
     }
     [str appendFormat:@"velocity gesture sees: %d", [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]];
-    [str appendFormat:@"pages being panned %d", [setOfPagesBeingPanned count]];
+    [str appendFormat:@"pages being panned %d", (int)[setOfPagesBeingPanned count]];
     
     [str appendFormat:@"done"];
     
@@ -598,6 +596,7 @@ int skipAll = NO;
                ![pageToDropScrap hasScrap:scrap]){
                 [pageToDropScrap addScrap:scrap];
                 [gesture.scrap.superview insertSubview:gesture.scrap atIndex:0];
+                [pageToDropScrap saveToDisk];
             }else if(gesture.scrap == [gesture.scrap.superview.subviews lastObject]){
                 [gesture.scrap.superview insertSubview:gesture.scrap atIndex:0];
             }else{
@@ -647,6 +646,7 @@ int skipAll = NO;
                 [pageToDropScrap addScrap:gesture.scrap];
                 gesture.scrap.scale = scrapScaleInPage;
                 gesture.scrap.center = scrapCenterInPage;
+                [pageToDropScrap saveToDisk];
             }else{
                 // couldn't find a page to catch it
                 shouldBezel = YES;
@@ -724,7 +724,7 @@ int skipAll = NO;
     arrayOfArrayOfViews[0] = visibleStackHolder.subviews;
     arrayOfArrayOfViews[1] = bezelStackHolder.subviews;
     int arrayNum = 1;
-    int indexNum = [bezelStackHolder.subviews count] - 1;
+    int indexNum = (int)[bezelStackHolder.subviews count] - 1;
 
     do{
         if(indexNum < 0){
@@ -738,7 +738,7 @@ int skipAll = NO;
                 // the system may exit our app, leaving us in an unknown state
                 return [visibleStackHolder peekSubview];
             }
-            indexNum = [(arrayOfArrayOfViews[arrayNum]) count] - 1;
+            indexNum = (int)[(arrayOfArrayOfViews[arrayNum]) count] - 1;
         }
         // fetch the most visible page
         pageToDropScrap = [(arrayOfArrayOfViews[arrayNum]) objectAtIndex:indexNum];
@@ -874,6 +874,7 @@ int skipAll = NO;
             // the scrap was dropped by the stretch gesture,
             // so just add it back to the top page
             [[visibleStackHolder peekSubview] addScrap:scrap];
+            [[visibleStackHolder peekSubview] saveToDisk];
         }
     }
 }
@@ -995,6 +996,11 @@ int skipAll = NO;
     CGPoint p2 = [[touches2 objectAtIndex:1] locationInView:self];
     clonedScrap.center = AveragePoints(p1, p2);
 
+    // now that the scrap is where it should be,
+    // and contains its background, etc, then
+    // save everything
+    [page saveToDisk];
+    
     // time to reset the gesture for the cloned scrap
     // now the scrap is in the right place, so hand it off to the pan gesture
     [self sendStretchedScrap:clonedScrap toPanGesture:panAndPinchScrapGesture2 withTouches:[touches2 array] withAnchor:np2];
@@ -1015,8 +1021,8 @@ int skipAll = NO;
             NSLog(@"what");
         }
         
-        NSLog(@"success? %d %p,  %d %p", [panAndPinchScrapGesture.validTouches count], panAndPinchScrapGesture.scrap,
-              [panAndPinchScrapGesture2.validTouches count], panAndPinchScrapGesture2.scrap);
+        NSLog(@"success? %d %p,  %d %p", (int)[panAndPinchScrapGesture.validTouches count], panAndPinchScrapGesture.scrap,
+              (int)[panAndPinchScrapGesture2.validTouches count], panAndPinchScrapGesture2.scrap);
 
         if([panAndPinchScrapGesture.validTouches count] < 2){
             [self logOutputGestureTouchOwnership:@"gesture 1 failed gesture 1" gesture:panAndPinchScrapGesture];
@@ -1162,7 +1168,7 @@ int skipAll = NO;
 }
 
 -(void) didAddScrapToBezelSidebar:(MMScrapView *)scrap{
-    [bezelScrapContainer saveToDisk];
+    [bezelScrapContainer saveScrapContainerToDisk];
 }
 
 -(void) didAddScrapBackToPage:(MMScrapView *)scrap{
@@ -1178,7 +1184,8 @@ int skipAll = NO;
     [page addScrap:scrap];
     scrap.center = center;
     scrap.scale = scale;
-    [bezelScrapContainer saveToDisk];
+    [page saveToDisk];
+    [bezelScrapContainer saveScrapContainerToDisk];
 }
 
 -(CGPoint) positionOnScreenToScaleScrapTo:(MMScrapView*)scrap{

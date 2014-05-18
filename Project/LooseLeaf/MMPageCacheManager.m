@@ -74,7 +74,7 @@ static MMPageCacheManager* _instance = nil;
     if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
         recentlySuggestedPageUUID = page.uuid;
         [self loadStateForPage:page];
-        debug_NSLog(@"may change top page to: %@ %d", page.uuid, [stateLoadedPages count]);
+        debug_NSLog(@"may change top page to: %@ %d", page.uuid, (int) [stateLoadedPages count]);
     }
 }
 

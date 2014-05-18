@@ -173,7 +173,7 @@
         [NSThread performBlockInBackground:^{
             [[NSNotificationCenter defaultCenter] addObserver: self
                                                      selector:@selector(connectionChange:)
-                                                         name: JotStylusManagerDidChangeConnectionStatus
+                                                         name:JotStylusManagerDidChangeConnectionStatus
                                                        object:nil];
             [[JotStylusManager sharedInstance] setEnabled:YES];
             [[JotStylusManager sharedInstance] setRejectMode:NO];
@@ -594,7 +594,7 @@
 #pragma mark - Stack Loading and Saving
 
 -(void) saveStacksToDisk{
-    [stackManager saveToDisk];
+    [stackManager saveStacksToDisk];
 }
 
 -(void) loadStacksFromDisk{
@@ -655,7 +655,7 @@
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
     // dont start a new stroke if one already exists
     if([[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count] > 0){
-        NSLog(@"stroke already exists: %d", [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
+        NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
         return NO;
     }
     if([[MMPageCacheManager sharedInstace].drawableView.state.currentStrokes count]){

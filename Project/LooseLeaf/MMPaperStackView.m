@@ -601,7 +601,7 @@
             // if we want more pages than are in the stack, then
             // we need to add another page
             [bezelStackHolder pushSubview:[hiddenStackHolder peekSubview]];
-            NSLog(@"bezel stack size: %d vs goal %d", [bezelStackHolder.subviews count], bezelGesture.numberOfRepeatingBezels);
+            NSLog(@"bezel stack size: %d vs goal %d", (int)[bezelStackHolder.subviews count], (int)bezelGesture.numberOfRepeatingBezels);
         }
         if(needsAnimationUpdate){
             //
@@ -924,7 +924,7 @@
     [self updateIconAnimations];
     
     if(justFinishedPanningTheTopPage && (bezelDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft){
-        NSLog(@"finished bezelling top page left %d %d", (bezelDirection & MMBezelDirectionLeft), (bezelDirection & MMBezelDirectionRight));
+        NSLog(@"finished bezelling top page left %d %d", (int) (bezelDirection & MMBezelDirectionLeft), (int) (bezelDirection & MMBezelDirectionRight));
         //
         // CASE 1:
         // left bezel by top page

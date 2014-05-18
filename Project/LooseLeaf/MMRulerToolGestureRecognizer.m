@@ -18,6 +18,19 @@
 
 @implementation MMRulerToolGestureRecognizer
 
+-(id) init{
+    if(self = [super init]){
+        self.cancelsTouchesInView = NO;
+    }
+    return self;
+}
+
+-(id) initWithTarget:(id)target action:(SEL)action{
+    if(self = [super initWithTarget:target action:action]){
+        self.cancelsTouchesInView = NO;
+    }
+    return self;
+}
 
 -(CGFloat) initialDistance{
     return initialDistance;

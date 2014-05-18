@@ -12,6 +12,7 @@
 		660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAB158FC65C0001DA12 /* NSMutableArray+StackAdditions.m */; };
 		660E1DB0158FC7DB0001DA12 /* MMPaperIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAF158FC7DB0001DA12 /* MMPaperIcon.m */; };
 		660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DB2159028560001DA12 /* NSArray+MapReduce.m */; };
+		660E9DCB19183032000A392A /* blackblur.png in Resources */ = {isa = PBXBuildFile; fileRef = 660E9DCA19183032000A392A /* blackblur.png */; };
 		661507641783338E00B181F3 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6615075E1783338E00B181F3 /* libTestFlight.a */; };
 		66150769178333D500B181F3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66150768178333D500B181F3 /* libz.dylib */; };
 		6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6616CCD018B6AE9700CAD0F3 /* JotUI.framework */; };
@@ -126,7 +127,6 @@
 		66AF94FD1905956C004818F8 /* MMPageCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AF94FC1905956C004818F8 /* MMPageCacheManager.m */; };
 		66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B0FA5F17FB68410079E7A3 /* MMScrapViewState.m */; };
 		66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A55175AFCA70049F1AF /* MMHandButton.m */; };
-		66B21A59175B0BF30049F1AF /* cloth.png in Resources */ = {isa = PBXBuildFile; fileRef = 66B21A58175B0BF30049F1AF /* cloth.png */; };
 		66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A6B175E4A5A0049F1AF /* MMStackManager.m */; };
 		66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A75175E559E0049F1AF /* NSArray+Map.m */; };
 		66B21A7A175E595B0049F1AF /* MMBlockOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A79175E595B0049F1AF /* MMBlockOperation.m */; };
@@ -194,6 +194,7 @@
 		660E1DAF158FC7DB0001DA12 /* MMPaperIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPaperIcon.m; sourceTree = "<group>"; };
 		660E1DB1159028560001DA12 /* NSArray+MapReduce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+MapReduce.h"; sourceTree = "<group>"; };
 		660E1DB2159028560001DA12 /* NSArray+MapReduce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+MapReduce.m"; sourceTree = "<group>"; };
+		660E9DCA19183032000A392A /* blackblur.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackblur.png; sourceTree = "<group>"; };
 		6615075E1783338E00B181F3 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		6615075F1783338E00B181F3 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		661507601783338E00B181F3 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
@@ -423,7 +424,6 @@
 		66B0FA5F17FB68410079E7A3 /* MMScrapViewState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapViewState.m; sourceTree = "<group>"; };
 		66B21A54175AFCA70049F1AF /* MMHandButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMHandButton.h; sourceTree = "<group>"; };
 		66B21A55175AFCA70049F1AF /* MMHandButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMHandButton.m; sourceTree = "<group>"; };
-		66B21A58175B0BF30049F1AF /* cloth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloth.png; sourceTree = "<group>"; };
 		66B21A6A175E4A5A0049F1AF /* MMStackManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackManager.h; sourceTree = "<group>"; };
 		66B21A6B175E4A5A0049F1AF /* MMStackManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStackManager.m; sourceTree = "<group>"; };
 		66B21A74175E559E0049F1AF /* NSArray+Map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Map.h"; sourceTree = "<group>"; };
@@ -1269,7 +1269,7 @@
 				66684B2F182D8869005A27B4 /* Settings */,
 				66B21A77175E59490049F1AF /* Operations */,
 				660E1DA6158FC6120001DA12 /* Categories */,
-				66B21A58175B0BF30049F1AF /* cloth.png */,
+				660E9DCA19183032000A392A /* blackblur.png */,
 				66DCFB921581BCEF00B4918C /* LooseLeaf-Info.plist */,
 				66DCFB931581BCEF00B4918C /* InfoPlist.strings */,
 				66DCFB961581BCEF00B4918C /* main.m */,
@@ -1435,11 +1435,11 @@
 				66684B48182DAD05005A27B4 /* 2Geom.license in Resources */,
 				6650DD1918F48D7500ADF591 /* camera.png in Resources */,
 				666E253218F5DDF100C17295 /* clearphotoalbum.png in Resources */,
-				66B21A59175B0BF30049F1AF /* cloth.png in Resources */,
 				6650DD1B18F48D7A00ADF591 /* camera@2x.png in Resources */,
 				66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */,
 				66684B4A182DAEBC005A27B4 /* UIImageRoundedCorner.license in Resources */,
 				66684B46182DACAE005A27B4 /* DrawKit.license in Resources */,
+				660E9DCB19183032000A392A /* blackblur.png in Resources */,
 				666425C418CBC61200A306C1 /* opencv.license in Resources */,
 				6650DD0F18F46D5100ADF591 /* Images.xcassets in Resources */,
 				66684B3B182D9624005A27B4 /* AGG.license in Resources */,
@@ -1700,7 +1700,6 @@
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = 2;
-				VALID_ARCHS = "armv7 armv7s";
 			};
 			name = Debug;
 		};
@@ -1741,7 +1740,6 @@
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "armv7 armv7s";
 			};
 			name = Release;
 		};
