@@ -14,6 +14,7 @@
 #import "MMScrapBubbleButton.h"
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "Mixpanel.h"
 
 @implementation MMEditablePaperStackView{
     UIPopoverController* jotTouchPopover;
@@ -310,6 +311,7 @@
     [hiddenStackHolder pushSubview:page];
     [[visibleStackHolder peekSubview] enableAllGestures];
     [self popTopPageOfHiddenStack];
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
 }
 
 -(void) shareButtonTapped:(UIButton*)_button{

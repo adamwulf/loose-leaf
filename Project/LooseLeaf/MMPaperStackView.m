@@ -12,6 +12,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "TestFlight.h"
 #import "MMScrappedPaperView.h"
+#import "Mixpanel.h"
 
 @implementation MMPaperStackView{
     MMPapersIcon* papersIcon;
@@ -103,6 +104,7 @@
         page.isBrandNewPage = YES;
         page.delegate = self;
         [stackView addSubviewToBottomOfStack:page];
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
     }
 }
 

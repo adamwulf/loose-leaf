@@ -11,6 +11,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMShadowManager.h"
 #import "MMScrappedPaperView.h"
+#import "Mixpanel.h"
 #include <map>
 #include <iterator>
 
@@ -116,6 +117,7 @@
     [self addPaperToBottomOfHiddenStack:paper];
     [self ensurePageIsAtTopOfVisibleStack:paper];
     [self immediatelyAnimateFromListViewToFullScreenView];
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
 }
 
 #pragma mark - Local Frame Cache

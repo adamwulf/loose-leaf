@@ -65,6 +65,11 @@
 // Scraps
 #define kScrapShadowBufferSize 4
 
+// MixPanel
+#define kMPDurationAppOpen @"Duration App Open"
+#define kMPNumberOfPages @"Number of Pages"
+#define kMPNumberOfScraps @"Number of Pages"
+
 
 // photo album
 #define kMaxPhotoRotationInDegrees 20

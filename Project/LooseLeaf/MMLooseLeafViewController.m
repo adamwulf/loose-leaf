@@ -38,11 +38,8 @@
         
         [stackView loadStacksFromDisk];
         
-        [[Mixpanel sharedInstance] track:@"App Launch" properties:@{
-                                                                       @"Visible Stack Size": @([stackView.visibleStackHolder.subviews count]),
-                                                                       @"Hidden Stack Size": @([stackView.hiddenStackHolder.subviews count])
-                                                                       }];
-        
+        [[[Mixpanel sharedInstance] people] set:kMPNumberOfPages
+                                             to:@([stackView.visibleStackHolder.subviews count] + [stackView.hiddenStackHolder.subviews count])];
 
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth.png"]]];
         
