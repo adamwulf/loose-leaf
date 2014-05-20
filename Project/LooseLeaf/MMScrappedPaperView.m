@@ -574,6 +574,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
         
         if(!hasBuiltAnyScraps && [scissorPath isClosed]){
             NSLog(@"didn't cut any scraps, so make one");
+            NSArray* subshapes = [[UIBezierPath bezierPathWithRect:drawableView.bounds] uniqueShapesCreatedFromSlicingWithUnclosedPath:scissorPath];
+            if([subshapes count] >= 1){
+                scissorPath = [[[subshapes firstObject] fullPath] copy];
+            }
+            
             MMScrapView* addedScrap = [self addScrapWithPath:scissorPath andScale:1.0];
             [addedScrap stampContentsFrom:self.drawableView];
             
