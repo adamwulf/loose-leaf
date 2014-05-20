@@ -70,7 +70,7 @@
 #define kMPNumberOfPages @"Number of Pages"
 #define kMPFirstLaunchDate @"Date of First Launch"
 #define kMPNumberOfScraps @"Number of Scraps"
-
+#define kMPHasAddedPage @"Has Ever Added Page"
 
 // photo album
 #define kMaxPhotoRotationInDegrees 20

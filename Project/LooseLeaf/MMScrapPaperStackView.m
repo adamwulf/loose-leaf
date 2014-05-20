@@ -20,6 +20,7 @@
 #import "MMImageSidebarContainerView.h"
 #import "MMBufferedImageView.h"
 #import "MMBorderedCamView.h"
+#import "Mixpanel.h"
 
 @implementation MMScrapPaperStackView{
     MMScrapSidebarContainerView* bezelScrapContainer;
