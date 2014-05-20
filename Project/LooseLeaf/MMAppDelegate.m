@@ -81,6 +81,7 @@
         //
         // this'll also trigger when the app first launches, as resignedActiveStamp == 0
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfLaunches by:@(1)];
+        [[Mixpanel sharedInstance] track:kMPEventLaunch];
     };
 }
 

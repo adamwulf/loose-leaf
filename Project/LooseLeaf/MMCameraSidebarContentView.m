@@ -169,4 +169,12 @@
     // noop
 }
 
+#pragma mark - Description
+
+-(NSString*) description{
+    return @"Camera Roll";
+}
+
+
+
 @end

@@ -65,7 +65,7 @@
 // Scraps
 #define kScrapShadowBufferSize 4
 
-// MixPanel
+// MixPanel People Properties
 #define kMPDurationAppOpen @"Duration App Open"
 #define kMPNumberOfPages @"Number of Pages"
 #define kMPFirstLaunchDate @"Date of First Launch"
@@ -82,6 +82,12 @@
 #define kMPNumberOfCrashes @"Number of Crashes"
 #define kMPDistanceDrawn @"Distance Drawn (m)"
 #define kMPDistanceErased @"Distance Erased (m)"
+
+// MixPanel Events Properties
+#define kMPEventLaunch @"App Launch"
+#define kMPEventTakePhoto @"Take Photo"
+#define kMPEventImportPhoto @"Import Photo"
+#define kMPEventPhotoSource @"Photo Source"
 
 
 // photo album

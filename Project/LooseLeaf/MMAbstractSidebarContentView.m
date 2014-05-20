@@ -141,7 +141,7 @@
 #pragma mark - MMPhotoRowViewDelegate
 
 -(void) photoRowWasTapped:(MMPhotoRowView*)row forAsset:(ALAsset *)asset forImage:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation{
-    [delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation];
+    [delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation fromContainer:self];
 }
 
 #pragma mark - MMCachedRowsScrollViewDataSource
@@ -238,6 +238,10 @@
             updateVisibleRowsWithRotation();
         }];
     }
+}
+
+-(NSString*) description{
+    @throw kAbstractMethodException;
 }
 
 @end
