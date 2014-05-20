@@ -24,6 +24,7 @@
 #import "MMVector.h"
 #import "MMScrapViewState.h"
 #import "MMPageCacheManager.h"
+#import "Mixpanel.h"
 
 
 @implementation MMScrappedPaperView{
@@ -162,6 +163,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
  * will have twice the resolution in both dimensions.
  */
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)lastBestRotation andScale:(CGFloat)scale{
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScraps by:@(1)];
     //
     // at this point, we have the correct path and rotation that will
     // give us the minimal square px. For instance, drawing a thin diagonal
@@ -551,7 +553,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
                         [addedScrap setBackgroundOffset:moveC2];
                         [scraps addObject:addedScrap];
                     }
+                    //
+                    // TODO: handle deleting scraps, and consider the undo queue as well
+                    // https://github.com/adamwulf/loose-leaf/issues/213
                     [scrap removeFromSuperview];
+                    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScraps by:@(-1)];
                 }
                 // clip out the portion of the scissor path that
                 // intersects with the scrap we just cut

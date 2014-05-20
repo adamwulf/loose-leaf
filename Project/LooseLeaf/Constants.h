@@ -68,7 +68,8 @@
 // MixPanel
 #define kMPDurationAppOpen @"Duration App Open"
 #define kMPNumberOfPages @"Number of Pages"
-#define kMPNumberOfScraps @"Number of Pages"
+#define kMPFirstLaunchDate @"Date of First Launch"
+#define kMPNumberOfScraps @"Number of Scraps"
 
 
 // photo album
