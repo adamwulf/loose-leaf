@@ -57,7 +57,7 @@
                                                       kMPDistanceErased : @(0.0)}];
 
 
-        [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth.png"]]];
+        [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"blackblur.png"]]];
         
 //        [self.view addSubview:[MMDebugDrawView sharedInstace]];
         

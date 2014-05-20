@@ -34,6 +34,8 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        self.backgroundColor = [UIColor clearColor];
+        
         // Initialization code
         setOfPagesBeingPanned = [[NSMutableSet alloc] init]; // use this as a quick cache of pages being panned
         visibleStackHolder = [[UIView alloc] initWithFrame:self.bounds];
