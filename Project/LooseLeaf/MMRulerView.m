@@ -611,6 +611,7 @@ static NSDate* lastRender;
     // zero everything out.
     // this will cause our drawRect to
     // display nothing
+    mostRecentTouchPointInOpenGLCoord = CGPointZero;
     old_p1 = CGPointZero;
     old_p2 = CGPointZero;
     initialDistance = 0;
@@ -622,6 +623,10 @@ static NSDate* lastRender;
     path1FullFlipped = nil;
     path2FullFlipped = nil;
     ticks = nil;
+}
+
+-(BOOL) rulerIsVisible{
+    return path1 != nil;
 }
 
 

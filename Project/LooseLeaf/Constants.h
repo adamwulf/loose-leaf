@@ -74,11 +74,14 @@
 #define kMPNumberOfPenUses @"Number of Pen Uses"
 #define kMPNumberOfEraserUses @"Number of Eraser Uses"
 #define kMPNumberOfScissorUses @"Number of Scissor Uses"
+#define kMPNumberOfRulerUses @"Number of Ruler Uses"
+#define kMPNumberOfPhotoImports @"Number of Photo Imports"  // import existing photo
+#define kMPNumberOfPhotosTaken @"Number of Photos Taken"    // take new photo with camera
 #define kMPHasZoomedToList @"Has Zoomed Out to List"
 #define kMPNumberOfLaunches @"Number Of Launches"
 #define kMPNumberOfCrashes @"Number of Crashes"
-#define kMPDistanceDrawn @"Distance Drawn (cm)"
-#define kMPDistanceErased @"Distance Erased (cm)"
+#define kMPDistanceDrawn @"Distance Drawn (m)"
+#define kMPDistanceErased @"Distance Erased (m)"
 
 
 // photo album

@@ -27,4 +27,6 @@
 
 -(UIBezierPath*) findPathSegmentsWithNearestStart:(CGPoint)nearestStart andNearestEnd:(CGPoint)nearestEnd;
 
+-(BOOL) rulerIsVisible;
+
 @end

@@ -428,9 +428,9 @@
 
 -(void) didDrawStrokeOfCm:(CGFloat)distanceInCentimeters{
     if([self activePen] == pen){
-        [[[Mixpanel sharedInstance] people] increment:kMPDistanceDrawn by:@(distanceInCentimeters)];
+        [[[Mixpanel sharedInstance] people] increment:kMPDistanceDrawn by:@(distanceInCentimeters / 100.0)];
     }else if([self activePen] == eraser){
-        [[[Mixpanel sharedInstance] people] increment:kMPDistanceErased by:@(distanceInCentimeters)];
+        [[[Mixpanel sharedInstance] people] increment:kMPDistanceErased by:@(distanceInCentimeters / 100.0)];
     }
 }
 
@@ -672,6 +672,9 @@
         }
     }
     [rulerView willBeginStrokeAt:[touch locationInView:rulerView]];
+    if([rulerView rulerIsVisible]){
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfRulerUses by:@(1)];
+    }
     return [[self activePen] willBeginStrokeWithTouch:touch];
 }
 
