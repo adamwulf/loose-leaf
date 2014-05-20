@@ -51,6 +51,7 @@
                                                       kMPNumberOfRulerUses : @(0),
                                                       kMPNumberOfPhotoImports : @(0),
                                                       kMPNumberOfPhotosTaken : @(0),
+                                                      kMPNumberOfExports : @(0),
                                                       kMPDurationAppOpen : @(0.0),
                                                       kMPNumberOfCrashes : @(0),
                                                       kMPDistanceDrawn : @(0.0),

@@ -1245,6 +1245,23 @@ int skipAll = NO;
 #pragma mark - MFMailComposeViewControllerDelegate
 
 -(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
+    NSString* strResult;
+    if(result == MFMailComposeResultCancelled){
+        strResult = @"Cancelled";
+    }else if(result == MFMailComposeResultFailed){
+        strResult = @"Failed";
+    }else if(result == MFMailComposeResultSaved){
+        strResult = @"Saved";
+    }else if(result == MFMailComposeResultSent){
+        strResult = @"Sent";
+    }
+    if(result == MFMailComposeResultSent || result == MFMailComposeResultSaved){
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+    }
+    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Email",
+                                                                 kMPEventExportPropResult : strResult}];
+    
+
     [[[[UIApplication sharedApplication] keyWindow] rootViewController] dismissViewControllerAnimated:YES completion:nil];
 }
 

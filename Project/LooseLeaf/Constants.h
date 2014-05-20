@@ -77,6 +77,7 @@
 #define kMPNumberOfRulerUses @"Number of Ruler Uses"
 #define kMPNumberOfPhotoImports @"Number of Photo Imports"  // import existing photo
 #define kMPNumberOfPhotosTaken @"Number of Photos Taken"    // take new photo with camera
+#define kMPNumberOfExports @"Number of Exports"
 #define kMPHasZoomedToList @"Has Zoomed Out to List"
 #define kMPNumberOfLaunches @"Number Of Launches"
 #define kMPNumberOfCrashes @"Number of Crashes"
@@ -87,9 +88,11 @@
 #define kMPEventLaunch @"App Launch"
 #define kMPEventTakePhoto @"Take Photo"
 #define kMPEventImportPhoto @"Import Photo"
+#define kMPEventExport @"Export Page"
 #define kMPEventPhotoSource @"Photo Source"
 
-
+#define kMPEventExportPropDestination @"Export Destination"
+#define kMPEventExportPropResult @"Export Result"
 // photo album
 #define kMaxPhotoRotationInDegrees 20
 
