@@ -42,7 +42,7 @@
                                                                           floorf((cameraViewFr.size.height - kWidthOfSidebarButton) / 2),
                                                                           kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [flipButton addTarget:self action:@selector(changeCamera) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:flipButton];
+        [photoListScrollView addSubview:flipButton];
     }
     return self;
 }
