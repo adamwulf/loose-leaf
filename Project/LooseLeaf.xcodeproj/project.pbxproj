@@ -902,6 +902,7 @@
 		6693295715958A890033E557 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				66AC8D8818E89A5600A65036 /* Photo Manager */,
 				6693295815958A950033E557 /* MMShadowManager.h */,
 				6693295915958A950033E557 /* MMShadowManager.m */,
 				66932963159593C00033E557 /* MMRotationManager.h */,
@@ -1362,7 +1363,6 @@
 		66DCFBBF1581C7F400B4918C /* MMPaperStack */ = {
 			isa = PBXGroup;
 			children = (
-				66AC8D8818E89A5600A65036 /* Photo Manager */,
 				66AC8D7618E7504D00A65036 /* Image Sidebar */,
 				66CE120417D3B6A400882275 /* Scrap Sidebar */,
 				66C38AC51753226F0035B872 /* Tools */,
