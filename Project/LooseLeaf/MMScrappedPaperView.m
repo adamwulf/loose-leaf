@@ -472,7 +472,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
         BOOL hasBuiltAnyScraps = NO;
         
         CGAffineTransform verticalFlip = CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height);
-        
+
+
         // iterate over the scraps from the visibly top scraps
         // to the bottom of the stack
         for(MMScrapView* scrap in [self.scraps reverseObjectEnumerator]){
@@ -571,7 +572,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
             }
         }
         
-        
         if(!hasBuiltAnyScraps && [scissorPath isClosed]){
             NSLog(@"didn't cut any scraps, so make one");
             NSArray* subshapes = [[UIBezierPath bezierPathWithRect:drawableView.bounds] uniqueShapesCreatedFromSlicingWithUnclosedPath:scissorPath];
@@ -625,7 +625,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         }else{
             [self saveToDisk];
         }
-        
+
         // clear the dotted line of the scissor
         [shapeBuilderView clear];
     }

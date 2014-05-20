@@ -722,14 +722,12 @@ static NSDate* lastRender;
 }
 
 
-#pragma mark - Private Helpers
-
 /**
  * this method will return a UIBezierPath along our ruler's edge
  * that most closely matches the input element, given the start/end
  * points of that element.
  */
--(UIBezierPath*) findPathSegmentsForElement:(AbstractBezierPathElement*)element withNearestStart:(CGPoint)nearestStart andNearestEnd:(CGPoint)nearestEnd{
+-(UIBezierPath*) findPathSegmentsWithNearestStart:(CGPoint)nearestStart andNearestEnd:(CGPoint)nearestEnd{
     UIBezierPath* flippedPath;
     
     if(nearestPathIsPath1){
@@ -748,6 +746,9 @@ static NSDate* lastRender;
     return newPath;
 }
 
+#pragma mark - Private Helpers
+
+
 /**
  * this will take the input element and make sure that the output
  * aligns to the ruler, if we have a ruler open. otherwise it'll
@@ -759,7 +760,7 @@ static NSDate* lastRender;
         // now we have a UIBezierPath that represents the portion of the ruler
         // that we should draw. this means we need to convert this uibezierpath
         // to AbstractBezierElements to return to the JotView
-        UIBezierPath* subpathForElement = [self findPathSegmentsForElement:element withNearestStart:mostRecentTouchPointInOpenGLCoord andNearestEnd:element.endPoint];
+        UIBezierPath* subpathForElement = [self findPathSegmentsWithNearestStart:mostRecentTouchPointInOpenGLCoord andNearestEnd:element.endPoint];
         
         // this'll be our output element array
         NSMutableArray* output = [NSMutableArray array];
