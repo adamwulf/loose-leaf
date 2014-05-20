@@ -71,9 +71,15 @@
 #define kMPFirstLaunchDate @"Date of First Launch"
 #define kMPNumberOfScraps @"Number of Scraps"
 #define kMPHasAddedPage @"Has Ever Added Page"
+#define kMPNumberOfPenUses @"Number of Pen Uses"
+#define kMPNumberOfEraserUses @"Number of Eraser Uses"
+#define kMPNumberOfScissorUses @"Number of Scissor Uses"
 #define kMPHasZoomedToList @"Has Zoomed Out to List"
 #define kMPNumberOfLaunches @"Number Of Launches"
 #define kMPNumberOfCrashes @"Number of Crashes"
+#define kMPDistanceDrawn @"Distance Drawn (cm)"
+#define kMPDistanceErased @"Distance Erased (cm)"
+
 
 // photo album
 #define kMaxPhotoRotationInDegrees 20

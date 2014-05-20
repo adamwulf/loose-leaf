@@ -704,6 +704,10 @@
 
 #pragma mark - MMPaperViewDelegate
 
+-(void) didDrawStrokeOfCm:(CGFloat)distanceInCentimeters{
+    @throw kAbstractMethodException;
+}
+
 /**
  * notify that we just long pressed
  */

@@ -426,6 +426,14 @@
     return [super isBeginning:beginning toPanAndScalePage:page fromFrame:fromFrame toFrame:toFrame withTouches:touches];
 }
 
+-(void) didDrawStrokeOfCm:(CGFloat)distanceInCentimeters{
+    if([self activePen] == pen){
+        [[[Mixpanel sharedInstance] people] increment:kMPDistanceDrawn by:@(distanceInCentimeters)];
+    }else if([self activePen] == eraser){
+        [[[Mixpanel sharedInstance] people] increment:kMPDistanceErased by:@(distanceInCentimeters)];
+    }
+}
+
 #pragma mark = List View
 
 -(void) isBeginningToScaleReallySmall:(MMPaperView *)page{
@@ -678,6 +686,11 @@
 
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
     [[self activePen] didEndStrokeWithTouch:touch];
+    if([self activePen] == pen){
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPenUses by:@(1)];
+    }else if([self activePen] == eraser){
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfEraserUses by:@(1)];
+    }
 }
 
 -(void) willCancelStrokeWithTouch:(JotTouch*)touch{

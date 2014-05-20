@@ -150,4 +150,8 @@
  */
 -(void) didStopRuler:(MMRulerToolGestureRecognizer*)gesture;
 
+#pragma mark Mixpanel
+
+-(void) didDrawStrokeOfCm:(CGFloat)distanceInCentimeters;
+
 @end

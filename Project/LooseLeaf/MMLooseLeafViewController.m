@@ -45,8 +45,13 @@
         [[[Mixpanel sharedInstance] people] setOnce:@{kMPFirstLaunchDate : [NSDate date],
                                                       kMPHasAddedPage : @(NO),
                                                       kMPHasZoomedToList : @(NO),
+                                                      kMPNumberOfPenUses : @(0),
+                                                      kMPNumberOfEraserUses : @(0),
+                                                      kMPNumberOfScissorUses : @(0),
                                                       kMPDurationAppOpen : @(0.0),
-                                                      kMPNumberOfCrashes : @(0)}];
+                                                      kMPNumberOfCrashes : @(0),
+                                                      kMPDistanceDrawn : @(0.0),
+                                                      kMPDistanceErased : @(0.0)}];
 
 
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth.png"]]];

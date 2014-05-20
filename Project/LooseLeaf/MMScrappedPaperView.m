@@ -25,6 +25,7 @@
 #import "MMScrapViewState.h"
 #import "MMPageCacheManager.h"
 #import "Mixpanel.h"
+#import "UIDevice+PPI.h"
 
 
 @implementation MMScrappedPaperView{
@@ -268,6 +269,15 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)_previousElement{
     NSArray* strokeElementsToDraw = [super willAddElementsToStroke:elements fromPreviousElement:_previousElement];
+    
+    
+    // track distance drawn
+    CGFloat strokeDistance = 0;
+    for(AbstractBezierPathElement* ele in strokeElementsToDraw){
+        strokeDistance += ele.lengthOfElement;
+    }
+    [self.delegate didDrawStrokeOfCm:strokeDistance / [UIDevice ppc]];
+    
     
     if(![self.scraps count]){
         return strokeElementsToDraw;
@@ -578,7 +588,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
             }
         }
         
+        if(hasBuiltAnyScraps){
+            // track if they cut existing scraps
+            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScissorUses by:@(1)];
+        }
         if(!hasBuiltAnyScraps && [scissorPath isClosed]){
+            // track if they cut new scrap from base page
+            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScissorUses by:@(1)];
             NSLog(@"didn't cut any scraps, so make one");
             NSArray* subshapes = [[UIBezierPath bezierPathWithRect:drawableView.bounds] uniqueShapesCreatedFromSlicingWithUnclosedPath:scissorPath];
             if([subshapes count] >= 1){

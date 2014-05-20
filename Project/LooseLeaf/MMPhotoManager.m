@@ -206,7 +206,6 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
  * initialize the repository of photo albums
  */
 -(void) initializeAlbumCache{
-    NSLog(@"status: %d", [ALAssetsLibrary authorizationStatus]);
     if(hasEverInitailized){
         return;
     }
