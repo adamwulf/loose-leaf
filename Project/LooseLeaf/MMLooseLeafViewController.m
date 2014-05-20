@@ -44,6 +44,7 @@
                                              to:@([stackView.visibleStackHolder.subviews count] + [stackView.hiddenStackHolder.subviews count])];
         [[[Mixpanel sharedInstance] people] setOnce:@{kMPFirstLaunchDate : [NSDate date],
                                                       kMPHasAddedPage : @(NO),
+                                                      kMPHasZoomedToList : @(NO),
                                                       kMPDurationAppOpen : @(0.0),
                                                       kMPNumberOfCrashes : @(0)}];
 

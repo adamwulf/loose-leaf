@@ -270,6 +270,7 @@
     [longPressGesture setEnabled:YES];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
     [self moveAddButtonToTop];
+    [[[Mixpanel sharedInstance] people] set:@{kMPHasZoomedToList : @(YES)}];
 }
 
 /**
