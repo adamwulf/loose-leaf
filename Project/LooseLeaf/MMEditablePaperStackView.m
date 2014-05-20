@@ -312,7 +312,7 @@
     [[visibleStackHolder peekSubview] enableAllGestures];
     [self popTopPageOfHiddenStack];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
-    [[[Mixpanel sharedInstance] people] setOnce:@{kMPHasAddedPage : @(YES)}];
+    [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
 }
 
 -(void) shareButtonTapped:(UIButton*)_button{

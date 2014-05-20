@@ -118,7 +118,7 @@
     [self ensurePageIsAtTopOfVisibleStack:paper];
     [self immediatelyAnimateFromListViewToFullScreenView];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
-    [[[Mixpanel sharedInstance] people] setOnce:@{kMPHasAddedPage : @(YES)}];
+    [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
 }
 
 #pragma mark - Local Frame Cache

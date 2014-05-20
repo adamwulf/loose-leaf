@@ -40,7 +40,9 @@
         
         [[[Mixpanel sharedInstance] people] set:kMPNumberOfPages
                                              to:@([stackView.visibleStackHolder.subviews count] + [stackView.hiddenStackHolder.subviews count])];
-        [[[Mixpanel sharedInstance] people] setOnce:@{kMPFirstLaunchDate : [NSDate date]}];
+        [[[Mixpanel sharedInstance] people] setOnce:@{kMPFirstLaunchDate : [NSDate date],
+                                                      kMPHasAddedPage : @(NO),
+                                                      kMPDurationAppOpen : @(0.0)}];
 
 
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth.png"]]];
