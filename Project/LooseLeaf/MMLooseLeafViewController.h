@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "MMScrapPaperStackView.h"
+#import <Crashlytics/Crashlytics.h>
 
-@interface MMLooseLeafViewController : UIViewController{
+@interface MMLooseLeafViewController : UIViewController<CrashlyticsDelegate>{
     IBOutlet MMScrapPaperStackView* stackView;
 }
 

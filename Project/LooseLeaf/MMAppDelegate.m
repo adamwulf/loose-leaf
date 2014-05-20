@@ -9,7 +9,6 @@
 #import "MMAppDelegate.h"
 
 #import "MMLooseLeafViewController.h"
-#import <Crashlytics/Crashlytics.h>
 #import "NSString+UUID.h"
 #import "SSKeychain.h"
 #import "Mixpanel.h"
@@ -34,18 +33,22 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.viewController = [[MMLooseLeafViewController alloc] init];
-    // [[MMLooseLeafViewController alloc] initWithNibName:@"MMPaperStackViewController" bundle:nil];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     
 //    [self.window.layer setSpeed:.5f];
 
+//    [self performSelector:@selector(asdfasdf:) withObject:nil afterDelay:30];
     
     // fire timer each minute
     [self setupTimer];
     
     return YES;
 }
+
+//-(void) asdfasdf:(id)foo{
+//    @throw [NSException exceptionWithName:@"foobar" reason:@"uh oh" userInfo:nil];
+//}
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
@@ -122,5 +125,6 @@
     }
     return uuid;
 }
+
 
 @end

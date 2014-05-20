@@ -26,6 +26,8 @@
 //            [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
 //        }];
 
+        [[Crashlytics sharedInstance] setDelegate:self];
+
         // Do any additional setup after loading the view, typically from a nib.
         srand ((uint) time(NULL) );
         [[MMShadowManager sharedInstace] beginGeneratingShadows];
@@ -42,7 +44,8 @@
                                              to:@([stackView.visibleStackHolder.subviews count] + [stackView.hiddenStackHolder.subviews count])];
         [[[Mixpanel sharedInstance] people] setOnce:@{kMPFirstLaunchDate : [NSDate date],
                                                       kMPHasAddedPage : @(NO),
-                                                      kMPDurationAppOpen : @(0.0)}];
+                                                      kMPDurationAppOpen : @(0.0),
+                                                      kMPNumberOfCrashes : @(0)}];
 
 
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth.png"]]];
@@ -77,5 +80,13 @@
 {
     return UIInterfaceOrientationPortrait == interfaceOrientation;
 }
+
+
+#pragma mark - Crashlytics reporting
+
+-(void) crashlytics:(Crashlytics *)crashlytics didDetectCrashDuringPreviousExecution:(id<CLSCrashReport>)crash{
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCrashes by:@(1)];
+}
+
 
 @end
