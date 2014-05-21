@@ -224,6 +224,7 @@
                                                       [topPage saveToDisk];
                                                   }];
                              }];
+            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
             [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{kMPEventImportPropFileExt : pathExtension,
                                                                               kMPEventImportPropFileType : urlUTI,
                                                                               kMPEventImportPropSource : kMPEventImportPropSourceApplication,
