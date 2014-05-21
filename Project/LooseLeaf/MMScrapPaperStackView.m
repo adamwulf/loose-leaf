@@ -189,10 +189,18 @@
         
         NSLog(@"got image: %p scale: %f width: %f %f", scrapBacking, scale, scrapBacking.size.width, scrapBacking.size.height);
         
+        MMVector* up = [[MMRotationManager sharedInstace] upVector];
+        MMVector* perp = [[up perpendicular] normal];
+        CGPoint center = CGPointMake(ceilf((self.bounds.size.width - scrapBacking.size.width) / 2),
+                                     ceilf((self.bounds.size.height - scrapBacking.size.height) / 2));
+        // start the photo "up" and have it drop down into the center ish of the page
+        center = [up pointFromPoint:center distance:80];
+        // randomize it a bit
+        center = [perp pointFromPoint:center distance:(random() % 80) - 40];
+        
+        
         // subtract 1px from the border so that the background is clipped nicely around the edge
-        CGFloat x = ceilf((self.bounds.size.width - scrapBacking.size.width) / 2) + ((rand() % 80) - 40);
-        CGFloat y = ceilf((self.bounds.size.height - scrapBacking.size.height) / 2) - 40 - (rand() % 80);
-        UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(x, y, scrapBacking.size.width - 2, scrapBacking.size.height - 2)];
+        UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(center.x, center.y, scrapBacking.size.width - 2, scrapBacking.size.height - 2)];
         
         MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
         MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation andScale:1.0];
@@ -211,7 +219,13 @@
                               delay:.1
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
-                             scrap.center = [visibleStackHolder peekSubview].center;
+                             // doesn't need to land exactly center. this way
+                             // multiple imports of multiple photos won't all
+                             // land exactly on top of each other. looks nicer.
+                             CGPoint center = [visibleStackHolder peekSubview].center;
+                             center.x += random() % 14 - 7;
+                             center.y += random() % 14 - 7;
+                             scrap.center = center;
                              [scrap setScale:(1-bounceScale) andRotation:RandomPhotoRotation];
                              scrap.alpha = .72;
                          }

@@ -96,7 +96,7 @@
 // photo album
 #define kMaxPhotoRotationInDegrees 20
 
-#define RandomPhotoRotation (rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees/2) / 360.0 * M_PI
+#define RandomPhotoRotation ((float)(rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees/2)) / 360.0 * M_PI
 
 #ifdef __cplusplus
 extern "C" {

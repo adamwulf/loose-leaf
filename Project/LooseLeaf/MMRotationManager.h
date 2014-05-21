@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MMRotationManagerDelegate.h"
 #import <CoreMotion/CoreMotion.h>
+#import "MMVector.h"
 #import "Constants.h"
 
 @interface MMRotationManager : NSObject{
@@ -32,5 +33,7 @@
 +(MMRotationManager*) sharedInstace;
 
 -(UIDeviceOrientation) currentDeviceOrientation;
+
+-(MMVector*) upVector;
 
 @end
