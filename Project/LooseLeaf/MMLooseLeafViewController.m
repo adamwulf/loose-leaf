@@ -66,25 +66,10 @@
     return self;
 }
 
--(void) printKeys:(NSDictionary*)dict atlevel:(NSInteger)level{
-    NSString* space = @"";
-    for(int i=0;i<level;i++){
-        space = [space stringByAppendingString:@" "];
-    }
-    for(NSString* key in [dict allKeys]){
-        
-        id obj = [dict objectForKey:key];
-        if([obj isKindOfClass:[NSDictionary class]]){
-            [self printKeys:obj atlevel:level+1];
-        }else{
-            if([obj isKindOfClass:[NSArray class]]){
-                NSLog(@"%@ %@ - %@ [%lu]", space, key, [obj class], (unsigned long)[obj count]);
-            }else{
-                NSLog(@"%@ %@ - %@", space, key, [obj class]);
-            }
-        }
-    }
+-(void) importFileFrom:(NSURL*)url{
+    [stackView importFileFrom:url];
 }
+
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {

@@ -44,10 +44,9 @@
     
     
     
-    NSString* url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
+    NSURL* url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
     if(url){
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"message" message:[NSString stringWithFormat:@"gotcha %@", url] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
+        [self importFileFrom:url];
     }
     
     return YES;
@@ -99,10 +98,19 @@
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     if (url) {
-        NSLog(@"url: %@", url);
+        [self importFileFrom:url];
     }
     return YES;
 }
+
+#pragma mark - Photo and PDF Import
+
+-(void) importFileFrom:(NSURL*)url{
+    NSLog(@"url: %@", url);
+    [self.viewController importFileFrom:url];
+}
+
+
 
 #pragma mark - Session Duration
 

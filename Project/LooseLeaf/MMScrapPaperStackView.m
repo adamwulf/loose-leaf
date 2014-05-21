@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
+#import <ImageIO/ImageIO.h>
 #import "MMScrapPaperStackView.h"
 #import "MMUntouchableView.h"
 #import "MMScrapSidebarContainerView.h"
@@ -151,6 +152,90 @@
     [self setButtonsVisible:NO withDuration:0.15];
     [imagePicker show:YES];
 }
+
+#pragma mark - Import Photo
+
+-(void) importFileFrom:(NSURL*)url{
+    
+    [[NSThread mainThread] performBlock:^{
+        
+        NSLog(@"url of image: %@", url);
+        CGImageSourceRef imageSource = CGImageSourceCreateWithURL((__bridge CFURLRef)url, nil);
+        
+        CGSize fullScale;
+        NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithBool:NO], (NSString *)kCGImageSourceShouldCache, nil];
+        CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, (__bridge CFDictionaryRef)options);
+        if (imageProperties) {
+            NSNumber *width = (NSNumber *)CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelWidth);
+            NSNumber *height = (NSNumber *)CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelHeight);
+            fullScale.width = [width floatValue];
+            fullScale.height = [height floatValue];
+            NSLog(@"Image dimensions: %@ x %@ px", width, height);
+            CFRelease(imageProperties);
+        }
+        
+        int maxDim = MIN(MAX(fullScale.width, fullScale.height), 600);
+        NSLog(@"found max dimension: %d", maxDim);
+        
+        CGFloat scale = [UIScreen mainScreen].scale;
+        NSDictionary* d = @{(id)kCGImageSourceShouldAllowFloat: (id)kCFBooleanTrue,
+                            (id)kCGImageSourceCreateThumbnailWithTransform: (id)kCFBooleanTrue,
+                            (id)kCGImageSourceCreateThumbnailFromImageAlways: (id)kCFBooleanTrue,
+                            (id)kCGImageSourceThumbnailMaxPixelSize: @(maxDim)};
+        CGImageRef imref = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, (__bridge CFDictionaryRef)d);
+        UIImage* scrapBacking = [UIImage imageWithCGImage:imref scale:scale orientation:UIImageOrientationUp];
+        
+        CFRelease(imref); CFRelease(imageSource);
+        
+        NSLog(@"got image: %p scale: %f width: %f %f", scrapBacking, scale, scrapBacking.size.width, scrapBacking.size.height);
+        
+        // subtract 1px from the border so that the background is clipped nicely around the edge
+        CGFloat x = ceilf((self.bounds.size.width - scrapBacking.size.width) / 2) + ((rand() % 80) - 40);
+        CGFloat y = ceilf((self.bounds.size.height - scrapBacking.size.height) / 2) - 40 - (rand() % 80);
+        UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(x, y, scrapBacking.size.width - 2, scrapBacking.size.height - 2)];
+        
+        MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
+        MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation andScale:1.0];
+        [scrapContainer addSubview:scrap];
+        
+        [scrap setBackingImage:scrapBacking];
+        [scrap setBackgroundScale:1.0];
+        scrap.alpha = .3;
+        scrap.scale = 1.2;
+        
+        
+        // bounce by 20px (10 on each side)
+        CGFloat bounceScale = 20 / MAX(fullScale.width, fullScale.height);
+        
+        [UIView animateWithDuration:.2
+                              delay:.1
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             scrap.center = [visibleStackHolder peekSubview].center;
+                             [scrap setScale:(1-bounceScale) andRotation:RandomPhotoRotation];
+                             scrap.alpha = .72;
+                         }
+                         completion:^(BOOL finished){
+                             [UIView animateWithDuration:.1
+                                                   delay:0
+                                                 options:UIViewAnimationOptionCurveEaseIn
+                                              animations:^{
+                                                  [scrap setScale:1];
+                                                  scrap.alpha = 1.0;
+                                              }
+                                              completion:^(BOOL finished){
+                                                  [topPage addScrap:scrap];
+                                                  [topPage saveToDisk];
+                                              }];
+                         }];
+    } afterDelay:.15];
+}
+
+- (void)removeInboxItem:(NSURL *)itemURL
+{
+    //Clean up the inbox once the file has been processed
+}
+
 
 #pragma mark - MMImageSidebarContainerViewDelegate
 
