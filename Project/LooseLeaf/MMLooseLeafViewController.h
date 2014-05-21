@@ -14,6 +14,6 @@
     MMScrapPaperStackView* stackView;
 }
 
--(void) importFileFrom:(NSURL*)url;
+-(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication;
 
 @end

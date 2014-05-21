@@ -90,9 +90,14 @@
 #define kMPEventImportPhoto @"Import Photo"
 #define kMPEventExport @"Export Page"
 #define kMPEventPhotoSource @"Photo Source"
+#define kMPEventImportPhotoFailed @"Import Photo Failed"
 
 #define kMPEventExportPropDestination @"Export Destination"
 #define kMPEventExportPropResult @"Export Result"
+#define kMPEventImportPropFileExt @"File Extension"
+#define kMPEventImportPropFileType @"File Type"
+#define kMPEventImportPropReferApp @"Referring App"
+
 // photo album
 #define kMaxPhotoRotationInDegrees 20
 

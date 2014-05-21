@@ -39,8 +39,11 @@
 			<array>
 				<string>public.png</string>
 				<string>public.jpg</string>
+				<string>public.jpeg-2000</string>
 				<string>public.jpeg</string>
+				<string>public.tiff</string>
 				<string>public.gif</string>
+				<string>com.apple.icns</string>
 				<string>public.image</string>
 				<string>com.microsoft.bmp</string>
 				<string>com.compuserve.gif</string>

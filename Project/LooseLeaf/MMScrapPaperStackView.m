@@ -21,6 +21,7 @@
 #import "MMImageSidebarContainerView.h"
 #import "MMBufferedImageView.h"
 #import "MMBorderedCamView.h"
+#import "MMImageImporter.h"
 #import "Mixpanel.h"
 
 @implementation MMScrapPaperStackView{
@@ -155,93 +156,82 @@
 
 #pragma mark - Import Photo
 
--(void) importFileFrom:(NSURL*)url{
-    
+-(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication{
+    // import after slight delay so the transition from the other app
+    // can complete nicely
     [[NSThread mainThread] performBlock:^{
-        
-        NSLog(@"url of image: %@", url);
-        CGImageSourceRef imageSource = CGImageSourceCreateWithURL((__bridge CFURLRef)url, nil);
-        
-        CGSize fullScale;
-        NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithBool:NO], (NSString *)kCGImageSourceShouldCache, nil];
-        CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, (__bridge CFDictionaryRef)options);
-        if (imageProperties) {
-            NSNumber *width = (NSNumber *)CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelWidth);
-            NSNumber *height = (NSNumber *)CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelHeight);
-            fullScale.width = [width floatValue];
-            fullScale.height = [height floatValue];
-            NSLog(@"Image dimensions: %@ x %@ px", width, height);
-            CFRelease(imageProperties);
-        }
-        
-        int maxDim = MIN(MAX(fullScale.width, fullScale.height), 600);
-        NSLog(@"found max dimension: %d", maxDim);
-        
+
+        NSString* path = url.path;
+        NSString* urlUTI = [MMImageImporter UTIForExtension:path.pathExtension];
         CGFloat scale = [UIScreen mainScreen].scale;
-        NSDictionary* d = @{(id)kCGImageSourceShouldAllowFloat: (id)kCFBooleanTrue,
-                            (id)kCGImageSourceCreateThumbnailWithTransform: (id)kCFBooleanTrue,
-                            (id)kCGImageSourceCreateThumbnailFromImageAlways: (id)kCFBooleanTrue,
-                            (id)kCGImageSourceThumbnailMaxPixelSize: @(maxDim)};
-        CGImageRef imref = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, (__bridge CFDictionaryRef)d);
-        UIImage* scrapBacking = [UIImage imageWithCGImage:imref scale:scale orientation:UIImageOrientationUp];
+        UIImage* scrapBacking = [[MMImageImporter sharedInstace] imageForURL:url maxDim:600];
         
-        CFRelease(imref); CFRelease(imageSource);
-        
-        NSLog(@"got image: %p scale: %f width: %f %f", scrapBacking, scale, scrapBacking.size.width, scrapBacking.size.height);
-        
-        MMVector* up = [[MMRotationManager sharedInstace] upVector];
-        MMVector* perp = [[up perpendicular] normal];
-        CGPoint center = CGPointMake(ceilf((self.bounds.size.width - scrapBacking.size.width) / 2),
-                                     ceilf((self.bounds.size.height - scrapBacking.size.height) / 2));
-        // start the photo "up" and have it drop down into the center ish of the page
-        center = [up pointFromPoint:center distance:80];
-        // randomize it a bit
-        center = [perp pointFromPoint:center distance:(random() % 80) - 40];
-        
-        
-        // subtract 1px from the border so that the background is clipped nicely around the edge
-        UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(center.x, center.y, scrapBacking.size.width - 2, scrapBacking.size.height - 2)];
-        
-        MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
-        MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation andScale:1.0];
-        [scrapContainer addSubview:scrap];
-        
-        [scrap setBackingImage:scrapBacking];
-        [scrap setBackgroundScale:1.0];
-        scrap.alpha = .3;
-        scrap.scale = 1.2;
-        
-        
-        // bounce by 20px (10 on each side)
-        CGFloat bounceScale = 20 / MAX(fullScale.width, fullScale.height);
-        
-        [UIView animateWithDuration:.2
-                              delay:.1
-                            options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^{
-                             // doesn't need to land exactly center. this way
-                             // multiple imports of multiple photos won't all
-                             // land exactly on top of each other. looks nicer.
-                             CGPoint center = [visibleStackHolder peekSubview].center;
-                             center.x += random() % 14 - 7;
-                             center.y += random() % 14 - 7;
-                             scrap.center = center;
-                             [scrap setScale:(1-bounceScale) andRotation:RandomPhotoRotation];
-                             scrap.alpha = .72;
-                         }
-                         completion:^(BOOL finished){
-                             [UIView animateWithDuration:.1
-                                                   delay:0
-                                                 options:UIViewAnimationOptionCurveEaseIn
-                                              animations:^{
-                                                  [scrap setScale:1];
-                                                  scrap.alpha = 1.0;
-                                              }
-                                              completion:^(BOOL finished){
-                                                  [topPage addScrap:scrap];
-                                                  [topPage saveToDisk];
-                                              }];
-                         }];
+        if(scrapBacking){
+            NSLog(@"got image: %p scale: %f width: %f %f", scrapBacking, scale, scrapBacking.size.width, scrapBacking.size.height);
+            
+            MMVector* up = [[MMRotationManager sharedInstace] upVector];
+            MMVector* perp = [[up perpendicular] normal];
+            CGPoint center = CGPointMake(ceilf((self.bounds.size.width - scrapBacking.size.width) / 2),
+                                         ceilf((self.bounds.size.height - scrapBacking.size.height) / 2));
+            // start the photo "up" and have it drop down into the center ish of the page
+            center = [up pointFromPoint:center distance:80];
+            // randomize it a bit
+            center = [perp pointFromPoint:center distance:(random() % 80) - 40];
+            
+            
+            // subtract 1px from the border so that the background is clipped nicely around the edge
+            CGSize scrapSize = CGSizeMake(scrapBacking.size.width - 2, scrapBacking.size.height - 2);
+            UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(center.x, center.y, scrapSize.width, scrapSize.height)];
+            
+            MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
+            MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation andScale:1.0];
+            [scrapContainer addSubview:scrap];
+            
+            [scrap setBackingImage:scrapBacking];
+            [scrap setBackgroundScale:1.0];
+            scrap.alpha = .3;
+            scrap.scale = 1.2;
+            
+            
+            // bounce by 20px (10 on each side)
+            CGFloat bounceScale = 20 / MAX(scrapSize.width, scrapSize.height);
+            
+            [UIView animateWithDuration:.2
+                                  delay:.1
+                                options:UIViewAnimationOptionCurveEaseInOut
+                             animations:^{
+                                 // doesn't need to land exactly center. this way
+                                 // multiple imports of multiple photos won't all
+                                 // land exactly on top of each other. looks nicer.
+                                 CGPoint center = [visibleStackHolder peekSubview].center;
+                                 center.x += random() % 14 - 7;
+                                 center.y += random() % 14 - 7;
+                                 scrap.center = center;
+                                 [scrap setScale:(1-bounceScale) andRotation:RandomPhotoRotation];
+                                 scrap.alpha = .72;
+                             }
+                             completion:^(BOOL finished){
+                                 [UIView animateWithDuration:.1
+                                                       delay:0
+                                                     options:UIViewAnimationOptionCurveEaseIn
+                                                  animations:^{
+                                                      [scrap setScale:1];
+                                                      scrap.alpha = 1.0;
+                                                  }
+                                                  completion:^(BOOL finished){
+                                                      [topPage addScrap:scrap];
+                                                      [topPage saveToDisk];
+                                                  }];
+                             }];
+        }else{
+            NSLog(@"too bad! can't import file from %@", url);
+            // log this to mixpanel
+            [[Mixpanel sharedInstance] track:kMPEventImportPhotoFailed properties:@{kMPEventImportPropFileExt : url.pathExtension,
+                                                                                    kMPEventImportPropFileType : urlUTI,
+                                                                                    kMPEventImportPropReferApp : sourceApplication}];
+
+        }
+
     } afterDelay:.15];
 }
 

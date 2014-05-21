@@ -9,6 +9,7 @@
 #import "MMAppDelegate.h"
 
 #import "MMLooseLeafViewController.h"
+#import "MMImageImporter.h"
 #import "NSString+UUID.h"
 #import "SSKeychain.h"
 #import "Mixpanel.h"
@@ -45,8 +46,9 @@
     
     
     NSURL* url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
+    NSString* sourceApplication = [launchOptions objectForKey:UIApplicationLaunchOptionsSourceApplicationKey];
     if(url){
-        [self importFileFrom:url];
+        [self importFileFrom:url fromApp:sourceApplication];
     }
     
     return YES;
@@ -98,16 +100,23 @@
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     if (url) {
-        [self importFileFrom:url];
+        [self importFileFrom:url fromApp:sourceApplication];
     }
     return YES;
 }
 
 #pragma mark - Photo and PDF Import
 
--(void) importFileFrom:(NSURL*)url{
-    NSLog(@"url: %@", url);
-    [self.viewController importFileFrom:url];
+-(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication{
+    if(!sourceApplication) sourceApplication = @"app.unknown";
+    // need to have a reference to this, because
+    // calling url.pathExtension seems to immediately dealloc
+    // the path extension when i pass it into the dict below
+    NSString* path = url.path;
+    [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{kMPEventImportPropFileExt : path.pathExtension,
+                                                                      kMPEventImportPropFileType : [MMImageImporter UTIForExtension:path.pathExtension],
+                                                                      kMPEventImportPropReferApp : sourceApplication}];
+    [self.viewController importFileFrom:url fromApp:sourceApplication];
 }
 
 

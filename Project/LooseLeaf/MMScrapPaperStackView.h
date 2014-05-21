@@ -13,6 +13,6 @@
 
 @interface MMScrapPaperStackView : MMEditablePaperStackView<MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapSidebarContainerViewDelegate,MMStretchScrapGestureRecognizerDelegate,MMImageSidebarContainerViewDelegate,MFMailComposeViewControllerDelegate>
 
--(void) importFileFrom:(NSURL*)url;
+-(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication;
 
 @end

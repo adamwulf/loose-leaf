@@ -66,8 +66,8 @@
     return self;
 }
 
--(void) importFileFrom:(NSURL*)url{
-    [stackView importFileFrom:url];
+-(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication{
+    [stackView importFileFrom:url fromApp:sourceApplication];
 }
 
 
