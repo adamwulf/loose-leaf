@@ -38,17 +38,20 @@
     
 //    [self.window.layer setSpeed:.5f];
 
-//    [self performSelector:@selector(asdfasdf:) withObject:nil afterDelay:30];
-    
-    // fire timer each minute
+    // setup the timer that will help log session duration
     [self setupTimer];
+    
+    
+    
+    
+    NSString* url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
+    if(url){
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"message" message:[NSString stringWithFormat:@"gotcha %@", url] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
     
     return YES;
 }
-
-//-(void) asdfasdf:(id)foo{
-//    @throw [NSException exceptionWithName:@"foobar" reason:@"uh oh" userInfo:nil];
-//}
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
@@ -93,11 +96,19 @@
     durationTimer = nil;
 }
 
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    if (url) {
+        NSLog(@"url: %@", url);
+    }
+    return YES;
+}
+
+#pragma mark - Session Duration
+
 -(void) logActiveAppDuration{
     [[[Mixpanel sharedInstance] people] increment:kMPDurationAppOpen by:@((CFAbsoluteTimeGetCurrent() - sessionStartStamp) / 60.0)];
 }
-
-
 
 -(void) setupTimer{
     sessionStartStamp = CFAbsoluteTimeGetCurrent();
@@ -107,7 +118,6 @@
                                                    selector:@selector(durationTimerDidFire:)
                                                    userInfo:nil
                                                     repeats:YES];
-
 }
 
 -(void) durationTimerDidFire:(NSTimer*)timer{
@@ -116,7 +126,7 @@
 }
 
 
-
+#pragma mark - User UUID
 
 +(NSString*) userID{
     NSString *uuid = [SSKeychain passwordForService:[[NSBundle mainBundle] bundleIdentifier] account:@"userID"];
