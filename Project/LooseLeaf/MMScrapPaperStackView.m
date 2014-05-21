@@ -162,7 +162,8 @@
     [[NSThread mainThread] performBlock:^{
 
         NSString* path = url.path;
-        NSString* urlUTI = [MMImageImporter UTIForExtension:path.pathExtension];
+        NSString* pathExtension = [path.pathExtension lowercaseString];
+        NSString* urlUTI = [MMImageImporter UTIForExtension:pathExtension];
         CGFloat scale = [UIScreen mainScreen].scale;
         UIImage* scrapBacking = [[MMImageImporter sharedInstace] imageForURL:url maxDim:600];
         
@@ -223,13 +224,18 @@
                                                       [topPage saveToDisk];
                                                   }];
                              }];
+            [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{kMPEventImportPropFileExt : pathExtension,
+                                                                              kMPEventImportPropFileType : urlUTI,
+                                                                              kMPEventImportPropSource : kMPEventImportPropSourceApplication,
+                                                                              kMPEventImportPropReferApp : sourceApplication}];
         }else{
             NSLog(@"too bad! can't import file from %@", url);
             // log this to mixpanel
-            [[Mixpanel sharedInstance] track:kMPEventImportPhotoFailed properties:@{kMPEventImportPropFileExt : url.pathExtension,
+            [[Mixpanel sharedInstance] track:kMPEventImportPhotoFailed properties:@{kMPEventImportPropFileExt : pathExtension,
                                                                                     kMPEventImportPropFileType : urlUTI,
+                                                                                    kMPEventImportPropSource : kMPEventImportPropSourceApplication,
                                                                                     kMPEventImportPropReferApp : sourceApplication}];
-
+            
         }
 
     } afterDelay:.15];
@@ -344,7 +350,14 @@
 
 -(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription{
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
-    [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{ kMPEventPhotoSource: containerDescription}];
+    
+    NSString* filePath = asset.defaultRepresentation.url.path;
+    NSString* pathExtension = [filePath.pathExtension lowercaseString];
+    NSString* assetUTI = [MMImageImporter UTIForExtension:pathExtension];
+    
+    [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{ kMPEventImportPropFileExt : pathExtension,
+                                                                       kMPEventImportPropFileType : assetUTI,
+                                                                       kMPEventImportPropSource: containerDescription}];
     
     CGRect scrapRect = CGRectZero;
     scrapRect.origin = [self convertPoint:[bufferedImage visibleImageOrigin] fromView:bufferedImage];

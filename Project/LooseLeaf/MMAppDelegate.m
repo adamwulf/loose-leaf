@@ -112,10 +112,6 @@
     // need to have a reference to this, because
     // calling url.pathExtension seems to immediately dealloc
     // the path extension when i pass it into the dict below
-    NSString* path = url.path;
-    [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{kMPEventImportPropFileExt : path.pathExtension,
-                                                                      kMPEventImportPropFileType : [MMImageImporter UTIForExtension:path.pathExtension],
-                                                                      kMPEventImportPropReferApp : sourceApplication}];
     [self.viewController importFileFrom:url fromApp:sourceApplication];
 }
 

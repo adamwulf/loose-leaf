@@ -27,7 +27,7 @@ static MMImageImporter* _instance = nil;
     if(!UTI){
         UTI = @"unknown";
     }
-    return UTI;
+    return [UTI lowercaseString];
 }
 
 -(UIImage*) imageForURL:(NSURL*)url maxDim:(int)maxDim{
