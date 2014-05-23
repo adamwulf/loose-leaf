@@ -12,6 +12,7 @@
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import <JotUI/JotUI.h>
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMScrapBackgroundView.h"
 #import "Constants.h"
 
 @implementation MMScrapViewState{
@@ -54,6 +55,8 @@
     UIImage* activeThumbnailImage;
     
     // image background
+    MMScrapBackgroundView* backingImageHolder;
+    
     BOOL backingViewHasChanged;
     UIImageView* backingContentView;
     CGFloat backgroundRotation;
@@ -158,20 +161,22 @@
         thumbnailView.frame = contentView.bounds;
 
         
+        backingImageHolder = [[MMScrapBackgroundView alloc] initWithFrame:contentView.bounds];
         backingContentView = [[UIImageView alloc] initWithFrame:contentView.bounds];
         backingContentView.contentMode = UIViewContentModeScaleAspectFit;
         backingContentView.clipsToBounds = YES;
         backingContentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         backingContentView.frame = contentView.bounds;
+        [backingImageHolder addSubview:backingContentView];
 
         UIView* clippedBackgroundView = [[UIView alloc] initWithFrame:contentView.bounds];
         clippedBackgroundView.clipsToBounds = YES;
         clippedBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         CAShapeLayer* backgroundColorLayer = [CAShapeLayer layer];
         [backgroundColorLayer setPath:bezierPath.CGPath];
-        backgroundColorLayer.frame = backingContentView.bounds;
+        backgroundColorLayer.frame = backingImageHolder.bounds;
         clippedBackgroundView.layer.mask = backgroundColorLayer;
-        [clippedBackgroundView addSubview:backingContentView];
+        [clippedBackgroundView addSubview:backingImageHolder];
 
         [contentView addSubview:clippedBackgroundView];
         [contentView addSubview:thumbnailView];

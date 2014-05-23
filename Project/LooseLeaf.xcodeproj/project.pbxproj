@@ -108,6 +108,7 @@
 		667D98BE192FD37500625879 /* NSURL+UTI.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98BD192FD37500625879 /* NSURL+UTI.m */; };
 		667D98C2192FD87400625879 /* MMPDF.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98C1192FD87400625879 /* MMPDF.m */; };
 		667D98C4192FDB4300625879 /* UIImagePDF.license in Resources */ = {isa = PBXBuildFile; fileRef = 667D98C3192FDB4300625879 /* UIImagePDF.license */; };
+		667D98CA19300D0F00625879 /* MMScrapBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98C919300D0F00625879 /* MMScrapBackgroundView.m */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
 		6693295A15958A950033E557 /* MMShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MMShadowManager.m */; };
@@ -390,6 +391,8 @@
 		667D98C0192FD87400625879 /* MMPDF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDF.h; sourceTree = "<group>"; };
 		667D98C1192FD87400625879 /* MMPDF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDF.m; sourceTree = "<group>"; };
 		667D98C3192FDB4300625879 /* UIImagePDF.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UIImagePDF.license; sourceTree = "<group>"; };
+		667D98C819300D0F00625879 /* MMScrapBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBackgroundView.h; sourceTree = "<group>"; };
+		667D98C919300D0F00625879 /* MMScrapBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBackgroundView.m; sourceTree = "<group>"; };
 		6690EF1217CC64630009A0AC /* MMScrapBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBubbleButton.h; sourceTree = "<group>"; };
 		6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBubbleButton.m; sourceTree = "<group>"; };
 		6690EF1517CC6F710009A0AC /* MMDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDotView.h; sourceTree = "<group>"; };
@@ -1166,6 +1169,8 @@
 				66B0FA5E17FB68410079E7A3 /* MMScrapViewState.h */,
 				66B0FA5F17FB68410079E7A3 /* MMScrapViewState.m */,
 				6629058B17FE0C4700FA680B /* MMScrapViewStateDelegate.h */,
+				667D98C819300D0F00625879 /* MMScrapBackgroundView.h */,
+				667D98C919300D0F00625879 /* MMScrapBackgroundView.m */,
 			);
 			name = Scraps;
 			sourceTree = "<group>";
@@ -1792,6 +1797,7 @@
 				66AC8D8B18E89A9C00A65036 /* MMCachedRowsScrollView.m in Sources */,
 				6695B6EC17505FBF0069E61F /* MMEditablePaperView.m in Sources */,
 				662A21E1191D671A00AD9E31 /* MPSurveyQuestionViewController.m in Sources */,
+				667D98CA19300D0F00625879 /* MMScrapBackgroundView.m in Sources */,
 				661885D418F9AED50016A333 /* MMDarkSidebarButton.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
 				662A21E5191D671A00AD9E31 /* UIImage+MPImageEffects.m in Sources */,
