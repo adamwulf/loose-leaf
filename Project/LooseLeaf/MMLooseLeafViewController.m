@@ -11,6 +11,7 @@
 #import "MMEditablePaperView.h"
 #import "TestFlight.h"
 #import "MMDebugDrawView.h"
+#import "MMInboxManager.h"
 #import "Mixpanel.h"
 
 @implementation MMLooseLeafViewController
@@ -67,7 +68,8 @@
 }
 
 -(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication{
-    [stackView importFileFrom:url fromApp:sourceApplication];
+    // ask the inbox manager to
+    [[MMInboxManager sharedInstace] processInboxItem:url fromApp:(NSString*)sourceApplication];
 }
 
 

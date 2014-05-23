@@ -381,6 +381,7 @@
 		667D98B6192FBF2400625879 /* MMPDFInboxContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDFInboxContentView.m; sourceTree = "<group>"; };
 		667D98B8192FC22A00625879 /* MMPDFButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDFButton.h; sourceTree = "<group>"; };
 		667D98B9192FC22A00625879 /* MMPDFButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDFButton.m; sourceTree = "<group>"; };
+		667D98BB192FCE3900625879 /* MMInboxManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMInboxManagerDelegate.h; sourceTree = "<group>"; };
 		6690EF1217CC64630009A0AC /* MMScrapBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBubbleButton.h; sourceTree = "<group>"; };
 		6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBubbleButton.m; sourceTree = "<group>"; };
 		6690EF1517CC6F710009A0AC /* MMDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDotView.h; sourceTree = "<group>"; };
@@ -978,6 +979,7 @@
 				66AC153C1805F2F8005315C8 /* MMLoadImageCache.m */,
 				667D98AD192D5D8200625879 /* MMInboxManager.h */,
 				667D98AE192D5D8200625879 /* MMInboxManager.m */,
+				667D98BB192FCE3900625879 /* MMInboxManagerDelegate.h */,
 			);
 			name = Managers;
 			sourceTree = "<group>";

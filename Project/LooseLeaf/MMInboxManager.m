@@ -12,6 +12,8 @@
 
 @implementation MMInboxManager
 
+@synthesize delegate;
+
 static MMInboxManager* _instance = nil;
 
 +(MMInboxManager*) sharedInstace{
@@ -21,6 +23,18 @@ static MMInboxManager* _instance = nil;
     return _instance;
 }
 
+#pragma mark - Dispatch Queue
+
+static dispatch_queue_t fileSystemQueue;
+
++(dispatch_queue_t) fileSystemQueue{
+    if(!fileSystemQueue){
+        fileSystemQueue = dispatch_queue_create("com.milestonemade.looseleaf.inboxFileSystemQueue", DISPATCH_QUEUE_SERIAL);
+    }
+    return fileSystemQueue;
+}
+
+#pragma mark - Public Methods
 
 +(NSString*) UTIForExtension:(NSString*)fileExtension{
     NSString *UTI = (__bridge_transfer NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)fileExtension, NULL);
@@ -30,9 +44,37 @@ static MMInboxManager* _instance = nil;
     return [UTI lowercaseString];
 }
 
+// process the item, and then remove it from disk
+// if appropriate
+-(void) processInboxItem:(NSURL*)itemURL fromApp:(NSString*)sourceApplication{
+    UIImage* importedImage = [self imageForURL:itemURL maxDim:600];
+    
+    if(importedImage){
+        [self.delegate didProcessIncomingImage:importedImage fromURL:itemURL fromApp:sourceApplication];
+        [self removeInboxItem:itemURL];
+    }else{
+        [self.delegate failedToProcessIncomingURL:itemURL fromApp:sourceApplication];
+    }
+}
+
+// remove the item from disk on our disk queue
+- (void)removeInboxItem:(NSURL *)itemURL{
+    dispatch_async([MMInboxManager fileSystemQueue], ^{
+        //Clean up the inbox once the file has been processed
+        NSError *error = nil;
+        [[NSFileManager defaultManager] removeItemAtPath:[itemURL path] error:&error];
+        if (error) {
+            NSLog(@"ERROR: Inbox file could not be deleted");
+        }
+    });
+}
+
+#pragma mark - Private Helpers
+
 -(UIImage*) imageForURL:(NSURL*)url maxDim:(int)maxDim{
     
     NSString* filePath = [url.path lowercaseString];
+    
     if([filePath.pathExtension isEqualToString:@"icns"]){
         CFBooleanRef b = (__bridge CFBooleanRef)([NSNumber numberWithBool:YES]);
         NSDictionary * sourceDict = [NSDictionary dictionaryWithObjectsAndKeys:(id)kUTTypeAppleICNS, kCGImageSourceTypeIdentifierHint,
@@ -88,15 +130,5 @@ static MMInboxManager* _instance = nil;
     return scrapBacking;
 }
 
-- (void)removeInboxItem:(NSURL *)itemURL
-{
-    //Clean up the inbox once the file has been processed
-    NSError *error = nil;
-    [[NSFileManager defaultManager] removeItemAtPath:[itemURL path] error:&error];
-    
-    if (error) {
-        NSLog(@"ERROR: Inbox file could not be deleted");
-    }
-}
 
 @end

@@ -7,15 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MMInboxManagerDelegate.h"
 
 @interface MMInboxManager : NSObject
+
+@property (nonatomic, weak) NSObject<MMInboxManagerDelegate>* delegate;
 
 +(MMInboxManager*) sharedInstace;
 
 +(NSString*) UTIForExtension:(NSString*)fileExtension;
 
--(UIImage*) imageForURL:(NSURL*)url maxDim:(int)maxDim;
+-(void) processInboxItem:(NSURL*)itemURL fromApp:(NSString*)sourceApplication;
 
-- (void) removeInboxItem:(NSURL *)itemURL;
+-(void) removeInboxItem:(NSURL *)itemURL;
 
 @end
