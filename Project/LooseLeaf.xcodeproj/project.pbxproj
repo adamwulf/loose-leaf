@@ -106,6 +106,8 @@
 		667D98B7192FBF2400625879 /* MMPDFInboxContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98B6192FBF2400625879 /* MMPDFInboxContentView.m */; };
 		667D98BA192FC22A00625879 /* MMPDFButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98B9192FC22A00625879 /* MMPDFButton.m */; };
 		667D98BE192FD37500625879 /* NSURL+UTI.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98BD192FD37500625879 /* NSURL+UTI.m */; };
+		667D98C2192FD87400625879 /* MMPDF.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98C1192FD87400625879 /* MMPDF.m */; };
+		667D98C4192FDB4300625879 /* UIImagePDF.license in Resources */ = {isa = PBXBuildFile; fileRef = 667D98C3192FDB4300625879 /* UIImagePDF.license */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
 		6693295A15958A950033E557 /* MMShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MMShadowManager.m */; };
@@ -385,6 +387,9 @@
 		667D98BB192FCE3900625879 /* MMInboxManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMInboxManagerDelegate.h; sourceTree = "<group>"; };
 		667D98BC192FD37500625879 /* NSURL+UTI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+UTI.h"; sourceTree = "<group>"; };
 		667D98BD192FD37500625879 /* NSURL+UTI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+UTI.m"; sourceTree = "<group>"; };
+		667D98C0192FD87400625879 /* MMPDF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDF.h; sourceTree = "<group>"; };
+		667D98C1192FD87400625879 /* MMPDF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDF.m; sourceTree = "<group>"; };
+		667D98C3192FDB4300625879 /* UIImagePDF.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UIImagePDF.license; sourceTree = "<group>"; };
 		6690EF1217CC64630009A0AC /* MMScrapBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBubbleButton.h; sourceTree = "<group>"; };
 		6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBubbleButton.m; sourceTree = "<group>"; };
 		6690EF1517CC6F710009A0AC /* MMDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDotView.h; sourceTree = "<group>"; };
@@ -898,6 +903,7 @@
 				66684B49182DAEBC005A27B4 /* UIImageRoundedCorner.license */,
 				66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */,
 				666425C318CBC61200A306C1 /* opencv.license */,
+				667D98C3192FDB4300625879 /* UIImagePDF.license */,
 			);
 			name = Licenses;
 			sourceTree = "<group>";
@@ -969,9 +975,19 @@
 			name = PDFs;
 			sourceTree = "<group>";
 		};
+		667D98BF192FD86700625879 /* PDF */ = {
+			isa = PBXGroup;
+			children = (
+				667D98C0192FD87400625879 /* MMPDF.h */,
+				667D98C1192FD87400625879 /* MMPDF.m */,
+			);
+			name = PDF;
+			sourceTree = "<group>";
+		};
 		6693295715958A890033E557 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				667D98BF192FD86700625879 /* PDF */,
 				66AC8D8818E89A5600A65036 /* Photo Manager */,
 				6693295815958A950033E557 /* MMShadowManager.h */,
 				6693295915958A950033E557 /* MMShadowManager.m */,
@@ -1593,6 +1609,7 @@
 				66684B46182DACAE005A27B4 /* DrawKit.license in Resources */,
 				660E9DCB19183032000A392A /* blackblur.png in Resources */,
 				666425C418CBC61200A306C1 /* opencv.license in Resources */,
+				667D98C4192FDB4300625879 /* UIImagePDF.license in Resources */,
 				6650DD0F18F46D5100ADF591 /* Images.xcassets in Resources */,
 				66684B3B182D9624005A27B4 /* AGG.license in Resources */,
 				6650DD1D18F48E3F00ADF591 /* twitter.png in Resources */,
@@ -1779,6 +1796,7 @@
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
 				662A21E5191D671A00AD9E31 /* UIImage+MPImageEffects.m in Sources */,
 				66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */,
+				667D98C2192FD87400625879 /* MMPDF.m in Sources */,
 				66AC8D7918E7506A00A65036 /* MMImageSidebarContainerView.m in Sources */,
 				66AC8D8018E88BCC00A65036 /* MMPhotoManager.m in Sources */,
 				66A471C217C7DEF200C2A5B6 /* SYShape+Bezier.m in Sources */,

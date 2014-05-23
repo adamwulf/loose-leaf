@@ -97,6 +97,7 @@
 #define kMPEventImportPropFileType @"File Type"
 #define kMPEventImportPropReferApp @"Referring App"
 #define kMPEventImportPropSource @"Import Source"
+#define kMPEventImportPropPDFPageCount @"PDF Page Count"
 #define kMPEventImportPropSourceApplication @"Application"
 
 // photo album

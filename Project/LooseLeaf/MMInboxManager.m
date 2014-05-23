@@ -10,6 +10,7 @@
 #import <ImageIO/ImageIO.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "NSURL+UTI.h"
+#import "MMPDF.h"
 
 @implementation MMInboxManager
 
@@ -52,6 +53,12 @@ static dispatch_queue_t fileSystemQueue;
         }
     }else if(UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypePDF)){
         NSLog(@"PDF!");
+        MMPDF* pdf = [[MMPDF alloc] initWithURL:itemURL];
+        [self.delegate didProcessIncomingPDF:pdf fromURL:itemURL fromApp:sourceApplication];
+        
+        if([pdf pageCount] == 1){
+            [self removeInboxItem:itemURL];
+        }
     }
     
     [self.delegate failedToProcessIncomingURL:itemURL fromApp:sourceApplication];
