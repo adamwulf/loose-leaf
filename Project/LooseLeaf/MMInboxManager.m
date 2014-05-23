@@ -6,17 +6,17 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMImageImporter.h"
+#import "MMInboxManager.h"
 #import <ImageIO/ImageIO.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
-@implementation MMImageImporter
+@implementation MMInboxManager
 
-static MMImageImporter* _instance = nil;
+static MMInboxManager* _instance = nil;
 
-+(MMImageImporter*) sharedInstace{
++(MMInboxManager*) sharedInstace{
     if(!_instance){
-        _instance = [[MMImageImporter alloc]init];
+        _instance = [[MMInboxManager alloc]init];
     }
     return _instance;
 }
@@ -31,6 +31,27 @@ static MMImageImporter* _instance = nil;
 }
 
 -(UIImage*) imageForURL:(NSURL*)url maxDim:(int)maxDim{
+    
+    NSString* filePath = [url.path lowercaseString];
+    if([filePath.pathExtension isEqualToString:@"icns"]){
+        CFBooleanRef b = (__bridge CFBooleanRef)([NSNumber numberWithBool:YES]);
+        NSDictionary * sourceDict = [NSDictionary dictionaryWithObjectsAndKeys:(id)kUTTypeAppleICNS, kCGImageSourceTypeIdentifierHint,
+                                     b, kCGImageSourceShouldAllowFloat, nil];
+        NSLog(@"url of image: %@", url);
+        CGImageSourceRef imageSource = CGImageSourceCreateWithURL((__bridge CFURLRef)url, (__bridge CFDictionaryRef)(sourceDict));
+        
+        NSString* type = (__bridge NSString *)(CGImageSourceGetType (imageSource));
+        NSLog(@"input type: %p %@", imageSource, type);
+        
+        CGImageSourceStatus status = CGImageSourceGetStatus (imageSource);
+        NSLog(@"status: %d", status);
+        
+        size_t foo = CGImageSourceGetCount (imageSource);
+        NSLog(@"size: %zu", foo);
+        
+        [NSDictionary dictionaryWithDictionary:sourceDict];
+        
+    }
     
     NSLog(@"url of image: %@", url);
     CGImageSourceRef imageSource = CGImageSourceCreateWithURL((__bridge CFURLRef)url, nil);
@@ -65,6 +86,17 @@ static MMImageImporter* _instance = nil;
     CFRelease(imageSource);
     
     return scrapBacking;
+}
+
+- (void)removeInboxItem:(NSURL *)itemURL
+{
+    //Clean up the inbox once the file has been processed
+    NSError *error = nil;
+    [[NSFileManager defaultManager] removeItemAtPath:[itemURL path] error:&error];
+    
+    if (error) {
+        NSLog(@"ERROR: Inbox file could not be deleted");
+    }
 }
 
 @end

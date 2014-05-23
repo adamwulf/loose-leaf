@@ -9,7 +9,7 @@
 #import "MMAppDelegate.h"
 
 #import "MMLooseLeafViewController.h"
-#import "MMImageImporter.h"
+#import "MMInboxManager.h"
 #import "NSString+UUID.h"
 #import "SSKeychain.h"
 #import "Mixpanel.h"

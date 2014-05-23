@@ -21,7 +21,7 @@
 #import "MMImageSidebarContainerView.h"
 #import "MMBufferedImageView.h"
 #import "MMBorderedCamView.h"
-#import "MMImageImporter.h"
+#import "MMInboxManager.h"
 #import "Mixpanel.h"
 
 @implementation MMScrapPaperStackView{
@@ -163,9 +163,9 @@
 
         NSString* path = url.path;
         NSString* pathExtension = [path.pathExtension lowercaseString];
-        NSString* urlUTI = [MMImageImporter UTIForExtension:pathExtension];
+        NSString* urlUTI = [MMInboxManager UTIForExtension:pathExtension];
         CGFloat scale = [UIScreen mainScreen].scale;
-        UIImage* scrapBacking = [[MMImageImporter sharedInstace] imageForURL:url maxDim:600];
+        UIImage* scrapBacking = [[MMInboxManager sharedInstace] imageForURL:url maxDim:600];
         
         if(scrapBacking){
             NSLog(@"got image: %p scale: %f width: %f %f", scrapBacking, scale, scrapBacking.size.width, scrapBacking.size.height);
@@ -354,7 +354,7 @@
     
     NSString* filePath = asset.defaultRepresentation.url.path;
     NSString* pathExtension = [filePath.pathExtension lowercaseString];
-    NSString* assetUTI = [MMImageImporter UTIForExtension:pathExtension];
+    NSString* assetUTI = [MMInboxManager UTIForExtension:pathExtension];
     
     [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{ kMPEventImportPropFileExt : pathExtension,
                                                                        kMPEventImportPropFileType : assetUTI,

@@ -8,12 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MMImageImporter : NSObject
+@interface MMInboxManager : NSObject
 
-+(MMImageImporter*) sharedInstace;
++(MMInboxManager*) sharedInstace;
 
 +(NSString*) UTIForExtension:(NSString*)fileExtension;
 
 -(UIImage*) imageForURL:(NSURL*)url maxDim:(int)maxDim;
+
+- (void) removeInboxItem:(NSURL *)itemURL;
 
 @end
