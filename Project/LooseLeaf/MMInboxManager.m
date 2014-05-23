@@ -41,14 +41,21 @@ static dispatch_queue_t fileSystemQueue;
 // process the item, and then remove it from disk
 // if appropriate
 -(void) processInboxItem:(NSURL*)itemURL fromApp:(NSString*)sourceApplication{
-    UIImage* importedImage = [self imageForURL:itemURL maxDim:600];
+    NSString* uti = [itemURL universalTypeID];
     
-    if(importedImage){
-        [self.delegate didProcessIncomingImage:importedImage fromURL:itemURL fromApp:sourceApplication];
-        [self removeInboxItem:itemURL];
-    }else{
-        [self.delegate failedToProcessIncomingURL:itemURL fromApp:sourceApplication];
+    if(UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypeImage)){
+        UIImage* importedImage = [self imageForURL:itemURL maxDim:600];
+        if(importedImage){
+            [self.delegate didProcessIncomingImage:importedImage fromURL:itemURL fromApp:sourceApplication];
+            [self removeInboxItem:itemURL];
+            return;
+        }
+    }else if(UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypePDF)){
+        NSLog(@"PDF!");
     }
+    
+    [self.delegate failedToProcessIncomingURL:itemURL fromApp:sourceApplication];
+    
 }
 
 // remove the item from disk on our disk queue
@@ -67,9 +74,7 @@ static dispatch_queue_t fileSystemQueue;
 
 -(UIImage*) imageForURL:(NSURL*)url maxDim:(int)maxDim{
     
-    NSString* filePath = [url.path lowercaseString];
-    
-    if([filePath.pathExtension isEqualToString:@"icns"]){
+    if([[url fileExtension] isEqualToString:@"icns"]){
         CFBooleanRef b = (__bridge CFBooleanRef)([NSNumber numberWithBool:YES]);
         NSDictionary * sourceDict = [NSDictionary dictionaryWithObjectsAndKeys:(id)kUTTypeAppleICNS, kCGImageSourceTypeIdentifierHint,
                                      b, kCGImageSourceShouldAllowFloat, nil];
