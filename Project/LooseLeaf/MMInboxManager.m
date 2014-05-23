@@ -9,6 +9,7 @@
 #import "MMInboxManager.h"
 #import <ImageIO/ImageIO.h>
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "NSURL+UTI.h"
 
 @implementation MMInboxManager
 
@@ -36,13 +37,6 @@ static dispatch_queue_t fileSystemQueue;
 
 #pragma mark - Public Methods
 
-+(NSString*) UTIForExtension:(NSString*)fileExtension{
-    NSString *UTI = (__bridge_transfer NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)fileExtension, NULL);
-    if(!UTI){
-        UTI = @"unknown";
-    }
-    return [UTI lowercaseString];
-}
 
 // process the item, and then remove it from disk
 // if appropriate

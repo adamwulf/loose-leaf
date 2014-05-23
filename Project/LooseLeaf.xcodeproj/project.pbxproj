@@ -105,6 +105,7 @@
 		667D98AF192D5D8200625879 /* MMInboxManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98AE192D5D8200625879 /* MMInboxManager.m */; };
 		667D98B7192FBF2400625879 /* MMPDFInboxContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98B6192FBF2400625879 /* MMPDFInboxContentView.m */; };
 		667D98BA192FC22A00625879 /* MMPDFButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98B9192FC22A00625879 /* MMPDFButton.m */; };
+		667D98BE192FD37500625879 /* NSURL+UTI.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98BD192FD37500625879 /* NSURL+UTI.m */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
 		6693295A15958A950033E557 /* MMShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MMShadowManager.m */; };
@@ -382,6 +383,8 @@
 		667D98B8192FC22A00625879 /* MMPDFButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDFButton.h; sourceTree = "<group>"; };
 		667D98B9192FC22A00625879 /* MMPDFButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDFButton.m; sourceTree = "<group>"; };
 		667D98BB192FCE3900625879 /* MMInboxManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMInboxManagerDelegate.h; sourceTree = "<group>"; };
+		667D98BC192FD37500625879 /* NSURL+UTI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+UTI.h"; sourceTree = "<group>"; };
+		667D98BD192FD37500625879 /* NSURL+UTI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+UTI.m"; sourceTree = "<group>"; };
 		6690EF1217CC64630009A0AC /* MMScrapBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBubbleButton.h; sourceTree = "<group>"; };
 		6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBubbleButton.m; sourceTree = "<group>"; };
 		6690EF1517CC6F710009A0AC /* MMDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDotView.h; sourceTree = "<group>"; };
@@ -685,6 +688,8 @@
 				66AC8D8518E8902A00A65036 /* ALAssetsGroup+Properties.m */,
 				669B764D18E9FE490041DAE7 /* ALAsset+Thumbnail.h */,
 				669B764E18E9FE490041DAE7 /* ALAsset+Thumbnail.m */,
+				667D98BC192FD37500625879 /* NSURL+UTI.h */,
+				667D98BD192FD37500625879 /* NSURL+UTI.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -1760,6 +1765,7 @@
 				66DCFBDF1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m in Sources */,
 				662A21DA191D671A00AD9E31 /* MPNotification.m in Sources */,
 				6693296D1596E0600033E557 /* MMBezelInRightGestureRecognizer.m in Sources */,
+				667D98BE192FD37500625879 /* NSURL+UTI.m in Sources */,
 				6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */,
 				6648D21D178C9E5400BE3B37 /* UIColor+Shadow.m in Sources */,
 				662A21E4191D671A00AD9E31 /* UIImage+MPAverageColor.m in Sources */,

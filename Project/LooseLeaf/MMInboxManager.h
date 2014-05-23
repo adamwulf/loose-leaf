@@ -15,8 +15,6 @@
 
 +(MMInboxManager*) sharedInstace;
 
-+(NSString*) UTIForExtension:(NSString*)fileExtension;
-
 -(void) processInboxItem:(NSURL*)itemURL fromApp:(NSString*)sourceApplication;
 
 -(void) removeInboxItem:(NSURL *)itemURL;

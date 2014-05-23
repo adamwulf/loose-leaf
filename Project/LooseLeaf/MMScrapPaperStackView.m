@@ -23,6 +23,7 @@
 #import "MMBorderedCamView.h"
 #import "MMInboxManager.h"
 #import "MMInboxManagerDelegate.h"
+#import "NSURL+UTI.h"
 #import "Mixpanel.h"
 
 @implementation MMScrapPaperStackView{
@@ -159,21 +160,15 @@
 #pragma mark - MMInboxManagerDelegate
 
 -(void) failedToProcessIncomingURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
-    NSString* path = url.path;
-    NSString* pathExtension = [path.pathExtension lowercaseString];
-    NSString* urlUTI = [MMInboxManager UTIForExtension:pathExtension];
     NSLog(@"too bad! can't import file from %@", url);
     // log this to mixpanel
-    [[Mixpanel sharedInstance] track:kMPEventImportPhotoFailed properties:@{kMPEventImportPropFileExt : pathExtension,
-                                                                            kMPEventImportPropFileType : urlUTI,
+    [[Mixpanel sharedInstance] track:kMPEventImportPhotoFailed properties:@{kMPEventImportPropFileExt : [url fileExtension],
+                                                                            kMPEventImportPropFileType : [url universalTypeID],
                                                                             kMPEventImportPropSource : kMPEventImportPropSourceApplication,
                                                                             kMPEventImportPropReferApp : sourceApplication}];
 }
 
 -(void) didProcessIncomingImage:(UIImage*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
-    NSString* path = url.path;
-    NSString* pathExtension = [path.pathExtension lowercaseString];
-    NSString* urlUTI = [MMInboxManager UTIForExtension:pathExtension];
     CGFloat scale = [UIScreen mainScreen].scale;
     
     // import after slight delay so the transition from the other app
@@ -236,8 +231,8 @@
                                               }];
                          }];
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
-        [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{kMPEventImportPropFileExt : pathExtension,
-                                                                          kMPEventImportPropFileType : urlUTI,
+        [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{kMPEventImportPropFileExt : [url fileExtension],
+                                                                          kMPEventImportPropFileType : [url universalTypeID],
                                                                           kMPEventImportPropSource : kMPEventImportPropSourceApplication,
                                                                           kMPEventImportPropReferApp : sourceApplication}];
     } afterDelay:.15];
@@ -348,12 +343,9 @@
 -(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription{
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
     
-    NSString* filePath = asset.defaultRepresentation.url.path;
-    NSString* pathExtension = [filePath.pathExtension lowercaseString];
-    NSString* assetUTI = [MMInboxManager UTIForExtension:pathExtension];
-    
-    [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{ kMPEventImportPropFileExt : pathExtension,
-                                                                       kMPEventImportPropFileType : assetUTI,
+    NSURL* assetURL = asset.defaultRepresentation.url;
+    [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{ kMPEventImportPropFileExt : [assetURL fileExtension],
+                                                                       kMPEventImportPropFileType : [assetURL universalTypeID],
                                                                        kMPEventImportPropSource: containerDescription}];
     
     CGRect scrapRect = CGRectZero;
