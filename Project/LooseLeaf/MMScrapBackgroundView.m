@@ -7,9 +7,11 @@
 //
 
 #import "MMScrapBackgroundView.h"
+#import "NSThread+BlockAdditions.h"
 
 @implementation MMScrapBackgroundView{
     UIImageView* backingContentView;
+    NSString* pathOfImageOnDisk;
 }
 
 @synthesize backingContentView;
@@ -18,12 +20,15 @@
 @synthesize backgroundOffset;
 @synthesize backingViewHasChanged;
 
--(id) init{
+-(id) initWithImage:(UIImage*)img atPath:(NSString*)pathToSaveBackground{
     if(self = [super initWithFrame:CGRectZero]){
+        pathOfImageOnDisk = pathToSaveBackground;
         backingContentView = [[UIImageView alloc] initWithFrame:CGRectZero];
         backingContentView.contentMode = UIViewContentModeScaleAspectFit;
         backingContentView.clipsToBounds = YES;
+        backgroundScale = 1.0;
         [self addSubview:backingContentView];
+        [self setBackingImage:img];
     }
     return self;
 }
@@ -77,6 +82,28 @@
 -(void) setBackgroundOffset:(CGPoint)bgOffset{
     backgroundOffset = bgOffset;
     [self updateBackingImageLocation];
+}
+
+#pragma mark - Save and Load
+
+-(void) loadBackgroundFromDisk{
+    if([[NSFileManager defaultManager] fileExistsAtPath:pathOfImageOnDisk]){
+        //            NSLog(@"should be loading background");
+        UIImage* image = [UIImage imageWithContentsOfFile:pathOfImageOnDisk];
+        [NSThread performBlockOnMainThread:^{
+            [self setBackingImage:image];
+        }];
+    }
+}
+
+-(void) saveBackgroundToDisk{
+    if(self.backingViewHasChanged && ![[NSFileManager defaultManager] fileExistsAtPath:pathOfImageOnDisk]){
+        if(self.backingContentView.image){
+            NSLog(@"orientation: %d", (int) self.backingContentView.image.imageOrientation);
+            [UIImageJPEGRepresentation(self.backingContentView.image, .9) writeToFile:pathOfImageOnDisk atomically:YES];
+        }
+        self.backingViewHasChanged = NO;
+    }
 }
 
 @end

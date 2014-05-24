@@ -21,9 +21,16 @@
 @property (nonatomic, assign) CGPoint backgroundOffset;
 @property (nonatomic, assign) BOOL backingViewHasChanged;
 
+-(id) initWithImage:(UIImage*)img atPath:(NSString*)pathToSaveBackground;
+
 -(void) updateBackingImageLocation;
 
 -(void) setBackingImage:(UIImage*)img;
+
 -(UIImage*) backingImage;
+
+-(void) loadBackgroundFromDisk;
+
+-(void) saveBackgroundToDisk;
 
 @end

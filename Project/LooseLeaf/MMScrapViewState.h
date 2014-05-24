@@ -44,7 +44,7 @@
 
 -(MMScrapBackgroundView*) backgroundView;
 -(void) setBackgroundView:(MMScrapBackgroundView*)backgroundView;
-
+-(NSString*) backgroundJPGFile;
 -(CGPoint) currentCenterOfScrapBackground;
 
 -(UIView*) contentView;

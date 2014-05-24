@@ -102,7 +102,7 @@
             NSDictionary* properties = [NSDictionary dictionaryWithContentsOfFile:self.plistPath];
             bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
             
-            MMScrapBackgroundView* backingView = [[MMScrapBackgroundView alloc] init];
+            MMScrapBackgroundView* backingView = [[MMScrapBackgroundView alloc] initWithImage:nil atPath:self.backgroundJPGFile];
             
             backingView.backgroundRotation = [[properties objectForKey:@"backgroundRotation"] floatValue];
             backingView.backgroundScale = [[properties objectForKey:@"backgroundScale"] floatValue];
@@ -141,7 +141,7 @@
             [savedProperties writeToFile:self.plistPath atomically:YES];
         }
         if(!backingView){
-            backingView = [[MMScrapBackgroundView alloc] init];
+            backingView = [[MMScrapBackgroundView alloc] initWithImage:nil atPath:self.backgroundJPGFile];
         }
 
         // find drawable view bounds
@@ -196,14 +196,9 @@
                 [lock unlock];
             });
         }
-        
-        if([[NSFileManager defaultManager] fileExistsAtPath:[self backgroundJPGFile]]){
-//            NSLog(@"should be loading background");
-            UIImage* image = [UIImage imageWithContentsOfFile:[self backgroundJPGFile]];
-            [NSThread performBlockOnMainThread:^{
-                [backingImageHolder setBackingImage:image];
-            }];
-        }
+
+        // now load the background image from disk, if any
+        [backingImageHolder loadBackgroundFromDisk];
     }
     return self;
 }
@@ -253,13 +248,8 @@
                                 [savedProperties setObject:[NSNumber numberWithFloat:backingImageHolder.backgroundOffset.y] forKey:@"backgroundOffset.y"];
                                 [savedProperties writeToFile:self.plistPath atomically:YES];
 
-                                if(backingImageHolder.backingViewHasChanged && ![[NSFileManager defaultManager] fileExistsAtPath:[self backgroundJPGFile]]){
-                                    if(backingImageHolder.backingContentView.image){
-                                        NSLog(@"orientation: %d", (int) backingImageHolder.backingContentView.image.imageOrientation);
-                                        [UIImageJPEGRepresentation(backingImageHolder.backingContentView.image, .9) writeToFile:[self backgroundJPGFile] atomically:YES];
-                                    }
-                                    backingImageHolder.backingViewHasChanged = NO;
-                                }
+                                
+                                [backingImageHolder saveBackgroundToDisk];
                                 
 
                                 if([drawableViewState hasEditsToSave]){
