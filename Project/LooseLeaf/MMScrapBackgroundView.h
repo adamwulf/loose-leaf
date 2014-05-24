@@ -24,5 +24,6 @@
 -(void) updateBackingImageLocation;
 
 -(void) setBackingImage:(UIImage*)img;
+-(UIImage*) backingImage;
 
 @end

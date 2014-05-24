@@ -169,37 +169,13 @@
 }
 
 
--(void) setBackingImage:(UIImage*)img{
-    [scrapState setBackingImage:img];
+-(MMScrapBackgroundView*) backgroundView{
+    return scrapState.backgroundView;
+}
+-(void) setBackgroundView:(MMScrapBackgroundView*)backgroundView{
+    scrapState.backgroundView = backgroundView;
 }
 
--(UIImage*) backingImage{
-    return scrapState.backingImage;
-}
-
--(void) setBackgroundRotation:(CGFloat)_rotation{
-    [scrapState setBackgroundRotation:_rotation];
-}
-
--(CGFloat) backgroundRotation{
-    return scrapState.backgroundRotation;
-}
-
--(void) setBackgroundScale:(CGFloat)_backgroundScale{
-    [scrapState setBackgroundScale:_backgroundScale];
-}
-
--(CGFloat) backgroundScale{
-    return scrapState.backgroundScale;
-}
-
--(void) setBackgroundOffset:(CGPoint)bgOffset{
-    [scrapState setBackgroundOffset:bgOffset];
-}
-
--(CGPoint) backgroundOffset{
-    return [scrapState backgroundOffset];
-}
 
 /**
  * shadows cause lag during scrolling

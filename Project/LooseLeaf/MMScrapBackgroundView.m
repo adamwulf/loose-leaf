@@ -33,8 +33,9 @@
     if(!backingContentView.image){
         // if the backingContentView has an image, then
         // it's frame is already set for its image size
-        backingContentView.frame = self.bounds;
+        backingContentView.bounds = self.bounds;
     }
+    [self updateBackingImageLocation];
 }
 
 -(void) updateBackingImageLocation{
@@ -57,6 +58,10 @@
     // instead, we want to change the pre-transform size
     backingContentView.bounds = r;
     [self updateBackingImageLocation];
+}
+
+-(UIImage*) backingImage{
+    return backingContentView.image;
 }
 
 -(void) setBackgroundRotation:(CGFloat)_backgroundRotation{

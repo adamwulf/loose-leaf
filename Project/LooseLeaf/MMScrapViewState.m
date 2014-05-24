@@ -54,6 +54,9 @@
     // thumbnail
     UIImage* activeThumbnailImage;
     
+    // clipped background view
+    UIView* clippedBackgroundView;
+    
     // image background
     MMScrapBackgroundView* backingImageHolder;
     
@@ -167,7 +170,7 @@
         backingView.frame = contentView.bounds;
         backingImageHolder.frame = contentView.bounds;
 
-        UIView* clippedBackgroundView = [[UIView alloc] initWithFrame:contentView.bounds];
+        clippedBackgroundView = [[UIView alloc] initWithFrame:contentView.bounds];
         clippedBackgroundView.clipsToBounds = YES;
         clippedBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         CAShapeLayer* backgroundColorLayer = [CAShapeLayer layer];
@@ -198,7 +201,7 @@
 //            NSLog(@"should be loading background");
             UIImage* image = [UIImage imageWithContentsOfFile:[self backgroundJPGFile]];
             [NSThread performBlockOnMainThread:^{
-                [self setBackingImage:image];
+                [backingImageHolder setBackingImage:image];
             }];
         }
     }
@@ -207,37 +210,18 @@
 
 #pragma mark - Backing Image
 
--(void) setBackingImage:(UIImage*)img{
-    [backingImageHolder setBackingImage:img];
+-(MMScrapBackgroundView*) backgroundView{
+    return backingImageHolder;
+}
+-(void) setBackgroundView:(MMScrapBackgroundView*)backgroundView{
+    if(backingImageHolder){
+        [backingImageHolder removeFromSuperview];
+    }
+    backingImageHolder = backgroundView;
+    backingImageHolder.frame = contentView.bounds;
+    [clippedBackgroundView addSubview:backingImageHolder];
 }
 
--(UIImage*) backingImage{
-    return backingImageHolder.backingContentView.image;
-}
-
--(void) setBackgroundRotation:(CGFloat)_backgroundRotation{
-    [backingImageHolder setBackgroundRotation:_backgroundRotation];
-}
-
--(CGFloat) backgroundRotation{
-    return backingImageHolder.backgroundRotation;
-}
-
--(void) setBackgroundScale:(CGFloat)_backgroundScale{
-    [backingImageHolder setBackgroundScale:_backgroundScale];
-}
-
--(CGFloat) backgroundScale{
-    return backingImageHolder.backgroundScale;
-}
-
--(void) setBackgroundOffset:(CGPoint)bgOffset{
-    [backingImageHolder setBackgroundOffset:bgOffset];
-}
-
--(CGPoint) backgroundOffset{
-    return backingImageHolder.backgroundOffset;
-}
 
 -(CGPoint) currentCenterOfScrapBackground{
     return backingImageHolder.backingContentView.center;

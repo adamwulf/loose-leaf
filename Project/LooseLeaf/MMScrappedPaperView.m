@@ -557,10 +557,17 @@ static dispatch_queue_t concurrentBackgroundQueue;
                         
                         moveC = CGPointApplyAffineTransform(moveC, CGAffineTransformMakeRotation(scrap.rotation - addedScrap.rotation));
                         
-                        [addedScrap setBackingImage:scrap.backingImage];
-                        [addedScrap setBackgroundRotation:scrap.backgroundRotation + rotDiff];
-                        [addedScrap setBackgroundScale:scrap.backgroundScale];
-                        [addedScrap setBackgroundOffset:moveC2];
+                        MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] init];
+                        backgroundView.backgroundRotation = scrap.backgroundView.backgroundRotation + rotDiff;
+                        backgroundView.backgroundScale = scrap.backgroundView.backgroundScale;
+                        backgroundView.backgroundOffset = moveC2;
+                        [backgroundView setBackingImage:[scrap.backgroundView backingImage]];
+                        [addedScrap setBackgroundView:backgroundView];
+                        
+//                        [addedScrap setBackingImage:scrap.backingImage];
+//                        [addedScrap setBackgroundRotation:scrap.backgroundRotation + rotDiff];
+//                        [addedScrap setBackgroundScale:scrap.backgroundScale];
+//                        [addedScrap setBackgroundOffset:moveC2];
                         [scraps addObject:addedScrap];
                     }
                     //
@@ -737,19 +744,19 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // background
     //
     // draw the scrap's background, if it has an image background
-    if(scrap.backingImage){
+    if(scrap.backgroundView.backingImage){
         // save our scrap's coordinate system
         CGContextSaveGState(context);
         // move to scrap center
         CGAffineTransform backingTransform = CGAffineTransformMakeTranslation(scrap.bounds.size.width / 2, scrap.bounds.size.height / 2);
         // move to background center
-        backingTransform = CGAffineTransformConcat(backingTransform, CGAffineTransformMakeTranslation(scrap.backgroundOffset.x, scrap.backgroundOffset.y));
+        backingTransform = CGAffineTransformConcat(backingTransform, CGAffineTransformMakeTranslation(scrap.backgroundView.backgroundOffset.x, scrap.backgroundView.backgroundOffset.y));
         // scale and rotate into background's coordinate space
         CGContextConcatCTM(context, backingTransform);
         // rotate and scale
-        CGContextConcatCTM(context, CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.backgroundRotation),CGAffineTransformMakeScale(scrap.backgroundScale, scrap.backgroundScale)));
+        CGContextConcatCTM(context, CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.backgroundView.backgroundRotation),CGAffineTransformMakeScale(scrap.backgroundView.backgroundScale, scrap.backgroundView.backgroundScale)));
         // draw the image, and keep the images center at cgpointzero
-        UIImage* backingImage = scrap.backingImage;
+        UIImage* backingImage = scrap.backgroundView.backingImage;
         [backingImage drawAtPoint:CGPointMake(-backingImage.size.width / 2, -backingImage.size.height/2)];
         // restore us back to the scrap's coordinate system
         CGContextRestoreGState(context);

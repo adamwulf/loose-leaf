@@ -194,8 +194,13 @@
         MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation andScale:1.0];
         [scrapContainer addSubview:scrap];
         
-        [scrap setBackingImage:scrapBacking];
-        [scrap setBackgroundScale:1.0];
+        MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] init];
+        backgroundView.backgroundScale = 1.0;
+        [backgroundView setBackingImage:scrapBacking];
+        [scrap setBackgroundView:backgroundView];
+        
+//        [scrap setBackingImage:scrapBacking];
+//        [scrap setBackgroundScale:1.0];
         scrap.alpha = .3;
         scrap.scale = 1.2;
         
@@ -319,8 +324,13 @@
     // edge from the mask of the CAShapeLayer
     CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width + 2.0/scrapBacking.size.width; // extra pixel
     
-    [scrap setBackingImage:scrapBacking];
-    [scrap setBackgroundScale:scaleUpOfImage];
+    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] init];
+    backgroundView.backgroundScale = scaleUpOfImage;
+    [backgroundView setBackingImage:scrapBacking];
+    [scrap setBackgroundView:backgroundView];
+    
+//    [scrap setBackingImage:scrapBacking];
+//    [scrap setBackgroundScale:scaleUpOfImage];
     scrap.center = [self convertPoint:CGPointMake(cameraView.bounds.size.width/2, cameraView.bounds.size.height/2) fromView:cameraView];
     scrap.rotation = cameraView.rotation;
     
@@ -410,8 +420,13 @@
     // edge from the mask of the CAShapeLayer
     CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width + 2.0/scrapBacking.size.width; // extra pixel
     
-    [scrap setBackingImage:scrapBacking];
-    [scrap setBackgroundScale:scaleUpOfImage];
+    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] init];
+    backgroundView.backgroundScale = scaleUpOfImage;
+    [backgroundView setBackingImage:scrapBacking];
+    [scrap setBackgroundView:backgroundView];
+    
+//    [scrap setBackingImage:scrapBacking];
+//    [scrap setBackgroundScale:scaleUpOfImage];
     scrap.center = [self convertPoint:CGPointMake(bufferedImage.bounds.size.width/2, bufferedImage.bounds.size.height/2) fromView:bufferedImage];
     scrap.rotation = bufferedImage.rotation;
     
@@ -1095,11 +1110,12 @@ int skipAll = NO;
     panAndPinchScrapGesture2.scrap = clonedScrap;
     
     // clone background contents too
-    [clonedScrap setBackingImage:scrap.backingImage];
-    [clonedScrap setBackgroundRotation:scrap.backgroundRotation];
-    [clonedScrap setBackgroundScale:scrap.backgroundScale];
-    [clonedScrap setBackgroundOffset:scrap.backgroundOffset];
-    
+    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] init];
+    backgroundView.backgroundScale = scrap.backgroundView.backgroundScale;
+    backgroundView.backgroundRotation = scrap.backgroundView.backgroundRotation;
+    backgroundView.backgroundOffset = scrap.backgroundView.backgroundOffset;
+    [backgroundView setBackingImage:scrap.backgroundView.backingImage];
+    [clonedScrap setBackgroundView:backgroundView];
 
     // move it to the new gesture location under it's scrap
     [UIView setAnchorPoint:CGPointMake(.5, .5) forView:clonedScrap];
