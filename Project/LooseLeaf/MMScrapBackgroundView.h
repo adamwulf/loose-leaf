@@ -36,4 +36,6 @@
 
 -(MMScrapBackgroundView*) duplicateFor:(MMScrapViewState*)otherScrapState;
 
+-(MMScrapBackgroundView*) stampBackgroundFor:(MMScrapViewState*)otherScrapState;
+
 @end

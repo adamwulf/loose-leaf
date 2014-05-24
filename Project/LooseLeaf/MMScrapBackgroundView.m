@@ -9,6 +9,7 @@
 #import "MMScrapBackgroundView.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMScrapViewState.h"
+#import <DrawKit-iOS/DrawKit-iOS.h>
 
 @implementation MMScrapBackgroundView{
     UIImageView* backingContentView;
@@ -107,6 +108,40 @@
     backgroundView.backgroundScale = self.backgroundScale;
     backgroundView.backgroundRotation = self.backgroundRotation;
     backgroundView.backgroundOffset = self.backgroundOffset;
+    return backgroundView;
+}
+
+// this will create a copy of the current background and will align
+// it onto the input scrap so that the new scrap's background perfectly
+// aligns with this scrap's background
+-(MMScrapBackgroundView*) stampBackgroundFor:(MMScrapViewState*)otherScrapState{
+    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:self.backingImage
+                                                                           forScrapState:otherScrapState];
+    // clone the background so that the new scrap's
+    // background aligns with the old scrap's background
+    CGFloat orgRot = scrapState.delegate.rotation;
+    CGFloat newRot = otherScrapState.delegate.rotation;
+    CGFloat rotDiff = orgRot - newRot;
+    
+    CGPoint orgC = scrapState.delegate.center;
+    CGPoint newC = otherScrapState.delegate.center;
+    CGPoint moveC = CGPointMake(newC.x - orgC.x, newC.y - orgC.y);
+    
+    CGPoint convertedC = [otherScrapState.contentView convertPoint:[scrapState currentCenterOfScrapBackground] fromView:scrapState.contentView];
+    CGPoint refPoint = CGPointMake(otherScrapState.contentView.bounds.size.width/2,
+                                   otherScrapState.contentView.bounds.size.height/2);
+    CGPoint moveC2 = CGPointMake(convertedC.x - refPoint.x, convertedC.y - refPoint.y);
+    
+    // we have the correct adjustment value,
+    // but now we need to account for the fact
+    // that the new scrap has a different rotation
+    // than the start scrap
+    
+    moveC = CGPointApplyAffineTransform(moveC, CGAffineTransformMakeRotation(scrapState.delegate.rotation - otherScrapState.delegate.rotation));
+    
+    backgroundView.backgroundRotation = self.backgroundRotation + rotDiff;
+    backgroundView.backgroundScale = self.backgroundScale;
+    backgroundView.backgroundOffset = moveC2;
     return backgroundView;
 }
 

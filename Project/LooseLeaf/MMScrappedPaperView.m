@@ -530,43 +530,22 @@ static dispatch_queue_t concurrentBackgroundQueue;
                         @synchronized(scrapContainerView){
                             [scrapContainerView insertSubview:addedScrap belowSubview:scrap];
                         }
+                        
+                        // stamp the background
+                        if(scrap.backgroundView.backingImage){
+                            [addedScrap setBackgroundView:[scrap.backgroundView stampBackgroundFor:addedScrap.state]];
+                        }
+                        
+                        // stamp the contents
                         [addedScrap stampContentsFrom:scrap.state.drawableView];
                         
-                        if(scrap.backgroundView.backingImage){
-                            // clone the background so that the new scrap's
-                            // background aligns with the old scrap's background
-                            CGFloat addedScrapDist = distance(scrap.center, addedScrap.center);
-                            if(addedScrapDist > maxDist){
-                                maxDist = addedScrapDist;
-                            }
-                            [vectors addObject:[MMVector vectorWithPoint:scrap.center andPoint:addedScrap.center]];
-                            CGFloat orgRot = scrap.rotation;
-                            CGFloat newRot = addedScrap.rotation;
-                            CGFloat rotDiff = orgRot - newRot;
-                            
-                            CGPoint orgC = scrap.center;
-                            CGPoint newC = addedScrap.center;
-                            CGPoint moveC = CGPointMake(newC.x - orgC.x, newC.y - orgC.y);
-                            
-                            CGPoint convertedC = [addedScrap.state.contentView convertPoint:[scrap.state currentCenterOfScrapBackground] fromView:scrap.state.contentView];
-                            CGPoint refPoint = CGPointMake(addedScrap.state.contentView.bounds.size.width/2,
-                                                           addedScrap.state.contentView.bounds.size.height/2);
-                            CGPoint moveC2 = CGPointMake(convertedC.x - refPoint.x, convertedC.y - refPoint.y);
-                            
-                            // we have the correct adjustment value,
-                            // but now we need to account for the fact
-                            // that the new scrap has a different rotation
-                            // than the start scrap
-                            
-                            moveC = CGPointApplyAffineTransform(moveC, CGAffineTransformMakeRotation(scrap.rotation - addedScrap.rotation));
-                        
-                            MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrap.backgroundView.backingImage
-                                                                                                          forScrapState:addedScrap.state];
-                            backgroundView.backgroundRotation = scrap.backgroundView.backgroundRotation + rotDiff;
-                            backgroundView.backgroundScale = scrap.backgroundView.backgroundScale;
-                            backgroundView.backgroundOffset = moveC2;
-                            [addedScrap setBackgroundView:backgroundView];
+                        // calculate vectors for pushing scraps apart
+                        CGFloat addedScrapDist = distance(scrap.center, addedScrap.center);
+                        if(addedScrapDist > maxDist){
+                            maxDist = addedScrapDist;
                         }
+                        [vectors addObject:[MMVector vectorWithPoint:scrap.center andPoint:addedScrap.center]];
+                        
                         [scraps addObject:addedScrap];
                     }
                     //
