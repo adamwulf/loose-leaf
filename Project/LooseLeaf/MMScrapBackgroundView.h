@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MMScrapBackgroundView : UIView
+@interface MMScrapBackgroundView : UIView{
+    CGFloat backgroundRotation;
+}
 
 @property (nonatomic, readonly) UIImageView* backingContentView;
+@property (nonatomic, assign) CGFloat backgroundRotation;
 
 @end

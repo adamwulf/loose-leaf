@@ -58,7 +58,6 @@
     MMScrapBackgroundView* backingImageHolder;
     
     BOOL backingViewHasChanged;
-    CGFloat backgroundRotation;
     CGFloat backgroundScale;
     CGPoint backgroundOffset;
     
@@ -103,11 +102,15 @@
         if([[NSFileManager defaultManager] fileExistsAtPath:self.plistPath]){
             NSDictionary* properties = [NSDictionary dictionaryWithContentsOfFile:self.plistPath];
             bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
-            backgroundRotation = [[properties objectForKey:@"backgroundRotation"] floatValue];
+            
+            MMScrapBackgroundView* backingView = [[MMScrapBackgroundView alloc] init];
+            
+            backingView.backgroundRotation = [[properties objectForKey:@"backgroundRotation"] floatValue];
             backgroundScale = [[properties objectForKey:@"backgroundScale"] floatValue];
             backgroundOffset.x = [[properties objectForKey:@"backgroundOffset.x"] floatValue];
             backgroundOffset.y = [[properties objectForKey:@"backgroundOffset.y"] floatValue];
-            return [self initWithUUID:uuid andBezierPath:bezierPath];
+            
+            return [self initWithUUID:uuid andBezierPath:bezierPath andBackgroundView:backingView];
         }else{
             // we don't have a file that we should have, so don't load the scrap
             return nil;
@@ -116,8 +119,11 @@
     return self;
 }
 
-
 -(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path{
+    return [self initWithUUID:_uuid andBezierPath:_path andBackgroundView:nil];
+}
+
+-(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andBackgroundView:(MMScrapBackgroundView*)backingView{
     if(self = [super init]){
         
         // save our UUID, everything depends on this
@@ -135,6 +141,9 @@
             NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
             [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
             [savedProperties writeToFile:self.plistPath atomically:YES];
+        }
+        if(!backingView){
+            backingView = [[MMScrapBackgroundView alloc] init];
         }
 
         // find drawable view bounds
@@ -159,7 +168,8 @@
         thumbnailView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         thumbnailView.frame = contentView.bounds;
 
-        backingImageHolder = [[MMScrapBackgroundView alloc] initWithFrame:contentView.bounds];
+        backingImageHolder = backingView;
+        backingImageHolder.frame = contentView.bounds;
 
         UIView* clippedBackgroundView = [[UIView alloc] initWithFrame:contentView.bounds];
         clippedBackgroundView.clipsToBounds = YES;
@@ -204,7 +214,7 @@
 -(void) updateBackingImageLocation{
     backingImageHolder.backingContentView.center = CGPointMake(contentView.bounds.size.width/2 + backgroundOffset.x,
                                             contentView.bounds.size.height/2 + backgroundOffset.y);
-    backingImageHolder.backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(backgroundRotation),CGAffineTransformMakeScale(backgroundScale, backgroundScale));
+    backingImageHolder.backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(backingImageHolder.backgroundRotation),CGAffineTransformMakeScale(backgroundScale, backgroundScale));
     backingViewHasChanged = YES;
 //    NSLog(@"(%@) updating background properties", self.uuid);
 }
@@ -222,12 +232,12 @@
 }
 
 -(void) setBackgroundRotation:(CGFloat)_backgroundRotation{
-    backgroundRotation = _backgroundRotation;
+    backingImageHolder.backgroundRotation = _backgroundRotation;
     [self updateBackingImageLocation];
 }
 
 -(CGFloat) backgroundRotation{
-    return backgroundRotation;
+    return backingImageHolder.backgroundRotation;
 }
 
 -(void) setBackgroundScale:(CGFloat)_backgroundScale{
@@ -272,7 +282,7 @@
                                 // for saving state vs content
                                 NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
                                 [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
-                                [savedProperties setObject:[NSNumber numberWithFloat:backgroundRotation] forKey:@"backgroundRotation"];
+                                [savedProperties setObject:[NSNumber numberWithFloat:backingImageHolder.backgroundRotation] forKey:@"backgroundRotation"];
                                 [savedProperties setObject:[NSNumber numberWithFloat:backgroundScale] forKey:@"backgroundScale"];
                                 [savedProperties setObject:[NSNumber numberWithFloat:backgroundOffset.x] forKey:@"backgroundOffset.x"];
                                 [savedProperties setObject:[NSNumber numberWithFloat:backgroundOffset.y] forKey:@"backgroundOffset.y"];

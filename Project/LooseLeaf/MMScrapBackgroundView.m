@@ -13,21 +13,25 @@
 }
 
 @synthesize backingContentView;
+@synthesize backgroundRotation;
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-        backingContentView = [[UIImageView alloc] initWithFrame:frame];
+-(id) init{
+    if(self = [super initWithFrame:CGRectZero]){
+        backingContentView = [[UIImageView alloc] initWithFrame:CGRectZero];
         backingContentView.contentMode = UIViewContentModeScaleAspectFit;
         backingContentView.clipsToBounds = YES;
-        backingContentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        backingContentView.frame = frame;
         [self addSubview:backingContentView];
     }
     return self;
 }
 
+-(void) setFrame:(CGRect)frame{
+    [super setFrame:frame];
+    if(!backingContentView.image){
+        // if the backingContentView has an image, then
+        // it's frame is already set for its image size
+        backingContentView.frame = self.bounds;
+    }
+}
 
 @end
