@@ -194,7 +194,7 @@
         MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation andScale:1.0];
         [scrapContainer addSubview:scrap];
         
-        MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrapBacking atPath:scrap.state.backgroundJPGFile];
+        MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state];
         [scrap setBackgroundView:backgroundView];
         
 //        [scrap setBackingImage:scrapBacking];
@@ -322,7 +322,7 @@
     // edge from the mask of the CAShapeLayer
     CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width + 2.0/scrapBacking.size.width; // extra pixel
     
-    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrapBacking atPath:scrap.state.backgroundJPGFile];
+    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state];
     backgroundView.backgroundScale = scaleUpOfImage;
     [scrap setBackgroundView:backgroundView];
     
@@ -417,7 +417,7 @@
     // edge from the mask of the CAShapeLayer
     CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width + 2.0/scrapBacking.size.width; // extra pixel
     
-    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrapBacking atPath:scrap.state.backgroundJPGFile];
+    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state];
     backgroundView.backgroundScale = scaleUpOfImage;
     [scrap setBackgroundView:backgroundView];
     
@@ -1106,7 +1106,8 @@ int skipAll = NO;
     panAndPinchScrapGesture2.scrap = clonedScrap;
     
     // clone background contents too
-    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrap.backgroundView.backingImage atPath:clonedScrap.state.backgroundJPGFile];
+    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrap.backgroundView.backingImage
+                                                                                  forScrapState:clonedScrap.state];
     backgroundView.backgroundScale = scrap.backgroundView.backgroundScale;
     backgroundView.backgroundRotation = scrap.backgroundView.backgroundRotation;
     backgroundView.backgroundOffset = scrap.backgroundView.backgroundOffset;

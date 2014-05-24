@@ -8,10 +8,14 @@
 
 #import "MMScrapBackgroundView.h"
 #import "NSThread+BlockAdditions.h"
+#import "MMScrapViewState.h"
 
 @implementation MMScrapBackgroundView{
     UIImageView* backingContentView;
-    NSString* pathOfImageOnDisk;
+    // the scrap that we're the background for
+    __weak MMScrapViewState* scrapState;
+    // cache our path
+    NSString* backgroundPathCache;
 }
 
 @synthesize backingContentView;
@@ -20,9 +24,9 @@
 @synthesize backgroundOffset;
 @synthesize backingViewHasChanged;
 
--(id) initWithImage:(UIImage*)img atPath:(NSString*)pathToSaveBackground{
+-(id) initWithImage:(UIImage*)img forScrapState:(MMScrapViewState*)_scrapState{
     if(self = [super initWithFrame:CGRectZero]){
-        pathOfImageOnDisk = pathToSaveBackground;
+        scrapState = _scrapState;
         backingContentView = [[UIImageView alloc] initWithFrame:CGRectZero];
         backingContentView.contentMode = UIViewContentModeScaleAspectFit;
         backingContentView.clipsToBounds = YES;
@@ -84,12 +88,22 @@
     [self updateBackingImageLocation];
 }
 
+#pragma mark - Path to the JPG on disk
+
+-(NSString*) backgroundJPGFile{
+    if(!backgroundPathCache){
+        backgroundPathCache = [scrapState.pathForScrapAssets stringByAppendingPathComponent:[@"background" stringByAppendingPathExtension:@"jpg"]];
+    }
+    return backgroundPathCache;
+}
+
+
 #pragma mark - Save and Load
 
 -(void) loadBackgroundFromDisk{
-    if([[NSFileManager defaultManager] fileExistsAtPath:pathOfImageOnDisk]){
+    if([[NSFileManager defaultManager] fileExistsAtPath:self.backgroundJPGFile]){
         //            NSLog(@"should be loading background");
-        UIImage* image = [UIImage imageWithContentsOfFile:pathOfImageOnDisk];
+        UIImage* image = [UIImage imageWithContentsOfFile:self.backgroundJPGFile];
         [NSThread performBlockOnMainThread:^{
             [self setBackingImage:image];
         }];
@@ -97,10 +111,10 @@
 }
 
 -(void) saveBackgroundToDisk{
-    if(self.backingViewHasChanged && ![[NSFileManager defaultManager] fileExistsAtPath:pathOfImageOnDisk]){
+    if(self.backingViewHasChanged && ![[NSFileManager defaultManager] fileExistsAtPath:self.backgroundJPGFile]){
         if(self.backingContentView.image){
             NSLog(@"orientation: %d", (int) self.backingContentView.image.imageOrientation);
-            [UIImageJPEGRepresentation(self.backingContentView.image, .9) writeToFile:pathOfImageOnDisk atomically:YES];
+            [UIImageJPEGRepresentation(self.backingContentView.image, .9) writeToFile:self.backgroundJPGFile atomically:YES];
         }
         self.backingViewHasChanged = NO;
     }

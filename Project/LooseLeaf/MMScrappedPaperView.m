@@ -561,7 +561,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                             moveC = CGPointApplyAffineTransform(moveC, CGAffineTransformMakeRotation(scrap.rotation - addedScrap.rotation));
                         
                             MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrap.backgroundView.backingImage
-                                                                                                          atPath:addedScrap.state.backgroundJPGFile];
+                                                                                                          forScrapState:addedScrap.state];
                             backgroundView.backgroundRotation = scrap.backgroundView.backgroundRotation + rotDiff;
                             backgroundView.backgroundScale = scrap.backgroundView.backgroundScale;
                             backgroundView.backgroundOffset = moveC2;

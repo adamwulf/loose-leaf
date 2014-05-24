@@ -102,7 +102,7 @@
             NSDictionary* properties = [NSDictionary dictionaryWithContentsOfFile:self.plistPath];
             bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
             
-            MMScrapBackgroundView* backingView = [[MMScrapBackgroundView alloc] initWithImage:nil atPath:self.backgroundJPGFile];
+            MMScrapBackgroundView* backingView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
             
             backingView.backgroundRotation = [[properties objectForKey:@"backgroundRotation"] floatValue];
             backingView.backgroundScale = [[properties objectForKey:@"backgroundScale"] floatValue];
@@ -141,7 +141,7 @@
             [savedProperties writeToFile:self.plistPath atomically:YES];
         }
         if(!backingView){
-            backingView = [[MMScrapBackgroundView alloc] initWithImage:nil atPath:self.backgroundJPGFile];
+            backingView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
         }
 
         // find drawable view bounds
@@ -445,37 +445,30 @@
 
 -(NSString*)plistPath{
     if(!plistPath){
-        plistPath = [self.scrapPath stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
+        plistPath = [self.pathForScrapAssets stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
     }
     return plistPath;
 }
 
 -(NSString*)inkImageFile{
     if(!inkImageFile){
-        inkImageFile = [self.scrapPath stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
+        inkImageFile = [self.pathForScrapAssets stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
     }
     return inkImageFile;
 }
 
 -(NSString*) thumbImageFile{
     if(!thumbImageFile){
-        thumbImageFile = [self.scrapPath stringByAppendingPathComponent:[@"thumb" stringByAppendingPathExtension:@"png"]];
+        thumbImageFile = [self.pathForScrapAssets stringByAppendingPathComponent:[@"thumb" stringByAppendingPathExtension:@"png"]];
     }
     return thumbImageFile;
 }
 
 -(NSString*) stateFile{
     if(!stateFile){
-        stateFile = [self.scrapPath stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
+        stateFile = [self.pathForScrapAssets stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
     }
     return stateFile;
-}
-
--(NSString*) backgroundJPGFile{
-    if(!backgroundFile){
-        backgroundFile = [self.scrapPath stringByAppendingPathComponent:[@"background" stringByAppendingPathExtension:@"jpg"]];
-    }
-    return backgroundFile;
 }
 
 #pragma mark - Private
@@ -486,7 +479,7 @@
     return scrapPath;
 }
 
--(NSString*) scrapPath{
+-(NSString*) pathForScrapAssets{
     if(!scrapPath){
         scrapPath = [MMScrapViewState scrapDirectoryPathForUUID:uuid];
         [NSFileManager ensureDirectoryExistsAtPath:scrapPath];

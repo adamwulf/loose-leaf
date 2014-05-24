@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class MMScrapViewState;
+
 @interface MMScrapBackgroundView : UIView{
     CGFloat backgroundRotation;
     CGFloat backgroundScale;
@@ -21,7 +23,7 @@
 @property (nonatomic, assign) CGPoint backgroundOffset;
 @property (nonatomic, assign) BOOL backingViewHasChanged;
 
--(id) initWithImage:(UIImage*)img atPath:(NSString*)pathToSaveBackground;
+-(id) initWithImage:(UIImage*)img forScrapState:(MMScrapViewState*)scrapState;
 
 -(void) updateBackingImageLocation;
 

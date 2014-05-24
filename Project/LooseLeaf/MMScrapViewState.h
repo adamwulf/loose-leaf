@@ -22,6 +22,7 @@
 @property (readonly) CGRect drawableBounds;
 @property (readonly) NSString* uuid;
 @property (readonly) JotView* drawableView;
+@property (readonly) NSString* pathForScrapAssets;
 
 -(id) initWithUUID:(NSString*)uuid;
 
@@ -44,7 +45,6 @@
 
 -(MMScrapBackgroundView*) backgroundView;
 -(void) setBackgroundView:(MMScrapBackgroundView*)backgroundView;
--(NSString*) backgroundJPGFile;
 -(CGPoint) currentCenterOfScrapBackground;
 
 -(UIView*) contentView;
