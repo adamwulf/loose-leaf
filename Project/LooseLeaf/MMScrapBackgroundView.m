@@ -14,6 +14,8 @@
 
 @synthesize backingContentView;
 @synthesize backgroundRotation;
+@synthesize backgroundScale;
+@synthesize backgroundOffset;
 
 -(id) init{
     if(self = [super initWithFrame:CGRectZero]){

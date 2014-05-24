@@ -58,8 +58,6 @@
     MMScrapBackgroundView* backingImageHolder;
     
     BOOL backingViewHasChanged;
-    CGFloat backgroundScale;
-    CGPoint backgroundOffset;
     
     // lock to control threading
     NSLock* lock;
@@ -106,9 +104,9 @@
             MMScrapBackgroundView* backingView = [[MMScrapBackgroundView alloc] init];
             
             backingView.backgroundRotation = [[properties objectForKey:@"backgroundRotation"] floatValue];
-            backgroundScale = [[properties objectForKey:@"backgroundScale"] floatValue];
-            backgroundOffset.x = [[properties objectForKey:@"backgroundOffset.x"] floatValue];
-            backgroundOffset.y = [[properties objectForKey:@"backgroundOffset.y"] floatValue];
+            backingView.backgroundScale = [[properties objectForKey:@"backgroundScale"] floatValue];
+            backingView.backgroundOffset = CGPointMake([[properties objectForKey:@"backgroundOffset.x"] floatValue],
+                                                       [[properties objectForKey:@"backgroundOffset.y"] floatValue]);
             
             return [self initWithUUID:uuid andBezierPath:bezierPath andBackgroundView:backingView];
         }else{
@@ -212,9 +210,9 @@
 #pragma mark - Backing Image
 
 -(void) updateBackingImageLocation{
-    backingImageHolder.backingContentView.center = CGPointMake(contentView.bounds.size.width/2 + backgroundOffset.x,
-                                            contentView.bounds.size.height/2 + backgroundOffset.y);
-    backingImageHolder.backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(backingImageHolder.backgroundRotation),CGAffineTransformMakeScale(backgroundScale, backgroundScale));
+    backingImageHolder.backingContentView.center = CGPointMake(contentView.bounds.size.width/2 + backingImageHolder.backgroundOffset.x,
+                                            contentView.bounds.size.height/2 + backingImageHolder.backgroundOffset.y);
+    backingImageHolder.backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(backingImageHolder.backgroundRotation),CGAffineTransformMakeScale(backingImageHolder.backgroundScale, backingImageHolder.backgroundScale));
     backingViewHasChanged = YES;
 //    NSLog(@"(%@) updating background properties", self.uuid);
 }
@@ -241,21 +239,21 @@
 }
 
 -(void) setBackgroundScale:(CGFloat)_backgroundScale{
-    backgroundScale = _backgroundScale;
+    backingImageHolder.backgroundScale = _backgroundScale;
     [self updateBackingImageLocation];
 }
 
 -(CGFloat) backgroundScale{
-    return backgroundScale;
+    return backingImageHolder.backgroundScale;
 }
 
 -(void) setBackgroundOffset:(CGPoint)bgOffset{
-    backgroundOffset = bgOffset;
+    backingImageHolder.backgroundOffset = bgOffset;
     [self updateBackingImageLocation];
 }
 
 -(CGPoint) backgroundOffset{
-    return backgroundOffset;
+    return backingImageHolder.backgroundOffset;
 }
 
 -(CGPoint) currentCenterOfScrapBackground{
@@ -283,9 +281,9 @@
                                 NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
                                 [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
                                 [savedProperties setObject:[NSNumber numberWithFloat:backingImageHolder.backgroundRotation] forKey:@"backgroundRotation"];
-                                [savedProperties setObject:[NSNumber numberWithFloat:backgroundScale] forKey:@"backgroundScale"];
-                                [savedProperties setObject:[NSNumber numberWithFloat:backgroundOffset.x] forKey:@"backgroundOffset.x"];
-                                [savedProperties setObject:[NSNumber numberWithFloat:backgroundOffset.y] forKey:@"backgroundOffset.y"];
+                                [savedProperties setObject:[NSNumber numberWithFloat:backingImageHolder.backgroundScale] forKey:@"backgroundScale"];
+                                [savedProperties setObject:[NSNumber numberWithFloat:backingImageHolder.backgroundOffset.x] forKey:@"backgroundOffset.x"];
+                                [savedProperties setObject:[NSNumber numberWithFloat:backingImageHolder.backgroundOffset.y] forKey:@"backgroundOffset.y"];
                                 [savedProperties writeToFile:self.plistPath atomically:YES];
 
                                 if(backingViewHasChanged && ![[NSFileManager defaultManager] fileExistsAtPath:[self backgroundJPGFile]]){
