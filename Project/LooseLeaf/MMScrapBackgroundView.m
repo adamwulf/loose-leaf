@@ -16,6 +16,7 @@
 @synthesize backgroundRotation;
 @synthesize backgroundScale;
 @synthesize backgroundOffset;
+@synthesize backingViewHasChanged;
 
 -(id) init{
     if(self = [super initWithFrame:CGRectZero]){
@@ -34,6 +35,43 @@
         // it's frame is already set for its image size
         backingContentView.frame = self.bounds;
     }
+}
+
+-(void) updateBackingImageLocation{
+    self.backingContentView.center = CGPointMake(self.bounds.size.width/2 + self.backgroundOffset.x,
+                                                               self.bounds.size.height/2 + self.backgroundOffset.y);
+    self.backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(self.backgroundRotation),CGAffineTransformMakeScale(self.backgroundScale, self.backgroundScale));
+    self.backingViewHasChanged = YES;
+}
+
+#pragma mark - Properties
+
+-(void) setBackingImage:(UIImage*)img{
+    backingContentView.image = img;
+    CGRect r = backingContentView.bounds;
+    r.size = CGSizeMake(img.size.width, img.size.height);
+    // must set the bounds, because the image view
+    // has a transform applied, and setting the frame
+    // will try to take that transform into account.
+    //
+    // instead, we want to change the pre-transform size
+    backingContentView.bounds = r;
+    [self updateBackingImageLocation];
+}
+
+-(void) setBackgroundRotation:(CGFloat)_backgroundRotation{
+    backgroundRotation = _backgroundRotation;
+    [self updateBackingImageLocation];
+}
+
+-(void) setBackgroundScale:(CGFloat)_backgroundScale{
+    backgroundScale = _backgroundScale;
+    [self updateBackingImageLocation];
+}
+
+-(void) setBackgroundOffset:(CGPoint)bgOffset{
+    backgroundOffset = bgOffset;
+    [self updateBackingImageLocation];
 }
 
 @end

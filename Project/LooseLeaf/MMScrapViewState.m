@@ -57,8 +57,6 @@
     // image background
     MMScrapBackgroundView* backingImageHolder;
     
-    BOOL backingViewHasChanged;
-    
     // lock to control threading
     NSLock* lock;
 }
@@ -127,7 +125,6 @@
         // save our UUID, everything depends on this
         uuid = _uuid;
         lock = [[NSLock alloc] init];
-        backingViewHasChanged = NO;
 
         if(!bezierPath){
             CGRect originalBounds = _path.bounds;
@@ -167,6 +164,7 @@
         thumbnailView.frame = contentView.bounds;
 
         backingImageHolder = backingView;
+        backingView.frame = contentView.bounds;
         backingImageHolder.frame = contentView.bounds;
 
         UIView* clippedBackgroundView = [[UIView alloc] initWithFrame:contentView.bounds];
@@ -209,20 +207,8 @@
 
 #pragma mark - Backing Image
 
--(void) updateBackingImageLocation{
-    backingImageHolder.backingContentView.center = CGPointMake(contentView.bounds.size.width/2 + backingImageHolder.backgroundOffset.x,
-                                            contentView.bounds.size.height/2 + backingImageHolder.backgroundOffset.y);
-    backingImageHolder.backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(backingImageHolder.backgroundRotation),CGAffineTransformMakeScale(backingImageHolder.backgroundScale, backingImageHolder.backgroundScale));
-    backingViewHasChanged = YES;
-//    NSLog(@"(%@) updating background properties", self.uuid);
-}
-
 -(void) setBackingImage:(UIImage*)img{
-    backingImageHolder.backingContentView.image = img;
-    CGRect r = backingImageHolder.backingContentView.frame;
-    r.size = CGSizeMake(img.size.width, img.size.height);
-    backingImageHolder.backingContentView.frame = r;
-    [self updateBackingImageLocation];
+    [backingImageHolder setBackingImage:img];
 }
 
 -(UIImage*) backingImage{
@@ -230,8 +216,7 @@
 }
 
 -(void) setBackgroundRotation:(CGFloat)_backgroundRotation{
-    backingImageHolder.backgroundRotation = _backgroundRotation;
-    [self updateBackingImageLocation];
+    [backingImageHolder setBackgroundRotation:_backgroundRotation];
 }
 
 -(CGFloat) backgroundRotation{
@@ -239,8 +224,7 @@
 }
 
 -(void) setBackgroundScale:(CGFloat)_backgroundScale{
-    backingImageHolder.backgroundScale = _backgroundScale;
-    [self updateBackingImageLocation];
+    [backingImageHolder setBackgroundScale:_backgroundScale];
 }
 
 -(CGFloat) backgroundScale{
@@ -248,8 +232,7 @@
 }
 
 -(void) setBackgroundOffset:(CGPoint)bgOffset{
-    backingImageHolder.backgroundOffset = bgOffset;
-    [self updateBackingImageLocation];
+    [backingImageHolder setBackgroundOffset:bgOffset];
 }
 
 -(CGPoint) backgroundOffset{
@@ -263,16 +246,16 @@
 #pragma mark - State Saving and Loading
 
 -(void) saveScrapStateToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock{
-    if(drawableViewState && ([drawableViewState hasEditsToSave] || backingViewHasChanged)){
+    if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
         dispatch_async([self importExportScrapStateQueue], ^{
             @autoreleasepool {
                 [lock lock];
 //                NSLog(@"(%@) saving with background: %d %d", uuid, (int)drawableView, backingViewHasChanged);
-                if(drawableViewState && ([drawableViewState hasEditsToSave] || backingViewHasChanged)){
+                if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                     [NSThread performBlockOnMainThread:^{
                         @autoreleasepool {
-                            if(drawableView && ([drawableViewState hasEditsToSave] || backingViewHasChanged)){
+                            if(drawableView && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
 //                                NSLog(@"(%@) saving background: %d", uuid, backingViewHasChanged);
                                 // save path
                                 // this needs to be saved at the exact same time as the drawable view
@@ -286,12 +269,12 @@
                                 [savedProperties setObject:[NSNumber numberWithFloat:backingImageHolder.backgroundOffset.y] forKey:@"backgroundOffset.y"];
                                 [savedProperties writeToFile:self.plistPath atomically:YES];
 
-                                if(backingViewHasChanged && ![[NSFileManager defaultManager] fileExistsAtPath:[self backgroundJPGFile]]){
+                                if(backingImageHolder.backingViewHasChanged && ![[NSFileManager defaultManager] fileExistsAtPath:[self backgroundJPGFile]]){
                                     if(backingImageHolder.backingContentView.image){
                                         NSLog(@"orientation: %d", (int) backingImageHolder.backingContentView.image.imageOrientation);
                                         [UIImageJPEGRepresentation(backingImageHolder.backingContentView.image, .9) writeToFile:[self backgroundJPGFile] atomically:YES];
                                     }
-                                    backingViewHasChanged = NO;
+                                    backingImageHolder.backingViewHasChanged = NO;
                                 }
                                 
 

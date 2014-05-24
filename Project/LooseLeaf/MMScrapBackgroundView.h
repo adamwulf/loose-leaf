@@ -12,11 +12,17 @@
     CGFloat backgroundRotation;
     CGFloat backgroundScale;
     CGPoint backgroundOffset;
+    BOOL backingViewHasChanged;
 }
 
 @property (nonatomic, readonly) UIImageView* backingContentView;
 @property (nonatomic, assign) CGFloat backgroundRotation;
 @property (nonatomic, assign) CGFloat backgroundScale;
 @property (nonatomic, assign) CGPoint backgroundOffset;
+@property (nonatomic, assign) BOOL backingViewHasChanged;
+
+-(void) updateBackingImageLocation;
+
+-(void) setBackingImage:(UIImage*)img;
 
 @end
