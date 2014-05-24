@@ -545,7 +545,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                         CGPoint newC = addedScrap.center;
                         CGPoint moveC = CGPointMake(newC.x - orgC.x, newC.y - orgC.y);
                         
-                        CGPoint convertedC = [addedScrap.state.contentView convertPoint:scrap.state.backingContentView.center fromView:scrap.state.contentView];
+                        CGPoint convertedC = [addedScrap.state.contentView convertPoint:[scrap.state currentCenterOfScrapBackground] fromView:scrap.state.contentView];
                         CGPoint refPoint = CGPointMake(addedScrap.state.contentView.bounds.size.width/2,
                                                        addedScrap.state.contentView.bounds.size.height/2);
                         CGPoint moveC2 = CGPointMake(convertedC.x - refPoint.x, convertedC.y - refPoint.y);

@@ -58,7 +58,6 @@
     MMScrapBackgroundView* backingImageHolder;
     
     BOOL backingViewHasChanged;
-    UIImageView* backingContentView;
     CGFloat backgroundRotation;
     CGFloat backgroundScale;
     CGPoint backgroundOffset;
@@ -160,14 +159,7 @@
         thumbnailView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         thumbnailView.frame = contentView.bounds;
 
-        
         backingImageHolder = [[MMScrapBackgroundView alloc] initWithFrame:contentView.bounds];
-        backingContentView = [[UIImageView alloc] initWithFrame:contentView.bounds];
-        backingContentView.contentMode = UIViewContentModeScaleAspectFit;
-        backingContentView.clipsToBounds = YES;
-        backingContentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        backingContentView.frame = contentView.bounds;
-        [backingImageHolder addSubview:backingContentView];
 
         UIView* clippedBackgroundView = [[UIView alloc] initWithFrame:contentView.bounds];
         clippedBackgroundView.clipsToBounds = YES;
@@ -210,23 +202,23 @@
 #pragma mark - Backing Image
 
 -(void) updateBackingImageLocation{
-    backingContentView.center = CGPointMake(contentView.bounds.size.width/2 + backgroundOffset.x,
+    backingImageHolder.backingContentView.center = CGPointMake(contentView.bounds.size.width/2 + backgroundOffset.x,
                                             contentView.bounds.size.height/2 + backgroundOffset.y);
-    backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(backgroundRotation),CGAffineTransformMakeScale(backgroundScale, backgroundScale));
+    backingImageHolder.backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(backgroundRotation),CGAffineTransformMakeScale(backgroundScale, backgroundScale));
     backingViewHasChanged = YES;
 //    NSLog(@"(%@) updating background properties", self.uuid);
 }
 
 -(void) setBackingImage:(UIImage*)img{
-    backingContentView.image = img;
-    CGRect r = backingContentView.frame;
+    backingImageHolder.backingContentView.image = img;
+    CGRect r = backingImageHolder.backingContentView.frame;
     r.size = CGSizeMake(img.size.width, img.size.height);
-    backingContentView.frame = r;
+    backingImageHolder.backingContentView.frame = r;
     [self updateBackingImageLocation];
 }
 
 -(UIImage*) backingImage{
-    return backingContentView.image;
+    return backingImageHolder.backingContentView.image;
 }
 
 -(void) setBackgroundRotation:(CGFloat)_backgroundRotation{
@@ -256,8 +248,8 @@
     return backgroundOffset;
 }
 
--(UIView*) backingContentView{
-    return backingContentView;
+-(CGPoint) currentCenterOfScrapBackground{
+    return backingImageHolder.backingContentView.center;
 }
 
 #pragma mark - State Saving and Loading
@@ -287,9 +279,9 @@
                                 [savedProperties writeToFile:self.plistPath atomically:YES];
 
                                 if(backingViewHasChanged && ![[NSFileManager defaultManager] fileExistsAtPath:[self backgroundJPGFile]]){
-                                    if(backingContentView.image){
-                                        NSLog(@"orientation: %d", (int) backingContentView.image.imageOrientation);
-                                        [UIImageJPEGRepresentation(backingContentView.image, .9) writeToFile:[self backgroundJPGFile] atomically:YES];
+                                    if(backingImageHolder.backingContentView.image){
+                                        NSLog(@"orientation: %d", (int) backingImageHolder.backingContentView.image.imageOrientation);
+                                        [UIImageJPEGRepresentation(backingImageHolder.backingContentView.image, .9) writeToFile:[self backgroundJPGFile] atomically:YES];
                                     }
                                     backingViewHasChanged = NO;
                                 }

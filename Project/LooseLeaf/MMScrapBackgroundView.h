@@ -10,4 +10,6 @@
 
 @interface MMScrapBackgroundView : UIView
 
+@property (nonatomic, readonly) UIImageView* backingContentView;
+
 @end

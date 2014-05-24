@@ -51,7 +51,7 @@
 -(void) setBackgroundOffset:(CGPoint)bgOffset;
 -(CGPoint) backgroundOffset;
 
--(UIView*) backingContentView;
+-(CGPoint) currentCenterOfScrapBackground;
 
 -(UIView*) contentView;
 

@@ -8,24 +8,26 @@
 
 #import "MMScrapBackgroundView.h"
 
-@implementation MMScrapBackgroundView
+@implementation MMScrapBackgroundView{
+    UIImageView* backingContentView;
+}
+
+@synthesize backingContentView;
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        backingContentView = [[UIImageView alloc] initWithFrame:frame];
+        backingContentView.contentMode = UIViewContentModeScaleAspectFit;
+        backingContentView.clipsToBounds = YES;
+        backingContentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        backingContentView.frame = frame;
+        [self addSubview:backingContentView];
     }
     return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
 
 @end
