@@ -32,7 +32,7 @@
         backingContentView.contentMode = UIViewContentModeScaleAspectFit;
         backingContentView.clipsToBounds = YES;
         backgroundScale = 1.0;
-        [self addSubview:backingContentView];
+//        [self addSubview:backingContentView];
         [self setBackingImage:img];
     }
     return self;
@@ -53,6 +53,7 @@
                                                                self.bounds.size.height/2 + self.backgroundOffset.y);
     self.backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(self.backgroundRotation),CGAffineTransformMakeScale(self.backgroundScale, self.backgroundScale));
     self.backingViewHasChanged = YES;
+    [self setNeedsDisplay];
 }
 
 #pragma mark - Properties
@@ -165,6 +166,40 @@
         }
         self.backingViewHasChanged = NO;
     }
+}
+
+
+-(void) drawRect:(CGRect)rect{
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(context);
+
+    // get the image
+    UIImage* img = self.backingContentView.image;
+
+    // center in the content bounds + offset
+    CGPoint moveCenterTo = CGPointMake(self.bounds.size.width/2 + self.backgroundOffset.x,
+                                       self.bounds.size.height/2 + self.backgroundOffset.y);
+    CGContextTranslateCTM(context, moveCenterTo.x, moveCenterTo.y);
+
+    // scale and rotate the image
+    CGContextConcatCTM(context, CGAffineTransformConcat(CGAffineTransformMakeRotation(self.backgroundRotation),
+                                                        CGAffineTransformMakeScale(self.backgroundScale, self.backgroundScale)));
+    
+    // draw the image, with 0,0 at the center
+    [img drawInRect:CGRectMake(-img.size.width/2, -img.size.height/2, img.size.width, img.size.height)];
+
+//    // dot the center
+//    [[UIColor redColor] setFill];
+//    [[UIBezierPath bezierPathWithArcCenter:CGPointZero radius:10 startAngle:0 endAngle:2*M_PI clockwise:YES] fill];
+    
+    // restore
+    CGContextRestoreGState(context);
+    
+//    // debug red border
+//    UIBezierPath* redBorder = [UIBezierPath bezierPathWithRect:self.bounds];
+//    redBorder.lineWidth = 20;
+//    [[UIColor redColor] setStroke];
+//    [redBorder stroke];
 }
 
 @end
