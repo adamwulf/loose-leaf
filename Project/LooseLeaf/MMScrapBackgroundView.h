@@ -22,17 +22,18 @@
 @property (nonatomic, assign) CGFloat backgroundScale;
 @property (nonatomic, assign) CGPoint backgroundOffset;
 @property (nonatomic, assign) BOOL backingViewHasChanged;
+@property (nonatomic, retain) UIImage* backingImage;
 
 -(id) initWithImage:(UIImage*)img forScrapState:(MMScrapViewState*)scrapState;
 
--(void) updateBackingImageLocation;
-
--(void) setBackingImage:(UIImage*)img;
-
--(UIImage*) backingImage;
+#pragma mark Saving and Loading
 
 -(void) loadBackgroundFromDisk;
 
 -(void) saveBackgroundToDisk;
+
+#pragma mark Duplication
+
+-(MMScrapBackgroundView*) duplicateFor:(MMScrapViewState*)otherScrapState;
 
 @end

@@ -194,18 +194,18 @@
         MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation andScale:1.0];
         [scrapContainer addSubview:scrap];
         
-        MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state];
-        [scrap setBackgroundView:backgroundView];
+        // background fills the entire scrap
+        [scrap setBackgroundView:[[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state]];
         
-//        [scrap setBackingImage:scrapBacking];
-//        [scrap setBackgroundScale:1.0];
+
+        // prep the scrap to fade in while it drops on screen
         scrap.alpha = .3;
         scrap.scale = 1.2;
         
-        
         // bounce by 20px (10 on each side)
         CGFloat bounceScale = 20 / MAX(scrapSize.width, scrapSize.height);
-        
+
+        // animate the scrap dropping and bouncing on the page
         [UIView animateWithDuration:.2
                               delay:.1
                             options:UIViewAnimationOptionCurveEaseInOut
@@ -322,12 +322,13 @@
     // edge from the mask of the CAShapeLayer
     CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width + 2.0/scrapBacking.size.width; // extra pixel
     
+    // add the background, and scale it so it fills the scrap
     MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state];
     backgroundView.backgroundScale = scaleUpOfImage;
     [scrap setBackgroundView:backgroundView];
-    
-//    [scrap setBackingImage:scrapBacking];
-//    [scrap setBackgroundScale:scaleUpOfImage];
+
+    // center the scrap on top of the camera view
+    // so we can slide it onto the page
     scrap.center = [self convertPoint:CGPointMake(cameraView.bounds.size.width/2, cameraView.bounds.size.height/2) fromView:cameraView];
     scrap.rotation = cameraView.rotation;
     
@@ -417,18 +418,24 @@
     // edge from the mask of the CAShapeLayer
     CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width + 2.0/scrapBacking.size.width; // extra pixel
     
+    // add the background, and scale it so it fills the scrap
     MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state];
     backgroundView.backgroundScale = scaleUpOfImage;
     [scrap setBackgroundView:backgroundView];
-    
-//    [scrap setBackingImage:scrapBacking];
-//    [scrap setBackgroundScale:scaleUpOfImage];
+
+    // move the scrap so that it covers the image that was just tapped.
+    // then we'll animate it onto the page
     scrap.center = [self convertPoint:CGPointMake(bufferedImage.bounds.size.width/2, bufferedImage.bounds.size.height/2) fromView:bufferedImage];
     scrap.rotation = bufferedImage.rotation;
     
+    // hide the picker, this'll slide it out
+    // underneath our scrap
     [imagePicker hide:YES];
     
-    // hide the photo in the row
+    // hide the photo in the row. this way the scrap
+    // becomes the photo, and it doesn't seem to duplicate
+    // as the image sidebar hides. the image in the sidebar
+    // will reset after the sidebar is done hiding
     bufferedImage.alpha = 0;
     
     // bounce by 20px (10 on each side)
@@ -1106,12 +1113,7 @@ int skipAll = NO;
     panAndPinchScrapGesture2.scrap = clonedScrap;
     
     // clone background contents too
-    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrap.backgroundView.backingImage
-                                                                                  forScrapState:clonedScrap.state];
-    backgroundView.backgroundScale = scrap.backgroundView.backgroundScale;
-    backgroundView.backgroundRotation = scrap.backgroundView.backgroundRotation;
-    backgroundView.backgroundOffset = scrap.backgroundView.backgroundOffset;
-    [clonedScrap setBackgroundView:backgroundView];
+    [clonedScrap setBackgroundView:[scrap.backgroundView duplicateFor:clonedScrap.state]];
 
     // move it to the new gesture location under it's scrap
     [UIView setAnchorPoint:CGPointMake(.5, .5) forView:clonedScrap];

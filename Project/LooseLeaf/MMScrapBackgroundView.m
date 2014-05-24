@@ -97,6 +97,18 @@
     return backgroundPathCache;
 }
 
+#pragma mark - Duplication and Stamping
+
+// returns an exact duplicate of this background, including all properties,
+// and assigns it to the input scrap state
+-(MMScrapBackgroundView*) duplicateFor:(MMScrapViewState*)otherScrapState{
+    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:self.backingImage
+                                                                           forScrapState:otherScrapState];
+    backgroundView.backgroundScale = self.backgroundScale;
+    backgroundView.backgroundRotation = self.backgroundRotation;
+    backgroundView.backgroundOffset = self.backgroundOffset;
+    return backgroundView;
+}
 
 #pragma mark - Save and Load
 
