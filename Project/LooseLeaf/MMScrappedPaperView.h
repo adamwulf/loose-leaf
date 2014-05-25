@@ -8,7 +8,6 @@
 
 #import "MMEditablePaperView.h"
 #import "MMPanAndPinchScrapGestureRecognizer.h"
-#import "MMPanAndPinchScrapGestureRecognizerDelegate.h"
 #import "MMScrapsOnPaperStateDelegate.h"
 #import <MessageUI/MFMailComposeViewController.h>
 

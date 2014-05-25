@@ -167,6 +167,12 @@
 // this will look at our possible touches, and move them
 // into valid touches if necessary
 -(void) processPossibleTouchesFromOriginalLocationInView:(CGPoint)originalLocationInView{
+    if(![scrapDelegate isAllowedToPan]){
+        NSLog(@"ignoring all touches! had %d possible", [possibleTouches count]);
+        // we're not allowed to pan, so ignore all touches
+        [ignoredTouches addObjectsInSet:[possibleTouches set]];
+        [possibleTouches removeAllObjects];
+    }
     if([possibleTouches count] && subState == UIGestureRecognizerStatePossible){
         NSMutableSet* allPossibleTouches = [NSMutableSet setWithSet:[possibleTouches set]];
         for(MMScrapView* _scrap in [scrapDelegate.scraps reverseObjectEnumerator]){

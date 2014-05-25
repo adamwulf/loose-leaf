@@ -501,6 +501,8 @@
  * without interruption.
  */
 -(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer*)bezelGesture{
+    [[[visibleStackHolder peekSubview] panGesture] cancel];
+    
     // make sure there's a page to bezel
     [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
     CGPoint translation = [bezelGesture translationInView:self];
@@ -734,6 +736,10 @@
  * before picking up a scrap
  */
 -(BOOL) panScrapRequiresLongPress{
+    @throw kAbstractMethodException;
+}
+
+-(BOOL) isAllowedToPan{
     @throw kAbstractMethodException;
 }
 

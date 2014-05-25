@@ -48,7 +48,7 @@
 }
 
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
-    return YES;
+    return [preventedGestureRecognizer isKindOfClass:[MMBezelInLeftGestureRecognizer class]];
 }
 
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
