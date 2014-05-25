@@ -26,12 +26,16 @@
     NSInteger numberOfRepeatingBezels;
     
     __weak NSObject<MMPanGestureDelegate>* panDelegate;
+    
+    UIGestureRecognizerState subState;
 }
 
 @property (readonly) NSArray* touches;
 @property (nonatomic, weak) NSObject<MMPanGestureDelegate>* panDelegate;
 @property (nonatomic, readonly) MMBezelDirection panDirection;
 @property (nonatomic, readonly) NSInteger numberOfRepeatingBezels;
+@property (nonatomic, readonly) UIGestureRecognizerState subState;
+@property (nonatomic, assign) BOOL hasSeenSubstateBegin;
 
 -(CGPoint) translationInView:(UIView*)view;
 

@@ -505,7 +505,19 @@
     [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
     CGPoint translation = [bezelGesture translationInView:self];
     
-    if(bezelGesture.state == UIGestureRecognizerStateBegan){
+    if(!bezelGesture.hasSeenSubstateBegin && (bezelGesture.subState == UIGestureRecognizerStateBegan ||
+                                             bezelGesture.subState == UIGestureRecognizerStateChanged)){
+        // this flag is an ugly hack because i'm using substates in gestures.
+        // ideally, i could handle this gesture entirely inside of the state,
+        // but i get an odd sitation where the gesture steals touches even
+        // though its state has never been set to began (see https://github.com/adamwulf/loose-leaf/issues/455 ).
+        //
+        // worse, i can set the substate to Began, but it's possible that both
+        // the touchesBegan: and touchesMoved: gets called on the gesture before
+        // the delegate is notified, so i've no idea when to set the substate from
+        // began to changed, because i never know when the delegate has or hasn't
+        // been notified about the substate
+        bezelGesture.hasSeenSubstateBegin = YES;
         //
         // ok, the user is beginning the drag two fingers from the
         // right hand bezel. we need to push a page from the hidden
@@ -536,9 +548,9 @@
             bezelStackHolder.frame = newFrame;
             [bezelStackHolder peekSubview].frame = bezelStackHolder.bounds;
         } completion:nil];
-    }else if(bezelGesture.state == UIGestureRecognizerStateCancelled ||
-             bezelGesture.state == UIGestureRecognizerStateFailed ||
-             (bezelGesture.state == UIGestureRecognizerStateEnded && ((bezelGesture.panDirection & MMBezelDirectionLeft) != MMBezelDirectionLeft))){
+    }else if(bezelGesture.subState == UIGestureRecognizerStateCancelled ||
+             bezelGesture.subState == UIGestureRecognizerStateFailed ||
+             (bezelGesture.subState == UIGestureRecognizerStateEnded && ((bezelGesture.panDirection & MMBezelDirectionLeft) != MMBezelDirectionLeft))){
         //
         // they cancelled the bezel. so push all the views from the bezel back
         // onto the hidden stack, then animate them back into position.
@@ -556,7 +568,7 @@
             [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
             [[visibleStackHolder peekSubview] enableAllGestures];
         }
-    }else if(bezelGesture.state == UIGestureRecognizerStateEnded &&
+    }else if(bezelGesture.subState == UIGestureRecognizerStateEnded &&
              ((bezelGesture.panDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft)){
         if([bezelStackHolder.subviews count]){
             //

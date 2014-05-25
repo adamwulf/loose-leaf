@@ -105,11 +105,9 @@ static MMDrawingTouchGestureRecognizer* _instance = nil;
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     if(gesture != self){
         [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
-//            if([possibleTouches containsObject:touch] || [validTouches containsObject:touch]){
-                [possibleTouches removeObjectsInSet:touches];
-                [ignoredTouches addObjectsInSet:touches];
-                [validTouches removeObjectsInSet:touches];
-//            }
+            [possibleTouches removeObjectsInSet:touches];
+            [ignoredTouches addObjectsInSet:touches];
+            [validTouches removeObjectsInSet:touches];
         }];
     }
 }
