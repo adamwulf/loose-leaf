@@ -1175,6 +1175,15 @@ int skipAll = NO;
     return rulerButton.selected;
 }
 
+-(BOOL) isAllowedToPan{
+    if(fromRightBezelGesture.subState != UIGestureRecognizerStatePossible ||
+       fromLeftBezelGesture.state != UIGestureRecognizerStatePossible){
+        // actively bezeling
+        return NO;
+    }
+    return YES;
+}
+
 -(CGFloat) topVisiblePageScaleForScrap:(MMScrapView*)scrap{
     if([scrapContainer.subviews containsObject:scrap]){
         return 1;

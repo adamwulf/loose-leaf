@@ -140,6 +140,8 @@
  */
 -(BOOL) shouldAllowPan:(MMPaperView*)page;
 
+-(BOOL) isAllowedToPan;
+
 /**
  * called when the ruler begins and when it moves
  */

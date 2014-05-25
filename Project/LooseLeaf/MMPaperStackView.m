@@ -145,7 +145,7 @@
  */
 -(void) updateIconAnimations{
     // YES if we're pulling pages in from the hidden stack, NO otherwise
-    BOOL bezelingFromRight = fromRightBezelGesture.state == UIGestureRecognizerStateBegan || fromRightBezelGesture.state == UIGestureRecognizerStateChanged;
+    BOOL bezelingFromRight = fromRightBezelGesture.subState == UIGestureRecognizerStateBegan || fromRightBezelGesture.subState == UIGestureRecognizerStateChanged;
     // YES if the top page will bezel right, NO otherwise
     BOOL topPageWillBezelRight = [[visibleStackHolder peekSubview] willExitToBezel:MMBezelDirectionRight];
     // YES if the top page will bezel left, NO otherwise
@@ -501,6 +501,10 @@
  * without interruption.
  */
 -(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer*)bezelGesture{
+    if([[visibleStackHolder peekSubview] panGesture].subState != UIGestureRecognizerStatePossible){
+        [[[visibleStackHolder peekSubview] panGesture] cancel];
+    }
+    
     // make sure there's a page to bezel
     [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
     CGPoint translation = [bezelGesture translationInView:self];
@@ -530,14 +534,19 @@
             // we need to cancel all of their animations
             // and move them immediately to the hidden view
             // being sure to maintain proper order
+            NSLog(@"empty bezel stack");
             while([bezelStackHolder.subviews count]){
                 MMPaperView* page = [bezelStackHolder peekSubview];
                 [page.layer removeAllAnimations];
                 [hiddenStackHolder pushSubview:page];
                 page.frame = hiddenStackHolder.bounds;
+                NSLog(@"pushing %@ onto hidden", page.uuid);
             }
+        }else{
+            NSLog(@"get top of hidden stack");
         }
         [[visibleStackHolder peekSubview] disableAllGestures];
+        NSLog(@"right bezelling %@", [hiddenStackHolder peekSubview].uuid);
         [self mayChangeTopPageTo:[hiddenStackHolder peekSubview]];
         [bezelStackHolder pushSubview:[hiddenStackHolder peekSubview]];
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
@@ -734,6 +743,10 @@
  * before picking up a scrap
  */
 -(BOOL) panScrapRequiresLongPress{
+    @throw kAbstractMethodException;
+}
+
+-(BOOL) isAllowedToPan{
     @throw kAbstractMethodException;
 }
 
@@ -1135,6 +1148,7 @@
     [self realignPagesInVisibleStackExcept:page animated:YES];
 
     if(justFinishedPanningTheTopPage && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
+        NSLog(@"should pop from visible");
         //
         // bezelStackHolder debugging DONE
         // pop the top page, it's close to the right bezel
@@ -1144,6 +1158,7 @@
             [self didChangeTopPage];
         }];
     }else if(justFinishedPanningTheTopPage && [self shouldPushPageOntoVisibleStack:page withFrame:toFrame]){
+        NSLog(@"should pop to visible");
         //
         // bezelStackHolder debugging DONE
         //
@@ -1174,6 +1189,7 @@
             [self popTopPageOfHiddenStack];
         }
     }else if(page.scale <= 1){
+        NSLog(@"scale < 1");
         //
         // bezelStackHolder debugging DONE
         //
@@ -1183,6 +1199,7 @@
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
         [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:nil];
     }else{
+        NSLog(@"last case");
         //
         // bezelStackHolder debugging DONE
         //
@@ -1292,7 +1309,7 @@
  * this is used when a user drags a page to the left/right
  */
 -(BOOL) shouldPopPageFromVisibleStack:(MMPaperView*)page withFrame:(CGRect)frame{
-    return page.frame.origin.x > self.frame.size.width - kGutterWidthToDragPages;
+    return frame.origin.x > self.frame.size.width - kGutterWidthToDragPages;
 }
 
 /**
@@ -1302,7 +1319,7 @@
  * this is used when a user drags a page to the left/right
  */
 -(BOOL) shouldPushPageOntoVisibleStack:(MMPaperView*)page withFrame:(CGRect)frame{
-    return page.frame.origin.x + page.frame.size.width < kGutterWidthToDragPages;
+    return frame.origin.x + frame.size.width < kGutterWidthToDragPages;
 }
 
 /**

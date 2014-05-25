@@ -263,6 +263,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [super panAndScale:_panGesture];
 }
 
+-(BOOL) isAllowedToPan{
+    return [self.delegate isAllowedToPan];
+}
+
 #pragma mark - JotViewDelegate
 
 
