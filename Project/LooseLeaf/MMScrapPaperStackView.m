@@ -55,11 +55,11 @@
 {
     if ((self = [super initWithFrame:frame])) {
         
-//        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
-//                                                                  target:self
-//                                                                selector:@selector(timerDidFire:)
-//                                                                userInfo:nil
-//                                                                 repeats:YES];
+        debugTimer = [NSTimer scheduledTimerWithTimeInterval:3
+                                                                  target:self
+                                                                selector:@selector(timerDidFire:)
+                                                                userInfo:nil
+                                                                 repeats:YES];
 
         
 //        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5
@@ -417,33 +417,33 @@ int skipAll = NO;
     allGesturesAndTopTwoPages = [allGesturesAndTopTwoPages arrayByAddingObjectsFromArray:[[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]] gestureRecognizers]];
     for(UIGestureRecognizer* gesture in allGesturesAndTopTwoPages){
         UIGestureRecognizerState st = gesture.state;
-        [str appendFormat:@"%@ %d", NSStringFromClass([gesture class]), (int)st];
+        [str appendFormat:@"%@ %d\n", NSStringFromClass([gesture class]), (int)st];
         if([gesture respondsToSelector:@selector(validTouches)]){
-            [str appendFormat:@"   validTouches: %d", (int)[[gesture performSelector:@selector(validTouches)] count]];
+            [str appendFormat:@"   validTouches: %d\n", (int)[[gesture performSelector:@selector(validTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(touches)]){
-            [str appendFormat:@"   touches: %d", (int)[[gesture performSelector:@selector(touches)] count]];
+            [str appendFormat:@"   touches: %d\n", (int)[[gesture performSelector:@selector(touches)] count]];
         }
         if([gesture respondsToSelector:@selector(possibleTouches)]){
-            [str appendFormat:@"   possibleTouches: %d", (int)[[gesture performSelector:@selector(possibleTouches)] count]];
+            [str appendFormat:@"   possibleTouches: %d\n", (int)[[gesture performSelector:@selector(possibleTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(ignoredTouches)]){
-            [str appendFormat:@"   ignoredTouches: %d", (int)[[gesture performSelector:@selector(ignoredTouches)] count]];
+            [str appendFormat:@"   ignoredTouches: %d\n", (int)[[gesture performSelector:@selector(ignoredTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(paused)]){
-            [str appendFormat:@"   paused: %d", [gesture performSelector:@selector(paused)] ? 1 : 0];
+            [str appendFormat:@"   paused: %d\n", [gesture performSelector:@selector(paused)] ? 1 : 0];
         }
         if([gesture respondsToSelector:@selector(scrap)]){
-            [str appendFormat:@"   has scrap: %d", [gesture performSelector:@selector(scrap)] ? 1 : 0];
+            [str appendFormat:@"   has scrap: %d\n", [gesture performSelector:@selector(scrap)] ? 1 : 0];
         }
     }
-    [str appendFormat:@"velocity gesture sees: %d", [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]];
-    [str appendFormat:@"pages being panned %d", (int)[setOfPagesBeingPanned count]];
+    [str appendFormat:@"velocity gesture sees: %d\n", [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]];
+    [str appendFormat:@"pages being panned %d\n", (int)[setOfPagesBeingPanned count]];
     
-    [str appendFormat:@"done"];
+    [str appendFormat:@"done\n"];
     
     for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scraps]){
-        [str appendFormat:@"scrap: %f %f", scrap.layer.anchorPoint.x, scrap.layer.anchorPoint.y];
+        [str appendFormat:@"scrap: %f %f\n", scrap.layer.anchorPoint.x, scrap.layer.anchorPoint.y];
     }
     return str;
 }
@@ -530,8 +530,11 @@ int skipAll = NO;
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
-    [super isBezelingInRightWithGesture:bezelGesture];
-    [self forceScrapToScrapContainerDuringGesture];
+    NSLog(@"bezel right state is: %d %d", bezelGesture.state, bezelGesture.subState);
+    if(bezelGesture.subState != UIGestureRecognizerStatePossible){
+        [super isBezelingInRightWithGesture:bezelGesture];
+        [self forceScrapToScrapContainerDuringGesture];
+    }
 }
 
 

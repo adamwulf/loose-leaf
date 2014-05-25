@@ -398,7 +398,7 @@
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
-    if(bezelGesture.state == UIGestureRecognizerStateBegan){
+    if(bezelGesture.subState == UIGestureRecognizerStateBegan){
         // cancel any strokes that this gesture is using
         for(UITouch* touch in bezelGesture.touches){
             [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
