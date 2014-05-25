@@ -48,7 +48,7 @@
 }
 
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
-    return [preventedGestureRecognizer isKindOfClass:[MMBezelInLeftGestureRecognizer class]];
+    return subState != UIGestureRecognizerStatePossible;
 }
 
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
@@ -159,7 +159,7 @@
     // we'll keep the gesture alive and just increment the repeat count counter
     // instead of ending the gesture entirely.
     //
-    if([validTouches count] >= 2){
+    if([validTouches count] >= 2 && foundValidTouch){
         if(!dateOfLastBezelEnding || [dateOfLastBezelEnding timeIntervalSinceNow] > -.5){
             numberOfRepeatingBezels++;
         }else{
@@ -168,6 +168,7 @@
         if(subState == UIGestureRecognizerStatePossible){
             [self.panDelegate ownershipOfTouches:validTouches isGesture:self];
             hasSeenSubstateBegin = NO;
+            NSLog(@"right bezel begins");
             subState = UIGestureRecognizerStateBegan;
             firstKnownLocation = [self furthestRightTouchLocation];
             firstKnownLocation.x = self.view.bounds.size.width;

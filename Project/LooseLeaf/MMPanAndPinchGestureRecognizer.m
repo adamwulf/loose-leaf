@@ -168,7 +168,6 @@
 // into valid touches if necessary
 -(void) processPossibleTouchesFromOriginalLocationInView:(CGPoint)originalLocationInView{
     if(![scrapDelegate isAllowedToPan]){
-        NSLog(@"ignoring all touches! had %d possible", [possibleTouches count]);
         // we're not allowed to pan, so ignore all touches
         [ignoredTouches addObjectsInSet:[possibleTouches set]];
         [possibleTouches removeAllObjects];
@@ -532,6 +531,7 @@
 
 -(void) cancel{
     if(self.enabled){
+        NSLog(@"cancelled page pan");
         self.enabled = NO;
         self.enabled = YES;
     }

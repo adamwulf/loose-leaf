@@ -28,11 +28,6 @@
 @synthesize panGesture;
 
 -(void) setIsBeingPannedAndZoomed:(BOOL)_isBeingPannedAndZoomed{
-    if(_isBeingPannedAndZoomed){
-        NSLog(@"%@ isBeingPannedAndZoomed: %d", self.uuid, _isBeingPannedAndZoomed);
-    }else{
-        NSLog(@"%@ isBeingPannedAndZoomed: %d", self.uuid, _isBeingPannedAndZoomed);
-    }
     isBeingPannedAndZoomed = _isBeingPannedAndZoomed;
 }
 
@@ -314,6 +309,13 @@
         return;
     }else if(!isBeingPannedAndZoomed && (panGesture.subState == UIGestureRecognizerStateBegan ||
                                          panGesture.subState == UIGestureRecognizerStateChanged)){
+        
+        if(panGesture.state == UIGestureRecognizerStatePossible ||
+           panGesture.state == UIGestureRecognizerStateCancelled ||
+           panGesture.state == UIGestureRecognizerStateEnded ||
+           panGesture.state == UIGestureRecognizerStateFailed){
+            NSLog(@"what");
+        }
         self.isBeingPannedAndZoomed = YES;
         //
         // if the user had 1 finger down and re-touches with the 2nd finger, then this

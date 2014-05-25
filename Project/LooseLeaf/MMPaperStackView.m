@@ -501,7 +501,9 @@
  * without interruption.
  */
 -(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer*)bezelGesture{
-    [[[visibleStackHolder peekSubview] panGesture] cancel];
+    if([[visibleStackHolder peekSubview] panGesture].subState != UIGestureRecognizerStatePossible){
+        [[[visibleStackHolder peekSubview] panGesture] cancel];
+    }
     
     // make sure there's a page to bezel
     [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
@@ -538,6 +540,9 @@
                 [hiddenStackHolder pushSubview:page];
                 page.frame = hiddenStackHolder.bounds;
             }
+            NSLog(@"empty bezel stack");
+        }else{
+            NSLog(@"get top of hidden stack");
         }
         [[visibleStackHolder peekSubview] disableAllGestures];
         [self mayChangeTopPageTo:[hiddenStackHolder peekSubview]];
