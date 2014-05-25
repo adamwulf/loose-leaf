@@ -50,14 +50,14 @@
 //        NSInteger photo = rand() % 6 + 1;
 //        UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", photo]];
         
-//        UILabel* label = [[UILabel alloc] initWithFrame:self.bounds];
-//        label.text = uuid;
-//        [label sizeToFit];
-//        CGRect fr = label.frame;
-//        fr.origin.x += 100;
-//        fr.origin.y += 100;
-//        label.frame = fr;
-//        [self addSubview:label];
+        UILabel* label = [[UILabel alloc] initWithFrame:self.bounds];
+        label.text = uuid;
+        [label sizeToFit];
+        CGRect fr = label.frame;
+        fr.origin.x += 100;
+        fr.origin.y += 100;
+        label.frame = fr;
+        [self addSubview:label];
         //
         // end debug image
         //
@@ -291,10 +291,21 @@
                     if(scale < kMinPageZoom){
                         [self.delegate cancelledScalingReallySmall:self];
                     }
-                    [self.delegate finishedPanningAndScalingPage:self
-                                                       intoBezel:panGesture.didExitToBezel
-                                                       fromFrame:panGesture.frameOfPageAtBeginningOfGesture
-                                                         toFrame:self.frame];
+                    
+                    if(panGesture.state == UIGestureRecognizerStateCancelled){
+                        // when cancelling, the page should go back to its
+                        // original frame
+                        NSLog(@"cancelled pan, should push it back onto visible stack");
+                        [self.delegate finishedPanningAndScalingPage:self
+                                                           intoBezel:panGesture.didExitToBezel
+                                                           fromFrame:panGesture.frameOfPageAtBeginningOfGesture
+                                                             toFrame:panGesture.frameOfPageAtBeginningOfGesture];
+                    }else{
+                        [self.delegate finishedPanningAndScalingPage:self
+                                                           intoBezel:panGesture.didExitToBezel
+                                                           fromFrame:panGesture.frameOfPageAtBeginningOfGesture
+                                                             toFrame:self.frame];
+                    }
                 }
             }
         }
