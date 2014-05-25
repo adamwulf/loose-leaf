@@ -21,6 +21,7 @@
 @synthesize numberOfRepeatingBezels;
 @synthesize panDelegate;
 @synthesize subState;
+@synthesize hasSeenSubstateBegin;
 
 -(id) initWithTarget:(id)target action:(SEL)action{
     self = [super initWithTarget:target action:action];
@@ -166,6 +167,7 @@
         }
         if(subState == UIGestureRecognizerStatePossible){
             [self.panDelegate ownershipOfTouches:validTouches isGesture:self];
+            hasSeenSubstateBegin = NO;
             subState = UIGestureRecognizerStateBegan;
             firstKnownLocation = [self furthestRightTouchLocation];
             firstKnownLocation.x = self.view.bounds.size.width;

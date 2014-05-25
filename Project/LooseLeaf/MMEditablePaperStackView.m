@@ -398,7 +398,10 @@
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
-    if(bezelGesture.subState == UIGestureRecognizerStateBegan){
+    // see comments in [MMPaperStackView:isBezelingInRightWithGesture] for
+    // comments on the messy `hasSeenSubstateBegin`
+    if(!bezelGesture.hasSeenSubstateBegin && (bezelGesture.subState == UIGestureRecognizerStateBegan ||
+                                              bezelGesture.subState == UIGestureRecognizerStateChanged)){
         // cancel any strokes that this gesture is using
         for(UITouch* touch in bezelGesture.touches){
             [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
@@ -670,6 +673,11 @@
         if([scrap.state.drawableView.state.currentStrokes count]){
             return NO;
         }
+    }
+    if(fromRightBezelGesture.subState == UIGestureRecognizerStateBegan ||
+       fromRightBezelGesture.subState == UIGestureRecognizerStateChanged){
+        // don't allow new strokes during bezel
+        return NO;
     }
     [rulerView willBeginStrokeAt:[touch locationInView:rulerView]];
     if([rulerView rulerIsVisible]){

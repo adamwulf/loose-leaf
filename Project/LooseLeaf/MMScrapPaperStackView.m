@@ -55,11 +55,11 @@
 {
     if ((self = [super initWithFrame:frame])) {
         
-        debugTimer = [NSTimer scheduledTimerWithTimeInterval:3
-                                                                  target:self
-                                                                selector:@selector(timerDidFire:)
-                                                                userInfo:nil
-                                                                 repeats:YES];
+//        debugTimer = [NSTimer scheduledTimerWithTimeInterval:3
+//                                                                  target:self
+//                                                                selector:@selector(timerDidFire:)
+//                                                                userInfo:nil
+//                                                                 repeats:YES];
 
         
 //        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5
@@ -530,7 +530,6 @@ int skipAll = NO;
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
-    NSLog(@"bezel right state is: %d %d", bezelGesture.state, bezelGesture.subState);
     if(bezelGesture.subState != UIGestureRecognizerStatePossible){
         [super isBezelingInRightWithGesture:bezelGesture];
         [self forceScrapToScrapContainerDuringGesture];
