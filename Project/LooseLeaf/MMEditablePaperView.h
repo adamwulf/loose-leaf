@@ -10,8 +10,9 @@
 #import <TouchShape/TouchShape.h>
 #import "MMRulerToolGestureRecognizer.h"
 #import "MMShapeBuilderView.h"
+#import <JotUI/JotUI.h>
 
-@interface MMEditablePaperView : MMPaperView<JotViewStateProxyDelegate>{
+@interface MMEditablePaperView : MMPaperView<JotViewDelegate,JotViewStateProxyDelegate>{
     __weak JotView* drawableView;
     MMShapeBuilderView* shapeBuilderView;
     

@@ -13,9 +13,8 @@
 #import "MMImmovableTapGestureRecognizer.h"
 #import "MMObjectSelectLongPressGestureRecognizer.h"
 #import "MMShadowedView.h"
-#import <JotUI/JotUI.h>
 
-@interface MMPaperView : MMShadowedView<JotViewDelegate>{
+@interface MMPaperView : MMShadowedView{
     
     NSString* uuid;
     
