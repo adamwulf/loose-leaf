@@ -59,7 +59,7 @@
 #define kMinScaleDelta .01
 #define kShadowDepth 7
 #define kShadowBend 3
-#define kBezelInGestureWidth 20
+#define kBezelInGestureWidth 40
 #define kUndoLimit 20
 
 // Scraps
