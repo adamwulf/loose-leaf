@@ -689,7 +689,6 @@
 #pragma mark - MMPanAndPinchFromListViewGestureRecognizerDelegate - Tap Gesture
 
 -(void) didHoldAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture{
-    
     void(^updatePageFrame)() = ^{
         //
         // ok, the top page is the only page that's being panned.
@@ -796,7 +795,6 @@
  * b) animate all views between the old/new index to their new home
  */
 -(void) didPinchAPageInListView:(MMPanAndPinchFromListViewGestureRecognizer*)gesture{
-    
     void(^updatePageFrame)() = ^{
         //
         // ok, the top page is the only page that's being panned.
@@ -1005,6 +1003,7 @@
 
 
 -(void) updateScrollOffsetDuringDrag{
+    initialScrollOffsetFromTransitionToListView = self.contentOffset;
     if(!pageBeingDragged){
         //
         // if we're not dragging the page, then don't update the display link
