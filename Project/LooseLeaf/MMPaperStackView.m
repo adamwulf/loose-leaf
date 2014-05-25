@@ -145,7 +145,7 @@
  */
 -(void) updateIconAnimations{
     // YES if we're pulling pages in from the hidden stack, NO otherwise
-    BOOL bezelingFromRight = fromRightBezelGesture.state == UIGestureRecognizerStateBegan || fromRightBezelGesture.state == UIGestureRecognizerStateChanged;
+    BOOL bezelingFromRight = fromRightBezelGesture.subState == UIGestureRecognizerStateBegan || fromRightBezelGesture.subState == UIGestureRecognizerStateChanged;
     // YES if the top page will bezel right, NO otherwise
     BOOL topPageWillBezelRight = [[visibleStackHolder peekSubview] willExitToBezel:MMBezelDirectionRight];
     // YES if the top page will bezel left, NO otherwise
