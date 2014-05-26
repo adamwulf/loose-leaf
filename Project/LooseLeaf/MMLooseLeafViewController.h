@@ -14,4 +14,6 @@
     IBOutlet MMScrapPaperStackView* stackView;
 }
 
+-(void) willResignActive;
+
 @end

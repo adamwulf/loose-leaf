@@ -98,5 +98,12 @@
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCrashes by:@(1)];
 }
 
+#pragma mark - application state
+
+-(void) willResignActive{
+    NSLog(@"telling stack to cancel all gestures");
+    [stackView cancelAllGestures];
+    [[stackView.visibleStackHolder peekSubview] cancelAllGestures];
+}
 
 @end
