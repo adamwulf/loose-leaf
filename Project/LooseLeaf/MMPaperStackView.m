@@ -41,6 +41,10 @@
         visibleStackHolder = [[UIView alloc] initWithFrame:self.bounds];
         hiddenStackHolder = [[UIView alloc] initWithFrame:self.bounds];
         bezelStackHolder = [[UIView alloc] initWithFrame:self.bounds];
+        
+        visibleStackHolder.tag = 0;
+        bezelStackHolder.tag = 1;
+        hiddenStackHolder.tag = 2;
 
         
         CGRect frameOfHiddenStack = hiddenStackHolder.frame;
@@ -534,19 +538,19 @@
             // we need to cancel all of their animations
             // and move them immediately to the hidden view
             // being sure to maintain proper order
-            NSLog(@"empty bezel stack");
+//            NSLog(@"empty bezel stack");
             while([bezelStackHolder.subviews count]){
                 MMPaperView* page = [bezelStackHolder peekSubview];
                 [page.layer removeAllAnimations];
                 [hiddenStackHolder pushSubview:page];
                 page.frame = hiddenStackHolder.bounds;
-                NSLog(@"pushing %@ onto hidden", page.uuid);
+//                NSLog(@"pushing %@ onto hidden", page.uuid);
             }
         }else{
-            NSLog(@"get top of hidden stack");
+//            NSLog(@"get top of hidden stack");
         }
         [[visibleStackHolder peekSubview] disableAllGestures];
-        NSLog(@"right bezelling %@", [hiddenStackHolder peekSubview].uuid);
+//        NSLog(@"right bezelling %@", [hiddenStackHolder peekSubview].uuid);
         [self mayChangeTopPageTo:[hiddenStackHolder peekSubview]];
         [bezelStackHolder pushSubview:[hiddenStackHolder peekSubview]];
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
@@ -627,7 +631,6 @@
             // if we want more pages than are in the stack, then
             // we need to add another page
             [bezelStackHolder pushSubview:[hiddenStackHolder peekSubview]];
-            NSLog(@"bezel stack size: %d vs goal %d", (int)[bezelStackHolder.subviews count], (int)bezelGesture.numberOfRepeatingBezels);
         }
         if(needsAnimationUpdate){
             //
@@ -958,7 +961,7 @@
     [self updateIconAnimations];
     
     if(justFinishedPanningTheTopPage && (bezelDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft){
-        NSLog(@"finished bezelling top page left %d %d", (int) (bezelDirection & MMBezelDirectionLeft), (int) (bezelDirection & MMBezelDirectionRight));
+//        NSLog(@"finished bezelling top page left %d %d", (int) (bezelDirection & MMBezelDirectionLeft), (int) (bezelDirection & MMBezelDirectionRight));
         //
         // CASE 1:
         // left bezel by top page
@@ -987,7 +990,7 @@
             // accident. we don't have a page in the bezel, but we think
             // we're bezeling a page left.
             // instead just bounce the top page
-            NSLog(@"graaceful fail: trying to bezel left, but nothing in the bezel holder. realigning stack.");
+            NSLog(@"graceful fail: trying to bezel left, but nothing in the bezel holder. realigning stack.");
             [self willChangeTopPageTo:[hiddenStackHolder peekSubview]];
             [self popHiddenStackForPages:1 onComplete:^(BOOL completed){
                 page.frame = self.bounds;
@@ -995,7 +998,7 @@
         }
         return;
     }else if(justFinishedPanningTheTopPage && [setOfPagesBeingPanned count]){
-        NSLog(@"finished top page, but still holding other pages");
+//        NSLog(@"finished top page, but still holding other pages");
         //
         // CASE 2:
         // they released the top page, but are still panning
@@ -1023,7 +1026,7 @@
         }];
         return;
     }else if(!justFinishedPanningTheTopPage && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
-        NSLog(@"didn't release top page but need to pop a page");
+//        NSLog(@"didn't release top page but need to pop a page");
         //
         // CASE 3:
         // they release a non-top page near the right bezel (but didn't bezel)
@@ -1047,7 +1050,7 @@
         [self mayChangeTopPageTo:[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]]];
         return;
     }else if((bezelDirection & MMBezelDirectionRight) == MMBezelDirectionRight){
-        NSLog(@"finished top page, bezel right");
+//        NSLog(@"finished top page, bezel right");
         //
         // CASE 4:
         // right bezel by any page
@@ -1097,7 +1100,7 @@
         }
         return;
     }else if(!justFinishedPanningTheTopPage){
-        NSLog(@"finished panning non-top page");
+//        NSLog(@"finished panning non-top page");
         //
         // CASE 5:
         //
@@ -1133,7 +1136,7 @@
         return;
     }
 
-    NSLog(@"just relased the top page, and no other pages being panned");
+//    NSLog(@"just released the top page, and no other pages being panned");
     
     //
     // CASE 6:
@@ -1148,7 +1151,7 @@
     [self realignPagesInVisibleStackExcept:page animated:YES];
 
     if(justFinishedPanningTheTopPage && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
-        NSLog(@"should pop from visible");
+//        NSLog(@"should pop from visible");
         //
         // bezelStackHolder debugging DONE
         // pop the top page, it's close to the right bezel
@@ -1158,7 +1161,7 @@
             [self didChangeTopPage];
         }];
     }else if(justFinishedPanningTheTopPage && [self shouldPushPageOntoVisibleStack:page withFrame:toFrame]){
-        NSLog(@"should pop to visible");
+//        NSLog(@"should pop to visible");
         //
         // bezelStackHolder debugging DONE
         //
@@ -1189,7 +1192,7 @@
             [self popTopPageOfHiddenStack];
         }
     }else if(page.scale <= 1){
-        NSLog(@"scale < 1");
+//        NSLog(@"scale < 1");
         //
         // bezelStackHolder debugging DONE
         //
@@ -1199,7 +1202,7 @@
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
         [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:nil];
     }else{
-        NSLog(@"last case");
+//        NSLog(@"last case");
         //
         // bezelStackHolder debugging DONE
         //

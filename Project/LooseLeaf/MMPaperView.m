@@ -50,14 +50,14 @@
 //        NSInteger photo = rand() % 6 + 1;
 //        UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", photo]];
         
-//        UILabel* label = [[UILabel alloc] initWithFrame:self.bounds];
-//        label.text = uuid;
-//        [label sizeToFit];
-//        CGRect fr = label.frame;
-//        fr.origin.x += 100;
-//        fr.origin.y += 100;
-//        label.frame = fr;
-//        [self addSubview:label];
+        UILabel* label = [[UILabel alloc] initWithFrame:self.bounds];
+        label.text = uuid;
+        [label sizeToFit];
+        CGRect fr = label.frame;
+        fr.origin.x += 100;
+        fr.origin.y += 100;
+        label.frame = fr;
+        [self addSubview:label];
         //
         // end debug image
         //
@@ -297,7 +297,7 @@
                         // original frame
                         NSLog(@"cancelled pan, should push it back onto visible stack");
                         [self.delegate finishedPanningAndScalingPage:self
-                                                           intoBezel:panGesture.didExitToBezel
+                                                           intoBezel:MMBezelDirectionNone
                                                            fromFrame:panGesture.frameOfPageAtBeginningOfGesture
                                                              toFrame:panGesture.frameOfPageAtBeginningOfGesture];
                     }else{
@@ -321,12 +321,6 @@
     }else if(!isBeingPannedAndZoomed && (panGesture.subState == UIGestureRecognizerStateBegan ||
                                          panGesture.subState == UIGestureRecognizerStateChanged)){
         
-        if(panGesture.state == UIGestureRecognizerStatePossible ||
-           panGesture.state == UIGestureRecognizerStateCancelled ||
-           panGesture.state == UIGestureRecognizerStateEnded ||
-           panGesture.state == UIGestureRecognizerStateFailed){
-            NSLog(@"what");
-        }
         self.isBeingPannedAndZoomed = YES;
         //
         // if the user had 1 finger down and re-touches with the 2nd finger, then this
@@ -346,7 +340,7 @@
     }
     
     if([_panGesture.validTouches count] < 2){
-        NSLog(@"skipping pan gesture: has %d valid touches and substate %d", (int) [_panGesture.validTouches count], (int) _panGesture.subState);
+//        NSLog(@"skipping pan gesture: has %d valid touches and substate %d", (int) [_panGesture.validTouches count], (int) _panGesture.subState);
         return;
     }
 

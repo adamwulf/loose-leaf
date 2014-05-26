@@ -785,7 +785,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) updateFullPageThumbnail:(MMImmutableScrapsOnPaperState*)immutableScrapState{
-    NSLog(@"updateFullPageThumbnail");
     UIImage* thumb = [self cachedImgViewImage];
     CGSize thumbSize = self.originalUnscaledBounds.size;
     thumbSize.width /= 2;
@@ -869,11 +868,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
             }
             
             
-            NSLog(@"something actually had changed %d %d", pageHadBeenChanged, scrapsHadBeenChanged);
+//            NSLog(@"something actually had changed %d %d", pageHadBeenChanged, scrapsHadBeenChanged);
             [self updateFullPageThumbnail:immutableScrapState];
             
             [NSThread performBlockOnMainThread:^{
-                NSLog(@"notifying did save page %@", self.uuid);
+//                NSLog(@"notifying did save page %@", self.uuid);
                 [self.delegate didSavePage:self];
             }];
         }

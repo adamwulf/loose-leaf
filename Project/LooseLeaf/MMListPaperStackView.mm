@@ -620,7 +620,6 @@
     [super cancelledScalingReallySmall:page];
     //
     // clean up gesture state
-    NSLog(@"removing2 %p", page);
     [setOfPagesBeingPanned removeObject:page];
     
     [self finishUITransitionToPageView];

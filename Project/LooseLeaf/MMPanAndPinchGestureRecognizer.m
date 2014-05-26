@@ -531,7 +531,7 @@
 
 -(void) cancel{
     if(self.enabled){
-        NSLog(@"cancelled page pan");
+        didExitToBezel = MMBezelDirectionNone;
         self.enabled = NO;
         self.enabled = YES;
     }
