@@ -14,6 +14,7 @@
 #import "MMScrapBubbleButton.h"
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "Mixpanel.h"
 
 @implementation MMEditablePaperStackView{
     UIPopoverController* jotTouchPopover;
@@ -310,6 +311,8 @@
     [hiddenStackHolder pushSubview:page];
     [[visibleStackHolder peekSubview] enableAllGestures];
     [self popTopPageOfHiddenStack];
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+    [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
 }
 
 -(void) shareButtonTapped:(UIButton*)_button{
@@ -395,7 +398,10 @@
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
-    if(bezelGesture.state == UIGestureRecognizerStateBegan){
+    // see comments in [MMPaperStackView:isBezelingInRightWithGesture] for
+    // comments on the messy `hasSeenSubstateBegin`
+    if(!bezelGesture.hasSeenSubstateBegin && (bezelGesture.subState == UIGestureRecognizerStateBegan ||
+                                              bezelGesture.subState == UIGestureRecognizerStateChanged)){
         // cancel any strokes that this gesture is using
         for(UITouch* touch in bezelGesture.touches){
             [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
@@ -421,6 +427,14 @@
     }
     
     return [super isBeginning:beginning toPanAndScalePage:page fromFrame:fromFrame toFrame:toFrame withTouches:touches];
+}
+
+-(void) didDrawStrokeOfCm:(CGFloat)distanceInCentimeters{
+    if([self activePen] == pen){
+        [[[Mixpanel sharedInstance] people] increment:kMPDistanceDrawn by:@(distanceInCentimeters / 100.0)];
+    }else if([self activePen] == eraser){
+        [[[Mixpanel sharedInstance] people] increment:kMPDistanceErased by:@(distanceInCentimeters / 100.0)];
+    }
 }
 
 #pragma mark = List View
@@ -660,7 +674,15 @@
             return NO;
         }
     }
+    if(fromRightBezelGesture.subState == UIGestureRecognizerStateBegan ||
+       fromRightBezelGesture.subState == UIGestureRecognizerStateChanged){
+        // don't allow new strokes during bezel
+        return NO;
+    }
     [rulerView willBeginStrokeAt:[touch locationInView:rulerView]];
+    if([rulerView rulerIsVisible]){
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfRulerUses by:@(1)];
+    }
     return [[self activePen] willBeginStrokeWithTouch:touch];
 }
 
@@ -675,6 +697,11 @@
 
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
     [[self activePen] didEndStrokeWithTouch:touch];
+    if([self activePen] == pen){
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPenUses by:@(1)];
+    }else if([self activePen] == eraser){
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfEraserUses by:@(1)];
+    }
 }
 
 -(void) willCancelStrokeWithTouch:(JotTouch*)touch{

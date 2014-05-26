@@ -140,6 +140,8 @@
  */
 -(BOOL) shouldAllowPan:(MMPaperView*)page;
 
+-(BOOL) isAllowedToPan;
+
 /**
  * called when the ruler begins and when it moves
  */
@@ -149,5 +151,9 @@
  * called when the user stops the ruler gesture
  */
 -(void) didStopRuler:(MMRulerToolGestureRecognizer*)gesture;
+
+#pragma mark Mixpanel
+
+-(void) didDrawStrokeOfCm:(CGFloat)distanceInCentimeters;
 
 @end

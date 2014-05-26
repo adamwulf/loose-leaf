@@ -55,4 +55,11 @@
 }
 
 
+#pragma mark - Description
+
+-(NSString*) description{
+    return @"Photo Albums";
+}
+
+
 @end

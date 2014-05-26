@@ -18,7 +18,8 @@
 
 
 #ifdef DEBUG
-#define debug_NSLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
+#define debug_NSLog(__FORMAT__, ...)
+//#define debug_NSLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
 #else
 #define debug_NSLog(__FORMAT__, ...)
 #endif
@@ -58,13 +59,40 @@
 #define kMinScaleDelta .01
 #define kShadowDepth 7
 #define kShadowBend 3
-#define kBezelInGestureWidth 20
+#define kBezelInGestureWidth 40
 #define kUndoLimit 20
 
 // Scraps
 #define kScrapShadowBufferSize 4
 
+// MixPanel People Properties
+#define kMPDurationAppOpen @"Duration App Open"
+#define kMPNumberOfPages @"Number of Pages"
+#define kMPFirstLaunchDate @"Date of First Launch"
+#define kMPNumberOfScraps @"Number of Scraps"
+#define kMPHasAddedPage @"Has Ever Added Page"
+#define kMPNumberOfPenUses @"Number of Pen Uses"
+#define kMPNumberOfEraserUses @"Number of Eraser Uses"
+#define kMPNumberOfScissorUses @"Number of Scissor Uses"
+#define kMPNumberOfRulerUses @"Number of Ruler Uses"
+#define kMPNumberOfPhotoImports @"Number of Photo Imports"  // import existing photo
+#define kMPNumberOfPhotosTaken @"Number of Photos Taken"    // take new photo with camera
+#define kMPNumberOfExports @"Number of Exports"
+#define kMPHasZoomedToList @"Has Zoomed Out to List"
+#define kMPNumberOfLaunches @"Number Of Launches"
+#define kMPNumberOfCrashes @"Number of Crashes"
+#define kMPDistanceDrawn @"Distance Drawn (m)"
+#define kMPDistanceErased @"Distance Erased (m)"
 
+// MixPanel Events Properties
+#define kMPEventLaunch @"App Launch"
+#define kMPEventTakePhoto @"Take Photo"
+#define kMPEventImportPhoto @"Import Photo"
+#define kMPEventExport @"Export Page"
+#define kMPEventPhotoSource @"Photo Source"
+
+#define kMPEventExportPropDestination @"Export Destination"
+#define kMPEventExportPropResult @"Export Result"
 // photo album
 #define kMaxPhotoRotationInDegrees 20
 

@@ -21,4 +21,6 @@
 
 -(CGPoint) convertScrapCenterToScrapContainerCoordinate:(MMScrapView*)scrap;
 
+-(BOOL) isAllowedToPan;
+
 @end

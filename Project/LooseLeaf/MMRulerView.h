@@ -20,7 +20,13 @@
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement;
 
 -(void) willBeginStrokeAt:(CGPoint)point;
+
 -(void) willMoveStrokeAt:(CGPoint)point;
+
 -(CGPoint) adjustPoint:(CGPoint)inputPoint;
+
+-(UIBezierPath*) findPathSegmentsWithNearestStart:(CGPoint)nearestStart andNearestEnd:(CGPoint)nearestEnd;
+
+-(BOOL) rulerIsVisible;
 
 @end

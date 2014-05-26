@@ -20,6 +20,7 @@
 #import "MMImageSidebarContainerView.h"
 #import "MMBufferedImageView.h"
 #import "MMBorderedCamView.h"
+#import "Mixpanel.h"
 
 @implementation MMScrapPaperStackView{
     MMScrapSidebarContainerView* bezelScrapContainer;
@@ -54,7 +55,7 @@
 {
     if ((self = [super initWithFrame:frame])) {
         
-//        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
+//        debugTimer = [NSTimer scheduledTimerWithTimeInterval:3
 //                                                                  target:self
 //                                                                selector:@selector(timerDidFire:)
 //                                                                userInfo:nil
@@ -167,6 +168,8 @@
 }
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotosTaken by:@(1)];
+    [[Mixpanel sharedInstance] track:kMPEventTakePhoto];
     CGRect scrapRect = CGRectZero;
     scrapRect.origin = [self convertPoint:cameraView.layer.bounds.origin fromView:cameraView];
     scrapRect.size = cameraView.bounds.size;
@@ -250,7 +253,10 @@
                      }];
 }
 
--(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation{
+-(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription{
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
+    [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{ kMPEventPhotoSource: containerDescription}];
+    
     CGRect scrapRect = CGRectZero;
     scrapRect.origin = [self convertPoint:[bufferedImage visibleImageOrigin] fromView:bufferedImage];
     scrapRect.size = [bufferedImage visibleImageSize];
@@ -411,33 +417,33 @@ int skipAll = NO;
     allGesturesAndTopTwoPages = [allGesturesAndTopTwoPages arrayByAddingObjectsFromArray:[[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]] gestureRecognizers]];
     for(UIGestureRecognizer* gesture in allGesturesAndTopTwoPages){
         UIGestureRecognizerState st = gesture.state;
-        [str appendFormat:@"%@ %d", NSStringFromClass([gesture class]), (int)st];
+        [str appendFormat:@"%@ %d\n", NSStringFromClass([gesture class]), (int)st];
         if([gesture respondsToSelector:@selector(validTouches)]){
-            [str appendFormat:@"   validTouches: %d", (int)[[gesture performSelector:@selector(validTouches)] count]];
+            [str appendFormat:@"   validTouches: %d\n", (int)[[gesture performSelector:@selector(validTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(touches)]){
-            [str appendFormat:@"   touches: %d", (int)[[gesture performSelector:@selector(touches)] count]];
+            [str appendFormat:@"   touches: %d\n", (int)[[gesture performSelector:@selector(touches)] count]];
         }
         if([gesture respondsToSelector:@selector(possibleTouches)]){
-            [str appendFormat:@"   possibleTouches: %d", (int)[[gesture performSelector:@selector(possibleTouches)] count]];
+            [str appendFormat:@"   possibleTouches: %d\n", (int)[[gesture performSelector:@selector(possibleTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(ignoredTouches)]){
-            [str appendFormat:@"   ignoredTouches: %d", (int)[[gesture performSelector:@selector(ignoredTouches)] count]];
+            [str appendFormat:@"   ignoredTouches: %d\n", (int)[[gesture performSelector:@selector(ignoredTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(paused)]){
-            [str appendFormat:@"   paused: %d", [gesture performSelector:@selector(paused)] ? 1 : 0];
+            [str appendFormat:@"   paused: %d\n", [gesture performSelector:@selector(paused)] ? 1 : 0];
         }
         if([gesture respondsToSelector:@selector(scrap)]){
-            [str appendFormat:@"   has scrap: %d", [gesture performSelector:@selector(scrap)] ? 1 : 0];
+            [str appendFormat:@"   has scrap: %d\n", [gesture performSelector:@selector(scrap)] ? 1 : 0];
         }
     }
-    [str appendFormat:@"velocity gesture sees: %d", [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]];
-    [str appendFormat:@"pages being panned %d", (int)[setOfPagesBeingPanned count]];
+    [str appendFormat:@"velocity gesture sees: %d\n", [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]];
+    [str appendFormat:@"pages being panned %d\n", (int)[setOfPagesBeingPanned count]];
     
-    [str appendFormat:@"done"];
+    [str appendFormat:@"done\n"];
     
     for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scraps]){
-        [str appendFormat:@"scrap: %f %f", scrap.layer.anchorPoint.x, scrap.layer.anchorPoint.y];
+        [str appendFormat:@"scrap: %f %f\n", scrap.layer.anchorPoint.x, scrap.layer.anchorPoint.y];
     }
     return str;
 }
@@ -524,8 +530,10 @@ int skipAll = NO;
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
-    [super isBezelingInRightWithGesture:bezelGesture];
-    [self forceScrapToScrapContainerDuringGesture];
+    if(bezelGesture.subState != UIGestureRecognizerStatePossible){
+        [super isBezelingInRightWithGesture:bezelGesture];
+        [self forceScrapToScrapContainerDuringGesture];
+    }
 }
 
 
@@ -611,9 +619,9 @@ int skipAll = NO;
     MMScrapView* scrapViewIfFinished = nil;
     
     BOOL shouldBezel = NO;
-    if(gesture.state == UIGestureRecognizerStateEnded ||
-       gesture.state == UIGestureRecognizerStateCancelled ||
-       ![gesture.validTouches count]){
+    if(gesture.scrap && (gesture.state == UIGestureRecognizerStateEnded ||
+                         gesture.state == UIGestureRecognizerStateCancelled ||
+                         ![gesture.validTouches count])){
         // turn off glow
         if(!stretchScrapGesture.scrap){
             // only if that scrap isn't being stretched
@@ -637,8 +645,16 @@ int skipAll = NO;
             CGPoint scrapCenterInPage;
             MMScrappedPaperView* pageToDropScrap;
             if(gesture.state == UIGestureRecognizerStateCancelled){
-                pageToDropScrap = [visibleStackHolder peekSubview];
-                [self scaledCenter:&scrapCenterInPage andScale:&scrapScaleInPage forScrap:gesture.scrap onPage:pageToDropScrap];
+                pageToDropScrap = [self pageWouldDropScrap:gesture.scrap atCenter:&scrapCenterInPage andScale:&scrapScaleInPage];
+                if(pageToDropScrap == [visibleStackHolder peekSubview]){
+                    // it would drop on the visible page, so just
+                    // do that
+                    [self scaledCenter:&scrapCenterInPage andScale:&scrapScaleInPage forScrap:gesture.scrap onPage:pageToDropScrap];
+                }else{
+                    // it wouldn't have dropped on the visible page, so
+                    // bezel it instead
+                    shouldBezel = YES;
+                }
             }else{
                 pageToDropScrap = [self pageWouldDropScrap:gesture.scrap atCenter:&scrapCenterInPage andScale:&scrapScaleInPage];
             }
@@ -1048,6 +1064,15 @@ int skipAll = NO;
     return rulerButton.selected;
 }
 
+-(BOOL) isAllowedToPan{
+    if(fromRightBezelGesture.subState != UIGestureRecognizerStatePossible ||
+       fromLeftBezelGesture.state != UIGestureRecognizerStatePossible){
+        // actively bezeling
+        return NO;
+    }
+    return YES;
+}
+
 -(CGFloat) topVisiblePageScaleForScrap:(MMScrapView*)scrap{
     if([scrapContainer.subviews containsObject:scrap]){
         return 1;
@@ -1200,6 +1225,25 @@ int skipAll = NO;
 
 #pragma mark - List View
 
+-(void) isBeginningToScaleReallySmall:(MMPaperView*)page{
+    if(panAndPinchScrapGesture.scrap){
+        [panAndPinchScrapGesture cancel];
+    }
+    if(panAndPinchScrapGesture2.scrap){
+        [panAndPinchScrapGesture2 cancel];
+    }
+    [panAndPinchScrapGesture setEnabled:NO];
+    [panAndPinchScrapGesture2 setEnabled:NO];
+    [super isBeginningToScaleReallySmall:page];
+}
+
+-(void) cancelledScalingReallySmall:(MMPaperView *)page{
+    [panAndPinchScrapGesture setEnabled:YES];
+    [panAndPinchScrapGesture2 setEnabled:YES];
+    [super cancelledScalingReallySmall:page];
+}
+
+
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     if(panAndPinchScrapGesture.scrap){
         [panAndPinchScrapGesture cancel];
@@ -1207,7 +1251,15 @@ int skipAll = NO;
     if(panAndPinchScrapGesture2.scrap){
         [panAndPinchScrapGesture2 cancel];
     }
+    [panAndPinchScrapGesture setEnabled:NO];
+    [panAndPinchScrapGesture2 setEnabled:NO];
     [super finishedScalingReallySmall:page];
+}
+
+-(void) finishedScalingBackToPageView:(MMPaperView *)page{
+    [panAndPinchScrapGesture setEnabled:YES];
+    [panAndPinchScrapGesture2 setEnabled:YES];
+    [super finishedScalingBackToPageView:page];
 }
 
 
@@ -1239,6 +1291,23 @@ int skipAll = NO;
 #pragma mark - MFMailComposeViewControllerDelegate
 
 -(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
+    NSString* strResult;
+    if(result == MFMailComposeResultCancelled){
+        strResult = @"Cancelled";
+    }else if(result == MFMailComposeResultFailed){
+        strResult = @"Failed";
+    }else if(result == MFMailComposeResultSaved){
+        strResult = @"Saved";
+    }else if(result == MFMailComposeResultSent){
+        strResult = @"Sent";
+    }
+    if(result == MFMailComposeResultSent || result == MFMailComposeResultSaved){
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+    }
+    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Email",
+                                                                 kMPEventExportPropResult : strResult}];
+    
+
     [[[[UIApplication sharedApplication] keyWindow] rootViewController] dismissViewControllerAnimated:YES completion:nil];
 }
 
