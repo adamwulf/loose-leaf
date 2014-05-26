@@ -902,10 +902,21 @@
         updatePageFrame();
     }
     if(gesture.state == UIGestureRecognizerStateCancelled){
-        // we cancelled, so some other gesture is going to
-        // handle the transition
+        // we cancelled, so just send the page back to its default
+        // space in the list
         realizedThatPageIsBeingDragged = NO;
         pageBeingDragged = nil;
+        if(gesture.pinchedPage){
+            CGRect frameOfPage = [self frameForListViewForPage:gesture.pinchedPage];
+            [UIView animateWithDuration:.15
+                                  delay:0
+                                options:UIViewAnimationOptionCurveEaseOut
+                             animations:^{
+                                 gesture.pinchedPage.frame = frameOfPage;
+                             }
+                             completion:nil];
+            [self finishUITransitionToListView];
+        }
     }
 }
 
