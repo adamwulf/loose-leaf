@@ -11,6 +11,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMShadowManager.h"
 #import "MMScrappedPaperView.h"
+#import "Mixpanel.h"
 #include <map>
 #include <iterator>
 
@@ -116,6 +117,8 @@
     [self addPaperToBottomOfHiddenStack:paper];
     [self ensurePageIsAtTopOfVisibleStack:paper];
     [self immediatelyAnimateFromListViewToFullScreenView];
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+    [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
 }
 
 #pragma mark - Local Frame Cache
@@ -267,6 +270,7 @@
     [longPressGesture setEnabled:YES];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
     [self moveAddButtonToTop];
+    [[[Mixpanel sharedInstance] people] set:@{kMPHasZoomedToList : @(YES)}];
 }
 
 /**
@@ -685,7 +689,6 @@
 #pragma mark - MMPanAndPinchFromListViewGestureRecognizerDelegate - Tap Gesture
 
 -(void) didHoldAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture{
-    
     void(^updatePageFrame)() = ^{
         //
         // ok, the top page is the only page that's being panned.
@@ -792,7 +795,6 @@
  * b) animate all views between the old/new index to their new home
  */
 -(void) didPinchAPageInListView:(MMPanAndPinchFromListViewGestureRecognizer*)gesture{
-    
     void(^updatePageFrame)() = ^{
         //
         // ok, the top page is the only page that's being panned.
@@ -900,10 +902,21 @@
         updatePageFrame();
     }
     if(gesture.state == UIGestureRecognizerStateCancelled){
-        // we cancelled, so some other gesture is going to
-        // handle the transition
+        // we cancelled, so just send the page back to its default
+        // space in the list
         realizedThatPageIsBeingDragged = NO;
         pageBeingDragged = nil;
+        if(gesture.pinchedPage){
+            CGRect frameOfPage = [self frameForListViewForPage:gesture.pinchedPage];
+            [UIView animateWithDuration:.15
+                                  delay:0
+                                options:UIViewAnimationOptionCurveEaseOut
+                             animations:^{
+                                 gesture.pinchedPage.frame = frameOfPage;
+                             }
+                             completion:nil];
+            [self finishUITransitionToListView];
+        }
     }
 }
 
@@ -1001,6 +1014,7 @@
 
 
 -(void) updateScrollOffsetDuringDrag{
+    initialScrollOffsetFromTransitionToListView = self.contentOffset;
     if(!pageBeingDragged){
         //
         // if we're not dragging the page, then don't update the display link

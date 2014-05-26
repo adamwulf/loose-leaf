@@ -24,6 +24,8 @@
 #import "MMVector.h"
 #import "MMScrapViewState.h"
 #import "MMPageCacheManager.h"
+#import "Mixpanel.h"
+#import "UIDevice+PPI.h"
 
 
 @implementation MMScrappedPaperView{
@@ -162,6 +164,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
  * will have twice the resolution in both dimensions.
  */
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)lastBestRotation andScale:(CGFloat)scale{
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScraps by:@(1)];
     //
     // at this point, we have the correct path and rotation that will
     // give us the minimal square px. For instance, drawing a thin diagonal
@@ -260,12 +263,25 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [super panAndScale:_panGesture];
 }
 
+-(BOOL) isAllowedToPan{
+    return [self.delegate isAllowedToPan];
+}
+
 #pragma mark - JotViewDelegate
 
 
 
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)_previousElement{
     NSArray* strokeElementsToDraw = [super willAddElementsToStroke:elements fromPreviousElement:_previousElement];
+    
+    
+    // track distance drawn
+    CGFloat strokeDistance = 0;
+    for(AbstractBezierPathElement* ele in strokeElementsToDraw){
+        strokeDistance += ele.lengthOfElement;
+    }
+    [self.delegate didDrawStrokeOfCm:strokeDistance / [UIDevice ppc]];
+    
     
     if(![self.scraps count]){
         return strokeElementsToDraw;
@@ -472,7 +488,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
         BOOL hasBuiltAnyScraps = NO;
         
         CGAffineTransform verticalFlip = CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height);
-        
+
+
         // iterate over the scraps from the visibly top scraps
         // to the bottom of the stack
         for(MMScrapView* scrap in [self.scraps reverseObjectEnumerator]){
@@ -550,7 +567,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
                         [addedScrap setBackgroundOffset:moveC2];
                         [scraps addObject:addedScrap];
                     }
+                    //
+                    // TODO: handle deleting scraps, and consider the undo queue as well
+                    // https://github.com/adamwulf/loose-leaf/issues/213
                     [scrap removeFromSuperview];
+                    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScraps by:@(-1)];
                 }
                 // clip out the portion of the scissor path that
                 // intersects with the scrap we just cut
@@ -571,9 +592,19 @@ static dispatch_queue_t concurrentBackgroundQueue;
             }
         }
         
-        
+        if(hasBuiltAnyScraps){
+            // track if they cut existing scraps
+            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScissorUses by:@(1)];
+        }
         if(!hasBuiltAnyScraps && [scissorPath isClosed]){
+            // track if they cut new scrap from base page
+            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScissorUses by:@(1)];
             NSLog(@"didn't cut any scraps, so make one");
+            NSArray* subshapes = [[UIBezierPath bezierPathWithRect:drawableView.bounds] uniqueShapesCreatedFromSlicingWithUnclosedPath:scissorPath];
+            if([subshapes count] >= 1){
+                scissorPath = [[[subshapes firstObject] fullPath] copy];
+            }
+            
             MMScrapView* addedScrap = [self addScrapWithPath:scissorPath andScale:1.0];
             [addedScrap stampContentsFrom:self.drawableView];
             
@@ -620,7 +651,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         }else{
             [self saveToDisk];
         }
-        
+
         // clear the dotted line of the scissor
         [shapeBuilderView clear];
     }

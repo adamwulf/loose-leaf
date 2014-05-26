@@ -54,5 +54,11 @@
     return [super updateRow:currentRow atIndex:index forFrame:frame forScrollView:scrollView];
 }
 
+#pragma mark - Description
+
+-(NSString*) description{
+    return @"Photo Events";
+}
+
 
 @end

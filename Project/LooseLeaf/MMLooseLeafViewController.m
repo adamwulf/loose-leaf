@@ -11,6 +11,7 @@
 #import "MMEditablePaperView.h"
 #import "TestFlight.h"
 #import "MMDebugDrawView.h"
+#import "Mixpanel.h"
 
 @implementation MMLooseLeafViewController
 
@@ -25,6 +26,8 @@
             [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
         }];
 
+        [[Crashlytics sharedInstance] setDelegate:self];
+
         // Do any additional setup after loading the view, typically from a nib.
         srand ((uint) time(NULL) );
         [[MMShadowManager sharedInstace] beginGeneratingShadows];
@@ -37,7 +40,25 @@
         
         [stackView loadStacksFromDisk];
         
-        [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth.png"]]];
+        [[[Mixpanel sharedInstance] people] set:kMPNumberOfPages
+                                             to:@([stackView.visibleStackHolder.subviews count] + [stackView.hiddenStackHolder.subviews count])];
+        [[[Mixpanel sharedInstance] people] setOnce:@{kMPFirstLaunchDate : [NSDate date],
+                                                      kMPHasAddedPage : @(NO),
+                                                      kMPHasZoomedToList : @(NO),
+                                                      kMPNumberOfPenUses : @(0),
+                                                      kMPNumberOfEraserUses : @(0),
+                                                      kMPNumberOfScissorUses : @(0),
+                                                      kMPNumberOfRulerUses : @(0),
+                                                      kMPNumberOfPhotoImports : @(0),
+                                                      kMPNumberOfPhotosTaken : @(0),
+                                                      kMPNumberOfExports : @(0),
+                                                      kMPDurationAppOpen : @(0.0),
+                                                      kMPNumberOfCrashes : @(0),
+                                                      kMPDistanceDrawn : @(0.0),
+                                                      kMPDistanceErased : @(0.0)}];
+
+
+        [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"blackblur.png"]]];
         
 //        [self.view addSubview:[MMDebugDrawView sharedInstace]];
         
@@ -68,6 +89,21 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return UIInterfaceOrientationPortrait == interfaceOrientation;
+}
+
+
+#pragma mark - Crashlytics reporting
+
+-(void) crashlytics:(Crashlytics *)crashlytics didDetectCrashDuringPreviousExecution:(id<CLSCrashReport>)crash{
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCrashes by:@(1)];
+}
+
+#pragma mark - application state
+
+-(void) willResignActive{
+    NSLog(@"telling stack to cancel all gestures");
+    [stackView cancelAllGestures];
+    [[stackView.visibleStackHolder peekSubview] cancelAllGestures];
 }
 
 @end

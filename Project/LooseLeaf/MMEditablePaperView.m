@@ -125,6 +125,7 @@ dispatch_queue_t importThumbnailQueue;
 }
 
 -(void) setEditable:(BOOL)isEditable{
+    NSLog(@"setting %@ editable", self.uuid);
     if(isEditable && (!drawableView || drawableView.hidden)){
         debug_NSLog(@"setting editable w/o canvas");
     }

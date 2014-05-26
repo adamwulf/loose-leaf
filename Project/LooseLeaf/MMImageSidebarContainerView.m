@@ -156,8 +156,8 @@
     [self.delegate pictureTakeWithCamera:img fromView:cameraView];
 }
 
--(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation{
-    [self.delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation];
+-(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(MMAbstractSidebarContentView *)container{
+    [self.delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation fromContainer:[container description]];
 }
 
 -(void) cameraButtonTapped:(UIButton*)button{

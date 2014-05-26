@@ -7,10 +7,10 @@
 //
 
 #import "MMPaperView.h"
-#import <JotUI/JotUI.h>
 #import <TouchShape/TouchShape.h>
 #import "MMRulerToolGestureRecognizer.h"
 #import "MMShapeBuilderView.h"
+#import <JotUI/JotUI.h>
 
 @interface MMEditablePaperView : MMPaperView<JotViewDelegate,JotViewStateProxyDelegate>{
     __weak JotView* drawableView;

@@ -27,6 +27,10 @@
 @synthesize originalUnscaledBounds;
 @synthesize panGesture;
 
+-(void) setIsBeingPannedAndZoomed:(BOOL)_isBeingPannedAndZoomed{
+    isBeingPannedAndZoomed = _isBeingPannedAndZoomed;
+}
+
 - (id)initWithFrame:(CGRect)frame{
     return [self initWithFrame:frame andUUID:[NSString createStringUUID]];
 }
@@ -153,7 +157,7 @@
         return 0;
     }
     BOOL isBezeled = (panGesture.didExitToBezel & panGesture.bezelDirectionMask) != MMBezelDirectionNone;
-    BOOL willExit = isBezeled && (panGesture.state == UIGestureRecognizerStateChanged || panGesture.state == UIGestureRecognizerStateEnded || panGesture.state == UIGestureRecognizerStateCancelled);
+    BOOL willExit = isBezeled && (panGesture.subState == UIGestureRecognizerStateChanged || panGesture.subState == UIGestureRecognizerStateEnded || panGesture.subState == UIGestureRecognizerStateCancelled);
     if(willExit){
         return 1;
     }
@@ -256,7 +260,7 @@
        ([_panGesture.validTouches count] == 0 && isBeingPannedAndZoomed)){
         if(panGesture.hasPannedOrScaled){
             if(isBeingPannedAndZoomed){
-                isBeingPannedAndZoomed = NO;
+                self.isBeingPannedAndZoomed = NO;
                 if(scale < (kMinPageZoom + kZoomToListPageZoom)/2 && panGesture.didExitToBezel == MMBezelDirectionNone){
                     if((_panGesture.scaleDirection & MMScaleDirectionSmaller) == MMScaleDirectionSmaller){
                         [self.delegate finishedScalingReallySmall:self];
@@ -267,10 +271,21 @@
                     if(scale < kMinPageZoom){
                         [self.delegate cancelledScalingReallySmall:self];
                     }
-                    [self.delegate finishedPanningAndScalingPage:self
-                                                       intoBezel:panGesture.didExitToBezel
-                                                       fromFrame:panGesture.frameOfPageAtBeginningOfGesture
-                                                         toFrame:self.frame];
+                    
+                    if(panGesture.state == UIGestureRecognizerStateCancelled){
+                        // when cancelling, the page should go back to its
+                        // original frame
+                        NSLog(@"cancelled pan, should push it back onto visible stack");
+                        [self.delegate finishedPanningAndScalingPage:self
+                                                           intoBezel:panGesture.didExitToBezel
+                                                           fromFrame:panGesture.frameOfPageAtBeginningOfGesture
+                                                             toFrame:panGesture.frameOfPageAtBeginningOfGesture];
+                    }else{
+                        [self.delegate finishedPanningAndScalingPage:self
+                                                           intoBezel:panGesture.didExitToBezel
+                                                           fromFrame:panGesture.frameOfPageAtBeginningOfGesture
+                                                             toFrame:self.frame];
+                    }
                 }
             }
         }
@@ -281,11 +296,18 @@
         // started the gesture with 2 fingers but then lifted a finger. in that case, 
         // don't continue the gesture at all, just wait till they finish it proper or re-put
         // that 2nd touch down
-        isBeingPannedAndZoomed = NO;
+        self.isBeingPannedAndZoomed = NO;
         return;
     }else if(!isBeingPannedAndZoomed && (panGesture.subState == UIGestureRecognizerStateBegan ||
                                          panGesture.subState == UIGestureRecognizerStateChanged)){
-        isBeingPannedAndZoomed = YES;
+        
+        if(panGesture.state == UIGestureRecognizerStatePossible ||
+           panGesture.state == UIGestureRecognizerStateCancelled ||
+           panGesture.state == UIGestureRecognizerStateEnded ||
+           panGesture.state == UIGestureRecognizerStateFailed){
+            NSLog(@"what");
+        }
+        self.isBeingPannedAndZoomed = YES;
         //
         // if the user had 1 finger down and re-touches with the 2nd finger, then this
         // will be called as if it was a "new" gesture. this lets the pan and zoom start
@@ -386,9 +408,9 @@
                         toFrame:fr
                         withTouches:panGesture.validTouches];
     
-    if(panGesture.state != UIGestureRecognizerStateCancelled &&
-       panGesture.state != UIGestureRecognizerStateEnded &&
-       panGesture.state != UIGestureRecognizerStateFailed){
+    if(panGesture.subState != UIGestureRecognizerStateCancelled &&
+       panGesture.subState != UIGestureRecognizerStateEnded &&
+       panGesture.subState != UIGestureRecognizerStateFailed){
         //
         // now we're ready, set the frame!
         //
