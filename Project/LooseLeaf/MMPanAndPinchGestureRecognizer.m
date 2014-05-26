@@ -531,7 +531,6 @@
 
 -(void) cancel{
     if(self.enabled){
-        didExitToBezel = MMBezelDirectionNone;
         self.enabled = NO;
         self.enabled = YES;
     }
