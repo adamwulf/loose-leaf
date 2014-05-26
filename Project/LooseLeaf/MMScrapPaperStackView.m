@@ -619,9 +619,9 @@ int skipAll = NO;
     MMScrapView* scrapViewIfFinished = nil;
     
     BOOL shouldBezel = NO;
-    if(gesture.state == UIGestureRecognizerStateEnded ||
-       gesture.state == UIGestureRecognizerStateCancelled ||
-       ![gesture.validTouches count]){
+    if(gesture.scrap && (gesture.state == UIGestureRecognizerStateEnded ||
+                         gesture.state == UIGestureRecognizerStateCancelled ||
+                         ![gesture.validTouches count])){
         // turn off glow
         if(!stretchScrapGesture.scrap){
             // only if that scrap isn't being stretched
@@ -645,8 +645,16 @@ int skipAll = NO;
             CGPoint scrapCenterInPage;
             MMScrappedPaperView* pageToDropScrap;
             if(gesture.state == UIGestureRecognizerStateCancelled){
-                pageToDropScrap = [visibleStackHolder peekSubview];
-                [self scaledCenter:&scrapCenterInPage andScale:&scrapScaleInPage forScrap:gesture.scrap onPage:pageToDropScrap];
+                pageToDropScrap = [self pageWouldDropScrap:gesture.scrap atCenter:&scrapCenterInPage andScale:&scrapScaleInPage];
+                if(pageToDropScrap == [visibleStackHolder peekSubview]){
+                    // it would drop on the visible page, so just
+                    // do that
+                    [self scaledCenter:&scrapCenterInPage andScale:&scrapScaleInPage forScrap:gesture.scrap onPage:pageToDropScrap];
+                }else{
+                    // it wouldn't have dropped on the visible page, so
+                    // bezel it instead
+                    shouldBezel = YES;
+                }
             }else{
                 pageToDropScrap = [self pageWouldDropScrap:gesture.scrap atCenter:&scrapCenterInPage andScale:&scrapScaleInPage];
             }
@@ -1217,6 +1225,25 @@ int skipAll = NO;
 
 #pragma mark - List View
 
+-(void) isBeginningToScaleReallySmall:(MMPaperView*)page{
+    if(panAndPinchScrapGesture.scrap){
+        [panAndPinchScrapGesture cancel];
+    }
+    if(panAndPinchScrapGesture2.scrap){
+        [panAndPinchScrapGesture2 cancel];
+    }
+    [panAndPinchScrapGesture setEnabled:NO];
+    [panAndPinchScrapGesture2 setEnabled:NO];
+    [super isBeginningToScaleReallySmall:page];
+}
+
+-(void) cancelledScalingReallySmall:(MMPaperView *)page{
+    [panAndPinchScrapGesture setEnabled:YES];
+    [panAndPinchScrapGesture2 setEnabled:YES];
+    [super cancelledScalingReallySmall:page];
+}
+
+
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     if(panAndPinchScrapGesture.scrap){
         [panAndPinchScrapGesture cancel];
@@ -1224,7 +1251,15 @@ int skipAll = NO;
     if(panAndPinchScrapGesture2.scrap){
         [panAndPinchScrapGesture2 cancel];
     }
+    [panAndPinchScrapGesture setEnabled:NO];
+    [panAndPinchScrapGesture2 setEnabled:NO];
     [super finishedScalingReallySmall:page];
+}
+
+-(void) finishedScalingBackToPageView:(MMPaperView *)page{
+    [panAndPinchScrapGesture setEnabled:YES];
+    [panAndPinchScrapGesture2 setEnabled:YES];
+    [super finishedScalingBackToPageView:page];
 }
 
 
