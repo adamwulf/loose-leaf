@@ -742,6 +742,7 @@
     
     
     if(gesture.state == UIGestureRecognizerStateBegan){
+        initialScrollOffsetFromTransitionToListView = self.contentOffset;
         [self setScrollEnabled:NO];
         [self ensurePageIsAtTopOfVisibleStack:gesture.pinchedPage];
         [self beginUITransitionFromListView];
@@ -865,6 +866,7 @@
     
     
     if(gesture.state == UIGestureRecognizerStateBegan){
+        initialScrollOffsetFromTransitionToListView = self.contentOffset;
         [self setScrollEnabled:NO];
         [self ensurePageIsAtTopOfVisibleStack:gesture.pinchedPage];
         [self beginUITransitionFromListView];
