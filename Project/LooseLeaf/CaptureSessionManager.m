@@ -50,13 +50,17 @@ dispatch_queue_t sessionQueue;
                 [captureSession addOutput:stillImageOutput];
             }
             
-            [self changeCameraToDevice:[self deviceForPosition:preferredPosition]];
+            [self changeCameraToDevice:[CaptureSessionManager deviceForPosition:preferredPosition]];
 
             [captureSession startRunning];
             [self sessionStarted];
         });
 	}
 	return self;
+}
+
++(BOOL) hasCamera{
+    return [CaptureSessionManager deviceForPosition:AVCaptureDevicePositionUnspecified] ? YES : NO;
 }
 
 -(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
@@ -235,10 +239,10 @@ dispatch_queue_t sessionQueue;
             break;
     }
     
-    return [self deviceForPosition:preferredPosition];
+    return [CaptureSessionManager deviceForPosition:preferredPosition];
 }
 
--(AVCaptureDevice*) deviceForPosition:(AVCaptureDevicePosition)preferredPosition{
++(AVCaptureDevice*) deviceForPosition:(AVCaptureDevicePosition)preferredPosition{
     return [CaptureSessionManager deviceWithMediaType:AVMediaTypeVideo preferringPosition:preferredPosition];
 }
 

@@ -24,4 +24,6 @@
 -(void) snapPicture;
 -(void) addPreviewLayerTo:(CALayer*)layer;
 
++(BOOL) hasCamera;
+
 @end

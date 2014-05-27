@@ -22,6 +22,7 @@
 }
 
 @synthesize delegate;
+@synthesize isShowing;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -73,12 +74,14 @@
     photoListScrollView.alpha = 0;
     [[MMPhotoManager sharedInstace] initializeAlbumCache];
     [self updatePhotoRotation:NO];
+    isShowing = YES;
 }
 
 -(void) hide:(BOOL)animated{
     albumListScrollView.alpha = 1;
     photoListScrollView.alpha = 0;
     currentAlbum = nil;
+    isShowing = NO;
 }
 
 
