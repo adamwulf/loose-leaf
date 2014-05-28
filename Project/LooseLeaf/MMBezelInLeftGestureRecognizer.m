@@ -9,6 +9,7 @@
 #import "MMBezelInLeftGestureRecognizer.h"
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "MMBezelInRightGestureRecognizer.h"
+#import "MMBounceButton.h"
 #import <JotUI/JotUI.h>
 
 @implementation MMBezelInLeftGestureRecognizer
@@ -21,6 +22,7 @@
     numberOfRepeatingBezels = 0;
     liftedRightFingerOffset = 0;
     dateOfLastBezelEnding = nil;
+    self.delegate = self;
     return self;
 }
 
@@ -262,6 +264,16 @@
     // calculate the pixels moved per 20th of a second
     // and add that to the bezel that we'll allow
     return averageVelocity.x; // velocity per fraction of a second
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    // Disallow recognition of tap gestures in the segmented control.
+    if ([touch.view isKindOfClass:[MMBounceButton class]]) {
+        return NO;
+    }
+    return YES;
 }
 
 @end

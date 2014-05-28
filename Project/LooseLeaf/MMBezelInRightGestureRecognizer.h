@@ -11,7 +11,7 @@
 #import "Constants.h"
 #import "MMPanGestureDelegate.h"
 
-@interface MMBezelInRightGestureRecognizer : UIGestureRecognizer{
+@interface MMBezelInRightGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>{
     // direction the user is panning
     MMBezelDirection panDirection;
     CGFloat liftedLeftFingerOffset;

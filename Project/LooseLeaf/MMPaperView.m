@@ -76,14 +76,14 @@
         //
         // allow the user to select an object by tapping on the page
         // with two fingers
-        tap = [[MMImmovableTapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleFingerDoubleTap:)];
-        tap.numberOfTapsRequired = 1;
-        tap.numberOfTouchesRequired = 2;
-        //
-        // only allow tap if the long press fails, otherwise
-        // we'll get a double positive
-        [tap requireGestureRecognizerToFail:longPress];
-        [self addGestureRecognizer:tap];
+//        tap = [[MMImmovableTapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleFingerDoubleTap:)];
+//        tap.numberOfTapsRequired = 1;
+//        tap.numberOfTouchesRequired = 2;
+//        //
+//        // only allow tap if the long press fails, otherwise
+//        // we'll get a double positive
+//        [tap requireGestureRecognizerToFail:longPress];
+//        [self addGestureRecognizer:tap];
 
         //
         // This pan gesture is used to pan/scale the page itself.
@@ -95,7 +95,7 @@
         // and the tap gesture, and only allow page pan/scale if
         // these fail
         [panGesture requireGestureRecognizerToFail:longPress];
-        [panGesture requireGestureRecognizerToFail:tap];
+//        [panGesture requireGestureRecognizerToFail:tap];
         [self addGestureRecognizer:panGesture];
     }
     return self;

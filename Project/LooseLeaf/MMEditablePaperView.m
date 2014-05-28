@@ -71,7 +71,7 @@ dispatch_queue_t importThumbnailQueue;
         // and the tap gesture, and only allow page pan/scale if
         // these fail
         [rulerGesture requireGestureRecognizerToFail:longPress];
-        [rulerGesture requireGestureRecognizerToFail:tap];
+//        [rulerGesture requireGestureRecognizerToFail:tap];
         [self addGestureRecognizer:rulerGesture];
 
         
