@@ -373,6 +373,14 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         return;
     }
     NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
+    
+    for(UITouch* touch in touches){
+        if(![self.scrapDelegate allowsHoldingScrapsWithTouch:touch]){
+            [validTouchesCurrentlyBeginning removeObject:touch];
+            [ignoredTouches addObject:touch];
+        }
+    }
+    
     // ignore all the touches that could be bezel touches
     if([validTouchesCurrentlyBeginning count]){
         

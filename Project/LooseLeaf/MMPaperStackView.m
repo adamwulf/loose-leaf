@@ -753,6 +753,11 @@
     @throw kAbstractMethodException;
 }
 
+-(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch{
+    @throw kAbstractMethodException;
+}
+
+
 /**
  * these are implemented in MMEditablePaperStackView
  */

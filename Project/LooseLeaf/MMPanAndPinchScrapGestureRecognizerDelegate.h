@@ -23,4 +23,6 @@
 
 -(BOOL) isAllowedToPan;
 
+-(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch;
+
 @end

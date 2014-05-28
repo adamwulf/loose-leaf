@@ -267,6 +267,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
     return [self.delegate isAllowedToPan];
 }
 
+-(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch{
+    return [self.delegate allowsHoldingScrapsWithTouch:(UITouch*)touch];
+}
+
 #pragma mark - JotViewDelegate
 
 

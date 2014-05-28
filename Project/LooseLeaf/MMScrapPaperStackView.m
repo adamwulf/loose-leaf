@@ -1073,6 +1073,10 @@ int skipAll = NO;
     return YES;
 }
 
+-(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch{
+    return [touch locationInView:bezelStackHolder].x < 0;
+}
+
 -(CGFloat) topVisiblePageScaleForScrap:(MMScrapView*)scrap{
     if([scrapContainer.subviews containsObject:scrap]){
         return 1;
