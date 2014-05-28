@@ -663,7 +663,7 @@
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
     // dont start a new stroke if one already exists
     if([[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count] > 0){
-        NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
+        debug_NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
         return NO;
     }
     if([[MMPageCacheManager sharedInstace].drawableView.state.currentStrokes count]){

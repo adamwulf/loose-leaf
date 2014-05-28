@@ -166,10 +166,10 @@
     if([validTouches count] >= 2 && foundValidTouch){
         if(!dateOfLastBezelEnding || [dateOfLastBezelEnding timeIntervalSinceNow] > -.5){
             numberOfRepeatingBezels++;
-            NSLog(@"increment to %d", (int) numberOfRepeatingBezels);
+            debug_NSLog(@"increment to %d", (int) numberOfRepeatingBezels);
         }else{
             numberOfRepeatingBezels = 1;
-            NSLog(@"set to %d", (int) numberOfRepeatingBezels);
+            debug_NSLog(@"set to %d", (int) numberOfRepeatingBezels);
         }
         if(subState == UIGestureRecognizerStatePossible){
             [self.panDelegate ownershipOfTouches:validTouches isGesture:self];

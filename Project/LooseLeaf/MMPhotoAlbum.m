@@ -10,6 +10,7 @@
 #import "MMPhotoManager.h"
 #import "ALAsset+Thumbnail.h"
 #import "NSThread+BlockAdditions.h"
+#import "Constants.h"
 
 dispatch_queue_t fetchThumbnailQueue;
 
@@ -124,7 +125,7 @@ BOOL isEnumerating = NO;
 -(void) dealloc{
     @synchronized(self){
         if(isEnumerating){
-            NSLog(@"haha what");
+            debug_NSLog(@"what: dealloc during enumeration");
         }
     }
 }

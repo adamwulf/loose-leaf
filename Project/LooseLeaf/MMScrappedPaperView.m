@@ -342,7 +342,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     redAndBlueSegments = [UIBezierPath redAndGreenAndBlueSegmentsCreatedFrom:scrapClippingPath bySlicingWithPath:strokePath andNumberOfBlueShellSegments:nil];
                 }@catch (id exc) {
                     //        NSAssert(NO, @"need to log this");
-                    NSLog(@"need to mail the paths");
+                    debug_NSLog(@"need to mail the paths");
                     
                     NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
                     
@@ -603,7 +603,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         if(!hasBuiltAnyScraps && [scissorPath isClosed]){
             // track if they cut new scrap from base page
             [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScissorUses by:@(1)];
-            NSLog(@"didn't cut any scraps, so make one");
+            debug_NSLog(@"didn't cut any scraps, so make one");
             NSArray* subshapes = [[UIBezierPath bezierPathWithRect:drawableView.bounds] uniqueShapesCreatedFromSlicingWithUnclosedPath:scissorPath];
             if([subshapes count] >= 1){
                 scissorPath = [[[subshapes firstObject] fullPath] copy];

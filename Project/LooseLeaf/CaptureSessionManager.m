@@ -10,6 +10,7 @@
 #import "CaptureSessionManager.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "MMRotationManager.h"
+#import "Constants.h"
 
 @implementation CaptureSessionManager{
     AVCaptureVideoPreviewLayer *previewLayer;
@@ -65,7 +66,7 @@ dispatch_queue_t sessionQueue;
 
 -(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
     if([keyPath isEqualToString:@"isInterrupted"]){
-        NSLog(@"interrupted!");
+        debug_NSLog(@"interrupted!");
     }else{
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
@@ -113,15 +114,15 @@ dispatch_queue_t sessionQueue;
                 [[self captureSession] addInput:videoIn];
                 [self.delegate didChangeCameraTo:videoIn.device.position];
             }else{
-                NSLog(@"Couldn't create video input");
+                debug_NSLog(@"Couldn't create video input");
                 currDevice = nil;
             }
         }else{
-            NSLog(@"Couldn't create video input");
+            debug_NSLog(@"Couldn't create video input");
             currDevice = nil;
         }
     }else{
-        NSLog(@"Couldn't create video capture device");
+        debug_NSLog(@"Couldn't create video capture device");
         currDevice = nil;
     }
 }
@@ -176,16 +177,16 @@ dispatch_queue_t sessionQueue;
 -(ALAssetOrientation) currentDeviceOrientation{
     UIDeviceOrientation deviceOrientation = [[MMRotationManager sharedInstace] currentDeviceOrientation];
     if(deviceOrientation == UIDeviceOrientationLandscapeLeft){
-        NSLog(@"i think i should save left");
+        debug_NSLog(@"i think i should save left");
         return ALAssetOrientationUp;
     }else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown){
-        NSLog(@"i think i should save upside down");
+        debug_NSLog(@"i think i should save upside down");
         return ALAssetOrientationRight;
     }else if(deviceOrientation == UIDeviceOrientationLandscapeRight){
-        NSLog(@"i think i should save right");
+        debug_NSLog(@"i think i should save right");
         return ALAssetOrientationDown;
     }else{
-        NSLog(@"i think i should save portrait");
+        debug_NSLog(@"i think i should save portrait");
         return ALAssetOrientationRight;
     }
 }
@@ -211,7 +212,7 @@ dispatch_queue_t sessionQueue;
                 CGSize sizeOfImage = image.size;
                 UIImageOrientation orient = image.imageOrientation;
                 AVCaptureVideoOrientation captureOrient = [[(AVCaptureVideoPreviewLayer *)[self previewLayer] connection] videoOrientation];
-                NSLog(@"image size %f,%f orient %@ %@ %@", sizeOfImage.width, sizeOfImage.height, [self logImageOrientation:orient], [self logVideoOrientation:captureOrient], [self logAssetOrientation:[self currentDeviceOrientation]]);
+                debug_NSLog(@"image size %f,%f orient %@ %@ %@", sizeOfImage.width, sizeOfImage.height, [self logImageOrientation:orient], [self logVideoOrientation:captureOrient], [self logAssetOrientation:[self currentDeviceOrientation]]);
                 
                 // rotate the image that we save
 				[[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage]
@@ -276,7 +277,7 @@ dispatch_queue_t sessionQueue;
 		}
 		else
 		{
-			NSLog(@"%@", error);
+			debug_NSLog(@"%@", error);
 		}
 	}
 }

@@ -393,7 +393,7 @@ int skipAll = NO;
         skipOnce = YES;
     }
     
-    NSLog(@"auto-lines: %d   pages: %d", numLines, (int) floor(numLines / strokesPerPage));
+    debug_NSLog(@"auto-lines: %d   pages: %d", numLines, (int) floor(numLines / strokesPerPage));
 }
 
 
@@ -450,7 +450,7 @@ int skipAll = NO;
 
 
 -(void) timerDidFire:(NSTimer*)timer{
-    NSLog(@"%@", [self activeGestureSummary]);
+    debug_NSLog(@"%@", [self activeGestureSummary]);
 }
 
 -(void) drawLine{
@@ -959,7 +959,7 @@ int skipAll = NO;
     for (UITouch* t in gesture.ignoredTouches) {
         ignoredOut = [ignoredOut stringByAppendingFormat:@" %p", t];
     }
-    NSLog(@"%@ (%p) knows about:\n%@\n%@\n%@ ", prefix, gesture, validOut, possibleOut, ignoredOut);
+    debug_NSLog(@"%@ (%p) knows about:\n%@\n%@\n%@ ", prefix, gesture, validOut, possibleOut, ignoredOut);
 }
 
 
@@ -1029,18 +1029,19 @@ int skipAll = NO;
 
     
     if(!panAndPinchScrapGesture.scrap || !panAndPinchScrapGesture2.scrap){
+        debug_NSLog(@"what: ending scrap gesture w/o holding scrap");
         // sanity checks.
         // we should never enter here
         if([panAndPinchScrapGesture.initialTouchVector isEqual:panAndPinchScrapGesture2.initialTouchVector]){
-            NSLog(@"what");
+            debug_NSLog(@"what");
         }
         
         if(scrap.scale != clonedScrap.scale ||
            scrap.rotation != clonedScrap.rotation){
-            NSLog(@"what");
+            debug_NSLog(@"what");
         }
         
-        NSLog(@"success? %d %p,  %d %p", (int)[panAndPinchScrapGesture.validTouches count], panAndPinchScrapGesture.scrap,
+        debug_NSLog(@"success? %d %p,  %d %p", (int)[panAndPinchScrapGesture.validTouches count], panAndPinchScrapGesture.scrap,
               (int)[panAndPinchScrapGesture2.validTouches count], panAndPinchScrapGesture2.scrap);
 
         if([panAndPinchScrapGesture.validTouches count] < 2){

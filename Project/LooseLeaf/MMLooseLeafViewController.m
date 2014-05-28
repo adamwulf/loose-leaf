@@ -78,9 +78,9 @@
             [self printKeys:obj atlevel:level+1];
         }else{
             if([obj isKindOfClass:[NSArray class]]){
-                NSLog(@"%@ %@ - %@ [%lu]", space, key, [obj class], (unsigned long)[obj count]);
+                debug_NSLog(@"%@ %@ - %@ [%lu]", space, key, [obj class], (unsigned long)[obj count]);
             }else{
-                NSLog(@"%@ %@ - %@", space, key, [obj class]);
+                debug_NSLog(@"%@ %@ - %@", space, key, [obj class]);
             }
         }
     }
@@ -101,7 +101,7 @@
 #pragma mark - application state
 
 -(void) willResignActive{
-    NSLog(@"telling stack to cancel all gestures");
+    debug_NSLog(@"telling stack to cancel all gestures");
     [stackView cancelAllGestures];
     [[stackView.visibleStackHolder peekSubview] cancelAllGestures];
 }

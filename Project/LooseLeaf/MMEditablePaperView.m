@@ -169,7 +169,7 @@ dispatch_queue_t importThumbnailQueue;
 
 -(void) setDrawableView:(JotView *)_drawableView{
     if(_drawableView && ![self hasStateLoaded]){
-        NSLog(@"oh no");
+        debug_NSLog(@"oh no");
     }
     if(drawableView != _drawableView){
         drawableView = _drawableView;
@@ -447,11 +447,11 @@ static int count = 0;
 
 
 -(void) jotSuggestsToDisableGestures{
-    NSLog(@"disable gestures!");
+    debug_NSLog(@"disable gestures!");
 }
 
 -(void) jotSuggestsToEnableGestures{
-    NSLog(@"enable gestures!");
+    debug_NSLog(@"enable gestures!");
 }
 
 #pragma mark - File Paths
@@ -492,7 +492,7 @@ static int count = 0;
 #pragma mark - JotViewStateProxyDelegate
 
 -(void) jotStrokeWasCancelled:(JotStroke *)stroke{
-    NSLog(@"MMEditablePaperView jotStrokeWasCancelled:");
+    debug_NSLog(@"MMEditablePaperView jotStrokeWasCancelled:");
 }
 
 -(void) didLoadState:(JotViewStateProxy*)state{

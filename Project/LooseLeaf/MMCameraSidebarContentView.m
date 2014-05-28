@@ -175,7 +175,7 @@
 #pragma mark - MMCamViewDelegate
 
 -(void) didTakePicture:(UIImage*)img{
-    NSLog(@"got picture %p", img);
+    debug_NSLog(@"got picture %p", img);
     [self.delegate pictureTakeWithCamera:img fromView:cameraRow];
 }
 

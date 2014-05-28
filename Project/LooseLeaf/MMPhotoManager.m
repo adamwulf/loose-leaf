@@ -8,6 +8,7 @@
 
 #import "MMPhotoManager.h"
 #import "NSThread+BlockAdditions.h"
+#import "Constants.h"
 
 @implementation MMPhotoManager{
     BOOL hasEverInitailized;
@@ -284,7 +285,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
 
 
 -(void) showErrorAboutUserNeedingToGivePermission{
-    NSLog(@"user needs to grant permission to photo library");
+    debug_NSLog(@"user needs to grant permission to photo library");
 }
 
 @end

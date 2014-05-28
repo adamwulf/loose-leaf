@@ -104,7 +104,7 @@
 
 -(void) setScale:(CGFloat)_scale{
     if(_scale == 0){
-        NSLog(@"what");
+        debug_NSLog(@"what: scale for page is 0");
     }
     scale = _scale;
 }
@@ -112,7 +112,7 @@
 
 -(void) setFrame:(CGRect)_frame{
     if(!_frame.size.width){
-        debug_NSLog(@"zero width");
+        debug_NSLog(@"what: zero width");
     }
     [super setFrame:_frame];
     // now that we have adjusted our frame
@@ -211,7 +211,7 @@
     }
     textLabel.text = @"disabled";
     if([self.uuid hasPrefix:@"41B98"]){
-        NSLog(@"disabled: %@ %d", self.uuid, panGesture.enabled);
+        debug_NSLog(@"disabled: %@ %d", self.uuid, panGesture.enabled);
     }
 }
 /**
@@ -223,7 +223,7 @@
     }
     textLabel.text = @"enabled";
     if([self.uuid hasPrefix:@"41B98"]){
-        NSLog(@"enabled: %@", self.uuid);
+        debug_NSLog(@"enabled: %@", self.uuid);
     }
 }
 
@@ -295,7 +295,7 @@
                     if(panGesture.state == UIGestureRecognizerStateCancelled){
                         // when cancelling, the page should go back to its
                         // original frame
-                        NSLog(@"cancelled pan, should push it back onto visible stack");
+                        debug_NSLog(@"cancelled pan, should push it back onto visible stack");
                         [self.delegate finishedPanningAndScalingPage:self
                                                            intoBezel:MMBezelDirectionNone
                                                            fromFrame:panGesture.frameOfPageAtBeginningOfGesture
