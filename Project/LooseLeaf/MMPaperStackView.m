@@ -362,8 +362,13 @@
         // make sure we have two pages, the one we're pulling, and
         // the one below it
         [self ensureAtLeast:2 pagesInStack:visibleStackHolder];
-        [self mayChangeTopPageTo:[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]]];
+        [self willChangeTopPageTo:[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]]];
         [bezelStackHolder pushSubview:[visibleStackHolder peekSubview]];
+        // when bezeling left, we must change the top page
+        // to the new visiblestack top page. this'll let us
+        // grab scraps from it, just as if we're bezeling
+        // right and grab scraps from top page
+        [self didChangeTopPage];
         // at this point, the bezel stack is immediately on top of the visible stack,
         // and it has 1 page in it. now animate the bezel stack to the user's finger
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{

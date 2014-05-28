@@ -527,6 +527,9 @@ int skipAll = NO;
 -(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
     [super isBezelingInLeftWithGesture:bezelGesture];
     [self forceScrapToScrapContainerDuringGesture];
+    
+    // adam
+    [visibleStackHolder peekSubview];
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{

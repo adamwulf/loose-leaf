@@ -18,8 +18,8 @@
 
 
 #ifdef DEBUG
-#define debug_NSLog(__FORMAT__, ...)
-//#define debug_NSLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
+//#define debug_NSLog(__FORMAT__, ...)
+#define debug_NSLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
 #else
 #define debug_NSLog(__FORMAT__, ...)
 #endif
