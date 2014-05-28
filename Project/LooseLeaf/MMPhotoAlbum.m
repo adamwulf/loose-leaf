@@ -40,7 +40,7 @@ dispatch_queue_t fetchThumbnailQueue;
 -(id) initWithAssetGroup:(ALAssetsGroup *)_group{
     if(self = [super init]){
         group = _group;
-        [group setAssetsFilter:[ALAssetsFilter allAssets]];
+        [group setAssetsFilter:[ALAssetsFilter allPhotos]];
         assetURL = group.url;
         name = group.name;
         persistentId = group.persistentId;
