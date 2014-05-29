@@ -7,11 +7,10 @@
 //
 
 #import "MMLoadImageCache.h"
+#import "Constants.h"
 
 // TODO: possibly use this tutorial for threadsafe cache
 // https://mikeash.com/pyblog/friday-qa-2011-10-14-whats-new-in-gcd.html
-
-#define kThumbCacheSize 30
 
 @implementation MMLoadImageCache{
     NSMutableDictionary* loadedImages;
@@ -81,7 +80,7 @@ static int count = 0;
 
 -(void) ensureCacheSize{
     @synchronized(self){
-        while([orderedKeys count] > kThumbCacheSize){
+        while([orderedKeys count] > kMMLoadImageCacheSize){
             [self clearCacheForPath:[orderedKeys lastObject]];
             [orderedKeys removeLastObject];
         }

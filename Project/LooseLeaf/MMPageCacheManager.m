@@ -7,6 +7,7 @@
 //
 
 #import "MMPageCacheManager.h"
+#import "Constants.h"
 
 @implementation MMPageCacheManager{
     // this is the UUID of the page that has
@@ -154,7 +155,7 @@ static MMPageCacheManager* _instance = nil;
         [stateLoadedPages removeObject:currentEditablePage];
         [stateLoadedPages insertObject:currentEditablePage atIndex:0];
     }
-    if([stateLoadedPages count] > 5){
+    if([stateLoadedPages count] > kMMPageCacheManagerSize){
         // too many pages, kick one out
         [[stateLoadedPages lastObject] unloadState];
         [stateLoadedPages removeLastObject];

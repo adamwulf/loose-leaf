@@ -105,6 +105,10 @@
 
 #define RandomPhotoRotation ((float)(rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees/2)) / 360.0 * M_PI
 
+// cache sizes
+#define kMMLoadImageCacheSize 30
+#define kMMPageCacheManagerSize 5
+
 #ifdef __cplusplus
 extern "C" {
 #endif
