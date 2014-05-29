@@ -10,6 +10,7 @@
 #import "MMBackgroundTimer.h"
 #import "MMLoadImageCache.h"
 #import "MMPageCacheManager.h"
+#import <JotUI/JotUI.h>
 
 @implementation MMMemoryProfileView{
     NSTimer* profileTimer;
@@ -52,14 +53,18 @@
     NSInteger numberInImageCache = [[MMLoadImageCache sharedInstace] numberOfItemsHeldInCache];
     NSInteger numberOfLoadedPagePreviews = [[MMPageCacheManager sharedInstace] numberOfPagesWithLoadedPreviewImage];
     NSInteger numberOfLoadedPageStates = [[MMPageCacheManager sharedInstace] numberOfStateLoadedPages];
+    NSInteger numberOfItemsInTrash = [[JotTrashManager sharedInstace] numberOfItemsInTrash];
     
-    
-    [@"MMLoadImageCache:" drawAtPoint:CGPointMake(150, 50) withFont:font];
-    [[NSString stringWithFormat:@"# of Images: %d", numberInImageCache] drawAtPoint:CGPointMake(150, 70) withFont:font];
+    CGFloat y = 50;
+    [@"MMLoadImageCache:" drawAtPoint:CGPointMake(150, y) withFont:font];
+    [[NSString stringWithFormat:@"# of Images: %d", numberInImageCache] drawAtPoint:CGPointMake(150, (y += 20)) withFont:font];
 
-    [@"MMPageCacheManager:" drawAtPoint:CGPointMake(150, 110) withFont:font];
-    [[NSString stringWithFormat:@"# in page previews: %d", numberOfLoadedPagePreviews] drawAtPoint:CGPointMake(150, 130) withFont:font];
-    [[NSString stringWithFormat:@"# in page states: %d", numberOfLoadedPageStates] drawAtPoint:CGPointMake(150, 150) withFont:font];
+    [@"MMPageCacheManager:" drawAtPoint:CGPointMake(150, (y += 40)) withFont:font];
+    [[NSString stringWithFormat:@"# in page previews: %d", numberOfLoadedPagePreviews] drawAtPoint:CGPointMake(150, (y += 20)) withFont:font];
+    [[NSString stringWithFormat:@"# in page states: %d", numberOfLoadedPageStates] drawAtPoint:CGPointMake(150, (y += 20)) withFont:font];
+
+    [@"JotTrashManager:" drawAtPoint:CGPointMake(150, (y += 40)) withFont:font];
+    [[NSString stringWithFormat:@"# items in trash: %d", numberOfItemsInTrash] drawAtPoint:CGPointMake(150, (y += 20)) withFont:font];
 }
 
 @end
