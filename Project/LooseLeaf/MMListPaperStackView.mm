@@ -620,7 +620,6 @@
     [super cancelledScalingReallySmall:page];
     //
     // clean up gesture state
-    NSLog(@"removing2 %p", page);
     [setOfPagesBeingPanned removeObject:page];
     
     [self finishUITransitionToPageView];
@@ -689,7 +688,6 @@
 #pragma mark - MMPanAndPinchFromListViewGestureRecognizerDelegate - Tap Gesture
 
 -(void) didHoldAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture{
-    
     void(^updatePageFrame)() = ^{
         //
         // ok, the top page is the only page that's being panned.
@@ -743,6 +741,7 @@
     
     
     if(gesture.state == UIGestureRecognizerStateBegan){
+        initialScrollOffsetFromTransitionToListView = self.contentOffset;
         [self setScrollEnabled:NO];
         [self ensurePageIsAtTopOfVisibleStack:gesture.pinchedPage];
         [self beginUITransitionFromListView];
@@ -796,7 +795,6 @@
  * b) animate all views between the old/new index to their new home
  */
 -(void) didPinchAPageInListView:(MMPanAndPinchFromListViewGestureRecognizer*)gesture{
-    
     void(^updatePageFrame)() = ^{
         //
         // ok, the top page is the only page that's being panned.
@@ -867,6 +865,7 @@
     
     
     if(gesture.state == UIGestureRecognizerStateBegan){
+        initialScrollOffsetFromTransitionToListView = self.contentOffset;
         [self setScrollEnabled:NO];
         [self ensurePageIsAtTopOfVisibleStack:gesture.pinchedPage];
         [self beginUITransitionFromListView];
@@ -904,10 +903,21 @@
         updatePageFrame();
     }
     if(gesture.state == UIGestureRecognizerStateCancelled){
-        // we cancelled, so some other gesture is going to
-        // handle the transition
+        // we cancelled, so just send the page back to its default
+        // space in the list
         realizedThatPageIsBeingDragged = NO;
         pageBeingDragged = nil;
+        if(gesture.pinchedPage){
+            CGRect frameOfPage = [self frameForListViewForPage:gesture.pinchedPage];
+            [UIView animateWithDuration:.15
+                                  delay:0
+                                options:UIViewAnimationOptionCurveEaseOut
+                             animations:^{
+                                 gesture.pinchedPage.frame = frameOfPage;
+                             }
+                             completion:nil];
+            [self finishUITransitionToListView];
+        }
     }
 }
 
@@ -1005,6 +1015,7 @@
 
 
 -(void) updateScrollOffsetDuringDrag{
+    initialScrollOffsetFromTransitionToListView = self.contentOffset;
     if(!pageBeingDragged){
         //
         // if we're not dragging the page, then don't update the display link

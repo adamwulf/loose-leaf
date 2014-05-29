@@ -16,4 +16,6 @@
 
 -(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication;
 
+-(void) willResignActive;
+
 @end

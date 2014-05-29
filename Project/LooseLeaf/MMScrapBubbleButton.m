@@ -9,6 +9,7 @@
 #import "MMScrapBubbleButton.h"
 #import "MMScrapBorderView.h"
 #import <DrawKit-iOS/DrawKit-iOS.h>
+#import "Constants.h"
 
 @implementation MMScrapBubbleButton{
     CGFloat rotationAdjustment;
@@ -73,7 +74,7 @@
 
 -(void) setScrap:(MMScrapView *)_scrap{
     if(!_scrap){
-        NSLog(@"what");
+        debug_NSLog(@"what: setting nil scrap");
     }
     scrap = _scrap;
     rotationAdjustment = self.rotation;

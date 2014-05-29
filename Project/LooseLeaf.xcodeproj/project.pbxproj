@@ -23,23 +23,7 @@
 		66277C9F192BC99D003E97C0 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 66277C9C192BC99D003E97C0 /* SSKeychain.m */; };
 		66277CA0192BC99D003E97C0 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 66277C9E192BC99D003E97C0 /* SSKeychainQuery.m */; };
 		6627DFA719003DF900592EEF /* CaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6627DFA619003DF900592EEF /* CaptureSessionManager.m */; };
-		662A21D6191D671A00AD9E31 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 662A21B9191D671A00AD9E31 /* Media.xcassets */; };
-		662A21D7191D671A00AD9E31 /* Mixpanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 662A21BB191D671A00AD9E31 /* Mixpanel.m */; };
-		662A21D8191D671A00AD9E31 /* MPCloseBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 662A21BC191D671A00AD9E31 /* MPCloseBtn.png */; };
-		662A21D9191D671A00AD9E31 /* MPCloseBtn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 662A21BD191D671A00AD9E31 /* MPCloseBtn@2x.png */; };
-		662A21DA191D671A00AD9E31 /* MPNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 662A21BF191D671A00AD9E31 /* MPNotification.m */; };
-		662A21DB191D671A00AD9E31 /* MPNotification.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 662A21C0191D671A00AD9E31 /* MPNotification.storyboard */; };
-		662A21DC191D671A00AD9E31 /* MPNotificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 662A21C2191D671A00AD9E31 /* MPNotificationViewController.m */; };
-		662A21DD191D671A00AD9E31 /* MPSurvey.m in Sources */ = {isa = PBXBuildFile; fileRef = 662A21C4191D671A00AD9E31 /* MPSurvey.m */; };
-		662A21DE191D671A00AD9E31 /* MPSurvey.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 662A21C5191D671A00AD9E31 /* MPSurvey.storyboard */; };
-		662A21DF191D671A00AD9E31 /* MPSurveyNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 662A21C7191D671A00AD9E31 /* MPSurveyNavigationController.m */; };
-		662A21E0191D671A00AD9E31 /* MPSurveyQuestion.m in Sources */ = {isa = PBXBuildFile; fileRef = 662A21C9191D671A00AD9E31 /* MPSurveyQuestion.m */; };
-		662A21E1191D671A00AD9E31 /* MPSurveyQuestionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 662A21CB191D671A00AD9E31 /* MPSurveyQuestionViewController.m */; };
-		662A21E2191D671A00AD9E31 /* NSData+MPBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 662A21CD191D671A00AD9E31 /* NSData+MPBase64.m */; };
-		662A21E3191D671A00AD9E31 /* UIColor+MPColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 662A21CF191D671A00AD9E31 /* UIColor+MPColor.m */; };
-		662A21E4191D671A00AD9E31 /* UIImage+MPAverageColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 662A21D1191D671A00AD9E31 /* UIImage+MPAverageColor.m */; };
-		662A21E5191D671A00AD9E31 /* UIImage+MPImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 662A21D3191D671A00AD9E31 /* UIImage+MPImageEffects.m */; };
-		662A21E6191D671A00AD9E31 /* UIView+MPSnapshotImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 662A21D5191D671A00AD9E31 /* UIView+MPSnapshotImage.m */; };
+		662A21D7191D671A00AD9E31 /* Mixpanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 662A21BB191D671A00AD9E31 /* Mixpanel.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C1877175538A800706A05 /* MMPencilEraserButton.m */; };
 		663C187D1755B63D00706A05 /* Eraser.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C187C1755B63D00706A05 /* Eraser.m */; };
@@ -201,6 +185,11 @@
 		66DCFBCD1582BAED00B4918C /* MMPaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBCC1582BAED00B4918C /* MMPaperView.m */; };
 		66DCFBDF1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBDE1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DF0B7D159BC30200C5C652 /* UIView+Animations.m */; };
+		66E716B51936580A00548491 /* MPCJSONDataSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E716AA1936580A00548491 /* MPCJSONDataSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66E716B61936580A00548491 /* MPCJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E716AC1936580A00548491 /* MPCJSONSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66E716B71936580A00548491 /* MPCSerializedJSONData.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E716AE1936580A00548491 /* MPCSerializedJSONData.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66E716B81936580A00548491 /* NSData+MPBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E716B11936580A00548491 /* NSData+MPBase64.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66E716B91936580A00548491 /* ODIN.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E716B41936580A00548491 /* ODIN.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66E769CE18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E769CD18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m */; };
 		66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E88A361591853E001A6EBF /* MMPapersIcon.m */; };
 		66EDA79617CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDA79517CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m */; };
@@ -247,35 +236,8 @@
 		6627DFA619003DF900592EEF /* CaptureSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptureSessionManager.m; sourceTree = "<group>"; };
 		6627DFAB1901D82300592EEF /* LooseLeaf.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = LooseLeaf.entitlements; path = LooseLeaf/LooseLeaf.entitlements; sourceTree = "<group>"; };
 		6629058B17FE0C4700FA680B /* MMScrapViewStateDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapViewStateDelegate.h; sourceTree = "<group>"; };
-		662A21B9191D671A00AD9E31 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Media.xcassets; path = ../../Submodules/mixpanel/Mixpanel/Media.xcassets; sourceTree = "<group>"; };
 		662A21BA191D671A00AD9E31 /* Mixpanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mixpanel.h; path = ../../Submodules/mixpanel/Mixpanel/Mixpanel.h; sourceTree = "<group>"; };
 		662A21BB191D671A00AD9E31 /* Mixpanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Mixpanel.m; path = ../../Submodules/mixpanel/Mixpanel/Mixpanel.m; sourceTree = "<group>"; };
-		662A21BC191D671A00AD9E31 /* MPCloseBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MPCloseBtn.png; path = ../../Submodules/mixpanel/Mixpanel/MPCloseBtn.png; sourceTree = "<group>"; };
-		662A21BD191D671A00AD9E31 /* MPCloseBtn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MPCloseBtn@2x.png"; path = "../../Submodules/mixpanel/Mixpanel/MPCloseBtn@2x.png"; sourceTree = "<group>"; };
-		662A21BE191D671A00AD9E31 /* MPNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPNotification.h; path = ../../Submodules/mixpanel/Mixpanel/MPNotification.h; sourceTree = "<group>"; };
-		662A21BF191D671A00AD9E31 /* MPNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPNotification.m; path = ../../Submodules/mixpanel/Mixpanel/MPNotification.m; sourceTree = "<group>"; };
-		662A21C0191D671A00AD9E31 /* MPNotification.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = MPNotification.storyboard; path = ../../Submodules/mixpanel/Mixpanel/MPNotification.storyboard; sourceTree = "<group>"; };
-		662A21C1191D671A00AD9E31 /* MPNotificationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPNotificationViewController.h; path = ../../Submodules/mixpanel/Mixpanel/MPNotificationViewController.h; sourceTree = "<group>"; };
-		662A21C2191D671A00AD9E31 /* MPNotificationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPNotificationViewController.m; path = ../../Submodules/mixpanel/Mixpanel/MPNotificationViewController.m; sourceTree = "<group>"; };
-		662A21C3191D671A00AD9E31 /* MPSurvey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPSurvey.h; path = ../../Submodules/mixpanel/Mixpanel/MPSurvey.h; sourceTree = "<group>"; };
-		662A21C4191D671A00AD9E31 /* MPSurvey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPSurvey.m; path = ../../Submodules/mixpanel/Mixpanel/MPSurvey.m; sourceTree = "<group>"; };
-		662A21C5191D671A00AD9E31 /* MPSurvey.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = MPSurvey.storyboard; path = ../../Submodules/mixpanel/Mixpanel/MPSurvey.storyboard; sourceTree = "<group>"; };
-		662A21C6191D671A00AD9E31 /* MPSurveyNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPSurveyNavigationController.h; path = ../../Submodules/mixpanel/Mixpanel/MPSurveyNavigationController.h; sourceTree = "<group>"; };
-		662A21C7191D671A00AD9E31 /* MPSurveyNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPSurveyNavigationController.m; path = ../../Submodules/mixpanel/Mixpanel/MPSurveyNavigationController.m; sourceTree = "<group>"; };
-		662A21C8191D671A00AD9E31 /* MPSurveyQuestion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPSurveyQuestion.h; path = ../../Submodules/mixpanel/Mixpanel/MPSurveyQuestion.h; sourceTree = "<group>"; };
-		662A21C9191D671A00AD9E31 /* MPSurveyQuestion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPSurveyQuestion.m; path = ../../Submodules/mixpanel/Mixpanel/MPSurveyQuestion.m; sourceTree = "<group>"; };
-		662A21CA191D671A00AD9E31 /* MPSurveyQuestionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPSurveyQuestionViewController.h; path = ../../Submodules/mixpanel/Mixpanel/MPSurveyQuestionViewController.h; sourceTree = "<group>"; };
-		662A21CB191D671A00AD9E31 /* MPSurveyQuestionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPSurveyQuestionViewController.m; path = ../../Submodules/mixpanel/Mixpanel/MPSurveyQuestionViewController.m; sourceTree = "<group>"; };
-		662A21CC191D671A00AD9E31 /* NSData+MPBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+MPBase64.h"; path = "../../Submodules/mixpanel/Mixpanel/NSData+MPBase64.h"; sourceTree = "<group>"; };
-		662A21CD191D671A00AD9E31 /* NSData+MPBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+MPBase64.m"; path = "../../Submodules/mixpanel/Mixpanel/NSData+MPBase64.m"; sourceTree = "<group>"; };
-		662A21CE191D671A00AD9E31 /* UIColor+MPColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+MPColor.h"; path = "../../Submodules/mixpanel/Mixpanel/UIColor+MPColor.h"; sourceTree = "<group>"; };
-		662A21CF191D671A00AD9E31 /* UIColor+MPColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+MPColor.m"; path = "../../Submodules/mixpanel/Mixpanel/UIColor+MPColor.m"; sourceTree = "<group>"; };
-		662A21D0191D671A00AD9E31 /* UIImage+MPAverageColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+MPAverageColor.h"; path = "../../Submodules/mixpanel/Mixpanel/UIImage+MPAverageColor.h"; sourceTree = "<group>"; };
-		662A21D1191D671A00AD9E31 /* UIImage+MPAverageColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+MPAverageColor.m"; path = "../../Submodules/mixpanel/Mixpanel/UIImage+MPAverageColor.m"; sourceTree = "<group>"; };
-		662A21D2191D671A00AD9E31 /* UIImage+MPImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+MPImageEffects.h"; path = "../../Submodules/mixpanel/Mixpanel/UIImage+MPImageEffects.h"; sourceTree = "<group>"; };
-		662A21D3191D671A00AD9E31 /* UIImage+MPImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+MPImageEffects.m"; path = "../../Submodules/mixpanel/Mixpanel/UIImage+MPImageEffects.m"; sourceTree = "<group>"; };
-		662A21D4191D671A00AD9E31 /* UIView+MPSnapshotImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+MPSnapshotImage.h"; path = "../../Submodules/mixpanel/Mixpanel/UIView+MPSnapshotImage.h"; sourceTree = "<group>"; };
-		662A21D5191D671A00AD9E31 /* UIView+MPSnapshotImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+MPSnapshotImage.m"; path = "../../Submodules/mixpanel/Mixpanel/UIView+MPSnapshotImage.m"; sourceTree = "<group>"; };
 		6630ED9F15F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
 		6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizerDelegate.h; sourceTree = "<group>"; };
@@ -591,6 +553,16 @@
 		66DCFBDE1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchGestureRecognizer.m; sourceTree = "<group>"; };
 		66DF0B7C159BC30200C5C652 /* UIView+Animations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Animations.h"; sourceTree = "<group>"; };
 		66DF0B7D159BC30200C5C652 /* UIView+Animations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Animations.m"; sourceTree = "<group>"; };
+		66E716A91936580A00548491 /* MPCJSONDataSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPCJSONDataSerializer.h; sourceTree = "<group>"; };
+		66E716AA1936580A00548491 /* MPCJSONDataSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPCJSONDataSerializer.m; sourceTree = "<group>"; };
+		66E716AB1936580A00548491 /* MPCJSONSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPCJSONSerializer.h; sourceTree = "<group>"; };
+		66E716AC1936580A00548491 /* MPCJSONSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPCJSONSerializer.m; sourceTree = "<group>"; };
+		66E716AD1936580A00548491 /* MPCSerializedJSONData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPCSerializedJSONData.h; sourceTree = "<group>"; };
+		66E716AE1936580A00548491 /* MPCSerializedJSONData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPCSerializedJSONData.m; sourceTree = "<group>"; };
+		66E716B01936580A00548491 /* NSData+MPBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+MPBase64.h"; sourceTree = "<group>"; };
+		66E716B11936580A00548491 /* NSData+MPBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+MPBase64.m"; sourceTree = "<group>"; };
+		66E716B31936580A00548491 /* ODIN.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ODIN.h; sourceTree = "<group>"; };
+		66E716B41936580A00548491 /* ODIN.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ODIN.m; sourceTree = "<group>"; };
 		66E769CC18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+DirectoryOptimizations.h"; sourceTree = "<group>"; };
 		66E769CD18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+DirectoryOptimizations.m"; sourceTree = "<group>"; };
 		66E88A351591853E001A6EBF /* MMPapersIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPapersIcon.h; sourceTree = "<group>"; };
@@ -748,35 +720,11 @@
 		662A21B8191D66FF00AD9E31 /* MixPanel */ = {
 			isa = PBXGroup;
 			children = (
-				662A21B9191D671A00AD9E31 /* Media.xcassets */,
+				66E716A81936580A00548491 /* JSON */,
+				66E716AF1936580A00548491 /* NSData_Base64 */,
+				66E716B21936580A00548491 /* ODIN */,
 				662A21BA191D671A00AD9E31 /* Mixpanel.h */,
 				662A21BB191D671A00AD9E31 /* Mixpanel.m */,
-				662A21BC191D671A00AD9E31 /* MPCloseBtn.png */,
-				662A21BD191D671A00AD9E31 /* MPCloseBtn@2x.png */,
-				662A21BE191D671A00AD9E31 /* MPNotification.h */,
-				662A21BF191D671A00AD9E31 /* MPNotification.m */,
-				662A21C0191D671A00AD9E31 /* MPNotification.storyboard */,
-				662A21C1191D671A00AD9E31 /* MPNotificationViewController.h */,
-				662A21C2191D671A00AD9E31 /* MPNotificationViewController.m */,
-				662A21C3191D671A00AD9E31 /* MPSurvey.h */,
-				662A21C4191D671A00AD9E31 /* MPSurvey.m */,
-				662A21C5191D671A00AD9E31 /* MPSurvey.storyboard */,
-				662A21C6191D671A00AD9E31 /* MPSurveyNavigationController.h */,
-				662A21C7191D671A00AD9E31 /* MPSurveyNavigationController.m */,
-				662A21C8191D671A00AD9E31 /* MPSurveyQuestion.h */,
-				662A21C9191D671A00AD9E31 /* MPSurveyQuestion.m */,
-				662A21CA191D671A00AD9E31 /* MPSurveyQuestionViewController.h */,
-				662A21CB191D671A00AD9E31 /* MPSurveyQuestionViewController.m */,
-				662A21CC191D671A00AD9E31 /* NSData+MPBase64.h */,
-				662A21CD191D671A00AD9E31 /* NSData+MPBase64.m */,
-				662A21CE191D671A00AD9E31 /* UIColor+MPColor.h */,
-				662A21CF191D671A00AD9E31 /* UIColor+MPColor.m */,
-				662A21D0191D671A00AD9E31 /* UIImage+MPAverageColor.h */,
-				662A21D1191D671A00AD9E31 /* UIImage+MPAverageColor.m */,
-				662A21D2191D671A00AD9E31 /* UIImage+MPImageEffects.h */,
-				662A21D3191D671A00AD9E31 /* UIImage+MPImageEffects.m */,
-				662A21D4191D671A00AD9E31 /* UIView+MPSnapshotImage.h */,
-				662A21D5191D671A00AD9E31 /* UIView+MPSnapshotImage.m */,
 			);
 			name = MixPanel;
 			sourceTree = "<group>";
@@ -1499,6 +1447,40 @@
 			name = Ruler;
 			sourceTree = "<group>";
 		};
+		66E716A81936580A00548491 /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				66E716A91936580A00548491 /* MPCJSONDataSerializer.h */,
+				66E716AA1936580A00548491 /* MPCJSONDataSerializer.m */,
+				66E716AB1936580A00548491 /* MPCJSONSerializer.h */,
+				66E716AC1936580A00548491 /* MPCJSONSerializer.m */,
+				66E716AD1936580A00548491 /* MPCSerializedJSONData.h */,
+				66E716AE1936580A00548491 /* MPCSerializedJSONData.m */,
+			);
+			name = JSON;
+			path = ../../Submodules/mixpanel/Mixpanel/Library/JSON;
+			sourceTree = "<group>";
+		};
+		66E716AF1936580A00548491 /* NSData_Base64 */ = {
+			isa = PBXGroup;
+			children = (
+				66E716B01936580A00548491 /* NSData+MPBase64.h */,
+				66E716B11936580A00548491 /* NSData+MPBase64.m */,
+			);
+			name = NSData_Base64;
+			path = ../../Submodules/mixpanel/Mixpanel/Library/NSData_Base64;
+			sourceTree = "<group>";
+		};
+		66E716B21936580A00548491 /* ODIN */ = {
+			isa = PBXGroup;
+			children = (
+				66E716B31936580A00548491 /* ODIN.h */,
+				66E716B41936580A00548491 /* ODIN.m */,
+			);
+			name = ODIN;
+			path = ../../Submodules/mixpanel/Mixpanel/Library/ODIN;
+			sourceTree = "<group>";
+		};
 		66EDA79317CA87D20067BA63 /* Scraps */ = {
 			isa = PBXGroup;
 			children = (
@@ -1599,8 +1581,6 @@
 			files = (
 				6650DD1418F4843D00ADF591 /* photoalbum.png in Resources */,
 				6650DD2518F491B700ADF591 /* evernote.png in Resources */,
-				662A21D6191D671A00AD9E31 /* Media.xcassets in Resources */,
-				662A21D9191D671A00AD9E31 /* MPCloseBtn@2x.png in Resources */,
 				66DCFB951581BCEF00B4918C /* InfoPlist.strings in Resources */,
 				6650DD1218F4843400ADF591 /* photoalbum@2x.png in Resources */,
 				66684B40182DAAC0005A27B4 /* UIColorWithHex.license in Resources */,
@@ -1618,8 +1598,6 @@
 				6650DD0F18F46D5100ADF591 /* Images.xcassets in Resources */,
 				66684B3B182D9624005A27B4 /* AGG.license in Resources */,
 				6650DD1D18F48E3F00ADF591 /* twitter.png in Resources */,
-				662A21DB191D671A00AD9E31 /* MPNotification.storyboard in Resources */,
-				662A21DE191D671A00AD9E31 /* MPSurvey.storyboard in Resources */,
 				6650DD2318F48F8300ADF591 /* facebook@2x.png in Resources */,
 				662A21D8191D671A00AD9E31 /* MPCloseBtn.png in Resources */,
 				667D98AA192D010900625879 /* Loose-Leaf_76.png in Resources */,
@@ -1714,16 +1692,15 @@
 				666E254F18F72BCF00C17295 /* MMCameraSidebarContentView.m in Sources */,
 				66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */,
 				662A21D7191D671A00AD9E31 /* Mixpanel.m in Sources */,
-				662A21DD191D671A00AD9E31 /* MPSurvey.m in Sources */,
 				66C2C1651879F3F200804123 /* UIBezierPath+Description.m in Sources */,
 				660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */,
 				660E1DB0158FC7DB0001DA12 /* MMPaperIcon.m in Sources */,
 				665CAC2117B57B0B000BD505 /* MMPencilAndPaletteView.m in Sources */,
 				667D98AF192D5D8200625879 /* MMInboxManager.m in Sources */,
+				66E716B51936580A00548491 /* MPCJSONDataSerializer.m in Sources */,
 				660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */,
 				665CAC1D17B578B0000BD505 /* MMColorButton.m in Sources */,
 				666425BA18CBC20000A306C1 /* MMStretchScrapGestureRecognizer.mm in Sources */,
-				662A21DF191D671A00AD9E31 /* MPSurveyNavigationController.m in Sources */,
 				664516B9159030FC0012FACA /* Constants.m in Sources */,
 				66A3A6BB1791F18900D8FE1D /* UIDevice+PPI.m in Sources */,
 				664F4139159063F8006F8B09 /* MMPlusIcon.m in Sources */,
@@ -1750,6 +1727,7 @@
 				66B75DB51877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.m in Sources */,
 				6627DFA719003DF900592EEF /* CaptureSessionManager.m in Sources */,
 				66BD6E971593E98D00D4544C /* MMTextButton.m in Sources */,
+				66E716B81936580A00548491 /* NSData+MPBase64.m in Sources */,
 				66BD6E9C15940D7500D4544C /* MMPencilButton.m in Sources */,
 				66BD6E9F15941B7B00D4544C /* MMShareButton.m in Sources */,
 				66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */,
@@ -1770,27 +1748,24 @@
 				66E769CE18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m in Sources */,
 				664C62F015A36DA40072736A /* MMListPaperStackView.mm in Sources */,
 				6640E6D917E390BE00EB3F7D /* MMTouchVelocityGestureRecognizer.m in Sources */,
-				662A21E6191D671A00AD9E31 /* UIView+MPSnapshotImage.m in Sources */,
 				66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */,
 				66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */,
 				667D98B7192FBF2400625879 /* MMPDFInboxContentView.m in Sources */,
 				66AC8D9218E8A90900A65036 /* MMBufferedImageView.m in Sources */,
+				66E716B91936580A00548491 /* ODIN.m in Sources */,
 				6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */,
 				66AC8D8618E8902A00A65036 /* ALAssetsGroup+Properties.m in Sources */,
 				66AC8D8E18E89C9800A65036 /* MMAlbumRowView.m in Sources */,
-				662A21E3191D671A00AD9E31 /* UIColor+MPColor.m in Sources */,
 				66AC153D1805F2F8005315C8 /* MMLoadImageCache.m in Sources */,
 				66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */,
 				6699715217DBA02700E81467 /* MMDebugDrawView.m in Sources */,
 				66277CA0192BC99D003E97C0 /* SSKeychainQuery.m in Sources */,
 				66B51A2A17AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m in Sources */,
 				66DCFBDF1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m in Sources */,
-				662A21DA191D671A00AD9E31 /* MPNotification.m in Sources */,
 				6693296D1596E0600033E557 /* MMBezelInRightGestureRecognizer.m in Sources */,
 				667D98BE192FD37500625879 /* NSURL+UTI.m in Sources */,
 				6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */,
 				6648D21D178C9E5400BE3B37 /* UIColor+Shadow.m in Sources */,
-				662A21E4191D671A00AD9E31 /* UIImage+MPAverageColor.m in Sources */,
 				66A13D3A1631D9D9002F5428 /* MMObjectSelectLongPressGestureRecognizer.m in Sources */,
 				665C593717BD7CD3006DECBF /* PolygonTool.m in Sources */,
 				66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */,
@@ -1800,7 +1775,6 @@
 				667D98CA19300D0F00625879 /* MMScrapBackgroundView.m in Sources */,
 				661885D418F9AED50016A333 /* MMDarkSidebarButton.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
-				662A21E5191D671A00AD9E31 /* UIImage+MPImageEffects.m in Sources */,
 				66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */,
 				667D98C2192FD87400625879 /* MMPDF.m in Sources */,
 				66AC8D7918E7506A00A65036 /* MMImageSidebarContainerView.m in Sources */,
@@ -1808,17 +1782,17 @@
 				66A471C217C7DEF200C2A5B6 /* SYShape+Bezier.m in Sources */,
 				66B3522517A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m in Sources */,
 				663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */,
+				66E716B61936580A00548491 /* MPCJSONSerializer.m in Sources */,
 				663C187D1755B63D00706A05 /* Eraser.m in Sources */,
 				663C188B1759B51600706A05 /* MMUndoRedoButton.m in Sources */,
 				66CE11FD17D2700E00882275 /* MMScrapSidebarContainerView.m in Sources */,
-				662A21E0191D671A00AD9E31 /* MPSurveyQuestion.m in Sources */,
 				663C1897175A89EF00706A05 /* MMRulerButton.m in Sources */,
 				6651083C178F249C00A7A7DD /* MMVector.m in Sources */,
-				662A21E2191D671A00AD9E31 /* NSData+MPBase64.m in Sources */,
 				66F4FB2617D912730086E21C /* MMScrapSidebarContentView.m in Sources */,
 				66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */,
 				66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */,
 				66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */,
+				66E716B71936580A00548491 /* MPCSerializedJSONData.m in Sources */,
 				66B21A7A175E595B0049F1AF /* MMBlockOperation.m in Sources */,
 				6693C94918E4C55B0054FF41 /* MMLeftCloseButton.m in Sources */,
 				6655E926176291C800E4F36A /* MMScissorButton.m in Sources */,
@@ -1834,7 +1808,6 @@
 				666E253018F5D9F100C17295 /* MMFaceButton.m in Sources */,
 				66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */,
 				66A471BE17C7DAA000C2A5B6 /* MMScrappedPaperView.m in Sources */,
-				662A21DC191D671A00AD9E31 /* MPNotificationViewController.m in Sources */,
 				66052A0317FA170600A94531 /* MMImmutableScrapsOnPaperState.m in Sources */,
 				6693C94C18E4E7860054FF41 /* MMSlidingSidebarContainerView.m in Sources */,
 				66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */,
@@ -1971,6 +1944,7 @@
 				PRODUCT_NAME = LooseLeaf;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 2;
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;

@@ -23,9 +23,11 @@
     MMCachedRowsScrollView* albumListScrollView;
     MMCachedRowsScrollView* photoListScrollView;
     __weak MMImageSidebarContainerView* delegate;
+    BOOL isShowing;
 }
 
 @property (nonatomic, weak) MMImageSidebarContainerView* delegate;
+@property (nonatomic, readonly) BOOL isShowing;
 
 -(void) show:(BOOL)animated;
 

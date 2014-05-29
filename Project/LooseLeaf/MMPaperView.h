@@ -25,7 +25,7 @@
     UILabel* textLabel;
     
     MMObjectSelectLongPressGestureRecognizer* longPress;
-    MMImmovableTapGestureRecognizer* tap;
+//    MMImmovableTapGestureRecognizer* tap;
     MMPanAndPinchGestureRecognizer* panGesture;
     
     BOOL isBrandNewPage;

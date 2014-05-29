@@ -516,7 +516,7 @@ int skipAll = NO;
         skipOnce = YES;
     }
     
-    NSLog(@"auto-lines: %d   pages: %d", numLines, (int) floor(numLines / strokesPerPage));
+    debug_NSLog(@"auto-lines: %d   pages: %d", numLines, (int) floor(numLines / strokesPerPage));
 }
 
 
@@ -573,7 +573,7 @@ int skipAll = NO;
 
 
 -(void) timerDidFire:(NSTimer*)timer{
-    NSLog(@"%@", [self activeGestureSummary]);
+    debug_NSLog(@"%@", [self activeGestureSummary]);
 }
 
 -(void) drawLine{
@@ -650,6 +650,9 @@ int skipAll = NO;
 -(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
     [super isBezelingInLeftWithGesture:bezelGesture];
     [self forceScrapToScrapContainerDuringGesture];
+    
+    // adam
+    [visibleStackHolder peekSubview];
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
@@ -742,9 +745,9 @@ int skipAll = NO;
     MMScrapView* scrapViewIfFinished = nil;
     
     BOOL shouldBezel = NO;
-    if(gesture.state == UIGestureRecognizerStateEnded ||
-       gesture.state == UIGestureRecognizerStateCancelled ||
-       ![gesture.validTouches count]){
+    if(gesture.scrap && (gesture.state == UIGestureRecognizerStateEnded ||
+                         gesture.state == UIGestureRecognizerStateCancelled ||
+                         ![gesture.validTouches count])){
         // turn off glow
         if(!stretchScrapGesture.scrap){
             // only if that scrap isn't being stretched
@@ -768,8 +771,16 @@ int skipAll = NO;
             CGPoint scrapCenterInPage;
             MMScrappedPaperView* pageToDropScrap;
             if(gesture.state == UIGestureRecognizerStateCancelled){
-                pageToDropScrap = [visibleStackHolder peekSubview];
-                [self scaledCenter:&scrapCenterInPage andScale:&scrapScaleInPage forScrap:gesture.scrap onPage:pageToDropScrap];
+                pageToDropScrap = [self pageWouldDropScrap:gesture.scrap atCenter:&scrapCenterInPage andScale:&scrapScaleInPage];
+                if(pageToDropScrap == [visibleStackHolder peekSubview]){
+                    // it would drop on the visible page, so just
+                    // do that
+                    [self scaledCenter:&scrapCenterInPage andScale:&scrapScaleInPage forScrap:gesture.scrap onPage:pageToDropScrap];
+                }else{
+                    // it wouldn't have dropped on the visible page, so
+                    // bezel it instead
+                    shouldBezel = YES;
+                }
             }else{
                 pageToDropScrap = [self pageWouldDropScrap:gesture.scrap atCenter:&scrapCenterInPage andScale:&scrapScaleInPage];
             }
@@ -1071,7 +1082,7 @@ int skipAll = NO;
     for (UITouch* t in gesture.ignoredTouches) {
         ignoredOut = [ignoredOut stringByAppendingFormat:@" %p", t];
     }
-    NSLog(@"%@ (%p) knows about:\n%@\n%@\n%@ ", prefix, gesture, validOut, possibleOut, ignoredOut);
+    debug_NSLog(@"%@ (%p) knows about:\n%@\n%@\n%@ ", prefix, gesture, validOut, possibleOut, ignoredOut);
 }
 
 
@@ -1137,18 +1148,19 @@ int skipAll = NO;
 
     
     if(!panAndPinchScrapGesture.scrap || !panAndPinchScrapGesture2.scrap){
+        debug_NSLog(@"what: ending scrap gesture w/o holding scrap");
         // sanity checks.
         // we should never enter here
         if([panAndPinchScrapGesture.initialTouchVector isEqual:panAndPinchScrapGesture2.initialTouchVector]){
-            NSLog(@"what");
+            debug_NSLog(@"what");
         }
         
         if(scrap.scale != clonedScrap.scale ||
            scrap.rotation != clonedScrap.rotation){
-            NSLog(@"what");
+            debug_NSLog(@"what");
         }
         
-        NSLog(@"success? %d %p,  %d %p", (int)[panAndPinchScrapGesture.validTouches count], panAndPinchScrapGesture.scrap,
+        debug_NSLog(@"success? %d %p,  %d %p", (int)[panAndPinchScrapGesture.validTouches count], panAndPinchScrapGesture.scrap,
               (int)[panAndPinchScrapGesture2.validTouches count], panAndPinchScrapGesture2.scrap);
 
         if([panAndPinchScrapGesture.validTouches count] < 2){
@@ -1182,6 +1194,10 @@ int skipAll = NO;
         return NO;
     }
     return YES;
+}
+
+-(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch{
+    return [touch locationInView:bezelStackHolder].x < 0;
 }
 
 -(CGFloat) topVisiblePageScaleForScrap:(MMScrapView*)scrap{
@@ -1336,6 +1352,25 @@ int skipAll = NO;
 
 #pragma mark - List View
 
+-(void) isBeginningToScaleReallySmall:(MMPaperView*)page{
+    if(panAndPinchScrapGesture.scrap){
+        [panAndPinchScrapGesture cancel];
+    }
+    if(panAndPinchScrapGesture2.scrap){
+        [panAndPinchScrapGesture2 cancel];
+    }
+    [panAndPinchScrapGesture setEnabled:NO];
+    [panAndPinchScrapGesture2 setEnabled:NO];
+    [super isBeginningToScaleReallySmall:page];
+}
+
+-(void) cancelledScalingReallySmall:(MMPaperView *)page{
+    [panAndPinchScrapGesture setEnabled:YES];
+    [panAndPinchScrapGesture2 setEnabled:YES];
+    [super cancelledScalingReallySmall:page];
+}
+
+
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     if(panAndPinchScrapGesture.scrap){
         [panAndPinchScrapGesture cancel];
@@ -1343,7 +1378,15 @@ int skipAll = NO;
     if(panAndPinchScrapGesture2.scrap){
         [panAndPinchScrapGesture2 cancel];
     }
+    [panAndPinchScrapGesture setEnabled:NO];
+    [panAndPinchScrapGesture2 setEnabled:NO];
     [super finishedScalingReallySmall:page];
+}
+
+-(void) finishedScalingBackToPageView:(MMPaperView *)page{
+    [panAndPinchScrapGesture setEnabled:YES];
+    [panAndPinchScrapGesture2 setEnabled:YES];
+    [super finishedScalingBackToPageView:page];
 }
 
 

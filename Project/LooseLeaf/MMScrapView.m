@@ -270,7 +270,7 @@
 
 -(void) setRotation:(CGFloat)_rotation{
     if(ABS(_rotation - rotation) > .3 && rotation != 0){
-        NSLog(@"what");
+        debug_NSLog(@"what: large rotation change");
     }
     [self setScale:self.scale andRotation:_rotation];
 }

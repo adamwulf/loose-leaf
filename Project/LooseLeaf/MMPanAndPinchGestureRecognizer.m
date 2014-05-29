@@ -531,7 +531,6 @@
 
 -(void) cancel{
     if(self.enabled){
-        NSLog(@"cancelled page pan");
         self.enabled = NO;
         self.enabled = YES;
     }

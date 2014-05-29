@@ -14,6 +14,7 @@
 #import "MMFlipCameraButton.h"
 #import "MMImageSidebarContainerView.h"
 #import "NSThread+BlockAdditions.h"
+#import "CaptureSessionManager.h"
 
 #define kCameraMargin 10
 #define kCameraPositionUserDefaultKey @"com.milestonemade.preferredCameraPosition"
@@ -56,14 +57,22 @@
 }
 
 -(void) show:(BOOL)animated{
+    isShowing = YES;
     
     AVCaptureDevicePosition preferredPosition = [[NSUserDefaults standardUserDefaults] integerForKey:kCameraPositionUserDefaultKey];
     
-    cameraRow = [[MMBorderedCamView alloc] initWithFrame:[self cameraViewFr] andCameraPosition:preferredPosition];
-    cameraRow.delegate = self;
-    cameraRow.rotation = RandomPhotoRotation/2;
-    cameraRow.center = CGPointMake((self.frame.size.width-kWidthOfSidebarButton)/2, kCameraMargin + cameraRow.bounds.size.height/2);
-    [photoListScrollView addSubview:cameraRow];
+    if([CaptureSessionManager hasCamera]){
+        cameraRow = [[MMBorderedCamView alloc] initWithFrame:[self cameraViewFr] andCameraPosition:preferredPosition];
+        cameraRow.delegate = self;
+        cameraRow.rotation = RandomPhotoRotation/2;
+        cameraRow.center = CGPointMake((self.frame.size.width-kWidthOfSidebarButton)/2, kCameraMargin + cameraRow.bounds.size.height/2);
+        [photoListScrollView addSubview:cameraRow];
+        flipButton.hidden = NO;
+    }else{
+        cameraRow = nil;
+        flipButton.hidden = YES;
+    }
+    
     
     albumListScrollView.alpha = 0;
     photoListScrollView.alpha = 1;
@@ -76,6 +85,8 @@
 }
 
 -(void) hide:(BOOL)animated{
+    isShowing = NO;
+
     albumListScrollView.alpha = 0;
     photoListScrollView.alpha = 1;
     
@@ -104,7 +115,7 @@
 
 -(void) doneLoadingPhotoAlbums{
     currentAlbum = [[MMPhotoManager sharedInstace] cameraRoll];
-    if(cameraRow && photoListScrollView.alpha){
+    if(self.isShowing && photoListScrollView.alpha){
         [photoListScrollView refreshVisibleRows];
         [photoListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             if(![obj isEqual:[NSNull null]]){
@@ -133,31 +144,38 @@
 
 -(NSInteger) numberOfRowsFor:(MMCachedRowsScrollView*)scrollView{
     // add two for the camera row at the top
-    return 2 + ceilf([[MMPhotoManager sharedInstace] cameraRoll].numberOfPhotos / 2.0);
+    return (cameraRow ? 2 : 0) + ceilf([[MMPhotoManager sharedInstace] cameraRoll].numberOfPhotos / 2.0);
 }
 
 -(BOOL) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView{
-    if(aRow.tag == 0 || aRow.tag == 1){
-        return NO;
+    if(cameraRow){
+        // only disallow reuse when camera is visible
+        if(aRow.tag == 0 || aRow.tag == 1){
+            return NO;
+        }
     }
     return [super prepareRowForReuse:aRow forScrollView:scrollView];
 }
 
 -(UIView*) updateRow:(UIView*)currentRow atIndex:(NSInteger)index forFrame:(CGRect)frame forScrollView:(MMCachedRowsScrollView*)scrollView{
-//    NSLog(@"fetching photo row for index: %d", index);
-    if(index == 0 || index == 1){
-        // this space is taken up by the camera row, so
-        // return nil
-        return nil;
+    if(cameraRow){
+        //    NSLog(@"fetching photo row for index: %d", index);
+        if(index == 0 || index == 1){
+            // this space is taken up by the camera row, so
+            // return nil
+            return nil;
+        }
+        // adjust for the 2 extra rows that are taken up by the camera input
+        return [super updateRow:currentRow atIndex:index - 2 forFrame:frame forScrollView:scrollView];
+    }else{
+        return [super updateRow:currentRow atIndex:index forFrame:frame forScrollView:scrollView];
     }
-    // adjust for the 2 extra rows that are taken up by the camera input
-    return [super updateRow:currentRow atIndex:index - 2 forFrame:frame forScrollView:scrollView];
 }
 
 #pragma mark - MMCamViewDelegate
 
 -(void) didTakePicture:(UIImage*)img{
-    NSLog(@"got picture %p", img);
+    debug_NSLog(@"got picture %p", img);
     [self.delegate pictureTakeWithCamera:img fromView:cameraRow];
 }
 

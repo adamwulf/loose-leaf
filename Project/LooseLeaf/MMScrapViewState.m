@@ -492,7 +492,7 @@
 -(void) addElements:(NSArray*)elements{
     if(!drawableViewState){
         // https://github.com/adamwulf/loose-leaf/issues/258
-        NSLog(@"trying to draw on an unloaded scrap");
+        debug_NSLog(@"trying to draw on an unloaded scrap");
     }
     [drawableView addElements:elements];
 }
