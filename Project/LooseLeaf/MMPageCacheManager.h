@@ -40,4 +40,9 @@
 
 -(void) updateVisiblePageImageCache;
 
+-(NSInteger) numberOfStateLoadedPages;
+
+-(NSInteger) numberOfPagesWithLoadedPreviewImage;
+
+
 @end

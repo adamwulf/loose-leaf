@@ -219,4 +219,15 @@ static MMPageCacheManager* _instance = nil;
     [pagesWithLoadedCacheImages addObjectsFromArray:visiblePages];
 }
 
+#pragma mark - Profiling Helpers
+
+-(NSInteger) numberOfStateLoadedPages{
+    return [stateLoadedPages count];
+}
+
+-(NSInteger) numberOfPagesWithLoadedPreviewImage{
+    return [pagesWithLoadedCacheImages count];
+}
+
+
 @end

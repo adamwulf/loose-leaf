@@ -9,6 +9,7 @@
 #import "MMMemoryProfileView.h"
 #import "MMBackgroundTimer.h"
 #import "MMLoadImageCache.h"
+#import "MMPageCacheManager.h"
 
 @implementation MMMemoryProfileView{
     NSTimer* profileTimer;
@@ -43,10 +44,22 @@
 {
     UIFont* font = [UIFont systemFontOfSize:20];
     
-    // Drawing code
-    NSInteger numberOfThumbs = [[MMLoadImageCache sharedInstace] numberOfItemsHeldInCache];
+    [[[UIColor whiteColor] colorWithAlphaComponent:.5] setFill];
+    [[UIBezierPath bezierPathWithRect:CGRectMake(140, 40, 300, 150)] fill];
+    [[UIColor blackColor] setFill];
     
-    [[NSString stringWithFormat:@"# in MMLoadImageCache: %d", numberOfThumbs] drawAtPoint:CGPointMake(150, 50) withFont:font];
+    // Drawing code
+    NSInteger numberInImageCache = [[MMLoadImageCache sharedInstace] numberOfItemsHeldInCache];
+    NSInteger numberOfLoadedPagePreviews = [[MMPageCacheManager sharedInstace] numberOfPagesWithLoadedPreviewImage];
+    NSInteger numberOfLoadedPageStates = [[MMPageCacheManager sharedInstace] numberOfStateLoadedPages];
+    
+    
+    [@"MMLoadImageCache:" drawAtPoint:CGPointMake(150, 50) withFont:font];
+    [[NSString stringWithFormat:@"# of Images: %d", numberInImageCache] drawAtPoint:CGPointMake(150, 70) withFont:font];
+
+    [@"MMPageCacheManager:" drawAtPoint:CGPointMake(150, 110) withFont:font];
+    [[NSString stringWithFormat:@"# in page previews: %d", numberOfLoadedPagePreviews] drawAtPoint:CGPointMake(150, 130) withFont:font];
+    [[NSString stringWithFormat:@"# in page states: %d", numberOfLoadedPageStates] drawAtPoint:CGPointMake(150, 150) withFont:font];
 }
 
 @end
