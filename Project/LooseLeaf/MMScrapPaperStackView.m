@@ -25,7 +25,6 @@
 #import "MMInboxManagerDelegate.h"
 #import "NSURL+UTI.h"
 #import "Mixpanel.h"
-#import "MMMemoryProfileView.h"
 
 @implementation MMScrapPaperStackView{
     MMScrapSidebarContainerView* bezelScrapContainer;
@@ -144,9 +143,6 @@
 //        debugImgView.contentMode = UIViewContentModeScaleAspectFit;
 //        debugImgView.backgroundColor = [UIColor orangeColor];
 //        [self addSubview:debugImgView];
-        
-        MMMemoryProfileView* profileView = [[MMMemoryProfileView alloc] initWithFrame:self.bounds];
-        [self addSubview:profileView];
     }
     return self;
 }

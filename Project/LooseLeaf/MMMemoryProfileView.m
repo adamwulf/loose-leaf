@@ -8,6 +8,7 @@
 
 #import "MMMemoryProfileView.h"
 #import "MMBackgroundTimer.h"
+#import "MMLoadImageCache.h"
 
 @implementation MMMemoryProfileView{
     NSTimer* profileTimer;
@@ -33,16 +34,19 @@
 
 
 -(void) timerDidFire{
-    NSLog(@"main thread? %i", [NSThread isMainThread]);
+    [self setNeedsDisplay];
 }
 
-/*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
+    UIFont* font = [UIFont systemFontOfSize:20];
+    
     // Drawing code
+    NSInteger numberOfThumbs = [[MMLoadImageCache sharedInstace] numberOfItemsHeldInCache];
+    
+    [[NSString stringWithFormat:@"# in MMLoadImageCache: %d", numberOfThumbs] drawAtPoint:CGPointMake(150, 50) withFont:font];
 }
-*/
 
 @end

@@ -20,4 +20,6 @@
 
 -(BOOL) containsPathInCache:(NSString*)path;
 
+-(NSInteger) numberOfItemsHeldInCache;
+
 @end

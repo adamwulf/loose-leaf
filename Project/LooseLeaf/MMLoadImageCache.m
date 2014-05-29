@@ -108,4 +108,10 @@ static int count = 0;
     }
 }
 
+#pragma mark - Profiling Helpers
+
+-(NSInteger) numberOfItemsHeldInCache{
+    return [loadedImages count];
+}
+
 @end

@@ -12,6 +12,7 @@
 #import "TestFlight.h"
 #import "MMDebugDrawView.h"
 #import "MMInboxManager.h"
+#import "MMMemoryProfileView.h"
 #import "Mixpanel.h"
 
 @implementation MMLooseLeafViewController
@@ -63,6 +64,8 @@
         
 //        [self.view addSubview:[MMDebugDrawView sharedInstace]];
         
+        MMMemoryProfileView* profileView = [[MMMemoryProfileView alloc] initWithFrame:self.view.bounds];
+        [self.view addSubview:profileView];
     }
     return self;
 }
