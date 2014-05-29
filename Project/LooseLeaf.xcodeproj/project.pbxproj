@@ -51,6 +51,8 @@
 		66510835178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66510834178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m */; };
 		66510838178DFEE700A7A7DD /* MMRulerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66510837178DFEE700A7A7DD /* MMRulerView.m */; };
 		6651083C178F249C00A7A7DD /* MMVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6651083B178F249C00A7A7DD /* MMVector.m */; };
+		665182071937B41800CBEAB4 /* MMMemoryProfileView.m in Sources */ = {isa = PBXBuildFile; fileRef = 665182061937B41800CBEAB4 /* MMMemoryProfileView.m */; };
+		6651820A1937B57600CBEAB4 /* MMBackgroundTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 665182091937B57600CBEAB4 /* MMBackgroundTimer.m */; };
 		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
 		665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665C592D17BD7692006DECBF /* Accelerate.framework */; };
 		665C593417BD7C42006DECBF /* Tool.m in Sources */ = {isa = PBXBuildFile; fileRef = 665C593317BD7C42006DECBF /* Tool.m */; };
@@ -283,6 +285,10 @@
 		66510837178DFEE700A7A7DD /* MMRulerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRulerView.m; sourceTree = "<group>"; };
 		6651083A178F249C00A7A7DD /* MMVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMVector.h; sourceTree = "<group>"; };
 		6651083B178F249C00A7A7DD /* MMVector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMVector.m; sourceTree = "<group>"; };
+		665182051937B41800CBEAB4 /* MMMemoryProfileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMMemoryProfileView.h; sourceTree = "<group>"; };
+		665182061937B41800CBEAB4 /* MMMemoryProfileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMMemoryProfileView.m; sourceTree = "<group>"; };
+		665182081937B57600CBEAB4 /* MMBackgroundTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBackgroundTimer.h; sourceTree = "<group>"; };
+		665182091937B57600CBEAB4 /* MMBackgroundTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBackgroundTimer.m; sourceTree = "<group>"; };
 		6655E924176291C800E4F36A /* MMScissorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScissorButton.h; sourceTree = "<group>"; };
 		6655E925176291C800E4F36A /* MMScissorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorButton.m; sourceTree = "<group>"; };
 		665C592D17BD7692006DECBF /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
@@ -755,6 +761,9 @@
 				66942DCE17C84356001E0150 /* MMUntouchableView.h */,
 				66942DCF17C84356001E0150 /* MMUntouchableView.m */,
 				6693C94318E4BCC70054FF41 /* Sliding Sidebar */,
+				665182041937B40000CBEAB4 /* Memory Profiling */,
+				665182081937B57600CBEAB4 /* MMBackgroundTimer.h */,
+				665182091937B57600CBEAB4 /* MMBackgroundTimer.m */,
 			);
 			name = "Helper Classes";
 			sourceTree = "<group>";
@@ -806,6 +815,15 @@
 				66510834178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m */,
 			);
 			name = "Ruler Tool";
+			sourceTree = "<group>";
+		};
+		665182041937B40000CBEAB4 /* Memory Profiling */ = {
+			isa = PBXGroup;
+			children = (
+				665182051937B41800CBEAB4 /* MMMemoryProfileView.h */,
+				665182061937B41800CBEAB4 /* MMMemoryProfileView.m */,
+			);
+			name = "Memory Profiling";
 			sourceTree = "<group>";
 		};
 		665C592F17BD7697006DECBF /* TouchShape */ = {
@@ -1599,7 +1617,6 @@
 				66684B3B182D9624005A27B4 /* AGG.license in Resources */,
 				6650DD1D18F48E3F00ADF591 /* twitter.png in Resources */,
 				6650DD2318F48F8300ADF591 /* facebook@2x.png in Resources */,
-				662A21D8191D671A00AD9E31 /* MPCloseBtn.png in Resources */,
 				667D98AA192D010900625879 /* Loose-Leaf_76.png in Resources */,
 				666E253418F5DDFD00C17295 /* clearphotoalbum@2x.png in Resources */,
 				6650DD1F18F48E4200ADF591 /* twitter@2x.png in Resources */,
@@ -1726,6 +1743,7 @@
 				66BD6E941593E1D800D4544C /* MMImageButton.m in Sources */,
 				66B75DB51877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.m in Sources */,
 				6627DFA719003DF900592EEF /* CaptureSessionManager.m in Sources */,
+				665182071937B41800CBEAB4 /* MMMemoryProfileView.m in Sources */,
 				66BD6E971593E98D00D4544C /* MMTextButton.m in Sources */,
 				66E716B81936580A00548491 /* NSData+MPBase64.m in Sources */,
 				66BD6E9C15940D7500D4544C /* MMPencilButton.m in Sources */,
@@ -1762,6 +1780,7 @@
 				66277CA0192BC99D003E97C0 /* SSKeychainQuery.m in Sources */,
 				66B51A2A17AC50F7005B5E09 /* MMBezelInLeftGestureRecognizer.m in Sources */,
 				66DCFBDF1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m in Sources */,
+				6651820A1937B57600CBEAB4 /* MMBackgroundTimer.m in Sources */,
 				6693296D1596E0600033E557 /* MMBezelInRightGestureRecognizer.m in Sources */,
 				667D98BE192FD37500625879 /* NSURL+UTI.m in Sources */,
 				6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */,
@@ -1771,7 +1790,6 @@
 				66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */,
 				66AC8D8B18E89A9C00A65036 /* MMCachedRowsScrollView.m in Sources */,
 				6695B6EC17505FBF0069E61F /* MMEditablePaperView.m in Sources */,
-				662A21E1191D671A00AD9E31 /* MPSurveyQuestionViewController.m in Sources */,
 				667D98CA19300D0F00625879 /* MMScrapBackgroundView.m in Sources */,
 				661885D418F9AED50016A333 /* MMDarkSidebarButton.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
