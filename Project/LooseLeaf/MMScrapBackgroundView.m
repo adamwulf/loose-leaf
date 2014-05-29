@@ -148,7 +148,7 @@
 
 #pragma mark - Save and Load
 
--(void) loadBackgroundFromDisk{
+-(void) loadBackgroundFromDiskWithProperties:(NSDictionary*)properties{
     if([[NSFileManager defaultManager] fileExistsAtPath:self.backgroundJPGFile]){
         //            NSLog(@"should be loading background");
         UIImage* image = [UIImage imageWithContentsOfFile:self.backgroundJPGFile];
@@ -156,9 +156,16 @@
             [self setBackingImage:image];
         }];
     }
+    self.backgroundRotation = [[properties objectForKey:@"backgroundRotation"] floatValue];
+    self.backgroundScale = [[properties objectForKey:@"backgroundScale"] floatValue];
+    self.backgroundOffset = CGPointMake([[properties objectForKey:@"backgroundOffset.x"] floatValue],
+                                        [[properties objectForKey:@"backgroundOffset.y"] floatValue]);
 }
 
--(void) saveBackgroundToDisk{
+// saves the backing image to disk if necessary, and
+// returns an NSDictionary of the properties that should
+// be persisted to disk
+-(NSDictionary*) saveBackgroundToDisk{
     if(self.backingViewHasChanged && ![[NSFileManager defaultManager] fileExistsAtPath:self.backgroundJPGFile]){
         if(self.backingContentView.image){
             NSLog(@"orientation: %d", (int) self.backingContentView.image.imageOrientation);
@@ -166,6 +173,13 @@
         }
         self.backingViewHasChanged = NO;
     }
+    
+    NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
+    [savedProperties setObject:[NSNumber numberWithFloat:self.backgroundRotation] forKey:@"backgroundRotation"];
+    [savedProperties setObject:[NSNumber numberWithFloat:self.backgroundScale] forKey:@"backgroundScale"];
+    [savedProperties setObject:[NSNumber numberWithFloat:self.backgroundOffset.x] forKey:@"backgroundOffset.x"];
+    [savedProperties setObject:[NSNumber numberWithFloat:self.backgroundOffset.y] forKey:@"backgroundOffset.y"];
+    return savedProperties;
 }
 
 //

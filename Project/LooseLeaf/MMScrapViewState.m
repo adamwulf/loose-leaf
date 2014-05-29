@@ -103,11 +103,8 @@
             bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
             
             MMScrapBackgroundView* backingView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
-            
-            backingView.backgroundRotation = [[properties objectForKey:@"backgroundRotation"] floatValue];
-            backingView.backgroundScale = [[properties objectForKey:@"backgroundScale"] floatValue];
-            backingView.backgroundOffset = CGPointMake([[properties objectForKey:@"backgroundOffset.x"] floatValue],
-                                                       [[properties objectForKey:@"backgroundOffset.y"] floatValue]);
+            // now load the background image from disk, if any
+            [backingView loadBackgroundFromDiskWithProperties:properties];
             
             return [self initWithUUID:uuid andBezierPath:bezierPath andBackgroundView:backingView];
         }else{
@@ -196,9 +193,6 @@
                 [lock unlock];
             });
         }
-
-        // now load the background image from disk, if any
-        [backingImageHolder loadBackgroundFromDisk];
     }
     return self;
 }
@@ -242,14 +236,11 @@
                                 // for saving state vs content
                                 NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
                                 [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
-                                [savedProperties setObject:[NSNumber numberWithFloat:backingImageHolder.backgroundRotation] forKey:@"backgroundRotation"];
-                                [savedProperties setObject:[NSNumber numberWithFloat:backingImageHolder.backgroundScale] forKey:@"backgroundScale"];
-                                [savedProperties setObject:[NSNumber numberWithFloat:backingImageHolder.backgroundOffset.x] forKey:@"backgroundOffset.x"];
-                                [savedProperties setObject:[NSNumber numberWithFloat:backingImageHolder.backgroundOffset.y] forKey:@"backgroundOffset.y"];
+                                // add in properties from background
+                                NSDictionary* backgroundProps = [backingImageHolder saveBackgroundToDisk];
+                                [savedProperties addEntriesFromDictionary:backgroundProps];
+                                // save properties to disk
                                 [savedProperties writeToFile:self.plistPath atomically:YES];
-
-                                
-                                [backingImageHolder saveBackgroundToDisk];
                                 
 
                                 if([drawableViewState hasEditsToSave]){

@@ -28,9 +28,9 @@
 
 #pragma mark Saving and Loading
 
--(void) loadBackgroundFromDisk;
+-(void) loadBackgroundFromDiskWithProperties:(NSDictionary*)properties;
 
--(void) saveBackgroundToDisk;
+-(NSDictionary*) saveBackgroundToDisk;
 
 #pragma mark Duplication
 
