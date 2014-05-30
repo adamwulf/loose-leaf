@@ -27,8 +27,10 @@
         
         timerQueue = [[NSOperationQueue alloc] init];
         
-        MMBackgroundTimer* backgroundTimer = [[MMBackgroundTimer alloc] initWithInterval:1 andTarget:self andSelector:@selector(timerDidFire)];
-        [timerQueue addOperation:backgroundTimer];
+//        MMBackgroundTimer* backgroundTimer = [[MMBackgroundTimer alloc] initWithInterval:1 andTarget:self andSelector:@selector(timerDidFire)];
+//        [timerQueue addOperation:backgroundTimer];
+        
+        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerDidFire) userInfo:nil repeats:YES];
         
     }
     return self;
@@ -57,14 +59,26 @@
     
     CGFloat y = 50;
     [@"MMLoadImageCache:" drawAtPoint:CGPointMake(150, y) withFont:font];
-    [[NSString stringWithFormat:@"# of Images: %d", numberInImageCache] drawAtPoint:CGPointMake(150, (y += 20)) withFont:font];
+    [[NSString stringWithFormat:@"# of Images: %d", numberInImageCache] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
 
     [@"MMPageCacheManager:" drawAtPoint:CGPointMake(150, (y += 40)) withFont:font];
-    [[NSString stringWithFormat:@"# in page previews: %d", numberOfLoadedPagePreviews] drawAtPoint:CGPointMake(150, (y += 20)) withFont:font];
-    [[NSString stringWithFormat:@"# in page states: %d", numberOfLoadedPageStates] drawAtPoint:CGPointMake(150, (y += 20)) withFont:font];
+    [[NSString stringWithFormat:@"# in page previews: %d", numberOfLoadedPagePreviews] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
+    [[NSString stringWithFormat:@"# in page states: %d", numberOfLoadedPageStates] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
 
     [@"JotTrashManager:" drawAtPoint:CGPointMake(150, (y += 40)) withFont:font];
-    [[NSString stringWithFormat:@"# items in trash: %d", numberOfItemsInTrash] drawAtPoint:CGPointMake(150, (y += 20)) withFont:font];
+    [[NSString stringWithFormat:@"# items in trash: %d", numberOfItemsInTrash] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
+
+    [@"JotBufferManager:" drawAtPoint:CGPointMake(150, (y += 40)) withFont:font];
+    
+    NSDictionary* cacheStats = [[JotBufferManager sharedInstace] cacheMemoryStats];
+    NSArray* keys = [[cacheStats allKeys] sortedArrayUsingComparator:^NSComparisonResult(NSString* obj1, NSString* obj2) {
+        return [obj1 compare:obj2 options:NSCaseInsensitiveSearch | NSNumericSearch];
+    }];
+    for(NSString* key in keys){
+        int bytesForKey = [[cacheStats objectForKey:key] intValue];
+        NSString* bytesInVBOsStr = [NSByteCountFormatter stringFromByteCount:bytesForKey countStyle:NSByteCountFormatterCountStyleBinary];
+        [[NSString stringWithFormat:@"%@: %@", key, bytesInVBOsStr] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
+    }
 }
 
 @end
