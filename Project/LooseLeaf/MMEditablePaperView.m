@@ -321,7 +321,9 @@ static int count = 0;
         // adding to these thread queues will make sure I unload
         // after any in progress load
         dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
-            cachedImgViewImage = nil;
+            @autoreleasepool {
+                cachedImgViewImage = nil;
+            }
         });
     }
 }

@@ -30,6 +30,7 @@
 -(id) init{
     if(self = [super init]){
         activeTouches = [[NSMutableSet alloc] init];
+        touchLocations = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -37,6 +38,7 @@
 -(id) initWithTarget:(id)target action:(SEL)action{
     if(self = [super initWithTarget:target action:action]){
         activeTouches = [[NSMutableSet alloc] init];
+        touchLocations = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -53,11 +55,7 @@
     return activeTouches;
 }
 
-
 -(NSMutableDictionary*)touchLocations{
-    if(!touchLocations){
-        touchLocations = [[NSMutableDictionary alloc] init];
-    }
     return touchLocations;
 }
 

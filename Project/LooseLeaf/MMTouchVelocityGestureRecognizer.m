@@ -113,7 +113,9 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
     [self updateStateInformationForTouches:touches];
     NSSet* touchesToKill = [NSSet setWithSet:touches];
     dispatch_async(dispatch_get_main_queue(),^{
-        [self killStateInformationForTouches:touchesToKill];
+        @autoreleasepool {
+            [self killStateInformationForTouches:touchesToKill];
+        }
     });
 }
 
@@ -121,7 +123,9 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
     [self updateStateInformationForTouches:touches];
     NSSet* touchesToKill = [NSSet setWithSet:touches];
     dispatch_async(dispatch_get_main_queue(),^{
-        [self killStateInformationForTouches:touchesToKill];
+        @autoreleasepool {
+            [self killStateInformationForTouches:touchesToKill];
+        }
     });
 }
 

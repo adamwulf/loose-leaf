@@ -172,12 +172,14 @@
         handButton.selected = YES;
         
         [NSThread performBlockInBackground:^{
-            [[NSNotificationCenter defaultCenter] addObserver: self
-                                                     selector:@selector(connectionChange:)
-                                                         name:JotStylusManagerDidChangeConnectionStatus
-                                                       object:nil];
-            [[JotStylusManager sharedInstance] setEnabled:YES];
-            [[JotStylusManager sharedInstance] setRejectMode:NO];
+            @autoreleasepool {
+                [[NSNotificationCenter defaultCenter] addObserver: self
+                                                         selector:@selector(connectionChange:)
+                                                             name:JotStylusManagerDidChangeConnectionStatus
+                                                           object:nil];
+                [[JotStylusManager sharedInstance] setEnabled:YES];
+                [[JotStylusManager sharedInstance] setRejectMode:NO];
+            }
         }];
         
         
@@ -430,10 +432,12 @@
 }
 
 -(void) didDrawStrokeOfCm:(CGFloat)distanceInCentimeters{
-    if([self activePen] == pen){
-        [[[Mixpanel sharedInstance] people] increment:kMPDistanceDrawn by:@(distanceInCentimeters / 100.0)];
-    }else if([self activePen] == eraser){
-        [[[Mixpanel sharedInstance] people] increment:kMPDistanceErased by:@(distanceInCentimeters / 100.0)];
+    @autoreleasepool {
+        if([self activePen] == pen){
+            [[[Mixpanel sharedInstance] people] increment:kMPDistanceDrawn by:@(distanceInCentimeters / 100.0)];
+        }else if([self activePen] == eraser){
+            [[[Mixpanel sharedInstance] people] increment:kMPDistanceErased by:@(distanceInCentimeters / 100.0)];
+        }
     }
 }
 

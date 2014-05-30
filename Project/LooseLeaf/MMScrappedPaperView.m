@@ -877,10 +877,12 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [super unloadState];
     MMScrapsOnPaperState* strongScrapState = scrapState;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
-        [[strongScrapState immutableState] saveStateToDiskBlocking];
-        // unloading the scrap state will also remove them
-        // from their superview (us)
-        [strongScrapState unload];
+        @autoreleasepool {
+            [[strongScrapState immutableState] saveStateToDiskBlocking];
+            // unloading the scrap state will also remove them
+            // from their superview (us)
+            [strongScrapState unload];
+        }
     });
     [[NSThread mainThread] performBlock:^{
         

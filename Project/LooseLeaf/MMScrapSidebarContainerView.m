@@ -433,8 +433,10 @@ static NSString* bezelStatePath;
     MMImmutableScrapsOnPaperState* immutableState = [scrapState immutableState];
     NSMutableDictionary* writeableAdjustments = [rotationAdjustments copy];
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
-        [immutableState saveStateToDiskBlocking];
-        [writeableAdjustments writeToFile:[MMScrapSidebarContainerView pathToPlist] atomically:YES];
+        @autoreleasepool {
+            [immutableState saveStateToDiskBlocking];
+            [writeableAdjustments writeToFile:[MMScrapSidebarContainerView pathToPlist] atomically:YES];
+            }
     });
 }
 

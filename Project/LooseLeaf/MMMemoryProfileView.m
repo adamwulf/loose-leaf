@@ -50,10 +50,10 @@
     [[UIColor blackColor] setFill];
     
     // Drawing code
-    int numberInImageCache = [[MMLoadImageCache sharedInstace] numberOfItemsHeldInCache];
-    int numberOfLoadedPagePreviews = [[MMPageCacheManager sharedInstace] numberOfPagesWithLoadedPreviewImage];
-    int numberOfLoadedPageStates = [[MMPageCacheManager sharedInstace] numberOfStateLoadedPages];
-    int numberOfItemsInTrash = [[JotTrashManager sharedInstace] numberOfItemsInTrash];
+    int numberInImageCache = (int) [[MMLoadImageCache sharedInstace] numberOfItemsHeldInCache];
+    int numberOfLoadedPagePreviews = (int) [[MMPageCacheManager sharedInstace] numberOfPagesWithLoadedPreviewImage];
+    int numberOfLoadedPageStates = (int) [[MMPageCacheManager sharedInstace] numberOfStateLoadedPages];
+    int numberOfItemsInTrash = (int) [[JotTrashManager sharedInstace] numberOfItemsInTrash];
     
     CGFloat y = 50;
     [@"MMLoadImageCache:" drawAtPoint:CGPointMake(150, y) withFont:font];

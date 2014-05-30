@@ -68,11 +68,13 @@ static dispatch_queue_t fileSystemQueue;
 // remove the item from disk on our disk queue
 - (void)removeInboxItem:(NSURL *)itemURL{
     dispatch_async([MMInboxManager fileSystemQueue], ^{
-        //Clean up the inbox once the file has been processed
-        NSError *error = nil;
-        [[NSFileManager defaultManager] removeItemAtPath:[itemURL path] error:&error];
-        if (error) {
-            NSLog(@"ERROR: Inbox file could not be deleted");
+        @autoreleasepool {
+            //Clean up the inbox once the file has been processed
+            NSError *error = nil;
+            [[NSFileManager defaultManager] removeItemAtPath:[itemURL path] error:&error];
+            if (error) {
+                NSLog(@"ERROR: Inbox file could not be deleted");
+            }
         }
     });
 }

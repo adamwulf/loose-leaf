@@ -54,9 +54,11 @@
         [self addGestureRecognizer:longPressGesture];
         
         [NSThread performBlockInBackground:^{
-            displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateScrollOffsetDuringDrag)];
-            displayLink.paused = YES;
-            [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+            @autoreleasepool {
+                displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateScrollOffsetDuringDrag)];
+                displayLink.paused = YES;
+                [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+            }
         }];
 
         // init the add page button in top left of scrollview
