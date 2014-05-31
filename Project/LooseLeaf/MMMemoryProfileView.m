@@ -55,7 +55,7 @@
     int numberInImageCache = (int) [[MMLoadImageCache sharedInstace] numberOfItemsHeldInCache];
     int numberOfLoadedPagePreviews = (int) [[MMPageCacheManager sharedInstace] numberOfPagesWithLoadedPreviewImage];
     int numberOfLoadedPageStates = (int) [[MMPageCacheManager sharedInstace] numberOfStateLoadedPages];
-    int numberOfItemsInTrash = (int) [[JotTrashManager sharedInstace] numberOfItemsInTrash];
+    int numberOfItemsInTrash = (int) [[JotTrashManager sharedInstance] numberOfItemsInTrash];
     
     CGFloat y = 50;
     [@"MMLoadImageCache:" drawAtPoint:CGPointMake(150, y) withFont:font];
@@ -67,9 +67,11 @@
 
     [@"JotTrashManager:" drawAtPoint:CGPointMake(150, (y += 40)) withFont:font];
     [[NSString stringWithFormat:@"# items in trash: %d", numberOfItemsInTrash] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
+    NSString* bytesInTrash = [NSByteCountFormatter stringFromByteCount:[[JotTrashManager sharedInstance] knownBytesInTrash] countStyle:NSByteCountFormatterCountStyleBinary];
+    [[NSString stringWithFormat:@"memory: %@", bytesInTrash] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
+    
 
     [@"JotBufferManager:" drawAtPoint:CGPointMake(150, (y += 40)) withFont:font];
-    
     NSDictionary* cacheStats = [[JotBufferManager sharedInstace] cacheMemoryStats];
     NSArray* keys = [[cacheStats allKeys] sortedArrayUsingComparator:^NSComparisonResult(NSString* obj1, NSString* obj2) {
         return [obj1 compare:obj2 options:NSCaseInsensitiveSearch | NSNumericSearch];
@@ -79,6 +81,10 @@
         NSString* bytesInVBOsStr = [NSByteCountFormatter stringFromByteCount:bytesForKey countStyle:NSByteCountFormatterCountStyleBinary];
         [[NSString stringWithFormat:@"%@: %@", key, bytesInVBOsStr] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
     }
+
+    [@"JotGLTexture:" drawAtPoint:CGPointMake(150, (y += 40)) withFont:font];
+    NSString* bytesForTextures = [NSByteCountFormatter stringFromByteCount:[JotGLTexture totalTextureBytes] countStyle:NSByteCountFormatterCountStyleBinary];
+    [[NSString stringWithFormat:@"textures: %@", bytesForTextures] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
 }
 
 @end

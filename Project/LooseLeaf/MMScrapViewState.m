@@ -399,7 +399,7 @@
                         [NSThread performBlockOnMainThread:^{
                             drawableViewState = nil;
                             [drawableView removeFromSuperview];
-                            [[JotTrashManager sharedInstace] addObjectToDealloc:drawableView];
+                            [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
                             drawableView = nil;
                             thumbnailView.hidden = NO;
                             dispatch_semaphore_signal(sema1);
