@@ -63,6 +63,7 @@
         stackView = stack;
         timerQueue = [[NSOperationQueue alloc] init];
         MMBackgroundTimer* backgroundTimer = [[MMBackgroundTimer alloc] initWithInterval:1 andTarget:self andSelector:@selector(tick)];
+        [self tick];
         [timerQueue addOperation:backgroundTimer];
     }
     return self;

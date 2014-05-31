@@ -42,9 +42,6 @@
     // setup the timer that will help log session duration
     [self setupTimer];
     
-    
-    
-    
     NSURL* url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
     NSString* sourceApplication = [launchOptions objectForKey:UIApplicationLaunchOptionsSourceApplicationKey];
     if(url){
