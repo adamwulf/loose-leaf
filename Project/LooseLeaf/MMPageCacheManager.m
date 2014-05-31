@@ -38,7 +38,7 @@ static MMPageCacheManager* _instance = nil;
     return _instance;
 }
 
-+(MMPageCacheManager*) sharedInstace{
++(MMPageCacheManager*) sharedInstance{
     if(!_instance){
         _instance = [[MMPageCacheManager alloc] init];
     }
@@ -228,6 +228,15 @@ static MMPageCacheManager* _instance = nil;
 
 -(NSInteger) numberOfPagesWithLoadedPreviewImage{
     return [pagesWithLoadedCacheImages count];
+}
+
+-(int) memoryOfStateLoadedPages{
+    int totalBytes = 0;
+    NSArray* pages = [NSArray arrayWithArray:stateLoadedPages];
+    for(MMPaperView* page in pages){
+        totalBytes += page.fullByteSize;
+    }
+    return totalBytes;
 }
 
 

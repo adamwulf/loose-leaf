@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "MMUntouchableView.h"
+#import "MMScrapPaperStackView.h"
 
 @interface MMMemoryProfileView : MMUntouchableView
+
+@property (weak) MMScrapPaperStackView* stackView;
 
 @end

@@ -16,6 +16,7 @@
 #import "DKUIBezierPathClippedSegment+PathElement.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMPageCacheManager.h"
+#import "MMLoadImageCache.h"
 
 dispatch_queue_t importThumbnailQueue;
 
@@ -81,6 +82,11 @@ dispatch_queue_t importThumbnailQueue;
     }
     return self;
 }
+
+-(int) fullByteSize{
+    return [super fullByteSize] + paperState.fullByteSize;
+}
+
 
 -(void) setFrame:(CGRect)frame{
     [super setFrame:frame];
@@ -294,7 +300,7 @@ static int count = 0;
                 //
                 // load thumbnails into a cache for faster repeat loading
                 // https://github.com/adamwulf/loose-leaf/issues/227
-                UIImage* thumbnail = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
+                UIImage* thumbnail = [[MMLoadImageCache sharedInstance] imageAtPath:[self thumbnailPath]];
                 if(!thumbnail){
                     definitelyDoesNotHaveAnInkThumbnail = YES;
                 }
@@ -503,7 +509,7 @@ static int count = 0;
 
 -(void) didUnloadState:(JotViewStateProxy *)state{
     [NSThread performBlockOnMainThread:^{
-        [[MMPageCacheManager sharedInstace] didUnloadStateForPage:self];
+        [[MMPageCacheManager sharedInstance] didUnloadStateForPage:self];
     }];
 }
 

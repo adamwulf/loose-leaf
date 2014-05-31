@@ -26,6 +26,7 @@
 #import "MMPageCacheManager.h"
 #import "Mixpanel.h"
 #import "UIDevice+PPI.h"
+#import "MMLoadImageCache.h"
 
 
 @implementation MMScrappedPaperView{
@@ -79,6 +80,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
         scrapState.delegate = self;
     }
     return self;
+}
+
+-(int) fullByteSize{
+    return [super fullByteSize] + scrapState.fullByteSize + scrapState.fullByteSize;
 }
 
 #pragma mark - Public Methods
@@ -923,7 +928,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         isLoadingCachedScrappedThumbnailFromDisk = YES;
         dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
             @autoreleasepool {
-                scrappedImgViewImage = [UIImage imageWithContentsOfFile:[self scrappedThumbnailPath]];
+                scrappedImgViewImage = [[MMLoadImageCache sharedInstance] imageAtPath:[self scrappedThumbnailPath]];
                 if(!scrappedImgViewImage){
                     definitelyDoesNotHaveAScrappedThumbnail = YES;
                 }
@@ -973,7 +978,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) didLoadState:(JotViewStateProxy*)state{
     if([self hasStateLoaded]){
         [NSThread performBlockOnMainThread:^{
-            [[MMPageCacheManager sharedInstace] didLoadStateForPage:self];
+            [[MMPageCacheManager sharedInstance] didLoadStateForPage:self];
             cachedImgView.image = scrappedImgViewImage;
         }];
     }
@@ -981,7 +986,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 -(void) didUnloadState:(JotViewStateProxy *)state{
     [NSThread performBlockOnMainThread:^{
-        [[MMPageCacheManager sharedInstace] didUnloadStateForPage:self];
+        [[MMPageCacheManager sharedInstance] didUnloadStateForPage:self];
     }];
 }
 

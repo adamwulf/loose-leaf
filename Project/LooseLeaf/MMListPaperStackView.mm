@@ -70,6 +70,10 @@
     return self;
 }
 
+-(int) fullByteSize{
+    return [super fullByteSize] + addPageButtonInListView.fullByteSize;
+}
+
 
 #pragma mark - Gesture Helpers
 

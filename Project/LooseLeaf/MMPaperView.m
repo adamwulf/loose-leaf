@@ -101,6 +101,10 @@
     return self;
 }
 
+-(int) fullByteSize{
+    return 0;
+}
+
 
 -(void) setScale:(CGFloat)_scale{
     if(_scale == 0){

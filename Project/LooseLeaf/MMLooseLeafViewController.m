@@ -65,6 +65,7 @@
 //        [self.view addSubview:[MMDebugDrawView sharedInstace]];
         
         MMMemoryProfileView* profileView = [[MMMemoryProfileView alloc] initWithFrame:self.view.bounds];
+        profileView.stackView = stackView;
         [self.view addSubview:profileView];
     }
     return self;

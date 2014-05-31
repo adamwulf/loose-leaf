@@ -86,6 +86,10 @@
     return self;
 }
 
+-(int) fullByteSize{
+    return papersIcon.fullByteSize + paperIcon.fullByteSize + plusIcon.fullByteSize + leftArrow.fullByteSize + rightArrow.fullByteSize;
+}
+
 -(NSString*) activeGestureSummary{
     @throw kAbstractMethodException;
 }
@@ -1673,7 +1677,7 @@
  * to disk
  */
 -(void) mayChangeTopPageTo:(MMPaperView*)page{
-    [[MMPageCacheManager sharedInstace] mayChangeTopPageTo:page];
+    [[MMPageCacheManager sharedInstance] mayChangeTopPageTo:page];
 }
 
 /**
@@ -1683,12 +1687,12 @@
  * get this into static mode asap.
  */
 -(void) willChangeTopPageTo:(MMPaperView*)page{
-    [[MMPageCacheManager sharedInstace] willChangeTopPageTo:page];
+    [[MMPageCacheManager sharedInstance] willChangeTopPageTo:page];
 }
 
 -(void) didChangeTopPage{
     MMPaperView* topPage = [visibleStackHolder peekSubview];
-    if([[MMPageCacheManager sharedInstace] didChangeToTopPage:topPage]){
+    if([[MMPageCacheManager sharedInstance] didChangeToTopPage:topPage]){
         [self saveStacksToDisk];
     }
 }
@@ -1700,7 +1704,7 @@
  * get this into static mode asap.
  */
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
-    [[MMPageCacheManager sharedInstace] willNotChangeTopPageTo:page];
+    [[MMPageCacheManager sharedInstance] willNotChangeTopPageTo:page];
 }
 
 -(void) saveStacksToDisk{

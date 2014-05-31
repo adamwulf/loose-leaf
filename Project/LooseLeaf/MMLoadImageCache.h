@@ -10,7 +10,7 @@
 
 @interface MMLoadImageCache : NSObject
 
-+(MMLoadImageCache*) sharedInstace;
++(MMLoadImageCache*) sharedInstance;
 
 -(UIImage*) imageAtPath:(NSString*)path;
 
@@ -21,5 +21,7 @@
 -(BOOL) containsPathInCache:(NSString*)path;
 
 -(NSInteger) numberOfItemsHeldInCache;
+
+-(int) memoryOfLoadedImages;
 
 @end

@@ -15,6 +15,7 @@
 @implementation MMLoadImageCache{
     NSMutableDictionary* loadedImages;
     NSMutableArray* orderedKeys;
+    int loadedBytes;
 }
 
 static MMLoadImageCache* _instance = nil;
@@ -31,11 +32,15 @@ static MMLoadImageCache* _instance = nil;
     return _instance;
 }
 
-+(MMLoadImageCache*) sharedInstace{
++(MMLoadImageCache*) sharedInstance{
     if(!_instance){
         _instance = [[MMLoadImageCache alloc]init];
     }
     return _instance;
+}
+
+-(int) memoryOfLoadedImages{
+    return loadedBytes;
 }
 
 #pragma mark - Load Images
@@ -63,7 +68,6 @@ static int count = 0;
                 return nil;
             }
         }
-        
         cachedImage = [UIImage imageWithContentsOfFile:path];
         count++;
         @synchronized(self){
@@ -73,6 +77,8 @@ static int count = 0;
             [orderedKeys removeObject:path];
             [orderedKeys insertObject:path atIndex:0];
             [self ensureCacheSize];
+            
+            loadedBytes += cachedImage.size.width * cachedImage.size.height * 4;
         }
     }
     return cachedImage;
@@ -82,13 +88,16 @@ static int count = 0;
     @synchronized(self){
         while([orderedKeys count] > kMMLoadImageCacheSize){
             [self clearCacheForPath:[orderedKeys lastObject]];
-            [orderedKeys removeLastObject];
         }
     }
 }
 
 -(void) clearCacheForPath:(NSString*)path{
     @synchronized(self){
+        UIImage* cachedImage = [loadedImages objectForKey:path];
+        if(cachedImage){
+            loadedBytes -= cachedImage.size.width * cachedImage.size.height * 4;
+        }
         [loadedImages removeObjectForKey:path];
         [orderedKeys removeObject:path];
     }
@@ -98,8 +107,17 @@ static int count = 0;
     @synchronized(self){
         [self clearCacheForPath:path];
         if(image){
+            UIImage* cachedImage = [loadedImages objectForKey:path];
+            if(cachedImage){
+                loadedBytes -= cachedImage.size.width * cachedImage.size.height * 4;
+            }
             [loadedImages setObject:image forKey:path];
+            loadedBytes += image.size.width * image.size.height * 4;
         }else{
+            UIImage* cachedImage = [loadedImages objectForKey:path];
+            if(cachedImage){
+                loadedBytes -= cachedImage.size.width * cachedImage.size.height * 4;
+            }
             [loadedImages removeObjectForKey:path];
         }
         [orderedKeys insertObject:path atIndex:0];

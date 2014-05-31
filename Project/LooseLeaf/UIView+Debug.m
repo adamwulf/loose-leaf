@@ -16,5 +16,8 @@
     self.layer.borderWidth = 1;
 }
 
+-(int) fullByteSize{
+    return self.bounds.size.width * self.contentScaleFactor * self.bounds.size.height * self.contentScaleFactor * 4;
+}
 
 @end

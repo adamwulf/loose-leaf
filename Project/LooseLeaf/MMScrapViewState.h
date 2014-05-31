@@ -23,6 +23,7 @@
 @property (readonly) NSString* uuid;
 @property (readonly) JotView* drawableView;
 @property (readonly) NSString* pathForScrapAssets;
+@property (nonatomic, readonly) int fullByteSize;
 
 -(id) initWithUUID:(NSString*)uuid;
 

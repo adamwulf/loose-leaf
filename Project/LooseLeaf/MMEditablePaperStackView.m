@@ -28,15 +28,15 @@
 
         [[NSFileManager defaultManager] preCacheDirectoryListingAt:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Pages"]];
         
-        [MMPageCacheManager sharedInstace].delegate = self;
+        [MMPageCacheManager sharedInstance].delegate = self;
 
         self.delegate = self;
         
         stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
         
-        [MMPageCacheManager sharedInstace].drawableView = [[JotView alloc] initWithFrame:self.bounds];
+        [MMPageCacheManager sharedInstance].drawableView = [[JotView alloc] initWithFrame:self.bounds];
 //        [MMPageCacheManager sharedInstace].drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
-        [[JotStylusManager sharedInstance] setPalmRejectorDelegate:[MMPageCacheManager sharedInstace].drawableView];
+        [[JotStylusManager sharedInstance] setPalmRejectorDelegate:[MMPageCacheManager sharedInstance].drawableView];
 
         pen = [[Pen alloc] init];
         
@@ -196,6 +196,10 @@
     return self;
 }
 
+-(int) fullByteSize{
+    return [super fullByteSize] + addPageSidebarButton.fullByteSize + shareButton.fullByteSize + settingsButton.fullByteSize + pencilTool.fullByteSize + eraserButton.fullByteSize + scissorButton.fullByteSize + insertImageButton.fullByteSize + handButton.fullByteSize + rulerButton.fullByteSize + undoButton.fullByteSize + redoButton.fullByteSize + rulerView.fullByteSize;
+    
+}
 
 #pragma mark - Gesture Helpers
 
@@ -457,7 +461,7 @@
     // update UI for scaling small into list view
     [self setButtonsVisible:NO];
     [super isBeginningToScaleReallySmall:page];
-    [[MMPageCacheManager sharedInstace] updateVisiblePageImageCache];
+    [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 }
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     [super finishedScalingReallySmall:page];
@@ -511,12 +515,12 @@
         // top page should actually be the top visible page isn't necessarily
         // true. instead, i should ask the PageCacheManager to recheck
         // if it can hand the currently top page the drawable view.
-        [[MMPageCacheManager sharedInstace] didChangeToTopPage:[visibleStackHolder peekSubview]];
+        [[MMPageCacheManager sharedInstance] didChangeToTopPage:[visibleStackHolder peekSubview]];
     }
 }
 
 -(BOOL) isPageEditable:(MMPaperView*)page{
-    return page == [MMPageCacheManager sharedInstace].currentEditablePage;
+    return page == [MMPageCacheManager sharedInstance].currentEditablePage;
 }
 
 #pragma mark = Ruler
@@ -641,8 +645,8 @@
     
     // load the state for the top page in the visible stack
     [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
-                                                     withSize:[[MMPageCacheManager sharedInstace].drawableView pagePixelSize]
-                                                   andContext:[[MMPageCacheManager sharedInstace].drawableView context]];
+                                                     withSize:[[MMPageCacheManager sharedInstance].drawableView pagePixelSize]
+                                                   andContext:[[MMPageCacheManager sharedInstance].drawableView context]];
     
     
     // only load the image previews for the pages that will be visible
@@ -670,7 +674,7 @@
         debug_NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
         return NO;
     }
-    if([[MMPageCacheManager sharedInstace].drawableView.state.currentStrokes count]){
+    if([[MMPageCacheManager sharedInstance].drawableView.state.currentStrokes count]){
         return NO;
     }
     for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scraps]){
@@ -810,7 +814,7 @@
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    [[MMPageCacheManager sharedInstace] updateVisiblePageImageCache];
+    [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 }
 
 

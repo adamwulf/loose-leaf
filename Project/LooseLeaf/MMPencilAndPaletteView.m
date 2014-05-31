@@ -11,6 +11,7 @@
 #import "Constants.h"
 #import "AVHexColor.h"
 #import "UIView+Animations.h"
+#import "UIView+Debug.h"
 
 @implementation MMPencilAndPaletteView{
     CGRect originalFrame;
@@ -114,7 +115,9 @@
     return self;
 }
 
-
+-(int) fullByteSize{
+    return pencilButton.fullByteSize + blackButton.fullByteSize + blueButton.fullByteSize + redButton.fullByteSize + yellowButton.fullByteSize + greenButton.fullByteSize + activeColorButton.fullByteSize;
+}
 
 #pragma mark - Touch Events
 

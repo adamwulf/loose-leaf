@@ -17,7 +17,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMScrapViewState.h"
 #import "MMScrapBorderView.h"
-
+#import "UIView+Debug.h"
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 
 @implementation MMScrapView{
@@ -166,6 +166,10 @@
 //    debugLabel.text = uuid;
 //    [self addSubview:debugLabel];
     return self;
+}
+
+-(int) fullByteSize{
+    return borderView.fullByteSize + scrapState.fullByteSize;
 }
 
 

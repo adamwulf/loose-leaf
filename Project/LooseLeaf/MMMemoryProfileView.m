@@ -11,11 +11,14 @@
 #import "MMLoadImageCache.h"
 #import "MMPageCacheManager.h"
 #import <JotUI/JotUI.h>
+#import <mach/mach.h>
 
 @implementation MMMemoryProfileView{
     NSTimer* profileTimer;
     NSOperationQueue* timerQueue;
 }
+
+@synthesize stackView;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -29,6 +32,8 @@
         
 //        MMBackgroundTimer* backgroundTimer = [[MMBackgroundTimer alloc] initWithInterval:1 andTarget:self andSelector:@selector(timerDidFire)];
 //        [timerQueue addOperation:backgroundTimer];
+        
+        self.contentScaleFactor = 1;
         
         [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerDidFire) userInfo:nil repeats:YES];
         
@@ -52,18 +57,42 @@
     [[UIColor blackColor] setFill];
     
     // Drawing code
-    int numberInImageCache = (int) [[MMLoadImageCache sharedInstace] numberOfItemsHeldInCache];
-    int numberOfLoadedPagePreviews = (int) [[MMPageCacheManager sharedInstace] numberOfPagesWithLoadedPreviewImage];
-    int numberOfLoadedPageStates = (int) [[MMPageCacheManager sharedInstace] numberOfStateLoadedPages];
+    int numberInImageCache = (int) [[MMLoadImageCache sharedInstance] numberOfItemsHeldInCache];
+    int numberOfLoadedPagePreviews = (int) [[MMPageCacheManager sharedInstance] numberOfPagesWithLoadedPreviewImage];
+    int numberOfLoadedPageStates = (int) [[MMPageCacheManager sharedInstance] numberOfStateLoadedPages];
     int numberOfItemsInTrash = (int) [[JotTrashManager sharedInstance] numberOfItemsInTrash];
     
+    
     CGFloat y = 50;
-    [@"MMLoadImageCache:" drawAtPoint:CGPointMake(150, y) withFont:font];
+
+    struct task_basic_info info;
+    mach_msg_type_number_t size = sizeof(info);
+    kern_return_t kerr = task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t)&info, &size);
+    if(kerr != KERN_SUCCESS){
+        size = 0;
+    }
+    [@"Entire App:" drawAtPoint:CGPointMake(150, (y += 40)) withFont:font];
+    NSString* virtualBytes = [NSByteCountFormatter stringFromByteCount:info.virtual_size countStyle:NSByteCountFormatterCountStyleBinary];
+    [[NSString stringWithFormat:@"virtual memory: %@", virtualBytes] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
+    NSString* residentBytes = [NSByteCountFormatter stringFromByteCount:info.resident_size countStyle:NSByteCountFormatterCountStyleBinary];
+    [[NSString stringWithFormat:@"resident memory: %@", residentBytes] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
+    
+    [@"MMLoadImageCache:" drawAtPoint:CGPointMake(150, y += 40) withFont:font];
     [[NSString stringWithFormat:@"# of Images: %d", numberInImageCache] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
+    NSString* bytesInImages = [NSByteCountFormatter stringFromByteCount:[[MMLoadImageCache sharedInstance] memoryOfLoadedImages] countStyle:NSByteCountFormatterCountStyleBinary];
+    [[NSString stringWithFormat:@"memory in images: %@", bytesInImages] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
 
     [@"MMPageCacheManager:" drawAtPoint:CGPointMake(150, (y += 40)) withFont:font];
     [[NSString stringWithFormat:@"# in page previews: %d", numberOfLoadedPagePreviews] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
     [[NSString stringWithFormat:@"# in page states: %d", numberOfLoadedPageStates] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
+    NSString* bytesInPages = [NSByteCountFormatter stringFromByteCount:[[MMPageCacheManager sharedInstance] memoryOfStateLoadedPages] countStyle:NSByteCountFormatterCountStyleBinary];
+    [[NSString stringWithFormat:@"memory in states: %@", bytesInPages] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
+    
+    if(stackView){
+        [@"Paper Stack:" drawAtPoint:CGPointMake(150, (y += 40)) withFont:font];
+        NSString* bytesInView = [NSByteCountFormatter stringFromByteCount:stackView.fullByteSize countStyle:NSByteCountFormatterCountStyleBinary];
+        [[NSString stringWithFormat:@"memory: %@", bytesInView] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
+    }
 
     [@"JotTrashManager:" drawAtPoint:CGPointMake(150, (y += 40)) withFont:font];
     [[NSString stringWithFormat:@"# items in trash: %d", numberOfItemsInTrash] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];

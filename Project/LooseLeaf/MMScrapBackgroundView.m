@@ -9,6 +9,7 @@
 #import "MMScrapBackgroundView.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMScrapViewState.h"
+#import "MMLoadImageCache.h"
 #import <DrawKit-iOS/DrawKit-iOS.h>
 
 @implementation MMScrapBackgroundView{
@@ -151,7 +152,7 @@
 -(void) loadBackgroundFromDiskWithProperties:(NSDictionary*)properties{
     if([[NSFileManager defaultManager] fileExistsAtPath:self.backgroundJPGFile]){
         //            NSLog(@"should be loading background");
-        UIImage* image = [UIImage imageWithContentsOfFile:self.backgroundJPGFile];
+        UIImage* image = [[MMLoadImageCache sharedInstance] imageAtPath:self.backgroundJPGFile];
         [NSThread performBlockOnMainThread:^{
             [self setBackingImage:image];
         }];

@@ -179,15 +179,15 @@
         [contentView addSubview:clippedBackgroundView];
         [contentView addSubview:thumbnailView];
 
-        if([[MMLoadImageCache sharedInstace] containsPathInCache:self.thumbImageFile]){
+        if([[MMLoadImageCache sharedInstance] containsPathInCache:self.thumbImageFile]){
             // load if we can
-            [self setActiveThumbnailImage:[[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile]];
+            [self setActiveThumbnailImage:[[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile]];
         }else{
             // don't load from disk on the main thread.
             dispatch_async([self importExportScrapStateQueue], ^{
                 [lock lock];
                 @autoreleasepool {
-                    UIImage* thumb = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
+                    UIImage* thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
                     [self setActiveThumbnailImage:thumb];
                 }
                 [lock unlock];
@@ -195,6 +195,10 @@
         }
     }
     return self;
+}
+
+-(int) fullByteSize{
+    return drawableView.fullByteSize + drawableViewState.fullByteSize;
 }
 
 #pragma mark - Backing Image
@@ -250,7 +254,7 @@
                                     // instant on the thread will be synced to the content in this drawable view
                                     [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
                                         if(state){
-                                            [[MMLoadImageCache sharedInstace] updateCacheForPath:self.thumbImageFile toImage:thumb];
+                                            [[MMLoadImageCache sharedInstance] updateCacheForPath:self.thumbImageFile toImage:thumb];
                                             [self setActiveThumbnailImage:thumb];
                                             [drawableViewState wasSavedAtImmutableState:state];
 //                                            NSLog(@"(%@) scrap saved at: %d with thumb: %d", uuid, state.undoHash, (int)thumb);
@@ -513,7 +517,7 @@
 
 -(void) dealloc{
 //    NSLog(@"scrap state (%@) dealloc", uuid);
-    [[MMLoadImageCache sharedInstace] clearCacheForPath:self.thumbImageFile];
+    [[MMLoadImageCache sharedInstance] clearCacheForPath:self.thumbImageFile];
     dispatch_release(importExportScrapStateQueue);
     importExportScrapStateQueue = nil;
 }

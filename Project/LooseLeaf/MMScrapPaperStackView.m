@@ -147,6 +147,10 @@
     return self;
 }
 
+-(int) fullByteSize{
+    return [super fullByteSize] + imagePicker.fullByteSize + bezelScrapContainer.fullByteSize;
+    
+}
 
 #pragma mark - Insert Image
 

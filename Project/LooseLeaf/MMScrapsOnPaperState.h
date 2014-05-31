@@ -19,6 +19,7 @@
 @property (nonatomic, weak) NSObject<MMScrapsOnPaperStateDelegate>* delegate;
 @property (readonly) NSString* scrapIDsPath;
 @property (nonatomic, assign) BOOL shouldShowShadows;
+@property (nonatomic, readonly) int fullByteSize;
 
 +(dispatch_queue_t) importExportStateQueue;
 
