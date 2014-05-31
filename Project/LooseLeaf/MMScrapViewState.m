@@ -14,6 +14,7 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMScrapBackgroundView.h"
 #import "Constants.h"
+#import "UIView+Debug.h"
 
 @implementation MMScrapViewState{
     // scrap ID and UI
@@ -198,7 +199,7 @@
 }
 
 -(int) fullByteSize{
-    return drawableViewState.fullByteSize;
+    return drawableViewState.fullByteSize + backingImageHolder.fullByteSize;
 }
 
 #pragma mark - Backing Image

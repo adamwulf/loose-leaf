@@ -14,8 +14,11 @@
 #import "MMInboxManager.h"
 #import "MMMemoryProfileView.h"
 #import "Mixpanel.h"
+#import "MMMemoryManager.h"
 
-@implementation MMLooseLeafViewController
+@implementation MMLooseLeafViewController{
+    MMMemoryManager* memoryManager;
+}
 
 - (id)init{
     if(self = [super init]){
@@ -64,8 +67,11 @@
         
 //        [self.view addSubview:[MMDebugDrawView sharedInstace]];
         
+        
+        memoryManager = [[MMMemoryManager alloc] initWithStack:stackView];
+        
         MMMemoryProfileView* profileView = [[MMMemoryProfileView alloc] initWithFrame:self.view.bounds];
-        profileView.stackView = stackView;
+        profileView.memoryManager = memoryManager;
         [self.view addSubview:profileView];
     }
     return self;

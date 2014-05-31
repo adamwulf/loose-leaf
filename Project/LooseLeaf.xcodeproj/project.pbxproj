@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		66052A0317FA170600A94531 /* MMImmutableScrapsOnPaperState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66052A0217FA170600A94531 /* MMImmutableScrapsOnPaperState.m */; };
 		66066747193A7C1400C985E9 /* UIImage+Memory.m in Sources */ = {isa = PBXBuildFile; fileRef = 66066746193A7C1400C985E9 /* UIImage+Memory.m */; };
+		6606674A193A8BC400C985E9 /* MMMemoryManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66066749193A8BC400C985E9 /* MMMemoryManager.m */; };
 		660E1DA9158FC6300001DA12 /* NSMutableArray+QueueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DA8158FC6300001DA12 /* NSMutableArray+QueueAdditions.m */; };
 		660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAB158FC65C0001DA12 /* NSMutableArray+StackAdditions.m */; };
 		660E1DB0158FC7DB0001DA12 /* MMPaperIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAF158FC7DB0001DA12 /* MMPaperIcon.m */; };
@@ -208,6 +209,8 @@
 		66052A0217FA170600A94531 /* MMImmutableScrapsOnPaperState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImmutableScrapsOnPaperState.m; sourceTree = "<group>"; };
 		66066745193A7C1400C985E9 /* UIImage+Memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Memory.h"; sourceTree = "<group>"; };
 		66066746193A7C1400C985E9 /* UIImage+Memory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Memory.m"; sourceTree = "<group>"; };
+		66066748193A8BC400C985E9 /* MMMemoryManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMMemoryManager.h; sourceTree = "<group>"; };
+		66066749193A8BC400C985E9 /* MMMemoryManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMMemoryManager.m; sourceTree = "<group>"; };
 		660E1DA7158FC6300001DA12 /* NSMutableArray+QueueAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+QueueAdditions.h"; sourceTree = "<group>"; };
 		660E1DA8158FC6300001DA12 /* NSMutableArray+QueueAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+QueueAdditions.m"; sourceTree = "<group>"; };
 		660E1DAA158FC65C0001DA12 /* NSMutableArray+StackAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+StackAdditions.h"; sourceTree = "<group>"; };
@@ -827,6 +830,8 @@
 			children = (
 				665182051937B41800CBEAB4 /* MMMemoryProfileView.h */,
 				665182061937B41800CBEAB4 /* MMMemoryProfileView.m */,
+				66066748193A8BC400C985E9 /* MMMemoryManager.h */,
+				66066749193A8BC400C985E9 /* MMMemoryManager.m */,
 			);
 			name = "Memory Profiling";
 			sourceTree = "<group>";
@@ -1700,6 +1705,7 @@
 				66DCFB971581BCEF00B4918C /* main.m in Sources */,
 				66DCFB9B1581BCEF00B4918C /* MMAppDelegate.m in Sources */,
 				6650DD1718F4849800ADF591 /* MMImageViewButton.m in Sources */,
+				6606674A193A8BC400C985E9 /* MMMemoryManager.m in Sources */,
 				661EBA57182AF1AD00893274 /* MMScissorTool.m in Sources */,
 				66B75DB81877D93000EF0A48 /* UIBezierPath+PathElement.m in Sources */,
 				661885D118F9ABD70016A333 /* MMFlipCameraButton.m in Sources */,
