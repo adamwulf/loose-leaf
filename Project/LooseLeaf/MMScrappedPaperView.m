@@ -83,7 +83,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(int) fullByteSize{
-    return [super fullByteSize] + scrapState.fullByteSize + scrapState.fullByteSize;
+    return [super fullByteSize] + scrapState.fullByteSize;
 }
 
 #pragma mark - Public Methods

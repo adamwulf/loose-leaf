@@ -198,7 +198,7 @@
 }
 
 -(int) fullByteSize{
-    return drawableView.fullByteSize + drawableViewState.fullByteSize;
+    return drawableViewState.fullByteSize;
 }
 
 #pragma mark - Backing Image
