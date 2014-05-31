@@ -48,7 +48,7 @@
     UIFont* font = [UIFont systemFontOfSize:20];
     
     [[[UIColor whiteColor] colorWithAlphaComponent:.5] setFill];
-    [[UIBezierPath bezierPathWithRect:CGRectMake(140, 40, 300, 150)] fill];
+    [[UIBezierPath bezierPathWithRect:self.bounds] fill];
     [[UIColor blackColor] setFill];
     
     // Drawing code
