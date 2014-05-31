@@ -9,8 +9,10 @@
 #import "MMScrapBackgroundView.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMScrapViewState.h"
-#import "MMLoadImageCache.h"
+#import "UIImage+Memory.h"
 #import <DrawKit-iOS/DrawKit-iOS.h>
+
+static int totalBackgroundBytes;
 
 @implementation MMScrapBackgroundView{
     UIImageView* backingContentView;
@@ -19,6 +21,11 @@
     // cache our path
     NSString* backgroundPathCache;
 }
+
++(int) totalBackgroundBytes{
+    return totalBackgroundBytes;
+}
+
 
 @synthesize backingContentView;
 @synthesize backgroundRotation;
@@ -35,6 +42,11 @@
         backgroundScale = 1.0;
         [self addSubview:backingContentView];
         [self setBackingImage:img];
+        if(img){
+            @synchronized([MMScrapBackgroundView class]){
+                totalBackgroundBytes += img.byteSize;
+            }
+        }
     }
     return self;
 }
@@ -60,6 +72,10 @@
 #pragma mark - Properties
 
 -(void) setBackingImage:(UIImage*)img{
+    @synchronized([MMScrapBackgroundView class]){
+        totalBackgroundBytes -= backingContentView.image.byteSize;
+        totalBackgroundBytes += img.byteSize;
+    }
     backingContentView.image = img;
     CGRect r = backingContentView.bounds;
     r.size = CGSizeMake(img.size.width, img.size.height);
@@ -152,7 +168,7 @@
 -(void) loadBackgroundFromDiskWithProperties:(NSDictionary*)properties{
     if([[NSFileManager defaultManager] fileExistsAtPath:self.backgroundJPGFile]){
         //            NSLog(@"should be loading background");
-        UIImage* image = [[MMLoadImageCache sharedInstance] imageAtPath:self.backgroundJPGFile];
+        UIImage* image = [UIImage imageWithContentsOfFile:self.backgroundJPGFile];
         [NSThread performBlockOnMainThread:^{
             [self setBackingImage:image];
         }];
@@ -169,7 +185,6 @@
 -(NSDictionary*) saveBackgroundToDisk{
     if(self.backingViewHasChanged && ![[NSFileManager defaultManager] fileExistsAtPath:self.backgroundJPGFile]){
         if(self.backingContentView.image){
-            NSLog(@"orientation: %d", (int) self.backingContentView.image.imageOrientation);
             [UIImageJPEGRepresentation(self.backingContentView.image, .9) writeToFile:self.backgroundJPGFile atomically:YES];
         }
         self.backingViewHasChanged = NO;
@@ -181,6 +196,12 @@
     [savedProperties setObject:[NSNumber numberWithFloat:self.backgroundOffset.x] forKey:@"backgroundOffset.x"];
     [savedProperties setObject:[NSNumber numberWithFloat:self.backgroundOffset.y] forKey:@"backgroundOffset.y"];
     return savedProperties;
+}
+
+-(void) dealloc{
+    @synchronized([MMScrapBackgroundView class]){
+        totalBackgroundBytes -= backingContentView.image.byteSize;
+    }
 }
 
 //

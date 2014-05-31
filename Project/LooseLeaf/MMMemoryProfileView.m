@@ -63,6 +63,13 @@
     int numberOfItemsInTrash = (int) [[JotTrashManager sharedInstance] numberOfItemsInTrash];
     
     
+    int accountedBytes = 0;
+    accountedBytes += [[MMPageCacheManager sharedInstance] memoryOfStateLoadedPages];
+    accountedBytes += stackView.fullByteSize;
+    accountedBytes += [MMScrapBackgroundView totalBackgroundBytes];
+    accountedBytes += [[JotTrashManager sharedInstance] knownBytesInTrash];
+    accountedBytes += [[MMLoadImageCache sharedInstance] memoryOfLoadedImages];
+    
     CGFloat y = 50;
 
     struct task_basic_info info;
@@ -71,17 +78,20 @@
     if(kerr != KERN_SUCCESS){
         size = 0;
     }
+
+    int unaccountedBytes = info.resident_size - accountedBytes;;
+    
+
     [@"Entire App:" drawAtPoint:CGPointMake(150, (y += 40)) withFont:font];
     NSString* virtualBytes = [NSByteCountFormatter stringFromByteCount:info.virtual_size countStyle:NSByteCountFormatterCountStyleBinary];
     [[NSString stringWithFormat:@"virtual memory: %@", virtualBytes] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
     NSString* residentBytes = [NSByteCountFormatter stringFromByteCount:info.resident_size countStyle:NSByteCountFormatterCountStyleBinary];
     [[NSString stringWithFormat:@"resident memory: %@", residentBytes] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
+    NSString* accountedMemory = [NSByteCountFormatter stringFromByteCount:accountedBytes countStyle:NSByteCountFormatterCountStyleBinary];
+    [[NSString stringWithFormat:@"accounted memory: %@", accountedMemory] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
+    NSString* unaccountedMemory = [NSByteCountFormatter stringFromByteCount:unaccountedBytes countStyle:NSByteCountFormatterCountStyleBinary];
+    [[NSString stringWithFormat:@"unaccounted memory: %@", unaccountedMemory] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
     
-    [@"MMLoadImageCache:" drawAtPoint:CGPointMake(150, y += 40) withFont:font];
-    [[NSString stringWithFormat:@"# of Images: %d", numberInImageCache] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
-    NSString* bytesInImages = [NSByteCountFormatter stringFromByteCount:[[MMLoadImageCache sharedInstance] memoryOfLoadedImages] countStyle:NSByteCountFormatterCountStyleBinary];
-    [[NSString stringWithFormat:@"memory in images: %@", bytesInImages] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
-
     [@"MMPageCacheManager:" drawAtPoint:CGPointMake(150, (y += 40)) withFont:font];
     [[NSString stringWithFormat:@"# in page previews: %d", numberOfLoadedPagePreviews] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
     [[NSString stringWithFormat:@"# in page states: %d", numberOfLoadedPageStates] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
@@ -94,11 +104,19 @@
         [[NSString stringWithFormat:@"memory: %@", bytesInView] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
     }
 
+    [@"Scrap Backgrounds:" drawAtPoint:CGPointMake(150, (y += 40)) withFont:font];
+    NSString* bytesInView = [NSByteCountFormatter stringFromByteCount:[MMScrapBackgroundView totalBackgroundBytes] countStyle:NSByteCountFormatterCountStyleBinary];
+    [[NSString stringWithFormat:@"memory: %@", bytesInView] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
+
     [@"JotTrashManager:" drawAtPoint:CGPointMake(150, (y += 40)) withFont:font];
     [[NSString stringWithFormat:@"# items in trash: %d", numberOfItemsInTrash] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
     NSString* bytesInTrash = [NSByteCountFormatter stringFromByteCount:[[JotTrashManager sharedInstance] knownBytesInTrash] countStyle:NSByteCountFormatterCountStyleBinary];
     [[NSString stringWithFormat:@"memory: %@", bytesInTrash] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
     
+    [@"MMLoadImageCache:" drawAtPoint:CGPointMake(150, y += 40) withFont:font];
+    [[NSString stringWithFormat:@"# of Images: %d", numberInImageCache] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
+    NSString* bytesInImages = [NSByteCountFormatter stringFromByteCount:[[MMLoadImageCache sharedInstance] memoryOfLoadedImages] countStyle:NSByteCountFormatterCountStyleBinary];
+    [[NSString stringWithFormat:@"memory in images: %@", bytesInImages] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
 
     [@"JotBufferManager:" drawAtPoint:CGPointMake(150, (y += 40)) withFont:font];
     NSDictionary* cacheStats = [[JotBufferManager sharedInstace] cacheMemoryStats];

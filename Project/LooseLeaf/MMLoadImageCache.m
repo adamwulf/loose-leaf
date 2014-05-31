@@ -78,7 +78,7 @@ static int count = 0;
             [orderedKeys insertObject:path atIndex:0];
             [self ensureCacheSize];
             
-            loadedBytes += cachedImage.size.width * cachedImage.size.height * 4;
+            loadedBytes += cachedImage.size.width * cachedImage.scale * cachedImage.size.height * cachedImage.scale * 4;
         }
     }
     return cachedImage;
@@ -112,11 +112,11 @@ static int count = 0;
                 loadedBytes -= cachedImage.size.width * cachedImage.size.height * 4;
             }
             [loadedImages setObject:image forKey:path];
-            loadedBytes += image.size.width * image.size.height * 4;
+            loadedBytes += image.size.width * image.scale * image.size.height * image.scale * 4;
         }else{
             UIImage* cachedImage = [loadedImages objectForKey:path];
             if(cachedImage){
-                loadedBytes -= cachedImage.size.width * cachedImage.size.height * 4;
+                loadedBytes -= cachedImage.size.width * cachedImage.scale * cachedImage.size.height * cachedImage.scale * 4;
             }
             [loadedImages removeObjectForKey:path];
         }

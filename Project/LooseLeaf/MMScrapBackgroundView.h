@@ -24,6 +24,8 @@
 @property (nonatomic, assign) BOOL backingViewHasChanged;
 @property (nonatomic, retain) UIImage* backingImage;
 
++(int) totalBackgroundBytes;
+
 -(id) initWithImage:(UIImage*)img forScrapState:(MMScrapViewState*)scrapState;
 
 #pragma mark Saving and Loading
