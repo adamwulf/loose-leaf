@@ -263,6 +263,7 @@ dispatch_queue_t importThumbnailQueue;
                                // save
                                definitelyDoesNotHaveAnInkThumbnail = NO;
                                [paperState wasSavedAtImmutableState:immutableState];
+                               [[MMLoadImageCache sharedInstance] updateCacheForPath:[self thumbnailPath] toImage:thumbnail];
                                cachedImgViewImage = thumbnail;
                                onComplete(YES);
                            }else{

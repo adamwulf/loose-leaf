@@ -807,6 +807,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     scrappedImgViewImage = UIGraphicsGetImageFromCurrentImageContext();
     [[NSThread mainThread] performBlock:^{
         cachedImgView.image = scrappedImgViewImage;
+        [[MMLoadImageCache sharedInstance] updateCacheForPath:[self scrappedThumbnailPath] toImage:scrappedImgViewImage];
     }];
     
     [UIImagePNGRepresentation(scrappedImgViewImage) writeToFile:[self scrappedThumbnailPath] atomically:YES];

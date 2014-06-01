@@ -130,7 +130,6 @@
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     if(gesture != self){
-        NSLog(@"pagepan sees %@ owning %d touches", NSStringFromClass([gesture class]), [touches count]);
         __block BOOL touchesWereStolen = NO;
         [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
             if([possibleTouches containsObject:touch] || [validTouches containsObject:touch]){
@@ -196,7 +195,6 @@
             [validTouches addObjectsInSet:claimedTouches];
             [possibleTouches removeObjectsInSet:claimedTouches];
             subState = UIGestureRecognizerStateBegan;
-            NSLog(@"pan and pinch began");
             hasPannedOrScaled = YES;
             
             // reset the location and the initial distance of the gesture
@@ -425,7 +423,6 @@
             // pick the page back up again later
             if(cancelledFromBezel){
                 subState = UIGestureRecognizerStateCancelled;
-                NSLog(@"pan and pinch cancelled");
             }else{
                 subState = UIGestureRecognizerStatePossible;
             }
@@ -436,11 +433,9 @@
             if(cancelledFromBezel){
                 subState = UIGestureRecognizerStateCancelled;
                 self.state = UIGestureRecognizerStateCancelled;
-                NSLog(@"pan and pinch cancelled");
             }else{
                 subState = UIGestureRecognizerStateEnded;
                 self.state = UIGestureRecognizerStateEnded;
-                NSLog(@"pan and pinch cancelled");
             }
         }
     }else{
