@@ -70,9 +70,12 @@
         
         memoryManager = [[MMMemoryManager alloc] initWithStack:stackView];
         
-        MMMemoryProfileView* profileView = [[MMMemoryProfileView alloc] initWithFrame:self.view.bounds];
-        profileView.memoryManager = memoryManager;
-        [self.view addSubview:profileView];
+        MMMemoryProfileView* memoryProfileView = [[MMMemoryProfileView alloc] initWithFrame:self.view.bounds];
+        memoryProfileView.memoryManager = memoryManager;
+        memoryProfileView.hidden = YES;
+        
+        [stackView setMemoryView:memoryProfileView];
+        [self.view addSubview:memoryProfileView];
     }
     return self;
 }

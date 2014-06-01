@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MMScrapPaperStackView.h"
+
+@class MMScrapPaperStackView;
 
 @interface MMMemoryManager : NSObject
 

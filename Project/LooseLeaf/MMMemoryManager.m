@@ -10,6 +10,7 @@
 #import "MMBackgroundTimer.h"
 #import "MMLoadImageCache.h"
 #import "MMPageCacheManager.h"
+#import "MMScrapPaperStackView.h"
 #import "Constants.h"
 #import <JotUI/JotUI.h>
 #import <mach/mach.h>

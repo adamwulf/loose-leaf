@@ -14,10 +14,12 @@
 #import "MMScrapBubbleButton.h"
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMMemoryProfileView.h"
 #import "Mixpanel.h"
 
 @implementation MMEditablePaperStackView{
     UIPopoverController* jotTouchPopover;
+    MMMemoryProfileView* memoryView;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -63,10 +65,17 @@
         [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:shareButton];
         
-        settingsButton = [[MMAdonitButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        settingsButton.delegate = self;
-        [settingsButton addTarget:self action:@selector(jotSettingsTapped:) forControlEvents:UIControlEventTouchUpInside];
+//        settingsButton = [[MMAdonitButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+//        settingsButton.delegate = self;
+//        [settingsButton addTarget:self action:@selector(jotSettingsTapped:) forControlEvents:UIControlEventTouchUpInside];
 //        [self addSubview:settingsButton];
+        
+        // memory button
+        CGRect settingsButtonRect = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 2 * 60, kWidthOfSidebarButton, kWidthOfSidebarButton);
+        settingsButton = [[MMTextButton alloc] initWithFrame:settingsButtonRect andFont:[UIFont systemFontOfSize:20] andLetter:@"!?" andXOffset:2 andYOffset:0];
+        settingsButton.delegate = self;
+        [settingsButton addTarget:self action:@selector(toggleMemoryView:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:settingsButton];
         
         
         pencilTool = [[MMPencilAndPaletteView alloc] initWithButtonFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton) andScreenSize:self.bounds.size];
@@ -194,6 +203,15 @@
         
     }
     return self;
+}
+
+-(void) setMemoryView:(MMMemoryProfileView*)_memoryView{
+    memoryView = _memoryView;
+}
+
+
+-(void) toggleMemoryView:(UIButton*)button{
+    memoryView.hidden = !memoryView.hidden;
 }
 
 -(int) fullByteSize{
