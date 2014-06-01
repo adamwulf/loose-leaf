@@ -16,11 +16,14 @@
 #import "MMShadowedView.h"
 #import <JotUI/JotUI.h>
 
-@implementation MMRulerToolGestureRecognizer
+@implementation MMRulerToolGestureRecognizer{
+    __weak NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>* rulerDelegate;
+}
 
 -(id) init{
     if(self = [super init]){
         self.cancelsTouchesInView = NO;
+        self.scrapDelegate = self;
     }
     return self;
 }
@@ -28,8 +31,17 @@
 -(id) initWithTarget:(id)target action:(SEL)action{
     if(self = [super initWithTarget:target action:action]){
         self.cancelsTouchesInView = NO;
+        self.scrapDelegate = self;
     }
     return self;
+}
+
+-(void) setScrapDelegate:(NSObject<MMPanAndPinchScrapGestureRecognizerDelegate> *)_scrapDelegate{
+    if(!scrapDelegate){
+        [super setScrapDelegate:_scrapDelegate];
+    }else{
+        rulerDelegate = _scrapDelegate;
+    }
 }
 
 -(CGFloat) initialDistance{
@@ -75,6 +87,36 @@
         return DistanceBetweenTwoPoints(initialPoint1, initialPoint2);
     }
     return 0;
+}
+
+#pragma mark - MMPanAndPinchScrapGestureRecognizerDelegate
+
+-(NSArray*) scraps{
+    return [rulerDelegate scraps];
+}
+
+-(BOOL) panScrapRequiresLongPress{
+    return [rulerDelegate panScrapRequiresLongPress];
+}
+
+-(CGFloat) topVisiblePageScaleForScrap:(MMScrapView*)scrap{
+    return [rulerDelegate topVisiblePageScaleForScrap:scrap];
+}
+
+-(CGPoint) convertScrapCenterToScrapContainerCoordinate:(MMScrapView*)scrap{
+    return [rulerDelegate convertScrapCenterToScrapContainerCoordinate:scrap];
+}
+
+-(BOOL) isAllowedToPan{
+    return ![rulerDelegate isAllowedToPan];
+}
+
+-(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch{
+    return [rulerDelegate allowsHoldingScrapsWithTouch:touch];
+}
+
+-(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
+    [rulerDelegate ownershipOfTouches:touches isGesture:gesture];
 }
 
 @end
