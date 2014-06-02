@@ -44,7 +44,7 @@ static int totalBackgroundBytes;
         [self setBackingImage:img];
         if(img){
             @synchronized([MMScrapBackgroundView class]){
-                totalBackgroundBytes += img.byteSize;
+                totalBackgroundBytes += [img uncompressedByteSize];
             }
         }
     }
@@ -73,8 +73,8 @@ static int totalBackgroundBytes;
 
 -(void) setBackingImage:(UIImage*)img{
     @synchronized([MMScrapBackgroundView class]){
-        totalBackgroundBytes -= backingContentView.image.byteSize;
-        totalBackgroundBytes += img.byteSize;
+        totalBackgroundBytes -= [backingContentView.image uncompressedByteSize];
+        totalBackgroundBytes += [img uncompressedByteSize];
     }
     backingContentView.image = img;
     CGRect r = backingContentView.bounds;
@@ -200,7 +200,7 @@ static int totalBackgroundBytes;
 
 -(void) dealloc{
     @synchronized([MMScrapBackgroundView class]){
-        totalBackgroundBytes -= backingContentView.image.byteSize;
+        totalBackgroundBytes -= [backingContentView.image uncompressedByteSize];
     }
 }
 

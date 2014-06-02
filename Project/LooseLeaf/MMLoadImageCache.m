@@ -7,6 +7,7 @@
 //
 
 #import "MMLoadImageCache.h"
+#import "UIImage+Memory.h"
 #import "Constants.h"
 
 // TODO: possibly use this tutorial for threadsafe cache
@@ -78,7 +79,7 @@ static int count = 0;
             [orderedKeys insertObject:path atIndex:0];
             [self ensureCacheSize];
             
-            loadedBytes += cachedImage.size.width * cachedImage.scale * cachedImage.size.height * cachedImage.scale * 4;
+            loadedBytes += [cachedImage uncompressedByteSize];
         }
     }
     return cachedImage;
@@ -96,7 +97,7 @@ static int count = 0;
     @synchronized(self){
         UIImage* cachedImage = [loadedImages objectForKey:path];
         if(cachedImage){
-            loadedBytes -= cachedImage.size.width * cachedImage.size.height * 4;
+            loadedBytes -= [cachedImage uncompressedByteSize];
         }
         [loadedImages removeObjectForKey:path];
         [orderedKeys removeObject:path];
@@ -109,14 +110,14 @@ static int count = 0;
         if(image){
             UIImage* cachedImage = [loadedImages objectForKey:path];
             if(cachedImage){
-                loadedBytes -= cachedImage.size.width * cachedImage.size.height * 4;
+                loadedBytes -= [cachedImage uncompressedByteSize];
             }
             [loadedImages setObject:image forKey:path];
-            loadedBytes += image.size.width * image.scale * image.size.height * image.scale * 4;
+            loadedBytes += [image uncompressedByteSize];
         }else{
             UIImage* cachedImage = [loadedImages objectForKey:path];
             if(cachedImage){
-                loadedBytes -= cachedImage.size.width * cachedImage.scale * cachedImage.size.height * cachedImage.scale * 4;
+                loadedBytes -= [cachedImage uncompressedByteSize];
             }
             [loadedImages removeObjectForKey:path];
         }

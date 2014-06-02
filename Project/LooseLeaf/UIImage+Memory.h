@@ -10,6 +10,6 @@
 
 @interface UIImage (Memory)
 
--(int) byteSize;
+-(int) uncompressedByteSize;
 
 @end

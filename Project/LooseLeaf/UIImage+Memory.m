@@ -10,7 +10,7 @@
 
 @implementation UIImage (Memory)
 
--(int) byteSize{
+-(int) uncompressedByteSize{
     return self.size.width * self.scale * self.size.height * self.scale * 4;
 }
 
