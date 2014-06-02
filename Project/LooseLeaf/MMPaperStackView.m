@@ -1005,6 +1005,7 @@
             // we're bezeling a page left.
             // instead just bounce the top page
             NSLog(@"graceful fail: trying to bezel left, but nothing in the bezel holder. realigning stack.");
+            [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
             [self willChangeTopPageTo:[hiddenStackHolder peekSubview]];
             [self popHiddenStackForPages:1 onComplete:^(BOOL completed){
                 page.frame = self.bounds;

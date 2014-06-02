@@ -186,7 +186,7 @@
                                                          selector:@selector(connectionChange:)
                                                              name:JotStylusManagerDidChangeConnectionStatus
                                                            object:nil];
-                [[JotStylusManager sharedInstance] setEnabled:YES];
+                [[JotStylusManager sharedInstance] setEnabled:NO];
                 [[JotStylusManager sharedInstance] setRejectMode:NO];
             }
         }];

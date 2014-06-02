@@ -422,7 +422,7 @@
             // active, so put us back into possible state and we may
             // pick the page back up again later
             if(cancelledFromBezel){
-                subState = UIGestureRecognizerStateCancelled;
+                subState = UIGestureRecognizerStateEnded;
             }else{
                 subState = UIGestureRecognizerStatePossible;
             }
@@ -430,13 +430,8 @@
 
         if([validTouches count] == 0 && [possibleTouches count] == 0 && [ignoredTouches count] == 0 &&
            subState == UIGestureRecognizerStateChanged){
-            if(cancelledFromBezel){
-                subState = UIGestureRecognizerStateCancelled;
-                self.state = UIGestureRecognizerStateCancelled;
-            }else{
-                subState = UIGestureRecognizerStateEnded;
-                self.state = UIGestureRecognizerStateEnded;
-            }
+            subState = UIGestureRecognizerStateEnded;
+            self.state = UIGestureRecognizerStateEnded;
         }
     }else{
         //
