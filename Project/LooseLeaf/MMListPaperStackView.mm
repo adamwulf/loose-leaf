@@ -734,12 +734,14 @@
                                                         scale * gesture.normalizedLocationOfScale.y * superviewSize.height);
         CGSize newSizeOfView = CGSizeMake(superviewSize.width * scale, superviewSize.height * scale);
         
+        CGSize smallSize = CGSizeMake(superviewSize.width * kListPageZoom, superviewSize.height * kListPageZoom);
+        CGSize diffInSize = CGSizeMake(newSizeOfView.width - smallSize.width, newSizeOfView.height - smallSize.height);
         
         //
         // now calculate our final frame given our pan and zoom
         CGRect fr = self.frame;
-        fr.origin = CGPointMake(lastLocationInSuper.x - locationOfPinchAfterScale.x,
-                                lastLocationInSuper.y - locationOfPinchAfterScale.y);
+        fr.origin = CGPointMake(lastLocationInSuper.x - locationOfPinchAfterScale.x - diffInSize.width/2,
+                                lastLocationInSuper.y - locationOfPinchAfterScale.y - diffInSize.height/2);
         fr.size = newSizeOfView;
         gesture.pinchedPage.frame = fr;
     };
