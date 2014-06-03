@@ -41,8 +41,21 @@
     int totalBytesInScrapBackgrounds;
     int totalBytesInVBOs;
     int totalBytesInTextures;
+
+    // track max during the session
+    int maxVirtualSize;
+    int maxResidentSize;
+    int maxAccountedResidentBytes;
+    int maxUnaccountedResidentBytes;
+    int maxTotalBytesInScrapBackgrounds;
+    int maxTotalBytesInVBOs;
+    int maxTotalBytesInTextures;
 }
 
+@synthesize maxVirtualSize;
+@synthesize maxResidentSize;
+@synthesize maxAccountedResidentBytes;
+@synthesize maxUnaccountedResidentBytes;
 @synthesize virtualSize;
 @synthesize residentSize;
 @synthesize residentPageStateMemory;
@@ -81,7 +94,7 @@
     
     virtualSize = (int)info.virtual_size;
     residentSize = (int)info.resident_size;
-
+    
     // bytes by logical ownership
     residentPageStateMemory = [[MMPageCacheManager sharedInstance] memoryOfStateLoadedPages];
     residentStackViewMemory = stackView.fullByteSize;
@@ -101,6 +114,28 @@
     totalBytesInVBOs = [[[[JotBufferManager sharedInstace] cacheMemoryStats] objectForKey:kVBOCacheSize] intValue];
     totalBytesInTextures = [JotGLTexture totalTextureBytes];
     
+    if(virtualSize > maxVirtualSize){
+        maxVirtualSize = virtualSize;
+    }
+    if(residentSize > maxResidentSize){
+        maxResidentSize = residentSize;
+    }
+    if(accountedResidentBytes > maxAccountedResidentBytes){
+        maxAccountedResidentBytes = accountedResidentBytes;
+    }
+    if(unaccountedResidentBytes > maxUnaccountedResidentBytes){
+        maxUnaccountedResidentBytes = unaccountedResidentBytes;
+    }
+    if(totalBytesInScrapBackgrounds > maxTotalBytesInScrapBackgrounds){
+        maxTotalBytesInScrapBackgrounds = totalBytesInScrapBackgrounds;
+    }
+    if(totalBytesInTextures > maxTotalBytesInTextures){
+        maxTotalBytesInTextures = totalBytesInTextures;
+    }
+    if(totalBytesInVBOs > maxTotalBytesInVBOs){
+        maxTotalBytesInVBOs = totalBytesInVBOs;
+    }
+
     [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@(virtualSize), @"Virtual Size",
                                                         @(residentSize), @"Resident Size",
                                                         @(residentPageStateMemory), @"Resident Page State Memory",
@@ -115,7 +150,15 @@
                                                         @(numberOfItemsInTrash), @"Number Of Items In Trash",
                                                         @(totalBytesInScrapBackgrounds), @"Total Bytes In Scrap Backgrounds",
                                                         @(totalBytesInVBOs), @"Total Bytes In VBOs",
-                                                        @(totalBytesInTextures), @"Total Bytes In Textures", nil]];
+                                                        @(totalBytesInTextures), @"Total Bytes In Textures",
+                                                        @(maxTotalBytesInScrapBackgrounds), @"Max Total Bytes In Scrap Backgrounds",
+                                                        @(maxTotalBytesInVBOs), @"Max Total Bytes In VBOs",
+                                                        @(maxTotalBytesInTextures), @"Max Total Bytes In Textures",
+                                                        @(maxVirtualSize), @"Max Virtual Size",
+                                                        @(maxResidentSize), @"Max Resident Size",
+                                                        @(maxAccountedResidentBytes), @"Max Resident Accounted Bytes",
+                                                        @(maxUnaccountedResidentBytes), @"Max Resident Unaccounted Bytes",
+                                                        nil]];
 }
 
 @end

@@ -53,13 +53,21 @@
 
     [@"Entire App:" drawAtPoint:CGPointMake(150, (y += 40)) withFont:font];
     NSString* virtualBytes = [NSByteCountFormatter stringFromByteCount:memoryManager.virtualSize countStyle:NSByteCountFormatterCountStyleBinary];
+    NSString* maxVirtualBytes = [NSByteCountFormatter stringFromByteCount:memoryManager.maxVirtualSize countStyle:NSByteCountFormatterCountStyleBinary];
     [[NSString stringWithFormat:@"virtual memory: %@", virtualBytes] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
+    [[NSString stringWithFormat:@"[%@]", maxVirtualBytes] drawAtPoint:CGPointMake(460, y) withFont:font];
     NSString* residentBytes = [NSByteCountFormatter stringFromByteCount:memoryManager.residentSize countStyle:NSByteCountFormatterCountStyleBinary];
+    NSString* maxResidentBytes = [NSByteCountFormatter stringFromByteCount:memoryManager.maxResidentSize countStyle:NSByteCountFormatterCountStyleBinary];
     [[NSString stringWithFormat:@"resident memory: %@", residentBytes] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
+    [[NSString stringWithFormat:@"[%@]", maxResidentBytes] drawAtPoint:CGPointMake(460, y) withFont:font];
     NSString* accountedMemory = [NSByteCountFormatter stringFromByteCount:memoryManager.accountedResidentBytes countStyle:NSByteCountFormatterCountStyleBinary];
+    NSString* maxAccountedMemory = [NSByteCountFormatter stringFromByteCount:memoryManager.maxAccountedResidentBytes countStyle:NSByteCountFormatterCountStyleBinary];
     [[NSString stringWithFormat:@"accounted memory: %@", accountedMemory] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
+    [[NSString stringWithFormat:@"[%@]", maxAccountedMemory] drawAtPoint:CGPointMake(460, y) withFont:font];
     NSString* unaccountedMemory = [NSByteCountFormatter stringFromByteCount:memoryManager.unaccountedResidentBytes countStyle:NSByteCountFormatterCountStyleBinary];
+    NSString* maxUnaccountedMemory = [NSByteCountFormatter stringFromByteCount:memoryManager.maxUnaccountedResidentBytes countStyle:NSByteCountFormatterCountStyleBinary];
     [[NSString stringWithFormat:@"unaccounted memory: %@", unaccountedMemory] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];
+    [[NSString stringWithFormat:@"[%@]", maxUnaccountedMemory] drawAtPoint:CGPointMake(460, y) withFont:font];
     
     [@"MMPageCacheManager:" drawAtPoint:CGPointMake(150, (y += 40)) withFont:font];
     [[NSString stringWithFormat:@"# in page previews: %d", memoryManager.numberOfLoadedPagePreviews] drawAtPoint:CGPointMake(160, (y += 20)) withFont:font];

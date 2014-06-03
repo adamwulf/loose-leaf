@@ -12,6 +12,13 @@
 
 @interface MMMemoryManager : NSObject
 
+@property (readonly) int maxVirtualSize;
+@property (readonly) int maxResidentSize;
+@property (readonly) int maxAccountedResidentBytes;
+@property (readonly) int maxUnaccountedResidentBytes;
+@property (readonly) int maxTotalBytesInScrapBackgrounds;
+@property (readonly) int maxTotalBytesInVBOs;
+@property (readonly) int maxTotalBytesInTextures;
 @property (readonly) int virtualSize;
 @property (readonly) int residentSize;
 @property (readonly) int residentPageStateMemory;
