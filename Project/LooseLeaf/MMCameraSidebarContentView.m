@@ -66,7 +66,13 @@
         cameraRow.delegate = self;
         cameraRow.rotation = RandomPhotoRotation/2;
         cameraRow.center = CGPointMake((self.frame.size.width-kWidthOfSidebarButton)/2, kCameraMargin + cameraRow.bounds.size.height/2);
-        [photoListScrollView addSubview:cameraRow];
+        [photoListScrollView insertSubview:cameraRow belowSubview:flipButton];
+        [photoListScrollView.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            NSLog(@"subview: %@", [obj class]);
+            if([obj isKindOfClass:[MMPhotoRowView class]]){
+                NSLog(@"row: %d", (int) ((UIView*)obj).tag);
+            }
+        }];
         flipButton.hidden = NO;
     }else{
         cameraRow = nil;
@@ -158,18 +164,13 @@
 }
 
 -(UIView*) updateRow:(UIView*)currentRow atIndex:(NSInteger)index forFrame:(CGRect)frame forScrollView:(MMCachedRowsScrollView*)scrollView{
-    if(cameraRow){
-        //    NSLog(@"fetching photo row for index: %d", index);
-        if(index == 0 || index == 1){
-            // this space is taken up by the camera row, so
-            // return nil
-            return nil;
-        }
-        // adjust for the 2 extra rows that are taken up by the camera input
-        return [super updateRow:currentRow atIndex:index - 2 forFrame:frame forScrollView:scrollView];
-    }else{
-        return [super updateRow:currentRow atIndex:index forFrame:frame forScrollView:scrollView];
+    if(index == 0 || index == 1){
+        // this space is taken up by the camera row, so
+        // return nil
+        return nil;
     }
+    // adjust for the 2 extra rows that are taken up by the camera input
+    return [super updateRow:currentRow atIndex:index - 2 forFrame:frame forScrollView:scrollView];
 }
 
 #pragma mark - MMCamViewDelegate
