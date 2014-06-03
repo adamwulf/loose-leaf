@@ -410,7 +410,10 @@
 #pragma mark - Bezel Left and Right Gestures
 
 -(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
-    if(bezelGesture.state == UIGestureRecognizerStateBegan){
+    // see comments in [MMPaperStackView:isBezelingInRightWithGesture] for
+    // comments on the messy `hasSeenSubstateBegin`
+    if(!bezelGesture.hasSeenSubstateBegin && (bezelGesture.subState == UIGestureRecognizerStateBegan ||
+                                              bezelGesture.subState == UIGestureRecognizerStateChanged)){
         // cancel any strokes that this gesture is using
         for(UITouch* touch in bezelGesture.touches){
             [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];

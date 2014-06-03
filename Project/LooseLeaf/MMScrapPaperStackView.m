@@ -652,11 +652,10 @@ int skipAll = NO;
 }
 
 -(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
-    [super isBezelingInLeftWithGesture:bezelGesture];
-    [self forceScrapToScrapContainerDuringGesture];
-    
-    // adam
-    [visibleStackHolder peekSubview];
+    if(bezelGesture.subState != UIGestureRecognizerStatePossible){
+        [super isBezelingInLeftWithGesture:bezelGesture];
+        [self forceScrapToScrapContainerDuringGesture];
+    }
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
