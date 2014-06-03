@@ -56,6 +56,9 @@
 @synthesize maxResidentSize;
 @synthesize maxAccountedResidentBytes;
 @synthesize maxUnaccountedResidentBytes;
+@synthesize maxTotalBytesInScrapBackgrounds;
+@synthesize maxTotalBytesInTextures;
+@synthesize maxTotalBytesInVBOs;
 @synthesize virtualSize;
 @synthesize residentSize;
 @synthesize residentPageStateMemory;
