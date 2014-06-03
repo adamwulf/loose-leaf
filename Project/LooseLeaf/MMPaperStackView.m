@@ -413,7 +413,6 @@
         if([bezelStackHolder.subviews count]){
             [self willNotChangeTopPageTo:[bezelStackHolder peekSubview]];
             [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
-            [self didChangeTopPage];
             [[visibleStackHolder peekSubview] enableAllGestures];
         }
     }else if(bezelGesture.subState == UIGestureRecognizerStateEnded &&
@@ -472,7 +471,9 @@
             //
             // we just added a new page to the bezel gesture,
             // so make sure we've notified that it may be the new top
-            [self mayChangeTopPageTo:[visibleStackHolder peekSubview]];
+            [self mayChangeTopPageTo:[bezelStackHolder peekSubview]];
+            [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
+            [self didChangeTopPage];
             
             //
             // ok, animate them all into place
@@ -556,6 +557,9 @@
         if([bezelStackHolder.subviews count]){
             // uh oh, we still have views in the bezel gesture
             // that haven't compeleted their animation.
+            //
+            // this may happen from the new page bumped onto the bezel
+            // when panning a page far left
             //
             // we need to cancel all of their animations
             // and move them immediately to the hidden view
