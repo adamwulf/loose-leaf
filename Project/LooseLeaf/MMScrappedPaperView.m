@@ -526,7 +526,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     
                     NSMutableArray* sortedArrayOfNewSubpaths = [NSMutableArray array];
                     for(DKUIBezierPathShape* shape in subshapes){
-                        [sortedArrayOfNewSubpaths addObject:[shape.fullPath copy]];
+                        UIBezierPath* shapePath = [shape.fullPath copy];
+                        [sortedArrayOfNewSubpaths addObject:shapePath];
                     }
                     [sortedArrayOfNewSubpaths sortUsingComparator:^(id obj1, id obj2){
                         UIBezierPath* p1 = obj1;
@@ -538,6 +539,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     
                     debugFullText = [debugFullText stringByAppendingFormat:@"shape:\n %@ scissor:\n %@ \n\n\n\n", subshapePath, scissorPath];
                     for(UIBezierPath* subshapePath in sortedArrayOfNewSubpaths){
+                        if([subshapePath containsDuplicateAndReversedSubpaths]){
+                            @throw [NSException exceptionWithName:@"DuplicateSubshape" reason:@"shape contains duplicate subshapes" userInfo:nil];
+                        }
                         // and add the scrap so that it's scale matches the scrap that its built from
                         MMScrapView* addedScrap = [self addScrapWithPath:subshapePath andScale:scrap.scale];
                         @synchronized(scrapContainerView){
