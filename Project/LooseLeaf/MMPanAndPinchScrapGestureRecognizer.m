@@ -7,8 +7,7 @@
 //
 
 #import "MMPanAndPinchScrapGestureRecognizer.h"
-#import "MMBezelInRightGestureRecognizer.h"
-#import "MMBezelInLeftGestureRecognizer.h"
+#import "MMBezelInGestureRecognizer.h"
 #import "MMVector.h"
 #import "MMPanAndPinchGestureRecognizer.h"
 #import "NSMutableSet+Extras.h"

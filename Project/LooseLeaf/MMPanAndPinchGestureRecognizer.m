@@ -8,8 +8,7 @@
 
 #import "MMPanAndPinchGestureRecognizer.h"
 #import <QuartzCore/QuartzCore.h>
-#import "MMBezelInRightGestureRecognizer.h"
-#import "MMBezelInLeftGestureRecognizer.h"
+#import "MMBezelInGestureRecognizer.h"
 #import "MMObjectSelectLongPressGestureRecognizer.h"
 #import "MMPanAndPinchScrapGestureRecognizer.h"
 #import "MMTouchVelocityGestureRecognizer.h"
@@ -120,8 +119,7 @@
 }
 
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return [preventingGestureRecognizer isKindOfClass:[MMBezelInRightGestureRecognizer class]] ||
-           [preventingGestureRecognizer isKindOfClass:[MMBezelInLeftGestureRecognizer class]];
+    return [preventingGestureRecognizer isKindOfClass:[MMBezelInGestureRecognizer class]];
 }
 
 -(BOOL) containsTouch:(UITouch*)touch{

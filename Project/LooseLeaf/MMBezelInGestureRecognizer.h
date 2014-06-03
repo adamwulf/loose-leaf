@@ -11,17 +11,17 @@
 #import "Constants.h"
 #import "MMPanGestureDelegate.h"
 
-@interface MMBezelInRightGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>{
+@interface MMBezelInGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>{
     // direction the user is panning
     MMBezelDirection panDirection;
-    CGFloat liftedLeftFingerOffset;
+    CGFloat liftedFingerOffset;
     // use to calculate direction
     CGPoint lastKnownLocation;
     // use to calculate translation
     CGPoint firstKnownLocation;
     
     NSMutableSet* validTouches;
-
+    
     NSDate* dateOfLastBezelEnding;
     NSInteger numberOfRepeatingBezels;
     
@@ -36,6 +36,7 @@
 @property (nonatomic, readonly) NSInteger numberOfRepeatingBezels;
 @property (nonatomic, readonly) UIGestureRecognizerState subState;
 @property (nonatomic, assign) BOOL hasSeenSubstateBegin;
+@property (nonatomic, assign) BOOL gestureIsFromRightBezel; // YES if from right bezel, NO if from left
 
 -(CGPoint) translationInView:(UIView*)view;
 

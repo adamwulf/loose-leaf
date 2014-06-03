@@ -409,7 +409,7 @@
 
 #pragma mark - Bezel Left and Right Gestures
 
--(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
+-(void) isBezelingInLeftWithGesture:(MMBezelInGestureRecognizer*)bezelGesture{
     // see comments in [MMPaperStackView:isBezelingInRightWithGesture] for
     // comments on the messy `hasSeenSubstateBegin`
     if(!bezelGesture.hasSeenSubstateBegin && (bezelGesture.subState == UIGestureRecognizerStateBegan ||
@@ -423,7 +423,7 @@
     [super isBezelingInLeftWithGesture:bezelGesture];
 }
 
--(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
+-(void) isBezelingInRightWithGesture:(MMBezelInGestureRecognizer *)bezelGesture{
     // see comments in [MMPaperStackView:isBezelingInRightWithGesture] for
     // comments on the messy `hasSeenSubstateBegin`
     if(!bezelGesture.hasSeenSubstateBegin && (bezelGesture.subState == UIGestureRecognizerStateBegan ||
@@ -580,7 +580,7 @@
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     [super ownershipOfTouches:touches isGesture:gesture];
     if([gesture isKindOfClass:[MMDrawingTouchGestureRecognizer class]] ||
-       [gesture isKindOfClass:[MMBezelInRightGestureRecognizer class]]){
+       [gesture isKindOfClass:[MMBezelInGestureRecognizer class]]){
         // only notify of our own gestures
         [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
     }

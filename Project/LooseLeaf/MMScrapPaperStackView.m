@@ -651,14 +651,14 @@ int skipAll = NO;
     }
 }
 
--(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
+-(void) isBezelingInLeftWithGesture:(MMBezelInGestureRecognizer*)bezelGesture{
     if(bezelGesture.subState != UIGestureRecognizerStatePossible){
         [super isBezelingInLeftWithGesture:bezelGesture];
         [self forceScrapToScrapContainerDuringGesture];
     }
 }
 
--(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
+-(void) isBezelingInRightWithGesture:(MMBezelInGestureRecognizer *)bezelGesture{
     if(bezelGesture.subState != UIGestureRecognizerStatePossible){
         [super isBezelingInRightWithGesture:bezelGesture];
         [self forceScrapToScrapContainerDuringGesture];

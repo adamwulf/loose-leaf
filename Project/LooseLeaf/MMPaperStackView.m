@@ -77,10 +77,11 @@
         rightArrow.alpha = 0;
         plusIcon.alpha = 0;
         
-        fromRightBezelGesture = [[MMBezelInRightGestureRecognizer alloc] initWithTarget:self action:@selector(isBezelingInRightWithGesture:)];
+        fromRightBezelGesture = [[MMBezelInGestureRecognizer alloc] initWithTarget:self action:@selector(isBezelingInRightWithGesture:)];
+        fromRightBezelGesture.gestureIsFromRightBezel = YES;
         [self addGestureRecognizer:fromRightBezelGesture];
 
-        fromLeftBezelGesture = [[MMBezelInLeftGestureRecognizer alloc] initWithTarget:self action:@selector(isBezelingInLeftWithGesture:)];
+        fromLeftBezelGesture = [[MMBezelInGestureRecognizer alloc] initWithTarget:self action:@selector(isBezelingInLeftWithGesture:)];
         [self addGestureRecognizer:fromLeftBezelGesture];
     }
     return self;
@@ -330,7 +331,7 @@
  * stack. either one at a time, or multiple if the gesture is repeated
  * without interruption.
  */
--(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
+-(void) isBezelingInLeftWithGesture:(MMBezelInGestureRecognizer*)bezelGesture{
     CGPoint translation = [bezelGesture translationInView:self];
     
     if(!bezelGesture.hasSeenSubstateBegin && (bezelGesture.subState == UIGestureRecognizerStateBegan ||
@@ -525,7 +526,7 @@
  * stack. either one at a time, or multiple if the gesture is repeated
  * without interruption.
  */
--(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer*)bezelGesture{
+-(void) isBezelingInRightWithGesture:(MMBezelInGestureRecognizer*)bezelGesture{
     if([[visibleStackHolder peekSubview] panGesture].subState != UIGestureRecognizerStatePossible){
         [[[visibleStackHolder peekSubview] panGesture] cancel];
     }
