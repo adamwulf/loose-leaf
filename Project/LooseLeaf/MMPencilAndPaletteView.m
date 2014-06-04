@@ -278,17 +278,18 @@
 #pragma mark - Choose Color
 
 -(void) colorTapped:(MMColorButton*)button{
-    
-    blackButton.selected = NO;
-    blueButton.selected = NO;
-    redButton.selected = NO;
-    yellowButton.selected = NO;
-    greenButton.selected = NO;
-    button.selected = YES;
-    
-    color = button.color;
-    [self.delegate didChangeColorTo:color];
-    [pencilButton setNeedsDisplay];
+    if([self isShowingColors]){
+        blackButton.selected = NO;
+        blueButton.selected = NO;
+        redButton.selected = NO;
+        yellowButton.selected = NO;
+        greenButton.selected = NO;
+        button.selected = YES;
+        
+        color = button.color;
+        [self.delegate didChangeColorTo:color];
+        [pencilButton setNeedsDisplay];
+    }
 }
 
 @end
