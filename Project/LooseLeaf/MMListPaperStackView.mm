@@ -822,6 +822,12 @@
             //
             // also, cancel the gesture so that it doesn't continue to fire
             // after we've committed our animations
+            //
+            // when i call [cancel], this same gesture handler thinks that
+            // the gesture is cancelled back into list view, but we're about
+            // to zoom into page view. to work around this (killTheGestureCold),
+            // i need tocancel the gesture and also nil the held page, so
+            // that this handler won't try to animate back into list view
             [gesture killTheGestureCold];
             [self immediatelyAnimateFromListViewToFullScreenView];
             return;
