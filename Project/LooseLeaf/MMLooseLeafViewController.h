@@ -11,8 +11,10 @@
 #import <Crashlytics/Crashlytics.h>
 
 @interface MMLooseLeafViewController : UIViewController<CrashlyticsDelegate>{
-    IBOutlet MMScrapPaperStackView* stackView;
+    MMScrapPaperStackView* stackView;
 }
+
+-(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication;
 
 -(void) willResignActive;
 

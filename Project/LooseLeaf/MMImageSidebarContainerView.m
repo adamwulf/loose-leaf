@@ -11,10 +11,12 @@
 #import "MMFaceSidebarContentView.h"
 #import "MMEventSidebarContentView.h"
 #import "MMCameraSidebarContentView.h"
+#import "MMPDFInboxContentView.h"
 #import "MMPhotoManager.h"
 #import "MMImageViewButton.h"
 #import "MMFaceButton.h"
 #import "MMPalmTreeButton.h"
+#import "MMPDFButton.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
 
@@ -23,11 +25,15 @@
     MMAbstractSidebarContentView* albumListContentView;
     MMAbstractSidebarContentView* faceListContentView;
     MMEventSidebarContentView* eventListContentView;
+    MMPDFInboxContentView* pdfListContentView;
+    
+    NSArray* allListContentViews;
     
     MMImageViewButton* cameraAlbumButton;
     MMImageViewButton* iPhotoAlbumButton;
     MMFaceButton* iPhotoFacesButton;
     MMPalmTreeButton* iPhotoEventsButton;
+    MMPDFButton* pdfInboxButton;
     MMImageViewButton* twitterAlbumButton;
     MMImageViewButton* facebookAlbumButton;
     MMImageViewButton* evernoteAlbumButton;
@@ -73,6 +79,15 @@
         [sidebarContentView addSubview:eventListContentView];
         eventListContentView.hidden = YES;
         
+        pdfListContentView = [[MMPDFInboxContentView alloc] initWithFrame:contentBounds];
+        pdfListContentView.delegate = self;
+        [sidebarContentView addSubview:pdfListContentView];
+        pdfListContentView.hidden = YES;
+        
+        
+        allListContentViews = [NSArray arrayWithObjects:cameraListContentView,
+                               albumListContentView, faceListContentView, eventListContentView,
+                               pdfListContentView, nil];
         //////////////////////////////////////////
         // buttons
         
@@ -103,6 +118,10 @@
         [iPhotoEventsButton addTarget:self action:@selector(eventButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [sidebarContentView addSubview:iPhotoEventsButton];
         
+        pdfInboxButton = [[MMPDFButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4* kWidthOfSidebarButton, buttonBounds.origin.y,
+                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        [pdfInboxButton addTarget:self action:@selector(pdfButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [sidebarContentView addSubview:pdfInboxButton];
         
 //        // facebook
 //        facebookAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4*kWidthOfSidebarButton, buttonBounds.origin.y,
@@ -140,6 +159,9 @@
     if(!eventListContentView.hidden){
         [eventListContentView show:animated];
     }
+    if(!pdfListContentView.hidden){
+        [pdfListContentView show:animated];
+    }
 }
 
 -(void) hide:(BOOL)animated{
@@ -149,6 +171,7 @@
         [albumListContentView hide:animated];
         [faceListContentView hide:animated];
         [eventListContentView hide:animated];
+        [pdfListContentView hide:animated];
     } afterDelay:.1];
 }
 
@@ -160,73 +183,59 @@
     [self.delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation fromContainer:[container description]];
 }
 
+-(void) switchToListView:(MMAbstractSidebarContentView*)listView{
+    for(MMAbstractSidebarContentView* aListView in allListContentViews){
+        if(aListView == listView){
+            listView.hidden = NO;
+            [listView show:NO];
+        }else if(!aListView.hidden){
+            [aListView hide:NO];
+            aListView.hidden = YES;
+        }
+    }
+}
+
 -(void) cameraButtonTapped:(UIButton*)button{
-    [cameraListContentView show:NO];
-    cameraListContentView.hidden = NO;
-    albumListContentView.hidden = YES;
-    faceListContentView.hidden = YES;
-    eventListContentView.hidden = YES;
-    [albumListContentView show:NO];
-    [faceListContentView hide:NO];
-    [eventListContentView hide:NO];
+    [self switchToListView:cameraListContentView];
 }
 
 -(void) albumButtonTapped:(UIButton*)button{
-    if(!cameraListContentView.hidden){
-        [cameraListContentView hide:NO];
-    }
-    cameraListContentView.hidden = YES;
-    albumListContentView.hidden = NO;
-    faceListContentView.hidden = YES;
-    eventListContentView.hidden = YES;
-    [albumListContentView show:NO];
-    [faceListContentView hide:NO];
-    [eventListContentView hide:NO];
+    [self switchToListView:albumListContentView];
 }
 
 -(void) faceButtonTapped:(UIButton*)button{
-    if(!cameraListContentView.hidden){
-        [cameraListContentView hide:NO];
-    }
-    cameraListContentView.hidden = YES;
-    albumListContentView.hidden = YES;
-    faceListContentView.hidden = NO;
-    eventListContentView.hidden = YES;
-    [albumListContentView hide:NO];
-    [faceListContentView show:NO];
-    [eventListContentView hide:NO];
+    [self switchToListView:faceListContentView];
 }
 
 -(void) eventButtonTapped:(UIButton*)button{
-    if(!cameraListContentView.hidden){
-        [cameraListContentView hide:NO];
-    }
-    cameraListContentView.hidden = YES;
-    albumListContentView.hidden = YES;
-    faceListContentView.hidden = YES;
-    eventListContentView.hidden = NO;
-    [albumListContentView hide:NO];
-    [faceListContentView hide:NO];
-    [eventListContentView show:NO];
+    [self switchToListView:eventListContentView];
+}
+
+-(void) pdfButtonTapped:(UIButton*)button{
+    [self switchToListView:pdfListContentView];
 }
 
 #pragma mark - MMPhotoManagerDelegate
 
 -(void) doneLoadingPhotoAlbums;{
     dispatch_async(dispatch_get_main_queue(), ^{
-        [cameraListContentView doneLoadingPhotoAlbums];
-        [albumListContentView doneLoadingPhotoAlbums];
-        [faceListContentView doneLoadingPhotoAlbums];
-        [eventListContentView doneLoadingPhotoAlbums];
+        @autoreleasepool {
+            [cameraListContentView doneLoadingPhotoAlbums];
+            [albumListContentView doneLoadingPhotoAlbums];
+            [faceListContentView doneLoadingPhotoAlbums];
+            [eventListContentView doneLoadingPhotoAlbums];
+        }
     });
 }
 
 -(void) albumUpdated:(MMPhotoAlbum*)updatedAlbum{
     dispatch_async(dispatch_get_main_queue(), ^{
-        [cameraListContentView albumUpdated:updatedAlbum];
-        [albumListContentView albumUpdated:updatedAlbum];
-        [faceListContentView albumUpdated:updatedAlbum];
-        [eventListContentView albumUpdated:updatedAlbum];
+        @autoreleasepool {
+            [cameraListContentView albumUpdated:updatedAlbum];
+            [albumListContentView albumUpdated:updatedAlbum];
+            [faceListContentView albumUpdated:updatedAlbum];
+            [eventListContentView albumUpdated:updatedAlbum];
+        }
     });
 }
 
@@ -242,6 +251,8 @@
         [faceListContentView updatePhotoRotation:YES];
     }else if(!eventListContentView.hidden){
         [eventListContentView updatePhotoRotation:YES];
+    }else if(!pdfListContentView.hidden){
+        [pdfListContentView updatePhotoRotation:YES];
     }
 }
 

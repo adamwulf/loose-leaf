@@ -7,15 +7,16 @@
 //
 
 #import "MMLoadImageCache.h"
+#import "UIImage+Memory.h"
+#import "Constants.h"
 
 // TODO: possibly use this tutorial for threadsafe cache
 // https://mikeash.com/pyblog/friday-qa-2011-10-14-whats-new-in-gcd.html
 
-#define kThumbCacheSize 30
-
 @implementation MMLoadImageCache{
     NSMutableDictionary* loadedImages;
     NSMutableArray* orderedKeys;
+    int loadedBytes;
 }
 
 static MMLoadImageCache* _instance = nil;
@@ -32,11 +33,15 @@ static MMLoadImageCache* _instance = nil;
     return _instance;
 }
 
-+(MMLoadImageCache*) sharedInstace{
++(MMLoadImageCache*) sharedInstance{
     if(!_instance){
         _instance = [[MMLoadImageCache alloc]init];
     }
     return _instance;
+}
+
+-(int) memoryOfLoadedImages{
+    return loadedBytes;
 }
 
 #pragma mark - Load Images
@@ -64,7 +69,6 @@ static int count = 0;
                 return nil;
             }
         }
-        
         cachedImage = [UIImage imageWithContentsOfFile:path];
         count++;
         @synchronized(self){
@@ -74,6 +78,8 @@ static int count = 0;
             [orderedKeys removeObject:path];
             [orderedKeys insertObject:path atIndex:0];
             [self ensureCacheSize];
+            
+            loadedBytes += [cachedImage uncompressedByteSize];
         }
     }
     return cachedImage;
@@ -81,15 +87,18 @@ static int count = 0;
 
 -(void) ensureCacheSize{
     @synchronized(self){
-        while([orderedKeys count] > kThumbCacheSize){
+        while([orderedKeys count] > kMMLoadImageCacheSize){
             [self clearCacheForPath:[orderedKeys lastObject]];
-            [orderedKeys removeLastObject];
         }
     }
 }
 
 -(void) clearCacheForPath:(NSString*)path{
     @synchronized(self){
+        UIImage* cachedImage = [loadedImages objectForKey:path];
+        if(cachedImage){
+            loadedBytes -= [cachedImage uncompressedByteSize];
+        }
         [loadedImages removeObjectForKey:path];
         [orderedKeys removeObject:path];
     }
@@ -99,13 +108,28 @@ static int count = 0;
     @synchronized(self){
         [self clearCacheForPath:path];
         if(image){
+            UIImage* cachedImage = [loadedImages objectForKey:path];
+            if(cachedImage){
+                loadedBytes -= [cachedImage uncompressedByteSize];
+            }
             [loadedImages setObject:image forKey:path];
+            loadedBytes += [image uncompressedByteSize];
         }else{
+            UIImage* cachedImage = [loadedImages objectForKey:path];
+            if(cachedImage){
+                loadedBytes -= [cachedImage uncompressedByteSize];
+            }
             [loadedImages removeObjectForKey:path];
         }
         [orderedKeys insertObject:path atIndex:0];
         [self ensureCacheSize];
     }
+}
+
+#pragma mark - Profiling Helpers
+
+-(NSInteger) numberOfItemsHeldInCache{
+    return [loadedImages count];
 }
 
 @end

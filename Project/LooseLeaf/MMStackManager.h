@@ -14,7 +14,6 @@
     UIView* bezelStack;
     UIView* hiddenStack;
     
-    
     NSOperationQueue* opQueue;
 }
 

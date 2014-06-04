@@ -10,6 +10,7 @@
 #import "MMPhotoManager.h"
 #import "ALAsset+Thumbnail.h"
 #import "NSThread+BlockAdditions.h"
+#import "Constants.h"
 
 dispatch_queue_t fetchThumbnailQueue;
 
@@ -40,7 +41,7 @@ dispatch_queue_t fetchThumbnailQueue;
 -(id) initWithAssetGroup:(ALAssetsGroup *)_group{
     if(self = [super init]){
         group = _group;
-        [group setAssetsFilter:[ALAssetsFilter allAssets]];
+        [group setAssetsFilter:[ALAssetsFilter allPhotos]];
         assetURL = group.url;
         name = group.name;
         persistentId = group.persistentId;
@@ -124,7 +125,7 @@ BOOL isEnumerating = NO;
 -(void) dealloc{
     @synchronized(self){
         if(isEnumerating){
-            NSLog(@"haha what");
+            debug_NSLog(@"what: dealloc during enumeration");
         }
     }
 }

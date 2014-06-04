@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
+#import <ImageIO/ImageIO.h>
 #import "MMScrapPaperStackView.h"
 #import "MMUntouchableView.h"
 #import "MMScrapSidebarContainerView.h"
@@ -20,6 +21,9 @@
 #import "MMImageSidebarContainerView.h"
 #import "MMBufferedImageView.h"
 #import "MMBorderedCamView.h"
+#import "MMInboxManager.h"
+#import "MMInboxManagerDelegate.h"
+#import "NSURL+UTI.h"
 #import "Mixpanel.h"
 
 @implementation MMScrapPaperStackView{
@@ -68,6 +72,7 @@
 //                                                    userInfo:nil
 //                                                     repeats:YES];
 
+        [MMInboxManager sharedInstace].delegate = self;
         
         CGFloat rightBezelSide = frame.size.width - 100;
         CGFloat midPointY = (frame.size.height - 3*80) / 2;
@@ -142,6 +147,10 @@
     return self;
 }
 
+-(int) fullByteSize{
+    return [super fullByteSize] + imagePicker.fullByteSize + bezelScrapContainer.fullByteSize;
+    
+}
 
 #pragma mark - Insert Image
 
@@ -151,6 +160,105 @@
     [self setButtonsVisible:NO withDuration:0.15];
     [imagePicker show:YES];
 }
+
+#pragma mark - MMInboxManagerDelegate
+
+-(void) failedToProcessIncomingURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
+    NSLog(@"too bad! can't import file from %@", url);
+    // log this to mixpanel
+    [[Mixpanel sharedInstance] track:kMPEventImportPhotoFailed properties:@{kMPEventImportPropFileExt : [url fileExtension],
+                                                                            kMPEventImportPropFileType : [url universalTypeID],
+                                                                            kMPEventImportPropSource : kMPEventImportPropSourceApplication,
+                                                                            kMPEventImportPropReferApp : sourceApplication}];
+}
+
+-(void) didProcessIncomingImage:(UIImage*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
+    CGFloat scale = [UIScreen mainScreen].scale;
+    
+    // import after slight delay so the transition from the other app
+    // can complete nicely
+    [[NSThread mainThread] performBlock:^{
+        NSLog(@"got image: %p scale: %f width: %f %f", scrapBacking, scale, scrapBacking.size.width, scrapBacking.size.height);
+        
+        MMVector* up = [[MMRotationManager sharedInstace] upVector];
+        MMVector* perp = [[up perpendicular] normal];
+        CGPoint center = CGPointMake(ceilf((self.bounds.size.width - scrapBacking.size.width) / 2),
+                                     ceilf((self.bounds.size.height - scrapBacking.size.height) / 2));
+        // start the photo "up" and have it drop down into the center ish of the page
+        center = [up pointFromPoint:center distance:80];
+        // randomize it a bit
+        center = [perp pointFromPoint:center distance:(random() % 80) - 40];
+        
+        
+        // subtract 1px from the border so that the background is clipped nicely around the edge
+        CGSize scrapSize = CGSizeMake(scrapBacking.size.width - 2, scrapBacking.size.height - 2);
+        UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(center.x, center.y, scrapSize.width, scrapSize.height)];
+        
+        MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
+        MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation andScale:1.0];
+        [scrapContainer addSubview:scrap];
+        
+        // background fills the entire scrap
+        [scrap setBackgroundView:[[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state]];
+        
+
+        // prep the scrap to fade in while it drops on screen
+        scrap.alpha = .3;
+        scrap.scale = 1.2;
+        
+        // bounce by 20px (10 on each side)
+        CGFloat bounceScale = 20 / MAX(scrapSize.width, scrapSize.height);
+
+        // animate the scrap dropping and bouncing on the page
+        [UIView animateWithDuration:.2
+                              delay:.1
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             // doesn't need to land exactly center. this way
+                             // multiple imports of multiple photos won't all
+                             // land exactly on top of each other. looks nicer.
+                             CGPoint center = [visibleStackHolder peekSubview].center;
+                             center.x += random() % 14 - 7;
+                             center.y += random() % 14 - 7;
+                             scrap.center = center;
+                             [scrap setScale:(1-bounceScale) andRotation:RandomPhotoRotation];
+                             scrap.alpha = .72;
+                         }
+                         completion:^(BOOL finished){
+                             [UIView animateWithDuration:.1
+                                                   delay:0
+                                                 options:UIViewAnimationOptionCurveEaseIn
+                                              animations:^{
+                                                  [scrap setScale:1];
+                                                  scrap.alpha = 1.0;
+                                              }
+                                              completion:^(BOOL finished){
+                                                  [topPage addScrap:scrap];
+                                                  [topPage saveToDisk];
+                                              }];
+                         }];
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
+        [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{kMPEventImportPropFileExt : [url fileExtension],
+                                                                          kMPEventImportPropFileType : [url universalTypeID],
+                                                                          kMPEventImportPropSource : kMPEventImportPropSourceApplication,
+                                                                          kMPEventImportPropReferApp : sourceApplication}];
+    } afterDelay:.15];
+}
+
+-(void) didProcessIncomingPDF:(MMPDF*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
+    if(pdfDoc.pageCount == 1){
+        // create a UIImage from teh PDF and add it like normal above
+    }else{
+        
+    }
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
+    [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{kMPEventImportPropFileExt : [url fileExtension],
+                                                                      kMPEventImportPropFileType : [url universalTypeID],
+                                                                      kMPEventImportPropSource : kMPEventImportPropSourceApplication,
+                                                                      kMPEventImportPropPDFPageCount : @(pdfDoc.pageCount),
+                                                                      kMPEventImportPropReferApp : sourceApplication}];
+}
+
 
 #pragma mark - MMImageSidebarContainerViewDelegate
 
@@ -218,8 +326,13 @@
     // edge from the mask of the CAShapeLayer
     CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width + 2.0/scrapBacking.size.width; // extra pixel
     
-    [scrap setBackingImage:scrapBacking];
-    [scrap setBackgroundScale:scaleUpOfImage];
+    // add the background, and scale it so it fills the scrap
+    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state];
+    backgroundView.backgroundScale = scaleUpOfImage;
+    [scrap setBackgroundView:backgroundView];
+
+    // center the scrap on top of the camera view
+    // so we can slide it onto the page
     scrap.center = [self convertPoint:CGPointMake(cameraView.bounds.size.width/2, cameraView.bounds.size.height/2) fromView:cameraView];
     scrap.rotation = cameraView.rotation;
     
@@ -255,7 +368,11 @@
 
 -(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription{
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
-    [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{ kMPEventPhotoSource: containerDescription}];
+    
+    NSURL* assetURL = asset.defaultRepresentation.url;
+    [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{ kMPEventImportPropFileExt : [assetURL fileExtension],
+                                                                       kMPEventImportPropFileType : [assetURL universalTypeID],
+                                                                       kMPEventImportPropSource: containerDescription}];
     
     CGRect scrapRect = CGRectZero;
     scrapRect.origin = [self convertPoint:[bufferedImage visibleImageOrigin] fromView:bufferedImage];
@@ -305,14 +422,24 @@
     // edge from the mask of the CAShapeLayer
     CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width + 2.0/scrapBacking.size.width; // extra pixel
     
-    [scrap setBackingImage:scrapBacking];
-    [scrap setBackgroundScale:scaleUpOfImage];
+    // add the background, and scale it so it fills the scrap
+    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state];
+    backgroundView.backgroundScale = scaleUpOfImage;
+    [scrap setBackgroundView:backgroundView];
+
+    // move the scrap so that it covers the image that was just tapped.
+    // then we'll animate it onto the page
     scrap.center = [self convertPoint:CGPointMake(bufferedImage.bounds.size.width/2, bufferedImage.bounds.size.height/2) fromView:bufferedImage];
     scrap.rotation = bufferedImage.rotation;
     
+    // hide the picker, this'll slide it out
+    // underneath our scrap
     [imagePicker hide:YES];
     
-    // hide the photo in the row
+    // hide the photo in the row. this way the scrap
+    // becomes the photo, and it doesn't seem to duplicate
+    // as the image sidebar hides. the image in the sidebar
+    // will reset after the sidebar is done hiding
     bufferedImage.alpha = 0;
     
     // bounce by 20px (10 on each side)
@@ -393,7 +520,7 @@ int skipAll = NO;
         skipOnce = YES;
     }
     
-    NSLog(@"auto-lines: %d   pages: %d", numLines, (int) floor(numLines / strokesPerPage));
+    debug_NSLog(@"auto-lines: %d   pages: %d", numLines, (int) floor(numLines / strokesPerPage));
 }
 
 
@@ -450,7 +577,7 @@ int skipAll = NO;
 
 
 -(void) timerDidFire:(NSTimer*)timer{
-    NSLog(@"%@", [self activeGestureSummary]);
+    debug_NSLog(@"%@", [self activeGestureSummary]);
 }
 
 -(void) drawLine{
@@ -524,12 +651,14 @@ int skipAll = NO;
     }
 }
 
--(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
-    [super isBezelingInLeftWithGesture:bezelGesture];
-    [self forceScrapToScrapContainerDuringGesture];
+-(void) isBezelingInLeftWithGesture:(MMBezelInGestureRecognizer*)bezelGesture{
+    if(bezelGesture.subState != UIGestureRecognizerStatePossible){
+        [super isBezelingInLeftWithGesture:bezelGesture];
+        [self forceScrapToScrapContainerDuringGesture];
+    }
 }
 
--(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
+-(void) isBezelingInRightWithGesture:(MMBezelInGestureRecognizer *)bezelGesture{
     if(bezelGesture.subState != UIGestureRecognizerStatePossible){
         [super isBezelingInRightWithGesture:bezelGesture];
         [self forceScrapToScrapContainerDuringGesture];
@@ -956,7 +1085,7 @@ int skipAll = NO;
     for (UITouch* t in gesture.ignoredTouches) {
         ignoredOut = [ignoredOut stringByAppendingFormat:@" %p", t];
     }
-    NSLog(@"%@ (%p) knows about:\n%@\n%@\n%@ ", prefix, gesture, validOut, possibleOut, ignoredOut);
+    debug_NSLog(@"%@ (%p) knows about:\n%@\n%@\n%@ ", prefix, gesture, validOut, possibleOut, ignoredOut);
 }
 
 
@@ -1000,11 +1129,7 @@ int skipAll = NO;
     panAndPinchScrapGesture2.scrap = clonedScrap;
     
     // clone background contents too
-    [clonedScrap setBackingImage:scrap.backingImage];
-    [clonedScrap setBackgroundRotation:scrap.backgroundRotation];
-    [clonedScrap setBackgroundScale:scrap.backgroundScale];
-    [clonedScrap setBackgroundOffset:scrap.backgroundOffset];
-    
+    [clonedScrap setBackgroundView:[scrap.backgroundView duplicateFor:clonedScrap.state]];
 
     // move it to the new gesture location under it's scrap
     [UIView setAnchorPoint:CGPointMake(.5, .5) forView:clonedScrap];
@@ -1026,18 +1151,19 @@ int skipAll = NO;
 
     
     if(!panAndPinchScrapGesture.scrap || !panAndPinchScrapGesture2.scrap){
+        debug_NSLog(@"what: ending scrap gesture w/o holding scrap");
         // sanity checks.
         // we should never enter here
         if([panAndPinchScrapGesture.initialTouchVector isEqual:panAndPinchScrapGesture2.initialTouchVector]){
-            NSLog(@"what");
+            debug_NSLog(@"what");
         }
         
         if(scrap.scale != clonedScrap.scale ||
            scrap.rotation != clonedScrap.rotation){
-            NSLog(@"what");
+            debug_NSLog(@"what");
         }
         
-        NSLog(@"success? %d %p,  %d %p", (int)[panAndPinchScrapGesture.validTouches count], panAndPinchScrapGesture.scrap,
+        debug_NSLog(@"success? %d %p,  %d %p", (int)[panAndPinchScrapGesture.validTouches count], panAndPinchScrapGesture.scrap,
               (int)[panAndPinchScrapGesture2.validTouches count], panAndPinchScrapGesture2.scrap);
 
         if([panAndPinchScrapGesture.validTouches count] < 2){
@@ -1071,6 +1197,10 @@ int skipAll = NO;
         return NO;
     }
     return YES;
+}
+
+-(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch{
+    return [touch locationInView:bezelStackHolder].x < 0;
 }
 
 -(CGFloat) topVisiblePageScaleForScrap:(MMScrapView*)scrap{

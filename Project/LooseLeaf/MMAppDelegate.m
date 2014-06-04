@@ -9,6 +9,7 @@
 #import "MMAppDelegate.h"
 
 #import "MMLooseLeafViewController.h"
+#import "MMInboxManager.h"
 #import "NSString+UUID.h"
 #import "SSKeychain.h"
 #import "Mixpanel.h"
@@ -25,7 +26,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSLog(@"launching");
+    debug_NSLog(@"launching");
     [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
@@ -36,25 +37,25 @@
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     
-//    [self.window.layer setSpeed:.5f];
+//    [self.window.layer setSpeed:0.5f];
 
-//    [self performSelector:@selector(asdfasdf:) withObject:nil afterDelay:30];
-    
-    // fire timer each minute
+    // setup the timer that will help log session duration
     [self setupTimer];
+    
+    NSURL* url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
+    NSString* sourceApplication = [launchOptions objectForKey:UIApplicationLaunchOptionsSourceApplicationKey];
+    if(url){
+        [self importFileFrom:url fromApp:sourceApplication];
+    }
     
     return YES;
 }
-
-//-(void) asdfasdf:(id)foo{
-//    @throw [NSException exceptionWithName:@"foobar" reason:@"uh oh" userInfo:nil];
-//}
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-    NSLog(@"WILL RESIGN ACTIVE");
+    debug_NSLog(@"WILL RESIGN ACTIVE");
     [self.viewController willResignActive];
 }
 
@@ -66,13 +67,13 @@
     [self logActiveAppDuration];
     [durationTimer invalidate];
     durationTimer = nil;
-    NSLog(@"DID ENTER BACKGROUND");
+    debug_NSLog(@"DID ENTER BACKGROUND");
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-    NSLog(@"WILL ENTER FOREGROUND");
+    debug_NSLog(@"WILL ENTER FOREGROUND");
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -87,7 +88,7 @@
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfLaunches by:@(1)];
         [[Mixpanel sharedInstance] track:kMPEventLaunch];
     };
-    NSLog(@"DID BECOME ACTIVE");
+    debug_NSLog(@"DID BECOME ACTIVE");
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -96,14 +97,34 @@
     [self logActiveAppDuration];
     [durationTimer invalidate];
     durationTimer = nil;
-    NSLog(@"WILL TERMINATE");
+    debug_NSLog(@"WILL TERMINATE");
 }
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    if (url) {
+        [self importFileFrom:url fromApp:sourceApplication];
+    }
+    return YES;
+}
+
+#pragma mark - Photo and PDF Import
+
+-(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication{
+    if(!sourceApplication) sourceApplication = @"app.unknown";
+    // need to have a reference to this, because
+    // calling url.pathExtension seems to immediately dealloc
+    // the path extension when i pass it into the dict below
+    [self.viewController importFileFrom:url fromApp:sourceApplication];
+}
+
+
+
+#pragma mark - Session Duration
 
 -(void) logActiveAppDuration{
     [[[Mixpanel sharedInstance] people] increment:kMPDurationAppOpen by:@((CFAbsoluteTimeGetCurrent() - sessionStartStamp) / 60.0)];
 }
-
-
 
 -(void) setupTimer{
     sessionStartStamp = CFAbsoluteTimeGetCurrent();
@@ -113,7 +134,6 @@
                                                    selector:@selector(durationTimerDidFire:)
                                                    userInfo:nil
                                                     repeats:YES];
-
 }
 
 -(void) durationTimerDidFire:(NSTimer*)timer{
@@ -122,7 +142,7 @@
 }
 
 
-
+#pragma mark - User UUID
 
 +(NSString*) userID{
     NSString *uuid = [SSKeychain passwordForService:[[NSBundle mainBundle] bundleIdentifier] account:@"userID"];

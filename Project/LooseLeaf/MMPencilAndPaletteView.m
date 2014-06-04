@@ -11,6 +11,7 @@
 #import "Constants.h"
 #import "AVHexColor.h"
 #import "UIView+Animations.h"
+#import "UIView+Debug.h"
 
 @implementation MMPencilAndPaletteView{
     CGRect originalFrame;
@@ -114,7 +115,9 @@
     return self;
 }
 
-
+-(int) fullByteSize{
+    return pencilButton.fullByteSize + blackButton.fullByteSize + blueButton.fullByteSize + redButton.fullByteSize + yellowButton.fullByteSize + greenButton.fullByteSize + activeColorButton.fullByteSize;
+}
 
 #pragma mark - Touch Events
 
@@ -275,17 +278,18 @@
 #pragma mark - Choose Color
 
 -(void) colorTapped:(MMColorButton*)button{
-    
-    blackButton.selected = NO;
-    blueButton.selected = NO;
-    redButton.selected = NO;
-    yellowButton.selected = NO;
-    greenButton.selected = NO;
-    button.selected = YES;
-    
-    color = button.color;
-    [self.delegate didChangeColorTo:color];
-    [pencilButton setNeedsDisplay];
+    if([self isShowingColors]){
+        blackButton.selected = NO;
+        blueButton.selected = NO;
+        redButton.selected = NO;
+        yellowButton.selected = NO;
+        greenButton.selected = NO;
+        button.selected = YES;
+        
+        color = button.color;
+        [self.delegate didChangeColorTo:color];
+        [pencilButton setNeedsDisplay];
+    }
 }
 
 @end

@@ -26,6 +26,7 @@
 #import "MMPageCacheManager.h"
 #import "Mixpanel.h"
 #import "UIDevice+PPI.h"
+#import "MMLoadImageCache.h"
 
 
 @implementation MMScrappedPaperView{
@@ -79,6 +80,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
         scrapState.delegate = self;
     }
     return self;
+}
+
+-(int) fullByteSize{
+    return [super fullByteSize] + scrapState.fullByteSize;
 }
 
 #pragma mark - Public Methods
@@ -267,6 +272,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
     return [self.delegate isAllowedToPan];
 }
 
+-(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch{
+    return [self.delegate allowsHoldingScrapsWithTouch:(UITouch*)touch];
+}
+
 #pragma mark - JotViewDelegate
 
 
@@ -338,7 +347,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     redAndBlueSegments = [UIBezierPath redAndGreenAndBlueSegmentsCreatedFrom:scrapClippingPath bySlicingWithPath:strokePath andNumberOfBlueShellSegments:nil];
                 }@catch (id exc) {
                     //        NSAssert(NO, @"need to log this");
-                    NSLog(@"need to mail the paths");
+                    debug_NSLog(@"need to mail the paths");
                     
                     NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
                     
@@ -517,7 +526,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     
                     NSMutableArray* sortedArrayOfNewSubpaths = [NSMutableArray array];
                     for(DKUIBezierPathShape* shape in subshapes){
-                        [sortedArrayOfNewSubpaths addObject:[shape.fullPath copy]];
+                        UIBezierPath* shapePath = [shape.fullPath copy];
+                        [sortedArrayOfNewSubpaths addObject:shapePath];
                     }
                     [sortedArrayOfNewSubpaths sortUsingComparator:^(id obj1, id obj2){
                         UIBezierPath* p1 = obj1;
@@ -529,42 +539,30 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     
                     debugFullText = [debugFullText stringByAppendingFormat:@"shape:\n %@ scissor:\n %@ \n\n\n\n", subshapePath, scissorPath];
                     for(UIBezierPath* subshapePath in sortedArrayOfNewSubpaths){
+                        if([subshapePath containsDuplicateAndReversedSubpaths]){
+                            @throw [NSException exceptionWithName:@"DuplicateSubshape" reason:@"shape contains duplicate subshapes" userInfo:nil];
+                        }
                         // and add the scrap so that it's scale matches the scrap that its built from
                         MMScrapView* addedScrap = [self addScrapWithPath:subshapePath andScale:scrap.scale];
                         @synchronized(scrapContainerView){
                             [scrapContainerView insertSubview:addedScrap belowSubview:scrap];
                         }
+                        
+                        // stamp the background
+                        if(scrap.backgroundView.backingImage){
+                            [addedScrap setBackgroundView:[scrap.backgroundView stampBackgroundFor:addedScrap.state]];
+                        }
+                        
+                        // stamp the contents
                         [addedScrap stampContentsFrom:scrap.state.drawableView];
                         
+                        // calculate vectors for pushing scraps apart
                         CGFloat addedScrapDist = distance(scrap.center, addedScrap.center);
                         if(addedScrapDist > maxDist){
                             maxDist = addedScrapDist;
                         }
                         [vectors addObject:[MMVector vectorWithPoint:scrap.center andPoint:addedScrap.center]];
-                        CGFloat orgRot = scrap.rotation;
-                        CGFloat newRot = addedScrap.rotation;
-                        CGFloat rotDiff = orgRot - newRot;
                         
-                        CGPoint orgC = scrap.center;
-                        CGPoint newC = addedScrap.center;
-                        CGPoint moveC = CGPointMake(newC.x - orgC.x, newC.y - orgC.y);
-                        
-                        CGPoint convertedC = [addedScrap.state.contentView convertPoint:scrap.state.backingContentView.center fromView:scrap.state.contentView];
-                        CGPoint refPoint = CGPointMake(addedScrap.state.contentView.bounds.size.width/2,
-                                                       addedScrap.state.contentView.bounds.size.height/2);
-                        CGPoint moveC2 = CGPointMake(convertedC.x - refPoint.x, convertedC.y - refPoint.y);
-                        
-                        // we have the correct adjustment value,
-                        // but now we need to account for the fact
-                        // that the new scrap has a different rotation
-                        // than the start scrap
-                        
-                        moveC = CGPointApplyAffineTransform(moveC, CGAffineTransformMakeRotation(scrap.rotation - addedScrap.rotation));
-                        
-                        [addedScrap setBackingImage:scrap.backingImage];
-                        [addedScrap setBackgroundRotation:scrap.backgroundRotation + rotDiff];
-                        [addedScrap setBackgroundScale:scrap.backgroundScale];
-                        [addedScrap setBackgroundOffset:moveC2];
                         [scraps addObject:addedScrap];
                     }
                     //
@@ -599,7 +597,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         if(!hasBuiltAnyScraps && [scissorPath isClosed]){
             // track if they cut new scrap from base page
             [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScissorUses by:@(1)];
-            NSLog(@"didn't cut any scraps, so make one");
+            debug_NSLog(@"didn't cut any scraps, so make one");
             NSArray* subshapes = [[UIBezierPath bezierPathWithRect:drawableView.bounds] uniqueShapesCreatedFromSlicingWithUnclosedPath:scissorPath];
             if([subshapes count] >= 1){
                 scissorPath = [[[subshapes firstObject] fullPath] copy];
@@ -741,19 +739,19 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // background
     //
     // draw the scrap's background, if it has an image background
-    if(scrap.backingImage){
+    if(scrap.backgroundView.backingImage){
         // save our scrap's coordinate system
         CGContextSaveGState(context);
         // move to scrap center
         CGAffineTransform backingTransform = CGAffineTransformMakeTranslation(scrap.bounds.size.width / 2, scrap.bounds.size.height / 2);
         // move to background center
-        backingTransform = CGAffineTransformConcat(backingTransform, CGAffineTransformMakeTranslation(scrap.backgroundOffset.x, scrap.backgroundOffset.y));
+        backingTransform = CGAffineTransformConcat(backingTransform, CGAffineTransformMakeTranslation(scrap.backgroundView.backgroundOffset.x, scrap.backgroundView.backgroundOffset.y));
         // scale and rotate into background's coordinate space
         CGContextConcatCTM(context, backingTransform);
         // rotate and scale
-        CGContextConcatCTM(context, CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.backgroundRotation),CGAffineTransformMakeScale(scrap.backgroundScale, scrap.backgroundScale)));
+        CGContextConcatCTM(context, CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.backgroundView.backgroundRotation),CGAffineTransformMakeScale(scrap.backgroundView.backgroundScale, scrap.backgroundView.backgroundScale)));
         // draw the image, and keep the images center at cgpointzero
-        UIImage* backingImage = scrap.backingImage;
+        UIImage* backingImage = scrap.backgroundView.backingImage;
         [backingImage drawAtPoint:CGPointMake(-backingImage.size.width / 2, -backingImage.size.height/2)];
         // restore us back to the scrap's coordinate system
         CGContextRestoreGState(context);
@@ -785,7 +783,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) updateFullPageThumbnail:(MMImmutableScrapsOnPaperState*)immutableScrapState{
-    NSLog(@"updateFullPageThumbnail");
     UIImage* thumb = [self cachedImgViewImage];
     CGSize thumbSize = self.originalUnscaledBounds.size;
     thumbSize.width /= 2;
@@ -814,6 +811,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     scrappedImgViewImage = UIGraphicsGetImageFromCurrentImageContext();
     [[NSThread mainThread] performBlock:^{
         cachedImgView.image = scrappedImgViewImage;
+        [[MMLoadImageCache sharedInstance] updateCacheForPath:[self scrappedThumbnailPath] toImage:scrappedImgViewImage];
     }];
     
     [UIImagePNGRepresentation(scrappedImgViewImage) writeToFile:[self scrappedThumbnailPath] atomically:YES];
@@ -869,11 +867,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
             }
             
             
-            NSLog(@"something actually had changed %d %d", pageHadBeenChanged, scrapsHadBeenChanged);
+//            NSLog(@"something actually had changed %d %d", pageHadBeenChanged, scrapsHadBeenChanged);
             [self updateFullPageThumbnail:immutableScrapState];
             
             [NSThread performBlockOnMainThread:^{
-                NSLog(@"notifying did save page %@", self.uuid);
+//                NSLog(@"notifying did save page %@", self.uuid);
                 [self.delegate didSavePage:self];
             }];
         }
@@ -889,10 +887,12 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [super unloadState];
     MMScrapsOnPaperState* strongScrapState = scrapState;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
-        [[strongScrapState immutableState] saveStateToDiskBlocking];
-        // unloading the scrap state will also remove them
-        // from their superview (us)
-        [strongScrapState unload];
+        @autoreleasepool {
+            [[strongScrapState immutableState] saveStateToDiskBlocking];
+            // unloading the scrap state will also remove them
+            // from their superview (us)
+            [strongScrapState unload];
+        }
     });
     [[NSThread mainThread] performBlock:^{
         
@@ -933,7 +933,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         isLoadingCachedScrappedThumbnailFromDisk = YES;
         dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
             @autoreleasepool {
-                scrappedImgViewImage = [UIImage imageWithContentsOfFile:[self scrappedThumbnailPath]];
+                scrappedImgViewImage = [[MMLoadImageCache sharedInstance] imageAtPath:[self scrappedThumbnailPath]];
                 if(!scrappedImgViewImage){
                     definitelyDoesNotHaveAScrappedThumbnail = YES;
                 }
@@ -983,7 +983,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) didLoadState:(JotViewStateProxy*)state{
     if([self hasStateLoaded]){
         [NSThread performBlockOnMainThread:^{
-            [[MMPageCacheManager sharedInstace] didLoadStateForPage:self];
+            [[MMPageCacheManager sharedInstance] didLoadStateForPage:self];
             cachedImgView.image = scrappedImgViewImage;
         }];
     }
@@ -991,7 +991,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 -(void) didUnloadState:(JotViewStateProxy *)state{
     [NSThread performBlockOnMainThread:^{
-        [[MMPageCacheManager sharedInstace] didUnloadStateForPage:self];
+        [[MMPageCacheManager sharedInstance] didUnloadStateForPage:self];
     }];
 }
 

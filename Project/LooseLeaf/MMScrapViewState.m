@@ -12,7 +12,9 @@
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import <JotUI/JotUI.h>
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMScrapBackgroundView.h"
 #import "Constants.h"
+#import "UIView+Debug.h"
 
 @implementation MMScrapViewState{
     // scrap ID and UI
@@ -53,12 +55,11 @@
     // thumbnail
     UIImage* activeThumbnailImage;
     
+    // clipped background view
+    UIView* clippedBackgroundView;
+    
     // image background
-    BOOL backingViewHasChanged;
-    UIImageView* backingContentView;
-    CGFloat backgroundRotation;
-    CGFloat backgroundScale;
-    CGPoint backgroundOffset;
+    MMScrapBackgroundView* backingImageHolder;
     
     // lock to control threading
     NSLock* lock;
@@ -101,11 +102,12 @@
         if([[NSFileManager defaultManager] fileExistsAtPath:self.plistPath]){
             NSDictionary* properties = [NSDictionary dictionaryWithContentsOfFile:self.plistPath];
             bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
-            backgroundRotation = [[properties objectForKey:@"backgroundRotation"] floatValue];
-            backgroundScale = [[properties objectForKey:@"backgroundScale"] floatValue];
-            backgroundOffset.x = [[properties objectForKey:@"backgroundOffset.x"] floatValue];
-            backgroundOffset.y = [[properties objectForKey:@"backgroundOffset.y"] floatValue];
-            return [self initWithUUID:uuid andBezierPath:bezierPath];
+            
+            MMScrapBackgroundView* backingView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
+            // now load the background image from disk, if any
+            [backingView loadBackgroundFromDiskWithProperties:properties];
+            
+            return [self initWithUUID:uuid andBezierPath:bezierPath andBackgroundView:backingView];
         }else{
             // we don't have a file that we should have, so don't load the scrap
             return nil;
@@ -114,14 +116,16 @@
     return self;
 }
 
-
 -(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path{
+    return [self initWithUUID:_uuid andBezierPath:_path andBackgroundView:nil];
+}
+
+-(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andBackgroundView:(MMScrapBackgroundView*)backingView{
     if(self = [super init]){
         
         // save our UUID, everything depends on this
         uuid = _uuid;
         lock = [[NSLock alloc] init];
-        backingViewHasChanged = NO;
 
         if(!bezierPath){
             CGRect originalBounds = _path.bounds;
@@ -133,6 +137,9 @@
             NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
             [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
             [savedProperties writeToFile:self.plistPath atomically:YES];
+        }
+        if(!backingView){
+            backingView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
         }
 
         // find drawable view bounds
@@ -157,117 +164,76 @@
         thumbnailView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         thumbnailView.frame = contentView.bounds;
 
-        
-        backingContentView = [[UIImageView alloc] initWithFrame:contentView.bounds];
-        backingContentView.contentMode = UIViewContentModeScaleAspectFit;
-        backingContentView.clipsToBounds = YES;
-        backingContentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        backingContentView.frame = contentView.bounds;
+        backingImageHolder = backingView;
+        backingView.frame = contentView.bounds;
+        backingImageHolder.frame = contentView.bounds;
 
-        UIView* clippedBackgroundView = [[UIView alloc] initWithFrame:contentView.bounds];
+        clippedBackgroundView = [[UIView alloc] initWithFrame:contentView.bounds];
         clippedBackgroundView.clipsToBounds = YES;
         clippedBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         CAShapeLayer* backgroundColorLayer = [CAShapeLayer layer];
         [backgroundColorLayer setPath:bezierPath.CGPath];
-        backgroundColorLayer.frame = backingContentView.bounds;
+        backgroundColorLayer.frame = backingImageHolder.bounds;
         clippedBackgroundView.layer.mask = backgroundColorLayer;
-        [clippedBackgroundView addSubview:backingContentView];
+        [clippedBackgroundView addSubview:backingImageHolder];
 
         [contentView addSubview:clippedBackgroundView];
         [contentView addSubview:thumbnailView];
 
-        if([[MMLoadImageCache sharedInstace] containsPathInCache:self.thumbImageFile]){
+        if([[MMLoadImageCache sharedInstance] containsPathInCache:self.thumbImageFile]){
             // load if we can
-            [self setActiveThumbnailImage:[[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile]];
+            [self setActiveThumbnailImage:[[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile]];
         }else{
             // don't load from disk on the main thread.
             dispatch_async([self importExportScrapStateQueue], ^{
                 [lock lock];
                 @autoreleasepool {
-                    UIImage* thumb = [[MMLoadImageCache sharedInstace] imageAtPath:self.thumbImageFile];
+                    UIImage* thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
                     [self setActiveThumbnailImage:thumb];
                 }
                 [lock unlock];
             });
         }
-        
-        if([[NSFileManager defaultManager] fileExistsAtPath:[self backgroundJPGFile]]){
-//            NSLog(@"should be loading background");
-            UIImage* image = [UIImage imageWithContentsOfFile:[self backgroundJPGFile]];
-            [NSThread performBlockOnMainThread:^{
-                [self setBackingImage:image];
-            }];
-        }
     }
     return self;
 }
 
+-(int) fullByteSize{
+    return drawableViewState.fullByteSize + backingImageHolder.fullByteSize;
+}
+
 #pragma mark - Backing Image
 
--(void) updateBackingImageLocation{
-    backingContentView.center = CGPointMake(contentView.bounds.size.width/2 + backgroundOffset.x,
-                                            contentView.bounds.size.height/2 + backgroundOffset.y);
-    backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(backgroundRotation),CGAffineTransformMakeScale(backgroundScale, backgroundScale));
-    backingViewHasChanged = YES;
-//    NSLog(@"(%@) updating background properties", self.uuid);
+-(MMScrapBackgroundView*) backgroundView{
+    return backingImageHolder;
+}
+-(void) setBackgroundView:(MMScrapBackgroundView*)backgroundView{
+    if(backingImageHolder){
+        [backingImageHolder removeFromSuperview];
+    }
+    backingImageHolder = backgroundView;
+    backingImageHolder.frame = contentView.bounds;
+    [clippedBackgroundView addSubview:backingImageHolder];
 }
 
--(void) setBackingImage:(UIImage*)img{
-    backingContentView.image = img;
-    CGRect r = backingContentView.frame;
-    r.size = CGSizeMake(img.size.width, img.size.height);
-    backingContentView.frame = r;
-    [self updateBackingImageLocation];
-}
 
--(UIImage*) backingImage{
-    return backingContentView.image;
-}
-
--(void) setBackgroundRotation:(CGFloat)_backgroundRotation{
-    backgroundRotation = _backgroundRotation;
-    [self updateBackingImageLocation];
-}
-
--(CGFloat) backgroundRotation{
-    return backgroundRotation;
-}
-
--(void) setBackgroundScale:(CGFloat)_backgroundScale{
-    backgroundScale = _backgroundScale;
-    [self updateBackingImageLocation];
-}
-
--(CGFloat) backgroundScale{
-    return backgroundScale;
-}
-
--(void) setBackgroundOffset:(CGPoint)bgOffset{
-    backgroundOffset = bgOffset;
-    [self updateBackingImageLocation];
-}
-
--(CGPoint) backgroundOffset{
-    return backgroundOffset;
-}
-
--(UIView*) backingContentView{
-    return backingContentView;
+-(CGPoint) currentCenterOfScrapBackground{
+    return backingImageHolder.backingContentView.center;
 }
 
 #pragma mark - State Saving and Loading
 
 -(void) saveScrapStateToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock{
-    if(drawableViewState && ([drawableViewState hasEditsToSave] || backingViewHasChanged)){
+    if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
         dispatch_async([self importExportScrapStateQueue], ^{
             @autoreleasepool {
                 [lock lock];
 //                NSLog(@"(%@) saving with background: %d %d", uuid, (int)drawableView, backingViewHasChanged);
-                if(drawableViewState && ([drawableViewState hasEditsToSave] || backingViewHasChanged)){
+                if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                     [NSThread performBlockOnMainThread:^{
                         @autoreleasepool {
-                            if(drawableView && ([drawableViewState hasEditsToSave] || backingViewHasChanged)){
+                            if(drawableView && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
 //                                NSLog(@"(%@) saving background: %d", uuid, backingViewHasChanged);
                                 // save path
                                 // this needs to be saved at the exact same time as the drawable view
@@ -275,19 +241,11 @@
                                 // for saving state vs content
                                 NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
                                 [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
-                                [savedProperties setObject:[NSNumber numberWithFloat:backgroundRotation] forKey:@"backgroundRotation"];
-                                [savedProperties setObject:[NSNumber numberWithFloat:backgroundScale] forKey:@"backgroundScale"];
-                                [savedProperties setObject:[NSNumber numberWithFloat:backgroundOffset.x] forKey:@"backgroundOffset.x"];
-                                [savedProperties setObject:[NSNumber numberWithFloat:backgroundOffset.y] forKey:@"backgroundOffset.y"];
+                                // add in properties from background
+                                NSDictionary* backgroundProps = [backingImageHolder saveBackgroundToDisk];
+                                [savedProperties addEntriesFromDictionary:backgroundProps];
+                                // save properties to disk
                                 [savedProperties writeToFile:self.plistPath atomically:YES];
-
-                                if(backingViewHasChanged && ![[NSFileManager defaultManager] fileExistsAtPath:[self backgroundJPGFile]]){
-                                    if(backingContentView.image){
-                                        NSLog(@"orientation: %d", (int) backingContentView.image.imageOrientation);
-                                        [UIImageJPEGRepresentation(backingContentView.image, .9) writeToFile:[self backgroundJPGFile] atomically:YES];
-                                    }
-                                    backingViewHasChanged = NO;
-                                }
                                 
 
                                 if([drawableViewState hasEditsToSave]){
@@ -297,7 +255,7 @@
                                     // instant on the thread will be synced to the content in this drawable view
                                     [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
                                         if(state){
-                                            [[MMLoadImageCache sharedInstace] updateCacheForPath:self.thumbImageFile toImage:thumb];
+                                            [[MMLoadImageCache sharedInstance] updateCacheForPath:self.thumbImageFile toImage:thumb];
                                             [self setActiveThumbnailImage:thumb];
                                             [drawableViewState wasSavedAtImmutableState:state];
 //                                            NSLog(@"(%@) scrap saved at: %d with thumb: %d", uuid, state.undoHash, (int)thumb);
@@ -446,7 +404,7 @@
                         [NSThread performBlockOnMainThread:^{
                             drawableViewState = nil;
                             [drawableView removeFromSuperview];
-                            [[JotTrashManager sharedInstace] addObjectToDealloc:drawableView];
+                            [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
                             drawableView = nil;
                             thumbnailView.hidden = NO;
                             dispatch_semaphore_signal(sema1);
@@ -483,37 +441,30 @@
 
 -(NSString*)plistPath{
     if(!plistPath){
-        plistPath = [self.scrapPath stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
+        plistPath = [self.pathForScrapAssets stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
     }
     return plistPath;
 }
 
 -(NSString*)inkImageFile{
     if(!inkImageFile){
-        inkImageFile = [self.scrapPath stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
+        inkImageFile = [self.pathForScrapAssets stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
     }
     return inkImageFile;
 }
 
 -(NSString*) thumbImageFile{
     if(!thumbImageFile){
-        thumbImageFile = [self.scrapPath stringByAppendingPathComponent:[@"thumb" stringByAppendingPathExtension:@"png"]];
+        thumbImageFile = [self.pathForScrapAssets stringByAppendingPathComponent:[@"thumb" stringByAppendingPathExtension:@"png"]];
     }
     return thumbImageFile;
 }
 
 -(NSString*) stateFile{
     if(!stateFile){
-        stateFile = [self.scrapPath stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
+        stateFile = [self.pathForScrapAssets stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
     }
     return stateFile;
-}
-
--(NSString*) backgroundJPGFile{
-    if(!backgroundFile){
-        backgroundFile = [self.scrapPath stringByAppendingPathComponent:[@"background" stringByAppendingPathExtension:@"jpg"]];
-    }
-    return backgroundFile;
 }
 
 #pragma mark - Private
@@ -524,7 +475,7 @@
     return scrapPath;
 }
 
--(NSString*) scrapPath{
+-(NSString*) pathForScrapAssets{
     if(!scrapPath){
         scrapPath = [MMScrapViewState scrapDirectoryPathForUUID:uuid];
         [NSFileManager ensureDirectoryExistsAtPath:scrapPath];
@@ -537,7 +488,7 @@
 -(void) addElements:(NSArray*)elements{
     if(!drawableViewState){
         // https://github.com/adamwulf/loose-leaf/issues/258
-        NSLog(@"trying to draw on an unloaded scrap");
+        debug_NSLog(@"trying to draw on an unloaded scrap");
     }
     [drawableView addElements:elements];
 }
@@ -567,7 +518,7 @@
 
 -(void) dealloc{
 //    NSLog(@"scrap state (%@) dealloc", uuid);
-    [[MMLoadImageCache sharedInstace] clearCacheForPath:self.thumbImageFile];
+    [[MMLoadImageCache sharedInstance] clearCacheForPath:self.thumbImageFile];
     dispatch_release(importExportScrapStateQueue);
     importExportScrapStateQueue = nil;
 }

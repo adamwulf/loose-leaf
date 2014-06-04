@@ -26,6 +26,7 @@
     return self;
 }
 
+
 -(void) setNumberToShowIfApplicable:(NSInteger)_numberToShowIfApplicable{
     if(numberToShowIfApplicable != _numberToShowIfApplicable){
         numberToShowIfApplicable = _numberToShowIfApplicable;

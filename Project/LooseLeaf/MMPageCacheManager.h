@@ -25,7 +25,7 @@
 @property (nonatomic, strong) JotView* drawableView;
 @property (nonatomic, readonly) MMEditablePaperView* currentEditablePage;
 
-+(MMPageCacheManager*) sharedInstace;
++(MMPageCacheManager*) sharedInstance;
 
 -(void) mayChangeTopPageTo:(MMPaperView*)page;
 -(void) willChangeTopPageTo:(MMPaperView*)page;
@@ -39,5 +39,11 @@
 -(void) didSavePage:(MMPaperView*)page;
 
 -(void) updateVisiblePageImageCache;
+
+-(NSInteger) numberOfStateLoadedPages;
+
+-(NSInteger) numberOfPagesWithLoadedPreviewImage;
+
+-(int) memoryOfStateLoadedPages;
 
 @end

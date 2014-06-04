@@ -56,14 +56,14 @@
         //
         // allow the user to select an object by tapping on the page
         // with two fingers
-        tap = [[MMImmovableTapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleFingerDoubleTap:)];
-        tap.numberOfTapsRequired = 1;
-        tap.numberOfTouchesRequired = 2;
-        //
-        // only allow tap if the long press fails, otherwise
-        // we'll get a double positive
-        [tap requireGestureRecognizerToFail:longPress];
-        [self addGestureRecognizer:tap];
+//        tap = [[MMImmovableTapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleFingerDoubleTap:)];
+//        tap.numberOfTapsRequired = 1;
+//        tap.numberOfTouchesRequired = 2;
+//        //
+//        // only allow tap if the long press fails, otherwise
+//        // we'll get a double positive
+//        [tap requireGestureRecognizerToFail:longPress];
+//        [self addGestureRecognizer:tap];
 
         //
         // This pan gesture is used to pan/scale the page itself.
@@ -75,16 +75,20 @@
         // and the tap gesture, and only allow page pan/scale if
         // these fail
         [panGesture requireGestureRecognizerToFail:longPress];
-        [panGesture requireGestureRecognizerToFail:tap];
+//        [panGesture requireGestureRecognizerToFail:tap];
         [self addGestureRecognizer:panGesture];
     }
     return self;
 }
 
+-(int) fullByteSize{
+    return 0;
+}
+
 
 -(void) setScale:(CGFloat)_scale{
     if(_scale == 0){
-        NSLog(@"what");
+        debug_NSLog(@"what: scale for page is 0");
     }
     scale = _scale;
 }
@@ -92,7 +96,7 @@
 
 -(void) setFrame:(CGRect)_frame{
     if(!_frame.size.width){
-        debug_NSLog(@"zero width");
+        debug_NSLog(@"what: zero width");
     }
     [super setFrame:_frame];
     // now that we have adjusted our frame
@@ -191,7 +195,7 @@
     }
     textLabel.text = @"disabled";
     if([self.uuid hasPrefix:@"41B98"]){
-        NSLog(@"disabled: %@ %d", self.uuid, panGesture.enabled);
+        debug_NSLog(@"disabled: %@ %d", self.uuid, panGesture.enabled);
     }
 }
 /**
@@ -203,7 +207,7 @@
     }
     textLabel.text = @"enabled";
     if([self.uuid hasPrefix:@"41B98"]){
-        NSLog(@"enabled: %@", self.uuid);
+        debug_NSLog(@"enabled: %@", self.uuid);
     }
 }
 
@@ -275,9 +279,9 @@
                     if(panGesture.state == UIGestureRecognizerStateCancelled){
                         // when cancelling, the page should go back to its
                         // original frame
-                        NSLog(@"cancelled pan, should push it back onto visible stack");
+                        debug_NSLog(@"cancelled pan, should push it back onto visible stack");
                         [self.delegate finishedPanningAndScalingPage:self
-                                                           intoBezel:panGesture.didExitToBezel
+                                                           intoBezel:MMBezelDirectionNone
                                                            fromFrame:panGesture.frameOfPageAtBeginningOfGesture
                                                              toFrame:panGesture.frameOfPageAtBeginningOfGesture];
                     }else{
@@ -301,12 +305,6 @@
     }else if(!isBeingPannedAndZoomed && (panGesture.subState == UIGestureRecognizerStateBegan ||
                                          panGesture.subState == UIGestureRecognizerStateChanged)){
         
-        if(panGesture.state == UIGestureRecognizerStatePossible ||
-           panGesture.state == UIGestureRecognizerStateCancelled ||
-           panGesture.state == UIGestureRecognizerStateEnded ||
-           panGesture.state == UIGestureRecognizerStateFailed){
-            NSLog(@"what");
-        }
         self.isBeingPannedAndZoomed = YES;
         //
         // if the user had 1 finger down and re-touches with the 2nd finger, then this
@@ -326,7 +324,7 @@
     }
     
     if([_panGesture.validTouches count] < 2){
-        NSLog(@"skipping pan gesture: has %d valid touches and substate %d", (int) [_panGesture.validTouches count], (int) _panGesture.subState);
+//        NSLog(@"skipping pan gesture: has %d valid touches and substate %d", (int) [_panGesture.validTouches count], (int) _panGesture.subState);
         return;
     }
 

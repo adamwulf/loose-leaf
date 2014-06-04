@@ -7,6 +7,7 @@
 //
 
 #import "MMPageCacheManager.h"
+#import "Constants.h"
 
 @implementation MMPageCacheManager{
     // this is the UUID of the page that has
@@ -37,7 +38,7 @@ static MMPageCacheManager* _instance = nil;
     return _instance;
 }
 
-+(MMPageCacheManager*) sharedInstace{
++(MMPageCacheManager*) sharedInstance{
     if(!_instance){
         _instance = [[MMPageCacheManager alloc] init];
     }
@@ -154,7 +155,7 @@ static MMPageCacheManager* _instance = nil;
         [stateLoadedPages removeObject:currentEditablePage];
         [stateLoadedPages insertObject:currentEditablePage atIndex:0];
     }
-    if([stateLoadedPages count] > 5){
+    if([stateLoadedPages count] > kMMPageCacheManagerSize){
         // too many pages, kick one out
         [[stateLoadedPages lastObject] unloadState];
         [stateLoadedPages removeLastObject];
@@ -218,5 +219,25 @@ static MMPageCacheManager* _instance = nil;
     }
     [pagesWithLoadedCacheImages addObjectsFromArray:visiblePages];
 }
+
+#pragma mark - Profiling Helpers
+
+-(NSInteger) numberOfStateLoadedPages{
+    return [stateLoadedPages count];
+}
+
+-(NSInteger) numberOfPagesWithLoadedPreviewImage{
+    return [pagesWithLoadedCacheImages count];
+}
+
+-(int) memoryOfStateLoadedPages{
+    int totalBytes = 0;
+    NSArray* pages = [NSArray arrayWithArray:stateLoadedPages];
+    for(MMPaperView* page in pages){
+        totalBytes += page.fullByteSize;
+    }
+    return totalBytes;
+}
+
 
 @end

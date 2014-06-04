@@ -17,7 +17,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMScrapViewState.h"
 #import "MMScrapBorderView.h"
-
+#import "UIView+Debug.h"
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 
 @implementation MMScrapView{
@@ -168,38 +168,18 @@
     return self;
 }
 
-
--(void) setBackingImage:(UIImage*)img{
-    [scrapState setBackingImage:img];
+-(int) fullByteSize{
+    return borderView.fullByteSize + scrapState.fullByteSize;
 }
 
--(UIImage*) backingImage{
-    return scrapState.backingImage;
+
+-(MMScrapBackgroundView*) backgroundView{
+    return scrapState.backgroundView;
+}
+-(void) setBackgroundView:(MMScrapBackgroundView*)backgroundView{
+    scrapState.backgroundView = backgroundView;
 }
 
--(void) setBackgroundRotation:(CGFloat)_rotation{
-    [scrapState setBackgroundRotation:_rotation];
-}
-
--(CGFloat) backgroundRotation{
-    return scrapState.backgroundRotation;
-}
-
--(void) setBackgroundScale:(CGFloat)_backgroundScale{
-    [scrapState setBackgroundScale:_backgroundScale];
-}
-
--(CGFloat) backgroundScale{
-    return scrapState.backgroundScale;
-}
-
--(void) setBackgroundOffset:(CGPoint)bgOffset{
-    [scrapState setBackgroundOffset:bgOffset];
-}
-
--(CGPoint) backgroundOffset{
-    return [scrapState backgroundOffset];
-}
 
 /**
  * shadows cause lag during scrolling
@@ -294,7 +274,7 @@
 
 -(void) setRotation:(CGFloat)_rotation{
     if(ABS(_rotation - rotation) > .3 && rotation != 0){
-        NSLog(@"what");
+        debug_NSLog(@"what: large rotation change");
     }
     [self setScale:self.scale andRotation:_rotation];
 }

@@ -8,6 +8,7 @@
 
 #import "MMSlidingSidebarContainerView.h"
 #import "UIView+Animations.h"
+#import "UIView+Debug.h"
 
 #define kAnimationDuration 0.3
 
@@ -49,6 +50,10 @@
         [self hide:NO];
     }
     return self;
+}
+
+-(int) fullByteSize{
+    return sidebarContentView.fullByteSize;
 }
 
 #pragma mark - Show and Hide

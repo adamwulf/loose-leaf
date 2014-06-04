@@ -7,6 +7,7 @@
 //
 
 #import "ALAsset+Thumbnail.h"
+#import "Constants.h"
 
 @implementation ALAsset (Thumbnail)
 
@@ -63,7 +64,7 @@ static size_t getAssetBytesCallback(void *info, void *buffer, off_t position, si
     
     if (countRead == 0 && error) {
         // We have no way of passing this info back to the caller, so we log it, at least.
-        NSLog(@"thumbnailForAsset:maxPixelSize: got an error reading an asset: %@", error);
+        debug_NSLog(@"thumbnailForAsset:maxPixelSize: got an error reading an asset: %@", error);
     }
     
     return countRead;

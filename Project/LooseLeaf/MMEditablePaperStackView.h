@@ -39,6 +39,8 @@
 #import "MMDrawingTouchGestureRecognizer.h"
 #import "MMPageCacheManagerDelegate.h"
 
+@class MMMemoryProfileView;
+
 /**
  * this class is responsible for the editable buttons and controls that show
  * outside of a page's view subviews
@@ -58,7 +60,7 @@
     MMPencilAndPaletteView* pencilTool;
     MMPencilEraserButton* eraserButton;
     MMShareButton* shareButton;
-    MMAdonitButton* settingsButton;
+    MMTextButton* settingsButton;
     MMMapButton* mapButton;
     
     MMUndoRedoButton* undoButton;
@@ -88,5 +90,6 @@
 
 -(void) setButtonsVisible:(BOOL)visible withDuration:(CGFloat)duration;
 
+-(void) setMemoryView:(MMMemoryProfileView*)_memoryView;
 
 @end

@@ -8,8 +8,7 @@
 
 #import "MMPanAndPinchGestureRecognizer.h"
 #import <QuartzCore/QuartzCore.h>
-#import "MMBezelInRightGestureRecognizer.h"
-#import "MMBezelInLeftGestureRecognizer.h"
+#import "MMBezelInGestureRecognizer.h"
 #import "MMObjectSelectLongPressGestureRecognizer.h"
 #import "MMPanAndPinchScrapGestureRecognizer.h"
 #import "MMTouchVelocityGestureRecognizer.h"
@@ -120,8 +119,7 @@
 }
 
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return [preventingGestureRecognizer isKindOfClass:[MMBezelInRightGestureRecognizer class]] ||
-           [preventingGestureRecognizer isKindOfClass:[MMBezelInLeftGestureRecognizer class]];
+    return [preventingGestureRecognizer isKindOfClass:[MMBezelInGestureRecognizer class]];
 }
 
 -(BOOL) containsTouch:(UITouch*)touch{
@@ -130,7 +128,6 @@
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     if(gesture != self){
-//        NSLog(@"pagepan sees %@ owning %d touches", NSStringFromClass([gesture class]), [touches count]);
         __block BOOL touchesWereStolen = NO;
         [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
             if([possibleTouches containsObject:touch] || [validTouches containsObject:touch]){
@@ -423,7 +420,7 @@
             // active, so put us back into possible state and we may
             // pick the page back up again later
             if(cancelledFromBezel){
-                subState = UIGestureRecognizerStateCancelled;
+                subState = UIGestureRecognizerStateEnded;
             }else{
                 subState = UIGestureRecognizerStatePossible;
             }
@@ -431,13 +428,8 @@
 
         if([validTouches count] == 0 && [possibleTouches count] == 0 && [ignoredTouches count] == 0 &&
            subState == UIGestureRecognizerStateChanged){
-            if(cancelledFromBezel){
-                subState = UIGestureRecognizerStateCancelled;
-                self.state = UIGestureRecognizerStateCancelled;
-            }else{
-                subState = UIGestureRecognizerStateEnded;
-                self.state = UIGestureRecognizerStateEnded;
-            }
+            subState = UIGestureRecognizerStateEnded;
+            self.state = UIGestureRecognizerStateEnded;
         }
     }else{
         //
@@ -531,7 +523,6 @@
 
 -(void) cancel{
     if(self.enabled){
-        NSLog(@"cancelled page pan");
         self.enabled = NO;
         self.enabled = YES;
     }

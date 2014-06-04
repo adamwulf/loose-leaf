@@ -79,15 +79,17 @@ static MMShadowManager* _instance = nil;
         // only run once
         // latest tests show this finishes in .02s on an iPad 3
         [NSThread performBlockInBackground:^{
-            CGSize screenSize = [[UIScreen mainScreen] bounds].size;
-            CGFloat minWidth = floorf(screenSize.width * kMinPageZoom);
-            CGFloat maxWidth = screenSize.width * kMaxPageZoom;
-            CGFloat currWidth = minWidth;
-            CGFloat currHeight;
-            while(currWidth <= maxWidth){
-                currHeight = currWidth / screenSize.width * screenSize.height;
-                [self getShadowForSize:CGSizeMake(currWidth, currHeight)];
-                currWidth += 1;
+            @autoreleasepool {
+                CGSize screenSize = [[UIScreen mainScreen] bounds].size;
+                CGFloat minWidth = floorf(screenSize.width * kMinPageZoom);
+                CGFloat maxWidth = screenSize.width * kMaxPageZoom;
+                CGFloat currWidth = minWidth;
+                CGFloat currHeight;
+                while(currWidth <= maxWidth){
+                    currHeight = currWidth / screenSize.width * screenSize.height;
+                    [self getShadowForSize:CGSizeMake(currWidth, currHeight)];
+                    currWidth += 1;
+                }
             }
         }];
     }
@@ -95,7 +97,7 @@ static MMShadowManager* _instance = nil;
 
 -(BOOL) hasShadowForSize:(CGSize)size{
     NSNumber* key = [NSNumber numberWithInt:(int) size.width];
-    return [shadowPathCache objectForKey:key] && YES;
+    return (BOOL)[shadowPathCache objectForKey:key];
 }
 
 -(CGPathRef) getShadowForSize:(CGSize)size{
