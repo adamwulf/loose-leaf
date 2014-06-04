@@ -822,7 +822,7 @@
             //
             // also, cancel the gesture so that it doesn't continue to fire
             // after we've committed our animations
-            [gesture cancel];
+            [gesture killTheGestureCold];
             [self immediatelyAnimateFromListViewToFullScreenView];
             return;
             
@@ -911,11 +911,13 @@
         updatePageFrame();
     }
     if(gesture.state == UIGestureRecognizerStateCancelled){
+        NSLog(@"cancelled pinch");
         // we cancelled, so just send the page back to its default
         // space in the list
         realizedThatPageIsBeingDragged = NO;
         pageBeingDragged = nil;
         if(gesture.pinchedPage){
+            NSLog(@"animating to list view");
             CGRect frameOfPage = [self frameForListViewForPage:gesture.pinchedPage];
             [UIView animateWithDuration:.15
                                   delay:0
