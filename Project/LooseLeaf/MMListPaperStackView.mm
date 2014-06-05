@@ -1271,8 +1271,14 @@
                 // we have to expand the frame, because we want to count pages even if
                 // just their shadow is visible
                 frameOfPage = [MMShadowedView expandFrame:frameOfPage];
-                if(frameOfPage.origin.y < selfContentOffsetY + selfFrameSizeHeight &&
-                   frameOfPage.origin.y + frameOfPage.size.height > selfContentOffsetY){
+                //
+                // this adjustment helps us load a few images at a time on a slower scroll
+                // so that 3 images don't have to get pulled from disk at the exact
+                // same time. this'll help spread that disk load out a bit
+                // https://github.com/adamwulf/loose-leaf/issues/503
+                CGFloat adjust = (i % 3 == 0) ? (selfFrameSizeHeight/3) : (i % 3 == 1) ? (selfFrameSizeHeight*2/3) : 0;
+                if(frameOfPage.origin.y - adjust < selfContentOffsetY + selfFrameSizeHeight &&
+                   frameOfPage.origin.y + frameOfPage.size.height + adjust > selfContentOffsetY){
                     [pagesThatWouldBeVisible addObject:aPage];
                     if(actualEnd == -1){
                         actualEnd = indexInList;
