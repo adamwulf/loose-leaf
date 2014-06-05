@@ -69,7 +69,14 @@ static int count = 0;
                 return nil;
             }
         }
+        // this isn't that important since you just want UIImage to decompress the image data before switching back to main thread
+        // http://stackoverflow.com/questions/10149165/uiimage-decompression-causing-scrolling-lag
+        // this will force the UIImage to be decompressed
         cachedImage = [UIImage imageWithContentsOfFile:path];
+        UIGraphicsBeginImageContext(CGSizeMake(1, 1));
+        [cachedImage drawAtPoint:CGPointZero];
+        UIGraphicsEndImageContext();
+
         count++;
         @synchronized(self){
             if(cachedImage){
