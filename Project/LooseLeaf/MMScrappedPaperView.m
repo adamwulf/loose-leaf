@@ -946,6 +946,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) didDecompressImage:(UIImage*)img{
+    if(scrappedImgViewImage && !scrappedImgViewImage.image){
+        NSLog(@"what");
+    }
     cachedImgView.image = scrappedImgViewImage.image;
     isLoadingCachedScrappedThumbnailFromDisk = NO;
 }

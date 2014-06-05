@@ -39,8 +39,10 @@ NSOperationQueue* decompressImageQueue;
             UIGraphicsEndImageContext();
             dispatch_sync(dispatch_get_main_queue(), ^(void) {
                 @synchronized(self){
-                    isDecompressed = YES;
-                    [delegate didDecompressImage:self.image];
+                    if(image){
+                        isDecompressed = YES;
+                        [delegate didDecompressImage:self.image];
+                    }
                     decompressBlock = nil;
                 }
             });
