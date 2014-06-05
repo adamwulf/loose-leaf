@@ -192,6 +192,17 @@
             [scrapDelegate ownershipOfTouches:claimedTouches isGesture:self];
             [validTouches addObjectsInSet:claimedTouches];
             [possibleTouches removeObjectsInSet:claimedTouches];
+            
+            // need to reset to initial state
+            // soft reset. keep the touches that we know
+            // about, but reset everything else
+            initialDistance = 0;
+            scale = 1;
+            didExitToBezel = MMBezelDirectionNone;
+            scaleDirection = MMScaleDirectionNone;
+            locationAdjustment = CGPointZero;
+            lastLocationInView = CGPointZero;
+            
             subState = UIGestureRecognizerStateBegan;
             hasPannedOrScaled = YES;
             
@@ -441,17 +452,6 @@
         if(![validTouches count] && ![possibleTouches count] && ![ignoredTouches count]){
             self.state = UIGestureRecognizerStateFailed;
         }
-    }
-    if(![validTouches count] && [possibleTouches count] && subState != UIGestureRecognizerStateCancelled){
-        // need to reset to initial state
-        // soft reset. keep the touches that we know
-        // about, but reset everything else
-        initialDistance = 0;
-        scale = 1;
-        didExitToBezel = MMBezelDirectionNone;
-        scaleDirection = MMScaleDirectionNone;
-        locationAdjustment = CGPointZero;
-        lastLocationInView = CGPointZero;
     }
     [self processPossibleTouchesFromOriginalLocationInView:originalLocationInView];
 
