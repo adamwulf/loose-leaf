@@ -92,6 +92,14 @@ static int count = 0;
     return cachedImage;
 }
 
+-(MMDecompressImagePromise*) decompressedImageAtPath:(NSString*)path{
+    UIImage* image = [self imageAtPath:path];
+    if(image){
+        return [[MMDecompressImagePromise alloc] initForImage:image];
+    }
+    return nil;
+}
+
 -(void) ensureCacheSize{
     @synchronized(self){
         while([orderedKeys count] > kMMLoadImageCacheSize){

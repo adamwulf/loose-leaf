@@ -33,7 +33,7 @@
     UIView* scrapContainerView;
     NSString* scrapIDsPath;
     MMScrapsOnPaperState* scrapState;
-    UIImage* scrappedImgViewImage;
+    MMDecompressImagePromise* scrappedImgViewImage;
     // this defaults to NO, which means we'll try to
     // load a thumbnail. if an image does not exist
     // on disk, then we'll set this to YES which will
@@ -779,7 +779,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     return [[[self pagesPath] stringByAppendingPathComponent:[@"scrapped" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
 }
 -(UIImage*) scrappedImgViewImage{
-    return scrappedImgViewImage;
+    return [scrappedImgViewImage image];
 }
 
 -(void) updateFullPageThumbnail:(MMImmutableScrapsOnPaperState*)immutableScrapState{
@@ -808,13 +808,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
     }
     
     // get a UIImage from the image context- enjoy!!!
-    scrappedImgViewImage = UIGraphicsGetImageFromCurrentImageContext();
+    scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForDecompressedImage:UIGraphicsGetImageFromCurrentImageContext()];
     [[NSThread mainThread] performBlock:^{
-        cachedImgView.image = scrappedImgViewImage;
-        [[MMLoadImageCache sharedInstance] updateCacheForPath:[self scrappedThumbnailPath] toImage:scrappedImgViewImage];
+        cachedImgView.image = scrappedImgViewImage.image;
+        [[MMLoadImageCache sharedInstance] updateCacheForPath:[self scrappedThumbnailPath] toImage:scrappedImgViewImage.image];
     }];
     
-    [UIImagePNGRepresentation(scrappedImgViewImage) writeToFile:[self scrappedThumbnailPath] atomically:YES];
+    [UIImagePNGRepresentation(scrappedImgViewImage.image) writeToFile:[self scrappedThumbnailPath] atomically:YES];
     definitelyDoesNotHaveAScrappedThumbnail = NO;
     
     // clean up drawing environment
@@ -918,7 +918,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
-    cachedImgView.image = scrappedImgViewImage;
+    cachedImgView.image = scrappedImgViewImage.image;
 }
 
 /**
@@ -933,14 +933,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
         isLoadingCachedScrappedThumbnailFromDisk = YES;
         dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
             @autoreleasepool {
-                scrappedImgViewImage = [[MMLoadImageCache sharedInstance] imageAtPath:[self scrappedThumbnailPath]];
+                scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForImage:[[MMLoadImageCache sharedInstance] imageAtPath:[self scrappedThumbnailPath]]];
                 if(!scrappedImgViewImage){
                     definitelyDoesNotHaveAScrappedThumbnail = YES;
                 }
-                [NSThread performBlockOnMainThread:^{
-                    cachedImgView.image = scrappedImgViewImage;
-                    isLoadingCachedScrappedThumbnailFromDisk = NO;
-                }];
+                scrappedImgViewImage.delegate = self;
             }
         });
     }
@@ -948,10 +945,16 @@ static dispatch_queue_t concurrentBackgroundQueue;
 //    [scrapState loadStateAsynchronously:YES andMakeEditable:NO];
 }
 
+-(void) didDecompressImage:(UIImage*)img{
+    cachedImgView.image = scrappedImgViewImage.image;
+    isLoadingCachedScrappedThumbnailFromDisk = NO;
+}
+
 -(void) unloadCachedPreview{
     // free our preview memory
     [super unloadCachedPreview];
     if(scrappedImgViewImage){
+        [scrappedImgViewImage cancel];
         scrappedImgViewImage = nil;
         // cachedImgView.image is already set to nil in super
         [NSThread performBlockOnMainThread:^{
@@ -984,7 +987,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
     if([self hasStateLoaded]){
         [NSThread performBlockOnMainThread:^{
             [[MMPageCacheManager sharedInstance] didLoadStateForPage:self];
-            cachedImgView.image = scrappedImgViewImage;
+            if(scrappedImgViewImage.isDecompressed){
+                cachedImgView.image = scrappedImgViewImage.image;
+            }
         }];
     }
 }

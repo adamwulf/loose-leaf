@@ -23,7 +23,11 @@
 
 // from NSOperation
 - (void) main {
-    _block();
+    if(![self isCancelled]){
+        _block();
+    }else{
+        NSLog(@"skipped");
+    }
 }
 
 

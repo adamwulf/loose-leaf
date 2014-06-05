@@ -9,13 +9,14 @@
 #import "MMEditablePaperView.h"
 #import "MMPanAndPinchScrapGestureRecognizer.h"
 #import "MMScrapsOnPaperStateDelegate.h"
+#import "MMDecompressImagePromiseDelegate.h"
 #import <MessageUI/MFMailComposeViewController.h>
 
 /**
  * the purpose of this subclass is to encompass all of the
  * scrap functionality for a page
  */
-@interface MMScrappedPaperView : MMEditablePaperView<MFMailComposeViewControllerDelegate,MMPanGestureDelegate,MMScrapsOnPaperStateDelegate>{
+@interface MMScrappedPaperView : MMEditablePaperView<MFMailComposeViewControllerDelegate,MMPanGestureDelegate,MMScrapsOnPaperStateDelegate,MMDecompressImagePromiseDelegate>{
     UIImageView* cachedImgView;
 }
 
