@@ -64,6 +64,7 @@ NSOperationQueue* decompressImageQueue;
 -(void) cancel{
     @synchronized(self){
         if(!isDecompressed){
+            [delegate didDecompressImage:nil];
             [decompressBlock cancel];
             image = nil;
             decompressBlock = nil;
