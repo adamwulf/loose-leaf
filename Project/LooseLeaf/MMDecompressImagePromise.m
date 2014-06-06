@@ -62,9 +62,15 @@ NSOperationQueue* decompressImageQueue;
 }
 
 -(void) cancel{
+    NSObject<MMDecompressImagePromiseDelegate>* strongDelegate = delegate;;
+    delegate = nil;
+    [NSThread performBlockOnMainThreadSync:^{
+        if(!isDecompressed){
+            [strongDelegate didDecompressImage:nil];
+        }
+    }];
     @synchronized(self){
         if(!isDecompressed){
-            [delegate didDecompressImage:nil];
             [decompressBlock cancel];
             image = nil;
             decompressBlock = nil;
