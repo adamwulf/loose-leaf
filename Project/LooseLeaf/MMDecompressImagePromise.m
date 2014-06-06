@@ -29,23 +29,46 @@ NSOperationQueue* decompressImageQueue;
     return self;
 }
 
+-(void) setIsDecompressed:(BOOL)_isDecompressed{
+    isDecompressed = _isDecompressed;
+}
+
 -(id) initForImage:(UIImage*)imageToDecompress{
     if(self = [super init]){
         image = imageToDecompress;
-        decompressBlock = [[MMBlockOperation alloc] initWithBlock:^{
-            // this isn't that important since you just want UIImage to decompress the image data before switching back to main thread
-            UIGraphicsBeginImageContext(CGSizeMake(1, 1));
-            [self.image drawAtPoint:CGPointZero];
-            UIGraphicsEndImageContext();
-            dispatch_sync(dispatch_get_main_queue(), ^(void) {
-                @synchronized(self){
-                    if(image){
-                        isDecompressed = YES;
-                        [delegate didDecompressImage:self.image];
+        __weak MMDecompressImagePromise* weakSelf = self;
+        void (^notifyDelegateBlock)() = ^(void) {
+            @autoreleasepool {
+                MMDecompressImagePromise* strongMainSelf = weakSelf;
+                @synchronized(strongMainSelf){
+                    if(strongMainSelf && strongMainSelf.image){
+                        strongMainSelf.isDecompressed = YES;
+                        [strongMainSelf.delegate didDecompressImage:strongMainSelf.image];
                     }
-                    decompressBlock = nil;
                 }
-            });
+            }
+        };
+        __weak void (^weakNotifyDelegateBlock)() = notifyDelegateBlock;
+        
+        decompressBlock = [[MMBlockOperation alloc] initWithBlock:^{
+            @autoreleasepool {
+                // this isn't that important since you just want UIImage to decompress the image data before switching back to main thread
+                MMDecompressImagePromise* strongContextSelf = weakSelf;
+                void (^strongNotifyDelegateBlock)() = weakNotifyDelegateBlock;
+                if(strongContextSelf){
+                    UIGraphicsBeginImageContext(CGSizeMake(1, 1));
+                    [strongContextSelf.image drawAtPoint:CGPointZero];
+                    UIGraphicsEndImageContext();
+                    if(strongNotifyDelegateBlock){
+                        dispatch_async(dispatch_get_main_queue(), strongNotifyDelegateBlock);
+                    }else{
+                        NSObject<MMDecompressImagePromiseDelegate>* strongDelegate = strongContextSelf.delegate;
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [strongDelegate didDecompressImage:nil];
+                        });
+                    }
+                }
+            }
         }];
         [[MMDecompressImagePromise decompressImageQueue] addOperation:decompressBlock];
     }
@@ -62,18 +85,20 @@ NSOperationQueue* decompressImageQueue;
 }
 
 -(void) cancel{
-    NSObject<MMDecompressImagePromiseDelegate>* strongDelegate = delegate;;
-    delegate = nil;
-    [NSThread performBlockOnMainThreadSync:^{
-        if(!isDecompressed){
-            [strongDelegate didDecompressImage:nil];
-        }
-    }];
-    @synchronized(self){
-        if(!isDecompressed){
-            [decompressBlock cancel];
-            image = nil;
-            decompressBlock = nil;
+    @autoreleasepool {
+        NSObject<MMDecompressImagePromiseDelegate>* strongDelegate = delegate;;
+        delegate = nil;
+        [NSThread performBlockOnMainThreadSync:^{
+            if(!isDecompressed){
+                [strongDelegate didDecompressImage:nil];
+            }
+        }];
+        @synchronized(self){
+            if(!isDecompressed){
+                [decompressBlock cancel];
+                image = nil;
+                decompressBlock = nil;
+            }
         }
     }
 }
@@ -83,7 +108,7 @@ NSOperationQueue* decompressImageQueue;
         @synchronized([MMDecompressImagePromise class]){
             if(!decompressImageQueue){
                 decompressImageQueue = [[NSOperationQueue alloc] init];
-                decompressImageQueue.maxConcurrentOperationCount = 10;
+                decompressImageQueue.maxConcurrentOperationCount = 3;
                 decompressImageQueue.name = @"com.milestonemade.looseleaf.decompressImageQueue";
             }
         }

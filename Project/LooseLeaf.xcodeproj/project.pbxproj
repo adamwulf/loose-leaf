@@ -33,6 +33,7 @@
 		663C1897175A89EF00706A05 /* MMRulerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C1896175A89ED00706A05 /* MMRulerButton.m */; };
 		6640E6D917E390BE00EB3F7D /* MMTouchVelocityGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6640E6D817E390BE00EB3F7D /* MMTouchVelocityGestureRecognizer.m */; };
 		66423DCB19412195000A3709 /* MMDecompressImagePromise.m in Sources */ = {isa = PBXBuildFile; fileRef = 66423DCA19412195000A3709 /* MMDecompressImagePromise.m */; };
+		66423DD019425AA7000A3709 /* MMCachedPreviewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66423DCF19425AA7000A3709 /* MMCachedPreviewManager.m */; };
 		664516B9159030FC0012FACA /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 664516B8159030FC0012FACA /* Constants.m */; };
 		6648D21D178C9E5400BE3B37 /* UIColor+Shadow.m in Sources */ = {isa = PBXBuildFile; fileRef = 6648D21C178C9E5400BE3B37 /* UIColor+Shadow.m */; };
 		664C62F015A36DA40072736A /* MMListPaperStackView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 664C62EF15A36DA40072736A /* MMListPaperStackView.mm */; };
@@ -264,6 +265,8 @@
 		66423DC919412195000A3709 /* MMDecompressImagePromise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDecompressImagePromise.h; sourceTree = "<group>"; };
 		66423DCA19412195000A3709 /* MMDecompressImagePromise.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDecompressImagePromise.m; sourceTree = "<group>"; };
 		66423DCC194121A9000A3709 /* MMDecompressImagePromiseDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMDecompressImagePromiseDelegate.h; sourceTree = "<group>"; };
+		66423DCE19425AA7000A3709 /* MMCachedPreviewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCachedPreviewManager.h; sourceTree = "<group>"; };
+		66423DCF19425AA7000A3709 /* MMCachedPreviewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCachedPreviewManager.m; sourceTree = "<group>"; };
 		664516B8159030FC0012FACA /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		6648D21B178C9E5400BE3B37 /* UIColor+Shadow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Shadow.h"; sourceTree = "<group>"; };
 		6648D21C178C9E5400BE3B37 /* UIColor+Shadow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Shadow.m"; sourceTree = "<group>"; };
@@ -764,6 +767,15 @@
 			path = LooseLeaf;
 			sourceTree = "<group>";
 		};
+		66423DCD19425A91000A3709 /* CachedPreviewManager */ = {
+			isa = PBXGroup;
+			children = (
+				66423DCE19425AA7000A3709 /* MMCachedPreviewManager.h */,
+				66423DCF19425AA7000A3709 /* MMCachedPreviewManager.m */,
+			);
+			name = CachedPreviewManager;
+			sourceTree = "<group>";
+		};
 		664B025E18E6711D00325EF2 /* Helper Classes */ = {
 			isa = PBXGroup;
 			children = (
@@ -780,6 +792,7 @@
 		664C62F115A36DB00072736A /* MMPaperView */ = {
 			isa = PBXGroup;
 			children = (
+				66423DCD19425A91000A3709 /* CachedPreviewManager */,
 				66E47E22187F278A000AFD18 /* Ruler */,
 				66B62C4B17F245E6006D31EB /* Page State */,
 				66A471C317C7E05C00C2A5B6 /* Scraps */,
@@ -1780,6 +1793,7 @@
 				664C62F015A36DA40072736A /* MMListPaperStackView.mm in Sources */,
 				6640E6D917E390BE00EB3F7D /* MMTouchVelocityGestureRecognizer.m in Sources */,
 				66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */,
+				66423DD019425AA7000A3709 /* MMCachedPreviewManager.m in Sources */,
 				66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */,
 				667D98B7192FBF2400625879 /* MMPDFInboxContentView.m in Sources */,
 				66AC8D9218E8A90900A65036 /* MMBufferedImageView.m in Sources */,

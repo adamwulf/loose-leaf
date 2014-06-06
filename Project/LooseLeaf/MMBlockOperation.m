@@ -30,5 +30,10 @@
     }
 }
 
+-(void) cancel{
+    [super cancel];
+    _block = nil;
+}
+
 
 @end

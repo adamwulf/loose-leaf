@@ -27,6 +27,7 @@
 #import "Mixpanel.h"
 #import "UIDevice+PPI.h"
 #import "MMLoadImageCache.h"
+#import "MMCachedPreviewManager.h"
 
 
 @implementation MMScrappedPaperView{
@@ -55,16 +56,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
-        // create the cache thumbnail view
-        cachedImgView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
-        cachedImgView.frame = self.contentView.bounds;
-        cachedImgView.contentMode = UIViewContentModeScaleAspectFill;
-        cachedImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        cachedImgView.clipsToBounds = YES;
-        cachedImgView.opaque = YES;
-        cachedImgView.backgroundColor = [UIColor whiteColor];
-        [self.contentView addSubview:cachedImgView];
-
         // Initialization code
         scrapContainerView = [[MMUntouchableView alloc] initWithFrame:self.bounds];
         [self.contentView addSubview:scrapContainerView];
@@ -810,7 +801,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // get a UIImage from the image context- enjoy!!!
     scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForDecompressedImage:UIGraphicsGetImageFromCurrentImageContext()];
     [[NSThread mainThread] performBlock:^{
-        cachedImgView.image = scrappedImgViewImage.image;
+        [self setThumbnailTo:scrappedImgViewImage.image];
         [[MMLoadImageCache sharedInstance] updateCacheForPath:[self scrappedThumbnailPath] toImage:scrappedImgViewImage.image];
     }];
     
@@ -820,6 +811,22 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // clean up drawing environment
     UIGraphicsEndImageContext();
     
+}
+
+-(void) setThumbnailTo:(UIImage*)img{
+    @autoreleasepool {
+        // create the cache thumbnail view
+        if(!cachedImgView && img){
+            cachedImgView = [[MMCachedPreviewManager sharedInstace] requestCachedImageViewForView:self];
+            cachedImgView.image = img;
+            [self.contentView insertSubview:cachedImgView belowSubview:scrapContainerView];
+        }else if(cachedImgView && !img){
+            [[MMCachedPreviewManager sharedInstace] giveBackCachedImageView:cachedImgView];
+            cachedImgView = nil;
+        }else if(img){
+            cachedImgView.image = img;
+        }
+    }
 }
 
 -(void) saveToDisk{
@@ -914,11 +921,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
     // check to see if we've also loaded
     [self didLoadState:self.paperState];
-    cachedImgView.image = [self cachedImgViewImage];
+    [self setThumbnailTo:[self cachedImgViewImage]];
 }
 
 -(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
-    cachedImgView.image = scrappedImgViewImage.image;
+    [self setThumbnailTo:scrappedImgViewImage.image];
 }
 
 /**
@@ -927,52 +934,56 @@ static dispatch_queue_t concurrentBackgroundQueue;
  * page preview or not
  */
 -(void) loadCachedPreview{
-    // make sure our thumbnail is loaded
-    [super loadCachedPreview];
-    if(!definitelyDoesNotHaveAScrappedThumbnail && !scrappedImgViewImage && !isLoadingCachedScrappedThumbnailFromDisk){
-        isLoadingCachedScrappedThumbnailFromDisk = YES;
-        dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
-            @autoreleasepool {
-                scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForImage:[[MMLoadImageCache sharedInstance] imageAtPath:[self scrappedThumbnailPath]]];
-                if(!scrappedImgViewImage){
-                    definitelyDoesNotHaveAScrappedThumbnail = YES;
+    @autoreleasepool {
+        // make sure our thumbnail is loaded
+        [super loadCachedPreview];
+        if(!definitelyDoesNotHaveAScrappedThumbnail && !scrappedImgViewImage && !isLoadingCachedScrappedThumbnailFromDisk){
+            isLoadingCachedScrappedThumbnailFromDisk = YES;
+            dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
+                @autoreleasepool {
+                    scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForImage:[[MMLoadImageCache sharedInstance] imageAtPath:[self scrappedThumbnailPath]]];
+                    if(!scrappedImgViewImage){
+                        definitelyDoesNotHaveAScrappedThumbnail = YES;
+                    }
+                    scrappedImgViewImage.delegate = self;
+                    isLoadingCachedScrappedThumbnailFromDisk = NO;
                 }
-                scrappedImgViewImage.delegate = self;
-                isLoadingCachedScrappedThumbnailFromDisk = NO;
-            }
-        });
+            });
+        }
     }
     // make sure our scraps' thumbnails are loaded
 //    [scrapState loadStateAsynchronously:YES andMakeEditable:NO];
 }
 
 -(void) didDecompressImage:(UIImage*)img{
-    cachedImgView.image = scrappedImgViewImage.image;
+    [self setThumbnailTo:scrappedImgViewImage.image];
 }
 
 -(void) unloadCachedPreview{
-    // free our preview memory
-    [super unloadCachedPreview];
-    if(scrappedImgViewImage){
-        [scrappedImgViewImage cancel];
-        scrappedImgViewImage = nil;
-        // cachedImgView.image is already set to nil in super
-        [NSThread performBlockOnMainThread:^{
-            cachedImgView.image = nil;
-        }];
-    }
-    if([scrapState isStateLoaded]){
-        MMScrapsOnPaperState* strongScrapState = scrapState;
-        dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
-            @autoreleasepool {
-                // save if needed
-                // currently this will always save to disk. in the future #338
-                // we should only save if this has changed.
-                [[strongScrapState immutableState] saveStateToDiskBlocking];
-                // free all scraps from memory too
-                [strongScrapState unload];
-            }
-        });
+    @autoreleasepool {
+        // free our preview memory
+        [super unloadCachedPreview];
+        if(scrappedImgViewImage){
+            [scrappedImgViewImage cancel];
+            scrappedImgViewImage = nil;
+            // cachedImgView.image is already set to nil in super
+            [NSThread performBlockOnMainThread:^{
+                [self setThumbnailTo:nil];
+            }];
+        }
+        if([scrapState isStateLoaded]){
+            MMScrapsOnPaperState* strongScrapState = scrapState;
+            dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
+                @autoreleasepool {
+                    // save if needed
+                    // currently this will always save to disk. in the future #338
+                    // we should only save if this has changed.
+                    [[strongScrapState immutableState] saveStateToDiskBlocking];
+                    // free all scraps from memory too
+                    [strongScrapState unload];
+                }
+            });
+        }
     }
 }
 
@@ -988,7 +999,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         [NSThread performBlockOnMainThread:^{
             [[MMPageCacheManager sharedInstance] didLoadStateForPage:self];
             if(scrappedImgViewImage.isDecompressed){
-                cachedImgView.image = scrappedImgViewImage.image;
+                [self setThumbnailTo:scrappedImgViewImage.image];
             }
         }];
     }
