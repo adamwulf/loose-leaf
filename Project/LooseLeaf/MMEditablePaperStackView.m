@@ -592,7 +592,7 @@
 }
 
 
-#pragma mark - Page Loading and Unloading
+#pragma mark - MMPageCacheManagerDelegate: Page Loading and Unloading
 
 -(BOOL) isPageInVisibleStack:(MMPaperView*)page{
     return [visibleStackHolder containsSubview:page];

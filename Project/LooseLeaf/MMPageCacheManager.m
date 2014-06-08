@@ -179,12 +179,16 @@ static MMPageCacheManager* _instance = nil;
                 // the outgoing page is saved to disk
                 // and the incoming page has its
                 // state loaded
-                [currentEditablePage setDrawableView:nil];
-                [currentEditablePage setEditable:NO];
-                [currentEditablePage setCanvasVisible:NO];
-                currentEditablePage = editableTopPage;
-                //                debug_NSLog(@"did switch top page to %@", currentEditablePage.uuid);
-                [currentEditablePage setDrawableView:drawableView];
+                if([delegate isShowingPageView]){
+                    // only swap the drawable view if we're showing
+                    // the page view
+                    [currentEditablePage setDrawableView:nil];
+                    [currentEditablePage setEditable:NO];
+                    [currentEditablePage setCanvasVisible:NO];
+                    currentEditablePage = editableTopPage;
+                    //                debug_NSLog(@"did switch top page to %@", currentEditablePage.uuid);
+                    [currentEditablePage setDrawableView:drawableView];
+                }
             }else{
                 if(![editableTopPage hasStateLoaded]){
                     // load the state for the new top page
