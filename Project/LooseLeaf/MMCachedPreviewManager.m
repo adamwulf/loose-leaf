@@ -7,7 +7,6 @@
 //
 
 #import "MMCachedPreviewManager.h"
-#import "MMCachedImageView.h"
 #import "MMBlockOperation.h"
 #import "NSThread+BlockAdditions.h"
 
@@ -41,11 +40,12 @@ static MMCachedPreviewManager* _instance = nil;
 
 -(UIImageView*) requestCachedImageViewForView:(UIView*)aView{
     if([arrayOfImageViews count]){
-        UIImageView* view = [arrayOfImageViews lastObject];
+        UIImageView* cachedImgView = [arrayOfImageViews lastObject];
         [arrayOfImageViews removeLastObject];
-        return view;
+        cachedImgView.frame = aView.bounds;
+        return cachedImgView;
     }
-    MMCachedImageView* cachedImgView = [[MMCachedImageView alloc] initWithFrame:aView.bounds];
+    UIImageView* cachedImgView = [[UIImageView alloc] initWithFrame:aView.bounds];
     cachedImgView.frame = aView.bounds;
     cachedImgView.contentMode = UIViewContentModeScaleAspectFill;
     cachedImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;

@@ -145,35 +145,37 @@ static MMPageCacheManager* _instance = nil;
 
 
 -(void) loadStateForPage:(MMPaperView*)page{
-    // add the page to the beginning
-    [stateLoadedPages removeObject:page];
-    [stateLoadedPages insertObject:page atIndex:0];
-    if(currentEditablePage){
-        // ensure the currently editable page never
-        // gets kicked out of the cache. it's always
-        // the most recent
-        [stateLoadedPages removeObject:currentEditablePage];
-        [stateLoadedPages insertObject:currentEditablePage atIndex:0];
-    }
-    if([stateLoadedPages count] > kMMPageCacheManagerSize){
-        // too many pages, kick one out
-        [[stateLoadedPages lastObject] unloadState];
-        [stateLoadedPages removeLastObject];
-    }
-    if([page isKindOfClass:[MMEditablePaperView class]]){
-        // finally, tell that page to load its state
-        MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
-        [editablePage loadStateAsynchronously:YES withSize:[drawableView pagePixelSize] andContext:[drawableView context]];
+    if(page){
+        // add the page to the beginning
+        [stateLoadedPages removeObject:page];
+        [stateLoadedPages insertObject:page atIndex:0];
+        if(currentEditablePage){
+            // ensure the currently editable page never
+            // gets kicked out of the cache. it's always
+            // the most recent
+            [stateLoadedPages removeObject:currentEditablePage];
+            [stateLoadedPages insertObject:currentEditablePage atIndex:0];
+        }
+        if([stateLoadedPages count] > kMMPageCacheManagerSize){
+            // too many pages, kick one out
+            [[stateLoadedPages lastObject] unloadState];
+            [stateLoadedPages removeLastObject];
+        }
+        if([page isKindOfClass:[MMEditablePaperView class]]){
+            // finally, tell that page to load its state
+            MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
+            [editablePage loadStateAsynchronously:YES withSize:[drawableView pagePixelSize] andContext:[drawableView context]];
+        }
     }
 }
 
 -(void) ensureTopPageIsLoaded:(MMPaperView*)topPage{
-    if([topPage isKindOfClass:[MMEditablePaperView class]]){
+    if(!topPage || [topPage isKindOfClass:[MMEditablePaperView class]]){
         MMEditablePaperView* editableTopPage = (MMEditablePaperView*)topPage;
         
         if(currentEditablePage != editableTopPage){
             // only care if the page is changing
-            if(![currentEditablePage hasEditsToSave] && [editableTopPage hasStateLoaded]){
+            if(![currentEditablePage hasEditsToSave] && (!editableTopPage || [editableTopPage hasStateLoaded])){
                 // the outgoing page is saved to disk
                 // and the incoming page has its
                 // state loaded

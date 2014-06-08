@@ -73,6 +73,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
         
         scrapState = [[MMScrapsOnPaperState alloc] initWithScrapIDsPath:self.scrapIDsPath];
         scrapState.delegate = self;
+        
+        [self setCanvasVisible:NO];
     }
     return self;
 }
@@ -87,8 +89,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [super setCanvasVisible:isCanvasVisible];
     if(isCanvasVisible){
         cachedImgView.hidden = YES;
+        scrapContainerView.hidden = NO;
     }else{
         cachedImgView.hidden = NO;
+        scrapContainerView.hidden = YES;
     }
 }
 
@@ -693,7 +697,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [scrapState setShouldShowShadows:isEditable];
 }
 
-
 -(BOOL) hasEditsToSave{
     return [super hasEditsToSave];
 }
@@ -930,10 +933,12 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // check to see if we've also loaded
     [self didLoadState:self.paperState];
     [self setThumbnailTo:[self cachedImgViewImage]];
+    scrapContainerView.hidden = NO;
 }
 
 -(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
     [self didDecompressImage:scrappedImgViewImage];
+    scrapContainerView.hidden = YES;
 }
 
 /**
