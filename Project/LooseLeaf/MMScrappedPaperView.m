@@ -42,13 +42,10 @@
     // is saved
     BOOL definitelyDoesNotHaveAScrappedThumbnail;
     BOOL isLoadingCachedScrappedThumbnailFromDisk;
-    
-    
+    // track if we should have our thumbnail loaded
+    // this will help us since we use lots of threads
+    // during thumbnail loading.
     BOOL isAskedToLoadThumbnail;
-}
-
--(BOOL) askedToHaveThumbnail{
-    return isAskedToLoadThumbnail;
 }
 
 
@@ -100,7 +97,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) addDrawableViewToContentView{
     // default will be to just append drawable view. subclasses
     // can (and will) change behavior
-    [self.contentView insertSubview:drawableView aboveSubview:cachedImgView];
+    [self.contentView insertSubview:drawableView belowSubview:scrapContainerView];
 }
 
 
@@ -820,14 +817,17 @@ static dispatch_queue_t concurrentBackgroundQueue;
     
 }
 
-
 -(void) setThumbnailTo:(UIImage*)img{
     @autoreleasepool {
         // create the cache thumbnail view
         if(!cachedImgView && img){
             cachedImgView = [[MMCachedPreviewManager sharedInstace] requestCachedImageViewForView:self];
             cachedImgView.image = img;
-            [self.contentView insertSubview:cachedImgView belowSubview:scrapContainerView];
+            if(drawableView){
+                [self.contentView insertSubview:cachedImgView belowSubview:drawableView];
+            }else{
+                [self.contentView insertSubview:cachedImgView belowSubview:scrapContainerView];
+            }
         }else if(cachedImgView && !img){
             [[MMCachedPreviewManager sharedInstace] giveBackCachedImageView:cachedImgView];
             cachedImgView = nil;
@@ -961,7 +961,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     if(shouldLoad){
                         scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForImage:[[MMLoadImageCache sharedInstance] imageAtPath:[self scrappedThumbnailPath]]
                                                                                   andDelegate:self];
-                        if(!scrappedImgViewImage){
+                        if(!scrappedImgViewImage.image){
                             definitelyDoesNotHaveAScrappedThumbnail = YES;
                         }
                         scrappedImgViewImage.delegate = self;
@@ -1000,7 +1000,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
             }
         }
         [NSThread performBlockOnMainThread:^{
-            [self setThumbnailTo:nil];
+            [self didDecompressImage:nil];
         }];
         if([scrapState isStateLoaded]){
             MMScrapsOnPaperState* strongScrapState = scrapState;
