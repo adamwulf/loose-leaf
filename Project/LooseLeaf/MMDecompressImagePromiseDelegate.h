@@ -8,8 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+@class MMDecompressImagePromise;
+
 @protocol MMDecompressImagePromiseDelegate <NSObject>
 
--(void) didDecompressImage:(UIImage*)img;
+-(void) didDecompressImage:(MMDecompressImagePromise*)img;
 
 @end

@@ -18,8 +18,8 @@
 @property (nonatomic) UIImage* image;
 @property (readonly) BOOL isDecompressed;
 
--(id) initForDecompressedImage:(UIImage*)imageToDecompress;
--(id) initForImage:(UIImage*)imageToDecompress;
+-(id) initForDecompressedImage:(UIImage*)imageToDecompress andDelegate:(NSObject<MMDecompressImagePromiseDelegate>*)delegate;
+-(id) initForImage:(UIImage*)imageToDecompress andDelegate:(NSObject<MMDecompressImagePromiseDelegate>*)delegate;
 
 -(void) cancel;
 

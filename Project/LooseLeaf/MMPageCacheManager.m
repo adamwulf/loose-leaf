@@ -202,9 +202,6 @@ static MMPageCacheManager* _instance = nil;
 
 -(void) updateVisiblePageImageCache{
     NSArray* visiblePages = [self.delegate findPagesInVisibleRowsOfListView];
-    for(MMEditablePaperView* page in visiblePages){
-        [page loadCachedPreview];
-    }
     NSIndexSet* indexes = [pagesWithLoadedCacheImages indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger indx, BOOL*stop){
         return ![visiblePages containsObject:obj];
     }];
@@ -216,6 +213,9 @@ static MMPageCacheManager* _instance = nil;
             [page unloadCachedPreview];
             [pagesWithLoadedCacheImages removeObject:page];
         }
+    }
+    for(MMEditablePaperView* page in visiblePages){
+        [page loadCachedPreview];
     }
     [pagesWithLoadedCacheImages addObjectsFromArray:visiblePages];
 }

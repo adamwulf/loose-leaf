@@ -7,10 +7,14 @@
 //
 
 #import "MMCachedPreviewManager.h"
-#import <JotUI/JotUI.h>
+#import "MMCachedImageView.h"
+#import "MMBlockOperation.h"
+#import "NSThread+BlockAdditions.h"
 
 @implementation MMCachedPreviewManager{
     NSMutableArray* arrayOfImageViews;
+    NSMutableArray* toDealloc;
+    NSOperationQueue* queue;
 }
 
 static MMCachedPreviewManager* _instance = nil;
@@ -20,6 +24,9 @@ static MMCachedPreviewManager* _instance = nil;
     if((self = [super init])){
         _instance = self;
         arrayOfImageViews = [NSMutableArray array];
+        queue = [[NSOperationQueue alloc] init];
+        queue.maxConcurrentOperationCount = 1;
+        toDealloc = [NSMutableArray array];
     }
     return _instance;
 }
@@ -31,13 +38,14 @@ static MMCachedPreviewManager* _instance = nil;
     return _instance;
 }
 
+
 -(UIImageView*) requestCachedImageViewForView:(UIView*)aView{
     if([arrayOfImageViews count]){
         UIImageView* view = [arrayOfImageViews lastObject];
         [arrayOfImageViews removeLastObject];
         return view;
     }
-    UIImageView* cachedImgView = [[UIImageView alloc] initWithFrame:aView.bounds];
+    MMCachedImageView* cachedImgView = [[MMCachedImageView alloc] initWithFrame:aView.bounds];
     cachedImgView.frame = aView.bounds;
     cachedImgView.contentMode = UIViewContentModeScaleAspectFill;
     cachedImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -50,10 +58,17 @@ static MMCachedPreviewManager* _instance = nil;
 -(void) giveBackCachedImageView:(UIImageView*)imageView{
     [imageView removeFromSuperview];
     imageView.image = nil;
-    if([arrayOfImageViews count] < 20){
+    if([arrayOfImageViews count] < 3){
         [arrayOfImageViews addObject:imageView];
     }else{
-        [[JotTrashManager sharedInstance] addObjectToDealloc:imageView];
+        @synchronized(self){
+            [toDealloc addObject:imageView];
+        }
+        [queue addOperationWithBlock:^{
+            @synchronized(self){
+                [toDealloc removeLastObject];
+            }
+        }];
     }
 }
 

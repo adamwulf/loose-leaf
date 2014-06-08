@@ -21,6 +21,7 @@
 }
 
 @property (readonly) NSArray* scraps;
+@property (readonly) BOOL askedToHaveThumbnail;
 
 -(void) addScrap:(MMScrapView*)scrap;
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andScale:(CGFloat)scale;

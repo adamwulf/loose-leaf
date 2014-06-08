@@ -42,6 +42,13 @@
     // is saved
     BOOL definitelyDoesNotHaveAScrappedThumbnail;
     BOOL isLoadingCachedScrappedThumbnailFromDisk;
+    
+    
+    BOOL isAskedToLoadThumbnail;
+}
+
+-(BOOL) askedToHaveThumbnail{
+    return isAskedToLoadThumbnail;
 }
 
 
@@ -799,10 +806,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
     }
     
     // get a UIImage from the image context- enjoy!!!
-    scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForDecompressedImage:UIGraphicsGetImageFromCurrentImageContext()];
+    scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForDecompressedImage:UIGraphicsGetImageFromCurrentImageContext() andDelegate:self];
+    [[MMLoadImageCache sharedInstance] updateCacheForPath:[self scrappedThumbnailPath] toImage:scrappedImgViewImage.image];
     [[NSThread mainThread] performBlock:^{
-        [self setThumbnailTo:scrappedImgViewImage.image];
-        [[MMLoadImageCache sharedInstance] updateCacheForPath:[self scrappedThumbnailPath] toImage:scrappedImgViewImage.image];
+        [self didDecompressImage:scrappedImgViewImage];
     }];
     
     [UIImagePNGRepresentation(scrappedImgViewImage.image) writeToFile:[self scrappedThumbnailPath] atomically:YES];
@@ -812,6 +819,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     UIGraphicsEndImageContext();
     
 }
+
 
 -(void) setThumbnailTo:(UIImage*)img{
     @autoreleasepool {
@@ -925,7 +933,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
-    [self setThumbnailTo:scrappedImgViewImage.image];
+    [self didDecompressImage:scrappedImgViewImage];
 }
 
 /**
@@ -935,17 +943,29 @@ static dispatch_queue_t concurrentBackgroundQueue;
  */
 -(void) loadCachedPreview{
     @autoreleasepool {
+        @synchronized(self){
+            isAskedToLoadThumbnail = YES;
+        }
         // make sure our thumbnail is loaded
         [super loadCachedPreview];
         if(!definitelyDoesNotHaveAScrappedThumbnail && !scrappedImgViewImage && !isLoadingCachedScrappedThumbnailFromDisk){
             isLoadingCachedScrappedThumbnailFromDisk = YES;
             dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
                 @autoreleasepool {
-                    scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForImage:[[MMLoadImageCache sharedInstance] imageAtPath:[self scrappedThumbnailPath]]];
-                    if(!scrappedImgViewImage){
-                        definitelyDoesNotHaveAScrappedThumbnail = YES;
+                    BOOL shouldLoad = YES;
+                    @synchronized(self){
+                        if(!isAskedToLoadThumbnail){
+                            shouldLoad = NO;
+                        }
                     }
-                    scrappedImgViewImage.delegate = self;
+                    if(shouldLoad){
+                        scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForImage:[[MMLoadImageCache sharedInstance] imageAtPath:[self scrappedThumbnailPath]]
+                                                                                  andDelegate:self];
+                        if(!scrappedImgViewImage){
+                            definitelyDoesNotHaveAScrappedThumbnail = YES;
+                        }
+                        scrappedImgViewImage.delegate = self;
+                    }
                     isLoadingCachedScrappedThumbnailFromDisk = NO;
                 }
             });
@@ -955,22 +975,33 @@ static dispatch_queue_t concurrentBackgroundQueue;
 //    [scrapState loadStateAsynchronously:YES andMakeEditable:NO];
 }
 
--(void) didDecompressImage:(UIImage*)img{
-    [self setThumbnailTo:scrappedImgViewImage.image];
+-(void) didDecompressImage:(MMDecompressImagePromise*)promise{
+    @synchronized(self){
+        if(promise == scrappedImgViewImage){
+            [self setThumbnailTo:promise.image];
+        }else{
+            [self setThumbnailTo:nil];
+        }
+    }
 }
 
 -(void) unloadCachedPreview{
     @autoreleasepool {
+        @synchronized(self){
+            isAskedToLoadThumbnail = NO;
+        }
         // free our preview memory
         [super unloadCachedPreview];
-        if(scrappedImgViewImage){
-            [scrappedImgViewImage cancel];
-            scrappedImgViewImage = nil;
-            // cachedImgView.image is already set to nil in super
-            [NSThread performBlockOnMainThread:^{
-                [self setThumbnailTo:nil];
-            }];
+        @synchronized(self){
+            if(scrappedImgViewImage){
+                [scrappedImgViewImage cancel];
+                scrappedImgViewImage = nil;
+                // cachedImgView.image is already set to nil in super
+            }
         }
+        [NSThread performBlockOnMainThread:^{
+            [self setThumbnailTo:nil];
+        }];
         if([scrapState isStateLoaded]){
             MMScrapsOnPaperState* strongScrapState = scrapState;
             dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
@@ -999,7 +1030,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         [NSThread performBlockOnMainThread:^{
             [[MMPageCacheManager sharedInstance] didLoadStateForPage:self];
             if(scrappedImgViewImage.isDecompressed){
-                [self setThumbnailTo:scrappedImgViewImage.image];
+                [self didDecompressImage:scrappedImgViewImage];
             }
         }];
     }
