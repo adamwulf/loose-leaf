@@ -14,4 +14,8 @@
 
 -(void) didLoadScrapViewState:(MMScrapViewState*)state;
 
+-(CGPoint) center;
+
+-(CGFloat) rotation;
+
 @end

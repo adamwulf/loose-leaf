@@ -11,6 +11,7 @@
 #import "MMScrapViewState.h"
 #import "MMImmutableScrapsOnPaperState.h"
 #import "NSThread+BlockAdditions.h"
+#import "UIView+Debug.h"
 
 /**
  * similar to the MMPaperState, this object will
@@ -41,6 +42,14 @@ static dispatch_queue_t importExportStateQueue;
         scrapIDsPath = _scrapIDsPath;
     }
     return self;
+}
+
+-(int) fullByteSize{
+    int totalBytes = 0;
+    for(MMScrapView* scrap in self.delegate.scraps){
+        totalBytes += scrap.fullByteSize;
+    }
+    return totalBytes;
 }
 
 -(BOOL) isStateLoaded{

@@ -10,16 +10,17 @@
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import <DrawKit-iOS/JRSwizzle.h>
+#import "Constants.h"
 
 @implementation UIGestureRecognizer (GestureDebug)
 
 -(void) swizzle_setState:(UIGestureRecognizerState)state{
     if(state == UIGestureRecognizerStateBegan){
-        NSLog(@"%@ began", [self class]);
+        debug_NSLog(@"%@ began", [self class]);
     }else if(state == UIGestureRecognizerStateCancelled){
-        NSLog(@"%@ cancelled", [self class]);
+        debug_NSLog(@"%@ cancelled", [self class]);
     }else if(state == UIGestureRecognizerStateEnded){
-        NSLog(@"%@ ended", [self class]);
+        debug_NSLog(@"%@ ended", [self class]);
     }
 
     [self swizzle_setState:state];

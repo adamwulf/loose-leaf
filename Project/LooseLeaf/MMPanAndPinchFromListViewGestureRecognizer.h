@@ -43,6 +43,7 @@
 @property (nonatomic, readonly) MMBezelScaleDirection scaleDirection;
 @property (nonatomic, assign) NSObject<MMPanAndPinchFromListViewGestureRecognizerDelegate>* pinchDelegate;
 
+-(void) killTheGestureCold;
 -(void) cancel;
 
 @end

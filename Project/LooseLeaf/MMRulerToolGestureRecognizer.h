@@ -11,7 +11,7 @@
 #import "Constants.h"
 #import "MMPanAndPinchGestureRecognizer.h"
 
-@interface MMRulerToolGestureRecognizer : MMPanAndPinchGestureRecognizer
+@interface MMRulerToolGestureRecognizer : MMPanAndPinchGestureRecognizer<MMPanAndPinchScrapGestureRecognizerDelegate>
 
 
 @property (nonatomic, readonly) CGFloat initialDistance;

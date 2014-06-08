@@ -127,6 +127,13 @@
     [super reset];
 }
 
+// kill the gesture, and make sure that any events
+// that fire after this won't include the pinchedPage
+-(void) killTheGestureCold{
+    pinchedPage = nil;
+    [self cancel];
+}
+
 -(void) cancel{
     if(self.enabled){
         self.enabled = NO;

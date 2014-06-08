@@ -6,6 +6,50 @@
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>Loose Leaf</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array>
+				<string>Loose-Leaf_76.png</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>PDF File</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adobe.pdf</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array>
+				<string>Loose-Leaf_76.png</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>Image File</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.png</string>
+				<string>public.jpg</string>
+				<string>public.jpeg-2000</string>
+				<string>public.jpeg</string>
+				<string>public.tiff</string>
+				<string>public.gif</string>
+				<string>com.apple.icns</string>
+				<string>public.image</string>
+				<string>com.microsoft.bmp</string>
+				<string>com.compuserve.gif</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIdentifier</key>

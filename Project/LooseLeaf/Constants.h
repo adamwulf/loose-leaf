@@ -18,8 +18,8 @@
 
 
 #ifdef DEBUG
-#define debug_NSLog(__FORMAT__, ...)
-//#define debug_NSLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
+//#define debug_NSLog(__FORMAT__, ...)
+#define debug_NSLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
 #else
 #define debug_NSLog(__FORMAT__, ...)
 #endif
@@ -88,15 +88,26 @@
 #define kMPEventLaunch @"App Launch"
 #define kMPEventTakePhoto @"Take Photo"
 #define kMPEventImportPhoto @"Import Photo"
+#define kMPEventImportPhotoFailed @"Import Photo Failed"
 #define kMPEventExport @"Export Page"
-#define kMPEventPhotoSource @"Photo Source"
 
 #define kMPEventExportPropDestination @"Export Destination"
 #define kMPEventExportPropResult @"Export Result"
+#define kMPEventImportPropFileExt @"File Extension"
+#define kMPEventImportPropFileType @"File Type"
+#define kMPEventImportPropReferApp @"Referring App"
+#define kMPEventImportPropSource @"Import Source"
+#define kMPEventImportPropPDFPageCount @"PDF Page Count"
+#define kMPEventImportPropSourceApplication @"Application"
+
 // photo album
 #define kMaxPhotoRotationInDegrees 20
 
-#define RandomPhotoRotation (rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees/2) / 360.0 * M_PI
+#define RandomPhotoRotation ((float)(rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees/2)) / 360.0 * M_PI
+
+// cache sizes
+#define kMMLoadImageCacheSize 30
+#define kMMPageCacheManagerSize 5
 
 #ifdef __cplusplus
 extern "C" {

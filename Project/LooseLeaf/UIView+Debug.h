@@ -12,4 +12,6 @@
 
 -(void) showDebugBorder;
 
+-(int) fullByteSize;
+
 @end

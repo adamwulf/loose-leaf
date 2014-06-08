@@ -15,8 +15,7 @@
 #import "MMPlusIcon.h"
 #import "MMLeftArrow.h"
 #import "MMRightArrow.h"
-#import "MMBezelInRightGestureRecognizer.h"
-#import "MMBezelInLeftGestureRecognizer.h"
+#import "MMBezelInGestureRecognizer.h"
 #import "UIView+SubviewStacks.h"
 #import "UIView+Debug.h"
 #import "UIView+Animations.h"
@@ -28,8 +27,8 @@
 @interface MMPaperStackView : UIScrollView<MMPaperViewDelegate>{
 
 @protected
-    MMBezelInRightGestureRecognizer* fromRightBezelGesture;
-    MMBezelInLeftGestureRecognizer* fromLeftBezelGesture;
+    MMBezelInGestureRecognizer* fromRightBezelGesture;
+    MMBezelInGestureRecognizer* fromLeftBezelGesture;
     
     UIView* visibleStackHolder;
     UIView* hiddenStackHolder;
@@ -60,8 +59,8 @@
 -(void) willChangeTopPageTo:(MMPaperView*)page;
 -(void) didChangeTopPage;
 -(void) willNotChangeTopPageTo:(MMPaperView*)page;
--(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer*)bezelGesture;
--(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture;
+-(void) isBezelingInRightWithGesture:(MMBezelInGestureRecognizer*)bezelGesture;
+-(void) isBezelingInLeftWithGesture:(MMBezelInGestureRecognizer*)bezelGesture;
 -(void) saveStacksToDisk;
 
 @end

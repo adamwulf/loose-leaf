@@ -142,6 +142,8 @@
 
 -(BOOL) isAllowedToPan;
 
+-(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch;
+
 /**
  * called when the ruler begins and when it moves
  */

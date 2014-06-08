@@ -15,5 +15,4 @@
 
 @property (nonatomic, weak) NSObject<MMListAddPageButtonDelegate>* delegate;
 
-
 @end

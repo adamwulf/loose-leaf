@@ -14,10 +14,12 @@
 #import "MMScrapBubbleButton.h"
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMMemoryProfileView.h"
 #import "Mixpanel.h"
 
 @implementation MMEditablePaperStackView{
     UIPopoverController* jotTouchPopover;
+    MMMemoryProfileView* memoryView;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -28,15 +30,15 @@
 
         [[NSFileManager defaultManager] preCacheDirectoryListingAt:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Pages"]];
         
-        [MMPageCacheManager sharedInstace].delegate = self;
+        [MMPageCacheManager sharedInstance].delegate = self;
 
         self.delegate = self;
         
         stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
         
-        [MMPageCacheManager sharedInstace].drawableView = [[JotView alloc] initWithFrame:self.bounds];
+        [MMPageCacheManager sharedInstance].drawableView = [[JotView alloc] initWithFrame:self.bounds];
 //        [MMPageCacheManager sharedInstace].drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
-        [[JotStylusManager sharedInstance] setPalmRejectorDelegate:[MMPageCacheManager sharedInstace].drawableView];
+        [[JotStylusManager sharedInstance] setPalmRejectorDelegate:[MMPageCacheManager sharedInstance].drawableView];
 
         pen = [[Pen alloc] init];
         
@@ -63,10 +65,17 @@
         [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:shareButton];
         
-        settingsButton = [[MMAdonitButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        settingsButton.delegate = self;
-        [settingsButton addTarget:self action:@selector(jotSettingsTapped:) forControlEvents:UIControlEventTouchUpInside];
+//        settingsButton = [[MMAdonitButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+//        settingsButton.delegate = self;
+//        [settingsButton addTarget:self action:@selector(jotSettingsTapped:) forControlEvents:UIControlEventTouchUpInside];
 //        [self addSubview:settingsButton];
+        
+        // memory button
+        CGRect settingsButtonRect = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 2 * 60, kWidthOfSidebarButton, kWidthOfSidebarButton);
+        settingsButton = [[MMTextButton alloc] initWithFrame:settingsButtonRect andFont:[UIFont systemFontOfSize:20] andLetter:@"!?" andXOffset:2 andYOffset:0];
+        settingsButton.delegate = self;
+        [settingsButton addTarget:self action:@selector(toggleMemoryView:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:settingsButton];
         
         
         pencilTool = [[MMPencilAndPaletteView alloc] initWithButtonFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton) andScreenSize:self.bounds.size];
@@ -172,12 +181,14 @@
         handButton.selected = YES;
         
         [NSThread performBlockInBackground:^{
-            [[NSNotificationCenter defaultCenter] addObserver: self
-                                                     selector:@selector(connectionChange:)
-                                                         name:JotStylusManagerDidChangeConnectionStatus
-                                                       object:nil];
-            [[JotStylusManager sharedInstance] setEnabled:YES];
-            [[JotStylusManager sharedInstance] setRejectMode:NO];
+            @autoreleasepool {
+                [[NSNotificationCenter defaultCenter] addObserver: self
+                                                         selector:@selector(connectionChange:)
+                                                             name:JotStylusManagerDidChangeConnectionStatus
+                                                           object:nil];
+                [[JotStylusManager sharedInstance] setEnabled:NO];
+                [[JotStylusManager sharedInstance] setRejectMode:NO];
+            }
         }];
         
         
@@ -194,6 +205,18 @@
     return self;
 }
 
+-(void) setMemoryView:(MMMemoryProfileView*)_memoryView{
+    memoryView = _memoryView;
+}
+
+
+-(void) toggleMemoryView:(UIButton*)button{
+    memoryView.hidden = !memoryView.hidden;
+}
+
+-(int) fullByteSize{
+    return [super fullByteSize] + addPageSidebarButton.fullByteSize + shareButton.fullByteSize + settingsButton.fullByteSize + pencilTool.fullByteSize + eraserButton.fullByteSize + scissorButton.fullByteSize + insertImageButton.fullByteSize + handButton.fullByteSize + rulerButton.fullByteSize + undoButton.fullByteSize + redoButton.fullByteSize + rulerView.fullByteSize;
+}
 
 #pragma mark - Gesture Helpers
 
@@ -386,8 +409,11 @@
 
 #pragma mark - Bezel Left and Right Gestures
 
--(void) isBezelingInLeftWithGesture:(MMBezelInLeftGestureRecognizer*)bezelGesture{
-    if(bezelGesture.state == UIGestureRecognizerStateBegan){
+-(void) isBezelingInLeftWithGesture:(MMBezelInGestureRecognizer*)bezelGesture{
+    // see comments in [MMPaperStackView:isBezelingInRightWithGesture] for
+    // comments on the messy `hasSeenSubstateBegin`
+    if(!bezelGesture.hasSeenSubstateBegin && (bezelGesture.subState == UIGestureRecognizerStateBegan ||
+                                              bezelGesture.subState == UIGestureRecognizerStateChanged)){
         // cancel any strokes that this gesture is using
         for(UITouch* touch in bezelGesture.touches){
             [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
@@ -397,7 +423,7 @@
     [super isBezelingInLeftWithGesture:bezelGesture];
 }
 
--(void) isBezelingInRightWithGesture:(MMBezelInRightGestureRecognizer *)bezelGesture{
+-(void) isBezelingInRightWithGesture:(MMBezelInGestureRecognizer *)bezelGesture{
     // see comments in [MMPaperStackView:isBezelingInRightWithGesture] for
     // comments on the messy `hasSeenSubstateBegin`
     if(!bezelGesture.hasSeenSubstateBegin && (bezelGesture.subState == UIGestureRecognizerStateBegan ||
@@ -430,10 +456,12 @@
 }
 
 -(void) didDrawStrokeOfCm:(CGFloat)distanceInCentimeters{
-    if([self activePen] == pen){
-        [[[Mixpanel sharedInstance] people] increment:kMPDistanceDrawn by:@(distanceInCentimeters / 100.0)];
-    }else if([self activePen] == eraser){
-        [[[Mixpanel sharedInstance] people] increment:kMPDistanceErased by:@(distanceInCentimeters / 100.0)];
+    @autoreleasepool {
+        if([self activePen] == pen){
+            [[[Mixpanel sharedInstance] people] increment:kMPDistanceDrawn by:@(distanceInCentimeters / 100.0)];
+        }else if([self activePen] == eraser){
+            [[[Mixpanel sharedInstance] people] increment:kMPDistanceErased by:@(distanceInCentimeters / 100.0)];
+        }
     }
 }
 
@@ -453,7 +481,7 @@
     // update UI for scaling small into list view
     [self setButtonsVisible:NO];
     [super isBeginningToScaleReallySmall:page];
-    [[MMPageCacheManager sharedInstace] updateVisiblePageImageCache];
+    [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 }
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     [super finishedScalingReallySmall:page];
@@ -507,12 +535,12 @@
         // top page should actually be the top visible page isn't necessarily
         // true. instead, i should ask the PageCacheManager to recheck
         // if it can hand the currently top page the drawable view.
-        [[MMPageCacheManager sharedInstace] didChangeToTopPage:[visibleStackHolder peekSubview]];
+        [[MMPageCacheManager sharedInstance] didChangeToTopPage:[visibleStackHolder peekSubview]];
     }
 }
 
 -(BOOL) isPageEditable:(MMPaperView*)page{
-    return page == [MMPageCacheManager sharedInstace].currentEditablePage;
+    return page == [MMPageCacheManager sharedInstance].currentEditablePage;
 }
 
 #pragma mark = Ruler
@@ -552,7 +580,7 @@
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     [super ownershipOfTouches:touches isGesture:gesture];
     if([gesture isKindOfClass:[MMDrawingTouchGestureRecognizer class]] ||
-       [gesture isKindOfClass:[MMBezelInRightGestureRecognizer class]]){
+       [gesture isKindOfClass:[MMBezelInGestureRecognizer class]]){
         // only notify of our own gestures
         [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
     }
@@ -637,8 +665,8 @@
     
     // load the state for the top page in the visible stack
     [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
-                                                     withSize:[[MMPageCacheManager sharedInstace].drawableView pagePixelSize]
-                                                   andContext:[[MMPageCacheManager sharedInstace].drawableView context]];
+                                                     withSize:[[MMPageCacheManager sharedInstance].drawableView pagePixelSize]
+                                                   andContext:[[MMPageCacheManager sharedInstance].drawableView context]];
     
     
     // only load the image previews for the pages that will be visible
@@ -663,10 +691,10 @@
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
     // dont start a new stroke if one already exists
     if([[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count] > 0){
-        NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
+        debug_NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
         return NO;
     }
-    if([[MMPageCacheManager sharedInstace].drawableView.state.currentStrokes count]){
+    if([[MMPageCacheManager sharedInstance].drawableView.state.currentStrokes count]){
         return NO;
     }
     for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scraps]){
@@ -806,7 +834,7 @@
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    [[MMPageCacheManager sharedInstace] updateVisiblePageImageCache];
+    [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 }
 
 

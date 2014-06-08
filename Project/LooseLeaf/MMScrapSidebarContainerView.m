@@ -14,6 +14,7 @@
 #import "MMImmutableScrapsOnPaperState.h"
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "UIView+Debug.h"
 
 #define kMaxScrapsInBezel 6
 
@@ -72,6 +73,10 @@
         [scrapState loadStateAsynchronously:YES andMakeEditable:NO];
     }
     return self;
+}
+
+-(int) fullByteSize{
+    return [super fullByteSize] + scrapState.fullByteSize;
 }
 
 
@@ -433,8 +438,10 @@ static NSString* bezelStatePath;
     MMImmutableScrapsOnPaperState* immutableState = [scrapState immutableState];
     NSMutableDictionary* writeableAdjustments = [rotationAdjustments copy];
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
-        [immutableState saveStateToDiskBlocking];
-        [writeableAdjustments writeToFile:[MMScrapSidebarContainerView pathToPlist] atomically:YES];
+        @autoreleasepool {
+            [immutableState saveStateToDiskBlocking];
+            [writeableAdjustments writeToFile:[MMScrapSidebarContainerView pathToPlist] atomically:YES];
+            }
     });
 }
 

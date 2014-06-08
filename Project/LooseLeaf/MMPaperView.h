@@ -25,7 +25,7 @@
     UILabel* textLabel;
     
     MMObjectSelectLongPressGestureRecognizer* longPress;
-    MMImmovableTapGestureRecognizer* tap;
+//    MMImmovableTapGestureRecognizer* tap;
     MMPanAndPinchGestureRecognizer* panGesture;
     
     BOOL isBrandNewPage;
@@ -43,6 +43,7 @@
 @property (nonatomic, readonly) UILabel* textLabel;
 @property (nonatomic, assign) BOOL isBrandNewPage;
 @property (nonatomic, readonly) MMPanAndPinchGestureRecognizer* panGesture;
+@property (nonatomic, readonly) int fullByteSize;
 
 // read only props
 @property (nonatomic, readonly) CGRect originalUnscaledBounds;

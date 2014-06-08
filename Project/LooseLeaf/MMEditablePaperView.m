@@ -16,6 +16,7 @@
 #import "DKUIBezierPathClippedSegment+PathElement.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMPageCacheManager.h"
+#import "MMLoadImageCache.h"
 
 dispatch_queue_t importThumbnailQueue;
 
@@ -71,7 +72,7 @@ dispatch_queue_t importThumbnailQueue;
         // and the tap gesture, and only allow page pan/scale if
         // these fail
         [rulerGesture requireGestureRecognizerToFail:longPress];
-        [rulerGesture requireGestureRecognizerToFail:tap];
+//        [rulerGesture requireGestureRecognizerToFail:tap];
         [self addGestureRecognizer:rulerGesture];
 
         
@@ -81,6 +82,11 @@ dispatch_queue_t importThumbnailQueue;
     }
     return self;
 }
+
+-(int) fullByteSize{
+    return [super fullByteSize] + paperState.fullByteSize;
+}
+
 
 -(void) setFrame:(CGRect)frame{
     [super setFrame:frame];
@@ -125,7 +131,6 @@ dispatch_queue_t importThumbnailQueue;
 }
 
 -(void) setEditable:(BOOL)isEditable{
-    NSLog(@"setting %@ editable", self.uuid);
     if(isEditable && (!drawableView || drawableView.hidden)){
         debug_NSLog(@"setting editable w/o canvas");
     }
@@ -170,7 +175,7 @@ dispatch_queue_t importThumbnailQueue;
 
 -(void) setDrawableView:(JotView *)_drawableView{
     if(_drawableView && ![self hasStateLoaded]){
-        NSLog(@"oh no");
+        debug_NSLog(@"oh no");
     }
     if(drawableView != _drawableView){
         drawableView = _drawableView;
@@ -258,6 +263,7 @@ dispatch_queue_t importThumbnailQueue;
                                // save
                                definitelyDoesNotHaveAnInkThumbnail = NO;
                                [paperState wasSavedAtImmutableState:immutableState];
+                               [[MMLoadImageCache sharedInstance] updateCacheForPath:[self thumbnailPath] toImage:thumbnail];
                                cachedImgViewImage = thumbnail;
                                onComplete(YES);
                            }else{
@@ -295,7 +301,7 @@ static int count = 0;
                 //
                 // load thumbnails into a cache for faster repeat loading
                 // https://github.com/adamwulf/loose-leaf/issues/227
-                UIImage* thumbnail = [UIImage imageWithContentsOfFile:[self thumbnailPath]];
+                UIImage* thumbnail = [[MMLoadImageCache sharedInstance] imageAtPath:[self thumbnailPath]];
                 if(!thumbnail){
                     definitelyDoesNotHaveAnInkThumbnail = YES;
                 }
@@ -322,7 +328,9 @@ static int count = 0;
         // adding to these thread queues will make sure I unload
         // after any in progress load
         dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
-            cachedImgViewImage = nil;
+            @autoreleasepool {
+                cachedImgViewImage = nil;
+            }
         });
     }
 }
@@ -448,11 +456,11 @@ static int count = 0;
 
 
 -(void) jotSuggestsToDisableGestures{
-    NSLog(@"disable gestures!");
+    debug_NSLog(@"disable gestures!");
 }
 
 -(void) jotSuggestsToEnableGestures{
-    NSLog(@"enable gestures!");
+    debug_NSLog(@"enable gestures!");
 }
 
 #pragma mark - File Paths
@@ -493,7 +501,7 @@ static int count = 0;
 #pragma mark - JotViewStateProxyDelegate
 
 -(void) jotStrokeWasCancelled:(JotStroke *)stroke{
-    NSLog(@"MMEditablePaperView jotStrokeWasCancelled:");
+    debug_NSLog(@"MMEditablePaperView jotStrokeWasCancelled:");
 }
 
 -(void) didLoadState:(JotViewStateProxy*)state{
@@ -502,7 +510,7 @@ static int count = 0;
 
 -(void) didUnloadState:(JotViewStateProxy *)state{
     [NSThread performBlockOnMainThread:^{
-        [[MMPageCacheManager sharedInstace] didUnloadStateForPage:self];
+        [[MMPageCacheManager sharedInstance] didUnloadStateForPage:self];
     }];
 }
 

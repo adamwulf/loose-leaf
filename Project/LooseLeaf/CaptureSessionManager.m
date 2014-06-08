@@ -10,6 +10,7 @@
 #import "CaptureSessionManager.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "MMRotationManager.h"
+#import "Constants.h"
 
 @implementation CaptureSessionManager{
     AVCaptureVideoPreviewLayer *previewLayer;
@@ -44,24 +45,30 @@ dispatch_queue_t sessionQueue;
         previewLayerHolder = [[CALayer alloc] init];
         
         dispatch_async([CaptureSessionManager sessionQueue], ^{
-            stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
-            if ([captureSession canAddOutput:stillImageOutput]){
-                [stillImageOutput setOutputSettings:@{AVVideoCodecKey : AVVideoCodecJPEG}];
-                [captureSession addOutput:stillImageOutput];
+            @autoreleasepool {
+                stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
+                if ([captureSession canAddOutput:stillImageOutput]){
+                    [stillImageOutput setOutputSettings:@{AVVideoCodecKey : AVVideoCodecJPEG}];
+                    [captureSession addOutput:stillImageOutput];
+                }
+                
+                [self changeCameraToDevice:[CaptureSessionManager deviceForPosition:preferredPosition]];
+                
+                [captureSession startRunning];
+                [self sessionStarted];
             }
-            
-            [self changeCameraToDevice:[self deviceForPosition:preferredPosition]];
-
-            [captureSession startRunning];
-            [self sessionStarted];
         });
 	}
 	return self;
 }
 
++(BOOL) hasCamera{
+    return [CaptureSessionManager deviceForPosition:AVCaptureDevicePositionUnspecified] ? YES : NO;
+}
+
 -(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
     if([keyPath isEqualToString:@"isInterrupted"]){
-        NSLog(@"interrupted!");
+        debug_NSLog(@"interrupted!");
     }else{
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
@@ -69,17 +76,19 @@ dispatch_queue_t sessionQueue;
 
 -(void) sessionStarted{
     dispatch_async(dispatch_get_main_queue(), ^{
-        if(previewLayer){
-            [previewLayer removeFromSuperlayer];
+        @autoreleasepool {
+            if(previewLayer){
+                [previewLayer removeFromSuperlayer];
+            }
+            previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:captureSession];
+            [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+            CGRect layerRect = [previewLayerHolder bounds];
+            layerRect.size.width = floorf(layerRect.size.width);
+            layerRect.size.height = floorf(layerRect.size.height);
+            [previewLayer setBounds:layerRect];
+            [previewLayer setPosition:CGPointMake(CGRectGetMidX(layerRect),CGRectGetMidY(layerRect))];
+            [previewLayerHolder addSublayer:previewLayer];
         }
-        previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:captureSession];
-        [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-        CGRect layerRect = [previewLayerHolder bounds];
-        layerRect.size.width = floorf(layerRect.size.width);
-        layerRect.size.height = floorf(layerRect.size.height);
-        [previewLayer setBounds:layerRect];
-        [previewLayer setPosition:CGPointMake(CGRectGetMidX(layerRect),CGRectGetMidY(layerRect))];
-        [previewLayerHolder addSublayer:previewLayer];
     });
     [delegate sessionStarted];
 }
@@ -88,14 +97,16 @@ dispatch_queue_t sessionQueue;
 
 -(void) changeCamera{
     dispatch_async([CaptureSessionManager sessionQueue], ^{
-        NSArray* currentInputs = [[self captureSession] inputs];
-        AVCaptureDeviceInput* currInput = [currentInputs firstObject];
-        if([currentInputs count]){
-            // remove if we have one
-            [[self captureSession] removeInput:currInput];
+        @autoreleasepool {
+            NSArray* currentInputs = [[self captureSession] inputs];
+            AVCaptureDeviceInput* currInput = [currentInputs firstObject];
+            if([currentInputs count]){
+                // remove if we have one
+                [[self captureSession] removeInput:currInput];
+            }
+            AVCaptureDevice* nextDevice = [self oppositeDeviceFrom:currDevice];
+            [self changeCameraToDevice:nextDevice];
         }
-        AVCaptureDevice* nextDevice = [self oppositeDeviceFrom:currDevice];
-        [self changeCameraToDevice:nextDevice];
     });
 }
 
@@ -109,15 +120,15 @@ dispatch_queue_t sessionQueue;
                 [[self captureSession] addInput:videoIn];
                 [self.delegate didChangeCameraTo:videoIn.device.position];
             }else{
-                NSLog(@"Couldn't create video input");
+                debug_NSLog(@"Couldn't create video input");
                 currDevice = nil;
             }
         }else{
-            NSLog(@"Couldn't create video input");
+            debug_NSLog(@"Couldn't create video input");
             currDevice = nil;
         }
     }else{
-        NSLog(@"Couldn't create video capture device");
+        debug_NSLog(@"Couldn't create video capture device");
         currDevice = nil;
     }
 }
@@ -172,49 +183,51 @@ dispatch_queue_t sessionQueue;
 -(ALAssetOrientation) currentDeviceOrientation{
     UIDeviceOrientation deviceOrientation = [[MMRotationManager sharedInstace] currentDeviceOrientation];
     if(deviceOrientation == UIDeviceOrientationLandscapeLeft){
-        NSLog(@"i think i should save left");
+        debug_NSLog(@"i think i should save left");
         return ALAssetOrientationUp;
     }else if(deviceOrientation == UIDeviceOrientationPortraitUpsideDown){
-        NSLog(@"i think i should save upside down");
+        debug_NSLog(@"i think i should save upside down");
         return ALAssetOrientationRight;
     }else if(deviceOrientation == UIDeviceOrientationLandscapeRight){
-        NSLog(@"i think i should save right");
+        debug_NSLog(@"i think i should save right");
         return ALAssetOrientationDown;
     }else{
-        NSLog(@"i think i should save portrait");
+        debug_NSLog(@"i think i should save portrait");
         return ALAssetOrientationRight;
     }
 }
 
 -(void) snapPicture{
 	dispatch_async([CaptureSessionManager sessionQueue], ^{
-		// Update the orientation on the still image output video connection before capturing.
-		[[stillImageOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:[[(AVCaptureVideoPreviewLayer *)[self previewLayer] connection] videoOrientation]];
-
-		// Flash set to Auto for Still Capture
-		[CaptureSessionManager setFlashMode:AVCaptureFlashModeAuto forDevice:currDevice];
-		
-		// Capture a still image.
-		[stillImageOutput captureStillImageAsynchronouslyFromConnection:[stillImageOutput connectionWithMediaType:AVMediaTypeVideo] completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
-			
-			if (imageDataSampleBuffer)
-			{
-				NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
-				UIImage *image = [[UIImage alloc] initWithData:imageData];
+        @autoreleasepool {
+            // Update the orientation on the still image output video connection before capturing.
+            [[stillImageOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:[[(AVCaptureVideoPreviewLayer *)[self previewLayer] connection] videoOrientation]];
+            
+            // Flash set to Auto for Still Capture
+            [CaptureSessionManager setFlashMode:AVCaptureFlashModeAuto forDevice:currDevice];
+            
+            // Capture a still image.
+            [stillImageOutput captureStillImageAsynchronouslyFromConnection:[stillImageOutput connectionWithMediaType:AVMediaTypeVideo] completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
                 
-                [delegate didTakePicture:image];
-                
-                CGSize sizeOfImage = image.size;
-                UIImageOrientation orient = image.imageOrientation;
-                AVCaptureVideoOrientation captureOrient = [[(AVCaptureVideoPreviewLayer *)[self previewLayer] connection] videoOrientation];
-                NSLog(@"image size %f,%f orient %@ %@ %@", sizeOfImage.width, sizeOfImage.height, [self logImageOrientation:orient], [self logVideoOrientation:captureOrient], [self logAssetOrientation:[self currentDeviceOrientation]]);
-                
-                // rotate the image that we save
-				[[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage]
-                                                                 orientation:[self currentDeviceOrientation]
-                                                             completionBlock:nil];
-			}
-		}];
+                if (imageDataSampleBuffer)
+                {
+                    NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
+                    UIImage *image = [[UIImage alloc] initWithData:imageData];
+                    
+                    [delegate didTakePicture:image];
+                    
+                    CGSize sizeOfImage = image.size;
+                    UIImageOrientation orient = image.imageOrientation;
+                    AVCaptureVideoOrientation captureOrient = [[(AVCaptureVideoPreviewLayer *)[self previewLayer] connection] videoOrientation];
+                    debug_NSLog(@"image size %f,%f orient %@ %@ %@", sizeOfImage.width, sizeOfImage.height, [self logImageOrientation:orient], [self logVideoOrientation:captureOrient], [self logAssetOrientation:[self currentDeviceOrientation]]);
+                    
+                    // rotate the image that we save
+                    [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage]
+                                                                     orientation:[self currentDeviceOrientation]
+                                                                 completionBlock:nil];
+                }
+            }];
+        }
 	});
 }
 
@@ -235,10 +248,10 @@ dispatch_queue_t sessionQueue;
             break;
     }
     
-    return [self deviceForPosition:preferredPosition];
+    return [CaptureSessionManager deviceForPosition:preferredPosition];
 }
 
--(AVCaptureDevice*) deviceForPosition:(AVCaptureDevicePosition)preferredPosition{
++(AVCaptureDevice*) deviceForPosition:(AVCaptureDevicePosition)preferredPosition{
     return [CaptureSessionManager deviceWithMediaType:AVMediaTypeVideo preferringPosition:preferredPosition];
 }
 
@@ -272,7 +285,7 @@ dispatch_queue_t sessionQueue;
 		}
 		else
 		{
-			NSLog(@"%@", error);
+			debug_NSLog(@"%@", error);
 		}
 	}
 }

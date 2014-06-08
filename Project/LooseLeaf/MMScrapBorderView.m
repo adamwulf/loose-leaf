@@ -23,6 +23,7 @@
     return self;
 }
 
+
 -(UIColor*) borderColor{
     return [UIColor colorWithRed: 0.26 green: 0.26 blue: 0.26 alpha: 0.35];
 }

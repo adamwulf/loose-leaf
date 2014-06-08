@@ -97,4 +97,10 @@ static MMRotationManager* _instance = nil;
 }
 
 
+-(MMVector*) upVector{
+    MMVector* up = [[[MMVector vectorWithAngle:-([[MMRotationManager sharedInstace] currentRotationReading])] flip] normal];
+    NSLog(@"up vector is: %@", up);
+    return up;
+}
+
 @end
