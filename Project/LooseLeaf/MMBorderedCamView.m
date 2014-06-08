@@ -13,6 +13,7 @@
 @implementation MMBorderedCamView{
     CGFloat rotation;
     CaptureSessionManager* cameraSession;
+    UIButton* circleButton;
 }
 
 @synthesize delegate;
@@ -63,6 +64,40 @@
         tempButton.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [tempButton addTarget:self action:@selector(snapStillImage:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:tempButton];
+
+        
+        CGFloat borderWidth = 6;
+        CGFloat strokeWidth = 2;
+        CGFloat buttonWidth = 60;
+        CGRect buttonFr = CGRectMake(0, 0, buttonWidth, buttonWidth);
+        buttonFr.origin.x = (self.bounds.size.width - buttonFr.size.width) / 2;
+        buttonFr.origin.y = self.bounds.size.height - buttonFr.size.height * 2 / 3;
+        circleButton = [[UIButton alloc] initWithFrame:buttonFr];
+        [circleButton addTarget:self action:@selector(snapStillImage:) forControlEvents:UIControlEventTouchUpInside];
+        
+        CAShapeLayer* circleInTheButton = [[CAShapeLayer alloc] init];
+        circleInTheButton.path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, buttonWidth, buttonWidth)].CGPath;
+        circleInTheButton.fillColor = [[UIColor blackColor] colorWithAlphaComponent:.5].CGColor;
+        [circleButton.layer addSublayer:circleInTheButton];
+
+        circleInTheButton = [[CAShapeLayer alloc] init];
+        UIBezierPath* outerEdge = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, buttonWidth, buttonWidth)];
+        [outerEdge appendPath:[UIBezierPath bezierPathWithOvalInRect:CGRectMake(borderWidth, borderWidth, buttonWidth - 2*borderWidth, buttonWidth - 2*borderWidth)]];
+        circleInTheButton.path = outerEdge.CGPath;
+        circleInTheButton.fillRule = kCAFillRuleEvenOdd;
+        circleInTheButton.fillColor = [UIColor whiteColor].CGColor;
+        [circleButton.layer addSublayer:circleInTheButton];
+        
+        circleInTheButton = [[CAShapeLayer alloc] init];
+        circleInTheButton.path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(borderWidth+strokeWidth, borderWidth+strokeWidth,
+                                                                                   buttonWidth - 2*(borderWidth+strokeWidth), buttonWidth - 2*(borderWidth+strokeWidth))].CGPath;
+        circleInTheButton.fillColor = [UIColor whiteColor].CGColor;
+//        circleInTheButton.strokeColor = [[UIColor blackColor] colorWithAlphaComponent:.3].CGColor;
+//        circleInTheButton.lineWidth = strokeWidth;
+        [circleButton.layer addSublayer:circleInTheButton];
+        
+        [self addSubview:circleButton];
+        
     }
     return self;
 }
