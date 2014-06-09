@@ -43,6 +43,7 @@
  * or a page pan
  */
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
+-(void) ownedTouchesHaveDied:(NSSet*)touches inGesture:(UIGestureRecognizer*)gesture;
 
 /**
  * notifies when a longpress happens, so that we can tell 

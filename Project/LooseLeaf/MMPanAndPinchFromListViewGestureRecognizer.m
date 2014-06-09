@@ -135,6 +135,7 @@
 }
 
 -(void) cancel{
+    NSLog(@"cancelled %@", NSStringFromClass([self class]));
     if(self.enabled){
         self.enabled = NO;
         self.enabled = YES;

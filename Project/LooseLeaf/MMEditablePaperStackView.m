@@ -57,12 +57,16 @@
         // ================================================================================
         addPageSidebarButton = [[MMPlusButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         addPageSidebarButton.delegate = self;
-        [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(addPageButtonTapped:)];
+        [addPageSidebarButton addGestureRecognizer:tap];
+//        [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:addPageSidebarButton];
         
         shareButton = [[MMShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         shareButton.delegate = self;
-        [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(shareButtonTapped:)];
+        [shareButton addGestureRecognizer:tap];
+//        [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:shareButton];
         
 //        settingsButton = [[MMAdonitButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
@@ -74,7 +78,9 @@
         CGRect settingsButtonRect = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 2 * 60, kWidthOfSidebarButton, kWidthOfSidebarButton);
         settingsButton = [[MMTextButton alloc] initWithFrame:settingsButtonRect andFont:[UIFont systemFontOfSize:20] andLetter:@"!?" andXOffset:2 andYOffset:0];
         settingsButton.delegate = self;
-        [settingsButton addTarget:self action:@selector(toggleMemoryView:) forControlEvents:UIControlEventTouchUpInside];
+        tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleMemoryView:)];
+        [settingsButton addGestureRecognizer:tap];
+//        [settingsButton addTarget:self action:@selector(toggleMemoryView:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:settingsButton];
         
         
@@ -84,13 +90,17 @@
         
         eraserButton = [[MMPencilEraserButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         eraserButton.delegate = self;
-        [eraserButton addTarget:self action:@selector(eraserTapped:) forControlEvents:UIControlEventTouchUpInside];
+        tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(eraserTapped:)];
+        [eraserButton addGestureRecognizer:tap];
+//        [eraserButton addTarget:self action:@selector(eraserTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:eraserButton];
         
         CGRect scissorButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton);
         scissorButton = [[MMScissorButton alloc] initWithFrame:scissorButtonFrame];
         scissorButton.delegate = self;
-        [scissorButton addTarget:self action:@selector(scissorTapped:) forControlEvents:UIControlEventTouchUpInside];
+        tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scissorTapped:)];
+        [scissorButton addGestureRecognizer:tap];
+//        [scissorButton addTarget:self action:@selector(scissorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:scissorButton];
         
         insertImageButton = [[MMImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
@@ -103,13 +113,17 @@
         CGRect handButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 5.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
         handButton = [[MMHandButton alloc] initWithFrame:handButtonFrame];
         handButton.delegate = self;
-        [handButton addTarget:self action:@selector(handTapped:) forControlEvents:UIControlEventTouchUpInside];
+        tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handTapped:)];
+        [handButton addGestureRecognizer:tap];
+//        [handButton addTarget:self action:@selector(handTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:handButton];
         
         CGRect rulerButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 6.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
         rulerButton = [[MMRulerButton alloc] initWithFrame:rulerButtonFrame];
         rulerButton.delegate = self;
-        [rulerButton addTarget:self action:@selector(rulerTapped:) forControlEvents:UIControlEventTouchUpInside];
+        tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(rulerTapped:)];
+        [rulerButton addGestureRecognizer:tap];
+//        [rulerButton addTarget:self action:@selector(rulerTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:rulerButton];
         
         
@@ -119,13 +133,17 @@
         
         undoButton = [[MMUndoRedoButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         undoButton.delegate = self;
-        [undoButton addTarget:self action:@selector(undo:) forControlEvents:UIControlEventTouchUpInside];
+        tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(undo:)];
+        [undoButton addGestureRecognizer:tap];
+//        [undoButton addTarget:self action:@selector(undo:) forControlEvents:UIControlEventTouchUpInside];
         undoButton.reverseArrow = YES;
         [self addSubview:undoButton];
         
         redoButton = [[MMUndoRedoButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         redoButton.delegate = self;
-        [redoButton addTarget:self action:@selector(redo:) forControlEvents:UIControlEventTouchUpInside];
+        tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(redo:)];
+        [redoButton addGestureRecognizer:tap];
+//        [redoButton addTarget:self action:@selector(redo:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:redoButton];
        
         
@@ -586,6 +604,16 @@
     }
     [[MMDrawingTouchGestureRecognizer sharedInstace] ownershipOfTouches:touches isGesture:gesture];
 }
+
+-(void) ownedTouchesHaveDied:(NSSet*)touches inGesture:(UIGestureRecognizer*)gesture{
+    [super ownedTouchesHaveDied:touches inGesture:gesture];
+    if([gesture isKindOfClass:[MMDrawingTouchGestureRecognizer class]] ||
+       [gesture isKindOfClass:[MMBezelInGestureRecognizer class]]){
+        [[visibleStackHolder peekSubview] ownedTouchesHaveDied:touches inGesture:gesture];
+    }
+    [[MMDrawingTouchGestureRecognizer sharedInstace] ownedTouchesHaveDied:touches inGesture:gesture];
+}
+
 
 -(NSArray*) scraps{
     @throw kAbstractMethodException;

@@ -24,6 +24,7 @@
 + (CATransform3D)transformQuadrilateral:(Quadrilateral)origin toQuadrilateral:(Quadrilateral)destination;
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
+-(void) ownedTouchesHaveDied:(NSSet *)touches inGesture:(UIGestureRecognizer *)gesture;
 
 -(Quadrilateral) getQuad;
 

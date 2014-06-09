@@ -1281,6 +1281,10 @@
     // noop
 }
 
+-(void) ownedTouchesHaveDied:(NSSet*)touches inGesture:(UIGestureRecognizer*)gesture{
+    // noop
+}
+
 -(void) isBeginningToScaleReallySmall:(MMPaperView *)page{
     [self updateIconAnimations];
 }

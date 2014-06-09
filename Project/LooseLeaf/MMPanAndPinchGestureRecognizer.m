@@ -137,6 +137,7 @@
                 [possibleTouches removeObjectsInSet:touches];
                 [validTouches removeObjectsInSet:touches];
             }
+            NSLog(@"added %d to %@", (int)[touches count], NSStringFromClass([self class]));
             [ignoredTouches addObjectsInSet:touches];
         }];
         if([validTouches count] < 2 && touchesWereStolen){
@@ -148,6 +149,11 @@
             [validTouches removeAllObjects];
         }
     }
+}
+
+-(void) ownedTouchesHaveDied:(NSSet*)touches inGesture:(UIGestureRecognizer*)gesture{
+    NSLog(@"died %d from %@", (int)[touches count], NSStringFromClass([self class]));
+    [ignoredTouches removeObjectsInSet:touches];
 }
 
 -(CGPoint)locationInView:(UIView *)view{
@@ -254,6 +260,8 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [self processSubStateForNextIteration];
     
+    NSLog(@"began %d from %@", (int)[touches count], NSStringFromClass([self class]));
+
     NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
     [validTouchesCurrentlyBeginning removeObjectsInSet:ignoredTouches];
 //    NSLog(@"input: %d  ignored: %d  possiblyValid: %d", [touches count], [ignoredTouches count], [validTouchesCurrentlyBeginning count]);
@@ -380,6 +388,13 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     [self processSubStateForNextIteration];
 
+    NSMutableSet* validTouchesCurrentEnding = [NSMutableSet setWithSet:[validTouches set]];
+    [validTouchesCurrentEnding intersectSet:touches];
+    if([validTouchesCurrentEnding count]){
+        [scrapDelegate ownedTouchesHaveDied:validTouchesCurrentEnding inGesture:self];
+    }
+    NSLog(@"ended %d from %@", (int)[touches count], NSStringFromClass([self class]));
+
     // pan and pinch and bezel
     BOOL cancelledFromBezel = NO;
     NSMutableOrderedSet* validTouchesCurrentlyEnding = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
@@ -502,7 +517,6 @@
 //    NSLog(@"cancel pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 -(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
-    [ignoredTouches addObject:touch];
     [super ignoreTouch:touch forEvent:event];
 }
 
@@ -522,6 +536,7 @@
 }
 
 -(void) cancel{
+    NSLog(@"cancelled %@", NSStringFromClass([self class]));
     if(self.enabled){
         self.enabled = NO;
         self.enabled = YES;

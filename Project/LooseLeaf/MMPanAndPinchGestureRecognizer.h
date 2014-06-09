@@ -54,5 +54,5 @@
 -(void) cancel;
 -(BOOL) containsTouch:(UITouch*)touch;
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
-
+-(void) ownedTouchesHaveDied:(NSSet*)touches inGesture:(UIGestureRecognizer*)gesture;
 @end

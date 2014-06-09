@@ -59,11 +59,11 @@
 {
     if ((self = [super initWithFrame:frame])) {
         
-//        debugTimer = [NSTimer scheduledTimerWithTimeInterval:3
-//                                                                  target:self
-//                                                                selector:@selector(timerDidFire:)
-//                                                                userInfo:nil
-//                                                                 repeats:YES];
+        debugTimer = [NSTimer scheduledTimerWithTimeInterval:3
+                                                                  target:self
+                                                                selector:@selector(timerDidFire:)
+                                                                userInfo:nil
+                                                                 repeats:YES];
 
         
 //        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5
@@ -78,7 +78,9 @@
         CGFloat midPointY = (frame.size.height - 3*80) / 2;
         countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
         countButton.alpha = 0;
-        [countButton addTarget:self action:@selector(showScrapSidebar:) forControlEvents:UIControlEventTouchUpInside];
+        UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showScrapSidebar:)];
+        [countButton addGestureRecognizer:tap];
+//        [countButton addTarget:self action:@selector(showScrapSidebar:) forControlEvents:UIControlEventTouchUpInside];
         [self insertSubview:countButton belowSubview:addPageSidebarButton];
 
         bezelScrapContainer = [[MMScrapSidebarContainerView alloc] initWithFrame:self.bounds andCountButton:countButton];
@@ -111,7 +113,9 @@
         // make sure sidebar buttons hide the scrap menu
         for(MMSidebarButton* possibleSidebarButton in self.subviews){
             if([possibleSidebarButton isKindOfClass:[MMSidebarButton class]]){
-                [possibleSidebarButton addTarget:self action:@selector(anySidebarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+                tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(anySidebarButtonTapped:)];
+                [possibleSidebarButton addGestureRecognizer:tap];
+//                [possibleSidebarButton addTarget:self action:@selector(anySidebarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
             }
         }
     
@@ -123,7 +127,9 @@
 //        drawLongElementButton.layer.borderWidth = 1;
 //        [self addSubview:drawLongElementButton];
         
-        [insertImageButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(insertImageButtonTapped:)];
+        [insertImageButton addGestureRecognizer:tap];
+//        [insertImageButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
         imagePicker = [[MMImageSidebarContainerView alloc] initWithFrame:self.bounds forButton:insertImageButton animateFromLeft:YES];
         imagePicker.delegate = self;
@@ -544,7 +550,11 @@ int skipAll = NO;
     allGesturesAndTopTwoPages = [allGesturesAndTopTwoPages arrayByAddingObjectsFromArray:[[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]] gestureRecognizers]];
     for(UIGestureRecognizer* gesture in allGesturesAndTopTwoPages){
         UIGestureRecognizerState st = gesture.state;
-        [str appendFormat:@"%@ %d\n", NSStringFromClass([gesture class]), (int)st];
+        UIGestureRecognizerState sst = gesture.state;
+        if([gesture respondsToSelector:@selector(subState)]){
+            sst = (UIGestureRecognizerState) [gesture performSelector:@selector(subState)];
+        }
+        [str appendFormat:@"%@ %d %d\n", NSStringFromClass([gesture class]), (int)st, (int) sst];
         if([gesture respondsToSelector:@selector(validTouches)]){
             [str appendFormat:@"   validTouches: %d\n", (int)[[gesture performSelector:@selector(validTouches)] count]];
         }
@@ -1282,6 +1292,18 @@ int skipAll = NO;
     [panAndPinchScrapGesture ownershipOfTouches:touches isGesture:gesture];
     [panAndPinchScrapGesture2 ownershipOfTouches:touches isGesture:gesture];
     [stretchScrapGesture ownershipOfTouches:touches isGesture:gesture];
+}
+
+-(void) ownedTouchesHaveDied:(NSSet *)touches inGesture:(UIGestureRecognizer *)gesture{
+    [super ownedTouchesHaveDied:touches inGesture:gesture];
+    if([gesture isKindOfClass:[MMPanAndPinchScrapGestureRecognizer class]] ||
+       [gesture isKindOfClass:[MMStretchScrapGestureRecognizer class]]){
+        // only notify of our own gestures
+        [[visibleStackHolder peekSubview] ownedTouchesHaveDied:touches inGesture:gesture];
+    }
+    [panAndPinchScrapGesture ownedTouchesHaveDied:touches inGesture:gesture];
+    [panAndPinchScrapGesture2 ownedTouchesHaveDied:touches inGesture:gesture];
+    [stretchScrapGesture ownedTouchesHaveDied:touches inGesture:gesture];
 }
 
 -(void) didLongPressPage:(MMPaperView*)page withTouches:(NSSet*)touches{

@@ -42,7 +42,9 @@
         flipButton = [[MMFlipCameraButton alloc] initWithFrame:CGRectMake(self.frame.size.width - kWidthOfSidebarButton - kWidthOfSidebarButtonBuffer,
                                                                           floorf((cameraViewFr.size.height - kWidthOfSidebarButton) / 2),
                                                                           kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        [flipButton addTarget:self action:@selector(changeCamera) forControlEvents:UIControlEventTouchUpInside];
+        UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(changeCamera)];
+        [flipButton addGestureRecognizer:tap];
+//        [flipButton addTarget:self action:@selector(changeCamera) forControlEvents:UIControlEventTouchUpInside];
         [photoListScrollView addSubview:flipButton];
     }
     return self;

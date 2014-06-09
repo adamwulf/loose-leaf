@@ -101,6 +101,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 }
 
 -(void) cancel{
+    NSLog(@"cancelled %@", NSStringFromClass([self class]));
     if(self.enabled){
         self.enabled = NO;
         self.enabled = YES;
@@ -173,6 +174,12 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         }
     }
 }
+
+-(void) ownedTouchesHaveDied:(NSSet *)touches inGesture:(UIGestureRecognizer *)gesture{
+    [ignoredTouches removeObjectsInSet:touches];
+}
+
+
 
 /**
  * called when someone else decides that we need to
@@ -502,6 +509,12 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSMutableSet* validTouchesCurrentEnding = [NSMutableSet setWithSet:[validTouches set]];
+    [validTouchesCurrentEnding intersectSet:touches];
+    if([validTouchesCurrentEnding count]){
+        [scrapDelegate ownedTouchesHaveDied:validTouchesCurrentEnding inGesture:self];
+    }
+
     [self say:@"ended" ISee:touches];
     if(paused){
         [validTouches removeObjectsInSet:touches];
@@ -626,6 +639,12 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSMutableSet* validTouchesCurrentEnding = [NSMutableSet setWithSet:[validTouches set]];
+    [validTouchesCurrentEnding intersectSet:touches];
+    if([validTouchesCurrentEnding count]){
+        [scrapDelegate ownedTouchesHaveDied:validTouchesCurrentEnding inGesture:self];
+    }
+
     [self say:@"cancelled" ISee:touches];
     if(paused){
         [validTouches removeObjectsInSet:touches];
@@ -746,15 +765,15 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     scrap = nil;
 }
 
--(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
-    if(![ignoredTouches containsObject:touch]){
-        [ignoredTouches addObject:touch];
-        [self clearCacheForTouch:touch];
-        // dont' send to super, or we'll stop getting
-        // update events for these touches. we'll manually
-        // ignore them by tracking ignoredTouches ourselves
-    }
-}
+//-(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
+//    if(![ignoredTouches containsObject:touch]){
+//        [ignoredTouches addObject:touch];
+//        [self clearCacheForTouch:touch];
+//        // dont' send to super, or we'll stop getting
+//        // update events for these touches. we'll manually
+//        // ignore them by tracking ignoredTouches ourselves
+//    }
+//}
 - (void)reset{
     [super reset];
     initialDistance = 0;

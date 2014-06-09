@@ -58,6 +58,7 @@
 @property (readonly) MMVector* initialTouchVector;
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
+-(void) ownedTouchesHaveDied:(NSSet *)touches inGesture:(UIGestureRecognizer *)gesture;
 -(void) relinquishOwnershipOfTouches:(NSSet*)touches;
 -(void) giveUpScrap;
 -(void) cancel;

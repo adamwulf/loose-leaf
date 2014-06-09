@@ -45,9 +45,13 @@ static MMDrawingTouchGestureRecognizer* _instance = nil;
 }
 
 -(void) cancel{
+    NSLog(@"cancelled %@", NSStringFromClass([self class]));
     if(self.enabled){
         self.enabled = NO;
         self.enabled = YES;
+//        [validTouches removeAllObjects];
+//        [possibleTouches removeAllObjects];
+//        [ignoredTouches removeAllObjects];
     }
 }
 
@@ -90,12 +94,22 @@ static MMDrawingTouchGestureRecognizer* _instance = nil;
 }
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSMutableSet* validTouchesCurrentEnding = [NSMutableSet setWithSet:[validTouches set]];
+    [validTouchesCurrentEnding intersectSet:touches];
+    if([validTouchesCurrentEnding count]){
+        [self.touchDelegate ownedTouchesHaveDied:validTouchesCurrentEnding inGesture:self];
+    }
     [possibleTouches removeObjectsInSet:touches];
     [ignoredTouches removeObjectsInSet:touches];
     [validTouches removeObjectsInSet:touches];
 }
 
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSMutableSet* validTouchesCurrentEnding = [NSMutableSet setWithSet:[validTouches set]];
+    [validTouchesCurrentEnding intersectSet:touches];
+    if([validTouchesCurrentEnding count]){
+        [self.touchDelegate ownedTouchesHaveDied:validTouchesCurrentEnding inGesture:self];
+    }
     [possibleTouches removeObjectsInSet:touches];
     [ignoredTouches removeObjectsInSet:touches];
     [validTouches removeObjectsInSet:touches];
@@ -112,6 +126,9 @@ static MMDrawingTouchGestureRecognizer* _instance = nil;
     }
 }
 
+-(void) ownedTouchesHaveDied:(NSSet*)touches inGesture:(UIGestureRecognizer*)gesture{
+    [ignoredTouches removeObjectsInSet:touches];
+}
 
 #pragma mark - UIGestureRecognizerDelegate
 

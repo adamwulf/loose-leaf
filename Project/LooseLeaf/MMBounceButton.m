@@ -11,9 +11,13 @@
 
 @implementation MMBounceButton{
     CGFloat rotation;
+    BOOL enabled;
+    BOOL selected;
 }
 
 @synthesize rotation;
+@synthesize enabled;
+@synthesize selected;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -22,9 +26,14 @@
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
-        [self addTarget:self action:@selector(bounceButton:) forControlEvents:UIControlEventTouchUpInside];
-        self.adjustsImageWhenDisabled = NO;
-        self.adjustsImageWhenHighlighted = NO;
+        enabled = YES;
+//        [self addTarget:self action:@selector(bounceButton:) forControlEvents:UIControlEventTouchUpInside];
+//        self.adjustsImageWhenDisabled = NO;
+//        self.adjustsImageWhenHighlighted = NO;
+        
+        self.userInteractionEnabled = YES;
+        UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(bounceButton:)];
+        [self addGestureRecognizer:tap];
     }
     return self;
 }

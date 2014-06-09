@@ -17,6 +17,9 @@
 // ownership of a touch inside of its Ended or Cancelled event.
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 
+// when claimed touches have ended or canceled, its important to tell all other gestures
+-(void) ownedTouchesHaveDied:(NSSet*)touches inGesture:(UIGestureRecognizer*)gesture;
+
 -(NSArray*) scraps;
 
 @end

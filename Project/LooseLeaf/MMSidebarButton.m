@@ -23,8 +23,8 @@
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
-        self.adjustsImageWhenDisabled = NO;
-        self.adjustsImageWhenHighlighted = NO;
+//        self.adjustsImageWhenDisabled = NO;
+//        self.adjustsImageWhenHighlighted = NO;
     }
     return self;
 }

@@ -48,6 +48,7 @@
 }
 
 -(void) cancel{
+    NSLog(@"cancelled %@", NSStringFromClass([self class]));
     if(self.enabled){
         self.enabled = NO;
         self.enabled = YES;
@@ -116,6 +117,11 @@
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     [rulerDelegate ownershipOfTouches:touches isGesture:gesture];
+}
+
+-(void) ownedTouchesHaveDied:(NSSet *)touches inGesture:(UIGestureRecognizer *)gesture{
+    [super ownedTouchesHaveDied:touches inGesture:gesture];
+    [rulerDelegate ownedTouchesHaveDied:touches inGesture:gesture];
 }
 
 @end

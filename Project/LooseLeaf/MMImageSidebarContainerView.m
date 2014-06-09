@@ -96,31 +96,41 @@
                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
         cameraAlbumButton.darkBg = YES;
         [cameraAlbumButton setImage:[UIImage imageNamed:@"clearcamera"]];
-        [cameraAlbumButton addTarget:self action:@selector(cameraButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cameraButtonTapped:)];
+        [cameraAlbumButton addGestureRecognizer:tap];
+//        [cameraAlbumButton addTarget:self action:@selector(cameraButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [sidebarContentView addSubview:cameraAlbumButton];
 
         // albums
         iPhotoAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + kWidthOfSidebarButton, buttonBounds.origin.y,
                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [iPhotoAlbumButton setImage:[UIImage imageNamed:@"clearphotoalbum"]];
-        [iPhotoAlbumButton addTarget:self action:@selector(albumButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(albumButtonTapped:)];
+        [iPhotoAlbumButton addGestureRecognizer:tap];
+//        [iPhotoAlbumButton addTarget:self action:@selector(albumButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [sidebarContentView addSubview:iPhotoAlbumButton];
         
         // faces button
         iPhotoFacesButton = [[MMFaceButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 2* kWidthOfSidebarButton, buttonBounds.origin.y,
                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        [iPhotoFacesButton addTarget:self action:@selector(faceButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(faceButtonTapped:)];
+        [iPhotoFacesButton addGestureRecognizer:tap];
+//        [iPhotoFacesButton addTarget:self action:@selector(faceButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [sidebarContentView addSubview:iPhotoFacesButton];
         
         // event button
         iPhotoEventsButton = [[MMPalmTreeButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 3* kWidthOfSidebarButton, buttonBounds.origin.y,
                                                                     kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        [iPhotoEventsButton addTarget:self action:@selector(eventButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(eventButtonTapped:)];
+        [iPhotoEventsButton addGestureRecognizer:tap];
+//        [iPhotoEventsButton addTarget:self action:@selector(eventButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [sidebarContentView addSubview:iPhotoEventsButton];
         
         pdfInboxButton = [[MMPDFButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4* kWidthOfSidebarButton, buttonBounds.origin.y,
                                                                                 kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        [pdfInboxButton addTarget:self action:@selector(pdfButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pdfButtonTapped:)];
+        [pdfInboxButton addGestureRecognizer:tap];
+//        [pdfInboxButton addTarget:self action:@selector(pdfButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [sidebarContentView addSubview:pdfInboxButton];
         
 //        // facebook

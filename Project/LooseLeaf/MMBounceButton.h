@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MMBounceButton : UIButton
+@interface MMBounceButton : UIView
 
 @property (nonatomic, assign) CGFloat rotation;
+@property (nonatomic, assign) BOOL enabled;
+@property (nonatomic, assign) BOOL selected;
 
 -(UIColor*) borderColor;
 

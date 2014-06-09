@@ -64,6 +64,7 @@
 }
 
 -(void) cancel{
+    NSLog(@"cancelled %@", NSStringFromClass([self class]));
     if(self.enabled){
         self.enabled = NO;
         self.enabled = YES;
@@ -248,6 +249,12 @@
         self.state = UIGestureRecognizerStateFailed;
         return;
     }
+    NSMutableSet* validTouchesCurrentEnding = [NSMutableSet setWithSet:validTouches];
+    [validTouchesCurrentEnding intersectSet:touches];
+    if([validTouchesCurrentEnding count]){
+        [self.panDelegate ownedTouchesHaveDied:validTouchesCurrentEnding inGesture:self];
+    }
+
     [self processSubStateForNextIteration];
     [ignoredTouches removeObjectsInSet:touches];
     BOOL didChangeTouchLoc = NO;
@@ -301,6 +308,12 @@
         self.state = UIGestureRecognizerStateFailed;
         return;
     }
+    NSMutableSet* validTouchesCurrentEnding = [NSMutableSet setWithSet:validTouches];
+    [validTouchesCurrentEnding intersectSet:touches];
+    if([validTouchesCurrentEnding count]){
+        [self.panDelegate ownedTouchesHaveDied:validTouchesCurrentEnding inGesture:self];
+    }
+
     [self processSubStateForNextIteration];
     [ignoredTouches removeObjectsInSet:touches];
     [validTouches removeObjectsInSet:touches];
@@ -392,12 +405,12 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     // Disallow recognition of tap gestures in the segmented control.
-    if(gestureIsFromRightBezel){
+//    if(gestureIsFromRightBezel){
         // might need to work on this for the left as well??
         if ([touch.view isKindOfClass:[MMBounceButton class]]) {
             return NO;
         }
-    }
+//    }
     return YES;
 }
 

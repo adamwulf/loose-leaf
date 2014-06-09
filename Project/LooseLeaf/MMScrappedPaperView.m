@@ -260,6 +260,15 @@ static dispatch_queue_t concurrentBackgroundQueue;
     }
 }
 
+-(void) ownedTouchesHaveDied:(NSSet*)touches inGesture:(UIGestureRecognizer*)gesture{
+    [panGesture ownedTouchesHaveDied:touches inGesture:gesture];
+    [rulerGesture ownedTouchesHaveDied:touches inGesture:gesture];
+    if([gesture isKindOfClass:[MMPanAndPinchGestureRecognizer class]]){
+        [self.delegate ownedTouchesHaveDied:touches inGesture:gesture];
+    }
+}
+
+
 -(BOOL) panScrapRequiresLongPress{
     return [self.delegate panScrapRequiresLongPress];
 }

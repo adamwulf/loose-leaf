@@ -59,7 +59,9 @@
         [sidebarContentView addSubview:contentView];
 
         countButton = _countButton;
-        [countButton addTarget:self action:@selector(countButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(countButtonTapped:)];
+        [countButton addGestureRecognizer:tap];
+//        [countButton addTarget:self action:@selector(countButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
         
         NSDictionary* loadedRotationValues = [NSDictionary dictionaryWithContentsOfFile:[MMScrapSidebarContainerView pathToPlist]];

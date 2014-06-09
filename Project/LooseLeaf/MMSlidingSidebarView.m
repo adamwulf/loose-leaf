@@ -37,7 +37,9 @@
         // make the button we'll use to close
         closeButton = [[MMLeftCloseButton alloc] initWithFrame:referenceButton.frame];
         closeButton.frame = [self rectForButton];
-        [closeButton addTarget:self action:@selector(closeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeButtonTapped:)];
+        [closeButton addGestureRecognizer:tap];
+//        [closeButton addTarget:self action:@selector(closeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         if(!directionIsFromLeft){
             // flip the button to point to the right
             closeButton.rotation = M_PI;

@@ -57,7 +57,9 @@
         // Initialization code
         
         pencilButton = [[MMPencilButton alloc] initWithFrame:originalFrame];
-        [pencilButton addTarget:self action:@selector(penTapped:) forControlEvents:UIControlEventTouchUpInside];
+        UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(penTapped:)];
+        [pencilButton addGestureRecognizer:tap];
+//        [pencilButton addTarget:self action:@selector(penTapped:) forControlEvents:UIControlEventTouchUpInside];
         pencilButton.tool = self;
         [self addSubview:pencilButton];
         
@@ -66,7 +68,9 @@
                                          (pencilLocInContentHolder.y + originalFrame.size.height / 2) / blackColorHolder.frame.size.height) forView:blackColorHolder];
         [self addSubview:blackColorHolder];
         blackButton = [[MMColorButton alloc] initWithColor:[UIColor blackColor] andFrame:CGRectMake(pencilLocInContentHolder.x + kWidthOfSidebarButtonBuffer - kWidthOfSidebarButton, pencilLocInContentHolder.y, originalFrame.size.width, originalFrame.size.height)];
-        [blackButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
+        tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(colorTapped:)];
+        [blackButton addGestureRecognizer:tap];
+//        [blackButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [blackColorHolder addSubview:blackButton];
 
         activeColorButton = [[MMColorButton alloc] initWithColor:[UIColor blackColor] andFrame:blackButton.originalFrame];
@@ -77,7 +81,9 @@
                                          (pencilLocInContentHolder.y + originalFrame.size.height / 2) / blackColorHolder.frame.size.height) forView:blueColorHolder];
         [self addSubview:blueColorHolder];
         blueButton = [[MMColorButton alloc] initWithColor:[AVHexColor colorWithHexString:@"3C7BFF"] andFrame:CGRectMake(pencilLocInContentHolder.x - kWidthOfSidebarButton * cosf(M_PI / 3), pencilLocInContentHolder.y + kWidthOfSidebarButton * sinf(M_PI / 3), originalFrame.size.width, originalFrame.size.height)];
-        [blueButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
+        tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(colorTapped:)];
+        [blueButton addGestureRecognizer:tap];
+//        [blueButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [blueColorHolder addSubview:blueButton];
     
         redColorHolder = [[UIView alloc] initWithFrame:CGRectMake(originalFrame.origin.x - pencilLocInContentHolder.x, originalFrame.origin.y - pencilLocInContentHolder.y, 200, 200)];
@@ -85,7 +91,9 @@
                                          (pencilLocInContentHolder.y + originalFrame.size.height / 2) / blackColorHolder.frame.size.height) forView:redColorHolder];
         [self addSubview:redColorHolder];
         redButton = [[MMColorButton alloc] initWithColor:[AVHexColor colorWithHexString:@"E8373E"] andFrame:CGRectMake(pencilLocInContentHolder.x - 2 * kWidthOfSidebarButton, pencilLocInContentHolder.y, originalFrame.size.width, originalFrame.size.height)];
-        [redButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
+        tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(colorTapped:)];
+        [redButton addGestureRecognizer:tap];
+//        [redButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [redColorHolder addSubview:redButton];
         
         yellowColorHolder = [[UIView alloc] initWithFrame:CGRectMake(originalFrame.origin.x - pencilLocInContentHolder.x, originalFrame.origin.y - pencilLocInContentHolder.y, 200, 200)];
@@ -93,7 +101,9 @@
                                          (pencilLocInContentHolder.y + originalFrame.size.height / 2) / blackColorHolder.frame.size.height) forView:yellowColorHolder];
         [self addSubview:yellowColorHolder];
         yellowButton = [[MMColorButton alloc] initWithColor:[AVHexColor colorWithHexString:@"FFE230"] andFrame:CGRectMake(pencilLocInContentHolder.x - 1.8 * kWidthOfSidebarButton * cosf(M_PI / 6), pencilLocInContentHolder.y + 1.8 * kWidthOfSidebarButton * sinf(M_PI / 6), originalFrame.size.width, originalFrame.size.height)];
-        [yellowButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
+        tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(colorTapped:)];
+        [yellowButton addGestureRecognizer:tap];
+//        [yellowButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [yellowColorHolder addSubview:yellowButton];
         
         greenColorHolder = [[UIView alloc] initWithFrame:CGRectMake(originalFrame.origin.x - pencilLocInContentHolder.x, originalFrame.origin.y - pencilLocInContentHolder.y, 200, 200)];
@@ -101,7 +111,9 @@
                                          (pencilLocInContentHolder.y + originalFrame.size.height / 2) / blackColorHolder.frame.size.height) forView:greenColorHolder];
         [self addSubview:greenColorHolder];
         greenButton = [[MMColorButton alloc] initWithColor:[AVHexColor colorWithHexString:@"5EF52E"] andFrame:CGRectMake(pencilLocInContentHolder.x - 2 * kWidthOfSidebarButton * cosf(M_PI / 3), pencilLocInContentHolder.y + 2 * kWidthOfSidebarButton * sinf(M_PI / 3), originalFrame.size.width, originalFrame.size.height)];
-        [greenButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
+        tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(colorTapped:)];
+        [greenButton addGestureRecognizer:tap];
+//        [greenButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [greenColorHolder addSubview:greenButton];
         
         

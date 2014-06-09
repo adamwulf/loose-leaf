@@ -73,6 +73,7 @@
 }
 
 -(void) cancel{
+    NSLog(@"cancelled %@", NSStringFromClass([self class]));
     if(self.enabled){
         self.enabled = NO;
         self.enabled = YES;
@@ -110,6 +111,10 @@
             [self updateValidTouches];
         }
     }
+}
+
+-(void) ownedTouchesHaveDied:(NSSet *)touches inGesture:(UIGestureRecognizer *)gesture{
+    [ignoredTouches removeObjectsInSet:touches];
 }
 
 -(void) blessTouches:(NSSet*)touches{
@@ -509,6 +514,11 @@
 }
 
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSMutableSet* validTouchesCurrentEnding = [NSMutableSet setWithSet:[validTouches set]];
+    [validTouchesCurrentEnding intersectSet:touches];
+    if([validTouchesCurrentEnding count]){
+        [scrapDelegate ownedTouchesHaveDied:validTouchesCurrentEnding inGesture:self];
+    }
     [touches enumerateObjectsUsingBlock:^(id touch, BOOL* stop){
         [possibleTouches removeObject:touch];
         [validTouches removeObject:touch];
@@ -524,6 +534,11 @@
 }
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSMutableSet* validTouchesCurrentEnding = [NSMutableSet setWithSet:[validTouches set]];
+    [validTouchesCurrentEnding intersectSet:touches];
+    if([validTouchesCurrentEnding count]){
+        [scrapDelegate ownedTouchesHaveDied:validTouchesCurrentEnding inGesture:self];
+    }
     [touches enumerateObjectsUsingBlock:^(id touch, BOOL* stop){
         [possibleTouches removeObject:touch];
         [validTouches removeObject:touch];
