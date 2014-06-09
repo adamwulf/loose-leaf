@@ -453,7 +453,7 @@
             self.state = UIGestureRecognizerStateFailed;
         }
     }
-    [self processPossibleTouchesFromOriginalLocationInView:originalLocationInView];
+//    [self processPossibleTouchesFromOriginalLocationInView:originalLocationInView];
 
     [super touchesEnded:touches withEvent:event];
 //    NSLog(@"end pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);

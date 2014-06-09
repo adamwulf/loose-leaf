@@ -347,6 +347,7 @@
         // began to changed, because i never know when the delegate has or hasn't
         // been notified about the substate
         bezelGesture.hasSeenSubstateBegin = YES;
+        [[visibleStackHolder peekSubview] saveToDisk];
         [[visibleStackHolder peekSubview] disableAllGestures];
         //
         // ok, the user is beginning the drag two fingers from the
@@ -380,6 +381,9 @@
         // the one below it
         [self ensureAtLeast:2 pagesInStack:visibleStackHolder];
         [self willChangeTopPageTo:[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]]];
+        if([[visibleStackHolder peekSubview] hasEditsToSave]){
+            [[visibleStackHolder peekSubview] saveToDisk];
+        }
         [bezelStackHolder pushSubview:[visibleStackHolder peekSubview]];
         // when bezeling left, we must change the top page
         // to the new visiblestack top page. this'll let us
@@ -549,6 +553,7 @@
         // began to changed, because i never know when the delegate has or hasn't
         // been notified about the substate
         bezelGesture.hasSeenSubstateBegin = YES;
+        [[visibleStackHolder peekSubview] saveToDisk];
         //
         // ok, the user is beginning the drag two fingers from the
         // right hand bezel. we need to push a page from the hidden

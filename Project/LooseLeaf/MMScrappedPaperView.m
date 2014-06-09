@@ -826,6 +826,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         if(!cachedImgView && img){
             cachedImgView = [[MMCachedPreviewManager sharedInstace] requestCachedImageViewForView:self];
             cachedImgView.image = img;
+            cachedImgView.hidden = !scrapContainerView.hidden;
             if(drawableView){
                 [self.contentView insertSubview:cachedImgView belowSubview:drawableView];
             }else{

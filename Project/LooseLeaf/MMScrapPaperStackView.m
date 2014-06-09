@@ -59,11 +59,11 @@
 {
     if ((self = [super initWithFrame:frame])) {
         
-//        debugTimer = [NSTimer scheduledTimerWithTimeInterval:3
-//                                                                  target:self
-//                                                                selector:@selector(timerDidFire:)
-//                                                                userInfo:nil
-//                                                                 repeats:YES];
+        debugTimer = [NSTimer scheduledTimerWithTimeInterval:3
+                                                                  target:self
+                                                                selector:@selector(timerDidFire:)
+                                                                userInfo:nil
+                                                                 repeats:YES];
 
         
 //        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5
@@ -653,15 +653,15 @@ int skipAll = NO;
 
 -(void) isBezelingInLeftWithGesture:(MMBezelInGestureRecognizer*)bezelGesture{
     if(bezelGesture.subState != UIGestureRecognizerStatePossible){
-        [super isBezelingInLeftWithGesture:bezelGesture];
         [self forceScrapToScrapContainerDuringGesture];
+        [super isBezelingInLeftWithGesture:bezelGesture];
     }
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInGestureRecognizer *)bezelGesture{
     if(bezelGesture.subState != UIGestureRecognizerStatePossible){
-        [super isBezelingInRightWithGesture:bezelGesture];
         [self forceScrapToScrapContainerDuringGesture];
+        [super isBezelingInRightWithGesture:bezelGesture];
     }
 }
 
