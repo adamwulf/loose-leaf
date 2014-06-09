@@ -1191,9 +1191,9 @@ int skipAll = NO;
 }
 
 -(BOOL) isAllowedToPan{
-    if(fromRightBezelGesture.subState != UIGestureRecognizerStatePossible ||
-       fromLeftBezelGesture.state != UIGestureRecognizerStatePossible){
-        // actively bezeling
+    if([fromRightBezelGesture isActivelyBezeling] || [fromLeftBezelGesture isActivelyBezeling]){
+        // not allowed to pan a page if we're
+        // bezeling
         return NO;
     }
     return YES;

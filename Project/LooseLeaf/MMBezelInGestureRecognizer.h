@@ -44,4 +44,6 @@
 
 -(void) cancel;
 
+-(BOOL) isActivelyBezeling;
+
 @end

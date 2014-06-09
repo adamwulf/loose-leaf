@@ -401,5 +401,12 @@
     return YES;
 }
 
+-(BOOL) isActivelyBezeling{
+    return (self.state == UIGestureRecognizerStateBegan ||
+    self.state == UIGestureRecognizerStateChanged) &&
+    (self.subState == UIGestureRecognizerStateBegan ||
+     self.subState == UIGestureRecognizerStateChanged);
+}
+
 
 @end
