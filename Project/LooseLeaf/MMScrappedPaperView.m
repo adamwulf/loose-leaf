@@ -203,14 +203,14 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(BOOL) hasScrap:(MMScrapView*)scrap{
-    return [[self scraps] containsObject:scrap];
+    return [[self scrapsOnPaper] containsObject:scrap];
 }
 
 /**
  * returns all subviews in back-to-front
  * order
  */
--(NSArray*) scraps{
+-(NSArray*) scrapsOnPaper{
     // we'll be calling this method quite often,
     // so don't create a new auto-released array
     // all the time. instead, just return our subview
@@ -231,7 +231,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     scrapContainerView.transform = CGAffineTransformMakeScale(_scale, _scale);
 }
 
-#pragma mark - Pan and Scale Scraps
+#pragma mark - MMPanAndPinchScrapGestureRecognizerDelegate
 
 /**
  * this is an important method to ensure that panning scraps and panning pages
@@ -258,6 +258,18 @@ static dispatch_queue_t concurrentBackgroundQueue;
         // only notify of our own gestures
         [self.delegate ownershipOfTouches:touches isGesture:gesture];
     }
+}
+
+-(NSArray*) scrapsToPan{
+    return self.scrapsOnPaper;
+}
+
+-(CGFloat) topVisiblePageScaleForScrap:(MMScrapView *)scrap{
+    @throw kAbstractMethodException;
+}
+
+-(CGPoint) convertScrapCenterToScrapContainerCoordinate:(MMScrapView *)scrap{
+    @throw kAbstractMethodException;
 }
 
 -(BOOL) panScrapRequiresLongPress{
@@ -292,14 +304,14 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [self.delegate didDrawStrokeOfCm:strokeDistance / [UIDevice ppc]];
     
     
-    if(![self.scraps count]){
+    if(![self.scrapsOnPaper count]){
         return strokeElementsToDraw;
     }
     
     NSMutableArray* strokesToCrop = [NSMutableArray arrayWithArray:strokeElementsToDraw];
     
     
-    for(MMScrapView* scrap in [self.scraps reverseObjectEnumerator]){
+    for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
         // find the bounding box of the scrap, so we can determine
         // quickly if they even possibly intersect
         UIBezierPath* scrapClippingPath = scrap.clippingPath;
@@ -433,7 +445,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 #pragma mark - MMRotationManagerDelegate
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading{
-    for(MMScrapView* scrap in self.scraps){
+    for(MMScrapView* scrap in self.scrapsOnPaper){
         [scrap didUpdateAccelerometerWithRawReading:-currentRawReading];
     }
 }
@@ -501,7 +513,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
         // iterate over the scraps from the visibly top scraps
         // to the bottom of the stack
-        for(MMScrapView* scrap in [self.scraps reverseObjectEnumerator]){
+        for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
             debugFullText = @"";
             // get the clipping path of the scrap and convert it into
             // CoreGraphics coordinate system

@@ -13,7 +13,7 @@
 
 @protocol MMPanAndPinchScrapGestureRecognizerDelegate <MMPanGestureDelegate>
 
--(NSArray*) scraps;
+-(NSArray*) scrapsToPan;
 
 -(BOOL) panScrapRequiresLongPress;
 

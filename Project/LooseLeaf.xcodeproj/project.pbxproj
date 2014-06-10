@@ -590,7 +590,6 @@
 		66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCountBubbleButton.m; sourceTree = "<group>"; };
 		66F4FB2417D912730086E21C /* MMScrapSidebarContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapSidebarContentView.h; sourceTree = "<group>"; };
 		66F4FB2517D912730086E21C /* MMScrapSidebarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapSidebarContentView.m; sourceTree = "<group>"; };
-		66F4FB2717DA53DE0086E21C /* MMScrapSidebarContentViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScrapSidebarContentViewDelegate.h; sourceTree = "<group>"; };
 		66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = basegfxbezierclip.license; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1322,7 +1321,6 @@
 				66CE120617D3BBCD00882275 /* MMScrapSidebarContainerViewDelegate.h */,
 				66F4FB2417D912730086E21C /* MMScrapSidebarContentView.h */,
 				66F4FB2517D912730086E21C /* MMScrapSidebarContentView.m */,
-				66F4FB2717DA53DE0086E21C /* MMScrapSidebarContentViewDelegate.h */,
 				6699714B17DA5EDB00E81467 /* MMScrapSidebarButton.h */,
 				6699714C17DA5EDB00E81467 /* MMScrapSidebarButton.m */,
 			);

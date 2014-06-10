@@ -11,12 +11,9 @@
 #import "Constants.h"
 #import "MMPanGestureDelegate.h"
 
-@protocol MMStretchScrapGestureRecognizerDelegate <MMPanGestureDelegate>
+@protocol MMStretchScrapGestureRecognizerDelegate <MMPanAndPinchScrapGestureRecognizerDelegate>
 
 -(BOOL) panScrapRequiresLongPress;
-
--(NSArray*) scraps;
-
 
 -(CGPoint) beginStretchForScrap:(MMScrapView*)scrap;
 
