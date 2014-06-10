@@ -12,6 +12,7 @@
 #import "MMLongPressFromListViewGestureRecognizer.h"
 #import "MMListAddPageButton.h"
 #import "MMListAddPageButtonDelegate.h"
+#import "MMButtonAwareTapGestureRecognizer.h"
 
 @interface MMListPaperStackView : MMPaperStackView<MMPanAndPinchFromListViewGestureRecognizerDelegate,MMListAddPageButtonDelegate>{
     //
@@ -28,7 +29,7 @@
     CGFloat rowHeight;
     CGFloat bufferWidth;
     
-    UITapGestureRecognizer* tapGesture;
+    MMButtonAwareTapGestureRecognizer* tapGesture;
     MMPanAndPinchFromListViewGestureRecognizer* pinchGesture;
     MMLongPressFromListViewGestureRecognizer* longPressGesture;
     

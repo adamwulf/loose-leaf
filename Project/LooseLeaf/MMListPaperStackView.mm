@@ -36,7 +36,7 @@
         rowHeight = columnWidth * screenHeight / screenWidth;
         bufferWidth = columnWidth * kListPageZoom;
 
-        tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapScrollView:)];
+        tapGesture = [[MMButtonAwareTapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapScrollView:)];
         [tapGesture setNumberOfTapsRequired:1];
         [tapGesture setNumberOfTouchesRequired:1];
         tapGesture.enabled = NO;

@@ -84,6 +84,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         ignoredTouches = [[NSMutableSet alloc] init];
         self.delaysTouchesEnded = NO;
         self.cancelsTouchesInView = NO;
+        self.delegate = self;
     }
     return self;
 }
@@ -96,6 +97,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         ignoredTouches = [[NSMutableSet alloc] init];
         self.delaysTouchesEnded = NO;
         self.cancelsTouchesInView = NO;
+        self.delegate = self;
     }
     return self;
 }
@@ -846,5 +848,29 @@ CGPoint prevLocation;
     }
     return NO;
 }
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    // Disallow recognition of tap gestures in the segmented control.
+    if ([touch.view isKindOfClass:[UIControl class]]) {
+        NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
+        return NO;
+    }
+    return YES;
+}
+
 
 @end

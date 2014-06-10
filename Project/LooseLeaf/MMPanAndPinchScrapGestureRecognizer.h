@@ -13,7 +13,7 @@
 #import "MMPanAndPinchScrapGestureRecognizerDelegate.h"
 #import "MMVector.h"
 
-@interface MMPanAndPinchScrapGestureRecognizer : UIGestureRecognizer{
+@interface MMPanAndPinchScrapGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>{
     // the initial distance between
     // the touches. to be used to calculate
     // scale

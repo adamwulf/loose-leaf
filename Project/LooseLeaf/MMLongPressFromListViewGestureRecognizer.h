@@ -10,7 +10,7 @@
 #import "Constants.h"
 #import "MMPanAndPinchFromListViewGestureRecognizerDelegate.h"
 
-@interface MMLongPressFromListViewGestureRecognizer : UILongPressGestureRecognizer{
+@interface MMLongPressFromListViewGestureRecognizer : UILongPressGestureRecognizer<UIGestureRecognizerDelegate>{
     CGPoint normalizedLocationOfScale;
     // delegate to help us track down which page is being touched
     NSObject<MMPanAndPinchFromListViewGestureRecognizerDelegate>* pinchDelegate;

@@ -842,16 +842,6 @@
 }
 
 
-#pragma mark - UIGestureRecognizerDelegate
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    
-    // Disallow recognition of tap gestures in the segmented control.
-    if ([touch.view isKindOfClass:[UIControl class]]) {//change it to your condition
-        return NO;
-    }
-    return YES;
-}
-
 #pragma mark - gestures for list view
 
 -(void) beginUITransitionFromPageView{
