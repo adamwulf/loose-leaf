@@ -12,7 +12,7 @@
 #import "MMPanAndPinchFromListViewGestureRecognizerDelegate.h"
 #import "NSMutableSet+Extras.h"
 
-@interface MMPanAndPinchFromListViewGestureRecognizer : UIGestureRecognizer{
+@interface MMPanAndPinchFromListViewGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>{
     //
     // the initial distance between
     // the touches. to be used to calculate

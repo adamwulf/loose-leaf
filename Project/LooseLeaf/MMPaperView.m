@@ -231,6 +231,10 @@
     }
 }
 
+-(BOOL) areGesturesEnabled{
+    return panGesture.enabled;
+}
+
 
 /**
  * this is the heart of the two finger zoom/pan for pages

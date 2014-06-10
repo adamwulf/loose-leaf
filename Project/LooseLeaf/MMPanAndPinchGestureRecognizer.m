@@ -57,6 +57,7 @@
         possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
         self.cancelsTouchesInView = NO;
+        self.delegate = self;
     }
     return self;
 }
@@ -68,6 +69,7 @@
         possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
         self.cancelsTouchesInView = NO;
+        self.delegate = self;
     }
     return self;
 }
@@ -541,6 +543,22 @@
     }
 }
 
+-(void) setEnabled:(BOOL)enabled{
+    [super setEnabled:enabled];
+    if(!enabled){
+        subState = UIGestureRecognizerStatePossible;
+        initialDistance = 0;
+        scale = 1;
+        [validTouches removeAllObjects];
+        [possibleTouches removeAllObjects];
+        [ignoredTouches removeAllObjects];
+        didExitToBezel = MMBezelDirectionNone;
+        scaleDirection = MMScaleDirectionNone;
+        locationAdjustment = CGPointZero;
+        lastLocationInView = CGPointZero;
+        hasPannedOrScaled = NO;
+    }
+}
 
 #pragma mark - Helper Methods
 
@@ -579,6 +597,29 @@
         return DistanceBetweenTwoPoints(initialPoint1, initialPoint2);
     }
     return 0;
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    // Disallow recognition of tap gestures in the segmented control.
+    if ([touch.view isKindOfClass:[UIControl class]]) {
+        NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
+        return NO;
+    }
+    return YES;
 }
 
 

@@ -12,7 +12,7 @@
 #import "MMPanAndPinchScrapGestureRecognizer.h"
 #import "MMStretchScrapGestureRecognizerDelegate.h"
 
-@interface MMStretchScrapGestureRecognizer : UIGestureRecognizer
+@interface MMStretchScrapGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>
 
 @property (nonatomic, weak) MMPanAndPinchScrapGestureRecognizer* pinchScrapGesture1;
 @property (nonatomic, weak) MMPanAndPinchScrapGestureRecognizer* pinchScrapGesture2;

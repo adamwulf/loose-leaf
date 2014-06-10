@@ -288,8 +288,10 @@
     
     if([validTouches count] == 0 && [ignoredTouches count] == 0){
         if(subState == UIGestureRecognizerStatePossible) {
+            subState = UIGestureRecognizerStateCancelled;
             self.state = UIGestureRecognizerStateCancelled;
         }else{
+            subState = UIGestureRecognizerStateEnded;
             self.state = UIGestureRecognizerStateEnded;
         }
     }else{
@@ -316,8 +318,10 @@
     }
     if([validTouches count] == 0 && [ignoredTouches count] == 0){
         if(subState == UIGestureRecognizerStatePossible) {
+            subState = UIGestureRecognizerStateCancelled;
             self.state = UIGestureRecognizerStateCancelled;
         }else{
+            subState = UIGestureRecognizerStateEnded;
             self.state = UIGestureRecognizerStateEnded;
         }
     }else{
@@ -326,6 +330,7 @@
 }
 - (void)reset{
     [super reset];
+    NSLog(@"reset %@", NSStringFromClass([self class]));
     subState = UIGestureRecognizerStatePossible;
     liftedFingerOffset = 0;
     panDirection = MMBezelDirectionNone;
@@ -392,11 +397,9 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     // Disallow recognition of tap gestures in the segmented control.
-    if(gestureIsFromRightBezel){
-        // might need to work on this for the left as well??
-        if ([touch.view isKindOfClass:[MMBounceButton class]]) {
-            return NO;
-        }
+    if ([touch.view isKindOfClass:[UIControl class]]) {
+        NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
+        return NO;
     }
     return YES;
 }

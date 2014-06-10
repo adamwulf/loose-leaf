@@ -59,11 +59,11 @@
 {
     if ((self = [super initWithFrame:frame])) {
         
-//        debugTimer = [NSTimer scheduledTimerWithTimeInterval:3
-//                                                                  target:self
-//                                                                selector:@selector(timerDidFire:)
-//                                                                userInfo:nil
-//                                                                 repeats:YES];
+        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
+                                                                  target:self
+                                                                selector:@selector(timerDidFire:)
+                                                                userInfo:nil
+                                                                 repeats:YES];
 
         
 //        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5
@@ -92,20 +92,17 @@
         panAndPinchScrapGesture = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
         panAndPinchScrapGesture.bezelDirectionMask = MMBezelDirectionRight;
         panAndPinchScrapGesture.scrapDelegate = self;
-        panAndPinchScrapGesture.delegate = self;
         [self addGestureRecognizer:panAndPinchScrapGesture];
         
         panAndPinchScrapGesture2 = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
         panAndPinchScrapGesture2.bezelDirectionMask = MMBezelDirectionRight;
         panAndPinchScrapGesture2.scrapDelegate = self;
-        panAndPinchScrapGesture2.delegate = self;
         [self addGestureRecognizer:panAndPinchScrapGesture2];
         
         stretchScrapGesture = [[MMStretchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(stretchScrapGesture:)];
         stretchScrapGesture.scrapDelegate = self;
         stretchScrapGesture.pinchScrapGesture1 = panAndPinchScrapGesture;
         stretchScrapGesture.pinchScrapGesture2 = panAndPinchScrapGesture2;
-        stretchScrapGesture.delegate = self;
         [self addGestureRecognizer:stretchScrapGesture];
         
         // make sure sidebar buttons hide the scrap menu
@@ -572,6 +569,26 @@ int skipAll = NO;
     for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scrapsOnPaper]){
         [str appendFormat:@"scrap: %f %f\n", scrap.layer.anchorPoint.x, scrap.layer.anchorPoint.y];
     }
+
+    BOOL visibleStackHasDisabledPages = NO;
+    BOOL hiddenStackHasEnabledPages = NO;
+    for(MMPaperView* page in visibleStackHolder.subviews){
+        if(!page.areGesturesEnabled){
+            visibleStackHasDisabledPages = YES;
+        }
+    }
+    for(MMPaperView* page in hiddenStackHolder.subviews){
+        if(page.areGesturesEnabled){
+            hiddenStackHasEnabledPages = YES;
+        }
+    }
+    
+    
+    [str appendFormat:@"top visible page is disabled? %i\n", ![visibleStackHolder peekSubview].areGesturesEnabled];
+    [str appendFormat:@"visible stack has disabled? %i\n", visibleStackHasDisabledPages];
+    [str appendFormat:@"hidden stack has enabled? %i\n", hiddenStackHasEnabledPages];
+
+    
     return str;
 }
 
