@@ -1200,7 +1200,12 @@ int skipAll = NO;
 }
 
 -(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch{
-    return [touch locationInView:bezelStackHolder].x < 0;
+    if([fromLeftBezelGesture isActivelyBezeling]){
+        return [touch locationInView:bezelStackHolder].x > 0;
+    }else if([fromRightBezelGesture isActivelyBezeling]){
+        return [touch locationInView:bezelStackHolder].x < 0;
+    }
+    return YES;
 }
 
 -(CGFloat) topVisiblePageScaleForScrap:(MMScrapView*)scrap{

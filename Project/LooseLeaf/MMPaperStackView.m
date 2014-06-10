@@ -380,13 +380,8 @@
         // make sure we have two pages, the one we're pulling, and
         // the one below it
         [self ensureAtLeast:2 pagesInStack:visibleStackHolder];
-        [self willChangeTopPageTo:[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]]];
+        [self mayChangeTopPageTo:[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]]];
         [bezelStackHolder pushSubview:[visibleStackHolder peekSubview]];
-        // when bezeling left, we must change the top page
-        // to the new visiblestack top page. this'll let us
-        // grab scraps from it, just as if we're bezeling
-        // right and grab scraps from top page
-        [self didChangeTopPage];
         // at this point, the bezel stack is immediately on top of the visible stack,
         // and it has 1 page in it. now animate the bezel stack to the user's finger
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
@@ -413,7 +408,10 @@
         // haven't completed.
         if([bezelStackHolder.subviews count]){
             [self willNotChangeTopPageTo:[bezelStackHolder peekSubview]];
-            [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
+            [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
+            [self emptyBezelStackToHiddenStackAnimated:YES onComplete:^(BOOL finished){
+                [self didChangeTopPage];
+            }];
             [[visibleStackHolder peekSubview] enableAllGestures];
         }
     }else if(bezelGesture.subState == UIGestureRecognizerStateEnded &&
@@ -430,7 +428,7 @@
             // this'll let us move the bezel frame back to its hidden place above the hidden stack
             // immediately
             [[visibleStackHolder peekSubview] enableAllGestures];
-            [self willChangeTopPageTo:[bezelStackHolder peekSubview]];
+            [self willNotChangeTopPageTo:[visibleStackHolder peekSubview]];
             while([bezelStackHolder.subviews count]){
                 // this will translate the frame from the bezel stack to the
                 // hidden stack, so that the pages appear in the same place
@@ -472,9 +470,7 @@
             //
             // we just added a new page to the bezel gesture,
             // so make sure we've notified that it may be the new top
-            [self mayChangeTopPageTo:[bezelStackHolder peekSubview]];
-            [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
-            [self didChangeTopPage];
+            [self mayChangeTopPageTo:[visibleStackHolder peekSubview]];
             
             //
             // ok, animate them all into place
