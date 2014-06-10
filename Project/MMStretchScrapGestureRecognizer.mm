@@ -281,7 +281,7 @@
         // delegate lets us filter out any touches that are
         // within the bounds of the scrap but would land on some
         // other scrap that's above it in view
-        NSArray* scrapsToLookAt = scrapDelegate.scraps;
+        NSArray* scrapsToLookAt = scrapDelegate.scrapsToPan;
         NSMutableSet* allPossibleTouches = [NSMutableSet setWithSet:[possibleTouches set]];
         for(MMScrapView* pinchedScrap in [scrapsToLookAt reverseObjectEnumerator]){
             NSMutableSet* touchesInScrap = [NSMutableSet setWithSet:[pinchedScrap allMatchingTouchesFrom:allPossibleTouches]];

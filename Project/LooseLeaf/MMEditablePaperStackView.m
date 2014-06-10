@@ -535,7 +535,11 @@
         // top page should actually be the top visible page isn't necessarily
         // true. instead, i should ask the PageCacheManager to recheck
         // if it can hand the currently top page the drawable view.
-        [[MMPageCacheManager sharedInstance] didChangeToTopPage:[visibleStackHolder peekSubview]];
+        if([fromLeftBezelGesture isActivelyBezeling]){
+            [[MMPageCacheManager sharedInstance] didChangeToTopPage:[bezelStackHolder peekSubview]];
+        }else{
+            [[MMPageCacheManager sharedInstance] didChangeToTopPage:[visibleStackHolder peekSubview]];
+        }
     }
 }
 
@@ -697,7 +701,7 @@
     if([[MMPageCacheManager sharedInstance].drawableView.state.currentStrokes count]){
         return NO;
     }
-    for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scraps]){
+    for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scrapsOnPaper]){
         if([scrap.state.drawableView.state.currentStrokes count]){
             return NO;
         }

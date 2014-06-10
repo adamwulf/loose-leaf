@@ -171,7 +171,7 @@
     }
     if([possibleTouches count] && subState == UIGestureRecognizerStatePossible){
         NSMutableSet* allPossibleTouches = [NSMutableSet setWithSet:[possibleTouches set]];
-        for(MMScrapView* _scrap in [scrapDelegate.scraps reverseObjectEnumerator]){
+        for(MMScrapView* _scrap in [scrapDelegate.scrapsToPan reverseObjectEnumerator]){
             NSSet* touchesInScrap = [_scrap matchingPairTouchesFrom:allPossibleTouches];
             if([touchesInScrap count]){
                 // two+ possible touches match this scrap

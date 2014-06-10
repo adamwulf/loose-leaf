@@ -90,8 +90,8 @@
 
 #pragma mark - MMPanAndPinchScrapGestureRecognizerDelegate
 
--(NSArray*) scraps{
-    return [rulerDelegate scraps];
+-(NSArray*) scrapsToPan{
+    return [rulerDelegate scrapsToPan];
 }
 
 -(BOOL) panScrapRequiresLongPress{

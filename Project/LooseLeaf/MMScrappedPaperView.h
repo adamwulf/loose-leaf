@@ -15,11 +15,9 @@
  * the purpose of this subclass is to encompass all of the
  * scrap functionality for a page
  */
-@interface MMScrappedPaperView : MMEditablePaperView<MFMailComposeViewControllerDelegate,MMPanGestureDelegate,MMScrapsOnPaperStateDelegate>{
+@interface MMScrappedPaperView : MMEditablePaperView<MFMailComposeViewControllerDelegate,MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapsOnPaperStateDelegate>{
     UIImageView* cachedImgView;
 }
-
-@property (readonly) NSArray* scraps;
 
 -(void) addScrap:(MMScrapView*)scrap;
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andScale:(CGFloat)scale;

@@ -569,7 +569,7 @@ int skipAll = NO;
     
     [str appendFormat:@"done\n"];
     
-    for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scraps]){
+    for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scrapsOnPaper]){
         [str appendFormat:@"scrap: %f %f\n", scrap.layer.anchorPoint.x, scrap.layer.anchorPoint.y];
     }
     return str;
@@ -767,12 +767,12 @@ int skipAll = NO;
         
         NSArray* scrapsInContainer = scrapContainer.subviews;
         
+        MMScrappedPaperView* pageToDropScrap = nil;
         if(gesture.didExitToBezel){
             shouldBezel = YES;
         }else if([scrapsInContainer containsObject:gesture.scrap]){
             CGFloat scrapScaleInPage;
             CGPoint scrapCenterInPage;
-            MMScrappedPaperView* pageToDropScrap;
             if(gesture.state == UIGestureRecognizerStateCancelled){
                 pageToDropScrap = [self pageWouldDropScrap:gesture.scrap atCenter:&scrapCenterInPage andScale:&scrapScaleInPage];
                 if(pageToDropScrap == [visibleStackHolder peekSubview]){
@@ -798,6 +798,14 @@ int skipAll = NO;
             }
         }
         
+        // save teh page that the scrap came from
+        MMEditablePaperView* pageThatGaveUpScrap = [visibleStackHolder peekSubview];
+        if([fromLeftBezelGesture isActivelyBezeling]){
+            pageThatGaveUpScrap = [bezelStackHolder peekSubview];
+        }
+        if(pageThatGaveUpScrap != pageToDropScrap){
+            [pageThatGaveUpScrap saveToDisk];
+        }
         scrapViewIfFinished = gesture.scrap;
     }else if(gesture.scrap && didReset){
         // glow blue
@@ -1181,9 +1189,11 @@ int skipAll = NO;
 
 #pragma mark - MMPanAndPinchScrapGestureRecognizerDelegate
 
--(NSArray*) scraps{
-    return [[[visibleStackHolder peekSubview] scraps] arrayByAddingObjectsFromArray:scrapContainer.subviews];
-    
+-(NSArray*) scrapsToPan{
+    if([fromLeftBezelGesture isActivelyBezeling]){
+        return [[[bezelStackHolder peekSubview] scrapsOnPaper] arrayByAddingObjectsFromArray:scrapContainer.subviews];
+    }
+    return [[[visibleStackHolder peekSubview] scrapsOnPaper] arrayByAddingObjectsFromArray:scrapContainer.subviews];
 }
 
 -(BOOL) panScrapRequiresLongPress{
@@ -1221,14 +1231,18 @@ int skipAll = NO;
     if([scrapContainer.subviews containsObject:scrap]){
         return scrapCenter;
     }else{
-        CGFloat pageScale = [visibleStackHolder peekSubview].scale;
+        MMPaperView* pageHoldingScrap = [visibleStackHolder peekSubview];
+        if([fromLeftBezelGesture isActivelyBezeling]){
+            pageHoldingScrap = [bezelStackHolder peekSubview];
+        }
+        CGFloat pageScale = pageHoldingScrap.scale;
         // because the page uses a transform to scale itself, the scrap center will always
         // be in page scale = 1.0 form. if the user picks up a scrap while also scaling the page,
         // then we need to transform that coordinate into the visible scale of the zoomed page.
         scrapCenter = CGPointApplyAffineTransform(scrapCenter, CGAffineTransformMakeScale(pageScale, pageScale));
         // now that the coordinate is in the visible scale, we can convert that directly to the
         // scapContainer's coodinate system
-        return [[visibleStackHolder peekSubview] convertPoint:scrapCenter toView:scrapContainer];
+        return [pageHoldingScrap convertPoint:scrapCenter toView:scrapContainer];
     }
 }
 

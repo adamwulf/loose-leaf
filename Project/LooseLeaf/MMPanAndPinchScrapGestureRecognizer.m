@@ -312,7 +312,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
 
 
 -(void) processPossibleTouches{
-    NSArray* scrapsToLookAt = scrapDelegate.scraps;
+    NSArray* scrapsToLookAt = scrapDelegate.scrapsToPan;
     if(self.scrap){
         NSUInteger indx = [scrapsToLookAt indexOfObject:self.scrap];
         if(indx == NSNotFound){
