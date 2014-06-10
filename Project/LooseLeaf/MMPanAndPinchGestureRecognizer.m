@@ -139,6 +139,7 @@
                 [possibleTouches removeObjectsInSet:touches];
                 [validTouches removeObjectsInSet:touches];
             }
+            NSLog(@"ignored touch from ownership: %@", [self.view performSelector:@selector(uuid)]);
             [ignoredTouches addObjectsInSet:touches];
         }];
         if([validTouches count] < 2 && touchesWereStolen){
@@ -168,6 +169,7 @@
 -(void) processPossibleTouchesFromOriginalLocationInView:(CGPoint)originalLocationInView{
     if(![scrapDelegate isAllowedToPan]){
         // we're not allowed to pan, so ignore all touches
+        NSLog(@"ignored from impossible: %@", [self.view performSelector:@selector(uuid)]);
         [ignoredTouches addObjectsInSet:[possibleTouches set]];
         [possibleTouches removeAllObjects];
     }
@@ -177,6 +179,7 @@
             NSSet* touchesInScrap = [_scrap matchingPairTouchesFrom:allPossibleTouches];
             if([touchesInScrap count]){
                 // two+ possible touches match this scrap
+                NSLog(@"ignored from scrap match: %@", [self.view performSelector:@selector(uuid)]);
                 [ignoredTouches addObjectsInSet:touchesInScrap];
                 [possibleTouches removeObjectsInSet:touchesInScrap];
             }else{
@@ -504,7 +507,10 @@
 //    NSLog(@"cancel pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 -(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
-    [ignoredTouches addObject:touch];
+    NSLog(@"ignored touch in pan gesture: %@", [self.view performSelector:@selector(uuid)]);
+    [validTouches removeObject:touch];
+    [possibleTouches removeObject:touch];
+    [ignoredTouches removeObject:touch];
     [super ignoreTouch:touch forEvent:event];
 }
 
@@ -525,6 +531,13 @@
 
 -(void) cancel{
     if(self.enabled){
+        
+        if(![[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]){
+            if([validTouches count] || [possibleTouches count] || [ignoredTouches count]){
+                NSLog(@"what!!");
+            }
+        }
+        
         self.enabled = NO;
         self.enabled = YES;
     }

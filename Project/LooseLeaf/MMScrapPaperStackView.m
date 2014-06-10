@@ -59,7 +59,7 @@
 {
     if ((self = [super initWithFrame:frame])) {
         
-        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
+        debugTimer = [NSTimer scheduledTimerWithTimeInterval:6
                                                                   target:self
                                                                 selector:@selector(timerDidFire:)
                                                                 userInfo:nil
@@ -541,12 +541,15 @@ int skipAll = NO;
     allGesturesAndTopTwoPages = [allGesturesAndTopTwoPages arrayByAddingObjectsFromArray:[[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]] gestureRecognizers]];
     for(UIGestureRecognizer* gesture in allGesturesAndTopTwoPages){
         UIGestureRecognizerState st = gesture.state;
-        [str appendFormat:@"%@ %d\n", NSStringFromClass([gesture class]), (int)st];
+        [str appendFormat:@"%@ %d %p\n", NSStringFromClass([gesture class]), (int)st, gesture];
         if([gesture respondsToSelector:@selector(validTouches)]){
             [str appendFormat:@"   validTouches: %d\n", (int)[[gesture performSelector:@selector(validTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(touches)]){
             [str appendFormat:@"   touches: %d\n", (int)[[gesture performSelector:@selector(touches)] count]];
+        }
+        if([gesture respondsToSelector:@selector(activeTouches)]){
+            [str appendFormat:@"   activeTouches: %d\n", (int)[[gesture performSelector:@selector(activeTouches)] count]];
         }
         if([gesture respondsToSelector:@selector(possibleTouches)]){
             [str appendFormat:@"   possibleTouches: %d\n", (int)[[gesture performSelector:@selector(possibleTouches)] count]];

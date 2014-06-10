@@ -9,6 +9,7 @@
 #import "MMObjectSelectLongPressGestureRecognizer.h"
 #import "MMPanAndPinchGestureRecognizer.h"
 #import "Constants.h"
+#import "MMTouchVelocityGestureRecognizer.h"
 #import "NSMutableSet+Extras.h"
 #import <JotUI/JotUI.h>
 
@@ -74,6 +75,9 @@
         [self.touchLocations setObject:[NSValue valueWithCGPoint:[touch locationInView:self.view]]
                                 forKey:@([touch hash])];
     }
+    if(!self.enabled){
+        NSLog(@"what");
+    }
     [activeTouches addObjectsInSet:touches];
     [super touchesBegan:touches withEvent:event];
 }
@@ -127,6 +131,13 @@
     [super touchesEnded:touches withEvent:event];
 }
 
+-(void) ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
+    if([activeTouches containsObject:touch]){
+        [activeTouches removeObject:touch];
+    }
+    [super ignoreTouch:touch forEvent:event];
+}
+
 /**
  * if our gesture ends, then remove all our cached locations. these
  * locations only matter during the Possible state, and aren't used
@@ -148,9 +159,31 @@
     [activeTouches removeAllObjects];
 }
 
+-(void) cancel{
+    if(self.enabled){
+        int velocityTouches = [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches];
+        int myTouches = [activeTouches count];
+        if(!velocityTouches){
+            if(myTouches){
+                NSLog(@"what!!");
+            }
+        }
+        self.enabled = NO;
+        self.enabled = YES;
+    }else if([activeTouches count]){
+        int active = [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches];
+        NSLog(@"known touches from velocity: %i", active);
+        NSLog(@"cancelling disabled gesture that owns touches");
+    }
+}
+
+
 -(void) setEnabled:(BOOL)enabled{
     if(!enabled || (!self.enabled && enabled)){
         [activeTouches removeAllObjects];
+    }
+    if(!enabled && [activeTouches count]){
+        NSLog(@"what");
     }
     [super setEnabled:enabled];
 }

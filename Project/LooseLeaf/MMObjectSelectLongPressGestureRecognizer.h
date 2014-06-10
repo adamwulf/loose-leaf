@@ -47,4 +47,6 @@
 
 @property (readonly) NSSet* activeTouches;
 
+-(void) cancel;
+
 @end

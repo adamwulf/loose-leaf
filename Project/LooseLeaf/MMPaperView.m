@@ -199,6 +199,7 @@
             if(gesture.enabled && gesture.state != UIGestureRecognizerStatePossible){
 //                NSLog(@"gesture is active %@", gesture);
             }
+            NSLog(@"cancelling %@ %p", NSStringFromClass([gesture class]), gesture);
             [(MMPanAndPinchGestureRecognizer*)gesture cancel];
         }
     }
@@ -214,9 +215,6 @@
         [gesture setEnabled:NO];
     }
     textLabel.text = @"disabled";
-    if([self.uuid hasPrefix:@"41B98"]){
-        debug_NSLog(@"disabled: %@ %d", self.uuid, panGesture.enabled);
-    }
 }
 /**
  * enables all gestures on this page
@@ -226,9 +224,6 @@
         [gesture setEnabled:YES];
     }
     textLabel.text = @"enabled";
-    if([self.uuid hasPrefix:@"41B98"]){
-        debug_NSLog(@"enabled: %@", self.uuid);
-    }
 }
 
 -(BOOL) areGesturesEnabled{
