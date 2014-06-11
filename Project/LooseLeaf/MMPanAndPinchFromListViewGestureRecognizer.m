@@ -7,6 +7,7 @@
 //
 
 #import "MMPanAndPinchFromListViewGestureRecognizer.h"
+#import "MMLongPressFromListViewGestureRecognizer.h"
 
 @implementation MMPanAndPinchFromListViewGestureRecognizer
 
@@ -37,11 +38,11 @@
 }
 
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
-    return NO;
+    return [preventedGestureRecognizer isKindOfClass:[MMLongPressFromListViewGestureRecognizer class]];
 }
 
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return NO;
+    return [preventingGestureRecognizer isKindOfClass:[MMLongPressFromListViewGestureRecognizer class]];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{

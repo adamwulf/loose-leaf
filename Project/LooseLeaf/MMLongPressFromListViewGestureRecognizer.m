@@ -7,6 +7,7 @@
 //
 
 #import "MMLongPressFromListViewGestureRecognizer.h"
+#import "MMPanAndPinchFromListViewGestureRecognizer.h"
 
 @implementation MMLongPressFromListViewGestureRecognizer
 
@@ -15,11 +16,11 @@
 @synthesize normalizedLocationOfScale;
 
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
-    return NO;
+    return [preventedGestureRecognizer isKindOfClass:[MMPanAndPinchFromListViewGestureRecognizer class]];
 }
 
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return NO;
+    return [preventingGestureRecognizer isKindOfClass:[MMPanAndPinchFromListViewGestureRecognizer class]];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{

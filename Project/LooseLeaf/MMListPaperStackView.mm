@@ -868,8 +868,9 @@
         
         
         // make sure to keep it centered in its location in list view
+        CGSize pickupSize = CGSizeMake(superviewSize.width * (kListPageZoom+.03), superviewSize.height * (kListPageZoom+.03));
         CGSize smallSize = CGSizeMake(superviewSize.width * kListPageZoom, superviewSize.height * kListPageZoom);
-        CGSize diffInSize = CGSizeMake(newSizeOfView.width - smallSize.width, newSizeOfView.height - smallSize.height);
+        CGSize diffInSize = CGSizeMake(pickupSize.width - smallSize.width, pickupSize.height - smallSize.height);
 
         //
         // now calculate our final frame given our pan and zoom
