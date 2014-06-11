@@ -357,11 +357,40 @@ static BOOL hasTimerFired = NO;
         NSLog(@"cancelled gestures");
         [[NSThread mainThread] performBlock:^{
             NSLog(@"gestures: %@", [stackView activeGestureSummary]);
+            [[NSThread mainThread] performBlock:^{
+                NSLog(@"********************************");
+                [self printAllGesturesIn:[[UIApplication sharedApplication] keyWindow] indent:@""];
+                NSLog(@"********************************");
+            } afterDelay:1];
         } afterDelay:1];
     } afterDelay:1];
-    
-    
-    
+}
+
+
+
+
+-(void) printAllGesturesIn:(UIView*)aView indent:(NSString*)indent{
+    NSLog(@"%@ %@", indent, NSStringFromClass([aView class]));
+    for (UIGestureRecognizer* gesture in aView.gestureRecognizers) {
+        if(gesture.state == 1 || gesture.state == 2){
+            NSLog(@"*********************************************************");
+            NSLog(@"*********************************************************");
+            NSLog(@"*********************************************************");
+        }
+        NSLog(@"%@ %@ %i", indent, NSStringFromClass([gesture class]), gesture.state);
+    }
+    if([aView isKindOfClass:[UIControl class]]){
+        UIControl* aControl = (UIControl*)aView;
+        if(aControl.isTracking){
+            NSLog(@"*********************************************************");
+            NSLog(@"*********************************************************");
+            NSLog(@"*********************************************************");
+            NSLog(@"tracking!");
+        }
+    }
+    for(UIView* subview in aView.subviews){
+        [self printAllGesturesIn:subview indent:[indent stringByAppendingString:@" "]];
+    }
 }
 
 @end
