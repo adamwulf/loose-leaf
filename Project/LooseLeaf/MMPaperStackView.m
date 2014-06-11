@@ -30,6 +30,7 @@
 
 @synthesize visibleStackHolder = visibleStackHolder;
 @synthesize hiddenStackHolder = hiddenStackHolder;
+@synthesize bezelStackHolder = bezelStackHolder;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -334,21 +335,21 @@
  */
 -(void) isBezelingInLeftWithGesture:(MMBezelInGestureRecognizer*)bezelGesture{
     
-    [[visibleStackHolder peekSubview] cancelAllGestures];
-    NSLog(@"bezel from left: %i %i", bezelGesture.state, bezelGesture.subState);
-    
-    if(bezelGesture.state == UIGestureRecognizerStateEnded){
-        [[NSThread mainThread] performBlock:^{
-            if(![[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]){
-                NSLog(@"no touching!");
-                [[visibleStackHolder peekSubview] cancelAllGestures];
-                [[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]] cancelAllGestures];
-            }else{
-                NSLog(@"touching!");
-            }
-        } afterDelay:1];
-    }
-    return;
+//    [[visibleStackHolder peekSubview] cancelAllGestures];
+//    NSLog(@"bezel from left: %i %i", bezelGesture.state, bezelGesture.subState);
+//    
+//    if(bezelGesture.state == UIGestureRecognizerStateEnded){
+//        [[NSThread mainThread] performBlock:^{
+//            if(![[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]){
+//                NSLog(@"no touching!");
+//                [[visibleStackHolder peekSubview] cancelAllGestures];
+//                [[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]] cancelAllGestures];
+//            }else{
+//                NSLog(@"touching!");
+//            }
+//        } afterDelay:1];
+//    }
+//    return;
     
     
     CGPoint translation = [bezelGesture translationInView:self];
@@ -1011,18 +1012,6 @@
     [setOfPagesBeingPanned removeObject:page];
     // ok, update the icons
     [self updateIconAnimations];
-    
-    if(justFinishedPanningTheTopPage){
-        [[NSThread mainThread] performBlock:^{
-            if(![[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]){
-                NSLog(@"no touching2!");
-                [[visibleStackHolder peekSubview] cancelAllGestures];
-                [[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]] cancelAllGestures];
-            }else{
-                NSLog(@"touching2!");
-            }
-        } afterDelay:1];
-    }
     
     if(justFinishedPanningTheTopPage && (bezelDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft){
 //        NSLog(@"finished bezelling top page left %d %d", (int) (bezelDirection & MMBezelDirectionLeft), (int) (bezelDirection & MMBezelDirectionRight));

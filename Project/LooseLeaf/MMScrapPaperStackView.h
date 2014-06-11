@@ -14,4 +14,6 @@
 
 @interface MMScrapPaperStackView : MMEditablePaperStackView<MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapSidebarContainerViewDelegate,MMStretchScrapGestureRecognizerDelegate,MMImageSidebarContainerViewDelegate,MFMailComposeViewControllerDelegate,MMInboxManagerDelegate>
 
+-(NSString*) activeGestureSummary;
+
 @end

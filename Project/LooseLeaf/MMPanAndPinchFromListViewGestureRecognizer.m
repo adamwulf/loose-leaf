@@ -138,8 +138,12 @@
 
 -(void) cancel{
     if(self.enabled){
+        NSLog(@"Cancelled %@ %p", NSStringFromClass([self class]), self);
         self.enabled = NO;
         self.enabled = YES;
+        [validTouches removeAllObjects];
+    }else{
+        NSLog(@"NOT Cancelled %@ %p", NSStringFromClass([self class]), self);
     }
 }
 

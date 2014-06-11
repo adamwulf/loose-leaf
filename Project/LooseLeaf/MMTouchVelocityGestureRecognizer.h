@@ -10,6 +10,8 @@
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "Constants.h"
 
+@class MMScrapPaperStackView;
+
 struct DurationCacheObject{
     // hash uniquely identifying a touch,
     // 0 if this record is free to use
@@ -34,7 +36,11 @@ struct DurationCacheObject{
     CGFloat totalDistance;
 };
 
-@interface MMTouchVelocityGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>
+@interface MMTouchVelocityGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>{
+    __weak MMScrapPaperStackView* stackView;
+}
+
+@property (nonatomic, weak) MMScrapPaperStackView* stackView;
 
 +(MMTouchVelocityGestureRecognizer*) sharedInstace;
 

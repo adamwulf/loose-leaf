@@ -161,6 +161,7 @@
 
 -(void) cancel{
     if(self.enabled){
+        NSLog(@"Cancelled %@ %p", NSStringFromClass([self class]), self);
         int velocityTouches = [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches];
         int myTouches = [activeTouches count];
         if(!velocityTouches){
@@ -172,9 +173,13 @@
         self.enabled = YES;
     }else if([activeTouches count]){
         int active = [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches];
+        NSLog(@"NOT Cancelled %@ %p", NSStringFromClass([self class]), self);
         NSLog(@"known touches from velocity: %i", active);
         NSLog(@"cancelling disabled gesture that owns touches");
+    }else{
+        NSLog(@"NOT Cancelled2 %@ %p", NSStringFromClass([self class]), self);
     }
+    [activeTouches removeAllObjects];
 }
 
 

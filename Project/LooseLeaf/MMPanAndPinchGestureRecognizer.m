@@ -531,15 +531,20 @@
 
 -(void) cancel{
     if(self.enabled){
-        
+        NSLog(@"Cancelled %@ %p", NSStringFromClass([self class]), self);
         if(![[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]){
             if([validTouches count] || [possibleTouches count] || [ignoredTouches count]){
                 NSLog(@"what!!");
             }
         }
+        [validTouches removeAllObjects];
+        [possibleTouches removeAllObjects];
+        [ignoredTouches removeAllObjects];
         
         self.enabled = NO;
         self.enabled = YES;
+    }else{
+        NSLog(@"NOT Cancelled %@ %p", NSStringFromClass([self class]), self);
     }
 }
 

@@ -59,11 +59,11 @@
 {
     if ((self = [super initWithFrame:frame])) {
         
-        debugTimer = [NSTimer scheduledTimerWithTimeInterval:6
-                                                                  target:self
-                                                                selector:@selector(timerDidFire:)
-                                                                userInfo:nil
-                                                                 repeats:YES];
+//        debugTimer = [NSTimer scheduledTimerWithTimeInterval:6
+//                                                                  target:self
+//                                                                selector:@selector(timerDidFire:)
+//                                                                userInfo:nil
+//                                                                 repeats:YES];
 
         
 //        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5
@@ -140,6 +140,9 @@
 //        debugImgView.contentMode = UIViewContentModeScaleAspectFit;
 //        debugImgView.backgroundColor = [UIColor orangeColor];
 //        [self addSubview:debugImgView];
+        
+        
+        [MMTouchVelocityGestureRecognizer sharedInstace].stackView = self;
     }
     return self;
 }
@@ -471,6 +474,23 @@
     [panAndPinchScrapGesture cancel];
     [panAndPinchScrapGesture2 cancel];
     [stretchScrapGesture cancel];
+    
+    for(UIView* subview in self.subviews){
+        if([subview isKindOfClass:[UIControl class]]){
+            UIControl* control = (UIControl*)subview;
+            if(control.enabled){
+                if(control.tracking){
+                    NSLog(@"tracking! %@", NSStringFromClass([control class]));
+                }
+                NSLog(@"cancelling %@", NSStringFromClass([control class]));
+                control.enabled = NO;
+                control.enabled = YES;
+                if(control.tracking){
+                    NSLog(@"still tracking! %@", NSStringFromClass([control class]));
+                }
+            }
+        }
+    }
 }
 
 
@@ -537,7 +557,11 @@ int skipAll = NO;
     }
     
     
-    NSArray* allGesturesAndTopTwoPages = [self.gestureRecognizers arrayByAddingObjectsFromArray:[[visibleStackHolder peekSubview] gestureRecognizers]];
+    
+    NSArray* allGesturesAndTopTwoPages = [NSArray arrayWithArray:[[MMPageCacheManager sharedInstance] drawableView].gestureRecognizers];
+    allGesturesAndTopTwoPages = [allGesturesAndTopTwoPages arrayByAddingObjectsFromArray:[[UIApplication sharedApplication] keyWindow].gestureRecognizers];
+    allGesturesAndTopTwoPages = [allGesturesAndTopTwoPages arrayByAddingObjectsFromArray:self.gestureRecognizers];
+    allGesturesAndTopTwoPages = [allGesturesAndTopTwoPages arrayByAddingObjectsFromArray:[[visibleStackHolder peekSubview] gestureRecognizers]];
     allGesturesAndTopTwoPages = [allGesturesAndTopTwoPages arrayByAddingObjectsFromArray:[[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]] gestureRecognizers]];
     for(UIGestureRecognizer* gesture in allGesturesAndTopTwoPages){
         UIGestureRecognizerState st = gesture.state;
