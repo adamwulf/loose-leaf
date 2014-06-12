@@ -59,7 +59,7 @@
     return [preventingGestureRecognizer isKindOfClass:[MMBezelInGestureRecognizer class]];
 }
 
--(NSArray*)touches{
+-(NSArray*)validTouches{
     return [validTouches allObjects];
 }
 
@@ -249,18 +249,18 @@
     }
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    [ignoredTouches removeObjectsInSet:touches];
+    [validTouches removeObjectsInSet:touches];
     if(self.state == UIGestureRecognizerStatePossible){
-        self.state = UIGestureRecognizerStateFailed;
+//        self.state = UIGestureRecognizerStateFailed;
         return;
     }
     [self processSubStateForNextIteration];
-    [ignoredTouches removeObjectsInSet:touches];
     BOOL didChangeTouchLoc = NO;
     if(gestureIsFromRightBezel){
         CGPoint locationOfLeft = [self furthestLeftTouchLocation];
         for(UITouch* touch in touches){
             CGPoint touchLocation = [touch locationInView:self.view];
-            [validTouches removeObject:touch];
             if(CGPointEqualToPoint(touchLocation, locationOfLeft)){
                 // this'll use the new left location
                 if([self furthestLeftTouchLocation].x != MAXFLOAT){
@@ -273,7 +273,6 @@
         CGPoint locationOfRight = [self furthestRightTouchLocation];
         for(UITouch* touch in touches){
             CGPoint touchLocation = [touch locationInView:self.view];
-            [validTouches removeObject:touch];
             if(CGPointEqualToPoint(touchLocation, locationOfRight)){
                 // this'll use the new right location
                 if([self furthestRightTouchLocation].x != MAXFLOAT){
@@ -304,13 +303,13 @@
     }
 }
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+    [ignoredTouches removeObjectsInSet:touches];
+    [validTouches removeObjectsInSet:touches];
     if(self.state == UIGestureRecognizerStatePossible){
-        self.state = UIGestureRecognizerStateFailed;
+//        self.state = UIGestureRecognizerStateFailed;
         return;
     }
     [self processSubStateForNextIteration];
-    [ignoredTouches removeObjectsInSet:touches];
-    [validTouches removeObjectsInSet:touches];
     if([validTouches count] < 2 && (subState == UIGestureRecognizerStateChanged || subState == UIGestureRecognizerStateBegan)){
         // we cancelled one of our two touches, so
         // tell our substate we're dead now

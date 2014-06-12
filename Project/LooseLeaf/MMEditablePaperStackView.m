@@ -415,7 +415,7 @@
     if(!bezelGesture.hasSeenSubstateBegin && (bezelGesture.subState == UIGestureRecognizerStateBegan ||
                                               bezelGesture.subState == UIGestureRecognizerStateChanged)){
         // cancel any strokes that this gesture is using
-        for(UITouch* touch in bezelGesture.touches){
+        for(UITouch* touch in bezelGesture.validTouches){
             [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
             [scissor cancelPolygonForTouch:touch];
         }
@@ -429,7 +429,7 @@
     if(!bezelGesture.hasSeenSubstateBegin && (bezelGesture.subState == UIGestureRecognizerStateBegan ||
                                               bezelGesture.subState == UIGestureRecognizerStateChanged)){
         // cancel any strokes that this gesture is using
-        for(UITouch* touch in bezelGesture.touches){
+        for(UITouch* touch in bezelGesture.validTouches){
             [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
             [scissor cancelPolygonForTouch:touch];
         }

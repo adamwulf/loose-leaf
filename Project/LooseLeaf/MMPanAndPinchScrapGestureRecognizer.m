@@ -382,14 +382,24 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     }
     NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
     
+    // ignore touches that could hold a scrap
     for(UITouch* touch in touches){
         if(![self.scrapDelegate allowsHoldingScrapsWithTouch:touch]){
             [validTouchesCurrentlyBeginning removeObject:touch];
             [ignoredTouches addObject:touch];
         }
     }
-    
     // ignore all the touches that could be bezel touches
+    for(UITouch* touch in touches){
+        CGPoint point = [touch locationInView:self.view];
+        if(point.x > kBezelInGestureWidth || point.x < self.view.frame.size.width - kBezelInGestureWidth){
+            [validTouchesCurrentlyBeginning removeObject:touch];
+            [ignoredTouches addObject:touch];
+        }
+    }
+    
+    
+    
     if([validTouchesCurrentlyBeginning count]){
         
         [possibleTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
@@ -616,7 +626,9 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         [ignoredTouches removeObjectsInSet:touches];
         
         if(![validTouches count] && ![possibleTouches count] && ![ignoredTouches count]){
-            self.state = UIGestureRecognizerStateFailed;
+            if(self.state != UIGestureRecognizerStatePossible){
+                self.state = UIGestureRecognizerStateFailed;
+            }
         }
     }
     if([validTouches count] >= mmMinimumNumberOfScrapTouches && [validTouchesCurrentlyEnding count]){

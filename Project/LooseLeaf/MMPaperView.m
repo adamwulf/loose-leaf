@@ -73,10 +73,10 @@
         // allow the user to select an object by long pressing
         // on it. this'll allow the user to select + move/scale/rotate
         // an object in one gesture
-        longPress = [[MMObjectSelectLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
-        longPress.numberOfTouchesRequired = 2;
-        longPress.allowableMovement = 20;
-        [self addGestureRecognizer:longPress];
+//        longPress = [[MMObjectSelectLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+//        longPress.numberOfTouchesRequired = 2;
+//        longPress.allowableMovement = 20;
+//        [self addGestureRecognizer:longPress];
         //
         // allow the user to select an object by tapping on the page
         // with two fingers
@@ -98,7 +98,7 @@
         // acting on an object on the page. defer to the long press
         // and the tap gesture, and only allow page pan/scale if
         // these fail
-        [panGesture requireGestureRecognizerToFail:longPress];
+//        [panGesture requireGestureRecognizerToFail:longPress];
 //        [panGesture requireGestureRecognizerToFail:tap];
         [self addGestureRecognizer:panGesture];
     }

@@ -47,7 +47,6 @@
         visibleStackHolder.tag = 0;
         bezelStackHolder.tag = 1;
         hiddenStackHolder.tag = 2;
-
         
         CGRect frameOfHiddenStack = hiddenStackHolder.frame;
         frameOfHiddenStack.origin.x += hiddenStackHolder.bounds.size.width + 1;

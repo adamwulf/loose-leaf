@@ -30,7 +30,7 @@
     UIGestureRecognizerState subState;
 }
 
-@property (readonly) NSArray* touches;
+@property (readonly) NSArray* validTouches;
 @property (nonatomic, weak) NSObject<MMPanGestureDelegate>* panDelegate;
 @property (nonatomic, readonly) MMBezelDirection panDirection;
 @property (nonatomic, readonly) NSInteger numberOfRepeatingBezels;

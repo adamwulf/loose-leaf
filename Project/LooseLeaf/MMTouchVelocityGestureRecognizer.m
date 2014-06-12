@@ -10,6 +10,7 @@
 #import "MMVector.h"
 #import "MMScrapPaperStackView.h"
 #import "MMPageCacheManager.h"
+#import "MMUntouchableView.h"
 
 #define kVelocityLowPass 0.7
 
@@ -109,10 +110,14 @@ static BOOL hasTimerFired = NO;
             if(!touchView){
                 NSLog(@"what");
             }
-            NSLog(@"%@ - %@", NSStringFromClass([touchView class]), touchView);
+            NSLog(@"%@ - %@ ui%i mt%i et%i", NSStringFromClass([touchView class]), touchView, touchView.userInteractionEnabled, touchView.multipleTouchEnabled, touchView.exclusiveTouch);
             NSLog(@"superview %@", NSStringFromClass([touchView.superview class]));
             for(UIView* subview in touchView.subviews){
                 NSLog(@" - subview: %@ %@", NSStringFromClass([subview class]), subview);
+            }
+            NSLog(@"gestures:");
+            for(UIGestureRecognizer* gesture in touchView.gestureRecognizers){
+                NSLog(@"%@ - %i", NSStringFromClass([gesture class]), gesture.enabled);
             }
         }
     }
@@ -364,18 +369,21 @@ static BOOL hasTimerFired = NO;
         [[NSThread mainThread] performBlock:^{
             NSLog(@"gestures: %@", [stackView activeGestureSummary]);
             [[NSThread mainThread] performBlock:^{
-                NSLog(@"********************************");
-                [self printAllGesturesIn:[[UIApplication sharedApplication] keyWindow] indent:@""];
-                NSLog(@"********************************");
-                
                 MMScrappedPaperView* topPage = [stackView.visibleStackHolder peekSubview];
-                if(topPage.contentView != [[MMPageCacheManager sharedInstance] drawableView].superview){
-                    NSLog(@"what");
-                }
                 if(![[MMPageCacheManager sharedInstance] drawableView].userInteractionEnabled){
                     NSLog(@"what");
                 }
+                
                 [[[MMPageCacheManager sharedInstance] drawableView] removeFromSuperview];
+
+                for(UIView* subview in [topPage.contentView.subviews copy]){
+                    if([subview isKindOfClass:[MMShapeBuilderView class]] ||
+                       [subview isKindOfClass:[MMUntouchableView class]] ||
+                       [subview isKindOfClass:[UIImageView class]]){
+                        [subview removeFromSuperview];
+                    }
+                }
+                [topPage.contentView removeFromSuperview];
                 
                 if(!topPage.userInteractionEnabled){
                     NSLog(@"what");
@@ -392,6 +400,10 @@ static BOOL hasTimerFired = NO;
                     NSLog(@"what");
                 }
                 
+                NSLog(@"********************************");
+                [self printAllGesturesIn:[[UIApplication sharedApplication] keyWindow] indent:@""];
+                NSLog(@"********************************");
+                
             } afterDelay:1];
         } afterDelay:1];
     } afterDelay:1];
@@ -401,12 +413,7 @@ static BOOL hasTimerFired = NO;
 
 
 -(void) printAllGesturesIn:(UIView*)aView indent:(NSString*)indent{
-    NSLog(@"%@ %@", indent, NSStringFromClass([aView class]));
-    if(aView.userInteractionEnabled){
-        NSLog(@" - toggled user interaction");
-        aView.userInteractionEnabled = NO;
-        aView.userInteractionEnabled = YES;
-    }
+    NSLog(@"%@ %@ ui%i mt%i et%i", indent, NSStringFromClass([aView class]), aView.userInteractionEnabled, aView.multipleTouchEnabled, aView.exclusiveTouch);
     for (UIGestureRecognizer* gesture in aView.gestureRecognizers) {
         if(gesture.state == 1 || gesture.state == 2){
             NSLog(@"*********************************************************");

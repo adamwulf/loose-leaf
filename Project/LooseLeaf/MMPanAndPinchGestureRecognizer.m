@@ -301,7 +301,7 @@
         // we're actually moving the page
         self.state = UIGestureRecognizerStateBegan;
     }
-    [super touchesBegan:touches withEvent:event];
+//    [super touchesBegan:touches withEvent:event];
 //    NSLog(@"pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 
@@ -379,7 +379,7 @@
             }
         }
     }
-    [super touchesMoved:touches withEvent:event];
+//    [super touchesMoved:touches withEvent:event];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -460,7 +460,7 @@
     }
     [self processPossibleTouchesFromOriginalLocationInView:originalLocationInView];
 
-    [super touchesEnded:touches withEvent:event];
+//    [super touchesEnded:touches withEvent:event];
 //    NSLog(@"end pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 
@@ -510,8 +510,8 @@
     NSLog(@"ignored touch in pan gesture: %@", [self.view performSelector:@selector(uuid)]);
     [validTouches removeObject:touch];
     [possibleTouches removeObject:touch];
-    [ignoredTouches removeObject:touch];
-    [super ignoreTouch:touch forEvent:event];
+    [ignoredTouches addObject:touch];
+//    [super ignoreTouch:touch forEvent:event];
 }
 
 - (void)reset{
