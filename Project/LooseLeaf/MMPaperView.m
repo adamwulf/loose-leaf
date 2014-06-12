@@ -43,6 +43,9 @@
         uuid = _uuid;
         originalUnscaledBounds = self.bounds;
         
+        self.multipleTouchEnabled = YES;
+        self.contentView.multipleTouchEnabled = YES;
+        
         //////////////////////////////////////////////////////////////////////
         //
         // debug image to help show page zoom/pan etc better
