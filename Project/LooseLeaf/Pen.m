@@ -12,6 +12,10 @@
 #import <JotUI/JotUI.h>
 #import "MMTouchVelocityGestureRecognizer.h"
 
+#define           VELOCITY_CLAMP_MIN 20
+#define           VELOCITY_CLAMP_MAX 1000
+
+
 @implementation Pen
 
 @synthesize minSize;
