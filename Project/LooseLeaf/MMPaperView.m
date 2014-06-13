@@ -50,14 +50,14 @@
 //        NSInteger photo = rand() % 6 + 1;
 //        UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", photo]];
         
-//        UILabel* label = [[UILabel alloc] initWithFrame:self.bounds];
-//        label.text = uuid;
-//        [label sizeToFit];
-//        CGRect fr = label.frame;
-//        fr.origin.x += 100;
-//        fr.origin.y += 100;
-//        label.frame = fr;
-//        [self addSubview:label];
+        UILabel* label = [[UILabel alloc] initWithFrame:self.bounds];
+        label.text = uuid;
+        [label sizeToFit];
+        CGRect fr = label.frame;
+        fr.origin.x += 100;
+        fr.origin.y += 100;
+        label.frame = fr;
+        [self addSubview:label];
         //
         // end debug image
         //
@@ -265,6 +265,12 @@
  * pan gestures use proper state control etc to zoom a page in and out.
  */
 -(void) panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture{
+    
+    if(_panGesture.state != UIGestureRecognizerStateChanged){
+        NSLog(@"pan %@ %i", self.uuid, _panGesture.state);
+    }
+    
+    
     if(![self.delegate shouldAllowPan:self]){
         return;
     }

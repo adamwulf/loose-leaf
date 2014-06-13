@@ -8,6 +8,10 @@
 
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "MMVector.h"
+#import "MMScrapPaperStackView.h"
+#import "MMPageCacheManager.h"
+#import "MMUntouchableView.h"
+
 
 #define kVelocityLowPass 0.7
 
@@ -21,8 +25,10 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
 
 @implementation MMTouchVelocityGestureRecognizer{
     struct DurationCacheObject durationCache[kDurationTouchHashSize];
+    NSTimer* debugTimer;
 }
 
+@synthesize stackView;
 
 #pragma mark - Singleton
 
@@ -95,7 +101,27 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
 
 #pragma mark - Touch Methods
 
+static BOOL hasTimerFired = NO;
+
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self killTimer];
+//    if(hasTimerFired){
+//        for(UITouch* aTouch in touches){
+//            UIView* touchView = [aTouch view];
+//            if(!touchView){
+//                NSLog(@"what");
+//            }
+//            NSLog(@"%@ - %@ ui%i mt%i et%i", NSStringFromClass([touchView class]), touchView, touchView.userInteractionEnabled, touchView.multipleTouchEnabled, touchView.exclusiveTouch);
+//            NSLog(@"superview %@", NSStringFromClass([touchView.superview class]));
+//            for(UIView* subview in touchView.subviews){
+//                NSLog(@" - subview: %@ %@", NSStringFromClass([subview class]), subview);
+//            }
+//            NSLog(@"gestures:");
+//            for(UIGestureRecognizer* gesture in touchView.gestureRecognizers){
+//                NSLog(@"%@ - %i", NSStringFromClass([gesture class]), gesture.enabled);
+//            }
+//        }
+//    }
     for(UITouch* touch in touches){
         // initialize values for touch
         int indexOfTouch = [self indexForTouchInCache:touch];
@@ -151,11 +177,11 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
         float clampedVelocityMagnitude = clamp(VELOCITY_CLAMP_MIN, VELOCITY_CLAMP_MAX, velocityMagnitude);
         // now normalize it, so we return a value between 0 and 1
         CGFloat normalizedVelocity = (clampedVelocityMagnitude - VELOCITY_CLAMP_MIN) / (VELOCITY_CLAMP_MAX - VELOCITY_CLAMP_MIN);
-
+        
         // the direction last touch:
         CGPoint oldVectorOfMotion = durationCache[indexOfTouch].directionOfTouch;
         MMVector* oldVec = [MMVector vectorWithX:oldVectorOfMotion.x andY:oldVectorOfMotion.y];
-
+        
         // calc current direction
         CGPoint vectorOfMotion = CGPointMake((l.x - previousPoint.x), (l.y - previousPoint.y));
         MMVector* currVec = [MMVector vectorWithX:vectorOfMotion.x andY:vectorOfMotion.y];
@@ -198,6 +224,7 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
             c++;
         }
     }
+    [self setupDebugTimer];
 }
 
 /**
@@ -273,5 +300,84 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
     return NO;
 }
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    // Disallow recognition of tap gestures in the segmented control.
+    if ([touch.view isKindOfClass:[UIControl class]]) {
+        NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
+        return NO;
+    }
+    return YES;
+}
+
+
+#pragma mark - Debug Timer
+
+-(void) killTimer{
+    if(debugTimer){
+        [debugTimer invalidate];
+        debugTimer = nil;
+    }
+}
+
+-(void) setupDebugTimer{
+    if([self numberOfActiveTouches] == 0){
+        [self killTimer];
+        debugTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(timerDidFire:) userInfo:nil repeats:NO];
+        [[NSThread mainThread] performBlock:^{
+            NSLog(@"***************************************************************************");
+            NSLog(@"***************************************************************************");
+        } afterDelay:.01];
+    }
+}
+
+-(void) timerDidFire:(NSTimer*)timer{
+    NSLog(@"Velocity Update");
+    NSLog(@"gestures: %@", [stackView activeGestureSummary]);
+    
+    hasTimerFired = YES;
+    
+    [[NSThread mainThread] performBlock:^{
+        [stackView cancelAllGestures];
+        MMPaperView* topPage = [stackView.visibleStackHolder peekSubview];
+        [topPage cancelAllGestures];
+        [[stackView.visibleStackHolder getPageBelow:topPage] cancelAllGestures];
+        
+        MMPaperView* topHiddenPage = [stackView.hiddenStackHolder peekSubview];
+        [topHiddenPage cancelAllGestures];
+        [[stackView.visibleStackHolder getPageBelow:topHiddenPage] cancelAllGestures];
+        
+        if([stackView.bezelStackHolder.subviews count]){
+            NSLog(@"uh oh! view in bezel!");
+        }
+        
+        NSArray* allGesturesAndTopTwoPages = [NSArray arrayWithArray:[[MMPageCacheManager sharedInstance] drawableView].gestureRecognizers];
+        allGesturesAndTopTwoPages = [allGesturesAndTopTwoPages arrayByAddingObjectsFromArray:[[UIApplication sharedApplication] keyWindow].gestureRecognizers];
+        for (UIGestureRecognizer* gesture in allGesturesAndTopTwoPages) {
+            if([gesture respondsToSelector:@selector(cancel)]){
+                NSLog(@"trying to cancel: %@ %d", NSStringFromClass([gesture class]), gesture.state);
+                [gesture performSelector:@selector(cancel)];
+            }else{
+                NSLog(@"couldn't cancel: %@ %d", NSStringFromClass([gesture class]), gesture.state);
+                if(gesture.enabled){
+                    gesture.enabled = NO;
+                    gesture.enabled = YES;
+                    NSLog(@"manually cancelled: %@ %d", NSStringFromClass([gesture class]), gesture.state);
+                }else{
+                    NSLog(@"was disabled: %@ %d", NSStringFromClass([gesture class]), gesture.state);
+                }
+            }
+        }
+        
+        
+        NSLog(@"cancelled gestures");
+        [[NSThread mainThread] performBlock:^{
+            NSLog(@"gestures: %@", [stackView activeGestureSummary]);
+        } afterDelay:1];
+    } afterDelay:1];
+}
+
+
+
 
 @end

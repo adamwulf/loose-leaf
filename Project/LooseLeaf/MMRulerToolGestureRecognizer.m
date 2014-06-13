@@ -49,6 +49,7 @@
 
 -(void) cancel{
     if(self.enabled){
+        NSLog(@"%@ [cancel]", NSStringFromClass([self class]));
         self.enabled = NO;
         self.enabled = YES;
     }

@@ -39,6 +39,7 @@
 
 @property (nonatomic, readonly) UIView* visibleStackHolder;
 @property (nonatomic, readonly) UIView* hiddenStackHolder;
+@property (nonatomic, readonly) UIView* bezelStackHolder;
 
 -(void) addPaperToBottomOfStack:(MMPaperView*)page;
 -(void) addPaperToBottomOfHiddenStack:(MMPaperView*)page;
@@ -62,5 +63,7 @@
 -(void) isBezelingInRightWithGesture:(MMBezelInGestureRecognizer*)bezelGesture;
 -(void) isBezelingInLeftWithGesture:(MMBezelInGestureRecognizer*)bezelGesture;
 -(void) saveStacksToDisk;
+
+-(NSString*) activeGestureSummary;
 
 @end

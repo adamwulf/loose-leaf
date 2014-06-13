@@ -450,6 +450,8 @@
         [possibleTouches removeObjectsInSet:touches];
         [ignoredTouches removeObjectsInSet:touches];
         if(![validTouches count] && ![possibleTouches count] && ![ignoredTouches count]){
+            UIGestureRecognizerState state = self.state;
+            
             self.state = UIGestureRecognizerStateFailed;
         }
     }
@@ -502,8 +504,19 @@
 //    NSLog(@"cancel pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 -(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
-    [ignoredTouches addObject:touch];
-    [super ignoreTouch:touch forEvent:event];
+    NSString* uuid = @"";
+    if([self.view respondsToSelector:@selector(uuid)]){
+        uuid = [(NSString*) self.view performSelector:@selector(uuid)];
+    }
+    UIGestureRecognizerState state = self.state;
+    
+    if(self.state != UIGestureRecognizerStateFailed){
+        [ignoredTouches addObject:touch];
+        [possibleTouches removeObject:touch];
+        [validTouches removeObject:touch];
+    }else{
+        NSLog(@"what %@", uuid);
+    }
 }
 
 - (void)reset{

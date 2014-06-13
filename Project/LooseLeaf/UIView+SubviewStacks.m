@@ -80,7 +80,7 @@
 -(MMPaperView*) getPageBelow:(MMPaperView*)page{
     if(!page) return page;
     NSInteger index = [self.subviews indexOfObject:page];
-    if(index != 0){
+    if(index != 0 && index != NSNotFound){
         return [self.subviews objectAtIndex:index-1];
     }
     return nil;
