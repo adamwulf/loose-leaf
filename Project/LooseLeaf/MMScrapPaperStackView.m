@@ -1073,19 +1073,19 @@ int skipAll = NO;
 
 -(void) logOutputGestureTouchOwnership:(NSString*) prefix gesture:(MMPanAndPinchScrapGestureRecognizer*)gesture{
     return;
-    NSString* validOut = @"valid:";
-    for (UITouch* t in gesture.validTouches) {
-        validOut = [validOut stringByAppendingFormat:@" %p", t];
-    }
-    NSString* possibleOut = @"possible:";
-    for (UITouch* t in gesture.possibleTouches) {
-        possibleOut = [possibleOut stringByAppendingFormat:@" %p", t];
-    }
-    NSString* ignoredOut = @"ignored:";
-    for (UITouch* t in gesture.ignoredTouches) {
-        ignoredOut = [ignoredOut stringByAppendingFormat:@" %p", t];
-    }
-    debug_NSLog(@"%@ (%p) knows about:\n%@\n%@\n%@ ", prefix, gesture, validOut, possibleOut, ignoredOut);
+//    NSString* validOut = @"valid:";
+//    for (UITouch* t in gesture.validTouches) {
+//        validOut = [validOut stringByAppendingFormat:@" %p", t];
+//    }
+//    NSString* possibleOut = @"possible:";
+//    for (UITouch* t in gesture.possibleTouches) {
+//        possibleOut = [possibleOut stringByAppendingFormat:@" %p", t];
+//    }
+//    NSString* ignoredOut = @"ignored:";
+//    for (UITouch* t in gesture.ignoredTouches) {
+//        ignoredOut = [ignoredOut stringByAppendingFormat:@" %p", t];
+//    }
+//    debug_NSLog(@"%@ (%p) knows about:\n%@\n%@\n%@ ", prefix, gesture, validOut, possibleOut, ignoredOut);
 }
 
 

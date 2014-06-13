@@ -184,7 +184,7 @@
 {
     SYShape* possibleShape = [shapeController getFigurePaintedWithTolerance:[toleranceSlider value]*0.0001 andContinuity:[continuitySlider value] forceOpen:(shapeVsScissorChooser.selectedSegmentIndex != 0)];
     if(possibleShape){
-        @throw [NSException exceptionWithName:@"Test Target Exception" reason:@"testing crashlytics" userInfo:nil];
+//        @throw [NSException exceptionWithName:@"Test Target Exception" reason:@"testing crashlytics" userInfo:nil];
         [filledShapeView clear];
         
         if([self shapeIsSelfIntersecting:possibleShape]){

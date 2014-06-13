@@ -141,8 +141,8 @@
     
     return thetaAB;
     
-    CGFloat scaler = self.x * otherVector.x + self.y * otherVector.y;
-    return acosf(scaler / (self.magnitude * otherVector.magnitude));
+//    CGFloat scaler = self.x * otherVector.x + self.y * otherVector.y;
+//    return acosf(scaler / (self.magnitude * otherVector.magnitude));
 }
 
 -(CGPoint) asCGPoint{
