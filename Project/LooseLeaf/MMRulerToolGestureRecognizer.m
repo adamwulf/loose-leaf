@@ -49,14 +49,6 @@
     return initialDistance;
 }
 
--(void) cancel{
-    if(self.enabled){
-        NSLog(@"%@ [cancel]", NSStringFromClass([self class]));
-        self.enabled = NO;
-        self.enabled = YES;
-    }
-}
-
 
 -(BOOL) containsTouch:(UITouch*)touch{
     return [validTouches containsObject:touch];
@@ -119,6 +111,7 @@
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     [rulerDelegate ownershipOfTouches:touches isGesture:gesture];
+    [super ownershipOfTouches:touches isGesture:gesture];
 }
 
 #pragma mark - UIGestureRecognizerDelegate

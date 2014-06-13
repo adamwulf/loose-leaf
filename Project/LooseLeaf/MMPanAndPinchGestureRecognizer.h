@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
+#import "MMCancelableGestureRecognizer.h"
 #import "Constants.h"
 #import "MMScrapView.h"
 #import "MMPanAndPinchScrapGestureRecognizerDelegate.h"
 
-@interface MMPanAndPinchGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>{
+@interface MMPanAndPinchGestureRecognizer : MMCancelableGestureRecognizer<UIGestureRecognizerDelegate>{
     //
     // the initial distance between
     // the touches. to be used to calculate
@@ -51,7 +52,6 @@
 @property (nonatomic, readonly) CGRect frameOfPageAtBeginningOfGesture;
 @property (nonatomic, readonly) BOOL hasPannedOrScaled;
 
--(void) cancel;
 -(BOOL) containsTouch:(UITouch*)touch;
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 

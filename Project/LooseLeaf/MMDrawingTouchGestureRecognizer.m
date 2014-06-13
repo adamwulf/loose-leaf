@@ -44,13 +44,6 @@ static MMDrawingTouchGestureRecognizer* _instance = nil;
     return [validTouches array];
 }
 
--(void) cancel{
-    if(self.enabled){
-        self.enabled = NO;
-        self.enabled = YES;
-    }
-}
-
 #pragma mark - UIGestureRecognizer
 
 -(BOOL) canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{

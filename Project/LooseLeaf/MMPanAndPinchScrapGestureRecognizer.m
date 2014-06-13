@@ -102,13 +102,6 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     return self;
 }
 
--(void) cancel{
-    if(self.enabled){
-        self.enabled = NO;
-        self.enabled = YES;
-    }
-}
-
 -(NSArray*) possibleTouches{
     return [possibleTouches array];
 }

@@ -39,6 +39,7 @@
 		664F4139159063F8006F8B09 /* MMPlusIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F4138159063F8006F8B09 /* MMPlusIcon.m */; };
 		664F413D1590661F006F8B09 /* MMRightArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413C1590661F006F8B09 /* MMRightArrow.m */; };
 		664F414015906628006F8B09 /* MMLeftArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413F15906628006F8B09 /* MMLeftArrow.m */; };
+		664FB55B194BAC6A009C1EF9 /* MMCancelableGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 664FB55A194BAC6A009C1EF9 /* MMCancelableGestureRecognizer.m */; };
 		6650DD0F18F46D5100ADF591 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6650DD0E18F46D5100ADF591 /* Images.xcassets */; };
 		6650DD1218F4843400ADF591 /* photoalbum@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6650DD1118F4843400ADF591 /* photoalbum@2x.png */; };
 		6650DD1418F4843D00ADF591 /* photoalbum.png in Resources */ = {isa = PBXBuildFile; fileRef = 6650DD1318F4843D00ADF591 /* photoalbum.png */; };
@@ -274,6 +275,8 @@
 		664F413C1590661F006F8B09 /* MMRightArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRightArrow.m; sourceTree = "<group>"; };
 		664F413E15906628006F8B09 /* MMLeftArrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLeftArrow.h; sourceTree = "<group>"; };
 		664F413F15906628006F8B09 /* MMLeftArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLeftArrow.m; sourceTree = "<group>"; };
+		664FB559194BAC6A009C1EF9 /* MMCancelableGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCancelableGestureRecognizer.h; sourceTree = "<group>"; };
+		664FB55A194BAC6A009C1EF9 /* MMCancelableGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCancelableGestureRecognizer.m; sourceTree = "<group>"; };
 		6650DD0E18F46D5100ADF591 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = LooseLeaf/Images.xcassets; sourceTree = "<group>"; };
 		6650DD1118F4843400ADF591 /* photoalbum@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photoalbum@2x.png"; sourceTree = "<group>"; };
 		6650DD1318F4843D00ADF591 /* photoalbum.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = photoalbum.png; sourceTree = "<group>"; };
@@ -801,6 +804,15 @@
 				66A471BD17C7DAA000C2A5B6 /* MMScrappedPaperView.m */,
 			);
 			name = MMPaperView;
+			sourceTree = "<group>";
+		};
+		664FB558194BABE2009C1EF9 /* CancelableGesture */ = {
+			isa = PBXGroup;
+			children = (
+				664FB559194BAC6A009C1EF9 /* MMCancelableGestureRecognizer.h */,
+				664FB55A194BAC6A009C1EF9 /* MMCancelableGestureRecognizer.m */,
+			);
+			name = CancelableGesture;
 			sourceTree = "<group>";
 		};
 		6650DD1018F4842E00ADF591 /* photo album */ = {
@@ -1456,6 +1468,7 @@
 		66DCFBDC1582BF1600B4918C /* Gestures */ = {
 			isa = PBXGroup;
 			children = (
+				664FB558194BABE2009C1EF9 /* CancelableGesture */,
 				663EFFF01946D13B006E6AF5 /* UIButton Aware Tap Gesture */,
 				66D7496018A6DA670015650E /* Drawing */,
 				6640E6D617E390A800EB3F7D /* Velocity */,
@@ -1721,6 +1734,7 @@
 				6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */,
 				66DCFBCD1582BAED00B4918C /* MMPaperView.m in Sources */,
 				660E1DA9158FC6300001DA12 /* NSMutableArray+QueueAdditions.m in Sources */,
+				664FB55B194BAC6A009C1EF9 /* MMCancelableGestureRecognizer.m in Sources */,
 				666E254918F613FA00C17295 /* MMFaceSidebarContentView.m in Sources */,
 				6699714D17DA5EDB00E81467 /* MMScrapSidebarButton.m in Sources */,
 				666E254F18F72BCF00C17295 /* MMCameraSidebarContentView.m in Sources */,

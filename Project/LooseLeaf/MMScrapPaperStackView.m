@@ -132,6 +132,7 @@
         
         
         fromRightBezelGesture.panDelegate = self;
+        fromLeftBezelGesture.panDelegate = self;
 
     
 //        debugImgView = [[UIImageView alloc] initWithFrame:CGRectMake(380, 80, self.bounds.size.width / 3, self.bounds.size.height/3)];
@@ -1312,7 +1313,7 @@ int skipAll = NO;
     [super ownershipOfTouches:touches isGesture:gesture];
     if([gesture isKindOfClass:[MMPanAndPinchScrapGestureRecognizer class]] ||
        [gesture isKindOfClass:[MMStretchScrapGestureRecognizer class]]){
-        // only notify of our own gestures
+        // only notify of our own gestures, super will handle its own
         [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
     }
     [panAndPinchScrapGesture ownershipOfTouches:touches isGesture:gesture];

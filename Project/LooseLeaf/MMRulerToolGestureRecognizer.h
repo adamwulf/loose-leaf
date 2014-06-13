@@ -17,7 +17,6 @@
 @property (nonatomic, readonly) CGFloat initialDistance;
 @property (nonatomic, readonly) CGFloat scale;
 
--(void) cancel;
 -(BOOL) containsTouch:(UITouch*)touch;
 
 -(CGPoint) point1InView:(UIView*)view;

@@ -12,8 +12,9 @@
 #import "MMScrapView.h"
 #import "MMPanAndPinchScrapGestureRecognizerDelegate.h"
 #import "MMVector.h"
+#import "MMCancelableGestureRecognizer.h"
 
-@interface MMPanAndPinchScrapGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>{
+@interface MMPanAndPinchScrapGestureRecognizer : MMCancelableGestureRecognizer<UIGestureRecognizerDelegate>{
     // the initial distance between
     // the touches. to be used to calculate
     // scale
@@ -60,7 +61,6 @@
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 -(void) relinquishOwnershipOfTouches:(NSSet*)touches;
 -(void) giveUpScrap;
--(void) cancel;
 -(void) blessTouches:(NSSet*)touches;
 -(void) forceBlessTouches:(NSSet*)touches forScrap:(MMScrapView*)_scrap;
 

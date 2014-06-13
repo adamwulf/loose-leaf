@@ -21,16 +21,25 @@
         uuid = [(NSString*) self.view performSelector:@selector(uuid)];
     }
     if(state == UIGestureRecognizerStateBegan){
-        debug_NSLog(@"%@ (%@) %p began", [self class], uuid, self);
+        debug_NSLog(@"%@ began", [self description]);
     }else if(state == UIGestureRecognizerStateCancelled){
-        debug_NSLog(@"%@ (%@) %p cancelled", [self class], uuid, self);
+        debug_NSLog(@"%@ cancelled", [self description]);
     }else if(state == UIGestureRecognizerStateEnded){
-        debug_NSLog(@"%@ (%@) %p ended", [self class], uuid, self);
+        debug_NSLog(@"%@ ended", [self description]);
     }else if(state == UIGestureRecognizerStateFailed){
-        debug_NSLog(@"%@ (%@) %p failed", [self class], uuid, self);
+        debug_NSLog(@"%@ failed", [self description]);
     }
 
     [self swizzle_setState:state];
+}
+
+-(NSString*) swizzle_description{
+    return [NSString stringWithFormat:@"[%@ %p]", NSStringFromClass([self class]), self];
+}
+
+-(void) swizzle_reset{
+    NSLog(@"reset %@", [self description]);
+    [self swizzle_reset];
 }
 
 -(void) say:(NSString*)prefix ISee:(NSSet*)touches{
@@ -48,6 +57,12 @@
 	[UIGestureRecognizer jr_swizzleMethod:@selector(setState:)
                         withMethod:@selector(swizzle_setState:)
                              error:&error];
+	[UIGestureRecognizer jr_swizzleMethod:@selector(description)
+                               withMethod:@selector(swizzle_description)
+                                    error:&error];
+	[UIGestureRecognizer jr_swizzleMethod:@selector(reset)
+                               withMethod:@selector(swizzle_reset)
+                                    error:&error];
 }
 
 

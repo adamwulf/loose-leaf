@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMCancelableGestureRecognizer.h"
 #import "MMPanGestureDelegate.h"
 
-@interface MMDrawingTouchGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>{
+@interface MMDrawingTouchGestureRecognizer : MMCancelableGestureRecognizer<UIGestureRecognizerDelegate>{
     NSMutableSet* ignoredTouches;
     NSMutableOrderedSet* possibleTouches;
     NSMutableOrderedSet* validTouches;
@@ -23,7 +24,5 @@
 +(MMDrawingTouchGestureRecognizer*) sharedInstace;
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
-
--(void) cancel;
 
 @end

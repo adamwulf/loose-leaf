@@ -89,6 +89,8 @@
         [[Mixpanel sharedInstance] track:kMPEventLaunch];
     };
     debug_NSLog(@"DID BECOME ACTIVE");
+    debug_NSLog(@"***************************************************************************");
+    debug_NSLog(@"***************************************************************************");
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

@@ -121,7 +121,6 @@
 }
 
 -(void) reset{
-//    debug_NSLog(@"reset");
     [validTouches removeAllObjects];
     pinchedPage = nil;
     scaleDirection = MMBezelDirectionNone;
@@ -135,13 +134,6 @@
 -(void) killTheGestureCold{
     pinchedPage = nil;
     [self cancel];
-}
-
--(void) cancel{
-    if(self.enabled){
-        self.enabled = NO;
-        self.enabled = YES;
-    }
 }
 
 #pragma mark - UIGestureRecognizerDelegate

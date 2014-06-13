@@ -11,8 +11,9 @@
 #import "Constants.h"
 #import "MMPanAndPinchFromListViewGestureRecognizerDelegate.h"
 #import "NSMutableSet+Extras.h"
+#import "MMCancelableGestureRecognizer.h"
 
-@interface MMPanAndPinchFromListViewGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>{
+@interface MMPanAndPinchFromListViewGestureRecognizer : MMCancelableGestureRecognizer<UIGestureRecognizerDelegate>{
     //
     // the initial distance between
     // the touches. to be used to calculate
@@ -44,6 +45,5 @@
 @property (nonatomic, assign) NSObject<MMPanAndPinchFromListViewGestureRecognizerDelegate>* pinchDelegate;
 
 -(void) killTheGestureCold;
--(void) cancel;
 
 @end

@@ -374,7 +374,6 @@
                 }
             }
         }
-        [[visibleStackHolder peekSubview] disableAllGestures];
         [bezelStackHolder removeAllAnimationsAndPreservePresentationFrame];
         bezelStackHolder.frame = visibleStackHolder.frame;
         
@@ -383,8 +382,6 @@
         [self ensureAtLeast:2 pagesInStack:visibleStackHolder];
         [bezelStackHolder pushSubview:[visibleStackHolder peekSubview]];
         [self mayChangeTopPageTo:[visibleStackHolder peekSubview]];
-        // make sure top visible stack page is always disabled gestures
-        [[visibleStackHolder peekSubview] disableAllGestures];
         // at this point, the bezel stack is immediately on top of the visible stack,
         // and it has 1 page in it. now animate the bezel stack to the user's finger
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
@@ -406,10 +403,16 @@
         // to the hidden stack
 
         if([bezelStackHolder.subviews count]){
+            NSArray* pagesToDisable = [bezelStackHolder.subviews copy];
             [self willNotChangeTopPageTo:[bezelStackHolder peekSubview]];
             [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
             [self emptyBezelStackToHiddenStackAnimated:YES onComplete:^(BOOL finished){
                 [self didChangeTopPage];
+                // since we've added pages to the hidden stack, make sure
+                // all of their gestures are turned off
+                for(MMPaperView* page in pagesToDisable){
+                    [page disableAllGestures];
+                }
             }];
             [[visibleStackHolder peekSubview] enableAllGestures];
         }
@@ -428,7 +431,6 @@
         // haven't completed.
         if([bezelStackHolder.subviews count]){
             [self willNotChangeTopPageTo:[visibleStackHolder peekSubview]];
-            [[visibleStackHolder peekSubview] enableAllGestures];
             while([bezelStackHolder.subviews count]){
                 // this will translate the frame from the bezel stack to the
                 // hidden stack, so that the pages appear in the same place
@@ -439,8 +441,10 @@
             void(^finishedBlock)(BOOL finished)  = ^(BOOL finished){
                 bezelStackHolder.frame = hiddenStackHolder.frame;
                 [self didChangeTopPage];
-                [[visibleStackHolder peekSubview] cancelAllGestures];
             };
+            // now pop all of those pages back onto the visible stack.
+            // each of these came from the visible stack initially, so
+            // we don't need to toggle their gestures enabled/disabled
             [self popHiddenStackForPages:bezelGesture.numberOfRepeatingBezels onComplete:finishedBlock];
             
             //
@@ -451,7 +455,7 @@
             // immediately back on bezel, then it'll increment count correctly
             [bezelGesture resetPageCount];
         }
-    }else if(bezelGesture.numberOfRepeatingBezels){
+    }else if(bezelGesture.subState == UIGestureRecognizerStateChanged && bezelGesture.numberOfRepeatingBezels){
         //
         // we're in progress of a bezel gesture from the right
         //
@@ -530,16 +534,17 @@
  * without interruption.
  */
 -(void) isBezelingInRightWithGesture:(MMBezelInGestureRecognizer*)bezelGesture{
-    if([[visibleStackHolder peekSubview] panGesture].subState != UIGestureRecognizerStatePossible){
-        [[[visibleStackHolder peekSubview] panGesture] cancel];
-    }
-    
-    // make sure there's a page to bezel
-    [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
     CGPoint translation = [bezelGesture translationInView:self];
     
     if(!bezelGesture.hasSeenSubstateBegin && (bezelGesture.subState == UIGestureRecognizerStateBegan ||
                                              bezelGesture.subState == UIGestureRecognizerStateChanged)){
+        
+        // cancel panning a page, if any
+        if([[visibleStackHolder peekSubview] panGesture].subState != UIGestureRecognizerStatePossible){
+            [[[visibleStackHolder peekSubview] panGesture] cancel];
+        }
+        // make sure there's a page to bezel
+        [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
         // this flag is an ugly hack because i'm using substates in gestures.
         // ideally, i could handle this gesture entirely inside of the state,
         // but i get an odd sitation where the gesture steals touches even
@@ -645,7 +650,7 @@
             // immediately back on bezel, then it'll increment count correctly
             [bezelGesture resetPageCount];
         }
-    }else if(bezelGesture.numberOfRepeatingBezels){
+    }else if(bezelGesture.subState == UIGestureRecognizerStateChanged && bezelGesture.numberOfRepeatingBezels){
         //
         // we're in progress of a bezel gesture from the right
         //

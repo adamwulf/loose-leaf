@@ -10,8 +10,9 @@
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "Constants.h"
 #import "MMPanGestureDelegate.h"
+#import "MMCancelableGestureRecognizer.h"
 
-@interface MMBezelInGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>{
+@interface MMBezelInGestureRecognizer : MMCancelableGestureRecognizer<UIGestureRecognizerDelegate>{
     // direction the user is panning
     MMBezelDirection panDirection;
     CGFloat liftedFingerOffset;
@@ -41,8 +42,6 @@
 -(CGPoint) translationInView:(UIView*)view;
 
 -(void) resetPageCount;
-
--(void) cancel;
 
 -(BOOL) isActivelyBezeling;
 

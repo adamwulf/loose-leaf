@@ -254,6 +254,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
  */
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     [panGesture ownershipOfTouches:touches isGesture:gesture];
+    [rulerGesture ownershipOfTouches:touches isGesture:gesture];
     if([gesture isKindOfClass:[MMPanAndPinchGestureRecognizer class]]){
         // only notify of our own gestures
         [self.delegate ownershipOfTouches:touches isGesture:gesture];

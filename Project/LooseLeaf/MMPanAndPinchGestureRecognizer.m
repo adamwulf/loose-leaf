@@ -74,6 +74,13 @@
     return self;
 }
 
+-(NSString*) uuid{
+    if([self.view respondsToSelector:@selector(uuid)]){
+        return [self.view performSelector:@selector(uuid)];
+    }
+    return nil;
+}
+
 -(NSArray*)validTouches{
     return [validTouches array];
 }
@@ -99,6 +106,19 @@
     return subState;
 }
 
+-(void) setSubState:(UIGestureRecognizerState)_subState{
+    subState = _subState;
+    if(subState == UIGestureRecognizerStateBegan){
+        debug_NSLog(@"%@ substate began", [self description]);
+    }else if(subState == UIGestureRecognizerStateCancelled){
+        debug_NSLog(@"%@ substate cancelled", [self description]);
+    }else if(subState == UIGestureRecognizerStateEnded){
+        debug_NSLog(@"%@ substate ended", [self description]);
+    }else if(subState == UIGestureRecognizerStateFailed){
+        debug_NSLog(@"%@ substate failed", [self description]);
+    }
+}
+
 //
 // this will make sure that the substate transitions
 // into a valid state and doesn't repeat a Began/End/Cancelled/etc
@@ -106,9 +126,9 @@
     if(subState == UIGestureRecognizerStateEnded ||
        subState == UIGestureRecognizerStateCancelled ||
        subState == UIGestureRecognizerStateFailed){
-        subState = UIGestureRecognizerStatePossible;
+        self.subState = UIGestureRecognizerStatePossible;
     }else if(subState == UIGestureRecognizerStateBegan){
-        subState = UIGestureRecognizerStateChanged;
+        self.subState = UIGestureRecognizerStateChanged;
     }
 }
 
@@ -121,7 +141,7 @@
 }
 
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return [preventingGestureRecognizer isKindOfClass:[MMBezelInGestureRecognizer class]];
+    return NO;
 }
 
 -(BOOL) containsTouch:(UITouch*)touch{
@@ -130,6 +150,7 @@
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     if(gesture != self){
+        NSLog(@"%@ was told that %@ owns %i touches", [self description], [gesture description], [touches count]);
         __block BOOL touchesWereStolen = NO;
         [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
             if([possibleTouches containsObject:touch] || [validTouches containsObject:touch]){
@@ -144,7 +165,7 @@
         if([validTouches count] < 2 && touchesWereStolen){
             // uh oh, we have valid touches, but not enough
             if(subState != UIGestureRecognizerStatePossible){
-                subState = UIGestureRecognizerStateCancelled;
+                self.subState = UIGestureRecognizerStateCancelled;
             }
             [possibleTouches addObjectsInOrderedSet:validTouches];
             [validTouches removeAllObjects];
@@ -205,7 +226,7 @@
             locationAdjustment = CGPointZero;
             lastLocationInView = CGPointZero;
             
-            subState = UIGestureRecognizerStateBegan;
+            self.subState = UIGestureRecognizerStateBegan;
             hasPannedOrScaled = YES;
             
             // reset the location and the initial distance of the gesture
@@ -256,6 +277,8 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [self processSubStateForNextIteration];
     
+    NSLog(@"%@: %i touches began", [self description], [touches count]);
+    
     NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
     [validTouchesCurrentlyBeginning removeObjectsInSet:ignoredTouches];
 //    NSLog(@"input: %d  ignored: %d  possiblyValid: %d", [touches count], [ignoredTouches count], [validTouchesCurrentlyBeginning count]);
@@ -298,7 +321,6 @@
         // we're actually moving the page
         self.state = UIGestureRecognizerStateBegan;
     }
-    [super touchesBegan:touches withEvent:event];
 //    NSLog(@"pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 
@@ -376,12 +398,14 @@
             }
         }
     }
-    [super touchesMoved:touches withEvent:event];
+    self.state = UIGestureRecognizerStateChanged;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     [self processSubStateForNextIteration];
 
+    NSLog(@"%@: %i touches ended", [self description], [touches count]);
+    
     // pan and pinch and bezel
     BOOL cancelledFromBezel = NO;
     NSMutableOrderedSet* validTouchesCurrentlyEnding = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
@@ -419,7 +443,6 @@
             }
         }
         
-        
         [validTouches minusOrderedSet:validTouchesCurrentlyEnding];
         [possibleTouches removeObjectsInSet:touches];
         [ignoredTouches removeObjectsInSet:touches];
@@ -433,15 +456,15 @@
             // active, so put us back into possible state and we may
             // pick the page back up again later
             if(cancelledFromBezel){
-                subState = UIGestureRecognizerStateEnded;
+                self.subState = UIGestureRecognizerStateEnded;
             }else{
-                subState = UIGestureRecognizerStatePossible;
+                self.subState = UIGestureRecognizerStatePossible;
             }
         }
 
         if([validTouches count] == 0 && [possibleTouches count] == 0 && [ignoredTouches count] == 0 &&
            subState == UIGestureRecognizerStateChanged){
-            subState = UIGestureRecognizerStateEnded;
+            self.subState = UIGestureRecognizerStateEnded;
             self.state = UIGestureRecognizerStateEnded;
         }
     }else{
@@ -452,78 +475,41 @@
         [possibleTouches removeObjectsInSet:touches];
         [ignoredTouches removeObjectsInSet:touches];
         if(![validTouches count] && ![possibleTouches count] && ![ignoredTouches count]){
-            UIGestureRecognizerState state = self.state;
-            
             self.state = UIGestureRecognizerStateFailed;
         }
     }
     [self processPossibleTouchesFromOriginalLocationInView:originalLocationInView];
-
-    [super touchesEnded:touches withEvent:event];
-//    NSLog(@"end pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
-    
     return [self touchesEnded:touches withEvent:event];
-    
-    /*
-    
-    
-    
-    [self processSubStateForNextIteration];
-
-    NSMutableOrderedSet* validTouchesCurrentlyCancelling = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
-    [validTouchesCurrentlyCancelling intersectSet:touches];
-    [validTouchesCurrentlyCancelling minusSet:ignoredTouches];
-    
-//    NSLog(@"pan cancelled touches %d vs %d", [validTouchesCurrentlyCancelling count], [touches count]);
-    if([validTouchesCurrentlyCancelling count]){
-        if(self.numberOfValidTouches == 1 && (self.state == UIGestureRecognizerStateChanged || self.state == UIGestureRecognizerStateBegan)){
-            self.state = UIGestureRecognizerStatePossible;
-        }else if([validTouches count] == [validTouchesCurrentlyCancelling count] && (self.state == UIGestureRecognizerStateChanged || self.state == UIGestureRecognizerStateBegan)){
-            self.state = UIGestureRecognizerStateCancelled;
-        }
-        [validTouches minusOrderedSet:validTouchesCurrentlyCancelling];
-    }
-    [possibleTouches removeObjectsInSet:touches];
-    [ignoredTouches removeObjectsInSet:touches];
-    
-    if([validTouches count] == 0 && [possibleTouches count] == 0){
-        if((self.state == UIGestureRecognizerStateChanged || self.state == UIGestureRecognizerStateBegan)){
-            // if we've just lifted our last touch, and we don't have any
-            // touches left on screen that could revive this gesture,
-            // then set us to cancelled.
-            //
-            // this may happen if:
-            // - valid gesture w/ 2 touches
-            // - end 1 touch
-            // - cancel last 1 touch
-            self.state = UIGestureRecognizerStateCancelled;
-        }
-    }
-     */
-//    NSLog(@"cancel pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
+
 -(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
+    NSLog(@"%@: 1 touches ignored", [self description]);
+
     NSString* uuid = @"";
     if([self.view respondsToSelector:@selector(uuid)]){
         uuid = [(NSString*) self.view performSelector:@selector(uuid)];
     }
-    UIGestureRecognizerState state = self.state;
+    [ignoredTouches addObject:touch];
+    [possibleTouches removeObject:touch];
+    [validTouches removeObject:touch];
     
-    if(self.state != UIGestureRecognizerStateFailed){
-        [ignoredTouches addObject:touch];
-        [possibleTouches removeObject:touch];
-        [validTouches removeObject:touch];
-    }else{
-        NSLog(@"what %@", uuid);
+    if([validTouches count] < kMinimumNumberOfTouches){
+        if(subState == UIGestureRecognizerStateChanged ||
+           subState == UIGestureRecognizerStateBegan){
+            self.subState = UIGestureRecognizerStateFailed;
+        }
+    }
+    if(![validTouches count] && ![possibleTouches count] && ![ignoredTouches count]){
+        self.state = UIGestureRecognizerStateEnded;
     }
 }
 
 - (void)reset{
     [super reset];
-    subState = UIGestureRecognizerStatePossible;
+    self.subState = UIGestureRecognizerStatePossible;
     initialDistance = 0;
     scale = 1;
     [validTouches removeAllObjects];
@@ -536,27 +522,23 @@
     hasPannedOrScaled = NO;
 }
 
--(void) cancel{
-    if(self.enabled){
-        self.enabled = NO;
-        self.enabled = YES;
-    }
-}
-
 -(void) setEnabled:(BOOL)enabled{
-    [super setEnabled:enabled];
-    if(!enabled){
-        subState = UIGestureRecognizerStatePossible;
-        initialDistance = 0;
-        scale = 1;
-        [validTouches removeAllObjects];
-        [possibleTouches removeAllObjects];
-        [ignoredTouches removeAllObjects];
-        didExitToBezel = MMBezelDirectionNone;
-        scaleDirection = MMScaleDirectionNone;
-        locationAdjustment = CGPointZero;
-        lastLocationInView = CGPointZero;
-        hasPannedOrScaled = NO;
+    if(enabled != self.enabled){
+        NSLog(@"%@: setEnabled: %i", [self description], enabled);
+        [super setEnabled:enabled];
+        if(!enabled){
+            self.subState = UIGestureRecognizerStatePossible;
+            initialDistance = 0;
+            scale = 1;
+            [validTouches removeAllObjects];
+            [possibleTouches removeAllObjects];
+            [ignoredTouches removeAllObjects];
+            didExitToBezel = MMBezelDirectionNone;
+            scaleDirection = MMScaleDirectionNone;
+            locationAdjustment = CGPointZero;
+            lastLocationInView = CGPointZero;
+            hasPannedOrScaled = NO;
+        }
     }
 }
 
@@ -616,11 +598,15 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     // Disallow recognition of tap gestures in the segmented control.
     if ([touch.view isKindOfClass:[UIControl class]]) {
-        NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
+        NSLog(@"shouldn't receive touch in %@", [self description]);
         return NO;
     }
     return YES;
 }
 
+
+-(NSString*) description{
+    return [NSString stringWithFormat:@"[%@ %@ %p]", NSStringFromClass([self class]), [self uuid], self];
+}
 
 @end
