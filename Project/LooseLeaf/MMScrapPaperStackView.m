@@ -59,11 +59,11 @@
 {
     if ((self = [super initWithFrame:frame])) {
         
-        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
-                                                                  target:self
-                                                                selector:@selector(timerDidFire:)
-                                                                userInfo:nil
-                                                                 repeats:YES];
+//        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
+//                                                                  target:self
+//                                                                selector:@selector(timerDidFire:)
+//                                                                userInfo:nil
+//                                                                 repeats:YES];
 
         
 //        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5
