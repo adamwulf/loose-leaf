@@ -13,7 +13,7 @@
 #import "MMScrapView.h"
 #import "MMPanAndPinchScrapGestureRecognizerDelegate.h"
 
-@interface MMPanAndPinchGestureRecognizer : MMCancelableGestureRecognizer<UIGestureRecognizerDelegate>{
+@interface MMPanAndPinchGestureRecognizer : MMCancelableGestureRecognizer{
     //
     // the initial distance between
     // the touches. to be used to calculate

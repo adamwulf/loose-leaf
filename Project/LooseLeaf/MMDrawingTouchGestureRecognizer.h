@@ -10,7 +10,7 @@
 #import "MMCancelableGestureRecognizer.h"
 #import "MMPanGestureDelegate.h"
 
-@interface MMDrawingTouchGestureRecognizer : MMCancelableGestureRecognizer<UIGestureRecognizerDelegate>{
+@interface MMDrawingTouchGestureRecognizer : MMCancelableGestureRecognizer{
     NSMutableSet* ignoredTouches;
     NSMutableOrderedSet* possibleTouches;
     NSMutableOrderedSet* validTouches;

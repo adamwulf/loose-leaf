@@ -38,7 +38,6 @@
     self.cancelsTouchesInView = NO;
     self.delaysTouchesEnded = NO;
     self.delaysTouchesBegan = NO;
-    self.delegate = self;
     return self;
 }
 
@@ -359,6 +358,13 @@
     return averageVelocity.x; // velocity per fraction of a second
 }
 
+-(BOOL) isActivelyBezeling{
+    return (self.state == UIGestureRecognizerStateBegan ||
+            self.state == UIGestureRecognizerStateChanged) &&
+    (self.subState == UIGestureRecognizerStateBegan ||
+     self.subState == UIGestureRecognizerStateChanged);
+}
+
 #pragma mark - UIGestureRecognizer Subclass
 
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
@@ -380,36 +386,6 @@
     [ignoredTouches removeAllObjects];
 }
 
-
-#pragma mark - UIGestureRecognizerDelegate
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return subState == UIGestureRecognizerStatePossible;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return subState != UIGestureRecognizerStatePossible;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return NO;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    // Disallow recognition of tap gestures in the segmented control.
-    if ([touch.view isKindOfClass:[UIControl class]]) {
-        NSLog(@"shouldn't receive touch in %@", [self description]);
-        return NO;
-    }
-    return YES;
-}
-
--(BOOL) isActivelyBezeling{
-    return (self.state == UIGestureRecognizerStateBegan ||
-    self.state == UIGestureRecognizerStateChanged) &&
-    (self.subState == UIGestureRecognizerStateBegan ||
-     self.subState == UIGestureRecognizerStateChanged);
-}
 
 -(NSString*) description{
     return [NSString stringWithFormat:@"[%@ %@ %p]", NSStringFromClass([self class]), gestureIsFromRightBezel ? @"right" : @"left", self];

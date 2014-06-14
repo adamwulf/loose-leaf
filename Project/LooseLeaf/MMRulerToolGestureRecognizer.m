@@ -32,7 +32,6 @@
     if(self = [super init]){
         self.cancelsTouchesInView = NO;
         self.scrapDelegate = self;
-        self.delegate = self;
     }
     return self;
 }
@@ -41,7 +40,6 @@
     if(self = [super initWithTarget:target action:action]){
         self.cancelsTouchesInView = NO;
         self.scrapDelegate = self;
-        self.delegate = self;
     }
     return self;
 }

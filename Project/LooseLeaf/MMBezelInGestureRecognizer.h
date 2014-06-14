@@ -12,7 +12,7 @@
 #import "MMPanGestureDelegate.h"
 #import "MMCancelableGestureRecognizer.h"
 
-@interface MMBezelInGestureRecognizer : MMCancelableGestureRecognizer<UIGestureRecognizerDelegate>{
+@interface MMBezelInGestureRecognizer : MMCancelableGestureRecognizer{
     // direction the user is panning
     MMBezelDirection panDirection;
     CGFloat liftedFingerOffset;
