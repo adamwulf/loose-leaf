@@ -117,6 +117,10 @@
     return ![rulerDelegate isAllowedToPan];
 }
 
+-(BOOL) isAllowedToBezel{
+    return [rulerDelegate isAllowedToBezel];
+}
+
 -(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch{
     return [rulerDelegate allowsHoldingScrapsWithTouch:touch];
 }

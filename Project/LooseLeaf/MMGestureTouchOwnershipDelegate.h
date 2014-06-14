@@ -17,4 +17,8 @@
 // ownership of a touch inside of its Ended or Cancelled event.
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 
+-(BOOL) isAllowedToPan;
+
+-(BOOL) isAllowedToBezel;
+
 @end

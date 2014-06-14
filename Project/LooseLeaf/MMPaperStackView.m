@@ -786,6 +786,10 @@
     @throw kAbstractMethodException;
 }
 
+-(BOOL) isAllowedToBezel{
+    return ![fromLeftBezelGesture isActivelyBezeling] && ![fromRightBezelGesture isActivelyBezeling];
+}
+
 -(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch{
     @throw kAbstractMethodException;
 }

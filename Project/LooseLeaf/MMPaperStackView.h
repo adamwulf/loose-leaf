@@ -23,8 +23,9 @@
 #import "Constants.h"
 #import "MMPopoverView.h"
 #import "MMPageCacheManager.h"
+#import "MMGestureTouchOwnershipDelegate.h"
 
-@interface MMPaperStackView : UIScrollView<MMPaperViewDelegate>{
+@interface MMPaperStackView : UIScrollView<MMPaperViewDelegate,MMGestureTouchOwnershipDelegate>{
 
 @protected
     MMBezelInGestureRecognizer* fromRightBezelGesture;

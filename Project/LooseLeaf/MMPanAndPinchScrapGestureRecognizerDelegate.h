@@ -21,8 +21,6 @@
 
 -(CGPoint) convertScrapCenterToScrapContainerCoordinate:(MMScrapView*)scrap;
 
--(BOOL) isAllowedToPan;
-
 -(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch;
 
 @end

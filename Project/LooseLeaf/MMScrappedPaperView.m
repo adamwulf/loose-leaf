@@ -285,6 +285,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
     return [self.delegate isAllowedToPan];
 }
 
+-(BOOL) isAllowedToBezel{
+    return [self.delegate isAllowedToBezel];
+}
+
 -(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch{
     return [self.delegate allowsHoldingScrapsWithTouch:(UITouch*)touch];
 }
