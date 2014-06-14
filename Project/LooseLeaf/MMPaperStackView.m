@@ -338,6 +338,20 @@
     if([bezelGesture isActivelyBezeling] &&
        !bezelGesture.hasSeenSubstateBegin &&
        (bezelGesture.subState == UIGestureRecognizerStateBegan || bezelGesture.subState == UIGestureRecognizerStateChanged)){
+        
+        
+        // a bezel might begin while a page is being actively
+        // panned. in this case, the pan gesture (or ruler, etc) should be cancelled
+        // so that bezel will own the entire touch state except for scrap panning
+        // and/or drawing
+        if([setOfPagesBeingPanned count]){
+            NSLog(@"Wanting to bezel from left, but pages are being panned.");
+            for(MMPaperView* page in [setOfPagesBeingPanned copy]){
+                [page cancelAllGestures];
+            }
+        }
+        
+        
         // this flag is an ugly hack because i'm using substates in gestures.
         // ideally, i could handle this gesture entirely inside of the state,
         // but i get an odd sitation where the gesture steals touches even
@@ -381,6 +395,7 @@
         // make sure we have two pages, the one we're pulling, and
         // the one below it
         [self ensureAtLeast:2 pagesInStack:visibleStackHolder];
+        [[visibleStackHolder peekSubview] removeAllAnimationsAndPreservePresentationFrame];
         [bezelStackHolder pushSubview:[visibleStackHolder peekSubview]];
         [self mayChangeTopPageTo:[visibleStackHolder peekSubview]];
         // at this point, the bezel stack is immediately on top of the visible stack,
