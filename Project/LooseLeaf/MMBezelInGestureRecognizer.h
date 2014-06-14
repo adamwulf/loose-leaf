@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "Constants.h"
-#import "MMPanGestureDelegate.h"
+#import "MMGestureTouchOwnershipDelegate.h"
 #import "MMCancelableGestureRecognizer.h"
 
 @interface MMBezelInGestureRecognizer : MMCancelableGestureRecognizer{
@@ -26,13 +26,13 @@
     NSDate* dateOfLastBezelEnding;
     NSInteger numberOfRepeatingBezels;
     
-    __weak NSObject<MMPanGestureDelegate>* panDelegate;
+    __weak NSObject<MMGestureTouchOwnershipDelegate>* panDelegate;
     
     UIGestureRecognizerState subState;
 }
 
 @property (readonly) NSArray* touches;
-@property (nonatomic, weak) NSObject<MMPanGestureDelegate>* panDelegate;
+@property (nonatomic, weak) NSObject<MMGestureTouchOwnershipDelegate>* panDelegate;
 @property (nonatomic, readonly) MMBezelDirection panDirection;
 @property (nonatomic, readonly) NSInteger numberOfRepeatingBezels;
 @property (nonatomic, readonly) UIGestureRecognizerState subState;

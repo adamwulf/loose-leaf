@@ -7,11 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MMPanGestureDelegate.h"
+#import "MMGestureTouchOwnershipDelegate.h"
 
 @class MMPaperView;
 
-@protocol MMPanAndPinchScrapGestureRecognizerDelegate <MMPanGestureDelegate>
+@protocol MMPanAndPinchScrapGestureRecognizerDelegate <MMGestureTouchOwnershipDelegate>
 
 -(NSArray*) scrapsToPan;
 

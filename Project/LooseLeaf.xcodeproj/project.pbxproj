@@ -429,7 +429,7 @@
 		66A13D3F1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImmovableTapGestureRecognizer.m; sourceTree = "<group>"; };
 		66A29049187773E70036E4B7 /* AVHexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AVHexColor.h; path = ../../Submodules/ColorWithHex/AVHexColor.h; sourceTree = "<group>"; };
 		66A2904A187773E70036E4B7 /* AVHexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AVHexColor.m; path = ../../Submodules/ColorWithHex/AVHexColor.m; sourceTree = "<group>"; };
-		66A3921517CC126D00B4974D /* MMPanGestureDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPanGestureDelegate.h; sourceTree = "<group>"; };
+		66A3921517CC126D00B4974D /* MMGestureTouchOwnershipDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMGestureTouchOwnershipDelegate.h; sourceTree = "<group>"; };
 		66A3921617CC4EE000B4974D /* NSArray+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Extras.h"; sourceTree = "<group>"; };
 		66A3921717CC4EE000B4974D /* NSArray+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Extras.m"; sourceTree = "<group>"; };
 		66A3A6B91791F18900D8FE1D /* UIDevice+PPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+PPI.h"; sourceTree = "<group>"; };
@@ -1462,7 +1462,7 @@
 				664FB55C194BF6E2009C1EF9 /* Unused */,
 				66B3522317A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.h */,
 				66B3522417A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m */,
-				66A3921517CC126D00B4974D /* MMPanGestureDelegate.h */,
+				66A3921517CC126D00B4974D /* MMGestureTouchOwnershipDelegate.h */,
 			);
 			name = Gestures;
 			sourceTree = "<group>";

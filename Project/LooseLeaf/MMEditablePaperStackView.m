@@ -579,7 +579,7 @@
     [rulerView liftRuler];
 }
 
-#pragma mark - MMPanGestureDelegate
+#pragma mark - MMGestureTouchOwnershipDelegate
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     [super ownershipOfTouches:touches isGesture:gesture];
