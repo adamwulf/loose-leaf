@@ -438,6 +438,9 @@
 -(void) processPossibleTouchesFromOriginalLocationInView:(CGPoint)originalLocationInView{
     if(![scrapDelegate isAllowedToPan]){
         // we're not allowed to pan, so ignore all touches
+        if([possibleTouches count]){
+            NSLog(@"%@ might begin, but isn't allowed", [self description]);
+        }
         [ignoredTouches addObjectsInSet:[possibleTouches set]];
         [possibleTouches removeAllObjects];
     }

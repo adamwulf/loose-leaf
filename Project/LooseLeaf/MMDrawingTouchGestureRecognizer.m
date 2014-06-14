@@ -66,6 +66,7 @@ static MMDrawingTouchGestureRecognizer* _instance = nil;
             [possibleTouches addObject:touch];
         }
     }
+    self.state = UIGestureRecognizerStateBegan;
 }
 
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -83,18 +84,20 @@ static MMDrawingTouchGestureRecognizer* _instance = nil;
             }
         }
     }
+    self.state = UIGestureRecognizerStateChanged;
 }
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     [possibleTouches removeObjectsInSet:touches];
     [ignoredTouches removeObjectsInSet:touches];
     [validTouches removeObjectsInSet:touches];
+    if([possibleTouches count] == 0 && [ignoredTouches count] == 0 && [validTouches count] == 0){
+        self.state = UIGestureRecognizerStateEnded;
+    }
 }
 
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
-    [possibleTouches removeObjectsInSet:touches];
-    [ignoredTouches removeObjectsInSet:touches];
-    [validTouches removeObjectsInSet:touches];
+    [self touchesEnded:touches withEvent:event];
 }
 
 

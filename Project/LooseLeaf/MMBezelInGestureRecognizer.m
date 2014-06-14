@@ -125,7 +125,7 @@
     // we'll keep the gesture alive and just increment the repeat count counter
     // instead of ending the gesture entirely.
     //
-    if([validTouches count] >= 2 && foundValidTouch){
+    if([validTouches count] >= 2 && foundValidTouch && [self.panDelegate isAllowedToBezel]){
         if(!dateOfLastBezelEnding || [dateOfLastBezelEnding timeIntervalSinceNow] > -.5){
             numberOfRepeatingBezels++;
         }else{
@@ -144,6 +144,10 @@
         }
         [dateOfLastBezelEnding release];
         dateOfLastBezelEnding = nil;
+    }else if([validTouches count] >= 2 && foundValidTouch && ![self.panDelegate isAllowedToBezel]){
+        NSLog(@"%@ would begin, but isn't allowed", [self description]);
+        [ignoredTouches addObjectsInSet:validTouches];
+        [validTouches removeAllObjects];
     }
     if(self.state == UIGestureRecognizerStatePossible){
         self.state = UIGestureRecognizerStateBegan;
@@ -360,19 +364,21 @@
 
 -(BOOL) isActivelyBezeling{
     return (self.state == UIGestureRecognizerStateBegan ||
-            self.state == UIGestureRecognizerStateChanged) &&
+            self.state == UIGestureRecognizerStateChanged ||
+            self.state == UIGestureRecognizerStateEnded) &&
     (self.subState == UIGestureRecognizerStateBegan ||
-     self.subState == UIGestureRecognizerStateChanged);
+     self.subState == UIGestureRecognizerStateChanged ||
+     self.subState == UIGestureRecognizerStateEnded);
 }
 
 #pragma mark - UIGestureRecognizer Subclass
 
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
-    return subState != UIGestureRecognizerStatePossible && [preventedGestureRecognizer isKindOfClass:[MMBezelInGestureRecognizer class]];
+    return NO;
 }
 
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return [preventingGestureRecognizer isKindOfClass:[MMBezelInGestureRecognizer class]];
+    return NO;
 }
 
 - (void)reset{

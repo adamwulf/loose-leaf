@@ -114,7 +114,7 @@
 }
 
 -(BOOL) isAllowedToPan{
-    return ![rulerDelegate isAllowedToPan];
+    return ![rulerDelegate isAllowedToPan] && [rulerDelegate isAllowedToBezel];
 }
 
 -(BOOL) isAllowedToBezel{

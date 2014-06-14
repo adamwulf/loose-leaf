@@ -335,8 +335,9 @@
 -(void) isBezelingInLeftWithGesture:(MMBezelInGestureRecognizer*)bezelGesture{
     CGPoint translation = [bezelGesture translationInView:self];
     
-    if(!bezelGesture.hasSeenSubstateBegin && (bezelGesture.subState == UIGestureRecognizerStateBegan ||
-                                              bezelGesture.subState == UIGestureRecognizerStateChanged)){
+    if([bezelGesture isActivelyBezeling] &&
+       !bezelGesture.hasSeenSubstateBegin &&
+       (bezelGesture.subState == UIGestureRecognizerStateBegan || bezelGesture.subState == UIGestureRecognizerStateChanged)){
         // this flag is an ugly hack because i'm using substates in gestures.
         // ideally, i could handle this gesture entirely inside of the state,
         // but i get an odd sitation where the gesture steals touches even
@@ -392,9 +393,9 @@
             bezelStackHolder.frame = newFrame;
             [bezelStackHolder peekSubview].frame = bezelStackHolder.bounds;
         } completion:nil];
-    }else if(bezelGesture.subState == UIGestureRecognizerStateCancelled ||
-             bezelGesture.subState == UIGestureRecognizerStateFailed ||
-             (bezelGesture.subState == UIGestureRecognizerStateEnded && ((bezelGesture.panDirection & MMBezelDirectionLeft) != MMBezelDirectionLeft))){
+    }else if([bezelGesture isActivelyBezeling] &&
+             (bezelGesture.subState == UIGestureRecognizerStateCancelled || bezelGesture.subState == UIGestureRecognizerStateFailed ||
+              (bezelGesture.subState == UIGestureRecognizerStateEnded && ((bezelGesture.panDirection & MMBezelDirectionLeft) != MMBezelDirectionLeft)))){
         //
         // ok, the user has completed a bezel gesture, so we should take all
         // the pages in the bezel view and push them onto the hidden stack
@@ -416,7 +417,8 @@
             }];
             [[visibleStackHolder peekSubview] enableAllGestures];
         }
-    }else if(bezelGesture.subState == UIGestureRecognizerStateEnded &&
+    }else if([bezelGesture isActivelyBezeling] &&
+             bezelGesture.subState == UIGestureRecognizerStateEnded &&
              ((bezelGesture.panDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft)){
         //
         // they cancelled the bezel. so push all the views from the bezel back
@@ -455,7 +457,9 @@
             // immediately back on bezel, then it'll increment count correctly
             [bezelGesture resetPageCount];
         }
-    }else if(bezelGesture.subState == UIGestureRecognizerStateChanged && bezelGesture.numberOfRepeatingBezels){
+    }else if([bezelGesture isActivelyBezeling] &&
+             bezelGesture.subState == UIGestureRecognizerStateChanged &&
+             bezelGesture.numberOfRepeatingBezels){
         //
         // we're in progress of a bezel gesture from the right
         //
@@ -536,8 +540,9 @@
 -(void) isBezelingInRightWithGesture:(MMBezelInGestureRecognizer*)bezelGesture{
     CGPoint translation = [bezelGesture translationInView:self];
     
-    if(!bezelGesture.hasSeenSubstateBegin && (bezelGesture.subState == UIGestureRecognizerStateBegan ||
-                                             bezelGesture.subState == UIGestureRecognizerStateChanged)){
+    if([bezelGesture isActivelyBezeling] &&
+       !bezelGesture.hasSeenSubstateBegin &&
+       (bezelGesture.subState == UIGestureRecognizerStateBegan || bezelGesture.subState == UIGestureRecognizerStateChanged)){
         
         // cancel panning a page, if any
         if([[visibleStackHolder peekSubview] panGesture].subState != UIGestureRecognizerStatePossible){
@@ -594,9 +599,9 @@
             bezelStackHolder.frame = newFrame;
             [bezelStackHolder peekSubview].frame = bezelStackHolder.bounds;
         } completion:nil];
-    }else if(bezelGesture.subState == UIGestureRecognizerStateCancelled ||
-             bezelGesture.subState == UIGestureRecognizerStateFailed ||
-             (bezelGesture.subState == UIGestureRecognizerStateEnded && ((bezelGesture.panDirection & MMBezelDirectionLeft) != MMBezelDirectionLeft))){
+    }else if([bezelGesture isActivelyBezeling] &&
+             (bezelGesture.subState == UIGestureRecognizerStateCancelled || bezelGesture.subState == UIGestureRecognizerStateFailed ||
+              (bezelGesture.subState == UIGestureRecognizerStateEnded && ((bezelGesture.panDirection & MMBezelDirectionLeft) != MMBezelDirectionLeft)))){
         //
         // they cancelled the bezel. so push all the views from the bezel back
         // onto the hidden stack, then animate them back into position.
@@ -614,7 +619,8 @@
             [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
             [[visibleStackHolder peekSubview] enableAllGestures];
         }
-    }else if(bezelGesture.subState == UIGestureRecognizerStateEnded &&
+    }else if([bezelGesture isActivelyBezeling] &&
+             bezelGesture.subState == UIGestureRecognizerStateEnded &&
              ((bezelGesture.panDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft)){
         if([bezelStackHolder.subviews count]){
             //
@@ -650,7 +656,9 @@
             // immediately back on bezel, then it'll increment count correctly
             [bezelGesture resetPageCount];
         }
-    }else if(bezelGesture.subState == UIGestureRecognizerStateChanged && bezelGesture.numberOfRepeatingBezels){
+    }else if([bezelGesture isActivelyBezeling] &&
+             bezelGesture.subState == UIGestureRecognizerStateChanged &&
+             bezelGesture.numberOfRepeatingBezels){
         //
         // we're in progress of a bezel gesture from the right
         //
@@ -1254,37 +1262,6 @@
         [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
         [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:nil];
-
-        
-
-        //
-        // the below code was when we allowed
-        // zoomed pages to stay zoomed.
-        //
-        // now we only allow it when the user is holding
-        // the page
-//        {
-//            //
-//            // the scale is larger than 1, so we may need
-//            // to slide the page with some inertia. if the page is
-//            // to far from an edge, then we need to move it to another stack.
-//            // if its not far enough to move, then we may need to bounce it
-//            // back to an edge.
-//            float inertiaSeconds = .3;
-//            CGPoint finalOrigin = CGPointMake(toFrame.origin.x + velocity.x * inertiaSeconds, toFrame.origin.y + velocity.y * inertiaSeconds);
-//            CGRect intertialFrame = toFrame;
-//            intertialFrame.origin = finalOrigin;
-//            
-//            if([self shouldInterialSlideThePage:page toFrame:intertialFrame]){
-//                [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut animations:^(void){
-//                    page.frame = intertialFrame;
-//                } completion:nil];
-//            }else{
-//                // bounce
-//                [self bouncePageToEdge:page toFrame:toFrame intertialFrame:intertialFrame];
-//            }
-//        }
-        
     }
 }
 
