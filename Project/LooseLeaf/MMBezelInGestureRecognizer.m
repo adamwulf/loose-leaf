@@ -125,7 +125,7 @@
     // we'll keep the gesture alive and just increment the repeat count counter
     // instead of ending the gesture entirely.
     //
-    if([validTouches count] >= 2 && foundValidTouch && [self.panDelegate isAllowedToBezel]){
+    if([validTouches count] >= 2 && foundValidTouch && [self isAllowedToBezelHelper]){
         if(!dateOfLastBezelEnding || [dateOfLastBezelEnding timeIntervalSinceNow] > -.5){
             numberOfRepeatingBezels++;
         }else{
@@ -144,7 +144,7 @@
         }
         [dateOfLastBezelEnding release];
         dateOfLastBezelEnding = nil;
-    }else if([validTouches count] >= 2 && foundValidTouch && ![self.panDelegate isAllowedToBezel]){
+    }else if([validTouches count] >= 2 && foundValidTouch && ![self isAllowedToBezelHelper]){
         NSLog(@"%@ would begin, but isn't allowed", [self description]);
         [ignoredTouches addObjectsInSet:validTouches];
         [validTouches removeAllObjects];
@@ -154,6 +154,12 @@
     }else{
         self.state = UIGestureRecognizerStateChanged;
     }
+}
+
+-(BOOL) isAllowedToBezelHelper{
+    // check if i'm allowed to bezel. i'm always allowed to bezel
+    // if i'm already bezeling
+    return [self.panDelegate isAllowedToBezel] || [self isActivelyBezeling];
 }
 
 /**
