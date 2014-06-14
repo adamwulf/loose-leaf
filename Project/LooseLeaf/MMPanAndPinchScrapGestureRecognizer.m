@@ -16,9 +16,12 @@
 #import "UIView+Animations.h"
 #import "UIGestureRecognizer+GestureDebug.h"
 
-#define kMaxSimultaneousTouchesAllowedToTrack 20
-#define kNumberOfDirectionChangesToDetermineShake 2
-#define kVelocityLowPass 0.7
+#define  kMaxSimultaneousTouchesAllowedToTrack 20
+#define  kNumberOfDirectionChangesToDetermineShake 2
+#define  kVelocityLowPass 0.7
+NSInteger const  mmMinimumNumberOfScrapTouches = 2;
+#define  SCRAP_VELOCITY_CLAMP_MIN 20 // px / sec
+#define  SCRAP_VELOCITY_CLAMP_MAX 2000 // px / sec
 
 struct TouchInterval{
     NSInteger numberOfDirectionChanges;
@@ -57,6 +60,8 @@ struct TouchInterval{
 }
 
 
+#pragma mark - Properties
+
 @synthesize scale;
 @synthesize scrap;
 @synthesize preGestureScale;
@@ -70,11 +75,31 @@ struct TouchInterval{
 @synthesize isShaking;
 @synthesize initialTouchVector;
 
+-(NSArray*) possibleTouches{
+    return [possibleTouches array];
+}
 
-NSInteger const  mmMinimumNumberOfScrapTouches = 2;
-#define           SCRAP_VELOCITY_CLAMP_MIN 20 // px / sec
-#define           SCRAP_VELOCITY_CLAMP_MAX 2000 // px / sec
+-(NSArray*) ignoredTouches{
+    NSMutableArray* ret = [NSMutableArray array];
+    for(NSObject* obj in ignoredTouches){
+        [ret addObject:obj];
+    }
+    return ret;
+}
 
+-(NSArray*)validTouches{
+    return [validTouches array];
+}
+
+-(CGPoint) translation{
+    return CGPointMake(translation.x, translation.y);
+}
+
+-(CGFloat) rotation{
+    return rotation;
+}
+
+#pragma mark - Init
 
 -(id) init{
     self = [super init];
@@ -102,37 +127,8 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     return self;
 }
 
--(NSArray*) possibleTouches{
-    return [possibleTouches array];
-}
 
--(NSArray*) ignoredTouches{
-    NSMutableArray* ret = [NSMutableArray array];
-    for(NSObject* obj in ignoredTouches){
-        [ret addObject:obj];
-    }
-    return ret;
-}
-
--(NSArray*)validTouches{
-    return [validTouches array];
-}
-
--(CGPoint) translation{
-    return CGPointMake(translation.x, translation.y);
-}
-
--(CGFloat) rotation{
-    return rotation;
-}
-
-- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
-    return NO;
-}
-
-- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return NO;
-}
+#pragma mark - Touch Ownership
 
 -(BOOL) containsTouch:(UITouch*)touch{
     return [validTouches containsObject:touch];
@@ -249,18 +245,6 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     // for the animation after the stretch gesture.
 }
 
--(CGPoint)locationInView:(UIView *)view{
-    if([validTouches count] >= mmMinimumNumberOfScrapTouches){
-        CGPoint loc1 = [[validTouches firstObject] locationInView:view];
-        CGPoint loc2 = [[validTouches objectAtIndex:1] locationInView:view];
-        return CGPointMake((loc1.x + loc2.x) / 2, (loc1.y + loc2.y) / 2);
-    }
-    return [super locationInView:view];
-}
-
-
-
-
 -(void) forceBlessTouches:(NSSet*)touches forScrap:(MMScrapView*)_scrap{
     // force scrap to the input, and force
     // input touches to valid
@@ -283,10 +267,6 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     }
 }
 
-
-
-
-
 -(void) blessTouches:(NSSet*)touches{
     NSMutableSet* newPossibleTouches = [NSMutableSet setWithSet:ignoredTouches];
     [newPossibleTouches intersectSet:touches];
@@ -304,7 +284,16 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     }
 }
 
+#pragma mark - Helper Methods
 
+-(CGPoint)locationInView:(UIView *)view{
+    if([validTouches count] >= mmMinimumNumberOfScrapTouches){
+        CGPoint loc1 = [[validTouches firstObject] locationInView:view];
+        CGPoint loc2 = [[validTouches objectAtIndex:1] locationInView:view];
+        return CGPointMake((loc1.x + loc2.x) / 2, (loc1.y + loc2.y) / 2);
+    }
+    return [super locationInView:view];
+}
 
 -(void) processPossibleTouches{
     NSArray* scrapsToLookAt = scrapDelegate.scrapsToPan;
@@ -348,6 +337,8 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
         if(![allPossibleTouches count]) break;
     }
 }
+
+#pragma mark - Touch Methods
 
 /**
  * the first touch of a gesture.
@@ -660,6 +651,18 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     }
 }
 
+-(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
+    if(![ignoredTouches containsObject:touch]){
+        [ignoredTouches addObject:touch];
+        [self clearCacheForTouch:touch];
+        // dont' send to super, or we'll stop getting
+        // update events for these touches. we'll manually
+        // ignore them by tracking ignoredTouches ourselves
+    }
+}
+
+#pragma mark - Gesture Reset
+
 /**
  * during the gesture, we allow the user
  * to lift fingers and effectively restart
@@ -741,15 +744,7 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     scrap = nil;
 }
 
--(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
-    if(![ignoredTouches containsObject:touch]){
-        [ignoredTouches addObject:touch];
-        [self clearCacheForTouch:touch];
-        // dont' send to super, or we'll stop getting
-        // update events for these touches. we'll manually
-        // ignore them by tracking ignoredTouches ourselves
-    }
-}
+
 - (void)reset{
     [super reset];
     initialDistance = 0;
@@ -816,16 +811,11 @@ NSInteger const  mmMinimumNumberOfScrapTouches = 2;
     }
 }
 
-
-
 -(BOOL) paused{
     return paused;
 }
 
-CGPoint prevLocation;
 -(void) pause{
-//    NSLog(@"pan scrap gesture %p paused", self);
-    prevLocation = [self locationInView:self.view];
     paused = YES;
 }
 
@@ -841,6 +831,17 @@ CGPoint prevLocation;
     }
     return NO;
 }
+
+#pragma mark - UIGestureRecognizer Subclass
+
+- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
+    return NO;
+}
+
+- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
+    return NO;
+}
+
 
 #pragma mark - UIGestureRecognizerDelegate
 

@@ -17,12 +17,16 @@
     NSMutableSet* ignoredTouches;
 }
 
+#pragma mark - Properties
+
 @synthesize panDirection;
 @synthesize numberOfRepeatingBezels;
 @synthesize panDelegate;
 @synthesize subState;
 @synthesize hasSeenSubstateBegin;
 @synthesize gestureIsFromRightBezel;
+
+#pragma mark - Init
 
 -(id) initWithTarget:(id)target action:(SEL)action{
     self = [super initWithTarget:target action:action];
@@ -37,6 +41,12 @@
     self.delegate = self;
     return self;
 }
+
+-(NSArray*)touches{
+    return [validTouches allObjects];
+}
+
+#pragma mark - SubState
 
 //
 // this will make sure that the substate transitions
@@ -65,80 +75,7 @@
     }
 }
 
-- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
-    return subState != UIGestureRecognizerStatePossible && [preventedGestureRecognizer isKindOfClass:[MMBezelInGestureRecognizer class]];
-}
-
-- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return [preventingGestureRecognizer isKindOfClass:[MMBezelInGestureRecognizer class]];
-}
-
--(NSArray*)touches{
-    return [validTouches allObjects];
-}
-
-/**
- * finds the touch that is furthest left
- *
- * right now, this gesture is effectively hard coded to
- * allow for bezeling in from the right.
- *
- * it would need a refactor to support gesturing from
- * other sides, despite what its API looks like
- */
--(CGPoint) furthestRightTouchLocation{
-    CGPoint ret = CGPointZero;
-    for(UITouch* touch in validTouches){
-        CGPoint ret2 = [touch locationInView:self.view];
-        if(ret2.x > ret.x){
-            ret = ret2;
-        }
-    }
-    return ret;
-}
--(CGPoint) furthestLeftTouchLocation{
-    CGPoint ret = CGPointMake(CGFLOAT_MAX, CGFLOAT_MAX);
-    for(UITouch* touch in validTouches){
-        CGPoint ret2 = [touch locationInView:self.view];
-        if(ret2.x < ret.x){
-            ret = ret2;
-        }
-    }
-    return ret;
-}
-
-/**
- * returns the furthest point of the gesture if possible,
- * otherwise returns default behavior.
- *
- * this is so that the translation isn't an average of
- * touch locations but will follow the lead finger in
- * the gesture.
- */
--(CGPoint) translationInView:(UIView *)view{
-    if(self.view){
-        CGPoint p;
-        if(gestureIsFromRightBezel){
-            p = [self furthestLeftTouchLocation];
-            if(p.x == MAXFLOAT){
-                // we don't have a furthest location,
-                // so the translation is zero
-                return CGPointZero;
-            }
-
-        }else{
-            p = [self furthestRightTouchLocation];
-            if(p.x == 0){
-                // we don't have a furthest location,
-                // so the translation is zero
-                return CGPointZero;
-            }
-
-        }
-        return CGPointMake(p.x - firstKnownLocation.x - liftedFingerOffset, p.y - firstKnownLocation.y);
-    }
-    return CGPointZero;
-}
+#pragma mark - Touch Methods
 
 /**
  * the first touch of a gesture.
@@ -320,26 +257,77 @@
     [self touchesEnded:touches withEvent:event];
 }
 
+#pragma mark - Reset and Helper Methods
 
-- (void)reset{
-    [super reset];
-    self.subState = UIGestureRecognizerStatePossible;
-    liftedFingerOffset = 0;
-    panDirection = MMBezelDirectionNone;
-    firstKnownLocation = CGPointZero;
-    lastKnownLocation = CGPointZero;
-    [validTouches removeAllObjects];
-    [ignoredTouches removeAllObjects];
-}
--(void) setState:(UIGestureRecognizerState)state{
-    [super setState:state];
-}
 - (void) resetPageCount{
     numberOfRepeatingBezels = 0;
     [dateOfLastBezelEnding release];
     dateOfLastBezelEnding = nil;
 }
 
+
+/**
+ * finds the touch that is furthest left
+ *
+ * right now, this gesture is effectively hard coded to
+ * allow for bezeling in from the right.
+ *
+ * it would need a refactor to support gesturing from
+ * other sides, despite what its API looks like
+ */
+-(CGPoint) furthestRightTouchLocation{
+    CGPoint ret = CGPointZero;
+    for(UITouch* touch in validTouches){
+        CGPoint ret2 = [touch locationInView:self.view];
+        if(ret2.x > ret.x){
+            ret = ret2;
+        }
+    }
+    return ret;
+}
+-(CGPoint) furthestLeftTouchLocation{
+    CGPoint ret = CGPointMake(CGFLOAT_MAX, CGFLOAT_MAX);
+    for(UITouch* touch in validTouches){
+        CGPoint ret2 = [touch locationInView:self.view];
+        if(ret2.x < ret.x){
+            ret = ret2;
+        }
+    }
+    return ret;
+}
+
+/**
+ * returns the furthest point of the gesture if possible,
+ * otherwise returns default behavior.
+ *
+ * this is so that the translation isn't an average of
+ * touch locations but will follow the lead finger in
+ * the gesture.
+ */
+-(CGPoint) translationInView:(UIView *)view{
+    if(self.view){
+        CGPoint p;
+        if(gestureIsFromRightBezel){
+            p = [self furthestLeftTouchLocation];
+            if(p.x == MAXFLOAT){
+                // we don't have a furthest location,
+                // so the translation is zero
+                return CGPointZero;
+            }
+            
+        }else{
+            p = [self furthestRightTouchLocation];
+            if(p.x == 0){
+                // we don't have a furthest location,
+                // so the translation is zero
+                return CGPointZero;
+            }
+            
+        }
+        return CGPointMake(p.x - firstKnownLocation.x - liftedFingerOffset, p.y - firstKnownLocation.y);
+    }
+    return CGPointZero;
+}
 
 
 /**
@@ -371,6 +359,26 @@
     return averageVelocity.x; // velocity per fraction of a second
 }
 
+#pragma mark - UIGestureRecognizer Subclass
+
+- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
+    return subState != UIGestureRecognizerStatePossible && [preventedGestureRecognizer isKindOfClass:[MMBezelInGestureRecognizer class]];
+}
+
+- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
+    return [preventingGestureRecognizer isKindOfClass:[MMBezelInGestureRecognizer class]];
+}
+
+- (void)reset{
+    [super reset];
+    self.subState = UIGestureRecognizerStatePossible;
+    liftedFingerOffset = 0;
+    panDirection = MMBezelDirectionNone;
+    firstKnownLocation = CGPointZero;
+    lastKnownLocation = CGPointZero;
+    [validTouches removeAllObjects];
+    [ignoredTouches removeAllObjects];
+}
 
 
 #pragma mark - UIGestureRecognizerDelegate

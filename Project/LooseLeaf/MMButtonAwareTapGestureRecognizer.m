@@ -10,6 +10,8 @@
 
 @implementation MMButtonAwareTapGestureRecognizer
 
+#pragma mark - Init
+
 -(id) init{
     if(self = [super init]){
         self.delegate = self;

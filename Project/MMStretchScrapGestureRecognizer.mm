@@ -42,11 +42,31 @@
     UITouch* lowerRightTouch;
 }
 
+#pragma mark - Properties
+
 @synthesize pinchScrapGesture1;
 @synthesize pinchScrapGesture2;
 @synthesize scrapDelegate;
 @synthesize scrap = scrap;
 @synthesize skewTransform = skewTransform;
+
+-(NSArray*) possibleTouches{
+    return [possibleTouches array];
+}
+
+-(NSArray*) ignoredTouches{
+    NSMutableArray* ret = [NSMutableArray array];
+    for(NSObject* obj in ignoredTouches){
+        [ret addObject:obj];
+    }
+    return ret;
+}
+
+-(NSArray*)validTouches{
+    return [validTouches array];
+}
+
+#pragma mark - Init
 
 -(id) init{
     self = [super init];
@@ -74,21 +94,7 @@
     return self;
 }
 
--(NSArray*) possibleTouches{
-    return [possibleTouches array];
-}
-
--(NSArray*) ignoredTouches{
-    NSMutableArray* ret = [NSMutableArray array];
-    for(NSObject* obj in ignoredTouches){
-        [ret addObject:obj];
-    }
-    return ret;
-}
-
--(NSArray*)validTouches{
-    return [validTouches array];
-}
+#pragma mark - Touch Ownership
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     if(gesture != self){
@@ -115,90 +121,7 @@
     [self touchesBegan:newPossibleTouches withEvent:nil];
 }
 
-
-#pragma mark - Quadrilateral
-
-// this quad is used as the basis of our transform. it averages
-// out all of the touch points into a parallelogram instead of
-// a generic quad
--(Quadrilateral) getQuad{
-    return [self generateAverageQuadFor:[self getRawQuad]];
-}
-
-// this generates a Quadrilateral struct from the clockwise touch locations.
-// note. the touches are only sorted at the beginning of the gesture. so this means
-// that the touches are guaranteed form a clockwise quad only at the very beginning of
-// the gesture, but the user can spin, flip, and mix their fingers to create self
-// intersecting quads.
--(Quadrilateral) getRawQuad{
-    __block Quadrilateral output;
-    [[self validTouches] enumerateObjectsUsingBlock:^(UITouch* touch, NSUInteger idx, BOOL* stop){
-        CGPoint location = [touch locationInView:self.view];
-        if(idx == 0){
-            output.upperLeft = location;
-        }else if(idx == 1){
-            output.upperRight = location;
-        }else if(idx == 2){
-            output.lowerRight = location;
-        }else if(idx == 3){
-            output.lowerLeft = location;
-        }
-    }];
-    return output;
-}
-
-// this maps all of the initial 4 touch points into normalized
-// touch points inside the scrap. this data becomes useful later
-// when the stretch ends to help us calculate the new anchor
-// point for the pan gesture
--(Quadrilateral) getNormalizedRawQuad{
-    __block Quadrilateral output;
-    [[self validTouches] enumerateObjectsUsingBlock:^(UITouch* touch, NSUInteger idx, BOOL* stop){
-        CGPoint location = [touch locationInView:self.scrap];
-        location = NormalizePointTo(location, scrap.bounds.size);
-        if(idx == 0){
-            output.upperLeft = location;
-        }else if(idx == 1){
-            output.upperRight = location;
-        }else if(idx == 2){
-            output.lowerRight = location;
-        }else if(idx == 3){
-            output.lowerLeft = location;
-        }
-    }];
-    return output;
-}
-
-// if we use the getRawQuad only, then the transform we create by skewing that
-// raw quad will manipulate dramatically in 3d. This transform ends up to give
-// terrible results if the quad is manipulated by the user to be concave.
-//
-// this methods helps get around these awkward transforms by created an average of the
-// user's finger positions instead of exact quad transforms.
-//
-// 1. find the midpoints along each edge of the quad.
-// 2. find the vectors beteween opposite midpoints
-// 3. create new quad endpoints using these vectors
-// 4. this will create an output parallelogram from the input quad
--(Quadrilateral) generateAverageQuadFor:(Quadrilateral)q{
-    Quadrilateral ret;
-    
-    CGPoint midLeft = CGPointMake((q.upperLeft.x + q.lowerLeft.x)/2, (q.upperLeft.y + q.lowerLeft.y)/2);
-    CGPoint midRight = CGPointMake((q.upperRight.x + q.lowerRight.x)/2, (q.upperRight.y + q.lowerRight.y)/2);
-    
-    MMVector* lengthVector = [MMVector vectorWithPoint:midLeft andPoint:midRight];
-    
-    CGPoint midTop = CGPointMake((q.upperLeft.x + q.upperRight.x)/2, (q.upperLeft.y + q.upperRight.y)/2);
-    CGPoint midLow = CGPointMake((q.lowerLeft.x + q.lowerRight.x)/2, (q.lowerLeft.y + q.lowerRight.y)/2);
-    
-    
-    ret.upperLeft = [lengthVector pointFromPoint:midTop distance:-0.5];
-    ret.upperRight = [lengthVector pointFromPoint:midTop distance:0.5];
-    ret.lowerRight = [lengthVector pointFromPoint:midLow distance:0.5];
-    ret.lowerLeft = [lengthVector pointFromPoint:midLow distance:-0.5];
-    
-    return ret;
-}
+#pragma mark - Helper Methods
 
 // valid touches are updated whenever our state updates
 // or we are told of touch ownership updates. this method
@@ -440,7 +363,7 @@
     return output;
 }
 
-#pragma mark - UIGestureRecognizer
+#pragma mark - UIGestureRecognizer Subclass
 
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
     return NO;
@@ -482,6 +405,8 @@
         lowerLeftTouch = nil;
     }
 }
+
+#pragma mark - Touch Methods
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     if([self.scrapDelegate panScrapRequiresLongPress] && ![possibleTouches intersectsSet:touches] &&
@@ -555,6 +480,114 @@
     return [MMStretchScrapGestureRecognizer transformQuadrilateral:[self adjustedQuad:firstQ by:adjust] toQuadrilateral:[self adjustedQuad:scaledQ by:adjust]];
 }
 
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    // Disallow recognition of tap gestures in the segmented control.
+    if ([touch.view isKindOfClass:[UIControl class]]) {
+        NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
+        return NO;
+    }
+    return YES;
+}
+
+#pragma mark - Quadrilateral
+
+// this quad is used as the basis of our transform. it averages
+// out all of the touch points into a parallelogram instead of
+// a generic quad
+-(Quadrilateral) getQuad{
+    return [self generateAverageQuadFor:[self getRawQuad]];
+}
+
+// this generates a Quadrilateral struct from the clockwise touch locations.
+// note. the touches are only sorted at the beginning of the gesture. so this means
+// that the touches are guaranteed form a clockwise quad only at the very beginning of
+// the gesture, but the user can spin, flip, and mix their fingers to create self
+// intersecting quads.
+-(Quadrilateral) getRawQuad{
+    __block Quadrilateral output;
+    [[self validTouches] enumerateObjectsUsingBlock:^(UITouch* touch, NSUInteger idx, BOOL* stop){
+        CGPoint location = [touch locationInView:self.view];
+        if(idx == 0){
+            output.upperLeft = location;
+        }else if(idx == 1){
+            output.upperRight = location;
+        }else if(idx == 2){
+            output.lowerRight = location;
+        }else if(idx == 3){
+            output.lowerLeft = location;
+        }
+    }];
+    return output;
+}
+
+// this maps all of the initial 4 touch points into normalized
+// touch points inside the scrap. this data becomes useful later
+// when the stretch ends to help us calculate the new anchor
+// point for the pan gesture
+-(Quadrilateral) getNormalizedRawQuad{
+    __block Quadrilateral output;
+    [[self validTouches] enumerateObjectsUsingBlock:^(UITouch* touch, NSUInteger idx, BOOL* stop){
+        CGPoint location = [touch locationInView:self.scrap];
+        location = NormalizePointTo(location, scrap.bounds.size);
+        if(idx == 0){
+            output.upperLeft = location;
+        }else if(idx == 1){
+            output.upperRight = location;
+        }else if(idx == 2){
+            output.lowerRight = location;
+        }else if(idx == 3){
+            output.lowerLeft = location;
+        }
+    }];
+    return output;
+}
+
+// if we use the getRawQuad only, then the transform we create by skewing that
+// raw quad will manipulate dramatically in 3d. This transform ends up to give
+// terrible results if the quad is manipulated by the user to be concave.
+//
+// this methods helps get around these awkward transforms by created an average of the
+// user's finger positions instead of exact quad transforms.
+//
+// 1. find the midpoints along each edge of the quad.
+// 2. find the vectors beteween opposite midpoints
+// 3. create new quad endpoints using these vectors
+// 4. this will create an output parallelogram from the input quad
+-(Quadrilateral) generateAverageQuadFor:(Quadrilateral)q{
+    Quadrilateral ret;
+    
+    CGPoint midLeft = CGPointMake((q.upperLeft.x + q.lowerLeft.x)/2, (q.upperLeft.y + q.lowerLeft.y)/2);
+    CGPoint midRight = CGPointMake((q.upperRight.x + q.lowerRight.x)/2, (q.upperRight.y + q.lowerRight.y)/2);
+    
+    MMVector* lengthVector = [MMVector vectorWithPoint:midLeft andPoint:midRight];
+    
+    CGPoint midTop = CGPointMake((q.upperLeft.x + q.upperRight.x)/2, (q.upperLeft.y + q.upperRight.y)/2);
+    CGPoint midLow = CGPointMake((q.lowerLeft.x + q.lowerRight.x)/2, (q.lowerLeft.y + q.lowerRight.y)/2);
+    
+    
+    ret.upperLeft = [lengthVector pointFromPoint:midTop distance:-0.5];
+    ret.upperRight = [lengthVector pointFromPoint:midTop distance:0.5];
+    ret.lowerRight = [lengthVector pointFromPoint:midLow distance:0.5];
+    ret.lowerLeft = [lengthVector pointFromPoint:midLow distance:-0.5];
+    
+    return ret;
+}
+
 #pragma mark - OpenCV Transform
 
 // http://stackoverflow.com/questions/9470493/transforming-a-rectangle-image-into-a-quadrilateral-using-a-catransform3d
@@ -612,28 +645,5 @@
     return transform;
 }
 
-
-#pragma mark - UIGestureRecognizerDelegate
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return YES;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return NO;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return NO;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    // Disallow recognition of tap gestures in the segmented control.
-    if ([touch.view isKindOfClass:[UIControl class]]) {
-        NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
-        return NO;
-    }
-    return YES;
-}
 
 @end

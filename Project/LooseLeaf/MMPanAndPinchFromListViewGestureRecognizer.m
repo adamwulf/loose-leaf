@@ -11,6 +11,8 @@
 
 @implementation MMPanAndPinchFromListViewGestureRecognizer
 
+#pragma mark - Properties
+
 @synthesize scale;
 @synthesize initialPageScale;
 @synthesize scaleDirection;
@@ -18,6 +20,7 @@
 @synthesize pinchedPage;
 @synthesize normalizedLocationOfScale;
 
+#pragma mark - Init
 
 -(id) init{
     self = [super init];
@@ -39,13 +42,7 @@
     return self;
 }
 
-- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
-    return [preventedGestureRecognizer isKindOfClass:[MMLongPressFromListViewGestureRecognizer class]];
-}
-
-- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return [preventingGestureRecognizer isKindOfClass:[MMLongPressFromListViewGestureRecognizer class]];
-}
+#pragma mark - Touch Methods
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
 //    debug_NSLog(@"touchesBegan");
@@ -120,6 +117,8 @@
     [super ignoreTouch:touch forEvent:event];
 }
 
+#pragma mark - UIGestureRecognzier Subclass
+
 -(void) reset{
     [validTouches removeAllObjects];
     pinchedPage = nil;
@@ -134,6 +133,14 @@
 -(void) killTheGestureCold{
     pinchedPage = nil;
     [self cancel];
+}
+
+- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
+    return [preventedGestureRecognizer isKindOfClass:[MMLongPressFromListViewGestureRecognizer class]];
+}
+
+- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
+    return [preventingGestureRecognizer isKindOfClass:[MMLongPressFromListViewGestureRecognizer class]];
 }
 
 #pragma mark - UIGestureRecognizerDelegate
@@ -160,10 +167,7 @@
 }
 
 
-
-
-
-
+#pragma mark - Helper
 
 -(CGFloat) distanceBetweenTouches:(NSOrderedSet*) touches{
     if([touches count] >= 2){

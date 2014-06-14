@@ -12,9 +12,15 @@
 
 @implementation MMDrawingTouchGestureRecognizer
 
+#pragma mark - Properties
+
 @synthesize touchDelegate;
 
-#pragma mark - Singleton
+-(NSArray*)validTouches{
+    return [validTouches array];
+}
+
+#pragma mark - Singleton and Init
 
 static MMDrawingTouchGestureRecognizer* _instance = nil;
 
@@ -40,18 +46,16 @@ static MMDrawingTouchGestureRecognizer* _instance = nil;
     return _instance;
 }
 
--(NSArray*)validTouches{
-    return [validTouches array];
-}
+#pragma mark - Touch Ownership
 
-#pragma mark - UIGestureRecognizer
-
--(BOOL) canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return NO;
-}
-
--(BOOL) shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return NO;
+-(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
+    if(gesture != self){
+        [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
+            [possibleTouches removeObjectsInSet:touches];
+            [ignoredTouches addObjectsInSet:touches];
+            [validTouches removeObjectsInSet:touches];
+        }];
+    }
 }
 
 #pragma mark - Touch Methods
@@ -95,14 +99,14 @@ static MMDrawingTouchGestureRecognizer* _instance = nil;
 }
 
 
--(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
-    if(gesture != self){
-        [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
-            [possibleTouches removeObjectsInSet:touches];
-            [ignoredTouches addObjectsInSet:touches];
-            [validTouches removeObjectsInSet:touches];
-        }];
-    }
+#pragma mark - UIGestureRecognizer Subclass
+
+-(BOOL) canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
+    return NO;
+}
+
+-(BOOL) shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return NO;
 }
 
 

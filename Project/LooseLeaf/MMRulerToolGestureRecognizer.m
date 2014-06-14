@@ -19,6 +19,15 @@
     __weak NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>* rulerDelegate;
 }
 
+#pragma mark - Properties
+
+-(CGFloat) initialDistance{
+    return initialDistance;
+}
+
+
+#pragma mark - Init
+
 -(id) init{
     if(self = [super init]){
         self.cancelsTouchesInView = NO;
@@ -37,6 +46,8 @@
     return self;
 }
 
+#pragma mark - Helper Methods
+
 -(void) setScrapDelegate:(NSObject<MMPanAndPinchScrapGestureRecognizerDelegate> *)_scrapDelegate{
     if(!scrapDelegate){
         [super setScrapDelegate:_scrapDelegate];
@@ -45,16 +56,19 @@
     }
 }
 
--(CGFloat) initialDistance{
-    return initialDistance;
+
+#pragma mark - Touch Ownership
+
+-(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
+    [rulerDelegate ownershipOfTouches:touches isGesture:gesture];
+    [super ownershipOfTouches:touches isGesture:gesture];
 }
 
+#pragma mark - Public Interface
 
 -(BOOL) containsTouch:(UITouch*)touch{
     return [validTouches containsObject:touch];
 }
-
-#pragma mark - Public Interface
 
 /**
  * return the two locations of the ruler in
@@ -107,34 +121,6 @@
 
 -(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch{
     return [rulerDelegate allowsHoldingScrapsWithTouch:touch];
-}
-
--(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
-    [rulerDelegate ownershipOfTouches:touches isGesture:gesture];
-    [super ownershipOfTouches:touches isGesture:gesture];
-}
-
-#pragma mark - UIGestureRecognizerDelegate
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return YES;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return NO;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return NO;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    // Disallow recognition of tap gestures in the segmented control.
-    if ([touch.view isKindOfClass:[UIControl class]]) {
-        NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
-        return NO;
-    }
-    return YES;
 }
 
 @end

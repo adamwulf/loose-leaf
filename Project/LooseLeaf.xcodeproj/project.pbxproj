@@ -745,15 +745,6 @@
 			name = MixPanel;
 			sourceTree = "<group>";
 		};
-		663EFFF01946D13B006E6AF5 /* UIButton Aware Tap Gesture */ = {
-			isa = PBXGroup;
-			children = (
-				663EFFF11946D153006E6AF5 /* MMButtonAwareTapGestureRecognizer.h */,
-				663EFFF21946D153006E6AF5 /* MMButtonAwareTapGestureRecognizer.m */,
-			);
-			name = "UIButton Aware Tap Gesture";
-			sourceTree = "<group>";
-		};
 		6640E6D617E390A800EB3F7D /* Velocity */ = {
 			isa = PBXGroup;
 			children = (
@@ -815,6 +806,15 @@
 			name = CancelableGesture;
 			sourceTree = "<group>";
 		};
+		664FB55C194BF6E2009C1EF9 /* Unused */ = {
+			isa = PBXGroup;
+			children = (
+				66A13D3E1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.h */,
+				66A13D3F1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m */,
+			);
+			name = Unused;
+			sourceTree = "<group>";
+		};
 		6650DD1018F4842E00ADF591 /* photo album */ = {
 			isa = PBXGroup;
 			children = (
@@ -836,13 +836,21 @@
 			name = "photo album";
 			sourceTree = "<group>";
 		};
-		66510831178DF9B900A7A7DD /* Ruler Tool */ = {
+		66510831178DF9B900A7A7DD /* Page View */ = {
 			isa = PBXGroup;
 			children = (
+				66D7496118A6DB010015650E /* MMDrawingTouchGestureRecognizer.h */,
+				66D7496218A6DB010015650E /* MMDrawingTouchGestureRecognizer.m */,
+				66DCFBDD1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.h */,
+				66DCFBDE1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m */,
 				66510833178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.h */,
 				66510834178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m */,
+				66B51A2817AC50F7005B5E09 /* MMBezelInGestureRecognizer.h */,
+				66B51A2917AC50F7005B5E09 /* MMBezelInGestureRecognizer.m */,
+				66A13D381631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.h */,
+				66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */,
 			);
-			name = "Ruler Tool";
+			name = "Page View";
 			sourceTree = "<group>";
 		};
 		665182041937B40000CBEAB4 /* Memory Profiling */ = {
@@ -1119,31 +1127,18 @@
 			name = "Album Row Views";
 			sourceTree = "<group>";
 		};
-		66A13D3C1631E06D002F5428 /* Object Selection */ = {
+		66A13D3D1631E075002F5428 /* List View */ = {
 			isa = PBXGroup;
 			children = (
-				66A13D381631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.h */,
-				66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */,
-				66A13D3E1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.h */,
-				66A13D3F1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m */,
-			);
-			name = "Object Selection";
-			sourceTree = "<group>";
-		};
-		66A13D3D1631E075002F5428 /* Page Navigation */ = {
-			isa = PBXGroup;
-			children = (
-				66DCFBDD1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.h */,
-				66DCFBDE1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m */,
-				66B51A2817AC50F7005B5E09 /* MMBezelInGestureRecognizer.h */,
-				66B51A2917AC50F7005B5E09 /* MMBezelInGestureRecognizer.m */,
 				6630ED9F15F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.h */,
 				6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */,
 				6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */,
 				66F4B4B5178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.h */,
 				66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */,
+				663EFFF11946D153006E6AF5 /* MMButtonAwareTapGestureRecognizer.h */,
+				663EFFF21946D153006E6AF5 /* MMButtonAwareTapGestureRecognizer.m */,
 			);
-			name = "Page Navigation";
+			name = "List View";
 			sourceTree = "<group>";
 		};
 		66A471BF17C7DED500C2A5B6 /* TouchShape */ = {
@@ -1364,15 +1359,6 @@
 			name = "Scrap Bubble";
 			sourceTree = "<group>";
 		};
-		66D7496018A6DA670015650E /* Drawing */ = {
-			isa = PBXGroup;
-			children = (
-				66D7496118A6DB010015650E /* MMDrawingTouchGestureRecognizer.h */,
-				66D7496218A6DB010015650E /* MMDrawingTouchGestureRecognizer.m */,
-			);
-			name = Drawing;
-			sourceTree = "<group>";
-		};
 		66DCFB7B1581BCED00B4918C = {
 			isa = PBXGroup;
 			children = (
@@ -1469,13 +1455,11 @@
 			isa = PBXGroup;
 			children = (
 				664FB558194BABE2009C1EF9 /* CancelableGesture */,
-				663EFFF01946D13B006E6AF5 /* UIButton Aware Tap Gesture */,
-				66D7496018A6DA670015650E /* Drawing */,
 				6640E6D617E390A800EB3F7D /* Velocity */,
 				66EDA79317CA87D20067BA63 /* Scraps */,
-				66510831178DF9B900A7A7DD /* Ruler Tool */,
-				66A13D3D1631E075002F5428 /* Page Navigation */,
-				66A13D3C1631E06D002F5428 /* Object Selection */,
+				66510831178DF9B900A7A7DD /* Page View */,
+				66A13D3D1631E075002F5428 /* List View */,
+				664FB55C194BF6E2009C1EF9 /* Unused */,
 				66B3522317A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.h */,
 				66B3522417A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m */,
 				66A3921517CC126D00B4974D /* MMPanGestureDelegate.h */,

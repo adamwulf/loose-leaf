@@ -17,8 +17,6 @@
  * these classes is essentially the same.
  *
  */
-@interface MMImmovableTapGestureRecognizer : UITapGestureRecognizer<UIGestureRecognizerDelegate>{
-    NSMutableDictionary* touchLocations;
-}
+@interface MMImmovableTapGestureRecognizer : UITapGestureRecognizer<UIGestureRecognizerDelegate>
 
 @end

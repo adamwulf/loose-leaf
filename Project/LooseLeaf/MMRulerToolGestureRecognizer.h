@@ -15,7 +15,6 @@
 
 
 @property (nonatomic, readonly) CGFloat initialDistance;
-@property (nonatomic, readonly) CGFloat scale;
 
 -(BOOL) containsTouch:(UITouch*)touch;
 

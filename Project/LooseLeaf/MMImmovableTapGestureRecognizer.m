@@ -9,14 +9,24 @@
 #import "MMImmovableTapGestureRecognizer.h"
 #import "Constants.h"
 
-@interface MMImmovableTapGestureRecognizer (Private)
 
-@property (nonatomic, readonly) NSMutableDictionary* touchLocations;
-@property (nonatomic, readonly) CGFloat allowableMovement;
+#define  kTapAllowableMovement 10
 
-@end
+@implementation MMImmovableTapGestureRecognizer{
+    NSMutableDictionary* touchLocations;
+}
 
-@implementation MMImmovableTapGestureRecognizer
+#pragma mark - Properties
+
+-(NSMutableDictionary*)touchLocations{
+    if(!touchLocations){
+        touchLocations = [[NSMutableDictionary alloc] init];
+    }
+    return touchLocations;
+}
+
+
+#pragma mark - Init
 
 -(id) init{
     if(self = [super init]){
@@ -32,16 +42,7 @@
     return self;
 }
 
--(CGFloat) allowableMovement{
-    return 10;
-}
-
--(NSMutableDictionary*)touchLocations{
-    if(!touchLocations){
-        touchLocations = [[NSMutableDictionary alloc] init];
-    }
-    return touchLocations;
-}
+#pragma mark - Touch Methods
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [super touchesBegan:touches withEvent:event];
@@ -58,7 +59,7 @@
             CGPoint initialLocation = [[self.touchLocations objectForKey:[NSNumber numberWithInteger:[touch hash]]] CGPointValue];
             CGPoint currentLocation = [touch locationInView:self.view];
             CGFloat distance = DistanceBetweenTwoPoints(initialLocation, currentLocation);
-            if(distance > self.allowableMovement && self.state == UIGestureRecognizerStatePossible){
+            if(distance > kTapAllowableMovement && self.state == UIGestureRecognizerStatePossible){
                 self.state = UIGestureRecognizerStateFailed;
                 didChangeState = YES;
             }
@@ -82,6 +83,8 @@
         [self.touchLocations removeObjectForKey:[NSNumber numberWithInteger:[touch hash]]];
     }
 }
+
+#pragma mark - UIGestureRecognizer Subclass
 
 -(void) setState:(UIGestureRecognizerState)state{
     [super setState:state];

@@ -13,14 +13,12 @@
 #import "MMUntouchableView.h"
 
 
-#define kVelocityLowPass 0.7
+#define  kVelocityLowPass 0.7
+#define  kDurationTouchHashSize 20
+#define  VELOCITY_CLAMP_MIN 20
+#define  VELOCITY_CLAMP_MAX 800
 
 static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
-
-
-#define kDurationTouchHashSize 20
-#define           VELOCITY_CLAMP_MIN 20
-#define           VELOCITY_CLAMP_MAX 800
 
 
 @implementation MMTouchVelocityGestureRecognizer{
@@ -28,9 +26,19 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
     NSTimer* debugTimer;
 }
 
+#pragma mark - Properties
+
 @synthesize stackView;
 
-#pragma mark - Singleton
++(int) cacheSize{
+    return kDurationTouchHashSize;
+}
+
++(int) maxVelocity{
+    return VELOCITY_CLAMP_MAX;
+}
+
+#pragma mark - Singleton and Init
 
 static MMTouchVelocityGestureRecognizer* _instance = nil;
 
@@ -51,16 +59,6 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
         _instance.delegate = _instance;
     }
     return _instance;
-}
-
-#pragma mark - UIGestureRecognizer
-
--(BOOL) canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return NO;
-}
-
--(BOOL) shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return NO;
 }
 
 
@@ -90,38 +88,11 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
     return durationCache[indexOfTouch];
 }
 
-+(int) cacheSize{
-    return kDurationTouchHashSize;
-}
-
-+(int) maxVelocity{
-    return VELOCITY_CLAMP_MAX;
-}
-
 
 #pragma mark - Touch Methods
 
-static BOOL hasTimerFired = NO;
-
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [self killTimer];
-//    if(hasTimerFired){
-//        for(UITouch* aTouch in touches){
-//            UIView* touchView = [aTouch view];
-//            if(!touchView){
-//                NSLog(@"what");
-//            }
-//            NSLog(@"%@ - %@ ui%i mt%i et%i", NSStringFromClass([touchView class]), touchView, touchView.userInteractionEnabled, touchView.multipleTouchEnabled, touchView.exclusiveTouch);
-//            NSLog(@"superview %@", NSStringFromClass([touchView.superview class]));
-//            for(UIView* subview in touchView.subviews){
-//                NSLog(@" - subview: %@ %@", NSStringFromClass([subview class]), subview);
-//            }
-//            NSLog(@"gestures:");
-//            for(UIGestureRecognizer* gesture in touchView.gestureRecognizers){
-//                NSLog(@"%@ - %i", NSStringFromClass([gesture class]), gesture.enabled);
-//            }
-//        }
-//    }
     for(UITouch* touch in touches){
         // initialize values for touch
         int indexOfTouch = [self indexForTouchInCache:touch];
@@ -146,14 +117,10 @@ static BOOL hasTimerFired = NO;
 }
 
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
-    [self updateStateInformationForTouches:touches];
-    NSSet* touchesToKill = [NSSet setWithSet:touches];
-    dispatch_async(dispatch_get_main_queue(),^{
-        @autoreleasepool {
-            [self killStateInformationForTouches:touchesToKill];
-        }
-    });
+    [self touchesEnded:touches withEvent:event];
 }
+
+#pragma mark - State Methods
 
 -(void) updateStateInformationForTouches:(NSSet*)touches{
     for(UITouch* touch in touches){
@@ -285,6 +252,16 @@ static BOOL hasTimerFired = NO;
     }
 }
 
+#pragma mark - UIGestureRecognizer Subclass
+
+-(BOOL) canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
+    return NO;
+}
+
+-(BOOL) shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return NO;
+}
+
 
 
 #pragma mark - UIGestureRecognizerDelegate
@@ -334,8 +311,6 @@ static BOOL hasTimerFired = NO;
 -(void) timerDidFire:(NSTimer*)timer{
     NSLog(@"Velocity Update");
     NSLog(@"gestures: %@", [stackView activeGestureSummary]);
-    
-    hasTimerFired = YES;
     
     [[NSThread mainThread] performBlock:^{
         [stackView cancelAllGestures];
