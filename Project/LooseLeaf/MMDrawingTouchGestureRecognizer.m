@@ -66,7 +66,11 @@ static MMDrawingTouchGestureRecognizer* _instance = nil;
             [possibleTouches addObject:touch];
         }
     }
-    self.state = UIGestureRecognizerStateBegan;
+    if(self.state == UIGestureRecognizerStatePossible){
+        self.state = UIGestureRecognizerStateBegan;
+    }else{
+        self.state = UIGestureRecognizerStateChanged;
+    }
 }
 
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{

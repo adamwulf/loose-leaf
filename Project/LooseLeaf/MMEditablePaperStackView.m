@@ -586,7 +586,14 @@
     if([gesture isKindOfClass:[MMDrawingTouchGestureRecognizer class]] ||
        [gesture isKindOfClass:[MMBezelInGestureRecognizer class]]){
         // only notify of our own gestures
-        [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
+        if([fromLeftBezelGesture isActivelyBezeling] && [bezelStackHolder.subviews count]){
+            [[bezelStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
+        }else{
+            if([fromLeftBezelGesture isActivelyBezeling]){
+                NSLog(@"notifying of ownership during left bezel, but nothing in bezel holder");
+            }
+            [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
+        }
     }
     [[MMDrawingTouchGestureRecognizer sharedInstace] ownershipOfTouches:touches isGesture:gesture];
 }
