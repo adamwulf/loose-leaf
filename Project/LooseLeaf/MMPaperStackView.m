@@ -448,6 +448,7 @@
         // haven't completed.
         if([bezelStackHolder.subviews count]){
             [self willNotChangeTopPageTo:[visibleStackHolder peekSubview]];
+            NSArray* pagesToEnable = [bezelStackHolder.subviews copy];
             while([bezelStackHolder.subviews count]){
                 // this will translate the frame from the bezel stack to the
                 // hidden stack, so that the pages appear in the same place
@@ -458,6 +459,11 @@
             void(^finishedBlock)(BOOL finished)  = ^(BOOL finished){
                 bezelStackHolder.frame = hiddenStackHolder.frame;
                 [self didChangeTopPage];
+                // since we've added pages to the hidden stack, make sure
+                // all of their gestures are turned off
+                for(MMPaperView* page in pagesToEnable){
+                    [page enableAllGestures];
+                }
             };
             // now pop all of those pages back onto the visible stack.
             // each of these came from the visible stack initially, so
@@ -648,6 +654,7 @@
             //
             // this'll let us move the bezel frame back to its hidden place above the hidden stack
             // immediately
+            NSArray* pagesToEnable = [bezelStackHolder.subviews copy];
             [[visibleStackHolder peekSubview] enableAllGestures];
             [self willChangeTopPageTo:[bezelStackHolder peekSubview]];
             while([bezelStackHolder.subviews count]){
@@ -660,6 +667,11 @@
             void(^finishedBlock)(BOOL finished)  = ^(BOOL finished){
                 bezelStackHolder.frame = hiddenStackHolder.frame;
                 [self didChangeTopPage];
+                // since we've added pages to the hidden stack, make sure
+                // all of their gestures are turned off
+                for(MMPaperView* page in pagesToEnable){
+                    [page enableAllGestures];
+                }
             };
             [self popHiddenStackForPages:bezelGesture.numberOfRepeatingBezels onComplete:finishedBlock];
             
