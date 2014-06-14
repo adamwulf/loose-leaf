@@ -757,6 +757,7 @@
         BOOL isLastToAnimate = [bezelStackHolder.subviews count] == 1;
         MMPaperView* aPage = [bezelStackHolder.subviews objectAtIndex:0];
         [aPage removeAllAnimationsAndPreservePresentationFrame];
+        [aPage enableAllGestures];
         [visibleStackHolder pushSubview:aPage];
         [self animatePageToFullScreen:aPage withDelay:delay withBounce:NO onComplete:(isLastToAnimate ? ^(BOOL finished){
             bezelStackHolder.frame = hiddenStackHolder.frame;
