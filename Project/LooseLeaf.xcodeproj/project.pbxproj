@@ -817,6 +817,20 @@
 			name = Unused;
 			sourceTree = "<group>";
 		};
+		664FB55E194E306E009C1EF9 /* Stack View */ = {
+			isa = PBXGroup;
+			children = (
+				6640E6D617E390A800EB3F7D /* Velocity */,
+				66EDA79317CA87D20067BA63 /* Scraps */,
+				66A13D3D1631E075002F5428 /* List View */,
+				66B51A2817AC50F7005B5E09 /* MMBezelInGestureRecognizer.h */,
+				66B51A2917AC50F7005B5E09 /* MMBezelInGestureRecognizer.m */,
+				66D7496118A6DB010015650E /* MMDrawingTouchGestureRecognizer.h */,
+				66D7496218A6DB010015650E /* MMDrawingTouchGestureRecognizer.m */,
+			);
+			name = "Stack View";
+			sourceTree = "<group>";
+		};
 		6650DD1018F4842E00ADF591 /* photo album */ = {
 			isa = PBXGroup;
 			children = (
@@ -841,14 +855,10 @@
 		66510831178DF9B900A7A7DD /* Page View */ = {
 			isa = PBXGroup;
 			children = (
-				66D7496118A6DB010015650E /* MMDrawingTouchGestureRecognizer.h */,
-				66D7496218A6DB010015650E /* MMDrawingTouchGestureRecognizer.m */,
 				66DCFBDD1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.h */,
 				66DCFBDE1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m */,
 				66510833178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.h */,
 				66510834178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m */,
-				66B51A2817AC50F7005B5E09 /* MMBezelInGestureRecognizer.h */,
-				66B51A2917AC50F7005B5E09 /* MMBezelInGestureRecognizer.m */,
 				66A13D381631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.h */,
 				66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */,
 			);
@@ -1457,10 +1467,8 @@
 			isa = PBXGroup;
 			children = (
 				664FB558194BABE2009C1EF9 /* CancelableGesture */,
-				6640E6D617E390A800EB3F7D /* Velocity */,
-				66EDA79317CA87D20067BA63 /* Scraps */,
+				664FB55E194E306E009C1EF9 /* Stack View */,
 				66510831178DF9B900A7A7DD /* Page View */,
-				66A13D3D1631E075002F5428 /* List View */,
 				664FB55C194BF6E2009C1EF9 /* Unused */,
 				66B3522317A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.h */,
 				66B3522417A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m */,
