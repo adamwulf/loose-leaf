@@ -578,7 +578,6 @@
 
 -(void) setEnabled:(BOOL)enabled{
     if(enabled != self.enabled){
-        NSLog(@"%@: setEnabled: %i", [self description], enabled);
         [super setEnabled:enabled];
         if(!enabled){
             self.subState = UIGestureRecognizerStatePossible;
