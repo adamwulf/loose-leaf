@@ -436,9 +436,8 @@
                         toFrame:fr
                         withTouches:panGesture.validTouches];
     
-    if(panGesture.subState != UIGestureRecognizerStateCancelled &&
-       panGesture.subState != UIGestureRecognizerStateEnded &&
-       panGesture.subState != UIGestureRecognizerStateFailed){
+    if(panGesture.subState == UIGestureRecognizerStateBegan ||
+       panGesture.subState == UIGestureRecognizerStateChanged){
         //
         // now we're ready, set the frame!
         //

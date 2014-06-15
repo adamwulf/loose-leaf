@@ -97,13 +97,11 @@ dispatch_queue_t importThumbnailQueue;
 #pragma mark - Public Methods
 
 -(void) disableAllGestures{
-    NSLog(@"disable gestures for: %@", self.uuid);
     [super disableAllGestures];
     drawableView.userInteractionEnabled = NO;
 }
 
 -(void) enableAllGestures{
-    NSLog(@"enable gestures for: %@", self.uuid);
     [super enableAllGestures];
     drawableView.userInteractionEnabled = YES;
 }

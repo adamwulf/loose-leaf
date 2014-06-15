@@ -107,11 +107,7 @@
 }
 
 -(BOOL) isAllowedToPan{
-    BOOL isAllowedToPan = [rulerDelegate isAllowedToPan];
-    BOOL panIsDisabled = !isAllowedToPan;
-    BOOL isAllowedToBezel = [rulerDelegate isAllowedToBezel];
-    NSLog(@"checking permission for ruler: %i %i", panIsDisabled, isAllowedToBezel);
-    return panIsDisabled && isAllowedToBezel;
+    return ![rulerDelegate isAllowedToPan] && [rulerDelegate isAllowedToBezel];
 }
 
 -(BOOL) isAllowedToBezel{
