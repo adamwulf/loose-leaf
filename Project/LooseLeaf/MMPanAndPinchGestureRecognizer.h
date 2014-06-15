@@ -12,8 +12,9 @@
 #import "Constants.h"
 #import "MMScrapView.h"
 #import "MMPanAndPinchScrapGestureRecognizerDelegate.h"
+#import "MMTouchLifeCycleDelegate.h"
 
-@interface MMPanAndPinchGestureRecognizer : MMCancelableGestureRecognizer{
+@interface MMPanAndPinchGestureRecognizer : MMCancelableGestureRecognizer<MMTouchLifeCycleDelegate>{
     //
     // the initial distance between
     // the touches. to be used to calculate

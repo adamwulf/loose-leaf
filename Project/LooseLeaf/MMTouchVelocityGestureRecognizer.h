@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "Constants.h"
+#import "MMTouchLifeCycleDelegate.h"
 
 @class MMScrapPaperStackView;
 
@@ -45,6 +46,10 @@ struct DurationCacheObject{
 +(int) cacheSize;
 
 +(int) maxVelocity;
+
+-(void) pleaseNotifyMeWhenTouchesDie:(UIGestureRecognizer<MMTouchLifeCycleDelegate>*)obj;
+
+-(void) stopNotifyingMeWhenTouchesDie:(UIGestureRecognizer<MMTouchLifeCycleDelegate>*)obj;
 
 -(CGFloat) normalizedVelocityForTouch:(UITouch*)touch;
 

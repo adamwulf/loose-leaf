@@ -277,6 +277,7 @@
 		664F413F15906628006F8B09 /* MMLeftArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLeftArrow.m; sourceTree = "<group>"; };
 		664FB559194BAC6A009C1EF9 /* MMCancelableGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCancelableGestureRecognizer.h; sourceTree = "<group>"; };
 		664FB55A194BAC6A009C1EF9 /* MMCancelableGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCancelableGestureRecognizer.m; sourceTree = "<group>"; };
+		664FB55D194E2CF4009C1EF9 /* MMTouchLifeCycleDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMTouchLifeCycleDelegate.h; sourceTree = "<group>"; };
 		6650DD0E18F46D5100ADF591 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = LooseLeaf/Images.xcassets; sourceTree = "<group>"; };
 		6650DD1118F4843400ADF591 /* photoalbum@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photoalbum@2x.png"; sourceTree = "<group>"; };
 		6650DD1318F4843D00ADF591 /* photoalbum.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = photoalbum.png; sourceTree = "<group>"; };
@@ -750,6 +751,7 @@
 			children = (
 				6640E6D717E390BE00EB3F7D /* MMTouchVelocityGestureRecognizer.h */,
 				6640E6D817E390BE00EB3F7D /* MMTouchVelocityGestureRecognizer.m */,
+				664FB55D194E2CF4009C1EF9 /* MMTouchLifeCycleDelegate.h */,
 			);
 			name = Velocity;
 			sourceTree = "<group>";

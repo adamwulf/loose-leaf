@@ -124,11 +124,28 @@
 }
 
 
+#pragma mark - MMTouchLifeCycleDelegate
+
+-(void) touchesDidDie:(NSSet *)touches{
+    NSLog(@"%@ told that %i touches have died", self, [touches count]);
+    [possibleTouches removeObjectsInSet:touches];
+    [validTouches removeObjectsInSet:touches];
+    [ignoredTouches removeObjectsInSet:touches];
+    if(![possibleTouches count] && ![validTouches count] && ![ignoredTouches count]){
+        // don't ask for touch info anymore.
+        // i can't rely on removing myself in the reset method,
+        // because i may have been told about touch ownership when this gesture isn't
+        // active or even receiving touch events
+        [[MMTouchVelocityGestureRecognizer sharedInstace] stopNotifyingMeWhenTouchesDie:self];
+    }
+}
+
 #pragma mark - Touch Ownership
 
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     if(gesture != self){
+        [[MMTouchVelocityGestureRecognizer sharedInstace] pleaseNotifyMeWhenTouchesDie:self];
         NSLog(@"%@ was told that %@ owns %i touches", [self description], [gesture description], [touches count]);
         __block BOOL touchesWereStolen = NO;
         [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
@@ -555,6 +572,8 @@
     locationAdjustment = CGPointZero;
     lastLocationInView = CGPointZero;
     hasPannedOrScaled = NO;
+    // don't ask for touch info anymore
+    [[MMTouchVelocityGestureRecognizer sharedInstace] stopNotifyingMeWhenTouchesDie:self];
 }
 
 -(void) setEnabled:(BOOL)enabled{

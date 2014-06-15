@@ -24,6 +24,7 @@ static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
 @implementation MMTouchVelocityGestureRecognizer{
     struct DurationCacheObject durationCache[kDurationTouchHashSize];
     NSTimer* debugTimer;
+    NSMutableSet* notifyTheseWhenTouchDies;
 }
 
 #pragma mark - Properties
@@ -49,6 +50,7 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
         self.delaysTouchesBegan = NO;
         self.delaysTouchesEnded = NO;
         self.cancelsTouchesInView = NO;
+        notifyTheseWhenTouchDies = [NSMutableSet set];
     }
     return _instance;
 }
@@ -59,6 +61,18 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
         _instance.delegate = _instance;
     }
     return _instance;
+}
+
+#pragma mark - Notify When Touches Die
+
+-(void) pleaseNotifyMeWhenTouchesDie:(UIGestureRecognizer<MMTouchLifeCycleDelegate>*)obj{
+    NSLog(@"%@ asked to be notified of touch lifecycle", obj);
+    [notifyTheseWhenTouchDies addObject:obj];
+}
+
+-(void) stopNotifyingMeWhenTouchesDie:(UIGestureRecognizer<MMTouchLifeCycleDelegate>*)obj{
+    NSLog(@"%@ asked to NOT be notified of touch lifecycle", obj);
+    [notifyTheseWhenTouchDies removeObject:obj];
 }
 
 
@@ -114,6 +128,9 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
             [self killStateInformationForTouches:touchesToKill];
         }
     });
+    for (UIGestureRecognizer<MMTouchLifeCycleDelegate>* gesture in [notifyTheseWhenTouchDies copy]) {
+        [gesture touchesDidDie:touches];
+    }
 }
 
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
