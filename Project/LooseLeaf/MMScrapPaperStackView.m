@@ -1224,7 +1224,7 @@ int skipAll = NO;
         // bezeling
         return NO;
     }
-    return YES;
+    return handButton.selected;
 }
 
 -(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch{

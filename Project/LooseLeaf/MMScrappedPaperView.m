@@ -75,6 +75,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         scrapContainerView.layer.position = CGPointMake(0,0);
 
         panGesture.scrapDelegate = self;
+        rulerGesture.scrapDelegate = self;
         
         scrapState = [[MMScrapsOnPaperState alloc] initWithScrapIDsPath:self.scrapIDsPath];
         scrapState.delegate = self;

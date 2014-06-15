@@ -47,20 +47,13 @@
 #pragma mark - Helper Methods
 
 -(void) setScrapDelegate:(NSObject<MMPanAndPinchScrapGestureRecognizerDelegate> *)_scrapDelegate{
-    if(!scrapDelegate){
+    if(!self.scrapDelegate){
         [super setScrapDelegate:_scrapDelegate];
     }else{
         rulerDelegate = _scrapDelegate;
     }
 }
 
-
-#pragma mark - Touch Ownership
-
--(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
-    [rulerDelegate ownershipOfTouches:touches isGesture:gesture];
-    [super ownershipOfTouches:touches isGesture:gesture];
-}
 
 #pragma mark - Public Interface
 
@@ -114,7 +107,11 @@
 }
 
 -(BOOL) isAllowedToPan{
-    return ![rulerDelegate isAllowedToPan] && [rulerDelegate isAllowedToBezel];
+    BOOL isAllowedToPan = [rulerDelegate isAllowedToPan];
+    BOOL panIsDisabled = !isAllowedToPan;
+    BOOL isAllowedToBezel = [rulerDelegate isAllowedToBezel];
+    NSLog(@"checking permission for ruler: %i %i", panIsDisabled, isAllowedToBezel);
+    return panIsDisabled && isAllowedToBezel;
 }
 
 -(BOOL) isAllowedToBezel{
