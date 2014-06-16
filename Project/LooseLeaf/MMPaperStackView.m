@@ -446,6 +446,7 @@
         // this is handled in the UIGestureRecognizerStateBegan state, if the user
         // begins a new bezel gesture but the animations for the previous bezel
         // haven't completed.
+        [[visibleStackHolder peekSubview] enableAllGestures];
         if([bezelStackHolder.subviews count]){
             [self willNotChangeTopPageTo:[visibleStackHolder peekSubview]];
             NSArray* pagesToEnable = [bezelStackHolder.subviews copy];

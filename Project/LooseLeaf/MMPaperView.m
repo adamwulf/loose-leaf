@@ -207,6 +207,7 @@
  * disables all gestures on this page
  */
 -(void) disableAllGestures{
+    NSLog(@"%@ disabled", self.uuid);
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         if(gesture.enabled && gesture.state != UIGestureRecognizerStatePossible){
 //            NSLog(@"gesture is active %@ %d", gesture, gesture.state);
@@ -222,6 +223,7 @@
  * enables all gestures on this page
  */
 -(void) enableAllGestures{
+    NSLog(@"%@ enabled", self.uuid);
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         [gesture setEnabled:YES];
     }

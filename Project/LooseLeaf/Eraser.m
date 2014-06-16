@@ -8,7 +8,6 @@
 
 #import "Eraser.h"
 #import "Constants.h"
-#import "TestFlight.h"
 
 @implementation Eraser
 
