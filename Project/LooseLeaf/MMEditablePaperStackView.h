@@ -37,7 +37,6 @@
 #import "MMRulerView.h"
 #import "PolygonToolDelegate.h"
 #import "MMDrawingTouchGestureRecognizer.h"
-#import "MMPageCacheManagerDelegate.h"
 
 @class MMMemoryProfileView;
 

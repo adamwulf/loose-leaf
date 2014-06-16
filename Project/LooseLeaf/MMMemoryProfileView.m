@@ -36,7 +36,7 @@
 
 
 -(void) timerDidFire{
-    [self setNeedsDisplay];
+//    [self setNeedsDisplay];
 }
 
 // Only override drawRect: if you perform custom drawing.

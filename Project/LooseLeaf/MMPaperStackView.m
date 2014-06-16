@@ -363,6 +363,7 @@
         // began to changed, because i never know when the delegate has or hasn't
         // been notified about the substate
         bezelGesture.hasSeenSubstateBegin = YES;
+
         //
         // ok, the user is beginning the drag two fingers from the
         // left hand bezel. we need to push a page from the visible
@@ -588,6 +589,7 @@
         // began to changed, because i never know when the delegate has or hasn't
         // been notified about the substate
         bezelGesture.hasSeenSubstateBegin = YES;
+        [[visibleStackHolder peekSubview] saveToDisk];
         //
         // ok, the user is beginning the drag two fingers from the
         // right hand bezel. we need to push a page from the hidden

@@ -13,8 +13,9 @@
 #import "MMListAddPageButton.h"
 #import "MMListAddPageButtonDelegate.h"
 #import "MMButtonAwareTapGestureRecognizer.h"
+#import "MMPageCacheManagerDelegate.h"
 
-@interface MMListPaperStackView : MMPaperStackView<MMPanAndPinchFromListViewGestureRecognizerDelegate,MMListAddPageButtonDelegate>{
+@interface MMListPaperStackView : MMPaperStackView<MMPanAndPinchFromListViewGestureRecognizerDelegate,MMListAddPageButtonDelegate,MMPageCacheManagerDelegate>{
     //
     // when beginning a zoom, we need to save the
     // frames of all the pages we'll be animating

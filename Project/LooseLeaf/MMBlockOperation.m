@@ -23,7 +23,16 @@
 
 // from NSOperation
 - (void) main {
-    _block();
+    if(![self isCancelled]){
+        _block();
+    }else{
+        NSLog(@"skipped");
+    }
+}
+
+-(void) cancel{
+    [super cancel];
+    _block = nil;
 }
 
 
