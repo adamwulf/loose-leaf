@@ -407,10 +407,15 @@
     if(![validTouches count] && ![possibleTouches count] && ![ignoredTouches count]){
         self.state = UIGestureRecognizerStateEnded;
     }
+    //
+    // sometimes iOS will tell us about touches that we should ignore.
+    // this will make sure that we forget about these touches if iOS
+    // stops notifying us after telling us to ignore
+    [[MMTouchVelocityGestureRecognizer sharedInstace] pleaseNotifyMeWhenTouchesDie:self];
 }
 
 
-#pragma mark - Reset and Helper Methods
+#pragma mark - Helper Methods
 
 /**
  * calculates the pixel velocity
