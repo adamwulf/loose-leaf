@@ -806,7 +806,9 @@ int skipAll = NO;
                 pageToDropScrap = [self pageWouldDropScrap:gesture.scrap atCenter:&scrapCenterInPage andScale:&scrapScaleInPage];
             }
             if(pageToDropScrap){
-                [pageToDropScrap addScrap:gesture.scrap];
+                if(![pageToDropScrap hasScrap:gesture.scrap]){
+                    [pageToDropScrap addScrap:gesture.scrap];
+                }
                 gesture.scrap.scale = scrapScaleInPage;
                 gesture.scrap.center = scrapCenterInPage;
                 [pageToDropScrap saveToDisk];

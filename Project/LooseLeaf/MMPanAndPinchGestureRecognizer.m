@@ -127,9 +127,7 @@
 
 -(void) touchesDidDie:(NSSet *)touches{
     NSLog(@"%@ told that %i touches have died", self, [touches count]);
-    [possibleTouches removeObjectsInSet:touches];
-    [validTouches removeObjectsInSet:touches];
-    [ignoredTouches removeObjectsInSet:touches];
+    [self touchesEnded:touches withEvent:nil];
     if(![possibleTouches count] && ![validTouches count] && ![ignoredTouches count]){
         // don't ask for touch info anymore.
         // i can't rely on removing myself in the reset method,

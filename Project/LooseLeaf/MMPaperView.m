@@ -336,7 +336,6 @@
         return;
     }else if(!isBeingPannedAndZoomed && (panGesture.subState == UIGestureRecognizerStateBegan ||
                                          panGesture.subState == UIGestureRecognizerStateChanged)){
-        
         self.isBeingPannedAndZoomed = YES;
         //
         // if the user had 1 finger down and re-touches with the 2nd finger, then this
