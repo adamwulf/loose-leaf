@@ -1053,6 +1053,8 @@
                 [aPage cancelAllGestures];
             }
         }
+        
+        MMScrappedPaperView* oldTopVisiblePage = [visibleStackHolder peekSubview];
         //
         // the bezelStackHolder was been filled during the pan, so add
         // the top page of the visible stack to the bottom of the bezelGestureHolder,
@@ -1064,6 +1066,7 @@
             }];
             [self emptyBezelStackToVisibleStackOnComplete:^(BOOL finished){
                 [self updateIconAnimations];
+                [oldTopVisiblePage saveToDisk];
             }];
         }else{
             // we just picked up the top page close to the bezel,
@@ -1075,6 +1078,7 @@
             [self popHiddenStackForPages:1 onComplete:^(BOOL completed){
                 page.frame = self.bounds;
                 [self didChangeTopPage];
+                [oldTopVisiblePage saveToDisk];
             }];
         }
         return;
