@@ -11,8 +11,9 @@
 #import "Constants.h"
 #import "MMPanAndPinchScrapGestureRecognizer.h"
 #import "MMStretchScrapGestureRecognizerDelegate.h"
+#import "MMCancelableGestureRecognizer.h"
 
-@interface MMStretchScrapGestureRecognizer : UIGestureRecognizer
+@interface MMStretchScrapGestureRecognizer : MMCancelableGestureRecognizer<UIGestureRecognizerDelegate>
 
 @property (nonatomic, weak) MMPanAndPinchScrapGestureRecognizer* pinchScrapGesture1;
 @property (nonatomic, weak) MMPanAndPinchScrapGestureRecognizer* pinchScrapGesture2;
@@ -30,7 +31,5 @@
 -(void) blessTouches:(NSSet*)touches;
 
 -(CATransform3D) transformForBounceAtScale:(CGFloat) scale;
-
--(void) cancel;
 
 @end

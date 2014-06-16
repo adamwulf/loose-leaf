@@ -211,6 +211,10 @@
     }
 }
 
+-(BOOL) areGesturesEnabled{
+    return panGesture.enabled;
+}
+
 
 /**
  * this is the heart of the two finger zoom/pan for pages
@@ -245,6 +249,12 @@
  * pan gestures use proper state control etc to zoom a page in and out.
  */
 -(void) panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture{
+    
+    if(_panGesture.state != UIGestureRecognizerStateChanged){
+        NSLog(@"pan %@ %i", self.uuid, _panGesture.state);
+    }
+    
+    
     if(![self.delegate shouldAllowPan:self]){
         return;
     }
@@ -304,7 +314,6 @@
         return;
     }else if(!isBeingPannedAndZoomed && (panGesture.subState == UIGestureRecognizerStateBegan ||
                                          panGesture.subState == UIGestureRecognizerStateChanged)){
-        
         self.isBeingPannedAndZoomed = YES;
         //
         // if the user had 1 finger down and re-touches with the 2nd finger, then this
@@ -406,9 +415,8 @@
                         toFrame:fr
                         withTouches:panGesture.validTouches];
     
-    if(panGesture.subState != UIGestureRecognizerStateCancelled &&
-       panGesture.subState != UIGestureRecognizerStateEnded &&
-       panGesture.subState != UIGestureRecognizerStateFailed){
+    if(panGesture.subState == UIGestureRecognizerStateBegan ||
+       panGesture.subState == UIGestureRecognizerStateChanged){
         //
         // now we're ready, set the frame!
         //

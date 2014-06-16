@@ -12,7 +12,7 @@
 
 @protocol MMScrapsOnPaperStateDelegate <NSObject>
 
--(NSArray*) scraps;
+-(NSArray*) scrapsOnPaper;
 
 -(void) didLoadScrap:(MMScrapView*)scrap;
 

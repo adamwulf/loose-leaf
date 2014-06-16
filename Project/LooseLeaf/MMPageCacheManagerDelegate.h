@@ -20,4 +20,6 @@
 
 -(NSArray*) pagesInCurrentBezelGesture;
 
+-(BOOL) isShowingPageView;
+
 @end

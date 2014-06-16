@@ -535,7 +535,11 @@
         // top page should actually be the top visible page isn't necessarily
         // true. instead, i should ask the PageCacheManager to recheck
         // if it can hand the currently top page the drawable view.
-        [[MMPageCacheManager sharedInstance] didChangeToTopPage:[visibleStackHolder peekSubview]];
+        if([fromLeftBezelGesture isActivelyBezeling]){
+            [[MMPageCacheManager sharedInstance] didChangeToTopPage:[bezelStackHolder peekSubview]];
+        }else{
+            [[MMPageCacheManager sharedInstance] didChangeToTopPage:[visibleStackHolder peekSubview]];
+        }
     }
 }
 
@@ -575,14 +579,21 @@
     [rulerView liftRuler];
 }
 
-#pragma mark - MMPanGestureDelegate
+#pragma mark - MMGestureTouchOwnershipDelegate
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     [super ownershipOfTouches:touches isGesture:gesture];
     if([gesture isKindOfClass:[MMDrawingTouchGestureRecognizer class]] ||
        [gesture isKindOfClass:[MMBezelInGestureRecognizer class]]){
         // only notify of our own gestures
-        [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
+        if([fromLeftBezelGesture isActivelyBezeling] && [bezelStackHolder.subviews count]){
+            [[bezelStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
+        }else{
+            if([fromLeftBezelGesture isActivelyBezeling]){
+                NSLog(@"notifying of ownership during left bezel, but nothing in bezel holder");
+            }
+            [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
+        }
     }
     [[MMDrawingTouchGestureRecognizer sharedInstace] ownershipOfTouches:touches isGesture:gesture];
 }
@@ -592,7 +603,7 @@
 }
 
 
-#pragma mark - Page Loading and Unloading
+#pragma mark - MMPageCacheManagerDelegate: Page Loading and Unloading
 
 -(BOOL) isPageInVisibleStack:(MMPaperView*)page{
     return [visibleStackHolder containsSubview:page];
@@ -703,7 +714,7 @@
     if([[MMPageCacheManager sharedInstance].drawableView.state.currentStrokes count]){
         return NO;
     }
-    for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scraps]){
+    for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scrapsOnPaper]){
         if([scrap.state.drawableView.state.currentStrokes count]){
             return NO;
         }
@@ -843,16 +854,6 @@
     [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 }
 
-
-#pragma mark - UIGestureRecognizerDelegate
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    
-    // Disallow recognition of tap gestures in the segmented control.
-    if ([touch.view isKindOfClass:[UIControl class]]) {//change it to your condition
-        return NO;
-    }
-    return YES;
-}
 
 #pragma mark - gestures for list view
 

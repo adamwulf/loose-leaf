@@ -180,6 +180,9 @@ dispatch_queue_t importThumbnailQueue;
         debug_NSLog(@"oh no");
     }
     if(drawableView != _drawableView){
+        if(!_drawableView && drawableView){
+            [drawableView removeFromSuperview];
+        }
         drawableView = _drawableView;
         if(drawableView){
             [self generateDebugView:YES];

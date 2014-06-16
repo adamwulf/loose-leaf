@@ -23,8 +23,9 @@
 #import "Constants.h"
 #import "MMPopoverView.h"
 #import "MMPageCacheManager.h"
+#import "MMGestureTouchOwnershipDelegate.h"
 
-@interface MMPaperStackView : UIScrollView<MMPaperViewDelegate>{
+@interface MMPaperStackView : UIScrollView<MMPaperViewDelegate,MMGestureTouchOwnershipDelegate>{
 
 @protected
     MMBezelInGestureRecognizer* fromRightBezelGesture;
@@ -39,6 +40,7 @@
 
 @property (nonatomic, readonly) UIView* visibleStackHolder;
 @property (nonatomic, readonly) UIView* hiddenStackHolder;
+@property (nonatomic, readonly) UIView* bezelStackHolder;
 
 -(void) addPaperToBottomOfStack:(MMPaperView*)page;
 -(void) addPaperToBottomOfHiddenStack:(MMPaperView*)page;
@@ -62,5 +64,7 @@
 -(void) isBezelingInRightWithGesture:(MMBezelInGestureRecognizer*)bezelGesture;
 -(void) isBezelingInLeftWithGesture:(MMBezelInGestureRecognizer*)bezelGesture;
 -(void) saveStacksToDisk;
+
+-(NSString*) activeGestureSummary;
 
 @end

@@ -46,7 +46,7 @@ static dispatch_queue_t importExportStateQueue;
 
 -(int) fullByteSize{
     int totalBytes = 0;
-    for(MMScrapView* scrap in self.delegate.scraps){
+    for(MMScrapView* scrap in self.delegate.scrapsOnPaper){
         totalBytes += scrap.fullByteSize;
     }
     return totalBytes;
@@ -58,7 +58,7 @@ static dispatch_queue_t importExportStateQueue;
 
 -(void) setShouldShowShadows:(BOOL)_shouldShowShadows{
     shouldShowShadows = _shouldShowShadows;
-    for(MMScrapView* scrap in self.delegate.scraps){
+    for(MMScrapView* scrap in self.delegate.scrapsOnPaper){
         [scrap setShouldShowShadow:shouldShowShadows];
     }
 }
@@ -125,7 +125,7 @@ static dispatch_queue_t importExportStateQueue;
     }else if([self isStateLoaded] && makeEditable){
         void (^block2)() = ^(void) {
             if([self isStateLoaded]){
-                for(MMScrapView* scrap in self.delegate.scraps){
+                for(MMScrapView* scrap in self.delegate.scrapsOnPaper){
                     [scrap loadScrapStateAsynchronously:async];
                 }
             }
@@ -143,7 +143,7 @@ static dispatch_queue_t importExportStateQueue;
         dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
             @autoreleasepool {
                 if([self isStateLoaded]){
-                    NSArray* scraps = [self.delegate.scraps copy];
+                    NSArray* scraps = [self.delegate.scrapsOnPaper copy];
                     for(MMScrapView* scrap in scraps){
                         [scrap unloadState];
                     }
@@ -162,7 +162,7 @@ static dispatch_queue_t importExportStateQueue;
 
 -(MMImmutableScrapsOnPaperState*) immutableState{
     if([self isStateLoaded]){
-        return [[MMImmutableScrapsOnPaperState alloc] initWithScrapIDsPath:self.scrapIDsPath andScraps:self.delegate.scraps];
+        return [[MMImmutableScrapsOnPaperState alloc] initWithScrapIDsPath:self.scrapIDsPath andScraps:self.delegate.scrapsOnPaper];
     }
     return nil;
 }

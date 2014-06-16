@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
+#import "MMCancelableGestureRecognizer.h"
 #import "Constants.h"
 #import "MMScrapView.h"
 #import "MMPanAndPinchScrapGestureRecognizerDelegate.h"
+#import "MMTouchLifeCycleDelegate.h"
 
-@interface MMPanAndPinchGestureRecognizer : UIGestureRecognizer{
+@interface MMPanAndPinchGestureRecognizer : MMCancelableGestureRecognizer<MMTouchLifeCycleDelegate>{
     //
     // the initial distance between
     // the touches. to be used to calculate
@@ -37,7 +39,7 @@
     __weak NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>* scrapDelegate;
 }
 
-@property (nonatomic, weak) NSObject<MMPanGestureDelegate>* scrapDelegate;
+@property (nonatomic, weak) NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>* scrapDelegate;
 @property (readonly) NSArray* validTouches;
 @property (nonatomic, readonly) CGFloat scale;
 @property (nonatomic, assign) MMBezelDirection bezelDirectionMask;
@@ -51,7 +53,6 @@
 @property (nonatomic, readonly) CGRect frameOfPageAtBeginningOfGesture;
 @property (nonatomic, readonly) BOOL hasPannedOrScaled;
 
--(void) cancel;
 -(BOOL) containsTouch:(UITouch*)touch;
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 

@@ -7,21 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MMPanGestureDelegate.h"
+#import "MMGestureTouchOwnershipDelegate.h"
 
 @class MMPaperView;
 
-@protocol MMPanAndPinchScrapGestureRecognizerDelegate <MMPanGestureDelegate>
+@protocol MMPanAndPinchScrapGestureRecognizerDelegate <MMGestureTouchOwnershipDelegate>
 
--(NSArray*) scraps;
+-(NSArray*) scrapsToPan;
 
 -(BOOL) panScrapRequiresLongPress;
 
 -(CGFloat) topVisiblePageScaleForScrap:(MMScrapView*)scrap;
 
 -(CGPoint) convertScrapCenterToScrapContainerCoordinate:(MMScrapView*)scrap;
-
--(BOOL) isAllowedToPan;
 
 -(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch;
 

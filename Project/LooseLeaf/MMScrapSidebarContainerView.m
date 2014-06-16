@@ -278,6 +278,7 @@
             scrap.center = bubble.center;
             bubble.scrap = scrap;
         }
+        [self saveScrapContainerToDisk];
     }
 }
 
@@ -448,7 +449,7 @@ static NSString* bezelStatePath;
 
 #pragma mark - MMScrapsOnPaperStateDelegate & MMScrapBezelMenuViewDelegate
 
--(NSArray*) scraps{
+-(NSArray*) scrapsOnPaper{
     return  [scrapsHeldInBezel array];
 }
 

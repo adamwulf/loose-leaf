@@ -9,18 +9,14 @@
 #import "MMImmovableTapGestureRecognizer.h"
 #import "Constants.h"
 
-@interface MMImmovableTapGestureRecognizer (Private)
 
-@property (nonatomic, readonly) NSMutableDictionary* touchLocations;
-@property (nonatomic, readonly) CGFloat allowableMovement;
+#define  kTapAllowableMovement 10
 
-@end
-
-@implementation MMImmovableTapGestureRecognizer
-
--(CGFloat) allowableMovement{
-    return 10;
+@implementation MMImmovableTapGestureRecognizer{
+    NSMutableDictionary* touchLocations;
 }
+
+#pragma mark - Properties
 
 -(NSMutableDictionary*)touchLocations{
     if(!touchLocations){
@@ -28,6 +24,25 @@
     }
     return touchLocations;
 }
+
+
+#pragma mark - Init
+
+-(id) init{
+    if(self = [super init]){
+        self.delegate = self;
+    }
+    return self;
+}
+
+-(id) initWithTarget:(id)target action:(SEL)action{
+    if(self = [super initWithTarget:target action:action]){
+        self.delegate = self;
+    }
+    return self;
+}
+
+#pragma mark - Touch Methods
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [super touchesBegan:touches withEvent:event];
@@ -44,7 +59,7 @@
             CGPoint initialLocation = [[self.touchLocations objectForKey:[NSNumber numberWithInteger:[touch hash]]] CGPointValue];
             CGPoint currentLocation = [touch locationInView:self.view];
             CGFloat distance = DistanceBetweenTwoPoints(initialLocation, currentLocation);
-            if(distance > self.allowableMovement && self.state == UIGestureRecognizerStatePossible){
+            if(distance > kTapAllowableMovement && self.state == UIGestureRecognizerStatePossible){
                 self.state = UIGestureRecognizerStateFailed;
                 didChangeState = YES;
             }
@@ -69,6 +84,8 @@
     }
 }
 
+#pragma mark - UIGestureRecognizer Subclass
+
 -(void) setState:(UIGestureRecognizerState)state{
     [super setState:state];
     if(state == UIGestureRecognizerStateEnded ||
@@ -81,6 +98,29 @@
 -(void) reset{
     [super reset];
     [self.touchLocations removeAllObjects];
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    // Disallow recognition of tap gestures in the segmented control.
+    if ([touch.view isKindOfClass:[UIControl class]]) {
+        NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
+        return NO;
+    }
+    return YES;
 }
 
 @end

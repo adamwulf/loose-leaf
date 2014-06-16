@@ -15,6 +15,7 @@
 #import "MMMemoryProfileView.h"
 #import "Mixpanel.h"
 #import "MMMemoryManager.h"
+#import "MMTouchVelocityGestureRecognizer.h"
 
 @implementation MMLooseLeafViewController{
     MMMemoryManager* memoryManager;
@@ -44,6 +45,8 @@
         [self.view addSubview:stackView];
         
         [stackView loadStacksFromDisk];
+        
+        [[MMTouchVelocityGestureRecognizer sharedInstace] setStackView:stackView];
         
         [[[Mixpanel sharedInstance] people] set:kMPNumberOfPages
                                              to:@([stackView.visibleStackHolder.subviews count] + [stackView.hiddenStackHolder.subviews count])];
