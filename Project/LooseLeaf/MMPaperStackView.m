@@ -423,6 +423,9 @@
             [self willNotChangeTopPageTo:[bezelStackHolder peekSubview]];
             [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
             [self emptyBezelStackToHiddenStackAnimated:YES onComplete:^(BOOL finished){
+                if(!finished){
+                    NSLog(@"not finished4!");
+                }
                 [self didChangeTopPage];
                 // since we've added pages to the hidden stack, make sure
                 // all of their gestures are turned off
@@ -458,7 +461,9 @@
                 [hiddenStackHolder pushSubview:[bezelStackHolder peekSubview]];
             }
             void(^finishedBlock)(BOOL finished)  = ^(BOOL finished){
-                bezelStackHolder.frame = hiddenStackHolder.frame;
+                if(finished){
+                    bezelStackHolder.frame = hiddenStackHolder.frame;
+                }
                 [self didChangeTopPage];
                 // since we've added pages to the hidden stack, make sure
                 // all of their gestures are turned off
