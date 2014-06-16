@@ -841,6 +841,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) saveToDisk{
+    //
+    // for now, I will always save the entire page to disk.
+    // the JotView will optimize its part away, but the
+    // scrap state is currently always re-saving, and the
+    // thumbnail will always be re-generated.
+    //
+    // TODO: https://github.com/adamwulf/loose-leaf/issues/531
     
     CheckMainThread;
     
