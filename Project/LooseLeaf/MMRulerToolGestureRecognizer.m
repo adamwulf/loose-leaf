@@ -9,7 +9,6 @@
 #import "MMRulerToolGestureRecognizer.h"
 #import <QuartzCore/QuartzCore.h>
 #import "MMBezelInGestureRecognizer.h"
-#import "MMObjectSelectLongPressGestureRecognizer.h"
 #import "NSMutableSet+Extras.h"
 #import "NSArray+MapReduce.h"
 #import "MMShadowedView.h"

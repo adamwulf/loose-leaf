@@ -9,7 +9,6 @@
 #import "MMPanAndPinchGestureRecognizer.h"
 #import <QuartzCore/QuartzCore.h>
 #import "MMBezelInGestureRecognizer.h"
-#import "MMObjectSelectLongPressGestureRecognizer.h"
 #import "MMPanAndPinchScrapGestureRecognizer.h"
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "NSMutableSet+Extras.h"
