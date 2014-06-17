@@ -139,7 +139,7 @@ BOOL isEnumerating = NO;
             @throw exception;
         }
     }@catch(...){
-        NSLog(@"uncaught");
+        NSLog(@"caught unkown");
     }
 }
 
