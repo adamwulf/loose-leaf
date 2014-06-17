@@ -128,24 +128,29 @@
                 leftImageView.tag = leftIndex;
                 rightImageView.image = nil;
                 rightImageView.tag = rightIndex;
-                [album loadPhotosAtIndexes:assetsToLoad usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
-                    if(result){
-                        if(index == leftIndex || [assetsToLoad count] == 1){
-                            leftImageView.image = [UIImage imageWithCGImage:result.aspectRatioThumbnail];
-                            leftImageView.hidden = NO;
-                            leftAsset = result;
+                @try {
+                    [album loadPhotosAtIndexes:assetsToLoad usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+                        if(result){
+                            if(index == leftIndex || [assetsToLoad count] == 1){
+                                leftImageView.image = [UIImage imageWithCGImage:result.aspectRatioThumbnail];
+                                leftImageView.hidden = NO;
+                                leftAsset = result;
+                            }else{
+                                rightImageView.image = [UIImage imageWithCGImage:result.aspectRatioThumbnail];
+                                rightImageView.hidden = NO;
+                                rightAsset = result;
+                            }
                         }else{
-                            rightImageView.image = [UIImage imageWithCGImage:result.aspectRatioThumbnail];
-                            rightImageView.hidden = NO;
-                            rightAsset = result;
+                            // was an error. possibly syncing the ipad to iphoto,
+                            // so the album is updated faster than we can enumerate.
+                            // just noop.
+                            // https://github.com/adamwulf/loose-leaf/issues/529
                         }
-                    }else{
-                        // was an error. possibly syncing the ipad to iphoto,
-                        // so the album is updated faster than we can enumerate.
-                        // just noop.
-                        // https://github.com/adamwulf/loose-leaf/issues/529
-                    }
-                }];
+                    }];
+                }
+                @catch (NSException *exception) {
+                    NSLog(@"gotcha");
+                }
             }
         }
     }

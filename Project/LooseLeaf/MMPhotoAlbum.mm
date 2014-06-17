@@ -65,6 +65,7 @@ dispatch_queue_t fetchThumbnailQueue;
 -(void) refreshAlbumContentsWithGroup:(ALAssetsGroup*)_group{
     @synchronized(self){
         group = _group;
+        [group setAssetsFilter:[ALAssetsFilter allPhotos]];
         name = group.name;
         numberOfPhotos = group.numberOfAssets;
         if(previewPhotosAreLoaded){
@@ -97,7 +98,6 @@ BOOL isEnumerating = NO;
         NSMutableArray* updatedPreviewPhotos = [NSMutableArray array];
         @synchronized(self){
             isEnumerating = YES;
-            [group setAssetsFilter:[ALAssetsFilter allPhotos]];
             [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
                 if(result){
                     [updatedPreviewPhotos addObject:[UIImage imageWithCGImage:result.aspectRatioThumbnail]];
@@ -117,24 +117,29 @@ BOOL isEnumerating = NO;
 
 
 -(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(ALAssetsGroupEnumerationResultsBlock)enumerationBlock{
-    @synchronized(self){
-        [group setAssetsFilter:[ALAssetsFilter allPhotos]];
-        @try{
-            [group enumerateAssetsAtIndexes:indexSet options:NSEnumerationReverse usingBlock:enumerationBlock];
-        }@catch(NSException* exception){
-//            NSLog(@"caught: %@", exception);
-            if([exception.name isEqualToString:NSRangeException]){
-                // noop
-                //
-                // the album is likely changing, and will update
-                // in the background soon.
-                // https://github.com/adamwulf/loose-leaf/issues/529
-                enumerationBlock(nil, 0, nil);
-                return;
-            }else{
-                @throw exception;
+    @try{
+        try{
+            @synchronized(self){
+                [group enumerateAssetsAtIndexes:indexSet options:NSEnumerationReverse usingBlock:enumerationBlock];
             }
+        }catch(...){
+            NSLog(@"caught++");
         }
+    }@catch(NSException* exception){
+        if([exception.name isEqualToString:NSRangeException]){
+            NSLog(@"caught: %@ %@", exception.name, exception);
+            // noop
+            //
+            // the album is likely changing, and will update
+            // in the background soon.
+            // https://github.com/adamwulf/loose-leaf/issues/529
+            enumerationBlock(nil, 0, nil);
+        }else{
+            NSLog(@"uncaught: %@ %@", exception.name, exception);
+            @throw exception;
+        }
+    }@catch(...){
+        NSLog(@"uncaught");
     }
 }
 
