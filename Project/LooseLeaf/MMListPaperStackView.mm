@@ -1531,25 +1531,26 @@
  * let's check if the user tapped a page, and zoom
  * to that page as the top of the visible stack
  */
--(void) didTapScrollView:(UITapGestureRecognizer*)_tapGesture{
-    //
-    // first, we should find which page the user tapped
-    CGPoint locationOfTap = [_tapGesture locationInView:self];
-    
-    MMPaperView* thePageThatWasTapped = nil;
-    for(MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
-        CGRect frameOfPage = [self frameForListViewForPage:aPage];
-        if(CGRectContainsPoint(frameOfPage, locationOfTap)){
-            thePageThatWasTapped = aPage;
+-(void) didTapScrollView:(MMButtonAwareTapGestureRecognizer*)_tapGesture{
+    if(_tapGesture.state == UIGestureRecognizerStateRecognized){
+        //
+        // first, we should find which page the user tapped
+        CGPoint locationOfTap = [_tapGesture locationInView:self];
+        
+        MMPaperView* thePageThatWasTapped = nil;
+        for(MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
+            CGRect frameOfPage = [self frameForListViewForPage:aPage];
+            if(CGRectContainsPoint(frameOfPage, locationOfTap)){
+                thePageThatWasTapped = aPage;
+            }
         }
+        if(!thePageThatWasTapped) return;
+        
+        
+        [self ensurePageIsAtTopOfVisibleStack:thePageThatWasTapped];
+        
+        [self immediatelyAnimateFromListViewToFullScreenView];
     }
-    if(!thePageThatWasTapped) return;
-    
-    
-    [self ensurePageIsAtTopOfVisibleStack:thePageThatWasTapped];
-    
-    [self immediatelyAnimateFromListViewToFullScreenView];
-    
 }
 
 
