@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 #import "MMPhotoAlbum.h"
 #import "MMPhotoManager.h"
 #import "ALAsset+Thumbnail.h"
@@ -118,7 +119,22 @@ BOOL isEnumerating = NO;
 -(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(ALAssetsGroupEnumerationResultsBlock)enumerationBlock{
     @synchronized(self){
         [group setAssetsFilter:[ALAssetsFilter allPhotos]];
-        [group enumerateAssetsAtIndexes:indexSet options:NSEnumerationReverse usingBlock:enumerationBlock];
+        @try{
+            [group enumerateAssetsAtIndexes:indexSet options:NSEnumerationReverse usingBlock:enumerationBlock];
+        }@catch(NSException* exception){
+//            NSLog(@"caught: %@", exception);
+            if([exception.name isEqualToString:NSRangeException]){
+                // noop
+                //
+                // the album is likely changing, and will update
+                // in the background soon.
+                // https://github.com/adamwulf/loose-leaf/issues/529
+                enumerationBlock(nil, 0, nil);
+                return;
+            }else{
+                @throw exception;
+            }
+        }
     }
 }
 

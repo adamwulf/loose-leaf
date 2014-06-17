@@ -139,6 +139,11 @@
                             rightImageView.hidden = NO;
                             rightAsset = result;
                         }
+                    }else{
+                        // was an error. possibly syncing the ipad to iphoto,
+                        // so the album is updated faster than we can enumerate.
+                        // just noop.
+                        // https://github.com/adamwulf/loose-leaf/issues/529
                     }
                 }];
             }
