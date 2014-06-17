@@ -51,19 +51,19 @@
 }
 
 
-
-+(void)load{
-    NSError *error = nil;
-	[UIGestureRecognizer jr_swizzleMethod:@selector(setState:)
-                        withMethod:@selector(swizzle_setState:)
-                             error:&error];
-	[UIGestureRecognizer jr_swizzleMethod:@selector(description)
-                               withMethod:@selector(swizzle_description)
-                                    error:&error];
-	[UIGestureRecognizer jr_swizzleMethod:@selector(reset)
-                               withMethod:@selector(swizzle_reset)
-                                    error:&error];
-}
+//
+//+(void)load{
+//    NSError *error = nil;
+//	[UIGestureRecognizer jr_swizzleMethod:@selector(setState:)
+//                        withMethod:@selector(swizzle_setState:)
+//                             error:&error];
+//	[UIGestureRecognizer jr_swizzleMethod:@selector(description)
+//                               withMethod:@selector(swizzle_description)
+//                                    error:&error];
+//	[UIGestureRecognizer jr_swizzleMethod:@selector(reset)
+//                               withMethod:@selector(swizzle_reset)
+//                                    error:&error];
+//}
 
 
 @end

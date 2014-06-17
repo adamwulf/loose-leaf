@@ -269,6 +269,7 @@ dispatch_queue_t importThumbnailQueue;
                                [[MMLoadImageCache sharedInstance] updateCacheForPath:[self thumbnailPath] toImage:thumbnail];
                                cachedImgViewImage = thumbnail;
                                onComplete(YES);
+                               NSLog(@"saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
                            }else{
                                onComplete(NO);
                            }
