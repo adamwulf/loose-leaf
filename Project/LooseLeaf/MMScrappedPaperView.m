@@ -706,7 +706,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
  * our scrap views
  */
 -(void) setDrawableView:(JotView *)_drawableView{
-    NSLog(@"setting drawable to %@ at undo state: %lu", [self uuid], (unsigned long) self.paperState.undoHash);
     [super setDrawableView:_drawableView];
 }
 
@@ -1061,7 +1060,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
  */
 -(void) didLoadState:(JotViewStateProxy*)state{
     if([self hasStateLoaded]){
-        NSLog(@"loaded state for %@ at %lu", self.uuid, (unsigned long)state.undoHash);
         [NSThread performBlockOnMainThread:^{
             [[MMPageCacheManager sharedInstance] didLoadStateForPage:self];
             if(scrappedImgViewImage.isDecompressed){

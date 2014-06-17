@@ -98,15 +98,15 @@
 
 -(void) setSubState:(UIGestureRecognizerState)_subState{
     subState = _subState;
-    if(subState == UIGestureRecognizerStateBegan){
-        debug_NSLog(@"%@ substate began", [self description]);
-    }else if(subState == UIGestureRecognizerStateCancelled){
-        debug_NSLog(@"%@ substate cancelled", [self description]);
-    }else if(subState == UIGestureRecognizerStateEnded){
-        debug_NSLog(@"%@ substate ended", [self description]);
-    }else if(subState == UIGestureRecognizerStateFailed){
-        debug_NSLog(@"%@ substate failed", [self description]);
-    }
+//    if(subState == UIGestureRecognizerStateBegan){
+//        debug_NSLog(@"%@ substate began", [self description]);
+//    }else if(subState == UIGestureRecognizerStateCancelled){
+//        debug_NSLog(@"%@ substate cancelled", [self description]);
+//    }else if(subState == UIGestureRecognizerStateEnded){
+//        debug_NSLog(@"%@ substate ended", [self description]);
+//    }else if(subState == UIGestureRecognizerStateFailed){
+//        debug_NSLog(@"%@ substate failed", [self description]);
+//    }
 }
 
 //
@@ -180,7 +180,7 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [self processSubStateForNextIteration];
     
-    NSLog(@"%@: %i touches began", [self description], [touches count]);
+//    NSLog(@"%@: %i touches began", [self description], [touches count]);
     
     NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
     [validTouchesCurrentlyBeginning removeObjectsInSet:ignoredTouches];
@@ -307,7 +307,7 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     [self processSubStateForNextIteration];
 
-    NSLog(@"%@: %i touches ended", [self description], [touches count]);
+//    NSLog(@"%@: %i touches ended", [self description], [touches count]);
     
     // pan and pinch and bezel
     BOOL cancelledFromBezel = NO;
@@ -389,7 +389,7 @@
 }
 
 -(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
-    NSLog(@"%@: 1 touches ignored", [self description]);
+//    NSLog(@"%@: 1 touches ignored", [self description]);
 
     [ignoredTouches addObject:touch];
     [possibleTouches removeObject:touch];
