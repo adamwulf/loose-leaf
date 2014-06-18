@@ -1744,8 +1744,12 @@
     [[MMPageCacheManager sharedInstance] willChangeTopPageTo:page];
 }
 
+// convenience method
 -(void) didChangeTopPage{
-    MMPaperView* topPage = [visibleStackHolder peekSubview];
+    [self didChangeTopPageTo:[visibleStackHolder peekSubview]];
+}
+
+-(void) didChangeTopPageTo:(MMPaperView*)topPage{
     if([[MMPageCacheManager sharedInstance] didChangeToTopPage:topPage]){
         [self saveStacksToDisk];
     }

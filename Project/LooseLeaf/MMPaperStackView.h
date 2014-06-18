@@ -60,6 +60,7 @@
 -(void) mayChangeTopPageTo:(MMPaperView*)page;
 -(void) willChangeTopPageTo:(MMPaperView*)page;
 -(void) didChangeTopPage;
+-(void) didChangeTopPageTo:(MMPaperView*)page;
 -(void) willNotChangeTopPageTo:(MMPaperView*)page;
 -(void) isBezelingInRightWithGesture:(MMBezelInGestureRecognizer*)bezelGesture;
 -(void) isBezelingInLeftWithGesture:(MMBezelInGestureRecognizer*)bezelGesture;

@@ -284,7 +284,7 @@
     [self moveAddButtonToTop];
     [[[Mixpanel sharedInstance] people] set:@{kMPHasZoomedToList : @(YES)}];
     // set the top visible page to thumbnail view only
-    [[MMPageCacheManager sharedInstance] didChangeToTopPage:nil];
+    [self didChangeTopPageTo:nil];
 }
 
 /**
