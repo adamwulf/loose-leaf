@@ -536,9 +536,9 @@
         // true. instead, i should ask the PageCacheManager to recheck
         // if it can hand the currently top page the drawable view.
         if([fromLeftBezelGesture isActivelyBezeling]){
-            [[MMPageCacheManager sharedInstance] didChangeToTopPage:[bezelStackHolder peekSubview]];
+            [self didChangeTopPageTo:[bezelStackHolder peekSubview]];
         }else{
-            [[MMPageCacheManager sharedInstance] didChangeToTopPage:[visibleStackHolder peekSubview]];
+            [self didChangeTopPageTo:[visibleStackHolder peekSubview]];
         }
     }
 }
@@ -635,9 +635,9 @@
     [super willChangeTopPageTo:page];
 }
 
--(void) didChangeTopPage{
+-(void) didChangeTopPageTo:(MMPaperView*)page{
     CheckMainThread;
-    [super didChangeTopPage];
+    [super didChangeTopPageTo:(MMPaperView*)page];
 }
 
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{

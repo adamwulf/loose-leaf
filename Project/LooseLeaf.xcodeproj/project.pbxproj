@@ -137,7 +137,7 @@
 		66AC8D7918E7506A00A65036 /* MMImageSidebarContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC8D7818E7506A00A65036 /* MMImageSidebarContainerView.m */; };
 		66AC8D7D18E754FE00A65036 /* MMAbstractSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC8D7C18E754FE00A65036 /* MMAbstractSidebarContentView.m */; };
 		66AC8D8018E88BCC00A65036 /* MMPhotoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC8D7F18E88BCC00A65036 /* MMPhotoManager.m */; };
-		66AC8D8318E88F4700A65036 /* MMPhotoAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC8D8218E88F4700A65036 /* MMPhotoAlbum.m */; };
+		66AC8D8318E88F4700A65036 /* MMPhotoAlbum.mm in Sources */ = {isa = PBXBuildFile; fileRef = 66AC8D8218E88F4700A65036 /* MMPhotoAlbum.mm */; };
 		66AC8D8618E8902A00A65036 /* ALAssetsGroup+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC8D8518E8902A00A65036 /* ALAssetsGroup+Properties.m */; };
 		66AC8D8B18E89A9C00A65036 /* MMCachedRowsScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC8D8A18E89A9C00A65036 /* MMCachedRowsScrollView.m */; };
 		66AC8D8E18E89C9800A65036 /* MMAlbumRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC8D8D18E89C9800A65036 /* MMAlbumRowView.m */; };
@@ -466,7 +466,7 @@
 		66AC8D7E18E88BCC00A65036 /* MMPhotoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPhotoManager.h; sourceTree = "<group>"; };
 		66AC8D7F18E88BCC00A65036 /* MMPhotoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPhotoManager.m; sourceTree = "<group>"; };
 		66AC8D8118E88F4700A65036 /* MMPhotoAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPhotoAlbum.h; sourceTree = "<group>"; };
-		66AC8D8218E88F4700A65036 /* MMPhotoAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPhotoAlbum.m; sourceTree = "<group>"; };
+		66AC8D8218E88F4700A65036 /* MMPhotoAlbum.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = MMPhotoAlbum.mm; sourceTree = "<group>"; };
 		66AC8D8418E8902A00A65036 /* ALAssetsGroup+Properties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ALAssetsGroup+Properties.h"; sourceTree = "<group>"; };
 		66AC8D8518E8902A00A65036 /* ALAssetsGroup+Properties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ALAssetsGroup+Properties.m"; sourceTree = "<group>"; };
 		66AC8D8718E8939800A65036 /* MMPhotoManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPhotoManagerDelegate.h; sourceTree = "<group>"; };
@@ -1289,7 +1289,7 @@
 				66AC8D7F18E88BCC00A65036 /* MMPhotoManager.m */,
 				66AC8D8718E8939800A65036 /* MMPhotoManagerDelegate.h */,
 				66AC8D8118E88F4700A65036 /* MMPhotoAlbum.h */,
-				66AC8D8218E88F4700A65036 /* MMPhotoAlbum.m */,
+				66AC8D8218E88F4700A65036 /* MMPhotoAlbum.mm */,
 			);
 			name = "Photo Manager";
 			sourceTree = "<group>";
@@ -1782,7 +1782,7 @@
 				66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */,
 				66CE120317D3AD7C00882275 /* MMBounceButton.m in Sources */,
 				66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */,
-				66AC8D8318E88F4700A65036 /* MMPhotoAlbum.m in Sources */,
+				66AC8D8318E88F4700A65036 /* MMPhotoAlbum.mm in Sources */,
 				66BD6E701593A8CC00D4544C /* MMPlusButton.m in Sources */,
 				66AF94FD1905956C004818F8 /* MMPageCacheManager.m in Sources */,
 				66BD6E801593AF4200D4544C /* MMSidebarButton.m in Sources */,

@@ -298,7 +298,7 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     // Disallow recognition of tap gestures in the segmented control.
     if ([touch.view isKindOfClass:[UIControl class]]) {
-        NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
+//        NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
         return NO;
     }
     return YES;
@@ -315,6 +315,7 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
 }
 
 -(void) setupDebugTimer{
+    return;
     if([self numberOfActiveTouches] == 0){
         [self killTimer];
         debugTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(timerDidFire:) userInfo:nil repeats:NO];

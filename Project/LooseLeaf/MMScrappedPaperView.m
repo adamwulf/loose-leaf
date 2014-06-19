@@ -706,7 +706,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
  * our scrap views
  */
 -(void) setDrawableView:(JotView *)_drawableView{
-//    NSLog(@"setting drawable %@: %d", [self uuid], (int)_drawableView);
     [super setDrawableView:_drawableView];
 }
 
@@ -860,6 +859,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) saveToDisk{
+    NSLog(@"asking %@ to save to disk at %lu", self.uuid, (unsigned long)self.drawableView.undoHash);
     //
     // for now, I will always save the entire page to disk.
     // the JotView will optimize its part away, but the
@@ -907,15 +907,15 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 // call [saveToDisk] in very quick succession
                 // so that the 1st call is still saving, and the
                 // 2nd ends early b/c it knows the 1st is still going
+                NSLog(@"saved %@ but still have edits to save: saved at %lu but is now %lu",self.uuid, (unsigned long)self.paperState.lastSavedUndoHash, (unsigned long)self.paperState.currentStateUndoHash);
                 return;
             }
-            
             
 //            NSLog(@"something actually had changed %d %d", pageHadBeenChanged, scrapsHadBeenChanged);
             [self updateFullPageThumbnail:immutableScrapState];
             
             [NSThread performBlockOnMainThread:^{
-//                NSLog(@"notifying did save page %@", self.uuid);
+                NSLog(@"notifying did save page %@ at %lu", self.uuid, (unsigned long)self.paperState.lastSavedUndoHash);
                 [self.delegate didSavePage:self];
             }];
         }
@@ -923,11 +923,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context{
+    NSLog(@"asking %@ to load state", self.uuid);
     [super loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
     [scrapState loadStateAsynchronously:async andMakeEditable:YES];
 }
 
 -(void) unloadState{
+    NSLog(@"asking %@ to unload", self.uuid);
     [super unloadState];
     MMScrapsOnPaperState* strongScrapState = scrapState;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {

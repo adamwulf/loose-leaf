@@ -22,6 +22,7 @@
 -(id) init{
     if(self = [super init]){
         self.delegate = self;
+        self.numberOfTouchesRequired = 1;
     }
     return self;
 }
@@ -29,6 +30,7 @@
 -(id) initWithTarget:(id)target action:(SEL)action{
     if(self = [super initWithTarget:target action:action]){
         self.delegate = self;
+        self.numberOfTouchesRequired = 1;
     }
     return self;
 }
@@ -54,6 +56,16 @@
             [mset addObject:touch];
         }else{
             [self ignoreTouch:touch forEvent:event];
+            if(self.state == UIGestureRecognizerStatePossible){
+                if(page == pinchedPage && (self.numberOfTouches || [mset count])){
+                    // they put a 2nd finger down on the same page
+                    // this should fail our gesture since it'll now
+                    // be a pinch.
+                    // we need to fail here so that the pinch can
+                    // start immediately
+                    self.state = UIGestureRecognizerStateFailed;
+                }
+            }
         }
     }];
     if([mset count]){
@@ -88,7 +100,7 @@
 #pragma mark - UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return YES;
+    return ![otherGestureRecognizer isKindOfClass:[MMPanAndPinchFromListViewGestureRecognizer class]];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
@@ -96,13 +108,13 @@
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return NO;
+    return [otherGestureRecognizer isKindOfClass:[MMPanAndPinchFromListViewGestureRecognizer class]];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     // Disallow recognition of tap gestures in the segmented control.
     if ([touch.view isKindOfClass:[UIControl class]]) {
-        NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
+//        NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
         return NO;
     }
     return YES;

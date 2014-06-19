@@ -1153,6 +1153,7 @@
         // either, i bezeled right the top page and am not bezeling anything else
         // or, i bezeled right a bottom page and am holding the top page
         if(justFinishedPanningTheTopPage){
+            MMScrappedPaperView* oldTopVisiblePage = [visibleStackHolder peekSubview];
             //
             // we bezeled right the top page.
             // send as many as necessary to the hidden stack
@@ -1169,12 +1170,14 @@
                 [self popStackUntilPage:pageToPopUntil onComplete:^(BOOL finished){
                     [self updateIconAnimations];
                     [self didChangeTopPage];
+                    [oldTopVisiblePage saveToDisk];
                 }];
             }else{
                 [self willChangeTopPageTo:[visibleStackHolder getPageBelow:page]];
                 [self sendPageToHiddenStack:page onComplete:^(BOOL finished){
                     [self updateIconAnimations];
                     [self didChangeTopPage];
+                    [oldTopVisiblePage saveToDisk];
                 }];
             }
             //
@@ -1188,6 +1191,10 @@
             [page removeAllAnimationsAndPreservePresentationFrame];
             [self sendPageToHiddenStack:page onComplete:^(BOOL finished){
                 [self updateIconAnimations];
+                if([page isKindOfClass:[MMEditablePaperView class]]){
+                    MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
+                    [editablePage saveToDisk];
+                }
             }];
         }
         return;
@@ -1737,8 +1744,12 @@
     [[MMPageCacheManager sharedInstance] willChangeTopPageTo:page];
 }
 
+// convenience method
 -(void) didChangeTopPage{
-    MMPaperView* topPage = [visibleStackHolder peekSubview];
+    [self didChangeTopPageTo:[visibleStackHolder peekSubview]];
+}
+
+-(void) didChangeTopPageTo:(MMPaperView*)topPage{
     if([[MMPageCacheManager sharedInstance] didChangeToTopPage:topPage]){
         [self saveStacksToDisk];
     }

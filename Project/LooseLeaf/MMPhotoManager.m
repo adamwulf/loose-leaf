@@ -99,6 +99,7 @@ static MMPhotoManager* _instance = nil;
 
 -(void) libraryChanged:(NSNotification*)note{
     NSDictionary* info = [note userInfo];
+    NSLog(@"library changed: %@", info);
     NSSet *updatedAssetGroup = [info objectForKey:ALAssetLibraryUpdatedAssetGroupsKey];
     NSSet *deletedAssetGroup = [info objectForKey:ALAssetLibraryDeletedAssetGroupsKey];
     NSSet *insertedAssetGroup = [info objectForKey:ALAssetLibraryInsertedAssetGroupsKey];
@@ -200,6 +201,11 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
             return album;
         }
     }
+//    [[self assetsLibrary] groupForURL:url resultBlock:^(ALAssetsGroup *group) {
+//        <#code#>
+//    } failureBlock:^(NSError *error) {
+//        <#code#>
+//    }];
     return nil;
 }
 
@@ -231,7 +237,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                                         }
                                                         hasEverInitailized = YES;
                                                         [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
-                                                    }else if ([group numberOfAssets] > 0){
+                                                    }else if ([group numberOfAssets] > 0 || group.type == ALAssetsGroupSavedPhotos){
                                                         MMPhotoAlbum* addedAlbum = [self albumWithURL:group.url];
                                                         if(!addedAlbum){
                                                             addedAlbum = [[MMPhotoAlbum alloc] initWithAssetGroup:group];
