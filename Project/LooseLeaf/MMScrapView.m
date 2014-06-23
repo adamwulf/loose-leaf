@@ -421,6 +421,10 @@
     [scrapState addElements:elements];
 }
 
+-(void) doneAddingElements{
+    [scrapState doneAddingElements];
+}
+
 
 #pragma mark - MMScrapViewStateDelegate
 

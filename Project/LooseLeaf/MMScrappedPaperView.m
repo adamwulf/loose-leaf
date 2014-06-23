@@ -97,6 +97,24 @@ static dispatch_queue_t concurrentBackgroundQueue;
     }
 }
 
+-(void) undo{
+    if(scrapState){
+        for(MMScrapView* scrap in self.scrapsOnPaper){
+            [scrap.state.drawableView undo];
+        }
+    }
+    [super undo];
+}
+
+-(void) redo{
+    if(scrapState){
+        for(MMScrapView* scrap in self.scrapsOnPaper){
+            [scrap.state.drawableView redo];
+        }
+    }
+    [super redo];
+}
+
 #pragma mark - Protected Methods
 
 -(void) addDrawableViewToContentView{
@@ -295,7 +313,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 #pragma mark - JotViewDelegate
 
-
+-(void) didEndStrokeWithTouch:(JotTouch *)touch{
+    [super didEndStrokeWithTouch:touch];
+    NSLog(@"did end stroke");
+    for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
+        [scrap doneAddingElements];
+    }
+}
 
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)_previousElement{
     NSArray* strokeElementsToDraw = [super willAddElementsToStroke:elements fromPreviousElement:_previousElement];
