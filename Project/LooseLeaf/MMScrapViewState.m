@@ -282,7 +282,7 @@
                         }
                     }];
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-                    dispatch_release(sema1);
+//                    dispatch_release(sema1); ARC handles this
 //                    NSLog(@"(%@) done saving scrap: %d", uuid, (int)drawableView);
                     if(doneSavingBlock) doneSavingBlock(YES);
                 }else{
@@ -365,7 +365,7 @@
                 dispatch_semaphore_signal(sema1);
             }];
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-            dispatch_release(sema1);
+//            dispatch_release(sema1); ARC handles this
             [lock unlock];
         }
     };
@@ -410,7 +410,7 @@
                             dispatch_semaphore_signal(sema1);
                         }];
                         dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-                        dispatch_release(sema1);
+//                        dispatch_release(sema1); ARC handles this
                     }
                 }
             }
@@ -492,6 +492,9 @@
     }
     [drawableView addElements:elements];
 }
+-(void) doneAddingElements{
+    [drawableView doneAddingElements];
+}
 
 -(JotView*) drawableView{
     return drawableView;
@@ -519,7 +522,7 @@
 -(void) dealloc{
 //    NSLog(@"scrap state (%@) dealloc", uuid);
     [[MMLoadImageCache sharedInstance] clearCacheForPath:self.thumbImageFile];
-    dispatch_release(importExportScrapStateQueue);
+//    dispatch_release(importExportScrapStateQueue); ARC handles this
     importExportScrapStateQueue = nil;
 }
 

@@ -38,7 +38,7 @@
 }
 
 -(void) swizzle_reset{
-    NSLog(@"reset %@", [self description]);
+    debug_NSLog(@"reset %@", [self description]);
     [self swizzle_reset];
 }
 
@@ -47,7 +47,7 @@
     for (UITouch*t in touches) {
         str = [str stringByAppendingFormat:@" %p", t];
     }
-//    NSLog(@"%p %@ %@", self, prefix, str);
+//    debug_NSLog(@"%p %@ %@", self, prefix, str);
 }
 
 

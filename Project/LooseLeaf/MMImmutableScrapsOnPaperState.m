@@ -60,7 +60,7 @@
         [scrapUUIDs writeToFile:self.scrapIDsPath atomically:YES];
         
         dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-        dispatch_release(sema1);
+//        dispatch_release(sema1); ARC handles this
 //        NSLog(@"done saving %d scraps", [scraps count]);
     }else{
         [[NSFileManager defaultManager] removeItemAtPath:self.scrapIDsPath error:nil];
