@@ -623,7 +623,7 @@ int skipAll = NO;
             NSData *data = UIImagePNGRepresentation([visibleStackHolder peekSubview].scrappedImgViewImage);
             [composer addAttachmentData:data  mimeType:@"image/png" fileName:@"LooseLeaf.png"];
             
-            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentModalViewController:composer animated:YES];
+            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:composer animated:YES completion:nil];
         }
     }
 }

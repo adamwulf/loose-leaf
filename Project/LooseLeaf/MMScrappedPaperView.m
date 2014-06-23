@@ -900,8 +900,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
         @autoreleasepool {
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
-            dispatch_release(sema1);
-            dispatch_release(sema2);
+//            dispatch_release(sema1); ARC handles these
+//            dispatch_release(sema2);
             if([self hasEditsToSave]){
                 // our save failed. this may happen if we
                 // call [saveToDisk] in very quick succession

@@ -113,7 +113,7 @@ static dispatch_queue_t importExportStateQueue;
                     dispatch_semaphore_signal(sema1);
                 }];
                 dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-                dispatch_release(sema1);
+//                dispatch_release(sema1); ARC handles this
             }
         };
 
