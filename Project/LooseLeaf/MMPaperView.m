@@ -271,7 +271,7 @@
 -(void) panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture{
     
     if(_panGesture.state != UIGestureRecognizerStateChanged){
-        NSLog(@"pan %@ %i", self.uuid, _panGesture.state);
+        debug_NSLog(@"pan %@ %i", self.uuid, _panGesture.state);
     }
     
     
