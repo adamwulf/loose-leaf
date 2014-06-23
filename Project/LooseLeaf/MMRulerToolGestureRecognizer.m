@@ -90,7 +90,9 @@
 #pragma mark - MMPanAndPinchScrapGestureRecognizerDelegate
 
 -(NSArray*) scrapsToPan{
-    return [rulerDelegate scrapsToPan];
+    // ruler works when used over scraps, so send an empty/nil array
+    // so we don't filter any touches out that occur over scraps
+    return nil;
 }
 
 -(BOOL) panScrapRequiresLongPress{
