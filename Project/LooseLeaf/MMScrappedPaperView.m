@@ -314,21 +314,39 @@ static dispatch_queue_t concurrentBackgroundQueue;
 #pragma mark - JotViewDelegate
 
 -(void) didEndStrokeWithTouch:(JotTouch *)touch{
-    [super didEndStrokeWithTouch:touch];
     NSLog(@"did end stroke");
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
         [scrap doneAddingElements];
+        // TODO: also tell the state to [state.stackOfUndoneStrokes removeAllObjects];
+        // so that the redo button won't do anything after a successful new stroke
+        // has been drawn.
     }
+    [super didEndStrokeWithTouch:touch];
+}
+
+-(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch *)touch{
+    for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
+        [scrap doneAddingElements];
+        [scrap.state.drawableView undo];
+    }
+    [super didCancelStroke:stroke withTouch:touch];
+}
+
+-(void) addUndoLevel{
+//    self.drawableView addun
 }
 
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)_previousElement{
     NSArray* strokeElementsToDraw = [super willAddElementsToStroke:elements fromPreviousElement:_previousElement];
     
-    
     // track distance drawn
     CGFloat strokeDistance = 0;
+    // track size of these added elements, so we can
+    // trigger an undo level if needed
+    NSInteger sizeInBytes = 0;
     for(AbstractBezierPathElement* ele in strokeElementsToDraw){
         strokeDistance += ele.lengthOfElement;
+        sizeInBytes += [ele fullByteSize];
     }
     [self.delegate didDrawStrokeOfCm:strokeDistance / [UIDevice ppc]];
     
@@ -337,7 +355,18 @@ static dispatch_queue_t concurrentBackgroundQueue;
         return strokeElementsToDraw;
     }
     
-    NSMutableArray* strokesToCrop = [NSMutableArray arrayWithArray:strokeElementsToDraw];
+    NSMutableArray* strokeElementsToCrop = [NSMutableArray arrayWithArray:strokeElementsToDraw];
+    BOOL shouldAddUndoLevel = [self.drawableView maxCurrentStrokeByteSize] + sizeInBytes > kJotMaxStrokeByteSize;
+    for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
+        if([scrap.state.drawableView maxCurrentStrokeByteSize] + sizeInBytes > kJotMaxStrokeByteSize || shouldAddUndoLevel){
+            shouldAddUndoLevel = YES;
+            break;
+        }
+    }
+    
+    if(shouldAddUndoLevel){
+        [self addUndoLevel];
+    }
     
     
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
@@ -356,9 +385,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
         // and add some pieces to the scrap and return the rest.
         AbstractBezierPathElement* previousElement = _previousElement;
         if(!previousElement){
-            previousElement = [strokesToCrop firstObject];
+            previousElement = [strokeElementsToCrop firstObject];
         }
-        for(AbstractBezierPathElement* element in strokesToCrop){
+        for(AbstractBezierPathElement* element in strokeElementsToCrop){
             if(!CGRectIntersectsRect(element.bounds, boundsOfScrap)){
                 // if we don't intersect the bounds of a scrap, then we definitely
                 // don't intersect it's path, so just add it to our return value
@@ -462,12 +491,12 @@ static dispatch_queue_t concurrentBackgroundQueue;
             previousElement = element;
         }
         
-        strokesToCrop = nextStrokesToCrop;
+        strokeElementsToCrop = nextStrokesToCrop;
     }
     
     // anything that's left over at this point
     // is fair game for to add to the page itself
-    return strokesToCrop;
+    return strokeElementsToCrop;
 }
 
 

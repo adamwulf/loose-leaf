@@ -743,12 +743,12 @@
     }
 }
 
--(void) willCancelStrokeWithTouch:(JotTouch*)touch{
-    [[self activePen] willCancelStrokeWithTouch:touch];
+-(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+    [[self activePen] willCancelStroke:stroke withTouch:touch];
 }
 
--(void) didCancelStrokeWithTouch:(JotTouch*)touch{
-    [[self activePen] didCancelStrokeWithTouch:touch];
+-(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+    [[self activePen] didCancelStroke:stroke withTouch:touch];
 }
 
 -(UIColor*) colorForTouch:(JotTouch *)touch{

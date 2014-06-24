@@ -393,12 +393,12 @@ static int count = 0;
     [self saveToDisk];
 }
 
--(void) willCancelStrokeWithTouch:(JotTouch*)touch{
-    [delegate willCancelStrokeWithTouch:touch];
+-(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+    [delegate willCancelStroke:stroke withTouch:touch];
 }
 
--(void) didCancelStrokeWithTouch:(JotTouch*)touch{
-    [delegate didCancelStrokeWithTouch:touch];
+-(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+    [delegate didCancelStroke:stroke withTouch:touch];
 }
 
 -(UIColor*) colorForTouch:(JotTouch *)touch{
