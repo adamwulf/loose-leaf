@@ -274,20 +274,49 @@
             NSLog(@"state wasn't loaded, trying again soon");
             [self savePageAndPop:numLeft];
         } afterDelay:0.1];
-    }else if([scrappedPage.drawableView.state.stackOfStrokes count] && ![scrappedPage hasEditsToSave]){
+    }else if(![scrappedPage hasEditsToSave]){
         NSLog(@"state loaded, saving strokes for: %@", scrappedPage.uuid);
         
-        scrappedPage forc
+        for(int i=0;i<10;i++){
+            [scrappedPage addUndoLevel];
+        }
         
-    }else{
+        NSLog(@"now has edits to save: %i", [scrappedPage hasEditsToSave]);
 
-        if(numLeft > 0){
+        [[NSThread mainThread] performBlock:^{
+            [self savePageAndPop:numLeft];
+        } afterDelay:5];
+    }else if([scrappedPage.drawableView.state.stackOfStrokes count] && [scrappedPage hasEditsToSave]){
+
+        if([[scrappedPage.drawableView.state strokesBeingWrittenToBackingTexture] count]){
+            // try again later
             [[NSThread mainThread] performBlock:^{
-                NSLog(@"done, popping to next page");
-                [self popTopPageOfHiddenStackOnComplete:^(BOOL finished){
-                    [self savePageAndPop:numLeft - 1];
-                }];
-            } afterDelay:5.0];
+                NSLog(@"still have strokes to write to texture");
+                [self savePageAndPop:numLeft];
+            } afterDelay:0.1];
+        }else{
+            // ok all strokes are in the texture
+            // now need to save it
+            NSLog(@"ready to save to disk");
+            
+            [scrappedPage saveToDisk:^(BOOL didSaveEdits) {
+                if(didSaveEdits){
+                    NSLog(@"saved ok");
+                    [NSThread performBlockOnMainThread:^{
+                        if(numLeft > 0){
+                            NSLog(@"done, popping to next page");
+                            MMScrappedPaperView* hiddenPage = [hiddenStackHolder peekSubview];
+                            [self willChangeTopPageTo:hiddenPage];
+                            [self popTopPageOfHiddenStackOnComplete:^(BOOL finished){
+                                [self didChangeTopPage];
+                                [self savePageAndPop:numLeft - 1];
+                            }];
+                        }
+                    }];
+                }else{
+                    NSLog(@"couldn't save?!");
+                }
+            }];
         }
     }
 }
@@ -729,6 +758,11 @@
     }
 }
 
+
+-(void) finishedLoading{
+    // noop;
+}
+
 -(void) loadStacksFromDisk{
     NSDictionary* pages = [stackManager loadFromDiskWithBounds:self.bounds];
     for(MMPaperView* page in [[pages objectForKey:@"visiblePages"] reverseObjectEnumerator]){
@@ -771,6 +805,7 @@
     
     [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
     [self didChangeTopPage];
+    [self finishedLoading];
 }
 
 -(BOOL) hasPages{
