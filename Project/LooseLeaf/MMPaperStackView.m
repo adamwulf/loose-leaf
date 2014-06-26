@@ -1791,11 +1791,11 @@
     @throw kAbstractMethodException;
 }
 
--(void) willCancelStrokeWithTouch:(JotTouch*)touch{
+-(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
     @throw kAbstractMethodException;
 }
 
--(void) didCancelStrokeWithTouch:(JotTouch*)touch{
+-(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
     @throw kAbstractMethodException;
 }
 

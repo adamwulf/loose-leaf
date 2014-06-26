@@ -785,11 +785,11 @@
         debug_NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
         return NO;
     }
-    if([[MMPageCacheManager sharedInstance].drawableView.state.currentStrokes count]){
+    if([MMPageCacheManager sharedInstance].drawableView.state.currentStroke){
         return NO;
     }
     for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scrapsOnPaper]){
-        if([scrap.state.drawableView.state.currentStrokes count]){
+        if(scrap.state.drawableView.state.currentStroke){
             return NO;
         }
     }
@@ -823,12 +823,12 @@
     }
 }
 
--(void) willCancelStrokeWithTouch:(JotTouch*)touch{
-    [[self activePen] willCancelStrokeWithTouch:touch];
+-(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+    [[self activePen] willCancelStroke:stroke withTouch:touch];
 }
 
--(void) didCancelStrokeWithTouch:(JotTouch*)touch{
-    [[self activePen] didCancelStrokeWithTouch:touch];
+-(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+    [[self activePen] didCancelStroke:stroke withTouch:touch];
 }
 
 -(UIColor*) colorForTouch:(JotTouch *)touch{

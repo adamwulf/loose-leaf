@@ -101,6 +101,26 @@ static dispatch_queue_t concurrentBackgroundQueue;
     }
 }
 
+-(void) undo{
+    if(scrapState){
+        for(MMScrapView* scrap in self.scrapsOnPaper){
+            [scrap.state.drawableView undo];
+        }
+    }
+    [super undo];
+    [self debugPrintUndoStatus];
+}
+
+-(void) redo{
+    if(scrapState){
+        for(MMScrapView* scrap in self.scrapsOnPaper){
+            [scrap.state.drawableView redo];
+        }
+    }
+    [super redo];
+    [self debugPrintUndoStatus];
+}
+
 #pragma mark - Protected Methods
 
 -(void) addDrawableViewToContentView{
@@ -299,25 +319,97 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 #pragma mark - JotViewDelegate
 
+-(void) debugPrintUndoStatus{
+    
+    NSLog(@"**********************************************************************");
+    NSLog(@"Undo status for: %@", self.uuid);
+    NSLog(@"currentStroke: %p", self.drawableView.state.currentStroke);
+    NSLog(@"undoable stack: %i", (int)[self.drawableView.state.stackOfStrokes count]);
+    NSLog(@"undone stack:   %i", (int)[self.drawableView.state.stackOfUndoneStrokes count]);
+    NSLog(@"scraps:");
+    for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
+        NSLog(@" scrap %@", scrap.uuid);
+        NSLog(@"   currentStroke: %p", scrap.state.drawableView.state.currentStroke);
+        NSLog(@"   undoable stack: %i", (int)[scrap.state.drawableView.state.stackOfStrokes count]);
+        NSLog(@"   undone stack:   %i", (int)[scrap.state.drawableView.state.stackOfUndoneStrokes count]);
+    }
+    NSLog(@"**********************************************************************");
+}
 
+
+-(void) didEndStrokeWithTouch:(JotTouch *)touch{
+    NSLog(@"did end stroke");
+    for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
+        [scrap doneAddingElements];
+    }
+    [super didEndStrokeWithTouch:touch];
+    [self debugPrintUndoStatus];
+}
+
+-(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch *)touch{
+    for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
+        [scrap doneAddingElements];
+        [scrap.state.drawableView undo];
+    }
+    [super didCancelStroke:stroke withTouch:touch];
+    [self debugPrintUndoStatus];
+}
+
+-(void) addUndoLevel{
+    NSLog(@"adding undo level");
+    [self.drawableView addUndoLevel];
+    for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
+        [scrap.state.drawableView addUndoLevel];
+    }
+}
 
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)_previousElement{
     NSArray* strokeElementsToDraw = [super willAddElementsToStroke:elements fromPreviousElement:_previousElement];
     
-    
     // track distance drawn
     CGFloat strokeDistance = 0;
+    // track size of these added elements, so we can
+    // trigger an undo level if needed
+    NSInteger sizeInBytes = 0;
     for(AbstractBezierPathElement* ele in strokeElementsToDraw){
         strokeDistance += ele.lengthOfElement;
+        sizeInBytes += [ele fullByteSize]; // byte size is zero since the vbo hasn't loaded yet
     }
     [self.delegate didDrawStrokeOfCm:strokeDistance / [UIDevice ppc]];
     
     
+    
+    // i need to check here if i should add an undo level
+    // based on the stroke size.
+    //
+    // this used to be done automatically inside the jotview,
+    // but instead i've pulled it out so that whoever owns
+    // the jotview can arbitrarily add undo levels mid-stroke
+    // as needed. this helps us, because we may need to add
+    // undo levels to all scraps as well, not just whichever
+    // drawable view happens to exceed the byte limit
+    NSMutableArray* strokeElementsToCrop = [NSMutableArray arrayWithArray:strokeElementsToDraw];
+    BOOL shouldAddUndoLevel = [self.drawableView maxCurrentStrokeByteSize] + sizeInBytes > kJotMaxStrokeByteSize;
+    for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
+        if([scrap.state.drawableView maxCurrentStrokeByteSize] + sizeInBytes > kJotMaxStrokeByteSize || shouldAddUndoLevel){
+            shouldAddUndoLevel = YES;
+            break;
+        }
+    }
+    
+    if(shouldAddUndoLevel){
+        // if we land in here, then that means that either our
+        // drawable view, or one of our scraps, would exceed the max
+        // byte size for a stroke. so we should add an undo level
+        // to make sure byte sizes stay smaller than our max allowed
+        [self addUndoLevel];
+    }
+    
+    // we can exit early here if we don't have any scraps on our paper
     if(![self.scrapsOnPaper count]){
         return strokeElementsToDraw;
     }
     
-    NSMutableArray* strokesToCrop = [NSMutableArray arrayWithArray:strokeElementsToDraw];
     
     
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
@@ -336,9 +428,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
         // and add some pieces to the scrap and return the rest.
         AbstractBezierPathElement* previousElement = _previousElement;
         if(!previousElement){
-            previousElement = [strokesToCrop firstObject];
+            previousElement = [strokeElementsToCrop firstObject];
         }
-        for(AbstractBezierPathElement* element in strokesToCrop){
+        for(AbstractBezierPathElement* element in strokeElementsToCrop){
             if(!CGRectIntersectsRect(element.bounds, boundsOfScrap)){
                 // if we don't intersect the bounds of a scrap, then we definitely
                 // don't intersect it's path, so just add it to our return value
@@ -442,12 +534,12 @@ static dispatch_queue_t concurrentBackgroundQueue;
             previousElement = element;
         }
         
-        strokesToCrop = nextStrokesToCrop;
+        strokeElementsToCrop = nextStrokesToCrop;
     }
     
     // anything that's left over at this point
     // is fair game for to add to the page itself
-    return strokesToCrop;
+    return strokeElementsToCrop;
 }
 
 

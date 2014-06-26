@@ -107,14 +107,14 @@
     // noop
 }
 
--(void) willCancelStrokeWithTouch:(JotTouch*)touch{
+-(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
     // noop
 }
 
 /**
  * the user cancelled the touch
  */
--(void) didCancelStrokeWithTouch:(JotTouch*)touch{
+-(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
     // noop
 }
 

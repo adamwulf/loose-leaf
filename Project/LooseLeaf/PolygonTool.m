@@ -55,7 +55,7 @@
 /**
  * the stroke for the input touch will been cancelled.
  */
-- (void) willCancelStrokeWithTouch:(JotTouch*)touch{
+- (void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
     if([polygonTouches containsObject:touch.touch]){
         [delegate cancelShapeWithTouch:touch.touch withTool:self];
         [polygonTouches removeObject:touch.touch];

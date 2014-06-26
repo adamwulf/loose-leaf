@@ -492,6 +492,9 @@
     }
     [drawableView addElements:elements];
 }
+-(void) doneAddingElements{
+    [drawableView doneAddingElements];
+}
 
 -(JotView*) drawableView{
     return drawableView;
