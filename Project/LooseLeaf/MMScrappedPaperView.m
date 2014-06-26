@@ -360,6 +360,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [self.drawableView addUndoLevel];
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
         [scrap.state.drawableView addUndoLevel];
+        
+        NSLog(@"scrap: %@", scrap.uuid);
+        NSLog(@"scrap state: %p %p", scrap.state, scrap.state.drawableView.state);
+        NSLog(@"scrap undone: %d", (int) [scrap.state.drawableView.state.stackOfUndoneStrokes count]);
     }
 }
 
@@ -955,6 +959,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) saveToDisk{
+    [self saveToDisk:nil];
+}
+
+-(void) saveToDisk:(void (^)(BOOL))onComplete{
     debug_NSLog(@"asking %@ to save to disk at %lu", self.uuid, (unsigned long)self.drawableView.undoHash);
     //
     // for now, I will always save the entire page to disk.
@@ -1004,6 +1012,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 // so that the 1st call is still saving, and the
                 // 2nd ends early b/c it knows the 1st is still going
                 debug_NSLog(@"saved %@ but still have edits to save: saved at %lu but is now %lu",self.uuid, (unsigned long)self.paperState.lastSavedUndoHash, (unsigned long)self.paperState.currentStateUndoHash);
+                if(onComplete) onComplete(NO);
                 return;
             }
             
@@ -1013,6 +1022,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
             [NSThread performBlockOnMainThread:^{
                 debug_NSLog(@"notifying did save page %@ at %lu", self.uuid, (unsigned long)self.paperState.lastSavedUndoHash);
                 [self.delegate didSavePage:self];
+                if(onComplete) onComplete(YES);
             }];
         }
     });

@@ -760,7 +760,7 @@
 
 
 -(void) finishedLoading{
-    // noop;
+    // noop
 }
 
 -(void) loadStacksFromDisk{
