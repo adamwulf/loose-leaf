@@ -259,19 +259,27 @@
         [self didChangeTopPage];
         [[NSThread mainThread] performBlock:^{
             [self savePageAndPop:[hiddenStackHolder.subviews count]];
-        } afterDelay:5.0];
+        } afterDelay:1.0];
     }];
 }
 
 -(void) savePageAndPop:(int)numLeft{
     MMScrappedPaperView* scrappedPage = [visibleStackHolder peekSubview];
+    if([hiddenStackHolder.subviews count]){
+        [self mayChangeTopPageTo:[hiddenStackHolder peekSubview]];
+    }
+    
     if(![scrappedPage hasStateLoaded] || ![scrappedPage hasScrapStateLoaded]){
         [[NSThread mainThread] performBlock:^{
             NSLog(@"state wasn't loaded, trying again soon");
             [self savePageAndPop:numLeft];
         } afterDelay:0.1];
-    }else{
+    }else if([scrappedPage.drawableView.state.stackOfStrokes count] && ![scrappedPage hasEditsToSave]){
         NSLog(@"state loaded, saving strokes for: %@", scrappedPage.uuid);
+        
+        scrappedPage forc
+        
+    }else{
 
         if(numLeft > 0){
             [[NSThread mainThread] performBlock:^{
