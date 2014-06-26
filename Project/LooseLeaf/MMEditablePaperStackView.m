@@ -705,11 +705,11 @@
         debug_NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
         return NO;
     }
-    if([[MMPageCacheManager sharedInstance].drawableView.state.currentStrokes count]){
+    if([MMPageCacheManager sharedInstance].drawableView.state.currentStroke){
         return NO;
     }
     for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scrapsOnPaper]){
-        if([scrap.state.drawableView.state.currentStrokes count]){
+        if(scrap.state.drawableView.state.currentStroke){
             return NO;
         }
     }
