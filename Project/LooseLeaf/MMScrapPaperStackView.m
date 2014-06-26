@@ -145,6 +145,10 @@
     return self;
 }
 
+-(void) finishedLoading{
+    [bezelScrapContainer loadFromDisk];
+}
+
 -(int) fullByteSize{
     return [super fullByteSize] + imagePicker.fullByteSize + bezelScrapContainer.fullByteSize;
     
