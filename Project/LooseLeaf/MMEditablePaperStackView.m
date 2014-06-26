@@ -77,6 +77,13 @@
         [settingsButton addTarget:self action:@selector(toggleMemoryView:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:settingsButton];
         
+        // memory button
+        CGRect textureButtonRect = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 3 * 60, kWidthOfSidebarButton, kWidthOfSidebarButton);
+        NSString* str = [NSString stringWithCString:"\U0001F4BE" encoding:NSUTF8StringEncoding];
+        settingsButton = [[MMTextButton alloc] initWithFrame:textureButtonRect andFont:[UIFont systemFontOfSize:20] andLetter:str andXOffset:2 andYOffset:0];
+        settingsButton.delegate = self;
+        [settingsButton addTarget:self action:@selector(forceToTexture:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:settingsButton];
         
         pencilTool = [[MMPencilAndPaletteView alloc] initWithButtonFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton) andScreenSize:self.bounds.size];
         pencilTool.delegate = self;
@@ -242,6 +249,41 @@
         return pen;
     }
 }
+
+
+-(void) forceToTexture:(id)obj{
+    NSLog(@"force all strokes on all pages to texture");
+    MMPaperView* firstPage = [visibleStackHolder.subviews firstObject];
+    [self willChangeTopPageTo:firstPage];
+    [self popStackUntilPage:firstPage onComplete:^(BOOL finished){
+        [self didChangeTopPage];
+        [[NSThread mainThread] performBlock:^{
+            [self savePageAndPop:[hiddenStackHolder.subviews count]];
+        } afterDelay:5.0];
+    }];
+}
+
+-(void) savePageAndPop:(int)numLeft{
+    MMScrappedPaperView* scrappedPage = [visibleStackHolder peekSubview];
+    if(![scrappedPage hasStateLoaded] || ![scrappedPage hasScrapStateLoaded]){
+        [[NSThread mainThread] performBlock:^{
+            NSLog(@"state wasn't loaded, trying again soon");
+            [self savePageAndPop:numLeft];
+        } afterDelay:0.1];
+    }else{
+        NSLog(@"state loaded, saving strokes for: %@", scrappedPage.uuid);
+
+        if(numLeft > 0){
+            [[NSThread mainThread] performBlock:^{
+                NSLog(@"done, popping to next page");
+                [self popTopPageOfHiddenStackOnComplete:^(BOOL finished){
+                    [self savePageAndPop:numLeft - 1];
+                }];
+            } afterDelay:5.0];
+        }
+    }
+}
+
 
 #pragma mark - MMPencilAndPaletteViewDelegate
 

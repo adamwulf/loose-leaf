@@ -1437,14 +1437,19 @@
  * if a page does not exist, it will create one
  * so that it has something to pop.
  */
--(void) popTopPageOfHiddenStack{
+-(void) popTopPageOfHiddenStackOnComplete:(void(^)(BOOL finished))completionBlock{
     [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
     MMPaperView* page = [hiddenStackHolder peekSubview];
     [self willChangeTopPageTo:page];
     page.isBrandNewPage = NO;
     [self popHiddenStackUntilPage:[hiddenStackHolder getPageBelow:page] onComplete:^(BOOL finished){
         [self didChangeTopPage];
+        if(completionBlock) completionBlock(finished);
     }];
+}
+
+-(void) popTopPageOfHiddenStack{
+    [self popTopPageOfHiddenStackOnComplete:nil];
 }
 
 /**

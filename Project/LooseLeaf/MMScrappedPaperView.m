@@ -80,6 +80,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
     return self;
 }
 
+-(BOOL) hasScrapStateLoaded{
+    return [scrapState isStateLoaded];
+}
+
 -(int) fullByteSize{
     return [super fullByteSize] + scrapState.fullByteSize;
 }
