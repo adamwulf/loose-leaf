@@ -104,6 +104,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         }
     }
     [super undo];
+    [self debugPrintUndoStatus];
 }
 
 -(void) redo{
@@ -113,6 +114,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         }
     }
     [super redo];
+    [self debugPrintUndoStatus];
 }
 
 #pragma mark - Protected Methods
@@ -313,15 +315,30 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 #pragma mark - JotViewDelegate
 
+-(void) debugPrintUndoStatus{
+    
+    NSLog(@"**********************************************************************");
+    NSLog(@"Undo status for: %@", self.uuid);
+    NSLog(@"currentStroke: %p", self.drawableView.state.currentStroke);
+    NSLog(@"undoable stack: %i", (int)[self.drawableView.state.stackOfStrokes count]);
+    NSLog(@"undone stack:   %i", (int)[self.drawableView.state.stackOfUndoneStrokes count]);
+    NSLog(@"scraps:");
+    for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
+        NSLog(@" scrap %@", scrap.uuid);
+        NSLog(@"   currentStroke: %p", scrap.state.drawableView.state.currentStroke);
+        NSLog(@"   undoable stack: %i", (int)[scrap.state.drawableView.state.stackOfStrokes count]);
+        NSLog(@"   undone stack:   %i", (int)[scrap.state.drawableView.state.stackOfUndoneStrokes count]);
+    }
+}
+
+
 -(void) didEndStrokeWithTouch:(JotTouch *)touch{
     NSLog(@"did end stroke");
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
         [scrap doneAddingElements];
-        // TODO: also tell the state to [state.stackOfUndoneStrokes removeAllObjects];
-        // so that the redo button won't do anything after a successful new stroke
-        // has been drawn.
     }
     [super didEndStrokeWithTouch:touch];
+    [self debugPrintUndoStatus];
 }
 
 -(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch *)touch{
@@ -330,6 +347,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         [scrap.state.drawableView undo];
     }
     [super didCancelStroke:stroke withTouch:touch];
+    [self debugPrintUndoStatus];
 }
 
 -(void) addUndoLevel{
