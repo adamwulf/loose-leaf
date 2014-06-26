@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>center.x</key>
+		<real>39.561977386474609</real>
+		<key>center.y</key>
+		<real>39.727970123291016</real>
+		<key>rotation</key>
+		<real>-1.7905255556106567</real>
+		<key>scale</key>
+		<real>0.86786502599716187</real>
+		<key>uuid</key>
+		<string>6FCDB37B-5A27-4554-8B9A-ED29F4C6CF4D</string>
+	</dict>
+	<dict>
+		<key>center.x</key>
+		<real>40.175609588623047</real>
+		<key>center.y</key>
+		<real>39.815902709960938</real>
+		<key>rotation</key>
+		<real>-1.3345198631286621</real>
+		<key>scale</key>
+		<real>0.87735152244567871</real>
+		<key>uuid</key>
+		<string>0023A66A-3EDB-449F-B555-AE9A85A7673F</string>
+	</dict>
+	<dict>
+		<key>center.x</key>
+		<real>41.223651885986328</real>
+		<key>center.y</key>
+		<real>39.674369812011719</real>
+		<key>rotation</key>
+		<real>-0.82634258270263672</real>
+		<key>scale</key>
+		<real>1.2528882026672363</real>
+		<key>uuid</key>
+		<string>5FEB0F95-2657-471A-AAF9-F743ACE60A32</string>
+	</dict>
+	<dict>
+		<key>center.x</key>
+		<real>40</real>
+		<key>center.y</key>
+		<real>40</real>
+		<key>rotation</key>
+		<real>-0.90376836061477661</real>
+		<key>scale</key>
+		<real>1.6292212009429932</real>
+		<key>uuid</key>
+		<string>5ABECB88-4736-45D5-A093-3F608B29919E</string>
+	</dict>
+</array>
+</plist>

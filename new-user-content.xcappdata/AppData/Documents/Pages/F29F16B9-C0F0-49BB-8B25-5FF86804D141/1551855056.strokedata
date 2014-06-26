@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>class</key>
+	<string>JotStroke</string>
+	<key>segmentSmoother</key>
+	<dict>
+		<key>point0</key>
+		<string>{-1, -1}</string>
+		<key>point1</key>
+		<string>{424, 120}</string>
+		<key>point2</key>
+		<string>{436, 120}</string>
+		<key>point3</key>
+		<string>{436, 120}</string>
+	</dict>
+	<key>segments</key>
+	<array>
+		<dict>
+			<key>class</key>
+			<string>MoveToPathElement</string>
+			<key>color</key>
+			<dict>
+				<key>alpha</key>
+				<real>0.75</real>
+				<key>blue</key>
+				<real>0.0</real>
+				<key>green</key>
+				<real>0.0</real>
+				<key>red</key>
+				<real>0.0</real>
+			</dict>
+			<key>scaleOfVertexBuffer</key>
+			<real>0.0</real>
+			<key>startPoint.x</key>
+			<real>424</real>
+			<key>startPoint.y</key>
+			<real>120</real>
+			<key>width</key>
+			<real>4</real>
+		</dict>
+		<dict>
+			<key>class</key>
+			<string>CurveToPathElement</string>
+			<key>color</key>
+			<dict>
+				<key>alpha</key>
+				<real>0.89326918125152588</real>
+				<key>blue</key>
+				<real>0.0</real>
+				<key>green</key>
+				<real>0.0</real>
+				<key>red</key>
+				<real>0.0</real>
+			</dict>
+			<key>ctrl1.x</key>
+			<real>428.5</real>
+			<key>ctrl1.y</key>
+			<real>120</real>
+			<key>ctrl2.x</key>
+			<real>431.5</real>
+			<key>ctrl2.y</key>
+			<real>120</real>
+			<key>curveTo.x</key>
+			<real>436</real>
+			<key>curveTo.y</key>
+			<real>120</real>
+			<key>numberOfBytesOfVertexData</key>
+			<real>336</real>
+			<key>scaleOfVertexBuffer</key>
+			<real>2</real>
+			<key>startPoint.x</key>
+			<real>424</real>
+			<key>startPoint.y</key>
+			<real>120</real>
+			<key>vertexBuffer</key>
+			<data>
+			vwZURAAAcEMAAAAAAAAAAAAAAAAAAPA+AAAAQaqDVEQAAHBDAAAA
+			AAAAAAAAAAAAOdjhPiMwCkFoAVVEAABwQwAAAAAAAAAAAAAAABmi
+			1T5GYBRBTnpVRAAAcEMAAAAAAAAAAAAAAACu/co+aZAeQYwGVkQA
+			AHBDAAAAAAAAAAAAAAAAOqLBPozAKEGveFZEAABwQwAAAAAAAAAA
+			AAAAAI1XuT6v8DJBAABXRAAAcEMAAAAAAAAAAAAAAACP8bE+0iA9
+			QVCHV0QAAHBDAAAAAAAAAAAAAAAAMk2rPvVQR0F0+VdEAABwQwAA
+			AAAAAAAAAAAAADROpT4YgVFBsoVYRAAAcEMAAAAAAAAAAAAAAACU
+			3Z8+O7FbQZj+WEQAAHBDAAAAAAAAAAAAAAAAZeiaPl7hZUFWfFlE
+			AABwQwAAAAAAAAAAAAAAAO5elj6BEXBB
+			</data>
+			<key>vertexBufferShouldContainColor</key>
+			<true/>
+			<key>width</key>
+			<real>7.8205127716064453</real>
+		</dict>
+	</array>
+	<key>texture</key>
+	<dict>
+		<key>class</key>
+		<string>JotDefaultBrushTexture</string>
+	</dict>
+</dict>
+</plist>

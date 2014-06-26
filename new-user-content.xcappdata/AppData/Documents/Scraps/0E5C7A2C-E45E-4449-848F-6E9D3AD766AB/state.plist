@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>hasConverted</key>
+	<true/>
+	<key>stackOfStrokes</key>
+	<array>
+		<string>1</string>
+		<string>1389685573</string>
+		<string>935911964</string>
+		<string>3153679760</string>
+	</array>
+	<key>stackOfUndoneStrokes</key>
+	<array>
+		<string>1</string>
+	</array>
+	<key>undoHash</key>
+	<integer>1856139481</integer>
+</dict>
+</plist>

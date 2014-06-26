@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>analytics</key>
+	<dict>
+		<key>flush_interval_secs</key>
+		<integer>600</integer>
+		<key>max_byte_size_per_file</key>
+		<integer>8000</integer>
+		<key>max_file_count_per_send</key>
+		<integer>1</integer>
+		<key>max_pending_send_file_count</key>
+		<integer>100</integer>
+		<key>track_view_controllers</key>
+		<false/>
+		<key>url</key>
+		<string>https://e.crashlytics.com/spi/v2/events</string>
+	</dict>
+	<key>app</key>
+	<dict>
+		<key>identifier</key>
+		<string>com.milestonemade.looseleaf</string>
+		<key>reports_url</key>
+		<string>https://reports.crashlytics.com/spi/v1/platforms/ios/apps/com.milestonemade.looseleaf/reports</string>
+		<key>status</key>
+		<string>activated</string>
+		<key>update_required</key>
+		<false/>
+		<key>url</key>
+		<string>https://api.crashlytics.com/spi/v1/platforms/ios/apps/com.milestonemade.looseleaf</string>
+	</dict>
+	<key>beta</key>
+	<dict>
+		<key>update_endpoint</key>
+		<string>https://api.crashlytics.com/spi/v2/platforms/ios/apps/com.milestonemade.looseleaf/beta_update_check</string>
+		<key>update_suspend_duration</key>
+		<integer>3600</integer>
+	</dict>
+	<key>cache_duration</key>
+	<integer>60</integer>
+	<key>features</key>
+	<dict>
+		<key>collect_analytics</key>
+		<false/>
+		<key>collect_logged_exceptions</key>
+		<true/>
+		<key>collect_reports</key>
+		<true/>
+		<key>prompt_enabled</key>
+		<false/>
+	</dict>
+	<key>prompt</key>
+	<dict>
+		<key>always_send_button_title</key>
+		<string>Always Send</string>
+		<key>cancel_button_title</key>
+		<string>Don't Send</string>
+		<key>message</key>
+		<string>Looks like we crashed! Please help us fix the problem by sending a crash report.</string>
+		<key>send_button_title</key>
+		<string>Send</string>
+		<key>show_always_send_button</key>
+		<true/>
+		<key>show_cancel_button</key>
+		<true/>
+		<key>title</key>
+		<string>Send Crash Report?</string>
+	</dict>
+	<key>session</key>
+	<dict>
+		<key>identifier_mask</key>
+		<integer>255</integer>
+		<key>log_buffer_size</key>
+		<integer>64000</integer>
+		<key>max_chained_exception_depth</key>
+		<integer>16</integer>
+		<key>max_custom_exception_events</key>
+		<integer>16</integer>
+		<key>max_custom_key_value_pairs</key>
+		<integer>64</integer>
+	</dict>
+	<key>settings</key>
+	<dict>
+		<key>valid_until</key>
+		<date>2014-06-26T15:13:11Z</date>
+	</dict>
+	<key>settings_version</key>
+	<integer>2</integer>
+</dict>
+</plist>

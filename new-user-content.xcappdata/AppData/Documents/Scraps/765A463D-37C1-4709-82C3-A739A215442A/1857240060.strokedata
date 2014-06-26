@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>class</key>
+	<string>JotStroke</string>
+	<key>segmentSmoother</key>
+	<dict>
+		<key>point0</key>
+		<string>{-1, -1}</string>
+		<key>point1</key>
+		<string>{-1, -1}</string>
+		<key>point2</key>
+		<string>{-1, -1}</string>
+		<key>point3</key>
+		<string>{-1, -1}</string>
+	</dict>
+	<key>segments</key>
+	<array>
+		<dict>
+			<key>class</key>
+			<string>MoveToPathElement</string>
+			<key>color</key>
+			<dict/>
+			<key>scaleOfVertexBuffer</key>
+			<real>0.0</real>
+			<key>startPoint.x</key>
+			<real>96.558685302734375</real>
+			<key>startPoint.y</key>
+			<real>132.79891967773438</real>
+			<key>width</key>
+			<real>11.992902755737305</real>
+		</dict>
+		<dict>
+			<key>class</key>
+			<string>CurveToPathElement</string>
+			<key>color</key>
+			<dict/>
+			<key>ctrl1.x</key>
+			<real>93.91229248046875</real>
+			<key>ctrl1.y</key>
+			<real>132.1348876953125</real>
+			<key>ctrl2.x</key>
+			<real>92.148040771484375</real>
+			<key>ctrl2.y</key>
+			<real>131.69219970703125</real>
+			<key>curveTo.x</key>
+			<real>89.50164794921875</real>
+			<key>curveTo.y</key>
+			<real>131.02816772460938</real>
+			<key>numberOfBytesOfVertexData</key>
+			<real>84</real>
+			<key>scaleOfVertexBuffer</key>
+			<real>2</real>
+			<key>startPoint.x</key>
+			<real>96.558685302734375</real>
+			<key>startPoint.y</key>
+			<real>132.79891967773438</real>
+			<key>vertexBuffer</key>
+			<data>
+			X/5AQ43IhEPu4r9BWDU/QzaPhEMYjdRB5P08QwVIhENCN+lBYOM6
+			Q3QEhENs4f1BhDs5Q0jPg0PLRQlCACE3Q7iLg0PgmhNCi+k0Q4ZE
+			g0P17x1C
+			</data>
+			<key>vertexBufferShouldContainColor</key>
+			<false/>
+			<key>width</key>
+			<real>21.033710479736328</real>
+		</dict>
+	</array>
+	<key>texture</key>
+	<dict>
+		<key>class</key>
+		<string>JotDefaultBrushTexture</string>
+	</dict>
+</dict>
+</plist>

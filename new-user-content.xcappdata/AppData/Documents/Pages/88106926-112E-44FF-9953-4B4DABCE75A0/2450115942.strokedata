@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>class</key>
+	<string>JotStroke</string>
+	<key>segmentSmoother</key>
+	<dict>
+		<key>point0</key>
+		<string>{-1, -1}</string>
+		<key>point1</key>
+		<string>{659.5, 813}</string>
+		<key>point2</key>
+		<string>{661.5, 813}</string>
+		<key>point3</key>
+		<string>{661.5, 813}</string>
+	</dict>
+	<key>segments</key>
+	<array>
+		<dict>
+			<key>class</key>
+			<string>MoveToPathElement</string>
+			<key>color</key>
+			<dict>
+				<key>alpha</key>
+				<real>0.75</real>
+				<key>blue</key>
+				<real>0.0</real>
+				<key>green</key>
+				<real>0.0</real>
+				<key>red</key>
+				<real>0.0</real>
+			</dict>
+			<key>scaleOfVertexBuffer</key>
+			<real>0.0</real>
+			<key>startPoint.x</key>
+			<real>659.5</real>
+			<key>startPoint.y</key>
+			<real>813</real>
+			<key>width</key>
+			<real>4</real>
+		</dict>
+		<dict>
+			<key>class</key>
+			<string>CurveToPathElement</string>
+			<key>color</key>
+			<dict>
+				<key>alpha</key>
+				<real>0.89999997615814209</real>
+				<key>blue</key>
+				<real>0.0</real>
+				<key>green</key>
+				<real>0.0</real>
+				<key>red</key>
+				<real>0.0</real>
+			</dict>
+			<key>ctrl1.x</key>
+			<real>660.25</real>
+			<key>ctrl1.y</key>
+			<real>813</real>
+			<key>ctrl2.x</key>
+			<real>660.75</real>
+			<key>ctrl2.y</key>
+			<real>813</real>
+			<key>curveTo.x</key>
+			<real>661.5</real>
+			<key>curveTo.y</key>
+			<real>813</real>
+			<key>numberOfBytesOfVertexData</key>
+			<real>56</real>
+			<key>scaleOfVertexBuffer</key>
+			<real>2</real>
+			<key>startPoint.x</key>
+			<real>659.5</real>
+			<key>startPoint.y</key>
+			<real>813</real>
+			<key>vertexBuffer</key>
+			<data>
+			dOSkRABAy0QAAAAAAAAAAAAAAAAAAPA+AAAAQQAgpUQAQMtEAAAA
+			AAAAAAAAAAAA//+vPgAAQEE=
+			</data>
+			<key>vertexBufferShouldContainColor</key>
+			<true/>
+			<key>width</key>
+			<real>8</real>
+		</dict>
+	</array>
+	<key>texture</key>
+	<dict>
+		<key>class</key>
+		<string>JotDefaultBrushTexture</string>
+	</dict>
+</dict>
+</plist>
