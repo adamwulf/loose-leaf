@@ -650,6 +650,35 @@
     [stackManager saveStacksToDisk];
 }
 
+-(void) buildDefaultContent{
+    
+    NSString* documentsPath = [NSFileManager documentsPath];
+    NSURL* realDocumentsPath = [NSURL URLWithString:[documentsPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+
+    NSURL* urlForDocuments = [[NSBundle mainBundle] URLForResource:@"Documents" withExtension:nil];
+    
+    NSLog(@"url: %@", urlForDocuments);
+
+    NSDirectoryEnumerator* enumerator = [[NSFileManager defaultManager] enumeratorAtPath:[urlForDocuments path]];
+    
+    NSString* pathOfItem;
+    while(pathOfItem = [enumerator nextObject]){
+        NSURL* urlOfItem = [NSURL URLWithString:[[urlForDocuments path] stringByAppendingPathComponent:pathOfItem]];
+        NSString* targetPath = [[realDocumentsPath path] stringByAppendingPathComponent:pathOfItem];
+        NSError* err = nil;
+        if([[NSFileManager defaultManager] fileExistsAtPath:targetPath]){
+            [[NSFileManager defaultManager] removeItemAtPath:targetPath error:nil];
+        }
+        [[NSFileManager defaultManager] copyItemAtPath:[urlOfItem path] toPath:targetPath error:&err];
+        if(err){
+            NSLog(@"error: %@", err);
+        }else{
+            NSLog(@"copied: %@", urlOfItem);
+        }
+        [enumerator skipDescendants];
+    }
+}
+
 -(void) loadStacksFromDisk{
     NSDictionary* pages = [stackManager loadFromDiskWithBounds:self.bounds];
     for(MMPaperView* page in [[pages objectForKey:@"visiblePages"] reverseObjectEnumerator]){
@@ -660,18 +689,19 @@
     }
     
     if(![self hasPages]){
-        for(int i=0;i<1;i++){
-            MMEditablePaperView* editable = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
-            [editable setEditable:YES];
-            [self addPaperToBottomOfStack:editable];
-            MMEditablePaperView* paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
-            [self addPaperToBottomOfStack:paper];
-            paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
-            [self addPaperToBottomOfHiddenStack:paper];
-            paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
-            [self addPaperToBottomOfHiddenStack:paper];
-        }
-        [self saveStacksToDisk];
+        self.userInteractionEnabled = NO;
+        UIView* white = [[UIView alloc] initWithFrame:self.bounds];
+        white.backgroundColor = [UIColor whiteColor];
+        [self insertSubview:white belowSubview:visibleStackHolder];
+        [NSThread performBlockInBackground:^{
+            [self buildDefaultContent];
+            [NSThread performBlockOnMainThread:^{
+                self.userInteractionEnabled = YES;
+                [white removeFromSuperview];
+                [self loadStacksFromDisk];
+            }];
+        }];
+        return;
     }
     
     // load the state for the top page in the visible stack
