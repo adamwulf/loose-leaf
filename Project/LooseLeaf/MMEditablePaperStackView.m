@@ -650,6 +650,10 @@
     [stackManager saveStacksToDisk];
 }
 
+-(void) finishedLoading{
+    // noop
+}
+
 -(void) loadStacksFromDisk{
     NSDictionary* pages = [stackManager loadFromDiskWithBounds:self.bounds];
     for(MMPaperView* page in [[pages objectForKey:@"visiblePages"] reverseObjectEnumerator]){
@@ -691,6 +695,7 @@
     
     [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
     [self didChangeTopPage];
+    [self finishedLoading];
 }
 
 -(BOOL) hasPages{
