@@ -329,6 +329,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         NSLog(@"   undoable stack: %i", (int)[scrap.state.drawableView.state.stackOfStrokes count]);
         NSLog(@"   undone stack:   %i", (int)[scrap.state.drawableView.state.stackOfUndoneStrokes count]);
     }
+    NSLog(@"**********************************************************************");
 }
 
 
@@ -351,7 +352,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) addUndoLevel{
-//    self.drawableView addun
+    NSLog(@"adding undo level");
+    [self.drawableView addUndoLevel];
+    for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
+        [scrap.state.drawableView addUndoLevel];
+    }
 }
 
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)_previousElement{
@@ -364,15 +369,21 @@ static dispatch_queue_t concurrentBackgroundQueue;
     NSInteger sizeInBytes = 0;
     for(AbstractBezierPathElement* ele in strokeElementsToDraw){
         strokeDistance += ele.lengthOfElement;
-        sizeInBytes += [ele fullByteSize];
+        sizeInBytes += [ele fullByteSize]; // byte size is zero since the vbo hasn't loaded yet
     }
     [self.delegate didDrawStrokeOfCm:strokeDistance / [UIDevice ppc]];
     
     
-    if(![self.scrapsOnPaper count]){
-        return strokeElementsToDraw;
-    }
     
+    // i need to check here if i should add an undo level
+    // based on the stroke size.
+    //
+    // this used to be done automatically inside the jotview,
+    // but instead i've pulled it out so that whoever owns
+    // the jotview can arbitrarily add undo levels mid-stroke
+    // as needed. this helps us, because we may need to add
+    // undo levels to all scraps as well, not just whichever
+    // drawable view happens to exceed the byte limit
     NSMutableArray* strokeElementsToCrop = [NSMutableArray arrayWithArray:strokeElementsToDraw];
     BOOL shouldAddUndoLevel = [self.drawableView maxCurrentStrokeByteSize] + sizeInBytes > kJotMaxStrokeByteSize;
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
@@ -383,8 +394,18 @@ static dispatch_queue_t concurrentBackgroundQueue;
     }
     
     if(shouldAddUndoLevel){
+        // if we land in here, then that means that either our
+        // drawable view, or one of our scraps, would exceed the max
+        // byte size for a stroke. so we should add an undo level
+        // to make sure byte sizes stay smaller than our max allowed
         [self addUndoLevel];
     }
+    
+    // we can exit early here if we don't have any scraps on our paper
+    if(![self.scrapsOnPaper count]){
+        return strokeElementsToDraw;
+    }
+    
     
     
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
