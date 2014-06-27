@@ -16,6 +16,7 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMMemoryProfileView.h"
 #import "Mixpanel.h"
+#import <mach/mach_time.h>  // for mach_absolute_time() and friends
 
 @implementation MMEditablePaperStackView{
     UIPopoverController* jotTouchPopover;
@@ -660,23 +661,55 @@
     NSLog(@"url: %@", urlForDocuments);
 
     NSDirectoryEnumerator* enumerator = [[NSFileManager defaultManager] enumeratorAtPath:[urlForDocuments path]];
+
     
+    mach_timebase_info_data_t info;
+    mach_timebase_info(&info);
+
+    int numberOfItems = 0;
     NSString* pathOfItem;
+    double maxDur = 0;
+    NSString* maxItemPath = nil;
+    uint64_t totalStart = mach_absolute_time ();
+
     while(pathOfItem = [enumerator nextObject]){
-        NSURL* urlOfItem = [NSURL URLWithString:[[urlForDocuments path] stringByAppendingPathComponent:pathOfItem]];
+        NSURL* urlOfItem = [urlForDocuments URLByAppendingPathComponent:pathOfItem];
         NSString* targetPath = [[realDocumentsPath path] stringByAppendingPathComponent:pathOfItem];
         NSError* err = nil;
         if([[NSFileManager defaultManager] fileExistsAtPath:targetPath]){
             [[NSFileManager defaultManager] removeItemAtPath:targetPath error:nil];
         }
-        [[NSFileManager defaultManager] copyItemAtPath:[urlOfItem path] toPath:targetPath error:&err];
-        if(err){
-            NSLog(@"error: %@", err);
+        
+        NSNumber *isDirectory;
+        double duration = -1;
+
+        uint64_t start = mach_absolute_time ();
+        BOOL success = [urlOfItem getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil];
+        if (success && [isDirectory boolValue]) {
+            [[NSFileManager defaultManager] createDirectoryAtPath:targetPath withIntermediateDirectories:YES attributes:nil error:nil];
         }else{
-            NSLog(@"copied: %@", urlOfItem);
+            [[NSFileManager defaultManager] copyItemAtPath:[urlOfItem path] toPath:targetPath error:&err];
         }
-        [enumerator skipDescendants];
+        uint64_t end = mach_absolute_time ();
+        uint64_t elapsed = end - start;
+        
+        uint64_t nanos = elapsed * info.numer / info.denom;
+        duration = (CGFloat)nanos / NSEC_PER_SEC;
+        
+        if(duration > maxDur){
+            maxDur = duration;
+            maxItemPath = targetPath;
+        }
+        
+        numberOfItems++;
+//        [enumerator skipDescendants];
     }
+    uint64_t totalEnd = mach_absolute_time ();
+    uint64_t totalElapsed = totalEnd - totalStart;
+    uint64_t nanos = totalElapsed * info.numer / info.denom;
+    double duration = (CGFloat)nanos / NSEC_PER_SEC;
+    NSLog(@"copied %i items in %f", numberOfItems, duration);
+    NSLog(@"max duration %f for item %@", maxDur, maxItemPath);
 }
 
 -(void) loadStacksFromDisk{
