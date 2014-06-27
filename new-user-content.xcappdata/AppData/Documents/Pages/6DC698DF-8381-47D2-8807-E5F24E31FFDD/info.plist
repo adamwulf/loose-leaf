@@ -6,20 +6,20 @@
 	<true/>
 	<key>stackOfStrokes</key>
 	<array>
-		<string>4058095288</string>
-		<string>2957196507</string>
-		<string>412955943</string>
-		<string>2562249413</string>
-		<string>644562985</string>
-		<string>3250461376</string>
-		<string>3421136</string>
-		<string>3351108657</string>
-		<string>2888589007</string>
-		<string>2957559734</string>
+		<string>1</string>
+		<string>1</string>
+		<string>1</string>
+		<string>1</string>
+		<string>1</string>
+		<string>1</string>
+		<string>1</string>
+		<string>1</string>
+		<string>1</string>
+		<string>1</string>
 	</array>
 	<key>stackOfUndoneStrokes</key>
 	<array/>
 	<key>undoHash</key>
-	<integer>904510977</integer>
+	<integer>3153945441</integer>
 </dict>
 </plist>
