@@ -334,7 +334,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 
 -(void) didEndStrokeWithTouch:(JotTouch *)touch{
-    NSLog(@"did end stroke");
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
         [scrap doneAddingElements];
     }
@@ -356,10 +355,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [self.drawableView addUndoLevel];
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
         [scrap.state.drawableView addUndoLevel];
-        
-        NSLog(@"scrap: %@", scrap.uuid);
-        NSLog(@"scrap state: %p %p", scrap.state, scrap.state.drawableView.state);
-        NSLog(@"scrap undone: %d", (int) [scrap.state.drawableView.state.stackOfUndoneStrokes count]);
     }
 }
 
