@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>center.x</key>
+		<real>443.71697998046875</real>
+		<key>center.y</key>
+		<real>309.03155517578125</real>
+		<key>rotation</key>
+		<real>-1.5163884162902832</real>
+		<key>scale</key>
+		<real>0.9751056432723999</real>
+		<key>uuid</key>
+		<string>067CEDF5-2232-4F3F-951A-5D28BFCAB0DF</string>
+	</dict>
+	<dict>
+		<key>center.x</key>
+		<real>291.52389526367188</real>
+		<key>center.y</key>
+		<real>483.92095947265625</real>
+		<key>rotation</key>
+		<real>-1.688904881477356</real>
+		<key>scale</key>
+		<real>0.89122098684310913</real>
+		<key>uuid</key>
+		<string>A5B26794-E39A-4E59-A4AE-118F01D878C9</string>
+	</dict>
+	<dict>
+		<key>center.x</key>
+		<real>417.42977905273438</real>
+		<key>center.y</key>
+		<real>677.154541015625</real>
+		<key>rotation</key>
+		<real>-0.8825264573097229</real>
+		<key>scale</key>
+		<real>0.8942258358001709</real>
+		<key>uuid</key>
+		<string>0E5C7A2C-E45E-4449-848F-6E9D3AD766AB</string>
+	</dict>
+</array>
+</plist>

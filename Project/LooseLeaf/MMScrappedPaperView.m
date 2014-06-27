@@ -72,7 +72,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         panGesture.scrapDelegate = self;
         rulerGesture.scrapDelegate = self;
         
-        scrapState = [[MMScrapsOnPaperState alloc] initWithScrapIDsPath:self.scrapIDsPath];
+        scrapState = [[MMScrapsOnPaperState alloc] init];
         scrapState.delegate = self;
         
         [self setCanvasVisible:NO];
@@ -886,9 +886,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     CGContextRestoreGState(context);
 }
 
--(NSString*) scrappedThumbnailPath{
-    return [[[self pagesPath] stringByAppendingPathComponent:[@"scrapped" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
-}
 -(UIImage*) scrappedImgViewImage{
     return [scrappedImgViewImage image];
 }
@@ -990,7 +987,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     __block MMImmutableScrapsOnPaperState* immutableScrapState;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
-            immutableScrapState = [scrapState immutableState];
+            immutableScrapState = [scrapState immutableStateForPath:self.scrapIDsPath];
             scrapsHadBeenChanged = [immutableScrapState saveStateToDiskBlocking];
             dispatch_semaphore_signal(sema2);
         }
@@ -1027,7 +1024,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context{
     debug_NSLog(@"asking %@ to load state", self.uuid);
     [super loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
-    [scrapState loadStateAsynchronously:async andMakeEditable:YES];
+    if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
+        [scrapState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
+    }else{
+        [scrapState loadStateAsynchronously:async atPath:self.bundledScrapIDsPath andMakeEditable:YES];
+    }
 }
 
 -(void) unloadState{
@@ -1036,7 +1037,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     MMScrapsOnPaperState* strongScrapState = scrapState;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
-            [[strongScrapState immutableState] saveStateToDiskBlocking];
+            [[strongScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
             // unloading the scrap state will also remove them
             // from their superview (us)
             [strongScrapState unload];
@@ -1094,8 +1095,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
                         }
                     }
                     if(shouldLoad){
-                        scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForImage:[[MMLoadImageCache sharedInstance] imageAtPath:[self scrappedThumbnailPath]]
-                                                                                  andDelegate:self];
+                        if([[NSFileManager defaultManager] fileExistsAtPath:[self scrappedThumbnailPath]]){
+                            scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForImage:[[MMLoadImageCache sharedInstance] imageAtPath:[self scrappedThumbnailPath]]
+                                                                                      andDelegate:self];
+                        }else{
+                            scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForImage:[[MMLoadImageCache sharedInstance] imageAtPath:[self bundledScrappedThumbnailPath]]
+                                                                                      andDelegate:self];
+                        }
                         if(!scrappedImgViewImage.image){
                             definitelyDoesNotHaveAScrappedThumbnail = YES;
                         }
@@ -1144,7 +1150,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     // save if needed
                     // currently this will always save to disk. in the future #338
                     // we should only save if this has changed.
-                    [[strongScrapState immutableState] saveStateToDiskBlocking];
+                    [[strongScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
                     // free all scraps from memory too
                     [strongScrapState unload];
                 }
@@ -1179,11 +1185,22 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 #pragma mark - Paths
 
+-(NSString*) scrappedThumbnailPath{
+    return [[[self pagesPath] stringByAppendingPathComponent:[@"scrapped" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
+}
+
+-(NSString*) bundledScrappedThumbnailPath{
+    return [[[self bundledPagesPath] stringByAppendingPathComponent:[@"scrapped" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
+}
+
 -(NSString*) scrapIDsPath{
     if(!scrapIDsPath){
         scrapIDsPath = [[[self pagesPath] stringByAppendingPathComponent:@"scrapIDs"] stringByAppendingPathExtension:@"plist"];
     }
     return scrapIDsPath;
+}
+-(NSString*) bundledScrapIDsPath{
+    return [[[self bundledPagesPath] stringByAppendingPathComponent:@"scrapIDs"] stringByAppendingPathExtension:@"plist"];
 }
 
 

@@ -16,6 +16,7 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMMemoryProfileView.h"
 #import "Mixpanel.h"
+#import <mach/mach_time.h>  // for mach_absolute_time() and friends
 
 @implementation MMEditablePaperStackView{
     UIPopoverController* jotTouchPopover;
@@ -650,6 +651,25 @@
     [stackManager saveStacksToDisk];
 }
 
+-(void) buildDefaultContent{
+    
+    // just need to copy the visible/hiddenPages.plist files
+    // and the content will be loaded from the bundle just fine
+    
+    NSString* documentsPath = [NSFileManager documentsPath];
+    NSURL* realDocumentsPath = [NSURL URLWithString:[documentsPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+
+    NSURL* visiblePagesPlist = [[NSBundle mainBundle] URLForResource:@"visiblePages" withExtension:@"plist" subdirectory:@"Documents"];
+    NSURL* hiddenPagesPlist = [[NSBundle mainBundle] URLForResource:@"hiddenPages" withExtension:@"plist" subdirectory:@"Documents"];
+    
+    [[NSFileManager defaultManager] copyItemAtPath:[visiblePagesPlist path]
+                                            toPath:[[realDocumentsPath path] stringByAppendingPathComponent:@"visiblePages.plist"]
+                                                    error:nil];
+    [[NSFileManager defaultManager] copyItemAtPath:[hiddenPagesPlist path]
+                                            toPath:[[realDocumentsPath path] stringByAppendingPathComponent:@"hiddenPages.plist"]
+                                             error:nil];
+}
+
 -(void) finishedLoading{
     // noop
 }
@@ -664,18 +684,19 @@
     }
     
     if(![self hasPages]){
-        for(int i=0;i<1;i++){
-            MMEditablePaperView* editable = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
-            [editable setEditable:YES];
-            [self addPaperToBottomOfStack:editable];
-            MMEditablePaperView* paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
-            [self addPaperToBottomOfStack:paper];
-            paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
-            [self addPaperToBottomOfHiddenStack:paper];
-            paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
-            [self addPaperToBottomOfHiddenStack:paper];
-        }
-        [self saveStacksToDisk];
+        self.userInteractionEnabled = NO;
+        UIView* white = [[UIView alloc] initWithFrame:self.bounds];
+        white.backgroundColor = [UIColor whiteColor];
+        [self insertSubview:white belowSubview:visibleStackHolder];
+        [NSThread performBlockInBackground:^{
+            [self buildDefaultContent];
+            [NSThread performBlockOnMainThread:^{
+                self.userInteractionEnabled = YES;
+                [white removeFromSuperview];
+                [self loadStacksFromDisk];
+            }];
+        }];
+        return;
     }
     
     // load the state for the top page in the visible stack

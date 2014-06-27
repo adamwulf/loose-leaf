@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>class</key>
+		<string>MMScrappedPaperView</string>
+		<key>uuid</key>
+		<string>CD3CD453-A80C-419E-9ED9-F335BF1356E8</string>
+	</dict>
+	<dict>
+		<key>class</key>
+		<string>MMScrappedPaperView</string>
+		<key>uuid</key>
+		<string>83DE59EA-7B1E-41EF-8F55-77A130013057</string>
+	</dict>
+	<dict>
+		<key>class</key>
+		<string>MMScrappedPaperView</string>
+		<key>uuid</key>
+		<string>88106926-112E-44FF-9953-4B4DABCE75A0</string>
+	</dict>
+	<dict>
+		<key>class</key>
+		<string>MMScrappedPaperView</string>
+		<key>uuid</key>
+		<string>DB29030D-596B-4B8F-8893-E32C3C0C80B5</string>
+	</dict>
+</array>
+</plist>

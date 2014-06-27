@@ -77,7 +77,13 @@ dispatch_queue_t importThumbnailQueue;
 
         
         // initialize our state manager
-        paperState = [[JotViewStateProxy alloc] initWithInkPath:[self inkPath] andPlistPath:[self plistPath]];
+        if([[NSFileManager defaultManager] fileExistsAtPath:[self inkPath]]){
+            paperState = [[JotViewStateProxy alloc] initWithInkPath:[self inkPath] andPlistPath:[self plistPath]];
+        }else{
+            NSString* bundledInkPath = [[[self bundledPagesPath] stringByAppendingPathComponent:@"ink"] stringByAppendingPathExtension:@"png"];
+            NSString* bundledPlistPath = [[[self bundledPagesPath] stringByAppendingPathComponent:@"info"] stringByAppendingPathExtension:@"plist"];
+            paperState = [[JotViewStateProxy alloc] initWithInkPath:bundledInkPath andPlistPath:bundledPlistPath];
+        }
         paperState.delegate = self;
     }
     return self;
@@ -307,6 +313,12 @@ static int count = 0;
                 // https://github.com/adamwulf/loose-leaf/issues/227
                 UIImage* thumbnail = [[MMLoadImageCache sharedInstance] imageAtPath:[self thumbnailPath]];
                 if(!thumbnail){
+                    // we might be loading a new-user-content provided page,
+                    // so load from the bundle as a backup
+                    NSString* bundleThumbPath = [[[self bundledPagesPath] stringByAppendingPathComponent:[@"ink" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
+                    thumbnail = [[MMLoadImageCache sharedInstance] imageAtPath:bundleThumbPath];
+                }
+                if(!thumbnail){
                     definitelyDoesNotHaveAnInkThumbnail = YES;
                 }
                 isLoadingCachedInkThumbnailFromDisk = NO;
@@ -478,16 +490,21 @@ static int count = 0;
     return pagesPath;
 }
 
+-(NSString*) bundledPagesPath{
+    NSString* documentsPath = [[NSBundle mainBundle] pathForResource:@"Documents" ofType:nil];
+    return [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:[self uuid]];
+}
+
 -(NSString*) inkPath{
     if(!inkPath){
-        inkPath = [[[self pagesPath] stringByAppendingPathComponent:@"ink"] stringByAppendingPathExtension:@"png"];;
+        inkPath = [[[self pagesPath] stringByAppendingPathComponent:@"ink"] stringByAppendingPathExtension:@"png"];
     }
     return inkPath;
 }
 
 -(NSString*) plistPath{
     if(!plistPath){
-        plistPath = [[[self pagesPath] stringByAppendingPathComponent:@"info"] stringByAppendingPathExtension:@"plist"];;
+        plistPath = [[[self pagesPath] stringByAppendingPathComponent:@"info"] stringByAppendingPathExtension:@"plist"];
     }
     return plistPath;
 }

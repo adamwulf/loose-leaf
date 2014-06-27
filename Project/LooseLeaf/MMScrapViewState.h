@@ -52,4 +52,6 @@
 
 -(UIView*) contentView;
 
++(NSString*) bundledScrapDirectoryPathForUUID:(NSString*)uuid;
+
 @end

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>center.x</key>
+		<real>256.6014404296875</real>
+		<key>center.y</key>
+		<real>563.6104736328125</real>
+		<key>rotation</key>
+		<real>-1.60325026512146</real>
+		<key>scale</key>
+		<real>1.0005917549133301</real>
+		<key>uuid</key>
+		<string>765A463D-37C1-4709-82C3-A739A215442A</string>
+	</dict>
+</array>
+</plist>

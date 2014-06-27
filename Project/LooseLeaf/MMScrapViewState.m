@@ -99,8 +99,12 @@
         // save our UUID, everything depends on this
         uuid = _uuid;
         
-        if([[NSFileManager defaultManager] fileExistsAtPath:self.plistPath]){
+        if([[NSFileManager defaultManager] fileExistsAtPath:self.plistPath] ||
+           [[NSFileManager defaultManager] fileExistsAtPath:self.bundledPlistPath]){
             NSDictionary* properties = [NSDictionary dictionaryWithContentsOfFile:self.plistPath];
+            if(!properties){
+                properties = [NSDictionary dictionaryWithContentsOfFile:self.bundledPlistPath];
+            }
             bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
             
             MMScrapBackgroundView* backingView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
@@ -189,6 +193,9 @@
                 [lock lock];
                 @autoreleasepool {
                     UIImage* thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
+                    if(!thumb){
+                        thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.bundledThumbImageFile];
+                    }
                     [self setActiveThumbnailImage:thumb];
                 }
                 [lock unlock];
@@ -336,7 +343,11 @@
             // load state, if we have any.
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             // load drawable view information here
-            drawableViewState = [[JotViewStateProxy alloc] initWithInkPath:self.inkImageFile andPlistPath:self.stateFile];
+            if([[NSFileManager defaultManager] fileExistsAtPath:self.inkImageFile]){
+                drawableViewState = [[JotViewStateProxy alloc] initWithInkPath:self.inkImageFile andPlistPath:self.stateFile];
+            }else{
+                drawableViewState = [[JotViewStateProxy alloc] initWithInkPath:self.bundledInkImageFile andPlistPath:self.bundledStateFile];
+            }
             [drawableViewState loadStateAsynchronously:NO
                                               withSize:[drawableView pagePixelSize]
                                             andContext:[drawableView context]
@@ -467,10 +478,32 @@
     return stateFile;
 }
 
+-(NSString*) bundledPlistPath{
+    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid] stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
+}
+
+-(NSString*) bundledInkImageFile{
+    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid] stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
+}
+
+-(NSString*) bundledThumbImageFile{
+    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid] stringByAppendingPathComponent:[@"thumb" stringByAppendingPathExtension:@"png"]];
+}
+
+-(NSString*) bundledStateFile{
+    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid] stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
+}
+
 #pragma mark - Private
 
 +(NSString*) scrapDirectoryPathForUUID:(NSString*)uuid{
     NSString* documentsPath = [NSFileManager documentsPath];
+    NSString* scrapPath = [[documentsPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
+    return scrapPath;
+}
+
++(NSString*) bundledScrapDirectoryPathForUUID:(NSString*)uuid{
+    NSString* documentsPath = [[NSBundle mainBundle] pathForResource:@"Documents" ofType:nil];
     NSString* scrapPath = [[documentsPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
     return scrapPath;
 }
