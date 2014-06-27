@@ -11,11 +11,13 @@
 
 @implementation MMImmutableScrapsOnPaperState{
     NSArray* scraps;
+    NSString* scrapIDsPath;
 }
 
--(id) initWithScrapIDsPath:(NSString *)scrapIDsPath andScraps:(NSArray*)_scraps{
-    if(self = [super initWithScrapIDsPath:scrapIDsPath]){
+-(id) initWithScrapIDsPath:(NSString *)_scrapIDsPath andScraps:(NSArray*)_scraps{
+    if(self = [super init]){
         scraps = [_scraps copy];
+        scrapIDsPath = _scrapIDsPath;
     }
     return self;
 }
@@ -28,7 +30,7 @@
     return scraps;
 }
 
--(BOOL) saveStateToDiskBlockingAtPath:(NSString*)pathToSave{
+-(BOOL) saveStateToDiskBlocking{
     __block BOOL hadAnyEditsToSaveAtAll = NO;
     NSMutableArray* scrapUUIDs = [NSMutableArray array];
     if([scraps count]){
@@ -59,7 +61,7 @@
         }
         dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
     }
-    [scrapUUIDs writeToFile:pathToSave atomically:YES];
+    [scrapUUIDs writeToFile:scrapIDsPath atomically:YES];
         
 //        dispatch_release(sema1); ARC handles this
 //        NSLog(@"done saving %d scraps", [scraps count]);
@@ -75,7 +77,7 @@
 
 -(void) unload{
     if([self isStateLoaded]){
-        [self saveStateToDiskBlockingAtPath:self.scrapIDsPath];
+        [self saveStateToDiskBlocking];
     }
     [super unload];
 }

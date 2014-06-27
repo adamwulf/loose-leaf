@@ -72,11 +72,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         panGesture.scrapDelegate = self;
         rulerGesture.scrapDelegate = self;
         
-        if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
-            scrapState = [[MMScrapsOnPaperState alloc] initWithScrapIDsPath:self.scrapIDsPath];
-        }else{
-            scrapState = [[MMScrapsOnPaperState alloc] initWithScrapIDsPath:self.bundledScrapIDsPath];
-        }
+        scrapState = [[MMScrapsOnPaperState alloc] init];
         scrapState.delegate = self;
         
         [self setCanvasVisible:NO];
@@ -891,8 +887,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
     __block MMImmutableScrapsOnPaperState* immutableScrapState;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
-            immutableScrapState = [scrapState immutableState];
-            scrapsHadBeenChanged = [immutableScrapState saveStateToDiskBlockingAtPath:self.scrapIDsPath];
+            immutableScrapState = [scrapState immutableStateForPath:self.scrapIDsPath];
+            scrapsHadBeenChanged = [immutableScrapState saveStateToDiskBlocking];
             dispatch_semaphore_signal(sema2);
         }
     });
@@ -926,7 +922,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context{
     debug_NSLog(@"asking %@ to load state", self.uuid);
     [super loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
-    [scrapState loadStateAsynchronously:async andMakeEditable:YES];
+    if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
+        [scrapState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
+    }else{
+        [scrapState loadStateAsynchronously:async atPath:self.bundledScrapIDsPath andMakeEditable:YES];
+    }
 }
 
 -(void) unloadState{
@@ -935,7 +935,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     MMScrapsOnPaperState* strongScrapState = scrapState;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
-            [[strongScrapState immutableState] saveStateToDiskBlockingAtPath:self.scrapIDsPath];
+            [[strongScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
             // unloading the scrap state will also remove them
             // from their superview (us)
             [strongScrapState unload];
@@ -1048,7 +1048,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     // save if needed
                     // currently this will always save to disk. in the future #338
                     // we should only save if this has changed.
-                    [[strongScrapState immutableState] saveStateToDiskBlockingAtPath:self.scrapIDsPath];
+                    [[strongScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
                     // free all scraps from memory too
                     [strongScrapState unload];
                 }

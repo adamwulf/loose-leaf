@@ -16,6 +16,6 @@
 
 // returns YES if any changes actually saved,
 // NO otherwise
--(BOOL) saveStateToDiskBlockingAtPath:(NSString*)path;
+-(BOOL) saveStateToDiskBlocking;
 
 @end

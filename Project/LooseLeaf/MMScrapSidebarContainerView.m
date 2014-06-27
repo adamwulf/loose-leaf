@@ -68,9 +68,9 @@
             [rotationAdjustments addEntriesFromDictionary:loadedRotationValues];
         }
 
-        scrapState = [[MMScrapsOnPaperState alloc] initWithScrapIDsPath:self.scrapIDsPath];
+        scrapState = [[MMScrapsOnPaperState alloc] init];
         scrapState.delegate = self;
-        [scrapState loadStateAsynchronously:YES andMakeEditable:NO];
+        [scrapState loadStateAsynchronously:YES atPath:self.scrapIDsPath andMakeEditable:NO];
     }
     return self;
 }
@@ -436,13 +436,13 @@ static NSString* bezelStatePath;
 }
 
 -(void) saveScrapContainerToDisk{
-    MMImmutableScrapsOnPaperState* immutableState = [scrapState immutableState];
+    MMImmutableScrapsOnPaperState* immutableState = [scrapState immutableStateForPath:self.scrapIDsPath];
     NSMutableDictionary* writeableAdjustments = [rotationAdjustments copy];
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
-            [immutableState saveStateToDiskBlockingAtPath:scrapState.scrapIDsPath];
+            [immutableState saveStateToDiskBlocking];
             [writeableAdjustments writeToFile:[MMScrapSidebarContainerView pathToPlist] atomically:YES];
-            }
+        }
     });
 }
 
