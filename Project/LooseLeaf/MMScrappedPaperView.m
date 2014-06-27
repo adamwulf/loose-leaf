@@ -318,10 +318,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) debugPrintUndoStatus{
     
     NSLog(@"**********************************************************************");
-    NSLog(@"Undo status for: %@", self.uuid);
-    NSLog(@"currentStroke: %p", self.drawableView.state.currentStroke);
-    NSLog(@"undoable stack: %i", (int)[self.drawableView.state.stackOfStrokes count]);
-    NSLog(@"undone stack:   %i", (int)[self.drawableView.state.stackOfUndoneStrokes count]);
+    NSLog(@"Undo status");
+    NSLog(@" page %@", self.uuid);
+    NSLog(@"   currentStroke: %p", self.drawableView.state.currentStroke);
+    NSLog(@"   undoable stack: %i", (int)[self.drawableView.state.stackOfStrokes count]);
+    NSLog(@"   undone stack:   %i", (int)[self.drawableView.state.stackOfUndoneStrokes count]);
     NSLog(@"scraps:");
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
         NSLog(@" scrap %@", scrap.uuid);
@@ -336,15 +337,24 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) didEndStrokeWithTouch:(JotTouch *)touch{
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
         [scrap addUndoLevelAndFinishStroke];
+        [scrap.state.drawableView clearUndoneStrokes];
     }
     [super didEndStrokeWithTouch:touch];
     [self debugPrintUndoStatus];
 }
 
 -(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch *)touch{
+    // when a stroke ends, our drawableview has its undo-state
+    // set by removing its current stroke. to match, we need to
+    // end all the strokes of our scraps, and then undo them, to
+    // make it as though this never happened.
+    //
+    // however! just undoing will add an extra stroke to the
+    // strokesThatHaveBeenUndone array. so we need to make sure
+    // both the undo-able and undone arrays are unchanged.
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
         [scrap addUndoLevelAndFinishStroke];
-        [scrap.state.drawableView undo];
+        [scrap.state.drawableView undoAndForget];
     }
     [super didCancelStroke:stroke withTouch:touch];
     [self debugPrintUndoStatus];
