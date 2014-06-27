@@ -85,6 +85,8 @@ static dispatch_queue_t importExportStateQueue;
                         NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
                         [props setObject:state forKey:@"state"];
                         [scrapPropsWithState addObject:props];
+                    }else{
+                        NSLog(@"what");
                     }
                 }
                 
@@ -103,6 +105,9 @@ static dispatch_queue_t importExportStateQueue;
                                 [scrap loadScrapStateAsynchronously:async];
                             }
                             [scrap setShouldShowShadow:shouldShowShadows];
+                            NSLog(@"loaded scrap: %@", scrap.uuid);
+                        }else{
+                            NSLog(@"what");
                         }
                     }
                     @synchronized(self){

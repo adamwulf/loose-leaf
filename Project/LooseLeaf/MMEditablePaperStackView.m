@@ -674,35 +674,39 @@
 
     while(pathOfItem = [enumerator nextObject]){
         NSURL* urlOfItem = [urlForDocuments URLByAppendingPathComponent:pathOfItem];
-        NSString* targetPath = [[realDocumentsPath path] stringByAppendingPathComponent:pathOfItem];
-        NSError* err = nil;
-        if([[NSFileManager defaultManager] fileExistsAtPath:targetPath]){
-            [[NSFileManager defaultManager] removeItemAtPath:targetPath error:nil];
-        }
-        
-        NSNumber *isDirectory;
-        double duration = -1;
+        if([[pathOfItem lastPathComponent] isEqualToString:@"visiblePages.plist"] ||
+           [[pathOfItem lastPathComponent] isEqualToString:@"hiddenPages.plist"]){
+            NSString* targetPath = [[realDocumentsPath path] stringByAppendingPathComponent:pathOfItem];
+            NSError* err = nil;
+            if([[NSFileManager defaultManager] fileExistsAtPath:targetPath]){
+                [[NSFileManager defaultManager] removeItemAtPath:targetPath error:nil];
+            }
+            
+            NSNumber *isDirectory;
+            double duration = -1;
 
-        uint64_t start = mach_absolute_time ();
-        BOOL success = [urlOfItem getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil];
-        if (success && [isDirectory boolValue]) {
-            [[NSFileManager defaultManager] createDirectoryAtPath:targetPath withIntermediateDirectories:YES attributes:nil error:nil];
-        }else{
-            [[NSFileManager defaultManager] copyItemAtPath:[urlOfItem path] toPath:targetPath error:&err];
+            uint64_t start = mach_absolute_time ();
+            BOOL success = [urlOfItem getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil];
+            if (success && [isDirectory boolValue]) {
+                [[NSFileManager defaultManager] createDirectoryAtPath:targetPath withIntermediateDirectories:YES attributes:nil error:nil];
+            }else{
+                [[NSFileManager defaultManager] copyItemAtPath:[urlOfItem path] toPath:targetPath error:&err];
+            }
+            uint64_t end = mach_absolute_time ();
+            uint64_t elapsed = end - start;
+            
+            uint64_t nanos = elapsed * info.numer / info.denom;
+            duration = (CGFloat)nanos / NSEC_PER_SEC;
+            
+            if(duration > maxDur){
+                maxDur = duration;
+                maxItemPath = targetPath;
+            }
+            numberOfItems++;
         }
-        uint64_t end = mach_absolute_time ();
-        uint64_t elapsed = end - start;
+        NSLog(@"path: %@", urlOfItem);
+        //            [enumerator skipDescendants];
         
-        uint64_t nanos = elapsed * info.numer / info.denom;
-        duration = (CGFloat)nanos / NSEC_PER_SEC;
-        
-        if(duration > maxDur){
-            maxDur = duration;
-            maxItemPath = targetPath;
-        }
-        
-        numberOfItems++;
-//        [enumerator skipDescendants];
     }
     uint64_t totalEnd = mach_absolute_time ();
     uint64_t totalElapsed = totalEnd - totalStart;
