@@ -653,67 +653,21 @@
 
 -(void) buildDefaultContent{
     
+    // just need to copy the visible/hiddenPages.plist files
+    // and the content will be loaded from the bundle just fine
+    
     NSString* documentsPath = [NSFileManager documentsPath];
     NSURL* realDocumentsPath = [NSURL URLWithString:[documentsPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
-    NSURL* urlForDocuments = [[NSBundle mainBundle] URLForResource:@"Documents" withExtension:nil];
+    NSURL* visiblePagesPlist = [[NSBundle mainBundle] URLForResource:@"visiblePages" withExtension:@"plist" subdirectory:@"Documents"];
+    NSURL* hiddenPagesPlist = [[NSBundle mainBundle] URLForResource:@"hiddenPages" withExtension:@"plist" subdirectory:@"Documents"];
     
-    NSLog(@"url: %@", urlForDocuments);
-
-    NSDirectoryEnumerator* enumerator = [[NSFileManager defaultManager] enumeratorAtPath:[urlForDocuments path]];
-
-    
-    mach_timebase_info_data_t info;
-    mach_timebase_info(&info);
-
-    int numberOfItems = 0;
-    NSString* pathOfItem;
-    double maxDur = 0;
-    NSString* maxItemPath = nil;
-    uint64_t totalStart = mach_absolute_time ();
-
-    while(pathOfItem = [enumerator nextObject]){
-        NSURL* urlOfItem = [urlForDocuments URLByAppendingPathComponent:pathOfItem];
-        if([[pathOfItem lastPathComponent] isEqualToString:@"visiblePages.plist"] ||
-           [[pathOfItem lastPathComponent] isEqualToString:@"hiddenPages.plist"]){
-            NSString* targetPath = [[realDocumentsPath path] stringByAppendingPathComponent:pathOfItem];
-            NSError* err = nil;
-            if([[NSFileManager defaultManager] fileExistsAtPath:targetPath]){
-                [[NSFileManager defaultManager] removeItemAtPath:targetPath error:nil];
-            }
-            
-            NSNumber *isDirectory;
-            double duration = -1;
-
-            uint64_t start = mach_absolute_time ();
-            BOOL success = [urlOfItem getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil];
-            if (success && [isDirectory boolValue]) {
-                [[NSFileManager defaultManager] createDirectoryAtPath:targetPath withIntermediateDirectories:YES attributes:nil error:nil];
-            }else{
-                [[NSFileManager defaultManager] copyItemAtPath:[urlOfItem path] toPath:targetPath error:&err];
-            }
-            uint64_t end = mach_absolute_time ();
-            uint64_t elapsed = end - start;
-            
-            uint64_t nanos = elapsed * info.numer / info.denom;
-            duration = (CGFloat)nanos / NSEC_PER_SEC;
-            
-            if(duration > maxDur){
-                maxDur = duration;
-                maxItemPath = targetPath;
-            }
-            numberOfItems++;
-        }
-        NSLog(@"path: %@", urlOfItem);
-        //            [enumerator skipDescendants];
-        
-    }
-    uint64_t totalEnd = mach_absolute_time ();
-    uint64_t totalElapsed = totalEnd - totalStart;
-    uint64_t nanos = totalElapsed * info.numer / info.denom;
-    double duration = (CGFloat)nanos / NSEC_PER_SEC;
-    NSLog(@"copied %i items in %f", numberOfItems, duration);
-    NSLog(@"max duration %f for item %@", maxDur, maxItemPath);
+    [[NSFileManager defaultManager] copyItemAtPath:[visiblePagesPlist path]
+                                            toPath:[[realDocumentsPath path] stringByAppendingPathComponent:@"visiblePages.plist"]
+                                                    error:nil];
+    [[NSFileManager defaultManager] copyItemAtPath:[hiddenPagesPlist path]
+                                            toPath:[[realDocumentsPath path] stringByAppendingPathComponent:@"hiddenPages.plist"]
+                                             error:nil];
 }
 
 -(void) loadStacksFromDisk{
