@@ -40,7 +40,7 @@
 -(UIImage*) activeThumbnailImage;
 
 -(void) addElements:(NSArray*)elements;
--(void) doneAddingElements;
+-(void) addUndoLevelAndFinishStroke;
 
 -(JotGLTexture*) generateTexture;
 -(void) importTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4;

@@ -335,7 +335,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 -(void) didEndStrokeWithTouch:(JotTouch *)touch{
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
-        [scrap doneAddingElements];
+        [scrap addUndoLevelAndFinishStroke];
     }
     [super didEndStrokeWithTouch:touch];
     [self debugPrintUndoStatus];
@@ -343,18 +343,21 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 -(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch *)touch{
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
-        [scrap doneAddingElements];
+        [scrap addUndoLevelAndFinishStroke];
         [scrap.state.drawableView undo];
     }
     [super didCancelStroke:stroke withTouch:touch];
     [self debugPrintUndoStatus];
 }
 
--(void) addUndoLevel{
+
+// adds an undo level to the drawable views and maintains
+// any alive strokes
+-(void) addUndoLevelAndContinueStroke{
     NSLog(@"adding undo level");
-    [self.drawableView addUndoLevel];
+    [self.drawableView addUndoLevelAndContinueStroke];
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
-        [scrap.state.drawableView addUndoLevel];
+        [scrap.state.drawableView addUndoLevelAndContinueStroke];
     }
 }
 
@@ -397,7 +400,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         // drawable view, or one of our scraps, would exceed the max
         // byte size for a stroke. so we should add an undo level
         // to make sure byte sizes stay smaller than our max allowed
-        [self addUndoLevel];
+        [self addUndoLevelAndContinueStroke];
     }
     
     // we can exit early here if we don't have any scraps on our paper

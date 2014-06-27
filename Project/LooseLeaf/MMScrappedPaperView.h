@@ -45,6 +45,6 @@
 
 -(UIImage*) scrappedImgViewImage;
 
--(void) addUndoLevel;
+-(void) addUndoLevelAndContinueStroke;
 
 @end

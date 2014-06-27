@@ -525,8 +525,8 @@
     }
     [drawableView addElements:elements];
 }
--(void) doneAddingElements{
-    [drawableView doneAddingElements];
+-(void) addUndoLevelAndFinishStroke{
+    [drawableView addUndoLevelAndFinishStroke];
 }
 
 -(JotView*) drawableView{
