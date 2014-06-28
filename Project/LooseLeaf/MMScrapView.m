@@ -421,6 +421,10 @@
     [scrapState addElements:elements];
 }
 
+-(void) addUndoLevelAndFinishStroke{
+    [scrapState addUndoLevelAndFinishStroke];
+}
+
 
 #pragma mark - MMScrapViewStateDelegate
 

@@ -70,9 +70,12 @@
 
         scrapState = [[MMScrapsOnPaperState alloc] init];
         scrapState.delegate = self;
-        [scrapState loadStateAsynchronously:YES atPath:self.scrapIDsPath andMakeEditable:NO];
     }
     return self;
+}
+
+-(void) loadFromDisk{
+    [scrapState loadStateAsynchronously:YES atPath:self.scrapIDsPath andMakeEditable:NO];
 }
 
 -(int) fullByteSize{

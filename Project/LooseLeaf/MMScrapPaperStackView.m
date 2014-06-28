@@ -145,6 +145,10 @@
     return self;
 }
 
+-(void) finishedLoading{
+    [bezelScrapContainer loadFromDisk];
+}
+
 -(int) fullByteSize{
     return [super fullByteSize] + imagePicker.fullByteSize + bezelScrapContainer.fullByteSize;
     
@@ -1473,6 +1477,7 @@ int skipAll = NO;
 #pragma mark = Saving and Editing
 
 -(void) didSavePage:(MMPaperView*)page{
+    NSLog(@"did save page: %@", page.uuid);
     [super didSavePage:page];
     if(wantsExport == page){
         wantsExport = nil;

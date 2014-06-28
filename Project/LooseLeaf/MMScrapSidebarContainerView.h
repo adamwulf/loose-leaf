@@ -32,4 +32,6 @@
 
 -(void) didTapOnScrapFromMenu:(MMScrapView*)scrap;
 
+-(void) loadFromDisk;
+
 @end

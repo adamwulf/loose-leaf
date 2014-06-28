@@ -525,6 +525,9 @@
     }
     [drawableView addElements:elements];
 }
+-(void) addUndoLevelAndFinishStroke{
+    [drawableView addUndoLevelAndFinishStroke];
+}
 
 -(JotView*) drawableView{
     return drawableView;
