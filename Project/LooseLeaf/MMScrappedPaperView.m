@@ -72,7 +72,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         panGesture.scrapDelegate = self;
         rulerGesture.scrapDelegate = self;
         
-        scrapState = [[MMScrapsOnPaperState alloc] initWithScrapIDsPath:self.scrapIDsPath];
+        scrapState = [[MMScrapsOnPaperState alloc] init];
         scrapState.delegate = self;
         
         [self setCanvasVisible:NO];
@@ -322,10 +322,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) debugPrintUndoStatus{
     
     NSLog(@"**********************************************************************");
-    NSLog(@"Undo status for: %@", self.uuid);
-    NSLog(@"currentStroke: %p", self.drawableView.state.currentStroke);
-    NSLog(@"undoable stack: %i", (int)[self.drawableView.state.stackOfStrokes count]);
-    NSLog(@"undone stack:   %i", (int)[self.drawableView.state.stackOfUndoneStrokes count]);
+    NSLog(@"Undo status");
+    NSLog(@" page %@", self.uuid);
+    NSLog(@"   currentStroke: %p", self.drawableView.state.currentStroke);
+    NSLog(@"   undoable stack: %i", (int)[self.drawableView.state.stackOfStrokes count]);
+    NSLog(@"   undone stack:   %i", (int)[self.drawableView.state.stackOfUndoneStrokes count]);
     NSLog(@"scraps:");
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
         NSLog(@" scrap %@", scrap.uuid);
@@ -338,32 +339,39 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 
 -(void) didEndStrokeWithTouch:(JotTouch *)touch{
-    NSLog(@"did end stroke");
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
-        [scrap doneAddingElements];
+        [scrap addUndoLevelAndFinishStroke];
+        [scrap.state.drawableView clearUndoneStrokes];
     }
     [super didEndStrokeWithTouch:touch];
     [self debugPrintUndoStatus];
 }
 
 -(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch *)touch{
+    // when a stroke ends, our drawableview has its undo-state
+    // set by removing its current stroke. to match, we need to
+    // end all the strokes of our scraps, and then undo them, to
+    // make it as though this never happened.
+    //
+    // however! just undoing will add an extra stroke to the
+    // strokesThatHaveBeenUndone array. so we need to make sure
+    // both the undo-able and undone arrays are unchanged.
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
-        [scrap doneAddingElements];
-        [scrap.state.drawableView undo];
+        [scrap addUndoLevelAndFinishStroke];
+        [scrap.state.drawableView undoAndForget];
     }
     [super didCancelStroke:stroke withTouch:touch];
     [self debugPrintUndoStatus];
 }
 
--(void) addUndoLevel{
+
+// adds an undo level to the drawable views and maintains
+// any alive strokes
+-(void) addUndoLevelAndContinueStroke{
     NSLog(@"adding undo level");
-    [self.drawableView addUndoLevel];
+    [self.drawableView addUndoLevelAndContinueStroke];
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
-        [scrap.state.drawableView addUndoLevel];
-        
-        NSLog(@"scrap: %@", scrap.uuid);
-        NSLog(@"scrap state: %p %p", scrap.state, scrap.state.drawableView.state);
-        NSLog(@"scrap undone: %d", (int) [scrap.state.drawableView.state.stackOfUndoneStrokes count]);
+        [scrap.state.drawableView addUndoLevelAndContinueStroke];
     }
 }
 
@@ -406,7 +414,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         // drawable view, or one of our scraps, would exceed the max
         // byte size for a stroke. so we should add an undo level
         // to make sure byte sizes stay smaller than our max allowed
-        [self addUndoLevel];
+        [self addUndoLevelAndContinueStroke];
     }
     
     // we can exit early here if we don't have any scraps on our paper
@@ -890,9 +898,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     CGContextRestoreGState(context);
 }
 
--(NSString*) scrappedThumbnailPath{
-    return [[[self pagesPath] stringByAppendingPathComponent:[@"scrapped" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
-}
 -(UIImage*) scrappedImgViewImage{
     return [scrappedImgViewImage image];
 }
@@ -994,7 +999,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     __block MMImmutableScrapsOnPaperState* immutableScrapState;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
-            immutableScrapState = [scrapState immutableState];
+            immutableScrapState = [scrapState immutableStateForPath:self.scrapIDsPath];
             scrapsHadBeenChanged = [immutableScrapState saveStateToDiskBlocking];
             dispatch_semaphore_signal(sema2);
         }
@@ -1031,7 +1036,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context{
     debug_NSLog(@"asking %@ to load state", self.uuid);
     [super loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
-    [scrapState loadStateAsynchronously:async andMakeEditable:YES];
+    if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
+        [scrapState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
+    }else{
+        [scrapState loadStateAsynchronously:async atPath:self.bundledScrapIDsPath andMakeEditable:YES];
+    }
 }
 
 -(void) unloadState{
@@ -1040,7 +1049,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     MMScrapsOnPaperState* strongScrapState = scrapState;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
-            [[strongScrapState immutableState] saveStateToDiskBlocking];
+            [[strongScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
             // unloading the scrap state will also remove them
             // from their superview (us)
             [strongScrapState unload];
@@ -1098,8 +1107,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
                         }
                     }
                     if(shouldLoad){
-                        scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForImage:[[MMLoadImageCache sharedInstance] imageAtPath:[self scrappedThumbnailPath]]
-                                                                                  andDelegate:self];
+                        if([[NSFileManager defaultManager] fileExistsAtPath:[self scrappedThumbnailPath]]){
+                            scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForImage:[[MMLoadImageCache sharedInstance] imageAtPath:[self scrappedThumbnailPath]]
+                                                                                      andDelegate:self];
+                        }else{
+                            scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForImage:[[MMLoadImageCache sharedInstance] imageAtPath:[self bundledScrappedThumbnailPath]]
+                                                                                      andDelegate:self];
+                        }
                         if(!scrappedImgViewImage.image){
                             definitelyDoesNotHaveAScrappedThumbnail = YES;
                         }
@@ -1148,7 +1162,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                     // save if needed
                     // currently this will always save to disk. in the future #338
                     // we should only save if this has changed.
-                    [[strongScrapState immutableState] saveStateToDiskBlocking];
+                    [[strongScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
                     // free all scraps from memory too
                     [strongScrapState unload];
                 }
@@ -1183,11 +1197,22 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 #pragma mark - Paths
 
+-(NSString*) scrappedThumbnailPath{
+    return [[[self pagesPath] stringByAppendingPathComponent:[@"scrapped" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
+}
+
+-(NSString*) bundledScrappedThumbnailPath{
+    return [[[self bundledPagesPath] stringByAppendingPathComponent:[@"scrapped" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
+}
+
 -(NSString*) scrapIDsPath{
     if(!scrapIDsPath){
         scrapIDsPath = [[[self pagesPath] stringByAppendingPathComponent:@"scrapIDs"] stringByAppendingPathExtension:@"plist"];
     }
     return scrapIDsPath;
+}
+-(NSString*) bundledScrapIDsPath{
+    return [[[self bundledPagesPath] stringByAppendingPathComponent:@"scrapIDs"] stringByAppendingPathExtension:@"plist"];
 }
 
 

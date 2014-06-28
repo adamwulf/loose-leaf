@@ -45,7 +45,7 @@
 -(NSSet*) allMatchingTouchesFrom:(NSSet*) touches;
 
 -(void) addElements:(NSArray*)elements;
--(void) doneAddingElements;
+-(void) addUndoLevelAndFinishStroke;
 
 -(void) saveScrapToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock;
 

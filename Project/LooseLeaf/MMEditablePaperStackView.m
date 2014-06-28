@@ -16,6 +16,7 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMMemoryProfileView.h"
 #import "Mixpanel.h"
+#import <mach/mach_time.h>  // for mach_absolute_time() and friends
 
 @implementation MMEditablePaperStackView{
     UIPopoverController* jotTouchPopover;
@@ -278,7 +279,10 @@
         NSLog(@"state loaded, saving strokes for: %@", scrappedPage.uuid);
         
         for(int i=0;i<10;i++){
-            [scrappedPage addUndoLevel];
+            [scrappedPage.drawableView addUndoLevelAndFinishStroke];
+            for(MMScrapView* scrap in scrappedPage.scrapsOnPaper){
+                [scrap addUndoLevelAndFinishStroke];
+            }
         }
         
         NSLog(@"now has edits to save: %i", [scrappedPage hasEditsToSave]);
@@ -731,33 +735,22 @@
 
 -(void) buildDefaultContent{
     
+    // just need to copy the visible/hiddenPages.plist files
+    // and the content will be loaded from the bundle just fine
+    
     NSString* documentsPath = [NSFileManager documentsPath];
     NSURL* realDocumentsPath = [NSURL URLWithString:[documentsPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
-    NSURL* urlForDocuments = [[NSBundle mainBundle] URLForResource:@"Documents" withExtension:nil];
+    NSURL* visiblePagesPlist = [[NSBundle mainBundle] URLForResource:@"visiblePages" withExtension:@"plist" subdirectory:@"Documents"];
+    NSURL* hiddenPagesPlist = [[NSBundle mainBundle] URLForResource:@"hiddenPages" withExtension:@"plist" subdirectory:@"Documents"];
     
-    NSLog(@"url: %@", urlForDocuments);
-
-    NSDirectoryEnumerator* enumerator = [[NSFileManager defaultManager] enumeratorAtPath:[urlForDocuments path]];
-    
-    NSString* pathOfItem;
-    while(pathOfItem = [enumerator nextObject]){
-        NSURL* urlOfItem = [NSURL URLWithString:[[urlForDocuments path] stringByAppendingPathComponent:pathOfItem]];
-        NSString* targetPath = [[realDocumentsPath path] stringByAppendingPathComponent:pathOfItem];
-        NSError* err = nil;
-        if([[NSFileManager defaultManager] fileExistsAtPath:targetPath]){
-            [[NSFileManager defaultManager] removeItemAtPath:targetPath error:nil];
-        }
-        [[NSFileManager defaultManager] copyItemAtPath:[urlOfItem path] toPath:targetPath error:&err];
-        if(err){
-            NSLog(@"error: %@", err);
-        }else{
-            NSLog(@"copied: %@", urlOfItem);
-        }
-        [enumerator skipDescendants];
-    }
+    [[NSFileManager defaultManager] copyItemAtPath:[visiblePagesPlist path]
+                                            toPath:[[realDocumentsPath path] stringByAppendingPathComponent:@"visiblePages.plist"]
+                                                    error:nil];
+    [[NSFileManager defaultManager] copyItemAtPath:[hiddenPagesPlist path]
+                                            toPath:[[realDocumentsPath path] stringByAppendingPathComponent:@"hiddenPages.plist"]
+                                             error:nil];
 }
-
 
 -(void) finishedLoading{
     // noop

@@ -421,8 +421,8 @@
     [scrapState addElements:elements];
 }
 
--(void) doneAddingElements{
-    [scrapState doneAddingElements];
+-(void) addUndoLevelAndFinishStroke{
+    [scrapState addUndoLevelAndFinishStroke];
 }
 
 

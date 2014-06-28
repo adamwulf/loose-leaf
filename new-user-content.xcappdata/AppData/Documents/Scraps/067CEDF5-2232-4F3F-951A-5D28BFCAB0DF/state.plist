@@ -15,16 +15,11 @@
 		<string>1</string>
 		<string>1</string>
 		<string>1</string>
+		<string>1</string>
 	</array>
 	<key>stackOfUndoneStrokes</key>
-	<array>
-		<string>1</string>
-		<string>1</string>
-		<string>1</string>
-		<string>1</string>
-		<string>1</string>
-	</array>
+	<array/>
 	<key>undoHash</key>
-	<integer>655929504</integer>
+	<integer>3153945441</integer>
 </dict>
 </plist>

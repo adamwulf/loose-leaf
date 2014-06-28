@@ -23,14 +23,14 @@
 
 +(dispatch_queue_t) importExportStateQueue;
 
--(id) initWithScrapIDsPath:(NSString*)scrapIDsPath;
+-(id) init;
 
 -(BOOL) isStateLoaded;
 
--(void) loadStateAsynchronously:(BOOL)async andMakeEditable:(BOOL)makeEditable;
+-(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable;
 
 -(void) unload;
 
--(MMImmutableScrapsOnPaperState*) immutableState;
+-(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath;
 
 @end

@@ -18,13 +18,11 @@
  * track the state for all scraps within a single page
  */
 @implementation MMScrapsOnPaperState{
-    NSString* scrapIDsPath;
     BOOL isLoaded;
     BOOL isLoading;
 }
 
 @synthesize delegate;
-@synthesize scrapIDsPath;
 @synthesize shouldShowShadows;
 
 static dispatch_queue_t importExportStateQueue;
@@ -37,9 +35,9 @@ static dispatch_queue_t importExportStateQueue;
     return importExportStateQueue;
 }
 
--(id) initWithScrapIDsPath:(NSString*)_scrapIDsPath{
+-(id) init{
     if(self = [super init]){
-        scrapIDsPath = _scrapIDsPath;
+        // noop
     }
     return self;
 }
@@ -64,7 +62,7 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 
--(void) loadStateAsynchronously:(BOOL)async andMakeEditable:(BOOL)makeEditable{
+-(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable{
     if(![self isStateLoaded] && !isLoading){
         __block NSArray* scrapProps;
         @synchronized(self){
@@ -160,9 +158,9 @@ static dispatch_queue_t importExportStateQueue;
     }
 }
 
--(MMImmutableScrapsOnPaperState*) immutableState{
+-(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath{
     if([self isStateLoaded]){
-        return [[MMImmutableScrapsOnPaperState alloc] initWithScrapIDsPath:self.scrapIDsPath andScraps:self.delegate.scrapsOnPaper];
+        return [[MMImmutableScrapsOnPaperState alloc] initWithScrapIDsPath:scrapIDsPath andScraps:self.delegate.scrapsOnPaper];
     }
     return nil;
 }

@@ -6,12 +6,6 @@
 		<key>class</key>
 		<string>MMScrappedPaperView</string>
 		<key>uuid</key>
-		<string>ECF7E558-03B4-4D4C-8D63-1CC7601948A4</string>
-	</dict>
-	<dict>
-		<key>class</key>
-		<string>MMScrappedPaperView</string>
-		<key>uuid</key>
 		<string>6DC698DF-8381-47D2-8807-E5F24E31FFDD</string>
 	</dict>
 	<dict>
@@ -30,7 +24,7 @@
 		<key>class</key>
 		<string>MMScrappedPaperView</string>
 		<key>uuid</key>
-		<string>DB29030D-596B-4B8F-8893-E32C3C0C80B5</string>
+		<string>F29F16B9-C0F0-49BB-8B25-5FF86804D141</string>
 	</dict>
 </array>
 </plist>
