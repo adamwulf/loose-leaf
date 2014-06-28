@@ -59,6 +59,7 @@
 		6651083C178F249C00A7A7DD /* MMVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6651083B178F249C00A7A7DD /* MMVector.m */; };
 		665182071937B41800CBEAB4 /* MMMemoryProfileView.m in Sources */ = {isa = PBXBuildFile; fileRef = 665182061937B41800CBEAB4 /* MMMemoryProfileView.m */; };
 		6651820A1937B57600CBEAB4 /* MMBackgroundTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 665182091937B57600CBEAB4 /* MMBackgroundTimer.m */; };
+		6653B8A9195CC7AD001C6E15 /* Documents in Resources */ = {isa = PBXBuildFile; fileRef = 6653B8A8195CC7AD001C6E15 /* Documents */; };
 		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
 		665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665C592D17BD7692006DECBF /* Accelerate.framework */; };
 		665C593417BD7C42006DECBF /* Tool.m in Sources */ = {isa = PBXBuildFile; fileRef = 665C593317BD7C42006DECBF /* Tool.m */; };
@@ -265,7 +266,6 @@
 		663EFFF21946D153006E6AF5 /* MMButtonAwareTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMButtonAwareTapGestureRecognizer.m; sourceTree = "<group>"; };
 		6640E6D717E390BE00EB3F7D /* MMTouchVelocityGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTouchVelocityGestureRecognizer.h; sourceTree = "<group>"; };
 		6640E6D817E390BE00EB3F7D /* MMTouchVelocityGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTouchVelocityGestureRecognizer.m; sourceTree = "<group>"; };
-		6641F9D717B81D770000489F /* com.milestonemade.looseleaf 2013-08-10 13.19.03.621.xcappdata */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "com.milestonemade.looseleaf 2013-08-10 13.19.03.621.xcappdata"; path = "../../TestData/com.milestonemade.looseleaf 2013-08-10 13.19.03.621.xcappdata"; sourceTree = "<group>"; };
 		66423DC919412195000A3709 /* MMDecompressImagePromise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDecompressImagePromise.h; sourceTree = "<group>"; };
 		66423DCA19412195000A3709 /* MMDecompressImagePromise.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDecompressImagePromise.m; sourceTree = "<group>"; };
 		66423DCC194121A9000A3709 /* MMDecompressImagePromiseDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMDecompressImagePromiseDelegate.h; sourceTree = "<group>"; };
@@ -308,6 +308,7 @@
 		665182061937B41800CBEAB4 /* MMMemoryProfileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMMemoryProfileView.m; sourceTree = "<group>"; };
 		665182081937B57600CBEAB4 /* MMBackgroundTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBackgroundTimer.h; sourceTree = "<group>"; };
 		665182091937B57600CBEAB4 /* MMBackgroundTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBackgroundTimer.m; sourceTree = "<group>"; };
+		6653B8A8195CC7AD001C6E15 /* Documents */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Documents; path = "../../new-user-content.xcappdata/AppData/Documents"; sourceTree = "<group>"; };
 		6655E924176291C800E4F36A /* MMScissorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScissorButton.h; sourceTree = "<group>"; };
 		6655E925176291C800E4F36A /* MMScissorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorButton.m; sourceTree = "<group>"; };
 		665C592D17BD7692006DECBF /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
@@ -446,7 +447,6 @@
 		66A3A6BA1791F18900D8FE1D /* UIDevice+PPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+PPI.m"; sourceTree = "<group>"; };
 		66A3AF8C15913B5E00F8A7A6 /* NSMutableSet+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableSet+Extras.h"; sourceTree = "<group>"; };
 		66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableSet+Extras.m"; sourceTree = "<group>"; };
-		66A43CB917B96E4C0094EE62 /* com.milestonemade.looseleaf 2013-08-11 15.38.49.227.xcappdata */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "com.milestonemade.looseleaf 2013-08-11 15.38.49.227.xcappdata"; path = "../../TestData/com.milestonemade.looseleaf 2013-08-11 15.38.49.227.xcappdata"; sourceTree = "<group>"; };
 		66A471BC17C7DAA000C2A5B6 /* MMScrappedPaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrappedPaperView.h; sourceTree = "<group>"; };
 		66A471BD17C7DAA000C2A5B6 /* MMScrappedPaperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrappedPaperView.m; sourceTree = "<group>"; };
 		66A471C017C7DEF200C2A5B6 /* SYShape+Bezier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SYShape+Bezier.h"; sourceTree = "<group>"; };
@@ -538,7 +538,6 @@
 		66C38AC7175329160035B872 /* JotTouchSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotTouchSDK.framework; path = ../Submodules/JotUI/JotTouchSDK/JotTouchSDK.framework; sourceTree = "<group>"; };
 		66C47DA5158EF03200E2CD0C /* MMPaperViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperViewDelegate.h; sourceTree = "<group>"; };
 		66CA1A8B185E77F50013505A /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
-		66CDB72E17CC0C7200C636C7 /* com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata"; path = "../../TestData/com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata"; sourceTree = "<group>"; };
 		66CE11F517CFD8A600882275 /* MMScrapPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapPaperStackView.h; sourceTree = "<group>"; };
 		66CE11F617CFD8A600882275 /* MMScrapPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapPaperStackView.m; sourceTree = "<group>"; };
 		66CE11FB17D2700E00882275 /* MMScrapSidebarContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapSidebarContainerView.h; sourceTree = "<group>"; };
@@ -765,17 +764,6 @@
 			name = Velocity;
 			sourceTree = "<group>";
 		};
-		6641F9D617B81D630000489F /* Test Data */ = {
-			isa = PBXGroup;
-			children = (
-				6641F9D717B81D770000489F /* com.milestonemade.looseleaf 2013-08-10 13.19.03.621.xcappdata */,
-				66A43CB917B96E4C0094EE62 /* com.milestonemade.looseleaf 2013-08-11 15.38.49.227.xcappdata */,
-				66CDB72E17CC0C7200C636C7 /* com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata */,
-			);
-			name = "Test Data";
-			path = LooseLeaf;
-			sourceTree = "<group>";
-		};
 		66423DCD19425A91000A3709 /* CachedPreviewManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -892,6 +880,14 @@
 				66066749193A8BC400C985E9 /* MMMemoryManager.m */,
 			);
 			name = "Memory Profiling";
+			sourceTree = "<group>";
+		};
+		6653B8A7195CC79A001C6E15 /* Default user content */ = {
+			isa = PBXGroup;
+			children = (
+				6653B8A8195CC7AD001C6E15 /* Documents */,
+			);
+			name = "Default user content";
 			sourceTree = "<group>";
 		};
 		665C592F17BD7697006DECBF /* TouchShape */ = {
@@ -1400,7 +1396,6 @@
 				6627DFAB1901D82300592EEF /* LooseLeaf.entitlements */,
 				6650DD0E18F46D5100ADF591 /* Images.xcassets */,
 				66DCFB901581BCEF00B4918C /* Loose Leaf */,
-				6641F9D617B81D630000489F /* Test Data */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
 				66DCFB871581BCEF00B4918C /* Products */,
 			);
@@ -1452,6 +1447,7 @@
 			children = (
 				667F8AF217B0222300A0C7F8 /* Loose-Leaf-Icon7.png */,
 				667F8AF317B0222300A0C7F8 /* Loose-Leaf-Icon7@2x.png */,
+				6653B8A7195CC79A001C6E15 /* Default user content */,
 				66277C9A192BC97E003E97C0 /* SSKeychain */,
 				662A21B8191D66FF00AD9E31 /* MixPanel */,
 				66684B2F182D8869005A27B4 /* Settings */,
@@ -1673,6 +1669,7 @@
 				6650DD2718F491BA00ADF591 /* evernote@2x.png in Resources */,
 				66684B44182DAC9B005A27B4 /* CurveFit.license in Resources */,
 				66684B31182D887E005A27B4 /* Settings.bundle in Resources */,
+				6653B8A9195CC7AD001C6E15 /* Documents in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1929,14 +1926,12 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
@@ -1967,14 +1962,12 @@
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;

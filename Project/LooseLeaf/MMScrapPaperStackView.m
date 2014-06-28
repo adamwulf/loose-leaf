@@ -145,6 +145,10 @@
     return self;
 }
 
+-(void) finishedLoading{
+    [bezelScrapContainer loadFromDisk];
+}
+
 -(int) fullByteSize{
     return [super fullByteSize] + imagePicker.fullByteSize + bezelScrapContainer.fullByteSize;
     
@@ -623,7 +627,7 @@ int skipAll = NO;
             NSData *data = UIImagePNGRepresentation([visibleStackHolder peekSubview].scrappedImgViewImage);
             [composer addAttachmentData:data  mimeType:@"image/png" fileName:@"LooseLeaf.png"];
             
-            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentModalViewController:composer animated:YES];
+            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:composer animated:YES completion:nil];
         }
     }
 }
@@ -1473,6 +1477,7 @@ int skipAll = NO;
 #pragma mark = Saving and Editing
 
 -(void) didSavePage:(MMPaperView*)page{
+    NSLog(@"did save page: %@", page.uuid);
     [super didSavePage:page];
     if(wantsExport == page){
         wantsExport = nil;

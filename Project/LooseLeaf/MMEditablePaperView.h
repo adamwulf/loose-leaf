@@ -39,6 +39,7 @@
 
 // abstract
 -(void) saveToDisk;
+-(NSString*) bundledPagesPath;
 -(NSString*) pagesPath;
 -(NSString*) thumbnailPath;
 -(UIImage*) cachedImgViewImage;

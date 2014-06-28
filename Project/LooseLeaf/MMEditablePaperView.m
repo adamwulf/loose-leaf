@@ -77,7 +77,13 @@ dispatch_queue_t importThumbnailQueue;
 
         
         // initialize our state manager
-        paperState = [[JotViewStateProxy alloc] initWithInkPath:[self inkPath] andPlistPath:[self plistPath]];
+        if([[NSFileManager defaultManager] fileExistsAtPath:[self inkPath]]){
+            paperState = [[JotViewStateProxy alloc] initWithInkPath:[self inkPath] andPlistPath:[self plistPath]];
+        }else{
+            NSString* bundledInkPath = [[[self bundledPagesPath] stringByAppendingPathComponent:@"ink"] stringByAppendingPathExtension:@"png"];
+            NSString* bundledPlistPath = [[[self bundledPagesPath] stringByAppendingPathComponent:@"info"] stringByAppendingPathExtension:@"plist"];
+            paperState = [[JotViewStateProxy alloc] initWithInkPath:bundledInkPath andPlistPath:bundledPlistPath];
+        }
         paperState.delegate = self;
     }
     return self;
@@ -271,7 +277,7 @@ dispatch_queue_t importThumbnailQueue;
                                [[MMLoadImageCache sharedInstance] updateCacheForPath:[self thumbnailPath] toImage:thumbnail];
                                cachedImgViewImage = thumbnail;
                                onComplete(YES);
-                               NSLog(@"saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
+                               debug_NSLog(@"saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
                            }else{
                                onComplete(NO);
                            }
@@ -308,6 +314,12 @@ static int count = 0;
                 // load thumbnails into a cache for faster repeat loading
                 // https://github.com/adamwulf/loose-leaf/issues/227
                 UIImage* thumbnail = [[MMLoadImageCache sharedInstance] imageAtPath:[self thumbnailPath]];
+                if(!thumbnail){
+                    // we might be loading a new-user-content provided page,
+                    // so load from the bundle as a backup
+                    NSString* bundleThumbPath = [[[self bundledPagesPath] stringByAppendingPathComponent:[@"ink" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
+                    thumbnail = [[MMLoadImageCache sharedInstance] imageAtPath:bundleThumbPath];
+                }
                 if(!thumbnail){
                     definitelyDoesNotHaveAnInkThumbnail = YES;
                 }
@@ -395,12 +407,12 @@ static int count = 0;
     [self saveToDisk];
 }
 
--(void) willCancelStrokeWithTouch:(JotTouch*)touch{
-    [delegate willCancelStrokeWithTouch:touch];
+-(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+    [delegate willCancelStroke:stroke withTouch:touch];
 }
 
--(void) didCancelStrokeWithTouch:(JotTouch*)touch{
-    [delegate didCancelStrokeWithTouch:touch];
+-(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+    [delegate didCancelStroke:stroke withTouch:touch];
 }
 
 -(UIColor*) colorForTouch:(JotTouch *)touch{
@@ -480,16 +492,21 @@ static int count = 0;
     return pagesPath;
 }
 
+-(NSString*) bundledPagesPath{
+    NSString* documentsPath = [[NSBundle mainBundle] pathForResource:@"Documents" ofType:nil];
+    return [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:[self uuid]];
+}
+
 -(NSString*) inkPath{
     if(!inkPath){
-        inkPath = [[[self pagesPath] stringByAppendingPathComponent:@"ink"] stringByAppendingPathExtension:@"png"];;
+        inkPath = [[[self pagesPath] stringByAppendingPathComponent:@"ink"] stringByAppendingPathExtension:@"png"];
     }
     return inkPath;
 }
 
 -(NSString*) plistPath{
     if(!plistPath){
-        plistPath = [[[self pagesPath] stringByAppendingPathComponent:@"info"] stringByAppendingPathExtension:@"plist"];;
+        plistPath = [[[self pagesPath] stringByAppendingPathComponent:@"info"] stringByAppendingPathExtension:@"plist"];
     }
     return plistPath;
 }

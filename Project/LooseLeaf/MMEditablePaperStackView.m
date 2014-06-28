@@ -16,6 +16,7 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMMemoryProfileView.h"
 #import "Mixpanel.h"
+#import <mach/mach_time.h>  // for mach_absolute_time() and friends
 
 @implementation MMEditablePaperStackView{
     UIPopoverController* jotTouchPopover;
@@ -650,6 +651,29 @@
     [stackManager saveStacksToDisk];
 }
 
+-(void) buildDefaultContent{
+    
+    // just need to copy the visible/hiddenPages.plist files
+    // and the content will be loaded from the bundle just fine
+    
+    NSString* documentsPath = [NSFileManager documentsPath];
+    NSURL* realDocumentsPath = [NSURL URLWithString:[documentsPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+
+    NSURL* visiblePagesPlist = [[NSBundle mainBundle] URLForResource:@"visiblePages" withExtension:@"plist" subdirectory:@"Documents"];
+    NSURL* hiddenPagesPlist = [[NSBundle mainBundle] URLForResource:@"hiddenPages" withExtension:@"plist" subdirectory:@"Documents"];
+    
+    [[NSFileManager defaultManager] copyItemAtPath:[visiblePagesPlist path]
+                                            toPath:[[realDocumentsPath path] stringByAppendingPathComponent:@"visiblePages.plist"]
+                                                    error:nil];
+    [[NSFileManager defaultManager] copyItemAtPath:[hiddenPagesPlist path]
+                                            toPath:[[realDocumentsPath path] stringByAppendingPathComponent:@"hiddenPages.plist"]
+                                             error:nil];
+}
+
+-(void) finishedLoading{
+    // noop
+}
+
 -(void) loadStacksFromDisk{
     NSDictionary* pages = [stackManager loadFromDiskWithBounds:self.bounds];
     for(MMPaperView* page in [[pages objectForKey:@"visiblePages"] reverseObjectEnumerator]){
@@ -659,22 +683,20 @@
         [self addPaperToBottomOfHiddenStack:page];
     }
     
-    BOOL isStart = NO;
-    
     if(![self hasPages]){
-        isStart = YES;
-        for(int i=0;i<1;i++){
-            MMEditablePaperView* editable = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
-            [editable setEditable:YES];
-            [self addPaperToBottomOfStack:editable];
-            MMEditablePaperView* paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
-            [self addPaperToBottomOfStack:paper];
-            paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
-            [self addPaperToBottomOfHiddenStack:paper];
-            paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
-            [self addPaperToBottomOfHiddenStack:paper];
-        }
-        [self saveStacksToDisk];
+        self.userInteractionEnabled = NO;
+        UIView* white = [[UIView alloc] initWithFrame:self.bounds];
+        white.backgroundColor = [UIColor whiteColor];
+        [self insertSubview:white belowSubview:visibleStackHolder];
+        [NSThread performBlockInBackground:^{
+            [self buildDefaultContent];
+            [NSThread performBlockOnMainThread:^{
+                self.userInteractionEnabled = YES;
+                [white removeFromSuperview];
+                [self loadStacksFromDisk];
+            }];
+        }];
+        return;
     }
     
     // load the state for the top page in the visible stack
@@ -693,10 +715,7 @@
     
     [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
     [self didChangeTopPage];
-
-    if(isStart){
-        [[visibleStackHolder peekSubview] saveToDisk];
-    }
+    [self finishedLoading];
 }
 
 -(BOOL) hasPages{
@@ -711,11 +730,11 @@
         debug_NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
         return NO;
     }
-    if([[MMPageCacheManager sharedInstance].drawableView.state.currentStrokes count]){
+    if([MMPageCacheManager sharedInstance].drawableView.state.currentStroke){
         return NO;
     }
     for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scrapsOnPaper]){
-        if([scrap.state.drawableView.state.currentStrokes count]){
+        if(scrap.state.drawableView.state.currentStroke){
             return NO;
         }
     }
@@ -749,12 +768,12 @@
     }
 }
 
--(void) willCancelStrokeWithTouch:(JotTouch*)touch{
-    [[self activePen] willCancelStrokeWithTouch:touch];
+-(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+    [[self activePen] willCancelStroke:stroke withTouch:touch];
 }
 
--(void) didCancelStrokeWithTouch:(JotTouch*)touch{
-    [[self activePen] didCancelStrokeWithTouch:touch];
+-(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+    [[self activePen] didCancelStroke:stroke withTouch:touch];
 }
 
 -(UIColor*) colorForTouch:(JotTouch *)touch{
