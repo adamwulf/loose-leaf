@@ -266,7 +266,6 @@
 		663EFFF21946D153006E6AF5 /* MMButtonAwareTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMButtonAwareTapGestureRecognizer.m; sourceTree = "<group>"; };
 		6640E6D717E390BE00EB3F7D /* MMTouchVelocityGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTouchVelocityGestureRecognizer.h; sourceTree = "<group>"; };
 		6640E6D817E390BE00EB3F7D /* MMTouchVelocityGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTouchVelocityGestureRecognizer.m; sourceTree = "<group>"; };
-		6641F9D717B81D770000489F /* com.milestonemade.looseleaf 2013-08-10 13.19.03.621.xcappdata */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "com.milestonemade.looseleaf 2013-08-10 13.19.03.621.xcappdata"; path = "../../TestData/com.milestonemade.looseleaf 2013-08-10 13.19.03.621.xcappdata"; sourceTree = "<group>"; };
 		66423DC919412195000A3709 /* MMDecompressImagePromise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDecompressImagePromise.h; sourceTree = "<group>"; };
 		66423DCA19412195000A3709 /* MMDecompressImagePromise.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDecompressImagePromise.m; sourceTree = "<group>"; };
 		66423DCC194121A9000A3709 /* MMDecompressImagePromiseDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMDecompressImagePromiseDelegate.h; sourceTree = "<group>"; };
@@ -446,7 +445,6 @@
 		66A3A6BA1791F18900D8FE1D /* UIDevice+PPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+PPI.m"; sourceTree = "<group>"; };
 		66A3AF8C15913B5E00F8A7A6 /* NSMutableSet+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableSet+Extras.h"; sourceTree = "<group>"; };
 		66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableSet+Extras.m"; sourceTree = "<group>"; };
-		66A43CB917B96E4C0094EE62 /* com.milestonemade.looseleaf 2013-08-11 15.38.49.227.xcappdata */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "com.milestonemade.looseleaf 2013-08-11 15.38.49.227.xcappdata"; path = "../../TestData/com.milestonemade.looseleaf 2013-08-11 15.38.49.227.xcappdata"; sourceTree = "<group>"; };
 		66A471BC17C7DAA000C2A5B6 /* MMScrappedPaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrappedPaperView.h; sourceTree = "<group>"; };
 		66A471BD17C7DAA000C2A5B6 /* MMScrappedPaperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrappedPaperView.m; sourceTree = "<group>"; };
 		66A471C017C7DEF200C2A5B6 /* SYShape+Bezier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SYShape+Bezier.h"; sourceTree = "<group>"; };
@@ -538,7 +536,6 @@
 		66C38AC7175329160035B872 /* JotTouchSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotTouchSDK.framework; path = ../Submodules/JotUI/JotTouchSDK/JotTouchSDK.framework; sourceTree = "<group>"; };
 		66C47DA5158EF03200E2CD0C /* MMPaperViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperViewDelegate.h; sourceTree = "<group>"; };
 		66CA1A8B185E77F50013505A /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
-		66CDB72E17CC0C7200C636C7 /* com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata"; path = "../../TestData/com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata"; sourceTree = "<group>"; };
 		66CE11F517CFD8A600882275 /* MMScrapPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapPaperStackView.h; sourceTree = "<group>"; };
 		66CE11F617CFD8A600882275 /* MMScrapPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapPaperStackView.m; sourceTree = "<group>"; };
 		66CE11FB17D2700E00882275 /* MMScrapSidebarContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapSidebarContainerView.h; sourceTree = "<group>"; };
@@ -763,17 +760,6 @@
 				664FB55D194E2CF4009C1EF9 /* MMTouchLifeCycleDelegate.h */,
 			);
 			name = Velocity;
-			sourceTree = "<group>";
-		};
-		6641F9D617B81D630000489F /* Test Data */ = {
-			isa = PBXGroup;
-			children = (
-				6641F9D717B81D770000489F /* com.milestonemade.looseleaf 2013-08-10 13.19.03.621.xcappdata */,
-				66A43CB917B96E4C0094EE62 /* com.milestonemade.looseleaf 2013-08-11 15.38.49.227.xcappdata */,
-				66CDB72E17CC0C7200C636C7 /* com.milestonemade.looseleaf 2013-08-26 17.19.21.521.xcappdata */,
-			);
-			name = "Test Data";
-			path = LooseLeaf;
 			sourceTree = "<group>";
 		};
 		66423DCD19425A91000A3709 /* CachedPreviewManager */ = {
@@ -1408,7 +1394,6 @@
 				6627DFAB1901D82300592EEF /* LooseLeaf.entitlements */,
 				6650DD0E18F46D5100ADF591 /* Images.xcassets */,
 				66DCFB901581BCEF00B4918C /* Loose Leaf */,
-				6641F9D617B81D630000489F /* Test Data */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
 				66DCFB871581BCEF00B4918C /* Products */,
 			);
