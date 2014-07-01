@@ -11,7 +11,7 @@
 #import "MMScrapBackgroundView.h"
 #import "MMScrapViewStateDelegate.h"
 
-@interface MMScrapViewState : NSObject{
+@interface MMScrapViewState : NSObject<JotViewStateProxyDelegate>{
     __weak NSObject<MMScrapViewStateDelegate>* delegate;
 }
 

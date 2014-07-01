@@ -63,6 +63,11 @@
     
     // lock to control threading
     NSLock* lock;
+    
+    // YES if the file exists at the path, NO
+    // if it *might* exist
+    BOOL fileExistsAtInkPath;
+    BOOL fileExistsAtPlistPath;
 }
 
 #pragma mark - Properties
@@ -343,11 +348,7 @@
             // load state, if we have any.
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             // load drawable view information here
-            if([[NSFileManager defaultManager] fileExistsAtPath:self.inkImageFile]){
-                drawableViewState = [[JotViewStateProxy alloc] initWithInkPath:self.inkImageFile andPlistPath:self.stateFile];
-            }else{
-                drawableViewState = [[JotViewStateProxy alloc] initWithInkPath:self.bundledInkImageFile andPlistPath:self.bundledStateFile];
-            }
+            drawableViewState = [[JotViewStateProxy alloc] initWithDelegate:self];
             [drawableViewState loadStateAsynchronously:NO
                                               withSize:[drawableView pagePixelSize]
                                             andContext:[drawableView context]
@@ -548,6 +549,43 @@
     [drawableView drawBackingTexture:texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4 clippingPath:self.bezierPath
                      andClippingSize:roundedDrawableBounds];
     [drawableView forceAddEmptyStroke];
+}
+
+#pragma mark - JotViewStateProxyDelegate
+
+// the state for the page and/or scrap might be a default
+// new user tutorial page. if that's the case, we want to
+// load the initial state from the bundle. pages will always
+// save to the user's document's directory.
+//
+// this method will make sure that if the user loads a default
+// page from the bundle, saves it, then reloads it -> then it
+// will be loaded from the documents directory instead of
+// reloaded from scratch from the bundle
+-(NSString*) jotViewStateInkPath{
+    if(fileExistsAtInkPath || [[NSFileManager defaultManager] fileExistsAtPath:self.inkImageFile]){
+        fileExistsAtInkPath = YES;
+        return self.inkImageFile;
+    }else{
+        return self.bundledInkImageFile;
+    }
+}
+
+-(NSString*) jotViewStatePlistPath{
+    if(fileExistsAtPlistPath || [[NSFileManager defaultManager] fileExistsAtPath:self.inkImageFile]){
+        fileExistsAtPlistPath = YES;
+        return self.inkImageFile;
+    }else{
+        return self.bundledInkImageFile;
+    }
+}
+
+-(void) didLoadState:(JotViewStateProxy *)state{
+    // noop
+}
+
+-(void) didUnloadState:(JotViewStateProxy *)state{
+    // noop
 }
 
 #pragma mark - dealloc
