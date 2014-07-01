@@ -294,7 +294,6 @@
        ([_panGesture.validTouches count] == 0 && isBeingPannedAndZoomed)){
         if(panGesture.hasPannedOrScaled){
             if(isBeingPannedAndZoomed){
-                self.isBeingPannedAndZoomed = NO;
                 if(scale < (kMinPageZoom + kZoomToListPageZoom)/2 && panGesture.didExitToBezel == MMBezelDirectionNone){
                     if((_panGesture.scaleDirection & MMScaleDirectionSmaller) == MMScaleDirectionSmaller){
                         [self.delegate finishedScalingReallySmall:self];
@@ -321,6 +320,7 @@
                                                              toFrame:self.frame];
                     }
                 }
+                self.isBeingPannedAndZoomed = NO;
             }
         }
         return;
