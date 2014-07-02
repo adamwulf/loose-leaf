@@ -19,6 +19,9 @@
     BOOL canUndo;
 }
 
++(MMUndoRedoBlockItem*) itemWithUndoBlock:(void(^)())undoBlock andRedoBlock:(void(^)())redoBlock{
+    return [[MMUndoRedoBlockItem alloc] initWithUndoBlock:undoBlock andRedoBlock:redoBlock];
+}
 
 /** Initialize with the provided block. */
 - (id) initWithUndoBlock:(void(^)())undoBlock andRedoBlock:(void(^)())redoBlock {
@@ -28,6 +31,7 @@
     /* Blocks must be copied */
     _undoBlock = [undoBlock copy];
     _redoBlock = [redoBlock copy];
+    canUndo = YES;
     
     return self;
 }
@@ -51,5 +55,14 @@
         @throw [NSException exceptionWithName:@"MMUndoInconsistencyException" reason:@"redo item is already redone" userInfo:nil];
     }
 }
+
+-(void) finalizeUndoneState{
+    NSLog(@"finalizeUndoneState");
+}
+
+-(void) finalizeRedoneState{
+    NSLog(@"finalizeRedoneState");
+}
+
 
 @end

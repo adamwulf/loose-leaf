@@ -7,8 +7,8 @@
 //
 
 #import "MMPageUndoRedoManager.h"
-#import "MMUndoRedoItem.h"
 #import <JotUI/JotUI.h>
+#import "Constants.h"
 
 @implementation MMPageUndoRedoManager{
     NSMutableArray* stackOfUndoableItems;
@@ -22,6 +22,19 @@
         stackOfUndoneItems = [NSMutableArray array];
     }
     return self;
+}
+
+-(void) addUndoItem:(NSObject<MMUndoRedoItem>*)item{
+    
+    [stackOfUndoneItems makeObjectsPerformSelector:@selector(finalizeRedoneState)];
+    [stackOfUndoneItems removeAllObjects];
+    [stackOfUndoableItems addObject:item];
+    while([stackOfUndoableItems count] > kUndoLimit){
+        NSObject<MMUndoRedoItem>* item = [stackOfUndoableItems firstObject];
+        [stackOfUndoableItems removeObject:item];
+        [item finalizeUndoneState];
+    }
+    
 }
 
 -(void) undo{
@@ -41,7 +54,7 @@
     NSObject<MMUndoRedoItem>* item = [stackOfUndoneItems lastObject];
     if(item){
         [stackOfUndoneItems removeLastObject];
-        [item undo];
+        [item redo];
         [stackOfUndoableItems addObject:item];
     }
 }

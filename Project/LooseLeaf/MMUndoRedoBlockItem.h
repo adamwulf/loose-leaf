@@ -11,4 +11,6 @@
 
 @interface MMUndoRedoBlockItem : NSObject<MMUndoRedoItem>
 
++(MMUndoRedoBlockItem*) itemWithUndoBlock:(void(^)())undoBlock andRedoBlock:(void(^)())redoBlock;
+
 @end

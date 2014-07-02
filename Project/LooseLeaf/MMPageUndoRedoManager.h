@@ -7,7 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MMUndoRedoItem.h"
 
 @interface MMPageUndoRedoManager : NSObject
+
+-(void) addUndoItem:(NSObject<MMUndoRedoItem>*)item;
+
+-(void) undo;
+
+-(void) redo;
 
 @end

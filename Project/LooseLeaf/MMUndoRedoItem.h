@@ -14,4 +14,8 @@
 
 -(void) redo;
 
+-(void) finalizeUndoneState;
+
+-(void) finalizeRedoneState;
+
 @end

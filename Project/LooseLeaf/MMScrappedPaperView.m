@@ -104,7 +104,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
         }
     }
     [super undo];
-    [self debugPrintUndoStatus];
 }
 
 -(void) redo{
@@ -114,7 +113,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
         }
     }
     [super redo];
-    [self debugPrintUndoStatus];
 }
 
 #pragma mark - Protected Methods
@@ -315,32 +313,12 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 #pragma mark - JotViewDelegate
 
--(void) debugPrintUndoStatus{
-    
-    NSLog(@"**********************************************************************");
-    NSLog(@"Undo status");
-    NSLog(@" page %@", self.uuid);
-    NSLog(@"   currentStroke: %p", self.drawableView.state.currentStroke);
-    NSLog(@"   undoable stack: %i", (int)[self.drawableView.state.stackOfStrokes count]);
-    NSLog(@"   undone stack:   %i", (int)[self.drawableView.state.stackOfUndoneStrokes count]);
-    NSLog(@"scraps:");
-    for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
-        NSLog(@" scrap %@", scrap.uuid);
-        NSLog(@"   currentStroke: %p", scrap.state.drawableView.state.currentStroke);
-        NSLog(@"   undoable stack: %i", (int)[scrap.state.drawableView.state.stackOfStrokes count]);
-        NSLog(@"   undone stack:   %i", (int)[scrap.state.drawableView.state.stackOfUndoneStrokes count]);
-    }
-    NSLog(@"**********************************************************************");
-}
-
-
 -(void) didEndStrokeWithTouch:(JotTouch *)touch{
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
         [scrap addUndoLevelAndFinishStroke];
         [scrap.state.drawableView clearUndoneStrokes];
     }
     [super didEndStrokeWithTouch:touch];
-    [self debugPrintUndoStatus];
 }
 
 -(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch *)touch{
@@ -357,7 +335,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
         [scrap.state.drawableView undoAndForget];
     }
     [super didCancelStroke:stroke withTouch:touch];
-    [self debugPrintUndoStatus];
 }
 
 
