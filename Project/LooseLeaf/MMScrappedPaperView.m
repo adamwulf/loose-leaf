@@ -7,6 +7,7 @@
 //
 
 #import "MMScrappedPaperView.h"
+#import "MMEditablePaperView+UndoRedo.h"
 #import "PolygonToolDelegate.h"
 #import "MMScrapView.h"
 #import "MMUntouchableView.h"

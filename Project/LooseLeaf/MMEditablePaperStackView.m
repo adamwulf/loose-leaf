@@ -268,19 +268,13 @@
 #pragma mark - Tool Button Actions
 
 -(void) undo:(UIButton*)_button{
-    id obj = [visibleStackHolder peekSubview];
-    if([obj respondsToSelector:@selector(undo)]){
-        [obj undo];
-//        [TestFlight passCheckpoint:@"BUTTON_UNDO"];
-    }
+    MMUndoablePaperView* obj = [visibleStackHolder peekSubview];
+    [obj.undoRedoManager undo];
 }
 
 -(void) redo:(UIButton*)_button{
-    id obj = [visibleStackHolder peekSubview];
-    if([obj respondsToSelector:@selector(redo)]){
-        [obj redo];
-//        [TestFlight passCheckpoint:@"BUTTON_REDO"];
-    }
+    MMUndoablePaperView* obj = [visibleStackHolder peekSubview];
+    [obj.undoRedoManager redo];
 }
 
 -(void) eraserTapped:(UIButton*)_button{

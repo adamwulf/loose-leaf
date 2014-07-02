@@ -18,6 +18,7 @@
 		6612C8851964C0E3003A9575 /* MMPageUndoRedoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C8841964C0E3003A9575 /* MMPageUndoRedoManager.m */; };
 		6612C8881964C113003A9575 /* MMUndoablePaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C8871964C113003A9575 /* MMUndoablePaperView.m */; };
 		6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C88A1964C401003A9575 /* MMUndoRedoBlockItem.m */; };
+		6612C8901964CC76003A9575 /* MMUndoRedoStrokeItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C88F1964CC76003A9575 /* MMUndoRedoStrokeItem.m */; };
 		661507641783338E00B181F3 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6615075E1783338E00B181F3 /* libTestFlight.a */; };
 		66150769178333D500B181F3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66150768178333D500B181F3 /* libz.dylib */; };
 		6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6616CCD018B6AE9700CAD0F3 /* JotUI.framework */; };
@@ -234,6 +235,9 @@
 		6612C8891964C401003A9575 /* MMUndoRedoBlockItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoRedoBlockItem.h; sourceTree = "<group>"; };
 		6612C88A1964C401003A9575 /* MMUndoRedoBlockItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUndoRedoBlockItem.m; sourceTree = "<group>"; };
 		6612C88C1964C57E003A9575 /* MMUndoRedoItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMUndoRedoItem.h; sourceTree = "<group>"; };
+		6612C88E1964CC76003A9575 /* MMUndoRedoStrokeItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoRedoStrokeItem.h; sourceTree = "<group>"; };
+		6612C88F1964CC76003A9575 /* MMUndoRedoStrokeItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUndoRedoStrokeItem.m; sourceTree = "<group>"; };
+		6612C8911964CDB1003A9575 /* MMEditablePaperView+UndoRedo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMEditablePaperView+UndoRedo.h"; sourceTree = "<group>"; };
 		6615075E1783338E00B181F3 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		6615075F1783338E00B181F3 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		661507601783338E00B181F3 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
@@ -727,13 +731,23 @@
 		6612C8821964C0C4003A9575 /* Undo Redo */ = {
 			isa = PBXGroup;
 			children = (
+				6612C88D1964CC58003A9575 /* Items */,
 				6612C8831964C0E3003A9575 /* MMPageUndoRedoManager.h */,
 				6612C8841964C0E3003A9575 /* MMPageUndoRedoManager.m */,
-				6612C8891964C401003A9575 /* MMUndoRedoBlockItem.h */,
-				6612C88A1964C401003A9575 /* MMUndoRedoBlockItem.m */,
 				6612C88C1964C57E003A9575 /* MMUndoRedoItem.h */,
 			);
 			name = "Undo Redo";
+			sourceTree = "<group>";
+		};
+		6612C88D1964CC58003A9575 /* Items */ = {
+			isa = PBXGroup;
+			children = (
+				6612C8891964C401003A9575 /* MMUndoRedoBlockItem.h */,
+				6612C88A1964C401003A9575 /* MMUndoRedoBlockItem.m */,
+				6612C88E1964CC76003A9575 /* MMUndoRedoStrokeItem.h */,
+				6612C88F1964CC76003A9575 /* MMUndoRedoStrokeItem.m */,
+			);
+			name = Items;
 			sourceTree = "<group>";
 		};
 		6615075D1783338E00B181F3 /* TestFlightSDK */ = {
@@ -820,6 +834,7 @@
 				66C47DA5158EF03200E2CD0C /* MMPaperViewDelegate.h */,
 				6695B6EA17505FBF0069E61F /* MMEditablePaperView.h */,
 				6695B6EB17505FBF0069E61F /* MMEditablePaperView.m */,
+				6612C8911964CDB1003A9575 /* MMEditablePaperView+UndoRedo.h */,
 				66A471BC17C7DAA000C2A5B6 /* MMScrappedPaperView.h */,
 				66A471BD17C7DAA000C2A5B6 /* MMScrappedPaperView.m */,
 				6612C8861964C113003A9575 /* MMUndoablePaperView.h */,
@@ -1883,6 +1898,7 @@
 				66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */,
 				66E716B71936580A00548491 /* MPCSerializedJSONData.m in Sources */,
 				66B21A7A175E595B0049F1AF /* MMBlockOperation.m in Sources */,
+				6612C8901964CC76003A9575 /* MMUndoRedoStrokeItem.m in Sources */,
 				6693C94918E4C55B0054FF41 /* MMLeftCloseButton.m in Sources */,
 				6655E926176291C800E4F36A /* MMScissorButton.m in Sources */,
 				66D7496318A6DB010015650E /* MMDrawingTouchGestureRecognizer.m in Sources */,

@@ -8,6 +8,8 @@
 
 #import "MMUndoablePaperView.h"
 #import "MMUndoRedoBlockItem.h"
+#import "MMEditablePaperView+UndoRedo.h"
+#import "MMUndoRedoStrokeItem.h"
 
 @implementation MMUndoablePaperView{
     MMPageUndoRedoManager* undoRedoManager;
@@ -27,24 +29,14 @@
     return self;
 }
 
--(void) undo{
-    NSLog(@"undo!");
-    [self.undoRedoManager undo];
-}
-
--(void) redo{
-    NSLog(@"redo!");
-    [self.undoRedoManager redo];
-}
-
 #pragma mark - Undo / Redo of JotViews
 
--(void) undoSuper{
+-(void) undo{
     [super undo];
     [self debugPrintUndoStatus];
 }
 
--(void) redoSuper{
+-(void) redo{
     [super redo];
     [self debugPrintUndoStatus];
 }
@@ -52,12 +44,7 @@
 #pragma mark - Methods That Trigger Undo
 
 -(void) addStandardStrokeUndoItem{
-    __weak MMUndoablePaperView* weakSelf = self;
-    [self.undoRedoManager addUndoItem:[MMUndoRedoBlockItem itemWithUndoBlock:^{
-        [weakSelf undoSuper];
-    } andRedoBlock:^{
-        [weakSelf redoSuper];
-    }]];
+    [self.undoRedoManager addUndoItem:[MMUndoRedoStrokeItem itemForPage:self]];
 }
 
 

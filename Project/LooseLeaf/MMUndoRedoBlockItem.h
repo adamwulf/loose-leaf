@@ -13,4 +13,6 @@
 
 +(MMUndoRedoBlockItem*) itemWithUndoBlock:(void(^)())undoBlock andRedoBlock:(void(^)())redoBlock;
 
+- (id) initWithUndoBlock:(void(^)())undoBlock andRedoBlock:(void(^)())redoBlock;
+
 @end
