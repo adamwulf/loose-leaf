@@ -13,6 +13,7 @@
 #import "TestFlight.h"
 #import "MMScrappedPaperView.h"
 #import "Mixpanel.h"
+#import "MMUndoablePaperView.h"
 
 @implementation MMPaperStackView{
     MMPapersIcon* papersIcon;
@@ -112,7 +113,7 @@
  */
 -(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(UIView*)stackView{
     while([stackView.subviews count] < numberOfPagesToEnsure){
-        MMEditablePaperView* page = [[MMScrappedPaperView alloc] initWithFrame:stackView.bounds];
+        MMEditablePaperView* page = [[MMUndoablePaperView alloc] initWithFrame:stackView.bounds];
         page.isBrandNewPage = YES;
         page.delegate = self;
         [stackView addSubviewToBottomOfStack:page];

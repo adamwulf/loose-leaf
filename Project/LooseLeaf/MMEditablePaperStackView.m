@@ -15,6 +15,7 @@
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMMemoryProfileView.h"
+#import "MMUndoablePaperView.h"
 #import "Mixpanel.h"
 #import <mach/mach_time.h>  // for mach_absolute_time() and friends
 
@@ -329,7 +330,7 @@
  * without changing the hidden stack's contents
  */
 -(void) addPageButtonTapped:(UIButton*)_button{
-    MMEditablePaperView* page = [[MMScrappedPaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+    MMEditablePaperView* page = [[MMUndoablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.isBrandNewPage = YES;
     page.delegate = self;
     [hiddenStackHolder pushSubview:page];

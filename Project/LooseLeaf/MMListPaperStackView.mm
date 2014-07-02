@@ -11,6 +11,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMShadowManager.h"
 #import "MMScrappedPaperView.h"
+#import "MMUndoablePaperView.h"
 #import "Mixpanel.h"
 #include <map>
 #include <iterator>
@@ -120,7 +121,7 @@
 -(void) didTapAddButtonInListView{
     //
     // this'll determine the resolution of the canvas too
-    MMEditablePaperView* paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
+    MMEditablePaperView* paper = [[MMUndoablePaperView alloc] initWithFrame:self.bounds];
     // now size it for display
     paper.frame = addPageButtonInListView.frame;
     [self addPaperToBottomOfHiddenStack:paper];

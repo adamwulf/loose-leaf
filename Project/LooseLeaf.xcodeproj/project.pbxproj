@@ -15,6 +15,9 @@
 		660E1DB0158FC7DB0001DA12 /* MMPaperIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAF158FC7DB0001DA12 /* MMPaperIcon.m */; };
 		660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DB2159028560001DA12 /* NSArray+MapReduce.m */; };
 		660E9DCB19183032000A392A /* blackblur.png in Resources */ = {isa = PBXBuildFile; fileRef = 660E9DCA19183032000A392A /* blackblur.png */; };
+		6612C8851964C0E3003A9575 /* MMPageUndoRedoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C8841964C0E3003A9575 /* MMPageUndoRedoManager.m */; };
+		6612C8881964C113003A9575 /* MMUndoablePaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C8871964C113003A9575 /* MMUndoablePaperView.m */; };
+		6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C88A1964C401003A9575 /* MMUndoRedoBlockItem.m */; };
 		661507641783338E00B181F3 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6615075E1783338E00B181F3 /* libTestFlight.a */; };
 		66150769178333D500B181F3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66150768178333D500B181F3 /* libz.dylib */; };
 		6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6616CCD018B6AE9700CAD0F3 /* JotUI.framework */; };
@@ -224,6 +227,13 @@
 		660E1DB1159028560001DA12 /* NSArray+MapReduce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+MapReduce.h"; sourceTree = "<group>"; };
 		660E1DB2159028560001DA12 /* NSArray+MapReduce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+MapReduce.m"; sourceTree = "<group>"; };
 		660E9DCA19183032000A392A /* blackblur.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackblur.png; sourceTree = "<group>"; };
+		6612C8831964C0E3003A9575 /* MMPageUndoRedoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageUndoRedoManager.h; sourceTree = "<group>"; };
+		6612C8841964C0E3003A9575 /* MMPageUndoRedoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPageUndoRedoManager.m; sourceTree = "<group>"; };
+		6612C8861964C113003A9575 /* MMUndoablePaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoablePaperView.h; sourceTree = "<group>"; };
+		6612C8871964C113003A9575 /* MMUndoablePaperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUndoablePaperView.m; sourceTree = "<group>"; };
+		6612C8891964C401003A9575 /* MMUndoRedoBlockItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoRedoBlockItem.h; sourceTree = "<group>"; };
+		6612C88A1964C401003A9575 /* MMUndoRedoBlockItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUndoRedoBlockItem.m; sourceTree = "<group>"; };
+		6612C88C1964C57E003A9575 /* MMUndoRedoItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMUndoRedoItem.h; sourceTree = "<group>"; };
 		6615075E1783338E00B181F3 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		6615075F1783338E00B181F3 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		661507601783338E00B181F3 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
@@ -714,6 +724,18 @@
 			name = Icons;
 			sourceTree = "<group>";
 		};
+		6612C8821964C0C4003A9575 /* Undo Redo */ = {
+			isa = PBXGroup;
+			children = (
+				6612C8831964C0E3003A9575 /* MMPageUndoRedoManager.h */,
+				6612C8841964C0E3003A9575 /* MMPageUndoRedoManager.m */,
+				6612C8891964C401003A9575 /* MMUndoRedoBlockItem.h */,
+				6612C88A1964C401003A9575 /* MMUndoRedoBlockItem.m */,
+				6612C88C1964C57E003A9575 /* MMUndoRedoItem.h */,
+			);
+			name = "Undo Redo";
+			sourceTree = "<group>";
+		};
 		6615075D1783338E00B181F3 /* TestFlightSDK */ = {
 			isa = PBXGroup;
 			children = (
@@ -787,6 +809,7 @@
 		664C62F115A36DB00072736A /* MMPaperView */ = {
 			isa = PBXGroup;
 			children = (
+				6612C8821964C0C4003A9575 /* Undo Redo */,
 				66E47E22187F278A000AFD18 /* Ruler */,
 				66B62C4B17F245E6006D31EB /* Page State */,
 				66A471C317C7E05C00C2A5B6 /* Scraps */,
@@ -799,6 +822,8 @@
 				6695B6EB17505FBF0069E61F /* MMEditablePaperView.m */,
 				66A471BC17C7DAA000C2A5B6 /* MMScrappedPaperView.h */,
 				66A471BD17C7DAA000C2A5B6 /* MMScrappedPaperView.m */,
+				6612C8861964C113003A9575 /* MMUndoablePaperView.h */,
+				6612C8871964C113003A9575 /* MMUndoablePaperView.m */,
 			);
 			name = MMPaperView;
 			sourceTree = "<group>";
@@ -1797,6 +1822,7 @@
 				66932965159593C00033E557 /* MMRotationManager.m in Sources */,
 				6693296A1595A87E0033E557 /* MMMapButton.m in Sources */,
 				669329701598E4DC0033E557 /* NSString+UUID.m in Sources */,
+				6612C8881964C113003A9575 /* MMUndoablePaperView.m in Sources */,
 				669B764F18E9FE490041DAE7 /* ALAsset+Thumbnail.m in Sources */,
 				66A3921817CC4EE000B4974D /* NSArray+Extras.m in Sources */,
 				669329731598EE210033E557 /* UIView+Debug.m in Sources */,
@@ -1818,6 +1844,7 @@
 				66AC8D8618E8902A00A65036 /* ALAssetsGroup+Properties.m in Sources */,
 				66AC8D8E18E89C9800A65036 /* MMAlbumRowView.m in Sources */,
 				66AC153D1805F2F8005315C8 /* MMLoadImageCache.m in Sources */,
+				6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */,
 				66423DCB19412195000A3709 /* MMDecompressImagePromise.m in Sources */,
 				66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */,
 				6699715217DBA02700E81467 /* MMDebugDrawView.m in Sources */,
@@ -1875,6 +1902,7 @@
 				6693C94C18E4E7860054FF41 /* MMSlidingSidebarContainerView.m in Sources */,
 				66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */,
 				66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */,
+				6612C8851964C0E3003A9575 /* MMPageUndoRedoManager.m in Sources */,
 				66A471C617C7E06B00C2A5B6 /* MMScrapView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
