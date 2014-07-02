@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>New item</key>
-	<string>shellScript = "cd \"$SRCROOT/LooseLeaf\"\n./generateLicenses.pl\ntouch Settings.bundle";</string>
+	<string>shellScript = &quot;cd \&quot;$SRCROOT/LooseLeaf\&quot;\n./generateLicenses.pl\ntouch Settings.bundle&quot;;</string>
 	<key>PreferenceSpecifiers</key>
 	<array>
 		<dict>
@@ -30,7 +30,7 @@
 		</dict>
 		<dict>
 			<key>Title</key>
-			<string>Copyright 2013 Milestone Made, LLC</string>
+			<string>Copyright 2014 Milestone Made, LLC</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>
