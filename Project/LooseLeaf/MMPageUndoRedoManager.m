@@ -67,6 +67,7 @@
     NSArray* saveableStackOfUndoableItems = [stackOfUndoableItems mapObjectsUsingSelector:@selector(asDictionary)];
     NSDictionary* objectsToSave = [NSDictionary dictionaryWithObjectsAndKeys:saveableStackOfUndoneItems, @"saveableStackOfUndoneItems", saveableStackOfUndoableItems, @"saveableStackOfUndoableItems", nil];
     [objectsToSave writeToFile:path atomically:YES];
+    NSLog(@"wrote undo state: %@", path);
 }
 
 -(void) loadFrom:(NSString*)path{

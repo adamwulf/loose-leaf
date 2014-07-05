@@ -1029,9 +1029,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
             [strongScrapState unload];
         }
     });
-    [[NSThread mainThread] performBlock:^{
-        
-    }];
 }
 
 -(BOOL) hasStateLoaded{

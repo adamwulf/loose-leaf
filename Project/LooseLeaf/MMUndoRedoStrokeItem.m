@@ -29,11 +29,10 @@
         // noop
         page = _page;
     };
-
     return self;
 }
 
-#pragma mark - Save and Load
+#pragma mark - Serialize
 
 -(NSDictionary*) asDictionary{
     return [NSDictionary dictionaryWithObject:NSStringFromClass([self class]) forKey:@"class"];

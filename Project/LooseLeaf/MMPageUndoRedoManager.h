@@ -19,4 +19,8 @@
 
 -(void) redo;
 
+-(void) saveTo:(NSString*)path;
+
+-(void) loadFrom:(NSString*)path;
+
 @end

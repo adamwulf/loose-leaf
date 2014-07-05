@@ -11,6 +11,13 @@
 #import "MMEditablePaperView+UndoRedo.h"
 #import "MMUndoRedoStrokeItem.h"
 
+@interface MMScrappedPaperView (Queue)
+
++(dispatch_queue_t) concurrentBackgroundQueue;
+
+@end
+
+
 @implementation MMUndoablePaperView{
     MMPageUndoRedoManager* undoRedoManager;
     NSString* undoStatePath;
@@ -28,6 +35,45 @@
         undoRedoManager = [[MMPageUndoRedoManager alloc] initForPage:self];
     }
     return self;
+}
+
+#pragma mark - Saving
+
+-(void) saveToDisk:(void (^)(BOOL))onComplete{
+    // track if our back ground page has saved
+    dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+    // track if all of our scraps have saved
+    dispatch_semaphore_t sema2 = dispatch_semaphore_create(0);
+
+    
+    __block BOOL hadEditsToSave;
+    [super saveToDisk:^(BOOL _hadEditsToSave){
+        // save all our ink/strokes/thumbs/etc to disk
+        hadEditsToSave = _hadEditsToSave;
+        dispatch_semaphore_signal(sema1);
+    }];
+    dispatch_async([MMScrappedPaperView concurrentBackgroundQueue], ^(void) {
+        // also write undostack to disk
+        [undoRedoManager saveTo:[self undoStatePath]];
+        dispatch_semaphore_signal(sema2);
+    });
+    
+    dispatch_async([MMScrappedPaperView concurrentBackgroundQueue], ^(void) {
+        @autoreleasepool {
+            dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+            dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
+            
+            if(onComplete) onComplete(hadEditsToSave);
+        }
+    });
+}
+
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext *)context{
+    [super loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
+}
+
+-(void) unloadState{
+    [super unloadState];
 }
 
 #pragma mark - Undo / Redo of JotViews

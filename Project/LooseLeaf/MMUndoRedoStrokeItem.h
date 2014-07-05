@@ -16,5 +16,4 @@
 
 -(id) initForPage:(MMUndoablePaperView*)page;
 
-
 @end
