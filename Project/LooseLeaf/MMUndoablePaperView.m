@@ -10,6 +10,9 @@
 #import "MMUndoRedoBlockItem.h"
 #import "MMEditablePaperView+UndoRedo.h"
 #import "MMUndoRedoStrokeItem.h"
+#import "MMUndoRedoAddScrapItem.h"
+#import "MMUndoRedoRemoveScrapItem.h"
+#import "MMUndoRedoGroupItem.h"
 
 @interface MMScrappedPaperView (Queue)
 
@@ -100,6 +103,27 @@
 }
 
 #pragma mark - Methods That Trigger Undo
+
+-(MMScissorResult*) completeScissorsCutWithPath:(UIBezierPath *)scissorPath{
+    MMScissorResult* result = [super completeScissorsCutWithPath:scissorPath];
+    
+    if([result.addedScraps count] || [result.removedScraps count]){
+        NSMutableArray* undoItems = [NSMutableArray array];
+        if([result didAddFillStroke]){
+            [undoItems addObject:[MMUndoRedoStrokeItem itemForPage:self]];
+        }
+        for (MMScrapView* scrap in result.addedScraps) {
+            [undoItems addObject:[MMUndoRedoAddScrapItem itemForPage:self andScrap:scrap]];
+        }
+        for (MMScrapView* scrap in result.removedScraps) {
+            [undoItems addObject:[MMUndoRedoRemoveScrapItem itemForPage:self andScrap:scrap]];
+        }
+        
+        [self.undoRedoManager addUndoItem:[MMUndoRedoGroupItem itemForPage:self withItems:undoItems]];
+    }
+    
+    return result;
+}
 
 -(void) addStandardStrokeUndoItem{
     [self.undoRedoManager addUndoItem:[MMUndoRedoStrokeItem itemForPage:self]];

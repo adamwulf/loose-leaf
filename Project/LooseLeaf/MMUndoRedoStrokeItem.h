@@ -6,11 +6,11 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMUndoRedoBlockItem.h"
+#import "MMUndoRedoPageItem.h"
 
 @class MMUndoablePaperView;
 
-@interface MMUndoRedoStrokeItem : MMUndoRedoBlockItem
+@interface MMUndoRedoStrokeItem : MMUndoRedoPageItem
 
 +(id) itemForPage:(MMUndoablePaperView*)_page;
 

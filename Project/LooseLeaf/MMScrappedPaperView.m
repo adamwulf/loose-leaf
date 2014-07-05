@@ -221,6 +221,17 @@ static dispatch_queue_t concurrentBackgroundQueue;
     [scrap setShouldShowShadow:[self isEditable]];
 }
 
+-(void) removeScrap:(MMScrapView*)scrap{
+    @synchronized(scrapContainerView){
+        if(scrapContainerView == scrap.superview){
+            [scrap setShouldShowShadow:NO];
+            [scrap removeFromSuperview];
+        }else{
+            @throw [NSException exceptionWithName:@"MMScrapContainerException" reason:@"Removing scrap from a container that doesn't own it" userInfo:nil];
+        }
+    }
+}
+
 -(BOOL) hasScrap:(MMScrapView*)scrap{
     return [[self scrapsOnPaper] containsObject:scrap];
 }
@@ -583,10 +594,14 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 
--(void) completeScissorsCutWithPath:(UIBezierPath*)scissorPath{
+-(MMScissorResult*) completeScissorsCutWithPath:(UIBezierPath*)scissorPath{
     // track path information for debugging
     NSString* debugFullText = @"";
 
+    NSMutableArray* scrapsBeingBuilt = [NSMutableArray array];
+    NSMutableArray* scrapsBeingRemoved = [NSMutableArray array];
+    BOOL didFill = NO;
+    
     @try {
         // scale the scissors into the zoom of the page, in case the user is
         // pinching and zooming the page our scissor path will be in page coordinates
@@ -596,7 +611,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
         BOOL hasBuiltAnyScraps = NO;
         
         CGAffineTransform verticalFlip = CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height);
-
 
         // iterate over the scraps from the visibly top scraps
         // to the bottom of the stack
@@ -663,11 +677,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
                         [vectors addObject:[MMVector vectorWithPoint:scrap.center andPoint:addedScrap.center]];
                         
                         [scraps addObject:addedScrap];
+                        [scrapsBeingBuilt addObject:addedScrap];
                     }
                     //
                     // TODO: handle deleting scraps, and consider the undo queue as well
                     // https://github.com/adamwulf/loose-leaf/issues/213
                     [scrap removeFromSuperview];
+                    [scrapsBeingRemoved addObject:scrap];
                     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScraps by:@(-1)];
                 }
                 // clip out the portion of the scissor path that
@@ -705,6 +721,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
             MMScrapView* addedScrap = [self addScrapWithPath:scissorPath andScale:1.0];
             [addedScrap stampContentsFrom:self.drawableView];
             
+            [scrapsBeingBuilt addObject:addedScrap];
+            
             // now we need to add a stroke to the underlying page that
             // will erase the area below the new scrap
             CGPoint p1 = addedScrap.bounds.origin;
@@ -741,13 +759,21 @@ static dispatch_queue_t concurrentBackgroundQueue;
             
 
             [scissorPath applyTransform:CGAffineTransformMakeTranslation(-scissorPath.bounds.origin.x + kScrapShadowBufferSize, -scissorPath.bounds.origin.y + kScrapShadowBufferSize)];
+            didFill = YES;
             [[NSThread mainThread] performBlock:^{
                 [drawableView forceAddStrokeForFilledPath:scissorPath andP1:p1 andP2:p2 andP3:p3 andP4:p4 andSize:addedScrap.bounds.size];
+                for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
+                    [scrap.state.drawableView forceAddEmptyStroke];
+                }
                 [self saveToDisk];
             } afterDelay:.01];
         }else{
             [self saveToDisk];
         }
+        
+        // undo
+        NSLog(@"need to manage undo item for: %d added scraps and %d removed scraps", (int) [scrapsBeingBuilt count], (int) [scrapsBeingRemoved count]);
+        
 
         // clear the dotted line of the scissor
         [shapeBuilderView clear];
@@ -775,6 +801,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
             [rootController presentViewController:controller animated:YES completion:nil];
         }
     }
+    
+    return [[MMScissorResult alloc] initWithAddedScraps:scrapsBeingBuilt andRemovedScraps:scrapsBeingRemoved andDidFillStroke:didFill];
 }
 
 

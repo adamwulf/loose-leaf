@@ -11,9 +11,7 @@
 #import "MMEditablePaperView+UndoRedo.h"
 
 
-@implementation MMUndoRedoStrokeItem{
-    __weak MMUndoablePaperView* page;
-}
+@implementation MMUndoRedoStrokeItem
 
 +(id) itemForPage:(MMUndoablePaperView*)_page{
     return [[MMUndoRedoStrokeItem alloc] initForPage:_page];
@@ -25,9 +23,8 @@
         [weakPage undo];
     } andRedoBlock:^{
         [weakPage redo];
-    }]){
+    } forPage:_page]){
         // noop
-        page = _page;
     };
 
     return self;

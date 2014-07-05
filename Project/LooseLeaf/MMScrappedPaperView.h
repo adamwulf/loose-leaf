@@ -10,6 +10,7 @@
 #import "MMPanAndPinchScrapGestureRecognizer.h"
 #import "MMScrapsOnPaperStateDelegate.h"
 #import "MMDecompressImagePromiseDelegate.h"
+#import "MMScissorResult.h"
 #import <MessageUI/MFMailComposeViewController.h>
 
 /**
@@ -21,6 +22,8 @@
 }
 
 -(void) addScrap:(MMScrapView*)scrap;
+-(void) removeScrap:(MMScrapView*)scrap;
+
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andScale:(CGFloat)scale;
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)lastBestRotation andScale:(CGFloat)scale;
 -(BOOL) hasScrap:(MMScrapView*)scrap;
@@ -39,7 +42,7 @@
 
 -(void) cancelScissorAtPoint:(CGPoint)point;
 
--(void) completeScissorsCutWithPath:(UIBezierPath*)scissorPath;
+-(MMScissorResult*) completeScissorsCutWithPath:(UIBezierPath*)scissorPath;
 
 -(NSString*) scrappedThumbnailPath;
 
