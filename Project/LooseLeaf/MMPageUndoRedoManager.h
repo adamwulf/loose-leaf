@@ -19,8 +19,12 @@
 
 -(void) redo;
 
+#pragma mark - Saving and Loading
+
 -(void) saveTo:(NSString*)path;
 
 -(void) loadFrom:(NSString*)path;
+
+-(void) unloadState;
 
 @end

@@ -16,55 +16,73 @@
     MMUndoablePaperView* page;
     NSMutableArray* stackOfUndoableItems;
     NSMutableArray* stackOfUndoneItems;
+    BOOL hasEditsToSave;
 }
 
 
--(id) initForPage:(MMUndoablePaperView*)page{
+-(id) initForPage:(MMUndoablePaperView*)_page{
     if(self = [super init]){
+        page = _page;
         stackOfUndoableItems = [NSMutableArray array];
         stackOfUndoneItems = [NSMutableArray array];
+        hasEditsToSave = NO;
     }
     return self;
 }
 
 -(void) addUndoItem:(NSObject<MMUndoRedoItem>*)item{
-    
-    [stackOfUndoneItems makeObjectsPerformSelector:@selector(finalizeRedoneState)];
-    [stackOfUndoneItems removeAllObjects];
-    [stackOfUndoableItems addObject:item];
-    while([stackOfUndoableItems count] > kUndoLimit){
-        NSObject<MMUndoRedoItem>* item = [stackOfUndoableItems firstObject];
-        [stackOfUndoableItems removeObject:item];
-        [item finalizeUndoneState];
+    @synchronized(self){
+        [stackOfUndoneItems makeObjectsPerformSelector:@selector(finalizeRedoneState)];
+        [stackOfUndoneItems removeAllObjects];
+        [stackOfUndoableItems addObject:item];
+        while([stackOfUndoableItems count] > kUndoLimit){
+            NSObject<MMUndoRedoItem>* item = [stackOfUndoableItems firstObject];
+            [stackOfUndoableItems removeObject:item];
+            [item finalizeUndoneState];
+        }
+        hasEditsToSave = YES;
     }
-    
 }
 
 -(void) undo{
     CheckMainThread;
     
-    NSObject<MMUndoRedoItem>* item = [stackOfUndoableItems lastObject];
-    if(item){
-        [stackOfUndoableItems removeLastObject];
-        [item undo];
-        [stackOfUndoneItems addObject:item];
+    @synchronized(self){
+        NSObject<MMUndoRedoItem>* item = [stackOfUndoableItems lastObject];
+        if(item){
+            [stackOfUndoableItems removeLastObject];
+            [item undo];
+            [stackOfUndoneItems addObject:item];
+        }
+        hasEditsToSave = YES;
     }
 }
 
 -(void) redo{
     CheckMainThread;
-    
-    NSObject<MMUndoRedoItem>* item = [stackOfUndoneItems lastObject];
-    if(item){
-        [stackOfUndoneItems removeLastObject];
-        [item redo];
-        [stackOfUndoableItems addObject:item];
+    @synchronized(self){
+        NSObject<MMUndoRedoItem>* item = [stackOfUndoneItems lastObject];
+        if(item){
+            [stackOfUndoneItems removeLastObject];
+            [item redo];
+            [stackOfUndoableItems addObject:item];
+        }
+        hasEditsToSave = YES;
     }
 }
 
 -(void) saveTo:(NSString*)path{
-    NSArray* saveableStackOfUndoneItems = [stackOfUndoneItems mapObjectsUsingSelector:@selector(asDictionary)];
-    NSArray* saveableStackOfUndoableItems = [stackOfUndoableItems mapObjectsUsingSelector:@selector(asDictionary)];
+    if(!hasEditsToSave){
+        NSLog(@"no edits to save for undo state: %@", path);
+        return;
+    }
+    NSArray* saveableStackOfUndoneItems;
+    NSArray* saveableStackOfUndoableItems;
+    @synchronized(self){
+        saveableStackOfUndoneItems = [stackOfUndoneItems mapObjectsUsingSelector:@selector(asDictionary)];
+        saveableStackOfUndoableItems = [stackOfUndoableItems mapObjectsUsingSelector:@selector(asDictionary)];
+        hasEditsToSave = NO;
+    }
     NSDictionary* objectsToSave = [NSDictionary dictionaryWithObjectsAndKeys:saveableStackOfUndoneItems, @"saveableStackOfUndoneItems", saveableStackOfUndoableItems, @"saveableStackOfUndoableItems", nil];
     [objectsToSave writeToFile:path atomically:YES];
     NSLog(@"wrote undo state: %@", path);
@@ -73,27 +91,42 @@
 -(void) loadFrom:(NSString*)path{
     NSDictionary* loadedInfo = [NSDictionary dictionaryWithContentsOfFile:path];
     if(loadedInfo){
-        [stackOfUndoneItems removeAllObjects];
-        [stackOfUndoableItems removeAllObjects];
-        NSArray* loadedUndoneItems = [loadedInfo objectForKey:@"saveableStackOfUndoneItems"];
-        NSArray* loadedUndoableItems = [loadedInfo objectForKey:@"saveableStackOfUndoableItems"];
-
-        if(loadedUndoneItems){
-            [stackOfUndoneItems addObjectsFromArray:[loadedUndoneItems mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
-                NSString* className = [obj objectForKey:@"class"];
-                Class class = NSClassFromString(className);
-                return [[class alloc] initFromDictionary:obj forPage:page];
-            }]];
+        @synchronized(self){
+            [stackOfUndoneItems removeAllObjects];
+            [stackOfUndoableItems removeAllObjects];
+            NSArray* loadedUndoneItems = [loadedInfo objectForKey:@"saveableStackOfUndoneItems"];
+            NSArray* loadedUndoableItems = [loadedInfo objectForKey:@"saveableStackOfUndoableItems"];
+            
+            if(loadedUndoneItems){
+                [stackOfUndoneItems addObjectsFromArray:[loadedUndoneItems mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
+                    NSString* className = [obj objectForKey:@"class"];
+                    Class class = NSClassFromString(className);
+                    return [[class alloc] initFromDictionary:obj forPage:page];
+                }]];
+            }
+            
+            if(loadedUndoableItems){
+                [stackOfUndoableItems addObjectsFromArray:[loadedUndoableItems mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
+                    NSString* className = [obj objectForKey:@"class"];
+                    Class class = NSClassFromString(className);
+                    return [[class alloc] initFromDictionary:obj forPage:page];
+                }]];
+            }
+            hasEditsToSave = NO;
         }
-
-        if(loadedUndoableItems){
-            [stackOfUndoableItems addObjectsFromArray:[loadedUndoableItems mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
-                NSString* className = [obj objectForKey:@"class"];
-                Class class = NSClassFromString(className);
-                return [[class alloc] initFromDictionary:obj forPage:page];
-            }]];
-        }
+    }
+    NSLog(@"loaded undo state: %@", path);
 }
+
+-(void) unloadState{
+    @synchronized(self){
+        if(hasEditsToSave){
+            @throw [NSException exceptionWithName:@"UnloadUndoStateException" reason:@"Unloading Undo State that has edits to save" userInfo:nil];
+        }
+        [stackOfUndoableItems removeAllObjects];
+        [stackOfUndoneItems removeAllObjects];
+        NSLog(@"unloaded undo state: %@", page.uuid);
+    }
 }
 
 @end

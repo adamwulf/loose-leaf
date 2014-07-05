@@ -13,11 +13,9 @@
 @implementation MMUndoRedoBlockItem{
     void (^_undoBlock)();
     void (^_redoBlock)();
-    
-    // YES if the item can undo,
-    // NO if it can redo
-    BOOL canUndo;
 }
+
+@synthesize canUndo;
 
 +(MMUndoRedoBlockItem*) itemWithUndoBlock:(void(^)())undoBlock andRedoBlock:(void(^)())redoBlock{
     return [[MMUndoRedoBlockItem alloc] initWithUndoBlock:undoBlock andRedoBlock:redoBlock];

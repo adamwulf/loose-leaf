@@ -70,10 +70,21 @@
 
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext *)context{
     [super loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
+    
+    dispatch_block_t block = ^{
+        [undoRedoManager loadFrom:[self undoStatePath]];
+    };
+    
+    if(async){
+        dispatch_async([MMScrappedPaperView concurrentBackgroundQueue], block);
+    }else{
+        block();
+    }
 }
 
 -(void) unloadState{
     [super unloadState];
+    [undoRedoManager unloadState];
 }
 
 #pragma mark - Undo / Redo of JotViews

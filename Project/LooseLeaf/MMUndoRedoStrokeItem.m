@@ -29,17 +29,21 @@
         // noop
         page = _page;
     };
+
     return self;
 }
 
 #pragma mark - Serialize
 
 -(NSDictionary*) asDictionary{
-    return [NSDictionary dictionaryWithObject:NSStringFromClass([self class]) forKey:@"class"];
+    return [NSDictionary dictionaryWithObjectsAndKeys:NSStringFromClass([self class]), @"class", [NSNumber numberWithBool:self.canUndo], @"canUndo", nil];
 }
 
 -(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page{
-    return [[MMUndoRedoStrokeItem alloc] initForPage:_page];
+    if(self = [self initForPage:_page]){
+        canUndo = [[dict objectForKey:@"canUndo"] boolValue];
+    }
+    return self;
 }
 
 @end
