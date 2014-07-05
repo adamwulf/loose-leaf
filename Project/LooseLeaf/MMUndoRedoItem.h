@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class MMUndoablePaperView;
+
 @protocol MMUndoRedoItem <NSObject>
 
 -(void) undo;
@@ -17,5 +19,11 @@
 -(void) finalizeUndoneState;
 
 -(void) finalizeRedoneState;
+
+#pragma mark - Save and Load
+
+-(NSDictionary*) asDictionary;
+
+-(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)page;
 
 @end

@@ -13,6 +13,7 @@
 
 @implementation MMUndoablePaperView{
     MMPageUndoRedoManager* undoRedoManager;
+    NSString* undoStatePath;
 }
 
 @synthesize undoRedoManager;
@@ -24,7 +25,7 @@
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     if (self = [super initWithFrame:frame andUUID:_uuid]) {
         // Initialization code
-        undoRedoManager = [[MMPageUndoRedoManager alloc] init];
+        undoRedoManager = [[MMPageUndoRedoManager alloc] initForPage:self];
     }
     return self;
 }
@@ -65,6 +66,16 @@
     [super addUndoLevelAndContinueStroke];
     [self addStandardStrokeUndoItem];
 }
+
+#pragma mark - Paths
+
+-(NSString*) undoStatePath{
+    if(!undoStatePath){
+        undoStatePath = [[[self pagesPath] stringByAppendingPathComponent:@"undoRedo"] stringByAppendingPathExtension:@"plist"];
+    }
+    return undoStatePath;
+}
+
 
 #pragma mark - Debug
 

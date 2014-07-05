@@ -33,4 +33,14 @@
     return self;
 }
 
+#pragma mark - Save and Load
+
+-(NSDictionary*) asDictionary{
+    return [NSDictionary dictionaryWithObject:NSStringFromClass([self class]) forKey:@"class"];
+}
+
+-(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page{
+    return [[MMUndoRedoStrokeItem alloc] initForPage:_page];
+}
+
 @end

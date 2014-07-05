@@ -11,6 +11,8 @@
 
 @interface MMPageUndoRedoManager : NSObject
 
+-(id) initForPage:(MMUndoablePaperView*)page;
+
 -(void) addUndoItem:(NSObject<MMUndoRedoItem>*)item;
 
 -(void) undo;

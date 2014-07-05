@@ -64,5 +64,14 @@
     NSLog(@"finalizeRedoneState");
 }
 
+#pragma mark - Save and Load
+
+-(NSDictionary*) asDictionary{
+    @throw [NSException exceptionWithName:@"CannotSaveItemException" reason:@"This class cannot be serialized to a dictionary" userInfo:nil];
+}
+
+-(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)page{
+    @throw [NSException exceptionWithName:@"CannotLoadItemException" reason:@"This class cannot be initialized from a dictionary" userInfo:nil];
+}
 
 @end
