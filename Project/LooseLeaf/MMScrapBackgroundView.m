@@ -127,8 +127,8 @@ static int totalBackgroundBytes;
 -(MMScrapBackgroundView*) duplicateFor:(MMScrapViewState*)otherScrapState{
     MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:self.backingImage
                                                                            forScrapState:otherScrapState];
-    backgroundView.backgroundScale = self.backgroundScale;
     backgroundView.backgroundRotation = self.backgroundRotation;
+    backgroundView.backgroundScale = self.backgroundScale;
     backgroundView.backgroundOffset = self.backgroundOffset;
     return backgroundView;
 }

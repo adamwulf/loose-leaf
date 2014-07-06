@@ -42,6 +42,11 @@ dispatch_queue_t importThumbnailQueue;
     // is saved
     BOOL definitelyDoesNotHaveAnInkThumbnail;
     BOOL isLoadingCachedInkThumbnailFromDisk;
+    
+    // YES if the file exists at the path, NO
+    // if it *might* exist
+    BOOL fileExistsAtInkPath;
+    BOOL fileExistsAtPlistPath;
 }
 
 @synthesize drawableView;
@@ -77,13 +82,7 @@ dispatch_queue_t importThumbnailQueue;
 
         
         // initialize our state manager
-        if([[NSFileManager defaultManager] fileExistsAtPath:[self inkPath]]){
-            paperState = [[JotViewStateProxy alloc] initWithInkPath:[self inkPath] andPlistPath:[self plistPath]];
-        }else{
-            NSString* bundledInkPath = [[[self bundledPagesPath] stringByAppendingPathComponent:@"ink"] stringByAppendingPathExtension:@"png"];
-            NSString* bundledPlistPath = [[[self bundledPagesPath] stringByAppendingPathComponent:@"info"] stringByAppendingPathExtension:@"plist"];
-            paperState = [[JotViewStateProxy alloc] initWithInkPath:bundledInkPath andPlistPath:bundledPlistPath];
-        }
+        paperState = [[JotViewStateProxy alloc] initWithDelegate:self];
         paperState.delegate = self;
     }
     return self;
@@ -523,8 +522,34 @@ static int count = 0;
 
 #pragma mark - JotViewStateProxyDelegate
 
--(void) jotStrokeWasCancelled:(JotStroke *)stroke{
-    debug_NSLog(@"MMEditablePaperView jotStrokeWasCancelled:");
+// the state for the page and/or scrap might be a default
+// new user tutorial page. if that's the case, we want to
+// load the initial state from the bundle. pages will always
+// save to the user's document's directory.
+//
+// this method will make sure that if the user loads a default
+// page from the bundle, saves it, then reloads it -> then it
+// will be loaded from the documents directory instead of
+// reloaded from scratch from the bundle
+-(NSString*) jotViewStateInkPath{
+    if(fileExistsAtInkPath || [[NSFileManager defaultManager] fileExistsAtPath:[self inkPath]]){
+        // save that the file exists at the path. this will reduce
+        // the number of filesystem calls that we make to check for
+        // fileExistsAtPath
+        fileExistsAtInkPath = YES;
+        return [self inkPath];
+    }else{
+        return [[[self bundledPagesPath] stringByAppendingPathComponent:@"ink"] stringByAppendingPathExtension:@"png"];
+    }
+}
+
+-(NSString*) jotViewStatePlistPath{
+    if(fileExistsAtPlistPath || [[NSFileManager defaultManager] fileExistsAtPath:[self inkPath]]){
+        fileExistsAtPlistPath = YES;
+        return [self plistPath];
+    }else{
+        return [[[self bundledPagesPath] stringByAppendingPathComponent:@"info"] stringByAppendingPathExtension:@"plist"];
+    }
 }
 
 -(void) didLoadState:(JotViewStateProxy*)state{

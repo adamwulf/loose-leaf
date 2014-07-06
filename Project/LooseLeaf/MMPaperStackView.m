@@ -761,17 +761,21 @@
 -(void) emptyBezelStackToVisibleStackOnComplete:(void(^)(BOOL finished))completionBlock{
     [bezelStackHolder removeAllAnimationsAndPreservePresentationFrame];
     CGFloat delay = 0;
-    while([bezelStackHolder.subviews count]){
-        BOOL isLastToAnimate = [bezelStackHolder.subviews count] == 1;
-        MMPaperView* aPage = [bezelStackHolder.subviews objectAtIndex:0];
-        [aPage removeAllAnimationsAndPreservePresentationFrame];
-        [aPage enableAllGestures];
-        [visibleStackHolder pushSubview:aPage];
-        [self animatePageToFullScreen:aPage withDelay:delay withBounce:NO onComplete:(isLastToAnimate ? ^(BOOL finished){
-            bezelStackHolder.frame = hiddenStackHolder.frame;
-            if(completionBlock) completionBlock(finished);
-        } : nil)];
-        delay += kAnimationDelay;
+    if([bezelStackHolder.subviews count] == 0){
+        if(completionBlock) completionBlock(YES);
+    }else{
+        while([bezelStackHolder.subviews count]){
+            BOOL isLastToAnimate = [bezelStackHolder.subviews count] == 1;
+            MMPaperView* aPage = [bezelStackHolder.subviews objectAtIndex:0];
+            [aPage removeAllAnimationsAndPreservePresentationFrame];
+            [aPage enableAllGestures];
+            [visibleStackHolder pushSubview:aPage];
+            [self animatePageToFullScreen:aPage withDelay:delay withBounce:NO onComplete:(isLastToAnimate ? ^(BOOL finished){
+                bezelStackHolder.frame = hiddenStackHolder.frame;
+                if(completionBlock) completionBlock(finished);
+            } : nil)];
+            delay += kAnimationDelay;
+        }
     }
 }
 -(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated onComplete:(void(^)(BOOL finished))completionBlock{
@@ -781,16 +785,20 @@
     [bezelStackHolder removeAllAnimationsAndPreservePresentationFrame];
     if(animated){
         CGFloat delay = 0;
-        for(MMPaperView* page in [bezelStackHolder.subviews reverseObjectEnumerator]){
-            BOOL isLastToAnimate = page == [bezelStackHolder.subviews objectAtIndex:0];
-            [self animateBackToHiddenStack:page withDelay:delay onComplete:(isLastToAnimate ? ^(BOOL finished){
-                // since we're  moving the bezel frame for the drag animation, be sure to re-hide it
-                // above the hidden stack off screen after all the pages animate
-                // back to the hidden stack
-                bezelStackHolder.frame = hiddenStackHolder.frame;
-                if(completionBlock) completionBlock(finished);
-            } : nil)];
-            delay += kAnimationDelay;
+        if([bezelStackHolder.subviews count] == 0){
+            if(completionBlock) completionBlock(YES);
+        }else{
+            for(MMPaperView* page in [bezelStackHolder.subviews reverseObjectEnumerator]){
+                BOOL isLastToAnimate = page == [bezelStackHolder.subviews objectAtIndex:0];
+                [self animateBackToHiddenStack:page withDelay:delay onComplete:(isLastToAnimate ? ^(BOOL finished){
+                    // since we're  moving the bezel frame for the drag animation, be sure to re-hide it
+                    // above the hidden stack off screen after all the pages animate
+                    // back to the hidden stack
+                    bezelStackHolder.frame = hiddenStackHolder.frame;
+                    if(completionBlock) completionBlock(finished);
+                } : nil)];
+                delay += kAnimationDelay;
+            }
         }
     }else{
         for(MMPaperView* page in [[bezelStackHolder.subviews copy] reverseObjectEnumerator]){
