@@ -40,7 +40,20 @@
     return self;
 }
 
-#pragma mark - Saving
+#pragma mark - Scrap Loading
+
+-(NSArray*) scrapsOnPaper{
+    // also tie in here and append any scraps
+    // that are in the undo manager (?)
+    return [super scrapsOnPaper];
+}
+
+-(void) didLoadScrap:(MMScrapView *)scrap{
+    // should i tie in here to give scraps to undo objects?
+    [super didLoadScrap:scrap];
+}
+
+#pragma mark - Saving and Loading
 
 -(void) saveToDisk:(void (^)(BOOL))onComplete{
     // track if our back ground page has saved

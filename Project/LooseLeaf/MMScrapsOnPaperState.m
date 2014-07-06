@@ -86,7 +86,6 @@ static dispatch_queue_t importExportStateQueue;
                     }
                 }
                 
-                
                 [NSThread performBlockOnMainThread:^{
                     for(NSDictionary* scrapProperties in scrapPropsWithState){
                         MMScrapViewState* scrapState = [scrapProperties objectForKey:@"state"];
