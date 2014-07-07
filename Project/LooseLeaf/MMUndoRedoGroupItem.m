@@ -23,7 +23,7 @@
             [obj undo];
         }
     } andRedoBlock:^{
-        for(NSObject<MMUndoRedoItem>*obj in undoableItems){
+        for(NSObject<MMUndoRedoItem>*obj in [undoableItems reverseObjectEnumerator]){
             [obj redo];
         }
     } forPage:_page]){
