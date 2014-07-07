@@ -771,10 +771,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
             [self saveToDisk];
         }
         
-        // undo
-        NSLog(@"need to manage undo item for: %d added scraps and %d removed scraps", (int) [scrapsBeingBuilt count], (int) [scrapsBeingRemoved count]);
-        
-
         // clear the dotted line of the scissor
         [shapeBuilderView clear];
     }

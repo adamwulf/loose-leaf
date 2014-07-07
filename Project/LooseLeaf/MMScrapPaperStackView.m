@@ -798,6 +798,8 @@ int skipAll = NO;
         MMScrappedPaperView* pageToDropScrap = nil;
         if(gesture.didExitToBezel){
             shouldBezel = YES;
+            // remove scrap undo item
+            NSLog(@"remove scrap undo item!");
         }else if([scrapsInContainer containsObject:gesture.scrap]){
             CGFloat scrapScaleInPage;
             CGPoint scrapCenterInPage;
@@ -816,16 +818,39 @@ int skipAll = NO;
                 pageToDropScrap = [self pageWouldDropScrap:gesture.scrap atCenter:&scrapCenterInPage andScale:&scrapScaleInPage];
             }
             if(pageToDropScrap){
-                if(![pageToDropScrap hasScrap:gesture.scrap]){
-                    [pageToDropScrap addScrap:gesture.scrap];
-                }
                 gesture.scrap.scale = scrapScaleInPage;
                 gesture.scrap.center = scrapCenterInPage;
+
+                if(pageToDropScrap != gesture.startingPageForScrap){
+                    // make remove/add scrap undo items
+                    // need to somehow save which page used to
+                    // own this scrap
+                    NSLog(@"add/remove scrap undo items");
+                }else{
+                    // make a move-scrap undo item
+                    NSLog(@"move scrap undo items");
+                    NSDictionary* endingProperties = [gesture.scrap propertiesDictionary];
+                    NSDictionary* startingProperties = gesture.startingScrapProperties;
+                    
+                    NSLog(@"start: %@", startingProperties);
+                    NSLog(@"end:   %@", endingProperties);
+                }
+                
                 [pageToDropScrap saveToDisk];
             }else{
                 // couldn't find a page to catch it
                 shouldBezel = YES;
             }
+        }else{
+            // scrap stayed on page
+            // make a move-scrap undo item
+            NSLog(@"move scrap undo items");
+            NSDictionary* endingProperties = [gesture.scrap propertiesDictionary];
+            NSDictionary* startingProperties = gesture.startingScrapProperties;
+            
+            NSLog(@"start: %@", startingProperties);
+            NSLog(@"end:   %@", endingProperties);
+
         }
         
         // save teh page that the scrap came from
@@ -856,6 +881,7 @@ int skipAll = NO;
         // nil out the scrap in the gesture, so
         // hang onto it
         MMScrapView* scrap = gesture.scrap;
+        
         [gesture giveUpScrap];
         
         if(shouldBezel){

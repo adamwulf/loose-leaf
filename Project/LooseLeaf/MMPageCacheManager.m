@@ -16,7 +16,7 @@
     NSString* recentlySuggestedPageUUID;
     NSString* recentlyConfirmedPageUUID;
     MMEditablePaperView* currentlyTopPage;
-    MMEditablePaperView* currentEditablePage;
+    MMUndoablePaperView* currentEditablePage;
     NSMutableArray* stateLoadedPages;
     NSMutableOrderedSet* pagesWithLoadedCacheImages;
 }
@@ -171,7 +171,7 @@ static MMPageCacheManager* _instance = nil;
 
 -(void) ensureTopPageIsLoaded:(MMPaperView*)topPage{
     if(!topPage || [topPage isKindOfClass:[MMEditablePaperView class]]){
-        MMEditablePaperView* editableTopPage = (MMEditablePaperView*)topPage;
+        MMUndoablePaperView* editableTopPage = (MMUndoablePaperView*)topPage;
         
         if(currentEditablePage != editableTopPage){
             // only care if the page is changing

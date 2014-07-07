@@ -7,7 +7,6 @@
 //
 
 #import "MMEditablePaperView.h"
-#import "MMPanAndPinchScrapGestureRecognizer.h"
 #import "MMScrapsOnPaperStateDelegate.h"
 #import "MMDecompressImagePromiseDelegate.h"
 #import "MMScissorResult.h"

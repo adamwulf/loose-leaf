@@ -15,6 +15,7 @@
 #import "MMStretchScrapGestureRecognizer.h"
 #import "UIView+Animations.h"
 #import "UIGestureRecognizer+GestureDebug.h"
+#import "MMPageCacheManager.h"
 
 #define  kMaxSimultaneousTouchesAllowedToTrack 20
 #define  kNumberOfDirectionChangesToDetermineShake 2
@@ -57,6 +58,8 @@ struct TouchInterval{
     
     BOOL isShaking;
     BOOL paused;
+    
+    NSDictionary* startingScrapProperties;
 }
 
 
@@ -74,6 +77,8 @@ struct TouchInterval{
 @synthesize shouldReset;
 @synthesize isShaking;
 @synthesize initialTouchVector;
+@synthesize startingScrapProperties;
+@synthesize startingPageForScrap;
 
 -(NSArray*) possibleTouches{
     return [possibleTouches array];
@@ -97,6 +102,15 @@ struct TouchInterval{
 
 -(CGFloat) rotation{
     return rotation;
+}
+
+-(void) setScrap:(MMScrapView *)_scrap{
+    if(scrap != _scrap){
+        // save the properties of the scrap whenever its set
+        scrap = _scrap;
+        startingScrapProperties = [scrap propertiesDictionary];
+        startingPageForScrap = scrap ? [[MMPageCacheManager sharedInstance] currentEditablePage] : nil;
+    }
 }
 
 #pragma mark - Init
