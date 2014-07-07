@@ -34,14 +34,6 @@
 
 -(void) addUndoItem:(NSObject<MMUndoRedoItem>*)item{
     @synchronized(self){
-        
-        MMUndoRedoPageItem* lastItem = [stackOfUndoableItems lastObject];
-        if([item shouldMergeWith:lastItem]){
-            [stackOfUndoableItems removeLastObject];
-            item = [item mergedItemWith:lastItem];
-        }
-        
-        
         [stackOfUndoneItems makeObjectsPerformSelector:@selector(finalizeRedoneState)];
         [stackOfUndoneItems removeAllObjects];
         [stackOfUndoableItems addObject:item];
@@ -51,6 +43,18 @@
             [item finalizeUndoneState];
         }
         hasEditsToSave = YES;
+    }
+}
+
+-(void) mergeItemsIfPossible{
+    @throw [NSException exceptionWithName:@"UnusedMethod" reason:@"This method should not be used until functionality is defined" userInfo:nil];
+    MMUndoRedoPageItem* lastItem = [stackOfUndoableItems lastObject];
+    MMUndoRedoPageItem* almostLastItem = [stackOfUndoableItems lastObject];
+    if([lastItem shouldMergeWith:almostLastItem]){
+        // remove last 2 objects and merge
+        [stackOfUndoableItems removeLastObject];
+        [stackOfUndoableItems removeLastObject];
+        [stackOfUndoableItems addObject:[lastItem mergedItemWith:almostLastItem]];
     }
 }
 

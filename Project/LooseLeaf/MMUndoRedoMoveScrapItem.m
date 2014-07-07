@@ -53,7 +53,6 @@
     return [MMUndoRedoGroupItem itemForPage:self.page withItems:@[self, otherItem]];
 }
 
-
 #pragma mark - Serialize
 
 -(NSDictionary*) asDictionary{

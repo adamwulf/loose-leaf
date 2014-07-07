@@ -19,6 +19,8 @@
 
 -(void) redo;
 
+-(void) mergeItemsIfPossible;
+
 #pragma mark - Saving and Loading
 
 -(void) saveTo:(NSString*)path;

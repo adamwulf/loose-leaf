@@ -22,7 +22,7 @@
 
 -(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)_scrap{
     __weak MMUndoablePaperView* weakPage = _page;
-    propertiesWhenAdded = [scrap propertiesDictionary];
+    propertiesWhenAdded = [_scrap propertiesDictionary];
     if(self = [super initWithUndoBlock:^{
         [weakPage removeScrap:scrap];
     } andRedoBlock:^{
