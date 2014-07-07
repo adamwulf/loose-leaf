@@ -9,7 +9,9 @@
 #import "MMUndoRedoRemoveScrapItem.h"
 #import "MMUndoablePaperView.h"
 
-@implementation MMUndoRedoRemoveScrapItem
+@implementation MMUndoRedoRemoveScrapItem{
+    NSDictionary* propertiesWhenRemoved;
+}
 
 +(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap{
     return [[MMUndoRedoRemoveScrapItem alloc] initForPage:_page andScrap:scrap];
@@ -17,8 +19,10 @@
 
 -(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap{
     __weak MMUndoablePaperView* weakPage = _page;
+    propertiesWhenRemoved = [scrap propertiesDictionary];
     if(self = [super initWithUndoBlock:^{
         [weakPage addScrap:scrap];
+        [scrap setPropertiesDictionary:propertiesWhenRemoved];
     } andRedoBlock:^{
         [weakPage removeScrap:scrap];
     } forPage:_page]){
