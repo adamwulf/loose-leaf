@@ -126,8 +126,8 @@
     [self.undoRedoManager addUndoItem:[MMUndoRedoMoveScrapItem itemForPage:self andScrap:scrap from:startProperties to:endProperties]];
 }
 
--(void) addUndoItemForRemovedScrap:(MMScrapView*)scrap{
-    [self.undoRedoManager addUndoItem:[MMUndoRedoRemoveScrapItem itemForPage:self andScrap:scrap]];
+-(void) addUndoItemForRemovedScrap:(MMScrapView*)scrap withProperties:(NSDictionary*)scrapProperties{
+    [self.undoRedoManager addUndoItem:[MMUndoRedoRemoveScrapItem itemForPage:self andScrap:scrap withProperties:scrapProperties]];
 }
 
 -(void) addUndoItemForAddedScrap:(MMScrapView*)scrap{
@@ -146,7 +146,7 @@
             [undoItems addObject:[MMUndoRedoAddScrapItem itemForPage:self andScrap:scrap]];
         }
         for (MMScrapView* scrap in result.removedScraps) {
-            [undoItems addObject:[MMUndoRedoRemoveScrapItem itemForPage:self andScrap:scrap]];
+            [undoItems addObject:[MMUndoRedoRemoveScrapItem itemForPage:self andScrap:scrap withProperties:[scrap propertiesDictionary]]];
         }
         
         [self.undoRedoManager addUndoItem:[MMUndoRedoGroupItem itemForPage:self withItems:undoItems]];

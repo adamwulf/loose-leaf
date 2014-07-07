@@ -11,8 +11,8 @@
 
 @interface MMUndoRedoRemoveScrapItem : MMUndoRedoPageItem
 
-+(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap;
++(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap withProperties:(NSDictionary*)scrapProperties;
 
--(id) initForPage:(MMUndoablePaperView*)page andScrap:(MMScrapView*)scrap;
+-(id) initForPage:(MMUndoablePaperView*)page andScrap:(MMScrapView*)scrap withProperties:(NSDictionary*)scrapProperties;
 
 @end

@@ -15,7 +15,7 @@
 
 -(void) addUndoItemForScrap:(MMScrapView*)scrap thatMovedFrom:(NSDictionary*)startProperties to:(NSDictionary*)endProperties;
 
--(void) addUndoItemForRemovedScrap:(MMScrapView*)scrap;
+-(void) addUndoItemForRemovedScrap:(MMScrapView*)scrap withProperties:(NSDictionary*)scrapProperties;
 
 -(void) addUndoItemForAddedScrap:(MMScrapView*)scrap;
 

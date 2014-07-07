@@ -842,7 +842,7 @@ int skipAll = NO;
                     [gesture.scrap removeFromSuperview];
 
                     // add the undo items
-                    [gesture.startingPageForScrap addUndoItemForRemovedScrap:gesture.scrap];
+                    [gesture.startingPageForScrap addUndoItemForRemovedScrap:gesture.scrap withProperties:gesture.startingScrapProperties];
                     [pageToDropScrap addUndoItemForAddedScrap:clonedScrap];
                 }else{
                     // make a move-scrap undo item

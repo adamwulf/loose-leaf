@@ -13,13 +13,13 @@
     NSDictionary* propertiesWhenRemoved;
 }
 
-+(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap{
-    return [[MMUndoRedoRemoveScrapItem alloc] initForPage:_page andScrap:scrap];
++(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap withProperties:(NSDictionary*)scrapProperties{
+    return [[MMUndoRedoRemoveScrapItem alloc] initForPage:_page andScrap:scrap withProperties:scrapProperties];
 }
 
--(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap{
+-(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap withProperties:(NSDictionary*)scrapProperties{
     __weak MMUndoablePaperView* weakPage = _page;
-    propertiesWhenRemoved = [scrap propertiesDictionary];
+    propertiesWhenRemoved = scrapProperties;
     if(self = [super initWithUndoBlock:^{
         [weakPage addScrap:scrap];
         [scrap setPropertiesDictionary:propertiesWhenRemoved];
@@ -39,7 +39,7 @@
 }
 
 -(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page{
-    if(self = [self initForPage:_page andScrap:nil]){
+    if(self = [self initForPage:_page andScrap:nil withProperties:[dict objectForKey:@"propertiesWhenRemoved"]]){
         canUndo = [[dict objectForKey:@"canUndo"] boolValue];
     }
     return self;
