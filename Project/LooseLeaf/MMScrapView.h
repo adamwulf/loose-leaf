@@ -18,6 +18,7 @@
 @property (readonly) UIBezierPath* bezierPath;
 @property (nonatomic, assign) CGFloat scale;
 @property (nonatomic, assign) CGFloat rotation;
+@property (nonatomic, assign) NSDictionary* propertiesDictionary; // contains center/scale/rotation/uuid
 @property (nonatomic, assign) BOOL selected;
 @property (nonatomic, readonly) CGSize originalSize;
 @property (nonatomic, readonly) NSString* uuid;

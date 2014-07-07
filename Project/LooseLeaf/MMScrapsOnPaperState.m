@@ -91,9 +91,7 @@ static dispatch_queue_t importExportStateQueue;
                         MMScrapViewState* scrapState = [scrapProperties objectForKey:@"state"];
                         MMScrapView* scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState];
                         if(scrap){
-                            scrap.center = CGPointMake([[scrapProperties objectForKey:@"center.x"] floatValue], [[scrapProperties objectForKey:@"center.y"] floatValue]);
-                            scrap.rotation = [[scrapProperties objectForKey:@"rotation"] floatValue];
-                            scrap.scale = [[scrapProperties objectForKey:@"scale"] floatValue];
+                            [scrap setPropertiesDictionary:scrapProperties];
                             [self.delegate didLoadScrap:scrap];
                             
                             if(makeEditable){

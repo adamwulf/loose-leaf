@@ -47,15 +47,8 @@
         };
 
         for(MMScrapView* scrap in scraps){
-            NSMutableDictionary* properties = [NSMutableDictionary dictionary];
-            [properties setObject:scrap.uuid forKey:@"uuid"];
-            [properties setObject:[NSNumber numberWithFloat:scrap.center.x] forKey:@"center.x"];
-            [properties setObject:[NSNumber numberWithFloat:scrap.center.y] forKey:@"center.y"];
-            [properties setObject:[NSNumber numberWithFloat:scrap.rotation] forKey:@"rotation"];
-            [properties setObject:[NSNumber numberWithFloat:scrap.scale] forKey:@"scale"];
-            
+            NSDictionary* properties = [scrap propertiesDictionary];
             [scrap saveScrapToDisk:doneSavingScrapBlock];
-            
             // save scraps
             [scrapUUIDs addObject:properties];
         }

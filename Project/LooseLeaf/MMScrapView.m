@@ -294,6 +294,21 @@
     needsClippingPathUpdate = YES;
 }
 
+-(NSDictionary*) propertiesDictionary{
+    NSMutableDictionary* properties = [NSMutableDictionary dictionary];
+    [properties setObject:self.uuid forKey:@"uuid"];
+    [properties setObject:[NSNumber numberWithFloat:self.center.x] forKey:@"center.x"];
+    [properties setObject:[NSNumber numberWithFloat:self.center.y] forKey:@"center.y"];
+    [properties setObject:[NSNumber numberWithFloat:self.rotation] forKey:@"rotation"];
+    [properties setObject:[NSNumber numberWithFloat:self.scale] forKey:@"scale"];
+    return properties;
+}
+
+-(void) setPropertiesDictionary:(NSDictionary *)properties{
+    self.center = CGPointMake([[properties objectForKey:@"center.x"] floatValue], [[properties objectForKey:@"center.y"] floatValue]);
+    self.rotation = [[properties objectForKey:@"rotation"] floatValue];
+    self.scale = [[properties objectForKey:@"scale"] floatValue];
+}
 
 #pragma mark - Clipping Path
 
