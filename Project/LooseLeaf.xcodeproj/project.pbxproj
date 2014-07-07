@@ -128,6 +128,7 @@
 		6699904F185F74F8005581D9 /* TouchShape.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6699904E185F74F8005581D9 /* TouchShape.framework */; };
 		66999051185F7501005581D9 /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66999050185F7501005581D9 /* DrawKit-iOS.framework */; };
 		669B764F18E9FE490041DAE7 /* ALAsset+Thumbnail.m in Sources */ = {isa = PBXBuildFile; fileRef = 669B764E18E9FE490041DAE7 /* ALAsset+Thumbnail.m */; };
+		66A08E71196B242F00476F99 /* MMUndoRedoMoveScrapItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A08E70196B242F00476F99 /* MMUndoRedoMoveScrapItem.m */; };
 		66A13D3A1631D9D9002F5428 /* MMObjectSelectLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D3F1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A2904B187773E70036E4B7 /* AVHexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A2904A187773E70036E4B7 /* AVHexColor.m */; };
@@ -451,6 +452,8 @@
 		669B764D18E9FE490041DAE7 /* ALAsset+Thumbnail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ALAsset+Thumbnail.h"; sourceTree = "<group>"; };
 		669B764E18E9FE490041DAE7 /* ALAsset+Thumbnail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ALAsset+Thumbnail.m"; sourceTree = "<group>"; };
 		669B765F18EB48470041DAE7 /* MMAlbumRowViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMAlbumRowViewDelegate.h; sourceTree = "<group>"; };
+		66A08E6F196B242F00476F99 /* MMUndoRedoMoveScrapItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoRedoMoveScrapItem.h; sourceTree = "<group>"; };
+		66A08E70196B242F00476F99 /* MMUndoRedoMoveScrapItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUndoRedoMoveScrapItem.m; sourceTree = "<group>"; };
 		66A13D381631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMObjectSelectLongPressGestureRecognizer.h; sourceTree = "<group>"; };
 		66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMObjectSelectLongPressGestureRecognizer.m; sourceTree = "<group>"; };
 		66A13D3E1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImmovableTapGestureRecognizer.h; sourceTree = "<group>"; };
@@ -764,6 +767,8 @@
 				66A790B5196896FA0037F01A /* MMUndoRedoAddScrapItem.m */,
 				66A790C119689CF00037F01A /* MMUndoRedoRemoveScrapItem.h */,
 				66A790C219689CF00037F01A /* MMUndoRedoRemoveScrapItem.m */,
+				66A08E6F196B242F00476F99 /* MMUndoRedoMoveScrapItem.h */,
+				66A08E70196B242F00476F99 /* MMUndoRedoMoveScrapItem.m */,
 				66A790B7196898A90037F01A /* MMUndoRedoGroupItem.h */,
 				66A790B8196898A90037F01A /* MMUndoRedoGroupItem.m */,
 			);
@@ -1888,6 +1893,7 @@
 				66A790BC196899980037F01A /* MMUndoRedoPageItem.m in Sources */,
 				66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */,
 				66423DD019425AA7000A3709 /* MMCachedPreviewManager.m in Sources */,
+				66A08E71196B242F00476F99 /* MMUndoRedoMoveScrapItem.m in Sources */,
 				66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */,
 				667D98B7192FBF2400625879 /* MMPDFInboxContentView.m in Sources */,
 				66AC8D9218E8A90900A65036 /* MMBufferedImageView.m in Sources */,

@@ -73,7 +73,7 @@
 
 -(void) saveTo:(NSString*)path{
     if(!hasEditsToSave){
-        NSLog(@"no edits to save for undo state: %@", path);
+//        NSLog(@"no edits to save for undo state: %@", path);
         return;
     }
     NSArray* saveableStackOfUndoneItems;
@@ -85,7 +85,6 @@
     }
     NSDictionary* objectsToSave = [NSDictionary dictionaryWithObjectsAndKeys:saveableStackOfUndoneItems, @"saveableStackOfUndoneItems", saveableStackOfUndoableItems, @"saveableStackOfUndoableItems", nil];
     [objectsToSave writeToFile:path atomically:YES];
-    NSLog(@"wrote undo state: %@", path);
 }
 
 -(void) loadFrom:(NSString*)path{

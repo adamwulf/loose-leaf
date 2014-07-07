@@ -13,4 +13,10 @@
 
 @property (nonatomic, readonly) MMPageUndoRedoManager* undoRedoManager;
 
+-(void) addUndoItemForScrap:(MMScrapView*)scrap thatMovedFrom:(NSDictionary*)startProperties to:(NSDictionary*)endProperties;
+
+-(void) addUndoItemForRemovedScrap:(MMScrapView*)scrap;
+
+-(void) addUndoItemForAddedScrap:(MMScrapView*)scrap;
+
 @end

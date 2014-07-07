@@ -29,6 +29,7 @@
 #import "UIDevice+PPI.h"
 #import "MMLoadImageCache.h"
 #import "MMCachedPreviewManager.h"
+#import "UIView+Animations.h"
 
 
 @implementation MMScrappedPaperView{
@@ -187,29 +188,18 @@ static dispatch_queue_t concurrentBackgroundQueue;
  * so, an input scale of 2.0 will not change the visible size of the added scrap, but it
  * will have twice the resolution in both dimensions.
  */
--(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)lastBestRotation andScale:(CGFloat)scale{
+-(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale{
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScraps by:@(1)];
     //
     // at this point, we have the correct path and rotation that will
     // give us the minimal square px. For instance, drawing a thin diagonal
     // strip of paper will create a thin texture and rotate it, instead of
     // an unrotated thick rectangle.
-    CGPoint pathC = path.center;
-    CGAffineTransform scalePathToFullResTransform = CGAffineTransformMakeTranslation(pathC.x, pathC.y);
-    scalePathToFullResTransform = CGAffineTransformScale(scalePathToFullResTransform, 1/scale, 1/scale);
-    scalePathToFullResTransform = CGAffineTransformTranslate(scalePathToFullResTransform, -pathC.x, -pathC.y);
-    [path applyTransform:scalePathToFullResTransform];
-    
-    MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path];
+    MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path andScale:scale andRotation:rotation];
     @synchronized(scrapContainerView){
         [scrapContainerView addSubview:newScrap];
     }
-    [newScrap loadScrapStateAsynchronously:NO];
     [newScrap setShouldShowShadow:[self isEditable]];
-    
-    [newScrap setScale:scale];
-    [newScrap setRotation:lastBestRotation];
-
     return newScrap;
 }
 
@@ -1217,6 +1207,5 @@ static dispatch_queue_t concurrentBackgroundQueue;
     UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
     [rootController dismissViewControllerAnimated:YES completion:nil];
 }
-
 
 @end

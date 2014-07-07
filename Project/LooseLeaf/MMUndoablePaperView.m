@@ -13,6 +13,7 @@
 #import "MMUndoRedoAddScrapItem.h"
 #import "MMUndoRedoRemoveScrapItem.h"
 #import "MMUndoRedoGroupItem.h"
+#import "MMUndoRedoMoveScrapItem.h"
 
 @interface MMScrappedPaperView (Queue)
 
@@ -61,6 +62,9 @@
     // track if all of our scraps have saved
     dispatch_semaphore_t sema2 = dispatch_semaphore_create(0);
 
+    if(!undoRedoManager){
+        NSLog(@"what");
+    }
     
     __block BOOL hadEditsToSave;
     [super saveToDisk:^(BOOL _hadEditsToSave){
@@ -117,6 +121,19 @@
 
 #pragma mark - Methods That Trigger Undo
 
+-(void) addUndoItemForScrap:(MMScrapView*)scrap thatMovedFrom:(NSDictionary*)startProperties to:(NSDictionary*)endProperties{
+    NSLog(@"moved scrap on same page");
+    [self.undoRedoManager addUndoItem:[MMUndoRedoMoveScrapItem itemForPage:self andScrap:scrap from:startProperties to:endProperties]];
+}
+
+-(void) addUndoItemForRemovedScrap:(MMScrapView*)scrap{
+    [self.undoRedoManager addUndoItem:[MMUndoRedoRemoveScrapItem itemForPage:self andScrap:scrap]];
+}
+
+-(void) addUndoItemForAddedScrap:(MMScrapView*)scrap{
+    [self.undoRedoManager addUndoItem:[MMUndoRedoAddScrapItem itemForPage:self andScrap:scrap]];
+}
+
 -(MMScissorResult*) completeScissorsCutWithPath:(UIBezierPath *)scissorPath{
     MMScissorResult* result = [super completeScissorsCutWithPath:scissorPath];
     
@@ -141,8 +158,6 @@
 -(void) addStandardStrokeUndoItem{
     [self.undoRedoManager addUndoItem:[MMUndoRedoStrokeItem itemForPage:self]];
 }
-
-
 
 -(void) didEndStrokeWithTouch:(JotTouch *)touch{
     [super didEndStrokeWithTouch:touch];

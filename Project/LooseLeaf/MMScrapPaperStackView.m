@@ -795,7 +795,7 @@ int skipAll = NO;
         
         NSArray* scrapsInContainer = scrapContainer.subviews;
         
-        MMScrappedPaperView* pageToDropScrap = nil;
+        MMUndoablePaperView* pageToDropScrap = nil;
         if(gesture.didExitToBezel){
             shouldBezel = YES;
             // remove scrap undo item
@@ -820,20 +820,36 @@ int skipAll = NO;
             if(pageToDropScrap){
                 gesture.scrap.scale = scrapScaleInPage;
                 gesture.scrap.center = scrapCenterInPage;
-
+                
                 if(pageToDropScrap != gesture.startingPageForScrap){
                     // make remove/add scrap undo items
                     // need to somehow save which page used to
                     // own this scrap
                     NSLog(@"add/remove scrap undo items");
+                    
+                    // clone the scrap and add it to the
+                    // page where it was dropped. this way, the
+                    // original page can undo the move and get its
+                    // own scrap back without adjusting the undo state
+                    // of the page that the scrap was dropped on to.
+                    //
+                    // similarly, the page that had the scrap dropped onto
+                    // it can undo the drop and it won't affect the page that
+                    // the scrap came from
+                    MMScrapView* clonedScrap = [self cloneScrap:gesture.scrap];
+                    [pageToDropScrap addScrap:clonedScrap];
+                    // remove the scrap from the original page
+                    [gesture.scrap removeFromSuperview];
+
+                    // add the undo items
+                    [gesture.startingPageForScrap addUndoItemForRemovedScrap:gesture.scrap];
+                    [pageToDropScrap addUndoItemForAddedScrap:clonedScrap];
                 }else{
                     // make a move-scrap undo item
-                    NSLog(@"move scrap undo items");
-                    NSDictionary* endingProperties = [gesture.scrap propertiesDictionary];
-                    NSDictionary* startingProperties = gesture.startingScrapProperties;
-                    
-                    NSLog(@"start: %@", startingProperties);
-                    NSLog(@"end:   %@", endingProperties);
+                    [gesture.startingPageForScrap addUndoItemForScrap:gesture.scrap thatMovedFrom:gesture.startingScrapProperties to:[gesture.scrap propertiesDictionary]];
+                    if(![pageToDropScrap hasScrap:gesture.scrap]){
+                        [pageToDropScrap addScrap:gesture.scrap];
+                    }
                 }
                 
                 [pageToDropScrap saveToDisk];
@@ -844,13 +860,7 @@ int skipAll = NO;
         }else{
             // scrap stayed on page
             // make a move-scrap undo item
-            NSLog(@"move scrap undo items");
-            NSDictionary* endingProperties = [gesture.scrap propertiesDictionary];
-            NSDictionary* startingProperties = gesture.startingScrapProperties;
-            
-            NSLog(@"start: %@", startingProperties);
-            NSLog(@"end:   %@", endingProperties);
-
+            [gesture.startingPageForScrap addUndoItemForScrap:gesture.scrap thatMovedFrom:gesture.startingScrapProperties to:[gesture.scrap propertiesDictionary]];
         }
         
         // save teh page that the scrap came from
@@ -906,8 +916,8 @@ int skipAll = NO;
  *
  * if no page could catch it, this will return nil
  */
--(MMScrappedPaperView*) pageWouldDropScrap:(MMScrapView*)scrap atCenter:(CGPoint*)scrapCenterInPage andScale:(CGFloat*)scrapScaleInPage{
-    MMScrappedPaperView* pageToDropScrap = nil;
+-(MMUndoablePaperView*) pageWouldDropScrap:(MMScrapView*)scrap atCenter:(CGPoint*)scrapCenterInPage andScale:(CGFloat*)scrapScaleInPage{
+    MMUndoablePaperView* pageToDropScrap = nil;
     CGRect pageBounds;
     //
     // we want to be able to drop scraps
@@ -1174,33 +1184,17 @@ int skipAll = NO;
 
     // next, add the new scrap to the same page as the stretched scrap
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
-    // we need to send in scale 1.0 because the *path* scale we're sending in is for the 1.0 scaled path.
-    // if we sent the scale into this method, it would assume that the input path was *already at* the input
-    // scale, so it would transform the path to a 1.0 scale before adding the scrap. this would result in incorrect
-    // resolution for the new scrap. so set the rotation to make sure we're getting the smallest bounding
-    // box, and we'll set the scrap's scale to match after we add it to the page.
-    MMScrapView* clonedScrap = [page addScrapWithPath:[scrap.bezierPath copy] andRotation:scrap.rotation andScale:1.0];
-    // ok, now the scrap is added with the correct path and resolution, so set it's scale to match
-    // the original scrap.
-    clonedScrap.scale = scrap.scale;
-    // next match it's location exactly on top of the original scrap:
-    [UIView setAnchorPoint:scrap.layer.anchorPoint forView:clonedScrap];
-    clonedScrap.center = scrap.center;
+    MMScrapView* clonedScrap = [self cloneScrap:scrap];
+    [page addScrap:clonedScrap];
     
-    // next, clone the contents onto the new scrap. at this point i have a duplicate scrap
-    // but it's in the wrong place.
-    [clonedScrap stampContentsFrom:scrap.state.drawableView];
-    panAndPinchScrapGesture2.scrap = clonedScrap;
-    
-    // clone background contents too
-    [clonedScrap setBackgroundView:[scrap.backgroundView duplicateFor:clonedScrap.state]];
-
     // move it to the new gesture location under it's scrap
-    [UIView setAnchorPoint:CGPointMake(.5, .5) forView:clonedScrap];
     CGPoint p1 = [[touches2 objectAtIndex:0] locationInView:self];
     CGPoint p2 = [[touches2 objectAtIndex:1] locationInView:self];
     clonedScrap.center = AveragePoints(p1, p2);
 
+    // hand the cloned scrap to the pan scrap gesture
+    panAndPinchScrapGesture2.scrap = clonedScrap;
+    
     // now that the scrap is where it should be,
     // and contains its background, etc, then
     // save everything
@@ -1503,7 +1497,7 @@ int skipAll = NO;
 #pragma mark = Saving and Editing
 
 -(void) didSavePage:(MMPaperView*)page{
-    NSLog(@"did save page: %@", page.uuid);
+//    NSLog(@"did save page: %@", page.uuid);
     [super didSavePage:page];
     if(wantsExport == page){
         wantsExport = nil;
@@ -1532,6 +1526,44 @@ int skipAll = NO;
     
 
     [[[[UIApplication sharedApplication] keyWindow] rootViewController] dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Clone Scrap
+
+/**
+ * this will clone a scrap and also clone it's contents
+ * the scrap to be cloned must be in our scrapContainer,
+ * and the cloned scrap will be put in the scrapContainer
+ * as well, exactly overlapping it
+ */
+-(MMScrapView*) cloneScrap:(MMScrapView*)scrap{
+    CheckMainThread;
+    if(![scrapContainer.subviews containsObject:scrap]){
+        @throw [NSException exceptionWithName:@"CloneScrapException" reason:@"Page asked to clone scrap and doesn't own it" userInfo:nil];
+    }
+    // we need to send in scale 1.0 because the *path* scale we're sending in is for the 1.0 scaled path.
+    // if we sent the scale into this method, it would assume that the input path was *already at* the input
+    // scale, so it would transform the path to a 1.0 scale before adding the scrap. this would result in incorrect
+    // resolution for the new scrap. so set the rotation to make sure we're getting the smallest bounding
+    // box, and we'll set the scrap's scale to match after we add it to the page.
+    MMScrapView* clonedScrap = [[MMScrapView alloc] initWithBezierPath:[scrap.bezierPath copy] andScale:1.0 andRotation:scrap.rotation];
+    clonedScrap.scale = scrap.scale;
+    [scrapContainer addSubview:clonedScrap];
+    
+    // next match it's location exactly on top of the original scrap:
+    [UIView setAnchorPoint:scrap.layer.anchorPoint forView:clonedScrap];
+    clonedScrap.center = scrap.center;
+    
+    // next, clone the contents onto the new scrap. at this point i have a duplicate scrap
+    // but it's in the wrong place.
+    [clonedScrap stampContentsFrom:scrap.state.drawableView];
+    
+    // clone background contents too
+    [clonedScrap setBackgroundView:[scrap.backgroundView duplicateFor:clonedScrap.state]];
+    
+    // set the scrap anchor to its center
+    [UIView setAnchorPoint:CGPointMake(.5, .5) forView:clonedScrap];
+    return clonedScrap;
 }
 
 
