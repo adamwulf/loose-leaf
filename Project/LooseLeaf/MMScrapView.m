@@ -18,6 +18,7 @@
 #import "MMScrapViewState.h"
 #import "MMScrapBorderView.h"
 #import "UIView+Debug.h"
+#import "UIView+Animations.h"
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 
 @implementation MMScrapView{
@@ -315,6 +316,10 @@
 }
 
 -(NSDictionary*) propertiesDictionary{
+    // make sure we calculate all of our properties
+    // with a neutral anchor point
+    CGPoint currentAnchor = self.layer.anchorPoint;
+    [UIView setAnchorPoint:CGPointMake(.5, .5) forView:self];
     NSMutableDictionary* properties = [NSMutableDictionary dictionary];
     [properties setObject:self.uuid forKey:@"uuid"];
     [properties setObject:[NSNumber numberWithFloat:self.center.x] forKey:@"center.x"];
@@ -327,13 +332,19 @@
     }else{
         @throw [NSException exceptionWithName:@"InvalidPropertyDictionary" reason:@"Scrap properties cannot be generated for scrap without a superview" userInfo:nil];
     }
+    [UIView setAnchorPoint:currentAnchor forView:self];
     return properties;
 }
 
 -(void) setPropertiesDictionary:(NSDictionary *)properties{
+    // make sure we set all of our properties
+    // with a neutral anchor point
+    CGPoint currentAnchor = self.layer.anchorPoint;
+    [UIView setAnchorPoint:CGPointMake(.5, .5) forView:self];
     self.center = CGPointMake([[properties objectForKey:@"center.x"] floatValue], [[properties objectForKey:@"center.y"] floatValue]);
     self.rotation = [[properties objectForKey:@"rotation"] floatValue];
     self.scale = [[properties objectForKey:@"scale"] floatValue];
+    [UIView setAnchorPoint:currentAnchor forView:self];
 }
 
 #pragma mark - Clipping Path

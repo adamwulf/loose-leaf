@@ -782,7 +782,10 @@ int skipAll = NO;
                 [gesture.startingPageForScrap addUndoItemForRemovedScrap:gesture.scrap withProperties:gesture.startingScrapProperties];
                 [pageToDropScrap addUndoItemForAddedScrap:clonedScrap];
                 
-                // update the gesture to start working with the cloned scrap
+                // update the gesture to start working with the cloned scrap,
+                // and make sure that this cloned scrap's anchor is at the
+                // correct place so the swap is seamless
+                [UIView setAnchorPoint:gesture.scrap.layer.anchorPoint forView:clonedScrap];
                 gesture.scrap = clonedScrap;
                 gesture.startingPageForScrap = pageToDropScrap;
                 [clonedScrap setShouldShowShadow:YES];
