@@ -1213,7 +1213,7 @@ int skipAll = NO;
 
 
     // next, add the new scrap to the same page as the stretched scrap
-    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+    MMUndoablePaperView* page = [visibleStackHolder peekSubview];
     MMScrapView* clonedScrap = [self cloneScrap:scrap];
     [page addScrap:clonedScrap];
     
@@ -1222,6 +1222,8 @@ int skipAll = NO;
     CGPoint p2 = [[touches2 objectAtIndex:1] locationInView:self];
     clonedScrap.center = AveragePoints(p1, p2);
 
+    [page addUndoItemForAddedScrap:clonedScrap];
+    
     // hand the cloned scrap to the pan scrap gesture
     panAndPinchScrapGesture2.scrap = clonedScrap;
     

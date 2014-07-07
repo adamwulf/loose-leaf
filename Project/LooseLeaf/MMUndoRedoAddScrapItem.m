@@ -23,6 +23,10 @@
 -(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)_scrap{
     __weak MMUndoablePaperView* weakPage = _page;
     propertiesWhenAdded = [_scrap propertiesDictionary];
+    if(!propertiesWhenAdded){
+        propertiesWhenAdded = [_scrap propertiesDictionary];
+        @throw [NSException exceptionWithName:@"InvalidUndoItem" reason:@"Undo Item must have scrap properties" userInfo:nil];
+    }
     if(self = [super initWithUndoBlock:^{
         [weakPage removeScrap:scrap];
     } andRedoBlock:^{
@@ -48,6 +52,12 @@
         canUndo = [[dict objectForKey:@"canUndo"] boolValue];
     }
     return self;
+}
+
+#pragma mark - Description
+
+-(NSString*) description{
+    return [NSString stringWithFormat:@"[MMUndoRedoAddScrapItem %@]", scrap.uuid];
 }
 
 @end

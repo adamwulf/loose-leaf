@@ -24,6 +24,9 @@
 }
 
 -(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)_scrap from:(NSDictionary *)_startProperties to:(NSDictionary *)_endProperties{
+    if(!_startProperties || !_endProperties){
+        @throw [NSException exceptionWithName:@"InvalidUndoItem" reason:@"Undo Item must have scrap properties" userInfo:nil];
+    }
     if(self = [super initWithUndoBlock:^{
         [scrap setPropertiesDictionary:startProperties];
         NSUInteger subviewIndex = [[startProperties objectForKey:@"subviewIndex"] unsignedIntegerValue];
@@ -64,6 +67,12 @@
         canUndo = [[dict objectForKey:@"canUndo"] boolValue];
     }
     return self;
+}
+
+#pragma mark - Description
+
+-(NSString*) description{
+    return [NSString stringWithFormat:@"[MMUndoRedoMoveScrapItem %@]", scrap.uuid];
 }
 
 @end

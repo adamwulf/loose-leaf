@@ -189,7 +189,7 @@
 #pragma mark - Debug
 
 -(void) debugPrintUndoStatus{
-    
+    return;
     NSLog(@"**********************************************************************");
     NSLog(@"Undo status");
     NSLog(@" page %@", self.uuid);

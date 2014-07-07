@@ -11,14 +11,16 @@
 
 @implementation MMUndoRedoRemoveScrapItem{
     NSDictionary* propertiesWhenRemoved;
+    MMScrapView* scrap;
 }
 
 +(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap withProperties:(NSDictionary*)scrapProperties{
     return [[MMUndoRedoRemoveScrapItem alloc] initForPage:_page andScrap:scrap withProperties:scrapProperties];
 }
 
--(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap withProperties:(NSDictionary*)scrapProperties{
+-(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)_scrap withProperties:(NSDictionary*)scrapProperties{
     __weak MMUndoablePaperView* weakPage = _page;
+    scrap = _scrap;
     propertiesWhenRemoved = scrapProperties;
     if(self = [super initWithUndoBlock:^{
         [weakPage addScrap:scrap];
@@ -45,6 +47,12 @@
         canUndo = [[dict objectForKey:@"canUndo"] boolValue];
     }
     return self;
+}
+
+#pragma mark - Description
+
+-(NSString*) description{
+    return [NSString stringWithFormat:@"[MMUndoRedoRemoveScrapItem %@]", scrap.uuid];
 }
 
 @end

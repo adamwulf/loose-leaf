@@ -59,4 +59,17 @@
     return self;
 }
 
+#pragma mark - Description
+
+-(NSString*) description{
+    NSString* str = @"";
+    for(NSObject<MMUndoRedoItem>*obj in undoableItems){
+        if(str.length){
+            str = [str stringByAppendingString:@",\n"];
+        }
+        str = [str stringByAppendingString:[obj description]];
+    }
+    return [NSString stringWithFormat:@"[MMUndoRedoGroupItem (%@)]", str];
+}
+
 @end
