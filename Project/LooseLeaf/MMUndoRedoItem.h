@@ -26,4 +26,8 @@
 
 -(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)page;
 
+-(BOOL) shouldMergeWith:(NSObject<MMUndoRedoItem>*)otherItem;
+
+-(NSObject<MMUndoRedoItem>*) mergedItemWith:(NSObject<MMUndoRedoItem>*)otherItem;
+
 @end

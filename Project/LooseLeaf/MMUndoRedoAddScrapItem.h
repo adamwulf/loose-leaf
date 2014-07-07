@@ -11,6 +11,8 @@
 
 @interface MMUndoRedoAddScrapItem : MMUndoRedoPageItem
 
+@property (readonly) MMScrapView* scrap;
+
 +(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap;
 
 -(id) initForPage:(MMUndoablePaperView*)page andScrap:(MMScrapView*)scrap;

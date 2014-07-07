@@ -10,10 +10,11 @@
 
 @implementation MMUndoRedoPageItem
 
+@synthesize page;
+
 +(id) itemWithUndoBlock:(void(^)())undoBlock andRedoBlock:(void(^)())redoBlock forPage:(MMUndoablePaperView*)page{
     return [[MMUndoRedoPageItem alloc] initWithUndoBlock:undoBlock andRedoBlock:redoBlock forPage:page];
 }
-
 
 -(id) initWithUndoBlock:(void (^)())undoBlock andRedoBlock:(void (^)())redoBlock forPage:(MMUndoablePaperView *)_page{
     if(self = [super initWithUndoBlock:undoBlock andRedoBlock:redoBlock]){

@@ -11,13 +11,16 @@
 
 @implementation MMUndoRedoAddScrapItem{
     NSDictionary* propertiesWhenAdded;
+    MMScrapView* scrap;
 }
+
+@synthesize scrap;
 
 +(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap{
     return [[MMUndoRedoAddScrapItem alloc] initForPage:_page andScrap:scrap];
 }
 
--(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap{
+-(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)_scrap{
     __weak MMUndoablePaperView* weakPage = _page;
     propertiesWhenAdded = [scrap propertiesDictionary];
     if(self = [super initWithUndoBlock:^{
@@ -25,8 +28,10 @@
     } andRedoBlock:^{
         [weakPage addScrap:scrap];
         [scrap setPropertiesDictionary:propertiesWhenAdded];
+        NSUInteger subviewIndex = [[propertiesWhenAdded objectForKey:@"subviewIndex"] unsignedIntegerValue];
+        [scrap.superview insertSubview:scrap atIndex:subviewIndex];
     } forPage:_page]){
-        // noop
+        scrap = _scrap;
     };
     return self;
 }

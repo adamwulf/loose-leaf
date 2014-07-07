@@ -23,6 +23,8 @@
     if(self = [super initWithUndoBlock:^{
         [weakPage addScrap:scrap];
         [scrap setPropertiesDictionary:propertiesWhenRemoved];
+        NSUInteger subviewIndex = [[propertiesWhenRemoved objectForKey:@"subviewIndex"] unsignedIntegerValue];
+        [scrap.superview insertSubview:scrap atIndex:subviewIndex];
     } andRedoBlock:^{
         [weakPage removeScrap:scrap];
     } forPage:_page]){

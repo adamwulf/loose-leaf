@@ -8,27 +8,49 @@
 
 #import "MMUndoRedoMoveScrapItem.h"
 #import "MMUndoablePaperView.h"
+#import "MMUndoRedoAddScrapItem.h"
+#import "MMUndoRedoGroupItem.h"
 
 @implementation MMUndoRedoMoveScrapItem{
     NSDictionary* startProperties;
+    NSUInteger subviewIndexAtStart;
     NSDictionary* endProperties;
+    NSUInteger subviewIndexAtEnd;
+    MMScrapView* scrap;
 }
 
 +(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap from:(NSDictionary *)startProperties to:(NSDictionary *)endProperties{
     return [[MMUndoRedoMoveScrapItem alloc] initForPage:_page andScrap:scrap from:startProperties to:endProperties];
 }
 
--(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap from:(NSDictionary *)_startProperties to:(NSDictionary *)_endProperties{
+-(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)_scrap from:(NSDictionary *)_startProperties to:(NSDictionary *)_endProperties{
     if(self = [super initWithUndoBlock:^{
         [scrap setPropertiesDictionary:startProperties];
+        NSUInteger subviewIndex = [[startProperties objectForKey:@"subviewIndex"] unsignedIntegerValue];
+        [scrap.superview insertSubview:scrap atIndex:subviewIndex];
     } andRedoBlock:^{
         [scrap setPropertiesDictionary:endProperties];
+        NSUInteger subviewIndex = [[endProperties objectForKey:@"subviewIndex"] unsignedIntegerValue];
+        [scrap.superview insertSubview:scrap atIndex:subviewIndex];
     } forPage:_page]){
         // noop
+        scrap = _scrap;
         startProperties = _startProperties;
         endProperties = _endProperties;
     };
     return self;
+}
+
+-(BOOL) shouldMergeWith:(NSObject<MMUndoRedoItem> *)otherItem{
+    if([otherItem isKindOfClass:[MMUndoRedoAddScrapItem class]] &&
+       ((MMUndoRedoAddScrapItem*)otherItem).scrap == scrap){
+        return YES;
+    }
+    return NO;
+}
+
+-(NSObject<MMUndoRedoItem>*) mergedItemWith:(NSObject<MMUndoRedoItem>*)otherItem{
+    return [MMUndoRedoGroupItem itemForPage:self.page withItems:@[self, otherItem]];
 }
 
 

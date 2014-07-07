@@ -62,6 +62,15 @@
     NSLog(@"finalizeRedoneState");
 }
 
+-(BOOL) shouldMergeWith:(NSObject<MMUndoRedoItem>*)otherItem{
+    return NO;
+}
+
+-(NSObject<MMUndoRedoItem>*) mergedItemWith:(NSObject<MMUndoRedoItem>*)otherItem{
+    @throw kAbstractMethodException;
+}
+
+
 #pragma mark - Save and Load
 
 -(NSDictionary*) asDictionary{

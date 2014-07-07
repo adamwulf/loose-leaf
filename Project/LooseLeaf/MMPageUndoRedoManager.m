@@ -11,6 +11,8 @@
 #import <JotUI/JotUI.h>
 #import "Constants.h"
 #import "MMUndoablePaperView.h"
+#import "MMUndoRedoPageItem.h"
+#import "MMUndoRedoAddScrapItem.h"
 
 @implementation MMPageUndoRedoManager{
     MMUndoablePaperView* page;
@@ -32,6 +34,14 @@
 
 -(void) addUndoItem:(NSObject<MMUndoRedoItem>*)item{
     @synchronized(self){
+        
+        MMUndoRedoPageItem* lastItem = [stackOfUndoableItems lastObject];
+        if([item shouldMergeWith:lastItem]){
+            [stackOfUndoableItems removeLastObject];
+            item = [item mergedItemWith:lastItem];
+        }
+        
+        
         [stackOfUndoneItems makeObjectsPerformSelector:@selector(finalizeRedoneState)];
         [stackOfUndoneItems removeAllObjects];
         [stackOfUndoableItems addObject:item];

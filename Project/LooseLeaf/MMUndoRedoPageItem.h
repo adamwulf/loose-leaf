@@ -13,6 +13,8 @@
     __weak MMUndoablePaperView* page;
 }
 
+@property (readonly) MMUndoablePaperView* page;
+
 +(id) itemWithUndoBlock:(void(^)())undoBlock andRedoBlock:(void(^)())redoBlock forPage:(MMUndoablePaperView*)page;
 
 - (id) initWithUndoBlock:(void(^)())undoBlock andRedoBlock:(void(^)())redoBlock forPage:(MMUndoablePaperView*)page;

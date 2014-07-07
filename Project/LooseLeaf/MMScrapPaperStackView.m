@@ -735,7 +735,7 @@ int skipAll = NO;
         // and what the page specific center and scale should be
         CGFloat scrapScaleInPage;
         CGPoint scrapCenterInPage;
-        MMScrappedPaperView* pageToDropScrap = [self pageWouldDropScrap:gesture.scrap atCenter:&scrapCenterInPage andScale:&scrapScaleInPage];
+        MMUndoablePaperView* pageToDropScrap = [self pageWouldDropScrap:gesture.scrap atCenter:&scrapCenterInPage andScale:&scrapScaleInPage];
         if(![pageToDropScrap isEqual:[visibleStackHolder peekSubview]]){
             // if the page it should drop isn't the top visible page,
             // then add it to the scrap container view.
@@ -754,13 +754,41 @@ int skipAll = NO;
             [self forceScrapToScrapContainerDuringGesture];
         }
         
-        if(gesture.isShaking){
+        // only allow for shaking if:
+        // 1. gesture is shaking
+        // 2. there are other scraps on the page to re-order with, and
+        // 3. we're not actively bezeling on a potentially different top page
+        //    (since the bezel will pull the scrap to the scrapContainer anyways, there's
+        //     no use adding an undo level for this shake)
+        if(gesture.isShaking && [pageToDropScrap.scrapsOnPaper count] && ![fromLeftBezelGesture isActivelyBezeling] && ![fromRightBezelGesture isActivelyBezeling]){
             // if the gesture is shaking, then pull the scrap to the top if
             // it's not already. otherwise send it to the back
-            if([pageToDropScrap isEqual:[visibleStackHolder peekSubview]] &&
+            if([pageToDropScrap isEqual:[[MMPageCacheManager sharedInstance] currentEditablePage]] &&
                ![pageToDropScrap hasScrap:scrap]){
-                [pageToDropScrap addScrap:scrap];
-                [gesture.scrap.superview insertSubview:gesture.scrap atIndex:0];
+                // this happens when the user picks up a scrap
+                // bezels / turns to another page while holding the scrap
+                // and then shakes the scrap to re-order it on the new page
+
+                // this page isn't allowed to steal another page's scrap,
+                // so we need to clone it before passing it to the new page
+                MMScrapView* clonedScrap = [self cloneScrap:gesture.scrap];
+                // add the scrap to the bottom of the page
+                [pageToDropScrap addScrap:clonedScrap];
+                [clonedScrap.superview insertSubview:clonedScrap atIndex:0];
+                // remove the scrap from the original page
+                [gesture.scrap removeFromSuperview];
+                
+                // add the undo items
+                [gesture.startingPageForScrap addUndoItemForRemovedScrap:gesture.scrap withProperties:gesture.startingScrapProperties];
+                [pageToDropScrap addUndoItemForAddedScrap:clonedScrap];
+                
+                // update the gesture to start working with the cloned scrap
+                gesture.scrap = clonedScrap;
+                gesture.startingPageForScrap = pageToDropScrap;
+                [clonedScrap setShouldShowShadow:YES];
+                [clonedScrap setSelected:YES];
+                
+                // save the page we just dropped the scrap on
                 [pageToDropScrap saveToDisk];
             }else if(gesture.scrap == [gesture.scrap.superview.subviews lastObject]){
                 [gesture.scrap.superview insertSubview:gesture.scrap atIndex:0];
@@ -799,7 +827,6 @@ int skipAll = NO;
         if(gesture.didExitToBezel){
             shouldBezel = YES;
             // remove scrap undo item
-            NSLog(@"remove scrap undo item!");
         }else if([scrapsInContainer containsObject:gesture.scrap]){
             CGFloat scrapScaleInPage;
             CGPoint scrapCenterInPage;
@@ -825,7 +852,6 @@ int skipAll = NO;
                     // make remove/add scrap undo items
                     // need to somehow save which page used to
                     // own this scrap
-                    NSLog(@"add/remove scrap undo items");
                     
                     // clone the scrap and add it to the
                     // page where it was dropped. this way, the
@@ -846,10 +872,10 @@ int skipAll = NO;
                     [pageToDropScrap addUndoItemForAddedScrap:clonedScrap];
                 }else{
                     // make a move-scrap undo item
-                    [gesture.startingPageForScrap addUndoItemForScrap:gesture.scrap thatMovedFrom:gesture.startingScrapProperties to:[gesture.scrap propertiesDictionary]];
                     if(![pageToDropScrap hasScrap:gesture.scrap]){
                         [pageToDropScrap addScrap:gesture.scrap];
                     }
+                    [gesture.startingPageForScrap addUndoItemForScrap:gesture.scrap thatMovedFrom:gesture.startingScrapProperties to:[gesture.scrap propertiesDictionary]];
                 }
                 
                 [pageToDropScrap saveToDisk];
@@ -895,6 +921,7 @@ int skipAll = NO;
         [gesture giveUpScrap];
         
         if(shouldBezel){
+            @throw [NSException exceptionWithName:@"IncompleteCode" reason:@"Need to handle bezeling a scrap for undo/redo" userInfo:nil];
             // if we've bezelled the scrap,
             // add it to the bezel container
             [bezelScrapContainer addScrapToBezelSidebar:scrap animated:YES];
