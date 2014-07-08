@@ -145,8 +145,10 @@
         for (MMScrapView* scrap in result.addedScraps) {
             [undoItems addObject:[MMUndoRedoAddScrapItem itemForPage:self andScrap:scrap]];
         }
-        for (MMScrapView* scrap in result.removedScraps) {
-            [undoItems addObject:[MMUndoRedoRemoveScrapItem itemForPage:self andScrap:scrap withProperties:[scrap propertiesDictionary]]];
+        for(int i=0;i<[result.removedScraps count];i++){
+            MMScrapView* scrap = [result.removedScraps objectAtIndex:i];
+            NSDictionary* props = [result.removedScrapProperties objectAtIndex:i];
+            [undoItems addObject:[MMUndoRedoRemoveScrapItem itemForPage:self andScrap:scrap withProperties:props]];
         }
         
         [self.undoRedoManager addUndoItem:[MMUndoRedoGroupItem itemForPage:self withItems:undoItems]];

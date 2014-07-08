@@ -12,8 +12,9 @@
 
 @property (nonatomic, readonly) NSArray* addedScraps;
 @property (nonatomic, readonly) NSArray* removedScraps;
+@property (nonatomic, readonly) NSArray* removedScrapProperties;
 @property (nonatomic, readonly) BOOL didAddFillStroke;
 
--(id) initWithAddedScraps:(NSArray*)_added andRemovedScraps:(NSArray*)_removed andDidFillStroke:(BOOL)_didFill;
+-(id) initWithAddedScraps:(NSArray*)_added andRemovedScraps:(NSArray*)_removed andRemovedScrapProperties:(NSArray*)_removedProps andDidFillStroke:(BOOL)_didFill;
 
 @end

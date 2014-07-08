@@ -873,7 +873,9 @@ int skipAll = NO;
                     [gesture.startingPageForScrap addUndoItemForRemovedScrap:gesture.scrap withProperties:gesture.startingScrapProperties];
                     [pageToDropScrap addUndoItemForAddedScrap:clonedScrap];
                 }else{
-                    // make a move-scrap undo item
+                    // make a move-scrap undo item.
+                    // we don't need to add an 'add scrap' undo item,
+                    // since this is the page that originated the scrap
                     if(![pageToDropScrap hasScrap:gesture.scrap]){
                         [pageToDropScrap addScrap:gesture.scrap];
                     }

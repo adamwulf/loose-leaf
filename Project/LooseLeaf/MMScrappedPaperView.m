@@ -590,6 +590,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
     NSMutableArray* scrapsBeingBuilt = [NSMutableArray array];
     NSMutableArray* scrapsBeingRemoved = [NSMutableArray array];
+    NSMutableArray* removedScrapProperties = [NSMutableArray array];
     BOOL didFill = NO;
     
     @try {
@@ -648,7 +649,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                         // and add the scrap so that it's scale matches the scrap that its built from
                         MMScrapView* addedScrap = [self addScrapWithPath:subshapePath andScale:scrap.scale];
                         @synchronized(scrapContainerView){
-                            [scrapContainerView insertSubview:addedScrap belowSubview:scrap];
+                            [scrapContainerView insertSubview:addedScrap aboveSubview:scrap];
                         }
                         
                         // stamp the background
@@ -669,9 +670,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
                         [scraps addObject:addedScrap];
                         [scrapsBeingBuilt addObject:addedScrap];
                     }
-                    //
-                    // TODO: handle deleting scraps, and consider the undo queue as well
-                    // https://github.com/adamwulf/loose-leaf/issues/213
+
+                    [removedScrapProperties addObject:[scrap propertiesDictionary]];
                     [scrap removeFromSuperview];
                     [scrapsBeingRemoved addObject:scrap];
                     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScraps by:@(-1)];
@@ -780,7 +780,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         [controller setToRecipients:[NSArray arrayWithObject:@"adam.wulf@gmail.com"]];
         [controller setSubject:[NSString stringWithFormat:@"Shape Clipping Test Case %@", convertedDateString]];
         [controller setMessageBody:debugFullText isHTML:NO];
-        //        [controller addAttachmentData:imageData mimeType:@"image/png" fileName:@"screenshot.png"];
+//        [controller addAttachmentData:imageData mimeType:@"image/png" fileName:@"screenshot.png"];
         
         if(controller){
             UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
@@ -788,7 +788,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
         }
     }
     
-    return [[MMScissorResult alloc] initWithAddedScraps:scrapsBeingBuilt andRemovedScraps:scrapsBeingRemoved andDidFillStroke:didFill];
+    return [[MMScissorResult alloc] initWithAddedScraps:scrapsBeingBuilt
+                                       andRemovedScraps:scrapsBeingRemoved
+                              andRemovedScrapProperties:removedScrapProperties
+                                       andDidFillStroke:didFill];
 }
 
 
