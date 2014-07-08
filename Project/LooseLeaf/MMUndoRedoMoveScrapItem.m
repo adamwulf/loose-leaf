@@ -11,12 +11,30 @@
 #import "MMUndoRedoAddScrapItem.h"
 #import "MMUndoRedoGroupItem.h"
 
+@interface MMUndoRedoMoveScrapItem (Private)
+
+@property (readonly) NSDictionary* startProperties;
+@property (readonly) NSDictionary* endProperties;
+@property (readonly) MMScrapView* scrap;
+
+@end
+
 @implementation MMUndoRedoMoveScrapItem{
     NSDictionary* startProperties;
-    NSUInteger subviewIndexAtStart;
     NSDictionary* endProperties;
-    NSUInteger subviewIndexAtEnd;
     MMScrapView* scrap;
+}
+
+-(NSDictionary*) startProperties{
+    return startProperties;
+}
+
+-(NSDictionary*) endProperties{
+    return endProperties;
+}
+
+-(MMScrapView*) scrap{
+    return scrap;
 }
 
 +(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap from:(NSDictionary *)startProperties to:(NSDictionary *)endProperties{
@@ -27,14 +45,15 @@
     if(!_startProperties || !_endProperties){
         @throw [NSException exceptionWithName:@"InvalidUndoItem" reason:@"Undo Item must have scrap properties" userInfo:nil];
     }
+    __weak MMUndoRedoMoveScrapItem* weakSelf = self;
     if(self = [super initWithUndoBlock:^{
-        [scrap setPropertiesDictionary:startProperties];
-        NSUInteger subviewIndex = [[startProperties objectForKey:@"subviewIndex"] unsignedIntegerValue];
-        [scrap.superview insertSubview:scrap atIndex:subviewIndex];
+        [weakSelf.scrap setPropertiesDictionary:weakSelf.startProperties];
+        NSUInteger subviewIndex = [[weakSelf.startProperties objectForKey:@"subviewIndex"] unsignedIntegerValue];
+        [weakSelf.scrap.superview insertSubview:weakSelf.scrap atIndex:subviewIndex];
     } andRedoBlock:^{
-        [scrap setPropertiesDictionary:endProperties];
-        NSUInteger subviewIndex = [[endProperties objectForKey:@"subviewIndex"] unsignedIntegerValue];
-        [scrap.superview insertSubview:scrap atIndex:subviewIndex];
+        [weakSelf.scrap setPropertiesDictionary:weakSelf.endProperties];
+        NSUInteger subviewIndex = [[weakSelf.endProperties objectForKey:@"subviewIndex"] unsignedIntegerValue];
+        [weakSelf.scrap.superview insertSubview:weakSelf.scrap atIndex:subviewIndex];
     } forPage:_page]){
         // noop
         scrap = _scrap;

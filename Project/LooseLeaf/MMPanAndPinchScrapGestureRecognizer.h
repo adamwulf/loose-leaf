@@ -56,13 +56,13 @@
 @property (nonatomic, readonly) CGPoint translation;
 @property (nonatomic, readonly) BOOL isShaking;
 @property (nonatomic, weak) MMScrapView* scrap;
-@property (nonatomic, readonly) NSDictionary* startingScrapProperties;
 @property (assign) CGFloat preGestureScale;
 @property (assign) CGFloat preGesturePageScale;
 @property (assign) CGFloat preGestureRotation;
 @property (assign) CGPoint preGestureCenter;
 @property (readonly) MMVector* initialTouchVector;
-@property (nonatomic, weak) MMUndoablePaperView* startingPageForScrap;
+@property (nonatomic, readonly) NSDictionary* startingScrapProperties;
+@property (nonatomic, readonly) MMUndoablePaperView* startingPageForScrap;
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 -(void) relinquishOwnershipOfTouches:(NSSet*)touches;
