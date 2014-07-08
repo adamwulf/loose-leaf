@@ -1143,6 +1143,7 @@ int skipAll = NO;
     // bless the touches so that the pan gesture
     // can pick them up
     [panScrapGesture forceBlessTouches:[NSSet setWithArray:touches] forScrap:scrap];
+    panScrapGesture.startingPageForScrap = [visibleStackHolder peekSubview];
     
     // now that we've calcualted the current position for our
     // reference anchor point, we should now adjust our anchor
@@ -1226,7 +1227,8 @@ int skipAll = NO;
     
     // hand the cloned scrap to the pan scrap gesture
     panAndPinchScrapGesture2.scrap = clonedScrap;
-    
+    panAndPinchScrapGesture2.startingPageForScrap = [visibleStackHolder peekSubview];
+
     // now that the scrap is where it should be,
     // and contains its background, etc, then
     // save everything
@@ -1570,6 +1572,7 @@ int skipAll = NO;
  */
 -(MMScrapView*) cloneScrap:(MMScrapView*)scrap{
     CheckMainThread;
+    
     if(![scrapContainer.subviews containsObject:scrap]){
         @throw [NSException exceptionWithName:@"CloneScrapException" reason:@"Page asked to clone scrap and doesn't own it" userInfo:nil];
     }
@@ -1595,6 +1598,9 @@ int skipAll = NO;
     
     // set the scrap anchor to its center
     [UIView setAnchorPoint:CGPointMake(.5, .5) forView:clonedScrap];
+
+    NSLog(@"clone scrap %@ into %@", scrap.uuid, clonedScrap.uuid);
+    
     return clonedScrap;
 }
 
