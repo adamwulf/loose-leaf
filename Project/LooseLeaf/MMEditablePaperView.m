@@ -544,7 +544,7 @@ static int count = 0;
 }
 
 -(NSString*) jotViewStatePlistPath{
-    if(fileExistsAtPlistPath || [[NSFileManager defaultManager] fileExistsAtPath:[self inkPath]]){
+    if(fileExistsAtPlistPath || [[NSFileManager defaultManager] fileExistsAtPath:[self plistPath]]){
         fileExistsAtPlistPath = YES;
         return [self plistPath];
     }else{

@@ -572,11 +572,11 @@
 }
 
 -(NSString*) jotViewStatePlistPath{
-    if(fileExistsAtPlistPath || [[NSFileManager defaultManager] fileExistsAtPath:self.inkImageFile]){
+    if(fileExistsAtPlistPath || [[NSFileManager defaultManager] fileExistsAtPath:self.stateFile]){
         fileExistsAtPlistPath = YES;
-        return self.inkImageFile;
+        return self.stateFile;
     }else{
-        return self.bundledInkImageFile;
+        return self.bundledStateFile;
     }
 }
 
