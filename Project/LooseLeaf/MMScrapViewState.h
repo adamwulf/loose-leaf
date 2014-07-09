@@ -10,9 +10,11 @@
 #import <JotUI/JotUI.h>
 #import "MMScrapBackgroundView.h"
 #import "MMScrapViewStateDelegate.h"
+#import "MMScrapsOnPaperState.h"
 
 @interface MMScrapViewState : NSObject<JotViewStateProxyDelegate>{
     __weak NSObject<MMScrapViewStateDelegate>* delegate;
+    __weak MMScrapsOnPaperState* paperState;
 }
 
 @property (weak) NSObject<MMScrapViewStateDelegate>* delegate;
@@ -25,9 +27,9 @@
 @property (readonly) NSString* pathForScrapAssets;
 @property (nonatomic, readonly) int fullByteSize;
 
--(id) initWithUUID:(NSString*)uuid;
+-(id) initWithUUID:(NSString*)uuid andPaperState:(MMScrapsOnPaperState*)paperState;
 
--(id) initWithUUID:(NSString*)uuid andBezierPath:(UIBezierPath*)bezierPath;
+-(id) initWithUUID:(NSString*)uuid andBezierPath:(UIBezierPath*)bezierPath andPaperState:(MMScrapsOnPaperState*)paperState;
 
 -(void) saveScrapStateToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock;
 

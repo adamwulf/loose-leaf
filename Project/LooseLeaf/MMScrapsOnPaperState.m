@@ -35,9 +35,9 @@ static dispatch_queue_t importExportStateQueue;
     return importExportStateQueue;
 }
 
--(id) init{
+-(id) initWithDelegate:(NSObject<MMScrapsOnPaperStateDelegate>*)_delegate{
     if(self = [super init]){
-        // noop
+        delegate = _delegate;
     }
     return self;
 }
@@ -78,7 +78,7 @@ static dispatch_queue_t importExportStateQueue;
                 
                 // load all the states async
                 for(NSDictionary* scrapProperties in scrapProps){
-                    MMScrapViewState* state = [[MMScrapViewState alloc] initWithUUID:[scrapProperties objectForKey:@"uuid"]];
+                    MMScrapViewState* state = [[MMScrapViewState alloc] initWithUUID:[scrapProperties objectForKey:@"uuid"] andPaperState:self];
                     if(state){
                         NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
                         [props setObject:state forKey:@"state"];
@@ -89,7 +89,7 @@ static dispatch_queue_t importExportStateQueue;
                 [NSThread performBlockOnMainThread:^{
                     for(NSDictionary* scrapProperties in scrapPropsWithState){
                         MMScrapViewState* scrapState = [scrapProperties objectForKey:@"state"];
-                        MMScrapView* scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState];
+                        MMScrapView* scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState andPaperState:self];
                         if(scrap){
                             [scrap setPropertiesDictionary:scrapProperties];
                             [self.delegate didLoadScrap:scrap];

@@ -98,7 +98,7 @@
 
 #pragma mark - Init
 
--(id) initWithUUID:(NSString*)_uuid{
+-(id) initWithUUID:(NSString*)_uuid andPaperState:(MMScrapsOnPaperState*)_paperState{
     if(self = [super init]){
         
         // save our UUID, everything depends on this
@@ -116,7 +116,7 @@
             // now load the background image from disk, if any
             [backingView loadBackgroundFromDiskWithProperties:properties];
             
-            return [self initWithUUID:uuid andBezierPath:bezierPath andBackgroundView:backingView];
+            return [self initWithUUID:uuid andBezierPath:bezierPath andBackgroundView:backingView andPaperState:_paperState];
         }else{
             // we don't have a file that we should have, so don't load the scrap
             return nil;
@@ -125,14 +125,15 @@
     return self;
 }
 
--(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path{
-    return [self initWithUUID:_uuid andBezierPath:_path andBackgroundView:nil];
+-(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andPaperState:(MMScrapsOnPaperState*)_paperState{
+    return [self initWithUUID:_uuid andBezierPath:_path andBackgroundView:nil andPaperState:_paperState];
 }
 
--(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andBackgroundView:(MMScrapBackgroundView*)backingView{
+-(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andBackgroundView:(MMScrapBackgroundView*)backingView andPaperState:(MMScrapsOnPaperState*)_paperState{
     if(self = [super init]){
         
         // save our UUID, everything depends on this
+        paperState = _paperState;
         uuid = _uuid;
         lock = [[NSLock alloc] init];
 

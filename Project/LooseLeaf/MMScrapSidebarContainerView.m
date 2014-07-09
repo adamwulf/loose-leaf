@@ -68,8 +68,7 @@
             [rotationAdjustments addEntriesFromDictionary:loadedRotationValues];
         }
 
-        scrapState = [[MMScrapsOnPaperState alloc] init];
-        scrapState.delegate = self;
+        scrapState = [[MMScrapsOnPaperState alloc] initWithDelegate:self];
     }
     return self;
 }

@@ -20,6 +20,8 @@
     UIImageView* cachedImgView;
 }
 
+@property (readonly) MMScrapsOnPaperState* scrapsOnPaperState;
+
 -(void) addScrap:(MMScrapView*)scrap;
 -(void) removeScrap:(MMScrapView*)scrap;
 

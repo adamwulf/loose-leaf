@@ -771,7 +771,7 @@ int skipAll = NO;
 
                 // this page isn't allowed to steal another page's scrap,
                 // so we need to clone it before passing it to the new page
-                MMScrapView* clonedScrap = [self cloneScrap:gesture.scrap];
+                MMScrapView* clonedScrap = [self cloneScrap:gesture.scrap toPage:pageToDropScrap];
                 // add the scrap to the bottom of the page
                 [pageToDropScrap addScrap:clonedScrap];
                 [clonedScrap.superview insertSubview:clonedScrap atIndex:0];
@@ -864,7 +864,7 @@ int skipAll = NO;
                     // similarly, the page that had the scrap dropped onto
                     // it can undo the drop and it won't affect the page that
                     // the scrap came from
-                    MMScrapView* clonedScrap = [self cloneScrap:gesture.scrap];
+                    MMScrapView* clonedScrap = [self cloneScrap:gesture.scrap toPage:pageToDropScrap];
                     [pageToDropScrap addScrap:clonedScrap];
                     // remove the scrap from the original page
                     [gesture.scrap removeFromSuperview];
@@ -1227,7 +1227,7 @@ int skipAll = NO;
 
     // next, add the new scrap to the same page as the stretched scrap
     MMUndoablePaperView* page = [visibleStackHolder peekSubview];
-    MMScrapView* clonedScrap = [self cloneScrap:scrap];
+    MMScrapView* clonedScrap = [self cloneScrap:scrap toPage:page];
     [page addScrap:clonedScrap];
     
     // move it to the new gesture location under it's scrap
@@ -1581,7 +1581,7 @@ int skipAll = NO;
  * and the cloned scrap will be put in the scrapContainer
  * as well, exactly overlapping it
  */
--(MMScrapView*) cloneScrap:(MMScrapView*)scrap{
+-(MMScrapView*) cloneScrap:(MMScrapView*)scrap toPage:(MMScrappedPaperView*)page{
     CheckMainThread;
     
     if(![scrapContainer.subviews containsObject:scrap]){
@@ -1592,7 +1592,7 @@ int skipAll = NO;
     // scale, so it would transform the path to a 1.0 scale before adding the scrap. this would result in incorrect
     // resolution for the new scrap. so set the rotation to make sure we're getting the smallest bounding
     // box, and we'll set the scrap's scale to match after we add it to the page.
-    MMScrapView* clonedScrap = [[MMScrapView alloc] initWithBezierPath:[scrap.bezierPath copy] andScale:1.0 andRotation:scrap.rotation];
+    MMScrapView* clonedScrap = [[MMScrapView alloc] initWithBezierPath:[scrap.bezierPath copy] andScale:1.0 andRotation:scrap.rotation andPaperState:page.scrapsOnPaperState];
     clonedScrap.scale = scrap.scale;
     [scrapContainer addSubview:clonedScrap];
     

@@ -35,7 +35,7 @@
 @implementation MMScrappedPaperView{
     UIView* scrapContainerView;
     NSString* scrapIDsPath;
-    MMScrapsOnPaperState* scrapState;
+    MMScrapsOnPaperState* scrapsOnPaperState;
     MMDecompressImagePromise* scrappedImgViewImage;
     // this defaults to NO, which means we'll try to
     // load a thumbnail. if an image does not exist
@@ -50,6 +50,7 @@
     BOOL isAskedToLoadThumbnail;
 }
 
+@synthesize scrapsOnPaperState;
 
 static dispatch_queue_t concurrentBackgroundQueue;
 +(dispatch_queue_t) concurrentBackgroundQueue{
@@ -74,8 +75,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         panGesture.scrapDelegate = self;
         rulerGesture.scrapDelegate = self;
         
-        scrapState = [[MMScrapsOnPaperState alloc] init];
-        scrapState.delegate = self;
+        scrapsOnPaperState = [[MMScrapsOnPaperState alloc] initWithDelegate:self];
         
         [self setCanvasVisible:NO];
     }
@@ -83,7 +83,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(int) fullByteSize{
-    return [super fullByteSize] + scrapState.fullByteSize;
+    return [super fullByteSize] + scrapsOnPaperState.fullByteSize;
 }
 
 #pragma mark - Public Methods
@@ -100,7 +100,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) undo{
-    if(scrapState){
+    if(scrapsOnPaperState){
         for(MMScrapView* scrap in self.scrapsOnPaper){
             [scrap.state.drawableView undo];
         }
@@ -109,7 +109,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) redo{
-    if(scrapState){
+    if(scrapsOnPaperState){
         for(MMScrapView* scrap in self.scrapsOnPaper){
             [scrap.state.drawableView redo];
         }
@@ -195,7 +195,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // give us the minimal square px. For instance, drawing a thin diagonal
     // strip of paper will create a thin texture and rotate it, instead of
     // an unrotated thick rectangle.
-    MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path andScale:scale andRotation:rotation];
+    MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path andScale:scale andRotation:rotation andPaperState:scrapsOnPaperState];
     @synchronized(scrapContainerView){
         [scrapContainerView addSubview:newScrap];
     }
@@ -810,7 +810,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 -(void) setEditable:(BOOL)isEditable{
     [super setEditable:isEditable];
-    [scrapState setShouldShowShadows:isEditable];
+    [scrapsOnPaperState setShouldShowShadows:isEditable];
 }
 
 -(BOOL) hasEditsToSave{
@@ -990,7 +990,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     __block MMImmutableScrapsOnPaperState* immutableScrapState;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
-            immutableScrapState = [scrapState immutableStateForPath:self.scrapIDsPath];
+            immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
             scrapsHadBeenChanged = [immutableScrapState saveStateToDiskBlocking];
             dispatch_semaphore_signal(sema2);
         }
@@ -1028,16 +1028,16 @@ static dispatch_queue_t concurrentBackgroundQueue;
     debug_NSLog(@"asking %@ to load state", self.uuid);
     [super loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
     if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
-        [scrapState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
+        [scrapsOnPaperState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
     }else{
-        [scrapState loadStateAsynchronously:async atPath:self.bundledScrapIDsPath andMakeEditable:YES];
+        [scrapsOnPaperState loadStateAsynchronously:async atPath:self.bundledScrapIDsPath andMakeEditable:YES];
     }
 }
 
 -(void) unloadState{
     debug_NSLog(@"asking %@ to unload", self.uuid);
     [super unloadState];
-    MMScrapsOnPaperState* strongScrapState = scrapState;
+    MMScrapsOnPaperState* strongScrapState = scrapsOnPaperState;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
             [[strongScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
@@ -1143,8 +1143,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
         [NSThread performBlockOnMainThread:^{
             [self didDecompressImage:nil];
         }];
-        if([scrapState isStateLoaded]){
-            MMScrapsOnPaperState* strongScrapState = scrapState;
+        if([scrapsOnPaperState isStateLoaded]){
+            MMScrapsOnPaperState* strongScrapState = scrapsOnPaperState;
             dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
                 @autoreleasepool {
                     // save if needed
