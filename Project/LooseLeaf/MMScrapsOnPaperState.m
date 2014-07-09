@@ -50,6 +50,8 @@ static dispatch_queue_t importExportStateQueue;
     return totalBytes;
 }
 
+#pragma mark - Save and Load
+
 -(BOOL) isStateLoaded{
     return isLoaded;
 }
@@ -160,6 +162,13 @@ static dispatch_queue_t importExportStateQueue;
         return [[MMImmutableScrapsOnPaperState alloc] initWithScrapIDsPath:scrapIDsPath andScraps:self.delegate.scrapsOnPaper];
     }
     return nil;
+}
+
+#pragma mark - Add Scraps
+
+-(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale{
+    MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path andScale:scale andRotation:rotation andPaperState:self];
+    return newScrap;
 }
 
 @end

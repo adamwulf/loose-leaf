@@ -25,6 +25,8 @@
 
 -(id) initWithDelegate:(NSObject<MMScrapsOnPaperStateDelegate>*)delegate;
 
+#pragma mark - Save and Load
+
 -(BOOL) isStateLoaded;
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable;
@@ -32,5 +34,9 @@
 -(void) unload;
 
 -(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath;
+
+#pragma mark - Add Scraps
+
+-(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale;
 
 @end

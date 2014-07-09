@@ -1592,7 +1592,7 @@ int skipAll = NO;
     // scale, so it would transform the path to a 1.0 scale before adding the scrap. this would result in incorrect
     // resolution for the new scrap. so set the rotation to make sure we're getting the smallest bounding
     // box, and we'll set the scrap's scale to match after we add it to the page.
-    MMScrapView* clonedScrap = [[MMScrapView alloc] initWithBezierPath:[scrap.bezierPath copy] andScale:1.0 andRotation:scrap.rotation andPaperState:page.scrapsOnPaperState];
+    MMScrapView* clonedScrap = [page.scrapsOnPaperState addScrapWithPath:[scrap.bezierPath copy] andRotation:scrap.rotation andScale:1.0];
     clonedScrap.scale = scrap.scale;
     [scrapContainer addSubview:clonedScrap];
     

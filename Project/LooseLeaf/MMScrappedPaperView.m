@@ -195,7 +195,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // give us the minimal square px. For instance, drawing a thin diagonal
     // strip of paper will create a thin texture and rotate it, instead of
     // an unrotated thick rectangle.
-    MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path andScale:scale andRotation:rotation andPaperState:scrapsOnPaperState];
+    MMScrapView* newScrap = [scrapsOnPaperState addScrapWithPath:path andRotation:rotation andScale:scale];
     @synchronized(scrapContainerView){
         [scrapContainerView addSubview:newScrap];
     }
