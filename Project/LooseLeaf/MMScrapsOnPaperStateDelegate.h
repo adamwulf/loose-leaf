@@ -20,6 +20,6 @@
 
 -(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState;
 
--(NSString*) uuid;
+-(NSString*) pagesPath;
 
 @end

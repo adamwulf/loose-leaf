@@ -98,42 +98,40 @@
 
 #pragma mark - Init
 
--(id) initWithUUID:(NSString*)_uuid andPaperState:(MMScrapsOnPaperState*)_paperState{
-    if(self = [super init]){
-        
-        // save our UUID, everything depends on this
-        uuid = _uuid;
-        
-        if([[NSFileManager defaultManager] fileExistsAtPath:self.plistPath] ||
-           [[NSFileManager defaultManager] fileExistsAtPath:self.bundledPlistPath]){
-            NSDictionary* properties = [NSDictionary dictionaryWithContentsOfFile:self.plistPath];
-            if(!properties){
-                properties = [NSDictionary dictionaryWithContentsOfFile:self.bundledPlistPath];
-            }
-            bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
-            
-            MMScrapBackgroundView* backingView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
-            // now load the background image from disk, if any
-            [backingView loadBackgroundFromDiskWithProperties:properties];
-            
-            return [self initWithUUID:uuid andBezierPath:bezierPath andBackgroundView:backingView andPaperState:_paperState];
-        }else{
-            // we don't have a file that we should have, so don't load the scrap
-            return nil;
+-(id) initWithUUID:(NSString*)_uuid andPaperState:(MMScrapsOnPaperState*)_scrapsOnPaperState{
+    // save our UUID and scrapsOnPaperState, everything depends on these
+    uuid = _uuid;
+    scrapsOnPaperState = _scrapsOnPaperState;
+    
+    if([[NSFileManager defaultManager] fileExistsAtPath:self.plistPath] ||
+       [[NSFileManager defaultManager] fileExistsAtPath:self.bundledPlistPath]){
+        NSDictionary* properties = [NSDictionary dictionaryWithContentsOfFile:self.plistPath];
+        if(!properties){
+            properties = [NSDictionary dictionaryWithContentsOfFile:self.bundledPlistPath];
         }
+        bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
+        
+        MMScrapBackgroundView* backingView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
+        // now load the background image from disk, if any
+        [backingView loadBackgroundFromDiskWithProperties:properties];
+        
+        return [self initWithUUID:uuid andBezierPath:bezierPath andBackgroundView:backingView andPaperState:_scrapsOnPaperState];
+    }else{
+        // we don't have a file that we should have, so don't load the scrap
+        return nil;
     }
     return self;
 }
 
--(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andPaperState:(MMScrapsOnPaperState*)_paperState{
-    return [self initWithUUID:_uuid andBezierPath:_path andBackgroundView:nil andPaperState:_paperState];
+-(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andPaperState:(MMScrapsOnPaperState*)_scrapsOnPaperState{
+    return [self initWithUUID:_uuid andBezierPath:_path andBackgroundView:nil andPaperState:_scrapsOnPaperState];
 }
 
--(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andBackgroundView:(MMScrapBackgroundView*)backingView andPaperState:(MMScrapsOnPaperState*)_paperState{
+-(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andBackgroundView:(MMScrapBackgroundView*)backingView andPaperState:(MMScrapsOnPaperState*)_scrapsOnPaperState{
     if(self = [super init]){
         
         // save our UUID, everything depends on this
-        paperState = _paperState;
+        scrapsOnPaperState = _scrapsOnPaperState;
         uuid = _uuid;
         lock = [[NSLock alloc] init];
 
@@ -498,9 +496,8 @@
 
 #pragma mark - Private
 
-+(NSString*) scrapDirectoryPathForUUID:(NSString*)uuid{
-    NSString* documentsPath = [NSFileManager documentsPath];
-    NSString* scrapPath = [[documentsPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
++(NSString*) scrapDirectoryPathForUUID:(NSString*)uuid andScrapsOnPaperState:(MMScrapsOnPaperState*)scrapsOnPaperState{
+    NSString* scrapPath = [[scrapsOnPaperState.delegate.pagesPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
     return scrapPath;
 }
 
@@ -512,7 +509,7 @@
 
 -(NSString*) pathForScrapAssets{
     if(!scrapPath){
-        scrapPath = [MMScrapViewState scrapDirectoryPathForUUID:uuid];
+        scrapPath = [MMScrapViewState scrapDirectoryPathForUUID:uuid andScrapsOnPaperState:scrapsOnPaperState];
         [NSFileManager ensureDirectoryExistsAtPath:scrapPath];
     }
     return scrapPath;

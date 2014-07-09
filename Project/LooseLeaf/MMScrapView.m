@@ -28,7 +28,6 @@
     CGFloat scale;
     // our current rotation around our center
     CGFloat rotation;
-
     
     // these properties are UI only, and
     // don't need to be persisted:
@@ -82,8 +81,6 @@
     }
     // can't find any information about that scrap
     return nil;
-    
-    return self;
 }
 
 - (id)initWithBezierPath:(UIBezierPath *)path andPaperState:(MMScrapsOnPaperState*)paperState{
