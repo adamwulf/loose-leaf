@@ -18,11 +18,11 @@
 
 -(id) initWithScrapIDsPath:(NSString *)_scrapIDsPath andAllScraps:(NSArray*)_allScraps andScrapsOnPage:(NSArray*)_scrapsOnPage{
     if(self = [super init]){
+        scrapIDsPath = _scrapIDsPath;
         scrapsOnPageIDs = [_scrapsOnPage mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
             return [obj uuid];
         }];
-        allScrapsOnPage = [_scrapsOnPage copy];
-        scrapIDsPath = _scrapIDsPath;
+        allScrapsOnPage = [_allScraps copy];
     }
     return self;
 }

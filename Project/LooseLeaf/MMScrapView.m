@@ -325,7 +325,7 @@
         NSUInteger index = [self.superview.subviews indexOfObject:self];
         [properties setObject:[NSNumber numberWithUnsignedInteger:index] forKey:@"subviewIndex"];
     }else{
-        @throw [NSException exceptionWithName:@"InvalidPropertyDictionary" reason:@"Scrap properties cannot be generated for scrap without a superview" userInfo:nil];
+        // noop
     }
     [UIView setAnchorPoint:currentAnchor forView:self];
     return properties;

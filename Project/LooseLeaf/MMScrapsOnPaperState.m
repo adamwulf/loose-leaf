@@ -179,6 +179,7 @@ static dispatch_queue_t importExportStateQueue;
 
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale{
     MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path andScale:scale andRotation:rotation andPaperState:self];
+    [allScrapsForPage addObject:newScrap];
     return newScrap;
 }
 
