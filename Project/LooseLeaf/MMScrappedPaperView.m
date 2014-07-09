@@ -1054,10 +1054,14 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 #pragma mark - MMScrapsOnPaperStateDelegate
 
--(void) didLoadScrap:(MMScrapView*)scrap{
+-(void) didLoadScrapOnPage:(MMScrapView*)scrap{
     @synchronized(scrapContainerView){
         [scrapContainerView addSubview:scrap];
     }
+}
+
+-(void) didLoadScrapOffPage:(MMScrapView*)scrap{
+    // noop, scrap in the undo/redo stack only
 }
 
 -(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{

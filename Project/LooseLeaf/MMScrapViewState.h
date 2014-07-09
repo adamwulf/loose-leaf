@@ -25,6 +25,7 @@
 @property (readonly) NSString* uuid;
 @property (readonly) JotView* drawableView;
 @property (readonly) NSString* pathForScrapAssets;
+@property (readonly) MMScrapsOnPaperState* scrapsOnPaperState;
 @property (nonatomic, readonly) int fullByteSize;
 
 -(id) initWithUUID:(NSString*)uuid andPaperState:(MMScrapsOnPaperState*)scrapsOnPaperState;
@@ -54,6 +55,6 @@
 
 -(UIView*) contentView;
 
-+(NSString*) bundledScrapDirectoryPathForUUID:(NSString*)uuid;
++(NSString*) bundledScrapDirectoryPathForUUID:(NSString*)uuid andScrapsOnPaperState:(MMScrapsOnPaperState*)scrapsOnPaperState;
 
 @end

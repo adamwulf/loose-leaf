@@ -49,9 +49,9 @@
     return [super scrapsOnPaper];
 }
 
--(void) didLoadScrap:(MMScrapView *)scrap{
+-(void) didLoadScrapOnPage:(MMScrapView *)scrap{
     // should i tie in here to give scraps to undo objects?
-    [super didLoadScrap:scrap];
+    [super didLoadScrapOnPage:scrap];
 }
 
 #pragma mark - Saving and Loading

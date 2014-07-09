@@ -430,7 +430,6 @@ static NSString* bezelStatePath;
     if(!bezelStatePath){
         NSString* documentsPath = [NSFileManager documentsPath];
         NSString* bezelStateDirectory = [documentsPath stringByAppendingPathComponent:@"BezelState"];
-        
         [NSFileManager ensureDirectoryExistsAtPath:bezelStateDirectory];
         bezelStatePath = [[bezelStateDirectory stringByAppendingPathComponent:@"info"] stringByAppendingPathExtension:@"plist"];
     }
@@ -455,11 +454,15 @@ static NSString* bezelStatePath;
     return  [scrapsHeldInBezel array];
 }
 
--(void) didLoadScrap:(MMScrapView *)scrap{
+-(void) didLoadScrapOnPage:(MMScrapView *)scrap{
     // add to the bezel
     NSNumber* rotationAdjustment = [rotationAdjustments objectForKey:scrap.uuid];
     scrap.rotation += [rotationAdjustment floatValue];
     [scrapsHeldInBezel addObject:scrap];
+}
+
+-(void) didLoadScrapOffPage:(MMScrapView *)scrap{
+    // noop
 }
 
 -(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{

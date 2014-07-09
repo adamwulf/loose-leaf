@@ -77,6 +77,7 @@
 @synthesize drawableBounds;
 @synthesize delegate;
 @synthesize uuid;
+@synthesize scrapsOnPaperState;
 
 -(CGSize) originalSize{
     if(CGSizeEqualToSize(originalSize, CGSizeZero)){
@@ -479,19 +480,19 @@
 }
 
 -(NSString*) bundledPlistPath{
-    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid] stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
+    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid andScrapsOnPaperState:scrapsOnPaperState] stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
 }
 
 -(NSString*) bundledInkImageFile{
-    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid] stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
+    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid andScrapsOnPaperState:scrapsOnPaperState] stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
 }
 
 -(NSString*) bundledThumbImageFile{
-    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid] stringByAppendingPathComponent:[@"thumb" stringByAppendingPathExtension:@"png"]];
+    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid andScrapsOnPaperState:scrapsOnPaperState] stringByAppendingPathComponent:[@"thumb" stringByAppendingPathExtension:@"png"]];
 }
 
 -(NSString*) bundledStateFile{
-    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid] stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
+    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid andScrapsOnPaperState:scrapsOnPaperState] stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
 }
 
 #pragma mark - Private
@@ -501,9 +502,8 @@
     return scrapPath;
 }
 
-+(NSString*) bundledScrapDirectoryPathForUUID:(NSString*)uuid{
-    NSString* documentsPath = [[NSBundle mainBundle] pathForResource:@"Documents" ofType:nil];
-    NSString* scrapPath = [[documentsPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
++(NSString*) bundledScrapDirectoryPathForUUID:(NSString*)uuid andScrapsOnPaperState:(MMScrapsOnPaperState*)scrapsOnPaperState{
+    NSString* scrapPath = [[scrapsOnPaperState.delegate.bundledPagesPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
     return scrapPath;
 }
 

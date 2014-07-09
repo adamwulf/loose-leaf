@@ -20,6 +20,7 @@
 @implementation MMScrapsOnPaperState{
     BOOL isLoaded;
     BOOL isLoading;
+    NSMutableArray* allScrapsForPage;
 }
 
 @synthesize delegate;
@@ -38,6 +39,7 @@ static dispatch_queue_t importExportStateQueue;
 -(id) initWithDelegate:(NSObject<MMScrapsOnPaperStateDelegate>*)_delegate{
     if(self = [super init]){
         delegate = _delegate;
+        allScrapsForPage = [NSMutableArray array];
     }
     return self;
 }
@@ -74,7 +76,10 @@ static dispatch_queue_t importExportStateQueue;
         void (^block2)() = ^(void) {
             @autoreleasepool {
                 dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
-                scrapProps = [NSArray arrayWithContentsOfFile:scrapIDsPath];
+                NSDictionary* allScrapStateInfo = [NSDictionary dictionaryWithContentsOfFile:scrapIDsPath];
+
+                NSArray* scrapIDsOnPage = [allScrapStateInfo objectForKey:@"scrapsOnPageIDs"];
+                scrapProps = [allScrapStateInfo objectForKey:@"allScrapProperties"];
                 
                 NSMutableArray* scrapPropsWithState = [NSMutableArray array];
                 
@@ -94,7 +99,13 @@ static dispatch_queue_t importExportStateQueue;
                         MMScrapView* scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState andPaperState:self];
                         if(scrap){
                             [scrap setPropertiesDictionary:scrapProperties];
-                            [self.delegate didLoadScrap:scrap];
+                            [allScrapsForPage addObject:scrap];
+                            
+                            if([scrapIDsOnPage containsObject:scrap.uuid]){
+                                [self.delegate didLoadScrapOnPage:scrap];
+                            }else{
+                                [self.delegate didLoadScrapOffPage:scrap];
+                            }
                             
                             if(makeEditable){
                                 [scrap loadScrapStateAsynchronously:async];
@@ -159,7 +170,7 @@ static dispatch_queue_t importExportStateQueue;
 
 -(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath{
     if([self isStateLoaded]){
-        return [[MMImmutableScrapsOnPaperState alloc] initWithScrapIDsPath:scrapIDsPath andScraps:self.delegate.scrapsOnPaper];
+        return [[MMImmutableScrapsOnPaperState alloc] initWithScrapIDsPath:scrapIDsPath andAllScraps:allScrapsForPage andScrapsOnPage:self.delegate.scrapsOnPaper];
     }
     return nil;
 }

@@ -8,15 +8,20 @@
 
 #import "MMImmutableScrapsOnPaperState.h"
 #import "MMScrapView.h"
+#import "NSArray+Map.h"
 
 @implementation MMImmutableScrapsOnPaperState{
-    NSArray* scraps;
+    NSArray* allScrapsOnPage;
+    NSArray* scrapsOnPageIDs;
     NSString* scrapIDsPath;
 }
 
--(id) initWithScrapIDsPath:(NSString *)_scrapIDsPath andScraps:(NSArray*)_scraps{
+-(id) initWithScrapIDsPath:(NSString *)_scrapIDsPath andAllScraps:(NSArray*)_allScraps andScrapsOnPage:(NSArray*)_scrapsOnPage{
     if(self = [super init]){
-        scraps = [_scraps copy];
+        scrapsOnPageIDs = [_scrapsOnPage mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
+            return [obj uuid];
+        }];
+        allScrapsOnPage = [_scrapsOnPage copy];
         scrapIDsPath = _scrapIDsPath;
     }
     return self;
@@ -27,44 +32,37 @@
 }
 
 -(NSArray*) scraps{
-    return scraps;
+    return allScrapsOnPage;
 }
 
 -(BOOL) saveStateToDiskBlocking{
     __block BOOL hadAnyEditsToSaveAtAll = NO;
-    NSMutableArray* scrapUUIDs = [NSMutableArray array];
-    if([scraps count]){
+    NSMutableArray* allScrapProperties = [NSMutableArray array];
+    if([allScrapsOnPage count]){
         dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
 
         __block NSInteger savedScraps = 0;
         void(^doneSavingScrapBlock)(BOOL) = ^(BOOL hadEditsToSave){
             savedScraps ++;
             hadAnyEditsToSaveAtAll = hadAnyEditsToSaveAtAll || hadEditsToSave;
-            if(savedScraps == [scraps count]){
+            if(savedScraps == [allScrapsOnPage count]){
                 // just saved the last scrap, signal
                 dispatch_semaphore_signal(sema1);
             }
         };
 
-        for(MMScrapView* scrap in scraps){
+        for(MMScrapView* scrap in allScrapsOnPage){
             NSDictionary* properties = [scrap propertiesDictionary];
             [scrap saveScrapToDisk:doneSavingScrapBlock];
             // save scraps
-            [scrapUUIDs addObject:properties];
+            [allScrapProperties addObject:properties];
         }
         dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
     }
-    [scrapUUIDs writeToFile:scrapIDsPath atomically:YES];
-        
-//        dispatch_release(sema1); ARC handles this
-//        NSLog(@"done saving %d scraps", [scraps count]);
-//    else{
-    // i can't just delete the file, because if this is a new-user-content page,
-    // and the user removes all the scraps from the page, then next time the
-    // page loaded it would re-add the scraps from the bundle plist
-//        [[NSFileManager defaultManager] removeItemAtPath:pathToSave error:nil];
-//    }
-//    NSLog(@"done saving immutable scraps on paper state");
+    
+    NSDictionary* scrapsOnPaperInfo = [NSDictionary dictionaryWithObjectsAndKeys:allScrapProperties, @"allScrapProperties", scrapsOnPageIDs, @"scrapsOnPageIDs", nil];
+    [scrapsOnPaperInfo writeToFile:scrapIDsPath atomically:YES];
+
     return hadAnyEditsToSaveAtAll;
 }
 
