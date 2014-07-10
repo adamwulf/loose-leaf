@@ -10,6 +10,7 @@
 #import "MMScrapsOnPaperStateDelegate.h"
 #import "MMDecompressImagePromiseDelegate.h"
 #import "MMScissorResult.h"
+#import "MMScrapContainerView.h"
 #import <MessageUI/MFMailComposeViewController.h>
 
 /**
@@ -21,13 +22,10 @@
 }
 
 @property (readonly) MMScrapsOnPaperState* scrapsOnPaperState;
-
--(void) addScrap:(MMScrapView*)scrap;
--(void) removeScrap:(MMScrapView*)scrap;
+@property (readonly) MMScrapContainerView* scrapContainerView;
 
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andScale:(CGFloat)scale;
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale;
--(BOOL) hasScrap:(MMScrapView*)scrap;
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
 

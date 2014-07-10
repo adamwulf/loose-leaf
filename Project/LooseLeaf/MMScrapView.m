@@ -516,6 +516,9 @@
     [scrapState unloadState];
 }
 
+-(void) didMoveToSuperview{
+    [scrapState.scrapsOnPaperState scrapVisibilityWasUpdated:self];
+}
 
 #pragma mark - Properties
 

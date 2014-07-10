@@ -103,6 +103,7 @@ static dispatch_queue_t importExportStateQueue;
                             
                             if([scrapIDsOnPage containsObject:scrap.uuid]){
                                 [self.delegate didLoadScrapOnPage:scrap];
+                                [self showScrap:scrap];
                             }else{
                                 [self.delegate didLoadScrapOffPage:scrap];
                             }
@@ -175,12 +176,54 @@ static dispatch_queue_t importExportStateQueue;
     return nil;
 }
 
-#pragma mark - Add Scraps
+#pragma mark - Create Scraps
 
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale{
     MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path andScale:scale andRotation:rotation andPaperState:self];
     [allScrapsForPage addObject:newScrap];
     return newScrap;
 }
+
+#pragma mark - Manage Scraps
+
+-(void) showScrap:(MMScrapView*)scrap atIndex:(NSUInteger)subviewIndex{
+    [self showScrap:scrap];
+    [scrap.superview insertSubview:scrap atIndex:subviewIndex];
+}
+
+-(void) showScrap:(MMScrapView*)scrap{
+    CheckMainThread;
+    if(scrap.state.scrapsOnPaperState != self){
+        @throw [NSException exceptionWithName:@"ScrapAddedToWrongPageException" reason:@"This scrap was added to a page that doesn't own it" userInfo:nil];
+    }
+    @synchronized(delegate.scrapContainerView){
+        [delegate.scrapContainerView addSubview:scrap];
+    }
+    [scrap setShouldShowShadow:delegate.isEditable];
+}
+
+-(void) hideScrap:(MMScrapView*)scrap{
+    @synchronized(delegate.scrapContainerView){
+        if(delegate.scrapContainerView == scrap.superview){
+            [scrap setShouldShowShadow:NO];
+            [scrap removeFromSuperview];
+        }else{
+            @throw [NSException exceptionWithName:@"MMScrapContainerException" reason:@"Removing scrap from a container that doesn't own it" userInfo:nil];
+        }
+    }
+}
+
+-(BOOL) isScrapVisible:(MMScrapView*)scrap{
+    return [[delegate scrapsOnPaper] containsObject:scrap];
+}
+
+-(void) scrapVisibilityWasUpdated:(MMScrapView*)scrap{
+    if(scrap.superview != delegate.scrapContainerView){
+        NSLog(@"scrap saves %@ as invisible", scrap.uuid);
+    }else{
+        NSLog(@"scrap saves %@ as visible", scrap.uuid);
+    }
+}
+
 
 @end

@@ -12,6 +12,10 @@
 
 @protocol MMScrapsOnPaperStateDelegate <NSObject>
 
+-(UIView*) scrapContainerView;
+
+-(BOOL) isEditable;
+
 -(NSArray*) scrapsOnPaper;
 
 /**

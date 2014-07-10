@@ -39,4 +39,12 @@
 
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale;
 
+#pragma mark - Manage Scraps
+
+-(void) showScrap:(MMScrapView*)scrap;
+-(void) showScrap:(MMScrapView*)scrap atIndex:(NSUInteger)subviewIndex;
+-(void) hideScrap:(MMScrapView*)scrap;
+-(BOOL) isScrapVisible:(MMScrapView*)scrap;
+-(void) scrapVisibilityWasUpdated:(MMScrapView*)scrap;
+
 @end

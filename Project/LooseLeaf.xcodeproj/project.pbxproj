@@ -164,6 +164,7 @@
 		66B51A2A17AC50F7005B5E09 /* MMBezelInGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B51A2917AC50F7005B5E09 /* MMBezelInGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66B75DB51877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B75DB41877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.m */; };
 		66B75DB81877D93000EF0A48 /* UIBezierPath+PathElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B75DB71877D93000EF0A48 /* UIBezierPath+PathElement.m */; };
+		66B8A4C9196E43C300E80009 /* MMScrapContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B8A4C8196E43C300E80009 /* MMScrapContainerView.m */; };
 		66BD6E301591B57B00D4544C /* MMPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* MMPaperButton.m */; };
 		66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E331591C37D00D4544C /* UIImage+MCDrawSubImage.m */; };
 		66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */; };
@@ -531,6 +532,8 @@
 		66B75DB41877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DKUIBezierPathClippedSegment+PathElement.m"; sourceTree = "<group>"; };
 		66B75DB61877D93000EF0A48 /* UIBezierPath+PathElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+PathElement.h"; sourceTree = "<group>"; };
 		66B75DB71877D93000EF0A48 /* UIBezierPath+PathElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+PathElement.m"; sourceTree = "<group>"; };
+		66B8A4C7196E43C300E80009 /* MMScrapContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapContainerView.h; sourceTree = "<group>"; };
+		66B8A4C8196E43C300E80009 /* MMScrapContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapContainerView.m; sourceTree = "<group>"; };
 		66BD6E2E1591B57B00D4544C /* MMPaperButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperButton.h; sourceTree = "<group>"; };
 		66BD6E2F1591B57B00D4544C /* MMPaperButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPaperButton.m; sourceTree = "<group>"; };
 		66BD6E321591C37D00D4544C /* UIImage+MCDrawSubImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MCDrawSubImage.h"; sourceTree = "<group>"; };
@@ -1406,6 +1409,15 @@
 			name = DrawKit;
 			sourceTree = "<group>";
 		};
+		66B8A4C6196E43B400E80009 /* Scrap Container */ = {
+			isa = PBXGroup;
+			children = (
+				66B8A4C7196E43C300E80009 /* MMScrapContainerView.h */,
+				66B8A4C8196E43C300E80009 /* MMScrapContainerView.m */,
+			);
+			name = "Scrap Container";
+			sourceTree = "<group>";
+		};
 		66BD6E811593AF4500D4544C /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
@@ -1509,6 +1521,7 @@
 				660E1DAD158FC7CA0001DA12 /* Icons */,
 				66DCFBDC1582BF1600B4918C /* Gestures */,
 				664B025E18E6711D00325EF2 /* Helper Classes */,
+				66B8A4C6196E43B400E80009 /* Scrap Container */,
 				664C62F115A36DB00072736A /* MMPaperView */,
 				66DCFBBF1581C7F400B4918C /* MMPaperStack */,
 				6693298115996C6A0033E557 /* Controller and App Delegate */,
@@ -1819,6 +1832,7 @@
 				66B75DB81877D93000EF0A48 /* UIBezierPath+PathElement.m in Sources */,
 				661885D118F9ABD70016A333 /* MMFlipCameraButton.m in Sources */,
 				66DCFB9E1581BCEF00B4918C /* MMLooseLeafViewController.m in Sources */,
+				66B8A4C9196E43C300E80009 /* MMScrapContainerView.m in Sources */,
 				66DCFBC21581C85B00B4918C /* MMPaperStackView.m in Sources */,
 				667D98BA192FC22A00625879 /* MMPDFButton.m in Sources */,
 				6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */,

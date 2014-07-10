@@ -28,12 +28,11 @@
         @throw [NSException exceptionWithName:@"InvalidUndoItem" reason:@"Undo Item must have scrap properties" userInfo:nil];
     }
     if(self = [super initWithUndoBlock:^{
-        [weakPage removeScrap:scrap];
+        [weakPage.scrapsOnPaperState hideScrap:scrap];
     } andRedoBlock:^{
-        [weakPage addScrap:scrap];
-        [scrap setPropertiesDictionary:propertiesWhenAdded];
         NSUInteger subviewIndex = [[propertiesWhenAdded objectForKey:@"subviewIndex"] unsignedIntegerValue];
-        [scrap.superview insertSubview:scrap atIndex:subviewIndex];
+        [weakPage.scrapsOnPaperState showScrap:scrap atIndex:subviewIndex];
+        [scrap setPropertiesDictionary:propertiesWhenAdded];
     } forPage:_page]){
         scrap = _scrap;
     };

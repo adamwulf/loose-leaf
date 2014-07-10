@@ -33,7 +33,7 @@
 
 
 @implementation MMScrappedPaperView{
-    UIView* scrapContainerView;
+    MMScrapContainerView* scrapContainerView;
     NSString* scrapIDsPath;
     MMScrapsOnPaperState* scrapsOnPaperState;
     MMDecompressImagePromise* scrappedImgViewImage;
@@ -51,6 +51,7 @@
 }
 
 @synthesize scrapsOnPaperState;
+@synthesize scrapContainerView;
 
 static dispatch_queue_t concurrentBackgroundQueue;
 +(dispatch_queue_t) concurrentBackgroundQueue{
@@ -64,7 +65,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
         // Initialization code
-        scrapContainerView = [[MMUntouchableView alloc] initWithFrame:self.bounds];
+        scrapContainerView = [[MMScrapContainerView alloc] initWithFrame:self.bounds andPage:self];
         [self.contentView addSubview:scrapContainerView];
         // anchor the view to the top left,
         // so that when we scale down, the drawable view
@@ -196,35 +197,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // strip of paper will create a thin texture and rotate it, instead of
     // an unrotated thick rectangle.
     MMScrapView* newScrap = [scrapsOnPaperState addScrapWithPath:path andRotation:rotation andScale:scale];
-    @synchronized(scrapContainerView){
-        [scrapContainerView addSubview:newScrap];
-    }
-    [newScrap setShouldShowShadow:[self isEditable]];
+    [scrapsOnPaperState showScrap:newScrap];
     return newScrap;
 }
 
-
--(void) addScrap:(MMScrapView*)scrap{
-    @synchronized(scrapContainerView){
-        [scrapContainerView addSubview:scrap];
-    }
-    [scrap setShouldShowShadow:[self isEditable]];
-}
-
--(void) removeScrap:(MMScrapView*)scrap{
-    @synchronized(scrapContainerView){
-        if(scrapContainerView == scrap.superview){
-            [scrap setShouldShowShadow:NO];
-            [scrap removeFromSuperview];
-        }else{
-            @throw [NSException exceptionWithName:@"MMScrapContainerException" reason:@"Removing scrap from a container that doesn't own it" userInfo:nil];
-        }
-    }
-}
-
--(BOOL) hasScrap:(MMScrapView*)scrap{
-    return [[self scrapsOnPaper] containsObject:scrap];
-}
 
 /**
  * returns all subviews in back-to-front
@@ -1055,9 +1031,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 #pragma mark - MMScrapsOnPaperStateDelegate
 
 -(void) didLoadScrapOnPage:(MMScrapView*)scrap{
-    @synchronized(scrapContainerView){
-        [scrapContainerView addSubview:scrap];
-    }
+    // noop, adding scrap to scrapContainerView is handled in the scrapOnPaperState
 }
 
 -(void) didLoadScrapOffPage:(MMScrapView*)scrap{

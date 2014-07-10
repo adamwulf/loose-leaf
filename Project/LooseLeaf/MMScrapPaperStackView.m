@@ -28,7 +28,7 @@
 
 @implementation MMScrapPaperStackView{
     MMScrapSidebarContainerView* bezelScrapContainer;
-    MMUntouchableView* scrapContainer;
+    MMScrapContainerView* scrapContainer;
     // we get two gestures here, so that we can support
     // grabbing two scraps at the same time
     MMPanAndPinchScrapGestureRecognizer* panAndPinchScrapGesture;
@@ -127,7 +127,7 @@
         [imagePicker hide:NO];
         [self addSubview:imagePicker];
         
-        scrapContainer = [[MMUntouchableView alloc] initWithFrame:self.bounds];
+        scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds andPage:nil];
         [self addSubview:scrapContainer];
         
         
@@ -235,7 +235,7 @@
                                                   scrap.alpha = 1.0;
                                               }
                                               completion:^(BOOL finished){
-                                                  [topPage addScrap:scrap];
+                                                  [topPage.scrapsOnPaperState showScrap:scrap];
                                                   [topPage saveToDisk];
                                               }];
                          }];
@@ -362,7 +362,7 @@
                                           }
                                           completion:^(BOOL finished){
                                               cameraView.alpha = 1;
-                                              [topPage addScrap:scrap];
+                                              [topPage.scrapsOnPaperState showScrap:scrap];
                                               [topPage saveToDisk];
                                           }];
                      }];
@@ -463,7 +463,7 @@
                                           }
                                           completion:^(BOOL finished){
                                               bufferedImage.alpha = 1;
-                                              [topPage addScrap:scrap];
+                                              [topPage.scrapsOnPaperState showScrap:scrap];
                                               [topPage saveToDisk];
                                           }];
                      }];
@@ -743,14 +743,14 @@ int skipAll = NO;
                 // just keep it in the scrap container
                 [scrapContainer addSubview:scrap];
             }
-        }else if(pageToDropScrap && [pageToDropScrap hasScrap:scrap]){
+        }else if(pageToDropScrap && [pageToDropScrap.scrapsOnPaperState isScrapVisible:scrap]){
             // only adjust for the page if the page
             // already has the scrap. otherwise we'll keep
             // the scrap in the container view and only drop
             // it onto a page once the gesture is complete.
             gesture.scrap.scale = scrapScaleInPage;
             gesture.scrap.center = scrapCenterInPage;
-        }else if(pageToDropScrap && ![pageToDropScrap hasScrap:scrap]){
+        }else if(pageToDropScrap && ![pageToDropScrap.scrapsOnPaperState isScrapVisible:scrap]){
             [self forceScrapToScrapContainerDuringGesture];
         }
         
@@ -764,7 +764,7 @@ int skipAll = NO;
             // if the gesture is shaking, then pull the scrap to the top if
             // it's not already. otherwise send it to the back
             if([pageToDropScrap isEqual:[[MMPageCacheManager sharedInstance] currentEditablePage]] &&
-               ![pageToDropScrap hasScrap:scrap]){
+               ![pageToDropScrap.scrapsOnPaperState isScrapVisible:scrap]){
                 // this happens when the user picks up a scrap
                 // bezels / turns to another page while holding the scrap
                 // and then shakes the scrap to re-order it on the new page
@@ -773,7 +773,7 @@ int skipAll = NO;
                 // so we need to clone it before passing it to the new page
                 MMScrapView* clonedScrap = [self cloneScrap:gesture.scrap toPage:pageToDropScrap];
                 // add the scrap to the bottom of the page
-                [pageToDropScrap addScrap:clonedScrap];
+                [pageToDropScrap.scrapsOnPaperState showScrap:clonedScrap];
                 [clonedScrap.superview insertSubview:clonedScrap atIndex:0];
                 // remove the scrap from the original page
                 [gesture.scrap removeFromSuperview];
@@ -865,7 +865,7 @@ int skipAll = NO;
                     // it can undo the drop and it won't affect the page that
                     // the scrap came from
                     MMScrapView* clonedScrap = [self cloneScrap:gesture.scrap toPage:pageToDropScrap];
-                    [pageToDropScrap addScrap:clonedScrap];
+                    [pageToDropScrap.scrapsOnPaperState showScrap:clonedScrap];
                     // remove the scrap from the original page
                     [gesture.scrap removeFromSuperview];
 
@@ -876,8 +876,8 @@ int skipAll = NO;
                     // make a move-scrap undo item.
                     // we don't need to add an 'add scrap' undo item,
                     // since this is the page that originated the scrap
-                    if(![pageToDropScrap hasScrap:gesture.scrap]){
-                        [pageToDropScrap addScrap:gesture.scrap];
+                    if(![pageToDropScrap.scrapsOnPaperState isScrapVisible:gesture.scrap]){
+                        [pageToDropScrap.scrapsOnPaperState showScrap:gesture.scrap];
                     }
                     [gesture.startingPageForScrap addUndoItemForScrap:gesture.scrap thatMovedFrom:gesture.startingScrapProperties to:[gesture.scrap propertiesDictionary]];
                 }
@@ -1120,10 +1120,10 @@ int skipAll = NO;
         // kill highlight since it's not being held
         scrap.selected = NO;
         
-        if(![[visibleStackHolder peekSubview] hasScrap:scrap]){
+        if(![[visibleStackHolder peekSubview].scrapsOnPaperState isScrapVisible:scrap]){
             // the scrap was dropped by the stretch gesture,
             // so just add it back to the top page
-            [[visibleStackHolder peekSubview] addScrap:scrap];
+            [[visibleStackHolder peekSubview].scrapsOnPaperState showScrap:scrap];
             [[visibleStackHolder peekSubview] saveToDisk];
         }
     }
@@ -1204,10 +1204,25 @@ int skipAll = NO;
     MMPanAndPinchScrapGestureRecognizer* panScrapGesture1 = panAndPinchScrapGesture;
     MMPanAndPinchScrapGestureRecognizer* panScrapGesture2 = panAndPinchScrapGesture2;
 
-    if(panScrapGesture2.scrap == scrap){
-        MMPanAndPinchScrapGestureRecognizer* t = panScrapGesture2;
-        panScrapGesture2 = panScrapGesture1;
-        panScrapGesture1 = t;
+    if(panAndPinchScrapGesture2.scrap == scrap){
+        // a gesture already owns that scrap, so let it keep it.
+        // this will let the startingPageForScrap property
+        // remain the same for the gesture, so the scrap won't
+        // get accidentally assigned to the wrong page.
+        //
+        // to make sure everything still gets the right touches
+        // at the right locations, i need to swap all inputs
+        panScrapGesture1 = panAndPinchScrapGesture2;
+        panScrapGesture2 = panAndPinchScrapGesture;
+        NSOrderedSet* t = touches1;
+        touches1 = touches2;
+        touches2 = t;
+        CGPoint tnp = np1;
+        np1 = np2;
+        np2 = tnp;
+        NSLog(@"panAndPinchScrapGesture2 %p owned scrap %p", panAndPinchScrapGesture2, scrap);
+    }else{
+        NSLog(@"panAndPinchScrapGesture %p owned scrap %p", panAndPinchScrapGesture, scrap);
     }
     
     [self logOutputGestureTouchOwnership:@"before gesture 1" gesture:panScrapGesture1];
@@ -1228,7 +1243,7 @@ int skipAll = NO;
     // next, add the new scrap to the same page as the stretched scrap
     MMUndoablePaperView* page = [visibleStackHolder peekSubview];
     MMScrapView* clonedScrap = [self cloneScrap:scrap toPage:page];
-    [page addScrap:clonedScrap];
+    [page.scrapsOnPaperState showScrap:clonedScrap];
     
     // move it to the new gesture location under it's scrap
     CGPoint p1 = [[touches2 objectAtIndex:0] locationInView:self];
@@ -1467,7 +1482,7 @@ int skipAll = NO;
     MMScrappedPaperView* page = [self pageWouldDropScrap:scrap atCenter:&center andScale:&scale];
 
     // ok, done, just set it
-    [page addScrap:scrap];
+    [page.scrapsOnPaperState showScrap:scrap];
     scrap.center = center;
     scrap.scale = scale;
     [page saveToDisk];
@@ -1580,6 +1595,10 @@ int skipAll = NO;
  * the scrap to be cloned must be in our scrapContainer,
  * and the cloned scrap will be put in the scrapContainer
  * as well, exactly overlapping it
+ *
+ * the new cloned scrap is allowed to be added to our
+ * scrap container, its just not allowed to be added to
+ * any pages scrap container besides its own
  */
 -(MMScrapView*) cloneScrap:(MMScrapView*)scrap toPage:(MMScrappedPaperView*)page{
     CheckMainThread;

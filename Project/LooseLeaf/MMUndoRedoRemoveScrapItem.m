@@ -23,12 +23,12 @@
     scrap = _scrap;
     propertiesWhenRemoved = scrapProperties;
     if(self = [super initWithUndoBlock:^{
-        [weakPage addScrap:scrap];
+        [weakPage.scrapsOnPaperState showScrap:scrap];
         [scrap setPropertiesDictionary:propertiesWhenRemoved];
         NSUInteger subviewIndex = [[propertiesWhenRemoved objectForKey:@"subviewIndex"] unsignedIntegerValue];
         [scrap.superview insertSubview:scrap atIndex:subviewIndex];
     } andRedoBlock:^{
-        [weakPage removeScrap:scrap];
+        [weakPage.scrapsOnPaperState hideScrap:scrap];
     } forPage:_page]){
         // noop
     };
