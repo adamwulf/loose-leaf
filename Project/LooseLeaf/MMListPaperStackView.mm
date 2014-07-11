@@ -1389,6 +1389,8 @@
  */
 -(void) immediatelyAnimateFromListViewToFullScreenView{
     
+    CheckMainThread;
+    
     __block NSMutableSet* pagesThatNeedAnimating = [NSMutableSet set];
     
     CGFloat duration = 0.2;
@@ -1464,7 +1466,6 @@
         newHiddenFrame.origin.x += screenWidth;
         hiddenStackHolder.frame = newHiddenFrame;
         addPageButtonInListView.alpha = 0;
-        [self finishedScalingBackToPageView:[visibleStackHolder peekSubview]];
     };
     
     
@@ -1479,6 +1480,7 @@
     //
     // also, turn off gestures
     void (^step3)(BOOL finished) = ^(BOOL finished){
+        [self finishedScalingBackToPageView:[visibleStackHolder peekSubview]];
         //
         // now complete the bounce for the top page
         CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];

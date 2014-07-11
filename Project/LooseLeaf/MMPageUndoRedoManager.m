@@ -100,6 +100,7 @@
 }
 
 -(void) printDescription{
+    return;
     NSLog(@"***************************");
     NSLog(@"stackOfUndoneItems:");
     for(NSObject<MMUndoRedoItem>*obj in stackOfUndoneItems){

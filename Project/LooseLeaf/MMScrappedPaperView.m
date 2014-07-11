@@ -790,9 +790,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(BOOL) hasEditsToSave{
-    if(![super hasEditsToSave] && [scrapsOnPaperState hasEditsToSave]){
-        NSLog(@"gotcha?? only scrap state edits");
-    }
     return [super hasEditsToSave] || [scrapsOnPaperState hasEditsToSave];
 }
 

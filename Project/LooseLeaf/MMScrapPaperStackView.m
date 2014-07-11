@@ -897,6 +897,7 @@ int skipAll = NO;
         MMEditablePaperView* pageThatGaveUpScrap = gesture.startingPageForScrap;
         if((pageToDropScrap || shouldBezel) && pageThatGaveUpScrap != pageToDropScrap){
             [pageThatGaveUpScrap saveToDisk];
+            [pageToDropScrap saveToDisk];
         }
         scrapViewIfFinished = gesture.scrap;
     }else if(gesture.scrap && didReset){

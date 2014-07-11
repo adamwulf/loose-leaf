@@ -12,6 +12,7 @@
 #import "MMImmutableScrapsOnPaperState.h"
 #import "NSThread+BlockAdditions.h"
 #import "UIView+Debug.h"
+#import "Constants.h"
 
 /**
  * similar to the MMPaperState, this object will
@@ -82,7 +83,7 @@ static dispatch_queue_t importExportStateQueue;
 
                 NSArray* scrapIDsOnPage = [allScrapStateInfo objectForKey:@"scrapsOnPageIDs"];
                 scrapProps = [allScrapStateInfo objectForKey:@"allScrapProperties"];
-                
+
                 NSMutableArray* scrapPropsWithState = [NSMutableArray array];
                 
                 // load all the states async
@@ -158,6 +159,7 @@ static dispatch_queue_t importExportStateQueue;
                     for(MMScrapView* scrap in scraps){
                         [scrap unloadState];
                     }
+                    [allScrapsForPage removeAllObjects];
                     [NSThread performBlockOnMainThread:^{
                         [scraps makeObjectsPerformSelector:@selector(removeFromSuperview)];
                         [self.delegate didUnloadAllScrapsFor:self];
@@ -182,6 +184,9 @@ static dispatch_queue_t importExportStateQueue;
 #pragma mark - Create Scraps
 
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale{
+    if(![self isStateLoaded]){
+        @throw [NSException exceptionWithName:@"ModifyingUnloadedScrapsOnPaperStateException" reason:@"cannot add scrap to unloaded ScrapsOnPaperState" userInfo:nil];
+    }
     MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path andScale:scale andRotation:rotation andPaperState:self];
     [allScrapsForPage addObject:newScrap];
     return newScrap;
@@ -222,9 +227,9 @@ static dispatch_queue_t importExportStateQueue;
 
 -(void) scrapVisibilityWasUpdated:(MMScrapView*)scrap{
     if(scrap.superview != delegate.scrapContainerView){
-        NSLog(@"scrap saves %@ as invisible", scrap.uuid);
+        debug_NSLog(@"scrap %@ is invisible, state loaded: %d", scrap.uuid, [self isStateLoaded] || isLoading);
     }else{
-        NSLog(@"scrap saves %@ as visible", scrap.uuid);
+        debug_NSLog(@"scrap %@ is visible, state loaded: %d", scrap.uuid, [self isStateLoaded] || isLoading);
     }
     if([self isStateLoaded] || isLoaded){
         // something changed w/ scrap visibility
