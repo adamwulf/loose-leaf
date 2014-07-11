@@ -28,6 +28,7 @@
 }
 
 @synthesize undoRedoManager;
+@synthesize undoStatePath;
 
 -(NSUndoManager*) undoManager{
     @throw [NSException exceptionWithName:@"MMUnknownUndoManager" reason:@"undoManager property is disabled" userInfo:nil];

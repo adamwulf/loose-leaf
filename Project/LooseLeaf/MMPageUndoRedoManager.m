@@ -19,6 +19,7 @@
     NSMutableArray* stackOfUndoableItems;
     NSMutableArray* stackOfUndoneItems;
     BOOL hasEditsToSave;
+    BOOL isLoaded;
 }
 
 
@@ -28,12 +29,17 @@
         stackOfUndoableItems = [NSMutableArray array];
         stackOfUndoneItems = [NSMutableArray array];
         hasEditsToSave = NO;
+        isLoaded = NO;
     }
     return self;
 }
 
 -(void) addUndoItem:(NSObject<MMUndoRedoItem>*)item{
     @synchronized(self){
+        BOOL needsLoad = !isLoaded;
+        if(needsLoad){
+            [self loadFrom:page.undoStatePath];
+        }
         [stackOfUndoneItems makeObjectsPerformSelector:@selector(finalizeRedoneState)];
         [stackOfUndoneItems removeAllObjects];
         [stackOfUndoableItems addObject:item];
@@ -44,6 +50,10 @@
         }
         hasEditsToSave = YES;
         [self printDescription];
+        if(needsLoad){
+            [self saveTo:page.undoStatePath];
+            [self unloadState];
+        }
     }
 }
 
@@ -118,6 +128,7 @@
 }
 
 -(void) loadFrom:(NSString*)path{
+    isLoaded = YES;
     NSDictionary* loadedInfo = [NSDictionary dictionaryWithContentsOfFile:path];
     if(loadedInfo){
         @synchronized(self){
@@ -152,6 +163,7 @@
         if(hasEditsToSave){
             @throw [NSException exceptionWithName:@"UnloadUndoStateException" reason:@"Unloading Undo State that has edits to save" userInfo:nil];
         }
+        isLoaded = NO;
         [stackOfUndoableItems removeAllObjects];
         [stackOfUndoneItems removeAllObjects];
         NSLog(@"unloaded undo state: %@", page.uuid);

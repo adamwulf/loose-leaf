@@ -12,6 +12,7 @@
 @interface MMUndoablePaperView : MMScrappedPaperView
 
 @property (nonatomic, readonly) MMPageUndoRedoManager* undoRedoManager;
+@property (readonly) NSString* undoStatePath;
 
 -(void) addUndoItemForScrap:(MMScrapView*)scrap thatMovedFrom:(NSDictionary*)startProperties to:(NSDictionary*)endProperties;
 
