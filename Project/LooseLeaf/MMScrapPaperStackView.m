@@ -894,11 +894,8 @@ int skipAll = NO;
         }
         
         // save teh page that the scrap came from
-        MMEditablePaperView* pageThatGaveUpScrap = [visibleStackHolder peekSubview];
-        if([fromLeftBezelGesture isActivelyBezeling]){
-            pageThatGaveUpScrap = [bezelStackHolder peekSubview];
-        }
-        if(pageThatGaveUpScrap != pageToDropScrap){
+        MMEditablePaperView* pageThatGaveUpScrap = gesture.startingPageForScrap;
+        if((pageToDropScrap || shouldBezel) && pageThatGaveUpScrap != pageToDropScrap){
             [pageThatGaveUpScrap saveToDisk];
         }
         scrapViewIfFinished = gesture.scrap;

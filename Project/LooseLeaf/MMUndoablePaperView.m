@@ -58,6 +58,7 @@
 #pragma mark - Saving and Loading
 
 -(void) saveToDisk:(void (^)(BOOL))onComplete{
+    
     // track if our back ground page has saved
     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
     // track if all of our scraps have saved
@@ -209,5 +210,11 @@
     NSLog(@"**********************************************************************");
 }
 
+-(BOOL) hasEditsToSave{
+    if(![super hasEditsToSave] && [undoRedoManager hasEditsToSave]){
+        NSLog(@"gotcha??? only undo edits");
+    }
+    return [super hasEditsToSave] || [undoRedoManager hasEditsToSave];
+}
 
 @end

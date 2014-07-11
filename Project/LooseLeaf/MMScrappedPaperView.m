@@ -790,7 +790,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(BOOL) hasEditsToSave{
-    return [super hasEditsToSave];
+    if(![super hasEditsToSave] && [scrapsOnPaperState hasEditsToSave]){
+        NSLog(@"gotcha?? only scrap state edits");
+    }
+    return [super hasEditsToSave] || [scrapsOnPaperState hasEditsToSave];
 }
 
 
@@ -945,6 +948,14 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // TODO: https://github.com/adamwulf/loose-leaf/issues/531
     
     CheckMainThread;
+    
+    if(![self hasStateLoaded]){
+        // don't allow saving a page to disk if its state isn't
+        // even loaded. otherwise we'll end up saving empty state
+        // info and overriding legit info
+        onComplete(NO);
+        return;
+    }
     
     // track if our back ground page has saved
     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);

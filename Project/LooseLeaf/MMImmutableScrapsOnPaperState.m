@@ -11,7 +11,7 @@
 #import "NSArray+Map.h"
 
 @implementation MMImmutableScrapsOnPaperState{
-    NSArray* allScrapsOnPage;
+    NSArray* allScrapsForPage;
     NSArray* scrapsOnPageIDs;
     NSString* scrapIDsPath;
 }
@@ -22,7 +22,7 @@
         scrapsOnPageIDs = [_scrapsOnPage mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
             return [obj uuid];
         }];
-        allScrapsOnPage = [_allScraps copy];
+        allScrapsForPage = [_allScraps copy];
     }
     return self;
 }
@@ -32,26 +32,28 @@
 }
 
 -(NSArray*) scraps{
-    return allScrapsOnPage;
+    return [allScrapsForPage filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        return [scrapsOnPageIDs containsObject:[evaluatedObject uuid]];
+    }]];
 }
 
 -(BOOL) saveStateToDiskBlocking{
     __block BOOL hadAnyEditsToSaveAtAll = NO;
     NSMutableArray* allScrapProperties = [NSMutableArray array];
-    if([allScrapsOnPage count]){
+    if([allScrapsForPage count]){
         dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
 
         __block NSInteger savedScraps = 0;
         void(^doneSavingScrapBlock)(BOOL) = ^(BOOL hadEditsToSave){
             savedScraps ++;
             hadAnyEditsToSaveAtAll = hadAnyEditsToSaveAtAll || hadEditsToSave;
-            if(savedScraps == [allScrapsOnPage count]){
+            if(savedScraps == [allScrapsForPage count]){
                 // just saved the last scrap, signal
                 dispatch_semaphore_signal(sema1);
             }
         };
 
-        for(MMScrapView* scrap in allScrapsOnPage){
+        for(MMScrapView* scrap in allScrapsForPage){
             NSDictionary* properties = [scrap propertiesDictionary];
             [scrap saveScrapToDisk:doneSavingScrapBlock];
             // save scraps

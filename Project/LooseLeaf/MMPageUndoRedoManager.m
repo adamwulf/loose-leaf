@@ -53,6 +53,7 @@
         if(needsLoad){
             [self saveTo:page.undoStatePath];
             [self unloadState];
+            NSLog(@"done saving unloaded undo manager");
         }
     }
 }
@@ -112,6 +113,9 @@
 }
 
 -(void) saveTo:(NSString*)path{
+    if(!isLoaded){
+        @throw [NSException exceptionWithName:@"SavingUnloadedUndoManager" reason:@"Cannot save unloaded undo manager" userInfo:nil];
+    }
     if(!hasEditsToSave){
 //        NSLog(@"no edits to save for undo state: %@", path);
         return;
@@ -155,7 +159,6 @@
             hasEditsToSave = NO;
         }
     }
-    NSLog(@"loaded undo state: %@", path);
 }
 
 -(void) unloadState{
@@ -166,7 +169,6 @@
         isLoaded = NO;
         [stackOfUndoableItems removeAllObjects];
         [stackOfUndoneItems removeAllObjects];
-        NSLog(@"unloaded undo state: %@", page.uuid);
     }
 }
 

@@ -11,6 +11,8 @@
 
 @interface MMPageUndoRedoManager : NSObject
 
+@property (readonly) BOOL hasEditsToSave;
+
 -(id) initForPage:(MMUndoablePaperView*)page;
 
 -(void) addUndoItem:(NSObject<MMUndoRedoItem>*)item;

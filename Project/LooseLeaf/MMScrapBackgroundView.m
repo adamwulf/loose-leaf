@@ -207,6 +207,8 @@ static int totalBackgroundBytes;
     return savedProperties;
 }
 
+#pragma mark - Dealloc
+
 -(void) dealloc{
     @synchronized([MMScrapBackgroundView class]){
         totalBackgroundBytes -= [backingContentView.image uncompressedByteSize];

@@ -21,10 +21,12 @@
     BOOL isLoaded;
     BOOL isLoading;
     NSMutableArray* allScrapsForPage;
+    BOOL hasEditsToSave;
 }
 
 @synthesize delegate;
 @synthesize shouldShowShadows;
+@synthesize hasEditsToSave;
 
 static dispatch_queue_t importExportStateQueue;
 
@@ -171,6 +173,7 @@ static dispatch_queue_t importExportStateQueue;
 
 -(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath{
     if([self isStateLoaded]){
+        hasEditsToSave = NO;
         return [[MMImmutableScrapsOnPaperState alloc] initWithScrapIDsPath:scrapIDsPath andAllScraps:allScrapsForPage andScrapsOnPage:self.delegate.scrapsOnPaper];
     }
     return nil;
@@ -222,6 +225,10 @@ static dispatch_queue_t importExportStateQueue;
         NSLog(@"scrap saves %@ as invisible", scrap.uuid);
     }else{
         NSLog(@"scrap saves %@ as visible", scrap.uuid);
+    }
+    if([self isStateLoaded] || isLoaded){
+        // something changed w/ scrap visibility
+        hasEditsToSave = YES;
     }
 }
 

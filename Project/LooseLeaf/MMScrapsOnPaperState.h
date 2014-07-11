@@ -20,6 +20,7 @@
 @property (readonly) NSString* scrapIDsPath;
 @property (nonatomic, assign) BOOL shouldShowShadows;
 @property (nonatomic, readonly) int fullByteSize;
+@property (readonly) BOOL hasEditsToSave;
 
 +(dispatch_queue_t) importExportStateQueue;
 

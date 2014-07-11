@@ -106,14 +106,11 @@ struct TouchInterval{
 
 -(void) setScrap:(MMScrapView *)_scrap{
     if(scrap != _scrap){
-        id oldStartingPage = startingPageForScrap;
-        id oldScrap = scrap;
         // save the properties of the scrap whenever its set
         scrap = _scrap;
         startingScrapProperties = [scrap propertiesDictionary];
         // update the starting page, if any
         startingPageForScrap = scrap ? [[MMPageCacheManager sharedInstance] currentEditablePage] : nil;
-        NSLog(@"gesture %p changes scrap from %p to %p with starting page %p => %p", self, oldScrap, _scrap, oldStartingPage, startingPageForScrap);
     }
 }
 
@@ -758,14 +755,12 @@ struct TouchInterval{
  * without having to expose anchor point methods
  */
 -(void) giveUpScrap{
-    NSLog(@"gesture %p asked to give up scrap", self);
     [UIView setAnchorPoint:CGPointMake(.5, .5) forView:self.scrap];
     self.scrap = nil;
 }
 
 
 - (void)reset{
-    NSLog(@"gesture %p asked to reset", self);
     [super reset];
     initialDistance = 0;
     scale = 1;
