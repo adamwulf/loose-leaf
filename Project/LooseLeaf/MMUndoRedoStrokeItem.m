@@ -13,17 +13,17 @@
 
 @implementation MMUndoRedoStrokeItem
 
-+(id) itemForPage:(MMUndoablePaperView*)_page{
-    return [[MMUndoRedoStrokeItem alloc] initForPage:_page];
++(id) itemForPage:(MMUndoablePaperView*)_page withUndoManager:(MMPageUndoRedoManager*)undoManager{
+    return [[MMUndoRedoStrokeItem alloc] initForPage:_page withUndoManager:(MMPageUndoRedoManager*)undoManager];
 }
 
--(id) initForPage:(MMUndoablePaperView*)_page{
+-(id) initForPage:(MMUndoablePaperView*)_page withUndoManager:(MMPageUndoRedoManager*)undoManager{
     __weak MMUndoablePaperView* weakPage = _page;
     if(self = [super initWithUndoBlock:^{
         [weakPage undo];
     } andRedoBlock:^{
         [weakPage redo];
-    } forPage:_page]){
+    } forPage:_page withUndoManager:undoManager]){
         // noop
     };
 
@@ -36,8 +36,8 @@
     return [NSDictionary dictionaryWithObjectsAndKeys:NSStringFromClass([self class]), @"class", [NSNumber numberWithBool:self.canUndo], @"canUndo", nil];
 }
 
--(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page{
-    if(self = [self initForPage:_page]){
+-(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page withUndoRedoManager:(MMPageUndoRedoManager*)undoManager{
+    if(self = [self initForPage:_page withUndoManager:(MMPageUndoRedoManager*)undoManager]){
         canUndo = [[dict objectForKey:@"canUndo"] boolValue];
     }
     return self;

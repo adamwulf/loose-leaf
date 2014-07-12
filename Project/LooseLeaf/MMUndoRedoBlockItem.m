@@ -77,7 +77,7 @@
     @throw [NSException exceptionWithName:@"CannotSaveItemException" reason:@"This class cannot be serialized to a dictionary" userInfo:nil];
 }
 
--(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)page{
+-(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)page withUndoRedoManager:(MMPageUndoRedoManager *)undoRedoManager{
     @throw [NSException exceptionWithName:@"CannotLoadItemException" reason:@"This class cannot be initialized from a dictionary" userInfo:nil];
 }
 

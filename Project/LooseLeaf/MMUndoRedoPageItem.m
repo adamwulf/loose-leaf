@@ -7,17 +7,22 @@
 //
 
 #import "MMUndoRedoPageItem.h"
+#import "MMPageUndoRedoManager.h"
 
-@implementation MMUndoRedoPageItem
-
-@synthesize page;
-
-+(id) itemWithUndoBlock:(void(^)())undoBlock andRedoBlock:(void(^)())redoBlock forPage:(MMUndoablePaperView*)page{
-    return [[MMUndoRedoPageItem alloc] initWithUndoBlock:undoBlock andRedoBlock:redoBlock forPage:page];
+@implementation MMUndoRedoPageItem{
+    __weak MMPageUndoRedoManager* undoRedoManager;
 }
 
--(id) initWithUndoBlock:(void (^)())undoBlock andRedoBlock:(void (^)())redoBlock forPage:(MMUndoablePaperView *)_page{
+@synthesize page;
+@synthesize undoRedoManager;
+
++(id) itemWithUndoBlock:(void(^)())undoBlock andRedoBlock:(void(^)())redoBlock forPage:(MMUndoablePaperView*)page withUndoManager:(MMPageUndoRedoManager*)undoManager{
+    return [[MMUndoRedoPageItem alloc] initWithUndoBlock:undoBlock andRedoBlock:redoBlock forPage:page withUndoManager:(MMPageUndoRedoManager*)undoManager];
+}
+
+-(id) initWithUndoBlock:(void (^)())undoBlock andRedoBlock:(void (^)())redoBlock forPage:(MMUndoablePaperView *)_page withUndoManager:(MMPageUndoRedoManager*)_undoManager{
     if(self = [super initWithUndoBlock:undoBlock andRedoBlock:redoBlock]){
+        undoRedoManager = _undoManager;
         page = _page;
     }
     return self;

@@ -237,5 +237,15 @@ static dispatch_queue_t importExportStateQueue;
     }
 }
 
+-(MMScrapView*) scrapForUUID:(NSString*)uuid{
+    @synchronized(allScrapsForPage){
+        for(MMScrapView*scrap in allScrapsForPage){
+            if([scrap.uuid isEqualToString:uuid]){
+                return scrap;
+            }
+        }
+    }
+    return nil;
+}
 
 @end

@@ -10,8 +10,8 @@
 
 @interface MMUndoRedoGroupItem : MMUndoRedoPageItem
 
-+(id) itemForPage:(MMUndoablePaperView*)_page withItems:(NSArray*)undoableItems;
++(id) itemForPage:(MMUndoablePaperView*)_page withItems:(NSArray*)undoableItems withUndoManager:(MMPageUndoRedoManager*)undoManager;
 
--(id) initForPage:(MMUndoablePaperView*)_page withItems:(NSArray*)undoableItems;
+-(id) initForPage:(MMUndoablePaperView*)_page withItems:(NSArray*)undoableItems withUndoManager:(MMPageUndoRedoManager*)undoManager;
 
 @end

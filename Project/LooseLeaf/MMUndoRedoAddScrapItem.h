@@ -13,8 +13,8 @@
 
 @property (readonly) MMScrapView* scrap;
 
-+(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap;
++(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap withUndoManager:(MMPageUndoRedoManager*)undoManager;
 
--(id) initForPage:(MMUndoablePaperView*)page andScrap:(MMScrapView*)scrap;
+-(id) initForPage:(MMUndoablePaperView*)page andScrap:(MMScrapView*)scrap withUndoManager:(MMPageUndoRedoManager*)undoManager;
 
 @end

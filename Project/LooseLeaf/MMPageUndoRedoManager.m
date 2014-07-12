@@ -20,7 +20,11 @@
     NSMutableArray* stackOfUndoneItems;
     BOOL hasEditsToSave;
     BOOL isLoaded;
+    __weak MMScrapsOnPaperState* scrapsOnPaperState;
 }
+
+@synthesize scrapsOnPaperState;
+@synthesize hasEditsToSave;
 
 
 -(id) initForPage:(MMUndoablePaperView*)_page{
@@ -146,7 +150,7 @@
                 [stackOfUndoneItems addObjectsFromArray:[loadedUndoneItems mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
                     NSString* className = [obj objectForKey:@"class"];
                     Class class = NSClassFromString(className);
-                    return [[class alloc] initFromDictionary:obj forPage:page];
+                    return [[class alloc] initFromDictionary:obj forPage:page withUndoRedoManager:self];
                 }]];
             }
             
@@ -154,7 +158,7 @@
                 [stackOfUndoableItems addObjectsFromArray:[loadedUndoableItems mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
                     NSString* className = [obj objectForKey:@"class"];
                     Class class = NSClassFromString(className);
-                    return [[class alloc] initFromDictionary:obj forPage:page];
+                    return [[class alloc] initFromDictionary:obj forPage:page withUndoRedoManager:self];
                 }]];
             }
             hasEditsToSave = NO;

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class MMUndoablePaperView;
+@class MMUndoablePaperView, MMPageUndoRedoManager;
 
 @protocol MMUndoRedoItem <NSObject>
 
@@ -24,7 +24,7 @@
 
 -(NSDictionary*) asDictionary;
 
--(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)page;
+-(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)page withUndoRedoManager:(MMPageUndoRedoManager*)undoRedoManager;
 
 -(BOOL) shouldMergeWith:(NSObject<MMUndoRedoItem>*)otherItem;
 

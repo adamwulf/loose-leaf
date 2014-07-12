@@ -7,13 +7,14 @@
 //
 
 #import "MMUndoRedoPageItem.h"
+#import "MMPageUndoRedoManager.h"
 
 @class MMUndoablePaperView;
 
 @interface MMUndoRedoStrokeItem : MMUndoRedoPageItem
 
-+(id) itemForPage:(MMUndoablePaperView*)_page;
++(id) itemForPage:(MMUndoablePaperView*)_page withUndoManager:(MMPageUndoRedoManager*)undoManager;
 
--(id) initForPage:(MMUndoablePaperView*)page;
+-(id) initForPage:(MMUndoablePaperView*)page withUndoManager:(MMPageUndoRedoManager*)undoManager;
 
 @end
