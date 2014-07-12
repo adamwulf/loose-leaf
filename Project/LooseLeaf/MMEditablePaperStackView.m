@@ -270,11 +270,13 @@
 -(void) undo:(UIButton*)_button{
     MMUndoablePaperView* obj = [visibleStackHolder peekSubview];
     [obj.undoRedoManager undo];
+    [obj saveToDisk];
 }
 
 -(void) redo:(UIButton*)_button{
     MMUndoablePaperView* obj = [visibleStackHolder peekSubview];
     [obj.undoRedoManager redo];
+    [obj saveToDisk];
 }
 
 -(void) eraserTapped:(UIButton*)_button{
