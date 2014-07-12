@@ -96,7 +96,17 @@ static dispatch_queue_t concurrentBackgroundQueue;
         scrapContainerView.hidden = NO;
     }else{
         cachedImgView.hidden = NO;
-        scrapContainerView.hidden = YES;
+        if(scrapsOnPaperState.isStateLoaded){
+            // if we're loaded, then show the scraps and
+            // only the ink thumbnail
+            [self setThumbnailTo:[self cachedImgViewImage]];
+            scrapContainerView.hidden = NO;
+        }else{
+            // otherwise, show the scrapped thumbnail
+            // and hide teh scrap container
+            [self setThumbnailTo:[self scrappedImgViewImage]];
+            scrapContainerView.hidden = YES;
+        }
     }
 }
 
