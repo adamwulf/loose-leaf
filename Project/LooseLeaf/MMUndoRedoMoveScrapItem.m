@@ -78,11 +78,21 @@
 #pragma mark - Serialize
 
 -(NSDictionary*) asDictionary{
-    return [NSDictionary dictionary];
+    NSMutableDictionary* propertiesDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:NSStringFromClass([self class]), @"class",
+                                                 [NSNumber numberWithBool:self.canUndo], @"canUndo", nil];
+    [propertiesDictionary setObject:startProperties forKey:@"startProperties"];
+    [propertiesDictionary setObject:endProperties forKey:@"endProperties"];
+    [propertiesDictionary setObject:scrap.uuid forKey:@"scrap.uuid"];
+    return propertiesDictionary;
 }
 
--(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page withUndoRedoManager:(MMPageUndoRedoManager*)undoManager{
-    if(self = [self initForPage:_page andScrap:nil from:[dict objectForKey:@"startProperties"] to:[dict objectForKey:@"endProperties"] withUndoManager:undoManager]){
+-(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page withUndoRedoManager:(MMPageUndoRedoManager*)undoRedoManager{
+    NSDictionary* _startProperties = [dict objectForKey:@"startProperties"];
+    NSDictionary* _endProperties = [dict objectForKey:@"endProperties"];
+    NSString* scrapUUID = [dict objectForKey:@"scrap.uuid"];
+    MMScrapView* _scrap = [undoRedoManager.scrapsOnPaperState scrapForUUID:scrapUUID];
+    
+    if(self = [self initForPage:_page andScrap:_scrap from:_startProperties to:_endProperties withUndoManager:undoRedoManager]){
         canUndo = [[dict objectForKey:@"canUndo"] boolValue];
     }
     return self;

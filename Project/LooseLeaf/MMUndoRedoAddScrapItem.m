@@ -57,7 +57,6 @@
 }
 
 -(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page withUndoRedoManager:(MMPageUndoRedoManager*)undoRedoManager{
-    
     NSDictionary* _properties = [dict objectForKey:@"propertiesWhenAdded"];
     NSString* scrapUUID = [dict objectForKey:@"scrap.uuid"];
     MMScrapView* _scrap = [undoRedoManager.scrapsOnPaperState scrapForUUID:scrapUUID];

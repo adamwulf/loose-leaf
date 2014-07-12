@@ -14,11 +14,11 @@
     MMScrapView* scrap;
 }
 
-+(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap withProperties:(NSDictionary*)scrapProperties withUndoManager:(MMPageUndoRedoManager*)undoManager{
-    return [[MMUndoRedoRemoveScrapItem alloc] initForPage:_page andScrap:scrap withProperties:scrapProperties withUndoManager:undoManager];
++(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap andProperties:(NSDictionary*)scrapProperties withUndoManager:(MMPageUndoRedoManager*)undoManager{
+    return [[MMUndoRedoRemoveScrapItem alloc] initForPage:_page andScrap:scrap andProperties:scrapProperties withUndoManager:undoManager];
 }
 
--(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)_scrap withProperties:(NSDictionary*)scrapProperties withUndoManager:(MMPageUndoRedoManager*)undoManager{
+-(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)_scrap andProperties:(NSDictionary*)scrapProperties withUndoManager:(MMPageUndoRedoManager*)undoManager{
     __weak MMUndoablePaperView* weakPage = _page;
     scrap = _scrap;
     propertiesWhenRemoved = scrapProperties;
@@ -39,11 +39,19 @@
 #pragma mark - Serialize
 
 -(NSDictionary*) asDictionary{
-    return [NSDictionary dictionary];
+    NSMutableDictionary* propertiesDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:NSStringFromClass([self class]), @"class",
+                                                 [NSNumber numberWithBool:self.canUndo], @"canUndo", nil];
+    [propertiesDictionary setObject:propertiesWhenRemoved forKey:@"propertiesWhenRemoved"];
+    [propertiesDictionary setObject:scrap.uuid forKey:@"scrap.uuid"];
+    return propertiesDictionary;
 }
 
--(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page withUndoRedoManager:(MMPageUndoRedoManager*)undoManager{
-    if(self = [self initForPage:_page andScrap:nil withProperties:[dict objectForKey:@"propertiesWhenRemoved"] withUndoManager:undoManager]){
+-(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page withUndoRedoManager:(MMPageUndoRedoManager*)undoRedoManager{
+    NSDictionary* _properties = [dict objectForKey:@"propertiesWhenRemoved"];
+    NSString* scrapUUID = [dict objectForKey:@"scrap.uuid"];
+    MMScrapView* _scrap = [undoRedoManager.scrapsOnPaperState scrapForUUID:scrapUUID];
+    
+    if(self = [self initForPage:_page andScrap:_scrap andProperties:_properties withUndoManager:undoRedoManager]){
         canUndo = [[dict objectForKey:@"canUndo"] boolValue];
     }
     return self;

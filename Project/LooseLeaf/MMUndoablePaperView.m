@@ -149,7 +149,7 @@
 }
 
 -(void) addUndoItemForRemovedScrap:(MMScrapView*)scrap withProperties:(NSDictionary*)scrapProperties{
-    [self.undoRedoManager addUndoItem:[MMUndoRedoRemoveScrapItem itemForPage:self andScrap:scrap withProperties:scrapProperties withUndoManager:self.undoRedoManager]];
+    [self.undoRedoManager addUndoItem:[MMUndoRedoRemoveScrapItem itemForPage:self andScrap:scrap andProperties:scrapProperties withUndoManager:self.undoRedoManager]];
 }
 
 -(void) addUndoItemForAddedScrap:(MMScrapView*)scrap{
@@ -170,7 +170,7 @@
         for(int i=0;i<[result.removedScraps count];i++){
             MMScrapView* scrap = [result.removedScraps objectAtIndex:i];
             NSDictionary* props = [result.removedScrapProperties objectAtIndex:i];
-            [undoItems addObject:[MMUndoRedoRemoveScrapItem itemForPage:self andScrap:scrap withProperties:props withUndoManager:self.undoRedoManager]];
+            [undoItems addObject:[MMUndoRedoRemoveScrapItem itemForPage:self andScrap:scrap andProperties:props withUndoManager:self.undoRedoManager]];
         }
         
         [self.undoRedoManager addUndoItem:[MMUndoRedoGroupItem itemForPage:self withItems:undoItems withUndoManager:self.undoRedoManager]];
