@@ -55,11 +55,11 @@
 }
 
 -(void) finalizeUndoneState{
-    NSLog(@"finalizeUndoneState");
+    NSLog(@"finalizeUndoneState %@", NSStringFromClass([self class]));
 }
 
 -(void) finalizeRedoneState{
-    NSLog(@"finalizeRedoneState");
+    NSLog(@"finalizeRedoneState %@", NSStringFromClass([self class]));
 }
 
 -(BOOL) shouldMergeWith:(NSObject<MMUndoRedoItem>*)otherItem{

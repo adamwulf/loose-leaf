@@ -284,6 +284,11 @@
     }
 }
 
+-(BOOL) containsScrap:(MMScrapView*)scrap{
+    return [scrapsHeldInBezel containsObject:scrap];
+}
+
+
 #pragma mark - Button Tap
 
 -(void) bubbleTapped:(UITapGestureRecognizer*)gesture{

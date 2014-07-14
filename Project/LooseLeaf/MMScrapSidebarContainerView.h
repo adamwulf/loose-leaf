@@ -24,9 +24,9 @@
 
 -(void) addScrapToBezelSidebar:(MMScrapView *)scrap animated:(BOOL)animated;
 
--(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel;
+-(BOOL) containsScrap:(MMScrapView*)scrap;
 
--(void) animateAndAddScrapBackToPage:(MMScrapView*)scrap;
+-(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel;
 
 -(void) saveScrapContainerToDisk;
 
