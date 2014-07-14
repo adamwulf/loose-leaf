@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-@class MMScrapView, MMScrapsOnPaperState;
+@class MMScrapView, MMScrapsOnPaperState, MMScrapContainerView,MMScrapSidebarContainerView;
 
 @protocol MMScrapsOnPaperStateDelegate <NSObject>
 
--(UIView*) scrapContainerView;
+-(MMScrapContainerView*) scrapContainerView;
 
 -(BOOL) isEditable;
 

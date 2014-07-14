@@ -31,6 +31,7 @@
 		6627DFA719003DF900592EEF /* CaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6627DFA619003DF900592EEF /* CaptureSessionManager.m */; };
 		662A21D7191D671A00AD9E31 /* Mixpanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 662A21BB191D671A00AD9E31 /* Mixpanel.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		6635BE9619748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635BE9519748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m */; };
 		663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C1877175538A800706A05 /* MMPencilEraserButton.m */; };
 		663C187D1755B63D00706A05 /* Eraser.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C187C1755B63D00706A05 /* Eraser.m */; };
 		663C188B1759B51600706A05 /* MMUndoRedoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C188A1759B51600706A05 /* MMUndoRedoButton.m */; };
@@ -274,6 +275,8 @@
 		6630ED9F15F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
 		6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizerDelegate.h; sourceTree = "<group>"; };
+		6635BE9419748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoRedoBezeledScrapItem.h; sourceTree = "<group>"; };
+		6635BE9519748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUndoRedoBezeledScrapItem.m; sourceTree = "<group>"; };
 		663C1876175538A800706A05 /* MMPencilEraserButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPencilEraserButton.h; sourceTree = "<group>"; };
 		663C1877175538A800706A05 /* MMPencilEraserButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPencilEraserButton.m; sourceTree = "<group>"; };
 		663C187B1755B63D00706A05 /* Eraser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Eraser.h; sourceTree = "<group>"; };
@@ -774,6 +777,8 @@
 				66A08E70196B242F00476F99 /* MMUndoRedoMoveScrapItem.m */,
 				66A790B7196898A90037F01A /* MMUndoRedoGroupItem.h */,
 				66A790B8196898A90037F01A /* MMUndoRedoGroupItem.m */,
+				6635BE9419748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.h */,
+				6635BE9519748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m */,
 			);
 			name = Items;
 			sourceTree = "<group>";
@@ -1837,6 +1842,7 @@
 				667D98BA192FC22A00625879 /* MMPDFButton.m in Sources */,
 				6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */,
 				66DCFBCD1582BAED00B4918C /* MMPaperView.m in Sources */,
+				6635BE9619748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m in Sources */,
 				660E1DA9158FC6300001DA12 /* NSMutableArray+QueueAdditions.m in Sources */,
 				664FB55B194BAC6A009C1EF9 /* MMCancelableGestureRecognizer.m in Sources */,
 				666E254918F613FA00C17295 /* MMFaceSidebarContentView.m in Sources */,

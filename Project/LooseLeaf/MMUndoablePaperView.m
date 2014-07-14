@@ -14,6 +14,7 @@
 #import "MMUndoRedoRemoveScrapItem.h"
 #import "MMUndoRedoGroupItem.h"
 #import "MMUndoRedoMoveScrapItem.h"
+#import "MMScrapSidebarContainerView.h"
 
 @interface MMScrappedPaperView (Queue)
 
@@ -70,6 +71,10 @@
 
 -(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
     [super didUnloadAllScrapsFor:scrapState];
+}
+
+-(MMScrapSidebarContainerView*) bezelContainerView{
+    return self.delegate.bezelContainerView;
 }
 
 #pragma mark - Saving and Loading
@@ -149,6 +154,10 @@
 }
 
 -(void) addUndoItemForRemovedScrap:(MMScrapView*)scrap withProperties:(NSDictionary*)scrapProperties{
+    [self.undoRedoManager addUndoItem:[MMUndoRedoRemoveScrapItem itemForPage:self andScrap:scrap andProperties:scrapProperties withUndoManager:self.undoRedoManager]];
+}
+
+-(void) addUndoItemForBezeledScrap:(MMScrapView*)scrap withProperties:(NSDictionary*)scrapProperties{
     [self.undoRedoManager addUndoItem:[MMUndoRedoRemoveScrapItem itemForPage:self andScrap:scrap andProperties:scrapProperties withUndoManager:self.undoRedoManager]];
 }
 

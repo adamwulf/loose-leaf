@@ -10,6 +10,7 @@
 #import "MMScrapView.h"
 #import "MMScrapViewState.h"
 #import "MMImmutableScrapsOnPaperState.h"
+#import "MMScrapContainerView.h"
 #import "NSThread+BlockAdditions.h"
 #import "UIView+Debug.h"
 #import "Constants.h"

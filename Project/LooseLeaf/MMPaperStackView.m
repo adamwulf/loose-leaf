@@ -1365,6 +1365,10 @@
     @throw kAbstractMethodException;
 }
 
+-(MMScrapSidebarContainerView*) bezelContainerView{
+    @throw kAbstractMethodException;
+}
+
 #pragma mark - Page Animation and Navigation Helpers
 
 /**

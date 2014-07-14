@@ -18,6 +18,10 @@
 
 -(void) addUndoItemForRemovedScrap:(MMScrapView*)scrap withProperties:(NSDictionary*)scrapProperties;
 
+-(void) addUndoItemForBezeledScrap:(MMScrapView*)scrap withProperties:(NSDictionary*)scrapProperties;
+
 -(void) addUndoItemForAddedScrap:(MMScrapView*)scrap;
+
+-(MMScrapSidebarContainerView*) bezelContainerView;
 
 @end

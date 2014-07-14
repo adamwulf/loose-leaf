@@ -919,11 +919,13 @@ int skipAll = NO;
         // nil out the scrap in the gesture, so
         // hang onto it
         MMScrapView* scrap = gesture.scrap;
+        NSDictionary* startingScrapProperties = gesture.startingScrapProperties;
+        MMUndoablePaperView* startingPageForScrap = gesture.startingPageForScrap;
         
         [gesture giveUpScrap];
         
         if(shouldBezel){
-            @throw [NSException exceptionWithName:@"IncompleteCode" reason:@"Need to handle bezeling a scrap for undo/redo" userInfo:nil];
+            [startingPageForScrap addUndoItemForBezeledScrap:scrap withProperties:startingScrapProperties];
             // if we've bezelled the scrap,
             // add it to the bezel container
             [bezelScrapContainer addScrapToBezelSidebar:scrap animated:YES];
@@ -1404,6 +1406,11 @@ int skipAll = NO;
         [[visibleStackHolder peekSubview] saveToDisk];
     }
 }
+
+-(MMScrapSidebarContainerView*) bezelContainerView{
+    return bezelScrapContainer;
+}
+
 
 #pragma mark - MMGestureTouchOwnershipDelegate
 
