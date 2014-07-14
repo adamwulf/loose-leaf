@@ -32,6 +32,8 @@
 
 -(void) didTapOnScrapFromMenu:(MMScrapView*)scrap;
 
+-(void) didTapOnScrapFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties;
+
 -(void) loadFromDisk;
 
 @end

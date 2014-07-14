@@ -28,8 +28,9 @@
     if(self = [super initWithUndoBlock:^{
         if([weakPage.bezelContainerView containsScrap:scrap]){
             sidebarEverDidContainScrap = YES;
-            [weakPage.bezelContainerView didTapOnScrapFromMenu:scrap];
+            [weakPage.bezelContainerView didTapOnScrapFromMenu:scrap withPreferredScrapProperties:scrapProperties];
         }else{
+            sidebarEverDidContainScrap = NO;
             [weakPage.scrapsOnPaperState showScrap:scrap];
             [scrap setPropertiesDictionary:propertiesWhenRemoved];
             NSUInteger subviewIndex = [[propertiesWhenRemoved objectForKey:@"subviewIndex"] unsignedIntegerValue];

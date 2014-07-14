@@ -146,6 +146,7 @@
     // and set it's alpha/rotation/scale to prepare for the animation
     MMScrapBubbleButton* bubble = [[MMScrapBubbleButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
     bubble.center = center;
+    
     //
     // iOS7 changes how buttons can be tapped during a gesture (i think).
     // so adding our gesture recognizer explicitly, and disallowing it to
@@ -302,7 +303,7 @@
         scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
         [self insertSubview:scrap atIndex:0];
         
-        [self animateAndAddScrapBackToPage:scrap];
+        [self animateAndAddScrapBackToPage:scrap withPreferredScrapProperties:nil];
         
         [bubbleForScrap removeObjectForKey:scrap.uuid];
         [rotationAdjustments removeObjectForKey:scrap.uuid];
@@ -310,31 +311,43 @@
 }
 
 -(void) didTapOnScrapFromMenu:(MMScrapView*)scrap{
-    [scrapsHeldInBezel removeObject:scrap];
+    [self didTapOnScrapFromMenu:scrap withPreferredScrapProperties:nil];
+}
 
+-(void) didTapOnScrapFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties{
+    [scrapsHeldInBezel removeObject:scrap];
+    
     scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
     [self insertSubview:scrap atIndex:0];
     
     [self sidebarCloseButtonWasTapped];
-    [self animateAndAddScrapBackToPage:scrap];
+    [self animateAndAddScrapBackToPage:scrap withPreferredScrapProperties:properties];
     [countButton setCount:[scrapsHeldInBezel count]];
-
+    
     [bubbleForScrap removeObjectForKey:scrap.uuid];
 }
 
--(void) animateAndAddScrapBackToPage:(MMScrapView*)scrap{
+-(void) animateAndAddScrapBackToPage:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties{
     MMScrapBubbleButton* bubble = [bubbleForScrap objectForKey:scrap.uuid];
     [scrap loadScrapStateAsynchronously:YES];
     
-    if([scrapsHeldInBezel count] > kMaxScrapsInBezel){
-        scrap.scale = scrap.scale * [MMScrapBubbleButton idealScaleForScrap:scrap];
+    scrap.scale = scrap.scale * [MMScrapBubbleButton idealScaleForScrap:scrap];
+    
+    if(!properties){
+        CGPoint positionOnScreenToScaleTo = [self.bubbleDelegate positionOnScreenToScaleScrapTo:scrap];
+        CGFloat scaleOnScreenToScaleTo = [self.bubbleDelegate scaleOnScreenToScaleScrapTo:scrap givenOriginalScale:bubble.originalScrapScale];
+        NSMutableDictionary* mproperties = [NSMutableDictionary dictionary];
+        [mproperties setObject:[NSNumber numberWithFloat:positionOnScreenToScaleTo.x] forKey:@"center.x"];
+        [mproperties setObject:[NSNumber numberWithFloat:positionOnScreenToScaleTo.y] forKey:@"center.y"];
+        [mproperties setObject:[NSNumber numberWithFloat:scrap.rotation] forKey:@"rotation"];
+        [mproperties setObject:[NSNumber numberWithFloat:scaleOnScreenToScaleTo] forKey:@"scale"];
+        properties = mproperties;
     }
     
-    CGPoint positionOnScreenToScaleTo = [self.bubbleDelegate positionOnScreenToScaleScrapTo:scrap];
-    CGFloat scaleOnScreenToScaleTo = [self.bubbleDelegate scaleOnScreenToScaleScrapTo:scrap givenOriginalScale:bubble.originalScrapScale];
     [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        scrap.center = positionOnScreenToScaleTo;
-        [scrap setScale:scaleOnScreenToScaleTo andRotation:scrap.rotation];
+        [scrap setPropertiesDictionary:properties];
+//        scrap.center = positionOnScreenToScaleTo;
+//        [scrap setScale:scaleOnScreenToScaleTo andRotation:scrap.rotation];
     } completion:^(BOOL finished){
         [self.bubbleDelegate didAddScrapBackToPage:scrap];
     }];
