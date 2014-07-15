@@ -18,7 +18,11 @@
 -(id) initWithScrapIDsPath:(NSString *)_scrapIDsPath andAllScrapProperties:(NSArray*)_allScrapProperties{
     if(self = [super init]){
         scrapIDsPath = _scrapIDsPath;
-        allScrapProperties = [_allScrapProperties copy];
+        allScrapProperties = [_allScrapProperties mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
+            NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:obj];
+            [props removeObjectForKey:@"state"]; // don't allow state object in the list
+            return props;
+        }];
     }
     return self;
 }

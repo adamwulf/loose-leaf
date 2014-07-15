@@ -96,6 +96,7 @@ static dispatch_queue_t importExportStateQueue;
                             [scrap setPropertiesDictionary:scrapProperties];
                             @synchronized(allScrapsInSidebar){
                                 [allScrapsInSidebar addObject:scrap];
+                                [allPropertiesForScraps addObject:scrapProperties];
                             }
                             
                             [self.delegate didLoadScrapInSidebar:scrap];
