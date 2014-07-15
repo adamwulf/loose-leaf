@@ -64,4 +64,6 @@
 -(MMScrapBackgroundView*) backgroundView;
 -(void) setBackgroundView:(MMScrapBackgroundView*)backgroundView;
 
+-(int) fullByteSize;
+
 @end

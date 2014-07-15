@@ -10,11 +10,12 @@
 #import "MMScrapBubbleButton.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMScrapSidebarContentView.h"
-#import "MMScrapsOnPaperState.h"
+#import "MMScrapsInSidebarState.h"
 #import "MMImmutableScrapsOnPaperState.h"
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "UIView+Debug.h"
+#import "MMImmutableScrapsInSidebarState.h"
 
 #define kMaxScrapsInBezel 6
 
@@ -39,7 +40,7 @@
     NSMutableDictionary* bubbleForScrap;
     MMCountBubbleButton* countButton;
     MMScrapSidebarContentView* contentView;
-    MMScrapsOnPaperState* scrapState;
+    MMScrapsInSidebarState* scrapState;
     NSString* scrapIDsPath;
     
     NSMutableDictionary* rotationAdjustments;
@@ -68,7 +69,7 @@
             [rotationAdjustments addEntriesFromDictionary:loadedRotationValues];
         }
 
-        scrapState = [[MMScrapsOnPaperState alloc] initWithDelegate:self];
+        scrapState = [[MMScrapsInSidebarState alloc] initWithDelegate:self];
     }
     return self;
 }
@@ -455,7 +456,7 @@ static NSString* bezelStatePath;
 }
 
 -(void) saveScrapContainerToDisk{
-    MMImmutableScrapsOnPaperState* immutableState = [scrapState immutableStateForPath:self.scrapIDsPath];
+    MMImmutableScrapsInSidebarState* immutableState = [scrapState immutableStateForPath:self.scrapIDsPath];
     NSMutableDictionary* writeableAdjustments = [rotationAdjustments copy];
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
@@ -466,24 +467,20 @@ static NSString* bezelStatePath;
 }
 
 
-#pragma mark - MMScrapsOnPaperStateDelegate & MMScrapBezelMenuViewDelegate
+#pragma mark - MMScrapsInSidebarStateDelegate & MMScrapBezelMenuViewDelegate
 
 -(NSArray*) scrapsOnPaper{
     return  [scrapsHeldInBezel array];
 }
 
--(void) didLoadScrapOnPage:(MMScrapView *)scrap{
+-(void) didLoadScrapInSidebar:(MMScrapView *)scrap{
     // add to the bezel
     NSNumber* rotationAdjustment = [rotationAdjustments objectForKey:scrap.uuid];
     scrap.rotation += [rotationAdjustment floatValue];
     [scrapsHeldInBezel addObject:scrap];
 }
 
--(void) didLoadScrapOffPage:(MMScrapView *)scrap{
-    // noop
-}
-
--(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
+-(void) didLoadAllScrapsInSidebar:(MMScrapsInSidebarState *)scrapState{
     NSArray* allScraps = [scrapsHeldInBezel copy];
     [scrapsHeldInBezel removeAllObjects];
     for(MMScrapView* scrap in [allScraps reverseObjectEnumerator]){
@@ -491,8 +488,12 @@ static NSString* bezelStatePath;
     }
 }
 
--(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState *)scrapState{
+-(void) didUnloadAllScrapsInSidebar:(MMScrapsInSidebarState *)scrapState{
     // noop
+}
+
+-(MMScrapsOnPaperState*) paperStateForPageUUID:(NSString*)uuidOfPage{
+    return nil;
 }
 
 @end

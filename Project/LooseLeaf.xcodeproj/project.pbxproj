@@ -32,6 +32,8 @@
 		662A21D7191D671A00AD9E31 /* Mixpanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 662A21BB191D671A00AD9E31 /* Mixpanel.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6635BE9619748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635BE9519748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m */; };
+		6635BE9919749BD600DFCBBA /* MMScrapsInSidebarState.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635BE9819749BD600DFCBBA /* MMScrapsInSidebarState.m */; };
+		6635BE9D19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635BE9C19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m */; };
 		663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C1877175538A800706A05 /* MMPencilEraserButton.m */; };
 		663C187D1755B63D00706A05 /* Eraser.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C187C1755B63D00706A05 /* Eraser.m */; };
 		663C188B1759B51600706A05 /* MMUndoRedoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C188A1759B51600706A05 /* MMUndoRedoButton.m */; };
@@ -277,6 +279,11 @@
 		6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizerDelegate.h; sourceTree = "<group>"; };
 		6635BE9419748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoRedoBezeledScrapItem.h; sourceTree = "<group>"; };
 		6635BE9519748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUndoRedoBezeledScrapItem.m; sourceTree = "<group>"; };
+		6635BE9719749BD600DFCBBA /* MMScrapsInSidebarState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapsInSidebarState.h; sourceTree = "<group>"; };
+		6635BE9819749BD600DFCBBA /* MMScrapsInSidebarState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapsInSidebarState.m; sourceTree = "<group>"; };
+		6635BE9A197589F200DFCBBA /* MMScrapsInSidebarStateDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScrapsInSidebarStateDelegate.h; sourceTree = "<group>"; };
+		6635BE9B19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImmutableScrapsInSidebarState.h; sourceTree = "<group>"; };
+		6635BE9C19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImmutableScrapsInSidebarState.m; sourceTree = "<group>"; };
 		663C1876175538A800706A05 /* MMPencilEraserButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPencilEraserButton.h; sourceTree = "<group>"; };
 		663C1877175538A800706A05 /* MMPencilEraserButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPencilEraserButton.m; sourceTree = "<group>"; };
 		663C187B1755B63D00706A05 /* Eraser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Eraser.h; sourceTree = "<group>"; };
@@ -1457,6 +1464,11 @@
 		66CE120417D3B6A400882275 /* Scrap Sidebar */ = {
 			isa = PBXGroup;
 			children = (
+				6635BE9719749BD600DFCBBA /* MMScrapsInSidebarState.h */,
+				6635BE9819749BD600DFCBBA /* MMScrapsInSidebarState.m */,
+				6635BE9A197589F200DFCBBA /* MMScrapsInSidebarStateDelegate.h */,
+				6635BE9B19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.h */,
+				6635BE9C19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m */,
 				66CE120517D3B6C200882275 /* Scrap Bubble */,
 				66CE11FB17D2700E00882275 /* MMScrapSidebarContainerView.h */,
 				66CE11FC17D2700E00882275 /* MMScrapSidebarContainerView.m */,
@@ -1852,6 +1864,7 @@
 				662A21D7191D671A00AD9E31 /* Mixpanel.m in Sources */,
 				66C2C1651879F3F200804123 /* UIBezierPath+Description.m in Sources */,
 				660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */,
+				6635BE9D19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m in Sources */,
 				660E1DB0158FC7DB0001DA12 /* MMPaperIcon.m in Sources */,
 				665CAC2117B57B0B000BD505 /* MMPencilAndPaletteView.m in Sources */,
 				66A790C319689CF00037F01A /* MMUndoRedoRemoveScrapItem.m in Sources */,
@@ -1892,6 +1905,7 @@
 				66BD6E9C15940D7500D4544C /* MMPencilButton.m in Sources */,
 				66BD6E9F15941B7B00D4544C /* MMShareButton.m in Sources */,
 				66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */,
+				6635BE9919749BD600DFCBBA /* MMScrapsInSidebarState.m in Sources */,
 				66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */,
 				66F4517E18EB7C3C00A57C95 /* MMPhotoRowView.m in Sources */,
 				6693295A15958A950033E557 /* MMShadowManager.m in Sources */,

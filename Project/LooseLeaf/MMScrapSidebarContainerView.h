@@ -12,8 +12,9 @@
 #import "MMScrapSidebarContainerViewDelegate.h"
 #import "MMScrapsOnPaperStateDelegate.h"
 #import "MMCountBubbleButton.h"
+#import "MMScrapsInSidebarStateDelegate.h"
 
-@interface MMScrapSidebarContainerView : MMSlidingSidebarContainerView<MMScrapsOnPaperStateDelegate>{
+@interface MMScrapSidebarContainerView : MMSlidingSidebarContainerView<MMScrapsInSidebarStateDelegate>{
     __weak NSObject<MMScrapSidebarContainerViewDelegate>* bubbleDelegate;
 }
 
