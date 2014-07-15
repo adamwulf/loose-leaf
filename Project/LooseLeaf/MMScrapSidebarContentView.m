@@ -68,7 +68,7 @@
     
     // determine the variables that will affect
     // our layout
-    NSArray* allScraps = [self.delegate scrapsOnPaper];
+    NSArray* allScraps = [self.delegate scrapsInSidebar];
     int rowCount = ceilf((float)[allScraps count] / columnCount);
     CGFloat sizeOfScrap = (self.bounds.size.width - kColumnSideMargin) / columnCount;
     

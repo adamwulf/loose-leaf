@@ -17,12 +17,13 @@
 @implementation MMScrapsInSidebarState{
     BOOL isLoaded;
     BOOL isLoading;
-    NSMutableArray* allScrapsForPage;
+    NSMutableArray* allScrapsInSidebar;
     BOOL hasEditsToSave;
 }
 
 @synthesize hasEditsToSave;
 @synthesize delegate;
+@synthesize allScrapsInSidebar;
 
 static dispatch_queue_t importExportStateQueue;
 
@@ -37,15 +38,17 @@ static dispatch_queue_t importExportStateQueue;
 -(id) initWithDelegate:(NSObject<MMScrapsInSidebarStateDelegate>*)_delegate{
     if(self = [super init]){
         delegate = _delegate;
-        allScrapsForPage = [NSMutableArray array];
+        allScrapsInSidebar = [NSMutableArray array];
     }
     return self;
 }
 
 -(int) fullByteSize{
     int totalBytes = 0;
-    for(MMScrapView* scrap in self.delegate.scrapsOnPaper){
-        totalBytes += scrap.fullByteSize;
+    @synchronized(allScrapsInSidebar){
+        for(MMScrapView* scrap in allScrapsInSidebar){
+            totalBytes += scrap.fullByteSize;
+        }
     }
     return totalBytes;
 }
@@ -89,7 +92,9 @@ static dispatch_queue_t importExportStateQueue;
                         MMScrapView* scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState andPaperState:scrapState.scrapsOnPaperState];
                         if(scrap){
                             [scrap setPropertiesDictionary:scrapProperties];
-                            [allScrapsForPage addObject:scrap];
+                            @synchronized(allScrapsInSidebar){
+                                [allScrapsInSidebar addObject:scrap];
+                            }
                             
                             [self.delegate didLoadScrapInSidebar:scrap];
                             
@@ -119,8 +124,10 @@ static dispatch_queue_t importExportStateQueue;
     }else if([self isStateLoaded] && makeEditable){
         void (^block2)() = ^(void) {
             if([self isStateLoaded]){
-                for(MMScrapView* scrap in self.delegate.scrapsOnPaper){
-                    [scrap loadScrapStateAsynchronously:async];
+                @synchronized(allScrapsInSidebar){
+                    for(MMScrapView* scrap in allScrapsInSidebar){
+                        [scrap loadScrapStateAsynchronously:async];
+                    }
                 }
             }
         };
@@ -137,11 +144,16 @@ static dispatch_queue_t importExportStateQueue;
         dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
             @autoreleasepool {
                 if([self isStateLoaded]){
-                    NSArray* scraps = [self.delegate.scrapsOnPaper copy];
+                    NSArray* scraps = nil;
+                    @synchronized(allScrapsInSidebar){
+                        scraps = [allScrapsInSidebar copy];
+                    }
                     for(MMScrapView* scrap in scraps){
                         [scrap unloadState];
                     }
-                    [allScrapsForPage removeAllObjects];
+                    @synchronized(allScrapsInSidebar){
+                        [allScrapsInSidebar removeAllObjects];
+                    }
                     [NSThread performBlockOnMainThread:^{
                         [scraps makeObjectsPerformSelector:@selector(removeFromSuperview)];
                         [self.delegate didUnloadAllScrapsInSidebar:self];
@@ -158,7 +170,7 @@ static dispatch_queue_t importExportStateQueue;
 -(MMImmutableScrapsInSidebarState*) immutableStateForPath:(NSString*)scrapIDsPath{
     if([self isStateLoaded]){
         hasEditsToSave = NO;
-        return [[MMImmutableScrapsInSidebarState alloc] initWithScrapIDsPath:scrapIDsPath andAllScraps:allScrapsForPage];
+        return [[MMImmutableScrapsInSidebarState alloc] initWithScrapIDsPath:scrapIDsPath andAllScraps:allScrapsInSidebar];
     }
     return nil;
 }
@@ -166,14 +178,27 @@ static dispatch_queue_t importExportStateQueue;
 #pragma mark - Manage Scraps
 
 -(MMScrapView*) scrapForUUID:(NSString*)uuid{
-    @synchronized(allScrapsForPage){
-        for(MMScrapView*scrap in allScrapsForPage){
+    @synchronized(allScrapsInSidebar){
+        for(MMScrapView*scrap in allScrapsInSidebar){
             if([scrap.uuid isEqualToString:uuid]){
                 return scrap;
             }
         }
     }
     return nil;
+}
+
+
+-(void) scrapIsAddedToSidebar:(MMScrapView *)scrap{
+    @synchronized(allScrapsInSidebar){
+        [allScrapsInSidebar insertObject:scrap atIndex:0];
+    }
+}
+
+-(void) scrapIsRemovedFromSidebar:(MMScrapView *)scrap{
+    @synchronized(allScrapsInSidebar){
+        [allScrapsInSidebar removeObject:scrap];
+    }
 }
 
 @end

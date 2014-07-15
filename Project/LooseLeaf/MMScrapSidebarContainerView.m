@@ -36,7 +36,6 @@
 @implementation MMScrapSidebarContainerView{
     CGFloat lastRotationReading;
     CGFloat targetAlpha;
-    NSMutableOrderedSet* scrapsHeldInBezel;
     NSMutableDictionary* bubbleForScrap;
     MMCountBubbleButton* countButton;
     MMScrapSidebarContentView* contentView;
@@ -52,7 +51,6 @@
 -(id) initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton *)_countButton{
     if(self = [super initWithFrame:frame forButton:_countButton animateFromLeft:NO]){
         targetAlpha = 1;
-        scrapsHeldInBezel = [NSMutableOrderedSet orderedSet];
         bubbleForScrap = [NSMutableDictionary dictionary];
         
         contentView = [[MMScrapSidebarContentView alloc] initWithFrame:[sidebarContentView contentBounds]];
@@ -74,12 +72,12 @@
     return self;
 }
 
--(void) loadFromDisk{
-    [scrapState loadStateAsynchronously:YES atPath:self.scrapIDsPath andMakeEditable:NO];
-}
-
 -(int) fullByteSize{
     return [super fullByteSize] + scrapState.fullByteSize;
+}
+
+-(NSArray*) scrapsInSidebar{
+    return [scrapState.allScrapsInSidebar copy];
 }
 
 
@@ -110,7 +108,7 @@
 
 -(void) setAlpha:(CGFloat)alpha{
     targetAlpha = alpha;
-    if([scrapsHeldInBezel count] > kMaxScrapsInBezel){
+    if([scrapState.allScrapsInSidebar count] > kMaxScrapsInBezel){
         countButton.alpha = targetAlpha;
     }else{
         countButton.alpha = 0;
@@ -135,9 +133,8 @@
         // only save when it's animated. non-animated is loading
         // from disk at start up
         [scrap saveScrapToDisk:nil];
+        [scrapState scrapIsAddedToSidebar:scrap];
     }
-    
-    [scrapsHeldInBezel insertObject:scrap atIndex:0];
     
     // exit the scrap to the bezel!
     CGPoint center = [self centerForBubbleAtIndex:0];
@@ -176,7 +173,7 @@
     if(animated){
         CGFloat animationDuration = 0.5;
         
-        if([scrapsHeldInBezel count] <= kMaxScrapsInBezel){
+        if([scrapState.allScrapsInSidebar count] <= kMaxScrapsInBezel){
             // allow adding to 6 in the sidebar, otherwise
             // we need to pull them all into 1 button w/
             // a menu
@@ -189,7 +186,7 @@
                 for(MMScrapBubbleButton* otherBubble in self.subviews){
                     if(otherBubble != bubble){
                         if([otherBubble isKindOfClass:[MMScrapBubbleButton class]]){
-                            int index = (int) [scrapsHeldInBezel indexOfObject:otherBubble.scrap];
+                            int index = (int) [scrapState.allScrapsInSidebar indexOfObject:otherBubble.scrap];
                             otherBubble.center = [self centerForBubbleAtIndex:index];
                         }
                     }
@@ -204,7 +201,7 @@
                     bubble.scale = .8;
                     bubble.alpha = targetAlpha;
                 } completion:^(BOOL finished){
-                    [countButton setCount:[scrapsHeldInBezel count]];
+                    [countButton setCount:[scrapState.allScrapsInSidebar count]];
                     [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
                         // bounce back
                         bubble.scale = 1.1;
@@ -218,10 +215,10 @@
                     }];
                 }];
             }];
-        }else if([scrapsHeldInBezel count] > kMaxScrapsInBezel){
+        }else if([scrapState.allScrapsInSidebar count] > kMaxScrapsInBezel){
             // we need to merge all the bubbles together into
             // a single button during the bezel animation
-            [countButton setCount:[scrapsHeldInBezel count]];
+            [countButton setCount:[scrapState.allScrapsInSidebar count]];
             bubble.center = countButton.center;
             bubble.scale = 1;
             [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -242,7 +239,7 @@
                     // scrap "hits" the bubble and pushes it down a bit
                     countButton.scale = .8;
                 } completion:^(BOOL finished){
-                    [countButton setCount:[scrapsHeldInBezel count]];
+                    [countButton setCount:[scrapState.allScrapsInSidebar count]];
                     [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
                         // bounce back
                         countButton.scale = 1.1;
@@ -258,19 +255,19 @@
             }];
         }
     }else{
-        if([scrapsHeldInBezel count] <= kMaxScrapsInBezel){
+        if([scrapState.allScrapsInSidebar count] <= kMaxScrapsInBezel){
             bubble.alpha = 1;
             scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
             scrap.center = bubble.center;
             bubble.scrap = scrap;
             for(MMScrapBubbleButton* anyBubble in self.subviews){
                 if([anyBubble isKindOfClass:[MMScrapBubbleButton class]]){
-                    int index = (int) [scrapsHeldInBezel indexOfObject:anyBubble.scrap];
+                    int index = (int) [scrapState.allScrapsInSidebar indexOfObject:anyBubble.scrap];
                     anyBubble.center = [self centerForBubbleAtIndex:index];
                 }
             }
         }else{
-            [countButton setCount:[scrapsHeldInBezel count]];
+            [countButton setCount:[scrapState.allScrapsInSidebar count]];
             countButton.alpha = 1;
             for(MMScrapBubbleButton* bubble in self.subviews){
                 if([bubble isKindOfClass:[MMScrapBubbleButton class]]){
@@ -287,7 +284,7 @@
 }
 
 -(BOOL) containsScrap:(MMScrapView*)scrap{
-    return [scrapsHeldInBezel containsObject:scrap];
+    return [scrapState.allScrapsInSidebar containsObject:scrap];
 }
 
 
@@ -295,8 +292,8 @@
 
 -(void) bubbleTapped:(UITapGestureRecognizer*)gesture{
     MMScrapBubbleButton* bubble = (MMScrapBubbleButton*) gesture.view;
-    if([scrapsHeldInBezel containsObject:bubble.scrap]){
-        [scrapsHeldInBezel removeObject:bubble.scrap];
+    if([scrapState.allScrapsInSidebar containsObject:bubble.scrap]){
+        [scrapState scrapIsRemovedFromSidebar:bubble.scrap];
         
         MMScrapView* scrap = bubble.scrap;
         scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
@@ -316,14 +313,14 @@
 }
 
 -(void) didTapOnScrapFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties{
-    [scrapsHeldInBezel removeObject:scrap];
+    [scrapState scrapIsRemovedFromSidebar:scrap];
     
     scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
     [self insertSubview:scrap atIndex:0];
     
     [self sidebarCloseButtonWasTapped];
     [self animateAndAddScrapBackToPage:scrap withPreferredScrapProperties:properties];
-    [countButton setCount:[scrapsHeldInBezel count]];
+    [countButton setCount:[scrapState.allScrapsInSidebar count]];
     
     [bubbleForScrap removeObjectForKey:scrap.uuid];
 }
@@ -357,16 +354,16 @@
         for(MMScrapBubbleButton* otherBubble in self.subviews){
             if(otherBubble != countButton && [otherBubble isKindOfClass:[MMScrapBubbleButton class]]){
                 if(otherBubble != bubble){
-                    int index = (int) [scrapsHeldInBezel indexOfObject:otherBubble.scrap];
+                    int index = (int) [scrapState.allScrapsInSidebar indexOfObject:otherBubble.scrap];
                     otherBubble.center = [self centerForBubbleAtIndex:index];
-                    if([scrapsHeldInBezel count] <= kMaxScrapsInBezel){
+                    if([scrapState.allScrapsInSidebar count] <= kMaxScrapsInBezel){
                         otherBubble.scrap = otherBubble.scrap; // reset it
                         otherBubble.alpha = 1;
                     }
                 }
             }
         }
-        if([scrapsHeldInBezel count] <= kMaxScrapsInBezel){
+        if([scrapState.allScrapsInSidebar count] <= kMaxScrapsInBezel){
             countButton.alpha = 0;
         }
     } completion:^(BOOL finished){
@@ -466,26 +463,22 @@ static NSString* bezelStatePath;
     });
 }
 
+-(void) loadFromDisk{
+    [scrapState loadStateAsynchronously:YES atPath:self.scrapIDsPath andMakeEditable:NO];
+}
+
 
 #pragma mark - MMScrapsInSidebarStateDelegate & MMScrapBezelMenuViewDelegate
-
--(NSArray*) scrapsOnPaper{
-    return  [scrapsHeldInBezel array];
-}
 
 -(void) didLoadScrapInSidebar:(MMScrapView *)scrap{
     // add to the bezel
     NSNumber* rotationAdjustment = [rotationAdjustments objectForKey:scrap.uuid];
     scrap.rotation += [rotationAdjustment floatValue];
-    [scrapsHeldInBezel addObject:scrap];
+    [self addScrapToBezelSidebar:scrap animated:NO];
 }
 
--(void) didLoadAllScrapsInSidebar:(MMScrapsInSidebarState *)scrapState{
-    NSArray* allScraps = [scrapsHeldInBezel copy];
-    [scrapsHeldInBezel removeAllObjects];
-    for(MMScrapView* scrap in [allScraps reverseObjectEnumerator]){
-        [self addScrapToBezelSidebar:scrap animated:NO];
-    }
+-(void) didLoadAllScrapsInSidebar:(MMScrapsInSidebarState *)_scrapState{
+    // noop
 }
 
 -(void) didUnloadAllScrapsInSidebar:(MMScrapsInSidebarState *)scrapState{

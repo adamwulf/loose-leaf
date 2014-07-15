@@ -12,8 +12,6 @@
 
 @protocol MMScrapsInSidebarStateDelegate <NSObject>
 
--(NSArray*) scrapsOnPaper;
-
 /**
  * triggered when a scrap is laoded from disk that is
  * actively showing on the page

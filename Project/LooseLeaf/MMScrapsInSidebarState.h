@@ -19,6 +19,7 @@
 @property (readonly) NSString* scrapIDsPath;
 @property (nonatomic, readonly) int fullByteSize;
 @property (readonly) BOOL hasEditsToSave;
+@property (readonly) NSArray* allScrapsInSidebar;
 
 +(dispatch_queue_t) importExportStateQueue;
 
@@ -39,5 +40,8 @@
 // returns the scrap for the specified uuid, or nil if there's no match
 -(MMScrapView*) scrapForUUID:(NSString*)uuid;
 
+-(void) scrapIsAddedToSidebar:(MMScrapView*)scrap;
+
+-(void) scrapIsRemovedFromSidebar:(MMScrapView*)scrap;
 
 @end
