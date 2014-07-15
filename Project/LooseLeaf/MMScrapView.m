@@ -61,6 +61,8 @@
     MMScrapBorderView* borderView;
     
     UILabel* debugLabel;
+    
+    NSMutableArray* blocksToFireWhenStateIsLoaded;
 }
 
 @synthesize scale;
@@ -70,6 +72,7 @@
 
 
 -(id) initWithScrapViewState:(MMScrapViewState*)_scrapState andPaperState:(MMScrapsOnPaperState*)paperState{
+    blocksToFireWhenStateIsLoaded = [NSMutableArray array];
     scrapState = _scrapState;
     scrapState.delegate = self;
     
@@ -464,7 +467,15 @@
     return CGAffineTransformConcat(entireTransform, CGAffineTransformMakeTranslation(recenter.x, recenter.y));
 }
 
-
+-(void) blockToFireWhenStateLoads:(void(^)())block{
+    if([self.state isStateLoaded]){
+        block();
+    }else{
+        @synchronized(blocksToFireWhenStateIsLoaded){
+            [blocksToFireWhenStateIsLoaded addObject:[block copy]];
+        }
+    }
+}
 
 #pragma mark - JotView
 
@@ -480,7 +491,13 @@
 #pragma mark - MMScrapViewStateDelegate
 
 -(void) didLoadScrapViewState:(MMScrapViewState*)state{
-    // noop
+    @synchronized(blocksToFireWhenStateIsLoaded){
+        while([blocksToFireWhenStateIsLoaded count]){
+            void(^block)() =[blocksToFireWhenStateIsLoaded firstObject];
+            block();
+            [blocksToFireWhenStateIsLoaded removeObjectAtIndex:0];
+        }
+    }
 }
 
 

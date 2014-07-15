@@ -335,6 +335,7 @@
     void (^loadBlock)() = ^(void) {
         @autoreleasepool {
             [lock lock];
+            
 //            NSLog(@"(%@) loading2: %d %d", uuid, targetIsLoadedState, isLoadingState);
             dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
             [NSThread performBlockOnMainThread:^{

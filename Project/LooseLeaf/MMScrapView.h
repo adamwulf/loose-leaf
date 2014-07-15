@@ -39,6 +39,8 @@
 
 -(void) stampContentsFrom:(JotView*)otherDrawableView;
 
+-(void) blockToFireWhenStateLoads:(void(^)())block;
+
 /**
  * will return the array of touches that this scrap
  * contains, but only if more than one touch

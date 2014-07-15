@@ -344,10 +344,12 @@
     
     [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         [scrap setPropertiesDictionary:properties];
-//        scrap.center = positionOnScreenToScaleTo;
-//        [scrap setScale:scaleOnScreenToScaleTo andRotation:scrap.rotation];
     } completion:^(BOOL finished){
-        [self.bubbleDelegate didAddScrapBackToPage:scrap];
+        [scrap blockToFireWhenStateLoads:^{
+            // only notify that the scrap is on the page when
+            // it's state is loaded
+            [self.bubbleDelegate didAddScrapBackToPage:scrap];
+        }];
     }];
     [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         bubble.alpha = 0;
