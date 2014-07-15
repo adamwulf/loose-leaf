@@ -19,9 +19,15 @@
 #import "Mixpanel.h"
 #import <mach/mach_time.h>  // for mach_absolute_time() and friends
 
+struct SidebarButton{
+    void* button;
+    CGRect originalRect;
+} SidebarButton;
+
 @implementation MMEditablePaperStackView{
     UIPopoverController* jotTouchPopover;
     MMMemoryProfileView* memoryView;
+    struct SidebarButton buttons[10];
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -61,11 +67,15 @@
         addPageSidebarButton.delegate = self;
         [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:addPageSidebarButton];
+        buttons[0].button = (__bridge void *)(addPageSidebarButton);
+        buttons[0].originalRect = addPageSidebarButton.frame;
         
         shareButton = [[MMShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         shareButton.delegate = self;
         [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:shareButton];
+        buttons[1].button = (__bridge void *)(shareButton);
+        buttons[1].originalRect = shareButton.frame;
         
 //        settingsButton = [[MMAdonitButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
 //        settingsButton.delegate = self;
@@ -83,22 +93,30 @@
         pencilTool = [[MMPencilAndPaletteView alloc] initWithButtonFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton) andScreenSize:self.bounds.size];
         pencilTool.delegate = self;
         [self addSubview:pencilTool];
+        buttons[2].button = (__bridge void *)(pencilTool.pencilButton);
+        buttons[2].originalRect = [pencilTool convertRect:pencilTool.pencilButton.frame toView:self];
         
         eraserButton = [[MMPencilEraserButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         eraserButton.delegate = self;
         [eraserButton addTarget:self action:@selector(eraserTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:eraserButton];
+        buttons[3].button = (__bridge void *)(eraserButton);
+        buttons[3].originalRect = eraserButton.frame;
         
         CGRect scissorButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton);
         scissorButton = [[MMScissorButton alloc] initWithFrame:scissorButtonFrame];
         scissorButton.delegate = self;
         [scissorButton addTarget:self action:@selector(scissorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:scissorButton];
-        
+        buttons[4].button = (__bridge void *)(scissorButton);
+        buttons[4].originalRect = scissorButton.frame;
+
         insertImageButton = [[MMImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         insertImageButton.delegate = self;
         [self addSubview:insertImageButton];
-        
+        buttons[5].button = (__bridge void *)(insertImageButton);
+        buttons[5].originalRect = insertImageButton.frame;
+
         
         
         
@@ -107,13 +125,17 @@
         handButton.delegate = self;
         [handButton addTarget:self action:@selector(handTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:handButton];
-        
+        buttons[6].button = (__bridge void *)(handButton);
+        buttons[6].originalRect = handButton.frame;
+
         CGRect rulerButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 6.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
         rulerButton = [[MMRulerButton alloc] initWithFrame:rulerButtonFrame];
         rulerButton.delegate = self;
         [rulerButton addTarget:self action:@selector(rulerTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:rulerButton];
-        
+        buttons[7].button = (__bridge void *)(rulerButton);
+        buttons[7].originalRect = rulerButton.frame;
+
         
         
         
@@ -124,12 +146,17 @@
         [undoButton addTarget:self action:@selector(undo:) forControlEvents:UIControlEventTouchUpInside];
         undoButton.reverseArrow = YES;
         [self addSubview:undoButton];
-        
+        buttons[8].button = (__bridge void *)(undoButton);
+        buttons[8].originalRect = CGRectInset(undoButton.frame, -(kWidthOfSidebar - kWidthOfSidebarButton)/2, 0) ;
+
         redoButton = [[MMUndoRedoButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         redoButton.delegate = self;
         [redoButton addTarget:self action:@selector(redo:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:redoButton];
-       
+        buttons[9].button = (__bridge void *)(redoButton);
+        buttons[9].originalRect = CGRectInset(redoButton.frame, -(kWidthOfSidebar - kWidthOfSidebarButton)/2, 0) ;
+        buttons[9].originalRect.size.height += (kWidthOfSidebar - kWidthOfSidebarButton)/2;
+
         
         //
         // accelerometer for rotating buttons
@@ -892,6 +919,18 @@
 -(void) finishUITransitionToPageView{
     [super finishUITransitionToPageView];
     [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
+}
+
+#pragma mark - Sidebar Hit Test
+
+-(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+    for(int i=0;i<10;i++){
+        if(CGRectContainsPoint(buttons[i].originalRect, point)){
+            NSLog(@"point %f %f maps to %@", point.x, point.y, buttons[i].button);
+            return (__bridge UIView*) buttons[i].button;
+        }
+    }
+    return [super hitTest:point withEvent:event];
 }
 
 
