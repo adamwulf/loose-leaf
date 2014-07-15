@@ -833,6 +833,18 @@
 			name = MixPanel;
 			sourceTree = "<group>";
 		};
+		6635BEA11975A5EF00DFCBBA /* Sidebar State */ = {
+			isa = PBXGroup;
+			children = (
+				6635BE9719749BD600DFCBBA /* MMScrapsInSidebarState.h */,
+				6635BE9819749BD600DFCBBA /* MMScrapsInSidebarState.m */,
+				6635BE9A197589F200DFCBBA /* MMScrapsInSidebarStateDelegate.h */,
+				6635BE9B19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.h */,
+				6635BE9C19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m */,
+			);
+			name = "Sidebar State";
+			sourceTree = "<group>";
+		};
 		6640E6D617E390A800EB3F7D /* Velocity */ = {
 			isa = PBXGroup;
 			children = (
@@ -1469,11 +1481,7 @@
 		66CE120417D3B6A400882275 /* Scrap Sidebar */ = {
 			isa = PBXGroup;
 			children = (
-				6635BE9719749BD600DFCBBA /* MMScrapsInSidebarState.h */,
-				6635BE9819749BD600DFCBBA /* MMScrapsInSidebarState.m */,
-				6635BE9A197589F200DFCBBA /* MMScrapsInSidebarStateDelegate.h */,
-				6635BE9B19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.h */,
-				6635BE9C19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m */,
+				6635BEA11975A5EF00DFCBBA /* Sidebar State */,
 				66CE120517D3B6C200882275 /* Scrap Bubble */,
 				66CE11FB17D2700E00882275 /* MMScrapSidebarContainerView.h */,
 				66CE11FC17D2700E00882275 /* MMScrapSidebarContainerView.m */,

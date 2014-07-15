@@ -1486,22 +1486,25 @@ int skipAll = NO;
     CGFloat scale;
     MMScrappedPaperView* page = [self pageWouldDropScrap:scrap atCenter:&center andScale:&scale];
 
-    if([scrap.state isStateLoaded]){
+    [scrap blockToFireWhenStateLoads:^{
+        CheckMainThread;
+        // we're only allowed to add scraps to a page
+        // when their state is loaded, so make sure
+        // we have their state loading
+        MMScrapView* scrapToAddToPage = scrap;
         if(scrap.state.scrapsOnPaperState != page.scrapsOnPaperState){
             MMScrapView* oldScrap = scrap;
             [scrapContainer addSubview:oldScrap];
-            scrap = [self cloneScrap:scrap toPage:page];
+            scrapToAddToPage = [self cloneScrap:scrap toPage:page];
             [oldScrap removeFromSuperview];
         }
-    }else{
-        NSLog(@"hrmph");
-    }
-    // ok, done, just set it
-    [page.scrapsOnPaperState showScrap:scrap];
-    scrap.center = center;
-    scrap.scale = scale;
-    [page saveToDisk];
-    [bezelScrapContainer saveScrapContainerToDisk];
+        // ok, done, just set it
+        [page.scrapsOnPaperState showScrap:scrapToAddToPage];
+        scrapToAddToPage.center = center;
+        scrapToAddToPage.scale = scale;
+        [page saveToDisk];
+        [bezelScrapContainer saveScrapContainerToDisk];
+    }];
 }
 
 -(MMScrappedPaperView*) pageForUUID:(NSString*)uuid{

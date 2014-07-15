@@ -345,11 +345,7 @@
     [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         [scrap setPropertiesDictionary:properties];
     } completion:^(BOOL finished){
-        [scrap blockToFireWhenStateLoads:^{
-            // only notify that the scrap is on the page when
-            // it's state is loaded
-            [self.bubbleDelegate didAddScrapBackToPage:scrap];
-        }];
+        [self.bubbleDelegate didAddScrapBackToPage:scrap];
     }];
     [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         bubble.alpha = 0;

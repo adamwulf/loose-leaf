@@ -72,7 +72,6 @@
 
 
 -(id) initWithScrapViewState:(MMScrapViewState*)_scrapState andPaperState:(MMScrapsOnPaperState*)paperState{
-    blocksToFireWhenStateIsLoaded = [NSMutableArray array];
     scrapState = _scrapState;
     scrapState.delegate = self;
     
@@ -116,7 +115,8 @@
  */
 - (id)initWithBezierPath:(UIBezierPath*)_path andUUID:(NSString*)uuid andPaperState:(MMScrapsOnPaperState*)paperState{
     UIBezierPath* originalPath = [_path copy];
-    
+    blocksToFireWhenStateIsLoaded = [NSMutableArray array];
+
     
     if(!scrapState){
         // one of our other [init] methods may have already created a state
