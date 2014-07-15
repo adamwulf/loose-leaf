@@ -43,10 +43,4 @@
     return self;
 }
 
-#pragma mark - Description
-
--(NSString*) description{
-    return @"[MMUndoRedoStrokeItem]";
-}
-
 @end

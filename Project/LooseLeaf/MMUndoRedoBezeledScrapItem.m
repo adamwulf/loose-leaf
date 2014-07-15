@@ -76,7 +76,7 @@
 #pragma mark - Description
 
 -(NSString*) description{
-    return [NSString stringWithFormat:@"[MMUndoRedoRemoveScrapItem %@]", scrap.uuid];
+    return [NSString stringWithFormat:@"[%@ %@]", NSStringFromClass([self class]), scrap.uuid];
 }
 
 @end

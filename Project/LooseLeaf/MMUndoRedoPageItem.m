@@ -28,5 +28,11 @@
     return self;
 }
 
+#pragma mark - Description
+
+-(NSString*) description{
+    return [NSString stringWithFormat:@"[%@]", NSStringFromClass([self class])];
+}
+
 
 @end

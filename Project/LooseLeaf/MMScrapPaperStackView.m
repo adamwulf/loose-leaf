@@ -1486,6 +1486,16 @@ int skipAll = NO;
     CGFloat scale;
     MMScrappedPaperView* page = [self pageWouldDropScrap:scrap atCenter:&center andScale:&scale];
 
+    if([scrap.state isStateLoaded]){
+        if(scrap.state.scrapsOnPaperState != page.scrapsOnPaperState){
+            MMScrapView* oldScrap = scrap;
+            [scrapContainer addSubview:oldScrap];
+            scrap = [self cloneScrap:scrap toPage:page];
+            [oldScrap removeFromSuperview];
+        }
+    }else{
+        NSLog(@"hrmph");
+    }
     // ok, done, just set it
     [page.scrapsOnPaperState showScrap:scrap];
     scrap.center = center;

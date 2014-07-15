@@ -8,8 +8,6 @@
 
 #import "MMUndoRedoPageItem.h"
 
-@class MMScrapSidebarContainerView;
-
 @interface MMUndoRedoBezeledScrapItem : MMUndoRedoPageItem
 
 +(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap andProperties:(NSDictionary*)scrapProperties withUndoManager:(MMPageUndoRedoManager*)undoManager;
