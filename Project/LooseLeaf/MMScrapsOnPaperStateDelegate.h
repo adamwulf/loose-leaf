@@ -12,6 +12,8 @@
 
 @protocol MMScrapsOnPaperStateDelegate <NSObject>
 
+-(NSString*) uuid;
+
 -(MMScrapContainerView*) scrapContainerView;
 
 -(BOOL) isEditable;

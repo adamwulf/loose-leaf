@@ -185,8 +185,12 @@
     return borderView.fullByteSize + scrapState.fullByteSize;
 }
 
--(NSString*)uuid{
+-(NSString*) uuid{
     return scrapState.uuid;
+}
+
+-(NSString*) owningPageUUID{
+    return [scrapState.scrapsOnPaperState.delegate uuid];
 }
 
 -(MMScrapBackgroundView*) backgroundView{

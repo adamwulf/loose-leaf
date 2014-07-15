@@ -1494,6 +1494,15 @@ int skipAll = NO;
     [bezelScrapContainer saveScrapContainerToDisk];
 }
 
+-(MMScrappedPaperView*) pageForUUID:(NSString*)uuid{
+    NSMutableArray* allPages = [NSMutableArray arrayWithArray:visibleStackHolder.subviews];
+    [allPages addObjectsFromArray:[bezelStackHolder.subviews copy]];
+    [allPages addObjectsFromArray:[hiddenStackHolder.subviews copy]];
+    return [[allPages filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        return [[evaluatedObject uuid] isEqualToString:uuid];
+    }]] firstObject];
+}
+
 -(CGPoint) positionOnScreenToScaleScrapTo:(MMScrapView*)scrap{
     return [visibleStackHolder center];
 }

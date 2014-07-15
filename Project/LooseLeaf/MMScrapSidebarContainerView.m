@@ -486,7 +486,7 @@ static NSString* bezelStatePath;
 }
 
 -(MMScrapsOnPaperState*) paperStateForPageUUID:(NSString*)uuidOfPage{
-    return nil;
+    return [bubbleDelegate pageForUUID:uuidOfPage].scrapsOnPaperState;
 }
 
 @end

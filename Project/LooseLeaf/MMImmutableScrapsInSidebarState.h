@@ -11,9 +11,9 @@
 
 @interface MMImmutableScrapsInSidebarState : MMScrapsInSidebarState
 
-@property (nonatomic, readonly) NSArray* scraps;
+@property (nonatomic, readonly) NSArray* allScrapProperties;
 
--(id) initWithScrapIDsPath:(NSString *)scrapIDsPath andAllScraps:(NSArray*)allScraps;
+-(id) initWithScrapIDsPath:(NSString *)scrapIDsPath andAllScrapProperties:(NSArray*)allScrapProperties;
 
 // returns YES if any changes actually saved,
 // NO otherwise

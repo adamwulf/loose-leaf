@@ -18,6 +18,7 @@
     BOOL isLoaded;
     BOOL isLoading;
     NSMutableArray* allScrapsInSidebar;
+    NSMutableArray* allPropertiesForScraps;
     BOOL hasEditsToSave;
 }
 
@@ -39,6 +40,7 @@ static dispatch_queue_t importExportStateQueue;
     if(self = [super init]){
         delegate = _delegate;
         allScrapsInSidebar = [NSMutableArray array];
+        allPropertiesForScraps = [NSMutableArray array];
     }
     return self;
 }
@@ -77,7 +79,7 @@ static dispatch_queue_t importExportStateQueue;
                 
                 // load all the states async
                 for(NSDictionary* scrapProperties in scrapProps){
-                    MMScrapsOnPaperState* pageStateForScrap = [self.delegate paperStateForPageUUID:nil];
+                    MMScrapsOnPaperState* pageStateForScrap = [self.delegate paperStateForPageUUID:[scrapProperties objectForKey:@"pageUUID"]];
                     MMScrapViewState* state = [[MMScrapViewState alloc] initWithUUID:[scrapProperties objectForKey:@"uuid"] andPaperState:pageStateForScrap];
                     if(state){
                         NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
@@ -170,7 +172,7 @@ static dispatch_queue_t importExportStateQueue;
 -(MMImmutableScrapsInSidebarState*) immutableStateForPath:(NSString*)scrapIDsPath{
     if([self isStateLoaded]){
         hasEditsToSave = NO;
-        return [[MMImmutableScrapsInSidebarState alloc] initWithScrapIDsPath:scrapIDsPath andAllScraps:allScrapsInSidebar];
+        return [[MMImmutableScrapsInSidebarState alloc] initWithScrapIDsPath:scrapIDsPath andAllScrapProperties:allPropertiesForScraps];
     }
     return nil;
 }
@@ -191,13 +193,20 @@ static dispatch_queue_t importExportStateQueue;
 
 -(void) scrapIsAddedToSidebar:(MMScrapView *)scrap{
     @synchronized(allScrapsInSidebar){
+        NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:[scrap propertiesDictionary]];
+        [props setObject:[scrap owningPageUUID] forKey:@"pageUUID"];
+        [allPropertiesForScraps insertObject:props atIndex:0];
         [allScrapsInSidebar insertObject:scrap atIndex:0];
     }
 }
 
 -(void) scrapIsRemovedFromSidebar:(MMScrapView *)scrap{
     @synchronized(allScrapsInSidebar){
-        [allScrapsInSidebar removeObject:scrap];
+        NSUInteger index = [allScrapsInSidebar indexOfObject:scrap];
+        if(index != NSNotFound){
+            [allPropertiesForScraps removeObjectAtIndex:index];
+            [allScrapsInSidebar removeObjectAtIndex:index];
+        }
     }
 }
 

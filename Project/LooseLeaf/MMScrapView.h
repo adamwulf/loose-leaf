@@ -22,6 +22,7 @@
 @property (nonatomic, assign) BOOL selected;
 @property (nonatomic, readonly) CGSize originalSize;
 @property (nonatomic, readonly) NSString* uuid;
+@property (nonatomic, readonly) NSString* owningPageUUID;
 @property (nonatomic, readonly) MMScrapViewState* state;
 
 -(id) initWithScrapViewState:(MMScrapViewState*)scrapState andPaperState:(MMScrapsOnPaperState*)paperState;
