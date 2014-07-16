@@ -1477,15 +1477,16 @@ int skipAll = NO;
     [bezelScrapContainer saveScrapContainerToDisk];
 }
 
--(void) didAddScrapBackToPage:(MMScrapView *)scrap{
+// returns the page that the scrap was added to
+-(MMUndoablePaperView*) didAddScrapBackToPage:(MMScrapView *)scrap{
     // first, find the page to add the scrap to.
     // this will check visible + bezelled pages to see
     // which page should get the scrap, and it'll tell us
     // the center/scale to use
     CGPoint center;
     CGFloat scale;
-    MMScrappedPaperView* page = [self pageWouldDropScrap:scrap atCenter:&center andScale:&scale];
-
+    MMUndoablePaperView* page = [self pageWouldDropScrap:scrap atCenter:&center andScale:&scale];
+    
     [scrap blockToFireWhenStateLoads:^{
         CheckMainThread;
         // we're only allowed to add scraps to a page
@@ -1505,6 +1506,7 @@ int skipAll = NO;
         [page saveToDisk];
         [bezelScrapContainer saveScrapContainerToDisk];
     }];
+    return page;
 }
 
 -(MMScrappedPaperView*) pageForUUID:(NSString*)uuid{

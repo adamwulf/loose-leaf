@@ -13,6 +13,7 @@
 #import "MMUndoablePaperView.h"
 #import "MMUndoRedoPageItem.h"
 #import "MMUndoRedoAddScrapItem.h"
+#import "MMUndoRedoBezeledScrapItem.h"
 
 @implementation MMPageUndoRedoManager{
     MMUndoablePaperView* page;
@@ -175,6 +176,12 @@
         [stackOfUndoableItems removeAllObjects];
         [stackOfUndoneItems removeAllObjects];
     }
+}
+
+
+// debug method to see if we just undid adding a scrap to the bezel
+-(BOOL) justUndidScrapBezel{
+    return [[stackOfUndoneItems firstObject] isKindOfClass:[MMUndoRedoBezeledScrapItem class]];
 }
 
 @end

@@ -33,4 +33,6 @@
 
 -(void) unloadState;
 
+-(BOOL) justUndidScrapBezel;
+
 @end

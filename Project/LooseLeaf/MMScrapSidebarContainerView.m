@@ -331,6 +331,8 @@
     
     scrap.scale = scrap.scale * [MMScrapBubbleButton idealScaleForScrap:scrap];
     
+    BOOL hadProperties = properties != nil;
+    
     if(!properties){
         CGPoint positionOnScreenToScaleTo = [self.bubbleDelegate positionOnScreenToScaleScrapTo:scrap];
         CGFloat scaleOnScreenToScaleTo = [self.bubbleDelegate scaleOnScreenToScaleScrapTo:scrap givenOriginalScale:bubble.originalScrapScale];
@@ -345,7 +347,14 @@
     [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         [scrap setPropertiesDictionary:properties];
     } completion:^(BOOL finished){
-        [self.bubbleDelegate didAddScrapBackToPage:scrap];
+        MMUndoablePaperView* page = [self.bubbleDelegate didAddScrapBackToPage:scrap];
+        [scrap blockToFireWhenStateLoads:^{
+            if(!hadProperties){
+                NSLog(@"tapped on scrap from sidebar. should add undo item to page %@", page.uuid);
+            }else{
+                NSLog(@"scrap added from undo item, don't add new undo item");
+            }
+        }];
     }];
     [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         bubble.alpha = 0;
