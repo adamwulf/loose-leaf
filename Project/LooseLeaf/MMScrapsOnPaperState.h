@@ -50,5 +50,6 @@
 // returns the scrap for the specified uuid, or nil if there's no match
 -(MMScrapView*) scrapForUUID:(NSString*)uuid;
 
+-(MMScrapView*) mostRecentScrap;
 
 @end

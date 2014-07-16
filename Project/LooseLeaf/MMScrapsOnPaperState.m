@@ -257,4 +257,8 @@ static dispatch_queue_t importExportStateQueue;
     return nil;
 }
 
+-(MMScrapView*) mostRecentScrap{
+    return [allScrapsForPage lastObject];
+}
+
 @end

@@ -22,6 +22,8 @@
 
 -(void) addUndoItemForAddedScrap:(MMScrapView*)scrap;
 
+-(void) addUndoItemForMostRecentAddedScrapFromBezelFromScrap:(MMScrapView*)scrapFromBezel;
+
 -(MMScrapSidebarContainerView*) bezelContainerView;
 
 @end

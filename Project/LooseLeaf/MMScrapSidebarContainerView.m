@@ -351,6 +351,7 @@
         [scrap blockToFireWhenStateLoads:^{
             if(!hadProperties){
                 NSLog(@"tapped on scrap from sidebar. should add undo item to page %@", page.uuid);
+                [page addUndoItemForMostRecentAddedScrapFromBezelFromScrap:scrap];
             }else{
                 NSLog(@"scrap added from undo item, don't add new undo item");
             }

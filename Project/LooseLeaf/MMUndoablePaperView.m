@@ -15,6 +15,7 @@
 #import "MMUndoRedoBezeledScrapItem.h"
 #import "MMUndoRedoGroupItem.h"
 #import "MMUndoRedoMoveScrapItem.h"
+#import "MMUndoRedoAddScrapFromBezelItem.h"
 #import "MMScrapSidebarContainerView.h"
 
 @interface MMScrappedPaperView (Queue)
@@ -164,6 +165,19 @@
 
 -(void) addUndoItemForAddedScrap:(MMScrapView*)scrap{
     [self.undoRedoManager addUndoItem:[MMUndoRedoAddScrapItem itemForPage:self andScrap:scrap withUndoManager:self.undoRedoManager]];
+}
+
+-(void) addUndoItemForMostRecentAddedScrapFromBezelFromScrap:(MMScrapView*)scrapFromBezel{
+    MMScrapView* scrap = nil;
+    if(scrapFromBezel.state.scrapsOnPaperState != self.scrapsOnPaperState){
+        // scrap would have been cloned, get most recent scrap on page
+        scrap = [self.scrapsOnPaperState mostRecentScrap];
+    }else{
+        // this scrap was owned by this page and added back from a tap on the bezel
+        scrap = scrapFromBezel;
+    }
+    NSLog(@"adding undo item for %@", scrap.uuid);
+    [self.undoRedoManager addUndoItem:[MMUndoRedoAddScrapFromBezelItem itemForPage:self andScrap:scrap withUndoManager:self.undoRedoManager]];
 }
 
 -(MMScissorResult*) completeScissorsCutWithPath:(UIBezierPath *)scissorPath{
