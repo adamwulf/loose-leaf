@@ -57,22 +57,21 @@
 }
 
 -(void) show:(BOOL)animated{
+    if(isShowing){
+        return;
+    }
     isShowing = YES;
     
     AVCaptureDevicePosition preferredPosition = [[NSUserDefaults standardUserDefaults] integerForKey:kCameraPositionUserDefaultKey];
     
     if([CaptureSessionManager hasCamera]){
-        cameraRow = [[MMBorderedCamView alloc] initWithFrame:[self cameraViewFr] andCameraPosition:preferredPosition];
-        cameraRow.delegate = self;
-        cameraRow.rotation = RandomPhotoRotation/2;
-        cameraRow.center = CGPointMake((self.frame.size.width-kWidthOfSidebarButton)/2, kCameraMargin + cameraRow.bounds.size.height/2);
-        [photoListScrollView insertSubview:cameraRow belowSubview:flipButton];
-        [photoListScrollView.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            NSLog(@"subview: %@", [obj class]);
-            if([obj isKindOfClass:[MMPhotoRowView class]]){
-                NSLog(@"row: %d", (int) ((UIView*)obj).tag);
-            }
-        }];
+        if(!cameraRow){
+            cameraRow = [[MMBorderedCamView alloc] initWithFrame:[self cameraViewFr] andCameraPosition:preferredPosition];
+            cameraRow.delegate = self;
+            cameraRow.rotation = RandomPhotoRotation/2;
+            cameraRow.center = CGPointMake((self.frame.size.width-kWidthOfSidebarButton)/2, kCameraMargin + cameraRow.bounds.size.height/2);
+            [photoListScrollView insertSubview:cameraRow belowSubview:flipButton];
+        }
         flipButton.hidden = NO;
     }else{
         cameraRow = nil;

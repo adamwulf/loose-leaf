@@ -7,8 +7,11 @@
 //
 
 #import "MMPanAndPinchFromListViewGestureRecognizer.h"
+#import "MMLongPressFromListViewGestureRecognizer.h"
 
 @implementation MMPanAndPinchFromListViewGestureRecognizer
+
+#pragma mark - Properties
 
 @synthesize scale;
 @synthesize initialPageScale;
@@ -17,12 +20,14 @@
 @synthesize pinchedPage;
 @synthesize normalizedLocationOfScale;
 
+#pragma mark - Init
 
 -(id) init{
     self = [super init];
     if(self){
         validTouches = [[NSMutableOrderedSet alloc] init];
         [self reset];
+        self.delegate = self;
     }
     return self;
 }
@@ -32,17 +37,12 @@
     if(self){
         validTouches = [[NSMutableOrderedSet alloc] init];
         [self reset];
+        self.delegate = self;
     }
     return self;
 }
 
-- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
-    return NO;
-}
-
-- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return NO;
-}
+#pragma mark - Touch Methods
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
 //    debug_NSLog(@"touchesBegan");
@@ -117,8 +117,9 @@
     [super ignoreTouch:touch forEvent:event];
 }
 
+#pragma mark - UIGestureRecognzier Subclass
+
 -(void) reset{
-//    debug_NSLog(@"reset");
     [validTouches removeAllObjects];
     pinchedPage = nil;
     scaleDirection = MMBezelDirectionNone;
@@ -134,19 +135,39 @@
     [self cancel];
 }
 
--(void) cancel{
-    if(self.enabled){
-        self.enabled = NO;
-        self.enabled = YES;
+- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
+    return [preventedGestureRecognizer isKindOfClass:[MMLongPressFromListViewGestureRecognizer class]];
+}
+
+- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
+    return [preventingGestureRecognizer isKindOfClass:[MMLongPressFromListViewGestureRecognizer class]];
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return ![otherGestureRecognizer isKindOfClass:[MMLongPressFromListViewGestureRecognizer class]];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return [otherGestureRecognizer isKindOfClass:[MMLongPressFromListViewGestureRecognizer class]];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return [otherGestureRecognizer isKindOfClass:[MMLongPressFromListViewGestureRecognizer class]];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    // Disallow recognition of tap gestures in the segmented control.
+    if ([touch.view isKindOfClass:[UIControl class]]) {
+//        NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
+        return NO;
     }
+    return YES;
 }
 
 
-
-
-
-
-
+#pragma mark - Helper
 
 -(CGFloat) distanceBetweenTouches:(NSOrderedSet*) touches{
     if([touches count] >= 2){

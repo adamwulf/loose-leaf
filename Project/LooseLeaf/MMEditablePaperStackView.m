@@ -16,10 +16,17 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMMemoryProfileView.h"
 #import "Mixpanel.h"
+#import <mach/mach_time.h>  // for mach_absolute_time() and friends
+
+struct SidebarButton{
+    void* button;
+    CGRect originalRect;
+} SidebarButton;
 
 @implementation MMEditablePaperStackView{
     UIPopoverController* jotTouchPopover;
     MMMemoryProfileView* memoryView;
+    struct SidebarButton buttons[10];
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -59,11 +66,15 @@
         addPageSidebarButton.delegate = self;
         [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:addPageSidebarButton];
+        buttons[0].button = (__bridge void *)(addPageSidebarButton);
+        buttons[0].originalRect = addPageSidebarButton.frame;
         
         shareButton = [[MMShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         shareButton.delegate = self;
         [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:shareButton];
+        buttons[1].button = (__bridge void *)(shareButton);
+        buttons[1].originalRect = shareButton.frame;
         
 //        settingsButton = [[MMAdonitButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
 //        settingsButton.delegate = self;
@@ -81,22 +92,30 @@
         pencilTool = [[MMPencilAndPaletteView alloc] initWithButtonFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton) andScreenSize:self.bounds.size];
         pencilTool.delegate = self;
         [self addSubview:pencilTool];
+        buttons[2].button = (__bridge void *)(pencilTool.pencilButton);
+        buttons[2].originalRect = [pencilTool convertRect:pencilTool.pencilButton.frame toView:self];
         
         eraserButton = [[MMPencilEraserButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         eraserButton.delegate = self;
         [eraserButton addTarget:self action:@selector(eraserTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:eraserButton];
+        buttons[3].button = (__bridge void *)(eraserButton);
+        buttons[3].originalRect = eraserButton.frame;
         
         CGRect scissorButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton);
         scissorButton = [[MMScissorButton alloc] initWithFrame:scissorButtonFrame];
         scissorButton.delegate = self;
         [scissorButton addTarget:self action:@selector(scissorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:scissorButton];
-        
+        buttons[4].button = (__bridge void *)(scissorButton);
+        buttons[4].originalRect = scissorButton.frame;
+
         insertImageButton = [[MMImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         insertImageButton.delegate = self;
         [self addSubview:insertImageButton];
-        
+        buttons[5].button = (__bridge void *)(insertImageButton);
+        buttons[5].originalRect = insertImageButton.frame;
+
         
         
         
@@ -105,13 +124,17 @@
         handButton.delegate = self;
         [handButton addTarget:self action:@selector(handTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:handButton];
-        
+        buttons[6].button = (__bridge void *)(handButton);
+        buttons[6].originalRect = handButton.frame;
+
         CGRect rulerButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 6.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
         rulerButton = [[MMRulerButton alloc] initWithFrame:rulerButtonFrame];
         rulerButton.delegate = self;
         [rulerButton addTarget:self action:@selector(rulerTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:rulerButton];
-        
+        buttons[7].button = (__bridge void *)(rulerButton);
+        buttons[7].originalRect = rulerButton.frame;
+
         
         
         
@@ -122,12 +145,17 @@
         [undoButton addTarget:self action:@selector(undo:) forControlEvents:UIControlEventTouchUpInside];
         undoButton.reverseArrow = YES;
         [self addSubview:undoButton];
-        
+        buttons[8].button = (__bridge void *)(undoButton);
+        buttons[8].originalRect = CGRectInset(undoButton.frame, -(kWidthOfSidebar - kWidthOfSidebarButton)/2, 0) ;
+
         redoButton = [[MMUndoRedoButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         redoButton.delegate = self;
         [redoButton addTarget:self action:@selector(redo:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:redoButton];
-       
+        buttons[9].button = (__bridge void *)(redoButton);
+        buttons[9].originalRect = CGRectInset(redoButton.frame, -(kWidthOfSidebar - kWidthOfSidebarButton)/2, 0) ;
+        buttons[9].originalRect.size.height += (kWidthOfSidebar - kWidthOfSidebarButton)/2;
+
         
         //
         // accelerometer for rotating buttons
@@ -535,7 +563,11 @@
         // top page should actually be the top visible page isn't necessarily
         // true. instead, i should ask the PageCacheManager to recheck
         // if it can hand the currently top page the drawable view.
-        [[MMPageCacheManager sharedInstance] didChangeToTopPage:[visibleStackHolder peekSubview]];
+        if([fromLeftBezelGesture isActivelyBezeling]){
+            [self didChangeTopPageTo:[bezelStackHolder peekSubview]];
+        }else{
+            [self didChangeTopPageTo:[visibleStackHolder peekSubview]];
+        }
     }
 }
 
@@ -575,14 +607,21 @@
     [rulerView liftRuler];
 }
 
-#pragma mark - MMPanGestureDelegate
+#pragma mark - MMGestureTouchOwnershipDelegate
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     [super ownershipOfTouches:touches isGesture:gesture];
     if([gesture isKindOfClass:[MMDrawingTouchGestureRecognizer class]] ||
        [gesture isKindOfClass:[MMBezelInGestureRecognizer class]]){
         // only notify of our own gestures
-        [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
+        if([fromLeftBezelGesture isActivelyBezeling] && [bezelStackHolder.subviews count]){
+            [[bezelStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
+        }else{
+            if([fromLeftBezelGesture isActivelyBezeling]){
+                NSLog(@"notifying of ownership during left bezel, but nothing in bezel holder");
+            }
+            [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
+        }
     }
     [[MMDrawingTouchGestureRecognizer sharedInstace] ownershipOfTouches:touches isGesture:gesture];
 }
@@ -592,7 +631,7 @@
 }
 
 
-#pragma mark - Page Loading and Unloading
+#pragma mark - MMPageCacheManagerDelegate: Page Loading and Unloading
 
 -(BOOL) isPageInVisibleStack:(MMPaperView*)page{
     return [visibleStackHolder containsSubview:page];
@@ -624,9 +663,9 @@
     [super willChangeTopPageTo:page];
 }
 
--(void) didChangeTopPage{
+-(void) didChangeTopPageTo:(MMPaperView*)page{
     CheckMainThread;
-    [super didChangeTopPage];
+    [super didChangeTopPageTo:(MMPaperView*)page];
 }
 
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
@@ -639,6 +678,29 @@
     [stackManager saveStacksToDisk];
 }
 
+-(void) buildDefaultContent{
+    
+    // just need to copy the visible/hiddenPages.plist files
+    // and the content will be loaded from the bundle just fine
+    
+    NSString* documentsPath = [NSFileManager documentsPath];
+    NSURL* realDocumentsPath = [NSURL URLWithString:[documentsPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+
+    NSURL* visiblePagesPlist = [[NSBundle mainBundle] URLForResource:@"visiblePages" withExtension:@"plist" subdirectory:@"Documents"];
+    NSURL* hiddenPagesPlist = [[NSBundle mainBundle] URLForResource:@"hiddenPages" withExtension:@"plist" subdirectory:@"Documents"];
+    
+    [[NSFileManager defaultManager] copyItemAtPath:[visiblePagesPlist path]
+                                            toPath:[[realDocumentsPath path] stringByAppendingPathComponent:@"visiblePages.plist"]
+                                                    error:nil];
+    [[NSFileManager defaultManager] copyItemAtPath:[hiddenPagesPlist path]
+                                            toPath:[[realDocumentsPath path] stringByAppendingPathComponent:@"hiddenPages.plist"]
+                                             error:nil];
+}
+
+-(void) finishedLoading{
+    // noop
+}
+
 -(void) loadStacksFromDisk{
     NSDictionary* pages = [stackManager loadFromDiskWithBounds:self.bounds];
     for(MMPaperView* page in [[pages objectForKey:@"visiblePages"] reverseObjectEnumerator]){
@@ -649,18 +711,19 @@
     }
     
     if(![self hasPages]){
-        for(int i=0;i<1;i++){
-            MMEditablePaperView* editable = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
-            [editable setEditable:YES];
-            [self addPaperToBottomOfStack:editable];
-            MMEditablePaperView* paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
-            [self addPaperToBottomOfStack:paper];
-            paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
-            [self addPaperToBottomOfHiddenStack:paper];
-            paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
-            [self addPaperToBottomOfHiddenStack:paper];
-        }
-        [self saveStacksToDisk];
+        self.userInteractionEnabled = NO;
+        UIView* white = [[UIView alloc] initWithFrame:self.bounds];
+        white.backgroundColor = [UIColor whiteColor];
+        [self insertSubview:white belowSubview:visibleStackHolder];
+        [NSThread performBlockInBackground:^{
+            [self buildDefaultContent];
+            [NSThread performBlockOnMainThread:^{
+                self.userInteractionEnabled = YES;
+                [white removeFromSuperview];
+                [self loadStacksFromDisk];
+            }];
+        }];
+        return;
     }
     
     // load the state for the top page in the visible stack
@@ -680,6 +743,7 @@
     
     [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
     [self didChangeTopPage];
+    [self finishedLoading];
 }
 
 -(BOOL) hasPages{
@@ -694,11 +758,11 @@
         debug_NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
         return NO;
     }
-    if([[MMPageCacheManager sharedInstance].drawableView.state.currentStrokes count]){
+    if([MMPageCacheManager sharedInstance].drawableView.state.currentStroke){
         return NO;
     }
-    for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scraps]){
-        if([scrap.state.drawableView.state.currentStrokes count]){
+    for(MMScrapView* scrap in [[visibleStackHolder peekSubview] scrapsOnPaper]){
+        if(scrap.state.drawableView.state.currentStroke){
             return NO;
         }
     }
@@ -732,12 +796,12 @@
     }
 }
 
--(void) willCancelStrokeWithTouch:(JotTouch*)touch{
-    [[self activePen] willCancelStrokeWithTouch:touch];
+-(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+    [[self activePen] willCancelStroke:stroke withTouch:touch];
 }
 
--(void) didCancelStrokeWithTouch:(JotTouch*)touch{
-    [[self activePen] didCancelStrokeWithTouch:touch];
+-(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+    [[self activePen] didCancelStroke:stroke withTouch:touch];
 }
 
 -(UIColor*) colorForTouch:(JotTouch *)touch{
@@ -838,16 +902,6 @@
 }
 
 
-#pragma mark - UIGestureRecognizerDelegate
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    
-    // Disallow recognition of tap gestures in the segmented control.
-    if ([touch.view isKindOfClass:[UIControl class]]) {//change it to your condition
-        return NO;
-    }
-    return YES;
-}
-
 #pragma mark - gestures for list view
 
 -(void) beginUITransitionFromPageView{
@@ -868,6 +922,18 @@
 -(void) finishUITransitionToPageView{
     [super finishUITransitionToPageView];
     [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
+}
+
+#pragma mark - Sidebar Hit Test
+
+-(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+    for(int i=0;i<10;i++){
+        if(CGRectContainsPoint(buttons[i].originalRect, point)){
+            NSLog(@"point %f %f maps to %@", point.x, point.y, buttons[i].button);
+            return (__bridge UIView*) buttons[i].button;
+        }
+    }
+    return [super hitTest:point withEvent:event];
 }
 
 

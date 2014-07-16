@@ -12,44 +12,12 @@
 #import "NSMutableSet+Extras.h"
 #import <JotUI/JotUI.h>
 
-@interface MMObjectSelectLongPressGestureRecognizer (Private)
-
-/**
- * track the locations of each touch in this gesture
- */
-@property (nonatomic, readonly) NSMutableDictionary* touchLocations;
-@property (nonatomic, readonly) NSMutableSet* activeTouches;
-
-@end
-
 @implementation MMObjectSelectLongPressGestureRecognizer{
     NSMutableDictionary* touchLocations;
     NSMutableSet* activeTouches;
 }
 
--(id) init{
-    if(self = [super init]){
-        activeTouches = [[NSMutableSet alloc] init];
-        touchLocations = [[NSMutableDictionary alloc] init];
-    }
-    return self;
-}
-
--(id) initWithTarget:(id)target action:(SEL)action{
-    if(self = [super initWithTarget:target action:action]){
-        activeTouches = [[NSMutableSet alloc] init];
-        touchLocations = [[NSMutableDictionary alloc] init];
-    }
-    return self;
-}
-
-- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
-    return NO;
-}
-
-- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return NO;
-}
+#pragma mark - Properties
 
 -(NSSet*) activeTouches{
     return activeTouches;
@@ -58,6 +26,28 @@
 -(NSMutableDictionary*)touchLocations{
     return touchLocations;
 }
+
+#pragma mark - Init
+
+-(id) init{
+    if(self = [super init]){
+        activeTouches = [[NSMutableSet alloc] init];
+        touchLocations = [[NSMutableDictionary alloc] init];
+        self.delegate = self;
+    }
+    return self;
+}
+
+-(id) initWithTarget:(id)target action:(SEL)action{
+    if(self = [super initWithTarget:target action:action]){
+        activeTouches = [[NSMutableSet alloc] init];
+        touchLocations = [[NSMutableDictionary alloc] init];
+        self.delegate = self;
+    }
+    return self;
+}
+
+#pragma mark - Touch Methods
 
 /**
  * when a touch begins, we need to save it's initial location
@@ -69,7 +59,7 @@
  */
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     for(UITouch* touch in touches){
-        [self.touchLocations setObject:[NSValue valueWithCGPoint:[touch locationInView:self.view]]
+        [touchLocations setObject:[NSValue valueWithCGPoint:[touch locationInView:self.view]]
                                 forKey:@([touch hash])];
     }
     [activeTouches addObjectsInSet:touches];
@@ -89,7 +79,7 @@
     BOOL didChangeState = NO;
     if(self.state == UIGestureRecognizerStatePossible){
         for(UITouch* touch in touches){
-            CGPoint initialLocation = [[self.touchLocations objectForKey:@([touch hash])] CGPointValue];
+            CGPoint initialLocation = [[touchLocations objectForKey:@([touch hash])] CGPointValue];
             CGPoint currentLocation = [touch locationInView:self.view];
             CGFloat distance = DistanceBetweenTwoPoints(initialLocation, currentLocation);
             if(distance > self.allowableMovement && self.state == UIGestureRecognizerStatePossible){
@@ -108,7 +98,7 @@
  */
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
     for(UITouch* touch in touches){
-        [self.touchLocations removeObjectForKey:@([touch hash])];
+        [touchLocations removeObjectForKey:@([touch hash])];
     }
     [activeTouches removeObjectsInSet:touches];
     [super touchesCancelled:touches withEvent:event];
@@ -119,11 +109,13 @@
  */
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     for(UITouch* touch in touches){
-        [self.touchLocations removeObjectForKey:@([touch hash])];
+        [touchLocations removeObjectForKey:@([touch hash])];
     }
     [activeTouches removeObjectsInSet:touches];
     [super touchesEnded:touches withEvent:event];
 }
+
+#pragma mark - UIGestureRecognizer Subclass
 
 /**
  * if our gesture ends, then remove all our cached locations. these
@@ -135,15 +127,54 @@
     if(state == UIGestureRecognizerStateEnded ||
        state == UIGestureRecognizerStateFailed ||
        state == UIGestureRecognizerStateCancelled){
-        [self.touchLocations removeAllObjects];
+        [touchLocations removeAllObjects];
         [activeTouches removeAllObjects];
     }
 }
 
 -(void)reset{
     [super reset];
-    [self.touchLocations removeAllObjects];
+    [touchLocations removeAllObjects];
     [activeTouches removeAllObjects];
+}
+
+-(void) setEnabled:(BOOL)enabled{
+    if(!enabled || (!self.enabled && enabled)){
+        [activeTouches removeAllObjects];
+    }
+    [super setEnabled:enabled];
+}
+
+- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
+    return NO;
+}
+
+- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
+    return NO;
+}
+
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    // Disallow recognition of tap gestures in the segmented control.
+    if ([touch.view isKindOfClass:[UIControl class]]) {
+//        debug_NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
+        return NO;
+    }
+    return YES;
 }
 
 @end

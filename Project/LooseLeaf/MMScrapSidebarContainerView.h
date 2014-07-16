@@ -10,11 +10,10 @@
 #import "MMUntouchableView.h"
 #import "MMScrapView.h"
 #import "MMScrapSidebarContainerViewDelegate.h"
-#import "MMScrapSidebarContentViewDelegate.h"
 #import "MMScrapsOnPaperStateDelegate.h"
 #import "MMCountBubbleButton.h"
 
-@interface MMScrapSidebarContainerView : MMSlidingSidebarContainerView<MMScrapSidebarContentViewDelegate,MMScrapsOnPaperStateDelegate>{
+@interface MMScrapSidebarContainerView : MMSlidingSidebarContainerView<MMScrapsOnPaperStateDelegate>{
     __weak NSObject<MMScrapSidebarContainerViewDelegate>* bubbleDelegate;
 }
 
@@ -30,5 +29,9 @@
 -(void) animateAndAddScrapBackToPage:(MMScrapView*)scrap;
 
 -(void) saveScrapContainerToDisk;
+
+-(void) didTapOnScrapFromMenu:(MMScrapView*)scrap;
+
+-(void) loadFromDisk;
 
 @end

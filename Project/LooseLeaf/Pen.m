@@ -12,6 +12,10 @@
 #import <JotUI/JotUI.h>
 #import "MMTouchVelocityGestureRecognizer.h"
 
+#define           VELOCITY_CLAMP_MIN 20
+#define           VELOCITY_CLAMP_MAX 1000
+
+
 @implementation Pen
 
 @synthesize minSize;
@@ -103,14 +107,14 @@
     // noop
 }
 
--(void) willCancelStrokeWithTouch:(JotTouch*)touch{
+-(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
     // noop
 }
 
 /**
  * the user cancelled the touch
  */
--(void) didCancelStrokeWithTouch:(JotTouch*)touch{
+-(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
     // noop
 }
 

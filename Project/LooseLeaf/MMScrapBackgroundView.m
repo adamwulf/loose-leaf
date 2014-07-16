@@ -116,6 +116,10 @@ static int totalBackgroundBytes;
     return backgroundPathCache;
 }
 
+-(NSString*) bundledBackgroundJPGFile{
+    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:scrapState.uuid] stringByAppendingPathComponent:[@"background" stringByAppendingPathExtension:@"jpg"]];
+}
+
 #pragma mark - Duplication and Stamping
 
 // returns an exact duplicate of this background, including all properties,
@@ -123,8 +127,8 @@ static int totalBackgroundBytes;
 -(MMScrapBackgroundView*) duplicateFor:(MMScrapViewState*)otherScrapState{
     MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:self.backingImage
                                                                            forScrapState:otherScrapState];
-    backgroundView.backgroundScale = self.backgroundScale;
     backgroundView.backgroundRotation = self.backgroundRotation;
+    backgroundView.backgroundScale = self.backgroundScale;
     backgroundView.backgroundOffset = self.backgroundOffset;
     return backgroundView;
 }
@@ -166,9 +170,12 @@ static int totalBackgroundBytes;
 #pragma mark - Save and Load
 
 -(void) loadBackgroundFromDiskWithProperties:(NSDictionary*)properties{
-    if([[NSFileManager defaultManager] fileExistsAtPath:self.backgroundJPGFile]){
-        //            NSLog(@"should be loading background");
+    if([[NSFileManager defaultManager] fileExistsAtPath:self.backgroundJPGFile] ||
+       [[NSFileManager defaultManager] fileExistsAtPath:self.bundledBackgroundJPGFile]){
         UIImage* image = [UIImage imageWithContentsOfFile:self.backgroundJPGFile];
+        if(!image){
+            image = [UIImage imageWithContentsOfFile:self.bundledBackgroundJPGFile];
+        }
         [NSThread performBlockOnMainThread:^{
             [self setBackingImage:image];
         }];
@@ -184,7 +191,9 @@ static int totalBackgroundBytes;
 // be persisted to disk
 -(NSDictionary*) saveBackgroundToDisk{
     if(self.backingViewHasChanged && ![[NSFileManager defaultManager] fileExistsAtPath:self.backgroundJPGFile]){
-        if(self.backingContentView.image){
+        if([[NSFileManager defaultManager] fileExistsAtPath:self.bundledBackgroundJPGFile]){
+            [[NSFileManager defaultManager] copyItemAtPath:self.bundledBackgroundJPGFile toPath:self.backgroundJPGFile error:nil];
+        }else if(self.backingContentView.image){
             [UIImageJPEGRepresentation(self.backingContentView.image, .9) writeToFile:self.backgroundJPGFile atomically:YES];
         }
         self.backingViewHasChanged = NO;

@@ -9,17 +9,16 @@
 #import "MMEditablePaperView.h"
 #import "MMPanAndPinchScrapGestureRecognizer.h"
 #import "MMScrapsOnPaperStateDelegate.h"
+#import "MMDecompressImagePromiseDelegate.h"
 #import <MessageUI/MFMailComposeViewController.h>
 
 /**
  * the purpose of this subclass is to encompass all of the
  * scrap functionality for a page
  */
-@interface MMScrappedPaperView : MMEditablePaperView<MFMailComposeViewControllerDelegate,MMPanGestureDelegate,MMScrapsOnPaperStateDelegate>{
+@interface MMScrappedPaperView : MMEditablePaperView<MFMailComposeViewControllerDelegate,MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapsOnPaperStateDelegate,MMDecompressImagePromiseDelegate>{
     UIImageView* cachedImgView;
 }
-
-@property (readonly) NSArray* scraps;
 
 -(void) addScrap:(MMScrapView*)scrap;
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andScale:(CGFloat)scale;
@@ -45,5 +44,7 @@
 -(NSString*) scrappedThumbnailPath;
 
 -(UIImage*) scrappedImgViewImage;
+
+-(void) addUndoLevelAndContinueStroke;
 
 @end

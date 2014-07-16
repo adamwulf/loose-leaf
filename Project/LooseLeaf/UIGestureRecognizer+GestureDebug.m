@@ -11,19 +11,35 @@
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import <DrawKit-iOS/JRSwizzle.h>
 #import "Constants.h"
+#import "MMPaperView.h"
 
 @implementation UIGestureRecognizer (GestureDebug)
 
 -(void) swizzle_setState:(UIGestureRecognizerState)state{
+    NSString* uuid = @"";
+    if([self.view respondsToSelector:@selector(uuid)]){
+        uuid = [(NSString*) self.view performSelector:@selector(uuid)];
+    }
     if(state == UIGestureRecognizerStateBegan){
-        debug_NSLog(@"%@ began", [self class]);
+        debug_NSLog(@"%@ began", [self description]);
     }else if(state == UIGestureRecognizerStateCancelled){
-        debug_NSLog(@"%@ cancelled", [self class]);
+        debug_NSLog(@"%@ cancelled", [self description]);
     }else if(state == UIGestureRecognizerStateEnded){
-        debug_NSLog(@"%@ ended", [self class]);
+        debug_NSLog(@"%@ ended", [self description]);
+    }else if(state == UIGestureRecognizerStateFailed){
+        debug_NSLog(@"%@ failed", [self description]);
     }
 
     [self swizzle_setState:state];
+}
+
+-(NSString*) swizzle_description{
+    return [NSString stringWithFormat:@"[%@ %p]", NSStringFromClass([self class]), self];
+}
+
+-(void) swizzle_reset{
+    debug_NSLog(@"reset %@", [self description]);
+    [self swizzle_reset];
 }
 
 -(void) say:(NSString*)prefix ISee:(NSSet*)touches{
@@ -31,17 +47,23 @@
     for (UITouch*t in touches) {
         str = [str stringByAppendingFormat:@" %p", t];
     }
-//    NSLog(@"%p %@ %@", self, prefix, str);
+//    debug_NSLog(@"%p %@ %@", self, prefix, str);
 }
 
 
-
-+(void)load{
+//
+//+(void)load{
 //    NSError *error = nil;
 //	[UIGestureRecognizer jr_swizzleMethod:@selector(setState:)
 //                        withMethod:@selector(swizzle_setState:)
 //                             error:&error];
-}
+//	[UIGestureRecognizer jr_swizzleMethod:@selector(description)
+//                               withMethod:@selector(swizzle_description)
+//                                    error:&error];
+//	[UIGestureRecognizer jr_swizzleMethod:@selector(reset)
+//                               withMethod:@selector(swizzle_reset)
+//                                    error:&error];
+//}
 
 
 @end

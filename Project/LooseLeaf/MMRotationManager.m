@@ -87,7 +87,7 @@ static MMRotationManager* _instance = nil;
     UIInterfaceOrientation devOrient = (UIInterfaceOrientation) orientation;
     UIInterfaceOrientation currOrient = [self currentStatusbarOrientation];
     [delegate willRotateInterfaceFrom:currOrient to:devOrient];
-    [[UIApplication sharedApplication] setStatusBarOrientation:devOrient animated:NO];
+//    [[UIApplication sharedApplication] setStatusBarOrientation:devOrient animated:NO];
     [delegate didRotateInterfaceFrom:currOrient to:devOrient];
 }
 

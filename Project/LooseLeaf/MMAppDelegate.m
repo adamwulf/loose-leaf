@@ -42,6 +42,7 @@
 //    [self.window.layer setSpeed:.5f];
     MMTouchDotView* blueDots = [[MMTouchDotView alloc] initWithFrame:self.window.bounds];
     [self.window addSubview:blueDots];
+//    [self.window.layer setSpeed:0.1f];
 
     // fire timer each minute
     [self setupTimer];
@@ -93,6 +94,8 @@
         [[Mixpanel sharedInstance] track:kMPEventLaunch];
     };
     debug_NSLog(@"DID BECOME ACTIVE");
+    debug_NSLog(@"***************************************************************************");
+    debug_NSLog(@"***************************************************************************");
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

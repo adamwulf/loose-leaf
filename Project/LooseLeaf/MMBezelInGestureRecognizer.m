@@ -17,12 +17,16 @@
     NSMutableSet* ignoredTouches;
 }
 
+#pragma mark - Properties
+
 @synthesize panDirection;
 @synthesize numberOfRepeatingBezels;
 @synthesize panDelegate;
 @synthesize subState;
 @synthesize hasSeenSubstateBegin;
 @synthesize gestureIsFromRightBezel;
+
+#pragma mark - Init
 
 -(id) initWithTarget:(id)target action:(SEL)action{
     self = [super initWithTarget:target action:action];
@@ -34,9 +38,14 @@
     self.cancelsTouchesInView = NO;
     self.delaysTouchesEnded = NO;
     self.delaysTouchesBegan = NO;
-    self.delegate = self;
     return self;
 }
+
+-(NSArray*)touches{
+    return [validTouches allObjects];
+}
+
+#pragma mark - SubState
 
 //
 // this will make sure that the substate transitions
@@ -45,30 +54,226 @@
     if(subState == UIGestureRecognizerStateEnded ||
        subState == UIGestureRecognizerStateCancelled ||
        subState == UIGestureRecognizerStateFailed){
-        subState = UIGestureRecognizerStatePossible;
+        self.subState = UIGestureRecognizerStatePossible;
     }else if(subState == UIGestureRecognizerStateBegan){
-        subState = UIGestureRecognizerStateChanged;
+        self.subState = UIGestureRecognizerStateChanged;
     }
 }
 
-- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
-    return subState != UIGestureRecognizerStatePossible;
+
+-(void) setSubState:(UIGestureRecognizerState)_subState{
+    subState = _subState;
+//    if(subState == UIGestureRecognizerStateBegan){
+//        debug_NSLog(@"%@ substate began", [self description]);
+//    }else if(subState == UIGestureRecognizerStateCancelled){
+//        debug_NSLog(@"%@ substate cancelled", [self description]);
+//    }else if(subState == UIGestureRecognizerStateEnded){
+//        debug_NSLog(@"%@ substate ended", [self description]);
+//    }else if(subState == UIGestureRecognizerStateFailed){
+//        debug_NSLog(@"%@ substate failed", [self description]);
+//    }
 }
 
-- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return [preventingGestureRecognizer isKindOfClass:[MMBezelInGestureRecognizer class]];
-}
+#pragma mark - Touch Methods
 
--(NSArray*)touches{
-    return [validTouches allObjects];
-}
+/**
+ * the first touch of a gesture.
+ * this touch may interrupt an animation on this frame, so set the frame
+ * to match that of the animation.
+ */
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self processSubStateForNextIteration];
 
--(void) cancel{
-    if(self.enabled){
-        self.enabled = NO;
-        self.enabled = YES;
+//    debug_NSLog(@"%@: %i touches began", [self description], [touches count]);
+
+    BOOL foundValidTouch = NO;
+    for(UITouch* touch in touches){
+        CGPoint point = [touch locationInView:self.view];
+        if(!gestureIsFromRightBezel && point.x > kBezelInGestureWidth){
+            // only accept touches on the right bezel
+            [ignoredTouches addObject:touch];
+        }else if(gestureIsFromRightBezel && point.x < self.view.frame.size.width - kBezelInGestureWidth){
+            // only accept touches on the right bezel
+            [ignoredTouches addObject:touch];
+        }else{
+            [validTouches addObject:touch];
+            foundValidTouch = YES;
+        }
+    }
+    
+    panDirection = MMBezelDirectionNone;
+    if(gestureIsFromRightBezel){
+        lastKnownLocation = [self furthestLeftTouchLocation];
+    }else{
+        lastKnownLocation = [self furthestRightTouchLocation];
+    }
+    
+    // ok, a touch began, and we need to start the gesture
+    // and increment our repeat count
+    //
+    // we have to manually track valid touches for this gesture
+    //
+    // the default for a gesture recognizer:
+    //   after the recognizer is set to UIGestureRecognizerStateEnded,
+    //   then all touches from that gesture are ignored for the rest
+    //   of the life of that touch
+    //
+    // we want to support the user gesturing with two fingers into the bezel,
+    // then gesturing both OR just one finger back off the bezel and repeating.
+    //
+    // since we want to effectively re-use a touch for the 2nd bezel gesture,
+    // we'll keep the gesture alive and just increment the repeat count counter
+    // instead of ending the gesture entirely.
+    //
+    if([validTouches count] >= 2 && foundValidTouch && [self isAllowedToBezelHelper]){
+        if(!dateOfLastBezelEnding || [dateOfLastBezelEnding timeIntervalSinceNow] > -.5){
+            numberOfRepeatingBezels++;
+        }else{
+            numberOfRepeatingBezels = 1;
+        }
+        if(subState == UIGestureRecognizerStatePossible){
+            [self.panDelegate ownershipOfTouches:validTouches isGesture:self];
+            hasSeenSubstateBegin = NO;
+            self.subState = UIGestureRecognizerStateBegan;
+            firstKnownLocation = [self furthestRightTouchLocation];
+            if(gestureIsFromRightBezel){
+                firstKnownLocation.x = self.view.bounds.size.width;
+            }else{
+                firstKnownLocation.x = 0;
+            }
+        }
+        [dateOfLastBezelEnding release];
+        dateOfLastBezelEnding = nil;
+    }else if([validTouches count] >= 2 && foundValidTouch && ![self isAllowedToBezelHelper]){
+        debug_NSLog(@"%@ would begin, but isn't allowed", [self description]);
+        [ignoredTouches addObjectsInSet:validTouches];
+        [validTouches removeAllObjects];
+    }
+    if(self.state == UIGestureRecognizerStatePossible){
+        self.state = UIGestureRecognizerStateBegan;
+    }else{
+        self.state = UIGestureRecognizerStateChanged;
     }
 }
+
+-(BOOL) isAllowedToBezelHelper{
+    // check if i'm allowed to bezel. i'm always allowed to bezel
+    // if i'm already bezeling
+    return [self.panDelegate isAllowedToBezel] || [self isActivelyBezeling];
+}
+
+/**
+ * when the touch moves, track which direction the gesture
+ * is moving and record it
+ */
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self processSubStateForNextIteration];
+    CGFloat xDirection = [self directionOfTouchesInXAxis];
+    CGPoint p;
+    if(gestureIsFromRightBezel){
+        p = [self furthestLeftTouchLocation];
+    }else{
+        p = [self furthestRightTouchLocation];
+    }
+    if(p.x != lastKnownLocation.x){
+        panDirection = MMBezelDirectionNone;
+        if(xDirection < 0){
+            panDirection = panDirection | MMBezelDirectionLeft;
+        }
+        if(xDirection > 0){
+            panDirection = panDirection | MMBezelDirectionRight;
+        }
+        if(p.y > lastKnownLocation.y){
+            panDirection = panDirection | MMBezelDirectionDown;
+        }
+        if(p.y < lastKnownLocation.y){
+            panDirection = panDirection | MMBezelDirectionUp;
+        }
+        lastKnownLocation = p;
+    }
+    if(self.state != UIGestureRecognizerStatePossible){
+        self.state = UIGestureRecognizerStateChanged;
+    }
+}
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+
+//    debug_NSLog(@"%@: %i touches ended", [self description], [touches count]);
+
+    [self processSubStateForNextIteration];
+    [ignoredTouches removeObjectsInSet:touches];
+    [validTouches removeObjectsInSet:touches];
+    BOOL didChangeTouchLoc = NO;
+    if(gestureIsFromRightBezel){
+        CGPoint locationOfLeft = [self furthestLeftTouchLocation];
+        for(UITouch* touch in touches){
+            CGPoint touchLocation = [touch locationInView:self.view];
+            if(CGPointEqualToPoint(touchLocation, locationOfLeft)){
+                // this'll use the new left location
+                if([self furthestLeftTouchLocation].x != MAXFLOAT){
+                    liftedFingerOffset += [self furthestLeftTouchLocation].x - touchLocation.x;
+                }
+                didChangeTouchLoc = YES;
+            }
+        }
+    }else{
+        CGPoint locationOfRight = [self furthestRightTouchLocation];
+        for(UITouch* touch in touches){
+            CGPoint touchLocation = [touch locationInView:self.view];
+            if(CGPointEqualToPoint(touchLocation, locationOfRight)){
+                // this'll use the new right location
+                if([self furthestRightTouchLocation].x != MAXFLOAT){
+                    liftedFingerOffset += [self furthestRightTouchLocation].x - touchLocation.x;
+                }
+                didChangeTouchLoc = YES;
+            }
+        }
+    }
+    
+    // track date of last bezel, if there was one
+    if([validTouches count] == 0 && subState == UIGestureRecognizerStateChanged){
+        [dateOfLastBezelEnding release];
+        dateOfLastBezelEnding = [[NSDate date] retain];
+    }
+    
+    // case: valid touches are empty + other touches
+    // case: valid touches empty + no other touches
+    // case: still valid touches
+    if([validTouches count]){
+        self.subState = UIGestureRecognizerStateChanged;
+        self.state = UIGestureRecognizerStateChanged;
+    }else{
+        // no valid touches. do we have others?
+        if([ignoredTouches count]){
+            // other touches are still alive
+            if(subState == UIGestureRecognizerStateChanged){
+                self.subState = UIGestureRecognizerStateEnded;
+            }else{
+                self.subState = UIGestureRecognizerStateFailed;
+            }
+            self.state = UIGestureRecognizerStateChanged;
+        }else{
+            // no touches on screen
+            if(subState == UIGestureRecognizerStateChanged){
+                self.subState = UIGestureRecognizerStateEnded;
+            }else{
+                self.subState = UIGestureRecognizerStateFailed;
+            }
+            self.state = UIGestureRecognizerStateEnded;
+        }
+    }
+}
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self touchesEnded:touches withEvent:event];
+}
+
+#pragma mark - Reset and Helper Methods
+
+- (void) resetPageCount{
+    numberOfRepeatingBezels = 0;
+    [dateOfLastBezelEnding release];
+    dateOfLastBezelEnding = nil;
+}
+
 
 /**
  * finds the touch that is furthest left
@@ -118,7 +323,7 @@
                 // so the translation is zero
                 return CGPointZero;
             }
-
+            
         }else{
             p = [self furthestRightTouchLocation];
             if(p.x == 0){
@@ -126,223 +331,12 @@
                 // so the translation is zero
                 return CGPointZero;
             }
-
+            
         }
         return CGPointMake(p.x - firstKnownLocation.x - liftedFingerOffset, p.y - firstKnownLocation.y);
     }
     return CGPointZero;
 }
-
-/**
- * the first touch of a gesture.
- * this touch may interrupt an animation on this frame, so set the frame
- * to match that of the animation.
- */
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    [self processSubStateForNextIteration];
-    BOOL foundValidTouch = NO;
-    for(UITouch* touch in touches){
-        CGPoint point = [touch locationInView:self.view];
-        if(!gestureIsFromRightBezel && point.x > kBezelInGestureWidth){
-            // only accept touches on the right bezel
-            [ignoredTouches addObject:touch];
-        }else if(gestureIsFromRightBezel && point.x < self.view.frame.size.width - kBezelInGestureWidth){
-            // only accept touches on the right bezel
-            [ignoredTouches addObject:touch];
-        }else{
-            [validTouches addObject:touch];
-            foundValidTouch = YES;
-        }
-    }
-    
-    panDirection = MMBezelDirectionNone;
-    if(gestureIsFromRightBezel){
-        lastKnownLocation = [self furthestLeftTouchLocation];
-    }else{
-        lastKnownLocation = [self furthestRightTouchLocation];
-    }
-    
-    // ok, a touch began, and we need to start the gesture
-    // and increment our repeat count
-    //
-    // we have to manually track valid touches for this gesture
-    //
-    // the default for a gesture recognizer:
-    //   after the recognizer is set to UIGestureRecognizerStateEnded,
-    //   then all touches from that gesture are ignored for the rest
-    //   of the life of that touch
-    //
-    // we want to support the user gesturing with two fingers into the bezel,
-    // then gesturing both OR just one finger back off the bezel and repeating.
-    //
-    // since we want to effectively re-use a touch for the 2nd bezel gesture,
-    // we'll keep the gesture alive and just increment the repeat count counter
-    // instead of ending the gesture entirely.
-    //
-    if([validTouches count] >= 2 && foundValidTouch){
-        if(!dateOfLastBezelEnding || [dateOfLastBezelEnding timeIntervalSinceNow] > -.5){
-            numberOfRepeatingBezels++;
-        }else{
-            numberOfRepeatingBezels = 1;
-        }
-        if(subState == UIGestureRecognizerStatePossible){
-            [self.panDelegate ownershipOfTouches:validTouches isGesture:self];
-            hasSeenSubstateBegin = NO;
-            subState = UIGestureRecognizerStateBegan;
-            firstKnownLocation = [self furthestRightTouchLocation];
-            if(gestureIsFromRightBezel){
-                firstKnownLocation.x = self.view.bounds.size.width;
-            }else{
-                firstKnownLocation.x = 0;
-            }
-        }
-        [dateOfLastBezelEnding release];
-        dateOfLastBezelEnding = nil;
-    }
-    if(self.state == UIGestureRecognizerStatePossible){
-        if([validTouches count]){
-            self.state = UIGestureRecognizerStateBegan;
-            // don't start the gesture unless we actually have a touch
-            // that we could start with
-        }
-    }else{
-        self.state = UIGestureRecognizerStateChanged;
-    }
-}
-
-/**
- * when the touch moves, track which direction the gesture
- * is moving and record it
- */
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
-    [self processSubStateForNextIteration];
-    CGFloat xDirection = [self directionOfTouchesInXAxis];
-    CGPoint p;
-    if(gestureIsFromRightBezel){
-        p = [self furthestLeftTouchLocation];
-    }else{
-        p = [self furthestRightTouchLocation];
-    }
-    if(p.x != lastKnownLocation.x){
-        panDirection = MMBezelDirectionNone;
-        if(xDirection < 0){
-            panDirection = panDirection | MMBezelDirectionLeft;
-        }
-        if(xDirection > 0){
-            panDirection = panDirection | MMBezelDirectionRight;
-        }
-        if(p.y > lastKnownLocation.y){
-            panDirection = panDirection | MMBezelDirectionDown;
-        }
-        if(p.y < lastKnownLocation.y){
-            panDirection = panDirection | MMBezelDirectionUp;
-        }
-        lastKnownLocation = p;
-    }
-    if(self.state != UIGestureRecognizerStatePossible){
-        self.state = UIGestureRecognizerStateChanged;
-    }
-}
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
-    if(self.state == UIGestureRecognizerStatePossible){
-        self.state = UIGestureRecognizerStateFailed;
-        return;
-    }
-    [self processSubStateForNextIteration];
-    [ignoredTouches removeObjectsInSet:touches];
-    BOOL didChangeTouchLoc = NO;
-    if(gestureIsFromRightBezel){
-        CGPoint locationOfLeft = [self furthestLeftTouchLocation];
-        for(UITouch* touch in touches){
-            CGPoint touchLocation = [touch locationInView:self.view];
-            [validTouches removeObject:touch];
-            if(CGPointEqualToPoint(touchLocation, locationOfLeft)){
-                // this'll use the new left location
-                if([self furthestLeftTouchLocation].x != MAXFLOAT){
-                    liftedFingerOffset += [self furthestLeftTouchLocation].x - touchLocation.x;
-                }
-                didChangeTouchLoc = YES;
-            }
-        }
-    }else{
-        CGPoint locationOfRight = [self furthestRightTouchLocation];
-        for(UITouch* touch in touches){
-            CGPoint touchLocation = [touch locationInView:self.view];
-            [validTouches removeObject:touch];
-            if(CGPointEqualToPoint(touchLocation, locationOfRight)){
-                // this'll use the new right location
-                if([self furthestRightTouchLocation].x != MAXFLOAT){
-                    liftedFingerOffset += [self furthestRightTouchLocation].x - touchLocation.x;
-                }
-                didChangeTouchLoc = YES;
-            }
-        }
-    }
-    if([validTouches count] == 0 && subState == UIGestureRecognizerStateChanged){
-        subState = UIGestureRecognizerStateEnded;
-        [dateOfLastBezelEnding release];
-        dateOfLastBezelEnding = [[NSDate date] retain];
-    }else if(didChangeTouchLoc && subState == UIGestureRecognizerStateChanged){
-        subState = UIGestureRecognizerStateChanged;
-    }
-    
-    if([validTouches count] == 0 && [ignoredTouches count] == 0){
-        if(subState == UIGestureRecognizerStatePossible) {
-            self.state = UIGestureRecognizerStateCancelled;
-        }else{
-            self.state = UIGestureRecognizerStateEnded;
-        }
-    }else{
-        self.state = UIGestureRecognizerStateChanged;
-    }
-}
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
-    if(self.state == UIGestureRecognizerStatePossible){
-        self.state = UIGestureRecognizerStateFailed;
-        return;
-    }
-    [self processSubStateForNextIteration];
-    [ignoredTouches removeObjectsInSet:touches];
-    [validTouches removeObjectsInSet:touches];
-    if([validTouches count] < 2 && (subState == UIGestureRecognizerStateChanged || subState == UIGestureRecognizerStateBegan)){
-        // we cancelled one of our two touches, so
-        // tell our substate we're dead now
-        subState = UIGestureRecognizerStateCancelled;
-    }
-    if([validTouches count] == 0 && subState == UIGestureRecognizerStateChanged){
-        subState = UIGestureRecognizerStateCancelled;
-        [dateOfLastBezelEnding release];
-        dateOfLastBezelEnding = [[NSDate date] retain];
-    }
-    if([validTouches count] == 0 && [ignoredTouches count] == 0){
-        if(subState == UIGestureRecognizerStatePossible) {
-            self.state = UIGestureRecognizerStateCancelled;
-        }else{
-            self.state = UIGestureRecognizerStateEnded;
-        }
-    }else{
-        self.state = UIGestureRecognizerStateChanged;
-    }
-}
-- (void)reset{
-    [super reset];
-    subState = UIGestureRecognizerStatePossible;
-    liftedFingerOffset = 0;
-    panDirection = MMBezelDirectionNone;
-    firstKnownLocation = CGPointZero;
-    lastKnownLocation = CGPointZero;
-    [validTouches removeAllObjects];
-    [ignoredTouches removeAllObjects];
-}
--(void) setState:(UIGestureRecognizerState)state{
-    [super setState:state];
-}
-- (void) resetPageCount{
-    numberOfRepeatingBezels = 0;
-    [dateOfLastBezelEnding release];
-    dateOfLastBezelEnding = nil;
-}
-
 
 
 /**
@@ -374,32 +368,39 @@
     return averageVelocity.x; // velocity per fraction of a second
 }
 
-
-
-#pragma mark - UIGestureRecognizerDelegate
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return subState == UIGestureRecognizerStatePossible;
+-(BOOL) isActivelyBezeling{
+    return (self.state == UIGestureRecognizerStateBegan ||
+            self.state == UIGestureRecognizerStateChanged ||
+            self.state == UIGestureRecognizerStateEnded) &&
+    (self.subState == UIGestureRecognizerStateBegan ||
+     self.subState == UIGestureRecognizerStateChanged ||
+     self.subState == UIGestureRecognizerStateEnded);
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return subState != UIGestureRecognizerStatePossible;
-}
+#pragma mark - UIGestureRecognizer Subclass
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
     return NO;
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    // Disallow recognition of tap gestures in the segmented control.
-    if(gestureIsFromRightBezel){
-        // might need to work on this for the left as well??
-        if ([touch.view isKindOfClass:[MMBounceButton class]]) {
-            return NO;
-        }
-    }
-    return YES;
+- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
+    return NO;
 }
 
+- (void)reset{
+    [super reset];
+    self.subState = UIGestureRecognizerStatePossible;
+    liftedFingerOffset = 0;
+    panDirection = MMBezelDirectionNone;
+    firstKnownLocation = CGPointZero;
+    lastKnownLocation = CGPointZero;
+    [validTouches removeAllObjects];
+    [ignoredTouches removeAllObjects];
+}
+
+
+-(NSString*) description{
+    return [NSString stringWithFormat:@"[%@ %@ %p]", NSStringFromClass([self class]), gestureIsFromRightBezel ? @"right" : @"left", self];
+}
 
 @end

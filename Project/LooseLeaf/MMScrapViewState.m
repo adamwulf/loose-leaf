@@ -63,6 +63,11 @@
     
     // lock to control threading
     NSLock* lock;
+    
+    // YES if the file exists at the path, NO
+    // if it *might* exist
+    BOOL fileExistsAtInkPath;
+    BOOL fileExistsAtPlistPath;
 }
 
 #pragma mark - Properties
@@ -99,8 +104,12 @@
         // save our UUID, everything depends on this
         uuid = _uuid;
         
-        if([[NSFileManager defaultManager] fileExistsAtPath:self.plistPath]){
+        if([[NSFileManager defaultManager] fileExistsAtPath:self.plistPath] ||
+           [[NSFileManager defaultManager] fileExistsAtPath:self.bundledPlistPath]){
             NSDictionary* properties = [NSDictionary dictionaryWithContentsOfFile:self.plistPath];
+            if(!properties){
+                properties = [NSDictionary dictionaryWithContentsOfFile:self.bundledPlistPath];
+            }
             bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
             
             MMScrapBackgroundView* backingView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
@@ -189,6 +198,9 @@
                 [lock lock];
                 @autoreleasepool {
                     UIImage* thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
+                    if(!thumb){
+                        thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.bundledThumbImageFile];
+                    }
                     [self setActiveThumbnailImage:thumb];
                 }
                 [lock unlock];
@@ -282,7 +294,7 @@
                         }
                     }];
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-                    dispatch_release(sema1);
+//                    dispatch_release(sema1); ARC handles this
 //                    NSLog(@"(%@) done saving scrap: %d", uuid, (int)drawableView);
                     if(doneSavingBlock) doneSavingBlock(YES);
                 }else{
@@ -336,7 +348,7 @@
             // load state, if we have any.
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             // load drawable view information here
-            drawableViewState = [[JotViewStateProxy alloc] initWithInkPath:self.inkImageFile andPlistPath:self.stateFile];
+            drawableViewState = [[JotViewStateProxy alloc] initWithDelegate:self];
             [drawableViewState loadStateAsynchronously:NO
                                               withSize:[drawableView pagePixelSize]
                                             andContext:[drawableView context]
@@ -365,7 +377,7 @@
                 dispatch_semaphore_signal(sema1);
             }];
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-            dispatch_release(sema1);
+//            dispatch_release(sema1); ARC handles this
             [lock unlock];
         }
     };
@@ -410,7 +422,7 @@
                             dispatch_semaphore_signal(sema1);
                         }];
                         dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-                        dispatch_release(sema1);
+//                        dispatch_release(sema1); ARC handles this
                     }
                 }
             }
@@ -467,10 +479,32 @@
     return stateFile;
 }
 
+-(NSString*) bundledPlistPath{
+    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid] stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
+}
+
+-(NSString*) bundledInkImageFile{
+    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid] stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
+}
+
+-(NSString*) bundledThumbImageFile{
+    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid] stringByAppendingPathComponent:[@"thumb" stringByAppendingPathExtension:@"png"]];
+}
+
+-(NSString*) bundledStateFile{
+    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid] stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
+}
+
 #pragma mark - Private
 
 +(NSString*) scrapDirectoryPathForUUID:(NSString*)uuid{
     NSString* documentsPath = [NSFileManager documentsPath];
+    NSString* scrapPath = [[documentsPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
+    return scrapPath;
+}
+
++(NSString*) bundledScrapDirectoryPathForUUID:(NSString*)uuid{
+    NSString* documentsPath = [[NSBundle mainBundle] pathForResource:@"Documents" ofType:nil];
     NSString* scrapPath = [[documentsPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
     return scrapPath;
 }
@@ -491,6 +525,9 @@
         // debug_NSLog(@"trying to draw on an unloaded scrap");
     }
     [drawableView addElements:elements];
+}
+-(void) addUndoLevelAndFinishStroke{
+    [drawableView addUndoLevelAndFinishStroke];
 }
 
 -(JotView*) drawableView{
@@ -514,11 +551,48 @@
     [drawableView forceAddEmptyStroke];
 }
 
+#pragma mark - JotViewStateProxyDelegate
+
+// the state for the page and/or scrap might be a default
+// new user tutorial page. if that's the case, we want to
+// load the initial state from the bundle. pages will always
+// save to the user's document's directory.
+//
+// this method will make sure that if the user loads a default
+// page from the bundle, saves it, then reloads it -> then it
+// will be loaded from the documents directory instead of
+// reloaded from scratch from the bundle
+-(NSString*) jotViewStateInkPath{
+    if(fileExistsAtInkPath || [[NSFileManager defaultManager] fileExistsAtPath:self.inkImageFile]){
+        fileExistsAtInkPath = YES;
+        return self.inkImageFile;
+    }else{
+        return self.bundledInkImageFile;
+    }
+}
+
+-(NSString*) jotViewStatePlistPath{
+    if(fileExistsAtPlistPath || [[NSFileManager defaultManager] fileExistsAtPath:self.stateFile]){
+        fileExistsAtPlistPath = YES;
+        return self.stateFile;
+    }else{
+        return self.bundledStateFile;
+    }
+}
+
+-(void) didLoadState:(JotViewStateProxy *)state{
+    // noop
+}
+
+-(void) didUnloadState:(JotViewStateProxy *)state{
+    // noop
+}
+
 #pragma mark - dealloc
 
 -(void) dealloc{
     [[MMLoadImageCache sharedInstance] clearCacheForPath:self.thumbImageFile];
-    dispatch_release(importExportScrapStateQueue);
+//    dispatch_release(importExportScrapStateQueue); ARC handles this
     importExportScrapStateQueue = nil;
 }
 
