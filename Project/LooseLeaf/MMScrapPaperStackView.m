@@ -314,7 +314,7 @@
     
     UIImage* scrapBacking = [img resizedImage:CGSizeMake(ceilf(fullScale.width/2), ceilf(fullScale.height/2)) interpolationQuality:kCGInterpolationMedium];
     
-    MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
+    MMUndoablePaperView* topPage = [visibleStackHolder peekSubview];
     MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:0 andScale:startingScale];
     [scrapContainer addSubview:scrap];
     
@@ -363,6 +363,7 @@
                                           completion:^(BOOL finished){
                                               cameraView.alpha = 1;
                                               [topPage.scrapsOnPaperState showScrap:scrap];
+                                              [topPage addUndoItemForAddedScrap:scrap];
                                               [topPage saveToDisk];
                                           }];
                      }];
@@ -410,7 +411,7 @@
     
     UIImage* scrapBacking = [asset aspectThumbnailWithMaxPixelSize:300];
     
-    MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
+    MMUndoablePaperView* topPage = [visibleStackHolder peekSubview];
     MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:0 andScale:startingScale];
     [scrapContainer addSubview:scrap];
     
@@ -464,6 +465,7 @@
                                           completion:^(BOOL finished){
                                               bufferedImage.alpha = 1;
                                               [topPage.scrapsOnPaperState showScrap:scrap];
+                                              [topPage addUndoItemForAddedScrap:scrap];
                                               [topPage saveToDisk];
                                           }];
                      }];
