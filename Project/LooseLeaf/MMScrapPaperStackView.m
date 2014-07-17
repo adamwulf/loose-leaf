@@ -1674,4 +1674,10 @@ int skipAll = NO;
     return ![imagePicker isVisible];
 }
 
+#pragma mark - Check for Active Gestures
+
+-(BOOL) isActivelyGesturing{
+    return [super isActivelyGesturing] || panAndPinchScrapGesture.scrap || panAndPinchScrapGesture2.scrap || stretchScrapGesture.scrap;
+}
+
 @end

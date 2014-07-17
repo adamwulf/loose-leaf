@@ -68,4 +68,6 @@
 
 -(NSString*) activeGestureSummary;
 
+-(BOOL) isActivelyGesturing;
+
 @end

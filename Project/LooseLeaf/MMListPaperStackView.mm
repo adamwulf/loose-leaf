@@ -1587,4 +1587,11 @@
 -(BOOL) isShowingPageView{
     return isShowingPageView;
 }
+
+#pragma mark - Check for Active Gestures
+
+-(BOOL) isActivelyGesturing{
+    return [super isActivelyGesturing] || !isShowingPageView;
+}
+
 @end

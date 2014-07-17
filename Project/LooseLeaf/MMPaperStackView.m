@@ -1827,5 +1827,10 @@
     @throw kAbstractMethodException;
 }
 
+#pragma mark - Check for Active Gestures
+
+-(BOOL) isActivelyGesturing{
+    return [fromLeftBezelGesture isActivelyBezeling] || [fromRightBezelGesture isActivelyBezeling] || [setOfPagesBeingPanned count];
+}
 
 @end

@@ -295,15 +295,23 @@ struct SidebarButton{
 #pragma mark - Tool Button Actions
 
 -(void) undo:(UIButton*)_button{
-    MMUndoablePaperView* obj = [visibleStackHolder peekSubview];
-    [obj.undoRedoManager undo];
-    [obj saveToDisk];
+    if(![self isActivelyGesturing]){
+        // only allow undo/redo when no other gestures
+        // are active
+        MMUndoablePaperView* obj = [visibleStackHolder peekSubview];
+        [obj.undoRedoManager undo];
+        [obj saveToDisk];
+    }
 }
 
 -(void) redo:(UIButton*)_button{
-    MMUndoablePaperView* obj = [visibleStackHolder peekSubview];
-    [obj.undoRedoManager redo];
-    [obj saveToDisk];
+    if(![self isActivelyGesturing]){
+        // only allow undo/redo when no other gestures
+        // are active
+        MMUndoablePaperView* obj = [visibleStackHolder peekSubview];
+        [obj.undoRedoManager redo];
+        [obj saveToDisk];
+    }
 }
 
 -(void) eraserTapped:(UIButton*)_button{
@@ -931,7 +939,6 @@ struct SidebarButton{
     if([self shouldPrioritizeSidebarButtonsForTaps]){
         for(int i=0;i<10;i++){
             if(CGRectContainsPoint(buttons[i].originalRect, point)){
-                NSLog(@"point %f %f maps to %@", point.x, point.y, buttons[i].button);
                 return (__bridge UIView*) buttons[i].button;
             }
         }
@@ -939,5 +946,10 @@ struct SidebarButton{
     return [super hitTest:point withEvent:event];
 }
 
+#pragma mark - Check for Active Gestures
+
+-(BOOL) isActivelyGesturing{
+    return [super isActivelyGesturing] || [[MMDrawingTouchGestureRecognizer sharedInstace] isDrawing];
+}
 
 @end

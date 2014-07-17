@@ -25,4 +25,6 @@
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 
+-(BOOL) isDrawing;
+
 @end
