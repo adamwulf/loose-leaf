@@ -79,6 +79,7 @@ static dispatch_queue_t importExportStateQueue;
                 
                 // load all the states async
                 for(NSDictionary* scrapProperties in scrapProps){
+                    // TODO: https://github.com/adamwulf/loose-leaf/issues/604
                     MMScrapsOnPaperState* pageStateForScrap = [self.delegate paperStateForPageUUID:[scrapProperties objectForKey:@"pageUUID"]];
                     MMScrapViewState* state = [[MMScrapViewState alloc] initWithUUID:[scrapProperties objectForKey:@"uuid"] andPaperState:pageStateForScrap];
                     if(state){

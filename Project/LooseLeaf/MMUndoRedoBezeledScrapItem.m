@@ -66,10 +66,10 @@
 -(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page{
     NSDictionary* _properties = [dict objectForKey:@"propertiesWhenRemoved"];
     NSString* _scrapUUID = [dict objectForKey:@"scrapUUID"];
-    sidebarEverDidContainScrap = [[dict objectForKey:@"sidebarEverDidContainScrap"] boolValue];
     
     if(self = [self initForPage:_page andScrapUUID:_scrapUUID andProperties:_properties]){
         canUndo = [[dict objectForKey:@"canUndo"] boolValue];
+        sidebarEverDidContainScrap = [[dict objectForKey:@"sidebarEverDidContainScrap"] boolValue];
     }
     return self;
 }

@@ -1480,7 +1480,7 @@ int skipAll = NO;
 }
 
 // returns the page that the scrap was added to
--(MMUndoablePaperView*) didAddScrapBackToPage:(MMScrapView *)scrap{
+-(MMUndoablePaperView*) didAddScrapBackToPage:(MMScrapView *)scrap atIndex:(NSUInteger)index{
     // first, find the page to add the scrap to.
     // this will check visible + bezelled pages to see
     // which page should get the scrap, and it'll tell us
@@ -1502,7 +1502,11 @@ int skipAll = NO;
             [oldScrap removeFromSuperview];
         }
         // ok, done, just set it
-        [page.scrapsOnPaperState showScrap:scrapToAddToPage];
+        if(index == NSNotFound){
+            [page.scrapsOnPaperState showScrap:scrapToAddToPage];
+        }else{
+            [page.scrapsOnPaperState showScrap:scrapToAddToPage atIndex:index];
+        }
         scrapToAddToPage.center = center;
         scrapToAddToPage.scale = scale;
         [page saveToDisk];

@@ -347,7 +347,11 @@
     [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         [scrap setPropertiesDictionary:properties];
     } completion:^(BOOL finished){
-        MMUndoablePaperView* page = [self.bubbleDelegate didAddScrapBackToPage:scrap];
+        NSUInteger index = NSNotFound;
+        if([properties objectForKey:@"subviewIndex"]){
+            index = [[properties objectForKey:@"subviewIndex"] unsignedIntegerValue];
+        }
+        MMUndoablePaperView* page = [self.bubbleDelegate didAddScrapBackToPage:scrap atIndex:index];
         [scrap blockToFireWhenStateLoads:^{
             if(!hadProperties){
                 NSLog(@"tapped on scrap from sidebar. should add undo item to page %@", page.uuid);
