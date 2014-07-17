@@ -10,8 +10,8 @@
 
 @interface MMUndoRedoAddScrapFromBezelItem : MMUndoRedoPageItem
 
-+(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap;
++(id) itemForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)scrapUUID andProperties:(NSDictionary*)scrapProperties;
 
--(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)_scrap;
+-(id) initForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)scrapUUID andProperties:(NSDictionary*)scrapProperties;
 
 @end

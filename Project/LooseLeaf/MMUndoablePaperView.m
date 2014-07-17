@@ -177,7 +177,7 @@
         scrap = scrapFromBezel;
     }
     NSLog(@"adding undo item for %@", scrap.uuid);
-    [self.undoRedoManager addUndoItem:[MMUndoRedoAddScrapFromBezelItem itemForPage:self andScrap:scrap]];
+    [self.undoRedoManager addUndoItem:[MMUndoRedoAddScrapFromBezelItem itemForPage:self andScrapUUID:scrap.uuid andProperties:[scrap propertiesDictionary]]];
 }
 
 -(MMScissorResult*) completeScissorsCutWithPath:(UIBezierPath *)scissorPath{
