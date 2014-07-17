@@ -99,13 +99,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
         if(scrapsOnPaperState.isStateLoaded){
             // if we're loaded, then show the scraps and
             // only the ink thumbnail
-            [self setThumbnailTo:[self cachedImgViewImage]];
             scrapContainerView.hidden = NO;
+            [self setThumbnailTo:[self cachedImgViewImage]];
         }else{
             // otherwise, show the scrapped thumbnail
             // and hide teh scrap container
-            [self setThumbnailTo:[self scrappedImgViewImage]];
             scrapContainerView.hidden = YES;
+            [self setThumbnailTo:[self scrappedImgViewImage]];
         }
     }
 }
@@ -905,16 +905,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
     
     // get a UIImage from the image context- enjoy!!!
     UIImage* generatedScrappedThumbnailImage = UIGraphicsGetImageFromCurrentImageContext();
-    NSLog(@"setting new thumbnail to %p for %@", generatedScrappedThumbnailImage, self.uuid);
     scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForDecompressedImage:generatedScrappedThumbnailImage andDelegate:self];
     [[MMLoadImageCache sharedInstance] updateCacheForPath:[self scrappedThumbnailPath] toImage:scrappedImgViewImage.image];
     [[NSThread mainThread] performBlock:^{
-        NSLog(@"setting scrapped thumbnail for %@", self.uuid);
         [self didDecompressImage:scrappedImgViewImage];
     }];
     
     [UIImagePNGRepresentation(scrappedImgViewImage.image) writeToFile:[self scrappedThumbnailPath] atomically:YES];
-    NSLog(@"wrote scrapped thumbnail for %@", self.uuid);
     definitelyDoesNotHaveAScrappedThumbnail = NO;
     
     // clean up drawing environment
@@ -925,7 +922,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) setThumbnailTo:(UIImage*)img{
     CheckMainThread;
     @autoreleasepool {
-        NSLog(@"setting thumbnail (%p, %p) for %@", cachedImgView, img, self.uuid);
         // create the cache thumbnail view
         if(!cachedImgView && img){
             cachedImgView = [[MMCachedPreviewManager sharedInstace] requestCachedImageViewForView:self];
@@ -943,7 +939,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
             cachedImgView.image = img;
             cachedImgView.hidden = !scrapContainerView.hidden;
         }
-        NSLog(@"cachedImgView.hidden = %d for %@", cachedImgView.hidden, self.uuid);
     }
 }
 
@@ -1041,21 +1036,26 @@ static dispatch_queue_t concurrentBackgroundQueue;
     });
 }
 
+// this method will load the scrapsOnPaperState, run
+// the input block that requires the loaded state,
+// and then will save and unload the scrapsOnPaper state
+//
+// this allows us to drop scraps onto pages that don't
+// have their scrapsOnPaperState loaded
 -(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block{
-    NSLog(@"performing block for page %@", self.uuid);
+    if([scrapsOnPaperState isStateLoaded]){
+        @throw [NSException exceptionWithName:@"LoadedStateForUnloadedBlockException" reason:@"Cannot run block on unloaded state when state is already loaded" userInfo:nil];
+    }
     if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
         [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.scrapIDsPath andMakeEditable:YES];
     }else{
         [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.bundledScrapIDsPath andMakeEditable:YES];
     }
-    NSLog(@"scrap state loaded for page %@", self.uuid);
     block();
-    NSLog(@"block finished for page %@", self.uuid);
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
             MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
             [immutableScrapState saveStateToDiskBlocking];
-            NSLog(@"immutable state saved for %@", self.uuid);
             [self updateFullPageThumbnail:immutableScrapState];
             [scrapsOnPaperState unload];
         }
@@ -1084,7 +1084,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
-    NSLog(@"did unload all scraps for %@", self.uuid);
     scrapContainerView.hidden = YES;
     [self didDecompressImage:scrappedImgViewImage];
 }
