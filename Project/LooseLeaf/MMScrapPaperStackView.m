@@ -1666,4 +1666,12 @@ int skipAll = NO;
 }
 
 
+#pragma mark - Hit Test
+
+// MMEditablePaperStackView calls this method to check
+// if the sidebar buttons should take priority over anything else
+-(BOOL) shouldPrioritizeSidebarButtonsForTaps{
+    return ![imagePicker isVisible];
+}
+
 @end

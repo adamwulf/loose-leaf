@@ -923,11 +923,17 @@ struct SidebarButton{
 
 #pragma mark - Sidebar Hit Test
 
+-(BOOL) shouldPrioritizeSidebarButtonsForTaps{
+    return YES;
+}
+
 -(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
-    for(int i=0;i<10;i++){
-        if(CGRectContainsPoint(buttons[i].originalRect, point)){
-            NSLog(@"point %f %f maps to %@", point.x, point.y, buttons[i].button);
-            return (__bridge UIView*) buttons[i].button;
+    if([self shouldPrioritizeSidebarButtonsForTaps]){
+        for(int i=0;i<10;i++){
+            if(CGRectContainsPoint(buttons[i].originalRect, point)){
+                NSLog(@"point %f %f maps to %@", point.x, point.y, buttons[i].button);
+                return (__bridge UIView*) buttons[i].button;
+            }
         }
     }
     return [super hitTest:point withEvent:event];

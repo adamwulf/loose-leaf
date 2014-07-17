@@ -29,7 +29,7 @@
     __weak MMUndoablePaperView* weakPage = _page;
     propertiesWhenAdded = properties;
     scrap = _scrap;
-    if(!propertiesWhenAdded){
+    if(!propertiesWhenAdded || !_scrap){
         propertiesWhenAdded = [_scrap propertiesDictionary];
         @throw [NSException exceptionWithName:@"InvalidUndoItem" reason:@"Undo Item must have scrap properties" userInfo:nil];
     }
