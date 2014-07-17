@@ -160,7 +160,7 @@
 }
 
 -(void) addUndoItemForBezeledScrap:(MMScrapView*)scrap withProperties:(NSDictionary*)scrapProperties{
-    [self.undoRedoManager addUndoItem:[MMUndoRedoBezeledScrapItem itemForPage:self andScrap:scrap andProperties:scrapProperties]];
+    [self.undoRedoManager addUndoItem:[MMUndoRedoBezeledScrapItem itemForPage:self andScrapUUID:scrap.uuid andProperties:scrapProperties]];
 }
 
 -(void) addUndoItemForAddedScrap:(MMScrapView*)scrap{

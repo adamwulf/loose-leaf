@@ -12,35 +12,37 @@
 
 @implementation MMUndoRedoBezeledScrapItem{
     NSDictionary* propertiesWhenRemoved;
-    MMScrapView* scrap;
+    NSString* scrapUUID;
     BOOL sidebarEverDidContainScrap;
 }
 
-+(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap andProperties:(NSDictionary*)scrapProperties{
-    return [[MMUndoRedoBezeledScrapItem alloc] initForPage:_page andScrap:scrap andProperties:scrapProperties];
++(id) itemForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)scrapUUID andProperties:(NSDictionary*)scrapProperties{
+    return [[MMUndoRedoBezeledScrapItem alloc] initForPage:_page andScrapUUID:scrapUUID andProperties:scrapProperties];
 }
 
--(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)_scrap andProperties:(NSDictionary*)scrapProperties{
-    __weak MMUndoablePaperView* weakPage = _page;
+-(id) initForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)_scrapUUID andProperties:(NSDictionary*)scrapProperties{
     sidebarEverDidContainScrap = NO;
-    scrap = _scrap;
+    scrapUUID = _scrapUUID;
     propertiesWhenRemoved = scrapProperties;
+    __weak MMUndoRedoBezeledScrapItem* weakSelf = self;
     if(self = [super initWithUndoBlock:^{
-        if([weakPage.bezelContainerView containsScrap:scrap]){
+        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:scrapUUID];
+        if([weakSelf.page.bezelContainerView containsScrap:scrap]){
             sidebarEverDidContainScrap = YES;
-            [weakPage.bezelContainerView didTapOnScrapFromMenu:scrap withPreferredScrapProperties:scrapProperties];
+            [weakSelf.page.bezelContainerView didTapOnScrapFromMenu:scrap withPreferredScrapProperties:scrapProperties];
         }else{
             sidebarEverDidContainScrap = NO;
-            [weakPage.scrapsOnPaperState showScrap:scrap];
+            [weakSelf.page.scrapsOnPaperState showScrap:scrap];
             [scrap setPropertiesDictionary:propertiesWhenRemoved];
             NSUInteger subviewIndex = [[propertiesWhenRemoved objectForKey:@"subviewIndex"] unsignedIntegerValue];
             [scrap.superview insertSubview:scrap atIndex:subviewIndex];
         }
     } andRedoBlock:^{
+        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:scrapUUID];
         if(sidebarEverDidContainScrap){
-            [weakPage.bezelContainerView addScrapToBezelSidebar:scrap animated:YES];
+            [weakSelf.page.bezelContainerView addScrapToBezelSidebar:scrap animated:YES];
         }else{
-            [weakPage.scrapsOnPaperState hideScrap:scrap];
+            [weakSelf.page.scrapsOnPaperState hideScrap:scrap];
         }
     } forPage:_page]){
         // noop
@@ -55,7 +57,7 @@
     NSMutableDictionary* propertiesDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:NSStringFromClass([self class]), @"class",
                                                  [NSNumber numberWithBool:self.canUndo], @"canUndo", nil];
     [propertiesDictionary setObject:propertiesWhenRemoved forKey:@"propertiesWhenRemoved"];
-    [propertiesDictionary setObject:scrap.uuid forKey:@"scrap.uuid"];
+    [propertiesDictionary setObject:scrapUUID forKey:@"scrapUUID"];
     [propertiesDictionary setObject:[NSNumber numberWithBool:sidebarEverDidContainScrap] forKey:@"sidebarEverDidContainScrap"];
     
     return propertiesDictionary;
@@ -63,11 +65,10 @@
 
 -(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page{
     NSDictionary* _properties = [dict objectForKey:@"propertiesWhenRemoved"];
-    NSString* scrapUUID = [dict objectForKey:@"scrap.uuid"];
+    NSString* _scrapUUID = [dict objectForKey:@"scrapUUID"];
     sidebarEverDidContainScrap = [[dict objectForKey:@"sidebarEverDidContainScrap"] boolValue];
-    MMScrapView* _scrap = [_page.scrapsOnPaperState scrapForUUID:scrapUUID];
     
-    if(self = [self initForPage:_page andScrap:_scrap andProperties:_properties]){
+    if(self = [self initForPage:_page andScrapUUID:_scrapUUID andProperties:_properties]){
         canUndo = [[dict objectForKey:@"canUndo"] boolValue];
     }
     return self;
@@ -76,7 +77,7 @@
 #pragma mark - Description
 
 -(NSString*) description{
-    return [NSString stringWithFormat:@"[%@ %@]", NSStringFromClass([self class]), scrap.uuid];
+    return [NSString stringWithFormat:@"[%@ %@]", NSStringFromClass([self class]), scrapUUID];
 }
 
 @end
