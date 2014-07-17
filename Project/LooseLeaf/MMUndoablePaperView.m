@@ -152,7 +152,7 @@
 #pragma mark - Methods That Trigger Undo
 
 -(void) addUndoItemForScrap:(MMScrapView*)scrap thatMovedFrom:(NSDictionary*)startProperties to:(NSDictionary*)endProperties{
-    [self.undoRedoManager addUndoItem:[MMUndoRedoMoveScrapItem itemForPage:self andScrap:scrap from:startProperties to:endProperties]];
+    [self.undoRedoManager addUndoItem:[MMUndoRedoMoveScrapItem itemForPage:self andScrapUUID:scrap.uuid from:startProperties to:endProperties]];
 }
 
 -(void) addUndoItemForRemovedScrap:(MMScrapView*)scrap withProperties:(NSDictionary*)scrapProperties{

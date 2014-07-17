@@ -19,18 +19,18 @@
 }
 
 -(id) initForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)_scrapUUID andProperties:(NSDictionary*)scrapProperties{
-    __weak MMUndoablePaperView* weakPage = _page;
     scrapUUID = _scrapUUID;
     propertiesWhenRemoved = scrapProperties;
+    __weak MMUndoRedoRemoveScrapItem* weakSelf = self;
     if(self = [super initWithUndoBlock:^{
-        MMScrapView* scrap = [weakPage.scrapsOnPaperState scrapForUUID:scrapUUID];
-        [weakPage.scrapsOnPaperState showScrap:scrap];
+        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:scrapUUID];
+        [weakSelf.page.scrapsOnPaperState showScrap:scrap];
         [scrap setPropertiesDictionary:propertiesWhenRemoved];
         NSUInteger subviewIndex = [[propertiesWhenRemoved objectForKey:@"subviewIndex"] unsignedIntegerValue];
         [scrap.superview insertSubview:scrap atIndex:subviewIndex];
     } andRedoBlock:^{
-        MMScrapView* scrap = [weakPage.scrapsOnPaperState scrapForUUID:scrapUUID];
-        [weakPage.scrapsOnPaperState hideScrap:scrap];
+        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:scrapUUID];
+        [weakSelf.page.scrapsOnPaperState hideScrap:scrap];
     } forPage:_page]){
         // noop
     };

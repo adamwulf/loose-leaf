@@ -22,19 +22,19 @@
 }
 
 -(id) initForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)_scrapUUID andProperties:(NSDictionary*)properties{
-    __weak MMUndoablePaperView* weakPage = _page;
     propertiesWhenAdded = properties;
     scrapUUID = _scrapUUID;
     if(!propertiesWhenAdded || !scrapUUID){
         @throw [NSException exceptionWithName:@"InvalidUndoItem" reason:@"Undo Item must have scrap properties" userInfo:nil];
     }
+    __weak MMUndoRedoAddScrapItem* weakSelf = self;
     if(self = [super initWithUndoBlock:^{
-        MMScrapView* scrap = [weakPage.scrapsOnPaperState scrapForUUID:scrapUUID];
-        [weakPage.scrapsOnPaperState hideScrap:scrap];
+        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:scrapUUID];
+        [weakSelf.page.scrapsOnPaperState hideScrap:scrap];
     } andRedoBlock:^{
-        MMScrapView* scrap = [weakPage.scrapsOnPaperState scrapForUUID:scrapUUID];
+        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:scrapUUID];
         NSUInteger subviewIndex = [[propertiesWhenAdded objectForKey:@"subviewIndex"] unsignedIntegerValue];
-        [weakPage.scrapsOnPaperState showScrap:scrap atIndex:subviewIndex];
+        [weakSelf.page.scrapsOnPaperState showScrap:scrap atIndex:subviewIndex];
         [scrap setPropertiesDictionary:propertiesWhenAdded];
     } forPage:_page]){
         // noop
