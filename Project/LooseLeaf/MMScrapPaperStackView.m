@@ -1642,25 +1642,37 @@ int skipAll = NO;
     // scale, so it would transform the path to a 1.0 scale before adding the scrap. this would result in incorrect
     // resolution for the new scrap. so set the rotation to make sure we're getting the smallest bounding
     // box, and we'll set the scrap's scale to match after we add it to the page.
-    MMScrapView* clonedScrap = [page.scrapsOnPaperState addScrapWithPath:[scrap.bezierPath copy] andRotation:scrap.rotation andScale:1.0];
-    clonedScrap.scale = scrap.scale;
-    [scrapContainer addSubview:clonedScrap];
     
-    // next match it's location exactly on top of the original scrap:
-    [UIView setAnchorPoint:scrap.layer.anchorPoint forView:clonedScrap];
-    clonedScrap.center = scrap.center;
+    BOOL needsStateLoading = ![page.scrapsOnPaperState isStateLoaded];
+    __block MMScrapView* clonedScrap = nil;
     
-    // next, clone the contents onto the new scrap. at this point i have a duplicate scrap
-    // but it's in the wrong place.
-    [clonedScrap stampContentsFrom:scrap.state.drawableView];
+    void(^block)() = ^{
+        clonedScrap = [page.scrapsOnPaperState addScrapWithPath:[scrap.bezierPath copy] andRotation:scrap.rotation andScale:1.0];
+        clonedScrap.scale = scrap.scale;
+        [scrapContainer addSubview:clonedScrap];
+        
+        // next match it's location exactly on top of the original scrap:
+        [UIView setAnchorPoint:scrap.layer.anchorPoint forView:clonedScrap];
+        clonedScrap.center = scrap.center;
+        
+        // next, clone the contents onto the new scrap. at this point i have a duplicate scrap
+        // but it's in the wrong place.
+        [clonedScrap stampContentsFrom:scrap.state.drawableView];
+        
+        // clone background contents too
+        [clonedScrap setBackgroundView:[scrap.backgroundView duplicateFor:clonedScrap.state]];
+        
+        // set the scrap anchor to its center
+        [UIView setAnchorPoint:CGPointMake(.5, .5) forView:clonedScrap];
+        
+        NSLog(@"clone scrap %@ into %@", scrap.uuid, clonedScrap.uuid);
+    };
     
-    // clone background contents too
-    [clonedScrap setBackgroundView:[scrap.backgroundView duplicateFor:clonedScrap.state]];
-    
-    // set the scrap anchor to its center
-    [UIView setAnchorPoint:CGPointMake(.5, .5) forView:clonedScrap];
-
-    NSLog(@"clone scrap %@ into %@", scrap.uuid, clonedScrap.uuid);
+    if(needsStateLoading){
+        [page performBlockForUnloadedScrapStateSynchronously:block];
+    }else{
+        block();
+    }
     
     return clonedScrap;
 }

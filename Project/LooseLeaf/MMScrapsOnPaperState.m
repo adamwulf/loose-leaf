@@ -208,13 +208,10 @@ static dispatch_queue_t importExportStateQueue;
     @synchronized(delegate.scrapContainerView){
         [delegate.scrapContainerView addSubview:scrap];
     }
-    NSLog(@"scrap set to %d when showing", delegate.isEditable);
     [scrap setShouldShowShadow:delegate.isEditable];
     if(isLoaded){
-        NSLog(@"loading scrap state after showing");
         [scrap loadScrapStateAsynchronously:YES];
     }else{
-        NSLog(@"unloaded unnecessary state after showing");
         [scrap unloadState];
     }
 }

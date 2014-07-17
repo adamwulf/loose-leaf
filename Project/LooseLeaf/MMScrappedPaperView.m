@@ -899,19 +899,22 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // this example draws the inputImage into the context
     [thumb drawInRect:CGRectMake(0, 0, thumbSize.width, thumbSize.height)];
     
-    
     for(MMScrapView* scrap in immutableScrapState.scraps){
         [self drawScrap:scrap intoContext:context withSize:thumbSize];
     }
     
     // get a UIImage from the image context- enjoy!!!
-    scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForDecompressedImage:UIGraphicsGetImageFromCurrentImageContext() andDelegate:self];
+    UIImage* generatedScrappedThumbnailImage = UIGraphicsGetImageFromCurrentImageContext();
+    NSLog(@"setting new thumbnail to %p for %@", generatedScrappedThumbnailImage, self.uuid);
+    scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForDecompressedImage:generatedScrappedThumbnailImage andDelegate:self];
     [[MMLoadImageCache sharedInstance] updateCacheForPath:[self scrappedThumbnailPath] toImage:scrappedImgViewImage.image];
     [[NSThread mainThread] performBlock:^{
+        NSLog(@"setting scrapped thumbnail for %@", self.uuid);
         [self didDecompressImage:scrappedImgViewImage];
     }];
     
     [UIImagePNGRepresentation(scrappedImgViewImage.image) writeToFile:[self scrappedThumbnailPath] atomically:YES];
+    NSLog(@"wrote scrapped thumbnail for %@", self.uuid);
     definitelyDoesNotHaveAScrappedThumbnail = NO;
     
     // clean up drawing environment
@@ -920,7 +923,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) setThumbnailTo:(UIImage*)img{
+    CheckMainThread;
     @autoreleasepool {
+        NSLog(@"setting thumbnail (%p, %p) for %@", cachedImgView, img, self.uuid);
         // create the cache thumbnail view
         if(!cachedImgView && img){
             cachedImgView = [[MMCachedPreviewManager sharedInstace] requestCachedImageViewForView:self];
@@ -936,7 +941,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
             cachedImgView = nil;
         }else if(img){
             cachedImgView.image = img;
+            cachedImgView.hidden = !scrapContainerView.hidden;
         }
+        NSLog(@"cachedImgView.hidden = %d for %@", cachedImgView.hidden, self.uuid);
     }
 }
 
@@ -1034,6 +1041,27 @@ static dispatch_queue_t concurrentBackgroundQueue;
     });
 }
 
+-(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block{
+    NSLog(@"performing block for page %@", self.uuid);
+    if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
+        [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.scrapIDsPath andMakeEditable:YES];
+    }else{
+        [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.bundledScrapIDsPath andMakeEditable:YES];
+    }
+    NSLog(@"scrap state loaded for page %@", self.uuid);
+    block();
+    NSLog(@"block finished for page %@", self.uuid);
+    dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
+        @autoreleasepool {
+            MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
+            [immutableScrapState saveStateToDiskBlocking];
+            NSLog(@"immutable state saved for %@", self.uuid);
+            [self updateFullPageThumbnail:immutableScrapState];
+            [scrapsOnPaperState unload];
+        }
+    });
+}
+
 -(BOOL) hasStateLoaded{
     return [super hasStateLoaded];
 }
@@ -1051,13 +1079,14 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
     // check to see if we've also loaded
     [self didLoadState:self.paperState];
-    [self setThumbnailTo:[self cachedImgViewImage]];
     scrapContainerView.hidden = NO;
+    [self setThumbnailTo:[self cachedImgViewImage]];
 }
 
 -(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
-    [self didDecompressImage:scrappedImgViewImage];
+    NSLog(@"did unload all scraps for %@", self.uuid);
     scrapContainerView.hidden = YES;
+    [self didDecompressImage:scrappedImgViewImage];
 }
 
 /**

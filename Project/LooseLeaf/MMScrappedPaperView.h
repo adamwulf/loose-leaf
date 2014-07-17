@@ -49,4 +49,6 @@
 
 -(void) addUndoLevelAndContinueStroke;
 
+-(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block;
+
 @end
