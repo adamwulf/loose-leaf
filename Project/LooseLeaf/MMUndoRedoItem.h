@@ -24,7 +24,7 @@
 
 -(NSDictionary*) asDictionary;
 
--(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)page withUndoRedoManager:(MMPageUndoRedoManager*)undoRedoManager;
+-(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)page;
 
 -(BOOL) shouldMergeWith:(NSObject<MMUndoRedoItem>*)otherItem;
 

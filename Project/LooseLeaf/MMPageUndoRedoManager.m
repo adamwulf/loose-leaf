@@ -151,7 +151,7 @@
                 [stackOfUndoneItems addObjectsFromArray:[loadedUndoneItems mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
                     NSString* className = [obj objectForKey:@"class"];
                     Class class = NSClassFromString(className);
-                    return [[class alloc] initFromDictionary:obj forPage:page withUndoRedoManager:self];
+                    return [[class alloc] initFromDictionary:obj forPage:page];
                 }]];
             }
             
@@ -159,7 +159,7 @@
                 [stackOfUndoableItems addObjectsFromArray:[loadedUndoableItems mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
                     NSString* className = [obj objectForKey:@"class"];
                     Class class = NSClassFromString(className);
-                    return [[class alloc] initFromDictionary:obj forPage:page withUndoRedoManager:self];
+                    return [[class alloc] initFromDictionary:obj forPage:page];
                 }]];
             }
             hasEditsToSave = NO;

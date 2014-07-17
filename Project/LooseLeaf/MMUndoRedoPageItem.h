@@ -17,8 +17,8 @@
 @property (readonly) MMUndoablePaperView* page;
 @property (readonly) MMPageUndoRedoManager* undoRedoManager;
 
-+(id) itemWithUndoBlock:(void(^)())undoBlock andRedoBlock:(void(^)())redoBlock forPage:(MMUndoablePaperView*)page withUndoManager:(MMPageUndoRedoManager*)undoManager;
++(id) itemWithUndoBlock:(void(^)())undoBlock andRedoBlock:(void(^)())redoBlock forPage:(MMUndoablePaperView*)page;
 
-- (id) initWithUndoBlock:(void(^)())undoBlock andRedoBlock:(void(^)())redoBlock forPage:(MMUndoablePaperView*)page withUndoManager:(MMPageUndoRedoManager*)undoManager;
+- (id) initWithUndoBlock:(void(^)())undoBlock andRedoBlock:(void(^)())redoBlock forPage:(MMUndoablePaperView*)page;
 
 @end

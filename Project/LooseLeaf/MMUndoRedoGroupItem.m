@@ -13,11 +13,11 @@
     NSArray* undoableItems;
 }
 
-+(id) itemForPage:(MMUndoablePaperView *)_page withItems:(NSArray *)undoableItems withUndoManager:(MMPageUndoRedoManager*)undoManager{
-    return [[MMUndoRedoGroupItem alloc] initForPage:_page withItems:undoableItems withUndoManager:undoManager];
++(id) itemForPage:(MMUndoablePaperView *)_page withItems:(NSArray *)undoableItems{
+    return [[MMUndoRedoGroupItem alloc] initForPage:_page withItems:undoableItems];
 }
 
--(id) initForPage:(MMUndoablePaperView *)_page withItems:(NSArray *)_undoableItems withUndoManager:(MMPageUndoRedoManager*)undoManager{
+-(id) initForPage:(MMUndoablePaperView *)_page withItems:(NSArray *)_undoableItems{
     if(self = [super initWithUndoBlock:^{
         for(NSObject<MMUndoRedoItem>*obj in undoableItems){
             [obj undo];
@@ -26,7 +26,7 @@
         for(NSObject<MMUndoRedoItem>*obj in [undoableItems reverseObjectEnumerator]){
             [obj redo];
         }
-    } forPage:_page withUndoManager:undoManager]){
+    } forPage:_page]){
         // noop
         undoableItems = _undoableItems;
     };
@@ -46,14 +46,14 @@
             nil];
 }
 
--(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page withUndoRedoManager:(MMPageUndoRedoManager*)undoManager{
+-(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page{
     NSArray* undoItems = [dict objectForKey:@"undoItems"];
     undoItems = [undoItems mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
         NSString* className = [obj objectForKey:@"class"];
         Class class = NSClassFromString(className);
-        return [[class alloc] initFromDictionary:obj forPage:_page withUndoRedoManager:undoManager];
+        return [[class alloc] initFromDictionary:obj forPage:_page];
     }];
-    if(self = [self initForPage:_page withItems:undoItems withUndoManager:undoManager]){
+    if(self = [self initForPage:_page withItems:undoItems]){
         canUndo = [[dict objectForKey:@"canUndo"] boolValue];
     }
     return self;

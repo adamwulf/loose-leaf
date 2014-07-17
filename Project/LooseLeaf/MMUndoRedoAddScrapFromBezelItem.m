@@ -15,11 +15,11 @@
     NSDictionary* properties;
 }
 
-+(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap withUndoManager:(MMPageUndoRedoManager*)undoManager{
-    return [[MMUndoRedoAddScrapFromBezelItem alloc] initForPage:_page andScrap:scrap withUndoManager:undoManager];
++(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap{
+    return [[MMUndoRedoAddScrapFromBezelItem alloc] initForPage:_page andScrap:scrap];
 }
 
--(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)_scrap withUndoManager:(MMPageUndoRedoManager*)undoManager{
+-(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)_scrap{
     __weak MMUndoablePaperView* weakPage = _page;
     scrap = _scrap;
     properties = [scrap propertiesDictionary];
@@ -27,7 +27,7 @@
         [weakPage.bezelContainerView addScrapToBezelSidebar:scrap animated:YES];
     } andRedoBlock:^{
         [weakPage.bezelContainerView didTapOnScrapFromMenu:scrap withPreferredScrapProperties:properties];
-    } forPage:_page withUndoManager:undoManager]){
+    } forPage:_page]){
         // noop
     };
     return self;
@@ -45,11 +45,11 @@
     return propertiesDictionary;
 }
 
--(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page withUndoRedoManager:(MMPageUndoRedoManager*)undoRedoManager{
+-(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page{
     NSString* scrapUUID = [dict objectForKey:@"scrap.uuid"];
-    MMScrapView* _scrap = [undoRedoManager.scrapsOnPaperState scrapForUUID:scrapUUID];
+    MMScrapView* _scrap = [_page.scrapsOnPaperState scrapForUUID:scrapUUID];
     NSDictionary* propertiesInDict = [dict objectForKey:@"properties"];
-    if(self = [self initForPage:_page andScrap:_scrap withUndoManager:undoRedoManager]){
+    if(self = [self initForPage:_page andScrap:_scrap]){
         canUndo = [[dict objectForKey:@"canUndo"] boolValue];
         properties = propertiesInDict;
     }

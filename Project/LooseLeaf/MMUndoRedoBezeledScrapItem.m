@@ -16,11 +16,11 @@
     BOOL sidebarEverDidContainScrap;
 }
 
-+(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap andProperties:(NSDictionary*)scrapProperties withUndoManager:(MMPageUndoRedoManager*)undoManager{
-    return [[MMUndoRedoBezeledScrapItem alloc] initForPage:_page andScrap:scrap andProperties:scrapProperties withUndoManager:undoManager];
++(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap andProperties:(NSDictionary*)scrapProperties{
+    return [[MMUndoRedoBezeledScrapItem alloc] initForPage:_page andScrap:scrap andProperties:scrapProperties];
 }
 
--(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)_scrap andProperties:(NSDictionary*)scrapProperties withUndoManager:(MMPageUndoRedoManager*)undoManager{
+-(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)_scrap andProperties:(NSDictionary*)scrapProperties{
     __weak MMUndoablePaperView* weakPage = _page;
     sidebarEverDidContainScrap = NO;
     scrap = _scrap;
@@ -42,7 +42,7 @@
         }else{
             [weakPage.scrapsOnPaperState hideScrap:scrap];
         }
-    } forPage:_page withUndoManager:undoManager]){
+    } forPage:_page]){
         // noop
     };
     return self;
@@ -61,13 +61,13 @@
     return propertiesDictionary;
 }
 
--(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page withUndoRedoManager:(MMPageUndoRedoManager*)undoRedoManager{
+-(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page{
     NSDictionary* _properties = [dict objectForKey:@"propertiesWhenRemoved"];
     NSString* scrapUUID = [dict objectForKey:@"scrap.uuid"];
     sidebarEverDidContainScrap = [[dict objectForKey:@"sidebarEverDidContainScrap"] boolValue];
-    MMScrapView* _scrap = [undoRedoManager.scrapsOnPaperState scrapForUUID:scrapUUID];
+    MMScrapView* _scrap = [_page.scrapsOnPaperState scrapForUUID:scrapUUID];
     
-    if(self = [self initForPage:_page andScrap:_scrap andProperties:_properties withUndoManager:undoRedoManager]){
+    if(self = [self initForPage:_page andScrap:_scrap andProperties:_properties]){
         canUndo = [[dict objectForKey:@"canUndo"] boolValue];
     }
     return self;
