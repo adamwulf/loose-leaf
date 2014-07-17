@@ -65,7 +65,7 @@
 
 -(BOOL) shouldMergeWith:(NSObject<MMUndoRedoItem> *)otherItem{
     if([otherItem isKindOfClass:[MMUndoRedoAddScrapItem class]] &&
-       ((MMUndoRedoAddScrapItem*)otherItem).scrap == scrap){
+       [((MMUndoRedoAddScrapItem*)otherItem).scrapUUID isEqualToString:scrap.uuid]){
         return YES;
     }
     return NO;

@@ -11,23 +11,25 @@
 
 @implementation MMUndoRedoRemoveScrapItem{
     NSDictionary* propertiesWhenRemoved;
-    MMScrapView* scrap;
+    NSString* scrapUUID;
 }
 
-+(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap andProperties:(NSDictionary*)scrapProperties{
-    return [[MMUndoRedoRemoveScrapItem alloc] initForPage:_page andScrap:scrap andProperties:scrapProperties];
++(id) itemForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)scrapUUID andProperties:(NSDictionary*)scrapProperties{
+    return [[MMUndoRedoRemoveScrapItem alloc] initForPage:_page andScrapUUID:scrapUUID andProperties:scrapProperties];
 }
 
--(id) initForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)_scrap andProperties:(NSDictionary*)scrapProperties{
+-(id) initForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)_scrapUUID andProperties:(NSDictionary*)scrapProperties{
     __weak MMUndoablePaperView* weakPage = _page;
-    scrap = _scrap;
+    scrapUUID = _scrapUUID;
     propertiesWhenRemoved = scrapProperties;
     if(self = [super initWithUndoBlock:^{
+        MMScrapView* scrap = [weakPage.scrapsOnPaperState scrapForUUID:scrapUUID];
         [weakPage.scrapsOnPaperState showScrap:scrap];
         [scrap setPropertiesDictionary:propertiesWhenRemoved];
         NSUInteger subviewIndex = [[propertiesWhenRemoved objectForKey:@"subviewIndex"] unsignedIntegerValue];
         [scrap.superview insertSubview:scrap atIndex:subviewIndex];
     } andRedoBlock:^{
+        MMScrapView* scrap = [weakPage.scrapsOnPaperState scrapForUUID:scrapUUID];
         [weakPage.scrapsOnPaperState hideScrap:scrap];
     } forPage:_page]){
         // noop
@@ -42,16 +44,15 @@
     NSMutableDictionary* propertiesDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:NSStringFromClass([self class]), @"class",
                                                  [NSNumber numberWithBool:self.canUndo], @"canUndo", nil];
     [propertiesDictionary setObject:propertiesWhenRemoved forKey:@"propertiesWhenRemoved"];
-    [propertiesDictionary setObject:scrap.uuid forKey:@"scrap.uuid"];
+    [propertiesDictionary setObject:scrapUUID forKey:@"scrapUUID"];
     return propertiesDictionary;
 }
 
 -(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page{
     NSDictionary* _properties = [dict objectForKey:@"propertiesWhenRemoved"];
-    NSString* scrapUUID = [dict objectForKey:@"scrap.uuid"];
-    MMScrapView* _scrap = [_page.scrapsOnPaperState scrapForUUID:scrapUUID];
+    NSString* _scrapUUID = [dict objectForKey:@"scrapUUID"];
     
-    if(self = [self initForPage:_page andScrap:_scrap andProperties:_properties]){
+    if(self = [self initForPage:_page andScrapUUID:_scrapUUID andProperties:_properties]){
         canUndo = [[dict objectForKey:@"canUndo"] boolValue];
     }
     return self;
@@ -60,7 +61,7 @@
 #pragma mark - Description
 
 -(NSString*) description{
-    return [NSString stringWithFormat:@"[%@ %@]", NSStringFromClass([self class]), scrap.uuid];
+    return [NSString stringWithFormat:@"[%@ %@]", NSStringFromClass([self class]), scrapUUID];
 }
 
 @end

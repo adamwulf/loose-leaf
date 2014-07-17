@@ -11,10 +11,10 @@
 
 @interface MMUndoRedoAddScrapItem : MMUndoRedoPageItem
 
-@property (readonly) MMScrapView* scrap;
+@property (readonly) NSString* scrapUUID;
 
-+(id) itemForPage:(MMUndoablePaperView*)_page andScrap:(MMScrapView*)scrap;
++(id) itemForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)scrapUUID andProperties:(NSDictionary*)properties;
 
--(id) initForPage:(MMUndoablePaperView*)page andScrap:(MMScrapView*)scrap;
+-(id) initForPage:(MMUndoablePaperView*)page andScrapUUID:(NSString*)scrapUUID andProperties:(NSDictionary*)properties;
 
 @end
