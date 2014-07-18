@@ -90,21 +90,41 @@ static dispatch_queue_t importExportStateQueue;
                 // load all the states async
                 for(NSDictionary* scrapProperties in scrapProps){
                     NSString* scrapUUID = [scrapProperties objectForKey:@"uuid"];
-                    NSLog(@"loading scrap %@ for page %@", scrapUUID, delegate.uuid);
-                    MMScrapViewState* state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:self];
-                    if(state){
-                        NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
-                        [props setObject:state forKey:@"state"];
+                    
+                    MMScrapView* scrap = [delegate scrapForUUIDIfAlreadyExists:scrapUUID];
+
+                    NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
+                    if(scrap){
+                        NSLog(@"page found scrap on sidebar %@", scrapUUID);
+                        [props setObject:scrap forKey:@"scrap"];
                         [scrapPropsWithState addObject:props];
+                    }else{
+                        MMScrapViewState* state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:self];
+                        if(state){
+                            [props setObject:state forKey:@"state"];
+                            [scrapPropsWithState addObject:props];
+                        }else{
+                            // failed to load scrap
+                        }
                     }
                 }
                 
                 [NSThread performBlockOnMainThread:^{
                     for(NSDictionary* scrapProperties in scrapPropsWithState){
-                        MMScrapViewState* scrapState = [scrapProperties objectForKey:@"state"];
-                        MMScrapView* scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState andPaperState:self];
-                        if(scrap){
+                        MMScrapView* scrap = nil;
+                        if([scrapProperties objectForKey:@"scrap"]){
+                            scrap = [scrapProperties objectForKey:@"scrap"];
+                            NSLog(@"page %@ reused scrap %@", delegate.uuid, scrap.uuid);
+                        }else{
+                            MMScrapViewState* scrapState = [scrapProperties objectForKey:@"state"];
+                            scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState andPaperState:self];
+                            NSLog(@"page %@ built scrap %@", delegate.uuid, scrap.uuid);
+                            // only set properties if we built the scrap,
+                            // otherwise it's in the sidebar and we don't
+                            // own it right now
                             [scrap setPropertiesDictionary:scrapProperties];
+                        }
+                        if(scrap){
                             [allScrapsForPage addObject:scrap];
                             
                             if([scrapIDsOnPage containsObject:scrap.uuid]){

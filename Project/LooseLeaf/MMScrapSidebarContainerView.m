@@ -47,6 +47,7 @@
 
 @synthesize bubbleDelegate;
 @synthesize countButton;
+@synthesize scrapState;
 
 -(id) initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton *)_countButton{
     if(self = [super initWithFrame:frame forButton:_countButton animateFromLeft:NO]){

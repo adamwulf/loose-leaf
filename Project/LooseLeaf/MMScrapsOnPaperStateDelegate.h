@@ -14,6 +14,8 @@
 
 -(NSString*) uuid;
 
+-(MMScrapView*) scrapForUUIDIfAlreadyExists:(NSString*)scrapUUID;
+
 -(MMScrapContainerView*) scrapContainerView;
 
 -(BOOL) isEditable;

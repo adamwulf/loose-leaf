@@ -29,6 +29,8 @@
 #import "UIDevice+PPI.h"
 #import "MMLoadImageCache.h"
 #import "MMCachedPreviewManager.h"
+#import "MMScrapSidebarContainerView.h"
+#import "MMScrapsInSidebarState.h"
 #import "UIView+Animations.h"
 
 
@@ -1174,6 +1176,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
         }
     }
 }
+
+-(MMScrapView*) scrapForUUIDIfAlreadyExists:(NSString*)scrapUUID{
+    // try to load a scrap from the bezel sidebar if possible,
+    // otherwise our scrap state will load it
+    return [delegate.bezelContainerView.scrapState scrapForUUID:scrapUUID];
+}
+
 
 #pragma mark - JotViewStateProxyDelegate
 
