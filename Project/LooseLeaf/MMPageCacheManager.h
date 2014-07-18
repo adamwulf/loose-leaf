@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MMPaperView.h"
-#import "MMEditablePaperView.h"
+#import "MMUndoablePaperView.h"
 #import "MMPageCacheManagerDelegate.h"
 
 // this cache will help ensure that the
@@ -23,7 +23,7 @@
 
 @property (nonatomic, weak) NSObject<MMPageCacheManagerDelegate>* delegate;
 @property (nonatomic, strong) JotView* drawableView;
-@property (nonatomic, readonly) MMEditablePaperView* currentEditablePage;
+@property (nonatomic, readonly) MMUndoablePaperView* currentEditablePage;
 
 +(MMPageCacheManager*) sharedInstance;
 

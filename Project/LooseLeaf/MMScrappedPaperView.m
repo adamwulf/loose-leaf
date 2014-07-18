@@ -7,6 +7,7 @@
 //
 
 #import "MMScrappedPaperView.h"
+#import "MMEditablePaperView+UndoRedo.h"
 #import "PolygonToolDelegate.h"
 #import "MMScrapView.h"
 #import "MMUntouchableView.h"
@@ -28,12 +29,15 @@
 #import "UIDevice+PPI.h"
 #import "MMLoadImageCache.h"
 #import "MMCachedPreviewManager.h"
+#import "MMScrapSidebarContainerView.h"
+#import "MMScrapsInSidebarState.h"
+#import "UIView+Animations.h"
 
 
 @implementation MMScrappedPaperView{
-    UIView* scrapContainerView;
+    MMScrapContainerView* scrapContainerView;
     NSString* scrapIDsPath;
-    MMScrapsOnPaperState* scrapState;
+    MMScrapsOnPaperState* scrapsOnPaperState;
     MMDecompressImagePromise* scrappedImgViewImage;
     // this defaults to NO, which means we'll try to
     // load a thumbnail. if an image does not exist
@@ -48,6 +52,8 @@
     BOOL isAskedToLoadThumbnail;
 }
 
+@synthesize scrapsOnPaperState;
+@synthesize scrapContainerView;
 
 static dispatch_queue_t concurrentBackgroundQueue;
 +(dispatch_queue_t) concurrentBackgroundQueue{
@@ -61,7 +67,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
         // Initialization code
-        scrapContainerView = [[MMUntouchableView alloc] initWithFrame:self.bounds];
+        scrapContainerView = [[MMScrapContainerView alloc] initWithFrame:self.bounds andPage:self];
         [self.contentView addSubview:scrapContainerView];
         // anchor the view to the top left,
         // so that when we scale down, the drawable view
@@ -72,8 +78,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         panGesture.scrapDelegate = self;
         rulerGesture.scrapDelegate = self;
         
-        scrapState = [[MMScrapsOnPaperState alloc] init];
-        scrapState.delegate = self;
+        scrapsOnPaperState = [[MMScrapsOnPaperState alloc] initWithDelegate:self];
         
         [self setCanvasVisible:NO];
     }
@@ -81,7 +86,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(int) fullByteSize{
-    return [super fullByteSize] + scrapState.fullByteSize;
+    return [super fullByteSize] + scrapsOnPaperState.fullByteSize;
 }
 
 #pragma mark - Public Methods
@@ -93,28 +98,36 @@ static dispatch_queue_t concurrentBackgroundQueue;
         scrapContainerView.hidden = NO;
     }else{
         cachedImgView.hidden = NO;
-        scrapContainerView.hidden = YES;
+        if(scrapsOnPaperState.isStateLoaded){
+            // if we're loaded, then show the scraps and
+            // only the ink thumbnail
+            scrapContainerView.hidden = NO;
+            [self setThumbnailTo:[self cachedImgViewImage]];
+        }else{
+            // otherwise, show the scrapped thumbnail
+            // and hide teh scrap container
+            scrapContainerView.hidden = YES;
+            [self setThumbnailTo:[self scrappedImgViewImage]];
+        }
     }
 }
 
 -(void) undo{
-    if(scrapState){
+    if(scrapsOnPaperState){
         for(MMScrapView* scrap in self.scrapsOnPaper){
             [scrap.state.drawableView undo];
         }
     }
     [super undo];
-    [self debugPrintUndoStatus];
 }
 
 -(void) redo{
-    if(scrapState){
+    if(scrapsOnPaperState){
         for(MMScrapView* scrap in self.scrapsOnPaper){
             [scrap.state.drawableView redo];
         }
     }
     [super redo];
-    [self debugPrintUndoStatus];
 }
 
 #pragma mark - Protected Methods
@@ -188,43 +201,18 @@ static dispatch_queue_t concurrentBackgroundQueue;
  * so, an input scale of 2.0 will not change the visible size of the added scrap, but it
  * will have twice the resolution in both dimensions.
  */
--(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)lastBestRotation andScale:(CGFloat)scale{
+-(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale{
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScraps by:@(1)];
     //
     // at this point, we have the correct path and rotation that will
     // give us the minimal square px. For instance, drawing a thin diagonal
     // strip of paper will create a thin texture and rotate it, instead of
     // an unrotated thick rectangle.
-    CGPoint pathC = path.center;
-    CGAffineTransform scalePathToFullResTransform = CGAffineTransformMakeTranslation(pathC.x, pathC.y);
-    scalePathToFullResTransform = CGAffineTransformScale(scalePathToFullResTransform, 1/scale, 1/scale);
-    scalePathToFullResTransform = CGAffineTransformTranslate(scalePathToFullResTransform, -pathC.x, -pathC.y);
-    [path applyTransform:scalePathToFullResTransform];
-    
-    MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path];
-    @synchronized(scrapContainerView){
-        [scrapContainerView addSubview:newScrap];
-    }
-    [newScrap loadScrapStateAsynchronously:NO];
-    [newScrap setShouldShowShadow:[self isEditable]];
-    
-    [newScrap setScale:scale];
-    [newScrap setRotation:lastBestRotation];
-
+    MMScrapView* newScrap = [scrapsOnPaperState addScrapWithPath:path andRotation:rotation andScale:scale];
+    [scrapsOnPaperState showScrap:newScrap];
     return newScrap;
 }
 
-
--(void) addScrap:(MMScrapView*)scrap{
-    @synchronized(scrapContainerView){
-        [scrapContainerView addSubview:scrap];
-    }
-    [scrap setShouldShowShadow:[self isEditable]];
-}
-
--(BOOL) hasScrap:(MMScrapView*)scrap{
-    return [[self scrapsOnPaper] containsObject:scrap];
-}
 
 /**
  * returns all subviews in back-to-front
@@ -315,32 +303,12 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 #pragma mark - JotViewDelegate
 
--(void) debugPrintUndoStatus{
-    
-    NSLog(@"**********************************************************************");
-    NSLog(@"Undo status");
-    NSLog(@" page %@", self.uuid);
-    NSLog(@"   currentStroke: %p", self.drawableView.state.currentStroke);
-    NSLog(@"   undoable stack: %i", (int)[self.drawableView.state.stackOfStrokes count]);
-    NSLog(@"   undone stack:   %i", (int)[self.drawableView.state.stackOfUndoneStrokes count]);
-    NSLog(@"scraps:");
-    for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
-        NSLog(@" scrap %@", scrap.uuid);
-        NSLog(@"   currentStroke: %p", scrap.state.drawableView.state.currentStroke);
-        NSLog(@"   undoable stack: %i", (int)[scrap.state.drawableView.state.stackOfStrokes count]);
-        NSLog(@"   undone stack:   %i", (int)[scrap.state.drawableView.state.stackOfUndoneStrokes count]);
-    }
-    NSLog(@"**********************************************************************");
-}
-
-
 -(void) didEndStrokeWithTouch:(JotTouch *)touch{
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
         [scrap addUndoLevelAndFinishStroke];
         [scrap.state.drawableView clearUndoneStrokes];
     }
     [super didEndStrokeWithTouch:touch];
-    [self debugPrintUndoStatus];
 }
 
 -(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch *)touch{
@@ -357,7 +325,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
         [scrap.state.drawableView undoAndForget];
     }
     [super didCancelStroke:stroke withTouch:touch];
-    [self debugPrintUndoStatus];
 }
 
 
@@ -600,15 +567,22 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 
 -(void) completeScissorsCut{
-    UIBezierPath* scissorPath = [shapeBuilderView completeAndGenerateShape];
-    [self completeScissorsCutWithPath:scissorPath];
+    @autoreleasepool {
+        UIBezierPath* scissorPath = [shapeBuilderView completeAndGenerateShape];
+        [self completeScissorsCutWithPath:scissorPath];
+    }
 }
 
 
--(void) completeScissorsCutWithPath:(UIBezierPath*)scissorPath{
+-(MMScissorResult*) completeScissorsCutWithPath:(UIBezierPath*)scissorPath{
     // track path information for debugging
     NSString* debugFullText = @"";
 
+    NSMutableArray* scrapsBeingBuilt = [NSMutableArray array];
+    NSMutableArray* scrapsBeingRemoved = [NSMutableArray array];
+    NSMutableArray* removedScrapProperties = [NSMutableArray array];
+    BOOL didFill = NO;
+    
     @try {
         // scale the scissors into the zoom of the page, in case the user is
         // pinching and zooming the page our scissor path will be in page coordinates
@@ -618,7 +592,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
         BOOL hasBuiltAnyScraps = NO;
         
         CGAffineTransform verticalFlip = CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height);
-
 
         // iterate over the scraps from the visibly top scraps
         // to the bottom of the stack
@@ -666,7 +639,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
                         // and add the scrap so that it's scale matches the scrap that its built from
                         MMScrapView* addedScrap = [self addScrapWithPath:subshapePath andScale:scrap.scale];
                         @synchronized(scrapContainerView){
-                            [scrapContainerView insertSubview:addedScrap belowSubview:scrap];
+                            [scrapContainerView insertSubview:addedScrap aboveSubview:scrap];
                         }
                         
                         // stamp the background
@@ -685,11 +658,12 @@ static dispatch_queue_t concurrentBackgroundQueue;
                         [vectors addObject:[MMVector vectorWithPoint:scrap.center andPoint:addedScrap.center]];
                         
                         [scraps addObject:addedScrap];
+                        [scrapsBeingBuilt addObject:addedScrap];
                     }
-                    //
-                    // TODO: handle deleting scraps, and consider the undo queue as well
-                    // https://github.com/adamwulf/loose-leaf/issues/213
+
+                    [removedScrapProperties addObject:[scrap propertiesDictionary]];
                     [scrap removeFromSuperview];
+                    [scrapsBeingRemoved addObject:scrap];
                     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScraps by:@(-1)];
                 }
                 // clip out the portion of the scissor path that
@@ -727,6 +701,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
             MMScrapView* addedScrap = [self addScrapWithPath:scissorPath andScale:1.0];
             [addedScrap stampContentsFrom:self.drawableView];
             
+            [scrapsBeingBuilt addObject:addedScrap];
+            
             // now we need to add a stroke to the underlying page that
             // will erase the area below the new scrap
             CGPoint p1 = addedScrap.bounds.origin;
@@ -763,14 +739,18 @@ static dispatch_queue_t concurrentBackgroundQueue;
             
 
             [scissorPath applyTransform:CGAffineTransformMakeTranslation(-scissorPath.bounds.origin.x + kScrapShadowBufferSize, -scissorPath.bounds.origin.y + kScrapShadowBufferSize)];
+            didFill = YES;
             [[NSThread mainThread] performBlock:^{
                 [drawableView forceAddStrokeForFilledPath:scissorPath andP1:p1 andP2:p2 andP3:p3 andP4:p4 andSize:addedScrap.bounds.size];
+                for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
+                    [scrap.state.drawableView forceAddEmptyStroke];
+                }
                 [self saveToDisk];
             } afterDelay:.01];
         }else{
             [self saveToDisk];
         }
-
+        
         // clear the dotted line of the scissor
         [shapeBuilderView clear];
     }
@@ -790,13 +770,18 @@ static dispatch_queue_t concurrentBackgroundQueue;
         [controller setToRecipients:[NSArray arrayWithObject:@"adam.wulf@gmail.com"]];
         [controller setSubject:[NSString stringWithFormat:@"Shape Clipping Test Case %@", convertedDateString]];
         [controller setMessageBody:debugFullText isHTML:NO];
-        //        [controller addAttachmentData:imageData mimeType:@"image/png" fileName:@"screenshot.png"];
+//        [controller addAttachmentData:imageData mimeType:@"image/png" fileName:@"screenshot.png"];
         
         if(controller){
             UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
             [rootController presentViewController:controller animated:YES completion:nil];
         }
     }
+    
+    return [[MMScissorResult alloc] initWithAddedScraps:scrapsBeingBuilt
+                                       andRemovedScraps:scrapsBeingRemoved
+                              andRemovedScrapProperties:removedScrapProperties
+                                       andDidFillStroke:didFill];
 }
 
 
@@ -815,11 +800,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 -(void) setEditable:(BOOL)isEditable{
     [super setEditable:isEditable];
-    [scrapState setShouldShowShadows:isEditable];
+    [scrapsOnPaperState setShouldShowShadows:isEditable];
 }
 
 -(BOOL) hasEditsToSave{
-    return [super hasEditsToSave];
+    return [super hasEditsToSave] || [scrapsOnPaperState hasEditsToSave];
 }
 
 
@@ -918,13 +903,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // this example draws the inputImage into the context
     [thumb drawInRect:CGRectMake(0, 0, thumbSize.width, thumbSize.height)];
     
-    
     for(MMScrapView* scrap in immutableScrapState.scraps){
         [self drawScrap:scrap intoContext:context withSize:thumbSize];
     }
     
     // get a UIImage from the image context- enjoy!!!
-    scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForDecompressedImage:UIGraphicsGetImageFromCurrentImageContext() andDelegate:self];
+    UIImage* generatedScrappedThumbnailImage = UIGraphicsGetImageFromCurrentImageContext();
+    scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForDecompressedImage:generatedScrappedThumbnailImage andDelegate:self];
     [[MMLoadImageCache sharedInstance] updateCacheForPath:[self scrappedThumbnailPath] toImage:scrappedImgViewImage.image];
     [[NSThread mainThread] performBlock:^{
         [self didDecompressImage:scrappedImgViewImage];
@@ -939,6 +924,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) setThumbnailTo:(UIImage*)img{
+    CheckMainThread;
     @autoreleasepool {
         // create the cache thumbnail view
         if(!cachedImgView && img){
@@ -955,6 +941,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
             cachedImgView = nil;
         }else if(img){
             cachedImgView.image = img;
+            cachedImgView.hidden = !scrapContainerView.hidden;
         }
     }
 }
@@ -995,7 +982,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     __block MMImmutableScrapsOnPaperState* immutableScrapState;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
-            immutableScrapState = [scrapState immutableStateForPath:self.scrapIDsPath];
+            immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
             scrapsHadBeenChanged = [immutableScrapState saveStateToDiskBlocking];
             dispatch_semaphore_signal(sema2);
         }
@@ -1033,16 +1020,16 @@ static dispatch_queue_t concurrentBackgroundQueue;
     debug_NSLog(@"asking %@ to load state", self.uuid);
     [super loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
     if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
-        [scrapState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
+        [scrapsOnPaperState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
     }else{
-        [scrapState loadStateAsynchronously:async atPath:self.bundledScrapIDsPath andMakeEditable:YES];
+        [scrapsOnPaperState loadStateAsynchronously:async atPath:self.bundledScrapIDsPath andMakeEditable:YES];
     }
 }
 
 -(void) unloadState{
     debug_NSLog(@"asking %@ to unload", self.uuid);
     [super unloadState];
-    MMScrapsOnPaperState* strongScrapState = scrapState;
+    MMScrapsOnPaperState* strongScrapState = scrapsOnPaperState;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
             [[strongScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
@@ -1051,9 +1038,32 @@ static dispatch_queue_t concurrentBackgroundQueue;
             [strongScrapState unload];
         }
     });
-    [[NSThread mainThread] performBlock:^{
-        
-    }];
+}
+
+// this method will load the scrapsOnPaperState, run
+// the input block that requires the loaded state,
+// and then will save and unload the scrapsOnPaper state
+//
+// this allows us to drop scraps onto pages that don't
+// have their scrapsOnPaperState loaded
+-(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block{
+    if([scrapsOnPaperState isStateLoaded]){
+        @throw [NSException exceptionWithName:@"LoadedStateForUnloadedBlockException" reason:@"Cannot run block on unloaded state when state is already loaded" userInfo:nil];
+    }
+    if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
+        [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.scrapIDsPath andMakeEditable:YES];
+    }else{
+        [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.bundledScrapIDsPath andMakeEditable:YES];
+    }
+    block();
+    dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
+        @autoreleasepool {
+            MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
+            [immutableScrapState saveStateToDiskBlocking];
+            [self updateFullPageThumbnail:immutableScrapState];
+            [scrapsOnPaperState unload];
+        }
+    });
 }
 
 -(BOOL) hasStateLoaded{
@@ -1062,22 +1072,24 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 #pragma mark - MMScrapsOnPaperStateDelegate
 
--(void) didLoadScrap:(MMScrapView*)scrap{
-    @synchronized(scrapContainerView){
-        [scrapContainerView addSubview:scrap];
-    }
+-(void) didLoadScrapOnPage:(MMScrapView*)scrap{
+    // noop, adding scrap to scrapContainerView is handled in the scrapOnPaperState
+}
+
+-(void) didLoadScrapOffPage:(MMScrapView*)scrap{
+    // noop, scrap in the undo/redo stack only
 }
 
 -(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
     // check to see if we've also loaded
     [self didLoadState:self.paperState];
-    [self setThumbnailTo:[self cachedImgViewImage]];
     scrapContainerView.hidden = NO;
+    [self setThumbnailTo:[self cachedImgViewImage]];
 }
 
 -(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
-    [self didDecompressImage:scrappedImgViewImage];
     scrapContainerView.hidden = YES;
+    [self didDecompressImage:scrappedImgViewImage];
 }
 
 /**
@@ -1151,8 +1163,8 @@ static dispatch_queue_t concurrentBackgroundQueue;
         [NSThread performBlockOnMainThread:^{
             [self didDecompressImage:nil];
         }];
-        if([scrapState isStateLoaded]){
-            MMScrapsOnPaperState* strongScrapState = scrapState;
+        if([scrapsOnPaperState isStateLoaded]){
+            MMScrapsOnPaperState* strongScrapState = scrapsOnPaperState;
             dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
                 @autoreleasepool {
                     // save if needed
@@ -1166,6 +1178,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
         }
     }
 }
+
+-(MMScrapView*) scrapForUUIDIfAlreadyExists:(NSString*)scrapUUID{
+    // try to load a scrap from the bezel sidebar if possible,
+    // otherwise our scrap state will load it
+    return [delegate.bezelContainerView.scrapState scrapForUUID:scrapUUID];
+}
+
 
 #pragma mark - JotViewStateProxyDelegate
 
@@ -1218,6 +1237,5 @@ static dispatch_queue_t concurrentBackgroundQueue;
     UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
     [rootController dismissViewControllerAnimated:YES completion:nil];
 }
-
 
 @end

@@ -12,25 +12,30 @@
 #import "MMScrapSidebarContainerViewDelegate.h"
 #import "MMScrapsOnPaperStateDelegate.h"
 #import "MMCountBubbleButton.h"
+#import "MMScrapsInSidebarStateDelegate.h"
 
-@interface MMScrapSidebarContainerView : MMSlidingSidebarContainerView<MMScrapsOnPaperStateDelegate>{
+@interface MMScrapSidebarContainerView : MMSlidingSidebarContainerView<MMScrapsInSidebarStateDelegate>{
     __weak NSObject<MMScrapSidebarContainerViewDelegate>* bubbleDelegate;
 }
 
 @property (nonatomic, weak) NSObject<MMScrapSidebarContainerViewDelegate>* bubbleDelegate;
 @property (nonatomic, strong) MMCountBubbleButton* countButton;
+@property (readonly) NSArray* scrapsInSidebar;
+@property (readonly) MMScrapsInSidebarState* scrapState;
 
 -(id) initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton *)countButton;
 
 -(void) addScrapToBezelSidebar:(MMScrapView *)scrap animated:(BOOL)animated;
 
--(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel;
+-(BOOL) containsScrap:(MMScrapView*)scrap;
 
--(void) animateAndAddScrapBackToPage:(MMScrapView*)scrap;
+-(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel;
 
 -(void) saveScrapContainerToDisk;
 
 -(void) didTapOnScrapFromMenu:(MMScrapView*)scrap;
+
+-(void) didTapOnScrapFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties;
 
 -(void) loadFromDisk;
 

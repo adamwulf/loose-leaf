@@ -13,6 +13,7 @@
 #import "TestFlight.h"
 #import "MMScrappedPaperView.h"
 #import "Mixpanel.h"
+#import "MMUndoablePaperView.h"
 
 @implementation MMPaperStackView{
     MMPapersIcon* papersIcon;
@@ -112,7 +113,7 @@
  */
 -(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(UIView*)stackView{
     while([stackView.subviews count] < numberOfPagesToEnsure){
-        MMEditablePaperView* page = [[MMScrappedPaperView alloc] initWithFrame:stackView.bounds];
+        MMEditablePaperView* page = [[MMUndoablePaperView alloc] initWithFrame:stackView.bounds];
         page.isBrandNewPage = YES;
         page.delegate = self;
         [stackView addSubviewToBottomOfStack:page];
@@ -497,7 +498,7 @@
         // c) add correct number of pages to the bezelStackHolder
         // d) update the offset for the bezelStackHolder so they all move in tandem
         BOOL needsAnimationUpdate = bezelGesture.numberOfRepeatingBezels != [bezelStackHolder.subviews count];
-        while(bezelGesture.numberOfRepeatingBezels != [bezelStackHolder.subviews count] && [hiddenStackHolder.subviews count]){
+        while(bezelGesture.numberOfRepeatingBezels != [bezelStackHolder.subviews count]){
             //
             // we need to add another page
             [self ensureAtLeast:2 pagesInStack:visibleStackHolder];
@@ -1364,6 +1365,10 @@
     @throw kAbstractMethodException;
 }
 
+-(MMScrapSidebarContainerView*) bezelContainerView{
+    @throw kAbstractMethodException;
+}
+
 #pragma mark - Page Animation and Navigation Helpers
 
 /**
@@ -1822,5 +1827,10 @@
     @throw kAbstractMethodException;
 }
 
+#pragma mark - Check for Active Gestures
+
+-(BOOL) isActivelyGesturing{
+    return [fromLeftBezelGesture isActivelyBezeling] || [fromRightBezelGesture isActivelyBezeling] || [setOfPagesBeingPanned count];
+}
 
 @end

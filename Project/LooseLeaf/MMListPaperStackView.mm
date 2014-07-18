@@ -11,6 +11,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMShadowManager.h"
 #import "MMScrappedPaperView.h"
+#import "MMUndoablePaperView.h"
 #import "Mixpanel.h"
 #include <map>
 #include <iterator>
@@ -120,7 +121,7 @@
 -(void) didTapAddButtonInListView{
     //
     // this'll determine the resolution of the canvas too
-    MMEditablePaperView* paper = [[MMScrappedPaperView alloc] initWithFrame:self.bounds];
+    MMEditablePaperView* paper = [[MMUndoablePaperView alloc] initWithFrame:self.bounds];
     // now size it for display
     paper.frame = addPageButtonInListView.frame;
     [self addPaperToBottomOfHiddenStack:paper];
@@ -1388,6 +1389,8 @@
  */
 -(void) immediatelyAnimateFromListViewToFullScreenView{
     
+    CheckMainThread;
+    
     __block NSMutableSet* pagesThatNeedAnimating = [NSMutableSet set];
     
     CGFloat duration = 0.2;
@@ -1463,7 +1466,6 @@
         newHiddenFrame.origin.x += screenWidth;
         hiddenStackHolder.frame = newHiddenFrame;
         addPageButtonInListView.alpha = 0;
-        [self finishedScalingBackToPageView:[visibleStackHolder peekSubview]];
     };
     
     
@@ -1478,6 +1480,7 @@
     //
     // also, turn off gestures
     void (^step3)(BOOL finished) = ^(BOOL finished){
+        [self finishedScalingBackToPageView:[visibleStackHolder peekSubview]];
         //
         // now complete the bounce for the top page
         CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
@@ -1584,4 +1587,11 @@
 -(BOOL) isShowingPageView{
     return isShowingPageView;
 }
+
+#pragma mark - Check for Active Gestures
+
+-(BOOL) isActivelyGesturing{
+    return [super isActivelyGesturing] || !isShowingPageView;
+}
+
 @end

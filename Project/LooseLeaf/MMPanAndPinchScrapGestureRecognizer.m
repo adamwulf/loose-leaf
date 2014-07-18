@@ -15,6 +15,7 @@
 #import "MMStretchScrapGestureRecognizer.h"
 #import "UIView+Animations.h"
 #import "UIGestureRecognizer+GestureDebug.h"
+#import "MMPageCacheManager.h"
 
 #define  kMaxSimultaneousTouchesAllowedToTrack 20
 #define  kNumberOfDirectionChangesToDetermineShake 2
@@ -57,6 +58,8 @@ struct TouchInterval{
     
     BOOL isShaking;
     BOOL paused;
+    
+    NSDictionary* startingScrapProperties;
 }
 
 
@@ -74,6 +77,8 @@ struct TouchInterval{
 @synthesize shouldReset;
 @synthesize isShaking;
 @synthesize initialTouchVector;
+@synthesize startingScrapProperties;
+@synthesize startingPageForScrap;
 
 -(NSArray*) possibleTouches{
     return [possibleTouches array];
@@ -97,6 +102,16 @@ struct TouchInterval{
 
 -(CGFloat) rotation{
     return rotation;
+}
+
+-(void) setScrap:(MMScrapView *)_scrap{
+    if(scrap != _scrap){
+        // save the properties of the scrap whenever its set
+        scrap = _scrap;
+        startingScrapProperties = [scrap propertiesDictionary];
+        // update the starting page, if any
+        startingPageForScrap = scrap ? [[MMPageCacheManager sharedInstance] currentEditablePage] : nil;
+    }
 }
 
 #pragma mark - Init
@@ -158,7 +173,7 @@ struct TouchInterval{
                 if([(MMPanAndPinchScrapGestureRecognizer*)gesture scrap] == scrap){
                     // if the other pan/pinch gesture owns this scrap, then let
                     // it handle it and we'll give up our scrap silently
-                    scrap = nil;
+                    self.scrap = nil;
                 }
             }
         }
@@ -248,7 +263,7 @@ struct TouchInterval{
 -(void) forceBlessTouches:(NSSet*)touches forScrap:(MMScrapView*)_scrap{
     // force scrap to the input, and force
     // input touches to valid
-    scrap = _scrap;
+    self.scrap = _scrap;
     [validTouches addObjectsInSet:touches];
     [possibleTouches removeObjectsInSet:touches];
     [ignoredTouches removeObjectsInSet:touches];
@@ -623,7 +638,7 @@ struct TouchInterval{
         }
         if([validTouches count] < mmMinimumNumberOfScrapTouches && self.scrap){
 //            NSLog(@"what");
-            scrap = nil;
+            self.scrap = nil;
         }
         return;
     }
@@ -741,7 +756,7 @@ struct TouchInterval{
  */
 -(void) giveUpScrap{
     [UIView setAnchorPoint:CGPointMake(.5, .5) forView:self.scrap];
-    scrap = nil;
+    self.scrap = nil;
 }
 
 
@@ -755,7 +770,7 @@ struct TouchInterval{
     didExitToBezel = MMBezelDirectionNone;
     scaleDirection = MMScaleDirectionNone;
     secondToLastTouchDidBezel = NO;
-    scrap = nil;
+    self.scrap = nil;
     gestureLocationAtStart = CGPointZero;
     translation = CGPointZero;
     self.shouldReset = NO;

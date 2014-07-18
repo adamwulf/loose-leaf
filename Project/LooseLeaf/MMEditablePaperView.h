@@ -24,8 +24,6 @@
 
 +(dispatch_queue_t) importThumbnailQueue;
 
--(void) undo;
--(void) redo;
 -(BOOL) hasEditsToSave;
 -(BOOL) hasStateLoaded;
 -(void) unloadCachedPreview;

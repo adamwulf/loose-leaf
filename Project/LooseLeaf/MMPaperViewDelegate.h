@@ -10,7 +10,7 @@
 #import <JotUI/JotUI.h>
 #import "MMGestureTouchOwnershipDelegate.h"
 
-@class MMPaperView,MMRulerToolGestureRecognizer,MMScrapView;
+@class MMPaperView,MMRulerToolGestureRecognizer,MMScrapView,MMScrapSidebarContainerView;
 
 @protocol MMPaperViewDelegate <JotViewDelegate,MMGestureTouchOwnershipDelegate>
 
@@ -146,6 +146,11 @@
  * called when the user stops the ruler gesture
  */
 -(void) didStopRuler:(MMRulerToolGestureRecognizer*)gesture;
+
+
+#pragma mark - Scrap Container for Sidebar
+
+-(MMScrapSidebarContainerView*) bezelContainerView;
 
 #pragma mark Mixpanel
 

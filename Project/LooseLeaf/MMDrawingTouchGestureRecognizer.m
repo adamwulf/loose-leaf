@@ -45,6 +45,10 @@ static MMDrawingTouchGestureRecognizer* _instance = nil;
     return _instance;
 }
 
+-(BOOL) isDrawing{
+    return [validTouches count];
+}
+
 #pragma mark - Touch Ownership
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{

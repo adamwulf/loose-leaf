@@ -10,11 +10,12 @@
 #import "MMScrapBubbleButton.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMScrapSidebarContentView.h"
-#import "MMScrapsOnPaperState.h"
+#import "MMScrapsInSidebarState.h"
 #import "MMImmutableScrapsOnPaperState.h"
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "UIView+Debug.h"
+#import "MMImmutableScrapsInSidebarState.h"
 
 #define kMaxScrapsInBezel 6
 
@@ -35,11 +36,10 @@
 @implementation MMScrapSidebarContainerView{
     CGFloat lastRotationReading;
     CGFloat targetAlpha;
-    NSMutableOrderedSet* scrapsHeldInBezel;
     NSMutableDictionary* bubbleForScrap;
     MMCountBubbleButton* countButton;
     MMScrapSidebarContentView* contentView;
-    MMScrapsOnPaperState* scrapState;
+    MMScrapsInSidebarState* scrapState;
     NSString* scrapIDsPath;
     
     NSMutableDictionary* rotationAdjustments;
@@ -47,11 +47,11 @@
 
 @synthesize bubbleDelegate;
 @synthesize countButton;
+@synthesize scrapState;
 
 -(id) initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton *)_countButton{
     if(self = [super initWithFrame:frame forButton:_countButton animateFromLeft:NO]){
         targetAlpha = 1;
-        scrapsHeldInBezel = [NSMutableOrderedSet orderedSet];
         bubbleForScrap = [NSMutableDictionary dictionary];
         
         contentView = [[MMScrapSidebarContentView alloc] initWithFrame:[sidebarContentView contentBounds]];
@@ -68,18 +68,17 @@
             [rotationAdjustments addEntriesFromDictionary:loadedRotationValues];
         }
 
-        scrapState = [[MMScrapsOnPaperState alloc] init];
-        scrapState.delegate = self;
+        scrapState = [[MMScrapsInSidebarState alloc] initWithDelegate:self];
     }
     return self;
 }
 
--(void) loadFromDisk{
-    [scrapState loadStateAsynchronously:YES atPath:self.scrapIDsPath andMakeEditable:NO];
-}
-
 -(int) fullByteSize{
     return [super fullByteSize] + scrapState.fullByteSize;
+}
+
+-(NSArray*) scrapsInSidebar{
+    return [scrapState.allScrapsInSidebar copy];
 }
 
 
@@ -110,7 +109,7 @@
 
 -(void) setAlpha:(CGFloat)alpha{
     targetAlpha = alpha;
-    if([scrapsHeldInBezel count] > kMaxScrapsInBezel){
+    if([scrapState.allScrapsInSidebar count] > kMaxScrapsInBezel){
         countButton.alpha = targetAlpha;
     }else{
         countButton.alpha = 0;
@@ -135,9 +134,8 @@
         // only save when it's animated. non-animated is loading
         // from disk at start up
         [scrap saveScrapToDisk:nil];
+        [scrapState scrapIsAddedToSidebar:scrap];
     }
-    
-    [scrapsHeldInBezel insertObject:scrap atIndex:0];
     
     // exit the scrap to the bezel!
     CGPoint center = [self centerForBubbleAtIndex:0];
@@ -147,6 +145,7 @@
     // and set it's alpha/rotation/scale to prepare for the animation
     MMScrapBubbleButton* bubble = [[MMScrapBubbleButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
     bubble.center = center;
+    
     //
     // iOS7 changes how buttons can be tapped during a gesture (i think).
     // so adding our gesture recognizer explicitly, and disallowing it to
@@ -175,7 +174,7 @@
     if(animated){
         CGFloat animationDuration = 0.5;
         
-        if([scrapsHeldInBezel count] <= kMaxScrapsInBezel){
+        if([scrapState.allScrapsInSidebar count] <= kMaxScrapsInBezel){
             // allow adding to 6 in the sidebar, otherwise
             // we need to pull them all into 1 button w/
             // a menu
@@ -188,7 +187,7 @@
                 for(MMScrapBubbleButton* otherBubble in self.subviews){
                     if(otherBubble != bubble){
                         if([otherBubble isKindOfClass:[MMScrapBubbleButton class]]){
-                            int index = (int) [scrapsHeldInBezel indexOfObject:otherBubble.scrap];
+                            int index = (int) [scrapState.allScrapsInSidebar indexOfObject:otherBubble.scrap];
                             otherBubble.center = [self centerForBubbleAtIndex:index];
                         }
                     }
@@ -203,7 +202,7 @@
                     bubble.scale = .8;
                     bubble.alpha = targetAlpha;
                 } completion:^(BOOL finished){
-                    [countButton setCount:[scrapsHeldInBezel count]];
+                    [countButton setCount:[scrapState.allScrapsInSidebar count]];
                     [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
                         // bounce back
                         bubble.scale = 1.1;
@@ -217,10 +216,10 @@
                     }];
                 }];
             }];
-        }else if([scrapsHeldInBezel count] > kMaxScrapsInBezel){
+        }else if([scrapState.allScrapsInSidebar count] > kMaxScrapsInBezel){
             // we need to merge all the bubbles together into
             // a single button during the bezel animation
-            [countButton setCount:[scrapsHeldInBezel count]];
+            [countButton setCount:[scrapState.allScrapsInSidebar count]];
             bubble.center = countButton.center;
             bubble.scale = 1;
             [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -241,7 +240,7 @@
                     // scrap "hits" the bubble and pushes it down a bit
                     countButton.scale = .8;
                 } completion:^(BOOL finished){
-                    [countButton setCount:[scrapsHeldInBezel count]];
+                    [countButton setCount:[scrapState.allScrapsInSidebar count]];
                     [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
                         // bounce back
                         countButton.scale = 1.1;
@@ -257,19 +256,19 @@
             }];
         }
     }else{
-        if([scrapsHeldInBezel count] <= kMaxScrapsInBezel){
+        if([scrapState.allScrapsInSidebar count] <= kMaxScrapsInBezel){
             bubble.alpha = 1;
             scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
             scrap.center = bubble.center;
             bubble.scrap = scrap;
             for(MMScrapBubbleButton* anyBubble in self.subviews){
                 if([anyBubble isKindOfClass:[MMScrapBubbleButton class]]){
-                    int index = (int) [scrapsHeldInBezel indexOfObject:anyBubble.scrap];
+                    int index = (int) [scrapState.allScrapsInSidebar indexOfObject:anyBubble.scrap];
                     anyBubble.center = [self centerForBubbleAtIndex:index];
                 }
             }
         }else{
-            [countButton setCount:[scrapsHeldInBezel count]];
+            [countButton setCount:[scrapState.allScrapsInSidebar count]];
             countButton.alpha = 1;
             for(MMScrapBubbleButton* bubble in self.subviews){
                 if([bubble isKindOfClass:[MMScrapBubbleButton class]]){
@@ -285,12 +284,17 @@
     }
 }
 
+-(BOOL) containsScrap:(MMScrapView*)scrap{
+    return [scrapState.allScrapsInSidebar containsObject:scrap];
+}
+
+
 #pragma mark - Button Tap
 
 -(void) bubbleTapped:(UITapGestureRecognizer*)gesture{
     MMScrapBubbleButton* bubble = (MMScrapBubbleButton*) gesture.view;
-    if([scrapsHeldInBezel containsObject:bubble.scrap]){
-        [scrapsHeldInBezel removeObject:bubble.scrap];
+    if([scrapState.allScrapsInSidebar containsObject:bubble.scrap]){
+        [scrapState scrapIsRemovedFromSidebar:bubble.scrap];
         
         MMScrapView* scrap = bubble.scrap;
         scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
@@ -298,7 +302,7 @@
         scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
         [self insertSubview:scrap atIndex:0];
         
-        [self animateAndAddScrapBackToPage:scrap];
+        [self animateAndAddScrapBackToPage:scrap withPreferredScrapProperties:nil];
         
         [bubbleForScrap removeObjectForKey:scrap.uuid];
         [rotationAdjustments removeObjectForKey:scrap.uuid];
@@ -306,49 +310,73 @@
 }
 
 -(void) didTapOnScrapFromMenu:(MMScrapView*)scrap{
-    [scrapsHeldInBezel removeObject:scrap];
+    [self didTapOnScrapFromMenu:scrap withPreferredScrapProperties:nil];
+}
 
+-(void) didTapOnScrapFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties{
+    [scrapState scrapIsRemovedFromSidebar:scrap];
+    
     scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
     [self insertSubview:scrap atIndex:0];
     
     [self sidebarCloseButtonWasTapped];
-    [self animateAndAddScrapBackToPage:scrap];
-    [countButton setCount:[scrapsHeldInBezel count]];
-
+    [self animateAndAddScrapBackToPage:scrap withPreferredScrapProperties:properties];
+    [countButton setCount:[scrapState.allScrapsInSidebar count]];
+    
     [bubbleForScrap removeObjectForKey:scrap.uuid];
 }
 
--(void) animateAndAddScrapBackToPage:(MMScrapView*)scrap{
+-(void) animateAndAddScrapBackToPage:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties{
     MMScrapBubbleButton* bubble = [bubbleForScrap objectForKey:scrap.uuid];
     [scrap loadScrapStateAsynchronously:YES];
     
-    if([scrapsHeldInBezel count] > kMaxScrapsInBezel){
-        scrap.scale = scrap.scale * [MMScrapBubbleButton idealScaleForScrap:scrap];
+    scrap.scale = scrap.scale * [MMScrapBubbleButton idealScaleForScrap:scrap];
+    
+    BOOL hadProperties = properties != nil;
+    
+    if(!properties){
+        CGPoint positionOnScreenToScaleTo = [self.bubbleDelegate positionOnScreenToScaleScrapTo:scrap];
+        CGFloat scaleOnScreenToScaleTo = [self.bubbleDelegate scaleOnScreenToScaleScrapTo:scrap givenOriginalScale:bubble.originalScrapScale];
+        NSMutableDictionary* mproperties = [NSMutableDictionary dictionary];
+        [mproperties setObject:[NSNumber numberWithFloat:positionOnScreenToScaleTo.x] forKey:@"center.x"];
+        [mproperties setObject:[NSNumber numberWithFloat:positionOnScreenToScaleTo.y] forKey:@"center.y"];
+        [mproperties setObject:[NSNumber numberWithFloat:scrap.rotation] forKey:@"rotation"];
+        [mproperties setObject:[NSNumber numberWithFloat:scaleOnScreenToScaleTo] forKey:@"scale"];
+        properties = mproperties;
     }
     
-    CGPoint positionOnScreenToScaleTo = [self.bubbleDelegate positionOnScreenToScaleScrapTo:scrap];
-    CGFloat scaleOnScreenToScaleTo = [self.bubbleDelegate scaleOnScreenToScaleScrapTo:scrap givenOriginalScale:bubble.originalScrapScale];
     [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        scrap.center = positionOnScreenToScaleTo;
-        [scrap setScale:scaleOnScreenToScaleTo andRotation:scrap.rotation];
+        [scrap setPropertiesDictionary:properties];
     } completion:^(BOOL finished){
-        [self.bubbleDelegate didAddScrapBackToPage:scrap];
+        NSUInteger index = NSNotFound;
+        if([properties objectForKey:@"subviewIndex"]){
+            index = [[properties objectForKey:@"subviewIndex"] unsignedIntegerValue];
+        }
+        MMUndoablePaperView* page = [self.bubbleDelegate didAddScrapBackToPage:scrap atIndex:index];
+        [scrap blockToFireWhenStateLoads:^{
+            if(!hadProperties){
+                NSLog(@"tapped on scrap from sidebar. should add undo item to page %@", page.uuid);
+                [page addUndoItemForMostRecentAddedScrapFromBezelFromScrap:scrap];
+            }else{
+                NSLog(@"scrap added from undo item, don't add new undo item");
+            }
+        }];
     }];
     [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         bubble.alpha = 0;
         for(MMScrapBubbleButton* otherBubble in self.subviews){
             if(otherBubble != countButton && [otherBubble isKindOfClass:[MMScrapBubbleButton class]]){
                 if(otherBubble != bubble){
-                    int index = (int) [scrapsHeldInBezel indexOfObject:otherBubble.scrap];
+                    int index = (int) [scrapState.allScrapsInSidebar indexOfObject:otherBubble.scrap];
                     otherBubble.center = [self centerForBubbleAtIndex:index];
-                    if([scrapsHeldInBezel count] <= kMaxScrapsInBezel){
+                    if([scrapState.allScrapsInSidebar count] <= kMaxScrapsInBezel){
                         otherBubble.scrap = otherBubble.scrap; // reset it
                         otherBubble.alpha = 1;
                     }
                 }
             }
         }
-        if([scrapsHeldInBezel count] <= kMaxScrapsInBezel){
+        if([scrapState.allScrapsInSidebar count] <= kMaxScrapsInBezel){
             countButton.alpha = 0;
         }
     } completion:^(BOOL finished){
@@ -431,7 +459,6 @@ static NSString* bezelStatePath;
     if(!bezelStatePath){
         NSString* documentsPath = [NSFileManager documentsPath];
         NSString* bezelStateDirectory = [documentsPath stringByAppendingPathComponent:@"BezelState"];
-        
         [NSFileManager ensureDirectoryExistsAtPath:bezelStateDirectory];
         bezelStatePath = [[bezelStateDirectory stringByAppendingPathComponent:@"info"] stringByAppendingPathExtension:@"plist"];
     }
@@ -439,7 +466,7 @@ static NSString* bezelStatePath;
 }
 
 -(void) saveScrapContainerToDisk{
-    MMImmutableScrapsOnPaperState* immutableState = [scrapState immutableStateForPath:self.scrapIDsPath];
+    MMImmutableScrapsInSidebarState* immutableState = [scrapState immutableStateForPath:self.scrapIDsPath];
     NSMutableDictionary* writeableAdjustments = [rotationAdjustments copy];
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
@@ -449,30 +476,30 @@ static NSString* bezelStatePath;
     });
 }
 
-
-#pragma mark - MMScrapsOnPaperStateDelegate & MMScrapBezelMenuViewDelegate
-
--(NSArray*) scrapsOnPaper{
-    return  [scrapsHeldInBezel array];
+-(void) loadFromDisk{
+    [scrapState loadStateAsynchronously:YES atPath:self.scrapIDsPath andMakeEditable:NO];
 }
 
--(void) didLoadScrap:(MMScrapView *)scrap{
+
+#pragma mark - MMScrapsInSidebarStateDelegate & MMScrapBezelMenuViewDelegate
+
+-(void) didLoadScrapInSidebar:(MMScrapView *)scrap{
     // add to the bezel
     NSNumber* rotationAdjustment = [rotationAdjustments objectForKey:scrap.uuid];
     scrap.rotation += [rotationAdjustment floatValue];
-    [scrapsHeldInBezel addObject:scrap];
+    [self addScrapToBezelSidebar:scrap animated:NO];
 }
 
--(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
-    NSArray* allScraps = [scrapsHeldInBezel copy];
-    [scrapsHeldInBezel removeAllObjects];
-    for(MMScrapView* scrap in [allScraps reverseObjectEnumerator]){
-        [self addScrapToBezelSidebar:scrap animated:NO];
-    }
-}
-
--(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState *)scrapState{
+-(void) didLoadAllScrapsInSidebar:(MMScrapsInSidebarState *)_scrapState{
     // noop
+}
+
+-(void) didUnloadAllScrapsInSidebar:(MMScrapsInSidebarState *)scrapState{
+    // noop
+}
+
+-(MMScrapsOnPaperState*) paperStateForPageUUID:(NSString*)uuidOfPage{
+    return [bubbleDelegate pageForUUID:uuidOfPage].scrapsOnPaperState;
 }
 
 @end

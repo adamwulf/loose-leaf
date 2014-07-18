@@ -18,13 +18,16 @@
 @property (readonly) UIBezierPath* bezierPath;
 @property (nonatomic, assign) CGFloat scale;
 @property (nonatomic, assign) CGFloat rotation;
+@property (nonatomic, assign) NSDictionary* propertiesDictionary; // contains center/scale/rotation/uuid
 @property (nonatomic, assign) BOOL selected;
 @property (nonatomic, readonly) CGSize originalSize;
 @property (nonatomic, readonly) NSString* uuid;
+@property (nonatomic, readonly) NSString* owningPageUUID;
 @property (nonatomic, readonly) MMScrapViewState* state;
 
--(id) initWithScrapViewState:(MMScrapViewState*)scrapState;
-- (id)initWithBezierPath:(UIBezierPath*)path;
+-(id) initWithScrapViewState:(MMScrapViewState*)scrapState andPaperState:(MMScrapsOnPaperState*)paperState;
+-(id) initWithBezierPath:(UIBezierPath*)path andPaperState:(MMScrapsOnPaperState*)paperState;
+-(id) initWithBezierPath:(UIBezierPath *)path andScale:(CGFloat)scale andRotation:(CGFloat)rotation andPaperState:(MMScrapsOnPaperState*)paperState;
 
 -(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
 
@@ -35,6 +38,8 @@
 -(void) setShouldShowShadow:(BOOL)shouldShowShadow;
 
 -(void) stampContentsFrom:(JotView*)otherDrawableView;
+
+-(void) blockToFireWhenStateLoads:(void(^)())block;
 
 /**
  * will return the array of touches that this scrap
@@ -61,5 +66,7 @@
 
 -(MMScrapBackgroundView*) backgroundView;
 -(void) setBackgroundView:(MMScrapBackgroundView*)backgroundView;
+
+-(int) fullByteSize;
 
 @end

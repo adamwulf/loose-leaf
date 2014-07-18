@@ -1,30 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<array>
-	<dict>
-		<key>center.x</key>
-		<real>347.1075439453125</real>
-		<key>center.y</key>
-		<real>529.7657470703125</real>
-		<key>rotation</key>
-		<real>-1.3261244297027588</real>
-		<key>scale</key>
-		<real>1.0552759170532227</real>
-		<key>uuid</key>
+<dict>
+	<key>scrapsOnPageIDs</key>
+	<array>
 		<string>6D147292-7302-44EE-93A8-DDD5E9AFCD3C</string>
-	</dict>
-	<dict>
-		<key>center.x</key>
-		<real>465.6845703125</real>
-		<key>center.y</key>
-		<real>836.10040283203125</real>
-		<key>rotation</key>
-		<real>-1.2722158432006836</real>
-		<key>scale</key>
-		<real>1.0062975883483887</real>
-		<key>uuid</key>
 		<string>B84EB2AE-361A-4232-9272-952AD4046B91</string>
-	</dict>
-</array>
+	</array>
+	<key>allScrapProperties</key>
+	<array>
+		<dict>
+			<key>center.x</key>
+			<real>347.1075439453125</real>
+			<key>center.y</key>
+			<real>529.7657470703125</real>
+			<key>rotation</key>
+			<real>-1.326124429702759</real>
+			<key>scale</key>
+			<real>1.055275917053223</real>
+			<key>uuid</key>
+			<string>6D147292-7302-44EE-93A8-DDD5E9AFCD3C</string>
+		</dict>
+		<dict>
+			<key>center.x</key>
+			<real>465.6845703125</real>
+			<key>center.y</key>
+			<real>836.1004028320312</real>
+			<key>rotation</key>
+			<real>-1.272215843200684</real>
+			<key>scale</key>
+			<real>1.006297588348389</real>
+			<key>uuid</key>
+			<string>B84EB2AE-361A-4232-9272-952AD4046B91</string>
+		</dict>
+	</array>
+</dict>
 </plist>

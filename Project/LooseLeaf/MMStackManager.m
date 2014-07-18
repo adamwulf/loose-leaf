@@ -10,7 +10,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "NSArray+Map.h"
 #import "MMBlockOperation.h"
-#import "MMScrappedPaperView.h"
+#import "MMUndoablePaperView.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 
 @implementation MMStackManager
@@ -79,12 +79,12 @@
     NSMutableArray* hiddenPages = [NSMutableArray array];
     
     for(NSDictionary* pageDict in visiblePagesToCreate){
-        MMPaperView* page = [[MMScrappedPaperView alloc] initWithFrame:bounds andUUID:[pageDict objectForKey:@"uuid"]];
+        MMPaperView* page = [[MMUndoablePaperView alloc] initWithFrame:bounds andUUID:[pageDict objectForKey:@"uuid"]];
         [visiblePages addObject:page];
     }
     
     for(NSDictionary* pageDict in hiddenPagesToCreate){
-        MMPaperView* page = [[MMScrappedPaperView alloc] initWithFrame:bounds andUUID:[pageDict objectForKey:@"uuid"]];
+        MMPaperView* page = [[MMUndoablePaperView alloc] initWithFrame:bounds andUUID:[pageDict objectForKey:@"uuid"]];
         [hiddenPages addObject:page];
     }
     
