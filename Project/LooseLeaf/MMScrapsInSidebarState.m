@@ -80,19 +80,39 @@ static dispatch_queue_t importExportStateQueue;
                 // load all the states async
                 for(NSDictionary* scrapProperties in scrapProps){
                     // TODO: https://github.com/adamwulf/loose-leaf/issues/604
-                    MMScrapsOnPaperState* pageStateForScrap = [self.delegate paperStateForPageUUID:[scrapProperties objectForKey:@"pageUUID"]];
-                    MMScrapViewState* state = [[MMScrapViewState alloc] initWithUUID:[scrapProperties objectForKey:@"uuid"] andPaperState:pageStateForScrap];
-                    if(state){
+                    NSString* pageUUID = [scrapProperties objectForKey:@"pageUUID"];
+                    NSString* scrapUUID = [scrapProperties objectForKey:@"uuid"];
+                    MMScrapsOnPaperState* paperStateForScrap = [self.delegate paperStateForPageUUID:pageUUID];
+                    
+                    MMScrapView* scrapFromPaperState = [paperStateForScrap scrapForUUID:scrapUUID];
+                    if(scrapFromPaperState){
+                        NSLog(@"sidebar found scrap from page %@", scrapFromPaperState.uuid);
                         NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
-                        [props setObject:state forKey:@"state"];
+                        [props setObject:scrapFromPaperState forKey:@"scrap"];
                         [scrapPropsWithState addObject:props];
+                    }else{
+                        // couldn't find already built scrap, so load a state and
+                        // we'll build a scrap
+                        MMScrapViewState* state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:paperStateForScrap];
+                        if(state){
+                            NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
+                            [props setObject:state forKey:@"state"];
+                            [scrapPropsWithState addObject:props];
+                        }
                     }
                 }
                 
                 [NSThread performBlockOnMainThread:^{
                     for(NSDictionary* scrapProperties in scrapPropsWithState){
-                        MMScrapViewState* scrapState = [scrapProperties objectForKey:@"state"];
-                        MMScrapView* scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState andPaperState:scrapState.scrapsOnPaperState];
+                        MMScrapView* scrap = nil;
+                        if([scrapProperties objectForKey:@"scrap"]){
+                            scrap = [scrapProperties objectForKey:@"scrap"];
+                            NSLog(@"sidebar reused scrap %@", scrap.uuid);
+                        }else{
+                            MMScrapViewState* scrapState = [scrapProperties objectForKey:@"state"];
+                            scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState andPaperState:scrapState.scrapsOnPaperState];
+                            NSLog(@"sidebar built scrap %@", scrap.uuid);
+                        }
                         if(scrap){
                             [scrap setPropertiesDictionary:scrapProperties];
                             @synchronized(allScrapsInSidebar){

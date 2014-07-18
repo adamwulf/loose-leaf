@@ -89,7 +89,9 @@ static dispatch_queue_t importExportStateQueue;
                 
                 // load all the states async
                 for(NSDictionary* scrapProperties in scrapProps){
-                    MMScrapViewState* state = [[MMScrapViewState alloc] initWithUUID:[scrapProperties objectForKey:@"uuid"] andPaperState:self];
+                    NSString* scrapUUID = [scrapProperties objectForKey:@"uuid"];
+                    NSLog(@"loading scrap %@ for page %@", scrapUUID, delegate.uuid);
+                    MMScrapViewState* state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:self];
                     if(state){
                         NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
                         [props setObject:state forKey:@"state"];
