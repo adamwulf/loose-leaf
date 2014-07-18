@@ -9,6 +9,12 @@
 #import "MMUndoRedoGroupItem.h"
 #import "NSArray+Map.h"
 
+@interface MMUndoRedoGroupItem (Private)
+
+@property (readonly) NSArray* undoableItems;
+
+@end
+
 @implementation MMUndoRedoGroupItem{
     NSArray* undoableItems;
 }
@@ -18,12 +24,13 @@
 }
 
 -(id) initForPage:(MMUndoablePaperView *)_page withItems:(NSArray *)_undoableItems{
+    __weak MMUndoRedoGroupItem* weakSelf = self;
     if(self = [super initWithUndoBlock:^{
-        for(NSObject<MMUndoRedoItem>*obj in undoableItems){
+        for(NSObject<MMUndoRedoItem>*obj in weakSelf.undoableItems){
             [obj undo];
         }
     } andRedoBlock:^{
-        for(NSObject<MMUndoRedoItem>*obj in [undoableItems reverseObjectEnumerator]){
+        for(NSObject<MMUndoRedoItem>*obj in [weakSelf.undoableItems reverseObjectEnumerator]){
             [obj redo];
         }
     } forPage:_page]){
@@ -70,6 +77,12 @@
         str = [str stringByAppendingString:[obj description]];
     }
     return [NSString stringWithFormat:@"[MMUndoRedoGroupItem (%@)]", str];
+}
+
+#pragma mark - Private Properties
+
+-(NSArray*) undoableItems{
+    return undoableItems;
 }
 
 @end

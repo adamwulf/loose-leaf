@@ -10,42 +10,51 @@
 #import "MMUndoablePaperView.h"
 #import "MMScrapSidebarContainerView.h"
 
+
+@interface MMUndoRedoBezeledScrapItem (Private)
+
+@property (readonly) NSDictionary* propertiesWhenRemoved;
+@property (assign) BOOL sidebarEverDidContainScrap;
+
+@end
+
 @implementation MMUndoRedoBezeledScrapItem{
     NSDictionary* propertiesWhenRemoved;
     NSString* scrapUUID;
     BOOL sidebarEverDidContainScrap;
 }
 
+@synthesize scrapUUID;
+
 +(id) itemForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)scrapUUID andProperties:(NSDictionary*)scrapProperties{
     return [[MMUndoRedoBezeledScrapItem alloc] initForPage:_page andScrapUUID:scrapUUID andProperties:scrapProperties];
 }
 
 -(id) initForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)_scrapUUID andProperties:(NSDictionary*)scrapProperties{
-    sidebarEverDidContainScrap = NO;
-    scrapUUID = _scrapUUID;
-    propertiesWhenRemoved = scrapProperties;
     __weak MMUndoRedoBezeledScrapItem* weakSelf = self;
     if(self = [super initWithUndoBlock:^{
-        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:scrapUUID];
+        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
         if([weakSelf.page.bezelContainerView containsScrap:scrap]){
-            sidebarEverDidContainScrap = YES;
-            [weakSelf.page.bezelContainerView didTapOnScrapFromMenu:scrap withPreferredScrapProperties:scrapProperties];
+            weakSelf.sidebarEverDidContainScrap = YES;
+            [weakSelf.page.bezelContainerView didTapOnScrapFromMenu:scrap withPreferredScrapProperties:weakSelf.propertiesWhenRemoved];
         }else{
-            sidebarEverDidContainScrap = NO;
+            weakSelf.sidebarEverDidContainScrap = NO;
             [weakSelf.page.scrapsOnPaperState showScrap:scrap];
-            [scrap setPropertiesDictionary:propertiesWhenRemoved];
-            NSUInteger subviewIndex = [[propertiesWhenRemoved objectForKey:@"subviewIndex"] unsignedIntegerValue];
+            [scrap setPropertiesDictionary:weakSelf.propertiesWhenRemoved];
+            NSUInteger subviewIndex = [[weakSelf.propertiesWhenRemoved objectForKey:@"subviewIndex"] unsignedIntegerValue];
             [scrap.superview insertSubview:scrap atIndex:subviewIndex];
         }
     } andRedoBlock:^{
-        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:scrapUUID];
-        if(sidebarEverDidContainScrap){
+        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
+        if(weakSelf.sidebarEverDidContainScrap){
             [weakSelf.page.bezelContainerView addScrapToBezelSidebar:scrap animated:YES];
         }else{
             [weakSelf.page.scrapsOnPaperState hideScrap:scrap];
         }
     } forPage:_page]){
-        // noop
+        sidebarEverDidContainScrap = NO;
+        scrapUUID = _scrapUUID;
+        propertiesWhenRemoved = scrapProperties;
     };
     return self;
 }
@@ -78,6 +87,20 @@
 
 -(NSString*) description{
     return [NSString stringWithFormat:@"[%@ %@]", NSStringFromClass([self class]), scrapUUID];
+}
+
+#pragma mark - Private Properties
+
+-(BOOL) sidebarEverDidContainScrap{
+    return sidebarEverDidContainScrap;
+}
+
+-(void) setSidebarEverDidContainScrap:(BOOL)_sidebarEverDidContainScrap{
+    sidebarEverDidContainScrap = _sidebarEverDidContainScrap;
+}
+
+-(NSDictionary*) propertiesWhenRemoved{
+    return propertiesWhenRemoved;
 }
 
 @end

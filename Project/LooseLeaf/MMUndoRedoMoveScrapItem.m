@@ -24,13 +24,7 @@
     NSString* scrapUUID;
 }
 
--(NSDictionary*) startProperties{
-    return startProperties;
-}
-
--(NSDictionary*) endProperties{
-    return endProperties;
-}
+@synthesize scrapUUID;
 
 +(id) itemForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)scrapUUID from:(NSDictionary *)startProperties to:(NSDictionary *)endProperties{
     return [[MMUndoRedoMoveScrapItem alloc] initForPage:_page andScrapUUID:scrapUUID from:startProperties to:endProperties];
@@ -42,12 +36,12 @@
     }
     __weak MMUndoRedoMoveScrapItem* weakSelf = self;
     if(self = [super initWithUndoBlock:^{
-        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:scrapUUID];
+        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
         [scrap setPropertiesDictionary:weakSelf.startProperties];
         NSUInteger subviewIndex = [[weakSelf.startProperties objectForKey:@"subviewIndex"] unsignedIntegerValue];
         [scrap.superview insertSubview:scrap atIndex:subviewIndex];
     } andRedoBlock:^{
-        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:scrapUUID];
+        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
         [scrap setPropertiesDictionary:weakSelf.endProperties];
         NSUInteger subviewIndex = [[weakSelf.endProperties objectForKey:@"subviewIndex"] unsignedIntegerValue];
         [scrap.superview insertSubview:scrap atIndex:subviewIndex];
@@ -98,6 +92,17 @@
 
 -(NSString*) description{
     return [NSString stringWithFormat:@"[%@ %@]", NSStringFromClass([self class]), scrapUUID];
+}
+
+#pragma mark - Private Properties
+
+
+-(NSDictionary*) startProperties{
+    return startProperties;
+}
+
+-(NSDictionary*) endProperties{
+    return endProperties;
 }
 
 @end

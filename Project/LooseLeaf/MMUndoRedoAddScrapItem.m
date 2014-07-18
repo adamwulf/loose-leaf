@@ -10,6 +10,12 @@
 #import "MMUndoablePaperView.h"
 #import "MMPageUndoRedoManager.h"
 
+@interface MMUndoRedoAddScrapItem (Private)
+
+@property (readonly) NSDictionary* propertiesWhenAdded;
+
+@end
+
 @implementation MMUndoRedoAddScrapItem{
     NSDictionary* propertiesWhenAdded;
     NSString* scrapUUID;
@@ -22,22 +28,21 @@
 }
 
 -(id) initForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)_scrapUUID andProperties:(NSDictionary*)properties{
-    propertiesWhenAdded = properties;
-    scrapUUID = _scrapUUID;
-    if(!propertiesWhenAdded || !scrapUUID){
-        @throw [NSException exceptionWithName:@"InvalidUndoItem" reason:@"Undo Item must have scrap properties" userInfo:nil];
-    }
     __weak MMUndoRedoAddScrapItem* weakSelf = self;
     if(self = [super initWithUndoBlock:^{
-        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:scrapUUID];
+        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
         [weakSelf.page.scrapsOnPaperState hideScrap:scrap];
     } andRedoBlock:^{
-        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:scrapUUID];
-        NSUInteger subviewIndex = [[propertiesWhenAdded objectForKey:@"subviewIndex"] unsignedIntegerValue];
+        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
+        NSUInteger subviewIndex = [[weakSelf.propertiesWhenAdded objectForKey:@"subviewIndex"] unsignedIntegerValue];
         [weakSelf.page.scrapsOnPaperState showScrap:scrap atIndex:subviewIndex];
-        [scrap setPropertiesDictionary:propertiesWhenAdded];
+        [scrap setPropertiesDictionary:weakSelf.propertiesWhenAdded];
     } forPage:_page]){
-        // noop
+        propertiesWhenAdded = properties;
+        scrapUUID = _scrapUUID;
+        if(!propertiesWhenAdded || !scrapUUID){
+            @throw [NSException exceptionWithName:@"InvalidUndoItem" reason:@"Undo Item must have scrap properties" userInfo:nil];
+        }
     };
     return self;
 }
@@ -67,6 +72,12 @@
 
 -(NSString*) description{
     return [NSString stringWithFormat:@"[%@ %@]", NSStringFromClass([self class]), scrapUUID];
+}
+
+#pragma mark - Private Properties
+
+-(NSDictionary*) propertiesWhenAdded{
+    return propertiesWhenAdded;
 }
 
 @end

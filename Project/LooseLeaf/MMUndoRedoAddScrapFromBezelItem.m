@@ -10,27 +10,34 @@
 #import "MMUndoablePaperView.h"
 #import "MMScrapSidebarContainerView.h"
 
+@interface MMUndoRedoAddScrapFromBezelItem (Private)
+
+@property (readonly) NSDictionary* properties;
+
+@end
+
 @implementation MMUndoRedoAddScrapFromBezelItem{
     NSString* scrapUUID;
     NSDictionary* properties;
 }
+
+@synthesize scrapUUID;
 
 +(id) itemForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)scrapUUID andProperties:(NSDictionary*)scrapProperties{
     return [[MMUndoRedoAddScrapFromBezelItem alloc] initForPage:_page andScrapUUID:scrapUUID andProperties:scrapProperties];
 }
 
 -(id) initForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)_scrapUUID andProperties:(NSDictionary*)scrapProperties{
-    scrapUUID = _scrapUUID;
-    properties = scrapProperties;
     __weak MMUndoRedoAddScrapFromBezelItem* weakSelf = self;
     if(self = [super initWithUndoBlock:^{
-        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:scrapUUID];
+        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
         [weakSelf.page.bezelContainerView addScrapToBezelSidebar:scrap animated:YES];
     } andRedoBlock:^{
-        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:scrapUUID];
-        [weakSelf.page.bezelContainerView didTapOnScrapFromMenu:scrap withPreferredScrapProperties:properties];
+        MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
+        [weakSelf.page.bezelContainerView didTapOnScrapFromMenu:scrap withPreferredScrapProperties:weakSelf.properties];
     } forPage:_page]){
-        // noop
+        scrapUUID = _scrapUUID;
+        properties = scrapProperties;
     };
     return self;
 }
@@ -60,6 +67,12 @@
 
 -(NSString*) description{
     return [NSString stringWithFormat:@"[%@ %@]", NSStringFromClass([self class]), scrapUUID];
+}
+
+#pragma mark - Private Properties
+
+-(NSDictionary*) properties{
+    return properties;
 }
 
 @end

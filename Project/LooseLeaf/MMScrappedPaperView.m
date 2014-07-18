@@ -567,8 +567,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 
 -(void) completeScissorsCut{
-    UIBezierPath* scissorPath = [shapeBuilderView completeAndGenerateShape];
-    [self completeScissorsCutWithPath:scissorPath];
+    @autoreleasepool {
+        UIBezierPath* scissorPath = [shapeBuilderView completeAndGenerateShape];
+        [self completeScissorsCutWithPath:scissorPath];
+    }
 }
 
 

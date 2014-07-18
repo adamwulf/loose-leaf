@@ -11,6 +11,8 @@
 
 @interface MMUndoRedoMoveScrapItem : MMUndoRedoPageItem
 
+@property (readonly) NSString* scrapUUID;
+
 +(id) itemForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)scrapUUID from:(NSDictionary*)startProperties to:(NSDictionary*)endProperties;
 
 -(id) initForPage:(MMUndoablePaperView*)page andScrapUUID:(NSString*)scrapUUID from:(NSDictionary*)startProperties to:(NSDictionary*)endProperties;
