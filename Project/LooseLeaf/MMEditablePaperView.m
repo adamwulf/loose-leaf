@@ -275,14 +275,14 @@ dispatch_queue_t importThumbnailQueue;
                                      [[MMLoadImageCache sharedInstance] updateCacheForPath:[self thumbnailPath] toImage:thumbnail];
                                      cachedImgViewImage = thumbnail;
                                      onComplete(YES);
-                                     NSLog(@"saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
+//                                     NSLog(@"saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
                                  }else{
                                      onComplete(NO);
-                                     NSLog(@"duplicate saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
+//                                     NSLog(@"duplicate saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
                                  }
                              }];
         }else{
-            NSLog(@"don't have a drawable view, notifying that our save is complete b/c we didn't need one");
+//            NSLog(@"don't have a drawable view, notifying that our save is complete b/c we didn't need one");
             onComplete(NO);
         }
 

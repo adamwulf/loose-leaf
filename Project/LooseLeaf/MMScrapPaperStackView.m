@@ -1669,7 +1669,7 @@ int skipAll = NO;
         // set the scrap anchor to its center
         [UIView setAnchorPoint:CGPointMake(.5, .5) forView:clonedScrap];
         
-        NSLog(@"clone scrap %@ into %@", scrap.uuid, clonedScrap.uuid);
+//        NSLog(@"clone scrap %@ into %@", scrap.uuid, clonedScrap.uuid);
     };
     
     if(needsStateLoading){

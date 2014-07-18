@@ -86,7 +86,7 @@ static dispatch_queue_t importExportStateQueue;
                     
                     MMScrapView* scrapFromPaperState = [paperStateForScrap scrapForUUID:scrapUUID];
                     if(scrapFromPaperState){
-                        NSLog(@"sidebar found scrap from page %@", scrapFromPaperState.uuid);
+//                        NSLog(@"sidebar found scrap from page %@", scrapFromPaperState.uuid);
                         NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
                         [props setObject:scrapFromPaperState forKey:@"scrap"];
                         [scrapPropsWithState addObject:props];
@@ -107,11 +107,11 @@ static dispatch_queue_t importExportStateQueue;
                         MMScrapView* scrap = nil;
                         if([scrapProperties objectForKey:@"scrap"]){
                             scrap = [scrapProperties objectForKey:@"scrap"];
-                            NSLog(@"sidebar reused scrap %@", scrap.uuid);
+//                            NSLog(@"sidebar reused scrap %@", scrap.uuid);
                         }else{
                             MMScrapViewState* scrapState = [scrapProperties objectForKey:@"state"];
                             scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState andPaperState:scrapState.scrapsOnPaperState];
-                            NSLog(@"sidebar built scrap %@", scrap.uuid);
+//                            NSLog(@"sidebar built scrap %@", scrap.uuid);
                         }
                         if(scrap){
                             [scrap setPropertiesDictionary:scrapProperties];

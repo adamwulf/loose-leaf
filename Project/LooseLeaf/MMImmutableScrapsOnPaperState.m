@@ -23,7 +23,6 @@
             return [obj uuid];
         }];
         allScrapsForPage = [_allScraps copy];
-        NSLog(@"alloc of %p immutable scraps on paper state for %@", self, scrapIDsPath);
     }
     return self;
 }
@@ -74,10 +73,6 @@
         [self saveStateToDiskBlocking];
     }
     [super unload];
-}
-
--(void) dealloc{
-    NSLog(@"dealloc of %p immutable scraps on paper state for %@", self, scrapIDsPath);
 }
 
 @end

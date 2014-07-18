@@ -95,7 +95,7 @@ static dispatch_queue_t importExportStateQueue;
 
                     NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
                     if(scrap){
-                        NSLog(@"page found scrap on sidebar %@", scrapUUID);
+//                        NSLog(@"page found scrap on sidebar %@", scrapUUID);
                         [props setObject:scrap forKey:@"scrap"];
                         [scrapPropsWithState addObject:props];
                     }else{
@@ -114,11 +114,11 @@ static dispatch_queue_t importExportStateQueue;
                         MMScrapView* scrap = nil;
                         if([scrapProperties objectForKey:@"scrap"]){
                             scrap = [scrapProperties objectForKey:@"scrap"];
-                            NSLog(@"page %@ reused scrap %@", delegate.uuid, scrap.uuid);
+//                            NSLog(@"page %@ reused scrap %@", delegate.uuid, scrap.uuid);
                         }else{
                             MMScrapViewState* scrapState = [scrapProperties objectForKey:@"state"];
                             scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState andPaperState:self];
-                            NSLog(@"page %@ built scrap %@", delegate.uuid, scrap.uuid);
+//                            NSLog(@"page %@ built scrap %@", delegate.uuid, scrap.uuid);
                             // only set properties if we built the scrap,
                             // otherwise it's in the sidebar and we don't
                             // own it right now
