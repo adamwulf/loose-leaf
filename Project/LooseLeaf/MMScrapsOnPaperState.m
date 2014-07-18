@@ -178,13 +178,21 @@ static dispatch_queue_t importExportStateQueue;
         dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
             @autoreleasepool {
                 if([self isStateLoaded]){
-                    NSArray* scraps = [self.delegate.scrapsOnPaper copy];
-                    for(MMScrapView* scrap in scraps){
-                        [scrap unloadState];
+                    @synchronized(allScrapsForPage){
+                        for(MMScrapView* scrap in allScrapsForPage){
+                            if([delegate scrapForUUIDIfAlreadyExists:scrap.uuid]){
+                                // if this is true, then the scrap is being held
+                                // by the sidebar, so we shouldn't manage its
+                                // state
+                            }else{
+                                [scrap unloadState];
+                            }
+                        }
                     }
+                    NSArray* visibleScraps = [self.delegate.scrapsOnPaper copy];
                     [allScrapsForPage removeAllObjects];
                     [NSThread performBlockOnMainThread:^{
-                        [scraps makeObjectsPerformSelector:@selector(removeFromSuperview)];
+                        [visibleScraps makeObjectsPerformSelector:@selector(removeFromSuperview)];
                         [self.delegate didUnloadAllScrapsFor:self];
                     }];
                     @synchronized(self){

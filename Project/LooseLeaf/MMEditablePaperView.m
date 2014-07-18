@@ -257,28 +257,35 @@ dispatch_queue_t importThumbnailQueue;
     if([self hasEditsToSave]){
         // something has changed since the last time we saved,
         // so ask the JotView to save out the png of its data
-        [drawableView exportImageTo:[self inkPath]
-                   andThumbnailTo:[self thumbnailPath]
-                       andStateTo:[self plistPath]
-                       onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* immutableState){
-                           if(immutableState){
-                               // sometimes, if we try to export multiple times
-                               // very very quickly, the 3+ exports will fail
-                               // with all arguments=nil because the first export
-                               // is still going (and a 2nd export is already waiting
-                               // in queue)
-                               // so only trigger our save action if we did in fact
-                               // save
-                               definitelyDoesNotHaveAnInkThumbnail = NO;
-                               [paperState wasSavedAtImmutableState:immutableState];
-                               [[MMLoadImageCache sharedInstance] updateCacheForPath:[self thumbnailPath] toImage:thumbnail];
-                               cachedImgViewImage = thumbnail;
-                               onComplete(YES);
-                               debug_NSLog(@"saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
-                           }else{
-                               onComplete(NO);
-                           }
-                       }];
+        if(drawableView){
+            [drawableView exportImageTo:[self inkPath]
+                         andThumbnailTo:[self thumbnailPath]
+                             andStateTo:[self plistPath]
+                             onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* immutableState){
+                                 if(immutableState){
+                                     // sometimes, if we try to export multiple times
+                                     // very very quickly, the 3+ exports will fail
+                                     // with all arguments=nil because the first export
+                                     // is still going (and a 2nd export is already waiting
+                                     // in queue)
+                                     // so only trigger our save action if we did in fact
+                                     // save
+                                     definitelyDoesNotHaveAnInkThumbnail = NO;
+                                     [paperState wasSavedAtImmutableState:immutableState];
+                                     [[MMLoadImageCache sharedInstance] updateCacheForPath:[self thumbnailPath] toImage:thumbnail];
+                                     cachedImgViewImage = thumbnail;
+                                     onComplete(YES);
+                                     NSLog(@"saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
+                                 }else{
+                                     onComplete(NO);
+                                     NSLog(@"duplicate saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
+                                 }
+                             }];
+        }else{
+            NSLog(@"don't have a drawable view, notifying that our save is complete b/c we didn't need one");
+            onComplete(NO);
+        }
+
     }else{
         // already saved, but don't need to write
         // anything new to disk
