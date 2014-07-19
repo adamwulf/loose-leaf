@@ -31,7 +31,7 @@
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(JotGLContext*)context;
 -(void) unloadState;
 -(void) saveToDisk:(void (^)(BOOL didSaveEdits))onComplete;
--(void) setCanvasVisible:(BOOL)isVisible;
+-(void) updateThumbnailVisibility;
 -(void) setEditable:(BOOL)isEditable;
 -(BOOL) isEditable;
 -(void) cancelCurrentStrokeIfAny;

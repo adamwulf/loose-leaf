@@ -184,7 +184,7 @@ static MMPageCacheManager* _instance = nil;
                     // the page view
                     [currentEditablePage setDrawableView:nil];
                     [currentEditablePage setEditable:NO];
-                    [currentEditablePage setCanvasVisible:NO];
+                    [currentEditablePage updateThumbnailVisibility];
                     currentEditablePage = editableTopPage;
                     //                debug_NSLog(@"did switch top page to %@", currentEditablePage.uuid);
                     [currentEditablePage setDrawableView:drawableView];

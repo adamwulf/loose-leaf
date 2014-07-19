@@ -174,6 +174,7 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 -(void) unload{
+    NSLog(@"unloading scrap state %p", self);
     if([self isStateLoaded] || isLoading){
         dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
             @autoreleasepool {

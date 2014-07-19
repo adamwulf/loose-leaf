@@ -51,4 +51,6 @@
 
 -(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block;
 
+-(void) updateThumbnailVisibility;
+
 @end

@@ -10,6 +10,27 @@
 #import "MMBlockOperation.h"
 #import "NSThread+BlockAdditions.h"
 
+@interface MMImageView : UIImageView
+
+@end
+
+@implementation MMImageView
+
+-(id)initWithFrame:(CGRect)frame{
+    if(self = [super initWithFrame:frame]){
+//        self.layer.borderColor = [UIColor redColor].CGColor;
+//        self.layer.borderWidth = 100;
+    }
+    return self;
+}
+
+-(void) setHidden:(BOOL)hidden{
+//    NSLog(@"setting %p hidden: %d", self, hidden);
+    [super setHidden:hidden];
+}
+
+@end
+
 @implementation MMCachedPreviewManager{
     NSMutableArray* arrayOfImageViews;
     NSMutableArray* toDealloc;
@@ -45,7 +66,7 @@ static MMCachedPreviewManager* _instance = nil;
         cachedImgView.frame = aView.bounds;
         return cachedImgView;
     }
-    UIImageView* cachedImgView = [[UIImageView alloc] initWithFrame:aView.bounds];
+    UIImageView* cachedImgView = [[MMImageView alloc] initWithFrame:aView.bounds];
     cachedImgView.frame = aView.bounds;
     cachedImgView.contentMode = UIViewContentModeScaleAspectFill;
     cachedImgView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
