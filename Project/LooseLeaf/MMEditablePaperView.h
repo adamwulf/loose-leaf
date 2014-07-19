@@ -34,6 +34,7 @@
 -(void) setCanvasVisible:(BOOL)isVisible;
 -(void) setEditable:(BOOL)isEditable;
 -(BOOL) isEditable;
+-(void) cancelCurrentStrokeIfAny;
 
 // abstract
 -(void) saveToDisk;

@@ -361,6 +361,17 @@ static int count = 0;
     return cachedImgViewImage;
 }
 
+-(void) cancelCurrentStrokeIfAny{
+    CheckMainThread;
+    if(paperState.currentStroke){
+        if([[JotStrokeManager sharedInstace] cancelStroke:paperState.currentStroke]){
+            NSLog(@"cancelled stroke");
+            return;
+        }
+    }
+    NSLog(@"couldn't cancel a stroke");
+}
+
 
 
 #pragma mark - Ruler Tool

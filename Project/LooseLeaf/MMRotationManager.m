@@ -53,7 +53,7 @@ static MMRotationManager* _instance = nil;
             accelerationX = data.acceleration.x * kFilteringFactor + accelerationX * (1.0 - kFilteringFactor);
             accelerationY = data.acceleration.y * kFilteringFactor + accelerationY * (1.0 - kFilteringFactor);
             accelerationZ = data.acceleration.z * kFilteringFactor + accelerationZ * (1.0 - kFilteringFactor);
-            CGFloat absZ = accelerationZ < 0 ? -accelerationZ : accelerationZ;
+//            CGFloat absZ = accelerationZ < 0 ? -accelerationZ : accelerationZ;
 //            debug_NSLog(@"x: %f   y: %f   z: %f   diff: %f", accelerationX, accelerationY, absZ);
             CGFloat newRawReading = atan2(accelerationY, accelerationX);
             currentTrust += (goalTrust - currentTrust) / 10.0;

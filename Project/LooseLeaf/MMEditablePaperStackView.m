@@ -911,6 +911,7 @@ struct SidebarButton{
 
 -(void) beginUITransitionFromPageView{
     [super beginUITransitionFromPageView];
+    [[[MMPageCacheManager sharedInstance] currentEditablePage] cancelCurrentStrokeIfAny];
     [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
 }
 
