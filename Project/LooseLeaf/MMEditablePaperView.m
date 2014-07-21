@@ -125,14 +125,8 @@ dispatch_queue_t importThumbnailQueue;
     }
 }
 
--(void) setCanvasVisible:(BOOL)isCanvasVisible{
-    if(isCanvasVisible){
-        drawableView.hidden = NO;
-        shapeBuilderView.hidden = NO;
-    }else{
-        drawableView.hidden = YES;
-        shapeBuilderView.hidden = YES;
-    }
+-(void) updateThumbnailVisibility{
+    @throw kAbstractMethodException;
 }
 
 -(void) setEditable:(BOOL)isEditable{
@@ -202,16 +196,16 @@ dispatch_queue_t importThumbnailQueue;
                     drawableView.layer.anchorPoint = CGPointMake(0,0);
                     drawableView.layer.position = CGPointMake(0,0);
                     drawableView.delegate = self;
-                    [self setCanvasVisible:YES];
                     [self setEditable:YES];
+                    [self updateThumbnailVisibility];
                 }
             }];
         }else{
             [self generateDebugView:NO];
         }
     }else if(drawableView && [self hasStateLoaded]){
-        [self setCanvasVisible:YES];
         [self setEditable:YES];
+        [self updateThumbnailVisibility];
     }
 }
 
@@ -361,6 +355,15 @@ static int count = 0;
 
 -(UIImage*) cachedImgViewImage{
     return cachedImgViewImage;
+}
+
+-(void) cancelCurrentStrokeIfAny{
+    CheckMainThread;
+    if(paperState.currentStroke){
+        if([[JotStrokeManager sharedInstace] cancelStroke:paperState.currentStroke]){
+            return;
+        }
+    }
 }
 
 

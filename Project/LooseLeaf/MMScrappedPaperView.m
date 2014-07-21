@@ -50,6 +50,9 @@
     // this will help us since we use lots of threads
     // during thumbnail loading.
     BOOL isAskedToLoadThumbnail;
+    // has pending icon update. this will be YES
+    // during a save
+    BOOL hasPendingScrappedIconUpdate;
 }
 
 @synthesize scrapsOnPaperState;
@@ -80,7 +83,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         
         scrapsOnPaperState = [[MMScrapsOnPaperState alloc] initWithDelegate:self];
         
-        [self setCanvasVisible:NO];
+        [self updateThumbnailVisibility];
     }
     return self;
 }
@@ -91,24 +94,57 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 #pragma mark - Public Methods
 
--(void) setCanvasVisible:(BOOL)isCanvasVisible{
-    [super setCanvasVisible:isCanvasVisible];
-    if(isCanvasVisible){
-        cachedImgView.hidden = YES;
-        scrapContainerView.hidden = NO;
-    }else{
-        cachedImgView.hidden = NO;
-        if(scrapsOnPaperState.isStateLoaded){
-            // if we're loaded, then show the scraps and
-            // only the ink thumbnail
+// https://github.com/adamwulf/loose-leaf/issues/614
+//
+// should show combinations of drawable view, scrap container,
+// ink thumb, or scrapped thumb depending on editable state
+// and what's loaded into memory
+-(void) updateThumbnailVisibility{
+    CheckMainThread;
+    if(drawableView && drawableView.superview && (self.scale > kMinPageZoom || hasPendingScrappedIconUpdate)){
+        // if we have a drawable view, and it's been added to our page
+        // then we know it was it's prepped and ready to show valid ink
+        if([self.paperState isStateLoaded] && [self.scrapsOnPaperState isStateLoaded]){
+            // page is editable and ready for work
+//            NSLog(@"page %@ is editing, so nil thumb", self.uuid);
+            [self setThumbnailTo:nil];
             scrapContainerView.hidden = NO;
+            drawableView.hidden = NO;
+            shapeBuilderView.hidden = NO;
+            cachedImgView.hidden = YES;
+        }else if([self.scrapsOnPaperState isStateLoaded]){
+            // scrap state is loaded, so at least
+            // show that
+//            NSLog(@"page %@ wants editing, has scraps, showing ink thumb", self.uuid);
             [self setThumbnailTo:[self cachedImgViewImage]];
+            scrapContainerView.hidden = NO;
+            drawableView.hidden = YES;
+            shapeBuilderView.hidden = YES;
+            cachedImgView.hidden = NO;
         }else{
-            // otherwise, show the scrapped thumbnail
-            // and hide teh scrap container
+            // scrap state isn't loaded, so show
+            // our thumbnail
+//            NSLog(@"page %@ wants editing, doens't have scraps, showing scrap thumb", self.uuid);
+            [self setThumbnailTo:scrappedImgViewImage.image];
             scrapContainerView.hidden = YES;
-            [self setThumbnailTo:[self scrappedImgViewImage]];
+            drawableView.hidden = YES;
+            shapeBuilderView.hidden = YES;
+            cachedImgView.hidden = NO;
         }
+    }else if([self.scrapsOnPaperState isStateLoaded] && [self.scrapsOnPaperState hasEditsToSave]){
+//        NSLog(@"page %@ isn't editing, has unsaved scraps, showing ink thumb", self.uuid);
+        [self setThumbnailTo:[self cachedImgViewImage]];
+        scrapContainerView.hidden = NO;
+        drawableView.hidden = YES;
+        shapeBuilderView.hidden = YES;
+        cachedImgView.hidden = NO;
+    }else{
+//        NSLog(@"page %@ isn't editing, scraps are saved, showing scrapped thumb", self.uuid);
+        [self setThumbnailTo:scrappedImgViewImage.image];
+        scrapContainerView.hidden = YES;
+        drawableView.hidden = YES;
+        shapeBuilderView.hidden = YES;
+        cachedImgView.hidden = NO;
     }
 }
 
@@ -930,18 +966,18 @@ static dispatch_queue_t concurrentBackgroundQueue;
         if(!cachedImgView && img){
             cachedImgView = [[MMCachedPreviewManager sharedInstace] requestCachedImageViewForView:self];
             cachedImgView.image = img;
-            cachedImgView.hidden = !scrapContainerView.hidden;
             if(drawableView){
                 [self.contentView insertSubview:cachedImgView belowSubview:drawableView];
             }else{
                 [self.contentView insertSubview:cachedImgView belowSubview:scrapContainerView];
             }
         }else if(cachedImgView && !img){
+            // giving the cachedImgView back to the cache will automatically
+            // remove it from the superview
             [[MMCachedPreviewManager sharedInstace] giveBackCachedImageView:cachedImgView];
             cachedImgView = nil;
         }else if(img){
             cachedImgView.image = img;
-            cachedImgView.hidden = !scrapContainerView.hidden;
         }
     }
 }
@@ -967,6 +1003,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // track if all of our scraps have saved
     dispatch_semaphore_t sema2 = dispatch_semaphore_create(0);
 
+    [self updateThumbnailVisibility];
+    
+    @synchronized(self){
+        hasPendingScrappedIconUpdate = YES;
+    }
     
     __block BOOL pageHadBeenChanged = NO;
     __block BOOL scrapsHadBeenChanged = NO;
@@ -1006,9 +1047,15 @@ static dispatch_queue_t concurrentBackgroundQueue;
             
 //            debug_NSLog(@"something actually had changed %d %d", pageHadBeenChanged, scrapsHadBeenChanged);
             [self updateFullPageThumbnail:immutableScrapState];
-            
+
+            @synchronized(self){
+                hasPendingScrappedIconUpdate = NO;
+            }
+
             [NSThread performBlockOnMainThread:^{
                 debug_NSLog(@"notifying did save page %@ at %lu", self.uuid, (unsigned long)self.paperState.lastSavedUndoHash);
+                // reset canvas visibility
+                [self updateThumbnailVisibility];
                 [self.delegate didSavePage:self];
                 if(onComplete) onComplete(YES);
             }];
@@ -1083,13 +1130,12 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
     // check to see if we've also loaded
     [self didLoadState:self.paperState];
-    scrapContainerView.hidden = NO;
     [self setThumbnailTo:[self cachedImgViewImage]];
+    [self updateThumbnailVisibility];
 }
 
 -(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
-    scrapContainerView.hidden = YES;
-    [self didDecompressImage:scrappedImgViewImage];
+    [self updateThumbnailVisibility];
 }
 
 /**
@@ -1144,6 +1190,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
             [self setThumbnailTo:nil];
         }
     }
+    [self updateThumbnailVisibility];
 }
 
 -(void) unloadCachedPreview{

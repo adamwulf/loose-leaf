@@ -454,6 +454,7 @@ struct SidebarButton{
         }
     }
     [super isBezelingInLeftWithGesture:bezelGesture];
+    [[visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInGestureRecognizer *)bezelGesture{
@@ -468,6 +469,7 @@ struct SidebarButton{
         }
     }
     [super isBezelingInRightWithGesture:bezelGesture];
+    [[bezelStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 #pragma mark - MMPaperViewDelegate
@@ -529,8 +531,8 @@ struct SidebarButton{
     // ok, we've zoomed into this page now
     if([page isKindOfClass:[MMEditablePaperView class]]){
         MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
-        [pageToSave setCanvasVisible:YES];
         [pageToSave setEditable:YES];
+        [pageToSave updateThumbnailVisibility];
 //        debug_NSLog(@"page %@ is editable", pageToSave.uuid);
     }
     [rulerView setHidden:NO];
@@ -542,8 +544,8 @@ struct SidebarButton{
     [rulerView setHidden:NO];
     MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
     if(![editablePage hasEditsToSave]){
-        [editablePage setCanvasVisible:NO];
         [editablePage setEditable:NO];
+        [editablePage updateThumbnailVisibility];
     }
 //    [TestFlight passCheckpoint:@"NAV_TO_PAGE_FROM_LIST"];
 }
@@ -558,8 +560,8 @@ struct SidebarButton{
 //                debug_NSLog(@"page still has edits to save...");
             }else{
 //                debug_NSLog(@"page is done saving...");
-                [(MMEditablePaperView*)page setCanvasVisible:NO];
                 [(MMEditablePaperView*)page setEditable:NO];
+                [(MMEditablePaperView*)page updateThumbnailVisibility];
 //                debug_NSLog(@"thumb for %@ is visible", page.uuid);
             }
         }
@@ -910,7 +912,9 @@ struct SidebarButton{
 
 -(void) beginUITransitionFromPageView{
     [super beginUITransitionFromPageView];
+    [[[MMPageCacheManager sharedInstance] currentEditablePage] cancelCurrentStrokeIfAny];
     [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+    [[visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 -(void) beginUITransitionFromListView{
@@ -921,11 +925,13 @@ struct SidebarButton{
 -(void) finishUITransitionToListView{
     [super finishUITransitionToListView];
     [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+    [[visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 -(void) finishUITransitionToPageView{
     [super finishUITransitionToPageView];
     [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
+    [[visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 #pragma mark - Sidebar Hit Test
