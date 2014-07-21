@@ -52,4 +52,5 @@
 
 -(MMScrapView*) mostRecentScrap;
 
+
 @end

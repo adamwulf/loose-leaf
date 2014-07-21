@@ -97,6 +97,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
 // ink thumb, or scrapped thumb depending on editable state
 // and what's loaded into memory
 -(void) updateThumbnailVisibility{
+    CheckMainThread;
+    if(!scrapContainerView || !scrapContainerView.superview){
+        NSLog(@"what");
+    }
     if(self.isEditable){
         if([self.paperState isStateLoaded] && [self.scrapsOnPaperState isStateLoaded]){
             // page is editable and ready for work
@@ -126,7 +130,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
             cachedImgView.hidden = NO;
         }
     }else if([self.scrapsOnPaperState isStateLoaded] && [self.scrapsOnPaperState hasEditsToSave]){
-        NSLog(@"page %@ isn't editing, has unsaved scraps, showing ink thumb", self.uuid);
+        NSUInteger scrapContainerViewIndex = [scrapContainerView.superview.subviews indexOfObject:scrapContainerView];
+        NSUInteger cachedImgViewIndex = [cachedImgView.superview.subviews indexOfObject:cachedImgView];
+        BOOL match = cachedImgView.superview == scrapContainerView.superview;
+        NSLog(@"page %@ isn't editing, has unsaved scraps, showing ink thumb %d %d %d %d", self.uuid, scrapContainerViewIndex, cachedImgViewIndex, match, [scrapContainerView.superview.subviews count]);
         [self setThumbnailTo:[self cachedImgViewImage]];
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;

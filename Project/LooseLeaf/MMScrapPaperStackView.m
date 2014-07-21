@@ -128,6 +128,7 @@
         [self addSubview:imagePicker];
         
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds andPage:nil];
+        scrapContainer.backgroundColor = [UIColor clearColor];
         [self addSubview:scrapContainer];
         
         

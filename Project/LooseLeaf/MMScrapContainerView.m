@@ -19,6 +19,7 @@
     if (self) {
         // Initialization code
         page = _page;
+        self.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.4];
     }
     return self;
 }
