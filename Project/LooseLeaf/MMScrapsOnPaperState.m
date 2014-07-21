@@ -21,7 +21,7 @@
  */
 @implementation MMScrapsOnPaperState{
     BOOL isLoaded;
-    BOOL isLoading;
+    BOOL isLoadingOrUnloading;
     NSMutableArray* allScrapsForPage;
     BOOL hasEditsToSave;
 }
@@ -71,10 +71,10 @@ static dispatch_queue_t importExportStateQueue;
 
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable{
-    if(![self isStateLoaded] && !isLoading){
+    if(![self isStateLoaded] && !isLoadingOrUnloading){
         __block NSArray* scrapProps;
         @synchronized(self){
-            isLoading = YES;
+            isLoadingOrUnloading = YES;
         }
         
         void (^block2)() = ^(void) {
@@ -142,7 +142,7 @@ static dispatch_queue_t importExportStateQueue;
                     }
                     @synchronized(self){
                         isLoaded = YES;
-                        isLoading = NO;
+                        isLoadingOrUnloading = NO;
                     }
                     [self.delegate didLoadAllScrapsFor:self];
                     dispatch_semaphore_signal(sema1);
@@ -174,8 +174,11 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 -(void) unload{
-    NSLog(@"unloading scrap state %p", self);
-    if([self isStateLoaded] || isLoading){
+    NSLog(@"unloading scrap state for %@", self.delegate.uuid);
+    if([self isStateLoaded] || isLoadingOrUnloading){
+        @synchronized(self){
+            isLoadingOrUnloading = YES;
+        }
         dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
             @autoreleasepool {
                 if([self isStateLoaded]){
@@ -198,6 +201,7 @@ static dispatch_queue_t importExportStateQueue;
                     }];
                     @synchronized(self){
                         isLoaded = NO;
+                        isLoadingOrUnloading = NO;
                     }
                 }
             }
@@ -268,9 +272,12 @@ static dispatch_queue_t importExportStateQueue;
     }else{
         debug_NSLog(@"scrap %@ is visible, state loaded: %d", scrap.uuid, [self isStateLoaded] || isLoading);
     }
-    if([self isStateLoaded] || isLoaded){
+    if([self isStateLoaded] && !isLoadingOrUnloading){
         // something changed w/ scrap visibility
+        // we only care if we're fully loaded, not if
+        // we're loading or unloading.
         hasEditsToSave = YES;
+        NSLog(@"scrap in state for %@ was changed", self.delegate.uuid);
     }
 }
 

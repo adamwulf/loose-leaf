@@ -100,6 +100,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     if(self.isEditable){
         if([self.paperState isStateLoaded] && [self.scrapsOnPaperState isStateLoaded]){
             // page is editable and ready for work
+            NSLog(@"page %@ is editing, so nil thumb", self.uuid);
             [self setThumbnailTo:nil];
             scrapContainerView.hidden = NO;
             drawableView.hidden = NO;
@@ -108,6 +109,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         }else if([self.scrapsOnPaperState isStateLoaded]){
             // scrap state is loaded, so at least
             // show that
+            NSLog(@"page %@ wants editing, has scraps, showing ink thumb", self.uuid);
             [self setThumbnailTo:[self cachedImgViewImage]];
             drawableView.hidden = YES;
             shapeBuilderView.hidden = YES;
@@ -116,6 +118,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         }else{
             // scrap state isn't loaded, so show
             // our thumbnail
+            NSLog(@"page %@ wants editing, doens't have scraps, showing scrap thumb", self.uuid);
             [self setThumbnailTo:scrappedImgViewImage.image];
             drawableView.hidden = YES;
             shapeBuilderView.hidden = YES;
@@ -123,12 +126,14 @@ static dispatch_queue_t concurrentBackgroundQueue;
             cachedImgView.hidden = NO;
         }
     }else if([self.scrapsOnPaperState isStateLoaded] && [self.scrapsOnPaperState hasEditsToSave]){
+        NSLog(@"page %@ isn't editing, has unsaved scraps, showing ink thumb", self.uuid);
         [self setThumbnailTo:[self cachedImgViewImage]];
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;
         scrapContainerView.hidden = NO;
         cachedImgView.hidden = NO;
     }else{
+        NSLog(@"page %@ isn't editing, scraps are saved, showing scrapped thumb", self.uuid);
         [self setThumbnailTo:scrappedImgViewImage.image];
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;
@@ -1116,7 +1121,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 -(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
     scrapContainerView.hidden = YES;
-    [self didDecompressImage:scrappedImgViewImage];
+    [self updateThumbnailVisibility];
 }
 
 /**
