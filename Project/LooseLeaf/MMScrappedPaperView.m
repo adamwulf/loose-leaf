@@ -98,13 +98,12 @@ static dispatch_queue_t concurrentBackgroundQueue;
 // and what's loaded into memory
 -(void) updateThumbnailVisibility{
     CheckMainThread;
-    if(!scrapContainerView || !scrapContainerView.superview){
-        NSLog(@"what");
-    }
-    if(self.isEditable){
+    if(drawableView && drawableView.superview){
+        // if we have a drawable view, and it's been added to our page
+        // then we know it was it's prepped and ready to show valid ink
         if([self.paperState isStateLoaded] && [self.scrapsOnPaperState isStateLoaded]){
             // page is editable and ready for work
-            NSLog(@"page %@ is editing, so nil thumb", self.uuid);
+//            NSLog(@"page %@ is editing, so nil thumb", self.uuid);
             [self setThumbnailTo:nil];
             scrapContainerView.hidden = NO;
             drawableView.hidden = NO;
@@ -113,7 +112,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         }else if([self.scrapsOnPaperState isStateLoaded]){
             // scrap state is loaded, so at least
             // show that
-            NSLog(@"page %@ wants editing, has scraps, showing ink thumb", self.uuid);
+//            NSLog(@"page %@ wants editing, has scraps, showing ink thumb", self.uuid);
             [self setThumbnailTo:[self cachedImgViewImage]];
             drawableView.hidden = YES;
             shapeBuilderView.hidden = YES;
@@ -122,7 +121,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         }else{
             // scrap state isn't loaded, so show
             // our thumbnail
-            NSLog(@"page %@ wants editing, doens't have scraps, showing scrap thumb", self.uuid);
+//            NSLog(@"page %@ wants editing, doens't have scraps, showing scrap thumb", self.uuid);
             [self setThumbnailTo:scrappedImgViewImage.image];
             drawableView.hidden = YES;
             shapeBuilderView.hidden = YES;
@@ -130,17 +129,14 @@ static dispatch_queue_t concurrentBackgroundQueue;
             cachedImgView.hidden = NO;
         }
     }else if([self.scrapsOnPaperState isStateLoaded] && [self.scrapsOnPaperState hasEditsToSave]){
-        NSUInteger scrapContainerViewIndex = [scrapContainerView.superview.subviews indexOfObject:scrapContainerView];
-        NSUInteger cachedImgViewIndex = [cachedImgView.superview.subviews indexOfObject:cachedImgView];
-        BOOL match = cachedImgView.superview == scrapContainerView.superview;
-        NSLog(@"page %@ isn't editing, has unsaved scraps, showing ink thumb %d %d %d %d", self.uuid, scrapContainerViewIndex, cachedImgViewIndex, match, [scrapContainerView.superview.subviews count]);
+//        NSLog(@"page %@ isn't editing, has unsaved scraps, showing ink thumb", self.uuid);
         [self setThumbnailTo:[self cachedImgViewImage]];
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;
         scrapContainerView.hidden = NO;
         cachedImgView.hidden = NO;
     }else{
-        NSLog(@"page %@ isn't editing, scraps are saved, showing scrapped thumb", self.uuid);
+//        NSLog(@"page %@ isn't editing, scraps are saved, showing scrapped thumb", self.uuid);
         [self setThumbnailTo:scrappedImgViewImage.image];
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;

@@ -53,11 +53,6 @@
 }
 
 -(BOOL) saveStateToDiskBlocking{
-    if([NSThread isMainThread]){
-        NSLog(@"saving state for %@ on main thread", scrapIDsPath);
-    }else{
-        NSLog(@"saving state for %@ on background thread", scrapIDsPath);
-    }
     __block BOOL hadAnyEditsToSaveAtAll = NO;
     if(ownerState.lastSavedUndoHash != self.undoHash){
         NSMutableArray* allScrapProperties = [NSMutableArray array];
@@ -85,12 +80,9 @@
         
         NSDictionary* scrapsOnPaperInfo = [NSDictionary dictionaryWithObjectsAndKeys:allScrapProperties, @"allScrapProperties", scrapsOnPageIDs, @"scrapsOnPageIDs", nil];
         [scrapsOnPaperInfo writeToFile:scrapIDsPath atomically:YES];
-        if([NSThread isMainThread]){
-            NSLog(@"done saving state for %@ on main thread", scrapIDsPath);
-        }else{
-            NSLog(@"done saving state for %@ on background thread", scrapIDsPath);
-        }
         [ownerState wasSavedAtUndoHash:self.undoHash];
+    }else{
+        // we've already saved an immutable state with this hash
     }
 
     return hadAnyEditsToSaveAtAll;
