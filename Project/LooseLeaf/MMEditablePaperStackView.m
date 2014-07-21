@@ -915,6 +915,7 @@ struct SidebarButton{
     [super beginUITransitionFromPageView];
     [[[MMPageCacheManager sharedInstance] currentEditablePage] cancelCurrentStrokeIfAny];
     [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+    [[visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 -(void) beginUITransitionFromListView{
@@ -925,11 +926,13 @@ struct SidebarButton{
 -(void) finishUITransitionToListView{
     [super finishUITransitionToListView];
     [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+    [[visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 -(void) finishUITransitionToPageView{
     [super finishUITransitionToPageView];
     [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
+    [[visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 #pragma mark - Sidebar Hit Test
