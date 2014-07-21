@@ -66,6 +66,7 @@
 #define kScrapShadowBufferSize 4
 
 // MixPanel People Properties
+#define kMPScreenScale @"Screen Scale"
 #define kMPDurationAppOpen @"Duration App Open"
 #define kMPNumberOfPages @"Number of Pages"
 #define kMPFirstLaunchDate @"Date of First Launch"
