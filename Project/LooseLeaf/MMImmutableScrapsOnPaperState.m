@@ -102,6 +102,13 @@
         NSUInteger hashVal = 1;
         for(MMScrapView* scrap in allScrapsForPage){
             hashVal = prime * hashVal + [[scrap uuid] hash];
+            if([scrap.state isStateLoaded]){
+                // if we're loaded, use the current hash
+                hashVal = prime * hashVal + [scrap.state.drawableView.state undoHash];
+            }else{
+                // otherwise, use our hash
+                @throw [NSException exceptionWithName:@"UndoHashForUnloadedStateException" reason:@"Cannot ask for undo hash of unloaded scrap" userInfo:nil];
+            }
             NSDictionary* properties = [scrap propertiesDictionary];
             hashVal = prime * hashVal + [[properties objectForKey:@"center.x"] floatValue];
             hashVal = prime * hashVal + [[properties objectForKey:@"center.y"] floatValue];

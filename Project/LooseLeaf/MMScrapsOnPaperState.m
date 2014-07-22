@@ -301,7 +301,7 @@ static dispatch_queue_t importExportStateQueue;
         // we only care if we're fully loaded, not if
         // we're loading or unloading.
         hasEditsToSave = YES;
-        NSLog(@"scrap in state for %@ was changed", self.delegate.uuid);
+//        NSLog(@"scrap in state for %@ was changed", self.delegate.uuid);
     }
 }
 
