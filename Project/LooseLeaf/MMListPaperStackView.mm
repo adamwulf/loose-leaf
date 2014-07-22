@@ -300,12 +300,7 @@
         if(aPage != [visibleStackHolder peekSubview]){
             [aPage enableAllGestures];
         }
-        NSValue* possibleCachedLocation = [setOfInitialFramesForPagesBeingZoomed objectForKey:aPage.uuid];
-        if(possibleCachedLocation){
-            aPage.frame = [possibleCachedLocation CGRectValue];
-        }else{
-            aPage.frame = visibleStackHolder.bounds;
-        }
+        aPage.frame = visibleStackHolder.bounds;
     }
     [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
     [fromRightBezelGesture setEnabled:YES];
@@ -640,10 +635,10 @@
     // clean up gesture state
     [setOfPagesBeingPanned removeObject:page];
     
-    [self finishUITransitionToPageView];
     if(![page isBeingPannedAndZoomed]){
         [self animatePageToFullScreen:[visibleStackHolder peekSubview] withDelay:0 withBounce:YES onComplete:^(BOOL finished){
             [self realignPagesInVisibleStackExcept:[visibleStackHolder peekSubview] animated:NO];
+            [self finishUITransitionToPageView];
         }];
         [UIView animateWithDuration:0.1 delay:0 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationCurveLinear) animations:^{
             CGRect fr = visibleStackHolder.frame;
@@ -665,6 +660,14 @@
                 break;
             }else{
                 aPage.frame = hiddenStackHolder.bounds;
+            }
+        }
+        for(MMPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
+            if(aPage != [visibleStackHolder peekSubview]){
+                // turn gestures back on.
+                // these were turned off in beginUITransitionFromPageView
+                // which is called from isBeginningToScaleReallySmall
+                [aPage enableAllGestures];
             }
         }
     }
