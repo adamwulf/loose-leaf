@@ -9,6 +9,7 @@
 #import "MMAppDelegate.h"
 
 #import "MMLooseLeafViewController.h"
+#import "MMRotationManager.h"
 #import "MMInboxManager.h"
 #import "NSString+UUID.h"
 #import "SSKeychain.h"
@@ -68,6 +69,7 @@
     [self logActiveAppDuration];
     [durationTimer invalidate];
     durationTimer = nil;
+    [[MMRotationManager sharedInstace] applicationDidBackground];
     debug_NSLog(@"DID ENTER BACKGROUND");
 }
 

@@ -398,11 +398,11 @@
 
 #pragma mark - Rotation
 
--(CGFloat) sidebarButtonRotationForReading:(CGFloat)currentReading{
-    return -(currentReading + M_PI/2);
+-(CGFloat) sidebarButtonRotationForReading:(MMVector*)currentReading{
+    return -([currentReading angle] + M_PI/2);
 }
 
--(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
+-(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
     lastRotationReading = [self sidebarButtonRotationForReading:currentRawReading];
     for(MMScrapBubbleButton* bubble in self.subviews){
         if([bubble isKindOfClass:[MMScrapBubbleButton class]]){
