@@ -249,7 +249,6 @@
                 [lock lock];
 //                NSLog(@"(%@) saving with background: %d %d", uuid, (int)drawableView, backingViewHasChanged);
                 if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
-                    NSLog(@"saving scrap %@", self.uuid);
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                     [NSThread performBlockOnMainThread:^{
                         @autoreleasepool {
@@ -343,7 +342,6 @@
         isLoadingState = YES;
     }
 
-    NSLog(@"loading scrap %@", self.uuid);
 //    NSLog(@"(%@) loading1: %d %d", uuid, targetIsLoadedState, isLoadingState);
     void (^loadBlock)() = ^(void) {
         @autoreleasepool {
@@ -404,7 +402,6 @@
 }
 
 -(void) unloadState{
-    NSLog(@"unloading scrap %@", self.uuid);
     dispatch_async([self importExportScrapStateQueue], ^{
         @autoreleasepool {
             [lock lock];
