@@ -10,9 +10,6 @@
 #import <JotUI/JotUI.h>
 #import "Tool.h"
 
-#define           VELOCITY_CLAMP_MIN 20
-#define           VELOCITY_CLAMP_MAX 1000
-
 @interface Pen : Tool{
 
     CGFloat defaultMinSize;

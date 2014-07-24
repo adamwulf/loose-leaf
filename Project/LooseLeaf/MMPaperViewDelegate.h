@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import <JotUI/JotUI.h>
+#import "MMGestureTouchOwnershipDelegate.h"
 
-@class MMPaperView,MMRulerToolGestureRecognizer,MMScrapView;
+@class MMPaperView,MMRulerToolGestureRecognizer,MMScrapView,MMScrapSidebarContainerView;
 
-@protocol MMPaperViewDelegate <JotViewDelegate>
+@protocol MMPaperViewDelegate <JotViewDelegate,MMGestureTouchOwnershipDelegate>
 
 #pragma mark Scale
 
@@ -37,12 +38,6 @@
  * animation of "throwing" the page can be calculated
  */
 -(void) finishedPanningAndScalingPage:(MMPaperView*)page intoBezel:(MMBezelDirection)direction fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame;
-
-/**
- * communicates when touches are owned by a scrap pan
- * or a page pan
- */
--(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 
 /**
  * notifies when a longpress happens, so that we can tell 
@@ -140,8 +135,6 @@
  */
 -(BOOL) shouldAllowPan:(MMPaperView*)page;
 
--(BOOL) isAllowedToPan;
-
 -(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch;
 
 /**
@@ -153,6 +146,11 @@
  * called when the user stops the ruler gesture
  */
 -(void) didStopRuler:(MMRulerToolGestureRecognizer*)gesture;
+
+
+#pragma mark - Scrap Container for Sidebar
+
+-(MMScrapSidebarContainerView*) bezelContainerView;
 
 #pragma mark Mixpanel
 

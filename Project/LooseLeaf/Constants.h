@@ -18,8 +18,8 @@
 
 
 #ifdef DEBUG
-//#define debug_NSLog(__FORMAT__, ...)
-#define debug_NSLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
+#define debug_NSLog(__FORMAT__, ...)
+//#define debug_NSLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
 #else
 #define debug_NSLog(__FORMAT__, ...)
 #endif
@@ -60,12 +60,13 @@
 #define kShadowDepth 7
 #define kShadowBend 3
 #define kBezelInGestureWidth 40
-#define kUndoLimit 20
+#define kUndoLimit 10 // TODO: make sure this defines the jot undo level
 
 // Scraps
 #define kScrapShadowBufferSize 4
 
 // MixPanel People Properties
+#define kMPScreenScale @"Screen Scale"
 #define kMPDurationAppOpen @"Duration App Open"
 #define kMPNumberOfPages @"Number of Pages"
 #define kMPFirstLaunchDate @"Date of First Launch"

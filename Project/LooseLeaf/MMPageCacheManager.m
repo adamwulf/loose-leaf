@@ -16,7 +16,7 @@
     NSString* recentlySuggestedPageUUID;
     NSString* recentlyConfirmedPageUUID;
     MMEditablePaperView* currentlyTopPage;
-    MMEditablePaperView* currentEditablePage;
+    MMUndoablePaperView* currentEditablePage;
     NSMutableArray* stateLoadedPages;
     NSMutableOrderedSet* pagesWithLoadedCacheImages;
 }
@@ -145,44 +145,49 @@ static MMPageCacheManager* _instance = nil;
 
 
 -(void) loadStateForPage:(MMPaperView*)page{
-    // add the page to the beginning
-    [stateLoadedPages removeObject:page];
-    [stateLoadedPages insertObject:page atIndex:0];
-    if(currentEditablePage){
-        // ensure the currently editable page never
-        // gets kicked out of the cache. it's always
-        // the most recent
-        [stateLoadedPages removeObject:currentEditablePage];
-        [stateLoadedPages insertObject:currentEditablePage atIndex:0];
-    }
-    if([stateLoadedPages count] > kMMPageCacheManagerSize){
-        // too many pages, kick one out
-        [[stateLoadedPages lastObject] unloadState];
-        [stateLoadedPages removeLastObject];
-    }
-    if([page isKindOfClass:[MMEditablePaperView class]]){
-        // finally, tell that page to load its state
-        MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
-        [editablePage loadStateAsynchronously:YES withSize:[drawableView pagePixelSize] andContext:[drawableView context]];
+    if(page){
+        // add the page to the beginning
+        [stateLoadedPages removeObject:page];
+        [stateLoadedPages insertObject:page atIndex:0];
+        if(currentEditablePage){
+            // ensure the currently editable page never
+            // gets kicked out of the cache. it's always
+            // the most recent
+            [stateLoadedPages removeObject:currentEditablePage];
+            [stateLoadedPages insertObject:currentEditablePage atIndex:0];
+        }
+        if([stateLoadedPages count] > kMMPageCacheManagerSize){
+            // too many pages, kick one out
+            [[stateLoadedPages lastObject] unloadState];
+            [stateLoadedPages removeLastObject];
+        }
+        if([page isKindOfClass:[MMEditablePaperView class]]){
+            // finally, tell that page to load its state
+            MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
+            [editablePage loadStateAsynchronously:YES withSize:[drawableView pagePixelSize] andContext:[drawableView context]];
+        }
     }
 }
 
 -(void) ensureTopPageIsLoaded:(MMPaperView*)topPage{
-    if([topPage isKindOfClass:[MMEditablePaperView class]]){
-        MMEditablePaperView* editableTopPage = (MMEditablePaperView*)topPage;
+    if(!topPage || [topPage isKindOfClass:[MMEditablePaperView class]]){
+        MMUndoablePaperView* editableTopPage = (MMUndoablePaperView*)topPage;
         
         if(currentEditablePage != editableTopPage){
             // only care if the page is changing
-            if(![currentEditablePage hasEditsToSave] && [editableTopPage hasStateLoaded]){
+            if(![currentEditablePage hasEditsToSave] && (!editableTopPage || [editableTopPage hasStateLoaded])){
                 // the outgoing page is saved to disk
                 // and the incoming page has its
                 // state loaded
-                [currentEditablePage setDrawableView:nil];
-                [currentEditablePage setEditable:NO];
-                [currentEditablePage setCanvasVisible:NO];
-                currentEditablePage = editableTopPage;
-                //                debug_NSLog(@"did switch top page to %@", currentEditablePage.uuid);
-                [currentEditablePage setDrawableView:drawableView];
+                if([delegate isShowingPageView]){
+                    // only swap the drawable view if we're showing
+                    // the page view
+                    [currentEditablePage setDrawableView:nil];
+                    [currentEditablePage setEditable:NO];
+                    currentEditablePage = editableTopPage;
+                    //                debug_NSLog(@"did switch top page to %@", currentEditablePage.uuid);
+                    [currentEditablePage setDrawableView:drawableView];
+                }
             }else{
                 if(![editableTopPage hasStateLoaded]){
                     // load the state for the new top page
@@ -202,9 +207,6 @@ static MMPageCacheManager* _instance = nil;
 
 -(void) updateVisiblePageImageCache{
     NSArray* visiblePages = [self.delegate findPagesInVisibleRowsOfListView];
-    for(MMEditablePaperView* page in visiblePages){
-        [page loadCachedPreview];
-    }
     NSIndexSet* indexes = [pagesWithLoadedCacheImages indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger indx, BOOL*stop){
         return ![visiblePages containsObject:obj];
     }];
@@ -216,6 +218,9 @@ static MMPageCacheManager* _instance = nil;
             [page unloadCachedPreview];
             [pagesWithLoadedCacheImages removeObject:page];
         }
+    }
+    for(MMEditablePaperView* page in visiblePages){
+        [page loadCachedPreview];
     }
     [pagesWithLoadedCacheImages addObjectsFromArray:visiblePages];
 }

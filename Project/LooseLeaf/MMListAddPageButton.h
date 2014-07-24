@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MMListAddPageButtonDelegate.h"
 
-@interface MMListAddPageButton : UIView{
+@interface MMListAddPageButton : UIControl{
     NSObject<MMListAddPageButtonDelegate>* __weak delegate;
 }
 

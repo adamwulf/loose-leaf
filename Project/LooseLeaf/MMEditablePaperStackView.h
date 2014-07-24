@@ -37,7 +37,6 @@
 #import "MMRulerView.h"
 #import "PolygonToolDelegate.h"
 #import "MMDrawingTouchGestureRecognizer.h"
-#import "MMPageCacheManagerDelegate.h"
 
 @class MMMemoryProfileView;
 
@@ -45,7 +44,7 @@
  * this class is responsible for the editable buttons and controls that show
  * outside of a page's view subviews
  */
-@interface MMEditablePaperStackView : MMListPaperStackView<MMPaperViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,UIScrollViewDelegate,PolygonToolDelegate,MMPanGestureDelegate,UIGestureRecognizerDelegate,MMPageCacheManagerDelegate>{
+@interface MMEditablePaperStackView : MMListPaperStackView<MMPaperViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,UIScrollViewDelegate,PolygonToolDelegate,MMPageCacheManagerDelegate>{
     
     // managers
     MMStackManager* stackManager;
@@ -91,5 +90,7 @@
 -(void) setButtonsVisible:(BOOL)visible withDuration:(CGFloat)duration;
 
 -(void) setMemoryView:(MMMemoryProfileView*)_memoryView;
+
+-(void) finishedLoading;
 
 @end

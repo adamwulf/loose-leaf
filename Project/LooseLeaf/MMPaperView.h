@@ -63,4 +63,6 @@
 
 -(NSDictionary*) dictionaryDescription;
 
+-(BOOL) areGesturesEnabled;
+
 @end

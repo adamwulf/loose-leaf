@@ -9,14 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "Constants.h"
-#import "MMPanGestureDelegate.h"
+#import "MMGestureTouchOwnershipDelegate.h"
 
-@protocol MMStretchScrapGestureRecognizerDelegate <MMPanGestureDelegate>
+@protocol MMStretchScrapGestureRecognizerDelegate <MMPanAndPinchScrapGestureRecognizerDelegate>
 
 -(BOOL) panScrapRequiresLongPress;
-
--(NSArray*) scraps;
-
 
 -(CGPoint) beginStretchForScrap:(MMScrapView*)scrap;
 

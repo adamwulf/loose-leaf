@@ -9,7 +9,6 @@
 #import "MMRulerToolGestureRecognizer.h"
 #import <QuartzCore/QuartzCore.h>
 #import "MMBezelInGestureRecognizer.h"
-#import "MMObjectSelectLongPressGestureRecognizer.h"
 #import "NSMutableSet+Extras.h"
 #import "NSArray+MapReduce.h"
 #import "MMShadowedView.h"
@@ -18,6 +17,15 @@
 @implementation MMRulerToolGestureRecognizer{
     __weak NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>* rulerDelegate;
 }
+
+#pragma mark - Properties
+
+-(CGFloat) initialDistance{
+    return initialDistance;
+}
+
+
+#pragma mark - Init
 
 -(id) init{
     if(self = [super init]){
@@ -35,31 +43,22 @@
     return self;
 }
 
+#pragma mark - Helper Methods
+
 -(void) setScrapDelegate:(NSObject<MMPanAndPinchScrapGestureRecognizerDelegate> *)_scrapDelegate{
-    if(!scrapDelegate){
+    if(!self.scrapDelegate){
         [super setScrapDelegate:_scrapDelegate];
     }else{
         rulerDelegate = _scrapDelegate;
     }
 }
 
--(CGFloat) initialDistance{
-    return initialDistance;
-}
 
--(void) cancel{
-    if(self.enabled){
-        self.enabled = NO;
-        self.enabled = YES;
-    }
-}
-
+#pragma mark - Public Interface
 
 -(BOOL) containsTouch:(UITouch*)touch{
     return [validTouches containsObject:touch];
 }
-
-#pragma mark - Public Interface
 
 /**
  * return the two locations of the ruler in
@@ -90,8 +89,10 @@
 
 #pragma mark - MMPanAndPinchScrapGestureRecognizerDelegate
 
--(NSArray*) scraps{
-    return [rulerDelegate scraps];
+-(NSArray*) scrapsToPan{
+    // ruler works when used over scraps, so send an empty/nil array
+    // so we don't filter any touches out that occur over scraps
+    return nil;
 }
 
 -(BOOL) panScrapRequiresLongPress{
@@ -107,15 +108,15 @@
 }
 
 -(BOOL) isAllowedToPan{
-    return ![rulerDelegate isAllowedToPan];
+    return ![rulerDelegate isAllowedToPan] && [rulerDelegate isAllowedToBezel];
+}
+
+-(BOOL) isAllowedToBezel{
+    return [rulerDelegate isAllowedToBezel];
 }
 
 -(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch{
     return [rulerDelegate allowsHoldingScrapsWithTouch:touch];
-}
-
--(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
-    [rulerDelegate ownershipOfTouches:touches isGesture:gesture];
 }
 
 @end

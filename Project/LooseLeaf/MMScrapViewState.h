@@ -10,9 +10,11 @@
 #import <JotUI/JotUI.h>
 #import "MMScrapBackgroundView.h"
 #import "MMScrapViewStateDelegate.h"
+#import "MMScrapsOnPaperState.h"
 
-@interface MMScrapViewState : NSObject{
+@interface MMScrapViewState : NSObject<JotViewStateProxyDelegate>{
     __weak NSObject<MMScrapViewStateDelegate>* delegate;
+    __weak MMScrapsOnPaperState* scrapsOnPaperState;
 }
 
 @property (weak) NSObject<MMScrapViewStateDelegate>* delegate;
@@ -23,11 +25,13 @@
 @property (readonly) NSString* uuid;
 @property (readonly) JotView* drawableView;
 @property (readonly) NSString* pathForScrapAssets;
+@property (readonly) MMScrapsOnPaperState* scrapsOnPaperState;
 @property (nonatomic, readonly) int fullByteSize;
+@property (readonly) NSUInteger lastSavedUndoHash;
 
--(id) initWithUUID:(NSString*)uuid;
+-(id) initWithUUID:(NSString*)uuid andPaperState:(MMScrapsOnPaperState*)scrapsOnPaperState;
 
--(id) initWithUUID:(NSString*)uuid andBezierPath:(UIBezierPath*)bezierPath;
+-(id) initWithUUID:(NSString*)uuid andBezierPath:(UIBezierPath*)bezierPath andPaperState:(MMScrapsOnPaperState*)scrapsOnPaperState;
 
 -(void) saveScrapStateToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock;
 
@@ -40,6 +44,8 @@
 -(UIImage*) activeThumbnailImage;
 
 -(void) addElements:(NSArray*)elements;
+-(void) addUndoLevelAndFinishStroke;
+
 -(JotGLTexture*) generateTexture;
 -(void) importTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4;
 
@@ -49,5 +55,7 @@
 -(CGPoint) currentCenterOfScrapBackground;
 
 -(UIView*) contentView;
+
++(NSString*) bundledScrapDirectoryPathForUUID:(NSString*)uuid andScrapsOnPaperState:(MMScrapsOnPaperState*)scrapsOnPaperState;
 
 @end

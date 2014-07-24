@@ -37,6 +37,7 @@
 }
 
 @synthesize color;
+@synthesize pencilButton;
 
 - (id)initWithButtonFrame:(CGRect)frame andScreenSize:(CGSize)totalSize
 {

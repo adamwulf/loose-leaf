@@ -39,10 +39,10 @@
     BOOL isLoadingState;
     
     // private vars
-    NSString* plistPath;
+    NSString* scrapPropertiesPlistPath;
     NSString* inkImageFile;
     NSString* thumbImageFile;
-    NSString* stateFile;
+    NSString* drawableViewStateFile;
     NSString* backgroundFile;
 
     // helper vars
@@ -63,6 +63,15 @@
     
     // lock to control threading
     NSLock* lock;
+    
+    // YES if the file exists at the path, NO
+    // if it *might* exist
+    BOOL fileExistsAtInkPath;
+    BOOL fileExistsAtJotViewPlistPath;
+    
+    // the undoHash that our drawable view was
+    // last saved at
+    NSUInteger lastSavedUndoHash;
 }
 
 #pragma mark - Properties
@@ -72,6 +81,8 @@
 @synthesize drawableBounds;
 @synthesize delegate;
 @synthesize uuid;
+@synthesize scrapsOnPaperState;
+@synthesize lastSavedUndoHash;
 
 -(CGSize) originalSize{
     if(CGSizeEqualToSize(originalSize, CGSizeZero)){
@@ -93,39 +104,44 @@
 
 #pragma mark - Init
 
--(id) initWithUUID:(NSString*)_uuid{
-    if(self = [super init]){
-        
-        // save our UUID, everything depends on this
-        uuid = _uuid;
-        
-        if([[NSFileManager defaultManager] fileExistsAtPath:self.plistPath]){
-            NSDictionary* properties = [NSDictionary dictionaryWithContentsOfFile:self.plistPath];
-            bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
-            
-            MMScrapBackgroundView* backingView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
-            // now load the background image from disk, if any
-            [backingView loadBackgroundFromDiskWithProperties:properties];
-            
-            return [self initWithUUID:uuid andBezierPath:bezierPath andBackgroundView:backingView];
-        }else{
-            // we don't have a file that we should have, so don't load the scrap
-            return nil;
+-(id) initWithUUID:(NSString*)_uuid andPaperState:(MMScrapsOnPaperState*)_scrapsOnPaperState{
+    // save our UUID and scrapsOnPaperState, everything depends on these
+    uuid = _uuid;
+    scrapsOnPaperState = _scrapsOnPaperState;
+    
+    if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapPropertiesPlistPath] ||
+       [[NSFileManager defaultManager] fileExistsAtPath:self.bundledScrapPropertiesPlistPath]){
+        NSDictionary* properties = [NSDictionary dictionaryWithContentsOfFile:self.scrapPropertiesPlistPath];
+        if(!properties){
+            properties = [NSDictionary dictionaryWithContentsOfFile:self.bundledScrapPropertiesPlistPath];
         }
+        bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
+        NSUInteger lsuh = [[properties objectForKey:@"lastSavedUndoHash"] unsignedIntegerValue];
+        
+        MMScrapBackgroundView* backingView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
+        // now load the background image from disk, if any
+        [backingView loadBackgroundFromDiskWithProperties:properties];
+        
+        return [self initWithUUID:uuid andBezierPath:bezierPath andBackgroundView:backingView andPaperState:_scrapsOnPaperState andLastSavedUndoHash:lsuh];
+    }else{
+        // we don't have a file that we should have, so don't load the scrap
+        return nil;
     }
     return self;
 }
 
--(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path{
-    return [self initWithUUID:_uuid andBezierPath:_path andBackgroundView:nil];
+-(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andPaperState:(MMScrapsOnPaperState*)_scrapsOnPaperState{
+    return [self initWithUUID:_uuid andBezierPath:_path andBackgroundView:nil andPaperState:_scrapsOnPaperState andLastSavedUndoHash:0];
 }
 
--(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andBackgroundView:(MMScrapBackgroundView*)backingView{
+-(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andBackgroundView:(MMScrapBackgroundView*)backingView andPaperState:(MMScrapsOnPaperState*)_scrapsOnPaperState andLastSavedUndoHash:(NSUInteger)lsuh{
     if(self = [super init]){
         
         // save our UUID, everything depends on this
+        scrapsOnPaperState = _scrapsOnPaperState;
         uuid = _uuid;
         lock = [[NSLock alloc] init];
+        lastSavedUndoHash = lsuh;
 
         if(!bezierPath){
             CGRect originalBounds = _path.bounds;
@@ -136,7 +152,7 @@
             // not the most elegant solution, but it works and is fast enough for now
             NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
             [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
-            [savedProperties writeToFile:self.plistPath atomically:YES];
+            [savedProperties writeToFile:self.scrapPropertiesPlistPath atomically:YES];
         }
         if(!backingView){
             backingView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
@@ -189,6 +205,9 @@
                 [lock lock];
                 @autoreleasepool {
                     UIImage* thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
+                    if(!thumb){
+                        thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.bundledThumbImageFile];
+                    }
                     [self setActiveThumbnailImage:thumb];
                 }
                 [lock unlock];
@@ -224,6 +243,22 @@
 #pragma mark - State Saving and Loading
 
 -(void) saveScrapStateToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock{
+    
+    // block to help save properties to a plist file
+    void(^savePropertiesToDisk)(NSUInteger, UIBezierPath*, MMScrapBackgroundView* backgroundInfo, NSString* pathToSave) = ^(NSUInteger lsuh, UIBezierPath* bezierPathForProperties, MMScrapBackgroundView* backgroundInfo, NSString* pathToSave){
+        // this will save the properties for the scrap
+        // to disk, including the path and background information
+        NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
+        [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPathForProperties] forKey:@"bezierPath"];
+        // add in properties from background
+        [savedProperties setObject:[NSNumber numberWithUnsignedInteger:lsuh] forKey:@"lastSavedUndoHash"];
+        NSDictionary* backgroundProps = [backgroundInfo saveBackgroundToDisk];
+        [savedProperties addEntriesFromDictionary:backgroundProps];
+        // save properties to disk
+        [savedProperties writeToFile:pathToSave atomically:YES];
+    };
+    
+    
     if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
         dispatch_async([self importExportScrapStateQueue], ^{
             @autoreleasepool {
@@ -235,38 +270,42 @@
                         @autoreleasepool {
                             if(drawableView && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
 //                                NSLog(@"(%@) saving background: %d", uuid, backingViewHasChanged);
-                                // save path
-                                // this needs to be saved at the exact same time as the drawable view
-                                // so that we can guarentee that there is no race condition
-                                // for saving state vs content
-                                NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
-                                [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
-                                // add in properties from background
-                                NSDictionary* backgroundProps = [backingImageHolder saveBackgroundToDisk];
-                                [savedProperties addEntriesFromDictionary:backgroundProps];
-                                // save properties to disk
-                                [savedProperties writeToFile:self.plistPath atomically:YES];
-                                
 
                                 if([drawableViewState hasEditsToSave]){
 //                                    NSLog(@"(%@) saving strokes: %d", uuid, backingViewHasChanged);
                                     // now export the drawn content. this will create an immutable state
                                     // object and export in the background. this means that everything at this
                                     // instant on the thread will be synced to the content in this drawable view
-                                    [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.stateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
+                                    [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.drawableViewStateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
                                         if(state){
                                             [[MMLoadImageCache sharedInstance] updateCacheForPath:self.thumbImageFile toImage:thumb];
                                             [self setActiveThumbnailImage:thumb];
                                             [drawableViewState wasSavedAtImmutableState:state];
-//                                            NSLog(@"(%@) scrap saved at: %d with thumb: %d", uuid, state.undoHash, (int)thumb);
+                                            
+                                            // save path
+                                            // this needs to be saved at the exact same time as the drawable view
+                                            // so that we can guarentee that there is no race condition
+                                            // for saving state vs content
+                                            lastSavedUndoHash = state.undoHash;
+                                            savePropertiesToDisk(lastSavedUndoHash, bezierPath, backingImageHolder, self.scrapPropertiesPlistPath);
+
+//                                            NSLog(@"(%@) scrap saved at: %d with thumb: %d", uuid, (int)state.undoHash, (int)thumb);
                                         }
                                         dispatch_semaphore_signal(sema1);
                                     }];
+                                }else if(backingImageHolder.backingViewHasChanged){
+                                    // if we dont' have any pen edits in the drawableViewState,
+                                    // but we do have background changes to save
+                                    lastSavedUndoHash = drawableViewState.undoHash;
+                                    savePropertiesToDisk(lastSavedUndoHash, bezierPath, backingImageHolder, self.scrapPropertiesPlistPath);
+                                    dispatch_semaphore_signal(sema1);
                                 }else{
+                                    // nothing new to save
 //                                    NSLog(@"(%@) skipped saving strokes: %d", uuid, backingViewHasChanged);
                                     dispatch_semaphore_signal(sema1);
                                 }
                             }else{
+                                // nothing new to save
 //                                if(!drawableView && ![drawableViewState hasEditsToSave]){
 //                                    NSLog(@"(%@) no drawable view or edits", uuid);
 //                                }else if(!drawableView){
@@ -282,7 +321,7 @@
                         }
                     }];
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-                    dispatch_release(sema1);
+//                    dispatch_release(sema1); ARC handles this
 //                    NSLog(@"(%@) done saving scrap: %d", uuid, (int)drawableView);
                     if(doneSavingBlock) doneSavingBlock(YES);
                 }else{
@@ -323,6 +362,7 @@
     void (^loadBlock)() = ^(void) {
         @autoreleasepool {
             [lock lock];
+            
 //            NSLog(@"(%@) loading2: %d %d", uuid, targetIsLoadedState, isLoadingState);
             dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
             [NSThread performBlockOnMainThread:^{
@@ -336,7 +376,7 @@
             // load state, if we have any.
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             // load drawable view information here
-            drawableViewState = [[JotViewStateProxy alloc] initWithInkPath:self.inkImageFile andPlistPath:self.stateFile];
+            drawableViewState = [[JotViewStateProxy alloc] initWithDelegate:self];
             [drawableViewState loadStateAsynchronously:NO
                                               withSize:[drawableView pagePixelSize]
                                             andContext:[drawableView context]
@@ -365,7 +405,7 @@
                 dispatch_semaphore_signal(sema1);
             }];
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-            dispatch_release(sema1);
+//            dispatch_release(sema1); ARC handles this
             [lock unlock];
         }
     };
@@ -410,7 +450,7 @@
                             dispatch_semaphore_signal(sema1);
                         }];
                         dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-                        dispatch_release(sema1);
+//                        dispatch_release(sema1); ARC handles this
                     }
                 }
             }
@@ -439,11 +479,11 @@
 
 #pragma mark - Paths
 
--(NSString*)plistPath{
-    if(!plistPath){
-        plistPath = [self.pathForScrapAssets stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
+-(NSString*)scrapPropertiesPlistPath{
+    if(!scrapPropertiesPlistPath){
+        scrapPropertiesPlistPath = [self.pathForScrapAssets stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
     }
-    return plistPath;
+    return scrapPropertiesPlistPath;
 }
 
 -(NSString*)inkImageFile{
@@ -460,24 +500,44 @@
     return thumbImageFile;
 }
 
--(NSString*) stateFile{
-    if(!stateFile){
-        stateFile = [self.pathForScrapAssets stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
+-(NSString*) drawableViewStateFile{
+    if(!drawableViewStateFile){
+        drawableViewStateFile = [self.pathForScrapAssets stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
     }
-    return stateFile;
+    return drawableViewStateFile;
+}
+
+-(NSString*) bundledScrapPropertiesPlistPath{
+    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid andScrapsOnPaperState:scrapsOnPaperState] stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
+}
+
+-(NSString*) bundledInkImageFile{
+    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid andScrapsOnPaperState:scrapsOnPaperState] stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
+}
+
+-(NSString*) bundledThumbImageFile{
+    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid andScrapsOnPaperState:scrapsOnPaperState] stringByAppendingPathComponent:[@"thumb" stringByAppendingPathExtension:@"png"]];
+}
+
+-(NSString*) bundledDrawableViewStateFile{
+    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid andScrapsOnPaperState:scrapsOnPaperState] stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
 }
 
 #pragma mark - Private
 
-+(NSString*) scrapDirectoryPathForUUID:(NSString*)uuid{
-    NSString* documentsPath = [NSFileManager documentsPath];
-    NSString* scrapPath = [[documentsPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
++(NSString*) scrapDirectoryPathForUUID:(NSString*)uuid andScrapsOnPaperState:(MMScrapsOnPaperState*)scrapsOnPaperState{
+    NSString* scrapPath = [[scrapsOnPaperState.delegate.pagesPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
+    return scrapPath;
+}
+
++(NSString*) bundledScrapDirectoryPathForUUID:(NSString*)uuid andScrapsOnPaperState:(MMScrapsOnPaperState*)scrapsOnPaperState{
+    NSString* scrapPath = [[scrapsOnPaperState.delegate.bundledPagesPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
     return scrapPath;
 }
 
 -(NSString*) pathForScrapAssets{
     if(!scrapPath){
-        scrapPath = [MMScrapViewState scrapDirectoryPathForUUID:uuid];
+        scrapPath = [MMScrapViewState scrapDirectoryPathForUUID:uuid andScrapsOnPaperState:scrapsOnPaperState];
         [NSFileManager ensureDirectoryExistsAtPath:scrapPath];
     }
     return scrapPath;
@@ -491,6 +551,9 @@
         debug_NSLog(@"trying to draw on an unloaded scrap");
     }
     [drawableView addElements:elements];
+}
+-(void) addUndoLevelAndFinishStroke{
+    [drawableView addUndoLevelAndFinishStroke];
 }
 
 -(JotView*) drawableView{
@@ -514,12 +577,49 @@
     [drawableView forceAddEmptyStroke];
 }
 
+#pragma mark - JotViewStateProxyDelegate
+
+// the state for the page and/or scrap might be a default
+// new user tutorial page. if that's the case, we want to
+// load the initial state from the bundle. pages will always
+// save to the user's document's directory.
+//
+// this method will make sure that if the user loads a default
+// page from the bundle, saves it, then reloads it -> then it
+// will be loaded from the documents directory instead of
+// reloaded from scratch from the bundle
+-(NSString*) jotViewStateInkPath{
+    if(fileExistsAtInkPath || [[NSFileManager defaultManager] fileExistsAtPath:self.inkImageFile]){
+        fileExistsAtInkPath = YES;
+        return self.inkImageFile;
+    }else{
+        return self.bundledInkImageFile;
+    }
+}
+
+-(NSString*) jotViewStatePlistPath{
+    if(fileExistsAtJotViewPlistPath || [[NSFileManager defaultManager] fileExistsAtPath:self.drawableViewStateFile]){
+        fileExistsAtJotViewPlistPath = YES;
+        return self.drawableViewStateFile;
+    }else{
+        return self.bundledDrawableViewStateFile;
+    }
+}
+
+-(void) didLoadState:(JotViewStateProxy *)state{
+    // noop
+}
+
+-(void) didUnloadState:(JotViewStateProxy *)state{
+    // noop
+}
+
 #pragma mark - dealloc
 
 -(void) dealloc{
 //    NSLog(@"scrap state (%@) dealloc", uuid);
     [[MMLoadImageCache sharedInstance] clearCacheForPath:self.thumbImageFile];
-    dispatch_release(importExportScrapStateQueue);
+//    dispatch_release(importExportScrapStateQueue); ARC handles this
     importExportScrapStateQueue = nil;
 }
 

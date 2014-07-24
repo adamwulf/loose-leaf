@@ -8,7 +8,14 @@
 
 #import "MMRotationManager.h"
 
-@implementation MMRotationManager
+@implementation MMRotationManager{
+    CGFloat goalTrust;
+    CGFloat currentTrust;
+    UIDeviceOrientation lastBestOrientation;
+    UIDeviceOrientation currentOrientation;
+    
+    NSDate* startupTime;
+}
 
 @synthesize delegate;
 @synthesize currentRotationReading;
@@ -20,9 +27,14 @@ static MMRotationManager* _instance = nil;
     if(_instance) return _instance;
     if((self = [super init])){
         _instance = self;
+        // we need to ignore rotation
+        startupTime = [NSDate date];
+        currentTrust = 0.0;
+        goalTrust = 0.0;
+        lastBestOrientation = UIDeviceOrientationPortrait;
         [[NSNotificationCenter defaultCenter] addObserver:_instance selector:@selector(didRotate:)   name:UIDeviceOrientationDidChangeNotification object:nil];
         isFirstReading = YES;
-        currentRotationReading = 0;
+        currentRotationReading = [MMVector vectorWithAngle:-M_PI / 2];
         // add opqueue to sample the accelerometer
         opQueue = [[NSOperationQueue alloc] init];
         [opQueue setMaxConcurrentOperationCount:1];
@@ -45,16 +57,41 @@ static MMRotationManager* _instance = nil;
             accelerationX = data.acceleration.x * kFilteringFactor + accelerationX * (1.0 - kFilteringFactor);
             accelerationY = data.acceleration.y * kFilteringFactor + accelerationY * (1.0 - kFilteringFactor);
             accelerationZ = data.acceleration.z * kFilteringFactor + accelerationZ * (1.0 - kFilteringFactor);
-            CGFloat absZ = accelerationZ < 0 ? -accelerationZ : accelerationZ;
+//            CGFloat absZ = accelerationZ < 0 ? -accelerationZ : accelerationZ;
 //            debug_NSLog(@"x: %f   y: %f   z: %f   diff: %f", accelerationX, accelerationY, absZ);
-            CGFloat newRawReading = atan2(accelerationY, accelerationX);
-            if((ABS(newRawReading - currentRotationReading) > .05 || isFirstReading) && absZ < 0.95){
-                currentRotationReading = newRawReading;
+            currentTrust += (goalTrust - currentTrust) / 20.0;
+
+            MMVector* actualRawReading = [MMVector vectorWithAngle:atan2(accelerationY, accelerationX)];
+            MMVector* orientationRotationReading = [self idealRotationReadingForCurrentOrientation];
+            
+            CGFloat diffOrient = [currentRotationReading angleBetween:orientationRotationReading];
+            CGFloat diffActual = [currentRotationReading angleBetween:actualRawReading];
+            
+            CGFloat diffCombined = currentTrust * diffActual + (1-currentTrust)*diffOrient;
+//            NSLog(@"currVec: %@  actualVec: %@  orientVec: %@  trust: %f", currentRotationReading, actualRawReading, orientationRotationReading, currentTrust);
+            // now tone it down so that we don't jump around too much, make
+            // sure it only changes by max of 5 degrees
+            if(ABS(diffCombined) > .05 || isFirstReading){
+                diffCombined = diffCombined > .2 ? .2 : diffCombined < -.2 ? -.2 : diffCombined;
+                currentRotationReading = [currentRotationReading rotateBy:diffCombined];
                 isFirstReading = NO;
                 [self.delegate didUpdateAccelerometerWithReading:currentRotationReading];
             }
-            currentRawRotationReading = newRawReading;
+            currentRawRotationReading = actualRawReading;
             [self.delegate didUpdateAccelerometerWithRawReading:currentRawRotationReading andX:accelerationX andY:accelerationY andZ:accelerationZ];
+            
+            if(currentTrust > .75){
+                if(currentOrientation == UIDeviceOrientationPortrait ||
+                   currentOrientation == UIDeviceOrientationPortraitUpsideDown ||
+                   currentOrientation == UIDeviceOrientationLandscapeLeft ||
+                   currentOrientation == UIDeviceOrientationLandscapeRight){
+                    if(currentOrientation != UIDeviceOrientationFaceUp &&
+                       currentOrientation != UIDeviceOrientationFaceDown &&
+                       currentOrientation != UIDeviceOrientationUnknown){
+                        lastBestOrientation = currentOrientation;
+                    }
+                }
+            }
         }];
     }
     return _instance;
@@ -75,8 +112,25 @@ static MMRotationManager* _instance = nil;
     return [[UIApplication sharedApplication] statusBarOrientation];
 }
 
+static BOOL ignoredFirstRotateNotification = NO;
+
 - (void)didRotate:(NSNotification *)notification {
+    if(!ignoredFirstRotateNotification){
+        ignoredFirstRotateNotification = YES;
+        return;
+    }
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    if(orientation == UIDeviceOrientationPortrait ||
+       orientation == UIDeviceOrientationPortraitUpsideDown ||
+       orientation == UIDeviceOrientationLandscapeLeft ||
+       orientation == UIDeviceOrientationLandscapeRight){
+        goalTrust = 1.0;
+    }else{
+        goalTrust = 0.0;
+    }
+    NSLog(@"resetting goal trust to: %f %d", goalTrust, orientation);
+    currentOrientation = orientation;
+    
     if(orientation == UIDeviceOrientationUnknown ||
        orientation == UIDeviceOrientationFaceDown ||
        orientation == UIDeviceOrientationFaceUp){
@@ -87,18 +141,34 @@ static MMRotationManager* _instance = nil;
     UIInterfaceOrientation devOrient = (UIInterfaceOrientation) orientation;
     UIInterfaceOrientation currOrient = [self currentStatusbarOrientation];
     [delegate willRotateInterfaceFrom:currOrient to:devOrient];
-    [[UIApplication sharedApplication] setStatusBarOrientation:devOrient animated:NO];
+//    [[UIApplication sharedApplication] setStatusBarOrientation:devOrient animated:NO];
     [delegate didRotateInterfaceFrom:currOrient to:devOrient];
 }
+
+-(void) applicationDidBackground{
+    ignoredFirstRotateNotification = NO;
+}
+
+-(MMVector*) idealRotationReadingForCurrentOrientation{
+    if(lastBestOrientation == UIDeviceOrientationPortrait){
+        return [MMVector vectorWithAngle:-M_PI / 2];
+    }else if(lastBestOrientation == UIDeviceOrientationLandscapeLeft){
+        return [MMVector vectorWithAngle:M_PI];
+    }else if(lastBestOrientation == UIDeviceOrientationLandscapeRight){
+        return [MMVector vectorWithAngle:0];
+    }else{
+        return [MMVector vectorWithAngle:M_PI / 2];
+    }
+}
+
 
 -(void) setDelegate:(NSObject<MMRotationManagerDelegate> *)_delegate{
     delegate = _delegate;
     [delegate didUpdateAccelerometerWithReading:[self currentRotationReading]];
 }
 
-
 -(MMVector*) upVector{
-    MMVector* up = [[[MMVector vectorWithAngle:-([[MMRotationManager sharedInstace] currentRotationReading])] flip] normal];
+    MMVector* up = [[[MMVector vectorWithAngle:-([currentRotationReading angle])] flip] normal];
     NSLog(@"up vector is: %@", up);
     return up;
 }

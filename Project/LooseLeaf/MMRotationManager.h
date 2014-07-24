@@ -17,16 +17,16 @@
     CGFloat accelerationX;
     CGFloat accelerationY;
     CGFloat accelerationZ;
-    CGFloat currentRotationReading;
-    CGFloat currentRawRotationReading;
+    MMVector* currentRotationReading;
+    MMVector* currentRawRotationReading;
 
     NSObject<MMRotationManagerDelegate>* __weak delegate;
     NSOperationQueue* opQueue;
     CMMotionManager* motionManager;
 }
 
-@property (nonatomic, readonly) CGFloat currentRotationReading;
-@property (nonatomic, readonly) CGFloat currentRawRotationReading;
+@property (nonatomic, readonly) MMVector* currentRotationReading;
+@property (nonatomic, readonly) MMVector* currentRawRotationReading;
 @property (nonatomic, weak) NSObject<MMRotationManagerDelegate>* delegate;
 
 
@@ -35,5 +35,7 @@
 -(UIDeviceOrientation) currentDeviceOrientation;
 
 -(MMVector*) upVector;
+
+-(void) applicationDidBackground;
 
 @end

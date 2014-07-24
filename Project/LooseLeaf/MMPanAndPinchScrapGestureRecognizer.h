@@ -12,8 +12,10 @@
 #import "MMScrapView.h"
 #import "MMPanAndPinchScrapGestureRecognizerDelegate.h"
 #import "MMVector.h"
+#import "MMCancelableGestureRecognizer.h"
+#import "MMUndoablePaperView.h"
 
-@interface MMPanAndPinchScrapGestureRecognizer : UIGestureRecognizer{
+@interface MMPanAndPinchScrapGestureRecognizer : MMCancelableGestureRecognizer<UIGestureRecognizerDelegate>{
     // the initial distance between
     // the touches. to be used to calculate
     // scale
@@ -39,6 +41,9 @@
     
     __weak NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>* scrapDelegate;
     
+    // will hold the original page that the scrap was on
+    // before it was panned
+    __weak MMUndoablePaperView* startingPageForScrap;
 }
 
 @property (nonatomic, assign) BOOL shouldReset;
@@ -56,11 +61,12 @@
 @property (assign) CGFloat preGestureRotation;
 @property (assign) CGPoint preGestureCenter;
 @property (readonly) MMVector* initialTouchVector;
+@property (nonatomic, readonly) NSDictionary* startingScrapProperties;
+@property (nonatomic, readonly) MMUndoablePaperView* startingPageForScrap;
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 -(void) relinquishOwnershipOfTouches:(NSSet*)touches;
 -(void) giveUpScrap;
--(void) cancel;
 -(void) blessTouches:(NSSet*)touches;
 -(void) forceBlessTouches:(NSSet*)touches forScrap:(MMScrapView*)_scrap;
 

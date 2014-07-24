@@ -12,9 +12,15 @@
 
 @implementation MMDrawingTouchGestureRecognizer
 
+#pragma mark - Properties
+
 @synthesize touchDelegate;
 
-#pragma mark - Singleton
+-(NSArray*)validTouches{
+    return [validTouches array];
+}
+
+#pragma mark - Singleton and Init
 
 static MMDrawingTouchGestureRecognizer* _instance = nil;
 
@@ -35,30 +41,24 @@ static MMDrawingTouchGestureRecognizer* _instance = nil;
 +(MMDrawingTouchGestureRecognizer*) sharedInstace{
     if(!_instance){
         _instance = [[MMDrawingTouchGestureRecognizer alloc]init];
-        _instance.delegate = _instance;
     }
     return _instance;
 }
 
--(NSArray*)validTouches{
-    return [validTouches array];
+-(BOOL) isDrawing{
+    return [validTouches count];
 }
 
--(void) cancel{
-    if(self.enabled){
-        self.enabled = NO;
-        self.enabled = YES;
+#pragma mark - Touch Ownership
+
+-(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
+    if(gesture != self){
+        [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
+            [possibleTouches removeObjectsInSet:touches];
+            [ignoredTouches addObjectsInSet:touches];
+            [validTouches removeObjectsInSet:touches];
+        }];
     }
-}
-
-#pragma mark - UIGestureRecognizer
-
--(BOOL) canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
-    return NO;
-}
-
--(BOOL) shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return NO;
 }
 
 #pragma mark - Touch Methods
@@ -69,6 +69,11 @@ static MMDrawingTouchGestureRecognizer* _instance = nil;
         if(![ignoredTouches containsObject:touch]){
             [possibleTouches addObject:touch];
         }
+    }
+    if(self.state == UIGestureRecognizerStatePossible){
+        self.state = UIGestureRecognizerStateBegan;
+    }else{
+        self.state = UIGestureRecognizerStateChanged;
     }
 }
 
@@ -87,44 +92,33 @@ static MMDrawingTouchGestureRecognizer* _instance = nil;
             }
         }
     }
+    self.state = UIGestureRecognizerStateChanged;
 }
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     [possibleTouches removeObjectsInSet:touches];
     [ignoredTouches removeObjectsInSet:touches];
     [validTouches removeObjectsInSet:touches];
-}
-
--(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
-    [possibleTouches removeObjectsInSet:touches];
-    [ignoredTouches removeObjectsInSet:touches];
-    [validTouches removeObjectsInSet:touches];
-}
-
-
--(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
-    if(gesture != self){
-        [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
-            [possibleTouches removeObjectsInSet:touches];
-            [ignoredTouches addObjectsInSet:touches];
-            [validTouches removeObjectsInSet:touches];
-        }];
+    if([possibleTouches count] == 0 && [ignoredTouches count] == 0 && [validTouches count] == 0){
+        self.state = UIGestureRecognizerStateEnded;
     }
 }
 
-
-#pragma mark - UIGestureRecognizerDelegate
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return YES;
+-(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self touchesEnded:touches withEvent:event];
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+
+#pragma mark - UIGestureRecognizer Subclass
+
+-(BOOL) canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
     return NO;
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+-(BOOL) shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
     return NO;
 }
+
+
 
 @end

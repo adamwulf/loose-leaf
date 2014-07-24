@@ -9,6 +9,7 @@
 #import "MMAppDelegate.h"
 
 #import "MMLooseLeafViewController.h"
+#import "MMRotationManager.h"
 #import "MMInboxManager.h"
 #import "NSString+UUID.h"
 #import "SSKeychain.h"
@@ -30,6 +31,7 @@
     [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
+    [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale, nil]];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
@@ -37,7 +39,7 @@
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     
-//    [self.window.layer setSpeed:0.5f];
+//    [self.window.layer setSpeed:0.1f];
 
     // setup the timer that will help log session duration
     [self setupTimer];
@@ -67,6 +69,7 @@
     [self logActiveAppDuration];
     [durationTimer invalidate];
     durationTimer = nil;
+    [[MMRotationManager sharedInstace] applicationDidBackground];
     debug_NSLog(@"DID ENTER BACKGROUND");
 }
 
@@ -89,6 +92,8 @@
         [[Mixpanel sharedInstance] track:kMPEventLaunch];
     };
     debug_NSLog(@"DID BECOME ACTIVE");
+    debug_NSLog(@"***************************************************************************");
+    debug_NSLog(@"***************************************************************************");
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

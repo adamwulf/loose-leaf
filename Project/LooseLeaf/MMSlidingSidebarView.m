@@ -29,6 +29,12 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        
+        UIToolbar* toolbar = [[UIToolbar alloc] initWithFrame:self.bounds];
+        toolbar.barStyle = UIBarStyleBlack;
+        [self addSubview:toolbar];
+        
+        
         // 2 points for the border size
         borderSize = 2;
         // store our direction and reference button
@@ -48,6 +54,7 @@
         self.opaque = NO;
         self.backgroundColor = [UIColor clearColor];
         self.clipsToBounds = YES;
+        
     }
     return self;
 }
@@ -107,7 +114,7 @@
     return [UIColor colorWithRed: 0.84 green: 0.84 blue: 0.84 alpha: 0.5];
 }
 
-
+/*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
@@ -182,6 +189,8 @@
     UIBezierPath* outsideOfSidebarPath = [UIBezierPath bezierPathWithRect:outsideOfSidebarRect];
     [self erase:outsideOfSidebarPath atContext:context];
 }
+ 
+ */
 
 // helper function to erase everything
 // inside of the input path

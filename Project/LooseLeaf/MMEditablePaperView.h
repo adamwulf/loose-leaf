@@ -24,8 +24,6 @@
 
 +(dispatch_queue_t) importThumbnailQueue;
 
--(void) undo;
--(void) redo;
 -(BOOL) hasEditsToSave;
 -(BOOL) hasStateLoaded;
 -(void) unloadCachedPreview;
@@ -33,12 +31,14 @@
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(JotGLContext*)context;
 -(void) unloadState;
 -(void) saveToDisk:(void (^)(BOOL didSaveEdits))onComplete;
--(void) setCanvasVisible:(BOOL)isVisible;
+-(void) updateThumbnailVisibility;
 -(void) setEditable:(BOOL)isEditable;
 -(BOOL) isEditable;
+-(void) cancelCurrentStrokeIfAny;
 
 // abstract
 -(void) saveToDisk;
+-(NSString*) bundledPagesPath;
 -(NSString*) pagesPath;
 -(NSString*) thumbnailPath;
 -(UIImage*) cachedImgViewImage;
