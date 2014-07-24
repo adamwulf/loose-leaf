@@ -84,6 +84,7 @@
         [ownerState wasSavedAtUndoHash:self.undoHash];
     }else{
         // we've already saved an immutable state with this hash
+        NSLog(@"scrapsOnPaperState doesn't need saving %lu == %lu", (unsigned long) ownerState.lastSavedUndoHash, (unsigned long) self.undoHash);
     }
 
     return hadAnyEditsToSaveAtAll;
@@ -111,10 +112,10 @@
                 hashVal = prime * hashVal + [scrap.state lastSavedUndoHash];
             }
             NSDictionary* properties = [scrap propertiesDictionary];
-            hashVal = prime * hashVal + [[properties objectForKey:@"center.x"] floatValue];
-            hashVal = prime * hashVal + [[properties objectForKey:@"center.y"] floatValue];
-            hashVal = prime * hashVal + [[properties objectForKey:@"rotation"] floatValue];
-            hashVal = prime * hashVal + [[properties objectForKey:@"scale"] floatValue];
+            hashVal = prime * hashVal + [[properties objectForKey:@"center.x"] hash];
+            hashVal = prime * hashVal + [[properties objectForKey:@"center.y"] hash];
+            hashVal = prime * hashVal + [[properties objectForKey:@"rotation"] hash];
+            hashVal = prime * hashVal + [[properties objectForKey:@"scale"] hash];
         }
         hashVal = prime * hashVal + 4409; // a prime from http://www.bigprimes.net/archive/prime/6/
         for(NSString* stroke in scrapsOnPageIDs){
