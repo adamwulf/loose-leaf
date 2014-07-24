@@ -36,8 +36,10 @@
         blurView = [[FXBlurView alloc] initWithFrame:self.bounds];
         blurView.blurEnabled = YES;
         blurView.dynamic = NO;
-        blurView.tintColor = [UIColor blackColor];
+        blurView.tintColor = [[UIColor blackColor] colorWithAlphaComponent:1.0];
         [self addSubview:blurView];
+        
+        
 //        
 //        // blur view
 //        UIBlurEffect* blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
@@ -61,7 +63,7 @@
 //        // and button cutout
         CAShapeLayer* maskLayer = [CAShapeLayer layer];
         maskLayer.frame = self.bounds;
-        maskLayer.path = [UIBezierPath bezierPathWithOvalInRect:self.bounds].CGPath;
+        maskLayer.path = [UIBezierPath bezierPathWithRect:self.bounds].CGPath;
         maskLayer.fillColor = [UIColor whiteColor].CGColor;
         self.layer.mask = maskLayer;
 //

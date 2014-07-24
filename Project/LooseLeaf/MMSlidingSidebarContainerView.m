@@ -117,12 +117,12 @@
         bounceAnimation.removedOnCompletion = YES;
         bounceAnimation.keyTimes = [NSArray arrayWithObjects:
                                     [NSNumber numberWithFloat:0.0],
-                                    [NSNumber numberWithFloat:0.7],
-                                    [NSNumber numberWithFloat:.90], nil];
+                                    [NSNumber numberWithFloat:1.0],
+                                    [NSNumber numberWithFloat:1.0], nil];
         if(directionIsFromLeft){
             bounceAnimation.values = [NSArray arrayWithObjects:
                                       [NSValue valueWithCGPoint:CGPointMake(-sidebarContentView.frame.size.width/4, 0)],
-                                      [NSValue valueWithCGPoint:CGPointMake(0, 0)],
+                                      [NSValue valueWithCGPoint:CGPointMake(-kBounceWidth, 0)],
                                       [NSValue valueWithCGPoint:CGPointMake(-kBounceWidth, 0)], nil];
         }else{
             bounceAnimation.values = [NSArray arrayWithObjects:
@@ -139,10 +139,11 @@
         opacityAnimation2.removedOnCompletion = YES;
         [opacityAnimation2 setFromValue:[NSNumber numberWithFloat:0.0]];
         [opacityAnimation2 setToValue:[NSNumber numberWithFloat:1.0]];
-        [opacityAnimation2 setDuration:kAnimationDuration];
+        [opacityAnimation2 setDuration:kAnimationDuration * 2.0 / 3.0];
 
         CAAnimationGroup* gr = [CAAnimationGroup animation];
         gr.animations = @[bounceAnimation, opacityAnimation2];
+        gr.duration = kAnimationDuration;
         
 
         ////////////////////////////////////////////////////////
@@ -158,7 +159,7 @@
         // Animate bounce of sidebar button
         
         // tell the content view to trigger it's animation as well
-        [sidebarContentView bounceAnimationForButtonWithDuration:kAnimationDuration];
+//        [sidebarContentView bounceAnimationForButtonWithDuration:kAnimationDuration];
         
         ///////////////////////////////////////////////
         // Add the animations to the layers
