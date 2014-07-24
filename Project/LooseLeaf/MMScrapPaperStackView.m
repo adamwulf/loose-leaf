@@ -1696,4 +1696,8 @@ int skipAll = NO;
     return [super isActivelyGesturing] || panAndPinchScrapGesture.scrap || panAndPinchScrapGesture2.scrap || stretchScrapGesture.scrap;
 }
 
+
+-(UIView*) viewForBlur{
+    return visibleStackHolder;
+}
 @end

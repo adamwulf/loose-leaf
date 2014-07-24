@@ -28,4 +28,6 @@
 
 -(void) show:(BOOL)animated;
 
+-(UIView*) viewForBlur;
+
 @end

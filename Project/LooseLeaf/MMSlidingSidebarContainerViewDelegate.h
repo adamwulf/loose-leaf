@@ -16,4 +16,6 @@
 
 -(void) sidebarWillHide;
 
+-(UIView*) viewForBlur;
+
 @end

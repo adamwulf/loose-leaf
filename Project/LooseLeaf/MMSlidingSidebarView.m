@@ -10,6 +10,7 @@
 #import "MMLeftCloseButton.h"
 #import "UIView+Animations.h"
 #import "MMSlidingSidebarContainerView.h"
+#import "FXBlurView.h"
 
 @implementation MMSlidingSidebarView{
     // this is the button that'll trigger the sidebar
@@ -21,6 +22,8 @@
     // YES if we should animate from the left,
     // NO for the right
     BOOL directionIsFromLeft;
+    
+    FXBlurView* blurView;
 }
 
 @synthesize delegate;
@@ -29,6 +32,46 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        
+        blurView = [[FXBlurView alloc] initWithFrame:self.bounds];
+        blurView.blurEnabled = YES;
+        blurView.dynamic = NO;
+        blurView.tintColor = [UIColor blackColor];
+        [self addSubview:blurView];
+//        
+//        // blur view
+//        UIBlurEffect* blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+//        UIVisualEffectView* background = [[UIVisualEffectView alloc] initWithEffect:blur];
+//        CGRect size = self.bounds;
+//        background.frame = size;
+//        background.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+//        [self addSubview:background];
+//        
+//        // rect for blur
+//        CGRect leftDarkArea = [self contentBounds];
+//        if(directionIsFromLeft){
+//            leftDarkArea.size.width += 3*kBounceWidth;
+//            leftDarkArea.origin.x = 0;
+//        }else{
+//            leftDarkArea.origin.x -= kBounceWidth;
+//            leftDarkArea.size.width += 3*kBounceWidth;
+//        }
+//
+//        // create mask, including border
+//        // and button cutout
+        CAShapeLayer* maskLayer = [CAShapeLayer layer];
+        maskLayer.frame = self.bounds;
+        maskLayer.path = [UIBezierPath bezierPathWithOvalInRect:self.bounds].CGPath;
+        maskLayer.fillColor = [UIColor whiteColor].CGColor;
+        self.layer.mask = maskLayer;
+//
+//
+        
+        
+        
+        
+        
+
         // 2 points for the border size
         borderSize = 2;
         // store our direction and reference button
@@ -50,6 +93,15 @@
         self.clipsToBounds = YES;
     }
     return self;
+}
+
+-(void) setDelegate:(MMSlidingSidebarContainerView *)_delegate{
+    delegate = _delegate;
+    blurView.underlyingView = _delegate.viewForBlur;
+}
+
+-(void) show{
+    [blurView setNeedsDisplay];
 }
 
 -(BOOL) isVisible{
@@ -107,7 +159,7 @@
     return [UIColor colorWithRed: 0.84 green: 0.84 blue: 0.84 alpha: 0.5];
 }
 
-
+/*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
@@ -182,6 +234,8 @@
     UIBezierPath* outsideOfSidebarPath = [UIBezierPath bezierPathWithRect:outsideOfSidebarRect];
     [self erase:outsideOfSidebarPath atContext:context];
 }
+ 
+ */
 
 // helper function to erase everything
 // inside of the input path

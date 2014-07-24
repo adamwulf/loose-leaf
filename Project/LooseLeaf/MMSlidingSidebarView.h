@@ -27,4 +27,6 @@
 
 -(BOOL) isVisible;
 
+-(void) show;
+
 @end

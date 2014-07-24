@@ -23,6 +23,7 @@
 		66150769178333D500B181F3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66150768178333D500B181F3 /* libz.dylib */; };
 		6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6616CCD018B6AE9700CAD0F3 /* JotUI.framework */; };
 		6616CCD218B6AEB100CAD0F3 /* JotTouchSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66C38AC7175329160035B872 /* JotTouchSDK.framework */; };
+		661708E61981B434006A73EF /* FXBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 661708E51981B434006A73EF /* FXBlurView.m */; };
 		661885D118F9ABD70016A333 /* MMFlipCameraButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 661885D018F9ABD70016A333 /* MMFlipCameraButton.m */; };
 		661885D418F9AED50016A333 /* MMDarkSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 661885D318F9AED50016A333 /* MMDarkSidebarButton.m */; };
 		661EBA57182AF1AD00893274 /* MMScissorTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 661EBA56182AF1AD00893274 /* MMScissorTool.m */; };
@@ -257,6 +258,8 @@
 		6615076A178338AF00B181F3 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
 		6615076B178338AF00B181F3 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
 		6616CCD018B6AE9700CAD0F3 /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/LooseLeaf-hhwdxgyoymgwhwezrbyabmvqherf/Build/Products/Debug-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
+		661708E41981B434006A73EF /* FXBlurView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXBlurView.h; sourceTree = "<group>"; };
+		661708E51981B434006A73EF /* FXBlurView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXBlurView.m; sourceTree = "<group>"; };
 		661885CF18F9ABD70016A333 /* MMFlipCameraButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFlipCameraButton.h; sourceTree = "<group>"; };
 		661885D018F9ABD70016A333 /* MMFlipCameraButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFlipCameraButton.m; sourceTree = "<group>"; };
 		661885D218F9AED50016A333 /* MMDarkSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDarkSidebarButton.h; sourceTree = "<group>"; };
@@ -808,6 +811,16 @@
 			);
 			name = TestFlightSDK;
 			path = External/TestFlightSDK;
+			sourceTree = "<group>";
+		};
+		661708E31981B434006A73EF /* FXBlurView */ = {
+			isa = PBXGroup;
+			children = (
+				661708E41981B434006A73EF /* FXBlurView.h */,
+				661708E51981B434006A73EF /* FXBlurView.m */,
+			);
+			name = FXBlurView;
+			path = ../../Submodules/FXBlurView/FXBlurView;
 			sourceTree = "<group>";
 		};
 		66277C9A192BC97E003E97C0 /* SSKeychain */ = {
@@ -1545,6 +1558,7 @@
 		66DCFB901581BCEF00B4918C /* Loose Leaf */ = {
 			isa = PBXGroup;
 			children = (
+				661708E31981B434006A73EF /* FXBlurView */,
 				66932995159984090033E557 /* Experiments */,
 				6693295715958A890033E557 /* Managers */,
 				66BD6E811593AF4500D4544C /* Buttons */,
@@ -1970,6 +1984,7 @@
 				66A790C019689B810037F01A /* MMScissorResult.m in Sources */,
 				667D98CA19300D0F00625879 /* MMScrapBackgroundView.m in Sources */,
 				661885D418F9AED50016A333 /* MMDarkSidebarButton.m in Sources */,
+				661708E61981B434006A73EF /* FXBlurView.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
 				66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */,
 				667D98C2192FD87400625879 /* MMPDF.m in Sources */,
