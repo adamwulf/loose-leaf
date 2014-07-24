@@ -259,7 +259,7 @@ struct SidebarButton{
  * should be rotated to stay pointed "down"
  */
 -(CGFloat) sidebarButtonRotation{
-    return -([[MMRotationManager sharedInstace] currentRotationReading] + M_PI/2);
+    return -([[[MMRotationManager sharedInstace] currentRotationReading] angle] + M_PI/2);
 }
 
 -(Tool*) activePen{
@@ -405,7 +405,7 @@ struct SidebarButton{
 
 #pragma mark - MMRotationManagerDelegate
 
--(void) didUpdateAccelerometerWithReading:(CGFloat)currentRawReading{
+-(void) didUpdateAccelerometerWithReading:(MMVector*)currentRawReading{
     [NSThread performBlockOnMainThread:^{
         CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         addPageSidebarButton.transform = rotationTransform;
@@ -425,7 +425,7 @@ struct SidebarButton{
         settingsButton.transform = rotationTransform;
     }];
 }
--(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
+-(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
     [NSThread performBlockOnMainThread:^{
         [[visibleStackHolder peekSubview] didUpdateAccelerometerWithRawReading:currentRawReading];
     }];

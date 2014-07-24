@@ -10,6 +10,7 @@
 #import <JotUI/JotUI.h>
 #import "MMScrapViewStateDelegate.h"
 #import "MMScrapViewState.h"
+#import "MMVector.h"
 
 @interface MMScrapView : UIView<MMScrapViewStateDelegate>
 
@@ -29,7 +30,7 @@
 -(id) initWithBezierPath:(UIBezierPath*)path andPaperState:(MMScrapsOnPaperState*)paperState;
 -(id) initWithBezierPath:(UIBezierPath *)path andScale:(CGFloat)scale andRotation:(CGFloat)rotation andPaperState:(MMScrapsOnPaperState*)paperState;
 
--(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
+-(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading;
 
 -(BOOL) containsTouch:(UITouch*)touch;
 

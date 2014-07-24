@@ -27,6 +27,7 @@
 @property (readonly) NSString* pathForScrapAssets;
 @property (readonly) MMScrapsOnPaperState* scrapsOnPaperState;
 @property (nonatomic, readonly) int fullByteSize;
+@property (readonly) NSUInteger lastSavedUndoHash;
 
 -(id) initWithUUID:(NSString*)uuid andPaperState:(MMScrapsOnPaperState*)scrapsOnPaperState;
 

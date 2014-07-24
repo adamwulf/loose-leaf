@@ -27,7 +27,8 @@
  */
 @implementation MMScrapsOnPaperState{
     BOOL isLoaded;
-    BOOL isLoadingOrUnloading;
+    BOOL isLoading;
+    BOOL isUnloading;
     NSMutableArray* allScrapsForPage;
     BOOL hasEditsToSave;
     // this is the undo hash of the most recent immutable state
@@ -88,10 +89,10 @@ static dispatch_queue_t importExportStateQueue;
 
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable{
-    if(![self isStateLoaded] && !isLoadingOrUnloading){
+    if(![self isStateLoaded] && !isLoading){
         __block NSArray* scrapProps;
         @synchronized(self){
-            isLoadingOrUnloading = YES;
+            isLoading = YES;
         }
         
         void (^block2)() = ^(void) {
@@ -159,7 +160,7 @@ static dispatch_queue_t importExportStateQueue;
                     }
                     @synchronized(self){
                         isLoaded = YES;
-                        isLoadingOrUnloading = NO;
+                        isLoading = NO;
                         MMImmutableScrapsOnPaperState* immutableState = [self immutableStateForPath:nil];
                         expectedUndoHash = [immutableState undoHash];
                         lastSavedUndoHash = [immutableState undoHash];
@@ -195,9 +196,9 @@ static dispatch_queue_t importExportStateQueue;
 
 -(void) unload{
     NSLog(@"unloading scrap state for %@", self.delegate.uuid);
-    if([self isStateLoaded] || isLoadingOrUnloading){
+    if([self isStateLoaded] || isLoading){
         @synchronized(self){
-            isLoadingOrUnloading = YES;
+            isUnloading = YES;
         }
         dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
             @autoreleasepool {
@@ -221,7 +222,7 @@ static dispatch_queue_t importExportStateQueue;
                     }];
                     @synchronized(self){
                         isLoaded = NO;
-                        isLoadingOrUnloading = NO;
+                        isUnloading = NO;
                         expectedUndoHash = 0;
                         lastSavedUndoHash = 0;
                     }
@@ -268,7 +269,7 @@ static dispatch_queue_t importExportStateQueue;
         [delegate.scrapContainerView addSubview:scrap];
     }
     [scrap setShouldShowShadow:delegate.isEditable];
-    if(isLoaded){
+    if(isLoaded || isLoading){
         [scrap loadScrapStateAsynchronously:YES];
     }else{
         [scrap unloadState];
@@ -296,12 +297,12 @@ static dispatch_queue_t importExportStateQueue;
     }else{
         debug_NSLog(@"scrap %@ is visible, state loaded: %d", scrap.uuid, [self isStateLoaded] || isLoading);
     }
-    if([self isStateLoaded] && !isLoadingOrUnloading){
+    if([self isStateLoaded] && !isLoading && !isUnloading){
         // something changed w/ scrap visibility
         // we only care if we're fully loaded, not if
         // we're loading or unloading.
         hasEditsToSave = YES;
-        NSLog(@"scrap in state for %@ was changed", self.delegate.uuid);
+//        NSLog(@"scrap in state for %@ was changed", self.delegate.uuid);
     }
 }
 

@@ -556,9 +556,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 #pragma mark - MMRotationManagerDelegate
 
--(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading{
+-(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading{
     for(MMScrapView* scrap in self.scrapsOnPaper){
-        [scrap didUpdateAccelerometerWithRawReading:-currentRawReading];
+        [scrap didUpdateAccelerometerWithRawReading:currentRawReading];
     }
 }
 

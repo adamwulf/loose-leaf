@@ -11,6 +11,7 @@
 #import "MMDecompressImagePromiseDelegate.h"
 #import "MMScissorResult.h"
 #import "MMScrapContainerView.h"
+#import "MMVector.h"
 #import <MessageUI/MFMailComposeViewController.h>
 
 /**
@@ -27,7 +28,7 @@
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andScale:(CGFloat)scale;
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale;
 
--(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
+-(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading;
 
 -(void) saveToDisk;
 

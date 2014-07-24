@@ -704,13 +704,14 @@
         // c) add correct number of pages to the bezelStackHolder
         // d) update the offset for the bezelStackHolder so they all move in tandem
         BOOL needsAnimationUpdate = bezelGesture.numberOfRepeatingBezels != [bezelStackHolder.subviews count];
-        while(bezelGesture.numberOfRepeatingBezels > [bezelStackHolder.subviews count] && [hiddenStackHolder.subviews count]){
+        while(bezelGesture.numberOfRepeatingBezels > [bezelStackHolder.subviews count]){
             // if we want more pages than are in the stack, then
             // we need to add another page
+            // make sure there's a page to bezel
+            [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
             [bezelStackHolder pushSubview:[hiddenStackHolder peekSubview]];
         }
         if(needsAnimationUpdate){
-            //
             // we just added a new page to the bezel gesture,
             // so make sure we've notified that it may be the new top
             [self mayChangeTopPageTo:[bezelStackHolder peekSubview]];

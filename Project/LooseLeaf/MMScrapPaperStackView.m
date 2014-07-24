@@ -1456,7 +1456,7 @@ int skipAll = NO;
 
 #pragma mark - Rotation
 
--(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
+-(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
     if(1 - ABS(zAccel) > .03){
         [NSThread performBlockOnMainThread:^{
             [super didUpdateAccelerometerWithReading:currentRawReading];
