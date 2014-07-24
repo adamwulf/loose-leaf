@@ -68,6 +68,10 @@
     // if it *might* exist
     BOOL fileExistsAtInkPath;
     BOOL fileExistsAtJotViewPlistPath;
+    
+    // the undoHash that our drawable view was
+    // last saved at
+    NSUInteger lastSavedUndoHash;
 }
 
 #pragma mark - Properties
@@ -78,6 +82,7 @@
 @synthesize delegate;
 @synthesize uuid;
 @synthesize scrapsOnPaperState;
+@synthesize lastSavedUndoHash;
 
 -(CGSize) originalSize{
     if(CGSizeEqualToSize(originalSize, CGSizeZero)){
@@ -111,12 +116,13 @@
             properties = [NSDictionary dictionaryWithContentsOfFile:self.bundledScrapPropertiesPlistPath];
         }
         bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
+        NSUInteger lsuh = [[properties objectForKey:@"lastSavedUndoHash"] unsignedIntegerValue];
         
         MMScrapBackgroundView* backingView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
         // now load the background image from disk, if any
         [backingView loadBackgroundFromDiskWithProperties:properties];
         
-        return [self initWithUUID:uuid andBezierPath:bezierPath andBackgroundView:backingView andPaperState:_scrapsOnPaperState];
+        return [self initWithUUID:uuid andBezierPath:bezierPath andBackgroundView:backingView andPaperState:_scrapsOnPaperState andLastSavedUndoHash:lsuh];
     }else{
         // we don't have a file that we should have, so don't load the scrap
         return nil;
@@ -125,16 +131,17 @@
 }
 
 -(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andPaperState:(MMScrapsOnPaperState*)_scrapsOnPaperState{
-    return [self initWithUUID:_uuid andBezierPath:_path andBackgroundView:nil andPaperState:_scrapsOnPaperState];
+    return [self initWithUUID:_uuid andBezierPath:_path andBackgroundView:nil andPaperState:_scrapsOnPaperState andLastSavedUndoHash:0];
 }
 
--(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andBackgroundView:(MMScrapBackgroundView*)backingView andPaperState:(MMScrapsOnPaperState*)_scrapsOnPaperState{
+-(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andBackgroundView:(MMScrapBackgroundView*)backingView andPaperState:(MMScrapsOnPaperState*)_scrapsOnPaperState andLastSavedUndoHash:(NSUInteger)lsuh{
     if(self = [super init]){
         
         // save our UUID, everything depends on this
         scrapsOnPaperState = _scrapsOnPaperState;
         uuid = _uuid;
         lock = [[NSLock alloc] init];
+        lastSavedUndoHash = lsuh;
 
         if(!bezierPath){
             CGRect originalBounds = _path.bounds;
@@ -242,22 +249,12 @@
                 [lock lock];
 //                NSLog(@"(%@) saving with background: %d %d", uuid, (int)drawableView, backingViewHasChanged);
                 if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
+                    NSLog(@"saving scrap %@", self.uuid);
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                     [NSThread performBlockOnMainThread:^{
                         @autoreleasepool {
                             if(drawableView && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
 //                                NSLog(@"(%@) saving background: %d", uuid, backingViewHasChanged);
-                                // save path
-                                // this needs to be saved at the exact same time as the drawable view
-                                // so that we can guarentee that there is no race condition
-                                // for saving state vs content
-                                NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
-                                [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
-                                // add in properties from background
-                                NSDictionary* backgroundProps = [backingImageHolder saveBackgroundToDisk];
-                                [savedProperties addEntriesFromDictionary:backgroundProps];
-                                // save properties to disk
-                                [savedProperties writeToFile:self.scrapPropertiesPlistPath atomically:YES];
                                 
 
                                 if([drawableViewState hasEditsToSave]){
@@ -270,6 +267,21 @@
                                             [[MMLoadImageCache sharedInstance] updateCacheForPath:self.thumbImageFile toImage:thumb];
                                             [self setActiveThumbnailImage:thumb];
                                             [drawableViewState wasSavedAtImmutableState:state];
+                                            
+                                            // save path
+                                            // this needs to be saved at the exact same time as the drawable view
+                                            // so that we can guarentee that there is no race condition
+                                            // for saving state vs content
+                                            lastSavedUndoHash = state.undoHash;
+                                            NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
+                                            [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
+                                            // add in properties from background
+                                            [savedProperties setObject:[NSNumber numberWithUnsignedInteger:lastSavedUndoHash] forKey:@"lastSavedUndoHash"];
+                                            NSDictionary* backgroundProps = [backingImageHolder saveBackgroundToDisk];
+                                            [savedProperties addEntriesFromDictionary:backgroundProps];
+                                            // save properties to disk
+                                            [savedProperties writeToFile:self.scrapPropertiesPlistPath atomically:YES];
+
 //                                            NSLog(@"(%@) scrap saved at: %d with thumb: %d", uuid, (int)state.undoHash, (int)thumb);
                                         }
                                         dispatch_semaphore_signal(sema1);
@@ -331,6 +343,7 @@
         isLoadingState = YES;
     }
 
+    NSLog(@"loading scrap %@", self.uuid);
 //    NSLog(@"(%@) loading1: %d %d", uuid, targetIsLoadedState, isLoadingState);
     void (^loadBlock)() = ^(void) {
         @autoreleasepool {
@@ -391,6 +404,7 @@
 }
 
 -(void) unloadState{
+    NSLog(@"unloading scrap %@", self.uuid);
     dispatch_async([self importExportScrapStateQueue], ^{
         @autoreleasepool {
             [lock lock];
