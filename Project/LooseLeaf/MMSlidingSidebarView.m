@@ -24,6 +24,7 @@
     BOOL directionIsFromLeft;
     
     FXBlurView* blurView;
+    UIView* blurContainerView;
 }
 
 @synthesize delegate;
@@ -33,11 +34,21 @@
     self = [super initWithFrame:frame];
     if (self) {
         
+        blurContainerView = [[UIView alloc] initWithFrame:self.bounds];
+        [self addSubview:blurContainerView];
+        blurContainerView.frame = self.bounds;
+        blurContainerView.layer.borderWidth = 2;
+        blurContainerView.layer.borderColor = [UIColor redColor].CGColor;
+        
         blurView = [[FXBlurView alloc] initWithFrame:self.bounds];
         blurView.blurEnabled = YES;
         blurView.dynamic = NO;
         blurView.tintColor = [[UIColor blackColor] colorWithAlphaComponent:1.0];
-        [self addSubview:blurView];
+        [blurContainerView addSubview:blurView];
+        blurView.frame = blurContainerView.bounds;
+        blurView.layer.borderWidth = 2;
+        blurView.layer.borderColor = [UIColor blueColor].CGColor;
+        [blurView updateAsynchronously:NO completion:nil];
         
         
 //        
@@ -65,7 +76,7 @@
         maskLayer.frame = self.bounds;
         maskLayer.path = [UIBezierPath bezierPathWithRect:self.bounds].CGPath;
         maskLayer.fillColor = [UIColor whiteColor].CGColor;
-        self.layer.mask = maskLayer;
+        blurContainerView.layer.mask = maskLayer;
 //
 //
         
@@ -93,6 +104,9 @@
         self.opaque = NO;
         self.backgroundColor = [UIColor clearColor];
         self.clipsToBounds = YES;
+
+        // set the anchor to 0,0 for the sliding animations
+        [UIView setAnchorPoint:CGPointZero forView:blurView];
     }
     return self;
 }
@@ -102,8 +116,50 @@
     blurView.underlyingView = _delegate.viewForBlur;
 }
 
--(void) show{
+-(void) prepForShowAnimation{
+    CGPoint o1 = blurView.frame.origin;
+    CGPoint o2 = blurContainerView.frame.origin;
+    
+    
+    CGRect fr = blurView.frame;
+    fr.origin = CGPointZero;
+    blurView.frame = fr;
+    blurContainerView.frame = fr;
+
+    CGPoint o3 = blurView.frame.origin;
     [blurView setNeedsDisplay];
+    [blurView updateAsynchronously:NO completion:nil];
+    fr = blurView.frame;
+    fr.origin = CGPointMake(blurContainerView.bounds.size.width/4, 0);
+    blurView.frame = fr;
+}
+
+-(void) showForDuration:(CGFloat)duration{
+    CAKeyframeAnimation *bounceAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
+    bounceAnimation.removedOnCompletion = YES;
+    bounceAnimation.keyTimes = [NSArray arrayWithObjects:
+                                [NSNumber numberWithFloat:0.0],
+                                [NSNumber numberWithFloat:1.0],
+                                [NSNumber numberWithFloat:1.0], nil];
+    if(directionIsFromLeft){
+        bounceAnimation.values = [NSArray arrayWithObjects:
+                                  [NSValue valueWithCGPoint:CGPointMake(blurView.bounds.size.width/4, 0)],
+                                  [NSValue valueWithCGPoint:CGPointMake(0, 0)],
+                                  [NSValue valueWithCGPoint:CGPointMake(0, 0)], nil];
+    }else{
+        bounceAnimation.values = [NSArray arrayWithObjects:
+                                  [NSValue valueWithCGPoint:CGPointMake(blurView.bounds.size.width/4, 0)],
+                                  [NSValue valueWithCGPoint:CGPointMake(0, 0)],
+                                  [NSValue valueWithCGPoint:CGPointMake(0, 0)], nil];
+    }
+    bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
+                                       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut],
+                                       [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn], nil];
+    [bounceAnimation setDuration:duration];
+    
+    [blurView.layer addAnimation:bounceAnimation forKey:@"bounceAnimation"];
+    
+    blurView.frame = blurContainerView.bounds;
 }
 
 -(BOOL) isVisible{

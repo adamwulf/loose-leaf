@@ -106,7 +106,14 @@
     [delegate sidebarWillShow];
 
     if(animated){
+        CGRect fr = sidebarContentView.frame;
+        fr.origin = CGPointZero;
+        sidebarContentView.frame = fr;
+
+        
+        
         sidebarContentView.alpha = 0;
+        [sidebarContentView prepForShowAnimation];
         
         [CATransaction begin];
         
@@ -167,7 +174,8 @@
         
         [dismissButton.layer addAnimation:opacityAnimation forKey:@"alpha"];
         
-        
+        [sidebarContentView showForDuration:kAnimationDuration];
+
         [CATransaction commit];
         
     }
@@ -186,7 +194,6 @@
     }
     sidebarContentView.frame = fr;
     
-    [sidebarContentView show];
 }
 
 
