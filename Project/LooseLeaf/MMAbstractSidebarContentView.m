@@ -86,7 +86,10 @@
     isShowing = NO;
 }
 
-
+-(void) killMemory{
+    [albumListScrollView killMemory];
+    [photoListScrollView killMemory];
+}
 
 #pragma mark - MMPhotoManagerDelegate
 

@@ -35,6 +35,8 @@
 
 -(void) hide:(BOOL)animated;
 
+-(void) killMemory;
+
 -(void) updatePhotoRotation:(BOOL)animated;
 
 // abstract

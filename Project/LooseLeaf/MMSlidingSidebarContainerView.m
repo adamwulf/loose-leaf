@@ -47,7 +47,7 @@
         [UIView setAnchorPoint:CGPointZero forView:sidebarContentView];
         
         // init the view positions
-        [self hide:NO];
+        [self hide:NO onComplete:nil];
     }
     return self;
 }
@@ -71,7 +71,7 @@
 
 // hide the sidebar and optionally
 // animate the change
--(void) hide:(BOOL)animated{
+-(void) hide:(BOOL)animated onComplete:(void(^)(BOOL finished))onComplete{
     // ignore if we're hidden
     if(![self isVisible]) return;
     [delegate sidebarWillHide];
@@ -94,7 +94,7 @@
     };
     
     if(animated){
-        [UIView animateWithDuration:kAnimationDuration animations:hideBlock];
+        [UIView animateWithDuration:kAnimationDuration animations:hideBlock completion:onComplete];
     }else{
         hideBlock();
     }
@@ -231,7 +231,7 @@
 
 -(void) sidebarCloseButtonWasTapped{
     if([self isVisible]){
-        [self hide:YES];
+        [self hide:YES onComplete:nil];
         [self.delegate sidebarCloseButtonWasTapped];
     }
 }

@@ -1055,9 +1055,6 @@
 				666E255018F887FF00C17295 /* Camera */,
 				66AC8D9018E8A90900A65036 /* MMBufferedImageView.h */,
 				66AC8D9118E8A90900A65036 /* MMBufferedImageView.m */,
-				66AC8D8918E89A9C00A65036 /* MMCachedRowsScrollView.h */,
-				66AC8D8A18E89A9C00A65036 /* MMCachedRowsScrollView.m */,
-				66F4517A18EB4C1700A57C95 /* MMCachedRowsScrollViewDataSource.h */,
 			);
 			name = "Helper Views";
 			sourceTree = "<group>";
@@ -1067,6 +1064,9 @@
 			children = (
 				66AC8D7B18E754FE00A65036 /* MMAbstractSidebarContentView.h */,
 				66AC8D7C18E754FE00A65036 /* MMAbstractSidebarContentView.m */,
+				66AC8D8918E89A9C00A65036 /* MMCachedRowsScrollView.h */,
+				66AC8D8A18E89A9C00A65036 /* MMCachedRowsScrollView.m */,
+				66F4517A18EB4C1700A57C95 /* MMCachedRowsScrollViewDataSource.h */,
 			);
 			name = AbstractPhotoAlbumList;
 			sourceTree = "<group>";

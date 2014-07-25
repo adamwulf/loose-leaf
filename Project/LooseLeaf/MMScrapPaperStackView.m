@@ -124,7 +124,7 @@
 
         imagePicker = [[MMImageSidebarContainerView alloc] initWithFrame:self.bounds forButton:insertImageButton animateFromLeft:YES];
         imagePicker.delegate = self;
-        [imagePicker hide:NO];
+        [imagePicker hide:NO onComplete:nil];
         [self addSubview:imagePicker];
         
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds andPage:nil];
@@ -338,7 +338,7 @@
     scrap.center = [self convertPoint:CGPointMake(cameraView.bounds.size.width/2, cameraView.bounds.size.height/2) fromView:cameraView];
     scrap.rotation = cameraView.rotation;
     
-    [imagePicker hide:YES];
+    [imagePicker hide:YES onComplete:nil];
     
     // hide the photo in the row
     cameraView.alpha = 0;
@@ -437,7 +437,7 @@
     
     // hide the picker, this'll slide it out
     // underneath our scrap
-    [imagePicker hide:YES];
+    [imagePicker hide:YES onComplete:nil];
     
     // hide the photo in the row. this way the scrap
     // becomes the photo, and it doesn't seem to duplicate

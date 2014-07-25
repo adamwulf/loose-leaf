@@ -214,6 +214,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
  */
 -(void) initializeAlbumCache{
     if(hasEverInitailized){
+        [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
         return;
     }
     NSMutableArray* updatedAlbumsList = [NSMutableArray array];
