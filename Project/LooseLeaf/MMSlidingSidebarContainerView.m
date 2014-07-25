@@ -10,7 +10,7 @@
 #import "UIView+Animations.h"
 #import "UIView+Debug.h"
 
-#define kAnimationDuration 0.3
+#define kAnimationDuration 0.2
 
 @implementation MMSlidingSidebarContainerView{
     UIButton* dismissButton;
@@ -124,22 +124,18 @@
         bounceAnimation.removedOnCompletion = YES;
         bounceAnimation.keyTimes = [NSArray arrayWithObjects:
                                     [NSNumber numberWithFloat:0.0],
-                                    [NSNumber numberWithFloat:1.0],
                                     [NSNumber numberWithFloat:1.0], nil];
         if(directionIsFromLeft){
             bounceAnimation.values = [NSArray arrayWithObjects:
                                       [NSValue valueWithCGPoint:CGPointMake(-sidebarContentView.frame.size.width/4, 0)],
-                                      [NSValue valueWithCGPoint:CGPointMake(-kBounceWidth, 0)],
                                       [NSValue valueWithCGPoint:CGPointMake(-kBounceWidth, 0)], nil];
         }else{
             bounceAnimation.values = [NSArray arrayWithObjects:
                                       [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width, 0)],
-                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width, 0)],
                                       [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width+kBounceWidth, 0)], nil];
         }
         bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
-                                           [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut],
-                                           [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn], nil];
+                                           [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut], nil];
         [bounceAnimation setDuration:kAnimationDuration];
 
         CABasicAnimation *opacityAnimation2 = [CABasicAnimation animationWithKeyPath:@"opacity"];
