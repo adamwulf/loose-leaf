@@ -37,8 +37,10 @@
         blurContainerView = [[UIView alloc] initWithFrame:self.bounds];
         [self addSubview:blurContainerView];
         blurContainerView.frame = self.bounds;
+        blurContainerView.contentScaleFactor = 1.0;
         
         blurView = [[FXBlurView alloc] initWithFrame:self.bounds];
+        blurView.contentScaleFactor = 1.0;
         blurView.blurEnabled = YES;
         blurView.dynamic = NO;
         blurView.tintColor = [[UIColor blackColor] colorWithAlphaComponent:1.0];
