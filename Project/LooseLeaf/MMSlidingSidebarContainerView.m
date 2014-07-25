@@ -108,7 +108,11 @@
 
     if(animated){
         CGRect fr = sidebarContentView.frame;
-        fr.origin = CGPointZero;
+        if(directionIsFromLeft){
+            fr.origin = CGPointMake(-sidebarContentView.frame.size.width, 0);
+        }else{
+            fr.origin = CGPointMake(self.bounds.size.width, 0);
+        }
         sidebarContentView.frame = fr;
 
         
@@ -135,8 +139,8 @@
         }else{
             bounceAnimation.values = [NSArray arrayWithObjects:
                                       [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width, 0)],
-                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width+kBounceWidth, 0)],
-                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width+kBounceWidth, 0)], nil];
+                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width - kBounceWidth, 0)],
+                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width, 0)], nil];
         }
         bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
                                            [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut],
@@ -191,7 +195,7 @@
     if(directionIsFromLeft){
         fr.origin = CGPointMake(-kBounceWidth, 0);
     }else{
-        fr.origin = CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width+kBounceWidth, 0);
+        fr.origin = CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width, 0);
     }
     sidebarContentView.frame = fr;
     
