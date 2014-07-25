@@ -52,6 +52,10 @@
     
     // flag if we're waiting on a page to save
     MMPaperView* wantsExport;
+    
+    // flag if we're animating a scrap
+    // to/from the sidebar
+    BOOL isAnimatingScrapToOrFromSidebar;
 }
 
 
@@ -1475,8 +1479,17 @@ int skipAll = NO;
     [self cancelAllGestures];
 }
 
+-(void) willAddScrapToBezelSidebar:(MMScrapView *)scrap{
+    isAnimatingScrapToOrFromSidebar = NO;
+}
+
 -(void) didAddScrapToBezelSidebar:(MMScrapView *)scrap{
     [bezelScrapContainer saveScrapContainerToDisk];
+    isAnimatingScrapToOrFromSidebar = NO;
+}
+
+-(void) willAddScrapBackToPage:(MMScrapView *)scrap{
+    isAnimatingScrapToOrFromSidebar = YES;
 }
 
 // returns the page that the scrap was added to
@@ -1511,6 +1524,8 @@ int skipAll = NO;
         scrapToAddToPage.scale = scale;
         [page saveToDisk];
         [bezelScrapContainer saveScrapContainerToDisk];
+
+        isAnimatingScrapToOrFromSidebar = NO;
     }];
     return page;
 }
@@ -1693,7 +1708,7 @@ int skipAll = NO;
 #pragma mark - Check for Active Gestures
 
 -(BOOL) isActivelyGesturing{
-    return [super isActivelyGesturing] || panAndPinchScrapGesture.scrap || panAndPinchScrapGesture2.scrap || stretchScrapGesture.scrap;
+    return [super isActivelyGesturing] || panAndPinchScrapGesture.scrap || panAndPinchScrapGesture2.scrap || stretchScrapGesture.scrap || isAnimatingScrapToOrFromSidebar;
 }
 
 

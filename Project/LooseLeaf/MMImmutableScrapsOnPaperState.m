@@ -55,7 +55,7 @@
 -(BOOL) saveStateToDiskBlocking{
     __block BOOL hadAnyEditsToSaveAtAll = NO;
     if(ownerState.lastSavedUndoHash != self.undoHash){
-        NSLog(@"scrapsOnPaperState needs saving %lu != %lu", (unsigned long) ownerState.lastSavedUndoHash, (unsigned long) self.undoHash);
+//        NSLog(@"scrapsOnPaperState needs saving %lu != %lu", (unsigned long) ownerState.lastSavedUndoHash, (unsigned long) self.undoHash);
         NSMutableArray* allScrapProperties = [NSMutableArray array];
         if([allScrapsForPage count]){
             dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
@@ -84,7 +84,7 @@
         [ownerState wasSavedAtUndoHash:self.undoHash];
     }else{
         // we've already saved an immutable state with this hash
-        NSLog(@"scrapsOnPaperState doesn't need saving %lu == %lu", (unsigned long) ownerState.lastSavedUndoHash, (unsigned long) self.undoHash);
+//        NSLog(@"scrapsOnPaperState doesn't need saving %lu == %lu", (unsigned long) ownerState.lastSavedUndoHash, (unsigned long) self.undoHash);
     }
 
     return hadAnyEditsToSaveAtAll;
