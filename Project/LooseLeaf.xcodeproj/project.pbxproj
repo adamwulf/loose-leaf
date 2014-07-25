@@ -1095,6 +1095,7 @@
 		667D98B3192FBEEF00625879 /* Photo Library */ = {
 			isa = PBXGroup;
 			children = (
+				666E254618F613B900C17295 /* AbstractPhotoAlbumList */,
 				666E254318F60F3E00C17295 /* MMAlbumSidebarContentView.h */,
 				666E254418F60F3E00C17295 /* MMAlbumSidebarContentView.m */,
 				666E254718F613FA00C17295 /* MMFaceSidebarContentView.h */,
@@ -1393,7 +1394,6 @@
 				666E254218F60DD100C17295 /* Helper Views */,
 				66F4517B18EB7C2800A57C95 /* Photo Row Views */,
 				669B765E18EB47EA0041DAE7 /* Album Row Views */,
-				666E254618F613B900C17295 /* AbstractPhotoAlbumList */,
 				667D98B2192FBEDF00625879 /* Content Views */,
 			);
 			name = "Import Sidebar";

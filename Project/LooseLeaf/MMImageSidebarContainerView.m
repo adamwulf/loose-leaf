@@ -187,6 +187,7 @@
     for(MMAbstractSidebarContentView* aListView in allListContentViews){
         if(aListView == listView){
             listView.hidden = NO;
+            [listView reset:NO];
             [listView show:NO];
         }else if(!aListView.hidden){
             [aListView hide:NO];
