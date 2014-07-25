@@ -31,4 +31,6 @@
 
 -(void) showForDuration:(CGFloat)duration;
 
+-(void) hideAnimation;
+
 @end

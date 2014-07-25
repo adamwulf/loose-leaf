@@ -168,17 +168,17 @@
     bounceAnimation.removedOnCompletion = YES;
     bounceAnimation.keyTimes = [NSArray arrayWithObjects:
                                 [NSNumber numberWithFloat:0.0],
-                                [NSNumber numberWithFloat:1.0],
+                                [NSNumber numberWithFloat:0.7],
                                 [NSNumber numberWithFloat:1.0], nil];
     if(directionIsFromLeft){
         bounceAnimation.values = [NSArray arrayWithObjects:
-                                  [NSValue valueWithCGPoint:CGPointMake(blurView.bounds.size.width/4, 0)],
-                                  [NSValue valueWithCGPoint:CGPointMake(0, 0)],
+                                  [NSValue valueWithCGPoint:CGPointMake(blurView.bounds.size.width, 0)],
+                                  [NSValue valueWithCGPoint:CGPointMake(-kBounceWidth, 0)],
                                   [NSValue valueWithCGPoint:CGPointMake(0, 0)], nil];
     }else{
         bounceAnimation.values = [NSArray arrayWithObjects:
-                                  [NSValue valueWithCGPoint:CGPointMake(blurView.bounds.size.width/4, 0)],
-                                  [NSValue valueWithCGPoint:CGPointMake(0, 0)],
+                                  [NSValue valueWithCGPoint:CGPointMake(blurView.bounds.size.width, 0)],
+                                  [NSValue valueWithCGPoint:CGPointMake(-kBounceWidth, 0)],
                                   [NSValue valueWithCGPoint:CGPointMake(0, 0)], nil];
     }
     bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
@@ -189,6 +189,12 @@
     [blurView.layer addAnimation:bounceAnimation forKey:@"bounceAnimation"];
     
     blurView.frame = blurContainerView.bounds;
+}
+
+-(void) hideAnimation{
+    CGRect fr = blurView.frame;
+    fr.origin.x = blurView.bounds.size.width/4;
+    blurView.frame = fr;
 }
 
 -(BOOL) isVisible{
