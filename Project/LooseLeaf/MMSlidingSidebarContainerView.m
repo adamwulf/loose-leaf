@@ -84,9 +84,9 @@
         // animate the position of the sidebar offscreen
         CGRect imagePickerBounds = [self defaultSidebarFrame];
         if(directionIsFromLeft){
-            imagePickerBounds.origin.x = -imagePickerBounds.size.width / 4;
+            imagePickerBounds.origin.x = -imagePickerBounds.size.width / 4.0;
         }else{
-            imagePickerBounds.origin.x = self.bounds.size.width;
+            imagePickerBounds.origin.x = self.bounds.size.width-imagePickerBounds.size.width * 3.0 / 4.0;
         }
         sidebarContentView.frame = imagePickerBounds;
         sidebarContentView.alpha = 0;
@@ -139,8 +139,8 @@
         }else{
             bounceAnimation.values = [NSArray arrayWithObjects:
                                       [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width, 0)],
-                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width - kBounceWidth, 0)],
-                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width, 0)], nil];
+                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width, 0)],
+                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width + kBounceWidth, 0)], nil];
         }
         bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
                                            [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut],
@@ -195,7 +195,7 @@
     if(directionIsFromLeft){
         fr.origin = CGPointMake(-kBounceWidth, 0);
     }else{
-        fr.origin = CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width, 0);
+        fr.origin = CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width + kBounceWidth, 0);
     }
     sidebarContentView.frame = fr;
     

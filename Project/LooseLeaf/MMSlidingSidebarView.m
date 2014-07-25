@@ -46,6 +46,8 @@
         blurView.tintColor = [[UIColor blackColor] colorWithAlphaComponent:1.0];
         [blurContainerView addSubview:blurView];
         blurView.frame = blurContainerView.bounds;
+        blurView.layer.borderColor = [UIColor redColor].CGColor;
+        blurView.layer.borderWidth = 2;
         
         
 //        
@@ -114,7 +116,6 @@
             [maskPath addArcWithCenter:buttonCenter radius:radius - stripeWidth startAngle:(2*M_PI - angle) endAngle:angle clockwise:NO];
             [maskPath addLineToPoint:CGPointMake(self.contentBounds.size.width + 3*kBounceWidth + stripeWidth, buttonRect.origin.y + buttonRect.size.height)];
             [maskPath addLineToPoint:CGPointMake(self.contentBounds.size.width + 3*kBounceWidth + stripeWidth, self.contentBounds.size.height)];
-            
             
             targetX = targetX - stripeWidth;
             angle = acos(-(targetX - buttonRect.origin.x) / (radius - stripeWidth*2));
@@ -208,7 +209,7 @@
     if(directionIsFromLeft){
         fr.origin = CGPointMake(blurContainerView.bounds.size.width, 0);
     }else{
-        fr.origin = CGPointMake(-blurView.bounds.size.width + kBounceWidth, 0);
+        fr.origin = CGPointMake(-blurContainerView.bounds.size.width, 0);
     }
     blurView.frame = fr;
     [blurView setNeedsDisplay];
@@ -245,7 +246,11 @@
 
 -(void) hideAnimation{
     CGRect fr = blurView.frame;
-    fr.origin.x = blurView.bounds.size.width/4;
+    if(directionIsFromLeft){
+        fr.origin.x = blurView.bounds.size.width/4;
+    }else{
+        fr.origin.x = -blurView.bounds.size.width/4;
+    }
     blurView.frame = fr;
 }
 
