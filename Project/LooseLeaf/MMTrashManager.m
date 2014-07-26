@@ -47,9 +47,9 @@ static MMTrashManager* _instance = nil;
 #pragma mark - Delete Methods
 
 -(void) deleteScrap:(NSString*)scrapUUID inPage:(NSString*)pageUUID{
-    //
+    // we've been told to delete a scrap from disk.
+    // so do this on our low priority background queue
     dispatch_async([self trashManagerQueue], ^{
-        NSLog(@"deleting scrap %@ in page %@", scrapUUID, pageUUID);
         NSString* documentsPath = [NSFileManager documentsPath];
         NSString* pagesPath = [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:pageUUID];
         NSString* scrapPath = [[pagesPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:scrapUUID];
@@ -57,19 +57,18 @@ static MMTrashManager* _instance = nil;
         BOOL isDirectory = NO;
         if([[NSFileManager defaultManager] fileExistsAtPath:scrapPath isDirectory:&isDirectory]){
             if(isDirectory){
-                NSLog(@"found path to delete %@", scrapPath);
                 NSError* err = nil;
                 if([[NSFileManager defaultManager] removeItemAtPath:scrapPath error:&err]){
-                    NSLog(@"deleted %@", scrapPath);
+//                    NSLog(@"deleted %@", scrapPath);
                 }
                 if(err){
                     NSLog(@"error deleting %@: %@", scrapPath, err);
                 }
             }else{
-                NSLog(@"found path, but it isn't a directory");
+//                NSLog(@"found path, but it isn't a directory");
             }
         }else{
-            NSLog(@"path to delete doesn't exist %@", scrapPath);
+//            NSLog(@"path to delete doesn't exist %@", scrapPath);
         }
     });
 }
