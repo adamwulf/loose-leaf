@@ -291,6 +291,15 @@
     return [scrapState.allScrapsInSidebar containsObject:scrap];
 }
 
+-(BOOL) containsScrapUUID:(NSString *)scrapUUID{
+    for(MMScrapView* scrap in scrapState.allScrapsInSidebar){
+        if([scrap.uuid isEqualToString:scrapUUID]){
+            return YES;
+        }
+    }
+    return NO;
+}
+
 
 #pragma mark - Button Tap
 

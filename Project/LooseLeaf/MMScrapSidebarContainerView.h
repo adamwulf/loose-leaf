@@ -29,6 +29,8 @@
 
 -(BOOL) containsScrap:(MMScrapView*)scrap;
 
+-(BOOL) containsScrapUUID:(NSString*)scrapUUID;
+
 -(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel;
 
 -(void) saveScrapContainerToDisk;

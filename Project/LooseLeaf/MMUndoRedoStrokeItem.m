@@ -30,6 +30,21 @@
     return self;
 }
 
+
+#pragma mark - Finalize
+
+-(void) finalizeUndoableState{
+    // undoing and redoing a stroke has
+    // no effect on what's stored on disk,
+    // so this is a noop
+}
+
+-(void) finalizeRedoableState{
+    // undoing and redoing a stroke has
+    // no effect on what's stored on disk,
+    // so this is a noop
+}
+
 #pragma mark - Serialize
 
 -(NSDictionary*) asDictionary{
