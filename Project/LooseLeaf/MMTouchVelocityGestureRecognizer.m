@@ -108,7 +108,6 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [self killTimer];
     for(UITouch* touch in touches){
-        NSLog(@"touch to %@", NSStringFromClass([touch.view class]));
         // initialize values for touch
         int indexOfTouch = [self indexForTouchInCache:touch];
         durationCache[indexOfTouch].instantaneousNormalizedVelocity = 1;

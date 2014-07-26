@@ -73,7 +73,25 @@
 // animate the change
 -(void) hide:(BOOL)animated onComplete:(void(^)(BOOL finished))onComplete{
     // ignore if we're hidden
-    if(![self isVisible]) return;
+    if(![self isVisible]){
+        if(onComplete) onComplete(YES);
+        return;
+    }
+    
+    void(^realComplete)(BOOL) = ^(BOOL finished){
+        if(finished){
+            CGRect fr = sidebarContentView.frame;
+            if(directionIsFromLeft){
+                fr.origin.x = -fr.size.width;
+                sidebarContentView.frame = fr;
+            }else{
+                fr.origin.x = self.bounds.size.width;
+                sidebarContentView.frame = fr;
+            }
+        }
+        if(onComplete) onComplete(finished);
+    };
+    
     [delegate sidebarWillHide];
     // keep our property changes in a block
     // to pass to UIView or just run
@@ -94,9 +112,10 @@
     };
     
     if(animated){
-        [UIView animateWithDuration:kAnimationDuration animations:hideBlock completion:onComplete];
+        [UIView animateWithDuration:kAnimationDuration animations:hideBlock completion:realComplete];
     }else{
         hideBlock();
+        realComplete(YES);
     }
 }
 
