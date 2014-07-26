@@ -44,6 +44,15 @@
     return self;
 }
 
+#pragma mark - Finalize
+
+-(void) finalizeUndoneState{
+    NSLog(@"finalizeUndoneState %@", NSStringFromClass([self class]));
+}
+
+-(void) finalizeRedoneState{
+    NSLog(@"finalizeRedoneState %@", NSStringFromClass([self class]));
+}
 
 #pragma mark - Serialize
 
