@@ -175,6 +175,9 @@ static int totalBackgroundBytes;
         UIImage* image = [UIImage imageWithContentsOfFile:self.backgroundJPGFile];
         if(!image){
             image = [UIImage imageWithContentsOfFile:self.bundledBackgroundJPGFile];
+            if(!image){
+                NSLog(@"can't get background!");
+            }
         }
         [NSThread performBlockOnMainThread:^{
             [self setBackingImage:image];
