@@ -1511,6 +1511,13 @@ int skipAll = NO;
             [scrapContainer addSubview:oldScrap];
             scrapToAddToPage = [self cloneScrap:scrap toPage:page];
             [oldScrap removeFromSuperview];
+            
+            // check the original page of the scrap
+            // and see if it has any reference to this
+            // scrap. if its undo stack doesn't hold any
+            // reference, then we should trigger deleting
+            // it's old assets
+            [scrap.state.scrapsOnPaperState bezelRelenquishesScrap:scrap];
         }
         // ok, done, just set it
         if(index == NSNotFound){

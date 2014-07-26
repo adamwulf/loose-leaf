@@ -36,6 +36,10 @@
 
 -(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath;
 
+#pragma mark - Interaction with Bezel Sidebar
+
+-(void) bezelRelenquishesScrap:(MMScrapView*)scrap;
+
 #pragma mark - Add Scraps
 
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale;

@@ -17,6 +17,7 @@
 #import "MMUndoRedoMoveScrapItem.h"
 #import "MMUndoRedoAddScrapFromBezelItem.h"
 #import "MMScrapSidebarContainerView.h"
+#import "MMTrashManager.h"
 
 @interface MMScrappedPaperView (Queue)
 
@@ -76,6 +77,31 @@
 
 -(MMScrapSidebarContainerView*) bezelContainerView{
     return self.delegate.bezelContainerView;
+}
+
+-(void) validateNeedForScrapAssets:(MMScrapView*)scrap{
+    NSLog(@"undoable page %@ is validating scrap assets for %@", self.uuid, scrap.uuid);
+
+    void(^checkScrap)() = ^{
+        if([undoRedoManager containsItemForScrapUUID:scrap.uuid]){
+            NSLog(@"found undo items for scrap: %@", scrap.uuid);
+        }else{
+            NSLog(@"didn't found undo items for scrap: %@", scrap.uuid);
+            [[MMTrashManager sharedInstace] deleteScrap:scrap.uuid inPage:self.uuid];
+        }
+    };
+    
+    void(^loadCheckScrapAndUnload)() = ^{
+        [undoRedoManager loadFrom:[self undoStatePath]];
+        checkScrap();
+        [undoRedoManager unloadState];
+    };
+    
+    if(!undoRedoManager.isLoaded){
+        dispatch_async([MMScrappedPaperView concurrentBackgroundQueue], loadCheckScrapAndUnload);
+    }else{
+        checkScrap();
+    }
 }
 
 #pragma mark - Saving and Loading

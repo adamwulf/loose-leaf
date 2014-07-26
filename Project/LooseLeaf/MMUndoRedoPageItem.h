@@ -21,4 +21,6 @@
 
 - (id) initWithUndoBlock:(void(^)())undoBlock andRedoBlock:(void(^)())redoBlock forPage:(MMUndoablePaperView*)page;
 
+-(BOOL) containsScrapUUID:(NSString*)scrapUUID;
+
 @end

@@ -99,4 +99,10 @@
     return propertiesWhenAdded;
 }
 
+#pragma mark - Scrap Checking
+
+-(BOOL) containsScrapUUID:(NSString*)_scrapUUID{
+    return [scrapUUID isEqualToString:_scrapUUID];
+}
+
 @end

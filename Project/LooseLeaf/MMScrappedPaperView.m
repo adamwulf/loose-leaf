@@ -1232,6 +1232,9 @@ static dispatch_queue_t concurrentBackgroundQueue;
     return [delegate.bezelContainerView.scrapState scrapForUUID:scrapUUID];
 }
 
+-(void) validateNeedForScrapAssets:(MMScrapView*)scrap{
+    @throw kAbstractMethodException;
+}
 
 #pragma mark - JotViewStateProxyDelegate
 

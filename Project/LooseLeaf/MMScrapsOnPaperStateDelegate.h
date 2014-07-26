@@ -43,4 +43,6 @@
 
 -(NSString*) bundledPagesPath;
 
+-(void) validateNeedForScrapAssets:(MMScrapView*)scrap;
+
 @end

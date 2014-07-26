@@ -242,6 +242,17 @@ static dispatch_queue_t importExportStateQueue;
     return nil;
 }
 
+#pragma mark - Interaction with Bezel Sidebar
+
+-(void) bezelRelenquishesScrap:(MMScrapView*)scrap{
+    // when the bezel adds our scrap to another page,
+    // it is going to relenquish ownership of that scrap.
+    // we need to double check if we have any references
+    // to this scrap in our undo manager. if so, then keep
+    // the scrap. if not, then delete the scrap assets
+    [delegate validateNeedForScrapAssets:scrap];
+}
+
 #pragma mark - Create Scraps
 
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale{

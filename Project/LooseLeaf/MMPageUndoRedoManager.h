@@ -13,6 +13,7 @@
 @interface MMPageUndoRedoManager : NSObject
 
 @property (readonly) BOOL hasEditsToSave;
+@property (readonly) BOOL isLoaded;
 
 -(id) initForPage:(MMUndoablePaperView*)page;
 
@@ -29,5 +30,9 @@
 -(void) loadFrom:(NSString*)path;
 
 -(void) unloadState;
+
+#pragma mark - Scrap Checking
+
+-(BOOL) containsItemForScrapUUID:(NSString*)scrapUUID;
 
 @end

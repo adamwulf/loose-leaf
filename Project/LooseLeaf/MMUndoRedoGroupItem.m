@@ -99,4 +99,15 @@
     return undoableItems;
 }
 
+#pragma mark - Scrap Checking
+
+-(BOOL) containsScrapUUID:(NSString*)_scrapUUID{
+    for(MMUndoRedoPageItem* item in undoableItems){
+        if([item containsScrapUUID:_scrapUUID]){
+            return YES;
+        }
+    }
+    return NO;
+}
+
 @end

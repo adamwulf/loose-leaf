@@ -35,5 +35,10 @@
     return [NSString stringWithFormat:@"[%@]", NSStringFromClass([self class])];
 }
 
+#pragma mark - Scrap Checking
+
+-(BOOL) containsScrapUUID:(NSString*)scrapUUID{
+    return NO;
+}
 
 @end

@@ -24,7 +24,7 @@
 }
 
 @synthesize hasEditsToSave;
-
+@synthesize isLoaded;
 
 -(id) initForPage:(MMUndoablePaperView*)_page{
     if(self = [super init]){
@@ -163,6 +163,17 @@
         [stackOfUndoableItems removeAllObjects];
         [stackOfUndoneItems removeAllObjects];
     }
+}
+
+#pragma mark - Scrap Checking
+
+-(BOOL) containsItemForScrapUUID:(NSString*)scrapUUID{
+    for(MMUndoRedoPageItem* undoItem in [stackOfUndoneItems arrayByAddingObjectsFromArray:stackOfUndoableItems]){
+        if([undoItem containsScrapUUID:scrapUUID]){
+            return YES;
+        }
+    }
+    return NO;
 }
 
 @end
