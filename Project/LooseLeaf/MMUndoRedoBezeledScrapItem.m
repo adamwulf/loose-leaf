@@ -9,6 +9,7 @@
 #import "MMUndoRedoBezeledScrapItem.h"
 #import "MMUndoablePaperView.h"
 #import "MMScrapSidebarContainerView.h"
+#import "MMTrashManager.h"
 
 
 @interface MMUndoRedoBezeledScrapItem (Private)
@@ -59,6 +60,29 @@
     return self;
 }
 
+
+#pragma mark - Finalize
+
+-(void) finalizeUndoableState{
+    // if this item is undoable, it means that as far as we know
+    // the scrap is still in the bezel. let's check and make sure.
+    // if the scrap had already been added to another page, then
+    // we're the last place that knows about this scrap, and should
+    // delete it.
+    // if it's still in the bezel, then leave it there and don't delete
+    // any assets
+    if([page.delegate.bezelContainerView containsScrapUUID:scrapUUID]){
+        NSLog(@"scrap %@ is in bezel, can't delete assets", scrapUUID);
+    }else{
+        [[MMTrashManager sharedInstace] deleteScrap:scrapUUID inPage:page.uuid];
+    }
+}
+
+-(void) finalizeRedoableState{
+    // if this item is redoable, it means we've undone adding it to the bezel
+    // so as far as we know it's still on our page.
+    // this is a noop
+}
 
 #pragma mark - Serialize
 
