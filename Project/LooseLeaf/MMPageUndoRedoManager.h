@@ -23,8 +23,6 @@
 
 -(void) redo;
 
--(void) mergeItemsIfPossible;
-
 #pragma mark - Saving and Loading
 
 -(void) saveTo:(NSString*)path;
@@ -32,7 +30,5 @@
 -(void) loadFrom:(NSString*)path;
 
 -(void) unloadState;
-
--(BOOL) justUndidScrapBezel;
 
 @end

@@ -16,9 +16,9 @@
 
 -(void) redo;
 
--(void) finalizeUndoneState;
+-(void) finalizeUndoableState;
 
--(void) finalizeRedoneState;
+-(void) finalizeRedoableState;
 
 #pragma mark - Save and Load
 

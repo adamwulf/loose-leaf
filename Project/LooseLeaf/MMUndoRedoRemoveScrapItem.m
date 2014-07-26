@@ -46,12 +46,12 @@
 
 #pragma mark - Finalize
 
--(void) finalizeUndoneState{
-    NSLog(@"finalizeUndoneState %@", NSStringFromClass([self class]));
+-(void) finalizeUndoableState{
+    NSLog(@"finalizeUndoableState %@", NSStringFromClass([self class]));
 }
 
--(void) finalizeRedoneState{
-    NSLog(@"finalizeRedoneState %@", NSStringFromClass([self class]));
+-(void) finalizeRedoableState{
+    NSLog(@"finalizeRedoableState %@", NSStringFromClass([self class]));
 }
 
 #pragma mark - Serialize
