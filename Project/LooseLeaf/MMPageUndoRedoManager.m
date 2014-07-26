@@ -21,10 +21,8 @@
     NSMutableArray* stackOfUndoneItems;
     BOOL hasEditsToSave;
     BOOL isLoaded;
-    __weak MMScrapsOnPaperState* scrapsOnPaperState;
 }
 
-@synthesize scrapsOnPaperState;
 @synthesize hasEditsToSave;
 
 

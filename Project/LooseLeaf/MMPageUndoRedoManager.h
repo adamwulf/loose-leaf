@@ -8,12 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import "MMUndoRedoItem.h"
-#import "MMScrapsOnPaperState.h"
+#import "MMUndoablePaperView.h"
 
 @interface MMPageUndoRedoManager : NSObject
 
 @property (readonly) BOOL hasEditsToSave;
-@property (weak) MMScrapsOnPaperState* scrapsOnPaperState;
 
 -(id) initForPage:(MMUndoablePaperView*)page;
 
