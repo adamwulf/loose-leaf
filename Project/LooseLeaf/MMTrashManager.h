@@ -7,11 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MMScrapView.h"
+#import "MMScrappedPaperView.h"
 
 @interface MMTrashManager : NSObject
 
 +(MMTrashManager*) sharedInstace;
 
--(void) deleteScrap:(NSString*)scrapUUID inPage:(NSString*)pageUUID;
+-(void) deleteScrap:(NSString*)scrap inPage:(MMScrappedPaperView*)page;
 
 @end

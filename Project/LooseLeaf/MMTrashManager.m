@@ -8,6 +8,8 @@
 
 #import "MMTrashManager.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMImmutableScrapsOnPaperState.h"
+#import "MMUndoablePaperView.h"
 
 @implementation MMTrashManager{
     dispatch_queue_t trashManagerQueue;
@@ -46,20 +48,74 @@ static MMTrashManager* _instance = nil;
 
 #pragma mark - Delete Methods
 
--(void) deleteScrap:(NSString*)scrapUUID inPage:(NSString*)pageUUID{
+-(void) deleteScrap:(NSString*)scrapUUID inPage:(MMScrappedPaperView*)page{
+    
+    MMUndoablePaperView* undoablePage = nil;
+    if([page isKindOfClass:[MMUndoablePaperView class]]){
+        undoablePage = (MMUndoablePaperView*)page;
+    }
+    
+    dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+
+    // first, we need to check if we're even eligible to
+    // delete the scrap or not.
+    //
+    // if the scrap is being held in the undo/redo manager
+    // then we need to keep the scraps assets on disk.
+    // otherwise we can delete them.
+    BOOL(^checkScrapExistsInUndoRedoManager)() = ^{
+        __block BOOL existsInUndoRedoManager = NO;
+        dispatch_async([MMScrappedPaperView concurrentBackgroundQueue], ^{
+            BOOL needsLoad = ![undoablePage.undoRedoManager isLoaded];
+            if(needsLoad){
+                [undoablePage.undoRedoManager loadFrom:[undoablePage undoStatePath]];
+            }
+            existsInUndoRedoManager = [undoablePage.undoRedoManager containsItemForScrapUUID:scrapUUID];
+            if(needsLoad){
+                [undoablePage.undoRedoManager unloadState];
+            }
+            dispatch_semaphore_signal(sema1);
+        });
+        dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+        return existsInUndoRedoManager;
+    };
+    
+    
     // we've been told to delete a scrap from disk.
     // so do this on our low priority background queue
     dispatch_async([self trashManagerQueue], ^{
-        NSString* documentsPath = [NSFileManager documentsPath];
-        NSString* pagesPath = [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:pageUUID];
-        NSString* scrapPath = [[pagesPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:scrapUUID];
+
+        if(undoablePage && checkScrapExistsInUndoRedoManager()){
+            // the scrap exists in the page's undo manager,
+            // so don't bother deleting it
+            NSLog(@"TrashManager found scrap in page's undo state. keeping files.");
+            return;
+        }
         
+        // delete from the page's scrapsOnPaperState
+        void(^removeFromScrapsOnPaperState)() = ^{
+            [page.scrapsOnPaperState removeScrapWithUUID:scrapUUID];
+            [[page.scrapsOnPaperState immutableStateForPath:page.scrapIDsPath] saveStateToDiskBlocking];
+        };
+        
+        // now the scrap is off disk, so remove it from the page's state too
+        if([page.scrapsOnPaperState isStateLoaded]){
+            removeFromScrapsOnPaperState();
+        }else{
+            [page performBlockForUnloadedScrapStateSynchronously:removeFromScrapsOnPaperState];
+        }
+
+        // now that the scrap is out of the page's state, then
+        // we can delete it off disk too
+        NSString* documentsPath = [NSFileManager documentsPath];
+        NSString* pagesPath = [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:page.uuid];
+        NSString* scrapPath = [[pagesPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:scrapUUID];
         BOOL isDirectory = NO;
         if([[NSFileManager defaultManager] fileExistsAtPath:scrapPath isDirectory:&isDirectory]){
             if(isDirectory){
                 NSError* err = nil;
                 if([[NSFileManager defaultManager] removeItemAtPath:scrapPath error:&err]){
-//                    NSLog(@"deleted %@", scrapPath);
+                    NSLog(@"deleted %@", scrapPath);
                 }
                 if(err){
                     NSLog(@"error deleting %@: %@", scrapPath, err);

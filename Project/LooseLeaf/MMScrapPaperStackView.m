@@ -25,6 +25,7 @@
 #import "MMInboxManagerDelegate.h"
 #import "NSURL+UTI.h"
 #import "Mixpanel.h"
+#import "MMTrashManager.h"
 
 @implementation MMScrapPaperStackView{
     MMScrapSidebarContainerView* bezelScrapContainer;
@@ -1517,7 +1518,7 @@ int skipAll = NO;
             // scrap. if its undo stack doesn't hold any
             // reference, then we should trigger deleting
             // it's old assets
-            [scrap.state.scrapsOnPaperState bezelRelenquishesScrap:scrap];
+            [[MMTrashManager sharedInstace] deleteScrap:scrap.uuid inPage:scrap.state.scrapsOnPaperState.delegate.page];
         }
         // ok, done, just set it
         if(index == NSNotFound){

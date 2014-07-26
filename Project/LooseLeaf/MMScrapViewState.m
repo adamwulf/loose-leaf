@@ -126,7 +126,7 @@
     }else{
         // we don't have a file that we should have, so don't load the scrap
         NSLog(@"can't find file at %@ or %@", self.scrapPropertiesPlistPath, self.bundledScrapPropertiesPlistPath);
-        return nil;
+        @throw [NSException exceptionWithName:@"MissingScrapFilesException" reason:@"files for scrap state are not on disk" userInfo:nil];
     }
     return self;
 }

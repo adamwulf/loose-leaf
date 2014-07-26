@@ -59,7 +59,7 @@
     if([page.delegate.bezelContainerView containsScrapUUID:scrapUUID]){
         NSLog(@"scrap %@ is in bezel, can't delete assets", scrapUUID);
     }else{
-        [[MMTrashManager sharedInstace] deleteScrap:scrapUUID inPage:page.uuid];
+        [[MMTrashManager sharedInstace] deleteScrap:scrapUUID inPage:page];
     }
 }
 
