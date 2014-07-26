@@ -125,6 +125,7 @@
         return [self initWithUUID:uuid andBezierPath:bezierPath andBackgroundView:backingView andPaperState:_scrapsOnPaperState andLastSavedUndoHash:lsuh];
     }else{
         // we don't have a file that we should have, so don't load the scrap
+        NSLog(@"can't find file at %@ or %@", self.scrapPropertiesPlistPath, self.bundledScrapPropertiesPlistPath);
         return nil;
     }
     return self;
@@ -255,7 +256,9 @@
         NSDictionary* backgroundProps = [backgroundInfo saveBackgroundToDisk];
         [savedProperties addEntriesFromDictionary:backgroundProps];
         // save properties to disk
-        [savedProperties writeToFile:pathToSave atomically:YES];
+        if(![savedProperties writeToFile:pathToSave atomically:YES]){
+            NSLog(@"couldn't save properties!");
+        }
     };
     
     

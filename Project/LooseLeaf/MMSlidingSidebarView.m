@@ -11,6 +11,7 @@
 #import "UIView+Animations.h"
 #import "MMSlidingSidebarContainerView.h"
 #import "FXBlurView.h"
+#import "UIView+Debug.h"
 
 @implementation MMSlidingSidebarView{
     // this is the button that'll trigger the sidebar
@@ -46,7 +47,10 @@
         blurView.tintColor = [[UIColor blackColor] colorWithAlphaComponent:1.0];
         [blurContainerView addSubview:blurView];
         blurView.frame = blurContainerView.bounds;
-        
+
+//        [blurContainerView showDebugBorder];
+//        [blurView showDebugBorder];
+
         
 //        
 //        // blur view
