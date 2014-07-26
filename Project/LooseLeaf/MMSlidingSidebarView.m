@@ -46,8 +46,6 @@
         blurView.tintColor = [[UIColor blackColor] colorWithAlphaComponent:1.0];
         [blurContainerView addSubview:blurView];
         blurView.frame = blurContainerView.bounds;
-        blurView.layer.borderColor = [UIColor redColor].CGColor;
-        blurView.layer.borderWidth = 2;
         
         
 //        
