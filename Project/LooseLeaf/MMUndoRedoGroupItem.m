@@ -66,6 +66,20 @@
     return self;
 }
 
+#pragma mark - Finalize
+
+-(void) finalizeUndoableState{
+    // we need to pass through this notification to all the items
+    // that we're holding
+    [undoableItems makeObjectsPerformSelector:@selector(finalizeUndoableState)];
+}
+
+-(void) finalizeRedoableState{
+    // we need to pass through this notification to all the items
+    // that we're holding
+    [undoableItems makeObjectsPerformSelector:@selector(finalizeRedoableState)];
+}
+
 #pragma mark - Description
 
 -(NSString*) description{
