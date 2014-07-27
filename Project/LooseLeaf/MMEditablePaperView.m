@@ -173,6 +173,7 @@ dispatch_queue_t importThumbnailQueue;
 }
 
 -(void) setDrawableView:(JotView *)_drawableView{
+    CheckMainThread;
     if(_drawableView && ![self hasStateLoaded]){
         debug_NSLog(@"oh no");
     }
@@ -184,22 +185,21 @@ dispatch_queue_t importThumbnailQueue;
         if(drawableView){
             [self generateDebugView:YES];
             [self setFrame:self.frame];
-            [NSThread performBlockOnMainThread:^{
-                if([self.delegate isPageEditable:self] && [self hasStateLoaded]){
-                    [drawableView loadState:paperState];
-                    [self addDrawableViewToContentView];
-                    // anchor the view to the top left,
-                    // so that when we scale down, the drawable view
-                    // stays in place
-                    drawableView.layer.anchorPoint = CGPointMake(0,0);
-                    drawableView.layer.position = CGPointMake(0,0);
-                    drawableView.delegate = self;
-                    [self setEditable:YES];
-                    [self updateThumbnailVisibility];
-                }
-            }];
+            if([self.delegate isPageEditable:self] && [self hasStateLoaded]){
+                [drawableView loadState:paperState];
+                [self addDrawableViewToContentView];
+                // anchor the view to the top left,
+                // so that when we scale down, the drawable view
+                // stays in place
+                drawableView.layer.anchorPoint = CGPointMake(0,0);
+                drawableView.layer.position = CGPointMake(0,0);
+                drawableView.delegate = self;
+                [self setEditable:YES];
+                [self updateThumbnailVisibility];
+            }
         }else{
             [self generateDebugView:NO];
+            [self updateThumbnailVisibility];
         }
     }else if(drawableView && [self hasStateLoaded]){
         [self setEditable:YES];
