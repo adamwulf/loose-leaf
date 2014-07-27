@@ -619,6 +619,10 @@ int skipAll = NO;
 }
 
 -(void) shareButtonTapped:(UIButton*)_button{
+    if([self isActivelyGesturing]){
+        // export not allowed while gesturing
+        return;
+    }
     if([[visibleStackHolder peekSubview] hasEditsToSave]){
         wantsExport = [visibleStackHolder peekSubview];
     }else{
