@@ -29,9 +29,13 @@
 @property (nonatomic, weak) MMImageSidebarContainerView* delegate;
 @property (nonatomic, readonly) BOOL isShowing;
 
+-(void) reset:(BOOL)animated;
+
 -(void) show:(BOOL)animated;
 
 -(void) hide:(BOOL)animated;
+
+-(void) killMemory;
 
 -(void) updatePhotoRotation:(BOOL)animated;
 

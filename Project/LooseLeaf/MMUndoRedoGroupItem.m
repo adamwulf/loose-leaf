@@ -41,6 +41,20 @@
 }
 
 
+#pragma mark - Finalize
+
+-(void) finalizeUndoableState{
+    // we need to pass through this notification to all the items
+    // that we're holding
+    [undoableItems makeObjectsPerformSelector:@selector(finalizeUndoableState)];
+}
+
+-(void) finalizeRedoableState{
+    // we need to pass through this notification to all the items
+    // that we're holding
+    [undoableItems makeObjectsPerformSelector:@selector(finalizeRedoableState)];
+}
+
 #pragma mark - Serialize
 
 -(NSDictionary*) asDictionary{
@@ -83,6 +97,17 @@
 
 -(NSArray*) undoableItems{
     return undoableItems;
+}
+
+#pragma mark - Scrap Checking
+
+-(BOOL) containsScrapUUID:(NSString*)_scrapUUID{
+    for(MMUndoRedoPageItem* item in undoableItems){
+        if([item containsScrapUUID:_scrapUUID]){
+            return YES;
+        }
+    }
+    return NO;
 }
 
 @end

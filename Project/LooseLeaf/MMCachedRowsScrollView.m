@@ -134,6 +134,11 @@
     self.contentSize = CGSizeMake(self.bounds.size.width, contentHeight);
 }
 
+-(void) killMemory{
+    [bufferOfUnusedRows removeAllObjects];
+    [currentRowAtIndex removeAllObjects];
+    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+}
 
 #pragma mark - UIScrollViewDelegate
 

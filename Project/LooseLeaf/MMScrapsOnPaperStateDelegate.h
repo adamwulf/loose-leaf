@@ -8,9 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-@class MMScrapView, MMScrapsOnPaperState, MMScrapContainerView,MMScrapSidebarContainerView;
+@class MMScrapView, MMScrapsOnPaperState, MMScrapContainerView,MMScrapSidebarContainerView,MMScrappedPaperView;
 
 @protocol MMScrapsOnPaperStateDelegate <NSObject>
+
+-(MMScrappedPaperView*) page;
 
 -(NSString*) uuid;
 

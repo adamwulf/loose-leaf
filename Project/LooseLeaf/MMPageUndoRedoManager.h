@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "MMUndoRedoItem.h"
-#import "MMScrapsOnPaperState.h"
+#import "MMUndoablePaperView.h"
 
 @interface MMPageUndoRedoManager : NSObject
 
 @property (readonly) BOOL hasEditsToSave;
-@property (weak) MMScrapsOnPaperState* scrapsOnPaperState;
+@property (readonly) BOOL isLoaded;
 
 -(id) initForPage:(MMUndoablePaperView*)page;
 
@@ -23,8 +23,6 @@
 
 -(void) redo;
 
--(void) mergeItemsIfPossible;
-
 #pragma mark - Saving and Loading
 
 -(void) saveTo:(NSString*)path;
@@ -33,6 +31,8 @@
 
 -(void) unloadState;
 
--(BOOL) justUndidScrapBezel;
+#pragma mark - Scrap Checking
+
+-(BOOL) containsItemForScrapUUID:(NSString*)scrapUUID;
 
 @end

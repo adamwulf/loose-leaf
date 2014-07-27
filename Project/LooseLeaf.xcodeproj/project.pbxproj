@@ -23,6 +23,8 @@
 		66150769178333D500B181F3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66150768178333D500B181F3 /* libz.dylib */; };
 		6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6616CCD018B6AE9700CAD0F3 /* JotUI.framework */; };
 		6616CCD218B6AEB100CAD0F3 /* JotTouchSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66C38AC7175329160035B872 /* JotTouchSDK.framework */; };
+		661708E61981B434006A73EF /* FXBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 661708E51981B434006A73EF /* FXBlurView.m */; };
+		661708EE19841988006A73EF /* MMTrashManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 661708ED19841988006A73EF /* MMTrashManager.m */; };
 		661885D118F9ABD70016A333 /* MMFlipCameraButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 661885D018F9ABD70016A333 /* MMFlipCameraButton.m */; };
 		661885D418F9AED50016A333 /* MMDarkSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 661885D318F9AED50016A333 /* MMDarkSidebarButton.m */; };
 		661EBA57182AF1AD00893274 /* MMScissorTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 661EBA56182AF1AD00893274 /* MMScissorTool.m */; };
@@ -257,6 +259,10 @@
 		6615076A178338AF00B181F3 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
 		6615076B178338AF00B181F3 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
 		6616CCD018B6AE9700CAD0F3 /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/LooseLeaf-hhwdxgyoymgwhwezrbyabmvqherf/Build/Products/Debug-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
+		661708E41981B434006A73EF /* FXBlurView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXBlurView.h; sourceTree = "<group>"; };
+		661708E51981B434006A73EF /* FXBlurView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXBlurView.m; sourceTree = "<group>"; };
+		661708EC19841988006A73EF /* MMTrashManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTrashManager.h; sourceTree = "<group>"; };
+		661708ED19841988006A73EF /* MMTrashManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTrashManager.m; sourceTree = "<group>"; };
 		661885CF18F9ABD70016A333 /* MMFlipCameraButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFlipCameraButton.h; sourceTree = "<group>"; };
 		661885D018F9ABD70016A333 /* MMFlipCameraButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFlipCameraButton.m; sourceTree = "<group>"; };
 		661885D218F9AED50016A333 /* MMDarkSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDarkSidebarButton.h; sourceTree = "<group>"; };
@@ -812,6 +818,63 @@
 			path = External/TestFlightSDK;
 			sourceTree = "<group>";
 		};
+		661708E31981B434006A73EF /* FXBlurView */ = {
+			isa = PBXGroup;
+			children = (
+				661708E41981B434006A73EF /* FXBlurView.h */,
+				661708E51981B434006A73EF /* FXBlurView.m */,
+			);
+			name = FXBlurView;
+			path = ../../Submodules/FXBlurView/FXBlurView;
+			sourceTree = "<group>";
+		};
+		661708E719841939006A73EF /* Inbox */ = {
+			isa = PBXGroup;
+			children = (
+				667D98AD192D5D8200625879 /* MMInboxManager.h */,
+				667D98AE192D5D8200625879 /* MMInboxManager.m */,
+				667D98BB192FCE3900625879 /* MMInboxManagerDelegate.h */,
+			);
+			name = Inbox;
+			sourceTree = "<group>";
+		};
+		661708E819841942006A73EF /* Rotation */ = {
+			isa = PBXGroup;
+			children = (
+				66932963159593C00033E557 /* MMRotationManager.h */,
+				66932964159593C00033E557 /* MMRotationManager.m */,
+				66932967159594A60033E557 /* MMRotationManagerDelegate.h */,
+			);
+			name = Rotation;
+			sourceTree = "<group>";
+		};
+		661708E91984194B006A73EF /* Shadow */ = {
+			isa = PBXGroup;
+			children = (
+				6693295815958A950033E557 /* MMShadowManager.h */,
+				6693295915958A950033E557 /* MMShadowManager.m */,
+			);
+			name = Shadow;
+			sourceTree = "<group>";
+		};
+		661708EA19841956006A73EF /* Stack Manager */ = {
+			isa = PBXGroup;
+			children = (
+				66B21A6A175E4A5A0049F1AF /* MMStackManager.h */,
+				66B21A6B175E4A5A0049F1AF /* MMStackManager.m */,
+			);
+			name = "Stack Manager";
+			sourceTree = "<group>";
+		};
+		661708EB1984197C006A73EF /* Trash */ = {
+			isa = PBXGroup;
+			children = (
+				661708EC19841988006A73EF /* MMTrashManager.h */,
+				661708ED19841988006A73EF /* MMTrashManager.m */,
+			);
+			name = Trash;
+			sourceTree = "<group>";
+		};
 		66277C9A192BC97E003E97C0 /* SSKeychain */ = {
 			isa = PBXGroup;
 			children = (
@@ -1044,9 +1107,6 @@
 				666E255018F887FF00C17295 /* Camera */,
 				66AC8D9018E8A90900A65036 /* MMBufferedImageView.h */,
 				66AC8D9118E8A90900A65036 /* MMBufferedImageView.m */,
-				66AC8D8918E89A9C00A65036 /* MMCachedRowsScrollView.h */,
-				66AC8D8A18E89A9C00A65036 /* MMCachedRowsScrollView.m */,
-				66F4517A18EB4C1700A57C95 /* MMCachedRowsScrollViewDataSource.h */,
 			);
 			name = "Helper Views";
 			sourceTree = "<group>";
@@ -1056,6 +1116,9 @@
 			children = (
 				66AC8D7B18E754FE00A65036 /* MMAbstractSidebarContentView.h */,
 				66AC8D7C18E754FE00A65036 /* MMAbstractSidebarContentView.m */,
+				66AC8D8918E89A9C00A65036 /* MMCachedRowsScrollView.h */,
+				66AC8D8A18E89A9C00A65036 /* MMCachedRowsScrollView.m */,
+				66F4517A18EB4C1700A57C95 /* MMCachedRowsScrollViewDataSource.h */,
 			);
 			name = AbstractPhotoAlbumList;
 			sourceTree = "<group>";
@@ -1084,6 +1147,7 @@
 		667D98B3192FBEEF00625879 /* Photo Library */ = {
 			isa = PBXGroup;
 			children = (
+				666E254618F613B900C17295 /* AbstractPhotoAlbumList */,
 				666E254318F60F3E00C17295 /* MMAlbumSidebarContentView.h */,
 				666E254418F60F3E00C17295 /* MMAlbumSidebarContentView.m */,
 				666E254718F613FA00C17295 /* MMFaceSidebarContentView.h */,
@@ -1105,34 +1169,21 @@
 			name = PDFs;
 			sourceTree = "<group>";
 		};
-		667D98BF192FD86700625879 /* PDF */ = {
-			isa = PBXGroup;
-			children = (
-				667D98C0192FD87400625879 /* MMPDF.h */,
-				667D98C1192FD87400625879 /* MMPDF.m */,
-			);
-			name = PDF;
-			sourceTree = "<group>";
-		};
 		6693295715958A890033E557 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				667D98BF192FD86700625879 /* PDF */,
+				661708EB1984197C006A73EF /* Trash */,
+				661708EA19841956006A73EF /* Stack Manager */,
+				661708E91984194B006A73EF /* Shadow */,
+				661708E819841942006A73EF /* Rotation */,
+				661708E719841939006A73EF /* Inbox */,
 				66AC8D8818E89A5600A65036 /* Photo Manager */,
 				66AF94FA19059550004818F8 /* PageCacheManager */,
 				66423DCD19425A91000A3709 /* CachedPreviewManager */,
-				6693295815958A950033E557 /* MMShadowManager.h */,
-				6693295915958A950033E557 /* MMShadowManager.m */,
-				66932963159593C00033E557 /* MMRotationManager.h */,
-				66932964159593C00033E557 /* MMRotationManager.m */,
-				66932967159594A60033E557 /* MMRotationManagerDelegate.h */,
-				66B21A6A175E4A5A0049F1AF /* MMStackManager.h */,
-				66B21A6B175E4A5A0049F1AF /* MMStackManager.m */,
+				667D98C0192FD87400625879 /* MMPDF.h */,
+				667D98C1192FD87400625879 /* MMPDF.m */,
 				66AC153B1805F2F8005315C8 /* MMLoadImageCache.h */,
 				66AC153C1805F2F8005315C8 /* MMLoadImageCache.m */,
-				667D98AD192D5D8200625879 /* MMInboxManager.h */,
-				667D98AE192D5D8200625879 /* MMInboxManager.m */,
-				667D98BB192FCE3900625879 /* MMInboxManagerDelegate.h */,
 				66423DC919412195000A3709 /* MMDecompressImagePromise.h */,
 				66423DCA19412195000A3709 /* MMDecompressImagePromise.m */,
 				66423DCC194121A9000A3709 /* MMDecompressImagePromiseDelegate.h */,
@@ -1382,7 +1433,6 @@
 				666E254218F60DD100C17295 /* Helper Views */,
 				66F4517B18EB7C2800A57C95 /* Photo Row Views */,
 				669B765E18EB47EA0041DAE7 /* Album Row Views */,
-				666E254618F613B900C17295 /* AbstractPhotoAlbumList */,
 				667D98B2192FBEDF00625879 /* Content Views */,
 			);
 			name = "Import Sidebar";
@@ -1547,6 +1597,7 @@
 		66DCFB901581BCEF00B4918C /* Loose Leaf */ = {
 			isa = PBXGroup;
 			children = (
+				661708E31981B434006A73EF /* FXBlurView */,
 				66932995159984090033E557 /* Experiments */,
 				6693295715958A890033E557 /* Managers */,
 				66BD6E811593AF4500D4544C /* Buttons */,
@@ -1956,6 +2007,7 @@
 				66AC153D1805F2F8005315C8 /* MMLoadImageCache.m in Sources */,
 				6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */,
 				66423DCB19412195000A3709 /* MMDecompressImagePromise.m in Sources */,
+				661708EE19841988006A73EF /* MMTrashManager.m in Sources */,
 				66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */,
 				6699715217DBA02700E81467 /* MMDebugDrawView.m in Sources */,
 				66277CA0192BC99D003E97C0 /* SSKeychainQuery.m in Sources */,
@@ -1974,6 +2026,7 @@
 				66A790C019689B810037F01A /* MMScissorResult.m in Sources */,
 				667D98CA19300D0F00625879 /* MMScrapBackgroundView.m in Sources */,
 				661885D418F9AED50016A333 /* MMDarkSidebarButton.m in Sources */,
+				661708E61981B434006A73EF /* FXBlurView.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
 				66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */,
 				667D98C2192FD87400625879 /* MMPDF.m in Sources */,

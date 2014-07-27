@@ -83,10 +83,8 @@
     photoListScrollView.alpha = 1;
     [[MMPhotoManager sharedInstace] initializeAlbumCache];
     
-    [[NSThread mainThread] performBlock:^{
-        currentAlbum = [[MMPhotoManager sharedInstace] cameraRoll];
-        [self doneLoadingPhotoAlbums];
-    } afterDelay:.1];
+    currentAlbum = [[MMPhotoManager sharedInstace] cameraRoll];
+    [self doneLoadingPhotoAlbums];
 }
 
 -(void) hide:(BOOL)animated{

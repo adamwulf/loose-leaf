@@ -68,23 +68,28 @@
     return self;
 }
 
-
--(void) show:(BOOL)animated{
+-(void) reset:(BOOL)animated{
     albumListScrollView.alpha = 1;
     photoListScrollView.alpha = 0;
+}
+
+-(void) show:(BOOL)animated{
     [[MMPhotoManager sharedInstace] initializeAlbumCache];
     [self updatePhotoRotation:NO];
     isShowing = YES;
 }
 
 -(void) hide:(BOOL)animated{
-    albumListScrollView.alpha = 1;
-    photoListScrollView.alpha = 0;
-    currentAlbum = nil;
+//    albumListScrollView.alpha = 1;
+//    photoListScrollView.alpha = 0;
+//    currentAlbum = nil;
     isShowing = NO;
 }
 
-
+-(void) killMemory{
+    [albumListScrollView killMemory];
+    [photoListScrollView killMemory];
+}
 
 #pragma mark - MMPhotoManagerDelegate
 

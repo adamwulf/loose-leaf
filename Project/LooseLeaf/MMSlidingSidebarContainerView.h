@@ -24,8 +24,10 @@
 
 -(BOOL) isVisible;
 
--(void) hide:(BOOL)animated;
+-(void) hide:(BOOL)animated onComplete:(void(^)(BOOL finished))onComplete;
 
 -(void) show:(BOOL)animated;
+
+-(UIView*) viewForBlur;
 
 @end

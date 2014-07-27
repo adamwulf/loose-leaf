@@ -27,4 +27,10 @@
 
 -(BOOL) isVisible;
 
+-(void) prepForShowAnimation;
+
+-(void) showForDuration:(CGFloat)duration;
+
+-(void) hideAnimation;
+
 @end

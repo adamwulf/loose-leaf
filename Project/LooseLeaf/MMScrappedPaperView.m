@@ -1119,6 +1119,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 #pragma mark - MMScrapsOnPaperStateDelegate
 
+-(MMScrappedPaperView*) page{
+    return self;
+}
+
 -(void) didLoadScrapOnPage:(MMScrapView*)scrap{
     // noop, adding scrap to scrapContainerView is handled in the scrapOnPaperState
 }
@@ -1231,7 +1235,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     // otherwise our scrap state will load it
     return [delegate.bezelContainerView.scrapState scrapForUUID:scrapUUID];
 }
-
 
 #pragma mark - JotViewStateProxyDelegate
 

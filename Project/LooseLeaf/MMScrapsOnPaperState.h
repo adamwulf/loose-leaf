@@ -52,5 +52,6 @@
 
 -(MMScrapView*) mostRecentScrap;
 
+-(void) removeScrapWithUUID:(NSString*)scrapUUID;
 
 @end

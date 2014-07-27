@@ -22,3 +22,6 @@
 [submodule "Submodules/sskeychain"]
 	path = Submodules/sskeychain
 	url = git@github.com:soffes/sskeychain.git
+[submodule "Submodules/FXBlurView"]
+	path = Submodules/FXBlurView
+	url = git@github.com:nicklockwood/FXBlurView.git

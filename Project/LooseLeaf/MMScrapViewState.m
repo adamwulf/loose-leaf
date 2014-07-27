@@ -125,7 +125,8 @@
         return [self initWithUUID:uuid andBezierPath:bezierPath andBackgroundView:backingView andPaperState:_scrapsOnPaperState andLastSavedUndoHash:lsuh];
     }else{
         // we don't have a file that we should have, so don't load the scrap
-        return nil;
+        NSLog(@"can't find file at %@ or %@", self.scrapPropertiesPlistPath, self.bundledScrapPropertiesPlistPath);
+        @throw [NSException exceptionWithName:@"MissingScrapFilesException" reason:@"files for scrap state are not on disk" userInfo:nil];
     }
     return self;
 }
@@ -243,6 +244,24 @@
 #pragma mark - State Saving and Loading
 
 -(void) saveScrapStateToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock{
+    
+    // block to help save properties to a plist file
+    void(^savePropertiesToDisk)(NSUInteger, UIBezierPath*, MMScrapBackgroundView* backgroundInfo, NSString* pathToSave) = ^(NSUInteger lsuh, UIBezierPath* bezierPathForProperties, MMScrapBackgroundView* backgroundInfo, NSString* pathToSave){
+        // this will save the properties for the scrap
+        // to disk, including the path and background information
+        NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
+        [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPathForProperties] forKey:@"bezierPath"];
+        // add in properties from background
+        [savedProperties setObject:[NSNumber numberWithUnsignedInteger:lsuh] forKey:@"lastSavedUndoHash"];
+        NSDictionary* backgroundProps = [backgroundInfo saveBackgroundToDisk];
+        [savedProperties addEntriesFromDictionary:backgroundProps];
+        // save properties to disk
+        if(![savedProperties writeToFile:pathToSave atomically:YES]){
+            NSLog(@"couldn't save properties!");
+        }
+    };
+    
+    
     if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
         dispatch_async([self importExportScrapStateQueue], ^{
             @autoreleasepool {
@@ -254,7 +273,6 @@
                         @autoreleasepool {
                             if(drawableView && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
 //                                NSLog(@"(%@) saving background: %d", uuid, backingViewHasChanged);
-                                
 
                                 if([drawableViewState hasEditsToSave]){
 //                                    NSLog(@"(%@) saving strokes: %d", uuid, backingViewHasChanged);
@@ -272,24 +290,25 @@
                                             // so that we can guarentee that there is no race condition
                                             // for saving state vs content
                                             lastSavedUndoHash = state.undoHash;
-                                            NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
-                                            [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
-                                            // add in properties from background
-                                            [savedProperties setObject:[NSNumber numberWithUnsignedInteger:lastSavedUndoHash] forKey:@"lastSavedUndoHash"];
-                                            NSDictionary* backgroundProps = [backingImageHolder saveBackgroundToDisk];
-                                            [savedProperties addEntriesFromDictionary:backgroundProps];
-                                            // save properties to disk
-                                            [savedProperties writeToFile:self.scrapPropertiesPlistPath atomically:YES];
+                                            savePropertiesToDisk(lastSavedUndoHash, bezierPath, backingImageHolder, self.scrapPropertiesPlistPath);
 
 //                                            NSLog(@"(%@) scrap saved at: %d with thumb: %d", uuid, (int)state.undoHash, (int)thumb);
                                         }
                                         dispatch_semaphore_signal(sema1);
                                     }];
+                                }else if(backingImageHolder.backingViewHasChanged){
+                                    // if we dont' have any pen edits in the drawableViewState,
+                                    // but we do have background changes to save
+                                    lastSavedUndoHash = drawableViewState.undoHash;
+                                    savePropertiesToDisk(lastSavedUndoHash, bezierPath, backingImageHolder, self.scrapPropertiesPlistPath);
+                                    dispatch_semaphore_signal(sema1);
                                 }else{
+                                    // nothing new to save
 //                                    NSLog(@"(%@) skipped saving strokes: %d", uuid, backingViewHasChanged);
                                     dispatch_semaphore_signal(sema1);
                                 }
                             }else{
+                                // nothing new to save
 //                                if(!drawableView && ![drawableViewState hasEditsToSave]){
 //                                    NSLog(@"(%@) no drawable view or edits", uuid);
 //                                }else if(!drawableView){

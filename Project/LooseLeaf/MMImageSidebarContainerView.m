@@ -164,15 +164,26 @@
     }
 }
 
--(void) hide:(BOOL)animated{
-    [super hide:animated];
-    [[NSThread mainThread] performBlock:^{
+-(void) hide:(BOOL)animated onComplete:(void (^)(BOOL))onComplete{
+    [super hide:animated onComplete:^(BOOL finished){
         [cameraListContentView hide:animated];
         [albumListContentView hide:animated];
         [faceListContentView hide:animated];
         [eventListContentView hide:animated];
         [pdfListContentView hide:animated];
-    } afterDelay:.1];
+        
+        if(finished){
+            [cameraListContentView killMemory];
+            [albumListContentView killMemory];
+            [faceListContentView killMemory];
+            [eventListContentView killMemory];
+            [pdfListContentView killMemory];
+        }
+
+        if(onComplete){
+            onComplete(finished);
+        }
+    }];
 }
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
@@ -187,6 +198,7 @@
     for(MMAbstractSidebarContentView* aListView in allListContentViews){
         if(aListView == listView){
             listView.hidden = NO;
+            [listView reset:NO];
             [listView show:NO];
         }else if(!aListView.hidden){
             [aListView hide:NO];

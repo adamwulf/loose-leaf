@@ -337,5 +337,20 @@ static dispatch_queue_t importExportStateQueue;
     }
 }
 
+-(void) removeScrapWithUUID:(NSString*)scrapUUID{
+    @synchronized(allScrapsForPage){
+        NSMutableArray* otherArray = [NSMutableArray array];
+        for(MMScrapView* scrap in allScrapsForPage){
+            if(![scrap.uuid isEqualToString:scrapUUID]){
+                [otherArray addObject:scrap];
+            }else{
+                NSLog(@"permanently removed scrap %@ from page %@", scrapUUID, delegate.uuid);
+            }
+        }
+        allScrapsForPage = otherArray;
+        hasEditsToSave = YES;
+    }
+}
+
 
 @end

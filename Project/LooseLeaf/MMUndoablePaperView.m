@@ -17,6 +17,8 @@
 #import "MMUndoRedoMoveScrapItem.h"
 #import "MMUndoRedoAddScrapFromBezelItem.h"
 #import "MMScrapSidebarContainerView.h"
+#import "MMImmutableScrapsOnPaperState.h"
+#import "MMTrashManager.h"
 
 @interface MMScrappedPaperView (Queue)
 
@@ -41,7 +43,6 @@
     if (self = [super initWithFrame:frame andUUID:_uuid]) {
         // Initialization code
         undoRedoManager = [[MMPageUndoRedoManager alloc] initForPage:self];
-        undoRedoManager.scrapsOnPaperState = self.scrapsOnPaperState;
     }
     return self;
 }

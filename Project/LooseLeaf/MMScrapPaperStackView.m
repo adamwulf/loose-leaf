@@ -25,6 +25,7 @@
 #import "MMInboxManagerDelegate.h"
 #import "NSURL+UTI.h"
 #import "Mixpanel.h"
+#import "MMTrashManager.h"
 
 @implementation MMScrapPaperStackView{
     MMScrapSidebarContainerView* bezelScrapContainer;
@@ -52,6 +53,10 @@
     
     // flag if we're waiting on a page to save
     MMPaperView* wantsExport;
+    
+    // flag if we're animating a scrap
+    // to/from the sidebar
+    BOOL isAnimatingScrapToOrFromSidebar;
 }
 
 
@@ -87,8 +92,6 @@
         [self insertSubview:bezelScrapContainer belowSubview:countButton];
         [bezelScrapContainer setCountButton:countButton];
         
-
-
         panAndPinchScrapGesture = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
         panAndPinchScrapGesture.bezelDirectionMask = MMBezelDirectionRight;
         panAndPinchScrapGesture.scrapDelegate = self;
@@ -124,7 +127,7 @@
 
         imagePicker = [[MMImageSidebarContainerView alloc] initWithFrame:self.bounds forButton:insertImageButton animateFromLeft:YES];
         imagePicker.delegate = self;
-        [imagePicker hide:NO];
+        [imagePicker hide:NO onComplete:nil];
         [self addSubview:imagePicker];
         
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds andPage:nil];
@@ -338,7 +341,7 @@
     scrap.center = [self convertPoint:CGPointMake(cameraView.bounds.size.width/2, cameraView.bounds.size.height/2) fromView:cameraView];
     scrap.rotation = cameraView.rotation;
     
-    [imagePicker hide:YES];
+    [imagePicker hide:YES onComplete:nil];
     
     // hide the photo in the row
     cameraView.alpha = 0;
@@ -437,7 +440,7 @@
     
     // hide the picker, this'll slide it out
     // underneath our scrap
-    [imagePicker hide:YES];
+    [imagePicker hide:YES onComplete:nil];
     
     // hide the photo in the row. this way the scrap
     // becomes the photo, and it doesn't seem to duplicate
@@ -616,6 +619,10 @@ int skipAll = NO;
 }
 
 -(void) shareButtonTapped:(UIButton*)_button{
+    if([self isActivelyGesturing]){
+        // export not allowed while gesturing
+        return;
+    }
     if([[visibleStackHolder peekSubview] hasEditsToSave]){
         wantsExport = [visibleStackHolder peekSubview];
     }else{
@@ -1475,8 +1482,17 @@ int skipAll = NO;
     [self cancelAllGestures];
 }
 
+-(void) willAddScrapToBezelSidebar:(MMScrapView *)scrap{
+    isAnimatingScrapToOrFromSidebar = NO;
+}
+
 -(void) didAddScrapToBezelSidebar:(MMScrapView *)scrap{
     [bezelScrapContainer saveScrapContainerToDisk];
+    isAnimatingScrapToOrFromSidebar = NO;
+}
+
+-(void) willAddScrapBackToPage:(MMScrapView *)scrap{
+    isAnimatingScrapToOrFromSidebar = YES;
 }
 
 // returns the page that the scrap was added to
@@ -1500,6 +1516,13 @@ int skipAll = NO;
             [scrapContainer addSubview:oldScrap];
             scrapToAddToPage = [self cloneScrap:scrap toPage:page];
             [oldScrap removeFromSuperview];
+            
+            // check the original page of the scrap
+            // and see if it has any reference to this
+            // scrap. if its undo stack doesn't hold any
+            // reference, then we should trigger deleting
+            // it's old assets
+            [[MMTrashManager sharedInstace] deleteScrap:scrap.uuid inPage:scrap.state.scrapsOnPaperState.delegate.page];
         }
         // ok, done, just set it
         if(index == NSNotFound){
@@ -1511,6 +1534,8 @@ int skipAll = NO;
         scrapToAddToPage.scale = scale;
         [page saveToDisk];
         [bezelScrapContainer saveScrapContainerToDisk];
+
+        isAnimatingScrapToOrFromSidebar = NO;
     }];
     return page;
 }
@@ -1693,7 +1718,11 @@ int skipAll = NO;
 #pragma mark - Check for Active Gestures
 
 -(BOOL) isActivelyGesturing{
-    return [super isActivelyGesturing] || panAndPinchScrapGesture.scrap || panAndPinchScrapGesture2.scrap || stretchScrapGesture.scrap;
+    return [super isActivelyGesturing] || panAndPinchScrapGesture.scrap || panAndPinchScrapGesture2.scrap || stretchScrapGesture.scrap || isAnimatingScrapToOrFromSidebar;
 }
 
+
+-(UIView*) viewForBlur{
+    return visibleStackHolder;
+}
 @end

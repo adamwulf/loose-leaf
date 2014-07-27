@@ -98,6 +98,8 @@ static dispatch_queue_t importExportStateQueue;
                             NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
                             [props setObject:state forKey:@"state"];
                             [scrapPropsWithState addObject:props];
+                        }else{
+                            NSLog(@"couldn't find state for %@", scrapUUID);
                         }
                     }
                 }
@@ -126,6 +128,8 @@ static dispatch_queue_t importExportStateQueue;
                                 [scrap loadScrapStateAsynchronously:async];
                             }
                             [scrap setShouldShowShadow:NO];
+                        }else{
+                            NSLog(@"couldn't load scrap for %@", scrapProperties);
                         }
                     }
                     @synchronized(self){

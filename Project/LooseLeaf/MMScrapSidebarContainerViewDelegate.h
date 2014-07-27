@@ -12,7 +12,11 @@
 
 @protocol MMScrapSidebarContainerViewDelegate <NSObject>
 
+-(void) willAddScrapToBezelSidebar:(MMScrapView*)scrap;
+
 -(void) didAddScrapToBezelSidebar:(MMScrapView*)scrap;
+
+-(void) willAddScrapBackToPage:(MMScrapView *)scrap;
 
 -(MMUndoablePaperView*) didAddScrapBackToPage:(MMScrapView *)scrap atIndex:(NSUInteger)index;
 
