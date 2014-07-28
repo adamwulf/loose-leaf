@@ -15,6 +15,7 @@
 #import "MMImageSidebarContainerView.h"
 #import "NSThread+BlockAdditions.h"
 #import "CaptureSessionManager.h"
+#import "UIView+Debug.h"
 
 #define kCameraMargin 10
 #define kCameraPositionUserDefaultKey @"com.milestonemade.preferredCameraPosition"
@@ -65,6 +66,9 @@
     AVCaptureDevicePosition preferredPosition = [[NSUserDefaults standardUserDefaults] integerForKey:kCameraPositionUserDefaultKey];
     
     if([CaptureSessionManager hasCamera]){
+        if(!flipButton.superview){
+            [photoListScrollView addSubview:flipButton];
+        }
         if(!cameraRow){
             cameraRow = [[MMBorderedCamView alloc] initWithFrame:[self cameraViewFr] andCameraPosition:preferredPosition];
             cameraRow.delegate = self;
