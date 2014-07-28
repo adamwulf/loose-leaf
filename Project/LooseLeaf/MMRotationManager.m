@@ -34,7 +34,9 @@ static MMRotationManager* _instance = nil;
         lastBestOrientation = UIDeviceOrientationPortrait;
         [[NSNotificationCenter defaultCenter] addObserver:_instance selector:@selector(didRotate:)   name:UIDeviceOrientationDidChangeNotification object:nil];
         isFirstReading = YES;
-        currentRotationReading = [MMVector vectorWithAngle:-M_PI / 2];
+        @synchronized(self){
+            currentRotationReading = [MMVector vectorWithAngle:-M_PI / 2];
+        }
         // add opqueue to sample the accelerometer
         opQueue = [[NSOperationQueue alloc] init];
         [opQueue setMaxConcurrentOperationCount:1];
@@ -64,21 +66,23 @@ static MMRotationManager* _instance = nil;
             MMVector* actualRawReading = [MMVector vectorWithAngle:atan2(accelerationY, accelerationX)];
             MMVector* orientationRotationReading = [self idealRotationReadingForCurrentOrientation];
             
-            CGFloat diffOrient = [currentRotationReading angleBetween:orientationRotationReading];
-            CGFloat diffActual = [currentRotationReading angleBetween:actualRawReading];
-            
-            CGFloat diffCombined = currentTrust * diffActual + (1-currentTrust)*diffOrient;
-//            NSLog(@"currVec: %@  actualVec: %@  orientVec: %@  trust: %f", currentRotationReading, actualRawReading, orientationRotationReading, currentTrust);
-            // now tone it down so that we don't jump around too much, make
-            // sure it only changes by max of 5 degrees
-            if(ABS(diffCombined) > .05 || isFirstReading){
-                diffCombined = diffCombined > .2 ? .2 : diffCombined < -.2 ? -.2 : diffCombined;
-                currentRotationReading = [currentRotationReading rotateBy:diffCombined];
-                isFirstReading = NO;
-                [self.delegate didUpdateAccelerometerWithReading:currentRotationReading];
+            @synchronized(self){
+                CGFloat diffOrient = [currentRotationReading angleBetween:orientationRotationReading];
+                CGFloat diffActual = [currentRotationReading angleBetween:actualRawReading];
+                
+                CGFloat diffCombined = currentTrust * diffActual + (1-currentTrust)*diffOrient;
+                //            NSLog(@"currVec: %@  actualVec: %@  orientVec: %@  trust: %f", currentRotationReading, actualRawReading, orientationRotationReading, currentTrust);
+                // now tone it down so that we don't jump around too much, make
+                // sure it only changes by max of 5 degrees
+                if(ABS(diffCombined) > .05 || isFirstReading){
+                    diffCombined = diffCombined > .2 ? .2 : diffCombined < -.2 ? -.2 : diffCombined;
+                    currentRotationReading = [currentRotationReading rotateBy:diffCombined];
+                    isFirstReading = NO;
+                    [self.delegate didUpdateAccelerometerWithReading:currentRotationReading];
+                }
+                currentRawRotationReading = actualRawReading;
+                [self.delegate didUpdateAccelerometerWithRawReading:currentRawRotationReading andX:accelerationX andY:accelerationY andZ:accelerationZ];
             }
-            currentRawRotationReading = actualRawReading;
-            [self.delegate didUpdateAccelerometerWithRawReading:currentRawRotationReading andX:accelerationX andY:accelerationY andZ:accelerationZ];
             
             if(currentTrust > .75){
                 if(currentOrientation == UIDeviceOrientationPortrait ||
@@ -95,6 +99,18 @@ static MMRotationManager* _instance = nil;
         }];
     }
     return _instance;
+}
+
+-(MMVector*) currentRawRotationReading{
+    @synchronized(self){
+        return currentRawRotationReading;
+    }
+}
+
+-(MMVector*) currentRotationReading{
+    @synchronized(self){
+        return currentRotationReading;
+    }
 }
 
 +(MMRotationManager*) sharedInstace{
