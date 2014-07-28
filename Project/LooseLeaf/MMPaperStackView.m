@@ -325,6 +325,15 @@
 
 #pragma mark - Bezel Left and Right Gestures
 
+-(void) addPageButtonTapped:(UIButton*)button{
+    if([setOfPagesBeingPanned count]){
+        NSLog(@"adding new page, but pages are being panned.");
+        for(MMPaperView* page in [setOfPagesBeingPanned copy]){
+            [page cancelAllGestures];
+        }
+    }
+    [[visibleStackHolder peekSubview] cancelAllGestures];
+}
 
 /**
  * this is the event handler for the MMBezelInRightGestureRecognizer

@@ -361,6 +361,8 @@ struct SidebarButton{
  * without changing the hidden stack's contents
  */
 -(void) addPageButtonTapped:(UIButton*)_button{
+    [super addPageButtonTapped:_button];
+    
     MMEditablePaperView* page = [[MMUndoablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.isBrandNewPage = YES;
     page.delegate = self;
