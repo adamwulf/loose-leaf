@@ -82,6 +82,7 @@
 #define kMPHasZoomedToList @"Has Zoomed Out to List"
 #define kMPNumberOfLaunches @"Number Of Launches"
 #define kMPNumberOfCrashes @"Number of Crashes"
+#define kMPNumberOfDuplicatePages @"Duplicate Pages Found"
 #define kMPDistanceDrawn @"Distance Drawn (m)"
 #define kMPDistanceErased @"Distance Erased (m)"
 

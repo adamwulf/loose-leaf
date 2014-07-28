@@ -11,6 +11,7 @@
 #import "NSArray+Map.h"
 #import "MMBlockOperation.h"
 #import "MMUndoablePaperView.h"
+#import "Mixpanel.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 
 @implementation MMStackManager
@@ -78,6 +79,7 @@
     NSMutableArray* visiblePages = [NSMutableArray array];
     NSMutableArray* hiddenPages = [NSMutableArray array];
     
+    int hasFoundDuplicate = 0;
     NSMutableSet* seenPageUUIDs = [NSMutableSet set];
     
     for(NSDictionary* pageDict in visiblePagesToCreate){
@@ -88,6 +90,7 @@
             [seenPageUUIDs addObject:uuid];
         }else{
             NSLog(@"found duplicate page: %@", uuid);
+            hasFoundDuplicate++;
         }
     }
     
@@ -99,7 +102,12 @@
             [seenPageUUIDs addObject:uuid];
         }else{
             NSLog(@"found duplicate page: %@", uuid);
+            hasFoundDuplicate++;
         }
+    }
+    
+    if(hasFoundDuplicate){
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfDuplicatePages by:@(hasFoundDuplicate)];
     }
     
     return [NSDictionary dictionaryWithObjectsAndKeys:visiblePages, @"visiblePages",
