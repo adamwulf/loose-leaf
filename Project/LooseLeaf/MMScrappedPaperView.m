@@ -138,7 +138,14 @@ static dispatch_queue_t concurrentBackgroundQueue;
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;
         cachedImgView.hidden = NO;
+    }else if(!isAskedToLoadThumbnail){
+        NSLog(@"default thumb for %@, HIDING thumb", self.uuid);
+        [self setThumbnailTo:nil];
+        scrapContainerView.hidden = YES;
+        drawableView.hidden = YES;
+        shapeBuilderView.hidden = YES;
     }else{
+//        NSLog(@"default thumb for %@, SHOWING thumb", self.uuid);
 //        NSLog(@"page %@ isn't editing, scraps are saved, showing scrapped thumb", self.uuid);
         [self setThumbnailTo:scrappedImgViewImage.image];
         scrapContainerView.hidden = YES;
@@ -925,7 +932,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     thumbSize.width /= 2;
     thumbSize.height /= 2;
     
-    
     UIGraphicsBeginImageContextWithOptions(thumbSize, NO, 0.0);
     
     // get context
@@ -956,7 +962,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
     
     // clean up drawing environment
     UIGraphicsEndImageContext();
-    
 }
 
 -(void) setThumbnailTo:(UIImage*)img{
@@ -1134,7 +1139,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
 -(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
     // check to see if we've also loaded
     [self didLoadState:self.paperState];
-    [self setThumbnailTo:[self cachedImgViewImage]];
     [self updateThumbnailVisibility];
 }
 
@@ -1187,13 +1191,6 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) didDecompressImage:(MMDecompressImagePromise*)promise{
-    @synchronized(self){
-        if(promise == scrappedImgViewImage){
-            [self setThumbnailTo:promise.image];
-        }else{
-            [self setThumbnailTo:nil];
-        }
-    }
     [self updateThumbnailVisibility];
 }
 
