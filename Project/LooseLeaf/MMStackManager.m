@@ -78,14 +78,28 @@
     NSMutableArray* visiblePages = [NSMutableArray array];
     NSMutableArray* hiddenPages = [NSMutableArray array];
     
+    NSMutableSet* seenPageUUIDs = [NSMutableSet set];
+    
     for(NSDictionary* pageDict in visiblePagesToCreate){
-        MMPaperView* page = [[MMUndoablePaperView alloc] initWithFrame:bounds andUUID:[pageDict objectForKey:@"uuid"]];
-        [visiblePages addObject:page];
+        NSString* uuid = [pageDict objectForKey:@"uuid"];
+        if(![seenPageUUIDs containsObject:uuid]){
+            MMPaperView* page = [[MMUndoablePaperView alloc] initWithFrame:bounds andUUID:uuid];
+            [visiblePages addObject:page];
+            [seenPageUUIDs addObject:uuid];
+        }else{
+            NSLog(@"found duplicate page: %@", uuid);
+        }
     }
     
     for(NSDictionary* pageDict in hiddenPagesToCreate){
-        MMPaperView* page = [[MMUndoablePaperView alloc] initWithFrame:bounds andUUID:[pageDict objectForKey:@"uuid"]];
-        [hiddenPages addObject:page];
+        NSString* uuid = [pageDict objectForKey:@"uuid"];
+        if(![seenPageUUIDs containsObject:uuid]){
+            MMPaperView* page = [[MMUndoablePaperView alloc] initWithFrame:bounds andUUID:uuid];
+            [hiddenPages addObject:page];
+            [seenPageUUIDs addObject:uuid];
+        }else{
+            NSLog(@"found duplicate page: %@", uuid);
+        }
     }
     
     return [NSDictionary dictionaryWithObjectsAndKeys:visiblePages, @"visiblePages",
