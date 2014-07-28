@@ -57,6 +57,10 @@
     return cameraViewFr;
 }
 
+-(void) reset:(BOOL)animated{
+    // noop
+}
+
 -(void) show:(BOOL)animated{
     if(isShowing){
         return;
