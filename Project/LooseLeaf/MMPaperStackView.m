@@ -361,6 +361,9 @@
             }
         }
         
+        // make sure to disable all gestures on the top page.
+        // this will cancel any strokes / ruler / etc
+        [[visibleStackHolder peekSubview] disableAllGestures];
         
         // this flag is an ugly hack because i'm using substates in gestures.
         // ideally, i could handle this gesture entirely inside of the state,
