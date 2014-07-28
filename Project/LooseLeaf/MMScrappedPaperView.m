@@ -139,7 +139,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
         shapeBuilderView.hidden = YES;
         cachedImgView.hidden = NO;
     }else if(!isAskedToLoadThumbnail){
-        NSLog(@"default thumb for %@, HIDING thumb", self.uuid);
+//        NSLog(@"default thumb for %@, HIDING thumb", self.uuid);
         [self setThumbnailTo:nil];
         scrapContainerView.hidden = YES;
         drawableView.hidden = YES;
@@ -1050,8 +1050,11 @@ static dispatch_queue_t concurrentBackgroundQueue;
                 return;
             }
             
-//            debug_NSLog(@"something actually had changed %d %d", pageHadBeenChanged, scrapsHadBeenChanged);
-            [self updateFullPageThumbnail:immutableScrapState];
+//            NSLog(@"something actually had changed %d %d", pageHadBeenChanged, scrapsHadBeenChanged);
+            if(pageHadBeenChanged || scrapsHadBeenChanged){
+                NSLog(@"actually updated scrapped thumb for %@ %d %d", self.uuid, pageHadBeenChanged, scrapsHadBeenChanged);
+                [self updateFullPageThumbnail:immutableScrapState];
+            }
 
             @synchronized(self){
                 hasPendingScrappedIconUpdate = NO;
