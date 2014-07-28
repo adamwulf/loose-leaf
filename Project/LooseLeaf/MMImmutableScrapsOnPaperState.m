@@ -55,7 +55,7 @@
 -(BOOL) saveStateToDiskBlocking{
     __block BOOL hadAnyEditsToSaveAtAll = NO;
     if(ownerState.lastSavedUndoHash != self.undoHash){
-//        NSLog(@"scrapsOnPaperState needs saving %lu != %lu", (unsigned long) ownerState.lastSavedUndoHash, (unsigned long) self.undoHash);
+        NSLog(@"scrapsOnPaperState needs saving %lu != %lu", (unsigned long) ownerState.lastSavedUndoHash, (unsigned long) self.undoHash);
         NSMutableArray* allScrapProperties = [NSMutableArray array];
         if([allScrapsForPage count]){
             dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
@@ -104,7 +104,7 @@
         NSUInteger hashVal = 1;
         for(MMScrapView* scrap in allScrapsForPage){
             hashVal = prime * hashVal + [[scrap uuid] hash];
-            if([scrap.state isStateLoaded]){
+            if([scrap.state isStateLoaded] && [scrap.state.drawableView.state isStateLoaded]){
                 // if we're loaded, use the current hash
                 hashVal = prime * hashVal + [scrap.state.drawableView.state undoHash];
             }else{

@@ -164,6 +164,7 @@ static dispatch_queue_t importExportStateQueue;
                         MMImmutableScrapsOnPaperState* immutableState = [self immutableStateForPath:nil];
                         expectedUndoHash = [immutableState undoHash];
                         lastSavedUndoHash = [immutableState undoHash];
+//                        NSLog(@"loaded scrapsOnPaperState at: %lu", (unsigned long)lastSavedUndoHash);
                     }
                     [self.delegate didLoadAllScrapsFor:self];
                     dispatch_semaphore_signal(sema1);
@@ -195,7 +196,7 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 -(void) unload{
-    NSLog(@"unloading scrap state for %@", self.delegate.uuid);
+//    NSLog(@"unloading scrap state for %@", self.delegate.uuid);
     if([self isStateLoaded] || isLoading){
         @synchronized(self){
             isUnloading = YES;
@@ -333,6 +334,8 @@ static dispatch_queue_t importExportStateQueue;
 
 -(void) wasSavedAtUndoHash:(NSUInteger)savedUndoHash{
     @synchronized(self){
+        NSLog(@"notifed saved at: %lu", (unsigned long)lastSavedUndoHash);
+        
         lastSavedUndoHash = savedUndoHash;
     }
 }
