@@ -194,6 +194,7 @@
     pagesThatWillBeVisibleAfterTransitionToListView = [self findPagesInVisibleRowsOfListViewGivenOffset:initialScrollOffsetFromTransitionToListView];
     // bezeling in from right is no longer allowed
     [fromRightBezelGesture setEnabled:NO];
+    [fromLeftBezelGesture setEnabled:NO];
     [hiddenStackHolder setClipsToBounds:NO];
     [visibleStackHolder setClipsToBounds:NO];
     [self setScrollEnabled:NO];
@@ -251,6 +252,7 @@
     pagesThatWillBeVisibleAfterTransitionToListView = [self findPagesInVisibleRowsOfListViewGivenOffset:initialScrollOffsetFromTransitionToListView];
     // bezeling in from right is no longer allowed
     [fromRightBezelGesture setEnabled:NO];
+    [fromLeftBezelGesture setEnabled:NO];
     [hiddenStackHolder setClipsToBounds:NO];
     [visibleStackHolder setClipsToBounds:NO];
     [self setScrollEnabled:NO];
@@ -275,6 +277,7 @@
     }
     [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
     [fromRightBezelGesture setEnabled:NO];
+    [fromLeftBezelGesture setEnabled:NO];
     [visibleStackHolder setClipsToBounds:NO];
     [hiddenStackHolder setClipsToBounds:NO];
     [self setScrollEnabled:YES];
@@ -304,6 +307,7 @@
     }
     [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
     [fromRightBezelGesture setEnabled:YES];
+    [fromLeftBezelGesture setEnabled:YES];
     [visibleStackHolder setClipsToBounds:YES];
     [hiddenStackHolder setClipsToBounds:YES];
     [self setScrollEnabled:NO];

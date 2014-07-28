@@ -82,6 +82,7 @@
 #define kMPHasZoomedToList @"Has Zoomed Out to List"
 #define kMPNumberOfLaunches @"Number Of Launches"
 #define kMPNumberOfCrashes @"Number of Crashes"
+#define kMPNumberOfDuplicatePages @"Duplicate Pages Found"
 #define kMPDistanceDrawn @"Distance Drawn (m)"
 #define kMPDistanceErased @"Distance Erased (m)"
 
@@ -107,7 +108,7 @@
 #define RandomPhotoRotation ((float)(rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees/2)) / 360.0 * M_PI
 
 // cache sizes
-#define kMMLoadImageCacheSize 30
+#define kMMLoadImageCacheSize 10
 #define kMMPageCacheManagerSize 5
 
 #ifdef __cplusplus

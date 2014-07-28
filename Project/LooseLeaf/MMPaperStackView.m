@@ -325,6 +325,15 @@
 
 #pragma mark - Bezel Left and Right Gestures
 
+-(void) addPageButtonTapped:(UIButton*)button{
+    if([setOfPagesBeingPanned count]){
+        NSLog(@"adding new page, but pages are being panned.");
+        for(MMPaperView* page in [setOfPagesBeingPanned copy]){
+            [page cancelAllGestures];
+        }
+    }
+    [[visibleStackHolder peekSubview] cancelAllGestures];
+}
 
 /**
  * this is the event handler for the MMBezelInRightGestureRecognizer
@@ -352,6 +361,9 @@
             }
         }
         
+        // make sure to disable all gestures on the top page.
+        // this will cancel any strokes / ruler / etc
+        [[visibleStackHolder peekSubview] disableAllGestures];
         
         // this flag is an ugly hack because i'm using substates in gestures.
         // ideally, i could handle this gesture entirely inside of the state,

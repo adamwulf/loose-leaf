@@ -55,6 +55,8 @@
 
 -(void) cancelAllGestures;
 
+-(void) addPageButtonTapped:(UIButton*)_button;
+
 // private
 
 -(void) mayChangeTopPageTo:(MMPaperView*)page;

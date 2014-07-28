@@ -11,6 +11,7 @@
 #import "NSArray+Map.h"
 #import "MMBlockOperation.h"
 #import "MMUndoablePaperView.h"
+#import "Mixpanel.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 
 @implementation MMStackManager
@@ -78,14 +79,35 @@
     NSMutableArray* visiblePages = [NSMutableArray array];
     NSMutableArray* hiddenPages = [NSMutableArray array];
     
+    int hasFoundDuplicate = 0;
+    NSMutableSet* seenPageUUIDs = [NSMutableSet set];
+    
     for(NSDictionary* pageDict in visiblePagesToCreate){
-        MMPaperView* page = [[MMUndoablePaperView alloc] initWithFrame:bounds andUUID:[pageDict objectForKey:@"uuid"]];
-        [visiblePages addObject:page];
+        NSString* uuid = [pageDict objectForKey:@"uuid"];
+        if(![seenPageUUIDs containsObject:uuid]){
+            MMPaperView* page = [[MMUndoablePaperView alloc] initWithFrame:bounds andUUID:uuid];
+            [visiblePages addObject:page];
+            [seenPageUUIDs addObject:uuid];
+        }else{
+            NSLog(@"found duplicate page: %@", uuid);
+            hasFoundDuplicate++;
+        }
     }
     
     for(NSDictionary* pageDict in hiddenPagesToCreate){
-        MMPaperView* page = [[MMUndoablePaperView alloc] initWithFrame:bounds andUUID:[pageDict objectForKey:@"uuid"]];
-        [hiddenPages addObject:page];
+        NSString* uuid = [pageDict objectForKey:@"uuid"];
+        if(![seenPageUUIDs containsObject:uuid]){
+            MMPaperView* page = [[MMUndoablePaperView alloc] initWithFrame:bounds andUUID:uuid];
+            [hiddenPages addObject:page];
+            [seenPageUUIDs addObject:uuid];
+        }else{
+            NSLog(@"found duplicate page: %@", uuid);
+            hasFoundDuplicate++;
+        }
+    }
+    
+    if(hasFoundDuplicate){
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfDuplicatePages by:@(hasFoundDuplicate)];
     }
     
     return [NSDictionary dictionaryWithObjectsAndKeys:visiblePages, @"visiblePages",

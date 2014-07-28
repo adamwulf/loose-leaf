@@ -41,8 +41,8 @@
 
     NSDictionary* scrapsOnPaperInfo = [NSDictionary dictionaryWithObjectsAndKeys:allScrapProperties, @"allScrapProperties", nil];
     if([scrapsOnPaperInfo writeToFile:scrapIDsPath atomically:YES]){
-        NSLog(@"saved bezel scrap state for %d scraps", [allScrapProperties count]);
-        NSLog(@"saved to: %@", scrapIDsPath);
+//        NSLog(@"saved bezel scrap state for %d scraps", [allScrapProperties count]);
+//        NSLog(@"saved to: %@", scrapIDsPath);
     }else{
         NSLog(@"couldn't save");
     }
