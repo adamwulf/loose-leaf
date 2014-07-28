@@ -59,7 +59,6 @@
     BOOL isAnimatingScrapToOrFromSidebar;
 }
 
-
 - (id)initWithFrame:(CGRect)frame
 {
     if ((self = [super initWithFrame:frame])) {
@@ -1483,7 +1482,7 @@ int skipAll = NO;
 }
 
 -(void) willAddScrapToBezelSidebar:(MMScrapView *)scrap{
-    isAnimatingScrapToOrFromSidebar = NO;
+    isAnimatingScrapToOrFromSidebar = YES;
 }
 
 -(void) didAddScrapToBezelSidebar:(MMScrapView *)scrap{
