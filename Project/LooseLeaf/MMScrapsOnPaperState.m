@@ -90,7 +90,7 @@ static dispatch_queue_t importExportStateQueue;
 
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable{
-    NSLog(@"asking to load scrap state for %@", self.delegate);
+    NSLog(@"asking to load scrap state for %@ async:%d", self.delegate, async);
     if(![self isStateLoaded] && !isLoading){
         __block NSArray* scrapProps;
         @synchronized(self){

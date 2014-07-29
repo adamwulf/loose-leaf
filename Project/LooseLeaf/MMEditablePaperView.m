@@ -312,13 +312,7 @@ static int count = 0;
                 //
                 // load thumbnails into a cache for faster repeat loading
                 // https://github.com/adamwulf/loose-leaf/issues/227
-                UIImage* thumbnail = [[MMLoadImageCache sharedInstance] imageAtPath:[self thumbnailPath]];
-                if(!thumbnail){
-                    // we might be loading a new-user-content provided page,
-                    // so load from the bundle as a backup
-                    NSString* bundleThumbPath = [[[self bundledPagesPath] stringByAppendingPathComponent:[@"ink" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
-                    thumbnail = [[MMLoadImageCache sharedInstance] imageAtPath:bundleThumbPath];
-                }
+                UIImage* thumbnail = [self synchronouslyLoadInkPreview];
                 if(!thumbnail){
                     definitelyDoesNotHaveAnInkThumbnail = YES;
                 }
@@ -327,6 +321,21 @@ static int count = 0;
             }
         });
     }
+}
+
+-(UIImage*) synchronouslyLoadInkPreview{
+    if(cachedImgViewImage){
+        return cachedImgViewImage;
+    }
+    NSLog(@"fetching ink from disk for %@", self.uuid);
+    UIImage* thumbnail = [[MMLoadImageCache sharedInstance] imageAtPath:[self thumbnailPath]];
+    if(!thumbnail){
+        // we might be loading a new-user-content provided page,
+        // so load from the bundle as a backup
+        NSString* bundleThumbPath = [[[self bundledPagesPath] stringByAppendingPathComponent:[@"ink" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
+        thumbnail = [[MMLoadImageCache sharedInstance] imageAtPath:bundleThumbPath];
+    }
+    return thumbnail;
 }
 
 /**
