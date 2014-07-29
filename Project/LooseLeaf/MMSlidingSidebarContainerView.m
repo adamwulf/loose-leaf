@@ -88,6 +88,7 @@
                 fr.origin.x = self.bounds.size.width;
                 sidebarContentView.frame = fr;
             }
+            [sidebarContentView didHide];
         }
         if(onComplete) onComplete(finished);
     };
@@ -137,7 +138,7 @@
         
         
         sidebarContentView.alpha = 0;
-        [sidebarContentView prepForShowAnimation];
+        [sidebarContentView willShow];
         
         [CATransaction begin];
         

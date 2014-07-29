@@ -39,14 +39,6 @@
         [self addSubview:blurContainerView];
         blurContainerView.frame = self.bounds;
         blurContainerView.contentScaleFactor = 1.0;
-        
-        blurView = [[FXBlurView alloc] initWithFrame:self.bounds];
-        blurView.contentScaleFactor = 1.0;
-        blurView.blurEnabled = YES;
-        blurView.dynamic = NO;
-        blurView.tintColor = [[UIColor blackColor] colorWithAlphaComponent:1.0];
-        [blurContainerView addSubview:blurView];
-        blurView.frame = blurContainerView.bounds;
 
 //        [blurContainerView showDebugBorder];
 //        [blurView showDebugBorder];
@@ -194,19 +186,31 @@
         self.opaque = NO;
         self.backgroundColor = [UIColor clearColor];
         self.clipsToBounds = YES;
-
-        // set the anchor to 0,0 for the sliding animations
-        [UIView setAnchorPoint:CGPointZero forView:blurView];
     }
     return self;
 }
 
 -(void) setDelegate:(MMSlidingSidebarContainerView *)_delegate{
     delegate = _delegate;
-    blurView.underlyingView = _delegate.viewForBlur;
 }
 
--(void) prepForShowAnimation{
+-(void) willShow{
+    if(!blurView){
+        CGRect b = self.bounds;
+        blurView = [[FXBlurView alloc] initWithFrame:self.bounds];
+        blurView.contentScaleFactor = 1.0;
+        blurView.blurEnabled = YES;
+        blurView.dynamic = NO;
+        blurView.tintColor = [[UIColor blackColor] colorWithAlphaComponent:1.0];
+        [blurContainerView addSubview:blurView];
+        blurView.frame = blurContainerView.bounds;
+        blurView.underlyingView = delegate.viewForBlur;
+        b = blurContainerView.bounds;
+        
+        // set the anchor to 0,0 for the sliding animations
+        [UIView setAnchorPoint:CGPointZero forView:blurView];
+    }
+
     CGRect fr = blurView.frame;
     if(directionIsFromLeft){
         fr.origin = CGPointMake(blurContainerView.bounds.size.width, 0);
@@ -216,6 +220,11 @@
     blurView.frame = fr;
     [blurView setNeedsDisplay];
     [blurView updateAsynchronously:NO completion:nil];
+}
+
+-(void) didHide{
+    [blurView removeFromSuperview];
+    blurView = nil;
 }
 
 -(void) showForDuration:(CGFloat)duration{
