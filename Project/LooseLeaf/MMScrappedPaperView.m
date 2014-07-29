@@ -999,7 +999,13 @@
 }
 
 -(void) saveToDisk{
-    [self saveToDisk:nil];
+    [self saveToDisk:^(BOOL hadEditsToSave){
+        if(hadEditsToSave){
+            NSLog(@"saved edits for %@", self);
+        }else{
+            NSLog(@"didn't save any edits for %@", self);
+        }
+    }];
 }
 
 -(void) saveToDisk:(void (^)(BOOL))onComplete{
@@ -1039,18 +1045,23 @@
         dispatch_semaphore_signal(sema1);
     }];
     
-    // need to keep reference to immutableScrapState so that
-    // we can update the thumbnail after the save
     __block MMImmutableScrapsOnPaperState* immutableScrapState;
-    dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
-        @autoreleasepool {
-            immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
-            scrapsHadBeenChanged = [immutableScrapState saveStateToDiskBlocking];
-            lastSavedScrapStateHash = immutableScrapState.undoHash;
-//            NSLog(@"scrapsHadBeenChanged %d %lu",scrapsHadBeenChanged, (unsigned long)immutableScrapState.undoHash);
-            dispatch_semaphore_signal(sema2);
-        }
-    });
+    if([scrapsOnPaperState isStateLoaded]){
+        // need to keep reference to immutableScrapState so that
+        // we can update the thumbnail after the save
+        dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
+            @autoreleasepool {
+                immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
+                scrapsHadBeenChanged = [immutableScrapState saveStateToDiskBlocking];
+                lastSavedScrapStateHash = immutableScrapState.undoHash;
+                //            NSLog(@"scrapsHadBeenChanged %d %lu",scrapsHadBeenChanged, (unsigned long)immutableScrapState.undoHash);
+                dispatch_semaphore_signal(sema2);
+            }
+        });
+    }else{
+        lastSavedScrapStateHash = lastSavedScrapStateHashForGeneratedThumbnail;
+        dispatch_semaphore_signal(sema2);
+    }
 
     dispatch_async([self concurrentBackgroundQueue], ^(void) {
         @autoreleasepool {
@@ -1092,10 +1103,13 @@
             if(!hasPendingScrappedIconUpdate && (needsThumbnailUpdateSinceLastSave || pageHadBeenChanged || scrapsHadBeenChanged)){
                 // only save a new thumbnail when we're the last pending save.
                 // otherwise the next pending save will generate it
-//                NSLog(@"generating thumbnail (at %lu) with %d saves in progress", (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
                 lastSavedPaperStateHashForGeneratedThumbnail = lastSavedPaperStateHash;
                 lastSavedScrapStateHashForGeneratedThumbnail = lastSavedScrapStateHash;
-                [self updateFullPageThumbnail:immutableScrapState];
+                if(immutableScrapState){
+                NSLog(@"generating thumbnail for %@ (at %lu) with %d saves in progress",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+                    // only save a new thumbnail if we have our state loaded
+                    [self updateFullPageThumbnail:immutableScrapState];
+                }
 //                NSLog(@"done generating thumbnail (at %lu) with %d saves in progress", (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
             }else if(hasPendingScrappedIconUpdate){
 //                NSLog(@"skipped generating thumbnail (at %lu) because of %d pending saves", (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
@@ -1148,6 +1162,7 @@
     if([scrapsOnPaperState isStateLoaded]){
         @throw [NSException exceptionWithName:@"LoadedStateForUnloadedBlockException" reason:@"Cannot run block on unloaded state when state is already loaded" userInfo:nil];
     }
+    NSLog(@"performing block for unloaded scrap state: %@", self);
     if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
         [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.scrapIDsPath andMakeEditable:YES];
     }else{
