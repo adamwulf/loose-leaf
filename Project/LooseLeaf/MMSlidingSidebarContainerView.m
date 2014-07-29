@@ -186,12 +186,6 @@
         [opacityAnimation setToValue:[NSNumber numberWithFloat:0.0]];
         [opacityAnimation setDuration:kAnimationDuration];
 
-        ////////////////////////////////////////////////////////
-        // Animate bounce of sidebar button
-        
-        // tell the content view to trigger it's animation as well
-//        [sidebarContentView bounceAnimationForButtonWithDuration:kAnimationDuration];
-        
         ///////////////////////////////////////////////
         // Add the animations to the layers
         [sidebarContentView.layer addAnimation:gr forKey:@"showImagePicker"];

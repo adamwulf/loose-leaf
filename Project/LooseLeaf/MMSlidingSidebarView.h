@@ -21,8 +21,6 @@
 
 - (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft;
 
-- (void)bounceAnimationForButtonWithDuration:(CGFloat)animationDuration;
-
 -(CGRect) contentBounds;
 
 -(BOOL) isVisible;
