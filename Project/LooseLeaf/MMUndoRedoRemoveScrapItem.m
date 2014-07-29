@@ -32,10 +32,14 @@
     __weak MMUndoRedoRemoveScrapItem* weakSelf = self;
     if(self = [super initWithUndoBlock:^{
         MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
-        [weakSelf.page.scrapsOnPaperState showScrap:scrap];
-        [scrap setPropertiesDictionary:weakSelf.propertiesWhenRemoved];
-        NSUInteger subviewIndex = [[weakSelf.propertiesWhenRemoved objectForKey:@"subviewIndex"] unsignedIntegerValue];
-        [scrap.superview insertSubview:scrap atIndex:subviewIndex];
+        if(!scrap){
+            NSLog(@"failed to load scrap!");
+        }else{
+            [weakSelf.page.scrapsOnPaperState showScrap:scrap];
+            [scrap setPropertiesDictionary:weakSelf.propertiesWhenRemoved];
+            NSUInteger subviewIndex = [[weakSelf.propertiesWhenRemoved objectForKey:@"subviewIndex"] unsignedIntegerValue];
+            [scrap.superview insertSubview:scrap atIndex:subviewIndex];
+        }
     } andRedoBlock:^{
         MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
         [weakSelf.page.scrapsOnPaperState hideScrap:scrap];

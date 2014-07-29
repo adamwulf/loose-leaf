@@ -247,7 +247,7 @@ dispatch_queue_t importThumbnailQueue;
     
     // find out what our current undo state looks like.
     if([self hasEditsToSave] && ![paperState hasEditsToSave]){
-        NSLog(@"saved excess");
+//        NSLog(@"saved excess");
     }
     if([paperState hasEditsToSave]){
         // something has changed since the last time we saved,

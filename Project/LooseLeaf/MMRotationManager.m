@@ -144,7 +144,7 @@ static BOOL ignoredFirstRotateNotification = NO;
     }else{
         goalTrust = 0.0;
     }
-    NSLog(@"resetting goal trust to: %f %d", goalTrust, orientation);
+//    NSLog(@"resetting goal trust to: %f %d", goalTrust, orientation);
     currentOrientation = orientation;
     
     if(orientation == UIDeviceOrientationUnknown ||

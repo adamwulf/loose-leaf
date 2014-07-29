@@ -14,6 +14,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "UIView+Debug.h"
 #import "Constants.h"
+#import "MMPageCacheManager.h"
 
 @interface MMImmutableScrapsOnPaperState (Private)
 
@@ -89,6 +90,7 @@ static dispatch_queue_t importExportStateQueue;
 
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable{
+    NSLog(@"asking to load scrap state for %@", self.delegate);
     if(![self isStateLoaded] && !isLoading){
         __block NSArray* scrapProps;
         @synchronized(self){
@@ -167,6 +169,7 @@ static dispatch_queue_t importExportStateQueue;
 //                        NSLog(@"loaded scrapsOnPaperState at: %lu", (unsigned long)lastSavedUndoHash);
                     }
                     [self.delegate didLoadAllScrapsFor:self];
+                    NSLog(@"did load scrap state for %@", self.delegate);
                     dispatch_semaphore_signal(sema1);
                 }];
                 dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
@@ -196,7 +199,10 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 -(void) unload{
-//    NSLog(@"unloading scrap state for %@", self.delegate.uuid);
+    if(self.delegate == [[MMPageCacheManager sharedInstance] currentEditablePage]){
+        NSLog(@"what");
+    }
+    NSLog(@"unloading scrap state for %@", self.delegate);
     if([self isStateLoaded] || isLoading){
         @synchronized(self){
             isUnloading = YES;
@@ -220,6 +226,7 @@ static dispatch_queue_t importExportStateQueue;
                     [NSThread performBlockOnMainThread:^{
                         [visibleScraps makeObjectsPerformSelector:@selector(removeFromSuperview)];
                         [self.delegate didUnloadAllScrapsFor:self];
+                        NSLog(@"did unload scrap state for %@", self.delegate);
                     }];
                     @synchronized(self){
                         isLoaded = NO;
@@ -267,6 +274,7 @@ static dispatch_queue_t importExportStateQueue;
         @throw [NSException exceptionWithName:@"ScrapAddedToWrongPageException" reason:@"This scrap was added to a page that doesn't own it" userInfo:nil];
     }
     @synchronized(delegate.scrapContainerView){
+        NSLog(@"adding scrap subview to %p", delegate.scrapContainerView);
         [delegate.scrapContainerView addSubview:scrap];
     }
     [scrap setShouldShowShadow:delegate.isEditable];
@@ -335,7 +343,7 @@ static dispatch_queue_t importExportStateQueue;
 -(void) wasSavedAtUndoHash:(NSUInteger)savedUndoHash{
     @synchronized(self){
         lastSavedUndoHash = savedUndoHash;
-        NSLog(@"notified saved at: %lu", (unsigned long)lastSavedUndoHash);
+//        NSLog(@"notified saved at: %lu", (unsigned long)lastSavedUndoHash);
     }
 }
 

@@ -1026,7 +1026,7 @@
     
     @synchronized(self){
         hasPendingScrappedIconUpdate++;
-        NSLog(@"starting save! %d", hasPendingScrappedIconUpdate);
+//        NSLog(@"starting save! %d", hasPendingScrappedIconUpdate);
     }
     
     __block BOOL pageHadBeenChanged = NO;
@@ -1047,7 +1047,7 @@
             immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
             scrapsHadBeenChanged = [immutableScrapState saveStateToDiskBlocking];
             lastSavedScrapStateHash = immutableScrapState.undoHash;
-            NSLog(@"scrapsHadBeenChanged %d %lu",scrapsHadBeenChanged, (unsigned long)immutableScrapState.undoHash);
+//            NSLog(@"scrapsHadBeenChanged %d %lu",scrapsHadBeenChanged, (unsigned long)immutableScrapState.undoHash);
             dispatch_semaphore_signal(sema2);
         }
     });
@@ -1059,19 +1059,19 @@
 //            dispatch_release(sema1); ARC handles these
 //            dispatch_release(sema2);
             if([self hasEditsToSave] && ![self hasPenOrScrapEditsToSave]){
-                NSLog(@"gotcha!!");
+//                NSLog(@"gotcha!!");
             }
             @synchronized(self){
-                NSLog(@"ending save pre icon at %lu", (unsigned long)immutableScrapState.undoHash);
+//                NSLog(@"ending save pre icon at %lu", (unsigned long)immutableScrapState.undoHash);
                 hasPendingScrappedIconUpdate--;
             }
             BOOL needsThumbnailUpdateSinceLastSave = NO;
             if(lastSavedPaperStateHash != lastSavedPaperStateHashForGeneratedThumbnail ||
                lastSavedScrapStateHash != lastSavedScrapStateHashForGeneratedThumbnail){
                 needsThumbnailUpdateSinceLastSave = YES;
-                NSLog(@"needs thumbnail update since last generation");
+//                NSLog(@"needs thumbnail update since last generation");
             }else{
-                NSLog(@"doesn't need thumbnail update since last generation");
+//                NSLog(@"doesn't need thumbnail update since last generation");
             }
             
             if([self hasPenOrScrapEditsToSave]){
@@ -1080,31 +1080,31 @@
                 // call [saveToDisk] in very quick succession
                 // so that the 1st call is still saving, and the
                 // 2nd ends early b/c it knows the 1st is still going
-                NSLog(@"saved %@ but still have edits to save: saved at %lu but is now %lu",self.uuid, (unsigned long)immutableScrapState.undoHash,
-                      (unsigned long)[self.scrapsOnPaperState immutableStateForPath:nil].undoHash);
-                NSLog(@"needs save at %lu: %d %d", (unsigned long)[self.scrapsOnPaperState immutableStateForPath:nil].undoHash, [super hasEditsToSave], [scrapsOnPaperState hasEditsToSave]);
+//                NSLog(@"saved %@ but still have edits to save: saved at %lu but is now %lu",self.uuid, (unsigned long)immutableScrapState.undoHash,
+//                      (unsigned long)[self.scrapsOnPaperState immutableStateForPath:nil].undoHash);
+//                NSLog(@"needs save at %lu: %d %d", (unsigned long)[self.scrapsOnPaperState immutableStateForPath:nil].undoHash, [super hasEditsToSave], [scrapsOnPaperState hasEditsToSave]);
                 if(onComplete) onComplete(NO);
                 return;
             }else{
-                NSLog(@"finished save for %@ %d %d %d (at %lu)", self.uuid, pageHadBeenChanged, scrapsHadBeenChanged, needsThumbnailUpdateSinceLastSave, (unsigned long) immutableScrapState.undoHash);
+//                NSLog(@"finished save for %@ %d %d %d (at %lu)", self.uuid, pageHadBeenChanged, scrapsHadBeenChanged, needsThumbnailUpdateSinceLastSave, (unsigned long) immutableScrapState.undoHash);
             }
             
             if(!hasPendingScrappedIconUpdate && (needsThumbnailUpdateSinceLastSave || pageHadBeenChanged || scrapsHadBeenChanged)){
                 // only save a new thumbnail when we're the last pending save.
                 // otherwise the next pending save will generate it
-                NSLog(@"generating thumbnail (at %lu) with %d saves in progress", (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+//                NSLog(@"generating thumbnail (at %lu) with %d saves in progress", (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
                 lastSavedPaperStateHashForGeneratedThumbnail = lastSavedPaperStateHash;
                 lastSavedScrapStateHashForGeneratedThumbnail = lastSavedScrapStateHash;
                 [self updateFullPageThumbnail:immutableScrapState];
-                NSLog(@"done generating thumbnail (at %lu) with %d saves in progress", (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+//                NSLog(@"done generating thumbnail (at %lu) with %d saves in progress", (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
             }else if(hasPendingScrappedIconUpdate){
-                NSLog(@"skipped generating thumbnail (at %lu) because of %d pending saves", (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+//                NSLog(@"skipped generating thumbnail (at %lu) because of %d pending saves", (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
             }else{
-                NSLog(@"skipped generating thumbnail (at %lu) because page and scraps hadn't changed", (unsigned long) immutableScrapState.undoHash);
+//                NSLog(@"skipped generating thumbnail (at %lu) because page and scraps hadn't changed", (unsigned long) immutableScrapState.undoHash);
             }
 
             [NSThread performBlockOnMainThread:^{
-                NSLog(@"done saving page (at %lu)", (unsigned long) immutableScrapState.undoHash);
+//                NSLog(@"done saving page (at %lu)", (unsigned long) immutableScrapState.undoHash);
                 // reset canvas visibility
                 [self updateThumbnailVisibility];
                 [self.delegate didSavePage:self];
@@ -1227,7 +1227,6 @@
                         if(!scrappedImgViewImage.image){
                             definitelyDoesNotHaveAScrappedThumbnail = YES;
                         }
-                        scrappedImgViewImage.delegate = self;
                     }
                     isLoadingCachedScrappedThumbnailFromDisk = NO;
                 }
@@ -1244,6 +1243,9 @@
 
 -(void) unloadCachedPreview{
     @autoreleasepool {
+        if(self == [[MMPageCacheManager sharedInstance] currentEditablePage]){
+            NSLog(@"what");
+        }
         @synchronized(self){
             isAskedToLoadThumbnail = NO;
         }
