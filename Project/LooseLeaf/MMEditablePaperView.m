@@ -29,8 +29,6 @@ dispatch_queue_t importThumbnailQueue;
     NSString* thumbnailPath;
     UIBezierPath* boundsPath;
     
-    JotViewStateProxy* paperState;
-    
     // we want to be able to track extremely
     // efficiently 1) if we have a thumbnail loaded,
     // and 2) if we have (or don't) a thumbnail at all

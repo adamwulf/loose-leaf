@@ -13,7 +13,7 @@
 
 -(void) showDebugBorder{
     self.layer.borderColor = [UIColor redColor].CGColor;
-    self.layer.borderWidth = 1;
+    self.layer.borderWidth = 10;
 }
 
 -(int) fullByteSize{

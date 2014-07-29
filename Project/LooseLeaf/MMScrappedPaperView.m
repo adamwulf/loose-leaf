@@ -52,16 +52,22 @@
     BOOL isAskedToLoadThumbnail;
     // has pending icon update. this will be YES
     // during a save
-    BOOL hasPendingScrappedIconUpdate;
+    int hasPendingScrappedIconUpdate;
+
+    dispatch_queue_t concurrentBackgroundQueue;
+
+    
+    NSInteger lastSavedPaperStateHashForGeneratedThumbnail;
+    NSInteger lastSavedScrapStateHashForGeneratedThumbnail;
 }
 
 @synthesize scrapsOnPaperState;
 @synthesize scrapContainerView;
 
-static dispatch_queue_t concurrentBackgroundQueue;
-+(dispatch_queue_t) concurrentBackgroundQueue{
+
+-(dispatch_queue_t) concurrentBackgroundQueue{
     if(!concurrentBackgroundQueue){
-        concurrentBackgroundQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.concurrentBackgroundQueue", DISPATCH_QUEUE_CONCURRENT);
+        concurrentBackgroundQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.concurrentBackgroundQueue", DISPATCH_QUEUE_SERIAL);
     }
     return concurrentBackgroundQueue;
 }
@@ -71,6 +77,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     if (self) {
         // Initialization code
         scrapContainerView = [[MMScrapContainerView alloc] initWithFrame:self.bounds andPage:self];
+
         [self.contentView addSubview:scrapContainerView];
         // anchor the view to the top left,
         // so that when we scale down, the drawable view
@@ -850,6 +857,10 @@ static dispatch_queue_t concurrentBackgroundQueue;
     return [super hasEditsToSave] || [scrapsOnPaperState hasEditsToSave];
 }
 
+-(BOOL) hasPenOrScrapEditsToSave{
+    return [super hasEditsToSave] || [scrapsOnPaperState hasEditsToSave];
+}
+
 
 
 -(void) drawScrap:(MMScrapView*)scrap intoContext:(CGContextRef)context withSize:(CGSize)contextSize{
@@ -1010,8 +1021,12 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
     [self updateThumbnailVisibility];
     
+    __block NSInteger lastSavedPaperStateHash = 0;
+    __block NSInteger lastSavedScrapStateHash = 0;
+    
     @synchronized(self){
-        hasPendingScrappedIconUpdate = YES;
+        hasPendingScrappedIconUpdate++;
+        NSLog(@"starting save! %d", hasPendingScrappedIconUpdate);
     }
     
     __block BOOL pageHadBeenChanged = NO;
@@ -1019,6 +1034,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
     
     // save our backing page
     [super saveToDisk:^(BOOL hadEditsToSave){
+        lastSavedPaperStateHash = paperState.lastSavedUndoHash;
         pageHadBeenChanged = hadEditsToSave;
         dispatch_semaphore_signal(sema1);
     }];
@@ -1030,38 +1046,65 @@ static dispatch_queue_t concurrentBackgroundQueue;
         @autoreleasepool {
             immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
             scrapsHadBeenChanged = [immutableScrapState saveStateToDiskBlocking];
+            lastSavedScrapStateHash = immutableScrapState.undoHash;
+            NSLog(@"scrapsHadBeenChanged %d %lu",scrapsHadBeenChanged, (unsigned long)immutableScrapState.undoHash);
             dispatch_semaphore_signal(sema2);
         }
     });
 
-    dispatch_async([MMScrappedPaperView concurrentBackgroundQueue], ^(void) {
+    dispatch_async([self concurrentBackgroundQueue], ^(void) {
         @autoreleasepool {
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
 //            dispatch_release(sema1); ARC handles these
 //            dispatch_release(sema2);
-            if([self hasEditsToSave]){
+            if([self hasEditsToSave] && ![self hasPenOrScrapEditsToSave]){
+                NSLog(@"gotcha!!");
+            }
+            @synchronized(self){
+                NSLog(@"ending save pre icon at %lu", (unsigned long)immutableScrapState.undoHash);
+                hasPendingScrappedIconUpdate--;
+            }
+            BOOL needsThumbnailUpdateSinceLastSave = NO;
+            if(lastSavedPaperStateHash != lastSavedPaperStateHashForGeneratedThumbnail ||
+               lastSavedScrapStateHash != lastSavedScrapStateHashForGeneratedThumbnail){
+                needsThumbnailUpdateSinceLastSave = YES;
+                NSLog(@"needs thumbnail update since last generation");
+            }else{
+                NSLog(@"doesn't need thumbnail update since last generation");
+            }
+            
+            if([self hasPenOrScrapEditsToSave]){
+//                NSLog(@"i have more edits to save for %@ (now %lu). bailing. %d %d",self.uuid, (unsigned long) immutableScrapState.undoHash, pageHadBeenChanged, scrapsHadBeenChanged);
                 // our save failed. this may happen if we
                 // call [saveToDisk] in very quick succession
                 // so that the 1st call is still saving, and the
                 // 2nd ends early b/c it knows the 1st is still going
-                debug_NSLog(@"saved %@ but still have edits to save: saved at %lu but is now %lu",self.uuid, (unsigned long)self.paperState.lastSavedUndoHash, (unsigned long)self.paperState.currentStateUndoHash);
+                NSLog(@"saved %@ but still have edits to save: saved at %lu but is now %lu",self.uuid, (unsigned long)immutableScrapState.undoHash,
+                      (unsigned long)[self.scrapsOnPaperState immutableStateForPath:nil].undoHash);
+                NSLog(@"needs save at %lu: %d %d", (unsigned long)[self.scrapsOnPaperState immutableStateForPath:nil].undoHash, [super hasEditsToSave], [scrapsOnPaperState hasEditsToSave]);
                 if(onComplete) onComplete(NO);
                 return;
+            }else{
+                NSLog(@"finished save for %@ %d %d %d (at %lu)", self.uuid, pageHadBeenChanged, scrapsHadBeenChanged, needsThumbnailUpdateSinceLastSave, (unsigned long) immutableScrapState.undoHash);
             }
             
-//            NSLog(@"something actually had changed %d %d", pageHadBeenChanged, scrapsHadBeenChanged);
-            if(pageHadBeenChanged || scrapsHadBeenChanged){
-                NSLog(@"actually updated scrapped thumb for %@ %d %d", self.uuid, pageHadBeenChanged, scrapsHadBeenChanged);
+            if(!hasPendingScrappedIconUpdate && (needsThumbnailUpdateSinceLastSave || pageHadBeenChanged || scrapsHadBeenChanged)){
+                // only save a new thumbnail when we're the last pending save.
+                // otherwise the next pending save will generate it
+                NSLog(@"generating thumbnail (at %lu) with %d saves in progress", (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+                lastSavedPaperStateHashForGeneratedThumbnail = lastSavedPaperStateHash;
+                lastSavedScrapStateHashForGeneratedThumbnail = lastSavedScrapStateHash;
                 [self updateFullPageThumbnail:immutableScrapState];
-            }
-
-            @synchronized(self){
-                hasPendingScrappedIconUpdate = NO;
+                NSLog(@"done generating thumbnail (at %lu) with %d saves in progress", (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+            }else if(hasPendingScrappedIconUpdate){
+                NSLog(@"skipped generating thumbnail (at %lu) because of %d pending saves", (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+            }else{
+                NSLog(@"skipped generating thumbnail (at %lu) because page and scraps hadn't changed", (unsigned long) immutableScrapState.undoHash);
             }
 
             [NSThread performBlockOnMainThread:^{
-                debug_NSLog(@"notifying did save page %@ at %lu", self.uuid, (unsigned long)self.paperState.lastSavedUndoHash);
+                NSLog(@"done saving page (at %lu)", (unsigned long) immutableScrapState.undoHash);
                 // reset canvas visibility
                 [self updateThumbnailVisibility];
                 [self.delegate didSavePage:self];
@@ -1141,11 +1184,13 @@ static dispatch_queue_t concurrentBackgroundQueue;
 
 -(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
     // check to see if we've also loaded
+    lastSavedScrapStateHashForGeneratedThumbnail = [scrapState lastSavedUndoHash];
     [self didLoadState:self.paperState];
     [self updateThumbnailVisibility];
 }
 
 -(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
+    lastSavedScrapStateHashForGeneratedThumbnail = 0;
     [self updateThumbnailVisibility];
 }
 
@@ -1245,6 +1290,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
  */
 -(void) didLoadState:(JotViewStateProxy*)state{
     if([self hasStateLoaded]){
+        lastSavedPaperStateHashForGeneratedThumbnail = [state undoHash];
         [NSThread performBlockOnMainThread:^{
             [[MMPageCacheManager sharedInstance] didLoadStateForPage:self];
             if(scrappedImgViewImage.isDecompressed){
@@ -1255,6 +1301,7 @@ static dispatch_queue_t concurrentBackgroundQueue;
 }
 
 -(void) didUnloadState:(JotViewStateProxy *)state{
+    lastSavedPaperStateHashForGeneratedThumbnail = 0;
     [NSThread performBlockOnMainThread:^{
         [[MMPageCacheManager sharedInstance] didUnloadStateForPage:self];
     }];

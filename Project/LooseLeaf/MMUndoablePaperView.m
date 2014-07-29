@@ -20,13 +20,6 @@
 #import "MMImmutableScrapsOnPaperState.h"
 #import "MMTrashManager.h"
 
-@interface MMScrappedPaperView (Queue)
-
-+(dispatch_queue_t) concurrentBackgroundQueue;
-
-@end
-
-
 @implementation MMUndoablePaperView{
     MMPageUndoRedoManager* undoRedoManager;
     NSString* undoStatePath;
@@ -69,7 +62,7 @@
         [undoRedoManager loadFrom:[self undoStatePath]];
     };
     
-    dispatch_async([MMScrappedPaperView concurrentBackgroundQueue], block);
+    dispatch_async([self concurrentBackgroundQueue], block);
 }
 
 -(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
@@ -103,13 +96,13 @@
         hadEditsToSave = _hadEditsToSave;
         dispatch_semaphore_signal(sema1);
     }];
-    dispatch_async([MMScrappedPaperView concurrentBackgroundQueue], ^(void) {
+    dispatch_async([self concurrentBackgroundQueue], ^(void) {
         // also write undostack to disk
         [undoRedoManager saveTo:[self undoStatePath]];
         dispatch_semaphore_signal(sema2);
     });
     
-    dispatch_async([MMScrappedPaperView concurrentBackgroundQueue], ^(void) {
+    dispatch_async([self concurrentBackgroundQueue], ^(void) {
         @autoreleasepool {
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);

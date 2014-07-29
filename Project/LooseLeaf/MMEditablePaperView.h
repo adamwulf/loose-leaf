@@ -17,6 +17,8 @@
     MMShapeBuilderView* shapeBuilderView;
     
     MMRulerToolGestureRecognizer* rulerGesture;
+
+    JotViewStateProxy* paperState;
 }
 
 @property (nonatomic, weak) JotView* drawableView;

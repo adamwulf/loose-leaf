@@ -334,9 +334,8 @@ static dispatch_queue_t importExportStateQueue;
 
 -(void) wasSavedAtUndoHash:(NSUInteger)savedUndoHash{
     @synchronized(self){
-        NSLog(@"notifed saved at: %lu", (unsigned long)lastSavedUndoHash);
-        
         lastSavedUndoHash = savedUndoHash;
+        NSLog(@"notified saved at: %lu", (unsigned long)lastSavedUndoHash);
     }
 }
 

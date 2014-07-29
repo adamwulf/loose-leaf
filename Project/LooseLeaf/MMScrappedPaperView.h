@@ -25,7 +25,7 @@
 @property (readonly) MMScrapsOnPaperState* scrapsOnPaperState;
 @property (readonly) MMScrapContainerView* scrapContainerView;
 
-+(dispatch_queue_t) concurrentBackgroundQueue;
+-(dispatch_queue_t) concurrentBackgroundQueue;
 
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andScale:(CGFloat)scale;
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale;
