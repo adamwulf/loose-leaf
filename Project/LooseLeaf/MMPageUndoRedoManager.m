@@ -56,7 +56,7 @@
         if(needsLoad){
             [self saveTo:page.undoStatePath];
             [self unloadState];
-            NSLog(@"done saving unloaded undo manager");
+//            NSLog(@"done saving unloaded undo manager");
         }
     }
 }

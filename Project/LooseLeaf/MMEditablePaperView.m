@@ -327,7 +327,6 @@ static int count = 0;
     if(cachedImgViewImage){
         return cachedImgViewImage;
     }
-    NSLog(@"fetching ink from disk for %@", self.uuid);
     UIImage* thumbnail = [[MMLoadImageCache sharedInstance] imageAtPath:[self thumbnailPath]];
     if(!thumbnail){
         // we might be loading a new-user-content provided page,

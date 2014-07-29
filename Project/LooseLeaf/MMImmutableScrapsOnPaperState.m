@@ -84,10 +84,10 @@
 //            NSLog(@"on no");
         }
         
-        NSLog(@"saving %d scraps on %@", [scrapsOnPageIDs count], ownerState.delegate);
+//        NSLog(@"saving %lu scraps on %@", (unsigned long)[scrapsOnPageIDs count], ownerState.delegate);
         NSDictionary* scrapsOnPaperInfo = [NSDictionary dictionaryWithObjectsAndKeys:allScrapProperties, @"allScrapProperties", scrapsOnPageIDs, @"scrapsOnPageIDs", nil];
         if([scrapsOnPaperInfo writeToFile:scrapIDsPath atomically:YES]){
-            NSLog(@"saved to %@", scrapIDsPath);
+//            NSLog(@"saved to %@", scrapIDsPath);
         }else{
             NSLog(@"failed saved to %@", scrapIDsPath);
         }

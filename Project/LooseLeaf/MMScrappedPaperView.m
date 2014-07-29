@@ -1008,9 +1008,9 @@
 -(void) saveToDisk{
     [self saveToDisk:^(BOOL hadEditsToSave){
         if(hadEditsToSave){
-            NSLog(@"saved edits for %@", self);
+//            NSLog(@"saved edits for %@", self);
         }else{
-            NSLog(@"didn't save any edits for %@", self);
+//            NSLog(@"didn't save any edits for %@", self);
         }
     }];
 }
@@ -1081,30 +1081,30 @@
             }
             @synchronized(self){
                 hasPendingScrappedIconUpdate--;
-                NSLog(@"%@ ending save pre icon at %lu with %d pending saves", self, (unsigned long)immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+//                NSLog(@"%@ ending save pre icon at %lu with %d pending saves", self, (unsigned long)immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
             }
             BOOL needsThumbnailUpdateSinceLastSave = NO;
             if(lastSavedPaperStateHash != lastSavedPaperStateHashForGeneratedThumbnail ||
                lastSavedScrapStateHash != lastSavedScrapStateHashForGeneratedThumbnail){
                 needsThumbnailUpdateSinceLastSave = YES;
-                NSLog(@"%@ needs thumbnail update since last generation", self);
+//                NSLog(@"%@ needs thumbnail update since last generation", self);
             }else{
-                NSLog(@"%@ doesn't need thumbnail update since last generation", self);
+//                NSLog(@"%@ doesn't need thumbnail update since last generation", self);
             }
             
             if([self hasPenOrScrapEditsToSave]){
-                NSLog(@"i have more edits to save for %@ (now %lu). bailing. %d %d %d",self.uuid, (unsigned long) immutableScrapState.undoHash, pageHadBeenChanged, scrapsHadBeenChanged, needsThumbnailUpdateSinceLastSave);
+//                NSLog(@"i have more edits to save for %@ (now %lu). bailing. %d %d %d",self.uuid, (unsigned long) immutableScrapState.undoHash, pageHadBeenChanged, scrapsHadBeenChanged, needsThumbnailUpdateSinceLastSave);
                 // our save failed. this may happen if we
                 // call [saveToDisk] in very quick succession
                 // so that the 1st call is still saving, and the
                 // 2nd ends early b/c it knows the 1st is still going
-                NSLog(@"saved %@ but still have edits to save: saved at %lu but is now %lu",self.uuid, (unsigned long)immutableScrapState.undoHash,
-                      (unsigned long)[self.scrapsOnPaperState immutableStateForPath:nil].undoHash);
-                NSLog(@"%@ needs save at %lu: %d %d",self, (unsigned long)[self.scrapsOnPaperState immutableStateForPath:nil].undoHash, [super hasEditsToSave], [scrapsOnPaperState hasEditsToSave]);
+//                NSLog(@"saved %@ but still have edits to save: saved at %lu but is now %lu",self.uuid, (unsigned long)immutableScrapState.undoHash,
+//                      (unsigned long)[self.scrapsOnPaperState immutableStateForPath:nil].undoHash);
+//                NSLog(@"%@ needs save at %lu: %d %d",self, (unsigned long)[self.scrapsOnPaperState immutableStateForPath:nil].undoHash, [super hasEditsToSave], [scrapsOnPaperState hasEditsToSave]);
                 if(onComplete) onComplete(NO);
                 return;
             }else{
-                NSLog(@"finished save for %@ %d %d %d (at %lu)", self.uuid, pageHadBeenChanged, scrapsHadBeenChanged, needsThumbnailUpdateSinceLastSave, (unsigned long) immutableScrapState.undoHash);
+//                NSLog(@"finished save for %@ %d %d %d (at %lu)", self.uuid, pageHadBeenChanged, scrapsHadBeenChanged, needsThumbnailUpdateSinceLastSave, (unsigned long) immutableScrapState.undoHash);
             }
             
             if(!hasPendingScrappedIconUpdate && (needsThumbnailUpdateSinceLastSave || pageHadBeenChanged || scrapsHadBeenChanged)){
@@ -1113,17 +1113,17 @@
                 lastSavedPaperStateHashForGeneratedThumbnail = lastSavedPaperStateHash;
                 lastSavedScrapStateHashForGeneratedThumbnail = lastSavedScrapStateHash;
                 if(immutableScrapState){
-                    NSLog(@"generating thumbnail for %@ (at %lu) with %d saves in progress",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+//                    NSLog(@"generating thumbnail for %@ (at %lu) with %d saves in progress",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
                     // only save a new thumbnail if we have our state loaded
                     [self updateFullPageThumbnail:immutableScrapState];
                 }else{
-                    NSLog(@"can't generating thumbnail without immutableScrapState for %@ (at %lu) with %d saves in progress",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+//                    NSLog(@"can't generating thumbnail without immutableScrapState for %@ (at %lu) with %d saves in progress",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
                 }
 //                NSLog(@"done generating thumbnail (at %lu) with %d saves in progress", (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
             }else if(hasPendingScrappedIconUpdate){
-                NSLog(@"%@ skipped generating thumbnail (at %lu) because of %d pending saves",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+//                NSLog(@"%@ skipped generating thumbnail (at %lu) because of %d pending saves",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
             }else{
-                NSLog(@"%@ skipped generating thumbnail (at %lu) because page and scraps hadn't changed",self, (unsigned long) immutableScrapState.undoHash);
+//                NSLog(@"%@ skipped generating thumbnail (at %lu) because page and scraps hadn't changed",self, (unsigned long) immutableScrapState.undoHash);
             }
 
             [NSThread performBlockOnMainThread:^{
@@ -1171,7 +1171,7 @@
     if([scrapsOnPaperState isStateLoaded]){
         @throw [NSException exceptionWithName:@"LoadedStateForUnloadedBlockException" reason:@"Cannot run block on unloaded state when state is already loaded" userInfo:nil];
     }
-    NSLog(@"performing block for unloaded scrap state: %@", self);
+//    NSLog(@"performing block for unloaded scrap state: %@", self);
     if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
         [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.scrapIDsPath andMakeEditable:YES];
     }else{
