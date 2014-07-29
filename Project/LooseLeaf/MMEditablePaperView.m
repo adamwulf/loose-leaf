@@ -29,8 +29,6 @@ dispatch_queue_t importThumbnailQueue;
     NSString* thumbnailPath;
     UIBezierPath* boundsPath;
     
-    JotViewStateProxy* paperState;
-    
     // we want to be able to track extremely
     // efficiently 1) if we have a thumbnail loaded,
     // and 2) if we have (or don't) a thumbnail at all
@@ -251,7 +249,7 @@ dispatch_queue_t importThumbnailQueue;
     
     // find out what our current undo state looks like.
     if([self hasEditsToSave] && ![paperState hasEditsToSave]){
-        NSLog(@"saved excess");
+//        NSLog(@"saved excess");
     }
     if([paperState hasEditsToSave]){
         // something has changed since the last time we saved,
@@ -316,13 +314,7 @@ static int count = 0;
                 //
                 // load thumbnails into a cache for faster repeat loading
                 // https://github.com/adamwulf/loose-leaf/issues/227
-                UIImage* thumbnail = [[MMLoadImageCache sharedInstance] imageAtPath:[self thumbnailPath]];
-                if(!thumbnail){
-                    // we might be loading a new-user-content provided page,
-                    // so load from the bundle as a backup
-                    NSString* bundleThumbPath = [[[self bundledPagesPath] stringByAppendingPathComponent:[@"ink" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
-                    thumbnail = [[MMLoadImageCache sharedInstance] imageAtPath:bundleThumbPath];
-                }
+                UIImage* thumbnail = [self synchronouslyLoadInkPreview];
                 if(!thumbnail){
                     definitelyDoesNotHaveAnInkThumbnail = YES;
                 }
@@ -331,6 +323,20 @@ static int count = 0;
             }
         });
     }
+}
+
+-(UIImage*) synchronouslyLoadInkPreview{
+    if(cachedImgViewImage){
+        return cachedImgViewImage;
+    }
+    UIImage* thumbnail = [[MMLoadImageCache sharedInstance] imageAtPath:[self thumbnailPath]];
+    if(!thumbnail){
+        // we might be loading a new-user-content provided page,
+        // so load from the bundle as a backup
+        NSString* bundleThumbPath = [[[self bundledPagesPath] stringByAppendingPathComponent:[@"ink" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
+        thumbnail = [[MMLoadImageCache sharedInstance] imageAtPath:bundleThumbPath];
+    }
+    return thumbnail;
 }
 
 /**

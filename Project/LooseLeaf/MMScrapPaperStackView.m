@@ -671,14 +671,14 @@ int skipAll = NO;
         if(![scrapContainer.subviews containsObject:panAndPinchScrapGesture.scrap]){
             [scrapContainer addSubview:panAndPinchScrapGesture.scrap];
             [self panAndScaleScrap:panAndPinchScrapGesture];
-            NSLog(@"forceScrapToScrapContainerDuringGesture");
+//            NSLog(@"forceScrapToScrapContainerDuringGesture");
         }
     }
     if(panAndPinchScrapGesture2.scrap && panAndPinchScrapGesture2.state != UIGestureRecognizerStateCancelled){
         if(![scrapContainer.subviews containsObject:panAndPinchScrapGesture2.scrap]){
             [scrapContainer addSubview:panAndPinchScrapGesture2.scrap];
             [self panAndScaleScrap:panAndPinchScrapGesture2];
-            NSLog(@"forceScrapToScrapContainerDuringGesture");
+//            NSLog(@"forceScrapToScrapContainerDuringGesture");
         }
     }
 }
@@ -817,6 +817,7 @@ int skipAll = NO;
     if(gesture.scrap && (gesture.state == UIGestureRecognizerStateEnded ||
                          gesture.state == UIGestureRecognizerStateCancelled ||
                          ![gesture.validTouches count])){
+        
         // turn off glow
         if(!stretchScrapGesture.scrap){
             // only if that scrap isn't being stretched

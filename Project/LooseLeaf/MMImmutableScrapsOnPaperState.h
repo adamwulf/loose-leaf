@@ -18,4 +18,6 @@
 // NO otherwise
 -(BOOL) saveStateToDiskBlocking;
 
+-(NSUInteger) undoHash;
+
 @end

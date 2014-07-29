@@ -14,6 +14,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "UIView+Debug.h"
 #import "Constants.h"
+#import "MMPageCacheManager.h"
 
 @interface MMImmutableScrapsOnPaperState (Private)
 
@@ -196,7 +197,9 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 -(void) unload{
-//    NSLog(@"unloading scrap state for %@", self.delegate.uuid);
+    if(self.delegate == [[MMPageCacheManager sharedInstance] currentEditablePage]){
+        NSLog(@"what");
+    }
     if([self isStateLoaded] || isLoading){
         @synchronized(self){
             isUnloading = YES;
@@ -334,9 +337,8 @@ static dispatch_queue_t importExportStateQueue;
 
 -(void) wasSavedAtUndoHash:(NSUInteger)savedUndoHash{
     @synchronized(self){
-        NSLog(@"notifed saved at: %lu", (unsigned long)lastSavedUndoHash);
-        
         lastSavedUndoHash = savedUndoHash;
+//        NSLog(@"notified saved at: %lu", (unsigned long)lastSavedUndoHash);
     }
 }
 

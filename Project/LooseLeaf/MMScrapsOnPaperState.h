@@ -21,6 +21,7 @@
 @property (nonatomic, assign) BOOL shouldShowShadows;
 @property (nonatomic, readonly) int fullByteSize;
 @property (readonly) BOOL hasEditsToSave;
+@property (readonly) NSUInteger lastSavedUndoHash;
 
 +(dispatch_queue_t) importExportStateQueue;
 

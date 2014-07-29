@@ -65,7 +65,7 @@ static MMTrashManager* _instance = nil;
     // otherwise we can delete them.
     BOOL(^checkScrapExistsInUndoRedoManager)() = ^{
         __block BOOL existsInUndoRedoManager = NO;
-        dispatch_async([MMScrappedPaperView concurrentBackgroundQueue], ^{
+        dispatch_async([page concurrentBackgroundQueue], ^{
             BOOL needsLoad = ![undoablePage.undoRedoManager isLoaded];
             if(needsLoad){
                 [undoablePage.undoRedoManager loadFrom:[undoablePage undoStatePath]];
