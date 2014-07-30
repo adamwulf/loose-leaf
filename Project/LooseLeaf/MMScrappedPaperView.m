@@ -63,8 +63,8 @@
     dispatch_queue_t concurrentBackgroundQueue;
 
     
-    NSInteger lastSavedPaperStateHashForGeneratedThumbnail;
-    NSInteger lastSavedScrapStateHashForGeneratedThumbnail;
+    NSUInteger lastSavedPaperStateHashForGeneratedThumbnail;
+    NSUInteger lastSavedScrapStateHashForGeneratedThumbnail;
 }
 
 @synthesize scrapsOnPaperState;
@@ -1034,12 +1034,12 @@
 
     [self updateThumbnailVisibility];
     
-    __block NSInteger lastSavedPaperStateHash = 0;
-    __block NSInteger lastSavedScrapStateHash = 0;
+    __block NSUInteger lastSavedPaperStateHash = 0;
+    __block NSUInteger lastSavedScrapStateHash = 0;
     
     @synchronized(self){
         hasPendingScrappedIconUpdate++;
-//        NSLog(@"starting save! %d", hasPendingScrappedIconUpdate);
+        NSLog(@"%@ starting save! %d, hasPenOrScrapChanges: %d", self.uuid, hasPendingScrappedIconUpdate, [self hasPenOrScrapEditsToSave]);
     }
     
     __block BOOL pageHadBeenChanged = NO;
@@ -1047,8 +1047,17 @@
     
     // save our backing page
     [super saveToDisk:^(BOOL hadEditsToSave){
-        lastSavedPaperStateHash = paperState.lastSavedUndoHash;
+        // NOTE!
+        // https://github.com/adamwulf/loose-leaf/issues/658
+        // it's important that we use paperState.lastSavedUndoHash
+        // only /after/ both semaphores are signaled. this is
+        // because if a 2nd save happens too quickly, then it
+        // will trigger this immediately and our lastSavedUndoHash
+        // will be /before/ the currently in progress save that is
+        // happening right before us. so if we check lastSavedUndoHash
+        // after the signals, it'll be properly updated.
         pageHadBeenChanged = hadEditsToSave;
+        NSLog(@"ScrapPage notified of page state save at %lu (success %d)", (unsigned long)lastSavedPaperStateHash, hadEditsToSave);
         dispatch_semaphore_signal(sema1);
     }];
     
@@ -1074,16 +1083,17 @@
         @autoreleasepool {
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
-//            dispatch_release(sema1); ARC handles these
-//            dispatch_release(sema2);
-            if([self hasEditsToSave] && ![self hasPenOrScrapEditsToSave]){
-//                NSLog(@"gotcha!!");
-            }
             @synchronized(self){
                 hasPendingScrappedIconUpdate--;
 //                NSLog(@"%@ ending save pre icon at %lu with %d pending saves", self, (unsigned long)immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
             }
+            lastSavedPaperStateHash = paperState.lastSavedUndoHash;
+
             BOOL needsThumbnailUpdateSinceLastSave = NO;
+//            NSLog(@"checking need for thumbnail? %lu == %lu ? %lu == %lu ?", (unsigned long)lastSavedPaperStateHash,
+//                  (unsigned long)lastSavedPaperStateHashForGeneratedThumbnail,
+//                  (unsigned long)lastSavedScrapStateHash,
+//                  (unsigned long)lastSavedScrapStateHashForGeneratedThumbnail);
             if(lastSavedPaperStateHash != lastSavedPaperStateHashForGeneratedThumbnail ||
                lastSavedScrapStateHash != lastSavedScrapStateHashForGeneratedThumbnail){
                 needsThumbnailUpdateSinceLastSave = YES;
@@ -1092,6 +1102,10 @@
 //                NSLog(@"%@ doesn't need thumbnail update since last generation", self);
             }
             
+            // NOTE:
+            // we need to check [hasPenOrScrapEditsToSave] not [hasEditsToSave].
+            // otherwise we'd accidentally take undoManager etc into account
+            // when we shouldn't (since undoManager will aways save after us
             if([self hasPenOrScrapEditsToSave]){
 //                NSLog(@"i have more edits to save for %@ (now %lu). bailing. %d %d %d",self.uuid, (unsigned long) immutableScrapState.undoHash, pageHadBeenChanged, scrapsHadBeenChanged, needsThumbnailUpdateSinceLastSave);
                 // our save failed. this may happen if we
@@ -1110,9 +1124,11 @@
             if(!hasPendingScrappedIconUpdate && (needsThumbnailUpdateSinceLastSave || pageHadBeenChanged || scrapsHadBeenChanged)){
                 // only save a new thumbnail when we're the last pending save.
                 // otherwise the next pending save will generate it
-                lastSavedPaperStateHashForGeneratedThumbnail = lastSavedPaperStateHash;
-                lastSavedScrapStateHashForGeneratedThumbnail = lastSavedScrapStateHash;
                 if(immutableScrapState){
+                    // only update our last saved hash when
+                    // we actually generate the thumbnail.
+                    lastSavedPaperStateHashForGeneratedThumbnail = lastSavedPaperStateHash;
+                    lastSavedScrapStateHashForGeneratedThumbnail = lastSavedScrapStateHash;
 //                    NSLog(@"generating thumbnail for %@ (at %lu) with %d saves in progress",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
                     // only save a new thumbnail if we have our state loaded
                     [self updateFullPageThumbnail:immutableScrapState];
