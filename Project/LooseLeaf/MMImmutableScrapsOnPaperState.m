@@ -114,7 +114,7 @@
         NSUInteger hashVal = 1;
         for(MMScrapView* scrap in allScrapsForPage){
             hashVal = prime * hashVal + [[scrap uuid] hash];
-            if([scrap.state isStateLoaded] && [scrap.state.drawableView.state isStateLoaded]){
+            if([scrap.state isScrapStateLoaded]){
                 // if we're loaded, use the current hash
                 hashVal = prime * hashVal + [scrap.state.drawableView.state undoHash];
             }else{

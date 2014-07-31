@@ -462,8 +462,8 @@
     });
 }
 
--(BOOL) isStateLoaded{
-    return drawableViewState != nil;
+-(BOOL) isScrapStateLoaded{
+    return drawableViewState != nil && [drawableViewState isStateLoaded];
 }
 
 // returns the loaded thumbnail image,

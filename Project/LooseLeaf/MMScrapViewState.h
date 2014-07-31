@@ -39,7 +39,7 @@
 
 -(void) unloadState;
 
--(BOOL) isStateLoaded;
+-(BOOL) isScrapStateLoaded;
 
 -(UIImage*) activeThumbnailImage;
 
