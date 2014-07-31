@@ -685,7 +685,7 @@
                         UIBezierPath* p2 = obj2;
                         CGFloat s1 = p1.bounds.size.width * p1.bounds.size.height;
                         CGFloat s2 = p2.bounds.size.width * p2.bounds.size.height;
-                        return s1 > s2 ? NSOrderedAscending : NSOrderedDescending;
+                        return s1 < s2 ? NSOrderedAscending : NSOrderedDescending;
                     }];
                     
                     debugFullText = [debugFullText stringByAppendingFormat:@"shape:\n %@ scissor:\n %@ \n\n\n\n", subshapePath, scissorPath];
