@@ -165,6 +165,10 @@
             return NO;
         }
     }
+    if([aRow isKindOfClass:[MMFlipCameraButton class]]){
+        // don't reuse the flip button
+        return NO;
+    }
     return [super prepareRowForReuse:aRow forScrollView:scrollView];
 }
 
