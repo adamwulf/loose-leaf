@@ -1039,7 +1039,7 @@
     
     @synchronized(self){
         hasPendingScrappedIconUpdate++;
-        NSLog(@"%@ starting save! %d, hasPenOrScrapChanges: %d", self.uuid, hasPendingScrappedIconUpdate, [self hasPenOrScrapEditsToSave]);
+//        NSLog(@"%@ starting save! %d, hasPenOrScrapChanges: %d", self.uuid, hasPendingScrappedIconUpdate, [self hasPenOrScrapEditsToSave]);
     }
     
     __block BOOL pageHadBeenChanged = NO;
@@ -1057,7 +1057,7 @@
         // happening right before us. so if we check lastSavedUndoHash
         // after the signals, it'll be properly updated.
         pageHadBeenChanged = hadEditsToSave;
-        NSLog(@"ScrapPage notified of page state save at %lu (success %d)", (unsigned long)lastSavedPaperStateHash, hadEditsToSave);
+//        NSLog(@"ScrapPage notified of page state save at %lu (success %d)", (unsigned long)lastSavedPaperStateHash, hadEditsToSave);
         dispatch_semaphore_signal(sema1);
     }];
     

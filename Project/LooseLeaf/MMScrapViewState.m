@@ -49,9 +49,6 @@
     CGSize originalSize;
     CGRect drawableBounds;
     
-    // queue
-    dispatch_queue_t importExportScrapStateQueue;
-    
     // thumbnail
     UIImage* activeThumbnailImage;
     
@@ -95,11 +92,16 @@
 
 #pragma mark - Dispatch Queue
 
--(dispatch_queue_t) importExportScrapStateQueue{
-    if(!importExportScrapStateQueue){
-        importExportScrapStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.importExportScrapStateQueue", DISPATCH_QUEUE_SERIAL);
+// queue
+static dispatch_queue_t importExportScrapStateQueue;
+
++(dispatch_queue_t) importExportScrapStateQueue{
+    @synchronized([MMScrapViewState class]){
+        if(!importExportScrapStateQueue){
+            importExportScrapStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.importExportScrapStateQueue", DISPATCH_QUEUE_SERIAL);
+        }
+        return importExportScrapStateQueue;
     }
-    return importExportScrapStateQueue;
 }
 
 #pragma mark - Init
@@ -202,7 +204,7 @@
             [self setActiveThumbnailImage:[[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile]];
         }else{
             // don't load from disk on the main thread.
-            dispatch_async([self importExportScrapStateQueue], ^{
+            dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
                 [lock lock];
                 @autoreleasepool {
                     UIImage* thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
@@ -263,7 +265,7 @@
     
     
     if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
-        dispatch_async([self importExportScrapStateQueue], ^{
+        dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
             @autoreleasepool {
                 [lock lock];
 //                NSLog(@"(%@) saving with background: %d %d", uuid, (int)drawableView, backingViewHasChanged);
@@ -414,14 +416,14 @@
     };
 
     if(async){
-        dispatch_async([self importExportScrapStateQueue], loadBlock);
+        dispatch_async([MMScrapViewState importExportScrapStateQueue], loadBlock);
     }else{
         loadBlock();
     }
 }
 
 -(void) unloadState{
-    dispatch_async([self importExportScrapStateQueue], ^{
+    dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
         @autoreleasepool {
             [lock lock];
             @synchronized(self){
@@ -429,12 +431,12 @@
 //                    NSLog(@"(%@) unload failed, will retry", uuid);
                     // we want to unload, but we're not saved.
                     // save, then try to unload again
-                    dispatch_async([self importExportScrapStateQueue], ^{
+                    dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
                         @autoreleasepool {
                             [self saveScrapStateToDisk:nil];
                         }
                     });
-                    dispatch_async([self importExportScrapStateQueue], ^{
+                    dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
                         @autoreleasepool {
                             [self unloadState];
                         }
@@ -620,6 +622,9 @@
 #pragma mark - dealloc
 
 -(void) dealloc{
+    if(self.isScrapStateLoaded){
+        NSLog(@"what");
+    }
 //    NSLog(@"scrap state (%@) dealloc", uuid);
     [[MMLoadImageCache sharedInstance] clearCacheForPath:self.thumbImageFile];
 //    dispatch_release(importExportScrapStateQueue); ARC handles this
