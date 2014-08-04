@@ -130,6 +130,11 @@ static dispatch_queue_t importExportStateQueue;
                 
                 [NSThread performBlockOnMainThread:^{
                     for(NSDictionary* scrapProperties in scrapPropsWithState){
+                        @synchronized(self){
+                            if(isUnloading){
+                                NSLog(@"loading during unloading");
+                            }
+                        }
                         MMScrapView* scrap = nil;
                         if([scrapProperties objectForKey:@"scrap"]){
                             scrap = [scrapProperties objectForKey:@"scrap"];
@@ -154,6 +159,9 @@ static dispatch_queue_t importExportStateQueue;
                             }
                             
                             if(makeEditable){
+                                if(!async){
+                                    NSLog(@"not async");
+                                }
                                 [scrap loadScrapStateAsynchronously:async];
                             }
                             [scrap setShouldShowShadow:shouldShowShadows];
@@ -185,6 +193,14 @@ static dispatch_queue_t importExportStateQueue;
             if([self isStateLoaded]){
                 for(MMScrapView* scrap in self.delegate.scrapsOnPaper){
                     [scrap loadScrapStateAsynchronously:async];
+                    if(!async){
+                        NSLog(@"not async");
+                    }
+                    @synchronized(self){
+                        if(isUnloading){
+                            NSLog(@"loading during unloading");
+                        }
+                    }
                 }
             }
         };
@@ -206,6 +222,9 @@ static dispatch_queue_t importExportStateQueue;
         }
         dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
             @autoreleasepool {
+                if(isLoading){
+                    NSLog(@"unload during loading");
+                }
                 if([self isStateLoaded]){
                     @synchronized(allScrapsForPage){
                         for(MMScrapView* scrap in allScrapsForPage){

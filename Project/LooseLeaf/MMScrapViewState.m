@@ -358,6 +358,9 @@ static dispatch_queue_t importExportScrapStateQueue;
 //            NSLog(@"(%@) already loaded", uuid);
             return;
         }
+        if(targetIsLoadedState){
+            NSLog(@"duplicate load");
+        }
         
         targetIsLoadedState = YES;
         isLoadingState = YES;
@@ -365,6 +368,9 @@ static dispatch_queue_t importExportScrapStateQueue;
 
 //    NSLog(@"(%@) loading1: %d %d", uuid, targetIsLoadedState, isLoadingState);
     void (^loadBlock)() = ^(void) {
+        @synchronized(self){
+            targetIsLoadedState = YES;
+        }
         @autoreleasepool {
             [lock lock];
             
@@ -372,6 +378,9 @@ static dispatch_queue_t importExportScrapStateQueue;
             dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
             [NSThread performBlockOnMainThread:^{
                 @synchronized(self){
+                    if(!targetIsLoadedState){
+                        NSLog(@"haha what1");
+                    }
                     // add our drawable view to our contents
                     drawableView = [[JotView alloc] initWithFrame:drawableBounds];
                 }
@@ -380,37 +389,15 @@ static dispatch_queue_t importExportScrapStateQueue;
 
             // load state, if we have any.
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+            if(!targetIsLoadedState){
+                NSLog(@"haha what2");
+            }
             // load drawable view information here
             drawableViewState = [[JotViewStateProxy alloc] initWithDelegate:self];
-            [drawableViewState loadStateAsynchronously:NO
+            [drawableViewState loadStateAsynchronously:YES
                                               withSize:[drawableView pagePixelSize]
                                             andContext:[drawableView context]
                                       andBufferManager:[[JotBufferManager alloc] init]];
-            [NSThread performBlockOnMainThread:^{
-                @synchronized(self){
-                    isLoadingState = NO;
-                    if(targetIsLoadedState){
-                        [contentView addSubview:drawableView];
-                        thumbnailView.hidden = YES;
-                        if(drawableViewState){
-                            [drawableView loadState:drawableViewState];
-                        }
-                        
-                        // nothing changed in our goals since we started
-                        // to load state, so notify our delegate
-                        [self.delegate didLoadScrapViewState:self];
-                    }else{
-                        // when loading state, we were actually
-                        // told that we didn't really need the
-                        // state after all, so just throw it away :(
-                        drawableViewState = nil;
-                        drawableView = nil;
-                    }
-                }
-                dispatch_semaphore_signal(sema1);
-            }];
-            dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-//            dispatch_release(sema1); ARC handles this
             [lock unlock];
         }
     };
@@ -423,11 +410,17 @@ static dispatch_queue_t importExportScrapStateQueue;
 }
 
 -(void) unloadState{
+    @synchronized(self){
+        if(!targetIsLoadedState){
+            NSLog(@"duplicate unload");
+        }
+        targetIsLoadedState = NO;
+    }
     dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
         @autoreleasepool {
             [lock lock];
             @synchronized(self){
-                if(drawableViewState && [drawableViewState hasEditsToSave]){
+                if(drawableViewState && [drawableViewState isStateLoaded] && [drawableViewState hasEditsToSave]){
 //                    NSLog(@"(%@) unload failed, will retry", uuid);
                     // we want to unload, but we're not saved.
                     // save, then try to unload again
@@ -447,9 +440,10 @@ static dispatch_queue_t importExportScrapStateQueue;
                     if(!isLoadingState && drawableViewState){
                         dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                         [NSThread performBlockOnMainThread:^{
-                            drawableViewState = nil;
                             [drawableView removeFromSuperview];
                             [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
+                            [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];
+                            drawableViewState = nil;
                             drawableView = nil;
                             thumbnailView.hidden = NO;
                             dispatch_semaphore_signal(sema1);
@@ -612,7 +606,33 @@ static dispatch_queue_t importExportScrapStateQueue;
 }
 
 -(void) didLoadState:(JotViewStateProxy *)state{
-    // noop
+    [NSThread performBlockOnMainThread:^{
+        @synchronized(self){
+            if(!targetIsLoadedState){
+                NSLog(@"haha what3");
+            }
+            isLoadingState = NO;
+            if(targetIsLoadedState){
+                [contentView addSubview:drawableView];
+                thumbnailView.hidden = YES;
+                if(drawableViewState){
+                    [drawableView loadState:drawableViewState];
+                }
+                
+                // nothing changed in our goals since we started
+                // to load state, so notify our delegate
+                [self.delegate didLoadScrapViewState:self];
+            }else{
+                // when loading state, we were actually
+                // told that we didn't really need the
+                // state after all, so just throw it away :(
+                [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];
+                [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
+                drawableViewState = nil;
+                drawableView = nil;
+            }
+        }
+    }];
 }
 
 -(void) didUnloadState:(JotViewStateProxy *)state{
@@ -623,12 +643,17 @@ static dispatch_queue_t importExportScrapStateQueue;
 
 -(void) dealloc{
     if(self.isScrapStateLoaded){
-        NSLog(@"what");
+        if(drawableView){
+            [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
+        }
+        if(drawableViewState){
+            [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];
+        }
     }
 //    NSLog(@"scrap state (%@) dealloc", uuid);
     [[MMLoadImageCache sharedInstance] clearCacheForPath:self.thumbImageFile];
 //    dispatch_release(importExportScrapStateQueue); ARC handles this
-    importExportScrapStateQueue = nil;
+//    importExportScrapStateQueue = nil;
 }
 
 @end
