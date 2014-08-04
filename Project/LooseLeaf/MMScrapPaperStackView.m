@@ -1229,9 +1229,6 @@ int skipAll = NO;
         CGPoint tnp = np1;
         np1 = np2;
         np2 = tnp;
-        NSLog(@"panAndPinchScrapGesture2 %p owned scrap %p", panAndPinchScrapGesture2, scrap);
-    }else{
-        NSLog(@"panAndPinchScrapGesture %p owned scrap %p", panAndPinchScrapGesture, scrap);
     }
     
     [self logOutputGestureTouchOwnership:@"before gesture 1" gesture:panScrapGesture1];
