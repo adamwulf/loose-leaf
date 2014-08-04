@@ -297,28 +297,45 @@
                }
            }
 
-           [UIView animateWithDuration:0.2
-                                 delay:0 options:UIViewAnimationOptionBeginFromCurrentState
-                            animations:^{
-                                papersIcon.alpha = papersIconAlpha;
-                                paperIcon.alpha = paperIconAlpha;
-                                leftArrow.alpha = leftArrowAlpha;
-                                plusIcon.alpha = plusIconAlpha;
-                                rightArrow.alpha = rightArrowAlpha;
-                            }
-                            completion:nil];
+           if(papersIcon.alpha == papersIconAlpha &&
+              paperIcon.alpha == paperIconAlpha &&
+              leftArrow.alpha == leftArrowAlpha &&
+              plusIcon.alpha == plusIconAlpha &&
+              rightArrow.alpha == rightArrowAlpha){
+//               NSLog(@"duplicate animation");
+           }else{
+               [UIView animateWithDuration:0.2
+                                     delay:0 options:UIViewAnimationOptionBeginFromCurrentState
+                                animations:^{
+                                    papersIcon.alpha = papersIconAlpha;
+                                    paperIcon.alpha = paperIconAlpha;
+                                    leftArrow.alpha = leftArrowAlpha;
+                                    plusIcon.alpha = plusIconAlpha;
+                                    rightArrow.alpha = rightArrowAlpha;
+                                }
+                                completion:nil];
+           }
        }else if(!showLeftArrow && !showRightArrow && (paperIcon.alpha || papersIcon.alpha)){
-           [UIView animateWithDuration:0.3
-                                 delay:0
-                               options:UIViewAnimationOptionBeginFromCurrentState
-                            animations:^{
-                                papersIcon.alpha = 0;
-                                paperIcon.alpha = 0;
-                                leftArrow.alpha = 0;
-                                plusIcon.alpha = 0;
-                                rightArrow.alpha = 0;
-                            }
-                            completion:nil];
+           if(papersIcon.alpha == 0 &&
+              paperIcon.alpha == 0 &&
+              leftArrow.alpha == 0 &&
+              plusIcon.alpha == 0 &&
+              rightArrow.alpha == 0){
+               //               NSLog(@"duplicate animation");
+           }else{
+               
+               [UIView animateWithDuration:0.3
+                                     delay:0
+                                   options:UIViewAnimationOptionBeginFromCurrentState
+                                animations:^{
+                                    papersIcon.alpha = 0;
+                                    paperIcon.alpha = 0;
+                                    leftArrow.alpha = 0;
+                                    plusIcon.alpha = 0;
+                                    rightArrow.alpha = 0;
+                                }
+                                completion:nil];
+           }
        }
 }
 

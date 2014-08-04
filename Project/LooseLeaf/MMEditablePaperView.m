@@ -274,6 +274,10 @@ dispatch_queue_t importThumbnailQueue;
                                      onComplete(YES);
 //                                     NSLog(@"saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
                                  }else{
+                                     // NOTE!
+                                     // https://github.com/adamwulf/loose-leaf/issues/658
+                                     // it's important to anyone listening to us that they potentially
+                                     // wait for a pending save
                                      onComplete(NO);
 //                                     NSLog(@"duplicate saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
                                  }
