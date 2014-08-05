@@ -1117,6 +1117,8 @@ int skipAll = NO;
         [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[stretchScrapGesture validTouches] withAnchor:np];
         [panAndPinchScrapGesture2 begin];
     }else{
+//        NSLog(@"original properties was %@ or %@", stretchScrapGesture.startingPageForScrap, stretchScrapGesture.startingScrapProperties);
+
         // neither has a scrap, and i don't have enough touches to give it away
         [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:validTouches];
         [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:validTouches];
@@ -1124,16 +1126,31 @@ int skipAll = NO;
         // put the scrap back into the page
         [panAndPinchScrapGesture begin];
         [panAndPinchScrapGesture2 begin];
+
         scrap.layer.transform = startSkewTransform;
         [UIView setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
         // kill highlight since it's not being held
         scrap.selected = NO;
-        
-        if(![[visibleStackHolder peekSubview].scrapsOnPaperState isScrapVisible:scrap]){
+
+        // find the page that we'll drop the scrap on
+        MMUndoablePaperView* page = [visibleStackHolder peekSubview];
+        if([visibleStackHolder peekSubview].scrapsOnPaperState != scrap.state.scrapsOnPaperState){
+            // page doesn't own the scrap,
+            // so we need to clone it to the new page
+            // and update their undo stacks
+            MMScrapView* clonedScrap = [self cloneScrap:scrap toPage:page];
+            [page.scrapsOnPaperState showScrap:clonedScrap];
+            [page addUndoItemForAddedScrap:clonedScrap];
+            
+            // now update the undo stack of the owning page
+            [scrap removeFromSuperview];
+            [stretchScrapGesture.startingPageForScrap addUndoItemForRemovedScrap:scrap withProperties:stretchScrapGesture.startingScrapProperties];
+        }else if(![[visibleStackHolder peekSubview].scrapsOnPaperState isScrapVisible:scrap]){
             // the scrap was dropped by the stretch gesture,
             // so just add it back to the top page
-            [[visibleStackHolder peekSubview].scrapsOnPaperState showScrap:scrap];
-            [[visibleStackHolder peekSubview] saveToDisk];
+            [page.scrapsOnPaperState showScrap:scrap];
+            [page addUndoItemForScrap:scrap thatMovedFrom:stretchScrapGesture.startingScrapProperties to:[scrap propertiesDictionary]];
+            [page saveToDisk];
         }
     }
 }
