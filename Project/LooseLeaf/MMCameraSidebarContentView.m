@@ -165,6 +165,10 @@
             return NO;
         }
     }
+    if([aRow isKindOfClass:[MMFlipCameraButton class]]){
+        // don't reuse the flip button
+        return NO;
+    }
     return [super prepareRowForReuse:aRow forScrollView:scrollView];
 }
 
@@ -181,7 +185,6 @@
 #pragma mark - MMCamViewDelegate
 
 -(void) didTakePicture:(UIImage*)img{
-    debug_NSLog(@"got picture %p", img);
     [self.delegate pictureTakeWithCamera:img fromView:cameraRow];
 }
 

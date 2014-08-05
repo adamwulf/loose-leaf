@@ -763,7 +763,7 @@ struct SidebarButton{
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
     // dont start a new stroke if one already exists
     if([[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count] > 0){
-        debug_NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
+//        debug_NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
         return NO;
     }
     if([MMPageCacheManager sharedInstance].drawableView.state.currentStroke){
@@ -898,7 +898,7 @@ struct SidebarButton{
             settingsButton.selected = NO;
             break;
     }
-    debug_NSLog(@"jot status: %@", text);
+//    debug_NSLog(@"jot status: %@", text);
 }
 
 

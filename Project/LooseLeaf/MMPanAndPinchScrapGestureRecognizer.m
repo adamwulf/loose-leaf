@@ -269,10 +269,8 @@ struct TouchInterval{
     [ignoredTouches removeObjectsInSet:touches];
     [self touchesBegan:touches withEvent:nil];
     
-    
     [self.scrapDelegate ownershipOfTouches:[validTouches set] isGesture:self];
 
-    
     if([validTouches count] >= mmMinimumNumberOfScrapTouches){
         [self prepareGestureToBeginFresh];
     }else{

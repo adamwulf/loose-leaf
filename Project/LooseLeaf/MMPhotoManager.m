@@ -294,6 +294,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
 
 
 -(void) showErrorAboutUserNeedingToGivePermission{
+    // TODO: https://github.com/adamwulf/loose-leaf/issues/671
     debug_NSLog(@"user needs to grant permission to photo library");
 }
 

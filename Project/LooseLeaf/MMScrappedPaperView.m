@@ -1016,7 +1016,7 @@
 }
 
 -(void) saveToDisk:(void (^)(BOOL))onComplete{
-    debug_NSLog(@"asking %@ to save to disk at %lu", self.uuid, (unsigned long)self.drawableView.undoHash);
+//    debug_NSLog(@"asking %@ to save to disk at %lu", self.uuid, (unsigned long)self.drawableView.undoHash);
     //
     // for now, I will always save the entire page to disk.
     // the JotView will optimize its part away, but the
@@ -1154,7 +1154,7 @@
 }
 
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context{
-    debug_NSLog(@"asking %@ to load state", self.uuid);
+//    debug_NSLog(@"asking %@ to load state", self.uuid);
     [super loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
     if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
         [scrapsOnPaperState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
@@ -1164,7 +1164,7 @@
 }
 
 -(void) unloadState{
-    debug_NSLog(@"asking %@ to unload", self.uuid);
+//    debug_NSLog(@"asking %@ to unload", self.uuid);
     [super unloadState];
     MMScrapsOnPaperState* strongScrapState = scrapsOnPaperState;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {

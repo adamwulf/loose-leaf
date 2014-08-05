@@ -315,11 +315,11 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 -(void) scrapVisibilityWasUpdated:(MMScrapView*)scrap{
-    if(scrap.superview != delegate.scrapContainerView){
-        debug_NSLog(@"scrap %@ is invisible, state loaded: %d", scrap.uuid, [self isStateLoaded] || isLoading);
-    }else{
-        debug_NSLog(@"scrap %@ is visible, state loaded: %d", scrap.uuid, [self isStateLoaded] || isLoading);
-    }
+//    if(scrap.superview != delegate.scrapContainerView){
+//        debug_NSLog(@"scrap %@ is invisible, state loaded: %d", scrap.uuid, [self isStateLoaded] || isLoading);
+//    }else{
+//        debug_NSLog(@"scrap %@ is visible, state loaded: %d", scrap.uuid, [self isStateLoaded] || isLoading);
+//    }
     if([self isStateLoaded] && !isLoading && !isUnloading){
         // something changed w/ scrap visibility
         // we only care if we're fully loaded, not if
