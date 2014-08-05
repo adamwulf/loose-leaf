@@ -168,7 +168,6 @@
         // this scrap was owned by this page and added back from a tap on the bezel
         scrap = scrapFromBezel;
     }
-    NSLog(@"adding undo item for %@", scrap.uuid);
     [self.undoRedoManager addUndoItem:[MMUndoRedoAddScrapFromBezelItem itemForPage:self andScrapUUID:scrap.uuid andProperties:[scrap propertiesDictionary]]];
 }
 
