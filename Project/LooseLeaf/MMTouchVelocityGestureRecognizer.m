@@ -66,12 +66,12 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
 #pragma mark - Notify When Touches Die
 
 -(void) pleaseNotifyMeWhenTouchesDie:(UIGestureRecognizer<MMTouchLifeCycleDelegate>*)obj{
-    debug_NSLog(@"%@ asked to be notified of touch lifecycle", obj);
+//    debug_NSLog(@"%@ asked to be notified of touch lifecycle", obj);
     [notifyTheseWhenTouchDies addObject:obj];
 }
 
 -(void) stopNotifyingMeWhenTouchesDie:(UIGestureRecognizer<MMTouchLifeCycleDelegate>*)obj{
-    debug_NSLog(@"%@ asked to NOT be notified of touch lifecycle", obj);
+//    debug_NSLog(@"%@ asked to NOT be notified of touch lifecycle", obj);
     [notifyTheseWhenTouchDies removeObject:obj];
 }
 

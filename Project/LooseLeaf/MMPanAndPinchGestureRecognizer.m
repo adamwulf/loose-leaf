@@ -126,7 +126,7 @@
 #pragma mark - MMTouchLifeCycleDelegate
 
 -(void) touchesDidDie:(NSSet *)touches{
-    debug_NSLog(@"%@ told that %i touches have died", self, [touches count]);
+//    debug_NSLog(@"%@ told that %i touches have died", self, [touches count]);
     [self touchesEnded:touches withEvent:nil];
     if(![possibleTouches count] && ![validTouches count] && ![ignoredTouches count]){
         // don't ask for touch info anymore.
@@ -143,7 +143,7 @@
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     if(gesture != self){
         [[MMTouchVelocityGestureRecognizer sharedInstace] pleaseNotifyMeWhenTouchesDie:self];
-        debug_NSLog(@"%@ was told that %@ owns %i touches", [self description], [gesture description], [touches count]);
+//        debug_NSLog(@"%@ was told that %@ owns %i touches", [self description], [gesture description], [touches count]);
         __block BOOL touchesWereStolen = NO;
         [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
             if([possibleTouches containsObject:touch] || [validTouches containsObject:touch]){
@@ -458,7 +458,7 @@
     if(![scrapDelegate isAllowedToPan]){
         // we're not allowed to pan, so ignore all touches
         if([possibleTouches count]){
-            debug_NSLog(@"%@ might begin, but isn't allowed", [self description]);
+//            debug_NSLog(@"%@ might begin, but isn't allowed", [self description]);
         }
         [ignoredTouches addObjectsInSet:[possibleTouches set]];
         [possibleTouches removeAllObjects];

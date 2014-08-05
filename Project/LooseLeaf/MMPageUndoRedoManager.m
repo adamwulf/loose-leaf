@@ -38,6 +38,7 @@
 }
 
 -(void) addUndoItem:(NSObject<MMUndoRedoItem>*)item{
+    NSLog(@"adding undo item: %@", item);
     @synchronized(self){
         BOOL needsLoad = !isLoaded;
         if(needsLoad){
