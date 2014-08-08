@@ -53,6 +53,17 @@
     [delegate didShare];
 }
 
+#pragma mark - Notification
+
+-(void) updateButtonGreyscale{
+    if([MFMailComposeViewController canSendMail]) {
+        button.greyscale = NO;
+    }else{
+        button.greyscale = YES;
+    }
+    [button setNeedsDisplay];
+}
+
 #pragma mark - MFMailComposeViewControllerDelegate
 
 -(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
@@ -73,17 +84,6 @@
                                                                  kMPEventExportPropResult : strResult}];
     
     [[[[UIApplication sharedApplication] keyWindow] rootViewController] dismissViewControllerAnimated:YES completion:nil];
-}
-
-#pragma mark - Notification
-
--(void) updateButtonGreyscale{
-    if([MFMailComposeViewController canSendMail]) {
-        button.greyscale = NO;
-    }else{
-        button.greyscale = YES;
-    }
-    [button setNeedsDisplay];
 }
 
 #pragma mark - Dealloc

@@ -75,6 +75,9 @@
 		66524509199575A900C36609 /* MMTextShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 66524508199575A900C36609 /* MMTextShareItem.m */; };
 		6652450B199576E400C36609 /* text.png in Resources */ = {isa = PBXBuildFile; fileRef = 6652450A199576E400C36609 /* text.png */; };
 		6652450D199576E800C36609 /* text@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6652450C199576E800C36609 /* text@2x.png */; };
+		6652451019957AD600C36609 /* MMTwitterShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6652450F19957AD600C36609 /* MMTwitterShareItem.m */; };
+		66524512199583B600C36609 /* twitterLarge@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66524511199583B600C36609 /* twitterLarge@2x.png */; };
+		665245141995844D00C36609 /* twitterLarge.png in Resources */ = {isa = PBXBuildFile; fileRef = 665245131995844D00C36609 /* twitterLarge.png */; };
 		6653B8A9195CC7AD001C6E15 /* Documents in Resources */ = {isa = PBXBuildFile; fileRef = 6653B8A8195CC7AD001C6E15 /* Documents */; };
 		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
 		665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665C592D17BD7692006DECBF /* Accelerate.framework */; };
@@ -365,6 +368,10 @@
 		66524508199575A900C36609 /* MMTextShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTextShareItem.m; sourceTree = "<group>"; };
 		6652450A199576E400C36609 /* text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = text.png; sourceTree = "<group>"; };
 		6652450C199576E800C36609 /* text@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text@2x.png"; sourceTree = "<group>"; };
+		6652450E19957AD600C36609 /* MMTwitterShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTwitterShareItem.h; sourceTree = "<group>"; };
+		6652450F19957AD600C36609 /* MMTwitterShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTwitterShareItem.m; sourceTree = "<group>"; };
+		66524511199583B600C36609 /* twitterLarge@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "twitterLarge@2x.png"; sourceTree = "<group>"; };
+		665245131995844D00C36609 /* twitterLarge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = twitterLarge.png; sourceTree = "<group>"; };
 		6653B8A8195CC7AD001C6E15 /* Documents */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Documents; path = "../../new-user-content.xcappdata/AppData/Documents"; sourceTree = "<group>"; };
 		6655E924176291C800E4F36A /* MMScissorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScissorButton.h; sourceTree = "<group>"; };
 		6655E925176291C800E4F36A /* MMScissorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorButton.m; sourceTree = "<group>"; };
@@ -1017,6 +1024,8 @@
 		6650DD1018F4842E00ADF591 /* photo album */ = {
 			isa = PBXGroup;
 			children = (
+				66524511199583B600C36609 /* twitterLarge@2x.png */,
+				665245131995844D00C36609 /* twitterLarge.png */,
 				6652450A199576E400C36609 /* text.png */,
 				6652450C199576E800C36609 /* text@2x.png */,
 				665244FD1995673900C36609 /* email.png */,
@@ -1071,6 +1080,8 @@
 				6652450219956DFA00C36609 /* MMEmailShareItem.m */,
 				66524507199575A900C36609 /* MMTextShareItem.h */,
 				66524508199575A900C36609 /* MMTextShareItem.m */,
+				6652450E19957AD600C36609 /* MMTwitterShareItem.h */,
+				6652450F19957AD600C36609 /* MMTwitterShareItem.m */,
 				665245051995721C00C36609 /* MMShareItemDelegate.h */,
 			);
 			name = "Share Items";
@@ -1857,6 +1868,7 @@
 			files = (
 				6650DD1418F4843D00ADF591 /* photoalbum.png in Resources */,
 				6650DD2518F491B700ADF591 /* evernote.png in Resources */,
+				66524512199583B600C36609 /* twitterLarge@2x.png in Resources */,
 				66DCFB951581BCEF00B4918C /* InfoPlist.strings in Resources */,
 				6650DD1218F4843400ADF591 /* photoalbum@2x.png in Resources */,
 				66684B40182DAAC0005A27B4 /* UIColorWithHex.license in Resources */,
@@ -1879,6 +1891,7 @@
 				667D98AA192D010900625879 /* Loose-Leaf_76.png in Resources */,
 				666E253418F5DDFD00C17295 /* clearphotoalbum@2x.png in Resources */,
 				6650DD1F18F48E4200ADF591 /* twitter@2x.png in Resources */,
+				665245141995844D00C36609 /* twitterLarge.png in Resources */,
 				665244FF1995673900C36609 /* email.png in Resources */,
 				6652450D199576E800C36609 /* text@2x.png in Resources */,
 				6650DD2118F48F7F00ADF591 /* facebook.png in Resources */,
@@ -1956,6 +1969,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				66A790B9196898A90037F01A /* MMUndoRedoGroupItem.m in Sources */,
+				6652451019957AD600C36609 /* MMTwitterShareItem.m in Sources */,
 				66DCFB971581BCEF00B4918C /* main.m in Sources */,
 				66DCFB9B1581BCEF00B4918C /* MMAppDelegate.m in Sources */,
 				6650DD1718F4849800ADF591 /* MMImageViewButton.m in Sources */,

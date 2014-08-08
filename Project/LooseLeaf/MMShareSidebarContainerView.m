@@ -10,6 +10,7 @@
 #import "MMImageViewButton.h"
 #import "MMEmailShareItem.h"
 #import "MMTextShareItem.h"
+#import "MMTwitterShareItem.h"
 #import "Constants.h"
 
 @implementation MMShareSidebarContainerView{
@@ -44,11 +45,12 @@
         
         [shareItems addObject:[[MMEmailShareItem alloc] init]];
         [shareItems addObject:[[MMTextShareItem alloc] init]];
+        [shareItems addObject:[[MMTwitterShareItem alloc] init]];
         [shareItems addObject:[[MMEmailShareItem alloc] init]];
         [shareItems addObject:[[MMTextShareItem alloc] init]];
+        [shareItems addObject:[[MMTwitterShareItem alloc] init]];
         [shareItems addObject:[[MMEmailShareItem alloc] init]];
         [shareItems addObject:[[MMTextShareItem alloc] init]];
-        [shareItems addObject:[[MMEmailShareItem alloc] init]];
         
         
         int buttonIndex = 0;
