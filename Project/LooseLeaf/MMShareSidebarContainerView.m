@@ -11,6 +11,7 @@
 #import "MMEmailShareItem.h"
 #import "MMTextShareItem.h"
 #import "MMTwitterShareItem.h"
+#import "MMFacebookShareItem.h"
 #import "Constants.h"
 
 @implementation MMShareSidebarContainerView{
@@ -46,11 +47,19 @@
         [shareItems addObject:[[MMEmailShareItem alloc] init]];
         [shareItems addObject:[[MMTextShareItem alloc] init]];
         [shareItems addObject:[[MMTwitterShareItem alloc] init]];
+        [shareItems addObject:[[MMFacebookShareItem alloc] init]];
         [shareItems addObject:[[MMEmailShareItem alloc] init]];
         [shareItems addObject:[[MMTextShareItem alloc] init]];
         [shareItems addObject:[[MMTwitterShareItem alloc] init]];
+        [shareItems addObject:[[MMFacebookShareItem alloc] init]];
         [shareItems addObject:[[MMEmailShareItem alloc] init]];
         [shareItems addObject:[[MMTextShareItem alloc] init]];
+        
+        NSString *language = [[NSLocale preferredLanguages] objectAtIndex:0];
+        if([language hasPrefix:@"zh"]){
+            NSLog(@"current lang: %@", language);
+            // weibo enabled
+        }
         
         
         int buttonIndex = 0;

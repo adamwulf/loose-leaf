@@ -78,6 +78,7 @@
 		6652451019957AD600C36609 /* MMTwitterShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6652450F19957AD600C36609 /* MMTwitterShareItem.m */; };
 		66524512199583B600C36609 /* twitterLarge@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66524511199583B600C36609 /* twitterLarge@2x.png */; };
 		665245141995844D00C36609 /* twitterLarge.png in Resources */ = {isa = PBXBuildFile; fileRef = 665245131995844D00C36609 /* twitterLarge.png */; };
+		66524517199587A700C36609 /* MMFacebookShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 66524516199587A700C36609 /* MMFacebookShareItem.m */; };
 		6653B8A9195CC7AD001C6E15 /* Documents in Resources */ = {isa = PBXBuildFile; fileRef = 6653B8A8195CC7AD001C6E15 /* Documents */; };
 		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
 		665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665C592D17BD7692006DECBF /* Accelerate.framework */; };
@@ -372,6 +373,8 @@
 		6652450F19957AD600C36609 /* MMTwitterShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTwitterShareItem.m; sourceTree = "<group>"; };
 		66524511199583B600C36609 /* twitterLarge@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "twitterLarge@2x.png"; sourceTree = "<group>"; };
 		665245131995844D00C36609 /* twitterLarge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = twitterLarge.png; sourceTree = "<group>"; };
+		66524515199587A700C36609 /* MMFacebookShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFacebookShareItem.h; sourceTree = "<group>"; };
+		66524516199587A700C36609 /* MMFacebookShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFacebookShareItem.m; sourceTree = "<group>"; };
 		6653B8A8195CC7AD001C6E15 /* Documents */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Documents; path = "../../new-user-content.xcappdata/AppData/Documents"; sourceTree = "<group>"; };
 		6655E924176291C800E4F36A /* MMScissorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScissorButton.h; sourceTree = "<group>"; };
 		6655E925176291C800E4F36A /* MMScissorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorButton.m; sourceTree = "<group>"; };
@@ -1082,6 +1085,8 @@
 				66524508199575A900C36609 /* MMTextShareItem.m */,
 				6652450E19957AD600C36609 /* MMTwitterShareItem.h */,
 				6652450F19957AD600C36609 /* MMTwitterShareItem.m */,
+				66524515199587A700C36609 /* MMFacebookShareItem.h */,
+				66524516199587A700C36609 /* MMFacebookShareItem.m */,
 				665245051995721C00C36609 /* MMShareItemDelegate.h */,
 			);
 			name = "Share Items";
@@ -2118,6 +2123,7 @@
 				66510838178DFEE700A7A7DD /* MMRulerView.m in Sources */,
 				666E254518F60F3E00C17295 /* MMAlbumSidebarContentView.m in Sources */,
 				66510835178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m in Sources */,
+				66524517199587A700C36609 /* MMFacebookShareItem.m in Sources */,
 				6693C94618E4BCD90054FF41 /* MMSlidingSidebarView.m in Sources */,
 				66CE120017D2772400882275 /* MMScrapBorderView.m in Sources */,
 				666E255918F89B1B00C17295 /* MMBorderedCamView.m in Sources */,
