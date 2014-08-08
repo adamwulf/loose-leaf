@@ -53,6 +53,10 @@
     [delegate didShare];
 }
 
+-(BOOL) isAtAllPossible{
+    return YES;
+}
+
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{

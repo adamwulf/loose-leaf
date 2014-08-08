@@ -12,16 +12,13 @@
 #import "MMTextShareItem.h"
 #import "MMTwitterShareItem.h"
 #import "MMFacebookShareItem.h"
+#import "MMSinaWeiboShareItem.h"
+#import "NSThread+BlockAdditions.h"
 #import "Constants.h"
 
 @implementation MMShareSidebarContainerView{
-    
+    UIView* buttonView;
     NSMutableArray* shareItems;
-    
-    MMImageViewButton* facebookShareButton;
-    MMImageViewButton* twitterShareButton;
-    MMImageViewButton* evernoteShareButton;
-    MMImageViewButton* emailShareButton;
 }
 
 @synthesize shareDelegate;
@@ -29,18 +26,34 @@
 - (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton *)_button animateFromLeft:(BOOL)fromLeft{
     if (self = [super initWithFrame:frame forButton:_button animateFromLeft:fromLeft]) {
         // Initialization code
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateShareOptions)
+                                                     name:UIApplicationDidBecomeActiveNotification object:nil];
+        
+        buttonView = [[UIView alloc] initWithFrame:[sidebarContentView contentBounds]];
+        [sidebarContentView addSubview:buttonView];
+
+        [self updateShareOptions];
+        
+    }
+    return self;
+}
+
+-(void) updateShareOptions{
+    [NSThread performBlockOnMainThread:^{
+        [buttonView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        
         CGRect contentBounds = [sidebarContentView contentBounds];
         
-        CGFloat buttonWidth = contentBounds.size.width - kWidthOfSidebarButtonBuffer; // four buffers (3 between, and 1 on the right side)
+        CGFloat buttonWidth = buttonView.bounds.size.width - kWidthOfSidebarButtonBuffer; // four buffers (3 between, and 1 on the right side)
         buttonWidth /= 4; // four buttons wide
         
-        CGRect buttonBounds = contentBounds;
+        CGRect buttonBounds = buttonView.bounds;
         buttonBounds.origin.y = [UIApplication sharedApplication].statusBarFrame.size.height + kWidthOfSidebarButtonBuffer;
         buttonBounds.size.height = buttonWidth + kWidthOfSidebarButtonBuffer; // includes spacing buffer
         
         contentBounds.origin.y = buttonBounds.origin.y + buttonBounds.size.height;
         contentBounds.size.height -= buttonBounds.size.height;
-        
         
         shareItems = [NSMutableArray array];
         
@@ -48,10 +61,12 @@
         [shareItems addObject:[[MMTextShareItem alloc] init]];
         [shareItems addObject:[[MMTwitterShareItem alloc] init]];
         [shareItems addObject:[[MMFacebookShareItem alloc] init]];
+        [shareItems addObject:[[MMSinaWeiboShareItem alloc] init]];
         [shareItems addObject:[[MMEmailShareItem alloc] init]];
         [shareItems addObject:[[MMTextShareItem alloc] init]];
         [shareItems addObject:[[MMTwitterShareItem alloc] init]];
         [shareItems addObject:[[MMFacebookShareItem alloc] init]];
+        [shareItems addObject:[[MMSinaWeiboShareItem alloc] init]];
         [shareItems addObject:[[MMEmailShareItem alloc] init]];
         [shareItems addObject:[[MMTextShareItem alloc] init]];
         
@@ -61,46 +76,23 @@
             // weibo enabled
         }
         
-        
         int buttonIndex = 0;
         for(MMEmailShareItem* item in shareItems){
-            item.delegate = self;
-            
-            MMSidebarButton* button = item.button;
-            int column = (buttonIndex%4);
-            int row = floor(buttonIndex / 4.0);
-            button.frame = CGRectMake(buttonBounds.origin.x + column*(buttonWidth),
-                                      buttonBounds.origin.y + row*(buttonWidth),
-                                      buttonWidth, buttonWidth);
-            [sidebarContentView addSubview:button];
-
-            buttonIndex += 1;
+            if(item.isAtAllPossible){
+                item.delegate = self;
+                
+                MMSidebarButton* button = item.button;
+                int column = (buttonIndex%4);
+                int row = floor(buttonIndex / 4.0);
+                button.frame = CGRectMake(buttonBounds.origin.x + column*(buttonWidth),
+                                          buttonBounds.origin.y + row*(buttonWidth),
+                                          buttonWidth, buttonWidth);
+                [buttonView addSubview:button];
+                
+                buttonIndex += 1;
+            }
         }
-        
-        
-//        emailShareButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x,
-//                                                                               buttonBounds.origin.y, buttonWidth, buttonWidth)];
-//        [emailShareButton setImage:[UIImage imageNamed:@"email"]];
-//
-//        facebookShareButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x, buttonBounds.origin.y,
-//                                                                                 buttonWidth, buttonWidth)];
-//        [facebookShareButton setImage:[UIImage imageNamed:@"facebook"]];
-//        [sidebarContentView addSubview:facebookShareButton];
-//
-//        twitterShareButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 2*(kWidthOfSidebarButtonBuffer + buttonWidth),
-//                                                                                 buttonBounds.origin.y, buttonWidth, buttonWidth)];
-//        [twitterShareButton setImage:[UIImage imageNamed:@"twitter"]];
-//        [sidebarContentView addSubview:twitterShareButton];
-//
-//
-//        evernoteShareButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 3*(kWidthOfSidebarButtonBuffer + buttonWidth),
-//                                                                                  buttonBounds.origin.y, buttonWidth, buttonWidth)];
-//        [evernoteShareButton setImage:[UIImage imageNamed:@"evernote"]];
-//        [sidebarContentView addSubview:evernoteShareButton];
-        
-        emailShareButton.greyscale = YES;
-    }
-    return self;
+    }];
 }
 
 #pragma mark - Rotation
@@ -128,6 +120,12 @@
 
 -(void) didShare{
     [shareDelegate didShare];
+}
+
+#pragma mark - Dealloc
+
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

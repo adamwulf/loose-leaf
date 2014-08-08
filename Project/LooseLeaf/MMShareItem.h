@@ -16,4 +16,6 @@
 
 -(MMSidebarButton*) button;
 
+-(BOOL) isAtAllPossible;
+
 @end

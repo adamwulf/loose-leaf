@@ -1,12 +1,12 @@
 //
-//  MMTwitterShareItem.m
+//  MMSinaWeiboShareItem.m
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 8/8/14.
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMTwitterShareItem.h"
+#import "MMSinaWeiboShareItem.h"
 #import "MMImageViewButton.h"
 #import "Mixpanel.h"
 #import "Constants.h"
@@ -14,7 +14,7 @@
 #import <Social/Social.h>
 #import <Accounts/Accounts.h>
 
-@implementation MMTwitterShareItem{
+@implementation MMSinaWeiboShareItem{
     MMImageViewButton* button;
 }
 
@@ -23,7 +23,7 @@
 -(id) init{
     if(self = [super init]){
         button = [[MMImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        [button setImage:[UIImage imageNamed:@"twitterLarge"]];
+        [button setImage:[UIImage imageNamed:@"sinaWeibo"]];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(updateButtonGreyscale)
@@ -41,11 +41,12 @@
 }
 
 -(void) performShareAction{
-    SLComposeViewController *tweetSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
-    if(tweetSheet){
-        [tweetSheet setInitialText:@"Quick sketch drawn in Loose Leaf @getlooseleaf"];
-        [tweetSheet addImage:self.delegate.imageToShare];
-        tweetSheet.completionHandler = ^(SLComposeViewControllerResult result){
+    SLComposeViewController *fbSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeSinaWeibo];
+    if(fbSheet){
+        [fbSheet setInitialText:@"Quick sketch drawn in Loose Leaf"];
+        [fbSheet addImage:self.delegate.imageToShare];
+        [fbSheet addURL:[NSURL URLWithString:@"http://getlooseleaf.com"]];
+        fbSheet.completionHandler = ^(SLComposeViewControllerResult result){
             NSString* strResult;
             if(result == SLComposeViewControllerResultCancelled){
                 strResult = @"Cancelled";
@@ -55,24 +56,24 @@
             if(result == SLComposeViewControllerResultDone){
                 [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
             }
-            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Twitter",
+            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"SinaWeibo",
                                                                          kMPEventExportPropResult : strResult}];
         };
         
-        [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:tweetSheet animated:YES completion:nil];
+        [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:fbSheet animated:YES completion:nil];
     }
 
     [delegate didShare];
 }
 
 -(BOOL) isAtAllPossible{
-    return [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter] != nil;
+    return [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeSinaWeibo] != nil;
 }
 
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
+    if([SLComposeViewController isAvailableForServiceType:SLServiceTypeSinaWeibo]) {
         button.greyscale = NO;
     }else{
         button.greyscale = YES;

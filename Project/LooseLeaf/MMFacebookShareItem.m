@@ -42,35 +42,32 @@
 
 -(void) performShareAction{
     SLComposeViewController *fbSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook];
-    [fbSheet setInitialText:@"Quick sketch drawn in Loose Leaf"];
-    [fbSheet addImage:self.delegate.imageToShare];
-    [fbSheet addURL:[NSURL URLWithString:@"http://getlooseleaf.com"]];
-    fbSheet.completionHandler = ^(SLComposeViewControllerResult result){
-        NSString* strResult;
-        if(result == SLComposeViewControllerResultCancelled){
-            strResult = @"Cancelled";
-        }else if(result == SLComposeViewControllerResultDone){
-            strResult = @"Sent";
-        }
-        if(result == SLComposeViewControllerResultDone){
-            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
-        }
-        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Facebook",
-                                                                     kMPEventExportPropResult : strResult}];
-    };
-    
-    [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:fbSheet animated:YES completion:nil];
-    
+    if(fbSheet){
+        [fbSheet setInitialText:@"Quick sketch drawn in Loose Leaf"];
+        [fbSheet addImage:self.delegate.imageToShare];
+        [fbSheet addURL:[NSURL URLWithString:@"http://getlooseleaf.com"]];
+        fbSheet.completionHandler = ^(SLComposeViewControllerResult result){
+            NSString* strResult;
+            if(result == SLComposeViewControllerResultCancelled){
+                strResult = @"Cancelled";
+            }else if(result == SLComposeViewControllerResultDone){
+                strResult = @"Sent";
+            }
+            if(result == SLComposeViewControllerResultDone){
+                [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+            }
+            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Facebook",
+                                                                         kMPEventExportPropResult : strResult}];
+        };
+        
+        [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:fbSheet animated:YES completion:nil];
+    }
+
     [delegate didShare];
 }
 
-- (void)dismissKeyboard{
-    UITextField *tempTextField = [[UITextField alloc] initWithFrame:CGRectZero];
-    tempTextField.enabled = NO;
-    [[[[UIApplication sharedApplication] keyWindow] rootViewController].view addSubview:tempTextField];
-    [tempTextField becomeFirstResponder];
-    [tempTextField resignFirstResponder];
-    [tempTextField removeFromSuperview];
+-(BOOL) isAtAllPossible{
+    return [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook] != nil;
 }
 
 #pragma mark - Notification
