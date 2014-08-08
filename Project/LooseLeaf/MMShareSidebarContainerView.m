@@ -21,6 +21,8 @@
     MMImageViewButton* emailShareButton;
 }
 
+@synthesize shareDelegate;
+
 - (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton *)_button animateFromLeft:(BOOL)fromLeft{
     if (self = [super initWithFrame:frame forButton:_button animateFromLeft:fromLeft]) {
         // Initialization code
@@ -50,6 +52,8 @@
         
         int buttonIndex = 0;
         for(MMEmailShareItem* item in shareItems){
+            item.delegate = self;
+            
             MMSidebarButton* button = item.button;
             int column = (buttonIndex%4);
             int row = floor(buttonIndex / 4.0);
@@ -102,6 +106,16 @@
 //    }else if(!pdfListContentView.hidden){
 //        [pdfListContentView updatePhotoRotation:YES];
 //    }
+}
+
+#pragma mark - MMShareItemDelegate
+
+-(UIImage*) imageToShare{
+    return shareDelegate.imageToShare;
+}
+
+-(void) didShare{
+    [shareDelegate didShare];
 }
 
 @end

@@ -7,10 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <MessageUI/MessageUI.h>
 #import "MMSidebarButton.h"
+#import "MMShareItemDelegate.h"
+#import "MMShareItem.h"
 
-@interface MMEmailShareItem : NSObject
+@interface MMEmailShareItem : NSObject<MMShareItem,MFMailComposeViewControllerDelegate>
 
--(MMSidebarButton*) button;
 
 @end

@@ -356,6 +356,8 @@
 		665244FE1995673900C36609 /* email@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "email@2x.png"; sourceTree = "<group>"; };
 		6652450119956DFA00C36609 /* MMEmailShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEmailShareItem.h; sourceTree = "<group>"; };
 		6652450219956DFA00C36609 /* MMEmailShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEmailShareItem.m; sourceTree = "<group>"; };
+		665245051995721C00C36609 /* MMShareItemDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShareItemDelegate.h; sourceTree = "<group>"; };
+		66524506199573B100C36609 /* MMShareItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShareItem.h; sourceTree = "<group>"; };
 		6653B8A8195CC7AD001C6E15 /* Documents */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Documents; path = "../../new-user-content.xcappdata/AppData/Documents"; sourceTree = "<group>"; };
 		6655E924176291C800E4F36A /* MMScissorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScissorButton.h; sourceTree = "<group>"; };
 		6655E925176291C800E4F36A /* MMScissorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorButton.m; sourceTree = "<group>"; };
@@ -1052,6 +1054,17 @@
 			name = "Memory Profiling";
 			sourceTree = "<group>";
 		};
+		6652450419956FC800C36609 /* Share Items */ = {
+			isa = PBXGroup;
+			children = (
+				66524506199573B100C36609 /* MMShareItem.h */,
+				6652450119956DFA00C36609 /* MMEmailShareItem.h */,
+				6652450219956DFA00C36609 /* MMEmailShareItem.m */,
+				665245051995721C00C36609 /* MMShareItemDelegate.h */,
+			);
+			name = "Share Items";
+			sourceTree = "<group>";
+		};
 		6653B8A7195CC79A001C6E15 /* Default user content */ = {
 			isa = PBXGroup;
 			children = (
@@ -1482,10 +1495,9 @@
 		66B42FBD19955A2C005D8214 /* Share Sidebar */ = {
 			isa = PBXGroup;
 			children = (
+				6652450419956FC800C36609 /* Share Items */,
 				66B42FBE19955A47005D8214 /* MMShareSidebarContainerView.h */,
 				66B42FBF19955A47005D8214 /* MMShareSidebarContainerView.m */,
-				6652450119956DFA00C36609 /* MMEmailShareItem.h */,
-				6652450219956DFA00C36609 /* MMEmailShareItem.m */,
 			);
 			name = "Share Sidebar";
 			sourceTree = "<group>";

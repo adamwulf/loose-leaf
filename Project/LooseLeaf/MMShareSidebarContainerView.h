@@ -7,8 +7,11 @@
 //
 
 #import "MMSlidingSidebarContainerView.h"
+#import "MMShareItemDelegate.h"
 
-@interface MMShareSidebarContainerView : MMSlidingSidebarContainerView
+@interface MMShareSidebarContainerView : MMSlidingSidebarContainerView<MMShareItemDelegate>
+
+@property (weak) NSObject<MMShareItemDelegate>* shareDelegate;
 
 -(void) updatePhotoRotation;
 
