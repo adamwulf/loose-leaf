@@ -379,25 +379,31 @@ static dispatch_queue_t importExportScrapStateQueue;
             [NSThread performBlockOnMainThread:^{
                 @synchronized(self){
                     if(!targetIsLoadedState){
-                        NSLog(@"haha what1");
+                        NSLog(@"saved building JotView we didn't need");
+                    }else{
+                        // add our drawable view to our contents
+                        drawableView = [[JotView alloc] initWithFrame:drawableBounds];
                     }
-                    // add our drawable view to our contents
-                    drawableView = [[JotView alloc] initWithFrame:drawableBounds];
                 }
                 dispatch_semaphore_signal(sema1);
             }];
 
             // load state, if we have any.
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-            if(!targetIsLoadedState){
-                NSLog(@"haha what2");
+            BOOL goalIsLoaded = NO;
+            @synchronized(self){
+                goalIsLoaded = targetIsLoadedState;
             }
-            // load drawable view information here
-            drawableViewState = [[JotViewStateProxy alloc] initWithDelegate:self];
-            [drawableViewState loadStateAsynchronously:async
-                                              withSize:[drawableView pagePixelSize]
-                                            andContext:[drawableView context]
-                                      andBufferManager:[[JotBufferManager alloc] init]];
+            if(!goalIsLoaded){
+                NSLog(@"saved building JotViewStateProxy we didn't need");
+            }else{
+                // load drawable view information here
+                drawableViewState = [[JotViewStateProxy alloc] initWithDelegate:self];
+                [drawableViewState loadStateAsynchronously:async
+                                                  withSize:[drawableView pagePixelSize]
+                                                andContext:[drawableView context]
+                                          andBufferManager:[[JotBufferManager alloc] init]];
+            }
             [lock unlock];
         }
     };
@@ -606,33 +612,48 @@ static dispatch_queue_t importExportScrapStateQueue;
 }
 
 -(void) didLoadState:(JotViewStateProxy *)state{
-    [NSThread performBlockOnMainThread:^{
-        @synchronized(self){
-            if(!targetIsLoadedState){
-                NSLog(@"haha what3");
-            }
-            isLoadingState = NO;
-            if(targetIsLoadedState){
-                [contentView addSubview:drawableView];
-                thumbnailView.hidden = YES;
-                if(drawableViewState){
-                    [drawableView loadState:drawableViewState];
-                }
-                
-                // nothing changed in our goals since we started
-                // to load state, so notify our delegate
-                [self.delegate didLoadScrapViewState:self];
-            }else{
-                // when loading state, we were actually
-                // told that we didn't really need the
-                // state after all, so just throw it away :(
+    @synchronized(self){
+        if(!targetIsLoadedState){
+            NSLog(@"loaded state we didn't need");
+            if(drawableViewState){
                 [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];
-                [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
-                drawableViewState = nil;
-                drawableView = nil;
             }
+            if(drawableView){
+                [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
+            }
+            drawableViewState = nil;
+            drawableView = nil;
+        }else{
+            [NSThread performBlockOnMainThread:^{
+                @synchronized(self){
+                    isLoadingState = NO;
+                    if(targetIsLoadedState){
+                        [contentView addSubview:drawableView];
+                        thumbnailView.hidden = YES;
+                        if(drawableViewState){
+                            [drawableView loadState:drawableViewState];
+                        }
+                        
+                        // nothing changed in our goals since we started
+                        // to load state, so notify our delegate
+                        [self.delegate didLoadScrapViewState:self];
+                    }else{
+                        // when loading state, we were actually
+                        // told that we didn't really need the
+                        // state after all, so just throw it away :(
+                        if(drawableViewState){
+                            [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];
+                        }
+                        if(drawableView){
+                            [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
+                        }
+                        drawableViewState = nil;
+                        drawableView = nil;
+                    }
+                }
+            }];
         }
-    }];
+    }
 }
 
 -(void) didUnloadState:(JotViewStateProxy *)state{
