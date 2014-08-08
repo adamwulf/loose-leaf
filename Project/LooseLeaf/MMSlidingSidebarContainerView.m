@@ -30,8 +30,6 @@
         // handle any touches not in the sidebar
         dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
         dismissButton.frame = self.bounds;
-        dismissButton.layer.borderColor = [UIColor redColor].CGColor;
-        dismissButton.layer.borderWidth = 10;
         [dismissButton addTarget:self action:@selector(sidebarCloseButtonWasTapped) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:dismissButton];
         
