@@ -29,6 +29,11 @@
     [self setNeedsDisplay];
 }
 
+-(void) setFrame:(CGRect)frame{
+    [super setFrame:frame];
+    [self setNeedsDisplay];
+}
+
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
@@ -83,7 +88,6 @@
     [self drawDropshadowIfSelected];
     
     [super drawRect:rect];
-
 }
 
 

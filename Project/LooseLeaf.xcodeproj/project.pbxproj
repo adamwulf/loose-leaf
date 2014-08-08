@@ -71,6 +71,7 @@
 		6651820A1937B57600CBEAB4 /* MMBackgroundTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 665182091937B57600CBEAB4 /* MMBackgroundTimer.m */; };
 		665244FF1995673900C36609 /* email.png in Resources */ = {isa = PBXBuildFile; fileRef = 665244FD1995673900C36609 /* email.png */; };
 		665245001995673900C36609 /* email@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 665244FE1995673900C36609 /* email@2x.png */; };
+		6652450319956DFA00C36609 /* MMEmailShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6652450219956DFA00C36609 /* MMEmailShareItem.m */; };
 		6653B8A9195CC7AD001C6E15 /* Documents in Resources */ = {isa = PBXBuildFile; fileRef = 6653B8A8195CC7AD001C6E15 /* Documents */; };
 		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
 		665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665C592D17BD7692006DECBF /* Accelerate.framework */; };
@@ -353,6 +354,8 @@
 		665182091937B57600CBEAB4 /* MMBackgroundTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBackgroundTimer.m; sourceTree = "<group>"; };
 		665244FD1995673900C36609 /* email.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = email.png; sourceTree = "<group>"; };
 		665244FE1995673900C36609 /* email@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "email@2x.png"; sourceTree = "<group>"; };
+		6652450119956DFA00C36609 /* MMEmailShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEmailShareItem.h; sourceTree = "<group>"; };
+		6652450219956DFA00C36609 /* MMEmailShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEmailShareItem.m; sourceTree = "<group>"; };
 		6653B8A8195CC7AD001C6E15 /* Documents */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Documents; path = "../../new-user-content.xcappdata/AppData/Documents"; sourceTree = "<group>"; };
 		6655E924176291C800E4F36A /* MMScissorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScissorButton.h; sourceTree = "<group>"; };
 		6655E925176291C800E4F36A /* MMScissorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorButton.m; sourceTree = "<group>"; };
@@ -1481,6 +1484,8 @@
 			children = (
 				66B42FBE19955A47005D8214 /* MMShareSidebarContainerView.h */,
 				66B42FBF19955A47005D8214 /* MMShareSidebarContainerView.m */,
+				6652450119956DFA00C36609 /* MMEmailShareItem.h */,
+				6652450219956DFA00C36609 /* MMEmailShareItem.m */,
 			);
 			name = "Share Sidebar";
 			sourceTree = "<group>";
@@ -2032,6 +2037,7 @@
 				66B51A2A17AC50F7005B5E09 /* MMBezelInGestureRecognizer.m in Sources */,
 				66DCFBDF1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m in Sources */,
 				6651820A1937B57600CBEAB4 /* MMBackgroundTimer.m in Sources */,
+				6652450319956DFA00C36609 /* MMEmailShareItem.m in Sources */,
 				667D98BE192FD37500625879 /* NSURL+UTI.m in Sources */,
 				6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */,
 				6648D21D178C9E5400BE3B37 /* UIColor+Shadow.m in Sources */,

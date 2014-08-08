@@ -1781,6 +1781,6 @@ int skipAll = NO;
 
 
 -(UIView*) viewForBlur{
-    return visibleStackHolder;
+    return [visibleStackHolder peekSubview];
 }
 @end
