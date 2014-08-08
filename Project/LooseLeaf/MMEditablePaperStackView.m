@@ -932,6 +932,16 @@ struct SidebarButton{
     [[visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
+-(void) disableAllGesturesForPageView{
+    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+    [super disableAllGesturesForPageView];
+}
+
+-(void) enableAllGesturesForPageView{
+    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
+    [super enableAllGesturesForPageView];
+}
+
 #pragma mark - Sidebar Hit Test
 
 -(BOOL) shouldPrioritizeSidebarButtonsForTaps{

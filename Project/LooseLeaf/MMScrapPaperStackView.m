@@ -278,17 +278,31 @@
 
 #pragma mark - MMImageSidebarContainerViewDelegate
 
+-(void) disableAllGesturesForPageView{
+    [panAndPinchScrapGesture setEnabled:NO];
+    [panAndPinchScrapGesture2 setEnabled:NO];
+    [stretchScrapGesture setEnabled:NO];
+    [super disableAllGesturesForPageView];
+}
+
+-(void) enableAllGesturesForPageView{
+    [panAndPinchScrapGesture setEnabled:YES];
+    [panAndPinchScrapGesture2 setEnabled:YES];
+    [stretchScrapGesture setEnabled:YES];
+    [super enableAllGesturesForPageView];
+}
+
 -(void) sidebarCloseButtonWasTapped{
     // noop
 }
 
 -(void) sidebarWillShow{
-    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+    [self disableAllGesturesForPageView];
 }
 
 -(void) sidebarWillHide{
     [self setButtonsVisible:YES];
-    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
+    [self enableAllGesturesForPageView];
 }
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
