@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MMSidebarButton.h"
+#import "MMShareItemDelegate.h"
 
 @protocol MMShareItem <NSObject>
 

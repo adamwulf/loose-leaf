@@ -1,5 +1,5 @@
 //
-//  MMEmailShareItem.h
+//  MMTextShareItem.h
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 8/8/14.
@@ -10,7 +10,6 @@
 #import <MessageUI/MessageUI.h>
 #import "MMShareItem.h"
 
-@interface MMEmailShareItem : NSObject<MMShareItem,MFMailComposeViewControllerDelegate>
-
+@interface MMTextShareItem : NSObject<MMShareItem,MFMessageComposeViewControllerDelegate>
 
 @end

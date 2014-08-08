@@ -9,6 +9,7 @@
 #import "MMShareSidebarContainerView.h"
 #import "MMImageViewButton.h"
 #import "MMEmailShareItem.h"
+#import "MMTextShareItem.h"
 #import "Constants.h"
 
 @implementation MMShareSidebarContainerView{
@@ -42,11 +43,11 @@
         shareItems = [NSMutableArray array];
         
         [shareItems addObject:[[MMEmailShareItem alloc] init]];
+        [shareItems addObject:[[MMTextShareItem alloc] init]];
         [shareItems addObject:[[MMEmailShareItem alloc] init]];
+        [shareItems addObject:[[MMTextShareItem alloc] init]];
         [shareItems addObject:[[MMEmailShareItem alloc] init]];
-        [shareItems addObject:[[MMEmailShareItem alloc] init]];
-        [shareItems addObject:[[MMEmailShareItem alloc] init]];
-        [shareItems addObject:[[MMEmailShareItem alloc] init]];
+        [shareItems addObject:[[MMTextShareItem alloc] init]];
         [shareItems addObject:[[MMEmailShareItem alloc] init]];
         
         

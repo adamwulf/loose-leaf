@@ -72,6 +72,9 @@
 		665244FF1995673900C36609 /* email.png in Resources */ = {isa = PBXBuildFile; fileRef = 665244FD1995673900C36609 /* email.png */; };
 		665245001995673900C36609 /* email@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 665244FE1995673900C36609 /* email@2x.png */; };
 		6652450319956DFA00C36609 /* MMEmailShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6652450219956DFA00C36609 /* MMEmailShareItem.m */; };
+		66524509199575A900C36609 /* MMTextShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 66524508199575A900C36609 /* MMTextShareItem.m */; };
+		6652450B199576E400C36609 /* text.png in Resources */ = {isa = PBXBuildFile; fileRef = 6652450A199576E400C36609 /* text.png */; };
+		6652450D199576E800C36609 /* text@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6652450C199576E800C36609 /* text@2x.png */; };
 		6653B8A9195CC7AD001C6E15 /* Documents in Resources */ = {isa = PBXBuildFile; fileRef = 6653B8A8195CC7AD001C6E15 /* Documents */; };
 		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
 		665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665C592D17BD7692006DECBF /* Accelerate.framework */; };
@@ -358,6 +361,10 @@
 		6652450219956DFA00C36609 /* MMEmailShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEmailShareItem.m; sourceTree = "<group>"; };
 		665245051995721C00C36609 /* MMShareItemDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShareItemDelegate.h; sourceTree = "<group>"; };
 		66524506199573B100C36609 /* MMShareItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShareItem.h; sourceTree = "<group>"; };
+		66524507199575A900C36609 /* MMTextShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTextShareItem.h; sourceTree = "<group>"; };
+		66524508199575A900C36609 /* MMTextShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTextShareItem.m; sourceTree = "<group>"; };
+		6652450A199576E400C36609 /* text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = text.png; sourceTree = "<group>"; };
+		6652450C199576E800C36609 /* text@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text@2x.png"; sourceTree = "<group>"; };
 		6653B8A8195CC7AD001C6E15 /* Documents */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Documents; path = "../../new-user-content.xcappdata/AppData/Documents"; sourceTree = "<group>"; };
 		6655E924176291C800E4F36A /* MMScissorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScissorButton.h; sourceTree = "<group>"; };
 		6655E925176291C800E4F36A /* MMScissorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorButton.m; sourceTree = "<group>"; };
@@ -1010,6 +1017,8 @@
 		6650DD1018F4842E00ADF591 /* photo album */ = {
 			isa = PBXGroup;
 			children = (
+				6652450A199576E400C36609 /* text.png */,
+				6652450C199576E800C36609 /* text@2x.png */,
 				665244FD1995673900C36609 /* email.png */,
 				665244FE1995673900C36609 /* email@2x.png */,
 				666E253D18F5E19100C17295 /* clearcamera.png */,
@@ -1060,6 +1069,8 @@
 				66524506199573B100C36609 /* MMShareItem.h */,
 				6652450119956DFA00C36609 /* MMEmailShareItem.h */,
 				6652450219956DFA00C36609 /* MMEmailShareItem.m */,
+				66524507199575A900C36609 /* MMTextShareItem.h */,
+				66524508199575A900C36609 /* MMTextShareItem.m */,
 				665245051995721C00C36609 /* MMShareItemDelegate.h */,
 			);
 			name = "Share Items";
@@ -1869,10 +1880,12 @@
 				666E253418F5DDFD00C17295 /* clearphotoalbum@2x.png in Resources */,
 				6650DD1F18F48E4200ADF591 /* twitter@2x.png in Resources */,
 				665244FF1995673900C36609 /* email.png in Resources */,
+				6652450D199576E800C36609 /* text@2x.png in Resources */,
 				6650DD2118F48F7F00ADF591 /* facebook.png in Resources */,
 				666E253C18F5E15F00C17295 /* clearcamera@2x.png in Resources */,
 				666E253E18F5E19100C17295 /* clearcamera.png in Resources */,
 				6650DD2718F491BA00ADF591 /* evernote@2x.png in Resources */,
+				6652450B199576E400C36609 /* text.png in Resources */,
 				66684B44182DAC9B005A27B4 /* CurveFit.license in Resources */,
 				66684B31182D887E005A27B4 /* Settings.bundle in Resources */,
 				6653B8A9195CC7AD001C6E15 /* Documents in Resources */,
@@ -1975,6 +1988,7 @@
 				66E716B51936580A00548491 /* MPCJSONDataSerializer.m in Sources */,
 				660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */,
 				665CAC1D17B578B0000BD505 /* MMColorButton.m in Sources */,
+				66524509199575A900C36609 /* MMTextShareItem.m in Sources */,
 				666425BA18CBC20000A306C1 /* MMStretchScrapGestureRecognizer.mm in Sources */,
 				664516B9159030FC0012FACA /* Constants.m in Sources */,
 				66A3A6BB1791F18900D8FE1D /* UIDevice+PPI.m in Sources */,
