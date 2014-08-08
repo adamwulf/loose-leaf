@@ -82,6 +82,9 @@
 		6652451919958C2500C36609 /* sinaWeibo.png in Resources */ = {isa = PBXBuildFile; fileRef = 6652451819958C2500C36609 /* sinaWeibo.png */; };
 		6652451B19958C2900C36609 /* sinaWeibo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6652451A19958C2900C36609 /* sinaWeibo@2x.png */; };
 		6652451E19958C4900C36609 /* MMSinaWeiboShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6652451D19958C4900C36609 /* MMSinaWeiboShareItem.m */; };
+		66524521199591FF00C36609 /* MMTencentWeiboShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 66524520199591FF00C36609 /* MMTencentWeiboShareItem.m */; };
+		665245231995936000C36609 /* tencentWeibo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 665245221995936000C36609 /* tencentWeibo@2x.png */; };
+		665245251995936500C36609 /* tencentWeibo.png in Resources */ = {isa = PBXBuildFile; fileRef = 665245241995936500C36609 /* tencentWeibo.png */; };
 		6653B8A9195CC7AD001C6E15 /* Documents in Resources */ = {isa = PBXBuildFile; fileRef = 6653B8A8195CC7AD001C6E15 /* Documents */; };
 		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
 		665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665C592D17BD7692006DECBF /* Accelerate.framework */; };
@@ -382,6 +385,10 @@
 		6652451A19958C2900C36609 /* sinaWeibo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sinaWeibo@2x.png"; sourceTree = "<group>"; };
 		6652451C19958C4900C36609 /* MMSinaWeiboShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMSinaWeiboShareItem.h; sourceTree = "<group>"; };
 		6652451D19958C4900C36609 /* MMSinaWeiboShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMSinaWeiboShareItem.m; sourceTree = "<group>"; };
+		6652451F199591FF00C36609 /* MMTencentWeiboShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTencentWeiboShareItem.h; sourceTree = "<group>"; };
+		66524520199591FF00C36609 /* MMTencentWeiboShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTencentWeiboShareItem.m; sourceTree = "<group>"; };
+		665245221995936000C36609 /* tencentWeibo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tencentWeibo@2x.png"; sourceTree = "<group>"; };
+		665245241995936500C36609 /* tencentWeibo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tencentWeibo.png; sourceTree = "<group>"; };
 		6653B8A8195CC7AD001C6E15 /* Documents */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Documents; path = "../../new-user-content.xcappdata/AppData/Documents"; sourceTree = "<group>"; };
 		6655E924176291C800E4F36A /* MMScissorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScissorButton.h; sourceTree = "<group>"; };
 		6655E925176291C800E4F36A /* MMScissorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorButton.m; sourceTree = "<group>"; };
@@ -1034,6 +1041,8 @@
 		6650DD1018F4842E00ADF591 /* photo album */ = {
 			isa = PBXGroup;
 			children = (
+				665245221995936000C36609 /* tencentWeibo@2x.png */,
+				665245241995936500C36609 /* tencentWeibo.png */,
 				6652451819958C2500C36609 /* sinaWeibo.png */,
 				6652451A19958C2900C36609 /* sinaWeibo@2x.png */,
 				66524511199583B600C36609 /* twitterLarge@2x.png */,
@@ -1098,6 +1107,8 @@
 				66524516199587A700C36609 /* MMFacebookShareItem.m */,
 				6652451C19958C4900C36609 /* MMSinaWeiboShareItem.h */,
 				6652451D19958C4900C36609 /* MMSinaWeiboShareItem.m */,
+				6652451F199591FF00C36609 /* MMTencentWeiboShareItem.h */,
+				66524520199591FF00C36609 /* MMTencentWeiboShareItem.m */,
 				665245051995721C00C36609 /* MMShareItemDelegate.h */,
 			);
 			name = "Share Items";
@@ -1884,7 +1895,9 @@
 			files = (
 				6650DD1418F4843D00ADF591 /* photoalbum.png in Resources */,
 				6650DD2518F491B700ADF591 /* evernote.png in Resources */,
+				665245251995936500C36609 /* tencentWeibo.png in Resources */,
 				66524512199583B600C36609 /* twitterLarge@2x.png in Resources */,
+				665245231995936000C36609 /* tencentWeibo@2x.png in Resources */,
 				66DCFB951581BCEF00B4918C /* InfoPlist.strings in Resources */,
 				6650DD1218F4843400ADF591 /* photoalbum@2x.png in Resources */,
 				66684B40182DAAC0005A27B4 /* UIColorWithHex.license in Resources */,
@@ -2009,6 +2022,7 @@
 				666E254F18F72BCF00C17295 /* MMCameraSidebarContentView.m in Sources */,
 				66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */,
 				662A21D7191D671A00AD9E31 /* Mixpanel.m in Sources */,
+				66524521199591FF00C36609 /* MMTencentWeiboShareItem.m in Sources */,
 				66C2C1651879F3F200804123 /* UIBezierPath+Description.m in Sources */,
 				660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */,
 				6635BE9D19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m in Sources */,

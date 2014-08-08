@@ -13,6 +13,7 @@
 #import "MMTwitterShareItem.h"
 #import "MMFacebookShareItem.h"
 #import "MMSinaWeiboShareItem.h"
+#import "MMTencentWeiboShareItem.h"
 #import "NSThread+BlockAdditions.h"
 #import "Constants.h"
 
@@ -59,22 +60,10 @@
         
         [shareItems addObject:[[MMEmailShareItem alloc] init]];
         [shareItems addObject:[[MMTextShareItem alloc] init]];
+        [shareItems addObject:[[MMSinaWeiboShareItem alloc] init]];
+        [shareItems addObject:[[MMTencentWeiboShareItem alloc] init]];
         [shareItems addObject:[[MMTwitterShareItem alloc] init]];
         [shareItems addObject:[[MMFacebookShareItem alloc] init]];
-        [shareItems addObject:[[MMSinaWeiboShareItem alloc] init]];
-        [shareItems addObject:[[MMEmailShareItem alloc] init]];
-        [shareItems addObject:[[MMTextShareItem alloc] init]];
-        [shareItems addObject:[[MMTwitterShareItem alloc] init]];
-        [shareItems addObject:[[MMFacebookShareItem alloc] init]];
-        [shareItems addObject:[[MMSinaWeiboShareItem alloc] init]];
-        [shareItems addObject:[[MMEmailShareItem alloc] init]];
-        [shareItems addObject:[[MMTextShareItem alloc] init]];
-        
-        NSString *language = [[NSLocale preferredLanguages] objectAtIndex:0];
-        if([language hasPrefix:@"zh"]){
-            NSLog(@"current lang: %@", language);
-            // weibo enabled
-        }
         
         int buttonIndex = 0;
         for(MMEmailShareItem* item in shareItems){
