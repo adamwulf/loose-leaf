@@ -13,6 +13,7 @@
 }
 
 @synthesize darkBg;
+@synthesize greyscale;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -58,7 +59,13 @@
     
     CGContextSaveGState(context);
     [ovalPath addClip];
-    [image drawInRect:frame];
+    if(self.isGreyscale){
+        CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
+        CGContextFillRect(context, frame);
+        [image drawInRect:frame blendMode:kCGBlendModeLuminosity alpha:1.0f];
+    }else{
+        [image drawInRect:frame];
+    }
     CGContextRestoreGState(context);
     
     

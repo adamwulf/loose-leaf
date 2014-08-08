@@ -1770,7 +1770,7 @@ int skipAll = NO;
 // MMEditablePaperStackView calls this method to check
 // if the sidebar buttons should take priority over anything else
 -(BOOL) shouldPrioritizeSidebarButtonsForTaps{
-    return ![importImageSidebar isVisible];
+    return ![importImageSidebar isVisible] && ![sharePageSidebar isVisible];
 }
 
 #pragma mark - Check for Active Gestures
