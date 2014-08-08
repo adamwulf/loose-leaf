@@ -26,6 +26,7 @@
 #import "NSURL+UTI.h"
 #import "Mixpanel.h"
 #import "MMTrashManager.h"
+#import "MMShareSidebarContainerView.h"
 
 @implementation MMScrapPaperStackView{
     MMScrapSidebarContainerView* bezelScrapContainer;
@@ -45,7 +46,10 @@
     MMCountBubbleButton* countButton;
     
     // image picker sidebar
-    MMImageSidebarContainerView* imagePicker;
+    MMImageSidebarContainerView* importImageSidebar;
+    
+    // share sidebar
+    MMShareSidebarContainerView* sharePageSidebar;
 
     NSTimer* debugTimer;
     NSTimer* drawTimer;
@@ -124,10 +128,18 @@
         
         [insertImageButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
-        imagePicker = [[MMImageSidebarContainerView alloc] initWithFrame:self.bounds forButton:insertImageButton animateFromLeft:YES];
-        imagePicker.delegate = self;
-        [imagePicker hide:NO onComplete:nil];
-        [self addSubview:imagePicker];
+        importImageSidebar = [[MMImageSidebarContainerView alloc] initWithFrame:self.bounds forButton:insertImageButton animateFromLeft:YES];
+        importImageSidebar.delegate = self;
+        [importImageSidebar hide:NO onComplete:nil];
+        [self addSubview:importImageSidebar];
+        
+        
+        [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+
+        sharePageSidebar = [[MMShareSidebarContainerView alloc] initWithFrame:self.bounds forButton:shareButton animateFromLeft:YES];
+        sharePageSidebar.delegate = self;
+        [sharePageSidebar hide:NO onComplete:nil];
+        [self addSubview:sharePageSidebar];
         
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds andPage:nil];
         [self addSubview:scrapContainer];
@@ -152,7 +164,7 @@
 }
 
 -(int) fullByteSize{
-    return [super fullByteSize] + imagePicker.fullByteSize + bezelScrapContainer.fullByteSize;
+    return [super fullByteSize] + importImageSidebar.fullByteSize + bezelScrapContainer.fullByteSize;
     
 }
 
@@ -162,7 +174,7 @@
     [self cancelAllGestures];
     [[visibleStackHolder peekSubview] cancelAllGestures];
     [self setButtonsVisible:NO withDuration:0.15];
-    [imagePicker show:YES];
+    [importImageSidebar show:YES];
 }
 
 #pragma mark - MMInboxManagerDelegate
@@ -340,7 +352,7 @@
     scrap.center = [self convertPoint:CGPointMake(cameraView.bounds.size.width/2, cameraView.bounds.size.height/2) fromView:cameraView];
     scrap.rotation = cameraView.rotation;
     
-    [imagePicker hide:YES onComplete:nil];
+    [importImageSidebar hide:YES onComplete:nil];
     
     // hide the photo in the row
     cameraView.alpha = 0;
@@ -439,7 +451,7 @@
     
     // hide the picker, this'll slide it out
     // underneath our scrap
-    [imagePicker hide:YES onComplete:nil];
+    [importImageSidebar hide:YES onComplete:nil];
     
     // hide the photo in the row. this way the scrap
     // becomes the photo, and it doesn't seem to duplicate
@@ -617,34 +629,49 @@ int skipAll = NO;
     [super addPageButtonTapped:_button];
 }
 
--(void) shareButtonTapped:(UIButton*)_button{
-    if([self isActivelyGesturing]){
-        // export not allowed while gesturing
-        return;
-    }
-    if([[visibleStackHolder peekSubview] hasEditsToSave]){
-        wantsExport = [visibleStackHolder peekSubview];
-    }else{
-        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
-        [composer setMailComposeDelegate:self];
-        if([MFMailComposeViewController canSendMail]) {
-            [composer setSubject:@"Quick sketch from Loose Leaf"];
-            [composer setMessageBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
-            [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-            
-            NSData *data = UIImagePNGRepresentation([visibleStackHolder peekSubview].scrappedImgViewImage);
-            [composer addAttachmentData:data  mimeType:@"image/png" fileName:@"LooseLeaf.png"];
-            
-            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:composer animated:YES completion:nil];
-        }
-    }
-}
-
 -(void) anySidebarButtonTapped:(id)button{
     if(button != countButton){
         [bezelScrapContainer sidebarCloseButtonWasTapped];
     }
 }
+
+#pragma mark - Sharing
+
+
+-(void) shareButtonTapped:(UIButton*)_button{
+    if([self isActivelyGesturing]){
+        // export not allowed while gesturing
+        return;
+    }
+    
+    [self cancelAllGestures];
+    [[visibleStackHolder peekSubview] cancelAllGestures];
+    [self setButtonsVisible:NO withDuration:0.15];
+    [sharePageSidebar show:YES];
+    
+    
+    
+    
+    
+    
+//    if([[visibleStackHolder peekSubview] hasEditsToSave]){
+//        wantsExport = [visibleStackHolder peekSubview];
+//    }else{
+//        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
+//        [composer setMailComposeDelegate:self];
+//        if([MFMailComposeViewController canSendMail]) {
+//            [composer setSubject:@"Quick sketch from Loose Leaf"];
+//            [composer setMessageBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
+//            [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+//            
+//            NSData *data = UIImagePNGRepresentation([visibleStackHolder peekSubview].scrappedImgViewImage);
+//            [composer addAttachmentData:data  mimeType:@"image/png" fileName:@"LooseLeaf.png"];
+//            
+//            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:composer animated:YES completion:nil];
+//        }
+//    }
+}
+
 
 #pragma mark - MMPencilAndPaletteViewDelegate
 
@@ -1624,7 +1651,7 @@ int skipAll = NO;
 #pragma mark - MMRotationManagerDelegate
 
 -(void) didRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient{
-    [imagePicker updatePhotoRotation];
+    [importImageSidebar updatePhotoRotation];
 }
 
 
@@ -1729,7 +1756,7 @@ int skipAll = NO;
 // MMEditablePaperStackView calls this method to check
 // if the sidebar buttons should take priority over anything else
 -(BOOL) shouldPrioritizeSidebarButtonsForTaps{
-    return ![imagePicker isVisible];
+    return ![importImageSidebar isVisible];
 }
 
 #pragma mark - Check for Active Gestures
