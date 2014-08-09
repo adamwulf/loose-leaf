@@ -35,6 +35,16 @@
         buttonView = [[UIView alloc] initWithFrame:[sidebarContentView contentBounds]];
         [sidebarContentView addSubview:buttonView];
 
+        shareItems = [NSMutableArray array];
+        
+        [shareItems addObject:[[MMEmailShareItem alloc] init]];
+        [shareItems addObject:[[MMTextShareItem alloc] init]];
+        [shareItems addObject:[[MMSinaWeiboShareItem alloc] init]];
+        [shareItems addObject:[[MMTencentWeiboShareItem alloc] init]];
+        [shareItems addObject:[[MMTwitterShareItem alloc] init]];
+        [shareItems addObject:[[MMFacebookShareItem alloc] init]];
+        [shareItems addObject:[[MMPhotoAlbumShareItem alloc] init]];
+
         [self updateShareOptions];
         
     }
@@ -57,16 +67,6 @@
         contentBounds.origin.y = buttonBounds.origin.y + buttonBounds.size.height;
         contentBounds.size.height -= buttonBounds.size.height;
         
-        shareItems = [NSMutableArray array];
-        
-        [shareItems addObject:[[MMEmailShareItem alloc] init]];
-        [shareItems addObject:[[MMTextShareItem alloc] init]];
-        [shareItems addObject:[[MMSinaWeiboShareItem alloc] init]];
-        [shareItems addObject:[[MMTencentWeiboShareItem alloc] init]];
-        [shareItems addObject:[[MMTwitterShareItem alloc] init]];
-        [shareItems addObject:[[MMFacebookShareItem alloc] init]];
-        [shareItems addObject:[[MMPhotoAlbumShareItem alloc] init]];
-        
         int buttonIndex = 0;
         for(MMEmailShareItem* item in shareItems){
             if(item.isAtAllPossible){
@@ -78,7 +78,7 @@
                 button.frame = CGRectMake(buttonBounds.origin.x + column*(buttonWidth),
                                           buttonBounds.origin.y + row*(buttonWidth),
                                           buttonWidth, buttonWidth);
-                [buttonView addSubview:button];
+                [buttonView insertSubview:button atIndex:buttonIndex];
                 
                 buttonIndex += 1;
             }

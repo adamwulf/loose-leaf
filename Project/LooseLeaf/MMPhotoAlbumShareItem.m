@@ -42,17 +42,80 @@
 -(void) performShareAction{
     ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
     
+    BOOL needsDelay = [ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusNotDetermined;
     UIImage* image = self.delegate.imageToShare;
     [library writeImageToSavedPhotosAlbum:image.CGImage orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error){
-        if (error) {
-            // TODO: error handling
-        } else {
-            // TODO: success handling
+        NSLog(@"here");
+        [[NSThread mainThread] performBlock:^{
+            if (error) {
+                // TODO: error handling
+                [self animateToSuccess:NO];
+            } else {
+                // TODO: success handling
+                [self animateToSuccess:YES];
+            }
             [button setNeedsDisplay];
-        }
+        } afterDelay:(needsDelay ? .2 : 0)];
     }];
+}
+
+-(void) animateToSuccess:(BOOL)succeeded{
+    NSLog(@"here2");
+
+    CGPoint center = CGPointMake(button.bounds.size.width/2, button.bounds.size.height/2);
     
-    [delegate didShare];
+    
+    CAShapeLayer *circle=[CAShapeLayer layer];
+    CGFloat radius = button.drawableFrame.size.width / 2;
+    circle.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+    circle.fillColor=[UIColor clearColor].CGColor;
+    circle.strokeColor=[UIColor whiteColor].CGColor;
+    circle.lineWidth=radius*2;
+    circle.strokeEnd = 0;
+    
+    
+    CAShapeLayer *mask=[CAShapeLayer layer];
+    mask.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+
+    CAShapeLayer *mask2=[CAShapeLayer layer];
+    mask2.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+    
+    circle.mask = mask;
+    
+    UILabel* label = [[UILabel alloc] initWithFrame:button.bounds];
+    
+    [button.layer addSublayer:circle];
+
+    CABasicAnimation *animation=[CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+    animation.duration=.4;
+    animation.fillMode = kCAFillModeForwards;
+    animation.removedOnCompletion=NO;
+    animation.fromValue=@(0);
+    animation.toValue=@(1);
+    animation.timingFunction=[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    [circle addAnimation:animation forKey:@"drawCircleAnimation"];
+    
+    [[NSThread mainThread] performBlock:^{
+        NSLog(@"here3");
+        if(succeeded){
+            label.text = @"\u2714";
+        }else{
+            label.text = @"\u2718";
+        }
+        label.font = [UIFont fontWithName:@"ZapfDingbatsITC" size:30];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.alpha = 0;
+        [button addSubview:label];
+        [UIView animateWithDuration:.3 animations:^{
+            label.alpha = 1;
+        } completion:^(BOOL finished){
+            NSLog(@"here4 :%d", finished);
+            [label removeFromSuperview];
+            [circle removeAnimationForKey:@"drawCircleAnimation"];
+            [circle removeFromSuperlayer];
+            [delegate didShare];
+        }];
+    } afterDelay:.3];
 }
 
 -(BOOL) isAtAllPossible{
@@ -73,6 +136,7 @@
 #pragma mark - Dealloc
 
 -(void) dealloc{
+    NSLog(@"dealloc photo button");
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
