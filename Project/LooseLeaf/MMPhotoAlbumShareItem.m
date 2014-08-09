@@ -42,28 +42,21 @@
 -(void) performShareAction{
     ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
     
-    BOOL needsDelay = [ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusNotDetermined;
     UIImage* image = self.delegate.imageToShare;
     [library writeImageToSavedPhotosAlbum:image.CGImage orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error){
-        NSLog(@"here");
-        [[NSThread mainThread] performBlock:^{
-            if (error) {
-                // TODO: error handling
-                [self animateToSuccess:NO];
-            } else {
-                // TODO: success handling
-                [self animateToSuccess:YES];
-            }
-            [button setNeedsDisplay];
-        } afterDelay:(needsDelay ? .2 : 0)];
+        if (error) {
+            // TODO: error handling
+            [self animateToSuccess:NO];
+        } else {
+            // TODO: success handling
+            [self animateToSuccess:YES];
+        }
+        [button setNeedsDisplay];
     }];
 }
 
 -(void) animateToSuccess:(BOOL)succeeded{
-    NSLog(@"here2");
-
     CGPoint center = CGPointMake(button.bounds.size.width/2, button.bounds.size.height/2);
-    
     
     CAShapeLayer *circle=[CAShapeLayer layer];
     CGFloat radius = button.drawableFrame.size.width / 2;
@@ -96,7 +89,6 @@
     [circle addAnimation:animation forKey:@"drawCircleAnimation"];
     
     [[NSThread mainThread] performBlock:^{
-        NSLog(@"here3");
         if(succeeded){
             label.text = @"\u2714";
         }else{
@@ -109,11 +101,12 @@
         [UIView animateWithDuration:.3 animations:^{
             label.alpha = 1;
         } completion:^(BOOL finished){
-            NSLog(@"here4 :%d", finished);
-            [label removeFromSuperview];
-            [circle removeAnimationForKey:@"drawCircleAnimation"];
-            [circle removeFromSuperlayer];
             [delegate didShare];
+            [[NSThread mainThread] performBlock:^{
+                [label removeFromSuperview];
+                [circle removeAnimationForKey:@"drawCircleAnimation"];
+                [circle removeFromSuperlayer];
+            } afterDelay:.5];
         }];
     } afterDelay:.3];
 }
