@@ -59,6 +59,7 @@
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     debug_NSLog(@"WILL RESIGN ACTIVE");
     [self.viewController willResignActive];
+    [[MMRotationManager sharedInstace] willResignActive];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -77,6 +78,7 @@
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     debug_NSLog(@"WILL ENTER FOREGROUND");
+    [[MMRotationManager sharedInstace] didEnterForeground];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -91,6 +93,7 @@
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfLaunches by:@(1)];
         [[Mixpanel sharedInstance] track:kMPEventLaunch];
     };
+    [[MMRotationManager sharedInstace] didBecomeActive];
     debug_NSLog(@"DID BECOME ACTIVE");
     debug_NSLog(@"***************************************************************************");
     debug_NSLog(@"***************************************************************************");
