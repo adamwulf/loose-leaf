@@ -14,6 +14,7 @@
 #import "MMFacebookShareItem.h"
 #import "MMSinaWeiboShareItem.h"
 #import "MMTencentWeiboShareItem.h"
+#import "MMPhotoAlbumShareItem.h"
 #import "NSThread+BlockAdditions.h"
 #import "Constants.h"
 
@@ -64,6 +65,7 @@
         [shareItems addObject:[[MMTencentWeiboShareItem alloc] init]];
         [shareItems addObject:[[MMTwitterShareItem alloc] init]];
         [shareItems addObject:[[MMFacebookShareItem alloc] init]];
+        [shareItems addObject:[[MMPhotoAlbumShareItem alloc] init]];
         
         int buttonIndex = 0;
         for(MMEmailShareItem* item in shareItems){

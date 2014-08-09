@@ -85,6 +85,7 @@
 		66524521199591FF00C36609 /* MMTencentWeiboShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 66524520199591FF00C36609 /* MMTencentWeiboShareItem.m */; };
 		665245231995936000C36609 /* tencentWeibo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 665245221995936000C36609 /* tencentWeibo@2x.png */; };
 		665245251995936500C36609 /* tencentWeibo.png in Resources */ = {isa = PBXBuildFile; fileRef = 665245241995936500C36609 /* tencentWeibo.png */; };
+		6652452A1996B45C00C36609 /* MMPhotoAlbumShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 665245291996B45C00C36609 /* MMPhotoAlbumShareItem.m */; };
 		6653B8A9195CC7AD001C6E15 /* Documents in Resources */ = {isa = PBXBuildFile; fileRef = 6653B8A8195CC7AD001C6E15 /* Documents */; };
 		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
 		665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665C592D17BD7692006DECBF /* Accelerate.framework */; };
@@ -389,6 +390,8 @@
 		66524520199591FF00C36609 /* MMTencentWeiboShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTencentWeiboShareItem.m; sourceTree = "<group>"; };
 		665245221995936000C36609 /* tencentWeibo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tencentWeibo@2x.png"; sourceTree = "<group>"; };
 		665245241995936500C36609 /* tencentWeibo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tencentWeibo.png; sourceTree = "<group>"; };
+		665245281996B45C00C36609 /* MMPhotoAlbumShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPhotoAlbumShareItem.h; sourceTree = "<group>"; };
+		665245291996B45C00C36609 /* MMPhotoAlbumShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPhotoAlbumShareItem.m; sourceTree = "<group>"; };
 		6653B8A8195CC7AD001C6E15 /* Documents */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Documents; path = "../../new-user-content.xcappdata/AppData/Documents"; sourceTree = "<group>"; };
 		6655E924176291C800E4F36A /* MMScissorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScissorButton.h; sourceTree = "<group>"; };
 		6655E925176291C800E4F36A /* MMScissorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorButton.m; sourceTree = "<group>"; };
@@ -1038,7 +1041,7 @@
 			name = "Stack View";
 			sourceTree = "<group>";
 		};
-		6650DD1018F4842E00ADF591 /* photo album */ = {
+		6650DD1018F4842E00ADF591 /* Icon Images */ = {
 			isa = PBXGroup;
 			children = (
 				665245221995936000C36609 /* tencentWeibo@2x.png */,
@@ -1066,7 +1069,7 @@
 				666E253318F5DDFD00C17295 /* clearphotoalbum@2x.png */,
 				666E253118F5DDF100C17295 /* clearphotoalbum.png */,
 			);
-			name = "photo album";
+			name = "Icon Images";
 			sourceTree = "<group>";
 		};
 		66510831178DF9B900A7A7DD /* Page View */ = {
@@ -1109,6 +1112,8 @@
 				6652451D19958C4900C36609 /* MMSinaWeiboShareItem.m */,
 				6652451F199591FF00C36609 /* MMTencentWeiboShareItem.h */,
 				66524520199591FF00C36609 /* MMTencentWeiboShareItem.m */,
+				665245281996B45C00C36609 /* MMPhotoAlbumShareItem.h */,
+				665245291996B45C00C36609 /* MMPhotoAlbumShareItem.m */,
 				665245051995721C00C36609 /* MMShareItemDelegate.h */,
 			);
 			name = "Share Items";
@@ -1437,7 +1442,6 @@
 		66A74630176B860900466AA4 /* Used */ = {
 			isa = PBXGroup;
 			children = (
-				6650DD1018F4842E00ADF591 /* photo album */,
 				66CE120117D3AD7C00882275 /* MMBounceButton.h */,
 				66CE120217D3AD7C00882275 /* MMBounceButton.m */,
 				66BD6E7E1593AF4100D4544C /* MMSidebarButton.h */,
@@ -1682,6 +1686,7 @@
 				661708E31981B434006A73EF /* FXBlurView */,
 				66932995159984090033E557 /* Experiments */,
 				6693295715958A890033E557 /* Managers */,
+				6650DD1018F4842E00ADF591 /* Icon Images */,
 				66BD6E811593AF4500D4544C /* Buttons */,
 				660E1DAD158FC7CA0001DA12 /* Icons */,
 				66DCFBDC1582BF1600B4918C /* Gestures */,
@@ -2106,6 +2111,7 @@
 				66B42FC019955A47005D8214 /* MMShareSidebarContainerView.m in Sources */,
 				6699715217DBA02700E81467 /* MMDebugDrawView.m in Sources */,
 				66277CA0192BC99D003E97C0 /* SSKeychainQuery.m in Sources */,
+				6652452A1996B45C00C36609 /* MMPhotoAlbumShareItem.m in Sources */,
 				66B51A2A17AC50F7005B5E09 /* MMBezelInGestureRecognizer.m in Sources */,
 				66DCFBDF1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m in Sources */,
 				6651820A1937B57600CBEAB4 /* MMBackgroundTimer.m in Sources */,

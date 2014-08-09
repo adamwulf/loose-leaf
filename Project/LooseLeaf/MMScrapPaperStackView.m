@@ -1777,7 +1777,7 @@ int skipAll = NO;
 #pragma mark - MMShareItemDelegate
 
 -(UIImage*) imageToShare{
-    return [visibleStackHolder peekSubview].cachedImgViewImage;
+    return [visibleStackHolder peekSubview].scrappedImgViewImage;
 }
 
 -(void) didShare{
