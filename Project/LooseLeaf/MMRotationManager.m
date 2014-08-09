@@ -83,7 +83,7 @@ static MMRotationManager* _instance = nil;
             CGFloat diffActual = [currentRotationReading angleBetween:actualRawReading];
             
             CGFloat diffCombined = currentTrust * diffActual + (1-currentTrust)*diffOrient;
-            NSLog(@"currVec: %@  actualVec: %@  orientVec: %@  trust: %f", currentRotationReading, actualRawReading, orientationRotationReading, currentTrust);
+//            NSLog(@"currVec: %@  actualVec: %@  orientVec: %@  trust: %f", currentRotationReading, actualRawReading, orientationRotationReading, currentTrust);
             // now tone it down so that we don't jump around too much, make
             // sure it only changes by max of 5 degrees
             if(ABS(diffCombined) > .05 || isFirstReading){
