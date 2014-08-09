@@ -50,6 +50,9 @@
         
         [[[Mixpanel sharedInstance] people] set:kMPNumberOfPages
                                              to:@([stackView.visibleStackHolder.subviews count] + [stackView.hiddenStackHolder.subviews count])];
+        NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
+        [[[Mixpanel sharedInstance] people] set:kMPPreferredLanguage
+                                             to:language];
         [[[Mixpanel sharedInstance] people] setOnce:@{kMPFirstLaunchDate : [NSDate date],
                                                       kMPHasAddedPage : @(NO),
                                                       kMPHasZoomedToList : @(NO),
