@@ -44,13 +44,17 @@
     
     UIImage* image = self.delegate.imageToShare;
     [library writeImageToSavedPhotosAlbum:image.CGImage orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error){
+        NSString* strResult = @"Failed";
         if (error) {
             // TODO: error handling
             [self animateToSuccess:NO];
         } else {
-            // TODO: success handling
+            strResult = @"Success";
             [self animateToSuccess:YES];
+            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
         }
+        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"PhotoAlbum",
+                                                                     kMPEventExportPropResult : strResult}];
         [button setNeedsDisplay];
     }];
 }

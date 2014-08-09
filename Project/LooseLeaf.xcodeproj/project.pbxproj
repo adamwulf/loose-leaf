@@ -100,6 +100,8 @@
 		6652456A1996DAB800C36609 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 665245611996DAB800C36609 /* AFURLSessionManager.m */; };
 		6652456D1996E69D00C36609 /* link.png in Resources */ = {isa = PBXBuildFile; fileRef = 6652456B1996E69D00C36609 /* link.png */; };
 		6652456E1996E69D00C36609 /* link@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6652456C1996E69D00C36609 /* link@2x.png */; };
+		665245761996EA2300C36609 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 665245751996EA2300C36609 /* Reachability.m */; };
+		6652457A1996EA6500C36609 /* MMReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 665245791996EA6500C36609 /* MMReachabilityManager.m */; };
 		6653B8A9195CC7AD001C6E15 /* Documents in Resources */ = {isa = PBXBuildFile; fileRef = 6653B8A8195CC7AD001C6E15 /* Documents */; };
 		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
 		665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665C592D17BD7692006DECBF /* Accelerate.framework */; };
@@ -431,6 +433,10 @@
 		665245611996DAB800C36609 /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFURLSessionManager.m; path = ../../Submodules/AFNetworking/AFNetworking/AFURLSessionManager.m; sourceTree = "<group>"; };
 		6652456B1996E69D00C36609 /* link.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = link.png; sourceTree = "<group>"; };
 		6652456C1996E69D00C36609 /* link@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "link@2x.png"; sourceTree = "<group>"; };
+		665245741996EA2300C36609 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		665245751996EA2300C36609 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		665245781996EA6500C36609 /* MMReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMReachabilityManager.h; sourceTree = "<group>"; };
+		665245791996EA6500C36609 /* MMReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMReachabilityManager.m; sourceTree = "<group>"; };
 		6653B8A8195CC7AD001C6E15 /* Documents */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Documents; path = "../../new-user-content.xcappdata/AppData/Documents"; sourceTree = "<group>"; };
 		6655E924176291C800E4F36A /* MMScissorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScissorButton.h; sourceTree = "<group>"; };
 		6655E925176291C800E4F36A /* MMScissorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorButton.m; sourceTree = "<group>"; };
@@ -1190,6 +1196,17 @@
 			name = AFNetworking;
 			sourceTree = "<group>";
 		};
+		665245771996EA5100C36609 /* ReachabilityManager */ = {
+			isa = PBXGroup;
+			children = (
+				665245741996EA2300C36609 /* Reachability.h */,
+				665245751996EA2300C36609 /* Reachability.m */,
+				665245781996EA6500C36609 /* MMReachabilityManager.h */,
+				665245791996EA6500C36609 /* MMReachabilityManager.m */,
+			);
+			name = ReachabilityManager;
+			sourceTree = "<group>";
+		};
 		6653B8A7195CC79A001C6E15 /* Default user content */ = {
 			isa = PBXGroup;
 			children = (
@@ -1320,6 +1337,7 @@
 		6693295715958A890033E557 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				665245771996EA5100C36609 /* ReachabilityManager */,
 				661708EB1984197C006A73EF /* Trash */,
 				661708EA19841956006A73EF /* Stack Manager */,
 				661708E91984194B006A73EF /* Shadow */,
@@ -2114,6 +2132,7 @@
 				66A790C319689CF00037F01A /* MMUndoRedoRemoveScrapItem.m in Sources */,
 				667D98AF192D5D8200625879 /* MMInboxManager.m in Sources */,
 				66A790B6196896FA0037F01A /* MMUndoRedoAddScrapItem.m in Sources */,
+				665245761996EA2300C36609 /* Reachability.m in Sources */,
 				66E716B51936580A00548491 /* MPCJSONDataSerializer.m in Sources */,
 				660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */,
 				665CAC1D17B578B0000BD505 /* MMColorButton.m in Sources */,
@@ -2179,6 +2198,7 @@
 				66423DD019425AA7000A3709 /* MMCachedPreviewManager.m in Sources */,
 				66A08E71196B242F00476F99 /* MMUndoRedoMoveScrapItem.m in Sources */,
 				66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */,
+				6652457A1996EA6500C36609 /* MMReachabilityManager.m in Sources */,
 				667D98B7192FBF2400625879 /* MMPDFInboxContentView.m in Sources */,
 				66AC8D9218E8A90900A65036 /* MMBufferedImageView.m in Sources */,
 				66E716B91936580A00548491 /* ODIN.m in Sources */,

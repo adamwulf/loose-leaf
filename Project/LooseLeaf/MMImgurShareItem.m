@@ -12,8 +12,9 @@
 #import "Mixpanel.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
-#import <AssetsLibrary/AssetsLibrary.h>
 #import "AFNetworking.h"
+#import "MMReachabilityManager.h"
+#import "Reachability.h"
 
 @implementation MMImgurShareItem{
     MMImageViewButton* button;
@@ -34,6 +35,10 @@
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(updateButtonGreyscale)
                                                      name:UIApplicationDidBecomeActiveNotification object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateButtonGreyscale)
+                                                     name:kReachabilityChangedNotification object:nil];
         
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
         
@@ -58,19 +63,21 @@
                 targetProgress = progress;
             }
             targetSuccess = YES;
-            NSLog(@"progress %f", progress);
         } completionBlock:^(NSString *result) {
             lastLinkURL = result;
             targetProgress = 1.0;
             targetSuccess = YES;
             conn = nil;
-            NSLog(@"done: %@", result);
+            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Imgur",
+                                                                         kMPEventExportPropResult : @"Success"}];
         } failureBlock:^(NSURLResponse *response, NSError *error, NSInteger status) {
             lastLinkURL = nil;
             targetProgress = 1.0;
             targetSuccess = NO;
             conn = nil;
-            NSLog(@"failed: %d %@", status, response);
+            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Imgur",
+                                                                         kMPEventExportPropResult : @"Failed"}];
         }];
         [self animateToPercent:.1 success:YES];
     }
@@ -280,7 +287,7 @@
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
+    if([MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable) {
         button.greyscale = NO;
     }else{
         button.greyscale = YES;
