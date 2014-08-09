@@ -86,6 +86,20 @@
 		665245231995936000C36609 /* tencentWeibo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 665245221995936000C36609 /* tencentWeibo@2x.png */; };
 		665245251995936500C36609 /* tencentWeibo.png in Resources */ = {isa = PBXBuildFile; fileRef = 665245241995936500C36609 /* tencentWeibo.png */; };
 		6652452A1996B45C00C36609 /* MMPhotoAlbumShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 665245291996B45C00C36609 /* MMPhotoAlbumShareItem.m */; };
+		6652452D1996CE3000C36609 /* MMImgurShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6652452C1996CE3000C36609 /* MMImgurShareItem.m */; };
+		6652452F1996D1E500C36609 /* imgur@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6652452E1996D1E500C36609 /* imgur@2x.png */; };
+		665245311996D1E800C36609 /* imgur.png in Resources */ = {isa = PBXBuildFile; fileRef = 665245301996D1E800C36609 /* imgur.png */; };
+		665245621996DAB800C36609 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 665245501996DAB800C36609 /* AFHTTPRequestOperation.m */; };
+		665245631996DAB800C36609 /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 665245521996DAB800C36609 /* AFHTTPRequestOperationManager.m */; };
+		665245641996DAB800C36609 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 665245541996DAB800C36609 /* AFHTTPSessionManager.m */; };
+		665245651996DAB800C36609 /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 665245571996DAB800C36609 /* AFNetworkReachabilityManager.m */; };
+		665245661996DAB800C36609 /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 665245591996DAB800C36609 /* AFSecurityPolicy.m */; };
+		665245671996DAB800C36609 /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6652455B1996DAB800C36609 /* AFURLConnectionOperation.m */; };
+		665245681996DAB800C36609 /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 6652455D1996DAB800C36609 /* AFURLRequestSerialization.m */; };
+		665245691996DAB800C36609 /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 6652455F1996DAB800C36609 /* AFURLResponseSerialization.m */; };
+		6652456A1996DAB800C36609 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 665245611996DAB800C36609 /* AFURLSessionManager.m */; };
+		6652456D1996E69D00C36609 /* link.png in Resources */ = {isa = PBXBuildFile; fileRef = 6652456B1996E69D00C36609 /* link.png */; };
+		6652456E1996E69D00C36609 /* link@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6652456C1996E69D00C36609 /* link@2x.png */; };
 		6653B8A9195CC7AD001C6E15 /* Documents in Resources */ = {isa = PBXBuildFile; fileRef = 6653B8A8195CC7AD001C6E15 /* Documents */; };
 		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
 		665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665C592D17BD7692006DECBF /* Accelerate.framework */; };
@@ -392,6 +406,31 @@
 		665245241995936500C36609 /* tencentWeibo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tencentWeibo.png; sourceTree = "<group>"; };
 		665245281996B45C00C36609 /* MMPhotoAlbumShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPhotoAlbumShareItem.h; sourceTree = "<group>"; };
 		665245291996B45C00C36609 /* MMPhotoAlbumShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPhotoAlbumShareItem.m; sourceTree = "<group>"; };
+		6652452B1996CE3000C36609 /* MMImgurShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImgurShareItem.h; sourceTree = "<group>"; };
+		6652452C1996CE3000C36609 /* MMImgurShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImgurShareItem.m; sourceTree = "<group>"; };
+		6652452E1996D1E500C36609 /* imgur@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "imgur@2x.png"; sourceTree = "<group>"; };
+		665245301996D1E800C36609 /* imgur.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = imgur.png; sourceTree = "<group>"; };
+		6652454F1996DAB800C36609 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFHTTPRequestOperation.h; path = ../../Submodules/AFNetworking/AFNetworking/AFHTTPRequestOperation.h; sourceTree = "<group>"; };
+		665245501996DAB800C36609 /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFHTTPRequestOperation.m; path = ../../Submodules/AFNetworking/AFNetworking/AFHTTPRequestOperation.m; sourceTree = "<group>"; };
+		665245511996DAB800C36609 /* AFHTTPRequestOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFHTTPRequestOperationManager.h; path = ../../Submodules/AFNetworking/AFNetworking/AFHTTPRequestOperationManager.h; sourceTree = "<group>"; };
+		665245521996DAB800C36609 /* AFHTTPRequestOperationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFHTTPRequestOperationManager.m; path = ../../Submodules/AFNetworking/AFNetworking/AFHTTPRequestOperationManager.m; sourceTree = "<group>"; };
+		665245531996DAB800C36609 /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFHTTPSessionManager.h; path = ../../Submodules/AFNetworking/AFNetworking/AFHTTPSessionManager.h; sourceTree = "<group>"; };
+		665245541996DAB800C36609 /* AFHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFHTTPSessionManager.m; path = ../../Submodules/AFNetworking/AFNetworking/AFHTTPSessionManager.m; sourceTree = "<group>"; };
+		665245551996DAB800C36609 /* AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFNetworking.h; path = ../../Submodules/AFNetworking/AFNetworking/AFNetworking.h; sourceTree = "<group>"; };
+		665245561996DAB800C36609 /* AFNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFNetworkReachabilityManager.h; path = ../../Submodules/AFNetworking/AFNetworking/AFNetworkReachabilityManager.h; sourceTree = "<group>"; };
+		665245571996DAB800C36609 /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFNetworkReachabilityManager.m; path = ../../Submodules/AFNetworking/AFNetworking/AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
+		665245581996DAB800C36609 /* AFSecurityPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFSecurityPolicy.h; path = ../../Submodules/AFNetworking/AFNetworking/AFSecurityPolicy.h; sourceTree = "<group>"; };
+		665245591996DAB800C36609 /* AFSecurityPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFSecurityPolicy.m; path = ../../Submodules/AFNetworking/AFNetworking/AFSecurityPolicy.m; sourceTree = "<group>"; };
+		6652455A1996DAB800C36609 /* AFURLConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFURLConnectionOperation.h; path = ../../Submodules/AFNetworking/AFNetworking/AFURLConnectionOperation.h; sourceTree = "<group>"; };
+		6652455B1996DAB800C36609 /* AFURLConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFURLConnectionOperation.m; path = ../../Submodules/AFNetworking/AFNetworking/AFURLConnectionOperation.m; sourceTree = "<group>"; };
+		6652455C1996DAB800C36609 /* AFURLRequestSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFURLRequestSerialization.h; path = ../../Submodules/AFNetworking/AFNetworking/AFURLRequestSerialization.h; sourceTree = "<group>"; };
+		6652455D1996DAB800C36609 /* AFURLRequestSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFURLRequestSerialization.m; path = ../../Submodules/AFNetworking/AFNetworking/AFURLRequestSerialization.m; sourceTree = "<group>"; };
+		6652455E1996DAB800C36609 /* AFURLResponseSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFURLResponseSerialization.h; path = ../../Submodules/AFNetworking/AFNetworking/AFURLResponseSerialization.h; sourceTree = "<group>"; };
+		6652455F1996DAB800C36609 /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFURLResponseSerialization.m; path = ../../Submodules/AFNetworking/AFNetworking/AFURLResponseSerialization.m; sourceTree = "<group>"; };
+		665245601996DAB800C36609 /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFURLSessionManager.h; path = ../../Submodules/AFNetworking/AFNetworking/AFURLSessionManager.h; sourceTree = "<group>"; };
+		665245611996DAB800C36609 /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFURLSessionManager.m; path = ../../Submodules/AFNetworking/AFNetworking/AFURLSessionManager.m; sourceTree = "<group>"; };
+		6652456B1996E69D00C36609 /* link.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = link.png; sourceTree = "<group>"; };
+		6652456C1996E69D00C36609 /* link@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "link@2x.png"; sourceTree = "<group>"; };
 		6653B8A8195CC7AD001C6E15 /* Documents */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Documents; path = "../../new-user-content.xcappdata/AppData/Documents"; sourceTree = "<group>"; };
 		6655E924176291C800E4F36A /* MMScissorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScissorButton.h; sourceTree = "<group>"; };
 		6655E925176291C800E4F36A /* MMScissorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorButton.m; sourceTree = "<group>"; };
@@ -1044,6 +1083,10 @@
 		6650DD1018F4842E00ADF591 /* Icon Images */ = {
 			isa = PBXGroup;
 			children = (
+				6652456B1996E69D00C36609 /* link.png */,
+				6652456C1996E69D00C36609 /* link@2x.png */,
+				665245301996D1E800C36609 /* imgur.png */,
+				6652452E1996D1E500C36609 /* imgur@2x.png */,
 				665245221995936000C36609 /* tencentWeibo@2x.png */,
 				665245241995936500C36609 /* tencentWeibo.png */,
 				6652451819958C2500C36609 /* sinaWeibo.png */,
@@ -1114,9 +1157,37 @@
 				66524520199591FF00C36609 /* MMTencentWeiboShareItem.m */,
 				665245281996B45C00C36609 /* MMPhotoAlbumShareItem.h */,
 				665245291996B45C00C36609 /* MMPhotoAlbumShareItem.m */,
+				6652452B1996CE3000C36609 /* MMImgurShareItem.h */,
+				6652452C1996CE3000C36609 /* MMImgurShareItem.m */,
 				665245051995721C00C36609 /* MMShareItemDelegate.h */,
 			);
 			name = "Share Items";
+			sourceTree = "<group>";
+		};
+		665245321996D9E700C36609 /* AFNetworking */ = {
+			isa = PBXGroup;
+			children = (
+				6652454F1996DAB800C36609 /* AFHTTPRequestOperation.h */,
+				665245501996DAB800C36609 /* AFHTTPRequestOperation.m */,
+				665245511996DAB800C36609 /* AFHTTPRequestOperationManager.h */,
+				665245521996DAB800C36609 /* AFHTTPRequestOperationManager.m */,
+				665245531996DAB800C36609 /* AFHTTPSessionManager.h */,
+				665245541996DAB800C36609 /* AFHTTPSessionManager.m */,
+				665245551996DAB800C36609 /* AFNetworking.h */,
+				665245561996DAB800C36609 /* AFNetworkReachabilityManager.h */,
+				665245571996DAB800C36609 /* AFNetworkReachabilityManager.m */,
+				665245581996DAB800C36609 /* AFSecurityPolicy.h */,
+				665245591996DAB800C36609 /* AFSecurityPolicy.m */,
+				6652455A1996DAB800C36609 /* AFURLConnectionOperation.h */,
+				6652455B1996DAB800C36609 /* AFURLConnectionOperation.m */,
+				6652455C1996DAB800C36609 /* AFURLRequestSerialization.h */,
+				6652455D1996DAB800C36609 /* AFURLRequestSerialization.m */,
+				6652455E1996DAB800C36609 /* AFURLResponseSerialization.h */,
+				6652455F1996DAB800C36609 /* AFURLResponseSerialization.m */,
+				665245601996DAB800C36609 /* AFURLSessionManager.h */,
+				665245611996DAB800C36609 /* AFURLSessionManager.m */,
+			);
+			name = AFNetworking;
 			sourceTree = "<group>";
 		};
 		6653B8A7195CC79A001C6E15 /* Default user content */ = {
@@ -1704,6 +1775,7 @@
 		66DCFB911581BCEF00B4918C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				665245321996D9E700C36609 /* AFNetworking */,
 				6653B8A7195CC79A001C6E15 /* Default user content */,
 				66277C9A192BC97E003E97C0 /* SSKeychain */,
 				662A21B8191D66FF00AD9E31 /* MixPanel */,
@@ -1900,9 +1972,11 @@
 			files = (
 				6650DD1418F4843D00ADF591 /* photoalbum.png in Resources */,
 				6650DD2518F491B700ADF591 /* evernote.png in Resources */,
+				665245311996D1E800C36609 /* imgur.png in Resources */,
 				665245251995936500C36609 /* tencentWeibo.png in Resources */,
 				66524512199583B600C36609 /* twitterLarge@2x.png in Resources */,
 				665245231995936000C36609 /* tencentWeibo@2x.png in Resources */,
+				6652456E1996E69D00C36609 /* link@2x.png in Resources */,
 				66DCFB951581BCEF00B4918C /* InfoPlist.strings in Resources */,
 				6650DD1218F4843400ADF591 /* photoalbum@2x.png in Resources */,
 				66684B40182DAAC0005A27B4 /* UIColorWithHex.license in Resources */,
@@ -1925,10 +1999,12 @@
 				6652451B19958C2900C36609 /* sinaWeibo@2x.png in Resources */,
 				6650DD2318F48F8300ADF591 /* facebook@2x.png in Resources */,
 				667D98AA192D010900625879 /* Loose-Leaf_76.png in Resources */,
+				6652452F1996D1E500C36609 /* imgur@2x.png in Resources */,
 				666E253418F5DDFD00C17295 /* clearphotoalbum@2x.png in Resources */,
 				6650DD1F18F48E4200ADF591 /* twitter@2x.png in Resources */,
 				665245141995844D00C36609 /* twitterLarge.png in Resources */,
 				665244FF1995673900C36609 /* email.png in Resources */,
+				6652456D1996E69D00C36609 /* link.png in Resources */,
 				6652450D199576E800C36609 /* text@2x.png in Resources */,
 				6650DD2118F48F7F00ADF591 /* facebook.png in Resources */,
 				666E253C18F5E15F00C17295 /* clearcamera@2x.png in Resources */,
@@ -2004,6 +2080,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				665245671996DAB800C36609 /* AFURLConnectionOperation.m in Sources */,
 				66A790B9196898A90037F01A /* MMUndoRedoGroupItem.m in Sources */,
 				6652451019957AD600C36609 /* MMTwitterShareItem.m in Sources */,
 				66DCFB971581BCEF00B4918C /* main.m in Sources */,
@@ -2021,6 +2098,7 @@
 				66DCFBCD1582BAED00B4918C /* MMPaperView.m in Sources */,
 				6635BE9619748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m in Sources */,
 				660E1DA9158FC6300001DA12 /* NSMutableArray+QueueAdditions.m in Sources */,
+				665245691996DAB800C36609 /* AFURLResponseSerialization.m in Sources */,
 				664FB55B194BAC6A009C1EF9 /* MMCancelableGestureRecognizer.m in Sources */,
 				666E254918F613FA00C17295 /* MMFaceSidebarContentView.m in Sources */,
 				6699714D17DA5EDB00E81467 /* MMScrapSidebarButton.m in Sources */,
@@ -2051,6 +2129,7 @@
 				66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */,
 				66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */,
 				66BD6E301591B57B00D4544C /* MMPaperButton.m in Sources */,
+				6652452D1996CE3000C36609 /* MMImgurShareItem.m in Sources */,
 				6667480617C0166100D5C390 /* MMShapeBuilderView.m in Sources */,
 				666E254C18F618B000C17295 /* MMEventSidebarContentView.m in Sources */,
 				66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */,
@@ -2059,6 +2138,7 @@
 				66AC8D8318E88F4700A65036 /* MMPhotoAlbum.mm in Sources */,
 				66BD6E701593A8CC00D4544C /* MMPlusButton.m in Sources */,
 				66AF94FD1905956C004818F8 /* MMPageCacheManager.m in Sources */,
+				665245661996DAB800C36609 /* AFSecurityPolicy.m in Sources */,
 				66BD6E801593AF4200D4544C /* MMSidebarButton.m in Sources */,
 				66BD6E8E1593D18800D4544C /* MMPolylineButton.m in Sources */,
 				66A2904B187773E70036E4B7 /* AVHexColor.m in Sources */,
@@ -2079,11 +2159,13 @@
 				6693295A15958A950033E557 /* MMShadowManager.m in Sources */,
 				66932965159593C00033E557 /* MMRotationManager.m in Sources */,
 				6693296A1595A87E0033E557 /* MMMapButton.m in Sources */,
+				665245651996DAB800C36609 /* AFNetworkReachabilityManager.m in Sources */,
 				669329701598E4DC0033E557 /* NSString+UUID.m in Sources */,
 				6612C8881964C113003A9575 /* MMUndoablePaperView.m in Sources */,
 				669B764F18E9FE490041DAE7 /* ALAsset+Thumbnail.m in Sources */,
 				66A3921817CC4EE000B4974D /* NSArray+Extras.m in Sources */,
 				669329731598EE210033E557 /* UIView+Debug.m in Sources */,
+				6652456A1996DAB800C36609 /* AFURLSessionManager.m in Sources */,
 				66EDA79617CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m in Sources */,
 				665C593417BD7C42006DECBF /* Tool.m in Sources */,
 				66277C9F192BC99D003E97C0 /* SSKeychain.m in Sources */,
@@ -2133,11 +2215,13 @@
 				66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */,
 				667D98C2192FD87400625879 /* MMPDF.m in Sources */,
 				66AC8D7918E7506A00A65036 /* MMImageSidebarContainerView.m in Sources */,
+				665245631996DAB800C36609 /* AFHTTPRequestOperationManager.m in Sources */,
 				66AC8D8018E88BCC00A65036 /* MMPhotoManager.m in Sources */,
 				66A471C217C7DEF200C2A5B6 /* SYShape+Bezier.m in Sources */,
 				66B3522517A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m in Sources */,
 				663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */,
 				66E716B61936580A00548491 /* MPCJSONSerializer.m in Sources */,
+				665245621996DAB800C36609 /* AFHTTPRequestOperation.m in Sources */,
 				663C187D1755B63D00706A05 /* Eraser.m in Sources */,
 				663C188B1759B51600706A05 /* MMUndoRedoButton.m in Sources */,
 				6652451E19958C4900C36609 /* MMSinaWeiboShareItem.m in Sources */,
@@ -2148,11 +2232,13 @@
 				66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */,
 				66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */,
 				66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */,
+				665245681996DAB800C36609 /* AFURLRequestSerialization.m in Sources */,
 				66E716B71936580A00548491 /* MPCSerializedJSONData.m in Sources */,
 				66B21A7A175E595B0049F1AF /* MMBlockOperation.m in Sources */,
 				6612C8901964CC76003A9575 /* MMUndoRedoStrokeItem.m in Sources */,
 				6693C94918E4C55B0054FF41 /* MMLeftCloseButton.m in Sources */,
 				6655E926176291C800E4F36A /* MMScissorButton.m in Sources */,
+				665245641996DAB800C36609 /* AFHTTPSessionManager.m in Sources */,
 				66D7496318A6DB010015650E /* MMDrawingTouchGestureRecognizer.m in Sources */,
 				66510838178DFEE700A7A7DD /* MMRulerView.m in Sources */,
 				666E254518F60F3E00C17295 /* MMAlbumSidebarContentView.m in Sources */,

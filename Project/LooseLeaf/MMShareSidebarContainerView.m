@@ -15,6 +15,7 @@
 #import "MMSinaWeiboShareItem.h"
 #import "MMTencentWeiboShareItem.h"
 #import "MMPhotoAlbumShareItem.h"
+#import "MMImgurShareItem.h"
 #import "NSThread+BlockAdditions.h"
 #import "Constants.h"
 
@@ -39,11 +40,12 @@
         
         [shareItems addObject:[[MMEmailShareItem alloc] init]];
         [shareItems addObject:[[MMTextShareItem alloc] init]];
+        [shareItems addObject:[[MMPhotoAlbumShareItem alloc] init]];
         [shareItems addObject:[[MMSinaWeiboShareItem alloc] init]];
         [shareItems addObject:[[MMTencentWeiboShareItem alloc] init]];
         [shareItems addObject:[[MMTwitterShareItem alloc] init]];
         [shareItems addObject:[[MMFacebookShareItem alloc] init]];
-        [shareItems addObject:[[MMPhotoAlbumShareItem alloc] init]];
+        [shareItems addObject:[[MMImgurShareItem alloc] init]];
 
         [self updateShareOptions];
         

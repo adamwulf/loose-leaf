@@ -129,7 +129,6 @@
 #pragma mark - Dealloc
 
 -(void) dealloc{
-    NSLog(@"dealloc photo button");
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
