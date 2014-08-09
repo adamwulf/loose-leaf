@@ -258,4 +258,8 @@
     return delegate.viewForBlur;
 }
 
+-(UIImage*) imageForBlur{
+    return delegate.imageForBlur;
+}
+
 @end

@@ -61,6 +61,8 @@
     // flag if we're animating a scrap
     // to/from the sidebar
     BOOL isAnimatingScrapToOrFromSidebar;
+    
+    UIImageView* testImageView;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -156,6 +158,11 @@
 //        debugImgView.contentMode = UIViewContentModeScaleAspectFit;
 //        debugImgView.backgroundColor = [UIColor orangeColor];
 //        [self addSubview:debugImgView];
+        
+//        testImageView = [[UIImageView alloc] initWithFrame:CGRectMake(450, 50, 200, 200)];
+//        [testImageView showDebugBorder];
+//        [self addSubview:testImageView];
+
     }
     return self;
 }
@@ -1762,10 +1769,15 @@ int skipAll = NO;
     return [visibleStackHolder peekSubview];
 }
 
+-(UIImage*) imageForBlur{
+    testImageView.image = [visibleStackHolder peekSubview].scrappedImgViewImage;
+    return [visibleStackHolder peekSubview].scrappedImgViewImage;
+}
+
 #pragma mark - MMShareItemDelegate
 
 -(UIImage*) imageToShare{
-    return [visibleStackHolder peekSubview].scrappedImgViewImage;
+    return [visibleStackHolder peekSubview].cachedImgViewImage;
 }
 
 -(void) didShare{

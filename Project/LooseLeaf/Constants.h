@@ -109,7 +109,7 @@
 
 // cache sizes
 #define kMMLoadImageCacheSize 10
-#define kMMPageCacheManagerSize 5
+#define kMMPageCacheManagerSize 3
 
 #ifdef __cplusplus
 extern "C" {
