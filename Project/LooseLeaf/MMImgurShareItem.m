@@ -57,7 +57,7 @@
         lastProgress = 0;
         targetSuccess = 0;
         targetProgress = 0;
-        [self uploadPhoto:UIImagePNGRepresentation(image) title:@"Quick sketch from Loose Leaf" description:@"getlooseleaf.com" progressBlock:^(CGFloat progress) {
+        [self uploadPhoto:UIImagePNGRepresentation(image) title:@"Quick sketch from Loose Leaf" description:@"http://getlooseleaf.com" progressBlock:^(CGFloat progress) {
             progress *= .55; // leave last 10 % for when we get the URL
             if(progress > targetProgress){
                 targetProgress = progress;
@@ -76,8 +76,16 @@
             targetProgress = 1.0;
             targetSuccess = NO;
             conn = nil;
-            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Imgur",
-                                                                         kMPEventExportPropResult : @"Failed"}];
+            
+            NSString* failedReason = [error.userInfo valueForKey:NSLocalizedFailureReasonErrorKey];
+            if(failedReason){
+                [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Imgur",
+                                                                             kMPEventExportPropResult : @"Failed",
+                                                                             kMPEventExportPropReason : failedReason}];
+            }else{
+                [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Imgur",
+                                                                             kMPEventExportPropResult : @"Failed"}];
+            }
         }];
         [self animateToPercent:.1 success:YES];
     }
@@ -208,7 +216,8 @@
 {
     NSAssert(imageData, @"Image data is required");
     
-    NSString *urlString = @"https://api.imgur.com/3/upload.json";
+//    NSString *urlString = @"https://api.imgur.com/3/upload.json";
+    NSString *urlString = @"https://imgur-apiv3.p.mashape.com/3/upload.json";
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init] ;
     [request setURL:[NSURL URLWithString:urlString]];
     [request setHTTPMethod:@"POST"];
@@ -222,6 +231,7 @@
     
     // Add client ID as authrorization header
     [request addValue:[NSString stringWithFormat:@"Client-ID %@", kImgurClientID] forHTTPHeaderField:@"Authorization"];
+    [request addValue:[NSString stringWithFormat:kMashapeClientID] forHTTPHeaderField:@"X-Mashape-Key"];
     
     // Image File Data
     [requestBody appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -264,18 +274,23 @@
             if(blockConn.responseData){
                 responseDictionary = [NSJSONSerialization JSONObjectWithData:blockConn.responseData options:NSJSONReadingMutableContainers error:nil];
             }
-            if (!responseDictionary || [responseDictionary valueForKeyPath:@"data.error"]) {
+            if([responseDictionary valueForKeyPath:@"data.link"]){
+                if (completionBlock) {
+                    completionBlock([responseDictionary valueForKeyPath:@"data.link"]);
+                }
+            }else{
                 if (failureBlock) {
                     NSError* error = blockConn.error;
                     if (!error) {
+                        NSString* errStr = [responseDictionary valueForKeyPath:@"data.error"];
+                        if([responseDictionary valueForKey:@"message"]){
+                            errStr = [responseDictionary valueForKeyPath:@"message"];
+                        }
                         // If no error has been provided, create one based on the response received from the server
-                        error = [NSError errorWithDomain:@"imguruploader" code:10000 userInfo:@{NSLocalizedFailureReasonErrorKey : [responseDictionary valueForKeyPath:@"data.error"]}];
+                        error = [NSError errorWithDomain:@"imguruploader" code:10000 userInfo:errStr ? @{NSLocalizedFailureReasonErrorKey : errStr} : nil];
                     }
+
                     failureBlock(blockConn.response, error, [[responseDictionary valueForKey:@"status"] intValue]);
-                }
-            } else {
-                if (completionBlock) {
-                    completionBlock([responseDictionary valueForKeyPath:@"data.link"]);
                 }
             }
         }

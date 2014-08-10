@@ -35,6 +35,7 @@
 // Imgur
 #define kImgurClientID @"84d82da68fd2438"
 #define kImgurClientSecret @"9d527186fee2a9f9e7af7f5e9fbbab334a1ac1ce"
+#define kMashapeClientID @"YOUR_MASHAPE_CLIENT_ID"
 
 // Ruler
 #define kWidthOfRuler 70
@@ -99,6 +100,7 @@
 
 #define kMPEventExportPropDestination @"Export Destination"
 #define kMPEventExportPropResult @"Export Result"
+#define kMPEventExportPropReason @"Export Result Reason"
 #define kMPEventImportPropFileExt @"File Extension"
 #define kMPEventImportPropFileType @"File Type"
 #define kMPEventImportPropReferApp @"Referring App"
