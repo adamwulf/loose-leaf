@@ -34,6 +34,8 @@
     return button;
 }
 
+
+
 -(void) performShareAction{
     NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"temp.png"];
     
@@ -41,6 +43,7 @@
     NSURL* fileLocation = [NSURL URLWithString:[@"file://" stringByAppendingString:filePath]];
     
     controller = [UIDocumentInteractionController interactionControllerWithURL:fileLocation];
+    
     [controller presentOpenInMenuFromRect:self.button.bounds inView:self.button animated:YES ];
     
 //    controller = [[UIActivityViewController alloc] initWithActivityItems:@[fileLocation]
