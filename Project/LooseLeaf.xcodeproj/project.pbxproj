@@ -197,6 +197,8 @@
 		66AF94FD1905956C004818F8 /* MMPageCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AF94FC1905956C004818F8 /* MMPageCacheManager.m */; };
 		66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B0FA5F17FB68410079E7A3 /* MMScrapViewState.m */; };
 		66B1EF2A19980A1300E9EEF1 /* UIView+SuperWatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B1EF2919980A1300E9EEF1 /* UIView+SuperWatch.m */; };
+		66B1EF2D19983DCD00E9EEF1 /* MMShareManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B1EF2C19983DCD00E9EEF1 /* MMShareManager.m */; };
+		66B1EF3019984C0300E9EEF1 /* MMShareView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B1EF2F19984C0300E9EEF1 /* MMShareView.m */; };
 		66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A55175AFCA70049F1AF /* MMHandButton.m */; };
 		66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A6B175E4A5A0049F1AF /* MMStackManager.m */; };
 		66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A75175E559E0049F1AF /* NSArray+Map.m */; };
@@ -629,6 +631,10 @@
 		66B0FA5F17FB68410079E7A3 /* MMScrapViewState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapViewState.m; sourceTree = "<group>"; };
 		66B1EF2819980A1300E9EEF1 /* UIView+SuperWatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+SuperWatch.h"; sourceTree = "<group>"; };
 		66B1EF2919980A1300E9EEF1 /* UIView+SuperWatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+SuperWatch.m"; sourceTree = "<group>"; };
+		66B1EF2B19983DCD00E9EEF1 /* MMShareManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShareManager.h; sourceTree = "<group>"; };
+		66B1EF2C19983DCD00E9EEF1 /* MMShareManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShareManager.m; sourceTree = "<group>"; };
+		66B1EF2E19984C0300E9EEF1 /* MMShareView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShareView.h; sourceTree = "<group>"; };
+		66B1EF2F19984C0300E9EEF1 /* MMShareView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShareView.m; sourceTree = "<group>"; };
 		66B21A54175AFCA70049F1AF /* MMHandButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMHandButton.h; sourceTree = "<group>"; };
 		66B21A55175AFCA70049F1AF /* MMHandButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMHandButton.m; sourceTree = "<group>"; };
 		66B21A6A175E4A5A0049F1AF /* MMStackManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackManager.h; sourceTree = "<group>"; };
@@ -1639,6 +1645,10 @@
 			children = (
 				66B1EF2819980A1300E9EEF1 /* UIView+SuperWatch.h */,
 				66B1EF2919980A1300E9EEF1 /* UIView+SuperWatch.m */,
+				66B1EF2B19983DCD00E9EEF1 /* MMShareManager.h */,
+				66B1EF2C19983DCD00E9EEF1 /* MMShareManager.m */,
+				66B1EF2E19984C0300E9EEF1 /* MMShareView.h */,
+				66B1EF2F19984C0300E9EEF1 /* MMShareView.m */,
 			);
 			name = OpenIn;
 			sourceTree = "<group>";
@@ -2175,6 +2185,7 @@
 				66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */,
 				66AC8D8318E88F4700A65036 /* MMPhotoAlbum.mm in Sources */,
 				66BD6E701593A8CC00D4544C /* MMPlusButton.m in Sources */,
+				66B1EF2D19983DCD00E9EEF1 /* MMShareManager.m in Sources */,
 				66AF94FD1905956C004818F8 /* MMPageCacheManager.m in Sources */,
 				665245661996DAB800C36609 /* AFSecurityPolicy.m in Sources */,
 				66BD6E801593AF4200D4544C /* MMSidebarButton.m in Sources */,
@@ -2205,6 +2216,7 @@
 				669329731598EE210033E557 /* UIView+Debug.m in Sources */,
 				6652456A1996DAB800C36609 /* AFURLSessionManager.m in Sources */,
 				66EDA79617CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m in Sources */,
+				66B1EF3019984C0300E9EEF1 /* MMShareView.m in Sources */,
 				665C593417BD7C42006DECBF /* Tool.m in Sources */,
 				66277C9F192BC99D003E97C0 /* SSKeychain.m in Sources */,
 				6693297E1599196E0033E557 /* UIFont+UIBezierCurve.m in Sources */,

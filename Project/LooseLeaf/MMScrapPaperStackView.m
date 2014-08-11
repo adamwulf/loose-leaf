@@ -25,6 +25,7 @@
 #import "MMInboxManagerDelegate.h"
 #import "NSURL+UTI.h"
 #import "Mixpanel.h"
+#import "MMShareManager.h"
 #import "MMTrashManager.h"
 #import "MMShareSidebarContainerView.h"
 
@@ -311,6 +312,8 @@
 -(void) sidebarWillHide{
     [self setButtonsVisible:YES];
     [self enableAllGesturesForPageView];
+    
+    [[MMShareManager sharedInstace] reset];
 }
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{

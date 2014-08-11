@@ -66,7 +66,10 @@
 //    [self.button.window.rootViewController presentViewController:controller animated:YES completion:nil];
     
     
-    
+    [[NSThread mainThread] performBlock:^{
+        [controller dismissMenuAnimated:NO];
+        controller = nil;
+    } afterDelay:60];
 
 }
 

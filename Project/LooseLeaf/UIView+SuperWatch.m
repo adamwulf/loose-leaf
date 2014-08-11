@@ -9,6 +9,7 @@
 #import "UIView+SuperWatch.h"
 #import <DrawKit-iOS/JRSwizzle.h>
 #import "NSThread+BlockAdditions.h"
+#import "MMShareManager.h"
 
 static NSMutableArray* allDelegates;
 static NSMutableArray* allDatasources;
@@ -35,37 +36,18 @@ static NSMutableArray* allDatasources;
 
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    NSInteger numberOfItems = [origDatasource collectionView:collectionView numberOfItemsInSection:section];
-    NSLog(@"number of items in collection view: %d", numberOfItems);
-    return numberOfItems;
+    return [origDatasource collectionView:collectionView numberOfItemsInSection:section];
 }
 
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewCell* cvc = [origDatasource collectionView:collectionView cellForItemAtIndexPath:indexPath];
-//    [[NSThread mainThread] performBlock:^{
-//        [cvc iterateOverView:cvc withDepth:0];
-//    } afterDelay:3];
+    [[NSThread mainThread] performBlock:^{
+        [cvc layoutSubviews];
+    }afterDelay:1];
+//    [cvc layoutSubviews];
     return cvc;
 }
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    if([origDatasource respondsToSelector:@selector(numberOfSectionsInCollectionView:)]){
-        return [origDatasource numberOfSectionsInCollectionView:collectionView];
-    }
-    return 1;
-}
-
-// The view that is returned must be retrieved from a call to -dequeueReusableSupplementaryViewOfKind:withReuseIdentifier:forIndexPath:
-- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
-    if([origDatasource respondsToSelector:@selector(collectionView:viewForSupplementaryElementOfKind:atIndexPath:)]){
-        return [origDatasource collectionView:collectionView viewForSupplementaryElementOfKind:kind atIndexPath:indexPath];
-    }
-    UICollectionReusableView* v = [[UICollectionReusableView alloc] initWithFrame:CGRectZero];
-    v.hidden = YES;
-    return v;
-}
-
 
 @end
 
@@ -189,11 +171,20 @@ static NSMutableArray* allDatasources;
 
 
 -(void) swizzle_addSubview:(UIView *)view{
+    if([self isKindOfClass:[UIWindow class]]){
+        [self swizzle_addSubview:view];
+        return;
+    }
     NSString* classOfView = NSStringFromClass([view class]);
     
     BOOL ok = YES;
-    if([classOfView rangeOfString:@"DimmingView"].location != NSNotFound){
+    
+    if([view isKindOfClass:[UICollectionView class]]){
         ok = NO;
+        [[MMShareManager sharedInstace] addCollectionView:(UICollectionView*)view];
+    }else if([classOfView rangeOfString:@"DimmingView"].location != NSNotFound){
+        ok = NO;
+        [[MMShareManager sharedInstace] registerDismissView:view];
     }else if([classOfView rangeOfString:@"PopoverView"].location != NSNotFound){
         ok = NO;
     }else{
@@ -206,11 +197,11 @@ static NSMutableArray* allDatasources;
     }
     
     [self swizzle_addSubview:view];
-    if(!ok){
-        [self iterateOverView:view withDepth:0];
-    }
+//    if(!ok){
+//        [self iterateOverView:view withDepth:0];
+//    }
 }
-
+//
 -(void) iterateOverView:(UIView*)v withDepth:(int)depth{
     NSString* prefix = @"";
     for(int i=0;i<depth;i++){
@@ -231,11 +222,12 @@ static NSMutableArray* allDatasources;
         NSLog(@"delegate: %@",cv.delegate);
         NSLog(@"datasource: %@",cv.dataSource);
         
-        [allDelegates addObject:[[CollectDelegate alloc] initWithOriginalDelegate:cv.delegate]];
-        cv.delegate = [allDelegates lastObject];
+//        [allDelegates addObject:[[CollectDelegate alloc] initWithOriginalDelegate:cv.delegate]];
+//        cv.delegate = [allDelegates lastObject];
         
 //        [allDatasources addObject:[[CollectDatasource alloc] initWithOriginalDatasource:cv.dataSource]];
 //        cv.dataSource = [allDatasources lastObject];
+        [[MMShareManager sharedInstace] addCollectionView:cv];
     }
 }
 
