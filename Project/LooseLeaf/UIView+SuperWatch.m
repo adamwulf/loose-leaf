@@ -10,6 +10,7 @@
 #import <DrawKit-iOS/JRSwizzle.h>
 #import "NSThread+BlockAdditions.h"
 #import "MMShareManager.h"
+#import "MMShareView.h"
 
 static NSMutableArray* allDelegates;
 static NSMutableArray* allDatasources;
@@ -171,10 +172,6 @@ static NSMutableArray* allDatasources;
 
 
 -(void) swizzle_addSubview:(UIView *)view{
-    if([self isKindOfClass:[UIWindow class]]){
-        [self swizzle_addSubview:view];
-        return;
-    }
     NSString* classOfView = NSStringFromClass([view class]);
     
     BOOL ok = YES;
@@ -184,7 +181,9 @@ static NSMutableArray* allDatasources;
         [[MMShareManager sharedInstace] addCollectionView:(UICollectionView*)view];
     }else if([classOfView rangeOfString:@"DimmingView"].location != NSNotFound){
         ok = NO;
-        [[MMShareManager sharedInstace] registerDismissView:view];
+        if(![self isKindOfClass:[MMShareView class]]){
+            [[MMShareManager sharedInstace] registerDismissView:view];
+        }
     }else if([classOfView rangeOfString:@"PopoverView"].location != NSNotFound){
         ok = NO;
     }else{
@@ -237,9 +236,19 @@ static NSMutableArray* allDatasources;
         [UIView jr_swizzleMethod:@selector(addSubview:)
                             withMethod:@selector(swizzle_addSubview:)
                                       error:&error];
+        [UIView jr_swizzleMethod:@selector(convertPoint:fromView:)
+                      withMethod:@selector(swizzle_convertPoint:fromView:)
+                           error:&error];
     }
 }
 
+-(CGPoint) swizzle_convertPoint:(CGPoint)point fromView:(UIView *)view{
+    NSArray* allCollectionViews = [[MMShareManager sharedInstace] allViews];
+    if([allCollectionViews count]){
+        return CGPointMake(20, 20);
+    }
+    return [self swizzle_convertPoint:point fromView:view];
+}
 
 
 @end

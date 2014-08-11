@@ -10,6 +10,6 @@
 #import "MMUntouchableView.h"
 
 
-@interface MMShareView : MMUntouchableView
+@interface MMShareView : UIView
 
 @end

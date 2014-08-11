@@ -51,6 +51,8 @@ static MMShareManager* _instance = nil;
 -(void) registerDismissView:(UIView*)dismissView{
     dismissView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
     dismissView.alpha = .5;
+    dismissView.hidden = YES;
+    [shareView addSubview:dismissView];
 }
 
 -(void) addCollectionView:(UICollectionView*)view{
