@@ -10,29 +10,43 @@
 #import "NSThread+BlockAdditions.h"
 #import "UIView+Debug.h"
 #import "MMShareView.h"
+#import <JotUI/JotUI.h>
 
 @implementation MMShareManager{
-    NSMutableArray* allViews;
+    // the document controller that we'll
+    // use for drawing the buttons
+    UIDocumentInteractionController* controller;
+    NSMutableArray* allFoundCollectionViews;
     MMShareView* shareView;
 }
 
+static BOOL shouldListenToRegisterViews;
 static MMShareManager* _instance = nil;
+
++(BOOL) shouldListenToRegisterViews{
+    return shouldListenToRegisterViews;
+}
+
+-(NSArray*)allFoundCollectionViews{
+    return [NSArray arrayWithArray:allFoundCollectionViews];
+}
 
 -(id) init{
     if(_instance) return _instance;
     if((self = [super init])){
         _instance = self;
-        allViews = [NSMutableArray array];
-        UICollectionViewFlowLayout* layout = [[UICollectionViewFlowLayout alloc] init];
-        layout.minimumLineSpacing = 10;
-        layout.minimumInteritemSpacing = 10;
-        layout.itemSize = CGSizeMake(100, 100);
-        layout.sectionInset = UIEdgeInsetsZero;
-        layout.scrollDirection = UICollectionViewScrollDirectionVertical;
+        allFoundCollectionViews = [NSMutableArray array];
         
-        shareView = [[MMShareView alloc] initWithFrame:[UIScreen mainScreen].bounds];
         UIWindow* win = [[UIApplication sharedApplication] keyWindow];
-        [win addSubview:shareView];
+        shareView = [[MMShareView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        shareView.hidden = YES;
+        [win.rootViewController.view addSubview:shareView];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(endSharing)
+                                                     name:UIApplicationWillResignActiveNotification
+                                                   object:nil];
+
     }
     return _instance;
 }
@@ -44,9 +58,48 @@ static MMShareManager* _instance = nil;
     return _instance;
 }
 
--(NSArray*)allViews{
-    return [NSArray arrayWithArray:allViews];
+#pragma mark - Create and Dismiss the Document Controller
+
+-(void) beginSharingWithURL:(NSURL*)fileLocation{
+    CheckMainThread;
+    
+    controller = [UIDocumentInteractionController interactionControllerWithURL:fileLocation];
+    
+    shouldListenToRegisterViews = YES;
+    [controller presentOpenInMenuFromRect:CGRectZero inView:shareView animated:NO];
+    shouldListenToRegisterViews = NO;
+    
+    shareView.hidden = NO;
+
+    for(int i=1;i<5;i++){
+        [[NSThread mainThread] performBlock:^{
+            [shareView setNeedsDisplay];
+        } afterDelay:i];
+    }
 }
+
+-(void) endSharing{
+    CheckMainThread;
+    
+    if(controller){
+        [controller dismissMenuAnimated:NO];
+        controller = nil;
+        [allFoundCollectionViews removeAllObjects];
+        shareView.hidden = YES;
+    }
+    
+    UIWindow* win = [[UIApplication sharedApplication] keyWindow];
+    [[win rootViewController] dismissViewControllerAnimated:NO completion:nil];
+    
+    for (UIView* subview in win.subviews) {
+        NSLog(@"still in window: %@", NSStringFromClass([subview class]));
+        for (UIView* subview2 in subview.subviews) {
+            NSLog(@"  still in subview: %@", NSStringFromClass([subview2 class]));
+        }
+    }
+}
+
+#pragma mark - Registering Popover and Collection Views
 
 -(void) registerDismissView:(UIView*)dismissView{
     dismissView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
@@ -57,30 +110,15 @@ static MMShareManager* _instance = nil;
 
 -(void) addCollectionView:(UICollectionView*)view{
     @synchronized(self){
-        [allViews addObject:view];
+        [allFoundCollectionViews addObject:view];
         [shareView setNeedsDisplay];
-        [[NSThread mainThread] performBlock:^{
-            [shareView setNeedsDisplay];
-        } afterDelay:5];
-        
-        [[NSThread mainThread] performBlock:^{
-            [shareView setNeedsDisplay];
-        } afterDelay:10];
     }
 }
 
--(void) reset{
-    UIWindow* win = [[UIApplication sharedApplication] keyWindow];
-    [[win rootViewController] dismissViewControllerAnimated:NO completion:nil];
+#pragma mark - Dealloc
 
-    [allViews removeAllObjects];
-    
-    for (UIView* subview in win.subviews) {
-        NSLog(@"still in window: %@", NSStringFromClass([subview class]));
-        for (UIView* subview2 in subview.subviews) {
-            NSLog(@"  still in subview: %@", NSStringFromClass([subview2 class]));
-        }
-    }
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

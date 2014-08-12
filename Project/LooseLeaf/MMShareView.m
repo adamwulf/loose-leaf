@@ -19,7 +19,6 @@
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
-//        [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap)]];
         [self showDebugBorder];
         self.userInteractionEnabled = YES;
     }
@@ -35,7 +34,7 @@
     
     CGFloat loc = 0;
     
-    NSArray* allCollectionViews = [[MMShareManager sharedInstace] allViews];
+    NSArray* allCollectionViews = [[MMShareManager sharedInstace] allFoundCollectionViews];
     
     
     NSLog(@"checking on %d views", [allCollectionViews count]);
@@ -65,7 +64,10 @@
     }
 }
 
-#pragma mark - Ignore Touches
+#pragma mark - Redirect Touches
+
+// the goal of this method is to direct the touch to
+// the activity cell for the app we want to open
 
 /**
  * these two methods make sure that the ruler view
@@ -73,7 +75,7 @@
  * effectively pass through this view to the views behind it
  */
 -(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
-    NSArray* allCollectionViews = [[MMShareManager sharedInstace] allViews];
+    NSArray* allCollectionViews = [[MMShareManager sharedInstace] allFoundCollectionViews];
     for(UICollectionView* cv in allCollectionViews){
         NSInteger numberOfItems = [cv numberOfItemsInSection:0];
         for(NSInteger i=0;i<numberOfItems;i++){
@@ -85,7 +87,7 @@
 }
 
 -(BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
-    NSArray* allCollectionViews = [[MMShareManager sharedInstace] allViews];
+    NSArray* allCollectionViews = [[MMShareManager sharedInstace] allFoundCollectionViews];
     for(UICollectionView* cv in allCollectionViews){
         NSInteger numberOfItems = [cv numberOfItemsInSection:0];
         if(numberOfItems > 1){
@@ -93,23 +95,6 @@
         }
     }
     return NO;
-}
-
--(CGPoint) convertPoint:(CGPoint)point toView:(UIView *)view{
-    return [super convertPoint:point toView:view];
-}
-
--(CGPoint) convertPoint:(CGPoint)point fromView:(UIView *)view{
-    NSArray* allCollectionViews = [[MMShareManager sharedInstace] allViews];
-    for(UICollectionView* cv in allCollectionViews){
-        NSInteger numberOfItems = [cv numberOfItemsInSection:0];
-        for(NSInteger i=0;i<numberOfItems;i++){
-            UICollectionViewCell* cell = [cv cellForItemAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-            CGPoint p = [cell convertPoint:cell.center toView:self];
-            return p;
-        }
-    }
-    return [super convertPoint:point fromView:view];
 }
 
 @end

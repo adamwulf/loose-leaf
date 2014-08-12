@@ -8,13 +8,13 @@
 
 #import "MMOpenInShareItem.h"
 #import "MMImageViewButton.h"
+#import "MMShareManager.h"
 #import "Mixpanel.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
 
 @implementation MMOpenInShareItem{
     MMImageViewButton* button;
-    UIDocumentInteractionController* controller;
 }
 
 @synthesize delegate;
@@ -42,35 +42,8 @@
     [UIImagePNGRepresentation(self.delegate.imageToShare) writeToFile:filePath atomically:YES];
     NSURL* fileLocation = [NSURL URLWithString:[@"file://" stringByAppendingString:filePath]];
     
-    controller = [UIDocumentInteractionController interactionControllerWithURL:fileLocation];
+    [[MMShareManager sharedInstace] beginSharingWithURL:fileLocation];
     
-    [controller presentOpenInMenuFromRect:self.button.bounds inView:self.button animated:YES ];
-    
-//    controller = [[UIActivityViewController alloc] initWithActivityItems:@[fileLocation]
-//                                      applicationActivities:@[]];
-//    controller.excludedActivityTypes = @[UIActivityTypeAirDrop,
-//                                         UIActivityTypePostToFacebook,
-//                                         UIActivityTypePostToTwitter,
-//                                         UIActivityTypePostToWeibo,
-//                                         UIActivityTypeMessage,
-//                                         UIActivityTypeMail,
-//                                         UIActivityTypePrint,
-//                                         UIActivityTypeCopyToPasteboard,
-//                                         UIActivityTypeAssignToContact,
-//                                         UIActivityTypeSaveToCameraRoll,
-//                                         UIActivityTypeAddToReadingList,
-//                                         UIActivityTypePostToFlickr,
-//                                         UIActivityTypePostToVimeo,
-//                                         UIActivityTypePostToTencentWeibo];
-//
-//    [self.button.window.rootViewController presentViewController:controller animated:YES completion:nil];
-    
-    
-    [[NSThread mainThread] performBlock:^{
-        [controller dismissMenuAnimated:NO];
-        controller = nil;
-    } afterDelay:60];
-
 }
 
 -(BOOL) isAtAllPossible{

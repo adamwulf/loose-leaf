@@ -313,7 +313,7 @@
     [self setButtonsVisible:YES];
     [self enableAllGesturesForPageView];
     
-    [[MMShareManager sharedInstace] reset];
+    [[MMShareManager sharedInstace] endSharing];
 }
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{

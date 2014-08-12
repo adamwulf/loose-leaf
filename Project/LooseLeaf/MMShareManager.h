@@ -10,14 +10,18 @@
 
 @interface MMShareManager : NSObject
 
--(NSArray*) allViews;
+@property (readonly) NSArray* allFoundCollectionViews;
+
++ (BOOL) shouldListenToRegisterViews;
 
 +(MMShareManager*) sharedInstace;
+
+-(void) beginSharingWithURL:(NSURL*)fileLocation;
+
+-(void) endSharing;
 
 -(void) addCollectionView:(UICollectionView*)view;
 
 -(void) registerDismissView:(UIView*)dismissView;
-
--(void) reset;
 
 @end

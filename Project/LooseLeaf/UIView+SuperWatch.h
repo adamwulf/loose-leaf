@@ -10,6 +10,4 @@
 
 @interface UIView (SuperWatch)
 
--(void) iterateOverView:(UIView*)v withDepth:(int)depth;
-
 @end
