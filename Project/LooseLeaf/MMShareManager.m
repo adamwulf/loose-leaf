@@ -16,6 +16,7 @@
     // use for drawing the buttons
     UIDocumentInteractionController* controller;
     NSMutableArray* allFoundCollectionViews;
+    NSTimer* mainThreadSharingTimer;
 }
 
 static UIView* shareTarget;
@@ -26,12 +27,14 @@ static MMShareManager* _instance = nil;
     return shouldListenToRegisterViews;
 }
 
-+(UIView*)shareTarget{
++(UIView*)shareTargetView{
     return shareTarget;
 }
-+(void) setShareTarget:(UIView*)_shareTarget{
++(void) setShareTargetView:(UIView*)_shareTarget{
     shareTarget = _shareTarget;
 }
+
+@synthesize delegate;
 
 -(NSArray*)allFoundCollectionViews{
     return [NSArray arrayWithArray:allFoundCollectionViews];
@@ -52,7 +55,7 @@ static MMShareManager* _instance = nil;
     return _instance;
 }
 
-+(MMShareManager*) sharedInstace{
++(MMShareManager*) sharedInstance{
     if(!_instance){
         _instance = [[MMShareManager alloc]init];
     }
@@ -70,6 +73,9 @@ static MMShareManager* _instance = nil;
     shouldListenToRegisterViews = YES;
     [controller presentOpenInMenuFromRect:CGRectZero inView:win animated:NO];
     shouldListenToRegisterViews = NO;
+    
+    mainThreadSharingTimer = [NSTimer scheduledTimerWithTimeInterval:.3 target:self selector:@selector(tick) userInfo:nil repeats:YES];
+    [self performSelector:@selector(tick) withObject:nil afterDelay:.01];
 }
 
 -(void) endSharing{
@@ -79,7 +85,7 @@ static MMShareManager* _instance = nil;
         [controller dismissMenuAnimated:NO];
         controller = nil;
         [allFoundCollectionViews removeAllObjects];
-        [MMShareManager setShareTarget:nil];
+        [MMShareManager setShareTargetView:nil];
     }
     
     UIWindow* win = [[UIApplication sharedApplication] keyWindow];
@@ -91,6 +97,8 @@ static MMShareManager* _instance = nil;
             NSLog(@"  still in subview: %@", NSStringFromClass([subview2 class]));
         }
     }
+    [mainThreadSharingTimer invalidate];
+    mainThreadSharingTimer = nil;
 }
 
 #pragma mark - Number of Sharable Targets
@@ -121,6 +129,12 @@ static MMShareManager* _instance = nil;
 
 -(void) dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - Timer for finding share items
+
+-(void) tick{
+    [delegate shareItemsUpdated:allFoundCollectionViews];
 }
 
 @end

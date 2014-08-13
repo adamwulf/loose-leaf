@@ -6,13 +6,13 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "UIView+SuperWatch.h"
+#import "UIView+SharingViewWatch.h"
 #import <DrawKit-iOS/JRSwizzle.h>
 #import "NSThread+BlockAdditions.h"
 #import "MMShareManager.h"
 #import "MMShareView.h"
 
-@implementation UIView (SuperWatch)
+@implementation UIView (SharingViewWatch)
 
 
 // when adding views, check if we're in sharing mode. if so,
@@ -21,9 +21,9 @@
 -(void) swizzle_addSubview:(UIView *)view{
     if([MMShareManager shouldListenToRegisterViews]){
         if([view isKindOfClass:[UICollectionView class]]){
-            [[MMShareManager sharedInstace] addCollectionView:(UICollectionView*)view];
+            [[MMShareManager sharedInstance] addCollectionView:(UICollectionView*)view];
         }else if([self isKindOfClass:[UIWindow class]]){
-            [[MMShareManager sharedInstace] registerDismissView:view];
+            [[MMShareManager sharedInstance] registerDismissView:view];
         }
     }
     [self swizzle_addSubview:view];
@@ -42,8 +42,8 @@
 }
 
 -(CGPoint) swizzle_convertPoint:(CGPoint)point fromView:(UIView *)view{
-    if(self == [MMShareManager shareTarget]){
-        NSArray* allCollectionViews = [[MMShareManager sharedInstace] allFoundCollectionViews];
+    if(self == [MMShareManager shareTargetView]){
+        NSArray* allCollectionViews = [[MMShareManager sharedInstance] allFoundCollectionViews];
         if([allCollectionViews count]){
             return CGPointMake(20, 20);
         }

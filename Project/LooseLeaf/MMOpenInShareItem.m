@@ -17,7 +17,7 @@
 
 @implementation MMOpenInShareItem{
     MMImageViewButton* button;
-    UIView* sharingOptionsView;
+    MMShareView* sharingOptionsView;
 }
 
 @synthesize delegate;
@@ -44,21 +44,22 @@
 
 -(void) performShareAction{
     NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"temp.png"];
-    
     [UIImagePNGRepresentation(self.delegate.imageToShare) writeToFile:filePath atomically:YES];
     NSURL* fileLocation = [NSURL URLWithString:[@"file://" stringByAppendingString:filePath]];
-    
-    [[MMShareManager sharedInstace] beginSharingWithURL:fileLocation];
-    
-    for(int i=1;i<5;i++){
-        [[NSThread mainThread] performBlock:^{
-            NSUInteger numberOfItems = [[MMShareManager sharedInstace] numberOfShareTargets];
-            CGRect fr = sharingOptionsView.frame;
-            fr.size.height = numberOfItems * (kWidthOfSidebarButton + kWidthOfSidebarButtonBuffer);
-            sharingOptionsView.frame = fr;
-            [sharingOptionsView setNeedsDisplay];
-        } afterDelay:i];
-    }
+    [[MMShareManager sharedInstance] beginSharingWithURL:fileLocation];
+    [MMShareManager sharedInstance].delegate = sharingOptionsView;
+}
+
+// called when the menu appears and our button is about to be visible
+-(void) willShow{
+    // noop
+}
+
+
+// called when our button is no longer visible
+-(void) didHide{
+    [[MMShareManager sharedInstance] endSharing];
+    [MMShareManager sharedInstance].delegate = nil;
 }
 
 -(BOOL) isAtAllPossible{

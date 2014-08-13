@@ -196,7 +196,7 @@
 		66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */; };
 		66AF94FD1905956C004818F8 /* MMPageCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AF94FC1905956C004818F8 /* MMPageCacheManager.m */; };
 		66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B0FA5F17FB68410079E7A3 /* MMScrapViewState.m */; };
-		66B1EF2A19980A1300E9EEF1 /* UIView+SuperWatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B1EF2919980A1300E9EEF1 /* UIView+SuperWatch.m */; };
+		66B1EF2A19980A1300E9EEF1 /* UIView+SharingViewWatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B1EF2919980A1300E9EEF1 /* UIView+SharingViewWatch.m */; };
 		66B1EF2D19983DCD00E9EEF1 /* MMShareManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B1EF2C19983DCD00E9EEF1 /* MMShareManager.m */; };
 		66B1EF3019984C0300E9EEF1 /* MMShareView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B1EF2F19984C0300E9EEF1 /* MMShareView.m */; };
 		66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A55175AFCA70049F1AF /* MMHandButton.m */; };
@@ -629,12 +629,13 @@
 		66AF94FE1905981F004818F8 /* MMPageCacheManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPageCacheManagerDelegate.h; sourceTree = "<group>"; };
 		66B0FA5E17FB68410079E7A3 /* MMScrapViewState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapViewState.h; sourceTree = "<group>"; };
 		66B0FA5F17FB68410079E7A3 /* MMScrapViewState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapViewState.m; sourceTree = "<group>"; };
-		66B1EF2819980A1300E9EEF1 /* UIView+SuperWatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+SuperWatch.h"; sourceTree = "<group>"; };
-		66B1EF2919980A1300E9EEF1 /* UIView+SuperWatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+SuperWatch.m"; sourceTree = "<group>"; };
+		66B1EF2819980A1300E9EEF1 /* UIView+SharingViewWatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+SharingViewWatch.h"; sourceTree = "<group>"; };
+		66B1EF2919980A1300E9EEF1 /* UIView+SharingViewWatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+SharingViewWatch.m"; sourceTree = "<group>"; };
 		66B1EF2B19983DCD00E9EEF1 /* MMShareManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShareManager.h; sourceTree = "<group>"; };
 		66B1EF2C19983DCD00E9EEF1 /* MMShareManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShareManager.m; sourceTree = "<group>"; };
 		66B1EF2E19984C0300E9EEF1 /* MMShareView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShareView.h; sourceTree = "<group>"; };
 		66B1EF2F19984C0300E9EEF1 /* MMShareView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShareView.m; sourceTree = "<group>"; };
+		66B1EF31199C293C00E9EEF1 /* MMShareManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShareManagerDelegate.h; sourceTree = "<group>"; };
 		66B21A54175AFCA70049F1AF /* MMHandButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMHandButton.h; sourceTree = "<group>"; };
 		66B21A55175AFCA70049F1AF /* MMHandButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMHandButton.m; sourceTree = "<group>"; };
 		66B21A6A175E4A5A0049F1AF /* MMStackManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackManager.h; sourceTree = "<group>"; };
@@ -1643,10 +1644,11 @@
 		66B1EF27199809B100E9EEF1 /* OpenIn */ = {
 			isa = PBXGroup;
 			children = (
-				66B1EF2819980A1300E9EEF1 /* UIView+SuperWatch.h */,
-				66B1EF2919980A1300E9EEF1 /* UIView+SuperWatch.m */,
+				66B1EF2819980A1300E9EEF1 /* UIView+SharingViewWatch.h */,
+				66B1EF2919980A1300E9EEF1 /* UIView+SharingViewWatch.m */,
 				66B1EF2B19983DCD00E9EEF1 /* MMShareManager.h */,
 				66B1EF2C19983DCD00E9EEF1 /* MMShareManager.m */,
+				66B1EF31199C293C00E9EEF1 /* MMShareManagerDelegate.h */,
 				66B1EF2E19984C0300E9EEF1 /* MMShareView.h */,
 				66B1EF2F19984C0300E9EEF1 /* MMShareView.m */,
 			);
@@ -2282,7 +2284,7 @@
 				66F4FB2617D912730086E21C /* MMScrapSidebarContentView.m in Sources */,
 				66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */,
 				66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */,
-				66B1EF2A19980A1300E9EEF1 /* UIView+SuperWatch.m in Sources */,
+				66B1EF2A19980A1300E9EEF1 /* UIView+SharingViewWatch.m in Sources */,
 				66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */,
 				665245681996DAB800C36609 /* AFURLRequestSerialization.m in Sources */,
 				66E716B71936580A00548491 /* MPCSerializedJSONData.m in Sources */,

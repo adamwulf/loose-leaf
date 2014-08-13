@@ -22,4 +22,8 @@
 
 -(UIView*) optionsView;
 
+-(void) willShow;
+
+-(void) didHide;
+
 @end

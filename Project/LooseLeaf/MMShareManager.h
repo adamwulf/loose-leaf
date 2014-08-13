@@ -7,21 +7,26 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MMShareManagerDelegate.h"
 
 @interface MMShareManager : NSObject
 
 @property (readonly) NSArray* allFoundCollectionViews;
+@property (weak) NSObject<MMShareManagerDelegate>* delegate;
 
 + (BOOL) shouldListenToRegisterViews;
-+(UIView*)shareTarget;
-+(void) setShareTarget:(UIView*)_shareTarget;
++(MMShareManager*) sharedInstance;
++(UIView*)shareTargetView;
++(void) setShareTargetView:(UIView*)shareTargetView;
 
-+(MMShareManager*) sharedInstace;
-
+// called when the share manager should begin looking
+// for applications and AirDrop share targets
 -(void) beginSharingWithURL:(NSURL*)fileLocation;
 
+// called when we no longer need share targets
 -(void) endSharing;
 
+// UIView registration used by UIView+SuperWatch
 -(void) addCollectionView:(UICollectionView*)view;
 
 -(void) registerDismissView:(UIView*)dismissView;

@@ -312,8 +312,6 @@
 -(void) sidebarWillHide{
     [self setButtonsVisible:YES];
     [self enableAllGesturesForPageView];
-    
-    [[MMShareManager sharedInstace] endSharing];
 }
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{

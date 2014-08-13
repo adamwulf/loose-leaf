@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIView (SuperWatch)
+@interface UIView (SharingViewWatch)
 
 @end

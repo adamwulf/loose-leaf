@@ -9,6 +9,7 @@
 #import "MMShareView.h"
 #import "MMShareManager.h"
 #import "UIView+Debug.h"
+#import "Constants.h"
 
 @implementation MMShareView
 
@@ -32,7 +33,7 @@
 {
     // Drawing code
     CGFloat loc = 0;
-    NSArray* allCollectionViews = [[MMShareManager sharedInstace] allFoundCollectionViews];
+    NSArray* allCollectionViews = [[MMShareManager sharedInstance] allFoundCollectionViews];
     
     NSLog(@"checking on %d views", [allCollectionViews count]);
     for(UICollectionView* cv in allCollectionViews){
@@ -61,6 +62,19 @@
     }
 }
 
+#pragma mark - MMShareManagerDelegate
+
+-(void) shareItemsUpdated:(NSArray*)allCollectionViews{
+    NSInteger numberOfItems = 0;
+    for(UICollectionView* cv in allCollectionViews){
+        numberOfItems += [cv numberOfItemsInSection:0];
+        CGRect fr = self.frame;
+        fr.size.height = numberOfItems * (kWidthOfSidebarButton + kWidthOfSidebarButtonBuffer);
+        self.frame = fr;
+    }
+    [self setNeedsDisplay];
+}
+
 #pragma mark - Redirect Touches
 
 // the goal of this method is to direct the touch to
@@ -72,12 +86,12 @@
  * effectively pass through this view to the views behind it
  */
 -(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
-    NSArray* allCollectionViews = [[MMShareManager sharedInstace] allFoundCollectionViews];
+    NSArray* allCollectionViews = [[MMShareManager sharedInstance] allFoundCollectionViews];
     for(UICollectionView* cv in allCollectionViews){
         NSInteger numberOfItems = [cv numberOfItemsInSection:0];
         for(NSInteger i=0;i<numberOfItems;i++){
             UICollectionViewCell* cell = [cv cellForItemAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-            [MMShareManager setShareTarget:cell];
+            [MMShareManager setShareTargetView:cell];
             return cell;
         }
     }
@@ -85,7 +99,7 @@
 }
 
 -(BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
-    NSArray* allCollectionViews = [[MMShareManager sharedInstace] allFoundCollectionViews];
+    NSArray* allCollectionViews = [[MMShareManager sharedInstance] allFoundCollectionViews];
     for(UICollectionView* cv in allCollectionViews){
         NSInteger numberOfItems = [cv numberOfItemsInSection:0];
         if(numberOfItems > 1){
@@ -94,5 +108,7 @@
     }
     return NO;
 }
+
+
 
 @end

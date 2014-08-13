@@ -18,6 +18,7 @@
 #import "MMImgurShareItem.h"
 #import "MMOpenInShareItem.h"
 #import "NSThread+BlockAdditions.h"
+#import "MMShareManager.h"
 #import "Constants.h"
 
 @implementation MMShareSidebarContainerView{
@@ -136,12 +137,27 @@
     }
 }
 
+-(void) show:(BOOL)animated{
+    for (NSObject<MMShareItem>*shareItem in shareItems) {
+        if([shareItem respondsToSelector:@selector(willShow)]){
+            [shareItem willShow];
+        }
+    }
+    [super show:animated];
+}
+
 -(void) hide:(BOOL)animated onComplete:(void(^)(BOOL finished))onComplete{
     [super hide:animated onComplete:^(BOOL finished){
         while([scrollView.subviews count] > 1){
             // remove any options views
             [[scrollView.subviews objectAtIndex:1] removeFromSuperview];
             [scrollView setContentOffset:CGPointZero animated:NO];
+        }
+        // notify any buttons that they're now hidden.
+        for (NSObject<MMShareItem>*shareItem in shareItems) {
+            if([shareItem respondsToSelector:@selector(didHide)]){
+                [shareItem didHide];
+            }
         }
     }];
 }

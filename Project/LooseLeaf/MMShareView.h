@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "MMUntouchableView.h"
+#import "MMShareManagerDelegate.h"
 
 
-@interface MMShareView : UIView
+@interface MMShareView : UIView<MMShareManagerDelegate>
 
 @end
