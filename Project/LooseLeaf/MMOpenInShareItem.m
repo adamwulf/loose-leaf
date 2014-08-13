@@ -12,9 +12,12 @@
 #import "Mixpanel.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
+#import "UIView+Debug.h"
+#import "MMShareView.h"
 
 @implementation MMOpenInShareItem{
     MMImageViewButton* button;
+    UIView* sharingOptionsView;
 }
 
 @synthesize delegate;
@@ -26,6 +29,11 @@
         button.greyscale = NO;
         
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
+        
+        // arbitrary size, will be resized to fit when it's added to a sidebar
+        sharingOptionsView = [[MMShareView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+        sharingOptionsView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.5];
+        [sharingOptionsView showDebugBorder];
     }
     return self;
 }
@@ -33,8 +41,6 @@
 -(MMSidebarButton*) button{
     return button;
 }
-
-
 
 -(void) performShareAction{
     NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"temp.png"];
@@ -44,10 +50,26 @@
     
     [[MMShareManager sharedInstace] beginSharingWithURL:fileLocation];
     
+    for(int i=1;i<5;i++){
+        [[NSThread mainThread] performBlock:^{
+            NSUInteger numberOfItems = [[MMShareManager sharedInstace] numberOfShareTargets];
+            CGRect fr = sharingOptionsView.frame;
+            fr.size.height = numberOfItems * (kWidthOfSidebarButton + kWidthOfSidebarButtonBuffer);
+            sharingOptionsView.frame = fr;
+            [sharingOptionsView setNeedsDisplay];
+        } afterDelay:i];
+    }
 }
 
 -(BOOL) isAtAllPossible{
     return YES;
+}
+
+#pragma mark - Options Menu
+
+// will dispaly buttons to open in any other app
+-(UIView*) optionsView{
+    return sharingOptionsView;
 }
 
 @end

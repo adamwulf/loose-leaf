@@ -11,4 +11,6 @@
 
 @interface MMOpenInShareItem : NSObject<MMShareItem>
 
+-(UIView*) optionsView;
+
 @end

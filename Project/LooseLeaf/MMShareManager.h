@@ -24,4 +24,6 @@
 
 -(void) registerDismissView:(UIView*)dismissView;
 
+-(NSUInteger) numberOfShareTargets;
+
 @end

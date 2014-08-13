@@ -31,11 +31,8 @@
 - (void)drawRect:(CGRect)rect
 {
     // Drawing code
-    
     CGFloat loc = 0;
-    
     NSArray* allCollectionViews = [[MMShareManager sharedInstace] allFoundCollectionViews];
-    
     
     NSLog(@"checking on %d views", [allCollectionViews count]);
     for(UICollectionView* cv in allCollectionViews){

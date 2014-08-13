@@ -18,4 +18,8 @@
 
 -(BOOL) isAtAllPossible;
 
+@optional
+
+-(UIView*) optionsView;
+
 @end

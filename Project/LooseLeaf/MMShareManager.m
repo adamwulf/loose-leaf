@@ -9,7 +9,6 @@
 #import "MMShareManager.h"
 #import "NSThread+BlockAdditions.h"
 #import "UIView+Debug.h"
-#import "MMShareView.h"
 #import <JotUI/JotUI.h>
 
 @implementation MMShareManager{
@@ -17,7 +16,6 @@
     // use for drawing the buttons
     UIDocumentInteractionController* controller;
     NSMutableArray* allFoundCollectionViews;
-    MMShareView* shareView;
 }
 
 static BOOL shouldListenToRegisterViews;
@@ -36,11 +34,6 @@ static MMShareManager* _instance = nil;
     if((self = [super init])){
         _instance = self;
         allFoundCollectionViews = [NSMutableArray array];
-        
-        UIWindow* win = [[UIApplication sharedApplication] keyWindow];
-        shareView = [[MMShareView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-        shareView.hidden = YES;
-        [win.rootViewController.view addSubview:shareView];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(endSharing)
@@ -63,19 +56,12 @@ static MMShareManager* _instance = nil;
 -(void) beginSharingWithURL:(NSURL*)fileLocation{
     CheckMainThread;
     
+    UIWindow* win = [[UIApplication sharedApplication] keyWindow];
     controller = [UIDocumentInteractionController interactionControllerWithURL:fileLocation];
     
     shouldListenToRegisterViews = YES;
-    [controller presentOpenInMenuFromRect:CGRectZero inView:shareView animated:NO];
+    [controller presentOpenInMenuFromRect:CGRectZero inView:win animated:NO];
     shouldListenToRegisterViews = NO;
-    
-    shareView.hidden = NO;
-
-    for(int i=1;i<5;i++){
-        [[NSThread mainThread] performBlock:^{
-            [shareView setNeedsDisplay];
-        } afterDelay:i];
-    }
 }
 
 -(void) endSharing{
@@ -85,7 +71,6 @@ static MMShareManager* _instance = nil;
         [controller dismissMenuAnimated:NO];
         controller = nil;
         [allFoundCollectionViews removeAllObjects];
-        shareView.hidden = YES;
     }
     
     UIWindow* win = [[UIApplication sharedApplication] keyWindow];
@@ -99,19 +84,27 @@ static MMShareManager* _instance = nil;
     }
 }
 
+#pragma mark - Number of Sharable Targets
+
+-(NSUInteger) numberOfShareTargets{
+    NSUInteger totalShareItems = 0;
+    for(UICollectionView* cv in allFoundCollectionViews){
+        totalShareItems += [cv numberOfItemsInSection:0];
+    }
+    return totalShareItems;
+}
+
 #pragma mark - Registering Popover and Collection Views
 
 -(void) registerDismissView:(UIView*)dismissView{
     dismissView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
     dismissView.alpha = .5;
     dismissView.hidden = YES;
-    [shareView addSubview:dismissView];
 }
 
 -(void) addCollectionView:(UICollectionView*)view{
     @synchronized(self){
         [allFoundCollectionViews addObject:view];
-        [shareView setNeedsDisplay];
     }
 }
 
