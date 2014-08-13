@@ -77,6 +77,7 @@
         NSInteger numberOfItems = [cv numberOfItemsInSection:0];
         for(NSInteger i=0;i<numberOfItems;i++){
             UICollectionViewCell* cell = [cv cellForItemAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+            [MMShareManager setShareTarget:cell];
             return cell;
         }
     }

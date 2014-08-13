@@ -13,6 +13,8 @@
 @property (readonly) NSArray* allFoundCollectionViews;
 
 + (BOOL) shouldListenToRegisterViews;
++(UIView*)shareTarget;
++(void) setShareTarget:(UIView*)_shareTarget;
 
 +(MMShareManager*) sharedInstace;
 

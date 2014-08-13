@@ -42,9 +42,11 @@
 }
 
 -(CGPoint) swizzle_convertPoint:(CGPoint)point fromView:(UIView *)view{
-    NSArray* allCollectionViews = [[MMShareManager sharedInstace] allFoundCollectionViews];
-    if([allCollectionViews count]){
-        return CGPointMake(20, 20);
+    if(self == [MMShareManager shareTarget]){
+        NSArray* allCollectionViews = [[MMShareManager sharedInstace] allFoundCollectionViews];
+        if([allCollectionViews count]){
+            return CGPointMake(20, 20);
+        }
     }
     return [self swizzle_convertPoint:point fromView:view];
 }

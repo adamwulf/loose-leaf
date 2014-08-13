@@ -18,11 +18,19 @@
     NSMutableArray* allFoundCollectionViews;
 }
 
+static UIView* shareTarget;
 static BOOL shouldListenToRegisterViews;
 static MMShareManager* _instance = nil;
 
 +(BOOL) shouldListenToRegisterViews{
     return shouldListenToRegisterViews;
+}
+
++(UIView*)shareTarget{
+    return shareTarget;
+}
++(void) setShareTarget:(UIView*)_shareTarget{
+    shareTarget = _shareTarget;
 }
 
 -(NSArray*)allFoundCollectionViews{
@@ -71,6 +79,7 @@ static MMShareManager* _instance = nil;
         [controller dismissMenuAnimated:NO];
         controller = nil;
         [allFoundCollectionViews removeAllObjects];
+        [MMShareManager setShareTarget:nil];
     }
     
     UIWindow* win = [[UIApplication sharedApplication] keyWindow];
