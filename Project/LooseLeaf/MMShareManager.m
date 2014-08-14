@@ -99,7 +99,11 @@ static MMShareManager* _instance = nil;
         [allFoundCollectionViews removeAllObjects];
         [MMShareManager setShareTargetView:nil];
         [arrayOfAllowableIndexPaths removeAllObjects];
+        
+        UIWindow* win = [[UIApplication sharedApplication] keyWindow];
+        [[win rootViewController] dismissViewControllerAnimated:NO completion:nil];
     }
+    
     
     [mainThreadSharingTimer invalidate];
     mainThreadSharingTimer = nil;

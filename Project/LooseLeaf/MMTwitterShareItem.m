@@ -11,6 +11,7 @@
 #import "Mixpanel.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
+#import "Reachability.h"
 #import <Social/Social.h>
 #import <Accounts/Accounts.h>
 
@@ -41,8 +42,16 @@
 }
 
 -(void) performShareAction{
+    if([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]){
+        NSLog(@"available");
+    }else{
+        NSLog(@"not available");
+    }
     SLComposeViewController *tweetSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
     if(tweetSheet){
+        // TODO: fix twitter share when wifi enabled w/o any network
+        // this hung with the modal "open" in the window, no events triggered when tryign to draw
+        // even though the twitter dialog never showed. wifi was on but not connected.
         [tweetSheet setInitialText:@"Quick sketch drawn in Loose Leaf @getlooseleaf"];
         [tweetSheet addImage:self.delegate.imageToShare];
         tweetSheet.completionHandler = ^(SLComposeViewControllerResult result){
@@ -57,9 +66,13 @@
             }
             [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Twitter",
                                                                          kMPEventExportPropResult : strResult}];
+            
+            [[[[UIApplication sharedApplication] keyWindow] rootViewController] dismissViewControllerAnimated:YES completion:nil];
         };
         
-        [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:tweetSheet animated:YES completion:nil];
+        [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:tweetSheet animated:YES completion:^{
+            NSLog(@"finished");
+        }];
     }
 
     [delegate didShare];
