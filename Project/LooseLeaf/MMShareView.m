@@ -14,6 +14,7 @@
 
 @implementation MMShareView{
     NSMutableArray* buttons;
+    UIView* line;
 }
 
 @synthesize delegate;
@@ -27,13 +28,27 @@
         self.opaque = NO;
         self.userInteractionEnabled = YES;
         buttons = [NSMutableArray array];
+        
+        CGFloat width = frame.size.width;
+        CGRect lineRect = CGRectMake(width*0.1, 0, width*0.8, 1);
+        line = [[UIView alloc] initWithFrame:lineRect];
+        line.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
+        line.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
+        [self addSubview:line];
     }
     return self;
 }
 
+//-(void) setFrame:(CGRect)frame{
+//    [super setFrame:frame];
+//    CGFloat width = frame.size.width;
+//    CGRect lineRect = CGRectMake(width*0.1, 0, width*0.8, 20);
+//    line.frame = lineRect;
+//}
+
 -(void) reset{
+    [buttons makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [buttons removeAllObjects];
-    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     self.alpha = 0;
 }
 
@@ -60,7 +75,7 @@
             NSInteger row = floor(currentIndex / columnCount);
             NSInteger col = currentIndex % columnCount;
             
-            CGRect buttonFr = CGRectMake(col * self.buttonWidth, row * self.buttonWidth,
+            CGRect buttonFr = CGRectMake(col * self.buttonWidth, kWidthOfSidebarButtonBuffer + row * self.buttonWidth,
                                          self.buttonWidth, self.buttonWidth);
             MMOpenInAppSidebarButton* button = nil;
             if([buttons count] > currentIndex) button = [buttons objectAtIndex:currentIndex];
@@ -88,9 +103,8 @@
     }
     
     CGRect fr = self.frame;
-    fr.size.height = totalNumberOfItemsInPreviousSections * (kWidthOfSidebarButton + kWidthOfSidebarButtonBuffer);
+    fr.size.height = totalNumberOfItemsInPreviousSections * (kWidthOfSidebarButton + kWidthOfSidebarButtonBuffer) + kWidthOfSidebarButtonBuffer;
     self.frame = fr;
-    [self setNeedsDisplay];
 }
 
 -(void) allCellsLoaded{
