@@ -199,6 +199,7 @@
 		66B1EF2A19980A1300E9EEF1 /* UIView+SharingViewWatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B1EF2919980A1300E9EEF1 /* UIView+SharingViewWatch.m */; };
 		66B1EF2D19983DCD00E9EEF1 /* MMShareManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B1EF2C19983DCD00E9EEF1 /* MMShareManager.m */; };
 		66B1EF3019984C0300E9EEF1 /* MMShareView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B1EF2F19984C0300E9EEF1 /* MMShareView.m */; };
+		66B1EF34199C2D7D00E9EEF1 /* MMOpenInAppSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B1EF33199C2D7D00E9EEF1 /* MMOpenInAppSidebarButton.m */; };
 		66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A55175AFCA70049F1AF /* MMHandButton.m */; };
 		66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A6B175E4A5A0049F1AF /* MMStackManager.m */; };
 		66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A75175E559E0049F1AF /* NSArray+Map.m */; };
@@ -636,6 +637,8 @@
 		66B1EF2E19984C0300E9EEF1 /* MMShareView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShareView.h; sourceTree = "<group>"; };
 		66B1EF2F19984C0300E9EEF1 /* MMShareView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShareView.m; sourceTree = "<group>"; };
 		66B1EF31199C293C00E9EEF1 /* MMShareManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShareManagerDelegate.h; sourceTree = "<group>"; };
+		66B1EF32199C2D7D00E9EEF1 /* MMOpenInAppSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMOpenInAppSidebarButton.h; sourceTree = "<group>"; };
+		66B1EF33199C2D7D00E9EEF1 /* MMOpenInAppSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMOpenInAppSidebarButton.m; sourceTree = "<group>"; };
 		66B21A54175AFCA70049F1AF /* MMHandButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMHandButton.h; sourceTree = "<group>"; };
 		66B21A55175AFCA70049F1AF /* MMHandButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMHandButton.m; sourceTree = "<group>"; };
 		66B21A6A175E4A5A0049F1AF /* MMStackManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackManager.h; sourceTree = "<group>"; };
@@ -1644,6 +1647,8 @@
 		66B1EF27199809B100E9EEF1 /* OpenIn */ = {
 			isa = PBXGroup;
 			children = (
+				66B1EF32199C2D7D00E9EEF1 /* MMOpenInAppSidebarButton.h */,
+				66B1EF33199C2D7D00E9EEF1 /* MMOpenInAppSidebarButton.m */,
 				66B1EF2819980A1300E9EEF1 /* UIView+SharingViewWatch.h */,
 				66B1EF2919980A1300E9EEF1 /* UIView+SharingViewWatch.m */,
 				66B1EF2B19983DCD00E9EEF1 /* MMShareManager.h */,
@@ -2179,6 +2184,7 @@
 				66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */,
 				66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */,
 				66BD6E301591B57B00D4544C /* MMPaperButton.m in Sources */,
+				66B1EF34199C2D7D00E9EEF1 /* MMOpenInAppSidebarButton.m in Sources */,
 				6652452D1996CE3000C36609 /* MMImgurShareItem.m in Sources */,
 				6667480617C0166100D5C390 /* MMShapeBuilderView.m in Sources */,
 				666E254C18F618B000C17295 /* MMEventSidebarContentView.m in Sources */,

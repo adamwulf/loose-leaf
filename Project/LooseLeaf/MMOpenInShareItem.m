@@ -43,6 +43,9 @@
 }
 
 -(void) performShareAction{
+    
+    sharingOptionsView.buttonWidth = self.button.bounds.size.width;
+    
     NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"temp.png"];
     [UIImagePNGRepresentation(self.delegate.imageToShare) writeToFile:filePath atomically:YES];
     NSURL* fileLocation = [NSURL URLWithString:[@"file://" stringByAppendingString:filePath]];

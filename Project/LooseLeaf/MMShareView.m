@@ -8,10 +8,13 @@
 
 #import "MMShareView.h"
 #import "MMShareManager.h"
+#import "MMOpenInAppSidebarButton.h"
 #import "UIView+Debug.h"
 #import "Constants.h"
 
-@implementation MMShareView
+@implementation MMShareView{
+    NSMutableArray* buttons;
+}
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -22,11 +25,12 @@
         self.opaque = NO;
         [self showDebugBorder];
         self.userInteractionEnabled = YES;
+        buttons = [NSMutableArray array];
     }
     return self;
 }
 
-
+/*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
@@ -61,17 +65,45 @@
         }
     }
 }
+ */
 
 #pragma mark - MMShareManagerDelegate
 
 -(void) shareItemsUpdated:(NSArray*)allCollectionViews{
-    NSInteger numberOfItems = 0;
+    NSInteger columnCount = floor(self.bounds.size.width / self.buttonWidth);
+    NSInteger section = 0;
+    NSInteger totalNumberOfItems = 0;
     for(UICollectionView* cv in allCollectionViews){
-        numberOfItems += [cv numberOfItemsInSection:0];
-        CGRect fr = self.frame;
-        fr.size.height = numberOfItems * (kWidthOfSidebarButton + kWidthOfSidebarButtonBuffer);
-        self.frame = fr;
+        NSInteger numberOfItems = [cv numberOfItemsInSection:0];
+        
+        for(int index=0;index<numberOfItems;index++){
+            NSIndexPath* path = [NSIndexPath indexPathForRow:index inSection:section];
+            [cv cellForItemAtIndexPath:path];
+            
+            NSInteger currentIndex = totalNumberOfItems+index;
+            NSInteger row = floor(currentIndex / columnCount);
+            NSInteger col = currentIndex % columnCount;
+            
+            CGRect buttonFr = CGRectMake(col * self.buttonWidth, row * self.buttonWidth,
+                                          self.buttonWidth, self.buttonWidth);
+            MMOpenInAppSidebarButton* button = nil;
+            if([buttons count] > currentIndex) button = [buttons objectAtIndex:currentIndex];
+            if(!button){
+                button = [[MMOpenInAppSidebarButton alloc] initWithFrame:buttonFr andIndexPath:path];
+                [buttons addObject:button];
+                [self addSubview:button];
+            }else{
+                button.frame = buttonFr;
+                button.indexPath = path;
+            }
+        }
+        totalNumberOfItems += numberOfItems;
+        section++;
     }
+    
+    CGRect fr = self.frame;
+    fr.size.height = totalNumberOfItems * (kWidthOfSidebarButton + kWidthOfSidebarButtonBuffer);
+    self.frame = fr;
     [self setNeedsDisplay];
 }
 

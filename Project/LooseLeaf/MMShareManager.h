@@ -26,11 +26,13 @@
 // called when we no longer need share targets
 -(void) endSharing;
 
+-(NSUInteger) numberOfShareTargets;
+
+-(UIView*) viewForIndexPath:(NSIndexPath*)indexPath;
+
 // UIView registration used by UIView+SuperWatch
 -(void) addCollectionView:(UICollectionView*)view;
 
 -(void) registerDismissView:(UIView*)dismissView;
-
--(NSUInteger) numberOfShareTargets;
 
 @end

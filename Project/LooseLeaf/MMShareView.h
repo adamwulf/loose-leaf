@@ -13,4 +13,6 @@
 
 @interface MMShareView : UIView<MMShareManagerDelegate>
 
+@property (nonatomic) CGFloat buttonWidth;
+
 @end

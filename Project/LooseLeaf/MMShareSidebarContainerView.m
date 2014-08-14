@@ -20,6 +20,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMShareManager.h"
 #import "Constants.h"
+#import "UIView+Debug.h"
 
 @implementation MMShareSidebarContainerView{
     UIScrollView* scrollView;
@@ -42,7 +43,7 @@
         scrollView.showsHorizontalScrollIndicator = NO;
         scrollView.showsVerticalScrollIndicator = NO;
         
-        buttonView = [[UIView alloc] initWithFrame:[sidebarContentView contentBounds]];
+        buttonView = [[UIView alloc] initWithFrame:scrollView.bounds];
         [scrollView addSubview:buttonView];
         [sidebarContentView addSubview:scrollView];
         scrollView.contentSize = scrollView.bounds.size;

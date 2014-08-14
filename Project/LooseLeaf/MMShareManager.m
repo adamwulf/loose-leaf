@@ -71,7 +71,7 @@ static MMShareManager* _instance = nil;
     controller = [UIDocumentInteractionController interactionControllerWithURL:fileLocation];
     
     shouldListenToRegisterViews = YES;
-    [controller presentOpenInMenuFromRect:CGRectZero inView:win animated:NO];
+    [controller presentOpenInMenuFromRect:CGRectMake(0, 0, 10, 10) inView:win animated:NO];
     shouldListenToRegisterViews = NO;
     
     mainThreadSharingTimer = [NSTimer scheduledTimerWithTimeInterval:.3 target:self selector:@selector(tick) userInfo:nil repeats:YES];
@@ -109,6 +109,26 @@ static MMShareManager* _instance = nil;
         totalShareItems += [cv numberOfItemsInSection:0];
     }
     return totalShareItems;
+}
+
+-(UIView*) viewForIndexPath:(NSIndexPath*)indexPath{
+    CheckMainThread;
+    NSLog(@"collections %d",[allFoundCollectionViews count]);
+    if(indexPath.section < [allFoundCollectionViews count]){
+        UICollectionView* cv = [allFoundCollectionViews objectAtIndex:indexPath.section];
+        NSLog(@"numberOfViews %d in collection",[cv numberOfItemsInSection:0]);
+        if(indexPath.row < [cv numberOfItemsInSection:0]){
+            NSLog(@"checking %d vs %d", indexPath.row, [cv numberOfItemsInSection:0]);
+            NSIndexPath* pathInCv = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
+            [cv scrollToItemAtIndexPath:pathInCv atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally | UICollectionViewScrollPositionTop animated:NO];
+            UIView* cell = [cv cellForItemAtIndexPath:pathInCv];
+            if(!cell){
+                NSLog(@"what");
+            }
+            return cell;
+        }
+    }
+    return nil;
 }
 
 #pragma mark - Registering Popover and Collection Views
