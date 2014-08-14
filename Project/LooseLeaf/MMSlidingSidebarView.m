@@ -35,13 +35,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-<<<<<<< HEAD
-        UIToolbar* toolbar = [[UIToolbar alloc] initWithFrame:self.bounds];
-        toolbar.barStyle = UIBarStyleBlack;
-        [self addSubview:toolbar];
-        
-        
-=======
         blurContainerView = [[UIView alloc] initWithFrame:self.bounds];
         [self addSubview:blurContainerView];
         blurContainerView.frame = self.bounds;
@@ -71,7 +64,6 @@
 //        }
 //
 
->>>>>>> twitter
         // 2 points for the border size
         borderSize = 2;
         // store our direction and reference button
