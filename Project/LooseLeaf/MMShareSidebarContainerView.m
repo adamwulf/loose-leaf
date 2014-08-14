@@ -127,6 +127,8 @@
 
     // now we have the share item
     if([shareItemForButton respondsToSelector:@selector(optionsView)]){
+        button.selected = YES;
+        [button setNeedsDisplay];
         UIView* optionsView = [shareItemForButton optionsView];
         CGRect frForOptions = buttonView.bounds;
         frForOptions.origin.y = buttonView.bounds.size.height;

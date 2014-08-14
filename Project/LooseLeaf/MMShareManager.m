@@ -96,15 +96,6 @@ static MMShareManager* _instance = nil;
         [arrayOfAllowableIndexPaths removeAllObjects];
     }
     
-    UIWindow* win = [[UIApplication sharedApplication] keyWindow];
-    [[win rootViewController] dismissViewControllerAnimated:NO completion:nil];
-    
-    for (UIView* subview in win.subviews) {
-        NSLog(@"still in window: %@", NSStringFromClass([subview class]));
-        for (UIView* subview2 in subview.subviews) {
-            NSLog(@"  still in subview: %@", NSStringFromClass([subview2 class]));
-        }
-    }
     [mainThreadSharingTimer invalidate];
     mainThreadSharingTimer = nil;
 }
@@ -127,13 +118,9 @@ static MMShareManager* _instance = nil;
             NSIndexPath* pathInCv = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
             UIView* cell = [cv cellForItemAtIndexPath:pathInCv];
             if(!cell && force){
-                NSLog(@"loading %d %d", indexPath.section, indexPath.row);
                 [cv scrollToItemAtIndexPath:pathInCv atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally | UICollectionViewScrollPositionCenteredVertically animated:NO];
                 [cv reloadItemsAtIndexPaths:[NSArray arrayWithObject:pathInCv]];
                 cell = [cv cellForItemAtIndexPath:pathInCv];
-            }
-            if(!cell){
-                NSLog(@"what");
             }
             return cell;
         }
@@ -182,18 +169,15 @@ static MMShareManager* _instance = nil;
             UIView* cell = [self viewForIndexPath:loadedPath forceGet:NO];
             [self.delegate cellLoaded:cell forIndexPath:loadedPath];
             needsWait = NO;
-            NSLog(@"notifying to %d:%d", loadedPath.section, loadedPath.row);
+//            NSLog(@"notifying to %d:%d", loadedPath.section, loadedPath.row);
         }else{
             NSIndexPath* loadedPath = [arrayOfAllowableIndexPaths firstObject];
             // force scroll cell into view
             [self viewForIndexPath:loadedPath forceGet:YES];
             needsWait = YES;
-            NSLog(@"scrolling to %d:%d", loadedPath.section, loadedPath.row);
+//            NSLog(@"scrolling to %d:%d", loadedPath.section, loadedPath.row);
         }
     }
-    
-    
-//    [delegate shareItemsUpdated:allFoundCollectionViews];
 }
 
 @end

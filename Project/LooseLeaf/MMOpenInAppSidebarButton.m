@@ -123,7 +123,6 @@
             [MMShareManager setShareTargetView:cell];
             
             for(NSObject* obj in self.allTargets){
-                NSLog(@"obj: %@", obj);
                 NSArray* actions = [self actionsForTarget:obj forControlEvent:UIControlEventTouchUpInside];
                 for(NSString* action in actions){
                     [obj performSelector:NSSelectorFromString(action) withObject:event];

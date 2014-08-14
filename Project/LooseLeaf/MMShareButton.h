@@ -10,4 +10,6 @@
 
 @interface MMShareButton : MMSidebarButton
 
+@property (nonatomic) UIColor* arrowColor;
+
 @end

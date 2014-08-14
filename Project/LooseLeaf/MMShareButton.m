@@ -12,6 +12,8 @@
 
 @implementation MMShareButton
 
+@synthesize arrowColor;
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -38,6 +40,10 @@
     
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
+    UIColor* strokeColor = darkerGreyBorder;
+    if(arrowColor){
+        strokeColor = arrowColor;
+    }
     UIColor* halfGreyFill = [self backgroundColor];
     
     CGRect frame = [self drawableFrame];
@@ -59,7 +65,7 @@
     [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.67500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.73750 * CGRectGetHeight(frame))];
     [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.67500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.38750 * CGRectGetHeight(frame))];
     [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.57500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.38750 * CGRectGetHeight(frame))];
-    [darkerGreyBorder setStroke];
+    [strokeColor setStroke];
     boxPath.lineWidth = 2;
     [boxPath stroke];
     
@@ -69,7 +75,7 @@
     [arrowHeadPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.40000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.28750 * CGRectGetHeight(frame))];
     [arrowHeadPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.50000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.18750 * CGRectGetHeight(frame))];
     [arrowHeadPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.60000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.28750 * CGRectGetHeight(frame))];
-    [darkerGreyBorder setStroke];
+    [strokeColor setStroke];
     arrowHeadPath.lineWidth = 2;
     [arrowHeadPath stroke];
     
@@ -78,7 +84,7 @@
     UIBezierPath* arrowBodyPath = [UIBezierPath bezierPath];
     [arrowBodyPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.50000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.56250 * CGRectGetHeight(frame))];
     [arrowBodyPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.50000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.21250 * CGRectGetHeight(frame))];
-    [darkerGreyBorder setStroke];
+    [strokeColor setStroke];
     arrowBodyPath.lineWidth = 2;
     [arrowBodyPath stroke];
     

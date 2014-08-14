@@ -7,16 +7,17 @@
 //
 
 #import "MMOpenInShareItem.h"
-#import "MMImageViewButton.h"
+#import "MMShareButton.h"
 #import "MMShareManager.h"
 #import "Mixpanel.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
 #import "UIView+Debug.h"
 #import "MMShareView.h"
+#import "UIColor+Shadow.h"
 
 @implementation MMOpenInShareItem{
-    MMImageViewButton* button;
+    MMShareButton* button;
     MMShareView* sharingOptionsView;
 }
 
@@ -24,9 +25,9 @@
 
 -(id) init{
     if(self = [super init]){
-        button = [[MMImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        [button setImage:[UIImage imageNamed:@"photoalbum"]];
-        button.greyscale = NO;
+        button = [[MMShareButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        button.arrowColor = [UIColor blackColor];
+//        button.greyscale = NO;
         
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
         
@@ -60,7 +61,6 @@
 
 // called when our button is no longer visible
 -(void) didHide{
-    NSLog(@"didHide");
     [[MMShareManager sharedInstance] endSharing];
     [MMShareManager sharedInstance].delegate = nil;
 }

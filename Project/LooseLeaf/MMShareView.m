@@ -91,7 +91,6 @@
 }
 
 -(void) buttonTapped:(id)obj{
-    NSLog(@"shareButtonTapped");
     [delegate didShare];
 }
 
