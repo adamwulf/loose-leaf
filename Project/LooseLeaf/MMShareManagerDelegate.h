@@ -10,6 +10,6 @@
 
 @protocol MMShareManagerDelegate <NSObject>
 
--(void) shareItemsUpdated:(NSArray*)allCollectionViews;
+-(void) cellLoaded:(UIView*)cell forIndexPath:(NSIndexPath*)indexPath;
 
 @end

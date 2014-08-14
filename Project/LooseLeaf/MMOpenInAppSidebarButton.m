@@ -8,6 +8,7 @@
 
 #import "MMOpenInAppSidebarButton.h"
 #import "MMShareManager.h"
+#import "Constants.h"
 
 @implementation MMOpenInAppSidebarButton{
     BOOL needsUpdate;
@@ -31,8 +32,16 @@
        indexPath.row != _indexPath.row ||
        indexPath.section != _indexPath.section){
         indexPath = _indexPath;
+        [self performSelector:@selector(tryDisplayAgain) withObject:nil afterDelay:.1];
+        [self performSelector:@selector(tryDisplayAgain) withObject:nil afterDelay:.3];
+        [self performSelector:@selector(tryDisplayAgain) withObject:nil afterDelay:1];
+    }
+    if(needsUpdate){
         [self setNeedsDisplay];
     }
+}
+
+-(void) tryDisplayAgain{
     if(needsUpdate){
         [self setNeedsDisplay];
     }
@@ -64,7 +73,7 @@
     [halfGreyFill setFill];
     [ovalPath fill];
     
-    UIView* view = [[MMShareManager sharedInstance] viewForIndexPath:self.indexPath];
+    UIView* view = [[MMShareManager sharedInstance] viewForIndexPath:self.indexPath forceGet:NO];
     
     if(!view){
         needsUpdate = YES;
@@ -74,15 +83,63 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSaveGState(context);
     [ovalPath addClip];
-    [view drawViewHierarchyInRect:[self drawableFrame] afterScreenUpdates:NO];
-    [[NSString stringWithFormat:@"%d:%d", indexPath.section, indexPath.row] drawAtPoint:CGPointMake(20, 20) withAttributes:nil];
+    
+    CGRect viewFr = view.bounds;
+    CGFloat ratio = view.bounds.size.height / view.bounds.size.width;
+    CGFloat buffer = 2;
+    viewFr.origin.x = buffer;
+    viewFr.origin.y = buffer + 2;
+    viewFr.size.width = self.bounds.size.width - 2*buffer;
+    viewFr.size.height = ratio * (self.bounds.size.width - 2*buffer);
+    
+    
+    [view drawViewHierarchyInRect:viewFr afterScreenUpdates:NO];
     CGContextRestoreGState(context);
     
-    
+    [[NSString stringWithFormat:@"%d:%d", indexPath.section, indexPath.row] drawAtPoint:CGPointMake(20, 20) withAttributes:nil];
     
     [self drawDropshadowIfSelected];
     
     [super drawRect:rect];
 }
+
+
+
+#pragma mark - Redirect Touches
+
+// the goal of this method is to direct the touch to
+// the activity cell for the app we want to open
+
+/**
+ * these two methods make sure that the ruler view
+ * can never intercept any touch input. instead it will
+ * effectively pass through this view to the views behind it
+ */
+-(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+    UIView* viewFromSuper = [super hitTest:point withEvent:event];
+    if(viewFromSuper == self){
+        UIView* cell = [[MMShareManager sharedInstance] viewForIndexPath:self.indexPath forceGet:YES];
+        if(cell){
+            [MMShareManager setShareTargetView:cell];
+            [self performSelector:@selector(bounceButton:) withObject:nil afterDelay:.01];
+            return cell;
+        }
+    }
+
+    return viewFromSuper;
+}
+//
+//-(BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
+//    NSArray* allCollectionViews = [[MMShareManager sharedInstance] allFoundCollectionViews];
+//    for(UICollectionView* cv in allCollectionViews){
+//        NSInteger numberOfItems = [cv numberOfItemsInSection:0];
+//        if(numberOfItems > 1){
+//            return YES;
+//        }
+//    }
+//    return NO;
+//}
+
+
 
 @end

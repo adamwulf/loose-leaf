@@ -17,6 +17,10 @@
     UIDocumentInteractionController* controller;
     NSMutableArray* allFoundCollectionViews;
     NSTimer* mainThreadSharingTimer;
+    
+    NSMutableArray* arrayOfAllowableIndexPaths;
+    BOOL needsWait;
+    BOOL needsLoad;
 }
 
 static UIView* shareTarget;
@@ -45,6 +49,7 @@ static MMShareManager* _instance = nil;
     if((self = [super init])){
         _instance = self;
         allFoundCollectionViews = [NSMutableArray array];
+        arrayOfAllowableIndexPaths = [NSMutableArray array];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(endSharing)
@@ -70,11 +75,13 @@ static MMShareManager* _instance = nil;
     UIWindow* win = [[UIApplication sharedApplication] keyWindow];
     controller = [UIDocumentInteractionController interactionControllerWithURL:fileLocation];
     
+    needsLoad = YES;
+    
     shouldListenToRegisterViews = YES;
     [controller presentOpenInMenuFromRect:CGRectMake(0, 0, 10, 10) inView:win animated:NO];
     shouldListenToRegisterViews = NO;
     
-    mainThreadSharingTimer = [NSTimer scheduledTimerWithTimeInterval:.3 target:self selector:@selector(tick) userInfo:nil repeats:YES];
+    mainThreadSharingTimer = [NSTimer scheduledTimerWithTimeInterval:.03 target:self selector:@selector(tick) userInfo:nil repeats:YES];
     [self performSelector:@selector(tick) withObject:nil afterDelay:.01];
 }
 
@@ -86,6 +93,7 @@ static MMShareManager* _instance = nil;
         controller = nil;
         [allFoundCollectionViews removeAllObjects];
         [MMShareManager setShareTargetView:nil];
+        [arrayOfAllowableIndexPaths removeAllObjects];
     }
     
     UIWindow* win = [[UIApplication sharedApplication] keyWindow];
@@ -111,17 +119,19 @@ static MMShareManager* _instance = nil;
     return totalShareItems;
 }
 
--(UIView*) viewForIndexPath:(NSIndexPath*)indexPath{
+-(UIView*) viewForIndexPath:(NSIndexPath*)indexPath forceGet:(BOOL)force{
     CheckMainThread;
-    NSLog(@"collections %d",[allFoundCollectionViews count]);
     if(indexPath.section < [allFoundCollectionViews count]){
         UICollectionView* cv = [allFoundCollectionViews objectAtIndex:indexPath.section];
-        NSLog(@"numberOfViews %d in collection",[cv numberOfItemsInSection:0]);
         if(indexPath.row < [cv numberOfItemsInSection:0]){
-            NSLog(@"checking %d vs %d", indexPath.row, [cv numberOfItemsInSection:0]);
             NSIndexPath* pathInCv = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
-            [cv scrollToItemAtIndexPath:pathInCv atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally | UICollectionViewScrollPositionTop animated:NO];
             UIView* cell = [cv cellForItemAtIndexPath:pathInCv];
+            if(!cell && force){
+                NSLog(@"loading %d %d", indexPath.section, indexPath.row);
+                [cv scrollToItemAtIndexPath:pathInCv atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally | UICollectionViewScrollPositionCenteredVertically animated:NO];
+                [cv reloadItemsAtIndexPaths:[NSArray arrayWithObject:pathInCv]];
+                cell = [cv cellForItemAtIndexPath:pathInCv];
+            }
             if(!cell){
                 NSLog(@"what");
             }
@@ -154,7 +164,36 @@ static MMShareManager* _instance = nil;
 #pragma mark - Timer for finding share items
 
 -(void) tick{
-    [delegate shareItemsUpdated:allFoundCollectionViews];
+    if(![arrayOfAllowableIndexPaths count] && needsLoad){
+        NSInteger section = 0;
+        for(UICollectionView* cv in allFoundCollectionViews){
+            NSInteger itemCount = [cv numberOfItemsInSection:0];
+            for (NSInteger index=0; index < itemCount; index++) {
+                [arrayOfAllowableIndexPaths addObject:[NSIndexPath indexPathForRow:index inSection:section]];
+            }
+            section++;
+            needsLoad = NO;
+        }
+    }else if(!needsLoad && [arrayOfAllowableIndexPaths count]){
+        if(needsWait){
+            NSIndexPath* loadedPath = [arrayOfAllowableIndexPaths firstObject];
+            [arrayOfAllowableIndexPaths removeObject:loadedPath];
+            
+            UIView* cell = [self viewForIndexPath:loadedPath forceGet:NO];
+            [self.delegate cellLoaded:cell forIndexPath:loadedPath];
+            needsWait = NO;
+            NSLog(@"notifying to %d:%d", loadedPath.section, loadedPath.row);
+        }else{
+            NSIndexPath* loadedPath = [arrayOfAllowableIndexPaths firstObject];
+            // force scroll cell into view
+            [self viewForIndexPath:loadedPath forceGet:YES];
+            needsWait = YES;
+            NSLog(@"scrolling to %d:%d", loadedPath.section, loadedPath.row);
+        }
+    }
+    
+    
+//    [delegate shareItemsUpdated:allFoundCollectionViews];
 }
 
 @end

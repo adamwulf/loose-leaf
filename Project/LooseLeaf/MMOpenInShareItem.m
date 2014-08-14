@@ -32,8 +32,6 @@
         
         // arbitrary size, will be resized to fit when it's added to a sidebar
         sharingOptionsView = [[MMShareView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
-        sharingOptionsView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.5];
-        [sharingOptionsView showDebugBorder];
     }
     return self;
 }
@@ -61,6 +59,7 @@
 
 // called when our button is no longer visible
 -(void) didHide{
+    NSLog(@"didHide");
     [[MMShareManager sharedInstance] endSharing];
     [MMShareManager sharedInstance].delegate = nil;
 }

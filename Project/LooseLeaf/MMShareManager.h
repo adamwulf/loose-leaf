@@ -28,7 +28,7 @@
 
 -(NSUInteger) numberOfShareTargets;
 
--(UIView*) viewForIndexPath:(NSIndexPath*)indexPath;
+-(UIView*) viewForIndexPath:(NSIndexPath*)indexPath forceGet:(BOOL)force;
 
 // UIView registration used by UIView+SuperWatch
 -(void) addCollectionView:(UICollectionView*)view;
