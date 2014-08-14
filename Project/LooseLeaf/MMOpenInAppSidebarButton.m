@@ -88,7 +88,7 @@
     CGFloat ratio = view.bounds.size.height / view.bounds.size.width;
     CGFloat buffer = 2;
     viewFr.origin.x = buffer;
-    viewFr.origin.y = buffer + 2;
+    viewFr.origin.y = buffer + 3;
     viewFr.size.width = self.bounds.size.width - 2*buffer;
     viewFr.size.height = ratio * (self.bounds.size.width - 2*buffer);
     

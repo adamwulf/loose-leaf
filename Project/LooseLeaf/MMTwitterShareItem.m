@@ -11,7 +11,7 @@
 #import "Mixpanel.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
-#import "Reachability.h"
+#import "MMReachabilityManager.h"
 #import <Social/Social.h>
 #import <Accounts/Accounts.h>
 
@@ -30,6 +30,10 @@
                                                  selector:@selector(updateButtonGreyscale)
                                                      name:UIApplicationDidBecomeActiveNotification object:nil];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateButtonGreyscale)
+                                                     name:kReachabilityChangedNotification object:nil];
+
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
         
         [self updateButtonGreyscale];
@@ -85,10 +89,12 @@
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
-        button.greyscale = NO;
-    }else{
+    if(![MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable) {
         button.greyscale = YES;
+    }else if(![SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
+        button.greyscale = YES;
+    }else{
+        button.greyscale = NO;
     }
     [button setNeedsDisplay];
 }

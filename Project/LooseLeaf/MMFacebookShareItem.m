@@ -8,6 +8,7 @@
 
 #import "MMFacebookShareItem.h"
 #import "MMImageViewButton.h"
+#import "MMReachabilityManager.h"
 #import "Mixpanel.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
@@ -28,6 +29,10 @@
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(updateButtonGreyscale)
                                                      name:UIApplicationDidBecomeActiveNotification object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateButtonGreyscale)
+                                                     name:kReachabilityChangedNotification object:nil];
         
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
         
@@ -73,10 +78,12 @@
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) {
-        button.greyscale = NO;
-    }else{
+    if(![MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable) {
         button.greyscale = YES;
+    }else if(![SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) {
+        button.greyscale = YES;
+    }else{
+        button.greyscale = NO;
     }
     [button setNeedsDisplay];
 }
