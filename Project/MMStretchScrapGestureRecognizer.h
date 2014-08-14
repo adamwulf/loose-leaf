@@ -21,6 +21,8 @@
 @property (readonly) MMScrapView* scrap;
 @property (readonly) NSArray* validTouches;
 @property (readonly) CATransform3D skewTransform;
+@property (nonatomic, readonly) NSDictionary* startingScrapProperties;
+@property (nonatomic, readonly) MMUndoablePaperView* startingPageForScrap;
 
 + (CATransform3D)transformQuadrilateral:(Quadrilateral)origin toQuadrilateral:(Quadrilateral)destination;
 

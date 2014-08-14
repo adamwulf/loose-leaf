@@ -47,15 +47,24 @@
 }
 
 -(NSArray*) scraps{
-    return [allScrapsForPage filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+    return [[allScrapsForPage filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        // only return scraps that are physically on the page
+        // we'll save all scraps, but this method is used
+        // to help generate the thumbnail later on, so we only
+        // care about scraps on the page
         return [scrapsOnPageIDs containsObject:[evaluatedObject uuid]];
-    }]];
+    }]] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        // sort the scraps, so that they are added to the thumbnail
+        // in the correct order
+        return [scrapsOnPageIDs indexOfObject:[obj1 uuid]] < [scrapsOnPageIDs indexOfObject:[obj2 uuid]] ? NSOrderedAscending : NSOrderedDescending;
+    }];
 }
 
 -(BOOL) saveStateToDiskBlocking{
     __block BOOL hadAnyEditsToSaveAtAll = NO;
     if(ownerState.lastSavedUndoHash != self.undoHash){
-        NSLog(@"scrapsOnPaperState needs saving %lu != %lu", (unsigned long) ownerState.lastSavedUndoHash, (unsigned long) self.undoHash);
+        hadAnyEditsToSaveAtAll = YES;
+//        NSLog(@"scrapsOnPaperState needs saving last: %lu !=  now:%lu", (unsigned long) ownerState.lastSavedUndoHash, (unsigned long) self.undoHash);
         NSMutableArray* allScrapProperties = [NSMutableArray array];
         if([allScrapsForPage count]){
             dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
@@ -63,7 +72,7 @@
             __block NSInteger savedScraps = 0;
             void(^doneSavingScrapBlock)(BOOL) = ^(BOOL hadEditsToSave){
                 savedScraps ++;
-                hadAnyEditsToSaveAtAll = hadAnyEditsToSaveAtAll || hadEditsToSave;
+//                hadAnyEditsToSaveAtAll = hadAnyEditsToSaveAtAll || hadEditsToSave;
                 if(savedScraps == [allScrapsForPage count]){
                     // just saved the last scrap, signal
                     dispatch_semaphore_signal(sema1);
@@ -79,12 +88,21 @@
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
         }
         
+        if(!scrapIDsPath){
+//            NSLog(@"on no");
+        }
+        
+//        NSLog(@"saving %lu scraps on %@", (unsigned long)[scrapsOnPageIDs count], ownerState.delegate);
         NSDictionary* scrapsOnPaperInfo = [NSDictionary dictionaryWithObjectsAndKeys:allScrapProperties, @"allScrapProperties", scrapsOnPageIDs, @"scrapsOnPageIDs", nil];
-        [scrapsOnPaperInfo writeToFile:scrapIDsPath atomically:YES];
+        if([scrapsOnPaperInfo writeToFile:scrapIDsPath atomically:YES]){
+//            NSLog(@"saved to %@", scrapIDsPath);
+        }else{
+            NSLog(@"failed saved to %@", scrapIDsPath);
+        }
         [ownerState wasSavedAtUndoHash:self.undoHash];
     }else{
         // we've already saved an immutable state with this hash
-        NSLog(@"scrapsOnPaperState doesn't need saving %lu == %lu", (unsigned long) ownerState.lastSavedUndoHash, (unsigned long) self.undoHash);
+//        NSLog(@"scrapsOnPaperState doesn't need saving %lu == %lu", (unsigned long) ownerState.lastSavedUndoHash, (unsigned long) self.undoHash);
     }
 
     return hadAnyEditsToSaveAtAll;
@@ -104,7 +122,7 @@
         NSUInteger hashVal = 1;
         for(MMScrapView* scrap in allScrapsForPage){
             hashVal = prime * hashVal + [[scrap uuid] hash];
-            if([scrap.state isStateLoaded]){
+            if([scrap.state isScrapStateLoaded]){
                 // if we're loaded, use the current hash
                 hashVal = prime * hashVal + [scrap.state.drawableView.state undoHash];
             }else{

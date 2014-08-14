@@ -24,6 +24,9 @@
 
 @property (readonly) MMScrapsOnPaperState* scrapsOnPaperState;
 @property (readonly) MMScrapContainerView* scrapContainerView;
+@property (readonly) UIImageView* cachedImgView;
+
+-(dispatch_queue_t) concurrentBackgroundQueue;
 
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andScale:(CGFloat)scale;
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale;
@@ -53,5 +56,7 @@
 -(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block;
 
 -(void) updateThumbnailVisibility;
+
+-(NSString*) scrapIDsPath;
 
 @end

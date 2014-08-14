@@ -49,9 +49,6 @@
     CGSize originalSize;
     CGRect drawableBounds;
     
-    // queue
-    dispatch_queue_t importExportScrapStateQueue;
-    
     // thumbnail
     UIImage* activeThumbnailImage;
     
@@ -95,11 +92,16 @@
 
 #pragma mark - Dispatch Queue
 
--(dispatch_queue_t) importExportScrapStateQueue{
-    if(!importExportScrapStateQueue){
-        importExportScrapStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.importExportScrapStateQueue", DISPATCH_QUEUE_SERIAL);
+// queue
+static dispatch_queue_t importExportScrapStateQueue;
+
++(dispatch_queue_t) importExportScrapStateQueue{
+    @synchronized([MMScrapViewState class]){
+        if(!importExportScrapStateQueue){
+            importExportScrapStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.importExportScrapStateQueue", DISPATCH_QUEUE_SERIAL);
+        }
+        return importExportScrapStateQueue;
     }
-    return importExportScrapStateQueue;
 }
 
 #pragma mark - Init
@@ -125,7 +127,8 @@
         return [self initWithUUID:uuid andBezierPath:bezierPath andBackgroundView:backingView andPaperState:_scrapsOnPaperState andLastSavedUndoHash:lsuh];
     }else{
         // we don't have a file that we should have, so don't load the scrap
-        return nil;
+        NSLog(@"can't find file at %@ or %@", self.scrapPropertiesPlistPath, self.bundledScrapPropertiesPlistPath);
+        @throw [NSException exceptionWithName:@"MissingScrapFilesException" reason:@"files for scrap state are not on disk" userInfo:nil];
     }
     return self;
 }
@@ -201,7 +204,7 @@
             [self setActiveThumbnailImage:[[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile]];
         }else{
             // don't load from disk on the main thread.
-            dispatch_async([self importExportScrapStateQueue], ^{
+            dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
                 [lock lock];
                 @autoreleasepool {
                     UIImage* thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
@@ -255,12 +258,14 @@
         NSDictionary* backgroundProps = [backgroundInfo saveBackgroundToDisk];
         [savedProperties addEntriesFromDictionary:backgroundProps];
         // save properties to disk
-        [savedProperties writeToFile:pathToSave atomically:YES];
+        if(![savedProperties writeToFile:pathToSave atomically:YES]){
+            NSLog(@"couldn't save properties!");
+        }
     };
     
     
     if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
-        dispatch_async([self importExportScrapStateQueue], ^{
+        dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
             @autoreleasepool {
                 [lock lock];
 //                NSLog(@"(%@) saving with background: %d %d", uuid, (int)drawableView, backingViewHasChanged);
@@ -353,6 +358,9 @@
 //            NSLog(@"(%@) already loaded", uuid);
             return;
         }
+        if(targetIsLoadedState){
+            NSLog(@"duplicate load");
+        }
         
         targetIsLoadedState = YES;
         isLoadingState = YES;
@@ -360,6 +368,9 @@
 
 //    NSLog(@"(%@) loading1: %d %d", uuid, targetIsLoadedState, isLoadingState);
     void (^loadBlock)() = ^(void) {
+        @synchronized(self){
+            targetIsLoadedState = YES;
+        }
         @autoreleasepool {
             [lock lock];
             
@@ -367,71 +378,64 @@
             dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
             [NSThread performBlockOnMainThread:^{
                 @synchronized(self){
-                    // add our drawable view to our contents
-                    drawableView = [[JotView alloc] initWithFrame:drawableBounds];
+                    if(!targetIsLoadedState){
+                        NSLog(@"saved building JotView we didn't need");
+                    }else{
+                        // add our drawable view to our contents
+                        drawableView = [[JotView alloc] initWithFrame:drawableBounds];
+                    }
                 }
                 dispatch_semaphore_signal(sema1);
             }];
 
             // load state, if we have any.
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-            // load drawable view information here
-            drawableViewState = [[JotViewStateProxy alloc] initWithDelegate:self];
-            [drawableViewState loadStateAsynchronously:NO
-                                              withSize:[drawableView pagePixelSize]
-                                            andContext:[drawableView context]
-                                      andBufferManager:[[JotBufferManager alloc] init]];
-            [NSThread performBlockOnMainThread:^{
-                @synchronized(self){
-                    isLoadingState = NO;
-                    if(targetIsLoadedState){
-                        [contentView addSubview:drawableView];
-                        thumbnailView.hidden = YES;
-                        if(drawableViewState){
-                            [drawableView loadState:drawableViewState];
-                        }
-                        
-                        // nothing changed in our goals since we started
-                        // to load state, so notify our delegate
-                        [self.delegate didLoadScrapViewState:self];
-                    }else{
-                        // when loading state, we were actually
-                        // told that we didn't really need the
-                        // state after all, so just throw it away :(
-                        drawableViewState = nil;
-                        drawableView = nil;
-                    }
-                }
-                dispatch_semaphore_signal(sema1);
-            }];
-            dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-//            dispatch_release(sema1); ARC handles this
+            BOOL goalIsLoaded = NO;
+            @synchronized(self){
+                goalIsLoaded = targetIsLoadedState;
+            }
+            if(!goalIsLoaded){
+                NSLog(@"saved building JotViewStateProxy we didn't need");
+            }else{
+                // load drawable view information here
+                drawableViewState = [[JotViewStateProxy alloc] initWithDelegate:self];
+                [drawableViewState loadStateAsynchronously:async
+                                                  withSize:[drawableView pagePixelSize]
+                                                andContext:[drawableView context]
+                                          andBufferManager:[[JotBufferManager alloc] init]];
+            }
             [lock unlock];
         }
     };
 
     if(async){
-        dispatch_async([self importExportScrapStateQueue], loadBlock);
+        dispatch_async([MMScrapViewState importExportScrapStateQueue], loadBlock);
     }else{
         loadBlock();
     }
 }
 
 -(void) unloadState{
-    dispatch_async([self importExportScrapStateQueue], ^{
+    @synchronized(self){
+        if(!targetIsLoadedState){
+            NSLog(@"duplicate unload");
+        }
+        targetIsLoadedState = NO;
+    }
+    dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
         @autoreleasepool {
             [lock lock];
             @synchronized(self){
-                if(drawableViewState && [drawableViewState hasEditsToSave]){
+                if(drawableViewState && [drawableViewState isStateLoaded] && [drawableViewState hasEditsToSave]){
 //                    NSLog(@"(%@) unload failed, will retry", uuid);
                     // we want to unload, but we're not saved.
                     // save, then try to unload again
-                    dispatch_async([self importExportScrapStateQueue], ^{
+                    dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
                         @autoreleasepool {
                             [self saveScrapStateToDisk:nil];
                         }
                     });
-                    dispatch_async([self importExportScrapStateQueue], ^{
+                    dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
                         @autoreleasepool {
                             [self unloadState];
                         }
@@ -442,9 +446,10 @@
                     if(!isLoadingState && drawableViewState){
                         dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                         [NSThread performBlockOnMainThread:^{
-                            drawableViewState = nil;
                             [drawableView removeFromSuperview];
                             [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
+                            [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];
+                            drawableViewState = nil;
                             drawableView = nil;
                             thumbnailView.hidden = NO;
                             dispatch_semaphore_signal(sema1);
@@ -459,8 +464,8 @@
     });
 }
 
--(BOOL) isStateLoaded{
-    return drawableViewState != nil;
+-(BOOL) isScrapStateLoaded{
+    return drawableViewState != nil && [drawableViewState isStateLoaded];
 }
 
 // returns the loaded thumbnail image,
@@ -607,7 +612,48 @@
 }
 
 -(void) didLoadState:(JotViewStateProxy *)state{
-    // noop
+    @synchronized(self){
+        if(!targetIsLoadedState){
+            NSLog(@"loaded state we didn't need");
+            if(drawableViewState){
+                [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];
+            }
+            if(drawableView){
+                [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
+            }
+            drawableViewState = nil;
+            drawableView = nil;
+        }else{
+            [NSThread performBlockOnMainThread:^{
+                @synchronized(self){
+                    isLoadingState = NO;
+                    if(targetIsLoadedState){
+                        [contentView addSubview:drawableView];
+                        thumbnailView.hidden = YES;
+                        if(drawableViewState){
+                            [drawableView loadState:drawableViewState];
+                        }
+                        
+                        // nothing changed in our goals since we started
+                        // to load state, so notify our delegate
+                        [self.delegate didLoadScrapViewState:self];
+                    }else{
+                        // when loading state, we were actually
+                        // told that we didn't really need the
+                        // state after all, so just throw it away :(
+                        if(drawableViewState){
+                            [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];
+                        }
+                        if(drawableView){
+                            [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
+                        }
+                        drawableViewState = nil;
+                        drawableView = nil;
+                    }
+                }
+            }];
+        }
+    }
 }
 
 -(void) didUnloadState:(JotViewStateProxy *)state{
@@ -617,10 +663,18 @@
 #pragma mark - dealloc
 
 -(void) dealloc{
+    if(self.isScrapStateLoaded){
+        if(drawableView){
+            [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
+        }
+        if(drawableViewState){
+            [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];
+        }
+    }
 //    NSLog(@"scrap state (%@) dealloc", uuid);
     [[MMLoadImageCache sharedInstance] clearCacheForPath:self.thumbImageFile];
 //    dispatch_release(importExportScrapStateQueue); ARC handles this
-    importExportScrapStateQueue = nil;
+//    importExportScrapStateQueue = nil;
 }
 
 @end

@@ -21,12 +21,10 @@
     NSMutableArray* stackOfUndoneItems;
     BOOL hasEditsToSave;
     BOOL isLoaded;
-    __weak MMScrapsOnPaperState* scrapsOnPaperState;
 }
 
-@synthesize scrapsOnPaperState;
 @synthesize hasEditsToSave;
-
+@synthesize isLoaded;
 
 -(id) initForPage:(MMUndoablePaperView*)_page{
     if(self = [super init]){
@@ -45,35 +43,24 @@
         if(needsLoad){
             [self loadFrom:page.undoStatePath];
         }
-        [stackOfUndoneItems makeObjectsPerformSelector:@selector(finalizeRedoneState)];
+        [stackOfUndoneItems makeObjectsPerformSelector:@selector(finalizeRedoableState)];
         [stackOfUndoneItems removeAllObjects];
         [stackOfUndoableItems addObject:item];
         while([stackOfUndoableItems count] > kUndoLimit){
             NSObject<MMUndoRedoItem>* item = [stackOfUndoableItems firstObject];
             [stackOfUndoableItems removeObject:item];
-            [item finalizeUndoneState];
+            [item finalizeUndoableState];
         }
         hasEditsToSave = YES;
         [self printDescription];
         if(needsLoad){
             [self saveTo:page.undoStatePath];
             [self unloadState];
-            NSLog(@"done saving unloaded undo manager");
+//            NSLog(@"done saving unloaded undo manager");
         }
     }
 }
 
--(void) mergeItemsIfPossible{
-    @throw [NSException exceptionWithName:@"UnusedMethod" reason:@"This method should not be used until functionality is defined" userInfo:nil];
-    MMUndoRedoPageItem* lastItem = [stackOfUndoableItems lastObject];
-    MMUndoRedoPageItem* almostLastItem = [stackOfUndoableItems lastObject];
-    if([lastItem shouldMergeWith:almostLastItem]){
-        // remove last 2 objects and merge
-        [stackOfUndoableItems removeLastObject];
-        [stackOfUndoableItems removeLastObject];
-        [stackOfUndoableItems addObject:[lastItem mergedItemWith:almostLastItem]];
-    }
-}
 
 -(void) undo{
     CheckMainThread;
@@ -178,10 +165,15 @@
     }
 }
 
+#pragma mark - Scrap Checking
 
-// debug method to see if we just undid adding a scrap to the bezel
--(BOOL) justUndidScrapBezel{
-    return [[stackOfUndoneItems firstObject] isKindOfClass:[MMUndoRedoBezeledScrapItem class]];
+-(BOOL) containsItemForScrapUUID:(NSString*)scrapUUID{
+    for(MMUndoRedoPageItem* undoItem in [stackOfUndoneItems arrayByAddingObjectsFromArray:stackOfUndoableItems]){
+        if([undoItem containsScrapUUID:scrapUUID]){
+            return YES;
+        }
+    }
+    return NO;
 }
 
 @end

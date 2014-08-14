@@ -8,6 +8,8 @@
 
 #import "MMUndoRedoRemoveScrapItem.h"
 #import "MMUndoablePaperView.h"
+#import "MMScrapSidebarContainerView.h"
+#import "MMTrashManager.h"
 
 @interface MMUndoRedoRemoveScrapItem (Private)
 
@@ -30,10 +32,14 @@
     __weak MMUndoRedoRemoveScrapItem* weakSelf = self;
     if(self = [super initWithUndoBlock:^{
         MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
-        [weakSelf.page.scrapsOnPaperState showScrap:scrap];
-        [scrap setPropertiesDictionary:weakSelf.propertiesWhenRemoved];
-        NSUInteger subviewIndex = [[weakSelf.propertiesWhenRemoved objectForKey:@"subviewIndex"] unsignedIntegerValue];
-        [scrap.superview insertSubview:scrap atIndex:subviewIndex];
+        if(!scrap){
+            NSLog(@"failed to load scrap!");
+        }else{
+            [weakSelf.page.scrapsOnPaperState showScrap:scrap];
+            [scrap setPropertiesDictionary:weakSelf.propertiesWhenRemoved];
+            NSUInteger subviewIndex = [[weakSelf.propertiesWhenRemoved objectForKey:@"subviewIndex"] unsignedIntegerValue];
+            [scrap.superview insertSubview:scrap atIndex:subviewIndex];
+        }
     } andRedoBlock:^{
         MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
         [weakSelf.page.scrapsOnPaperState hideScrap:scrap];
@@ -44,6 +50,28 @@
     return self;
 }
 
+#pragma mark - Finalize
+
+-(void) finalizeUndoableState{
+    // if the remove scrap item is left in the undoable state
+    // then that means the user has removed the scrap and kept it
+    // removed. if we're here, there's a chance (i think) that the
+    // scrap could be in the bezel.
+    //
+    // if so, then we shouldn't delete it from disk. otherwise
+    // we should delete it from disk.
+    if([page.delegate.bezelContainerView containsScrapUUID:scrapUUID]){
+        NSLog(@"scrap %@ is in bezel, can't delete assets", scrapUUID);
+    }else{
+        [[MMTrashManager sharedInstace] deleteScrap:scrapUUID inPage:page];
+    }
+}
+
+-(void) finalizeRedoableState{
+    // if this undo item is redoable, it means they've undone removing the scrap
+    // so the scrap still exists on the page as far as we know
+    // we shouldn't do anything
+}
 
 #pragma mark - Serialize
 
@@ -75,6 +103,12 @@
 
 -(NSDictionary*) propertiesWhenRemoved{
     return propertiesWhenRemoved;
+}
+
+#pragma mark - Scrap Checking
+
+-(BOOL) containsScrapUUID:(NSString*)_scrapUUID{
+    return [scrapUUID isEqualToString:_scrapUUID];
 }
 
 @end

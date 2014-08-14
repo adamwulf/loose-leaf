@@ -54,6 +54,10 @@
 -(BOOL) shouldPopPageFromVisibleStack:(MMPaperView*)page withFrame:(CGRect)frame;
 
 -(void) cancelAllGestures;
+-(void) disableAllGesturesForPageView;
+-(void) enableAllGesturesForPageView;
+
+-(void) addPageButtonTapped:(UIButton*)_button;
 
 // private
 

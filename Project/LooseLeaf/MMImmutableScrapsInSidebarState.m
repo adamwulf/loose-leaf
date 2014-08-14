@@ -21,6 +21,7 @@
         allScrapProperties = [_allScrapProperties mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
             NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:obj];
             [props removeObjectForKey:@"state"]; // don't allow state object in the list
+            [props removeObjectForKey:@"scrap"]; // don't allow scrap object in the list
             return props;
         }];
     }
@@ -39,7 +40,13 @@
     __block BOOL hadAnyEditsToSaveAtAll = NO;
 
     NSDictionary* scrapsOnPaperInfo = [NSDictionary dictionaryWithObjectsAndKeys:allScrapProperties, @"allScrapProperties", nil];
-    [scrapsOnPaperInfo writeToFile:scrapIDsPath atomically:YES];
+    if([scrapsOnPaperInfo writeToFile:scrapIDsPath atomically:YES]){
+//        NSLog(@"saved bezel scrap state for %d scraps", [allScrapProperties count]);
+//        NSLog(@"saved to: %@", scrapIDsPath);
+    }else{
+        NSLog(@"couldn't save");
+    }
+    
     
     return hadAnyEditsToSaveAtAll;
 }

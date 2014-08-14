@@ -297,34 +297,60 @@
                }
            }
 
-           [UIView animateWithDuration:0.2
-                                 delay:0 options:UIViewAnimationOptionBeginFromCurrentState
-                            animations:^{
-                                papersIcon.alpha = papersIconAlpha;
-                                paperIcon.alpha = paperIconAlpha;
-                                leftArrow.alpha = leftArrowAlpha;
-                                plusIcon.alpha = plusIconAlpha;
-                                rightArrow.alpha = rightArrowAlpha;
-                            }
-                            completion:nil];
+           if(papersIcon.alpha == papersIconAlpha &&
+              paperIcon.alpha == paperIconAlpha &&
+              leftArrow.alpha == leftArrowAlpha &&
+              plusIcon.alpha == plusIconAlpha &&
+              rightArrow.alpha == rightArrowAlpha){
+//               NSLog(@"duplicate animation");
+           }else{
+               [UIView animateWithDuration:0.2
+                                     delay:0 options:UIViewAnimationOptionBeginFromCurrentState
+                                animations:^{
+                                    papersIcon.alpha = papersIconAlpha;
+                                    paperIcon.alpha = paperIconAlpha;
+                                    leftArrow.alpha = leftArrowAlpha;
+                                    plusIcon.alpha = plusIconAlpha;
+                                    rightArrow.alpha = rightArrowAlpha;
+                                }
+                                completion:nil];
+           }
        }else if(!showLeftArrow && !showRightArrow && (paperIcon.alpha || papersIcon.alpha)){
-           [UIView animateWithDuration:0.3
-                                 delay:0
-                               options:UIViewAnimationOptionBeginFromCurrentState
-                            animations:^{
-                                papersIcon.alpha = 0;
-                                paperIcon.alpha = 0;
-                                leftArrow.alpha = 0;
-                                plusIcon.alpha = 0;
-                                rightArrow.alpha = 0;
-                            }
-                            completion:nil];
+           if(papersIcon.alpha == 0 &&
+              paperIcon.alpha == 0 &&
+              leftArrow.alpha == 0 &&
+              plusIcon.alpha == 0 &&
+              rightArrow.alpha == 0){
+               //               NSLog(@"duplicate animation");
+           }else{
+               
+               [UIView animateWithDuration:0.3
+                                     delay:0
+                                   options:UIViewAnimationOptionBeginFromCurrentState
+                                animations:^{
+                                    papersIcon.alpha = 0;
+                                    paperIcon.alpha = 0;
+                                    leftArrow.alpha = 0;
+                                    plusIcon.alpha = 0;
+                                    rightArrow.alpha = 0;
+                                }
+                                completion:nil];
+           }
        }
 }
 
 
 #pragma mark - Bezel Left and Right Gestures
 
+-(void) addPageButtonTapped:(UIButton*)button{
+    if([setOfPagesBeingPanned count]){
+        NSLog(@"adding new page, but pages are being panned.");
+        for(MMPaperView* page in [setOfPagesBeingPanned copy]){
+            [page cancelAllGestures];
+        }
+    }
+    [[visibleStackHolder peekSubview] cancelAllGestures];
+}
 
 /**
  * this is the event handler for the MMBezelInRightGestureRecognizer
@@ -352,6 +378,9 @@
             }
         }
         
+        // make sure to disable all gestures on the top page.
+        // this will cancel any strokes / ruler / etc
+        [[visibleStackHolder peekSubview] disableAllGestures];
         
         // this flag is an ugly hack because i'm using substates in gestures.
         // ideally, i could handle this gesture entirely inside of the state,
@@ -1832,6 +1861,16 @@
 
 -(BOOL) isActivelyGesturing{
     return [fromLeftBezelGesture isActivelyBezeling] || [fromRightBezelGesture isActivelyBezeling] || [setOfPagesBeingPanned count];
+}
+
+-(void) disableAllGesturesForPageView{
+    [fromLeftBezelGesture setEnabled:NO];
+    [fromRightBezelGesture setEnabled:NO];
+}
+
+-(void) enableAllGesturesForPageView{
+    [fromLeftBezelGesture setEnabled:YES];
+    [fromRightBezelGesture setEnabled:YES];
 }
 
 @end

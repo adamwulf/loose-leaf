@@ -214,6 +214,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
  */
 -(void) initializeAlbumCache{
     if(hasEverInitailized){
+        [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
         return;
     }
     NSMutableArray* updatedAlbumsList = [NSMutableArray array];
@@ -293,6 +294,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
 
 
 -(void) showErrorAboutUserNeedingToGivePermission{
+    // TODO: https://github.com/adamwulf/loose-leaf/issues/671
     debug_NSLog(@"user needs to grant permission to photo library");
 }
 

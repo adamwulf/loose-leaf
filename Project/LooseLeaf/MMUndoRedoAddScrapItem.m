@@ -9,6 +9,8 @@
 #import "MMUndoRedoAddScrapItem.h"
 #import "MMUndoablePaperView.h"
 #import "MMPageUndoRedoManager.h"
+#import "MMScrapSidebarContainerView.h"
+#import "MMTrashManager.h"
 
 @interface MMUndoRedoAddScrapItem (Private)
 
@@ -47,6 +49,23 @@
     return self;
 }
 
+#pragma mark - Finalize
+
+-(void) finalizeUndoableState{
+    // if this item is undoable, it means the user has
+    // added a scrap to the page and has NOT undone the
+    // scrap, so as far as we know it's still on the page.
+    // this is a noop for us
+}
+
+-(void) finalizeRedoableState{
+    // if this item is able to be re-done, it means that the user
+    // has undone adding the scrap. if this is the case, then
+    // the scrap could only ever have been on the page and undone,
+    // we don't need to check the bezel.
+    // just delete the assets straight away
+    [[MMTrashManager sharedInstace] deleteScrap:scrapUUID inPage:page];
+}
 
 #pragma mark - Serialize
 
@@ -78,6 +97,12 @@
 
 -(NSDictionary*) propertiesWhenAdded{
     return propertiesWhenAdded;
+}
+
+#pragma mark - Scrap Checking
+
+-(BOOL) containsScrapUUID:(NSString*)_scrapUUID{
+    return [scrapUUID isEqualToString:_scrapUUID];
 }
 
 @end

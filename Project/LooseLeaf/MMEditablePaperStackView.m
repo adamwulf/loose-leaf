@@ -72,7 +72,6 @@ struct SidebarButton{
         
         shareButton = [[MMShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         shareButton.delegate = self;
-        [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:shareButton];
         buttons[1].button = (__bridge void *)(shareButton);
         buttons[1].originalRect = shareButton.frame;
@@ -361,6 +360,8 @@ struct SidebarButton{
  * without changing the hidden stack's contents
  */
 -(void) addPageButtonTapped:(UIButton*)_button{
+    [super addPageButtonTapped:_button];
+    
     MMEditablePaperView* page = [[MMUndoablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.isBrandNewPage = YES;
     page.delegate = self;
@@ -369,10 +370,6 @@ struct SidebarButton{
     [self popTopPageOfHiddenStack];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
     [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
-}
-
--(void) shareButtonTapped:(UIButton*)_button{
-    @throw kAbstractMethodException;
 }
 
 -(void) tempButtonTapped:(UIButton*)_button{
@@ -762,7 +759,7 @@ struct SidebarButton{
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
     // dont start a new stroke if one already exists
     if([[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count] > 0){
-        debug_NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
+//        debug_NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
         return NO;
     }
     if([MMPageCacheManager sharedInstance].drawableView.state.currentStroke){
@@ -897,7 +894,7 @@ struct SidebarButton{
             settingsButton.selected = NO;
             break;
     }
-    debug_NSLog(@"jot status: %@", text);
+//    debug_NSLog(@"jot status: %@", text);
 }
 
 
@@ -933,6 +930,16 @@ struct SidebarButton{
     [super finishUITransitionToPageView];
     [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
     [[visibleStackHolder peekSubview] updateThumbnailVisibility];
+}
+
+-(void) disableAllGesturesForPageView{
+    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+    [super disableAllGesturesForPageView];
+}
+
+-(void) enableAllGesturesForPageView{
+    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
+    [super enableAllGesturesForPageView];
 }
 
 #pragma mark - Sidebar Hit Test

@@ -122,25 +122,6 @@
                                                                                 kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [pdfInboxButton addTarget:self action:@selector(pdfButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [sidebarContentView addSubview:pdfInboxButton];
-        
-//        // facebook
-//        facebookAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4*kWidthOfSidebarButton, buttonBounds.origin.y,
-//                                                                                 kWidthOfSidebarButton, kWidthOfSidebarButton)];
-//        [facebookAlbumButton setImage:[UIImage imageNamed:@"facebook"]];
-//        [sidebarContentView addSubview:facebookAlbumButton];
-
-        
-//        twitterAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 2*kWidthOfSidebarButton, buttonBounds.origin.y,
-//                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
-//        [twitterAlbumButton setImage:[UIImage imageNamed:@"twitter"]];
-//        [sidebarContentView addSubview:twitterAlbumButton];
-
-
-//        evernoteAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4*kWidthOfSidebarButton, buttonBounds.origin.y,
-//                                                                                  kWidthOfSidebarButton, kWidthOfSidebarButton)];
-//        [evernoteAlbumButton setImage:[UIImage imageNamed:@"evernote"]];
-//        [sidebarContentView addSubview:evernoteAlbumButton];
-        
 }
     return self;
 }
@@ -164,15 +145,26 @@
     }
 }
 
--(void) hide:(BOOL)animated{
-    [super hide:animated];
-    [[NSThread mainThread] performBlock:^{
+-(void) hide:(BOOL)animated onComplete:(void (^)(BOOL))onComplete{
+    [super hide:animated onComplete:^(BOOL finished){
         [cameraListContentView hide:animated];
         [albumListContentView hide:animated];
         [faceListContentView hide:animated];
         [eventListContentView hide:animated];
         [pdfListContentView hide:animated];
-    } afterDelay:.1];
+        
+        if(finished){
+            [cameraListContentView killMemory];
+            [albumListContentView killMemory];
+            [faceListContentView killMemory];
+            [eventListContentView killMemory];
+            [pdfListContentView killMemory];
+        }
+
+        if(onComplete){
+            onComplete(finished);
+        }
+    }];
 }
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
@@ -187,6 +179,7 @@
     for(MMAbstractSidebarContentView* aListView in allListContentViews){
         if(aListView == listView){
             listView.hidden = NO;
+            [listView reset:NO];
             [listView show:NO];
         }else if(!aListView.hidden){
             [aListView hide:NO];

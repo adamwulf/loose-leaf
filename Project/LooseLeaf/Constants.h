@@ -32,6 +32,11 @@
 
 #define kAnimationDelay 0.05
 
+// Imgur
+#define kImgurClientID @"84d82da68fd2438"
+#define kImgurClientSecret @"9d527186fee2a9f9e7af7f5e9fbbab334a1ac1ce"
+#define kMashapeClientID @"YOUR_MASHAPE_CLIENT_ID"
+
 // Ruler
 #define kWidthOfRuler 70
 #define kRulerPinchBuffer 40
@@ -82,6 +87,7 @@
 #define kMPHasZoomedToList @"Has Zoomed Out to List"
 #define kMPNumberOfLaunches @"Number Of Launches"
 #define kMPNumberOfCrashes @"Number of Crashes"
+#define kMPNumberOfDuplicatePages @"Duplicate Pages Found"
 #define kMPDistanceDrawn @"Distance Drawn (m)"
 #define kMPDistanceErased @"Distance Erased (m)"
 
@@ -94,6 +100,7 @@
 
 #define kMPEventExportPropDestination @"Export Destination"
 #define kMPEventExportPropResult @"Export Result"
+#define kMPEventExportPropReason @"Export Result Reason"
 #define kMPEventImportPropFileExt @"File Extension"
 #define kMPEventImportPropFileType @"File Type"
 #define kMPEventImportPropReferApp @"Referring App"
@@ -107,8 +114,8 @@
 #define RandomPhotoRotation ((float)(rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees/2)) / 360.0 * M_PI
 
 // cache sizes
-#define kMMLoadImageCacheSize 30
-#define kMMPageCacheManagerSize 5
+#define kMMLoadImageCacheSize 10
+#define kMMPageCacheManagerSize 3
 
 #ifdef __cplusplus
 extern "C" {

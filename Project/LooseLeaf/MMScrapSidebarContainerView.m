@@ -179,6 +179,8 @@
             // we need to pull them all into 1 button w/
             // a menu
             
+            [self.bubbleDelegate willAddScrapToBezelSidebar:scrap];
+            
             [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                 // animate the scrap into position
                 bubble.alpha = 1;
@@ -219,6 +221,7 @@
         }else if([scrapState.allScrapsInSidebar count] > kMaxScrapsInBezel){
             // we need to merge all the bubbles together into
             // a single button during the bezel animation
+            [self.bubbleDelegate willAddScrapToBezelSidebar:scrap];
             [countButton setCount:[scrapState.allScrapsInSidebar count]];
             bubble.center = countButton.center;
             bubble.scale = 1;
@@ -288,6 +291,15 @@
     return [scrapState.allScrapsInSidebar containsObject:scrap];
 }
 
+-(BOOL) containsScrapUUID:(NSString *)scrapUUID{
+    for(MMScrapView* scrap in scrapState.allScrapsInSidebar){
+        if([scrap.uuid isEqualToString:scrapUUID]){
+            return YES;
+        }
+    }
+    return NO;
+}
+
 
 #pragma mark - Button Tap
 
@@ -345,6 +357,7 @@
         properties = mproperties;
     }
     
+    [self.bubbleDelegate willAddScrapBackToPage:scrap];
     [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         [scrap setPropertiesDictionary:properties];
     } completion:^(BOOL finished){

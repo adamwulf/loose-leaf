@@ -14,6 +14,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "UIView+Debug.h"
 #import "Constants.h"
+#import "MMPageCacheManager.h"
 
 @interface MMImmutableScrapsOnPaperState (Private)
 
@@ -127,8 +128,19 @@ static dispatch_queue_t importExportStateQueue;
                     }
                 }
                 
+                // maintain order of loaded scraps, so that they are added to the page
+                // in the correct order as they load
+                [scrapPropsWithState sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                    return [scrapIDsOnPage indexOfObject:[obj1 objectForKey:@"uuid"]] < [scrapIDsOnPage indexOfObject:[obj2 objectForKey:@"uuid"]] ? NSOrderedAscending : NSOrderedDescending;
+                }];
+                
                 [NSThread performBlockOnMainThread:^{
                     for(NSDictionary* scrapProperties in scrapPropsWithState){
+                        @synchronized(self){
+                            if(isUnloading){
+                                NSLog(@"loading during unloading");
+                            }
+                        }
                         MMScrapView* scrap = nil;
                         if([scrapProperties objectForKey:@"scrap"]){
                             scrap = [scrapProperties objectForKey:@"scrap"];
@@ -153,6 +165,9 @@ static dispatch_queue_t importExportStateQueue;
                             }
                             
                             if(makeEditable){
+                                if(!async){
+                                    NSLog(@"not async");
+                                }
                                 [scrap loadScrapStateAsynchronously:async];
                             }
                             [scrap setShouldShowShadow:shouldShowShadows];
@@ -164,6 +179,7 @@ static dispatch_queue_t importExportStateQueue;
                         MMImmutableScrapsOnPaperState* immutableState = [self immutableStateForPath:nil];
                         expectedUndoHash = [immutableState undoHash];
                         lastSavedUndoHash = [immutableState undoHash];
+//                        NSLog(@"loaded scrapsOnPaperState at: %lu", (unsigned long)lastSavedUndoHash);
                     }
                     [self.delegate didLoadAllScrapsFor:self];
                     dispatch_semaphore_signal(sema1);
@@ -183,6 +199,14 @@ static dispatch_queue_t importExportStateQueue;
             if([self isStateLoaded]){
                 for(MMScrapView* scrap in self.delegate.scrapsOnPaper){
                     [scrap loadScrapStateAsynchronously:async];
+                    if(!async){
+                        NSLog(@"not async");
+                    }
+                    @synchronized(self){
+                        if(isUnloading){
+                            NSLog(@"loading during unloading");
+                        }
+                    }
                 }
             }
         };
@@ -195,13 +219,18 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 -(void) unload{
-    NSLog(@"unloading scrap state for %@", self.delegate.uuid);
+    if(self.delegate == [[MMPageCacheManager sharedInstance] currentEditablePage]){
+        NSLog(@"what");
+    }
     if([self isStateLoaded] || isLoading){
         @synchronized(self){
             isUnloading = YES;
         }
         dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
             @autoreleasepool {
+                if(isLoading){
+                    NSLog(@"unload during loading");
+                }
                 if([self isStateLoaded]){
                     @synchronized(allScrapsForPage){
                         for(MMScrapView* scrap in allScrapsForPage){
@@ -292,11 +321,11 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 -(void) scrapVisibilityWasUpdated:(MMScrapView*)scrap{
-    if(scrap.superview != delegate.scrapContainerView){
-        debug_NSLog(@"scrap %@ is invisible, state loaded: %d", scrap.uuid, [self isStateLoaded] || isLoading);
-    }else{
-        debug_NSLog(@"scrap %@ is visible, state loaded: %d", scrap.uuid, [self isStateLoaded] || isLoading);
-    }
+//    if(scrap.superview != delegate.scrapContainerView){
+//        debug_NSLog(@"scrap %@ is invisible, state loaded: %d", scrap.uuid, [self isStateLoaded] || isLoading);
+//    }else{
+//        debug_NSLog(@"scrap %@ is visible, state loaded: %d", scrap.uuid, [self isStateLoaded] || isLoading);
+//    }
     if([self isStateLoaded] && !isLoading && !isUnloading){
         // something changed w/ scrap visibility
         // we only care if we're fully loaded, not if
@@ -334,6 +363,22 @@ static dispatch_queue_t importExportStateQueue;
 -(void) wasSavedAtUndoHash:(NSUInteger)savedUndoHash{
     @synchronized(self){
         lastSavedUndoHash = savedUndoHash;
+//        NSLog(@"notified saved at: %lu", (unsigned long)lastSavedUndoHash);
+    }
+}
+
+-(void) removeScrapWithUUID:(NSString*)scrapUUID{
+    @synchronized(allScrapsForPage){
+        NSMutableArray* otherArray = [NSMutableArray array];
+        for(MMScrapView* scrap in allScrapsForPage){
+            if(![scrap.uuid isEqualToString:scrapUUID]){
+                [otherArray addObject:scrap];
+            }else{
+                NSLog(@"permanently removed scrap %@ from page %@", scrapUUID, delegate.uuid);
+            }
+        }
+        allScrapsForPage = otherArray;
+        hasEditsToSave = YES;
     }
 }
 

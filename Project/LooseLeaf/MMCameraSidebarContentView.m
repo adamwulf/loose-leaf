@@ -15,6 +15,7 @@
 #import "MMImageSidebarContainerView.h"
 #import "NSThread+BlockAdditions.h"
 #import "CaptureSessionManager.h"
+#import "UIView+Debug.h"
 
 #define kCameraMargin 10
 #define kCameraPositionUserDefaultKey @"com.milestonemade.preferredCameraPosition"
@@ -56,6 +57,10 @@
     return cameraViewFr;
 }
 
+-(void) reset:(BOOL)animated{
+    // noop
+}
+
 -(void) show:(BOOL)animated{
     if(isShowing){
         return;
@@ -65,6 +70,9 @@
     AVCaptureDevicePosition preferredPosition = [[NSUserDefaults standardUserDefaults] integerForKey:kCameraPositionUserDefaultKey];
     
     if([CaptureSessionManager hasCamera]){
+        if(!flipButton.superview){
+            [photoListScrollView addSubview:flipButton];
+        }
         if(!cameraRow){
             cameraRow = [[MMBorderedCamView alloc] initWithFrame:[self cameraViewFr] andCameraPosition:preferredPosition];
             cameraRow.delegate = self;
@@ -83,10 +91,8 @@
     photoListScrollView.alpha = 1;
     [[MMPhotoManager sharedInstace] initializeAlbumCache];
     
-    [[NSThread mainThread] performBlock:^{
-        currentAlbum = [[MMPhotoManager sharedInstace] cameraRoll];
-        [self doneLoadingPhotoAlbums];
-    } afterDelay:.1];
+    currentAlbum = [[MMPhotoManager sharedInstace] cameraRoll];
+    [self doneLoadingPhotoAlbums];
 }
 
 -(void) hide:(BOOL)animated{
@@ -159,6 +165,10 @@
             return NO;
         }
     }
+    if([aRow isKindOfClass:[MMFlipCameraButton class]]){
+        // don't reuse the flip button
+        return NO;
+    }
     return [super prepareRowForReuse:aRow forScrollView:scrollView];
 }
 
@@ -175,7 +185,6 @@
 #pragma mark - MMCamViewDelegate
 
 -(void) didTakePicture:(UIImage*)img{
-    debug_NSLog(@"got picture %p", img);
     [self.delegate pictureTakeWithCamera:img fromView:cameraRow];
 }
 

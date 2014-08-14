@@ -10,9 +10,11 @@
 
 @interface MMImageViewButton : MMDarkSidebarButton{
     BOOL darkBg;
+    BOOL greyscale;
 }
 
 @property (assign, getter = isDarkBg) BOOL darkBg;
+@property (assign, getter = isGreyscale) BOOL greyscale;
 
 -(void) setImage:(UIImage*)img;
 

@@ -17,13 +17,8 @@
 #import "MMUndoRedoMoveScrapItem.h"
 #import "MMUndoRedoAddScrapFromBezelItem.h"
 #import "MMScrapSidebarContainerView.h"
-
-@interface MMScrappedPaperView (Queue)
-
-+(dispatch_queue_t) concurrentBackgroundQueue;
-
-@end
-
+#import "MMImmutableScrapsOnPaperState.h"
+#import "MMTrashManager.h"
 
 @implementation MMUndoablePaperView{
     MMPageUndoRedoManager* undoRedoManager;
@@ -41,7 +36,6 @@
     if (self = [super initWithFrame:frame andUUID:_uuid]) {
         // Initialization code
         undoRedoManager = [[MMPageUndoRedoManager alloc] initForPage:self];
-        undoRedoManager.scrapsOnPaperState = self.scrapsOnPaperState;
     }
     return self;
 }
@@ -68,7 +62,7 @@
         [undoRedoManager loadFrom:[self undoStatePath]];
     };
     
-    dispatch_async([MMScrappedPaperView concurrentBackgroundQueue], block);
+    dispatch_async([self concurrentBackgroundQueue], block);
 }
 
 -(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
@@ -83,32 +77,30 @@
 
 -(void) saveToDisk:(void (^)(BOOL))onComplete{
     
-    if(![self hasStateLoaded]){
-        // don't allow saving a page to disk if its state isn't
-        // even loaded. otherwise we'll end up saving empty state
-        // info and overriding legit info
-        if(onComplete) onComplete(NO);
-        return;
-    }
-
     // track if our back ground page has saved
     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
-    // track if all of our scraps have saved
-    dispatch_semaphore_t sema2 = dispatch_semaphore_create(0);
-
     __block BOOL hadEditsToSave;
     [super saveToDisk:^(BOOL _hadEditsToSave){
         // save all our ink/strokes/thumbs/etc to disk
         hadEditsToSave = _hadEditsToSave;
         dispatch_semaphore_signal(sema1);
     }];
-    dispatch_async([MMScrappedPaperView concurrentBackgroundQueue], ^(void) {
-        // also write undostack to disk
-        [undoRedoManager saveTo:[self undoStatePath]];
-        dispatch_semaphore_signal(sema2);
-    });
     
-    dispatch_async([MMScrappedPaperView concurrentBackgroundQueue], ^(void) {
+    dispatch_semaphore_t sema2 = dispatch_semaphore_create(0);
+    if(undoRedoManager.isLoaded){
+        // only bother saving our undo/redo state
+        // if its loaded
+        // track if all of our scraps have saved
+        
+        dispatch_async([self concurrentBackgroundQueue], ^(void) {
+            // also write undostack to disk
+            [undoRedoManager saveTo:[self undoStatePath]];
+            dispatch_semaphore_signal(sema2);
+        });
+    }else{
+        dispatch_semaphore_signal(sema2);
+    }
+    dispatch_async([self concurrentBackgroundQueue], ^(void) {
         @autoreleasepool {
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
@@ -176,7 +168,6 @@
         // this scrap was owned by this page and added back from a tap on the bezel
         scrap = scrapFromBezel;
     }
-    NSLog(@"adding undo item for %@", scrap.uuid);
     [self.undoRedoManager addUndoItem:[MMUndoRedoAddScrapFromBezelItem itemForPage:self andScrapUUID:scrap.uuid andProperties:[scrap propertiesDictionary]]];
 }
 

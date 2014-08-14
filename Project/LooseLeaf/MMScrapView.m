@@ -468,7 +468,7 @@
 }
 
 -(void) blockToFireWhenStateLoads:(void(^)())block{
-    if([self.state isStateLoaded]){
+    if([self.state isScrapStateLoaded]){
         block();
     }else{
         @synchronized(blocksToFireWhenStateIsLoaded){

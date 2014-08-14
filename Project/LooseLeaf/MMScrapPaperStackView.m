@@ -25,6 +25,9 @@
 #import "MMInboxManagerDelegate.h"
 #import "NSURL+UTI.h"
 #import "Mixpanel.h"
+#import "MMShareManager.h"
+#import "MMTrashManager.h"
+#import "MMShareSidebarContainerView.h"
 
 @implementation MMScrapPaperStackView{
     MMScrapSidebarContainerView* bezelScrapContainer;
@@ -44,7 +47,10 @@
     MMCountBubbleButton* countButton;
     
     // image picker sidebar
-    MMImageSidebarContainerView* imagePicker;
+    MMImageSidebarContainerView* importImageSidebar;
+    
+    // share sidebar
+    MMShareSidebarContainerView* sharePageSidebar;
 
     NSTimer* debugTimer;
     NSTimer* drawTimer;
@@ -52,8 +58,13 @@
     
     // flag if we're waiting on a page to save
     MMPaperView* wantsExport;
+    
+    // flag if we're animating a scrap
+    // to/from the sidebar
+    BOOL isAnimatingScrapToOrFromSidebar;
+    
+    UIImageView* testImageView;
 }
-
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -87,8 +98,6 @@
         [self insertSubview:bezelScrapContainer belowSubview:countButton];
         [bezelScrapContainer setCountButton:countButton];
         
-
-
         panAndPinchScrapGesture = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
         panAndPinchScrapGesture.bezelDirectionMask = MMBezelDirectionRight;
         panAndPinchScrapGesture.scrapDelegate = self;
@@ -122,10 +131,19 @@
         
         [insertImageButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
-        imagePicker = [[MMImageSidebarContainerView alloc] initWithFrame:self.bounds forButton:insertImageButton animateFromLeft:YES];
-        imagePicker.delegate = self;
-        [imagePicker hide:NO];
-        [self addSubview:imagePicker];
+        importImageSidebar = [[MMImageSidebarContainerView alloc] initWithFrame:self.bounds forButton:insertImageButton animateFromLeft:YES];
+        importImageSidebar.delegate = self;
+        [importImageSidebar hide:NO onComplete:nil];
+        [self addSubview:importImageSidebar];
+        
+        
+        [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+
+        sharePageSidebar = [[MMShareSidebarContainerView alloc] initWithFrame:self.bounds forButton:shareButton animateFromLeft:YES];
+        sharePageSidebar.delegate = self;
+        [sharePageSidebar hide:NO onComplete:nil];
+        sharePageSidebar.shareDelegate = self;
+        [self addSubview:sharePageSidebar];
         
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds andPage:nil];
         [self addSubview:scrapContainer];
@@ -141,6 +159,11 @@
 //        debugImgView.contentMode = UIViewContentModeScaleAspectFit;
 //        debugImgView.backgroundColor = [UIColor orangeColor];
 //        [self addSubview:debugImgView];
+        
+//        testImageView = [[UIImageView alloc] initWithFrame:CGRectMake(450, 50, 200, 200)];
+//        [testImageView showDebugBorder];
+//        [self addSubview:testImageView];
+
     }
     return self;
 }
@@ -150,7 +173,7 @@
 }
 
 -(int) fullByteSize{
-    return [super fullByteSize] + imagePicker.fullByteSize + bezelScrapContainer.fullByteSize;
+    return [super fullByteSize] + importImageSidebar.fullByteSize + bezelScrapContainer.fullByteSize;
     
 }
 
@@ -160,7 +183,7 @@
     [self cancelAllGestures];
     [[visibleStackHolder peekSubview] cancelAllGestures];
     [self setButtonsVisible:NO withDuration:0.15];
-    [imagePicker show:YES];
+    [importImageSidebar show:YES];
 }
 
 #pragma mark - MMInboxManagerDelegate
@@ -264,17 +287,33 @@
 
 #pragma mark - MMImageSidebarContainerViewDelegate
 
+-(void) disableAllGesturesForPageView{
+    NSLog(@"disableAllGesturesForPageView");
+    [panAndPinchScrapGesture setEnabled:NO];
+    [panAndPinchScrapGesture2 setEnabled:NO];
+    [stretchScrapGesture setEnabled:NO];
+    [super disableAllGesturesForPageView];
+}
+
+-(void) enableAllGesturesForPageView{
+    NSLog(@"enableAllGesturesForPageView");
+    [panAndPinchScrapGesture setEnabled:YES];
+    [panAndPinchScrapGesture2 setEnabled:YES];
+    [stretchScrapGesture setEnabled:YES];
+    [super enableAllGesturesForPageView];
+}
+
 -(void) sidebarCloseButtonWasTapped{
     // noop
 }
 
 -(void) sidebarWillShow{
-    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+    [self disableAllGesturesForPageView];
 }
 
 -(void) sidebarWillHide{
     [self setButtonsVisible:YES];
-    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
+    [self enableAllGesturesForPageView];
 }
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
@@ -338,7 +377,7 @@
     scrap.center = [self convertPoint:CGPointMake(cameraView.bounds.size.width/2, cameraView.bounds.size.height/2) fromView:cameraView];
     scrap.rotation = cameraView.rotation;
     
-    [imagePicker hide:YES];
+    [importImageSidebar hide:YES onComplete:nil];
     
     // hide the photo in the row
     cameraView.alpha = 0;
@@ -437,7 +476,7 @@
     
     // hide the picker, this'll slide it out
     // underneath our scrap
-    [imagePicker hide:YES];
+    [importImageSidebar hide:YES onComplete:nil];
     
     // hide the photo in the row. this way the scrap
     // becomes the photo, and it doesn't seem to duplicate
@@ -615,30 +654,49 @@ int skipAll = NO;
     [super addPageButtonTapped:_button];
 }
 
--(void) shareButtonTapped:(UIButton*)_button{
-    if([[visibleStackHolder peekSubview] hasEditsToSave]){
-        wantsExport = [visibleStackHolder peekSubview];
-    }else{
-        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
-        [composer setMailComposeDelegate:self];
-        if([MFMailComposeViewController canSendMail]) {
-            [composer setSubject:@"Quick sketch from Loose Leaf"];
-            [composer setMessageBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
-            [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-            
-            NSData *data = UIImagePNGRepresentation([visibleStackHolder peekSubview].scrappedImgViewImage);
-            [composer addAttachmentData:data  mimeType:@"image/png" fileName:@"LooseLeaf.png"];
-            
-            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:composer animated:YES completion:nil];
-        }
-    }
-}
-
 -(void) anySidebarButtonTapped:(id)button{
     if(button != countButton){
         [bezelScrapContainer sidebarCloseButtonWasTapped];
     }
 }
+
+#pragma mark - Sharing
+
+
+-(void) shareButtonTapped:(UIButton*)_button{
+    if([self isActivelyGesturing]){
+        // export not allowed while gesturing
+        return;
+    }
+    
+    [self cancelAllGestures];
+    [[visibleStackHolder peekSubview] cancelAllGestures];
+    [self setButtonsVisible:NO withDuration:0.15];
+    [sharePageSidebar show:YES];
+    
+    
+    
+    
+    
+    
+//    if([[visibleStackHolder peekSubview] hasEditsToSave]){
+//        wantsExport = [visibleStackHolder peekSubview];
+//    }else{
+//        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
+//        [composer setMailComposeDelegate:self];
+//        if([MFMailComposeViewController canSendMail]) {
+//            [composer setSubject:@"Quick sketch from Loose Leaf"];
+//            [composer setMessageBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
+//            [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+//            
+//            NSData *data = UIImagePNGRepresentation([visibleStackHolder peekSubview].scrappedImgViewImage);
+//            [composer addAttachmentData:data  mimeType:@"image/png" fileName:@"LooseLeaf.png"];
+//            
+//            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:composer animated:YES completion:nil];
+//        }
+//    }
+}
+
 
 #pragma mark - MMPencilAndPaletteViewDelegate
 
@@ -665,14 +723,14 @@ int skipAll = NO;
         if(![scrapContainer.subviews containsObject:panAndPinchScrapGesture.scrap]){
             [scrapContainer addSubview:panAndPinchScrapGesture.scrap];
             [self panAndScaleScrap:panAndPinchScrapGesture];
-            NSLog(@"forceScrapToScrapContainerDuringGesture");
+//            NSLog(@"forceScrapToScrapContainerDuringGesture");
         }
     }
     if(panAndPinchScrapGesture2.scrap && panAndPinchScrapGesture2.state != UIGestureRecognizerStateCancelled){
         if(![scrapContainer.subviews containsObject:panAndPinchScrapGesture2.scrap]){
             [scrapContainer addSubview:panAndPinchScrapGesture2.scrap];
             [self panAndScaleScrap:panAndPinchScrapGesture2];
-            NSLog(@"forceScrapToScrapContainerDuringGesture");
+//            NSLog(@"forceScrapToScrapContainerDuringGesture");
         }
     }
 }
@@ -811,6 +869,7 @@ int skipAll = NO;
     if(gesture.scrap && (gesture.state == UIGestureRecognizerStateEnded ||
                          gesture.state == UIGestureRecognizerStateCancelled ||
                          ![gesture.validTouches count])){
+        
         // turn off glow
         if(!stretchScrapGesture.scrap){
             // only if that scrap isn't being stretched
@@ -1110,6 +1169,8 @@ int skipAll = NO;
         [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[stretchScrapGesture validTouches] withAnchor:np];
         [panAndPinchScrapGesture2 begin];
     }else{
+//        NSLog(@"original properties was %@ or %@", stretchScrapGesture.startingPageForScrap, stretchScrapGesture.startingScrapProperties);
+
         // neither has a scrap, and i don't have enough touches to give it away
         [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:validTouches];
         [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:validTouches];
@@ -1117,16 +1178,31 @@ int skipAll = NO;
         // put the scrap back into the page
         [panAndPinchScrapGesture begin];
         [panAndPinchScrapGesture2 begin];
+
         scrap.layer.transform = startSkewTransform;
         [UIView setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
         // kill highlight since it's not being held
         scrap.selected = NO;
-        
-        if(![[visibleStackHolder peekSubview].scrapsOnPaperState isScrapVisible:scrap]){
+
+        // find the page that we'll drop the scrap on
+        MMUndoablePaperView* page = [visibleStackHolder peekSubview];
+        if([visibleStackHolder peekSubview].scrapsOnPaperState != scrap.state.scrapsOnPaperState){
+            // page doesn't own the scrap,
+            // so we need to clone it to the new page
+            // and update their undo stacks
+            MMScrapView* clonedScrap = [self cloneScrap:scrap toPage:page];
+            [page.scrapsOnPaperState showScrap:clonedScrap];
+            [page addUndoItemForAddedScrap:clonedScrap];
+            
+            // now update the undo stack of the owning page
+            [scrap removeFromSuperview];
+            [stretchScrapGesture.startingPageForScrap addUndoItemForRemovedScrap:scrap withProperties:stretchScrapGesture.startingScrapProperties];
+        }else if(![[visibleStackHolder peekSubview].scrapsOnPaperState isScrapVisible:scrap]){
             // the scrap was dropped by the stretch gesture,
             // so just add it back to the top page
-            [[visibleStackHolder peekSubview].scrapsOnPaperState showScrap:scrap];
-            [[visibleStackHolder peekSubview] saveToDisk];
+            [page.scrapsOnPaperState showScrap:scrap];
+            [page addUndoItemForScrap:scrap thatMovedFrom:stretchScrapGesture.startingScrapProperties to:[scrap propertiesDictionary]];
+            [page saveToDisk];
         }
     }
 }
@@ -1222,9 +1298,6 @@ int skipAll = NO;
         CGPoint tnp = np1;
         np1 = np2;
         np2 = tnp;
-        NSLog(@"panAndPinchScrapGesture2 %p owned scrap %p", panAndPinchScrapGesture2, scrap);
-    }else{
-        NSLog(@"panAndPinchScrapGesture %p owned scrap %p", panAndPinchScrapGesture, scrap);
     }
     
     [self logOutputGestureTouchOwnership:@"before gesture 1" gesture:panScrapGesture1];
@@ -1475,8 +1548,17 @@ int skipAll = NO;
     [self cancelAllGestures];
 }
 
+-(void) willAddScrapToBezelSidebar:(MMScrapView *)scrap{
+    isAnimatingScrapToOrFromSidebar = YES;
+}
+
 -(void) didAddScrapToBezelSidebar:(MMScrapView *)scrap{
     [bezelScrapContainer saveScrapContainerToDisk];
+    isAnimatingScrapToOrFromSidebar = NO;
+}
+
+-(void) willAddScrapBackToPage:(MMScrapView *)scrap{
+    isAnimatingScrapToOrFromSidebar = YES;
 }
 
 // returns the page that the scrap was added to
@@ -1500,6 +1582,13 @@ int skipAll = NO;
             [scrapContainer addSubview:oldScrap];
             scrapToAddToPage = [self cloneScrap:scrap toPage:page];
             [oldScrap removeFromSuperview];
+            
+            // check the original page of the scrap
+            // and see if it has any reference to this
+            // scrap. if its undo stack doesn't hold any
+            // reference, then we should trigger deleting
+            // it's old assets
+            [[MMTrashManager sharedInstace] deleteScrap:scrap.uuid inPage:scrap.state.scrapsOnPaperState.delegate.page];
         }
         // ok, done, just set it
         if(index == NSNotFound){
@@ -1511,6 +1600,8 @@ int skipAll = NO;
         scrapToAddToPage.scale = scale;
         [page saveToDisk];
         [bezelScrapContainer saveScrapContainerToDisk];
+
+        isAnimatingScrapToOrFromSidebar = NO;
     }];
     return page;
 }
@@ -1585,7 +1676,7 @@ int skipAll = NO;
 #pragma mark - MMRotationManagerDelegate
 
 -(void) didRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient{
-    [imagePicker updatePhotoRotation];
+    [importImageSidebar updatePhotoRotation];
 }
 
 
@@ -1600,28 +1691,6 @@ int skipAll = NO;
     }
 }
 
-#pragma mark - MFMailComposeViewControllerDelegate
-
--(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
-    NSString* strResult;
-    if(result == MFMailComposeResultCancelled){
-        strResult = @"Cancelled";
-    }else if(result == MFMailComposeResultFailed){
-        strResult = @"Failed";
-    }else if(result == MFMailComposeResultSaved){
-        strResult = @"Saved";
-    }else if(result == MFMailComposeResultSent){
-        strResult = @"Sent";
-    }
-    if(result == MFMailComposeResultSent || result == MFMailComposeResultSaved){
-        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
-    }
-    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Email",
-                                                                 kMPEventExportPropResult : strResult}];
-    
-
-    [[[[UIApplication sharedApplication] keyWindow] rootViewController] dismissViewControllerAnimated:YES completion:nil];
-}
 
 #pragma mark - Clone Scrap
 
@@ -1638,6 +1707,9 @@ int skipAll = NO;
 -(MMScrapView*) cloneScrap:(MMScrapView*)scrap toPage:(MMScrappedPaperView*)page{
     CheckMainThread;
     
+    if(![scrap.state isScrapStateLoaded]){
+        @throw [NSException exceptionWithName:@"CloneUnloadedScrapException" reason:@"asking to clone a scrap who's state is not yet loaded" userInfo:nil];
+    }
     if(![scrapContainer.subviews containsObject:scrap]){
         @throw [NSException exceptionWithName:@"CloneScrapException" reason:@"Page asked to clone scrap and doesn't own it" userInfo:nil];
     }
@@ -1687,13 +1759,34 @@ int skipAll = NO;
 // MMEditablePaperStackView calls this method to check
 // if the sidebar buttons should take priority over anything else
 -(BOOL) shouldPrioritizeSidebarButtonsForTaps{
-    return ![imagePicker isVisible];
+    return ![importImageSidebar isVisible] && ![sharePageSidebar isVisible];
 }
 
 #pragma mark - Check for Active Gestures
 
 -(BOOL) isActivelyGesturing{
-    return [super isActivelyGesturing] || panAndPinchScrapGesture.scrap || panAndPinchScrapGesture2.scrap || stretchScrapGesture.scrap;
+    return [super isActivelyGesturing] || panAndPinchScrapGesture.scrap || panAndPinchScrapGesture2.scrap || stretchScrapGesture.scrap || isAnimatingScrapToOrFromSidebar;
 }
+
+-(UIView*) viewForBlur{
+    return [visibleStackHolder peekSubview];
+}
+
+-(UIImage*) imageForBlur{
+    testImageView.image = [visibleStackHolder peekSubview].scrappedImgViewImage;
+    return [visibleStackHolder peekSubview].scrappedImgViewImage;
+}
+
+#pragma mark - MMShareItemDelegate
+
+-(UIImage*) imageToShare{
+    return [visibleStackHolder peekSubview].scrappedImgViewImage;
+}
+
+-(void) didShare{
+    NSLog(@"hiding from scrap stack");
+    [sharePageSidebar hide:YES onComplete:nil];
+}
+
 
 @end

@@ -55,6 +55,10 @@ static MMPageCacheManager* _instance = nil;
             [pagesWithLoadedCacheImages addObject:pageBelow];
         }
     }
+    // reset location of current top page
+    [pagesWithLoadedCacheImages removeObject:currentEditablePage];
+    [pagesWithLoadedCacheImages addObject:currentEditablePage];
+    // now unload any extra pages
     if([page isKindOfClass:[MMEditablePaperView class]]){
         [(MMEditablePaperView*)page loadCachedPreview];
         [pagesWithLoadedCacheImages addObject:page];

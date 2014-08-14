@@ -12,6 +12,24 @@
 
 @implementation MMShareButton
 
+@synthesize arrowColor;
+@synthesize topBgColor;
+@synthesize bottomBgColor;
+
+-(UIColor*) topBgColor{
+    if(!topBgColor){
+        return [self backgroundColor];
+    }
+    return topBgColor;
+}
+
+-(UIColor*) bottomBgColor{
+    if(!bottomBgColor){
+        return [self backgroundColor];
+    }
+    return bottomBgColor;
+}
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -38,7 +56,20 @@
     
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
-    UIColor* halfGreyFill = [self backgroundColor];
+    UIColor* strokeColor = darkerGreyBorder;
+    if(arrowColor){
+        strokeColor = arrowColor;
+    }
+    
+    //// Gradient Declarations
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    NSArray* faceGradientColors = [NSArray arrayWithObjects:
+                                   (id)self.topBgColor.CGColor,
+                                   (id)self.bottomBgColor.CGColor, nil];
+    CGFloat faceGradientLocations[] = {0, 1};
+    CGGradientRef faceGradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)faceGradientColors, faceGradientLocations);
+
     
     CGRect frame = [self drawableFrame];
     
@@ -49,8 +80,21 @@
     ovalPath.lineWidth = 1;
     [darkerGreyBorder setStroke];
     [ovalPath stroke];
-    [halfGreyFill setFill];
-    [ovalPath fill];
+    
+    // fill background
+//    [halfGreyFill setFill];
+//    [ovalPath fill];
+    // fill face with gradient
+    
+    CGContextSaveGState(context);
+    [ovalPath addClip];
+    CGRect ovalBounds = CGPathGetPathBoundingBox(ovalPath.CGPath);
+    CGContextDrawLinearGradient(context, faceGradient,
+                                CGPointMake(CGRectGetMidX(ovalBounds), CGRectGetMinY(ovalBounds)),
+                                CGPointMake(CGRectGetMidX(ovalBounds), CGRectGetMaxY(ovalBounds)),
+                                0);
+    CGContextRestoreGState(context);
+
 
     UIBezierPath* boxPath = [UIBezierPath bezierPath];
     [boxPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.42500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.38750 * CGRectGetHeight(frame))];
@@ -59,7 +103,7 @@
     [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.67500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.73750 * CGRectGetHeight(frame))];
     [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.67500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.38750 * CGRectGetHeight(frame))];
     [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.57500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.38750 * CGRectGetHeight(frame))];
-    [darkerGreyBorder setStroke];
+    [strokeColor setStroke];
     boxPath.lineWidth = 2;
     [boxPath stroke];
     
@@ -69,7 +113,7 @@
     [arrowHeadPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.40000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.28750 * CGRectGetHeight(frame))];
     [arrowHeadPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.50000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.18750 * CGRectGetHeight(frame))];
     [arrowHeadPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.60000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.28750 * CGRectGetHeight(frame))];
-    [darkerGreyBorder setStroke];
+    [strokeColor setStroke];
     arrowHeadPath.lineWidth = 2;
     [arrowHeadPath stroke];
     
@@ -78,12 +122,10 @@
     UIBezierPath* arrowBodyPath = [UIBezierPath bezierPath];
     [arrowBodyPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.50000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.56250 * CGRectGetHeight(frame))];
     [arrowBodyPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.50000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.21250 * CGRectGetHeight(frame))];
-    [darkerGreyBorder setStroke];
+    [strokeColor setStroke];
     arrowBodyPath.lineWidth = 2;
     [arrowBodyPath stroke];
     
-    
-
     [self drawDropshadowIfSelected];
 
     [super drawRect:rect];
