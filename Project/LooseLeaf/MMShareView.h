@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "MMUntouchableView.h"
 #import "MMShareManagerDelegate.h"
+#import "MMShareViewDelegate.h"
 
 
 @interface MMShareView : UIView<MMShareManagerDelegate>
 
 @property (nonatomic) CGFloat buttonWidth;
+@property (weak) NSObject<MMShareViewDelegate>* delegate;
 
 @end

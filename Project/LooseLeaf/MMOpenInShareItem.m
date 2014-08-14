@@ -32,6 +32,7 @@
         
         // arbitrary size, will be resized to fit when it's added to a sidebar
         sharingOptionsView = [[MMShareView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+        sharingOptionsView.delegate = self;
     }
     return self;
 }
@@ -73,6 +74,12 @@
 // will dispaly buttons to open in any other app
 -(UIView*) optionsView{
     return sharingOptionsView;
+}
+
+#pragma mark - MMShareViewDelegate
+
+-(void) didShare{
+    [delegate performSelector:@selector(didShare) withObject:nil afterDelay:.3];
 }
 
 @end

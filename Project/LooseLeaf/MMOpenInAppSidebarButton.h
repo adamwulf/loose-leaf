@@ -7,6 +7,7 @@
 //
 
 #import "MMSidebarButton.h"
+#import "MMShareViewDelegate.h"
 
 @interface MMOpenInAppSidebarButton : MMSidebarButton
 

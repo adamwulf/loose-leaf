@@ -639,6 +639,7 @@
 		66B1EF31199C293C00E9EEF1 /* MMShareManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShareManagerDelegate.h; sourceTree = "<group>"; };
 		66B1EF32199C2D7D00E9EEF1 /* MMOpenInAppSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMOpenInAppSidebarButton.h; sourceTree = "<group>"; };
 		66B1EF33199C2D7D00E9EEF1 /* MMOpenInAppSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMOpenInAppSidebarButton.m; sourceTree = "<group>"; };
+		66B1EF36199C59A700E9EEF1 /* MMShareViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShareViewDelegate.h; sourceTree = "<group>"; };
 		66B21A54175AFCA70049F1AF /* MMHandButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMHandButton.h; sourceTree = "<group>"; };
 		66B21A55175AFCA70049F1AF /* MMHandButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMHandButton.m; sourceTree = "<group>"; };
 		66B21A6A175E4A5A0049F1AF /* MMStackManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackManager.h; sourceTree = "<group>"; };
@@ -1656,6 +1657,7 @@
 				66B1EF31199C293C00E9EEF1 /* MMShareManagerDelegate.h */,
 				66B1EF2E19984C0300E9EEF1 /* MMShareView.h */,
 				66B1EF2F19984C0300E9EEF1 /* MMShareView.m */,
+				66B1EF36199C59A700E9EEF1 /* MMShareViewDelegate.h */,
 			);
 			name = OpenIn;
 			sourceTree = "<group>";

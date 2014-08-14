@@ -18,6 +18,4 @@
 
 -(CGAffineTransform) rotationTransform;
 
--(void) bounceButton:(id)sender;
-
 @end

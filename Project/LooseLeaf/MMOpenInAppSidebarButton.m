@@ -96,7 +96,7 @@
     [view drawViewHierarchyInRect:viewFr afterScreenUpdates:NO];
     CGContextRestoreGState(context);
     
-    [[NSString stringWithFormat:@"%d:%d", indexPath.section, indexPath.row] drawAtPoint:CGPointMake(20, 20) withAttributes:nil];
+//    [[NSString stringWithFormat:@"%d:%d", indexPath.section, indexPath.row] drawAtPoint:CGPointMake(20, 20) withAttributes:nil];
     
     [self drawDropshadowIfSelected];
     
@@ -121,7 +121,14 @@
         UIView* cell = [[MMShareManager sharedInstance] viewForIndexPath:self.indexPath forceGet:YES];
         if(cell){
             [MMShareManager setShareTargetView:cell];
-            [self performSelector:@selector(bounceButton:) withObject:nil afterDelay:.01];
+            
+            for(NSObject* obj in self.allTargets){
+                NSLog(@"obj: %@", obj);
+                NSArray* actions = [self actionsForTarget:obj forControlEvent:UIControlEventTouchUpInside];
+                for(NSString* action in actions){
+                    [obj performSelector:NSSelectorFromString(action) withObject:event];
+                }
+            }
             return cell;
         }
     }

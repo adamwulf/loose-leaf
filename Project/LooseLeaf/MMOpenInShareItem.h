@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "MMShareItem.h"
+#import "MMShareViewDelegate.h"
 
-@interface MMOpenInShareItem : NSObject<MMShareItem>
+@interface MMOpenInShareItem : NSObject<MMShareItem,MMShareViewDelegate>
 
 -(UIView*) optionsView;
 

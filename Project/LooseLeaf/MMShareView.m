@@ -16,6 +16,8 @@
     NSMutableArray* buttons;
 }
 
+@synthesize delegate;
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -58,6 +60,7 @@
             if([buttons count] > currentIndex) button = [buttons objectAtIndex:currentIndex];
             if(!button){
                 button = [[MMOpenInAppSidebarButton alloc] initWithFrame:buttonFr andIndexPath:indexPath];
+                [button addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
                 [buttons addObject:button];
                 [self addSubview:button];
             }else{
@@ -87,6 +90,9 @@
 
 }
 
-
+-(void) buttonTapped:(id)obj{
+    NSLog(@"shareButtonTapped");
+    [delegate didShare];
+}
 
 @end
