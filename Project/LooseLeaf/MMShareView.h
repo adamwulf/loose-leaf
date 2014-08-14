@@ -17,4 +17,6 @@
 @property (nonatomic) CGFloat buttonWidth;
 @property (weak) NSObject<MMShareViewDelegate>* delegate;
 
+-(void) reset;
+
 @end

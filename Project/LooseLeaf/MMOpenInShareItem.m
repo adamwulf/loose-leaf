@@ -43,6 +43,7 @@
 }
 
 -(void) performShareAction{
+    [sharingOptionsView reset];
     
     sharingOptionsView.buttonWidth = self.button.bounds.size.width;
     

@@ -31,6 +31,12 @@
     return self;
 }
 
+-(void) reset{
+    [buttons removeAllObjects];
+    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    self.alpha = 0;
+}
+
 #pragma mark - MMShareManagerDelegate
 
 -(void) cellLoaded:(UIView *)cell forIndexPath:(NSIndexPath *)indexPath{
@@ -76,8 +82,6 @@
         for(int index=0;index<numberOfItems;index++){
             NSIndexPath* path = [NSIndexPath indexPathForRow:index inSection:section];
             [cv cellForItemAtIndexPath:path];
-            
-
         }
         totalNumberOfItemsInPreviousSections += numberOfItems;
         section++;
@@ -87,8 +91,21 @@
     fr.size.height = totalNumberOfItemsInPreviousSections * (kWidthOfSidebarButton + kWidthOfSidebarButtonBuffer);
     self.frame = fr;
     [self setNeedsDisplay];
-
 }
+
+-(void) allCellsLoaded{
+    CGRect origFrame = self.frame;
+    CGRect offsetFrame = origFrame;
+    offsetFrame.origin.y += 10;
+    self.frame = offsetFrame;
+    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.alpha = 1;
+        self.frame = origFrame;
+    }completion:nil];
+}
+
+
+#pragma mark - Actions
 
 -(void) buttonTapped:(id)obj{
     [delegate didShare];

@@ -170,6 +170,10 @@ static MMShareManager* _instance = nil;
             [self.delegate cellLoaded:cell forIndexPath:loadedPath];
             needsWait = NO;
 //            NSLog(@"notifying to %d:%d", loadedPath.section, loadedPath.row);
+            
+            if(![arrayOfAllowableIndexPaths count]){
+                [delegate allCellsLoaded];
+            }
         }else{
             NSIndexPath* loadedPath = [arrayOfAllowableIndexPaths firstObject];
             // force scroll cell into view

@@ -12,4 +12,6 @@
 
 -(void) cellLoaded:(UIView*)cell forIndexPath:(NSIndexPath*)indexPath;
 
+-(void) allCellsLoaded;
+
 @end
