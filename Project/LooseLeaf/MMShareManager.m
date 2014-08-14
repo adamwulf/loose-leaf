@@ -18,6 +18,7 @@
     NSMutableArray* allFoundCollectionViews;
     NSTimer* mainThreadSharingTimer;
     
+    NSMutableArray* arrayOfDismissViews;
     NSMutableArray* arrayOfAllowableIndexPaths;
     BOOL needsWait;
     BOOL needsLoad;
@@ -50,6 +51,7 @@ static MMShareManager* _instance = nil;
         _instance = self;
         allFoundCollectionViews = [NSMutableArray array];
         arrayOfAllowableIndexPaths = [NSMutableArray array];
+        arrayOfDismissViews = [NSMutableArray array];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(endSharing)
@@ -72,6 +74,7 @@ static MMShareManager* _instance = nil;
 -(void) beginSharingWithURL:(NSURL*)fileLocation{
     CheckMainThread;
     if(!controller){
+        NSLog(@"begin sharing");
         UIWindow* win = [[UIApplication sharedApplication] keyWindow];
         controller = [UIDocumentInteractionController interactionControllerWithURL:fileLocation];
         
@@ -90,6 +93,7 @@ static MMShareManager* _instance = nil;
     CheckMainThread;
     
     if(controller){
+        NSLog(@"end sharing");
         [controller dismissMenuAnimated:NO];
         controller = nil;
         [allFoundCollectionViews removeAllObjects];

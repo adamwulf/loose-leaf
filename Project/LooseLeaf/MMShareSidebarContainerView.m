@@ -25,6 +25,7 @@
 @implementation MMShareSidebarContainerView{
     UIScrollView* scrollView;
     UIView* buttonView;
+    UIView* activeOptionsView;
     NSMutableArray* shareItems;
 }
 
@@ -117,6 +118,9 @@
 #pragma mark - Sharing button tapped
 
 -(void) shareButtonTapped:(MMSidebarButton*)button{
+    if(activeOptionsView){
+        [activeOptionsView removeFromSuperview];
+    }
     NSObject<MMShareItem>*shareItemForButton = nil;
     for (NSObject<MMShareItem>*shareItem in shareItems) {
         if(shareItem.button == button){
@@ -132,14 +136,16 @@
         if([shareItemForButton respondsToSelector:@selector(setIsShowingOptionsView:)]){
             shareItemForButton.isShowingOptionsView = YES;
         }
-        UIView* optionsView = [shareItemForButton optionsView];
+        activeOptionsView = [shareItemForButton optionsView];
         CGRect frForOptions = buttonView.bounds;
         frForOptions.origin.y = buttonView.bounds.size.height;
         frForOptions.size.height = kWidthOfSidebarButtonBuffer;
-        optionsView.frame = frForOptions;
-        [scrollView addSubview:optionsView];
+        activeOptionsView.frame = frForOptions;
+        [scrollView addSubview:activeOptionsView];
         
-        scrollView.contentSize = CGSizeMake(optionsView.bounds.size.width, optionsView.bounds.size.height + buttonView.bounds.size.height);
+        scrollView.contentSize = CGSizeMake(activeOptionsView.bounds.size.width, activeOptionsView.bounds.size.height + buttonView.bounds.size.height);
+    }else{
+        activeOptionsView = nil;
     }
 }
 
@@ -154,6 +160,7 @@
 
 -(void) hide:(BOOL)animated onComplete:(void(^)(BOOL finished))onComplete{
     [super hide:animated onComplete:^(BOOL finished){
+        activeOptionsView = nil;
         while([scrollView.subviews count] > 1){
             // remove any options views
             [[scrollView.subviews objectAtIndex:1] removeFromSuperview];
@@ -164,6 +171,18 @@
             if([shareItem respondsToSelector:@selector(didHide)]){
                 [shareItem didHide];
             }
+        }
+        
+        UIWindow* win = [[UIApplication sharedApplication] keyWindow];
+        for (UIView* subview in win.subviews) {
+            NSLog(@"subview: %@", NSStringFromClass([subview class]));
+            for (UIView* subview2 in subview.subviews) {
+                NSLog(@"  subview: %@", NSStringFromClass([subview2 class]));
+            }
+        }
+
+        if(onComplete){
+            onComplete(finished);
         }
     }];
 }

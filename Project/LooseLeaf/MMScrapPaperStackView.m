@@ -288,6 +288,7 @@
 #pragma mark - MMImageSidebarContainerViewDelegate
 
 -(void) disableAllGesturesForPageView{
+    NSLog(@"disableAllGesturesForPageView");
     [panAndPinchScrapGesture setEnabled:NO];
     [panAndPinchScrapGesture2 setEnabled:NO];
     [stretchScrapGesture setEnabled:NO];
@@ -295,6 +296,7 @@
 }
 
 -(void) enableAllGesturesForPageView{
+    NSLog(@"enableAllGesturesForPageView");
     [panAndPinchScrapGesture setEnabled:YES];
     [panAndPinchScrapGesture2 setEnabled:YES];
     [stretchScrapGesture setEnabled:YES];
@@ -1782,6 +1784,7 @@ int skipAll = NO;
 }
 
 -(void) didShare{
+    NSLog(@"hiding from scrap stack");
     [sharePageSidebar hide:YES onComplete:nil];
 }
 
