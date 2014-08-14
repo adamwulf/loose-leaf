@@ -190,6 +190,13 @@ static MMShareManager* _instance = nil;
             needsWait = YES;
 //            NSLog(@"scrolling to %d:%d", loadedPath.section, loadedPath.row);
         }
+    }else{
+        NSInteger section = 0;
+        for(UICollectionView* cv in allFoundCollectionViews){
+            NSInteger itemCount = [cv numberOfItemsInSection:0];
+            NSLog(@"section %@ %d number %d", NSStringFromClass([cv.dataSource class]), section, itemCount);
+            section++;
+        }
     }
 }
 
