@@ -20,6 +20,8 @@
 
 @optional
 
+@property (nonatomic) BOOL isShowingOptionsView;
+
 -(UIView*) optionsView;
 
 -(void) willShow;

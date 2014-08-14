@@ -22,11 +22,13 @@
 }
 
 @synthesize delegate;
+@synthesize isShowingOptionsView;
 
 -(id) init{
     if(self = [super init]){
         button = [[MMShareButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         button.arrowColor = [UIColor blackColor];
+        button.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
         
@@ -37,19 +39,27 @@
     return self;
 }
 
+-(void) setIsShowingOptionsView:(BOOL)_isShowingOptionsView{
+    isShowingOptionsView = _isShowingOptionsView;
+    button.selected = isShowingOptionsView;
+    [button setNeedsDisplay];
+}
+
 -(MMSidebarButton*) button{
     return button;
 }
 
 -(void) performShareAction{
-    sharingOptionsView.buttonWidth = self.button.bounds.size.width;
-    [sharingOptionsView reset];
-    
-    NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"temp.png"];
-    [UIImagePNGRepresentation(self.delegate.imageToShare) writeToFile:filePath atomically:YES];
-    NSURL* fileLocation = [NSURL URLWithString:[@"file://" stringByAppendingString:filePath]];
-    [[MMShareManager sharedInstance] beginSharingWithURL:fileLocation];
-    [MMShareManager sharedInstance].delegate = sharingOptionsView;
+    if(!isShowingOptionsView){
+        sharingOptionsView.buttonWidth = self.button.bounds.size.width;
+        [sharingOptionsView reset];
+        
+        NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"temp.png"];
+        [UIImagePNGRepresentation(self.delegate.imageToShare) writeToFile:filePath atomically:YES];
+        NSURL* fileLocation = [NSURL URLWithString:[@"file://" stringByAppendingString:filePath]];
+        [[MMShareManager sharedInstance] beginSharingWithURL:fileLocation];
+        [MMShareManager sharedInstance].delegate = sharingOptionsView;
+    }
 }
 
 // called when the menu appears and our button is about to be visible
@@ -62,6 +72,7 @@
 -(void) didHide{
     [[MMShareManager sharedInstance] endSharing];
     [MMShareManager sharedInstance].delegate = nil;
+    self.isShowingOptionsView = NO;
 }
 
 -(BOOL) isAtAllPossible{

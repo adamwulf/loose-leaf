@@ -121,14 +121,17 @@
     for (NSObject<MMShareItem>*shareItem in shareItems) {
         if(shareItem.button == button){
             shareItemForButton = shareItem;
-            break;
+        }
+        if([shareItemForButton respondsToSelector:@selector(setIsShowingOptionsView:)]){
+            shareItemForButton.isShowingOptionsView = NO;
         }
     }
 
     // now we have the share item
     if([shareItemForButton respondsToSelector:@selector(optionsView)]){
-        button.selected = YES;
-        [button setNeedsDisplay];
+        if([shareItemForButton respondsToSelector:@selector(setIsShowingOptionsView:)]){
+            shareItemForButton.isShowingOptionsView = YES;
+        }
         UIView* optionsView = [shareItemForButton optionsView];
         CGRect frForOptions = buttonView.bounds;
         frForOptions.origin.y = buttonView.bounds.size.height;
