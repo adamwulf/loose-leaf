@@ -11,6 +11,7 @@
 #import "Mixpanel.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
+#import "MMReachabilityManager.h"
 #import <Social/Social.h>
 #import <Accounts/Accounts.h>
 
@@ -42,7 +43,7 @@
 
 -(void) performShareAction{
     SLComposeViewController *fbSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTencentWeibo];
-    if(fbSheet){
+    if(fbSheet && [MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
         [fbSheet setInitialText:@"Quick sketch drawn in Loose Leaf"];
         [fbSheet addImage:self.delegate.imageToShare];
         [fbSheet addURL:[NSURL URLWithString:@"http://getlooseleaf.com"]];
@@ -61,9 +62,9 @@
         };
         
         [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:fbSheet animated:YES completion:nil];
+
+        [delegate didShare];
     }
-    
-    [delegate didShare];
 }
 
 -(BOOL) isAtAllPossible{
@@ -73,10 +74,12 @@
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if([SLComposeViewController isAvailableForServiceType:SLServiceTypeTencentWeibo]) {
-        button.greyscale = NO;
-    }else{
+    if(![MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable) {
         button.greyscale = YES;
+    }else if(![SLComposeViewController isAvailableForServiceType:SLServiceTypeTencentWeibo]) {
+        button.greyscale = YES;
+    }else{
+        button.greyscale = NO;
     }
     [button setNeedsDisplay];
 }

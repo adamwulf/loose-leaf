@@ -47,7 +47,7 @@
 
 -(void) performShareAction{
     SLComposeViewController *fbSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook];
-    if(fbSheet){
+    if(fbSheet && [MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
         [fbSheet setInitialText:@"Quick sketch drawn in Loose Leaf"];
         [fbSheet addImage:self.delegate.imageToShare];
         [fbSheet addURL:[NSURL URLWithString:@"http://getlooseleaf.com"]];
@@ -66,9 +66,9 @@
         };
         
         [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:fbSheet animated:YES completion:nil];
-    }
 
-    [delegate didShare];
+        [delegate didShare];
+    }
 }
 
 -(BOOL) isAtAllPossible{

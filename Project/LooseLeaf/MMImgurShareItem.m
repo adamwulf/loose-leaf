@@ -53,7 +53,7 @@
 
 -(void) performShareAction{
     UIImage* image = self.delegate.imageToShare;
-    if(image && !conn){
+    if(image && !conn && [MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
         lastProgress = 0;
         targetSuccess = 0;
         targetProgress = 0;
