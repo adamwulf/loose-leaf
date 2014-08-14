@@ -39,13 +39,6 @@
     return self;
 }
 
-//-(void) setFrame:(CGRect)frame{
-//    [super setFrame:frame];
-//    CGFloat width = frame.size.width;
-//    CGRect lineRect = CGRectMake(width*0.1, 0, width*0.8, 20);
-//    line.frame = lineRect;
-//}
-
 -(void) reset{
     [buttons makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [buttons removeAllObjects];

@@ -27,7 +27,6 @@
     if(self = [super init]){
         button = [[MMShareButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         button.arrowColor = [UIColor blackColor];
-//        button.greyscale = NO;
         
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
         
@@ -43,9 +42,8 @@
 }
 
 -(void) performShareAction{
-    [sharingOptionsView reset];
-    
     sharingOptionsView.buttonWidth = self.button.bounds.size.width;
+    [sharingOptionsView reset];
     
     NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"temp.png"];
     [UIImagePNGRepresentation(self.delegate.imageToShare) writeToFile:filePath atomically:YES];

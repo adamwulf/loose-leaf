@@ -71,18 +71,19 @@ static MMShareManager* _instance = nil;
 
 -(void) beginSharingWithURL:(NSURL*)fileLocation{
     CheckMainThread;
-    
-    UIWindow* win = [[UIApplication sharedApplication] keyWindow];
-    controller = [UIDocumentInteractionController interactionControllerWithURL:fileLocation];
-    
-    needsLoad = YES;
-    
-    shouldListenToRegisterViews = YES;
-    [controller presentOpenInMenuFromRect:CGRectMake(0, 0, 10, 10) inView:win animated:NO];
-    shouldListenToRegisterViews = NO;
-    
-    mainThreadSharingTimer = [NSTimer scheduledTimerWithTimeInterval:.03 target:self selector:@selector(tick) userInfo:nil repeats:YES];
-    [self performSelector:@selector(tick) withObject:nil afterDelay:.01];
+    if(!controller){
+        UIWindow* win = [[UIApplication sharedApplication] keyWindow];
+        controller = [UIDocumentInteractionController interactionControllerWithURL:fileLocation];
+        
+        needsLoad = YES;
+        
+        shouldListenToRegisterViews = YES;
+        [controller presentOpenInMenuFromRect:CGRectMake(0, 0, 10, 10) inView:win animated:NO];
+        shouldListenToRegisterViews = NO;
+        
+        mainThreadSharingTimer = [NSTimer scheduledTimerWithTimeInterval:.03 target:self selector:@selector(tick) userInfo:nil repeats:YES];
+        [self performSelector:@selector(tick) withObject:nil afterDelay:.01];
+    }
 }
 
 -(void) endSharing{
