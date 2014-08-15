@@ -129,4 +129,16 @@
     [[stackView.visibleStackHolder peekSubview] cancelAllGestures];
 }
 
+
+-(void) dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion{
+    [super dismissViewControllerAnimated:flag completion:completion];
+    NSLog(@"dismissing view controller");
+}
+
+-(void) presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion{
+    [super presentViewController:viewControllerToPresent animated:flag completion:completion];
+    NSLog(@"presenting view controller");
+}
+
+
 @end

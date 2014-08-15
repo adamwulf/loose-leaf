@@ -46,40 +46,42 @@
 }
 
 -(void) performShareAction{
-    if([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]){
-        NSLog(@"available");
-    }else{
-        NSLog(@"not available");
-    }
-    SLComposeViewController *tweetSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
-    if(tweetSheet && [MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
-        // TODO: fix twitter share when wifi enabled w/o any network
-        // this hung with the modal "open" in the window, no events triggered when tryign to draw
-        // even though the twitter dialog never showed. wifi was on but not connected.
-        [tweetSheet setInitialText:@"Quick sketch drawn in Loose Leaf @getlooseleaf"];
-        [tweetSheet addImage:self.delegate.imageToShare];
-        tweetSheet.completionHandler = ^(SLComposeViewControllerResult result){
-            NSString* strResult;
-            if(result == SLComposeViewControllerResultCancelled){
-                strResult = @"Cancelled";
-            }else if(result == SLComposeViewControllerResultDone){
-                strResult = @"Sent";
-            }
-            if(result == SLComposeViewControllerResultDone){
-                [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
-            }
-            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Twitter",
-                                                                         kMPEventExportPropResult : strResult}];
+    [delegate mayShare:self];
+    // if a popover controller is dismissed, it
+    // adds the dismissal to the main queue async
+    // so we need to add our next steps /after that/
+    // so we need to dispatch async too
+    dispatch_async(dispatch_get_main_queue(), ^{
+        SLComposeViewController *tweetSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
+        if(tweetSheet && [MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
+            // TODO: fix twitter share when wifi enabled w/o any network
+            // this hung with the modal "open" in the window, no events triggered when tryign to draw
+            // even though the twitter dialog never showed. wifi was on but not connected.
+            [tweetSheet setInitialText:@"Quick sketch drawn in Loose Leaf @getlooseleaf"];
+            [tweetSheet addImage:self.delegate.imageToShare];
+            tweetSheet.completionHandler = ^(SLComposeViewControllerResult result){
+                NSString* strResult;
+                if(result == SLComposeViewControllerResultCancelled){
+                    strResult = @"Cancelled";
+                }else if(result == SLComposeViewControllerResultDone){
+                    strResult = @"Sent";
+                }
+                if(result == SLComposeViewControllerResultDone){
+                    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+                }
+                [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Twitter",
+                                                                             kMPEventExportPropResult : strResult}];
+                
+                [[[[UIApplication sharedApplication] keyWindow] rootViewController] dismissViewControllerAnimated:YES completion:nil];
+            };
             
-            [[[[UIApplication sharedApplication] keyWindow] rootViewController] dismissViewControllerAnimated:YES completion:nil];
-        };
-        
-        [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:tweetSheet animated:YES completion:^{
-            NSLog(@"finished");
-        }];
-
-        [delegate didShare];
-    }
+            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:tweetSheet animated:YES completion:^{
+                NSLog(@"finished");
+            }];
+            
+            [delegate didShare:self];
+        }
+    });
 }
 
 -(BOOL) isAtAllPossible{

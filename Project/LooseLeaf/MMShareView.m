@@ -152,7 +152,7 @@
 #pragma mark - Actions
 
 -(void) buttonTapped:(id)obj{
-    [delegate didShare];
+    [delegate itemWasTappedInShareView];
 }
 
 @end

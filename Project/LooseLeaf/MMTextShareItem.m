@@ -38,22 +38,28 @@
 }
 
 -(void) performShareAction{
-    
-    MFMessageComposeViewController* composer = [[MFMessageComposeViewController alloc] init];
-    [composer setMessageComposeDelegate:self];
-    if([MFMessageComposeViewController canSendText]) {
-        if([MFMessageComposeViewController canSendSubject]){
-            [composer setSubject:@"Quick sketch from Loose Leaf"];
+    [delegate mayShare:self];
+    // if a popover controller is dismissed, it
+    // adds the dismissal to the main queue async
+    // so we need to add our next steps /after that/
+    // so we need to dispatch async too
+    dispatch_async(dispatch_get_main_queue(), ^{
+        MFMessageComposeViewController* composer = [[MFMessageComposeViewController alloc] init];
+        [composer setMessageComposeDelegate:self];
+        if([MFMessageComposeViewController canSendText]) {
+            if([MFMessageComposeViewController canSendSubject]){
+                [composer setSubject:@"Quick sketch from Loose Leaf"];
+            }
+            [composer setBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com"];
+            [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+            
+            NSData *data = UIImagePNGRepresentation(self.delegate.imageToShare);
+            [composer addAttachmentData:data typeIdentifier:@"image/png" filename:@"LooseLeaf.png"];
+            
+            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:composer animated:YES completion:nil];
         }
-        [composer setBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com"];
-        [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-        
-        NSData *data = UIImagePNGRepresentation(self.delegate.imageToShare);
-        [composer addAttachmentData:data typeIdentifier:@"image/png" filename:@"LooseLeaf.png"];
-        
-        [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:composer animated:YES completion:nil];
-    }
-    [delegate didShare];
+        [delegate didShare:self];
+    });
 }
 
 -(BOOL) isAtAllPossible{

@@ -42,29 +42,36 @@
 }
 
 -(void) performShareAction{
-    SLComposeViewController *fbSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeSinaWeibo];
-    if(fbSheet && [MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
-        [fbSheet setInitialText:@"Quick sketch drawn in Loose Leaf"];
-        [fbSheet addImage:self.delegate.imageToShare];
-        [fbSheet addURL:[NSURL URLWithString:@"http://getlooseleaf.com"]];
-        fbSheet.completionHandler = ^(SLComposeViewControllerResult result){
-            NSString* strResult;
-            if(result == SLComposeViewControllerResultCancelled){
-                strResult = @"Cancelled";
-            }else if(result == SLComposeViewControllerResultDone){
-                strResult = @"Sent";
-            }
-            if(result == SLComposeViewControllerResultDone){
-                [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
-            }
-            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"SinaWeibo",
-                                                                         kMPEventExportPropResult : strResult}];
-        };
-        
-        [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:fbSheet animated:YES completion:nil];
-
-        [delegate didShare];
-    }
+    [delegate mayShare:self];
+    // if a popover controller is dismissed, it
+    // adds the dismissal to the main queue async
+    // so we need to add our next steps /after that/
+    // so we need to dispatch async too
+    dispatch_async(dispatch_get_main_queue(), ^{
+        SLComposeViewController *fbSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeSinaWeibo];
+        if(fbSheet && [MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
+            [fbSheet setInitialText:@"Quick sketch drawn in Loose Leaf"];
+            [fbSheet addImage:self.delegate.imageToShare];
+            [fbSheet addURL:[NSURL URLWithString:@"http://getlooseleaf.com"]];
+            fbSheet.completionHandler = ^(SLComposeViewControllerResult result){
+                NSString* strResult;
+                if(result == SLComposeViewControllerResultCancelled){
+                    strResult = @"Cancelled";
+                }else if(result == SLComposeViewControllerResultDone){
+                    strResult = @"Sent";
+                }
+                if(result == SLComposeViewControllerResultDone){
+                    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+                }
+                [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"SinaWeibo",
+                                                                             kMPEventExportPropResult : strResult}];
+            };
+            
+            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:fbSheet animated:YES completion:nil];
+            
+            [delegate didShare:self];
+        }
+    });
 }
 
 -(BOOL) isAtAllPossible{

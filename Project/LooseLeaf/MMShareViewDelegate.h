@@ -10,6 +10,6 @@
 
 @protocol MMShareViewDelegate <NSObject>
 
--(void) didShare;
+-(void) itemWasTappedInShareView;
 
 @end

@@ -40,23 +40,30 @@
 }
 
 -(void) performShareAction{
-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-    
-    UIImage* image = self.delegate.imageToShare;
-    [library writeImageToSavedPhotosAlbum:image.CGImage orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error){
-        NSString* strResult = @"Failed";
-        if (error) {
-            // TODO: error handling
-            [self animateToSuccess:NO];
-        } else {
-            strResult = @"Success";
-            [self animateToSuccess:YES];
-            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
-        }
-        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"PhotoAlbum",
-                                                                     kMPEventExportPropResult : strResult}];
-        [button setNeedsDisplay];
-    }];
+    [delegate mayShare:self];
+    // if a popover controller is dismissed, it
+    // adds the dismissal to the main queue async
+    // so we need to add our next steps /after that/
+    // so we need to dispatch async too
+    dispatch_async(dispatch_get_main_queue(), ^{
+        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+        
+        UIImage* image = self.delegate.imageToShare;
+        [library writeImageToSavedPhotosAlbum:image.CGImage orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error){
+            NSString* strResult = @"Failed";
+            if (error) {
+                // TODO: error handling
+                [self animateToSuccess:NO];
+            } else {
+                strResult = @"Success";
+                [self animateToSuccess:YES];
+                [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+            }
+            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"PhotoAlbum",
+                                                                         kMPEventExportPropResult : strResult}];
+            [button setNeedsDisplay];
+        }];
+    });
 }
 
 -(void) animateToSuccess:(BOOL)succeeded{
@@ -105,7 +112,7 @@
         [UIView animateWithDuration:.3 animations:^{
             label.alpha = 1;
         } completion:^(BOOL finished){
-            [delegate didShare];
+            [delegate didShare:self];
             [[NSThread mainThread] performBlock:^{
                 [label removeFromSuperview];
                 [circle removeAnimationForKey:@"drawCircleAnimation"];

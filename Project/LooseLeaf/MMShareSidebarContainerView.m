@@ -61,10 +61,6 @@
         [shareItems addObject:[[MMImgurShareItem alloc] init]];
         [shareItems addObject:[[MMOpenInShareItem alloc] init]];
 
-        for (NSObject<MMShareItem>*shareItem in shareItems) {
-            [shareItem.button addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        }
-        
         [self updateShareOptions];
         
     }
@@ -117,38 +113,6 @@
 
 #pragma mark - Sharing button tapped
 
--(void) shareButtonTapped:(MMSidebarButton*)button{
-    if(activeOptionsView){
-        [activeOptionsView removeFromSuperview];
-    }
-    NSObject<MMShareItem>*shareItemForButton = nil;
-    for (NSObject<MMShareItem>*shareItem in shareItems) {
-        if(shareItem.button == button){
-            shareItemForButton = shareItem;
-        }
-        if([shareItemForButton respondsToSelector:@selector(setIsShowingOptionsView:)]){
-            shareItemForButton.isShowingOptionsView = NO;
-        }
-    }
-
-    // now we have the share item
-    if([shareItemForButton respondsToSelector:@selector(optionsView)]){
-        if([shareItemForButton respondsToSelector:@selector(setIsShowingOptionsView:)]){
-            shareItemForButton.isShowingOptionsView = YES;
-        }
-        activeOptionsView = [shareItemForButton optionsView];
-        CGRect frForOptions = buttonView.bounds;
-        frForOptions.origin.y = buttonView.bounds.size.height;
-        frForOptions.size.height = kWidthOfSidebarButtonBuffer;
-        activeOptionsView.frame = frForOptions;
-        [scrollView addSubview:activeOptionsView];
-        
-        scrollView.contentSize = CGSizeMake(activeOptionsView.bounds.size.width, activeOptionsView.bounds.size.height + buttonView.bounds.size.height);
-    }else{
-        activeOptionsView = nil;
-    }
-}
-
 -(void) show:(BOOL)animated{
     for (NSObject<MMShareItem>*shareItem in shareItems) {
         if([shareItem respondsToSelector:@selector(willShow)]){
@@ -160,7 +124,7 @@
 
 -(void) hide:(BOOL)animated onComplete:(void(^)(BOOL finished))onComplete{
     [super hide:animated onComplete:^(BOOL finished){
-        activeOptionsView = nil;
+        [self closeActiveSharingOptionsForButton:nil];
         while([scrollView.subviews count] > 1){
             // remove any options views
             [[scrollView.subviews objectAtIndex:1] removeFromSuperview];
@@ -187,6 +151,23 @@
     }];
 }
 
+
+-(NSObject<MMShareItem>*) closeActiveSharingOptionsForButton:(UIButton*)button{
+    if(activeOptionsView){
+        [activeOptionsView removeFromSuperview];
+    }
+    NSObject<MMShareItem>*shareItemForButton = nil;
+    for (NSObject<MMShareItem>*shareItem in shareItems) {
+        if(shareItem.button == button){
+            shareItemForButton = shareItem;
+        }
+        if([shareItem respondsToSelector:@selector(setIsShowingOptionsView:)]){
+            shareItem.isShowingOptionsView = NO;
+        }
+    }
+    return shareItemForButton;
+}
+
 #pragma mark - Rotation
 
 -(void) updatePhotoRotation{
@@ -199,8 +180,40 @@
     return shareDelegate.imageToShare;
 }
 
--(void) didShare{
-    [shareDelegate didShare];
+
+-(void) mayShare:(NSObject<MMShareItem> *)shareItem{
+    // close out all of our sharing options views,
+    // if any
+    [self closeActiveSharingOptionsForButton:nil];
+    // now check if our new item has a sharing
+    // options panel or not
+    // if a popover controller is dismissed, it
+    // adds the dismissal to the main queue async
+    // so we need to add our next steps /after that/
+    // so we need to dispatch async too
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if([shareItem respondsToSelector:@selector(optionsView)]){
+            if([shareItem respondsToSelector:@selector(setIsShowingOptionsView:)]){
+                shareItem.isShowingOptionsView = YES;
+            }
+            activeOptionsView = [shareItem optionsView];
+            CGRect frForOptions = buttonView.bounds;
+            frForOptions.origin.y = buttonView.bounds.size.height;
+            frForOptions.size.height = kWidthOfSidebarButtonBuffer;
+            activeOptionsView.frame = frForOptions;
+            [scrollView addSubview:activeOptionsView];
+            
+            scrollView.contentSize = CGSizeMake(activeOptionsView.bounds.size.width, activeOptionsView.bounds.size.height + buttonView.bounds.size.height);
+        }else{
+            activeOptionsView = nil;
+        }
+        
+        [shareDelegate mayShare:shareItem];
+    });
+}
+
+-(void) didShare:(NSObject<MMShareItem> *)shareItem{
+    [shareDelegate didShare:shareItem];
 }
 
 #pragma mark - Dealloc

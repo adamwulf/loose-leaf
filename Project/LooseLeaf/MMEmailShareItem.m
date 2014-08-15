@@ -38,19 +38,28 @@
 }
 
 -(void) performShareAction{
-    MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
-    [composer setMailComposeDelegate:self];
-    if([MFMailComposeViewController canSendMail]) {
-        [composer setSubject:@"Quick sketch from Loose Leaf"];
-        [composer setMessageBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
-        [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-
-        NSData *data = UIImagePNGRepresentation(self.delegate.imageToShare);
-        [composer addAttachmentData:data  mimeType:@"image/png" fileName:@"LooseLeaf.png"];
-
-        [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:composer animated:YES completion:nil];
-    }
-    [delegate didShare];
+    [delegate mayShare:self];
+    // if a popover controller is dismissed, it
+    // adds the dismissal to the main queue async
+    // so we need to add our next steps /after that/
+    // so we need to dispatch async too
+    dispatch_async(dispatch_get_main_queue(), ^{
+        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
+        [composer setMailComposeDelegate:self];
+        if([MFMailComposeViewController canSendMail]) {
+            [composer setSubject:@"Quick sketch from Loose Leaf"];
+            [composer setMessageBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
+            [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+            
+            NSData *data = UIImagePNGRepresentation(self.delegate.imageToShare);
+            [composer addAttachmentData:data  mimeType:@"image/png" fileName:@"LooseLeaf.png"];
+            
+            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:composer animated:YES completion:^{
+                NSLog(@"done");
+            }];
+        }
+        [delegate didShare:self];
+    });
 }
 
 -(BOOL) isAtAllPossible{

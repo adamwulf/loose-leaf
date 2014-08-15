@@ -45,6 +45,9 @@
     isShowingOptionsView = _isShowingOptionsView;
     button.selected = isShowingOptionsView;
     [button setNeedsDisplay];
+
+    [[MMShareManager sharedInstance] endSharing];
+    [MMShareManager sharedInstance].delegate = nil;
 }
 
 -(MMSidebarButton*) button{
@@ -53,14 +56,21 @@
 
 -(void) performShareAction{
     if(!isShowingOptionsView){
-        sharingOptionsView.buttonWidth = self.button.bounds.size.width;
-        [sharingOptionsView reset];
-        
-        NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"temp.png"];
-        [UIImagePNGRepresentation(self.delegate.imageToShare) writeToFile:filePath atomically:YES];
-        NSURL* fileLocation = [NSURL URLWithString:[@"file://" stringByAppendingString:filePath]];
-        [[MMShareManager sharedInstance] beginSharingWithURL:fileLocation];
-        [MMShareManager sharedInstance].delegate = self;
+        [delegate mayShare:self];
+        // if a popover controller is dismissed, it
+        // adds the dismissal to the main queue async
+        // so we need to add our next steps /after that/
+        // so we need to dispatch async too
+        dispatch_async(dispatch_get_main_queue(), ^{
+            sharingOptionsView.buttonWidth = self.button.bounds.size.width;
+            [sharingOptionsView reset];
+            
+            NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"temp.png"];
+            [UIImagePNGRepresentation(self.delegate.imageToShare) writeToFile:filePath atomically:YES];
+            NSURL* fileLocation = [NSURL URLWithString:[@"file://" stringByAppendingString:filePath]];
+            [[MMShareManager sharedInstance] beginSharingWithURL:fileLocation];
+            [MMShareManager sharedInstance].delegate = self;
+        });
     }
 }
 
@@ -72,10 +82,7 @@
 
 // called when our button is no longer visible
 -(void) didHide{
-    [[MMShareManager sharedInstance] endSharing];
-    [MMShareManager sharedInstance].delegate = nil;
-    self.isShowingOptionsView = NO;
-    self.button.selected = NO;
+    // noop
 }
 
 -(BOOL) isAtAllPossible{
@@ -91,8 +98,9 @@
 
 #pragma mark - MMShareViewDelegate
 
--(void) didShare{
-    [delegate performSelector:@selector(didShare) withObject:nil afterDelay:.3];
+-(void) itemWasTappedInShareView{
+    [delegate mayShare:self];
+    [delegate performSelector:@selector(didShare:) withObject:self afterDelay:.3];
 }
 
 #pragma mark - MMShareManagerDelegate

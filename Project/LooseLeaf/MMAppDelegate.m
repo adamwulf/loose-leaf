@@ -15,6 +15,7 @@
 #import "SSKeychain.h"
 #import "Mixpanel.h"
 #import "UIView+SharingViewWatch.h"
+#import "MMWindow.h"
 
 
 @implementation MMAppDelegate{
@@ -34,7 +35,7 @@
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
     [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale, nil]];
     
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window = [[MMWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.viewController = [[MMLooseLeafViewController alloc] init];
     self.window.rootViewController = self.viewController;

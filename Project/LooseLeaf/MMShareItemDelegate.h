@@ -8,10 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol MMShareItem;
+
 @protocol MMShareItemDelegate <NSObject>
 
 -(UIImage*) imageToShare;
 
--(void) didShare;
+-(void) didShare:(NSObject<MMShareItem>*)shareItem;
+
+-(void) mayShare:(NSObject<MMShareItem>*)shareItem;
 
 @end
