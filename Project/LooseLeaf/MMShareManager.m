@@ -20,6 +20,7 @@
     
     NSMutableArray* arrayOfDismissViews;
     NSMutableArray* arrayOfAllowableIndexPaths;
+    NSArray* arrayOfLastLoadedIndexPaths;
     BOOL needsWait;
     BOOL needsLoad;
 }
@@ -104,7 +105,6 @@ static MMShareManager* _instance = nil;
         [[win rootViewController] dismissViewControllerAnimated:NO completion:nil];
     }
     
-    
     [mainThreadSharingTimer invalidate];
     mainThreadSharingTimer = nil;
 }
@@ -168,8 +168,11 @@ static MMShareManager* _instance = nil;
                 [arrayOfAllowableIndexPaths addObject:[NSIndexPath indexPathForRow:index inSection:section]];
             }
             section++;
+            arrayOfLastLoadedIndexPaths = [NSArray arrayWithArray:arrayOfAllowableIndexPaths];
             needsLoad = NO;
         }
+        // notify that we're about to load each cell
+        [delegate allCellsWillLoad];
     }else if(!needsLoad && [arrayOfAllowableIndexPaths count]){
         if(needsWait){
             NSIndexPath* loadedPath = [arrayOfAllowableIndexPaths firstObject];
@@ -181,7 +184,7 @@ static MMShareManager* _instance = nil;
 //            NSLog(@"notifying to %d:%d", loadedPath.section, loadedPath.row);
             
             if(![arrayOfAllowableIndexPaths count]){
-                [delegate allCellsLoaded];
+                [delegate allCellsLoaded:arrayOfLastLoadedIndexPaths];
             }
         }else{
             NSIndexPath* loadedPath = [arrayOfAllowableIndexPaths firstObject];
@@ -197,6 +200,11 @@ static MMShareManager* _instance = nil;
             NSLog(@"section %@ %d number %d", NSStringFromClass([cv.dataSource class]), section, itemCount);
             section++;
         }
+        
+        NSLog(@"resetting data to force a reload every time");
+        // reload
+        [arrayOfAllowableIndexPaths removeAllObjects];
+        needsLoad = YES;
     }
 }
 

@@ -47,6 +47,8 @@
 
 #pragma mark - MMShareManagerDelegate
 
+// we've just been notified that a cell is ready.
+// build and show the button
 -(void) cellLoaded:(UIView *)cell forIndexPath:(NSIndexPath *)indexPath{
     NSArray* allCollectionViews = [[MMShareManager sharedInstance] allFoundCollectionViews];
     NSInteger columnCount = floor(self.bounds.size.width / self.buttonWidth);
@@ -100,15 +102,30 @@
     self.frame = fr;
 }
 
--(void) allCellsLoaded{
-    CGRect origFrame = self.frame;
-    CGRect offsetFrame = origFrame;
-    offsetFrame.origin.y += 10;
-    self.frame = offsetFrame;
-    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        self.alpha = 1;
-        self.frame = origFrame;
-    }completion:nil];
+// something changed with our buttons,
+// so expect to reload them
+-(void) allCellsWillLoad{
+    // don't do anything yet
+}
+
+// ok, everything is done. animate the view
+// into place if needbe
+-(void) allCellsLoaded:(NSArray *)arrayOfAllLoadedButtonIndexes{
+    if(!self.alpha){
+        CGRect origFrame = self.frame;
+        CGRect offsetFrame = origFrame;
+        offsetFrame.origin.y += 10;
+        self.frame = offsetFrame;
+        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            self.alpha = 1;
+            self.frame = origFrame;
+        }completion:nil];
+    }else{
+        for (NSUInteger index = [arrayOfAllLoadedButtonIndexes count]; index < [buttons count]; index++) {
+            [[buttons objectAtIndex:index] removeFromSuperview];
+            [buttons removeObjectAtIndex:index];
+        }
+    }
 }
 
 

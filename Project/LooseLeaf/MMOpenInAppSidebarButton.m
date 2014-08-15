@@ -32,19 +32,8 @@
        indexPath.row != _indexPath.row ||
        indexPath.section != _indexPath.section){
         indexPath = _indexPath;
-        [self performSelector:@selector(tryDisplayAgain) withObject:nil afterDelay:.1];
-        [self performSelector:@selector(tryDisplayAgain) withObject:nil afterDelay:.3];
-        [self performSelector:@selector(tryDisplayAgain) withObject:nil afterDelay:1];
     }
-    if(needsUpdate){
-        [self setNeedsDisplay];
-    }
-}
-
--(void) tryDisplayAgain{
-    if(needsUpdate){
-        [self setNeedsDisplay];
-    }
+    [self setNeedsDisplay];
 }
 
 
@@ -125,7 +114,9 @@
             for(NSObject* obj in self.allTargets){
                 NSArray* actions = [self actionsForTarget:obj forControlEvent:UIControlEventTouchUpInside];
                 for(NSString* action in actions){
-                    [obj performSelector:NSSelectorFromString(action) withObject:event];
+                    SuppressPerformSelectorLeakWarning(
+                         [obj performSelector:NSSelectorFromString(action) withObject:event];
+                    );
                 }
             }
             return cell;
@@ -134,17 +125,15 @@
 
     return viewFromSuper;
 }
-//
-//-(BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
-//    NSArray* allCollectionViews = [[MMShareManager sharedInstance] allFoundCollectionViews];
-//    for(UICollectionView* cv in allCollectionViews){
-//        NSInteger numberOfItems = [cv numberOfItemsInSection:0];
-//        if(numberOfItems > 1){
-//            return YES;
-//        }
-//    }
-//    return NO;
-//}
+
+
+-(BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
+    // we don't need to custom handle pointInside:, but I'm including
+    // it here purposefully to show that. Since I always code these
+    // two methods together, including this method shows default
+    // functionality is purposeful
+    return [super pointInside:point withEvent:event];
+}
 
 
 

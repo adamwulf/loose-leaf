@@ -10,8 +10,10 @@
 
 @protocol MMShareManagerDelegate <NSObject>
 
+-(void) allCellsWillLoad;
+
 -(void) cellLoaded:(UIView*)cell forIndexPath:(NSIndexPath*)indexPath;
 
--(void) allCellsLoaded;
+-(void) allCellsLoaded:(NSArray*)arrayOfAllLoadedButtonIndexes;
 
 @end
