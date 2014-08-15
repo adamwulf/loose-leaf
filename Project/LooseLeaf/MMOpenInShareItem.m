@@ -40,7 +40,7 @@
         sharingOptionsView.delegate = self;
 
         dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"yyyy-MM-dd-HH-mm"];
+        [dateFormatter setDateFormat:@"yyyyMMdd-HHmm"];
     }
     return self;
 }
