@@ -205,6 +205,7 @@ static MMShareManager* _instance = nil;
         // reload
         [arrayOfAllowableIndexPaths removeAllObjects];
         needsLoad = YES;
+        needsWait = NO;
     }
 }
 

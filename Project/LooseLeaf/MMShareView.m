@@ -57,7 +57,7 @@
     
     for(int section = 0;section<[allCollectionViews count];section++){
         if(section == indexPath.section) break;
-        UICollectionView* cv = [allCollectionViews objectAtIndex:indexPath.section];
+        UICollectionView* cv = [allCollectionViews objectAtIndex:section];
         NSInteger numberOfItems = [cv numberOfItemsInSection:0];
         totalNumberOfItemsInPreviousSections += numberOfItems;
     }
@@ -67,6 +67,7 @@
         NSInteger numberOfItems = [cv numberOfItemsInSection:0];
         if(indexPath.row < numberOfItems){
             NSInteger currentIndex = totalNumberOfItemsInPreviousSections + indexPath.row;
+            NSLog(@"loading button at: %d, numBefore: %d now in section %d", currentIndex, totalNumberOfItemsInPreviousSections, indexPath.section);
             NSInteger row = floor(currentIndex / columnCount);
             NSInteger col = currentIndex % columnCount;
             
@@ -90,7 +91,7 @@
         NSInteger numberOfItems = [cv numberOfItemsInSection:0];
         
         for(int index=0;index<numberOfItems;index++){
-            NSIndexPath* path = [NSIndexPath indexPathForRow:index inSection:section];
+            NSIndexPath* path = [NSIndexPath indexPathForRow:index inSection:0];
             [cv cellForItemAtIndexPath:path];
         }
         totalNumberOfItemsInPreviousSections += numberOfItems;
@@ -112,6 +113,7 @@
 // into place if needbe
 -(void) allCellsLoaded:(NSArray *)arrayOfAllLoadedButtonIndexes{
     if(!self.alpha){
+        NSLog(@"done loading all buttons: %d vs %d", [buttons count], [arrayOfAllLoadedButtonIndexes count]);
         CGRect origFrame = self.frame;
         CGRect offsetFrame = origFrame;
         offsetFrame.origin.y += 10;
