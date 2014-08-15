@@ -60,7 +60,7 @@
         [UIImagePNGRepresentation(self.delegate.imageToShare) writeToFile:filePath atomically:YES];
         NSURL* fileLocation = [NSURL URLWithString:[@"file://" stringByAppendingString:filePath]];
         [[MMShareManager sharedInstance] beginSharingWithURL:fileLocation];
-        [MMShareManager sharedInstance].delegate = sharingOptionsView;
+        [MMShareManager sharedInstance].delegate = self;
     }
 }
 
@@ -75,6 +75,7 @@
     [[MMShareManager sharedInstance] endSharing];
     [MMShareManager sharedInstance].delegate = nil;
     self.isShowingOptionsView = NO;
+    self.button.selected = NO;
 }
 
 -(BOOL) isAtAllPossible{
@@ -93,5 +94,25 @@
 -(void) didShare{
     [delegate performSelector:@selector(didShare) withObject:nil afterDelay:.3];
 }
+
+#pragma mark - MMShareManagerDelegate
+
+-(void) allCellsWillLoad{
+    [sharingOptionsView allCellsWillLoad];
+}
+
+-(void) cellLoaded:(UIView*)cell forIndexPath:(NSIndexPath*)indexPath{
+    [sharingOptionsView cellLoaded:cell forIndexPath:indexPath];
+}
+
+-(void) allCellsLoaded:(NSArray*)arrayOfAllLoadedButtonIndexes{
+    [sharingOptionsView allCellsLoaded:arrayOfAllLoadedButtonIndexes];
+}
+
+-(void) sharingHasEnded{
+    [self didHide];
+    [sharingOptionsView sharingHasEnded];
+}
+
 
 @end

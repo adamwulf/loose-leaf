@@ -103,6 +103,8 @@ static MMShareManager* _instance = nil;
         
         UIWindow* win = [[UIApplication sharedApplication] keyWindow];
         [[win rootViewController] dismissViewControllerAnimated:NO completion:nil];
+        
+        [self.delegate sharingHasEnded];
     }
     
     [mainThreadSharingTimer invalidate];

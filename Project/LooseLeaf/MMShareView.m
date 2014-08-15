@@ -45,7 +45,27 @@
     self.alpha = 0;
 }
 
+-(void) hide{
+    CGRect origFrame = self.frame;
+    CGRect offsetFrame = origFrame;
+    offsetFrame.origin.y += 10;
+    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.alpha = 0;
+        self.frame = offsetFrame;
+    }completion:^(BOOL finished){
+        if(finished){
+            self.frame = origFrame;
+        }
+    }];
+}
+
 #pragma mark - MMShareManagerDelegate
+
+// something changed with our buttons,
+// so expect to reload them
+-(void) allCellsWillLoad{
+    // don't do anything yet
+}
 
 // we've just been notified that a cell is ready.
 // build and show the button
@@ -67,7 +87,6 @@
         NSInteger numberOfItems = [cv numberOfItemsInSection:0];
         if(indexPath.row < numberOfItems){
             NSInteger currentIndex = totalNumberOfItemsInPreviousSections + indexPath.row;
-            NSLog(@"loading button at: %d, numBefore: %d now in section %d", currentIndex, totalNumberOfItemsInPreviousSections, indexPath.section);
             NSInteger row = floor(currentIndex / columnCount);
             NSInteger col = currentIndex % columnCount;
             
@@ -103,12 +122,6 @@
     self.frame = fr;
 }
 
-// something changed with our buttons,
-// so expect to reload them
--(void) allCellsWillLoad{
-    // don't do anything yet
-}
-
 // ok, everything is done. animate the view
 // into place if needbe
 -(void) allCellsLoaded:(NSArray *)arrayOfAllLoadedButtonIndexes{
@@ -130,6 +143,11 @@
     }
 }
 
+-(void) sharingHasEnded{
+    if(self.alpha){
+        [self hide];
+    }
+}
 
 #pragma mark - Actions
 

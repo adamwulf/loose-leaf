@@ -16,4 +16,6 @@
 
 -(void) allCellsLoaded:(NSArray*)arrayOfAllLoadedButtonIndexes;
 
+-(void) sharingHasEnded;
+
 @end
