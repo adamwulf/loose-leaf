@@ -1784,12 +1784,11 @@ int skipAll = NO;
 }
 
 -(void) mayShare:(NSObject<MMShareItem> *)shareItem{
-    NSLog(@"may share %@", NSStringFromClass([shareItem class]));
+//    NSLog(@"may share %@", NSStringFromClass([shareItem class]));
 }
 
 -(void) didShare:(NSObject<MMShareItem> *)shareItem{
-    NSLog(@"did share %@", NSStringFromClass([shareItem class]));
-    NSLog(@"hiding sidebar");
+//    NSLog(@"did share %@", NSStringFromClass([shareItem class]));
     [sharePageSidebar hide:YES onComplete:nil];
 }
 

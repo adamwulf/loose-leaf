@@ -126,7 +126,6 @@
 // into place if needbe
 -(void) allCellsLoaded:(NSArray *)arrayOfAllLoadedButtonIndexes{
     if(!self.alpha){
-        NSLog(@"done loading all buttons: %d vs %d", [buttons count], [arrayOfAllLoadedButtonIndexes count]);
         CGRect origFrame = self.frame;
         CGRect offsetFrame = origFrame;
         offsetFrame.origin.y += 10;

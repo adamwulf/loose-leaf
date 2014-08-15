@@ -136,15 +136,6 @@
                 [shareItem didHide];
             }
         }
-        
-        UIWindow* win = [[UIApplication sharedApplication] keyWindow];
-        for (UIView* subview in win.subviews) {
-            NSLog(@"subview: %@", NSStringFromClass([subview class]));
-            for (UIView* subview2 in subview.subviews) {
-                NSLog(@"  subview: %@", NSStringFromClass([subview2 class]));
-            }
-        }
-
         if(onComplete){
             onComplete(finished);
         }
