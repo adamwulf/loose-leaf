@@ -81,7 +81,8 @@ static MMShareManager* _instance = nil;
         needsLoad = YES;
         
         shouldListenToRegisterViews = YES;
-        [controller presentOpenInMenuFromRect:CGRectMake(0, 0, 10, 10) inView:win animated:NO];
+//        [controller presentOpenInMenuFromRect:CGRectMake(300, 100, 10, 10) inView:win.rootViewController.view animated:NO];
+        [controller presentOptionsMenuFromRect:CGRectMake(300, 100, 10, 10) inView:win.rootViewController.view animated:NO];
         shouldListenToRegisterViews = NO;
         
         mainThreadSharingTimer = [NSTimer scheduledTimerWithTimeInterval:.03 target:self selector:@selector(tick) userInfo:nil repeats:YES];
@@ -142,7 +143,7 @@ static MMShareManager* _instance = nil;
 -(void) registerDismissView:(UIView*)dismissView{
     dismissView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
     dismissView.alpha = .5;
-    dismissView.hidden = YES;
+    dismissView.hidden = NO;
 }
 
 -(void) addCollectionView:(UICollectionView*)view{
@@ -170,6 +171,18 @@ static MMShareManager* _instance = nil;
             section++;
             needsLoad = NO;
         }
+        
+        UIWindow* win = [[UIApplication sharedApplication] keyWindow];
+        for(UIView* subview in win.subviews){
+            NSLog(@"subview: %@", [subview class]);
+            for(UIView* subview2 in subview.subviews){
+                NSLog(@"  subview2: %@", [subview2 class]);
+                for(UIView* subview3 in subview2.subviews){
+                    NSLog(@"    subview3: %@", [subview3 class]);
+                }
+            }
+        }
+        
     }else if(!needsLoad && [arrayOfAllowableIndexPaths count]){
         if(needsWait){
             NSIndexPath* loadedPath = [arrayOfAllowableIndexPaths firstObject];
