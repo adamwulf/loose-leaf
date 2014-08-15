@@ -8,6 +8,7 @@
 
 #import "MMShareManager.h"
 #import "NSThread+BlockAdditions.h"
+#import "UIDevice+PPI.h"
 #import "UIView+Debug.h"
 #import <JotUI/JotUI.h>
 
@@ -137,6 +138,9 @@ static MMShareManager* _instance = nil;
     NSUInteger totalShareItems = 0;
     for(UICollectionView* cv in allFoundCollectionViews){
         totalShareItems += [cv numberOfItemsInSection:0];
+        if([UIDevice majorVersion] >= 8){
+            totalShareItems--;
+        }
     }
     return totalShareItems;
 }
@@ -208,6 +212,9 @@ static MMShareManager* _instance = nil;
         NSInteger section = 0;
         for(UICollectionView* cv in allFoundCollectionViews){
             NSInteger itemCount = [cv numberOfItemsInSection:0];
+            if([UIDevice majorVersion] >= 8){
+                itemCount--;
+            }
             for (NSInteger index=0; index < itemCount; index++) {
                 [arrayOfAllowableIndexPaths addObject:[NSIndexPath indexPathForRow:index inSection:section]];
             }

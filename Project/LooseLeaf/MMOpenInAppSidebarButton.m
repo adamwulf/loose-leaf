@@ -81,7 +81,6 @@
     viewFr.size.width = self.bounds.size.width - 2*buffer;
     viewFr.size.height = ratio * (self.bounds.size.width - 2*buffer);
     
-    
     [view drawViewHierarchyInRect:viewFr afterScreenUpdates:NO];
     CGContextRestoreGState(context);
     

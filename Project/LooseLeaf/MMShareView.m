@@ -11,6 +11,7 @@
 #import "MMOpenInAppSidebarButton.h"
 #import "UIView+Debug.h"
 #import "Constants.h"
+#import "UIDevice+PPI.h"
 
 @implementation MMShareView{
     NSMutableArray* buttons;
@@ -79,12 +80,18 @@
         if(section == indexPath.section) break;
         UICollectionView* cv = [allCollectionViews objectAtIndex:section];
         NSInteger numberOfItems = [cv numberOfItemsInSection:0];
+        if([UIDevice majorVersion] >= 8){
+            numberOfItems--;
+        }
         totalNumberOfItemsInPreviousSections += numberOfItems;
     }
     
     if([allCollectionViews count] > indexPath.section){
         UICollectionView* cv = [allCollectionViews objectAtIndex:indexPath.section];
         NSInteger numberOfItems = [cv numberOfItemsInSection:0];
+        if([UIDevice majorVersion] >= 8){
+            numberOfItems--;
+        }
         if(indexPath.row < numberOfItems){
             NSInteger currentIndex = totalNumberOfItemsInPreviousSections + indexPath.row;
             NSInteger row = floor(currentIndex / columnCount);
@@ -108,7 +115,10 @@
     
     for(UICollectionView* cv in allCollectionViews){
         NSInteger numberOfItems = [cv numberOfItemsInSection:0];
-        
+        if([UIDevice majorVersion] >= 8){
+            numberOfItems--;
+        }
+
         for(int index=0;index<numberOfItems;index++){
             NSIndexPath* path = [NSIndexPath indexPathForRow:index inSection:0];
             [cv cellForItemAtIndexPath:path];

@@ -12,16 +12,34 @@
 	<dict>
 		<key>14C6FF5D-B518-4BDF-95FA-B405B8BC64B8</key>
 		<string>ssh://github.com/Adonit/JotTouchSDK.git</string>
+		<key>16ACBFB590A9E1151B4BE762DC3AC04A938B37EF</key>
+		<string>github.com:mixpanel/mixpanel-iphone.git</string>
+		<key>22D544D9B3EAA35CDDFE6ABB228157E6043DA9A8</key>
+		<string>github.com:adamwulf/FXBlurView.git</string>
+		<key>28E9204B86AFC0DBA92C65B6730EB6D37A220B6C</key>
+		<string>github.com:adamwulf/JotTouchSDK.git</string>
 		<key>2AAA6635-4510-4E3D-90E1-4CB3521ADC4B</key>
 		<string>ssh://github.com/adamwulf/DrawKit-iOS.git</string>
+		<key>2C955C45306C7A3A5375708C7171EBDC6DA686F7</key>
+		<string>github.com:adamwulf/JotUI.git</string>
 		<key>5148601B-759B-4B3D-8C4E-83D206A92ED2</key>
 		<string>ssh://github.com/adamwulf/painting-demo.git</string>
+		<key>80158B038A24D4E9CD734FF4632BD85DDAB610E4</key>
+		<string>github.com:adamwulf/loose-leaf.git</string>
+		<key>94E228DCF3BB22CC7071B387B6947E6B375ADFA0</key>
+		<string>github.com:anjerodesu/UIColor-ColorWithHex.git</string>
+		<key>9F22E3F18CD07AD761FDBCAEE84E4A72F51293DA</key>
+		<string>github.com:adamwulf/touch-chart.git</string>
 		<key>AD2028FA-458E-4976-B726-9499C781146E</key>
 		<string>git://github.com/rentzsch/jrswizzle.git</string>
 		<key>BC8ADFAC-BC7E-461B-B1A2-081D8AB6C365</key>
 		<string>ssh://github.com/adamwulf/JotUI.git</string>
 		<key>BDC88C21-6091-422D-87F4-A8FC1073FA61</key>
 		<string>ssh://github.com/dyang/DYRateView.git</string>
+		<key>DAF93FB062EA747941221BC588740DE29279908A</key>
+		<string>github.com:adamwulf/DrawKit-iOS.git</string>
+		<key>DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8</key>
+		<string>github.com:AFNetworking/AFNetworking.git</string>
 		<key>F29D9E2E-F440-4F73-A871-4B5801D69250</key>
 		<string>ssh://github.com/adamwulf/loose-leaf.git</string>
 	</dict>
@@ -30,28 +48,70 @@
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>14C6FF5D-B518-4BDF-95FA-B405B8BC64B8</key>
-		<string>../Submodules/JotUI/JotTouchSDK</string>
+		<string>../../Loose Leaf/Submodules/JotUI/JotTouchSDK</string>
+		<key>16ACBFB590A9E1151B4BE762DC3AC04A938B37EF</key>
+		<string>..Submodules/mixpanel/</string>
+		<key>22D544D9B3EAA35CDDFE6ABB228157E6043DA9A8</key>
+		<string>..Submodules/FXBlurView/</string>
+		<key>28E9204B86AFC0DBA92C65B6730EB6D37A220B6C</key>
+		<string>..Submodules/JotUI/JotTouchSDK/</string>
 		<key>2AAA6635-4510-4E3D-90E1-4CB3521ADC4B</key>
 		<string>../../DrawKit-iOS</string>
+		<key>2C955C45306C7A3A5375708C7171EBDC6DA686F7</key>
+		<string>..Submodules/JotUI/</string>
 		<key>5148601B-759B-4B3D-8C4E-83D206A92ED2</key>
 		<string>../../painting-demo</string>
+		<key>80158B038A24D4E9CD734FF4632BD85DDAB610E4</key>
+		<string>..</string>
+		<key>94E228DCF3BB22CC7071B387B6947E6B375ADFA0</key>
+		<string>..Submodules/ColorWithHex/</string>
+		<key>9F22E3F18CD07AD761FDBCAEE84E4A72F51293DA</key>
+		<string>..Submodules/touch-chart/</string>
 		<key>AD2028FA-458E-4976-B726-9499C781146E</key>
 		<string>../../jrswizzle</string>
 		<key>BC8ADFAC-BC7E-461B-B1A2-081D8AB6C365</key>
-		<string>../Submodules/JotUI</string>
+		<string>../../Loose Leaf/Submodules/JotUI</string>
 		<key>BDC88C21-6091-422D-87F4-A8FC1073FA61</key>
-		<string>../Submodules/DYRateView</string>
+		<string>../../Loose Leaf/Submodules/DYRateView</string>
+		<key>DAF93FB062EA747941221BC588740DE29279908A</key>
+		<string>..Submodules/DrawKit-iOS/</string>
+		<key>DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8</key>
+		<string>..Submodules/AFNetworking/</string>
 		<key>F29D9E2E-F440-4F73-A871-4B5801D69250</key>
-		<string>..</string>
+		<string>../../Loose Leaf</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://github.com/adamwulf/loose-leaf.git</string>
+	<string>github.com:adamwulf/loose-leaf.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>F29D9E2E-F440-4F73-A871-4B5801D69250</string>
+	<string>80158B038A24D4E9CD734FF4632BD85DDAB610E4</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8</string>
+			<key>IDESourceControlWCCName</key>
+			<string>AFNetworking</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>94E228DCF3BB22CC7071B387B6947E6B375ADFA0</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ColorWithHex</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>DAF93FB062EA747941221BC588740DE29279908A</string>
+			<key>IDESourceControlWCCName</key>
+			<string>DrawKit-iOS</string>
+		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
@@ -72,9 +132,33 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>22D544D9B3EAA35CDDFE6ABB228157E6043DA9A8</string>
+			<key>IDESourceControlWCCName</key>
+			<string>FXBlurView</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>14C6FF5D-B518-4BDF-95FA-B405B8BC64B8</string>
 			<key>IDESourceControlWCCName</key>
 			<string>JotTouchSDK</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>28E9204B86AFC0DBA92C65B6730EB6D37A220B6C</string>
+			<key>IDESourceControlWCCName</key>
+			<string>JotTouchSDK</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>2C955C45306C7A3A5375708C7171EBDC6DA686F7</string>
+			<key>IDESourceControlWCCName</key>
+			<string>JotUI</string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
@@ -104,9 +188,33 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>80158B038A24D4E9CD734FF4632BD85DDAB610E4</string>
+			<key>IDESourceControlWCCName</key>
+			<string>LooseLeaf</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>16ACBFB590A9E1151B4BE762DC3AC04A938B37EF</string>
+			<key>IDESourceControlWCCName</key>
+			<string>mixpanel</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>5148601B-759B-4B3D-8C4E-83D206A92ED2</string>
 			<key>IDESourceControlWCCName</key>
 			<string>painting-demo</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>9F22E3F18CD07AD761FDBCAEE84E4A72F51293DA</string>
+			<key>IDESourceControlWCCName</key>
+			<string>touch-chart</string>
 		</dict>
 	</array>
 </dict>
