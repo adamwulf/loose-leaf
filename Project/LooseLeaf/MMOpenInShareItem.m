@@ -19,6 +19,7 @@
 @implementation MMOpenInShareItem{
     MMShareButton* button;
     MMShareView* sharingOptionsView;
+    NSDateFormatter *dateFormatter;
 }
 
 @synthesize delegate;
@@ -37,6 +38,9 @@
         // arbitrary size, will be resized to fit when it's added to a sidebar
         sharingOptionsView = [[MMShareView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
         sharingOptionsView.delegate = self;
+
+        dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd-HH-mm"];
     }
     return self;
 }
@@ -65,7 +69,10 @@
             sharingOptionsView.buttonWidth = self.button.bounds.size.width;
             [sharingOptionsView reset];
             
-            NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"temp.png"];
+            NSDate *now = [[NSDate alloc] init];
+            NSString *theDate = [dateFormatter stringFromDate:now];
+            
+            NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"LooseLeaf-%@.png", theDate]];
             [UIImagePNGRepresentation(self.delegate.imageToShare) writeToFile:filePath atomically:YES];
             NSURL* fileLocation = [NSURL URLWithString:[@"file://" stringByAppendingString:filePath]];
             [[MMShareManager sharedInstance] beginSharingWithURL:fileLocation];
@@ -99,8 +106,10 @@
 #pragma mark - MMShareViewDelegate
 
 -(void) itemWasTappedInShareView{
-    [delegate mayShare:self];
-    [delegate performSelector:@selector(didShare:) withObject:self afterDelay:.3];
+    [[NSThread mainThread] performBlock:^{
+        [delegate mayShare:self];
+        [delegate didShare:self];
+    }afterDelay:.3];
 }
 
 #pragma mark - MMShareManagerDelegate
