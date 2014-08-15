@@ -65,7 +65,12 @@
                                                                          kMPEventExportPropResult : strResult}];
         };
         
-        [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:fbSheet animated:YES completion:nil];
+        UIViewController* vc = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+        NSLog(@"asking %@ to present", vc);
+        NSLog(@"current presented controller: %@", vc.presentedViewController);
+        [vc presentViewController:fbSheet animated:YES completion:^{
+            NSLog(@"complete showing");
+        }];
 
         [delegate didShare];
     }

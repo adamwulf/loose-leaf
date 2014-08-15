@@ -45,8 +45,30 @@
     self.alpha = 0;
 }
 
+-(void) hide{
+    CGRect origFrame = self.frame;
+    CGRect offsetFrame = origFrame;
+    offsetFrame.origin.y += 10;
+    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.alpha = 0;
+        self.frame = offsetFrame;
+    }completion:^(BOOL finished){
+        if(finished){
+            self.frame = origFrame;
+        }
+    }];
+}
+
 #pragma mark - MMShareManagerDelegate
 
+// something changed with our buttons,
+// so expect to reload them
+-(void) allCellsWillLoad{
+    // don't do anything yet
+}
+
+// we've just been notified that a cell is ready.
+// build and show the button
 -(void) cellLoaded:(UIView *)cell forIndexPath:(NSIndexPath *)indexPath{
     NSArray* allCollectionViews = [[MMShareManager sharedInstance] allFoundCollectionViews];
     NSInteger columnCount = floor(self.bounds.size.width / self.buttonWidth);
@@ -55,7 +77,7 @@
     
     for(int section = 0;section<[allCollectionViews count];section++){
         if(section == indexPath.section) break;
-        UICollectionView* cv = [allCollectionViews objectAtIndex:indexPath.section];
+        UICollectionView* cv = [allCollectionViews objectAtIndex:section];
         NSInteger numberOfItems = [cv numberOfItemsInSection:0];
         totalNumberOfItemsInPreviousSections += numberOfItems;
     }
@@ -88,7 +110,7 @@
         NSInteger numberOfItems = [cv numberOfItemsInSection:0];
         
         for(int index=0;index<numberOfItems;index++){
-            NSIndexPath* path = [NSIndexPath indexPathForRow:index inSection:section];
+            NSIndexPath* path = [NSIndexPath indexPathForRow:index inSection:0];
             [cv cellForItemAtIndexPath:path];
         }
         totalNumberOfItemsInPreviousSections += numberOfItems;
@@ -100,17 +122,32 @@
     self.frame = fr;
 }
 
--(void) allCellsLoaded{
-    CGRect origFrame = self.frame;
-    CGRect offsetFrame = origFrame;
-    offsetFrame.origin.y += 10;
-    self.frame = offsetFrame;
-    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        self.alpha = 1;
-        self.frame = origFrame;
-    }completion:nil];
+// ok, everything is done. animate the view
+// into place if needbe
+-(void) allCellsLoaded:(NSArray *)arrayOfAllLoadedButtonIndexes{
+    if(!self.alpha){
+        NSLog(@"done loading all buttons: %d vs %d", [buttons count], [arrayOfAllLoadedButtonIndexes count]);
+        CGRect origFrame = self.frame;
+        CGRect offsetFrame = origFrame;
+        offsetFrame.origin.y += 10;
+        self.frame = offsetFrame;
+        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            self.alpha = 1;
+            self.frame = origFrame;
+        }completion:nil];
+    }else{
+        for (NSUInteger index = [arrayOfAllLoadedButtonIndexes count]; index < [buttons count]; index++) {
+            [[buttons objectAtIndex:index] removeFromSuperview];
+            [buttons removeObjectAtIndex:index];
+        }
+    }
 }
 
+-(void) sharingHasEnded{
+    if(self.alpha){
+        [self hide];
+    }
+}
 
 #pragma mark - Actions
 

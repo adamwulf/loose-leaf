@@ -20,6 +20,7 @@
     
     NSMutableArray* arrayOfDismissViews;
     NSMutableArray* arrayOfAllowableIndexPaths;
+    NSArray* arrayOfLastLoadedIndexPaths;
     BOOL needsWait;
     BOOL needsLoad;
 }
@@ -103,11 +104,19 @@ static MMShareManager* _instance = nil;
         
         UIWindow* win = [[UIApplication sharedApplication] keyWindow];
         [[win rootViewController] dismissViewControllerAnimated:NO completion:nil];
+        
+        [self.delegate sharingHasEnded];
     }
-    
     
     [mainThreadSharingTimer invalidate];
     mainThreadSharingTimer = nil;
+    
+    for(UIView* dismissView in [arrayOfDismissViews copy]){
+        dismissView.hidden = NO;
+        if(!dismissView.superview){
+            [arrayOfDismissViews removeObject:dismissView];
+        }
+    }
 }
 
 #pragma mark - Number of Sharable Targets
@@ -141,14 +150,18 @@ static MMShareManager* _instance = nil;
 #pragma mark - Registering Popover and Collection Views
 
 -(void) registerDismissView:(UIView*)dismissView{
-    dismissView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
-    dismissView.alpha = .5;
-    dismissView.hidden = NO;
+    dismissView.hidden = YES;
+    [arrayOfDismissViews addObject:dismissView];
 }
 
 -(void) addCollectionView:(UICollectionView*)view{
     @synchronized(self){
-        [allFoundCollectionViews addObject:view];
+        NSString* dataSourceType = NSStringFromClass([view.dataSource class]);
+        if([dataSourceType rangeOfString:@"Air"].location == NSNotFound &&
+           [dataSourceType rangeOfString:@"Drop"].location == NSNotFound){
+            NSLog(@"found collection view with datasource type: %@", dataSourceType);
+            [allFoundCollectionViews addObject:view];
+        }
     }
 }
 
@@ -169,9 +182,9 @@ static MMShareManager* _instance = nil;
                 [arrayOfAllowableIndexPaths addObject:[NSIndexPath indexPathForRow:index inSection:section]];
             }
             section++;
+            arrayOfLastLoadedIndexPaths = [NSArray arrayWithArray:arrayOfAllowableIndexPaths];
             needsLoad = NO;
         }
-        
         UIWindow* win = [[UIApplication sharedApplication] keyWindow];
         for(UIView* subview in win.subviews){
             NSLog(@"subview: %@", [subview class]);
@@ -183,6 +196,8 @@ static MMShareManager* _instance = nil;
             }
         }
         
+        // notify that we're about to load each cell
+        [delegate allCellsWillLoad];
     }else if(!needsLoad && [arrayOfAllowableIndexPaths count]){
         if(needsWait){
             NSIndexPath* loadedPath = [arrayOfAllowableIndexPaths firstObject];
@@ -194,7 +209,7 @@ static MMShareManager* _instance = nil;
 //            NSLog(@"notifying to %d:%d", loadedPath.section, loadedPath.row);
             
             if(![arrayOfAllowableIndexPaths count]){
-                [delegate allCellsLoaded];
+                [delegate allCellsLoaded:arrayOfLastLoadedIndexPaths];
             }
         }else{
             NSIndexPath* loadedPath = [arrayOfAllowableIndexPaths firstObject];
@@ -210,6 +225,12 @@ static MMShareManager* _instance = nil;
             NSLog(@"section %@ %d number %d", NSStringFromClass([cv.dataSource class]), section, itemCount);
             section++;
         }
+        
+        NSLog(@"resetting data to force a reload every time");
+        // reload
+        [arrayOfAllowableIndexPaths removeAllObjects];
+        needsLoad = YES;
+        needsWait = NO;
     }
 }
 

@@ -19,4 +19,6 @@
 
 -(void) reset;
 
+-(void) hide;
+
 @end
