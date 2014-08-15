@@ -110,8 +110,11 @@ static MMShareManager* _instance = nil;
     [mainThreadSharingTimer invalidate];
     mainThreadSharingTimer = nil;
     
-    for(UIView* dismissView in arrayOfDismissViews){
+    for(UIView* dismissView in [arrayOfDismissViews copy]){
         dismissView.hidden = NO;
+        if(!dismissView.superview){
+            [arrayOfDismissViews removeObject:dismissView];
+        }
     }
 }
 
@@ -146,8 +149,6 @@ static MMShareManager* _instance = nil;
 #pragma mark - Registering Popover and Collection Views
 
 -(void) registerDismissView:(UIView*)dismissView{
-    dismissView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
-    dismissView.alpha = .5;
     dismissView.hidden = YES;
     [arrayOfDismissViews addObject:dismissView];
 }
