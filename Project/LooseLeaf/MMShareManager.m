@@ -149,7 +149,12 @@ static MMShareManager* _instance = nil;
 
 -(void) addCollectionView:(UICollectionView*)view{
     @synchronized(self){
-        [allFoundCollectionViews addObject:view];
+        NSString* dataSourceType = NSStringFromClass([view.dataSource class]);
+        if([dataSourceType rangeOfString:@"Air"].location == NSNotFound &&
+           [dataSourceType rangeOfString:@"Drop"].location == NSNotFound){
+            NSLog(@"found collection view with datasource type: %@", dataSourceType);
+            [allFoundCollectionViews addObject:view];
+        }
     }
 }
 
