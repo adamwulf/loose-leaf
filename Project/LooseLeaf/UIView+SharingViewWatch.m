@@ -29,6 +29,39 @@
     [self swizzle_addSubview:view];
 }
 
+-(void) swizzle_insertSubview:(UIView *)view aboveSubview:(UIView *)siblingSubview{
+    if([MMShareManager shouldListenToRegisterViews]){
+        if([view isKindOfClass:[UICollectionView class]]){
+            [[MMShareManager sharedInstance] addCollectionView:(UICollectionView*)view];
+        }else if([self isKindOfClass:[UIWindow class]]){
+            [[MMShareManager sharedInstance] registerDismissView:view];
+        }
+    }
+    [self swizzle_insertSubview:view aboveSubview:siblingSubview];
+}
+
+-(void) swizzle_insertSubview:(UIView *)view atIndex:(NSInteger)index{
+    if([MMShareManager shouldListenToRegisterViews]){
+        if([view isKindOfClass:[UICollectionView class]]){
+            [[MMShareManager sharedInstance] addCollectionView:(UICollectionView*)view];
+        }else if([self isKindOfClass:[UIWindow class]]){
+            [[MMShareManager sharedInstance] registerDismissView:view];
+        }
+    }
+    [self swizzle_insertSubview:view atIndex:index];
+}
+
+-(void) swizzle_insertSubview:(UIView *)view belowSubview:(UIView *)siblingSubview{
+    if([MMShareManager shouldListenToRegisterViews]){
+        if([view isKindOfClass:[UICollectionView class]]){
+            [[MMShareManager sharedInstance] addCollectionView:(UICollectionView*)view];
+        }else if([self isKindOfClass:[UIWindow class]]){
+            [[MMShareManager sharedInstance] registerDismissView:view];
+        }
+    }
+    [self swizzle_insertSubview:view belowSubview:siblingSubview];
+}
+
 +(void)load{
     @autoreleasepool {
         NSError *error = nil;
@@ -37,6 +70,15 @@
                                       error:&error];
         [UIView jr_swizzleMethod:@selector(convertPoint:fromView:)
                       withMethod:@selector(swizzle_convertPoint:fromView:)
+                           error:&error];
+        [UIView jr_swizzleMethod:@selector(insertSubview:aboveSubview:)
+                      withMethod:@selector(swizzle_insertSubview:aboveSubview:)
+                           error:&error];
+        [UIView jr_swizzleMethod:@selector(insertSubview:atIndex:)
+                      withMethod:@selector(swizzle_insertSubview:atIndex:)
+                           error:&error];
+        [UIView jr_swizzleMethod:@selector(insertSubview:belowSubview:)
+                      withMethod:@selector(swizzle_insertSubview:belowSubview:)
                            error:&error];
     }
 }

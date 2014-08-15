@@ -82,12 +82,14 @@ static MMShareManager* _instance = nil;
         needsLoad = YES;
         
         shouldListenToRegisterViews = YES;
-//        [controller presentOpenInMenuFromRect:CGRectMake(300, 100, 10, 10) inView:win.rootViewController.view animated:NO];
-        [controller presentOptionsMenuFromRect:CGRectMake(300, 100, 10, 10) inView:win.rootViewController.view animated:NO];
-        shouldListenToRegisterViews = NO;
+        [controller presentOpenInMenuFromRect:CGRectMake(300, 100, 10, 10) inView:win.rootViewController.view animated:NO];
+//        [controller presentOptionsMenuFromRect:CGRectMake(300, 100, 10, 10) inView:win.rootViewController.view animated:NO];
         
         mainThreadSharingTimer = [NSTimer scheduledTimerWithTimeInterval:.03 target:self selector:@selector(tick) userInfo:nil repeats:YES];
         [self performSelector:@selector(tick) withObject:nil afterDelay:.01];
+
+        [self printWindowContents];
+        NSLog(@"begin sharing complete");
     }
 }
 
@@ -95,6 +97,7 @@ static MMShareManager* _instance = nil;
     CheckMainThread;
     
     if(controller){
+        shouldListenToRegisterViews = NO;
         NSLog(@"end sharing");
         [controller dismissMenuAnimated:NO];
         controller = nil;
@@ -111,12 +114,21 @@ static MMShareManager* _instance = nil;
     [mainThreadSharingTimer invalidate];
     mainThreadSharingTimer = nil;
     
-    for(UIView* dismissView in [arrayOfDismissViews copy]){
-        dismissView.hidden = NO;
-        if(!dismissView.superview){
-            [arrayOfDismissViews removeObject:dismissView];
+    [[NSThread mainThread] performBlock:^{
+        if(!controller){
+            // confirm we're still dead and didn't re-activate sharing
+            for(UIView* dismissView in [arrayOfDismissViews copy]){
+                dismissView.hidden = NO;
+                if(!dismissView.superview){
+                    [arrayOfDismissViews removeObject:dismissView];
+                }
+            }
         }
-    }
+    }afterDelay:.3];
+
+    [self printWindowContents];
+    NSLog(@"end sharing complete");
+
 }
 
 #pragma mark - Number of Sharable Targets
@@ -150,15 +162,19 @@ static MMShareManager* _instance = nil;
 #pragma mark - Registering Popover and Collection Views
 
 -(void) registerDismissView:(UIView*)dismissView{
+    NSLog(@"registering dimming view %@", NSStringFromClass([dismissView class]));
     dismissView.hidden = YES;
     [arrayOfDismissViews addObject:dismissView];
+    shouldListenToRegisterViews = NO;
 }
 
 -(void) addCollectionView:(UICollectionView*)view{
     @synchronized(self){
         NSString* dataSourceType = NSStringFromClass([view.dataSource class]);
         if([dataSourceType rangeOfString:@"Air"].location == NSNotFound &&
-           [dataSourceType rangeOfString:@"Drop"].location == NSNotFound){
+           [dataSourceType rangeOfString:@"Drop"].location == NSNotFound &&
+           [dataSourceType rangeOfString:@"List"].location == NSNotFound &&
+           [dataSourceType rangeOfString:@"Alert"].location == NSNotFound){
             NSLog(@"found collection view with datasource type: %@", dataSourceType);
             [allFoundCollectionViews addObject:view];
         }
@@ -173,7 +189,21 @@ static MMShareManager* _instance = nil;
 
 #pragma mark - Timer for finding share items
 
+-(void) printWindowContents{
+//    UIWindow* win = [[UIApplication sharedApplication] keyWindow];
+//    for(UIView* subview in win.subviews){
+//        NSLog(@"subview: %@", [subview class]);
+//        for(UIView* subview2 in subview.subviews){
+//            NSLog(@"  subview2: %@", [subview2 class]);
+////            for(UIView* subview3 in subview2.subviews){
+////                NSLog(@"    subview3: %@", [subview3 class]);
+////            }
+//        }
+//    }
+}
+
 -(void) tick{
+    [self printWindowContents];
     if(![arrayOfAllowableIndexPaths count] && needsLoad){
         NSInteger section = 0;
         for(UICollectionView* cv in allFoundCollectionViews){
@@ -184,16 +214,6 @@ static MMShareManager* _instance = nil;
             section++;
             arrayOfLastLoadedIndexPaths = [NSArray arrayWithArray:arrayOfAllowableIndexPaths];
             needsLoad = NO;
-        }
-        UIWindow* win = [[UIApplication sharedApplication] keyWindow];
-        for(UIView* subview in win.subviews){
-            NSLog(@"subview: %@", [subview class]);
-            for(UIView* subview2 in subview.subviews){
-                NSLog(@"  subview2: %@", [subview2 class]);
-                for(UIView* subview3 in subview2.subviews){
-                    NSLog(@"    subview3: %@", [subview3 class]);
-                }
-            }
         }
         
         // notify that we're about to load each cell
