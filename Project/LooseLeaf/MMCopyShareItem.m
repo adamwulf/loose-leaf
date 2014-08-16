@@ -46,9 +46,10 @@
     if(!targetProgress){
         // only trigger if not already animating
         [delegate mayShare:self];
+        
+        [UIPasteboard generalPasteboard].image = self.delegate.imageToShare;
+        
         [self animateToPercent:1.0 success:YES];
-    }else{
-        NSLog(@"saved");
     }
 }
 

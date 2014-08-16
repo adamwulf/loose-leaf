@@ -53,7 +53,6 @@
 
 -(void) performShareAction{
     if(targetProgress){
-        NSLog(@"saved");
         // only try to share if not already sharing
         return;
     }
