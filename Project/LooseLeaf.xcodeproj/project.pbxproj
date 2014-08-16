@@ -162,6 +162,8 @@
 		667C6366199FF25C00E93CD6 /* print@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 667C6365199FF25C00E93CD6 /* print@2x.png */; };
 		667C6368199FF26100E93CD6 /* copy@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 667C6367199FF26100E93CD6 /* copy@2x.png */; };
 		667C636A199FF28E00E93CD6 /* print.png in Resources */ = {isa = PBXBuildFile; fileRef = 667C6369199FF28E00E93CD6 /* print.png */; };
+		667C636D199FF3D500E93CD6 /* MMCopyShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 667C636C199FF3D500E93CD6 /* MMCopyShareItem.m */; };
+		667C636F199FF41300E93CD6 /* copy.png in Resources */ = {isa = PBXBuildFile; fileRef = 667C636E199FF41300E93CD6 /* copy.png */; };
 		667D98AA192D010900625879 /* Loose-Leaf_76.png in Resources */ = {isa = PBXBuildFile; fileRef = 667D98A9192D010900625879 /* Loose-Leaf_76.png */; };
 		667D98AC192D4B7A00625879 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 667D98AB192D4B7A00625879 /* ImageIO.framework */; };
 		667D98AF192D5D8200625879 /* MMInboxManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98AE192D5D8200625879 /* MMInboxManager.m */; };
@@ -560,6 +562,9 @@
 		667C6365199FF25C00E93CD6 /* print@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "print@2x.png"; sourceTree = "<group>"; };
 		667C6367199FF26100E93CD6 /* copy@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "copy@2x.png"; sourceTree = "<group>"; };
 		667C6369199FF28E00E93CD6 /* print.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = print.png; sourceTree = "<group>"; };
+		667C636B199FF3D500E93CD6 /* MMCopyShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCopyShareItem.h; sourceTree = "<group>"; };
+		667C636C199FF3D500E93CD6 /* MMCopyShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCopyShareItem.m; sourceTree = "<group>"; };
+		667C636E199FF41300E93CD6 /* copy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = copy.png; sourceTree = "<group>"; };
 		667D98A9192D010900625879 /* Loose-Leaf_76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Loose-Leaf_76.png"; sourceTree = "<group>"; };
 		667D98AB192D4B7A00625879 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		667D98AD192D5D8200625879 /* MMInboxManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMInboxManager.h; sourceTree = "<group>"; };
@@ -576,8 +581,6 @@
 		667D98C3192FDB4300625879 /* UIImagePDF.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UIImagePDF.license; sourceTree = "<group>"; };
 		667D98C819300D0F00625879 /* MMScrapBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBackgroundView.h; sourceTree = "<group>"; };
 		667D98C919300D0F00625879 /* MMScrapBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBackgroundView.m; sourceTree = "<group>"; };
-		667F8AF217B0222300A0C7F8 /* Loose-Leaf-Icon7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Loose-Leaf-Icon7.png"; sourceTree = SOURCE_ROOT; };
-		667F8AF317B0222300A0C7F8 /* Loose-Leaf-Icon7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Loose-Leaf-Icon7@2x.png"; sourceTree = SOURCE_ROOT; };
 		6690EF1217CC64630009A0AC /* MMScrapBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBubbleButton.h; sourceTree = "<group>"; };
 		6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBubbleButton.m; sourceTree = "<group>"; };
 		6690EF1517CC6F710009A0AC /* MMDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDotView.h; sourceTree = "<group>"; };
@@ -1183,6 +1186,7 @@
 			children = (
 				667C6365199FF25C00E93CD6 /* print@2x.png */,
 				667C6369199FF28E00E93CD6 /* print.png */,
+				667C636E199FF41300E93CD6 /* copy.png */,
 				667C6367199FF26100E93CD6 /* copy@2x.png */,
 				66437C56199FE0F2003389F0 /* airsharing.png */,
 				66437C54199FDF55003389F0 /* airsharing@2x.png */,
@@ -1246,6 +1250,7 @@
 			isa = PBXGroup;
 			children = (
 				66524506199573B100C36609 /* MMShareItem.h */,
+				665245051995721C00C36609 /* MMShareItemDelegate.h */,
 				6652450119956DFA00C36609 /* MMEmailShareItem.h */,
 				6652450219956DFA00C36609 /* MMEmailShareItem.m */,
 				66524507199575A900C36609 /* MMTextShareItem.h */,
@@ -1267,9 +1272,10 @@
 				66B1EF27199809B100E9EEF1 /* OpenIn */,
 				662EFF2E199ECC760086C106 /* MMAirDropShareItem.h */,
 				662EFF2F199ECC760086C106 /* MMAirDropShareItem.m */,
-				665245051995721C00C36609 /* MMShareItemDelegate.h */,
 				667C6362199FED6E00E93CD6 /* MMPrintShareItem.h */,
 				667C6363199FED6E00E93CD6 /* MMPrintShareItem.m */,
+				667C636B199FF3D500E93CD6 /* MMCopyShareItem.h */,
+				667C636C199FF3D500E93CD6 /* MMCopyShareItem.m */,
 			);
 			name = "Share Items";
 			sourceTree = "<group>";
@@ -2100,6 +2106,7 @@
 				666E253218F5DDF100C17295 /* clearphotoalbum.png in Resources */,
 				6650DD1B18F48D7A00ADF591 /* camera@2x.png in Resources */,
 				66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */,
+				667C636F199FF41300E93CD6 /* copy.png in Resources */,
 				66684B4A182DAEBC005A27B4 /* UIImageRoundedCorner.license in Resources */,
 				665245271996AA7B00C36609 /* FXBlurView.license in Resources */,
 				66684B46182DACAE005A27B4 /* DrawKit.license in Resources */,
@@ -2370,6 +2377,7 @@
 				6612C8901964CC76003A9575 /* MMUndoRedoStrokeItem.m in Sources */,
 				6693C94918E4C55B0054FF41 /* MMLeftCloseButton.m in Sources */,
 				6655E926176291C800E4F36A /* MMScissorButton.m in Sources */,
+				667C636D199FF3D500E93CD6 /* MMCopyShareItem.m in Sources */,
 				665245641996DAB800C36609 /* AFHTTPSessionManager.m in Sources */,
 				66D7496318A6DB010015650E /* MMDrawingTouchGestureRecognizer.m in Sources */,
 				66510838178DFEE700A7A7DD /* MMRulerView.m in Sources */,

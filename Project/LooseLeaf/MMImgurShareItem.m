@@ -52,6 +52,11 @@
 }
 
 -(void) performShareAction{
+    if(targetProgress){
+        NSLog(@"saved");
+        // only try to share if not already sharing
+        return;
+    }
     [delegate mayShare:self];
     // if a popover controller is dismissed, it
     // adds the dismissal to the main queue async
@@ -192,11 +197,17 @@
             [UIView animateWithDuration:.3 animations:^{
                 label.alpha = 1;
             } completion:^(BOOL finished){
-                [delegate didShare:self];
+                if(succeeded){
+                    [delegate didShare:self];
+                }
                 [[NSThread mainThread] performBlock:^{
                     [label removeFromSuperview];
                     [circle removeAnimationForKey:@"drawCircleAnimation"];
                     [circle removeFromSuperlayer];
+                    // reset state
+                    lastProgress = 0;
+                    targetSuccess = 0;
+                    targetProgress = 0;
                 } afterDelay:.5];
             }];
         } afterDelay:.3];

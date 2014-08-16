@@ -19,6 +19,7 @@
 #import "MMPrintShareItem.h"
 #import "MMOpenInShareItem.h"
 #import "MMAirDropShareItem.h"
+#import "MMCopyShareItem.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMShareManager.h"
 #import "Constants.h"
@@ -64,6 +65,7 @@
         [shareItems addObject:[[MMAirDropShareItem alloc] init]];
         [shareItems addObject:[[MMPrintShareItem alloc] init]];
         [shareItems addObject:[[MMOpenInShareItem alloc] init]];
+        [shareItems addObject:[[MMCopyShareItem alloc] init]];
 
         [self updateShareOptions];
         
