@@ -54,7 +54,11 @@
         [printController presentFromRect:self.button.bounds inView:self.button animated:YES completionHandler:^(UIPrintInteractionController *printInteractionController, BOOL completed, NSError *error) {
             if(completed){
                 [self.delegate didShare:self];
+                [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
             }
+            NSString* strResult = completed ? @"Success" : @"Cancelled";
+            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Print",
+                                                                         kMPEventExportPropResult : strResult}];
             button.selected = NO;
             [button setNeedsDisplay];
         }];
