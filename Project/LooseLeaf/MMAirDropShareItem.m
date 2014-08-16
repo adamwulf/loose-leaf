@@ -21,7 +21,8 @@
     if(self = [super init]){
         button = [[MMImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [button setImage:[UIImage imageNamed:@"airsharing"]];
-        
+        button.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
+
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(updateButtonGreyscale)
                                                      name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -39,6 +40,8 @@
 
 -(void) performShareAction{
     [delegate mayShare:self];
+    button.selected = YES;
+    [button setNeedsDisplay];
     // if a popover controller is dismissed, it
     // adds the dismissal to the main queue async
     // so we need to add our next steps /after that/
@@ -73,9 +76,13 @@
                 if(completed){
                     [self.delegate didShare:self];
                 }
+                button.selected = NO;
+                [button setNeedsDisplay];
             };
         }else{
             [self.delegate didShare:self];
+            button.selected = NO;
+            [button setNeedsDisplay];
         }
         
         

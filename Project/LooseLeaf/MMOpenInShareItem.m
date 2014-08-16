@@ -29,8 +29,8 @@
     if(self = [super init]){
         button = [[MMShareButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         button.arrowColor = [UIColor blackColor];
-        button.topBgColor = [UIColor blueShadowColor];
-        button.bottomBgColor = [UIColor lightBlueShadowColor];
+        button.bottomBgColor = [UIColor colorWithRed:29/255.0 green:102/255.0 blue:240/255.0 alpha:.85];
+        button.topBgColor = [UIColor colorWithRed:26/255.0 green:210/255.0 blue:253/255.0 alpha:.85];
         button.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];

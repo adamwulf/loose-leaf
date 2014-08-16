@@ -158,6 +158,10 @@
 		667C635F199FE4BC00E93CD6 /* UIImage+MPAverageColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 667C634D199FE4BC00E93CD6 /* UIImage+MPAverageColor.m */; };
 		667C6360199FE4BC00E93CD6 /* UIImage+MPImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 667C634F199FE4BC00E93CD6 /* UIImage+MPImageEffects.m */; };
 		667C6361199FE4BC00E93CD6 /* UIView+MPSnapshotImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 667C6351199FE4BC00E93CD6 /* UIView+MPSnapshotImage.m */; };
+		667C6364199FED6E00E93CD6 /* MMPrintShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 667C6363199FED6E00E93CD6 /* MMPrintShareItem.m */; };
+		667C6366199FF25C00E93CD6 /* print@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 667C6365199FF25C00E93CD6 /* print@2x.png */; };
+		667C6368199FF26100E93CD6 /* copy@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 667C6367199FF26100E93CD6 /* copy@2x.png */; };
+		667C636A199FF28E00E93CD6 /* print.png in Resources */ = {isa = PBXBuildFile; fileRef = 667C6369199FF28E00E93CD6 /* print.png */; };
 		667D98AA192D010900625879 /* Loose-Leaf_76.png in Resources */ = {isa = PBXBuildFile; fileRef = 667D98A9192D010900625879 /* Loose-Leaf_76.png */; };
 		667D98AC192D4B7A00625879 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 667D98AB192D4B7A00625879 /* ImageIO.framework */; };
 		667D98AF192D5D8200625879 /* MMInboxManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98AE192D5D8200625879 /* MMInboxManager.m */; };
@@ -551,6 +555,11 @@
 		667C634F199FE4BC00E93CD6 /* UIImage+MPImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+MPImageEffects.m"; path = "../../Submodules/mixpanel/Mixpanel/UIImage+MPImageEffects.m"; sourceTree = "<group>"; };
 		667C6350199FE4BC00E93CD6 /* UIView+MPSnapshotImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+MPSnapshotImage.h"; path = "../../Submodules/mixpanel/Mixpanel/UIView+MPSnapshotImage.h"; sourceTree = "<group>"; };
 		667C6351199FE4BC00E93CD6 /* UIView+MPSnapshotImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+MPSnapshotImage.m"; path = "../../Submodules/mixpanel/Mixpanel/UIView+MPSnapshotImage.m"; sourceTree = "<group>"; };
+		667C6362199FED6E00E93CD6 /* MMPrintShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPrintShareItem.h; sourceTree = "<group>"; };
+		667C6363199FED6E00E93CD6 /* MMPrintShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPrintShareItem.m; sourceTree = "<group>"; };
+		667C6365199FF25C00E93CD6 /* print@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "print@2x.png"; sourceTree = "<group>"; };
+		667C6367199FF26100E93CD6 /* copy@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "copy@2x.png"; sourceTree = "<group>"; };
+		667C6369199FF28E00E93CD6 /* print.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = print.png; sourceTree = "<group>"; };
 		667D98A9192D010900625879 /* Loose-Leaf_76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Loose-Leaf_76.png"; sourceTree = "<group>"; };
 		667D98AB192D4B7A00625879 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		667D98AD192D5D8200625879 /* MMInboxManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMInboxManager.h; sourceTree = "<group>"; };
@@ -567,6 +576,8 @@
 		667D98C3192FDB4300625879 /* UIImagePDF.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UIImagePDF.license; sourceTree = "<group>"; };
 		667D98C819300D0F00625879 /* MMScrapBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBackgroundView.h; sourceTree = "<group>"; };
 		667D98C919300D0F00625879 /* MMScrapBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBackgroundView.m; sourceTree = "<group>"; };
+		667F8AF217B0222300A0C7F8 /* Loose-Leaf-Icon7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Loose-Leaf-Icon7.png"; sourceTree = SOURCE_ROOT; };
+		667F8AF317B0222300A0C7F8 /* Loose-Leaf-Icon7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Loose-Leaf-Icon7@2x.png"; sourceTree = SOURCE_ROOT; };
 		6690EF1217CC64630009A0AC /* MMScrapBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBubbleButton.h; sourceTree = "<group>"; };
 		6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBubbleButton.m; sourceTree = "<group>"; };
 		6690EF1517CC6F710009A0AC /* MMDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDotView.h; sourceTree = "<group>"; };
@@ -1170,6 +1181,11 @@
 		6650DD1018F4842E00ADF591 /* Icon Images */ = {
 			isa = PBXGroup;
 			children = (
+				667C6365199FF25C00E93CD6 /* print@2x.png */,
+				667C6369199FF28E00E93CD6 /* print.png */,
+				667C6367199FF26100E93CD6 /* copy@2x.png */,
+				66437C56199FE0F2003389F0 /* airsharing.png */,
+				66437C54199FDF55003389F0 /* airsharing@2x.png */,
 				6652456B1996E69D00C36609 /* link.png */,
 				6652456C1996E69D00C36609 /* link@2x.png */,
 				665245301996D1E800C36609 /* imgur.png */,
@@ -1251,9 +1267,9 @@
 				66B1EF27199809B100E9EEF1 /* OpenIn */,
 				662EFF2E199ECC760086C106 /* MMAirDropShareItem.h */,
 				662EFF2F199ECC760086C106 /* MMAirDropShareItem.m */,
-				66437C56199FE0F2003389F0 /* airsharing.png */,
-				66437C54199FDF55003389F0 /* airsharing@2x.png */,
 				665245051995721C00C36609 /* MMShareItemDelegate.h */,
+				667C6362199FED6E00E93CD6 /* MMPrintShareItem.h */,
+				667C6363199FED6E00E93CD6 /* MMPrintShareItem.m */,
 			);
 			name = "Share Items";
 			sourceTree = "<group>";
@@ -2078,6 +2094,8 @@
 				66684B3E182DA177005A27B4 /* GPC.license in Resources */,
 				66684B48182DAD05005A27B4 /* 2Geom.license in Resources */,
 				6652451919958C2500C36609 /* sinaWeibo.png in Resources */,
+				667C6366199FF25C00E93CD6 /* print@2x.png in Resources */,
+				667C636A199FF28E00E93CD6 /* print.png in Resources */,
 				6650DD1918F48D7500ADF591 /* camera.png in Resources */,
 				666E253218F5DDF100C17295 /* clearphotoalbum.png in Resources */,
 				6650DD1B18F48D7A00ADF591 /* camera@2x.png in Resources */,
@@ -2110,6 +2128,7 @@
 				667C6353199FE4BC00E93CD6 /* MPCloseBtn.png in Resources */,
 				666E253E18F5E19100C17295 /* clearcamera.png in Resources */,
 				6650DD2718F491BA00ADF591 /* evernote@2x.png in Resources */,
+				667C6368199FF26100E93CD6 /* copy@2x.png in Resources */,
 				6652450B199576E400C36609 /* text.png in Resources */,
 				66684B44182DAC9B005A27B4 /* CurveFit.license in Resources */,
 				66684B31182D887E005A27B4 /* Settings.bundle in Resources */,
@@ -2368,6 +2387,7 @@
 				66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */,
 				66A471BE17C7DAA000C2A5B6 /* MMScrappedPaperView.m in Sources */,
 				66052A0317FA170600A94531 /* MMImmutableScrapsOnPaperState.m in Sources */,
+				667C6364199FED6E00E93CD6 /* MMPrintShareItem.m in Sources */,
 				6693C94C18E4E7860054FF41 /* MMSlidingSidebarContainerView.m in Sources */,
 				66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */,
 				66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */,
