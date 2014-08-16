@@ -20,7 +20,7 @@
 -(id) init{
     if(self = [super init]){
         button = [[MMImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        [button setImage:[UIImage imageNamed:@"text"]];
+        [button setImage:[UIImage imageNamed:@"airsharing"]];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(updateButtonGreyscale)
@@ -67,6 +67,7 @@
         if([activityViewController respondsToSelector:@selector(popoverPresentationController)]){
             activityViewController.popoverPresentationController.sourceView = self.button;
             activityViewController.popoverPresentationController.sourceRect = self.button.bounds;
+//            activityViewController.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionLeft;
             activityViewController.completionHandler = ^(NSString *activityType, BOOL completed){
                 NSLog(@"shared: %@ %d", activityType, completed);
                 if(completed){

@@ -47,6 +47,8 @@
 		6640E6D917E390BE00EB3F7D /* MMTouchVelocityGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6640E6D817E390BE00EB3F7D /* MMTouchVelocityGestureRecognizer.m */; };
 		66423DCB19412195000A3709 /* MMDecompressImagePromise.m in Sources */ = {isa = PBXBuildFile; fileRef = 66423DCA19412195000A3709 /* MMDecompressImagePromise.m */; };
 		66423DD019425AA7000A3709 /* MMCachedPreviewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66423DCF19425AA7000A3709 /* MMCachedPreviewManager.m */; };
+		66437C55199FDF55003389F0 /* airsharing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66437C54199FDF55003389F0 /* airsharing@2x.png */; };
+		66437C57199FE0F2003389F0 /* airsharing.png in Resources */ = {isa = PBXBuildFile; fileRef = 66437C56199FE0F2003389F0 /* airsharing.png */; };
 		664516B9159030FC0012FACA /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 664516B8159030FC0012FACA /* Constants.m */; };
 		6648D21D178C9E5400BE3B37 /* UIColor+Shadow.m in Sources */ = {isa = PBXBuildFile; fileRef = 6648D21C178C9E5400BE3B37 /* UIColor+Shadow.m */; };
 		664C62F015A36DA40072736A /* MMListPaperStackView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 664C62EF15A36DA40072736A /* MMListPaperStackView.mm */; };
@@ -356,6 +358,8 @@
 		66423DCC194121A9000A3709 /* MMDecompressImagePromiseDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMDecompressImagePromiseDelegate.h; sourceTree = "<group>"; };
 		66423DCE19425AA7000A3709 /* MMCachedPreviewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCachedPreviewManager.h; sourceTree = "<group>"; };
 		66423DCF19425AA7000A3709 /* MMCachedPreviewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCachedPreviewManager.m; sourceTree = "<group>"; };
+		66437C54199FDF55003389F0 /* airsharing@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "airsharing@2x.png"; sourceTree = "<group>"; };
+		66437C56199FE0F2003389F0 /* airsharing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = airsharing.png; sourceTree = "<group>"; };
 		664516B8159030FC0012FACA /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
 		6648D21B178C9E5400BE3B37 /* UIColor+Shadow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Shadow.h"; sourceTree = "<group>"; };
 		6648D21C178C9E5400BE3B37 /* UIColor+Shadow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Shadow.m"; sourceTree = "<group>"; };
@@ -1193,6 +1197,8 @@
 				66B1EF27199809B100E9EEF1 /* OpenIn */,
 				662EFF2E199ECC760086C106 /* MMAirDropShareItem.h */,
 				662EFF2F199ECC760086C106 /* MMAirDropShareItem.m */,
+				66437C56199FE0F2003389F0 /* airsharing.png */,
+				66437C54199FDF55003389F0 /* airsharing@2x.png */,
 				665245051995721C00C36609 /* MMShareItemDelegate.h */,
 			);
 			name = "Share Items";
@@ -2042,6 +2048,7 @@
 				66524512199583B600C36609 /* twitterLarge@2x.png in Resources */,
 				665245231995936000C36609 /* tencentWeibo@2x.png in Resources */,
 				6652456E1996E69D00C36609 /* link@2x.png in Resources */,
+				66437C57199FE0F2003389F0 /* airsharing.png in Resources */,
 				66DCFB951581BCEF00B4918C /* InfoPlist.strings in Resources */,
 				6650DD1218F4843400ADF591 /* photoalbum@2x.png in Resources */,
 				66684B40182DAAC0005A27B4 /* UIColorWithHex.license in Resources */,
@@ -2063,6 +2070,7 @@
 				6650DD1D18F48E3F00ADF591 /* twitter.png in Resources */,
 				6652451B19958C2900C36609 /* sinaWeibo@2x.png in Resources */,
 				6650DD2318F48F8300ADF591 /* facebook@2x.png in Resources */,
+				66437C55199FDF55003389F0 /* airsharing@2x.png in Resources */,
 				667D98AA192D010900625879 /* Loose-Leaf_76.png in Resources */,
 				6652452F1996D1E500C36609 /* imgur@2x.png in Resources */,
 				666E253418F5DDFD00C17295 /* clearphotoalbum@2x.png in Resources */,
