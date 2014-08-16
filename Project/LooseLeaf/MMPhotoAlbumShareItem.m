@@ -52,7 +52,6 @@
         [library writeImageToSavedPhotosAlbum:image.CGImage orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error){
             NSString* strResult = @"Failed";
             if (error) {
-                // TODO: error handling
                 [self animateToSuccess:NO];
             } else {
                 strResult = @"Success";

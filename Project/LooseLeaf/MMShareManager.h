@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MMShareManagerDelegate.h"
 
-@interface MMShareManager : NSObject
+@interface MMShareManager : NSObject<UIDocumentInteractionControllerDelegate>
 
 @property (readonly) NSArray* allFoundCollectionViews;
 @property (weak) NSObject<MMShareManagerDelegate>* delegate;

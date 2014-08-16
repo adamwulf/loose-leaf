@@ -79,6 +79,7 @@ static MMShareManager* _instance = nil;
         NSLog(@"begin sharing");
         UIWindow* win = [[UIApplication sharedApplication] keyWindow];
         controller = [UIDocumentInteractionController interactionControllerWithURL:fileLocation];
+        controller.delegate = self;
         
         needsLoad = YES;
         
@@ -243,5 +244,13 @@ static MMShareManager* _instance = nil;
         needsWait = NO;
     }
 }
+
+#pragma mark - UIDocumentInteractionControllerDelegate
+
+- (void)documentInteractionController:(UIDocumentInteractionController *)controller willBeginSendingToApplication:(NSString *)application{
+    [delegate isSendingToApplication:application];
+}
+
+
 
 @end

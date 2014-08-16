@@ -67,26 +67,37 @@
                                                          UIActivityTypePostToTencentWeibo];
         UIWindow* win = [[UIApplication sharedApplication] keyWindow];
         
+        
+        void(^block)(NSString *, BOOL) = ^(NSString *activityType, BOOL completed){
+            NSLog(@"shared: %@ %d", activityType, completed);
+            if(completed){
+                [self.delegate didShare:self];
+                [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+            }
+            if(!activityType) activityType = @"com.apple.UIKit.activity.AirDrop";
+            NSString* strResult = completed ? @"Success" : @"Cancelled";
+            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : activityType,
+                                                                         kMPEventExportPropResult : strResult}];
+            
+            button.selected = NO;
+            [button setNeedsDisplay];
+        };
+        
         if([activityViewController respondsToSelector:@selector(popoverPresentationController)]){
             activityViewController.popoverPresentationController.sourceView = self.button;
             activityViewController.popoverPresentationController.sourceRect = self.button.bounds;
-//            activityViewController.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionLeft;
-            activityViewController.completionHandler = ^(NSString *activityType, BOOL completed){
-                NSLog(@"shared: %@ %d", activityType, completed);
-                if(completed){
-                    [self.delegate didShare:self];
-                }
-                button.selected = NO;
-                [button setNeedsDisplay];
+            activityViewController.completionWithItemsHandler = ^(NSString *activityType, BOOL completed, NSArray *returnedItems, NSError *activityError){
+                block(activityType, completed);
             };
         }else{
             [self.delegate didShare:self];
             button.selected = NO;
             [button setNeedsDisplay];
+            activityViewController.completionHandler = ^(NSString *activityType, BOOL completed){
+                block(activityType, completed);
+            };
         }
         
-        
-//        [win.rootViewController presentModalViewController:activityViewController animated:YES];
         [win.rootViewController presentViewController:activityViewController
                                              animated:YES
                                            completion:^{

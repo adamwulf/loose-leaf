@@ -49,6 +49,10 @@
         
         [UIPasteboard generalPasteboard].image = self.delegate.imageToShare;
         
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Copy To Clipboard",
+                                                                     kMPEventExportPropResult : @"Success"}];
+
         [self animateToPercent:1.0 success:YES];
     }
 }

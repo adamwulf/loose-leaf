@@ -18,4 +18,6 @@
 
 -(void) sharingHasEnded;
 
+-(void) isSendingToApplication:(NSString *)application;
+
 @end

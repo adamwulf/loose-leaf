@@ -158,6 +158,10 @@
     }
 }
 
+-(void) isSendingToApplication:(NSString *)application{
+    // noops
+}
+
 #pragma mark - Actions
 
 -(void) buttonTapped:(id)obj{
