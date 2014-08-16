@@ -89,7 +89,6 @@ static MMShareManager* _instance = nil;
         mainThreadSharingTimer = [NSTimer scheduledTimerWithTimeInterval:.03 target:self selector:@selector(tick) userInfo:nil repeats:YES];
         [self performSelector:@selector(tick) withObject:nil afterDelay:.01];
 
-        [self printWindowContents];
         NSLog(@"begin sharing complete");
     }
 }
@@ -127,7 +126,6 @@ static MMShareManager* _instance = nil;
         }
     }afterDelay:.3];
 
-    [self printWindowContents];
     NSLog(@"end sharing complete");
 
 }
@@ -193,21 +191,7 @@ static MMShareManager* _instance = nil;
 
 #pragma mark - Timer for finding share items
 
--(void) printWindowContents{
-//    UIWindow* win = [[UIApplication sharedApplication] keyWindow];
-//    for(UIView* subview in win.subviews){
-//        NSLog(@"subview: %@", [subview class]);
-//        for(UIView* subview2 in subview.subviews){
-//            NSLog(@"  subview2: %@", [subview2 class]);
-////            for(UIView* subview3 in subview2.subviews){
-////                NSLog(@"    subview3: %@", [subview3 class]);
-////            }
-//        }
-//    }
-}
-
 -(void) tick{
-    [self printWindowContents];
     if(![arrayOfAllowableIndexPaths count] && needsLoad){
         NSInteger section = 0;
         for(UICollectionView* cv in allFoundCollectionViews){

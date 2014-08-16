@@ -62,10 +62,10 @@
         [shareItems addObject:[[MMTwitterShareItem alloc] init]];
         [shareItems addObject:[[MMFacebookShareItem alloc] init]];
         [shareItems addObject:[[MMImgurShareItem alloc] init]];
-        [shareItems addObject:[[MMAirDropShareItem alloc] init]];
         [shareItems addObject:[[MMPrintShareItem alloc] init]];
-        [shareItems addObject:[[MMOpenInShareItem alloc] init]];
         [shareItems addObject:[[MMCopyShareItem alloc] init]];
+        [shareItems addObject:[[MMAirDropShareItem alloc] init]];
+        [shareItems addObject:[[MMOpenInShareItem alloc] init]];
 
         [self updateShareOptions];
         
