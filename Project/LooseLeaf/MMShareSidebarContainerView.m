@@ -17,6 +17,7 @@
 #import "MMPhotoAlbumShareItem.h"
 #import "MMImgurShareItem.h"
 #import "MMOpenInShareItem.h"
+#import "MMAirDropShareItem.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMShareManager.h"
 #import "Constants.h"
@@ -60,6 +61,7 @@
         [shareItems addObject:[[MMFacebookShareItem alloc] init]];
         [shareItems addObject:[[MMImgurShareItem alloc] init]];
         [shareItems addObject:[[MMOpenInShareItem alloc] init]];
+        [shareItems addObject:[[MMAirDropShareItem alloc] init]];
 
         [self updateShareOptions];
         

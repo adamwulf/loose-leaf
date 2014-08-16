@@ -33,6 +33,7 @@
 		6627DFA719003DF900592EEF /* CaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6627DFA619003DF900592EEF /* CaptureSessionManager.m */; };
 		662A21D7191D671A00AD9E31 /* Mixpanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 662A21BB191D671A00AD9E31 /* Mixpanel.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		662EFF2D199EBC140086C106 /* MMWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 662EFF2C199EBC140086C106 /* MMWindow.m */; };
+		662EFF30199ECC760086C106 /* MMAirDropShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 662EFF2F199ECC760086C106 /* MMAirDropShareItem.m */; };
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6635BE9619748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635BE9519748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m */; };
 		6635BE9919749BD600DFCBBA /* MMScrapsInSidebarState.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635BE9819749BD600DFCBBA /* MMScrapsInSidebarState.m */; };
@@ -323,6 +324,8 @@
 		662A21BB191D671A00AD9E31 /* Mixpanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Mixpanel.m; path = ../../Submodules/mixpanel/Mixpanel/Mixpanel.m; sourceTree = "<group>"; };
 		662EFF2B199EBC140086C106 /* MMWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMWindow.h; sourceTree = "<group>"; };
 		662EFF2C199EBC140086C106 /* MMWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMWindow.m; sourceTree = "<group>"; };
+		662EFF2E199ECC760086C106 /* MMAirDropShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAirDropShareItem.h; sourceTree = "<group>"; };
+		662EFF2F199ECC760086C106 /* MMAirDropShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAirDropShareItem.m; sourceTree = "<group>"; };
 		6630ED9F15F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
 		6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizerDelegate.h; sourceTree = "<group>"; };
@@ -1168,7 +1171,6 @@
 		6652450419956FC800C36609 /* Share Items */ = {
 			isa = PBXGroup;
 			children = (
-				66B1EF27199809B100E9EEF1 /* OpenIn */,
 				66524506199573B100C36609 /* MMShareItem.h */,
 				6652450119956DFA00C36609 /* MMEmailShareItem.h */,
 				6652450219956DFA00C36609 /* MMEmailShareItem.m */,
@@ -1188,6 +1190,9 @@
 				6652452C1996CE3000C36609 /* MMImgurShareItem.m */,
 				6652457B1996ECF900C36609 /* MMOpenInShareItem.h */,
 				6652457C1996ECF900C36609 /* MMOpenInShareItem.m */,
+				66B1EF27199809B100E9EEF1 /* OpenIn */,
+				662EFF2E199ECC760086C106 /* MMAirDropShareItem.h */,
+				662EFF2F199ECC760086C106 /* MMAirDropShareItem.m */,
 				665245051995721C00C36609 /* MMShareItemDelegate.h */,
 			);
 			name = "Share Items";
@@ -2280,6 +2285,7 @@
 				661708E61981B434006A73EF /* FXBlurView.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
 				66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */,
+				662EFF30199ECC760086C106 /* MMAirDropShareItem.m in Sources */,
 				667D98C2192FD87400625879 /* MMPDF.m in Sources */,
 				66AC8D7918E7506A00A65036 /* MMImageSidebarContainerView.m in Sources */,
 				665245631996DAB800C36609 /* AFHTTPRequestOperationManager.m in Sources */,
