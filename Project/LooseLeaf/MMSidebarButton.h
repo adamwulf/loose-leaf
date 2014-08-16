@@ -17,6 +17,7 @@
 @property (nonatomic, weak) NSObject<MMSidebarButtonDelegate>* delegate;
 @property (nonatomic, readonly) UIColor* backgroundColor;
 @property (nonatomic, readonly) UIColor* borderColor;
+@property (nonatomic) UIColor* shadowColor;
 
 -(CGPoint) perpendicularUnitVectorForPoint:(CGPoint)p1 andPoint:(CGPoint) p2;
 -(UIBezierPath*) pathForLineGivePoint:(CGPoint)p1 andPoint:(CGPoint) p2 andVector:(CGPoint)pv andWidth:(CGFloat)width;

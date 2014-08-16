@@ -72,7 +72,6 @@ struct SidebarButton{
         
         shareButton = [[MMShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         shareButton.delegate = self;
-        [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:shareButton];
         buttons[1].button = (__bridge void *)(shareButton);
         buttons[1].originalRect = shareButton.frame;
@@ -371,10 +370,6 @@ struct SidebarButton{
     [self popTopPageOfHiddenStack];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
     [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
-}
-
--(void) shareButtonTapped:(UIButton*)_button{
-    @throw kAbstractMethodException;
 }
 
 -(void) tempButtonTapped:(UIButton*)_button{
@@ -935,6 +930,16 @@ struct SidebarButton{
     [super finishUITransitionToPageView];
     [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
     [[visibleStackHolder peekSubview] updateThumbnailVisibility];
+}
+
+-(void) disableAllGesturesForPageView{
+    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+    [super disableAllGesturesForPageView];
+}
+
+-(void) enableAllGesturesForPageView{
+    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
+    [super enableAllGesturesForPageView];
 }
 
 #pragma mark - Sidebar Hit Test

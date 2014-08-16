@@ -8,6 +8,9 @@
 
 #import "ALAsset+Thumbnail.h"
 #import "Constants.h"
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <ImageIO/ImageIO.h>
+
 
 @implementation ALAsset (Thumbnail)
 
@@ -51,9 +54,6 @@
 
 
 // See http://mindsea.com/2012/12/18/downscaling-huge-alassets-without-fear-of-sigkill for details
-
-#import <AssetsLibrary/AssetsLibrary.h>
-#import <ImageIO/ImageIO.h>
 
 // Helper methods for thumbnailForAsset:maxPixelSize:
 static size_t getAssetBytesCallback(void *info, void *buffer, off_t position, size_t count) {

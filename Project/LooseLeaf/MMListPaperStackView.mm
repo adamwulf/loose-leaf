@@ -320,6 +320,14 @@
     [self didChangeTopPage];
 }
 
+-(void) disableAllGesturesForPageView{
+    [super disableAllGesturesForPageView];
+}
+
+-(void) enableAllGesturesForPageView{
+    [super enableAllGesturesForPageView];
+}
+
 
 
 #pragma mark - MMPaperViewDelegate

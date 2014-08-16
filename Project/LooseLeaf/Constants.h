@@ -24,6 +24,14 @@
 #define debug_NSLog(__FORMAT__, ...)
 #endif
 
+#define SuppressPerformSelectorLeakWarning(Stuff) \
+do { \
+_Pragma("clang diagnostic push") \
+_Pragma("clang diagnostic ignored \"-Warc-performSelector-leaks\"") \
+Stuff; \
+_Pragma("clang diagnostic pop") \
+} while (0)
+
 #define SIGN(__var__) (__var__ / ABS(__var__))
 
 #define kAbstractMethodException [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)] userInfo:nil]
@@ -31,6 +39,11 @@
 #define kTestflightAppToken @"7cad2371-d0e0-4524-a833-dbc6cbc7a870"
 
 #define kAnimationDelay 0.05
+
+// Imgur
+#define kImgurClientID @"84d82da68fd2438"
+#define kImgurClientSecret @"9d527186fee2a9f9e7af7f5e9fbbab334a1ac1ce"
+#define kMashapeClientID @"YOUR_MASHAPE_CLIENT_ID"
 
 // Ruler
 #define kWidthOfRuler 70
@@ -96,6 +109,7 @@
 
 #define kMPEventExportPropDestination @"Export Destination"
 #define kMPEventExportPropResult @"Export Result"
+#define kMPEventExportPropReason @"Export Result Reason"
 #define kMPEventImportPropFileExt @"File Extension"
 #define kMPEventImportPropFileType @"File Type"
 #define kMPEventImportPropReferApp @"Referring App"
@@ -110,7 +124,7 @@
 
 // cache sizes
 #define kMMLoadImageCacheSize 10
-#define kMMPageCacheManagerSize 5
+#define kMMPageCacheManagerSize 3
 
 #ifdef __cplusplus
 extern "C" {

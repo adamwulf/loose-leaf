@@ -122,25 +122,6 @@
                                                                                 kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [pdfInboxButton addTarget:self action:@selector(pdfButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [sidebarContentView addSubview:pdfInboxButton];
-        
-//        // facebook
-//        facebookAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4*kWidthOfSidebarButton, buttonBounds.origin.y,
-//                                                                                 kWidthOfSidebarButton, kWidthOfSidebarButton)];
-//        [facebookAlbumButton setImage:[UIImage imageNamed:@"facebook"]];
-//        [sidebarContentView addSubview:facebookAlbumButton];
-
-        
-//        twitterAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 2*kWidthOfSidebarButton, buttonBounds.origin.y,
-//                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
-//        [twitterAlbumButton setImage:[UIImage imageNamed:@"twitter"]];
-//        [sidebarContentView addSubview:twitterAlbumButton];
-
-
-//        evernoteAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4*kWidthOfSidebarButton, buttonBounds.origin.y,
-//                                                                                  kWidthOfSidebarButton, kWidthOfSidebarButton)];
-//        [evernoteAlbumButton setImage:[UIImage imageNamed:@"evernote"]];
-//        [sidebarContentView addSubview:evernoteAlbumButton];
-        
 }
     return self;
 }

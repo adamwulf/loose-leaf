@@ -1863,4 +1863,14 @@
     return [fromLeftBezelGesture isActivelyBezeling] || [fromRightBezelGesture isActivelyBezeling] || [setOfPagesBeingPanned count];
 }
 
+-(void) disableAllGesturesForPageView{
+    [fromLeftBezelGesture setEnabled:NO];
+    [fromRightBezelGesture setEnabled:NO];
+}
+
+-(void) enableAllGesturesForPageView{
+    [fromLeftBezelGesture setEnabled:YES];
+    [fromRightBezelGesture setEnabled:YES];
+}
+
 @end

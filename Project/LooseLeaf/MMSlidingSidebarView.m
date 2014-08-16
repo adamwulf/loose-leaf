@@ -186,6 +186,7 @@
         self.opaque = NO;
         self.backgroundColor = [UIColor clearColor];
         self.clipsToBounds = YES;
+        
     }
     return self;
 }
@@ -195,36 +196,43 @@
 }
 
 -(void) willShow{
-    if(!blurView){
-        CGRect b = self.bounds;
-        blurView = [[FXBlurView alloc] initWithFrame:self.bounds];
-        blurView.contentScaleFactor = 1.0;
-        blurView.blurEnabled = YES;
-        blurView.dynamic = NO;
-        blurView.tintColor = [[UIColor blackColor] colorWithAlphaComponent:1.0];
-        [blurContainerView addSubview:blurView];
-        blurView.frame = blurContainerView.bounds;
-        blurView.underlyingView = delegate.viewForBlur;
-        b = blurContainerView.bounds;
+    @autoreleasepool {
+        if(!blurView){
+            CGRect b = self.bounds;
+            blurView = [[FXBlurView alloc] initWithFrame:self.bounds];
+            blurView.contentScaleFactor = 1.0;
+            blurView.blurEnabled = YES;
+            blurView.dynamic = NO;
+            blurView.tintColor = [[UIColor blackColor] colorWithAlphaComponent:1.0];
+            [blurContainerView addSubview:blurView];
+            blurView.frame = blurContainerView.bounds;
+            blurView.underlyingView = delegate.viewForBlur;
+            blurView.underlyingImage = delegate.imageForBlur;
+            b = blurContainerView.bounds;
+            
+            // set the anchor to 0,0 for the sliding animations
+            [UIView setAnchorPoint:CGPointZero forView:blurView];
+        }
         
-        // set the anchor to 0,0 for the sliding animations
-        [UIView setAnchorPoint:CGPointZero forView:blurView];
+        CGRect fr = blurView.frame;
+        if(directionIsFromLeft){
+            fr.origin = CGPointMake(blurContainerView.bounds.size.width, 0);
+        }else{
+            fr.origin = CGPointMake(-blurContainerView.bounds.size.width, 0);
+        }
+        blurView.frame = fr;
+        [blurView setNeedsDisplay];
+        [blurView updateAsynchronously:NO completion:nil];
     }
-
-    CGRect fr = blurView.frame;
-    if(directionIsFromLeft){
-        fr.origin = CGPointMake(blurContainerView.bounds.size.width, 0);
-    }else{
-        fr.origin = CGPointMake(-blurContainerView.bounds.size.width, 0);
-    }
-    blurView.frame = fr;
-    [blurView setNeedsDisplay];
-    [blurView updateAsynchronously:NO completion:nil];
 }
 
 -(void) didHide{
-    [blurView removeFromSuperview];
-    blurView = nil;
+    @autoreleasepool {
+        blurView.underlyingView = nil;
+        blurView.underlyingImage = nil;
+        [blurView removeFromSuperview];
+        blurView = nil;
+    }
 }
 
 -(void) showForDuration:(CGFloat)duration{

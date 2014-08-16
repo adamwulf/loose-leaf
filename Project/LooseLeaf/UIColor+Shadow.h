@@ -14,4 +14,6 @@
 
 +(UIColor*) blueShadowColor;
 
++(UIColor*) lightBlueShadowColor;
+
 @end
