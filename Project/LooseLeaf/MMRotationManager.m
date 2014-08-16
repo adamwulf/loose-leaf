@@ -220,7 +220,7 @@ static BOOL ignoredFirstRotateNotification = NO;
 //    NSLog(@"rotation manager active");
     shouldIgnoreEvents = NO;
     ignoredFirstRotateNotification = YES;
-    [self didRotate:lastNote];
+//    [self didRotate:lastNote];
     [self startAccelNotifications];
 }
 

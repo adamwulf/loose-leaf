@@ -136,14 +136,6 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>28E9204B86AFC0DBA92C65B6730EB6D37A220B6C</string>
-			<key>IDESourceControlWCCName</key>
-			<string>JotTouchSDK</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>14C6FF5D-B518-4BDF-95FA-B405B8BC64B8</string>
 			<key>IDESourceControlWCCName</key>
 			<string>JotTouchSDK</string>
@@ -152,7 +144,15 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>2C955C45306C7A3A5375708C7171EBDC6DA686F7</string>
+			<string>28E9204B86AFC0DBA92C65B6730EB6D37A220B6C</string>
+			<key>IDESourceControlWCCName</key>
+			<string>JotTouchSDK</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>BC8ADFAC-BC7E-461B-B1A2-081D8AB6C365</string>
 			<key>IDESourceControlWCCName</key>
 			<string>JotUI</string>
 		</dict>
@@ -160,7 +160,7 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>BC8ADFAC-BC7E-461B-B1A2-081D8AB6C365</string>
+			<string>2C955C45306C7A3A5375708C7171EBDC6DA686F7</string>
 			<key>IDESourceControlWCCName</key>
 			<string>JotUI</string>
 		</dict>
