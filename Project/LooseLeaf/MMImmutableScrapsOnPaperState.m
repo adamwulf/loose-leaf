@@ -47,9 +47,17 @@
 }
 
 -(NSArray*) scraps{
-    return [allScrapsForPage filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+    return [[allScrapsForPage filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        // only return scraps that are physically on the page
+        // we'll save all scraps, but this method is used
+        // to help generate the thumbnail later on, so we only
+        // care about scraps on the page
         return [scrapsOnPageIDs containsObject:[evaluatedObject uuid]];
-    }]];
+    }]] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        // sort the scraps, so that they are added to the thumbnail
+        // in the correct order
+        return [scrapsOnPageIDs indexOfObject:[obj1 uuid]] < [scrapsOnPageIDs indexOfObject:[obj2 uuid]] ? NSOrderedAscending : NSOrderedDescending;
+    }];
 }
 
 -(BOOL) saveStateToDiskBlocking{

@@ -31,4 +31,9 @@
     }
 }
 
++(NSInteger) majorVersion{
+    NSArray *vComp = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
+    return [[vComp objectAtIndex:0] integerValue];
+}
+
 @end

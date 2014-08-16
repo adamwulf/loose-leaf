@@ -124,13 +124,13 @@
  */
 -(void)didMoveToSuperview{
     return;
-    if(isBrandNewPage){
-        self.backgroundColor = [UIColor blueColor];
-    }else if([self.delegate isInVisibleStack:self]){
-        self.backgroundColor = [UIColor greenColor];
-    }else{
-        self.backgroundColor = [UIColor redColor];
-    }
+//    if(isBrandNewPage){
+//        self.backgroundColor = [UIColor blueColor];
+//    }else if([self.delegate isInVisibleStack:self]){
+//        self.backgroundColor = [UIColor greenColor];
+//    }else{
+//        self.backgroundColor = [UIColor redColor];
+//    }
 }
  
 

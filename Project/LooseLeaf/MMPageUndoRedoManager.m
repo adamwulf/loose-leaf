@@ -38,7 +38,6 @@
 }
 
 -(void) addUndoItem:(NSObject<MMUndoRedoItem>*)item{
-    NSLog(@"adding undo item: %@", item);
     @synchronized(self){
         BOOL needsLoad = !isLoaded;
         if(needsLoad){
@@ -93,17 +92,17 @@
 }
 
 -(void) printDescription{
-    return;
-    NSLog(@"***************************");
-    NSLog(@"stackOfUndoneItems:");
-    for(NSObject<MMUndoRedoItem>*obj in stackOfUndoneItems){
-        NSLog(@"%@", obj);
-    }
-    NSLog(@"stackOfUndoableItems:");
-    for(NSObject<MMUndoRedoItem>*obj in stackOfUndoableItems){
-        NSLog(@"%@", obj);
-    }
-    NSLog(@"***************************");
+//    return;
+//    NSLog(@"***************************");
+//    NSLog(@"stackOfUndoneItems:");
+//    for(NSObject<MMUndoRedoItem>*obj in stackOfUndoneItems){
+//        NSLog(@"%@", obj);
+//    }
+//    NSLog(@"stackOfUndoableItems:");
+//    for(NSObject<MMUndoRedoItem>*obj in stackOfUndoableItems){
+//        NSLog(@"%@", obj);
+//    }
+//    NSLog(@"***************************");
 }
 
 -(void) saveTo:(NSString*)path{

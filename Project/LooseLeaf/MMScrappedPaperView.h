@@ -24,6 +24,7 @@
 
 @property (readonly) MMScrapsOnPaperState* scrapsOnPaperState;
 @property (readonly) MMScrapContainerView* scrapContainerView;
+@property (readonly) UIImageView* cachedImgView;
 
 -(dispatch_queue_t) concurrentBackgroundQueue;
 

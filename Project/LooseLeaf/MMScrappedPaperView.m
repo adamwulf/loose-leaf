@@ -69,6 +69,7 @@
 
 @synthesize scrapsOnPaperState;
 @synthesize scrapContainerView;
+@synthesize cachedImgView;
 
 
 -(dispatch_queue_t) concurrentBackgroundQueue{
@@ -871,73 +872,75 @@
 
 
 -(void) drawScrap:(MMScrapView*)scrap intoContext:(CGContextRef)context withSize:(CGSize)contextSize{
-    CGContextSaveGState(context);
-    
-    CGPoint center = scrap.center;
-    CGFloat scale = contextSize.width / self.originalUnscaledBounds.size.width;
-
-    // calculate the center of the scrap, scaled to our smaller thumbnail context
-    center = CGPointApplyAffineTransform(center, CGAffineTransformMakeScale(scale, scale));
-    
-    // transform into the scrap's coordinate system
-    //
-    // move to scrap center
-    CGAffineTransform transform = CGAffineTransformMakeTranslation(-scrap.bounds.size.width/2, -scrap.bounds.size.height/2);
-    // rotate
-    transform = CGAffineTransformConcat(transform, CGAffineTransformMakeRotation(scrap.rotation));
-    // scale it
-    transform = CGAffineTransformConcat(transform, CGAffineTransformMakeScale(scale * scrap.scale, scale * scrap.scale));
-    // move to position
-    transform = CGAffineTransformConcat(transform, CGAffineTransformMakeTranslation(center.x, center.y));
-    // apply transform, now we're in the scrap's coordinate system
-    CGContextConcatCTM(context, transform);
-
-    // work with the scrap's path
-    UIBezierPath* path = [scrap.bezierPath copy];
-
-    // clip to the scrap's path
-    CGContextSaveGState(context);
-    [path addClip];
-    [[UIColor whiteColor] setFill];
-    [path fill];
-
-    // background
-    //
-    // draw the scrap's background, if it has an image background
-    if(scrap.backgroundView.backingImage){
-        // save our scrap's coordinate system
+    @autoreleasepool {
         CGContextSaveGState(context);
+        
+        CGPoint center = scrap.center;
+        CGFloat scale = contextSize.width / self.originalUnscaledBounds.size.width;
+        
+        // calculate the center of the scrap, scaled to our smaller thumbnail context
+        center = CGPointApplyAffineTransform(center, CGAffineTransformMakeScale(scale, scale));
+        
+        // transform into the scrap's coordinate system
+        //
         // move to scrap center
-        CGAffineTransform backingTransform = CGAffineTransformMakeTranslation(scrap.bounds.size.width / 2, scrap.bounds.size.height / 2);
-        // move to background center
-        backingTransform = CGAffineTransformConcat(backingTransform, CGAffineTransformMakeTranslation(scrap.backgroundView.backgroundOffset.x, scrap.backgroundView.backgroundOffset.y));
-        // scale and rotate into background's coordinate space
-        CGContextConcatCTM(context, backingTransform);
-        // rotate and scale
-        CGContextConcatCTM(context, CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.backgroundView.backgroundRotation),CGAffineTransformMakeScale(scrap.backgroundView.backgroundScale, scrap.backgroundView.backgroundScale)));
-        // draw the image, and keep the images center at cgpointzero
-        UIImage* backingImage = scrap.backgroundView.backingImage;
-        [backingImage drawAtPoint:CGPointMake(-backingImage.size.width / 2, -backingImage.size.height/2)];
-        // restore us back to the scrap's coordinate system
+        CGAffineTransform transform = CGAffineTransformMakeTranslation(-scrap.bounds.size.width/2, -scrap.bounds.size.height/2);
+        // rotate
+        transform = CGAffineTransformConcat(transform, CGAffineTransformMakeRotation(scrap.rotation));
+        // scale it
+        transform = CGAffineTransformConcat(transform, CGAffineTransformMakeScale(scale * scrap.scale, scale * scrap.scale));
+        // move to position
+        transform = CGAffineTransformConcat(transform, CGAffineTransformMakeTranslation(center.x, center.y));
+        // apply transform, now we're in the scrap's coordinate system
+        CGContextConcatCTM(context, transform);
+        
+        // work with the scrap's path
+        UIBezierPath* path = [scrap.bezierPath copy];
+        
+        // clip to the scrap's path
+        CGContextSaveGState(context);
+        [path addClip];
+        [[UIColor whiteColor] setFill];
+        [path fill];
+        
+        // background
+        //
+        // draw the scrap's background, if it has an image background
+        if(scrap.backgroundView.backingImage){
+            // save our scrap's coordinate system
+            CGContextSaveGState(context);
+            // move to scrap center
+            CGAffineTransform backingTransform = CGAffineTransformMakeTranslation(scrap.bounds.size.width / 2, scrap.bounds.size.height / 2);
+            // move to background center
+            backingTransform = CGAffineTransformConcat(backingTransform, CGAffineTransformMakeTranslation(scrap.backgroundView.backgroundOffset.x, scrap.backgroundView.backgroundOffset.y));
+            // scale and rotate into background's coordinate space
+            CGContextConcatCTM(context, backingTransform);
+            // rotate and scale
+            CGContextConcatCTM(context, CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.backgroundView.backgroundRotation),CGAffineTransformMakeScale(scrap.backgroundView.backgroundScale, scrap.backgroundView.backgroundScale)));
+            // draw the image, and keep the images center at cgpointzero
+            UIImage* backingImage = scrap.backgroundView.backingImage;
+            [backingImage drawAtPoint:CGPointMake(-backingImage.size.width / 2, -backingImage.size.height/2)];
+            // restore us back to the scrap's coordinate system
+            CGContextRestoreGState(context);
+        }
+        
+        // ink
+        //
+        // draw the scrap's strokes
+        if(scrap.state.activeThumbnailImage){
+            [scrap.state.activeThumbnailImage drawInRect:scrap.bounds];
+        }
+        
+        // restore the state, no more clip
+        CGContextRestoreGState(context);
+        
+        // stroke the scrap path
+        CGContextSetLineWidth(context, 1);
+        [[UIColor grayColor] setStroke];
+        [path stroke];
+        
         CGContextRestoreGState(context);
     }
-    
-    // ink
-    //
-    // draw the scrap's strokes
-    if(scrap.state.activeThumbnailImage){
-        [scrap.state.activeThumbnailImage drawInRect:scrap.bounds];
-    }
-    
-    // restore the state, no more clip
-    CGContextRestoreGState(context);
-    
-    // stroke the scrap path
-    CGContextSetLineWidth(context, 1);
-    [[UIColor grayColor] setStroke];
-    [path stroke];
-    
-    CGContextRestoreGState(context);
 }
 
 -(UIImage*) scrappedImgViewImage{
@@ -945,41 +948,43 @@
 }
 
 -(void) updateFullPageThumbnail:(MMImmutableScrapsOnPaperState*)immutableScrapState{
-    UIImage* thumb = [self synchronouslyLoadInkPreview];
-    CGSize thumbSize = self.originalUnscaledBounds.size;
-    thumbSize.width /= 2;
-    thumbSize.height /= 2;
-    
-    UIGraphicsBeginImageContextWithOptions(thumbSize, NO, 0.0);
-    
-    // get context
-    CGContextRef context = UIGraphicsGetCurrentContext();
-
-    [[UIColor whiteColor] setFill];
-    CGContextFillRect(context, CGRectMake(0, 0, thumbSize.width, thumbSize.height));
-
-    // drawing code comes here- look at CGContext reference
-    // for available operations
-    // this example draws the inputImage into the context
-    [thumb drawInRect:CGRectMake(0, 0, thumbSize.width, thumbSize.height)];
-    
-    for(MMScrapView* scrap in immutableScrapState.scraps){
-        [self drawScrap:scrap intoContext:context withSize:thumbSize];
+    @autoreleasepool {
+        UIImage* thumb = [self synchronouslyLoadInkPreview];
+        CGSize thumbSize = self.originalUnscaledBounds.size;
+        thumbSize.width /= 2;
+        thumbSize.height /= 2;
+        
+        UIGraphicsBeginImageContextWithOptions(thumbSize, NO, 0.0);
+        
+        // get context
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        
+        [[UIColor whiteColor] setFill];
+        CGContextFillRect(context, CGRectMake(0, 0, thumbSize.width, thumbSize.height));
+        
+        // drawing code comes here- look at CGContext reference
+        // for available operations
+        // this example draws the inputImage into the context
+        [thumb drawInRect:CGRectMake(0, 0, thumbSize.width, thumbSize.height)];
+        
+        for(MMScrapView* scrap in immutableScrapState.scraps){
+            [self drawScrap:scrap intoContext:context withSize:thumbSize];
+        }
+        
+        // get a UIImage from the image context- enjoy!!!
+        UIImage* generatedScrappedThumbnailImage = UIGraphicsGetImageFromCurrentImageContext();
+        scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForDecompressedImage:generatedScrappedThumbnailImage andDelegate:self];
+        [[MMLoadImageCache sharedInstance] updateCacheForPath:[self scrappedThumbnailPath] toImage:scrappedImgViewImage.image];
+        [[NSThread mainThread] performBlock:^{
+            [self didDecompressImage:scrappedImgViewImage];
+        }];
+        
+        [UIImagePNGRepresentation(scrappedImgViewImage.image) writeToFile:[self scrappedThumbnailPath] atomically:YES];
+        definitelyDoesNotHaveAScrappedThumbnail = NO;
+        
+        // clean up drawing environment
+        UIGraphicsEndImageContext();
     }
-    
-    // get a UIImage from the image context- enjoy!!!
-    UIImage* generatedScrappedThumbnailImage = UIGraphicsGetImageFromCurrentImageContext();
-    scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForDecompressedImage:generatedScrappedThumbnailImage andDelegate:self];
-    [[MMLoadImageCache sharedInstance] updateCacheForPath:[self scrappedThumbnailPath] toImage:scrappedImgViewImage.image];
-    [[NSThread mainThread] performBlock:^{
-        [self didDecompressImage:scrappedImgViewImage];
-    }];
-    
-    [UIImagePNGRepresentation(scrappedImgViewImage.image) writeToFile:[self scrappedThumbnailPath] atomically:YES];
-    definitelyDoesNotHaveAScrappedThumbnail = NO;
-    
-    // clean up drawing environment
-    UIGraphicsEndImageContext();
 }
 
 -(void) setThumbnailTo:(UIImage*)img{

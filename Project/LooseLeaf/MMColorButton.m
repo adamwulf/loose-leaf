@@ -27,11 +27,6 @@
     return self;
 }
 
--(UIColor*) shadowColor{
-    return [color colorWithAlphaComponent:.5];
-}
-
-
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect

@@ -128,6 +128,12 @@ static dispatch_queue_t importExportStateQueue;
                     }
                 }
                 
+                // maintain order of loaded scraps, so that they are added to the page
+                // in the correct order as they load
+                [scrapPropsWithState sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                    return [scrapIDsOnPage indexOfObject:[obj1 objectForKey:@"uuid"]] < [scrapIDsOnPage indexOfObject:[obj2 objectForKey:@"uuid"]] ? NSOrderedAscending : NSOrderedDescending;
+                }];
+                
                 [NSThread performBlockOnMainThread:^{
                     for(NSDictionary* scrapProperties in scrapPropsWithState){
                         @synchronized(self){

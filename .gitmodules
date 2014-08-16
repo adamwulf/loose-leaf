@@ -25,3 +25,6 @@
 [submodule "Submodules/FXBlurView"]
 	path = Submodules/FXBlurView
 	url = git@github.com:nicklockwood/FXBlurView.git
+[submodule "Submodules/AFNetworking"]
+	path = Submodules/AFNetworking
+	url = git@github.com:AFNetworking/AFNetworking.git

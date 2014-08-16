@@ -281,6 +281,8 @@ static NSDate* lastRender;
  */
 -(void) drawArcWithOriginalDistance:(CGFloat)originalDistance currentDistance:(CGFloat)currentDistance andPerpN:(MMVector*)perpN withPoint1:(CGPoint)point1 andPoint2:(CGPoint)point2 andScale:(CGFloat)scale onComplete:(void(^)(UIBezierPath* clippedPath, UIBezierPath* fullCirclePath, UIBezierPath* tickMarks))onComplete{
     
+    // this is the distance between points that should
+    // change from a circle arc to an oval arc
     CGFloat nintyDistance = originalDistance * 3 / 5;
     // This is the distance between points that should result
     // in a 1 degree arc
@@ -298,7 +300,9 @@ static NSDate* lastRender;
     // now how far are we currently through that 1->90 degree span?
     // 0% == we are mostly a straight line,
     // 100% == we should show a semicircle
-    CGFloat percent = 1 - (nintyDistance - currentDistance) / span;
+    
+    CGFloat percent = span ? 1 - (nintyDistance - currentDistance) / span : 1; // if our span is zero, then our percent should be too
+
     // what is the angle that we should be for the given percent?
     // 0 is flat, and M_PI is the semi circle
     CGFloat radian = percent * M_PI;

@@ -36,6 +36,13 @@
 
 -(MMVector*) upVector;
 
+
+-(void) willResignActive;
+
+-(void) didEnterForeground;
+
+-(void) didBecomeActive;
+
 -(void) applicationDidBackground;
 
 @end

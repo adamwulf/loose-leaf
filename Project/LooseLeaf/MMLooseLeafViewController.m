@@ -50,6 +50,9 @@
         
         [[[Mixpanel sharedInstance] people] set:kMPNumberOfPages
                                              to:@([stackView.visibleStackHolder.subviews count] + [stackView.hiddenStackHolder.subviews count])];
+        NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
+        [[[Mixpanel sharedInstance] people] set:kMPPreferredLanguage
+                                             to:language];
         [[[Mixpanel sharedInstance] people] setOnce:@{kMPFirstLaunchDate : [NSDate date],
                                                       kMPHasAddedPage : @(NO),
                                                       kMPHasZoomedToList : @(NO),
@@ -128,5 +131,17 @@
     [stackView cancelAllGestures];
     [[stackView.visibleStackHolder peekSubview] cancelAllGestures];
 }
+
+
+-(void) dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion{
+    [super dismissViewControllerAnimated:flag completion:completion];
+//    NSLog(@"dismissing view controller");
+}
+
+-(void) presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion{
+    [super presentViewController:viewControllerToPresent animated:flag completion:completion];
+//    NSLog(@"presenting view controller");
+}
+
 
 @end

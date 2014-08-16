@@ -315,15 +315,15 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
 }
 
 -(void) setupDebugTimer{
-    return;
-    if([self numberOfActiveTouches] == 0){
-        [self killTimer];
-        debugTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(timerDidFire:) userInfo:nil repeats:NO];
-        [[NSThread mainThread] performBlock:^{
-            debug_NSLog(@"***************************************************************************");
-            debug_NSLog(@"***************************************************************************");
-        } afterDelay:.01];
-    }
+//    return;
+//    if([self numberOfActiveTouches] == 0){
+//        [self killTimer];
+//        debugTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(timerDidFire:) userInfo:nil repeats:NO];
+//        [[NSThread mainThread] performBlock:^{
+//            debug_NSLog(@"***************************************************************************");
+//            debug_NSLog(@"***************************************************************************");
+//        } afterDelay:.01];
+//    }
 }
 
 -(void) timerDidFire:(NSTimer*)timer{
