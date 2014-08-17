@@ -140,7 +140,7 @@
         } completion:^(BOOL finished){
             [delegate didShare:self];
             [[NSThread mainThread] performBlock:^{
-                [label removeFromSuperview];
+                [checkOrXView removeFromSuperview];
                 [circle removeAnimationForKey:@"drawCircleAnimation"];
                 [circle removeFromSuperlayer];
             } afterDelay:.5];
