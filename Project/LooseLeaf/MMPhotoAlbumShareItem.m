@@ -132,20 +132,18 @@
         checkMarkOrXLayer.backgroundColor = [UIColor clearColor].CGColor;
         checkMarkOrXLayer.fillColor = [UIColor clearColor].CGColor;
         
-//        label.font = [UIFont fontWithName:@"ZapfDingbatsITC" size:30];
-//        label.textAlignment = NSTextAlignmentCenter;
         checkOrXView.alpha = 0;
         [checkOrXView.layer addSublayer:checkMarkOrXLayer];
         [button addSubview:checkOrXView];
         [UIView animateWithDuration:.3 animations:^{
             checkOrXView.alpha = 1;
         } completion:^(BOOL finished){
-//            [delegate didShare:self];
-//            [[NSThread mainThread] performBlock:^{
-//                [label removeFromSuperview];
-//                [circle removeAnimationForKey:@"drawCircleAnimation"];
-//                [circle removeFromSuperlayer];
-//            } afterDelay:.5];
+            [delegate didShare:self];
+            [[NSThread mainThread] performBlock:^{
+                [label removeFromSuperview];
+                [circle removeAnimationForKey:@"drawCircleAnimation"];
+                [circle removeFromSuperlayer];
+            } afterDelay:.5];
         }];
     } afterDelay:.3];
 }
