@@ -169,7 +169,7 @@
         circle=[CAShapeLayer layer];
         circle.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
         circle.fillColor=[UIColor clearColor].CGColor;
-        circle.strokeColor=[UIColor whiteColor].CGColor;
+        circle.strokeColor=[[UIColor whiteColor] colorWithAlphaComponent:.7].CGColor;
         circle.lineWidth=radius*2;
         CAShapeLayer *mask=[CAShapeLayer layer];
         mask.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
@@ -180,27 +180,56 @@
     circle.strokeEnd = lastProgress;
     
     if(lastProgress >= 1.0){
-        UILabel* label = [[UILabel alloc] initWithFrame:button.bounds];
+        CAShapeLayer *mask2=[CAShapeLayer layer];
+        mask2.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+        
+        UIView* checkOrXView = [[UIView alloc] initWithFrame:button.bounds];
+        checkOrXView.backgroundColor = [UIColor whiteColor];
+        checkOrXView.layer.mask = mask2;
         
         [[NSThread mainThread] performBlock:^{
+            CAShapeLayer* checkMarkOrXLayer = [CAShapeLayer layer];
+            checkMarkOrXLayer.anchorPoint = CGPointZero;
+            checkMarkOrXLayer.bounds = button.bounds;
+            UIBezierPath* path = [UIBezierPath bezierPath];
             if(succeeded){
-                label.text = @"\u2714";
-                [self animateLinkTo:lastLinkURL];
+                CGPoint start = CGPointMake(28, 39);
+                CGPoint corner = CGPointMake(start.x + 6, start.y + 6);
+                CGPoint end = CGPointMake(corner.x + 14, corner.y - 14);
+                [path moveToPoint:start];
+                [path addLineToPoint:corner];
+                [path addLineToPoint:end];
             }else{
-                label.text = @"\u2718";
+                CGFloat size = 14;
+                CGPoint start = CGPointMake(31, 31);
+                CGPoint end = CGPointMake(start.x + size, start.y + size);
+                [path moveToPoint:start];
+                [path addLineToPoint:end];
+                start = CGPointMake(start.x + size, start.y);
+                end = CGPointMake(start.x - size, start.y + size);
+                [path moveToPoint:start];
+                [path addLineToPoint:end];
             }
-            label.font = [UIFont fontWithName:@"ZapfDingbatsITC" size:30];
-            label.textAlignment = NSTextAlignmentCenter;
-            label.alpha = 0;
-            [button addSubview:label];
+            checkMarkOrXLayer.path = path.CGPath;
+            checkMarkOrXLayer.strokeColor = [UIColor blackColor].CGColor;
+            checkMarkOrXLayer.lineWidth = 6;
+            checkMarkOrXLayer.lineCap = @"square";
+            checkMarkOrXLayer.strokeStart = 0;
+            checkMarkOrXLayer.strokeEnd = 1;
+            checkMarkOrXLayer.backgroundColor = [UIColor clearColor].CGColor;
+            checkMarkOrXLayer.fillColor = [UIColor clearColor].CGColor;
+            
+            checkOrXView.alpha = 0;
+            [checkOrXView.layer addSublayer:checkMarkOrXLayer];
+            [button addSubview:checkOrXView];
             [UIView animateWithDuration:.3 animations:^{
-                label.alpha = 1;
+                checkOrXView.alpha = 1;
             } completion:^(BOOL finished){
                 if(succeeded){
                     [delegate didShare:self];
                 }
                 [[NSThread mainThread] performBlock:^{
-                    [label removeFromSuperview];
+                    [checkOrXView removeFromSuperview];
                     [circle removeAnimationForKey:@"drawCircleAnimation"];
                     [circle removeFromSuperlayer];
                     // reset state
