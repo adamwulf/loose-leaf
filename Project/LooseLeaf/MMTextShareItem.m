@@ -50,7 +50,7 @@
             if([MFMessageComposeViewController canSendSubject]){
                 [composer setSubject:@"Quick sketch from Loose Leaf"];
             }
-            [composer setBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com"];
+            [composer setBody:@"\nDrawn with Loose Leaf. http://getlooseleaf.com"];
             [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
             
             NSData *data = UIImagePNGRepresentation(self.delegate.imageToShare);
