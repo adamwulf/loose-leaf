@@ -29,8 +29,8 @@
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
         rotationAdjustment = 0;
-        self.rotation = 0;
         scale = 1;
+        self.rotation = 0;
         borderView = [[MMScrapBorderView alloc] initWithFrame:self.bounds];
         [self addSubview:borderView];
     }
@@ -49,10 +49,8 @@
 }
 
 -(void) setRotation:(CGFloat)_rotation{
-    if(ABS(self.rotation - _rotation) >= .01){
-        [super setRotation:_rotation];
-        self.transform = CGAffineTransformScale([self rotationTransform], scale, scale);
-    }
+    [super setRotation:_rotation];
+    self.transform = CGAffineTransformScale([self rotationTransform], scale, scale);
 }
 
 -(void) setScale:(CGFloat)_scale{
