@@ -422,7 +422,7 @@
     return -([currentReading angle] + M_PI/2);
 }
 
--(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
+-(void) didUpdateAccelerometerWithReading:(MMVector *)currentRawReading{
     lastRotationReading = [self sidebarButtonRotationForReading:currentRawReading];
     CGFloat rotReading = [self sidebarButtonRotationForReading:currentRawReading];
     countButton.rotation = rotReading;

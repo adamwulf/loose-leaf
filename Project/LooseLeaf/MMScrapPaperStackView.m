@@ -1663,11 +1663,17 @@ int skipAll = NO;
 
 #pragma mark - MMRotationManagerDelegate
 
+-(void) didUpdateAccelerometerWithReading:(MMVector *)currentRawReading{
+    [super didUpdateAccelerometerWithReading:currentRawReading];
+    [NSThread performBlockOnMainThread:^{
+        [bezelScrapContainer didUpdateAccelerometerWithReading:currentRawReading];
+    }];
+}
+
 -(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
     if(1 - ABS(zAccel) > .03){
         [NSThread performBlockOnMainThread:^{
             [super didUpdateAccelerometerWithReading:currentRawReading];
-            [bezelScrapContainer didUpdateAccelerometerWithRawReading:currentRawReading andX:xAccel andY:yAccel andZ:zAccel];
             [[visibleStackHolder peekSubview] didUpdateAccelerometerWithRawReading:currentRawReading];
         }];
     }
