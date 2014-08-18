@@ -22,8 +22,6 @@
 -(CGPoint) perpendicularUnitVectorForPoint:(CGPoint)p1 andPoint:(CGPoint) p2;
 -(UIBezierPath*) pathForLineGivePoint:(CGPoint)p1 andPoint:(CGPoint) p2 andVector:(CGPoint)pv andWidth:(CGFloat)width;
 
--(CGFloat) rotation;
-
 -(CGRect) drawableFrame;
 -(UIBezierPath*) ovalPath;
 -(void) drawDropshadowIfSelected;

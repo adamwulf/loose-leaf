@@ -1527,18 +1527,6 @@ int skipAll = NO;
     }
 }
 
-#pragma mark - Rotation
-
--(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
-    if(1 - ABS(zAccel) > .03){
-        [NSThread performBlockOnMainThread:^{
-            [super didUpdateAccelerometerWithReading:currentRawReading];
-            [bezelScrapContainer didUpdateAccelerometerWithRawReading:currentRawReading andX:xAccel andY:yAccel andZ:zAccel];
-            [[visibleStackHolder peekSubview] didUpdateAccelerometerWithRawReading:currentRawReading];
-        }];
-    }
-}
-
 #pragma mark - MMScrapSidebarViewDelegate
 
 -(void) showScrapSidebar:(UIButton*)button{
@@ -1674,6 +1662,17 @@ int skipAll = NO;
 }
 
 #pragma mark - MMRotationManagerDelegate
+
+-(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
+    if(1 - ABS(zAccel) > .03){
+        [NSThread performBlockOnMainThread:^{
+            [super didUpdateAccelerometerWithReading:currentRawReading];
+            [bezelScrapContainer didUpdateAccelerometerWithRawReading:currentRawReading andX:xAccel andY:yAccel andZ:zAccel];
+            [[visibleStackHolder peekSubview] didUpdateAccelerometerWithRawReading:currentRawReading];
+        }];
+    }
+}
+
 
 -(void) didRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient{
     [importImageSidebar updatePhotoRotation];

@@ -45,7 +45,7 @@
  * rotation = 0, so the rotationAdjustment accounts for that
  */
 -(CGAffineTransform) rotationTransform{
-    return CGAffineTransformMakeRotation(self.rotation - rotationAdjustment);
+    return CGAffineTransformMakeRotation([self.delegate sidebarButtonRotation] - rotationAdjustment);
 }
 
 -(void) setRotation:(CGFloat)_rotation{

@@ -14,6 +14,7 @@
 #import "MMImmutableScrapsOnPaperState.h"
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMRotationManager.h"
 #import "UIView+Debug.h"
 #import "MMImmutableScrapsInSidebarState.h"
 
@@ -59,6 +60,7 @@
         [sidebarContentView addSubview:contentView];
 
         countButton = _countButton;
+        countButton.delegate = self;
         [countButton addTarget:self action:@selector(countButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
         
@@ -145,6 +147,7 @@
     // and set it's alpha/rotation/scale to prepare for the animation
     MMScrapBubbleButton* bubble = [[MMScrapBubbleButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
     bubble.center = center;
+    bubble.delegate = self;
     
     //
     // iOS7 changes how buttons can be tapped during a gesture (i think).
@@ -411,18 +414,24 @@
 
 #pragma mark - Rotation
 
+-(CGFloat) sidebarButtonRotation{
+    return -([[[MMRotationManager sharedInstace] currentRotationReading] angle] + M_PI/2);
+}
+
 -(CGFloat) sidebarButtonRotationForReading:(MMVector*)currentReading{
     return -([currentReading angle] + M_PI/2);
 }
 
 -(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
     lastRotationReading = [self sidebarButtonRotationForReading:currentRawReading];
+    CGFloat rotReading = [self sidebarButtonRotationForReading:currentRawReading];
+    countButton.rotation = rotReading;
     for(MMScrapBubbleButton* bubble in self.subviews){
         if([bubble isKindOfClass:[MMScrapBubbleButton class]]){
             // during an animation, the scrap will also be a subview,
             // so we need to make sure that we're rotating only the
             // bubble button
-            bubble.rotation = [self sidebarButtonRotationForReading:currentRawReading];
+            bubble.rotation = rotReading;
         }
     }
 }
