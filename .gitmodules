@@ -31,3 +31,6 @@
 [submodule "Submodules/eppz-kit"]
 	path = Submodules/eppz-kit
 	url = git@github.com:eppz/eppz.kit.git
+[submodule "Submodules/Droplr"]
+	path = Submodules/Droplr
+	url = git@github.com:Droplr/api-objc.git
