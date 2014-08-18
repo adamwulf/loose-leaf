@@ -73,7 +73,8 @@ static MMRotationManager* _instance = nil;
         accelerationZ = data.acceleration.z * kFilteringFactor + accelerationZ * (1.0 - kFilteringFactor);
         //            CGFloat absZ = accelerationZ < 0 ? -accelerationZ : accelerationZ;
         //            debug_NSLog(@"x: %f   y: %f   z: %f   diff: %f", accelerationX, accelerationY, absZ);
-        currentTrust += (goalTrust - currentTrust) / 20.0;
+        currentTrust += (goalTrust - currentTrust) / 10.0;
+        currentTrust = goalTrust;
         
         MMVector* actualRawReading = [MMVector vectorWithAngle:atan2(accelerationY, accelerationX)];
         MMVector* orientationRotationReading = [self idealRotationReadingForCurrentOrientation];
@@ -141,6 +142,31 @@ static MMRotationManager* _instance = nil;
 static BOOL ignoredFirstRotateNotification = NO;
 
 - (void)didRotate:(NSNotification *)notification {
+    CGFloat absZ = accelerationZ < 0 ? -accelerationZ : accelerationZ;
+    //            debug_NSLog(@"x: %f   y: %f   z: %f   diff: %f", accelerationX, accelerationY, absZ);
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    if(orientation == UIDeviceOrientationPortrait ||
+       orientation == UIDeviceOrientationPortraitUpsideDown ||
+       orientation == UIDeviceOrientationLandscapeLeft ||
+       orientation == UIDeviceOrientationLandscapeRight){
+        if(absZ < 0.95){
+//            NSLog(@"rotated ok");
+        }else{
+            // we got a rotation even when our accelerometers
+            // are telling us that we're definitely faceup/down
+            // so ignore it. this happens when becoming active
+            // from background
+            if(accelerationZ < 0){
+                orientation = UIDeviceOrientationFaceUp;
+            }else{
+                orientation = UIDeviceOrientationFaceDown;
+            }
+//            NSLog(@"should ignore this guy %f", accelerationZ);
+        }
+    }else{
+//        NSLog(@"faceup/down");
+    }
+    
     if(shouldIgnoreEvents){
         return;
     }
@@ -148,7 +174,6 @@ static BOOL ignoredFirstRotateNotification = NO;
         ignoredFirstRotateNotification = YES;
         return;
     }
-    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     if(orientation == UIDeviceOrientationPortrait ||
        orientation == UIDeviceOrientationPortraitUpsideDown ||
        orientation == UIDeviceOrientationLandscapeLeft ||
