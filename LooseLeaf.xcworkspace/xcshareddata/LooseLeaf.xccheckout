@@ -30,6 +30,8 @@
 		<string>github.com:anjerodesu/UIColor-ColorWithHex.git</string>
 		<key>9F22E3F18CD07AD761FDBCAEE84E4A72F51293DA</key>
 		<string>github.com:adamwulf/touch-chart.git</string>
+		<key>A524279715AC697C6A1D50464F5ECBB1E53B6C0F</key>
+		<string>github.com:eppz/eppz.kit.git</string>
 		<key>BC8ADFAC-BC7E-461B-B1A2-081D8AB6C365</key>
 		<string>ssh://github.com/adamwulf/JotUI.git</string>
 		<key>BDC88C21-6091-422D-87F4-A8FC1073FA61</key>
@@ -65,6 +67,8 @@
 		<string>..Submodules/ColorWithHex</string>
 		<key>9F22E3F18CD07AD761FDBCAEE84E4A72F51293DA</key>
 		<string>..Submodules/touch-chart</string>
+		<key>A524279715AC697C6A1D50464F5ECBB1E53B6C0F</key>
+		<string>../Submodules/eppz-kit/</string>
 		<key>BC8ADFAC-BC7E-461B-B1A2-081D8AB6C365</key>
 		<string>../../Loose Leaf/Submodules/JotUI</string>
 		<key>BDC88C21-6091-422D-87F4-A8FC1073FA61</key>
@@ -123,6 +127,14 @@
 			<string>BDC88C21-6091-422D-87F4-A8FC1073FA61</string>
 			<key>IDESourceControlWCCName</key>
 			<string>DYRateView</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>A524279715AC697C6A1D50464F5ECBB1E53B6C0F</string>
+			<key>IDESourceControlWCCName</key>
+			<string>eppz-kit</string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>

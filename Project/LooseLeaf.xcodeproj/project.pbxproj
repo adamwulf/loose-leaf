@@ -196,6 +196,8 @@
 		6699904F185F74F8005581D9 /* TouchShape.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6699904E185F74F8005581D9 /* TouchShape.framework */; };
 		66999051185F7501005581D9 /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66999050185F7501005581D9 /* DrawKit-iOS.framework */; };
 		669B764F18E9FE490041DAE7 /* ALAsset+Thumbnail.m in Sources */ = {isa = PBXBuildFile; fileRef = 669B764E18E9FE490041DAE7 /* ALAsset+Thumbnail.m */; };
+		66A02F9619A1D1500013EFAE /* EPPZDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A02F9519A1D1500013EFAE /* EPPZDevice.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66A02F9A19A1D1950013EFAE /* EPPZSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A02F9919A1D1950013EFAE /* EPPZSingleton.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A08E71196B242F00476F99 /* MMUndoRedoMoveScrapItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A08E70196B242F00476F99 /* MMUndoRedoMoveScrapItem.m */; };
 		66A13D3A1631D9D9002F5428 /* MMObjectSelectLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D391631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A13D3F1631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -634,6 +636,11 @@
 		669B764D18E9FE490041DAE7 /* ALAsset+Thumbnail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ALAsset+Thumbnail.h"; sourceTree = "<group>"; };
 		669B764E18E9FE490041DAE7 /* ALAsset+Thumbnail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ALAsset+Thumbnail.m"; sourceTree = "<group>"; };
 		669B765F18EB48470041DAE7 /* MMAlbumRowViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMAlbumRowViewDelegate.h; sourceTree = "<group>"; };
+		66A02F9419A1D1500013EFAE /* EPPZDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EPPZDevice.h; path = "../../Submodules/eppz-kit/eppz!kit/EPPZDevice.h"; sourceTree = "<group>"; };
+		66A02F9519A1D1500013EFAE /* EPPZDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EPPZDevice.m; path = "../../Submodules/eppz-kit/eppz!kit/EPPZDevice.m"; sourceTree = "<group>"; };
+		66A02F9719A1D1620013EFAE /* EPPZSingletonSubclass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EPPZSingletonSubclass.h; path = "../../Submodules/eppz-kit/eppz!kit/EPPZSingletonSubclass.h"; sourceTree = "<group>"; };
+		66A02F9819A1D17D0013EFAE /* EPPZSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EPPZSingleton.h; path = "../../Submodules/eppz-kit/eppz!kit/EPPZSingleton.h"; sourceTree = "<group>"; };
+		66A02F9919A1D1950013EFAE /* EPPZSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EPPZSingleton.m; path = "../../Submodules/eppz-kit/eppz!kit/EPPZSingleton.m"; sourceTree = "<group>"; };
 		66A08E6F196B242F00476F99 /* MMUndoRedoMoveScrapItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoRedoMoveScrapItem.h; sourceTree = "<group>"; };
 		66A08E70196B242F00476F99 /* MMUndoRedoMoveScrapItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUndoRedoMoveScrapItem.m; sourceTree = "<group>"; };
 		66A13D381631D9D8002F5428 /* MMObjectSelectLongPressGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMObjectSelectLongPressGestureRecognizer.h; sourceTree = "<group>"; };
@@ -1587,6 +1594,18 @@
 			name = "Album Row Views";
 			sourceTree = "<group>";
 		};
+		66A02F9019A1D0FD0013EFAE /* eppz-kit */ = {
+			isa = PBXGroup;
+			children = (
+				66A02F9819A1D17D0013EFAE /* EPPZSingleton.h */,
+				66A02F9919A1D1950013EFAE /* EPPZSingleton.m */,
+				66A02F9719A1D1620013EFAE /* EPPZSingletonSubclass.h */,
+				66A02F9419A1D1500013EFAE /* EPPZDevice.h */,
+				66A02F9519A1D1500013EFAE /* EPPZDevice.m */,
+			);
+			name = "eppz-kit";
+			sourceTree = "<group>";
+		};
 		66A13D3D1631E075002F5428 /* List View */ = {
 			isa = PBXGroup;
 			children = (
@@ -1926,6 +1945,7 @@
 		66DCFB911581BCEF00B4918C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				66A02F9019A1D0FD0013EFAE /* eppz-kit */,
 				665245321996D9E700C36609 /* AFNetworking */,
 				6653B8A7195CC79A001C6E15 /* Default user content */,
 				66277C9A192BC97E003E97C0 /* SSKeychain */,
@@ -2248,6 +2268,7 @@
 				66A790B6196896FA0037F01A /* MMUndoRedoAddScrapItem.m in Sources */,
 				665245761996EA2300C36609 /* Reachability.m in Sources */,
 				667C635E199FE4BC00E93CD6 /* UIColor+MPColor.m in Sources */,
+				66A02F9619A1D1500013EFAE /* EPPZDevice.m in Sources */,
 				660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */,
 				665CAC1D17B578B0000BD505 /* MMColorButton.m in Sources */,
 				66524509199575A900C36609 /* MMTextShareItem.m in Sources */,
@@ -2401,6 +2422,7 @@
 				66052A0317FA170600A94531 /* MMImmutableScrapsOnPaperState.m in Sources */,
 				667C6364199FED6E00E93CD6 /* MMPrintShareItem.m in Sources */,
 				6693C94C18E4E7860054FF41 /* MMSlidingSidebarContainerView.m in Sources */,
+				66A02F9A19A1D1950013EFAE /* EPPZSingleton.m in Sources */,
 				66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */,
 				66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */,
 				6612C8851964C0E3003A9575 /* MMPageUndoRedoManager.m in Sources */,

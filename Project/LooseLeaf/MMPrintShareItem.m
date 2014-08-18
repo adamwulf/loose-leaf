@@ -8,6 +8,7 @@
 
 #import "MMPrintShareItem.h"
 #import "Mixpanel.h"
+#import "MMReachabilityManager.h"
 #import "MMImageViewButton.h"
 #import "Constants.h"
 

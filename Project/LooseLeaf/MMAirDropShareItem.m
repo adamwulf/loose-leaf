@@ -10,6 +10,7 @@
 #import "Mixpanel.h"
 #import "MMImageViewButton.h"
 #import "MMReachabilityManager.h"
+#import "EPPZDevice.h"
 #import "Constants.h"
 
 @implementation MMAirDropShareItem{
@@ -113,7 +114,13 @@
 }
 
 -(BOOL) isAtAllPossible{
-    return YES;
+    
+    NSLog(@"model: %@", [EPPZDevice sharedDevice].model);
+    NSLog(@"variant: %@", [EPPZDevice sharedDevice].variant);
+    NSLog(@"generation: %@", [EPPZDevice sharedDevice].generation);
+    NSLog(@"machineID: %@", [EPPZDevice sharedDevice].machineID);
+    
+    return ![[EPPZDevice sharedDevice].generation isEqualToString:@"iPad 2"];
 }
 
 #pragma mark - Notification

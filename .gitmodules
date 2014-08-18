@@ -28,3 +28,6 @@
 [submodule "Submodules/AFNetworking"]
 	path = Submodules/AFNetworking
 	url = git@github.com:AFNetworking/AFNetworking.git
+[submodule "Submodules/eppz-kit"]
+	path = Submodules/eppz-kit
+	url = git@github.com:eppz/eppz.kit.git
