@@ -91,7 +91,7 @@
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if(![MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable) {
+    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable) {
         button.greyscale = YES;
     }else if(![SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
         button.greyscale = YES;
