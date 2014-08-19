@@ -52,7 +52,6 @@
 }
 
 -(void) setRotation:(CGFloat)_rotation{
-//    if(ABS(self.rotation - _rotation) >= .01){
     [super setRotation:_rotation];
     if(ABS(lastRotationTransform - [self.delegate sidebarButtonRotation]) > 0.01){
         self.transform = CGAffineTransformScale([self rotationTransform], scale, scale);

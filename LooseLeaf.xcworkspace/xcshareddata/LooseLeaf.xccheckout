@@ -68,7 +68,7 @@
 		<key>9F22E3F18CD07AD761FDBCAEE84E4A72F51293DA</key>
 		<string>..Submodules/touch-chart</string>
 		<key>A524279715AC697C6A1D50464F5ECBB1E53B6C0F</key>
-		<string>../Submodules/eppz-kit/</string>
+		<string>../Submodules/eppz-kit</string>
 		<key>BC8ADFAC-BC7E-461B-B1A2-081D8AB6C365</key>
 		<string>../../Loose Leaf/Submodules/JotUI</string>
 		<key>BDC88C21-6091-422D-87F4-A8FC1073FA61</key>
@@ -148,14 +148,6 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>14C6FF5D-B518-4BDF-95FA-B405B8BC64B8</string>
-			<key>IDESourceControlWCCName</key>
-			<string>JotTouchSDK</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>28E9204B86AFC0DBA92C65B6730EB6D37A220B6C</string>
 			<key>IDESourceControlWCCName</key>
 			<string>JotTouchSDK</string>
@@ -164,7 +156,15 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>BC8ADFAC-BC7E-461B-B1A2-081D8AB6C365</string>
+			<string>14C6FF5D-B518-4BDF-95FA-B405B8BC64B8</string>
+			<key>IDESourceControlWCCName</key>
+			<string>JotTouchSDK</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>2C955C45306C7A3A5375708C7171EBDC6DA686F7</string>
 			<key>IDESourceControlWCCName</key>
 			<string>JotUI</string>
 		</dict>
@@ -172,7 +172,7 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>2C955C45306C7A3A5375708C7171EBDC6DA686F7</string>
+			<string>BC8ADFAC-BC7E-461B-B1A2-081D8AB6C365</string>
 			<key>IDESourceControlWCCName</key>
 			<string>JotUI</string>
 		</dict>
