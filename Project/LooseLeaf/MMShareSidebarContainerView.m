@@ -104,6 +104,8 @@
                 button.frame = CGRectMake(buttonBounds.origin.x + column*(buttonWidth),
                                           buttonBounds.origin.y + row*(buttonWidth),
                                           buttonWidth, buttonWidth);
+                
+                NSLog(@"button size: %f", buttonWidth);
                 [buttonView insertSubview:button atIndex:buttonIndex];
                 
                 buttonIndex += 1;
