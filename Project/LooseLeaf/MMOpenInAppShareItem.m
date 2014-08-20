@@ -6,19 +6,19 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMOpenInShareItem.h"
+#import "MMOpenInAppShareItem.h"
 #import "MMShareButton.h"
-#import "MMShareManager.h"
+#import "MMOpenInAppManager.h"
 #import "Mixpanel.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
 #import "UIView+Debug.h"
-#import "MMShareView.h"
+#import "MMOpenInAppOptionsView.h"
 #import "UIColor+Shadow.h"
 
-@implementation MMOpenInShareItem{
+@implementation MMOpenInAppShareItem{
     MMShareButton* button;
-    MMShareView* sharingOptionsView;
+    MMOpenInAppOptionsView* sharingOptionsView;
     NSDateFormatter *dateFormatter;
 }
 
@@ -36,7 +36,7 @@
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
         
         // arbitrary size, will be resized to fit when it's added to a sidebar
-        sharingOptionsView = [[MMShareView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+        sharingOptionsView = [[MMOpenInAppOptionsView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
         sharingOptionsView.delegate = self;
 
         dateFormatter = [[NSDateFormatter alloc] init];
@@ -50,8 +50,8 @@
     button.selected = isShowingOptionsView;
     [button setNeedsDisplay];
 
-    [[MMShareManager sharedInstance] endSharing];
-    [MMShareManager sharedInstance].delegate = nil;
+    [[MMOpenInAppManager sharedInstance] endSharing];
+    [MMOpenInAppManager sharedInstance].delegate = nil;
 }
 
 -(MMSidebarButton*) button{
@@ -75,8 +75,8 @@
             NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"LooseLeaf-%@.png", theDate]];
             [UIImagePNGRepresentation(self.delegate.imageToShare) writeToFile:filePath atomically:YES];
             NSURL* fileLocation = [NSURL URLWithString:[@"file://" stringByAppendingString:filePath]];
-            [[MMShareManager sharedInstance] beginSharingWithURL:fileLocation];
-            [MMShareManager sharedInstance].delegate = self;
+            [[MMOpenInAppManager sharedInstance] beginSharingWithURL:fileLocation];
+            [MMOpenInAppManager sharedInstance].delegate = self;
         });
     }
 }

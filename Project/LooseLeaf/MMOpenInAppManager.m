@@ -6,13 +6,13 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMShareManager.h"
+#import "MMOpenInAppManager.h"
 #import "NSThread+BlockAdditions.h"
 #import "UIDevice+PPI.h"
 #import "UIView+Debug.h"
 #import <JotUI/JotUI.h>
 
-@implementation MMShareManager{
+@implementation MMOpenInAppManager{
     // the document controller that we'll
     // use for drawing the buttons
     UIDocumentInteractionController* controller;
@@ -28,7 +28,7 @@
 
 static UIView* shareTarget;
 static BOOL shouldListenToRegisterViews;
-static MMShareManager* _instance = nil;
+static MMOpenInAppManager* _instance = nil;
 
 +(BOOL) shouldListenToRegisterViews{
     return shouldListenToRegisterViews;
@@ -64,9 +64,9 @@ static MMShareManager* _instance = nil;
     return _instance;
 }
 
-+(MMShareManager*) sharedInstance{
++(MMOpenInAppManager*) sharedInstance{
     if(!_instance){
-        _instance = [[MMShareManager alloc]init];
+        _instance = [[MMOpenInAppManager alloc]init];
     }
     return _instance;
 }
@@ -103,7 +103,7 @@ static MMShareManager* _instance = nil;
         [controller dismissMenuAnimated:NO];
         controller = nil;
         [allFoundCollectionViews removeAllObjects];
-        [MMShareManager setShareTargetView:nil];
+        [MMOpenInAppManager setShareTargetView:nil];
         [arrayOfAllowableIndexPaths removeAllObjects];
         
         UIWindow* win = [[UIApplication sharedApplication] keyWindow];

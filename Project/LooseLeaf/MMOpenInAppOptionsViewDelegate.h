@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol MMShareViewDelegate <NSObject>
+@protocol MMOpenInAppOptionsViewDelegate <NSObject>
 
 -(void) itemWasTappedInShareView;
 

@@ -25,7 +25,7 @@
 #import "MMInboxManagerDelegate.h"
 #import "NSURL+UTI.h"
 #import "Mixpanel.h"
-#import "MMShareManager.h"
+#import "MMOpenInAppManager.h"
 #import "MMTrashManager.h"
 #import "MMShareSidebarContainerView.h"
 

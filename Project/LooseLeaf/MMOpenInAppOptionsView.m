@@ -6,14 +6,14 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMShareView.h"
-#import "MMShareManager.h"
+#import "MMOpenInAppOptionsView.h"
+#import "MMOpenInAppManager.h"
 #import "MMOpenInAppSidebarButton.h"
 #import "UIView+Debug.h"
 #import "Constants.h"
 #import "UIDevice+PPI.h"
 
-@implementation MMShareView{
+@implementation MMOpenInAppOptionsView{
     NSMutableArray* buttons;
     UIView* line;
 }
@@ -71,7 +71,7 @@
 // we've just been notified that a cell is ready.
 // build and show the button
 -(void) cellLoaded:(UIView *)cell forIndexPath:(NSIndexPath *)indexPath{
-    NSArray* allCollectionViews = [[MMShareManager sharedInstance] allFoundCollectionViews];
+    NSArray* allCollectionViews = [[MMOpenInAppManager sharedInstance] allFoundCollectionViews];
     NSInteger columnCount = floor(self.bounds.size.width / self.buttonWidth);
     NSInteger section = 0;
     NSInteger totalNumberOfItemsInPreviousSections = 0;

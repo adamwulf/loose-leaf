@@ -9,8 +9,8 @@
 #import "UIView+SharingViewWatch.h"
 #import <DrawKit-iOS/JRSwizzle.h>
 #import "NSThread+BlockAdditions.h"
-#import "MMShareManager.h"
-#import "MMShareView.h"
+#import "MMOpenInAppManager.h"
+#import "MMOpenInAppOptionsView.h"
 
 @implementation UIView (SharingViewWatch)
 
@@ -19,44 +19,44 @@
 // we need to register any view that's been added to the Window,
 // and also register any collection views.
 -(void) swizzle_addSubview:(UIView *)view{
-    if([MMShareManager shouldListenToRegisterViews]){
+    if([MMOpenInAppManager shouldListenToRegisterViews]){
         if([view isKindOfClass:[UICollectionView class]]){
-            [[MMShareManager sharedInstance] addCollectionView:(UICollectionView*)view];
+            [[MMOpenInAppManager sharedInstance] addCollectionView:(UICollectionView*)view];
         }else if([self isKindOfClass:[UIWindow class]]){
-            [[MMShareManager sharedInstance] registerDismissView:view];
+            [[MMOpenInAppManager sharedInstance] registerDismissView:view];
         }
     }
     [self swizzle_addSubview:view];
 }
 
 -(void) swizzle_insertSubview:(UIView *)view aboveSubview:(UIView *)siblingSubview{
-    if([MMShareManager shouldListenToRegisterViews]){
+    if([MMOpenInAppManager shouldListenToRegisterViews]){
         if([view isKindOfClass:[UICollectionView class]]){
-            [[MMShareManager sharedInstance] addCollectionView:(UICollectionView*)view];
+            [[MMOpenInAppManager sharedInstance] addCollectionView:(UICollectionView*)view];
         }else if([self isKindOfClass:[UIWindow class]]){
-            [[MMShareManager sharedInstance] registerDismissView:view];
+            [[MMOpenInAppManager sharedInstance] registerDismissView:view];
         }
     }
     [self swizzle_insertSubview:view aboveSubview:siblingSubview];
 }
 
 -(void) swizzle_insertSubview:(UIView *)view atIndex:(NSInteger)index{
-    if([MMShareManager shouldListenToRegisterViews]){
+    if([MMOpenInAppManager shouldListenToRegisterViews]){
         if([view isKindOfClass:[UICollectionView class]]){
-            [[MMShareManager sharedInstance] addCollectionView:(UICollectionView*)view];
+            [[MMOpenInAppManager sharedInstance] addCollectionView:(UICollectionView*)view];
         }else if([self isKindOfClass:[UIWindow class]]){
-            [[MMShareManager sharedInstance] registerDismissView:view];
+            [[MMOpenInAppManager sharedInstance] registerDismissView:view];
         }
     }
     [self swizzle_insertSubview:view atIndex:index];
 }
 
 -(void) swizzle_insertSubview:(UIView *)view belowSubview:(UIView *)siblingSubview{
-    if([MMShareManager shouldListenToRegisterViews]){
+    if([MMOpenInAppManager shouldListenToRegisterViews]){
         if([view isKindOfClass:[UICollectionView class]]){
-            [[MMShareManager sharedInstance] addCollectionView:(UICollectionView*)view];
+            [[MMOpenInAppManager sharedInstance] addCollectionView:(UICollectionView*)view];
         }else if([self isKindOfClass:[UIWindow class]]){
-            [[MMShareManager sharedInstance] registerDismissView:view];
+            [[MMOpenInAppManager sharedInstance] registerDismissView:view];
         }
     }
     [self swizzle_insertSubview:view belowSubview:siblingSubview];
@@ -84,8 +84,8 @@
 }
 
 -(CGPoint) swizzle_convertPoint:(CGPoint)point fromView:(UIView *)view{
-    if(self == [MMShareManager shareTargetView]){
-        NSArray* allCollectionViews = [[MMShareManager sharedInstance] allFoundCollectionViews];
+    if(self == [MMOpenInAppManager shareTargetView]){
+        NSArray* allCollectionViews = [[MMOpenInAppManager sharedInstance] allFoundCollectionViews];
         if([allCollectionViews count]){
             return CGPointMake(20, 20);
         }

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol MMShareManagerDelegate <NSObject>
+@protocol MMOpenInAppManagerDelegate <NSObject>
 
 -(void) allCellsWillLoad;
 

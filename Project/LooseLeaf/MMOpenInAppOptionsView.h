@@ -8,14 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "MMUntouchableView.h"
-#import "MMShareManagerDelegate.h"
-#import "MMShareViewDelegate.h"
+#import "MMOpenInAppManagerDelegate.h"
+#import "MMOpenInAppOptionsViewDelegate.h"
 
 
-@interface MMShareView : UIView<MMShareManagerDelegate>
+@interface MMOpenInAppOptionsView : UIView<MMOpenInAppManagerDelegate>
 
 @property (nonatomic) CGFloat buttonWidth;
-@property (weak) NSObject<MMShareViewDelegate>* delegate;
+@property (weak) NSObject<MMOpenInAppOptionsViewDelegate>* delegate;
 
 -(void) reset;
 

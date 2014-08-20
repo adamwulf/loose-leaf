@@ -7,15 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MMShareManagerDelegate.h"
+#import "MMOpenInAppManagerDelegate.h"
 
-@interface MMShareManager : NSObject<UIDocumentInteractionControllerDelegate>
+@interface MMOpenInAppManager : NSObject<UIDocumentInteractionControllerDelegate>
 
 @property (readonly) NSArray* allFoundCollectionViews;
-@property (weak) NSObject<MMShareManagerDelegate>* delegate;
+@property (weak) NSObject<MMOpenInAppManagerDelegate>* delegate;
 
 + (BOOL) shouldListenToRegisterViews;
-+(MMShareManager*) sharedInstance;
++(MMOpenInAppManager*) sharedInstance;
 +(UIView*)shareTargetView;
 +(void) setShareTargetView:(UIView*)shareTargetView;
 
