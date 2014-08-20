@@ -17,6 +17,7 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMPageCacheManager.h"
 #import "MMLoadImageCache.h"
+#import "UIView+Animations.h"
 
 dispatch_queue_t importThumbnailQueue;
 
@@ -184,6 +185,10 @@ dispatch_queue_t importThumbnailQueue;
             [self generateDebugView:YES];
             [self setFrame:self.frame];
             if([self.delegate isPageEditable:self] && [self hasStateLoaded]){
+                // drawableView might be animating from
+                // it's old page, so remove that animation
+                // if any
+                [drawableView.layer removeAllAnimations];
                 [drawableView loadState:paperState];
                 [self addDrawableViewToContentView];
                 // anchor the view to the top left,
