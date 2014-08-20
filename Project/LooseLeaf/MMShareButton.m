@@ -81,11 +81,7 @@
     [darkerGreyBorder setStroke];
     [ovalPath stroke];
     
-    // fill background
-//    [halfGreyFill setFill];
-//    [ovalPath fill];
-    // fill face with gradient
-    
+    // fill background with gradient
     CGContextSaveGState(context);
     [ovalPath addClip];
     CGRect ovalBounds = CGPathGetPathBoundingBox(ovalPath.CGPath);

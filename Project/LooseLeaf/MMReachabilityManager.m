@@ -12,6 +12,8 @@
 
 static Reachability* _instance = nil;
 
+static Reachability* _localInstance = nil;
+
 +(Reachability*) sharedManager{
     if(!_instance){
         _instance = [MMReachabilityManager reachabilityWithHostName:@"imgur.com"];
@@ -19,4 +21,13 @@ static Reachability* _instance = nil;
     }
     return _instance;
 }
+
++(Reachability*) sharedLocalNetwork{
+    if(!_localInstance){
+        _localInstance = [MMReachabilityManager reachabilityForLocalWiFi];
+        [_localInstance startNotifier];
+    }
+    return _localInstance;
+}
+
 @end

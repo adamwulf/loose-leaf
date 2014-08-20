@@ -44,30 +44,34 @@
 }
 
 -(void) performShareAction{
-    [delegate mayShare:self];
-    button.selected = YES;
-    [button setNeedsDisplay];
-    // if a popover controller is dismissed, it
-    // adds the dismissal to the main queue async
-    // so we need to add our next steps /after that/
-    // so we need to dispatch async too
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-        UIPrintInteractionController* printController = [UIPrintInteractionController sharedPrintController];
-        printController.printingItem = self.delegate.imageToShare;
-        
-        [printController presentFromRect:self.button.bounds inView:self.button animated:YES completionHandler:^(UIPrintInteractionController *printInteractionController, BOOL completed, NSError *error) {
-            if(completed){
-                [self.delegate didShare:self];
-                [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
-            }
-            NSString* strResult = completed ? @"Success" : @"Cancelled";
-            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Print",
-                                                                         kMPEventExportPropResult : strResult}];
-            button.selected = NO;
-            [button setNeedsDisplay];
-        }];
-    });
+    // only allow printing if we're enabled
+    if([UIPrintInteractionController isPrintingAvailable] &&
+       [MMReachabilityManager sharedLocalNetwork].currentReachabilityStatus != NotReachable){
+        [delegate mayShare:self];
+        button.selected = YES;
+        [button setNeedsDisplay];
+        // if a popover controller is dismissed, it
+        // adds the dismissal to the main queue async
+        // so we need to add our next steps /after that/
+        // so we need to dispatch async too
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            UIPrintInteractionController* printController = [UIPrintInteractionController sharedPrintController];
+            printController.printingItem = self.delegate.imageToShare;
+            
+            [printController presentFromRect:self.button.bounds inView:self.button animated:YES completionHandler:^(UIPrintInteractionController *printInteractionController, BOOL completed, NSError *error) {
+                if(completed){
+                    [self.delegate didShare:self];
+                    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+                }
+                NSString* strResult = completed ? @"Success" : @"Cancelled";
+                [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Print",
+                                                                             kMPEventExportPropResult : strResult}];
+                button.selected = NO;
+                [button setNeedsDisplay];
+            }];
+        });
+    }
 }
 
 -(BOOL) isAtAllPossible{
@@ -77,7 +81,8 @@
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if([UIPrintInteractionController isPrintingAvailable]){
+    if([UIPrintInteractionController isPrintingAvailable] &&
+       [MMReachabilityManager sharedLocalNetwork].currentReachabilityStatus != NotReachable){
         button.greyscale = NO;
     }else{
         button.greyscale = YES;
