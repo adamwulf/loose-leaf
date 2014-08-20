@@ -638,6 +638,24 @@
     // we can forget about the original frame locations
 }
 
+
+// when bouncing a page back to full screen,
+// i shuld always trigger finishUITransitionToPageView.
+// this will undo anything that beginUITransitionFromPageView
+// might have done if the page was ever scaled small
+// enough during the pinch/pan/etc.
+// see: https://github.com/adamwulf/loose-leaf/issues/729
+// since a page will never be animated to full screen unless
+// in page view, there is no harm in calling a potentially
+// extra finishUITransitionToPageView
+-(void) animatePageToFullScreen:(MMPaperView*)page withDelay:(CGFloat)delay withBounce:(BOOL)bounce onComplete:(void(^)(BOOL finished))completionBlock{
+    [super animatePageToFullScreen:page withDelay:delay withBounce:bounce onComplete:^(BOOL finished){
+        [self finishUITransitionToPageView];
+        if(completionBlock) completionBlock(finished);
+    }];
+}
+
+
 /**
  * the user has cancelled the zoom-to-list gesture
  */
@@ -650,7 +668,6 @@
     if(![page isBeingPannedAndZoomed]){
         [self animatePageToFullScreen:[visibleStackHolder peekSubview] withDelay:0 withBounce:YES onComplete:^(BOOL finished){
             [self realignPagesInVisibleStackExcept:[visibleStackHolder peekSubview] animated:NO];
-            [self finishUITransitionToPageView];
         }];
         [UIView animateWithDuration:0.1 delay:0 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationCurveLinear) animations:^{
             CGRect fr = visibleStackHolder.frame;
