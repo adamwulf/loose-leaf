@@ -199,6 +199,7 @@
                 [path moveToPoint:start];
                 [path addLineToPoint:corner];
                 [path addLineToPoint:end];
+                [self animateLinkTo:lastLinkURL];
             }else{
                 CGFloat size = 14;
                 CGPoint start = CGPointMake(31, 31);
