@@ -8,6 +8,7 @@
 
 #import "MMShareSidebarContainerView.h"
 #import "MMImageViewButton.h"
+#import "MMCloudKitShareItem.h"
 #import "MMEmailShareItem.h"
 #import "MMTextShareItem.h"
 #import "MMTwitterShareItem.h"
@@ -54,6 +55,7 @@
         
         
         shareItems = [NSMutableArray array];
+        [shareItems addObject:[[MMCloudKitShareItem alloc] init]];
         [shareItems addObject:[[MMEmailShareItem alloc] init]];
         [shareItems addObject:[[MMTextShareItem alloc] init]];
         [shareItems addObject:[[MMPhotoAlbumShareItem alloc] init]];

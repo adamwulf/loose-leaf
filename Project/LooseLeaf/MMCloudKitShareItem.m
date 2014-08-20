@@ -7,7 +7,7 @@
 //
 
 #import "MMCloudKitShareItem.h"
-#import "MMImageViewButton.h"
+#import "MMCloudKitButton.h"
 #import "Mixpanel.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
@@ -16,7 +16,7 @@
 
 
 @implementation MMCloudKitShareItem{
-    MMImageViewButton* button;
+    MMCloudKitButton* button;
     MMCloudKitOptionsView* sharingOptionsView;
     NSDateFormatter *dateFormatter;
 }
@@ -26,8 +26,8 @@
 
 -(id) init{
     if(self = [super init]){
-        button = [[MMImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        [button setImage:[UIImage imageNamed:@"imgur"]];
+        button = [[MMCloudKitButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        [button setImage:[UIImage imageNamed:@"icloud-share"]];
         
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
         

@@ -174,6 +174,10 @@
 		667D98C2192FD87400625879 /* MMPDF.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98C1192FD87400625879 /* MMPDF.m */; };
 		667D98C4192FDB4300625879 /* UIImagePDF.license in Resources */ = {isa = PBXBuildFile; fileRef = 667D98C3192FDB4300625879 /* UIImagePDF.license */; };
 		667D98CA19300D0F00625879 /* MMScrapBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98C919300D0F00625879 /* MMScrapBackgroundView.m */; };
+		667EF0C519A5401400B1A38D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 667EF0C419A5401400B1A38D /* CloudKit.framework */; };
+		667EF0C719A54F2100B1A38D /* icloud-share.png in Resources */ = {isa = PBXBuildFile; fileRef = 667EF0C619A54F2100B1A38D /* icloud-share.png */; };
+		667EF0C919A54F2500B1A38D /* icloud-share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 667EF0C819A54F2500B1A38D /* icloud-share@2x.png */; };
+		667EF0CC19A5501900B1A38D /* MMCloudKitButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 667EF0CB19A5501900B1A38D /* MMCloudKitButton.m */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
 		6693295A15958A950033E557 /* MMShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MMShadowManager.m */; };
@@ -589,6 +593,11 @@
 		667D98C3192FDB4300625879 /* UIImagePDF.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UIImagePDF.license; sourceTree = "<group>"; };
 		667D98C819300D0F00625879 /* MMScrapBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBackgroundView.h; sourceTree = "<group>"; };
 		667D98C919300D0F00625879 /* MMScrapBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBackgroundView.m; sourceTree = "<group>"; };
+		667EF0C419A5401400B1A38D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		667EF0C619A54F2100B1A38D /* icloud-share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icloud-share.png"; sourceTree = "<group>"; };
+		667EF0C819A54F2500B1A38D /* icloud-share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icloud-share@2x.png"; sourceTree = "<group>"; };
+		667EF0CA19A5501900B1A38D /* MMCloudKitButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitButton.h; sourceTree = "<group>"; };
+		667EF0CB19A5501900B1A38D /* MMCloudKitButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitButton.m; sourceTree = "<group>"; };
 		6690EF1217CC64630009A0AC /* MMScrapBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBubbleButton.h; sourceTree = "<group>"; };
 		6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBubbleButton.m; sourceTree = "<group>"; };
 		6690EF1517CC6F710009A0AC /* MMDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDotView.h; sourceTree = "<group>"; };
@@ -858,6 +867,7 @@
 				6699904F185F74F8005581D9 /* TouchShape.framework in Frameworks */,
 				66CA1A8D185E78030013505A /* libc++.dylib in Frameworks */,
 				665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */,
+				667EF0C519A5401400B1A38D /* CloudKit.framework in Frameworks */,
 				66D4FE6918DCA6950010CCBF /* Crashlytics.framework in Frameworks */,
 				66150769178333D500B181F3 /* libz.dylib in Frameworks */,
 				6695B6E81750088D0069E61F /* AudioToolbox.framework in Frameworks */,
@@ -1204,6 +1214,8 @@
 		6650DD1018F4842E00ADF591 /* Icon Images */ = {
 			isa = PBXGroup;
 			children = (
+				667EF0C619A54F2100B1A38D /* icloud-share.png */,
+				667EF0C819A54F2500B1A38D /* icloud-share@2x.png */,
 				667C6365199FF25C00E93CD6 /* print@2x.png */,
 				667C6369199FF28E00E93CD6 /* print.png */,
 				667C636E199FF41300E93CD6 /* copy.png */,
@@ -1724,6 +1736,8 @@
 				661885D018F9ABD70016A333 /* MMFlipCameraButton.m */,
 				667D98B8192FC22A00625879 /* MMPDFButton.h */,
 				667D98B9192FC22A00625879 /* MMPDFButton.m */,
+				667EF0CA19A5501900B1A38D /* MMCloudKitButton.h */,
+				667EF0CB19A5501900B1A38D /* MMCloudKitButton.m */,
 			);
 			name = Used;
 			sourceTree = "<group>";
@@ -1933,6 +1947,7 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				667EF0C419A5401400B1A38D /* CloudKit.framework */,
 				66A7AF1819A5399000E0AA29 /* SimpleCloudKitManager.framework */,
 				667D98AB192D4B7A00625879 /* ImageIO.framework */,
 				666425C118CBC40000A306C1 /* CoreMedia.framework */,
@@ -2104,7 +2119,7 @@
 								enabled = 0;
 							};
 							com.apple.iCloud = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};
@@ -2153,6 +2168,7 @@
 				667C636A199FF28E00E93CD6 /* print.png in Resources */,
 				6650DD1918F48D7500ADF591 /* camera.png in Resources */,
 				666E253218F5DDF100C17295 /* clearphotoalbum.png in Resources */,
+				667EF0C719A54F2100B1A38D /* icloud-share.png in Resources */,
 				6650DD1B18F48D7A00ADF591 /* camera@2x.png in Resources */,
 				66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */,
 				667C636F199FF41300E93CD6 /* copy.png in Resources */,
@@ -2183,6 +2199,7 @@
 				666E253C18F5E15F00C17295 /* clearcamera@2x.png in Resources */,
 				667C6353199FE4BC00E93CD6 /* MPCloseBtn.png in Resources */,
 				66A02F9C19A1DBE90013EFAE /* Eppz.license in Resources */,
+				667EF0C919A54F2500B1A38D /* icloud-share@2x.png in Resources */,
 				666E253E18F5E19100C17295 /* clearcamera.png in Resources */,
 				6650DD2718F491BA00ADF591 /* evernote@2x.png in Resources */,
 				667C6368199FF26100E93CD6 /* copy@2x.png in Resources */,
@@ -2435,6 +2452,7 @@
 				66D7496318A6DB010015650E /* MMDrawingTouchGestureRecognizer.m in Sources */,
 				66510838178DFEE700A7A7DD /* MMRulerView.m in Sources */,
 				666E254518F60F3E00C17295 /* MMAlbumSidebarContentView.m in Sources */,
+				667EF0CC19A5501900B1A38D /* MMCloudKitButton.m in Sources */,
 				66510835178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m in Sources */,
 				667C635C199FE4BC00E93CD6 /* MPSurveyQuestionViewController.m in Sources */,
 				66524517199587A700C36609 /* MMFacebookShareItem.m in Sources */,
@@ -2563,6 +2581,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_ENTITLEMENTS = LooseLeaf/LooseLeaf.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2599,6 +2618,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_ENTITLEMENTS = LooseLeaf/LooseLeaf.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (

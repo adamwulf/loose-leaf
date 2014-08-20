@@ -11,6 +11,7 @@
 @interface MMImageViewButton : MMDarkSidebarButton{
     BOOL darkBg;
     BOOL greyscale;
+    UIImage* image;
 }
 
 @property (assign, getter = isDarkBg) BOOL darkBg;
