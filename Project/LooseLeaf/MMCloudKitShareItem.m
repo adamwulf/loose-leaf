@@ -14,6 +14,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMCloudKitOptionsView.h"
 #import "UIColor+Shadow.h"
+#import <CloudKit/CloudKit.h>
 
 
 @implementation MMCloudKitShareItem{
@@ -79,7 +80,8 @@
 }
 
 -(BOOL) isAtAllPossible{
-    return YES;
+    // only show CloudKit if it exists
+    return [CKContainer class] != nil;
 }
 
 #pragma mark - Options Menu
