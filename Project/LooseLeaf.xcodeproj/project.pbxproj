@@ -164,7 +164,6 @@
 		667C636A199FF28E00E93CD6 /* print.png in Resources */ = {isa = PBXBuildFile; fileRef = 667C6369199FF28E00E93CD6 /* print.png */; };
 		667C636D199FF3D500E93CD6 /* MMCopyShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 667C636C199FF3D500E93CD6 /* MMCopyShareItem.m */; };
 		667C636F199FF41300E93CD6 /* copy.png in Resources */ = {isa = PBXBuildFile; fileRef = 667C636E199FF41300E93CD6 /* copy.png */; };
-		667C637319A011A100E93CD6 /* icon.license in Resources */ = {isa = PBXBuildFile; fileRef = 667C637219A011A100E93CD6 /* icon.license */; };
 		667D98AA192D010900625879 /* Loose-Leaf_76.png in Resources */ = {isa = PBXBuildFile; fileRef = 667D98A9192D010900625879 /* Loose-Leaf_76.png */; };
 		667D98AC192D4B7A00625879 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 667D98AB192D4B7A00625879 /* ImageIO.framework */; };
 		667D98AF192D5D8200625879 /* MMInboxManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98AE192D5D8200625879 /* MMInboxManager.m */; };
@@ -569,7 +568,6 @@
 		667C636B199FF3D500E93CD6 /* MMCopyShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCopyShareItem.h; sourceTree = "<group>"; };
 		667C636C199FF3D500E93CD6 /* MMCopyShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCopyShareItem.m; sourceTree = "<group>"; };
 		667C636E199FF41300E93CD6 /* copy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = copy.png; sourceTree = "<group>"; };
-		667C637219A011A100E93CD6 /* icon.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = icon.license; sourceTree = "<group>"; };
 		667D98A9192D010900625879 /* Loose-Leaf_76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Loose-Leaf_76.png"; sourceTree = "<group>"; };
 		667D98AB192D4B7A00625879 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		667D98AD192D5D8200625879 /* MMInboxManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMInboxManager.h; sourceTree = "<group>"; };
@@ -1384,7 +1382,6 @@
 				666425C318CBC61200A306C1 /* opencv.license */,
 				667D98C3192FDB4300625879 /* UIImagePDF.license */,
 				665245261996AA7B00C36609 /* FXBlurView.license */,
-				667C637219A011A100E93CD6 /* icon.license */,
 				66A02F9B19A1DBE90013EFAE /* Eppz.license */,
 			);
 			name = Licenses;
@@ -2116,7 +2113,6 @@
 				667C6354199FE4BC00E93CD6 /* MPCloseBtn@2x.png in Resources */,
 				665245251995936500C36609 /* tencentWeibo.png in Resources */,
 				66524512199583B600C36609 /* twitterLarge@2x.png in Resources */,
-				667C637319A011A100E93CD6 /* icon.license in Resources */,
 				665245231995936000C36609 /* tencentWeibo@2x.png in Resources */,
 				6652456E1996E69D00C36609 /* link@2x.png in Resources */,
 				66437C57199FE0F2003389F0 /* airsharing.png in Resources */,
