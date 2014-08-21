@@ -36,6 +36,8 @@
 		<string>ssh://github.com/adamwulf/JotUI.git</string>
 		<key>BDC88C21-6091-422D-87F4-A8FC1073FA61</key>
 		<string>ssh://github.com/dyang/DYRateView.git</string>
+		<key>CAB3A39894B4286495E359F8D4790E8B508908C2</key>
+		<string>github.com:adamwulf/cloudkit-manager.git</string>
 		<key>DAF93FB062EA747941221BC588740DE29279908A</key>
 		<string>ssh://github.com/adamwulf/DrawKit-iOS.git</string>
 		<key>DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8</key>
@@ -73,6 +75,8 @@
 		<string>../../Loose Leaf/Submodules/JotUI</string>
 		<key>BDC88C21-6091-422D-87F4-A8FC1073FA61</key>
 		<string>../../Loose Leaf/Submodules/DYRateView</string>
+		<key>CAB3A39894B4286495E359F8D4790E8B508908C2</key>
+		<string>../Submodules/cloudkit-manager/</string>
 		<key>DAF93FB062EA747941221BC588740DE29279908A</key>
 		<string>../../DrawKit-iOS</string>
 		<key>DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8</key>
@@ -95,6 +99,14 @@
 			<string>DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8</string>
 			<key>IDESourceControlWCCName</key>
 			<string>AFNetworking</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>CAB3A39894B4286495E359F8D4790E8B508908C2</string>
+			<key>IDESourceControlWCCName</key>
+			<string>cloudkit-manager</string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
@@ -148,14 +160,6 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>14C6FF5D-B518-4BDF-95FA-B405B8BC64B8</string>
-			<key>IDESourceControlWCCName</key>
-			<string>JotTouchSDK</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>28E9204B86AFC0DBA92C65B6730EB6D37A220B6C</string>
 			<key>IDESourceControlWCCName</key>
 			<string>JotTouchSDK</string>
@@ -164,7 +168,15 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>2C955C45306C7A3A5375708C7171EBDC6DA686F7</string>
+			<string>14C6FF5D-B518-4BDF-95FA-B405B8BC64B8</string>
+			<key>IDESourceControlWCCName</key>
+			<string>JotTouchSDK</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>BC8ADFAC-BC7E-461B-B1A2-081D8AB6C365</string>
 			<key>IDESourceControlWCCName</key>
 			<string>JotUI</string>
 		</dict>
@@ -172,7 +184,7 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>BC8ADFAC-BC7E-461B-B1A2-081D8AB6C365</string>
+			<string>2C955C45306C7A3A5375708C7171EBDC6DA686F7</string>
 			<key>IDESourceControlWCCName</key>
 			<string>JotUI</string>
 		</dict>

@@ -42,13 +42,13 @@
                                                  selector:@selector(updateShareOptions)
                                                      name:UIApplicationDidBecomeActiveNotification object:nil];
         
-        scrollView = [[UIScrollView alloc] initWithFrame:[sidebarContentView contentBounds]];
+        scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
         scrollView.bounces = YES;
         scrollView.alwaysBounceVertical = NO;
         scrollView.showsHorizontalScrollIndicator = NO;
         scrollView.showsVerticalScrollIndicator = NO;
         
-        buttonView = [[UIView alloc] initWithFrame:scrollView.bounds];
+        buttonView = [[UIView alloc] initWithFrame:[sidebarContentView contentBounds]];
         [scrollView addSubview:buttonView];
         [sidebarContentView addSubview:scrollView];
         scrollView.contentSize = scrollView.bounds.size;
@@ -198,13 +198,13 @@
                 shareItem.isShowingOptionsView = YES;
             }
             activeOptionsView = [shareItem optionsView];
-            CGRect frForOptions = buttonView.bounds;
+            CGRect frForOptions = buttonView.frame;
             frForOptions.origin.y = buttonView.bounds.size.height;
             frForOptions.size.height = kWidthOfSidebarButtonBuffer;
             activeOptionsView.frame = frForOptions;
             [scrollView addSubview:activeOptionsView];
             
-            scrollView.contentSize = CGSizeMake(activeOptionsView.bounds.size.width, activeOptionsView.bounds.size.height + buttonView.bounds.size.height);
+            scrollView.contentSize = CGSizeMake(scrollView.bounds.size.width, activeOptionsView.bounds.size.height + buttonView.bounds.size.height);
         }else{
             activeOptionsView = nil;
         }

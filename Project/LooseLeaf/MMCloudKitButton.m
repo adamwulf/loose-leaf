@@ -32,22 +32,6 @@
         [image drawInRect:frame];
     }
     CGContextRestoreGState(context);
-//    
-//    
-//    // clip end of sleeve
-//    CGContextSetBlendMode(context, kCGBlendModeClear);
-//    [[UIColor whiteColor] setFill];
-//    [circleClipPath fill];
-//    CGContextSetBlendMode(context, kCGBlendModeNormal);
-//    
-//    // stroke circle
-//    [darkerGreyBorder setStroke];
-//    ovalPath.lineWidth = 1;
-//    [ovalPath stroke];
-//    
-//    [self drawDropshadowIfSelected];
-//    
-//    [super drawRect:rect];
 }
 
 
