@@ -51,6 +51,7 @@
         UIImage* image = self.delegate.imageToShare;
         [library writeImageToSavedPhotosAlbum:image.CGImage orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error){
             NSString* strResult = @"Failed";
+            [self updateButtonGreyscale];
             if (error) {
                 [self animateToSuccess:NO];
             } else {
@@ -60,7 +61,6 @@
             }
             [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"PhotoAlbum",
                                                                          kMPEventExportPropResult : strResult}];
-            [button setNeedsDisplay];
         }];
     });
 }
