@@ -107,7 +107,6 @@
                                           buttonBounds.origin.y + row*(buttonWidth),
                                           buttonWidth, buttonWidth);
                 
-                NSLog(@"button size: %f", buttonWidth);
                 [buttonView insertSubview:button atIndex:buttonIndex];
                 
                 buttonIndex += 1;
@@ -194,14 +193,14 @@
     // so we need to dispatch async too
     dispatch_async(dispatch_get_main_queue(), ^{
         if([shareItem respondsToSelector:@selector(optionsView)]){
-            if([shareItem respondsToSelector:@selector(setIsShowingOptionsView:)]){
-                shareItem.isShowingOptionsView = YES;
-            }
             activeOptionsView = [shareItem optionsView];
             CGRect frForOptions = buttonView.frame;
             frForOptions.origin.y = buttonView.bounds.size.height;
             frForOptions.size.height = kWidthOfSidebarButtonBuffer;
             activeOptionsView.frame = frForOptions;
+            if([shareItem respondsToSelector:@selector(setIsShowingOptionsView:)]){
+                shareItem.isShowingOptionsView = YES;
+            }
             [scrollView addSubview:activeOptionsView];
             
             scrollView.contentSize = CGSizeMake(scrollView.bounds.size.width, activeOptionsView.bounds.size.height + buttonView.bounds.size.height);

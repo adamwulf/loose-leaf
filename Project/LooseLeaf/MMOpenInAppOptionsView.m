@@ -15,7 +15,6 @@
 
 @implementation MMOpenInAppOptionsView{
     NSMutableArray* buttons;
-    UIView* line;
 }
 
 @synthesize delegate;
@@ -29,13 +28,6 @@
         self.opaque = NO;
         self.userInteractionEnabled = YES;
         buttons = [NSMutableArray array];
-        
-        CGFloat width = frame.size.width;
-        CGRect lineRect = CGRectMake(width*0.1, 0, width*0.8, 1);
-        line = [[UIView alloc] initWithFrame:lineRect];
-        line.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
-        line.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
-        [self addSubview:line];
     }
     return self;
 }
@@ -44,20 +36,6 @@
     [buttons makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [buttons removeAllObjects];
     self.alpha = 0;
-}
-
--(void) hide{
-    CGRect origFrame = self.frame;
-    CGRect offsetFrame = origFrame;
-    offsetFrame.origin.y += 10;
-    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        self.alpha = 0;
-        self.frame = offsetFrame;
-    }completion:^(BOOL finished){
-        if(finished){
-            self.frame = origFrame;
-        }
-    }];
 }
 
 #pragma mark - MMShareManagerDelegate
@@ -135,15 +113,9 @@
 // ok, everything is done. animate the view
 // into place if needbe
 -(void) allCellsLoaded:(NSArray *)arrayOfAllLoadedButtonIndexes{
+    [self show];
     if(!self.alpha){
-        CGRect origFrame = self.frame;
-        CGRect offsetFrame = origFrame;
-        offsetFrame.origin.y += 10;
-        self.frame = offsetFrame;
-        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-            self.alpha = 1;
-            self.frame = origFrame;
-        }completion:nil];
+        [self show];
     }else{
         for (NSUInteger index = [arrayOfAllLoadedButtonIndexes count]; index < [buttons count]; index++) {
             [[buttons objectAtIndex:index] removeFromSuperview];

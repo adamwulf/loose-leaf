@@ -14,7 +14,7 @@
 #import "NSString+UUID.h"
 #import "SSKeychain.h"
 #import "Mixpanel.h"
-#import "UIView+SharingViewWatch.h"
+#import "UIView+OpenInAppOptionsViewWatch.h"
 #import "MMWindow.h"
 
 

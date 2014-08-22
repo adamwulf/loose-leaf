@@ -6,13 +6,13 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "UIView+SharingViewWatch.h"
 #import <DrawKit-iOS/JRSwizzle.h>
+#import "UIView+OpenInAppOptionsViewWatch.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMOpenInAppManager.h"
 #import "MMOpenInAppOptionsView.h"
 
-@implementation UIView (SharingViewWatch)
+@implementation UIView (OpenInAppOptionsViewWatch)
 
 
 // when adding views, check if we're in sharing mode. if so,

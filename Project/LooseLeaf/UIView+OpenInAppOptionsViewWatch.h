@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIView (SharingViewWatch)
+@interface UIView (OpenInAppOptionsViewWatch)
 
 @end

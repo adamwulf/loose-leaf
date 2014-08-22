@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
+#import "MMShareOptionsView.h"
 
-@interface MMCloudKitOptionsView : UIView
+@interface MMCloudKitOptionsView : MMShareOptionsView<SPRSimpleCloudKitManagerDelegate>
 
 @end

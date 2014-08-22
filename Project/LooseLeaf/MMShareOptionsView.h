@@ -10,4 +10,8 @@
 
 @interface MMShareOptionsView : UIView
 
+-(void) show;
+
+-(void) hide;
+
 @end
