@@ -29,15 +29,22 @@
         
         [SPRSimpleCloudKitManager sharedManager].delegate = self;
         
-        [self cloudKitStatusChanged];
+        [self updateInterfaceBasedOniCloudStatus];
     }
     return self;
 }
 
+#pragma mark - MMShareOptionsView
 
-#pragma mark - SPRSimpleCloudKitManagerDelegate
+-(void) show{
+    [super show];
+    [self updateInterfaceBasedOniCloudStatus];
+    [[SPRSimpleCloudKitManager sharedManager] promptAndFetchUserInfoOnComplete:nil];
+}
 
--(void) cloudKitStatusChanged{
+#pragma mark - CloudKit UI
+
+-(void) updateInterfaceBasedOniCloudStatus{
     NSString* cloudKitInfo;
     if([SPRSimpleCloudKitManager sharedManager].accountStatus == CKAccountStatusAvailable){
         cloudKitInfo = @"Available";
@@ -71,18 +78,36 @@
     fr.origin.y = kWidthOfSidebarButtonBuffer;
     fr.size.width = self.bounds.size.width;
     cloudKitLabel.frame = fr;
-
+    
     fr = self.frame;
     fr.size.height = cloudKitLabel.bounds.size.height + cloudKitLabel.frame.origin.y;
     self.frame = fr;
 }
 
--(void) show{
-    [super show];
-    [self cloudKitStatusChanged];
-    [[SPRSimpleCloudKitManager sharedManager] verifyiCloudAccountStatusOnComplete:^(SCKMAccountStatus accountStatus, SCKMApplicationPermissionStatus permissionStatus, NSError *error) {
-        [self cloudKitStatusChanged];
-    }];
+-(void) attemptToLoadContactList{
+    if([SPRSimpleCloudKitManager sharedManager].accountStatus == SCKMAccountStatusAvailable &&
+       [SPRSimpleCloudKitManager sharedManager].permissionStatus == SCKMApplicationPermissionStatusGranted){
+        
+        NSLog(@"can try to load friend list");
+        
+    }else{
+        
+        NSLog(@"can't try to load friend list");
+        
+    }
+}
+
+
+
+#pragma mark - SPRSimpleCloudKitManagerDelegate
+
+-(void) updatedCloudKitAccountStatusTo:(SCKMAccountStatus)accountStatus andApplicationPermissionTo:(SCKMApplicationPermissionStatus)permissionStatus{
+    [self updateInterfaceBasedOniCloudStatus];
+}
+
+-(void) updatedUserRecord:(CKRecordID*)recordID withUserInfo:(CKDiscoveredUserInfo*)userInfo{
+    NSLog(@"recordID: %@", recordID);
+    NSLog(@"userInfo: %@", userInfo);
 }
 
 
