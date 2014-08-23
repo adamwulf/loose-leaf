@@ -42,7 +42,9 @@
                                                  selector:@selector(updateShareOptions)
                                                      name:UIApplicationDidBecomeActiveNotification object:nil];
         
-        scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
+        CGRect scrollViewBounds = self.bounds;
+        scrollViewBounds.size.width = [sidebarContentView contentBounds].origin.x + [sidebarContentView contentBounds].size.width;
+        scrollView = [[UIScrollView alloc] initWithFrame:scrollViewBounds];
         scrollView.bounces = YES;
         scrollView.alwaysBounceVertical = NO;
         scrollView.showsHorizontalScrollIndicator = NO;

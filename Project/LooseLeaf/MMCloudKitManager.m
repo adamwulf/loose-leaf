@@ -9,6 +9,7 @@
 #import "MMCloudKitManager.h"
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 #import "NSThread+BlockAdditions.h"
+#import "MMReachabilityManager.h"
 
 @implementation MMCloudKitManager{
     SPRSimpleCloudKitManager* sprManager;
@@ -34,8 +35,11 @@
         accountRecordID = nil;
         accountInfo = nil;
         
-        [self silentlyLoadStateIfNeeded];
-        [self updateState];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cloudKitAccountChanged) name:NSUbiquityIdentityDidChangeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cloudKitAccountChanged) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cloudKitAccountChanged) name:kReachabilityChangedNotification object:nil];
+        
+        // the UIApplicationDidBecomeActiveNotification will kickstart the process when the app launches
     }
     return self;
 }
@@ -52,6 +56,22 @@
 +(BOOL) isCloudKitAvailable{
     return [CKContainer class] != nil;
 }
+
+-(void) cloudKitAccountChanged{
+    // handle change in cloudkit
+    NSLog(@"[Re]Initializing CloudKit");
+    [[SPRSimpleCloudKitManager sharedManager] reset];
+    mostRecentError = nil;
+    accountStatus = [SPRSimpleCloudKitManager sharedManager].accountStatus;
+    permissionStatus = [SPRSimpleCloudKitManager sharedManager].permissionStatus;
+    accountRecordID = [SPRSimpleCloudKitManager sharedManager].accountRecordID;
+    accountInfo = [SPRSimpleCloudKitManager sharedManager].accountInfo;
+    
+    if([MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
+        [self silentlyLoadStateIfNeeded];
+    }
+}
+
 
 -(void) updateState{
     accountStatus = [SPRSimpleCloudKitManager sharedManager].accountStatus;
@@ -85,6 +105,7 @@
                     // again, so just wait for that.
                     break;
                 case SCKMApplicationPermissionStatusCouldNotComplete:
+                    accountStatus = SCKMAccountStatusCouldNotDetermine;
                     permissionStatus = SCKMApplicationPermissionStatusLoading;
                     accountRecordID = nil;
                     accountInfo = nil;

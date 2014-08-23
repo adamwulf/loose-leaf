@@ -417,9 +417,6 @@ static dispatch_queue_t importExportScrapStateQueue;
 
 -(void) unloadState{
     @synchronized(self){
-        if(!targetIsLoadedState){
-            NSLog(@"duplicate unload");
-        }
         targetIsLoadedState = NO;
     }
     dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
