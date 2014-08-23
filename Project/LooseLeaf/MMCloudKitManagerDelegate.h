@@ -21,6 +21,8 @@
 
 -(void) cloudKitPermissionIsUnknownForThisUser;
 
+-(void) cloudKitDidLoadFriends:(NSArray*)friendList;
+
 @end
 
 

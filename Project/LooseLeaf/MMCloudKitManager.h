@@ -18,4 +18,6 @@
 
 +(BOOL) isCloudKitAvailable;
 
+-(void) login;
+
 @end

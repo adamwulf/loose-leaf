@@ -18,6 +18,8 @@
     CKRecordID *accountRecordID;
     CKDiscoveredUserInfo* accountInfo;
     
+    NSArray* friendList;
+    
     NSError* mostRecentError;
 }
 
@@ -99,13 +101,36 @@
                 case SCKMApplicationPermissionStatusGranted:
                     // icloud is available for this user, so we need to
                     // fetch their account info if we don't already have it.
-                    [self silentlyLoadAccountInformation];
+                    if(!accountRecordID || !accountInfo){
+                        [self silentlyLoadAccountInformation];
+                    }else{
+                        // we have both account info and records
+                        if(![friendList count]){
+                            [self silentlyLoadFriendList];
+                        }else{
+                            // done! we have friends
+                            // and all user information
+                        }
+                    }
                     break;
             }
             break;
     }
 }
 
+-(void) login{
+    if(accountStatus == SCKMAccountStatusAvailable &&
+       permissionStatus == SCKMApplicationPermissionStatusInitialState){
+        [[SPRSimpleCloudKitManager sharedManager] promptAndFetchUserInfoOnComplete:^(SCKMAccountStatus accountStatus,
+                                                                                     SCKMApplicationPermissionStatus permissionStatus,
+                                                                                     CKRecordID *recordID,
+                                                                                     CKDiscoveredUserInfo *userInfo,
+                                                                                     NSError *error) {
+            // noop
+            [self updateState];
+        }];
+    }
+}
 
 -(void) silentlyLoadStateIfNeeded{
     if(accountStatus == SCKMAccountStatusCouldNotDetermine){
@@ -136,6 +161,18 @@
     }
 }
 
+-(void) silentlyLoadFriendList{
+    if(accountStatus == SCKMAccountStatusAvailable &&
+       permissionStatus == SCKMApplicationPermissionStatusGranted &&
+       accountRecordID &&
+       accountInfo){
+        [[SPRSimpleCloudKitManager sharedManager] discoverAllFriendsWithCompletionHandler:^(NSArray *friendRecords, NSError *error) {
+            friendList = friendRecords;
+            [self updateState];
+            [self.delegate cloudKitDidLoadFriends:friendList];
+        }];
+    }
+}
 
 
 #pragma mark - Description

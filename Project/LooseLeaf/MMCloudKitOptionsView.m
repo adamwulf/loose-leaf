@@ -12,6 +12,8 @@
 
 @implementation MMCloudKitOptionsView{
     UILabel* cloudKitLabel;
+    
+    UIButton* loginButton;
 }
 
 -(id) initWithFrame:(CGRect)frame{
@@ -26,11 +28,25 @@
         cloudKitLabel.numberOfLines = 0;
         [self addSubview:cloudKitLabel];
         
+        
+        loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [loginButton addTarget:self action:@selector(loginButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+        CGRect buttonFr = lblFr;
+        buttonFr.origin.y = lblFr.origin.y + lblFr.size.height + kWidthOfSidebarButtonBuffer;
+        loginButton.frame = buttonFr;
+        [loginButton setTitle:@"Log In" forState:UIControlStateNormal];
+        [loginButton sizeToFit];
+        [self addSubview:loginButton];
+        
         [MMCloudKitManager sharedManager].delegate = self;
         
         [self updateInterfaceBasedOniCloudStatus];
     }
     return self;
+}
+
+-(void) loginButtonPressed{
+    [[MMCloudKitManager sharedManager] login];
 }
 
 #pragma mark - MMShareOptionsView
@@ -48,14 +64,25 @@
     cloudKitLabel.text = cloudKitInfo;
     [cloudKitLabel sizeToFit];
     
-    CGRect fr = cloudKitLabel.frame;
-    fr.origin.y = kWidthOfSidebarButtonBuffer;
-    fr.size.width = self.bounds.size.width;
-    cloudKitLabel.frame = fr;
+    CGRect lblFr = cloudKitLabel.frame;
+    lblFr.origin.y = kWidthOfSidebarButtonBuffer;
+    lblFr.size.width = self.bounds.size.width;
+    cloudKitLabel.frame = lblFr;
     
-    fr = self.frame;
-    fr.size.height = cloudKitLabel.bounds.size.height + cloudKitLabel.frame.origin.y;
-    self.frame = fr;
+    CGRect buttonFr = lblFr;
+    buttonFr.origin.y = lblFr.origin.y + lblFr.size.height + kWidthOfSidebarButtonBuffer;
+    loginButton.frame = buttonFr;
+    [loginButton sizeToFit];
+    
+    if(loginButton.hidden){
+        CGRect fr = self.frame;
+        fr.size.height = cloudKitLabel.bounds.size.height + cloudKitLabel.frame.origin.y;
+        self.frame = fr;
+    }else{
+        CGRect fr = self.frame;
+        fr.size.height = loginButton.bounds.size.height + loginButton.frame.origin.y;
+        self.frame = fr;
+    }
 }
 
 #pragma mark - MMCloudKitManagerDelegate
@@ -66,18 +93,25 @@
 }
 
 -(void) cloudKitStatusIsLoading{
+    loginButton.hidden = YES;
     NSLog(@"cloudkit is loading...");
     [self updateInterfaceBasedOniCloudStatus];
 }
 
 -(void) cloudKitIsUnavailableForThisUser{
+    loginButton.hidden = YES;
     NSLog(@"CloudKit is unavailable!");
     [self updateInterfaceBasedOniCloudStatus];
 }
 
 -(void) cloudKitPermissionIsUnknownForThisUser{
+    loginButton.hidden = NO;
     NSLog(@"unknown cloudkit permission. need to ask the user");
     [self updateInterfaceBasedOniCloudStatus];
+}
+
+-(void) cloudKitDidLoadFriends:(NSArray*)friendList{
+    NSLog(@"loaded friends: %@", friendList);
 }
 
 @end
