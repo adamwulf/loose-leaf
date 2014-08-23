@@ -15,6 +15,7 @@
 #import "MMCloudKitOptionsView.h"
 #import "UIColor+Shadow.h"
 #import <CloudKit/CloudKit.h>
+#import "MMCloudKitManager.h"
 
 
 @implementation MMCloudKitShareItem{
@@ -83,7 +84,7 @@
 
 -(BOOL) isAtAllPossible{
     // only show CloudKit if it exists
-    return [CKContainer class] != nil;
+    return [MMCloudKitManager isCloudKitAvailable];
 }
 
 #pragma mark - Options Menu

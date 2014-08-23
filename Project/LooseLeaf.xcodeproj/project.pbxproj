@@ -36,6 +36,7 @@
 		662EFF30199ECC760086C106 /* MMAirDropShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 662EFF2F199ECC760086C106 /* MMAirDropShareItem.m */; };
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		663523E519A7E32000A26B88 /* MMShareOptionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 663523E419A7E32000A26B88 /* MMShareOptionsView.m */; };
+		663523EC19A8401100A26B88 /* MMCloudKitManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 663523EB19A8401100A26B88 /* MMCloudKitManager.m */; };
 		6635BE9619748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635BE9519748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m */; };
 		6635BE9919749BD600DFCBBA /* MMScrapsInSidebarState.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635BE9819749BD600DFCBBA /* MMScrapsInSidebarState.m */; };
 		6635BE9D19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635BE9C19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m */; };
@@ -363,6 +364,9 @@
 		6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizerDelegate.h; sourceTree = "<group>"; };
 		663523E319A7E32000A26B88 /* MMShareOptionsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShareOptionsView.h; sourceTree = "<group>"; };
 		663523E419A7E32000A26B88 /* MMShareOptionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShareOptionsView.m; sourceTree = "<group>"; };
+		663523EA19A8401100A26B88 /* MMCloudKitManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitManager.h; sourceTree = "<group>"; };
+		663523EB19A8401100A26B88 /* MMCloudKitManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitManager.m; sourceTree = "<group>"; };
+		663523ED19A8402000A26B88 /* MMCloudKitManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMCloudKitManagerDelegate.h; sourceTree = "<group>"; };
 		6635BE9419748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoRedoBezeledScrapItem.h; sourceTree = "<group>"; };
 		6635BE9519748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUndoRedoBezeledScrapItem.m; sourceTree = "<group>"; };
 		6635BE9719749BD600DFCBBA /* MMScrapsInSidebarState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapsInSidebarState.h; sourceTree = "<group>"; };
@@ -1284,6 +1288,9 @@
 		6652450419956FC800C36609 /* Share Items */ = {
 			isa = PBXGroup;
 			children = (
+				66A7AF1A19A53ACD00E0AA29 /* CloudKit */,
+				66A7AF1B19A53AF400E0AA29 /* MMCloudKitShareItem.h */,
+				66A7AF1C19A53AF400E0AA29 /* MMCloudKitShareItem.m */,
 				66524506199573B100C36609 /* MMShareItem.h */,
 				665245051995721C00C36609 /* MMShareItemDelegate.h */,
 				6652450119956DFA00C36609 /* MMEmailShareItem.h */,
@@ -1311,9 +1318,6 @@
 				667C6363199FED6E00E93CD6 /* MMPrintShareItem.m */,
 				667C636B199FF3D500E93CD6 /* MMCopyShareItem.h */,
 				667C636C199FF3D500E93CD6 /* MMCopyShareItem.m */,
-				66A7AF1A19A53ACD00E0AA29 /* CloudKit */,
-				66A7AF1B19A53AF400E0AA29 /* MMCloudKitShareItem.h */,
-				66A7AF1C19A53AF400E0AA29 /* MMCloudKitShareItem.m */,
 			);
 			name = "Share Items";
 			sourceTree = "<group>";
@@ -1761,6 +1765,9 @@
 			children = (
 				66A7AF1E19A53C7900E0AA29 /* MMCloudKitOptionsView.h */,
 				66A7AF1F19A53C7900E0AA29 /* MMCloudKitOptionsView.m */,
+				663523EA19A8401100A26B88 /* MMCloudKitManager.h */,
+				663523EB19A8401100A26B88 /* MMCloudKitManager.m */,
+				663523ED19A8402000A26B88 /* MMCloudKitManagerDelegate.h */,
 			);
 			name = CloudKit;
 			sourceTree = "<group>";
@@ -2346,6 +2353,7 @@
 				66B1EF2D19983DCD00E9EEF1 /* MMOpenInAppManager.m in Sources */,
 				66AF94FD1905956C004818F8 /* MMPageCacheManager.m in Sources */,
 				665245661996DAB800C36609 /* AFSecurityPolicy.m in Sources */,
+				663523EC19A8401100A26B88 /* MMCloudKitManager.m in Sources */,
 				66BD6E801593AF4200D4544C /* MMSidebarButton.m in Sources */,
 				66BD6E8E1593D18800D4544C /* MMPolylineButton.m in Sources */,
 				66A2904B187773E70036E4B7 /* AVHexColor.m in Sources */,

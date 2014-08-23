@@ -16,7 +16,6 @@
 
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
-        
         CGRect lblFr = self.bounds;
         lblFr.origin.y = kWidthOfSidebarButtonBuffer;
         
@@ -27,7 +26,7 @@
         cloudKitLabel.numberOfLines = 0;
         [self addSubview:cloudKitLabel];
         
-        [SPRSimpleCloudKitManager sharedManager].delegate = self;
+        [MMCloudKitManager sharedManager].delegate = self;
         
         [self updateInterfaceBasedOniCloudStatus];
     }
@@ -39,37 +38,12 @@
 -(void) show{
     [super show];
     [self updateInterfaceBasedOniCloudStatus];
-    [[SPRSimpleCloudKitManager sharedManager] promptAndFetchUserInfoOnComplete:nil];
 }
 
 #pragma mark - CloudKit UI
 
 -(void) updateInterfaceBasedOniCloudStatus{
-    NSString* cloudKitInfo;
-    if([SPRSimpleCloudKitManager sharedManager].accountStatus == CKAccountStatusAvailable){
-        cloudKitInfo = @"Available";
-        if([SPRSimpleCloudKitManager sharedManager].accountRecordID){
-            cloudKitInfo = [cloudKitInfo stringByAppendingFormat:@"\nrecord id: %@", [SPRSimpleCloudKitManager sharedManager].accountRecordID];
-        }
-        if([SPRSimpleCloudKitManager sharedManager].accountInfo){
-            cloudKitInfo = [cloudKitInfo stringByAppendingFormat:@"\ninfo: %@", [SPRSimpleCloudKitManager sharedManager].accountInfo];
-        }
-        if([SPRSimpleCloudKitManager sharedManager].permissionStatus == CKApplicationPermissionStatusCouldNotComplete){
-            cloudKitInfo = [cloudKitInfo stringByAppendingString:@"\npermission: unknown"];
-        }else if([SPRSimpleCloudKitManager sharedManager].permissionStatus == CKApplicationPermissionStatusDenied){
-            cloudKitInfo = [cloudKitInfo stringByAppendingString:@"\npermission: denied"];
-        }else if([SPRSimpleCloudKitManager sharedManager].permissionStatus == CKApplicationPermissionStatusGranted){
-            cloudKitInfo = [cloudKitInfo stringByAppendingString:@"\npermission: granted"];
-        }else if([SPRSimpleCloudKitManager sharedManager].permissionStatus == CKApplicationPermissionStatusInitialState){
-            cloudKitInfo = [cloudKitInfo stringByAppendingString:@"\npermission: initial state"];
-        }else if([SPRSimpleCloudKitManager sharedManager].permissionStatus == SCKMApplicationPermissionStatusLoading){
-            cloudKitInfo = [cloudKitInfo stringByAppendingString:@"\npermission: loading"];
-        }
-    }else if([SPRSimpleCloudKitManager sharedManager].accountStatus == SCKMAccountStatusLoading){
-        cloudKitInfo = @"Loading";
-    }else{
-        cloudKitInfo = @"Not Available";
-    }
+    NSString* cloudKitInfo = [[MMCloudKitManager sharedManager] description];
     
     cloudKitLabel.text = cloudKitInfo;
     [cloudKitLabel sizeToFit];
@@ -84,31 +58,26 @@
     self.frame = fr;
 }
 
--(void) attemptToLoadContactList{
-    if([SPRSimpleCloudKitManager sharedManager].accountStatus == SCKMAccountStatusAvailable &&
-       [SPRSimpleCloudKitManager sharedManager].permissionStatus == SCKMApplicationPermissionStatusGranted){
-        
-        NSLog(@"can try to load friend list");
-        
-    }else{
-        
-        NSLog(@"can't try to load friend list");
-        
-    }
-}
+#pragma mark - MMCloudKitManagerDelegate
 
-
-
-#pragma mark - SPRSimpleCloudKitManagerDelegate
-
--(void) updatedCloudKitAccountStatusTo:(SCKMAccountStatus)accountStatus andApplicationPermissionTo:(SCKMApplicationPermissionStatus)permissionStatus{
+-(void) cloudKitDidError:(NSError *)err{
+    NSLog(@"cloudkit error: %@", err);
     [self updateInterfaceBasedOniCloudStatus];
 }
 
--(void) updatedUserRecord:(CKRecordID*)recordID withUserInfo:(CKDiscoveredUserInfo*)userInfo{
-    NSLog(@"recordID: %@", recordID);
-    NSLog(@"userInfo: %@", userInfo);
+-(void) cloudKitStatusIsLoading{
+    NSLog(@"cloudkit is loading...");
+    [self updateInterfaceBasedOniCloudStatus];
 }
 
+-(void) cloudKitIsUnavailableForThisUser{
+    NSLog(@"CloudKit is unavailable!");
+    [self updateInterfaceBasedOniCloudStatus];
+}
+
+-(void) cloudKitPermissionIsUnknownForThisUser{
+    NSLog(@"unknown cloudkit permission. need to ask the user");
+    [self updateInterfaceBasedOniCloudStatus];
+}
 
 @end
