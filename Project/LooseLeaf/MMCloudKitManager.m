@@ -12,6 +12,7 @@
 #import "MMReachabilityManager.h"
 #import "MMCloudKitDeclinedPermissionState.h"
 #import "MMCloudKitAccountMissingState.h"
+#import "MMCloudKitAskingForPermissionState.h"
 #import "MMCloudKitOfflineState.h"
 #import "MMCloudKitWaitingForLoginState.h"
 #import "MMCloudKitLoggedInState.h"
@@ -92,20 +93,22 @@
 #pragma mark - Description
 
 -(NSString*) description{
-    if([currentState isKindOfClass:[MMCloudKitDeclinedPermissionState class]]){
-        return @"Permission Denied";
-    }else if([currentState isKindOfClass:[MMCloudKitAccountMissingState class]]){
-        return @"No Account";
-    }else if([currentState isKindOfClass:[MMCloudKitOfflineState class]]){
-        return @"Network Offline";
-    }else if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
-        return @"Needs User to Login";
-    }else if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
-        return @"logged in";
+    if([currentState isKindOfClass:[MMCloudKitFetchingAccountInfoState class]]){
+        return @"loading account info";
     }else if([currentState isKindOfClass:[MMCloudKitFetchFriendsState class]]){
         return @"loading friends";
-    }else if([currentState isKindOfClass:[MMCloudKitFetchingAccountInfoState class]]){
-        return @"loading account info";
+    }else if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
+        return @"logged in";
+    }else if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
+        return @"Needs User to Login";
+    }else if([currentState isKindOfClass:[MMCloudKitAskingForPermissionState class]]){
+        return @"Asking for permission";
+    }else if([currentState isKindOfClass:[MMCloudKitOfflineState class]]){
+        return @"Network Offline";
+    }else if([currentState isKindOfClass:[MMCloudKitAccountMissingState class]]){
+        return @"No Account";
+    }else if([currentState isKindOfClass:[MMCloudKitDeclinedPermissionState class]]){
+        return @"Permission Denied";
     }else{
         return @"initializing cloudkit";
     }

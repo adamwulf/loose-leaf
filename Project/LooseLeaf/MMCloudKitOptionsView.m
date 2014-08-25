@@ -40,6 +40,7 @@
         [self addSubview:loginButton];
         
         [MMCloudKitManager sharedManager].delegate = self;
+        [self cloudKitDidChangeState:[MMCloudKitManager sharedManager].currentState];
         
         [self updateInterfaceBasedOniCloudStatus];
     }
