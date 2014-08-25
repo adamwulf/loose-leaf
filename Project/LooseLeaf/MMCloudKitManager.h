@@ -14,6 +14,7 @@
 @interface MMCloudKitManager : NSObject
 
 @property (nonatomic, weak) NSObject<MMCloudKitManagerDelegate>* delegate;
+@property (nonatomic, readonly) MMCloudKitBaseState* currentState;
 
 + (MMCloudKitManager *) sharedManager;
 

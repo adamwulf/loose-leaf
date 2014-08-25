@@ -28,13 +28,17 @@
     
     if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
         // we can't connect to cloudkit, so move to an error state
-        isCheckingStatus = NO;
+        @synchronized(self){
+            isCheckingStatus = NO;
+        }
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
     }else{
         
         [[SPRSimpleCloudKitManager sharedManager] silentlyFetchUserInfoOnComplete:^(CKRecordID* userRecord, CKDiscoveredUserInfo *userInfo, NSError *error) {
             NSLog(@"got cloudkit user info %@ %@ %p!", userRecord, userInfo, error);
-            isCheckingStatus = NO;
+            @synchronized(self){
+                isCheckingStatus = NO;
+            }
             if(error){
                 [self updateStateBasedOnError:error];
             }else{

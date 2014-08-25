@@ -12,7 +12,6 @@
 #import "MMCloudKitOfflineState.h"
 
 @implementation MMCloudKitLoggedInState{
-    BOOL isCheckingStatus;
     CKRecordID* userRecord;
     CKDiscoveredUserInfo* userInfo;
     NSArray* friendList;
@@ -28,21 +27,12 @@
 }
 
 -(void) runState{
-    @synchronized(self){
-        if(isCheckingStatus){
-            return;
-        }
-        isCheckingStatus = YES;
-    }
     NSLog(@"Running state %@", NSStringFromClass([self class]));
     
     if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
         // we can't connect to cloudkit, so move to an error state
-        isCheckingStatus = NO;
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
     }else{
-        isCheckingStatus = NO;
-        
         
         NSLog(@"got friend list: %@", friendList);
     }

@@ -23,6 +23,7 @@
 }
 
 @synthesize delegate;
+@synthesize currentState;
 
 - (id)init {
     self = [super init];
@@ -109,30 +110,4 @@
         return @"initializing cloudkit";
     }
 }
-
-
-
-
-#pragma mark - Move This Into States
-
-/*
-
--(void) login{
-    if(accountStatus == SCKMAccountStatusAvailable &&
-       permissionStatus == SCKMApplicationPermissionStatusInitialState){
-        [[SPRSimpleCloudKitManager sharedManager] promptAndFetchUserInfoOnComplete:^(SCKMAccountStatus accountStatus,
-                                                                                     SCKMApplicationPermissionStatus permissionStatus,
-                                                                                     CKRecordID *recordID,
-                                                                                     CKDiscoveredUserInfo *userInfo,
-                                                                                     NSError *error) {
-            // noop
-            [self updateState];
-        }];
-    }
-}
-
- */
-
-
-
 @end

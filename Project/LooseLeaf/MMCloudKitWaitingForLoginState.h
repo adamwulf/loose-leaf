@@ -10,4 +10,6 @@
 
 @interface MMCloudKitWaitingForLoginState : MMCloudKitBaseState
 
+-(void) didAskToLogin;
+
 @end

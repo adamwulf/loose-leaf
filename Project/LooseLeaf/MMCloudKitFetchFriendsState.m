@@ -47,10 +47,15 @@
     
     if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
         // we can't connect to cloudkit, so move to an error state
-        isCheckingStatus = NO;
+        @synchronized(self){
+            isCheckingStatus = NO;
+        }
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
     }else{
         [[SPRSimpleCloudKitManager sharedManager] discoverAllFriendsWithCompletionHandler:^(NSArray *friendRecords, NSError *error) {
+            @synchronized(self){
+                isCheckingStatus = NO;
+            }
             if(error){
                 [self updateStateBasedOnError:error];
             }else{
