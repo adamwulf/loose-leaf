@@ -300,6 +300,7 @@
 		66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DF0B7D159BC30200C5C652 /* UIView+Animations.m */; };
 		66E769CE18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E769CD18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m */; };
 		66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E88A361591853E001A6EBF /* MMPapersIcon.m */; };
+		66EC7B7519ABD5FC00406D97 /* MMCloudKitFriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EC7B7419ABD5FC00406D97 /* MMCloudKitFriendTableViewCell.m */; };
 		66EDA79617CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDA79517CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m */; };
 		66F4517E18EB7C3C00A57C95 /* MMPhotoRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4517D18EB7C3C00A57C95 /* MMPhotoRowView.m */; };
 		66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -867,6 +868,8 @@
 		66E769CD18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+DirectoryOptimizations.m"; sourceTree = "<group>"; };
 		66E88A351591853E001A6EBF /* MMPapersIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPapersIcon.h; sourceTree = "<group>"; };
 		66E88A361591853E001A6EBF /* MMPapersIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPapersIcon.m; sourceTree = "<group>"; };
+		66EC7B7319ABD5FC00406D97 /* MMCloudKitFriendTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitFriendTableViewCell.h; sourceTree = "<group>"; };
+		66EC7B7419ABD5FC00406D97 /* MMCloudKitFriendTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitFriendTableViewCell.m; sourceTree = "<group>"; };
 		66EDA79417CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchScrapGestureRecognizer.h; sourceTree = "<group>"; };
 		66EDA79517CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchScrapGestureRecognizer.m; sourceTree = "<group>"; };
 		66EDA7AB17CBD8580067BA63 /* MMPanAndPinchScrapGestureRecognizerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchScrapGestureRecognizerDelegate.h; sourceTree = "<group>"; };
@@ -1544,6 +1547,7 @@
 		6693295715958A890033E557 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				66EC7B7219ABD06100406D97 /* CloudKit Manager */,
 				665245771996EA5100C36609 /* ReachabilityManager */,
 				661708EB1984197C006A73EF /* Trash */,
 				661708EA19841956006A73EF /* Stack Manager */,
@@ -1815,12 +1819,10 @@
 		66A7AF1A19A53ACD00E0AA29 /* CloudKit */ = {
 			isa = PBXGroup;
 			children = (
-				660116E319ABAAD60065C1B4 /* CloudKit States */,
 				66A7AF1E19A53C7900E0AA29 /* MMCloudKitOptionsView.h */,
 				66A7AF1F19A53C7900E0AA29 /* MMCloudKitOptionsView.m */,
-				663523EA19A8401100A26B88 /* MMCloudKitManager.h */,
-				663523EB19A8401100A26B88 /* MMCloudKitManager.m */,
-				663523ED19A8402000A26B88 /* MMCloudKitManagerDelegate.h */,
+				66EC7B7319ABD5FC00406D97 /* MMCloudKitFriendTableViewCell.h */,
+				66EC7B7419ABD5FC00406D97 /* MMCloudKitFriendTableViewCell.m */,
 			);
 			name = CloudKit;
 			sourceTree = "<group>";
@@ -2114,6 +2116,17 @@
 			name = Ruler;
 			sourceTree = "<group>";
 		};
+		66EC7B7219ABD06100406D97 /* CloudKit Manager */ = {
+			isa = PBXGroup;
+			children = (
+				663523EA19A8401100A26B88 /* MMCloudKitManager.h */,
+				663523EB19A8401100A26B88 /* MMCloudKitManager.m */,
+				663523ED19A8402000A26B88 /* MMCloudKitManagerDelegate.h */,
+				660116E319ABAAD60065C1B4 /* CloudKit States */,
+			);
+			name = "CloudKit Manager";
+			sourceTree = "<group>";
+		};
 		66EDA79317CA87D20067BA63 /* Scraps */ = {
 			isa = PBXGroup;
 			children = (
@@ -2377,6 +2390,7 @@
 				665245761996EA2300C36609 /* Reachability.m in Sources */,
 				667C635E199FE4BC00E93CD6 /* UIColor+MPColor.m in Sources */,
 				66A02F9619A1D1500013EFAE /* EPPZDevice.m in Sources */,
+				66EC7B7519ABD5FC00406D97 /* MMCloudKitFriendTableViewCell.m in Sources */,
 				660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */,
 				665CAC1D17B578B0000BD505 /* MMColorButton.m in Sources */,
 				66524509199575A900C36609 /* MMTextShareItem.m in Sources */,

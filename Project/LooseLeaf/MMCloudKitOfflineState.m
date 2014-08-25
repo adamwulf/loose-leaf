@@ -24,11 +24,6 @@
     [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitBaseState alloc] init]];
 }
 
--(void) applicationDidBecomeActive{
-    NSLog(@"%@ applicationDidBecomeActive", NSStringFromClass([self class]));
-    [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitBaseState alloc] init]];
-}
-
 -(void) reachabilityDidChange{
     NSLog(@"%@ reachabilityDidChange", NSStringFromClass([self class]));
     [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitBaseState alloc] init]];

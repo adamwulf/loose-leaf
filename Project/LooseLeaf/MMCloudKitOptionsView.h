@@ -10,6 +10,6 @@
 #import "MMShareOptionsView.h"
 #import "MMCloudKitManager.h"
 
-@interface MMCloudKitOptionsView : MMShareOptionsView<MMCloudKitManagerDelegate>
+@interface MMCloudKitOptionsView : MMShareOptionsView<MMCloudKitManagerDelegate,UITableViewDataSource,UITableViewDelegate>
 
 @end

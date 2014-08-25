@@ -25,4 +25,17 @@
     }
 }
 
+#pragma mark - Notifications
+
+-(void) cloudKitInfoDidChange{
+    NSLog(@"%@ cloudKitInfoDidChange", NSStringFromClass([self class]));
+    [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitBaseState alloc] init]];
+}
+
+-(void) applicationDidBecomeActive{
+    NSLog(@"%@ applicationDidBecomeActive", NSStringFromClass([self class]));
+    [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitBaseState alloc] init]];
+}
+
+
 @end

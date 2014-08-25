@@ -17,6 +17,8 @@
     NSArray* friendList;
 }
 
+@synthesize friendList;
+
 -(id) initWithUserRecord:(CKRecordID*)_userRecord andUserInfo:(CKDiscoveredUserInfo*)_userInfo andFriendList:(NSArray *)_friendList{
     if(self = [super init]){
         userRecord = _userRecord;

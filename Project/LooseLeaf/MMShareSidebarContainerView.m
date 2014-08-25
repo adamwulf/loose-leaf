@@ -27,7 +27,7 @@
 #import "UIView+Debug.h"
 
 @implementation MMShareSidebarContainerView{
-    UIScrollView* scrollView;
+    UIView* sharingContentView;
     UIView* buttonView;
     UIView* activeOptionsView;
     NSMutableArray* shareItems;
@@ -44,16 +44,11 @@
         
         CGRect scrollViewBounds = self.bounds;
         scrollViewBounds.size.width = [sidebarContentView contentBounds].origin.x + [sidebarContentView contentBounds].size.width;
-        scrollView = [[UIScrollView alloc] initWithFrame:scrollViewBounds];
-        scrollView.bounces = YES;
-        scrollView.alwaysBounceVertical = NO;
-        scrollView.showsHorizontalScrollIndicator = NO;
-        scrollView.showsVerticalScrollIndicator = NO;
+        sharingContentView = [[UIView alloc] initWithFrame:scrollViewBounds];
         
         buttonView = [[UIView alloc] initWithFrame:[sidebarContentView contentBounds]];
-        [scrollView addSubview:buttonView];
-        [sidebarContentView addSubview:scrollView];
-        scrollView.contentSize = scrollView.bounds.size;
+        [sharingContentView addSubview:buttonView];
+        [sidebarContentView addSubview:sharingContentView];
         
         
         shareItems = [NSMutableArray array];
@@ -136,10 +131,9 @@
 -(void) hide:(BOOL)animated onComplete:(void(^)(BOOL finished))onComplete{
     [super hide:animated onComplete:^(BOOL finished){
         [self closeActiveSharingOptionsForButton:nil];
-        while([scrollView.subviews count] > 1){
+        while([sharingContentView.subviews count] > 1){
             // remove any options views
-            [[scrollView.subviews objectAtIndex:1] removeFromSuperview];
-            [scrollView setContentOffset:CGPointZero animated:NO];
+            [[sharingContentView.subviews objectAtIndex:1] removeFromSuperview];
         }
         // notify any buttons that they're now hidden.
         for (NSObject<MMShareItem>*shareItem in shareItems) {
@@ -198,14 +192,12 @@
             activeOptionsView = [shareItem optionsView];
             CGRect frForOptions = buttonView.frame;
             frForOptions.origin.y = buttonView.bounds.size.height;
-            frForOptions.size.height = kWidthOfSidebarButtonBuffer;
+            frForOptions.size.height = sharingContentView.bounds.size.height - buttonView.frame.origin.y - buttonView.frame.size.height;
             activeOptionsView.frame = frForOptions;
             if([shareItem respondsToSelector:@selector(setIsShowingOptionsView:)]){
                 shareItem.isShowingOptionsView = YES;
             }
-            [scrollView addSubview:activeOptionsView];
-            
-            scrollView.contentSize = CGSizeMake(scrollView.bounds.size.width, activeOptionsView.bounds.size.height + buttonView.bounds.size.height);
+            [sharingContentView addSubview:activeOptionsView];
         }else{
             activeOptionsView = nil;
         }

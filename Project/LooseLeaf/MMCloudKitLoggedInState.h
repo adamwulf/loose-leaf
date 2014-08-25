@@ -11,6 +11,8 @@
 
 @interface MMCloudKitLoggedInState : MMCloudKitBaseState
 
+@property (readonly) NSArray* friendList;
+
 -(id) initWithUserRecord:(CKRecordID*)userRecord andUserInfo:(CKDiscoveredUserInfo*) userInfo andFriendList:(NSArray*)friendList;
 
 @end

@@ -44,7 +44,7 @@
         [[SPRSimpleCloudKitManager sharedManager] silentlyVerifyiCloudAccountStatusOnComplete:^(SCKMAccountStatus accountStatus,
                                                                                                 SCKMApplicationPermissionStatus permissionStatus,
                                                                                                 NSError *error) {
-            NSLog(@"got account status and permisison info %d %d %p!", accountStatus, permissionStatus, error);
+            NSLog(@"got account status and permisison info %d %d %p!", (int) accountStatus, (int) permissionStatus, error);
             @synchronized(self){
                 isCheckingStatus = NO;
             }

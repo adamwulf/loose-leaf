@@ -9,10 +9,14 @@
 #import "MMCloudKitOptionsView.h"
 #import "MMCloudKitDeclinedPermissionState.h"
 #import "MMCloudKitWaitingForLoginState.h"
+#import "MMCloudKitLoggedInState.h"
+#import "MMCloudKitFriendTableViewCell.h"
 #import "Constants.h"
+#import "UIView+Debug.h"
 
 @implementation MMCloudKitOptionsView{
     UILabel* cloudKitLabel;
+    UITableView* listOfFriendsView;
     
     UIButton* loginButton;
 }
@@ -39,6 +43,19 @@
         [loginButton sizeToFit];
         [self addSubview:loginButton];
         
+        CGRect frForTable = self.bounds;
+        frForTable.origin.y = kWidthOfSidebarButtonBuffer;
+        frForTable.size.height -= kWidthOfSidebarButtonBuffer;
+        listOfFriendsView = [[UITableView alloc] initWithFrame:frForTable style:UITableViewStylePlain];
+        listOfFriendsView.backgroundColor = [UIColor clearColor];
+        listOfFriendsView.opaque = NO;
+        listOfFriendsView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        listOfFriendsView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        [listOfFriendsView registerClass:[MMCloudKitFriendTableViewCell class] forCellReuseIdentifier:@"MMCloudKitFriendTableViewCell"];
+        listOfFriendsView.dataSource = self;
+        listOfFriendsView.delegate = self;
+        [self addSubview:listOfFriendsView];
+
         [MMCloudKitManager sharedManager].delegate = self;
         [self cloudKitDidChangeState:[MMCloudKitManager sharedManager].currentState];
         
@@ -78,16 +95,6 @@
     buttonFr.origin.y = lblFr.origin.y + lblFr.size.height + kWidthOfSidebarButtonBuffer;
     loginButton.frame = buttonFr;
     [loginButton sizeToFit];
-    
-    if(loginButton.hidden){
-        CGRect fr = self.frame;
-        fr.size.height = cloudKitLabel.bounds.size.height + cloudKitLabel.frame.origin.y;
-        self.frame = fr;
-    }else{
-        CGRect fr = self.frame;
-        fr.size.height = loginButton.bounds.size.height + loginButton.frame.origin.y;
-        self.frame = fr;
-    }
 }
 
 #pragma mark - MMCloudKitManagerDelegate
@@ -98,7 +105,57 @@
     }else{
         loginButton.hidden = YES;
     }
+    if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
+        [listOfFriendsView reloadData];
+        listOfFriendsView.hidden = NO;
+        cloudKitLabel.hidden = YES;
+    }else{
+        listOfFriendsView.hidden = YES;
+        cloudKitLabel.hidden = NO;
+    }
     [self updateInterfaceBasedOniCloudStatus];
+}
+
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
+    if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
+        return [((MMCloudKitLoggedInState*)currentState).friendList count];
+    }
+    return 0;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    MMCloudKitFriendTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"MMCloudKitFriendTableViewCell" forIndexPath:indexPath];
+    cell.backgroundColor = [UIColor clearColor];
+    cell.opaque = NO;
+
+    MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
+    if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
+        NSArray* friends = ((MMCloudKitLoggedInState*)currentState).friendList;
+        CKDiscoveredUserInfo* user = [friends objectAtIndex:indexPath.row];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName];
+    }else{
+        cell.textLabel.text = @"";
+    }
+    return cell;
+}
+
+#pragma mark - UITableViewDelegate
+
+-(CGFloat) buttonWidth{
+    CGFloat buttonWidth = self.bounds.size.width - kWidthOfSidebarButtonBuffer; // four buffers (3 between, and 1 on the right side)
+    buttonWidth /= 4; // four buttons wide
+    return buttonWidth;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return [self buttonWidth];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return [self buttonWidth];
 }
 
 @end
