@@ -46,7 +46,7 @@
 }
 
 -(void) loginButtonPressed{
-    [[MMCloudKitManager sharedManager] login];
+    [[MMCloudKitManager sharedManager] userRequestedToLogin];
 }
 
 #pragma mark - MMShareOptionsView

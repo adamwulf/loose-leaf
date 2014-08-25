@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MMCloudKitManagerDelegate.h"
+#import "MMCloudKitBaseState.h"
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 
 @interface MMCloudKitManager : NSObject
@@ -18,6 +19,10 @@
 
 +(BOOL) isCloudKitAvailable;
 
--(void) login;
+-(void) userRequestedToLogin;
+
+-(void) changeToState:(MMCloudKitBaseState*)state;
+
+-(void) retryStateAfterDelay;
 
 @end

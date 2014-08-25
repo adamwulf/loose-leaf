@@ -9,19 +9,11 @@
 #import "MMCloudKitManager.h"
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 #import "NSThread+BlockAdditions.h"
+#import "MMCloudKitLoginState.h"
 #import "MMReachabilityManager.h"
 
 @implementation MMCloudKitManager{
-    SPRSimpleCloudKitManager* sprManager;
-    
-    SCKMAccountStatus accountStatus;
-    SCKMApplicationPermissionStatus permissionStatus;
-    CKRecordID *accountRecordID;
-    CKDiscoveredUserInfo* accountInfo;
-    
-    NSArray* friendList;
-    
-    NSError* mostRecentError;
+    MMCloudKitBaseState* currentState;
 }
 
 @synthesize delegate;
@@ -29,15 +21,11 @@
 - (id)init {
     self = [super init];
     if (self) {
-        sprManager = [SPRSimpleCloudKitManager sharedManager];
-        accountStatus = SCKMAccountStatusCouldNotDetermine;
-        permissionStatus = SCKMApplicationPermissionStatusCouldNotComplete;
-        accountRecordID = nil;
-        accountInfo = nil;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cloudKitInfoDidChange) name:NSUbiquityIdentityDidChangeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityDidChange) name:kReachabilityChangedNotification object:nil];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cloudKitAccountChanged) name:NSUbiquityIdentityDidChangeNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cloudKitAccountChanged) name:UIApplicationDidBecomeActiveNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cloudKitAccountChanged) name:kReachabilityChangedNotification object:nil];
+        currentState = [[MMCloudKitBaseState alloc] init];
         
         // the UIApplicationDidBecomeActiveNotification will kickstart the process when the app launches
     }
@@ -57,21 +45,81 @@
     return [CKContainer class] != nil;
 }
 
--(void) cloudKitAccountChanged{
-    // handle change in cloudkit
-    NSLog(@"[Re]Initializing CloudKit");
-    [[SPRSimpleCloudKitManager sharedManager] reset];
-    mostRecentError = nil;
-    accountStatus = [SPRSimpleCloudKitManager sharedManager].accountStatus;
-    permissionStatus = [SPRSimpleCloudKitManager sharedManager].permissionStatus;
-    accountRecordID = [SPRSimpleCloudKitManager sharedManager].accountRecordID;
-    accountInfo = [SPRSimpleCloudKitManager sharedManager].accountInfo;
-    
-    if([MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
-        [self silentlyLoadStateIfNeeded];
+-(void) userRequestedToLogin{
+    if(![currentState isKindOfClass:[MMCloudKitLoginState class]]){
+        [self changeToState:[[MMCloudKitLoginState alloc] init]];
     }
 }
 
+-(void) changeToState:(MMCloudKitBaseState*)state{
+    currentState = state;
+    [currentState runState];
+}
+
+-(void) retryStateAfterDelay{
+    [self performSelector:@selector(delayedRunStateFor:) withObject:currentState afterDelay:1];
+}
+
+-(void) delayedRunStateFor:(MMCloudKitBaseState*)aState{
+    if(currentState == aState){
+        [aState runState];
+    }
+}
+
+#pragma mark - Notifications
+
+-(void) cloudKitInfoDidChange{
+    // handle change in cloudkit
+    [currentState cloudKitInfoDidChange];
+}
+
+-(void) applicationDidBecomeActive{
+    [currentState applicationDidBecomeActive];
+}
+
+-(void) reachabilityDidChange{
+    [currentState reachabilityDidChange];
+}
+
+
+
+#pragma mark - Description
+
+-(NSString*) description{
+    NSString* cloudKitInfo = nil;
+    if([SPRSimpleCloudKitManager sharedManager].accountStatus == CKAccountStatusAvailable){
+        cloudKitInfo = @"Available";
+        if([SPRSimpleCloudKitManager sharedManager].accountRecordID){
+            cloudKitInfo = [cloudKitInfo stringByAppendingFormat:@"\nrecord id: %@", [SPRSimpleCloudKitManager sharedManager].accountRecordID];
+        }
+        if([SPRSimpleCloudKitManager sharedManager].accountInfo){
+            cloudKitInfo = [cloudKitInfo stringByAppendingFormat:@"\ninfo: %@", [SPRSimpleCloudKitManager sharedManager].accountInfo];
+        }
+        if([SPRSimpleCloudKitManager sharedManager].permissionStatus == CKApplicationPermissionStatusCouldNotComplete){
+            cloudKitInfo = [cloudKitInfo stringByAppendingString:@"\npermission: unknown"];
+        }else if([SPRSimpleCloudKitManager sharedManager].permissionStatus == CKApplicationPermissionStatusDenied){
+            cloudKitInfo = [cloudKitInfo stringByAppendingString:@"\npermission: denied"];
+        }else if([SPRSimpleCloudKitManager sharedManager].permissionStatus == CKApplicationPermissionStatusGranted){
+            cloudKitInfo = [cloudKitInfo stringByAppendingString:@"\npermission: granted"];
+        }else if([SPRSimpleCloudKitManager sharedManager].permissionStatus == CKApplicationPermissionStatusInitialState){
+            cloudKitInfo = [cloudKitInfo stringByAppendingString:@"\npermission: initial state"];
+        }else if([SPRSimpleCloudKitManager sharedManager].permissionStatus == SCKMApplicationPermissionStatusLoading){
+            cloudKitInfo = [cloudKitInfo stringByAppendingString:@"\npermission: loading"];
+        }
+    }else if([SPRSimpleCloudKitManager sharedManager].accountStatus == SCKMAccountStatusLoading){
+        cloudKitInfo = @"Loading";
+    }else{
+        cloudKitInfo = @"Not Available";
+    }
+    return cloudKitInfo;
+}
+
+
+
+
+#pragma mark - Move This Into States
+
+/*
 
 -(void) updateState{
     accountStatus = [SPRSimpleCloudKitManager sharedManager].accountStatus;
@@ -194,40 +242,7 @@
         }];
     }
 }
-
-
-#pragma mark - Description
-
--(NSString*) description{
-    NSString* cloudKitInfo = nil;
-    if([SPRSimpleCloudKitManager sharedManager].accountStatus == CKAccountStatusAvailable){
-        cloudKitInfo = @"Available";
-        if([SPRSimpleCloudKitManager sharedManager].accountRecordID){
-            cloudKitInfo = [cloudKitInfo stringByAppendingFormat:@"\nrecord id: %@", [SPRSimpleCloudKitManager sharedManager].accountRecordID];
-        }
-        if([SPRSimpleCloudKitManager sharedManager].accountInfo){
-            cloudKitInfo = [cloudKitInfo stringByAppendingFormat:@"\ninfo: %@", [SPRSimpleCloudKitManager sharedManager].accountInfo];
-        }
-        if([SPRSimpleCloudKitManager sharedManager].permissionStatus == CKApplicationPermissionStatusCouldNotComplete){
-            cloudKitInfo = [cloudKitInfo stringByAppendingString:@"\npermission: unknown"];
-        }else if([SPRSimpleCloudKitManager sharedManager].permissionStatus == CKApplicationPermissionStatusDenied){
-            cloudKitInfo = [cloudKitInfo stringByAppendingString:@"\npermission: denied"];
-        }else if([SPRSimpleCloudKitManager sharedManager].permissionStatus == CKApplicationPermissionStatusGranted){
-            cloudKitInfo = [cloudKitInfo stringByAppendingString:@"\npermission: granted"];
-        }else if([SPRSimpleCloudKitManager sharedManager].permissionStatus == CKApplicationPermissionStatusInitialState){
-            cloudKitInfo = [cloudKitInfo stringByAppendingString:@"\npermission: initial state"];
-        }else if([SPRSimpleCloudKitManager sharedManager].permissionStatus == SCKMApplicationPermissionStatusLoading){
-            cloudKitInfo = [cloudKitInfo stringByAppendingString:@"\npermission: loading"];
-        }
-    }else if([SPRSimpleCloudKitManager sharedManager].accountStatus == SCKMAccountStatusLoading){
-        cloudKitInfo = @"Loading";
-    }else{
-        cloudKitInfo = @"Not Available";
-    }
-    return cloudKitInfo;
-}
-
-
+ */
 
 
 
