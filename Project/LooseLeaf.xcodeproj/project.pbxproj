@@ -1745,8 +1745,6 @@
 				66BD6E2F1591B57B00D4544C /* MMPaperButton.m */,
 				66BD6E8C1593D18800D4544C /* MMPolylineButton.h */,
 				66BD6E8D1593D18800D4544C /* MMPolylineButton.m */,
-				66BD6E951593E98D00D4544C /* MMTextButton.h */,
-				66BD6E961593E98D00D4544C /* MMTextButton.m */,
 				669329681595A87E0033E557 /* MMMapButton.h */,
 				669329691595A87E0033E557 /* MMMapButton.m */,
 			);
@@ -1801,6 +1799,8 @@
 				667D98B9192FC22A00625879 /* MMPDFButton.m */,
 				667EF0CA19A5501900B1A38D /* MMCloudKitButton.h */,
 				667EF0CB19A5501900B1A38D /* MMCloudKitButton.m */,
+				66BD6E951593E98D00D4544C /* MMTextButton.h */,
+				66BD6E961593E98D00D4544C /* MMTextButton.m */,
 			);
 			name = Used;
 			sourceTree = "<group>";

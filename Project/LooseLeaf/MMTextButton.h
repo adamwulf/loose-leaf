@@ -6,10 +6,10 @@
 //  Copyright (c) 2012 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMSidebarButton.h"
+#import "MMDarkSidebarButton.h"
 #import <CoreText/CoreText.h>
 
-@interface MMTextButton : MMSidebarButton{
+@interface MMTextButton : MMDarkSidebarButton{
     NSString* letter;
     CGFloat pointSize;
     CTFontSymbolicTraits traits;

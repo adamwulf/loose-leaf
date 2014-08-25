@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CloudKit/CloudKit.h>
 
 @interface MMCloudKitFriendTableViewCell : UITableViewCell
+
+-(void) setUserInfo:(CKDiscoveredUserInfo*)userInfo;
 
 @end

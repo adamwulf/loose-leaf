@@ -134,10 +134,13 @@
     MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
     if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
         NSArray* friends = ((MMCloudKitLoggedInState*)currentState).friendList;
-        CKDiscoveredUserInfo* user = [friends objectAtIndex:indexPath.row];
-        cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName];
+        if([friends count] > indexPath.row){
+            [cell setUserInfo:[friends objectAtIndex:indexPath.row]];
+        }else{
+            [cell setUserInfo:nil];
+        }
     }else{
-        cell.textLabel.text = @"";
+        [cell setUserInfo:nil];
     }
     return cell;
 }
