@@ -7,7 +7,8 @@
 //
 
 #import "MMCloudKitOptionsView.h"
-#import "UIView+Debug.h"
+#import "MMCloudKitDeclinedPermissionState.h"
+#import "MMCloudKitWaitingForLoginState.h"
 #import "Constants.h"
 
 @implementation MMCloudKitOptionsView{
@@ -87,31 +88,13 @@
 
 #pragma mark - MMCloudKitManagerDelegate
 
--(void) cloudKitDidError:(NSError *)err{
-    NSLog(@"cloudkit error: %@", err);
+-(void) cloudKitDidChangeState:(MMCloudKitBaseState *)currentState{
+    if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
+        loginButton.hidden = NO;
+    }else{
+        loginButton.hidden = YES;
+    }
     [self updateInterfaceBasedOniCloudStatus];
-}
-
--(void) cloudKitStatusIsLoading{
-    loginButton.hidden = YES;
-    NSLog(@"cloudkit is loading...");
-    [self updateInterfaceBasedOniCloudStatus];
-}
-
--(void) cloudKitIsUnavailableForThisUser{
-    loginButton.hidden = YES;
-    NSLog(@"CloudKit is unavailable!");
-    [self updateInterfaceBasedOniCloudStatus];
-}
-
--(void) cloudKitPermissionIsUnknownForThisUser{
-    loginButton.hidden = NO;
-    NSLog(@"unknown cloudkit permission. need to ask the user");
-    [self updateInterfaceBasedOniCloudStatus];
-}
-
--(void) cloudKitDidLoadFriends:(NSArray*)friendList{
-    NSLog(@"loaded friends: %@", friendList);
 }
 
 @end

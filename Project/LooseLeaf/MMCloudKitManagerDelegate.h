@@ -10,18 +10,11 @@
 #define LooseLeaf_MMCloudKitManagerDelegate_h
 
 #import <CloudKit/CloudKit.h>
+#import "MMCloudKitBaseState.h"
 
 @protocol MMCloudKitManagerDelegate <NSObject>
 
--(void) cloudKitStatusIsLoading;
-
--(void) cloudKitDidError:(NSError*)err;
-
--(void) cloudKitIsUnavailableForThisUser;
-
--(void) cloudKitPermissionIsUnknownForThisUser;
-
--(void) cloudKitDidLoadFriends:(NSArray*)friendList;
+-(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState;
 
 @end
 

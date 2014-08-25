@@ -10,6 +10,13 @@
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 #import "NSThread+BlockAdditions.h"
 #import "MMReachabilityManager.h"
+#import "MMCloudKitDeclinedPermissionState.h"
+#import "MMCloudKitAccountMissingState.h"
+#import "MMCloudKitOfflineState.h"
+#import "MMCloudKitWaitingForLoginState.h"
+#import "MMCloudKitLoggedInState.h"
+#import "MMCloudKitFetchFriendsState.h"
+#import "MMCloudKitFetchingAccountInfoState.h"
 
 @implementation MMCloudKitManager{
     MMCloudKitBaseState* currentState;
@@ -51,6 +58,7 @@
 -(void) changeToState:(MMCloudKitBaseState*)state{
     currentState = state;
     [currentState runState];
+    [self.delegate cloudKitDidChangeState:currentState];
 }
 
 -(void) retryStateAfterDelay{
@@ -83,28 +91,23 @@
 #pragma mark - Description
 
 -(NSString*) description{
-    NSString* cloudKitInfo = nil;
-    if([SPRSimpleCloudKitManager sharedManager].accountStatus == CKAccountStatusAvailable){
-        cloudKitInfo = @"Available";
-        if([SPRSimpleCloudKitManager sharedManager].accountRecordID){
-            cloudKitInfo = [cloudKitInfo stringByAppendingFormat:@"\nrecord id: %@", [SPRSimpleCloudKitManager sharedManager].accountRecordID];
-        }
-        if([SPRSimpleCloudKitManager sharedManager].accountInfo){
-            cloudKitInfo = [cloudKitInfo stringByAppendingFormat:@"\ninfo: %@", [SPRSimpleCloudKitManager sharedManager].accountInfo];
-        }
-        if([SPRSimpleCloudKitManager sharedManager].permissionStatus == CKApplicationPermissionStatusCouldNotComplete){
-            cloudKitInfo = [cloudKitInfo stringByAppendingString:@"\npermission: unknown"];
-        }else if([SPRSimpleCloudKitManager sharedManager].permissionStatus == CKApplicationPermissionStatusDenied){
-            cloudKitInfo = [cloudKitInfo stringByAppendingString:@"\npermission: denied"];
-        }else if([SPRSimpleCloudKitManager sharedManager].permissionStatus == CKApplicationPermissionStatusGranted){
-            cloudKitInfo = [cloudKitInfo stringByAppendingString:@"\npermission: granted"];
-        }else if([SPRSimpleCloudKitManager sharedManager].permissionStatus == CKApplicationPermissionStatusInitialState){
-            cloudKitInfo = [cloudKitInfo stringByAppendingString:@"\npermission: initial state"];
-        }
+    if([currentState isKindOfClass:[MMCloudKitDeclinedPermissionState class]]){
+        return @"Permission Denied";
+    }else if([currentState isKindOfClass:[MMCloudKitAccountMissingState class]]){
+        return @"No Account";
+    }else if([currentState isKindOfClass:[MMCloudKitOfflineState class]]){
+        return @"Network Offline";
+    }else if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
+        return @"Needs User to Login";
+    }else if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
+        return @"logged in";
+    }else if([currentState isKindOfClass:[MMCloudKitFetchFriendsState class]]){
+        return @"loading friends";
+    }else if([currentState isKindOfClass:[MMCloudKitFetchingAccountInfoState class]]){
+        return @"loading account info";
     }else{
-        cloudKitInfo = @"Not Available";
+        return @"initializing cloudkit";
     }
-    return cloudKitInfo;
 }
 
 
@@ -113,14 +116,6 @@
 #pragma mark - Move This Into States
 
 /*
-
--(void) updateState{
-    accountStatus = [SPRSimpleCloudKitManager sharedManager].accountStatus;
-    permissionStatus = [SPRSimpleCloudKitManager sharedManager].permissionStatus;
-    accountRecordID = [SPRSimpleCloudKitManager sharedManager].accountRecordID;
-    accountInfo = [SPRSimpleCloudKitManager sharedManager].accountInfo;
-
-}
 
 -(void) login{
     if(accountStatus == SCKMAccountStatusAvailable &&
@@ -136,47 +131,6 @@
     }
 }
 
--(void) silentlyLoadStateIfNeeded{
-    if(accountStatus == SCKMAccountStatusCouldNotDetermine){
-        [[SPRSimpleCloudKitManager sharedManager] silentlyVerifyiCloudAccountStatusOnComplete:^(SCKMAccountStatus _accountStatus,
-                                                                                                SCKMApplicationPermissionStatus _permissionStatus,
-                                                                                                NSError *error) {
-            mostRecentError = error;
-            if(!error){
-                [self updateState];
-            }else{
-                [self performSelector:@selector(updateState) withObject:nil afterDelay:1];
-            }
-        }];
-    }
-}
-
--(void) silentlyLoadAccountInformation{
-    if(accountStatus == SCKMAccountStatusAvailable &&
-       permissionStatus == SCKMApplicationPermissionStatusGranted){
-        [[SPRSimpleCloudKitManager sharedManager] silentlyFetchUserInfoOnComplete:^(CKRecordID* userRecord, CKDiscoveredUserInfo *userInfo, NSError *error) {
-            mostRecentError = error;
-            if(!error){
-                [self updateState];
-            }else{
-                [self performSelector:@selector(updateState) withObject:nil afterDelay:1];
-            }
-        }];
-    }
-}
-
--(void) silentlyLoadFriendList{
-    if(accountStatus == SCKMAccountStatusAvailable &&
-       permissionStatus == SCKMApplicationPermissionStatusGranted &&
-       accountRecordID &&
-       accountInfo){
-        [[SPRSimpleCloudKitManager sharedManager] discoverAllFriendsWithCompletionHandler:^(NSArray *friendRecords, NSError *error) {
-            friendList = friendRecords;
-            [self updateState];
-            [self.delegate cloudKitDidLoadFriends:friendList];
-        }];
-    }
-}
  */
 
 
