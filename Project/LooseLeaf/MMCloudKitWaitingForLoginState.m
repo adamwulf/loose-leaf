@@ -13,19 +13,12 @@
 #import "MMCloudKitFetchingAccountInfoState.h"
 #import "MMCloudKitFetchFriendsState.h"
 #import "MMCloudKitAccountMissingState.h"
+#import "MMCloudKitAskingForPermissionState.h"
 #import "MMCloudKitManager.h"
 
-@implementation MMCloudKitWaitingForLoginState{
-    BOOL isCheckingStatus;
-}
+@implementation MMCloudKitWaitingForLoginState
 
 -(void) runState{
-    @synchronized(self){
-        if(isCheckingStatus){
-            return;
-        }
-    }
-
     NSLog(@"Running state %@", NSStringFromClass([self class]));
     
     if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
@@ -37,61 +30,7 @@
 }
 
 -(void) didAskToLogin{
-    @synchronized(self){
-        if(isCheckingStatus){
-            return;
-        }
-        isCheckingStatus = YES;
-    }
-    [[SPRSimpleCloudKitManager sharedManager] promptAndFetchUserInfoOnComplete:^(SCKMAccountStatus accountStatus,
-                                                                                 SCKMApplicationPermissionStatus permissionStatus,
-                                                                                 CKRecordID *recordID,
-                                                                                 CKDiscoveredUserInfo *userInfo,
-                                                                                 NSError *error) {
-        @synchronized(self){
-            isCheckingStatus = NO;
-        }
-        if(error){
-            [self updateStateBasedOnError:error];
-        }else{
-            switch (accountStatus) {
-                case SCKMAccountStatusCouldNotDetermine:
-                    // accountStatus is unknown, so reload it
-                    [[MMCloudKitManager sharedManager] retryStateAfterDelay];
-                    break;
-                case SCKMAccountStatusNoAccount:
-                case SCKMAccountStatusRestricted:
-                    // notify that cloudKit is entirely unavailable
-                    [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitAccountMissingState alloc] init]];
-                    break;
-                case SCKMAccountStatusAvailable:
-                    switch (permissionStatus) {
-                        case SCKMApplicationPermissionStatusCouldNotComplete:
-                            [[MMCloudKitManager sharedManager] retryStateAfterDelay];
-                            break;
-                        case SCKMApplicationPermissionStatusDenied:
-                            // account exists for iCloud, but the user has
-                            // denied us permission to use it
-                            [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitDeclinedPermissionState alloc] init]];
-                            break;
-                        case SCKMApplicationPermissionStatusInitialState:
-                            // unknown permission
-                            // waiting for manual login
-                            [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitWaitingForLoginState alloc] init]];
-                        case SCKMApplicationPermissionStatusGranted:
-                            // icloud is available for this user, so we need to
-                            // fetch their account info if we don't already have it.
-                            if(recordID && userInfo){
-                                [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchFriendsState alloc] initWithUserRecord:recordID andUserInfo:userInfo]];
-                            }else{
-                                [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitBaseState alloc] init]];
-                            }
-                            break;
-                    }
-                    break;
-            }
-        }
-    }];
+    [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitAskingForPermissionState alloc] init]];
 }
 
 

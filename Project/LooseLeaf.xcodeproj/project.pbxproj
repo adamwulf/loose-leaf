@@ -15,6 +15,7 @@
 		660116F819ABB8980065C1B4 /* MMCloudKitFetchingAccountInfoState.m in Sources */ = {isa = PBXBuildFile; fileRef = 660116F719ABB8980065C1B4 /* MMCloudKitFetchingAccountInfoState.m */; };
 		660116FB19ABBA7E0065C1B4 /* MMCloudKitFetchFriendsState.m in Sources */ = {isa = PBXBuildFile; fileRef = 660116FA19ABBA7E0065C1B4 /* MMCloudKitFetchFriendsState.m */; };
 		660116FE19ABBBD70065C1B4 /* MMCloudKitLoggedInState.m in Sources */ = {isa = PBXBuildFile; fileRef = 660116FD19ABBBD70065C1B4 /* MMCloudKitLoggedInState.m */; };
+		6601170119ABC6710065C1B4 /* MMCloudKitAskingForPermissionState.m in Sources */ = {isa = PBXBuildFile; fileRef = 6601170019ABC6710065C1B4 /* MMCloudKitAskingForPermissionState.m */; };
 		66052A0317FA170600A94531 /* MMImmutableScrapsOnPaperState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66052A0217FA170600A94531 /* MMImmutableScrapsOnPaperState.m */; };
 		66066747193A7C1400C985E9 /* UIImage+Memory.m in Sources */ = {isa = PBXBuildFile; fileRef = 66066746193A7C1400C985E9 /* UIImage+Memory.m */; };
 		6606674A193A8BC400C985E9 /* MMMemoryManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66066749193A8BC400C985E9 /* MMMemoryManager.m */; };
@@ -324,6 +325,8 @@
 		660116FA19ABBA7E0065C1B4 /* MMCloudKitFetchFriendsState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitFetchFriendsState.m; sourceTree = "<group>"; };
 		660116FC19ABBBD70065C1B4 /* MMCloudKitLoggedInState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitLoggedInState.h; sourceTree = "<group>"; };
 		660116FD19ABBBD70065C1B4 /* MMCloudKitLoggedInState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitLoggedInState.m; sourceTree = "<group>"; };
+		660116FF19ABC6710065C1B4 /* MMCloudKitAskingForPermissionState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitAskingForPermissionState.h; sourceTree = "<group>"; };
+		6601170019ABC6710065C1B4 /* MMCloudKitAskingForPermissionState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitAskingForPermissionState.m; sourceTree = "<group>"; };
 		66052A0117FA170600A94531 /* MMImmutableScrapsOnPaperState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImmutableScrapsOnPaperState.h; sourceTree = "<group>"; };
 		66052A0217FA170600A94531 /* MMImmutableScrapsOnPaperState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImmutableScrapsOnPaperState.m; sourceTree = "<group>"; };
 		66066745193A7C1400C985E9 /* UIImage+Memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Memory.h"; sourceTree = "<group>"; };
@@ -932,6 +935,8 @@
 				660116FD19ABBBD70065C1B4 /* MMCloudKitLoggedInState.m */,
 				660116F319ABB8290065C1B4 /* MMCloudKitWaitingForLoginState.h */,
 				660116F419ABB8290065C1B4 /* MMCloudKitWaitingForLoginState.m */,
+				660116FF19ABC6710065C1B4 /* MMCloudKitAskingForPermissionState.h */,
+				6601170019ABC6710065C1B4 /* MMCloudKitAskingForPermissionState.m */,
 				660116EA19ABAEC10065C1B4 /* MMCloudKitOfflineState.h */,
 				660116EB19ABAEC10065C1B4 /* MMCloudKitOfflineState.m */,
 				660116ED19ABB1720065C1B4 /* MMCloudKitAccountMissingState.h */,
@@ -2543,6 +2548,7 @@
 				66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */,
 				6612C8851964C0E3003A9575 /* MMPageUndoRedoManager.m in Sources */,
 				66A471C617C7E06B00C2A5B6 /* MMScrapView.m in Sources */,
+				6601170119ABC6710065C1B4 /* MMCloudKitAskingForPermissionState.m in Sources */,
 				667C6357199FE4BC00E93CD6 /* MPNotificationViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
