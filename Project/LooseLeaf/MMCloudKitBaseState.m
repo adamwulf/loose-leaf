@@ -12,6 +12,8 @@
 #import "MMCloudKitOfflineState.h"
 #import "MMCloudKitAccountMissingState.h"
 #import "MMCloudKitDeclinedPermissionState.h"
+#import "MMCloudKitFetchingAccountInfoState.h"
+#import "MMCloudKitWaitingForLoginState.h"
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 
 //
@@ -21,7 +23,6 @@
 // appropriate reason
 @implementation MMCloudKitBaseState{
     BOOL isCheckingStatus;
-    BOOL needsAdditionalCheck;
 }
 
 -(void) runState{
@@ -38,18 +39,46 @@
         isCheckingStatus = NO;
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
     }else{
-        [[SPRSimpleCloudKitManager sharedManager] silentlyVerifyiCloudAccountStatusOnComplete:^(SCKMAccountStatus _accountStatus,
-                                                                                                SCKMApplicationPermissionStatus _permissionStatus,
+        [[SPRSimpleCloudKitManager sharedManager] silentlyVerifyiCloudAccountStatusOnComplete:^(SCKMAccountStatus accountStatus,
+                                                                                                SCKMApplicationPermissionStatus permissionStatus,
                                                                                                 NSError *error) {
+            NSLog(@"got account status and permisison info %d %d %p!", accountStatus, permissionStatus, error);
             isCheckingStatus = NO;
             if(error){
                 [self updateStateBasedOnError:error];
             }else{
-                
-                
-                NSLog(@"got account status and permisison info!");
-                
-                
+                switch (accountStatus) {
+                    case SCKMAccountStatusCouldNotDetermine:
+                        // accountStatus is unknown, so reload it
+                        [[MMCloudKitManager sharedManager] retryStateAfterDelay];
+                        break;
+                    case SCKMAccountStatusNoAccount:
+                    case SCKMAccountStatusRestricted:
+                        // notify that cloudKit is entirely unavailable
+                        [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitAccountMissingState alloc] init]];
+                        break;
+                    case SCKMAccountStatusAvailable:
+                        switch (permissionStatus) {
+                            case SCKMApplicationPermissionStatusCouldNotComplete:
+                                [[MMCloudKitManager sharedManager] retryStateAfterDelay];
+                                break;
+                            case SCKMApplicationPermissionStatusDenied:
+                                // account exists for iCloud, but the user has
+                                // denied us permission to use it
+                                [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitDeclinedPermissionState alloc] init]];
+                                break;
+                            case SCKMApplicationPermissionStatusInitialState:
+                                // unknown permission
+                                // waiting for manual login
+                                [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitWaitingForLoginState alloc] init]];
+                            case SCKMApplicationPermissionStatusGranted:
+                                // icloud is available for this user, so we need to
+                                // fetch their account info if we don't already have it.
+                                [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchingAccountInfoState alloc] init]];
+                                break;
+                        }
+                        break;
+                }
             }
         }];
     }

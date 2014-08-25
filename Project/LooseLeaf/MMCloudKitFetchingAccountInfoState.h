@@ -1,5 +1,5 @@
 //
-//  MMCloudKitLoginState.h
+//  MMCloudKitFetchingAccountInfoState.h
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 8/25/14.
@@ -8,6 +8,6 @@
 
 #import "MMCloudKitBaseState.h"
 
-@interface MMCloudKitLoginState : MMCloudKitBaseState
+@interface MMCloudKitFetchingAccountInfoState : MMCloudKitBaseState
 
 @end
