@@ -11,12 +11,13 @@
 #import "MMCloudKitWaitingForLoginState.h"
 #import "MMCloudKitLoggedInState.h"
 #import "MMCloudKitFriendTableViewCell.h"
+#import "MMCloudKitShareListVerticalLayout.h"
 #import "Constants.h"
 #import "UIView+Debug.h"
 
 @implementation MMCloudKitOptionsView{
     UILabel* cloudKitLabel;
-    UITableView* listOfFriendsView;
+    UICollectionView* listOfFriendsView;
     
     UIButton* loginButton;
 }
@@ -43,15 +44,15 @@
         [loginButton sizeToFit];
         [self addSubview:loginButton];
         
+        
         CGRect frForTable = self.bounds;
         frForTable.origin.y = kWidthOfSidebarButtonBuffer;
         frForTable.size.height -= kWidthOfSidebarButtonBuffer;
-        listOfFriendsView = [[UITableView alloc] initWithFrame:frForTable style:UITableViewStylePlain];
+        listOfFriendsView = [[UICollectionView alloc] initWithFrame:frForTable collectionViewLayout:[[MMCloudKitShareListVerticalLayout alloc] init]];
         listOfFriendsView.backgroundColor = [UIColor clearColor];
         listOfFriendsView.opaque = NO;
-        listOfFriendsView.separatorStyle = UITableViewCellSeparatorStyleNone;
         listOfFriendsView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        [listOfFriendsView registerClass:[MMCloudKitFriendTableViewCell class] forCellReuseIdentifier:@"MMCloudKitFriendTableViewCell"];
+        [listOfFriendsView registerClass:[MMCloudKitFriendTableViewCell class] forCellWithReuseIdentifier:@"MMCloudKitFriendTableViewCell"];
         listOfFriendsView.dataSource = self;
         listOfFriendsView.delegate = self;
         [self addSubview:listOfFriendsView];
@@ -116,55 +117,40 @@
     [self updateInterfaceBasedOniCloudStatus];
 }
 
-#pragma mark - UITableViewDataSource
+#pragma mark - UICollectionViewDataSource
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
     if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
-        return [((MMCloudKitLoggedInState*)currentState).friendList count];
+        return [((MMCloudKitLoggedInState*)currentState).friendList count] * 100;
     }
     return 0;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    MMCloudKitFriendTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"MMCloudKitFriendTableViewCell" forIndexPath:indexPath];
-    cell.backgroundColor = [UIColor clearColor];
-    cell.opaque = NO;
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    MMCloudKitFriendTableViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMCloudKitFriendTableViewCell" forIndexPath:indexPath];
 
     MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
     if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
         NSArray* friends = ((MMCloudKitLoggedInState*)currentState).friendList;
-        if([friends count] > indexPath.row){
-            [cell setUserInfo:[friends objectAtIndex:indexPath.row]];
-        }else{
-            [cell setUserInfo:nil];
-        }
+        int index = indexPath.row % [friends count];
+//        if([friends count] > indexPath.row){
+            [cell setUserInfo:[friends objectAtIndex:index] forIndex:indexPath.row];
+//        }else{
+//            [cell setUserInfo:nil];
+//        }
     }else{
-        [cell setUserInfo:nil];
+        [cell setUserInfo:nil forIndex:0];
     }
     return cell;
 }
 
-#pragma mark - UITableViewDelegate
+#pragma mark - UICollectionViewDelegate
 
--(CGFloat) buttonWidth{
-    CGFloat buttonWidth = self.bounds.size.width - kWidthOfSidebarButtonBuffer; // four buffers (3 between, and 1 on the right side)
-    buttonWidth /= 4; // four buttons wide
-    return buttonWidth;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return [self buttonWidth];
-}
-
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return [self buttonWidth];
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     NSLog(@"row: %d %d", indexPath.section, indexPath.section);
     
-    MMCloudKitFriendTableViewCell* cell = (MMCloudKitFriendTableViewCell*) [tableView cellForRowAtIndexPath:indexPath];
+    MMCloudKitFriendTableViewCell* cell = (MMCloudKitFriendTableViewCell*) [collectionView cellForItemAtIndexPath:indexPath];
     [cell bounce];
 }
 

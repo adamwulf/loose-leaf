@@ -67,6 +67,7 @@
 		664F413D1590661F006F8B09 /* MMRightArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413C1590661F006F8B09 /* MMRightArrow.m */; };
 		664F414015906628006F8B09 /* MMLeftArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F413F15906628006F8B09 /* MMLeftArrow.m */; };
 		664FB55B194BAC6A009C1EF9 /* MMCancelableGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 664FB55A194BAC6A009C1EF9 /* MMCancelableGestureRecognizer.m */; };
+		6650943419AD37E200D58118 /* MMCloudKitShareListVerticalLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 6650943319AD37E200D58118 /* MMCloudKitShareListVerticalLayout.m */; };
 		6650DD0F18F46D5100ADF591 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6650DD0E18F46D5100ADF591 /* Images.xcassets */; };
 		6650DD1218F4843400ADF591 /* photoalbum@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6650DD1118F4843400ADF591 /* photoalbum@2x.png */; };
 		6650DD1418F4843D00ADF591 /* photoalbum.png in Resources */ = {isa = PBXBuildFile; fileRef = 6650DD1318F4843D00ADF591 /* photoalbum.png */; };
@@ -438,6 +439,8 @@
 		664FB559194BAC6A009C1EF9 /* MMCancelableGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCancelableGestureRecognizer.h; sourceTree = "<group>"; };
 		664FB55A194BAC6A009C1EF9 /* MMCancelableGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCancelableGestureRecognizer.m; sourceTree = "<group>"; };
 		664FB55D194E2CF4009C1EF9 /* MMTouchLifeCycleDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMTouchLifeCycleDelegate.h; sourceTree = "<group>"; };
+		6650943219AD37E200D58118 /* MMCloudKitShareListVerticalLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitShareListVerticalLayout.h; sourceTree = "<group>"; };
+		6650943319AD37E200D58118 /* MMCloudKitShareListVerticalLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitShareListVerticalLayout.m; sourceTree = "<group>"; };
 		6650DD0E18F46D5100ADF591 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6650DD1118F4843400ADF591 /* photoalbum@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photoalbum@2x.png"; sourceTree = "<group>"; };
 		6650DD1318F4843D00ADF591 /* photoalbum.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = photoalbum.png; sourceTree = "<group>"; };
@@ -1823,6 +1826,8 @@
 				66A7AF1F19A53C7900E0AA29 /* MMCloudKitOptionsView.m */,
 				66EC7B7319ABD5FC00406D97 /* MMCloudKitFriendTableViewCell.h */,
 				66EC7B7419ABD5FC00406D97 /* MMCloudKitFriendTableViewCell.m */,
+				6650943219AD37E200D58118 /* MMCloudKitShareListVerticalLayout.h */,
+				6650943319AD37E200D58118 /* MMCloudKitShareListVerticalLayout.m */,
 			);
 			name = CloudKit;
 			sourceTree = "<group>";
@@ -2381,6 +2386,7 @@
 				66524521199591FF00C36609 /* MMTencentWeiboShareItem.m in Sources */,
 				66C2C1651879F3F200804123 /* UIBezierPath+Description.m in Sources */,
 				660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */,
+				6650943419AD37E200D58118 /* MMCloudKitShareListVerticalLayout.m in Sources */,
 				6635BE9D19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m in Sources */,
 				660E1DB0158FC7DB0001DA12 /* MMPaperIcon.m in Sources */,
 				665CAC2117B57B0B000BD505 /* MMPencilAndPaletteView.m in Sources */,

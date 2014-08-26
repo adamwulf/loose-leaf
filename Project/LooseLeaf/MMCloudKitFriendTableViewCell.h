@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <CloudKit/CloudKit.h>
 
-@interface MMCloudKitFriendTableViewCell : UITableViewCell
 
--(void) setUserInfo:(CKDiscoveredUserInfo*)userInfo;
+@interface MMCloudKitFriendTableViewCell : UICollectionViewCell
+
+-(void) setUserInfo:(CKDiscoveredUserInfo*)userInfo forIndex:(NSInteger)index;
 
 -(void) bounce;
 
