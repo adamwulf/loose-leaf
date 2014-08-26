@@ -78,6 +78,7 @@
 
 -(void) show{
     [super show];
+    [listOfFriendsView setCollectionViewLayout:[self idealLayoutForOrientation:(UIInterfaceOrientation)[MMRotationManager sharedInstace].lastBestOrientation] animated:NO];
     [self updateInterfaceBasedOniCloudStatus];
 }
 
@@ -124,7 +125,7 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
     if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
-        return [((MMCloudKitLoggedInState*)currentState).friendList count] * 7;
+        return [((MMCloudKitLoggedInState*)currentState).friendList count] * 77;
     }
     return 0;
 }
@@ -158,14 +159,18 @@
 
 #pragma mark - Rotation
 
--(void) updateInterfaceTo:(UIInterfaceOrientation)orientation{
+-(UICollectionViewLayout*) idealLayoutForOrientation:(UIInterfaceOrientation)orientation{
     if(orientation == UIDeviceOrientationLandscapeLeft){
-        [listOfFriendsView setCollectionViewLayout:[[MMCloudKitShareListHorizontalLayout alloc] init] animated:YES];
+        return [[MMCloudKitShareListHorizontalLayout alloc] init];
     }else if(orientation == UIDeviceOrientationLandscapeRight){
-        [listOfFriendsView setCollectionViewLayout:[[MMCloudKitShareListHorizontalLayout alloc] init] animated:YES];
+        return [[MMCloudKitShareListHorizontalLayout alloc] init];
     }else{
-        [listOfFriendsView setCollectionViewLayout:[[MMCloudKitShareListVerticalLayout alloc] init] animated:YES];
+        return [[MMCloudKitShareListVerticalLayout alloc] init];
     }
+}
+
+-(void) updateInterfaceTo:(UIInterfaceOrientation)orientation{
+    [listOfFriendsView setCollectionViewLayout:[self idealLayoutForOrientation:orientation] animated:YES];
 }
 
 

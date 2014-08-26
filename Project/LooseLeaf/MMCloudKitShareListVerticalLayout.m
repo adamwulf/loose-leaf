@@ -12,9 +12,7 @@
 @implementation MMCloudKitShareListVerticalLayout
 
 -(CGFloat) buttonWidth{
-    CGFloat buttonWidth = self.collectionView.bounds.size.width - kWidthOfSidebarButtonBuffer; // four buffers (3 between, and 1 on the right side)
-    buttonWidth /= 4; // four buttons wide
-    return buttonWidth;
+    return self.collectionView.bounds.size.width / 4;
 }
 
 

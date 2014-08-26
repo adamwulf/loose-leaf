@@ -9,6 +9,7 @@
 #import "MMCloudKitFriendTableViewCell.h"
 #import "MMTextButton.h"
 #import "UIView+Debug.h"
+#import "Constants.h"
 
 @implementation MMCloudKitFriendTableViewCell{
     UILabel* textLabel;
@@ -42,7 +43,7 @@
     NSString* initials = [[NSString stringWithFormat:@"%@%@", firstLetter, lastLetter] uppercaseString];
     initials = [NSString stringWithFormat:@"%d", (int) index];
 
-    CGFloat height = self.bounds.size.height;
+    CGFloat height = self.bounds.size.height - kWidthOfSidebarButtonBuffer / 4.0;
     [avatarButton removeFromSuperview];
     avatarButton = [[MMTextButton alloc] initWithFrame:CGRectMake(0, 0, height, height) andFont:[UIFont systemFontOfSize:16] andLetter:initials andXOffset:0 andYOffset:0];
     [self addSubview:avatarButton];
