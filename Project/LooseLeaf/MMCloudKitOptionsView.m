@@ -12,6 +12,7 @@
 #import "MMCloudKitLoggedInState.h"
 #import "MMCloudKitFriendTableViewCell.h"
 #import "MMCloudKitShareListVerticalLayout.h"
+#import "MMCloudKitShareListHorizontalLayout.h"
 #import "Constants.h"
 #import "UIView+Debug.h"
 
@@ -48,7 +49,7 @@
         CGRect frForTable = self.bounds;
         frForTable.origin.y = kWidthOfSidebarButtonBuffer;
         frForTable.size.height -= kWidthOfSidebarButtonBuffer;
-        listOfFriendsView = [[UICollectionView alloc] initWithFrame:frForTable collectionViewLayout:[[MMCloudKitShareListVerticalLayout alloc] init]];
+        listOfFriendsView = [[UICollectionView alloc] initWithFrame:frForTable collectionViewLayout:[[MMCloudKitShareListHorizontalLayout alloc] init]];
         listOfFriendsView.backgroundColor = [UIColor clearColor];
         listOfFriendsView.opaque = NO;
         listOfFriendsView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
