@@ -13,4 +13,6 @@
 
 -(void) setUserInfo:(CKDiscoveredUserInfo*)userInfo;
 
+-(void) bounce;
+
 @end

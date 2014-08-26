@@ -25,6 +25,8 @@
         textLabel.textColor = [UIColor whiteColor];
         textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        
         [self addSubview:textLabel];
     }
     return self;
@@ -50,5 +52,8 @@
 
 }
 
+-(void) bounce{
+    [avatarButton bounceButton];
+}
 
 @end

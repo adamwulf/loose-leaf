@@ -161,4 +161,13 @@
     return [self buttonWidth];
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    NSLog(@"row: %d %d", indexPath.section, indexPath.section);
+    
+    MMCloudKitFriendTableViewCell* cell = (MMCloudKitFriendTableViewCell*) [tableView cellForRowAtIndexPath:indexPath];
+    [cell bounce];
+}
+
+
+
 @end
