@@ -10,4 +10,6 @@
 
 @interface MMCloudKitShareListVerticalLayout : UICollectionViewLayout
 
+-(id) initWithFlip:(BOOL)shouldFlip;
+
 @end

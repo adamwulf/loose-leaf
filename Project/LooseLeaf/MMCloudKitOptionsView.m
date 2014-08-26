@@ -161,11 +161,13 @@
 
 -(UICollectionViewLayout*) idealLayoutForOrientation:(UIInterfaceOrientation)orientation{
     if(orientation == UIDeviceOrientationLandscapeLeft){
-        return [[MMCloudKitShareListHorizontalLayout alloc] init];
+        return [[MMCloudKitShareListHorizontalLayout alloc] initWithFlip:YES];
     }else if(orientation == UIDeviceOrientationLandscapeRight){
-        return [[MMCloudKitShareListHorizontalLayout alloc] init];
+        return [[MMCloudKitShareListHorizontalLayout alloc] initWithFlip:NO];
+    }else if(orientation == UIDeviceOrientationPortraitUpsideDown){
+        return [[MMCloudKitShareListVerticalLayout alloc] initWithFlip:YES];
     }else{
-        return [[MMCloudKitShareListVerticalLayout alloc] init];
+        return [[MMCloudKitShareListVerticalLayout alloc] initWithFlip:NO];
     }
 }
 

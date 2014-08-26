@@ -9,7 +9,16 @@
 #import "MMCloudKitShareListHorizontalLayout.h"
 #import "Constants.h"
 
-@implementation MMCloudKitShareListHorizontalLayout
+@implementation MMCloudKitShareListHorizontalLayout{
+    BOOL shouldFlip;
+}
+
+-(id) initWithFlip:(BOOL)_shouldFlip{
+    if(self = [super init]){
+        shouldFlip = _shouldFlip;
+    }
+    return self;
+}
 
 -(CGFloat) buttonWidth{
     return self.collectionView.bounds.size.width / 4;
@@ -30,14 +39,26 @@
     
     int transformIndex = indexPath.row % 4; // 4 cells rotate together
     
-    if(transformIndex == 0){
-        ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(-1.5*[self buttonWidth], +1.5*[self buttonWidth]), -M_PI_2);
-    }else if(transformIndex == 1){
-        ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(-0.5*[self buttonWidth], +0.5*[self buttonWidth]), -M_PI_2);
-    }else if(transformIndex == 2){
-        ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(+0.5*[self buttonWidth], -0.5*[self buttonWidth]), -M_PI_2);
+    if(shouldFlip){
+        if(transformIndex == 0){
+            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(+1.5*[self buttonWidth], +1.5*[self buttonWidth]), M_PI_2);
+        }else if(transformIndex == 1){
+            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(+0.5*[self buttonWidth], +0.5*[self buttonWidth]), M_PI_2);
+        }else if(transformIndex == 2){
+            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(-0.5*[self buttonWidth], -0.5*[self buttonWidth]), M_PI_2);
+        }else{
+            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(-1.5*[self buttonWidth], -1.5*[self buttonWidth]), M_PI_2);
+        }
     }else{
-        ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(+1.5*[self buttonWidth], -1.5*[self buttonWidth]), -M_PI_2);
+        if(transformIndex == 0){
+            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(-1.5*[self buttonWidth], +1.5*[self buttonWidth]), -M_PI_2);
+        }else if(transformIndex == 1){
+            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(-0.5*[self buttonWidth], +0.5*[self buttonWidth]), -M_PI_2);
+        }else if(transformIndex == 2){
+            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(+0.5*[self buttonWidth], -0.5*[self buttonWidth]), -M_PI_2);
+        }else{
+            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(+1.5*[self buttonWidth], -1.5*[self buttonWidth]), -M_PI_2);
+        }
     }
     
     return ret;
@@ -50,7 +71,7 @@
     NSInteger lastIndex = floorf((rect.origin.y + rect.size.height) / [self buttonWidth]);
     // round to sections of 4
     firstIndex -= firstIndex % 4;
-    lastIndex += 4 - firstIndex % 4;
+    lastIndex += 4 - lastIndex % 4;
     
     NSMutableArray* attrs = [NSMutableArray array];
     for (int index = firstIndex; index <= lastIndex; index++) {
@@ -64,6 +85,13 @@
 -(BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds
 {
     return NO;
+}
+
+-(CGPoint) targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset{
+    NSLog(@"target offset: %f %f", proposedContentOffset.x, proposedContentOffset.y);
+    NSLog(@"current offset: %f %f", self.collectionView.contentOffset.x, self.collectionView.contentOffset.y);
+    //    return [super targetContentOffsetForProposedContentOffset:proposedContentOffset];
+    return self.collectionView.contentOffset;
 }
 
 @end
