@@ -14,4 +14,6 @@
 
 -(void) hide;
 
+-(void) updateInterfaceTo:(UIInterfaceOrientation)orientation;
+
 @end

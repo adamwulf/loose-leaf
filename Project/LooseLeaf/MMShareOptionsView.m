@@ -57,5 +57,9 @@
     }
 }
 
+-(void) updateInterfaceTo:(UIInterfaceOrientation)orientation{
+    // noop
+}
+
 
 @end

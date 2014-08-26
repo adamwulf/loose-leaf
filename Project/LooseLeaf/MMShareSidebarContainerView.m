@@ -23,13 +23,14 @@
 #import "MMCopyShareItem.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMOpenInAppManager.h"
+#import "MMShareOptionsView.h"
 #import "Constants.h"
 #import "UIView+Debug.h"
 
 @implementation MMShareSidebarContainerView{
     UIView* sharingContentView;
     UIView* buttonView;
-    UIView* activeOptionsView;
+    MMShareOptionsView* activeOptionsView;
     NSMutableArray* shareItems;
 }
 
@@ -166,8 +167,9 @@
 
 #pragma mark - Rotation
 
--(void) updatePhotoRotation{
+-(void) updateInterfaceTo:(UIInterfaceOrientation)orientation{
     if(![self isVisible]) return;
+    [activeOptionsView updateInterfaceTo:orientation];
 }
 
 #pragma mark - MMShareItemDelegate

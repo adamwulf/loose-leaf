@@ -1679,10 +1679,16 @@ int skipAll = NO;
     }
 }
 
-
 -(void) didRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient{
     [importImageSidebar updatePhotoRotation];
 }
+
+-(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [sharePageSidebar updateInterfaceTo:orientation];
+    });
+}
+
 
 
 #pragma mark = Saving and Editing

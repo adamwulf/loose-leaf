@@ -22,6 +22,7 @@
 @synthesize delegate;
 @synthesize currentRotationReading;
 @synthesize currentRawRotationReading;
+@synthesize lastBestOrientation;
 
 static MMRotationManager* _instance = nil;
 
@@ -104,8 +105,10 @@ static MMRotationManager* _instance = nil;
                currentOrientation == UIDeviceOrientationLandscapeRight){
                 if(currentOrientation != UIDeviceOrientationFaceUp &&
                    currentOrientation != UIDeviceOrientationFaceDown &&
-                   currentOrientation != UIDeviceOrientationUnknown){
+                   currentOrientation != UIDeviceOrientationUnknown &&
+                   currentOrientation != lastBestOrientation){
                     lastBestOrientation = currentOrientation;
+                    [self.delegate didRotateToIdealOrientation:(UIInterfaceOrientation)lastBestOrientation];
                 }
             }
         }

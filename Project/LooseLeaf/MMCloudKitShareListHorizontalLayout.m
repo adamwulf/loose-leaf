@@ -46,7 +46,6 @@
     return ret;
 }
 
-
 -(NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
 {
     NSInteger numItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:0];

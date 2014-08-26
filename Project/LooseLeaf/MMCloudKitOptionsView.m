@@ -14,6 +14,7 @@
 #import "MMCloudKitShareListVerticalLayout.h"
 #import "MMCloudKitShareListHorizontalLayout.h"
 #import "Constants.h"
+#import "MMRotationManager.h"
 #import "UIView+Debug.h"
 
 @implementation MMCloudKitOptionsView{
@@ -49,7 +50,7 @@
         CGRect frForTable = self.bounds;
         frForTable.origin.y = kWidthOfSidebarButtonBuffer;
         frForTable.size.height -= kWidthOfSidebarButtonBuffer;
-        listOfFriendsView = [[UICollectionView alloc] initWithFrame:frForTable collectionViewLayout:[[MMCloudKitShareListHorizontalLayout alloc] init]];
+        listOfFriendsView = [[UICollectionView alloc] initWithFrame:frForTable collectionViewLayout:[[MMCloudKitShareListVerticalLayout alloc] init]];
         listOfFriendsView.backgroundColor = [UIColor clearColor];
         listOfFriendsView.opaque = NO;
         listOfFriendsView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -123,7 +124,7 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
     if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
-        return [((MMCloudKitLoggedInState*)currentState).friendList count] * 100;
+        return [((MMCloudKitLoggedInState*)currentState).friendList count] * 7;
     }
     return 0;
 }
@@ -155,6 +156,17 @@
     [cell bounce];
 }
 
+#pragma mark - Rotation
+
+-(void) updateInterfaceTo:(UIInterfaceOrientation)orientation{
+    if(orientation == UIDeviceOrientationLandscapeLeft){
+        [listOfFriendsView setCollectionViewLayout:[[MMCloudKitShareListHorizontalLayout alloc] init] animated:YES];
+    }else if(orientation == UIDeviceOrientationLandscapeRight){
+        [listOfFriendsView setCollectionViewLayout:[[MMCloudKitShareListHorizontalLayout alloc] init] animated:YES];
+    }else{
+        [listOfFriendsView setCollectionViewLayout:[[MMCloudKitShareListVerticalLayout alloc] init] animated:YES];
+    }
+}
 
 
 @end

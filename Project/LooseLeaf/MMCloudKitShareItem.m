@@ -90,7 +90,7 @@
 #pragma mark - Options Menu
 
 // will dispaly buttons to open in any other app
--(UIView*) optionsView{
+-(MMShareOptionsView*) optionsView{
     return sharingOptionsView;
 }
 

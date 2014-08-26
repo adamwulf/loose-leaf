@@ -436,6 +436,10 @@ struct SidebarButton{
     // noop
 }
 
+-(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
+    // noop
+}
+
 
 #pragma mark - Bezel Left and Right Gestures
 

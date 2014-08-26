@@ -13,6 +13,6 @@
 
 @property (weak) NSObject<MMShareItemDelegate>* shareDelegate;
 
--(void) updatePhotoRotation;
+-(void) updateInterfaceTo:(UIInterfaceOrientation)orientation;
 
 @end
