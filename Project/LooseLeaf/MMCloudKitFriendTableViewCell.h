@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <CloudKit/CloudKit.h>
-
+#import "MMAvatarButton.h"
 
 @interface MMCloudKitFriendTableViewCell : UICollectionViewCell
+
+@property (readonly) MMAvatarButton* avatarButton;
 
 -(void) setUserInfo:(CKDiscoveredUserInfo*)userInfo forIndex:(NSInteger)index;
 

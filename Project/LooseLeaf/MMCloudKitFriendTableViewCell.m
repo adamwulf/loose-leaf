@@ -7,15 +7,16 @@
 //
 
 #import "MMCloudKitFriendTableViewCell.h"
-#import "MMTextButton.h"
 #import "UIView+Debug.h"
 #import "UIView+Animations.h"
 #import "Constants.h"
 
 @implementation MMCloudKitFriendTableViewCell{
     UILabel* textLabel;
-    MMSidebarButton* avatarButton;
+    MMAvatarButton* avatarButton;
 }
+
+@synthesize avatarButton;
 
 - (id)initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
@@ -37,7 +38,6 @@
     return self;
 }
 
-
 -(void) setUserInfo:(CKDiscoveredUserInfo*)userInfo forIndex:(NSInteger)index{
     NSString* firstLetter = userInfo.firstName.length > 1 ? [userInfo.firstName substringToIndex:1] : @"";
     NSString* lastLetter = userInfo.lastName.length > 1 ? [userInfo.lastName substringToIndex:1] : @"";
@@ -46,7 +46,7 @@
 
     CGFloat height = self.bounds.size.height - kWidthOfSidebarButtonBuffer / 4.0;
     [avatarButton removeFromSuperview];
-    avatarButton = [[MMTextButton alloc] initWithFrame:CGRectMake(0, 0, height, height) andFont:[UIFont systemFontOfSize:16] andLetter:initials andXOffset:0 andYOffset:0];
+    avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, height, height) forLetter:initials];
     [self addSubview:avatarButton];
 
     CGRect lblFr = textLabel.frame;

@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CloudKit/CloudKit.h>
+#import "MMAvatarButton.h"
 
 @protocol MMShareItem;
 
@@ -17,5 +19,7 @@
 -(void) didShare:(NSObject<MMShareItem>*)shareItem;
 
 -(void) mayShare:(NSObject<MMShareItem>*)shareItem;
+
+-(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button;
 
 @end

@@ -304,6 +304,9 @@
 		66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E88A361591853E001A6EBF /* MMPapersIcon.m */; };
 		66EC7B7519ABD5FC00406D97 /* MMCloudKitFriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EC7B7419ABD5FC00406D97 /* MMCloudKitFriendTableViewCell.m */; };
 		66EDA79617CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDA79517CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m */; };
+		66EDE41D19AE6DB600A5623B /* MMCloudKitImportContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE41C19AE6DB600A5623B /* MMCloudKitImportContainerView.m */; };
+		66EDE42019AE736E00A5623B /* MMCloudKitExportView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE41F19AE736E00A5623B /* MMCloudKitExportView.m */; };
+		66EDE42719AE765000A5623B /* MMAvatarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE42619AE765000A5623B /* MMAvatarButton.m */; };
 		66F4517E18EB7C3C00A57C95 /* MMPhotoRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4517D18EB7C3C00A57C95 /* MMPhotoRowView.m */; };
 		66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */; };
@@ -879,6 +882,12 @@
 		66EDA79417CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchScrapGestureRecognizer.h; sourceTree = "<group>"; };
 		66EDA79517CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchScrapGestureRecognizer.m; sourceTree = "<group>"; };
 		66EDA7AB17CBD8580067BA63 /* MMPanAndPinchScrapGestureRecognizerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchScrapGestureRecognizerDelegate.h; sourceTree = "<group>"; };
+		66EDE41B19AE6DB600A5623B /* MMCloudKitImportContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitImportContainerView.h; sourceTree = "<group>"; };
+		66EDE41C19AE6DB600A5623B /* MMCloudKitImportContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitImportContainerView.m; sourceTree = "<group>"; };
+		66EDE41E19AE736E00A5623B /* MMCloudKitExportView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitExportView.h; sourceTree = "<group>"; };
+		66EDE41F19AE736E00A5623B /* MMCloudKitExportView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitExportView.m; sourceTree = "<group>"; };
+		66EDE42519AE765000A5623B /* MMAvatarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAvatarButton.h; sourceTree = "<group>"; };
+		66EDE42619AE765000A5623B /* MMAvatarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAvatarButton.m; sourceTree = "<group>"; };
 		66F4517A18EB4C1700A57C95 /* MMCachedRowsScrollViewDataSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMCachedRowsScrollViewDataSource.h; sourceTree = "<group>"; };
 		66F4517C18EB7C3C00A57C95 /* MMPhotoRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPhotoRowView.h; sourceTree = "<group>"; };
 		66F4517D18EB7C3C00A57C95 /* MMPhotoRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPhotoRowView.m; sourceTree = "<group>"; };
@@ -1350,35 +1359,8 @@
 			isa = PBXGroup;
 			children = (
 				66A7AF1A19A53ACD00E0AA29 /* CloudKit */,
-				66A7AF1B19A53AF400E0AA29 /* MMCloudKitShareItem.h */,
-				66A7AF1C19A53AF400E0AA29 /* MMCloudKitShareItem.m */,
-				66524506199573B100C36609 /* MMShareItem.h */,
-				665245051995721C00C36609 /* MMShareItemDelegate.h */,
-				6652450119956DFA00C36609 /* MMEmailShareItem.h */,
-				6652450219956DFA00C36609 /* MMEmailShareItem.m */,
-				66524507199575A900C36609 /* MMTextShareItem.h */,
-				66524508199575A900C36609 /* MMTextShareItem.m */,
-				6652450E19957AD600C36609 /* MMTwitterShareItem.h */,
-				6652450F19957AD600C36609 /* MMTwitterShareItem.m */,
-				66524515199587A700C36609 /* MMFacebookShareItem.h */,
-				66524516199587A700C36609 /* MMFacebookShareItem.m */,
-				6652451C19958C4900C36609 /* MMSinaWeiboShareItem.h */,
-				6652451D19958C4900C36609 /* MMSinaWeiboShareItem.m */,
-				6652451F199591FF00C36609 /* MMTencentWeiboShareItem.h */,
-				66524520199591FF00C36609 /* MMTencentWeiboShareItem.m */,
-				665245281996B45C00C36609 /* MMPhotoAlbumShareItem.h */,
-				665245291996B45C00C36609 /* MMPhotoAlbumShareItem.m */,
-				6652452B1996CE3000C36609 /* MMImgurShareItem.h */,
-				6652452C1996CE3000C36609 /* MMImgurShareItem.m */,
-				6652457B1996ECF900C36609 /* MMOpenInAppShareItem.h */,
-				6652457C1996ECF900C36609 /* MMOpenInAppShareItem.m */,
 				66B1EF27199809B100E9EEF1 /* OpenIn */,
-				662EFF2E199ECC760086C106 /* MMAirDropShareItem.h */,
-				662EFF2F199ECC760086C106 /* MMAirDropShareItem.m */,
-				667C6362199FED6E00E93CD6 /* MMPrintShareItem.h */,
-				667C6363199FED6E00E93CD6 /* MMPrintShareItem.m */,
-				667C636B199FF3D500E93CD6 /* MMCopyShareItem.h */,
-				667C636C199FF3D500E93CD6 /* MMCopyShareItem.m */,
+				66EDE42119AE754400A5623B /* Items */,
 			);
 			name = "Share Items";
 			sourceTree = "<group>";
@@ -1767,44 +1749,9 @@
 				661885D218F9AED50016A333 /* MMDarkSidebarButton.h */,
 				661885D318F9AED50016A333 /* MMDarkSidebarButton.m */,
 				66BD6E8B1593C3FF00D4544C /* MMSidebarButtonDelegate.h */,
-				66BD6E6E1593A8CC00D4544C /* MMPlusButton.h */,
-				66BD6E6F1593A8CC00D4544C /* MMPlusButton.m */,
-				66BD6E9D15941B7A00D4544C /* MMShareButton.h */,
-				66BD6E9E15941B7B00D4544C /* MMShareButton.m */,
-				66C0C9D61783EEEB009491B3 /* MMAdonitButton.h */,
-				66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */,
-				665CAC1E17B57AEE000BD505 /* Pencil */,
-				663C1876175538A800706A05 /* MMPencilEraserButton.h */,
-				663C1877175538A800706A05 /* MMPencilEraserButton.m */,
-				66BD6E8F1593DE4E00D4544C /* MMPolygonButton.h */,
-				66BD6E901593DE4E00D4544C /* MMPolygonButton.m */,
-				66BD6E921593E1D700D4544C /* MMImageButton.h */,
-				66BD6E931593E1D700D4544C /* MMImageButton.m */,
-				6655E924176291C800E4F36A /* MMScissorButton.h */,
-				6655E925176291C800E4F36A /* MMScissorButton.m */,
-				66B21A54175AFCA70049F1AF /* MMHandButton.h */,
-				66B21A55175AFCA70049F1AF /* MMHandButton.m */,
-				663C1895175A89EB00706A05 /* MMRulerButton.h */,
-				663C1896175A89ED00706A05 /* MMRulerButton.m */,
-				663C18891759B51600706A05 /* MMUndoRedoButton.h */,
-				663C188A1759B51600706A05 /* MMUndoRedoButton.m */,
-				66D0905415F7080F004D2CAF /* MMListAddPageButton.h */,
-				66D0905515F70810004D2CAF /* MMListAddPageButton.m */,
-				66D0905815F71941004D2CAF /* MMListAddPageButtonDelegate.h */,
-				6693C94718E4C55B0054FF41 /* MMLeftCloseButton.h */,
-				6693C94818E4C55B0054FF41 /* MMLeftCloseButton.m */,
-				6650DD1518F4849800ADF591 /* MMImageViewButton.h */,
-				6650DD1618F4849800ADF591 /* MMImageViewButton.m */,
-				666E252E18F5D9F100C17295 /* MMFaceButton.h */,
-				666E252F18F5D9F100C17295 /* MMFaceButton.m */,
-				666E253F18F5E43600C17295 /* MMPalmTreeButton.h */,
-				666E254018F5E43600C17295 /* MMPalmTreeButton.m */,
-				661885CF18F9ABD70016A333 /* MMFlipCameraButton.h */,
-				661885D018F9ABD70016A333 /* MMFlipCameraButton.m */,
-				667D98B8192FC22A00625879 /* MMPDFButton.h */,
-				667D98B9192FC22A00625879 /* MMPDFButton.m */,
-				667EF0CA19A5501900B1A38D /* MMCloudKitButton.h */,
-				667EF0CB19A5501900B1A38D /* MMCloudKitButton.m */,
+				66EDE42419AE761500A5623B /* List View */,
+				66EDE42319AE75F500A5623B /* Tool Sidebar */,
+				66EDE42219AE75EF00A5623B /* Share Sidebar */,
 				66BD6E951593E98D00D4544C /* MMTextButton.h */,
 				66BD6E961593E98D00D4544C /* MMTextButton.m */,
 			);
@@ -2084,6 +2031,7 @@
 		66DCFBBF1581C7F400B4918C /* MMPaperStack */ = {
 			isa = PBXGroup;
 			children = (
+				66EDE41A19AE6D9D00A5623B /* CloudKit Import Sidebar */,
 				66B42FBD19955A2C005D8214 /* Share Sidebar */,
 				66AC8D7618E7504D00A65036 /* Import Sidebar */,
 				66CE120417D3B6A400882275 /* Scrap Sidebar */,
@@ -2148,6 +2096,113 @@
 				66EDA7AB17CBD8580067BA63 /* MMPanAndPinchScrapGestureRecognizerDelegate.h */,
 			);
 			name = Scraps;
+			sourceTree = "<group>";
+		};
+		66EDE41A19AE6D9D00A5623B /* CloudKit Import Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				66EDE41B19AE6DB600A5623B /* MMCloudKitImportContainerView.h */,
+				66EDE41C19AE6DB600A5623B /* MMCloudKitImportContainerView.m */,
+				66EDE41E19AE736E00A5623B /* MMCloudKitExportView.h */,
+				66EDE41F19AE736E00A5623B /* MMCloudKitExportView.m */,
+			);
+			name = "CloudKit Import Sidebar";
+			sourceTree = "<group>";
+		};
+		66EDE42119AE754400A5623B /* Items */ = {
+			isa = PBXGroup;
+			children = (
+				66A7AF1B19A53AF400E0AA29 /* MMCloudKitShareItem.h */,
+				66A7AF1C19A53AF400E0AA29 /* MMCloudKitShareItem.m */,
+				66524506199573B100C36609 /* MMShareItem.h */,
+				665245051995721C00C36609 /* MMShareItemDelegate.h */,
+				6652450119956DFA00C36609 /* MMEmailShareItem.h */,
+				6652450219956DFA00C36609 /* MMEmailShareItem.m */,
+				66524507199575A900C36609 /* MMTextShareItem.h */,
+				66524508199575A900C36609 /* MMTextShareItem.m */,
+				6652450E19957AD600C36609 /* MMTwitterShareItem.h */,
+				6652450F19957AD600C36609 /* MMTwitterShareItem.m */,
+				66524515199587A700C36609 /* MMFacebookShareItem.h */,
+				66524516199587A700C36609 /* MMFacebookShareItem.m */,
+				6652451C19958C4900C36609 /* MMSinaWeiboShareItem.h */,
+				6652451D19958C4900C36609 /* MMSinaWeiboShareItem.m */,
+				6652451F199591FF00C36609 /* MMTencentWeiboShareItem.h */,
+				66524520199591FF00C36609 /* MMTencentWeiboShareItem.m */,
+				665245281996B45C00C36609 /* MMPhotoAlbumShareItem.h */,
+				665245291996B45C00C36609 /* MMPhotoAlbumShareItem.m */,
+				6652452B1996CE3000C36609 /* MMImgurShareItem.h */,
+				6652452C1996CE3000C36609 /* MMImgurShareItem.m */,
+				6652457B1996ECF900C36609 /* MMOpenInAppShareItem.h */,
+				6652457C1996ECF900C36609 /* MMOpenInAppShareItem.m */,
+				662EFF2E199ECC760086C106 /* MMAirDropShareItem.h */,
+				662EFF2F199ECC760086C106 /* MMAirDropShareItem.m */,
+				667C6362199FED6E00E93CD6 /* MMPrintShareItem.h */,
+				667C6363199FED6E00E93CD6 /* MMPrintShareItem.m */,
+				667C636B199FF3D500E93CD6 /* MMCopyShareItem.h */,
+				667C636C199FF3D500E93CD6 /* MMCopyShareItem.m */,
+			);
+			name = Items;
+			sourceTree = "<group>";
+		};
+		66EDE42219AE75EF00A5623B /* Share Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				66EDE42519AE765000A5623B /* MMAvatarButton.h */,
+				66EDE42619AE765000A5623B /* MMAvatarButton.m */,
+				6693C94718E4C55B0054FF41 /* MMLeftCloseButton.h */,
+				6693C94818E4C55B0054FF41 /* MMLeftCloseButton.m */,
+				6650DD1518F4849800ADF591 /* MMImageViewButton.h */,
+				6650DD1618F4849800ADF591 /* MMImageViewButton.m */,
+				666E252E18F5D9F100C17295 /* MMFaceButton.h */,
+				666E252F18F5D9F100C17295 /* MMFaceButton.m */,
+				666E253F18F5E43600C17295 /* MMPalmTreeButton.h */,
+				666E254018F5E43600C17295 /* MMPalmTreeButton.m */,
+				661885CF18F9ABD70016A333 /* MMFlipCameraButton.h */,
+				661885D018F9ABD70016A333 /* MMFlipCameraButton.m */,
+				667D98B8192FC22A00625879 /* MMPDFButton.h */,
+				667D98B9192FC22A00625879 /* MMPDFButton.m */,
+				667EF0CA19A5501900B1A38D /* MMCloudKitButton.h */,
+				667EF0CB19A5501900B1A38D /* MMCloudKitButton.m */,
+			);
+			name = "Share Sidebar";
+			sourceTree = "<group>";
+		};
+		66EDE42319AE75F500A5623B /* Tool Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				66BD6E6E1593A8CC00D4544C /* MMPlusButton.h */,
+				66BD6E6F1593A8CC00D4544C /* MMPlusButton.m */,
+				66BD6E9D15941B7A00D4544C /* MMShareButton.h */,
+				66BD6E9E15941B7B00D4544C /* MMShareButton.m */,
+				66C0C9D61783EEEB009491B3 /* MMAdonitButton.h */,
+				66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */,
+				663C1876175538A800706A05 /* MMPencilEraserButton.h */,
+				663C1877175538A800706A05 /* MMPencilEraserButton.m */,
+				66BD6E8F1593DE4E00D4544C /* MMPolygonButton.h */,
+				66BD6E901593DE4E00D4544C /* MMPolygonButton.m */,
+				66BD6E921593E1D700D4544C /* MMImageButton.h */,
+				66BD6E931593E1D700D4544C /* MMImageButton.m */,
+				6655E924176291C800E4F36A /* MMScissorButton.h */,
+				6655E925176291C800E4F36A /* MMScissorButton.m */,
+				66B21A54175AFCA70049F1AF /* MMHandButton.h */,
+				66B21A55175AFCA70049F1AF /* MMHandButton.m */,
+				663C1895175A89EB00706A05 /* MMRulerButton.h */,
+				663C1896175A89ED00706A05 /* MMRulerButton.m */,
+				663C18891759B51600706A05 /* MMUndoRedoButton.h */,
+				663C188A1759B51600706A05 /* MMUndoRedoButton.m */,
+				665CAC1E17B57AEE000BD505 /* Pencil */,
+			);
+			name = "Tool Sidebar";
+			sourceTree = "<group>";
+		};
+		66EDE42419AE761500A5623B /* List View */ = {
+			isa = PBXGroup;
+			children = (
+				66D0905415F7080F004D2CAF /* MMListAddPageButton.h */,
+				66D0905515F70810004D2CAF /* MMListAddPageButton.m */,
+				66D0905815F71941004D2CAF /* MMListAddPageButtonDelegate.h */,
+			);
+			name = "List View";
 			sourceTree = "<group>";
 		};
 		66F4517B18EB7C2800A57C95 /* Photo Row Views */ = {
@@ -2423,6 +2478,7 @@
 				6667480617C0166100D5C390 /* MMShapeBuilderView.m in Sources */,
 				667C635F199FE4BC00E93CD6 /* UIImage+MPAverageColor.m in Sources */,
 				666E254C18F618B000C17295 /* MMEventSidebarContentView.m in Sources */,
+				66EDE42719AE765000A5623B /* MMAvatarButton.m in Sources */,
 				66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */,
 				667C6355199FE4BC00E93CD6 /* MPNotification.m in Sources */,
 				66CE120317D3AD7C00882275 /* MMBounceButton.m in Sources */,
@@ -2442,6 +2498,7 @@
 				66BD6E941593E1D800D4544C /* MMImageButton.m in Sources */,
 				66A7AF2019A53C7900E0AA29 /* MMCloudKitOptionsView.m in Sources */,
 				66B75DB51877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.m in Sources */,
+				66EDE42019AE736E00A5623B /* MMCloudKitExportView.m in Sources */,
 				6627DFA719003DF900592EEF /* CaptureSessionManager.m in Sources */,
 				665182071937B41800CBEAB4 /* MMMemoryProfileView.m in Sources */,
 				66BD6E971593E98D00D4544C /* MMTextButton.m in Sources */,
@@ -2477,6 +2534,7 @@
 				664C62F015A36DA40072736A /* MMListPaperStackView.mm in Sources */,
 				6640E6D917E390BE00EB3F7D /* MMTouchVelocityGestureRecognizer.m in Sources */,
 				66A790BC196899980037F01A /* MMUndoRedoPageItem.m in Sources */,
+				66EDE41D19AE6DB600A5623B /* MMCloudKitImportContainerView.m in Sources */,
 				66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */,
 				66423DD019425AA7000A3709 /* MMCachedPreviewManager.m in Sources */,
 				66A08E71196B242F00476F99 /* MMUndoRedoMoveScrapItem.m in Sources */,

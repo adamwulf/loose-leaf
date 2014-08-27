@@ -13,6 +13,6 @@
 
 @interface MMCloudKitShareItem : NSObject<MMShareItem,MMOpenInAppOptionsViewDelegate>
 
--(void) userIsAskingToShareTo:(CKDiscoveredUserInfo*)userInfo;
+-(void) userIsAskingToShareTo:(CKDiscoveredUserInfo*)userInfo fromButton:(MMBounceButton*)button;
 
 @end

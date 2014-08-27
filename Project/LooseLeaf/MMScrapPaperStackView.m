@@ -28,8 +28,12 @@
 #import "MMOpenInAppManager.h"
 #import "MMTrashManager.h"
 #import "MMShareSidebarContainerView.h"
+#import "MMCloudKitImportContainerView.h"
+#import "MMCloudKitExportView.h"
+#import <CloudKit/CloudKit.h>
 
 @implementation MMScrapPaperStackView{
+    
     MMScrapSidebarContainerView* bezelScrapContainer;
     MMScrapContainerView* scrapContainer;
     // we get two gestures here, so that we can support
@@ -51,6 +55,11 @@
     
     // share sidebar
     MMShareSidebarContainerView* sharePageSidebar;
+    
+    // cloudkit import sidebar
+    MMTextButton* cloudKitImportButton;
+    MMCloudKitImportContainerView* cloudKitImportSidebar;
+    MMCloudKitExportView* cloudKitExportView;
 
     NSTimer* debugTimer;
     NSTimer* drawTimer;
@@ -131,6 +140,8 @@
         
         [insertImageButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
+
+        [self insertSubview:countButton belowSubview:addPageSidebarButton];
         importImageSidebar = [[MMImageSidebarContainerView alloc] initWithFrame:self.bounds forButton:insertImageButton animateFromLeft:YES];
         importImageSidebar.delegate = self;
         [importImageSidebar hide:NO onComplete:nil];
@@ -144,6 +155,20 @@
         [sharePageSidebar hide:NO onComplete:nil];
         sharePageSidebar.shareDelegate = self;
         [self addSubview:sharePageSidebar];
+        
+        cloudKitImportButton = [[MMTextButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)
+                                                           andFont:[UIFont systemFontOfSize:16]
+                                                         andLetter:@"CK"
+                                                        andXOffset:0
+                                                        andYOffset:0];
+        cloudKitImportButton.alpha = 0;
+        cloudKitImportSidebar = [[MMCloudKitImportContainerView alloc] initWithFrame:self.bounds forButton:cloudKitImportButton animateFromLeft:NO];
+        [cloudKitImportSidebar hide:NO onComplete:nil];
+        [self addSubview:sharePageSidebar];
+        
+        cloudKitExportView = [[MMCloudKitExportView alloc] initWithFrame:self.bounds];
+        [self addSubview:cloudKitExportView];
+
         
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds andPage:nil];
         [self addSubview:scrapContainer];
@@ -1800,6 +1825,11 @@ int skipAll = NO;
 
 -(void) didShare:(NSObject<MMShareItem> *)shareItem{
 //    NSLog(@"did share %@", NSStringFromClass([shareItem class]));
+    [sharePageSidebar hide:YES onComplete:nil];
+}
+
+-(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMBounceButton*)avatarButton{
+    [cloudKitExportView didShareTopPageToUser:userId fromButton:avatarButton];
     [sharePageSidebar hide:YES onComplete:nil];
 }
 

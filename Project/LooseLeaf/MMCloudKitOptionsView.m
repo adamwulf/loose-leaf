@@ -82,6 +82,7 @@
 -(void) show{
     [super show];
     [listOfFriendsView setCollectionViewLayout:[self idealLayoutForOrientation:(UIInterfaceOrientation)[MMRotationManager sharedInstace].lastBestOrientation] animated:NO];
+    [listOfFriendsView reloadData];
     [self updateInterfaceBasedOniCloudStatus];
 }
 
@@ -159,7 +160,7 @@
     MMCloudKitFriendTableViewCell* cell = (MMCloudKitFriendTableViewCell*) [collectionView cellForItemAtIndexPath:indexPath];
     [cell bounce];
     
-    [shareItem userIsAskingToShareTo:[self userInfoForIndexPath:indexPath]];
+    [shareItem userIsAskingToShareTo:[self userInfoForIndexPath:indexPath] fromButton:cell.avatarButton];
 }
 
 #pragma mark - Rotation

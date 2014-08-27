@@ -95,9 +95,8 @@
     return sharingOptionsView;
 }
 
--(void) userIsAskingToShareTo:(CKDiscoveredUserInfo*)userInfo{
-    [self.delegate didShare:self];
-    NSLog(@"shared to %@", userInfo);
+-(void) userIsAskingToShareTo:(CKDiscoveredUserInfo*)userInfo fromButton:(MMAvatarButton*)avatarButton{
+    [self.delegate didShare:self toUser:userInfo.userRecordID fromButton:avatarButton];
 }
 
 #pragma mark - MMShareViewDelegate

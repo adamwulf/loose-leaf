@@ -230,6 +230,11 @@
     [shareDelegate didShare:shareItem];
 }
 
+-(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button{
+    [shareDelegate didShare:shareItem toUser:userId fromButton:button];
+}
+
+
 #pragma mark - Dealloc
 
 -(void) dealloc{
