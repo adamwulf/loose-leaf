@@ -404,7 +404,8 @@ struct SidebarButton{
 
 -(void) didUpdateAccelerometerWithReading:(MMVector*)currentRawReading{
     [NSThread performBlockOnMainThread:^{
-        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        CGFloat rotationValue = [self sidebarButtonRotation];
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation(rotationValue);
         addPageSidebarButton.transform = rotationTransform;
         documentBackgroundSidebarButton.transform = rotationTransform;
         polylineButton.transform = rotationTransform;
@@ -420,6 +421,22 @@ struct SidebarButton{
         rulerButton.transform = rotationTransform;
         handButton.transform = rotationTransform;
         settingsButton.transform = rotationTransform;
+        
+        addPageSidebarButton.rotation = rotationValue;
+        documentBackgroundSidebarButton.rotation = rotationValue;
+        polylineButton.rotation = rotationValue;
+        insertImageButton.rotation = rotationValue;
+        textButton.rotation = rotationValue;
+        scissorButton.rotation = rotationValue;
+        pencilTool.rotation = rotationValue;
+        eraserButton.rotation = rotationValue;
+        shareButton.rotation = rotationValue;
+        mapButton.rotation = rotationValue;
+        undoButton.rotation = rotationValue;
+        redoButton.rotation = rotationValue;
+        rulerButton.rotation = rotationValue;
+        handButton.rotation = rotationValue;
+        settingsButton.rotation = rotationValue;
     }];
 }
 
