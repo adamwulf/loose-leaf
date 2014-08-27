@@ -151,7 +151,7 @@
 #pragma mark - UICollectionViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    NSLog(@"row: %d %d", indexPath.section, indexPath.section);
+    NSLog(@"row: %d %d", indexPath.section, indexPath.row);
     
     MMCloudKitFriendTableViewCell* cell = (MMCloudKitFriendTableViewCell*) [collectionView cellForItemAtIndexPath:indexPath];
     [cell bounce];

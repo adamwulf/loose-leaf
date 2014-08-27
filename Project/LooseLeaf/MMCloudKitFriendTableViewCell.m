@@ -9,6 +9,7 @@
 #import "MMCloudKitFriendTableViewCell.h"
 #import "MMTextButton.h"
 #import "UIView+Debug.h"
+#import "UIView+Animations.h"
 #import "Constants.h"
 
 @implementation MMCloudKitFriendTableViewCell{
@@ -54,11 +55,16 @@
     textLabel.frame = lblFr;
     
     textLabel.text = [NSString stringWithFormat:@"%@ %@ %d", userInfo.firstName, userInfo.lastName, (int) index];
-
+    // fit width
+    [textLabel sizeToFit];
+    CGRect fr = textLabel.frame;
+    fr.size.height = self.bounds.size.height;
+    textLabel.frame = fr;
 }
 
 -(void) bounce{
     [avatarButton bounceButton];
+    [textLabel bounceWithTransform:CGAffineTransformIdentity stepOne:.2 stepTwo:-.1];
 }
 
 @end
