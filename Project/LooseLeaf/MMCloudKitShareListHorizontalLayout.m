@@ -27,6 +27,9 @@
 
 -(CGSize)collectionViewContentSize{
     NSInteger numItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:0];
+    int offset = 4 - numItems%4;
+    if(offset == 4) offset = 0;
+    numItems += offset;
     return CGSizeMake(self.collectionView.bounds.size.width, numItems * [self buttonWidth]);
 }
 
@@ -92,7 +95,7 @@
 }
 
 -(CGPoint) targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset{
-    return self.collectionView.contentOffset;
+    return self.collectionView.contentOffset.y == 0 ? self.collectionView.contentOffset : proposedContentOffset;
 }
 
 -(void) prepareForTransitionFromLayout:(UICollectionViewLayout *)oldLayout{

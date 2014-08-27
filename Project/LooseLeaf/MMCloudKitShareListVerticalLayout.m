@@ -92,7 +92,7 @@
 
 -(CGPoint) targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset{
     // keep our content offset
-    return self.collectionView.contentOffset;
+    return self.collectionView.contentOffset.y == 0 ? self.collectionView.contentOffset : proposedContentOffset;
 }
 
 -(void) prepareForTransitionFromLayout:(UICollectionViewLayout *)oldLayout{
