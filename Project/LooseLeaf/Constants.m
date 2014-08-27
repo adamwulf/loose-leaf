@@ -39,3 +39,19 @@ CGPoint AveragePoints(CGPoint point1, CGPoint point2)
 {
     return CGPointMake((point1.x + point2.x)/2, (point1.y + point2.y)/2);
 };
+
+// interpolate between min/max with 0<=t<=1
+CGFloat sqrtTransform(CGFloat min, CGFloat max, CGFloat t){
+    t = sqrt(t);
+    return min + (max - min)*t;
+}
+
+CGFloat logTransform(CGFloat min, CGFloat max, CGFloat t){
+    t = logf(t+1) / logf(2);
+    return min + (max - min)*t;
+}
+
+CGFloat sqTransform(CGFloat min, CGFloat max, CGFloat t){
+    t = powf(t, 1.5);
+    return min + (max - min)*t;
+}

@@ -9,19 +9,9 @@
 #import "MMCloudKitExportView.h"
 #import "MMUntouchableView.h"
 #import "NSThread+BlockAdditions.h"
+#import "Constants.h"
 
 @implementation MMCloudKitExportView
-
--(CGFloat) sqrtTransform:(CGFloat)min max:(CGFloat)max t:(CGFloat)t{
-    t = sqrt(t);
-    return min + (max - min)*t;
-}
-
--(CGFloat) sqTransform:(CGFloat)min max:(CGFloat)max t:(CGFloat)t{
-    t = t*t;
-    return min + (max - min)*t;
-}
-
 
 #pragma mark - Sharing
 
@@ -30,17 +20,43 @@
     avatarButton.frame = fr;
     [self addSubview:avatarButton];
     
-    [UIView animateKeyframesWithDuration:3.5 delay:0 options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
+    CGFloat duration = .8;
+    
+    [UIView animateKeyframesWithDuration:duration delay:0 options:UIViewKeyframeAnimationOptionCalculationModeLinear animations:^{
         
         CGPoint originalCenter = avatarButton.center;
-        CGPoint targetCenter = CGPointMake(100 + avatarButton.bounds.size.width/2, avatarButton.bounds.size.height/2);
-        CGPoint diff = CGPointMake(targetCenter.x - originalCenter.x, targetCenter.y - originalCenter.y);
+        CGPoint targetCenter = CGPointMake(200 + avatarButton.bounds.size.width/2, avatarButton.bounds.size.height/2);
         
-        for (int foo = 0; foo < 10; foo += 1) {
-            [UIView addKeyframeWithRelativeStartTime:(foo/10.0) relativeDuration:0.1 animations:^{
-                
-                CGFloat x = [self sqrtTransform:originalCenter.x max:originalCenter.x + diff.x t:((foo+1)/10.0)];
-                CGFloat y = [self sqTransform:originalCenter.y max:originalCenter.y + diff.y t:((foo+1)/10.0)];
+        
+        int firstDrop = 14;
+        int topOfBounce = 18;
+        int maxSteps = 20;
+        CGFloat bounceHeight = 25;
+        
+        for (int foo = 1; foo <= maxSteps; foo += 1) {
+            NSLog(@"animation starting at: %f for %f", (foo-1)/(float)maxSteps, 1/(float)maxSteps);
+            [UIView addKeyframeWithRelativeStartTime:((foo-1)/(float)maxSteps) relativeDuration:1/(float)maxSteps animations:^{
+                CGFloat x;
+                CGFloat y;
+                CGFloat t;
+                if(foo <= firstDrop){
+                    t = foo/(float)firstDrop;
+                    x = logTransform(originalCenter.x, targetCenter.x, t);
+                    y = sqTransform(originalCenter.y, targetCenter.y, t);
+                    NSLog(@"1keyframe to %f %f %f => %d", x, y, t, foo);
+                }else if(foo <= topOfBounce){
+                    // 7, 8
+                    t = (foo-firstDrop)/(float)(topOfBounce - firstDrop);
+                    x = targetCenter.x;
+                    y = sqrtTransform(targetCenter.y, targetCenter.y + bounceHeight, t);
+                    NSLog(@"2keyframe to %f %f %f => %d", x, y, t, foo);
+                }else{
+                    // 9
+                    t = (foo-topOfBounce) / (float)(maxSteps - topOfBounce);
+                    x = targetCenter.x;
+                    y = sqTransform(targetCenter.y + bounceHeight, targetCenter.y, t);
+                    NSLog(@"3keyframe to %f %f %f => %d", x, y, t, foo);
+                }
                 
                 avatarButton.center = CGPointMake(x, y);
             }];

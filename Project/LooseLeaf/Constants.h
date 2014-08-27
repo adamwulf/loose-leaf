@@ -180,4 +180,24 @@ extern "C" {
 
 
 
+#pragma mark - Math Interpolation Helpers
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+    
+    // interpolate between min/max with 0<=t<=1
+    CGFloat logTransform(CGFloat min, CGFloat max, CGFloat t);
+
+    CGFloat sqrtTransform(CGFloat min, CGFloat max, CGFloat t);
+
+    CGFloat sqTransform(CGFloat min, CGFloat max, CGFloat t);
+    
+#ifdef __cplusplus
+    }  // extern "C"
+
+#endif
+
+    
+    
 #endif
