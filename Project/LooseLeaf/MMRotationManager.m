@@ -171,9 +171,11 @@ static BOOL ignoredFirstRotateNotification = NO;
     }
     
     if(shouldIgnoreEvents){
+        NSLog(@"ignoring rotation event");
         return;
     }
     if(!ignoredFirstRotateNotification){
+        NSLog(@"ignoring first rotation event");
         ignoredFirstRotateNotification = YES;
         return;
     }
@@ -194,6 +196,8 @@ static BOOL ignoredFirstRotateNotification = NO;
         orientation = UIDeviceOrientationPortrait;
     }
 
+    NSLog(@"orientation set to :%d", orientation);
+    
     // cast to save a warning
     UIInterfaceOrientation devOrient = (UIInterfaceOrientation) orientation;
     UIInterfaceOrientation currOrient = [self currentStatusbarOrientation];

@@ -12,6 +12,7 @@
 #import "UIView+Debug.h"
 #import "Constants.h"
 #import "UIDevice+PPI.h"
+#import "MMRotationManager.h"
 
 @implementation MMOpenInAppOptionsView{
     NSMutableArray* buttons;
@@ -82,6 +83,9 @@
             if(!button){
                 button = [[MMOpenInAppSidebarButton alloc] initWithFrame:buttonFr andIndexPath:indexPath];
                 [button addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
+                CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+                button.rotation = [self sidebarButtonRotation];
+                button.transform = rotationTransform;
                 [buttons addObject:button];
                 [self addSubview:button];
             }else{
@@ -132,6 +136,30 @@
 
 -(void) isSendingToApplication:(NSString *)application{
     // noops
+}
+
+#pragma mark - Rotation
+
+-(CGFloat) sidebarButtonRotation{
+    if([MMRotationManager sharedInstace].lastBestOrientation == UIInterfaceOrientationPortrait){
+        return 0;
+    }else if([MMRotationManager sharedInstace].lastBestOrientation == UIInterfaceOrientationLandscapeLeft){
+        return -M_PI_2;
+    }else if([MMRotationManager sharedInstace].lastBestOrientation == UIInterfaceOrientationLandscapeRight){
+        return M_PI_2;
+    }else{
+        return M_PI;
+    }
+}
+
+-(void) updateInterfaceTo:(UIInterfaceOrientation)orientation{
+    [UIView animateWithDuration:.3 animations:^{
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        for(MMBounceButton* button in buttons){
+            button.rotation = [self sidebarButtonRotation];
+            button.transform = rotationTransform;
+        }
+    }];
 }
 
 #pragma mark - Actions

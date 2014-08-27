@@ -422,6 +422,7 @@ struct SidebarButton{
         settingsButton.transform = rotationTransform;
     }];
 }
+
 -(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
     [NSThread performBlockOnMainThread:^{
         [[visibleStackHolder peekSubview] didUpdateAccelerometerWithRawReading:currentRawReading];

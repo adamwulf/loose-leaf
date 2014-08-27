@@ -24,6 +24,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMOpenInAppManager.h"
 #import "MMShareOptionsView.h"
+#import "MMRotationManager.h"
 #import "Constants.h"
 #import "UIView+Debug.h"
 
@@ -167,9 +168,28 @@
 
 #pragma mark - Rotation
 
+-(CGFloat) sidebarButtonRotation{
+    if([MMRotationManager sharedInstace].lastBestOrientation == UIInterfaceOrientationPortrait){
+        return 0;
+    }else if([MMRotationManager sharedInstace].lastBestOrientation == UIInterfaceOrientationLandscapeLeft){
+        return -M_PI_2;
+    }else if([MMRotationManager sharedInstace].lastBestOrientation == UIInterfaceOrientationLandscapeRight){
+        return M_PI_2;
+    }else{
+        return M_PI;
+    }
+}
+
 -(void) updateInterfaceTo:(UIInterfaceOrientation)orientation{
     if(![self isVisible]) return;
     [activeOptionsView updateInterfaceTo:orientation];
+    [UIView animateWithDuration:.3 animations:^{
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        for(MMBounceButton* button in buttonView.subviews){
+            button.rotation = [self sidebarButtonRotation];
+            button.transform = rotationTransform;
+        }
+    }];
 }
 
 #pragma mark - MMShareItemDelegate

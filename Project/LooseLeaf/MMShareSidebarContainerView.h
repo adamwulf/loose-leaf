@@ -8,6 +8,7 @@
 
 #import "MMSlidingSidebarContainerView.h"
 #import "MMShareItemDelegate.h"
+#import "MMVector.h"
 
 @interface MMShareSidebarContainerView : MMSlidingSidebarContainerView<MMShareItemDelegate>
 
