@@ -1828,7 +1828,7 @@ int skipAll = NO;
     [sharePageSidebar hide:YES onComplete:nil];
 }
 
--(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMBounceButton*)avatarButton{
+-(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)avatarButton{
     [cloudKitExportView didShareTopPageToUser:userId fromButton:avatarButton];
     [sharePageSidebar hide:YES onComplete:nil];
 }
