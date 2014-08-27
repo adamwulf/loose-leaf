@@ -36,6 +36,7 @@
         
         // arbitrary size, will be resized to fit when it's added to a sidebar
         sharingOptionsView = [[MMCloudKitOptionsView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+        sharingOptionsView.shareItem = self;
         
         dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"yyyyMMdd-HHmm"];
@@ -92,6 +93,11 @@
 // will dispaly buttons to open in any other app
 -(MMShareOptionsView*) optionsView{
     return sharingOptionsView;
+}
+
+-(void) userIsAskingToShareTo:(CKDiscoveredUserInfo*)userInfo{
+    [self.delegate didShare:self];
+    NSLog(@"shared to %@", userInfo);
 }
 
 #pragma mark - MMShareViewDelegate

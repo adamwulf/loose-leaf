@@ -13,6 +13,7 @@
 #import "MMCloudKitFriendTableViewCell.h"
 #import "MMCloudKitShareListVerticalLayout.h"
 #import "MMCloudKitShareListHorizontalLayout.h"
+#import "MMCloudKitShareItem.h"
 #import "Constants.h"
 #import "MMRotationManager.h"
 #import "UIView+Debug.h"
@@ -23,6 +24,8 @@
     
     UIButton* loginButton;
 }
+
+@synthesize shareItem;
 
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
@@ -122,6 +125,18 @@
 
 #pragma mark - UICollectionViewDataSource
 
+-(CKDiscoveredUserInfo*) userInfoForIndexPath:(NSIndexPath*)indexPath{
+    MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
+    if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
+        NSArray* friends = ((MMCloudKitLoggedInState*)currentState).friendList;
+        int index = indexPath.row % [friends count];
+//        if([friends count] > indexPath.row){
+        return [friends objectAtIndex:index];
+//        }
+    }
+    return nil;
+}
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
     if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
@@ -132,19 +147,7 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     MMCloudKitFriendTableViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMCloudKitFriendTableViewCell" forIndexPath:indexPath];
-
-    MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
-    if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
-        NSArray* friends = ((MMCloudKitLoggedInState*)currentState).friendList;
-        int index = indexPath.row % [friends count];
-//        if([friends count] > indexPath.row){
-            [cell setUserInfo:[friends objectAtIndex:index] forIndex:indexPath.row];
-//        }else{
-//            [cell setUserInfo:nil];
-//        }
-    }else{
-        [cell setUserInfo:nil forIndex:0];
-    }
+    [cell setUserInfo:[self userInfoForIndexPath:indexPath] forIndex:indexPath.row];
     return cell;
 }
 
@@ -155,6 +158,8 @@
     
     MMCloudKitFriendTableViewCell* cell = (MMCloudKitFriendTableViewCell*) [collectionView cellForItemAtIndexPath:indexPath];
     [cell bounce];
+    
+    [shareItem userIsAskingToShareTo:[self userInfoForIndexPath:indexPath]];
 }
 
 #pragma mark - Rotation

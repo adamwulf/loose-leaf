@@ -52,7 +52,6 @@
         [sharingContentView addSubview:buttonView];
         [sidebarContentView addSubview:sharingContentView];
         
-        
         shareItems = [NSMutableArray array];
         [shareItems addObject:[[MMCloudKitShareItem alloc] init]];
         [shareItems addObject:[[MMEmailShareItem alloc] init]];

@@ -10,6 +10,10 @@
 #import "MMShareOptionsView.h"
 #import "MMCloudKitManager.h"
 
+@class MMCloudKitShareItem;
+
 @interface MMCloudKitOptionsView : MMShareOptionsView<MMCloudKitManagerDelegate,UICollectionViewDataSource,UICollectionViewDelegate>
+
+@property (nonatomic, weak) MMCloudKitShareItem* shareItem;
 
 @end
