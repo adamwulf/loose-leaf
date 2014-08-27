@@ -10,6 +10,7 @@
 #import "Constants.h"
 
 @implementation MMCloudKitShareListVerticalLayout{
+    UICollectionViewLayout* previousLayout;
     BOOL shouldFlip;
 }
 
@@ -34,13 +35,23 @@
     
     CGFloat height = [self buttonWidth];
     CGFloat width = self.collectionView.bounds.size.width;
-    ret.frame = CGRectMake(0, indexPath.row * height, width, height);
+    ret.bounds = CGRectMake(0, 0, width, height);
+    
+    CGPoint originalCenter = CGPointMake(width/2, indexPath.row * height + height/2);
+    ret.center = originalCenter;
     
     if(shouldFlip){
+        //
+        // need to account for the last square of items
+        // so that its flush with the previous
+        // when it's upside down, even if it doesn't
+        // contain 4 items.
         int index = indexPath.row;
         index = floorf(indexPath.row/4)*4 + (4 - indexPath.row % 4 - 1);
-        ret.frame = CGRectMake(0, index * height, width, height);
-        ret.transform = CGAffineTransformMakeRotation(M_PI);
+        ret.center = CGPointMake(width/2, index * height + height/2);
+        ret.transform = CGAffineTransformMakeRotation(-M_PI);
+    }else{
+        ret.transform = CGAffineTransformIdentity;
     }
     return ret;
 }
@@ -72,12 +83,27 @@
 }
 
 -(CGPoint) targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset{
-    NSLog(@"target offset: %f %f", proposedContentOffset.x, proposedContentOffset.y);
-    NSLog(@"current offset: %f %f", self.collectionView.contentOffset.x, self.collectionView.contentOffset.y);
-//    return [super targetContentOffsetForProposedContentOffset:proposedContentOffset];
+    // keep our content offset
     return self.collectionView.contentOffset;
 }
 
+-(void) prepareForTransitionFromLayout:(UICollectionViewLayout *)oldLayout{
+    // save our previous layout so that
+    // we can animate from it as we come into view
+    previousLayout = oldLayout;
+}
+
+-(UICollectionViewLayoutAttributes*) initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath{
+    if(previousLayout){
+        return [previousLayout layoutAttributesForItemAtIndexPath:itemIndexPath];
+    }else{
+        return [self layoutAttributesForItemAtIndexPath:itemIndexPath];
+    }
+}
+
+-(UICollectionViewLayoutAttributes*) finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath{
+    return [self layoutAttributesForItemAtIndexPath:itemIndexPath];
+}
 
 
 @end

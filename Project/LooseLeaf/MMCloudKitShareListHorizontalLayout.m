@@ -10,6 +10,7 @@
 #import "Constants.h"
 
 @implementation MMCloudKitShareListHorizontalLayout{
+    UICollectionViewLayout* previousLayout;
     BOOL shouldFlip;
 }
 
@@ -37,30 +38,43 @@
     ret.bounds = CGRectMake(0, 0, width, height);
     ret.center = CGPointMake(width/2, indexPath.row * height + height/2);
     
+    NSLog(@"hindex: %d  c: %f %f", indexPath.row, ret.center.x, ret.center.y);
+
     int transformIndex = indexPath.row % 4; // 4 cells rotate together
     
+    CGPoint translate;
     if(shouldFlip){
         if(transformIndex == 0){
-            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(+1.5*[self buttonWidth], +1.5*[self buttonWidth]), M_PI_2);
+            translate = CGPointMake(+1.5*[self buttonWidth], +1.5*[self buttonWidth]);
+//            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(+1.5*[self buttonWidth], +1.5*[self buttonWidth]), M_PI_2);
         }else if(transformIndex == 1){
-            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(+0.5*[self buttonWidth], +0.5*[self buttonWidth]), M_PI_2);
+            translate = CGPointMake(+0.5*[self buttonWidth], +0.5*[self buttonWidth]);
+//            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(+0.5*[self buttonWidth], +0.5*[self buttonWidth]), M_PI_2);
         }else if(transformIndex == 2){
-            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(-0.5*[self buttonWidth], -0.5*[self buttonWidth]), M_PI_2);
+            translate = CGPointMake(-0.5*[self buttonWidth], -0.5*[self buttonWidth]);
+//            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(-0.5*[self buttonWidth], -0.5*[self buttonWidth]), M_PI_2);
         }else{
-            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(-1.5*[self buttonWidth], -1.5*[self buttonWidth]), M_PI_2);
+            translate = CGPointMake(-1.5*[self buttonWidth], -1.5*[self buttonWidth]);
+//            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(-1.5*[self buttonWidth], -1.5*[self buttonWidth]), M_PI_2);
         }
+        ret.transform = CGAffineTransformMakeRotation(M_PI_2);
     }else{
         if(transformIndex == 0){
-            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(-1.5*[self buttonWidth], +1.5*[self buttonWidth]), -M_PI_2);
+            translate = CGPointMake(-1.5*[self buttonWidth], +1.5*[self buttonWidth]);
+//            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(-1.5*[self buttonWidth], +1.5*[self buttonWidth]), -M_PI_2);
         }else if(transformIndex == 1){
-            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(-0.5*[self buttonWidth], +0.5*[self buttonWidth]), -M_PI_2);
+            translate = CGPointMake(-0.5*[self buttonWidth], +0.5*[self buttonWidth]);
+//            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(-0.5*[self buttonWidth], +0.5*[self buttonWidth]), -M_PI_2);
         }else if(transformIndex == 2){
-            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(+0.5*[self buttonWidth], -0.5*[self buttonWidth]), -M_PI_2);
+            translate = CGPointMake(+0.5*[self buttonWidth], -0.5*[self buttonWidth]);
+//            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(+0.5*[self buttonWidth], -0.5*[self buttonWidth]), -M_PI_2);
         }else{
-            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(+1.5*[self buttonWidth], -1.5*[self buttonWidth]), -M_PI_2);
+            translate = CGPointMake(+1.5*[self buttonWidth], -1.5*[self buttonWidth]);
+//            ret.transform = CGAffineTransformRotate(CGAffineTransformMakeTranslation(+1.5*[self buttonWidth], -1.5*[self buttonWidth]), -M_PI_2);
         }
+        ret.transform = CGAffineTransformMakeRotation(-M_PI_2);
     }
-    
+    ret.center = CGPointMake(ret.center.x + translate.x, ret.center.y + translate.y);
     return ret;
 }
 
@@ -92,6 +106,33 @@
     NSLog(@"current offset: %f %f", self.collectionView.contentOffset.x, self.collectionView.contentOffset.y);
     //    return [super targetContentOffsetForProposedContentOffset:proposedContentOffset];
     return self.collectionView.contentOffset;
+}
+
+-(void) prepareForTransitionFromLayout:(UICollectionViewLayout *)oldLayout{
+    previousLayout = oldLayout;
+    NSLog(@"h prepareForTransitionFromLayout: %@", NSStringFromClass([oldLayout class]));
+}
+
+- (void)prepareForCollectionViewUpdates:(NSArray *)updateItems{
+    NSLog(@"h prepareForCollectionViewUpdates");
+}
+
+- (void)finalizeCollectionViewUpdates{
+    NSLog(@"h finalizeCollectionViewUpdates");
+}
+
+-(UICollectionViewLayoutAttributes*) initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath{
+    NSLog(@"h initialLayoutAttributesForAppearingItemAtIndexPath:");
+    if(previousLayout){
+        return [previousLayout layoutAttributesForItemAtIndexPath:itemIndexPath];
+    }else{
+        return [self layoutAttributesForItemAtIndexPath:itemIndexPath];
+    }
+}
+
+-(UICollectionViewLayoutAttributes*) finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath{
+    NSLog(@"h finalLayoutAttributesForDisappearingItemAtIndexPath:");
+    return [self layoutAttributesForItemAtIndexPath:itemIndexPath];
 }
 
 @end
