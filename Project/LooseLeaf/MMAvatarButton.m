@@ -21,6 +21,7 @@
     CGFloat targetProgress;
     BOOL targetSuccess;
     CGFloat lastProgress;
+    CGFloat lastRadius;
 }
 
 - (id)initWithFrame:(CGRect)_frame forLetter:(NSString*)_letter{
@@ -116,10 +117,12 @@
 
 -(void) animateBounceToTopOfScreenAtX:(CGFloat)xLoc withDuration:(CGFloat)duration completion:(void (^)(BOOL finished))completion{
     
+    CGFloat targetSize = 80;
+    
     [UIView animateKeyframesWithDuration:duration delay:0 options:UIViewKeyframeAnimationOptionCalculationModeLinear animations:^{
         
         CGPoint originalCenter = self.center;
-        CGPoint targetCenter = CGPointMake(xLoc + self.bounds.size.width/2, self.bounds.size.height/2);
+        CGPoint targetCenter = CGPointMake(xLoc + targetSize/2, targetSize/2);
         
         
         int firstDrop = 14;
@@ -147,7 +150,7 @@
                     x = targetCenter.x;
                     y = sqTransform(targetCenter.y + bounceHeight, targetCenter.y, t);
                 }
-                self.bounds = CGRectMake(0, 0, 80, 80);
+                self.bounds = CGRectMake(0, 0, targetSize, targetSize);
                 self.center = CGPointMake(x, y);
             }];
         }
@@ -157,7 +160,7 @@
     }];
 }
 
--(void) animateToPercent:(CGFloat)progress success:(BOOL)succeeded completion:(void (^)(BOOL finished))completion{
+-(void) animateToPercent:(CGFloat)progress success:(BOOL)succeeded completion:(void (^)(BOOL targetSuccess))completion{
     targetProgress = progress;
     targetSuccess = succeeded;
     
@@ -172,18 +175,21 @@
     
     CGFloat radius = self.drawableFrame.size.width / 2;
     CAShapeLayer *circle;
-    if([self.layer.sublayers count] > 1){
-        circle = [self.layer.sublayers lastObject];
+    if([self.layer.sublayers count]){
+        circle = [self.layer.sublayers firstObject];
     }else{
         circle=[CAShapeLayer layer];
-        circle.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
         circle.fillColor=[UIColor clearColor].CGColor;
         circle.strokeColor=[[UIColor whiteColor] colorWithAlphaComponent:.7].CGColor;
-        circle.lineWidth=radius*2;
         CAShapeLayer *mask=[CAShapeLayer layer];
-        mask.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
         circle.mask = mask;
         [self.layer addSublayer:circle];
+    }
+    if(radius != lastRadius){
+        lastRadius = radius;
+        circle.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+        circle.lineWidth=radius*2;
+        ((CAShapeLayer*)circle.mask).path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
     }
     
     circle.strokeEnd = lastProgress;
@@ -234,13 +240,13 @@
             [UIView animateWithDuration:.3 animations:^{
                 checkOrXView.alpha = 1;
             } completion:^(BOOL finished){
-                if(completion) completion(finished);
+                if(completion) completion(targetSuccess);
             }];
         } afterDelay:.3];
     }else{
         [[NSThread mainThread] performBlock:^{
             [self animateToPercent:targetProgress success:targetSuccess completion:completion];
-        } afterDelay:.03];
+        } afterDelay:.3];
     }
 }
 

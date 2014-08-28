@@ -9,11 +9,16 @@
 #import "MMUntouchableView.h"
 #import "MMAvatarButton.h"
 #import <CloudKit/CloudKit.h>
+#import "MMCloudKitExportCoordinator.h"
 
 @interface MMCloudKitExportView : MMUntouchableView
 
 @property (nonatomic, strong) MMUntouchableView* animationHelperView;
 
 -(void) didShareTopPageToUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)avatarButton;
+
+-(void) exportComplete:(MMCloudKitExportCoordinator*)exportCoord;
+
+-(void) exportIsCompleting:(MMCloudKitExportCoordinator*)exportCoord;
 
 @end
