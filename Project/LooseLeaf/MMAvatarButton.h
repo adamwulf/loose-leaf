@@ -14,8 +14,10 @@
 
 - (id)initWithFrame:(CGRect)_frame forLetter:(NSString*)letter;
 
--(void) animateToPercent:(CGFloat)progress success:(BOOL)succeeded;
+-(void) animateToPercent:(CGFloat)progress success:(BOOL)succeeded completion:(void (^)(BOOL finished))completion;
 
--(void) animateBounceToTopOfScreenWithDuration:(CGFloat)duration completion:(void (^)(BOOL finished))completion;
+-(void) animateBounceToTopOfScreenAtX:(CGFloat)xLoc withDuration:(CGFloat)duration completion:(void (^)(BOOL finished))completion;
+
+-(void) animateOffScreenWithCompletion:(void (^)(BOOL finished))completion;
 
 @end

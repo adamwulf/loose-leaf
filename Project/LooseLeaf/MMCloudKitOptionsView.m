@@ -160,7 +160,7 @@
     MMCloudKitFriendTableViewCell* cell = (MMCloudKitFriendTableViewCell*) [collectionView cellForItemAtIndexPath:indexPath];
     [cell bounce];
     
-    [shareItem userIsAskingToShareTo:[self userInfoForIndexPath:indexPath] fromButton:cell.avatarButton];
+    [shareItem userIsAskingToShareTo:[self userInfoForIndexPath:indexPath] fromButton:[cell stealAvatarButton]];
 }
 
 #pragma mark - Rotation

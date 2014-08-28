@@ -103,22 +103,23 @@
 }
 
 
--(void) animateOffScreen{
+-(void) animateOffScreenWithCompletion:(void (^)(BOOL finished))completion{
     CGPoint offscreen = CGPointMake(self.center.x, self.center.y - self.bounds.size.height / 2);
     [UIView animateWithDuration:.3 animations:^{
         self.alpha = 0;
         self.center = offscreen;
     } completion:^(BOOL finished) {
         [self removeFromSuperview];
+        if(completion) completion(finished);
     }];
 }
 
--(void) animateBounceToTopOfScreenWithDuration:(CGFloat)duration completion:(void (^)(BOOL finished))completion{
+-(void) animateBounceToTopOfScreenAtX:(CGFloat)xLoc withDuration:(CGFloat)duration completion:(void (^)(BOOL finished))completion{
     
     [UIView animateKeyframesWithDuration:duration delay:0 options:UIViewKeyframeAnimationOptionCalculationModeLinear animations:^{
         
         CGPoint originalCenter = self.center;
-        CGPoint targetCenter = CGPointMake(100 + self.bounds.size.width/2, self.bounds.size.height/2);
+        CGPoint targetCenter = CGPointMake(xLoc + self.bounds.size.width/2, self.bounds.size.height/2);
         
         
         int firstDrop = 14;
@@ -146,6 +147,7 @@
                     x = targetCenter.x;
                     y = sqTransform(targetCenter.y + bounceHeight, targetCenter.y, t);
                 }
+                self.bounds = CGRectMake(0, 0, 80, 80);
                 self.center = CGPointMake(x, y);
             }];
         }
@@ -155,7 +157,7 @@
     }];
 }
 
--(void) animateToPercent:(CGFloat)progress success:(BOOL)succeeded{
+-(void) animateToPercent:(CGFloat)progress success:(BOOL)succeeded completion:(void (^)(BOOL finished))completion{
     targetProgress = progress;
     targetSuccess = succeeded;
     
@@ -200,7 +202,7 @@
             checkMarkOrXLayer.bounds = self.bounds;
             UIBezierPath* path = [UIBezierPath bezierPath];
             if(succeeded){
-                CGPoint start = CGPointMake(28, 39);
+                CGPoint start = CGPointMake(30, 41);
                 CGPoint corner = CGPointMake(start.x + 6, start.y + 6);
                 CGPoint end = CGPointMake(corner.x + 14, corner.y - 14);
                 [path moveToPoint:start];
@@ -208,7 +210,7 @@
                 [path addLineToPoint:end];
             }else{
                 CGFloat size = 14;
-                CGPoint start = CGPointMake(31, 31);
+                CGPoint start = CGPointMake(33, 33);
                 CGPoint end = CGPointMake(start.x + size, start.y + size);
                 [path moveToPoint:start];
                 [path addLineToPoint:end];
@@ -232,24 +234,12 @@
             [UIView animateWithDuration:.3 animations:^{
                 checkOrXView.alpha = 1;
             } completion:^(BOOL finished){
-                if(succeeded){
-//                    [delegate didShare:self];
-                }
-                [[NSThread mainThread] performBlock:^{
-                    [self animateOffScreen];
-//                    [checkOrXView removeFromSuperview];
-//                    [circle removeAnimationForKey:@"drawCircleAnimation"];
-//                    [circle removeFromSuperlayer];
-//                    // reset state
-//                    lastProgress = 0;
-//                    targetSuccess = 0;
-//                    targetProgress = 0;
-                } afterDelay:.5];
+                if(completion) completion(finished);
             }];
         } afterDelay:.3];
     }else{
         [[NSThread mainThread] performBlock:^{
-            [self animateToPercent:targetProgress success:targetSuccess];
+            [self animateToPercent:targetProgress success:targetSuccess completion:completion];
         } afterDelay:.03];
     }
 }

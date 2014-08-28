@@ -16,8 +16,6 @@
     MMAvatarButton* avatarButton;
 }
 
-@synthesize avatarButton;
-
 - (id)initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
         CGRect lblFr = self.bounds;
@@ -63,6 +61,12 @@
 -(void) bounce{
     [avatarButton bounceButton];
     [textLabel bounceWithTransform:CGAffineTransformIdentity stepOne:.2 stepTwo:-.1];
+}
+
+-(MMAvatarButton*) stealAvatarButton{
+    MMAvatarButton* ret = avatarButton;
+    avatarButton = nil;
+    return ret;
 }
 
 @end

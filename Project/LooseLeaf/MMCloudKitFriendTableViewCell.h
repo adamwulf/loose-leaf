@@ -12,10 +12,10 @@
 
 @interface MMCloudKitFriendTableViewCell : UICollectionViewCell
 
-@property (readonly) MMAvatarButton* avatarButton;
-
 -(void) setUserInfo:(CKDiscoveredUserInfo*)userInfo forIndex:(NSInteger)index;
 
 -(void) bounce;
+
+-(MMAvatarButton*) stealAvatarButton;
 
 @end

@@ -12,6 +12,8 @@
 
 @interface MMCloudKitExportView : MMUntouchableView
 
+@property (nonatomic, strong) MMUntouchableView* animationHelperView;
+
 -(void) didShareTopPageToUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)avatarButton;
 
 @end

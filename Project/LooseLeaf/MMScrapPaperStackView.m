@@ -129,7 +129,11 @@
                 [possibleSidebarButton addTarget:self action:@selector(anySidebarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
             }
         }
-    
+
+        // export icons will show here, below the sidebars but over the stacks
+        cloudKitExportView = [[MMCloudKitExportView alloc] initWithFrame:self.bounds];
+        [self addSubview:cloudKitExportView];
+
 //        UIButton* drawLongElementButton = [[UIButton alloc] initWithFrame:CGRectMake(100, 100, 200, 60)];
 //        [drawLongElementButton addTarget:self action:@selector(drawLine) forControlEvents:UIControlEventTouchUpInside];
 //        [drawLongElementButton setTitle:@"Draw Line" forState:UIControlStateNormal];
@@ -166,8 +170,9 @@
         [cloudKitImportSidebar hide:NO onComplete:nil];
         [self addSubview:sharePageSidebar];
         
-        cloudKitExportView = [[MMCloudKitExportView alloc] initWithFrame:self.bounds];
-        [self addSubview:cloudKitExportView];
+        MMUntouchableView* exportAnimationHelperView = [[MMUntouchableView alloc] initWithFrame:self.bounds];
+        cloudKitExportView.animationHelperView = exportAnimationHelperView;
+        [self addSubview:exportAnimationHelperView];
 
         
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds andPage:nil];
