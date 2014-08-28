@@ -58,6 +58,8 @@
         listOfFriendsView.opaque = NO;
         listOfFriendsView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [listOfFriendsView registerClass:[MMCloudKitFriendTableViewCell class] forCellWithReuseIdentifier:@"MMCloudKitFriendTableViewCell"];
+        listOfFriendsView.showsHorizontalScrollIndicator = NO;
+        listOfFriendsView.showsVerticalScrollIndicator = NO;
         listOfFriendsView.dataSource = self;
         listOfFriendsView.delegate = self;
         [self addSubview:listOfFriendsView];

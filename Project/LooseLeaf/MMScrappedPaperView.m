@@ -60,7 +60,7 @@
     // during a save
     int hasPendingScrappedIconUpdate;
 
-    dispatch_queue_t concurrentBackgroundQueue;
+    dispatch_queue_t serialBackgroundQueue;
 
     
     NSUInteger lastSavedPaperStateHashForGeneratedThumbnail;
@@ -72,11 +72,11 @@
 @synthesize cachedImgView;
 
 
--(dispatch_queue_t) concurrentBackgroundQueue{
-    if(!concurrentBackgroundQueue){
-        concurrentBackgroundQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.concurrentBackgroundQueue", DISPATCH_QUEUE_SERIAL);
+-(dispatch_queue_t) serialBackgroundQueue{
+    if(!serialBackgroundQueue){
+        serialBackgroundQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.concurrentBackgroundQueue", DISPATCH_QUEUE_SERIAL);
     }
-    return concurrentBackgroundQueue;
+    return serialBackgroundQueue;
 }
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
@@ -1084,7 +1084,7 @@
         dispatch_semaphore_signal(sema2);
     }
 
-    dispatch_async([self concurrentBackgroundQueue], ^(void) {
+    dispatch_async([self serialBackgroundQueue], ^(void) {
         @autoreleasepool {
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
