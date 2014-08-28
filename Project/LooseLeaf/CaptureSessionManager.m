@@ -189,7 +189,7 @@ dispatch_queue_t sessionQueue;
 }
 
 -(ALAssetOrientation) currentDeviceOrientation{
-    UIDeviceOrientation deviceOrientation = [[MMRotationManager sharedInstace] currentDeviceOrientation];
+    UIDeviceOrientation deviceOrientation = [[MMRotationManager sharedInstance] currentDeviceOrientation];
     if(deviceOrientation == UIDeviceOrientationLandscapeLeft){
         debug_NSLog(@"i think i should save left");
         return ALAssetOrientationUp;

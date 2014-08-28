@@ -114,7 +114,7 @@
     
     // bytes by object
     totalBytesInScrapBackgrounds = [MMScrapBackgroundView totalBackgroundBytes];
-    totalBytesInVBOs = [[[[JotBufferManager sharedInstace] cacheMemoryStats] objectForKey:kVBOCacheSize] intValue];
+    totalBytesInVBOs = [[[[JotBufferManager sharedInstance] cacheMemoryStats] objectForKey:kVBOCacheSize] intValue];
     totalBytesInTextures = [JotGLTexture totalTextureBytes];
     
     if(virtualSize > maxVirtualSize){

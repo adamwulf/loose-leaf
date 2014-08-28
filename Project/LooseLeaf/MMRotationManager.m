@@ -127,7 +127,7 @@ static MMRotationManager* _instance = nil;
     }
 }
 
-+(MMRotationManager*) sharedInstace{
++(MMRotationManager*) sharedInstance{
     if(!_instance){
         _instance = [[MMRotationManager alloc]init];
     }

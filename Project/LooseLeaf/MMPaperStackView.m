@@ -1670,7 +1670,7 @@
         theAnimation.duration = duration / 2;
         theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
         theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
-        theAnimation.toValue = (id) [[MMShadowManager sharedInstace] getShadowForSize:[MMShadowedView expandBounds:self.bounds].size];
+        theAnimation.toValue = (id) [[MMShadowManager sharedInstance] getShadowForSize:[MMShadowedView expandBounds:self.bounds].size];
         [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
         [UIView animateWithDuration:duration/2 delay:delay options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut
                          animations:^(void){
@@ -1691,7 +1691,7 @@
                                  theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
                                  theAnimation.duration = duration / 2;
                                  theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
-                                 theAnimation.toValue = (id) [[MMShadowManager sharedInstace] getShadowForSize:self.bounds.size];
+                                 theAnimation.toValue = (id) [[MMShadowManager sharedInstance] getShadowForSize:self.bounds.size];
                                  [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
                                  [UIView animateWithDuration:duration/2 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseIn
                                                   animations:^(void){
@@ -1709,7 +1709,7 @@
             theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
             theAnimation.duration = duration;
             theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
-            theAnimation.toValue = (id) [[MMShadowManager sharedInstace] getShadowForSize:self.bounds.size];
+            theAnimation.toValue = (id) [[MMShadowManager sharedInstance] getShadowForSize:self.bounds.size];
             [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
             [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut
                              animations:^(void){

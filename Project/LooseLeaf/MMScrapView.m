@@ -145,7 +145,7 @@
         // yes clip to bounds so we keep good performance
         self.clipsToBounds = YES;
         // update our shadow rotation
-        [self didUpdateAccelerometerWithRawReading:[[MMRotationManager sharedInstace] currentRawRotationReading]];
+        [self didUpdateAccelerometerWithRawReading:[[MMRotationManager sharedInstance] currentRawRotationReading]];
         needsClippingPathUpdate = YES;
         
         //

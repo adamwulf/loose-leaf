@@ -74,7 +74,7 @@
 }
 
 -(void) show:(BOOL)animated{
-    [[MMPhotoManager sharedInstace] initializeAlbumCache];
+    [[MMPhotoManager sharedInstance] initializeAlbumCache];
     [self updatePhotoRotation:NO];
     isShowing = YES;
 }

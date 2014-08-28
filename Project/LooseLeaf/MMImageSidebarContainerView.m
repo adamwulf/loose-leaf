@@ -47,7 +47,7 @@
         
         CGRect contentBounds = [sidebarContentView contentBounds];
 
-        [MMPhotoManager sharedInstace].delegate = self;
+        [MMPhotoManager sharedInstance].delegate = self;
 
         CGRect buttonBounds = contentBounds;
         buttonBounds.origin.y = [UIApplication sharedApplication].statusBarFrame.size.height;

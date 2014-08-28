@@ -224,7 +224,7 @@ dispatch_queue_t importThumbnailQueue;
         [self didLoadState:paperState];
         return;
     }
-    [paperState loadStateAsynchronously:async withSize:pagePixelSize andContext:context andBufferManager:[JotBufferManager sharedInstace]];
+    [paperState loadStateAsynchronously:async withSize:pagePixelSize andContext:context andBufferManager:[JotBufferManager sharedInstance]];
 }
 -(void) unloadState{
     [paperState unload];
@@ -376,7 +376,7 @@ static int count = 0;
 -(void) cancelCurrentStrokeIfAny{
     CheckMainThread;
     if(paperState.currentStroke){
-        if([[JotStrokeManager sharedInstace] cancelStroke:paperState.currentStroke]){
+        if([[JotStrokeManager sharedInstance] cancelStroke:paperState.currentStroke]){
             return;
         }
     }

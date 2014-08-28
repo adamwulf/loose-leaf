@@ -36,7 +36,7 @@
 
         // Do any additional setup after loading the view, typically from a nib.
         srand ((uint) time(NULL) );
-        [[MMShadowManager sharedInstace] beginGeneratingShadows];
+        [[MMShadowManager sharedInstance] beginGeneratingShadows];
     
         self.view.opaque = YES;
         
@@ -46,7 +46,7 @@
         
         [stackView loadStacksFromDisk];
         
-        [[MMTouchVelocityGestureRecognizer sharedInstace] setStackView:stackView];
+        [[MMTouchVelocityGestureRecognizer sharedInstance] setStackView:stackView];
         
         [[[Mixpanel sharedInstance] people] set:kMPNumberOfPages
                                              to:@([stackView.visibleStackHolder.subviews count] + [stackView.hiddenStackHolder.subviews count])];
@@ -71,7 +71,7 @@
 
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"blackblur.png"]]];
         
-//        [self.view addSubview:[MMDebugDrawView sharedInstace]];
+//        [self.view addSubview:[MMDebugDrawView sharedInstance]];
         
         
         memoryManager = [[MMMemoryManager alloc] initWithStack:stackView];
@@ -88,7 +88,7 @@
 
 -(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication{
     // ask the inbox manager to
-    [[MMInboxManager sharedInstace] processInboxItem:url fromApp:(NSString*)sourceApplication];
+    [[MMInboxManager sharedInstance] processInboxItem:url fromApp:(NSString*)sourceApplication];
 }
 
 -(void) printKeys:(NSDictionary*)dict atlevel:(NSInteger)level{

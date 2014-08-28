@@ -83,7 +83,7 @@
 
 -(void) show{
     [super show];
-    [listOfFriendsView setCollectionViewLayout:[self idealLayoutForOrientation:(UIInterfaceOrientation)[MMRotationManager sharedInstace].lastBestOrientation] animated:NO];
+    [listOfFriendsView setCollectionViewLayout:[self idealLayoutForOrientation:(UIInterfaceOrientation)[MMRotationManager sharedInstance].lastBestOrientation] animated:NO];
     [listOfFriendsView reloadData];
     [self updateInterfaceBasedOniCloudStatus];
 }

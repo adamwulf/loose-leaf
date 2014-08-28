@@ -466,7 +466,7 @@ struct TouchInterval{
                 // and if we have ever actually processed that shake yet
                 int numberOfShakingTouches = 0;
                 for(UITouch* touch in validTouches){
-                    int index = [[MMTouchVelocityGestureRecognizer sharedInstace] indexForTouchInCacheIfExists:touch];
+                    int index = [[MMTouchVelocityGestureRecognizer sharedInstance] indexForTouchInCacheIfExists:touch];
                     if(index != -1){
                         if(touchIntervals[index].numberOfDirectionChanges >= kNumberOfDirectionChangesToDetermineShake &&
                            !touchIntervals[index].hasProcessedShake){
@@ -488,7 +488,7 @@ struct TouchInterval{
                     // so that we don't use this same shake gesture to
                     // repeat immediately
                     for(UITouch* touch in validTouches){
-                        int index = [[MMTouchVelocityGestureRecognizer sharedInstace] indexForTouchInCacheIfExists:touch];
+                        int index = [[MMTouchVelocityGestureRecognizer sharedInstance] indexForTouchInCacheIfExists:touch];
                         if(index != -1){
                             touchIntervals[index].hasProcessedShake = YES;
                         }
@@ -543,7 +543,7 @@ struct TouchInterval{
                 // look up our velocity from our cache
                 CGFloat velocity = 0;
                 int indexOfTouch;
-                struct DurationCacheObject cacheInfo = [[MMTouchVelocityGestureRecognizer sharedInstace] velocityInformationForTouch:touch withIndex:&indexOfTouch];
+                struct DurationCacheObject cacheInfo = [[MMTouchVelocityGestureRecognizer sharedInstance] velocityInformationForTouch:touch withIndex:&indexOfTouch];
                 velocity = cacheInfo.instantaneousNormalizedVelocity;
                 // this uses instant velocity to calculate the extra bezel width to
                 // use. if this ends up too finicky, then we can use average velocity
@@ -793,7 +793,7 @@ struct TouchInterval{
 
 -(void) calculateShakesForTouch:(UITouch*)touch{
     int indexOfTouchInformation = -1;
-    struct DurationCacheObject cache = [[MMTouchVelocityGestureRecognizer sharedInstace] velocityInformationForTouch:touch withIndex:&indexOfTouchInformation];
+    struct DurationCacheObject cache = [[MMTouchVelocityGestureRecognizer sharedInstance] velocityInformationForTouch:touch withIndex:&indexOfTouchInformation];
     if(indexOfTouchInformation != -1){
         // we have velocity information for this touch
         
@@ -817,7 +817,7 @@ struct TouchInterval{
 }
 
 -(void) clearCacheForTouch:(UITouch*)touch{
-    int index = [[MMTouchVelocityGestureRecognizer sharedInstace] indexForTouchInCacheIfExists:touch];
+    int index = [[MMTouchVelocityGestureRecognizer sharedInstance] indexForTouchInCacheIfExists:touch];
     if(index != -1){
         touchIntervals[index].numberOfDirectionChanges = 0;
         touchIntervals[index].hasProcessedShake = NO;

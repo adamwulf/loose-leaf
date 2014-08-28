@@ -38,7 +38,7 @@ static MMTrashManager* _instance = nil;
     return _instance;
 }
 
-+(MMTrashManager*) sharedInstace{
++(MMTrashManager*) sharedInstance{
     if(!_instance){
         _instance = [[MMTrashManager alloc]init];
     }

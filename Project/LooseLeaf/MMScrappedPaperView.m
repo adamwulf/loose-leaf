@@ -992,7 +992,7 @@
     @autoreleasepool {
         // create the cache thumbnail view
         if(!cachedImgView && img){
-            cachedImgView = [[MMCachedPreviewManager sharedInstace] requestCachedImageViewForView:self];
+            cachedImgView = [[MMCachedPreviewManager sharedInstance] requestCachedImageViewForView:self];
             cachedImgView.image = img;
             if(drawableView){
                 [self.contentView insertSubview:cachedImgView belowSubview:drawableView];
@@ -1002,7 +1002,7 @@
         }else if(cachedImgView && !img){
             // giving the cachedImgView back to the cache will automatically
             // remove it from the superview
-            [[MMCachedPreviewManager sharedInstace] giveBackCachedImageView:cachedImgView];
+            [[MMCachedPreviewManager sharedInstance] giveBackCachedImageView:cachedImgView];
             cachedImgView = nil;
         }else if(img){
             cachedImgView.image = img;

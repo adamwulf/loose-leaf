@@ -146,11 +146,11 @@
 #pragma mark - Rotation
 
 -(CGFloat) sidebarButtonRotation{
-    if([MMRotationManager sharedInstace].lastBestOrientation == UIInterfaceOrientationPortrait){
+    if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationPortrait){
         return 0;
-    }else if([MMRotationManager sharedInstace].lastBestOrientation == UIInterfaceOrientationLandscapeLeft){
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeLeft){
         return -M_PI_2;
-    }else if([MMRotationManager sharedInstace].lastBestOrientation == UIInterfaceOrientationLandscapeRight){
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeRight){
         return M_PI_2;
     }else{
         return M_PI;

@@ -30,7 +30,7 @@
 @property (nonatomic, weak) NSObject<MMRotationManagerDelegate>* delegate;
 @property (nonatomic, readonly) UIDeviceOrientation lastBestOrientation;
 
-+(MMRotationManager*) sharedInstace;
++(MMRotationManager*) sharedInstance;
 
 -(UIDeviceOrientation) currentDeviceOrientation;
 

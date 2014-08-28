@@ -14,7 +14,7 @@
     UIBezierPath* unitShadowPath;
 }
 
-+(MMShadowManager*) sharedInstace;
++(MMShadowManager*) sharedInstance;
 
 -(void) beginGeneratingShadows;
 -(CGPathRef) getShadowForSize:(CGSize)size;

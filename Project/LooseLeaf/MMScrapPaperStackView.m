@@ -92,7 +92,7 @@
 //                                                    userInfo:nil
 //                                                     repeats:YES];
 
-        [MMInboxManager sharedInstace].delegate = self;
+        [MMInboxManager sharedInstance].delegate = self;
         
         CGFloat rightBezelSide = frame.size.width - 100;
         CGFloat midPointY = (frame.size.height - 3*80) / 2;
@@ -235,7 +235,7 @@
     [[NSThread mainThread] performBlock:^{
         NSLog(@"got image: %p scale: %f width: %f %f", scrapBacking, scale, scrapBacking.size.width, scrapBacking.size.height);
         
-        MMVector* up = [[MMRotationManager sharedInstace] upVector];
+        MMVector* up = [[MMRotationManager sharedInstance] upVector];
         MMVector* perp = [[up perpendicular] normal];
         CGPoint center = CGPointMake(ceilf((self.bounds.size.width - scrapBacking.size.width) / 2),
                                      ceilf((self.bounds.size.height - scrapBacking.size.height) / 2));
@@ -637,7 +637,7 @@ int skipAll = NO;
             [str appendFormat:@"   has scrap: %d\n", [gesture performSelector:@selector(scrap)] ? 1 : 0];
         }
     }
-    [str appendFormat:@"velocity gesture sees: %d\n", [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]];
+    [str appendFormat:@"velocity gesture sees: %d\n", [[MMTouchVelocityGestureRecognizer sharedInstance] numberOfActiveTouches]];
     [str appendFormat:@"pages being panned %d\n", (int)[setOfPagesBeingPanned count]];
     
     [str appendFormat:@"done\n"];
@@ -1500,7 +1500,7 @@ int skipAll = NO;
     // cancel through that manager, and it'll notify the appropriate
     // view if need be
     for(UITouch* touch in touches){
-        [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+        [[JotStrokeManager sharedInstance] cancelStrokeForTouch:touch];
         [scissor cancelPolygonForTouch:touch];
     }
 }
@@ -1606,7 +1606,7 @@ int skipAll = NO;
             // scrap. if its undo stack doesn't hold any
             // reference, then we should trigger deleting
             // it's old assets
-            [[MMTrashManager sharedInstace] deleteScrap:scrap.uuid inPage:scrap.state.scrapsOnPaperState.delegate.page];
+            [[MMTrashManager sharedInstance] deleteScrap:scrap.uuid inPage:scrap.state.scrapsOnPaperState.delegate.page];
         }
         // ok, done, just set it
         if(index == NSNotFound){
