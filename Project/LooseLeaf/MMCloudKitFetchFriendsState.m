@@ -28,13 +28,10 @@
 }
 
 -(NSArray*) filteredFriendsList:(NSArray*)friendsList{
-    NSLog(@"pre-filtered list: %@", friendsList);
     NSArray* filteredFriends = [friendsList filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-        NSLog(@"here");
         CKDiscoveredUserInfo* friend = (CKDiscoveredUserInfo*)evaluatedObject;
         return ![friend.userRecordID isEqual:userRecord];
     }]];
-    NSLog(@"post-filtered list: %@", friendsList);
     return filteredFriends;
 }
 

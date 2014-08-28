@@ -69,4 +69,18 @@
     return ret;
 }
 
+
+#pragma mark - UITouch Control
+
+-(BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
+    return [super pointInside:point withEvent:event];
+}
+
+-(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+    if([super hitTest:point withEvent:event]){
+        return self;
+    }
+    return nil;
+}
+
 @end

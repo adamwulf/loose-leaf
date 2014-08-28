@@ -308,6 +308,7 @@
 		66EDE42019AE736E00A5623B /* MMCloudKitExportView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE41F19AE736E00A5623B /* MMCloudKitExportView.m */; };
 		66EDE42719AE765000A5623B /* MMAvatarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE42619AE765000A5623B /* MMAvatarButton.m */; };
 		66EDE42A19AFDD2D00A5623B /* MMCloudKitExportCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE42919AFDD2D00A5623B /* MMCloudKitExportCoordinator.m */; };
+		66EDE42D19AFE27300A5623B /* MMExportablePaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE42C19AFE27300A5623B /* MMExportablePaperView.m */; };
 		66F4517E18EB7C3C00A57C95 /* MMPhotoRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4517D18EB7C3C00A57C95 /* MMPhotoRowView.m */; };
 		66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */; };
@@ -891,6 +892,8 @@
 		66EDE42619AE765000A5623B /* MMAvatarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAvatarButton.m; sourceTree = "<group>"; };
 		66EDE42819AFDD2D00A5623B /* MMCloudKitExportCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitExportCoordinator.h; sourceTree = "<group>"; };
 		66EDE42919AFDD2D00A5623B /* MMCloudKitExportCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitExportCoordinator.m; sourceTree = "<group>"; };
+		66EDE42B19AFE27300A5623B /* MMExportablePaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMExportablePaperView.h; sourceTree = "<group>"; };
+		66EDE42C19AFE27300A5623B /* MMExportablePaperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMExportablePaperView.m; sourceTree = "<group>"; };
 		66F4517A18EB4C1700A57C95 /* MMCachedRowsScrollViewDataSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMCachedRowsScrollViewDataSource.h; sourceTree = "<group>"; };
 		66F4517C18EB7C3C00A57C95 /* MMPhotoRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPhotoRowView.h; sourceTree = "<group>"; };
 		66F4517D18EB7C3C00A57C95 /* MMPhotoRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPhotoRowView.m; sourceTree = "<group>"; };
@@ -1255,6 +1258,8 @@
 				66A471BD17C7DAA000C2A5B6 /* MMScrappedPaperView.m */,
 				6612C8861964C113003A9575 /* MMUndoablePaperView.h */,
 				6612C8871964C113003A9575 /* MMUndoablePaperView.m */,
+				66EDE42B19AFE27300A5623B /* MMExportablePaperView.h */,
+				66EDE42C19AFE27300A5623B /* MMExportablePaperView.m */,
 			);
 			name = MMPaperView;
 			sourceTree = "<group>";
@@ -2602,6 +2607,7 @@
 				66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */,
 				66B1EF2A19980A1300E9EEF1 /* UIView+OpenInAppOptionsViewWatch.m in Sources */,
 				66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */,
+				66EDE42D19AFE27300A5623B /* MMExportablePaperView.m in Sources */,
 				665245681996DAB800C36609 /* AFURLRequestSerialization.m in Sources */,
 				66B21A7A175E595B0049F1AF /* MMBlockOperation.m in Sources */,
 				6612C8901964CC76003A9575 /* MMUndoRedoStrokeItem.m in Sources */,

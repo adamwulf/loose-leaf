@@ -15,7 +15,7 @@
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMMemoryProfileView.h"
-#import "MMUndoablePaperView.h"
+#import "MMExportablePaperView.h"
 #import "Mixpanel.h"
 #import <mach/mach_time.h>  // for mach_absolute_time() and friends
 
@@ -362,7 +362,7 @@ struct SidebarButton{
 -(void) addPageButtonTapped:(UIButton*)_button{
     [super addPageButtonTapped:_button];
     
-    MMEditablePaperView* page = [[MMUndoablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+    MMEditablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.isBrandNewPage = YES;
     page.delegate = self;
     [hiddenStackHolder pushSubview:page];

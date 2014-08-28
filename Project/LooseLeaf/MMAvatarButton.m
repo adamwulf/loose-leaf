@@ -124,7 +124,6 @@
         CGPoint originalCenter = self.center;
         CGPoint targetCenter = CGPointMake(xLoc + targetSize/2, targetSize/2);
         
-        
         int firstDrop = 14;
         int topOfBounce = 18;
         int maxSteps = 20;
