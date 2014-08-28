@@ -10,6 +10,12 @@
 
 @interface MMAvatarButton : MMSidebarButton
 
+@property (nonatomic, assign) BOOL shouldDrawDarkBackground;
+
 - (id)initWithFrame:(CGRect)_frame forLetter:(NSString*)letter;
+
+-(void) animateToPercent:(CGFloat)progress success:(BOOL)succeeded;
+
+-(void) animateBounceToTopOfScreenWithDuration:(CGFloat)duration completion:(void (^)(BOOL finished))completion;
 
 @end

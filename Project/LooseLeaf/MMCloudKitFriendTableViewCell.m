@@ -31,8 +31,6 @@
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
 
-        [self showDebugBorder];
-        
         [self addSubview:textLabel];
     }
     return self;
@@ -42,7 +40,7 @@
     NSString* firstLetter = userInfo.firstName.length > 1 ? [userInfo.firstName substringToIndex:1] : @"";
     NSString* lastLetter = userInfo.lastName.length > 1 ? [userInfo.lastName substringToIndex:1] : @"";
     NSString* initials = [[NSString stringWithFormat:@"%@%@", firstLetter, lastLetter] uppercaseString];
-    initials = [NSString stringWithFormat:@"%d", (int) index];
+//    initials = [NSString stringWithFormat:@"%d", (int) index];
 
     CGFloat height = self.bounds.size.height - kWidthOfSidebarButtonBuffer / 4.0;
     [avatarButton removeFromSuperview];
