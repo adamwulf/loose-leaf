@@ -9,16 +9,18 @@
 #import "MMCloudKitExportCoordinator.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMCloudKitExportView.h"
+#import "MMExportablePaperView.h"
 
 @implementation MMCloudKitExportCoordinator{
-    MMUndoablePaperView* page;
+    MMExportablePaperView* page;
     CKRecordID* userId;
     MMCloudKitExportView* exportView;
 }
 
 @synthesize avatarButton;
+@synthesize page;
 
--(id) initWithPage:(MMUndoablePaperView*)_page andRecipient:(CKRecordID*)_userId withButton:(MMAvatarButton*)_avatarButton forExportView:(MMCloudKitExportView*)_exportView{
+-(id) initWithPage:(MMExportablePaperView*)_page andRecipient:(CKRecordID*)_userId withButton:(MMAvatarButton*)_avatarButton forExportView:(MMCloudKitExportView*)_exportView{
     if(self = [super init]){
         page = _page;
         userId = _userId;
@@ -30,7 +32,8 @@
 }
 
 -(void) begin{
-    [avatarButton animateToPercent:1.0 success:YES completion:^(BOOL success) {
+    [page exportAsynchronouslyToZipFile];
+    [avatarButton animateToPercent:0.15 success:YES completion:^(BOOL success) {
         if(success){
             NSLog(@"CloudKit success");
         }else{
@@ -41,8 +44,12 @@
             [avatarButton animateOffScreenWithCompletion:^(BOOL finished) {
                 [exportView exportComplete:self];
             }];
-        } afterDelay:10.0 + rand()%10];
+        } afterDelay:.5];
     }];
+}
+
+-(void) complete{
+    avatarButton.targetProgress = 1.0;
 }
 
 @end

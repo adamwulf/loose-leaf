@@ -14,7 +14,7 @@
 
 @protocol MMPaperViewDelegate <JotViewDelegate,MMGestureTouchOwnershipDelegate>
 
-#pragma mark Scale
+#pragma mark - Scale
 
 /**
  * return YES if we allow the input page to
@@ -77,7 +77,7 @@
  */
 -(void) finishedScalingBackToPageView:(MMPaperView*)page;
 
-#pragma mark List View
+#pragma mark - List View
 
 /**
  * Performance optimization:
@@ -117,7 +117,7 @@
  */
 -(BOOL) isInVisibleStack:(MMPaperView*)page;
 
-#pragma mark Saving and Drawing
+#pragma mark - Saving and Drawing
 
 /**
  * called after a page gets saved
@@ -128,7 +128,7 @@
 
 -(BOOL) isPageEditable:(MMPaperView*)page;
 
-#pragma mark Ruler
+#pragma mark - Ruler
 
 /**
  * return YES if the page should allow pan
@@ -146,6 +146,10 @@
  * called when the user stops the ruler gesture
  */
 -(void) didStopRuler:(MMRulerToolGestureRecognizer*)gesture;
+
+#pragma mark - Export
+
+-(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk;
 
 
 #pragma mark - Scrap Container for Sidebar

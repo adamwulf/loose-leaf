@@ -132,6 +132,7 @@
 
         // export icons will show here, below the sidebars but over the stacks
         cloudKitExportView = [[MMCloudKitExportView alloc] initWithFrame:self.bounds];
+        cloudKitExportView.stackView = self;
         [self addSubview:cloudKitExportView];
 
 //        UIButton* drawLongElementButton = [[UIButton alloc] initWithFrame:CGRectMake(100, 100, 200, 60)];
@@ -1516,6 +1517,9 @@ int skipAll = NO;
     return bezelScrapContainer;
 }
 
+-(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk{
+    [cloudKitExportView didExportPage:page toZipLocation:fileLocationOnDisk];
+}
 
 #pragma mark - MMGestureTouchOwnershipDelegate
 

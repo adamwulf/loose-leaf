@@ -66,9 +66,11 @@
     }
     
     dispatch_async([self serialBackgroundQueue], ^{
+        sleep(3);
         @synchronized(self){
             isCurrentlyExporting = NO;
             NSLog(@"ending export page");
+            [self.delegate didExportPage:self toZipLocation:nil];
             [self retrySaveOrExport];
         }
     });

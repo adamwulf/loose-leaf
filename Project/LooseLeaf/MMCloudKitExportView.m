@@ -10,6 +10,7 @@
 #import "MMUntouchableView.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMCloudKitExportCoordinator.h"
+#import "MMScrapPaperStackView.h"
 #import "Constants.h"
 
 @implementation MMCloudKitExportView{
@@ -17,6 +18,7 @@
     NSMutableArray* activeExports;
 }
 
+@synthesize stackView;
 @synthesize animationHelperView;
 
 -(id) initWithFrame:(CGRect)frame{
@@ -30,7 +32,7 @@
 #pragma mark - Sharing
 
 -(void) didShareTopPageToUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)avatarButton{
-    [activeExports addObject:[[MMCloudKitExportCoordinator alloc] initWithPage:nil andRecipient:userId withButton:avatarButton forExportView:self]];
+    [activeExports addObject:[[MMCloudKitExportCoordinator alloc] initWithPage:[stackView.visibleStackHolder peekSubview] andRecipient:userId withButton:avatarButton forExportView:self]];
     [self animateAvatarButtonToTopOfPage:avatarButton];
 }
 
@@ -43,6 +45,18 @@
 -(void) exportIsCompleting:(MMCloudKitExportCoordinator*)exportCoord{
     [disappearingButtons addObject:exportCoord.avatarButton];
     [self animateAndAlignAllButtons];
+}
+
+#pragma mark - Export Notifications
+
+-(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk{
+    NSLog(@"did export page %@ to %@", page.uuid, fileLocationOnDisk);
+    for(MMCloudKitExportCoordinator* export in activeExports){
+        if(export.page == page){
+            [export complete];
+            NSLog(@"found export: %p", export);
+        }
+    }
 }
 
 #pragma mark - Animations

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MMUndoablePaperView.h"
+#import "MMExportablePaperView.h"
 #import "MMAvatarButton.h"
 #import <CloudKit/CloudKit.h>
 
@@ -16,7 +16,10 @@
 @interface MMCloudKitExportCoordinator : NSObject
 
 @property (nonatomic, strong) MMAvatarButton* avatarButton;
+@property (readonly) MMExportablePaperView* page;
 
 -(id) initWithPage:(MMUndoablePaperView*)page andRecipient:(CKRecordID*)userId withButton:(MMAvatarButton*)avatarButton forExportView:(MMCloudKitExportView*)exportView;
+
+-(void) complete;
 
 @end

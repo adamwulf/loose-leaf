@@ -24,6 +24,8 @@
     CGFloat lastRadius;
 }
 
+@synthesize targetProgress;
+
 - (id)initWithFrame:(CGRect)_frame forLetter:(NSString*)_letter{
     self = [super initWithFrame:_frame];
     if (self) {
@@ -245,7 +247,7 @@
     }else{
         [[NSThread mainThread] performBlock:^{
             [self animateToPercent:targetProgress success:targetSuccess completion:completion];
-        } afterDelay:.3];
+        } afterDelay:.03];
     }
 }
 
