@@ -77,7 +77,6 @@
     // noop
 }
 
-
 // called when our button is no longer visible
 -(void) didHide{
     // noop

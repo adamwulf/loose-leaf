@@ -126,15 +126,19 @@
             [shareItem willShow];
         }
     }
+    [activeOptionsView show];
     [super show:animated];
 }
 
 -(void) hide:(BOOL)animated onComplete:(void(^)(BOOL finished))onComplete{
     [super hide:animated onComplete:^(BOOL finished){
-        [self closeActiveSharingOptionsForButton:nil];
-        while([sharingContentView.subviews count] > 1){
-            // remove any options views
-            [[sharingContentView.subviews objectAtIndex:1] removeFromSuperview];
+        [activeOptionsView hide];
+        if(activeOptionsView.shouldCloseWhenSidebarHides){
+            [self closeActiveSharingOptionsForButton:nil];
+            while([sharingContentView.subviews count] > 1){
+                // remove any options views
+                [[sharingContentView.subviews objectAtIndex:1] removeFromSuperview];
+            }
         }
         // notify any buttons that they're now hidden.
         for (NSObject<MMShareItem>*shareItem in shareItems) {

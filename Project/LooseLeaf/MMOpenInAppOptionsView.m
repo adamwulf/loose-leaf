@@ -39,6 +39,11 @@
     self.alpha = 0;
 }
 
+-(BOOL) shouldCloseWhenSidebarHides{
+    return YES;
+}
+
+
 #pragma mark - MMShareManagerDelegate
 
 // something changed with our buttons,

@@ -28,6 +28,10 @@
     return self;
 }
 
+-(BOOL) shouldCloseWhenSidebarHides{
+    return NO;
+}
+
 -(void) hide{
     if(self.alpha){
         CGRect origFrame = self.frame;

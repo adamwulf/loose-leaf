@@ -10,6 +10,8 @@
 
 @interface MMShareOptionsView : UIView
 
+@property (nonatomic, readonly) BOOL shouldCloseWhenSidebarHides;
+
 -(void) show;
 
 -(void) hide;

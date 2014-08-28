@@ -86,6 +86,10 @@
     [self updateInterfaceBasedOniCloudStatus];
 }
 
+-(void) hide{
+    NSLog(@"hiding cloudkit view");
+}
+
 #pragma mark - CloudKit UI
 
 -(void) updateInterfaceBasedOniCloudStatus{
