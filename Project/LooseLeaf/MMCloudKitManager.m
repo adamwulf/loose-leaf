@@ -73,6 +73,10 @@
     }
 }
 
+-(BOOL) isLoggedInAndReadyForAnything{
+    return [currentState isKindOfClass:[MMCloudKitLoggedInState class]];
+}
+
 #pragma mark - Notifications
 
 -(void) cloudKitInfoDidChange{

@@ -26,4 +26,6 @@
 
 -(void) retryStateAfterDelay;
 
+-(BOOL) isLoggedInAndReadyForAnything;
+
 @end

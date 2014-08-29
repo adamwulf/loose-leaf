@@ -22,6 +22,7 @@
 
 -(void) begin;
 -(void) zipGenerationIsCompleteAt:(NSString*)pathToZipFile;
+-(void) zipGenerationFailed;
 -(void) zipGenerationIsPercentComplete:(CGFloat)complete;
 
 @end

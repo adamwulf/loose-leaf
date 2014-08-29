@@ -1403,6 +1403,10 @@
     @throw kAbstractMethodException;
 }
 
+-(void) didFailToExportPage:(MMPaperView*)page{
+    @throw kAbstractMethodException;
+}
+
 -(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk{
     @throw kAbstractMethodException;
 }

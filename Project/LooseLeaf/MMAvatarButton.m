@@ -24,6 +24,7 @@
     CGFloat lastRadius;
 }
 
+@synthesize targetSuccess;
 @synthesize targetProgress;
 
 - (id)initWithFrame:(CGRect)_frame forLetter:(NSString*)_letter{

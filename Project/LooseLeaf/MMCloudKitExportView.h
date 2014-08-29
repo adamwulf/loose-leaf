@@ -26,6 +26,8 @@
 
 #pragma mark - Export Notifications
 
+-(void) didFailToExportPage:(MMPaperView*)page;
+
 -(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk;
 
 -(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk;

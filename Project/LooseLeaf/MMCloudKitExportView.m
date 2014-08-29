@@ -55,7 +55,17 @@
 
 #pragma mark - Export Notifications
 
+-(void) didFailToExportPage:(MMPaperView*)page{
+    for(MMCloudKitExportCoordinator* export in activeExports){
+        if(export.page == page){
+            [export zipGenerationFailed];
+        }
+    }
+}
+
 -(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk{
+    NSLog(@"zip file: %d %@", [[NSFileManager defaultManager] fileExistsAtPath:fileLocationOnDisk], fileLocationOnDisk);
+    
     for(MMCloudKitExportCoordinator* export in activeExports){
         if(export.page == page){
             [export zipGenerationIsCompleteAt:fileLocationOnDisk];

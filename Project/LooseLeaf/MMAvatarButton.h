@@ -11,6 +11,7 @@
 @interface MMAvatarButton : MMSidebarButton
 
 @property (nonatomic, assign) BOOL shouldDrawDarkBackground;
+@property (nonatomic, assign) BOOL targetSuccess;
 @property (nonatomic, assign) CGFloat targetProgress;
 
 - (id)initWithFrame:(CGRect)_frame forLetter:(NSString*)letter;

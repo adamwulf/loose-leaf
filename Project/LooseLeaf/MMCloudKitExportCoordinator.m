@@ -7,9 +7,12 @@
 //
 
 #import "MMCloudKitExportCoordinator.h"
-#import "NSThread+BlockAdditions.h"
+#import "MMCloudKitManager.h"
+#import "MMCloudKitLoggedInState.h"
+#import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 #import "MMCloudKitExportView.h"
 #import "MMExportablePaperView.h"
+#import "NSThread+BlockAdditions.h"
 
 #define kPercentCompleteAtStart .15
 #define kPercentCompleteOfZip .55
@@ -45,7 +48,6 @@
             [exportView exportIsCompleting:self];
             [avatarButton animateOffScreenWithCompletion:^(BOOL finished) {
                 [exportView exportComplete:self];
-                // noop
             }];
         } afterDelay:.5];
     }];
@@ -55,8 +57,30 @@
     avatarButton.targetProgress = kPercentCompleteAtStart + kPercentCompleteOfZip*percentComplete;
 }
 
--(void) zipGenerationIsCompleteAt:(NSString*)pathToZipFile{
+-(void) zipGenerationFailed{
+    avatarButton.targetSuccess = NO;
     [self complete];
+}
+
+-(void) zipGenerationIsCompleteAt:(NSString*)pathToZipFile{
+    if([[MMCloudKitManager sharedManager] isLoggedInAndReadyForAnything]){
+        avatarButton.targetProgress = kPercentCompleteAtStart + kPercentCompleteOfZip;
+        [[SPRSimpleCloudKitManager sharedManager] sendMessage:@"foobar!"
+                                                 withImageURL:[[NSURL alloc] initFileURLWithPath:pathToZipFile]
+                                               toUserRecordID:userId
+                                        withCompletionHandler:^(NSError *error) {
+                                            if(error){
+                                                avatarButton.targetSuccess = NO;
+                                            }else{
+                                                avatarButton.targetSuccess = YES;
+                                            }
+                                            [self complete];
+                                        }];
+    }else{
+        // failed, cloudkit isn't logged in
+        avatarButton.targetSuccess = NO;
+        [self complete];
+    }
 }
 
 -(void) complete{

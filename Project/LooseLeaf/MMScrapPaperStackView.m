@@ -1521,6 +1521,10 @@ int skipAll = NO;
     [cloudKitExportView didExportPage:page toZipLocation:fileLocationOnDisk];
 }
 
+-(void) didFailToExportPage:(MMPaperView*)page{
+    [cloudKitExportView didFailToExportPage:page];
+}
+
 -(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk{
     [cloudKitExportView isExportingPage:page withPercentage:percentComplete toZipLocation:fileLocationOnDisk];
 }
