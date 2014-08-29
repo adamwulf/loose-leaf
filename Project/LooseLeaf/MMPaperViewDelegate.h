@@ -151,6 +151,8 @@
 
 -(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk;
 
+-(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk;
+
 
 #pragma mark - Scrap Container for Sidebar
 

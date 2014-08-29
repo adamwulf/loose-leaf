@@ -24,6 +24,10 @@
 
 -(void) exportIsCompleting:(MMCloudKitExportCoordinator*)exportCoord;
 
+#pragma mark - Export Notifications
+
 -(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk;
+
+-(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk;
 
 @end

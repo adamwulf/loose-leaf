@@ -22,11 +22,9 @@
 -(void) saveToDisk{
     @synchronized(self){
         if(isCurrentlySaving || isCurrentlyExporting){
-            NSLog(@"waiting to save page");
             waitingForSave = YES;
             return;
         }
-        NSLog(@"begining saving page");
         isCurrentlySaving = YES;
         waitingForSave = NO;
     }
@@ -37,7 +35,6 @@
     [super saveToDisk:^(BOOL hadEditsToSave){
         @synchronized(self){
             isCurrentlySaving = NO;
-            NSLog(@"ending saving page %d", hadEditsToSave);
             [self retrySaveOrExport];
         }
         if(onComplete) onComplete(hadEditsToSave);
@@ -46,12 +43,10 @@
 
 -(void) retrySaveOrExport{
     if(waitingForSave){
-        NSLog(@"retrying to save page");
         dispatch_async(dispatch_get_main_queue(), ^{
             [self saveToDisk];
         });
     }else if(waitingForExport){
-        NSLog(@"retrying to export page");
         [self exportAsynchronouslyToZipFile];
     }
 }
@@ -59,23 +54,18 @@
 -(void) exportAsynchronouslyToZipFile{
     @synchronized(self){
         if(isCurrentlySaving || isCurrentlyExporting){
-            NSLog(@"waiting to export page");
             waitingForExport = YES;
             return;
         }
-        NSLog(@"begining export page");
         isCurrentlyExporting = YES;
         waitingForExport = NO;
     }
     
     dispatch_async([self serialBackgroundQueue], ^{
-        sleep(3);
-        
         NSString* generatedZipFile = [self generateZipFile];
         
         @synchronized(self){
             isCurrentlyExporting = NO;
-            NSLog(@"ending export page");
             [self.delegate didExportPage:self toZipLocation:generatedZipFile];
             [self retrySaveOrExport];
         }
@@ -92,26 +82,27 @@
     NSUInteger hash2 = self.scrapsOnPaperState.lastSavedUndoHash;
     NSString* zipFileName = [NSString stringWithFormat:@"%@%lu%lu.zip", self.uuid, (unsigned long)hash1, (unsigned long)hash2];
     
+    NSString* tempZipFileName = [zipFileName stringByAppendingPathExtension:@"temp"];
     
-    
+    // make sure temp file is deleted
+    [[NSFileManager defaultManager] removeItemAtPath:tempZipFileName error:nil];
     
     NSArray * directoryContents = [[NSFileManager defaultManager] recursiveContentsOfDirectoryAtPath:pathOfPageFiles filesOnly:YES];
-    NSLog(@"wants to zip: %@", directoryContents);
     
-    NSString* fullPathToZip = [NSTemporaryDirectory() stringByAppendingPathComponent:zipFileName];
-    NSLog(@"creating zip file at: %@", fullPathToZip);
-    
-    
-    // File Tobe Added in Zip
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
+    NSString* fullPathToZip = [NSTemporaryDirectory() stringByAppendingPathComponent:tempZipFileName];
     
     ZipArchive* zip = [[ZipArchive alloc] init];
     if([zip createZipFileAt:fullPathToZip])
     {
-        NSLog(@"Zip File Created");
-        if([zip addFileToZip:filePath toPathInZip:[NSString stringWithFormat:@"%@",[filePath lastPathComponent]]])
-        {
-            NSLog(@"File Added to zip");
+        for(int filesSoFar=0;filesSoFar<[directoryContents count];filesSoFar++){
+            NSString* aFileInPage = [directoryContents objectAtIndex:filesSoFar];
+            if([zip addFileToZip:[pathOfPageFiles stringByAppendingPathComponent:aFileInPage]
+                     toPathInZip:[self.uuid stringByAppendingPathComponent:aFileInPage]]){
+            }else{
+                NSLog(@"error for path: %@", aFileInPage);
+            }
+            CGFloat percentSoFar = ((CGFloat)filesSoFar / [directoryContents count]);
+            [self.delegate isExportingPage:self withPercentage:percentSoFar toZipLocation:fullPathToZip];
         }
         [zip closeZipFile];
     }
@@ -122,6 +113,40 @@
     if (attribs) {
         NSLog(@"zip file is %@", [NSByteCountFormatter stringFromByteCount:[attribs fileSize] countStyle:NSByteCountFormatterCountStyleFile]);
     }
+    
+
+    NSLog(@"validating zip file");
+    zip = [[ZipArchive alloc] init];
+    [zip unzipOpenFile:fullPathToZip];
+    NSArray* contents = [zip contentsOfZipFile];
+    [zip unzipCloseFile];
+    
+    if([contents count] == [directoryContents count]){
+        NSLog(@"valid zip file");
+        [[NSFileManager defaultManager] moveItemAtPath:tempZipFileName toPath:zipFileName error:nil];
+    }else{
+        NSLog(@"invalid zip file: %@ vs %@", contents, directoryContents);
+    }
+    
+    /*
+    
+    NSLog(@"contents of zip: %@", contents);
+    
+    
+    
+    NSLog(@"unzipping file");
+    
+    NSString* unzipTargetDirectory = [NSTemporaryDirectory() stringByAppendingPathComponent:@"safeDir"];
+    
+    zip = [[ZipArchive alloc] init];
+    [zip unzipOpenFile:fullPathToZip];
+    [zip unzipFileTo:unzipTargetDirectory overWrite:YES];
+    [zip unzipCloseFile];
+    
+    
+    directoryContents = [[NSFileManager defaultManager] recursiveContentsOfDirectoryAtPath:unzipTargetDirectory filesOnly:YES];
+    NSLog(@"unzipped: %@", directoryContents);
+    */
     
     return fullPathToZip;
 }

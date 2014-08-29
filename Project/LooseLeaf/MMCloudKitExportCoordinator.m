@@ -11,6 +11,9 @@
 #import "MMCloudKitExportView.h"
 #import "MMExportablePaperView.h"
 
+#define kPercentCompleteAtStart .15
+#define kPercentCompleteOfZip .55
+
 @implementation MMCloudKitExportCoordinator{
     MMExportablePaperView* page;
     CKRecordID* userId;
@@ -27,13 +30,12 @@
         avatarButton = _avatarButton;
         exportView = _exportView;
     }
-    [self begin];
     return self;
 }
 
 -(void) begin{
     [page exportAsynchronouslyToZipFile];
-    [avatarButton animateToPercent:0.15 success:YES completion:^(BOOL success) {
+    [avatarButton animateToPercent:kPercentCompleteAtStart success:YES completion:^(BOOL success) {
         if(success){
             NSLog(@"CloudKit success");
         }else{
@@ -43,9 +45,18 @@
             [exportView exportIsCompleting:self];
             [avatarButton animateOffScreenWithCompletion:^(BOOL finished) {
                 [exportView exportComplete:self];
+                // noop
             }];
         } afterDelay:.5];
     }];
+}
+
+-(void) zipGenerationIsPercentComplete:(CGFloat)percentComplete{
+    avatarButton.targetProgress = kPercentCompleteAtStart + kPercentCompleteOfZip*percentComplete;
+}
+
+-(void) zipGenerationIsCompleteAt:(NSString*)pathToZipFile{
+    [self complete];
 }
 
 -(void) complete{

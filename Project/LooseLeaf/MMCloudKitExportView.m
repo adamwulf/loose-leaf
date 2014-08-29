@@ -32,8 +32,14 @@
 #pragma mark - Sharing
 
 -(void) didShareTopPageToUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)avatarButton{
-    [activeExports addObject:[[MMCloudKitExportCoordinator alloc] initWithPage:[stackView.visibleStackHolder peekSubview] andRecipient:userId withButton:avatarButton forExportView:self]];
-    [self animateAvatarButtonToTopOfPage:avatarButton];
+    MMCloudKitExportCoordinator* exportCoordinator = [[MMCloudKitExportCoordinator alloc] initWithPage:[stackView.visibleStackHolder peekSubview]
+                                                                                          andRecipient:userId
+                                                                                            withButton:avatarButton
+                                                                                         forExportView:self];
+    [activeExports addObject:exportCoordinator];
+    [self animateAvatarButtonToTopOfPage:avatarButton onComplete:^{
+        [exportCoordinator begin];
+    }];
 }
 
 -(void) exportComplete:(MMCloudKitExportCoordinator*)exportCoord{
@@ -50,18 +56,24 @@
 #pragma mark - Export Notifications
 
 -(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk{
-    NSLog(@"did export page %@ to %@", page.uuid, fileLocationOnDisk);
     for(MMCloudKitExportCoordinator* export in activeExports){
         if(export.page == page){
-            [export complete];
-            NSLog(@"found export: %p", export);
+            [export zipGenerationIsCompleteAt:fileLocationOnDisk];
+        }
+    }
+}
+
+-(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk{
+    for(MMCloudKitExportCoordinator* export in activeExports){
+        if(export.page == page){
+            [export zipGenerationIsPercentComplete:percentComplete];
         }
     }
 }
 
 #pragma mark - Animations
 
--(void) animateAvatarButtonToTopOfPage:(MMAvatarButton*)avatarButton{
+-(void) animateAvatarButtonToTopOfPage:(MMAvatarButton*)avatarButton onComplete:(void (^)())completion{
     CGRect fr = [avatarButton convertRect:avatarButton.bounds toView:self];
     avatarButton.frame = fr;
     [animationHelperView addSubview:avatarButton];
@@ -72,6 +84,7 @@
     [avatarButton animateBounceToTopOfScreenAtX:100 withDuration:0.8 completion:^(BOOL finished) {
         [self addSubview:avatarButton];
         [self animateAndAlignAllButtons];
+        if(completion) completion();
     }];
     [self animateAndAlignAllButtons];
 }

@@ -1521,6 +1521,12 @@ int skipAll = NO;
     [cloudKitExportView didExportPage:page toZipLocation:fileLocationOnDisk];
 }
 
+-(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk{
+    [cloudKitExportView isExportingPage:page withPercentage:percentComplete toZipLocation:fileLocationOnDisk];
+}
+
+
+
 #pragma mark - MMGestureTouchOwnershipDelegate
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{

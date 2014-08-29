@@ -20,6 +20,8 @@
 
 -(id) initWithPage:(MMUndoablePaperView*)page andRecipient:(CKRecordID*)userId withButton:(MMAvatarButton*)avatarButton forExportView:(MMCloudKitExportView*)exportView;
 
--(void) complete;
+-(void) begin;
+-(void) zipGenerationIsCompleteAt:(NSString*)pathToZipFile;
+-(void) zipGenerationIsPercentComplete:(CGFloat)complete;
 
 @end

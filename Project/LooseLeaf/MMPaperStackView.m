@@ -1403,6 +1403,10 @@
     @throw kAbstractMethodException;
 }
 
+-(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk{
+    @throw kAbstractMethodException;
+}
+
 #pragma mark - Page Animation and Navigation Helpers
 
 /**
