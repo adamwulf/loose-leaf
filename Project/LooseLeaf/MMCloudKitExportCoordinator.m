@@ -14,8 +14,9 @@
 #import "MMExportablePaperView.h"
 #import "NSThread+BlockAdditions.h"
 
-#define kPercentCompleteAtStart .15
-#define kPercentCompleteOfZip .55
+#define kPercentCompleteAtStart  .15
+#define kPercentCompleteOfZip    .20
+#define kPercentCompleteOfUpload .55
 
 @implementation MMCloudKitExportCoordinator{
     MMExportablePaperView* page;
@@ -68,6 +69,9 @@
         [[SPRSimpleCloudKitManager sharedManager] sendMessage:@"foobar!"
                                                  withImageURL:[[NSURL alloc] initFileURLWithPath:pathToZipFile]
                                                toUserRecordID:userId
+                                          withProgressHandler:^(CGFloat progress) {
+                                              avatarButton.targetProgress = kPercentCompleteAtStart + kPercentCompleteOfZip + kPercentCompleteOfUpload*progress;
+                                          }
                                         withCompletionHandler:^(NSError *error) {
                                             if(error){
                                                 avatarButton.targetSuccess = NO;
