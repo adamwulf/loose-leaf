@@ -7,6 +7,8 @@
 //
 
 #import "MMExportablePaperView.h"
+#import <ZipArchive/ZipArchive.h>
+
 
 @implementation MMExportablePaperView{
     BOOL isCurrentlyExporting;
@@ -67,6 +69,12 @@
     
     dispatch_async([self serialBackgroundQueue], ^{
         sleep(3);
+        
+        NSFileManager* fileManager = [NSFileManager defaultManager];
+        ZipArchive* archiver = [[ZipArchive alloc] initWithFileManager:fileManager];
+        
+        
+        
         @synchronized(self){
             isCurrentlyExporting = NO;
             NSLog(@"ending export page");
