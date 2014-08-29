@@ -16,4 +16,6 @@
 
 +(void) ensureDirectoryExistsAtPath:(NSString*)path;
 
+- (NSArray *)recursiveContentsOfDirectoryAtPath:(NSString *)directoryPath filesOnly:(BOOL)filesOnly;
+
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "MMExportablePaperView.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 #import <ZipArchive/ZipArchive.h>
 
 
@@ -85,28 +86,44 @@
 
 -(NSString*) generateZipFile{
     
-    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString* dPath = [paths objectAtIndex:0];
+    NSString* pathOfPageFiles = [self pagesPath];
     
-    NSString* zipfile = [dPath stringByAppendingPathComponent:@"test.zip"] ;
+    NSUInteger hash1 = self.paperState.lastSavedUndoHash;
+    NSUInteger hash2 = self.scrapsOnPaperState.lastSavedUndoHash;
+    NSString* zipFileName = [NSString stringWithFormat:@"%@%lu%lu.zip", self.uuid, (unsigned long)hash1, (unsigned long)hash2];
+    
+    
+    
+    
+    NSArray * directoryContents = [[NSFileManager defaultManager] recursiveContentsOfDirectoryAtPath:pathOfPageFiles filesOnly:YES];
+    NSLog(@"wants to zip: %@", directoryContents);
+    
+    NSString* fullPathToZip = [NSTemporaryDirectory() stringByAppendingPathComponent:zipFileName];
+    NSLog(@"creating zip file at: %@", fullPathToZip);
+    
     
     // File Tobe Added in Zip
-    
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"GetAllCardList" ofType:@"xml"];
-    
-    NSString *fileName = @"MyFile"; // Your New ZipFile Name
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
     
     ZipArchive* zip = [[ZipArchive alloc] init];
-    if([zip createZipFileAt:zipfile])
+    if([zip createZipFileAt:fullPathToZip])
     {
         NSLog(@"Zip File Created");
-        if([zip addFileToZip:filePath toPathInZip:[NSString stringWithFormat:@"%@.%@",fileName,[[filePath lastPathComponent] pathExtension]]])
+        if([zip addFileToZip:filePath toPathInZip:[NSString stringWithFormat:@"%@",[filePath lastPathComponent]]])
         {
             NSLog(@"File Added to zip");
         }
+        [zip closeZipFile];
     }
     
-    return zipfile;
+    NSLog(@"success? %d", [[NSFileManager defaultManager] fileExistsAtPath:fullPathToZip]);
+    
+    NSDictionary *attribs = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPathToZip error:nil];
+    if (attribs) {
+        NSLog(@"zip file is %@", [NSByteCountFormatter stringFromByteCount:[attribs fileSize] countStyle:NSByteCountFormatterCountStyleFile]);
+    }
+    
+    return fullPathToZip;
 }
 
 

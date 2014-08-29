@@ -63,4 +63,24 @@ static NSArray* userDocumentsPaths;
 }
 
 
+- (NSArray *)recursiveContentsOfDirectoryAtPath:(NSString *)directoryPath filesOnly:(BOOL)filesOnly{
+    
+    NSMutableArray *filePaths = [[NSMutableArray alloc] init];
+    
+    // Enumerators are recursive
+    NSDirectoryEnumerator *enumerator = [self enumeratorAtPath:directoryPath];
+    
+    NSString *filePath;
+    
+    BOOL isDirectory = NO;
+    while ((filePath = [enumerator nextObject]) != nil){
+        [self fileExistsAtPath:[directoryPath stringByAppendingPathComponent:filePath] isDirectory:&isDirectory];
+        if(!filePath || !isDirectory){
+            [filePaths addObject:filePath];
+        }
+    }
+    return filePaths;
+}
+
+
 @end
