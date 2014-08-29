@@ -44,6 +44,8 @@
 		<string>github.com:AFNetworking/AFNetworking.git</string>
 		<key>F29D9E2E-F440-4F73-A871-4B5801D69250</key>
 		<string>ssh://github.com/adamwulf/loose-leaf.git</string>
+		<key>F3F84DE32A2A2D85E989FC54BC2E72D5CD30CAB6</key>
+		<string>github.com:mattconnolly/ZipArchive.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>LooseLeaf.xcworkspace</string>
@@ -83,6 +85,8 @@
 		<string>..Submodules/AFNetworking</string>
 		<key>F29D9E2E-F440-4F73-A871-4B5801D69250</key>
 		<string>../../Loose Leaf</string>
+		<key>F3F84DE32A2A2D85E989FC54BC2E72D5CD30CAB6</key>
+		<string>../Submodules/zip-archive/</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>github.com:adamwulf/loose-leaf.git</string>
@@ -235,6 +239,14 @@
 			<string>9F22E3F18CD07AD761FDBCAEE84E4A72F51293DA</string>
 			<key>IDESourceControlWCCName</key>
 			<string>touch-chart</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>F3F84DE32A2A2D85E989FC54BC2E72D5CD30CAB6</string>
+			<key>IDESourceControlWCCName</key>
+			<string>zip-archive</string>
 		</dict>
 	</array>
 </dict>

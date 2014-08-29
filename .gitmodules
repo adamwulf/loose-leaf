@@ -34,3 +34,6 @@
 [submodule "Submodules/cloudkit-manager"]
 	path = Submodules/cloudkit-manager
 	url = git@github.com:adamwulf/cloudkit-manager.git
+[submodule "Submodules/zip-archive"]
+	path = Submodules/zip-archive
+	url = git@github.com:mattconnolly/ZipArchive.git

@@ -309,6 +309,8 @@
 		66EDE42719AE765000A5623B /* MMAvatarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE42619AE765000A5623B /* MMAvatarButton.m */; };
 		66EDE42A19AFDD2D00A5623B /* MMCloudKitExportCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE42919AFDD2D00A5623B /* MMCloudKitExportCoordinator.m */; };
 		66EDE42D19AFE27300A5623B /* MMExportablePaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE42C19AFE27300A5623B /* MMExportablePaperView.m */; };
+		66EDE44119B100B500A5623B /* ziparchive.license in Resources */ = {isa = PBXBuildFile; fileRef = 66EDE44019B100B500A5623B /* ziparchive.license */; };
+		66EDE44319B1011800A5623B /* minizip.license in Resources */ = {isa = PBXBuildFile; fileRef = 66EDE44219B1011800A5623B /* minizip.license */; };
 		66F4517E18EB7C3C00A57C95 /* MMPhotoRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4517D18EB7C3C00A57C95 /* MMPhotoRowView.m */; };
 		66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */; };
@@ -894,6 +896,8 @@
 		66EDE42919AFDD2D00A5623B /* MMCloudKitExportCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitExportCoordinator.m; sourceTree = "<group>"; };
 		66EDE42B19AFE27300A5623B /* MMExportablePaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMExportablePaperView.h; sourceTree = "<group>"; };
 		66EDE42C19AFE27300A5623B /* MMExportablePaperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMExportablePaperView.m; sourceTree = "<group>"; };
+		66EDE44019B100B500A5623B /* ziparchive.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ziparchive.license; sourceTree = "<group>"; };
+		66EDE44219B1011800A5623B /* minizip.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = minizip.license; sourceTree = "<group>"; };
 		66F4517A18EB4C1700A57C95 /* MMCachedRowsScrollViewDataSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMCachedRowsScrollViewDataSource.h; sourceTree = "<group>"; };
 		66F4517C18EB7C3C00A57C95 /* MMPhotoRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPhotoRowView.h; sourceTree = "<group>"; };
 		66F4517D18EB7C3C00A57C95 /* MMPhotoRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPhotoRowView.m; sourceTree = "<group>"; };
@@ -1453,6 +1457,8 @@
 			isa = PBXGroup;
 			children = (
 				66684B37182D95EA005A27B4 /* generateLicenses.pl */,
+				66EDE44019B100B500A5623B /* ziparchive.license */,
+				66EDE44219B1011800A5623B /* minizip.license */,
 				66684B39182D961A005A27B4 /* JRSwizzle.license */,
 				662441E4187BC68700011A54 /* Pomax.license */,
 				66684B3A182D9624005A27B4 /* AGG.license */,
@@ -2335,6 +2341,7 @@
 				665245001995673900C36609 /* email@2x.png in Resources */,
 				66684B3B182D9624005A27B4 /* AGG.license in Resources */,
 				667C6359199FE4BC00E93CD6 /* MPSurvey.storyboard in Resources */,
+				66EDE44119B100B500A5623B /* ziparchive.license in Resources */,
 				667C6356199FE4BC00E93CD6 /* MPNotification.storyboard in Resources */,
 				6650DD1D18F48E3F00ADF591 /* twitter.png in Resources */,
 				6652451B19958C2900C36609 /* sinaWeibo@2x.png in Resources */,
@@ -2355,6 +2362,7 @@
 				667EF0C919A54F2500B1A38D /* icloud-share@2x.png in Resources */,
 				666E253E18F5E19100C17295 /* clearcamera.png in Resources */,
 				6650DD2718F491BA00ADF591 /* evernote@2x.png in Resources */,
+				66EDE44319B1011800A5623B /* minizip.license in Resources */,
 				667C6368199FF26100E93CD6 /* copy@2x.png in Resources */,
 				6652450B199576E400C36609 /* text.png in Resources */,
 				66684B44182DAC9B005A27B4 /* CurveFit.license in Resources */,
