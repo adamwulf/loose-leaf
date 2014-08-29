@@ -70,18 +70,43 @@
     dispatch_async([self serialBackgroundQueue], ^{
         sleep(3);
         
-        NSFileManager* fileManager = [NSFileManager defaultManager];
-        ZipArchive* archiver = [[ZipArchive alloc] initWithFileManager:fileManager];
-        
-        
+        NSString* generatedZipFile = [self generateZipFile];
         
         @synchronized(self){
             isCurrentlyExporting = NO;
             NSLog(@"ending export page");
-            [self.delegate didExportPage:self toZipLocation:nil];
+            [self.delegate didExportPage:self toZipLocation:generatedZipFile];
             [self retrySaveOrExport];
         }
     });
+}
+
+
+
+-(NSString*) generateZipFile{
+    
+    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString* dPath = [paths objectAtIndex:0];
+    
+    NSString* zipfile = [dPath stringByAppendingPathComponent:@"test.zip"] ;
+    
+    // File Tobe Added in Zip
+    
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"GetAllCardList" ofType:@"xml"];
+    
+    NSString *fileName = @"MyFile"; // Your New ZipFile Name
+    
+    ZipArchive* zip = [[ZipArchive alloc] init];
+    if([zip createZipFileAt:zipfile])
+    {
+        NSLog(@"Zip File Created");
+        if([zip addFileToZip:filePath toPathInZip:[NSString stringWithFormat:@"%@.%@",fileName,[[filePath lastPathComponent] pathExtension]]])
+        {
+            NSLog(@"File Added to zip");
+        }
+    }
+    
+    return zipfile;
 }
 
 
