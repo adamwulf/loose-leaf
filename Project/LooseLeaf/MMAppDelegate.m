@@ -16,6 +16,7 @@
 #import "Mixpanel.h"
 #import "UIView+OpenInAppOptionsViewWatch.h"
 #import "MMWindow.h"
+#import "MMCloudKitManager.h"
 
 
 @implementation MMAppDelegate{
@@ -51,12 +52,34 @@
     if(url){
         [self importFileFrom:url fromApp:sourceApplication];
     }
-    
+
+    if (launchOptions != nil)
+    {
+        NSDictionary *dictionary = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+        if (dictionary != nil)
+        {
+            [self checkForNotificationToHandleWithUserInfo:dictionary];
+        }
+    }
+
     return YES;
 }
 
--(void) application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo{
-    NSLog(@"got notification! %@", userInfo);
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)info {
+    
+    // Do something if the app was in background. Could handle foreground notifications differently
+    if (application.applicationState != UIApplicationStateActive) {
+        [self checkForNotificationToHandleWithUserInfo:info];
+    }else{
+        [self checkForNotificationToHandleWithUserInfo:info];
+    }
+}
+
+- (void) checkForNotificationToHandleWithUserInfo:(NSDictionary *)userInfo {
+    CKQueryNotification *notification = [CKQueryNotification notificationFromRemoteNotificationDictionary:userInfo];
+    if(notification){
+        [[MMCloudKitManager sharedManager] handleIncomingMessage:notification];
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

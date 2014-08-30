@@ -18,6 +18,7 @@
 #import "MMCloudKitLoggedInState.h"
 #import "MMCloudKitFetchFriendsState.h"
 #import "MMCloudKitFetchingAccountInfoState.h"
+#import <ZipArchive/ZipArchive.h>
 
 @implementation MMCloudKitManager{
     MMCloudKitBaseState* currentState;
@@ -92,6 +93,41 @@
     [currentState reachabilityDidChange];
 }
 
+
+#pragma mark - Remote Notification
+
+-(void) handleIncomingMessage:(CKQueryNotification*)remoteNotification{
+    [[SPRSimpleCloudKitManager sharedManager] messageForQueryNotification:remoteNotification withCompletionHandler:^(SPRMessage *message, NSError *error) {
+        // Do something with the message, like pushing it onto the stack
+        NSLog(@"got message sender info: %@", message);
+        [[SPRSimpleCloudKitManager sharedManager] fetchDetailsForMessage:message withCompletionHandler:^(SPRMessage *message, NSError *error) {
+            NSLog(@"got entire message: %@", message);
+            if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+                UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Message!" message:message.messageText delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alertView show];
+            }
+            
+            
+            NSLog(@"success? incoming file at %@", message.messageData.path);
+            NSDictionary *attribs = [[NSFileManager defaultManager] attributesOfItemAtPath:message.messageData.path error:nil];
+            if (attribs) {
+                NSLog(@"zip file is %@", [NSByteCountFormatter stringFromByteCount:[attribs fileSize] countStyle:NSByteCountFormatterCountStyleFile]);
+            }
+
+            NSLog(@"validating zip file");
+            ZipArchive* zip = [[ZipArchive alloc] init];
+            [zip unzipOpenFile:message.messageData.path];
+            NSArray* contents = [zip contentsOfZipFile];
+            [zip unzipCloseFile];
+            
+            if([contents count]){
+                NSLog(@"valid zip file");
+            }else{
+                NSLog(@"invalid zip file");
+            }
+        }];
+    }];
+}
 
 
 #pragma mark - Description

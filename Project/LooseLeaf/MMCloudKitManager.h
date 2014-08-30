@@ -28,4 +28,6 @@
 
 -(BOOL) isLoggedInAndReadyForAnything;
 
+-(void) handleIncomingMessage:(CKQueryNotification*)remoteNotification;
+
 @end
