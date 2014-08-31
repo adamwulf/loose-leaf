@@ -12,7 +12,8 @@
 #import "MMImageSidebarContainerViewDelegate.h"
 #import "MMInboxManagerDelegate.h"
 #import "MMShareItemDelegate.h"
+#import "MMCloudKitManagerDelegate.h"
 
-@interface MMScrapPaperStackView : MMEditablePaperStackView<MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapSidebarContainerViewDelegate,MMStretchScrapGestureRecognizerDelegate,MMImageSidebarContainerViewDelegate,MMInboxManagerDelegate,MMShareItemDelegate>
+@interface MMScrapPaperStackView : MMEditablePaperStackView<MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapSidebarContainerViewDelegate,MMStretchScrapGestureRecognizerDelegate,MMImageSidebarContainerViewDelegate,MMInboxManagerDelegate,MMShareItemDelegate,MMCloudKitManagerDelegate>
 
 @end

@@ -10,8 +10,9 @@
 #import "MMShareItem.h"
 #import "MMOpenInAppOptionsViewDelegate.h"
 #import <CloudKit/CloudKit.h>
+#import "MMCloudKitManagerDelegate.h"
 
-@interface MMCloudKitShareItem : NSObject<MMShareItem,MMOpenInAppOptionsViewDelegate>
+@interface MMCloudKitShareItem : NSObject<MMShareItem,MMOpenInAppOptionsViewDelegate,MMCloudKitManagerDelegate>
 
 -(void) userIsAskingToShareTo:(CKDiscoveredUserInfo*)userInfo fromButton:(MMBounceButton*)button;
 

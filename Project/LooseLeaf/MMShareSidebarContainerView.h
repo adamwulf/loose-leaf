@@ -8,9 +8,10 @@
 
 #import "MMSlidingSidebarContainerView.h"
 #import "MMShareItemDelegate.h"
+#import "MMCloudKitManagerDelegate.h"
 #import "MMVector.h"
 
-@interface MMShareSidebarContainerView : MMSlidingSidebarContainerView<MMShareItemDelegate>
+@interface MMShareSidebarContainerView : MMSlidingSidebarContainerView<MMShareItemDelegate,MMCloudKitManagerDelegate>
 
 @property (weak) NSObject<MMShareItemDelegate>* shareDelegate;
 

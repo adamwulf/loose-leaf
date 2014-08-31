@@ -107,7 +107,6 @@
                 [alertView show];
             }
             
-            
             NSLog(@"success? incoming file at %@", message.messageData.path);
             NSDictionary *attribs = [[NSFileManager defaultManager] attributesOfItemAtPath:message.messageData.path error:nil];
             if (attribs) {
@@ -116,11 +115,7 @@
 
             NSLog(@"validating zip file");
             ZipArchive* zip = [[ZipArchive alloc] init];
-            [zip unzipOpenFile:message.messageData.path];
-            NSArray* contents = [zip contentsOfZipFile];
-            [zip unzipCloseFile];
-            
-            if([contents count]){
+            if([zip validateZipFileAt:message.messageData.path]){
                 NSLog(@"valid zip file");
             }else{
                 NSLog(@"invalid zip file");

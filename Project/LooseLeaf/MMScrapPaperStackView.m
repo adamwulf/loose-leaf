@@ -30,7 +30,7 @@
 #import "MMShareSidebarContainerView.h"
 #import "MMCloudKitImportContainerView.h"
 #import "MMCloudKitExportView.h"
-#import <CloudKit/CloudKit.h>
+#import "MMCloudKitManager.h"
 
 @implementation MMScrapPaperStackView{
     
@@ -93,7 +93,8 @@
 //                                                     repeats:YES];
 
         [MMInboxManager sharedInstance].delegate = self;
-        
+        [MMCloudKitManager sharedManager].delegate = self;
+
         CGFloat rightBezelSide = frame.size.width - 100;
         CGFloat midPointY = (frame.size.height - 3*80) / 2;
         countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
@@ -1850,6 +1851,12 @@ int skipAll = NO;
 -(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)avatarButton{
     [cloudKitExportView didShareTopPageToUser:userId fromButton:avatarButton];
     [sharePageSidebar hide:YES onComplete:nil];
+}
+
+#pragma mark - MMCloudKitManagerDelegate
+
+-(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState{
+    [sharePageSidebar cloudKitDidChangeState:currentState];
 }
 
 

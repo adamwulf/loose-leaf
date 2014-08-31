@@ -64,7 +64,6 @@
         listOfFriendsView.delegate = self;
         [self addSubview:listOfFriendsView];
 
-        [MMCloudKitManager sharedManager].delegate = self;
         [self cloudKitDidChangeState:[MMCloudKitManager sharedManager].currentState];
         
         [self updateInterfaceBasedOniCloudStatus];

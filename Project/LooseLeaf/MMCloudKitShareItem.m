@@ -107,4 +107,10 @@
     }afterDelay:.3];
 }
 
+#pragma mark - MMCloudKitManagerDelegate
+
+-(void) cloudKitDidChangeState:(MMCloudKitBaseState *)currentState{
+    [sharingOptionsView cloudKitDidChangeState:currentState];
+}
+
 @end

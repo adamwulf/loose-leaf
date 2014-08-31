@@ -33,6 +33,8 @@
     UIView* buttonView;
     MMShareOptionsView* activeOptionsView;
     NSMutableArray* shareItems;
+    
+    MMCloudKitShareItem* cloudKitShareItem;
 }
 
 @synthesize shareDelegate;
@@ -52,8 +54,10 @@
         [sharingContentView addSubview:buttonView];
         [sidebarContentView addSubview:sharingContentView];
         
+        cloudKitShareItem = [[MMCloudKitShareItem alloc] init];
+        
         shareItems = [NSMutableArray array];
-        [shareItems addObject:[[MMCloudKitShareItem alloc] init]];
+        [shareItems addObject:cloudKitShareItem];
         [shareItems addObject:[[MMEmailShareItem alloc] init]];
         [shareItems addObject:[[MMTextShareItem alloc] init]];
         [shareItems addObject:[[MMPhotoAlbumShareItem alloc] init]];
@@ -238,6 +242,11 @@
     [shareDelegate didShare:shareItem toUser:userId fromButton:button];
 }
 
+#pragma mark - MMCloudKitManagerDelegate
+
+-(void) cloudKitDidChangeState:(MMCloudKitBaseState *)currentState{
+    [cloudKitShareItem cloudKitDidChangeState:currentState];
+}
 
 #pragma mark - Dealloc
 
