@@ -8,9 +8,10 @@
 
 #import "MMUntouchableView.h"
 #import "MMAvatarButton.h"
-#import <CloudKit/CloudKit.h>
 #import "MMCloudKitExportCoordinator.h"
+#import "MMCloudKitImportCoordinator.h"
 #import "MMCloudKitManagerDelegate.h"
+#import <CloudKit/CloudKit.h>
 
 @class MMScrapPaperStackView;
 
@@ -32,5 +33,9 @@
 -(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk;
 
 -(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk;
+
+#pragma mark - Import Notifications
+
+-(void) importCoordinatorIsReady:(MMCloudKitImportCoordinator*)coordinator;
 
 @end

@@ -8,11 +8,15 @@
 
 #import <Foundation/Foundation.h>
 #import "MMCloudKitManager.h"
-#import "MMCloudKitExportView.h"
+#import "MMAvatarButton.h"
+
+@class MMCloudKitExportView;
 
 @interface MMCloudKitImportCoordinator : NSObject
 
--(id) initWithSender:(CKDiscoveredUserInfo*)senderInfo andButton:(MMAvatarButton*)avatarButton andZipFile:(NSString*)zipFile;
+@property (nonatomic, strong) MMAvatarButton* avatarButton;
+
+-(id) initWithSender:(CKDiscoveredUserInfo*)senderInfo andButton:(MMAvatarButton*)avatarButton andZipFile:(NSString*)zipFile forExportView:(MMCloudKitExportView*)_exportView;
 
 -(void) begin;
 

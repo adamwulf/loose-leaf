@@ -82,5 +82,11 @@ static NSArray* userDocumentsPaths;
     return filePaths;
 }
 
+-(BOOL) isDirectory:(NSString*)path{
+    BOOL isDirectory = NO;
+    BOOL exists = [self fileExistsAtPath:path isDirectory:&isDirectory];
+    return isDirectory && exists;
+}
+
 
 @end

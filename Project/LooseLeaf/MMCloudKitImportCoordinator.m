@@ -9,19 +9,24 @@
 #import "MMCloudKitImportCoordinator.h"
 #import "NSString+UUID.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMCloudKitExportView.h"
 #import <ZipArchive/ZipArchive.h>
 
 @implementation MMCloudKitImportCoordinator{
     CKDiscoveredUserInfo* senderInfo;
     MMAvatarButton* avatarButton;
     NSString* zipFileLocation;
+    MMCloudKitExportView* exportView;
 }
 
--(id) initWithSender:(CKDiscoveredUserInfo*)_senderInfo andButton:(MMAvatarButton*)_avatarButton andZipFile:(NSString*)_zipFile{
+@synthesize avatarButton;
+
+-(id) initWithSender:(CKDiscoveredUserInfo*)_senderInfo andButton:(MMAvatarButton*)_avatarButton andZipFile:(NSString*)_zipFile forExportView:(MMCloudKitExportView*)_exportView{
     if(self = [super init]){
         senderInfo = _senderInfo;
         avatarButton = _avatarButton;
         zipFileLocation = _zipFile;
+        exportView = _exportView;
     }
     return self;
 }
@@ -44,13 +49,33 @@
             
             NSLog(@"unzipped page: %@", tempPathOfIncomingPage);
             
-            NSArray* contentsOfPage = [[NSFileManager defaultManager] recursiveContentsOfDirectoryAtPath:tempPathOfIncomingPage filesOnly:YES];
+            NSString* pathToScrapsInPage = [tempPathOfIncomingPage stringByAppendingPathComponent:@"Scraps"];
+            NSArray* scrapContentsOfPage = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:pathToScrapsInPage error:nil];
             
-            NSLog(@"contents: %@", contentsOfPage);
-            
+            for (NSString* path in scrapContentsOfPage) {
+                NSError* err = nil;
+                if([[NSFileManager defaultManager] isDirectory:path]){
+                    NSString* uuidOfIncomingScrap = [NSString createStringUUID];
+                    NSString* oldScrapPath = [pathToScrapsInPage stringByAppendingPathComponent:path];
+                    NSString* newScrapPath = [pathToScrapsInPage stringByAppendingPathComponent:uuidOfIncomingScrap];
+                    [[NSFileManager defaultManager] moveItemAtPath:oldScrapPath
+                                                            toPath:newScrapPath
+                                                             error:&err];
+                    if(err){
+                        NSLog(@"couldn't move %@ to %@", oldScrapPath, newScrapPath);
+                    }
+                }
+            }
+            if([scrapContentsOfPage count]){
+                NSLog(@"need to update page scrap plist contents");
+            }
         }else{
             NSLog(@"failed to unzip file: %@", zipFileLocation);
         }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [exportView importCoordinatorIsReady:self];
+        });
     });
 
 }

@@ -18,4 +18,6 @@
 
 - (NSArray *)recursiveContentsOfDirectoryAtPath:(NSString *)directoryPath filesOnly:(BOOL)filesOnly;
 
+-(BOOL) isDirectory:(NSString*)path;
+
 @end

@@ -115,16 +115,31 @@
                 i++;
             }
         }
-        for(MMCloudKitExportCoordinator* import in activeImports){
+        for(MMCloudKitExportCoordinator* import in [activeImports reverseObjectEnumerator]){
             if(![disappearingButtons containsObject:import.avatarButton] &&
                ![animationHelperView containsSubview:import.avatarButton]){
                 CGRect fr = import.avatarButton.frame;
-                fr.origin.x = 100 + import.avatarButton.frame.size.width/2*(i+[animationHelperView.subviews count]);
+                fr.origin.x = self.bounds.size.width - 100 - import.avatarButton.frame.size.width/3*i;
                 import.avatarButton.frame = fr;
                 i++;
             }
         }
     }];
+}
+
+-(void) animateImportAvatarButtonToTopOfPage:(MMAvatarButton*)avatarButton onComplete:(void (^)())completion{
+    CGRect fr = CGRectMake(self.bounds.size.width - 100, 0, avatarButton.bounds.size.width, avatarButton.bounds.size.height);
+    avatarButton.frame = fr;
+    [self addSubview:avatarButton];
+
+    avatarButton.shouldDrawDarkBackground = YES;
+    [avatarButton setNeedsDisplay];
+    
+    [avatarButton animateOnScreenWithCompletion:^(BOOL finished) {
+        [self animateAndAlignAllButtons];
+        if(completion) completion();
+    }];
+    [self animateAndAlignAllButtons];
 }
 
 
@@ -137,13 +152,23 @@
 -(void) didRecieveMessageFrom:(CKDiscoveredUserInfo*)sender forZip:(NSString*)pathToZip{
     NSLog(@"got message");
     MMAvatarButton* senderButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:sender.initials];
-    MMCloudKitImportCoordinator* coordinator = [[MMCloudKitImportCoordinator alloc] initWithSender:sender andButton:senderButton andZipFile:pathToZip];
+    MMCloudKitImportCoordinator* coordinator = [[MMCloudKitImportCoordinator alloc] initWithSender:sender andButton:senderButton andZipFile:pathToZip forExportView:self];
     [activeImports addObject:coordinator];
     [coordinator begin];
 }
 
 -(void) didFailToFetchMessage:(CKRecordID*)messageID withProperties:(NSDictionary*)properties{
     NSLog(@"got message failed");
+}
+
+#pragma mark - MMCloudKitManagerDelegate
+
+-(void) importCoordinatorIsReady:(MMCloudKitImportCoordinator*)coordinator{
+    NSLog(@"beginning import animation");
+    [self animateImportAvatarButtonToTopOfPage:coordinator.avatarButton onComplete:^{
+        NSLog(@"done processing zip, ready to import");
+    }];
+    [self animateAndAlignAllButtons];
 }
 
 @end

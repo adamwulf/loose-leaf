@@ -42,7 +42,7 @@
 
 -(UIColor*) backgroundColor{
     if(self.shouldDrawDarkBackground){
-        return [[self borderColor] colorWithAlphaComponent:.5];
+        return [UIColor colorWithRed:.4 green:.4 blue:.4 alpha:.9];
     }else{
         return [[UIColor whiteColor] colorWithAlphaComponent:.7];
     }
@@ -82,15 +82,28 @@
                                                                (drawingWidth - glyphRect.size.height) / 2 + kWidthOfSidebarButtonBuffer)];
     
     //// Oval Drawing
-    UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 1.0), floor(CGRectGetHeight(frame) - 1.0))];
+    
+    CGRect ovalFrame = CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 1.0), floor(CGRectGetHeight(frame) - 1.0));
+    UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect:ovalFrame];
     [ovalPath appendPath:glyphPath];
     [ovalPath closePath];
     [halfGreyFill setFill];
     [ovalPath fill];
+    
     [darkerGreyBorder setStroke];
     ovalPath.lineWidth = 1;
     [ovalPath stroke];
     
+    if(self.shouldDrawDarkBackground){
+        UIBezierPath* stripe = [UIBezierPath bezierPathWithOvalInRect:ovalFrame];
+        CGContextSetBlendMode(context, kCGBlendModeClear);
+        [[UIColor whiteColor] setStroke];
+        [stripe stroke];
+        CGContextSetBlendMode(context, kCGBlendModeNormal);
+        [[self fontColor] setStroke];
+        [stripe stroke];
+    }
+
     
     //
     // clear the arrow and box, then fill with
@@ -114,6 +127,25 @@
         self.center = offscreen;
     } completion:^(BOOL finished) {
         [self removeFromSuperview];
+        if(completion) completion(finished);
+    }];
+}
+
+-(void) animateOnScreenWithCompletion:(void (^)(BOOL finished))completion{
+    CGPoint offscreen = CGPointMake(self.center.x, self.center.y - self.bounds.size.height / 2);
+    CGPoint onscreen = self.center;
+    self.alpha = 0;
+    self.center = offscreen;
+
+    [UIView animateKeyframesWithDuration:.4 delay:0 options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
+        [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:.6 animations:^{
+            self.alpha = 1;
+            self.center = CGPointMake(onscreen.x, onscreen.y+6);
+        }];
+        [UIView addKeyframeWithRelativeStartTime:.6 relativeDuration:.4 animations:^{
+            self.center = onscreen;
+        }];
+    } completion:^(BOOL finished){
         if(completion) completion(finished);
     }];
 }
