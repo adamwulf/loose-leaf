@@ -312,6 +312,8 @@
 		66EDE44119B100B500A5623B /* ziparchive.license in Resources */ = {isa = PBXBuildFile; fileRef = 66EDE44019B100B500A5623B /* ziparchive.license */; };
 		66EDE44319B1011800A5623B /* minizip.license in Resources */ = {isa = PBXBuildFile; fileRef = 66EDE44219B1011800A5623B /* minizip.license */; };
 		66EDE47819B1039000A5623B /* ZipArchive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66EDE47719B1039000A5623B /* ZipArchive.framework */; };
+		66EDE48319B3BB2900A5623B /* CKDiscoveredUserInfo+Initials.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE48219B3BB2900A5623B /* CKDiscoveredUserInfo+Initials.m */; };
+		66EDE48619B3BD6C00A5623B /* MMCloudKitImportCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE48519B3BD6C00A5623B /* MMCloudKitImportCoordinator.m */; };
 		66F4517E18EB7C3C00A57C95 /* MMPhotoRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4517D18EB7C3C00A57C95 /* MMPhotoRowView.m */; };
 		66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */; };
@@ -901,6 +903,10 @@
 		66EDE44219B1011800A5623B /* minizip.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = minizip.license; sourceTree = "<group>"; };
 		66EDE44419B1025400A5623B /* libZipArchive-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libZipArchive-ios.a"; path = "../Submodules/zip-archive/ZipArchive/build/Debug-iphoneos/libZipArchive-ios.a"; sourceTree = "<group>"; };
 		66EDE47719B1039000A5623B /* ZipArchive.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZipArchive.framework; path = "../Submodules/zip-archive/ZipArchive/build/Debug/ZipArchive.framework"; sourceTree = "<group>"; };
+		66EDE48119B3BB2900A5623B /* CKDiscoveredUserInfo+Initials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKDiscoveredUserInfo+Initials.h"; sourceTree = "<group>"; };
+		66EDE48219B3BB2900A5623B /* CKDiscoveredUserInfo+Initials.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CKDiscoveredUserInfo+Initials.m"; sourceTree = "<group>"; };
+		66EDE48419B3BD6C00A5623B /* MMCloudKitImportCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitImportCoordinator.h; sourceTree = "<group>"; };
+		66EDE48519B3BD6C00A5623B /* MMCloudKitImportCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitImportCoordinator.m; sourceTree = "<group>"; };
 		66F4517A18EB4C1700A57C95 /* MMCachedRowsScrollViewDataSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMCachedRowsScrollViewDataSource.h; sourceTree = "<group>"; };
 		66F4517C18EB7C3C00A57C95 /* MMPhotoRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPhotoRowView.h; sourceTree = "<group>"; };
 		66F4517D18EB7C3C00A57C95 /* MMPhotoRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPhotoRowView.m; sourceTree = "<group>"; };
@@ -1030,6 +1036,8 @@
 				667D98BD192FD37500625879 /* NSURL+UTI.m */,
 				66066745193A7C1400C985E9 /* UIImage+Memory.h */,
 				66066746193A7C1400C985E9 /* UIImage+Memory.m */,
+				66EDE48119B3BB2900A5623B /* CKDiscoveredUserInfo+Initials.h */,
+				66EDE48219B3BB2900A5623B /* CKDiscoveredUserInfo+Initials.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -2127,6 +2135,8 @@
 				66EDE41F19AE736E00A5623B /* MMCloudKitExportView.m */,
 				66EDE42819AFDD2D00A5623B /* MMCloudKitExportCoordinator.h */,
 				66EDE42919AFDD2D00A5623B /* MMCloudKitExportCoordinator.m */,
+				66EDE48419B3BD6C00A5623B /* MMCloudKitImportCoordinator.h */,
+				66EDE48519B3BD6C00A5623B /* MMCloudKitImportCoordinator.m */,
 			);
 			name = "CloudKit Import Sidebar";
 			sourceTree = "<group>";
@@ -2632,6 +2642,8 @@
 				66D7496318A6DB010015650E /* MMDrawingTouchGestureRecognizer.m in Sources */,
 				66510838178DFEE700A7A7DD /* MMRulerView.m in Sources */,
 				666E254518F60F3E00C17295 /* MMAlbumSidebarContentView.m in Sources */,
+				66EDE48619B3BD6C00A5623B /* MMCloudKitImportCoordinator.m in Sources */,
+				66EDE48319B3BB2900A5623B /* CKDiscoveredUserInfo+Initials.m in Sources */,
 				667EF0CC19A5501900B1A38D /* MMCloudKitButton.m in Sources */,
 				66510835178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m in Sources */,
 				660116F519ABB8290065C1B4 /* MMCloudKitWaitingForLoginState.m in Sources */,

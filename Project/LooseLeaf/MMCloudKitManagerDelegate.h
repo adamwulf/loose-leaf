@@ -16,6 +16,10 @@
 
 -(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState;
 
+-(void) didRecieveMessageFrom:(CKDiscoveredUserInfo*)sender forZip:(NSString*)pathToZip;
+
+-(void) didFailToFetchMessage:(CKRecordID*)messageID withProperties:(NSDictionary*)properties;
+
 @end
 
 

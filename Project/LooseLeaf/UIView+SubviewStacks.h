@@ -11,7 +11,7 @@
 
 @interface UIView (SubviewStacks)
 
-- (BOOL) containsSubview:(MMPaperView*)obj;
+- (BOOL) containsSubview:(UIView*)obj;
 - (MMUndoablePaperView*) peekSubview;
 - (MMUndoablePaperView*) popSubview;
 - (MMUndoablePaperView*) bottomSubview;

@@ -10,12 +10,15 @@
 #import "MMUntouchableView.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMCloudKitExportCoordinator.h"
+#import "MMCloudKitImportCoordinator.h"
 #import "MMScrapPaperStackView.h"
+#import "CKDiscoveredUserInfo+Initials.h"
 #import "Constants.h"
 
 @implementation MMCloudKitExportView{
     NSMutableSet* disappearingButtons;
     NSMutableArray* activeExports;
+    NSMutableArray* activeImports;
 }
 
 @synthesize stackView;
@@ -25,6 +28,7 @@
     if(self = [super initWithFrame:frame]){
         disappearingButtons = [NSMutableSet set];
         activeExports = [NSMutableArray array];
+        activeImports = [NSMutableArray array];
     }
     return self;
 }
@@ -102,17 +106,44 @@
 -(void) animateAndAlignAllButtons{
     [UIView animateWithDuration:.5 animations:^{
         int i=0;
-        for(MMAvatarButton* button in [self.subviews reverseObjectEnumerator]){
-            if([button isKindOfClass:[MMAvatarButton class]] &&
-               ![disappearingButtons containsObject:button]){
-                
-                CGRect fr = button.frame;
-                fr.origin.x = 100 + button.frame.size.width/2*(i+[animationHelperView.subviews count]);
-                button.frame = fr;
+        for(MMCloudKitExportCoordinator* export in [activeExports reverseObjectEnumerator]){
+            if(![disappearingButtons containsObject:export.avatarButton] &&
+               ![animationHelperView containsSubview:export.avatarButton]){
+                CGRect fr = export.avatarButton.frame;
+                fr.origin.x = 100 + export.avatarButton.frame.size.width/2*(i+[animationHelperView.subviews count]);
+                export.avatarButton.frame = fr;
+                i++;
+            }
+        }
+        for(MMCloudKitExportCoordinator* import in activeImports){
+            if(![disappearingButtons containsObject:import.avatarButton] &&
+               ![animationHelperView containsSubview:import.avatarButton]){
+                CGRect fr = import.avatarButton.frame;
+                fr.origin.x = 100 + import.avatarButton.frame.size.width/2*(i+[animationHelperView.subviews count]);
+                import.avatarButton.frame = fr;
                 i++;
             }
         }
     }];
+}
+
+
+#pragma mark - MMCloudKitManagerDelegate
+
+-(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState{
+    // noop
+}
+
+-(void) didRecieveMessageFrom:(CKDiscoveredUserInfo*)sender forZip:(NSString*)pathToZip{
+    NSLog(@"got message");
+    MMAvatarButton* senderButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:sender.initials];
+    MMCloudKitImportCoordinator* coordinator = [[MMCloudKitImportCoordinator alloc] initWithSender:sender andButton:senderButton andZipFile:pathToZip];
+    [activeImports addObject:coordinator];
+    [coordinator begin];
+}
+
+-(void) didFailToFetchMessage:(CKRecordID*)messageID withProperties:(NSDictionary*)properties{
+    NSLog(@"got message failed");
 }
 
 @end

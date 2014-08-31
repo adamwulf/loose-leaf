@@ -9,6 +9,7 @@
 #import "MMCloudKitFriendTableViewCell.h"
 #import "UIView+Debug.h"
 #import "UIView+Animations.h"
+#import "CKDiscoveredUserInfo+Initials.h"
 #import "Constants.h"
 
 @implementation MMCloudKitFriendTableViewCell{
@@ -35,14 +36,9 @@
 }
 
 -(void) setUserInfo:(CKDiscoveredUserInfo*)userInfo forIndex:(NSInteger)index{
-    NSString* firstLetter = userInfo.firstName.length > 1 ? [userInfo.firstName substringToIndex:1] : @"";
-    NSString* lastLetter = userInfo.lastName.length > 1 ? [userInfo.lastName substringToIndex:1] : @"";
-    NSString* initials = [[NSString stringWithFormat:@"%@%@", firstLetter, lastLetter] uppercaseString];
-//    initials = [NSString stringWithFormat:@"%d", (int) index];
-
     CGFloat height = self.bounds.size.height - kWidthOfSidebarButtonBuffer / 4.0;
     [avatarButton removeFromSuperview];
-    avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, height, height) forLetter:initials];
+    avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, height, height) forLetter:userInfo.initials];
     [self addSubview:avatarButton];
 
     CGRect lblFr = textLabel.frame;

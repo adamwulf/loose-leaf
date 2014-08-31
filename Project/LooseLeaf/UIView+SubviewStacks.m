@@ -10,7 +10,7 @@
 
 @implementation UIView (SubviewStacks)
 
-- (BOOL) containsSubview:(MMPaperView*)obj{
+- (BOOL) containsSubview:(UIView*)obj{
     return [self.subviews containsObject:obj];
 }
 

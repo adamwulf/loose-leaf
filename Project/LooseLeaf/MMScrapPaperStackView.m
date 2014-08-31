@@ -1859,5 +1859,13 @@ int skipAll = NO;
     [sharePageSidebar cloudKitDidChangeState:currentState];
 }
 
+-(void) didRecieveMessageFrom:(CKDiscoveredUserInfo*)sender forZip:(NSString*)pathToZip{
+    [cloudKitExportView didRecieveMessageFrom:sender forZip:pathToZip];
+}
+
+-(void) didFailToFetchMessage:(CKRecordID*)messageID withProperties:(NSDictionary*)properties{
+    [cloudKitExportView didFailToFetchMessage:messageID withProperties:properties];
+}
+
 
 @end

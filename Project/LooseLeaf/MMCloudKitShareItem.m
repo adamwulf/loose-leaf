@@ -113,4 +113,13 @@
     [sharingOptionsView cloudKitDidChangeState:currentState];
 }
 
+-(void) didRecieveMessageFrom:(CKDiscoveredUserInfo*)sender forZip:(NSString*)pathToZip{
+    // noop
+}
+
+-(void) didFailToFetchMessage:(CKRecordID*)messageID withProperties:(NSDictionary*)properties{
+    // noop
+}
+
+
 @end

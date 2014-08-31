@@ -106,7 +106,7 @@
             for(int filesSoFar=0;filesSoFar<[directoryContents count];filesSoFar++){
                 NSString* aFileInPage = [directoryContents objectAtIndex:filesSoFar];
                 if([zip addFileToZip:[pathOfPageFiles stringByAppendingPathComponent:aFileInPage]
-                         toPathInZip:[self.uuid stringByAppendingPathComponent:aFileInPage]]){
+                         toPathInZip:aFileInPage]){
                 }else{
                     NSLog(@"error for path: %@", aFileInPage);
                 }
@@ -116,7 +116,7 @@
             for(int filesSoFar=0;filesSoFar<[bundledContents count];filesSoFar++){
                 NSString* aFileInPage = [bundledContents objectAtIndex:filesSoFar];
                 if([zip addFileToZip:[[self bundledPagesPath] stringByAppendingPathComponent:aFileInPage]
-                         toPathInZip:[self.uuid stringByAppendingPathComponent:aFileInPage]]){
+                         toPathInZip:aFileInPage]){
                 }else{
                     NSLog(@"error for path: %@", aFileInPage);
                 }

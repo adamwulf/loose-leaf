@@ -10,10 +10,11 @@
 #import "MMAvatarButton.h"
 #import <CloudKit/CloudKit.h>
 #import "MMCloudKitExportCoordinator.h"
+#import "MMCloudKitManagerDelegate.h"
 
 @class MMScrapPaperStackView;
 
-@interface MMCloudKitExportView : MMUntouchableView
+@interface MMCloudKitExportView : MMUntouchableView<MMCloudKitManagerDelegate>
 
 @property (nonatomic, strong) MMUntouchableView* animationHelperView;
 @property (nonatomic, weak) MMScrapPaperStackView* stackView;
