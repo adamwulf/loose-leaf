@@ -103,7 +103,7 @@
 }
 
 -(void) animateAndAlignAllButtons{
-    [UIView animateWithDuration:.5 animations:^{
+    [UIView animateWithDuration:.3 animations:^{
         int i=0;
         for(MMCloudKitExportCoordinator* export in [activeExports reverseObjectEnumerator]){
             if(![disappearingButtons containsObject:export.avatarButton] &&
@@ -184,6 +184,7 @@
     
     [activeImports removeObject:coordinator];
     [coordinator.avatarButton animateOffScreenWithCompletion:nil];
+    [self animateAndAlignAllButtons];
 }
 
 #pragma mark - Touch Control

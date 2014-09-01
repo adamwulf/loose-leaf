@@ -400,7 +400,8 @@ static dispatch_queue_t importExportScrapStateQueue;
                 // load drawable view information here
                 drawableViewState = [[JotViewStateProxy alloc] initWithDelegate:self];
                 [drawableViewState loadStateAsynchronously:async
-                                                  withSize:[drawableView pagePixelSize]
+                                                  withSize:drawableView.pagePtSize
+                                                  andScale:drawableView.scale
                                                 andContext:[drawableView context]
                                           andBufferManager:[[JotBufferManager alloc] init]];
             }

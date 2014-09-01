@@ -110,8 +110,8 @@
     });
 }
 
--(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext *)context{
-    [super loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andScale:(CGFloat)scale andContext:(JotGLContext *)context{
+    [super loadStateAsynchronously:async withSize:pagePixelSize andScale:scale andContext:context];
     
 //    dispatch_block_t block = ^{
 //        [undoRedoManager loadFrom:[self undoStatePath]];

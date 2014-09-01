@@ -219,12 +219,12 @@ dispatch_queue_t importThumbnailQueue;
     return [paperState hasEditsToSave];
 }
 
--(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context{
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePtSize andScale:(CGFloat)scale andContext:(JotGLContext*)context{
     if([paperState isStateLoaded]){
         [self didLoadState:paperState];
         return;
     }
-    [paperState loadStateAsynchronously:async withSize:pagePixelSize andContext:context andBufferManager:[JotBufferManager sharedInstance]];
+    [paperState loadStateAsynchronously:async withSize:pagePtSize andScale:scale andContext:context andBufferManager:[JotBufferManager sharedInstance]];
 }
 -(void) unloadState{
     [paperState unload];

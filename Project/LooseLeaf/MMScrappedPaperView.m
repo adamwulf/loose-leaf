@@ -1158,9 +1158,9 @@
     });
 }
 
--(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context{
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andScale:(CGFloat)scale andContext:(JotGLContext*)context{
 //    debug_NSLog(@"asking %@ to load state", self.uuid);
-    [super loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
+    [super loadStateAsynchronously:async withSize:pagePixelSize andScale:scale andContext:context];
     if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
         [scrapsOnPaperState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
     }else{

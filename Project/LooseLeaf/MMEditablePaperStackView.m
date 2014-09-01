@@ -753,7 +753,8 @@ struct SidebarButton{
     
     // load the state for the top page in the visible stack
     [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
-                                                     withSize:[[MMPageCacheManager sharedInstance].drawableView pagePixelSize]
+                                                     withSize:[MMPageCacheManager sharedInstance].drawableView.pagePtSize
+                                                     andScale:[MMPageCacheManager sharedInstance].drawableView.scale
                                                    andContext:[[MMPageCacheManager sharedInstance].drawableView context]];
     
     

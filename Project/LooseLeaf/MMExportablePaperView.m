@@ -60,6 +60,11 @@
         isCurrentlyExporting = YES;
         waitingForExport = NO;
     }
+    if([self hasEditsToSave]){
+        NSLog(@"saved exporing while save is still needed");
+        [self saveToDisk];
+        return;
+    }
     
     dispatch_async([self serialBackgroundQueue], ^{
         NSString* generatedZipFile = [self generateZipFile];
