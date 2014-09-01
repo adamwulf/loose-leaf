@@ -38,4 +38,6 @@
 
 -(void) importCoordinatorIsReady:(MMCloudKitImportCoordinator*)coordinator;
 
+-(void) importWasTapped:(MMCloudKitImportCoordinator*)coordinator;
+
 @end

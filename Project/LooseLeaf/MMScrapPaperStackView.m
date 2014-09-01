@@ -1867,5 +1867,28 @@ int skipAll = NO;
     [cloudKitExportView didFailToFetchMessage:messageID withProperties:properties];
 }
 
+#pragma mark - Import
+
+-(void) importAndShowPage:(MMExportablePaperView*)page{
+    [[MMPageCacheManager sharedInstance] mayChangeTopPageTo:page];
+    [[MMPageCacheManager sharedInstance] willChangeTopPageTo:page];
+    [[NSThread mainThread] performBlock:^{
+        [self forceScrapToScrapContainerDuringGesture];
+        if([setOfPagesBeingPanned count]){
+            NSLog(@"adding new page, but pages are being panned.");
+            for(MMPaperView* page in [setOfPagesBeingPanned copy]){
+                [page cancelAllGestures];
+            }
+        }
+        [[visibleStackHolder peekSubview] cancelAllGestures];
+        page.delegate = self;
+        [hiddenStackHolder pushSubview:page];
+        [[visibleStackHolder peekSubview] enableAllGestures];
+        [self popTopPageOfHiddenStack];
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+        [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
+    } afterDelay:.1];
+}
+
 
 @end

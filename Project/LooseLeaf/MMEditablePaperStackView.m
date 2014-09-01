@@ -214,7 +214,6 @@ struct SidebarButton{
                                                          selector:@selector(connectionChange:)
                                                              name:JotStylusManagerDidChangeConnectionStatus
                                                            object:nil];
-                [[JotStylusManager sharedInstance] setEnabled:NO];
                 [[JotStylusManager sharedInstance] setRejectMode:NO];
             }
         }];
@@ -341,15 +340,15 @@ struct SidebarButton{
 }
 
 -(void) jotSettingsTapped:(UIButton*)_button{
-    if(jotTouchPopover && jotTouchPopover.popoverVisible){
-        return;
-    }else if(jotTouchPopover){
-        [jotTouchPopover dismissPopoverAnimated:NO];
-    }
-    JotSettingsViewController* settings = [[JotSettingsViewController alloc] initWithOnOffSwitch: YES];
-    jotTouchPopover = [[UIPopoverController alloc] initWithContentViewController:settings];
-    [jotTouchPopover presentPopoverFromRect:_button.frame inView:self permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-    [jotTouchPopover setPopoverContentSize:CGSizeMake(300, 446) animated:NO];
+//    if(jotTouchPopover && jotTouchPopover.popoverVisible){
+//        return;
+//    }else if(jotTouchPopover){
+//        [jotTouchPopover dismissPopoverAnimated:NO];
+//    }
+//    JotSettingsViewController* settings = [[JotSettingsViewController alloc] initWithOnOffSwitch: YES];
+//    jotTouchPopover = [[UIPopoverController alloc] initWithContentViewController:settings];
+//    [jotTouchPopover presentPopoverFromRect:_button.frame inView:self permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+//    [jotTouchPopover setPopoverContentSize:CGSizeMake(300, 446) animated:NO];
 }
 
 

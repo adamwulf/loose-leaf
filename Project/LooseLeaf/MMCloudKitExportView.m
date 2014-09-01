@@ -12,7 +12,6 @@
 #import "MMCloudKitExportCoordinator.h"
 #import "MMCloudKitImportCoordinator.h"
 #import "MMScrapPaperStackView.h"
-#import "CKDiscoveredUserInfo+Initials.h"
 #import "Constants.h"
 
 @implementation MMCloudKitExportView{
@@ -151,8 +150,7 @@
 
 -(void) didRecieveMessageFrom:(CKDiscoveredUserInfo*)sender forZip:(NSString*)pathToZip{
     NSLog(@"got message");
-    MMAvatarButton* senderButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:sender.initials];
-    MMCloudKitImportCoordinator* coordinator = [[MMCloudKitImportCoordinator alloc] initWithSender:sender andButton:senderButton andZipFile:pathToZip forExportView:self];
+    MMCloudKitImportCoordinator* coordinator = [[MMCloudKitImportCoordinator alloc] initWithSender:sender andZipFile:pathToZip forExportView:self];
     [activeImports addObject:coordinator];
     [coordinator begin];
 }
@@ -169,6 +167,41 @@
         NSLog(@"done processing zip, ready to import");
     }];
     [self animateAndAlignAllButtons];
+}
+
+-(void) importWasTapped:(MMCloudKitImportCoordinator*)coordinator{
+    NSLog(@"time to show this page %@", coordinator);
+    if(coordinator.uuidOfIncomingPage){
+        MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:stackView.bounds andUUID:coordinator.uuidOfIncomingPage];
+        if(page){
+            [stackView importAndShowPage:page];
+        }else{
+            NSLog(@"couldn't build page for %@", coordinator.uuidOfIncomingPage);
+        }
+    }else{
+        NSLog(@"couldn't create page for %@", coordinator);
+    }
+    
+    [activeImports removeObject:coordinator];
+    [coordinator.avatarButton animateOffScreenWithCompletion:nil];
+}
+
+#pragma mark - Touch Control
+
+- (BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
+    MMCloudKitImportCoordinator* import = [activeImports lastObject];
+    if([import.avatarButton pointInside:[self convertPoint:point toView:import.avatarButton] withEvent:event]){
+        return YES;
+    }
+    return [super pointInside:point withEvent:event];
+}
+
+-(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+    MMCloudKitImportCoordinator* import = [activeImports lastObject];
+    if([import.avatarButton pointInside:[self convertPoint:point toView:import.avatarButton] withEvent:event]){
+        return import.avatarButton;
+    }
+    return [super hitTest:point withEvent:event];
 }
 
 @end
