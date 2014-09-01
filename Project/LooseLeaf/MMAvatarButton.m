@@ -207,7 +207,7 @@
     
     CGPoint center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
     
-    CGFloat radius = self.drawableFrame.size.width / 2;
+    CGFloat radius = self.drawableFrame.size.width / 2 - 1;
     CAShapeLayer *circle;
     if([self.layer.sublayers count]){
         circle = [self.layer.sublayers firstObject];
