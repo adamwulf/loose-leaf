@@ -16,6 +16,7 @@
 #import "MMCloudKitShareItem.h"
 #import "Constants.h"
 #import "MMRotationManager.h"
+#import "NSThread+BlockAdditions.h"
 #import "UIView+Debug.h"
 
 @implementation MMCloudKitOptionsView{
@@ -93,6 +94,7 @@
 
 #pragma mark - CloudKit UI
 
+BOOL hasSent = NO;
 -(void) updateInterfaceBasedOniCloudStatus{
     NSString* cloudKitInfo = [[MMCloudKitManager sharedManager] description];
     
@@ -108,6 +110,21 @@
     buttonFr.origin.y = lblFr.origin.y + lblFr.size.height + kWidthOfSidebarButtonBuffer;
     loginButton.frame = buttonFr;
     [loginButton sizeToFit];
+    
+    NSLog(@"settings url: %@", UIApplicationOpenSettingsURLString);
+//    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+    
+//    
+//    [[NSThread mainThread] performBlock:^{
+//        if(!hasSent){
+//            NSURL *appSettings = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+//            if ([[UIApplication sharedApplication] canOpenURL:appSettings]) {
+//                // make sure to use in iOS8, not iOS7
+//                [[UIApplication sharedApplication] openURL:appSettings];
+//            }            hasSent = YES;
+//        }
+//    }afterDelay:3];
+    
 }
 
 #pragma mark - MMCloudKitManagerDelegate

@@ -114,6 +114,7 @@
                 i++;
             }
         }
+        i = 0;
         for(MMCloudKitExportCoordinator* import in [activeImports reverseObjectEnumerator]){
             if(![disappearingButtons containsObject:import.avatarButton] &&
                ![animationHelperView containsSubview:import.avatarButton]){
