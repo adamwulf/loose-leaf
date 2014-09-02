@@ -22,6 +22,8 @@ static NSMutableDictionary* _pathCacheInstance = nil;
 }
 
 -(UIBezierPath*) bezierPathForString:(NSString*) letter{
+    if(!letter) return nil;
+    
     NSString* key = [NSString stringWithFormat:@"%@%f - %@", [self fontName], [self pointSize], letter];
     
     UIBezierPath* glyphPath = [[UIFont sharedPathCache] objectForKey:key];
