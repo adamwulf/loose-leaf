@@ -96,6 +96,7 @@
 -(void) complete{
     avatarButton.targetProgress = 1.0;
     if(!error){
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCloudKitExports by:@(1)];
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
         [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"CloudKit",
                                                                      kMPEventExportPropResult : @"Success"}];

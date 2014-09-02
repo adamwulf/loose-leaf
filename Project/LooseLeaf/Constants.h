@@ -90,8 +90,10 @@ _Pragma("clang diagnostic pop") \
 #define kMPNumberOfEraserUses @"Number of Eraser Uses"
 #define kMPNumberOfScissorUses @"Number of Scissor Uses"
 #define kMPNumberOfRulerUses @"Number of Ruler Uses"
+#define kMPNumberOfCloudKitImports @"Number of CloudKit Imports"  // import page sent via cloudkit
 #define kMPNumberOfPhotoImports @"Number of Photo Imports"  // import existing photo
 #define kMPNumberOfPhotosTaken @"Number of Photos Taken"    // take new photo with camera
+#define kMPNumberOfCloudKitExports @"Number of CloudKit Exports"
 #define kMPNumberOfExports @"Number of Exports"
 #define kMPHasZoomedToList @"Has Zoomed Out to List"
 #define kMPNumberOfLaunches @"Number Of Launches"
@@ -104,6 +106,7 @@ _Pragma("clang diagnostic pop") \
 #define kMPEventLaunch @"App Launch"
 #define kMPEventTakePhoto @"Take Photo"
 #define kMPEventImportPhoto @"Import Photo"
+#define kMPEventImportPage @"Import Page"
 #define kMPEventImportPhotoFailed @"Import Photo Failed"
 #define kMPEventExport @"Export Page"
 
@@ -116,6 +119,8 @@ _Pragma("clang diagnostic pop") \
 #define kMPEventImportPropSource @"Import Source"
 #define kMPEventImportPropPDFPageCount @"PDF Page Count"
 #define kMPEventImportPropSourceApplication @"Application"
+#define kMPEventImportPropScrapCount @"File Extension"
+#define kMPEventImportPropVisibleScrapCount @"File Type"
 
 // photo album
 #define kMaxPhotoRotationInDegrees 20

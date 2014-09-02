@@ -145,6 +145,11 @@
     return YES;
 }
 
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    [[Mixpanel sharedInstance].people addPushDeviceToken:deviceToken];
+}
+
 #pragma mark - Photo and PDF Import
 
 -(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication{

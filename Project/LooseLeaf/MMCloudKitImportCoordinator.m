@@ -12,6 +12,7 @@
 #import "MMCloudKitExportView.h"
 #import "CKDiscoveredUserInfo+Initials.h"
 #import <ZipArchive/ZipArchive.h>
+#import "Mixpanel.h"
 
 @implementation MMCloudKitImportCoordinator{
     CKDiscoveredUserInfo* senderInfo;
@@ -23,6 +24,8 @@
     // the coordinator hasn't begun
     NSString* uuidOfIncomingPage;
     NSString* targetPageLocation;
+    NSInteger numberOfScrapsOnIncomingPage; // used for mixpanel only
+    NSInteger numberOfVisibleScrapsOnIncomingPage; // used for mixpanel only
 }
 
 @synthesize avatarButton;
@@ -92,6 +95,9 @@
                 // save the translation
                 [renamedScraps setObject:updatedScrapUUID forKey:oldScrapUUID];
             }
+            numberOfScrapsOnIncomingPage = [[originalScrapPlist objectForKey:@"allScrapProperties"] count];
+            numberOfVisibleScrapsOnIncomingPage = [[originalScrapPlist objectForKey:@"scrapsOnPageIDs"] count];
+            
             
             // update the array of UUIDs that are visible on the page
             NSMutableArray* updatedScrapsOnPageIDs = [NSMutableArray array];
@@ -144,6 +150,10 @@
 #pragma mark - Touch Event
 
 -(void) avatarButtonTapped:(MMAvatarButton*)button{
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCloudKitImports by:@(1)];
+    [[Mixpanel sharedInstance] track:kMPEventImportPage properties:@{kMPEventImportPropScrapCount : @(numberOfScrapsOnIncomingPage),
+                                                                      kMPEventImportPropVisibleScrapCount : @(numberOfVisibleScrapsOnIncomingPage)}];
+    
     [exportView importWasTapped:self];
 }
 
