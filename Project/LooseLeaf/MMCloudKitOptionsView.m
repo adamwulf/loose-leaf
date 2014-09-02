@@ -111,7 +111,7 @@ BOOL hasSent = NO;
     loginButton.frame = buttonFr;
     [loginButton sizeToFit];
     
-    NSLog(@"settings url: %@", UIApplicationOpenSettingsURLString);
+//    NSLog(@"settings url: %@", UIApplicationOpenSettingsURLString);
 //    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
     
 //    

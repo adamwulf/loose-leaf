@@ -115,22 +115,18 @@
             
             
             // move the page into position
-
+            NSString* documentsPath = [NSFileManager documentsPath];
+            targetPageLocation = [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:tmpUUIDOfIncomingPage];
             
-            if([scrapContentsOfPage count]){
-                NSString* documentsPath = [NSFileManager documentsPath];
-                targetPageLocation = [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:tmpUUIDOfIncomingPage];
-                
-                NSError* err = nil;
-                [[NSFileManager defaultManager] moveItemAtPath:tempPathOfIncomingPage toPath:targetPageLocation error:&err];
-                
-                if(!err){
-                    uuidOfIncomingPage = tmpUUIDOfIncomingPage;
-                }else{
-                    uuidOfIncomingPage = nil;
-                    targetPageLocation = nil;
-                    NSLog(@"couldn't move file from %@ to %@", tempPathOfIncomingPage, targetPageLocation);
-                }
+            err = nil;
+            [[NSFileManager defaultManager] moveItemAtPath:tempPathOfIncomingPage toPath:targetPageLocation error:&err];
+            
+            if(!err){
+                uuidOfIncomingPage = tmpUUIDOfIncomingPage;
+            }else{
+                uuidOfIncomingPage = nil;
+                targetPageLocation = nil;
+                NSLog(@"couldn't move file from %@ to %@", tempPathOfIncomingPage, targetPageLocation);
             }
         }else{
             NSLog(@"failed to unzip file: %@", zipFileLocation);
