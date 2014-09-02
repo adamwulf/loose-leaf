@@ -58,7 +58,6 @@
             
             NSString* pathToScrapsPlist = [[tempPathOfIncomingPage stringByAppendingPathComponent:@"scrapIDs"] stringByAppendingPathExtension:@"plist"];
             NSString* pathToScrapsInPage = [tempPathOfIncomingPage stringByAppendingPathComponent:@"Scraps"];
-            NSArray* scrapContentsOfPage = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:pathToScrapsInPage error:nil];
             
             NSDictionary* originalScrapPlist = [NSDictionary dictionaryWithContentsOfFile:pathToScrapsPlist];
             NSMutableDictionary* renamedScraps = [NSMutableDictionary dictionary];

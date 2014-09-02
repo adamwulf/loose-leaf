@@ -13,12 +13,16 @@
 #import "MMCloudKitExportView.h"
 #import "MMExportablePaperView.h"
 #import "NSThread+BlockAdditions.h"
+#import "Mixpanel.h"
 
 #define kPercentCompleteAtStart  .15
 #define kPercentCompleteOfZip    .20
 #define kPercentCompleteOfUpload .55
 
+#define kZipArchiveErrorDomain @"com.milestonemade.looseleaf.ZipArchive"
+
 @implementation MMCloudKitExportCoordinator{
+    NSError* error;
     MMExportablePaperView* page;
     CKRecordID* userId;
     MMCloudKitExportView* exportView;
@@ -59,6 +63,7 @@
 }
 
 -(void) zipGenerationFailed{
+    error = [NSError errorWithDomain:kZipArchiveErrorDomain code:500 userInfo:nil];
     avatarButton.targetSuccess = NO;
     [self complete];
 }
@@ -72,8 +77,9 @@
                                           withProgressHandler:^(CGFloat progress) {
                                               avatarButton.targetProgress = kPercentCompleteAtStart + kPercentCompleteOfZip + kPercentCompleteOfUpload*progress;
                                           }
-                                        withCompletionHandler:^(NSError *error) {
-                                            if(error){
+                                        withCompletionHandler:^(NSError *_err) {
+                                            if(_err){
+                                                error = _err;
                                                 avatarButton.targetSuccess = NO;
                                             }else{
                                                 avatarButton.targetSuccess = YES;
@@ -89,6 +95,39 @@
 
 -(void) complete{
     avatarButton.targetProgress = 1.0;
+    if(!error){
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"CloudKit",
+                                                                     kMPEventExportPropResult : @"Success"}];
+    }else{
+        if([error.domain isEqualToString:SPRSimpleCloudKitMessengerErrorDomain]){
+            
+            NSString* reason = @"Unknown";
+            if(error.code == SPRSimpleCloudMessengerErrorUnexpected){
+                reason = @"Unexpected";
+            }else if(error.code == SPRSimpleCloudMessengerErroriCloudAccount){
+                reason = @"iCloud Account";
+            }else if(error.code == SPRSimpleCloudMessengerErrorMissingDiscoveryPermissions){
+                reason = @"Discovery Permissions";
+            }else if(error.code == SPRSimpleCloudMessengerErrorNetwork){
+                reason = @"Network Error";
+            }else if(error.code == SPRSimpleCloudMessengerErrorServiceUnavailable){
+                reason = @"Service Unavailable";
+            }else if(error.code == SPRSimpleCloudMessengerErrorCancelled){
+                reason = @"Cancelled";
+            }else if(error.code == SPRSimpleCloudMessengerErroriCloudAccountChanged){
+                reason = @"iCloud Account Changed";
+            }
+            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"CloudKit",
+                                                                         kMPEventExportPropResult : reason}];
+        }else if([error.domain isEqualToString:kZipArchiveErrorDomain]){
+            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"CloudKit",
+                                                                         kMPEventExportPropResult : @"Zip Failed"}];
+        }else{
+            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"CloudKit",
+                                                                         kMPEventExportPropResult : [NSString stringWithFormat:@"%@:%d", error.domain, (int)error.code]}];
+        }
+    }
 }
 
 @end
