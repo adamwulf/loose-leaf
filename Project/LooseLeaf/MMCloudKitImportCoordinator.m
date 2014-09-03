@@ -150,6 +150,7 @@
 #pragma mark - Touch Event
 
 -(void) avatarButtonTapped:(MMAvatarButton*)button{
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCloudKitImports by:@(1)];
     [[Mixpanel sharedInstance] track:kMPEventImportPage properties:@{kMPEventImportPropScrapCount : @(numberOfScrapsOnIncomingPage),
                                                                       kMPEventImportPropVisibleScrapCount : @(numberOfVisibleScrapsOnIncomingPage)}];

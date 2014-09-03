@@ -90,11 +90,12 @@ _Pragma("clang diagnostic pop") \
 #define kMPNumberOfEraserUses @"Number of Eraser Uses"
 #define kMPNumberOfScissorUses @"Number of Scissor Uses"
 #define kMPNumberOfRulerUses @"Number of Ruler Uses"
+#define kMPNumberOfImports @"Number of Imports"
 #define kMPNumberOfCloudKitImports @"Number of CloudKit Imports"  // import page sent via cloudkit
 #define kMPNumberOfPhotoImports @"Number of Photo Imports"  // import existing photo
 #define kMPNumberOfPhotosTaken @"Number of Photos Taken"    // take new photo with camera
-#define kMPNumberOfCloudKitExports @"Number of CloudKit Exports"
 #define kMPNumberOfExports @"Number of Exports"
+#define kMPNumberOfCloudKitExports @"Number of CloudKit Exports"
 #define kMPHasZoomedToList @"Has Zoomed Out to List"
 #define kMPNumberOfLaunches @"Number Of Launches"
 #define kMPNumberOfCrashes @"Number of Crashes"

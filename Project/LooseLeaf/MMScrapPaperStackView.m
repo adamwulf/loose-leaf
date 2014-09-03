@@ -294,6 +294,7 @@
                                                   [topPage saveToDisk];
                                               }];
                          }];
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
         [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{kMPEventImportPropFileExt : [url fileExtension],
                                                                           kMPEventImportPropFileType : [url universalTypeID],
@@ -308,6 +309,7 @@
     }else{
         
     }
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
     [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{kMPEventImportPropFileExt : [url fileExtension],
                                                                       kMPEventImportPropFileType : [url universalTypeID],
@@ -441,6 +443,7 @@
 }
 
 -(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription{
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
     
     NSURL* assetURL = asset.defaultRepresentation.url;
