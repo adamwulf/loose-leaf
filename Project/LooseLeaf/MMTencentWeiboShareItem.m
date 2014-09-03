@@ -65,6 +65,7 @@
                     strResult = @"Sent";
                 }
                 if(result == SLComposeViewControllerResultDone){
+                    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfSocialExports by:@(1)];
                     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
                 }
                 [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"TencentWeibo",

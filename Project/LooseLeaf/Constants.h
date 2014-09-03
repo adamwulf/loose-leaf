@@ -96,6 +96,8 @@ _Pragma("clang diagnostic pop") \
 #define kMPNumberOfPhotosTaken @"Number of Photos Taken"    // take new photo with camera
 #define kMPNumberOfExports @"Number of Exports"
 #define kMPNumberOfCloudKitExports @"Number of CloudKit Exports"
+#define kMPNumberOfOpenInExports @"Number of Open In Exports"
+#define kMPNumberOfSocialExports @"Number of Social Media Exports"
 #define kMPHasZoomedToList @"Has Zoomed Out to List"
 #define kMPNumberOfLaunches @"Number Of Launches"
 #define kMPNumberOfCrashes @"Number of Crashes"

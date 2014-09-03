@@ -133,8 +133,8 @@
 
 -(void) isSendingToApplication:(NSString *)application{
     [sharingOptionsView isSendingToApplication:application];
-    
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfOpenInExports by:@(1)];
     [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"OpenIn",
                                                                  kMPEventExportPropResult : application}];
 }
