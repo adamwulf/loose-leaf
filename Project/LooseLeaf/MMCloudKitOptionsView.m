@@ -144,11 +144,15 @@ BOOL hasSent = NO;
     [self updateInterfaceBasedOniCloudStatus];
 }
 
--(void) didRecieveMessageFrom:(CKDiscoveredUserInfo*)sender forZip:(NSString*)pathToZip{
+-(void) willFetchMessage:(SPRMessage*)message{
     // noop
 }
 
--(void) didFailToFetchMessage:(CKRecordID*)messageID withProperties:(NSDictionary*)properties{
+-(void) didFetchMessage:(SPRMessage *)message{
+    // noop
+}
+
+-(void) didFailToFetchMessage:(SPRMessage *)message{
     // noop
 }
 

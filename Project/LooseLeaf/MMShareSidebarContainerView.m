@@ -248,11 +248,15 @@
     [cloudKitShareItem cloudKitDidChangeState:currentState];
 }
 
--(void) didRecieveMessageFrom:(CKRecordID*)senderID withFirstName:(NSString*)firstName andLastName:(NSString*)lastName forZipFile:(NSString*)pathToZip{
+-(void) willFetchMessage:(SPRMessage *)message{
     // noop
 }
 
--(void) didFailToFetchMessage:(CKRecordID*)messageID withProperties:(NSDictionary*)properties{
+-(void) didFetchMessage:(SPRMessage *)message{
+    // noop
+}
+
+-(void) didFailToFetchMessage:(SPRMessage *)message{
     // noop
 }
 

@@ -138,5 +138,8 @@
     // noop
 }
 
+-(void) cloudKitDidCheckForNotifications{
+    // noop
+}
 
 @end

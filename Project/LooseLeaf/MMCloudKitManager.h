@@ -32,6 +32,6 @@
 
 -(void) handleIncomingMessageNotification:(CKQueryNotification*)remoteNotification;
 
--(void) handleIncomingMessage:(SPRMessage *)message;
+-(void) fetchAllNewMessages;
 
 @end

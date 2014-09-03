@@ -17,7 +17,9 @@
 
 -(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState;
 
--(void) didRecieveMessage:(SPRMessage*)message;
+-(void) willFetchMessage:(SPRMessage*)message;
+
+-(void) didFetchMessage:(SPRMessage*)message;
 
 -(void) didFailToFetchMessage:(SPRMessage*)message;
 

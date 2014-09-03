@@ -25,7 +25,7 @@
     MMCloudKitBaseState* currentState;
     NSString* cachePath;
     
-    NSArray* currentMessages;
+    NSMutableArray* inProcessMessages;
 }
 
 @synthesize delegate;
@@ -52,7 +52,10 @@ static dispatch_queue_t messageQueue;
         currentState = [[MMCloudKitBaseState alloc] init];
         
         dispatch_async([MMCloudKitManager messageQueue], ^{
-            currentMessages = [NSMutableArray arrayWithContentsOfFile:[[self cachePath] stringByAppendingPathComponent:@"messages.plist"]];
+            inProcessMessages = [NSMutableArray arrayWithContentsOfFile:[[self cachePath] stringByAppendingPathComponent:@"messages.plist"]];
+            if(!inProcessMessages){
+                inProcessMessages = [NSMutableArray array];
+            }
         });
         
         // the UIApplicationDidBecomeActiveNotification will kickstart the process when the app launches
@@ -108,6 +111,16 @@ static dispatch_queue_t messageQueue;
     return [currentState isKindOfClass:[MMCloudKitLoggedInState class]];
 }
 
+-(void) fetchAllNewMessages{
+    [[SPRSimpleCloudKitManager sharedManager] fetchNewMessagesWithCompletionHandler:^(NSArray *messages, NSError *error) {
+        NSLog(@"fetched missed notifications: %d", [messages count]);
+        for(SPRMessage* message in messages){
+            [self processIncomingMessage:message];
+        }
+        [currentState cloudKitDidCheckForNotifications];
+    }];
+}
+
 #pragma mark - Notifications
 
 -(void) cloudKitInfoDidChange{
@@ -124,42 +137,60 @@ static dispatch_queue_t messageQueue;
 }
 
 
+-(void) processIncomingMessage:(SPRMessage*)unprocessedMessage{
+    dispatch_async([MMCloudKitManager messageQueue], ^{
+        if(![inProcessMessages containsObject:unprocessedMessage]){
+            [inProcessMessages addObject:unprocessedMessage];
+            NSLog(@"adding inProcessMessages: %d", [inProcessMessages count]);
+        }else{
+            NSLog(@"skipped inProcessMessages: %d", [inProcessMessages count]);
+        }
+    });
+    
+    [self.delegate willFetchMessage:unprocessedMessage];
+    // Do something with the message, like pushing it onto the stack
+    [[SPRSimpleCloudKitManager sharedManager] fetchDetailsForMessage:unprocessedMessage withCompletionHandler:^(SPRMessage *message, NSError *error) {
+        if(!error){
+            NSLog(@"processing incoming message: %@", message.messageRecordID);
+            ZipArchive* zip = [[ZipArchive alloc] init];
+            if([zip validateZipFileAt:message.messageData.path]){
+                [delegate didFetchMessage:message];
+                dispatch_async([MMCloudKitManager messageQueue], ^{
+                    // only remove completed messages
+                    [inProcessMessages removeObject:message];
+                });
+            }else{
+                NSLog(@"invalid zip file");
+                NSLog(@"zip at: %@", message.messageData.path);
+                if(message.messageData.path){
+                    NSString* savedPath = [[NSFileManager documentsPath] stringByAppendingPathComponent:[message.messageData.path lastPathComponent]];
+                    [[NSFileManager defaultManager] moveItemAtPath:message.messageData.path toPath:savedPath error:nil];
+                    NSLog(@"saved to: %@", savedPath);
+                }
+                [delegate didFailToFetchMessage:message];
+            }
+        }else{
+            NSLog(@"invalid zip file");
+            [delegate didFailToFetchMessage:message];
+        }
+        
+        
+        dispatch_async([MMCloudKitManager messageQueue], ^{
+            // only remove completed messages
+            NSLog(@"removing inProcessMessages: %d", [inProcessMessages count]);
+        });
+    }];
+}
+
 #pragma mark - Remote Notification
 
 -(void) handleIncomingMessageNotification:(CKQueryNotification*)remoteNotification{
     [[SPRSimpleCloudKitManager sharedManager] messageForQueryNotification:remoteNotification withCompletionHandler:^(SPRMessage *message, NSError *error) {
-        // Do something with the message, like pushing it onto the stack
-        [[SPRSimpleCloudKitManager sharedManager] fetchDetailsForMessage:message withCompletionHandler:^(SPRMessage *message, NSError *error) {
-            if(!error){
-                [self handleIncomingMessage:message];
-            }else{
-                NSLog(@"invalid zip file");
-                [delegate didFailToFetchMessage:message];
-            }
-        }];
+        // notify that we're going to fetch message details
+        [self processIncomingMessage:message];
     }];
     [self.currentState cloudKitDidRecievePush];
 }
-
--(void) handleIncomingMessage:(SPRMessage *)message{
-    NSLog(@"processing incoming message: %@", message.messageRecordID);
-    ZipArchive* zip = [[ZipArchive alloc] init];
-    if([zip validateZipFileAt:message.messageData.path]){
-        NSLog(@"valid zip file");
-        NSLog(@"message from: %@ %@ at %@", message.senderFirstName, message.senderLastName, message.messageData.path);
-        [delegate didRecieveMessage:message];
-    }else{
-        NSLog(@"invalid zip file");
-        NSLog(@"zip at: %@", message.messageData.path);
-        if(message.messageData.path){
-            NSString* savedPath = [[NSFileManager documentsPath] stringByAppendingPathComponent:[message.messageData.path lastPathComponent]];
-            [[NSFileManager defaultManager] moveItemAtPath:message.messageData.path toPath:savedPath error:nil];
-            NSLog(@"saved to: %@", savedPath);
-        }
-        [delegate didFailToFetchMessage:message];
-    }
-}
-
 
 #pragma mark - Description
 

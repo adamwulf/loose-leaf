@@ -43,14 +43,7 @@
 -(void) fetchAllNewMessages{
     [fetchAllMessagesTimer invalidate];
     fetchAllMessagesTimer = nil;
-    [[SPRSimpleCloudKitManager sharedManager] fetchNewMessagesWithCompletionHandler:^(NSArray *messages, NSError *error) {
-        for(SPRMessage* message in messages){
-            [[SPRSimpleCloudKitManager sharedManager] fetchDetailsForMessage:message withCompletionHandler:^(SPRMessage *message, NSError *error) {
-                [[MMCloudKitManager sharedManager] handleIncomingMessage:message];
-            }];
-        }
-        fetchAllMessagesTimer = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(fetchAllNewMessages) userInfo:nil repeats:NO];
-    }];
+    [[MMCloudKitManager sharedManager] fetchAllNewMessages];
 }
 
 -(void) cloudKitDidRecievePush{
@@ -62,5 +55,9 @@
 //    }
 }
 
+-(void) cloudKitDidCheckForNotifications{
+    [fetchAllMessagesTimer invalidate];
+    fetchAllMessagesTimer = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(fetchAllNewMessages) userInfo:nil repeats:NO];
+}
 
 @end

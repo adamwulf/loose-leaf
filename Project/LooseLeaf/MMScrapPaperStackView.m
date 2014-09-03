@@ -1862,12 +1862,16 @@ int skipAll = NO;
     [sharePageSidebar cloudKitDidChangeState:currentState];
 }
 
--(void) didRecieveMessageFrom:(CKRecordID*)senderID withFirstName:(NSString*)firstName andLastName:(NSString*)lastName forZipFile:(NSString*)pathToZip{
-    [cloudKitExportView didRecieveMessageFrom:senderID withFirstName:firstName andLastName:lastName forZipFile:pathToZip];
+-(void) willFetchMessage:(SPRMessage *)message{
+    [cloudKitExportView willFetchMessage:message];
 }
 
--(void) didFailToFetchMessage:(CKRecordID*)messageID withProperties:(NSDictionary*)properties{
-    [cloudKitExportView didFailToFetchMessage:messageID withProperties:properties];
+-(void) didFetchMessage:(SPRMessage *)message{
+    [cloudKitExportView didFetchMessage:message];
+}
+
+-(void) didFailToFetchMessage:(SPRMessage *)message{
+    [cloudKitExportView didFailToFetchMessage:message];
 }
 
 #pragma mark - Import

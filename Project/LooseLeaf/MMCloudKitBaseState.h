@@ -26,4 +26,6 @@
 
 -(void) cloudKitDidRecievePush;
 
+-(void) cloudKitDidCheckForNotifications;
+
 @end

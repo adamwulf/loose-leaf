@@ -149,15 +149,19 @@
     // noop
 }
 
--(void) didRecieveMessage:(SPRMessage *)message{
+-(void) willFetchMessage:(SPRMessage*)message{
+    // noop
+}
+
+-(void) didFetchMessage:(SPRMessage *)message{
     NSLog(@"got message");
     MMCloudKitImportCoordinator* coordinator = [[MMCloudKitImportCoordinator alloc] initWithImport:message forExportView:self];
     [activeImports addObject:coordinator];
     [coordinator begin];
 }
 
--(void) didFailToFetchMessage:(CKRecordID*)messageID withProperties:(NSDictionary*)properties{
-    NSLog(@"got message failed");
+-(void) didFailToFetchMessage:(SPRMessage *)message{
+    NSLog(@"failed fetching message");
 }
 
 #pragma mark - MMCloudKitManagerDelegate
