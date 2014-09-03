@@ -42,6 +42,8 @@
             if(error){
                 [self updateStateBasedOnError:error];
             }else{
+                [[SPRSimpleCloudKitManager sharedManager] promptForRemoteNotificationsIfNecessary];
+                if([SPRSimpleCloudKitManager sharedManager])
                 [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchFriendsState alloc] initWithUserRecord:userRecord andUserInfo:userInfo]];
             }
         }];

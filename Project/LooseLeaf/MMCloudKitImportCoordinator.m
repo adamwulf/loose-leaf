@@ -49,15 +49,12 @@
         // we'll put all the files into this directory for now
         NSString* tempPathOfIncomingPage = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"IncomingPages"] stringByAppendingPathComponent:tmpUUIDOfIncomingPage];
 
-        NSLog(@"unzipping to: %@", tempPathOfIncomingPage);
         ZipArchive* zip = [[ZipArchive alloc] init];
         if([zip unzipOpenFile:zipFileLocation]){
             // make sure target directory exists
             [[NSFileManager defaultManager] createDirectoryAtPath:tempPathOfIncomingPage withIntermediateDirectories:YES attributes:nil error:nil];
             // unzip files
             [zip unzipFileTo:tempPathOfIncomingPage overWrite:NO];
-            
-            NSLog(@"unzipped page: %@", tempPathOfIncomingPage);
             
             NSString* pathToScrapsPlist = [[tempPathOfIncomingPage stringByAppendingPathComponent:@"scrapIDs"] stringByAppendingPathExtension:@"plist"];
             NSString* pathToScrapsInPage = [tempPathOfIncomingPage stringByAppendingPathComponent:@"Scraps"];

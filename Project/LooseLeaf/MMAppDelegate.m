@@ -65,23 +65,6 @@
     return YES;
 }
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)info {
-    
-    // Do something if the app was in background. Could handle foreground notifications differently
-    if (application.applicationState != UIApplicationStateActive) {
-        [self checkForNotificationToHandleWithUserInfo:info];
-    }else{
-        [self checkForNotificationToHandleWithUserInfo:info];
-    }
-}
-
-- (void) checkForNotificationToHandleWithUserInfo:(NSDictionary *)userInfo {
-    CKQueryNotification *notification = [CKQueryNotification notificationFromRemoteNotificationDictionary:userInfo];
-    if(notification){
-        [[MMCloudKitManager sharedManager] handleIncomingMessage:notification];
-    }
-}
-
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -145,9 +128,29 @@
     return YES;
 }
 
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)info {
+    // Do something if the app was in background. Could handle foreground notifications differently
+    if (application.applicationState != UIApplicationStateActive) {
+        [self checkForNotificationToHandleWithUserInfo:info];
+    }else{
+        [self checkForNotificationToHandleWithUserInfo:info];
+    }
+}
+
+- (void) checkForNotificationToHandleWithUserInfo:(NSDictionary *)userInfo {
+    CKQueryNotification *notification = [CKQueryNotification notificationFromRemoteNotificationDictionary:userInfo];
+    if(notification){
+        [[MMCloudKitManager sharedManager] handleIncomingMessageNotification:notification];
+    }
+}
+
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     [[Mixpanel sharedInstance].people addPushDeviceToken:deviceToken];
+}
+
+-(void) application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error{
+    // noop
 }
 
 #pragma mark - Photo and PDF Import

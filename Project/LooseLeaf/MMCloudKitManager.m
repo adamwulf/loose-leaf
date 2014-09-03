@@ -18,6 +18,7 @@
 #import "MMCloudKitLoggedInState.h"
 #import "MMCloudKitFetchFriendsState.h"
 #import "MMCloudKitFetchingAccountInfoState.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 #import <ZipArchive/ZipArchive.h>
 
 @implementation MMCloudKitManager{
@@ -55,7 +56,10 @@
 }
 
 -(void) userRequestedToLogin{
-    // TODO: support user pressing login
+    MMCloudKitBaseState* currentState = [[MMCloudKitManager sharedManager] currentState];
+    if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
+        [(MMCloudKitWaitingForLoginState*)currentState didAskToLogin];
+    }
 }
 
 -(void) changeToState:(MMCloudKitBaseState*)state{
@@ -96,21 +100,37 @@
 
 #pragma mark - Remote Notification
 
--(void) handleIncomingMessage:(CKQueryNotification*)remoteNotification{
+-(void) handleIncomingMessageNotification:(CKQueryNotification*)remoteNotification{
     [[SPRSimpleCloudKitManager sharedManager] messageForQueryNotification:remoteNotification withCompletionHandler:^(SPRMessage *message, NSError *error) {
         // Do something with the message, like pushing it onto the stack
         [[SPRSimpleCloudKitManager sharedManager] fetchDetailsForMessage:message withCompletionHandler:^(SPRMessage *message, NSError *error) {
-            ZipArchive* zip = [[ZipArchive alloc] init];
-            if([zip validateZipFileAt:message.messageData.path]){
-                NSLog(@"valid zip file");
-                NSLog(@"message from: %@ %@ at %@", message.senderFirstName, message.senderLastName, message.messageData.path);
-                [delegate didRecieveMessageFrom:message.sender forZip:message.messageData.path];
+            if(!error){
+                [self handleIncomingMessage:message];
             }else{
                 NSLog(@"invalid zip file");
                 [delegate didFailToFetchMessage:remoteNotification.recordID withProperties:remoteNotification.recordFields];
             }
         }];
     }];
+    [self.currentState cloudKitDidRecievePush];
+}
+
+-(void) handleIncomingMessage:(SPRMessage *)message{
+    NSLog(@"processing incoming message: %@", message.messageRecordID);
+    ZipArchive* zip = [[ZipArchive alloc] init];
+    if([zip validateZipFileAt:message.messageData.path]){
+        NSLog(@"valid zip file");
+        NSLog(@"message from: %@ %@ at %@", message.senderFirstName, message.senderLastName, message.messageData.path);
+        [delegate didRecieveMessageFrom:message.sender forZip:message.messageData.path];
+    }else{
+        NSLog(@"invalid zip file");
+        NSLog(@"zip at: %@", message.messageData.path);
+        if(message.messageData.path){
+            NSString* savedPath = [[NSFileManager documentsPath] stringByAppendingPathComponent:[message.messageData.path lastPathComponent]];
+            [[NSFileManager defaultManager] moveItemAtPath:message.messageData.path toPath:savedPath error:nil];
+            NSLog(@"saved to: %@", savedPath);
+        }
+    }
 }
 
 

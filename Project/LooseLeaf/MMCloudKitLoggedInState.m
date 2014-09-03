@@ -15,6 +15,7 @@
     CKRecordID* userRecord;
     CKDiscoveredUserInfo* userInfo;
     NSArray* friendList;
+    NSTimer* fetchAllMessagesTimer;
 }
 
 @synthesize friendList;
@@ -30,14 +31,36 @@
 
 -(void) runState{
     NSLog(@"Running state %@", NSStringFromClass([self class]));
-    
     if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
         // we can't connect to cloudkit, so move to an error state
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
     }else{
-        
         NSLog(@"got friend list: %@", friendList);
+        [self fetchAllNewMessages];
     }
 }
+
+-(void) fetchAllNewMessages{
+    [fetchAllMessagesTimer invalidate];
+    fetchAllMessagesTimer = nil;
+    [[SPRSimpleCloudKitManager sharedManager] fetchNewMessagesWithCompletionHandler:^(NSArray *messages, NSError *error) {
+        for(SPRMessage* message in messages){
+            [[SPRSimpleCloudKitManager sharedManager] fetchDetailsForMessage:message withCompletionHandler:^(SPRMessage *message, NSError *error) {
+                [[MMCloudKitManager sharedManager] handleIncomingMessage:message];
+            }];
+        }
+        fetchAllMessagesTimer = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(fetchAllNewMessages) userInfo:nil repeats:NO];
+    }];
+}
+
+-(void) cloudKitDidRecievePush{
+    [self runState];
+//    if([UIApplication sharedApplication].isRegisteredForRemoteNotifications){
+//        NSLog(@"registered for push.");
+//    }else{
+//        NSLog(@"NOT registered for push.");
+//    }
+}
+
 
 @end

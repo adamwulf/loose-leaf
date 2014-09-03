@@ -24,4 +24,6 @@
 
 -(void) reachabilityDidChange;
 
+-(void) cloudKitDidRecievePush;
+
 @end

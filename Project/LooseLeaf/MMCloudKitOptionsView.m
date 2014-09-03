@@ -73,10 +73,7 @@
 }
 
 -(void) loginButtonPressed{
-    MMCloudKitBaseState* currentState = [[MMCloudKitManager sharedManager] currentState];
-    if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
-        [(MMCloudKitWaitingForLoginState*)currentState didAskToLogin];
-    }
+    [[MMCloudKitManager sharedManager] userRequestedToLogin];
 }
 
 #pragma mark - MMShareOptionsView
