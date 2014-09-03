@@ -10,12 +10,11 @@
 #import "NSString+UUID.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMCloudKitExportView.h"
-#import "CKDiscoveredUserInfo+Initials.h"
+#import "SPRMessage+Initials.h"
 #import <ZipArchive/ZipArchive.h>
 #import "Mixpanel.h"
 
 @implementation MMCloudKitImportCoordinator{
-    CKDiscoveredUserInfo* senderInfo;
     MMAvatarButton* avatarButton;
     NSString* zipFileLocation;
     MMCloudKitExportView* exportView;
@@ -30,12 +29,11 @@
 
 @synthesize avatarButton;
 
--(id) initWithSender:(CKDiscoveredUserInfo*)_senderInfo andZipFile:(NSString*)_zipFile forExportView:(MMCloudKitExportView*)_exportView{
+-(id) initWithImport:(SPRMessage*)importInfo forExportView:(MMCloudKitExportView*)_exportView{
     if(self = [super init]){
-        senderInfo = _senderInfo;
-        zipFileLocation = _zipFile;
+        zipFileLocation = importInfo.messageData.path;
         exportView = _exportView;
-        avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:senderInfo.initials];
+        avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:importInfo.initials];
         [avatarButton addTarget:self action:@selector(avatarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;

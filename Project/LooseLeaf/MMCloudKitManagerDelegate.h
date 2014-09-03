@@ -10,15 +10,16 @@
 #define LooseLeaf_MMCloudKitManagerDelegate_h
 
 #import <CloudKit/CloudKit.h>
+#import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 #import "MMCloudKitBaseState.h"
 
 @protocol MMCloudKitManagerDelegate <NSObject>
 
 -(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState;
 
--(void) didRecieveMessageFrom:(CKDiscoveredUserInfo*)sender forZip:(NSString*)pathToZip;
+-(void) didRecieveMessage:(SPRMessage*)message;
 
--(void) didFailToFetchMessage:(CKRecordID*)messageID withProperties:(NSDictionary*)properties;
+-(void) didFailToFetchMessage:(SPRMessage*)message;
 
 @end
 

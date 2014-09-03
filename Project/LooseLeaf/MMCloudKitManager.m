@@ -23,10 +23,24 @@
 
 @implementation MMCloudKitManager{
     MMCloudKitBaseState* currentState;
+    NSString* cachePath;
+    
+    NSArray* currentMessages;
 }
 
 @synthesize delegate;
 @synthesize currentState;
+
+static dispatch_queue_t messageQueue;
+
++(dispatch_queue_t) messageQueue{
+    if(!messageQueue){
+        messageQueue = dispatch_queue_create("com.milestonemade.looseleaf.messageQueue", DISPATCH_QUEUE_SERIAL);
+    }
+    return messageQueue;
+}
+
+
 
 - (id)init {
     self = [super init];
@@ -37,9 +51,22 @@
         
         currentState = [[MMCloudKitBaseState alloc] init];
         
+        dispatch_async([MMCloudKitManager messageQueue], ^{
+            currentMessages = [NSMutableArray arrayWithContentsOfFile:[[self cachePath] stringByAppendingPathComponent:@"messages.plist"]];
+        });
+        
         // the UIApplicationDidBecomeActiveNotification will kickstart the process when the app launches
     }
     return self;
+}
+
+-(NSString*) cachePath{
+    if(!cachePath){
+        NSString* documentsPath = [NSFileManager documentsPath];
+        cachePath = [documentsPath stringByAppendingPathComponent:@"CloudKit"];
+        [NSFileManager ensureDirectoryExistsAtPath:cachePath];
+    }
+    return cachePath;
 }
 
 + (MMCloudKitManager *) sharedManager {
@@ -56,7 +83,6 @@
 }
 
 -(void) userRequestedToLogin{
-    MMCloudKitBaseState* currentState = [[MMCloudKitManager sharedManager] currentState];
     if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
         [(MMCloudKitWaitingForLoginState*)currentState didAskToLogin];
     }
@@ -108,7 +134,7 @@
                 [self handleIncomingMessage:message];
             }else{
                 NSLog(@"invalid zip file");
-                [delegate didFailToFetchMessage:remoteNotification.recordID withProperties:remoteNotification.recordFields];
+                [delegate didFailToFetchMessage:message];
             }
         }];
     }];
@@ -121,7 +147,7 @@
     if([zip validateZipFileAt:message.messageData.path]){
         NSLog(@"valid zip file");
         NSLog(@"message from: %@ %@ at %@", message.senderFirstName, message.senderLastName, message.messageData.path);
-        [delegate didRecieveMessageFrom:message.sender forZip:message.messageData.path];
+        [delegate didRecieveMessage:message];
     }else{
         NSLog(@"invalid zip file");
         NSLog(@"zip at: %@", message.messageData.path);
@@ -130,6 +156,7 @@
             [[NSFileManager defaultManager] moveItemAtPath:message.messageData.path toPath:savedPath error:nil];
             NSLog(@"saved to: %@", savedPath);
         }
+        [delegate didFailToFetchMessage:message];
     }
 }
 

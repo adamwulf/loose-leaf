@@ -11,6 +11,8 @@
 #import "MMCloudKitBaseState.h"
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 
+// handles interaction with cloudkit, and recieving and downloading
+// all messages
 @interface MMCloudKitManager : NSObject
 
 @property (nonatomic, weak) NSObject<MMCloudKitManagerDelegate>* delegate;

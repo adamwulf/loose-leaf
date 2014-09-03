@@ -17,7 +17,7 @@
 @property (nonatomic, strong) MMAvatarButton* avatarButton;
 @property (readonly) NSString* uuidOfIncomingPage;
 
--(id) initWithSender:(CKDiscoveredUserInfo*)senderInfo andZipFile:(NSString*)zipFile forExportView:(MMCloudKitExportView*)_exportView;
+-(id) initWithImport:(SPRMessage*)importInfo forExportView:(MMCloudKitExportView*)_exportView;
 
 -(void) begin;
 

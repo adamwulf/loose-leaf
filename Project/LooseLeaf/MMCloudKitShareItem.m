@@ -113,7 +113,7 @@
     [sharingOptionsView cloudKitDidChangeState:currentState];
 }
 
--(void) didRecieveMessageFrom:(CKDiscoveredUserInfo*)sender forZip:(NSString*)pathToZip{
+-(void) didRecieveMessageFrom:(CKRecordID*)senderID withFirstName:(NSString*)firstName andLastName:(NSString*)lastName forZipFile:(NSString*)pathToZip{
     // noop
 }
 

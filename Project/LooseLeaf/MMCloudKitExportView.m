@@ -149,9 +149,9 @@
     // noop
 }
 
--(void) didRecieveMessageFrom:(CKDiscoveredUserInfo*)sender forZip:(NSString*)pathToZip{
+-(void) didRecieveMessage:(SPRMessage *)message{
     NSLog(@"got message");
-    MMCloudKitImportCoordinator* coordinator = [[MMCloudKitImportCoordinator alloc] initWithSender:sender andZipFile:pathToZip forExportView:self];
+    MMCloudKitImportCoordinator* coordinator = [[MMCloudKitImportCoordinator alloc] initWithImport:message forExportView:self];
     [activeImports addObject:coordinator];
     [coordinator begin];
 }

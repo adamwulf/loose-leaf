@@ -1862,8 +1862,8 @@ int skipAll = NO;
     [sharePageSidebar cloudKitDidChangeState:currentState];
 }
 
--(void) didRecieveMessageFrom:(CKDiscoveredUserInfo*)sender forZip:(NSString*)pathToZip{
-    [cloudKitExportView didRecieveMessageFrom:sender forZip:pathToZip];
+-(void) didRecieveMessageFrom:(CKRecordID*)senderID withFirstName:(NSString*)firstName andLastName:(NSString*)lastName forZipFile:(NSString*)pathToZip{
+    [cloudKitExportView didRecieveMessageFrom:senderID withFirstName:firstName andLastName:lastName forZipFile:pathToZip];
 }
 
 -(void) didFailToFetchMessage:(CKRecordID*)messageID withProperties:(NSDictionary*)properties{
