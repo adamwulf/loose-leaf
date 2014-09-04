@@ -87,13 +87,13 @@
         if([[MMCloudKitManager sharedManager] isLoggedInAndReadyForAnything]){
             avatarButton.targetProgress = kPercentCompleteAtStart + kPercentCompleteOfZip;
             [[SPRSimpleCloudKitManager sharedManager] sendFile:[[NSURL alloc] initFileURLWithPath:pathToZipFile]
-                                                withAttributes:@{@"Version":[[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"],
-                                                                 @"ShortVersion":[[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"],
-                                                                 @"Width":@(screenSize.width),
-                                                                 @"Height":@(screenSize.height),
-                                                                 @"Scale":@(scale),
-                                                                 @"AssetSize": @(assetSize),
-                                                                 @"ReadableSize":readableSize}
+                                                withAttributes:@{@"version":[[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"],
+                                                                 @"shortVersion":[[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"],
+                                                                 @"width":@(screenSize.width),
+                                                                 @"height":@(screenSize.height),
+                                                                 @"scale":@(scale),
+                                                                 @"assetSize": @(assetSize),
+                                                                 @"readableSize":readableSize}
                                                    toUserRecordID:userId
                                               withProgressHandler:^(CGFloat progress) {
                                                   avatarButton.targetProgress = kPercentCompleteAtStart + kPercentCompleteOfZip + kPercentCompleteOfUpload*progress;
