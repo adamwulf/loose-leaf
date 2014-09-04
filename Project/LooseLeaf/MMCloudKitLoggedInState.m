@@ -35,7 +35,7 @@
         // we can't connect to cloudkit, so move to an error state
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
     }else{
-        NSLog(@"got friend list: %@", friendList);
+        NSLog(@"got friend list");
         [self cloudKitDidCheckForNotifications];
     }
 }

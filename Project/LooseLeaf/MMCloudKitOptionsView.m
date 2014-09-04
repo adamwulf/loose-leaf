@@ -162,7 +162,7 @@ BOOL hasSent = NO;
     MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
     if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
         NSArray* friends = ((MMCloudKitLoggedInState*)currentState).friendList;
-        int index = indexPath.row % [friends count];
+        int index = indexPath.row % (int) [friends count];
 //        if([friends count] > indexPath.row){
         return [friends objectAtIndex:index];
 //        }

@@ -81,7 +81,7 @@
     lastIndex += 4 - lastIndex % 4;
     
     NSMutableArray* attrs = [NSMutableArray array];
-    for (int index = firstIndex; index <= lastIndex; index++) {
+    for (NSInteger index = firstIndex; index <= lastIndex; index++) {
         if(index >= 0 && index < numItems){
             [attrs addObject:[self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]]];
         }

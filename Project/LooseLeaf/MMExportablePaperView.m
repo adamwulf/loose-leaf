@@ -103,7 +103,7 @@
 
         [bundledContents removeObjectsInArray:directoryContents];
         NSLog(@"generating zip file for path %@", pathOfPageFiles);
-        NSLog(@"contents of path %d vs %d", [directoryContents count], [bundledContents count]);
+        NSLog(@"contents of path %d vs %d", (int) [directoryContents count], (int) [bundledContents count]);
         
         ZipArchive* zip = [[ZipArchive alloc] init];
         if([zip createZipFileAt:fullPathToTempZip])
@@ -149,7 +149,7 @@
             [zip unzipCloseFile];
             
             if([contents count] > 0 && [contents count] == [directoryContents count] + [bundledContents count]){
-                NSLog(@"valid zip file, contents: %d", [contents count]);
+                NSLog(@"valid zip file, contents: %d", (int) [contents count]);
                 [[NSFileManager defaultManager] moveItemAtPath:fullPathToTempZip toPath:fullPathToZip error:nil];
             }else{
                 NSLog(@"invalid zip file: %@ vs %@", contents, directoryContents);

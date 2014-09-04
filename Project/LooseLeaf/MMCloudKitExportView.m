@@ -135,6 +135,7 @@
     avatarButton.shouldDrawDarkBackground = YES;
     [avatarButton setNeedsDisplay];
     
+    avatarButton.alpha = 0;
     [avatarButton animateOnScreenWithCompletion:^(BOOL finished) {
         [self animateAndAlignAllButtons];
         if(completion) completion();
@@ -154,7 +155,6 @@
 }
 
 -(void) didFetchMessage:(SPRMessage *)message{
-    NSLog(@"got message");
     MMCloudKitImportCoordinator* coordinator = [[MMCloudKitImportCoordinator alloc] initWithImport:message forExportView:self];
     [activeImports addObject:coordinator];
     [coordinator begin];
@@ -167,14 +167,14 @@
 #pragma mark - MMCloudKitManagerDelegate
 
 -(void) importCoordinatorIsReady:(MMCloudKitImportCoordinator*)coordinator{
-    NSLog(@"beginning import animation");
+//    NSLog(@"beginning import animation");
     // other coordinators in the list may still be waiting for
     // their zip file to process, so make sure that coordinators
     // are sorted by their readiness
     [activeImports removeObject:coordinator];
     [activeImports addObject:coordinator];
     [self animateImportAvatarButtonToTopOfPage:coordinator.avatarButton onComplete:^{
-        NSLog(@"done processing zip, ready to import");
+//        NSLog(@"done processing zip, ready to import");
     }];
     [self animateAndAlignAllButtons];
 }

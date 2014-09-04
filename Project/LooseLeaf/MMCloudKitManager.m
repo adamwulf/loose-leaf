@@ -117,19 +117,20 @@ static dispatch_queue_t messageQueue;
 
 -(void) fetchAllNewMessages{
     [[SPRSimpleCloudKitManager sharedManager] fetchNewMessagesWithCompletionHandler:^(NSArray *messages, NSError *error) {
-        NSLog(@"fetched missed notifications: %d", [messages count]);
-        for(SPRMessage* message in messages){
-            [self processIncomingMessage:message];
-        }
-        [currentState cloudKitDidCheckForNotifications];
-
-        // clear out any messages that we're tracking
-        // since our last fetch-all-notifications
-        dispatch_async([MMCloudKitManager messageQueue], ^{
-            @synchronized(incomingMessageState){
-                [incomingMessageState setObject:[NSArray array] forKey:kMessagesSinceLastFetchKey];
+        if(!error){
+            for(SPRMessage* message in messages){
+                [self processIncomingMessage:message];
             }
-        });
+            [currentState cloudKitDidCheckForNotifications];
+            
+            // clear out any messages that we're tracking
+            // since our last fetch-all-notifications
+            dispatch_async([MMCloudKitManager messageQueue], ^{
+                @synchronized(incomingMessageState){
+                    [incomingMessageState setObject:[NSArray array] forKey:kMessagesSinceLastFetchKey];
+                }
+            });
+        }
     }];
 }
 
@@ -153,7 +154,6 @@ static dispatch_queue_t messageQueue;
     @synchronized(incomingMessageState){
         NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
         if([messagesSinceLastFetch containsObject:unprocessedMessage]){
-            NSLog(@"skipped inProcessMessages: %d", [messagesSinceLastFetch count]);
             return;
         }
     }
@@ -163,7 +163,6 @@ static dispatch_queue_t messageQueue;
             NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
             if(![messagesSinceLastFetch containsObject:unprocessedMessage]){
                 [incomingMessageState setObject:[messagesSinceLastFetch arrayByAddingObject:unprocessedMessage] forKey:kMessagesSinceLastFetchKey];
-                NSLog(@"adding inProcessMessages: %d", [messagesSinceLastFetch count]+1);
             }
         }
     });
@@ -174,17 +173,9 @@ static dispatch_queue_t messageQueue;
     // Do something with the message, like pushing it onto the stack
     [[SPRSimpleCloudKitManager sharedManager] fetchDetailsForMessage:unprocessedMessage withCompletionHandler:^(SPRMessage *message, NSError *error) {
         if(!error){
-            NSLog(@"processing incoming message: %@", message.messageRecordID);
             ZipArchive* zip = [[ZipArchive alloc] init];
             if([zip validateZipFileAt:message.messageData.path]){
                 [delegate didFetchMessage:message];
-                dispatch_async([MMCloudKitManager messageQueue], ^{
-                    @synchronized(incomingMessageState){
-                        // only remove completed messages
-                        NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
-                        [incomingMessageState setObject:[messagesSinceLastFetch arrayByRemovingObject:unprocessedMessage] forKey:kMessagesSinceLastFetchKey];
-                    }
-                });
             }else{
                 NSLog(@"invalid zip file");
                 NSLog(@"zip at: %@", message.messageData.path);
@@ -204,7 +195,6 @@ static dispatch_queue_t messageQueue;
             // only remove completed messages
             @synchronized(incomingMessageState){
                 NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
-                NSLog(@"removing inProcessMessages: %d", [messagesSinceLastFetch count]);
             }
         });
     }];

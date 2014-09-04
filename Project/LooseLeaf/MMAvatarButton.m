@@ -134,15 +134,20 @@
 -(void) animateOnScreenWithCompletion:(void (^)(BOOL finished))completion{
     CGPoint offscreen = CGPointMake(self.center.x, self.center.y - self.bounds.size.height / 2);
     CGPoint onscreen = self.center;
-    self.alpha = 0;
     self.center = offscreen;
 
-    [UIView animateKeyframesWithDuration:.4 delay:0 options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
-        [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:.6 animations:^{
+    [UIView animateKeyframesWithDuration:.7 delay:0 options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
+        [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:.25 animations:^{
             self.alpha = 1;
-            self.center = CGPointMake(onscreen.x, onscreen.y+6);
+            self.center = CGPointMake(onscreen.x, onscreen.y+12);
         }];
-        [UIView addKeyframeWithRelativeStartTime:.6 relativeDuration:.4 animations:^{
+        [UIView addKeyframeWithRelativeStartTime:.25 relativeDuration:.25 animations:^{
+            self.center = onscreen;
+        }];
+        [UIView addKeyframeWithRelativeStartTime:.5 relativeDuration:.25 animations:^{
+            self.center = CGPointMake(onscreen.x, onscreen.y+8);
+        }];
+        [UIView addKeyframeWithRelativeStartTime:.75 relativeDuration:.25 animations:^{
             self.center = onscreen;
         }];
     } completion:^(BOOL finished){

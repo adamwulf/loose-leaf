@@ -26,6 +26,8 @@
     MMExportablePaperView* page;
     CKRecordID* userId;
     MMCloudKitExportView* exportView;
+    
+    BOOL zipIsComplete;
 }
 
 @synthesize avatarButton;
@@ -37,6 +39,7 @@
         userId = _userId;
         avatarButton = _avatarButton;
         exportView = _exportView;
+        zipIsComplete = NO;
     }
     return self;
 }
@@ -63,33 +66,39 @@
 }
 
 -(void) zipGenerationFailed{
-    error = [NSError errorWithDomain:kZipArchiveErrorDomain code:500 userInfo:nil];
-    avatarButton.targetSuccess = NO;
-    [self complete];
+    if(!zipIsComplete){
+        zipIsComplete = YES;
+        error = [NSError errorWithDomain:kZipArchiveErrorDomain code:500 userInfo:nil];
+        avatarButton.targetSuccess = NO;
+        [self complete];
+    }
 }
 
 -(void) zipGenerationIsCompleteAt:(NSString*)pathToZipFile{
-    if([[MMCloudKitManager sharedManager] isLoggedInAndReadyForAnything]){
-        avatarButton.targetProgress = kPercentCompleteAtStart + kPercentCompleteOfZip;
-        [[SPRSimpleCloudKitManager sharedManager] sendMessage:@"foobar!"
-                                                 withImageURL:[[NSURL alloc] initFileURLWithPath:pathToZipFile]
-                                               toUserRecordID:userId
-                                          withProgressHandler:^(CGFloat progress) {
-                                              avatarButton.targetProgress = kPercentCompleteAtStart + kPercentCompleteOfZip + kPercentCompleteOfUpload*progress;
-                                          }
-                                        withCompletionHandler:^(NSError *_err) {
-                                            if(_err){
-                                                error = _err;
-                                                avatarButton.targetSuccess = NO;
-                                            }else{
-                                                avatarButton.targetSuccess = YES;
-                                            }
-                                            [self complete];
-                                        }];
-    }else{
-        // failed, cloudkit isn't logged in
-        avatarButton.targetSuccess = NO;
-        [self complete];
+    if(!zipIsComplete){
+        zipIsComplete = YES;
+        if([[MMCloudKitManager sharedManager] isLoggedInAndReadyForAnything]){
+            avatarButton.targetProgress = kPercentCompleteAtStart + kPercentCompleteOfZip;
+            [[SPRSimpleCloudKitManager sharedManager] sendMessage:@"foobar!"
+                                                     withImageURL:[[NSURL alloc] initFileURLWithPath:pathToZipFile]
+                                                   toUserRecordID:userId
+                                              withProgressHandler:^(CGFloat progress) {
+                                                  avatarButton.targetProgress = kPercentCompleteAtStart + kPercentCompleteOfZip + kPercentCompleteOfUpload*progress;
+                                              }
+                                            withCompletionHandler:^(NSError *_err) {
+                                                if(_err){
+                                                    error = _err;
+                                                    avatarButton.targetSuccess = NO;
+                                                }else{
+                                                    avatarButton.targetSuccess = YES;
+                                                }
+                                                [self complete];
+                                            }];
+        }else{
+            // failed, cloudkit isn't logged in
+            avatarButton.targetSuccess = NO;
+            [self complete];
+        }
     }
 }
 
