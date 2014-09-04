@@ -95,6 +95,9 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    // clear out the icon alert
+    [[MMCloudKitManager sharedManager] resetBadgeCountTo:0];
+    
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [self setupTimer];
     if((CFAbsoluteTimeGetCurrent() - resignedActiveAtStamp) / 60.0 > 5){
@@ -139,8 +142,12 @@
 
 - (void) checkForNotificationToHandleWithUserInfo:(NSDictionary *)userInfo {
     CKQueryNotification *notification = [CKQueryNotification notificationFromRemoteNotificationDictionary:userInfo];
-    if(notification){
-        [[MMCloudKitManager sharedManager] handleIncomingMessageNotification:notification];
+    if([notification isKindOfClass:[CKQueryNotification class]]){
+        if(notification.notificationType == CKNotificationTypeQuery){
+            if(notification){
+                [[MMCloudKitManager sharedManager] handleIncomingMessageNotification:notification];
+            }
+        }
     }
 }
 

@@ -34,4 +34,6 @@
 
 -(void) fetchAllNewMessages;
 
+-(void) resetBadgeCountTo:(NSUInteger)number;
+
 @end

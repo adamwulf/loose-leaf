@@ -211,6 +211,19 @@ static dispatch_queue_t messageQueue;
     [self fetchAllNewMessages];
 }
 
+-(void) resetBadgeCountTo:(NSUInteger)number{
+    [UIApplication sharedApplication].applicationIconBadgeNumber = number;
+    CKModifyBadgeOperation *oper = [[CKModifyBadgeOperation alloc] initWithBadgeValue:number];
+    oper.modifyBadgeCompletionBlock = ^(NSError* err){
+        if(err){
+            NSLog(@"failed to reset");
+        }else{
+            NSLog(@"did reset");
+        }
+    };
+    [[CKContainer defaultContainer] addOperation:oper];
+}
+
 #pragma mark - Description
 
 -(NSString*) description{
