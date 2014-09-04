@@ -168,6 +168,11 @@
 
 -(void) importCoordinatorIsReady:(MMCloudKitImportCoordinator*)coordinator{
     NSLog(@"beginning import animation");
+    // other coordinators in the list may still be waiting for
+    // their zip file to process, so make sure that coordinators
+    // are sorted by their readiness
+    [activeImports removeObject:coordinator];
+    [activeImports addObject:coordinator];
     [self animateImportAvatarButtonToTopOfPage:coordinator.avatarButton onComplete:^{
         NSLog(@"done processing zip, ready to import");
     }];

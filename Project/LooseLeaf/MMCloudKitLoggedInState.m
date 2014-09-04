@@ -36,7 +36,7 @@
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
     }else{
         NSLog(@"got friend list: %@", friendList);
-        [self fetchAllNewMessages];
+        [self cloudKitDidCheckForNotifications];
     }
 }
 
@@ -48,16 +48,13 @@
 
 -(void) cloudKitDidRecievePush{
     [self runState];
-//    if([UIApplication sharedApplication].isRegisteredForRemoteNotifications){
-//        NSLog(@"registered for push.");
-//    }else{
-//        NSLog(@"NOT registered for push.");
-//    }
 }
 
 -(void) cloudKitDidCheckForNotifications{
-    [fetchAllMessagesTimer invalidate];
-    fetchAllMessagesTimer = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(fetchAllNewMessages) userInfo:nil repeats:NO];
+    if(![UIApplication sharedApplication].isRegisteredForRemoteNotifications){
+        [fetchAllMessagesTimer invalidate];
+        fetchAllMessagesTimer = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(fetchAllNewMessages) userInfo:nil repeats:NO];
+    }
 }
 
 @end

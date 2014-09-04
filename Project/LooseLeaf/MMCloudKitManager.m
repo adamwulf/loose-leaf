@@ -19,13 +19,16 @@
 #import "MMCloudKitFetchFriendsState.h"
 #import "MMCloudKitFetchingAccountInfoState.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "NSArray+Extras.h"
 #import <ZipArchive/ZipArchive.h>
+
+#define kMessagesSinceLastFetchKey @"messagesSinceLastFetch"
 
 @implementation MMCloudKitManager{
     MMCloudKitBaseState* currentState;
     NSString* cachePath;
     
-    NSMutableArray* inProcessMessages;
+    NSMutableDictionary* incomingMessageState;
 }
 
 @synthesize delegate;
@@ -52,9 +55,10 @@ static dispatch_queue_t messageQueue;
         currentState = [[MMCloudKitBaseState alloc] init];
         
         dispatch_async([MMCloudKitManager messageQueue], ^{
-            inProcessMessages = [NSMutableArray arrayWithContentsOfFile:[[self cachePath] stringByAppendingPathComponent:@"messages.plist"]];
-            if(!inProcessMessages){
-                inProcessMessages = [NSMutableArray array];
+            incomingMessageState = [NSMutableDictionary dictionaryWithContentsOfFile:[[self cachePath] stringByAppendingPathComponent:@"messages.plist"]];
+            if(!incomingMessageState){
+                incomingMessageState = [NSMutableDictionary dictionary];
+                [incomingMessageState setObject:@[] forKey:kMessagesSinceLastFetchKey];
             }
         });
         
@@ -118,6 +122,14 @@ static dispatch_queue_t messageQueue;
             [self processIncomingMessage:message];
         }
         [currentState cloudKitDidCheckForNotifications];
+
+        // clear out any messages that we're tracking
+        // since our last fetch-all-notifications
+        dispatch_async([MMCloudKitManager messageQueue], ^{
+            @synchronized(incomingMessageState){
+                [incomingMessageState setObject:[NSArray array] forKey:kMessagesSinceLastFetchKey];
+            }
+        });
     }];
 }
 
@@ -138,18 +150,20 @@ static dispatch_queue_t messageQueue;
 
 
 -(void) processIncomingMessage:(SPRMessage*)unprocessedMessage{
-    @synchronized(inProcessMessages){
-        if([inProcessMessages containsObject:unprocessedMessage]){
-            NSLog(@"skipped inProcessMessages: %d", [inProcessMessages count]);
+    @synchronized(incomingMessageState){
+        NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
+        if([messagesSinceLastFetch containsObject:unprocessedMessage]){
+            NSLog(@"skipped inProcessMessages: %d", [messagesSinceLastFetch count]);
             return;
         }
     }
     
     dispatch_async([MMCloudKitManager messageQueue], ^{
-        @synchronized(inProcessMessages){
-            if(![inProcessMessages containsObject:unprocessedMessage]){
-                [inProcessMessages addObject:unprocessedMessage];
-                NSLog(@"adding inProcessMessages: %d", [inProcessMessages count]);
+        @synchronized(incomingMessageState){
+            NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
+            if(![messagesSinceLastFetch containsObject:unprocessedMessage]){
+                [incomingMessageState setObject:[messagesSinceLastFetch arrayByAddingObject:unprocessedMessage] forKey:kMessagesSinceLastFetchKey];
+                NSLog(@"adding inProcessMessages: %d", [messagesSinceLastFetch count]+1);
             }
         }
     });
@@ -165,9 +179,10 @@ static dispatch_queue_t messageQueue;
             if([zip validateZipFileAt:message.messageData.path]){
                 [delegate didFetchMessage:message];
                 dispatch_async([MMCloudKitManager messageQueue], ^{
-                    @synchronized(inProcessMessages){
+                    @synchronized(incomingMessageState){
                         // only remove completed messages
-                        [inProcessMessages removeObject:message];
+                        NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
+                        [incomingMessageState setObject:[messagesSinceLastFetch arrayByRemovingObject:unprocessedMessage] forKey:kMessagesSinceLastFetchKey];
                     }
                 });
             }else{
@@ -185,10 +200,12 @@ static dispatch_queue_t messageQueue;
             [delegate didFailToFetchMessage:message];
         }
         
-        
         dispatch_async([MMCloudKitManager messageQueue], ^{
             // only remove completed messages
-            NSLog(@"removing inProcessMessages: %d", [inProcessMessages count]);
+            @synchronized(incomingMessageState){
+                NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
+                NSLog(@"removing inProcessMessages: %d", [messagesSinceLastFetch count]);
+            }
         });
     }];
 }
@@ -201,6 +218,7 @@ static dispatch_queue_t messageQueue;
         [self processIncomingMessage:message];
     }];
     [self.currentState cloudKitDidRecievePush];
+    [self fetchAllNewMessages];
 }
 
 #pragma mark - Description

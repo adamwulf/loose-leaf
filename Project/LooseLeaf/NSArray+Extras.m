@@ -18,4 +18,10 @@
     return [NSArray arrayWithArray:outArray];
 }
 
+-(NSArray*) arrayByRemovingObject:(id)obj{
+    NSMutableArray* ret = [NSMutableArray arrayWithArray:self];
+    [ret removeObject:obj];
+    return ret;
+}
+
 @end
