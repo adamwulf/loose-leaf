@@ -41,7 +41,9 @@
                                                                                           andRecipient:userId
                                                                                             withButton:avatarButton
                                                                                          forExportView:self];
-    [activeExports addObject:exportCoordinator];
+    @synchronized(activeExports){
+        [activeExports addObject:exportCoordinator];
+    }
     [self animateAvatarButtonToTopOfPage:avatarButton onComplete:^{
         [exportCoordinator begin];
     }];
@@ -49,7 +51,9 @@
 
 -(void) exportComplete:(MMCloudKitExportCoordinator*)exportCoord{
     [disappearingButtons removeObject:exportCoord.avatarButton];
-    [activeExports removeObject:exportCoord];
+    @synchronized(activeExports){
+        [activeExports removeObject:exportCoord];
+    }
     [self animateAndAlignAllButtons];
 }
 
@@ -61,9 +65,11 @@
 #pragma mark - Export Notifications
 
 -(void) didFailToExportPage:(MMPaperView*)page{
-    for(MMCloudKitExportCoordinator* export in activeExports){
-        if(export.page == page){
-            [export zipGenerationFailed];
+    @synchronized(activeExports){
+        for(MMCloudKitExportCoordinator* export in activeExports){
+            if(export.page == page){
+                [export zipGenerationFailed];
+            }
         }
     }
 }
@@ -71,17 +77,21 @@
 -(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk{
     NSLog(@"zip file: %d %@", [[NSFileManager defaultManager] fileExistsAtPath:fileLocationOnDisk], fileLocationOnDisk);
     
-    for(MMCloudKitExportCoordinator* export in activeExports){
-        if(export.page == page){
-            [export zipGenerationIsCompleteAt:fileLocationOnDisk];
+    @synchronized(activeExports){
+        for(MMCloudKitExportCoordinator* export in activeExports){
+            if(export.page == page){
+                [export zipGenerationIsCompleteAt:fileLocationOnDisk];
+            }
         }
     }
 }
 
 -(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk{
-    for(MMCloudKitExportCoordinator* export in activeExports){
-        if(export.page == page){
-            [export zipGenerationIsPercentComplete:percentComplete];
+    @synchronized(activeExports){
+        for(MMCloudKitExportCoordinator* export in activeExports){
+            if(export.page == page){
+                [export zipGenerationIsPercentComplete:percentComplete];
+            }
         }
     }
 }
@@ -107,23 +117,27 @@
 -(void) animateAndAlignAllButtons{
     [UIView animateWithDuration:.3 animations:^{
         int i=0;
-        for(MMCloudKitExportCoordinator* export in [activeExports reverseObjectEnumerator]){
-            if(![disappearingButtons containsObject:export.avatarButton] &&
-               ![animationHelperView containsSubview:export.avatarButton]){
-                CGRect fr = export.avatarButton.frame;
-                fr.origin.x = 100 + export.avatarButton.frame.size.width/2*(i+[animationHelperView.subviews count]);
-                export.avatarButton.frame = fr;
-                i++;
+        @synchronized(activeExports){
+            for(MMCloudKitExportCoordinator* export in [activeExports reverseObjectEnumerator]){
+                if(![disappearingButtons containsObject:export.avatarButton] &&
+                   ![animationHelperView containsSubview:export.avatarButton]){
+                    CGRect fr = export.avatarButton.frame;
+                    fr.origin.x = 100 + export.avatarButton.frame.size.width/2*(i+[animationHelperView.subviews count]);
+                    export.avatarButton.frame = fr;
+                    i++;
+                }
             }
         }
         i = 0;
-        for(MMCloudKitExportCoordinator* import in [activeImports reverseObjectEnumerator]){
-            if(![disappearingButtons containsObject:import.avatarButton] &&
-               ![animationHelperView containsSubview:import.avatarButton]){
-                CGRect fr = import.avatarButton.frame;
-                fr.origin.x = self.bounds.size.width - 100 - import.avatarButton.frame.size.width/3*i;
-                import.avatarButton.frame = fr;
-                i++;
+        @synchronized(activeImports){
+            for(MMCloudKitExportCoordinator* import in [activeImports reverseObjectEnumerator]){
+                if(![disappearingButtons containsObject:import.avatarButton] &&
+                   ![animationHelperView containsSubview:import.avatarButton]){
+                    CGRect fr = import.avatarButton.frame;
+                    fr.origin.x = self.bounds.size.width - 100 - import.avatarButton.frame.size.width/3*i;
+                    import.avatarButton.frame = fr;
+                    i++;
+                }
             }
         }
     }];
@@ -159,7 +173,9 @@
 
 -(void) didFetchMessage:(SPRMessage *)message{
     MMCloudKitImportCoordinator* coordinator = [[MMCloudKitImportCoordinator alloc] initWithImport:message forExportView:self];
-    [activeImports addObject:coordinator];
+    @synchronized(activeImports){
+        [activeImports addObject:coordinator];
+    }
     [coordinator begin];
 }
 
@@ -174,8 +190,10 @@
     // other coordinators in the list may still be waiting for
     // their zip file to process, so make sure that coordinators
     // are sorted by their readiness
-    [activeImports removeObject:coordinator];
-    [activeImports addObject:coordinator];
+    @synchronized(activeImports){
+        [activeImports removeObject:coordinator];
+        [activeImports addObject:coordinator];
+    }
     [self animateImportAvatarButtonToTopOfPage:coordinator.avatarButton onComplete:^{
 //        NSLog(@"done processing zip, ready to import");
     }];
@@ -190,10 +208,12 @@
 }
 
 -(void) bounceMostRecentImport{
-    for (MMCloudKitImportCoordinator* coordinator in [activeImports reverseObjectEnumerator]) {
-        if(coordinator.isReady){
-            [coordinator.avatarButton animateOnScreenFrom:coordinator.avatarButton.center withCompletion:nil];
-            break;
+    @synchronized(activeImports){
+        for (MMCloudKitImportCoordinator* coordinator in [activeImports reverseObjectEnumerator]) {
+            if(coordinator.isReady){
+                [coordinator.avatarButton animateOnScreenFrom:coordinator.avatarButton.center withCompletion:nil];
+                break;
+            }
         }
     }
 }
@@ -215,7 +235,9 @@
         NSLog(@"couldn't create page for %@", coordinator);
     }
     
-    [activeImports removeObject:coordinator];
+    @synchronized(activeImports){
+        [activeImports removeObject:coordinator];
+    }
     [coordinator.avatarButton animateOffScreenWithCompletion:nil];
     [self animateAndAlignAllButtons];
 }
@@ -223,7 +245,16 @@
 #pragma mark - Touch Control
 
 - (BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
-    MMCloudKitImportCoordinator* import = [activeImports lastObject];
+    MMCloudKitImportCoordinator* import = nil;
+    @synchronized(activeImports){
+        for (MMCloudKitImportCoordinator* coordinator in [activeImports reverseObjectEnumerator]) {
+            if(coordinator.isReady){
+                import = coordinator;
+                break;
+            }
+        }
+    }
+
     if([import.avatarButton pointInside:[self convertPoint:point toView:import.avatarButton] withEvent:event]){
         return YES;
     }
@@ -231,7 +262,16 @@
 }
 
 -(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
-    MMCloudKitImportCoordinator* import = [activeImports lastObject];
+    MMCloudKitImportCoordinator* import = nil;
+    @synchronized(activeImports){
+        for (MMCloudKitImportCoordinator* coordinator in [activeImports reverseObjectEnumerator]) {
+            if(coordinator.isReady){
+                import = coordinator;
+                break;
+            }
+        }
+    }
+
     if([import.avatarButton pointInside:[self convertPoint:point toView:import.avatarButton] withEvent:event]){
         return import.avatarButton;
     }
