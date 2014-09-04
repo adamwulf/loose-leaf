@@ -12,6 +12,7 @@
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 #import "MMCloudKitExportView.h"
 #import "MMExportablePaperView.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 #import "NSThread+BlockAdditions.h"
 #import "Mixpanel.h"
 
@@ -77,10 +78,22 @@
 -(void) zipGenerationIsCompleteAt:(NSString*)pathToZipFile{
     if(!zipIsComplete){
         zipIsComplete = YES;
+        
+        CGSize screenSize = [UIScreen mainScreen].bounds.size;
+        CGFloat scale = [UIScreen mainScreen].scale;
+        CGFloat assetSize = [[NSFileManager defaultManager] sizeForItemAtPath:pathToZipFile];
+        NSString* readableSize = [[NSFileManager defaultManager] humanReadableSizeForItemAtPath:pathToZipFile];
+        
         if([[MMCloudKitManager sharedManager] isLoggedInAndReadyForAnything]){
             avatarButton.targetProgress = kPercentCompleteAtStart + kPercentCompleteOfZip;
             [[SPRSimpleCloudKitManager sharedManager] sendFile:[[NSURL alloc] initFileURLWithPath:pathToZipFile]
-                                                withAttributes:[NSDictionary dictionary]
+                                                withAttributes:@{@"Version":[[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"],
+                                                                 @"ShortVersion":[[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"],
+                                                                 @"Width":@(screenSize.width),
+                                                                 @"Height":@(screenSize.height),
+                                                                 @"Scale":@(scale),
+                                                                 @"AssetSize": @(assetSize),
+                                                                 @"ReadableSize":readableSize}
                                                    toUserRecordID:userId
                                               withProgressHandler:^(CGFloat progress) {
                                                   avatarButton.targetProgress = kPercentCompleteAtStart + kPercentCompleteOfZip + kPercentCompleteOfUpload*progress;

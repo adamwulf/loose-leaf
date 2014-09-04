@@ -16,7 +16,16 @@
 #import "MMCloudKitAskingForPermissionState.h"
 #import "MMCloudKitManager.h"
 
-@implementation MMCloudKitWaitingForLoginState
+@implementation MMCloudKitWaitingForLoginState{
+    SCKMAccountStatus accountStatus;
+}
+
+-(id) initWithAccountStatus:(SCKMAccountStatus) _accountStatus{
+    if(self = [super init]){
+        accountStatus = _accountStatus;
+    }
+    return self;
+}
 
 -(void) runState{
     NSLog(@"Running state %@", NSStringFromClass([self class]));
@@ -30,7 +39,7 @@
 }
 
 -(void) didAskToLogin{
-    [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitAskingForPermissionState alloc] init]];
+    [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitAskingForPermissionState alloc] initWithAccountStatus:accountStatus]];
 }
 
 

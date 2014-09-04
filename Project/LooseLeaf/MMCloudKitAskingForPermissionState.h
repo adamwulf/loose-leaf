@@ -7,7 +7,10 @@
 //
 
 #import "MMCloudKitBaseState.h"
+#import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 
 @interface MMCloudKitAskingForPermissionState : MMCloudKitBaseState
+
+-(id) initWithAccountStatus:(SCKMAccountStatus) accountStatus;
 
 @end

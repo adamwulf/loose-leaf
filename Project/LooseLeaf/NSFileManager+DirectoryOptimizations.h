@@ -20,4 +20,8 @@
 
 -(BOOL) isDirectory:(NSString*)path;
 
+-(NSString*) humanReadableSizeForItemAtPath:(NSString*)path;
+
+-(unsigned long long) sizeForItemAtPath:(NSString *)path;
+
 @end

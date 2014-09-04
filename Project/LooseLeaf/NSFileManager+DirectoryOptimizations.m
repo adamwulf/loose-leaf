@@ -88,5 +88,20 @@ static NSArray* userDocumentsPaths;
     return isDirectory && exists;
 }
 
+-(NSString*) humanReadableSizeForItemAtPath:(NSString *)path{
+    NSDictionary *attribs = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
+    if (attribs) {
+        return [NSByteCountFormatter stringFromByteCount:[attribs fileSize] countStyle:NSByteCountFormatterCountStyleFile];
+    }
+    return @"Unknown";
+}
+
+-(unsigned long long) sizeForItemAtPath:(NSString *)path{
+    NSDictionary *attribs = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
+    if (attribs) {
+        return [attribs fileSize];
+    }
+    return 0;
+}
 
 @end

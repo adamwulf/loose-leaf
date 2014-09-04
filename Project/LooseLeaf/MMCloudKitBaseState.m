@@ -74,7 +74,7 @@
                             case SCKMApplicationPermissionStatusInitialState:
                                 // unknown permission
                                 // waiting for manual login
-                                [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitWaitingForLoginState alloc] init]];
+                                [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitWaitingForLoginState alloc] initWithAccountStatus:accountStatus]];
                                 break;
                             case SCKMApplicationPermissionStatusGranted:
                                 // icloud is available for this user, so we need to
