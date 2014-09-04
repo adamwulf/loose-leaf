@@ -1728,12 +1728,13 @@ int skipAll = NO;
 }
 
 -(void) didRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient{
-    [importImageSidebar updatePhotoRotation];
+    // noop
 }
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
     dispatch_async(dispatch_get_main_queue(), ^{
         [sharePageSidebar updateInterfaceTo:orientation];
+        [importImageSidebar updateInterfaceTo:orientation];
     });
 }
 

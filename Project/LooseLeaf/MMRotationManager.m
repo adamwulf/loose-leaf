@@ -195,8 +195,6 @@ static BOOL ignoredFirstRotateNotification = NO;
        orientation == UIDeviceOrientationFaceUp){
         orientation = UIDeviceOrientationPortrait;
     }
-
-    NSLog(@"orientation set to :%d", (int) orientation);
     
     // cast to save a warning
     UIInterfaceOrientation devOrient = (UIInterfaceOrientation) orientation;

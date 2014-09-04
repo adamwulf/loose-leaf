@@ -235,11 +235,7 @@
     
     if(animated){
         [[NSThread mainThread] performBlock:^{
-            [UIView animateWithDuration:.15
-                                  delay:0
-                                options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState
-                             animations:updateVisibleRowsWithRotation
-                             completion:nil];
+            [UIView animateWithDuration:.3 animations:updateVisibleRowsWithRotation];
         }];
     }else{
         [[NSThread mainThread] performBlock:^{

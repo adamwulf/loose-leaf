@@ -194,7 +194,7 @@ static dispatch_queue_t messageQueue;
         dispatch_async([MMCloudKitManager messageQueue], ^{
             // only remove completed messages
             @synchronized(incomingMessageState){
-                NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
+//                NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
             }
         });
     }];
