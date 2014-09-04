@@ -25,6 +25,8 @@
     NSString* targetPageLocation;
     NSInteger numberOfScrapsOnIncomingPage; // used for mixpanel only
     NSInteger numberOfVisibleScrapsOnIncomingPage; // used for mixpanel only
+    
+    NSDictionary* importAttributes;
 }
 
 @synthesize avatarButton;
@@ -32,6 +34,7 @@
 
 -(id) initWithImport:(SPRMessage*)importInfo forExportView:(MMCloudKitExportView*)_exportView{
     if(self = [super init]){
+        importAttributes = importInfo.attributes;
         zipFileLocation = importInfo.messageData.path;
         exportView = _exportView;
         avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:importInfo.initials];
@@ -147,10 +150,19 @@
 #pragma mark - Touch Event
 
 -(void) avatarButtonTapped:(MMAvatarButton*)button{
+    NSMutableDictionary* eventProperties = [@{kMPEventImportPropScrapCount : @(numberOfScrapsOnIncomingPage),
+                                   kMPEventImportPropVisibleScrapCount : @(numberOfVisibleScrapsOnIncomingPage)} mutableCopy];
+    if(importAttributes){
+        if(importAttributes){
+            for(NSString* key in [importAttributes allKeys]){
+                [eventProperties setObject:[importAttributes objectForKey:key] forKey:[NSString stringWithFormat:@"ImportAttr: %@", key]];
+            }
+        }
+    }
+    
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCloudKitImports by:@(1)];
-    [[Mixpanel sharedInstance] track:kMPEventImportPage properties:@{kMPEventImportPropScrapCount : @(numberOfScrapsOnIncomingPage),
-                                                                      kMPEventImportPropVisibleScrapCount : @(numberOfVisibleScrapsOnIncomingPage)}];
+    [[Mixpanel sharedInstance] track:kMPEventImportPage properties:eventProperties];
     
     [exportView importWasTapped:self];
 }

@@ -29,6 +29,7 @@
     MMCloudKitExportView* exportView;
     
     BOOL zipIsComplete;
+    NSDictionary* zipAttributes;
 }
 
 @synthesize avatarButton;
@@ -86,14 +87,13 @@
         
         if([[MMCloudKitManager sharedManager] isLoggedInAndReadyForAnything]){
             avatarButton.targetProgress = kPercentCompleteAtStart + kPercentCompleteOfZip;
+            zipAttributes = @{@"width":@(screenSize.width),
+                              @"height":@(screenSize.height),
+                              @"scale":@(scale),
+                              @"assetSize": @(assetSize),
+                              @"readableSize":readableSize};
             [[SPRSimpleCloudKitManager sharedManager] sendFile:[[NSURL alloc] initFileURLWithPath:pathToZipFile]
-                                                withAttributes:@{@"version":[[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"],
-                                                                 @"shortVersion":[[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"],
-                                                                 @"width":@(screenSize.width),
-                                                                 @"height":@(screenSize.height),
-                                                                 @"scale":@(scale),
-                                                                 @"assetSize": @(assetSize),
-                                                                 @"readableSize":readableSize}
+                                                withAttributes:zipAttributes
                                                    toUserRecordID:userId
                                               withProgressHandler:^(CGFloat progress) {
                                                   avatarButton.targetProgress = kPercentCompleteAtStart + kPercentCompleteOfZip + kPercentCompleteOfUpload*progress;
@@ -116,12 +116,20 @@
 }
 
 -(void) complete{
+    NSMutableDictionary* eventProperties = [NSMutableDictionary dictionary];
+    if(zipAttributes){
+        for(NSString* key in [zipAttributes allKeys]){
+            [eventProperties setObject:[zipAttributes objectForKey:key] forKey:[NSString stringWithFormat:@"ExportAttr: %@", key]];
+        }
+    }
+    
     avatarButton.targetProgress = 1.0;
     if(!error){
+        [eventProperties addEntriesFromDictionary:@{kMPEventExportPropDestination : @"CloudKit",
+                                                    kMPEventExportPropResult : @"Success"}];
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCloudKitExports by:@(1)];
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
-        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"CloudKit",
-                                                                     kMPEventExportPropResult : @"Success"}];
+        [[Mixpanel sharedInstance] track:kMPEventExport properties:eventProperties];
     }else{
         if([error.domain isEqualToString:SPRSimpleCloudKitMessengerErrorDomain]){
             
@@ -141,14 +149,18 @@
             }else if(error.code == SPRSimpleCloudMessengerErroriCloudAccountChanged){
                 reason = @"iCloud Account Changed";
             }
-            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"CloudKit",
-                                                                         kMPEventExportPropResult : reason}];
+            [eventProperties addEntriesFromDictionary:@{kMPEventExportPropDestination : @"CloudKit",
+                                                        kMPEventExportPropResult : reason}];
+            
+            [[Mixpanel sharedInstance] track:kMPEventExport properties:eventProperties];
         }else if([error.domain isEqualToString:kZipArchiveErrorDomain]){
-            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"CloudKit",
-                                                                         kMPEventExportPropResult : @"Zip Failed"}];
+            [eventProperties addEntriesFromDictionary:@{kMPEventExportPropDestination : @"CloudKit",
+                                                        kMPEventExportPropResult : @"Zip Failed"}];
+            [[Mixpanel sharedInstance] track:kMPEventExport properties:eventProperties];
         }else{
-            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"CloudKit",
-                                                                         kMPEventExportPropResult : [NSString stringWithFormat:@"%@:%d", error.domain, (int)error.code]}];
+            [eventProperties addEntriesFromDictionary:@{kMPEventExportPropDestination : @"CloudKit",
+                                                        kMPEventExportPropResult : [NSString stringWithFormat:@"%@:%d", error.domain, (int)error.code]}];
+            [[Mixpanel sharedInstance] track:kMPEventExport properties:eventProperties];
         }
     }
 }
