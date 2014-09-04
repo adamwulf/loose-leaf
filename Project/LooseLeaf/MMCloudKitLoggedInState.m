@@ -16,6 +16,7 @@
     CKDiscoveredUserInfo* userInfo;
     NSArray* friendList;
     NSTimer* fetchAllMessagesTimer;
+    BOOL hasEverFetchedNewMessages;
 }
 
 @synthesize friendList;
@@ -36,7 +37,11 @@
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
     }else{
         NSLog(@"got friend list");
-        [self cloudKitDidCheckForNotifications];
+        if(!hasEverFetchedNewMessages){
+            [self fetchAllNewMessages];
+        }else{
+            [self cloudKitDidCheckForNotifications];
+        }
     }
 }
 
@@ -51,7 +56,7 @@
 }
 
 -(void) cloudKitDidCheckForNotifications{
-    if(![UIApplication sharedApplication].isRegisteredForRemoteNotifications){
+    if(![UIApplication sharedApplication].isRegisteredForRemoteNotifications || ![SPRSimpleCloudKitManager sharedManager].isSubscribed){
         [fetchAllMessagesTimer invalidate];
         fetchAllMessagesTimer = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(fetchAllNewMessages) userInfo:nil repeats:NO];
     }

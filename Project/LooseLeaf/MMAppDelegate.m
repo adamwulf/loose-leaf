@@ -140,6 +140,14 @@
     }
 }
 
+-(void) application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void (^)())completionHandler{
+    NSLog(@"what");
+}
+
+-(void) application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler{
+    NSLog(@"what");
+}
+
 - (void) checkForNotificationToHandleWithUserInfo:(NSDictionary *)userInfo {
     CKQueryNotification *notification = [CKQueryNotification notificationFromRemoteNotificationDictionary:userInfo];
     if([notification isKindOfClass:[CKQueryNotification class]]){

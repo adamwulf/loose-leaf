@@ -216,9 +216,9 @@ static dispatch_queue_t messageQueue;
     CKModifyBadgeOperation *oper = [[CKModifyBadgeOperation alloc] initWithBadgeValue:number];
     oper.modifyBadgeCompletionBlock = ^(NSError* err){
         if(err){
-            NSLog(@"failed to reset");
+            NSLog(@"failed to reset badge");
         }else{
-            NSLog(@"did reset");
+            NSLog(@"did reset badge");
         }
     };
     [[CKContainer defaultContainer] addOperation:oper];
