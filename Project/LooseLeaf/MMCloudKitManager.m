@@ -138,14 +138,23 @@ static dispatch_queue_t messageQueue;
 
 
 -(void) processIncomingMessage:(SPRMessage*)unprocessedMessage{
-    dispatch_async([MMCloudKitManager messageQueue], ^{
-        if(![inProcessMessages containsObject:unprocessedMessage]){
-            [inProcessMessages addObject:unprocessedMessage];
-            NSLog(@"adding inProcessMessages: %d", [inProcessMessages count]);
-        }else{
+    @synchronized(inProcessMessages){
+        if([inProcessMessages containsObject:unprocessedMessage]){
             NSLog(@"skipped inProcessMessages: %d", [inProcessMessages count]);
+            return;
+        }
+    }
+    
+    dispatch_async([MMCloudKitManager messageQueue], ^{
+        @synchronized(inProcessMessages){
+            if(![inProcessMessages containsObject:unprocessedMessage]){
+                [inProcessMessages addObject:unprocessedMessage];
+                NSLog(@"adding inProcessMessages: %d", [inProcessMessages count]);
+            }
         }
     });
+    
+
     
     [self.delegate willFetchMessage:unprocessedMessage];
     // Do something with the message, like pushing it onto the stack
@@ -156,8 +165,10 @@ static dispatch_queue_t messageQueue;
             if([zip validateZipFileAt:message.messageData.path]){
                 [delegate didFetchMessage:message];
                 dispatch_async([MMCloudKitManager messageQueue], ^{
-                    // only remove completed messages
-                    [inProcessMessages removeObject:message];
+                    @synchronized(inProcessMessages){
+                        // only remove completed messages
+                        [inProcessMessages removeObject:message];
+                    }
                 });
             }else{
                 NSLog(@"invalid zip file");
