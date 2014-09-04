@@ -16,6 +16,7 @@
 
 @property (nonatomic, strong) MMAvatarButton* avatarButton;
 @property (readonly) NSString* uuidOfIncomingPage;
+@property (readonly) BOOL isReady;
 
 -(id) initWithImport:(SPRMessage*)importInfo forExportView:(MMCloudKitExportView*)_exportView;
 

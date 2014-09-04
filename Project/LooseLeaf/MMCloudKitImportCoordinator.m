@@ -28,6 +28,7 @@
 }
 
 @synthesize avatarButton;
+@synthesize isReady;
 
 -(id) initWithImport:(SPRMessage*)importInfo forExportView:(MMCloudKitExportView*)_exportView{
     if(self = [super init]){
@@ -133,6 +134,7 @@
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            isReady = YES;
             [exportView importCoordinatorIsReady:self];
         });
     });

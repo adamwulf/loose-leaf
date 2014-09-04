@@ -18,6 +18,8 @@
     NSMutableSet* disappearingButtons;
     NSMutableArray* activeExports;
     NSMutableArray* activeImports;
+    
+    NSTimer* bounceTimer;
 }
 
 @synthesize stackView;
@@ -136,7 +138,8 @@
     [avatarButton setNeedsDisplay];
     
     avatarButton.alpha = 0;
-    [avatarButton animateOnScreenWithCompletion:^(BOOL finished) {
+    CGPoint offscreen = CGPointMake(avatarButton.center.x, avatarButton.center.y - avatarButton.bounds.size.height / 2);
+    [avatarButton animateOnScreenFrom:offscreen withCompletion:^(BOOL finished) {
         [self animateAndAlignAllButtons];
         if(completion) completion();
     }];
@@ -177,9 +180,29 @@
 //        NSLog(@"done processing zip, ready to import");
     }];
     [self animateAndAlignAllButtons];
+    
+    
+    if(![[NSUserDefaults standardUserDefaults] objectForKey:@"hasEverImportedAPage"]){
+        if(!bounceTimer){
+            bounceTimer = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(bounceMostRecentImport) userInfo:nil repeats:YES];
+        }
+    }
+}
+
+-(void) bounceMostRecentImport{
+    for (MMCloudKitImportCoordinator* coordinator in [activeImports reverseObjectEnumerator]) {
+        if(coordinator.isReady){
+            [coordinator.avatarButton animateOnScreenFrom:coordinator.avatarButton.center withCompletion:nil];
+            break;
+        }
+    }
 }
 
 -(void) importWasTapped:(MMCloudKitImportCoordinator*)coordinator{
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:@"hasEverImportedAPage"];
+    [bounceTimer invalidate];
+    bounceTimer = nil;
+    
     NSLog(@"time to show this page %@", coordinator);
     if(coordinator.uuidOfIncomingPage){
         MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:stackView.bounds andUUID:coordinator.uuidOfIncomingPage];

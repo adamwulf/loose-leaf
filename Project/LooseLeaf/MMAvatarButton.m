@@ -131,8 +131,7 @@
     }];
 }
 
--(void) animateOnScreenWithCompletion:(void (^)(BOOL finished))completion{
-    CGPoint offscreen = CGPointMake(self.center.x, self.center.y - self.bounds.size.height / 2);
+-(void) animateOnScreenFrom:(CGPoint)offscreen withCompletion:(void (^)(BOOL finished))completion{
     CGPoint onscreen = self.center;
     self.center = offscreen;
 
