@@ -1715,6 +1715,7 @@ int skipAll = NO;
     [super didUpdateAccelerometerWithReading:currentRawReading];
     [NSThread performBlockOnMainThread:^{
         [bezelScrapContainer didUpdateAccelerometerWithReading:currentRawReading];
+        [cloudKitExportView didUpdateAccelerometerWithReading:currentRawReading];;
     }];
 }
 

@@ -928,7 +928,7 @@ struct SidebarButton{
 }
 
 
-#pragma mark - gestures for list view
+#pragma mark - Gestures for List View
 
 -(void) beginUITransitionFromPageView{
     [super beginUITransitionFromPageView];

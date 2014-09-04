@@ -26,6 +26,10 @@
 
 -(void) exportIsCompleting:(MMCloudKitExportCoordinator*)exportCoord;
 
+#pragma mark - Rotation
+
+-(void) didUpdateAccelerometerWithReading:(MMVector *)currentRawReading;
+
 #pragma mark - Export Notifications
 
 -(void) didFailToExportPage:(MMPaperView*)page;

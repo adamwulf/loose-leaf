@@ -154,11 +154,16 @@
     }];
 }
 
--(void) animateBounceToTopOfScreenAtX:(CGFloat)xLoc withDuration:(CGFloat)duration completion:(void (^)(BOOL finished))completion{
+-(void) animateBounceToTopOfScreenAtX:(CGFloat)xLoc
+                         withDuration:(CGFloat)duration
+              withExtraAnimationBlock:(void(^)())animations
+                           completion:(void (^)(BOOL finished))completion{
     
     CGFloat targetSize = 80;
     
     [UIView animateKeyframesWithDuration:duration delay:0 options:UIViewKeyframeAnimationOptionCalculationModeLinear animations:^{
+        
+        [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:.5 animations:animations];
         
         CGPoint originalCenter = self.center;
         CGPoint targetCenter = CGPointMake(xLoc + targetSize/2, targetSize/2);

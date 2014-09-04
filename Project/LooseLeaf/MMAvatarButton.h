@@ -18,7 +18,10 @@
 
 -(void) animateToPercent:(CGFloat)progress success:(BOOL)succeeded completion:(void (^)(BOOL finished))completion;
 
--(void) animateBounceToTopOfScreenAtX:(CGFloat)xLoc withDuration:(CGFloat)duration completion:(void (^)(BOOL finished))completion;
+-(void) animateBounceToTopOfScreenAtX:(CGFloat)xLoc
+                         withDuration:(CGFloat)duration
+              withExtraAnimationBlock:(void(^)())animations
+                           completion:(void (^)(BOOL finished))completion;
 
 -(void) animateOnScreenFrom:(CGPoint)offscreen withCompletion:(void (^)(BOOL finished))completion;
 

@@ -19,7 +19,14 @@
     NSMutableArray* activeExports;
     NSMutableArray* activeImports;
     
+    // used to bounce the import button
+    // every 10s if its the first time
+    // the user has ever received an import
     NSTimer* bounceTimer;
+    
+    // used to set the rotation of newly
+    // added import/exports
+    CGFloat lastRotationReading;
 }
 
 @synthesize stackView;
@@ -44,7 +51,12 @@
     @synchronized(activeExports){
         [activeExports addObject:exportCoordinator];
     }
-    [self animateAvatarButtonToTopOfPage:avatarButton onComplete:^{
+
+    [self animateAvatarButtonToTopOfPage:avatarButton withExtraAnimationBlock:^{
+        CGAffineTransform rotTransform = CGAffineTransformMakeRotation(lastRotationReading);
+        avatarButton.rotation = lastRotationReading;
+        avatarButton.transform = rotTransform;
+    } onComplete:^{
         [exportCoordinator begin];
     }];
 }
@@ -98,7 +110,7 @@
 
 #pragma mark - Animations
 
--(void) animateAvatarButtonToTopOfPage:(MMAvatarButton*)avatarButton onComplete:(void (^)())completion{
+-(void) animateAvatarButtonToTopOfPage:(MMAvatarButton*)avatarButton withExtraAnimationBlock:(void(^)())animations onComplete:(void (^)())completion{
     CGRect fr = [avatarButton convertRect:avatarButton.bounds toView:self];
     avatarButton.frame = fr;
     [animationHelperView addSubview:avatarButton];
@@ -106,7 +118,7 @@
     avatarButton.shouldDrawDarkBackground = YES;
     [avatarButton setNeedsDisplay];
     
-    [avatarButton animateBounceToTopOfScreenAtX:100 withDuration:0.8 completion:^(BOOL finished) {
+    [avatarButton animateBounceToTopOfScreenAtX:100 withDuration:0.8 withExtraAnimationBlock:animations completion:^(BOOL finished) {
         [self addSubview:avatarButton];
         [self animateAndAlignAllButtons];
         if(completion) completion();
@@ -116,14 +128,14 @@
 
 -(void) animateAndAlignAllButtons{
     [UIView animateWithDuration:.3 animations:^{
-        int i=0;
+        int i=1;
         @synchronized(activeExports){
             for(MMCloudKitExportCoordinator* export in [activeExports reverseObjectEnumerator]){
                 if(![disappearingButtons containsObject:export.avatarButton] &&
                    ![animationHelperView containsSubview:export.avatarButton]){
-                    CGRect fr = export.avatarButton.frame;
-                    fr.origin.x = 100 + export.avatarButton.frame.size.width/2*(i+[animationHelperView.subviews count]);
-                    export.avatarButton.frame = fr;
+                    CGPoint center = export.avatarButton.center;
+                    center.x = 100 + export.avatarButton.bounds.size.width/2*(i+[animationHelperView.subviews count]);
+                    export.avatarButton.center = center;
                     i++;
                 }
             }
@@ -133,9 +145,9 @@
             for(MMCloudKitExportCoordinator* import in [activeImports reverseObjectEnumerator]){
                 if(![disappearingButtons containsObject:import.avatarButton] &&
                    ![animationHelperView containsSubview:import.avatarButton]){
-                    CGRect fr = import.avatarButton.frame;
-                    fr.origin.x = self.bounds.size.width - 100 - import.avatarButton.frame.size.width/3*i;
-                    import.avatarButton.frame = fr;
+                    CGPoint center = import.avatarButton.center;
+                    center.x = self.bounds.size.width - 100 - import.avatarButton.bounds.size.width/3*i + import.avatarButton.bounds.size.width / 2;
+                    import.avatarButton.center = center;
                     i++;
                 }
             }
@@ -144,8 +156,11 @@
 }
 
 -(void) animateImportAvatarButtonToTopOfPage:(MMAvatarButton*)avatarButton onComplete:(void (^)())completion{
-    CGRect fr = CGRectMake(self.bounds.size.width - 100, 0, avatarButton.bounds.size.width, avatarButton.bounds.size.height);
-    avatarButton.frame = fr;
+    CGPoint center = CGPointMake(self.bounds.size.width - 100 + avatarButton.bounds.size.width/2, avatarButton.bounds.size.height / 2);
+    CGAffineTransform rotTransform = CGAffineTransformMakeRotation(lastRotationReading);
+    avatarButton.rotation = lastRotationReading;
+    avatarButton.transform = rotTransform;
+    avatarButton.center = center;
     [self addSubview:avatarButton];
 
     avatarButton.shouldDrawDarkBackground = YES;
@@ -241,6 +256,37 @@
     [coordinator.avatarButton animateOffScreenWithCompletion:nil];
     [self animateAndAlignAllButtons];
 }
+
+#pragma mark - Rotation
+
+-(CGFloat) sidebarButtonRotation{
+    return -([[[MMRotationManager sharedInstance] currentRotationReading] angle] + M_PI/2);
+}
+
+-(CGFloat) sidebarButtonRotationForReading:(MMVector*)currentReading{
+    return -([currentReading angle] + M_PI/2);
+}
+
+-(void) didUpdateAccelerometerWithReading:(MMVector *)currentRawReading{
+    lastRotationReading = [self sidebarButtonRotationForReading:currentRawReading];
+    CGAffineTransform rotTransform = CGAffineTransformMakeRotation(lastRotationReading);
+    
+    [[NSThread mainThread] performBlock:^{
+        @synchronized(activeExports){
+            for (MMCloudKitExportCoordinator* coordinator in activeExports) {
+                coordinator.avatarButton.rotation = lastRotationReading;
+                coordinator.avatarButton.transform = rotTransform;
+            }
+        }
+        @synchronized(activeImports){
+            for (MMCloudKitImportCoordinator* coordinator in activeImports) {
+                coordinator.avatarButton.rotation = lastRotationReading;
+                coordinator.avatarButton.transform = rotTransform;
+            }
+        }
+    }];
+}
+
 
 #pragma mark - Touch Control
 
