@@ -15,6 +15,7 @@
 #import "MMImageSidebarContainerView.h"
 #import "NSThread+BlockAdditions.h"
 #import "CaptureSessionManager.h"
+#import "MMRotationManager.h"
 #import "UIView+Debug.h"
 
 #define kCameraMargin 10
@@ -180,6 +181,38 @@
     }
     // adjust for the 2 extra rows that are taken up by the camera input
     return [super updateRow:currentRow atIndex:index - 2 forFrame:frame forScrollView:scrollView];
+}
+
+#pragma mark - Rotation
+
+-(CGFloat) sidebarButtonRotation{
+    if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationPortrait){
+        return 0;
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeLeft){
+        return -M_PI_2;
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeRight){
+        return M_PI_2;
+    }else{
+        return M_PI;
+    }
+}
+
+-(void) updatePhotoRotation:(BOOL)animated{
+    [super updatePhotoRotation:animated];
+    void(^updateCameraFlipButton)() = ^{
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        flipButton.rotation = [self sidebarButtonRotation];
+        flipButton.transform = rotationTransform;
+    };
+    if(animated){
+        [[NSThread mainThread] performBlock:^{
+            [UIView animateWithDuration:.3 animations:updateCameraFlipButton];
+        }];
+    }else{
+        [[NSThread mainThread] performBlock:^{
+            updateCameraFlipButton();
+        }];
+    }
 }
 
 #pragma mark - MMCamViewDelegate
