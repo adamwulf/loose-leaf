@@ -79,8 +79,8 @@
         zipIsComplete = YES;
         if([[MMCloudKitManager sharedManager] isLoggedInAndReadyForAnything]){
             avatarButton.targetProgress = kPercentCompleteAtStart + kPercentCompleteOfZip;
-            [[SPRSimpleCloudKitManager sharedManager] sendMessage:@"foobar!"
-                                                     withImageURL:[[NSURL alloc] initFileURLWithPath:pathToZipFile]
+            [[SPRSimpleCloudKitManager sharedManager] sendFile:[[NSURL alloc] initFileURLWithPath:pathToZipFile]
+                                                withAttributes:[NSDictionary dictionary]
                                                    toUserRecordID:userId
                                               withProgressHandler:^(CGFloat progress) {
                                                   avatarButton.targetProgress = kPercentCompleteAtStart + kPercentCompleteOfZip + kPercentCompleteOfUpload*progress;
