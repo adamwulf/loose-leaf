@@ -8,6 +8,7 @@
 
 #import "MMExportablePaperView.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "NSString+UUID.h"
 #import <ZipArchive/ZipArchive.h>
 
 
@@ -105,12 +106,62 @@
         NSLog(@"generating zip file for path %@", pathOfPageFiles);
         NSLog(@"contents of path %d vs %d", (int) [directoryContents count], (int) [bundledContents count]);
         
+        
+        // find all scrap ids that are on the page vs just in our undo history
+        NSDictionary* scrapInfo =[NSDictionary dictionaryWithContentsOfFile:[self scrapIDsPath]];
+        NSString* locationOfUpdatedScrapInfo = nil;
+        
+        if(scrapInfo){
+            NSArray* allScrapIDsOnPage = [scrapInfo objectForKey:@"scrapsOnPageIDs"];
+            
+            // make sure to filter out scraps that are in our undo history.
+            typedef BOOL (^FilterBlock)(id evaluatedObject, NSDictionary *bindings);
+            FilterBlock(^filter)(NSString* basePath) = ^(NSString* basePath){
+                return ^BOOL(id evaluatedObject, NSDictionary *bindings) {
+                    if([evaluatedObject hasSuffix:@"undoRedo.plist"]){
+                        // don't include undo redo
+                        return NO;
+                    }else if([evaluatedObject hasPrefix:@"Scraps/"]){
+                        // ensure the id is in the allowed scraps
+                        NSString* scrapID = [evaluatedObject substringFromIndex:@"Scraps/".length];
+                        if([scrapID containsString:@"/"]){
+                            scrapID = [scrapID substringToIndex:[scrapID rangeOfString:@"/"].location];
+                            if([allScrapIDsOnPage containsObject:scrapID]){
+                                // noop, the scrap is good to go
+                            }else{
+                                // this scrap isn't visible, so filter it out
+                                return NO;
+                            }
+                        }
+                    }
+                    return YES;
+                };
+            };
+            [directoryContents filterUsingPredicate:[NSPredicate predicateWithBlock:filter(pathOfPageFiles)]];
+            [bundledContents filterUsingPredicate:[NSPredicate predicateWithBlock:filter([self bundledPagesPath])]];
+            
+            NSArray* scrapProperties = [scrapInfo objectForKey:@"allScrapProperties"];
+            scrapProperties = [scrapProperties filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+                return [allScrapIDsOnPage containsObject:[evaluatedObject objectForKey:@"uuid"]];
+            }]];
+            
+            NSDictionary* updatedScrapPlist = @{@"allScrapProperties" : scrapProperties,
+                                                @"scrapsOnPageIDs" : allScrapIDsOnPage};
+            
+            locationOfUpdatedScrapInfo = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString createStringUUID]];
+            [updatedScrapPlist writeToFile:locationOfUpdatedScrapInfo atomically:YES];
+        }
+        
         ZipArchive* zip = [[ZipArchive alloc] init];
         if([zip createZipFileAt:fullPathToTempZip])
         {
             for(int filesSoFar=0;filesSoFar<[directoryContents count];filesSoFar++){
                 NSString* aFileInPage = [directoryContents objectAtIndex:filesSoFar];
-                if([zip addFileToZip:[pathOfPageFiles stringByAppendingPathComponent:aFileInPage]
+                NSString* fullPathOfFile = [pathOfPageFiles stringByAppendingPathComponent:aFileInPage];
+                if([aFileInPage isEqualToString:@"scrapIDs.plist"] && locationOfUpdatedScrapInfo){
+                    fullPathOfFile = locationOfUpdatedScrapInfo;
+                }
+                if([zip addFileToZip:fullPathOfFile
                          toPathInZip:aFileInPage]){
                 }else{
                     NSLog(@"error for path: %@", aFileInPage);
@@ -120,7 +171,11 @@
             }
             for(int filesSoFar=0;filesSoFar<[bundledContents count];filesSoFar++){
                 NSString* aFileInPage = [bundledContents objectAtIndex:filesSoFar];
-                if([zip addFileToZip:[[self bundledPagesPath] stringByAppendingPathComponent:aFileInPage]
+                NSString* fullPathOfFile = [[self bundledPagesPath] stringByAppendingPathComponent:aFileInPage];
+                if([aFileInPage isEqualToString:@"scrapIDs.plist"] && locationOfUpdatedScrapInfo){
+                    fullPathOfFile = locationOfUpdatedScrapInfo;
+                }
+                if([zip addFileToZip:fullPathOfFile
                          toPathInZip:aFileInPage]){
                 }else{
                     NSLog(@"error for path: %@", aFileInPage);
