@@ -31,6 +31,7 @@
 #import "MMCloudKitImportContainerView.h"
 #import "MMCloudKitExportView.h"
 #import "MMCloudKitManager.h"
+#import "MMCloudKitFetchFriendsState.h"
 
 @implementation MMScrapPaperStackView{
     
@@ -1862,6 +1863,10 @@ int skipAll = NO;
 
 -(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState{
     [sharePageSidebar cloudKitDidChangeState:currentState];
+    if([currentState isKindOfClass:[MMCloudKitFetchFriendsState class]]){
+        // clear out the icon alert
+        [[MMCloudKitManager sharedManager] resetBadgeCountTo:0];
+    }
 }
 
 -(void) willFetchMessage:(SPRMessage *)message{

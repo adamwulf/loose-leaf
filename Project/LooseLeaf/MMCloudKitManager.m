@@ -214,12 +214,12 @@ static dispatch_queue_t messageQueue;
 }
 
 -(void) resetBadgeCountTo:(NSUInteger)number{
-    [UIApplication sharedApplication].applicationIconBadgeNumber = number;
     CKModifyBadgeOperation *oper = [[CKModifyBadgeOperation alloc] initWithBadgeValue:number];
     oper.modifyBadgeCompletionBlock = ^(NSError* err){
         if(err){
             NSLog(@"failed to reset badge");
         }else{
+            [UIApplication sharedApplication].applicationIconBadgeNumber = number;
             NSLog(@"did reset badge");
         }
     };

@@ -95,9 +95,6 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    // clear out the icon alert
-    [[MMCloudKitManager sharedManager] resetBadgeCountTo:0];
-    
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [self setupTimer];
     if((CFAbsoluteTimeGetCurrent() - resignedActiveAtStamp) / 60.0 > 5){
@@ -139,6 +136,7 @@
     }else{
         [self checkForNotificationToHandleWithUserInfo:info];
     }
+    [[MMCloudKitManager sharedManager] resetBadgeCountTo:0];
 }
 
 -(void) application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void (^)())completionHandler{
@@ -158,14 +156,13 @@
     }
 }
 
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
-{
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken{
     NSLog(@"did register for remote notifications");
     [[Mixpanel sharedInstance].people addPushDeviceToken:deviceToken];
 }
 
 -(void) application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error{
-    // noop
+    NSLog(@"did fail register for remote notifications");
 }
 
 #pragma mark - Photo and PDF Import
