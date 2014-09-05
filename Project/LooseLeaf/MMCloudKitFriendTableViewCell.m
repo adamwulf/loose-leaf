@@ -46,7 +46,7 @@
     lblFr.size.width = self.bounds.size.width - height;
     textLabel.frame = lblFr;
     
-    textLabel.text = [NSString stringWithFormat:@"%@ %@ %d", userInfo.firstName, userInfo.lastName, (int) index];
+    textLabel.text = [NSString stringWithFormat:@"%@ %@", userInfo.firstName, userInfo.lastName];
     // fit width
     [textLabel sizeToFit];
     CGRect fr = textLabel.frame;

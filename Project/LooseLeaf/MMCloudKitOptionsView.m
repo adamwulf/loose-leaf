@@ -162,10 +162,9 @@ BOOL hasSent = NO;
     MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
     if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
         NSArray* friends = ((MMCloudKitLoggedInState*)currentState).friendList;
-        int index = indexPath.row % (int) [friends count];
-//        if([friends count] > indexPath.row){
-        return [friends objectAtIndex:index];
-//        }
+        if([friends count] > indexPath.row){
+            return [friends objectAtIndex:indexPath.row];
+        }
     }
     return nil;
 }
@@ -173,7 +172,7 @@ BOOL hasSent = NO;
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
     if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
-        return [((MMCloudKitLoggedInState*)currentState).friendList count] * 11;
+        return [((MMCloudKitLoggedInState*)currentState).friendList count];
     }
     return 0;
 }
