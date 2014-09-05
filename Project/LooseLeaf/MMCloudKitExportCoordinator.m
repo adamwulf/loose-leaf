@@ -59,7 +59,7 @@
             [avatarButton animateOffScreenWithCompletion:^(BOOL finished) {
                 [exportView exportComplete:self];
             }];
-        } afterDelay:success ? .5 : 1.5];
+        } afterDelay:success ? .5 : 3.5];
     }];
 }
 
