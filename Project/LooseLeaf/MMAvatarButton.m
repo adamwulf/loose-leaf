@@ -156,14 +156,53 @@
 
 -(void) animateBounceToTopOfScreenAtX:(CGFloat)xLoc
                          withDuration:(CGFloat)duration
-              withExtraAnimationBlock:(void(^)())animations
+                   withTargetRotation:(CGFloat)targetRotation
                            completion:(void (^)(BOOL finished))completion{
     
     CGFloat targetSize = 80;
     
+    CGFloat rotStart = self.rotation;
+    CGFloat rotDiff = targetRotation - rotStart;
+    
     [UIView animateKeyframesWithDuration:duration delay:0 options:UIViewKeyframeAnimationOptionCalculationModeLinear animations:^{
+
         
-        [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:.5 animations:animations];
+//        NSMutableArray* keyTimes = [NSMutableArray arrayWithObjects:
+//                                    [NSNumber numberWithFloat:0.0],
+//                                    [NSNumber numberWithFloat:0.4],
+//                                    [NSNumber numberWithFloat:0.7],
+//                                    [NSNumber numberWithFloat:1.0], nil];
+//        bounceAnimation.keyTimes = keyTimes;
+//        bounceAnimation.values = [NSArray arrayWithObjects:
+//                                  [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.0, 1.0, 1.0))],
+//                                  [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.0+max, 1.0+max, 1.0))],
+//                                  [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.0+min, 1.0+min, 1.0))],
+//                                  [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.0, 1.0, 1.0))],
+        //
+        // total bounce duration: .3 of the .8s of the total animation: so .375 of keyframe
+        //
+        // dur1: .4 * .375 = 0.15
+        // dur2: .3 * .375 = 0.1125
+        // dur3: .3 * .375 = 0.1125
+
+        // button bounce
+        [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:.15 animations:^{
+            // rotate to .4 * diff
+            // scale to 1.4
+            CGFloat stepRot = rotStart + rotDiff * 0.4;
+            self.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(stepRot), CGAffineTransformMakeScale(1.4, 1.4));
+        }];
+        [UIView addKeyframeWithRelativeStartTime:.15 relativeDuration:.1125 animations:^{
+            // rotate to .7 * diff
+            // scale to .8
+            CGFloat stepRot = rotStart + rotDiff * 0.7;
+            self.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(stepRot), CGAffineTransformMakeScale(0.8, 0.8));
+        }];
+        [UIView addKeyframeWithRelativeStartTime:0.2625 relativeDuration:.1125 animations:^{
+            // scale to 1
+            // rotate to target
+            self.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(targetRotation), CGAffineTransformMakeScale(1.0, 1.0));
+        }];
         
         CGPoint originalCenter = self.center;
         CGPoint targetCenter = CGPointMake(xLoc + targetSize/2, targetSize/2);

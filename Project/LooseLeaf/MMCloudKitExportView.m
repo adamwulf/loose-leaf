@@ -52,11 +52,7 @@
         [activeExports addObject:exportCoordinator];
     }
 
-    [self animateAvatarButtonToTopOfPage:avatarButton withExtraAnimationBlock:^{
-        CGAffineTransform rotTransform = CGAffineTransformMakeRotation(lastRotationReading);
-        avatarButton.rotation = lastRotationReading;
-        avatarButton.transform = rotTransform;
-    } onComplete:^{
+    [self animateAvatarButtonToTopOfPage:avatarButton onComplete:^{
         [exportCoordinator begin];
     }];
 }
@@ -110,15 +106,27 @@
 
 #pragma mark - Animations
 
--(void) animateAvatarButtonToTopOfPage:(MMAvatarButton*)avatarButton withExtraAnimationBlock:(void(^)())animations onComplete:(void (^)())completion{
-    CGRect fr = [avatarButton convertRect:avatarButton.bounds toView:self];
-    avatarButton.frame = fr;
+-(void) animateAvatarButtonToTopOfPage:(MMAvatarButton*)avatarButton onComplete:(void (^)())completion{
+    CGPoint adjustedCenter = [avatarButton.superview convertPoint:avatarButton.center toView:self];
     [animationHelperView addSubview:avatarButton];
+    avatarButton.center = adjustedCenter;
+
+    CGFloat orig = [[[MMRotationManager sharedInstance] idealRotationReadingForCurrentOrientation] angle];
+    CGFloat angle = -(orig + M_PI_2);
+    
+    // portrait: needs + M_PI_2         is: -M_PI_2     needs: 0
+    // rotate right: needs + M_PI_2     is: 0           needs: -M_PI_2
+    // rotate left: needs - M_PI_2      is: -M_PI       needs: M_PI_2
+    // upside down: needs - M_PI_2      is: M_PI_2      needs: -M_PI
+    
+    CGAffineTransform rotTransform = CGAffineTransformMakeRotation(angle);
+    avatarButton.rotation = angle;
+    avatarButton.transform = rotTransform;
     
     avatarButton.shouldDrawDarkBackground = YES;
     [avatarButton setNeedsDisplay];
     
-    [avatarButton animateBounceToTopOfScreenAtX:100 withDuration:0.8 withExtraAnimationBlock:animations completion:^(BOOL finished) {
+    [avatarButton animateBounceToTopOfScreenAtX:100 withDuration:0.8 withTargetRotation:lastRotationReading completion:^(BOOL finished) {
         [self addSubview:avatarButton];
         [self animateAndAlignAllButtons];
         if(completion) completion();

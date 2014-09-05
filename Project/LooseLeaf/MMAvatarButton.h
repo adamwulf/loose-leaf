@@ -20,7 +20,7 @@
 
 -(void) animateBounceToTopOfScreenAtX:(CGFloat)xLoc
                          withDuration:(CGFloat)duration
-              withExtraAnimationBlock:(void(^)())animations
+                   withTargetRotation:(CGFloat)targetRotation
                            completion:(void (^)(BOOL finished))completion;
 
 -(void) animateOnScreenFrom:(CGPoint)offscreen withCompletion:(void (^)(BOOL finished))completion;

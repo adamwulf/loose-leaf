@@ -187,9 +187,9 @@ BOOL hasSent = NO;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     MMCloudKitFriendTableViewCell* cell = (MMCloudKitFriendTableViewCell*) [collectionView cellForItemAtIndexPath:indexPath];
+    MMAvatarButton* avatarButton = [cell stealAvatarButton];
+    [shareItem userIsAskingToShareTo:[self userInfoForIndexPath:indexPath] fromButton:avatarButton];
     [cell bounce];
-    
-    [shareItem userIsAskingToShareTo:[self userInfoForIndexPath:indexPath] fromButton:[cell stealAvatarButton]];
 }
 
 #pragma mark - Rotation
