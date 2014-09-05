@@ -2419,7 +2419,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$SRCROOT/LooseLeaf\"\n./generateLicenses.pl\n\ntouch \"$SRCROOT/LooseLeaf/Settings.bundle/Root.plist\"\ntouch \"$SRCROOT/LooseLeaf/Settings.bundle\"\n\n#GIT_RELEASE_VERSION=`git describe --tags`\n\n#echo \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\"\n#echo \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\"\n\n#open \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\"\n\n#/usr/libexec/PlistBuddy \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\" -c \"set PreferenceSpecifiers:4:DefaultValue $GIT_RELEASE_VERSION\"\n";
+			shellScript = "cd \"$SRCROOT/LooseLeaf\"\n./generateLicenses.pl\n\ntouch \"$SRCROOT/LooseLeaf/Settings.bundle/Root.plist\"\ntouch \"$SRCROOT/LooseLeaf/Settings.bundle\"\n";
 		};
 		6673C684182E0EA0005CEFAF /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2445,7 +2445,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Update the CFBundleShortVersionString in the generated Info.plist using the most recent Git tag.\n# Idea taken from http://tinyurl.com/3usjj9d by Joachim Bondo.\n\n# Get the current release description from Git.\nGIT_RELEASE_SHORT_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\nGIT_RELEASE_VERSION=`git describe --tags`\n\necho \"built products dir/info plist\"\necho \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\"\necho $GIT_RELEASE_VERSION\necho $GIT_RELEASE_SHORT_VERSION\n\n# Set the CFBundleShortVersionString in the generated Info.plist (stripping off the leading \"v\").\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleShortVersionString\" \"$GIT_RELEASE_SHORT_VERSION\"\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleVersion\" \"$GIT_RELEASE_VERSION\"\n\ntouch \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}.plist\"";
+			shellScript = "# Update the CFBundleShortVersionString in the generated Info.plist using the most recent Git tag.\n# Idea taken from http://tinyurl.com/3usjj9d by Joachim Bondo.\n\n# Get the current release description from Git.\nGIT_RELEASE_SHORT_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\nGIT_RELEASE_VERSION=`git describe --tags --abbrev=0`\n\necho \"built products dir/info plist\"\necho \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\"\necho $GIT_RELEASE_VERSION\necho $GIT_RELEASE_SHORT_VERSION\n\n# Set the CFBundleShortVersionString in the generated Info.plist (stripping off the leading \"v\").\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleShortVersionString\" \"$GIT_RELEASE_SHORT_VERSION\"\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleVersion\" \"$GIT_RELEASE_VERSION\"\n\ntouch \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}.plist\"";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
