@@ -130,6 +130,8 @@ static dispatch_queue_t messageQueue;
                     [incomingMessageState setObject:[NSArray array] forKey:kMessagesSinceLastFetchKey];
                 }
             });
+        }else{
+            [currentState cloudKitDidCheckForNotifications];
         }
     }];
 }

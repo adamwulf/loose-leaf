@@ -132,6 +132,7 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)info {
+    NSLog(@"==== recieved notification!");
     // Do something if the app was in background. Could handle foreground notifications differently
     if (application.applicationState != UIApplicationStateActive) {
         [self checkForNotificationToHandleWithUserInfo:info];
@@ -152,15 +153,14 @@
     CKQueryNotification *notification = [CKQueryNotification notificationFromRemoteNotificationDictionary:userInfo];
     if([notification isKindOfClass:[CKQueryNotification class]]){
         if(notification.notificationType == CKNotificationTypeQuery){
-            if(notification){
-                [[MMCloudKitManager sharedManager] handleIncomingMessageNotification:notification];
-            }
+            [[MMCloudKitManager sharedManager] handleIncomingMessageNotification:notification];
         }
     }
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
+    NSLog(@"did register for remote notifications");
     [[Mixpanel sharedInstance].people addPushDeviceToken:deviceToken];
 }
 
