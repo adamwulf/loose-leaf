@@ -136,7 +136,6 @@
     }else{
         [self checkForNotificationToHandleWithUserInfo:info];
     }
-    [[MMCloudKitManager sharedManager] resetBadgeCountTo:0];
 }
 
 -(void) application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void (^)())completionHandler{
@@ -152,6 +151,7 @@
     if([notification isKindOfClass:[CKQueryNotification class]]){
         if(notification.notificationType == CKNotificationTypeQuery){
             [[MMCloudKitManager sharedManager] handleIncomingMessageNotification:notification];
+            [[MMCloudKitManager sharedManager] resetBadgeCountTo:0];
         }
     }
 }
