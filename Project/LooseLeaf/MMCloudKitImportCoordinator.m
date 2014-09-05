@@ -27,6 +27,7 @@
     NSInteger numberOfVisibleScrapsOnIncomingPage; // used for mixpanel only
     
     NSDictionary* importAttributes;
+    NSInteger numberOfImportedScraps;
 }
 
 @synthesize avatarButton;
@@ -63,6 +64,9 @@
             
             NSDictionary* originalScrapPlist = [NSDictionary dictionaryWithContentsOfFile:pathToScrapsPlist];
             NSMutableDictionary* renamedScraps = [NSMutableDictionary dictionary];
+            
+            // track the number of scraps that were imported with this page
+            numberOfImportedScraps = [[originalScrapPlist objectForKey:@"scrapsOnPageIDs"] count];
             
             // update the scrap properties to point to new UUIDs
             // and move the files on disk to new locations in the
@@ -158,6 +162,12 @@
                 [eventProperties setObject:[importAttributes objectForKey:key] forKey:[NSString stringWithFormat:@"ImportAttr: %@", key]];
             }
         }
+    }
+    
+    // track addition of the page + its scraps in our count
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+    if(numberOfImportedScraps){
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScraps by:@(numberOfImportedScraps)];
     }
     
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
