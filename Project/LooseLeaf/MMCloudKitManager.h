@@ -32,6 +32,8 @@
 
 -(void) retryStateAfterDelay:(NSTimeInterval)delay;
 
+-(void) changeToStateBasedOnError:(NSError*)err;
+
 -(BOOL) isLoggedInAndReadyForAnything;
 
 -(void) handleIncomingMessageNotification:(CKQueryNotification*)remoteNotification;

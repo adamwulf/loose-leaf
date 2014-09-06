@@ -45,6 +45,15 @@
         }
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
     }else{
+        
+        // i should cache the results, and changing states based on errors:
+        // SPRSimpleCloudMessengerErroriCloudAccount, or
+        // SPRSimpleCloudMessengerErrorMissingDiscoveryPermissions
+        // should reset my cache and restart this state.
+        
+        
+        
+        
         [[SPRSimpleCloudKitManager sharedManager] silentlyVerifyiCloudAccountStatusOnComplete:^(SCKMAccountStatus accountStatus,
                                                                                                 SCKMApplicationPermissionStatus permissionStatus,
                                                                                                 NSError *error) {
@@ -53,7 +62,7 @@
                 isCheckingStatus = NO;
             }
             if(error){
-                [self updateStateBasedOnError:error];
+                [[MMCloudKitManager sharedManager] changeToStateBasedOnError:error];
             }else{
                 switch (accountStatus) {
                     case SCKMAccountStatusCouldNotDetermine:
@@ -95,31 +104,6 @@
 
 -(void) killState{
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
-}
-
--(void) updateStateBasedOnError:(NSError*)err{
-    NSLog(@"updateStateBasedOnError");
-    switch (err.code) {
-        case SPRSimpleCloudMessengerErrorNetwork:
-        case SPRSimpleCloudMessengerErrorServiceUnavailable:
-            [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
-            break;
-        case SPRSimpleCloudMessengerErroriCloudAccount:
-            [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitAccountMissingState alloc] init]];
-            break;
-        case SPRSimpleCloudMessengerErrorMissingDiscoveryPermissions:
-            // right now the ONLY permission is for discovery
-            // if that changes in the future, will want to make this more accurate
-            [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitDeclinedPermissionState alloc] init]];
-            break;
-        case SPRSimpleCloudMessengerErrorRateLimit:
-            // network command was somehow cancelled, so re-run it
-            [[MMCloudKitManager sharedManager] retryStateAfterDelay:10];
-            break;
-        case SPRSimpleCloudMessengerErrorUnexpected:
-            [[MMCloudKitManager sharedManager] retryStateAfterDelay:1];
-            break;
-    }
 }
 
 #pragma mark - Notifications

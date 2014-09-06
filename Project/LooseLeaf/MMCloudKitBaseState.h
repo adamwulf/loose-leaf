@@ -18,8 +18,6 @@
 
 -(void) killState;
 
--(void) updateStateBasedOnError:(NSError*)err;
-
 #pragma mark - Notifications
 
 -(void) cloudKitInfoDidChange;

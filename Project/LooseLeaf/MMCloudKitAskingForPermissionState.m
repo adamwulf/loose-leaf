@@ -59,7 +59,7 @@
                 isCheckingStatus = NO;
             }
             if(error){
-                [self updateStateBasedOnError:error];
+                [[MMCloudKitManager sharedManager] changeToStateBasedOnError:error];
             }else{
                 switch (permissionStatus) {
                     case SCKMApplicationPermissionStatusCouldNotComplete:

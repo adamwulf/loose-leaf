@@ -78,7 +78,7 @@
                 isCheckingStatus = NO;
             }
             if(error && !friendList){
-                [self updateStateBasedOnError:error];
+                [[MMCloudKitManager sharedManager] changeToStateBasedOnError:error];
             }else if(error){
                 // probably rate limited, but we already have
                 // some cached friends, so no biggie, just use those

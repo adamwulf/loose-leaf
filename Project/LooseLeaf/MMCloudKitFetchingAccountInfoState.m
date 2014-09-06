@@ -41,7 +41,7 @@
                 @synchronized(self){
                     isCheckingStatus = NO;
                 }
-                [self updateStateBasedOnError:error];
+                [[MMCloudKitManager sharedManager] changeToStateBasedOnError:error];
             }else{
                 
                 // we now have the user record id, find out
@@ -76,7 +76,7 @@
         }
         if(error){
             if(shouldUpdateState){
-                [self updateStateBasedOnError:error];
+                [[MMCloudKitManager sharedManager] changeToStateBasedOnError:error];
             }else{
                 // the state was already changed because we had cache data.
                 // we only loaded it again to update our cache in the background.
