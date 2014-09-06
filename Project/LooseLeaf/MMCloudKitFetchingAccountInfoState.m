@@ -18,6 +18,14 @@
     BOOL isCheckingStatus;
 }
 
++(NSString*) accountPlistPath{
+    return [[MMCloudKitManager cloudKitFilesPath] stringByAppendingPathComponent:@"account.plist"];
+}
+
++(void) clearAccountCache{
+    [[NSFileManager defaultManager] removeItemAtPath:[MMCloudKitFetchingAccountInfoState accountPlistPath] error:nil];
+}
+
 -(void) runState{
     NSLog(@"Running state %@", NSStringFromClass([self class]));
     
@@ -48,8 +56,7 @@
                 // we now have the user record id, find out
                 // if our info matches what we have stored
                 // on disk (if anything)
-                NSString* userInfoPlistPath = [[MMCloudKitManager cloudKitFilesPath] stringByAppendingPathComponent:@"account.plist"];
-                NSDictionary* cachedUserInfo = [NSKeyedUnarchiver unarchiveObjectWithFile:userInfoPlistPath];
+                NSDictionary* cachedUserInfo = [NSKeyedUnarchiver unarchiveObjectWithFile:[MMCloudKitFetchingAccountInfoState accountPlistPath]];
                 if(cachedUserInfo && [cachedUserInfo isKindOfClass:[NSDictionary class]]){
                     // sanity check with the class comparison
                     if([[cachedUserInfo objectForKey:@"recordId"] isEqual:userRecord]){
@@ -59,11 +66,20 @@
                         }
                         [[SPRSimpleCloudKitManager sharedManager] promptForRemoteNotificationsIfNecessary];
                         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchFriendsState alloc] initWithUserRecord:userRecord andUserInfo:cachedUserInfo]];
-                        [self fetchAccountInformationInBackgroundForUserRecord:userRecord andSaveToPath:userInfoPlistPath andUpdateStateWhenComplete:NO];
+                        [self fetchAccountInformationInBackgroundForUserRecord:userRecord
+                                                                 andSaveToPath:[MMCloudKitFetchingAccountInfoState accountPlistPath]
+                                                    andUpdateStateWhenComplete:NO];
                         return;
+                    }else{
+                        // our records don't match, so delete the file
+                        // and tell the friends state to delete too
+                        [MMCloudKitFetchingAccountInfoState clearAccountCache];
+                        [MMCloudKitFetchFriendsState clearFriendsCache];
                     }
                 }
-                [self fetchAccountInformationInBackgroundForUserRecord:userRecord andSaveToPath:userInfoPlistPath andUpdateStateWhenComplete:YES];
+                [self fetchAccountInformationInBackgroundForUserRecord:userRecord
+                                                         andSaveToPath:[MMCloudKitFetchingAccountInfoState accountPlistPath]
+                                            andUpdateStateWhenComplete:YES];
             }
         }];
     }

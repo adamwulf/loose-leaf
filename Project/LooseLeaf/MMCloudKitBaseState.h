@@ -22,11 +22,11 @@
 
 -(void) killState;
 
+-(BOOL) isLoggedInAndReadyForAnything;
+
 #pragma mark - Notifications
 
 -(void) cloudKitInfoDidChange;
-
--(void) applicationDidBecomeActive;
 
 -(void) reachabilityDidChange;
 

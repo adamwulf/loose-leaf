@@ -17,4 +17,6 @@
 
 -(id) initWithUserRecord:(CKRecordID *)userRecord andUserInfo:(NSDictionary *)userInfo andCachedFriendList:(NSArray*)friendList;
 
++(void) clearFriendsCache;
+
 @end

@@ -29,6 +29,8 @@
     NSString* cachePath;
     
     NSMutableDictionary* incomingMessageState;
+    
+    BOOL needsBootstrap;
 }
 
 @synthesize delegate;
@@ -66,8 +68,11 @@ static NSString* cloudKitFilesPath;
 - (id)init {
     self = [super init];
     if (self) {
+        needsBootstrap = YES;
+
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cloudKitInfoDidChange) name:NSUbiquityIdentityDidChangeNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityDidChange) name:kReachabilityChangedNotification object:nil];
         
         [MMCloudKitBaseState clearCache];
@@ -84,6 +89,13 @@ static NSString* cloudKitFilesPath;
         // the UIApplicationDidBecomeActiveNotification will kickstart the process when the app launches
     }
     return self;
+}
+
+-(void) didBecomeActive{
+    if(needsBootstrap){
+        needsBootstrap = NO;
+        [currentState runState];
+    }
 }
 
 -(NSString*) cachePath{
@@ -158,7 +170,7 @@ static NSString* cloudKitFilesPath;
 }
 
 -(BOOL) isLoggedInAndReadyForAnything{
-    return [currentState isKindOfClass:[MMCloudKitLoggedInState class]];
+    return [currentState isLoggedInAndReadyForAnything];
 }
 
 -(void) fetchAllNewMessages{
@@ -190,9 +202,10 @@ static NSString* cloudKitFilesPath;
     [currentState cloudKitInfoDidChange];
 }
 
--(void) applicationDidBecomeActive{
+-(void) applicationWillEnterForeground{
+    NSLog(@"applicationWillEnterForeground - cloudkit manager");
     [MMCloudKitBaseState clearCache];
-    [currentState applicationDidBecomeActive];
+    [self changeToState:[[MMCloudKitBaseState alloc] init]];
 }
 
 -(void) reachabilityDidChange{

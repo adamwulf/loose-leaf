@@ -24,6 +24,14 @@
 
 @synthesize friendList;
 
++(NSString*) friendsPlistPath{
+    return [[MMCloudKitManager cloudKitFilesPath] stringByAppendingPathComponent:@"friends.plist"];
+}
+
++(void) clearFriendsCache{
+    [[NSFileManager defaultManager] removeItemAtPath:[MMCloudKitFetchFriendsState friendsPlistPath] error:nil];
+}
+
 -(id) initWithUserRecord:(CKRecordID *)_userRecord andUserInfo:(NSDictionary *)_userInfo andCachedFriendList:(NSArray*)_friendList{
     if(self = [super init]){
         userRecord = _userRecord;
@@ -33,18 +41,14 @@
     return self;
 }
 
--(NSArray*) friendList{
-    return friendList;
-}
-
-+(NSString*) friendsPlistPath{
-    return [[MMCloudKitManager cloudKitFilesPath] stringByAppendingPathComponent:@"friends.plist"];
-}
-
 -(id) initWithUserRecord:(CKRecordID*)_userRecord andUserInfo:(NSDictionary*)_userInfo{
     NSArray* cachedFriendList = [NSKeyedUnarchiver unarchiveObjectWithFile:[MMCloudKitFetchFriendsState friendsPlistPath]];
     
     return [self initWithUserRecord:_userRecord andUserInfo:_userInfo andCachedFriendList:cachedFriendList];
+}
+
+-(NSArray*) friendList{
+    return friendList;
 }
 
 -(NSArray*) filteredFriendsList:(NSArray*)friendsList{
@@ -102,6 +106,10 @@
             }
         }];
     }
+}
+
+-(BOOL) isLoggedInAndReadyForAnything{
+    return friendList != nil;
 }
 
 @end

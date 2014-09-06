@@ -34,7 +34,8 @@
         // we can't connect to cloudkit, so move to an error state
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
     }else{
-        // noop
+        [MMCloudKitFetchingAccountInfoState clearAccountCache];
+        [MMCloudKitFetchFriendsState clearFriendsCache];
     }
 }
 

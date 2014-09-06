@@ -15,6 +15,7 @@
 #import "MMCloudKitFetchFriendsState.h"
 #import "MMCloudKitWaitingForLoginState.h"
 #import "CKDiscoveredUserInfo+Initials.h"
+#import "MMCloudKitFetchingAccountInfoState.h"
 
 @implementation MMCloudKitAskingForPermissionState{
     BOOL isCheckingStatus;
@@ -41,6 +42,10 @@
             }
             isCheckingStatus = YES;
         }
+        
+        [MMCloudKitFetchingAccountInfoState clearAccountCache];
+        [MMCloudKitFetchFriendsState clearFriendsCache];
+        
         [[SPRSimpleCloudKitManager sharedManager] promptAndFetchUserInfoOnComplete:^(SCKMApplicationPermissionStatus permissionStatus,
                                                                                      CKRecordID *recordID,
                                                                                      CKDiscoveredUserInfo *userInfo,

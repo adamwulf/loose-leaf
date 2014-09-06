@@ -10,6 +10,8 @@
 #import "MMReachabilityManager.h"
 #import "MMCloudKitOfflineState.h"
 #import "MMCloudKitManager.h"
+#import "MMCloudKitFetchingAccountInfoState.h"
+#import "MMCloudKitFetchFriendsState.h"
 
 @implementation MMCloudKitAccountMissingState
 
@@ -20,8 +22,8 @@
         // we can't connect to cloudkit, so move to an error state
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
     }else{
-        
-        // noop
+        [MMCloudKitFetchingAccountInfoState clearAccountCache];
+        [MMCloudKitFetchFriendsState clearFriendsCache];
     }
 }
 
@@ -29,11 +31,6 @@
 
 -(void) cloudKitInfoDidChange{
     NSLog(@"%@ cloudKitInfoDidChange", NSStringFromClass([self class]));
-    [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitBaseState alloc] init]];
-}
-
--(void) applicationDidBecomeActive{
-    NSLog(@"%@ applicationDidBecomeActive", NSStringFromClass([self class]));
     [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitBaseState alloc] init]];
 }
 

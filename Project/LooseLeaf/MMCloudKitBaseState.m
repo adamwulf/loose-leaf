@@ -133,17 +133,14 @@
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
 }
 
+-(BOOL) isLoggedInAndReadyForAnything{
+    return NO;
+}
+
 #pragma mark - Notifications
 
 -(void) cloudKitInfoDidChange{
     NSLog(@"%@ cloudKitInfoDidChange", NSStringFromClass([self class]));
-    @synchronized(self){
-        [self runState];
-    }
-}
-
--(void) applicationDidBecomeActive{
-    NSLog(@"%@ applicationDidBecomeActive", NSStringFromClass([self class]));
     @synchronized(self){
         [self runState];
     }

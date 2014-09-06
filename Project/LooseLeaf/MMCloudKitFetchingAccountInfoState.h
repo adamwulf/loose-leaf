@@ -10,4 +10,6 @@
 
 @interface MMCloudKitFetchingAccountInfoState : MMCloudKitBaseState
 
++(void) clearAccountCache;
+
 @end

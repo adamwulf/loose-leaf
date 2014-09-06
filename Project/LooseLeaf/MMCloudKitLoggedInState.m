@@ -54,14 +54,14 @@
     }
 }
 
--(void) applicationDidBecomeActive{
-    [self swapToFriendsState];
-}
-
 -(void) killState{
     [fetchAllMessagesTimer invalidate];
     fetchAllMessagesTimer = nil;
     [super killState];
+}
+
+-(BOOL) isLoggedInAndReadyForAnything{
+    return YES;
 }
 
 -(void) swapToFriendsState{
