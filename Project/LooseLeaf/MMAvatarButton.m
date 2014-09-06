@@ -14,6 +14,7 @@
 
 @implementation MMAvatarButton{
     NSString* letter;
+    CGPoint offset;
     CGFloat pointSize;
     CTFontSymbolicTraits traits;
     UIFont* font;
@@ -27,17 +28,23 @@
 @synthesize targetSuccess;
 @synthesize targetProgress;
 
-- (id)initWithFrame:(CGRect)_frame forLetter:(NSString*)_letter{
+- (id)initWithFrame:(CGRect)_frame forLetter:(NSString*)_letter andOffset:(CGPoint)_offset{
     self = [super initWithFrame:_frame];
     if (self) {
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
+        offset = _offset;
         letter = _letter;
         font = [UIFont systemFontOfSize:16];
         pointSize = [font pointSize] * kWidthOfSidebarButton / 50.0;
     }
     return self;
+}
+
+
+- (id)initWithFrame:(CGRect)_frame forLetter:(NSString*)_letter{
+    return [self initWithFrame:_frame forLetter:_letter andOffset:CGPointZero];
 }
 
 -(UIColor*) backgroundColor{
@@ -54,6 +61,15 @@
     }else{
         return [self borderColor];
     }
+}
+
+-(NSString*) letter{
+    return letter;
+}
+
+-(void) setLetter:(NSString *)_letter{
+    letter = _letter;
+    [self setNeedsDisplay];
 }
 
 // Only override drawRect: if you perform custom drawing.
@@ -76,11 +92,21 @@
     
     UIBezierPath* glyphPath = [[font fontWithSize:scaledPointSize] bezierPathForString:letter];
     CGRect glyphRect = [glyphPath bounds];
+    glyphRect = glyphPath.bounds;
+    CGFloat maxTextWidth = self.drawableFrame.size.width - 10;
+    if(glyphRect.size.width > maxTextWidth){
+        CGFloat ratio = maxTextWidth / glyphRect.size.width;
+        [glyphPath applyTransform:CGAffineTransformMakeScale(ratio, ratio)];
+        glyphRect = glyphPath.bounds;
+        [glyphPath applyTransform:CGAffineTransformMakeTranslation(-glyphRect.origin.x, -glyphRect.origin.y)];
+        glyphRect = glyphPath.bounds;
+    }
+
     [glyphPath applyTransform:CGAffineTransformConcat(CGAffineTransformMakeTranslation(-glyphRect.origin.x - .5, -glyphRect.size.height),
                                                       CGAffineTransformMakeScale(1.f, -1.f))];
-    [glyphPath applyTransform:CGAffineTransformMakeTranslation((drawingWidth - glyphRect.size.width) / 2 + kWidthOfSidebarButtonBuffer,
-                                                               (drawingWidth - glyphRect.size.height) / 2 + kWidthOfSidebarButtonBuffer)];
-    
+    [glyphPath applyTransform:CGAffineTransformMakeTranslation((drawingWidth - glyphRect.size.width) / 2 + kWidthOfSidebarButtonBuffer + offset.x,
+                                                               (drawingWidth - glyphRect.size.height) / 2 + kWidthOfSidebarButtonBuffer + offset.y)];
+
     //// Oval Drawing
     
     CGRect ovalFrame = CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 1.0), floor(CGRectGetHeight(frame) - 1.0));

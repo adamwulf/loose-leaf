@@ -27,6 +27,8 @@
     // used to set the rotation of newly
     // added import/exports
     CGFloat lastRotationReading;
+    
+    MMAvatarButton* countButton;
 }
 
 @synthesize stackView;
@@ -37,8 +39,18 @@
         disappearingButtons = [NSMutableSet set];
         activeExports = [NSMutableArray array];
         activeImports = [NSMutableArray array];
+        
+        countButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(300, 0, 80, 80) forLetter:@"0+" andOffset:CGPointMake(1, 0)];
+        countButton.shouldDrawDarkBackground = YES;
+        countButton.alpha = 0;
+        [countButton setNeedsDisplay];
+        [self addSubview:countButton];
     }
     return self;
+}
+
+-(void) setAnimationHelperView:(MMUntouchableView *)_animationHelperView{
+    animationHelperView = _animationHelperView;
 }
 
 #pragma mark - Sharing
@@ -148,6 +160,7 @@
                 }
             }
         }
+        int count = 0;
         i = 0;
         @synchronized(activeImports){
             for(MMCloudKitExportCoordinator* import in [activeImports reverseObjectEnumerator]){
@@ -156,9 +169,23 @@
                     CGPoint center = import.avatarButton.center;
                     center.x = self.bounds.size.width - 100 - import.avatarButton.bounds.size.width/3*i + import.avatarButton.bounds.size.width / 2;
                     import.avatarButton.center = center;
+                    if(i >= 3){
+                        import.avatarButton.alpha = 0;
+                    }else{
+                        import.avatarButton.alpha = 1;
+                    }
                     i++;
+                    count++;
                 }
             }
+            if(i > 3){
+                countButton.alpha = 1;
+            }else{
+                countButton.alpha = 0;
+            }
+            i = MIN(3,i);
+            countButton.center = CGPointMake(self.bounds.size.width - 100 - countButton.bounds.size.width/3*i + countButton.bounds.size.width / 4 - 2, countButton.center.y);
+            countButton.letter = [NSString stringWithFormat:@"%d+", count-i];
         }
     }];
 }

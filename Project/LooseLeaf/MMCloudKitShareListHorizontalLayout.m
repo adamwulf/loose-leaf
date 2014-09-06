@@ -55,7 +55,6 @@
             translate = CGPointMake(-1.5*[self buttonWidth], -1.5*[self buttonWidth]);
         }
         ret.transform = CGAffineTransformMakeRotation(M_PI_2);
-        NSLog(@"list rot: %f", M_PI_2);
     }else{
         if(transformIndex == 0){
             translate = CGPointMake(-1.5*[self buttonWidth], +1.5*[self buttonWidth]);
@@ -67,7 +66,6 @@
             translate = CGPointMake(+1.5*[self buttonWidth], -1.5*[self buttonWidth]);
         }
         ret.transform = CGAffineTransformMakeRotation(-M_PI_2);
-        NSLog(@"list rot: %f", -M_PI_2);
     }
     ret.center = CGPointMake(ret.center.x + translate.x, ret.center.y + translate.y);
     return ret;

@@ -57,11 +57,9 @@
         // set the center + rotation
         ret.center = CGPointMake(width/2, index * height + height/2);
         ret.transform = CGAffineTransformMakeRotation(-M_PI);
-        NSLog(@"list rot: %f", -M_PI);
     }else{
         ret.center = CGPointMake(width/2, indexPath.row * height + height/2);
         ret.transform = CGAffineTransformIdentity;
-        NSLog(@"list rot: %f", 0.0f);
     }
     return ret;
 }

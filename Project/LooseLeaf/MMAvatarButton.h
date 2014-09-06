@@ -13,8 +13,11 @@
 @property (nonatomic, assign) BOOL shouldDrawDarkBackground;
 @property (nonatomic, assign) BOOL targetSuccess;
 @property (nonatomic, assign) CGFloat targetProgress;
+@property (nonatomic) NSString* letter;
 
-- (id)initWithFrame:(CGRect)_frame forLetter:(NSString*)letter;
+- (id)initWithFrame:(CGRect)frame forLetter:(NSString*)letter andOffset:(CGPoint)offset;
+
+- (id)initWithFrame:(CGRect)frame forLetter:(NSString*)letter;
 
 -(void) animateToPercent:(CGFloat)progress success:(BOOL)succeeded completion:(void (^)(BOOL finished))completion;
 
