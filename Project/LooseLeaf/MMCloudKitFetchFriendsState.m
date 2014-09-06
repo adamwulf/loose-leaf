@@ -11,6 +11,8 @@
 #import "MMCloudKitManager.h"
 #import "MMCloudKitOfflineState.h"
 #import "MMCloudKitLoggedInState.h"
+#import "NSArray+MapReduce.h"
+#import "CKDiscoveredUserInfo+Initials.h"
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 
 @implementation MMCloudKitFetchFriendsState{
@@ -35,9 +37,14 @@
     return friendList;
 }
 
++(NSString*) friendsPlistPath{
+    return [[MMCloudKitManager cloudKitFilesPath] stringByAppendingPathComponent:@"friends.plist"];
+}
+
 -(id) initWithUserRecord:(CKRecordID*)_userRecord andUserInfo:(NSDictionary*)_userInfo{
-    // don't cache any friends
-    return [self initWithUserRecord:_userRecord andUserInfo:_userInfo andCachedFriendList:nil];
+    NSArray* cachedFriendList = [NSKeyedUnarchiver unarchiveObjectWithFile:[MMCloudKitFetchFriendsState friendsPlistPath]];
+    
+    return [self initWithUserRecord:_userRecord andUserInfo:_userInfo andCachedFriendList:cachedFriendList];
 }
 
 -(NSArray*) filteredFriendsList:(NSArray*)friendsList{
@@ -45,7 +52,9 @@
         CKDiscoveredUserInfo* friend = (CKDiscoveredUserInfo*)evaluatedObject;
         return ![friend.userRecordID isEqual:userRecord];
     }]];
-    return filteredFriends;
+    return [filteredFriends map:^id(id obj, NSUInteger index) {
+        return [obj asDictionary];
+    }];
 }
 
 -(void) runState{
@@ -70,18 +79,23 @@
             }
             if(error && !friendList){
                 [self updateStateBasedOnError:error];
-            }else if(!error){
-                // no error, so send our new friend list to the
-                // logged in state
-                [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitLoggedInState alloc] initWithUserRecord:userRecord
-                                                                                                         andUserInfo:userInfo
-                                                                                                       andFriendList:[self filteredFriendsList:friendRecords]]];
-            }else{
+            }else if(error){
                 // probably rate limited, but we already have
                 // some cached friends, so no biggie, just use those
                 [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitLoggedInState alloc] initWithUserRecord:userRecord
                                                                                                          andUserInfo:userInfo
                                                                                                        andFriendList:self.friendList]];
+            }else{
+                // no error, so send our new friend list to the
+                // logged in state
+                NSArray* filteredAndUpdatedFriendList = [self filteredFriendsList:friendRecords];
+                
+                if(![NSKeyedArchiver archiveRootObject:filteredAndUpdatedFriendList toFile:[MMCloudKitFetchFriendsState friendsPlistPath]]){
+                    NSLog(@"couldn't archive CloudKit data");
+                }
+                [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitLoggedInState alloc] initWithUserRecord:userRecord
+                                                                                                         andUserInfo:userInfo
+                                                                                                       andFriendList:filteredAndUpdatedFriendList]];
             }
         }];
     }

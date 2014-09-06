@@ -35,10 +35,10 @@
     return self;
 }
 
--(void) setUserInfo:(CKDiscoveredUserInfo*)userInfo forIndex:(NSInteger)index{
+-(void) setUserInfo:(NSDictionary*)userInfo forIndex:(NSInteger)index{
     CGFloat height = self.bounds.size.height - kWidthOfSidebarButtonBuffer / 4.0;
     [avatarButton removeFromSuperview];
-    avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, height, height) forLetter:userInfo.initials];
+    avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, height, height) forLetter:[userInfo objectForKey:@"initials"]];
     [self addSubview:avatarButton];
 
     CGRect lblFr = textLabel.frame;
@@ -46,7 +46,7 @@
     lblFr.size.width = self.bounds.size.width - height;
     textLabel.frame = lblFr;
     
-    textLabel.text = [NSString stringWithFormat:@"%@ %@", userInfo.firstName, userInfo.lastName];
+    textLabel.text = [NSString stringWithFormat:@"%@ %@", [userInfo objectForKey:@"firstName"], [userInfo objectForKey:@"lastName"]];
     // fit width
     [textLabel sizeToFit];
     CGRect fr = textLabel.frame;

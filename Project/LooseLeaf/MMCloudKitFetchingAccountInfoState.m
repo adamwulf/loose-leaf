@@ -84,7 +84,7 @@
             }
         }else{
             if(![NSKeyedArchiver archiveRootObject:[discoveredInfo asDictionary] toFile:userInfoPlistPath]){
-                NSLog(@"couldn't archive CloudKit data");
+                NSLog(@"couldn't archive CloudKit account data");
             }
             [[SPRSimpleCloudKitManager sharedManager] promptForRemoteNotificationsIfNecessary];
             if(shouldUpdateState){

@@ -159,7 +159,7 @@ BOOL hasSent = NO;
 
 #pragma mark - UICollectionViewDataSource
 
--(CKDiscoveredUserInfo*) userInfoForIndexPath:(NSIndexPath*)indexPath{
+-(NSDictionary*) userInfoForIndexPath:(NSIndexPath*)indexPath{
     MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
     NSArray* friends = currentState.friendList;
     if([friends count] > indexPath.row){

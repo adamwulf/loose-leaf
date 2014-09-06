@@ -21,7 +21,8 @@
         return @{
                  @"recordId" : self.userRecordID,
                  @"firstName" : self.firstName ? self.firstName : @"",
-                 @"lastName" : self.lastName ? self.lastName : @""
+                 @"lastName" : self.lastName ? self.lastName : @"",
+                 @"initials" : self.initials
                  };
     }else{
         return @{};

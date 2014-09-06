@@ -12,7 +12,7 @@
 
 @interface MMCloudKitFriendTableViewCell : UICollectionViewCell
 
--(void) setUserInfo:(CKDiscoveredUserInfo*)userInfo forIndex:(NSInteger)index;
+-(void) setUserInfo:(NSDictionary*)userInfo forIndex:(NSInteger)index;
 
 -(void) bounce;
 

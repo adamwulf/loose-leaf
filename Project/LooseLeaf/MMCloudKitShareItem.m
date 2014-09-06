@@ -94,8 +94,8 @@
     return sharingOptionsView;
 }
 
--(void) userIsAskingToShareTo:(CKDiscoveredUserInfo*)userInfo fromButton:(MMAvatarButton*)avatarButton{
-    [self.delegate didShare:self toUser:userInfo.userRecordID fromButton:avatarButton];
+-(void) userIsAskingToShareTo:(NSDictionary*)userInfo fromButton:(MMAvatarButton*)avatarButton{
+    [self.delegate didShare:self toUser:[userInfo objectForKey:@"recordId"] fromButton:avatarButton];
 }
 
 #pragma mark - MMShareViewDelegate
