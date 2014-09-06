@@ -49,18 +49,20 @@
                 // on disk (if anything)
                 NSString* userInfoPlistPath = [[MMCloudKitManager cloudKitFilesPath] stringByAppendingPathComponent:@"account.plist"];
                 NSDictionary* cachedUserInfo = [NSKeyedUnarchiver unarchiveObjectWithFile:userInfoPlistPath];
-                if(cachedUserInfo){
+                if(cachedUserInfo && [cachedUserInfo isKindOfClass:[NSDictionary class]]){
+                    // sanity check with the class comparison
                     if([[cachedUserInfo objectForKey:@"recordId"] isEqual:userRecord]){
+                        NSLog(@"using cached account information");
                         @synchronized(self){
                             isCheckingStatus = NO;
                         }
                         [[SPRSimpleCloudKitManager sharedManager] promptForRemoteNotificationsIfNecessary];
                         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchFriendsState alloc] initWithUserRecord:userRecord andUserInfo:cachedUserInfo]];
                         [self fetchAccountInformationInBackgroundForUserRecord:userRecord andSaveToPath:userInfoPlistPath andUpdateStateWhenComplete:NO];
-                    }else{
-                        [self fetchAccountInformationInBackgroundForUserRecord:userRecord andSaveToPath:userInfoPlistPath andUpdateStateWhenComplete:YES];
+                        return;
                     }
                 }
+                [self fetchAccountInformationInBackgroundForUserRecord:userRecord andSaveToPath:userInfoPlistPath andUpdateStateWhenComplete:YES];
             }
         }];
     }
@@ -81,7 +83,7 @@
                 // we can die silently here.
             }
         }else{
-            if(![NSKeyedArchiver archiveRootObject:discoveredInfo toFile:userInfoPlistPath]){
+            if(![NSKeyedArchiver archiveRootObject:[discoveredInfo asDictionary] toFile:userInfoPlistPath]){
                 NSLog(@"couldn't archive CloudKit data");
             }
             [[SPRSimpleCloudKitManager sharedManager] promptForRemoteNotificationsIfNecessary];
