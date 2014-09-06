@@ -16,4 +16,16 @@
     return [firstLetter stringByAppendingString:lastLetter];
 }
 
+-(NSDictionary*) asDictionary{
+    if(self.userRecordID){
+        return @{
+                 @"recordId" : self.userRecordID,
+                 @"firstName" : self.firstName ? self.firstName : @"",
+                 @"lastName" : self.lastName ? self.lastName : @""
+                 };
+    }else{
+        return @{};
+    }
+}
+
 @end

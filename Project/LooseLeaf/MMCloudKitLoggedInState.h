@@ -13,6 +13,6 @@
 
 @property (readonly) NSArray* friendList;
 
--(id) initWithUserRecord:(CKRecordID*)userRecord andUserInfo:(CKDiscoveredUserInfo*) userInfo andFriendList:(NSArray*)friendList;
+-(id) initWithUserRecord:(CKRecordID*)userRecord andUserInfo:(NSDictionary*) userInfo andFriendList:(NSArray*)friendList;
 
 @end

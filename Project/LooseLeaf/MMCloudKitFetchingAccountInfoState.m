@@ -11,6 +11,7 @@
 #import "MMCloudKitManager.h"
 #import "MMCloudKitOfflineState.h"
 #import "MMCloudKitFetchFriendsState.h"
+#import "CKDiscoveredUserInfo+Initials.h"
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 
 @implementation MMCloudKitFetchingAccountInfoState{
@@ -34,21 +35,65 @@
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
     }else{
         
-        [[SPRSimpleCloudKitManager sharedManager] silentlyFetchUserInfoOnComplete:^(CKRecordID* userRecord, CKDiscoveredUserInfo *userInfo, NSError *error) {
-            NSLog(@"got cloudkit user info %@ %@ %p!", userRecord, userInfo, error);
-            @synchronized(self){
-                isCheckingStatus = NO;
-            }
+        
+        [[SPRSimpleCloudKitManager sharedManager] silentlyFetchUserRecordIDOnComplete:^(CKRecordID *userRecord, NSError *error) {
             if(error){
+                @synchronized(self){
+                    isCheckingStatus = NO;
+                }
                 [self updateStateBasedOnError:error];
             }else{
-                [[SPRSimpleCloudKitManager sharedManager] promptForRemoteNotificationsIfNecessary];
-                if([SPRSimpleCloudKitManager sharedManager])
-                [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchFriendsState alloc] initWithUserRecord:userRecord andUserInfo:userInfo]];
+                
+                // we now have the user record id, find out
+                // if our info matches what we have stored
+                // on disk (if anything)
+                NSString* userInfoPlistPath = [[MMCloudKitManager cloudKitFilesPath] stringByAppendingPathComponent:@"account.plist"];
+                NSDictionary* cachedUserInfo = [NSKeyedUnarchiver unarchiveObjectWithFile:userInfoPlistPath];
+                if(cachedUserInfo){
+                    if([[cachedUserInfo objectForKey:@"recordId"] isEqual:userRecord]){
+                        @synchronized(self){
+                            isCheckingStatus = NO;
+                        }
+                        [[SPRSimpleCloudKitManager sharedManager] promptForRemoteNotificationsIfNecessary];
+                        [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchFriendsState alloc] initWithUserRecord:userRecord andUserInfo:cachedUserInfo]];
+                        [self fetchAccountInformationInBackgroundForUserRecord:userRecord andSaveToPath:userInfoPlistPath andUpdateStateWhenComplete:NO];
+                    }else{
+                        [self fetchAccountInformationInBackgroundForUserRecord:userRecord andSaveToPath:userInfoPlistPath andUpdateStateWhenComplete:YES];
+                    }
+                }
             }
         }];
     }
 }
 
+
+-(void) fetchAccountInformationInBackgroundForUserRecord:(CKRecordID*)userRecord andSaveToPath:(NSString*)userInfoPlistPath andUpdateStateWhenComplete:(BOOL)shouldUpdateState{
+    [[SPRSimpleCloudKitManager sharedManager] silentlyFetchUserInfoForUserId:userRecord onComplete:^(CKDiscoveredUserInfo* discoveredInfo, NSError* error) {
+        @synchronized(self){
+            isCheckingStatus = NO;
+        }
+        if(error){
+            if(shouldUpdateState){
+                [self updateStateBasedOnError:error];
+            }else{
+                // the state was already changed because we had cache data.
+                // we only loaded it again to update our cache in the background.
+                // we can die silently here.
+            }
+        }else{
+            if(![NSKeyedArchiver archiveRootObject:discoveredInfo toFile:userInfoPlistPath]){
+                NSLog(@"couldn't archive CloudKit data");
+            }
+            [[SPRSimpleCloudKitManager sharedManager] promptForRemoteNotificationsIfNecessary];
+            if(shouldUpdateState){
+                [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchFriendsState alloc] initWithUserRecord:userRecord
+                                                                                                             andUserInfo:[discoveredInfo asDictionary]]];
+            }else{
+                // the state was already changed because we had cache data.
+                // we only loaded it again to update our cache in the background.
+            }
+        }
+    }];
+}
 
 @end

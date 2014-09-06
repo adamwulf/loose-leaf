@@ -13,4 +13,6 @@
 
 -(NSString*) initials;
 
+-(NSDictionary*) asDictionary;
+
 @end

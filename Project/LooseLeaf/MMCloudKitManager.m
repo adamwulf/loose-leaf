@@ -38,11 +38,29 @@ static dispatch_queue_t messageQueue;
 
 +(dispatch_queue_t) messageQueue{
     if(!messageQueue){
-        messageQueue = dispatch_queue_create("com.milestonemade.looseleaf.messageQueue", DISPATCH_QUEUE_SERIAL);
+        messageQueue = dispatch_queue_create("com.milestonemade.looseleaf.cloudkit.messageQueue", DISPATCH_QUEUE_SERIAL);
     }
     return messageQueue;
 }
+//
+//static dispatch_queue_t fileSystemQueue;
+//
+//+(dispatch_queue_t) fileSystemQueue{
+//    if(!fileSystemQueue){
+//        fileSystemQueue = dispatch_queue_create("com.milestonemade.looseleaf.cloudkit.fileSystemQueue", DISPATCH_QUEUE_SERIAL);
+//    }
+//    return fileSystemQueue;
+//}
 
+static NSString* cloudKitFilesPath;
+
++(NSString*) cloudKitFilesPath{
+    if(!cloudKitFilesPath){
+        cloudKitFilesPath = [[NSFileManager documentsPath] stringByAppendingPathComponent:@"CloudKit"];
+        [NSFileManager ensureDirectoryExistsAtPath:cloudKitFilesPath];
+    }
+    return cloudKitFilesPath;
+}
 
 
 - (id)init {

@@ -14,7 +14,7 @@
 
 @implementation MMCloudKitLoggedInState{
     CKRecordID* userRecord;
-    CKDiscoveredUserInfo* userInfo;
+    NSDictionary* userInfo;
     NSArray* friendList;
     NSTimer* fetchAllMessagesTimer;
     BOOL hasEverFetchedNewMessages;
@@ -22,7 +22,7 @@
 
 @synthesize friendList;
 
--(id) initWithUserRecord:(CKRecordID*)_userRecord andUserInfo:(CKDiscoveredUserInfo*)_userInfo andFriendList:(NSArray *)_friendList{
+-(id) initWithUserRecord:(CKRecordID*)_userRecord andUserInfo:(NSDictionary*)_userInfo andFriendList:(NSArray *)_friendList{
     if(self = [super init]){
         userRecord = _userRecord;
         userInfo = _userInfo;

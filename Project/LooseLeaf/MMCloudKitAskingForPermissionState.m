@@ -14,6 +14,7 @@
 #import "MMCloudKitDeclinedPermissionState.h"
 #import "MMCloudKitFetchFriendsState.h"
 #import "MMCloudKitWaitingForLoginState.h"
+#import "CKDiscoveredUserInfo+Initials.h"
 
 @implementation MMCloudKitAskingForPermissionState{
     BOOL isCheckingStatus;
@@ -78,7 +79,7 @@
                         // icloud is available for this user, so we need to
                         // fetch their account info if we don't already have it.
                         if(recordID && userInfo){
-                            [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchFriendsState alloc] initWithUserRecord:recordID andUserInfo:userInfo]];
+                            [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchFriendsState alloc] initWithUserRecord:recordID andUserInfo:[userInfo asDictionary]]];
                         }else{
                             [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitBaseState alloc] init]];
                         }

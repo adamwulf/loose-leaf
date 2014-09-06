@@ -16,13 +16,13 @@
 @implementation MMCloudKitFetchFriendsState{
     BOOL isCheckingStatus;
     CKRecordID* userRecord;
-    CKDiscoveredUserInfo* userInfo;
+    NSDictionary* userInfo;
     NSArray* friendList;
 }
 
 @synthesize friendList;
 
--(id) initWithUserRecord:(CKRecordID *)_userRecord andUserInfo:(CKDiscoveredUserInfo *)_userInfo andCachedFriendList:(NSArray*)_friendList{
+-(id) initWithUserRecord:(CKRecordID *)_userRecord andUserInfo:(NSDictionary *)_userInfo andCachedFriendList:(NSArray*)_friendList{
     if(self = [super init]){
         userRecord = _userRecord;
         userInfo = _userInfo;
@@ -35,7 +35,7 @@
     return friendList;
 }
 
--(id) initWithUserRecord:(CKRecordID*)_userRecord andUserInfo:(CKDiscoveredUserInfo*)_userInfo{
+-(id) initWithUserRecord:(CKRecordID*)_userRecord andUserInfo:(NSDictionary*)_userInfo{
     // don't cache any friends
     return [self initWithUserRecord:_userRecord andUserInfo:_userInfo andCachedFriendList:nil];
 }

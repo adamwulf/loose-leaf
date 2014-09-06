@@ -20,6 +20,10 @@
 
 + (MMCloudKitManager *) sharedManager;
 
++(NSString*) cloudKitFilesPath;
+//
+//+(dispatch_queue_t) fileSystemQueue;
+
 +(BOOL) isCloudKitAvailable;
 
 -(void) userRequestedToLogin;
