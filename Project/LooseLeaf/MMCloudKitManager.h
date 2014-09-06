@@ -26,7 +26,7 @@
 
 -(void) changeToState:(MMCloudKitBaseState*)state;
 
--(void) retryStateAfterDelay;
+-(void) retryStateAfterDelay:(NSTimeInterval)delay;
 
 -(BOOL) isLoggedInAndReadyForAnything;
 

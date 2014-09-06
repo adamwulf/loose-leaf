@@ -10,6 +10,7 @@
 #import "MMCloudKitDeclinedPermissionState.h"
 #import "MMCloudKitWaitingForLoginState.h"
 #import "MMCloudKitLoggedInState.h"
+#import "MMCloudKitFetchFriendsState.h"
 #import "MMCloudKitFriendTableViewCell.h"
 #import "MMCloudKitShareListVerticalLayout.h"
 #import "MMCloudKitShareListHorizontalLayout.h"
@@ -133,7 +134,7 @@ BOOL hasSent = NO;
     }else{
         loginButton.hidden = YES;
     }
-    if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
+    if(currentState.friendList){
         [listOfFriendsView reloadData];
         listOfFriendsView.hidden = NO;
         cloudKitLabel.hidden = YES;
@@ -160,21 +161,16 @@ BOOL hasSent = NO;
 
 -(CKDiscoveredUserInfo*) userInfoForIndexPath:(NSIndexPath*)indexPath{
     MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
-    if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
-        NSArray* friends = ((MMCloudKitLoggedInState*)currentState).friendList;
-        if([friends count] > indexPath.row){
-            return [friends objectAtIndex:indexPath.row];
-        }
+    NSArray* friends = currentState.friendList;
+    if([friends count] > indexPath.row){
+        return [friends objectAtIndex:indexPath.row];
     }
     return nil;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
-    if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
-        return [((MMCloudKitLoggedInState*)currentState).friendList count];
-    }
-    return 0;
+    return [currentState.friendList count];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{

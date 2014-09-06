@@ -10,9 +10,13 @@
 
 @interface MMCloudKitBaseState : NSObject
 
+@property (readonly) NSArray* friendList;
+
 #pragma mark - State
 
 -(void) runState;
+
+-(void) killState;
 
 -(void) updateStateBasedOnError:(NSError*)err;
 

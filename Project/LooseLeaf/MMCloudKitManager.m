@@ -96,13 +96,15 @@ static dispatch_queue_t messageQueue;
 }
 
 -(void) changeToState:(MMCloudKitBaseState*)state{
+    // cancel any pending calls to the old state
+    [currentState killState];
     currentState = state;
     [currentState runState];
     [self.delegate cloudKitDidChangeState:currentState];
 }
 
--(void) retryStateAfterDelay{
-    [self performSelector:@selector(delayedRunStateFor:) withObject:currentState afterDelay:1];
+-(void) retryStateAfterDelay:(NSTimeInterval)delay{
+    [self performSelector:@selector(delayedRunStateFor:) withObject:currentState afterDelay:delay];
 }
 
 -(void) delayedRunStateFor:(MMCloudKitBaseState*)aState{

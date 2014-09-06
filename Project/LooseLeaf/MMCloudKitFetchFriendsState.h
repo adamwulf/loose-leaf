@@ -11,6 +11,10 @@
 
 @interface MMCloudKitFetchFriendsState : MMCloudKitBaseState
 
+@property (readonly) NSArray* friendList;
+
 -(id) initWithUserRecord:(CKRecordID*)userRecord andUserInfo:(CKDiscoveredUserInfo*) userInfo;
+
+-(id) initWithUserRecord:(CKRecordID *)userRecord andUserInfo:(CKDiscoveredUserInfo *)userInfo andCachedFriendList:(NSArray*)friendList;
 
 @end

@@ -17,14 +17,27 @@
     BOOL isCheckingStatus;
     CKRecordID* userRecord;
     CKDiscoveredUserInfo* userInfo;
+    NSArray* friendList;
 }
 
--(id) initWithUserRecord:(CKRecordID*)_userRecord andUserInfo:(CKDiscoveredUserInfo*)_userInfo{
+@synthesize friendList;
+
+-(id) initWithUserRecord:(CKRecordID *)_userRecord andUserInfo:(CKDiscoveredUserInfo *)_userInfo andCachedFriendList:(NSArray*)_friendList{
     if(self = [super init]){
         userRecord = _userRecord;
         userInfo = _userInfo;
+        friendList = _friendList;
     }
     return self;
+}
+
+-(NSArray*) friendList{
+    return friendList;
+}
+
+-(id) initWithUserRecord:(CKRecordID*)_userRecord andUserInfo:(CKDiscoveredUserInfo*)_userInfo{
+    // don't cache any friends
+    return [self initWithUserRecord:_userRecord andUserInfo:_userInfo andCachedFriendList:nil];
 }
 
 -(NSArray*) filteredFriendsList:(NSArray*)friendsList{
@@ -55,12 +68,20 @@
             @synchronized(self){
                 isCheckingStatus = NO;
             }
-            if(error){
+            if(error && !friendList){
                 [self updateStateBasedOnError:error];
-            }else{
+            }else if(!error){
+                // no error, so send our new friend list to the
+                // logged in state
                 [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitLoggedInState alloc] initWithUserRecord:userRecord
                                                                                                          andUserInfo:userInfo
                                                                                                        andFriendList:[self filteredFriendsList:friendRecords]]];
+            }else{
+                // probably rate limited, but we already have
+                // some cached friends, so no biggie, just use those
+                [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitLoggedInState alloc] initWithUserRecord:userRecord
+                                                                                                         andUserInfo:userInfo
+                                                                                                       andFriendList:self.friendList]];
             }
         }];
     }

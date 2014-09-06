@@ -25,6 +25,10 @@
     BOOL isCheckingStatus;
 }
 
+-(NSArray*) friendList{
+    return nil;
+}
+
 -(void) runState{
     @synchronized(self){
         if(isCheckingStatus){
@@ -54,7 +58,7 @@
                 switch (accountStatus) {
                     case SCKMAccountStatusCouldNotDetermine:
                         // accountStatus is unknown, so reload it
-                        [[MMCloudKitManager sharedManager] retryStateAfterDelay];
+                        [[MMCloudKitManager sharedManager] retryStateAfterDelay:3];
                         break;
                     case SCKMAccountStatusNoAccount:
                     case SCKMAccountStatusRestricted:
@@ -64,7 +68,7 @@
                     case SCKMAccountStatusAvailable:
                         switch (permissionStatus) {
                             case SCKMApplicationPermissionStatusCouldNotComplete:
-                                [[MMCloudKitManager sharedManager] retryStateAfterDelay];
+                                [[MMCloudKitManager sharedManager] retryStateAfterDelay:3];
                                 break;
                             case SCKMApplicationPermissionStatusDenied:
                                 // account exists for iCloud, but the user has
@@ -89,7 +93,12 @@
     }
 }
 
+-(void) killState{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+}
+
 -(void) updateStateBasedOnError:(NSError*)err{
+    NSLog(@"updateStateBasedOnError");
     switch (err.code) {
         case SPRSimpleCloudMessengerErrorNetwork:
         case SPRSimpleCloudMessengerErrorServiceUnavailable:
@@ -103,10 +112,12 @@
             // if that changes in the future, will want to make this more accurate
             [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitDeclinedPermissionState alloc] init]];
             break;
-        case SPRSimpleCloudMessengerErrorCancelled:
+        case SPRSimpleCloudMessengerErrorRateLimit:
             // network command was somehow cancelled, so re-run it
+            [[MMCloudKitManager sharedManager] retryStateAfterDelay:10];
+            break;
         case SPRSimpleCloudMessengerErrorUnexpected:
-            [[MMCloudKitManager sharedManager] retryStateAfterDelay];
+            [[MMCloudKitManager sharedManager] retryStateAfterDelay:1];
             break;
     }
 }

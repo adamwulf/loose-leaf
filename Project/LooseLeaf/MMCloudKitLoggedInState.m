@@ -10,6 +10,7 @@
 #import "MMReachabilityManager.h"
 #import "MMCloudKitManager.h"
 #import "MMCloudKitOfflineState.h"
+#import "MMCloudKitFetchFriendsState.h"
 
 @implementation MMCloudKitLoggedInState{
     CKRecordID* userRecord;
@@ -36,13 +37,35 @@
         // we can't connect to cloudkit, so move to an error state
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
     }else{
-        NSLog(@"got friend list");
         if(!hasEverFetchedNewMessages){
-            [self fetchAllNewMessages];
+            [fetchAllMessagesTimer invalidate];
+            fetchAllMessagesTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(fetchAllNewMessages) userInfo:nil repeats:NO];
         }else{
             [self cloudKitDidCheckForNotifications];
         }
+        
+        // we'll periodically swap back to the fetch friends state
+        // just in case the user has added anyone to their contact list
+        // and/or anyone new in their list has logged into icloud recently.
+        //
+        // CloudKit seems to rate limit this to once every ~900s, so it's
+        // rare that this would do anything, but nice to have i suppose
+        [self performSelector:@selector(swapToFriendsState) withObject:nil afterDelay:60];
     }
+}
+
+-(void) applicationDidBecomeActive{
+    [self swapToFriendsState];
+}
+
+-(void) killState{
+    [fetchAllMessagesTimer invalidate];
+    fetchAllMessagesTimer = nil;
+    [super killState];
+}
+
+-(void) swapToFriendsState{
+    [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchFriendsState alloc] initWithUserRecord:userRecord andUserInfo:userInfo andCachedFriendList:friendList]];
 }
 
 -(void) fetchAllNewMessages{

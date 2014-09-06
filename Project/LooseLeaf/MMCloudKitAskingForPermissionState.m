@@ -62,7 +62,7 @@
             }else{
                 switch (permissionStatus) {
                     case SCKMApplicationPermissionStatusCouldNotComplete:
-                        [[MMCloudKitManager sharedManager] retryStateAfterDelay];
+                        [[MMCloudKitManager sharedManager] retryStateAfterDelay:3];
                         break;
                     case SCKMApplicationPermissionStatusDenied:
                         // account exists for iCloud, but the user has
