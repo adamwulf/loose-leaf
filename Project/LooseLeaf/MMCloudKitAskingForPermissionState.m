@@ -29,35 +29,32 @@
 }
 
 -(void) runState{
-    // force iCloud account to be available when we start
-    if(accountStatus != SCKMAccountStatusAvailable){
-        [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitBaseState alloc] init]];
-        return;
-    }
-    
-    @synchronized(self){
-        if(isCheckingStatus){
-            return;
-        }
-        isCheckingStatus = YES;
-    }
-    
     NSLog(@"Running state %@", NSStringFromClass([self class]));
     
     if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
         // we can't connect to cloudkit, so move to an error state
-        @synchronized(self){
-            isCheckingStatus = NO;
-        }
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
     }else{
+        @synchronized(self){
+            if(isCheckingStatus){
+                return;
+            }
+            isCheckingStatus = YES;
+        }
         [[SPRSimpleCloudKitManager sharedManager] promptAndFetchUserInfoOnComplete:^(SCKMApplicationPermissionStatus permissionStatus,
                                                                                      CKRecordID *recordID,
                                                                                      CKDiscoveredUserInfo *userInfo,
                                                                                      NSError *error) {
+            if([MMCloudKitManager sharedManager].currentState != self){
+                // bail early. the network probably went offline
+                // while we were waiting for a reply. if we're not current,
+                // then we shouldn't process / change state.
+                return;
+            }
             @synchronized(self){
                 isCheckingStatus = NO;
             }
+            [MMCloudKitBaseState clearCache];
             if(error){
                 [[MMCloudKitManager sharedManager] changeToStateBasedOnError:error];
             }else{

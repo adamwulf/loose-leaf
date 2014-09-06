@@ -58,22 +58,25 @@
 }
 
 -(void) runState{
-    @synchronized(self){
-        if(isCheckingStatus){
-            return;
-        }
-        isCheckingStatus = YES;
-    }
     NSLog(@"Running state %@", NSStringFromClass([self class]));
     
     if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
         // we can't connect to cloudkit, so move to an error state
-        @synchronized(self){
-            isCheckingStatus = NO;
-        }
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
     }else{
+        @synchronized(self){
+            if(isCheckingStatus){
+                return;
+            }
+            isCheckingStatus = YES;
+        }
         [[SPRSimpleCloudKitManager sharedManager] discoverAllFriendsWithCompletionHandler:^(NSArray *friendRecords, NSError *error) {
+            if([MMCloudKitManager sharedManager].currentState != self){
+                // bail early. the network probably went offline
+                // while we were waiting for a reply. if we're not current,
+                // then we shouldn't process / change state.
+                return;
+            }
             @synchronized(self){
                 isCheckingStatus = NO;
             }

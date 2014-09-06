@@ -12,6 +12,10 @@
 
 @property (readonly) NSArray* friendList;
 
+#pragma mark - Cache
+
++(void) clearCache;
+
 #pragma mark - State
 
 -(void) runState;

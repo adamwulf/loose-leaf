@@ -70,6 +70,7 @@ static NSString* cloudKitFilesPath;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityDidChange) name:kReachabilityChangedNotification object:nil];
         
+        [MMCloudKitBaseState clearCache];
         currentState = [[MMCloudKitBaseState alloc] init];
         
         dispatch_async([MMCloudKitManager messageQueue], ^{
@@ -185,10 +186,12 @@ static NSString* cloudKitFilesPath;
 
 -(void) cloudKitInfoDidChange{
     // handle change in cloudkit
+    [MMCloudKitBaseState clearCache];
     [currentState cloudKitInfoDidChange];
 }
 
 -(void) applicationDidBecomeActive{
+    [MMCloudKitBaseState clearCache];
     [currentState applicationDidBecomeActive];
 }
 
