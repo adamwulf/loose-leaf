@@ -10,4 +10,6 @@
 
 @interface MMOfflineIconView : UIView
 
+@property (nonatomic) BOOL shouldDrawOpaque;
+
 @end

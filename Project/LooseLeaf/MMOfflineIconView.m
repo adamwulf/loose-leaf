@@ -10,6 +10,8 @@
 
 @implementation MMOfflineIconView
 
+@synthesize shouldDrawOpaque;
+
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
         self.opaque = NO;
@@ -27,6 +29,11 @@
         
         UIColor* exclaimColor = [[UIColor whiteColor] colorWithAlphaComponent:.7];
         UIColor* wifiBarColor = [[UIColor whiteColor] colorWithAlphaComponent:.4];
+        
+        if(self.shouldDrawOpaque){
+            exclaimColor = [UIColor blackColor];
+            wifiBarColor = [[UIColor blackColor] colorWithAlphaComponent:.8];
+        }
         
         
         //// Variable Declarations
@@ -131,7 +138,7 @@
 
         CGContextSetBlendMode(context, kCGBlendModeClear);
         [UIColor.whiteColor setStroke];
-        borderExclaimPath.lineWidth = 4;
+        borderExclaimPath.lineWidth = 4 * self.bounds.size.width / 170;
         [borderExclaimPath stroke];
         CGContextSetBlendMode(context, kCGBlendModeNormal);
     }
