@@ -32,6 +32,10 @@
     return NO;
 }
 
+-(void) reset{
+    self.alpha = 0;
+}
+
 -(void) hide{
     if(self.alpha){
         CGRect origFrame = self.frame;

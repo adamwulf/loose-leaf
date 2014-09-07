@@ -278,6 +278,7 @@
 		66BD6E9C15940D7500D4544C /* MMPencilButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9B15940D7400D4544C /* MMPencilButton.m */; };
 		66BD6E9F15941B7B00D4544C /* MMShareButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9E15941B7B00D4544C /* MMShareButton.m */; };
 		66BEBFF419BBEA950032D30C /* MMReplyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BEBFF319BBEA950032D30C /* MMReplyButton.m */; };
+		66BEBFF719BC10450032D30C /* MMOfflineIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BEBFF619BC10450032D30C /* MMOfflineIconView.m */; };
 		66C0C9D0178386B8009491B3 /* MMLikeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C0C9CF178386B8009491B3 /* MMLikeButton.m */; };
 		66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */; };
 		66C2C15B1879EFED00804123 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66B50FCD1862B7D30032F704 /* MessageUI.framework */; };
@@ -836,6 +837,8 @@
 		66BD6E9E15941B7B00D4544C /* MMShareButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MMShareButton.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		66BEBFF219BBEA950032D30C /* MMReplyButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMReplyButton.h; sourceTree = "<group>"; };
 		66BEBFF319BBEA950032D30C /* MMReplyButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMReplyButton.m; sourceTree = "<group>"; };
+		66BEBFF519BC10450032D30C /* MMOfflineIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMOfflineIconView.h; sourceTree = "<group>"; };
+		66BEBFF619BC10450032D30C /* MMOfflineIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMOfflineIconView.m; sourceTree = "<group>"; };
 		66C0C9C91783645E009491B3 /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
 		66C0C9CE178386B8009491B3 /* MMLikeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLikeButton.h; sourceTree = "<group>"; };
 		66C0C9CF178386B8009491B3 /* MMLikeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLikeButton.m; sourceTree = "<group>"; };
@@ -1809,6 +1812,8 @@
 				6650943319AD37E200D58118 /* MMCloudKitShareListVerticalLayout.m */,
 				6650943519AD3ECE00D58118 /* MMCloudKitShareListHorizontalLayout.h */,
 				6650943619AD3ECE00D58118 /* MMCloudKitShareListHorizontalLayout.m */,
+				66BEBFF519BC10450032D30C /* MMOfflineIconView.h */,
+				66BEBFF619BC10450032D30C /* MMOfflineIconView.m */,
 			);
 			name = CloudKit;
 			sourceTree = "<group>";
@@ -2566,6 +2571,7 @@
 				665C593417BD7C42006DECBF /* Tool.m in Sources */,
 				66A7AF1D19A53AF400E0AA29 /* MMCloudKitShareItem.m in Sources */,
 				66277C9F192BC99D003E97C0 /* SSKeychain.m in Sources */,
+				66BEBFF719BC10450032D30C /* MMOfflineIconView.m in Sources */,
 				6693297E1599196E0033E557 /* UIFont+UIBezierCurve.m in Sources */,
 				660116FE19ABBBD70065C1B4 /* MMCloudKitLoggedInState.m in Sources */,
 				66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */,

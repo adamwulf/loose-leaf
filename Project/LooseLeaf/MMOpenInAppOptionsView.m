@@ -34,9 +34,9 @@
 }
 
 -(void) reset{
+    [super reset];
     [buttons makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [buttons removeAllObjects];
-    self.alpha = 0;
 }
 
 -(BOOL) shouldCloseWhenSidebarHides{

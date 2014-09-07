@@ -11,10 +11,12 @@
 #import "MMCloudKitWaitingForLoginState.h"
 #import "MMCloudKitLoggedInState.h"
 #import "MMCloudKitFetchFriendsState.h"
+#import "MMCloudKitOfflineState.h"
 #import "MMCloudKitFriendTableViewCell.h"
 #import "MMCloudKitShareListVerticalLayout.h"
 #import "MMCloudKitShareListHorizontalLayout.h"
 #import "MMCloudKitShareItem.h"
+#import "MMOfflineIconView.h"
 #import "Constants.h"
 #import "MMRotationManager.h"
 #import "NSThread+BlockAdditions.h"
@@ -23,30 +25,12 @@
 @implementation MMCloudKitOptionsView{
     UILabel* cloudKitLabel;
     UICollectionView* listOfFriendsView;
+    MMOfflineIconView* offlineView;
     
     UIButton* loginButton;
     
     NSArray* allKnownFriends;
     NSArray* allFriendsExceptSender;
-}
-
--(void) updateDataSource{
-    allKnownFriends = [MMCloudKitManager sharedManager].currentState.friendList;
-    allFriendsExceptSender = [allKnownFriends filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-        return ![[evaluatedObject objectForKey:@"recordId"] isEqual:[shareItem.cloudKitSenderInfo objectForKey:@"recordId"]];
-    }]];
-    
-#ifdef DEBUG
-    [self addExtraUsers];
-#endif
-    
-    allFriendsExceptSender = [allFriendsExceptSender sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-        NSComparisonResult lastResult = [[obj1 objectForKey:@"lastName"] compare:[obj2 objectForKey:@"lastName"] options:NSCaseInsensitiveSearch];
-        if(lastResult != NSOrderedSame) return lastResult;
-        return [[obj1 objectForKey:@"firstName"] compare:[obj2 objectForKey:@"firstName"] options:NSCaseInsensitiveSearch];
-    }];
-    [listOfFriendsView reloadData];
-    
 }
 
 @synthesize shareItem;
@@ -62,6 +46,11 @@
         cloudKitLabel.text = @"cloudkit!";
         cloudKitLabel.numberOfLines = 0;
         [self addSubview:cloudKitLabel];
+        
+        offlineView = [[MMOfflineIconView alloc] initWithFrame:CGRectMake(0, 0, 140, 140)];
+        offlineView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        offlineView.center = CGPointMake(self.bounds.size.width/2, offlineView.bounds.size.height * 2 / 3);
+        [self addSubview:offlineView];
         
         
         loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -101,6 +90,10 @@
 
 #pragma mark - MMShareOptionsView
 
+-(void) reset{
+    [super reset];
+}
+
 -(void) show{
     [super show];
     UICollectionViewLayout* layout = [self idealLayoutForOrientation:(UIInterfaceOrientation)[MMRotationManager sharedInstance].lastBestOrientation];
@@ -110,7 +103,27 @@
 }
 
 -(void) hide{
+    [super hide];
     NSLog(@"hiding cloudkit view");
+}
+
+-(void) updateDataSource{
+    allKnownFriends = [MMCloudKitManager sharedManager].currentState.friendList;
+    allFriendsExceptSender = [allKnownFriends filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        return ![[evaluatedObject objectForKey:@"recordId"] isEqual:[shareItem.cloudKitSenderInfo objectForKey:@"recordId"]];
+    }]];
+    
+    #ifdef DEBUG
+        [self addExtraUsers];
+    #endif
+    
+    allFriendsExceptSender = [allFriendsExceptSender sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        NSComparisonResult lastResult = [[obj1 objectForKey:@"lastName"] compare:[obj2 objectForKey:@"lastName"] options:NSCaseInsensitiveSearch];
+        if(lastResult != NSOrderedSame) return lastResult;
+        return [[obj1 objectForKey:@"firstName"] compare:[obj2 objectForKey:@"firstName"] options:NSCaseInsensitiveSearch];
+    }];
+    [listOfFriendsView reloadData];
+    
 }
 
 #pragma mark - CloudKit UI
@@ -156,13 +169,19 @@ BOOL hasSent = NO;
     }else{
         loginButton.hidden = YES;
     }
-    if(currentState.friendList){
+    if([currentState isKindOfClass:[MMCloudKitOfflineState class]]){
+        listOfFriendsView.hidden = YES;
+        cloudKitLabel.hidden = YES;
+        offlineView.hidden = NO;
+    }else if(currentState.friendList){
         [self updateDataSource];
         listOfFriendsView.hidden = NO;
         cloudKitLabel.hidden = YES;
+        offlineView.hidden = YES;
     }else{
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = NO;
+        offlineView.hidden = YES;
     }
     [self updateInterfaceBasedOniCloudStatus];
 }

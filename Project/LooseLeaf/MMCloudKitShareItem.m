@@ -61,6 +61,7 @@
 
 -(void) performShareAction{
     if(!isShowingOptionsView){
+        [sharingOptionsView reset];
         [delegate mayShare:self];
         // if a popover controller is dismissed, it
         // adds the dismissal to the main queue async

@@ -12,6 +12,8 @@
 
 @property (nonatomic, readonly) BOOL shouldCloseWhenSidebarHides;
 
+-(void) reset;
+
 -(void) show;
 
 -(void) hide;

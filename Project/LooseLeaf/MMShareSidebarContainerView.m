@@ -130,6 +130,7 @@
             [shareItem willShow];
         }
     }
+    [activeOptionsView reset];
     [activeOptionsView show];
     [super show:animated];
 }
@@ -160,6 +161,7 @@
 -(NSObject<MMShareItem>*) closeActiveSharingOptionsForButton:(UIButton*)button{
     if(activeOptionsView){
         [activeOptionsView removeFromSuperview];
+        [activeOptionsView reset];
     }
     NSObject<MMShareItem>*shareItemForButton = nil;
     for (NSObject<MMShareItem>*shareItem in shareItems) {
@@ -222,6 +224,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         if([shareItem respondsToSelector:@selector(optionsView)]){
             activeOptionsView = [shareItem optionsView];
+            [activeOptionsView reset];
             CGRect frForOptions = buttonView.frame;
             frForOptions.origin.y = buttonView.bounds.size.height;
             frForOptions.size.height = sharingContentView.bounds.size.height - buttonView.frame.origin.y - buttonView.frame.size.height;
