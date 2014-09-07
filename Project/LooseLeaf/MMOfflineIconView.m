@@ -103,7 +103,7 @@
         //// Top of Exclaim Drawing
         CGRect topOfExclaimRect = CGRectMake(CGRectGetMinX(frame) + floor(CGRectGetWidth(frame) * -0.17941) + 0.5, CGRectGetMinY(frame) + floor(CGRectGetHeight(frame) * 0.03526) + 0.5, floor(CGRectGetWidth(frame) * 1.20882) - floor(CGRectGetWidth(frame) * -0.17941), floor(CGRectGetHeight(frame) * 1.54808) - floor(CGRectGetHeight(frame) * 0.03526));
         UIBezierPath* topOfExclaimPath = UIBezierPath.bezierPath;
-        [topOfExclaimPath addArcWithCenter: CGPointMake(CGRectGetMidX(topOfExclaimRect), CGRectGetMidY(topOfExclaimRect)) radius: CGRectGetWidth(topOfExclaimRect) / 2 startAngle: 264 * M_PI/180 endAngle: 276 * M_PI/180 clockwise: YES];
+        [topOfExclaimPath addArcWithCenter: CGPointMake(CGRectGetMidX(topOfExclaimRect), CGRectGetMidY(topOfExclaimRect)) radius: CGRectGetWidth(topOfExclaimRect) / 2 startAngle: 264 * M_PI/180 endAngle: 277 * M_PI/180 clockwise: YES];
         topOfExclaimPath.lineWidth = lineWidth;
         
         CGContextSetBlendMode(context, kCGBlendModeClear);
@@ -113,7 +113,9 @@
         
 
         //// Wifi Dot Drawing
-        UIBezierPath* wifiDotPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + floor(CGRectGetWidth(frame) * 0.46765) + 0.5, CGRectGetMinY(frame) + floor(CGRectGetHeight(frame) * 0.69551) + 0.5, floor(CGRectGetWidth(frame) * 0.57353) - floor(CGRectGetWidth(frame) * 0.46765), floor(CGRectGetHeight(frame) * 0.81090) - floor(CGRectGetHeight(frame) * 0.69551))];
+        UIBezierPath* wifiDotPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + floor(CGRectGetWidth(frame) * 0.46765) + 0.5, CGRectGetMinY(frame) + floor(CGRectGetHeight(frame) * 0.69551) + 0.5,
+                                                                                       floor(CGRectGetWidth(frame) * 0.57353) - floor(CGRectGetWidth(frame) * 0.46765),
+                                                                                       floor(CGRectGetWidth(frame) * 0.57353) - floor(CGRectGetWidth(frame) * 0.46765))];
         
         CGContextSetBlendMode(context, kCGBlendModeClear);
         [UIColor.whiteColor setStroke];
@@ -128,11 +130,11 @@
         
         //// Border Bezier Drawing
         UIBezierPath* borderExclaimPath = UIBezierPath.bezierPath;
-        [borderExclaimPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.44118 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.05769 * CGRectGetHeight(frame))];
-        [borderExclaimPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.59412 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.05769 * CGRectGetHeight(frame))];
-        [borderExclaimPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.54706 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.66987 * CGRectGetHeight(frame))];
-        [borderExclaimPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.48824 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.66987 * CGRectGetHeight(frame))];
-        [borderExclaimPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.44118 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.05769 * CGRectGetHeight(frame))];
+        [borderExclaimPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.44412 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.05769 * CGRectGetHeight(frame))];
+        [borderExclaimPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.59706 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.05769 * CGRectGetHeight(frame))];
+        [borderExclaimPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.55000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.66987 * CGRectGetHeight(frame))];
+        [borderExclaimPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.49118 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.66987 * CGRectGetHeight(frame))];
+        [borderExclaimPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.44412 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.05769 * CGRectGetHeight(frame))];
         [borderExclaimPath closePath];
         borderExclaimPath.lineJoinStyle = kCGLineJoinRound;
 
