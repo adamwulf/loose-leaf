@@ -10,6 +10,8 @@
 
 @interface MMExportablePaperView : MMUndoablePaperView
 
+@property (nonatomic, readonly) NSDictionary* cloudKitSenderInfo;
+
 -(void) exportAsynchronouslyToZipFile;
 
 @end

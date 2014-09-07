@@ -160,6 +160,9 @@ BOOL hasSent = NO;
 #pragma mark - UICollectionViewDataSource
 
 -(NSDictionary*) userInfoForIndexPath:(NSIndexPath*)indexPath{
+    if(shareItem.cloudKitSenderInfo && indexPath.section == 0){
+        return shareItem.cloudKitSenderInfo;
+    }
     MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
     NSArray* friends = currentState.friendList;
     if([friends count] > indexPath.row){
@@ -169,13 +172,28 @@ BOOL hasSent = NO;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if(shareItem.cloudKitSenderInfo && section == 0){
+        return 1;
+    }
     MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
     return [currentState.friendList count];
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    if(shareItem.cloudKitSenderInfo){
+        return 2;
+    }
+    return 1;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     MMCloudKitFriendTableViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMCloudKitFriendTableViewCell" forIndexPath:indexPath];
     [cell setUserInfo:[self userInfoForIndexPath:indexPath] forIndex:indexPath.row];
+    if(shareItem.cloudKitSenderInfo && indexPath.section == 0){
+        cell.shouldShowReplyIcon = YES;
+    }else{
+        cell.shouldShowReplyIcon = NO;
+    }
     return cell;
 }
 

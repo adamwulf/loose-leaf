@@ -262,7 +262,6 @@
 		66B75DB81877D93000EF0A48 /* UIBezierPath+PathElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B75DB71877D93000EF0A48 /* UIBezierPath+PathElement.m */; };
 		66B8A4C9196E43C300E80009 /* MMScrapContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B8A4C8196E43C300E80009 /* MMScrapContainerView.m */; };
 		66BC6F6419B7CEB500460E03 /* SPRMessage+Initials.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BC6F6319B7CEB500460E03 /* SPRMessage+Initials.m */; };
-		66BC6F6719B7D01F00460E03 /* CKDiscoveredUserInfo+Initials.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BC6F6619B7D01F00460E03 /* CKDiscoveredUserInfo+Initials.m */; };
 		66BD6E301591B57B00D4544C /* MMPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E2F1591B57B00D4544C /* MMPaperButton.m */; };
 		66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E331591C37D00D4544C /* UIImage+MCDrawSubImage.m */; };
 		66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */; };
@@ -807,8 +806,6 @@
 		66B8A4C8196E43C300E80009 /* MMScrapContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapContainerView.m; sourceTree = "<group>"; };
 		66BC6F6219B7CEB500460E03 /* SPRMessage+Initials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SPRMessage+Initials.h"; sourceTree = "<group>"; };
 		66BC6F6319B7CEB500460E03 /* SPRMessage+Initials.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SPRMessage+Initials.m"; sourceTree = "<group>"; };
-		66BC6F6519B7D01F00460E03 /* CKDiscoveredUserInfo+Initials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CKDiscoveredUserInfo+Initials.h"; sourceTree = "<group>"; };
-		66BC6F6619B7D01F00460E03 /* CKDiscoveredUserInfo+Initials.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CKDiscoveredUserInfo+Initials.m"; sourceTree = "<group>"; };
 		66BD6E2E1591B57B00D4544C /* MMPaperButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperButton.h; sourceTree = "<group>"; };
 		66BD6E2F1591B57B00D4544C /* MMPaperButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPaperButton.m; sourceTree = "<group>"; };
 		66BD6E321591C37D00D4544C /* UIImage+MCDrawSubImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MCDrawSubImage.h"; sourceTree = "<group>"; };
@@ -991,8 +988,6 @@
 		660E1DA6158FC6120001DA12 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				66BC6F6519B7D01F00460E03 /* CKDiscoveredUserInfo+Initials.h */,
-				66BC6F6619B7D01F00460E03 /* CKDiscoveredUserInfo+Initials.m */,
 				66BC6F6219B7CEB500460E03 /* SPRMessage+Initials.h */,
 				66BC6F6319B7CEB500460E03 /* SPRMessage+Initials.m */,
 				66C2C1631879F3F200804123 /* UIBezierPath+Description.h */,
@@ -2585,7 +2580,6 @@
 				66AC8D8618E8902A00A65036 /* ALAssetsGroup+Properties.m in Sources */,
 				667C6361199FE4BC00E93CD6 /* UIView+MPSnapshotImage.m in Sources */,
 				66AC8D8E18E89C9800A65036 /* MMAlbumRowView.m in Sources */,
-				66BC6F6719B7D01F00460E03 /* CKDiscoveredUserInfo+Initials.m in Sources */,
 				66AC153D1805F2F8005315C8 /* MMLoadImageCache.m in Sources */,
 				6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */,
 				66423DCB19412195000A3709 /* MMDecompressImagePromise.m in Sources */,

@@ -1845,6 +1845,10 @@ int skipAll = NO;
     return [visibleStackHolder peekSubview].scrappedImgViewImage;
 }
 
+-(NSDictionary*) cloudKitSenderInfo{
+    return [[visibleStackHolder peekSubview] cloudKitSenderInfo];
+}
+
 -(void) mayShare:(NSObject<MMShareItem> *)shareItem{
 //    NSLog(@"may share %@", NSStringFromClass([shareItem class]));
 }

@@ -16,6 +16,8 @@
 
 -(UIImage*) imageToShare;
 
+-(NSDictionary*) cloudKitSenderInfo;
+
 -(void) didShare:(NSObject<MMShareItem>*)shareItem;
 
 -(void) mayShare:(NSObject<MMShareItem>*)shareItem;

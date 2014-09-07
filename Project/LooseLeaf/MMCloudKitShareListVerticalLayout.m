@@ -25,8 +25,16 @@
     return self.collectionView.bounds.size.width / 4;
 }
 
+-(NSInteger) entireRowCount{
+    NSInteger ret = 0;
+    for (int section=0; section<[self.collectionView numberOfSections];section++){
+        ret += [self.collectionView numberOfItemsInSection:section];
+    }
+    return ret;
+}
+
 -(CGSize)collectionViewContentSize{
-    NSInteger numItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:0];
+    NSInteger numItems = [self entireRowCount];
     return CGSizeMake(self.collectionView.bounds.size.width, numItems * [self buttonWidth]);
 }
 
@@ -37,16 +45,23 @@
     CGFloat width = self.collectionView.bounds.size.width;
     ret.bounds = CGRectMake(0, 0, width, height);
     
+    NSInteger numRowsInPrevSections = 0;
+    for (int i=0; i<indexPath.section; i++) {
+        numRowsInPrevSections += [self.collectionView numberOfItemsInSection:i];
+    }
+    
+    NSInteger trueIndexInList = numRowsInPrevSections + indexPath.row;
+    
     if(shouldFlip){
         // flip the index of each section of 4
-        int index = floorf(indexPath.row/4)*4 + (4 - indexPath.row % 4 - 1);
+        int index = floorf(trueIndexInList/4)*4 + (4 - trueIndexInList % 4 - 1);
 
         //
         // need to account for the last square of items
         // so that its flush with the previous
         // when it's upside down, even if it doesn't
         // contain 4 items.
-        NSInteger numItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:0];
+        NSInteger numItems = [self entireRowCount];
         if(index >= numItems - numItems%4){
             int offset = 4 - numItems%4;
             if(offset != 4){
@@ -58,7 +73,7 @@
         ret.center = CGPointMake(width/2, index * height + height/2);
         ret.transform = CGAffineTransformMakeRotation(-M_PI);
     }else{
-        ret.center = CGPointMake(width/2, indexPath.row * height + height/2);
+        ret.center = CGPointMake(width/2, trueIndexInList * height + height/2);
         ret.transform = CGAffineTransformIdentity;
     }
     return ret;
@@ -67,7 +82,6 @@
 
 -(NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
 {
-    NSInteger numItems = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:0];
     NSInteger firstIndex = floorf(rect.origin.y / [self buttonWidth]);
     NSInteger lastIndex = floorf((rect.origin.y + rect.size.height) / [self buttonWidth]);
     if(shouldFlip){
@@ -76,10 +90,14 @@
         lastIndex += 4 - lastIndex % 4;
     }
     
+    NSInteger totalCount = 0;
     NSMutableArray* attrs = [NSMutableArray array];
-    for (NSInteger index = firstIndex; index <= lastIndex; index++) {
-        if(index >= 0 && index < numItems){
-            [attrs addObject:[self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]]];
+    for(NSInteger section = 0;section < self.collectionView.numberOfSections;section++){
+        for(NSInteger index = 0;index < [self.collectionView numberOfItemsInSection:section];index++){
+            if(totalCount >= firstIndex && totalCount <= lastIndex){
+                [attrs addObject:[self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:section]]];
+            }
+            totalCount++;
         }
     }
     return attrs;

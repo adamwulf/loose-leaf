@@ -204,6 +204,10 @@
     return shareDelegate.imageToShare;
 }
 
+-(NSDictionary*) cloudKitSenderInfo{
+    return shareDelegate.cloudKitSenderInfo;
+}
+
 
 -(void) mayShare:(NSObject<MMShareItem> *)shareItem{
     // close out all of our sharing options views,

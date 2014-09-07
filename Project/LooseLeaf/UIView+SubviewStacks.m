@@ -14,13 +14,13 @@
     return [self.subviews containsObject:obj];
 }
 
-- (MMUndoablePaperView*) peekSubview{
+- (MMExportablePaperView*) peekSubview{
     return [self.subviews lastObject];
 }
 
-- (MMUndoablePaperView*)popSubview{
+- (MMExportablePaperView*)popSubview{
     // nil if [self count] == 0
-    MMUndoablePaperView* lastObject = [self.subviews lastObject];
+    MMExportablePaperView* lastObject = [self.subviews lastObject];
     if (lastObject){
         [lastObject removeFromSuperview];
     }
@@ -45,7 +45,7 @@
     }
 }
 
-- (MMUndoablePaperView*)bottomSubview{
+- (MMExportablePaperView*)bottomSubview{
     if([self.subviews count]){
         return [self.subviews objectAtIndex:0];
     }

@@ -11,7 +11,6 @@
 #import "MMCloudKitManager.h"
 #import "MMCloudKitOfflineState.h"
 #import "MMCloudKitFetchFriendsState.h"
-#import "CKDiscoveredUserInfo+Initials.h"
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 
 @implementation MMCloudKitFetchingAccountInfoState{

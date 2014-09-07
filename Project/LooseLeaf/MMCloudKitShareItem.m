@@ -98,6 +98,10 @@
     [self.delegate didShare:self toUser:[userInfo objectForKey:@"recordId"] fromButton:avatarButton];
 }
 
+-(NSDictionary*) cloudKitSenderInfo{
+    return [self.delegate cloudKitSenderInfo];
+}
+
 #pragma mark - MMShareViewDelegate
 
 -(void) itemWasTappedInShareView{

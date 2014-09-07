@@ -18,6 +18,7 @@
     MMAvatarButton* avatarButton;
     NSString* zipFileLocation;
     MMCloudKitExportView* exportView;
+    NSDictionary* senderInfo;
     
     // nil if the scrap unzip failed, or if
     // the coordinator hasn't begun
@@ -37,6 +38,7 @@
     if(self = [super init]){
         importAttributes = importInfo.attributes;
         zipFileLocation = importInfo.messageData.path;
+        senderInfo = importInfo.senderInfo;
         exportView = _exportView;
         avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:importInfo.initials];
         [avatarButton addTarget:self action:@selector(avatarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -121,6 +123,11 @@
             NSString* undoPlist = [[tempPathOfIncomingPage stringByAppendingPathComponent:@"undoRedo"] stringByAppendingPathExtension:@"plist"];
             [[NSFileManager defaultManager] removeItemAtPath:undoPlist error:&err];
             
+            // add in the sender info
+            NSString* senderInfoPlist = [[tempPathOfIncomingPage stringByAppendingPathComponent:@"sender"] stringByAppendingPathExtension:@"plist"];
+            if(![NSKeyedArchiver archiveRootObject:senderInfo toFile:senderInfoPlist]){
+                NSLog(@"couldn't archive sender CloudKit account data");
+            }
             
             // move the page into position
             NSString* documentsPath = [NSFileManager documentsPath];

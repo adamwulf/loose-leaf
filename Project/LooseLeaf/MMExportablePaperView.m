@@ -17,8 +17,12 @@
     BOOL isCurrentlySaving;
     BOOL waitingForExport;
     BOOL waitingForSave;
+    NSDictionary* cloudKitSenderInfo;
 }
 
+@synthesize cloudKitSenderInfo;
+
+#pragma mark - Saving
 
 -(void) saveToDisk{
     @synchronized(self){
@@ -51,6 +55,44 @@
         [self exportAsynchronouslyToZipFile];
     }
 }
+
+#pragma mark - Load and Unload
+
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andScale:(CGFloat)scale andContext:(JotGLContext *)context{
+    [super loadStateAsynchronously:async withSize:pagePixelSize andScale:scale andContext:context];
+    
+    if(cloudKitSenderInfo){
+        // already loaded
+        return;
+    }
+    
+    dispatch_block_t block = ^{
+        cloudKitSenderInfo = [NSKeyedUnarchiver unarchiveObjectWithFile:[[self pagesPath] stringByAppendingPathComponent:@"sender.plist"]];
+        if(cloudKitSenderInfo){
+            NSLog(@"loading sender info for page: %@\n%@", self.uuid, cloudKitSenderInfo);
+        }
+    };
+
+    if(async){
+        dispatch_async([self serialBackgroundQueue], block);
+    }else{
+        block();
+    }
+}
+
+-(void) unloadState{
+    [super unloadState];
+    
+    dispatch_block_t block = ^{
+        cloudKitSenderInfo = nil;
+    };
+    
+    dispatch_async([self serialBackgroundQueue], block);
+}
+
+
+
+#pragma mark - Export
 
 -(void) exportAsynchronouslyToZipFile{
     @synchronized(self){
@@ -118,7 +160,10 @@
             typedef BOOL (^FilterBlock)(id evaluatedObject, NSDictionary *bindings);
             FilterBlock(^filter)(NSString* basePath) = ^(NSString* basePath){
                 return ^BOOL(id evaluatedObject, NSDictionary *bindings) {
-                    if([evaluatedObject hasSuffix:@"undoRedo.plist"]){
+                    if([evaluatedObject hasSuffix:@"sender.plist"]){
+                        // don't include sender information
+                        return NO;
+                    }else if([evaluatedObject hasSuffix:@"undoRedo.plist"]){
                         // don't include undo redo
                         return NO;
                     }else if([evaluatedObject hasPrefix:@"Scraps/"]){

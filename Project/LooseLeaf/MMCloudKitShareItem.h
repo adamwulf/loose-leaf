@@ -16,4 +16,6 @@
 
 -(void) userIsAskingToShareTo:(NSDictionary*)userInfo fromButton:(MMBounceButton*)button;
 
+-(NSDictionary*) cloudKitSenderInfo;
+
 @end

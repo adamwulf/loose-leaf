@@ -9,12 +9,13 @@
 #import "MMCloudKitFriendTableViewCell.h"
 #import "UIView+Debug.h"
 #import "UIView+Animations.h"
-#import "CKDiscoveredUserInfo+Initials.h"
+#import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 #import "Constants.h"
 
 @implementation MMCloudKitFriendTableViewCell{
     UILabel* textLabel;
     MMAvatarButton* avatarButton;
+    MMAvatarButton* replyButton;
 }
 
 - (id)initWithFrame:(CGRect)frame{
@@ -33,6 +34,20 @@
         [self addSubview:textLabel];
     }
     return self;
+}
+
+-(void) setShouldShowReplyIcon:(BOOL)shouldShowReplyIcon{
+    if(shouldShowReplyIcon && !replyButton){
+        replyButton = [[MMAvatarButton alloc] initWithFrame:avatarButton.bounds];
+        replyButton.center = CGPointMake(self.bounds.size.width - replyButton.bounds.size.width/2, replyButton.bounds.size.height/2);
+    }else if(!shouldShowReplyIcon && replyButton){
+        [replyButton removeFromSuperview];
+        replyButton = nil;
+    }
+}
+
+-(BOOL) shouldShowReplyIcon{
+    return replyButton;
 }
 
 -(void) setUserInfo:(NSDictionary*)userInfo forIndex:(NSInteger)index{

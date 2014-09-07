@@ -12,6 +12,8 @@
 
 @interface MMCloudKitFriendTableViewCell : UICollectionViewCell
 
+@property (nonatomic, assign) BOOL shouldShowReplyIcon;
+
 -(void) setUserInfo:(NSDictionary*)userInfo forIndex:(NSInteger)index;
 
 -(void) bounce;

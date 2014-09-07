@@ -14,8 +14,8 @@
 #import "MMCloudKitDeclinedPermissionState.h"
 #import "MMCloudKitFetchFriendsState.h"
 #import "MMCloudKitWaitingForLoginState.h"
-#import "CKDiscoveredUserInfo+Initials.h"
 #import "MMCloudKitFetchingAccountInfoState.h"
+#import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 
 @implementation MMCloudKitAskingForPermissionState{
     BOOL isCheckingStatus;
