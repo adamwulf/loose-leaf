@@ -220,7 +220,6 @@
                 [path addLineToPoint:end];
             }else{
                 CGRect iconFrame = CGRectInset(button.drawableFrame, 6, 6);
-                iconFrame.origin.x += 0.05; // manual adjust for screen pixels
                 iconFrame.origin.y += 4;
                 MMOfflineIconView* offlineIcon = [[MMOfflineIconView alloc] initWithFrame:iconFrame];
                 offlineIcon.shouldDrawOpaque = YES;
