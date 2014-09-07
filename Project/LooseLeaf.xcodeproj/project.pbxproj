@@ -277,6 +277,7 @@
 		66BD6E991593E9C400D4544C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66BD6E981593E9C300D4544C /* CoreText.framework */; };
 		66BD6E9C15940D7500D4544C /* MMPencilButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9B15940D7400D4544C /* MMPencilButton.m */; };
 		66BD6E9F15941B7B00D4544C /* MMShareButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BD6E9E15941B7B00D4544C /* MMShareButton.m */; };
+		66BEBFF419BBEA950032D30C /* MMReplyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BEBFF319BBEA950032D30C /* MMReplyButton.m */; };
 		66C0C9D0178386B8009491B3 /* MMLikeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C0C9CF178386B8009491B3 /* MMLikeButton.m */; };
 		66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */; };
 		66C2C15B1879EFED00804123 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66B50FCD1862B7D30032F704 /* MessageUI.framework */; };
@@ -833,6 +834,8 @@
 		66BD6E9B15940D7400D4544C /* MMPencilButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPencilButton.m; sourceTree = "<group>"; };
 		66BD6E9D15941B7A00D4544C /* MMShareButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShareButton.h; sourceTree = "<group>"; };
 		66BD6E9E15941B7B00D4544C /* MMShareButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MMShareButton.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		66BEBFF219BBEA950032D30C /* MMReplyButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMReplyButton.h; sourceTree = "<group>"; };
+		66BEBFF319BBEA950032D30C /* MMReplyButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMReplyButton.m; sourceTree = "<group>"; };
 		66C0C9C91783645E009491B3 /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
 		66C0C9CE178386B8009491B3 /* MMLikeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLikeButton.h; sourceTree = "<group>"; };
 		66C0C9CF178386B8009491B3 /* MMLikeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLikeButton.m; sourceTree = "<group>"; };
@@ -2181,6 +2184,8 @@
 			children = (
 				66EDE42519AE765000A5623B /* MMAvatarButton.h */,
 				66EDE42619AE765000A5623B /* MMAvatarButton.m */,
+				66BEBFF219BBEA950032D30C /* MMReplyButton.h */,
+				66BEBFF319BBEA950032D30C /* MMReplyButton.m */,
 				6693C94718E4C55B0054FF41 /* MMLeftCloseButton.h */,
 				6693C94818E4C55B0054FF41 /* MMLeftCloseButton.m */,
 				6650DD1518F4849800ADF591 /* MMImageViewButton.h */,
@@ -2607,6 +2612,7 @@
 				66A790C019689B810037F01A /* MMScissorResult.m in Sources */,
 				667D98CA19300D0F00625879 /* MMScrapBackgroundView.m in Sources */,
 				661885D418F9AED50016A333 /* MMDarkSidebarButton.m in Sources */,
+				66BEBFF419BBEA950032D30C /* MMReplyButton.m in Sources */,
 				661708E61981B434006A73EF /* FXBlurView.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
 				66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */,

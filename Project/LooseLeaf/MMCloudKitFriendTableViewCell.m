@@ -7,15 +7,16 @@
 //
 
 #import "MMCloudKitFriendTableViewCell.h"
+#import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
+#import "MMReplyButton.h"
 #import "UIView+Debug.h"
 #import "UIView+Animations.h"
-#import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 #import "Constants.h"
 
 @implementation MMCloudKitFriendTableViewCell{
     UILabel* textLabel;
     MMAvatarButton* avatarButton;
-    MMAvatarButton* replyButton;
+    MMReplyButton* replyButton;
 }
 
 - (id)initWithFrame:(CGRect)frame{
@@ -38,8 +39,10 @@
 
 -(void) setShouldShowReplyIcon:(BOOL)shouldShowReplyIcon{
     if(shouldShowReplyIcon && !replyButton){
-        replyButton = [[MMAvatarButton alloc] initWithFrame:avatarButton.bounds];
+        replyButton = [[MMReplyButton alloc] initWithFrame:avatarButton.bounds];
         replyButton.center = CGPointMake(self.bounds.size.width - replyButton.bounds.size.width/2, replyButton.bounds.size.height/2);
+        replyButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        [self addSubview:replyButton];
     }else if(!shouldShowReplyIcon && replyButton){
         [replyButton removeFromSuperview];
         replyButton = nil;
@@ -47,7 +50,7 @@
 }
 
 -(BOOL) shouldShowReplyIcon{
-    return replyButton;
+    return replyButton != nil;
 }
 
 -(void) setUserInfo:(NSDictionary*)userInfo forIndex:(NSInteger)index{
@@ -71,6 +74,7 @@
 
 -(void) bounce{
     [avatarButton bounceButton];
+    [replyButton bounceButton];
     [textLabel bounceWithTransform:CGAffineTransformIdentity stepOne:.2 stepTwo:-.1];
 }
 
