@@ -101,7 +101,6 @@
     [boxPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.57500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.38750 * CGRectGetHeight(frame))];
     [strokeColor setStroke];
     boxPath.lineWidth = 2;
-    [boxPath stroke];
     
     
     //// arrow head Drawing
@@ -109,18 +108,28 @@
     [arrowHeadPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.40000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.28750 * CGRectGetHeight(frame))];
     [arrowHeadPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.50000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.18750 * CGRectGetHeight(frame))];
     [arrowHeadPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.60000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.28750 * CGRectGetHeight(frame))];
-    [strokeColor setStroke];
     arrowHeadPath.lineWidth = 2;
-    [arrowHeadPath stroke];
     
     
     //// arrow body Drawing
     UIBezierPath* arrowBodyPath = [UIBezierPath bezierPath];
     [arrowBodyPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.50000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.56250 * CGRectGetHeight(frame))];
     [arrowBodyPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.50000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.21250 * CGRectGetHeight(frame))];
-    [strokeColor setStroke];
     arrowBodyPath.lineWidth = 2;
+    
+    CGContextSetBlendMode(context, kCGBlendModeClear);
+    [[UIColor whiteColor] setFill];
+    [boxPath stroke];
+    [arrowHeadPath stroke];
     [arrowBodyPath stroke];
+    CGContextSetBlendMode(context, kCGBlendModeNormal);
+
+    
+    [strokeColor setStroke];
+    [boxPath stroke];
+    [arrowHeadPath stroke];
+    [arrowBodyPath stroke];
+
     
     [self drawDropshadowIfSelected];
 
