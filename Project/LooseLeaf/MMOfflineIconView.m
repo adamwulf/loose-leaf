@@ -93,7 +93,7 @@
         [wifiLinePath fill];
         CGContextSetBlendMode(context, kCGBlendModeClear);
         [UIColor.whiteColor setStroke];
-        wifiLinePath.lineWidth = 14;
+        wifiLinePath.lineWidth = 14 * self.bounds.size.width / 170;
         [wifiLinePath stroke];
         CGContextSetBlendMode(context, kCGBlendModeNormal);
 
