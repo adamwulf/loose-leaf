@@ -25,6 +25,17 @@
     UICollectionView* listOfFriendsView;
     
     UIButton* loginButton;
+    
+    NSArray* allKnownFriends;
+    NSArray* allFriendsExceptSender;
+}
+
+-(void) updateDataSource{
+    allKnownFriends = [MMCloudKitManager sharedManager].currentState.friendList;
+    allFriendsExceptSender = [allKnownFriends filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        return ![[evaluatedObject objectForKey:@"recordId"] isEqual:[shareItem.cloudKitSenderInfo objectForKey:@"recordId"]];
+    }]];
+    [listOfFriendsView reloadData];
 }
 
 @synthesize shareItem;
@@ -82,7 +93,7 @@
 -(void) show{
     [super show];
     UICollectionViewLayout* layout = [self idealLayoutForOrientation:(UIInterfaceOrientation)[MMRotationManager sharedInstance].lastBestOrientation];
-    [listOfFriendsView reloadData];
+    [self updateDataSource];
     [listOfFriendsView setCollectionViewLayout:layout animated:NO];
     [self updateInterfaceBasedOniCloudStatus];
 }
@@ -135,7 +146,7 @@ BOOL hasSent = NO;
         loginButton.hidden = YES;
     }
     if(currentState.friendList){
-        [listOfFriendsView reloadData];
+        [self updateDataSource];
         listOfFriendsView.hidden = NO;
         cloudKitLabel.hidden = YES;
     }else{
@@ -159,14 +170,25 @@ BOOL hasSent = NO;
 
 #pragma mark - UICollectionViewDataSource
 
+-(BOOL) friendListContainsSender{
+    if(!shareItem.cloudKitSenderInfo){
+        return NO;
+    }
+    MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
+    for (NSDictionary* friend in currentState.friendList) {
+        if([[shareItem.cloudKitSenderInfo objectForKey:@"recordId"] isEqual:[friend objectForKey:@"recordId"]]){
+            return YES;
+        }
+    }
+    return NO;
+}
+
 -(NSDictionary*) userInfoForIndexPath:(NSIndexPath*)indexPath{
     if(shareItem.cloudKitSenderInfo && indexPath.section == 0){
         return shareItem.cloudKitSenderInfo;
     }
-    MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
-    NSArray* friends = currentState.friendList;
-    if([friends count] > indexPath.row){
-        return [friends objectAtIndex:indexPath.row];
+    if([allFriendsExceptSender count] > indexPath.row){
+        return [allFriendsExceptSender objectAtIndex:indexPath.row];
     }
     return nil;
 }
@@ -175,8 +197,7 @@ BOOL hasSent = NO;
     if(shareItem.cloudKitSenderInfo && section == 0){
         return 1;
     }
-    MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
-    return [currentState.friendList count];
+    return [allFriendsExceptSender count];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
