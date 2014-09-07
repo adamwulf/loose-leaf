@@ -53,24 +53,7 @@
     NSInteger trueIndexInList = numRowsInPrevSections + indexPath.row;
     
     if(shouldFlip){
-        // flip the index of each section of 4
-        int index = floorf(trueIndexInList/4)*4 + (4 - trueIndexInList % 4 - 1);
-
-        //
-        // need to account for the last square of items
-        // so that its flush with the previous
-        // when it's upside down, even if it doesn't
-        // contain 4 items.
-        NSInteger numItems = [self entireRowCount];
-        if(index >= numItems - numItems%4){
-            int offset = 4 - numItems%4;
-            if(offset != 4){
-                index -= offset;
-            }
-        }
-        
-        // set the center + rotation
-        ret.center = CGPointMake(width/2, index * height + height/2);
+        ret.center = CGPointMake(width/2, trueIndexInList * height + height/2);
         ret.transform = CGAffineTransformMakeRotation(-M_PI);
     }else{
         ret.center = CGPointMake(width/2, trueIndexInList * height + height/2);

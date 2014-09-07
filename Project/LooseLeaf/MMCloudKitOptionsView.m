@@ -35,7 +35,18 @@
     allFriendsExceptSender = [allKnownFriends filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
         return ![[evaluatedObject objectForKey:@"recordId"] isEqual:[shareItem.cloudKitSenderInfo objectForKey:@"recordId"]];
     }]];
+    
+#ifdef DEBUG
+    [self addExtraUsers];
+#endif
+    
+    allFriendsExceptSender = [allFriendsExceptSender sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        NSComparisonResult lastResult = [[obj1 objectForKey:@"lastName"] compare:[obj2 objectForKey:@"lastName"] options:NSCaseInsensitiveSearch];
+        if(lastResult != NSOrderedSame) return lastResult;
+        return [[obj1 objectForKey:@"firstName"] compare:[obj2 objectForKey:@"firstName"] options:NSCaseInsensitiveSearch];
+    }];
     [listOfFriendsView reloadData];
+    
 }
 
 @synthesize shareItem;
@@ -245,5 +256,46 @@ BOOL hasSent = NO;
     [listOfFriendsView setCollectionViewLayout:[self idealLayoutForOrientation:orientation] animated:YES];
 }
 
+
+#pragma mark - Debug
+
+-(void) addExtraUsers{
+    NSArray* extra = @[@{@"firstName" : @"Tim",
+                         @"lastName" : @"Cook",
+                         @"initials" : @"TC"},
+                       @{@"firstName" : @"Angela",
+                         @"lastName" : @"Ahrendts",
+                         @"initials" : @"AA"},
+                       @{@"firstName" : @"Eddy",
+                         @"lastName" : @"Cue",
+                         @"initials" : @"EC"},
+                       @{@"firstName" : @"Craig",
+                         @"lastName" : @"Federighi",
+                         @"initials" : @"CF"},
+                       @{@"firstName" : @"Jonny",
+                         @"lastName" : @"Ive",
+                         @"initials" : @"JI"},
+                       @{@"firstName" : @"Luca",
+                         @"lastName" : @"Maestri",
+                         @"initials" : @"LM"},
+                       @{@"firstName" : @"Dan",
+                         @"lastName" : @"Riccio",
+                         @"initials" : @"DR"},
+                       @{@"firstName" : @"Phil",
+                         @"lastName" : @"Schiller",
+                         @"initials" : @"PS"},
+                       @{@"firstName" : @"Bruce",
+                         @"lastName" : @"Sewell",
+                         @"initials" : @"BS"},
+                       @{@"firstName" : @"Jeff",
+                         @"lastName" : @"Williams",
+                         @"initials" : @"JW"}];
+    
+    
+    
+    allKnownFriends = [allKnownFriends arrayByAddingObjectsFromArray:extra];;
+    allFriendsExceptSender = [allFriendsExceptSender arrayByAddingObjectsFromArray:extra];;
+    
+}
 
 @end
