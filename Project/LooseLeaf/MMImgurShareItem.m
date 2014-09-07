@@ -24,6 +24,7 @@
     CGFloat lastProgress;
     CGFloat targetProgress;
     BOOL targetSuccess;
+    NSError* reason;
 }
 
 @synthesize delegate;
@@ -68,6 +69,7 @@
             lastProgress = 0;
             targetSuccess = 0;
             targetProgress = 0;
+            reason = nil;
             [self uploadPhoto:UIImagePNGRepresentation(image) title:@"Quick sketch from Loose Leaf" description:@"http://getlooseleaf.com" progressBlock:^(CGFloat progress) {
                 progress *= .55; // leave last 10 % for when we get the URL
                 if(progress > targetProgress){
@@ -79,6 +81,7 @@
                 targetProgress = 1.0;
                 targetSuccess = YES;
                 conn = nil;
+                reason = nil;
                 [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
                 [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Imgur",
                                                                              kMPEventExportPropResult : @"Success"}];
@@ -86,6 +89,7 @@
                 lastLinkURL = nil;
                 targetProgress = 1.0;
                 targetSuccess = NO;
+                reason = error;
                 conn = nil;
                 
                 NSString* failedReason = [error.userInfo valueForKey:NSLocalizedFailureReasonErrorKey];
@@ -202,7 +206,8 @@
                 [path addLineToPoint:corner];
                 [path addLineToPoint:end];
                 [self animateLinkTo:lastLinkURL];
-            }else if([MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
+            }else if([MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable &&
+                     reason.code != NSURLErrorNotConnectedToInternet){
                 path = [UIBezierPath bezierPath];
                 CGFloat size = 14;
                 CGPoint start = CGPointMake(31, 31);
@@ -214,7 +219,6 @@
                 [path moveToPoint:start];
                 [path addLineToPoint:end];
             }else{
-                NSLog(@"offline icon");
                 CGRect iconFrame = CGRectInset(button.drawableFrame, 7, 7);
                 iconFrame.origin.y += 4;
                 MMOfflineIconView* offlineIcon = [[MMOfflineIconView alloc] initWithFrame:iconFrame];

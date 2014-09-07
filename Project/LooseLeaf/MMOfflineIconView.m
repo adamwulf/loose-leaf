@@ -28,11 +28,11 @@
         CGContextRef context = UIGraphicsGetCurrentContext();
         
         UIColor* exclaimColor = [[UIColor whiteColor] colorWithAlphaComponent:.7];
-        UIColor* wifiBarColor = [[UIColor whiteColor] colorWithAlphaComponent:.4];
+        UIColor* wifiBarColor = [[UIColor whiteColor] colorWithAlphaComponent:.3];
         
         if(self.shouldDrawOpaque){
             exclaimColor = [UIColor blackColor];
-            wifiBarColor = [[UIColor blackColor] colorWithAlphaComponent:.8];
+            wifiBarColor = [[UIColor blackColor] colorWithAlphaComponent:.5];
         }
         
         
