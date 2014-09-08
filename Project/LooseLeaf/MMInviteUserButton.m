@@ -10,9 +10,9 @@
 
 @implementation MMInviteUserButton
 
-#define kAddButtonMinAnimationScale 0.97
-#define kAddButtonMidAnimationScale 0.98
-#define kAddButtonMaxAnimationScale 1.03
+#define kAddButtonMinAnimationScale 0.8
+#define kAddButtonMidAnimationScale 1.0
+#define kAddButtonMaxAnimationScale 1.4
 
 @synthesize delegate;
 

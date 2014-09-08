@@ -18,4 +18,6 @@
 
 -(NSDictionary*) cloudKitSenderInfo;
 
+-(void) didTapInviteButton;
+
 @end

@@ -104,6 +104,12 @@ _Pragma("clang diagnostic pop") \
 #define kMPNumberOfDuplicatePages @"Duplicate Pages Found"
 #define kMPDistanceDrawn @"Distance Drawn (m)"
 #define kMPDistanceErased @"Distance Erased (m)"
+#define kMPNumberOfInvites @"Number of Invites"
+
+// invite properties
+#define kMPEventInvite @"Invite Friend"
+#define kMPEventInvitePropDestination @"Invite Destination"
+#define kMPEventInvitePropResult @"Invite Result"
 
 // MixPanel Events Properties
 #define kMPEventLaunch @"App Launch"

@@ -21,7 +21,6 @@
 #import "Constants.h"
 #import "MMRotationManager.h"
 #import "NSThread+BlockAdditions.h"
-#import "UIView+Debug.h"
 
 @implementation MMCloudKitOptionsView{
     UILabel* cloudKitLabel;
@@ -322,8 +321,6 @@ BOOL hasSent = NO;
                          @"lastName" : @"Williams",
                          @"initials" : @"JW"}];
     
-    
-    
     allKnownFriends = [allKnownFriends arrayByAddingObjectsFromArray:extra];;
     allFriendsExceptSender = [allFriendsExceptSender arrayByAddingObjectsFromArray:extra];;
 }
@@ -331,7 +328,8 @@ BOOL hasSent = NO;
 #pragma mark - MMInviteUserButtonDelegate
 
 -(void) didTapInviteButton{
-    NSLog(@"invite!");
+    [shareItem didTapInviteButton];
+    [shareItem.delegate didShare:shareItem];
 }
 
 @end
