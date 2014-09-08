@@ -34,7 +34,7 @@
 }
 
 -(CGSize)collectionViewContentSize{
-    NSInteger numItems = [self entireRowCount];
+    NSInteger numItems = [self entireRowCount] + 1; // invite button is two items tall
     int offset = 4 - numItems%4;
     if(offset == 4) offset = 0;
     numItems += offset;
@@ -44,19 +44,35 @@
 -(UICollectionViewLayoutAttributes*) layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewLayoutAttributes* ret = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
     
+    BOOL isLastCell = indexPath.section == [self.collectionView numberOfSections] - 1 &&
+    indexPath.row == [self.collectionView numberOfItemsInSection:indexPath.section] - 1;
+
     NSInteger numRowsInPrevSections = 0;
     for (int i=0; i<indexPath.section; i++) {
         numRowsInPrevSections += [self.collectionView numberOfItemsInSection:i];
     }
     NSInteger trueIndexInList = numRowsInPrevSections + indexPath.row;
-
-    CGFloat height = [self buttonWidth];
-    CGFloat width = self.collectionView.bounds.size.width;
-    ret.bounds = CGRectMake(0, 0, width, height);
-    ret.center = CGPointMake(width/2, trueIndexInList * height + height/2);
-    
-
     int transformIndex = trueIndexInList % 4; // 4 cells rotate together
+
+    if(isLastCell && transformIndex == 3){
+        // if our invite button is at the bottom
+        // of the 4 cell group, then push it
+        // into the next group
+        trueIndexInList += 1;
+        transformIndex = 0;
+    }
+
+    CGFloat contactHeight = [self buttonWidth];
+    CGFloat cellHeight = isLastCell ? 150.0 : contactHeight;
+    NSLog(@"cellHeight: %f", cellHeight);
+    CGFloat width = self.collectionView.bounds.size.width;
+    ret.bounds = CGRectMake(0, 0, width, cellHeight);
+    ret.center = CGPointMake(width/2, trueIndexInList * contactHeight + cellHeight/2);
+
+    
+    if(isLastCell){
+        NSLog(@"true index: %d  transform index: %d", (int) trueIndexInList, transformIndex);
+    }
     
     CGPoint translate;
     if(shouldFlip){
@@ -68,6 +84,15 @@
             translate = CGPointMake(-0.5*[self buttonWidth], -0.5*[self buttonWidth]);
         }else{
             translate = CGPointMake(-1.5*[self buttonWidth], -1.5*[self buttonWidth]);
+        }
+        if(isLastCell){
+            if(transformIndex == 0){
+                translate = CGPointMake(+1.0*[self buttonWidth], +1.0*[self buttonWidth]);
+            }else if(transformIndex == 1){
+                translate = CGPointMake(+0.0*[self buttonWidth], -1.0*[self buttonWidth]); // ok
+            }else if(transformIndex == 2){
+                translate = CGPointMake(-1.0*[self buttonWidth], -1.0*[self buttonWidth]);
+            }
         }
         ret.transform = CGAffineTransformMakeRotation(M_PI_2);
     }else{

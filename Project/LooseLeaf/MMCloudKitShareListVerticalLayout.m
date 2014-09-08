@@ -43,7 +43,6 @@
 -(UICollectionViewLayoutAttributes*) layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewLayoutAttributes* ret = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
     
-    
     BOOL isLastCell = indexPath.section == [self.collectionView numberOfSections] - 1 &&
                       indexPath.row == [self.collectionView numberOfItemsInSection:indexPath.section] - 1;
     
