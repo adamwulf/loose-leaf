@@ -6,14 +6,14 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMCloudKitFriendTableViewCell.h"
+#import "MMCloudKitFriendCollectionViewCell.h"
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 #import "MMReplyButton.h"
 #import "UIView+Debug.h"
 #import "UIView+Animations.h"
 #import "Constants.h"
 
-@implementation MMCloudKitFriendTableViewCell{
+@implementation MMCloudKitFriendCollectionViewCell{
     UILabel* textLabel;
     MMAvatarButton* avatarButton;
     MMReplyButton* replyButton;

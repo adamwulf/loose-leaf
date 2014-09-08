@@ -280,6 +280,8 @@
 		66BEBFF419BBEA950032D30C /* MMReplyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BEBFF319BBEA950032D30C /* MMReplyButton.m */; };
 		66BEBFF719BC10450032D30C /* MMOfflineIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BEBFF619BC10450032D30C /* MMOfflineIconView.m */; };
 		66BEBFFA19BD6AAA0032D30C /* MMProgressedImageViewButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BEBFF919BD6AAA0032D30C /* MMProgressedImageViewButton.m */; };
+		66BEBFFD19BE55710032D30C /* MMCloudKitInviteCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BEBFFC19BE55710032D30C /* MMCloudKitInviteCollectionViewCell.m */; };
+		66BEC00019BE55C30032D30C /* MMInviteUserButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BEBFFF19BE55C30032D30C /* MMInviteUserButton.m */; };
 		66C0C9D0178386B8009491B3 /* MMLikeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C0C9CF178386B8009491B3 /* MMLikeButton.m */; };
 		66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */; };
 		66C2C15B1879EFED00804123 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66B50FCD1862B7D30032F704 /* MessageUI.framework */; };
@@ -306,7 +308,7 @@
 		66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DF0B7D159BC30200C5C652 /* UIView+Animations.m */; };
 		66E769CE18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E769CD18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m */; };
 		66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E88A361591853E001A6EBF /* MMPapersIcon.m */; };
-		66EC7B7519ABD5FC00406D97 /* MMCloudKitFriendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EC7B7419ABD5FC00406D97 /* MMCloudKitFriendTableViewCell.m */; };
+		66EC7B7519ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EC7B7419ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.m */; };
 		66EDA79617CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDA79517CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m */; };
 		66EDE41D19AE6DB600A5623B /* MMCloudKitImportContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE41C19AE6DB600A5623B /* MMCloudKitImportContainerView.m */; };
 		66EDE42019AE736E00A5623B /* MMCloudKitExportView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE41F19AE736E00A5623B /* MMCloudKitExportView.m */; };
@@ -842,6 +844,10 @@
 		66BEBFF619BC10450032D30C /* MMOfflineIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMOfflineIconView.m; sourceTree = "<group>"; };
 		66BEBFF819BD6AAA0032D30C /* MMProgressedImageViewButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMProgressedImageViewButton.h; sourceTree = "<group>"; };
 		66BEBFF919BD6AAA0032D30C /* MMProgressedImageViewButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMProgressedImageViewButton.m; sourceTree = "<group>"; };
+		66BEBFFB19BE55710032D30C /* MMCloudKitInviteCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitInviteCollectionViewCell.h; sourceTree = "<group>"; };
+		66BEBFFC19BE55710032D30C /* MMCloudKitInviteCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitInviteCollectionViewCell.m; sourceTree = "<group>"; };
+		66BEBFFE19BE55C30032D30C /* MMInviteUserButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMInviteUserButton.h; sourceTree = "<group>"; };
+		66BEBFFF19BE55C30032D30C /* MMInviteUserButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMInviteUserButton.m; sourceTree = "<group>"; };
 		66C0C9C91783645E009491B3 /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
 		66C0C9CE178386B8009491B3 /* MMLikeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLikeButton.h; sourceTree = "<group>"; };
 		66C0C9CF178386B8009491B3 /* MMLikeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLikeButton.m; sourceTree = "<group>"; };
@@ -895,8 +901,8 @@
 		66E769CD18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+DirectoryOptimizations.m"; sourceTree = "<group>"; };
 		66E88A351591853E001A6EBF /* MMPapersIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPapersIcon.h; sourceTree = "<group>"; };
 		66E88A361591853E001A6EBF /* MMPapersIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPapersIcon.m; sourceTree = "<group>"; };
-		66EC7B7319ABD5FC00406D97 /* MMCloudKitFriendTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitFriendTableViewCell.h; sourceTree = "<group>"; };
-		66EC7B7419ABD5FC00406D97 /* MMCloudKitFriendTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitFriendTableViewCell.m; sourceTree = "<group>"; };
+		66EC7B7319ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitFriendCollectionViewCell.h; sourceTree = "<group>"; };
+		66EC7B7419ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitFriendCollectionViewCell.m; sourceTree = "<group>"; };
 		66EDA79417CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchScrapGestureRecognizer.h; sourceTree = "<group>"; };
 		66EDA79517CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchScrapGestureRecognizer.m; sourceTree = "<group>"; };
 		66EDA7AB17CBD8580067BA63 /* MMPanAndPinchScrapGestureRecognizerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchScrapGestureRecognizerDelegate.h; sourceTree = "<group>"; };
@@ -1809,8 +1815,10 @@
 			children = (
 				66A7AF1E19A53C7900E0AA29 /* MMCloudKitOptionsView.h */,
 				66A7AF1F19A53C7900E0AA29 /* MMCloudKitOptionsView.m */,
-				66EC7B7319ABD5FC00406D97 /* MMCloudKitFriendTableViewCell.h */,
-				66EC7B7419ABD5FC00406D97 /* MMCloudKitFriendTableViewCell.m */,
+				66EC7B7319ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.h */,
+				66EC7B7419ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.m */,
+				66BEBFFB19BE55710032D30C /* MMCloudKitInviteCollectionViewCell.h */,
+				66BEBFFC19BE55710032D30C /* MMCloudKitInviteCollectionViewCell.m */,
 				6650943219AD37E200D58118 /* MMCloudKitShareListVerticalLayout.h */,
 				6650943319AD37E200D58118 /* MMCloudKitShareListVerticalLayout.m */,
 				6650943519AD3ECE00D58118 /* MMCloudKitShareListHorizontalLayout.h */,
@@ -2190,6 +2198,8 @@
 		66EDE42219AE75EF00A5623B /* Share Sidebar */ = {
 			isa = PBXGroup;
 			children = (
+				66BEBFFE19BE55C30032D30C /* MMInviteUserButton.h */,
+				66BEBFFF19BE55C30032D30C /* MMInviteUserButton.m */,
 				66EDE42519AE765000A5623B /* MMAvatarButton.h */,
 				66EDE42619AE765000A5623B /* MMAvatarButton.m */,
 				66BEBFF219BBEA950032D30C /* MMReplyButton.h */,
@@ -2505,7 +2515,7 @@
 				665245761996EA2300C36609 /* Reachability.m in Sources */,
 				667C635E199FE4BC00E93CD6 /* UIColor+MPColor.m in Sources */,
 				66A02F9619A1D1500013EFAE /* EPPZDevice.m in Sources */,
-				66EC7B7519ABD5FC00406D97 /* MMCloudKitFriendTableViewCell.m in Sources */,
+				66EC7B7519ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.m in Sources */,
 				660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */,
 				665CAC1D17B578B0000BD505 /* MMColorButton.m in Sources */,
 				66524509199575A900C36609 /* MMTextShareItem.m in Sources */,
@@ -2520,6 +2530,7 @@
 				66AC8D7D18E754FE00A65036 /* MMAbstractSidebarContentView.m in Sources */,
 				666E254118F5E43600C17295 /* MMPalmTreeButton.m in Sources */,
 				66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */,
+				66BEBFFD19BE55710032D30C /* MMCloudKitInviteCollectionViewCell.m in Sources */,
 				66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */,
 				66BD6E301591B57B00D4544C /* MMPaperButton.m in Sources */,
 				66B1EF34199C2D7D00E9EEF1 /* MMOpenInAppSidebarButton.m in Sources */,
@@ -2668,6 +2679,7 @@
 				667C635C199FE4BC00E93CD6 /* MPSurveyQuestionViewController.m in Sources */,
 				66524517199587A700C36609 /* MMFacebookShareItem.m in Sources */,
 				6693C94618E4BCD90054FF41 /* MMSlidingSidebarView.m in Sources */,
+				66BEC00019BE55C30032D30C /* MMInviteUserButton.m in Sources */,
 				66CE120017D2772400882275 /* MMScrapBorderView.m in Sources */,
 				663523E519A7E32000A26B88 /* MMShareOptionsView.m in Sources */,
 				666E255918F89B1B00C17295 /* MMBorderedCamView.m in Sources */,

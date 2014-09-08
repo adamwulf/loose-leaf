@@ -35,15 +35,23 @@
 
 -(CGSize)collectionViewContentSize{
     NSInteger numItems = [self entireRowCount];
-    return CGSizeMake(self.collectionView.bounds.size.width, numItems * [self buttonWidth]);
+    CGFloat sizeOfPeopleRows = (numItems - 1) * [self buttonWidth];
+    CGFloat sizeOfInviteButton = 1 * 150;
+    return CGSizeMake(self.collectionView.bounds.size.width, sizeOfPeopleRows + sizeOfInviteButton);
 }
 
 -(UICollectionViewLayoutAttributes*) layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewLayoutAttributes* ret = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
     
-    CGFloat height = [self buttonWidth];
+    
+    BOOL isLastCell = indexPath.section == [self.collectionView numberOfSections] - 1 &&
+                      indexPath.row == [self.collectionView numberOfItemsInSection:indexPath.section] - 1;
+    
+    CGFloat contactHeight = [self buttonWidth];
     CGFloat width = self.collectionView.bounds.size.width;
-    ret.bounds = CGRectMake(0, 0, width, height);
+    CGFloat cellHeight = isLastCell ? 150.0 : contactHeight;
+    
+    ret.bounds = CGRectMake(0, 0, width, isLastCell ? 150 : cellHeight);
     
     NSInteger numRowsInPrevSections = 0;
     for (int i=0; i<indexPath.section; i++) {
@@ -53,10 +61,10 @@
     NSInteger trueIndexInList = numRowsInPrevSections + indexPath.row;
     
     if(shouldFlip){
-        ret.center = CGPointMake(width/2, trueIndexInList * height + height/2);
+        ret.center = CGPointMake(width/2, trueIndexInList * contactHeight + cellHeight/2);
         ret.transform = CGAffineTransformMakeRotation(-M_PI);
     }else{
-        ret.center = CGPointMake(width/2, trueIndexInList * height + height/2);
+        ret.center = CGPointMake(width/2, trueIndexInList * contactHeight + cellHeight/2);
         ret.transform = CGAffineTransformIdentity;
     }
     return ret;

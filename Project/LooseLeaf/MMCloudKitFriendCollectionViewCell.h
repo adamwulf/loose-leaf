@@ -10,7 +10,7 @@
 #import <CloudKit/CloudKit.h>
 #import "MMAvatarButton.h"
 
-@interface MMCloudKitFriendTableViewCell : UICollectionViewCell
+@interface MMCloudKitFriendCollectionViewCell : UICollectionViewCell
 
 @property (nonatomic, assign) BOOL shouldShowReplyIcon;
 

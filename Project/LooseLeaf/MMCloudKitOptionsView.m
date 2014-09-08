@@ -12,7 +12,8 @@
 #import "MMCloudKitLoggedInState.h"
 #import "MMCloudKitFetchFriendsState.h"
 #import "MMCloudKitOfflineState.h"
-#import "MMCloudKitFriendTableViewCell.h"
+#import "MMCloudKitFriendCollectionViewCell.h"
+#import "MMCloudKitInviteCollectionViewCell.h"
 #import "MMCloudKitShareListVerticalLayout.h"
 #import "MMCloudKitShareListHorizontalLayout.h"
 #import "MMCloudKitShareItem.h"
@@ -70,11 +71,13 @@
         listOfFriendsView.backgroundColor = [UIColor clearColor];
         listOfFriendsView.opaque = NO;
         listOfFriendsView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        [listOfFriendsView registerClass:[MMCloudKitFriendTableViewCell class] forCellWithReuseIdentifier:@"MMCloudKitFriendTableViewCell"];
+        [listOfFriendsView registerClass:[MMCloudKitFriendCollectionViewCell class] forCellWithReuseIdentifier:@"MMCloudKitFriendCollectionViewCell"];
+        [listOfFriendsView registerClass:[MMCloudKitInviteCollectionViewCell class] forCellWithReuseIdentifier:@"MMCloudKitInviteCollectionViewCell"];
         listOfFriendsView.showsHorizontalScrollIndicator = NO;
         listOfFriendsView.showsVerticalScrollIndicator = NO;
         listOfFriendsView.dataSource = self;
         listOfFriendsView.delegate = self;
+        listOfFriendsView.delaysContentTouches = NO;
         [self addSubview:listOfFriendsView];
 
         [self cloudKitDidChangeState:[MMCloudKitManager sharedManager].currentState];
@@ -227,7 +230,7 @@ BOOL hasSent = NO;
     if(shareItem.cloudKitSenderInfo && section == 0){
         return 1;
     }
-    return [allFriendsExceptSender count];
+    return [allFriendsExceptSender count] + 1; // add 1 for the invite button
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
@@ -238,7 +241,15 @@ BOOL hasSent = NO;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    MMCloudKitFriendTableViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMCloudKitFriendTableViewCell" forIndexPath:indexPath];
+    if(!shareItem.cloudKitSenderInfo || indexPath.section == 1){
+        // if we're in the firend list
+        if(indexPath.row == [allFriendsExceptSender count]){
+            // invite button
+            return [collectionView dequeueReusableCellWithReuseIdentifier:@"MMCloudKitInviteCollectionViewCell" forIndexPath:indexPath];
+            
+        }
+    }
+    MMCloudKitFriendCollectionViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMCloudKitFriendCollectionViewCell" forIndexPath:indexPath];
     [cell setUserInfo:[self userInfoForIndexPath:indexPath] forIndex:indexPath.row];
     if(shareItem.cloudKitSenderInfo && indexPath.section == 0){
         cell.shouldShowReplyIcon = YES;
@@ -251,7 +262,7 @@ BOOL hasSent = NO;
 #pragma mark - UICollectionViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    MMCloudKitFriendTableViewCell* cell = (MMCloudKitFriendTableViewCell*) [collectionView cellForItemAtIndexPath:indexPath];
+    MMCloudKitFriendCollectionViewCell* cell = (MMCloudKitFriendCollectionViewCell*) [collectionView cellForItemAtIndexPath:indexPath];
     MMAvatarButton* avatarButton = [cell stealAvatarButton];
     [shareItem userIsAskingToShareTo:[self userInfoForIndexPath:indexPath] fromButton:avatarButton];
     [cell bounce];
