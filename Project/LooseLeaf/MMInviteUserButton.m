@@ -14,6 +14,8 @@
 #define kAddButtonMidAnimationScale 0.98
 #define kAddButtonMaxAnimationScale 1.03
 
+@synthesize delegate;
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -79,10 +81,7 @@
 
 -(void) tapped:(UITapGestureRecognizer*)tapGesture{
     if(tapGesture.state == UIGestureRecognizerStateRecognized){
-        //
-        // event triggered!
-//        [self.delegate didTapAddButtonInListView];
-        NSLog(@"invite tapped");
+        [self.delegate didTapInviteButton];
     }
 }
 

@@ -245,8 +245,9 @@ BOOL hasSent = NO;
         // if we're in the firend list
         if(indexPath.row == [allFriendsExceptSender count]){
             // invite button
-            return [collectionView dequeueReusableCellWithReuseIdentifier:@"MMCloudKitInviteCollectionViewCell" forIndexPath:indexPath];
-            
+            MMCloudKitInviteCollectionViewCell* invite = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMCloudKitInviteCollectionViewCell" forIndexPath:indexPath];
+            invite.delegate = self;
+            return invite;
         }
     }
     MMCloudKitFriendCollectionViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMCloudKitFriendCollectionViewCell" forIndexPath:indexPath];
@@ -325,7 +326,12 @@ BOOL hasSent = NO;
     
     allKnownFriends = [allKnownFriends arrayByAddingObjectsFromArray:extra];;
     allFriendsExceptSender = [allFriendsExceptSender arrayByAddingObjectsFromArray:extra];;
-    
+}
+
+#pragma mark - MMInviteUserButtonDelegate
+
+-(void) didTapInviteButton{
+    NSLog(@"invite!");
 }
 
 @end

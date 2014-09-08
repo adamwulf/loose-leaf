@@ -7,11 +7,12 @@
 //
 
 #import "MMCloudKitInviteCollectionViewCell.h"
-#import "MMInviteUserButton.h"
 
 @implementation MMCloudKitInviteCollectionViewCell{
     MMInviteUserButton* inviteButton;
 }
+
+@synthesize delegate;
 
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
@@ -19,8 +20,15 @@
         [self addSubview:inviteButton];
         inviteButton.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
         inviteButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        inviteButton.delegate = self;
     }
     return self;
+}
+
+#pragma mark - MMInviteUserButtonDelegate
+
+-(void) didTapInviteButton{
+    [self.delegate didTapInviteButton];
 }
 
 @end

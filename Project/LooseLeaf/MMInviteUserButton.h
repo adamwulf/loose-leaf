@@ -8,6 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol MMInviteUserButtonDelegate
+
+-(void) didTapInviteButton;
+
+@end
+
+
 @interface MMInviteUserButton : UIControl
+
+@property (nonatomic, weak) NSObject<MMInviteUserButtonDelegate>* delegate;
 
 @end

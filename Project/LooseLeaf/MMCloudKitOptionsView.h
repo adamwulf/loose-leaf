@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "MMShareOptionsView.h"
 #import "MMCloudKitManager.h"
+#import "MMInviteUserButton.h"
 
 @class MMCloudKitShareItem;
 
-@interface MMCloudKitOptionsView : MMShareOptionsView<MMCloudKitManagerDelegate,UICollectionViewDataSource,UICollectionViewDelegate>
+@interface MMCloudKitOptionsView : MMShareOptionsView<MMCloudKitManagerDelegate,UICollectionViewDataSource,UICollectionViewDelegate,MMInviteUserButtonDelegate>
 
 @property (nonatomic, weak) MMCloudKitShareItem* shareItem;
 

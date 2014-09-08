@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMInviteUserButton.h"
 
-@interface MMCloudKitInviteCollectionViewCell : UICollectionViewCell
+@interface MMCloudKitInviteCollectionViewCell : UICollectionViewCell<MMInviteUserButtonDelegate>
+
+@property (nonatomic, weak) NSObject<MMInviteUserButtonDelegate>* delegate;
 
 @end
