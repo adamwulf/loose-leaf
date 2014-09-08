@@ -7,7 +7,7 @@
 //
 
 #import "MMTwitterShareItem.h"
-#import "MMImageViewButton.h"
+#import "MMProgressedImageViewButton.h"
 #import "Mixpanel.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
@@ -16,14 +16,14 @@
 #import <Accounts/Accounts.h>
 
 @implementation MMTwitterShareItem{
-    MMImageViewButton* button;
+    MMProgressedImageViewButton* button;
 }
 
 @synthesize delegate;
 
 -(id) init{
     if(self = [super init]){
-        button = [[MMImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        button = [[MMProgressedImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [button setImage:[UIImage imageNamed:@"twitterLarge"]];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -81,6 +81,8 @@
             }];
             
             [delegate didShare:self];
+        }else{
+            [button animateToPercent:1 success:NO completion:nil];
         }
     });
 }

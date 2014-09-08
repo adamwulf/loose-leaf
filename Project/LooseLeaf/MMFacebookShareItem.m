@@ -7,7 +7,7 @@
 //
 
 #import "MMFacebookShareItem.h"
-#import "MMImageViewButton.h"
+#import "MMProgressedImageViewButton.h"
 #import "MMReachabilityManager.h"
 #import "Mixpanel.h"
 #import "Constants.h"
@@ -16,14 +16,14 @@
 #import <Accounts/Accounts.h>
 
 @implementation MMFacebookShareItem{
-    MMImageViewButton* button;
+    MMProgressedImageViewButton* button;
 }
 
 @synthesize delegate;
 
 -(id) init{
     if(self = [super init]){
-        button = [[MMImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        button = [[MMProgressedImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [button setImage:[UIImage imageNamed:@"facebook"]];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -80,6 +80,8 @@
             }];
             
             [delegate didShare:self];
+        }else{
+            [button animateToPercent:1.0 success:NO completion:nil];
         }
     });
 }
