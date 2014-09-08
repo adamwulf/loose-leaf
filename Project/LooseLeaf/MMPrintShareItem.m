@@ -9,18 +9,18 @@
 #import "MMPrintShareItem.h"
 #import "Mixpanel.h"
 #import "MMReachabilityManager.h"
-#import "MMImageViewButton.h"
+#import "MMProgressedImageViewButton.h"
 #import "Constants.h"
 
 @implementation MMPrintShareItem{
-    MMImageViewButton* button;
+    MMProgressedImageViewButton* button;
 }
 
 @synthesize delegate;
 
 -(id) init{
     if(self = [super init]){
-        button = [[MMImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        button = [[MMProgressedImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [button setImage:[UIImage imageNamed:@"print"]];
         button.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
 
@@ -71,6 +71,8 @@
                 [button setNeedsDisplay];
             }];
         });
+    }else{
+        [button animateToPercent:1.0 success:NO completion:nil];
     }
 }
 
