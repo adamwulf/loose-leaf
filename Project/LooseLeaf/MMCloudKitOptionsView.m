@@ -59,8 +59,6 @@
         [self addSubview:offlineView];
         
         needLoginView = [[MMCloudKeyIconLayer alloc] initWithFrame:CGRectMake(0, 0, 180, 180)];
-        needLoginView.borderColor = [UIColor redColor].CGColor;
-        needLoginView.borderWidth = 1;
         [self.layer addSublayer:needLoginView];
         
         animatingCloud = [[MMCloudLoadingIconLayer alloc] initWithFrame:CGRectMake(0, 180, 180, 180)];

@@ -102,8 +102,6 @@
     CAShapeLayer* cloudBorderLayer = [CAShapeLayer layer];
     cloudBorderLayer.bounds = self.bounds;
     cloudBorderLayer.path = cloudPath.CGPath;
-    cloudBorderLayer.borderColor = [UIColor greenColor].CGColor;
-    cloudBorderLayer.borderWidth = 1;
     cloudBorderLayer.anchorPoint = CGPointMake(0, 0);
     cloudBorderLayer.position = CGPointMake(0, 0);
     return cloudBorderLayer;
