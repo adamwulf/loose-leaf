@@ -20,6 +20,7 @@
 #import "MMOfflineIconView.h"
 #import "MMCloudLoadingIconLayer.h"
 #import "MMCloudKeyIconLayer.h"
+#import "MMRotatingKeyDemoLayer.h"
 #import "Constants.h"
 #import "MMRotationManager.h"
 #import "NSThread+BlockAdditions.h"
@@ -66,6 +67,9 @@
         [self.layer addSublayer:animatingCloud];
         
         
+        
+        MMRotatingKeyDemoLayer* rotating = [[MMRotatingKeyDemoLayer alloc] initWithFrame:CGRectMake(0, 360, 180, 180)];
+        [self.layer addSublayer:rotating];
         
         
         loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];

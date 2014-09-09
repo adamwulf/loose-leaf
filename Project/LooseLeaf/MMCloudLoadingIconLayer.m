@@ -37,8 +37,7 @@
         [self addSublayer:cloudBorderLayer];
         
         // setup our location
-        self.anchorPoint = CGPointZero;
-        self.position = frame.origin;
+        self.position = CGPointMake(frame.origin.x + frame.size.width/2, frame.origin.y + frame.size.height/2);
     }
     return self;
 }

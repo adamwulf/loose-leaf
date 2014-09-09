@@ -325,6 +325,7 @@
 		66F4FB2617D912730086E21C /* MMScrapSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2517D912730086E21C /* MMScrapSidebarContentView.m */; };
 		66FA039819BEBAB300AF0DC4 /* MMCloudKeyIconLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA039719BEBAB300AF0DC4 /* MMCloudKeyIconLayer.m */; };
 		66FA039B19BF8CDD00AF0DC4 /* MMCloudLoadingIconLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA039A19BF8CDD00AF0DC4 /* MMCloudLoadingIconLayer.m */; };
+		66FA039F19BFAF3600AF0DC4 /* MMRotatingKeyDemoLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA039E19BFAF3600AF0DC4 /* MMRotatingKeyDemoLayer.m */; };
 		66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */ = {isa = PBXBuildFile; fileRef = 66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */; };
 /* End PBXBuildFile section */
 
@@ -939,6 +940,8 @@
 		66FA039719BEBAB300AF0DC4 /* MMCloudKeyIconLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKeyIconLayer.m; sourceTree = "<group>"; };
 		66FA039919BF8CDD00AF0DC4 /* MMCloudLoadingIconLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudLoadingIconLayer.h; sourceTree = "<group>"; };
 		66FA039A19BF8CDD00AF0DC4 /* MMCloudLoadingIconLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudLoadingIconLayer.m; sourceTree = "<group>"; };
+		66FA039D19BFAF3600AF0DC4 /* MMRotatingKeyDemoLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRotatingKeyDemoLayer.h; sourceTree = "<group>"; };
+		66FA039E19BFAF3600AF0DC4 /* MMRotatingKeyDemoLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRotatingKeyDemoLayer.m; sourceTree = "<group>"; };
 		66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = basegfxbezierclip.license; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -2282,6 +2285,8 @@
 		66FA039C19BFAA5C00AF0DC4 /* SpinningKeyView */ = {
 			isa = PBXGroup;
 			children = (
+				66FA039D19BFAF3600AF0DC4 /* MMRotatingKeyDemoLayer.h */,
+				66FA039E19BFAF3600AF0DC4 /* MMRotatingKeyDemoLayer.m */,
 				66FA039619BEBAB300AF0DC4 /* MMCloudKeyIconLayer.h */,
 				66FA039719BEBAB300AF0DC4 /* MMCloudKeyIconLayer.m */,
 				66FA039919BF8CDD00AF0DC4 /* MMCloudLoadingIconLayer.h */,
@@ -2521,6 +2526,7 @@
 				66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */,
 				662A21D7191D671A00AD9E31 /* Mixpanel.m in Sources */,
 				66524521199591FF00C36609 /* MMTencentWeiboShareItem.m in Sources */,
+				66FA039F19BFAF3600AF0DC4 /* MMRotatingKeyDemoLayer.m in Sources */,
 				66C2C1651879F3F200804123 /* UIBezierPath+Description.m in Sources */,
 				660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */,
 				6650943419AD37E200D58118 /* MMCloudKitShareListVerticalLayout.m in Sources */,
