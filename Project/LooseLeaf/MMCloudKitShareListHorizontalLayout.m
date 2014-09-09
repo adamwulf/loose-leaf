@@ -64,16 +64,10 @@
 
     CGFloat contactHeight = [self buttonWidth];
     CGFloat cellHeight = isLastCell ? 150.0 : contactHeight;
-    NSLog(@"cellHeight: %f", cellHeight);
     CGFloat width = self.collectionView.bounds.size.width;
     ret.bounds = CGRectMake(0, 0, width, cellHeight);
     ret.center = CGPointMake(width/2, trueIndexInList * contactHeight + cellHeight/2);
 
-    
-    if(isLastCell){
-        NSLog(@"true index: %d  transform index: %d", (int) trueIndexInList, transformIndex);
-    }
-    
     CGPoint translate;
     if(shouldFlip){
         if(transformIndex == 0){
@@ -89,7 +83,7 @@
             if(transformIndex == 0){
                 translate = CGPointMake(+1.0*[self buttonWidth], +1.0*[self buttonWidth]);
             }else if(transformIndex == 1){
-                translate = CGPointMake(+0.0*[self buttonWidth], -1.0*[self buttonWidth]); // ok
+                translate = CGPointMake(+0.0*[self buttonWidth], +0.0*[self buttonWidth]);
             }else if(transformIndex == 2){
                 translate = CGPointMake(-1.0*[self buttonWidth], -1.0*[self buttonWidth]);
             }
@@ -104,6 +98,15 @@
             translate = CGPointMake(+0.5*[self buttonWidth], -0.5*[self buttonWidth]);
         }else{
             translate = CGPointMake(+1.5*[self buttonWidth], -1.5*[self buttonWidth]);
+        }
+        if(isLastCell){
+            if(transformIndex == 0){
+                translate = CGPointMake(-1.0*[self buttonWidth], +1.0*[self buttonWidth]);
+            }else if(transformIndex == 1){
+                translate = CGPointMake(+0.0*[self buttonWidth], +0.0*[self buttonWidth]);
+            }else if(transformIndex == 2){
+                translate = CGPointMake(+1.0*[self buttonWidth], -1.0*[self buttonWidth]);
+            }
         }
         ret.transform = CGAffineTransformMakeRotation(-M_PI_2);
     }
