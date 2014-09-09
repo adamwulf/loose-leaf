@@ -6,11 +6,44 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMCloudLoadingIconView.h"
+#import "MMCloudLoadingIconLayer.h"
 #import "NSArray+Extras.h"
 #import "NSArray+MapReduce.h"
 
-@implementation MMCloudLoadingIconView
+@implementation MMCloudLoadingIconLayer
+
+-(id) initWithFrame:(CGRect)frame{
+    if(self = [super init]){
+        // setup our size
+        self.bounds = CGRectMake(0, 0, frame.size.width, frame.size.height);
+        
+        self.opaque = NO;
+        self.backgroundColor = [UIColor clearColor].CGColor;
+
+        UIBezierPath* cloudPath = [self cloudPathForRect:self.bounds];
+        CAShapeLayer* cloudBorderLayer = [self cloudBorderLayerForPath:cloudPath];
+        UIColor* borderColor = [UIColor colorWithRed: 0.221 green: 0.221 blue: 0.219 alpha: 1];
+        cloudBorderLayer.strokeColor = borderColor.CGColor;
+        cloudBorderLayer.lineWidth = 1;
+        cloudBorderLayer.fillColor = [UIColor clearColor].CGColor;
+        
+        CAShapeLayer* cloudMaskLayer = [self cloudBorderLayerForPath:cloudPath];
+        
+        CAGradientLayer* gradientLayer = [self animatingGradientLayer:cloudPath];
+        gradientLayer.mask = cloudMaskLayer;
+        
+        
+        [self addSublayer:gradientLayer];
+        [self addSublayer:cloudBorderLayer];
+        
+        // setup our location
+        self.anchorPoint = CGPointZero;
+        self.position = frame.origin;
+    }
+    return self;
+}
+
+
 
 -(UIBezierPath*) cloudPathForRect:(CGRect)frame{
     UIBezierPath* cloudPath = UIBezierPath.bezierPath;
@@ -95,40 +128,6 @@
 
     return cloudGradientLayer;
 }
-
--(id) initWithFrame:(CGRect)frame{
-    if(self = [super init]){
-        // setup our size
-        self.bounds = CGRectMake(0, 0, frame.size.width, frame.size.height);
-        
-        UIBezierPath* cloudPath = [self cloudPathForRect:self.bounds];
-        CAShapeLayer* cloudBorderLayer = [self cloudBorderLayerForPath:cloudPath];
-        UIColor* borderColor = [UIColor colorWithRed: 0.221 green: 0.221 blue: 0.219 alpha: 1];
-        cloudBorderLayer.strokeColor = borderColor.CGColor;
-        cloudBorderLayer.lineWidth = 1;
-        cloudBorderLayer.fillColor = [UIColor clearColor].CGColor;
-        
-        CAShapeLayer* cloudMaskLayer = [self cloudBorderLayerForPath:cloudPath];
-        
-        CAGradientLayer* gradientLayer = [self animatingGradientLayer:cloudPath];
-        gradientLayer.mask = cloudMaskLayer;
-        
-        
-        [self addSublayer:gradientLayer];
-        [self addSublayer:cloudBorderLayer];
-        
-        // setup our location
-        self.anchorPoint = CGPointZero;
-        self.position = frame.origin;
-    }
-    return self;
-}
-
--(void) setFrame:(CGRect)frame{
-    [super setFrame:frame];
-    // update layer frames
-}
-
 
 
 @end

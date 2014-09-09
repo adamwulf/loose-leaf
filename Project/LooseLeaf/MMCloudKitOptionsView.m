@@ -18,7 +18,7 @@
 #import "MMCloudKitShareListHorizontalLayout.h"
 #import "MMCloudKitShareItem.h"
 #import "MMOfflineIconView.h"
-#import "MMCloudLoadingIconView.h"
+#import "MMCloudLoadingIconLayer.h"
 #import "MMCloudKeyIconView.h"
 #import "Constants.h"
 #import "MMRotationManager.h"
@@ -30,7 +30,7 @@
     UICollectionView* listOfFriendsView;
     MMOfflineIconView* offlineView;
     MMCloudKeyIconView* needLoginView;
-    MMCloudLoadingIconView* animatingCloud;
+    MMCloudLoadingIconLayer* animatingCloud;
     
     UIButton* loginButton;
     
@@ -58,11 +58,11 @@
         [self addSubview:offlineView];
         
         needLoginView = [[MMCloudKeyIconView alloc] initWithFrame:CGRectMake(0, 0, 180, 180)];
-        needLoginView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        needLoginView.center = CGPointMake(self.bounds.size.width/2, needLoginView.bounds.size.height * 2 / 3);
-        [self addSubview:needLoginView];
+        needLoginView.borderColor = [UIColor redColor].CGColor;
+        needLoginView.borderWidth = 1;
+        [self.layer addSublayer:needLoginView];
         
-        animatingCloud = [[MMCloudLoadingIconView alloc] initWithFrame:CGRectMake(0, 180, 180, 180)];
+        animatingCloud = [[MMCloudLoadingIconLayer alloc] initWithFrame:CGRectMake(0, 180, 180, 180)];
         [self.layer addSublayer:animatingCloud];
         
         
@@ -190,23 +190,19 @@ BOOL hasSent = NO;
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = YES;
-        needLoginView.hidden = NO;
     }else if([currentState isKindOfClass:[MMCloudKitOfflineState class]]){
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = NO;
-        needLoginView.hidden = YES;
     }else if(currentState.friendList){
         [self updateDataSource];
         listOfFriendsView.hidden = NO;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = YES;
-        needLoginView.hidden = YES;
     }else{
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = NO;
         offlineView.hidden = YES;
-        needLoginView.hidden = YES;
     }
     [self updateInterfaceBasedOniCloudStatus];
 }
