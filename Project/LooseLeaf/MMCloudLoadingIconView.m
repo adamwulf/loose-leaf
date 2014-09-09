@@ -54,14 +54,6 @@
     for (int i=0;i<maxColors*2;i++) {
         CGFloat angle = sinf(i / (maxColors*2) * M_PI);
         allColors = [allColors arrayByAddingObject:(id)[originalWhite colorWithAlphaComponent:minAlpha + angle*(maxAlpha - minAlpha)].CGColor];
-        
-        
-//        if(i < maxColors){
-//            allColors = [allColors arrayByAddingObject:(id)[originalWhite colorWithAlphaComponent:minAlpha + i/maxColors*(maxAlpha - minAlpha)].CGColor];
-//        }else{
-//            int j = i - maxColors;
-//            allColors = [allColors arrayByAddingObject:(id)[originalWhite colorWithAlphaComponent:maxAlpha - j/maxColors*(maxAlpha - minAlpha)].CGColor];
-//        }
     }
     
     NSArray* steppedColors = @[];
@@ -74,7 +66,6 @@
     
     NSArray* adjustedColors = @[];
     for (NSArray* colors in steppedColors) {
-//        adjustedColors = [adjustedColors arrayByAddingObject:[colors subarrayWithRange:NSMakeRange(0, maxColors)]];
         adjustedColors = [adjustedColors arrayByAddingObject:colors];
     }
     
@@ -106,7 +97,10 @@
 }
 
 -(id) initWithFrame:(CGRect)frame{
-    if(self = [super initWithFrame:frame]){
+    if(self = [super init]){
+        // setup our size
+        self.bounds = CGRectMake(0, 0, frame.size.width, frame.size.height);
+        
         UIBezierPath* cloudPath = [self cloudPathForRect:self.bounds];
         CAShapeLayer* cloudBorderLayer = [self cloudBorderLayerForPath:cloudPath];
         UIColor* borderColor = [UIColor colorWithRed: 0.221 green: 0.221 blue: 0.219 alpha: 1];
@@ -120,12 +114,12 @@
         gradientLayer.mask = cloudMaskLayer;
         
         
+        [self addSublayer:gradientLayer];
+        [self addSublayer:cloudBorderLayer];
         
-
-        
-        
-        [self.layer addSublayer:gradientLayer];
-        [self.layer addSublayer:cloudBorderLayer];
+        // setup our location
+        self.anchorPoint = CGPointZero;
+        self.position = frame.origin;
     }
     return self;
 }

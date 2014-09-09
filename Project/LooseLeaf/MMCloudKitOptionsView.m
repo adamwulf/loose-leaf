@@ -62,11 +62,8 @@
         needLoginView.center = CGPointMake(self.bounds.size.width/2, needLoginView.bounds.size.height * 2 / 3);
         [self addSubview:needLoginView];
         
-        animatingCloud = [[MMCloudLoadingIconView alloc] initWithFrame:CGRectMake(0, 0, 180, 180)];
-        animatingCloud.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        animatingCloud.center = CGPointMake(self.bounds.size.width/2, 180 + animatingCloud.bounds.size.height * 2 / 3);
-        [animatingCloud showDebugBorder];
-        [self addSubview:animatingCloud];
+        animatingCloud = [[MMCloudLoadingIconView alloc] initWithFrame:CGRectMake(0, 180, 180, 180)];
+        [self.layer addSublayer:animatingCloud];
         
         
         
@@ -194,7 +191,6 @@ BOOL hasSent = NO;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = YES;
         needLoginView.hidden = NO;
-        animatingCloud.hidden = NO;
     }else if([currentState isKindOfClass:[MMCloudKitOfflineState class]]){
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
