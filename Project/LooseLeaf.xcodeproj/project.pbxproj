@@ -324,6 +324,7 @@
 		66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */; };
 		66F4FB2617D912730086E21C /* MMScrapSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2517D912730086E21C /* MMScrapSidebarContentView.m */; };
 		66FA039819BEBAB300AF0DC4 /* MMCloudKeyIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA039719BEBAB300AF0DC4 /* MMCloudKeyIconView.m */; };
+		66FA039B19BF8CDD00AF0DC4 /* MMCloudLoadingIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA039A19BF8CDD00AF0DC4 /* MMCloudLoadingIconView.m */; };
 		66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */ = {isa = PBXBuildFile; fileRef = 66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */; };
 /* End PBXBuildFile section */
 
@@ -936,6 +937,8 @@
 		66F4FB2517D912730086E21C /* MMScrapSidebarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapSidebarContentView.m; sourceTree = "<group>"; };
 		66FA039619BEBAB300AF0DC4 /* MMCloudKeyIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKeyIconView.h; sourceTree = "<group>"; };
 		66FA039719BEBAB300AF0DC4 /* MMCloudKeyIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKeyIconView.m; sourceTree = "<group>"; };
+		66FA039919BF8CDD00AF0DC4 /* MMCloudLoadingIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudLoadingIconView.h; sourceTree = "<group>"; };
+		66FA039A19BF8CDD00AF0DC4 /* MMCloudLoadingIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudLoadingIconView.m; sourceTree = "<group>"; };
 		66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = basegfxbezierclip.license; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1077,6 +1080,8 @@
 				66BEBFF619BC10450032D30C /* MMOfflineIconView.m */,
 				66FA039619BEBAB300AF0DC4 /* MMCloudKeyIconView.h */,
 				66FA039719BEBAB300AF0DC4 /* MMCloudKeyIconView.m */,
+				66FA039919BF8CDD00AF0DC4 /* MMCloudLoadingIconView.h */,
+				66FA039A19BF8CDD00AF0DC4 /* MMCloudLoadingIconView.m */,
 			);
 			name = Icons;
 			sourceTree = "<group>";
@@ -2625,6 +2630,7 @@
 				660116E619ABAAFC0065C1B4 /* MMCloudKitBaseState.m in Sources */,
 				6652452A1996B45C00C36609 /* MMPhotoAlbumShareItem.m in Sources */,
 				66B51A2A17AC50F7005B5E09 /* MMBezelInGestureRecognizer.m in Sources */,
+				66FA039B19BF8CDD00AF0DC4 /* MMCloudLoadingIconView.m in Sources */,
 				66DCFBDF1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m in Sources */,
 				6651820A1937B57600CBEAB4 /* MMBackgroundTimer.m in Sources */,
 				6652450319956DFA00C36609 /* MMEmailShareItem.m in Sources */,

@@ -18,16 +18,19 @@
 #import "MMCloudKitShareListHorizontalLayout.h"
 #import "MMCloudKitShareItem.h"
 #import "MMOfflineIconView.h"
+#import "MMCloudLoadingIconView.h"
 #import "MMCloudKeyIconView.h"
 #import "Constants.h"
 #import "MMRotationManager.h"
 #import "NSThread+BlockAdditions.h"
+#import "UIView+Debug.h"
 
 @implementation MMCloudKitOptionsView{
     UILabel* cloudKitLabel;
     UICollectionView* listOfFriendsView;
     MMOfflineIconView* offlineView;
     MMCloudKeyIconView* needLoginView;
+    MMCloudLoadingIconView* animatingCloud;
     
     UIButton* loginButton;
     
@@ -58,6 +61,13 @@
         needLoginView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         needLoginView.center = CGPointMake(self.bounds.size.width/2, needLoginView.bounds.size.height * 2 / 3);
         [self addSubview:needLoginView];
+        
+        animatingCloud = [[MMCloudLoadingIconView alloc] initWithFrame:CGRectMake(0, 0, 180, 180)];
+        animatingCloud.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        animatingCloud.center = CGPointMake(self.bounds.size.width/2, 180 + animatingCloud.bounds.size.height * 2 / 3);
+        [animatingCloud showDebugBorder];
+        [self addSubview:animatingCloud];
+        
         
         
         
@@ -175,7 +185,7 @@ BOOL hasSent = NO;
 
 -(void) cloudKitDidChangeState:(MMCloudKitBaseState *)currentState{
     if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
-//        loginButton.hidden = NO;
+        loginButton.hidden = NO;
     }else{
         loginButton.hidden = YES;
     }
@@ -184,6 +194,7 @@ BOOL hasSent = NO;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = YES;
         needLoginView.hidden = NO;
+        animatingCloud.hidden = NO;
     }else if([currentState isKindOfClass:[MMCloudKitOfflineState class]]){
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
