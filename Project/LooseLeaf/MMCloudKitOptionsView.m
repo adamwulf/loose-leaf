@@ -19,7 +19,7 @@
 #import "MMCloudKitShareItem.h"
 #import "MMOfflineIconView.h"
 #import "MMCloudLoadingIconLayer.h"
-#import "MMCloudKeyIconView.h"
+#import "MMCloudKeyIconLayer.h"
 #import "Constants.h"
 #import "MMRotationManager.h"
 #import "NSThread+BlockAdditions.h"
@@ -29,7 +29,7 @@
     UILabel* cloudKitLabel;
     UICollectionView* listOfFriendsView;
     MMOfflineIconView* offlineView;
-    MMCloudKeyIconView* needLoginView;
+    MMCloudKeyIconLayer* needLoginView;
     MMCloudLoadingIconLayer* animatingCloud;
     
     UIButton* loginButton;
@@ -57,7 +57,7 @@
         offlineView.center = CGPointMake(self.bounds.size.width/2, offlineView.bounds.size.height * 2 / 3);
         [self addSubview:offlineView];
         
-        needLoginView = [[MMCloudKeyIconView alloc] initWithFrame:CGRectMake(0, 0, 180, 180)];
+        needLoginView = [[MMCloudKeyIconLayer alloc] initWithFrame:CGRectMake(0, 0, 180, 180)];
         needLoginView.borderColor = [UIColor redColor].CGColor;
         needLoginView.borderWidth = 1;
         [self.layer addSublayer:needLoginView];

@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMCloudKeyIconView.h"
+#import "MMCloudKeyIconLayer.h"
 
-@implementation MMCloudKeyIconView
+@implementation MMCloudKeyIconLayer
 
 
 -(id) initWithFrame:(CGRect)frame{

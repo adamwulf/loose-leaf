@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MMCloudKeyIconView : CALayer
+@interface MMCloudKeyIconLayer : CALayer
 
 -(id) initWithFrame:(CGRect)frame;
 
