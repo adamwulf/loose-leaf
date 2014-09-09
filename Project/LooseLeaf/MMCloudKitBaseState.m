@@ -23,10 +23,20 @@
 // appropriate reason
 @implementation MMCloudKitBaseState{
     BOOL isCheckingStatus;
+    NSArray* cachedFriendListIfAny;
 }
 
+
+-(id) initWithCachedFriendList:(NSArray*)_friendList{
+    if(self = [super init]){
+        cachedFriendListIfAny = _friendList;
+    }
+    return self;
+}
+
+
 -(NSArray*) friendList{
-    return nil;
+    return cachedFriendListIfAny;
 }
 
 
@@ -122,7 +132,7 @@
                 case SCKMApplicationPermissionStatusGranted:
                     // icloud is available for this user, so we need to
                     // fetch their account info if we don't already have it.
-                    [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchingAccountInfoState alloc] init]];
+                    [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchingAccountInfoState alloc] initWithCachedFriendList:self.friendList]];
                     break;
             }
             break;

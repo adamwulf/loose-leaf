@@ -15,6 +15,7 @@
 
 @implementation MMCloudKitFetchingAccountInfoState{
     BOOL isCheckingStatus;
+    NSArray* cachedFriendListIfAny;
 }
 
 +(NSString*) accountPlistPath{
@@ -71,14 +72,21 @@
                         return;
                     }else{
                         // our records don't match, so delete the file
-                        // and tell the friends state to delete too
+                        // and tell the friends state to delete too.
+                        // then re-run this state w/o any of the cached info
                         [MMCloudKitFetchingAccountInfoState clearAccountCache];
                         [MMCloudKitFetchFriendsState clearFriendsCache];
+                        [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchingAccountInfoState alloc] init]];
+                        return;
                     }
+                }else{
+                    // didn't have any cached account info,
+                    // so lets fetch it and update to the next state
+                    // afterwards
+                    [self fetchAccountInformationInBackgroundForUserRecord:userRecord
+                                                             andSaveToPath:[MMCloudKitFetchingAccountInfoState accountPlistPath]
+                                                andUpdateStateWhenComplete:YES];
                 }
-                [self fetchAccountInformationInBackgroundForUserRecord:userRecord
-                                                         andSaveToPath:[MMCloudKitFetchingAccountInfoState accountPlistPath]
-                                            andUpdateStateWhenComplete:YES];
             }
         }];
     }

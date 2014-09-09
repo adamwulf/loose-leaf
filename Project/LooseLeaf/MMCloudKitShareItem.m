@@ -152,6 +152,9 @@
         }
     }else{
         [self inviteWithEmail];
+        // track how many users try to invite w/o any email/sms installed
+        [[Mixpanel sharedInstance] track:kMPEventInvite properties:@{kMPEventInvitePropDestination : @"None",
+                                                                     kMPEventInvitePropResult : @"Failed"}];
     }
 }
 

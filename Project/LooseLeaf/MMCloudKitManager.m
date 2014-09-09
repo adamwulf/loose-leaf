@@ -205,7 +205,7 @@ static NSString* cloudKitFilesPath;
 -(void) applicationWillEnterForeground{
     NSLog(@"applicationWillEnterForeground - cloudkit manager");
     [MMCloudKitBaseState clearCache];
-    [self changeToState:[[MMCloudKitBaseState alloc] init]];
+    [self changeToState:[[MMCloudKitBaseState alloc] initWithCachedFriendList:currentState.friendList]];
 }
 
 -(void) reachabilityDidChange{
@@ -277,11 +277,11 @@ static NSString* cloudKitFilesPath;
 -(void) resetBadgeCountTo:(NSUInteger)number{
     CKModifyBadgeOperation *oper = [[CKModifyBadgeOperation alloc] initWithBadgeValue:number];
     oper.modifyBadgeCompletionBlock = ^(NSError* err){
-        if(err){
-            NSLog(@"failed to reset badge");
-        }else{
-            [UIApplication sharedApplication].applicationIconBadgeNumber = number;
-            NSLog(@"did reset badge");
+        if(!err){
+            UIUserNotificationSettings* notificationSettings = [[UIApplication sharedApplication] currentUserNotificationSettings];
+            if (notificationSettings.types & UIUserNotificationTypeBadge){
+                [UIApplication sharedApplication].applicationIconBadgeNumber = number;
+            }
         }
     };
     [[CKContainer defaultContainer] addOperation:oper];

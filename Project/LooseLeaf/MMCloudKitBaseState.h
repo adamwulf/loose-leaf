@@ -12,6 +12,8 @@
 
 @property (readonly) NSArray* friendList;
 
+-(id) initWithCachedFriendList:(NSArray*)friendList;
+
 #pragma mark - Cache
 
 +(void) clearCache;
