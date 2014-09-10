@@ -197,12 +197,6 @@
 //        [testImageView showDebugBorder];
 //        [self addSubview:testImageView];
 
-        // auto show the share + icloud sidebar for testing
-//        [[NSThread mainThread] performBlock:^{
-//            [self shareButtonTapped:nil];
-//            [sharePageSidebar debugSwitchToCloudKit];
-//        } afterDelay:.2];
-        
     }
     return self;
 }
@@ -1873,10 +1867,6 @@ int skipAll = NO;
 
 -(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState{
     [sharePageSidebar cloudKitDidChangeState:currentState];
-    if([currentState isKindOfClass:[MMCloudKitFetchFriendsState class]]){
-        // clear out the icon alert
-        [[MMCloudKitManager sharedManager] resetBadgeCountTo:0];
-    }
 }
 
 -(void) willFetchMessage:(SPRMessage *)message{

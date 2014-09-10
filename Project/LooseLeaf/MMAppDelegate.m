@@ -58,7 +58,7 @@
         NSDictionary *dictionary = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
         if (dictionary != nil)
         {
-            [self checkForNotificationToHandleWithUserInfo:dictionary];
+            [self checkForNotificationToHandleWithNotificationInfo:dictionary];
         }
     }
 
@@ -131,10 +131,14 @@
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)info {
     NSLog(@"==== recieved notification!");
     // Do something if the app was in background. Could handle foreground notifications differently
-    if (application.applicationState != UIApplicationStateActive) {
-        [self checkForNotificationToHandleWithUserInfo:info];
+    if (application.applicationState == UIApplicationStateActive) {
+        // notification came through while app was open
+        [self checkForNotificationToHandleWithNotificationInfo:info];
     }else{
-        [self checkForNotificationToHandleWithUserInfo:info];
+        // notification came through while app was in background.
+        // tapping on a notification to launch the app will also
+        // land here.
+        [self checkForNotificationToHandleWithNotificationInfo:info];
     }
 }
 
@@ -146,12 +150,11 @@
     NSLog(@"what");
 }
 
-- (void) checkForNotificationToHandleWithUserInfo:(NSDictionary *)userInfo {
+- (void) checkForNotificationToHandleWithNotificationInfo:(NSDictionary *)userInfo {
     CKQueryNotification *notification = [CKQueryNotification notificationFromRemoteNotificationDictionary:userInfo];
     if([notification isKindOfClass:[CKQueryNotification class]]){
         if(notification.notificationType == CKNotificationTypeQuery){
             [[MMCloudKitManager sharedManager] handleIncomingMessageNotification:notification];
-            [[MMCloudKitManager sharedManager] resetBadgeCountTo:0];
         }
     }
 }

@@ -44,15 +44,6 @@ static dispatch_queue_t messageQueue;
     }
     return messageQueue;
 }
-//
-//static dispatch_queue_t fileSystemQueue;
-//
-//+(dispatch_queue_t) fileSystemQueue{
-//    if(!fileSystemQueue){
-//        fileSystemQueue = dispatch_queue_create("com.milestonemade.looseleaf.cloudkit.fileSystemQueue", DISPATCH_QUEUE_SERIAL);
-//    }
-//    return fileSystemQueue;
-//}
 
 static NSString* cloudKitFilesPath;
 
@@ -64,6 +55,14 @@ static NSString* cloudKitFilesPath;
     return cloudKitFilesPath;
 }
 
++ (MMCloudKitManager *) sharedManager {
+    static dispatch_once_t onceToken;
+    static MMCloudKitManager *manager;
+    dispatch_once(&onceToken, ^{
+        manager = [[MMCloudKitManager alloc] init];
+    });
+    return manager;
+}
 
 - (id)init {
     self = [super init];
@@ -91,13 +90,6 @@ static NSString* cloudKitFilesPath;
     return self;
 }
 
--(void) didBecomeActive{
-    if(needsBootstrap){
-        needsBootstrap = NO;
-        [currentState runState];
-    }
-}
-
 -(NSString*) cachePath{
     if(!cachePath){
         NSString* documentsPath = [NSFileManager documentsPath];
@@ -107,24 +99,106 @@ static NSString* cloudKitFilesPath;
     return cachePath;
 }
 
-+ (MMCloudKitManager *) sharedManager {
-    static dispatch_once_t onceToken;
-    static MMCloudKitManager *manager;
-    dispatch_once(&onceToken, ^{
-        manager = [[MMCloudKitManager alloc] init];
-    });
-    return manager;
-}
+#pragma mark - Status
 
 +(BOOL) isCloudKitAvailable{
     return [CKContainer class] != nil;
 }
+
+-(BOOL) isLoggedInAndReadyForAnything{
+    return [currentState isLoggedInAndReadyForAnything];
+}
+
+#pragma mark - Events
 
 -(void) userRequestedToLogin{
     if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
         [(MMCloudKitWaitingForLoginState*)currentState didAskToLogin];
     }
 }
+
+-(void) didBecomeActive{
+    if(needsBootstrap){
+        needsBootstrap = NO;
+        [currentState runState];
+    }
+    [self resetBadgeCountTo:0];
+}
+
+-(void) fetchAllNewMessages{
+    [[SPRSimpleCloudKitManager sharedManager] fetchNewMessagesWithCompletionHandler:^(NSArray *messages, NSError *error) {
+        if(!error){
+            for(SPRMessage* message in messages){
+                [self processIncomingMessage:message];
+            }
+            [currentState cloudKitDidCheckForNotifications];
+            
+            // clear out any messages that we're tracking
+            // since our last fetch-all-notifications
+            dispatch_async([MMCloudKitManager messageQueue], ^{
+                @synchronized(incomingMessageState){
+                    [incomingMessageState setObject:[NSArray array] forKey:kMessagesSinceLastFetchKey];
+                }
+            });
+        }else{
+            [currentState cloudKitDidCheckForNotifications];
+        }
+    }];
+}
+
+
+-(void) processIncomingMessage:(SPRMessage*)unprocessedMessage{
+    @synchronized(incomingMessageState){
+        NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
+        if([messagesSinceLastFetch containsObject:unprocessedMessage]){
+            return;
+        }
+    }
+    
+    dispatch_async([MMCloudKitManager messageQueue], ^{
+        @synchronized(incomingMessageState){
+            NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
+            if(![messagesSinceLastFetch containsObject:unprocessedMessage]){
+                [incomingMessageState setObject:[messagesSinceLastFetch arrayByAddingObject:unprocessedMessage] forKey:kMessagesSinceLastFetchKey];
+            }
+        }
+    });
+    
+    
+    
+    [self.delegate willFetchMessage:unprocessedMessage];
+    // Do something with the message, like pushing it onto the stack
+    [[SPRSimpleCloudKitManager sharedManager] fetchDetailsForMessage:unprocessedMessage withCompletionHandler:^(SPRMessage *message, NSError *error) {
+        if(!error){
+            ZipArchive* zip = [[ZipArchive alloc] init];
+            if([zip validateZipFileAt:message.messageData.path]){
+                [delegate didFetchMessage:message];
+            }else{
+                NSLog(@"invalid zip file");
+                NSLog(@"zip at: %@", message.messageData.path);
+                if(message.messageData.path){
+                    NSString* savedPath = [[NSFileManager documentsPath] stringByAppendingPathComponent:[message.messageData.path lastPathComponent]];
+                    [[NSFileManager defaultManager] moveItemAtPath:message.messageData.path toPath:savedPath error:nil];
+                    NSLog(@"saved to: %@", savedPath);
+                }
+                [delegate didFailToFetchMessage:message];
+            }
+        }else{
+            NSLog(@"invalid zip file");
+            [delegate didFailToFetchMessage:message];
+        }
+        
+        dispatch_async([MMCloudKitManager messageQueue], ^{
+            // only remove completed messages
+            @synchronized(incomingMessageState){
+                //                NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
+            }
+        });
+    }];
+}
+
+#pragma mark - State Management
+
 
 -(void) changeToState:(MMCloudKitBaseState*)state{
     // cancel any pending calls to the old state
@@ -169,31 +243,6 @@ static NSString* cloudKitFilesPath;
     }
 }
 
--(BOOL) isLoggedInAndReadyForAnything{
-    return [currentState isLoggedInAndReadyForAnything];
-}
-
--(void) fetchAllNewMessages{
-    [[SPRSimpleCloudKitManager sharedManager] fetchNewMessagesWithCompletionHandler:^(NSArray *messages, NSError *error) {
-        if(!error){
-            for(SPRMessage* message in messages){
-                [self processIncomingMessage:message];
-            }
-            [currentState cloudKitDidCheckForNotifications];
-            
-            // clear out any messages that we're tracking
-            // since our last fetch-all-notifications
-            dispatch_async([MMCloudKitManager messageQueue], ^{
-                @synchronized(incomingMessageState){
-                    [incomingMessageState setObject:[NSArray array] forKey:kMessagesSinceLastFetchKey];
-                }
-            });
-        }else{
-            [currentState cloudKitDidCheckForNotifications];
-        }
-    }];
-}
-
 #pragma mark - Notifications
 
 -(void) cloudKitInfoDidChange{
@@ -212,57 +261,6 @@ static NSString* cloudKitFilesPath;
     [currentState reachabilityDidChange];
 }
 
-
--(void) processIncomingMessage:(SPRMessage*)unprocessedMessage{
-    @synchronized(incomingMessageState){
-        NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
-        if([messagesSinceLastFetch containsObject:unprocessedMessage]){
-            return;
-        }
-    }
-    
-    dispatch_async([MMCloudKitManager messageQueue], ^{
-        @synchronized(incomingMessageState){
-            NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
-            if(![messagesSinceLastFetch containsObject:unprocessedMessage]){
-                [incomingMessageState setObject:[messagesSinceLastFetch arrayByAddingObject:unprocessedMessage] forKey:kMessagesSinceLastFetchKey];
-            }
-        }
-    });
-    
-
-    
-    [self.delegate willFetchMessage:unprocessedMessage];
-    // Do something with the message, like pushing it onto the stack
-    [[SPRSimpleCloudKitManager sharedManager] fetchDetailsForMessage:unprocessedMessage withCompletionHandler:^(SPRMessage *message, NSError *error) {
-        if(!error){
-            ZipArchive* zip = [[ZipArchive alloc] init];
-            if([zip validateZipFileAt:message.messageData.path]){
-                [delegate didFetchMessage:message];
-            }else{
-                NSLog(@"invalid zip file");
-                NSLog(@"zip at: %@", message.messageData.path);
-                if(message.messageData.path){
-                    NSString* savedPath = [[NSFileManager documentsPath] stringByAppendingPathComponent:[message.messageData.path lastPathComponent]];
-                    [[NSFileManager defaultManager] moveItemAtPath:message.messageData.path toPath:savedPath error:nil];
-                    NSLog(@"saved to: %@", savedPath);
-                }
-                [delegate didFailToFetchMessage:message];
-            }
-        }else{
-            NSLog(@"invalid zip file");
-            [delegate didFailToFetchMessage:message];
-        }
-        
-        dispatch_async([MMCloudKitManager messageQueue], ^{
-            // only remove completed messages
-            @synchronized(incomingMessageState){
-//                NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
-            }
-        });
-    }];
-}
-
 #pragma mark - Remote Notification
 
 -(void) handleIncomingMessageNotification:(CKQueryNotification*)remoteNotification{
@@ -272,6 +270,7 @@ static NSString* cloudKitFilesPath;
     }];
     [self.currentState cloudKitDidRecievePush];
     [self fetchAllNewMessages];
+    [[MMCloudKitManager sharedManager] resetBadgeCountTo:0];
 }
 
 -(void) resetBadgeCountTo:(NSUInteger)number{
