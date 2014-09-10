@@ -21,15 +21,24 @@
         
         [self addTarget:needLoginView action:@selector(bounceAndFlip) forControlEvents:UIControlEventTouchUpInside];
         [self addTarget:self action:@selector(didTapButton) forControlEvents:UIControlEventTouchUpInside];
-        
-        bounceTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(bounceLightly) userInfo:nil repeats:YES];
     }
     return self;
 }
 
--(void) didTapButton{
+-(void) setupTimer{
+    if(!bounceTimer){
+        bounceTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(bounceLightly) userInfo:nil repeats:YES];
+        [self bounceLightly];
+    }
+}
+
+-(void) tearDownTimer{
     [bounceTimer invalidate];
     bounceTimer = nil;
+}
+
+-(void) didTapButton{
+    [self tearDownTimer];
     self.enabled = NO;
 }
 

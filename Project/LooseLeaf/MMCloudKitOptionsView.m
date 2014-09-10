@@ -99,11 +99,21 @@
     [self updateDataSource];
     [listOfFriendsView setCollectionViewLayout:layout animated:NO];
     [self updateInterfaceBasedOniCloudStatus];
+    [self updateCloudKeyBounceTimer];
 }
 
 -(void) hide{
     [super hide];
+    [cloudKeyButton tearDownTimer];
     NSLog(@"hiding cloudkit view");
+}
+
+-(void) updateCloudKeyBounceTimer{
+    [[NSThread mainThread] performBlock:^{
+        if(self.alpha && [[MMCloudKitManager sharedManager].currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
+            [cloudKeyButton setupTimer];
+        }
+    } afterDelay:.5];
 }
 
 -(void) updateDataSource{
@@ -158,6 +168,13 @@ BOOL hasSent = NO;
 #pragma mark - MMCloudKitManagerDelegate
 
 -(void) cloudKitDidChangeState:(MMCloudKitBaseState *)currentState{
+    if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
+        if(self.alpha){
+            [self updateCloudKeyBounceTimer];
+        }
+    }else{
+        [cloudKeyButton tearDownTimer];
+    }
     if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]] ||
        [currentState isKindOfClass:[MMCloudKitAskingForPermissionState class]]){
         listOfFriendsView.hidden = YES;

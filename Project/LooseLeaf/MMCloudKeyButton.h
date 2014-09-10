@@ -10,4 +10,8 @@
 
 @interface MMCloudKeyButton : UIButton
 
+-(void) setupTimer;
+
+-(void) tearDownTimer;
+
 @end
