@@ -89,13 +89,13 @@
     
     // rotation
     CABasicAnimation *rota1 = [CABasicAnimation animationWithKeyPath:@"transform.rotation.y"];
-    rota1.duration = duration;
+    rota1.duration = duration * .9;
     rota1.removedOnCompletion = YES;
     rota1.fromValue = [NSNumber numberWithFloat: 0];
     rota1.toValue = [NSNumber numberWithFloat: numberOfFlips*fullFlip ];
     
     CABasicAnimation *rota2 = [CABasicAnimation animationWithKeyPath:@"transform.rotation.y"];
-    rota2.duration = duration;
+    rota2.duration = duration * .9;
     rota2.removedOnCompletion = YES;
     rota2.fromValue = [NSNumber numberWithFloat: 0];
     rota2.toValue = [NSNumber numberWithFloat: numberOfFlips*fullFlip ];
@@ -106,8 +106,9 @@
     scale11.duration = duration;
     scale11.values = @[[NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)],
                        [NSValue valueWithCGPoint:CGPointMake(1.0 + bounceSize, 1.0 + bounceSize)],
+                       [NSValue valueWithCGPoint:CGPointMake(0.9, 0.95)],
                        [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)]];
-    scale11.keyTimes = @[@(0), @(.5), @(1.0)];
+    scale11.keyTimes = @[@(0), @(.5), @(0.85), @(1.0)];
     scale11.fillMode = kCAFillModeBoth;
     scale11.calculationMode = kCAAnimationCubic;
     
@@ -116,8 +117,9 @@
     scale21.duration = duration;
     scale21.values = @[[NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)],
                        [NSValue valueWithCGPoint:CGPointMake(1.0 + bounceSize, 1.0 + bounceSize)],
+                       [NSValue valueWithCGPoint:CGPointMake(0.9, 0.95)],
                        [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)]];
-    scale21.keyTimes = @[@(0), @(.5), @(1.0)];
+    scale21.keyTimes = @[@(0), @(.5), @(0.85), @(1.0)];
     scale21.fillMode = kCAFillModeBoth;
     scale21.calculationMode = kCAAnimationCubic;
     
