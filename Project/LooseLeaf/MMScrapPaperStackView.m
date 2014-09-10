@@ -197,10 +197,11 @@
 //        [testImageView showDebugBorder];
 //        [self addSubview:testImageView];
 
-        [[NSThread mainThread] performBlock:^{
-            [self shareButtonTapped:nil];
-            [sharePageSidebar debugSwitchToCloudKit];
-        } afterDelay:.2];
+        // auto show the share + icloud sidebar for testing
+//        [[NSThread mainThread] performBlock:^{
+//            [self shareButtonTapped:nil];
+//            [sharePageSidebar debugSwitchToCloudKit];
+//        } afterDelay:.2];
         
     }
     return self;
