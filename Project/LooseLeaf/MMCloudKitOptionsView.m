@@ -30,8 +30,7 @@
     UILabel* cloudKitLabel;
     UICollectionView* listOfFriendsView;
     MMOfflineIconView* offlineView;
-    MMCloudKeyIconLayer* needLoginView;
-    MMCloudLoadingIconLayer* animatingCloud;
+    MMRotatingKeyDemoLayer* needLoginView;
     
     UIButton* loginButton;
     
@@ -58,16 +57,12 @@
         offlineView.center = CGPointMake(self.bounds.size.width/2, offlineView.bounds.size.height * 2 / 3);
         [self addSubview:offlineView];
         
-        needLoginView = [[MMCloudKeyIconLayer alloc] initWithFrame:CGRectMake(0, 0, 180, 180)];
+        needLoginView = [[MMRotatingKeyDemoLayer alloc] initWithFrame:CGRectMake(0, 360, 180, 180)];
         [self.layer addSublayer:needLoginView];
         
-        animatingCloud = [[MMCloudLoadingIconLayer alloc] initWithFrame:CGRectMake(0, 180, 180, 180)];
-        [self.layer addSublayer:animatingCloud];
-        
-        
-        
-        MMRotatingKeyDemoLayer* rotating = [[MMRotatingKeyDemoLayer alloc] initWithFrame:CGRectMake(0, 360, 180, 180)];
-        [self.layer addSublayer:rotating];
+        UIButton* button = [[UIButton alloc] initWithFrame:needLoginView.frame];
+        [button addTarget:needLoginView action:@selector(bounceAndFlip) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:button];
         
         
         loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];

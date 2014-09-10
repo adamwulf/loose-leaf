@@ -118,10 +118,9 @@
     colorsAnimation.removedOnCompletion = NO;
     colorsAnimation.duration = 1.5f;
     colorsAnimation.repeatCount = HUGE_VALF; // repeat forever
-    
-    cloudGradientLayer.colors = [adjustedColors firstObject];
     [cloudGradientLayer addAnimation:colorsAnimation forKey:@"colorAnimation"];
     
+    cloudGradientLayer.colors = [adjustedColors firstObject];
 
     return cloudGradientLayer;
 }

@@ -197,6 +197,8 @@
 //        [testImageView showDebugBorder];
 //        [self addSubview:testImageView];
 
+        [self performSelector:@selector(shareButtonTapped:) withObject:nil afterDelay:.5];
+        
     }
     return self;
 }
