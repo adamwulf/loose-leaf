@@ -11,10 +11,14 @@
 #import "MMCloudKitManagerDelegate.h"
 #import "MMVector.h"
 
-@interface MMShareSidebarContainerView : MMSlidingSidebarContainerView<MMShareItemDelegate,MMCloudKitManagerDelegate>
+@interface MMShareSidebarContainerView : MMSlidingSidebarContainerView<MMShareItemDelegate>
 
 @property (weak) NSObject<MMShareItemDelegate>* shareDelegate;
 
 -(void) updateInterfaceTo:(UIInterfaceOrientation)orientation;
+
+#pragma mark - Cloud Kit
+
+-(void) cloudKitDidChangeState:(MMCloudKitBaseState *)currentState;
 
 @end

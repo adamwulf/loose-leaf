@@ -9,7 +9,7 @@
 #import "MMCloudKitImportCoordinator.h"
 #import "NSString+UUID.h"
 #import "NSFileManager+DirectoryOptimizations.h"
-#import "MMCloudKitExportView.h"
+#import "MMCloudKitImportExportView.h"
 #import "SPRMessage+Initials.h"
 #import <ZipArchive/ZipArchive.h>
 #import "Mixpanel.h"
@@ -17,7 +17,7 @@
 @implementation MMCloudKitImportCoordinator{
     MMAvatarButton* avatarButton;
     NSString* zipFileLocation;
-    MMCloudKitExportView* exportView;
+    MMCloudKitImportExportView* exportView;
     NSDictionary* senderInfo;
     
     // nil if the scrap unzip failed, or if
@@ -34,7 +34,7 @@
 @synthesize avatarButton;
 @synthesize isReady;
 
--(id) initWithImport:(SPRMessage*)importInfo forExportView:(MMCloudKitExportView*)_exportView{
+-(id) initWithImport:(SPRMessage*)importInfo forExportView:(MMCloudKitImportExportView*)_exportView{
     if(self = [super init]){
         importAttributes = importInfo.attributes;
         zipFileLocation = importInfo.messageData.path;

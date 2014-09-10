@@ -176,7 +176,6 @@ static NSString* cloudKitFilesPath;
         return;
     }
 
-    [self.delegate willFetchMessage:unprocessedMessage];
     // Do something with the message, like pushing it onto the stack
     [[SPRSimpleCloudKitManager sharedManager] fetchDetailsForMessage:unprocessedMessage withCompletionHandler:^(SPRMessage *message, NSError *error) {
         if(!error){
@@ -194,7 +193,7 @@ static NSString* cloudKitFilesPath;
                 [delegate didFailToFetchMessage:message];
             }
         }else{
-            NSLog(@"invalid zip file");
+            NSLog(@"cloudkit error fetching message");
             [delegate didFailToFetchMessage:message];
         }
     }];

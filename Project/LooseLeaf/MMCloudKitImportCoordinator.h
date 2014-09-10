@@ -10,7 +10,7 @@
 #import "MMCloudKitManager.h"
 #import "MMAvatarButton.h"
 
-@class MMCloudKitExportView;
+@class MMCloudKitImportExportView;
 
 @interface MMCloudKitImportCoordinator : NSObject
 
@@ -18,7 +18,7 @@
 @property (readonly) NSString* uuidOfIncomingPage;
 @property (readonly) BOOL isReady;
 
--(id) initWithImport:(SPRMessage*)importInfo forExportView:(MMCloudKitExportView*)_exportView;
+-(id) initWithImport:(SPRMessage*)importInfo forExportView:(MMCloudKitImportExportView*)_exportView;
 
 -(void) begin;
 

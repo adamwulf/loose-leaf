@@ -249,22 +249,10 @@
     [shareDelegate didShare:shareItem toUser:userId fromButton:button];
 }
 
-#pragma mark - MMCloudKitManagerDelegate
+#pragma mark - Cloud Kit State
 
 -(void) cloudKitDidChangeState:(MMCloudKitBaseState *)currentState{
     [cloudKitShareItem cloudKitDidChangeState:currentState];
-}
-
--(void) willFetchMessage:(SPRMessage *)message{
-    // noop
-}
-
--(void) didFetchMessage:(SPRMessage *)message{
-    // noop
-}
-
--(void) didFailToFetchMessage:(SPRMessage *)message{
-    // noop
 }
 
 

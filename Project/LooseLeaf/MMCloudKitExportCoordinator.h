@@ -11,14 +11,14 @@
 #import "MMAvatarButton.h"
 #import <CloudKit/CloudKit.h>
 
-@class MMCloudKitExportView;
+@class MMCloudKitImportExportView;
 
 @interface MMCloudKitExportCoordinator : NSObject
 
 @property (nonatomic, strong) MMAvatarButton* avatarButton;
 @property (readonly) MMExportablePaperView* page;
 
--(id) initWithPage:(MMUndoablePaperView*)page andRecipient:(CKRecordID*)userId withButton:(MMAvatarButton*)avatarButton forExportView:(MMCloudKitExportView*)exportView;
+-(id) initWithPage:(MMUndoablePaperView*)page andRecipient:(CKRecordID*)userId withButton:(MMAvatarButton*)avatarButton forExportView:(MMCloudKitImportExportView*)exportView;
 
 -(void) zipGenerationIsCompleteAt:(NSString*)pathToZipFile;
 -(void) zipGenerationFailed;

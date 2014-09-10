@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMCloudKitExportView.h"
+#import "MMCloudKitImportExportView.h"
 #import "MMUntouchableView.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMCloudKitExportCoordinator.h"
@@ -14,7 +14,7 @@
 #import "MMScrapPaperStackView.h"
 #import "Constants.h"
 
-@implementation MMCloudKitExportView{
+@implementation MMCloudKitImportExportView{
     NSMutableSet* disappearingButtons;
     NSMutableArray* activeExports;
     NSMutableArray* activeImports;
@@ -214,10 +214,6 @@
 #pragma mark - MMCloudKitManagerDelegate
 
 -(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState{
-    // noop
-}
-
--(void) willFetchMessage:(SPRMessage*)message{
     // noop
 }
 

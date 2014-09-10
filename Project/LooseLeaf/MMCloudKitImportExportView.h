@@ -15,7 +15,7 @@
 
 @class MMScrapPaperStackView;
 
-@interface MMCloudKitExportView : MMUntouchableView<MMCloudKitManagerDelegate>
+@interface MMCloudKitImportExportView : MMUntouchableView<MMCloudKitManagerDelegate>
 
 @property (nonatomic, strong) MMUntouchableView* animationHelperView;
 @property (nonatomic, weak) MMScrapPaperStackView* stackView;

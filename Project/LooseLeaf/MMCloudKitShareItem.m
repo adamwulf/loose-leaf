@@ -122,18 +122,6 @@
     [sharingOptionsView cloudKitDidChangeState:currentState];
 }
 
--(void) willFetchMessage:(SPRMessage*)message{
-    // noop
-}
-
--(void) didFetchMessage:(SPRMessage *)message{
-    // noop
-}
-
--(void) didFailToFetchMessage:(SPRMessage *)message{
-    // noop
-}
-
 #pragma mark - Invite
 
 -(void) didTapInviteButton{

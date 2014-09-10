@@ -29,7 +29,7 @@
 #import "MMTrashManager.h"
 #import "MMShareSidebarContainerView.h"
 #import "MMCloudKitImportContainerView.h"
-#import "MMCloudKitExportView.h"
+#import "MMCloudKitImportExportView.h"
 #import "MMCloudKitManager.h"
 #import "MMCloudKitFetchFriendsState.h"
 
@@ -60,7 +60,7 @@
     // cloudkit import sidebar
     MMTextButton* cloudKitImportButton;
     MMCloudKitImportContainerView* cloudKitImportSidebar;
-    MMCloudKitExportView* cloudKitExportView;
+    MMCloudKitImportExportView* cloudKitExportView;
 
     NSTimer* debugTimer;
     NSTimer* drawTimer;
@@ -133,7 +133,7 @@
         }
 
         // export icons will show here, below the sidebars but over the stacks
-        cloudKitExportView = [[MMCloudKitExportView alloc] initWithFrame:self.bounds];
+        cloudKitExportView = [[MMCloudKitImportExportView alloc] initWithFrame:self.bounds];
         cloudKitExportView.stackView = self;
         [self addSubview:cloudKitExportView];
 
@@ -1867,10 +1867,6 @@ int skipAll = NO;
 
 -(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState{
     [sharePageSidebar cloudKitDidChangeState:currentState];
-}
-
--(void) willFetchMessage:(SPRMessage *)message{
-    [cloudKitExportView willFetchMessage:message];
 }
 
 -(void) didFetchMessage:(SPRMessage *)message{

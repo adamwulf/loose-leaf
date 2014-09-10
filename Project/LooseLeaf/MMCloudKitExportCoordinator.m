@@ -10,7 +10,7 @@
 #import "MMCloudKitManager.h"
 #import "MMCloudKitLoggedInState.h"
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
-#import "MMCloudKitExportView.h"
+#import "MMCloudKitImportExportView.h"
 #import "MMExportablePaperView.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "NSThread+BlockAdditions.h"
@@ -26,7 +26,7 @@
     NSError* error;
     MMExportablePaperView* page;
     CKRecordID* userId;
-    MMCloudKitExportView* exportView;
+    MMCloudKitImportExportView* exportView;
     
     BOOL zipIsComplete;
     NSDictionary* zipAttributes;
@@ -35,7 +35,7 @@
 @synthesize avatarButton;
 @synthesize page;
 
--(id) initWithPage:(MMExportablePaperView*)_page andRecipient:(CKRecordID*)_userId withButton:(MMAvatarButton*)_avatarButton forExportView:(MMCloudKitExportView*)_exportView{
+-(id) initWithPage:(MMExportablePaperView*)_page andRecipient:(CKRecordID*)_userId withButton:(MMAvatarButton*)_avatarButton forExportView:(MMCloudKitImportExportView*)_exportView{
     if(self = [super init]){
         page = _page;
         userId = _userId;

@@ -311,7 +311,7 @@
 		66EC7B7519ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EC7B7419ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.m */; };
 		66EDA79617CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDA79517CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m */; };
 		66EDE41D19AE6DB600A5623B /* MMCloudKitImportContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE41C19AE6DB600A5623B /* MMCloudKitImportContainerView.m */; };
-		66EDE42019AE736E00A5623B /* MMCloudKitExportView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE41F19AE736E00A5623B /* MMCloudKitExportView.m */; };
+		66EDE42019AE736E00A5623B /* MMCloudKitImportExportView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE41F19AE736E00A5623B /* MMCloudKitImportExportView.m */; };
 		66EDE42719AE765000A5623B /* MMAvatarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE42619AE765000A5623B /* MMAvatarButton.m */; };
 		66EDE42A19AFDD2D00A5623B /* MMCloudKitExportCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE42919AFDD2D00A5623B /* MMCloudKitExportCoordinator.m */; };
 		66EDE42D19AFE27300A5623B /* MMExportablePaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE42C19AFE27300A5623B /* MMExportablePaperView.m */; };
@@ -913,8 +913,8 @@
 		66EDA7AB17CBD8580067BA63 /* MMPanAndPinchScrapGestureRecognizerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchScrapGestureRecognizerDelegate.h; sourceTree = "<group>"; };
 		66EDE41B19AE6DB600A5623B /* MMCloudKitImportContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitImportContainerView.h; sourceTree = "<group>"; };
 		66EDE41C19AE6DB600A5623B /* MMCloudKitImportContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitImportContainerView.m; sourceTree = "<group>"; };
-		66EDE41E19AE736E00A5623B /* MMCloudKitExportView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitExportView.h; sourceTree = "<group>"; };
-		66EDE41F19AE736E00A5623B /* MMCloudKitExportView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitExportView.m; sourceTree = "<group>"; };
+		66EDE41E19AE736E00A5623B /* MMCloudKitImportExportView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitImportExportView.h; sourceTree = "<group>"; };
+		66EDE41F19AE736E00A5623B /* MMCloudKitImportExportView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitImportExportView.m; sourceTree = "<group>"; };
 		66EDE42519AE765000A5623B /* MMAvatarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAvatarButton.h; sourceTree = "<group>"; };
 		66EDE42619AE765000A5623B /* MMAvatarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAvatarButton.m; sourceTree = "<group>"; };
 		66EDE42819AFDD2D00A5623B /* MMCloudKitExportCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitExportCoordinator.h; sourceTree = "<group>"; };
@@ -2166,8 +2166,8 @@
 			children = (
 				66EDE41B19AE6DB600A5623B /* MMCloudKitImportContainerView.h */,
 				66EDE41C19AE6DB600A5623B /* MMCloudKitImportContainerView.m */,
-				66EDE41E19AE736E00A5623B /* MMCloudKitExportView.h */,
-				66EDE41F19AE736E00A5623B /* MMCloudKitExportView.m */,
+				66EDE41E19AE736E00A5623B /* MMCloudKitImportExportView.h */,
+				66EDE41F19AE736E00A5623B /* MMCloudKitImportExportView.m */,
 				66EDE42819AFDD2D00A5623B /* MMCloudKitExportCoordinator.h */,
 				66EDE42919AFDD2D00A5623B /* MMCloudKitExportCoordinator.m */,
 				66EDE48419B3BD6C00A5623B /* MMCloudKitImportCoordinator.h */,
@@ -2593,7 +2593,7 @@
 				66BD6E941593E1D800D4544C /* MMImageButton.m in Sources */,
 				66A7AF2019A53C7900E0AA29 /* MMCloudKitOptionsView.m in Sources */,
 				66B75DB51877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.m in Sources */,
-				66EDE42019AE736E00A5623B /* MMCloudKitExportView.m in Sources */,
+				66EDE42019AE736E00A5623B /* MMCloudKitImportExportView.m in Sources */,
 				6627DFA719003DF900592EEF /* CaptureSessionManager.m in Sources */,
 				665182071937B41800CBEAB4 /* MMMemoryProfileView.m in Sources */,
 				66BD6E971593E98D00D4544C /* MMTextButton.m in Sources */,

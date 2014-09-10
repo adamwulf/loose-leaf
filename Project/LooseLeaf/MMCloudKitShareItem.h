@@ -12,12 +12,16 @@
 #import <CloudKit/CloudKit.h>
 #import "MMCloudKitManagerDelegate.h"
 
-@interface MMCloudKitShareItem : NSObject<MMShareItem,MMOpenInAppOptionsViewDelegate,MMCloudKitManagerDelegate>
+@interface MMCloudKitShareItem : NSObject<MMShareItem,MMOpenInAppOptionsViewDelegate>
 
 -(void) userIsAskingToShareTo:(NSDictionary*)userInfo fromButton:(MMBounceButton*)button;
 
 -(NSDictionary*) cloudKitSenderInfo;
 
 -(void) didTapInviteButton;
+
+#pragma mark - Cloud Kit
+
+-(void) cloudKitDidChangeState:(MMCloudKitBaseState *)currentState;
 
 @end

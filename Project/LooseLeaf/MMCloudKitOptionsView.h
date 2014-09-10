@@ -13,8 +13,12 @@
 
 @class MMCloudKitShareItem;
 
-@interface MMCloudKitOptionsView : MMShareOptionsView<MMCloudKitManagerDelegate,UICollectionViewDataSource,UICollectionViewDelegate,MMInviteUserButtonDelegate>
+@interface MMCloudKitOptionsView : MMShareOptionsView<UICollectionViewDataSource,UICollectionViewDelegate,MMInviteUserButtonDelegate>
 
 @property (nonatomic, weak) MMCloudKitShareItem* shareItem;
+
+#pragma mark - Cloud Kit
+
+-(void) cloudKitDidChangeState:(MMCloudKitBaseState *)currentState;
 
 @end

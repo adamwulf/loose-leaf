@@ -166,7 +166,7 @@ BOOL hasSent = NO;
     
 }
 
-#pragma mark - MMCloudKitManagerDelegate
+#pragma mark - Cloud Kit
 
 -(void) cloudKitDidChangeState:(MMCloudKitBaseState *)currentState{
     // always disable the cloud button, except
@@ -226,18 +226,6 @@ BOOL hasSent = NO;
         cloudKeyButton.hidden = NO;
     }
     [self updateInterfaceBasedOniCloudStatus];
-}
-
--(void) willFetchMessage:(SPRMessage*)message{
-    // noop
-}
-
--(void) didFetchMessage:(SPRMessage *)message{
-    // noop
-}
-
--(void) didFailToFetchMessage:(SPRMessage *)message{
-    // noop
 }
 
 #pragma mark - UICollectionViewDataSource
