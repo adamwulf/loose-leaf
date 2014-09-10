@@ -15,10 +15,13 @@
 #import "Mixpanel.h"
 
 @implementation MMCloudKitImportCoordinator{
+    NSDictionary* importAttributes;
     MMAvatarButton* avatarButton;
     NSString* zipFileLocation;
-    MMCloudKitImportExportView* exportView;
+    MMCloudKitImportExportView* importExportView;
     NSDictionary* senderInfo;
+    NSString* initials;
+    BOOL isReady;
     
     // nil if the scrap unzip failed, or if
     // the coordinator hasn't begun
@@ -26,27 +29,39 @@
     NSString* targetPageLocation;
     NSInteger numberOfScrapsOnIncomingPage; // used for mixpanel only
     NSInteger numberOfVisibleScrapsOnIncomingPage; // used for mixpanel only
-    
-    NSDictionary* importAttributes;
-    NSInteger numberOfImportedScraps;
+    NSInteger numberOfImportedScraps; // used for mixpanel only
 }
 
 @synthesize avatarButton;
 @synthesize isReady;
+@synthesize importExportView;
 
--(id) initWithImport:(SPRMessage*)importInfo forExportView:(MMCloudKitImportExportView*)_exportView{
+-(id) initWithImport:(SPRMessage*)importInfo forImportExportView:(MMCloudKitImportExportView*)_exportView{
     if(self = [super init]){
         importAttributes = importInfo.attributes;
         zipFileLocation = importInfo.messageData.path;
         senderInfo = importInfo.senderInfo;
-        exportView = _exportView;
-        avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:importInfo.initials];
+        importExportView = _exportView;
+        initials = importInfo.initials;
+        avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:initials];
         [avatarButton addTarget:self action:@selector(avatarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
 }
 
+-(void) setImportExportView:(MMCloudKitImportExportView *)_importExportView{
+    if(importExportView){
+        @throw [NSException exceptionWithName:@"DuplicateSetExportViewForImportCoordinator" reason:@"Cannot set export view for coordinator that already has one" userInfo:nil];
+    }
+    importExportView = _importExportView;
+}
+
 -(void) begin{
+    if(self.isReady){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [importExportView importCoordinatorIsReady:self];
+        });
+    }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         
         // we define our own UUID for the incoming page
@@ -149,7 +164,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             isReady = YES;
-            [exportView importCoordinatorIsReady:self];
+            [importExportView importCoordinatorIsReady:self];
         });
     });
 }
@@ -181,7 +196,43 @@
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCloudKitImports by:@(1)];
     [[Mixpanel sharedInstance] track:kMPEventImportPage properties:eventProperties];
     
-    [exportView importWasTapped:self];
+    [importExportView importWasTapped:self];
+}
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)encoder{
+    [encoder encodeObject:importAttributes forKey:@"importAttributes"];
+    [encoder encodeObject:zipFileLocation forKey:@"zipFileLocation"];
+    [encoder encodeObject:senderInfo forKey:@"senderInfo"];
+    [encoder encodeObject:initials forKey:@"initials"];
+
+    if(uuidOfIncomingPage) [encoder encodeObject:uuidOfIncomingPage forKey:@"uuidOfIncomingPage"];
+    if(targetPageLocation) [encoder encodeObject:targetPageLocation forKey:@"targetPageLocation"];
+    [encoder encodeObject:@(numberOfScrapsOnIncomingPage) forKey:@"numberOfScrapsOnIncomingPage"];
+    [encoder encodeObject:@(numberOfVisibleScrapsOnIncomingPage) forKey:@"numberOfVisibleScrapsOnIncomingPage"];
+    [encoder encodeObject:@(numberOfImportedScraps) forKey:@"numberOfImportedScraps"];
+    [encoder encodeObject:@(isReady) forKey:@"isReady"];
+}
+
+
+- (id)initWithCoder:(NSCoder *)decoder{
+    if(self = [super init]){
+        importAttributes = [decoder decodeObjectForKey:@"importAttributes"];
+        zipFileLocation = [decoder decodeObjectForKey:@"zipFileLocation"];
+        senderInfo = [decoder decodeObjectForKey:@"senderInfo"];
+        initials = [decoder decodeObjectForKey:@"initials"];
+        avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:initials];
+        [avatarButton addTarget:self action:@selector(avatarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+
+        uuidOfIncomingPage = [decoder decodeObjectForKey:@"uuidOfIncomingPage"];
+        targetPageLocation = [decoder decodeObjectForKey:@"targetPageLocation"];
+        numberOfScrapsOnIncomingPage = [[decoder decodeObjectForKey:@"numberOfScrapsOnIncomingPage"] integerValue];
+        numberOfVisibleScrapsOnIncomingPage = [[decoder decodeObjectForKey:@"numberOfVisibleScrapsOnIncomingPage"] integerValue];
+        numberOfImportedScraps = [[decoder decodeObjectForKey:@"numberOfImportedScraps"] integerValue];
+        isReady = [[decoder decodeObjectForKey:@"isReady"] boolValue];
+    }
+    return self;
 }
 
 

@@ -12,6 +12,7 @@
 #import "MMCloudKitExportCoordinator.h"
 #import "MMCloudKitImportCoordinator.h"
 #import "MMScrapPaperStackView.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 #import "Constants.h"
 
 @implementation MMCloudKitImportExportView{
@@ -45,12 +46,37 @@
         countButton.alpha = 0;
         [countButton setNeedsDisplay];
         [self addSubview:countButton];
+        
+        [self loadFromDisk];
     }
     return self;
 }
 
 -(void) setAnimationHelperView:(MMUntouchableView *)_animationHelperView{
     animationHelperView = _animationHelperView;
+}
+
+-(void) saveToDisk{
+    NSString* outputPath = [[MMCloudKitManager cloudKitFilesPath] stringByAppendingPathComponent:@"ImportsAndExports"];
+    [NSFileManager ensureDirectoryExistsAtPath:outputPath];
+    @synchronized(activeImports){
+        [NSKeyedArchiver archiveRootObject:activeImports toFile:[outputPath stringByAppendingPathComponent:@"imports.data"]];
+    }
+}
+
+-(void) loadFromDisk{
+    NSString* outputPath = [[MMCloudKitManager cloudKitFilesPath] stringByAppendingPathComponent:@"ImportsAndExports"];
+    @synchronized(activeImports){
+        NSArray* imported = [NSKeyedUnarchiver unarchiveObjectWithFile:[outputPath stringByAppendingPathComponent:@"imports.data"]];
+        activeImports = [NSMutableArray arrayWithArray:imported];
+        NSLog(@"imported %d pages", (int) [imported count]);
+        
+        for (MMCloudKitImportCoordinator* coordinator in activeImports) {
+            // need to set the import/export view after loading
+            coordinator.importExportView = self;
+            [coordinator begin];
+        }
+    }
 }
 
 #pragma mark - Sharing
@@ -218,9 +244,10 @@
 }
 
 -(void) didFetchMessage:(SPRMessage *)message{
-    MMCloudKitImportCoordinator* coordinator = [[MMCloudKitImportCoordinator alloc] initWithImport:message forExportView:self];
+    MMCloudKitImportCoordinator* coordinator = [[MMCloudKitImportCoordinator alloc] initWithImport:message forImportExportView:self];
     @synchronized(activeImports){
         [activeImports addObject:coordinator];
+        [self saveToDisk];
     }
     [coordinator begin];
 }
@@ -239,10 +266,9 @@
     @synchronized(activeImports){
         [activeImports removeObject:coordinator];
         [activeImports addObject:coordinator];
+        [self saveToDisk];
     }
-    [self animateImportAvatarButtonToTopOfPage:coordinator.avatarButton onComplete:^{
-//        NSLog(@"done processing zip, ready to import");
-    }];
+    [self animateImportAvatarButtonToTopOfPage:coordinator.avatarButton onComplete:nil];
     [self animateAndAlignAllButtons];
     
     
@@ -283,6 +309,7 @@
     
     @synchronized(activeImports){
         [activeImports removeObject:coordinator];
+        [self saveToDisk];
     }
     [coordinator.avatarButton animateOffScreenWithCompletion:nil];
     [self animateAndAlignAllButtons];
