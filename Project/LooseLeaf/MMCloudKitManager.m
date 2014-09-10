@@ -126,7 +126,7 @@ static NSString* cloudKitFilesPath;
 }
 
 -(void) fetchAllNewMessages{
-    [[SPRSimpleCloudKitManager sharedManager] fetchNewMessagesWithCompletionHandler:^(NSArray *messages, NSError *error) {
+    [[SPRSimpleCloudKitManager sharedManager] fetchNewMessagesAndMarkAsReadWithCompletionHandler:^(NSArray *messages, NSError *error) {
         if(!error){
             for(SPRMessage* message in messages){
                 [self processIncomingMessage:message];
@@ -148,24 +148,34 @@ static NSString* cloudKitFilesPath;
 
 
 -(void) processIncomingMessage:(SPRMessage*)unprocessedMessage{
-    @synchronized(incomingMessageState){
-        NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
-        if([messagesSinceLastFetch containsObject:unprocessedMessage]){
-            return;
-        }
-    }
-    
+    dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+
+    __block BOOL hadAlreadyProcessedThisMessage = NO;
+    // first, check to make sure that we haven't already processed
+    // this message yet. if we have, then we should just
+    // bail out here.
     dispatch_async([MMCloudKitManager messageQueue], ^{
         @synchronized(incomingMessageState){
             NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
-            if(![messagesSinceLastFetch containsObject:unprocessedMessage]){
+            hadAlreadyProcessedThisMessage = [messagesSinceLastFetch containsObject:unprocessedMessage];
+            if(!hadAlreadyProcessedThisMessage){
+                // if we haven't processed it yet, then go ahead
+                // and mark it as processed
                 [incomingMessageState setObject:[messagesSinceLastFetch arrayByAddingObject:unprocessedMessage] forKey:kMessagesSinceLastFetchKey];
             }
         }
+        dispatch_semaphore_signal(sema1);
     });
+    dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
     
-    
-    
+    if(hadAlreadyProcessedThisMessage){
+        // we'd already handle this message, so we can
+        // safely bail out here. this happens when we
+        // recieve the push notificatio, and also recieve it
+        // again when fetching all new messages.
+        return;
+    }
+
     [self.delegate willFetchMessage:unprocessedMessage];
     // Do something with the message, like pushing it onto the stack
     [[SPRSimpleCloudKitManager sharedManager] fetchDetailsForMessage:unprocessedMessage withCompletionHandler:^(SPRMessage *message, NSError *error) {
@@ -187,13 +197,6 @@ static NSString* cloudKitFilesPath;
             NSLog(@"invalid zip file");
             [delegate didFailToFetchMessage:message];
         }
-        
-        dispatch_async([MMCloudKitManager messageQueue], ^{
-            // only remove completed messages
-            @synchronized(incomingMessageState){
-                //                NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
-            }
-        });
     }];
 }
 
