@@ -92,26 +92,34 @@
     
     UIBezierPath* glyphPath = [[font fontWithSize:scaledPointSize] bezierPathForString:letter];
     CGRect glyphRect = [glyphPath bounds];
-    glyphRect = glyphPath.bounds;
-    CGFloat maxTextWidth = self.drawableFrame.size.width - 10;
-    if(glyphRect.size.width > maxTextWidth){
-        CGFloat ratio = maxTextWidth / glyphRect.size.width;
-        [glyphPath applyTransform:CGAffineTransformMakeScale(ratio, ratio)];
+    if(!CGRectIsNull(glyphRect) && !CGRectIsEmpty(glyphRect)){
+        // if the glyphPath is empty (possibly b/c letter is @"")
+        // then we shouldn't draw the path
         glyphRect = glyphPath.bounds;
-        [glyphPath applyTransform:CGAffineTransformMakeTranslation(-glyphRect.origin.x, -glyphRect.origin.y)];
-        glyphRect = glyphPath.bounds;
+        CGFloat maxTextWidth = self.drawableFrame.size.width - 10;
+        if(glyphRect.size.width > maxTextWidth){
+            CGFloat ratio = maxTextWidth / glyphRect.size.width;
+            [glyphPath applyTransform:CGAffineTransformMakeScale(ratio, ratio)];
+            glyphRect = glyphPath.bounds;
+            [glyphPath applyTransform:CGAffineTransformMakeTranslation(-glyphRect.origin.x, -glyphRect.origin.y)];
+            glyphRect = glyphPath.bounds;
+        }
+        
+        [glyphPath applyTransform:CGAffineTransformConcat(CGAffineTransformMakeTranslation(-glyphRect.origin.x - .5, -glyphRect.size.height),
+                                                          CGAffineTransformMakeScale(1.f, -1.f))];
+        [glyphPath applyTransform:CGAffineTransformMakeTranslation((drawingWidth - glyphRect.size.width) / 2 + kWidthOfSidebarButtonBuffer + offset.x,
+                                                                   (drawingWidth - glyphRect.size.height) / 2 + kWidthOfSidebarButtonBuffer + offset.y)];
+    }else{
+        glyphPath = nil;
     }
-
-    [glyphPath applyTransform:CGAffineTransformConcat(CGAffineTransformMakeTranslation(-glyphRect.origin.x - .5, -glyphRect.size.height),
-                                                      CGAffineTransformMakeScale(1.f, -1.f))];
-    [glyphPath applyTransform:CGAffineTransformMakeTranslation((drawingWidth - glyphRect.size.width) / 2 + kWidthOfSidebarButtonBuffer + offset.x,
-                                                               (drawingWidth - glyphRect.size.height) / 2 + kWidthOfSidebarButtonBuffer + offset.y)];
 
     //// Oval Drawing
     
     CGRect ovalFrame = CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 1.0), floor(CGRectGetHeight(frame) - 1.0));
     UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect:ovalFrame];
-    [ovalPath appendPath:glyphPath];
+    if(glyphPath){
+        [ovalPath appendPath:glyphPath];
+    }
     [ovalPath closePath];
     [halfGreyFill setFill];
     [ovalPath fill];
@@ -131,16 +139,18 @@
     }
 
     
-    //
-    // clear the arrow and box, then fill with
-    // border color
-    CGContextSetBlendMode(context, kCGBlendModeClear);
-    [[UIColor whiteColor] setFill];
-    [glyphPath fill];
-    CGContextSetBlendMode(context, kCGBlendModeNormal);
-    
-    [[self fontColor] setFill];
-    [glyphPath fill];
+    if(glyphPath){
+        //
+        // clear the arrow and box, then fill with
+        // border color
+        CGContextSetBlendMode(context, kCGBlendModeClear);
+        [[UIColor whiteColor] setFill];
+        [glyphPath fill];
+        CGContextSetBlendMode(context, kCGBlendModeNormal);
+        
+        [[self fontColor] setFill];
+        [glyphPath fill];
+    }
     
     CGContextRestoreGState(context);
 }

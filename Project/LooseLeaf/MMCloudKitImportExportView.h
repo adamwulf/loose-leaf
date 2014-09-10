@@ -40,8 +40,16 @@
 
 #pragma mark - Import Notifications
 
+// notify that assets have been downloaded
+-(void) importCoordinatorHasAssetsAndIsProcessing:(MMCloudKitImportCoordinator*)coordinator;
+
+// notify that assets have been downloaded
+-(void) importCoordinatorFailedPermanently:(MMCloudKitImportCoordinator*)coordinator;
+
+// notify that assets are 100% ready for user import, show button
 -(void) importCoordinatorIsReady:(MMCloudKitImportCoordinator*)coordinator;
 
+// notify that user wants to import this page
 -(void) importWasTapped:(MMCloudKitImportCoordinator*)coordinator;
 
 @end

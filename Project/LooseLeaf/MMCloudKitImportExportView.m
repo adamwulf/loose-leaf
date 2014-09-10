@@ -252,14 +252,21 @@
     [coordinator begin];
 }
 
--(void) didFailToFetchMessage:(SPRMessage *)message{
-    NSLog(@"failed fetching message");
-}
-
 #pragma mark - MMCloudKitManagerDelegate
 
+-(void) importCoordinatorHasAssetsAndIsProcessing:(MMCloudKitImportCoordinator*)coordinator{
+    // save our import status
+    [self saveToDisk];
+}
+
+-(void) importCoordinatorFailedPermanently:(MMCloudKitImportCoordinator*)coordinator{
+    @synchronized(activeImports){
+        [activeImports removeObject:coordinator];
+        [self saveToDisk];
+    }
+}
+
 -(void) importCoordinatorIsReady:(MMCloudKitImportCoordinator*)coordinator{
-//    NSLog(@"beginning import animation");
     // other coordinators in the list may still be waiting for
     // their zip file to process, so make sure that coordinators
     // are sorted by their readiness

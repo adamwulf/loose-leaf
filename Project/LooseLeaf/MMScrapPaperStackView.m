@@ -1873,10 +1873,6 @@ int skipAll = NO;
     [cloudKitExportView didFetchMessage:message];
 }
 
--(void) didFailToFetchMessage:(SPRMessage *)message{
-    [cloudKitExportView didFailToFetchMessage:message];
-}
-
 #pragma mark - Import
 
 -(void) importAndShowPage:(MMExportablePaperView*)page{

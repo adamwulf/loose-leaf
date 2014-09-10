@@ -176,27 +176,7 @@ static NSString* cloudKitFilesPath;
         return;
     }
 
-    // Do something with the message, like pushing it onto the stack
-    [[SPRSimpleCloudKitManager sharedManager] fetchDetailsForMessage:unprocessedMessage withCompletionHandler:^(SPRMessage *message, NSError *error) {
-        if(!error){
-            ZipArchive* zip = [[ZipArchive alloc] init];
-            if([zip validateZipFileAt:message.messageData.path]){
-                [delegate didFetchMessage:message];
-            }else{
-                NSLog(@"invalid zip file");
-                NSLog(@"zip at: %@", message.messageData.path);
-                if(message.messageData.path){
-                    NSString* savedPath = [[NSFileManager documentsPath] stringByAppendingPathComponent:[message.messageData.path lastPathComponent]];
-                    [[NSFileManager defaultManager] moveItemAtPath:message.messageData.path toPath:savedPath error:nil];
-                    NSLog(@"saved to: %@", savedPath);
-                }
-                [delegate didFailToFetchMessage:message];
-            }
-        }else{
-            NSLog(@"cloudkit error fetching message");
-            [delegate didFailToFetchMessage:message];
-        }
-    }];
+    [delegate didFetchMessage:unprocessedMessage];
 }
 
 #pragma mark - State Management

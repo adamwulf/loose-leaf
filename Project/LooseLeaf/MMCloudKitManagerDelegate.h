@@ -19,8 +19,6 @@
 
 -(void) didFetchMessage:(SPRMessage*)message;
 
--(void) didFailToFetchMessage:(SPRMessage*)message;
-
 @end
 
 

@@ -19,7 +19,7 @@
 @property (readonly) BOOL isReady;
 @property (nonatomic, strong) MMCloudKitImportExportView* importExportView;
 
--(id) initWithImport:(SPRMessage*)importInfo forImportExportView:(MMCloudKitImportExportView*)_importExportView;
+-(id) initWithImport:(SPRMessage*)importMessage forImportExportView:(MMCloudKitImportExportView*)_importExportView;
 
 -(void) begin;
 
