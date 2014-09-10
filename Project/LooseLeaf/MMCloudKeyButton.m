@@ -18,16 +18,30 @@
     if(self = [super initWithFrame:frame]){
         needLoginView = [[MMRotatingKeyDemoLayer alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         [self.layer addSublayer:needLoginView];
-        
-        [self addTarget:needLoginView action:@selector(bounceAndFlip) forControlEvents:UIControlEventTouchUpInside];
         [self addTarget:self action:@selector(didTapButton) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
 }
 
+-(BOOL) isShowingKey{
+    return !needLoginView.isFlipped;
+}
+
+-(void) flipImmediatelyToCloud{
+    if([self isShowingKey]){
+        [needLoginView flipWithoutAnimation];
+    }
+}
+
+-(void) flipAnimatedToKeyWithCompletion:(void (^)())completion{
+    if(![self isShowingKey]){
+        [needLoginView bounceAndFlipWithCompletion:completion];
+    }
+}
+
 -(void) setupTimer{
     if(!bounceTimer){
-        bounceTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(bounceLightly) userInfo:nil repeats:YES];
+        bounceTimer = [NSTimer scheduledTimerWithTimeInterval:3.5 target:self selector:@selector(bounceLightly) userInfo:nil repeats:YES];
         [self bounceLightly];
     }
 }
@@ -39,11 +53,12 @@
 
 -(void) didTapButton{
     [self tearDownTimer];
+    [needLoginView bounceAndFlipWithCompletion:nil];
     self.enabled = NO;
 }
 
 -(void)bounceLightly{
-    CGFloat duration = 0.4;
+    CGFloat duration = 0.35;
     [UIView animateKeyframesWithDuration:duration delay:0 options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
         [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:.25 animations:^{
             self.transform = CGAffineTransformMakeScale(0.9, 0.9);

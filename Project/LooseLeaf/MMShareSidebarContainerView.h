@@ -17,4 +17,6 @@
 
 -(void) updateInterfaceTo:(UIInterfaceOrientation)orientation;
 
+-(void) debugSwitchToCloudKit;
+
 @end

@@ -58,6 +58,7 @@
         cloudKeyButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         cloudKeyButton.center = CGPointMake(self.bounds.size.width/2, cloudKeyButton.bounds.size.height * 2 / 3);
         [cloudKeyButton addTarget:self action:@selector(loginButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+        cloudKeyButton.enabled = NO;
         [self addSubview:cloudKeyButton];
         
         CGRect frForTable = self.bounds;
@@ -113,7 +114,7 @@
         if(self.alpha && [[MMCloudKitManager sharedManager].currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
             [cloudKeyButton setupTimer];
         }
-    } afterDelay:.5];
+    } afterDelay:1.3];
 }
 
 -(void) updateDataSource{
@@ -168,15 +169,35 @@ BOOL hasSent = NO;
 #pragma mark - MMCloudKitManagerDelegate
 
 -(void) cloudKitDidChangeState:(MMCloudKitBaseState *)currentState{
+    // always disable the cloud button, except
+    // during the ask permissions state...
+    cloudKeyButton.enabled = NO;
+    
+    // handle the timer for the key bouncing
     if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
-        if(self.alpha){
-            [self updateCloudKeyBounceTimer];
-        }
+        [self updateCloudKeyBounceTimer];
     }else{
         [cloudKeyButton tearDownTimer];
     }
-    if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]] ||
-       [currentState isKindOfClass:[MMCloudKitAskingForPermissionState class]]){
+    
+    // show update what's being shown in our UI
+    if([currentState isMemberOfClass:[MMCloudKitBaseState class]]){
+        listOfFriendsView.hidden = YES;
+        cloudKitLabel.hidden = YES;
+        offlineView.hidden = YES;
+        cloudKeyButton.hidden = NO;
+        [cloudKeyButton flipImmediatelyToCloud];
+    }else if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
+        listOfFriendsView.hidden = YES;
+        cloudKitLabel.hidden = YES;
+        offlineView.hidden = YES;
+        cloudKeyButton.hidden = NO;
+        [cloudKeyButton flipAnimatedToKeyWithCompletion:^{
+            cloudKeyButton.enabled = YES;
+        }];
+    }else if([currentState isKindOfClass:[MMCloudKitAskingForPermissionState class]]){
+        // don't need to manually flip key here
+        // since it was flipped to cloud when tapped
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = YES;
@@ -194,9 +215,9 @@ BOOL hasSent = NO;
         cloudKeyButton.hidden = YES;
     }else{
         listOfFriendsView.hidden = YES;
-        cloudKitLabel.hidden = NO;
+        cloudKitLabel.hidden = YES;
         offlineView.hidden = YES;
-        cloudKeyButton.hidden = YES;
+        cloudKeyButton.hidden = NO;
     }
     [self updateInterfaceBasedOniCloudStatus];
 }

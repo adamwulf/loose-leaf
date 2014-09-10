@@ -197,7 +197,10 @@
 //        [testImageView showDebugBorder];
 //        [self addSubview:testImageView];
 
-        [self performSelector:@selector(shareButtonTapped:) withObject:nil afterDelay:.5];
+        [[NSThread mainThread] performBlock:^{
+            [self shareButtonTapped:nil];
+            [sharePageSidebar debugSwitchToCloudKit];
+        } afterDelay:.2];
         
     }
     return self;

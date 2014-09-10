@@ -10,8 +10,12 @@
 
 @interface MMRotatingKeyDemoLayer : CALayer
 
+@property (nonatomic, readonly) BOOL isFlipped;
+
 -(id) initWithFrame:(CGRect)frame;
 
--(void) bounceAndFlip;
+-(void) flipWithoutAnimation;
+
+-(void) bounceAndFlipWithCompletion:(void (^)())completion;
 
 @end

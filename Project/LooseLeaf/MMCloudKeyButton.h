@@ -10,8 +10,14 @@
 
 @interface MMCloudKeyButton : UIButton
 
+@property (nonatomic, readonly) BOOL isShowingKey;
+
 -(void) setupTimer;
 
 -(void) tearDownTimer;
+
+-(void) flipImmediatelyToCloud;
+
+-(void) flipAnimatedToKeyWithCompletion:(void (^)())completion;
 
 @end

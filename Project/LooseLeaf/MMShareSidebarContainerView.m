@@ -274,4 +274,10 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+
+-(void) debugSwitchToCloudKit{
+    [cloudKitShareItem performSelector:@selector(performShareAction)];
+}
+
+
 @end

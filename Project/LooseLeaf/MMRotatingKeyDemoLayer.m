@@ -17,6 +17,7 @@
     BOOL isAnimating;
 }
 
+@synthesize isFlipped;
 
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super init]){
@@ -56,7 +57,22 @@
     return self;
 }
 
--(void) bounceAndFlip{
+-(void) flipWithoutAnimation{
+    if(isAnimating){
+        return;
+    }
+    
+    isFlipped = !isFlipped;
+    if(isFlipped){
+        animatingCloud.opacity = 1.0;
+        keyLayer.opacity = 0.0;
+    }else{
+        animatingCloud.opacity = 0.0;
+        keyLayer.opacity = 1.0;
+    }
+}
+
+-(void) bounceAndFlipWithCompletion:(void (^)())completion{
     if(isAnimating){
         return;
     }
@@ -77,11 +93,13 @@
     // update the presentation layer.
     // if we updated model after these animations,
     // then it would flicker the values
-    CGFloat duration = 0.6;
-    NSInteger numberOfFlips = 2;
+    CGFloat duration = !isFlipped ? 0.45 : 0.65;
+    NSInteger numberOfFlips = !isFlipped ? 1 : 2;
     CGFloat bounceSize = .2;
     
-    CGFloat timestampOfMagicSwitch = (ceilf(numberOfFlips/2.0) + .25) / numberOfFlips;
+    CGFloat locationOfFlip = (ceilf(numberOfFlips/2.0) + .25);
+    locationOfFlip = (ceilf(numberOfFlips/2.0) + .25) > numberOfFlips ? .75 : locationOfFlip;
+    CGFloat timestampOfMagicSwitch = locationOfFlip / numberOfFlips;
     
     CGFloat fullFlip = 2*M_PI;
 
@@ -106,7 +124,7 @@
     scale11.duration = duration;
     scale11.values = @[[NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)],
                        [NSValue valueWithCGPoint:CGPointMake(1.0 + bounceSize, 1.0 + bounceSize)],
-                       [NSValue valueWithCGPoint:CGPointMake(0.9, 0.95)],
+                       [NSValue valueWithCGPoint:CGPointMake(0.95, 0.95)],
                        [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)]];
     scale11.keyTimes = @[@(0), @(.5), @(0.85), @(1.0)];
     scale11.fillMode = kCAFillModeBoth;
@@ -117,7 +135,7 @@
     scale21.duration = duration;
     scale21.values = @[[NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)],
                        [NSValue valueWithCGPoint:CGPointMake(1.0 + bounceSize, 1.0 + bounceSize)],
-                       [NSValue valueWithCGPoint:CGPointMake(0.9, 0.95)],
+                       [NSValue valueWithCGPoint:CGPointMake(0.95, 0.95)],
                        [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)]];
     scale21.keyTimes = @[@(0), @(.5), @(0.85), @(1.0)];
     scale21.fillMode = kCAFillModeBoth;
@@ -144,6 +162,7 @@
     [CATransaction begin];
     [CATransaction setCompletionBlock:^{
         isAnimating = NO;
+        if(completion) completion();
     }];
     [CATransaction setAnimationDuration:duration];
     [keyLayer addAnimation:hide1 forKey: @"hide"];
