@@ -304,7 +304,7 @@
             NSLog(@"couldn't build page for %@", coordinator.uuidOfIncomingPage);
         }
     }else{
-        NSLog(@"couldn't create page for %@", coordinator);
+        NSLog(@"don't have UUID for coordinator %@", coordinator);
     }
     
     @synchronized(activeImports){

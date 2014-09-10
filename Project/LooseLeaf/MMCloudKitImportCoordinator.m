@@ -39,12 +39,22 @@
 -(id) initWithImport:(SPRMessage*)importInfo forImportExportView:(MMCloudKitImportExportView*)_exportView{
     if(self = [super init]){
         importAttributes = importInfo.attributes;
-        zipFileLocation = importInfo.messageData.path;
         senderInfo = importInfo.senderInfo;
         importExportView = _exportView;
         initials = importInfo.initials;
         avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:initials];
         [avatarButton addTarget:self action:@selector(avatarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+
+        
+        zipFileLocation = importInfo.messageData.path;
+        NSString* movedZipFileLocation = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"IncomingPages"] stringByAppendingString:[NSString createStringUUID]];
+        NSError* err;
+        [[NSFileManager defaultManager] copyItemAtPath:zipFileLocation toPath:movedZipFileLocation error:&err];
+        if(err){
+            NSLog(@"haha what");
+        }else{
+            zipFileLocation = movedZipFileLocation;
+        }
     }
     return self;
 }
@@ -61,6 +71,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [importExportView importCoordinatorIsReady:self];
         });
+        return;
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         
@@ -160,6 +171,15 @@
             }
         }else{
             NSLog(@"failed to unzip file: %@", zipFileLocation);
+        }
+        
+        // at this point we've unzipped the file,
+        // or failed gloriously. so delete the zip.
+        NSError* err = nil;
+        [[NSFileManager defaultManager] removeItemAtPath:zipFileLocation error:&err];
+        if(err){
+            // log general error?
+            NSLog(@"failed removing zip");
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
