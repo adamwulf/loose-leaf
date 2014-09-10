@@ -23,4 +23,6 @@
 
 -(void) begin;
 
+-(BOOL) matchesMessage:(SPRMessage*)message;
+
 @end

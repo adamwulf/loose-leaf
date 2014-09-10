@@ -19,12 +19,9 @@
 // step 2: unzip file into Pages directory
 // step 3: notify that we're ready
 @implementation MMCloudKitImportCoordinator{
-    NSDictionary* importAttributes;
     MMAvatarButton* avatarButton;
     NSString* zipFileLocation;
     MMCloudKitImportExportView* importExportView;
-    NSDictionary* senderInfo;
-    NSString* initials;
     BOOL isReady;
     SPRMessage* message;
     
@@ -43,12 +40,10 @@
 
 -(id) initWithImport:(SPRMessage*)importMessage forImportExportView:(MMCloudKitImportExportView*)_exportView{
     if(self = [super init]){
+        NSLog(@"creating new import for %@", importMessage.messageRecordID);
         message = importMessage;
         importExportView = _exportView;
-        importAttributes = importMessage.attributes;
-        senderInfo = importMessage.senderInfo;
-        initials = importMessage.initials;
-        avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:initials];
+        avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:message.initials];
         [avatarButton addTarget:self action:@selector(avatarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
@@ -63,6 +58,7 @@
 
 -(void) begin{
     if(self.isReady){
+        NSLog(@"beginning already ready message %@", message.messageRecordID);
         dispatch_async(dispatch_get_main_queue(), ^{
             [importExportView importCoordinatorIsReady:self];
         });
@@ -73,13 +69,13 @@
         // Step 1:
         // fetch the message details so that we have the sender
         // and message information, including the attached zip file
+        NSLog(@"fetching message details %@", message.messageRecordID);
         [message fetchDetailsWithCompletionHandler:^(NSError *error) {
             if(!error){
                 if(!zipFileLocation){
-                    zipFileLocation = message.messageData.path;
                     NSString* movedZipFileLocation = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"IncomingPages"] stringByAppendingString:[NSString createStringUUID]];
                     NSError* err;
-                    [[NSFileManager defaultManager] copyItemAtPath:zipFileLocation toPath:movedZipFileLocation error:&err];
+                    [[NSFileManager defaultManager] copyItemAtPath:message.messageData.path toPath:movedZipFileLocation error:&err];
                     if(err){
                         NSLog(@"haha what");
                     }else{
@@ -88,10 +84,9 @@
                     NSLog(@"fetched message details, have zip at: %@", zipFileLocation);
 
                     // update our state with the new info
-                    importAttributes = message.attributes;
-                    senderInfo = message.senderInfo;
-                    initials = message.initials;
-                    avatarButton.letter = initials;
+                    avatarButton.letter = message.initials;
+                }else{
+                    NSLog(@"already had cached details for %@", message.messageRecordID);
                 }
                 [importExportView importCoordinatorHasAssetsAndIsProcessing:self];
 
@@ -182,7 +177,7 @@
                             
                             // add in the sender info
                             NSString* senderInfoPlist = [[tempPathOfIncomingPage stringByAppendingPathComponent:@"sender"] stringByAppendingPathExtension:@"plist"];
-                            if(![NSKeyedArchiver archiveRootObject:senderInfo toFile:senderInfoPlist]){
+                            if(![NSKeyedArchiver archiveRootObject:message.senderInfo toFile:senderInfoPlist]){
                                 NSLog(@"couldn't archive sender CloudKit account data");
                             }
                             
@@ -201,7 +196,7 @@
                                 NSLog(@"couldn't move file from %@ to %@", tempPathOfIncomingPage, targetPageLocation);
                             }
                         }else{
-                            NSLog(@"failed to unzip file: %@", zipFileLocation);
+                            NSLog(@"coordinator failed to unzip %@ with file %@", message.messageRecordID, zipFileLocation);
                             [importExportView importCoordinatorFailedPermanently:self];
                             return;
                         }
@@ -216,6 +211,7 @@
                         }
                         
                         dispatch_async(dispatch_get_main_queue(), ^{
+                            NSLog(@"coordinator is ready %@", message.messageRecordID);
                             //
                             // Step 3:
                             // notify our view that we're ready to be shown to the user
@@ -223,6 +219,7 @@
                             [importExportView importCoordinatorIsReady:self];
                         });
                     }else{
+                        NSLog(@"coordinator failed %@", message.messageRecordID);
                         NSLog(@"invalid zip file");
                         NSLog(@"zip at: %@", zipFileLocation);
                         if(zipFileLocation){
@@ -234,7 +231,7 @@
                     }
                 });
             }else{
-                NSLog(@"cloudkit error fetching message");
+                NSLog(@"coordinator failed - couldn't fetch data %@ %@", message.messageRecordID, error);
                 [importExportView importCoordinatorFailedPermanently:self];
             }
         }];
@@ -250,10 +247,10 @@
 -(void) avatarButtonTapped:(MMAvatarButton*)button{
     NSMutableDictionary* eventProperties = [@{kMPEventImportPropScrapCount : @(numberOfScrapsOnIncomingPage),
                                    kMPEventImportPropVisibleScrapCount : @(numberOfVisibleScrapsOnIncomingPage)} mutableCopy];
-    if(importAttributes){
-        if(importAttributes){
-            for(NSString* key in [importAttributes allKeys]){
-                [eventProperties setObject:[importAttributes objectForKey:key] forKey:[NSString stringWithFormat:@"ImportAttr: %@", key]];
+    if(message.attributes){
+        if(message.attributes){
+            for(NSString* key in [message.attributes allKeys]){
+                [eventProperties setObject:[message.attributes objectForKey:key] forKey:[NSString stringWithFormat:@"ImportAttr: %@", key]];
             }
         }
     }
@@ -276,11 +273,7 @@
 - (void)encodeWithCoder:(NSCoder *)encoder{
     [encoder encodeObject:message forKey:@"message"];
     
-    [encoder encodeObject:importAttributes forKey:@"importAttributes"];
-    [encoder encodeObject:zipFileLocation forKey:@"zipFileLocation"];
-    [encoder encodeObject:senderInfo forKey:@"senderInfo"];
-    [encoder encodeObject:initials forKey:@"initials"];
-
+    if(zipFileLocation) [encoder encodeObject:zipFileLocation forKey:@"zipFileLocation"];
     if(uuidOfIncomingPage) [encoder encodeObject:uuidOfIncomingPage forKey:@"uuidOfIncomingPage"];
     if(targetPageLocation) [encoder encodeObject:targetPageLocation forKey:@"targetPageLocation"];
     [encoder encodeObject:@(numberOfScrapsOnIncomingPage) forKey:@"numberOfScrapsOnIncomingPage"];
@@ -294,11 +287,8 @@
     if(self = [super init]){
         message = [decoder decodeObjectForKey:@"message"];
         
-        importAttributes = [decoder decodeObjectForKey:@"importAttributes"];
         zipFileLocation = [decoder decodeObjectForKey:@"zipFileLocation"];
-        senderInfo = [decoder decodeObjectForKey:@"senderInfo"];
-        initials = [decoder decodeObjectForKey:@"initials"];
-        avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:initials];
+        avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:message.initials];
         [avatarButton addTarget:self action:@selector(avatarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
         uuidOfIncomingPage = [decoder decodeObjectForKey:@"uuidOfIncomingPage"];
@@ -311,5 +301,9 @@
     return self;
 }
 
+
+-(BOOL) matchesMessage:(SPRMessage*)otherMessage{
+    return [message.messageRecordID isEqual:otherMessage.messageRecordID];
+}
 
 @end

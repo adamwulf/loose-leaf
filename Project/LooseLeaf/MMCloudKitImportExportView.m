@@ -56,11 +56,20 @@
     animationHelperView = _animationHelperView;
 }
 
--(void) saveToDisk{
-    NSString* outputPath = [[MMCloudKitManager cloudKitFilesPath] stringByAppendingPathComponent:@"ImportsAndExports"];
-    [NSFileManager ensureDirectoryExistsAtPath:outputPath];
-    @synchronized(activeImports){
-        [NSKeyedArchiver archiveRootObject:activeImports toFile:[outputPath stringByAppendingPathComponent:@"imports.data"]];
+-(void) saveToDiskOffMainThread{
+    dispatch_block_t saveBlock = ^{
+        NSString* outputPath = [[MMCloudKitManager cloudKitFilesPath] stringByAppendingPathComponent:@"ImportsAndExports"];
+        [NSFileManager ensureDirectoryExistsAtPath:outputPath];
+        @synchronized(activeImports){
+            [[NSKeyedArchiver archivedDataWithRootObject:activeImports] writeToFile:[outputPath stringByAppendingPathComponent:@"imports.data"] atomically:YES];
+            NSLog(@"saved imports to disk");
+        }
+    };
+    
+    if([NSThread isMainThread]){
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), saveBlock);
+    }else{
+        saveBlock();
     }
 }
 
@@ -69,7 +78,7 @@
     @synchronized(activeImports){
         NSArray* imported = [NSKeyedUnarchiver unarchiveObjectWithFile:[outputPath stringByAppendingPathComponent:@"imports.data"]];
         activeImports = [NSMutableArray arrayWithArray:imported];
-        NSLog(@"imported %d pages", (int) [imported count]);
+        NSLog(@"loaded %d pages from disk for import", (int) [imported count]);
         
         for (MMCloudKitImportCoordinator* coordinator in activeImports) {
             // need to set the import/export view after loading
@@ -121,8 +130,6 @@
 }
 
 -(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk{
-    NSLog(@"zip file: %d %@", [[NSFileManager defaultManager] fileExistsAtPath:fileLocationOnDisk], fileLocationOnDisk);
-    
     @synchronized(activeExports){
         for(MMCloudKitExportCoordinator* export in activeExports){
             if(export.page == page){
@@ -244,10 +251,24 @@
 }
 
 -(void) didFetchMessage:(SPRMessage *)message{
+    @synchronized(activeImports){
+        for (MMCloudKitImportCoordinator* coordinator in activeImports) {
+            if([coordinator matchesMessage:message]){
+                // this can happen if app exits/crashes before
+                // a notification is able to be marked as read on
+                // the server.
+                // the next time the app starts up, it'll re-fetch
+                // the same message, potentially creating a 2nd import
+                // if one had already been created and saved.
+                NSLog(@"founding matching import already in progress for message %@", message.messageRecordID);
+                return;
+            }
+        }
+    }
     MMCloudKitImportCoordinator* coordinator = [[MMCloudKitImportCoordinator alloc] initWithImport:message forImportExportView:self];
     @synchronized(activeImports){
         [activeImports addObject:coordinator];
-        [self saveToDisk];
+        [self saveToDiskOffMainThread];
     }
     [coordinator begin];
 }
@@ -256,13 +277,13 @@
 
 -(void) importCoordinatorHasAssetsAndIsProcessing:(MMCloudKitImportCoordinator*)coordinator{
     // save our import status
-    [self saveToDisk];
+    [self saveToDiskOffMainThread];
 }
 
 -(void) importCoordinatorFailedPermanently:(MMCloudKitImportCoordinator*)coordinator{
     @synchronized(activeImports){
         [activeImports removeObject:coordinator];
-        [self saveToDisk];
+        [self saveToDiskOffMainThread];
     }
 }
 
@@ -273,7 +294,7 @@
     @synchronized(activeImports){
         [activeImports removeObject:coordinator];
         [activeImports addObject:coordinator];
-        [self saveToDisk];
+        [self saveToDiskOffMainThread];
     }
     [self animateImportAvatarButtonToTopOfPage:coordinator.avatarButton onComplete:nil];
     [self animateAndAlignAllButtons];
@@ -302,7 +323,6 @@
     [bounceTimer invalidate];
     bounceTimer = nil;
     
-    NSLog(@"time to show this page %@", coordinator);
     if(coordinator.uuidOfIncomingPage){
         MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:stackView.bounds andUUID:coordinator.uuidOfIncomingPage];
         if(page){
@@ -316,7 +336,7 @@
     
     @synchronized(activeImports){
         [activeImports removeObject:coordinator];
-        [self saveToDisk];
+        [self saveToDiskOffMainThread];
     }
     [coordinator.avatarButton animateOffScreenWithCompletion:nil];
     [self animateAndAlignAllButtons];
