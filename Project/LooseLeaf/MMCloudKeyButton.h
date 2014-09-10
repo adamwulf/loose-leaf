@@ -20,4 +20,6 @@
 
 -(void) flipAnimatedToKeyWithCompletion:(void (^)())completion;
 
+-(void) animateToBrokenCloud;
+
 @end

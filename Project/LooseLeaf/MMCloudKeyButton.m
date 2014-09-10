@@ -8,10 +8,12 @@
 
 #import "MMCloudKeyButton.h"
 #import "MMRotatingKeyDemoLayer.h"
+#import "MMBrokenCloudLayer.h"
 
 @implementation MMCloudKeyButton{
     MMRotatingKeyDemoLayer* needLoginView;
     NSTimer* bounceTimer;
+    MMBrokenCloudLayer* brokenCloud;
 }
 
 -(id) initWithFrame:(CGRect)frame{
@@ -31,12 +33,44 @@
     if([self isShowingKey]){
         [needLoginView flipWithoutAnimation];
     }
+    if(brokenCloud){
+        needLoginView.opacity = 1.0;
+        [brokenCloud removeFromSuperlayer];
+        brokenCloud = nil;
+    }
 }
 
 -(void) flipAnimatedToKeyWithCompletion:(void (^)())completion{
     if(![self isShowingKey]){
         [needLoginView bounceAndFlipWithCompletion:completion];
     }
+}
+
+-(void) animateToBrokenCloud{
+    brokenCloud = [[MMBrokenCloudLayer alloc] initWithFrame:self.bounds];
+    [self.layer addSublayer:brokenCloud];
+    
+    brokenCloud.opacity = 1.0;
+    needLoginView.opacity = 0.0;
+
+    // animate:
+    CABasicAnimation* opacityForBreak = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    opacityForBreak.fromValue = @(0.0);
+    opacityForBreak.toValue = @(1.0);
+    opacityForBreak.duration = .3;
+    
+    CABasicAnimation* opacityForGradient = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    opacityForGradient.fromValue = @(1.0);
+    opacityForGradient.toValue = @(0.0);
+    opacityForGradient.duration = .2;
+    
+    [CATransaction begin];
+    [CATransaction setCompletionBlock:^{
+        [brokenCloud animatePiecesApart];
+    }];
+    [brokenCloud addAnimation:opacityForBreak forKey:@"opacity"];
+    [needLoginView addAnimation:opacityForGradient forKey:@"opacity"];
+    [CATransaction commit];
 }
 
 -(void) setupTimer{

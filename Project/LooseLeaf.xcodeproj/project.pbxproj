@@ -327,6 +327,7 @@
 		66FA039B19BF8CDD00AF0DC4 /* MMCloudLoadingIconLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA039A19BF8CDD00AF0DC4 /* MMCloudLoadingIconLayer.m */; };
 		66FA039F19BFAF3600AF0DC4 /* MMRotatingKeyDemoLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA039E19BFAF3600AF0DC4 /* MMRotatingKeyDemoLayer.m */; };
 		66FA03A219BFE68000AF0DC4 /* MMCloudKeyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA03A119BFE68000AF0DC4 /* MMCloudKeyButton.m */; };
+		66FA03A519BFFB7900AF0DC4 /* MMBrokenCloudLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA03A419BFFB7900AF0DC4 /* MMBrokenCloudLayer.m */; };
 		66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */ = {isa = PBXBuildFile; fileRef = 66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */; };
 /* End PBXBuildFile section */
 
@@ -945,6 +946,8 @@
 		66FA039E19BFAF3600AF0DC4 /* MMRotatingKeyDemoLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRotatingKeyDemoLayer.m; sourceTree = "<group>"; };
 		66FA03A019BFE68000AF0DC4 /* MMCloudKeyButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKeyButton.h; sourceTree = "<group>"; };
 		66FA03A119BFE68000AF0DC4 /* MMCloudKeyButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKeyButton.m; sourceTree = "<group>"; };
+		66FA03A319BFFB7900AF0DC4 /* MMBrokenCloudLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBrokenCloudLayer.h; sourceTree = "<group>"; };
+		66FA03A419BFFB7900AF0DC4 /* MMBrokenCloudLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBrokenCloudLayer.m; sourceTree = "<group>"; };
 		66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = basegfxbezierclip.license; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -2296,6 +2299,8 @@
 				66FA039719BEBAB300AF0DC4 /* MMCloudKeyIconLayer.m */,
 				66FA039919BF8CDD00AF0DC4 /* MMCloudLoadingIconLayer.h */,
 				66FA039A19BF8CDD00AF0DC4 /* MMCloudLoadingIconLayer.m */,
+				66FA03A319BFFB7900AF0DC4 /* MMBrokenCloudLayer.h */,
+				66FA03A419BFFB7900AF0DC4 /* MMBrokenCloudLayer.m */,
 			);
 			name = SpinningKeyView;
 			sourceTree = "<group>";
@@ -2581,6 +2586,7 @@
 				663523EC19A8401100A26B88 /* MMCloudKitManager.m in Sources */,
 				66BD6E801593AF4200D4544C /* MMSidebarButton.m in Sources */,
 				66BD6E8E1593D18800D4544C /* MMPolylineButton.m in Sources */,
+				66FA03A519BFFB7900AF0DC4 /* MMBrokenCloudLayer.m in Sources */,
 				66A2904B187773E70036E4B7 /* AVHexColor.m in Sources */,
 				667C6358199FE4BC00E93CD6 /* MPSurvey.m in Sources */,
 				66BD6E911593DE4E00D4544C /* MMPolygonButton.m in Sources */,

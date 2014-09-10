@@ -195,6 +195,12 @@ BOOL hasSent = NO;
         [cloudKeyButton flipAnimatedToKeyWithCompletion:^{
             cloudKeyButton.enabled = YES;
         }];
+    }else if([currentState isKindOfClass:[MMCloudKitDeclinedPermissionState class]]){
+        listOfFriendsView.hidden = YES;
+        cloudKitLabel.hidden = YES;
+        offlineView.hidden = YES;
+        cloudKeyButton.hidden = NO;
+        [cloudKeyButton animateToBrokenCloud];
     }else if([currentState isKindOfClass:[MMCloudKitAskingForPermissionState class]]){
         // don't need to manually flip key here
         // since it was flipped to cloud when tapped
