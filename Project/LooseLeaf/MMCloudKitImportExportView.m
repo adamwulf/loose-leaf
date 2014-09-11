@@ -29,6 +29,8 @@
     // added import/exports
     CGFloat lastRotationReading;
     
+    // this button appears when the number of
+    // waiting imports is more than
     MMAvatarButton* countButton;
 }
 
@@ -41,7 +43,9 @@
         activeExports = [NSMutableArray array];
         activeImports = [NSMutableArray array];
         
-        countButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(300, 0, 80, 80) forLetter:@"0+" andOffset:CGPointMake(1, 0)];
+        CGRect countButtonRect = CGRectMake(0, 0, 80, 80);
+        countButtonRect.origin.x = self.bounds.size.width - 100 - countButtonRect.size.width/3*kCloudKitMaxVisibleImports + countButtonRect.size.width / 4 - 2;
+        countButton = [[MMAvatarButton alloc] initWithFrame:countButtonRect forLetter:@"0+" andOffset:CGPointMake(1, 0)];
         countButton.shouldDrawDarkBackground = YES;
         countButton.alpha = 0;
         [countButton setNeedsDisplay];
@@ -180,6 +184,15 @@
 }
 
 -(void) animateAndAlignAllButtons{
+    // align all invisible buttons so they animate in respectably
+    for(MMCloudKitImportCoordinator* import in [activeImports reverseObjectEnumerator]){
+        if(!import.isReady || !import.avatarButton.alpha){
+            CGPoint center = import.avatarButton.center;
+            center.x = self.bounds.size.width - 100 - import.avatarButton.bounds.size.width/3 + import.avatarButton.bounds.size.width / 2;
+            import.avatarButton.center = center;
+        }
+    }
+    
     [UIView animateWithDuration:.3 animations:^{
         int i=1;
         @synchronized(activeExports){
@@ -196,27 +209,29 @@
         int count = 0;
         i = 0;
         @synchronized(activeImports){
-            for(MMCloudKitExportCoordinator* import in [activeImports reverseObjectEnumerator]){
+            for(MMCloudKitImportCoordinator* import in [activeImports reverseObjectEnumerator]){
                 if(![disappearingButtons containsObject:import.avatarButton] &&
                    ![animationHelperView containsSubview:import.avatarButton]){
-                    CGPoint center = import.avatarButton.center;
-                    center.x = self.bounds.size.width - 100 - import.avatarButton.bounds.size.width/3*i + import.avatarButton.bounds.size.width / 2;
-                    import.avatarButton.center = center;
-                    if(i >= 3){
-                        import.avatarButton.alpha = 0;
-                    }else{
-                        import.avatarButton.alpha = 1;
+                    if(import.isReady){
+                        CGPoint center = import.avatarButton.center;
+                        center.x = self.bounds.size.width - 100 - import.avatarButton.bounds.size.width/3*i + import.avatarButton.bounds.size.width / 2;
+                        import.avatarButton.center = center;
+                        if(i >= kCloudKitMaxVisibleImports){
+                            import.avatarButton.alpha = 0;
+                        }else{
+                            import.avatarButton.alpha = 1;
+                        }
+                        i++;
+                        count++;
                     }
-                    i++;
-                    count++;
                 }
             }
-            if(i > 3){
+            if(i > kCloudKitMaxVisibleImports){
                 countButton.alpha = 1;
             }else{
                 countButton.alpha = 0;
             }
-            i = MIN(3,i);
+            i = MIN(kCloudKitMaxVisibleImports,i);
             countButton.center = CGPointMake(self.bounds.size.width - 100 - countButton.bounds.size.width/3*i + countButton.bounds.size.width / 4 - 2, countButton.center.y);
             countButton.letter = [NSString stringWithFormat:@"%d+", count-i];
         }

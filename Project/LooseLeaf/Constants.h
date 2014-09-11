@@ -40,6 +40,9 @@ _Pragma("clang diagnostic pop") \
 
 #define kAnimationDelay 0.05
 
+// CloudKit Import
+#define kCloudKitMaxVisibleImports 5
+
 // Imgur
 #define kImgurClientID @"84d82da68fd2438"
 #define kImgurClientSecret @"9d527186fee2a9f9e7af7f5e9fbbab334a1ac1ce"
