@@ -12,6 +12,7 @@
 #import "MMCloudKitImportExportView.h"
 #import "SPRMessage+Initials.h"
 #import <ZipArchive/ZipArchive.h>
+#import "MMCloudKitManager.h"
 #import "Mixpanel.h"
 
 
@@ -231,8 +232,25 @@
                     }
                 });
             }else{
-                NSLog(@"coordinator failed - couldn't fetch data %@ %@", message.messageRecordID, error);
-                [importExportView importCoordinatorFailedPermanently:self];
+                switch (error.code) {
+                    case SPRSimpleCloudMessengerErrorUnexpected:
+                    case SPRSimpleCloudMessengerErrorNetwork:
+                    case SPRSimpleCloudMessengerErrorServiceUnavailable:
+                    case SPRSimpleCloudMessengerErrorRateLimit:
+                    case SPRSimpleCloudMessengerErrorCancelled:
+                        NSLog(@"coordinator failed temporarily - couldn't fetch data %@ %@", message.messageRecordID, error);
+                        NSLog(@"retrying in 5s");
+                        [self performSelector:@selector(begin) withObject:nil afterDelay:5];
+                        break;
+                        
+                    case SPRSimpleCloudMessengerErroriCloudAccount:
+                    case SPRSimpleCloudMessengerErroriCloudAccountChanged:
+                    case SPRSimpleCloudMessengerErrorMissingDiscoveryPermissions:
+                    default:
+                        NSLog(@"coordinator failed permanently - couldn't fetch data %@ %@", message.messageRecordID, error);
+                        [importExportView importCoordinatorFailedPermanently:self];
+                        break;
+                }
             }
         }];
     });
