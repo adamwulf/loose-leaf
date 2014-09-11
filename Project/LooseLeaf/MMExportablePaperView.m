@@ -104,6 +104,13 @@
         waitingForExport = NO;
     }
     if([self hasEditsToSave]){
+        @synchronized(self){
+            // welp, we can't export yet, we need
+            // to save first. so set that we're waiting
+            // and save immediately
+            isCurrentlyExporting = NO;
+            waitingForExport = YES;
+        }
         NSLog(@"saved exporing while save is still needed");
         [self saveToDisk];
         return;
