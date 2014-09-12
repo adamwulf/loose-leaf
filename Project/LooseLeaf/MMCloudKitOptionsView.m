@@ -13,6 +13,7 @@
 #import "MMCloudKitLoggedInState.h"
 #import "MMCloudKitFetchFriendsState.h"
 #import "MMCloudKitOfflineState.h"
+#import "MMCloudKitAccountMissingState.h"
 #import "MMCloudKitFriendCollectionViewCell.h"
 #import "MMCloudKitInviteCollectionViewCell.h"
 #import "MMCloudKitShareListVerticalLayout.h"
@@ -195,6 +196,12 @@ BOOL hasSent = NO;
         [cloudKeyButton flipAnimatedToKeyWithCompletion:^{
             cloudKeyButton.enabled = YES;
         }];
+    }else if([currentState isKindOfClass:[MMCloudKitAccountMissingState class]]){
+        listOfFriendsView.hidden = YES;
+        cloudKitLabel.hidden = YES;
+        offlineView.hidden = YES;
+        cloudKeyButton.hidden = NO;
+        [cloudKeyButton animateToBrokenCloud];
     }else if([currentState isKindOfClass:[MMCloudKitDeclinedPermissionState class]]){
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
