@@ -14,6 +14,8 @@
 #import <ZipArchive/ZipArchive.h>
 #import "MMCloudKitManager.h"
 #import "Mixpanel.h"
+#import "NSThread+BlockAdditions.h"
+#import "MMReachabilityManager.h"
 
 
 // step 1: fetch message from CloudKit
@@ -33,6 +35,8 @@
     NSInteger numberOfScrapsOnIncomingPage; // used for mixpanel only
     NSInteger numberOfVisibleScrapsOnIncomingPage; // used for mixpanel only
     NSInteger numberOfImportedScraps; // used for mixpanel only
+    
+    BOOL isWaitingOnNetwork;
 }
 
 @synthesize avatarButton;
@@ -46,6 +50,7 @@
         importExportView = _exportView;
         avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:message.initials];
         [avatarButton addTarget:self action:@selector(avatarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityDidChange) name:kReachabilityChangedNotification object:nil];
     }
     return self;
 }
@@ -57,6 +62,17 @@
     importExportView = _importExportView;
 }
 
+-(void) reachabilityDidChange{
+    if(isWaitingOnNetwork){
+        if([MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
+            NSLog(@"Import: network is back online, restarting download");
+            // we're allowed to startup our download again
+            isWaitingOnNetwork = NO;
+            [self begin];
+        }
+    }
+}
+
 -(void) begin{
     if(self.isReady){
         NSLog(@"beginning already ready message %@", message.messageRecordID);
@@ -65,6 +81,12 @@
         });
         return;
     }
+    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
+        NSLog(@"Import: network is offline, waiting for internet");
+        isWaitingOnNetwork = YES;
+        return;
+    }
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         //
         // Step 1:
