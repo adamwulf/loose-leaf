@@ -163,6 +163,7 @@
 		6672EFEA19C3A71E0076009F /* CloudKitLookUp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFE919C3A71E0076009F /* CloudKitLookUp@2x.png */; };
 		6672EFEC19C3AAC40076009F /* CloudKitPermissionSwitch.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFEB19C3AAC40076009F /* CloudKitPermissionSwitch.png */; };
 		6672EFEE19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFED19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png */; };
+		6672EFF119C3AC2B0076009F /* MMCloudErrorIconLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6672EFF019C3AC2B0076009F /* MMCloudErrorIconLayer.m */; };
 		667C6352199FE4BC00E93CD6 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 667C6337199FE4BC00E93CD6 /* Media.xcassets */; };
 		667C6353199FE4BC00E93CD6 /* MPCloseBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 667C6338199FE4BC00E93CD6 /* MPCloseBtn.png */; };
 		667C6354199FE4BC00E93CD6 /* MPCloseBtn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 667C6339199FE4BC00E93CD6 /* MPCloseBtn@2x.png */; };
@@ -623,6 +624,8 @@
 		6672EFE919C3A71E0076009F /* CloudKitLookUp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CloudKitLookUp@2x.png"; sourceTree = "<group>"; };
 		6672EFEB19C3AAC40076009F /* CloudKitPermissionSwitch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CloudKitPermissionSwitch.png; sourceTree = "<group>"; };
 		6672EFED19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CloudKitPermissionSwitch@2x.png"; sourceTree = "<group>"; };
+		6672EFEF19C3AC2B0076009F /* MMCloudErrorIconLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudErrorIconLayer.h; sourceTree = "<group>"; };
+		6672EFF019C3AC2B0076009F /* MMCloudErrorIconLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudErrorIconLayer.m; sourceTree = "<group>"; };
 		667AC03D18CE32D700AE6AF1 /* MMStretchScrapGestureRecognizerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMStretchScrapGestureRecognizerDelegate.h; sourceTree = "<group>"; };
 		667C6337199FE4BC00E93CD6 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Media.xcassets; path = ../../Submodules/mixpanel/Mixpanel/Media.xcassets; sourceTree = "<group>"; };
 		667C6338199FE4BC00E93CD6 /* MPCloseBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MPCloseBtn.png; path = ../../Submodules/mixpanel/Mixpanel/MPCloseBtn.png; sourceTree = "<group>"; };
@@ -2353,6 +2356,8 @@
 				66FA039719BEBAB300AF0DC4 /* MMCloudKeyIconLayer.m */,
 				66FA039919BF8CDD00AF0DC4 /* MMCloudLoadingIconLayer.h */,
 				66FA039A19BF8CDD00AF0DC4 /* MMCloudLoadingIconLayer.m */,
+				6672EFEF19C3AC2B0076009F /* MMCloudErrorIconLayer.h */,
+				6672EFF019C3AC2B0076009F /* MMCloudErrorIconLayer.m */,
 				66FA03A319BFFB7900AF0DC4 /* MMBrokenCloudLayer.h */,
 				66FA03A419BFFB7900AF0DC4 /* MMBrokenCloudLayer.m */,
 			);
@@ -2659,6 +2664,7 @@
 				66BD6E941593E1D800D4544C /* MMImageButton.m in Sources */,
 				66A7AF2019A53C7900E0AA29 /* MMCloudKitOptionsView.m in Sources */,
 				66B75DB51877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.m in Sources */,
+				6672EFF119C3AC2B0076009F /* MMCloudErrorIconLayer.m in Sources */,
 				66EDE42019AE736E00A5623B /* MMCloudKitImportExportView.m in Sources */,
 				6627DFA719003DF900592EEF /* CaptureSessionManager.m in Sources */,
 				665182071937B41800CBEAB4 /* MMMemoryProfileView.m in Sources */,

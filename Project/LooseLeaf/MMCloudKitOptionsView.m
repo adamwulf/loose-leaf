@@ -67,12 +67,12 @@
         cloudKeyButton.enabled = NO;
         [self addSubview:cloudKeyButton];
         
-        noAccountHelpView = [[MMCloudKitNoAccountHelpView alloc] initWithFrame:CGRectMake(0, cloudKeyButton.bounds.size.height,
+        noAccountHelpView = [[MMCloudKitNoAccountHelpView alloc] initWithFrame:CGRectMake(0, cloudKeyButton.bounds.size.height - 14,
                                                                                           self.bounds.size.width, 570)];
         noAccountHelpView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [self addSubview:noAccountHelpView];
 
-        declinedHelpView = [[MMCloudKitDeclinedPermissionHelpView alloc] initWithFrame:CGRectMake(0, cloudKeyButton.bounds.size.height,
+        declinedHelpView = [[MMCloudKitDeclinedPermissionHelpView alloc] initWithFrame:CGRectMake(0, cloudKeyButton.bounds.size.height - 14,
                                                                                                   self.bounds.size.width, 570)];
         declinedHelpView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [self addSubview:declinedHelpView];

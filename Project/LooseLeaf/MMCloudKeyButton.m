@@ -9,11 +9,12 @@
 #import "MMCloudKeyButton.h"
 #import "MMRotatingKeyDemoLayer.h"
 #import "MMBrokenCloudLayer.h"
+#import "MMCloudErrorIconLayer.h"
 
 @implementation MMCloudKeyButton{
     MMRotatingKeyDemoLayer* needLoginView;
     NSTimer* bounceTimer;
-    MMBrokenCloudLayer* brokenCloud;
+    MMCloudErrorIconLayer* brokenCloud;
 }
 
 -(id) initWithFrame:(CGRect)frame{
@@ -47,7 +48,7 @@
 }
 
 -(void) animateToBrokenCloud{
-    brokenCloud = [[MMBrokenCloudLayer alloc] initWithFrame:self.bounds];
+    brokenCloud = [[MMCloudErrorIconLayer alloc] initWithFrame:self.bounds];
     [self.layer addSublayer:brokenCloud];
     
     brokenCloud.opacity = 1.0;
@@ -65,11 +66,11 @@
     opacityForGradient.duration = .2;
     
     [CATransaction begin];
-    [CATransaction setCompletionBlock:^{
-        [brokenCloud animatePiecesApart];
-    }];
+//    [CATransaction setCompletionBlock:^{
+//        [brokenCloud animatePiecesApart];
+//    }];
     [brokenCloud addAnimation:opacityForBreak forKey:@"opacity"];
-    [needLoginView addAnimation:opacityForGradient forKey:@"opacity"];
+//    [needLoginView addAnimation:opacityForGradient forKey:@"opacity"];
     [CATransaction commit];
 }
 
