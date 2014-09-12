@@ -49,12 +49,12 @@
         topArrow.lineWidth = 1;
         topArrow.strokeColor = borderColor.CGColor;
         topArrow.fillColor = halfWhite.CGColor;
-        topArrow.position = CGPointMake(self.bounds.size.width/2, 150);
+        topArrow.position = CGPointMake(self.bounds.size.width/2, 148);
         [self.layer addSublayer:topArrow];
 
         UIImageView* iCloudSettings = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iCloudSettingsLoggedIn"]];
         iCloudSettings.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        iCloudSettings.center = CGPointMake(self.bounds.size.width/2, 220);
+        iCloudSettings.center = CGPointMake(self.bounds.size.width/2, 216);
         [self addSubview:iCloudSettings];
         
         bottomArrow = [CAShapeLayer layer];
@@ -63,12 +63,12 @@
         bottomArrow.lineWidth = 1;
         bottomArrow.strokeColor = borderColor.CGColor;
         bottomArrow.fillColor = halfWhite.CGColor;
-        bottomArrow.position = CGPointMake(self.bounds.size.width/2, 264);
+        bottomArrow.position = CGPointMake(self.bounds.size.width/2, 260);
         [self.layer addSublayer:bottomArrow];
         
         UIImageView* iCloudDrive = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iCloudDrive"]];
         iCloudDrive.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        iCloudDrive.center = CGPointMake(self.bounds.size.width/2, 309);
+        iCloudDrive.center = CGPointMake(self.bounds.size.width/2, 305);
         [self addSubview:iCloudDrive];
         
         bottomArrow2 = [CAShapeLayer layer];
@@ -77,12 +77,12 @@
         bottomArrow2.lineWidth = 1;
         bottomArrow2.strokeColor = borderColor.CGColor;
         bottomArrow2.fillColor = halfWhite.CGColor;
-        bottomArrow2.position = CGPointMake(self.bounds.size.width/2, 350);
+        bottomArrow2.position = CGPointMake(self.bounds.size.width/2, 346);
         [self.layer addSublayer:bottomArrow2];
         
         UIImageView* cloudKitLookUp = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CloudKitLookUp"]];
         cloudKitLookUp.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        cloudKitLookUp.center = CGPointMake(self.bounds.size.width/2, 395);
+        cloudKitLookUp.center = CGPointMake(self.bounds.size.width/2, 391);
         [self addSubview:cloudKitLookUp];
         
         bottomArrow3 = [CAShapeLayer layer];
@@ -91,12 +91,12 @@
         bottomArrow3.lineWidth = 1;
         bottomArrow3.strokeColor = borderColor.CGColor;
         bottomArrow3.fillColor = halfWhite.CGColor;
-        bottomArrow3.position = CGPointMake(self.bounds.size.width/2, 465);
+        bottomArrow3.position = CGPointMake(self.bounds.size.width/2, 461);
         [self.layer addSublayer:bottomArrow3];
         
         UIImageView* cloudKitPermission = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CloudKitPermissionSwitch"]];
         cloudKitPermission.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        cloudKitPermission.center = CGPointMake(self.bounds.size.width/2, 524);
+        cloudKitPermission.center = CGPointMake(self.bounds.size.width/2, 520);
         [self addSubview:cloudKitPermission];
     }
     return self;
