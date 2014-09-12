@@ -21,6 +21,7 @@
 #import "MMCloudKitShareItem.h"
 #import "MMOfflineIconView.h"
 #import "MMCloudKeyButton.h"
+#import "MMCloudKitNoAccountHelpView.h"
 #import "Constants.h"
 #import "MMRotationManager.h"
 #import "NSThread+BlockAdditions.h"
@@ -31,6 +32,8 @@
     UICollectionView* listOfFriendsView;
     MMOfflineIconView* offlineView;
     MMCloudKeyButton* cloudKeyButton;
+    
+    MMCloudKitNoAccountHelpView* noAccountHelpView;
     
     NSArray* allKnownFriends;
     NSArray* allFriendsExceptSender;
@@ -61,6 +64,11 @@
         [cloudKeyButton addTarget:self action:@selector(loginButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         cloudKeyButton.enabled = NO;
         [self addSubview:cloudKeyButton];
+        
+        noAccountHelpView = [[MMCloudKitNoAccountHelpView alloc] initWithFrame:CGRectMake(0, cloudKeyButton.bounds.size.height,
+                                                                                          self.bounds.size.width, 500)];
+        noAccountHelpView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        [self addSubview:noAccountHelpView];
         
         CGRect frForTable = self.bounds;
         frForTable.origin.y = kWidthOfSidebarButtonBuffer;

@@ -323,6 +323,11 @@
 		66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */; };
 		66F4FB2617D912730086E21C /* MMScrapSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2517D912730086E21C /* MMScrapSidebarContentView.m */; };
+		66F968AB19C393DE00C1F696 /* ios-settings-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 66F968AA19C393DE00C1F696 /* ios-settings-icon.png */; };
+		66F968AD19C393E300C1F696 /* ios-settings-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66F968AC19C393E300C1F696 /* ios-settings-icon@2x.png */; };
+		66F968B119C3940400C1F696 /* MMCloudKitNoAccountHelpView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F968B019C3940400C1F696 /* MMCloudKitNoAccountHelpView.m */; };
+		66F968B319C3947700C1F696 /* iCloudSettings.png in Resources */ = {isa = PBXBuildFile; fileRef = 66F968B219C3947700C1F696 /* iCloudSettings.png */; };
+		66F968B519C3947B00C1F696 /* iCloudSettings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66F968B419C3947B00C1F696 /* iCloudSettings@2x.png */; };
 		66FA039819BEBAB300AF0DC4 /* MMCloudKeyIconLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA039719BEBAB300AF0DC4 /* MMCloudKeyIconLayer.m */; };
 		66FA039B19BF8CDD00AF0DC4 /* MMCloudLoadingIconLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA039A19BF8CDD00AF0DC4 /* MMCloudLoadingIconLayer.m */; };
 		66FA039F19BFAF3600AF0DC4 /* MMRotatingKeyDemoLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA039E19BFAF3600AF0DC4 /* MMRotatingKeyDemoLayer.m */; };
@@ -938,6 +943,12 @@
 		66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCountBubbleButton.m; sourceTree = "<group>"; };
 		66F4FB2417D912730086E21C /* MMScrapSidebarContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapSidebarContentView.h; sourceTree = "<group>"; };
 		66F4FB2517D912730086E21C /* MMScrapSidebarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapSidebarContentView.m; sourceTree = "<group>"; };
+		66F968AA19C393DE00C1F696 /* ios-settings-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios-settings-icon.png"; sourceTree = "<group>"; };
+		66F968AC19C393E300C1F696 /* ios-settings-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios-settings-icon@2x.png"; sourceTree = "<group>"; };
+		66F968AF19C3940400C1F696 /* MMCloudKitNoAccountHelpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitNoAccountHelpView.h; sourceTree = "<group>"; };
+		66F968B019C3940400C1F696 /* MMCloudKitNoAccountHelpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitNoAccountHelpView.m; sourceTree = "<group>"; };
+		66F968B219C3947700C1F696 /* iCloudSettings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iCloudSettings.png; sourceTree = "<group>"; };
+		66F968B419C3947B00C1F696 /* iCloudSettings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iCloudSettings@2x.png"; sourceTree = "<group>"; };
 		66FA039619BEBAB300AF0DC4 /* MMCloudKeyIconLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKeyIconLayer.h; sourceTree = "<group>"; };
 		66FA039719BEBAB300AF0DC4 /* MMCloudKeyIconLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKeyIconLayer.m; sourceTree = "<group>"; };
 		66FA039919BF8CDD00AF0DC4 /* MMCloudLoadingIconLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudLoadingIconLayer.h; sourceTree = "<group>"; };
@@ -1830,6 +1841,7 @@
 		66A7AF1A19A53ACD00E0AA29 /* CloudKit */ = {
 			isa = PBXGroup;
 			children = (
+				66F968AE19C393F000C1F696 /* CloudKit Help Views */,
 				66FA039C19BFAA5C00AF0DC4 /* SpinningKeyView */,
 				66A7AF1E19A53C7900E0AA29 /* MMCloudKitOptionsView.h */,
 				66A7AF1F19A53C7900E0AA29 /* MMCloudKitOptionsView.m */,
@@ -2288,6 +2300,19 @@
 			name = "Photo Row Views";
 			sourceTree = "<group>";
 		};
+		66F968AE19C393F000C1F696 /* CloudKit Help Views */ = {
+			isa = PBXGroup;
+			children = (
+				66F968B219C3947700C1F696 /* iCloudSettings.png */,
+				66F968B419C3947B00C1F696 /* iCloudSettings@2x.png */,
+				66F968AA19C393DE00C1F696 /* ios-settings-icon.png */,
+				66F968AC19C393E300C1F696 /* ios-settings-icon@2x.png */,
+				66F968AF19C3940400C1F696 /* MMCloudKitNoAccountHelpView.h */,
+				66F968B019C3940400C1F696 /* MMCloudKitNoAccountHelpView.m */,
+			);
+			name = "CloudKit Help Views";
+			sourceTree = "<group>";
+		};
 		66FA039C19BFAA5C00AF0DC4 /* SpinningKeyView */ = {
 			isa = PBXGroup;
 			children = (
@@ -2409,6 +2434,7 @@
 				665245271996AA7B00C36609 /* FXBlurView.license in Resources */,
 				66684B46182DACAE005A27B4 /* DrawKit.license in Resources */,
 				660E9DCB19183032000A392A /* blackblur.png in Resources */,
+				66F968B319C3947700C1F696 /* iCloudSettings.png in Resources */,
 				666425C418CBC61200A306C1 /* opencv.license in Resources */,
 				667D98C4192FDB4300625879 /* UIImagePDF.license in Resources */,
 				6650DD0F18F46D5100ADF591 /* Images.xcassets in Resources */,
@@ -2422,15 +2448,18 @@
 				6650DD2318F48F8300ADF591 /* facebook@2x.png in Resources */,
 				66437C55199FDF55003389F0 /* airsharing@2x.png in Resources */,
 				667D98AA192D010900625879 /* Loose-Leaf_76.png in Resources */,
+				66F968B519C3947B00C1F696 /* iCloudSettings@2x.png in Resources */,
 				6652452F1996D1E500C36609 /* imgur@2x.png in Resources */,
 				666E253418F5DDFD00C17295 /* clearphotoalbum@2x.png in Resources */,
 				6650DD1F18F48E4200ADF591 /* twitter@2x.png in Resources */,
 				665245141995844D00C36609 /* twitterLarge.png in Resources */,
 				665244FF1995673900C36609 /* email.png in Resources */,
+				66F968AB19C393DE00C1F696 /* ios-settings-icon.png in Resources */,
 				6652456D1996E69D00C36609 /* link.png in Resources */,
 				6652450D199576E800C36609 /* text@2x.png in Resources */,
 				6650DD2118F48F7F00ADF591 /* facebook.png in Resources */,
 				666E253C18F5E15F00C17295 /* clearcamera@2x.png in Resources */,
+				66F968AD19C393E300C1F696 /* ios-settings-icon@2x.png in Resources */,
 				667C6353199FE4BC00E93CD6 /* MPCloseBtn.png in Resources */,
 				66A02F9C19A1DBE90013EFAE /* Eppz.license in Resources */,
 				667EF0C919A54F2500B1A38D /* icloud-share@2x.png in Resources */,
@@ -2662,6 +2691,7 @@
 				6652450319956DFA00C36609 /* MMEmailShareItem.m in Sources */,
 				667D98BE192FD37500625879 /* NSURL+UTI.m in Sources */,
 				6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */,
+				66F968B119C3940400C1F696 /* MMCloudKitNoAccountHelpView.m in Sources */,
 				6648D21D178C9E5400BE3B37 /* UIColor+Shadow.m in Sources */,
 				66A13D3A1631D9D9002F5428 /* MMObjectSelectLongPressGestureRecognizer.m in Sources */,
 				665C593717BD7CD3006DECBF /* PolygonTool.m in Sources */,
