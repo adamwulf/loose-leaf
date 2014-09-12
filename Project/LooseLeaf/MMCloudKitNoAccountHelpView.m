@@ -7,7 +7,8 @@
 //
 
 #import "MMCloudKitNoAccountHelpView.h"
-#import "UIView+Debug.h"
+#import "UIView+Animations.h"
+#import "NSThread+BlockAdditions.h"
 #import "Constants.h"
 
 @implementation MMCloudKitNoAccountHelpView{
@@ -27,10 +28,15 @@
         line.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         [self addSubview:line];
 
-        UIImageView* settingsIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ios-settings-icon"]];
-        settingsIcon.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        settingsIcon.center = CGPointMake(self.bounds.size.width/2, 40 + settingsIcon.bounds.size.height/2);
-        [self addSubview:settingsIcon];
+        
+        UIImage* settingsIcon = [UIImage imageNamed:@"ios-settings-icon"];
+        UIButton* settingsButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, settingsIcon.size.width, settingsIcon.size.height)];
+        [settingsButton setImage:settingsIcon forState:UIControlStateNormal];
+        [settingsButton setAdjustsImageWhenHighlighted:NO];
+        settingsButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        settingsButton.center = CGPointMake(self.bounds.size.width/2, 40 + settingsButton.bounds.size.height/2);
+        [settingsButton addTarget:self action:@selector(settingsButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:settingsButton];
         
         topArrow = [CAShapeLayer layer];
         topArrow.bounds = CGRectMake(0, 0, 80, 80);
@@ -50,6 +56,13 @@
         
     }
     return self;
+}
+
+-(void) settingsButtonTapped:(UIButton*)button{
+    [button bounceWithTransform:CGAffineTransformIdentity stepOne:.2 stepTwo:-.2];
+    [[NSThread mainThread] performBlock:^{
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+    } afterDelay:.2];
 }
 
 -(void) layoutSubviews{
