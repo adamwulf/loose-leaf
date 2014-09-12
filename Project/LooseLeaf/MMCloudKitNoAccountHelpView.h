@@ -10,4 +10,6 @@
 
 @interface MMCloudKitNoAccountHelpView : UIView
 
+-(void) animateIntoView;
+
 @end

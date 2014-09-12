@@ -191,12 +191,14 @@ BOOL hasSent = NO;
     
     // show update what's being shown in our UI
     if([currentState isMemberOfClass:[MMCloudKitBaseState class]]){
+        noAccountHelpView.hidden = YES;
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = YES;
         cloudKeyButton.hidden = NO;
         [cloudKeyButton flipImmediatelyToCloud];
     }else if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
+        noAccountHelpView.hidden = YES;
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = YES;
@@ -209,12 +211,14 @@ BOOL hasSent = NO;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = YES;
         cloudKeyButton.hidden = NO;
+        [noAccountHelpView animateIntoView];
         [cloudKeyButton animateToBrokenCloud];
     }else if([currentState isKindOfClass:[MMCloudKitDeclinedPermissionState class]]){
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = YES;
         cloudKeyButton.hidden = NO;
+        noAccountHelpView.hidden = YES;
         [cloudKeyButton animateToBrokenCloud];
     }else if([currentState isKindOfClass:[MMCloudKitAskingForPermissionState class]]){
         // don't need to manually flip key here
@@ -223,22 +227,26 @@ BOOL hasSent = NO;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = YES;
         cloudKeyButton.hidden = NO;
+        noAccountHelpView.hidden = YES;
     }else if([currentState isKindOfClass:[MMCloudKitOfflineState class]]){
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = NO;
         cloudKeyButton.hidden = YES;
+        noAccountHelpView.hidden = YES;
     }else if(currentState.friendList){
         [self updateDataSource];
         listOfFriendsView.hidden = NO;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = YES;
         cloudKeyButton.hidden = YES;
+        noAccountHelpView.hidden = YES;
     }else{
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = YES;
         cloudKeyButton.hidden = NO;
+        noAccountHelpView.hidden = YES;
     }
     [self updateInterfaceBasedOniCloudStatus];
 }

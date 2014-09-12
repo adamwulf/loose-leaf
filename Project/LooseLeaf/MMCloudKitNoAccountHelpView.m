@@ -72,4 +72,17 @@
     return arrowPath;
 }
 
+-(void) animateIntoView{
+    if(self.hidden){
+        self.alpha = 0;
+        self.hidden = NO;
+        CGRect origFr = self.frame;
+        self.frame = CGRectMake(origFr.origin.x, origFr.origin.y+10, origFr.size.width, origFr.size.height);
+        [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            self.frame = origFr;
+            self.alpha = 1;
+        } completion:nil];
+    }
+}
+
 @end
