@@ -1,41 +1,45 @@
 //
-//  MMCloudKitNoAccountHelpView.m
+//  MMCloudKitDeclinedPermissionHelpView.m
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 9/12/14.
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMCloudKitNoAccountHelpView.h"
+#import "MMCloudKitDeclinedPermissionHelpView.h"
 #import "UIView+Animations.h"
 #import "NSThread+BlockAdditions.h"
 #import "UIDevice+PPI.h"
 #import "Constants.h"
+#import "UIView+Debug.h"
 
-@implementation MMCloudKitNoAccountHelpView{
+@implementation MMCloudKitDeclinedPermissionHelpView{
     CAShapeLayer* topArrow;
+    CAShapeLayer* bottomArrow;
+    CAShapeLayer* bottomArrow2;
+    CAShapeLayer* bottomArrow3;
 }
 
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
-
+        
         UIColor* borderColor = [UIColor colorWithRed: 0.221 green: 0.221 blue: 0.219 alpha: 1];
         UIColor* halfWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.503];
-
+        
         CGFloat width = frame.size.width;
         CGRect lineRect = CGRectMake(width*0.1, kWidthOfSidebarButtonBuffer, width*0.8, 1);
         UIView* line = [[UIView alloc] initWithFrame:lineRect];
         line.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
         line.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         [self addSubview:line];
-
+        
         
         UIImage* settingsIcon = [UIImage imageNamed:@"ios-settings-icon"];
         UIButton* settingsButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, settingsIcon.size.width, settingsIcon.size.height)];
         [settingsButton setImage:settingsIcon forState:UIControlStateNormal];
         [settingsButton setAdjustsImageWhenHighlighted:NO];
         settingsButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        settingsButton.center = CGPointMake(self.bounds.size.width/2, 40 + settingsButton.bounds.size.height/2);
+        settingsButton.center = CGPointMake(self.bounds.size.width/2, 30 + settingsButton.bounds.size.height/2);
         [settingsButton addTarget:self action:@selector(settingsButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:settingsButton];
         
@@ -45,16 +49,55 @@
         topArrow.lineWidth = 1;
         topArrow.strokeColor = borderColor.CGColor;
         topArrow.fillColor = halfWhite.CGColor;
-        topArrow.position = CGPointMake(self.bounds.size.width/2, 164);
-        
-        
-        UIImageView* iCloudSettings = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iCloudSettings"]];
+        topArrow.position = CGPointMake(self.bounds.size.width/2, 150);
+        [self.layer addSublayer:topArrow];
+
+        UIImageView* iCloudSettings = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iCloudSettingsLoggedIn"]];
         iCloudSettings.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        iCloudSettings.center = CGPointMake(self.bounds.size.width/2, 238);
+        iCloudSettings.center = CGPointMake(self.bounds.size.width/2, 220);
         [self addSubview:iCloudSettings];
         
-        [self.layer addSublayer:topArrow];
+        bottomArrow = [CAShapeLayer layer];
+        bottomArrow.bounds = CGRectMake(0, 0, 40, 40);
+        bottomArrow.path = [self arrowPathForFrame:bottomArrow.bounds].CGPath;
+        bottomArrow.lineWidth = 1;
+        bottomArrow.strokeColor = borderColor.CGColor;
+        bottomArrow.fillColor = halfWhite.CGColor;
+        bottomArrow.position = CGPointMake(self.bounds.size.width/2, 264);
+        [self.layer addSublayer:bottomArrow];
         
+        UIImageView* iCloudDrive = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iCloudDrive"]];
+        iCloudDrive.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        iCloudDrive.center = CGPointMake(self.bounds.size.width/2, 309);
+        [self addSubview:iCloudDrive];
+        
+        bottomArrow2 = [CAShapeLayer layer];
+        bottomArrow2.bounds = CGRectMake(0, 0, 40, 40);
+        bottomArrow2.path = [self arrowPathForFrame:bottomArrow2.bounds].CGPath;
+        bottomArrow2.lineWidth = 1;
+        bottomArrow2.strokeColor = borderColor.CGColor;
+        bottomArrow2.fillColor = halfWhite.CGColor;
+        bottomArrow2.position = CGPointMake(self.bounds.size.width/2, 350);
+        [self.layer addSublayer:bottomArrow2];
+        
+        UIImageView* cloudKitLookUp = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CloudKitLookUp"]];
+        cloudKitLookUp.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        cloudKitLookUp.center = CGPointMake(self.bounds.size.width/2, 395);
+        [self addSubview:cloudKitLookUp];
+        
+        bottomArrow3 = [CAShapeLayer layer];
+        bottomArrow3.bounds = CGRectMake(0, 0, 80, 80);
+        bottomArrow3.path = [self arrowPathForFrame:bottomArrow3.bounds].CGPath;
+        bottomArrow3.lineWidth = 1;
+        bottomArrow3.strokeColor = borderColor.CGColor;
+        bottomArrow3.fillColor = halfWhite.CGColor;
+        bottomArrow3.position = CGPointMake(self.bounds.size.width/2, 465);
+        [self.layer addSublayer:bottomArrow3];
+        
+        UIImageView* cloudKitPermission = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CloudKitPermissionSwitch"]];
+        cloudKitPermission.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        cloudKitPermission.center = CGPointMake(self.bounds.size.width/2, 524);
+        [self addSubview:cloudKitPermission];
     }
     return self;
 }
@@ -70,6 +113,9 @@
 
 -(void) layoutSubviews{
     topArrow.position = CGPointMake(self.bounds.size.width/2, topArrow.position.y);
+    bottomArrow.position = CGPointMake(self.bounds.size.width/2, bottomArrow.position.y);
+    bottomArrow2.position = CGPointMake(self.bounds.size.width/2, bottomArrow2.position.y);
+    bottomArrow3.position = CGPointMake(self.bounds.size.width/2, bottomArrow3.position.y);
 }
 
 

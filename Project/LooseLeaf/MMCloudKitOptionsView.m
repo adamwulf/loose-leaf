@@ -22,6 +22,7 @@
 #import "MMOfflineIconView.h"
 #import "MMCloudKeyButton.h"
 #import "MMCloudKitNoAccountHelpView.h"
+#import "MMCloudKitDeclinedPermissionHelpView.h"
 #import "Constants.h"
 #import "MMRotationManager.h"
 #import "NSThread+BlockAdditions.h"
@@ -34,6 +35,7 @@
     MMCloudKeyButton* cloudKeyButton;
     
     MMCloudKitNoAccountHelpView* noAccountHelpView;
+    MMCloudKitDeclinedPermissionHelpView* declinedHelpView;
     
     NSArray* allKnownFriends;
     NSArray* allFriendsExceptSender;
@@ -66,10 +68,15 @@
         [self addSubview:cloudKeyButton];
         
         noAccountHelpView = [[MMCloudKitNoAccountHelpView alloc] initWithFrame:CGRectMake(0, cloudKeyButton.bounds.size.height,
-                                                                                          self.bounds.size.width, 500)];
+                                                                                          self.bounds.size.width, 570)];
         noAccountHelpView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [self addSubview:noAccountHelpView];
-        
+
+        declinedHelpView = [[MMCloudKitDeclinedPermissionHelpView alloc] initWithFrame:CGRectMake(0, cloudKeyButton.bounds.size.height,
+                                                                                                  self.bounds.size.width, 570)];
+        declinedHelpView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        [self addSubview:declinedHelpView];
+
         CGRect frForTable = self.bounds;
         frForTable.origin.y = kWidthOfSidebarButtonBuffer;
         frForTable.size.height -= kWidthOfSidebarButtonBuffer;
@@ -192,6 +199,7 @@ BOOL hasSent = NO;
     // show update what's being shown in our UI
     if([currentState isMemberOfClass:[MMCloudKitBaseState class]]){
         noAccountHelpView.hidden = YES;
+        declinedHelpView.hidden = YES;
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = YES;
@@ -199,6 +207,7 @@ BOOL hasSent = NO;
         [cloudKeyButton flipImmediatelyToCloud];
     }else if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
         noAccountHelpView.hidden = YES;
+        declinedHelpView.hidden = YES;
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = YES;
@@ -208,6 +217,7 @@ BOOL hasSent = NO;
         }];
     }else if([currentState isKindOfClass:[MMCloudKitAccountMissingState class]]){
         listOfFriendsView.hidden = YES;
+        declinedHelpView.hidden = YES;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = YES;
         cloudKeyButton.hidden = NO;
@@ -219,6 +229,7 @@ BOOL hasSent = NO;
         offlineView.hidden = YES;
         cloudKeyButton.hidden = NO;
         noAccountHelpView.hidden = YES;
+        [declinedHelpView animateIntoView];
         [cloudKeyButton animateToBrokenCloud];
     }else if([currentState isKindOfClass:[MMCloudKitAskingForPermissionState class]]){
         // don't need to manually flip key here
@@ -228,12 +239,14 @@ BOOL hasSent = NO;
         offlineView.hidden = YES;
         cloudKeyButton.hidden = NO;
         noAccountHelpView.hidden = YES;
+        declinedHelpView.hidden = YES;
     }else if([currentState isKindOfClass:[MMCloudKitOfflineState class]]){
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = NO;
         cloudKeyButton.hidden = YES;
         noAccountHelpView.hidden = YES;
+        declinedHelpView.hidden = YES;
     }else if(currentState.friendList){
         [self updateDataSource];
         listOfFriendsView.hidden = NO;
@@ -241,12 +254,14 @@ BOOL hasSent = NO;
         offlineView.hidden = YES;
         cloudKeyButton.hidden = YES;
         noAccountHelpView.hidden = YES;
+        declinedHelpView.hidden = YES;
     }else{
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = YES;
         cloudKeyButton.hidden = NO;
         noAccountHelpView.hidden = YES;
+        declinedHelpView.hidden = YES;
     }
     [self updateInterfaceBasedOniCloudStatus];
 }
