@@ -59,4 +59,6 @@
 
 -(NSString*) scrapIDsPath;
 
+-(CGSize) thumbnailSize;
+
 @end

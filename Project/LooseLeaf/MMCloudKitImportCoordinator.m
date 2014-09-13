@@ -198,6 +198,11 @@
                             NSString* undoPlist = [[tempPathOfIncomingPage stringByAppendingPathComponent:@"undoRedo"] stringByAppendingPathExtension:@"plist"];
                             [[NSFileManager defaultManager] removeItemAtPath:undoPlist error:&err];
                             
+                            // remove the empty page marker, if any, of the page
+                            err = nil;
+                            NSString* emptyFile = [tempPathOfIncomingPage stringByAppendingPathComponent:@"empty"];
+                            [[NSFileManager defaultManager] removeItemAtPath:emptyFile error:&err];
+                            
                             // add in the sender info
                             NSString* senderInfoPlist = [[tempPathOfIncomingPage stringByAppendingPathComponent:@"sender"] stringByAppendingPathExtension:@"plist"];
                             if(![NSKeyedArchiver archiveRootObject:message.senderInfo toFile:senderInfoPlist]){

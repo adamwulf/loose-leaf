@@ -235,6 +235,13 @@
                 CGFloat percentSoFar = ((CGFloat)filesSoFar / ([directoryContents count] + [bundledContents count]));
                 [self.delegate isExportingPage:self withPercentage:percentSoFar toZipLocation:fullPathToZip];
             }
+            if([directoryContents count] + [bundledContents count] == 0){
+                // page is entirely blank
+                // send an empty file in the zip
+                NSString* emptyFilename = [NSTemporaryDirectory() stringByAppendingPathComponent:@"empty"];
+                [@"" writeToFile:emptyFilename atomically:YES encoding:NSUTF8StringEncoding error:nil];
+                [zip addFileToZip:emptyFilename toPathInZip:@"empty"];
+            }
             [zip closeZipFile];
         }
         
@@ -255,7 +262,9 @@
             NSArray* contents = [zip contentsOfZipFile];
             [zip unzipCloseFile];
             
-            if([contents count] > 0 && [contents count] == [directoryContents count] + [bundledContents count]){
+            NSInteger expectedContentsCount = [directoryContents count] + [bundledContents count];
+            if(expectedContentsCount == 0) expectedContentsCount = 1;
+            if([contents count] > 0 && [contents count] == expectedContentsCount){
                 NSLog(@"valid zip file, contents: %d", (int) [contents count]);
                 [[NSFileManager defaultManager] moveItemAtPath:fullPathToTempZip toPath:fullPathToZip error:nil];
             }else{

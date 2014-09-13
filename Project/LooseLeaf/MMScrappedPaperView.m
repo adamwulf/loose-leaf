@@ -947,13 +947,17 @@
     return [scrappedImgViewImage image];
 }
 
+-(CGSize) thumbnailSize{
+    CGSize thumbSize = self.originalUnscaledBounds.size;
+    thumbSize.width /= 2;
+    thumbSize.height /= 2;
+    return thumbSize;
+}
+
 -(void) updateFullPageThumbnail:(MMImmutableScrapsOnPaperState*)immutableScrapState{
     @autoreleasepool {
         UIImage* thumb = [self synchronouslyLoadInkPreview];
-        CGSize thumbSize = self.originalUnscaledBounds.size;
-        thumbSize.width /= 2;
-        thumbSize.height /= 2;
-        
+        CGSize thumbSize = [self thumbnailSize];
         UIGraphicsBeginImageContextWithOptions(thumbSize, NO, 0.0);
         
         // get context

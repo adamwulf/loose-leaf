@@ -1842,7 +1842,19 @@ int skipAll = NO;
 #pragma mark - MMShareItemDelegate
 
 -(UIImage*) imageToShare{
-    return [visibleStackHolder peekSubview].scrappedImgViewImage;
+    UIImage* retImage = [visibleStackHolder peekSubview].scrappedImgViewImage;
+    if(!retImage){
+        @autoreleasepool {
+            CGSize thumbSize = [[visibleStackHolder peekSubview] thumbnailSize];
+            UIGraphicsBeginImageContextWithOptions(thumbSize, YES, 0.0);
+            [[UIColor whiteColor] setFill];
+            CGContextFillRect(UIGraphicsGetCurrentContext(), CGRectMake(0, 0, thumbSize.width, thumbSize.height));
+            
+            retImage = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+        }
+    }
+    return retImage;
 }
 
 -(NSDictionary*) cloudKitSenderInfo{
