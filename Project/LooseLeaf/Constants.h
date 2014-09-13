@@ -40,6 +40,9 @@ _Pragma("clang diagnostic pop") \
 
 #define kAnimationDelay 0.05
 
+// CloudKit Import
+#define kCloudKitMaxVisibleImports 5
+
 // Imgur
 #define kImgurClientID @"84d82da68fd2438"
 #define kImgurClientSecret @"9d527186fee2a9f9e7af7f5e9fbbab334a1ac1ce"
@@ -90,20 +93,33 @@ _Pragma("clang diagnostic pop") \
 #define kMPNumberOfEraserUses @"Number of Eraser Uses"
 #define kMPNumberOfScissorUses @"Number of Scissor Uses"
 #define kMPNumberOfRulerUses @"Number of Ruler Uses"
+#define kMPNumberOfImports @"Number of Imports"
+#define kMPNumberOfCloudKitImports @"Number of CloudKit Imports"  // import page sent via cloudkit
 #define kMPNumberOfPhotoImports @"Number of Photo Imports"  // import existing photo
 #define kMPNumberOfPhotosTaken @"Number of Photos Taken"    // take new photo with camera
 #define kMPNumberOfExports @"Number of Exports"
+#define kMPNumberOfCloudKitExports @"Number of CloudKit Exports"
+#define kMPNumberOfOpenInExports @"Number of Open In Exports"
+#define kMPNumberOfSocialExports @"Number of Social Media Exports"
 #define kMPHasZoomedToList @"Has Zoomed Out to List"
 #define kMPNumberOfLaunches @"Number Of Launches"
 #define kMPNumberOfCrashes @"Number of Crashes"
 #define kMPNumberOfDuplicatePages @"Duplicate Pages Found"
 #define kMPDistanceDrawn @"Distance Drawn (m)"
 #define kMPDistanceErased @"Distance Erased (m)"
+#define kMPNumberOfInvites @"Number of Invites"
+#define kMPNumberOfClippingExceptions @"Bezier Clip Exceptions"
+
+// invite properties
+#define kMPEventInvite @"Invite Friend"
+#define kMPEventInvitePropDestination @"Invite Destination"
+#define kMPEventInvitePropResult @"Invite Result"
 
 // MixPanel Events Properties
 #define kMPEventLaunch @"App Launch"
 #define kMPEventTakePhoto @"Take Photo"
 #define kMPEventImportPhoto @"Import Photo"
+#define kMPEventImportPage @"Import Page"
 #define kMPEventImportPhotoFailed @"Import Photo Failed"
 #define kMPEventExport @"Export Page"
 
@@ -116,6 +132,8 @@ _Pragma("clang diagnostic pop") \
 #define kMPEventImportPropSource @"Import Source"
 #define kMPEventImportPropPDFPageCount @"PDF Page Count"
 #define kMPEventImportPropSourceApplication @"Application"
+#define kMPEventImportPropScrapCount @"File Extension"
+#define kMPEventImportPropVisibleScrapCount @"File Type"
 
 // photo album
 #define kMaxPhotoRotationInDegrees 20
@@ -180,4 +198,24 @@ extern "C" {
 
 
 
+#pragma mark - Math Interpolation Helpers
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+    
+    // interpolate between min/max with 0<=t<=1
+    CGFloat logTransform(CGFloat min, CGFloat max, CGFloat t);
+
+    CGFloat sqrtTransform(CGFloat min, CGFloat max, CGFloat t);
+
+    CGFloat sqTransform(CGFloat min, CGFloat max, CGFloat t);
+    
+#ifdef __cplusplus
+    }  // extern "C"
+
+#endif
+
+    
+    
 #endif

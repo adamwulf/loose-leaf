@@ -38,7 +38,7 @@ static MMTrashManager* _instance = nil;
     return _instance;
 }
 
-+(MMTrashManager*) sharedInstace{
++(MMTrashManager*) sharedInstance{
     if(!_instance){
         _instance = [[MMTrashManager alloc]init];
     }
@@ -65,7 +65,7 @@ static MMTrashManager* _instance = nil;
     // otherwise we can delete them.
     BOOL(^checkScrapExistsInUndoRedoManager)() = ^{
         __block BOOL existsInUndoRedoManager = NO;
-        dispatch_async([page concurrentBackgroundQueue], ^{
+        dispatch_async([page serialBackgroundQueue], ^{
             BOOL needsLoad = ![undoablePage.undoRedoManager isLoaded];
             if(needsLoad){
                 [undoablePage.undoRedoManager loadFrom:[undoablePage undoStatePath]];

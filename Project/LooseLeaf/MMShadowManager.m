@@ -26,7 +26,7 @@ static MMShadowManager* _instance = nil;
     return _instance;
 }
 
-+(MMShadowManager*) sharedInstace{
++(MMShadowManager*) sharedInstance{
     if(!_instance){
         _instance = [[MMShadowManager alloc]init];
     }
@@ -37,7 +37,7 @@ static MMShadowManager* _instance = nil;
 #pragma mark - shadow methods
 
 -(UIBezierPath*) generateUnitShadowPath{
-    [MMShadowManager sharedInstace];
+    [MMShadowManager sharedInstance];
     CGFloat width = [[UIScreen mainScreen] bounds].size.width;
     CGFloat height = [[UIScreen mainScreen] bounds].size.height;
     UIBezierPath* path = [UIBezierPath bezierPath];

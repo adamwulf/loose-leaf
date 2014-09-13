@@ -11,7 +11,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMShadowManager.h"
 #import "MMScrappedPaperView.h"
-#import "MMUndoablePaperView.h"
+#import "MMExportablePaperView.h"
 #import "Mixpanel.h"
 #include <map>
 #include <iterator>
@@ -121,7 +121,7 @@
 -(void) didTapAddButtonInListView{
     //
     // this'll determine the resolution of the canvas too
-    MMEditablePaperView* paper = [[MMUndoablePaperView alloc] initWithFrame:self.bounds];
+    MMEditablePaperView* paper = [[MMExportablePaperView alloc] initWithFrame:self.bounds];
     // now size it for display
     paper.frame = addPageButtonInListView.frame;
     [self addPaperToBottomOfHiddenStack:paper];
@@ -562,7 +562,7 @@
                 theAnimation.duration = duration;
                 theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
                 theAnimation.fromValue = (id) aPage.contentView.layer.shadowPath;
-                theAnimation.toValue = (id) [[MMShadowManager sharedInstace] getShadowForSize:newFrame.size];
+                theAnimation.toValue = (id) [[MMShadowManager sharedInstance] getShadowForSize:newFrame.size];
                 [aPage.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
             }
         }
@@ -1470,7 +1470,7 @@
             if(aPage == [visibleStackHolder peekSubview]){
                 toSize = [MMShadowedView expandBounds:visibleStackHolder.bounds].size;
             }
-            theAnimation.toValue = (id) [[MMShadowManager sharedInstace] getShadowForSize:toSize];
+            theAnimation.toValue = (id) [[MMShadowManager sharedInstance] getShadowForSize:toSize];
             [aPage.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
         }
         [visibleStackHolder.superview insertSubview:hiddenStackHolder belowSubview:visibleStackHolder];
@@ -1519,7 +1519,7 @@
         theAnimation.duration = 0.15;
         theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
         theAnimation.fromValue = (id) [visibleStackHolder peekSubview].contentView.layer.shadowPath;
-        theAnimation.toValue = (id) [[MMShadowManager sharedInstace] getShadowForSize:self.bounds.size];
+        theAnimation.toValue = (id) [[MMShadowManager sharedInstance] getShadowForSize:self.bounds.size];
         [[visibleStackHolder peekSubview].contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
         [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn
                          animations:^(void){

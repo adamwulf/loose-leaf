@@ -18,4 +18,6 @@
 
 -(void) bounce;
 
+-(void) bounceWithTransform:(CGAffineTransform)transform stepOne:(CGFloat)max stepTwo:(CGFloat)min;
+
 @end

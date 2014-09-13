@@ -15,7 +15,7 @@
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMMemoryProfileView.h"
-#import "MMUndoablePaperView.h"
+#import "MMExportablePaperView.h"
 #import "Mixpanel.h"
 #import <mach/mach_time.h>  // for mach_absolute_time() and friends
 
@@ -45,7 +45,7 @@ struct SidebarButton{
         stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
         
         [MMPageCacheManager sharedInstance].drawableView = [[JotView alloc] initWithFrame:self.bounds];
-//        [MMPageCacheManager sharedInstace].drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
+//        [MMPageCacheManager sharedInstance].drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
         [[JotStylusManager sharedInstance] setPalmRejectorDelegate:[MMPageCacheManager sharedInstance].drawableView];
 
         pen = [[Pen alloc] init];
@@ -86,7 +86,7 @@ struct SidebarButton{
         settingsButton = [[MMTextButton alloc] initWithFrame:settingsButtonRect andFont:[UIFont systemFontOfSize:20] andLetter:@"!?" andXOffset:2 andYOffset:0];
         settingsButton.delegate = self;
         [settingsButton addTarget:self action:@selector(toggleMemoryView:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:settingsButton];
+//        [self addSubview:settingsButton];
         
         
         pencilTool = [[MMPencilAndPaletteView alloc] initWithButtonFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton) andScreenSize:self.bounds.size];
@@ -161,7 +161,7 @@ struct SidebarButton{
         // accelerometer for rotating buttons
         // ================================================================================
         
-        [[MMRotationManager sharedInstace] setDelegate:self];
+        [[MMRotationManager sharedInstance] setDelegate:self];
         
         
         
@@ -214,7 +214,6 @@ struct SidebarButton{
                                                          selector:@selector(connectionChange:)
                                                              name:JotStylusManagerDidChangeConnectionStatus
                                                            object:nil];
-                [[JotStylusManager sharedInstance] setEnabled:NO];
                 [[JotStylusManager sharedInstance] setRejectMode:NO];
             }
         }];
@@ -224,10 +223,10 @@ struct SidebarButton{
         [self addSubview:rulerView];
         
         
-        [self addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstace]];
+        [self addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstance]];
         
-        [[MMDrawingTouchGestureRecognizer sharedInstace] setTouchDelegate:self];
-        [self addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstace]];
+        [[MMDrawingTouchGestureRecognizer sharedInstance] setTouchDelegate:self];
+        [self addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstance]];
         
     }
     return self;
@@ -250,7 +249,8 @@ struct SidebarButton{
 
 -(void) cancelAllGestures{
     [super cancelAllGestures];
-    [[MMDrawingTouchGestureRecognizer sharedInstace] cancel];
+    [scissor cancelAllTouches];
+    [[MMDrawingTouchGestureRecognizer sharedInstance] cancel];
 }
 
 /**
@@ -258,7 +258,7 @@ struct SidebarButton{
  * should be rotated to stay pointed "down"
  */
 -(CGFloat) sidebarButtonRotation{
-    return -([[[MMRotationManager sharedInstace] currentRotationReading] angle] + M_PI/2);
+    return -([[[MMRotationManager sharedInstance] currentRotationReading] angle] + M_PI/2);
 }
 
 -(Tool*) activePen{
@@ -341,15 +341,15 @@ struct SidebarButton{
 }
 
 -(void) jotSettingsTapped:(UIButton*)_button{
-    if(jotTouchPopover && jotTouchPopover.popoverVisible){
-        return;
-    }else if(jotTouchPopover){
-        [jotTouchPopover dismissPopoverAnimated:NO];
-    }
-    JotSettingsViewController* settings = [[JotSettingsViewController alloc] initWithOnOffSwitch: YES];
-    jotTouchPopover = [[UIPopoverController alloc] initWithContentViewController:settings];
-    [jotTouchPopover presentPopoverFromRect:_button.frame inView:self permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-    [jotTouchPopover setPopoverContentSize:CGSizeMake(300, 446) animated:NO];
+//    if(jotTouchPopover && jotTouchPopover.popoverVisible){
+//        return;
+//    }else if(jotTouchPopover){
+//        [jotTouchPopover dismissPopoverAnimated:NO];
+//    }
+//    JotSettingsViewController* settings = [[JotSettingsViewController alloc] initWithOnOffSwitch: YES];
+//    jotTouchPopover = [[UIPopoverController alloc] initWithContentViewController:settings];
+//    [jotTouchPopover presentPopoverFromRect:_button.frame inView:self permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+//    [jotTouchPopover setPopoverContentSize:CGSizeMake(300, 446) animated:NO];
 }
 
 
@@ -362,7 +362,7 @@ struct SidebarButton{
 -(void) addPageButtonTapped:(UIButton*)_button{
     [super addPageButtonTapped:_button];
     
-    MMEditablePaperView* page = [[MMUndoablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+    MMEditablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.isBrandNewPage = YES;
     page.delegate = self;
     [hiddenStackHolder pushSubview:page];
@@ -404,7 +404,8 @@ struct SidebarButton{
 
 -(void) didUpdateAccelerometerWithReading:(MMVector*)currentRawReading{
     [NSThread performBlockOnMainThread:^{
-        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        CGFloat rotationValue = [self sidebarButtonRotation];
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation(rotationValue);
         addPageSidebarButton.transform = rotationTransform;
         documentBackgroundSidebarButton.transform = rotationTransform;
         polylineButton.transform = rotationTransform;
@@ -420,8 +421,25 @@ struct SidebarButton{
         rulerButton.transform = rotationTransform;
         handButton.transform = rotationTransform;
         settingsButton.transform = rotationTransform;
+        
+        addPageSidebarButton.rotation = rotationValue;
+        documentBackgroundSidebarButton.rotation = rotationValue;
+        polylineButton.rotation = rotationValue;
+        insertImageButton.rotation = rotationValue;
+        textButton.rotation = rotationValue;
+        scissorButton.rotation = rotationValue;
+        pencilTool.rotation = rotationValue;
+        eraserButton.rotation = rotationValue;
+        shareButton.rotation = rotationValue;
+        mapButton.rotation = rotationValue;
+        undoButton.rotation = rotationValue;
+        redoButton.rotation = rotationValue;
+        rulerButton.rotation = rotationValue;
+        handButton.rotation = rotationValue;
+        settingsButton.rotation = rotationValue;
     }];
 }
+
 -(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
     [NSThread performBlockOnMainThread:^{
         [[visibleStackHolder peekSubview] didUpdateAccelerometerWithRawReading:currentRawReading];
@@ -436,6 +454,10 @@ struct SidebarButton{
     // noop
 }
 
+-(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
+    // noop
+}
+
 
 #pragma mark - Bezel Left and Right Gestures
 
@@ -446,7 +468,7 @@ struct SidebarButton{
                                               bezelGesture.subState == UIGestureRecognizerStateChanged)){
         // cancel any strokes that this gesture is using
         for(UITouch* touch in bezelGesture.touches){
-            [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+            [[JotStrokeManager sharedInstance] cancelStrokeForTouch:touch];
             [scissor cancelPolygonForTouch:touch];
         }
     }
@@ -461,7 +483,7 @@ struct SidebarButton{
                                               bezelGesture.subState == UIGestureRecognizerStateChanged)){
         // cancel any strokes that this gesture is using
         for(UITouch* touch in bezelGesture.touches){
-            [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+            [[JotStrokeManager sharedInstance] cancelStrokeForTouch:touch];
             [scissor cancelPolygonForTouch:touch];
         }
     }
@@ -480,7 +502,7 @@ struct SidebarButton{
     // cancel through that manager, and it'll notify the appropriate
     // view if need be
     for(UITouch* touch in touches){
-        [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+        [[JotStrokeManager sharedInstance] cancelStrokeForTouch:touch];
         [scissor cancelPolygonForTouch:touch];
     }
     
@@ -512,6 +534,7 @@ struct SidebarButton{
     }
     // update UI for scaling small into list view
     [self setButtonsVisible:NO];
+    [scissor cancelAllTouches];
     [super isBeginningToScaleReallySmall:page];
     [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 }
@@ -596,7 +619,7 @@ struct SidebarButton{
     // cancel through that manager, and it'll notify the appropriate
     // view if need be
     for(UITouch* touch in gesture.validTouches){
-        [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+        [[JotStrokeManager sharedInstance] cancelStrokeForTouch:touch];
         [scissor cancelPolygonForTouch:touch];
     }
     if(gesture.subState == UIGestureRecognizerStateBegan ||
@@ -627,7 +650,7 @@ struct SidebarButton{
             [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
         }
     }
-    [[MMDrawingTouchGestureRecognizer sharedInstace] ownershipOfTouches:touches isGesture:gesture];
+    [[MMDrawingTouchGestureRecognizer sharedInstance] ownershipOfTouches:touches isGesture:gesture];
 }
 
 -(NSArray*) scraps{
@@ -732,7 +755,8 @@ struct SidebarButton{
     
     // load the state for the top page in the visible stack
     [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
-                                                     withSize:[[MMPageCacheManager sharedInstance].drawableView pagePixelSize]
+                                                     withSize:[MMPageCacheManager sharedInstance].drawableView.pagePtSize
+                                                     andScale:[MMPageCacheManager sharedInstance].drawableView.scale
                                                    andContext:[[MMPageCacheManager sharedInstance].drawableView context]];
     
     
@@ -758,8 +782,8 @@ struct SidebarButton{
 
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
     // dont start a new stroke if one already exists
-    if([[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count] > 0){
-//        debug_NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
+    if([[[MMDrawingTouchGestureRecognizer sharedInstance] validTouches] count] > 0){
+//        debug_NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstance] validTouches] count]);
         return NO;
     }
     if([MMPageCacheManager sharedInstance].drawableView.state.currentStroke){
@@ -906,39 +930,39 @@ struct SidebarButton{
 }
 
 
-#pragma mark - gestures for list view
+#pragma mark - Gestures for List View
 
 -(void) beginUITransitionFromPageView{
     [super beginUITransitionFromPageView];
     [[[MMPageCacheManager sharedInstance] currentEditablePage] cancelCurrentStrokeIfAny];
-    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+    [[MMDrawingTouchGestureRecognizer sharedInstance] setEnabled:NO];
     [[visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 -(void) beginUITransitionFromListView{
     [super beginUITransitionFromListView];
-    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+    [[MMDrawingTouchGestureRecognizer sharedInstance] setEnabled:NO];
 }
 
 -(void) finishUITransitionToListView{
     [super finishUITransitionToListView];
-    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+    [[MMDrawingTouchGestureRecognizer sharedInstance] setEnabled:NO];
     [[visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 -(void) finishUITransitionToPageView{
     [super finishUITransitionToPageView];
-    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
+    [[MMDrawingTouchGestureRecognizer sharedInstance] setEnabled:YES];
     [[visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 -(void) disableAllGesturesForPageView{
-    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+    [[MMDrawingTouchGestureRecognizer sharedInstance] setEnabled:NO];
     [super disableAllGesturesForPageView];
 }
 
 -(void) enableAllGesturesForPageView{
-    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
+    [[MMDrawingTouchGestureRecognizer sharedInstance] setEnabled:YES];
     [super enableAllGesturesForPageView];
 }
 
@@ -962,7 +986,7 @@ struct SidebarButton{
 #pragma mark - Check for Active Gestures
 
 -(BOOL) isActivelyGesturing{
-    return [super isActivelyGesturing] || [[MMDrawingTouchGestureRecognizer sharedInstace] isDrawing];
+    return [super isActivelyGesturing] || [[MMDrawingTouchGestureRecognizer sharedInstance] isDrawing];
 }
 
 @end

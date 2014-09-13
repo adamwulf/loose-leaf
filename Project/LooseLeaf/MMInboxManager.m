@@ -18,7 +18,7 @@
 
 static MMInboxManager* _instance = nil;
 
-+(MMInboxManager*) sharedInstace{
++(MMInboxManager*) sharedInstance{
     if(!_instance){
         _instance = [[MMInboxManager alloc]init];
     }

@@ -114,12 +114,10 @@
 }
 
 -(BOOL) isAtAllPossible{
-    
-    NSLog(@"model: %@", [EPPZDevice sharedDevice].model);
-    NSLog(@"variant: %@", [EPPZDevice sharedDevice].variant);
-    NSLog(@"generation: %@", [EPPZDevice sharedDevice].generation);
-    NSLog(@"machineID: %@", [EPPZDevice sharedDevice].machineID);
-    
+//    NSLog(@"model: %@", [EPPZDevice sharedDevice].model);
+//    NSLog(@"variant: %@", [EPPZDevice sharedDevice].variant);
+//    NSLog(@"generation: %@", [EPPZDevice sharedDevice].generation);
+//    NSLog(@"machineID: %@", [EPPZDevice sharedDevice].machineID);
     return ![[EPPZDevice sharedDevice].generation isEqualToString:@"iPad 2"];
 }
 

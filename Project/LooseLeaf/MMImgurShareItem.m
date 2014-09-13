@@ -15,6 +15,7 @@
 #import "AFNetworking.h"
 #import "MMReachabilityManager.h"
 #import "Reachability.h"
+#import "MMOfflineIconView.h"
 
 @implementation MMImgurShareItem{
     MMImageViewButton* button;
@@ -23,6 +24,7 @@
     CGFloat lastProgress;
     CGFloat targetProgress;
     BOOL targetSuccess;
+    NSError* reason;
 }
 
 @synthesize delegate;
@@ -63,10 +65,11 @@
     // so we need to dispatch async too
     dispatch_async(dispatch_get_main_queue(), ^{
         UIImage* image = self.delegate.imageToShare;
-        if(image && !conn && [MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
+        if(image && !conn){
             lastProgress = 0;
             targetSuccess = 0;
             targetProgress = 0;
+            reason = nil;
             [self uploadPhoto:UIImagePNGRepresentation(image) title:@"Quick sketch from Loose Leaf" description:@"http://getlooseleaf.com" progressBlock:^(CGFloat progress) {
                 progress *= .55; // leave last 10 % for when we get the URL
                 if(progress > targetProgress){
@@ -78,6 +81,7 @@
                 targetProgress = 1.0;
                 targetSuccess = YES;
                 conn = nil;
+                reason = nil;
                 [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
                 [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Imgur",
                                                                              kMPEventExportPropResult : @"Success"}];
@@ -85,6 +89,7 @@
                 lastLinkURL = nil;
                 targetProgress = 1.0;
                 targetSuccess = NO;
+                reason = error;
                 conn = nil;
                 
                 NSString* failedReason = [error.userInfo valueForKey:NSLocalizedFailureReasonErrorKey];
@@ -191,8 +196,9 @@
             CAShapeLayer* checkMarkOrXLayer = [CAShapeLayer layer];
             checkMarkOrXLayer.anchorPoint = CGPointZero;
             checkMarkOrXLayer.bounds = button.bounds;
-            UIBezierPath* path = [UIBezierPath bezierPath];
+            UIBezierPath* path = nil;
             if(succeeded){
+                path = [UIBezierPath bezierPath];
                 CGPoint start = CGPointMake(28, 39);
                 CGPoint corner = CGPointMake(start.x + 6, start.y + 6);
                 CGPoint end = CGPointMake(corner.x + 14, corner.y - 14);
@@ -200,7 +206,9 @@
                 [path addLineToPoint:corner];
                 [path addLineToPoint:end];
                 [self animateLinkTo:lastLinkURL];
-            }else{
+            }else if([MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable &&
+                     reason.code != NSURLErrorNotConnectedToInternet){
+                path = [UIBezierPath bezierPath];
                 CGFloat size = 14;
                 CGPoint start = CGPointMake(31, 31);
                 CGPoint end = CGPointMake(start.x + size, start.y + size);
@@ -210,18 +218,27 @@
                 end = CGPointMake(start.x - size, start.y + size);
                 [path moveToPoint:start];
                 [path addLineToPoint:end];
+            }else{
+                CGRect iconFrame = CGRectInset(button.drawableFrame, 6, 6);
+                iconFrame.origin.y += 4;
+                MMOfflineIconView* offlineIcon = [[MMOfflineIconView alloc] initWithFrame:iconFrame];
+                offlineIcon.shouldDrawOpaque = YES;
+                [checkOrXView addSubview:offlineIcon];
             }
-            checkMarkOrXLayer.path = path.CGPath;
-            checkMarkOrXLayer.strokeColor = [UIColor blackColor].CGColor;
-            checkMarkOrXLayer.lineWidth = 6;
-            checkMarkOrXLayer.lineCap = @"square";
-            checkMarkOrXLayer.strokeStart = 0;
-            checkMarkOrXLayer.strokeEnd = 1;
-            checkMarkOrXLayer.backgroundColor = [UIColor clearColor].CGColor;
-            checkMarkOrXLayer.fillColor = [UIColor clearColor].CGColor;
+            
+            if(path){
+                checkMarkOrXLayer.path = path.CGPath;
+                checkMarkOrXLayer.strokeColor = [UIColor blackColor].CGColor;
+                checkMarkOrXLayer.lineWidth = 6;
+                checkMarkOrXLayer.lineCap = @"square";
+                checkMarkOrXLayer.strokeStart = 0;
+                checkMarkOrXLayer.strokeEnd = 1;
+                checkMarkOrXLayer.backgroundColor = [UIColor clearColor].CGColor;
+                checkMarkOrXLayer.fillColor = [UIColor clearColor].CGColor;
+                [checkOrXView.layer addSublayer:checkMarkOrXLayer];
+            }
             
             checkOrXView.alpha = 0;
-            [checkOrXView.layer addSublayer:checkMarkOrXLayer];
             [button addSubview:checkOrXView];
             [UIView animateWithDuration:.3 animations:^{
                 checkOrXView.alpha = 1;
@@ -230,14 +247,19 @@
                     [delegate didShare:self];
                 }
                 [[NSThread mainThread] performBlock:^{
-                    [checkOrXView removeFromSuperview];
-                    [circle removeAnimationForKey:@"drawCircleAnimation"];
-                    [circle removeFromSuperlayer];
-                    // reset state
-                    lastProgress = 0;
-                    targetSuccess = 0;
-                    targetProgress = 0;
-                } afterDelay:.5];
+                    [checkOrXView.layer insertSublayer:circle atIndex:0];
+                    [UIView animateWithDuration:.3 animations:^{
+                        checkOrXView.alpha = 0;
+                    } completion:^(BOOL finished) {
+                        [checkOrXView removeFromSuperview];
+                        [circle removeAnimationForKey:@"drawCircleAnimation"];
+                        [circle removeFromSuperlayer];
+                        // reset state
+                        lastProgress = 0;
+                        targetSuccess = 0;
+                        targetProgress = 0;
+                    }];
+                } afterDelay:1];
             }];
         } afterDelay:.3];
     }else{

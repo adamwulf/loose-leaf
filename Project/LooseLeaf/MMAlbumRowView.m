@@ -88,7 +88,7 @@
 
 -(void) updatePhotoRotation{
     
-    UIDeviceOrientation orient = [[MMRotationManager sharedInstace] currentDeviceOrientation];
+    UIDeviceOrientation orient = [[MMRotationManager sharedInstance] currentDeviceOrientation];
     if(orient == UIDeviceOrientationLandscapeLeft){
         visiblePhotoRotation = M_PI / 2;
     }else if(orient == UIDeviceOrientationPortraitUpsideDown){

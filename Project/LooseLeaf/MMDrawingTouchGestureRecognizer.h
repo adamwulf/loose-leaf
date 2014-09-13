@@ -21,7 +21,7 @@
 @property (nonatomic, weak) NSObject<MMGestureTouchOwnershipDelegate>* touchDelegate;
 @property (readonly) NSArray* validTouches;
 
-+(MMDrawingTouchGestureRecognizer*) sharedInstace;
++(MMDrawingTouchGestureRecognizer*) sharedInstance;
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MMSidebarButton.h"
+#import "MMShareOptionsView.h"
 #import "MMShareItemDelegate.h"
 
 @protocol MMShareItem <NSObject>
@@ -22,7 +23,7 @@
 
 @property (nonatomic) BOOL isShowingOptionsView;
 
--(UIView*) optionsView;
+-(MMShareOptionsView*) optionsView;
 
 -(void) willShow;
 

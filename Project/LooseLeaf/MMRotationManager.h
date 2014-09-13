@@ -27,10 +27,11 @@
 
 @property (nonatomic, readonly) MMVector* currentRotationReading;
 @property (nonatomic, readonly) MMVector* currentRawRotationReading;
+@property (nonatomic, readonly) MMVector* idealRotationReadingForCurrentOrientation;
 @property (nonatomic, weak) NSObject<MMRotationManagerDelegate>* delegate;
+@property (nonatomic, readonly) UIDeviceOrientation lastBestOrientation;
 
-
-+(MMRotationManager*) sharedInstace;
++(MMRotationManager*) sharedInstance;
 
 -(UIDeviceOrientation) currentDeviceOrientation;
 

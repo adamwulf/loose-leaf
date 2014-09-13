@@ -18,6 +18,7 @@
 #import "MMPageCacheManager.h"
 #import "MMLoadImageCache.h"
 #import "UIView+Animations.h"
+#import "Mixpanel.h"
 
 dispatch_queue_t importThumbnailQueue;
 
@@ -219,12 +220,12 @@ dispatch_queue_t importThumbnailQueue;
     return [paperState hasEditsToSave];
 }
 
--(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context{
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePtSize andScale:(CGFloat)scale andContext:(JotGLContext*)context{
     if([paperState isStateLoaded]){
         [self didLoadState:paperState];
         return;
     }
-    [paperState loadStateAsynchronously:async withSize:pagePixelSize andContext:context andBufferManager:[JotBufferManager sharedInstace]];
+    [paperState loadStateAsynchronously:async withSize:pagePtSize andScale:scale andContext:context andBufferManager:[JotBufferManager sharedInstance]];
 }
 -(void) unloadState{
     [paperState unload];
@@ -376,7 +377,7 @@ static int count = 0;
 -(void) cancelCurrentStrokeIfAny{
     CheckMainThread;
     if(paperState.currentStroke){
-        if([[JotStrokeManager sharedInstace] cancelStroke:paperState.currentStroke]){
+        if([[JotStrokeManager sharedInstance] cancelStroke:paperState.currentStroke]){
             return;
         }
     }
@@ -466,7 +467,19 @@ static int count = 0;
         if([element isKindOfClass:[CurveToPathElement class]]){
             UIBezierPath* bez = [element bezierPathSegment];
             
-            NSArray* redAndBlueSegments = [UIBezierPath redAndGreenAndBlueSegmentsCreatedFrom:boundsPath bySlicingWithPath:bez andNumberOfBlueShellSegments:nil];
+            NSArray* redAndBlueSegments = nil;
+            @try{
+                redAndBlueSegments = [UIBezierPath redAndGreenAndBlueSegmentsCreatedFrom:boundsPath bySlicingWithPath:bez andNumberOfBlueShellSegments:nil];
+            }@catch(NSException* e){
+                // we had an exception when trying to clip this path.
+                // the solution for now is just to add the entire segment
+                // which will hapepn since [greenSegments count] will == 0
+                // below.
+                //
+                // true fix is filed in https://github.com/adamwulf/loose-leaf/issues/562
+                NSLog(@"unable to generate red/green/blue segments");
+                [[[Mixpanel sharedInstance] people] increment:kMPNumberOfClippingExceptions by:@(1)];
+            }
             NSArray* redSegments = [redAndBlueSegments firstObject];
             NSArray* greenSegments = [redAndBlueSegments objectAtIndex:1];
 

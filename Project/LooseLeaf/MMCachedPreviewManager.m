@@ -51,7 +51,7 @@ static MMCachedPreviewManager* _instance = nil;
     return _instance;
 }
 
-+(MMCachedPreviewManager*) sharedInstace{
++(MMCachedPreviewManager*) sharedInstance{
     if(!_instance){
         _instance = [[MMCachedPreviewManager alloc]init];
     }

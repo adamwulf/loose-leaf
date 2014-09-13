@@ -415,7 +415,7 @@
 #pragma mark - Rotation
 
 -(CGFloat) sidebarButtonRotation{
-    return -([[[MMRotationManager sharedInstace] currentRotationReading] angle] + M_PI/2);
+    return -([[[MMRotationManager sharedInstance] currentRotationReading] angle] + M_PI/2);
 }
 
 -(CGFloat) sidebarButtonRotationForReading:(MMVector*)currentReading{

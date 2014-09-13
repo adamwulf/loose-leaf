@@ -16,4 +16,12 @@
 
 +(void) ensureDirectoryExistsAtPath:(NSString*)path;
 
+- (NSArray *)recursiveContentsOfDirectoryAtPath:(NSString *)directoryPath filesOnly:(BOOL)filesOnly;
+
+-(BOOL) isDirectory:(NSString*)path;
+
+-(NSString*) humanReadableSizeForItemAtPath:(NSString*)path;
+
+-(unsigned long long) sizeForItemAtPath:(NSString *)path;
+
 @end

@@ -5,7 +5,7 @@
       "idiom" : "ipad",
       "extent" : "full-screen",
       "minimum-system-version" : "7.0",
-      "filename" : "Screenshot 2014.06.23 12.06.41-3.png",
+      "filename" : "portrait.png",
       "scale" : "1x"
     },
     {
@@ -13,7 +13,7 @@
       "idiom" : "ipad",
       "extent" : "full-screen",
       "minimum-system-version" : "7.0",
-      "filename" : "Screenshot 2014.06.23 12.06.41-2.png",
+      "filename" : "landscape.png",
       "scale" : "1x"
     },
     {
@@ -21,7 +21,7 @@
       "idiom" : "ipad",
       "extent" : "full-screen",
       "minimum-system-version" : "7.0",
-      "filename" : "Screenshot 2014.06.23 12.06.41.png",
+      "filename" : "portrait@2x.png",
       "scale" : "2x"
     },
     {
@@ -29,7 +29,7 @@
       "idiom" : "ipad",
       "extent" : "full-screen",
       "minimum-system-version" : "7.0",
-      "filename" : "Screenshot 2014.06.23 12.06.41-1.png",
+      "filename" : "landscape@2x.png",
       "scale" : "2x"
     },
     {

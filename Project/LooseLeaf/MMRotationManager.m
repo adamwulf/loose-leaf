@@ -22,6 +22,7 @@
 @synthesize delegate;
 @synthesize currentRotationReading;
 @synthesize currentRawRotationReading;
+@synthesize lastBestOrientation;
 
 static MMRotationManager* _instance = nil;
 
@@ -104,8 +105,10 @@ static MMRotationManager* _instance = nil;
                currentOrientation == UIDeviceOrientationLandscapeRight){
                 if(currentOrientation != UIDeviceOrientationFaceUp &&
                    currentOrientation != UIDeviceOrientationFaceDown &&
-                   currentOrientation != UIDeviceOrientationUnknown){
+                   currentOrientation != UIDeviceOrientationUnknown &&
+                   currentOrientation != lastBestOrientation){
                     lastBestOrientation = currentOrientation;
+                    [self.delegate didRotateToIdealOrientation:(UIInterfaceOrientation)lastBestOrientation];
                 }
             }
         }
@@ -124,7 +127,7 @@ static MMRotationManager* _instance = nil;
     }
 }
 
-+(MMRotationManager*) sharedInstace{
++(MMRotationManager*) sharedInstance{
     if(!_instance){
         _instance = [[MMRotationManager alloc]init];
     }
@@ -168,9 +171,11 @@ static BOOL ignoredFirstRotateNotification = NO;
     }
     
     if(shouldIgnoreEvents){
+        NSLog(@"ignoring rotation event");
         return;
     }
     if(!ignoredFirstRotateNotification){
+        NSLog(@"ignoring first rotation event");
         ignoredFirstRotateNotification = YES;
         return;
     }
@@ -190,7 +195,7 @@ static BOOL ignoredFirstRotateNotification = NO;
        orientation == UIDeviceOrientationFaceUp){
         orientation = UIDeviceOrientationPortrait;
     }
-
+    
     // cast to save a warning
     UIInterfaceOrientation devOrient = (UIInterfaceOrientation) orientation;
     UIInterfaceOrientation currOrient = [self currentStatusbarOrientation];

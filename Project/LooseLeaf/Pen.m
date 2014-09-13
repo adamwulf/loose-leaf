@@ -92,7 +92,7 @@
  * our velocity model and state info for this new touch
  */
 -(void) willMoveStrokeWithTouch:(JotTouch*)touch{
-    velocity = [[MMTouchVelocityGestureRecognizer sharedInstace] normalizedVelocityForTouch:touch.touch];
+    velocity = [[MMTouchVelocityGestureRecognizer sharedInstance] normalizedVelocityForTouch:touch.touch];
 }
 
 -(void) willEndStrokeWithTouch:(JotTouch*)touch{

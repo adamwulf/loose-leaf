@@ -13,7 +13,7 @@
 #import "TestFlight.h"
 #import "MMScrappedPaperView.h"
 #import "Mixpanel.h"
-#import "MMUndoablePaperView.h"
+#import "MMExportablePaperView.h"
 
 @implementation MMPaperStackView{
     MMPapersIcon* papersIcon;
@@ -113,7 +113,7 @@
  */
 -(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(UIView*)stackView{
     while([stackView.subviews count] < numberOfPagesToEnsure){
-        MMEditablePaperView* page = [[MMUndoablePaperView alloc] initWithFrame:stackView.bounds];
+        MMEditablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:stackView.bounds];
         page.isBrandNewPage = YES;
         page.delegate = self;
         [stackView addSubviewToBottomOfStack:page];
@@ -1399,6 +1399,18 @@
     @throw kAbstractMethodException;
 }
 
+-(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk{
+    @throw kAbstractMethodException;
+}
+
+-(void) didFailToExportPage:(MMPaperView*)page{
+    @throw kAbstractMethodException;
+}
+
+-(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk{
+    @throw kAbstractMethodException;
+}
+
 #pragma mark - Page Animation and Navigation Helpers
 
 /**
@@ -1670,7 +1682,7 @@
         theAnimation.duration = duration / 2;
         theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
         theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
-        theAnimation.toValue = (id) [[MMShadowManager sharedInstace] getShadowForSize:[MMShadowedView expandBounds:self.bounds].size];
+        theAnimation.toValue = (id) [[MMShadowManager sharedInstance] getShadowForSize:[MMShadowedView expandBounds:self.bounds].size];
         [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
         [UIView animateWithDuration:duration/2 delay:delay options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut
                          animations:^(void){
@@ -1691,7 +1703,7 @@
                                  theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
                                  theAnimation.duration = duration / 2;
                                  theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
-                                 theAnimation.toValue = (id) [[MMShadowManager sharedInstace] getShadowForSize:self.bounds.size];
+                                 theAnimation.toValue = (id) [[MMShadowManager sharedInstance] getShadowForSize:self.bounds.size];
                                  [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
                                  [UIView animateWithDuration:duration/2 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseIn
                                                   animations:^(void){
@@ -1709,7 +1721,7 @@
             theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
             theAnimation.duration = duration;
             theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
-            theAnimation.toValue = (id) [[MMShadowManager sharedInstace] getShadowForSize:self.bounds.size];
+            theAnimation.toValue = (id) [[MMShadowManager sharedInstance] getShadowForSize:self.bounds.size];
             [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
             [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut
                              animations:^(void){

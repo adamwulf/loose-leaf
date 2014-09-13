@@ -7,7 +7,7 @@
 //
 
 #import "MMOpenInAppSidebarButton.h"
-#import "MMShareManager.h"
+#import "MMOpenInAppManager.h"
 #import "Constants.h"
 
 @implementation MMOpenInAppSidebarButton{
@@ -62,7 +62,7 @@
     [halfGreyFill setFill];
     [ovalPath fill];
     
-    UIView* view = [[MMShareManager sharedInstance] viewForIndexPath:self.indexPath forceGet:NO];
+    UIView* view = [[MMOpenInAppManager sharedInstance] viewForIndexPath:self.indexPath forceGet:NO];
     
     if(!view){
         needsUpdate = YES;
@@ -106,9 +106,9 @@
 -(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
     UIView* viewFromSuper = [super hitTest:point withEvent:event];
     if(viewFromSuper == self){
-        UIView* cell = [[MMShareManager sharedInstance] viewForIndexPath:self.indexPath forceGet:YES];
+        UIView* cell = [[MMOpenInAppManager sharedInstance] viewForIndexPath:self.indexPath forceGet:YES];
         if(cell){
-            [MMShareManager setShareTargetView:cell];
+            [MMOpenInAppManager setShareTargetView:cell];
             
             for(NSObject* obj in self.allTargets){
                 NSArray* actions = [self actionsForTarget:obj forControlEvent:UIControlEventTouchUpInside];

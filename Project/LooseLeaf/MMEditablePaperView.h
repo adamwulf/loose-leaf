@@ -30,7 +30,7 @@
 -(BOOL) hasStateLoaded;
 -(void) unloadCachedPreview;
 -(void) loadCachedPreview;
--(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize) pagePixelSize andContext:(JotGLContext*)context;
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePtSize andScale:(CGFloat)scale andContext:(JotGLContext*)context;
 -(void) unloadState;
 -(void) saveToDisk:(void (^)(BOOL didSaveEdits))onComplete;
 -(void) updateThumbnailVisibility;
