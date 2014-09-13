@@ -620,9 +620,11 @@
     // we've cancelled the polygon (possibly b/c
     // it was a pan/pinch instead), so clear
     // the drawn polygon and reset.
-    [shapeBuilderView clear];
+    if(shapeBuilderView){
+        [shapeBuilderView clear];
+        NSLog(@"cancelling scissors");
+    }
 }
-
 
 -(void) completeScissorsCut{
     @autoreleasepool {

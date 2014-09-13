@@ -68,9 +68,6 @@
     
     dispatch_block_t block = ^{
         cloudKitSenderInfo = [NSKeyedUnarchiver unarchiveObjectWithFile:[[self pagesPath] stringByAppendingPathComponent:@"sender.plist"]];
-        if(cloudKitSenderInfo){
-            NSLog(@"loading sender info for page: %@\n%@", self.uuid, cloudKitSenderInfo);
-        }
     };
 
     if(async){

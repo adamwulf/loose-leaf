@@ -249,6 +249,7 @@ struct SidebarButton{
 
 -(void) cancelAllGestures{
     [super cancelAllGestures];
+    [scissor cancelAllTouches];
     [[MMDrawingTouchGestureRecognizer sharedInstance] cancel];
 }
 
@@ -533,6 +534,7 @@ struct SidebarButton{
     }
     // update UI for scaling small into list view
     [self setButtonsVisible:NO];
+    [scissor cancelAllTouches];
     [super isBeginningToScaleReallySmall:page];
     [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 }

@@ -70,4 +70,10 @@
     }
 }
 
+-(void) cancelAllTouches{
+    for(UITouch* touch in [polygonTouches copy]){
+        [self cancelPolygonForTouch:touch];
+    }
+}
+
 @end
