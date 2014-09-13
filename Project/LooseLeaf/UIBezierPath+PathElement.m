@@ -8,6 +8,8 @@
 
 #import "UIBezierPath+PathElement.h"
 #import <JotUI/UIColor+JotHelper.h>
+#import "Mixpanel.h"
+#import "Constants.h"
 
 @implementation UIBezierPath (PathElement)
 
@@ -91,42 +93,49 @@
     colorDiff[1] = elementColor[1] - prevColor[1];
     colorDiff[2] = elementColor[2] - prevColor[2];
     colorDiff[3] = elementColor[3] - prevColor[3];
-    [pathSegment iteratePathWithBlock:^(CGPathElement pathEle){
-        CGFloat tValueAtEndPoint;
-        AbstractBezierPathElement* newElement = nil;
-        if(pathEle.type == kCGPathElementAddCurveToPoint){
-            // curve
-            newElement = [CurveToPathElement elementWithStart:previousEndpoint
-                                                   andCurveTo:pathEle.points[2]
-                                                  andControl1:pathEle.points[0]
-                                                  andControl2:pathEle.points[1]];
-            previousEndpoint = pathEle.points[2];
-            tValueAtEndPoint = toTValue;
-        }else if(pathEle.type == kCGPathElementAddLineToPoint){
-            newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
-            previousEndpoint = pathEle.points[0];
-            tValueAtEndPoint = toTValue;
-        }else if(pathEle.type == kCGPathElementMoveToPoint){
-            newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
-            previousEndpoint = pathEle.points[0];
-            tValueAtEndPoint = fromTValue;
-        }
-        if(newElement){
-            // be sure to set color/width/etc
-            if(toColor){
-                CGFloat red = prevColorPtr[0] + colorDiff[0] * tValueAtEndPoint;
-                CGFloat green = prevColorPtr[1] + colorDiff[1] * tValueAtEndPoint;
-                CGFloat blue = prevColorPtr[2] + colorDiff[2] * tValueAtEndPoint;
-                CGFloat alpha = prevColorPtr[3] + colorDiff[3] * tValueAtEndPoint;
-                newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
-            }else{
-                newElement.color = nil;
+    @try{
+        [pathSegment iteratePathWithBlock:^(CGPathElement pathEle){
+            CGFloat tValueAtEndPoint;
+            AbstractBezierPathElement* newElement = nil;
+            if(pathEle.type == kCGPathElementAddCurveToPoint){
+                // curve
+                newElement = [CurveToPathElement elementWithStart:previousEndpoint
+                                                       andCurveTo:pathEle.points[2]
+                                                      andControl1:pathEle.points[0]
+                                                      andControl2:pathEle.points[1]];
+                previousEndpoint = pathEle.points[2];
+                tValueAtEndPoint = toTValue;
+            }else if(pathEle.type == kCGPathElementAddLineToPoint){
+                newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
+                previousEndpoint = pathEle.points[0];
+                tValueAtEndPoint = toTValue;
+            }else if(pathEle.type == kCGPathElementMoveToPoint){
+                newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
+                previousEndpoint = pathEle.points[0];
+                tValueAtEndPoint = fromTValue;
             }
-            newElement.width = fromWidth + widthDiff*tValueAtEndPoint;
-            newElement.width /= scale;
-            [convertedElements addObject:newElement];
-        }
-    }];
+            if(newElement){
+                // be sure to set color/width/etc
+                if(toColor){
+                    CGFloat red = prevColorPtr[0] + colorDiff[0] * tValueAtEndPoint;
+                    CGFloat green = prevColorPtr[1] + colorDiff[1] * tValueAtEndPoint;
+                    CGFloat blue = prevColorPtr[2] + colorDiff[2] * tValueAtEndPoint;
+                    CGFloat alpha = prevColorPtr[3] + colorDiff[3] * tValueAtEndPoint;
+                    newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+                }else{
+                    newElement.color = nil;
+                }
+                newElement.width = fromWidth + widthDiff*tValueAtEndPoint;
+                newElement.width /= scale;
+                [convertedElements addObject:newElement];
+            }
+        }];
+    }@catch(NSException* e){
+        NSString* pathCannotBeIterated = [pathSegment description];
+        [[Mixpanel sharedInstance] track:kMPPathIterationException properties:@{@"Path" : pathCannotBeIterated}];
+        [NSThread sleepForTimeInterval:5];
+        @throw e;
+    }
     
     return convertedElements;
 }

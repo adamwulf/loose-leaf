@@ -20,6 +20,7 @@
         self.backgroundColor = [UIColor clearColor].CGColor;
         
         UIBezierPath* keyPath = [self keyPathForRect:self.bounds];
+        [keyPath containsPoint:CGPointZero];
         CAShapeLayer* cloudBorderLayer = [self cloudBorderLayerForPath:keyPath];
         UIColor* borderColor = [UIColor colorWithRed: 0.221 green: 0.221 blue: 0.219 alpha: 1];
         cloudBorderLayer.strokeColor = borderColor.CGColor;

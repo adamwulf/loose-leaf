@@ -135,6 +135,9 @@ _Pragma("clang diagnostic pop") \
 #define kMPEventImportPropScrapCount @"File Extension"
 #define kMPEventImportPropVisibleScrapCount @"File Type"
 
+// MixPanel Error Tracking
+#define kMPPathIterationException @"PathIterationException"
+
 // photo album
 #define kMaxPhotoRotationInDegrees 20
 
