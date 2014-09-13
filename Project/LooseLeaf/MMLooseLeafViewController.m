@@ -69,7 +69,8 @@
                                                       kMPDurationAppOpen : @(0.0),
                                                       kMPNumberOfCrashes : @(0),
                                                       kMPDistanceDrawn : @(0.0),
-                                                      kMPDistanceErased : @(0.0)}];
+                                                      kMPDistanceErased : @(0.0),
+                                                      kMPNumberOfClippingExceptions : @(0.0)}];
 
 
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"blackblur.png"]]];

@@ -108,6 +108,7 @@ _Pragma("clang diagnostic pop") \
 #define kMPDistanceDrawn @"Distance Drawn (m)"
 #define kMPDistanceErased @"Distance Erased (m)"
 #define kMPNumberOfInvites @"Number of Invites"
+#define kMPNumberOfClippingExceptions @"Bezier Clip Exceptions"
 
 // invite properties
 #define kMPEventInvite @"Invite Friend"
