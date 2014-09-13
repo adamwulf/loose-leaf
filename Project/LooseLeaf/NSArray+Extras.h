@@ -12,4 +12,6 @@
 
 -(NSArray*) reversedArray;
 
+-(NSArray*) arrayByRemovingObject:(id)obj;
+
 @end

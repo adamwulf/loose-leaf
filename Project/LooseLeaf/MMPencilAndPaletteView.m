@@ -116,6 +116,14 @@
     return self;
 }
 
+-(CGFloat) rotation{
+    return pencilButton.rotation;
+}
+
+-(void) setRotation:(CGFloat)_rotation{
+    pencilButton.rotation = _rotation;
+}
+
 -(int) fullByteSize{
     return pencilButton.fullByteSize + blackButton.fullByteSize + blueButton.fullByteSize + redButton.fullByteSize + yellowButton.fullByteSize + greenButton.fullByteSize + activeColorButton.fullByteSize;
 }

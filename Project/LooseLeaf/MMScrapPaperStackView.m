@@ -25,11 +25,16 @@
 #import "MMInboxManagerDelegate.h"
 #import "NSURL+UTI.h"
 #import "Mixpanel.h"
-#import "MMShareManager.h"
+#import "MMOpenInAppManager.h"
 #import "MMTrashManager.h"
 #import "MMShareSidebarContainerView.h"
+#import "MMCloudKitImportContainerView.h"
+#import "MMCloudKitImportExportView.h"
+#import "MMCloudKitManager.h"
+#import "MMCloudKitFetchFriendsState.h"
 
 @implementation MMScrapPaperStackView{
+    
     MMScrapSidebarContainerView* bezelScrapContainer;
     MMScrapContainerView* scrapContainer;
     // we get two gestures here, so that we can support
@@ -51,6 +56,11 @@
     
     // share sidebar
     MMShareSidebarContainerView* sharePageSidebar;
+    
+    // cloudkit import sidebar
+    MMTextButton* cloudKitImportButton;
+    MMCloudKitImportContainerView* cloudKitImportSidebar;
+    MMCloudKitImportExportView* cloudKitExportView;
 
     NSTimer* debugTimer;
     NSTimer* drawTimer;
@@ -83,8 +93,9 @@
 //                                                    userInfo:nil
 //                                                     repeats:YES];
 
-        [MMInboxManager sharedInstace].delegate = self;
-        
+        [MMInboxManager sharedInstance].delegate = self;
+        [MMCloudKitManager sharedManager].delegate = self;
+
         CGFloat rightBezelSide = frame.size.width - 100;
         CGFloat midPointY = (frame.size.height - 3*80) / 2;
         countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
@@ -120,7 +131,12 @@
                 [possibleSidebarButton addTarget:self action:@selector(anySidebarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
             }
         }
-    
+
+        // export icons will show here, below the sidebars but over the stacks
+        cloudKitExportView = [[MMCloudKitImportExportView alloc] initWithFrame:self.bounds];
+        cloudKitExportView.stackView = self;
+        [self addSubview:cloudKitExportView];
+
 //        UIButton* drawLongElementButton = [[UIButton alloc] initWithFrame:CGRectMake(100, 100, 200, 60)];
 //        [drawLongElementButton addTarget:self action:@selector(drawLine) forControlEvents:UIControlEventTouchUpInside];
 //        [drawLongElementButton setTitle:@"Draw Line" forState:UIControlStateNormal];
@@ -131,6 +147,8 @@
         
         [insertImageButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
+
+        [self insertSubview:countButton belowSubview:addPageSidebarButton];
         importImageSidebar = [[MMImageSidebarContainerView alloc] initWithFrame:self.bounds forButton:insertImageButton animateFromLeft:YES];
         importImageSidebar.delegate = self;
         [importImageSidebar hide:NO onComplete:nil];
@@ -144,6 +162,21 @@
         [sharePageSidebar hide:NO onComplete:nil];
         sharePageSidebar.shareDelegate = self;
         [self addSubview:sharePageSidebar];
+        
+        cloudKitImportButton = [[MMTextButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)
+                                                           andFont:[UIFont systemFontOfSize:16]
+                                                         andLetter:@"CK"
+                                                        andXOffset:0
+                                                        andYOffset:0];
+        cloudKitImportButton.alpha = 0;
+        cloudKitImportSidebar = [[MMCloudKitImportContainerView alloc] initWithFrame:self.bounds forButton:cloudKitImportButton animateFromLeft:NO];
+        [cloudKitImportSidebar hide:NO onComplete:nil];
+        [self addSubview:sharePageSidebar];
+        
+        MMUntouchableView* exportAnimationHelperView = [[MMUntouchableView alloc] initWithFrame:self.bounds];
+        cloudKitExportView.animationHelperView = exportAnimationHelperView;
+        [self addSubview:exportAnimationHelperView];
+
         
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds andPage:nil];
         [self addSubview:scrapContainer];
@@ -205,7 +238,7 @@
     [[NSThread mainThread] performBlock:^{
         NSLog(@"got image: %p scale: %f width: %f %f", scrapBacking, scale, scrapBacking.size.width, scrapBacking.size.height);
         
-        MMVector* up = [[MMRotationManager sharedInstace] upVector];
+        MMVector* up = [[MMRotationManager sharedInstance] upVector];
         MMVector* perp = [[up perpendicular] normal];
         CGPoint center = CGPointMake(ceilf((self.bounds.size.width - scrapBacking.size.width) / 2),
                                      ceilf((self.bounds.size.height - scrapBacking.size.height) / 2));
@@ -262,6 +295,7 @@
                                                   [topPage saveToDisk];
                                               }];
                          }];
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
         [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{kMPEventImportPropFileExt : [url fileExtension],
                                                                           kMPEventImportPropFileType : [url universalTypeID],
@@ -276,6 +310,7 @@
     }else{
         
     }
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
     [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{kMPEventImportPropFileExt : [url fileExtension],
                                                                       kMPEventImportPropFileType : [url universalTypeID],
@@ -409,6 +444,7 @@
 }
 
 -(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription{
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
     
     NSURL* assetURL = asset.defaultRepresentation.url;
@@ -607,7 +643,7 @@ int skipAll = NO;
             [str appendFormat:@"   has scrap: %d\n", [gesture performSelector:@selector(scrap)] ? 1 : 0];
         }
     }
-    [str appendFormat:@"velocity gesture sees: %d\n", [[MMTouchVelocityGestureRecognizer sharedInstace] numberOfActiveTouches]];
+    [str appendFormat:@"velocity gesture sees: %d\n", [[MMTouchVelocityGestureRecognizer sharedInstance] numberOfActiveTouches]];
     [str appendFormat:@"pages being panned %d\n", (int)[setOfPagesBeingPanned count]];
     
     [str appendFormat:@"done\n"];
@@ -1470,7 +1506,7 @@ int skipAll = NO;
     // cancel through that manager, and it'll notify the appropriate
     // view if need be
     for(UITouch* touch in touches){
-        [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+        [[JotStrokeManager sharedInstance] cancelStrokeForTouch:touch];
         [scissor cancelPolygonForTouch:touch];
     }
 }
@@ -1485,6 +1521,19 @@ int skipAll = NO;
 -(MMScrapSidebarContainerView*) bezelContainerView{
     return bezelScrapContainer;
 }
+
+-(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk{
+    [cloudKitExportView didExportPage:page toZipLocation:fileLocationOnDisk];
+}
+
+-(void) didFailToExportPage:(MMPaperView*)page{
+    [cloudKitExportView didFailToExportPage:page];
+}
+
+-(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk{
+    [cloudKitExportView isExportingPage:page withPercentage:percentComplete toZipLocation:fileLocationOnDisk];
+}
+
 
 
 #pragma mark - MMGestureTouchOwnershipDelegate
@@ -1524,18 +1573,6 @@ int skipAll = NO;
             [panAndPinchScrapGesture2 blessTouches:touches];
         }
         [stretchScrapGesture blessTouches:touches];
-    }
-}
-
-#pragma mark - Rotation
-
--(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
-    if(1 - ABS(zAccel) > .03){
-        [NSThread performBlockOnMainThread:^{
-            [super didUpdateAccelerometerWithReading:currentRawReading];
-            [bezelScrapContainer didUpdateAccelerometerWithRawReading:currentRawReading andX:xAccel andY:yAccel andZ:zAccel];
-            [[visibleStackHolder peekSubview] didUpdateAccelerometerWithRawReading:currentRawReading];
-        }];
     }
 }
 
@@ -1588,7 +1625,7 @@ int skipAll = NO;
             // scrap. if its undo stack doesn't hold any
             // reference, then we should trigger deleting
             // it's old assets
-            [[MMTrashManager sharedInstace] deleteScrap:scrap.uuid inPage:scrap.state.scrapsOnPaperState.delegate.page];
+            [[MMTrashManager sharedInstance] deleteScrap:scrap.uuid inPage:scrap.state.scrapsOnPaperState.delegate.page];
         }
         // ok, done, just set it
         if(index == NSNotFound){
@@ -1675,9 +1712,34 @@ int skipAll = NO;
 
 #pragma mark - MMRotationManagerDelegate
 
--(void) didRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient{
-    [importImageSidebar updatePhotoRotation];
+-(void) didUpdateAccelerometerWithReading:(MMVector *)currentRawReading{
+    [super didUpdateAccelerometerWithReading:currentRawReading];
+    [NSThread performBlockOnMainThread:^{
+        [bezelScrapContainer didUpdateAccelerometerWithReading:currentRawReading];
+        [cloudKitExportView didUpdateAccelerometerWithReading:currentRawReading];;
+    }];
 }
+
+-(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
+    if(1 - ABS(zAccel) > .03){
+        [NSThread performBlockOnMainThread:^{
+            [super didUpdateAccelerometerWithReading:currentRawReading];
+            [[visibleStackHolder peekSubview] didUpdateAccelerometerWithRawReading:currentRawReading];
+        }];
+    }
+}
+
+-(void) didRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient{
+    // noop
+}
+
+-(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [sharePageSidebar updateInterfaceTo:orientation];
+        [importImageSidebar updateInterfaceTo:orientation];
+    });
+}
+
 
 
 #pragma mark = Saving and Editing
@@ -1780,7 +1842,23 @@ int skipAll = NO;
 #pragma mark - MMShareItemDelegate
 
 -(UIImage*) imageToShare{
-    return [visibleStackHolder peekSubview].scrappedImgViewImage;
+    UIImage* retImage = [visibleStackHolder peekSubview].scrappedImgViewImage;
+    if(!retImage){
+        @autoreleasepool {
+            CGSize thumbSize = [[visibleStackHolder peekSubview] thumbnailSize];
+            UIGraphicsBeginImageContextWithOptions(thumbSize, YES, 0.0);
+            [[UIColor whiteColor] setFill];
+            CGContextFillRect(UIGraphicsGetCurrentContext(), CGRectMake(0, 0, thumbSize.width, thumbSize.height));
+            
+            retImage = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+        }
+    }
+    return retImage;
+}
+
+-(NSDictionary*) cloudKitSenderInfo{
+    return [[visibleStackHolder peekSubview] cloudKitSenderInfo];
 }
 
 -(void) mayShare:(NSObject<MMShareItem> *)shareItem{
@@ -1790,6 +1868,44 @@ int skipAll = NO;
 -(void) didShare:(NSObject<MMShareItem> *)shareItem{
 //    NSLog(@"did share %@", NSStringFromClass([shareItem class]));
     [sharePageSidebar hide:YES onComplete:nil];
+}
+
+-(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)avatarButton{
+    [cloudKitExportView didShareTopPageToUser:userId fromButton:avatarButton];
+    [sharePageSidebar hide:YES onComplete:nil];
+}
+
+#pragma mark - MMCloudKitManagerDelegate
+
+-(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState{
+    [sharePageSidebar cloudKitDidChangeState:currentState];
+}
+
+-(void) didFetchMessage:(SPRMessage *)message{
+    [cloudKitExportView didFetchMessage:message];
+}
+
+#pragma mark - Import
+
+-(void) importAndShowPage:(MMExportablePaperView*)page{
+    [[MMPageCacheManager sharedInstance] mayChangeTopPageTo:page];
+    [[MMPageCacheManager sharedInstance] willChangeTopPageTo:page];
+    [[NSThread mainThread] performBlock:^{
+        [self forceScrapToScrapContainerDuringGesture];
+        if([setOfPagesBeingPanned count]){
+            NSLog(@"adding new page, but pages are being panned.");
+            for(MMPaperView* page in [setOfPagesBeingPanned copy]){
+                [page cancelAllGestures];
+            }
+        }
+        [[visibleStackHolder peekSubview] cancelAllGestures];
+        page.delegate = self;
+        [hiddenStackHolder pushSubview:page];
+        [[visibleStackHolder peekSubview] enableAllGestures];
+        [self popTopPageOfHiddenStack];
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+        [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
+    } afterDelay:.1];
 }
 
 

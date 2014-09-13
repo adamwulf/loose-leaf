@@ -10,7 +10,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "NSArray+Map.h"
 #import "MMBlockOperation.h"
-#import "MMUndoablePaperView.h"
+#import "MMExportablePaperView.h"
 #import "Mixpanel.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 
@@ -85,7 +85,7 @@
     for(NSDictionary* pageDict in visiblePagesToCreate){
         NSString* uuid = [pageDict objectForKey:@"uuid"];
         if(![seenPageUUIDs containsObject:uuid]){
-            MMPaperView* page = [[MMUndoablePaperView alloc] initWithFrame:bounds andUUID:uuid];
+            MMPaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:uuid];
             [visiblePages addObject:page];
             [seenPageUUIDs addObject:uuid];
         }else{
@@ -97,7 +97,7 @@
     for(NSDictionary* pageDict in hiddenPagesToCreate){
         NSString* uuid = [pageDict objectForKey:@"uuid"];
         if(![seenPageUUIDs containsObject:uuid]){
-            MMPaperView* page = [[MMUndoablePaperView alloc] initWithFrame:bounds andUUID:uuid];
+            MMPaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:uuid];
             [hiddenPages addObject:page];
             [seenPageUUIDs addObject:uuid];
         }else{

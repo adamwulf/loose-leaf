@@ -358,7 +358,7 @@
     int count = 0;
     CGPoint averageVelocity = CGPointZero;
     for(UITouch* touch in validTouches){
-        struct DurationCacheObject cache = [[MMTouchVelocityGestureRecognizer sharedInstace] velocityInformationForTouch:touch withIndex:nil];
+        struct DurationCacheObject cache = [[MMTouchVelocityGestureRecognizer sharedInstance] velocityInformationForTouch:touch withIndex:nil];
         averageVelocity.x = averageVelocity.x * count + cache.directionOfTouch.x;
         count += 1;
         averageVelocity.x /= count;

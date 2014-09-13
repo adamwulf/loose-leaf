@@ -12,4 +12,6 @@
 
 +(Reachability*) sharedManager;
 
++(Reachability*) sharedLocalNetwork;
+
 @end

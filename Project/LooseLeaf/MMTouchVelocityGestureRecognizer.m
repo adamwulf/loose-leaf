@@ -55,7 +55,7 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
     return _instance;
 }
 
-+(MMTouchVelocityGestureRecognizer*) sharedInstace{
++(MMTouchVelocityGestureRecognizer*) sharedInstance{
     if(!_instance){
         _instance = [[MMTouchVelocityGestureRecognizer alloc]init];
         _instance.delegate = _instance;

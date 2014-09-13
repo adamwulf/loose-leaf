@@ -8,6 +8,7 @@
 
 #import "MMShareSidebarContainerView.h"
 #import "MMImageViewButton.h"
+#import "MMCloudKitShareItem.h"
 #import "MMEmailShareItem.h"
 #import "MMTextShareItem.h"
 #import "MMTwitterShareItem.h"
@@ -16,18 +17,24 @@
 #import "MMTencentWeiboShareItem.h"
 #import "MMPhotoAlbumShareItem.h"
 #import "MMImgurShareItem.h"
-#import "MMOpenInShareItem.h"
+#import "MMPrintShareItem.h"
+#import "MMOpenInAppShareItem.h"
 #import "MMAirDropShareItem.h"
+#import "MMCopyShareItem.h"
 #import "NSThread+BlockAdditions.h"
-#import "MMShareManager.h"
+#import "MMOpenInAppManager.h"
+#import "MMShareOptionsView.h"
+#import "MMRotationManager.h"
 #import "Constants.h"
 #import "UIView+Debug.h"
 
 @implementation MMShareSidebarContainerView{
-    UIScrollView* scrollView;
+    UIView* sharingContentView;
     UIView* buttonView;
-    UIView* activeOptionsView;
+    MMShareOptionsView* activeOptionsView;
     NSMutableArray* shareItems;
+    
+    MMCloudKitShareItem* cloudKitShareItem;
 }
 
 @synthesize shareDelegate;
@@ -39,19 +46,18 @@
                                                  selector:@selector(updateShareOptions)
                                                      name:UIApplicationDidBecomeActiveNotification object:nil];
         
-        scrollView = [[UIScrollView alloc] initWithFrame:[sidebarContentView contentBounds]];
-        scrollView.bounces = YES;
-        scrollView.alwaysBounceVertical = NO;
-        scrollView.showsHorizontalScrollIndicator = NO;
-        scrollView.showsVerticalScrollIndicator = NO;
+        CGRect scrollViewBounds = self.bounds;
+        scrollViewBounds.size.width = [sidebarContentView contentBounds].origin.x + [sidebarContentView contentBounds].size.width;
+        sharingContentView = [[UIView alloc] initWithFrame:scrollViewBounds];
         
-        buttonView = [[UIView alloc] initWithFrame:scrollView.bounds];
-        [scrollView addSubview:buttonView];
-        [sidebarContentView addSubview:scrollView];
-        scrollView.contentSize = scrollView.bounds.size;
+        buttonView = [[UIView alloc] initWithFrame:[sidebarContentView contentBounds]];
+        [sharingContentView addSubview:buttonView];
+        [sidebarContentView addSubview:sharingContentView];
         
+        cloudKitShareItem = [[MMCloudKitShareItem alloc] init];
         
         shareItems = [NSMutableArray array];
+        [shareItems addObject:cloudKitShareItem];
         [shareItems addObject:[[MMEmailShareItem alloc] init]];
         [shareItems addObject:[[MMTextShareItem alloc] init]];
         [shareItems addObject:[[MMPhotoAlbumShareItem alloc] init]];
@@ -60,8 +66,10 @@
         [shareItems addObject:[[MMTwitterShareItem alloc] init]];
         [shareItems addObject:[[MMFacebookShareItem alloc] init]];
         [shareItems addObject:[[MMImgurShareItem alloc] init]];
-        [shareItems addObject:[[MMOpenInShareItem alloc] init]];
+        [shareItems addObject:[[MMPrintShareItem alloc] init]];
+        [shareItems addObject:[[MMCopyShareItem alloc] init]];
         [shareItems addObject:[[MMAirDropShareItem alloc] init]];
+        [shareItems addObject:[[MMOpenInAppShareItem alloc] init]];
 
         [self updateShareOptions];
         
@@ -100,6 +108,7 @@
                 button.frame = CGRectMake(buttonBounds.origin.x + column*(buttonWidth),
                                           buttonBounds.origin.y + row*(buttonWidth),
                                           buttonWidth, buttonWidth);
+                
                 [buttonView insertSubview:button atIndex:buttonIndex];
                 
                 buttonIndex += 1;
@@ -121,16 +130,20 @@
             [shareItem willShow];
         }
     }
+    [activeOptionsView reset];
+    [activeOptionsView show];
     [super show:animated];
 }
 
 -(void) hide:(BOOL)animated onComplete:(void(^)(BOOL finished))onComplete{
     [super hide:animated onComplete:^(BOOL finished){
-        [self closeActiveSharingOptionsForButton:nil];
-        while([scrollView.subviews count] > 1){
-            // remove any options views
-            [[scrollView.subviews objectAtIndex:1] removeFromSuperview];
-            [scrollView setContentOffset:CGPointZero animated:NO];
+        [activeOptionsView hide];
+        if(activeOptionsView.shouldCloseWhenSidebarHides){
+            [self closeActiveSharingOptionsForButton:nil];
+            while([sharingContentView.subviews count] > 1){
+                // remove any options views
+                [[sharingContentView.subviews objectAtIndex:1] removeFromSuperview];
+            }
         }
         // notify any buttons that they're now hidden.
         for (NSObject<MMShareItem>*shareItem in shareItems) {
@@ -148,6 +161,7 @@
 -(NSObject<MMShareItem>*) closeActiveSharingOptionsForButton:(UIButton*)button{
     if(activeOptionsView){
         [activeOptionsView removeFromSuperview];
+        [activeOptionsView reset];
     }
     NSObject<MMShareItem>*shareItemForButton = nil;
     for (NSObject<MMShareItem>*shareItem in shareItems) {
@@ -163,14 +177,37 @@
 
 #pragma mark - Rotation
 
--(void) updatePhotoRotation{
-    if(![self isVisible]) return;
+-(CGFloat) sidebarButtonRotation{
+    if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationPortrait){
+        return 0;
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeLeft){
+        return -M_PI_2;
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeRight){
+        return M_PI_2;
+    }else{
+        return M_PI;
+    }
+}
+
+-(void) updateInterfaceTo:(UIInterfaceOrientation)orientation{
+    [activeOptionsView updateInterfaceTo:orientation];
+    [UIView animateWithDuration:.3 animations:^{
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        for(MMBounceButton* button in buttonView.subviews){
+            button.rotation = [self sidebarButtonRotation];
+            button.transform = rotationTransform;
+        }
+    }];
 }
 
 #pragma mark - MMShareItemDelegate
 
 -(UIImage*) imageToShare{
     return shareDelegate.imageToShare;
+}
+
+-(NSDictionary*) cloudKitSenderInfo{
+    return shareDelegate.cloudKitSenderInfo;
 }
 
 
@@ -186,17 +223,16 @@
     // so we need to dispatch async too
     dispatch_async(dispatch_get_main_queue(), ^{
         if([shareItem respondsToSelector:@selector(optionsView)]){
+            activeOptionsView = [shareItem optionsView];
+            [activeOptionsView reset];
+            CGRect frForOptions = buttonView.frame;
+            frForOptions.origin.y = buttonView.bounds.size.height;
+            frForOptions.size.height = sharingContentView.bounds.size.height - buttonView.frame.origin.y - buttonView.frame.size.height;
+            activeOptionsView.frame = frForOptions;
             if([shareItem respondsToSelector:@selector(setIsShowingOptionsView:)]){
                 shareItem.isShowingOptionsView = YES;
             }
-            activeOptionsView = [shareItem optionsView];
-            CGRect frForOptions = buttonView.bounds;
-            frForOptions.origin.y = buttonView.bounds.size.height;
-            frForOptions.size.height = kWidthOfSidebarButtonBuffer;
-            activeOptionsView.frame = frForOptions;
-            [scrollView addSubview:activeOptionsView];
-            
-            scrollView.contentSize = CGSizeMake(activeOptionsView.bounds.size.width, activeOptionsView.bounds.size.height + buttonView.bounds.size.height);
+            [sharingContentView addSubview:activeOptionsView];
         }else{
             activeOptionsView = nil;
         }
@@ -208,6 +244,17 @@
 -(void) didShare:(NSObject<MMShareItem> *)shareItem{
     [shareDelegate didShare:shareItem];
 }
+
+-(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button{
+    [shareDelegate didShare:shareItem toUser:userId fromButton:button];
+}
+
+#pragma mark - Cloud Kit State
+
+-(void) cloudKitDidChangeState:(MMCloudKitBaseState *)currentState{
+    [cloudKitShareItem cloudKitDidChangeState:currentState];
+}
+
 
 #pragma mark - Dealloc
 

@@ -125,10 +125,6 @@
     return CGPointMake(dx, dy);
 }
 
--(CGFloat) rotation{
-    return [self.delegate sidebarButtonRotation];
-}
-
 /**
  * creates a rectangular bezier path along the line
  * between the input points with the input width

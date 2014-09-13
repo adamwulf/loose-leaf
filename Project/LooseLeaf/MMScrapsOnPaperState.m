@@ -165,9 +165,6 @@ static dispatch_queue_t importExportStateQueue;
                             }
                             
                             if(makeEditable){
-                                if(!async){
-                                    NSLog(@"not async");
-                                }
                                 [scrap loadScrapStateAsynchronously:async];
                             }
                             [scrap setShouldShowShadow:shouldShowShadows];
@@ -199,9 +196,6 @@ static dispatch_queue_t importExportStateQueue;
             if([self isStateLoaded]){
                 for(MMScrapView* scrap in self.delegate.scrapsOnPaper){
                     [scrap loadScrapStateAsynchronously:async];
-                    if(!async){
-                        NSLog(@"not async");
-                    }
                     @synchronized(self){
                         if(isUnloading){
                             NSLog(@"loading during unloading");

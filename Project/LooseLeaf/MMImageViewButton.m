@@ -9,7 +9,6 @@
 #import "MMImageViewButton.h"
 
 @implementation MMImageViewButton{
-    UIImage* image;
 }
 
 @synthesize darkBg;

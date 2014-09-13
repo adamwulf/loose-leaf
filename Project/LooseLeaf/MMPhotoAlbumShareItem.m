@@ -15,6 +15,10 @@
 
 @implementation MMPhotoAlbumShareItem{
     MMImageViewButton* button;
+    
+    CGFloat targetProgress;
+    BOOL targetSuccess;
+    CGFloat lastProgress;
 }
 
 @synthesize delegate;
@@ -49,77 +53,123 @@
         ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
         
         UIImage* image = self.delegate.imageToShare;
+        [self animateToPercent:.7 completion:^(BOOL didSucceed) {
+            if(didSucceed){
+                [self.delegate didShare:self];
+            }
+        }];
         [library writeImageToSavedPhotosAlbum:image.CGImage orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error){
             NSString* strResult = @"Failed";
+            [self updateButtonGreyscale];
             if (error) {
-                // TODO: error handling
-                [self animateToSuccess:NO];
+                targetSuccess = NO;
+                targetProgress = 1.0;
             } else {
                 strResult = @"Success";
-                [self animateToSuccess:YES];
+                targetSuccess = YES;
+                targetProgress = 1.0;
                 [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
             }
             [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"PhotoAlbum",
                                                                          kMPEventExportPropResult : strResult}];
-            [button setNeedsDisplay];
         }];
     });
 }
 
--(void) animateToSuccess:(BOOL)succeeded{
+-(void) animateToPercent:(CGFloat)progress completion:(void (^)(BOOL targetSuccess))completion{
+    targetProgress = progress;
+    
+    if(lastProgress < targetProgress){
+        lastProgress += (targetProgress / 10.0);
+        if(lastProgress > targetProgress){
+            lastProgress = targetProgress;
+        }
+    }
+    
     CGPoint center = CGPointMake(button.bounds.size.width/2, button.bounds.size.height/2);
     
-    CAShapeLayer *circle=[CAShapeLayer layer];
-    CGFloat radius = button.drawableFrame.size.width / 2;
-    circle.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
-    circle.fillColor=[UIColor clearColor].CGColor;
-    circle.strokeColor=[UIColor whiteColor].CGColor;
-    circle.lineWidth=radius*2;
-    circle.strokeEnd = 0;
+    CGFloat radius = button.drawableFrame.size.width / 2 - 1;
+    CAShapeLayer *circle;
+    if([button.layer.sublayers count]){
+        circle = [button.layer.sublayers firstObject];
+    }else{
+        circle=[CAShapeLayer layer];
+        circle.fillColor=[UIColor clearColor].CGColor;
+        circle.strokeColor=[[UIColor whiteColor] colorWithAlphaComponent:.7].CGColor;
+        CAShapeLayer *mask=[CAShapeLayer layer];
+        circle.mask = mask;
+        [button.layer addSublayer:circle];
+        circle.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+        circle.lineWidth=radius*2;
+        ((CAShapeLayer*)circle.mask).path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+    }
     
+    circle.strokeEnd = lastProgress;
     
-    CAShapeLayer *mask=[CAShapeLayer layer];
-    mask.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
-
-    CAShapeLayer *mask2=[CAShapeLayer layer];
-    mask2.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
-    
-    circle.mask = mask;
-    
-    UILabel* label = [[UILabel alloc] initWithFrame:button.bounds];
-    
-    [button.layer addSublayer:circle];
-
-    CABasicAnimation *animation=[CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-    animation.duration=.4;
-    animation.fillMode = kCAFillModeForwards;
-    animation.removedOnCompletion=NO;
-    animation.fromValue=@(0);
-    animation.toValue=@(1);
-    animation.timingFunction=[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-    [circle addAnimation:animation forKey:@"drawCircleAnimation"];
-    
-    [[NSThread mainThread] performBlock:^{
-        if(succeeded){
-            label.text = @"\u2714";
-        }else{
-            label.text = @"\u2718";
-        }
-        label.font = [UIFont fontWithName:@"ZapfDingbatsITC" size:30];
-        label.textAlignment = NSTextAlignmentCenter;
-        label.alpha = 0;
-        [button addSubview:label];
-        [UIView animateWithDuration:.3 animations:^{
-            label.alpha = 1;
-        } completion:^(BOOL finished){
-            [delegate didShare:self];
-            [[NSThread mainThread] performBlock:^{
-                [label removeFromSuperview];
-                [circle removeAnimationForKey:@"drawCircleAnimation"];
-                [circle removeFromSuperlayer];
-            } afterDelay:.5];
-        }];
-    } afterDelay:.3];
+    if(lastProgress >= 1.0){
+        CAShapeLayer *mask2=[CAShapeLayer layer];
+        mask2.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+        
+        UIView* checkOrXView = [[UIView alloc] initWithFrame:button.bounds];
+        checkOrXView.backgroundColor = [UIColor whiteColor];
+        checkOrXView.layer.mask = mask2;
+        
+        [[NSThread mainThread] performBlock:^{
+            CGRect drawableFrame = button.drawableFrame;
+            CAShapeLayer* checkMarkOrXLayer = [CAShapeLayer layer];
+            checkMarkOrXLayer.anchorPoint = CGPointZero;
+            checkMarkOrXLayer.bounds = button.bounds;
+            UIBezierPath* path = [UIBezierPath bezierPath];
+            if(targetSuccess){
+                CGPoint start = CGPointMake(drawableFrame.origin.x + (drawableFrame.size.width - 20)/2,drawableFrame.origin.y + (drawableFrame.size.height - 14)/2 + 8);
+                CGPoint corner = CGPointMake(start.x + 6, start.y + 6);
+                CGPoint end = CGPointMake(corner.x + 14, corner.y - 14);
+                [path moveToPoint:start];
+                [path addLineToPoint:corner];
+                [path addLineToPoint:end];
+            }else{
+                CGFloat size = 14;
+                CGPoint start = CGPointMake(drawableFrame.origin.x + (drawableFrame.size.width - size)/2,drawableFrame.origin.y + (drawableFrame.size.height - size)/2);
+                CGPoint end = CGPointMake(start.x + size, start.y + size);
+                [path moveToPoint:start];
+                [path addLineToPoint:end];
+                start = CGPointMake(start.x + size, start.y);
+                end = CGPointMake(start.x - size, start.y + size);
+                [path moveToPoint:start];
+                [path addLineToPoint:end];
+            }
+            checkMarkOrXLayer.path = path.CGPath;
+            checkMarkOrXLayer.strokeColor = [UIColor blackColor].CGColor;
+            checkMarkOrXLayer.lineWidth = 6;
+            checkMarkOrXLayer.lineCap = @"square";
+            checkMarkOrXLayer.strokeStart = 0;
+            checkMarkOrXLayer.strokeEnd = 1;
+            checkMarkOrXLayer.backgroundColor = [UIColor clearColor].CGColor;
+            checkMarkOrXLayer.fillColor = [UIColor clearColor].CGColor;
+            
+            checkOrXView.alpha = 0;
+            [checkOrXView.layer addSublayer:checkMarkOrXLayer];
+            [button addSubview:checkOrXView];
+            [UIView animateWithDuration:.3 animations:^{
+                checkOrXView.alpha = 1;
+            } completion:^(BOOL finished){
+                if(completion) completion(targetSuccess);
+                [[NSThread mainThread] performBlock:^{
+                    [checkOrXView removeFromSuperview];
+                    [circle removeAnimationForKey:@"drawCircleAnimation"];
+                    [circle removeFromSuperlayer];
+                    // reset state
+                    lastProgress = 0;
+                    targetSuccess = 0;
+                    targetProgress = 0;
+                } afterDelay:.5];
+            }];
+        } afterDelay:.3];
+    }else{
+        [[NSThread mainThread] performBlock:^{
+            [self animateToPercent:targetProgress completion:completion];
+        } afterDelay:.03];
+    }
 }
 
 -(BOOL) isAtAllPossible{

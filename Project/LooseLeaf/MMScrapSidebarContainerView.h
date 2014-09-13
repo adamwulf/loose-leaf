@@ -13,8 +13,9 @@
 #import "MMScrapsOnPaperStateDelegate.h"
 #import "MMCountBubbleButton.h"
 #import "MMScrapsInSidebarStateDelegate.h"
+#import "MMSidebarButtonDelegate.h"
 
-@interface MMScrapSidebarContainerView : MMSlidingSidebarContainerView<MMScrapsInSidebarStateDelegate>{
+@interface MMScrapSidebarContainerView : MMSlidingSidebarContainerView<MMScrapsInSidebarStateDelegate,MMSidebarButtonDelegate>{
     __weak NSObject<MMScrapSidebarContainerViewDelegate>* bubbleDelegate;
 }
 
@@ -31,7 +32,7 @@
 
 -(BOOL) containsScrapUUID:(NSString*)scrapUUID;
 
--(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel;
+-(void) didUpdateAccelerometerWithReading:(MMVector *)currentRawReading;
 
 -(void) saveScrapContainerToDisk;
 

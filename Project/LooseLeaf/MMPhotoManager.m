@@ -35,7 +35,7 @@ static MMPhotoManager* _instance = nil;
     return _instance;
 }
 
-+(MMPhotoManager*) sharedInstace{
++(MMPhotoManager*) sharedInstance{
     if(!_instance){
         _instance = [[MMPhotoManager alloc]init];
     }

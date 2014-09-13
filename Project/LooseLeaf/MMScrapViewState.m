@@ -128,7 +128,7 @@ static dispatch_queue_t importExportScrapStateQueue;
     }else{
         // we don't have a file that we should have, so don't load the scrap
         NSLog(@"can't find file at %@ or %@", self.scrapPropertiesPlistPath, self.bundledScrapPropertiesPlistPath);
-        @throw [NSException exceptionWithName:@"MissingScrapFilesException" reason:@"files for scrap state are not on disk" userInfo:nil];
+        return nil;
     }
     return self;
 }
@@ -400,7 +400,8 @@ static dispatch_queue_t importExportScrapStateQueue;
                 // load drawable view information here
                 drawableViewState = [[JotViewStateProxy alloc] initWithDelegate:self];
                 [drawableViewState loadStateAsynchronously:async
-                                                  withSize:[drawableView pagePixelSize]
+                                                  withSize:drawableView.pagePtSize
+                                                  andScale:drawableView.scale
                                                 andContext:[drawableView context]
                                           andBufferManager:[[JotBufferManager alloc] init]];
             }
@@ -417,9 +418,6 @@ static dispatch_queue_t importExportScrapStateQueue;
 
 -(void) unloadState{
     @synchronized(self){
-        if(!targetIsLoadedState){
-            NSLog(@"duplicate unload");
-        }
         targetIsLoadedState = NO;
     }
     dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{

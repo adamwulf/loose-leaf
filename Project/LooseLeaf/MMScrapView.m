@@ -145,7 +145,7 @@
         // yes clip to bounds so we keep good performance
         self.clipsToBounds = YES;
         // update our shadow rotation
-        [self didUpdateAccelerometerWithRawReading:[[MMRotationManager sharedInstace] currentRawRotationReading]];
+        [self didUpdateAccelerometerWithRawReading:[[MMRotationManager sharedInstance] currentRawRotationReading]];
         needsClippingPathUpdate = YES;
         
         //
@@ -242,7 +242,7 @@
  * scraps will show the shadow move ever so slightly as the device is turned
  */
 -(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading{
-    self.layer.shadowOffset = CGSizeMake(-sinf(-[currentRawReading angle])*1, cosf(-[currentRawReading angle])*1);
+    self.layer.shadowOffset = CGSizeMake(cosf(-[currentRawReading angle] - rotation)*1, sinf(-[currentRawReading angle] - rotation)*1);
 }
 
 #pragma mark - UITouch Helper methods

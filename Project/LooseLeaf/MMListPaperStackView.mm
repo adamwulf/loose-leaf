@@ -11,7 +11,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMShadowManager.h"
 #import "MMScrappedPaperView.h"
-#import "MMUndoablePaperView.h"
+#import "MMExportablePaperView.h"
 #import "Mixpanel.h"
 #include <map>
 #include <iterator>
@@ -121,7 +121,7 @@
 -(void) didTapAddButtonInListView{
     //
     // this'll determine the resolution of the canvas too
-    MMEditablePaperView* paper = [[MMUndoablePaperView alloc] initWithFrame:self.bounds];
+    MMEditablePaperView* paper = [[MMExportablePaperView alloc] initWithFrame:self.bounds];
     // now size it for display
     paper.frame = addPageButtonInListView.frame;
     [self addPaperToBottomOfHiddenStack:paper];
@@ -562,7 +562,7 @@
                 theAnimation.duration = duration;
                 theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
                 theAnimation.fromValue = (id) aPage.contentView.layer.shadowPath;
-                theAnimation.toValue = (id) [[MMShadowManager sharedInstace] getShadowForSize:newFrame.size];
+                theAnimation.toValue = (id) [[MMShadowManager sharedInstance] getShadowForSize:newFrame.size];
                 [aPage.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
             }
         }
@@ -638,6 +638,24 @@
     // we can forget about the original frame locations
 }
 
+
+// when bouncing a page back to full screen,
+// i shuld always trigger finishUITransitionToPageView.
+// this will undo anything that beginUITransitionFromPageView
+// might have done if the page was ever scaled small
+// enough during the pinch/pan/etc.
+// see: https://github.com/adamwulf/loose-leaf/issues/729
+// since a page will never be animated to full screen unless
+// in page view, there is no harm in calling a potentially
+// extra finishUITransitionToPageView
+-(void) animatePageToFullScreen:(MMPaperView*)page withDelay:(CGFloat)delay withBounce:(BOOL)bounce onComplete:(void(^)(BOOL finished))completionBlock{
+    [super animatePageToFullScreen:page withDelay:delay withBounce:bounce onComplete:^(BOOL finished){
+        [self finishUITransitionToPageView];
+        if(completionBlock) completionBlock(finished);
+    }];
+}
+
+
 /**
  * the user has cancelled the zoom-to-list gesture
  */
@@ -650,7 +668,6 @@
     if(![page isBeingPannedAndZoomed]){
         [self animatePageToFullScreen:[visibleStackHolder peekSubview] withDelay:0 withBounce:YES onComplete:^(BOOL finished){
             [self realignPagesInVisibleStackExcept:[visibleStackHolder peekSubview] animated:NO];
-            [self finishUITransitionToPageView];
         }];
         [UIView animateWithDuration:0.1 delay:0 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationCurveLinear) animations:^{
             CGRect fr = visibleStackHolder.frame;
@@ -1453,7 +1470,7 @@
             if(aPage == [visibleStackHolder peekSubview]){
                 toSize = [MMShadowedView expandBounds:visibleStackHolder.bounds].size;
             }
-            theAnimation.toValue = (id) [[MMShadowManager sharedInstace] getShadowForSize:toSize];
+            theAnimation.toValue = (id) [[MMShadowManager sharedInstance] getShadowForSize:toSize];
             [aPage.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
         }
         [visibleStackHolder.superview insertSubview:hiddenStackHolder belowSubview:visibleStackHolder];
@@ -1502,7 +1519,7 @@
         theAnimation.duration = 0.15;
         theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
         theAnimation.fromValue = (id) [visibleStackHolder peekSubview].contentView.layer.shadowPath;
-        theAnimation.toValue = (id) [[MMShadowManager sharedInstace] getShadowForSize:self.bounds.size];
+        theAnimation.toValue = (id) [[MMShadowManager sharedInstance] getShadowForSize:self.bounds.size];
         [[visibleStackHolder peekSubview].contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
         [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn
                          animations:^(void){

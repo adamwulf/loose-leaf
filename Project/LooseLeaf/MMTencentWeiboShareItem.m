@@ -7,7 +7,7 @@
 //
 
 #import "MMTencentWeiboShareItem.h"
-#import "MMImageViewButton.h"
+#import "MMProgressedImageViewButton.h"
 #import "Mixpanel.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
@@ -16,19 +16,23 @@
 #import <Accounts/Accounts.h>
 
 @implementation MMTencentWeiboShareItem{
-    MMImageViewButton* button;
+    MMProgressedImageViewButton* button;
 }
 
 @synthesize delegate;
 
 -(id) init{
     if(self = [super init]){
-        button = [[MMImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        button = [[MMProgressedImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [button setImage:[UIImage imageNamed:@"tencentWeibo"]];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(updateButtonGreyscale)
                                                      name:UIApplicationDidBecomeActiveNotification object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateButtonGreyscale)
+                                                     name:kReachabilityChangedNotification object:nil];
         
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
         
@@ -61,6 +65,7 @@
                     strResult = @"Sent";
                 }
                 if(result == SLComposeViewControllerResultDone){
+                    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfSocialExports by:@(1)];
                     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
                 }
                 [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"TencentWeibo",
@@ -70,6 +75,8 @@
             [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:fbSheet animated:YES completion:nil];
             
             [delegate didShare:self];
+        }else{
+            [button animateToPercent:1.0 success:NO completion:nil];
         }
     });
 }
@@ -81,7 +88,7 @@
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if(![MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable) {
+    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable) {
         button.greyscale = YES;
     }else if(![SLComposeViewController isAvailableForServiceType:SLServiceTypeTencentWeibo]) {
         button.greyscale = YES;

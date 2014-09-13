@@ -62,7 +62,7 @@
         [undoRedoManager loadFrom:[self undoStatePath]];
     };
     
-    dispatch_async([self concurrentBackgroundQueue], block);
+    dispatch_async([self serialBackgroundQueue], block);
 }
 
 -(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
@@ -92,7 +92,7 @@
         // if its loaded
         // track if all of our scraps have saved
         
-        dispatch_async([self concurrentBackgroundQueue], ^(void) {
+        dispatch_async([self serialBackgroundQueue], ^(void) {
             // also write undostack to disk
             [undoRedoManager saveTo:[self undoStatePath]];
             dispatch_semaphore_signal(sema2);
@@ -100,7 +100,7 @@
     }else{
         dispatch_semaphore_signal(sema2);
     }
-    dispatch_async([self concurrentBackgroundQueue], ^(void) {
+    dispatch_async([self serialBackgroundQueue], ^(void) {
         @autoreleasepool {
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
@@ -110,8 +110,8 @@
     });
 }
 
--(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext *)context{
-    [super loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andScale:(CGFloat)scale andContext:(JotGLContext *)context{
+    [super loadStateAsynchronously:async withSize:pagePixelSize andScale:scale andContext:context];
     
 //    dispatch_block_t block = ^{
 //        [undoRedoManager loadFrom:[self undoStatePath]];

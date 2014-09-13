@@ -26,7 +26,7 @@
 @property (readonly) MMScrapContainerView* scrapContainerView;
 @property (readonly) UIImageView* cachedImgView;
 
--(dispatch_queue_t) concurrentBackgroundQueue;
+-(dispatch_queue_t) serialBackgroundQueue;
 
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andScale:(CGFloat)scale;
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale;
@@ -58,5 +58,7 @@
 -(void) updateThumbnailVisibility;
 
 -(NSString*) scrapIDsPath;
+
+-(CGSize) thumbnailSize;
 
 @end

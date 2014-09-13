@@ -9,6 +9,8 @@
 #import "MMAirDropShareItem.h"
 #import "Mixpanel.h"
 #import "MMImageViewButton.h"
+#import "MMReachabilityManager.h"
+#import "EPPZDevice.h"
 #import "Constants.h"
 
 @implementation MMAirDropShareItem{
@@ -21,10 +23,15 @@
     if(self = [super init]){
         button = [[MMImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [button setImage:[UIImage imageNamed:@"airsharing"]];
-        
+        button.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
+
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(updateButtonGreyscale)
                                                      name:UIApplicationDidBecomeActiveNotification object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateButtonGreyscale)
+                                                     name:kReachabilityChangedNotification object:nil];
         
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
 
@@ -39,6 +46,8 @@
 
 -(void) performShareAction{
     [delegate mayShare:self];
+    button.selected = YES;
+    [button setNeedsDisplay];
     // if a popover controller is dismissed, it
     // adds the dismissal to the main queue async
     // so we need to add our next steps /after that/
@@ -64,22 +73,37 @@
                                                          UIActivityTypePostToTencentWeibo];
         UIWindow* win = [[UIApplication sharedApplication] keyWindow];
         
+        
+        void(^block)(NSString *, BOOL) = ^(NSString *activityType, BOOL completed){
+            NSLog(@"shared: %@ %d", activityType, completed);
+            if(completed){
+                [self.delegate didShare:self];
+                [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+            }
+            if(!activityType) activityType = @"com.apple.UIKit.activity.AirDrop";
+            NSString* strResult = completed ? @"Success" : @"Cancelled";
+            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : activityType,
+                                                                         kMPEventExportPropResult : strResult}];
+            
+            button.selected = NO;
+            [button setNeedsDisplay];
+        };
+        
         if([activityViewController respondsToSelector:@selector(popoverPresentationController)]){
             activityViewController.popoverPresentationController.sourceView = self.button;
             activityViewController.popoverPresentationController.sourceRect = self.button.bounds;
-//            activityViewController.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionLeft;
-            activityViewController.completionHandler = ^(NSString *activityType, BOOL completed){
-                NSLog(@"shared: %@ %d", activityType, completed);
-                if(completed){
-                    [self.delegate didShare:self];
-                }
+            activityViewController.completionWithItemsHandler = ^(NSString *activityType, BOOL completed, NSArray *returnedItems, NSError *activityError){
+                block(activityType, completed);
             };
         }else{
             [self.delegate didShare:self];
+            button.selected = NO;
+            [button setNeedsDisplay];
+            activityViewController.completionHandler = ^(NSString *activityType, BOOL completed){
+                block(activityType, completed);
+            };
         }
         
-        
-//        [win.rootViewController presentModalViewController:activityViewController animated:YES];
         [win.rootViewController presentViewController:activityViewController
                                              animated:YES
                                            completion:^{
@@ -90,14 +114,21 @@
 }
 
 -(BOOL) isAtAllPossible{
-    return YES;
+//    NSLog(@"model: %@", [EPPZDevice sharedDevice].model);
+//    NSLog(@"variant: %@", [EPPZDevice sharedDevice].variant);
+//    NSLog(@"generation: %@", [EPPZDevice sharedDevice].generation);
+//    NSLog(@"machineID: %@", [EPPZDevice sharedDevice].machineID);
+    return ![[EPPZDevice sharedDevice].generation isEqualToString:@"iPad 2"];
 }
 
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    button.greyscale = NO;
-    [button setNeedsDisplay];
+    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable) {
+        button.greyscale = YES;
+    }else{
+        button.greyscale = NO;
+    }    [button setNeedsDisplay];
 }
 
 #pragma mark - Dealloc

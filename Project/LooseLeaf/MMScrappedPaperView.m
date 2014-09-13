@@ -60,7 +60,7 @@
     // during a save
     int hasPendingScrappedIconUpdate;
 
-    dispatch_queue_t concurrentBackgroundQueue;
+    dispatch_queue_t serialBackgroundQueue;
 
     
     NSUInteger lastSavedPaperStateHashForGeneratedThumbnail;
@@ -72,11 +72,11 @@
 @synthesize cachedImgView;
 
 
--(dispatch_queue_t) concurrentBackgroundQueue{
-    if(!concurrentBackgroundQueue){
-        concurrentBackgroundQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.concurrentBackgroundQueue", DISPATCH_QUEUE_SERIAL);
+-(dispatch_queue_t) serialBackgroundQueue{
+    if(!serialBackgroundQueue){
+        serialBackgroundQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.concurrentBackgroundQueue", DISPATCH_QUEUE_SERIAL);
     }
-    return concurrentBackgroundQueue;
+    return serialBackgroundQueue;
 }
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
@@ -620,9 +620,11 @@
     // we've cancelled the polygon (possibly b/c
     // it was a pan/pinch instead), so clear
     // the drawn polygon and reset.
-    [shapeBuilderView clear];
+    if(shapeBuilderView){
+        [shapeBuilderView clear];
+        NSLog(@"cancelling scissors");
+    }
 }
-
 
 -(void) completeScissorsCut{
     @autoreleasepool {
@@ -947,13 +949,17 @@
     return [scrappedImgViewImage image];
 }
 
+-(CGSize) thumbnailSize{
+    CGSize thumbSize = self.originalUnscaledBounds.size;
+    thumbSize.width /= 2;
+    thumbSize.height /= 2;
+    return thumbSize;
+}
+
 -(void) updateFullPageThumbnail:(MMImmutableScrapsOnPaperState*)immutableScrapState{
     @autoreleasepool {
         UIImage* thumb = [self synchronouslyLoadInkPreview];
-        CGSize thumbSize = self.originalUnscaledBounds.size;
-        thumbSize.width /= 2;
-        thumbSize.height /= 2;
-        
+        CGSize thumbSize = [self thumbnailSize];
         UIGraphicsBeginImageContextWithOptions(thumbSize, NO, 0.0);
         
         // get context
@@ -992,7 +998,7 @@
     @autoreleasepool {
         // create the cache thumbnail view
         if(!cachedImgView && img){
-            cachedImgView = [[MMCachedPreviewManager sharedInstace] requestCachedImageViewForView:self];
+            cachedImgView = [[MMCachedPreviewManager sharedInstance] requestCachedImageViewForView:self];
             cachedImgView.image = img;
             if(drawableView){
                 [self.contentView insertSubview:cachedImgView belowSubview:drawableView];
@@ -1002,7 +1008,7 @@
         }else if(cachedImgView && !img){
             // giving the cachedImgView back to the cache will automatically
             // remove it from the superview
-            [[MMCachedPreviewManager sharedInstace] giveBackCachedImageView:cachedImgView];
+            [[MMCachedPreviewManager sharedInstance] giveBackCachedImageView:cachedImgView];
             cachedImgView = nil;
         }else if(img){
             cachedImgView.image = img;
@@ -1084,7 +1090,7 @@
         dispatch_semaphore_signal(sema2);
     }
 
-    dispatch_async([self concurrentBackgroundQueue], ^(void) {
+    dispatch_async([self serialBackgroundQueue], ^(void) {
         @autoreleasepool {
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
@@ -1158,9 +1164,9 @@
     });
 }
 
--(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context{
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andScale:(CGFloat)scale andContext:(JotGLContext*)context{
 //    debug_NSLog(@"asking %@ to load state", self.uuid);
-    [super loadStateAsynchronously:async withSize:pagePixelSize andContext:context];
+    [super loadStateAsynchronously:async withSize:pagePixelSize andScale:scale andContext:context];
     if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
         [scrapsOnPaperState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
     }else{

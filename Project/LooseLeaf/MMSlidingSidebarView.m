@@ -128,7 +128,6 @@
             maskLayer.fillColor = [UIColor whiteColor].CGColor;
             blurContainerView.layer.mask = maskLayer;
         }else{
-            
             CGRect buttonRect = [self rectForButton];
             CGFloat radius = buttonRect.size.width / 2;
             CGPoint buttonCenter = CGPointMake(buttonRect.origin.x + radius, buttonRect.origin.y + radius);

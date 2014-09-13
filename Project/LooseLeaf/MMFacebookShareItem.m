@@ -7,7 +7,7 @@
 //
 
 #import "MMFacebookShareItem.h"
-#import "MMImageViewButton.h"
+#import "MMProgressedImageViewButton.h"
 #import "MMReachabilityManager.h"
 #import "Mixpanel.h"
 #import "Constants.h"
@@ -16,14 +16,14 @@
 #import <Accounts/Accounts.h>
 
 @implementation MMFacebookShareItem{
-    MMImageViewButton* button;
+    MMProgressedImageViewButton* button;
 }
 
 @synthesize delegate;
 
 -(id) init{
     if(self = [super init]){
-        button = [[MMImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        button = [[MMProgressedImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [button setImage:[UIImage imageNamed:@"facebook"]];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -65,6 +65,7 @@
                     strResult = @"Sent";
                 }
                 if(result == SLComposeViewControllerResultDone){
+                    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfSocialExports by:@(1)];
                     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
                 }
                 [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Facebook",
@@ -79,6 +80,8 @@
             }];
             
             [delegate didShare:self];
+        }else{
+            [button animateToPercent:1.0 success:NO completion:nil];
         }
     });
 }
@@ -90,7 +93,7 @@
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if(![MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable) {
+    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable) {
         button.greyscale = YES;
     }else if(![SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) {
         button.greyscale = YES;

@@ -12,7 +12,7 @@
 
 @interface MMTrashManager : NSObject
 
-+(MMTrashManager*) sharedInstace;
++(MMTrashManager*) sharedInstance;
 
 -(void) deleteScrap:(NSString*)scrap inPage:(MMScrappedPaperView*)page;
 
