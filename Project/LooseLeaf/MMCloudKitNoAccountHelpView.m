@@ -35,7 +35,7 @@
         [settingsButton setImage:settingsIcon forState:UIControlStateNormal];
         [settingsButton setAdjustsImageWhenHighlighted:NO];
         settingsButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        settingsButton.center = CGPointMake(self.bounds.size.width/2, 40 + settingsButton.bounds.size.height/2);
+        settingsButton.center = CGPointMake(self.bounds.size.width/2, 30 + settingsButton.bounds.size.height/2);
         [settingsButton addTarget:self action:@selector(settingsButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:settingsButton];
         
@@ -45,15 +45,13 @@
         topArrow.lineWidth = 1;
         topArrow.strokeColor = borderColor.CGColor;
         topArrow.fillColor = halfWhite.CGColor;
-        topArrow.position = CGPointMake(self.bounds.size.width/2, 164);
-        
+        topArrow.position = CGPointMake(self.bounds.size.width/2, 148);
+        [self.layer addSublayer:topArrow];
         
         UIImageView* iCloudSettings = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iCloudSettings"]];
         iCloudSettings.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        iCloudSettings.center = CGPointMake(self.bounds.size.width/2, 238);
+        iCloudSettings.center = CGPointMake(self.bounds.size.width/2, 216);
         [self addSubview:iCloudSettings];
-        
-        [self.layer addSublayer:topArrow];
         
     }
     return self;
