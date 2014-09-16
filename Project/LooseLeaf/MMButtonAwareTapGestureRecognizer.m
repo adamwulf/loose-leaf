@@ -7,6 +7,7 @@
 //
 
 #import "MMButtonAwareTapGestureRecognizer.h"
+#import <UIKit/UIGestureRecognizerSubclass.h>
 
 @implementation MMButtonAwareTapGestureRecognizer
 
@@ -24,6 +25,14 @@
         self.delegate = self;
     }
     return self;
+}
+
+-(void) setState:(UIGestureRecognizerState) state{
+    [super setState:state];
+    if(self.numberOfTouchesRequired == 2){
+        NSLog(@"touches to the tap: %d", state);
+    }
+
 }
 
 #pragma mark - UIGestureRecognizerDelegate
