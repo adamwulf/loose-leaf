@@ -27,14 +27,6 @@
     return self;
 }
 
--(void) setState:(UIGestureRecognizerState) state{
-    [super setState:state];
-    if(self.numberOfTouchesRequired == 2){
-        NSLog(@"touches to the tap: %d", state);
-    }
-
-}
-
 #pragma mark - UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
