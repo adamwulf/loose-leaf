@@ -74,26 +74,26 @@
                                   andScale:(CGFloat)scale{
     NSMutableArray* convertedElements = [NSMutableArray array];
     UIBezierPath* pathSegment = self;
-    if(!CGAffineTransformIsIdentity(transform)){
-        // only spend resources copying if we have to
-        pathSegment = [pathSegment copy];
-        [pathSegment applyTransform:transform];
-    }
-    __block CGPoint previousEndpoint = self.firstPoint;
-    
-    
-    CGFloat widthDiff = toWidth - fromWidth;
-    GLfloat prevColor[4], elementColor[4];
-    GLfloat _colorDiff[4];
-    GLfloat* prevColorPtr = (GLfloat*) prevColor;
-    CGFloat* colorDiff = (CGFloat*)_colorDiff;
-    [fromColor getRGBAComponents:prevColor];
-    [toColor getRGBAComponents:elementColor];
-    colorDiff[0] = elementColor[0] - prevColor[0];
-    colorDiff[1] = elementColor[1] - prevColor[1];
-    colorDiff[2] = elementColor[2] - prevColor[2];
-    colorDiff[3] = elementColor[3] - prevColor[3];
     @try{
+        if(!CGAffineTransformIsIdentity(transform)){
+            // only spend resources copying if we have to
+            pathSegment = [pathSegment copy];
+            [pathSegment applyTransform:transform];
+        }
+        __block CGPoint previousEndpoint = self.firstPoint;
+        
+        CGFloat widthDiff = toWidth - fromWidth;
+        GLfloat prevColor[4], elementColor[4];
+        GLfloat _colorDiff[4];
+        GLfloat* prevColorPtr = (GLfloat*) prevColor;
+        CGFloat* colorDiff = (CGFloat*)_colorDiff;
+        [fromColor getRGBAComponents:prevColor];
+        [toColor getRGBAComponents:elementColor];
+        colorDiff[0] = elementColor[0] - prevColor[0];
+        colorDiff[1] = elementColor[1] - prevColor[1];
+        colorDiff[2] = elementColor[2] - prevColor[2];
+        colorDiff[3] = elementColor[3] - prevColor[3];
+        
         [pathSegment iteratePathWithBlock:^(CGPathElement pathEle){
             CGFloat tValueAtEndPoint;
             AbstractBezierPathElement* newElement = nil;
