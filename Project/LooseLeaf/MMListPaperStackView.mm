@@ -19,6 +19,8 @@
 @implementation MMListPaperStackView{
     std::map<NSUInteger,CGRect> * mapOfFinalFramesForPagesBeingZoomed; //All data pointers have same size,
     BOOL isShowingPageView;
+    MMButtonAwareTapGestureRecognizer* tapGesture;
+    MMButtonAwareTapGestureRecognizer* twoFingerTapGesture;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -46,9 +48,16 @@
         tapGesture.enabled = NO;
         [self addGestureRecognizer:tapGesture];
         
+        twoFingerTapGesture = [[MMButtonAwareTapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapScrollView:)];
+        [twoFingerTapGesture setNumberOfTapsRequired:1];
+        [twoFingerTapGesture setNumberOfTouchesRequired:2];
+        twoFingerTapGesture.enabled = NO;
+        [self addGestureRecognizer:twoFingerTapGesture];
+        
         pinchGesture = [[MMPanAndPinchFromListViewGestureRecognizer alloc] initWithTarget:self action:@selector(didPinchAPageInListView:)];
         pinchGesture.enabled = NO;
         pinchGesture.pinchDelegate = self;
+        [pinchGesture requireGestureRecognizerToFail:twoFingerTapGesture];
         [self addGestureRecognizer:pinchGesture];
         
         longPressGesture = [[MMLongPressFromListViewGestureRecognizer alloc] initWithTarget:self action:@selector(didHoldAPageInListView:)];
@@ -87,6 +96,8 @@
         // cancel tap w/o requiring subclass
         tapGesture.enabled = NO;
         tapGesture.enabled = YES;
+        twoFingerTapGesture.enabled = NO;
+        twoFingerTapGesture.enabled = YES;
     }
     [pinchGesture cancel];
     [longPressGesture cancel];
@@ -199,6 +210,7 @@
     [visibleStackHolder setClipsToBounds:NO];
     [self setScrollEnabled:NO];
     [tapGesture setEnabled:NO];
+    [twoFingerTapGesture setEnabled:NO];
     [pinchGesture setEnabled:NO];
     [longPressGesture setEnabled:NO];
     [self moveAddButtonToBottom];
@@ -257,6 +269,7 @@
     [visibleStackHolder setClipsToBounds:NO];
     [self setScrollEnabled:NO];
     [tapGesture setEnabled:NO];
+    [twoFingerTapGesture setEnabled:NO];
     if(!pinchGesture.pinchedPage){
         [pinchGesture setEnabled:NO];
     }
@@ -282,6 +295,7 @@
     [hiddenStackHolder setClipsToBounds:NO];
     [self setScrollEnabled:YES];
     [tapGesture setEnabled:YES];
+    [twoFingerTapGesture setEnabled:YES];
     [pinchGesture setEnabled:YES];
     [longPressGesture setEnabled:YES];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
@@ -312,6 +326,7 @@
     [hiddenStackHolder setClipsToBounds:YES];
     [self setScrollEnabled:NO];
     [tapGesture setEnabled:NO];
+    [twoFingerTapGesture setEnabled:NO];
     [pinchGesture setEnabled:NO];
     [longPressGesture setEnabled:NO];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;

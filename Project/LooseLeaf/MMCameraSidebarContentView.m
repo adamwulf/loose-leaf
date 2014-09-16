@@ -64,6 +64,7 @@
 
 -(void) show:(BOOL)animated{
     if(isShowing){
+        [photoListScrollView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
         return;
     }
     isShowing = YES;

@@ -91,10 +91,11 @@
         // only bother saving our undo/redo state
         // if its loaded
         // track if all of our scraps have saved
-        
         dispatch_async([self serialBackgroundQueue], ^(void) {
             // also write undostack to disk
-            [undoRedoManager saveTo:[self undoStatePath]];
+            if(undoRedoManager.isLoaded){
+                [undoRedoManager saveTo:[self undoStatePath]];
+            }
             dispatch_semaphore_signal(sema2);
         });
     }else{

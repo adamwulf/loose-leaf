@@ -164,10 +164,7 @@ static BOOL ignoredFirstRotateNotification = NO;
             }else{
                 orientation = UIDeviceOrientationFaceDown;
             }
-//            NSLog(@"should ignore this guy %f", accelerationZ);
         }
-    }else{
-//        NSLog(@"faceup/down");
     }
     
     if(shouldIgnoreEvents){
@@ -200,7 +197,6 @@ static BOOL ignoredFirstRotateNotification = NO;
     UIInterfaceOrientation devOrient = (UIInterfaceOrientation) orientation;
     UIInterfaceOrientation currOrient = [self currentStatusbarOrientation];
     [delegate willRotateInterfaceFrom:currOrient to:devOrient];
-//    [[UIApplication sharedApplication] setStatusBarOrientation:devOrient animated:NO];
     [delegate didRotateInterfaceFrom:currOrient to:devOrient];
 }
 
@@ -232,25 +228,18 @@ static BOOL ignoredFirstRotateNotification = NO;
 
 
 -(void) willResignActive{
-//    NSLog(@"rotation manager will resign");
     shouldIgnoreEvents = YES;
     [motionManager stopAccelerometerUpdates];
 }
 
 -(void) applicationDidBackground{
-//    NSLog(@"rotation manager background");
     ignoredFirstRotateNotification = NO;
-}
-
--(void) didEnterForeground{
-//    NSLog(@"rotation manager foreground");
 }
 
 -(void) didBecomeActive{
 //    NSLog(@"rotation manager active");
     shouldIgnoreEvents = NO;
     ignoredFirstRotateNotification = YES;
-//    [self didRotate:lastNote];
     [self startAccelNotifications];
 }
 

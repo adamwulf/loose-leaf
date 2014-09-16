@@ -30,6 +30,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
     debug_NSLog(@"DID FINISH LAUNCHING");
     [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
@@ -90,7 +91,6 @@
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     debug_NSLog(@"WILL ENTER FOREGROUND");
-    [[MMRotationManager sharedInstance] didEnterForeground];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

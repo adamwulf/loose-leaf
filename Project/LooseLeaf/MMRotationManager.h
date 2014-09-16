@@ -40,8 +40,6 @@
 
 -(void) willResignActive;
 
--(void) didEnterForeground;
-
 -(void) didBecomeActive;
 
 -(void) applicationDidBackground;
