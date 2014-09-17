@@ -44,7 +44,7 @@
 -(void) importCoordinatorHasAssetsAndIsProcessing:(MMCloudKitImportCoordinator*)coordinator;
 
 // notify that assets have been downloaded
--(void) importCoordinatorFailedPermanently:(MMCloudKitImportCoordinator*)coordinator;
+-(void) importCoordinatorFailedPermanently:(MMCloudKitImportCoordinator*)coordinator withCode:(NSInteger)errorCode;
 
 // notify that assets are 100% ready for user import, show button
 -(void) importCoordinatorIsReady:(MMCloudKitImportCoordinator*)coordinator;

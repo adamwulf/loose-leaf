@@ -22,7 +22,6 @@
 #import "MMAirDropShareItem.h"
 #import "MMCopyShareItem.h"
 #import "NSThread+BlockAdditions.h"
-#import "MMOpenInAppManager.h"
 #import "MMShareOptionsView.h"
 #import "MMRotationManager.h"
 #import "Constants.h"

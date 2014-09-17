@@ -118,7 +118,11 @@
 //    NSLog(@"variant: %@", [EPPZDevice sharedDevice].variant);
 //    NSLog(@"generation: %@", [EPPZDevice sharedDevice].generation);
 //    NSLog(@"machineID: %@", [EPPZDevice sharedDevice].machineID);
-    return ![[EPPZDevice sharedDevice].generation isEqualToString:@"iPad 2"];
+    
+    // for now, the Open In also covers AirDrop sharing, so don't
+    // display this extra menu item
+//    return ![[EPPZDevice sharedDevice].generation isEqualToString:@"iPad 2"];
+    return NO;
 }
 
 #pragma mark - Notification

@@ -70,8 +70,14 @@
                                                       kMPNumberOfCrashes : @(0),
                                                       kMPDistanceDrawn : @(0.0),
                                                       kMPDistanceErased : @(0.0),
-                                                      kMPNumberOfClippingExceptions : @(0.0)}];
-
+                                                      kMPNumberOfClippingExceptions : @(0.0),
+                                                      kMPShareStatusFacebook : kMPShareStatusUnknown,
+                                                      kMPShareStatusTwitter : kMPShareStatusUnknown,
+                                                      kMPShareStatusEmail : kMPShareStatusUnknown,
+                                                      kMPShareStatusSMS : kMPShareStatusUnknown,
+                                                      kMPShareStatusTencentWeibo : kMPShareStatusUnknown,
+                                                      kMPShareStatusSinaWeibo : kMPShareStatusUnknown,
+                                                      }];
 
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"blackblur.png"]]];
         

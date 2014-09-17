@@ -255,10 +255,6 @@
 		66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */; };
 		66AF94FD1905956C004818F8 /* MMPageCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AF94FC1905956C004818F8 /* MMPageCacheManager.m */; };
 		66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B0FA5F17FB68410079E7A3 /* MMScrapViewState.m */; };
-		66B1EF2A19980A1300E9EEF1 /* UIView+OpenInAppOptionsViewWatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B1EF2919980A1300E9EEF1 /* UIView+OpenInAppOptionsViewWatch.m */; };
-		66B1EF2D19983DCD00E9EEF1 /* MMOpenInAppManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B1EF2C19983DCD00E9EEF1 /* MMOpenInAppManager.m */; };
-		66B1EF3019984C0300E9EEF1 /* MMOpenInAppOptionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B1EF2F19984C0300E9EEF1 /* MMOpenInAppOptionsView.m */; };
-		66B1EF34199C2D7D00E9EEF1 /* MMOpenInAppSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B1EF33199C2D7D00E9EEF1 /* MMOpenInAppSidebarButton.m */; };
 		66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A55175AFCA70049F1AF /* MMHandButton.m */; };
 		66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A6B175E4A5A0049F1AF /* MMStackManager.m */; };
 		66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A75175E559E0049F1AF /* NSArray+Map.m */; };
@@ -663,7 +659,6 @@
 		667C636B199FF3D500E93CD6 /* MMCopyShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCopyShareItem.h; sourceTree = "<group>"; };
 		667C636C199FF3D500E93CD6 /* MMCopyShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCopyShareItem.m; sourceTree = "<group>"; };
 		667C636E199FF41300E93CD6 /* copy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = copy.png; sourceTree = "<group>"; };
-		667C637219A011A100E93CD6 /* icon.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = icon.license; sourceTree = "<group>"; };
 		667D98A9192D010900625879 /* Loose-Leaf_76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Loose-Leaf_76.png"; path = "../Loose-Leaf_76.png"; sourceTree = "<group>"; };
 		667D98AB192D4B7A00625879 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		667D98AD192D5D8200625879 /* MMInboxManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMInboxManager.h; sourceTree = "<group>"; };
@@ -809,16 +804,6 @@
 		66AF94FE1905981F004818F8 /* MMPageCacheManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPageCacheManagerDelegate.h; sourceTree = "<group>"; };
 		66B0FA5E17FB68410079E7A3 /* MMScrapViewState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapViewState.h; sourceTree = "<group>"; };
 		66B0FA5F17FB68410079E7A3 /* MMScrapViewState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapViewState.m; sourceTree = "<group>"; };
-		66B1EF2819980A1300E9EEF1 /* UIView+OpenInAppOptionsViewWatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+OpenInAppOptionsViewWatch.h"; sourceTree = "<group>"; };
-		66B1EF2919980A1300E9EEF1 /* UIView+OpenInAppOptionsViewWatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+OpenInAppOptionsViewWatch.m"; sourceTree = "<group>"; };
-		66B1EF2B19983DCD00E9EEF1 /* MMOpenInAppManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMOpenInAppManager.h; sourceTree = "<group>"; };
-		66B1EF2C19983DCD00E9EEF1 /* MMOpenInAppManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMOpenInAppManager.m; sourceTree = "<group>"; };
-		66B1EF2E19984C0300E9EEF1 /* MMOpenInAppOptionsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMOpenInAppOptionsView.h; sourceTree = "<group>"; };
-		66B1EF2F19984C0300E9EEF1 /* MMOpenInAppOptionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMOpenInAppOptionsView.m; sourceTree = "<group>"; };
-		66B1EF31199C293C00E9EEF1 /* MMOpenInAppManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMOpenInAppManagerDelegate.h; sourceTree = "<group>"; };
-		66B1EF32199C2D7D00E9EEF1 /* MMOpenInAppSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMOpenInAppSidebarButton.h; sourceTree = "<group>"; };
-		66B1EF33199C2D7D00E9EEF1 /* MMOpenInAppSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMOpenInAppSidebarButton.m; sourceTree = "<group>"; };
-		66B1EF36199C59A700E9EEF1 /* MMOpenInAppOptionsViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMOpenInAppOptionsViewDelegate.h; sourceTree = "<group>"; };
 		66B21A54175AFCA70049F1AF /* MMHandButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMHandButton.h; sourceTree = "<group>"; };
 		66B21A55175AFCA70049F1AF /* MMHandButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMHandButton.m; sourceTree = "<group>"; };
 		66B21A6A175E4A5A0049F1AF /* MMStackManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackManager.h; sourceTree = "<group>"; };
@@ -1449,7 +1434,6 @@
 			isa = PBXGroup;
 			children = (
 				66A7AF1A19A53ACD00E0AA29 /* CloudKit */,
-				66B1EF27199809B100E9EEF1 /* OpenIn */,
 				66EDE42119AE754400A5623B /* Items */,
 			);
 			name = "Share Items";
@@ -1913,23 +1897,6 @@
 				66AF94FE1905981F004818F8 /* MMPageCacheManagerDelegate.h */,
 			);
 			name = PageCacheManager;
-			sourceTree = "<group>";
-		};
-		66B1EF27199809B100E9EEF1 /* OpenIn */ = {
-			isa = PBXGroup;
-			children = (
-				66B1EF32199C2D7D00E9EEF1 /* MMOpenInAppSidebarButton.h */,
-				66B1EF33199C2D7D00E9EEF1 /* MMOpenInAppSidebarButton.m */,
-				66B1EF2819980A1300E9EEF1 /* UIView+OpenInAppOptionsViewWatch.h */,
-				66B1EF2919980A1300E9EEF1 /* UIView+OpenInAppOptionsViewWatch.m */,
-				66B1EF2B19983DCD00E9EEF1 /* MMOpenInAppManager.h */,
-				66B1EF2C19983DCD00E9EEF1 /* MMOpenInAppManager.m */,
-				66B1EF31199C293C00E9EEF1 /* MMOpenInAppManagerDelegate.h */,
-				66B1EF2E19984C0300E9EEF1 /* MMOpenInAppOptionsView.h */,
-				66B1EF2F19984C0300E9EEF1 /* MMOpenInAppOptionsView.m */,
-				66B1EF36199C59A700E9EEF1 /* MMOpenInAppOptionsViewDelegate.h */,
-			);
-			name = OpenIn;
 			sourceTree = "<group>";
 		};
 		66B21A77175E59490049F1AF /* Operations */ = {
@@ -2639,7 +2606,6 @@
 				66BEBFFD19BE55710032D30C /* MMCloudKitInviteCollectionViewCell.m in Sources */,
 				66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */,
 				66BD6E301591B57B00D4544C /* MMPaperButton.m in Sources */,
-				66B1EF34199C2D7D00E9EEF1 /* MMOpenInAppSidebarButton.m in Sources */,
 				6652452D1996CE3000C36609 /* MMImgurShareItem.m in Sources */,
 				6667480617C0166100D5C390 /* MMShapeBuilderView.m in Sources */,
 				667C635F199FE4BC00E93CD6 /* UIImage+MPAverageColor.m in Sources */,
@@ -2652,7 +2618,6 @@
 				66AC8D8318E88F4700A65036 /* MMPhotoAlbum.mm in Sources */,
 				66BD6E701593A8CC00D4544C /* MMPlusButton.m in Sources */,
 				667C635D199FE4BC00E93CD6 /* NSData+MPBase64.m in Sources */,
-				66B1EF2D19983DCD00E9EEF1 /* MMOpenInAppManager.m in Sources */,
 				66AF94FD1905956C004818F8 /* MMPageCacheManager.m in Sources */,
 				665245661996DAB800C36609 /* AFSecurityPolicy.m in Sources */,
 				663523EC19A8401100A26B88 /* MMCloudKitManager.m in Sources */,
@@ -2691,7 +2656,6 @@
 				669329731598EE210033E557 /* UIView+Debug.m in Sources */,
 				6652456A1996DAB800C36609 /* AFURLSessionManager.m in Sources */,
 				66EDA79617CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m in Sources */,
-				66B1EF3019984C0300E9EEF1 /* MMOpenInAppOptionsView.m in Sources */,
 				665C593417BD7C42006DECBF /* Tool.m in Sources */,
 				66A7AF1D19A53AF400E0AA29 /* MMCloudKitShareItem.m in Sources */,
 				66F968B819C3A0FB00C1F696 /* MMCloudKitDeclinedPermissionHelpView.m in Sources */,
@@ -2771,7 +2735,6 @@
 				66F4FB2617D912730086E21C /* MMScrapSidebarContentView.m in Sources */,
 				66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */,
 				66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */,
-				66B1EF2A19980A1300E9EEF1 /* UIView+OpenInAppOptionsViewWatch.m in Sources */,
 				66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */,
 				66EDE42D19AFE27300A5623B /* MMExportablePaperView.m in Sources */,
 				665245681996DAB800C36609 /* AFURLRequestSerialization.m in Sources */,

@@ -96,6 +96,12 @@
         button.greyscale = NO;
     }
     [button setNeedsDisplay];
+    
+    if([SLComposeViewController isAvailableForServiceType:SLServiceTypeTencentWeibo]) {
+        [[[Mixpanel sharedInstance] people] set:kMPShareStatusTencentWeibo to:kMPShareStatusAvailable];
+    }else{
+        [[[Mixpanel sharedInstance] people] set:kMPShareStatusTencentWeibo to:kMPShareStatusUnavailable];
+    }
 }
 
 #pragma mark - Dealloc

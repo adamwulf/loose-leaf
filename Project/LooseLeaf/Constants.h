@@ -81,6 +81,19 @@ _Pragma("clang diagnostic pop") \
 // Scraps
 #define kScrapShadowBufferSize 4
 
+// track social sharing availability
+#define kMPShareStatusAvailable @"Available"
+#define kMPShareStatusUnavailable @"Unavailable"
+#define kMPShareStatusUnknown @"Unknown"
+
+#define kMPShareStatusFacebook @"Share Status: Facebook"
+#define kMPShareStatusTwitter @"Share Status: Twitter"
+#define kMPShareStatusEmail @"Share Status: Email"
+#define kMPShareStatusSMS @"Share Status: SMS"
+#define kMPShareStatusTencentWeibo @"Share Status: Tencent Weibo"
+#define kMPShareStatusSinaWeibo @"Share Status: Sina Weibo"
+
+
 // MixPanel People Properties
 #define kMPPreferredLanguage @"Language"
 #define kMPScreenScale @"Screen Scale"
@@ -126,6 +139,7 @@ _Pragma("clang diagnostic pop") \
 #define kMPEventExportPropDestination @"Export Destination"
 #define kMPEventExportPropResult @"Export Result"
 #define kMPEventExportPropReason @"Export Result Reason"
+#define kMPEventImportPropResult @"Import Result"
 #define kMPEventImportPropFileExt @"File Extension"
 #define kMPEventImportPropFileType @"File Type"
 #define kMPEventImportPropReferApp @"Referring App"
@@ -134,9 +148,11 @@ _Pragma("clang diagnostic pop") \
 #define kMPEventImportPropSourceApplication @"Application"
 #define kMPEventImportPropScrapCount @"File Extension"
 #define kMPEventImportPropVisibleScrapCount @"File Type"
+#define kMPEventImportInvalidZipErrorCode -1
 
 // MixPanel Error Tracking
 #define kMPPathIterationException @"PathIterationException"
+
 
 // photo album
 #define kMaxPhotoRotationInDegrees 20

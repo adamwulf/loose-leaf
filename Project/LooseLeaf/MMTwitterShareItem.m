@@ -102,6 +102,12 @@
         button.greyscale = NO;
     }
     [button setNeedsDisplay];
+    
+    if([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) {
+        [[[Mixpanel sharedInstance] people] set:kMPShareStatusTwitter to:kMPShareStatusAvailable];
+    }else{
+        [[[Mixpanel sharedInstance] people] set:kMPShareStatusTwitter to:kMPShareStatusUnavailable];
+    }
 }
 
 #pragma mark - Dealloc

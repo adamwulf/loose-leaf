@@ -225,7 +225,7 @@
                             }
                         }else{
                             NSLog(@"coordinator failed to unzip %@ with file %@", message.messageRecordID, zipFileLocation);
-                            [importExportView importCoordinatorFailedPermanently:self];
+                            [importExportView importCoordinatorFailedPermanently:self withCode:kMPEventImportInvalidZipErrorCode];
                             return;
                         }
                         
@@ -250,12 +250,14 @@
                         NSLog(@"coordinator failed %@", message.messageRecordID);
                         NSLog(@"invalid zip file");
                         NSLog(@"zip at: %@", zipFileLocation);
+#ifdef DEBUG
                         if(zipFileLocation){
                             NSString* savedPath = [[NSFileManager documentsPath] stringByAppendingPathComponent:[zipFileLocation lastPathComponent]];
                             [[NSFileManager defaultManager] moveItemAtPath:zipFileLocation toPath:savedPath error:nil];
                             NSLog(@"saved to: %@", savedPath);
                         }
-                        [importExportView importCoordinatorFailedPermanently:self];
+#endif
+                        [importExportView importCoordinatorFailedPermanently:self withCode:kMPEventImportInvalidZipErrorCode];
                     }
                 });
             }else{
@@ -275,7 +277,7 @@
                     case SPRSimpleCloudMessengerErrorMissingDiscoveryPermissions:
                     default:
                         NSLog(@"coordinator failed permanently - couldn't fetch data %@ %@", message.messageRecordID, error);
-                        [importExportView importCoordinatorFailedPermanently:self];
+                        [importExportView importCoordinatorFailedPermanently:self withCode:error.code];
                         break;
                 }
             }
@@ -308,6 +310,8 @@
     
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCloudKitImports by:@(1)];
+    [eventProperties setObject:@"CloudKit" forKey:kMPEventImportPropSource];
+    [eventProperties setObject:@"Success" forKey:kMPEventImportPropResult];
     [[Mixpanel sharedInstance] track:kMPEventImportPage properties:eventProperties];
     
     [importExportView importWasTapped:self];

@@ -8,9 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MMShareItem.h"
-#import "MMOpenInAppOptionsViewDelegate.h"
-#import "MMOpenInAppManagerDelegate.h"
 
-@interface MMOpenInAppShareItem : NSObject<MMShareItem,MMOpenInAppOptionsViewDelegate,MMOpenInAppManagerDelegate>
+@interface MMOpenInAppShareItem : NSObject<MMShareItem,UIDocumentInteractionControllerDelegate>
 
 @end
