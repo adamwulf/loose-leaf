@@ -310,8 +310,8 @@
     
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCloudKitImports by:@(1)];
-    [eventProperties setObject:kMPEventImportPropSource forKey:@"CloudKit"];
-    [eventProperties setObject:kMPEventImportPropResult forKey:@"Success"];
+    [eventProperties setObject:@"CloudKit" forKey:kMPEventImportPropSource];
+    [eventProperties setObject:@"Success" forKey:kMPEventImportPropResult];
     [[Mixpanel sharedInstance] track:kMPEventImportPage properties:eventProperties];
     
     [importExportView importWasTapped:self];
