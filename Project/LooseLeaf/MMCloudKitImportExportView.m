@@ -14,6 +14,7 @@
 #import "MMScrapPaperStackView.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "Constants.h"
+#import "Mixpanel.h"
 
 @implementation MMCloudKitImportExportView{
     NSMutableSet* disappearingButtons;
@@ -295,11 +296,34 @@
     [self saveToDiskOffMainThread];
 }
 
--(void) importCoordinatorFailedPermanently:(MMCloudKitImportCoordinator*)coordinator{
+-(void) importCoordinatorFailedPermanently:(MMCloudKitImportCoordinator*)coordinator withCode:(NSInteger)errorCode{
     @synchronized(activeImports){
         [activeImports removeObject:coordinator];
         [self saveToDiskOffMainThread];
     }
+    
+    NSString* reason = @"Unknown";
+    switch (errorCode) {
+        case kMPEventImportInvalidZipErrorCode:
+            reason = @"Invalid Zip";
+            break;
+        case SPRSimpleCloudMessengerErroriCloudAccount:
+            reason = @"No iCloud Account";
+            break;
+        case SPRSimpleCloudMessengerErroriCloudAccountChanged:
+            reason = @"iCloud Account Changed";
+            break;
+        case SPRSimpleCloudMessengerErrorMissingDiscoveryPermissions:
+            reason = @"Missing Permissions";
+            break;
+        default:
+            reason = @"Unknown";
+            break;
+    }
+
+    [[Mixpanel sharedInstance] track:kMPEventImportPage properties:@{kMPEventImportPropSource : @"CloudKit",
+                                                                     kMPEventImportPropResult : reason}];
+
 }
 
 -(void) importCoordinatorIsReady:(MMCloudKitImportCoordinator*)coordinator{

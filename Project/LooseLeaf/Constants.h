@@ -139,6 +139,7 @@ _Pragma("clang diagnostic pop") \
 #define kMPEventExportPropDestination @"Export Destination"
 #define kMPEventExportPropResult @"Export Result"
 #define kMPEventExportPropReason @"Export Result Reason"
+#define kMPEventImportPropResult @"Import Result"
 #define kMPEventImportPropFileExt @"File Extension"
 #define kMPEventImportPropFileType @"File Type"
 #define kMPEventImportPropReferApp @"Referring App"
@@ -147,9 +148,11 @@ _Pragma("clang diagnostic pop") \
 #define kMPEventImportPropSourceApplication @"Application"
 #define kMPEventImportPropScrapCount @"File Extension"
 #define kMPEventImportPropVisibleScrapCount @"File Type"
+#define kMPEventImportInvalidZipErrorCode -1
 
 // MixPanel Error Tracking
 #define kMPPathIterationException @"PathIterationException"
+
 
 // photo album
 #define kMaxPhotoRotationInDegrees 20
