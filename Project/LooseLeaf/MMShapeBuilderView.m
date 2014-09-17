@@ -79,7 +79,7 @@
          * that the user drew, and will check to see if it
          * intersects any of the other line segments
          */
-        [dottedPath iteratePathWithBlock:^(CGPathElement element){
+        [dottedPath iteratePathWithBlock:[^(CGPathElement element){
             // track the point from the previous element
             // and look to see if it intersects with the
             // last drawn element.
@@ -104,7 +104,7 @@
                 }
             }
             p3 = p4;
-        }];
+        } copy]];
         
         distTravelled = MIN(DistanceBetweenTwoPoints(lastTouchPoint, point), 50);
         if(distTravelled > 2 || ![touches count]){
@@ -198,7 +198,7 @@
         __block CGPoint prevPoint = CGPointZero;
         __block NSInteger index = 0;
         NSInteger count = [singlePath elementCount];
-        [singlePath iteratePathWithBlock:^(CGPathElement element){
+        [singlePath iteratePathWithBlock:[^(CGPathElement element){
             // our path is only made of line-to segments
             if(element.type == kCGPathElementAddLineToPoint){
                 if(index == count - 1){
@@ -214,7 +214,7 @@
             }
             prevPoint = element.points[0];
             index++;
-        }];
+        } copy]];
         // the shape controller knows about all the points in this subpath,
         // so see if it can recognize a shape
         SYShape* shape = [shapeMaker getFigurePaintedWithTolerance:0.0000001 andContinuity:0 forceOpen:NO];
