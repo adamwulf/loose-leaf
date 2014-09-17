@@ -14,7 +14,6 @@
 #import "NSString+UUID.h"
 #import "SSKeychain.h"
 #import "Mixpanel.h"
-#import "UIView+OpenInAppOptionsViewWatch.h"
 #import "MMWindow.h"
 #import "MMCloudKitManager.h"
 
@@ -165,6 +164,11 @@
 
 -(void) application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error{
     NSLog(@"did fail register for remote notifications");
+}
+
+- (BOOL)application:(UIApplication *)application shouldAllowExtensionPointIdentifier:(NSString *)extensionPointIdentifier{
+    NSLog(@"extension? %@", extensionPointIdentifier);
+    return YES;
 }
 
 #pragma mark - Photo and PDF Import
