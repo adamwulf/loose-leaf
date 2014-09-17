@@ -364,7 +364,6 @@
 -(void) didEndStrokeWithTouch:(JotTouch *)touch{
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
         [scrap addUndoLevelAndFinishStroke];
-        [scrap.state.drawableView clearUndoneStrokes];
     }
     [super didEndStrokeWithTouch:touch];
 }
