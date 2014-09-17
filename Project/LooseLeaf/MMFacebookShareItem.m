@@ -101,6 +101,12 @@
         button.greyscale = NO;
     }
     [button setNeedsDisplay];
+    
+    if([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) {
+        [[[Mixpanel sharedInstance] people] set:kMPShareStatusFacebook to:kMPShareStatusAvailable];
+    }else{
+        [[[Mixpanel sharedInstance] people] set:kMPShareStatusFacebook to:kMPShareStatusUnavailable];
+    }
 }
 
 #pragma mark - Dealloc

@@ -75,6 +75,12 @@
         button.greyscale = YES;
     }
     [button setNeedsDisplay];
+    
+    if([MFMailComposeViewController canSendMail]) {
+        [[[Mixpanel sharedInstance] people] set:kMPShareStatusEmail to:kMPShareStatusAvailable];
+    }else{
+        [[[Mixpanel sharedInstance] people] set:kMPShareStatusEmail to:kMPShareStatusUnavailable];
+    }
 }
 
 #pragma mark - MFMailComposeViewControllerDelegate

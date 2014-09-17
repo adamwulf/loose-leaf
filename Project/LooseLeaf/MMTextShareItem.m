@@ -75,6 +75,12 @@
         button.greyscale = YES;
     }
     [button setNeedsDisplay];
+    
+    if([MFMessageComposeViewController canSendText]) {
+        [[[Mixpanel sharedInstance] people] set:kMPShareStatusSMS to:kMPShareStatusAvailable];
+    }else{
+        [[[Mixpanel sharedInstance] people] set:kMPShareStatusSMS to:kMPShareStatusUnavailable];
+    }
 }
 
 #pragma mark - MFMessageComposeViewControllerDelegate

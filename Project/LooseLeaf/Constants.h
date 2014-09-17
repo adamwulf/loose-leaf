@@ -81,6 +81,19 @@ _Pragma("clang diagnostic pop") \
 // Scraps
 #define kScrapShadowBufferSize 4
 
+// track social sharing availability
+#define kMPShareStatusAvailable @"Available"
+#define kMPShareStatusUnavailable @"Unavailable"
+#define kMPShareStatusUnknown @"Unknown"
+
+#define kMPShareStatusFacebook @"Share Status: Facebook"
+#define kMPShareStatusTwitter @"Share Status: Twitter"
+#define kMPShareStatusEmail @"Share Status: Email"
+#define kMPShareStatusSMS @"Share Status: SMS"
+#define kMPShareStatusTencentWeibo @"Share Status: Tencent Weibo"
+#define kMPShareStatusSinaWeibo @"Share Status: Sina Weibo"
+
+
 // MixPanel People Properties
 #define kMPPreferredLanguage @"Language"
 #define kMPScreenScale @"Screen Scale"
