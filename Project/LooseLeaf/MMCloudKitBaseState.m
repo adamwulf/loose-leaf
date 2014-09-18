@@ -66,7 +66,7 @@
         
         NSDictionary* status = [NSDictionary dictionaryWithContentsOfFile:[MMCloudKitBaseState statusPlistPath]];
         if(status){
-            NSLog(@"using cached account and permission status %@", status);
+//            NSLog(@"using cached account and permission status %@", status);
             SCKMAccountStatus accountStatus = (SCKMAccountStatus) [[status objectForKey:@"accountStatus"] integerValue];
             SCKMApplicationPermissionStatus permissionStatus = (SCKMApplicationPermissionStatus) [[status objectForKey:@"permissionStatus"] integerValue];
             [self switchStateBasedOnAccountStatus:accountStatus andPermissionStatus:permissionStatus];
