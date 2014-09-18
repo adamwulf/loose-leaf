@@ -85,8 +85,8 @@
         CGFloat widthDiff = toWidth - fromWidth;
         GLfloat prevColor[4], elementColor[4];
         GLfloat _colorDiff[4];
-        GLfloat* prevColorPtr = (GLfloat*) prevColor;
-        CGFloat* colorDiff = (CGFloat*)_colorDiff;
+        __block GLfloat* prevColorPtr = (GLfloat*) prevColor;
+        __block CGFloat* colorDiff = (CGFloat*)_colorDiff;
         [fromColor getRGBAComponents:prevColor];
         [toColor getRGBAComponents:elementColor];
         colorDiff[0] = elementColor[0] - prevColor[0];
