@@ -128,6 +128,9 @@ _Pragma("clang diagnostic pop") \
 #define kMPEventInvitePropDestination @"Invite Destination"
 #define kMPEventInvitePropResult @"Invite Result"
 
+// MixPanel Error Events
+#define kMPEventMemoryWarning @"Memory Warning"
+
 // MixPanel Events Properties
 #define kMPEventLaunch @"App Launch"
 #define kMPEventTakePhoto @"Take Photo"
