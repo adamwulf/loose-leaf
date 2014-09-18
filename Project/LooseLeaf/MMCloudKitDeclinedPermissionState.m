@@ -16,8 +16,6 @@
 @implementation MMCloudKitDeclinedPermissionState
 
 -(void) runState{
-    NSLog(@"Running state %@", NSStringFromClass([self class]));
-    
     if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
         // we can't connect to cloudkit, so move to an error state
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
