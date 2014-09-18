@@ -13,6 +13,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "UIView+Debug.h"
 #import "UIColor+Shadow.h"
+#import <MobileCoreServices/MobileCoreServices.h>
 
 @implementation MMOpenInAppShareItem{
     MMShareButton* button;
@@ -55,14 +56,14 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         NSDate *now = [[NSDate alloc] init];
         NSString *theDate = [dateFormatter stringFromDate:now];
-        NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"LooseLeaf-%@.png", theDate]];
+        NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"LooseLeaf-%@.jpg", theDate]];
         UIImage* imageToShare = self.delegate.imageToShare;
-        [UIImagePNGRepresentation(imageToShare) writeToFile:filePath atomically:YES];
+        [UIImageJPEGRepresentation(imageToShare, .9) writeToFile:filePath atomically:YES];
         NSURL* fileLocation = [NSURL fileURLWithPath:filePath];
 
         UIWindow* win = [[UIApplication sharedApplication] keyWindow];
         controller = [UIDocumentInteractionController interactionControllerWithURL:fileLocation];
-        controller.UTI = @"public.png";
+        controller.UTI = (__bridge NSString *)(kUTTypeJPEG);
         controller.delegate = self;
         UIView* presentationView = win.rootViewController.view;
         if(![controller presentOpenInMenuFromRect:[button convertRect:button.bounds toView:presentationView] inView:presentationView animated:YES]){
