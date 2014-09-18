@@ -250,6 +250,7 @@ dispatch_queue_t importThumbnailQueue;
  * state to disk, and notify our delegate when done
  */
 -(void) saveToDisk:(void (^)(BOOL didSaveEdits))onComplete{
+    
     // Sanity checks to generate our directory structure if needed
     [self pagesPath];
     
@@ -289,14 +290,11 @@ dispatch_queue_t importThumbnailQueue;
                                  }
                              }];
         }else{
-//            NSLog(@"don't have a drawable view, notifying that our save is complete b/c we didn't need one");
             onComplete(NO);
         }
-
     }else{
         // already saved, but don't need to write
         // anything new to disk
-//        debug_NSLog(@"no edits to save with hash %u", [drawableView undoHash]);
         onComplete(NO);
     }
 }

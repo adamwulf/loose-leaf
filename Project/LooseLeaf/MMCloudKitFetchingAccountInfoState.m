@@ -27,8 +27,6 @@
 }
 
 -(void) runState{
-    NSLog(@"Running state %@", NSStringFromClass([self class]));
-    
     if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
         // we can't connect to cloudkit, so move to an error state
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
@@ -60,7 +58,7 @@
                 if(cachedUserInfo && [cachedUserInfo isKindOfClass:[NSDictionary class]]){
                     // sanity check with the class comparison
                     if([[cachedUserInfo objectForKey:@"recordId"] isEqual:userRecord]){
-                        NSLog(@"using cached account information");
+//                        NSLog(@"using cached account information");
                         @synchronized(self){
                             isCheckingStatus = NO;
                         }

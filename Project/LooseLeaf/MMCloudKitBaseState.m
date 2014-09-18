@@ -49,8 +49,6 @@
 }
 
 -(void) runState{
-    NSLog(@"Running state %@", NSStringFromClass([self class]));
-    
     if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
         // we can't connect to cloudkit, so move to an error state
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
@@ -68,7 +66,7 @@
         
         NSDictionary* status = [NSDictionary dictionaryWithContentsOfFile:[MMCloudKitBaseState statusPlistPath]];
         if(status){
-            NSLog(@"using cached account and permission status %@", status);
+//            NSLog(@"using cached account and permission status %@", status);
             SCKMAccountStatus accountStatus = (SCKMAccountStatus) [[status objectForKey:@"accountStatus"] integerValue];
             SCKMApplicationPermissionStatus permissionStatus = (SCKMApplicationPermissionStatus) [[status objectForKey:@"permissionStatus"] integerValue];
             [self switchStateBasedOnAccountStatus:accountStatus andPermissionStatus:permissionStatus];
@@ -81,7 +79,6 @@
         [[SPRSimpleCloudKitManager sharedManager] silentlyVerifyiCloudAccountStatusOnComplete:^(SCKMAccountStatus accountStatus,
                                                                                                 SCKMApplicationPermissionStatus permissionStatus,
                                                                                                 NSError *error) {
-            NSLog(@"got account status and permisison info %d %d %p!", (int) accountStatus, (int) permissionStatus, error);
             @synchronized(self){
                 isCheckingStatus = NO;
             }

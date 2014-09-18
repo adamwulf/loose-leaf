@@ -12,7 +12,6 @@
 @implementation MMCloudKitOfflineState
 
 -(void) runState{
-    NSLog(@"Running state %@", NSStringFromClass([self class]));
     // noop
 }
 
@@ -25,7 +24,6 @@
 }
 
 -(void) reachabilityDidChange{
-    NSLog(@"%@ reachabilityDidChange", NSStringFromClass([self class]));
     [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitBaseState alloc] init]];
 }
 
