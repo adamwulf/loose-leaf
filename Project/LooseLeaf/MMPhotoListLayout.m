@@ -9,14 +9,11 @@
 #import "MMPhotoListLayout.h"
 #import "Constants.h"
 
-@implementation MMPhotoListLayout{
-    UIDynamicAnimator *dynamicAnimator;
-}
+@implementation MMPhotoListLayout
 
 -(id) init{
     if(self = [super init]){
         // noop
-        self.dynamicAnimator = [[UIDynamicAnimator alloc] initWithCollectionViewLayout:self];
     }
     return self;
 }
