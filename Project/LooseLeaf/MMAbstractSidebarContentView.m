@@ -16,6 +16,7 @@
 #import "ALAsset+Thumbnail.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
+#import "NSArray+Map.h"
 
 @implementation MMAbstractSidebarContentView{
     NSMutableDictionary* currentRowForAlbum;
@@ -33,9 +34,11 @@
         albumListScrollView = [[MMCachedRowsScrollView alloc] initWithFrame:self.bounds withRowHeight:ceilf(self.bounds.size.width / 3) andMargins:kTopBottomMargin];
         albumListScrollView.dataSource = self;
         
-        photoListScrollView = [[MMCachedRowsScrollView alloc] initWithFrame:self.bounds withRowHeight:ceilf(self.bounds.size.width / 2) andMargins:kTopBottomMargin];
+        photoListScrollView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:[self photosLayout]];
         photoListScrollView.dataSource = self;
+        photoListScrollView.delegate = self;
         photoListScrollView.alpha = 0;
+        photoListScrollView.backgroundColor = [UIColor clearColor];
         
         currentAlbum = nil;
         
@@ -67,6 +70,14 @@
     }
     return self;
 }
+                               
+-(UICollectionViewLayout*) photosLayout{
+    return [[UICollectionViewFlowLayout alloc] init];
+}
+
+-(CGFloat) rowHeight{
+    return ceilf(self.bounds.size.width / 2);
+}
 
 -(void) reset:(BOOL)animated{
     albumListScrollView.alpha = 1;
@@ -88,7 +99,6 @@
 
 -(void) killMemory{
     [albumListScrollView killMemory];
-    [photoListScrollView killMemory];
 }
 
 #pragma mark - MMPhotoManagerDelegate
@@ -99,13 +109,7 @@
         [self updateRow:obj atIndex:idx forFrame:[obj frame] forScrollView:albumListScrollView];
     }];
     if(photoListScrollView.alpha){
-        [photoListScrollView refreshVisibleRows];
-        [photoListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            // force invalidate the row's cache
-            [(MMPhotoRowView*)obj unload];
-            // now load the proper row info again
-            [self updateRow:obj atIndex:idx forFrame:[obj frame] forScrollView:photoListScrollView];
-        }];
+        [photoListScrollView reloadData];
     }
 }
 
@@ -134,10 +138,9 @@
     [self setUserInteractionEnabled:NO];
     currentAlbum = row.album;
     photoListScrollView.contentOffset = CGPointZero;
-    [photoListScrollView refreshVisibleRows];
-    [photoListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        [self updateRow:obj atIndex:idx forFrame:[obj frame] forScrollView:photoListScrollView];
-    }];
+    
+    [photoListScrollView reloadData];
+    
     [UIView animateWithDuration:.3 animations:^{
         albumListScrollView.alpha = 0;
         photoListScrollView.alpha = 1;
@@ -219,10 +222,11 @@
     
     void(^updateVisibleRowsWithRotation)() = ^{
         if(photoListScrollView.alpha){
-            [photoListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [photoListScrollView.visibleCells mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
                 if([obj respondsToSelector:@selector(updatePhotoRotation)]){
                     [obj updatePhotoRotation];
                 }
+                return obj;
             }];
         }else if(albumListScrollView.alpha){
             [albumListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -247,5 +251,32 @@
 -(NSString*) description{
     @throw kAbstractMethodException;
 }
+
+
+
+#pragma mark - UICollectionViewDataSource
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    @throw kAbstractMethodException;
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+//    @throw kAbstractMethodException;
+    return 0;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    @throw kAbstractMethodException;
+}
+
+
+#pragma mark - UICollectionViewDelegate
+
+
+
+
+
+
+
 
 @end

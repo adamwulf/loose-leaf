@@ -18,16 +18,17 @@
 
 @class MMImageSidebarContainerView;
 
-@interface MMAbstractSidebarContentView : UIView<MMPhotoManagerDelegate,MMAlbumRowViewDelegate,MMPhotoRowViewDelegate,MMCachedRowsScrollViewDataSource>{
+@interface MMAbstractSidebarContentView : UIView<UICollectionViewDataSource,UICollectionViewDelegate,MMPhotoManagerDelegate,MMAlbumRowViewDelegate,MMPhotoRowViewDelegate,MMCachedRowsScrollViewDataSource>{
     MMPhotoAlbum* currentAlbum;
     MMCachedRowsScrollView* albumListScrollView;
-    MMCachedRowsScrollView* photoListScrollView;
+    UICollectionView* photoListScrollView;
     __weak MMImageSidebarContainerView* delegate;
     BOOL isShowing;
 }
 
 @property (nonatomic, weak) MMImageSidebarContainerView* delegate;
 @property (nonatomic, readonly) BOOL isShowing;
+@property (readonly) CGFloat rowHeight;
 
 -(void) reset:(BOOL)animated;
 
@@ -44,5 +45,7 @@
 -(NSInteger) indexForAlbum:(MMPhotoAlbum*)album;
 
 -(MMPhotoAlbum*) albumAtIndex:(NSInteger)index;
+
+-(UICollectionViewLayout*) photosLayout;
 
 @end

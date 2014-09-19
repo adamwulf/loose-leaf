@@ -9,25 +9,19 @@
 #import "MMCameraSidebarContentView.h"
 #import "MMPhotoManager.h"
 #import "MMPhotoRowView.h"
-#import "MMBorderedCamView.h"
-#import "Constants.h"
-#import "MMFlipCameraButton.h"
 #import "MMImageSidebarContainerView.h"
 #import "NSThread+BlockAdditions.h"
 #import "CaptureSessionManager.h"
 #import "MMRotationManager.h"
+#import "MMCameraCollectionViewCell.h"
+#import "MMSinglePhotoCollectionViewCell.h"
+#import "MMPhotoListLayout.h"
 #import "UIView+Debug.h"
+#import "Constants.h"
 
-#define kCameraMargin 10
-#define kCameraPositionUserDefaultKey @"com.milestonemade.preferredCameraPosition"
+@implementation MMCameraSidebarContentView
 
-@implementation MMCameraSidebarContentView{
-    MMBorderedCamView* cameraRow;
-    MMFlipCameraButton* flipButton;
-}
-
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
         // don't use the albumListScrollView at all
@@ -38,24 +32,14 @@
         
         currentAlbum = [[MMPhotoManager sharedInstance] cameraRoll];
         
-        CGRect cameraViewFr = [self cameraViewFr];
-        
-        
-        flipButton = [[MMFlipCameraButton alloc] initWithFrame:CGRectMake(self.frame.size.width - kWidthOfSidebarButton - kWidthOfSidebarButtonBuffer,
-                                                                          floorf((cameraViewFr.size.height - kWidthOfSidebarButton) / 2),
-                                                                          kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        [flipButton addTarget:self action:@selector(changeCamera) forControlEvents:UIControlEventTouchUpInside];
-        [photoListScrollView addSubview:flipButton];
+        [photoListScrollView registerClass:[MMCameraCollectionViewCell class] forCellWithReuseIdentifier:@"MMCameraCollectionViewCell"];
+        [photoListScrollView registerClass:[MMSinglePhotoCollectionViewCell class] forCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell"];
     }
     return self;
 }
 
--(CGRect) cameraViewFr{
-    CGFloat ratio = [UIScreen mainScreen].bounds.size.width / [UIScreen mainScreen].bounds.size.height;
-    CGRect cameraViewFr = CGRectZero;
-    cameraViewFr.size.width = ratio * (photoListScrollView.rowHeight - kCameraMargin) * 2;
-    cameraViewFr.size.height = (photoListScrollView.rowHeight - kCameraMargin) * 2;
-    return cameraViewFr;
+-(UICollectionViewLayout*) photosLayout{
+    return [[MMPhotoListLayout alloc] init];
 }
 
 -(void) reset:(BOOL)animated{
@@ -68,26 +52,6 @@
         return;
     }
     isShowing = YES;
-    
-    AVCaptureDevicePosition preferredPosition = [[NSUserDefaults standardUserDefaults] integerForKey:kCameraPositionUserDefaultKey];
-    
-    if([CaptureSessionManager hasCamera]){
-        if(!flipButton.superview){
-            [photoListScrollView addSubview:flipButton];
-        }
-        if(!cameraRow){
-            cameraRow = [[MMBorderedCamView alloc] initWithFrame:[self cameraViewFr] andCameraPosition:preferredPosition];
-            cameraRow.delegate = self;
-            cameraRow.rotation = RandomPhotoRotation/2;
-            cameraRow.center = CGPointMake((self.frame.size.width-kWidthOfSidebarButton)/2, kCameraMargin + cameraRow.bounds.size.height/2);
-            [photoListScrollView insertSubview:cameraRow belowSubview:flipButton];
-        }
-        flipButton.hidden = NO;
-    }else{
-        cameraRow = nil;
-        flipButton.hidden = YES;
-    }
-    
     
     albumListScrollView.alpha = 0;
     photoListScrollView.alpha = 1;
@@ -103,25 +67,15 @@
     albumListScrollView.alpha = 0;
     photoListScrollView.alpha = 1;
     
-    [cameraRow removeFromSuperview];
-    cameraRow.delegate = nil;
-    cameraRow = nil;
+//    [cameraRow removeFromSuperview];
+//    cameraRow.delegate = nil;
+//    cameraRow = nil;
 
     [[NSThread mainThread] performBlock:^{
-        [photoListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            if(![obj isEqual:[NSNull null]]){
-                // force invalidate the row's cache
-                if([obj respondsToSelector:@selector(unload)]){
-                    [(MMPhotoRowView*)obj unload];
-                }
-            }
-        }];
+        [photoListScrollView reloadData];
     } afterDelay:.1];
 }
 
--(void) changeCamera{
-    [cameraRow changeCamera];
-}
 
 
 #pragma mark - MMPhotoManagerDelegate
@@ -129,19 +83,10 @@
 -(void) doneLoadingPhotoAlbums{
     currentAlbum = [[MMPhotoManager sharedInstance] cameraRoll];
     if(self.isShowing && photoListScrollView.alpha){
-        [photoListScrollView refreshVisibleRows];
-        [photoListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            if(![obj isEqual:[NSNull null]]){
-                // force invalidate the row's cache
-                if([obj respondsToSelector:@selector(unload)]){
-                    [(MMPhotoRowView*)obj unload];
-                }
-                // now load the proper row info again
-                [self updateRow:obj atIndex:idx forFrame:[obj frame] forScrollView:photoListScrollView];
-            }else if(idx == 1){
-                [self updateRow:nil atIndex:0 forFrame:CGRectZero forScrollView:photoListScrollView];
-            }
-        }];
+//        [photoListScrollView reloadData];
+        [photoListScrollView performBatchUpdates:^{
+            [photoListScrollView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [photoListScrollView numberOfSections])]];
+        } completion:nil];
     }
 }
 
@@ -152,88 +97,35 @@
     }
 }
 
-
-#pragma mark - MMCachedRowsScrollViewDataSource
-
--(NSInteger) numberOfRowsFor:(MMCachedRowsScrollView*)scrollView{
-    // add two for the camera row at the top
-    return (cameraRow ? 2 : 0) + ceilf([[MMPhotoManager sharedInstance] cameraRoll].numberOfPhotos / 2.0);
-}
-
--(BOOL) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView{
-    if(cameraRow){
-        // only disallow reuse when camera is visible
-        if(aRow.tag == 0 || aRow.tag == 1){
-            return NO;
-        }
-    }
-    if([aRow isKindOfClass:[MMFlipCameraButton class]]){
-        // don't reuse the flip button
-        return NO;
-    }
-    return [super prepareRowForReuse:aRow forScrollView:scrollView];
-}
-
--(UIView*) updateRow:(UIView*)currentRow atIndex:(NSInteger)index forFrame:(CGRect)frame forScrollView:(MMCachedRowsScrollView*)scrollView{
-    if(index == 0 || index == 1){
-        // this space is taken up by the camera row, so
-        // return nil
-        return nil;
-    }
-    // adjust for the 2 extra rows that are taken up by the camera input
-    return [super updateRow:currentRow atIndex:index - 2 forFrame:frame forScrollView:scrollView];
-}
-
-#pragma mark - Rotation
-
--(CGFloat) sidebarButtonRotation{
-    if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationPortrait){
-        return 0;
-    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeLeft){
-        return -M_PI_2;
-    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeRight){
-        return M_PI_2;
-    }else{
-        return M_PI;
-    }
-}
-
--(void) updatePhotoRotation:(BOOL)animated{
-    [super updatePhotoRotation:animated];
-    void(^updateCameraFlipButton)() = ^{
-        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        flipButton.rotation = [self sidebarButtonRotation];
-        flipButton.transform = rotationTransform;
-    };
-    if(animated){
-        [[NSThread mainThread] performBlock:^{
-            [UIView animateWithDuration:.3 animations:updateCameraFlipButton];
-        }];
-    }else{
-        [[NSThread mainThread] performBlock:^{
-            updateCameraFlipButton();
-        }];
-    }
-}
-
-#pragma mark - MMCamViewDelegate
-
--(void) didTakePicture:(UIImage*)img{
-    [self.delegate pictureTakeWithCamera:img fromView:cameraRow];
-}
-
--(void) didChangeCameraTo:(AVCaptureDevicePosition)preferredPosition{
-    [[NSUserDefaults standardUserDefaults] setInteger:preferredPosition forKey:kCameraPositionUserDefaultKey];
-}
-
--(void) sessionStarted{
-    // noop
-}
-
 #pragma mark - Description
 
 -(NSString*) description{
     return @"Camera Roll";
+}
+
+#pragma mark - UICollectionViewDataSource
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    // we're only working with the photoListScrollView. there's no albums here
+    if(section == 0){
+        return 1;
+    }else{
+        return currentAlbum.numberOfPhotos;
+    }
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    // 1 section for camera row, and 1 section for camera roll photos
+    return 2;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    if(indexPath.section == 0){
+        return [collectionView dequeueReusableCellWithReuseIdentifier:@"MMCameraCollectionViewCell" forIndexPath:indexPath];
+    }
+    MMSinglePhotoCollectionViewCell* photo = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell" forIndexPath:indexPath];
+    [photo loadPhotoFromAlbum:currentAlbum atIndex:currentAlbum.numberOfPhotos - indexPath.row - 1 forVisibleIndex:indexPath.row];
+    return photo;
 }
 
 
