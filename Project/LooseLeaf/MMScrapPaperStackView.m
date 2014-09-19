@@ -252,7 +252,7 @@
         UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(center.x, center.y, scrapSize.width, scrapSize.height)];
         
         MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
-        MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation andScale:1.0];
+        MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation(rand()) andScale:1.0];
         [scrapContainer addSubview:scrap];
         
         // background fills the entire scrap
@@ -278,7 +278,7 @@
                              center.x += random() % 14 - 7;
                              center.y += random() % 14 - 7;
                              scrap.center = center;
-                             [scrap setScale:(1-bounceScale) andRotation:RandomPhotoRotation];
+                             [scrap setScale:(1-bounceScale) andRotation:RandomPhotoRotation(rand())];
                              scrap.alpha = .72;
                          }
                          completion:^(BOOL finished){
@@ -424,7 +424,7 @@
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          scrap.center = [visibleStackHolder peekSubview].center;
-                         [scrap setScale:(1+bounceScale) andRotation:RandomPhotoRotation];
+                         [scrap setScale:(1+bounceScale) andRotation:RandomPhotoRotation(rand())];
                      }
                      completion:^(BOOL finished){
                          [UIView animateWithDuration:.1
@@ -527,7 +527,7 @@
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          scrap.center = [visibleStackHolder peekSubview].center;
-                         [scrap setScale:(1+bounceScale) andRotation:scrap.rotation + RandomPhotoRotation];
+                         [scrap setScale:(1+bounceScale) andRotation:scrap.rotation + RandomPhotoRotation(rand())];
                      }
                      completion:^(BOOL finished){
                          [UIView animateWithDuration:.1

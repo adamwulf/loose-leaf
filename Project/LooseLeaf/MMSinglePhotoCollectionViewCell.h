@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMSinglePhotoCollectionViewCellDelegate.h"
 #import "MMPhotoAlbum.h"
 
 @interface MMSinglePhotoCollectionViewCell : UICollectionViewCell
 
+@property (nonatomic, weak) NSObject<MMSinglePhotoCollectionViewCellDelegate>* delegate;
 @property (nonatomic, assign) CGFloat rotation;
 
 -(void) loadPhotoFromAlbum:(MMPhotoAlbum*)album atIndex:(NSInteger)photoIndex forVisibleIndex:(NSInteger)visibleIndex;

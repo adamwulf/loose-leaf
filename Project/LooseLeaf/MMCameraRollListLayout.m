@@ -6,10 +6,10 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMPhotoListLayout.h"
+#import "MMCameraRollListLayout.h"
 #import "Constants.h"
 
-@implementation MMPhotoListLayout
+@implementation MMCameraRollListLayout
 
 -(id) init{
     if(self = [super init]){

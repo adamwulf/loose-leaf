@@ -20,6 +20,8 @@
     MMFlipCameraButton* flipButton;
 }
 
+@synthesize delegate;
+
 -(CGRect) cameraViewFr{
     CGFloat ratio = [UIScreen mainScreen].bounds.size.width / [UIScreen mainScreen].bounds.size.height;
     CGRect cameraViewFr = CGRectZero;
@@ -76,7 +78,7 @@
 
 -(void) didTakePicture:(UIImage*)img{
     NSLog(@"took picture!");
-//    [self.delegate pictureTakeWithCamera:img fromView:cameraRow];
+    [self.delegate pictureTakeWithCamera:img fromView:cameraRow];
 }
 
 -(void) didChangeCameraTo:(AVCaptureDevicePosition)preferredPosition{

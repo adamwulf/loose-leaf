@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "MMCamViewDelegate.h"
+#import "MMSinglePhotoCollectionViewCellDelegate.h"
 
 @interface MMCameraCollectionViewCell : UICollectionViewCell<MMCamViewDelegate>
+
+@property (nonatomic, weak) NSObject<MMSinglePhotoCollectionViewCellDelegate>* delegate;
 
 @end

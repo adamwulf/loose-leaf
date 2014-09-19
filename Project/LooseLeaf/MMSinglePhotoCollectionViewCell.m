@@ -13,6 +13,8 @@
 
 @implementation MMSinglePhotoCollectionViewCell{
     MMBufferedImageView* bufferedImage;
+    NSInteger index;
+    MMPhotoAlbum* album;
 }
 
 -(id) initWithFrame:(CGRect)frame{
@@ -21,15 +23,32 @@
         bufferedImage.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self addSubview:bufferedImage];
         [self showDebugBorder];
+        
+        UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)];
+        [bufferedImage addGestureRecognizer:tapGesture];
     }
     return self;
 }
 
+@synthesize delegate;
+
+#pragma mark - Gesture
+
+-(void) tapped:(id)gesture{
+    [album loadPhotosAtIndexes:[[NSIndexSet alloc] initWithIndex:index] usingBlock:^(ALAsset *result, NSUInteger _index, BOOL *stop) {
+        if(result){
+            [delegate photoWasTapped:result fromView:bufferedImage withRotation:bufferedImage.rotation];
+        }
+    }];
+}
+
 #pragma mark - Properties
 
--(void) loadPhotoFromAlbum:(MMPhotoAlbum*)album atIndex:(NSInteger)photoIndex forVisibleIndex:(NSInteger)visibleIndex{
+-(void) loadPhotoFromAlbum:(MMPhotoAlbum*)_album atIndex:(NSInteger)photoIndex forVisibleIndex:(NSInteger)visibleIndex{
     @try {
-        NSIndexSet* assetsToLoad = [[NSIndexSet alloc] initWithIndex:visibleIndex];
+        album = _album;
+        index = visibleIndex;
+        NSIndexSet* assetsToLoad = [[NSIndexSet alloc] initWithIndex:index];
         [album loadPhotosAtIndexes:assetsToLoad usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
             if(result){
                 bufferedImage.image = [UIImage imageWithCGImage:result.aspectRatioThumbnail];

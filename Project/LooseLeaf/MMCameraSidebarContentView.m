@@ -15,12 +15,12 @@
 #import "MMRotationManager.h"
 #import "MMCameraCollectionViewCell.h"
 #import "MMSinglePhotoCollectionViewCell.h"
-#import "MMPhotoListLayout.h"
+#import "MMCameraRollListLayout.h"
 #import "UIView+Debug.h"
 #import "Constants.h"
 
 @implementation MMCameraSidebarContentView{
-    UICollectionViewCell * cachedCameraCell;
+    MMCameraCollectionViewCell * cachedCameraCell;
 }
 
 - (id)initWithFrame:(CGRect)frame{
@@ -41,7 +41,7 @@
 }
 
 -(UICollectionViewLayout*) photosLayout{
-    return [[MMPhotoListLayout alloc] init];
+    return [[MMCameraRollListLayout alloc] init];
 }
 
 -(void) reset:(BOOL)animated{
@@ -126,13 +126,26 @@
         return cachedCameraCell;
     }else if(indexPath.section == 0){
         cachedCameraCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMCameraCollectionViewCell" forIndexPath:indexPath];
+        cachedCameraCell.delegate = self;
         return cachedCameraCell;
     }
-    MMSinglePhotoCollectionViewCell* photo = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell" forIndexPath:indexPath];
-    [photo loadPhotoFromAlbum:currentAlbum atIndex:currentAlbum.numberOfPhotos - indexPath.row - 1 forVisibleIndex:indexPath.row];
-    return photo;
+    MMSinglePhotoCollectionViewCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell" forIndexPath:indexPath];
+    [photoCell loadPhotoFromAlbum:currentAlbum atIndex:currentAlbum.numberOfPhotos - indexPath.row - 1 forVisibleIndex:indexPath.row];
+    photoCell.delegate = self;
+    return photoCell;
 }
 
+#pragma mark - MMSinglePhotoCollectionViewCellDelegate
 
+-(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
+    NSLog(@"camera");
+}
+
+-(void) photoWasTapped:(ALAsset *)asset
+              fromView:(MMBufferedImageView *)bufferedImage
+          withRotation:(CGFloat)rotation{
+    NSLog(@"photo");
+    [delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation fromContainer:self];
+}
 
 @end
