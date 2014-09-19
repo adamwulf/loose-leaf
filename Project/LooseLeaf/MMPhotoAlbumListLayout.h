@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MMCameraRollListLayout : UICollectionViewLayout
+@interface MMPhotoAlbumListLayout : UICollectionViewLayout
 
 @end

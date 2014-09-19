@@ -18,7 +18,7 @@
 
 @class MMImageSidebarContainerView;
 
-@interface MMAbstractSidebarContentView : UIView<UICollectionViewDataSource,UICollectionViewDelegate,MMPhotoManagerDelegate,MMAlbumRowViewDelegate,MMPhotoRowViewDelegate,MMCachedRowsScrollViewDataSource>{
+@interface MMAbstractSidebarContentView : UIView<UICollectionViewDataSource,UICollectionViewDelegate,MMPhotoManagerDelegate,MMAlbumRowViewDelegate,MMCachedRowsScrollViewDataSource>{
     MMPhotoAlbum* currentAlbum;
     MMCachedRowsScrollView* albumListScrollView;
     UICollectionView* photoListScrollView;

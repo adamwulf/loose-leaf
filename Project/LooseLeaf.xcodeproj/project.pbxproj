@@ -28,6 +28,7 @@
 		6612C8881964C113003A9575 /* MMUndoablePaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C8871964C113003A9575 /* MMUndoablePaperView.m */; };
 		6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C88A1964C401003A9575 /* MMUndoRedoBlockItem.m */; };
 		6612C8901964CC76003A9575 /* MMUndoRedoStrokeItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C88F1964CC76003A9575 /* MMUndoRedoStrokeItem.m */; };
+		6614DCC619CBE04100AF5D3D /* NSIndexSet+Map.m in Sources */ = {isa = PBXBuildFile; fileRef = 6614DCC519CBE04100AF5D3D /* NSIndexSet+Map.m */; };
 		661507641783338E00B181F3 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6615075E1783338E00B181F3 /* libTestFlight.a */; };
 		66150769178333D500B181F3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66150768178333D500B181F3 /* libz.dylib */; };
 		6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6616CCD018B6AE9700CAD0F3 /* JotUI.framework */; };
@@ -292,7 +293,7 @@
 		66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */; };
 		66C2C15B1879EFED00804123 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66B50FCD1862B7D30032F704 /* MessageUI.framework */; };
 		66C2C1651879F3F200804123 /* UIBezierPath+Description.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C2C1641879F3F200804123 /* UIBezierPath+Description.m */; };
-		66C4734F19CB999000505BC0 /* MMCameraRollListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C4734E19CB999000505BC0 /* MMCameraRollListLayout.m */; };
+		66C4734F19CB999000505BC0 /* MMPhotoAlbumListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C4734E19CB999000505BC0 /* MMPhotoAlbumListLayout.m */; };
 		66CA1A8D185E78030013505A /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66CA1A8B185E77F50013505A /* libc++.dylib */; };
 		66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11F617CFD8A600882275 /* MMScrapPaperStackView.m */; };
 		66CE11FD17D2700E00882275 /* MMScrapSidebarContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11FC17D2700E00882275 /* MMScrapSidebarContainerView.m */; };
@@ -388,6 +389,8 @@
 		6612C88E1964CC76003A9575 /* MMUndoRedoStrokeItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoRedoStrokeItem.h; sourceTree = "<group>"; };
 		6612C88F1964CC76003A9575 /* MMUndoRedoStrokeItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUndoRedoStrokeItem.m; sourceTree = "<group>"; };
 		6612C8911964CDB1003A9575 /* MMEditablePaperView+UndoRedo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMEditablePaperView+UndoRedo.h"; sourceTree = "<group>"; };
+		6614DCC419CBE04100AF5D3D /* NSIndexSet+Map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSIndexSet+Map.h"; sourceTree = "<group>"; };
+		6614DCC519CBE04100AF5D3D /* NSIndexSet+Map.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSIndexSet+Map.m"; sourceTree = "<group>"; };
 		6615075E1783338E00B181F3 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		6615075F1783338E00B181F3 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		661507601783338E00B181F3 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
@@ -877,8 +880,8 @@
 		66C2C1631879F3F200804123 /* UIBezierPath+Description.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+Description.h"; sourceTree = "<group>"; };
 		66C2C1641879F3F200804123 /* UIBezierPath+Description.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+Description.m"; sourceTree = "<group>"; };
 		66C38AC7175329160035B872 /* JotTouchSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotTouchSDK.framework; path = ../Submodules/JotUI/JotTouchSDK/JotTouchSDK.framework; sourceTree = "<group>"; };
-		66C4734D19CB999000505BC0 /* MMCameraRollListLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCameraRollListLayout.h; sourceTree = "<group>"; };
-		66C4734E19CB999000505BC0 /* MMCameraRollListLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCameraRollListLayout.m; sourceTree = "<group>"; };
+		66C4734D19CB999000505BC0 /* MMPhotoAlbumListLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPhotoAlbumListLayout.h; sourceTree = "<group>"; };
+		66C4734E19CB999000505BC0 /* MMPhotoAlbumListLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPhotoAlbumListLayout.m; sourceTree = "<group>"; };
 		66C4735019CBD7C600505BC0 /* MMSinglePhotoCollectionViewCellDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMSinglePhotoCollectionViewCellDelegate.h; sourceTree = "<group>"; };
 		66C47DA5158EF03200E2CD0C /* MMPaperViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperViewDelegate.h; sourceTree = "<group>"; };
 		66CA1A8B185E77F50013505A /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
@@ -1065,6 +1068,8 @@
 				66BD6E3A1592CFE600D4544C /* UIView+SubviewStacks.m */,
 				66B21A74175E559E0049F1AF /* NSArray+Map.h */,
 				66B21A75175E559E0049F1AF /* NSArray+Map.m */,
+				6614DCC419CBE04100AF5D3D /* NSIndexSet+Map.h */,
+				6614DCC519CBE04100AF5D3D /* NSIndexSet+Map.m */,
 				66A3AF8C15913B5E00F8A7A6 /* NSMutableSet+Extras.h */,
 				66A3AF8D15913B5E00F8A7A6 /* NSMutableSet+Extras.m */,
 				66BD6E321591C37D00D4544C /* UIImage+MCDrawSubImage.h */,
@@ -1298,9 +1303,9 @@
 				66381F5819CB921A0014796F /* MMCameraCollectionViewCell.m */,
 				66381F5B19CB96730014796F /* MMSinglePhotoCollectionViewCell.h */,
 				66381F5C19CB96730014796F /* MMSinglePhotoCollectionViewCell.m */,
-				66C4734D19CB999000505BC0 /* MMCameraRollListLayout.h */,
-				66C4734E19CB999000505BC0 /* MMCameraRollListLayout.m */,
 				66C4735019CBD7C600505BC0 /* MMSinglePhotoCollectionViewCellDelegate.h */,
+				66C4734D19CB999000505BC0 /* MMPhotoAlbumListLayout.h */,
+				66C4734E19CB999000505BC0 /* MMPhotoAlbumListLayout.m */,
 			);
 			name = PhotosSection;
 			sourceTree = "<group>";
@@ -2620,7 +2625,7 @@
 				66EC7B7519ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.m in Sources */,
 				660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */,
 				665CAC1D17B578B0000BD505 /* MMColorButton.m in Sources */,
-				66C4734F19CB999000505BC0 /* MMCameraRollListLayout.m in Sources */,
+				66C4734F19CB999000505BC0 /* MMPhotoAlbumListLayout.m in Sources */,
 				66524509199575A900C36609 /* MMTextShareItem.m in Sources */,
 				660116EC19ABAEC10065C1B4 /* MMCloudKitOfflineState.m in Sources */,
 				666425BA18CBC20000A306C1 /* MMStretchScrapGestureRecognizer.mm in Sources */,
@@ -2666,6 +2671,7 @@
 				665182071937B41800CBEAB4 /* MMMemoryProfileView.m in Sources */,
 				66BD6E971593E98D00D4544C /* MMTextButton.m in Sources */,
 				667C635A199FE4BC00E93CD6 /* MPSurveyNavigationController.m in Sources */,
+				6614DCC619CBE04100AF5D3D /* NSIndexSet+Map.m in Sources */,
 				66BD6E9C15940D7500D4544C /* MMPencilButton.m in Sources */,
 				66BD6E9F15941B7B00D4544C /* MMShareButton.m in Sources */,
 				66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */,

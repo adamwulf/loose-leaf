@@ -6,10 +6,10 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMCameraRollListLayout.h"
+#import "MMPhotoAlbumListLayout.h"
 #import "Constants.h"
 
-@implementation MMCameraRollListLayout
+@implementation MMPhotoAlbumListLayout
 
 -(id) init{
     if(self = [super init]){
@@ -46,8 +46,7 @@
         return ret;
     }
 
-    NSInteger maxPhotos = [self.collectionView numberOfItemsInSection:1];
-    NSInteger indexOfPhoto = maxPhotos - indexPath.row - 1;
+    NSInteger indexOfPhoto = indexPath.row;
 
     NSInteger rowNumber = floorf(indexOfPhoto / 2.0);
     NSInteger colNumber = indexOfPhoto % 2;
@@ -59,8 +58,6 @@
     ret.bounds = b;
     ret.center = CGPointMake(x + ret.bounds.size.width/2, [self cameraRowHeight] + y + ret.bounds.size.height/2);
     ret.transform = CGAffineTransformIdentity;
-    
-//    NSLog(@"layout for %d at index %d", (int) indexOfPhoto, (int)indexPath.row);
     
     return ret;
 }
@@ -89,15 +86,13 @@
         NSInteger rightPhoto = leftPhoto + 1;
         
         if(leftPhoto < maxPhotos){
-            [attrs addObject:[self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForRow:maxPhotos - leftPhoto - 1 inSection:1]]];
+            [attrs addObject:[self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForRow:leftPhoto inSection:1]]];
         }
         if(rightPhoto < maxPhotos){
-            [attrs addObject:[self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForRow:maxPhotos - rightPhoto - 1 inSection:1]]];
+            [attrs addObject:[self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForRow:rightPhoto inSection:1]]];
         }
     }
     
-    NSLog(@"asking for rect from %f to %f (%d to %d)", rect.origin.y, rect.origin.y + rect.size.height, (int) startRow, (int) maxRow);
-
     return attrs;
 }
 

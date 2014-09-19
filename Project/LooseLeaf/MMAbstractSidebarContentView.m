@@ -149,12 +149,6 @@
     }];
 }
 
-#pragma mark - MMPhotoRowViewDelegate
-
--(void) photoRowWasTapped:(MMPhotoRowView*)row forAsset:(ALAsset *)asset forImage:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation{
-    [delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation fromContainer:self];
-}
-
 #pragma mark - MMCachedRowsScrollViewDataSource
 
 -(NSInteger) numberOfRowsFor:(MMCachedRowsScrollView*)scrollView{
@@ -182,44 +176,32 @@
 // create a view and return it. otehrwise use the
 // existing view, update it, and return it
 -(UIView*) updateRow:(UIView*)currentRow atIndex:(NSInteger)index forFrame:(CGRect)frame forScrollView:(MMCachedRowsScrollView*)scrollView{
-    if(scrollView == albumListScrollView){
-        MMAlbumRowView* currentAlbumRow = (MMAlbumRowView*)currentRow;
-        if(!currentAlbumRow){
-            currentAlbumRow = [[MMAlbumRowView alloc] initWithFrame:frame];
-            currentAlbumRow.delegate = self;
-        }
-        if([albumListScrollView rowIndexIsVisible:index]){
-            // make sure the album is set, but only if it's visible
-            // and if we need to
-            MMPhotoAlbum* album = [self albumAtIndex:index];
-            if(currentAlbumRow.album != album){
-                if(currentAlbumRow.album){
-                    [currentRowForAlbum removeObjectForKey:currentAlbumRow.album.persistentId];
-                }
-                currentAlbumRow.album = album;
-                if(currentAlbumRow.album){
-                    [currentRowForAlbum setObject:currentAlbumRow forKey:currentAlbumRow.album.persistentId];
-                }
-            }
-            [currentAlbumRow updatePhotoRotation];
-        }
-        return currentAlbumRow;
-    }else{
-        MMPhotoRowView* currentPhotoRow = (MMPhotoRowView*)currentRow;
-        if(!currentPhotoRow){
-            currentPhotoRow = [[MMPhotoRowView alloc] initWithFrame:frame];
-            currentPhotoRow.delegate = self;
-        }
-        [currentPhotoRow loadPhotosFromAlbum:currentAlbum atRow:index];
-        [currentPhotoRow updatePhotoRotation];
-        return currentPhotoRow;
+    MMAlbumRowView* currentAlbumRow = (MMAlbumRowView*)currentRow;
+    if(!currentAlbumRow){
+        currentAlbumRow = [[MMAlbumRowView alloc] initWithFrame:frame];
+        currentAlbumRow.delegate = self;
     }
+    if([albumListScrollView rowIndexIsVisible:index]){
+        // make sure the album is set, but only if it's visible
+        // and if we need to
+        MMPhotoAlbum* album = [self albumAtIndex:index];
+        if(currentAlbumRow.album != album){
+            if(currentAlbumRow.album){
+                [currentRowForAlbum removeObjectForKey:currentAlbumRow.album.persistentId];
+            }
+            currentAlbumRow.album = album;
+            if(currentAlbumRow.album){
+                [currentRowForAlbum setObject:currentAlbumRow forKey:currentAlbumRow.album.persistentId];
+            }
+        }
+        [currentAlbumRow updatePhotoRotation];
+    }
+    return currentAlbumRow;
 }
 
 #pragma mark - Rotation
 
 -(void) updatePhotoRotation:(BOOL)animated{
-    
     void(^updateVisibleRowsWithRotation)() = ^{
         if(photoListScrollView.alpha){
             [photoListScrollView.visibleCells mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {

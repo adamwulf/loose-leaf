@@ -147,6 +147,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                       faces = [self sortArrayByAlbumName:[faces arrayByAddingObject:addedAlbum]];
                                   }else if(addedAlbum.type == ALAssetsGroupSavedPhotos){
                                       cameraRoll = addedAlbum;
+                                      cameraRoll.reversed = YES;
                                   }
                               }
                               [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
@@ -235,6 +236,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                                             events = [self sortArrayByAlbumName:updatedEventsList];
                                                             faces = [self sortArrayByAlbumName:updatedFacesList];
                                                             cameraRoll = updatedCameraRoll;
+                                                            cameraRoll.reversed = YES;
                                                         }
                                                         hasEverInitailized = YES;
                                                         [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
@@ -251,6 +253,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                                             [updatedFacesList addObject:addedAlbum];
                                                         }else if(group.type == ALAssetsGroupSavedPhotos){
                                                             updatedCameraRoll = addedAlbum;
+                                                            updatedCameraRoll.reversed = YES;
                                                         }
                                                     }
                                                 }

@@ -18,6 +18,7 @@
 @property (readonly) ALAssetsGroupType type;
 @property (readonly) NSInteger numberOfPhotos;
 @property (readonly) NSArray* previewPhotos;
+@property (assign) BOOL reversed;
 
 -(id) initWithAssetGroup:(ALAssetsGroup*)group;
 
