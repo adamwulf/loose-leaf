@@ -19,7 +19,9 @@
 #import "UIView+Debug.h"
 #import "Constants.h"
 
-@implementation MMCameraSidebarContentView
+@implementation MMCameraSidebarContentView{
+    UICollectionViewCell * cachedCameraCell;
+}
 
 - (id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
@@ -120,8 +122,11 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    if(indexPath.section == 0){
-        return [collectionView dequeueReusableCellWithReuseIdentifier:@"MMCameraCollectionViewCell" forIndexPath:indexPath];
+    if(indexPath.section == 0 && cachedCameraCell){
+        return cachedCameraCell;
+    }else if(indexPath.section == 0){
+        cachedCameraCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMCameraCollectionViewCell" forIndexPath:indexPath];
+        return cachedCameraCell;
     }
     MMSinglePhotoCollectionViewCell* photo = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell" forIndexPath:indexPath];
     [photo loadPhotoFromAlbum:currentAlbum atIndex:currentAlbum.numberOfPhotos - indexPath.row - 1 forVisibleIndex:indexPath.row];
