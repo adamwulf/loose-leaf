@@ -70,6 +70,9 @@
 
     [[NSThread mainThread] performBlock:^{
         [photoListScrollView reloadData];
+        if(!isShowing){
+            cachedCameraCell = nil;
+        }
     } afterDelay:.1];
 }
 
@@ -80,10 +83,7 @@
 -(void) doneLoadingPhotoAlbums{
     currentAlbum = [[MMPhotoManager sharedInstance] cameraRoll];
     if(self.isShowing && photoListScrollView.alpha){
-//        [photoListScrollView reloadData];
-        [photoListScrollView performBatchUpdates:^{
-            [photoListScrollView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [photoListScrollView numberOfSections])]];
-        } completion:nil];
+        [photoListScrollView reloadData];
     }
 }
 
@@ -113,7 +113,7 @@
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     // 1 section for camera row, and 1 section for camera roll photos
-    return 2;
+    return isShowing ? 2 : 0;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{

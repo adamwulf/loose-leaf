@@ -9,7 +9,6 @@
 #import "MMSinglePhotoCollectionViewCell.h"
 #import "MMBufferedImageView.h"
 #import "Constants.h"
-#import "UIView+Debug.h"
 
 @implementation MMSinglePhotoCollectionViewCell{
     MMBufferedImageView* bufferedImage;
@@ -22,7 +21,6 @@
         bufferedImage = [[MMBufferedImageView alloc] initWithFrame:CGRectInset(self.bounds, 2, 2)];
         bufferedImage.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self addSubview:bufferedImage];
-        [self showDebugBorder];
         
         UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)];
         [bufferedImage addGestureRecognizer:tapGesture];

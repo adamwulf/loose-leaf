@@ -12,7 +12,6 @@
 #import "CaptureSessionManager.h"
 #import "MMRotationManager.h"
 #import "Constants.h"
-#import "UIView+Debug.h"
 
 @implementation MMCameraCollectionViewCell{
     CGFloat rowHeight;
@@ -49,7 +48,6 @@
 
         [self addSubview:cameraRow];
         [self addSubview:flipButton];
-        [self showDebugBorder];
     }
     return self;
 }

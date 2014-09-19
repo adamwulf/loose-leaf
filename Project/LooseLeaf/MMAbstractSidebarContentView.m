@@ -98,6 +98,9 @@
 //    photoListScrollView.alpha = 0;
 //    currentAlbum = nil;
     isShowing = NO;
+    [[NSThread mainThread] performBlock:^{
+        [photoListScrollView reloadData];
+    } afterDelay:.1];
 }
 
 -(void) killMemory{
@@ -246,7 +249,7 @@
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    return 1;
+    return isShowing ? 1 : 0;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{

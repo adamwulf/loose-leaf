@@ -38,6 +38,9 @@
 }
 
 -(CGSize)collectionViewContentSize{
+    if(!self.collectionView.numberOfSections){
+        return CGSizeZero;
+    }
     
     NSInteger numberOfPhotos = [self.collectionView numberOfItemsInSection:self.sectionIndexForPhotos];
     
@@ -76,6 +79,10 @@
 
 -(NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
 {
+    if(!self.collectionView.numberOfSections){
+        return @[];
+    }
+    
     NSMutableArray* attrs = [NSMutableArray array];
 
     if(self.hasSectionForCamera){
