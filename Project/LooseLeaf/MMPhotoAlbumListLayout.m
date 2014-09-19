@@ -9,11 +9,15 @@
 #import "MMPhotoAlbumListLayout.h"
 #import "Constants.h"
 
-@implementation MMPhotoAlbumListLayout
+@implementation MMPhotoAlbumListLayout{
+    CGFloat rotation;
+}
 
--(id) init{
+@synthesize rotation;
+
+-(id) initForRotation:(CGFloat)_rotation{
     if(self = [super init]){
-        // noop
+        rotation = _rotation;
     }
     return self;
 }
@@ -71,7 +75,7 @@
     CGRect b = CGRectMake(0, 0, width/2, [self photoRowHeight]);
     ret.bounds = b;
     ret.center = CGPointMake(x + ret.bounds.size.width/2, [self cameraRowHeight] + y + ret.bounds.size.height/2);
-    ret.transform = CGAffineTransformIdentity;
+    ret.transform = CGAffineTransformMakeRotation(rotation);
     
     return ret;
 }

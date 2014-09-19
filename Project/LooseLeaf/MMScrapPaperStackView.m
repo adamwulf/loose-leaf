@@ -507,7 +507,7 @@
     // move the scrap so that it covers the image that was just tapped.
     // then we'll animate it onto the page
     scrap.center = [self convertPoint:CGPointMake(bufferedImage.bounds.size.width/2, bufferedImage.bounds.size.height/2) fromView:bufferedImage];
-    scrap.rotation = bufferedImage.rotation;
+    scrap.rotation = rotation;
     
     // hide the picker, this'll slide it out
     // underneath our scrap

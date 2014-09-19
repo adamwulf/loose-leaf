@@ -14,6 +14,7 @@
 #import "MMImageSidebarContainerView.h"
 #import "MMSinglePhotoCollectionViewCell.h"
 #import "MMPhotoAlbumListLayout.h"
+#import "MMRotationManager.h"
 #import "ALAsset+Thumbnail.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
@@ -93,9 +94,6 @@
 }
 
 -(void) hide:(BOOL)animated{
-//    albumListScrollView.alpha = 1;
-//    photoListScrollView.alpha = 0;
-//    currentAlbum = nil;
     isShowing = NO;
     [[NSThread mainThread] performBlock:^{
         [photoListScrollView reloadData];
@@ -201,16 +199,24 @@
 
 #pragma mark - Rotation
 
+-(CGFloat) idealRotationForOrientation{
+    CGFloat visiblePhotoRotation = 0;
+    UIInterfaceOrientation orient = [[MMRotationManager sharedInstance] lastBestOrientation];
+    if(orient == UIInterfaceOrientationLandscapeRight){
+        visiblePhotoRotation = M_PI / 2;
+    }else if(orient == UIInterfaceOrientationPortraitUpsideDown){
+        visiblePhotoRotation = M_PI;
+    }else if(orient == UIInterfaceOrientationLandscapeLeft){
+        visiblePhotoRotation = -M_PI / 2;
+    }else{
+        visiblePhotoRotation = 0;
+    }
+    return visiblePhotoRotation;
+}
+
 -(void) updatePhotoRotation:(BOOL)animated{
     void(^updateVisibleRowsWithRotation)() = ^{
-        if(photoListScrollView.alpha){
-            [photoListScrollView.visibleCells mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
-                if([obj respondsToSelector:@selector(updatePhotoRotation)]){
-                    [obj updatePhotoRotation];
-                }
-                return obj;
-            }];
-        }else if(albumListScrollView.alpha){
+        if(albumListScrollView.alpha){
             [albumListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 if([obj respondsToSelector:@selector(updatePhotoRotation)]){
                     [obj updatePhotoRotation];
@@ -221,10 +227,12 @@
     
     if(animated){
         [[NSThread mainThread] performBlock:^{
+            [photoListScrollView setCollectionViewLayout:[[MMPhotoAlbumListLayout alloc] initForRotation:[self idealRotationForOrientation]] animated:YES];
             [UIView animateWithDuration:.3 animations:updateVisibleRowsWithRotation];
         }];
     }else{
         [[NSThread mainThread] performBlock:^{
+            [photoListScrollView setCollectionViewLayout:[[MMPhotoAlbumListLayout alloc] initForRotation:[self idealRotationForOrientation]] animated:NO];
             updateVisibleRowsWithRotation();
         }];
     }
@@ -262,7 +270,8 @@
 -(void) photoWasTapped:(ALAsset *)asset
               fromView:(MMBufferedImageView *)bufferedImage
           withRotation:(CGFloat)rotation{
-    [delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation fromContainer:self];
+    MMPhotoAlbumListLayout* layout = (MMPhotoAlbumListLayout*) photoListScrollView.collectionViewLayout;
+    [delegate photoWasTapped:asset fromView:bufferedImage withRotation:(rotation + layout.rotation) fromContainer:self];
 }
 
 

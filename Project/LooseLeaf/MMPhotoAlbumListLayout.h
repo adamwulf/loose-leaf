@@ -10,4 +10,8 @@
 
 @interface MMPhotoAlbumListLayout : UICollectionViewLayout
 
+-(id) initForRotation:(CGFloat)rotation;
+
+@property (nonatomic, readonly) CGFloat rotation;
+
 @end

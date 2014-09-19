@@ -126,6 +126,7 @@
 
 -(void) show:(BOOL)animated{
     [super show:animated];
+    [self updateInterfaceTo:[[MMRotationManager sharedInstance] lastBestOrientation]];
     if(!cameraListContentView.hidden){
         [cameraListContentView show:animated];
     }
