@@ -42,7 +42,7 @@
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     
-    [self.window.layer setSpeed:0.1f];
+//    [self.window.layer setSpeed:0.3f];
 
     // setup the timer that will help log session duration
     [self setupTimer];

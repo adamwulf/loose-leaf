@@ -8,8 +8,7 @@
 
 #import "MMAbstractSidebarContentView.h"
 #import "MMCamViewDelegate.h"
-#import "MMSinglePhotoCollectionViewCellDelegate.h"
 
-@interface MMCameraSidebarContentView : MMAbstractSidebarContentView<MMSinglePhotoCollectionViewCellDelegate>
+@interface MMCameraSidebarContentView : MMAbstractSidebarContentView
 
 @end

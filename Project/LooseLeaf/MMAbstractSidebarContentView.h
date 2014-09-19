@@ -13,12 +13,13 @@
 #import "MMPhotoManagerDelegate.h"
 #import "MMAlbumRowViewDelegate.h"
 #import "MMPhotoRowViewDelegate.h"
+#import "MMSinglePhotoCollectionViewCellDelegate.h"
 
 #define kTopBottomMargin 20
 
 @class MMImageSidebarContainerView;
 
-@interface MMAbstractSidebarContentView : UIView<UICollectionViewDataSource,UICollectionViewDelegate,MMPhotoManagerDelegate,MMAlbumRowViewDelegate,MMCachedRowsScrollViewDataSource>{
+@interface MMAbstractSidebarContentView : UIView<UICollectionViewDataSource,MMSinglePhotoCollectionViewCellDelegate,MMPhotoManagerDelegate,MMAlbumRowViewDelegate,MMCachedRowsScrollViewDataSource>{
     MMPhotoAlbum* currentAlbum;
     MMCachedRowsScrollView* albumListScrollView;
     UICollectionView* photoListScrollView;

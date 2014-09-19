@@ -35,13 +35,8 @@
         currentAlbum = [[MMPhotoManager sharedInstance] cameraRoll];
         
         [photoListScrollView registerClass:[MMCameraCollectionViewCell class] forCellWithReuseIdentifier:@"MMCameraCollectionViewCell"];
-        [photoListScrollView registerClass:[MMSinglePhotoCollectionViewCell class] forCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell"];
     }
     return self;
-}
-
--(UICollectionViewLayout*) photosLayout{
-    return [[MMPhotoAlbumListLayout alloc] init];
 }
 
 -(void) reset:(BOOL)animated{
@@ -133,18 +128,6 @@
     [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row forVisibleIndex:indexPath.row];
     photoCell.delegate = self;
     return photoCell;
-}
-
-#pragma mark - MMSinglePhotoCollectionViewCellDelegate
-
--(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
-    [delegate pictureTakeWithCamera:img fromView:cameraView];
-}
-
--(void) photoWasTapped:(ALAsset *)asset
-              fromView:(MMBufferedImageView *)bufferedImage
-          withRotation:(CGFloat)rotation{
-    [delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation fromContainer:self];
 }
 
 @end

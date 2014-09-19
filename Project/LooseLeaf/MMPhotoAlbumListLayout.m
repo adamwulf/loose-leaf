@@ -18,17 +18,28 @@
     return self;
 }
 
+-(BOOL) hasSectionForCamera{
+    return self.collectionView.numberOfSections > 1;
+}
+
+-(NSInteger) sectionIndexForPhotos{
+    return self.hasSectionForCamera ? 1 : 0;
+}
+
 -(CGFloat) photoRowHeight{
     return self.collectionView.bounds.size.width / 2;
 }
 
 -(CGFloat) cameraRowHeight{
-    return [self photoRowHeight] * 2 + kCameraMargin;
+    if(self.hasSectionForCamera){
+        return [self photoRowHeight] * 2 + kCameraMargin;
+    }
+    return 0;
 }
 
 -(CGSize)collectionViewContentSize{
     
-    NSInteger numberOfPhotos = [self.collectionView numberOfItemsInSection:1];
+    NSInteger numberOfPhotos = [self.collectionView numberOfItemsInSection:self.sectionIndexForPhotos];
     
     return CGSizeMake(self.collectionView.bounds.size.width, [self cameraRowHeight] + ceil(numberOfPhotos/2.0) * [self photoRowHeight]);
 }
@@ -38,7 +49,7 @@
     
     CGFloat width = self.collectionView.bounds.size.width;
     
-    if(indexPath.section == 0){
+    if(indexPath.section == 0 && self.hasSectionForCamera){
         // camera
         ret.bounds = CGRectMake(0, 0, width, [self cameraRowHeight]);
         ret.center = CGPointMake(width/2, [self cameraRowHeight]/2);
@@ -67,32 +78,33 @@
 {
     NSMutableArray* attrs = [NSMutableArray array];
 
-    if(rect.origin.y < [self cameraRowHeight]){
-        // should show camera
-        [attrs addObject:[self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]]];
-        rect.size.height -= rect.origin.y;
-        rect.origin.y = 0;
-    }else{
-        rect.origin.y -= [self cameraRowHeight];
+    if(self.hasSectionForCamera){
+        if(rect.origin.y < [self cameraRowHeight]){
+            // should show camera
+            [attrs addObject:[self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]]];
+            rect.size.height -= rect.origin.y;
+            rect.origin.y = 0;
+        }else{
+            rect.origin.y -= [self cameraRowHeight];
+        }
     }
 
     NSInteger startRow = floorf(rect.origin.y / [self photoRowHeight]);
     NSInteger maxRow = ceilf((rect.origin.y + rect.size.height) / [self photoRowHeight]);
     
-    NSInteger maxPhotos = [self.collectionView numberOfItemsInSection:1];
+    NSInteger maxPhotos = [self.collectionView numberOfItemsInSection:self.sectionIndexForPhotos];
     
     for(NSInteger index = startRow; index < maxRow; index++){
         NSInteger leftPhoto = index * 2;
         NSInteger rightPhoto = leftPhoto + 1;
         
-        if(leftPhoto < maxPhotos){
-            [attrs addObject:[self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForRow:leftPhoto inSection:1]]];
+        if(leftPhoto >= 0 && leftPhoto < maxPhotos){
+            [attrs addObject:[self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForRow:leftPhoto inSection:self.sectionIndexForPhotos]]];
         }
-        if(rightPhoto < maxPhotos){
-            [attrs addObject:[self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForRow:rightPhoto inSection:1]]];
+        if(rightPhoto >= 0 && rightPhoto < maxPhotos){
+            [attrs addObject:[self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForRow:rightPhoto inSection:self.sectionIndexForPhotos]]];
         }
     }
-    
     return attrs;
 }
 

@@ -13,6 +13,8 @@
 #import "MMPhotoRowView.h"
 #import "MMBufferedImageView.h"
 #import "MMImageSidebarContainerView.h"
+#import "MMSinglePhotoCollectionViewCell.h"
+#import "MMPhotoAlbumListLayout.h"
 #import "ALAsset+Thumbnail.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
@@ -36,10 +38,11 @@
         
         photoListScrollView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:[self photosLayout]];
         photoListScrollView.dataSource = self;
-        photoListScrollView.delegate = self;
         photoListScrollView.alpha = 0;
         photoListScrollView.backgroundColor = [UIColor clearColor];
         
+        [photoListScrollView registerClass:[MMSinglePhotoCollectionViewCell class] forCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell"];
+
         currentAlbum = nil;
         
         [self addSubview:albumListScrollView];
@@ -72,7 +75,7 @@
 }
                                
 -(UICollectionViewLayout*) photosLayout{
-    return [[UICollectionViewFlowLayout alloc] init];
+    return [[MMPhotoAlbumListLayout alloc] init];
 }
 
 -(CGFloat) rowHeight{
@@ -237,22 +240,33 @@
 
 
 #pragma mark - UICollectionViewDataSource
-
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    @throw kAbstractMethodException;
+    // we're only working with the photoListScrollView. there's no albums here
+    return currentAlbum.numberOfPhotos;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-//    @throw kAbstractMethodException;
-    return 0;
+    return 1;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    @throw kAbstractMethodException;
+    MMSinglePhotoCollectionViewCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell" forIndexPath:indexPath];
+    [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row forVisibleIndex:indexPath.row];
+    photoCell.delegate = self;
+    return photoCell;
 }
 
+#pragma mark - MMSinglePhotoCollectionViewCellDelegate
 
-#pragma mark - UICollectionViewDelegate
+-(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
+    [delegate pictureTakeWithCamera:img fromView:cameraView];
+}
+
+-(void) photoWasTapped:(ALAsset *)asset
+              fromView:(MMBufferedImageView *)bufferedImage
+          withRotation:(CGFloat)rotation{
+    [delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation fromContainer:self];
+}
 
 
 
