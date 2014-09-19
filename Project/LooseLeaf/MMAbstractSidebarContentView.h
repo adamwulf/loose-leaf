@@ -12,7 +12,6 @@
 #import "MMCachedRowsScrollView.h"
 #import "MMPhotoManagerDelegate.h"
 #import "MMAlbumRowViewDelegate.h"
-#import "MMPhotoRowViewDelegate.h"
 #import "MMSinglePhotoCollectionViewCellDelegate.h"
 
 #define kTopBottomMargin 20

@@ -10,7 +10,6 @@
 #import "MMPhotoManager.h"
 #import "MMCachedRowsScrollView.h"
 #import "MMAlbumRowView.h"
-#import "MMPhotoRowView.h"
 #import "MMBufferedImageView.h"
 #import "MMImageSidebarContainerView.h"
 #import "MMSinglePhotoCollectionViewCell.h"
@@ -164,16 +163,11 @@
 // called when a row is hidden in the scrollview
 // and may be re-used with different model data later
 -(BOOL) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView{
-    if(scrollView == albumListScrollView){
-        MMAlbumRowView* row = (MMAlbumRowView*)aRow;
-        if(row.album){
-            [currentRowForAlbum removeObjectForKey:row.album.persistentId];
-            [row.album unloadPreviewPhotos];
-            row.album = nil;
-        }
-    }else{
-        MMPhotoRowView* row = (MMPhotoRowView*)aRow;
-        [row unload];
+    MMAlbumRowView* row = (MMAlbumRowView*)aRow;
+    if(row.album){
+        [currentRowForAlbum removeObjectForKey:row.album.persistentId];
+        [row.album unloadPreviewPhotos];
+        row.album = nil;
     }
     return YES;
 }

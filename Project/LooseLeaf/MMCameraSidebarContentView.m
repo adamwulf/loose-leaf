@@ -8,7 +8,6 @@
 
 #import "MMCameraSidebarContentView.h"
 #import "MMPhotoManager.h"
-#import "MMPhotoRowView.h"
 #import "MMImageSidebarContainerView.h"
 #import "NSThread+BlockAdditions.h"
 #import "CaptureSessionManager.h"
