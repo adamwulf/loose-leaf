@@ -138,7 +138,7 @@
 #pragma mark - MMSinglePhotoCollectionViewCellDelegate
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
-    NSLog(@"camera");
+    [delegate pictureTakeWithCamera:img fromView:cameraView];
 }
 
 -(void) photoWasTapped:(ALAsset *)asset
