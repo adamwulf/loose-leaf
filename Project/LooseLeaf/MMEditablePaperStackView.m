@@ -8,7 +8,6 @@
 
 #import "MMEditablePaperStackView.h"
 #import "UIView+SubviewStacks.h"
-#import "TestFlight.h"
 #import "MMRulerView.h"
 #import "MMScrappedPaperView.h"
 #import "MMScrapBubbleButton.h"

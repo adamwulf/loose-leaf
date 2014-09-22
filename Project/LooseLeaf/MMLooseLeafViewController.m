@@ -9,7 +9,6 @@
 #import "MMLooseLeafViewController.h"
 #import "MMShadowManager.h"
 #import "MMEditablePaperView.h"
-#import "TestFlight.h"
 #import "MMDebugDrawView.h"
 #import "MMInboxManager.h"
 #import "MMMemoryProfileView.h"
@@ -23,15 +22,6 @@
 
 - (id)init{
     if(self = [super init]){
-        
-//        [NSThread performBlockInBackground:^{
-//            [TestFlight takeOff:kTestflightAppToken];
-//            [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
-//            [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
-//            [TestFlight setOptions:@{ TFOptionLogOnCheckpoint : @NO }];
-//            [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
-//        }];
-
         [[Crashlytics sharedInstance] setDelegate:self];
 
         // Do any additional setup after loading the view, typically from a nib.

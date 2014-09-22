@@ -16,6 +16,7 @@
 #import "Mixpanel.h"
 #import "MMWindow.h"
 #import "MMCloudKitManager.h"
+#import "TestFlight.h"
 
 
 @implementation MMAppDelegate{
@@ -35,6 +36,15 @@
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
     [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale, nil]];
+    
+    [[NSThread mainThread] performBlock:^{
+        [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
+        [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
+        [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
+        [TestFlight setOptions:@{ TFOptionLogOnCheckpoint : @NO }];
+        [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
+        [TestFlight takeOff:kTestflightAppToken];
+    } afterDelay:3];
     
     self.window = [[MMWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
