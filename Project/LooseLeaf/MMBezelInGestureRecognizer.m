@@ -84,7 +84,7 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [self processSubStateForNextIteration];
 
-//    NSLog(@"%@: %i touches began", [self description], [touches count]);
+//    debug_NSLog(@"%@: %i touches began", [self description], [touches count]);
 
     BOOL foundValidTouch = NO;
     for(UITouch* touch in touches){
@@ -145,7 +145,7 @@
         [dateOfLastBezelEnding release];
         dateOfLastBezelEnding = nil;
     }else if([validTouches count] >= 2 && foundValidTouch && ![self isAllowedToBezelHelper]){
-        NSLog(@"%@ would begin, but isn't allowed", [self description]);
+        debug_NSLog(@"%@ would begin, but isn't allowed", [self description]);
         [ignoredTouches addObjectsInSet:validTouches];
         [validTouches removeAllObjects];
     }
@@ -197,7 +197,7 @@
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
 
-//    NSLog(@"%@: %i touches ended", [self description], [touches count]);
+//    debug_NSLog(@"%@: %i touches ended", [self description], [touches count]);
 
     [self processSubStateForNextIteration];
     [ignoredTouches removeObjectsInSet:touches];
@@ -358,7 +358,7 @@
     int count = 0;
     CGPoint averageVelocity = CGPointZero;
     for(UITouch* touch in validTouches){
-        struct DurationCacheObject cache = [[MMTouchVelocityGestureRecognizer sharedInstace] velocityInformationForTouch:touch withIndex:nil];
+        struct DurationCacheObject cache = [[MMTouchVelocityGestureRecognizer sharedInstance] velocityInformationForTouch:touch withIndex:nil];
         averageVelocity.x = averageVelocity.x * count + cache.directionOfTouch.x;
         count += 1;
         averageVelocity.x /= count;

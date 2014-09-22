@@ -141,10 +141,6 @@
     [quarterWhite setStroke];
     plusPath.lineWidth = plusStrokeWidth;
     [plusPath stroke];
-    
-
-    
-    
 }
 
 

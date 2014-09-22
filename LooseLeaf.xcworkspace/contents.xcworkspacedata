@@ -2,6 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Project/LooseLeaf/../../Submodules/zip-archive/ZipArchive/ZipArchive.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Submodules/cloudkit-manager/SimpleCloudKitManager/SimpleCloudKitManager.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:ShapeShifter/ShapeShifter.xcodeproj">
    </FileRef>
    <FileRef

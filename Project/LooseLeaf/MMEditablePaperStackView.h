@@ -91,4 +91,6 @@
 
 -(void) setMemoryView:(MMMemoryProfileView*)_memoryView;
 
+-(void) finishedLoading;
+
 @end

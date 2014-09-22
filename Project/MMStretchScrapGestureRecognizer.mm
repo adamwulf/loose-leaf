@@ -40,6 +40,10 @@
     UITouch* upperRightTouch;
     UITouch* lowerLeftTouch;
     UITouch* lowerRightTouch;
+    
+    // properties of actively stretched scrap
+    NSDictionary* startingScrapProperties;
+    MMUndoablePaperView* startingPageForScrap;
 }
 
 #pragma mark - Properties
@@ -49,6 +53,8 @@
 @synthesize scrapDelegate;
 @synthesize scrap = scrap;
 @synthesize skewTransform = skewTransform;
+@synthesize startingPageForScrap;
+@synthesize startingScrapProperties;
 
 -(NSArray*) possibleTouches{
     return [possibleTouches array];
@@ -181,6 +187,8 @@
             [self.scrapDelegate endStretchBySplittingScrap:scrap toTouches:touches1 atNormalPoint:normalCenter1 andTouches:touches2 atNormalPoint:normalCenter2];
             [possibleTouches addObjectsInOrderedSet:validTouches];
             [validTouches removeAllObjects];
+            startingScrapProperties = nil;
+            startingPageForScrap = nil;
             scrap = nil;
         }
     }
@@ -190,6 +198,8 @@
         [self.scrapDelegate endStretchWithoutSplittingScrap:scrap atNormalPoint:[self normalizedLocationOfValidTouches]];
         [possibleTouches addObjectsInOrderedSet:validTouches];
         [validTouches removeAllObjects];
+        startingScrapProperties = nil;
+        startingPageForScrap = nil;
         scrap = nil;
     }
     if([possibleTouches count] == 4){
@@ -251,6 +261,15 @@
                     // any pan gesture's anchor is in the correct place
                     // for its touches
                     normalFirstQ = [self getNormalizedRawQuad];
+                    
+                    // now get all the properties of the gesture
+                    if(pinchedScrap == pinchScrapGesture1.scrap){
+                        startingScrapProperties = pinchScrapGesture1.startingScrapProperties;
+                        startingPageForScrap = pinchScrapGesture1.startingPageForScrap;
+                    }else{
+                        startingScrapProperties = pinchScrapGesture2.startingScrapProperties;
+                        startingPageForScrap = pinchScrapGesture2.startingPageForScrap;
+                    }
                     break;
                 }else{
                     [allPossibleTouches removeObjectsInSet:touchesInScrap];

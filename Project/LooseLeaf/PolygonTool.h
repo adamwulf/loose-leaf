@@ -17,4 +17,6 @@
 
 -(void) cancelPolygonForTouch:(UITouch*)touch;
 
+-(void) cancelAllTouches;
+
 @end

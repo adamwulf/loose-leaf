@@ -8,7 +8,6 @@
 
 #import "Pen.h"
 #import "Constants.h"
-#import "TestFlight.h"
 #import <JotUI/JotUI.h>
 #import "MMTouchVelocityGestureRecognizer.h"
 
@@ -92,7 +91,7 @@
  * our velocity model and state info for this new touch
  */
 -(void) willMoveStrokeWithTouch:(JotTouch*)touch{
-    velocity = [[MMTouchVelocityGestureRecognizer sharedInstace] normalizedVelocityForTouch:touch.touch];
+    velocity = [[MMTouchVelocityGestureRecognizer sharedInstance] normalizedVelocityForTouch:touch.touch];
 }
 
 -(void) willEndStrokeWithTouch:(JotTouch*)touch{
@@ -107,14 +106,14 @@
     // noop
 }
 
--(void) willCancelStrokeWithTouch:(JotTouch*)touch{
+-(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
     // noop
 }
 
 /**
  * the user cancelled the touch
  */
--(void) didCancelStrokeWithTouch:(JotTouch*)touch{
+-(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
     // noop
 }
 

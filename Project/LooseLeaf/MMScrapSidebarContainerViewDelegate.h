@@ -8,15 +8,22 @@
 
 #import <Foundation/Foundation.h>
 #import "MMScrapView.h"
+#import "MMUndoablePaperView.h"
 
 @protocol MMScrapSidebarContainerViewDelegate <NSObject>
 
+-(void) willAddScrapToBezelSidebar:(MMScrapView*)scrap;
+
 -(void) didAddScrapToBezelSidebar:(MMScrapView*)scrap;
 
--(void) didAddScrapBackToPage:(MMScrapView*)scrap;
+-(void) willAddScrapBackToPage:(MMScrapView *)scrap;
+
+-(MMUndoablePaperView*) didAddScrapBackToPage:(MMScrapView *)scrap atIndex:(NSUInteger)index;
 
 -(CGPoint) positionOnScreenToScaleScrapTo:(MMScrapView*)scrap;
 
 -(CGFloat) scaleOnScreenToScaleScrapTo:(MMScrapView*)scrap givenOriginalScale:(CGFloat)originalScale;
+
+-(MMScrappedPaperView*) pageForUUID:(NSString*)uuid;
 
 @end

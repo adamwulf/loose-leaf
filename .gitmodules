@@ -22,3 +22,18 @@
 [submodule "Submodules/sskeychain"]
 	path = Submodules/sskeychain
 	url = git@github.com:soffes/sskeychain.git
+[submodule "Submodules/FXBlurView"]
+	path = Submodules/FXBlurView
+	url = git@github.com:nicklockwood/FXBlurView.git
+[submodule "Submodules/AFNetworking"]
+	path = Submodules/AFNetworking
+	url = git@github.com:AFNetworking/AFNetworking.git
+[submodule "Submodules/eppz-kit"]
+	path = Submodules/eppz-kit
+	url = git@github.com:eppz/eppz.kit.git
+[submodule "Submodules/cloudkit-manager"]
+	path = Submodules/cloudkit-manager
+	url = git@github.com:adamwulf/cloudkit-manager.git
+[submodule "Submodules/zip-archive"]
+	path = Submodules/zip-archive
+	url = git@github.com:mattconnolly/ZipArchive.git

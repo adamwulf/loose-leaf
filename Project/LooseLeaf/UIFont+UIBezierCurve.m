@@ -22,6 +22,8 @@ static NSMutableDictionary* _pathCacheInstance = nil;
 }
 
 -(UIBezierPath*) bezierPathForString:(NSString*) letter{
+    if(!letter) return nil;
+    
     NSString* key = [NSString stringWithFormat:@"%@%f - %@", [self fontName], [self pointSize], letter];
     
     UIBezierPath* glyphPath = [[UIFont sharedPathCache] objectForKey:key];
@@ -64,6 +66,7 @@ static NSMutableDictionary* _pathCacheInstance = nil;
                 advances[i].width = advances[i].width * 8 / 10.0;
             }
         }
+        
         CGFloat xAdvance = 0;
         for(int i=0;i<count;i++){
             // Do something with the glyphs here, if a character is unmapped
@@ -74,6 +77,9 @@ static NSMutableDictionary* _pathCacheInstance = nil;
                 // to remove some of its leading spacing too
                 CGFloat oneXCorrection = -pathOfChar.bounds.origin.x * 1 / 5.0;
                 [pathOfChar applyTransform:CGAffineTransformMakeTranslation(oneXCorrection, 0)];
+            }
+            if([[letter substringWithRange:NSMakeRange(i, 1)] isEqualToString:@"+"]){
+                [pathOfChar applyTransform:CGAffineTransformMakeTranslation(0, pathOfChar.bounds.size.height / 5)];
             }
             [pathOfChar applyTransform:CGAffineTransformMakeTranslation(xAdvance, 0)];
             [glyphPath appendPath:pathOfChar];

@@ -8,14 +8,36 @@
 
 #import "MMImmutableScrapsOnPaperState.h"
 #import "MMScrapView.h"
+#import "NSArray+Map.h"
+
+
+@interface MMScrapsOnPaperState (Private)
+
+#pragma mark - Saving Helpers
+
+-(NSUInteger) lastSavedUndoHash;
+-(void) wasSavedAtUndoHash:(NSUInteger)savedUndoHash;
+
+@end
+
+
 
 @implementation MMImmutableScrapsOnPaperState{
-    NSArray* scraps;
+    MMScrapsOnPaperState* ownerState;
+    NSArray* allScrapsForPage;
+    NSArray* scrapsOnPageIDs;
+    NSString* scrapIDsPath;
+    NSUInteger cachedUndoHash;
 }
 
--(id) initWithScrapIDsPath:(NSString *)scrapIDsPath andScraps:(NSArray*)_scraps{
-    if(self = [super initWithScrapIDsPath:scrapIDsPath]){
-        scraps = [_scraps copy];
+-(id) initWithScrapIDsPath:(NSString *)_scrapIDsPath andAllScraps:(NSArray*)_allScraps andScrapsOnPage:(NSArray*)_scrapsOnPage andScrapsOnPaperState:(MMScrapsOnPaperState*)_ownerState{
+    if(self = [super init]){
+        ownerState = _ownerState;
+        scrapIDsPath = _scrapIDsPath;
+        scrapsOnPageIDs = [_scrapsOnPage mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
+            return [obj uuid];
+        }];
+        allScrapsForPage = [_allScraps copy];
     }
     return self;
 }
@@ -25,47 +47,64 @@
 }
 
 -(NSArray*) scraps{
-    return scraps;
+    return [[allScrapsForPage filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        // only return scraps that are physically on the page
+        // we'll save all scraps, but this method is used
+        // to help generate the thumbnail later on, so we only
+        // care about scraps on the page
+        return [scrapsOnPageIDs containsObject:[evaluatedObject uuid]];
+    }]] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        // sort the scraps, so that they are added to the thumbnail
+        // in the correct order
+        return [scrapsOnPageIDs indexOfObject:[obj1 uuid]] < [scrapsOnPageIDs indexOfObject:[obj2 uuid]] ? NSOrderedAscending : NSOrderedDescending;
+    }];
 }
 
 -(BOOL) saveStateToDiskBlocking{
     __block BOOL hadAnyEditsToSaveAtAll = NO;
-    if([scraps count]){
-        dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
-
-        __block NSInteger savedScraps = 0;
-        void(^doneSavingScrapBlock)(BOOL) = ^(BOOL hadEditsToSave){
-            savedScraps ++;
-            hadAnyEditsToSaveAtAll = hadAnyEditsToSaveAtAll || hadEditsToSave;
-            if(savedScraps == [scraps count]){
-                // just saved the last scrap, signal
-                dispatch_semaphore_signal(sema1);
+    if(ownerState.lastSavedUndoHash != self.undoHash){
+        hadAnyEditsToSaveAtAll = YES;
+//        NSLog(@"scrapsOnPaperState needs saving last: %lu !=  now:%lu", (unsigned long) ownerState.lastSavedUndoHash, (unsigned long) self.undoHash);
+        NSMutableArray* allScrapProperties = [NSMutableArray array];
+        if([allScrapsForPage count]){
+            dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+            
+            __block NSInteger savedScraps = 0;
+            void(^doneSavingScrapBlock)(BOOL) = ^(BOOL hadEditsToSave){
+                savedScraps ++;
+//                hadAnyEditsToSaveAtAll = hadAnyEditsToSaveAtAll || hadEditsToSave;
+                if(savedScraps == [allScrapsForPage count]){
+                    // just saved the last scrap, signal
+                    dispatch_semaphore_signal(sema1);
+                }
+            };
+            
+            for(MMScrapView* scrap in allScrapsForPage){
+                NSDictionary* properties = [scrap propertiesDictionary];
+                [scrap saveScrapToDisk:doneSavingScrapBlock];
+                // save scraps
+                [allScrapProperties addObject:properties];
             }
-        };
-
-        NSMutableArray* scrapUUIDs = [NSMutableArray array];
-        for(MMScrapView* scrap in scraps){
-            NSMutableDictionary* properties = [NSMutableDictionary dictionary];
-            [properties setObject:scrap.uuid forKey:@"uuid"];
-            [properties setObject:[NSNumber numberWithFloat:scrap.center.x] forKey:@"center.x"];
-            [properties setObject:[NSNumber numberWithFloat:scrap.center.y] forKey:@"center.y"];
-            [properties setObject:[NSNumber numberWithFloat:scrap.rotation] forKey:@"rotation"];
-            [properties setObject:[NSNumber numberWithFloat:scrap.scale] forKey:@"scale"];
-            
-            [scrap saveScrapToDisk:doneSavingScrapBlock];
-            
-            // save scraps
-            [scrapUUIDs addObject:properties];
+            dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
         }
-        [scrapUUIDs writeToFile:self.scrapIDsPath atomically:YES];
         
-        dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-//        dispatch_release(sema1); ARC handles this
-//        NSLog(@"done saving %d scraps", [scraps count]);
+        if(!scrapIDsPath){
+//            NSLog(@"on no");
+        }
+        
+//        NSLog(@"saving %lu scraps on %@", (unsigned long)[scrapsOnPageIDs count], ownerState.delegate);
+        NSDictionary* scrapsOnPaperInfo = [NSDictionary dictionaryWithObjectsAndKeys:allScrapProperties, @"allScrapProperties", scrapsOnPageIDs, @"scrapsOnPageIDs", nil];
+        if([scrapsOnPaperInfo writeToFile:scrapIDsPath atomically:YES]){
+//            NSLog(@"saved to %@", scrapIDsPath);
+        }else{
+            NSLog(@"failed saved to %@", scrapIDsPath);
+        }
+        [ownerState wasSavedAtUndoHash:self.undoHash];
     }else{
-        [[NSFileManager defaultManager] removeItemAtPath:self.scrapIDsPath error:nil];
+        // we've already saved an immutable state with this hash
+//        NSLog(@"scrapsOnPaperState doesn't need saving %lu == %lu", (unsigned long) ownerState.lastSavedUndoHash, (unsigned long) self.undoHash);
     }
-//    NSLog(@"done saving immutable scraps on paper state");
+
     return hadAnyEditsToSaveAtAll;
 }
 
@@ -75,5 +114,35 @@
     }
     [super unload];
 }
+
+
+-(NSUInteger) undoHash{
+    if(!cachedUndoHash){
+        NSUInteger prime = 31;
+        NSUInteger hashVal = 1;
+        for(MMScrapView* scrap in allScrapsForPage){
+            hashVal = prime * hashVal + [[scrap uuid] hash];
+            if([scrap.state isScrapStateLoaded]){
+                // if we're loaded, use the current hash
+                hashVal = prime * hashVal + [scrap.state.drawableView.state undoHash];
+            }else{
+                // otherwise, use our most recently saved hash
+                hashVal = prime * hashVal + [scrap.state lastSavedUndoHash];
+            }
+            NSDictionary* properties = [scrap propertiesDictionary];
+            hashVal = prime * hashVal + [[properties objectForKey:@"center.x"] hash];
+            hashVal = prime * hashVal + [[properties objectForKey:@"center.y"] hash];
+            hashVal = prime * hashVal + [[properties objectForKey:@"rotation"] hash];
+            hashVal = prime * hashVal + [[properties objectForKey:@"scale"] hash];
+        }
+        hashVal = prime * hashVal + 4409; // a prime from http://www.bigprimes.net/archive/prime/6/
+        for(NSString* stroke in scrapsOnPageIDs){
+            hashVal = prime * hashVal + [stroke hash];
+        }
+        cachedUndoHash = hashVal;
+    }
+    return cachedUndoHash;
+}
+
 
 @end

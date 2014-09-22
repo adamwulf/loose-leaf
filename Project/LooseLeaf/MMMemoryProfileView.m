@@ -97,7 +97,7 @@
     [[NSString stringWithFormat:@"memory: %@", bytesInBackgrounds] drawAtPoint:CGPointMake(160, (y += 20)) withAttributes:attributes];
     
     [@"JotBufferManager:" drawAtPoint:CGPointMake(150, (y += 40)) withAttributes:attributes];
-    NSDictionary* cacheStats = [[JotBufferManager sharedInstace] cacheMemoryStats];
+    NSDictionary* cacheStats = [[JotBufferManager sharedInstance] cacheMemoryStats];
     NSArray* keys = [[cacheStats allKeys] sortedArrayUsingComparator:^NSComparisonResult(NSString* obj1, NSString* obj2) {
         return [obj1 compare:obj2 options:NSCaseInsensitiveSearch | NSNumericSearch];
     }];

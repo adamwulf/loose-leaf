@@ -11,12 +11,13 @@
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "NSThread+BlockAdditions.h"
-#import "TestFlight.h"
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import "DKUIBezierPathClippedSegment+PathElement.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMPageCacheManager.h"
 #import "MMLoadImageCache.h"
+#import "UIView+Animations.h"
+#import "Mixpanel.h"
 
 dispatch_queue_t importThumbnailQueue;
 
@@ -29,8 +30,6 @@ dispatch_queue_t importThumbnailQueue;
     NSString* thumbnailPath;
     UIBezierPath* boundsPath;
     
-    JotViewStateProxy* paperState;
-    
     // we want to be able to track extremely
     // efficiently 1) if we have a thumbnail loaded,
     // and 2) if we have (or don't) a thumbnail at all
@@ -42,6 +41,11 @@ dispatch_queue_t importThumbnailQueue;
     // is saved
     BOOL definitelyDoesNotHaveAnInkThumbnail;
     BOOL isLoadingCachedInkThumbnailFromDisk;
+    
+    // YES if the file exists at the path, NO
+    // if it *might* exist
+    BOOL fileExistsAtInkPath;
+    BOOL fileExistsAtPlistPath;
 }
 
 @synthesize drawableView;
@@ -77,7 +81,7 @@ dispatch_queue_t importThumbnailQueue;
 
         
         // initialize our state manager
-        paperState = [[JotViewStateProxy alloc] initWithInkPath:[self inkPath] andPlistPath:[self plistPath]];
+        paperState = [[JotViewStateProxy alloc] initWithDelegate:self];
         paperState.delegate = self;
     }
     return self;
@@ -120,14 +124,8 @@ dispatch_queue_t importThumbnailQueue;
     }
 }
 
--(void) setCanvasVisible:(BOOL)isCanvasVisible{
-    if(isCanvasVisible){
-        drawableView.hidden = NO;
-        shapeBuilderView.hidden = NO;
-    }else{
-        drawableView.hidden = YES;
-        shapeBuilderView.hidden = YES;
-    }
+-(void) updateThumbnailVisibility{
+    @throw kAbstractMethodException;
 }
 
 -(void) setEditable:(BOOL)isEditable{
@@ -174,6 +172,7 @@ dispatch_queue_t importThumbnailQueue;
 }
 
 -(void) setDrawableView:(JotView *)_drawableView{
+    CheckMainThread;
     if(_drawableView && ![self hasStateLoaded]){
         debug_NSLog(@"oh no");
     }
@@ -185,26 +184,29 @@ dispatch_queue_t importThumbnailQueue;
         if(drawableView){
             [self generateDebugView:YES];
             [self setFrame:self.frame];
-            [NSThread performBlockOnMainThread:^{
-                if([self.delegate isPageEditable:self] && [self hasStateLoaded]){
-                    [drawableView loadState:paperState];
-                    [self addDrawableViewToContentView];
-                    // anchor the view to the top left,
-                    // so that when we scale down, the drawable view
-                    // stays in place
-                    drawableView.layer.anchorPoint = CGPointMake(0,0);
-                    drawableView.layer.position = CGPointMake(0,0);
-                    drawableView.delegate = self;
-                    [self setCanvasVisible:YES];
-                    [self setEditable:YES];
-                }
-            }];
+            if([self.delegate isPageEditable:self] && [self hasStateLoaded]){
+                // drawableView might be animating from
+                // it's old page, so remove that animation
+                // if any
+                [drawableView.layer removeAllAnimations];
+                [drawableView loadState:paperState];
+                [self addDrawableViewToContentView];
+                // anchor the view to the top left,
+                // so that when we scale down, the drawable view
+                // stays in place
+                drawableView.layer.anchorPoint = CGPointMake(0,0);
+                drawableView.layer.position = CGPointMake(0,0);
+                drawableView.delegate = self;
+                [self setEditable:YES];
+                [self updateThumbnailVisibility];
+            }
         }else{
             [self generateDebugView:NO];
+            [self updateThumbnailVisibility];
         }
     }else if(drawableView && [self hasStateLoaded]){
-        [self setCanvasVisible:YES];
         [self setEditable:YES];
+        [self updateThumbnailVisibility];
     }
 }
 
@@ -217,12 +219,12 @@ dispatch_queue_t importThumbnailQueue;
     return [paperState hasEditsToSave];
 }
 
--(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andContext:(JotGLContext*)context{
+-(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePtSize andScale:(CGFloat)scale andContext:(JotGLContext*)context{
     if([paperState isStateLoaded]){
         [self didLoadState:paperState];
         return;
     }
-    [paperState loadStateAsynchronously:async withSize:pagePixelSize andContext:context andBufferManager:[JotBufferManager sharedInstace]];
+    [paperState loadStateAsynchronously:async withSize:pagePtSize andScale:scale andContext:context andBufferManager:[JotBufferManager sharedInstance]];
 }
 -(void) unloadState{
     [paperState unload];
@@ -245,39 +247,51 @@ dispatch_queue_t importThumbnailQueue;
  * state to disk, and notify our delegate when done
  */
 -(void) saveToDisk:(void (^)(BOOL didSaveEdits))onComplete{
+    
     // Sanity checks to generate our directory structure if needed
     [self pagesPath];
     
     // find out what our current undo state looks like.
-    if([self hasEditsToSave]){
+    if([self hasEditsToSave] && ![paperState hasEditsToSave]){
+//        NSLog(@"saved excess");
+    }
+    if([paperState hasEditsToSave]){
         // something has changed since the last time we saved,
         // so ask the JotView to save out the png of its data
-        [drawableView exportImageTo:[self inkPath]
-                   andThumbnailTo:[self thumbnailPath]
-                       andStateTo:[self plistPath]
-                       onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* immutableState){
-                           if(immutableState){
-                               // sometimes, if we try to export multiple times
-                               // very very quickly, the 3+ exports will fail
-                               // with all arguments=nil because the first export
-                               // is still going (and a 2nd export is already waiting
-                               // in queue)
-                               // so only trigger our save action if we did in fact
-                               // save
-                               definitelyDoesNotHaveAnInkThumbnail = NO;
-                               [paperState wasSavedAtImmutableState:immutableState];
-                               [[MMLoadImageCache sharedInstance] updateCacheForPath:[self thumbnailPath] toImage:thumbnail];
-                               cachedImgViewImage = thumbnail;
-                               onComplete(YES);
-                               NSLog(@"saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
-                           }else{
-                               onComplete(NO);
-                           }
-                       }];
+        if(drawableView){
+            [drawableView exportImageTo:[self inkPath]
+                         andThumbnailTo:[self thumbnailPath]
+                             andStateTo:[self plistPath]
+                             onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* immutableState){
+                                 if(immutableState){
+                                     // sometimes, if we try to export multiple times
+                                     // very very quickly, the 3+ exports will fail
+                                     // with all arguments=nil because the first export
+                                     // is still going (and a 2nd export is already waiting
+                                     // in queue)
+                                     // so only trigger our save action if we did in fact
+                                     // save
+                                     definitelyDoesNotHaveAnInkThumbnail = NO;
+                                     [paperState wasSavedAtImmutableState:immutableState];
+                                     [[MMLoadImageCache sharedInstance] updateCacheForPath:[self thumbnailPath] toImage:thumbnail];
+                                     cachedImgViewImage = thumbnail;
+                                     onComplete(YES);
+//                                     NSLog(@"saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
+                                 }else{
+                                     // NOTE!
+                                     // https://github.com/adamwulf/loose-leaf/issues/658
+                                     // it's important to anyone listening to us that they potentially
+                                     // wait for a pending save
+                                     onComplete(NO);
+//                                     NSLog(@"duplicate saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
+                                 }
+                             }];
+        }else{
+            onComplete(NO);
+        }
     }else{
         // already saved, but don't need to write
         // anything new to disk
-//        debug_NSLog(@"no edits to save with hash %u", [drawableView undoHash]);
         onComplete(NO);
     }
 }
@@ -305,7 +319,7 @@ static int count = 0;
                 //
                 // load thumbnails into a cache for faster repeat loading
                 // https://github.com/adamwulf/loose-leaf/issues/227
-                UIImage* thumbnail = [[MMLoadImageCache sharedInstance] imageAtPath:[self thumbnailPath]];
+                UIImage* thumbnail = [self synchronouslyLoadInkPreview];
                 if(!thumbnail){
                     definitelyDoesNotHaveAnInkThumbnail = YES;
                 }
@@ -314,6 +328,20 @@ static int count = 0;
             }
         });
     }
+}
+
+-(UIImage*) synchronouslyLoadInkPreview{
+    if(cachedImgViewImage){
+        return cachedImgViewImage;
+    }
+    UIImage* thumbnail = [[MMLoadImageCache sharedInstance] imageAtPath:[self thumbnailPath]];
+    if(!thumbnail){
+        // we might be loading a new-user-content provided page,
+        // so load from the bundle as a backup
+        NSString* bundleThumbPath = [[[self bundledPagesPath] stringByAppendingPathComponent:[@"ink" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
+        thumbnail = [[MMLoadImageCache sharedInstance] imageAtPath:bundleThumbPath];
+    }
+    return thumbnail;
 }
 
 /**
@@ -341,6 +369,15 @@ static int count = 0;
 
 -(UIImage*) cachedImgViewImage{
     return cachedImgViewImage;
+}
+
+-(void) cancelCurrentStrokeIfAny{
+    CheckMainThread;
+    if(paperState.currentStroke){
+        if([[JotStrokeManager sharedInstance] cancelStroke:paperState.currentStroke]){
+            return;
+        }
+    }
 }
 
 
@@ -393,12 +430,12 @@ static int count = 0;
     [self saveToDisk];
 }
 
--(void) willCancelStrokeWithTouch:(JotTouch*)touch{
-    [delegate willCancelStrokeWithTouch:touch];
+-(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+    [delegate willCancelStroke:stroke withTouch:touch];
 }
 
--(void) didCancelStrokeWithTouch:(JotTouch*)touch{
-    [delegate didCancelStrokeWithTouch:touch];
+-(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+    [delegate didCancelStroke:stroke withTouch:touch];
 }
 
 -(UIColor*) colorForTouch:(JotTouch *)touch{
@@ -427,7 +464,19 @@ static int count = 0;
         if([element isKindOfClass:[CurveToPathElement class]]){
             UIBezierPath* bez = [element bezierPathSegment];
             
-            NSArray* redAndBlueSegments = [UIBezierPath redAndGreenAndBlueSegmentsCreatedFrom:boundsPath bySlicingWithPath:bez andNumberOfBlueShellSegments:nil];
+            NSArray* redAndBlueSegments = nil;
+            @try{
+                redAndBlueSegments = [UIBezierPath redAndGreenAndBlueSegmentsCreatedFrom:boundsPath bySlicingWithPath:bez andNumberOfBlueShellSegments:nil];
+            }@catch(NSException* e){
+                // we had an exception when trying to clip this path.
+                // the solution for now is just to add the entire segment
+                // which will hapepn since [greenSegments count] will == 0
+                // below.
+                //
+                // true fix is filed in https://github.com/adamwulf/loose-leaf/issues/562
+                NSLog(@"unable to generate red/green/blue segments");
+                [[[Mixpanel sharedInstance] people] increment:kMPNumberOfClippingExceptions by:@(1)];
+            }
             NSArray* redSegments = [redAndBlueSegments firstObject];
             NSArray* greenSegments = [redAndBlueSegments objectAtIndex:1];
 
@@ -478,16 +527,21 @@ static int count = 0;
     return pagesPath;
 }
 
+-(NSString*) bundledPagesPath{
+    NSString* documentsPath = [[NSBundle mainBundle] pathForResource:@"Documents" ofType:nil];
+    return [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:[self uuid]];
+}
+
 -(NSString*) inkPath{
     if(!inkPath){
-        inkPath = [[[self pagesPath] stringByAppendingPathComponent:@"ink"] stringByAppendingPathExtension:@"png"];;
+        inkPath = [[[self pagesPath] stringByAppendingPathComponent:@"ink"] stringByAppendingPathExtension:@"png"];
     }
     return inkPath;
 }
 
 -(NSString*) plistPath{
     if(!plistPath){
-        plistPath = [[[self pagesPath] stringByAppendingPathComponent:@"info"] stringByAppendingPathExtension:@"plist"];;
+        plistPath = [[[self pagesPath] stringByAppendingPathComponent:@"info"] stringByAppendingPathExtension:@"plist"];
     }
     return plistPath;
 }
@@ -504,8 +558,34 @@ static int count = 0;
 
 #pragma mark - JotViewStateProxyDelegate
 
--(void) jotStrokeWasCancelled:(JotStroke *)stroke{
-    debug_NSLog(@"MMEditablePaperView jotStrokeWasCancelled:");
+// the state for the page and/or scrap might be a default
+// new user tutorial page. if that's the case, we want to
+// load the initial state from the bundle. pages will always
+// save to the user's document's directory.
+//
+// this method will make sure that if the user loads a default
+// page from the bundle, saves it, then reloads it -> then it
+// will be loaded from the documents directory instead of
+// reloaded from scratch from the bundle
+-(NSString*) jotViewStateInkPath{
+    if(fileExistsAtInkPath || [[NSFileManager defaultManager] fileExistsAtPath:[self inkPath]]){
+        // save that the file exists at the path. this will reduce
+        // the number of filesystem calls that we make to check for
+        // fileExistsAtPath
+        fileExistsAtInkPath = YES;
+        return [self inkPath];
+    }else{
+        return [[[self bundledPagesPath] stringByAppendingPathComponent:@"ink"] stringByAppendingPathExtension:@"png"];
+    }
+}
+
+-(NSString*) jotViewStatePlistPath{
+    if(fileExistsAtPlistPath || [[NSFileManager defaultManager] fileExistsAtPath:[self plistPath]]){
+        fileExistsAtPlistPath = YES;
+        return [self plistPath];
+    }else{
+        return [[[self bundledPagesPath] stringByAppendingPathComponent:@"info"] stringByAppendingPathExtension:@"plist"];
+    }
 }
 
 -(void) didLoadState:(JotViewStateProxy*)state{

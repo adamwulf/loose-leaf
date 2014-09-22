@@ -37,6 +37,7 @@
 }
 
 @synthesize color;
+@synthesize pencilButton;
 
 - (id)initWithButtonFrame:(CGRect)frame andScreenSize:(CGSize)totalSize
 {
@@ -113,6 +114,14 @@
         blackButton.alpha = 0;
     }
     return self;
+}
+
+-(CGFloat) rotation{
+    return pencilButton.rotation;
+}
+
+-(void) setRotation:(CGFloat)_rotation{
+    pencilButton.rotation = _rotation;
 }
 
 -(int) fullByteSize{

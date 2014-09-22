@@ -10,12 +10,15 @@
 #import "MMPhotoManager.h"
 #import "MMCachedRowsScrollView.h"
 #import "MMAlbumRowView.h"
-#import "MMPhotoRowView.h"
 #import "MMBufferedImageView.h"
 #import "MMImageSidebarContainerView.h"
+#import "MMSinglePhotoCollectionViewCell.h"
+#import "MMPhotoAlbumListLayout.h"
+#import "MMRotationManager.h"
 #import "ALAsset+Thumbnail.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
+#import "NSArray+Map.h"
 
 @implementation MMAbstractSidebarContentView{
     NSMutableDictionary* currentRowForAlbum;
@@ -33,10 +36,13 @@
         albumListScrollView = [[MMCachedRowsScrollView alloc] initWithFrame:self.bounds withRowHeight:ceilf(self.bounds.size.width / 3) andMargins:kTopBottomMargin];
         albumListScrollView.dataSource = self;
         
-        photoListScrollView = [[MMCachedRowsScrollView alloc] initWithFrame:self.bounds withRowHeight:ceilf(self.bounds.size.width / 2) andMargins:kTopBottomMargin];
+        photoListScrollView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:[self photosLayout]];
         photoListScrollView.dataSource = self;
         photoListScrollView.alpha = 0;
+        photoListScrollView.backgroundColor = [UIColor clearColor];
         
+        [photoListScrollView registerClass:[MMSinglePhotoCollectionViewCell class] forCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell"];
+
         currentAlbum = nil;
         
         [self addSubview:albumListScrollView];
@@ -67,24 +73,36 @@
     }
     return self;
 }
+                               
+-(UICollectionViewLayout*) photosLayout{
+    return [[MMPhotoAlbumListLayout alloc] init];
+}
 
+-(CGFloat) rowHeight{
+    return ceilf(self.bounds.size.width / 2);
+}
 
--(void) show:(BOOL)animated{
+-(void) reset:(BOOL)animated{
     albumListScrollView.alpha = 1;
     photoListScrollView.alpha = 0;
-    [[MMPhotoManager sharedInstace] initializeAlbumCache];
+}
+
+-(void) show:(BOOL)animated{
+    [[MMPhotoManager sharedInstance] initializeAlbumCache];
     [self updatePhotoRotation:NO];
     isShowing = YES;
 }
 
 -(void) hide:(BOOL)animated{
-    albumListScrollView.alpha = 1;
-    photoListScrollView.alpha = 0;
-    currentAlbum = nil;
     isShowing = NO;
+    [[NSThread mainThread] performBlock:^{
+        [photoListScrollView reloadData];
+    } afterDelay:.1];
 }
 
-
+-(void) killMemory{
+    [albumListScrollView killMemory];
+}
 
 #pragma mark - MMPhotoManagerDelegate
 
@@ -94,13 +112,7 @@
         [self updateRow:obj atIndex:idx forFrame:[obj frame] forScrollView:albumListScrollView];
     }];
     if(photoListScrollView.alpha){
-        [photoListScrollView refreshVisibleRows];
-        [photoListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            // force invalidate the row's cache
-            [(MMPhotoRowView*)obj unload];
-            // now load the proper row info again
-            [self updateRow:obj atIndex:idx forFrame:[obj frame] forScrollView:photoListScrollView];
-        }];
+        [photoListScrollView reloadData];
     }
 }
 
@@ -129,22 +141,15 @@
     [self setUserInteractionEnabled:NO];
     currentAlbum = row.album;
     photoListScrollView.contentOffset = CGPointZero;
-    [photoListScrollView refreshVisibleRows];
-    [photoListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        [self updateRow:obj atIndex:idx forFrame:[obj frame] forScrollView:photoListScrollView];
-    }];
+    
+    [photoListScrollView reloadData];
+    
     [UIView animateWithDuration:.3 animations:^{
         albumListScrollView.alpha = 0;
         photoListScrollView.alpha = 1;
     }  completion:^(BOOL finished){
         [self setUserInteractionEnabled:YES];
     }];
-}
-
-#pragma mark - MMPhotoRowViewDelegate
-
--(void) photoRowWasTapped:(MMPhotoRowView*)row forAsset:(ALAsset *)asset forImage:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation{
-    [delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation fromContainer:self];
 }
 
 #pragma mark - MMCachedRowsScrollViewDataSource
@@ -156,16 +161,11 @@
 // called when a row is hidden in the scrollview
 // and may be re-used with different model data later
 -(BOOL) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView{
-    if(scrollView == albumListScrollView){
-        MMAlbumRowView* row = (MMAlbumRowView*)aRow;
-        if(row.album){
-            [currentRowForAlbum removeObjectForKey:row.album.persistentId];
-            [row.album unloadPreviewPhotos];
-            row.album = nil;
-        }
-    }else{
-        MMPhotoRowView* row = (MMPhotoRowView*)aRow;
-        [row unload];
+    MMAlbumRowView* row = (MMAlbumRowView*)aRow;
+    if(row.album){
+        [currentRowForAlbum removeObjectForKey:row.album.persistentId];
+        [row.album unloadPreviewPhotos];
+        row.album = nil;
     }
     return YES;
 }
@@ -174,52 +174,49 @@
 // create a view and return it. otehrwise use the
 // existing view, update it, and return it
 -(UIView*) updateRow:(UIView*)currentRow atIndex:(NSInteger)index forFrame:(CGRect)frame forScrollView:(MMCachedRowsScrollView*)scrollView{
-    if(scrollView == albumListScrollView){
-        MMAlbumRowView* currentAlbumRow = (MMAlbumRowView*)currentRow;
-        if(!currentAlbumRow){
-            currentAlbumRow = [[MMAlbumRowView alloc] initWithFrame:frame];
-            currentAlbumRow.delegate = self;
-        }
-        if([albumListScrollView rowIndexIsVisible:index]){
-            // make sure the album is set, but only if it's visible
-            // and if we need to
-            MMPhotoAlbum* album = [self albumAtIndex:index];
-            if(currentAlbumRow.album != album){
-                if(currentAlbumRow.album){
-                    [currentRowForAlbum removeObjectForKey:currentAlbumRow.album.persistentId];
-                }
-                currentAlbumRow.album = album;
-                if(currentAlbumRow.album){
-                    [currentRowForAlbum setObject:currentAlbumRow forKey:currentAlbumRow.album.persistentId];
-                }
-            }
-            [currentAlbumRow updatePhotoRotation];
-        }
-        return currentAlbumRow;
-    }else{
-        MMPhotoRowView* currentPhotoRow = (MMPhotoRowView*)currentRow;
-        if(!currentPhotoRow){
-            currentPhotoRow = [[MMPhotoRowView alloc] initWithFrame:frame];
-            currentPhotoRow.delegate = self;
-        }
-        [currentPhotoRow loadPhotosFromAlbum:currentAlbum atRow:index];
-        [currentPhotoRow updatePhotoRotation];
-        return currentPhotoRow;
+    MMAlbumRowView* currentAlbumRow = (MMAlbumRowView*)currentRow;
+    if(!currentAlbumRow){
+        currentAlbumRow = [[MMAlbumRowView alloc] initWithFrame:frame];
+        currentAlbumRow.delegate = self;
     }
+    if([albumListScrollView rowIndexIsVisible:index]){
+        // make sure the album is set, but only if it's visible
+        // and if we need to
+        MMPhotoAlbum* album = [self albumAtIndex:index];
+        if(currentAlbumRow.album != album){
+            if(currentAlbumRow.album){
+                [currentRowForAlbum removeObjectForKey:currentAlbumRow.album.persistentId];
+            }
+            currentAlbumRow.album = album;
+            if(currentAlbumRow.album){
+                [currentRowForAlbum setObject:currentAlbumRow forKey:currentAlbumRow.album.persistentId];
+            }
+        }
+        [currentAlbumRow updatePhotoRotation];
+    }
+    return currentAlbumRow;
 }
 
 #pragma mark - Rotation
 
+-(CGFloat) idealRotationForOrientation{
+    CGFloat visiblePhotoRotation = 0;
+    UIInterfaceOrientation orient = [[MMRotationManager sharedInstance] lastBestOrientation];
+    if(orient == UIInterfaceOrientationLandscapeRight){
+        visiblePhotoRotation = M_PI / 2;
+    }else if(orient == UIInterfaceOrientationPortraitUpsideDown){
+        visiblePhotoRotation = M_PI;
+    }else if(orient == UIInterfaceOrientationLandscapeLeft){
+        visiblePhotoRotation = -M_PI / 2;
+    }else{
+        visiblePhotoRotation = 0;
+    }
+    return visiblePhotoRotation;
+}
+
 -(void) updatePhotoRotation:(BOOL)animated{
-    
     void(^updateVisibleRowsWithRotation)() = ^{
-        if(photoListScrollView.alpha){
-            [photoListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                if([obj respondsToSelector:@selector(updatePhotoRotation)]){
-                    [obj updatePhotoRotation];
-                }
-            }];
-        }else if(albumListScrollView.alpha){
+        if(albumListScrollView.alpha){
             [albumListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 if([obj respondsToSelector:@selector(updatePhotoRotation)]){
                     [obj updatePhotoRotation];
@@ -230,14 +227,12 @@
     
     if(animated){
         [[NSThread mainThread] performBlock:^{
-            [UIView animateWithDuration:.15
-                                  delay:0
-                                options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState
-                             animations:updateVisibleRowsWithRotation
-                             completion:nil];
+            [photoListScrollView setCollectionViewLayout:[[MMPhotoAlbumListLayout alloc] initForRotation:[self idealRotationForOrientation]] animated:YES];
+            [UIView animateWithDuration:.3 animations:updateVisibleRowsWithRotation];
         }];
     }else{
         [[NSThread mainThread] performBlock:^{
+            [photoListScrollView setCollectionViewLayout:[[MMPhotoAlbumListLayout alloc] initForRotation:[self idealRotationForOrientation]] animated:NO];
             updateVisibleRowsWithRotation();
         }];
     }
@@ -246,5 +241,44 @@
 -(NSString*) description{
     @throw kAbstractMethodException;
 }
+
+
+
+#pragma mark - UICollectionViewDataSource
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    // we're only working with the photoListScrollView. there's no albums here
+    return currentAlbum.numberOfPhotos;
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    return isShowing ? 1 : 0;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    MMSinglePhotoCollectionViewCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell" forIndexPath:indexPath];
+    [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row forVisibleIndex:indexPath.row];
+    photoCell.delegate = self;
+    return photoCell;
+}
+
+#pragma mark - MMSinglePhotoCollectionViewCellDelegate
+
+-(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
+    [delegate pictureTakeWithCamera:img fromView:cameraView];
+}
+
+-(void) photoWasTapped:(ALAsset *)asset
+              fromView:(MMBufferedImageView *)bufferedImage
+          withRotation:(CGFloat)rotation{
+    MMPhotoAlbumListLayout* layout = (MMPhotoAlbumListLayout*) photoListScrollView.collectionViewLayout;
+    [delegate photoWasTapped:asset fromView:bufferedImage withRotation:(rotation + layout.rotation) fromContainer:self];
+}
+
+
+
+
+
+
+
 
 @end
