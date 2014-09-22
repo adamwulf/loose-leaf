@@ -37,12 +37,12 @@
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
     [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale, nil]];
     
+    [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
+    [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
+    [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
+    [TestFlight setOptions:@{ TFOptionLogOnCheckpoint : @NO }];
+    [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
     [[NSThread mainThread] performBlock:^{
-        [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
-        [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
-        [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
-        [TestFlight setOptions:@{ TFOptionLogOnCheckpoint : @NO }];
-        [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
         [TestFlight takeOff:kTestflightAppToken];
     } afterDelay:3];
     
