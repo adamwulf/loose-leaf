@@ -1055,8 +1055,10 @@
     __block BOOL pageHadBeenChanged = NO;
     __block BOOL scrapsHadBeenChanged = NO;
     
+    NSLog(@"spv: asking super to saveToDisk:");
     // save our backing page
     [super saveToDisk:^(BOOL hadEditsToSave){
+        NSLog(@"spv: super told us we had edits? %d", hadEditsToSave);
         // NOTE!
         // https://github.com/adamwulf/loose-leaf/issues/658
         // it's important that we use paperState.lastSavedUndoHash

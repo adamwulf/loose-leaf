@@ -259,6 +259,7 @@ dispatch_queue_t importThumbnailQueue;
         // something has changed since the last time we saved,
         // so ask the JotView to save out the png of its data
         if(drawableView){
+            NSLog(@"epv: asking jotview to export:");
             [drawableView exportImageTo:[self inkPath]
                          andThumbnailTo:[self thumbnailPath]
                              andStateTo:[self plistPath]
@@ -276,6 +277,7 @@ dispatch_queue_t importThumbnailQueue;
                                      [[MMLoadImageCache sharedInstance] updateCacheForPath:[self thumbnailPath] toImage:thumbnail];
                                      cachedImgViewImage = thumbnail;
                                      onComplete(YES);
+                                     NSLog(@"epv: telling YES");
 //                                     NSLog(@"saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
                                  }else{
                                      // NOTE!
@@ -283,15 +285,20 @@ dispatch_queue_t importThumbnailQueue;
                                      // it's important to anyone listening to us that they potentially
                                      // wait for a pending save
                                      onComplete(NO);
+                                     NSLog(@"epv: telling NO1");
 //                                     NSLog(@"duplicate saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
                                  }
                              }];
         }else{
+            NSLog(@"epv: don't have drawable view");
+            NSLog(@"epv: telling NO2");
             onComplete(NO);
         }
     }else{
         // already saved, but don't need to write
         // anything new to disk
+        NSLog(@"epv: didn't have edits");
+        NSLog(@"epv: telling NO3");
         onComplete(NO);
     }
 }
