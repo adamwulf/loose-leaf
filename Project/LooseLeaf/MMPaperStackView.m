@@ -10,7 +10,6 @@
 #import <QuartzCore/QuartzCore.h>
 #import "MMShadowManager.h"
 #import "NSThread+BlockAdditions.h"
-#import "TestFlight.h"
 #import "MMScrappedPaperView.h"
 #import "Mixpanel.h"
 #import "MMExportablePaperView.h"
