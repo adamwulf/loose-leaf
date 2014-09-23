@@ -592,7 +592,7 @@ int skipAll = NO;
     CGFloat strokesPerPage = 15;
     
     if(numLines % (int)strokesPerPage == 12){
-        [[visibleStackHolder peekSubview] completeScissorsCutWithPath:[UIBezierPath bezierPathWithRect:CGRectMake(300, 300, 200, 200)]];
+        [self debug_forceScissorCut];
     }
     if(numLines % (int)strokesPerPage == 0){
         [self addPageButtonTapped:nil];
@@ -600,6 +600,10 @@ int skipAll = NO;
     }
     
     debug_NSLog(@"auto-lines: %d   pages: %d", numLines, (int) floor(numLines / strokesPerPage));
+}
+
+-(void) debug_forceScissorCut{
+    [[visibleStackHolder peekSubview] completeScissorsCutWithPath:[UIBezierPath bezierPathWithRect:CGRectMake(300, 300, 200, 200)]];
 }
 
 

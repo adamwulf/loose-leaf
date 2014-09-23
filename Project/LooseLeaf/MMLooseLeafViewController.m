@@ -20,6 +20,8 @@
     MMMemoryManager* memoryManager;
 }
 
+@synthesize stackView;
+
 - (id)init{
     if(self = [super init]){
         [[Crashlytics sharedInstance] setDelegate:self];

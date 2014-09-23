@@ -82,10 +82,12 @@
     debug_NSLog(@"WILL RESIGN ACTIVE");
     [self.viewController willResignActive];
     [[MMRotationManager sharedInstance] willResignActive];
+    NSLog(@"-- OpenGL needs to finish here");
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
+    [self.viewController.stackView debug_forceScissorCut];
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     resignedActiveAtStamp = CFAbsoluteTimeGetCurrent();
@@ -94,12 +96,15 @@
     durationTimer = nil;
     [[MMRotationManager sharedInstance] applicationDidBackground];
     debug_NSLog(@"DID ENTER BACKGROUND");
+    NSLog(@"-- OpenGL should be finished here");
+    NSLog(@"-- should call glFinish() and not send any more commands");
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     debug_NSLog(@"WILL ENTER FOREGROUND");
+    NSLog(@"-- OpenGL can restart");
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

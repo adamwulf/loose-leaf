@@ -19,4 +19,6 @@
 
 -(void) importAndShowPage:(MMExportablePaperView*)page;
 
+-(void) debug_forceScissorCut;
+
 @end
