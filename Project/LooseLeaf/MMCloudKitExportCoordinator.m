@@ -47,8 +47,8 @@
 }
 
 -(void) begin{
-    [page exportAsynchronouslyToZipFile];
-    [avatarButton animateToPercent:kPercentCompleteAtStart success:YES completion:^(BOOL success) {
+//    [page exportAsynchronouslyToZipFile];
+    [avatarButton animateToPercent:1.0 success:YES completion:^(BOOL success) {
         if(success){
             NSLog(@"CloudKit success");
         }else{
