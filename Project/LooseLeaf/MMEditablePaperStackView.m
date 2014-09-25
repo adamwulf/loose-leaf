@@ -285,7 +285,7 @@ struct SidebarButton{
     [self popStackUntilPage:firstPage onComplete:^(BOOL finished){
         [self didChangeTopPage];
         [[NSThread mainThread] performBlock:^{
-            [self savePageAndPop:[hiddenStackHolder.subviews count]];
+            [self savePageAndPop:(int)[hiddenStackHolder.subviews count]];
         } afterDelay:1.0];
     }];
 }
@@ -316,7 +316,7 @@ struct SidebarButton{
         [[NSThread mainThread] performBlock:^{
             [self savePageAndPop:numLeft];
         } afterDelay:5];
-    }else if([scrappedPage.drawableView.state.stackOfStrokes count] && [scrappedPage hasEditsToSave]){
+    }else if([scrappedPage hasEditsToSave]){
 
         if([[scrappedPage.drawableView.state strokesBeingWrittenToBackingTexture] count]){
             // try again later
