@@ -56,6 +56,10 @@
 -(void) popTopPageOfHiddenStackOnComplete:(void(^)(BOOL finished))completionBlock;
 
 -(void) cancelAllGestures;
+-(void) disableAllGesturesForPageView;
+-(void) enableAllGesturesForPageView;
+
+-(void) addPageButtonTapped:(UIButton*)_button;
 
 // private
 
@@ -69,5 +73,7 @@
 -(void) saveStacksToDisk;
 
 -(NSString*) activeGestureSummary;
+
+-(BOOL) isActivelyGesturing;
 
 @end

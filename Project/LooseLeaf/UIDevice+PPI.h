@@ -16,4 +16,6 @@
 
 +(CGFloat) idealUnitLength;
 
++(NSInteger) majorVersion;
+
 @end

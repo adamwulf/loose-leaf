@@ -23,6 +23,6 @@
           withRotation:(CGFloat)rotation
          fromContainer:(MMAbstractSidebarContentView*)container;
 
--(void) updatePhotoRotation;
+-(void) updateInterfaceTo:(UIInterfaceOrientation)orientation;
 
 @end

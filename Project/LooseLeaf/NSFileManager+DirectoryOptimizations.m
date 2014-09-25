@@ -63,4 +63,45 @@ static NSArray* userDocumentsPaths;
 }
 
 
+- (NSArray *)recursiveContentsOfDirectoryAtPath:(NSString *)directoryPath filesOnly:(BOOL)filesOnly{
+    
+    NSMutableArray *filePaths = [[NSMutableArray alloc] init];
+    
+    // Enumerators are recursive
+    NSDirectoryEnumerator *enumerator = [self enumeratorAtPath:directoryPath];
+    
+    NSString *filePath;
+    
+    BOOL isDirectory = NO;
+    while ((filePath = [enumerator nextObject]) != nil){
+        [self fileExistsAtPath:[directoryPath stringByAppendingPathComponent:filePath] isDirectory:&isDirectory];
+        if(!filePath || !isDirectory){
+            [filePaths addObject:filePath];
+        }
+    }
+    return filePaths;
+}
+
+-(BOOL) isDirectory:(NSString*)path{
+    BOOL isDirectory = NO;
+    BOOL exists = [self fileExistsAtPath:path isDirectory:&isDirectory];
+    return isDirectory && exists;
+}
+
+-(NSString*) humanReadableSizeForItemAtPath:(NSString *)path{
+    NSDictionary *attribs = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
+    if (attribs) {
+        return [NSByteCountFormatter stringFromByteCount:[attribs fileSize] countStyle:NSByteCountFormatterCountStyleFile];
+    }
+    return @"Unknown";
+}
+
+-(unsigned long long) sizeForItemAtPath:(NSString *)path{
+    NSDictionary *attribs = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
+    if (attribs) {
+        return [attribs fileSize];
+    }
+    return 0;
+}
+
 @end

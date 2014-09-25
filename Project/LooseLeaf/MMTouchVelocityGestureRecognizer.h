@@ -41,7 +41,7 @@ struct DurationCacheObject{
 
 @property (nonatomic, weak) MMScrapPaperStackView* stackView;
 
-+(MMTouchVelocityGestureRecognizer*) sharedInstace;
++(MMTouchVelocityGestureRecognizer*) sharedInstance;
 
 +(int) cacheSize;
 

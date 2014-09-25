@@ -10,9 +10,11 @@
 #import <JotUI/JotUI.h>
 #import "MMScrapBackgroundView.h"
 #import "MMScrapViewStateDelegate.h"
+#import "MMScrapsOnPaperState.h"
 
-@interface MMScrapViewState : NSObject{
+@interface MMScrapViewState : NSObject<JotViewStateProxyDelegate>{
     __weak NSObject<MMScrapViewStateDelegate>* delegate;
+    __weak MMScrapsOnPaperState* scrapsOnPaperState;
 }
 
 @property (weak) NSObject<MMScrapViewStateDelegate>* delegate;
@@ -23,11 +25,13 @@
 @property (readonly) NSString* uuid;
 @property (readonly) JotView* drawableView;
 @property (readonly) NSString* pathForScrapAssets;
+@property (readonly) MMScrapsOnPaperState* scrapsOnPaperState;
 @property (nonatomic, readonly) int fullByteSize;
+@property (readonly) NSUInteger lastSavedUndoHash;
 
--(id) initWithUUID:(NSString*)uuid;
+-(id) initWithUUID:(NSString*)uuid andPaperState:(MMScrapsOnPaperState*)scrapsOnPaperState;
 
--(id) initWithUUID:(NSString*)uuid andBezierPath:(UIBezierPath*)bezierPath;
+-(id) initWithUUID:(NSString*)uuid andBezierPath:(UIBezierPath*)bezierPath andPaperState:(MMScrapsOnPaperState*)scrapsOnPaperState;
 
 -(void) saveScrapStateToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock;
 
@@ -35,7 +39,7 @@
 
 -(void) unloadState;
 
--(BOOL) isStateLoaded;
+-(BOOL) isScrapStateLoaded;
 
 -(UIImage*) activeThumbnailImage;
 
@@ -52,6 +56,6 @@
 
 -(UIView*) contentView;
 
-+(NSString*) bundledScrapDirectoryPathForUUID:(NSString*)uuid;
++(NSString*) bundledScrapDirectoryPathForUUID:(NSString*)uuid andScrapsOnPaperState:(MMScrapsOnPaperState*)scrapsOnPaperState;
 
 @end

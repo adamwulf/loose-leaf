@@ -144,13 +144,13 @@
  */
 -(void)didMoveToSuperview{
     return;
-    if(isBrandNewPage){
-        self.backgroundColor = [UIColor blueColor];
-    }else if([self.delegate isInVisibleStack:self]){
-        self.backgroundColor = [UIColor greenColor];
-    }else{
-        self.backgroundColor = [UIColor redColor];
-    }
+//    if(isBrandNewPage){
+//        self.backgroundColor = [UIColor blueColor];
+//    }else if([self.delegate isInVisibleStack:self]){
+//        self.backgroundColor = [UIColor greenColor];
+//    }else{
+//        self.backgroundColor = [UIColor redColor];
+//    }
 }
  
 
@@ -214,9 +214,9 @@
         [gesture setEnabled:NO];
     }
     textLabel.text = @"disabled";
-    if([self.uuid hasPrefix:@"41B98"]){
-        debug_NSLog(@"disabled: %@ %d", self.uuid, panGesture.enabled);
-    }
+//    if([self.uuid hasPrefix:@"41B98"]){
+//        debug_NSLog(@"disabled: %@ %d", self.uuid, panGesture.enabled);
+//    }
 }
 /**
  * enables all gestures on this page
@@ -226,9 +226,9 @@
         [gesture setEnabled:YES];
     }
     textLabel.text = @"enabled";
-    if([self.uuid hasPrefix:@"41B98"]){
-        debug_NSLog(@"enabled: %@", self.uuid);
-    }
+//    if([self.uuid hasPrefix:@"41B98"]){
+//        debug_NSLog(@"enabled: %@", self.uuid);
+//    }
 }
 
 -(BOOL) areGesturesEnabled{
@@ -269,12 +269,6 @@
  * pan gestures use proper state control etc to zoom a page in and out.
  */
 -(void) panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture{
-    
-    if(_panGesture.state != UIGestureRecognizerStateChanged){
-        debug_NSLog(@"pan %@ %i", self.uuid, _panGesture.state);
-    }
-    
-    
     if(![self.delegate shouldAllowPan:self]){
         return;
     }
@@ -309,7 +303,7 @@
                     if(panGesture.state == UIGestureRecognizerStateCancelled){
                         // when cancelling, the page should go back to its
                         // original frame
-                        debug_NSLog(@"cancelled pan, should push it back onto visible stack");
+//                        debug_NSLog(@"cancelled pan, should push it back onto visible stack");
                         [self.delegate finishedPanningAndScalingPage:self
                                                            intoBezel:MMBezelDirectionNone
                                                            fromFrame:panGesture.frameOfPageAtBeginningOfGesture

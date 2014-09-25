@@ -32,7 +32,7 @@
         CGFloat currX = 0;
         for(int i=0;i<5;i++){
             MMBufferedImageView* imgView = [[MMBufferedImageView alloc] initWithFrame:CGRectMake(currX, 0, maxDim, maxDim)];
-            imgView.rotation = RandomPhotoRotation;
+            imgView.rotation = RandomPhotoRotation(i);
             [self insertSubview:imgView atIndex:0];
             currX += stepX;
         }
@@ -88,19 +88,21 @@
 
 -(void) updatePhotoRotation{
     
-    UIDeviceOrientation orient = [[MMRotationManager sharedInstace] currentDeviceOrientation];
-    if(orient == UIDeviceOrientationLandscapeLeft){
+    UIInterfaceOrientation orient = [[MMRotationManager sharedInstance] lastBestOrientation];
+    if(orient == UIInterfaceOrientationLandscapeRight){
         visiblePhotoRotation = M_PI / 2;
-    }else if(orient == UIDeviceOrientationPortraitUpsideDown){
+    }else if(orient == UIInterfaceOrientationPortraitUpsideDown){
         visiblePhotoRotation = M_PI;
-    }else if(orient == UIDeviceOrientationLandscapeRight){
+    }else if(orient == UIInterfaceOrientationLandscapeLeft){
         visiblePhotoRotation = -M_PI / 2;
     }else{
         visiblePhotoRotation = 0;
     }
     
+    int i=0;
     for (MMBufferedImageView* imageView in bufferedImageViews) {
-        imageView.rotation = visiblePhotoRotation + RandomPhotoRotation;
+        imageView.rotation = visiblePhotoRotation + RandomPhotoRotation(i);
+        i++;
     }
 }
 

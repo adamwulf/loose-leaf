@@ -17,6 +17,7 @@
 #import "MMFaceButton.h"
 #import "MMPalmTreeButton.h"
 #import "MMPDFButton.h"
+#import "MMRotationManager.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
 
@@ -34,9 +35,6 @@
     MMFaceButton* iPhotoFacesButton;
     MMPalmTreeButton* iPhotoEventsButton;
     MMPDFButton* pdfInboxButton;
-    MMImageViewButton* twitterAlbumButton;
-    MMImageViewButton* facebookAlbumButton;
-    MMImageViewButton* evernoteAlbumButton;
 }
 
 @dynamic delegate;
@@ -47,7 +45,7 @@
         
         CGRect contentBounds = [sidebarContentView contentBounds];
 
-        [MMPhotoManager sharedInstace].delegate = self;
+        [MMPhotoManager sharedInstance].delegate = self;
 
         CGRect buttonBounds = contentBounds;
         buttonBounds.origin.y = [UIApplication sharedApplication].statusBarFrame.size.height;
@@ -122,31 +120,13 @@
                                                                                 kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [pdfInboxButton addTarget:self action:@selector(pdfButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [sidebarContentView addSubview:pdfInboxButton];
-        
-//        // facebook
-//        facebookAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4*kWidthOfSidebarButton, buttonBounds.origin.y,
-//                                                                                 kWidthOfSidebarButton, kWidthOfSidebarButton)];
-//        [facebookAlbumButton setImage:[UIImage imageNamed:@"facebook"]];
-//        [sidebarContentView addSubview:facebookAlbumButton];
-
-        
-//        twitterAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 2*kWidthOfSidebarButton, buttonBounds.origin.y,
-//                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
-//        [twitterAlbumButton setImage:[UIImage imageNamed:@"twitter"]];
-//        [sidebarContentView addSubview:twitterAlbumButton];
-
-
-//        evernoteAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4*kWidthOfSidebarButton, buttonBounds.origin.y,
-//                                                                                  kWidthOfSidebarButton, kWidthOfSidebarButton)];
-//        [evernoteAlbumButton setImage:[UIImage imageNamed:@"evernote"]];
-//        [sidebarContentView addSubview:evernoteAlbumButton];
-        
 }
     return self;
 }
 
 -(void) show:(BOOL)animated{
     [super show:animated];
+    [self updateInterfaceTo:[[MMRotationManager sharedInstance] lastBestOrientation]];
     if(!cameraListContentView.hidden){
         [cameraListContentView show:animated];
     }
@@ -164,15 +144,26 @@
     }
 }
 
--(void) hide:(BOOL)animated{
-    [super hide:animated];
-    [[NSThread mainThread] performBlock:^{
+-(void) hide:(BOOL)animated onComplete:(void (^)(BOOL))onComplete{
+    [super hide:animated onComplete:^(BOOL finished){
         [cameraListContentView hide:animated];
         [albumListContentView hide:animated];
         [faceListContentView hide:animated];
         [eventListContentView hide:animated];
         [pdfListContentView hide:animated];
-    } afterDelay:.1];
+        
+        if(finished){
+            [cameraListContentView killMemory];
+            [albumListContentView killMemory];
+            [faceListContentView killMemory];
+            [eventListContentView killMemory];
+            [pdfListContentView killMemory];
+        }
+
+        if(onComplete){
+            onComplete(finished);
+        }
+    }];
 }
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
@@ -187,6 +178,7 @@
     for(MMAbstractSidebarContentView* aListView in allListContentViews){
         if(aListView == listView){
             listView.hidden = NO;
+            [listView reset:NO];
             [listView show:NO];
         }else if(!aListView.hidden){
             [aListView hide:NO];
@@ -239,9 +231,22 @@
     });
 }
 
+
 #pragma mark - Rotation
 
--(void) updatePhotoRotation{
+-(CGFloat) sidebarButtonRotation{
+    if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationPortrait){
+        return 0;
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeLeft){
+        return -M_PI_2;
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeRight){
+        return M_PI_2;
+    }else{
+        return M_PI;
+    }
+}
+
+-(void) updateInterfaceTo:(UIInterfaceOrientation)orientation{
     if(![self isVisible]) return;
     if(!cameraListContentView.hidden){
         [cameraListContentView updatePhotoRotation:YES];
@@ -254,6 +259,27 @@
     }else if(!pdfListContentView.hidden){
         [pdfListContentView updatePhotoRotation:YES];
     }
+    
+    [[NSThread mainThread] performBlock:^{
+        [UIView animateWithDuration:.3 animations:^{
+            CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+            cameraAlbumButton.rotation = [self sidebarButtonRotation];
+            cameraAlbumButton.transform = rotationTransform;
+
+            iPhotoAlbumButton.rotation = [self sidebarButtonRotation];
+            iPhotoAlbumButton.transform = rotationTransform;
+
+            iPhotoFacesButton.rotation = [self sidebarButtonRotation];
+            iPhotoFacesButton.transform = rotationTransform;
+
+            iPhotoEventsButton.rotation = [self sidebarButtonRotation];
+            iPhotoEventsButton.transform = rotationTransform;
+
+            pdfInboxButton.rotation = [self sidebarButtonRotation];
+            pdfInboxButton.transform = rotationTransform;
+        }];
+    }];
 }
+
 
 @end

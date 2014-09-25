@@ -24,14 +24,14 @@
 
 -(NSInteger) indexForAlbum:(MMPhotoAlbum*)album{
     if(album.type == ALAssetsGroupAlbum){
-        return [[[MMPhotoManager sharedInstace] albums] indexOfObject:album];
+        return [[[MMPhotoManager sharedInstance] albums] indexOfObject:album];
     }
     return -1;
 }
 
 -(MMPhotoAlbum*) albumAtIndex:(NSInteger)index{
-    if(index < [[[MMPhotoManager sharedInstace] albums] count]){
-        return [[[MMPhotoManager sharedInstace] albums] objectAtIndex:index];
+    if(index < [[[MMPhotoManager sharedInstance] albums] count]){
+        return [[[MMPhotoManager sharedInstance] albums] objectAtIndex:index];
     }
     return nil;
 }
@@ -40,7 +40,7 @@
 
 -(NSInteger) numberOfRowsFor:(MMCachedRowsScrollView*)scrollView{
     if(scrollView == albumListScrollView){
-        return [[[MMPhotoManager sharedInstace] albums] count];
+        return [[[MMPhotoManager sharedInstance] albums] count];
     }else{
         return ceilf(currentAlbum.numberOfPhotos / 2.0);
     }

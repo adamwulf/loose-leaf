@@ -32,7 +32,7 @@
         scrollView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0];
         scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
         scrollView.showsHorizontalScrollIndicator = NO;
-        scrollView.showsVerticalScrollIndicator = YES;
+        scrollView.showsVerticalScrollIndicator = NO;
         scrollView.contentSize = CGSizeMake(self.bounds.size.width, 500);
         scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(6, 0, 6, 0);
         scrollView.alwaysBounceVertical = YES;
@@ -68,7 +68,7 @@
     
     // determine the variables that will affect
     // our layout
-    NSArray* allScraps = [self.delegate scrapsOnPaper];
+    NSArray* allScraps = [self.delegate scrapsInSidebar];
     int rowCount = ceilf((float)[allScraps count] / columnCount);
     CGFloat sizeOfScrap = (self.bounds.size.width - kColumnSideMargin) / columnCount;
     

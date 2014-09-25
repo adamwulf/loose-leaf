@@ -38,11 +38,15 @@ static MMDrawingTouchGestureRecognizer* _instance = nil;
     return _instance;
 }
 
-+(MMDrawingTouchGestureRecognizer*) sharedInstace{
++(MMDrawingTouchGestureRecognizer*) sharedInstance{
     if(!_instance){
         _instance = [[MMDrawingTouchGestureRecognizer alloc]init];
     }
     return _instance;
+}
+
+-(BOOL) isDrawing{
+    return [validTouches count];
 }
 
 #pragma mark - Touch Ownership
@@ -80,7 +84,7 @@ static MMDrawingTouchGestureRecognizer* _instance = nil;
                 [possibleTouches removeObject:touch];
                 [ignoredTouches addObject:touch];
             }
-            struct DurationCacheObject velInfo = [[MMTouchVelocityGestureRecognizer sharedInstace] velocityInformationForTouch:touch withIndex:nil];
+            struct DurationCacheObject velInfo = [[MMTouchVelocityGestureRecognizer sharedInstance] velocityInformationForTouch:touch withIndex:nil];
             if(velInfo.totalDistance > 100){
                 [validTouches addObject:touch];
                 [possibleTouches removeObject:touch];

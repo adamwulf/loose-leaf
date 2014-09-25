@@ -86,7 +86,7 @@
 		hex = strtol(cString, NULL, 16);
 	}
 	
-	UIColor *color = [self colorWithHex: hex];
+	UIColor *color = [self colorWithHex:(UInt32)hex];
 	return color;
 }
 
@@ -170,7 +170,7 @@
 	if ( !generated )
 	{
 		generated = YES;
-		srandom( time( NULL ) );
+		srandom((int)time( NULL ) );
 	}
 	
 	// generate a random number and divide it using the
@@ -538,19 +538,19 @@
 		{
 			case 0 :
 			{
-				const int value = [hexConverted[x] integerValue];
+				const int value = [hexConverted[x] intValue];
 				red = value * 16 + [hexConverted[x + 1] integerValue];
 				break;
 			}
 			case 2 :
 			{
-				const int value = [hexConverted[x] integerValue];
+				const int value = [hexConverted[x] intValue];
 				green = value * 16 + [hexConverted[x + 1] integerValue];
 				break;
 			}
 			case 4 :
 			{
-				const int value = [hexConverted[x] integerValue];
+				const int value = [hexConverted[x] intValue];
 				blue = value * 16 + [hexConverted[x + 1] integerValue];
 				break;
 			}

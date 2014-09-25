@@ -13,7 +13,7 @@
 
 @property (nonatomic, weak) NSObject<MMInboxManagerDelegate>* delegate;
 
-+(MMInboxManager*) sharedInstace;
++(MMInboxManager*) sharedInstance;
 
 -(void) processInboxItem:(NSURL*)itemURL fromApp:(NSString*)sourceApplication;
 

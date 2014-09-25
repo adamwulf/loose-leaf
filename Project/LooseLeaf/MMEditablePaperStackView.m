@@ -8,19 +8,25 @@
 
 #import "MMEditablePaperStackView.h"
 #import "UIView+SubviewStacks.h"
-#import "TestFlight.h"
 #import "MMRulerView.h"
 #import "MMScrappedPaperView.h"
 #import "MMScrapBubbleButton.h"
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMMemoryProfileView.h"
+#import "MMExportablePaperView.h"
 #import "Mixpanel.h"
 #import <mach/mach_time.h>  // for mach_absolute_time() and friends
+
+struct SidebarButton{
+    void* button;
+    CGRect originalRect;
+} SidebarButton;
 
 @implementation MMEditablePaperStackView{
     UIPopoverController* jotTouchPopover;
     MMMemoryProfileView* memoryView;
+    struct SidebarButton buttons[10];
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -38,7 +44,7 @@
         stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
         
         [MMPageCacheManager sharedInstance].drawableView = [[JotView alloc] initWithFrame:self.bounds];
-//        [MMPageCacheManager sharedInstace].drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
+//        [MMPageCacheManager sharedInstance].drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
         [[JotStylusManager sharedInstance] setPalmRejectorDelegate:[MMPageCacheManager sharedInstance].drawableView];
 
         pen = [[Pen alloc] init];
@@ -60,11 +66,14 @@
         addPageSidebarButton.delegate = self;
         [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:addPageSidebarButton];
+        buttons[0].button = (__bridge void *)(addPageSidebarButton);
+        buttons[0].originalRect = addPageSidebarButton.frame;
         
         shareButton = [[MMShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         shareButton.delegate = self;
-        [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:shareButton];
+        buttons[1].button = (__bridge void *)(shareButton);
+        buttons[1].originalRect = shareButton.frame;
         
 //        settingsButton = [[MMAdonitButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
 //        settingsButton.delegate = self;
@@ -76,7 +85,7 @@
         settingsButton = [[MMTextButton alloc] initWithFrame:settingsButtonRect andFont:[UIFont systemFontOfSize:20] andLetter:@"!?" andXOffset:2 andYOffset:0];
         settingsButton.delegate = self;
         [settingsButton addTarget:self action:@selector(toggleMemoryView:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:settingsButton];
+//        [self addSubview:settingsButton];
         
         // memory button
         CGRect textureButtonRect = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 3 * 60, kWidthOfSidebarButton, kWidthOfSidebarButton);
@@ -89,22 +98,30 @@
         pencilTool = [[MMPencilAndPaletteView alloc] initWithButtonFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton) andScreenSize:self.bounds.size];
         pencilTool.delegate = self;
         [self addSubview:pencilTool];
+        buttons[2].button = (__bridge void *)(pencilTool.pencilButton);
+        buttons[2].originalRect = [pencilTool convertRect:pencilTool.pencilButton.frame toView:self];
         
         eraserButton = [[MMPencilEraserButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         eraserButton.delegate = self;
         [eraserButton addTarget:self action:@selector(eraserTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:eraserButton];
+        buttons[3].button = (__bridge void *)(eraserButton);
+        buttons[3].originalRect = eraserButton.frame;
         
         CGRect scissorButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton);
         scissorButton = [[MMScissorButton alloc] initWithFrame:scissorButtonFrame];
         scissorButton.delegate = self;
         [scissorButton addTarget:self action:@selector(scissorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:scissorButton];
-        
+        buttons[4].button = (__bridge void *)(scissorButton);
+        buttons[4].originalRect = scissorButton.frame;
+
         insertImageButton = [[MMImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         insertImageButton.delegate = self;
         [self addSubview:insertImageButton];
-        
+        buttons[5].button = (__bridge void *)(insertImageButton);
+        buttons[5].originalRect = insertImageButton.frame;
+
         
         
         
@@ -113,13 +130,17 @@
         handButton.delegate = self;
         [handButton addTarget:self action:@selector(handTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:handButton];
-        
+        buttons[6].button = (__bridge void *)(handButton);
+        buttons[6].originalRect = handButton.frame;
+
         CGRect rulerButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 6.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
         rulerButton = [[MMRulerButton alloc] initWithFrame:rulerButtonFrame];
         rulerButton.delegate = self;
         [rulerButton addTarget:self action:@selector(rulerTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:rulerButton];
-        
+        buttons[7].button = (__bridge void *)(rulerButton);
+        buttons[7].originalRect = rulerButton.frame;
+
         
         
         
@@ -130,18 +151,23 @@
         [undoButton addTarget:self action:@selector(undo:) forControlEvents:UIControlEventTouchUpInside];
         undoButton.reverseArrow = YES;
         [self addSubview:undoButton];
-        
+        buttons[8].button = (__bridge void *)(undoButton);
+        buttons[8].originalRect = CGRectInset(undoButton.frame, -(kWidthOfSidebar - kWidthOfSidebarButton)/2, 0) ;
+
         redoButton = [[MMUndoRedoButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         redoButton.delegate = self;
         [redoButton addTarget:self action:@selector(redo:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:redoButton];
-       
+        buttons[9].button = (__bridge void *)(redoButton);
+        buttons[9].originalRect = CGRectInset(redoButton.frame, -(kWidthOfSidebar - kWidthOfSidebarButton)/2, 0) ;
+        buttons[9].originalRect.size.height += (kWidthOfSidebar - kWidthOfSidebarButton)/2;
+
         
         //
         // accelerometer for rotating buttons
         // ================================================================================
         
-        [[MMRotationManager sharedInstace] setDelegate:self];
+        [[MMRotationManager sharedInstance] setDelegate:self];
         
         
         
@@ -194,7 +220,6 @@
                                                          selector:@selector(connectionChange:)
                                                              name:JotStylusManagerDidChangeConnectionStatus
                                                            object:nil];
-                [[JotStylusManager sharedInstance] setEnabled:NO];
                 [[JotStylusManager sharedInstance] setRejectMode:NO];
             }
         }];
@@ -204,10 +229,10 @@
         [self addSubview:rulerView];
         
         
-        [self addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstace]];
+        [self addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstance]];
         
-        [[MMDrawingTouchGestureRecognizer sharedInstace] setTouchDelegate:self];
-        [self addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstace]];
+        [[MMDrawingTouchGestureRecognizer sharedInstance] setTouchDelegate:self];
+        [self addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstance]];
         
     }
     return self;
@@ -230,7 +255,8 @@
 
 -(void) cancelAllGestures{
     [super cancelAllGestures];
-    [[MMDrawingTouchGestureRecognizer sharedInstace] cancel];
+    [scissor cancelAllTouches];
+    [[MMDrawingTouchGestureRecognizer sharedInstance] cancel];
 }
 
 /**
@@ -238,7 +264,7 @@
  * should be rotated to stay pointed "down"
  */
 -(CGFloat) sidebarButtonRotation{
-    return -([[MMRotationManager sharedInstace] currentRotationReading] + M_PI/2);
+    return -([[[MMRotationManager sharedInstance] currentRotationReading] angle] + M_PI/2);
 }
 
 -(Tool*) activePen{
@@ -349,18 +375,22 @@
 #pragma mark - Tool Button Actions
 
 -(void) undo:(UIButton*)_button{
-    id obj = [visibleStackHolder peekSubview];
-    if([obj respondsToSelector:@selector(undo)]){
-        [obj undo];
-//        [TestFlight passCheckpoint:@"BUTTON_UNDO"];
+    if(![self isActivelyGesturing]){
+        // only allow undo/redo when no other gestures
+        // are active
+        MMUndoablePaperView* obj = [visibleStackHolder peekSubview];
+        [obj.undoRedoManager undo];
+        [obj saveToDisk];
     }
 }
 
 -(void) redo:(UIButton*)_button{
-    id obj = [visibleStackHolder peekSubview];
-    if([obj respondsToSelector:@selector(redo)]){
-        [obj redo];
-//        [TestFlight passCheckpoint:@"BUTTON_REDO"];
+    if(![self isActivelyGesturing]){
+        // only allow undo/redo when no other gestures
+        // are active
+        MMUndoablePaperView* obj = [visibleStackHolder peekSubview];
+        [obj.undoRedoManager redo];
+        [obj saveToDisk];
     }
 }
 
@@ -392,15 +422,15 @@
 }
 
 -(void) jotSettingsTapped:(UIButton*)_button{
-    if(jotTouchPopover && jotTouchPopover.popoverVisible){
-        return;
-    }else if(jotTouchPopover){
-        [jotTouchPopover dismissPopoverAnimated:NO];
-    }
-    JotSettingsViewController* settings = [[JotSettingsViewController alloc] initWithOnOffSwitch: YES];
-    jotTouchPopover = [[UIPopoverController alloc] initWithContentViewController:settings];
-    [jotTouchPopover presentPopoverFromRect:_button.frame inView:self permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-    [jotTouchPopover setPopoverContentSize:CGSizeMake(300, 446) animated:NO];
+//    if(jotTouchPopover && jotTouchPopover.popoverVisible){
+//        return;
+//    }else if(jotTouchPopover){
+//        [jotTouchPopover dismissPopoverAnimated:NO];
+//    }
+//    JotSettingsViewController* settings = [[JotSettingsViewController alloc] initWithOnOffSwitch: YES];
+//    jotTouchPopover = [[UIPopoverController alloc] initWithContentViewController:settings];
+//    [jotTouchPopover presentPopoverFromRect:_button.frame inView:self permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
+//    [jotTouchPopover setPopoverContentSize:CGSizeMake(300, 446) animated:NO];
 }
 
 
@@ -411,7 +441,9 @@
  * without changing the hidden stack's contents
  */
 -(void) addPageButtonTapped:(UIButton*)_button{
-    MMEditablePaperView* page = [[MMScrappedPaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+    [super addPageButtonTapped:_button];
+    
+    MMEditablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.isBrandNewPage = YES;
     page.delegate = self;
     [hiddenStackHolder pushSubview:page];
@@ -419,10 +451,6 @@
     [self popTopPageOfHiddenStack];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
     [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
-}
-
--(void) shareButtonTapped:(UIButton*)_button{
-    @throw kAbstractMethodException;
 }
 
 -(void) tempButtonTapped:(UIButton*)_button{
@@ -455,9 +483,10 @@
 
 #pragma mark - MMRotationManagerDelegate
 
--(void) didUpdateAccelerometerWithReading:(CGFloat)currentRawReading{
+-(void) didUpdateAccelerometerWithReading:(MMVector*)currentRawReading{
     [NSThread performBlockOnMainThread:^{
-        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        CGFloat rotationValue = [self sidebarButtonRotation];
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation(rotationValue);
         addPageSidebarButton.transform = rotationTransform;
         documentBackgroundSidebarButton.transform = rotationTransform;
         polylineButton.transform = rotationTransform;
@@ -473,9 +502,26 @@
         rulerButton.transform = rotationTransform;
         handButton.transform = rotationTransform;
         settingsButton.transform = rotationTransform;
+        
+        addPageSidebarButton.rotation = rotationValue;
+        documentBackgroundSidebarButton.rotation = rotationValue;
+        polylineButton.rotation = rotationValue;
+        insertImageButton.rotation = rotationValue;
+        textButton.rotation = rotationValue;
+        scissorButton.rotation = rotationValue;
+        pencilTool.rotation = rotationValue;
+        eraserButton.rotation = rotationValue;
+        shareButton.rotation = rotationValue;
+        mapButton.rotation = rotationValue;
+        undoButton.rotation = rotationValue;
+        redoButton.rotation = rotationValue;
+        rulerButton.rotation = rotationValue;
+        handButton.rotation = rotationValue;
+        settingsButton.rotation = rotationValue;
     }];
 }
--(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
+
+-(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
     [NSThread performBlockOnMainThread:^{
         [[visibleStackHolder peekSubview] didUpdateAccelerometerWithRawReading:currentRawReading];
     }];
@@ -489,6 +535,10 @@
     // noop
 }
 
+-(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
+    // noop
+}
+
 
 #pragma mark - Bezel Left and Right Gestures
 
@@ -499,11 +549,12 @@
                                               bezelGesture.subState == UIGestureRecognizerStateChanged)){
         // cancel any strokes that this gesture is using
         for(UITouch* touch in bezelGesture.touches){
-            [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+            [[JotStrokeManager sharedInstance] cancelStrokeForTouch:touch];
             [scissor cancelPolygonForTouch:touch];
         }
     }
     [super isBezelingInLeftWithGesture:bezelGesture];
+    [[visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInGestureRecognizer *)bezelGesture{
@@ -513,11 +564,12 @@
                                               bezelGesture.subState == UIGestureRecognizerStateChanged)){
         // cancel any strokes that this gesture is using
         for(UITouch* touch in bezelGesture.touches){
-            [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+            [[JotStrokeManager sharedInstance] cancelStrokeForTouch:touch];
             [scissor cancelPolygonForTouch:touch];
         }
     }
     [super isBezelingInRightWithGesture:bezelGesture];
+    [[bezelStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 #pragma mark - MMPaperViewDelegate
@@ -531,7 +583,7 @@
     // cancel through that manager, and it'll notify the appropriate
     // view if need be
     for(UITouch* touch in touches){
-        [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+        [[JotStrokeManager sharedInstance] cancelStrokeForTouch:touch];
         [scissor cancelPolygonForTouch:touch];
     }
     
@@ -563,6 +615,7 @@
     }
     // update UI for scaling small into list view
     [self setButtonsVisible:NO];
+    [scissor cancelAllTouches];
     [super isBeginningToScaleReallySmall:page];
     [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 }
@@ -579,8 +632,8 @@
     // ok, we've zoomed into this page now
     if([page isKindOfClass:[MMEditablePaperView class]]){
         MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
-        [pageToSave setCanvasVisible:YES];
         [pageToSave setEditable:YES];
+        [pageToSave updateThumbnailVisibility];
 //        debug_NSLog(@"page %@ is editable", pageToSave.uuid);
     }
     [rulerView setHidden:NO];
@@ -592,8 +645,8 @@
     [rulerView setHidden:NO];
     MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
     if(![editablePage hasEditsToSave]){
-        [editablePage setCanvasVisible:NO];
         [editablePage setEditable:NO];
+        [editablePage updateThumbnailVisibility];
     }
 //    [TestFlight passCheckpoint:@"NAV_TO_PAGE_FROM_LIST"];
 }
@@ -608,8 +661,8 @@
 //                debug_NSLog(@"page still has edits to save...");
             }else{
 //                debug_NSLog(@"page is done saving...");
-                [(MMEditablePaperView*)page setCanvasVisible:NO];
                 [(MMEditablePaperView*)page setEditable:NO];
+                [(MMEditablePaperView*)page updateThumbnailVisibility];
 //                debug_NSLog(@"thumb for %@ is visible", page.uuid);
             }
         }
@@ -647,7 +700,7 @@
     // cancel through that manager, and it'll notify the appropriate
     // view if need be
     for(UITouch* touch in gesture.validTouches){
-        [[JotStrokeManager sharedInstace] cancelStrokeForTouch:touch];
+        [[JotStrokeManager sharedInstance] cancelStrokeForTouch:touch];
         [scissor cancelPolygonForTouch:touch];
     }
     if(gesture.subState == UIGestureRecognizerStateBegan ||
@@ -678,7 +731,7 @@
             [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
         }
     }
-    [[MMDrawingTouchGestureRecognizer sharedInstace] ownershipOfTouches:touches isGesture:gesture];
+    [[MMDrawingTouchGestureRecognizer sharedInstance] ownershipOfTouches:touches isGesture:gesture];
 }
 
 -(NSArray*) scraps{
@@ -783,7 +836,8 @@
     
     // load the state for the top page in the visible stack
     [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
-                                                     withSize:[[MMPageCacheManager sharedInstance].drawableView pagePixelSize]
+                                                     withSize:[MMPageCacheManager sharedInstance].drawableView.pagePtSize
+                                                     andScale:[MMPageCacheManager sharedInstance].drawableView.scale
                                                    andContext:[[MMPageCacheManager sharedInstance].drawableView context]];
     
     
@@ -809,8 +863,8 @@
 
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
     // dont start a new stroke if one already exists
-    if([[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count] > 0){
-        debug_NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstace] validTouches] count]);
+    if([[[MMDrawingTouchGestureRecognizer sharedInstance] validTouches] count] > 0){
+//        debug_NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstance] validTouches] count]);
         return NO;
     }
     if([MMPageCacheManager sharedInstance].drawableView.state.currentStroke){
@@ -945,7 +999,7 @@
             settingsButton.selected = NO;
             break;
     }
-    debug_NSLog(@"jot status: %@", text);
+//    debug_NSLog(@"jot status: %@", text);
 }
 
 
@@ -957,27 +1011,63 @@
 }
 
 
-#pragma mark - gestures for list view
+#pragma mark - Gestures for List View
 
 -(void) beginUITransitionFromPageView{
     [super beginUITransitionFromPageView];
-    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+    [[[MMPageCacheManager sharedInstance] currentEditablePage] cancelCurrentStrokeIfAny];
+    [[MMDrawingTouchGestureRecognizer sharedInstance] setEnabled:NO];
+    [[visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 -(void) beginUITransitionFromListView{
     [super beginUITransitionFromListView];
-    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+    [[MMDrawingTouchGestureRecognizer sharedInstance] setEnabled:NO];
 }
 
 -(void) finishUITransitionToListView{
     [super finishUITransitionToListView];
-    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:NO];
+    [[MMDrawingTouchGestureRecognizer sharedInstance] setEnabled:NO];
+    [[visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 -(void) finishUITransitionToPageView{
     [super finishUITransitionToPageView];
-    [[MMDrawingTouchGestureRecognizer sharedInstace] setEnabled:YES];
+    [[MMDrawingTouchGestureRecognizer sharedInstance] setEnabled:YES];
+    [[visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
+-(void) disableAllGesturesForPageView{
+    [[MMDrawingTouchGestureRecognizer sharedInstance] setEnabled:NO];
+    [super disableAllGesturesForPageView];
+}
+
+-(void) enableAllGesturesForPageView{
+    [[MMDrawingTouchGestureRecognizer sharedInstance] setEnabled:YES];
+    [super enableAllGesturesForPageView];
+}
+
+#pragma mark - Sidebar Hit Test
+
+-(BOOL) shouldPrioritizeSidebarButtonsForTaps{
+    return YES;
+}
+
+-(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+    if([self shouldPrioritizeSidebarButtonsForTaps]){
+        for(int i=0;i<10;i++){
+            if(CGRectContainsPoint(buttons[i].originalRect, point)){
+                return (__bridge UIView*) buttons[i].button;
+            }
+        }
+    }
+    return [super hitTest:point withEvent:event];
+}
+
+#pragma mark - Check for Active Gestures
+
+-(BOOL) isActivelyGesturing{
+    return [super isActivelyGesturing] || [[MMDrawingTouchGestureRecognizer sharedInstance] isDrawing];
+}
 
 @end

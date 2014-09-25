@@ -13,8 +13,10 @@
 
 @interface MMPencilAndPaletteView : UIView
 
+@property (nonatomic) CGFloat rotation;
 @property (nonatomic) BOOL selected;
 @property (readonly) UIColor* color;
+@property (readonly) MMSidebarButton* pencilButton;
 @property (nonatomic, weak) NSObject<MMPencilAndPaletteViewDelegate>* delegate;
 
 - (id)initWithButtonFrame:(CGRect)frame andScreenSize:(CGSize)totalSize;

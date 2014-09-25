@@ -15,6 +15,7 @@
 @implementation MMSidebarButton
 
 @synthesize delegate;
+@synthesize shadowColor;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -61,12 +62,20 @@
     return [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 1.0), floor(CGRectGetHeight(frame) - 1.0))];
 }
 
+-(UIColor*) shadowColor{
+    if(!shadowColor){
+        return [UIColor blueShadowColor];
+    }
+    return shadowColor;
+}
+
 -(void) drawDropshadowIfSelected{
     if(self.selected){
         CGContextRef context = UIGraphicsGetCurrentContext();
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 
-        UIColor* selectedBlueFill = [UIColor blueShadowColor];
+        UIColor* selectedBlueFill = [self shadowColor];
+//        selectedBlueFill = [UIColor blueShadowColor];
         
         CGRect frame = [self drawableFrame];
         UIBezierPath* ovalPath = [self ovalPath];
@@ -87,9 +96,10 @@
         clipPath.usesEvenOddFillRule = YES;
         [clipPath addClip];
         
+        CGFloat width = self.bounds.size.width - (2*kWidthOfSidebarButtonBuffer);
         CGContextDrawRadialGradient(context, gradient,
-                                    CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), 19,
-                                    CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), 24.5,
+                                    CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), (width/2.0)-1,
+                                    CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), (width/2.0)+4.5,
                                     kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation);
         
         CGGradientRelease(gradient);
@@ -113,10 +123,6 @@
     dx /= dist;
     dy /= dist;
     return CGPointMake(dx, dy);
-}
-
--(CGFloat) rotation{
-    return [self.delegate sidebarButtonRotation];
 }
 
 /**

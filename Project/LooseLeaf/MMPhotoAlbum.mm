@@ -12,6 +12,8 @@
 #import "ALAsset+Thumbnail.h"
 #import "NSThread+BlockAdditions.h"
 #import "Constants.h"
+#import "NSArray+Extras.h"
+#import "NSIndexSet+Map.h"
 
 dispatch_queue_t fetchThumbnailQueue;
 
@@ -24,6 +26,7 @@ dispatch_queue_t fetchThumbnailQueue;
     NSInteger numberOfPhotos;
     NSArray* previewPhotos;
     BOOL previewPhotosAreLoaded;
+    BOOL reversed;
 }
 
 @synthesize assetURL;
@@ -31,6 +34,7 @@ dispatch_queue_t fetchThumbnailQueue;
 @synthesize persistentId;
 @synthesize type;
 @synthesize numberOfPhotos;
+@synthesize reversed;
 
 +(dispatch_queue_t) fetchThumbnailQueue{
     if(!fetchThumbnailQueue){
@@ -98,7 +102,7 @@ BOOL isEnumerating = NO;
         NSMutableArray* updatedPreviewPhotos = [NSMutableArray array];
         @synchronized(self){
             isEnumerating = YES;
-            [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+            [group enumerateAssetsWithOptions:reversed ? NULL : NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
                 if(result){
                     [updatedPreviewPhotos addObject:[UIImage imageWithCGImage:result.aspectRatioThumbnail]];
                     if([updatedPreviewPhotos count] >= 5){
@@ -119,8 +123,23 @@ BOOL isEnumerating = NO;
 -(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(ALAssetsGroupEnumerationResultsBlock)enumerationBlock{
     @try{
         try{
+            if(reversed){
+                // reverse what we fetch from the real album ordering
+                indexSet = [indexSet mapIndexesUsingBlock:^NSUInteger(NSUInteger idx) {
+                    return self.numberOfPhotos - idx - 1;
+                }];
+            }
+            ALAssetsGroupEnumerationResultsBlock indexManagerBlock = ^(ALAsset *result, NSUInteger index, BOOL *stop){
+                if(reversed){
+                    // remap the index to what the user asked for.
+                    // this way the user's index values map to
+                    // new values here
+                    index = self.numberOfPhotos - index - 1;
+                }
+                enumerationBlock(result, index, stop);
+            };
             @synchronized(self){
-                [group enumerateAssetsAtIndexes:indexSet options:NSEnumerationReverse usingBlock:enumerationBlock];
+                [group enumerateAssetsAtIndexes:indexSet options:NSEnumerationReverse usingBlock:indexManagerBlock];
             }
         }catch(...){
             NSLog(@"caught++");

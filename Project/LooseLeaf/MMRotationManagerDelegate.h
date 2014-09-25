@@ -8,16 +8,18 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "MMVector.h"
 
 @protocol MMRotationManagerDelegate <NSObject>
-
 
 -(void) willRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient;
 
 -(void) didRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient;
 
--(void) didUpdateAccelerometerWithReading:(CGFloat)currentRawReading;
+-(void) didRotateToIdealOrientation:(UIInterfaceOrientation)toOrient;
 
--(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel;
+-(void) didUpdateAccelerometerWithReading:(MMVector*)currentRawReading;
+
+-(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel;
 
 @end

@@ -45,7 +45,6 @@
 #pragma mark - Touch Methods
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-//    debug_NSLog(@"touchesBegan");
     [touches enumerateObjectsUsingBlock:^(id obj, BOOL *stop){
         UITouch* touch = obj;
         MMPaperView* page = [pinchDelegate pageForPointInList:[touch locationInView:self.view]];
@@ -97,9 +96,9 @@
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
-    if([validTouches count] == 2){
-//        debug_NSLog(@"touchesEnded");
-        [validTouches removeObjectsInSet:touches];
+    NSUInteger validTouchCount = [validTouches count];
+    [validTouches removeObjectsInSet:touches];
+    if(validTouchCount == 2){
         self.state = UIGestureRecognizerStateEnded;
     }else{
         self.state = UIGestureRecognizerStateFailed;
@@ -107,9 +106,13 @@
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
-//    debug_NSLog(@"touchesCancelled");
+    NSUInteger validTouchCount = [validTouches count];
     [validTouches removeObjectsInSet:touches];
-    self.state = UIGestureRecognizerStateCancelled;
+    if(validTouchCount == 2){
+        self.state = UIGestureRecognizerStateCancelled;
+    }else{
+        self.state = UIGestureRecognizerStateFailed;
+    }
 }
 
 - (void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{

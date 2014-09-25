@@ -6,19 +6,19 @@
 		<key>class</key>
 		<string>MMScrappedPaperView</string>
 		<key>uuid</key>
-		<string>6DC698DF-8381-47D2-8807-E5F24E31FFDD</string>
-	</dict>
-	<dict>
-		<key>class</key>
-		<string>MMScrappedPaperView</string>
-		<key>uuid</key>
 		<string>EA4F7C86-0223-47E7-8177-A00F229B7FDB</string>
 	</dict>
 	<dict>
 		<key>class</key>
 		<string>MMScrappedPaperView</string>
 		<key>uuid</key>
-		<string>39B2EB2B-50E0-421D-9114-3E980CA264A0</string>
+		<string>6DC698DF-8381-47D2-8807-E5F24E31FFDD</string>
+	</dict>
+	<dict>
+		<key>class</key>
+		<string>MMScrappedPaperView</string>
+		<key>uuid</key>
+		<string>C9570C85-BEC9-4320-B6AD-751CD0E9B5D5</string>
 	</dict>
 	<dict>
 		<key>class</key>
