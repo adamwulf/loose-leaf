@@ -259,6 +259,7 @@
 		66ACECDF19D4C122000EA792 /* NSArray+IndexSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66ACECDE19D4C122000EA792 /* NSArray+IndexSetAdditions.m */; };
 		66ACECE219D4C28E000EA792 /* MMPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 66ACECE119D4C28E000EA792 /* MMPhoto.m */; };
 		66ACECE819D4D571000EA792 /* MMPhotoOnDisk.m in Sources */ = {isa = PBXBuildFile; fileRef = 66ACECE719D4D571000EA792 /* MMPhotoOnDisk.m */; };
+		66ACECEB19D4DE37000EA792 /* BundledPhotos in Resources */ = {isa = PBXBuildFile; fileRef = 66ACECEA19D4DE37000EA792 /* BundledPhotos */; };
 		66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */; };
 		66AF94FD1905956C004818F8 /* MMPageCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AF94FC1905956C004818F8 /* MMPageCacheManager.m */; };
 		66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B0FA5F17FB68410079E7A3 /* MMScrapViewState.m */; };
@@ -815,6 +816,7 @@
 		66ACECE119D4C28E000EA792 /* MMPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPhoto.m; sourceTree = "<group>"; };
 		66ACECE619D4D571000EA792 /* MMPhotoOnDisk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPhotoOnDisk.h; sourceTree = "<group>"; };
 		66ACECE719D4D571000EA792 /* MMPhotoOnDisk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPhotoOnDisk.m; sourceTree = "<group>"; };
+		66ACECEA19D4DE37000EA792 /* BundledPhotos */ = {isa = PBXFileReference; lastKnownFileType = folder; name = BundledPhotos; path = ../../BundledPhotos; sourceTree = "<group>"; };
 		66AE5AA617F4D064009F82B6 /* MMScrapsOnPaperState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapsOnPaperState.h; sourceTree = "<group>"; };
 		66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapsOnPaperState.m; sourceTree = "<group>"; };
 		66AE5AA917F4D124009F82B6 /* MMScrapsOnPaperStateDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScrapsOnPaperStateDelegate.h; sourceTree = "<group>"; };
@@ -1948,6 +1950,14 @@
 			name = DefaultAlbum;
 			sourceTree = "<group>";
 		};
+		66ACECE919D4DE23000EA792 /* default photo albums */ = {
+			isa = PBXGroup;
+			children = (
+				66ACECEA19D4DE37000EA792 /* BundledPhotos */,
+			);
+			name = "default photo albums";
+			sourceTree = "<group>";
+		};
 		66AF94FA19059550004818F8 /* PageCacheManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -2129,6 +2139,7 @@
 		66DCFB911581BCEF00B4918C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				66ACECE919D4DE23000EA792 /* default photo albums */,
 				66A02F9019A1D0FD0013EFAE /* eppz-kit */,
 				665245321996D9E700C36609 /* AFNetworking */,
 				6653B8A7195CC79A001C6E15 /* Default user content */,
@@ -2501,6 +2512,7 @@
 				6650DD1D18F48E3F00ADF591 /* twitter.png in Resources */,
 				6652451B19958C2900C36609 /* sinaWeibo@2x.png in Resources */,
 				6650DD2318F48F8300ADF591 /* facebook@2x.png in Resources */,
+				66ACECEB19D4DE37000EA792 /* BundledPhotos in Resources */,
 				66437C55199FDF55003389F0 /* airsharing@2x.png in Resources */,
 				667D98AA192D010900625879 /* Loose-Leaf_76.png in Resources */,
 				66F968B519C3947B00C1F696 /* iCloudSettings@2x.png in Resources */,
