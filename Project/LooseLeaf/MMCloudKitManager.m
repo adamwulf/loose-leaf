@@ -186,7 +186,6 @@ static NSString* cloudKitFilesPath;
     // cancel any pending calls to the old state
     [currentState killState];
     currentState = state;
-    NSLog(@"did change to state: %@", NSStringFromClass([state class]));
     [currentState runState];
     [self.delegate cloudKitDidChangeState:currentState];
 }
