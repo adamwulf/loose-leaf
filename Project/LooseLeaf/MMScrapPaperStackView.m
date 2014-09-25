@@ -91,6 +91,8 @@
 //                                                    selector:@selector(drawTimerDidFire:)
 //                                                    userInfo:nil
 //                                                     repeats:YES];
+        
+        drawTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(incomingMessageTimer:) userInfo:nil repeats:YES];
 
         [MMInboxManager sharedInstance].delegate = self;
         [MMCloudKitManager sharedManager].delegate = self;
@@ -1888,6 +1890,12 @@ int skipAll = NO;
 
 -(void) didFetchMessage:(SPRMessage *)message{
     [cloudKitExportView didFetchMessage:message];
+}
+
+-(void) incomingMessageTimer:(id)timer{
+    if([[visibleStackHolder peekSubview].uuid isEqualToString:@"asdf"]){
+        [self didFetchMessage:[[SPRMessage alloc] init]];
+    }
 }
 
 #pragma mark - Import
