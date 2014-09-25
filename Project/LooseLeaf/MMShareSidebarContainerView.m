@@ -248,6 +248,10 @@
     [shareDelegate didShare:shareItem toUser:userId fromButton:button];
 }
 
+-(NSString*) uuidOfSharedItem{
+    return [shareDelegate uuidOfSharedItem];
+}
+
 #pragma mark - Cloud Kit State
 
 -(void) cloudKitDidChangeState:(MMCloudKitBaseState *)currentState{

@@ -24,4 +24,6 @@
 
 -(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button;
 
+-(NSString*) uuidOfSharedItem;
+
 @end

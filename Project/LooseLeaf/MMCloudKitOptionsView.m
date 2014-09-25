@@ -356,36 +356,34 @@ BOOL hasSent = NO;
 #pragma mark - Debug
 
 -(void) addExtraUsers{
-    NSArray* extra = @[@{@"firstName" : @"Tim",
-                         @"lastName" : @"Cook",
-                         @"initials" : @"TC"},
-                       @{@"firstName" : @"Angela",
-                         @"lastName" : @"Ahrendts",
-                         @"initials" : @"AA"},
-                       @{@"firstName" : @"Eddy",
-                         @"lastName" : @"Cue",
-                         @"initials" : @"EC"},
-                       @{@"firstName" : @"Craig",
-                         @"lastName" : @"Federighi",
-                         @"initials" : @"CF"},
-                       @{@"firstName" : @"Jonny",
-                         @"lastName" : @"Ive",
-                         @"initials" : @"JI"},
-                       @{@"firstName" : @"Luca",
-                         @"lastName" : @"Maestri",
-                         @"initials" : @"LM"},
-                       @{@"firstName" : @"Dan",
-                         @"lastName" : @"Riccio",
-                         @"initials" : @"DR"},
-                       @{@"firstName" : @"Phil",
-                         @"lastName" : @"Schiller",
-                         @"initials" : @"PS"},
-                       @{@"firstName" : @"Bruce",
-                         @"lastName" : @"Sewell",
-                         @"initials" : @"BS"},
-                       @{@"firstName" : @"Jeff",
-                         @"lastName" : @"Williams",
-                         @"initials" : @"JW"}];
+    NSArray* extra = @[@{@"firstName" : @"John",
+                         @"lastName" : @"Appleseed",
+                         @"initials" : @"JA"},
+                       @{@"firstName" : @"Kate",
+                         @"lastName" : @"Bell",
+                         @"initials" : @"KA"},
+                       @{@"firstName" : @"Anna",
+                         @"lastName" : @"Haro",
+                         @"initials" : @"AH"},
+                       @{@"firstName" : @"Daniel",
+                         @"lastName" : @"Higgins Jr.",
+                         @"initials" : @"DH"},
+                       @{@"firstName" : @"David",
+                         @"lastName" : @"Taylor",
+                         @"initials" : @"DT"},
+                       @{@"firstName" : @"Hank M.",
+                         @"lastName" : @"Zakroff",
+                         @"initials" : @"HZ"}];
+    
+    if([[shareItem.delegate uuidOfSharedItem] isEqual:@"asdf"]){
+        extra = [extra arrayByAddingObject:@{@"firstName" : @"Crystal",
+                                             @"lastName" : @"Hilliard",
+                                             @"initials" : @"CH"}];
+    }else{
+        extra = [extra arrayByAddingObject:@{@"firstName" : @"Grant",
+                                             @"lastName" : @"Hilliard",
+                                             @"initials" : @"GH"}];
+    }
     
     allKnownFriends = [allKnownFriends arrayByAddingObjectsFromArray:extra];;
     allFriendsExceptSender = [allFriendsExceptSender arrayByAddingObjectsFromArray:extra];;

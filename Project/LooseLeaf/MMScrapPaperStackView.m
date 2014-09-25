@@ -86,11 +86,13 @@
 //                                                                 repeats:YES];
 
         
-        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5
-                                                      target:self
-                                                    selector:@selector(drawTimerDidFire:)
-                                                    userInfo:nil
-                                                     repeats:YES];
+//        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5
+//                                                      target:self
+//                                                    selector:@selector(drawTimerDidFire:)
+//                                                    userInfo:nil
+//                                                     repeats:YES];
+        
+        drawTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(incomingMessageTimer:) userInfo:nil repeats:YES];
 
         [MMInboxManager sharedInstance].delegate = self;
         [MMCloudKitManager sharedManager].delegate = self;
@@ -1875,14 +1877,25 @@ int skipAll = NO;
     [sharePageSidebar hide:YES onComplete:nil];
 }
 
+-(NSString*) uuidOfSharedItem{
+    return [visibleStackHolder peekSubview].uuid;
+}
+
 #pragma mark - MMCloudKitManagerDelegate
 
 -(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState{
+    NSLog(@"notified of: %@", NSStringFromClass([currentState class]));
     [sharePageSidebar cloudKitDidChangeState:currentState];
 }
 
 -(void) didFetchMessage:(SPRMessage *)message{
     [cloudKitExportView didFetchMessage:message];
+}
+
+-(void) incomingMessageTimer:(id)timer{
+    if([[visibleStackHolder peekSubview].uuid isEqualToString:@"asdf"]){
+        [self didFetchMessage:[[SPRMessage alloc] init]];
+    }
 }
 
 #pragma mark - Import
