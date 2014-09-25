@@ -15,7 +15,6 @@
 #import "MMSinglePhotoCollectionViewCell.h"
 #import "MMPhotoAlbumListLayout.h"
 #import "MMRotationManager.h"
-#import "ALAsset+Thumbnail.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
 #import "NSArray+Map.h"
@@ -267,7 +266,7 @@
     [delegate pictureTakeWithCamera:img fromView:cameraView];
 }
 
--(void) photoWasTapped:(ALAsset *)asset
+-(void) photoWasTapped:(MMPhoto *)asset
               fromView:(MMBufferedImageView *)bufferedImage
           withRotation:(CGFloat)rotation{
     MMPhotoAlbumListLayout* layout = (MMPhotoAlbumListLayout*) photoListScrollView.collectionViewLayout;
