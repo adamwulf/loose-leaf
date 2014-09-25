@@ -113,8 +113,6 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
         durationCache[indexOfTouch].instantaneousNormalizedVelocity = 1;
         durationCache[indexOfTouch].lastTimestamp = touch.timestamp;
         durationCache[indexOfTouch].totalDistance = 0;
-        
-        NSLog(@"tapped: %@", NSStringFromClass([touch.view class]));
     }
 }
 
