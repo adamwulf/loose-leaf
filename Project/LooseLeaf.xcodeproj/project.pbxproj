@@ -2211,10 +2211,10 @@
 		66EDE42119AE754400A5623B /* Items */ = {
 			isa = PBXGroup;
 			children = (
-				66A7AF1B19A53AF400E0AA29 /* MMCloudKitShareItem.h */,
-				66A7AF1C19A53AF400E0AA29 /* MMCloudKitShareItem.m */,
 				66524506199573B100C36609 /* MMShareItem.h */,
 				665245051995721C00C36609 /* MMShareItemDelegate.h */,
+				66A7AF1B19A53AF400E0AA29 /* MMCloudKitShareItem.h */,
+				66A7AF1C19A53AF400E0AA29 /* MMCloudKitShareItem.m */,
 				6652450119956DFA00C36609 /* MMEmailShareItem.h */,
 				6652450219956DFA00C36609 /* MMEmailShareItem.m */,
 				66524507199575A900C36609 /* MMTextShareItem.h */,

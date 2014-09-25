@@ -1875,6 +1875,10 @@ int skipAll = NO;
     [sharePageSidebar hide:YES onComplete:nil];
 }
 
+-(NSString*) uuidOfSharedItem{
+    return [visibleStackHolder peekSubview].uuid;
+}
+
 #pragma mark - MMCloudKitManagerDelegate
 
 -(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState{
