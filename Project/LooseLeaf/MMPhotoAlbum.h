@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "ALAssetsGroup+Properties.h"
+#import "MMPhoto.h"
+
+typedef void (^MMPhotoGroupEnumerationResultsBlock)(MMPhoto *result, NSUInteger index, BOOL *stop);
 
 @interface MMPhotoAlbum : NSObject
 
@@ -28,6 +31,6 @@
 
 -(void) unloadPreviewPhotos;
 
--(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(ALAssetsGroupEnumerationResultsBlock)enumerationBlock;
+-(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMPhotoGroupEnumerationResultsBlock)enumerationBlock;
 
 @end

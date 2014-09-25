@@ -33,7 +33,7 @@
 #pragma mark - Gesture
 
 -(void) tapped:(id)gesture{
-    [album loadPhotosAtIndexes:[[NSIndexSet alloc] initWithIndex:index] usingBlock:^(ALAsset *result, NSUInteger _index, BOOL *stop) {
+    [album loadPhotosAtIndexes:[[NSIndexSet alloc] initWithIndex:index] usingBlock:^(MMPhoto *result, NSUInteger _index, BOOL *stop) {
         if(result){
             [delegate photoWasTapped:result fromView:bufferedImage withRotation:bufferedImage.rotation];
         }
@@ -47,9 +47,9 @@
         album = _album;
         index = visibleIndex;
         NSIndexSet* assetsToLoad = [[NSIndexSet alloc] initWithIndex:index];
-        [album loadPhotosAtIndexes:assetsToLoad usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+        [album loadPhotosAtIndexes:assetsToLoad usingBlock:^(MMPhoto *result, NSUInteger index, BOOL *stop) {
             if(result){
-                bufferedImage.image = [UIImage imageWithCGImage:result.aspectRatioThumbnail];
+                bufferedImage.image = result.aspectRatioThumbnail;
                 bufferedImage.rotation = RandomPhotoRotation(photoIndex);
             }else{
                 // was an error. possibly syncing the ipad to iphoto,
