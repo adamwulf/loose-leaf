@@ -32,10 +32,10 @@
 }
 
 -(void) runState{
-    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
-        // we can't connect to cloudkit, so move to an error state
-        [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
-    }else{
+//    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
+//        // we can't connect to cloudkit, so move to an error state
+//        [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
+//    }else{
         if(!hasEverFetchedNewMessages){
             [fetchAllMessagesTimer invalidate];
             fetchAllMessagesTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(fetchAllNewMessages) userInfo:nil repeats:NO];
@@ -50,7 +50,7 @@
         // CloudKit seems to rate limit this to once every ~900s, so it's
         // rare that this would do anything, but nice to have i suppose
         [self performSelector:@selector(swapToFriendsState) withObject:nil afterDelay:60];
-    }
+//    }
 }
 
 -(void) killState{
@@ -78,10 +78,7 @@
 }
 
 -(void) cloudKitDidCheckForNotifications{
-    if(![UIApplication sharedApplication].isRegisteredForRemoteNotifications || ![SPRSimpleCloudKitManager sharedManager].isSubscribed){
-        [fetchAllMessagesTimer invalidate];
-        fetchAllMessagesTimer = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(fetchAllNewMessages) userInfo:nil repeats:NO];
-    }
+    // noop
 }
 
 @end

@@ -27,16 +27,19 @@
 }
 
 -(void) runState{
-    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
-        // we can't connect to cloudkit, so move to an error state
-        [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
-    }else{
+//    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
+//        // we can't connect to cloudkit, so move to an error state
+//        [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
+//    }else{
+    @synchronized(self){
         @synchronized(self){
             if(isCheckingStatus){
                 return;
             }
             isCheckingStatus = YES;
         }
+
+        
         [[SPRSimpleCloudKitManager sharedManager] silentlyFetchUserRecordIDOnComplete:^(CKRecordID *userRecord, NSError *error) {
             if([MMCloudKitManager sharedManager].currentState != self){
                 // bail early. the network probably went offline
@@ -88,6 +91,7 @@
             }
         }];
     }
+//    }
 }
 
 

@@ -89,7 +89,7 @@
 
 -(BOOL) isAtAllPossible{
     // only show CloudKit if it exists
-    return [MMCloudKitManager isCloudKitAvailable];
+    return YES;// [MMCloudKitManager isCloudKitAvailable];
 }
 
 #pragma mark - Options Menu

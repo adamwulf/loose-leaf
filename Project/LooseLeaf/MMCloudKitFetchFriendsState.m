@@ -61,48 +61,16 @@
 }
 
 -(void) runState{
-    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
-        // we can't connect to cloudkit, so move to an error state
-        [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
-    }else{
-        @synchronized(self){
-            if(isCheckingStatus){
-                return;
-            }
-            isCheckingStatus = YES;
-        }
-        [[SPRSimpleCloudKitManager sharedManager] discoverAllFriendsWithCompletionHandler:^(NSArray *friendRecords, NSError *error) {
-            if([MMCloudKitManager sharedManager].currentState != self){
-                // bail early. the network probably went offline
-                // while we were waiting for a reply. if we're not current,
-                // then we shouldn't process / change state.
-                return;
-            }
-            @synchronized(self){
-                isCheckingStatus = NO;
-            }
-            if(error && !friendList){
-                [[MMCloudKitManager sharedManager] changeToStateBasedOnError:error];
-            }else if(error){
-                // probably rate limited, but we already have
-                // some cached friends, so no biggie, just use those
-                [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitLoggedInState alloc] initWithUserRecord:userRecord
-                                                                                                         andUserInfo:userInfo
-                                                                                                       andFriendList:self.friendList]];
-            }else{
-                // no error, so send our new friend list to the
-                // logged in state
-                NSArray* filteredAndUpdatedFriendList = [self filteredFriendsList:friendRecords];
-                
-                if(![NSKeyedArchiver archiveRootObject:filteredAndUpdatedFriendList toFile:[MMCloudKitFetchFriendsState friendsPlistPath]]){
-                    NSLog(@"couldn't archive CloudKit data");
-                }
-                [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitLoggedInState alloc] initWithUserRecord:userRecord
-                                                                                                         andUserInfo:userInfo
-                                                                                                       andFriendList:filteredAndUpdatedFriendList]];
-            }
-        }];
-    }
+//    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
+//        // we can't connect to cloudkit, so move to an error state
+//        [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
+//    }else{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitLoggedInState alloc] initWithUserRecord:userRecord
+                                                                                                 andUserInfo:userInfo
+                                                                                               andFriendList:self.friendList ? self.friendList : @[]]];
+    });
+//    }
 }
 
 -(BOOL) isLoggedInAndReadyForAnything{

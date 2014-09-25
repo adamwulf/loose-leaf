@@ -49,10 +49,11 @@
 }
 
 -(void) runState{
-    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
-        // we can't connect to cloudkit, so move to an error state
-        [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
-    }else{
+//    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
+//        // we can't connect to cloudkit, so move to an error state
+//        [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
+//    }else{
+    @synchronized(self){
         @synchronized(self){
             if(isCheckingStatus){
                 return;
@@ -64,40 +65,18 @@
         // SPRSimpleCloudMessengerErrorMissingDiscoveryPermissions
         // should reset my cache and restart this state.
         
-        NSDictionary* status = [NSDictionary dictionaryWithContentsOfFile:[MMCloudKitBaseState statusPlistPath]];
-        if(status){
-//            NSLog(@"using cached account and permission status %@", status);
-            SCKMAccountStatus accountStatus = (SCKMAccountStatus) [[status objectForKey:@"accountStatus"] integerValue];
-            SCKMApplicationPermissionStatus permissionStatus = (SCKMApplicationPermissionStatus) [[status objectForKey:@"permissionStatus"] integerValue];
+        NSDictionary* status = @{@"accountStatus" : @(SCKMAccountStatusAvailable),
+                                 @"permissionStatus" : @(SCKMApplicationPermissionStatusGranted)};
+        SCKMAccountStatus accountStatus = (SCKMAccountStatus) [[status objectForKey:@"accountStatus"] integerValue];
+        SCKMApplicationPermissionStatus permissionStatus = (SCKMApplicationPermissionStatus) [[status objectForKey:@"permissionStatus"] integerValue];
+        dispatch_async(dispatch_get_main_queue(), ^{
             [self switchStateBasedOnAccountStatus:accountStatus andPermissionStatus:permissionStatus];
-            @synchronized(self){
-                isCheckingStatus = NO;
-            }
-            return;
+        });
+        @synchronized(self){
+            isCheckingStatus = NO;
         }
-
-        [[SPRSimpleCloudKitManager sharedManager] silentlyVerifyiCloudAccountStatusOnComplete:^(SCKMAccountStatus accountStatus,
-                                                                                                SCKMApplicationPermissionStatus permissionStatus,
-                                                                                                NSError *error) {
-            @synchronized(self){
-                isCheckingStatus = NO;
-            }
-            if([MMCloudKitManager sharedManager].currentState != self){
-                // bail early. the network probably went offline
-                // while we were waiting for a reply. if we're not current,
-                // then we shouldn't process / change state.
-                return;
-            }
-            if(error){
-                [[MMCloudKitManager sharedManager] changeToStateBasedOnError:error];
-            }else{
-                NSDictionary* status = @{@"accountStatus" : @(accountStatus),
-                                         @"permissionStatus" : @(permissionStatus)};
-                [status writeToFile:[MMCloudKitBaseState statusPlistPath] atomically:YES];
-                [self switchStateBasedOnAccountStatus:accountStatus andPermissionStatus:permissionStatus];
-            }
-        }];
     }
+//    }
 }
 
 -(void) switchStateBasedOnAccountStatus:(SCKMAccountStatus)accountStatus andPermissionStatus:(SCKMApplicationPermissionStatus)permissionStatus{

@@ -86,11 +86,11 @@
 //                                                                 repeats:YES];
 
         
-        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5
-                                                      target:self
-                                                    selector:@selector(drawTimerDidFire:)
-                                                    userInfo:nil
-                                                     repeats:YES];
+//        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5
+//                                                      target:self
+//                                                    selector:@selector(drawTimerDidFire:)
+//                                                    userInfo:nil
+//                                                     repeats:YES];
 
         [MMInboxManager sharedInstance].delegate = self;
         [MMCloudKitManager sharedManager].delegate = self;
@@ -1878,6 +1878,7 @@ int skipAll = NO;
 #pragma mark - MMCloudKitManagerDelegate
 
 -(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState{
+    NSLog(@"notified of: %@", NSStringFromClass([currentState class]));
     [sharePageSidebar cloudKitDidChangeState:currentState];
 }
 
