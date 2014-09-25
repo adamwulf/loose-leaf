@@ -7,6 +7,7 @@
 //
 
 #import "MMPhotoManager.h"
+#import "MMDefaultPhotoAlbum.h"
 #import "NSThread+BlockAdditions.h"
 #import "Constants.h"
 
@@ -33,6 +34,19 @@ static MMPhotoManager* _instance = nil;
                                                    object:[self assetsLibrary]];
     }
     return _instance;
+}
+
+-(NSArray*) loadDefaultPhotoAlbums{
+    NSString* directoryOfAlbums = [[NSBundle mainBundle] pathForResource:@"BundledPhotos" ofType:nil];
+    NSArray* defaultAlbumList = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryOfAlbums error:nil];
+    NSLog(@"defaultAlbumList: %@", defaultAlbumList);
+    
+    NSArray* allDefaultAlbums = @[];
+    for(NSString* albumName in defaultAlbumList){
+        NSString* pathToAlbum = [directoryOfAlbums stringByAppendingPathComponent:albumName];
+        allDefaultAlbums = [allDefaultAlbums arrayByAddingObject:[[MMDefaultPhotoAlbum alloc] initWithPhotosInDirectory:pathToAlbum]];
+    }
+    return allDefaultAlbums;
 }
 
 +(MMPhotoManager*) sharedInstance{
@@ -202,11 +216,6 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
             return album;
         }
     }
-//    [[self assetsLibrary] groupForURL:url resultBlock:^(ALAssetsGroup *group) {
-//        <#code#>
-//    } failureBlock:^(NSError *error) {
-//        <#code#>
-//    }];
     return nil;
 }
 
@@ -233,6 +242,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                                         // from albums -> events -> faces order
                                                         @synchronized(self){
                                                             albums = [self sortArrayByAlbumName:updatedAlbumsList];
+                                                            albums = [[self loadDefaultPhotoAlbums] arrayByAddingObjectsFromArray:albums];
                                                             events = [self sortArrayByAlbumName:updatedEventsList];
                                                             faces = [self sortArrayByAlbumName:updatedFacesList];
                                                             cameraRoll = updatedCameraRoll;
