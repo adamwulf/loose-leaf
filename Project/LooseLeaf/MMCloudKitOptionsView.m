@@ -375,15 +375,9 @@ BOOL hasSent = NO;
                          @"lastName" : @"Zakroff",
                          @"initials" : @"HZ"}];
     
-    if([[shareItem.delegate uuidOfSharedItem] isEqual:@"asdf"]){
         extra = [extra arrayByAddingObject:@{@"firstName" : @"Crystal",
                                              @"lastName" : @"Hilliard",
                                              @"initials" : @"CH"}];
-    }else{
-        extra = [extra arrayByAddingObject:@{@"firstName" : @"Grant",
-                                             @"lastName" : @"Hilliard",
-                                             @"initials" : @"GH"}];
-    }
     
     allKnownFriends = [allKnownFriends arrayByAddingObjectsFromArray:extra];;
     allFriendsExceptSender = [allFriendsExceptSender arrayByAddingObjectsFromArray:extra];;

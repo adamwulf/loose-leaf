@@ -32,5 +32,11 @@
 		<key>uuid</key>
 		<string>09BCF065-4FDA-4D8E-BF9F-CD1608538D9B</string>
 	</dict>
+	<dict>
+		<key>class</key>
+		<string>MMExportablePaperView</string>
+		<key>uuid</key>
+		<string>73A9958C-CF00-4059-B4C7-A0B3ED463036</string>
+	</dict>
 </array>
 </plist>

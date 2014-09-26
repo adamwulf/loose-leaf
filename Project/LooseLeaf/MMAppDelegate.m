@@ -40,6 +40,15 @@
         [[NSFileManager defaultManager] removeItemAtPath:pathToRemove error:nil];
     }];
     
+    NSString* bundledDocs = [[NSBundle mainBundle] pathForResource:@"Documents" ofType:nil];
+    [[NSFileManager defaultManager] copyItemAtPath:[bundledDocs stringByAppendingPathComponent:@"Bezel"]
+                                            toPath:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Bezel"]
+                                             error:nil];
+    [[NSFileManager defaultManager] copyItemAtPath:[bundledDocs stringByAppendingPathComponent:@"BezelState"]
+                                            toPath:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"BezelState"]
+                                             error:nil];
+    
+    
     debug_NSLog(@"DID FINISH LAUNCHING");
     [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];

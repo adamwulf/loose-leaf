@@ -1955,7 +1955,7 @@ int skipAll = NO;
     if([[visibleStackHolder peekSubview] hasEditsToSave]){
         [super redo:_redoButton];
     }else{
-        [self showPageWithUUID:kUUIDOfHerPage];
+        [self showPageWithUUID:kUUIDOfHisPage];
     }
 }
 
