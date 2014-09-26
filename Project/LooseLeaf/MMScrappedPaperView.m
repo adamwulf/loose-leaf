@@ -103,7 +103,7 @@
 }
 
 -(BOOL) hasScrapStateLoaded{
-    return [scrapState isStateLoaded];
+    return [scrapsOnPaperState isStateLoaded];
 }
 
 -(int) fullByteSize{
