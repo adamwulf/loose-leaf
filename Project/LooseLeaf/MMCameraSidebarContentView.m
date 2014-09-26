@@ -9,6 +9,7 @@
 #import "MMCameraSidebarContentView.h"
 #import "MMPhotoManager.h"
 #import "MMImageSidebarContainerView.h"
+#import "MMPermissionCollectionViewCell.h"
 #import "NSThread+BlockAdditions.h"
 #import "CaptureSessionManager.h"
 #import "MMRotationManager.h"
@@ -34,6 +35,7 @@
         currentAlbum = [[MMPhotoManager sharedInstance] cameraRoll];
         
         [photoListScrollView registerClass:[MMCameraCollectionViewCell class] forCellWithReuseIdentifier:@"MMCameraCollectionViewCell"];
+        [photoListScrollView registerClass:[MMPermissionCollectionViewCell class] forCellWithReuseIdentifier:@"MMPermissionCollectionViewCell"];
     }
     return self;
 }
@@ -116,12 +118,18 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    if(indexPath.section == 0 && cachedCameraCell){
-        return cachedCameraCell;
-    }else if(indexPath.section == 0){
-        cachedCameraCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMCameraCollectionViewCell" forIndexPath:indexPath];
-        cachedCameraCell.delegate = self;
-        return cachedCameraCell;
+    if(indexPath.section == 0){
+        if ([CaptureSessionManager hasCamera] && [CaptureSessionManager hasCameraPermission]) {
+            if(cachedCameraCell){
+                return cachedCameraCell;
+            }else{
+                cachedCameraCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMCameraCollectionViewCell" forIndexPath:indexPath];
+                cachedCameraCell.delegate = self;
+                return cachedCameraCell;
+            }
+        }else{
+            return [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPermissionCollectionViewCell" forIndexPath:indexPath];
+        }
     }
     MMSinglePhotoCollectionViewCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell" forIndexPath:indexPath];
     [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row forVisibleIndex:indexPath.row];

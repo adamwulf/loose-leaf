@@ -27,7 +27,6 @@
 #import "Mixpanel.h"
 #import "MMTrashManager.h"
 #import "MMShareSidebarContainerView.h"
-#import "MMCloudKitImportContainerView.h"
 #import "MMCloudKitImportExportView.h"
 #import "MMCloudKitManager.h"
 #import "MMCloudKitFetchFriendsState.h"
@@ -58,7 +57,7 @@
     
     // cloudkit import sidebar
     MMTextButton* cloudKitImportButton;
-    MMCloudKitImportContainerView* cloudKitImportSidebar;
+    MMSlidingSidebarContainerView* cloudKitImportSidebar;
     MMCloudKitImportExportView* cloudKitExportView;
 
     NSTimer* debugTimer;
@@ -168,7 +167,7 @@
                                                         andXOffset:0
                                                         andYOffset:0];
         cloudKitImportButton.alpha = 0;
-        cloudKitImportSidebar = [[MMCloudKitImportContainerView alloc] initWithFrame:self.bounds forButton:cloudKitImportButton animateFromLeft:NO];
+        cloudKitImportSidebar = [[MMSlidingSidebarContainerView alloc] initWithFrame:self.bounds forButton:cloudKitImportButton animateFromLeft:NO];
         [cloudKitImportSidebar hide:NO onComplete:nil];
         [self addSubview:sharePageSidebar];
         
