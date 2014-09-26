@@ -4,27 +4,33 @@
 <array>
 	<dict>
 		<key>class</key>
-		<string>MMScrappedPaperView</string>
+		<string>MMExportablePaperView</string>
 		<key>uuid</key>
-		<string>CD3CD453-A80C-419E-9ED9-F335BF1356E8</string>
+		<string>68FA3D65-92E8-4165-9223-65AF27BD23F6</string>
 	</dict>
 	<dict>
 		<key>class</key>
-		<string>MMScrappedPaperView</string>
+		<string>MMExportablePaperView</string>
 		<key>uuid</key>
-		<string>83DE59EA-7B1E-41EF-8F55-77A130013057</string>
+		<string>C3B5973F-F4F8-4D01-88DB-1997B8CF286C</string>
 	</dict>
 	<dict>
 		<key>class</key>
-		<string>MMScrappedPaperView</string>
+		<string>MMExportablePaperView</string>
 		<key>uuid</key>
-		<string>9699D80C-9058-4D6D-8818-DC40FF38A40C</string>
+		<string>3885723B-8F25-4247-90DD-058269F847CC</string>
 	</dict>
 	<dict>
 		<key>class</key>
-		<string>MMScrappedPaperView</string>
+		<string>MMExportablePaperView</string>
 		<key>uuid</key>
-		<string>0BE5AC85-010B-4CAB-B80E-05652B182316</string>
+		<string>CEFEB1F9-53AD-4339-BE36-3C03143BC7D1</string>
+	</dict>
+	<dict>
+		<key>class</key>
+		<string>MMExportablePaperView</string>
+		<key>uuid</key>
+		<string>82C02643-3903-4391-B61A-5F93B1D54DCF</string>
 	</dict>
 </array>
 </plist>

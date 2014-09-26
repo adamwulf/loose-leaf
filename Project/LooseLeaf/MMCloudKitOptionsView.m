@@ -139,9 +139,9 @@
         return ![[evaluatedObject objectForKey:@"recordId"] isEqual:[shareItem.cloudKitSenderInfo objectForKey:@"recordId"]];
     }]];
     
-    #ifdef DEBUG
+//    #ifdef DEBUG
         [self addExtraUsers];
-    #endif
+//    #endif
     
     allFriendsExceptSender = [allFriendsExceptSender sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         NSComparisonResult lastResult = [[obj1 objectForKey:@"lastName"] compare:[obj2 objectForKey:@"lastName"] options:NSCaseInsensitiveSearch];
@@ -375,15 +375,9 @@ BOOL hasSent = NO;
                          @"lastName" : @"Zakroff",
                          @"initials" : @"HZ"}];
     
-    if([[shareItem.delegate uuidOfSharedItem] isEqual:@"asdf"]){
         extra = [extra arrayByAddingObject:@{@"firstName" : @"Crystal",
                                              @"lastName" : @"Hilliard",
                                              @"initials" : @"CH"}];
-    }else{
-        extra = [extra arrayByAddingObject:@{@"firstName" : @"Grant",
-                                             @"lastName" : @"Hilliard",
-                                             @"initials" : @"GH"}];
-    }
     
     allKnownFriends = [allKnownFriends arrayByAddingObjectsFromArray:extra];;
     allFriendsExceptSender = [allFriendsExceptSender arrayByAddingObjectsFromArray:extra];;

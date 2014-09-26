@@ -7,7 +7,24 @@
 //
 
 #import <Foundation/Foundation.h>
+<<<<<<< HEAD
 
 @interface MMPhoto : NSObject
 
+=======
+#import <AssetsLibrary/AssetsLibrary.h>
+
+@interface MMPhoto : NSObject
+
+-(id) initWithALAsset:(ALAsset*)asset;
+
+-(UIImage*) aspectRatioThumbnail;
+
+-(UIImage*) aspectThumbnailWithMaxPixelSize:(int)maxDim;
+
+-(NSURL*) fullResolutionURL;
+
+-(CGSize) fullResolutionSize;
+
+>>>>>>> josh
 @end

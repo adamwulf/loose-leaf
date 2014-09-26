@@ -160,6 +160,9 @@ _Pragma("clang diagnostic pop") \
 // MixPanel Error Tracking
 #define kMPPathIterationException @"PathIterationException"
 
+#define kUUIDOfHerPage @"B98C190F-6838-4B93-9676-065B4A992169"
+#define kUUIDOfHisPage @"3D31D997-F357-4958-9F5F-716CD9C8C75E"
+
 
 // photo album
 #define kMaxPhotoRotationInDegrees 20

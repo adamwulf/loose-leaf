@@ -621,6 +621,10 @@ static dispatch_queue_t importExportScrapStateQueue;
             }
             drawableViewState = nil;
             drawableView = nil;
+            @synchronized(self){
+                // signal that we're done loading state
+                isLoadingState = NO;
+            }
         }else{
             [NSThread performBlockOnMainThread:^{
                 @synchronized(self){

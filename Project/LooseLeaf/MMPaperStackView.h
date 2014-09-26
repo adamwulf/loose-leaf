@@ -54,6 +54,7 @@
 -(BOOL) shouldPopPageFromVisibleStack:(MMPaperView*)page withFrame:(CGRect)frame;
 -(void) popStackUntilPage:(MMPaperView*)page onComplete:(void(^)(BOOL finished))completionBlock;
 -(void) popTopPageOfHiddenStackOnComplete:(void(^)(BOOL finished))completionBlock;
+-(void) popHiddenStackUntilPage:(MMPaperView*)page onComplete:(void(^)(BOOL finished))completionBlock;
 
 -(void) cancelAllGestures;
 -(void) disableAllGesturesForPageView;

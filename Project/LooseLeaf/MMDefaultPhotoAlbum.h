@@ -10,4 +10,9 @@
 
 @interface MMDefaultPhotoAlbum : MMPhotoAlbum
 
+<<<<<<< HEAD
+=======
+-(id) initWithPhotosInDirectory:(NSString*)directoryPath;
+
+>>>>>>> josh
 @end

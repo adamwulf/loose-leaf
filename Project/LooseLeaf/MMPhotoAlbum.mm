@@ -120,7 +120,7 @@ BOOL isEnumerating = NO;
 }
 
 
--(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(ALAssetsGroupEnumerationResultsBlock)enumerationBlock{
+-(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMPhotoGroupEnumerationResultsBlock)enumerationBlock{
     @try{
         try{
             if(reversed){
@@ -136,9 +136,10 @@ BOOL isEnumerating = NO;
                     // new values here
                     index = self.numberOfPhotos - index - 1;
                 }
-                enumerationBlock(result, index, stop);
+                enumerationBlock(result ? [[MMPhoto alloc] initWithALAsset:result] : nil, index, stop);
             };
             @synchronized(self){
+//                NSInteger count = group.numberOfAssets;
                 [group enumerateAssetsAtIndexes:indexSet options:NSEnumerationReverse usingBlock:indexManagerBlock];
             }
         }catch(...){

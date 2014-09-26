@@ -444,11 +444,11 @@
                      }];
 }
 
--(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription{
+-(void) photoWasTapped:(MMPhoto *)photo fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription{
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
     
-    NSURL* assetURL = asset.defaultRepresentation.url;
+    NSURL* assetURL = photo.fullResolutionURL;
     [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{ kMPEventImportPropFileExt : [assetURL fileExtension],
                                                                        kMPEventImportPropFileType : [assetURL universalTypeID],
                                                                        kMPEventImportPropSource: containerDescription}];
@@ -474,7 +474,7 @@
     // max image size in any direction is 300pts
     CGFloat maxDim = 600;
     
-    CGSize fullScale = [[asset defaultRepresentation] dimensions];
+    CGSize fullScale = photo.fullResolutionSize;
     if(fullScale.width >= fullScale.height && fullScale.width > maxDim){
         fullScale.height = fullScale.height / fullScale.width * maxDim;
         fullScale.width = maxDim;
@@ -485,7 +485,7 @@
     
     CGFloat startingScale = scrapRect.size.width / fullScale.width;
     
-    UIImage* scrapBacking = [asset aspectThumbnailWithMaxPixelSize:300];
+    UIImage* scrapBacking = [photo aspectThumbnailWithMaxPixelSize:300];
     
     MMUndoablePaperView* topPage = [visibleStackHolder peekSubview];
     MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:0 andScale:startingScale];
@@ -1919,6 +1919,54 @@ int skipAll = NO;
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
         [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
     } afterDelay:.1];
+}
+
+-(void) showPageWithUUID:(NSString*)uuidOfPage{
+    [[NSThread mainThread] performBlock:^{
+        __block BOOL didFind = NO;
+        [visibleStackHolder.subviews enumerateObjectsUsingBlock:^(MMExportablePaperView* obj, NSUInteger idx, BOOL *stop) {
+            if([obj.uuid isEqual:uuidOfPage]){
+                didFind = YES;
+                [self popStackUntilPage:obj onComplete:nil];
+                stop[0] = YES;
+            };
+        }];
+        if(!didFind){
+            [hiddenStackHolder.subviews enumerateObjectsUsingBlock:^(MMExportablePaperView* obj, NSUInteger idx, BOOL *stop) {
+                if([obj.uuid isEqual:uuidOfPage]){
+                    didFind = YES;
+                    [self popHiddenStackUntilPage:obj onComplete:^(BOOL finished){
+                        [self popTopPageOfHiddenStack];
+                    }];
+                    stop[0] = YES;
+                };
+            }];
+        }
+        if(!didFind){
+            // need to add the page
+            MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:visibleStackHolder.bounds andUUID:uuidOfPage];
+            [page loadCachedPreview];
+            [self importAndShowPage:page];
+        }
+    }];
+}
+
+-(void) redo:(UIButton*)_redoButton{
+    if([[visibleStackHolder peekSubview] hasEditsToSave]){
+        [super redo:_redoButton];
+    }else{
+        [self showPageWithUUID:kUUIDOfHisPage];
+    }
+}
+
+-(void) undo:(UIButton*)_undoButton{
+    if([[visibleStackHolder peekSubview] hasEditsToSave]){
+        [super redo:_undoButton];
+    }else{
+        [[NSThread mainThread] performBlock:^{
+            [self didFetchMessage:[[SPRMessage alloc] init]];
+        } afterDelay:5];
+    }
 }
 
 
