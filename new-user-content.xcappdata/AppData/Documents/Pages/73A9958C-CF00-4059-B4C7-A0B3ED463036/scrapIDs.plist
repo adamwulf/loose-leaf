@@ -34,17 +34,17 @@
 		</dict>
 		<dict>
 			<key>center.x</key>
-			<real>40</real>
+			<real>295.36929321289062</real>
 			<key>center.y</key>
-			<real>40</real>
+			<real>736.99468994140625</real>
 			<key>rotation</key>
-			<real>0.37124863266944885</real>
+			<real>0.029079619795084</real>
 			<key>scale</key>
-			<real>0.52944427728652954</real>
+			<real>0.8254358172416687</real>
 			<key>subviewIndex</key>
-			<integer>0</integer>
+			<integer>2</integer>
 			<key>uuid</key>
-			<string>8772E06A-7CE6-4D4A-B154-3DAAE4F9077A</string>
+			<string>0283BBE6-BC77-41C9-AEF7-97561C2168B8</string>
 		</dict>
 		<dict>
 			<key>center.x</key>
@@ -60,17 +60,17 @@
 		</dict>
 		<dict>
 			<key>center.x</key>
-			<real>295.36929321289062</real>
+			<real>40</real>
 			<key>center.y</key>
-			<real>736.99468994140625</real>
+			<real>40</real>
 			<key>rotation</key>
-			<real>0.029079619795084</real>
+			<real>0.37124872207641602</real>
 			<key>scale</key>
-			<real>0.8254358172416687</real>
+			<real>0.52944427728652954</real>
 			<key>subviewIndex</key>
-			<integer>2</integer>
+			<integer>0</integer>
 			<key>uuid</key>
-			<string>0283BBE6-BC77-41C9-AEF7-97561C2168B8</string>
+			<string>8772E06A-7CE6-4D4A-B154-3DAAE4F9077A</string>
 		</dict>
 	</array>
 	<key>scrapsOnPageIDs</key>
