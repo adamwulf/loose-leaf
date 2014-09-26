@@ -174,10 +174,12 @@ static int totalBackgroundBytes;
        [[NSFileManager defaultManager] fileExistsAtPath:self.bundledBackgroundJPGFile]){
         UIImage* image = [UIImage imageWithContentsOfFile:self.backgroundJPGFile];
         if(!image){
-            NSLog(@"can't get background!");
+//            NSLog(@"can't get background! %@", self.backgroundJPGFile);
             image = [UIImage imageWithContentsOfFile:self.bundledBackgroundJPGFile];
             if(!image){
                 NSLog(@"can't get background!");
+            }else{
+//                NSLog(@"nevermind, i found it in the bundle...");
             }
         }
         [NSThread performBlockOnMainThread:^{

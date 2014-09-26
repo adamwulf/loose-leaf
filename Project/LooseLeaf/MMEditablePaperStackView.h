@@ -81,6 +81,8 @@
 
 -(BOOL) hasPages;
 
+-(void) undo:(UIButton*)button;
+
 // protected
 
 -(void) addPageButtonTapped:(UIButton*)_button;

@@ -1537,24 +1537,28 @@
 -(void) popHiddenStackUntilPage:(MMPaperView*)page onComplete:(void(^)(BOOL finished))completionBlock{
     if([hiddenStackHolder.subviews containsObject:page] || page == nil){
         CGFloat delay = 0;
-        while([hiddenStackHolder peekSubview] != page && [hiddenStackHolder.subviews count]){
-            //
-            // since we're manually popping the stack outside of an
-            // animation, we need to make sure the page still exists
-            // inside a stack.
-            //
-            // when the animation completes, it'll validate which stack
-            // it's in anyways
-            MMPaperView* aPage = [hiddenStackHolder peekSubview];
-            aPage.isBrandNewPage = NO;
-            //
-            // this push will also pop it off the visible stack, and adjust the frame
-            // correctly
-            [aPage enableAllGestures];
-            [visibleStackHolder pushSubview:aPage];
-            BOOL hasAnotherToPop = [hiddenStackHolder peekSubview] != page && [hiddenStackHolder.subviews count];
-            [self animatePageToFullScreen:aPage withDelay:delay withBounce:YES onComplete:(!hasAnotherToPop ? completionBlock : nil)];
-            delay += kAnimationDelay;
+        if([hiddenStackHolder peekSubview] == page){
+            completionBlock(YES);
+        }else{
+            while([hiddenStackHolder peekSubview] != page && [hiddenStackHolder.subviews count]){
+                //
+                // since we're manually popping the stack outside of an
+                // animation, we need to make sure the page still exists
+                // inside a stack.
+                //
+                // when the animation completes, it'll validate which stack
+                // it's in anyways
+                MMPaperView* aPage = [hiddenStackHolder peekSubview];
+                aPage.isBrandNewPage = NO;
+                //
+                // this push will also pop it off the visible stack, and adjust the frame
+                // correctly
+                [aPage enableAllGestures];
+                [visibleStackHolder pushSubview:aPage];
+                BOOL hasAnotherToPop = [hiddenStackHolder peekSubview] != page && [hiddenStackHolder.subviews count];
+                [self animatePageToFullScreen:aPage withDelay:delay withBounce:YES onComplete:(!hasAnotherToPop ? completionBlock : nil)];
+                delay += kAnimationDelay;
+            }
         }
     }
 }
