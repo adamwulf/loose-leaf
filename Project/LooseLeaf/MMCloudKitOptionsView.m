@@ -139,9 +139,9 @@
         return ![[evaluatedObject objectForKey:@"recordId"] isEqual:[shareItem.cloudKitSenderInfo objectForKey:@"recordId"]];
     }]];
     
-    #ifdef DEBUG
+//    #ifdef DEBUG
         [self addExtraUsers];
-    #endif
+//    #endif
     
     allFriendsExceptSender = [allFriendsExceptSender sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         NSComparisonResult lastResult = [[obj1 objectForKey:@"lastName"] compare:[obj2 objectForKey:@"lastName"] options:NSCaseInsensitiveSearch];
