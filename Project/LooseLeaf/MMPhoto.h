@@ -7,11 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-<<<<<<< HEAD
-
-@interface MMPhoto : NSObject
-
-=======
 #import <AssetsLibrary/AssetsLibrary.h>
 
 @interface MMPhoto : NSObject
@@ -26,5 +21,4 @@
 
 -(CGSize) fullResolutionSize;
 
->>>>>>> josh
 @end

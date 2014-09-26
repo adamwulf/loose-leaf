@@ -8,11 +8,6 @@
 
 #import "NSArray+IndexSetAdditions.h"
 
-<<<<<<< HEAD
-@implementation NSArray_IndexSetAdditions
-
-@end
-=======
 @implementation NSArray (IndexSetAddition)
 
 - (NSArray *) subarrayWithIndexes: (NSIndexSet *)indexes{
@@ -32,4 +27,3 @@
 }
 
 @end
->>>>>>> josh

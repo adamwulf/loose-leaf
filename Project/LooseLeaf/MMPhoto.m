@@ -7,10 +7,6 @@
 //
 
 #import "MMPhoto.h"
-<<<<<<< HEAD
-
-@implementation MMPhoto
-=======
 #import "ALAsset+Thumbnail.h"
 
 @implementation MMPhoto{
@@ -39,6 +35,5 @@
 -(CGSize) fullResolutionSize{
     return asset.defaultRepresentation.dimensions;
 }
->>>>>>> josh
 
 @end

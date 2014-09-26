@@ -7,10 +7,6 @@
 //
 
 #import "MMDefaultPhotoAlbum.h"
-<<<<<<< HEAD
-
-@implementation MMDefaultPhotoAlbum
-=======
 #import "MMPhotoOnDisk.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "NSArray+IndexSetAdditions.h"
@@ -84,7 +80,5 @@
         return obj;
     }];
 }
-
->>>>>>> josh
 
 @end
