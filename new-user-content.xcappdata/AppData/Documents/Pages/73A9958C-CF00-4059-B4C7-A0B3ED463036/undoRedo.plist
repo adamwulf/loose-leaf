@@ -8,287 +8,61 @@
 			<key>canUndo</key>
 			<true/>
 			<key>class</key>
-			<string>MMUndoRedoBezeledScrapItem</string>
-			<key>propertiesWhenRemoved</key>
-			<dict>
-				<key>center.x</key>
-				<real>248.23631286621094</real>
-				<key>center.y</key>
-				<real>768.1820068359375</real>
-				<key>rotation</key>
-				<real>-0.26201832294464111</real>
-				<key>scale</key>
-				<real>0.51420098543167114</real>
-				<key>subviewIndex</key>
-				<integer>0</integer>
-				<key>uuid</key>
-				<string>DDBDE117-8044-4CFE-B473-161130D2368A</string>
-			</dict>
-			<key>scrapUUID</key>
-			<string>DDBDE117-8044-4CFE-B473-161130D2368A</string>
-			<key>sidebarEverDidContainScrap</key>
-			<false/>
+			<string>MMUndoRedoStrokeItem</string>
 		</dict>
 		<dict>
 			<key>canUndo</key>
 			<true/>
 			<key>class</key>
-			<string>MMUndoRedoAddScrapFromBezelItem</string>
-			<key>properties</key>
-			<dict>
-				<key>center.x</key>
-				<real>384</real>
-				<key>center.y</key>
-				<real>512</real>
-				<key>rotation</key>
-				<real>0.015888333320617676</real>
-				<key>scale</key>
-				<real>0.56416773796081543</real>
-				<key>subviewIndex</key>
-				<integer>2</integer>
-				<key>uuid</key>
-				<string>DDBDE117-8044-4CFE-B473-161130D2368A</string>
-			</dict>
-			<key>scrapUUID</key>
-			<string>DDBDE117-8044-4CFE-B473-161130D2368A</string>
+			<string>MMUndoRedoStrokeItem</string>
 		</dict>
 		<dict>
 			<key>canUndo</key>
 			<true/>
 			<key>class</key>
-			<string>MMUndoRedoMoveScrapItem</string>
-			<key>endProperties</key>
-			<dict>
-				<key>center.x</key>
-				<real>244.26535034179688</real>
-				<key>center.y</key>
-				<real>732.32086181640625</real>
-				<key>rotation</key>
-				<real>0.027442812919616699</real>
-				<key>scale</key>
-				<real>0.56416773796081543</real>
-				<key>subviewIndex</key>
-				<integer>2</integer>
-				<key>uuid</key>
-				<string>DDBDE117-8044-4CFE-B473-161130D2368A</string>
-			</dict>
-			<key>scrapUUID</key>
-			<string>DDBDE117-8044-4CFE-B473-161130D2368A</string>
-			<key>startProperties</key>
-			<dict>
-				<key>center.x</key>
-				<real>384</real>
-				<key>center.y</key>
-				<real>512</real>
-				<key>rotation</key>
-				<real>0.015888333320617676</real>
-				<key>scale</key>
-				<real>0.56416773796081543</real>
-				<key>subviewIndex</key>
-				<integer>2</integer>
-				<key>uuid</key>
-				<string>DDBDE117-8044-4CFE-B473-161130D2368A</string>
-			</dict>
+			<string>MMUndoRedoStrokeItem</string>
 		</dict>
 		<dict>
 			<key>canUndo</key>
 			<true/>
 			<key>class</key>
-			<string>MMUndoRedoMoveScrapItem</string>
-			<key>endProperties</key>
-			<dict>
-				<key>center.x</key>
-				<real>274.41226196289062</real>
-				<key>center.y</key>
-				<real>747.12847900390625</real>
-				<key>rotation</key>
-				<real>0.0022908449172973633</real>
-				<key>scale</key>
-				<real>0.56558650732040405</real>
-				<key>subviewIndex</key>
-				<integer>2</integer>
-				<key>uuid</key>
-				<string>DDBDE117-8044-4CFE-B473-161130D2368A</string>
-			</dict>
-			<key>scrapUUID</key>
-			<string>DDBDE117-8044-4CFE-B473-161130D2368A</string>
-			<key>startProperties</key>
-			<dict>
-				<key>center.x</key>
-				<real>244.26535034179688</real>
-				<key>center.y</key>
-				<real>732.32086181640625</real>
-				<key>rotation</key>
-				<real>0.027442812919616699</real>
-				<key>scale</key>
-				<real>0.56416773796081543</real>
-				<key>subviewIndex</key>
-				<integer>2</integer>
-				<key>uuid</key>
-				<string>DDBDE117-8044-4CFE-B473-161130D2368A</string>
-			</dict>
+			<string>MMUndoRedoStrokeItem</string>
 		</dict>
 		<dict>
 			<key>canUndo</key>
 			<true/>
 			<key>class</key>
-			<string>MMUndoRedoAddScrapItem</string>
-			<key>propertiesWhenAdded</key>
-			<dict>
-				<key>center.x</key>
-				<real>170.5</real>
-				<key>center.y</key>
-				<real>745</real>
-				<key>rotation</key>
-				<real>0.018037557601928711</real>
-				<key>scale</key>
-				<real>0.57648742198944092</real>
-				<key>subviewIndex</key>
-				<integer>2</integer>
-				<key>uuid</key>
-				<string>8772E06A-7CE6-4D4A-B154-3DAAE4F9077A</string>
-			</dict>
-			<key>scrapUUID</key>
-			<string>8772E06A-7CE6-4D4A-B154-3DAAE4F9077A</string>
+			<string>MMUndoRedoStrokeItem</string>
 		</dict>
 		<dict>
 			<key>canUndo</key>
 			<true/>
 			<key>class</key>
-			<string>MMUndoRedoMoveScrapItem</string>
-			<key>endProperties</key>
-			<dict>
-				<key>center.x</key>
-				<real>478.590576171875</real>
-				<key>center.y</key>
-				<real>536.183837890625</real>
-				<key>rotation</key>
-				<real>0.18825817108154297</real>
-				<key>scale</key>
-				<real>0.62148368358612061</real>
-				<key>subviewIndex</key>
-				<integer>2</integer>
-				<key>uuid</key>
-				<string>DDBDE117-8044-4CFE-B473-161130D2368A</string>
-			</dict>
-			<key>scrapUUID</key>
-			<string>DDBDE117-8044-4CFE-B473-161130D2368A</string>
-			<key>startProperties</key>
-			<dict>
-				<key>center.x</key>
-				<real>274.41226196289062</real>
-				<key>center.y</key>
-				<real>747.12847900390625</real>
-				<key>rotation</key>
-				<real>0.0022908449172973633</real>
-				<key>scale</key>
-				<real>0.56558650732040405</real>
-				<key>subviewIndex</key>
-				<integer>2</integer>
-				<key>uuid</key>
-				<string>DDBDE117-8044-4CFE-B473-161130D2368A</string>
-			</dict>
+			<string>MMUndoRedoStrokeItem</string>
 		</dict>
 		<dict>
 			<key>canUndo</key>
 			<true/>
 			<key>class</key>
-			<string>MMUndoRedoMoveScrapItem</string>
-			<key>endProperties</key>
-			<dict>
-				<key>center.x</key>
-				<real>298.00079345703125</real>
-				<key>center.y</key>
-				<real>762.47772216796875</real>
-				<key>rotation</key>
-				<real>0.013744115829467773</real>
-				<key>scale</key>
-				<real>0.61090904474258423</real>
-				<key>subviewIndex</key>
-				<integer>3</integer>
-				<key>uuid</key>
-				<string>8772E06A-7CE6-4D4A-B154-3DAAE4F9077A</string>
-			</dict>
-			<key>scrapUUID</key>
-			<string>8772E06A-7CE6-4D4A-B154-3DAAE4F9077A</string>
-			<key>startProperties</key>
-			<dict>
-				<key>center.x</key>
-				<real>170.5</real>
-				<key>center.y</key>
-				<real>745</real>
-				<key>rotation</key>
-				<real>0.018037557601928711</real>
-				<key>scale</key>
-				<real>0.57648742198944092</real>
-				<key>subviewIndex</key>
-				<integer>2</integer>
-				<key>uuid</key>
-				<string>8772E06A-7CE6-4D4A-B154-3DAAE4F9077A</string>
-			</dict>
+			<string>MMUndoRedoStrokeItem</string>
 		</dict>
 		<dict>
 			<key>canUndo</key>
 			<true/>
 			<key>class</key>
-			<string>MMUndoRedoBezeledScrapItem</string>
-			<key>propertiesWhenRemoved</key>
-			<dict>
-				<key>center.x</key>
-				<real>478.590576171875</real>
-				<key>center.y</key>
-				<real>536.183837890625</real>
-				<key>rotation</key>
-				<real>0.18825817108154297</real>
-				<key>scale</key>
-				<real>0.62148368358612061</real>
-				<key>subviewIndex</key>
-				<integer>2</integer>
-				<key>uuid</key>
-				<string>DDBDE117-8044-4CFE-B473-161130D2368A</string>
-			</dict>
-			<key>scrapUUID</key>
-			<string>DDBDE117-8044-4CFE-B473-161130D2368A</string>
-			<key>sidebarEverDidContainScrap</key>
-			<false/>
+			<string>MMUndoRedoStrokeItem</string>
 		</dict>
 		<dict>
 			<key>canUndo</key>
 			<true/>
 			<key>class</key>
-			<string>MMUndoRedoMoveScrapItem</string>
-			<key>endProperties</key>
-			<dict>
-				<key>center.x</key>
-				<real>284.22967529296875</real>
-				<key>center.y</key>
-				<real>697.12274169921875</real>
-				<key>rotation</key>
-				<real>0.037682294845581055</real>
-				<key>scale</key>
-				<real>0.62159997224807739</real>
-				<key>subviewIndex</key>
-				<integer>2</integer>
-				<key>uuid</key>
-				<string>8772E06A-7CE6-4D4A-B154-3DAAE4F9077A</string>
-			</dict>
-			<key>scrapUUID</key>
-			<string>8772E06A-7CE6-4D4A-B154-3DAAE4F9077A</string>
-			<key>startProperties</key>
-			<dict>
-				<key>center.x</key>
-				<real>298.00079345703125</real>
-				<key>center.y</key>
-				<real>762.47772216796875</real>
-				<key>rotation</key>
-				<real>0.013744115829467773</real>
-				<key>scale</key>
-				<real>0.61090904474258423</real>
-				<key>subviewIndex</key>
-				<integer>2</integer>
-				<key>uuid</key>
-				<string>8772E06A-7CE6-4D4A-B154-3DAAE4F9077A</string>
-			</dict>
+			<string>MMUndoRedoStrokeItem</string>
+		</dict>
+		<dict>
+			<key>canUndo</key>
+			<true/>
+			<key>class</key>
+			<string>MMUndoRedoStrokeItem</string>
 		</dict>
 	</array>
 	<key>saveableStackOfUndoneItems</key>

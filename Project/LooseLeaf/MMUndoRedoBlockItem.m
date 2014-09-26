@@ -55,11 +55,11 @@
 }
 
 -(void) finalizeUndoableState{
-    NSLog(@"finalizeUndoableState %@", NSStringFromClass([self class]));
+//    NSLog(@"finalizeUndoableState %@", NSStringFromClass([self class]));
 }
 
 -(void) finalizeRedoableState{
-    NSLog(@"finalizeRedoableState %@", NSStringFromClass([self class]));
+//    NSLog(@"finalizeRedoableState %@", NSStringFromClass([self class]));
 }
 
 -(BOOL) shouldMergeWith:(NSObject<MMUndoRedoItem>*)otherItem{

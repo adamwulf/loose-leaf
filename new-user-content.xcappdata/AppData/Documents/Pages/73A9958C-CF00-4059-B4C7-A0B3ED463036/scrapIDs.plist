@@ -6,27 +6,13 @@
 	<array>
 		<dict>
 			<key>center.x</key>
-			<real>40</real>
+			<real>611.67694091796875</real>
 			<key>center.y</key>
-			<real>40</real>
+			<real>757.89422607421875</real>
 			<key>rotation</key>
-			<real>0.43618065118789673</real>
+			<real>0.19686152040958405</real>
 			<key>scale</key>
-			<real>0.64687132835388184</real>
-			<key>subviewIndex</key>
-			<integer>0</integer>
-			<key>uuid</key>
-			<string>DDBDE117-8044-4CFE-B473-161130D2368A</string>
-		</dict>
-		<dict>
-			<key>center.x</key>
-			<real>513.3204345703125</real>
-			<key>center.y</key>
-			<real>794.80181884765625</real>
-			<key>rotation</key>
-			<real>0.16939876973628998</real>
-			<key>scale</key>
-			<real>0.49560472369194031</real>
+			<real>0.60537886619567871</real>
 			<key>subviewIndex</key>
 			<integer>0</integer>
 			<key>uuid</key>
@@ -48,24 +34,50 @@
 		</dict>
 		<dict>
 			<key>center.x</key>
-			<real>284.22967529296875</real>
+			<real>40</real>
 			<key>center.y</key>
-			<real>697.12274169921875</real>
+			<real>40</real>
 			<key>rotation</key>
-			<real>0.037682294845581055</real>
+			<real>0.37124863266944885</real>
 			<key>scale</key>
-			<real>0.62159997224807739</real>
+			<real>0.52944427728652954</real>
+			<key>subviewIndex</key>
+			<integer>0</integer>
+			<key>uuid</key>
+			<string>8772E06A-7CE6-4D4A-B154-3DAAE4F9077A</string>
+		</dict>
+		<dict>
+			<key>center.x</key>
+			<real>40</real>
+			<key>center.y</key>
+			<real>40</real>
+			<key>rotation</key>
+			<real>0.43618065118789673</real>
+			<key>scale</key>
+			<real>0.64687132835388184</real>
+			<key>uuid</key>
+			<string>DDBDE117-8044-4CFE-B473-161130D2368A</string>
+		</dict>
+		<dict>
+			<key>center.x</key>
+			<real>295.36929321289062</real>
+			<key>center.y</key>
+			<real>736.99468994140625</real>
+			<key>rotation</key>
+			<real>0.029079619795084</real>
+			<key>scale</key>
+			<real>0.8254358172416687</real>
 			<key>subviewIndex</key>
 			<integer>2</integer>
 			<key>uuid</key>
-			<string>8772E06A-7CE6-4D4A-B154-3DAAE4F9077A</string>
+			<string>0283BBE6-BC77-41C9-AEF7-97561C2168B8</string>
 		</dict>
 	</array>
 	<key>scrapsOnPageIDs</key>
 	<array>
 		<string>ABB582C6-1CFB-4935-A280-8A7B3A87528D</string>
 		<string>9E287719-D795-4FCA-9536-43942FFA28C9</string>
-		<string>8772E06A-7CE6-4D4A-B154-3DAAE4F9077A</string>
+		<string>0283BBE6-BC77-41C9-AEF7-97561C2168B8</string>
 	</array>
 </dict>
 </plist>

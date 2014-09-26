@@ -5,10 +5,21 @@
 	<key>hasConverted</key>
 	<true/>
 	<key>stackOfStrokes</key>
-	<array/>
+	<array>
+		<string>1</string>
+		<string>1</string>
+		<string>1</string>
+		<string>1</string>
+		<string>1</string>
+		<string>1</string>
+		<string>1</string>
+		<string>1</string>
+		<string>1</string>
+		<string>1</string>
+	</array>
 	<key>stackOfUndoneStrokes</key>
 	<array/>
 	<key>undoHash</key>
-	<integer>142049</integer>
+	<integer>813918209914975809</integer>
 </dict>
 </plist>
