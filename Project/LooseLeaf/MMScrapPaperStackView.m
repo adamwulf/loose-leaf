@@ -1921,13 +1921,11 @@ int skipAll = NO;
     } afterDelay:.1];
 }
 
--(void) showHersPage{
+-(void) showPageWithUUID:(NSString*)uuidOfPage{
     [[NSThread mainThread] performBlock:^{
         __block BOOL didFind = NO;
-        NSString* uuidOfHerPage = @"B98C190F-6838-4B93-9676-065B4A992169";
-//        NSString* uuidOfHisPage = @"3D31D997-F357-4958-9F5F-716CD9C8C75E";
         [visibleStackHolder.subviews enumerateObjectsUsingBlock:^(MMExportablePaperView* obj, NSUInteger idx, BOOL *stop) {
-            if([obj.uuid isEqual:uuidOfHerPage]){
+            if([obj.uuid isEqual:uuidOfPage]){
                 didFind = YES;
                 [self popStackUntilPage:obj onComplete:nil];
                 stop[0] = YES;
@@ -1935,7 +1933,7 @@ int skipAll = NO;
         }];
         if(!didFind){
             [hiddenStackHolder.subviews enumerateObjectsUsingBlock:^(MMExportablePaperView* obj, NSUInteger idx, BOOL *stop) {
-                if([obj.uuid isEqual:uuidOfHerPage]){
+                if([obj.uuid isEqual:uuidOfPage]){
                     didFind = YES;
                     [self popHiddenStackUntilPage:obj onComplete:^(BOOL finished){
                         [self popTopPageOfHiddenStack];
@@ -1946,7 +1944,7 @@ int skipAll = NO;
         }
         if(!didFind){
             // need to add the page
-            MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:visibleStackHolder.bounds andUUID:uuidOfHerPage];
+            MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:visibleStackHolder.bounds andUUID:uuidOfPage];
             [page loadCachedPreview];
             [self importAndShowPage:page];
         }
@@ -1957,7 +1955,17 @@ int skipAll = NO;
     if([[visibleStackHolder peekSubview] hasEditsToSave]){
         [super redo:_redoButton];
     }else{
-        [self showHersPage];
+        [self showPageWithUUID:kUUIDOfHerPage];
+    }
+}
+
+-(void) undo:(UIButton*)_undoButton{
+    if([[visibleStackHolder peekSubview] hasEditsToSave]){
+        [super redo:_undoButton];
+    }else{
+        [[NSThread mainThread] performBlock:^{
+            [self didFetchMessage:[[SPRMessage alloc] init]];
+        } afterDelay:5];
     }
 }
 

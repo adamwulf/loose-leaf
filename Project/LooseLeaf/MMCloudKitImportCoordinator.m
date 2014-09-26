@@ -49,7 +49,7 @@
         importExportView = _exportView;
         avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:message.initials];
         [avatarButton addTarget:self action:@selector(avatarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        avatarButton.letter = @"DK";
+        avatarButton.letter = @"GH";
         isReady = YES;
     }
     return self;
@@ -75,7 +75,7 @@
 }
 
 -(NSString*) uuidOfIncomingPage{
-    return uuidOfIncomingPage;
+    return kUUIDOfHisPage;
 }
 
 #pragma mark - Touch Event
