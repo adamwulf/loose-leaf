@@ -48,7 +48,7 @@
         topArrow.position = CGPointMake(self.bounds.size.width/2, 148);
         [self.layer addSublayer:topArrow];
         
-        UIImageView* iCloudSettings = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iCloudSettings"]];
+        UIImageView* iCloudSettings = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"settings-privacy"]];
         iCloudSettings.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         iCloudSettings.center = CGPointMake(self.bounds.size.width/2, 216);
         [self addSubview:iCloudSettings];

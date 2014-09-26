@@ -319,6 +319,8 @@
 		66DCFBDF1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBDE1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DF0B7D159BC30200C5C652 /* UIView+Animations.m */; };
 		66E223FC19D6292F000FCA96 /* MMPermissionCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E223FB19D6292F000FCA96 /* MMPermissionCollectionViewCell.m */; };
+		66E223FE19D631EA000FCA96 /* settings-privacy.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E223FD19D631EA000FCA96 /* settings-privacy.png */; };
+		66E2240019D631EF000FCA96 /* settings-privacy@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E223FF19D631EF000FCA96 /* settings-privacy@2x.png */; };
 		66E769CE18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E769CD18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m */; };
 		66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E88A361591853E001A6EBF /* MMPapersIcon.m */; };
 		66EC7B7519ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EC7B7419ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.m */; };
@@ -937,6 +939,8 @@
 		66DF0B7D159BC30200C5C652 /* UIView+Animations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Animations.m"; sourceTree = "<group>"; };
 		66E223FA19D6292F000FCA96 /* MMPermissionCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPermissionCollectionViewCell.h; sourceTree = "<group>"; };
 		66E223FB19D6292F000FCA96 /* MMPermissionCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPermissionCollectionViewCell.m; sourceTree = "<group>"; };
+		66E223FD19D631EA000FCA96 /* settings-privacy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings-privacy.png"; sourceTree = "<group>"; };
+		66E223FF19D631EF000FCA96 /* settings-privacy@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings-privacy@2x.png"; sourceTree = "<group>"; };
 		66E769CC18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+DirectoryOptimizations.h"; sourceTree = "<group>"; };
 		66E769CD18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+DirectoryOptimizations.m"; sourceTree = "<group>"; };
 		66E88A351591853E001A6EBF /* MMPapersIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPapersIcon.h; sourceTree = "<group>"; };
@@ -1309,6 +1313,8 @@
 		66381F5A19CB965D0014796F /* PhotosSection */ = {
 			isa = PBXGroup;
 			children = (
+				66E223FD19D631EA000FCA96 /* settings-privacy.png */,
+				66E223FF19D631EF000FCA96 /* settings-privacy@2x.png */,
 				66381F5719CB921A0014796F /* MMCameraCollectionViewCell.h */,
 				66381F5819CB921A0014796F /* MMCameraCollectionViewCell.m */,
 				66381F5B19CB96730014796F /* MMSinglePhotoCollectionViewCell.h */,
@@ -2475,6 +2481,7 @@
 				6672EFEC19C3AAC40076009F /* CloudKitPermissionSwitch.png in Resources */,
 				667C6366199FF25C00E93CD6 /* print@2x.png in Resources */,
 				667C636A199FF28E00E93CD6 /* print.png in Resources */,
+				66E2240019D631EF000FCA96 /* settings-privacy@2x.png in Resources */,
 				6650DD1918F48D7500ADF591 /* camera.png in Resources */,
 				6672EFE019C3A51A0076009F /* iCloudSettingsLoggedIn.png in Resources */,
 				666E253218F5DDF100C17295 /* clearphotoalbum.png in Resources */,
@@ -2500,6 +2507,7 @@
 				667C6356199FE4BC00E93CD6 /* MPNotification.storyboard in Resources */,
 				6650DD1D18F48E3F00ADF591 /* twitter.png in Resources */,
 				6652451B19958C2900C36609 /* sinaWeibo@2x.png in Resources */,
+				66E223FE19D631EA000FCA96 /* settings-privacy.png in Resources */,
 				6650DD2318F48F8300ADF591 /* facebook@2x.png in Resources */,
 				66437C55199FDF55003389F0 /* airsharing@2x.png in Resources */,
 				667D98AA192D010900625879 /* Loose-Leaf_76.png in Resources */,
