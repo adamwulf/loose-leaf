@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>class</key>
+	<string>JotStroke</string>
+	<key>segmentSmoother</key>
+	<dict>
+		<key>point0</key>
+		<string>{495, 197}</string>
+		<key>point1</key>
+		<string>{495.5, 198.5}</string>
+		<key>point2</key>
+		<string>{494.5, 199}</string>
+		<key>point3</key>
+		<string>{494.5, 199}</string>
+	</dict>
+	<key>segments</key>
+	<array/>
+	<key>texture</key>
+	<dict>
+		<key>class</key>
+		<string>JotDefaultBrushTexture</string>
+	</dict>
+</dict>
+</plist>

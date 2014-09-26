@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>allScrapProperties</key>
+	<array>
+		<dict>
+			<key>center.x</key>
+			<real>423.344970703125</real>
+			<key>center.y</key>
+			<real>390.34600830078125</real>
+			<key>rotation</key>
+			<real>-0.21864581108093262</real>
+			<key>scale</key>
+			<real>2.2535545825958252</real>
+			<key>subviewIndex</key>
+			<integer>0</integer>
+			<key>uuid</key>
+			<string>1698A71E-7018-44CD-B1B4-CCBC0C7303B0</string>
+		</dict>
+		<dict>
+			<key>center.x</key>
+			<real>428.94683837890625</real>
+			<key>center.y</key>
+			<real>356.06314086914062</real>
+			<key>rotation</key>
+			<real>1.3384674787521362</real>
+			<key>scale</key>
+			<real>1.1775729656219482</real>
+			<key>subviewIndex</key>
+			<integer>1</integer>
+			<key>uuid</key>
+			<string>4C8D7B0A-E7FD-4CEB-8737-6B0CC95550A1</string>
+		</dict>
+	</array>
+	<key>scrapsOnPageIDs</key>
+	<array>
+		<string>1698A71E-7018-44CD-B1B4-CCBC0C7303B0</string>
+		<string>4C8D7B0A-E7FD-4CEB-8737-6B0CC95550A1</string>
+	</array>
+</dict>
+</plist>

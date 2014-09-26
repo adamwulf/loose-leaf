@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>allScrapProperties</key>
+	<array>
+		<dict>
+			<key>center.x</key>
+			<real>544.892333984375</real>
+			<key>center.y</key>
+			<real>749.88360595703125</real>
+			<key>rotation</key>
+			<real>2.6107211112976074</real>
+			<key>scale</key>
+			<real>1.9527397155761719</real>
+			<key>subviewIndex</key>
+			<integer>0</integer>
+			<key>uuid</key>
+			<string>16CB0AB8-845D-405A-907F-0D518645B48A</string>
+		</dict>
+		<dict>
+			<key>center.x</key>
+			<real>208.51246643066406</real>
+			<key>center.y</key>
+			<real>793.8883056640625</real>
+			<key>rotation</key>
+			<real>-1.6075122356414795</real>
+			<key>scale</key>
+			<real>2.1824991703033447</real>
+			<key>subviewIndex</key>
+			<integer>1</integer>
+			<key>uuid</key>
+			<string>3D094CC5-8D1A-4980-8937-7482CAAD9625</string>
+		</dict>
+		<dict>
+			<key>center.x</key>
+			<real>521.40576171875</real>
+			<key>center.y</key>
+			<real>229.20509338378906</real>
+			<key>rotation</key>
+			<real>-0.64838361740112305</real>
+			<key>scale</key>
+			<real>3.2249221801757812</real>
+			<key>subviewIndex</key>
+			<integer>2</integer>
+			<key>uuid</key>
+			<string>78836AA7-E05E-4EA7-9A77-E8D4A0738626</string>
+		</dict>
+	</array>
+	<key>scrapsOnPageIDs</key>
+	<array>
+		<string>16CB0AB8-845D-405A-907F-0D518645B48A</string>
+		<string>3D094CC5-8D1A-4980-8937-7482CAAD9625</string>
+		<string>78836AA7-E05E-4EA7-9A77-E8D4A0738626</string>
+	</array>
+</dict>
+</plist>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>class</key>
+	<string>JotStroke</string>
+	<key>segmentSmoother</key>
+	<dict>
+		<key>point0</key>
+		<string>{-1, -1}</string>
+		<key>point1</key>
+		<string>{-1, -1}</string>
+		<key>point2</key>
+		<string>{-1, -1}</string>
+		<key>point3</key>
+		<string>{-1, -1}</string>
+	</dict>
+	<key>segments</key>
+	<array>
+		<dict>
+			<key>class</key>
+			<string>MoveToPathElement</string>
+			<key>color</key>
+			<dict/>
+			<key>extraLengthWithoutDot</key>
+			<real>0.0</real>
+			<key>scaleOfVertexBuffer</key>
+			<real>0.0</real>
+			<key>startPoint.x</key>
+			<real>144.73515319824219</real>
+			<key>startPoint.y</key>
+			<real>114.54212188720703</real>
+			<key>width</key>
+			<real>15.446739196777344</real>
+		</dict>
+		<dict>
+			<key>class</key>
+			<string>CurveToPathElement</string>
+			<key>color</key>
+			<dict/>
+			<key>ctrl1.x</key>
+			<real>142.13996887207031</real>
+			<key>ctrl1.y</key>
+			<real>115.65818786621094</real>
+			<key>ctrl2.x</key>
+			<real>140.40983581542969</real>
+			<key>ctrl2.y</key>
+			<real>116.40222930908203</real>
+			<key>curveTo.x</key>
+			<real>137.81465148925781</real>
+			<key>curveTo.y</key>
+			<real>117.51828765869141</real>
+			<key>extraLengthWithoutDot</key>
+			<real>0.53331947326660156</real>
+			<key>numberOfBytesOfVertexData</key>
+			<real>96</real>
+			<key>scaleOfVertexBuffer</key>
+			<real>2</real>
+			<key>startPoint.x</key>
+			<real>144.73515319824219</real>
+			<key>startPoint.y</key>
+			<real>114.54212188720703</real>
+			<key>vertexBuffer</key>
+			<data>
+			rKyQQ+0iZUPYJfdBlMyPQ6rjZUOZMBZChuyOQ2CkZkNGzjBCnvyN
+			Q7dyZ0P0a0tCdhKNQx88aEOhCWZCqCaMQ+8GaUOnU4BC0jGLQ4XZ
+			aUN+oo1CokqKQ1ygakNU8ZpC
+			</data>
+			<key>vertexBufferShouldContainColor</key>
+			<false/>
+			<key>width</key>
+			<real>42.062664031982422</real>
+		</dict>
+	</array>
+	<key>texture</key>
+	<dict>
+		<key>class</key>
+		<string>JotDefaultBrushTexture</string>
+	</dict>
+</dict>
+</plist>
