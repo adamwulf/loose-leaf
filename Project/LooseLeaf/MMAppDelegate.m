@@ -17,6 +17,7 @@
 #import "MMWindow.h"
 #import "MMCloudKitManager.h"
 #import "TestFlight.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 
 
 @implementation MMAppDelegate{
@@ -30,6 +31,14 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    // erase everything in the documents folder
+    
+    NSArray* contentsOfDocuments = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[NSFileManager documentsPath] error:nil];
+    [contentsOfDocuments enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSString* pathToRemove = [[NSFileManager documentsPath] stringByAppendingPathComponent:obj];
+        [[NSFileManager defaultManager] removeItemAtPath:pathToRemove error:nil];
+    }];
     
     debug_NSLog(@"DID FINISH LAUNCHING");
     [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
@@ -94,6 +103,9 @@
     durationTimer = nil;
     [[MMRotationManager sharedInstance] applicationDidBackground];
     debug_NSLog(@"DID ENTER BACKGROUND");
+    
+    // force the app to exit
+    [[Crashlytics sharedInstance] crash];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
