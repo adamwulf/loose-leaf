@@ -1953,9 +1953,9 @@ int skipAll = NO;
     }];
 }
 
--(void) undo:(UIButton*)_undoButton{
+-(void) redo:(UIButton*)_redoButton{
     if([[visibleStackHolder peekSubview] hasEditsToSave]){
-        [super undo:_undoButton];
+        [super redo:_redoButton];
     }else{
         [self showHersPage];
     }

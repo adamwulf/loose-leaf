@@ -83,6 +83,8 @@
 
 -(void) undo:(UIButton*)button;
 
+-(void) redo:(UIButton*)button;
+
 // protected
 
 -(void) addPageButtonTapped:(UIButton*)_button;
