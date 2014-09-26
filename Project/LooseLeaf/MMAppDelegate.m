@@ -103,9 +103,6 @@
     durationTimer = nil;
     [[MMRotationManager sharedInstance] applicationDidBackground];
     debug_NSLog(@"DID ENTER BACKGROUND");
-    
-    // force the app to exit
-    [[Crashlytics sharedInstance] crash];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
