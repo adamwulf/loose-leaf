@@ -15,6 +15,7 @@
 #import "Mixpanel.h"
 #import "MMMemoryManager.h"
 #import "MMTouchVelocityGestureRecognizer.h"
+#import "TestFlight.h"
 
 @implementation MMLooseLeafViewController{
     MMMemoryManager* memoryManager;
@@ -24,11 +25,12 @@
     if(self = [super init]){
         
         [NSThread performBlockInBackground:^{
-            [TestFlight takeOff:kTestflightAppToken];
             [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
             [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
             [TestFlight setOptions:@{ TFOptionLogOnCheckpoint : @NO }];
             [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
+            [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
+            [TestFlight takeOff:kTestflightAppToken];
         }];
 
         [[Crashlytics sharedInstance] setDelegate:self];
