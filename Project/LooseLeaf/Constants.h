@@ -78,6 +78,10 @@ _Pragma("clang diagnostic pop") \
 #define kBezelInGestureWidth 40
 #define kUndoLimit 10 // TODO: make sure this defines the jot undo level
 
+// Camera
+#define kCameraMargin 10
+#define kCameraPositionUserDefaultKey @"com.milestonemade.preferredCameraPosition"
+
 // Scraps
 #define kScrapShadowBufferSize 4
 
@@ -128,6 +132,9 @@ _Pragma("clang diagnostic pop") \
 #define kMPEventInvitePropDestination @"Invite Destination"
 #define kMPEventInvitePropResult @"Invite Result"
 
+// MixPanel Error Events
+#define kMPEventMemoryWarning @"Memory Warning"
+
 // MixPanel Events Properties
 #define kMPEventLaunch @"App Launch"
 #define kMPEventTakePhoto @"Take Photo"
@@ -157,7 +164,7 @@ _Pragma("clang diagnostic pop") \
 // photo album
 #define kMaxPhotoRotationInDegrees 20
 
-#define RandomPhotoRotation ((float)(rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees/2)) / 360.0 * M_PI
+#define RandomPhotoRotation(a) (^float(NSInteger b){srand((unsigned)b); float output = ((float)(rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees/2)) / 360.0 * M_PI; srand((unsigned)time(NULL)); return output;})(a)
 
 // cache sizes
 #define kMMLoadImageCacheSize 10

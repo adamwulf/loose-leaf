@@ -9,7 +9,6 @@
 #import "MMLooseLeafViewController.h"
 #import "MMShadowManager.h"
 #import "MMEditablePaperView.h"
-#import "TestFlight.h"
 #import "MMDebugDrawView.h"
 #import "MMInboxManager.h"
 #import "MMMemoryProfileView.h"

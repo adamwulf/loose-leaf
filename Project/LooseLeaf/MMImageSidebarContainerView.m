@@ -23,8 +23,8 @@
 
 @implementation MMImageSidebarContainerView{
     MMCameraSidebarContentView* cameraListContentView;
-    MMAbstractSidebarContentView* albumListContentView;
-    MMAbstractSidebarContentView* faceListContentView;
+    MMAlbumSidebarContentView* albumListContentView;
+    MMFaceSidebarContentView* faceListContentView;
     MMEventSidebarContentView* eventListContentView;
     MMPDFInboxContentView* pdfListContentView;
     
@@ -126,6 +126,7 @@
 
 -(void) show:(BOOL)animated{
     [super show:animated];
+    [self updateInterfaceTo:[[MMRotationManager sharedInstance] lastBestOrientation]];
     if(!cameraListContentView.hidden){
         [cameraListContentView show:animated];
     }
@@ -169,7 +170,7 @@
     [self.delegate pictureTakeWithCamera:img fromView:cameraView];
 }
 
--(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(MMAbstractSidebarContentView *)container{
+-(void) photoWasTapped:(MMPhoto *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(MMAbstractSidebarContentView *)container{
     [self.delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation fromContainer:[container description]];
 }
 

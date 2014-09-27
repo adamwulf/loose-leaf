@@ -11,7 +11,7 @@
 @implementation MMRotationManager{
     CGFloat goalTrust;
     CGFloat currentTrust;
-    UIDeviceOrientation lastBestOrientation;
+    UIInterfaceOrientation lastBestOrientation;
     UIDeviceOrientation currentOrientation;
     
     NSDate* startupTime;
@@ -34,7 +34,7 @@ static MMRotationManager* _instance = nil;
         startupTime = [NSDate date];
         currentTrust = 0.0;
         goalTrust = 0.0;
-        lastBestOrientation = UIDeviceOrientationPortrait;
+        lastBestOrientation = UIInterfaceOrientationPortrait;
         [[NSNotificationCenter defaultCenter] addObserver:_instance selector:@selector(didRotate:)   name:UIDeviceOrientationDidChangeNotification object:nil];
         isFirstReading = YES;
         @synchronized(self){
@@ -106,9 +106,9 @@ static MMRotationManager* _instance = nil;
                 if(currentOrientation != UIDeviceOrientationFaceUp &&
                    currentOrientation != UIDeviceOrientationFaceDown &&
                    currentOrientation != UIDeviceOrientationUnknown &&
-                   currentOrientation != lastBestOrientation){
-                    lastBestOrientation = currentOrientation;
-                    [self.delegate didRotateToIdealOrientation:(UIInterfaceOrientation)lastBestOrientation];
+                   currentOrientation != (UIDeviceOrientation) lastBestOrientation){
+                    lastBestOrientation = (UIInterfaceOrientation)currentOrientation;
+                    [self.delegate didRotateToIdealOrientation:lastBestOrientation];
                 }
             }
         }

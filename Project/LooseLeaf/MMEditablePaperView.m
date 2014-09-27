@@ -11,7 +11,6 @@
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "NSThread+BlockAdditions.h"
-#import "TestFlight.h"
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import "DKUIBezierPathClippedSegment+PathElement.h"
 #import "NSFileManager+DirectoryOptimizations.h"

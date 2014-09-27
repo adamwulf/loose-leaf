@@ -27,7 +27,6 @@
 #import "Mixpanel.h"
 #import "MMTrashManager.h"
 #import "MMShareSidebarContainerView.h"
-#import "MMCloudKitImportContainerView.h"
 #import "MMCloudKitImportExportView.h"
 #import "MMCloudKitManager.h"
 #import "MMCloudKitFetchFriendsState.h"
@@ -58,7 +57,7 @@
     
     // cloudkit import sidebar
     MMTextButton* cloudKitImportButton;
-    MMCloudKitImportContainerView* cloudKitImportSidebar;
+    MMSlidingSidebarContainerView* cloudKitImportSidebar;
     MMCloudKitImportExportView* cloudKitExportView;
 
     NSTimer* debugTimer;
@@ -168,7 +167,7 @@
                                                         andXOffset:0
                                                         andYOffset:0];
         cloudKitImportButton.alpha = 0;
-        cloudKitImportSidebar = [[MMCloudKitImportContainerView alloc] initWithFrame:self.bounds forButton:cloudKitImportButton animateFromLeft:NO];
+        cloudKitImportSidebar = [[MMSlidingSidebarContainerView alloc] initWithFrame:self.bounds forButton:cloudKitImportButton animateFromLeft:NO];
         [cloudKitImportSidebar hide:NO onComplete:nil];
         [self addSubview:sharePageSidebar];
         
@@ -252,7 +251,7 @@
         UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(center.x, center.y, scrapSize.width, scrapSize.height)];
         
         MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
-        MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation andScale:1.0];
+        MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation(rand()) andScale:1.0];
         [scrapContainer addSubview:scrap];
         
         // background fills the entire scrap
@@ -278,7 +277,7 @@
                              center.x += random() % 14 - 7;
                              center.y += random() % 14 - 7;
                              scrap.center = center;
-                             [scrap setScale:(1-bounceScale) andRotation:RandomPhotoRotation];
+                             [scrap setScale:(1-bounceScale) andRotation:RandomPhotoRotation(rand())];
                              scrap.alpha = .72;
                          }
                          completion:^(BOOL finished){
@@ -424,7 +423,7 @@
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          scrap.center = [visibleStackHolder peekSubview].center;
-                         [scrap setScale:(1+bounceScale) andRotation:RandomPhotoRotation];
+                         [scrap setScale:(1+bounceScale) andRotation:RandomPhotoRotation(rand())];
                      }
                      completion:^(BOOL finished){
                          [UIView animateWithDuration:.1
@@ -442,11 +441,11 @@
                      }];
 }
 
--(void) photoWasTapped:(ALAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription{
+-(void) photoWasTapped:(MMPhoto *)photo fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription{
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
     
-    NSURL* assetURL = asset.defaultRepresentation.url;
+    NSURL* assetURL = photo.fullResolutionURL;
     [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{ kMPEventImportPropFileExt : [assetURL fileExtension],
                                                                        kMPEventImportPropFileType : [assetURL universalTypeID],
                                                                        kMPEventImportPropSource: containerDescription}];
@@ -472,7 +471,7 @@
     // max image size in any direction is 300pts
     CGFloat maxDim = 600;
     
-    CGSize fullScale = [[asset defaultRepresentation] dimensions];
+    CGSize fullScale = photo.fullResolutionSize;
     if(fullScale.width >= fullScale.height && fullScale.width > maxDim){
         fullScale.height = fullScale.height / fullScale.width * maxDim;
         fullScale.width = maxDim;
@@ -483,7 +482,7 @@
     
     CGFloat startingScale = scrapRect.size.width / fullScale.width;
     
-    UIImage* scrapBacking = [asset aspectThumbnailWithMaxPixelSize:300];
+    UIImage* scrapBacking = [photo aspectThumbnailWithMaxPixelSize:300];
     
     MMUndoablePaperView* topPage = [visibleStackHolder peekSubview];
     MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:0 andScale:startingScale];
@@ -507,7 +506,7 @@
     // move the scrap so that it covers the image that was just tapped.
     // then we'll animate it onto the page
     scrap.center = [self convertPoint:CGPointMake(bufferedImage.bounds.size.width/2, bufferedImage.bounds.size.height/2) fromView:bufferedImage];
-    scrap.rotation = bufferedImage.rotation;
+    scrap.rotation = rotation;
     
     // hide the picker, this'll slide it out
     // underneath our scrap
@@ -527,7 +526,7 @@
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          scrap.center = [visibleStackHolder peekSubview].center;
-                         [scrap setScale:(1+bounceScale) andRotation:scrap.rotation + RandomPhotoRotation];
+                         [scrap setScale:(1+bounceScale) andRotation:scrap.rotation + RandomPhotoRotation(rand())];
                      }
                      completion:^(BOOL finished){
                          [UIView animateWithDuration:.1
@@ -582,6 +581,7 @@ int skipAll = NO;
                           nil];
     
     [page.drawableView addElements:shortLine];
+    [page.drawableView.state finishCurrentStroke];
     
     [page saveToDisk];
     

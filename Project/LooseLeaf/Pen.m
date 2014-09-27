@@ -8,7 +8,6 @@
 
 #import "Pen.h"
 #import "Constants.h"
-#import "TestFlight.h"
 #import <JotUI/JotUI.h>
 #import "MMTouchVelocityGestureRecognizer.h"
 

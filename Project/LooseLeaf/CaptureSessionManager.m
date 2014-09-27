@@ -66,6 +66,10 @@ dispatch_queue_t sessionQueue;
     return [CaptureSessionManager deviceForPosition:AVCaptureDevicePositionUnspecified] ? YES : NO;
 }
 
++(BOOL) hasCameraPermission{
+    return [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] == AVAuthorizationStatusAuthorized;
+}
+
 -(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
     if([keyPath isEqualToString:@"isInterrupted"]){
         debug_NSLog(@"interrupted!");
@@ -214,27 +218,29 @@ dispatch_queue_t sessionQueue;
             // Flash set to Auto for Still Capture
             [CaptureSessionManager setFlashMode:AVCaptureFlashModeAuto forDevice:currDevice];
             
-            // Capture a still image.
-            [stillImageOutput captureStillImageAsynchronouslyFromConnection:[stillImageOutput connectionWithMediaType:AVMediaTypeVideo] completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
-                
-                if (imageDataSampleBuffer)
-                {
-                    NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
-                    UIImage *image = [[UIImage alloc] initWithData:imageData];
+            if([CaptureSessionManager hasCameraPermission]){
+                // Capture a still image.
+                [stillImageOutput captureStillImageAsynchronouslyFromConnection:[stillImageOutput connectionWithMediaType:AVMediaTypeVideo] completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
                     
-                    [delegate didTakePicture:image];
-                    
-//                    CGSize sizeOfImage = image.size;
-//                    UIImageOrientation orient = image.imageOrientation;
-//                    AVCaptureVideoOrientation captureOrient = [[(AVCaptureVideoPreviewLayer *)[self previewLayer] connection] videoOrientation];
-//                    debug_NSLog(@"image size %f,%f orient %@ %@ %@", sizeOfImage.width, sizeOfImage.height, [self logImageOrientation:orient], [self logVideoOrientation:captureOrient], [self logAssetOrientation:[self currentDeviceOrientation]]);
-                    
-                    // rotate the image that we save
-                    [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage]
-                                                                     orientation:[self currentDeviceOrientation]
-                                                                 completionBlock:nil];
-                }
-            }];
+                    if (imageDataSampleBuffer)
+                    {
+                        NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
+                        UIImage *image = [[UIImage alloc] initWithData:imageData];
+                        
+                        [delegate didTakePicture:image];
+                        
+                        //                    CGSize sizeOfImage = image.size;
+                        //                    UIImageOrientation orient = image.imageOrientation;
+                        //                    AVCaptureVideoOrientation captureOrient = [[(AVCaptureVideoPreviewLayer *)[self previewLayer] connection] videoOrientation];
+                        //                    debug_NSLog(@"image size %f,%f orient %@ %@ %@", sizeOfImage.width, sizeOfImage.height, [self logImageOrientation:orient], [self logVideoOrientation:captureOrient], [self logAssetOrientation:[self currentDeviceOrientation]]);
+                        
+                        // rotate the image that we save
+                        [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage]
+                                                                         orientation:[self currentDeviceOrientation]
+                                                                     completionBlock:nil];
+                    }
+                }];
+            }
         }
 	});
 }

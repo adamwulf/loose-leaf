@@ -27,6 +27,8 @@
 
 +(MMPhotoManager*) sharedInstance;
 
++(BOOL) hasPhotosPermission;
+
 -(void) initializeAlbumCache;
 
 @end
