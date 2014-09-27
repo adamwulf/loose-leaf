@@ -14,6 +14,7 @@
 #import "MMImageSidebarContainerView.h"
 #import "MMSinglePhotoCollectionViewCell.h"
 #import "MMPermissionPhotosCollectionViewCell.h"
+#import "MMEmptyCollectionViewCell.h"
 #import "MMPhotoAlbumListLayout.h"
 #import "MMRotationManager.h"
 #import "Constants.h"
@@ -22,6 +23,7 @@
 
 @implementation MMAbstractSidebarContentView{
     NSMutableDictionary* currentRowForAlbum;
+    MMEmptyCollectionViewCell* emptyView;
 }
 
 @synthesize delegate;
@@ -43,6 +45,7 @@
         
         [photoListScrollView registerClass:[MMSinglePhotoCollectionViewCell class] forCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell"];
         [photoListScrollView registerClass:[MMPermissionPhotosCollectionViewCell class] forCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell"];
+        [photoListScrollView registerClass:[MMEmptyCollectionViewCell class] forCellWithReuseIdentifier:@"MMEmptyCollectionViewCell"];
 
         currentAlbum = nil;
         
@@ -86,6 +89,11 @@
 -(void) reset:(BOOL)animated{
     albumListScrollView.alpha = 1;
     photoListScrollView.alpha = 0;
+    
+    if(!currentAlbum.numberOfPhotos){
+        emptyView = [[MMEmptyCollectionViewCell alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.width)];
+        [self addSubview:emptyView];
+    }
 }
 
 -(void) show:(BOOL)animated{
@@ -96,6 +104,10 @@
 
 -(void) hide:(BOOL)animated{
     isShowing = NO;
+    if(emptyView){
+        [emptyView removeFromSuperview];
+        emptyView = nil;
+    }
     [[NSThread mainThread] performBlock:^{
         [photoListScrollView reloadData];
     } afterDelay:.1];

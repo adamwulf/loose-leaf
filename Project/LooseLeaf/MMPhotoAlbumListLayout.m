@@ -94,7 +94,8 @@
     
     CGRect b = CGRectMake(0, 0, width/2, [self photoRowHeight]);
     ret.bounds = b;
-    ret.center = CGPointMake(x + ret.bounds.size.width/2, [self cameraRowHeight] + y + ret.bounds.size.height/2);
+    CGPoint c = CGPointMake(x + ret.bounds.size.width/2, [self cameraRowHeight] + y + ret.bounds.size.height/2);
+    ret.center = c;
     ret.transform = CGAffineTransformMakeRotation(rotation);
     
     return ret;
