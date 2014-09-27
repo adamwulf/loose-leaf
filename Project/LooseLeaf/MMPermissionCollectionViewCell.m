@@ -23,12 +23,11 @@
         UIColor* halfWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.503];
         
         CGFloat width = frame.size.width;
-        CGRect lineRect = CGRectMake(width*0.1, kWidthOfSidebarButtonBuffer, width*0.8, 1);
+        CGRect lineRect = CGRectMake(width*0.1, frame.size.height - kWidthOfSidebarButtonBuffer, width*0.8, 1);
         UIView* line = [[UIView alloc] initWithFrame:lineRect];
         line.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
         line.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         [self addSubview:line];
-        
         
         UIImage* settingsIcon = [UIImage imageNamed:@"ios-settings-icon"];
         UIButton* settingsButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, settingsIcon.size.width, settingsIcon.size.height)];
@@ -48,13 +47,57 @@
         topArrow.position = CGPointMake(self.bounds.size.width/2, 148);
         [self.layer addSublayer:topArrow];
         
-        UIImageView* iCloudSettings = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"settings-privacy"]];
-        iCloudSettings.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        iCloudSettings.center = CGPointMake(self.bounds.size.width/2, 216);
-        [self addSubview:iCloudSettings];
+        UIImageView* settingsPrivacy = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"settings-privacy"]];
+        settingsPrivacy.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        settingsPrivacy.center = CGPointMake(self.bounds.size.width/2, 216);
+        [self addSubview:settingsPrivacy];
         
+        CAShapeLayer* midArrow = [CAShapeLayer layer];
+        midArrow.bounds = CGRectMake(0, 0, 80, 80);
+        midArrow.path = [self arrowPathForFrame:midArrow.bounds].CGPath;
+        midArrow.lineWidth = 1;
+        midArrow.strokeColor = borderColor.CGColor;
+        midArrow.fillColor = halfWhite.CGColor;
+        midArrow.position = CGPointMake(self.bounds.size.width/2, 274);
+        [self.layer addSublayer:midArrow];
+        
+        NSString* settingsStep2Image;
+        if([UIDevice majorVersion] >= 8){
+            settingsStep2Image = @"ios8-settings-camera";
+        }else{
+            settingsStep2Image = @"ios7-settings-camera";
+        }
+        
+        UIImageView* settingsCamera = [[UIImageView alloc] initWithImage:[UIImage imageNamed:settingsStep2Image]];
+        settingsCamera.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        settingsCamera.center = CGPointMake(self.bounds.size.width/2, 338);
+        [self addSubview:settingsCamera];
+        
+        if([UIDevice majorVersion] < 8){
+            CAShapeLayer* lastArrow = [CAShapeLayer layer];
+            lastArrow.bounds = CGRectMake(0, 0, 80, 80);
+            lastArrow.path = [self arrowPathForFrame:lastArrow.bounds].CGPath;
+            lastArrow.lineWidth = 1;
+            lastArrow.strokeColor = borderColor.CGColor;
+            lastArrow.fillColor = halfWhite.CGColor;
+            lastArrow.position = CGPointMake(self.bounds.size.width/2, 396);
+            [self.layer addSublayer:lastArrow];
+            
+            UIImageView* settingsCamera = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CloudKitPermissionSwitch"]];
+            settingsCamera.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+            settingsCamera.center = CGPointMake(self.bounds.size.width/2, 454);
+            [self addSubview:settingsCamera];
+        }
     }
     return self;
+}
+
++(CGFloat) idealPhotoRowHeight{
+    if([UIDevice majorVersion] >= 8){
+        return 2.5;
+    }else{
+        return 3.25;
+    }
 }
 
 -(void) settingsButtonTapped:(UIButton*)button{

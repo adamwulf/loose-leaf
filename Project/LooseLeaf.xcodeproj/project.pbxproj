@@ -321,6 +321,10 @@
 		66E223FC19D6292F000FCA96 /* MMPermissionCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E223FB19D6292F000FCA96 /* MMPermissionCollectionViewCell.m */; };
 		66E223FE19D631EA000FCA96 /* settings-privacy.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E223FD19D631EA000FCA96 /* settings-privacy.png */; };
 		66E2240019D631EF000FCA96 /* settings-privacy@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E223FF19D631EF000FCA96 /* settings-privacy@2x.png */; };
+		66E2240219D633E1000FCA96 /* ios8-settings-camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240119D633E1000FCA96 /* ios8-settings-camera.png */; };
+		66E2240419D633E6000FCA96 /* ios8-settings-camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240319D633E6000FCA96 /* ios8-settings-camera@2x.png */; };
+		66E2240619D637AD000FCA96 /* ios7-settings-camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240519D637AD000FCA96 /* ios7-settings-camera.png */; };
+		66E2240819D637B2000FCA96 /* ios7-settings-camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240719D637B2000FCA96 /* ios7-settings-camera@2x.png */; };
 		66E769CE18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E769CD18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m */; };
 		66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E88A361591853E001A6EBF /* MMPapersIcon.m */; };
 		66EC7B7519ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EC7B7419ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.m */; };
@@ -941,6 +945,10 @@
 		66E223FB19D6292F000FCA96 /* MMPermissionCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPermissionCollectionViewCell.m; sourceTree = "<group>"; };
 		66E223FD19D631EA000FCA96 /* settings-privacy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings-privacy.png"; sourceTree = "<group>"; };
 		66E223FF19D631EF000FCA96 /* settings-privacy@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings-privacy@2x.png"; sourceTree = "<group>"; };
+		66E2240119D633E1000FCA96 /* ios8-settings-camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios8-settings-camera.png"; sourceTree = "<group>"; };
+		66E2240319D633E6000FCA96 /* ios8-settings-camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios8-settings-camera@2x.png"; sourceTree = "<group>"; };
+		66E2240519D637AD000FCA96 /* ios7-settings-camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios7-settings-camera.png"; sourceTree = "<group>"; };
+		66E2240719D637B2000FCA96 /* ios7-settings-camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios7-settings-camera@2x.png"; sourceTree = "<group>"; };
 		66E769CC18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+DirectoryOptimizations.h"; sourceTree = "<group>"; };
 		66E769CD18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+DirectoryOptimizations.m"; sourceTree = "<group>"; };
 		66E88A351591853E001A6EBF /* MMPapersIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPapersIcon.h; sourceTree = "<group>"; };
@@ -1313,6 +1321,10 @@
 		66381F5A19CB965D0014796F /* PhotosSection */ = {
 			isa = PBXGroup;
 			children = (
+				66E2240519D637AD000FCA96 /* ios7-settings-camera.png */,
+				66E2240719D637B2000FCA96 /* ios7-settings-camera@2x.png */,
+				66E2240119D633E1000FCA96 /* ios8-settings-camera.png */,
+				66E2240319D633E6000FCA96 /* ios8-settings-camera@2x.png */,
 				66E223FD19D631EA000FCA96 /* settings-privacy.png */,
 				66E223FF19D631EF000FCA96 /* settings-privacy@2x.png */,
 				66381F5719CB921A0014796F /* MMCameraCollectionViewCell.h */,
@@ -2484,16 +2496,19 @@
 				66E2240019D631EF000FCA96 /* settings-privacy@2x.png in Resources */,
 				6650DD1918F48D7500ADF591 /* camera.png in Resources */,
 				6672EFE019C3A51A0076009F /* iCloudSettingsLoggedIn.png in Resources */,
+				66E2240619D637AD000FCA96 /* ios7-settings-camera.png in Resources */,
 				666E253218F5DDF100C17295 /* clearphotoalbum.png in Resources */,
 				6672EFEE19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png in Resources */,
 				667EF0C719A54F2100B1A38D /* icloud-share.png in Resources */,
 				6650DD1B18F48D7A00ADF591 /* camera@2x.png in Resources */,
+				66E2240819D637B2000FCA96 /* ios7-settings-camera@2x.png in Resources */,
 				66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */,
 				667C636F199FF41300E93CD6 /* copy.png in Resources */,
 				66684B4A182DAEBC005A27B4 /* UIImageRoundedCorner.license in Resources */,
 				665245271996AA7B00C36609 /* FXBlurView.license in Resources */,
 				66684B46182DACAE005A27B4 /* DrawKit.license in Resources */,
 				660E9DCB19183032000A392A /* blackblur.png in Resources */,
+				66E2240219D633E1000FCA96 /* ios8-settings-camera.png in Resources */,
 				66F968B319C3947700C1F696 /* iCloudSettings.png in Resources */,
 				666425C418CBC61200A306C1 /* opencv.license in Resources */,
 				6672EFE419C3A6190076009F /* iCloudDrive.png in Resources */,
@@ -2529,6 +2544,7 @@
 				66A02F9C19A1DBE90013EFAE /* Eppz.license in Resources */,
 				667EF0C919A54F2500B1A38D /* icloud-share@2x.png in Resources */,
 				666E253E18F5E19100C17295 /* clearcamera.png in Resources */,
+				66E2240419D633E6000FCA96 /* ios8-settings-camera@2x.png in Resources */,
 				6650DD2718F491BA00ADF591 /* evernote@2x.png in Resources */,
 				66EDE44319B1011800A5623B /* minizip.license in Resources */,
 				667C6368199FF26100E93CD6 /* copy@2x.png in Resources */,

@@ -10,4 +10,6 @@
 
 @interface MMPermissionCollectionViewCell : UICollectionViewCell
 
++(CGFloat) idealPhotoRowHeight;
+
 @end
