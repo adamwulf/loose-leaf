@@ -329,6 +329,7 @@
 		66E2240F19D645C0000FCA96 /* ios8-settings-photos@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240E19D645C0000FCA96 /* ios8-settings-photos@2x.png */; };
 		66E2241119D6463F000FCA96 /* ios7-settings-photos.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2241019D6463F000FCA96 /* ios7-settings-photos.png */; };
 		66E2241319D64644000FCA96 /* ios7-settings-photos@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2241219D64644000FCA96 /* ios7-settings-photos@2x.png */; };
+		66E2241619D66ADD000FCA96 /* MMPermissionCameraPhotosCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E2241519D66ADD000FCA96 /* MMPermissionCameraPhotosCollectionViewCell.m */; };
 		66E769CE18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E769CD18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m */; };
 		66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E88A361591853E001A6EBF /* MMPapersIcon.m */; };
 		66EC7B7519ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EC7B7419ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.m */; };
@@ -957,6 +958,8 @@
 		66E2240E19D645C0000FCA96 /* ios8-settings-photos@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios8-settings-photos@2x.png"; sourceTree = "<group>"; };
 		66E2241019D6463F000FCA96 /* ios7-settings-photos.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios7-settings-photos.png"; sourceTree = "<group>"; };
 		66E2241219D64644000FCA96 /* ios7-settings-photos@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios7-settings-photos@2x.png"; sourceTree = "<group>"; };
+		66E2241419D66ADD000FCA96 /* MMPermissionCameraPhotosCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPermissionCameraPhotosCollectionViewCell.h; sourceTree = "<group>"; };
+		66E2241519D66ADD000FCA96 /* MMPermissionCameraPhotosCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPermissionCameraPhotosCollectionViewCell.m; sourceTree = "<group>"; };
 		66E769CC18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+DirectoryOptimizations.h"; sourceTree = "<group>"; };
 		66E769CD18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+DirectoryOptimizations.m"; sourceTree = "<group>"; };
 		66E88A351591853E001A6EBF /* MMPapersIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPapersIcon.h; sourceTree = "<group>"; };
@@ -1348,6 +1351,8 @@
 				66C4734E19CB999000505BC0 /* MMPhotoAlbumListLayout.m */,
 				66E2240919D63B8B000FCA96 /* MMPermissionPhotosCollectionViewCell.h */,
 				66E2240A19D63B8B000FCA96 /* MMPermissionPhotosCollectionViewCell.m */,
+				66E2241419D66ADD000FCA96 /* MMPermissionCameraPhotosCollectionViewCell.h */,
+				66E2241519D66ADD000FCA96 /* MMPermissionCameraPhotosCollectionViewCell.m */,
 			);
 			name = PhotosSection;
 			sourceTree = "<group>";
@@ -2760,6 +2765,7 @@
 				66A790BC196899980037F01A /* MMUndoRedoPageItem.m in Sources */,
 				66BEBFFA19BD6AAA0032D30C /* MMProgressedImageViewButton.m in Sources */,
 				66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */,
+				66E2241619D66ADD000FCA96 /* MMPermissionCameraPhotosCollectionViewCell.m in Sources */,
 				66423DD019425AA7000A3709 /* MMCachedPreviewManager.m in Sources */,
 				66A08E71196B242F00476F99 /* MMUndoRedoMoveScrapItem.m in Sources */,
 				66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */,

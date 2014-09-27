@@ -10,6 +10,7 @@
 #import "MMPhotoManager.h"
 #import "MMImageSidebarContainerView.h"
 #import "MMPermissionPhotosCollectionViewCell.h"
+#import "MMPermissionCameraPhotosCollectionViewCell.h"
 #import "NSThread+BlockAdditions.h"
 #import "CaptureSessionManager.h"
 #import "MMRotationManager.h"
@@ -36,6 +37,8 @@
         
         [photoListScrollView registerClass:[MMCameraCollectionViewCell class] forCellWithReuseIdentifier:@"MMCameraCollectionViewCell"];
         [photoListScrollView registerClass:[MMPermissionPhotosCollectionViewCell class] forCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell"];
+        [photoListScrollView registerClass:[MMPermissionCameraPhotosCollectionViewCell class]
+                forCellWithReuseIdentifier:@"MMPermissionCameraPhotosCollectionViewCell"];
     }
     return self;
 }
@@ -118,6 +121,10 @@
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     // 1 section for camera row, and 1 section for camera roll photos
+    if(isShowing && !([CaptureSessionManager hasCamera] && [CaptureSessionManager hasCameraPermission]) &&
+       ![MMPhotoManager hasPhotosPermission]){
+        return 1;
+    }
     return isShowing ? 2 : 0;
 }
 
@@ -131,10 +138,13 @@
                 cachedCameraCell.delegate = self;
                 return cachedCameraCell;
             }
-        }else{
+        }else if([MMPhotoManager hasPhotosPermission]){
             MMPermissionPhotosCollectionViewCell* cell =  [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell" forIndexPath:indexPath];
             [cell showCameraSteps];
             return cell;
+        }else{
+            return [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPermissionCameraPhotosCollectionViewCell"
+                                                             forIndexPath:indexPath];
         }
     }
     if([MMPhotoManager hasPhotosPermission]){
