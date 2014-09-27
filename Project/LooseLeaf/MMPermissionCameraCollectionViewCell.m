@@ -6,13 +6,13 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMPermissionCollectionViewCell.h"
+#import "MMPermissionCameraCollectionViewCell.h"
 #import "UIView+Animations.h"
 #import "NSThread+BlockAdditions.h"
 #import "UIDevice+PPI.h"
 #import "Constants.h"
 
-@implementation MMPermissionCollectionViewCell{
+@implementation MMPermissionCameraCollectionViewCell{
     CAShapeLayer* topArrow;
 }
 
@@ -107,10 +107,6 @@
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
         } afterDelay:.2];
     }
-}
-
--(void) layoutSubviews{
-    topArrow.position = CGPointMake(self.bounds.size.width/2, topArrow.position.y);
 }
 
 

@@ -318,7 +318,7 @@
 		66DCFBCD1582BAED00B4918C /* MMPaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBCC1582BAED00B4918C /* MMPaperView.m */; };
 		66DCFBDF1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBDE1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DF0B7D159BC30200C5C652 /* UIView+Animations.m */; };
-		66E223FC19D6292F000FCA96 /* MMPermissionCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E223FB19D6292F000FCA96 /* MMPermissionCollectionViewCell.m */; };
+		66E223FC19D6292F000FCA96 /* MMPermissionCameraCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E223FB19D6292F000FCA96 /* MMPermissionCameraCollectionViewCell.m */; };
 		66E223FE19D631EA000FCA96 /* settings-privacy.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E223FD19D631EA000FCA96 /* settings-privacy.png */; };
 		66E2240019D631EF000FCA96 /* settings-privacy@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E223FF19D631EF000FCA96 /* settings-privacy@2x.png */; };
 		66E2240219D633E1000FCA96 /* ios8-settings-camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240119D633E1000FCA96 /* ios8-settings-camera.png */; };
@@ -941,8 +941,8 @@
 		66DCFBDE1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchGestureRecognizer.m; sourceTree = "<group>"; };
 		66DF0B7C159BC30200C5C652 /* UIView+Animations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Animations.h"; sourceTree = "<group>"; };
 		66DF0B7D159BC30200C5C652 /* UIView+Animations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Animations.m"; sourceTree = "<group>"; };
-		66E223FA19D6292F000FCA96 /* MMPermissionCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPermissionCollectionViewCell.h; sourceTree = "<group>"; };
-		66E223FB19D6292F000FCA96 /* MMPermissionCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPermissionCollectionViewCell.m; sourceTree = "<group>"; };
+		66E223FA19D6292F000FCA96 /* MMPermissionCameraCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPermissionCameraCollectionViewCell.h; sourceTree = "<group>"; };
+		66E223FB19D6292F000FCA96 /* MMPermissionCameraCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPermissionCameraCollectionViewCell.m; sourceTree = "<group>"; };
 		66E223FD19D631EA000FCA96 /* settings-privacy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings-privacy.png"; sourceTree = "<group>"; };
 		66E223FF19D631EF000FCA96 /* settings-privacy@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings-privacy@2x.png"; sourceTree = "<group>"; };
 		66E2240119D633E1000FCA96 /* ios8-settings-camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios8-settings-camera.png"; sourceTree = "<group>"; };
@@ -1334,8 +1334,8 @@
 				66C4735019CBD7C600505BC0 /* MMSinglePhotoCollectionViewCellDelegate.h */,
 				66C4734D19CB999000505BC0 /* MMPhotoAlbumListLayout.h */,
 				66C4734E19CB999000505BC0 /* MMPhotoAlbumListLayout.m */,
-				66E223FA19D6292F000FCA96 /* MMPermissionCollectionViewCell.h */,
-				66E223FB19D6292F000FCA96 /* MMPermissionCollectionViewCell.m */,
+				66E223FA19D6292F000FCA96 /* MMPermissionCameraCollectionViewCell.h */,
+				66E223FB19D6292F000FCA96 /* MMPermissionCameraCollectionViewCell.m */,
 			);
 			name = PhotosSection;
 			sourceTree = "<group>";
@@ -2795,7 +2795,7 @@
 				66AC8D7918E7506A00A65036 /* MMImageSidebarContainerView.m in Sources */,
 				665245631996DAB800C36609 /* AFHTTPRequestOperationManager.m in Sources */,
 				66AC8D8018E88BCC00A65036 /* MMPhotoManager.m in Sources */,
-				66E223FC19D6292F000FCA96 /* MMPermissionCollectionViewCell.m in Sources */,
+				66E223FC19D6292F000FCA96 /* MMPermissionCameraCollectionViewCell.m in Sources */,
 				66FA039819BEBAB300AF0DC4 /* MMCloudKeyIconLayer.m in Sources */,
 				66A471C217C7DEF200C2A5B6 /* SYShape+Bezier.m in Sources */,
 				66B3522517A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m in Sources */,

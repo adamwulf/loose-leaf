@@ -9,7 +9,7 @@
 #import "MMCameraSidebarContentView.h"
 #import "MMPhotoManager.h"
 #import "MMImageSidebarContainerView.h"
-#import "MMPermissionCollectionViewCell.h"
+#import "MMPermissionCameraCollectionViewCell.h"
 #import "NSThread+BlockAdditions.h"
 #import "CaptureSessionManager.h"
 #import "MMRotationManager.h"
@@ -35,7 +35,7 @@
         currentAlbum = [[MMPhotoManager sharedInstance] cameraRoll];
         
         [photoListScrollView registerClass:[MMCameraCollectionViewCell class] forCellWithReuseIdentifier:@"MMCameraCollectionViewCell"];
-        [photoListScrollView registerClass:[MMPermissionCollectionViewCell class] forCellWithReuseIdentifier:@"MMPermissionCollectionViewCell"];
+        [photoListScrollView registerClass:[MMPermissionCameraCollectionViewCell class] forCellWithReuseIdentifier:@"MMPermissionCollectionViewCell"];
     }
     return self;
 }
