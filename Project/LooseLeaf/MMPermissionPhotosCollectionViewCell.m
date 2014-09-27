@@ -11,6 +11,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "UIDevice+PPI.h"
 #import "Constants.h"
+#import "UIView+Debug.h"
 
 @implementation MMPermissionPhotosCollectionViewCell{
     CAShapeLayer* topArrow;
@@ -96,7 +97,7 @@
 
 +(CGFloat) idealPhotoRowHeight{
     if([UIDevice majorVersion] >= 8){
-        return 2.5;
+        return 2.75;
     }else{
         return 3.25;
     }

@@ -44,6 +44,8 @@
         }else{
             return [self photoRowHeight] * [MMPermissionPhotosCollectionViewCell idealPhotoRowHeight] + kCameraMargin;
         }
+    }else if(![MMPhotoManager hasPhotosPermission]){
+        return [self photoRowHeight] * [MMPermissionPhotosCollectionViewCell idealPhotoRowHeight] + kCameraMargin;
     }
     return 0;
 }
