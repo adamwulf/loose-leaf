@@ -10,6 +10,11 @@
 
 @interface MMPermissionPhotosCollectionViewCell : UICollectionViewCell
 
++(CGFloat) idealPhotoRowHeight;
+
 @property (nonatomic, assign) BOOL shouldShowLine;
+
+-(void) showCameraSteps;
+-(void) showPhotosSteps;
 
 @end

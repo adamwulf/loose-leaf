@@ -15,6 +15,7 @@
 @implementation MMPermissionPhotosCollectionViewCell{
     CAShapeLayer* topArrow;
     UIView* line;
+    UIImageView* settingsCamera;
 }
 
 -(id) initWithFrame:(CGRect)frame{
@@ -69,7 +70,7 @@
             settingsStep2Image = @"ios7-settings-photos";
         }
         
-        UIImageView* settingsCamera = [[UIImageView alloc] initWithImage:[UIImage imageNamed:settingsStep2Image]];
+        settingsCamera = [[UIImageView alloc] initWithImage:[UIImage imageNamed:settingsStep2Image]];
         settingsCamera.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         settingsCamera.center = CGPointMake(self.bounds.size.width/2, 338);
         [self addSubview:settingsCamera];
@@ -84,21 +85,13 @@
             lastArrow.position = CGPointMake(self.bounds.size.width/2, 396);
             [self.layer addSublayer:lastArrow];
             
-            UIImageView* settingsCamera = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CloudKitPermissionSwitch"]];
-            settingsCamera.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-            settingsCamera.center = CGPointMake(self.bounds.size.width/2, 454);
-            [self addSubview:settingsCamera];
+            UIImageView* settingsPermission = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"CloudKitPermissionSwitch"]];
+            settingsPermission.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+            settingsPermission.center = CGPointMake(self.bounds.size.width/2, 454);
+            [self addSubview:settingsPermission];
         }
     }
     return self;
-}
-
--(void) setShouldShowLine:(BOOL)shouldShowLine{
-    line.hidden = !shouldShowLine;
-}
-
--(BOOL) shouldShowLine{
-    return !line.hidden;
 }
 
 +(CGFloat) idealPhotoRowHeight{
@@ -107,6 +100,35 @@
     }else{
         return 3.25;
     }
+}
+
+-(void) showCameraSteps{
+    NSString* settingsStep2Image;
+    if([UIDevice majorVersion] >= 8){
+        settingsStep2Image = @"ios8-settings-camera";
+    }else{
+        settingsStep2Image = @"ios7-settings-camera";
+    }
+    settingsCamera.image = [UIImage imageNamed:settingsStep2Image];
+}
+
+-(void) showPhotosSteps{
+    NSString* settingsStep2Image;
+    if([UIDevice majorVersion] >= 8){
+        settingsStep2Image = @"ios8-settings-photos";
+    }else{
+        settingsStep2Image = @"ios7-settings-photos";
+    }
+    settingsCamera.image = [UIImage imageNamed:settingsStep2Image];
+}
+
+
+-(void) setShouldShowLine:(BOOL)shouldShowLine{
+    line.hidden = !shouldShowLine;
+}
+
+-(BOOL) shouldShowLine{
+    return !line.hidden;
 }
 
 -(void) settingsButtonTapped:(UIButton*)button{

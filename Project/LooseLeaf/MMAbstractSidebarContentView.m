@@ -268,6 +268,7 @@
     }else{
         MMPermissionPhotosCollectionViewCell* permission = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell" forIndexPath:indexPath];
         permission.shouldShowLine = NO;
+        [permission showPhotosSteps];
         return permission;
     }
 }
