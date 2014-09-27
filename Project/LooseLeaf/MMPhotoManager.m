@@ -56,6 +56,10 @@ static MMPhotoManager* _instance = nil;
     return _instance;
 }
 
++(BOOL) hasPhotosPermission{
+    return [ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized;
+}
+
 - (void) dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self name:ALAssetsLibraryChangedNotification object:nil];
 }

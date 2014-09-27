@@ -23,8 +23,8 @@
 
 @implementation MMImageSidebarContainerView{
     MMCameraSidebarContentView* cameraListContentView;
-    MMAbstractSidebarContentView* albumListContentView;
-    MMAbstractSidebarContentView* faceListContentView;
+    MMAlbumSidebarContentView* albumListContentView;
+    MMFaceSidebarContentView* faceListContentView;
     MMEventSidebarContentView* eventListContentView;
     MMPDFInboxContentView* pdfListContentView;
     

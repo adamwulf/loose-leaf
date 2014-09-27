@@ -9,6 +9,7 @@
 #import "MMPhotoAlbumListLayout.h"
 #import "CaptureSessionManager.h"
 #import "MMPermissionCameraCollectionViewCell.h"
+#import "MMPhotoManager.h"
 #import "Constants.h"
 
 @implementation MMPhotoAlbumListLayout{
@@ -66,6 +67,17 @@
         // camera
         ret.bounds = CGRectMake(0, 0, width, [self cameraRowHeight]);
         ret.center = CGPointMake(width/2, [self cameraRowHeight]/2);
+        ret.transform = CGAffineTransformIdentity;
+        return ret;
+    }
+
+    if(![MMPhotoManager hasPhotosPermission]){
+        // don't have photo permissions
+        ret.bounds = CGRectMake(0, 0, width, [self cameraRowHeight]);
+        ret.center = CGPointMake(width/2, kWidthOfSidebarButtonBuffer + [self cameraRowHeight]/2);
+        if(self.hasSectionForCamera){
+            ret.center = CGPointMake(ret.center.x, ret.center.y + [self cameraRowHeight]);
+        }
         ret.transform = CGAffineTransformIdentity;
         return ret;
     }

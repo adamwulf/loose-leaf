@@ -13,6 +13,7 @@
 #import "MMBufferedImageView.h"
 #import "MMImageSidebarContainerView.h"
 #import "MMSinglePhotoCollectionViewCell.h"
+#import "MMPermissionPhotosCollectionViewCell.h"
 #import "MMPhotoAlbumListLayout.h"
 #import "MMRotationManager.h"
 #import "Constants.h"
@@ -41,6 +42,7 @@
         photoListScrollView.backgroundColor = [UIColor clearColor];
         
         [photoListScrollView registerClass:[MMSinglePhotoCollectionViewCell class] forCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell"];
+        [photoListScrollView registerClass:[MMPermissionPhotosCollectionViewCell class] forCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell"];
 
         currentAlbum = nil;
         
@@ -246,7 +248,11 @@
 #pragma mark - UICollectionViewDataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     // we're only working with the photoListScrollView. there's no albums here
-    return currentAlbum.numberOfPhotos;
+    if([MMPhotoManager hasPhotosPermission]){
+        return currentAlbum.numberOfPhotos;
+    }else{
+        return 1;
+    }
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
@@ -254,10 +260,16 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    MMSinglePhotoCollectionViewCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell" forIndexPath:indexPath];
-    [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row forVisibleIndex:indexPath.row];
-    photoCell.delegate = self;
-    return photoCell;
+    if([MMPhotoManager hasPhotosPermission]){
+        MMSinglePhotoCollectionViewCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell" forIndexPath:indexPath];
+        [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row forVisibleIndex:indexPath.row];
+        photoCell.delegate = self;
+        return photoCell;
+    }else{
+        MMPermissionPhotosCollectionViewCell* permission = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell" forIndexPath:indexPath];
+        permission.shouldShowLine = NO;
+        return permission;
+    }
 }
 
 #pragma mark - MMSinglePhotoCollectionViewCellDelegate
