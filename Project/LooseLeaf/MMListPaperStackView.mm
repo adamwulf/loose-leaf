@@ -1207,7 +1207,9 @@
                     };
                     
                     CGFloat percDelta = (diffDist / 100.0);
-                    center = [[[dir normal] addVector:moveRight] pointFromPoint:center distance:fx(dir.magnitude) * percDelta];
+                    MMVector* aimedDir = [[dir normal] averageWith:moveRight];
+//                    aimedDir = [[aimedDir normal] normalizedTo:2.5];
+                    center = [aimedDir pointFromPoint:center distance:fx(dir.magnitude) * percDelta];
                     pageToMove.center = center;
                 }
                 
