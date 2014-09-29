@@ -1158,34 +1158,59 @@
         if(pageBeingDragged.center.x < 100){
             CGFloat diffDist = 100 - pageBeingDragged.center.x;
             if(diffDist > 0){
-                NSLog(@"close to left: %f", diffDist);
+                NSMutableSet* pagesToMove = [NSMutableSet set];
 
+                // collect all the pages that are visible +
+                // need to be adjusted away from our held page
                 NSInteger numVisible = [visibleStackHolder.subviews count];
-                for(NSInteger i=numVisible - 1; i>=0 && i>numVisible - 6;i--){
+                for(NSInteger i=numVisible - 1; i>=0 && i>numVisible - 12;i--){
                     MMExportablePaperView* pageToMove = [visibleStackHolder.subviews objectAtIndex:i];
                     if(pageToMove != pageBeingDragged){
-                        CGRect fr = [self frameForListViewForPage:pageToMove];
-                        CGPoint center = CGPointMake(fr.origin.x + fr.size.width/2, fr.origin.y + fr.size.height/2);
-                        
-                        MMVector* dir = [MMVector vectorWithPoint:pageBeingDragged.center andPoint:center];
-                        dir = [dir normalizedTo:100];
-                        center = [dir pointFromPoint:center distance:diffDist];
-                        pageToMove.center = center;
+                        [pagesToMove addObject:pageToMove];
                     }
                 }
                 NSInteger numHidden = [hiddenStackHolder.subviews count];
-                for(NSInteger i=0; i<numHidden && i < 10;i++){
+                for(NSInteger i=numHidden - 1; i>=0 && i>numHidden - 12;i--){
                     MMExportablePaperView* pageToMove = [hiddenStackHolder.subviews objectAtIndex:i];
                     if(pageToMove != pageBeingDragged){
-                        CGRect fr = [self frameForListViewForPage:pageToMove];
-                        CGPoint center = CGPointMake(fr.origin.x + fr.size.width/2, fr.origin.y + fr.size.height/2);
-                        
-                        MMVector* dir = [MMVector vectorWithPoint:pageBeingDragged.center andPoint:center];
-                        dir = [dir normalizedTo:100];
-                        center = [dir pointFromPoint:center distance:diffDist];
-                        pageToMove.center = center;
+                        [pagesToMove addObject:pageToMove];
                     }
                 }
+                
+                
+                MMVector* moveRight = [MMVector vectorWithX:2.5 andY:0];
+                // now calculate how far from their original position
+                // these pages should be moved
+                for(MMExportablePaperView* pageToMove in pagesToMove){
+                    // ideal location w/o any adjustment
+                    CGRect fr = [self frameForListViewForPage:pageToMove];
+                    CGPoint center = CGPointMake(fr.origin.x + fr.size.width/2, fr.origin.y + fr.size.height/2);
+                    
+                    // vector of adjustment
+                    MMVector* dir = [MMVector vectorWithPoint:pageBeingDragged.center andPoint:center];
+                    
+                    // normalize and move
+                    
+                    // the idea is to move along the vector
+                    // at an ever decreasing amount the further away the
+                    // the page is.
+                    // later, we'll factor in diffDist so that it
+                    // smooothly travels to this point as diffDist increases
+                    CGFloat(^fx)(CGFloat) = ^(CGFloat x){
+                        if(x > 900){
+                            return 0.0f;
+                        }
+                        CGFloat a = 2.888889E-4;
+                        CGFloat b = -0.61;
+                        CGFloat c = 318.11111;
+                        return x * a * x + b * x + c;
+                    };
+                    
+                    CGFloat percDelta = (diffDist / 100.0);
+                    center = [[[dir normal] addVector:moveRight] pointFromPoint:center distance:fx(dir.magnitude) * percDelta];
+                    pageToMove.center = center;
+                }
+                
             }
         }
     }
