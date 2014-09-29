@@ -375,9 +375,9 @@ BOOL hasSent = NO;
                          @"lastName" : @"Zakroff",
                          @"initials" : @"HZ"}];
     
-        extra = [extra arrayByAddingObject:@{@"firstName" : @"Crystal",
-                                             @"lastName" : @"Hilliard",
-                                             @"initials" : @"CH"}];
+        extra = [extra arrayByAddingObject:@{@"firstName" : @"Rachel",
+                                             @"lastName" : @"Wilson",
+                                             @"initials" : @"RW"}];
     
     allKnownFriends = [allKnownFriends arrayByAddingObjectsFromArray:extra];;
     allFriendsExceptSender = [allFriendsExceptSender arrayByAddingObjectsFromArray:extra];;
