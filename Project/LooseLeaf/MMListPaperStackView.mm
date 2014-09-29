@@ -1198,7 +1198,7 @@
                     // smooothly travels to this point as diffDist increases
                     CGFloat(^fx)(CGFloat) = ^(CGFloat x){
                         if(x > 900){
-                            return 0.0f;
+                            return (CGFloat)0.0f;
                         }
                         CGFloat a = 2.888889E-4;
                         CGFloat b = -0.61;
