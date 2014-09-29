@@ -1130,7 +1130,6 @@
     }
     
     if(directionAndAmplitude){
-        
         //
         // the directionAndAmplitude is the number of points
         // above/below the midpoint. so scale it down so that
@@ -1152,6 +1151,43 @@
         CGPoint locatinInScrollView = CGPointMake(lastDragPoint.x, lastDragPoint.y + self.contentOffset.y);
         NSInteger indexOfGesture = [self indexForPointInList:locatinInScrollView];
         [self ensurePage:pageBeingDragged isAtIndex:indexOfGesture];
+    }
+    
+    
+    if(pageBeingDragged){
+        if(pageBeingDragged.center.x < 100){
+            CGFloat diffDist = 100 - pageBeingDragged.center.x;
+            if(diffDist > 0){
+                NSLog(@"close to left: %f", diffDist);
+
+                NSInteger numVisible = [visibleStackHolder.subviews count];
+                for(NSInteger i=numVisible - 1; i>=0 && i>numVisible - 6;i--){
+                    MMExportablePaperView* pageToMove = [visibleStackHolder.subviews objectAtIndex:i];
+                    if(pageToMove != pageBeingDragged){
+                        CGRect fr = [self frameForListViewForPage:pageToMove];
+                        CGPoint center = CGPointMake(fr.origin.x + fr.size.width/2, fr.origin.y + fr.size.height/2);
+                        
+                        MMVector* dir = [MMVector vectorWithPoint:pageBeingDragged.center andPoint:center];
+                        dir = [dir normalizedTo:100];
+                        center = [dir pointFromPoint:center distance:diffDist];
+                        pageToMove.center = center;
+                    }
+                }
+                NSInteger numHidden = [hiddenStackHolder.subviews count];
+                for(NSInteger i=0; i<numHidden && i < 10;i++){
+                    MMExportablePaperView* pageToMove = [hiddenStackHolder.subviews objectAtIndex:i];
+                    if(pageToMove != pageBeingDragged){
+                        CGRect fr = [self frameForListViewForPage:pageToMove];
+                        CGPoint center = CGPointMake(fr.origin.x + fr.size.width/2, fr.origin.y + fr.size.height/2);
+                        
+                        MMVector* dir = [MMVector vectorWithPoint:pageBeingDragged.center andPoint:center];
+                        dir = [dir normalizedTo:100];
+                        center = [dir pointFromPoint:center distance:diffDist];
+                        pageToMove.center = center;
+                    }
+                }
+            }
+        }
     }
 }
 
