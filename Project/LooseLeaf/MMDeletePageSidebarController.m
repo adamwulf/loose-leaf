@@ -7,6 +7,7 @@
 //
 
 #import "MMDeletePageSidebarController.h"
+#import "MMTrashIcon.h"
 
 #define kBorderWidth 3
 #define kBorderSpacing 2
@@ -65,6 +66,9 @@
         [deleteSidebarBackground.layer addSublayer:rightBorder];
         [deleteSidebarBackground addSubview:trashBackground];
         
+        MMTrashIcon* trashIcon = [[MMTrashIcon alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
+        trashIcon.center = CGPointMake(deleteSidebarBackground.bounds.size.width - 120, 200);
+        [deleteSidebarBackground addSubview:trashIcon];
     }
     return self;
 }

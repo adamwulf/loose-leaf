@@ -49,6 +49,7 @@
 		6634856219DB3ED000B5CF2D /* crumple.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6634856119DB3ED000B5CF2D /* crumple.jpg */; };
 		6634856519DB41F000B5CF2D /* Crumple.license in Resources */ = {isa = PBXBuildFile; fileRef = 6634856319DB41F000B5CF2D /* Crumple.license */; };
 		6634856619DB41F000B5CF2D /* TemplateIcon2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6634856419DB41F000B5CF2D /* TemplateIcon2x.png */; };
+		6634856919DB551B00B5CF2D /* MMTrashIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634856819DB551B00B5CF2D /* MMTrashIcon.m */; };
 		663523E519A7E32000A26B88 /* MMShareOptionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 663523E419A7E32000A26B88 /* MMShareOptionsView.m */; };
 		663523EC19A8401100A26B88 /* MMCloudKitManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 663523EB19A8401100A26B88 /* MMCloudKitManager.m */; };
 		6635BE9619748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635BE9519748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m */; };
@@ -453,6 +454,8 @@
 		6634856119DB3ED000B5CF2D /* crumple.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = crumple.jpg; sourceTree = "<group>"; };
 		6634856319DB41F000B5CF2D /* Crumple.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Crumple.license; sourceTree = "<group>"; };
 		6634856419DB41F000B5CF2D /* TemplateIcon2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TemplateIcon2x.png; sourceTree = "<group>"; };
+		6634856719DB551B00B5CF2D /* MMTrashIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTrashIcon.h; sourceTree = "<group>"; };
+		6634856819DB551B00B5CF2D /* MMTrashIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTrashIcon.m; sourceTree = "<group>"; };
 		663523E319A7E32000A26B88 /* MMShareOptionsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShareOptionsView.h; sourceTree = "<group>"; };
 		663523E419A7E32000A26B88 /* MMShareOptionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShareOptionsView.m; sourceTree = "<group>"; };
 		663523EA19A8401100A26B88 /* MMCloudKitManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitManager.h; sourceTree = "<group>"; };
@@ -1329,6 +1332,8 @@
 				6634856119DB3ED000B5CF2D /* crumple.jpg */,
 				6634855E19DA2E5F00B5CF2D /* MMDeletePageSidebarController.h */,
 				6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */,
+				6634856719DB551B00B5CF2D /* MMTrashIcon.h */,
+				6634856819DB551B00B5CF2D /* MMTrashIcon.m */,
 			);
 			name = "Delete Sidebar";
 			sourceTree = "<group>";
@@ -2910,6 +2915,7 @@
 				6693C94C18E4E7860054FF41 /* MMSlidingSidebarContainerView.m in Sources */,
 				66A02F9A19A1D1950013EFAE /* EPPZSingleton.m in Sources */,
 				66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */,
+				6634856919DB551B00B5CF2D /* MMTrashIcon.m in Sources */,
 				66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */,
 				6612C8851964C0E3003A9575 /* MMPageUndoRedoManager.m in Sources */,
 				66EDE42A19AFDD2D00A5623B /* MMCloudKitExportCoordinator.m in Sources */,
