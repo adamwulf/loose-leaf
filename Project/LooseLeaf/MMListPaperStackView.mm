@@ -1208,11 +1208,9 @@
                     
                     CGFloat percDelta = (diffDist / 100.0);
                     MMVector* aimedDir = [[dir normal] averageWith:moveRight];
-//                    aimedDir = [[aimedDir normal] normalizedTo:2.5];
                     center = [aimedDir pointFromPoint:center distance:fx(dir.magnitude) * percDelta];
                     pageToMove.center = center;
                 }
-                
             }
         }
     }
