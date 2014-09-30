@@ -46,6 +46,9 @@
 		662EFF30199ECC760086C106 /* MMAirDropShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 662EFF2F199ECC760086C106 /* MMAirDropShareItem.m */; };
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6634856019DA2E5F00B5CF2D /* MMDeletePageSidebarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */; };
+		6634856219DB3ED000B5CF2D /* crumple.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6634856119DB3ED000B5CF2D /* crumple.jpg */; };
+		6634856519DB41F000B5CF2D /* Crumple.license in Resources */ = {isa = PBXBuildFile; fileRef = 6634856319DB41F000B5CF2D /* Crumple.license */; };
+		6634856619DB41F000B5CF2D /* TemplateIcon2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6634856419DB41F000B5CF2D /* TemplateIcon2x.png */; };
 		663523E519A7E32000A26B88 /* MMShareOptionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 663523E419A7E32000A26B88 /* MMShareOptionsView.m */; };
 		663523EC19A8401100A26B88 /* MMCloudKitManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 663523EB19A8401100A26B88 /* MMCloudKitManager.m */; };
 		6635BE9619748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635BE9519748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m */; };
@@ -447,6 +450,9 @@
 		6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizerDelegate.h; sourceTree = "<group>"; };
 		6634855E19DA2E5F00B5CF2D /* MMDeletePageSidebarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDeletePageSidebarController.h; sourceTree = "<group>"; };
 		6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDeletePageSidebarController.m; sourceTree = "<group>"; };
+		6634856119DB3ED000B5CF2D /* crumple.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = crumple.jpg; sourceTree = "<group>"; };
+		6634856319DB41F000B5CF2D /* Crumple.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Crumple.license; sourceTree = "<group>"; };
+		6634856419DB41F000B5CF2D /* TemplateIcon2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TemplateIcon2x.png; sourceTree = "<group>"; };
 		663523E319A7E32000A26B88 /* MMShareOptionsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShareOptionsView.h; sourceTree = "<group>"; };
 		663523E419A7E32000A26B88 /* MMShareOptionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShareOptionsView.m; sourceTree = "<group>"; };
 		663523EA19A8401100A26B88 /* MMCloudKitManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitManager.h; sourceTree = "<group>"; };
@@ -1320,6 +1326,7 @@
 		6634855D19DA2E4200B5CF2D /* Delete Sidebar */ = {
 			isa = PBXGroup;
 			children = (
+				6634856119DB3ED000B5CF2D /* crumple.jpg */,
 				6634855E19DA2E5F00B5CF2D /* MMDeletePageSidebarController.h */,
 				6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */,
 			);
@@ -1638,6 +1645,8 @@
 				667D98C3192FDB4300625879 /* UIImagePDF.license */,
 				665245261996AA7B00C36609 /* FXBlurView.license */,
 				66A02F9B19A1DBE90013EFAE /* Eppz.license */,
+				6634856319DB41F000B5CF2D /* Crumple.license */,
+				6634856419DB41F000B5CF2D /* TemplateIcon2x.png */,
 			);
 			name = Licenses;
 			sourceTree = "<group>";
@@ -2527,6 +2536,7 @@
 				667C6352199FE4BC00E93CD6 /* Media.xcassets in Resources */,
 				66684B40182DAAC0005A27B4 /* UIColorWithHex.license in Resources */,
 				66684B3E182DA177005A27B4 /* GPC.license in Resources */,
+				6634856219DB3ED000B5CF2D /* crumple.jpg in Resources */,
 				66684B48182DAD05005A27B4 /* 2Geom.license in Resources */,
 				6672EFE219C3A51F0076009F /* iCloudSettingsLoggedIn@2x.png in Resources */,
 				6652451919958C2500C36609 /* sinaWeibo.png in Resources */,
@@ -2546,6 +2556,7 @@
 				66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */,
 				66E2241319D64644000FCA96 /* ios7-settings-photos@2x.png in Resources */,
 				667C636F199FF41300E93CD6 /* copy.png in Resources */,
+				6634856619DB41F000B5CF2D /* TemplateIcon2x.png in Resources */,
 				66684B4A182DAEBC005A27B4 /* UIImageRoundedCorner.license in Resources */,
 				665245271996AA7B00C36609 /* FXBlurView.license in Resources */,
 				66684B46182DACAE005A27B4 /* DrawKit.license in Resources */,
@@ -2563,6 +2574,7 @@
 				66EDE44119B100B500A5623B /* ziparchive.license in Resources */,
 				667C6356199FE4BC00E93CD6 /* MPNotification.storyboard in Resources */,
 				6650DD1D18F48E3F00ADF591 /* twitter.png in Resources */,
+				6634856519DB41F000B5CF2D /* Crumple.license in Resources */,
 				6652451B19958C2900C36609 /* sinaWeibo@2x.png in Resources */,
 				66E223FE19D631EA000FCA96 /* settings-privacy.png in Resources */,
 				6650DD2318F48F8300ADF591 /* facebook@2x.png in Resources */,
