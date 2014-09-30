@@ -21,7 +21,10 @@
     BOOL isShowingPageView;
     MMButtonAwareTapGestureRecognizer* tapGesture;
     MMButtonAwareTapGestureRecognizer* twoFingerTapGesture;
+    MMDeletePageSidebarController* deleteSidebar;
 }
+
+@synthesize deleteSidebar;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -1155,8 +1158,9 @@
     
     
     if(pageBeingDragged){
+        CGFloat diffDist = 100 - pageBeingDragged.center.x;
+        CGFloat percDelta = (diffDist / 100.0);
         if(pageBeingDragged.center.x < 100){
-            CGFloat diffDist = 100 - pageBeingDragged.center.x;
             if(diffDist > 0){
                 NSMutableSet* pagesToMove = [NSMutableSet set];
 
@@ -1206,12 +1210,14 @@
                         return x * a * x + b * x + c;
                     };
                     
-                    CGFloat percDelta = (diffDist / 100.0);
                     MMVector* aimedDir = [[dir normal] averageWith:moveRight];
                     center = [aimedDir pointFromPoint:center distance:fx(dir.magnitude) * percDelta];
                     pageToMove.center = center;
                 }
+                [deleteSidebar showSidebarWithPercent:percDelta];
             }
+        }else{
+            [deleteSidebar showSidebarWithPercent:0.0];
         }
     }
 }

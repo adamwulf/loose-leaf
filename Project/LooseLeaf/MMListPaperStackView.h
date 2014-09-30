@@ -14,6 +14,7 @@
 #import "MMListAddPageButtonDelegate.h"
 #import "MMButtonAwareTapGestureRecognizer.h"
 #import "MMPageCacheManagerDelegate.h"
+#import "MMDeletePageSidebarController.h"
 
 @interface MMListPaperStackView : MMPaperStackView<MMPanAndPinchFromListViewGestureRecognizerDelegate,MMListAddPageButtonDelegate,MMPageCacheManagerDelegate>{
     //
@@ -45,6 +46,8 @@
     
     MMListAddPageButton* addPageButtonInListView;
 }
+
+@property (nonatomic, strong) MMDeletePageSidebarController* deleteSidebar;
 
 -(void) ensurePage:(MMPaperView*)thePage isAtIndex:(NSInteger)newIndex;
 
