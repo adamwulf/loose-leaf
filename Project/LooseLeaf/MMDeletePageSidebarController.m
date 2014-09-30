@@ -28,12 +28,7 @@
         CGFloat thetaSmall = M_PI - 2*thetaLarge;
         CGFloat radius = 512.0 / tan(thetaSmall);
 
-        CGPoint center = CGPointMake(frame.size.width-radius, 512);
-
-        UIBezierPath* circle = [UIBezierPath bezierPathWithArcCenter:center radius:radius - 4 startAngle:0 endAngle:2*M_PI clockwise:YES];
-        [circle appendPath:[UIBezierPath bezierPathWithArcCenter:center radius:radius - 2 startAngle:0 endAngle:2*M_PI clockwise:YES]];
-        [circle appendPath:[UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:0 endAngle:2*M_PI clockwise:YES]];
-        circle.usesEvenOddFillRule = YES;
+        UIBezierPath* circle = [self pathForSidebarBackground:radius withFrame:frame];
         
         CAShapeLayer* mask = [CAShapeLayer layer];
         mask.bounds = deleteSidebarBackground.bounds;
@@ -43,6 +38,17 @@
         deleteSidebarBackground.layer.mask = mask;
     }
     return self;
+}
+
+-(UIBezierPath*) pathForSidebarBackground:(CGFloat)radius withFrame:(CGRect)frame{
+    CGPoint center = CGPointMake(frame.size.width-radius, 512);
+    
+    UIBezierPath* circle = [UIBezierPath bezierPathWithArcCenter:center radius:radius - 4 startAngle:0 endAngle:2*M_PI clockwise:YES];
+    [circle appendPath:[UIBezierPath bezierPathWithArcCenter:center radius:radius - 2 startAngle:0 endAngle:2*M_PI clockwise:YES]];
+    [circle appendPath:[UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:0 endAngle:2*M_PI clockwise:YES]];
+    circle.usesEvenOddFillRule = YES;
+    
+    return circle;
 }
 
 -(void) showSidebarWithPercent:(CGFloat)percent{
