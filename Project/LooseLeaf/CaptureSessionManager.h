@@ -25,5 +25,6 @@
 -(void) addPreviewLayerTo:(CALayer*)layer;
 
 +(BOOL) hasCamera;
++(BOOL) hasCameraPermission;
 
 @end

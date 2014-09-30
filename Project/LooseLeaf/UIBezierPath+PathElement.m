@@ -8,6 +8,8 @@
 
 #import "UIBezierPath+PathElement.h"
 #import <JotUI/UIColor+JotHelper.h>
+#import "Mixpanel.h"
+#import "Constants.h"
 
 @implementation UIBezierPath (PathElement)
 
@@ -72,61 +74,68 @@
                                   andScale:(CGFloat)scale{
     NSMutableArray* convertedElements = [NSMutableArray array];
     UIBezierPath* pathSegment = self;
-    if(!CGAffineTransformIsIdentity(transform)){
-        // only spend resources copying if we have to
-        pathSegment = [pathSegment copy];
-        [pathSegment applyTransform:transform];
-    }
-    __block CGPoint previousEndpoint = self.firstPoint;
-    
-    
-    CGFloat widthDiff = toWidth - fromWidth;
-    GLfloat prevColor[4], elementColor[4];
-    GLfloat _colorDiff[4];
-    GLfloat* prevColorPtr = (GLfloat*) prevColor;
-    CGFloat* colorDiff = (CGFloat*)_colorDiff;
-    [fromColor getRGBAComponents:prevColor];
-    [toColor getRGBAComponents:elementColor];
-    colorDiff[0] = elementColor[0] - prevColor[0];
-    colorDiff[1] = elementColor[1] - prevColor[1];
-    colorDiff[2] = elementColor[2] - prevColor[2];
-    colorDiff[3] = elementColor[3] - prevColor[3];
-    [pathSegment iteratePathWithBlock:^(CGPathElement pathEle){
-        CGFloat tValueAtEndPoint;
-        AbstractBezierPathElement* newElement = nil;
-        if(pathEle.type == kCGPathElementAddCurveToPoint){
-            // curve
-            newElement = [CurveToPathElement elementWithStart:previousEndpoint
-                                                   andCurveTo:pathEle.points[2]
-                                                  andControl1:pathEle.points[0]
-                                                  andControl2:pathEle.points[1]];
-            previousEndpoint = pathEle.points[2];
-            tValueAtEndPoint = toTValue;
-        }else if(pathEle.type == kCGPathElementAddLineToPoint){
-            newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
-            previousEndpoint = pathEle.points[0];
-            tValueAtEndPoint = toTValue;
-        }else if(pathEle.type == kCGPathElementMoveToPoint){
-            newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
-            previousEndpoint = pathEle.points[0];
-            tValueAtEndPoint = fromTValue;
+    @try{
+        if(!CGAffineTransformIsIdentity(transform)){
+            // only spend resources copying if we have to
+            pathSegment = [pathSegment copy];
+            [pathSegment applyTransform:transform];
         }
-        if(newElement){
-            // be sure to set color/width/etc
-            if(toColor){
-                CGFloat red = prevColorPtr[0] + colorDiff[0] * tValueAtEndPoint;
-                CGFloat green = prevColorPtr[1] + colorDiff[1] * tValueAtEndPoint;
-                CGFloat blue = prevColorPtr[2] + colorDiff[2] * tValueAtEndPoint;
-                CGFloat alpha = prevColorPtr[3] + colorDiff[3] * tValueAtEndPoint;
-                newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
-            }else{
-                newElement.color = nil;
+        __block CGPoint previousEndpoint = self.firstPoint;
+        
+        CGFloat widthDiff = toWidth - fromWidth;
+        GLfloat prevColor[4], elementColor[4];
+        GLfloat _colorDiff[4];
+        __block GLfloat* prevColorPtr = (GLfloat*) prevColor;
+        __block CGFloat* colorDiff = (CGFloat*)_colorDiff;
+        [fromColor getRGBAComponents:prevColor];
+        [toColor getRGBAComponents:elementColor];
+        colorDiff[0] = elementColor[0] - prevColor[0];
+        colorDiff[1] = elementColor[1] - prevColor[1];
+        colorDiff[2] = elementColor[2] - prevColor[2];
+        colorDiff[3] = elementColor[3] - prevColor[3];
+        
+        [pathSegment iteratePathWithBlock:[^(CGPathElement pathEle){
+            CGFloat tValueAtEndPoint;
+            AbstractBezierPathElement* newElement = nil;
+            if(pathEle.type == kCGPathElementAddCurveToPoint){
+                // curve
+                newElement = [CurveToPathElement elementWithStart:previousEndpoint
+                                                       andCurveTo:pathEle.points[2]
+                                                      andControl1:pathEle.points[0]
+                                                      andControl2:pathEle.points[1]];
+                previousEndpoint = pathEle.points[2];
+                tValueAtEndPoint = toTValue;
+            }else if(pathEle.type == kCGPathElementAddLineToPoint){
+                newElement = [CurveToPathElement elementWithStart:previousEndpoint andLineTo:pathEle.points[0]];
+                previousEndpoint = pathEle.points[0];
+                tValueAtEndPoint = toTValue;
+            }else if(pathEle.type == kCGPathElementMoveToPoint){
+                newElement = [MoveToPathElement elementWithMoveTo:pathEle.points[0]];
+                previousEndpoint = pathEle.points[0];
+                tValueAtEndPoint = fromTValue;
             }
-            newElement.width = fromWidth + widthDiff*tValueAtEndPoint;
-            newElement.width /= scale;
-            [convertedElements addObject:newElement];
-        }
-    }];
+            if(newElement){
+                // be sure to set color/width/etc
+                if(toColor){
+                    CGFloat red = prevColorPtr[0] + colorDiff[0] * tValueAtEndPoint;
+                    CGFloat green = prevColorPtr[1] + colorDiff[1] * tValueAtEndPoint;
+                    CGFloat blue = prevColorPtr[2] + colorDiff[2] * tValueAtEndPoint;
+                    CGFloat alpha = prevColorPtr[3] + colorDiff[3] * tValueAtEndPoint;
+                    newElement.color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+                }else{
+                    newElement.color = nil;
+                }
+                newElement.width = fromWidth + widthDiff*tValueAtEndPoint;
+                newElement.width /= scale;
+                [convertedElements addObject:newElement];
+            }
+        } copy]];
+    }@catch(NSException* e){
+        NSString* pathCannotBeIterated = [pathSegment description];
+        [[Mixpanel sharedInstance] track:kMPPathIterationException properties:@{@"Path" : pathCannotBeIterated}];
+        [NSThread sleepForTimeInterval:5];
+        @throw e;
+    }
     
     return convertedElements;
 }

@@ -41,6 +41,10 @@
     return CGAffineTransformMakeRotation([self rotation]);
 }
 
+-(void) bounceButton{
+    [self bounceButton:nil];
+}
+
 -(void) bounceButton:(id)sender{
     if(self.enabled){
         self.center = self.center;

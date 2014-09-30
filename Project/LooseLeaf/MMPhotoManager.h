@@ -25,7 +25,9 @@
 @property (readonly) MMPhotoAlbum* cameraRoll;
 @property (readonly) ALAssetsLibrary* assetsLibrary;
 
-+(MMPhotoManager*) sharedInstace;
++(MMPhotoManager*) sharedInstance;
+
++(BOOL) hasPhotosPermission;
 
 -(void) initializeAlbumCache;
 

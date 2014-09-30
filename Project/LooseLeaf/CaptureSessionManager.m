@@ -11,6 +11,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "MMRotationManager.h"
 #import "Constants.h"
+#import "NSThread+BlockAdditions.h"
 
 @implementation CaptureSessionManager{
     AVCaptureVideoPreviewLayer *previewLayer;
@@ -37,9 +38,8 @@ dispatch_queue_t sessionQueue;
 
 - (id)initWithPosition:(AVCaptureDevicePosition)preferredPosition{
 	if ((self = [super init])) {
-		captureSession = [[AVCaptureSession alloc] init];
+        captureSession = [[AVCaptureSession alloc] init];
         captureSession.sessionPreset = AVCaptureSessionPresetMedium;
-        
         [captureSession addObserver:self forKeyPath:@"isInterrupted" options:NSKeyValueObservingOptionNew context:nil];
         
         previewLayerHolder = [[CALayer alloc] init];
@@ -66,6 +66,10 @@ dispatch_queue_t sessionQueue;
     return [CaptureSessionManager deviceForPosition:AVCaptureDevicePositionUnspecified] ? YES : NO;
 }
 
++(BOOL) hasCameraPermission{
+    return [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] == AVAuthorizationStatusAuthorized;
+}
+
 -(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
     if([keyPath isEqualToString:@"isInterrupted"]){
         debug_NSLog(@"interrupted!");
@@ -80,14 +84,22 @@ dispatch_queue_t sessionQueue;
             if(previewLayer){
                 [previewLayer removeFromSuperlayer];
             }
-            previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:captureSession];
-            [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-            CGRect layerRect = [previewLayerHolder bounds];
-            layerRect.size.width = floorf(layerRect.size.width);
-            layerRect.size.height = floorf(layerRect.size.height);
-            [previewLayer setBounds:layerRect];
-            [previewLayer setPosition:CGPointMake(CGRectGetMidX(layerRect),CGRectGetMidY(layerRect))];
-            [previewLayerHolder addSublayer:previewLayer];
+            dispatch_async([CaptureSessionManager sessionQueue], ^{
+                @autoreleasepool {
+                    previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:captureSession];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        @autoreleasepool {
+                            [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+                            CGRect layerRect = [previewLayerHolder bounds];
+                            layerRect.size.width = floorf(layerRect.size.width);
+                            layerRect.size.height = floorf(layerRect.size.height);
+                            [previewLayer setBounds:layerRect];
+                            [previewLayer setPosition:CGPointMake(CGRectGetMidX(layerRect),CGRectGetMidY(layerRect))];
+                            [previewLayerHolder addSublayer:previewLayer];
+                        }
+                    });
+                }
+            });
         }
     });
     [delegate sessionStarted];
@@ -181,7 +193,7 @@ dispatch_queue_t sessionQueue;
 }
 
 -(ALAssetOrientation) currentDeviceOrientation{
-    UIDeviceOrientation deviceOrientation = [[MMRotationManager sharedInstace] currentDeviceOrientation];
+    UIDeviceOrientation deviceOrientation = [[MMRotationManager sharedInstance] currentDeviceOrientation];
     if(deviceOrientation == UIDeviceOrientationLandscapeLeft){
         debug_NSLog(@"i think i should save left");
         return ALAssetOrientationUp;
@@ -206,27 +218,29 @@ dispatch_queue_t sessionQueue;
             // Flash set to Auto for Still Capture
             [CaptureSessionManager setFlashMode:AVCaptureFlashModeAuto forDevice:currDevice];
             
-            // Capture a still image.
-            [stillImageOutput captureStillImageAsynchronouslyFromConnection:[stillImageOutput connectionWithMediaType:AVMediaTypeVideo] completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
-                
-                if (imageDataSampleBuffer)
-                {
-                    NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
-                    UIImage *image = [[UIImage alloc] initWithData:imageData];
+            if([CaptureSessionManager hasCameraPermission]){
+                // Capture a still image.
+                [stillImageOutput captureStillImageAsynchronouslyFromConnection:[stillImageOutput connectionWithMediaType:AVMediaTypeVideo] completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
                     
-                    [delegate didTakePicture:image];
-                    
-//                    CGSize sizeOfImage = image.size;
-//                    UIImageOrientation orient = image.imageOrientation;
-//                    AVCaptureVideoOrientation captureOrient = [[(AVCaptureVideoPreviewLayer *)[self previewLayer] connection] videoOrientation];
-//                    debug_NSLog(@"image size %f,%f orient %@ %@ %@", sizeOfImage.width, sizeOfImage.height, [self logImageOrientation:orient], [self logVideoOrientation:captureOrient], [self logAssetOrientation:[self currentDeviceOrientation]]);
-                    
-                    // rotate the image that we save
-                    [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage]
-                                                                     orientation:[self currentDeviceOrientation]
-                                                                 completionBlock:nil];
-                }
-            }];
+                    if (imageDataSampleBuffer)
+                    {
+                        NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
+                        UIImage *image = [[UIImage alloc] initWithData:imageData];
+                        
+                        [delegate didTakePicture:image];
+                        
+                        //                    CGSize sizeOfImage = image.size;
+                        //                    UIImageOrientation orient = image.imageOrientation;
+                        //                    AVCaptureVideoOrientation captureOrient = [[(AVCaptureVideoPreviewLayer *)[self previewLayer] connection] videoOrientation];
+                        //                    debug_NSLog(@"image size %f,%f orient %@ %@ %@", sizeOfImage.width, sizeOfImage.height, [self logImageOrientation:orient], [self logVideoOrientation:captureOrient], [self logAssetOrientation:[self currentDeviceOrientation]]);
+                        
+                        // rotate the image that we save
+                        [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage]
+                                                                         orientation:[self currentDeviceOrientation]
+                                                                     completionBlock:nil];
+                    }
+                }];
+            }
         }
 	});
 }

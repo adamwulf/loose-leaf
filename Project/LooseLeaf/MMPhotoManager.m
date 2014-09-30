@@ -7,6 +7,7 @@
 //
 
 #import "MMPhotoManager.h"
+#import "MMDefaultPhotoAlbum.h"
 #import "NSThread+BlockAdditions.h"
 #import "Constants.h"
 
@@ -35,11 +36,28 @@ static MMPhotoManager* _instance = nil;
     return _instance;
 }
 
-+(MMPhotoManager*) sharedInstace{
+-(NSArray*) loadDefaultPhotoAlbums{
+    NSString* directoryOfAlbums = [[NSBundle mainBundle] pathForResource:@"BundledPhotos" ofType:nil];
+    NSArray* defaultAlbumList = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryOfAlbums error:nil];
+    NSLog(@"defaultAlbumList: %@", defaultAlbumList);
+    
+    NSArray* allDefaultAlbums = @[];
+    for(NSString* albumName in defaultAlbumList){
+        NSString* pathToAlbum = [directoryOfAlbums stringByAppendingPathComponent:albumName];
+        allDefaultAlbums = [allDefaultAlbums arrayByAddingObject:[[MMDefaultPhotoAlbum alloc] initWithPhotosInDirectory:pathToAlbum]];
+    }
+    return allDefaultAlbums;
+}
+
++(MMPhotoManager*) sharedInstance{
     if(!_instance){
         _instance = [[MMPhotoManager alloc]init];
     }
     return _instance;
+}
+
++(BOOL) hasPhotosPermission{
+    return [ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized;
 }
 
 - (void) dealloc{
@@ -147,6 +165,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                       faces = [self sortArrayByAlbumName:[faces arrayByAddingObject:addedAlbum]];
                                   }else if(addedAlbum.type == ALAssetsGroupSavedPhotos){
                                       cameraRoll = addedAlbum;
+                                      cameraRoll.reversed = YES;
                                   }
                               }
                               [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
@@ -201,11 +220,6 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
             return album;
         }
     }
-//    [[self assetsLibrary] groupForURL:url resultBlock:^(ALAssetsGroup *group) {
-//        <#code#>
-//    } failureBlock:^(NSError *error) {
-//        <#code#>
-//    }];
     return nil;
 }
 
@@ -214,6 +228,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
  */
 -(void) initializeAlbumCache{
     if(hasEverInitailized){
+        [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
         return;
     }
     NSMutableArray* updatedAlbumsList = [NSMutableArray array];
@@ -231,9 +246,11 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                                         // from albums -> events -> faces order
                                                         @synchronized(self){
                                                             albums = [self sortArrayByAlbumName:updatedAlbumsList];
+                                                            albums = [[self loadDefaultPhotoAlbums] arrayByAddingObjectsFromArray:albums];
                                                             events = [self sortArrayByAlbumName:updatedEventsList];
                                                             faces = [self sortArrayByAlbumName:updatedFacesList];
                                                             cameraRoll = updatedCameraRoll;
+                                                            cameraRoll.reversed = YES;
                                                         }
                                                         hasEverInitailized = YES;
                                                         [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
@@ -250,6 +267,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                                             [updatedFacesList addObject:addedAlbum];
                                                         }else if(group.type == ALAssetsGroupSavedPhotos){
                                                             updatedCameraRoll = addedAlbum;
+                                                            updatedCameraRoll.reversed = YES;
                                                         }
                                                     }
                                                 }
@@ -293,6 +311,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
 
 
 -(void) showErrorAboutUserNeedingToGivePermission{
+    // TODO: https://github.com/adamwulf/loose-leaf/issues/671
     debug_NSLog(@"user needs to grant permission to photo library");
 }
 

@@ -10,7 +10,7 @@
 
 @interface MMCachedPreviewManager : NSObject
 
-+(MMCachedPreviewManager*) sharedInstace;
++(MMCachedPreviewManager*) sharedInstance;
 
 -(UIImageView*) requestCachedImageViewForView:(UIView*)aView;
 

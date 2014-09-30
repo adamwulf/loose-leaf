@@ -30,7 +30,6 @@
     CGFloat rowHeight;
     CGFloat bufferWidth;
     
-    MMButtonAwareTapGestureRecognizer* tapGesture;
     MMPanAndPinchFromListViewGestureRecognizer* pinchGesture;
     MMLongPressFromListViewGestureRecognizer* longPressGesture;
     

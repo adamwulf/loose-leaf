@@ -55,7 +55,7 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
     return _instance;
 }
 
-+(MMTouchVelocityGestureRecognizer*) sharedInstace{
++(MMTouchVelocityGestureRecognizer*) sharedInstance{
     if(!_instance){
         _instance = [[MMTouchVelocityGestureRecognizer alloc]init];
         _instance.delegate = _instance;
@@ -66,12 +66,12 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
 #pragma mark - Notify When Touches Die
 
 -(void) pleaseNotifyMeWhenTouchesDie:(UIGestureRecognizer<MMTouchLifeCycleDelegate>*)obj{
-    debug_NSLog(@"%@ asked to be notified of touch lifecycle", obj);
+//    debug_NSLog(@"%@ asked to be notified of touch lifecycle", obj);
     [notifyTheseWhenTouchDies addObject:obj];
 }
 
 -(void) stopNotifyingMeWhenTouchesDie:(UIGestureRecognizer<MMTouchLifeCycleDelegate>*)obj{
-    debug_NSLog(@"%@ asked to NOT be notified of touch lifecycle", obj);
+//    debug_NSLog(@"%@ asked to NOT be notified of touch lifecycle", obj);
     [notifyTheseWhenTouchDies removeObject:obj];
 }
 
@@ -315,15 +315,15 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
 }
 
 -(void) setupDebugTimer{
-    return;
-    if([self numberOfActiveTouches] == 0){
-        [self killTimer];
-        debugTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(timerDidFire:) userInfo:nil repeats:NO];
-        [[NSThread mainThread] performBlock:^{
-            debug_NSLog(@"***************************************************************************");
-            debug_NSLog(@"***************************************************************************");
-        } afterDelay:.01];
-    }
+//    return;
+//    if([self numberOfActiveTouches] == 0){
+//        [self killTimer];
+//        debugTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(timerDidFire:) userInfo:nil repeats:NO];
+//        [[NSThread mainThread] performBlock:^{
+//            debug_NSLog(@"***************************************************************************");
+//            debug_NSLog(@"***************************************************************************");
+//        } afterDelay:.01];
+//    }
 }
 
 -(void) timerDidFire:(NSTimer*)timer{

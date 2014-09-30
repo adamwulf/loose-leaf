@@ -9,10 +9,10 @@
 #import "MMImageViewButton.h"
 
 @implementation MMImageViewButton{
-    UIImage* image;
 }
 
 @synthesize darkBg;
+@synthesize greyscale;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -25,6 +25,11 @@
 
 -(void) setImage:(UIImage*)img{
     image = img;
+    [self setNeedsDisplay];
+}
+
+-(void) setFrame:(CGRect)frame{
+    [super setFrame:frame];
     [self setNeedsDisplay];
 }
 
@@ -58,7 +63,13 @@
     
     CGContextSaveGState(context);
     [ovalPath addClip];
-    [image drawInRect:frame];
+    if(self.isGreyscale){
+        CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
+        CGContextFillRect(context, frame);
+        [image drawInRect:frame blendMode:kCGBlendModeLuminosity alpha:1.0f];
+    }else{
+        [image drawInRect:frame];
+    }
     CGContextRestoreGState(context);
     
     
@@ -76,7 +87,6 @@
     [self drawDropshadowIfSelected];
     
     [super drawRect:rect];
-
 }
 
 

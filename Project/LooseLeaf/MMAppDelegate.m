@@ -11,10 +11,14 @@
 #import "MMLooseLeafViewController.h"
 #import "MMTouchDotView.h"
 #import <Crashlytics/Crashlytics.h>
+#import "MMRotationManager.h"
 #import "MMInboxManager.h"
 #import "NSString+UUID.h"
 #import "SSKeychain.h"
 #import "Mixpanel.h"
+#import "MMWindow.h"
+#import "MMCloudKitManager.h"
+#import "TestFlight.h"
 
 
 @implementation MMAppDelegate{
@@ -28,12 +32,23 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    debug_NSLog(@"launching");
+    
+    debug_NSLog(@"DID FINISH LAUNCHING");
     [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
+    [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale, nil]];
     
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
+    [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
+    [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
+    [TestFlight setOptions:@{ TFOptionLogOnCheckpoint : @NO }];
+    [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
+    [[NSThread mainThread] performBlock:^{
+        [TestFlight takeOff:kTestflightAppToken];
+    } afterDelay:3];
+    
+    self.window = [[MMWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.viewController = [[MMLooseLeafViewController alloc] init];
     self.window.rootViewController = self.viewController;
@@ -42,7 +57,7 @@
 //    [self.window.layer setSpeed:.5f];
     MMTouchDotView* blueDots = [[MMTouchDotView alloc] initWithFrame:self.window.bounds];
     [self.window addSubview:blueDots];
-//    [self.window.layer setSpeed:0.1f];
+//    [self.window.layer setSpeed:0.3f];
 
     // fire timer each minute
     [self setupTimer];
@@ -52,7 +67,16 @@
     if(url){
         [self importFileFrom:url fromApp:sourceApplication];
     }
-    
+
+    if (launchOptions != nil)
+    {
+        NSDictionary *dictionary = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+        if (dictionary != nil)
+        {
+            [self checkForNotificationToHandleWithNotificationInfo:dictionary];
+        }
+    }
+
     return YES;
 }
 
@@ -62,6 +86,7 @@
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     debug_NSLog(@"WILL RESIGN ACTIVE");
     [self.viewController willResignActive];
+    [[MMRotationManager sharedInstance] willResignActive];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -72,6 +97,7 @@
     [self logActiveAppDuration];
     [durationTimer invalidate];
     durationTimer = nil;
+    [[MMRotationManager sharedInstance] applicationDidBackground];
     debug_NSLog(@"DID ENTER BACKGROUND");
 }
 
@@ -93,6 +119,7 @@
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfLaunches by:@(1)];
         [[Mixpanel sharedInstance] track:kMPEventLaunch];
     };
+    [[MMRotationManager sharedInstance] didBecomeActive];
     debug_NSLog(@"DID BECOME ACTIVE");
     debug_NSLog(@"***************************************************************************");
     debug_NSLog(@"***************************************************************************");
@@ -112,6 +139,50 @@
     if (url) {
         [self importFileFrom:url fromApp:sourceApplication];
     }
+    return YES;
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)info {
+    NSLog(@"==== recieved notification!");
+    // Do something if the app was in background. Could handle foreground notifications differently
+    if (application.applicationState == UIApplicationStateActive) {
+        // notification came through while app was open
+        [self checkForNotificationToHandleWithNotificationInfo:info];
+    }else{
+        // notification came through while app was in background.
+        // tapping on a notification to launch the app will also
+        // land here.
+        [self checkForNotificationToHandleWithNotificationInfo:info];
+    }
+}
+
+-(void) application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void (^)())completionHandler{
+    NSLog(@"what");
+}
+
+-(void) application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler{
+    NSLog(@"what");
+}
+
+- (void) checkForNotificationToHandleWithNotificationInfo:(NSDictionary *)userInfo {
+    CKQueryNotification *notification = [CKQueryNotification notificationFromRemoteNotificationDictionary:userInfo];
+    if([notification isKindOfClass:[CKQueryNotification class]]){
+        if(notification.notificationType == CKNotificationTypeQuery){
+            [[MMCloudKitManager sharedManager] handleIncomingMessageNotification:notification];
+        }
+    }
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken{
+    [[Mixpanel sharedInstance].people addPushDeviceToken:deviceToken];
+}
+
+-(void) application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error{
+    NSLog(@"did fail register for remote notifications");
+}
+
+- (BOOL)application:(UIApplication *)application shouldAllowExtensionPointIdentifier:(NSString *)extensionPointIdentifier{
+    NSLog(@"extension? %@", extensionPointIdentifier);
     return YES;
 }
 

@@ -11,6 +11,7 @@
 #import "MMStretchGestureRecognizer1.h"
 #import "MMStretchGestureRecognizer2.h"
 #import "MMStretchGestureRecognizer3.h"
+#import "UIView+Animations.h"
 #import "Constants.h"
 
 @implementation MMShapeViewController{

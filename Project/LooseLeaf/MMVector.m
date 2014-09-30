@@ -92,6 +92,10 @@
     return [MMVector vectorWithX:(x + vector.x)/2 andY:(y + vector.y)/2];
 }
 
+-(MMVector*) addVector:(MMVector*)vector{
+    return [MMVector vectorWithX:x + vector.x andY:y + vector.y];
+}
+
 -(MMVector*) rotateBy:(CGFloat)angle{
     CGFloat xprime = x * cosf(angle) - y * sinf(angle);
     CGFloat yprime = x * sinf(angle) + y * cosf(angle);
@@ -141,8 +145,8 @@
     
     return thetaAB;
     
-    CGFloat scaler = self.x * otherVector.x + self.y * otherVector.y;
-    return acosf(scaler / (self.magnitude * otherVector.magnitude));
+//    CGFloat scaler = self.x * otherVector.x + self.y * otherVector.y;
+//    return acosf(scaler / (self.magnitude * otherVector.magnitude));
 }
 
 -(CGPoint) asCGPoint{

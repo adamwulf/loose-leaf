@@ -16,7 +16,7 @@
     NSString* recentlySuggestedPageUUID;
     NSString* recentlyConfirmedPageUUID;
     MMEditablePaperView* currentlyTopPage;
-    MMEditablePaperView* currentEditablePage;
+    MMUndoablePaperView* currentEditablePage;
     NSMutableArray* stateLoadedPages;
     NSMutableOrderedSet* pagesWithLoadedCacheImages;
 }
@@ -55,6 +55,10 @@ static MMPageCacheManager* _instance = nil;
             [pagesWithLoadedCacheImages addObject:pageBelow];
         }
     }
+    // reset location of current top page
+    [pagesWithLoadedCacheImages removeObject:currentEditablePage];
+    [pagesWithLoadedCacheImages addObject:currentEditablePage];
+    // now unload any extra pages
     if([page isKindOfClass:[MMEditablePaperView class]]){
         [(MMEditablePaperView*)page loadCachedPreview];
         [pagesWithLoadedCacheImages addObject:page];
@@ -164,14 +168,14 @@ static MMPageCacheManager* _instance = nil;
         if([page isKindOfClass:[MMEditablePaperView class]]){
             // finally, tell that page to load its state
             MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
-            [editablePage loadStateAsynchronously:YES withSize:[drawableView pagePixelSize] andContext:[drawableView context]];
+            [editablePage loadStateAsynchronously:YES withSize:drawableView.pagePtSize andScale:drawableView.scale andContext:[drawableView context]];
         }
     }
 }
 
 -(void) ensureTopPageIsLoaded:(MMPaperView*)topPage{
     if(!topPage || [topPage isKindOfClass:[MMEditablePaperView class]]){
-        MMEditablePaperView* editableTopPage = (MMEditablePaperView*)topPage;
+        MMUndoablePaperView* editableTopPage = (MMUndoablePaperView*)topPage;
         
         if(currentEditablePage != editableTopPage){
             // only care if the page is changing
@@ -184,7 +188,6 @@ static MMPageCacheManager* _instance = nil;
                     // the page view
                     [currentEditablePage setDrawableView:nil];
                     [currentEditablePage setEditable:NO];
-                    [currentEditablePage setCanvasVisible:NO];
                     currentEditablePage = editableTopPage;
                     //                debug_NSLog(@"did switch top page to %@", currentEditablePage.uuid);
                     [currentEditablePage setDrawableView:drawableView];

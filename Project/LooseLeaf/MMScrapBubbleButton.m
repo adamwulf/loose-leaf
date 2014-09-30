@@ -12,6 +12,7 @@
 #import "Constants.h"
 
 @implementation MMScrapBubbleButton{
+    CGFloat lastRotationTransform;
     CGFloat rotationAdjustment;
     MMScrapBorderView* borderView;
 }
@@ -29,8 +30,9 @@
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
         rotationAdjustment = 0;
-        self.rotation = 0;
         scale = 1;
+        lastRotationTransform = 0;
+        self.rotation = 0;
         borderView = [[MMScrapBorderView alloc] initWithFrame:self.bounds];
         [self addSubview:borderView];
     }
@@ -45,12 +47,13 @@
  * rotation = 0, so the rotationAdjustment accounts for that
  */
 -(CGAffineTransform) rotationTransform{
-    return CGAffineTransformMakeRotation(self.rotation - rotationAdjustment);
+    lastRotationTransform = [self.delegate sidebarButtonRotation];
+    return CGAffineTransformMakeRotation([self.delegate sidebarButtonRotation] - rotationAdjustment);
 }
 
 -(void) setRotation:(CGFloat)_rotation{
-    if(ABS(self.rotation - _rotation) >= .01){
-        [super setRotation:_rotation];
+    [super setRotation:_rotation];
+    if(ABS(lastRotationTransform - [self.delegate sidebarButtonRotation]) > 0.01){
         self.transform = CGAffineTransformScale([self rotationTransform], scale, scale);
     }
 }

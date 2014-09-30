@@ -10,7 +10,7 @@
 
 @interface MMDebugDrawView : UIView
 
-+(MMDebugDrawView*) sharedInstace;
++(MMDebugDrawView*) sharedInstance;
 
 -(void) clear;
 

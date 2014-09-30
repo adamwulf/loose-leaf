@@ -11,7 +11,12 @@
 #import "MMStretchScrapGestureRecognizerDelegate.h"
 #import "MMImageSidebarContainerViewDelegate.h"
 #import "MMInboxManagerDelegate.h"
+#import "MMShareItemDelegate.h"
+#import "MMCloudKitManagerDelegate.h"
+#import "MMExportablePaperView.h"
 
-@interface MMScrapPaperStackView : MMEditablePaperStackView<MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapSidebarContainerViewDelegate,MMStretchScrapGestureRecognizerDelegate,MMImageSidebarContainerViewDelegate,MFMailComposeViewControllerDelegate,MMInboxManagerDelegate>
+@interface MMScrapPaperStackView : MMEditablePaperStackView<MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapSidebarContainerViewDelegate,MMStretchScrapGestureRecognizerDelegate,MMImageSidebarContainerViewDelegate,MMInboxManagerDelegate,MMShareItemDelegate,MMCloudKitManagerDelegate>
+
+-(void) importAndShowPage:(MMExportablePaperView*)page;
 
 @end

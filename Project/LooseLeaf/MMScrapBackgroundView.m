@@ -117,7 +117,7 @@ static int totalBackgroundBytes;
 }
 
 -(NSString*) bundledBackgroundJPGFile{
-    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:scrapState.uuid] stringByAppendingPathComponent:[@"background" stringByAppendingPathExtension:@"jpg"]];
+    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:scrapState.uuid andScrapsOnPaperState:scrapState.scrapsOnPaperState] stringByAppendingPathComponent:[@"background" stringByAppendingPathExtension:@"jpg"]];
 }
 
 #pragma mark - Duplication and Stamping
@@ -174,7 +174,11 @@ static int totalBackgroundBytes;
        [[NSFileManager defaultManager] fileExistsAtPath:self.bundledBackgroundJPGFile]){
         UIImage* image = [UIImage imageWithContentsOfFile:self.backgroundJPGFile];
         if(!image){
+            NSLog(@"can't get background!");
             image = [UIImage imageWithContentsOfFile:self.bundledBackgroundJPGFile];
+            if(!image){
+                NSLog(@"can't get background!");
+            }
         }
         [NSThread performBlockOnMainThread:^{
             [self setBackingImage:image];
@@ -206,6 +210,8 @@ static int totalBackgroundBytes;
     [savedProperties setObject:[NSNumber numberWithFloat:self.backgroundOffset.y] forKey:@"backgroundOffset.y"];
     return savedProperties;
 }
+
+#pragma mark - Dealloc
 
 -(void) dealloc{
     @synchronized([MMScrapBackgroundView class]){

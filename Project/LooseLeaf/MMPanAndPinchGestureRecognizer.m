@@ -126,14 +126,14 @@
 #pragma mark - MMTouchLifeCycleDelegate
 
 -(void) touchesDidDie:(NSSet *)touches{
-    debug_NSLog(@"%@ told that %i touches have died", self, [touches count]);
+//    debug_NSLog(@"%@ told that %i touches have died", self, [touches count]);
     [self touchesEnded:touches withEvent:nil];
     if(![possibleTouches count] && ![validTouches count] && ![ignoredTouches count]){
         // don't ask for touch info anymore.
         // i can't rely on removing myself in the reset method,
         // because i may have been told about touch ownership when this gesture isn't
         // active or even receiving touch events
-        [[MMTouchVelocityGestureRecognizer sharedInstace] stopNotifyingMeWhenTouchesDie:self];
+        [[MMTouchVelocityGestureRecognizer sharedInstance] stopNotifyingMeWhenTouchesDie:self];
     }
 }
 
@@ -142,8 +142,8 @@
 
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     if(gesture != self){
-        [[MMTouchVelocityGestureRecognizer sharedInstace] pleaseNotifyMeWhenTouchesDie:self];
-        debug_NSLog(@"%@ was told that %@ owns %i touches", [self description], [gesture description], [touches count]);
+        [[MMTouchVelocityGestureRecognizer sharedInstance] pleaseNotifyMeWhenTouchesDie:self];
+//        debug_NSLog(@"%@ was told that %@ owns %i touches", [self description], [gesture description], [touches count]);
         __block BOOL touchesWereStolen = NO;
         [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
             if([possibleTouches containsObject:touch] || [validTouches containsObject:touch]){
@@ -408,7 +408,7 @@
     // sometimes iOS will tell us about touches that we should ignore.
     // this will make sure that we forget about these touches if iOS
     // stops notifying us after telling us to ignore
-    [[MMTouchVelocityGestureRecognizer sharedInstace] pleaseNotifyMeWhenTouchesDie:self];
+    [[MMTouchVelocityGestureRecognizer sharedInstance] pleaseNotifyMeWhenTouchesDie:self];
 }
 
 
@@ -429,7 +429,7 @@
     int count = 0;
     CGPoint averageVelocity = CGPointZero;
     for(UITouch* touch in validTouches){
-        struct DurationCacheObject cache = [[MMTouchVelocityGestureRecognizer sharedInstace] velocityInformationForTouch:touch withIndex:nil];
+        struct DurationCacheObject cache = [[MMTouchVelocityGestureRecognizer sharedInstance] velocityInformationForTouch:touch withIndex:nil];
         averageVelocity.x = averageVelocity.x * count + cache.directionOfTouch.x;
         count += 1;
         averageVelocity.x /= count;
@@ -458,7 +458,7 @@
     if(![scrapDelegate isAllowedToPan]){
         // we're not allowed to pan, so ignore all touches
         if([possibleTouches count]){
-            debug_NSLog(@"%@ might begin, but isn't allowed", [self description]);
+//            debug_NSLog(@"%@ might begin, but isn't allowed", [self description]);
         }
         [ignoredTouches addObjectsInSet:[possibleTouches set]];
         [possibleTouches removeAllObjects];
@@ -575,7 +575,7 @@
     lastLocationInView = CGPointZero;
     hasPannedOrScaled = NO;
     // don't ask for touch info anymore
-    [[MMTouchVelocityGestureRecognizer sharedInstace] stopNotifyingMeWhenTouchesDie:self];
+    [[MMTouchVelocityGestureRecognizer sharedInstance] stopNotifyingMeWhenTouchesDie:self];
 }
 
 -(void) setEnabled:(BOOL)enabled{

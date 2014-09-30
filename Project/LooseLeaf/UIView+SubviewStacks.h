@@ -7,21 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MMEditablePaperView.h"
-#import "MMScrappedPaperView.h"
+#import "MMExportablePaperView.h"
 
 @interface UIView (SubviewStacks)
 
-- (BOOL) containsSubview:(MMPaperView*)obj;
-- (MMScrappedPaperView*) peekSubview;
-- (MMScrappedPaperView*) popSubview;
-- (MMScrappedPaperView*) bottomSubview;
+- (BOOL) containsSubview:(UIView*)obj;
+- (MMExportablePaperView*) peekSubview;
+- (MMExportablePaperView*) popSubview;
+- (MMExportablePaperView*) bottomSubview;
 - (void) insertSubview:(MMPaperView*)obj;
 - (void) pushSubview:(MMPaperView*)obj;
 - (void) addSubviewToBottomOfStack:(MMPaperView*)obj;
 - (NSArray*) peekSubviewFromSubview:(MMPaperView*)obj;
-- (MMScrappedPaperView*) getPageBelow:(MMPaperView*)page;
--(MMScrappedPaperView*) getPageAbove:(MMPaperView*)page;
+- (MMExportablePaperView*) getPageBelow:(MMPaperView*)page;
+-(MMExportablePaperView*) getPageAbove:(MMPaperView*)page;
 -(void) insertPage:(MMPaperView*)pageToInsert belowPage:(MMPaperView*)referencePage;
 -(void) insertPage:(MMPaperView*)pageToInsert abovePage:(MMPaperView*)referencePage;
 

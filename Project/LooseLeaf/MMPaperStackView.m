@@ -10,9 +10,9 @@
 #import <QuartzCore/QuartzCore.h>
 #import "MMShadowManager.h"
 #import "NSThread+BlockAdditions.h"
-#import "TestFlight.h"
 #import "MMScrappedPaperView.h"
 #import "Mixpanel.h"
+#import "MMExportablePaperView.h"
 
 @implementation MMPaperStackView{
     MMPapersIcon* papersIcon;
@@ -112,7 +112,7 @@
  */
 -(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(UIView*)stackView{
     while([stackView.subviews count] < numberOfPagesToEnsure){
-        MMEditablePaperView* page = [[MMScrappedPaperView alloc] initWithFrame:stackView.bounds];
+        MMEditablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:stackView.bounds];
         page.isBrandNewPage = YES;
         page.delegate = self;
         [stackView addSubviewToBottomOfStack:page];
@@ -296,34 +296,60 @@
                }
            }
 
-           [UIView animateWithDuration:0.2
-                                 delay:0 options:UIViewAnimationOptionBeginFromCurrentState
-                            animations:^{
-                                papersIcon.alpha = papersIconAlpha;
-                                paperIcon.alpha = paperIconAlpha;
-                                leftArrow.alpha = leftArrowAlpha;
-                                plusIcon.alpha = plusIconAlpha;
-                                rightArrow.alpha = rightArrowAlpha;
-                            }
-                            completion:nil];
+           if(papersIcon.alpha == papersIconAlpha &&
+              paperIcon.alpha == paperIconAlpha &&
+              leftArrow.alpha == leftArrowAlpha &&
+              plusIcon.alpha == plusIconAlpha &&
+              rightArrow.alpha == rightArrowAlpha){
+//               NSLog(@"duplicate animation");
+           }else{
+               [UIView animateWithDuration:0.2
+                                     delay:0 options:UIViewAnimationOptionBeginFromCurrentState
+                                animations:^{
+                                    papersIcon.alpha = papersIconAlpha;
+                                    paperIcon.alpha = paperIconAlpha;
+                                    leftArrow.alpha = leftArrowAlpha;
+                                    plusIcon.alpha = plusIconAlpha;
+                                    rightArrow.alpha = rightArrowAlpha;
+                                }
+                                completion:nil];
+           }
        }else if(!showLeftArrow && !showRightArrow && (paperIcon.alpha || papersIcon.alpha)){
-           [UIView animateWithDuration:0.3
-                                 delay:0
-                               options:UIViewAnimationOptionBeginFromCurrentState
-                            animations:^{
-                                papersIcon.alpha = 0;
-                                paperIcon.alpha = 0;
-                                leftArrow.alpha = 0;
-                                plusIcon.alpha = 0;
-                                rightArrow.alpha = 0;
-                            }
-                            completion:nil];
+           if(papersIcon.alpha == 0 &&
+              paperIcon.alpha == 0 &&
+              leftArrow.alpha == 0 &&
+              plusIcon.alpha == 0 &&
+              rightArrow.alpha == 0){
+               //               NSLog(@"duplicate animation");
+           }else{
+               
+               [UIView animateWithDuration:0.3
+                                     delay:0
+                                   options:UIViewAnimationOptionBeginFromCurrentState
+                                animations:^{
+                                    papersIcon.alpha = 0;
+                                    paperIcon.alpha = 0;
+                                    leftArrow.alpha = 0;
+                                    plusIcon.alpha = 0;
+                                    rightArrow.alpha = 0;
+                                }
+                                completion:nil];
+           }
        }
 }
 
 
 #pragma mark - Bezel Left and Right Gestures
 
+-(void) addPageButtonTapped:(UIButton*)button{
+    if([setOfPagesBeingPanned count]){
+        NSLog(@"adding new page, but pages are being panned.");
+        for(MMPaperView* page in [setOfPagesBeingPanned copy]){
+            [page cancelAllGestures];
+        }
+    }
+    [[visibleStackHolder peekSubview] cancelAllGestures];
+}
 
 /**
  * this is the event handler for the MMBezelInRightGestureRecognizer
@@ -351,6 +377,9 @@
             }
         }
         
+        // make sure to disable all gestures on the top page.
+        // this will cancel any strokes / ruler / etc
+        [[visibleStackHolder peekSubview] disableAllGestures];
         
         // this flag is an ugly hack because i'm using substates in gestures.
         // ideally, i could handle this gesture entirely inside of the state,
@@ -703,13 +732,14 @@
         // c) add correct number of pages to the bezelStackHolder
         // d) update the offset for the bezelStackHolder so they all move in tandem
         BOOL needsAnimationUpdate = bezelGesture.numberOfRepeatingBezels != [bezelStackHolder.subviews count];
-        while(bezelGesture.numberOfRepeatingBezels > [bezelStackHolder.subviews count] && [hiddenStackHolder.subviews count]){
+        while(bezelGesture.numberOfRepeatingBezels > [bezelStackHolder.subviews count]){
             // if we want more pages than are in the stack, then
             // we need to add another page
+            // make sure there's a page to bezel
+            [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
             [bezelStackHolder pushSubview:[hiddenStackHolder peekSubview]];
         }
         if(needsAnimationUpdate){
-            //
             // we just added a new page to the bezel gesture,
             // so make sure we've notified that it may be the new top
             [self mayChangeTopPageTo:[bezelStackHolder peekSubview]];
@@ -1364,6 +1394,22 @@
     @throw kAbstractMethodException;
 }
 
+-(MMScrapSidebarContainerView*) bezelContainerView{
+    @throw kAbstractMethodException;
+}
+
+-(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk{
+    @throw kAbstractMethodException;
+}
+
+-(void) didFailToExportPage:(MMPaperView*)page{
+    @throw kAbstractMethodException;
+}
+
+-(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk{
+    @throw kAbstractMethodException;
+}
+
 #pragma mark - Page Animation and Navigation Helpers
 
 /**
@@ -1635,7 +1681,7 @@
         theAnimation.duration = duration / 2;
         theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
         theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
-        theAnimation.toValue = (id) [[MMShadowManager sharedInstace] getShadowForSize:[MMShadowedView expandBounds:self.bounds].size];
+        theAnimation.toValue = (id) [[MMShadowManager sharedInstance] getShadowForSize:[MMShadowedView expandBounds:self.bounds].size];
         [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
         [UIView animateWithDuration:duration/2 delay:delay options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut
                          animations:^(void){
@@ -1656,7 +1702,7 @@
                                  theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
                                  theAnimation.duration = duration / 2;
                                  theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
-                                 theAnimation.toValue = (id) [[MMShadowManager sharedInstace] getShadowForSize:self.bounds.size];
+                                 theAnimation.toValue = (id) [[MMShadowManager sharedInstance] getShadowForSize:self.bounds.size];
                                  [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
                                  [UIView animateWithDuration:duration/2 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseIn
                                                   animations:^(void){
@@ -1674,7 +1720,7 @@
             theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
             theAnimation.duration = duration;
             theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
-            theAnimation.toValue = (id) [[MMShadowManager sharedInstace] getShadowForSize:self.bounds.size];
+            theAnimation.toValue = (id) [[MMShadowManager sharedInstance] getShadowForSize:self.bounds.size];
             [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
             [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut
                              animations:^(void){
@@ -1822,5 +1868,20 @@
     @throw kAbstractMethodException;
 }
 
+#pragma mark - Check for Active Gestures
+
+-(BOOL) isActivelyGesturing{
+    return [fromLeftBezelGesture isActivelyBezeling] || [fromRightBezelGesture isActivelyBezeling] || [setOfPagesBeingPanned count];
+}
+
+-(void) disableAllGesturesForPageView{
+    [fromLeftBezelGesture setEnabled:NO];
+    [fromRightBezelGesture setEnabled:NO];
+}
+
+-(void) enableAllGesturesForPageView{
+    [fromLeftBezelGesture setEnabled:YES];
+    [fromRightBezelGesture setEnabled:YES];
+}
 
 @end

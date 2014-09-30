@@ -16,7 +16,7 @@
 
 -(NSString*) swizzle_description{
     __block NSString* str = @"path = [UIBezierPath bezierPath];\n";
-    [self iteratePathWithBlock:^(CGPathElement ele){
+    [self iteratePathWithBlock:[^(CGPathElement ele){
         if(ele.type == kCGPathElementAddCurveToPoint){
             CGPoint curveTo = ele.points[2];
             CGPoint ctrl1 = ele.points[0];
@@ -36,7 +36,7 @@
             CGPoint moveTo = ele.points[0];
             str = [str stringByAppendingFormat:@"[path moveToPoint:CGPointMake(%f, %f)];\n", moveTo.x, moveTo.y];
         }
-    }];
+    } copy]];
     return str;
 }
 

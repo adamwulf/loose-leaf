@@ -15,6 +15,7 @@
 #import "MMStretchScrapGestureRecognizer.h"
 #import "UIView+Animations.h"
 #import "UIGestureRecognizer+GestureDebug.h"
+#import "MMPageCacheManager.h"
 
 #define  kMaxSimultaneousTouchesAllowedToTrack 20
 #define  kNumberOfDirectionChangesToDetermineShake 2
@@ -57,6 +58,8 @@ struct TouchInterval{
     
     BOOL isShaking;
     BOOL paused;
+    
+    NSDictionary* startingScrapProperties;
 }
 
 
@@ -74,6 +77,8 @@ struct TouchInterval{
 @synthesize shouldReset;
 @synthesize isShaking;
 @synthesize initialTouchVector;
+@synthesize startingScrapProperties;
+@synthesize startingPageForScrap;
 
 -(NSArray*) possibleTouches{
     return [possibleTouches array];
@@ -97,6 +102,16 @@ struct TouchInterval{
 
 -(CGFloat) rotation{
     return rotation;
+}
+
+-(void) setScrap:(MMScrapView *)_scrap{
+    if(scrap != _scrap){
+        // save the properties of the scrap whenever its set
+        scrap = _scrap;
+        startingScrapProperties = [scrap propertiesDictionary];
+        // update the starting page, if any
+        startingPageForScrap = scrap ? [[MMPageCacheManager sharedInstance] currentEditablePage] : nil;
+    }
 }
 
 #pragma mark - Init
@@ -158,7 +173,7 @@ struct TouchInterval{
                 if([(MMPanAndPinchScrapGestureRecognizer*)gesture scrap] == scrap){
                     // if the other pan/pinch gesture owns this scrap, then let
                     // it handle it and we'll give up our scrap silently
-                    scrap = nil;
+                    self.scrap = nil;
                 }
             }
         }
@@ -248,16 +263,14 @@ struct TouchInterval{
 -(void) forceBlessTouches:(NSSet*)touches forScrap:(MMScrapView*)_scrap{
     // force scrap to the input, and force
     // input touches to valid
-    scrap = _scrap;
+    self.scrap = _scrap;
     [validTouches addObjectsInSet:touches];
     [possibleTouches removeObjectsInSet:touches];
     [ignoredTouches removeObjectsInSet:touches];
     [self touchesBegan:touches withEvent:nil];
     
-    
     [self.scrapDelegate ownershipOfTouches:[validTouches set] isGesture:self];
 
-    
     if([validTouches count] >= mmMinimumNumberOfScrapTouches){
         [self prepareGestureToBeginFresh];
     }else{
@@ -453,7 +466,7 @@ struct TouchInterval{
                 // and if we have ever actually processed that shake yet
                 int numberOfShakingTouches = 0;
                 for(UITouch* touch in validTouches){
-                    int index = [[MMTouchVelocityGestureRecognizer sharedInstace] indexForTouchInCacheIfExists:touch];
+                    int index = [[MMTouchVelocityGestureRecognizer sharedInstance] indexForTouchInCacheIfExists:touch];
                     if(index != -1){
                         if(touchIntervals[index].numberOfDirectionChanges >= kNumberOfDirectionChangesToDetermineShake &&
                            !touchIntervals[index].hasProcessedShake){
@@ -475,7 +488,7 @@ struct TouchInterval{
                     // so that we don't use this same shake gesture to
                     // repeat immediately
                     for(UITouch* touch in validTouches){
-                        int index = [[MMTouchVelocityGestureRecognizer sharedInstace] indexForTouchInCacheIfExists:touch];
+                        int index = [[MMTouchVelocityGestureRecognizer sharedInstance] indexForTouchInCacheIfExists:touch];
                         if(index != -1){
                             touchIntervals[index].hasProcessedShake = YES;
                         }
@@ -530,7 +543,7 @@ struct TouchInterval{
                 // look up our velocity from our cache
                 CGFloat velocity = 0;
                 int indexOfTouch;
-                struct DurationCacheObject cacheInfo = [[MMTouchVelocityGestureRecognizer sharedInstace] velocityInformationForTouch:touch withIndex:&indexOfTouch];
+                struct DurationCacheObject cacheInfo = [[MMTouchVelocityGestureRecognizer sharedInstance] velocityInformationForTouch:touch withIndex:&indexOfTouch];
                 velocity = cacheInfo.instantaneousNormalizedVelocity;
                 // this uses instant velocity to calculate the extra bezel width to
                 // use. if this ends up too finicky, then we can use average velocity
@@ -623,7 +636,7 @@ struct TouchInterval{
         }
         if([validTouches count] < mmMinimumNumberOfScrapTouches && self.scrap){
 //            NSLog(@"what");
-            scrap = nil;
+            self.scrap = nil;
         }
         return;
     }
@@ -741,7 +754,7 @@ struct TouchInterval{
  */
 -(void) giveUpScrap{
     [UIView setAnchorPoint:CGPointMake(.5, .5) forView:self.scrap];
-    scrap = nil;
+    self.scrap = nil;
 }
 
 
@@ -755,7 +768,7 @@ struct TouchInterval{
     didExitToBezel = MMBezelDirectionNone;
     scaleDirection = MMScaleDirectionNone;
     secondToLastTouchDidBezel = NO;
-    scrap = nil;
+    self.scrap = nil;
     gestureLocationAtStart = CGPointZero;
     translation = CGPointZero;
     self.shouldReset = NO;
@@ -780,7 +793,7 @@ struct TouchInterval{
 
 -(void) calculateShakesForTouch:(UITouch*)touch{
     int indexOfTouchInformation = -1;
-    struct DurationCacheObject cache = [[MMTouchVelocityGestureRecognizer sharedInstace] velocityInformationForTouch:touch withIndex:&indexOfTouchInformation];
+    struct DurationCacheObject cache = [[MMTouchVelocityGestureRecognizer sharedInstance] velocityInformationForTouch:touch withIndex:&indexOfTouchInformation];
     if(indexOfTouchInformation != -1){
         // we have velocity information for this touch
         
@@ -804,7 +817,7 @@ struct TouchInterval{
 }
 
 -(void) clearCacheForTouch:(UITouch*)touch{
-    int index = [[MMTouchVelocityGestureRecognizer sharedInstace] indexForTouchInCacheIfExists:touch];
+    int index = [[MMTouchVelocityGestureRecognizer sharedInstance] indexForTouchInCacheIfExists:touch];
     if(index != -1){
         touchIntervals[index].numberOfDirectionChanges = 0;
         touchIntervals[index].hasProcessedShake = NO;

@@ -7,6 +7,7 @@
 //
 
 #import "MMButtonAwareTapGestureRecognizer.h"
+#import <UIKit/UIGestureRecognizerSubclass.h>
 
 @implementation MMButtonAwareTapGestureRecognizer
 

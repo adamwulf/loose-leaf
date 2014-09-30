@@ -29,4 +29,11 @@ static UIColor* blueShadowColor;
 }
 
 
++(UIColor*) lightBlueShadowColor{
+    if(blueShadowColor){
+        return blueShadowColor;
+    }
+    blueShadowColor = [UIColor colorWithRed: 127.0/255.0 green: 237.0/255.0 blue: 1.0 alpha: 0.7];
+    return blueShadowColor;
+}
 @end

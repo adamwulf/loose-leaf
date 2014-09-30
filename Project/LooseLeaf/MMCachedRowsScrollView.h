@@ -28,4 +28,6 @@
 
 -(void) refreshVisibleRows;
 
+-(void) killMemory;
+
 @end

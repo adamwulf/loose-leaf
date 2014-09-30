@@ -9,6 +9,6 @@
 #import "MMAbstractSidebarContentView.h"
 #import "MMCamViewDelegate.h"
 
-@interface MMCameraSidebarContentView : MMAbstractSidebarContentView<MMCamViewDelegate>
+@interface MMCameraSidebarContentView : MMAbstractSidebarContentView
 
 @end

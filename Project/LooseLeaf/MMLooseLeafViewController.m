@@ -9,7 +9,6 @@
 #import "MMLooseLeafViewController.h"
 #import "MMShadowManager.h"
 #import "MMEditablePaperView.h"
-#import "TestFlight.h"
 #import "MMDebugDrawView.h"
 #import "MMInboxManager.h"
 #import "MMMemoryProfileView.h"
@@ -23,20 +22,11 @@
 
 - (id)init{
     if(self = [super init]){
-        
-//        [NSThread performBlockInBackground:^{
-//            [TestFlight takeOff:kTestflightAppToken];
-//            [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
-//            [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
-//            [TestFlight setOptions:@{ TFOptionLogOnCheckpoint : @NO }];
-//            [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
-//        }];
-
         [[Crashlytics sharedInstance] setDelegate:self];
 
         // Do any additional setup after loading the view, typically from a nib.
         srand ((uint) time(NULL) );
-        [[MMShadowManager sharedInstace] beginGeneratingShadows];
+        [[MMShadowManager sharedInstance] beginGeneratingShadows];
     
         self.view.opaque = YES;
         
@@ -46,10 +36,13 @@
         
         [stackView loadStacksFromDisk];
         
-        [[MMTouchVelocityGestureRecognizer sharedInstace] setStackView:stackView];
+        [[MMTouchVelocityGestureRecognizer sharedInstance] setStackView:stackView];
         
         [[[Mixpanel sharedInstance] people] set:kMPNumberOfPages
                                              to:@([stackView.visibleStackHolder.subviews count] + [stackView.hiddenStackHolder.subviews count])];
+        NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
+        [[[Mixpanel sharedInstance] people] set:kMPPreferredLanguage
+                                             to:language];
         [[[Mixpanel sharedInstance] people] setOnce:@{kMPFirstLaunchDate : [NSDate date],
                                                       kMPHasAddedPage : @(NO),
                                                       kMPHasZoomedToList : @(NO),
@@ -57,18 +50,28 @@
                                                       kMPNumberOfEraserUses : @(0),
                                                       kMPNumberOfScissorUses : @(0),
                                                       kMPNumberOfRulerUses : @(0),
+                                                      kMPNumberOfImports : @(0),
                                                       kMPNumberOfPhotoImports : @(0),
+                                                      kMPNumberOfCloudKitImports : @(0),
                                                       kMPNumberOfPhotosTaken : @(0),
                                                       kMPNumberOfExports : @(0),
+                                                      kMPNumberOfCloudKitExports : @(0),
                                                       kMPDurationAppOpen : @(0.0),
                                                       kMPNumberOfCrashes : @(0),
                                                       kMPDistanceDrawn : @(0.0),
-                                                      kMPDistanceErased : @(0.0)}];
-
+                                                      kMPDistanceErased : @(0.0),
+                                                      kMPNumberOfClippingExceptions : @(0.0),
+                                                      kMPShareStatusFacebook : kMPShareStatusUnknown,
+                                                      kMPShareStatusTwitter : kMPShareStatusUnknown,
+                                                      kMPShareStatusEmail : kMPShareStatusUnknown,
+                                                      kMPShareStatusSMS : kMPShareStatusUnknown,
+                                                      kMPShareStatusTencentWeibo : kMPShareStatusUnknown,
+                                                      kMPShareStatusSinaWeibo : kMPShareStatusUnknown,
+                                                      }];
 
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"blackblur.png"]]];
         
-//        [self.view addSubview:[MMDebugDrawView sharedInstace]];
+//        [self.view addSubview:[MMDebugDrawView sharedInstance]];
         
         
         memoryManager = [[MMMemoryManager alloc] initWithStack:stackView];
@@ -85,7 +88,7 @@
 
 -(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication{
     // ask the inbox manager to
-    [[MMInboxManager sharedInstace] processInboxItem:url fromApp:(NSString*)sourceApplication];
+    [[MMInboxManager sharedInstance] processInboxItem:url fromApp:(NSString*)sourceApplication];
 }
 
 -(void) printKeys:(NSDictionary*)dict atlevel:(NSInteger)level{
@@ -128,5 +131,17 @@
     [stackView cancelAllGestures];
     [[stackView.visibleStackHolder peekSubview] cancelAllGestures];
 }
+
+
+-(void) dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion{
+    [super dismissViewControllerAnimated:flag completion:completion];
+//    NSLog(@"dismissing view controller");
+}
+
+-(void) presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion{
+    [super presentViewController:viewControllerToPresent animated:flag completion:completion];
+//    NSLog(@"presenting view controller");
+}
+
 
 @end

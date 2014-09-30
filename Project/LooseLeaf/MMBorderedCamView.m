@@ -51,9 +51,6 @@
         camHolderLayer.backgroundColor = [UIColor blackColor].CGColor;
         [self.layer addSublayer:camHolderLayer];
         
-//        cameraController = [[AVCamView alloc] initWithFrame:CGRectInset(self.bounds, 3, 3)];
-//        [self addSubview:cameraController];
-        
         cameraSession = [[CaptureSessionManager alloc] initWithPosition:preferredPosition];
         cameraSession.delegate = self;
         [cameraSession addPreviewLayerTo:camHolderLayer];

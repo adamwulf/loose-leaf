@@ -20,18 +20,27 @@
     return self;
 }
 
+-(void) reset:(BOOL)animated{
+    if([MMPhotoManager hasPhotosPermission]){
+        [super reset:animated];
+    }else{
+        albumListScrollView.alpha = 0;
+        photoListScrollView.alpha = 1;
+    }
+}
+
 #pragma mark - Row Management
 
 -(NSInteger) indexForAlbum:(MMPhotoAlbum*)album{
     if(album.type == ALAssetsGroupAlbum){
-        return [[[MMPhotoManager sharedInstace] events] indexOfObject:album];
+        return [[[MMPhotoManager sharedInstance] events] indexOfObject:album];
     }
     return -1;
 }
 
 -(MMPhotoAlbum*) albumAtIndex:(NSInteger)index{
-    if(index < [[[MMPhotoManager sharedInstace] events] count]){
-        return [[[MMPhotoManager sharedInstace] events] objectAtIndex:index];
+    if(index < [[[MMPhotoManager sharedInstance] events] count]){
+        return [[[MMPhotoManager sharedInstance] events] objectAtIndex:index];
     }
     return nil;
 }
@@ -39,11 +48,7 @@
 #pragma mark - MMCachedRowsScrollViewDataSource
 
 -(NSInteger) numberOfRowsFor:(MMCachedRowsScrollView*)scrollView{
-    if(scrollView == albumListScrollView){
-        return [[[MMPhotoManager sharedInstace] events] count];
-    }else{
-        return ceilf(currentAlbum.numberOfPhotos / 2.0);
-    }
+    return [[[MMPhotoManager sharedInstance] events] count];
 }
 
 -(BOOL) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView{

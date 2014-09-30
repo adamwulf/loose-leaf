@@ -7,9 +7,11 @@
 //
 
 #import "MMEditablePaperView.h"
-#import "MMPanAndPinchScrapGestureRecognizer.h"
 #import "MMScrapsOnPaperStateDelegate.h"
 #import "MMDecompressImagePromiseDelegate.h"
+#import "MMScissorResult.h"
+#import "MMScrapContainerView.h"
+#import "MMVector.h"
 #import <MessageUI/MFMailComposeViewController.h>
 
 /**
@@ -20,12 +22,16 @@
     UIImageView* cachedImgView;
 }
 
--(void) addScrap:(MMScrapView*)scrap;
--(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andScale:(CGFloat)scale;
--(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)lastBestRotation andScale:(CGFloat)scale;
--(BOOL) hasScrap:(MMScrapView*)scrap;
+@property (readonly) MMScrapsOnPaperState* scrapsOnPaperState;
+@property (readonly) MMScrapContainerView* scrapContainerView;
+@property (readonly) UIImageView* cachedImgView;
 
--(void) didUpdateAccelerometerWithRawReading:(CGFloat)currentRawReading;
+-(dispatch_queue_t) serialBackgroundQueue;
+
+-(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andScale:(CGFloat)scale;
+-(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale;
+
+-(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading;
 
 -(void) saveToDisk;
 
@@ -39,12 +45,20 @@
 
 -(void) cancelScissorAtPoint:(CGPoint)point;
 
--(void) completeScissorsCutWithPath:(UIBezierPath*)scissorPath;
+-(MMScissorResult*) completeScissorsCutWithPath:(UIBezierPath*)scissorPath;
 
 -(NSString*) scrappedThumbnailPath;
 
 -(UIImage*) scrappedImgViewImage;
 
 -(void) addUndoLevelAndContinueStroke;
+
+-(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block;
+
+-(void) updateThumbnailVisibility;
+
+-(NSString*) scrapIDsPath;
+
+-(CGSize) thumbnailSize;
 
 @end

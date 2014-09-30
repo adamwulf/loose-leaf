@@ -58,7 +58,7 @@
     view.layer.anchorPoint = anchorPoint;
 }
 
--(void) bounceWithTransform:(CGAffineTransform)transform{
+-(void) bounceWithTransform:(CGAffineTransform)transform stepOne:(CGFloat)max stepTwo:(CGFloat)min{
     // run animation for a fraction of a second
     CGFloat duration = .30;
     
@@ -79,8 +79,8 @@
     bounceAnimation.keyTimes = keyTimes;
     bounceAnimation.values = [NSArray arrayWithObjects:
                               [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.0, 1.0, 1.0))],
-                              [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.4, 1.4, 1.0))],
-                              [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(0.8, 0.8, 1.0))],
+                              [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.0+max, 1.0+max, 1.0))],
+                              [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.0+min, 1.0+min, 1.0))],
                               [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.0, 1.0, 1.0))],
                               nil];
     bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
@@ -93,6 +93,10 @@
     ///////////////////////////////////////////////
     // Add the animations to the layers
     [self.layer addAnimation:bounceAnimation forKey:@"animateSize"];
+}
+
+-(void) bounceWithTransform:(CGAffineTransform)transform{
+    [self bounceWithTransform:transform stepOne:.4 stepTwo:-.2];
 }
 
 -(void) bounce{
