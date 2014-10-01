@@ -16,6 +16,8 @@
 @implementation MMDeletePageSidebarController{
     UIView* deleteSidebarBackground;
     UIView* deleteSidebarForeground;
+    UIView* trashBackground;
+    MMTrashIcon* trashIcon;
 }
 
 @synthesize deleteSidebarBackground;
@@ -32,7 +34,7 @@
         deleteSidebarBackground.backgroundColor = [UIColor clearColor];
         deleteSidebarForeground = [[UIView alloc] initWithFrame:frame];
         deleteSidebarForeground.backgroundColor = [UIColor clearColor];
-        [self showSidebarWithPercent:0];
+        [self showSidebarWithPercent:0 withTargetView:nil];
         
         CGFloat thetaLarge = atan(centerY/curveSize);
         CGFloat thetaSmall = M_PI - 2*thetaLarge;
@@ -53,7 +55,7 @@
         
         
         // default fill w/o stripes
-        UIImageView* trashBackground = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"crumple.jpg"]];
+        trashBackground = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"crumple.jpg"]];
         CGPoint center2 = CGPointMake(trashBackground.bounds.size.width-radius, frame.size.height/2);
         UIBezierPath* fillPath = [UIBezierPath bezierPathWithArcCenter:center2 radius:radius - kBorderSpacing - kBorderWidth startAngle:0 endAngle:2*M_PI clockwise:YES];
         trashBackground.alpha = 0.4;
@@ -66,7 +68,7 @@
         [deleteSidebarBackground.layer addSublayer:rightBorder];
         [deleteSidebarBackground addSubview:trashBackground];
         
-        MMTrashIcon* trashIcon = [[MMTrashIcon alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
+        trashIcon = [[MMTrashIcon alloc] initWithFrame:CGRectMake(0, 0, 130, 100)];
         trashIcon.center = CGPointMake(deleteSidebarBackground.bounds.size.width - 120, 200);
         [deleteSidebarBackground addSubview:trashIcon];
     }
@@ -87,16 +89,44 @@
     [circle appendPath:[UIBezierPath bezierPathWithArcCenter:center radius:radius - 2 startAngle:0 endAngle:2*M_PI clockwise:YES]];
     [circle appendPath:[UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:0 endAngle:2*M_PI clockwise:YES]];
     circle.usesEvenOddFillRule = YES;
-    
-    
-    
+
     return circle;
 }
 
--(void) showSidebarWithPercent:(CGFloat)percent{
+-(void) showSidebarWithPercent:(CGFloat)percent withTargetView:(UIView*)targetView{
     CGRect fr = CGRectMake(-deleteSidebarForeground.bounds.size.width + 200 * percent, 0, deleteSidebarForeground.bounds.size.width, deleteSidebarForeground.bounds.size.height);
     deleteSidebarBackground.frame = fr;
     deleteSidebarForeground.frame = fr;
+    
+    trashBackground.alpha = (percent + .1 > 1 ? 1.0 : percent + .1) * 0.4;
+    
+    CGFloat iconOpacity = (percent - .6) * 2;
+    iconOpacity = iconOpacity > 1 ? 1.0 : iconOpacity < 0 ? 0 : iconOpacity;
+    trashIcon.alpha = iconOpacity;
+    
+    CGFloat movementDistance = 20.0;
+    
+    CGPoint targetViewCenter = [deleteSidebarBackground convertPoint:targetView.center fromView:targetView.superview];
+    CGPoint trashIconCenter = CGPointMake(targetViewCenter.x + targetView.bounds.size.width / 2 - trashIcon.bounds.size.width / 4 + movementDistance,
+                                          targetViewCenter.y - targetView.bounds.size.height / 2 - trashIcon.bounds.size.height / 2 - 2);
+
+    CGFloat(^easeOut)(CGFloat t) = ^(CGFloat t){
+        t /= .5;
+        if(t<1) return (CGFloat) .5*t*t;
+        t -= 1;
+        return (CGFloat) -.5 * (t*(t-2) - 1);
+    };
+//    
+//    function (t, b, c, d) {
+//        t /= d/2;
+//        if (t < 1) return c/2*t*t + b;
+//        t--;
+//        return -c/2 * (t*(t-2) - 1) + b;
+//    };
+    
+    trashIconCenter.x -= movementDistance * easeOut(iconOpacity); // give it just a bit of movement
+    
+    trashIcon.center = trashIconCenter;
     
 //    fr = deleteSidebarBackground.bounds;
 //    deleteSidebarBackground.frame = fr;

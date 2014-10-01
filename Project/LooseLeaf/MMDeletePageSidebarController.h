@@ -15,6 +15,6 @@
 
 -(id) initWithFrame:(CGRect)frame;
 
--(void) showSidebarWithPercent:(CGFloat)percent;
+-(void) showSidebarWithPercent:(CGFloat)percent withTargetView:(UIView*)targetView;
 
 @end

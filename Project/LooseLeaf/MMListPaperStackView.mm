@@ -1214,10 +1214,10 @@
                     center = [aimedDir pointFromPoint:center distance:fx(dir.magnitude) * percDelta];
                     pageToMove.center = center;
                 }
-                [deleteSidebar showSidebarWithPercent:percDelta];
+                [deleteSidebar showSidebarWithPercent:percDelta withTargetView:pageBeingDragged];
             }
         }else{
-            [deleteSidebar showSidebarWithPercent:0.0];
+            [deleteSidebar showSidebarWithPercent:0.0 withTargetView:nil];
         }
     }
 }
