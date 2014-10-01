@@ -17,4 +17,6 @@
 
 -(void) showSidebarWithPercent:(CGFloat)percent withTargetView:(UIView*)targetView;
 
+-(void) closeSidebarAnimated;
+
 @end

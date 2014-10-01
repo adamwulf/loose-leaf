@@ -23,8 +23,31 @@
 @synthesize deleteSidebarBackground;
 @synthesize deleteSidebarForeground;
 
+static CGFloat(^alphaForPercent)(CGFloat);
+static CGFloat(^clampPercent)(CGFloat);
+
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super init]){
+        
+        alphaForPercent = [^(CGFloat percent){
+            CGFloat ret = 0;
+            if(percent + .1 > 1){
+                ret = 1.0 * .4;
+            }else{
+                ret = (percent + .1) * .4;
+            }
+            return ret;
+        } copy];
+        clampPercent = [^(CGFloat percent){
+            CGFloat ret = percent;
+            if(percent > 1){
+                ret = 1.0;
+            }else if(percent < 0){
+                ret = 0;
+            }
+            return ret;
+        } copy];
+
         CGFloat centerY = frame.size.height / 2;
         CGFloat curveSize = 20.0;
         
@@ -98,10 +121,11 @@
     deleteSidebarBackground.frame = fr;
     deleteSidebarForeground.frame = fr;
     
-    trashBackground.alpha = (percent + .1 > 1 ? 1.0 : percent + .1) * 0.4;
+    CGFloat alphaForBackground = alphaForPercent(percent);
+    trashBackground.alpha = alphaForBackground;
     
     CGFloat iconOpacity = (percent - .6) * 2;
-    iconOpacity = iconOpacity > 1 ? 1.0 : iconOpacity < 0 ? 0 : iconOpacity;
+    iconOpacity = clampPercent(iconOpacity);
     
     CGFloat movementDistance = 20.0;
     
@@ -119,5 +143,18 @@
     trashIcon.center = trashIconCenter;
 }
 
+-(void) closeSidebarAnimated{
+    trashBackground.alpha = alphaForPercent(.1);
+
+    [UIView animateWithDuration:.15 animations:^{
+        CGRect fr = CGRectMake(-deleteSidebarForeground.bounds.size.width, 0, deleteSidebarForeground.bounds.size.width, deleteSidebarForeground.bounds.size.height);
+        deleteSidebarBackground.frame = fr;
+        deleteSidebarForeground.frame = fr;
+        trashIcon.alpha = 0;
+        fr = trashIcon.frame;
+        fr.origin.x -= 20;
+        trashIcon.frame = fr;
+    }];
+}
 
 @end

@@ -22,6 +22,7 @@
     MMButtonAwareTapGestureRecognizer* tapGesture;
     MMButtonAwareTapGestureRecognizer* twoFingerTapGesture;
     MMDeletePageSidebarController* deleteSidebar;
+    NSMutableSet* pagesBeingAnimatedDuringDeleteGesture;
 }
 
 @synthesize deleteSidebar;
@@ -82,6 +83,8 @@
         addPageButtonInListView.delegate = self;
         addPageButtonInListView.alpha = 0;
         [self addSubview:addPageButtonInListView];
+        
+        pagesBeingAnimatedDuringDeleteGesture = [NSMutableSet set];
     }
     return self;
 }
@@ -1080,19 +1083,23 @@
     // ok, pages are in the right order, so animate them
     // to their new home
     if([pagesToAnimate count]){
-        [UIView animateWithDuration:.15
-                              delay:0
-                            options:UIViewAnimationOptionCurveEaseOut
-                         animations:^{
-                             for(MMPaperView* aPage in pagesToAnimate){
-                                 CGRect frameOfPage = [self frameForListViewForPage:aPage];
-                                 aPage.frame = frameOfPage;
-                             }
-                         }
-                         completion:nil];
-        
+        [self realignPagesInListView:pagesToAnimate];
         [self saveStacksToDisk];
     }
+}
+
+-(void) realignPagesInListView:(NSSet*)pagesToAnimate{
+    if(![pagesToAnimate count]) return;
+    [UIView animateWithDuration:.15
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         for(MMPaperView* aPage in pagesToAnimate){
+                             CGRect frameOfPage = [self frameForListViewForPage:aPage];
+                             aPage.frame = frameOfPage;
+                         }
+                     }
+                     completion:nil];
 }
 
 
@@ -1103,6 +1110,10 @@
         //
         // if we're not dragging the page, then don't update the display link
         displayLink.paused = YES;
+        
+        [deleteSidebar closeSidebarAnimated];
+        [self realignPagesInListView:pagesBeingAnimatedDuringDeleteGesture];
+        [pagesBeingAnimatedDuringDeleteGesture removeAllObjects];
         return;
     }
     if(!realizedThatPageIsBeingDragged){
@@ -1156,7 +1167,8 @@
         [self ensurePage:pageBeingDragged isAtIndex:indexOfGesture];
     }
     
-    
+    //
+    // delete sidebar if the user drags a page to the left
     if(pageBeingDragged){
         CGFloat diffDist = 100 - pageBeingDragged.center.x;
         CGFloat percDelta = (diffDist / 100.0);
@@ -1181,7 +1193,42 @@
                     }
                 }
                 
+                NSSet* pagesNoLongerAnimating = [pagesBeingAnimatedDuringDeleteGesture filteredSetUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+                    return ![pagesToMove containsObject:evaluatedObject];
+                }]];
+                [self realignPagesInListView:pagesNoLongerAnimating];
+                [pagesBeingAnimatedDuringDeleteGesture removeAllObjects];
+                [pagesBeingAnimatedDuringDeleteGesture addObjectsInSet:pagesToMove];
                 
+                
+                // the idea is to move along the vector
+                // at an ever decreasing amount the further away the
+                // the page is.
+                // later, we'll factor in diffDist so that it
+                // smooothly travels to this point as diffDist increases
+                CGFloat(^fx)(CGFloat) = ^(CGFloat x){
+                    if(x > 900){
+                        return (CGFloat)0.0f;
+                    }
+                    //
+                    // these were derived from a quadratic regression
+                    // of the points:
+                    //    x    y
+                    //    350  220
+                    //    550  120
+                    //    800  15
+                    //
+                    // using http://keisan.casio.com/exec/system/14059932254941
+                    CGFloat a = 2.888889E-4;
+                    CGFloat b = -0.61;
+                    CGFloat c = 318.11111;
+                    return x * a * x + b * x + c;
+                };
+                
+                //
+                // the animation will push pages away from the page
+                // that's being panned, and will also push them
+                // directly to the right
                 MMVector* moveRight = [MMVector vectorWithX:2.5 andY:0];
                 // now calculate how far from their original position
                 // these pages should be moved
@@ -1194,22 +1241,6 @@
                     MMVector* dir = [MMVector vectorWithPoint:pageBeingDragged.center andPoint:center];
                     
                     // normalize and move
-                    
-                    // the idea is to move along the vector
-                    // at an ever decreasing amount the further away the
-                    // the page is.
-                    // later, we'll factor in diffDist so that it
-                    // smooothly travels to this point as diffDist increases
-                    CGFloat(^fx)(CGFloat) = ^(CGFloat x){
-                        if(x > 900){
-                            return (CGFloat)0.0f;
-                        }
-                        CGFloat a = 2.888889E-4;
-                        CGFloat b = -0.61;
-                        CGFloat c = 318.11111;
-                        return x * a * x + b * x + c;
-                    };
-                    
                     MMVector* aimedDir = [[dir normal] averageWith:moveRight];
                     center = [aimedDir pointFromPoint:center distance:fx(dir.magnitude) * percDelta];
                     pageToMove.center = center;
@@ -1217,6 +1248,10 @@
                 [deleteSidebar showSidebarWithPercent:percDelta withTargetView:pageBeingDragged];
             }
         }else{
+            if([pagesBeingAnimatedDuringDeleteGesture count]){
+                [self realignPagesInListView:pagesBeingAnimatedDuringDeleteGesture];
+                [pagesBeingAnimatedDuringDeleteGesture removeAllObjects];
+            }
             [deleteSidebar showSidebarWithPercent:0.0 withTargetView:nil];
         }
     }
