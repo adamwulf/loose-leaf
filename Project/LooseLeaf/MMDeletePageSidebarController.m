@@ -145,6 +145,22 @@ static CGFloat(^clampPercent)(CGFloat);
     trashIcon.center = trashIconCenter;
 }
 
+-(BOOL) shouldDelete:(MMPaperView*)pageMightDelete{
+    return trashIcon.alpha > .25;
+}
+
+-(void) deletePage:(MMPaperView*)pageToDelete{
+    CGPoint center = [deleteSidebarForeground convertPoint:pageToDelete.center fromView:pageToDelete.superview];
+    [deleteSidebarForeground addSubview:pageToDelete];
+    pageToDelete.center = center;
+    
+    [UIView animateWithDuration:.3 animations:^{
+        // move it offscreen
+        pageToDelete.center = CGPointMake(-200 - pageToDelete.bounds.size.width/2, pageToDelete.center.y);
+        [pageToDelete removeFromSuperview];
+    }];
+}
+
 -(void) closeSidebarAnimated{
     trashBackground.alpha = alphaForPercent(.1);
 

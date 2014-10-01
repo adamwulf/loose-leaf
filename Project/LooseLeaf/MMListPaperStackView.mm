@@ -821,6 +821,14 @@
         [UIView animateWithDuration:.1 delay:0 options:UIViewAnimationOptionCurveLinear animations:updatePageFrame completion:nil];
     }else if(gesture.state == UIGestureRecognizerStateEnded ||
              gesture.state == UIGestureRecognizerStateFailed){
+        
+        //
+        // first, calculate if the page was dropped
+        // inside of the delete sidebar or not
+        if([deleteSidebar shouldDelete:pageBeingDragged]){
+            [deleteSidebar deletePage:pageBeingDragged];
+        }
+        
         // properties for drag behavior
         realizedThatPageIsBeingDragged = NO;
         pageBeingDragged = nil;
@@ -956,6 +964,15 @@
         [UIView animateWithDuration:.1 delay:0 options:UIViewAnimationOptionCurveLinear animations:updatePageFrame completion:nil];
     }else if(gesture.state == UIGestureRecognizerStateEnded ||
              gesture.state == UIGestureRecognizerStateFailed){
+        BOOL didDelete = NO;
+        //
+        // first, calculate if the page was dropped
+        // inside of the delete sidebar or not
+        if([deleteSidebar shouldDelete:pageBeingDragged]){
+            [deleteSidebar deletePage:pageBeingDragged];
+            didDelete = YES;
+        }
+        
         // properties for drag behavior
         realizedThatPageIsBeingDragged = NO;
         pageBeingDragged = nil;
@@ -963,25 +980,27 @@
         // go to page/list view
         // based on how the gesture ended
         [self setScrollEnabled:YES];
-        if(gesture.scaleDirection == MMScaleDirectionLarger && gesture.scale > kZoomToListPageZoom){
-            // the user has released their pinch, and the page is still really small,
-            // but they were *increasing* the size of the page when they let go,
-            // so we're going to use that "momentum" and scale the page into view
-            [self immediatelyAnimateFromListViewToFullScreenView];
-            return;
-        }else{
-            // the user has released their pinch, and the page is still really small,
-            // but they were *decreasing* the size of the page when they let go,
-            // so we'll decrease it back into list view
-            CGRect frameOfPage = [self frameForListViewForPage:gesture.pinchedPage];
-            [UIView animateWithDuration:.15
-                                  delay:0
-                                options:UIViewAnimationOptionCurveEaseOut
-                             animations:^{
-                                 gesture.pinchedPage.frame = frameOfPage;
-                             }
-                             completion:nil];
-            [self finishUITransitionToListView];
+        if(!didDelete){
+            if(gesture.scaleDirection == MMScaleDirectionLarger && gesture.scale > kZoomToListPageZoom){
+                // the user has released their pinch, and the page is still really small,
+                // but they were *increasing* the size of the page when they let go,
+                // so we're going to use that "momentum" and scale the page into view
+                [self immediatelyAnimateFromListViewToFullScreenView];
+                return;
+            }else{
+                // the user has released their pinch, and the page is still really small,
+                // but they were *decreasing* the size of the page when they let go,
+                // so we'll decrease it back into list view
+                CGRect frameOfPage = [self frameForListViewForPage:gesture.pinchedPage];
+                [UIView animateWithDuration:.15
+                                      delay:0
+                                    options:UIViewAnimationOptionCurveEaseOut
+                                 animations:^{
+                                     gesture.pinchedPage.frame = frameOfPage;
+                                 }
+                                 completion:nil];
+                [self finishUITransitionToListView];
+            }
         }
     }else if(gesture.state == UIGestureRecognizerStateChanged){
         updatePageFrame();
@@ -1083,23 +1102,30 @@
     // ok, pages are in the right order, so animate them
     // to their new home
     if([pagesToAnimate count]){
-        [self realignPagesInListView:pagesToAnimate];
+        [self realignPagesInListView:pagesToAnimate animated:YES];
         [self saveStacksToDisk];
     }
 }
 
--(void) realignPagesInListView:(NSSet*)pagesToAnimate{
-    if(![pagesToAnimate count]) return;
-    [UIView animateWithDuration:.15
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseOut
-                     animations:^{
-                         for(MMPaperView* aPage in pagesToAnimate){
-                             CGRect frameOfPage = [self frameForListViewForPage:aPage];
-                             aPage.frame = frameOfPage;
-                         }
-                     }
-                     completion:nil];
+-(void) realignPagesInListView:(NSSet*)pagesToMove animated:(BOOL)animated{
+    if(![pagesToMove count]) return;
+    
+    void(^block)() = ^{
+        for(MMPaperView* aPage in pagesToMove){
+            CGRect frameOfPage = [self frameForListViewForPage:aPage];
+            aPage.frame = frameOfPage;
+        }
+    };
+    
+    if(animated){
+        [UIView animateWithDuration:.15
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseOut
+                         animations:block
+                         completion:nil];
+    }else{
+        block();
+    }
 }
 
 
@@ -1112,8 +1138,22 @@
         displayLink.paused = YES;
         
         [deleteSidebar closeSidebarAnimated];
-        [self realignPagesInListView:pagesBeingAnimatedDuringDeleteGesture];
+        // if the page was deleted, then we'll need to recalculate all the frames
+        // clear our cache of frame locations
+        mapOfFinalFramesForPagesBeingZoomed->clear();
+        // now realign with fresh frame checking.
+        NSMutableSet* allOtherPages = [NSMutableSet setWithArray:visibleStackHolder.subviews];
+        [allOtherPages addObjectsFromArray:hiddenStackHolder.subviews];
+        [allOtherPages removeObjectsInSet:pagesBeingAnimatedDuringDeleteGesture];
+        
+        [self realignPagesInListView:pagesBeingAnimatedDuringDeleteGesture animated:YES];
         [pagesBeingAnimatedDuringDeleteGesture removeAllObjects];
+
+        [self realignPagesInListView:allOtherPages animated:NO];
+        addPageButtonInListView.frame = [self frameForAddPageButton];
+        [self setContentSize:CGSizeMake(screenWidth, [self contentHeightForAllPages])];
+        [self moveAddButtonToTop];
+        
         return;
     }
     if(!realizedThatPageIsBeingDragged){
@@ -1172,6 +1212,7 @@
     if(pageBeingDragged){
         CGFloat diffDist = 100 - pageBeingDragged.center.x;
         CGFloat percDelta = (diffDist / 100.0);
+        
         if(pageBeingDragged.center.x < 100){
             if(diffDist > 0){
                 NSMutableSet* pagesToMove = [NSMutableSet set];
@@ -1196,7 +1237,7 @@
                 NSSet* pagesNoLongerAnimating = [pagesBeingAnimatedDuringDeleteGesture filteredSetUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
                     return ![pagesToMove containsObject:evaluatedObject];
                 }]];
-                [self realignPagesInListView:pagesNoLongerAnimating];
+                [self realignPagesInListView:pagesNoLongerAnimating animated:YES];
                 [pagesBeingAnimatedDuringDeleteGesture removeAllObjects];
                 [pagesBeingAnimatedDuringDeleteGesture addObjectsInSet:pagesToMove];
                 
@@ -1249,7 +1290,7 @@
             }
         }else{
             if([pagesBeingAnimatedDuringDeleteGesture count]){
-                [self realignPagesInListView:pagesBeingAnimatedDuringDeleteGesture];
+                [self realignPagesInListView:pagesBeingAnimatedDuringDeleteGesture animated:YES];
                 [pagesBeingAnimatedDuringDeleteGesture removeAllObjects];
             }
             [deleteSidebar showSidebarWithPercent:0.0 withTargetView:nil];

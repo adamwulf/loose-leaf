@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMExportablePaperView.h"
 
 @interface MMDeletePageSidebarController : NSObject
 
@@ -18,5 +19,11 @@
 -(void) showSidebarWithPercent:(CGFloat)percent withTargetView:(UIView*)targetView;
 
 -(void) closeSidebarAnimated;
+
+// returns YES if the page would be dropped in the
+// sidebar at its current location
+-(BOOL) shouldDelete:(MMPaperView*)pageMightDelete;
+
+-(void) deletePage:(MMPaperView*)pageToDelete;
 
 @end
