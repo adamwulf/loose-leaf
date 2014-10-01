@@ -8,6 +8,7 @@
 
 #import "MMDeletePageSidebarController.h"
 #import "MMTrashIcon.h"
+#import "MMUntouchableView.h"
 
 #define kBorderWidth 3
 #define kBorderSpacing 2
@@ -55,7 +56,8 @@ static CGFloat(^clampPercent)(CGFloat);
         
         deleteSidebarBackground = [[UIView alloc] initWithFrame:frame];
         deleteSidebarBackground.backgroundColor = [UIColor clearColor];
-        deleteSidebarForeground = [[UIView alloc] initWithFrame:frame];
+        deleteSidebarForeground = [[MMUntouchableView alloc] initWithFrame:frame];
+        deleteSidebarForeground.clipsToBounds = YES;
         deleteSidebarForeground.backgroundColor = [UIColor clearColor];
         [self showSidebarWithPercent:0 withTargetView:nil];
         
@@ -92,8 +94,9 @@ static CGFloat(^clampPercent)(CGFloat);
         [deleteSidebarBackground addSubview:trashBackground];
         
         trashIcon = [[MMTrashIcon alloc] initWithFrame:CGRectMake(0, 0, 130, 100)];
-        trashIcon.center = CGPointMake(deleteSidebarBackground.bounds.size.width - 120, 200);
-        [deleteSidebarBackground addSubview:trashIcon];
+        trashIcon.center = CGPointMake(120, 200);
+        trashIcon.alpha = 0;
+        [deleteSidebarForeground addSubview:trashIcon];
     }
     return self;
 }
@@ -119,7 +122,6 @@ static CGFloat(^clampPercent)(CGFloat);
 -(void) showSidebarWithPercent:(CGFloat)percent withTargetView:(UIView*)targetView{
     CGRect fr = CGRectMake(-deleteSidebarForeground.bounds.size.width + 200 * percent, 0, deleteSidebarForeground.bounds.size.width, deleteSidebarForeground.bounds.size.height);
     deleteSidebarBackground.frame = fr;
-    deleteSidebarForeground.frame = fr;
     
     CGFloat alphaForBackground = alphaForPercent(percent);
     trashBackground.alpha = alphaForBackground;
@@ -129,7 +131,7 @@ static CGFloat(^clampPercent)(CGFloat);
     
     CGFloat movementDistance = 20.0;
     
-    CGPoint targetViewCenter = [deleteSidebarBackground convertPoint:targetView.center fromView:targetView.superview];
+    CGPoint targetViewCenter = [deleteSidebarForeground convertPoint:targetView.center fromView:targetView.superview];
     CGPoint trashIconCenter = CGPointMake(targetViewCenter.x + targetView.bounds.size.width / 2 - trashIcon.bounds.size.width / 4 + movementDistance,
                                           targetViewCenter.y - targetView.bounds.size.height / 2 - trashIcon.bounds.size.height / 2 - 2);
 
@@ -149,11 +151,11 @@ static CGFloat(^clampPercent)(CGFloat);
     [UIView animateWithDuration:.15 animations:^{
         CGRect fr = CGRectMake(-deleteSidebarForeground.bounds.size.width, 0, deleteSidebarForeground.bounds.size.width, deleteSidebarForeground.bounds.size.height);
         deleteSidebarBackground.frame = fr;
-        deleteSidebarForeground.frame = fr;
         trashIcon.alpha = 0;
-        fr = trashIcon.frame;
-        fr.origin.x -= 20;
-        trashIcon.frame = fr;
+
+        CGPoint c = trashIcon.center;
+        c.x -= 20;
+        trashIcon.center = c;
     }];
 }
 
