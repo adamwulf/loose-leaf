@@ -102,7 +102,6 @@
     
     CGFloat iconOpacity = (percent - .6) * 2;
     iconOpacity = iconOpacity > 1 ? 1.0 : iconOpacity < 0 ? 0 : iconOpacity;
-    trashIcon.alpha = iconOpacity;
     
     CGFloat movementDistance = 20.0;
     
@@ -111,13 +110,11 @@
                                           targetViewCenter.y - targetView.bounds.size.height / 2 - trashIcon.bounds.size.height / 2 - 2);
 
     CGFloat(^easeOut)(CGFloat t) = ^(CGFloat t){
-        t /= .5;
-        if(t<1) return (CGFloat) .5*t*t;
-        t -= 1;
-        return (CGFloat) -.5 * (t*(t-2) - 1);
+        return (CGFloat) - t*(t-2);
     };
     
-    trashIconCenter.x -= movementDistance * easeOut(easeOut(iconOpacity)); // give it just a bit of movement
+    trashIcon.alpha = easeOut(iconOpacity);
+    trashIconCenter.x -= movementDistance * easeOut(iconOpacity); // give it just a bit of movement
     
     trashIcon.center = trashIconCenter;
 }
