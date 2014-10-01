@@ -3046,7 +3046,6 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/External/TestFlightSDK\"",
 				);
-				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-ObjC++",
@@ -3082,7 +3081,6 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/External/TestFlightSDK\"",
 				);
-				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC++",
 					"-lstdc++",

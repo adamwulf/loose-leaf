@@ -116,21 +116,10 @@
         t -= 1;
         return (CGFloat) -.5 * (t*(t-2) - 1);
     };
-//    
-//    function (t, b, c, d) {
-//        t /= d/2;
-//        if (t < 1) return c/2*t*t + b;
-//        t--;
-//        return -c/2 * (t*(t-2) - 1) + b;
-//    };
     
-    trashIconCenter.x -= movementDistance * easeOut(iconOpacity); // give it just a bit of movement
+    trashIconCenter.x -= movementDistance * easeOut(easeOut(iconOpacity)); // give it just a bit of movement
     
     trashIcon.center = trashIconCenter;
-    
-//    fr = deleteSidebarBackground.bounds;
-//    deleteSidebarBackground.frame = fr;
-//    deleteSidebarForeground.frame = fr;
 }
 
 
