@@ -93,13 +93,17 @@ static dispatch_queue_t importExportStateQueue;
                     }else{
                         // couldn't find already built scrap, so load a state and
                         // we'll build a scrap
-                        MMScrapViewState* state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:paperStateForScrap];
-                        if(state){
-                            NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
-                            [props setObject:state forKey:@"state"];
-                            [scrapPropsWithState addObject:props];
+                        if(paperStateForScrap){
+                            MMScrapViewState* state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:paperStateForScrap];
+                            if(state){
+                                NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
+                                [props setObject:state forKey:@"state"];
+                                [scrapPropsWithState addObject:props];
+                            }else{
+                                NSLog(@"couldn't find state for %@", scrapUUID);
+                            }
                         }else{
-                            NSLog(@"couldn't find state for %@", scrapUUID);
+                            NSLog(@"couldn't find scrap's page state for %@ in page %@", scrapUUID, pageUUID);
                         }
                     }
                 }
