@@ -792,6 +792,21 @@
 
 #pragma mark - MMLongPressFromListViewGestureRecognizer - MMPanAndPinchFromListViewGestureRecognizer
 
+-(void) deletePage:(MMExportablePaperView*)page{
+    MMPaperView* nextTopPage = [visibleStackHolder getPageBelow:page];
+    if(!nextTopPage){
+        nextTopPage = [hiddenStackHolder peekSubview];
+    }
+    if(!nextTopPage){
+        NSLog(@"hrmph. out of pages...");
+    }
+    [self ensurePageIsAtTopOfVisibleStack:nextTopPage];
+    [[MMPageCacheManager sharedInstance] willChangeTopPageTo:nextTopPage];
+    [deleteSidebar deletePage:page];
+    [[MMPageCacheManager sharedInstance] didChangeToTopPage:nextTopPage];
+    [self saveStacksToDisk];
+}
+
 -(void) didPickUpAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture{
     if(gesture.state == UIGestureRecognizerStateBegan){
         initialScrollOffsetFromTransitionToListView = self.contentOffset;
@@ -808,19 +823,7 @@
         // first, calculate if the page was dropped
         // inside of the delete sidebar or not
         if([deleteSidebar shouldDelete:pageBeingDragged]){
-            MMPaperView* nextTopPage = [visibleStackHolder getPageBelow:pageBeingDragged];
-            if(!nextTopPage){
-                nextTopPage = [hiddenStackHolder peekSubview];
-            }
-            if(!nextTopPage){
-                NSLog(@"hrmph. out of pages...");
-            }
-            [self ensurePageIsAtTopOfVisibleStack:nextTopPage];
-            [[MMPageCacheManager sharedInstance] willChangeTopPageTo:nextTopPage];
-            [deleteSidebar deletePage:pageBeingDragged];
-            [[MMPageCacheManager sharedInstance] didChangeToTopPage:nextTopPage];
-            [[MMPageCacheManager sharedInstance] pageWasDeleted:pageBeingDragged];
-            [self saveStacksToDisk];
+            [self deletePage:pageBeingDragged];
             didDelete = YES;
         }
         

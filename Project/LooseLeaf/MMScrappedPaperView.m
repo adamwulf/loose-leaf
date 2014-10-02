@@ -1176,13 +1176,14 @@
 -(void) unloadState{
 //    debug_NSLog(@"asking %@ to unload", self.uuid);
     [super unloadState];
-    MMScrapsOnPaperState* strongScrapState = scrapsOnPaperState;
+    __block MMScrapsOnPaperState* strongScrapState = scrapsOnPaperState;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
             [[strongScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
             // unloading the scrap state will also remove them
             // from their superview (us)
             [strongScrapState unload];
+            strongScrapState = nil;
         }
     });
 }

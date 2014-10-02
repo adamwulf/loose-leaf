@@ -85,11 +85,11 @@
 //                                                                 repeats:YES];
 
         
-//        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5
-//                                                      target:self
-//                                                    selector:@selector(drawTimerDidFire:)
-//                                                    userInfo:nil
-//                                                     repeats:YES];
+        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5
+                                                      target:self
+                                                    selector:@selector(drawTimerDidFire:)
+                                                    userInfo:nil
+                                                     repeats:YES];
 
         [MMInboxManager sharedInstance].delegate = self;
         [MMCloudKitManager sharedManager].delegate = self;
@@ -594,6 +594,7 @@ int skipAll = NO;
         [[visibleStackHolder peekSubview] completeScissorsCutWithPath:[UIBezierPath bezierPathWithRect:CGRectMake(300, 300, 200, 200)]];
     }
     if(numLines % (int)strokesPerPage == 0){
+        [self deletePage:[visibleStackHolder peekSubview]];
         [self addPageButtonTapped:nil];
         skipOnce = YES;
     }

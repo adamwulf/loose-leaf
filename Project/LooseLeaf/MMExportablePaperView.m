@@ -37,10 +37,12 @@
 }
 
 -(void) saveToDisk:(void (^)(BOOL))onComplete{
+    __block __strong MMExportablePaperView* strongSelf = self;
     [super saveToDisk:^(BOOL hadEditsToSave){
         @synchronized(self){
             isCurrentlySaving = NO;
-            [self retrySaveOrExport];
+            [strongSelf retrySaveOrExport];
+            strongSelf = nil;
         }
         if(onComplete) onComplete(hadEditsToSave);
     }];
@@ -48,8 +50,10 @@
 
 -(void) retrySaveOrExport{
     if(waitingForSave){
+        __block __strong MMExportablePaperView* strongSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self saveToDisk];
+            [strongSelf saveToDisk];
+            strongSelf = nil;
         });
     }else if(waitingForExport){
         [self exportAsynchronouslyToZipFile];

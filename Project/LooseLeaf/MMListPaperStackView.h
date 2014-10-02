@@ -63,4 +63,6 @@
 
 -(void) finishUITransitionToPageView;
 
+-(void) deletePage:(MMPaperView*)page;
+
 @end
