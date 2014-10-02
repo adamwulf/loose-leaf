@@ -11,10 +11,12 @@
 #import "MMScrapView.h"
 
 @implementation MMScrapContainerView{
-    MMScrappedPaperView* page;
+    // must be weak, otherwise its a circular ref
+    // with the page
+    __weak MMScrappedPaperView* page;
 }
 
-- (id)initWithFrame:(CGRect)frame andPage:(MMScrappedPaperView*)_page{
+- (id)initWithFrame:(CGRect)frame forPageDelegate:(MMScrappedPaperView*)_page{
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code

@@ -250,4 +250,12 @@
     return [super hasEditsToSave] || [undoRedoManager hasEditsToSave];
 }
 
+
+
+-(void) sneakDealloc{
+    [super sneakDealloc];
+    undoRedoManager = nil;
+}
+
+
 @end

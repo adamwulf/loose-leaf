@@ -13,6 +13,7 @@
 #import "NSString+UUID.h"
 #import "UIView+Debug.h"
 
+
 @implementation MMPaperView{
     CGRect originalUnscaledBounds;
 }
@@ -480,5 +481,14 @@
     return [NSDictionary dictionaryWithObjectsAndKeys:NSStringFromClass(self.class), @"class",
             self.uuid, @"uuid", nil];
 }
+
+-(void) sneakDealloc{
+
+}
+
+-(void) dealloc{    
+    NSLog(@"page dealloc'd %@", self.uuid);
+}
+
 
 @end

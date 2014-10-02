@@ -208,6 +208,13 @@ static MMPageCacheManager* _instance = nil;
     }
 }
 
+-(void) pageWasDeleted:(MMPaperView*)page{
+    if(page){
+        [stateLoadedPages removeObject:page];
+        [pagesWithLoadedCacheImages removeObject:page];
+    }
+}
+
 
 -(void) updateVisiblePageImageCache{
     NSArray* visiblePages = [self.delegate findPagesInVisibleRowsOfListView];

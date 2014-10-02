@@ -13,6 +13,6 @@
 
 @interface MMScrapContainerView : MMUntouchableView
 
-- (id)initWithFrame:(CGRect)frame andPage:(MMScrappedPaperView*)page;
+- (id)initWithFrame:(CGRect)frame forPageDelegate:(MMScrappedPaperView*)page;
 
 @end

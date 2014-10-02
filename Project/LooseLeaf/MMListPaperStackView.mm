@@ -821,12 +821,17 @@
         [UIView animateWithDuration:.1 delay:0 options:UIViewAnimationOptionCurveLinear animations:updatePageFrame completion:nil];
     }else if(gesture.state == UIGestureRecognizerStateEnded ||
              gesture.state == UIGestureRecognizerStateFailed){
-        
+        BOOL didDelete = NO;
         //
         // first, calculate if the page was dropped
         // inside of the delete sidebar or not
         if([deleteSidebar shouldDelete:pageBeingDragged]){
+            [[MMPageCacheManager sharedInstance] willChangeTopPageTo:[visibleStackHolder getPageBelow:pageBeingDragged]];
             [deleteSidebar deletePage:pageBeingDragged];
+            [[MMPageCacheManager sharedInstance] didChangeToTopPage:[visibleStackHolder peekSubview]];
+            [[MMPageCacheManager sharedInstance] pageWasDeleted:pageBeingDragged];
+            [pageBeingDragged sneakDealloc];
+            didDelete = YES;
         }
         
         // properties for drag behavior
@@ -839,14 +844,16 @@
         // the user has released their pinch, and the page is still really small,
         // but they were *decreasing* the size of the page when they let go,
         // so we'll decrease it back into list view
-        CGRect frameOfPage = [self frameForListViewForPage:gesture.pinchedPage];
-        [UIView animateWithDuration:.15
-                              delay:0
-                            options:UIViewAnimationOptionCurveEaseOut
-                         animations:^{
-                             gesture.pinchedPage.frame = frameOfPage;
-                         }
-                         completion:nil];
+        if(!didDelete){
+            CGRect frameOfPage = [self frameForListViewForPage:gesture.pinchedPage];
+            [UIView animateWithDuration:.15
+                                  delay:0
+                                options:UIViewAnimationOptionCurveEaseOut
+                             animations:^{
+                                 gesture.pinchedPage.frame = frameOfPage;
+                             }
+                             completion:nil];
+        }
         [self finishUITransitionToListView];
     }else if(gesture.state == UIGestureRecognizerStateChanged){
         updatePageFrame();
@@ -969,7 +976,11 @@
         // first, calculate if the page was dropped
         // inside of the delete sidebar or not
         if([deleteSidebar shouldDelete:pageBeingDragged]){
+            [[MMPageCacheManager sharedInstance] willChangeTopPageTo:[visibleStackHolder getPageBelow:pageBeingDragged]];
             [deleteSidebar deletePage:pageBeingDragged];
+            [[MMPageCacheManager sharedInstance] didChangeToTopPage:[visibleStackHolder peekSubview]];
+            [[MMPageCacheManager sharedInstance] pageWasDeleted:pageBeingDragged];
+            [pageBeingDragged sneakDealloc];
             didDelete = YES;
         }
         
@@ -1001,6 +1012,8 @@
                                  completion:nil];
                 [self finishUITransitionToListView];
             }
+        }else{
+            [self finishUITransitionToListView];
         }
     }else if(gesture.state == UIGestureRecognizerStateChanged){
         updatePageFrame();

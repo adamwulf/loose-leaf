@@ -9,6 +9,7 @@
 #import "MMDeletePageSidebarController.h"
 #import "MMTrashIcon.h"
 #import "MMUntouchableView.h"
+#import "MMTrashManager.h"
 
 #define kBorderWidth 3
 #define kBorderSpacing 2
@@ -150,6 +151,8 @@ static CGFloat(^clampPercent)(CGFloat);
 }
 
 -(void) deletePage:(MMPaperView*)pageToDelete{
+    NSLog(@"deleting page... %p", pageToDelete);
+    
     CGPoint center = [deleteSidebarForeground convertPoint:pageToDelete.center fromView:pageToDelete.superview];
     [deleteSidebarForeground addSubview:pageToDelete];
     pageToDelete.center = center;
@@ -159,6 +162,8 @@ static CGFloat(^clampPercent)(CGFloat);
         pageToDelete.center = CGPointMake(-200 - pageToDelete.bounds.size.width/2, pageToDelete.center.y);
         [pageToDelete removeFromSuperview];
     }];
+
+    [[MMTrashManager sharedInstance] deletePage:pageToDelete];
 }
 
 -(void) closeSidebarAnimated{

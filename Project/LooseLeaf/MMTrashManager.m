@@ -129,4 +129,31 @@ static MMTrashManager* _instance = nil;
     });
 }
 
+
+-(void) deletePage:(MMPaperView*)page{
+    dispatch_async([self trashManagerQueue], ^{
+        
+        // now that the scrap is out of the page's state, then
+        // we can delete it off disk too
+        NSString* documentsPath = [NSFileManager documentsPath];
+        NSString* pagesPath = [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:page.uuid];
+        BOOL isDirectory = NO;
+        if([[NSFileManager defaultManager] fileExistsAtPath:pagesPath isDirectory:&isDirectory]){
+            if(isDirectory){
+                NSError* err = nil;
+                if([[NSFileManager defaultManager] removeItemAtPath:pagesPath error:&err]){
+                    NSLog(@"deleted %@", pagesPath);
+                }
+                if(err){
+                    NSLog(@"error deleting %@: %@", pagesPath, err);
+                }
+            }else{
+                //                NSLog(@"found path, but it isn't a directory");
+            }
+        }else{
+            //            NSLog(@"path to delete doesn't exist %@", scrapPath);
+        }
+    });
+}
+
 @end

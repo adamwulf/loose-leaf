@@ -314,4 +314,10 @@
 }
 
 
+
+-(void) sneakDealloc{
+    [super sneakDealloc];
+    cloudKitSenderInfo = nil;
+}
+
 @end

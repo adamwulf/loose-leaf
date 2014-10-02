@@ -83,7 +83,7 @@
     self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
         // Initialization code
-        scrapContainerView = [[MMScrapContainerView alloc] initWithFrame:self.bounds andPage:self];
+        scrapContainerView = [[MMScrapContainerView alloc] initWithFrame:self.bounds forPageDelegate:self];
 
         [self.contentView addSubview:scrapContainerView];
         // anchor the view to the top left,
@@ -1386,5 +1386,19 @@
     UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
     [rootController dismissViewControllerAnimated:YES completion:nil];
 }
+
+
+
+
+
+-(void) sneakDealloc{
+    [super sneakDealloc];
+
+    scrapsOnPaperState = nil;
+    scrapContainerView = nil;
+    cachedImgView = nil;
+    scrappedImgViewImage = nil;
+}
+
 
 @end
