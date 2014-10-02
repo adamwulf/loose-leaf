@@ -23,6 +23,7 @@
     MMButtonAwareTapGestureRecognizer* twoFingerTapGesture;
     MMDeletePageSidebarController* deleteSidebar;
     NSMutableSet* pagesBeingAnimatedDuringDeleteGesture;
+    BOOL isAnimatingTowardPageView;
 }
 
 @synthesize deleteSidebar;
@@ -32,6 +33,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         isShowingPageView = YES;
+        isAnimatingTowardPageView = NO;
         
         mapOfFinalFramesForPagesBeingZoomed = new std::map<NSUInteger,CGRect>;
         
@@ -1109,18 +1111,25 @@
         // if the page was deleted, then we'll need to recalculate all the frames
         // clear our cache of frame locations
         mapOfFinalFramesForPagesBeingZoomed->clear();
-        // now realign with fresh frame checking.
-        NSMutableSet* allOtherPages = [NSMutableSet setWithArray:visibleStackHolder.subviews];
-        [allOtherPages addObjectsFromArray:hiddenStackHolder.subviews];
-        [allOtherPages removeObjectsInSet:pagesBeingAnimatedDuringDeleteGesture];
         
         [self realignPagesInListView:pagesBeingAnimatedDuringDeleteGesture animated:YES];
         [pagesBeingAnimatedDuringDeleteGesture removeAllObjects];
 
-        [self realignPagesInListView:allOtherPages animated:NO];
-        addPageButtonInListView.frame = [self frameForAddPageButton];
-        [self setContentSize:CGSizeMake(screenWidth, [self contentHeightForAllPages])];
-        [self moveAddButtonToTop];
+        // the user might've pinched us up
+        // into page view, so don't realign
+        // to list view if we're already
+        // transitioning into page view
+        // now realign with fresh frame checking.
+        if(!isAnimatingTowardPageView){
+            NSMutableSet* allOtherPages = [NSMutableSet setWithArray:visibleStackHolder.subviews];
+            [allOtherPages addObjectsFromArray:hiddenStackHolder.subviews];
+            [allOtherPages removeObjectsInSet:pagesBeingAnimatedDuringDeleteGesture];
+            // find the pages to align
+            [self realignPagesInListView:allOtherPages animated:NO];
+            addPageButtonInListView.frame = [self frameForAddPageButton];
+            [self setContentSize:CGSizeMake(screenWidth, [self contentHeightForAllPages])];
+            [self moveAddButtonToTop];
+        }
         
         return;
     }
@@ -1557,6 +1566,7 @@
     // all of the pages "look" like they're in the right place,
     // but we need to turn on the scroll view.
     void (^step1)(void) = ^{
+        isAnimatingTowardPageView = YES;
         //
         // this means we need to keep the pages visually in the same place,
         // but adjust their frames and the content size/offset so
@@ -1664,6 +1674,7 @@
                                  aPage.scale = 1;
                              }
                              [self finishUITransitionToPageView];
+                             isAnimatingTowardPageView = NO;
                          }];
     };
     
