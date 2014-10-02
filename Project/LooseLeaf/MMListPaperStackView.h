@@ -49,8 +49,6 @@
 
 @property (nonatomic, strong) MMDeletePageSidebarController* deleteSidebar;
 
--(void) ensurePage:(MMPaperView*)thePage isAtIndex:(NSInteger)newIndex;
-
 -(CGPoint) offsetNeededToShowPage:(MMPaperView*)page;
 -(NSArray*) findPagesInVisibleRowsOfListViewGivenOffset:(CGPoint)eventualOffsetOfListView;
 
