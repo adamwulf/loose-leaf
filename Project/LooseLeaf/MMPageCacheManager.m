@@ -7,6 +7,7 @@
 //
 
 #import "MMPageCacheManager.h"
+#import "MMJotViewNilState.h"
 #import "Constants.h"
 
 @implementation MMPageCacheManager{
@@ -215,12 +216,11 @@ static MMPageCacheManager* _instance = nil;
         [stateLoadedPages removeObject:page];
         [pagesWithLoadedCacheImages removeObject:page];
         if(currentlyTopPage == page){
-            NSLog(@"what");
             currentlyTopPage = nil;
         }
         if(currentEditablePage == page){
-            NSLog(@"what");
             currentEditablePage = nil;
+            [drawableView loadState:[MMJotViewNilState sharedInstance]];
         }
     }
 }
