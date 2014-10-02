@@ -1388,17 +1388,4 @@
 }
 
 
-
-
-
--(void) sneakDealloc{
-    [super sneakDealloc];
-
-    scrapsOnPaperState = nil;
-    scrapContainerView = nil;
-    cachedImgView = nil;
-    scrappedImgViewImage = nil;
-}
-
-
 @end

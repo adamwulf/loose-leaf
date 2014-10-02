@@ -35,7 +35,7 @@
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     if (self = [super initWithFrame:frame andUUID:_uuid]) {
         // Initialization code
-        undoRedoManager = [[MMPageUndoRedoManager alloc] initForPage:self];
+        undoRedoManager = [[MMPageUndoRedoManager alloc] initForDelegatePage:self];
     }
     return self;
 }
@@ -249,13 +249,5 @@
 -(BOOL) hasEditsToSave{
     return [super hasEditsToSave] || [undoRedoManager hasEditsToSave];
 }
-
-
-
--(void) sneakDealloc{
-    [super sneakDealloc];
-    undoRedoManager = nil;
-}
-
 
 @end

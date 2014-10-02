@@ -313,11 +313,4 @@
     return fullPathToZip;
 }
 
-
-
--(void) sneakDealloc{
-    [super sneakDealloc];
-    cloudKitSenderInfo = nil;
-}
-
 @end

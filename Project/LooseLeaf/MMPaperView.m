@@ -482,10 +482,6 @@
             self.uuid, @"uuid", nil];
 }
 
--(void) sneakDealloc{
-
-}
-
 -(void) dealloc{    
     NSLog(@"page dealloc'd %@", self.uuid);
 }

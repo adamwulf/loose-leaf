@@ -820,7 +820,6 @@
             [deleteSidebar deletePage:pageBeingDragged];
             [[MMPageCacheManager sharedInstance] didChangeToTopPage:nextTopPage];
             [[MMPageCacheManager sharedInstance] pageWasDeleted:pageBeingDragged];
-            [pageBeingDragged sneakDealloc];
             [self saveStacksToDisk];
             didDelete = YES;
         }

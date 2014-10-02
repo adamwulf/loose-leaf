@@ -65,6 +65,4 @@
 
 -(BOOL) areGesturesEnabled;
 
--(void) sneakDealloc;
-
 @end

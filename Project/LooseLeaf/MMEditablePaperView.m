@@ -598,15 +598,4 @@ static int count = 0;
     }];
 }
 
-
-
-
-
-
--(void) sneakDealloc{
-    
-    paperState = nil;
-    drawableView = nil;
-}
-
 @end
