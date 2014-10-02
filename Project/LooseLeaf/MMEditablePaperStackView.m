@@ -968,7 +968,7 @@ struct SidebarButton{
 #pragma mark - Sidebar Hit Test
 
 -(BOOL) shouldPrioritizeSidebarButtonsForTaps{
-    return YES;
+    return self.isShowingPageView;
 }
 
 -(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
