@@ -933,9 +933,17 @@
         // first, calculate if the page was dropped
         // inside of the delete sidebar or not
         if([deleteSidebar shouldDelete:pageBeingDragged]){
-            [[MMPageCacheManager sharedInstance] willChangeTopPageTo:[visibleStackHolder getPageBelow:pageBeingDragged]];
+            MMPaperView* nextTopPage = [visibleStackHolder getPageBelow:pageBeingDragged];
+            if(!nextTopPage){
+                nextTopPage = [hiddenStackHolder peekSubview];
+            }
+            if(!nextTopPage){
+                NSLog(@"hrmph. out of pages...");
+            }
+            [self ensurePageIsAtTopOfVisibleStack:nextTopPage];
+            [[MMPageCacheManager sharedInstance] willChangeTopPageTo:nextTopPage];
             [deleteSidebar deletePage:pageBeingDragged];
-            [[MMPageCacheManager sharedInstance] didChangeToTopPage:[visibleStackHolder peekSubview]];
+            [[MMPageCacheManager sharedInstance] didChangeToTopPage:nextTopPage];
             [[MMPageCacheManager sharedInstance] pageWasDeleted:pageBeingDragged];
             [pageBeingDragged sneakDealloc];
             didDelete = YES;
