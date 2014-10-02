@@ -1953,11 +1953,51 @@ int skipAll = NO;
     }];
 }
 
+-(void) showHersPhotoOnlyPage{
+    [[NSThread mainThread] performBlock:^{
+        __block BOOL didFind = NO;
+        NSString* uuidOfHerPage = @"A98C190F-6838-4B93-9676-065B4A992169";
+        //        NSString* uuidOfHisPage = @"3D31D997-F357-4958-9F5F-716CD9C8C75E";
+        [visibleStackHolder.subviews enumerateObjectsUsingBlock:^(MMExportablePaperView* obj, NSUInteger idx, BOOL *stop) {
+            if([obj.uuid isEqual:uuidOfHerPage]){
+                didFind = YES;
+                [self popStackUntilPage:obj onComplete:nil];
+                stop[0] = YES;
+            };
+        }];
+        if(!didFind){
+            [hiddenStackHolder.subviews enumerateObjectsUsingBlock:^(MMExportablePaperView* obj, NSUInteger idx, BOOL *stop) {
+                if([obj.uuid isEqual:uuidOfHerPage]){
+                    didFind = YES;
+                    [self popHiddenStackUntilPage:obj onComplete:^(BOOL finished){
+                        [self popTopPageOfHiddenStack];
+                    }];
+                    stop[0] = YES;
+                };
+            }];
+        }
+        if(!didFind){
+            // need to add the page
+            MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:visibleStackHolder.bounds andUUID:uuidOfHerPage];
+            [page loadCachedPreview];
+            [self importAndShowPage:page];
+        }
+    }];
+}
+
 -(void) redo:(UIButton*)_redoButton{
     if([[visibleStackHolder peekSubview] hasEditsToSave]){
         [super redo:_redoButton];
     }else{
         [self showHersPage];
+    }
+}
+
+-(void) undo:(UIButton*)_redoButton{
+    if([[visibleStackHolder peekSubview] hasEditsToSave]){
+        [super redo:_redoButton];
+    }else{
+        [self showHersPhotoOnlyPage];
     }
 }
 
