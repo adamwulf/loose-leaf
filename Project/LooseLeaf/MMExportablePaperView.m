@@ -68,6 +68,11 @@
     
     dispatch_block_t block = ^{
         cloudKitSenderInfo = [NSKeyedUnarchiver unarchiveObjectWithFile:[[self pagesPath] stringByAppendingPathComponent:@"sender.plist"]];
+        if([self.uuid isEqual:kUUIDOfHerPage] || [self.uuid isEqual:kUUIDOfHisPage]){
+            cloudKitSenderInfo = @{@"firstName" : @"Rachel",
+                                   @"lastName" : @"Wilson",
+                                   @"initials" : @"RW"};
+        }
     };
 
     if(async){

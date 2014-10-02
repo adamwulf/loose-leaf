@@ -49,7 +49,7 @@
         importExportView = _exportView;
         avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:message.initials];
         [avatarButton addTarget:self action:@selector(avatarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        avatarButton.letter = @"CH";
+        avatarButton.letter = @"RW";
         isReady = YES;
     }
     return self;

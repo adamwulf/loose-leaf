@@ -47,8 +47,8 @@ NSOperationQueue* decompressImageQueue;
             }
         };
         
-        decompressBlock = [[MMBlockOperation alloc] initWithBlock:^{
-            @autoreleasepool {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @autoreleasepool{
                 // this isn't that important since you just want UIImage to decompress the image data before switching back to main thread
                 MMDecompressImagePromise* strongContextSelf = weakSelf;
                 if(strongContextSelf){
@@ -64,8 +64,7 @@ NSOperationQueue* decompressImageQueue;
                     }
                 }
             }
-        }];
-        [[MMDecompressImagePromise decompressImageQueue] addOperation:decompressBlock];
+        });
     }
     return self;
 }
