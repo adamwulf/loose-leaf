@@ -56,8 +56,10 @@ static MMPageCacheManager* _instance = nil;
         }
     }
     // reset location of current top page
-    [pagesWithLoadedCacheImages removeObject:currentEditablePage];
-    [pagesWithLoadedCacheImages addObject:currentEditablePage];
+    if(currentEditablePage){
+        [pagesWithLoadedCacheImages removeObject:currentEditablePage];
+        [pagesWithLoadedCacheImages addObject:currentEditablePage];
+    }
     // now unload any extra pages
     if([page isKindOfClass:[MMEditablePaperView class]]){
         [(MMEditablePaperView*)page loadCachedPreview];
@@ -212,6 +214,14 @@ static MMPageCacheManager* _instance = nil;
     if(page){
         [stateLoadedPages removeObject:page];
         [pagesWithLoadedCacheImages removeObject:page];
+        if(currentlyTopPage == page){
+            NSLog(@"what");
+            currentlyTopPage = nil;
+        }
+        if(currentEditablePage == page){
+            NSLog(@"what");
+            currentEditablePage = nil;
+        }
     }
 }
 

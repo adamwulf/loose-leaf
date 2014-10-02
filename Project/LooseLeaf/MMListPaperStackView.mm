@@ -866,6 +866,7 @@
             [[MMPageCacheManager sharedInstance] didChangeToTopPage:[visibleStackHolder peekSubview]];
             [[MMPageCacheManager sharedInstance] pageWasDeleted:pageBeingDragged];
             [pageBeingDragged sneakDealloc];
+            [self saveStacksToDisk];
             didDelete = YES;
         }
         
@@ -946,6 +947,7 @@
             [[MMPageCacheManager sharedInstance] didChangeToTopPage:nextTopPage];
             [[MMPageCacheManager sharedInstance] pageWasDeleted:pageBeingDragged];
             [pageBeingDragged sneakDealloc];
+            [self saveStacksToDisk];
             didDelete = YES;
         }
         
