@@ -480,9 +480,9 @@ static NSString* bezelStatePath;
 +(NSString*) pathToPlist{
     if(!bezelStatePath){
         NSString* documentsPath = [NSFileManager documentsPath];
-        NSString* bezelStateDirectory = [documentsPath stringByAppendingPathComponent:@"BezelState"];
+        NSString* bezelStateDirectory = [documentsPath stringByAppendingPathComponent:@"Bezel"];
         [NSFileManager ensureDirectoryExistsAtPath:bezelStateDirectory];
-        bezelStatePath = [[bezelStateDirectory stringByAppendingPathComponent:@"info"] stringByAppendingPathExtension:@"plist"];
+        bezelStatePath = [[bezelStateDirectory stringByAppendingPathComponent:@"rotations"] stringByAppendingPathExtension:@"plist"];
     }
     return bezelStatePath;
 }
