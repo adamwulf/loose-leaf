@@ -1388,5 +1388,16 @@
     [rootController dismissViewControllerAnimated:YES completion:nil];
 }
 
+#pragma mark - dealloc
+
+-(void) dealloc{
+    if(!scrappedImgViewImage.isDecompressed){
+        [scrappedImgViewImage cancel];
+        scrappedImgViewImage = nil;
+    }
+    [cachedImgView removeFromSuperview];
+    cachedImgView = nil;
+}
+
 
 @end

@@ -12,6 +12,7 @@
 #import "MMUndoablePaperView.h"
 #import "MMPageCacheManager.h"
 #import "MMExportablePaperView.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 
 @implementation MMTrashManager{
     dispatch_queue_t trashManagerQueue;
