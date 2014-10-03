@@ -33,8 +33,6 @@
 
 -(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading;
 
--(void) saveToDisk;
-
 #pragma mark - Scissors
 
 -(void) beginScissorAtPoint:(CGPoint)point;

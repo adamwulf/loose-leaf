@@ -270,6 +270,7 @@ static dispatch_queue_t importExportScrapStateQueue;
                 [lock lock];
 //                NSLog(@"(%@) saving with background: %d %d", uuid, (int)drawableView, backingViewHasChanged);
                 if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
+                    NSLog(@"scrap %@ asking drawable view to save", self.uuid);
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                     [NSThread performBlockOnMainThread:^{
                         @autoreleasepool {
@@ -281,7 +282,9 @@ static dispatch_queue_t importExportScrapStateQueue;
                                     // now export the drawn content. this will create an immutable state
                                     // object and export in the background. this means that everything at this
                                     // instant on the thread will be synced to the content in this drawable view
+                                    NSLog(@"drawable view has edits exporting image now %@", self.uuid);
                                     [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.drawableViewStateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
+                                        NSLog(@"drawable view for %@ has saved", self.uuid);
                                         if(state){
                                             [[MMLoadImageCache sharedInstance] updateCacheForPath:self.thumbImageFile toImage:thumb];
                                             [self setActiveThumbnailImage:thumb];
@@ -299,17 +302,20 @@ static dispatch_queue_t importExportScrapStateQueue;
                                         dispatch_semaphore_signal(sema1);
                                     }];
                                 }else if(backingImageHolder.backingViewHasChanged){
+                                    NSLog(@"scrap backing only %@", self.uuid);
                                     // if we dont' have any pen edits in the drawableViewState,
                                     // but we do have background changes to save
                                     lastSavedUndoHash = drawableViewState.undoHash;
                                     savePropertiesToDisk(lastSavedUndoHash, bezierPath, backingImageHolder, self.scrapPropertiesPlistPath);
                                     dispatch_semaphore_signal(sema1);
                                 }else{
+                                    NSLog(@"nothing to save for scrap %@", self.uuid);
                                     // nothing new to save
 //                                    NSLog(@"(%@) skipped saving strokes: %d", uuid, backingViewHasChanged);
                                     dispatch_semaphore_signal(sema1);
                                 }
                             }else{
+                                NSLog(@"nothing to save for scrap 2 %@", self.uuid);
                                 // nothing new to save
 //                                if(!drawableView && ![drawableViewState hasEditsToSave]){
 //                                    NSLog(@"(%@) no drawable view or edits", uuid);

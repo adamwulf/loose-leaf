@@ -113,14 +113,14 @@ dispatch_queue_t importThumbnailQueue;
 -(void) undo{
     if([drawableView canUndo]){
         [drawableView undo];
-        [self saveToDisk];
+        [self saveToDisk:nil];
     }
 }
 
 -(void) redo{
     if([drawableView canRedo]){
         [drawableView redo];
-        [self saveToDisk];
+        [self saveToDisk:nil];
     }
 }
 
@@ -238,7 +238,7 @@ dispatch_queue_t importThumbnailQueue;
 /**
  * subclass should override and call into saveToDisk:
  */
--(void) saveToDisk{
+-(void) saveToDisk:(void (^)(BOOL didSaveEdits))onComplete{
     @throw kAbstractMethodException;
 }
 
@@ -246,7 +246,7 @@ dispatch_queue_t importThumbnailQueue;
  * write the thumbnail, backing texture, and entire undo
  * state to disk, and notify our delegate when done
  */
--(void) saveToDisk:(void (^)(BOOL didSaveEdits))onComplete{
+-(void) saveToDiskHelper:(void (^)(BOOL didSaveEdits))onComplete{
     
     // Sanity checks to generate our directory structure if needed
     [self pagesPath];
@@ -427,7 +427,7 @@ static int count = 0;
 
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
     [delegate didEndStrokeWithTouch:touch];
-    [self saveToDisk];
+    [self saveToDisk:nil];
 }
 
 -(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{

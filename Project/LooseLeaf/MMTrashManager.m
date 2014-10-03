@@ -144,6 +144,7 @@ static MMTrashManager* _instance = nil;
                 }];
             });
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+            [NSThread sleepForTimeInterval:5];
             NSLog(@"page was saved, still has edits? %d", page.hasEditsToSave);
         }
 

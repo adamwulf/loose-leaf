@@ -79,6 +79,7 @@
                 }
             };
             
+            NSLog(@"saving %d scraps on %@ page", (int) [allScrapsForPage count], self.delegate.uuid);
             for(MMScrapView* scrap in allScrapsForPage){
                 NSDictionary* properties = [scrap propertiesDictionary];
                 [scrap saveScrapToDisk:doneSavingScrapBlock];

@@ -85,7 +85,7 @@
 //                                                                 repeats:YES];
 
         
-        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5
+        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.25
                                                       target:self
                                                     selector:@selector(drawTimerDidFire:)
                                                     userInfo:nil
@@ -290,7 +290,7 @@
                                               }
                                               completion:^(BOOL finished){
                                                   [topPage.scrapsOnPaperState showScrap:scrap];
-                                                  [topPage saveToDisk];
+                                                  [topPage saveToDisk:nil];
                                               }];
                          }];
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
@@ -436,7 +436,7 @@
                                               cameraView.alpha = 1;
                                               [topPage.scrapsOnPaperState showScrap:scrap];
                                               [topPage addUndoItemForAddedScrap:scrap];
-                                              [topPage saveToDisk];
+                                              [topPage saveToDisk:nil];
                                           }];
                      }];
 }
@@ -539,7 +539,7 @@
                                               bufferedImage.alpha = 1;
                                               [topPage.scrapsOnPaperState showScrap:scrap];
                                               [topPage addUndoItemForAddedScrap:scrap];
-                                              [topPage saveToDisk];
+                                              [topPage saveToDisk:nil];
                                           }];
                      }];
 }
@@ -566,12 +566,21 @@ int skipAll = NO;
     
     MMEditablePaperView* page = [visibleStackHolder peekSubview];
     
-    MoveToPathElement* moveTo = [MoveToPathElement elementWithMoveTo:CGPointMake(rand() % (int) page.bounds.size.width, rand() % (int) page.bounds.size.height)];
+    if(!page.isEditable){
+        return;
+    }
+    
+    CGPoint startOfLine = CGPointMake(rand() % (int) page.bounds.size.width, rand() % (int) page.bounds.size.height);
+    CGPoint endOfLine = CGPointMake(rand() % (int) page.bounds.size.width, rand() % (int) page.bounds.size.height);
+    MMVector* v = [[MMVector vectorWithPoint:startOfLine andPoint:endOfLine] normal];
+    endOfLine = [v pointFromPoint:startOfLine distance:100];
+    
+    MoveToPathElement* moveTo = [MoveToPathElement elementWithMoveTo:startOfLine];
     moveTo.width = 3;
     moveTo.color = [UIColor blackColor];
     
     CurveToPathElement* curveTo = [CurveToPathElement elementWithStart:moveTo.startPoint
-                                                             andLineTo:CGPointMake(rand() % (int) page.bounds.size.width, rand() % (int) page.bounds.size.height)];
+                                                             andLineTo:endOfLine];
     curveTo.width = 3;
     curveTo.color = [UIColor blackColor];
     
@@ -583,15 +592,24 @@ int skipAll = NO;
     [page.drawableView addElements:shortLine];
     [page.drawableView.state finishCurrentStroke];
     
-    [page saveToDisk];
+    [page saveToDisk:nil];
     
     numLines++;
     
     
-    CGFloat strokesPerPage = 15;
+    int strokesPerPage = 3000;
+    numLines = numLines % strokesPerPage;
     
-    if(numLines % (int)strokesPerPage == 12){
-        [[visibleStackHolder peekSubview] completeScissorsCutWithPath:[UIBezierPath bezierPathWithRect:CGRectMake(300, 300, 200, 200)]];
+    if(numLines % ((int)strokesPerPage/2) == 12 && numLines < 30){
+        CGRect scissorRect = CGRectMake(300, 300, 200, 200);
+        scissorRect = CGRectInset(scissorRect, -(rand() % 100), -(rand() % 100));
+        UIBezierPath* scissorPath = [UIBezierPath bezierPathWithRect:scissorRect];
+        [scissorPath applyTransform:CGAffineTransformMakeTranslation(-(scissorRect.origin.x + scissorRect.size.width/2),
+                                                                     -(scissorRect.origin.y + scissorRect.size.height/2))];
+        [scissorPath applyTransform:CGAffineTransformMakeRotation(M_PI * (rand() % 180) / 180.0)];
+        [scissorPath applyTransform:CGAffineTransformMakeTranslation(scissorRect.origin.x + scissorRect.size.width/2,
+                                                                     scissorRect.origin.y + scissorRect.size.height/2)];
+        [[visibleStackHolder peekSubview] completeScissorsCutWithPath:scissorPath];
     }
     if(numLines % (int)strokesPerPage == 0){
         [self deletePage:[visibleStackHolder peekSubview]];
@@ -887,7 +905,7 @@ int skipAll = NO;
                 [clonedScrap setSelected:YES];
                 
                 // save the page we just dropped the scrap on
-                [pageToDropScrap saveToDisk];
+                [pageToDropScrap saveToDisk:nil];
             }else if(gesture.scrap == [gesture.scrap.superview.subviews lastObject]){
                 [gesture.scrap.superview insertSubview:gesture.scrap atIndex:0];
             }else{
@@ -979,7 +997,7 @@ int skipAll = NO;
                     [gesture.startingPageForScrap addUndoItemForScrap:gesture.scrap thatMovedFrom:gesture.startingScrapProperties to:[gesture.scrap propertiesDictionary]];
                 }
                 
-                [pageToDropScrap saveToDisk];
+                [pageToDropScrap saveToDisk:nil];
             }else{
                 // couldn't find a page to catch it
                 shouldBezel = YES;
@@ -993,8 +1011,8 @@ int skipAll = NO;
         // save teh page that the scrap came from
         MMEditablePaperView* pageThatGaveUpScrap = gesture.startingPageForScrap;
         if((pageToDropScrap || shouldBezel) && pageThatGaveUpScrap != pageToDropScrap){
-            [pageThatGaveUpScrap saveToDisk];
-            [pageToDropScrap saveToDisk];
+            [pageThatGaveUpScrap saveToDisk:nil];
+            [pageToDropScrap saveToDisk:nil];
         }
         scrapViewIfFinished = gesture.scrap;
     }else if(gesture.scrap && didReset){
@@ -1238,7 +1256,7 @@ int skipAll = NO;
             // so just add it back to the top page
             [page.scrapsOnPaperState showScrap:scrap];
             [page addUndoItemForScrap:scrap thatMovedFrom:stretchScrapGesture.startingScrapProperties to:[scrap propertiesDictionary]];
-            [page saveToDisk];
+            [page saveToDisk:nil];
         }
     }
 }
@@ -1369,7 +1387,7 @@ int skipAll = NO;
     // now that the scrap is where it should be,
     // and contains its background, etc, then
     // save everything
-    [page saveToDisk];
+    [page saveToDisk:nil];
     
     // time to reset the gesture for the cloned scrap
     // now the scrap is in the right place, so hand it off to the pan gesture
@@ -1514,7 +1532,7 @@ int skipAll = NO;
 -(void) finishedPanningAndScalingScrap:(MMScrapView*)scrap{
     // save page if we're not holding any scraps
     if(!panAndPinchScrapGesture.scrap && !panAndPinchScrapGesture2.scrap && !stretchScrapGesture.scrap){
-        [[visibleStackHolder peekSubview] saveToDisk];
+        [[visibleStackHolder peekSubview] saveToDisk:nil];
     }
 }
 
@@ -1554,7 +1572,7 @@ int skipAll = NO;
 
 -(void) willChangeTopPageTo:(MMPaperView *)page{
     [super willChangeTopPageTo:page];
-    [[[MMPageCacheManager sharedInstance] currentEditablePage] saveToDisk];
+    [[[MMPageCacheManager sharedInstance] currentEditablePage] saveToDisk:nil];
 }
 
 
@@ -1635,7 +1653,7 @@ int skipAll = NO;
         }
         scrapToAddToPage.center = center;
         scrapToAddToPage.scale = scale;
-        [page saveToDisk];
+        [page saveToDisk:nil];
         [bezelScrapContainer saveScrapContainerToDisk];
 
         isAnimatingScrapToOrFromSidebar = NO;

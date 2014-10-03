@@ -7,6 +7,7 @@
 //
 
 #import "MMUndoablePaperView.h"
+#import "MMEditablePaperViewSubclass.h"
 #import "MMUndoRedoBlockItem.h"
 #import "MMEditablePaperView+UndoRedo.h"
 #import "MMUndoRedoStrokeItem.h"
@@ -75,12 +76,12 @@
 
 #pragma mark - Saving and Loading
 
--(void) saveToDisk:(void (^)(BOOL))onComplete{
+-(void) saveToDiskHelper:(void (^)(BOOL))onComplete{
     
     // track if our back ground page has saved
     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
     __block BOOL hadEditsToSave;
-    [super saveToDisk:^(BOOL _hadEditsToSave){
+    [super saveToDiskHelper:^(BOOL _hadEditsToSave){
         // save all our ink/strokes/thumbs/etc to disk
         hadEditsToSave = _hadEditsToSave;
         dispatch_semaphore_signal(sema1);
@@ -173,6 +174,9 @@
 }
 
 -(MMScissorResult*) completeScissorsCutWithPath:(UIBezierPath *)scissorPath{
+    if(![self hasStateLoaded] || ![self.scrapsOnPaperState isStateLoaded]){
+        return nil;
+    }
     MMScissorResult* result = [super completeScissorsCutWithPath:scissorPath];
     
     if([result.addedScraps count] || [result.removedScraps count]){

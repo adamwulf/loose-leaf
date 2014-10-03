@@ -7,6 +7,7 @@
 //
 
 #import "MMScrappedPaperView.h"
+#import "MMEditablePaperViewSubclass.h"
 #import "MMEditablePaperView+UndoRedo.h"
 #import "PolygonToolDelegate.h"
 #import "MMScrapView.h"
@@ -804,10 +805,10 @@
                 for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
                     [scrap.state.drawableView forceAddEmptyStroke];
                 }
-                [self saveToDisk];
+                [self saveToDisk:nil];
             } afterDelay:.01];
         }else{
-            [self saveToDisk];
+            [self saveToDisk:nil];
         }
         
         // clear the dotted line of the scissor
@@ -1015,17 +1016,18 @@
     }
 }
 
--(void) saveToDisk{
-    [self saveToDisk:^(BOOL hadEditsToSave){
+-(void) saveToDisk:(void (^)(BOOL didSaveEdits))onComplete{
+    [self saveToDiskHelper:^(BOOL hadEditsToSave){
         if(hadEditsToSave){
 //            NSLog(@"saved edits for %@", self);
         }else{
 //            NSLog(@"didn't save any edits for %@", self);
         }
+        if(onComplete) onComplete(hadEditsToSave);
     }];
 }
 
--(void) saveToDisk:(void (^)(BOOL))onComplete{
+-(void) saveToDiskHelper:(void (^)(BOOL))onComplete{
 //    debug_NSLog(@"asking %@ to save to disk at %lu", self.uuid, (unsigned long)self.drawableView.undoHash);
     //
     // for now, I will always save the entire page to disk.
@@ -1056,7 +1058,7 @@
     __block BOOL scrapsHadBeenChanged = NO;
     
     // save our backing page
-    [super saveToDisk:^(BOOL hadEditsToSave){
+    [super saveToDiskHelper:^(BOOL hadEditsToSave){
         // NOTE!
         // https://github.com/adamwulf/loose-leaf/issues/658
         // it's important that we use paperState.lastSavedUndoHash
