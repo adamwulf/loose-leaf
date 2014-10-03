@@ -26,11 +26,9 @@
 #pragma mark - Saving
 
 -(void) saveToDisk:(void (^)(BOOL didSaveEdits))onComplete{
-    NSLog(@"======== ASK TO SAVE %@", self.uuid);
     @synchronized(self){
         if(isCurrentlySaving || isCurrentlyExporting){
             waitingForSave = YES;
-            NSLog(@"======== BAILED %@", self.uuid);
             if(onComplete) onComplete(YES);
             return;
         }
@@ -38,18 +36,15 @@
         waitingForSave = NO;
     }
     [super saveToDisk:^(BOOL didSaveEdits){
-        NSLog(@"======== SAVED %@ (%d)", self.uuid, didSaveEdits);
         if(onComplete) onComplete(didSaveEdits);
     }];
 }
 
 -(void) saveToDiskHelper:(void (^)(BOOL))onComplete{
     __block __strong MMExportablePaperView* strongSelf = self;
-    NSLog(@"  - MMExportablePaperView saveToDiskHelper %@", self.uuid);
     [super saveToDiskHelper:^(BOOL hadEditsToSave){
         @synchronized(self){
             isCurrentlySaving = NO;
-            NSLog(@"  - MMExportablePaperView retrySaveOrExport %@", self.uuid);
             [strongSelf retrySaveOrExport];
             strongSelf = nil;
         }

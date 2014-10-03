@@ -599,11 +599,11 @@ int skipAll = NO;
     numLines++;
     
     
-    int strokesPerPage = 3000;
+    int strokesPerPage = 30;
     numLines = numLines % (int)strokesPerPage;
     
     if(numLines % ((int)strokesPerPage/2) == 12 && numLines < 30){
-        CGRect scissorRect = CGRectMake(300, 300, 200, 200);
+        CGRect scissorRect = CGRectMake(300+rand() % (int) page.bounds.size.width/2, 300+rand() % (int) page.bounds.size.height / 2, 200, 200);
         scissorRect = CGRectInset(scissorRect, -(rand() % 100), -(rand() % 100));
         UIBezierPath* scissorPath = [UIBezierPath bezierPathWithRect:scissorRect];
         [scissorPath applyTransform:CGAffineTransformMakeTranslation(-(scissorRect.origin.x + scissorRect.size.width/2),
