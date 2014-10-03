@@ -61,31 +61,38 @@
 }
 
 -(BOOL) saveStateToDiskBlocking{
+    NSLog(@"        - MMImmutableScrapsOnPaperState saveStateToDiskBlocking");
     __block BOOL hadAnyEditsToSaveAtAll = NO;
     if(ownerState.lastSavedUndoHash != self.undoHash){
+        NSLog(@"        - MMImmutableScrapsOnPaperState ownerState.lastSavedUndoHash");
         hadAnyEditsToSaveAtAll = YES;
 //        NSLog(@"scrapsOnPaperState needs saving last: %lu !=  now:%lu", (unsigned long) ownerState.lastSavedUndoHash, (unsigned long) self.undoHash);
         NSMutableArray* allScrapProperties = [NSMutableArray array];
         if([allScrapsForPage count]){
             dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+            NSLog(@"        - built sema1");
             
             __block NSInteger savedScraps = 0;
+            NSLog(@"        - saving %d scraps", (int) [allScrapsForPage count]);
             void(^doneSavingScrapBlock)(BOOL) = ^(BOOL hadEditsToSave){
                 savedScraps ++;
+                NSLog(@"        - saved %d of %d", (int) savedScraps,(int) [allScrapsForPage count]);
 //                hadAnyEditsToSaveAtAll = hadAnyEditsToSaveAtAll || hadEditsToSave;
                 if(savedScraps == [allScrapsForPage count]){
                     // just saved the last scrap, signal
+                    NSLog(@"        - signal sema1");
                     dispatch_semaphore_signal(sema1);
                 }
             };
             
-            NSLog(@"saving %d scraps on %@ page", (int) [allScrapsForPage count], self.delegate.uuid);
             for(MMScrapView* scrap in allScrapsForPage){
                 NSDictionary* properties = [scrap propertiesDictionary];
+                NSLog(@"        - asking scrap to save");
                 [scrap saveScrapToDisk:doneSavingScrapBlock];
                 // save scraps
                 [allScrapProperties addObject:properties];
             }
+            NSLog(@"        - waiting on sema1");
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
         }
         
@@ -93,6 +100,7 @@
 //            NSLog(@"on no");
         }
         
+        NSLog(@"        - writing dictionary");
 //        NSLog(@"saving %lu scraps on %@", (unsigned long)[scrapsOnPageIDs count], ownerState.delegate);
         NSDictionary* scrapsOnPaperInfo = [NSDictionary dictionaryWithObjectsAndKeys:allScrapProperties, @"allScrapProperties", scrapsOnPageIDs, @"scrapsOnPageIDs", nil];
         if([scrapsOnPaperInfo writeToFile:scrapIDsPath atomically:YES]){
@@ -102,6 +110,7 @@
         }
         [ownerState wasSavedAtUndoHash:self.undoHash];
     }else{
+        NSLog(@"        - MMImmutableScrapsOnPaperState no edits");
         // we've already saved an immutable state with this hash
 //        NSLog(@"scrapsOnPaperState doesn't need saving %lu == %lu", (unsigned long) ownerState.lastSavedUndoHash, (unsigned long) self.undoHash);
     }

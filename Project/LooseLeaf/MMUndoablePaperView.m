@@ -78,12 +78,14 @@
 
 -(void) saveToDiskHelper:(void (^)(BOOL))onComplete{
     
+    NSLog(@"    - UndoablePaperView saveToDiskHelper %@", self.uuid);
     // track if our back ground page has saved
     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
     __block BOOL hadEditsToSave;
     [super saveToDiskHelper:^(BOOL _hadEditsToSave){
         // save all our ink/strokes/thumbs/etc to disk
         hadEditsToSave = _hadEditsToSave;
+        NSLog(@"    - UndoablePaperView signal sema1 %@", self.uuid);
         dispatch_semaphore_signal(sema1);
     }];
     
@@ -97,15 +99,20 @@
             if(undoRedoManager.isLoaded){
                 [undoRedoManager saveTo:[self undoStatePath]];
             }
+            NSLog(@"    - UndoablePaperView signal sema21 %@", self.uuid);
             dispatch_semaphore_signal(sema2);
         });
     }else{
+        NSLog(@"    - UndoablePaperView signal sema22 %@", self.uuid);
         dispatch_semaphore_signal(sema2);
     }
     dispatch_async([self serialBackgroundQueue], ^(void) {
         @autoreleasepool {
+            NSLog(@"    - UndoablePaperView wait sema1 %@", self.uuid);
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+            NSLog(@"    - UndoablePaperView wait sema2 %@", self.uuid);
             dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
+            NSLog(@"    - UndoablePaperView semas done %@", self.uuid);
             
             if(onComplete) onComplete(hadEditsToSave);
         }

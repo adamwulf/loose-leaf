@@ -564,7 +564,7 @@ int skipAll = NO;
         return;
     }
     
-    MMEditablePaperView* page = [visibleStackHolder peekSubview];
+    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     
     if(!page.isEditable){
         return;
@@ -591,6 +591,8 @@ int skipAll = NO;
     
     [page.drawableView addElements:shortLine];
     [page.drawableView.state finishCurrentStroke];
+    [page.scrapsOnPaper makeObjectsPerformSelector:@selector(addUndoLevelAndFinishStroke)];
+
     
     [page saveToDisk:nil];
     
@@ -598,7 +600,7 @@ int skipAll = NO;
     
     
     int strokesPerPage = 3000;
-    numLines = numLines % strokesPerPage;
+    numLines = numLines % (int)strokesPerPage;
     
     if(numLines % ((int)strokesPerPage/2) == 12 && numLines < 30){
         CGRect scissorRect = CGRectMake(300, 300, 200, 200);

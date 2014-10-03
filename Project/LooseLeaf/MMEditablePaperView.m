@@ -255,14 +255,17 @@ dispatch_queue_t importThumbnailQueue;
     if([self hasEditsToSave] && ![paperState hasEditsToSave]){
 //        NSLog(@"saved excess");
     }
+    NSLog(@"        - EditablePaperView:saveToDiskHelper %@", self.uuid);
     if([paperState hasEditsToSave]){
         // something has changed since the last time we saved,
         // so ask the JotView to save out the png of its data
         if(drawableView){
+            NSLog(@"        - drawableView exportImageTo %@", self.uuid);
             [drawableView exportImageTo:[self inkPath]
                          andThumbnailTo:[self thumbnailPath]
                              andStateTo:[self plistPath]
                              onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* immutableState){
+                                 NSLog(@"        - drawableView exportImageTo done. %@", self.uuid);
                                  if(immutableState){
                                      // sometimes, if we try to export multiple times
                                      // very very quickly, the 3+ exports will fail
@@ -287,11 +290,13 @@ dispatch_queue_t importThumbnailQueue;
                                  }
                              }];
         }else{
+            NSLog(@"        - no drawableView %@", self.uuid);
             onComplete(NO);
         }
     }else{
         // already saved, but don't need to write
         // anything new to disk
+        NSLog(@"        - no edits to save %@", self.uuid);
         onComplete(NO);
     }
 }

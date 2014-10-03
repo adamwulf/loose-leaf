@@ -1057,6 +1057,7 @@
     __block BOOL pageHadBeenChanged = NO;
     __block BOOL scrapsHadBeenChanged = NO;
     
+    NSLog(@"      - ScrappedPaperView:saveToDiskHelper %@", self.uuid);
     // save our backing page
     [super saveToDiskHelper:^(BOOL hadEditsToSave){
         // NOTE!
@@ -1070,31 +1071,41 @@
         // after the signals, it'll be properly updated.
         pageHadBeenChanged = hadEditsToSave;
 //        NSLog(@"ScrapPage notified of page state save at %lu (success %d)", (unsigned long)lastSavedPaperStateHash, hadEditsToSave);
+        NSLog(@"      - ScrappedPaperView super (signal sema 1) %@", self.uuid);
         dispatch_semaphore_signal(sema1);
     }];
     
     __block MMImmutableScrapsOnPaperState* immutableScrapState;
     if([scrapsOnPaperState isStateLoaded]){
+        NSLog(@"      - ScrappedPaperView scrapsOnPaperState isStateLoaded %@", self.uuid);
         // need to keep reference to immutableScrapState so that
         // we can update the thumbnail after the save
         dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
+            NSLog(@"      - ScrappedPaperView importExportStateQueue %@", self.uuid);
             @autoreleasepool {
                 immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
+                NSLog(@"      - ScrappedPaperView has immutableScrapState %@", self.uuid);
                 scrapsHadBeenChanged = [immutableScrapState saveStateToDiskBlocking];
+                NSLog(@"      - ScrappedPaperView immutableScrapState saveStateToDiskBlocking %@", self.uuid);
                 lastSavedScrapStateHash = immutableScrapState.undoHash;
                 //            NSLog(@"scrapsHadBeenChanged %d %lu",scrapsHadBeenChanged, (unsigned long)immutableScrapState.undoHash);
+                NSLog(@"      - ScrappedPaperView importExportStateQueue (signal sema 2) %@", self.uuid);
                 dispatch_semaphore_signal(sema2);
             }
         });
     }else{
+        NSLog(@"      - ScrappedPaperView scrapsOnPaperState isn't loaded %@", self.uuid);
         lastSavedScrapStateHash = lastSavedScrapStateHashForGeneratedThumbnail;
         dispatch_semaphore_signal(sema2);
     }
 
     dispatch_async([self serialBackgroundQueue], ^(void) {
         @autoreleasepool {
+            NSLog(@"      - ScrappedPaperView wait sema 1 %@", self.uuid);
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+            NSLog(@"      - ScrappedPaperView wait sema 2 %@", self.uuid);
             dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
+            NSLog(@"      - ScrappedPaperView semas complete %@", self.uuid);
             @synchronized(self){
                 hasPendingScrappedIconUpdate--;
 //                NSLog(@"%@ ending save pre icon at %lu with %d pending saves", self, (unsigned long)immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
@@ -1119,6 +1130,7 @@
             // otherwise we'd accidentally take undoManager etc into account
             // when we shouldn't (since undoManager will aways save after us
             if([self hasPenOrScrapEditsToSave]){
+                NSLog(@"      - ScrappedPaperView hasPenOrScrapEditsToSave %@", self.uuid);
 //                NSLog(@"i have more edits to save for %@ (now %lu). bailing. %d %d %d",self.uuid, (unsigned long) immutableScrapState.undoHash, pageHadBeenChanged, scrapsHadBeenChanged, needsThumbnailUpdateSinceLastSave);
                 // our save failed. this may happen if we
                 // call [saveToDisk] in very quick succession
@@ -1130,6 +1142,7 @@
                 if(onComplete) onComplete(NO);
                 return;
             }else{
+                NSLog(@"      - ScrappedPaperView !hasPenOrScrapEditsToSave %@", self.uuid);
 //                NSLog(@"finished save for %@ %d %d %d (at %lu)", self.uuid, pageHadBeenChanged, scrapsHadBeenChanged, needsThumbnailUpdateSinceLastSave, (unsigned long) immutableScrapState.undoHash);
             }
             
@@ -1154,9 +1167,11 @@
 //                NSLog(@"%@ skipped generating thumbnail (at %lu) because page and scraps hadn't changed",self, (unsigned long) immutableScrapState.undoHash);
             }
 
+            NSLog(@"      - ScrappedPaperView performBlockOnMainThread %@", self.uuid);
             [NSThread performBlockOnMainThread:^{
 //                NSLog(@"done saving page (at %lu)", (unsigned long) immutableScrapState.undoHash);
                 // reset canvas visibility
+                NSLog(@"      - ScrappedPaperView didSavePage %@", self.uuid);
                 [self updateThumbnailVisibility];
                 [self.delegate didSavePage:self];
                 if(onComplete) onComplete(YES);
