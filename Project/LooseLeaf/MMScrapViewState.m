@@ -247,10 +247,8 @@ static dispatch_queue_t importExportScrapStateQueue;
 
 -(void) saveScrapStateToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock{
     
-    NSLog(@"          - saveScrapStateToDisk %p", self);
     // block to help save properties to a plist file
     void(^savePropertiesToDisk)(NSUInteger, UIBezierPath*, MMScrapBackgroundView* backgroundInfo, NSString* pathToSave) = ^(NSUInteger lsuh, UIBezierPath* bezierPathForProperties, MMScrapBackgroundView* backgroundInfo, NSString* pathToSave){
-        NSLog(@"          - savePropertiesToDisk %p", self);
         // this will save the properties for the scrap
         // to disk, including the path and background information
         NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
@@ -261,21 +259,17 @@ static dispatch_queue_t importExportScrapStateQueue;
         [savedProperties addEntriesFromDictionary:backgroundProps];
         // save properties to disk
         if(![savedProperties writeToFile:pathToSave atomically:YES]){
-            NSLog(@"          - couldn't save properties! %p", self);
+            NSLog(@"couldn't save properties! %p", self);
         }
     };
     
     
     if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
-        NSLog(@"          - asyc importExportScrapStateQueue %p", self);
         dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
-            NSLog(@"          - in importExportScrapStateQueue %p", self);
             @autoreleasepool {
                 [lock lock];
-                NSLog(@"          - in lock");
 //                NSLog(@"(%@) saving with background: %d %d", uuid, (int)drawableView, backingViewHasChanged);
                 if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
-                    NSLog(@"          - asking drawable view to save %p", self);
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                     [NSThread performBlockOnMainThread:^{
                         @autoreleasepool {
@@ -287,9 +281,7 @@ static dispatch_queue_t importExportScrapStateQueue;
                                     // now export the drawn content. this will create an immutable state
                                     // object and export in the background. this means that everything at this
                                     // instant on the thread will be synced to the content in this drawable view
-                                    NSLog(@"          - drawable view has edits %p", self);
                                     [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.drawableViewStateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
-                                        NSLog(@"          - drawable view saved for %p", self);
                                         if(state){
                                             [[MMLoadImageCache sharedInstance] updateCacheForPath:self.thumbImageFile toImage:thumb];
                                             [self setActiveThumbnailImage:thumb];
@@ -304,18 +296,15 @@ static dispatch_queue_t importExportScrapStateQueue;
 
 //                                            NSLog(@"(%@) scrap saved at: %d with thumb: %d", uuid, (int)state.undoHash, (int)thumb);
                                         }
-                                        NSLog(@"          - signal sema1 %p", self);
                                         dispatch_semaphore_signal(sema1);
                                     }];
                                 }else if(backingImageHolder.backingViewHasChanged){
-                                    NSLog(@"          - backing only, signal sema1 %p", self);
                                     // if we dont' have any pen edits in the drawableViewState,
                                     // but we do have background changes to save
                                     lastSavedUndoHash = drawableViewState.undoHash;
                                     savePropertiesToDisk(lastSavedUndoHash, bezierPath, backingImageHolder, self.scrapPropertiesPlistPath);
                                     dispatch_semaphore_signal(sema1);
                                 }else{
-                                    NSLog(@"          - nothing to save, signal sema1 %p", self);
                                     // nothing new to save
 //                                    NSLog(@"(%@) skipped saving strokes: %d", uuid, backingViewHasChanged);
                                     dispatch_semaphore_signal(sema1);
@@ -332,12 +321,10 @@ static dispatch_queue_t importExportScrapStateQueue;
                                 // was asked to save, but we were asked to save
                                 // multiple times extremely quickly, so just signal
                                 // that we're done
-                                NSLog(@"          - nothing to save, signal sema1 %p", self);
                                 dispatch_semaphore_signal(sema1);
                             }
                         }
                     }];
-                    NSLog(@"          - wait on sema1 %p", self);
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
 //                    dispatch_release(sema1); ARC handles this
 //                    NSLog(@"(%@) done saving scrap: %d", uuid, (int)drawableView);
@@ -352,11 +339,9 @@ static dispatch_queue_t importExportScrapStateQueue;
                     if(doneSavingBlock) doneSavingBlock(NO);
                 }
                 [lock unlock];
-                NSLog(@"          - in unlock %p", self);
             }
         });
     }else{
-        NSLog(@"          - no edits for %p", self);
         if(doneSavingBlock) doneSavingBlock(NO);
 //        NSLog(@"(%@) no edits to save in state3", uuid);
     }
