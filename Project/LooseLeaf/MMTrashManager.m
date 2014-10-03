@@ -115,10 +115,10 @@ static MMTrashManager* _instance = nil;
                         NSLog(@"error deleting %@: %@", thisPagesPath, err);
                     }
                 }else{
-                    //                NSLog(@"found path, but it isn't a directory");
+                    NSLog(@"found path, but it isn't a directory %@", thisPagesPath);
                 }
             }else{
-                //            NSLog(@"path to delete doesn't exist %@", scrapPath);
+                NSLog(@"path to delete doesn't exist %@", thisPagesPath);
             }
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[MMPageCacheManager sharedInstance] pageWasDeleted:page];
