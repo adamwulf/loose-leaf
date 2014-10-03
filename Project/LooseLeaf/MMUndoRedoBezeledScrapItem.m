@@ -71,11 +71,7 @@
     // delete it.
     // if it's still in the bezel, then leave it there and don't delete
     // any assets
-    if([page.delegate.bezelContainerView containsScrapUUID:scrapUUID]){
-        NSLog(@"scrap %@ is in bezel, can't delete assets", scrapUUID);
-    }else{
-        [[MMTrashManager sharedInstance] deleteScrap:scrapUUID inPage:page];
-    }
+    [[MMTrashManager sharedInstance] deleteScrap:scrapUUID inPage:page];
 }
 
 -(void) finalizeRedoableState{

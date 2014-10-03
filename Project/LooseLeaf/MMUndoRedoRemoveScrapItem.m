@@ -60,11 +60,7 @@
     //
     // if so, then we shouldn't delete it from disk. otherwise
     // we should delete it from disk.
-    if([page.delegate.bezelContainerView containsScrapUUID:scrapUUID]){
-        NSLog(@"scrap %@ is in bezel, can't delete assets", scrapUUID);
-    }else{
-        [[MMTrashManager sharedInstance] deleteScrap:scrapUUID inPage:page];
-    }
+    [[MMTrashManager sharedInstance] deleteScrap:scrapUUID inPage:page];
 }
 
 -(void) finalizeRedoableState{

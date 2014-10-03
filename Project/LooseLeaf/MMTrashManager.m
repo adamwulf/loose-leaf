@@ -13,6 +13,7 @@
 #import "MMPageCacheManager.h"
 #import "MMExportablePaperView.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMScrapSidebarContainerView.h"
 
 @implementation MMTrashManager{
     dispatch_queue_t trashManagerQueue;
@@ -51,8 +52,14 @@ static MMTrashManager* _instance = nil;
 
 #pragma mark - Delete Methods
 
--(void) deleteScrap:(NSString*)scrapUUID inPage:(MMScrappedPaperView*)page{
-    
+-(void) deleteScrap:(NSString*)scrapUUID inPage:(MMUndoablePaperView*)page{
+    //
+    // first check the bezel to see if the scrap exists outside the page
+    if([page.delegate.bezelContainerView containsScrapUUID:scrapUUID]){
+        NSLog(@"scrap %@ is in bezel, can't delete assets", scrapUUID);
+        return;
+    }
+
     MMUndoablePaperView* undoablePage = nil;
     if([page isKindOfClass:[MMUndoablePaperView class]]){
         undoablePage = (MMUndoablePaperView*)page;
@@ -87,7 +94,6 @@ static MMTrashManager* _instance = nil;
     // we've been told to delete a scrap from disk.
     // so do this on our low priority background queue
     dispatch_async([self trashManagerQueue], ^{
-
         if(undoablePage && checkScrapExistsInUndoRedoManager()){
             // the scrap exists in the page's undo manager,
             // so don't bother deleting it
