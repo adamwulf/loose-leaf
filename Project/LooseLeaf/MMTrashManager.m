@@ -60,6 +60,9 @@ static MMTrashManager* _instance = nil;
 -(void) deletePage:(MMExportablePaperView*)page{
     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
     dispatch_async([self trashManagerQueue], ^{
+        //
+        // Step 1: ensure the page is in a stable saved state
+        //         with no pending threads active
         while(page.hasEditsToSave){
             NSLog(@"deleting a page with active edits");
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -71,31 +74,55 @@ static MMTrashManager* _instance = nil;
             [NSThread sleepForTimeInterval:5];
             NSLog(@"page was saved, still has edits? %d", page.hasEditsToSave);
         }
-
-        // now that the scrap is out of the page's state, then
-        // we can delete it off disk too
+        // build some directories
         NSString* documentsPath = [NSFileManager documentsPath];
-        NSString* pagesDirectory = [documentsPath stringByAppendingPathComponent:@"Pages"];
-        NSString* pagesPath = [pagesDirectory stringByAppendingPathComponent:page.uuid];
-        BOOL isDirectory = NO;
-        if([[NSFileManager defaultManager] fileExistsAtPath:pagesPath isDirectory:&isDirectory] &&
-           ![pagesPath isEqualToString:pagesDirectory] && pagesPath.length > pagesDirectory.length){
-            if(isDirectory){
-                NSError* err = nil;
-                if([[NSFileManager defaultManager] removeItemAtPath:pagesPath error:&err]){
-                    NSLog(@"deleted2 %@", pagesPath);
-                }
-                if(err){
-                    NSLog(@"error deleting %@: %@", pagesPath, err);
+        NSString* allPagesPath = [documentsPath stringByAppendingPathComponent:@"Pages"];
+        NSString* thisPagesPath = [allPagesPath stringByAppendingPathComponent:page.uuid];
+        NSString* thisPagesScrapsPath = [thisPagesPath stringByAppendingPathComponent:@"Scraps"];
+
+        //
+        // Step 2: loop through all of the page's scraps and delete
+        //         all that are not in the bezel.
+        NSArray* thisPagesScrapsUUIDs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:thisPagesScrapsPath error:nil];
+        for (NSString* scrapUUID in thisPagesScrapsUUIDs) {
+            // delete the scrap, and do NOT respect the undo manager.
+            // we can ignore the undo manager since we're just deleting
+            // the page anyways.
+            [self deleteScrap:scrapUUID inPage:page shouldRespectUndoManager:NO];
+        }
+        
+        //
+        // deleting scraps above will add blocks to the trashManagerQueue
+        // for each scrap. So we need to add the rest of our logic
+        // to run /after/ those scraps (if any) have been processed.
+        dispatch_async([self trashManagerQueue], ^{
+            //
+            // Step 3: Transfer any remaining scraps to the bezel
+            NSArray* thisPagesSavedScrapUUIDs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:thisPagesScrapsPath error:nil];
+            NSLog(@"saved scraps for page %@ : %@", page.uuid, thisPagesSavedScrapUUIDs);
+            
+            //
+            // Step 4: Delete the rest of the page assets
+            BOOL isDirectory = NO;
+            if([[NSFileManager defaultManager] fileExistsAtPath:thisPagesPath isDirectory:&isDirectory] &&
+               ![thisPagesPath isEqualToString:allPagesPath] && thisPagesPath.length > allPagesPath.length){
+                if(isDirectory){
+                    NSError* err = nil;
+                    if([[NSFileManager defaultManager] removeItemAtPath:thisPagesPath error:&err]){
+                        NSLog(@"deleted page at %@", thisPagesPath);
+                    }
+                    if(err){
+                        NSLog(@"error deleting %@: %@", thisPagesPath, err);
+                    }
+                }else{
+                    //                NSLog(@"found path, but it isn't a directory");
                 }
             }else{
-                //                NSLog(@"found path, but it isn't a directory");
+                //            NSLog(@"path to delete doesn't exist %@", scrapPath);
             }
-        }else{
-            //            NSLog(@"path to delete doesn't exist %@", scrapPath);
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[MMPageCacheManager sharedInstance] pageWasDeleted:page];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[MMPageCacheManager sharedInstance] pageWasDeleted:page];
+            });
         });
     });
 }
@@ -199,16 +226,16 @@ static MMTrashManager* _instance = nil;
             if(isDirectory){
                 NSError* err = nil;
                 if([[NSFileManager defaultManager] removeItemAtPath:scrapPath error:&err]){
-                    NSLog(@"deleted1 %@", scrapPath);
+                    NSLog(@"deleted scrap at %@", scrapPath);
                 }
                 if(err){
                     NSLog(@"error deleting %@: %@", scrapPath, err);
                 }
             }else{
-                //                NSLog(@"found path, but it isn't a directory");
+                NSLog(@"found path, but it isn't a directory: %@", scrapPath);
             }
         }else{
-            //            NSLog(@"path to delete doesn't exist %@", scrapPath);
+            NSLog(@"path to delete doesn't exist %@", scrapPath);
         }
     });
 }
