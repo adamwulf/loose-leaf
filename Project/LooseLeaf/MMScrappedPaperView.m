@@ -30,7 +30,7 @@
 #import "UIDevice+PPI.h"
 #import "MMLoadImageCache.h"
 #import "MMCachedPreviewManager.h"
-#import "MMScrapSidebarContainerView.h"
+#import "MMScrapsInBezelContainerView.h"
 #import "MMScrapsInSidebarState.h"
 #import "UIView+Animations.h"
 

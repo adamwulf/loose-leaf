@@ -17,7 +17,7 @@
 #import "MMUndoRedoGroupItem.h"
 #import "MMUndoRedoMoveScrapItem.h"
 #import "MMUndoRedoAddScrapFromBezelItem.h"
-#import "MMScrapSidebarContainerView.h"
+#import "MMScrapsInBezelContainerView.h"
 #import "MMImmutableScrapsOnPaperState.h"
 #import "MMTrashManager.h"
 
@@ -70,7 +70,7 @@
     [super didUnloadAllScrapsFor:scrapState];
 }
 
--(MMScrapSidebarContainerView*) bezelContainerView{
+-(MMScrapsInBezelContainerView*) bezelContainerView{
     return self.delegate.bezelContainerView;
 }
 

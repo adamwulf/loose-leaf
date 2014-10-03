@@ -1394,7 +1394,7 @@
     @throw kAbstractMethodException;
 }
 
--(MMScrapSidebarContainerView*) bezelContainerView{
+-(MMScrapsInBezelContainerView*) bezelContainerView{
     @throw kAbstractMethodException;
 }
 

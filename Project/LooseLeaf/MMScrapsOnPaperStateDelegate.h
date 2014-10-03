@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class MMScrapView, MMScrapsOnPaperState, MMScrapContainerView,MMScrapSidebarContainerView,MMScrappedPaperView;
+@class MMScrapView, MMScrapsOnPaperState, MMScrapContainerView,MMScrapsInBezelContainerView,MMScrappedPaperView;
 
 @protocol MMScrapsOnPaperStateDelegate <NSObject>
 

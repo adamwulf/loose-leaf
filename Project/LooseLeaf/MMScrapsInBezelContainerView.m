@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMScrapSidebarContainerView.h"
+#import "MMScrapsInBezelContainerView.h"
 #import "MMScrapBubbleButton.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMScrapSidebarContentView.h"
@@ -34,7 +34,7 @@
 
 
 
-@implementation MMScrapSidebarContainerView{
+@implementation MMScrapsInBezelContainerView{
     CGFloat lastRotationReading;
     CGFloat targetAlpha;
     NSMutableDictionary* bubbleForScrap;
@@ -64,7 +64,7 @@
         [countButton addTarget:self action:@selector(countButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
         
-        NSDictionary* loadedRotationValues = [NSDictionary dictionaryWithContentsOfFile:[MMScrapSidebarContainerView pathToPlist]];
+        NSDictionary* loadedRotationValues = [NSDictionary dictionaryWithContentsOfFile:[MMScrapsInBezelContainerView pathToPlist]];
         rotationAdjustments = [NSMutableDictionary dictionary];
         if(loadedRotationValues){
             [rotationAdjustments addEntriesFromDictionary:loadedRotationValues];
@@ -493,7 +493,7 @@ static NSString* bezelStatePath;
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
             [immutableState saveStateToDiskBlocking];
-            [writeableAdjustments writeToFile:[MMScrapSidebarContainerView pathToPlist] atomically:YES];
+            [writeableAdjustments writeToFile:[MMScrapsInBezelContainerView pathToPlist] atomically:YES];
         }
     });
 }

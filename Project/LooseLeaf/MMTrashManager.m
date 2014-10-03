@@ -13,7 +13,7 @@
 #import "MMPageCacheManager.h"
 #import "MMExportablePaperView.h"
 #import "NSFileManager+DirectoryOptimizations.h"
-#import "MMScrapSidebarContainerView.h"
+#import "MMScrapsInBezelContainerView.h"
 
 @implementation MMTrashManager{
     dispatch_queue_t trashManagerQueue;
@@ -100,6 +100,8 @@ static MMTrashManager* _instance = nil;
             // Step 3: Transfer any remaining scraps to the bezel
             NSArray* thisPagesSavedScrapUUIDs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:thisPagesScrapsPath error:nil];
             NSLog(@"saved scraps for page %@ : %@", page.uuid, thisPagesSavedScrapUUIDs);
+            
+            id bcv = page.delegate.bezelContainerView;
             
             //
             // Step 4: Delete the rest of the page assets
