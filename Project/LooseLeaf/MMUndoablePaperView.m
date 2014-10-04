@@ -43,7 +43,7 @@
 
 #pragma mark - MMScrapsOnPaperStateDelegate
 
--(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
+-(void) didLoadAllScrapsFor:(MMScrapCollectionState*)scrapState{
     [super didLoadAllScrapsFor:scrapState];
 
     dispatch_block_t block = ^{

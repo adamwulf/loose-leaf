@@ -1219,14 +1219,14 @@
     [scrap setShouldShowShadow:self.isEditable];
 }
 
--(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
+-(void) didLoadAllScrapsFor:(MMScrapCollectionState*)scrapState{
     // check to see if we've also loaded
     lastSavedScrapStateHashForGeneratedThumbnail = [scrapState lastSavedUndoHash];
     [self didLoadState:self.paperState];
     [self updateThumbnailVisibility];
 }
 
--(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
+-(void) didUnloadAllScrapsFor:(MMScrapCollectionState*)scrapState{
     lastSavedScrapStateHashForGeneratedThumbnail = 0;
     [self updateThumbnailVisibility];
 }

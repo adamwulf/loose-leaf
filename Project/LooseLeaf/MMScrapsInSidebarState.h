@@ -8,30 +8,18 @@
 
 #import <Foundation/Foundation.h>
 #import "MMScrapsInSidebarStateDelegate.h"
+#import "MMScrapCollectionState.h"
 
 @class MMImmutableScrapsInSidebarState;
 
-@interface MMScrapsInSidebarState : NSObject{
+@interface MMScrapsInSidebarState : MMScrapCollectionState{
     __weak NSObject<MMScrapsInSidebarStateDelegate>* delegate;
 }
 
 @property (nonatomic, readonly) NSObject<MMScrapsInSidebarStateDelegate>* delegate;
 @property (readonly) NSString* scrapIDsPath;
-@property (nonatomic, readonly) int fullByteSize;
-@property (readonly) BOOL hasEditsToSave;
-@property (readonly) NSArray* allScrapsInSidebar;
-
-+(dispatch_queue_t) importExportStateQueue;
 
 -(id) initWithDelegate:(NSObject<MMScrapsInSidebarStateDelegate>*)delegate;
-
-#pragma mark - Save and Load
-
--(BOOL) isStateLoaded;
-
--(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable;
-
--(void) unload;
 
 -(MMImmutableScrapsInSidebarState*) immutableStateForPath:(NSString*)scrapIDsPath;
 

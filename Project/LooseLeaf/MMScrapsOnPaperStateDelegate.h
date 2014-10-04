@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class MMScrapView, MMScrapsOnPaperState, MMScrapContainerView,MMScrapsInBezelContainerView,MMScrappedPaperView;
+@class MMScrapView, MMScrapsOnPaperState, MMScrapContainerView,MMScrapsInBezelContainerView,MMScrappedPaperView,MMScrapCollectionState;
 
 @protocol MMScrapsOnPaperStateDelegate <NSObject>
 
@@ -33,9 +33,9 @@
  */
 -(void) didLoadScrapOffPage:(MMScrapView*)scrap;
 
--(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState;
+-(void) didLoadAllScrapsFor:(MMScrapCollectionState*)scrapState;
 
--(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState;
+-(void) didUnloadAllScrapsFor:(MMScrapCollectionState*)scrapState;
 
 -(NSString*) pagesPath;
 

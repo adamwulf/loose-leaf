@@ -8,31 +8,18 @@
 
 #import <Foundation/Foundation.h>
 #import "MMScrapsOnPaperStateDelegate.h"
+#import "MMScrapCollectionState.h"
 
 @class MMImmutableScrapsOnPaperState;
 
-@interface MMScrapsOnPaperState : NSObject{
+@interface MMScrapsOnPaperState : MMScrapCollectionState{
     __weak NSObject<MMScrapsOnPaperStateDelegate>* delegate;
 }
 
-+(dispatch_queue_t) importExportStateQueue;
-
 @property (nonatomic, readonly) NSObject<MMScrapsOnPaperStateDelegate>* delegate;
-@property (nonatomic, readonly) int fullByteSize;
-@property (readonly) BOOL hasEditsToSave;
-@property (readonly) NSUInteger lastSavedUndoHash;
 @property (nonatomic, readonly) MMScrapContainerView* scrapContainerView;
 
-
 -(id) initWithDelegate:(NSObject<MMScrapsOnPaperStateDelegate>*)delegate withScrapContainerSize:(CGSize)scrapContainerSize;
-
-#pragma mark - Save and Load
-
--(BOOL) isStateLoaded;
-
--(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable;
-
--(void) unload;
 
 -(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath;
 

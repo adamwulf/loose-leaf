@@ -336,6 +336,7 @@
 		66E2241319D64644000FCA96 /* ios7-settings-photos@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2241219D64644000FCA96 /* ios7-settings-photos@2x.png */; };
 		66E2241619D66ADD000FCA96 /* MMPermissionCameraPhotosCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E2241519D66ADD000FCA96 /* MMPermissionCameraPhotosCollectionViewCell.m */; };
 		66E2241919D66F8B000FCA96 /* MMEmptyCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E2241819D66F8B000FCA96 /* MMEmptyCollectionViewCell.m */; };
+		66E5AC9019DFA781006CEAAF /* MMScrapCollectionState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E5AC8F19DFA781006CEAAF /* MMScrapCollectionState.m */; };
 		66E769CE18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E769CD18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m */; };
 		66E88A371591853E001A6EBF /* MMPapersIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E88A361591853E001A6EBF /* MMPapersIcon.m */; };
 		66EC2FEC19DD06F6008F2BB6 /* MMPanAndPinchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBDE1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m */; };
@@ -980,6 +981,8 @@
 		66E2241519D66ADD000FCA96 /* MMPermissionCameraPhotosCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPermissionCameraPhotosCollectionViewCell.m; sourceTree = "<group>"; };
 		66E2241719D66F8B000FCA96 /* MMEmptyCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEmptyCollectionViewCell.h; sourceTree = "<group>"; };
 		66E2241819D66F8B000FCA96 /* MMEmptyCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEmptyCollectionViewCell.m; sourceTree = "<group>"; };
+		66E5AC8E19DFA781006CEAAF /* MMScrapCollectionState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapCollectionState.h; sourceTree = "<group>"; };
+		66E5AC8F19DFA781006CEAAF /* MMScrapCollectionState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapCollectionState.m; sourceTree = "<group>"; };
 		66E769CC18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+DirectoryOptimizations.h"; sourceTree = "<group>"; };
 		66E769CD18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+DirectoryOptimizations.m"; sourceTree = "<group>"; };
 		66E88A351591853E001A6EBF /* MMPapersIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPapersIcon.h; sourceTree = "<group>"; };
@@ -1342,18 +1345,6 @@
 			name = "Delete Sidebar";
 			sourceTree = "<group>";
 		};
-		6635BEA11975A5EF00DFCBBA /* Sidebar State */ = {
-			isa = PBXGroup;
-			children = (
-				6635BE9719749BD600DFCBBA /* MMScrapsInSidebarState.h */,
-				6635BE9819749BD600DFCBBA /* MMScrapsInSidebarState.m */,
-				6635BE9A197589F200DFCBBA /* MMScrapsInSidebarStateDelegate.h */,
-				6635BE9B19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.h */,
-				6635BE9C19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m */,
-			);
-			name = "Sidebar State";
-			sourceTree = "<group>";
-		};
 		66381F5619CB91F80014796F /* CameraSection */ = {
 			isa = PBXGroup;
 			children = (
@@ -1430,7 +1421,7 @@
 			children = (
 				6612C8821964C0C4003A9575 /* Undo Redo */,
 				66E47E22187F278A000AFD18 /* Ruler */,
-				66B62C4B17F245E6006D31EB /* Page State */,
+				66B62C4B17F245E6006D31EB /* Scrap Collection State */,
 				66A471C317C7E05C00C2A5B6 /* Scraps */,
 				66D33F4A15A6408A0044C809 /* MMShadowedView.h */,
 				66D33F4B15A6408A0044C809 /* MMShadowedView.m */,
@@ -2058,16 +2049,15 @@
 			name = "Share Sidebar";
 			sourceTree = "<group>";
 		};
-		66B62C4B17F245E6006D31EB /* Page State */ = {
+		66B62C4B17F245E6006D31EB /* Scrap Collection State */ = {
 			isa = PBXGroup;
 			children = (
-				66AE5AA617F4D064009F82B6 /* MMScrapsOnPaperState.h */,
-				66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */,
-				66AE5AA917F4D124009F82B6 /* MMScrapsOnPaperStateDelegate.h */,
-				66052A0117FA170600A94531 /* MMImmutableScrapsOnPaperState.h */,
-				66052A0217FA170600A94531 /* MMImmutableScrapsOnPaperState.m */,
+				66E5AC8E19DFA781006CEAAF /* MMScrapCollectionState.h */,
+				66E5AC8F19DFA781006CEAAF /* MMScrapCollectionState.m */,
+				66E5AC9119DFAAC9006CEAAF /* For Pages */,
+				66E5AC9219DFAACE006CEAAF /* For Bezel */,
 			);
-			name = "Page State";
+			name = "Scrap Collection State";
 			sourceTree = "<group>";
 		};
 		66B75DB21877ADAF00EF0A48 /* DrawKit */ = {
@@ -2122,7 +2112,6 @@
 		66CE120417D3B6A400882275 /* Scrap Sidebar */ = {
 			isa = PBXGroup;
 			children = (
-				6635BEA11975A5EF00DFCBBA /* Sidebar State */,
 				66CE120517D3B6C200882275 /* Scrap Bubble */,
 				66CE11FB17D2700E00882275 /* MMScrapsInBezelContainerView.h */,
 				66CE11FC17D2700E00882275 /* MMScrapsInBezelContainerView.m */,
@@ -2274,6 +2263,30 @@
 				6651083B178F249C00A7A7DD /* MMVector.m */,
 			);
 			name = Ruler;
+			sourceTree = "<group>";
+		};
+		66E5AC9119DFAAC9006CEAAF /* For Pages */ = {
+			isa = PBXGroup;
+			children = (
+				66AE5AA617F4D064009F82B6 /* MMScrapsOnPaperState.h */,
+				66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */,
+				66AE5AA917F4D124009F82B6 /* MMScrapsOnPaperStateDelegate.h */,
+				66052A0117FA170600A94531 /* MMImmutableScrapsOnPaperState.h */,
+				66052A0217FA170600A94531 /* MMImmutableScrapsOnPaperState.m */,
+			);
+			name = "For Pages";
+			sourceTree = "<group>";
+		};
+		66E5AC9219DFAACE006CEAAF /* For Bezel */ = {
+			isa = PBXGroup;
+			children = (
+				6635BE9719749BD600DFCBBA /* MMScrapsInSidebarState.h */,
+				6635BE9819749BD600DFCBBA /* MMScrapsInSidebarState.m */,
+				6635BE9A197589F200DFCBBA /* MMScrapsInSidebarStateDelegate.h */,
+				6635BE9B19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.h */,
+				6635BE9C19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m */,
+			);
+			name = "For Bezel";
 			sourceTree = "<group>";
 		};
 		66EC7B7219ABD06100406D97 /* CloudKit Manager */ = {
@@ -2793,6 +2806,7 @@
 				66932965159593C00033E557 /* MMRotationManager.m in Sources */,
 				6693296A1595A87E0033E557 /* MMMapButton.m in Sources */,
 				665245651996DAB800C36609 /* AFNetworkReachabilityManager.m in Sources */,
+				66E5AC9019DFA781006CEAAF /* MMScrapCollectionState.m in Sources */,
 				6650943719AD3ECE00D58118 /* MMCloudKitShareListHorizontalLayout.m in Sources */,
 				669329701598E4DC0033E557 /* NSString+UUID.m in Sources */,
 				6612C8881964C113003A9575 /* MMUndoablePaperView.m in Sources */,

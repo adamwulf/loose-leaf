@@ -15,7 +15,6 @@
 
 #pragma mark - Saving Helpers
 
--(NSUInteger) lastSavedUndoHash;
 -(void) wasSavedAtUndoHash:(NSUInteger)savedUndoHash;
 
 @end
