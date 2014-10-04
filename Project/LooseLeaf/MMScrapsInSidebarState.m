@@ -14,9 +14,7 @@
 #import "MMImmutableScrapsInSidebarState.h"
 #import "Constants.h"
 
-@implementation MMScrapsInSidebarState{
-    NSMutableArray* allPropertiesForScraps;
-}
+@implementation MMScrapsInSidebarState
 
 @dynamic delegate;
 
@@ -32,7 +30,6 @@ static dispatch_queue_t importExportStateQueue;
 -(id) initWithDelegate:(NSObject<MMScrapsInSidebarStateDelegate>*)_delegate{
     if(self = [super init]){
         delegate = _delegate;
-        allPropertiesForScraps = [NSMutableArray array];
     }
     return self;
 }
@@ -106,14 +103,14 @@ static dispatch_queue_t importExportStateQueue;
                         MMScrapView* scrap = nil;
                         if([scrapProperties objectForKey:@"scrap"]){
                             scrap = [scrapProperties objectForKey:@"scrap"];
-//                            NSLog(@"sidebar reused scrap %@", scrap.uuid);
+//                            NSLog(@"reused scrap %@", scrap.uuid);
                         }else{
                             MMScrapViewState* scrapState = [scrapProperties objectForKey:@"state"];
                             scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState];
-//                            NSLog(@"sidebar built scrap %@", scrap.uuid);
+//                            NSLog(@"built scrap %@", scrap.uuid);
+                            [scrap setPropertiesDictionary:scrapProperties];
                         }
                         if(scrap){
-                            [scrap setPropertiesDictionary:scrapProperties];
                             @synchronized(allLoadedScraps){
                                 [allLoadedScraps addObject:scrap];
                                 [allPropertiesForScraps addObject:scrapProperties];
@@ -124,7 +121,6 @@ static dispatch_queue_t importExportStateQueue;
                             if(makeEditable){
                                 [scrap loadScrapStateAsynchronously:async];
                             }
-                            [scrap setShouldShowShadow:NO];
                         }else{
                             NSLog(@"couldn't load scrap for %@", scrapProperties);
                         }
@@ -132,7 +128,7 @@ static dispatch_queue_t importExportStateQueue;
                     @synchronized(self){
                         isLoaded = YES;
                         isLoading = NO;
-                        MMImmutableScrapsInSidebarState* immutableState = [self immutableStateForPath:nil];
+                        MMImmutableScrapCollectionState* immutableState = [self immutableStateForPath:nil];
                         expectedUndoHash = [immutableState undoHash];
                         lastSavedUndoHash = [immutableState undoHash];
                     }

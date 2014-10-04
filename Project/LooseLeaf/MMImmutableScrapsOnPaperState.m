@@ -93,14 +93,6 @@
     return hadAnyEditsToSaveAtAll;
 }
 
--(void) unload{
-    if([self isStateLoaded]){
-        [self saveStateToDiskBlocking];
-    }
-    [super unload];
-}
-
-
 -(NSUInteger) undoHash{
     if(!cachedUndoHash){
         NSUInteger prime = 31;

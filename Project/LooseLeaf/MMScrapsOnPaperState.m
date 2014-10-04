@@ -141,7 +141,7 @@
                     @synchronized(self){
                         isLoaded = YES;
                         isLoading = NO;
-                        MMImmutableScrapsOnPaperState* immutableState = [self immutableStateForPath:nil];
+                        MMImmutableScrapCollectionState* immutableState = [self immutableStateForPath:nil];
                         expectedUndoHash = [immutableState undoHash];
                         lastSavedUndoHash = [immutableState undoHash];
 //                        NSLog(@"loaded scrapsOnPaperState at: %lu", (unsigned long)lastSavedUndoHash);

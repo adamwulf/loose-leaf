@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "MMScrapsOnPaperStateDelegate.h"
 
+@class MMImmutableScrapCollectionState;
+
 @interface MMScrapCollectionState : NSObject{
     // loading state
     BOOL isLoaded;
@@ -25,6 +27,8 @@
     NSUInteger lastSavedUndoHash;
     // delegate
     __weak NSObject<MMScrapCollectionStateDelegate>* delegate;
+    // all of the loaded properties for all this state's scraps
+    NSMutableArray* allPropertiesForScraps;
 }
 
 +(dispatch_queue_t) importExportStateQueue;
@@ -36,6 +40,8 @@
 @property (readonly) NSUInteger lastSavedUndoHash;
 
 #pragma mark - Save and Load
+
+-(MMImmutableScrapCollectionState*) immutableStateForPath:(NSString*)scrapIDsPath;
 
 -(BOOL) isStateLoaded;
 

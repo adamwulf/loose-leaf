@@ -30,6 +30,7 @@ static dispatch_queue_t importExportStateQueue;
         expectedUndoHash = 0;
         lastSavedUndoHash = 0;
         allLoadedScraps = [NSMutableArray array];
+        allPropertiesForScraps = [NSMutableArray array];
     }
     return self;
 }
@@ -49,6 +50,10 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 #pragma mark - Save and Load
+
+-(MMImmutableScrapCollectionState*) immutableStateForPath:(NSString *)scrapIDsPath{
+    @throw kAbstractMethodException;
+}
 
 -(BOOL) isStateLoaded{
     return isLoaded;

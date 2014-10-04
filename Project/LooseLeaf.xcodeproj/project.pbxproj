@@ -136,6 +136,7 @@
 		665C593717BD7CD3006DECBF /* PolygonTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 665C593617BD7CD3006DECBF /* PolygonTool.m */; };
 		665CAC1D17B578B0000BD505 /* MMColorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 665CAC1C17B578B0000BD505 /* MMColorButton.m */; };
 		665CAC2117B57B0B000BD505 /* MMPencilAndPaletteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 665CAC2017B57B0B000BD505 /* MMPencilAndPaletteView.m */; };
+		6663CC4A19DFC2280084F9FF /* MMImmutableScrapCollectionState.m in Sources */ = {isa = PBXBuildFile; fileRef = 6663CC4919DFC2280084F9FF /* MMImmutableScrapCollectionState.m */; };
 		666425BA18CBC20000A306C1 /* MMStretchScrapGestureRecognizer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 666425B918CBC20000A306C1 /* MMStretchScrapGestureRecognizer.mm */; };
 		666425BC18CBC37700A306C1 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 666425BB18CBC37700A306C1 /* opencv2.framework */; };
 		666425BE18CBC3DD00A306C1 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 666425BD18CBC3DD00A306C1 /* AVFoundation.framework */; };
@@ -611,6 +612,8 @@
 		665CAC1F17B57B0B000BD505 /* MMPencilAndPaletteView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPencilAndPaletteView.h; sourceTree = "<group>"; };
 		665CAC2017B57B0B000BD505 /* MMPencilAndPaletteView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPencilAndPaletteView.m; sourceTree = "<group>"; };
 		665CAC2217B5803B000BD505 /* MMPencilAndPaletteViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPencilAndPaletteViewDelegate.h; sourceTree = "<group>"; };
+		6663CC4819DFC2280084F9FF /* MMImmutableScrapCollectionState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImmutableScrapCollectionState.h; sourceTree = "<group>"; };
+		6663CC4919DFC2280084F9FF /* MMImmutableScrapCollectionState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImmutableScrapCollectionState.m; sourceTree = "<group>"; };
 		666425B818CBC20000A306C1 /* MMStretchScrapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMStretchScrapGestureRecognizer.h; path = ../MMStretchScrapGestureRecognizer.h; sourceTree = "<group>"; };
 		666425B918CBC20000A306C1 /* MMStretchScrapGestureRecognizer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MMStretchScrapGestureRecognizer.mm; path = ../MMStretchScrapGestureRecognizer.mm; sourceTree = "<group>"; };
 		666425BB18CBC37700A306C1 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
@@ -2057,6 +2060,8 @@
 				66E5AC8F19DFA781006CEAAF /* MMScrapCollectionState.m */,
 				66220FC919DFB4BB0039DA46 /* MMScrapCollectionState+Private.h */,
 				66220FC819DFAF1C0039DA46 /* MMScrapCollectionStateDelegate.h */,
+				6663CC4819DFC2280084F9FF /* MMImmutableScrapCollectionState.h */,
+				6663CC4919DFC2280084F9FF /* MMImmutableScrapCollectionState.m */,
 				66E5AC9119DFAAC9006CEAAF /* For Pages */,
 				66E5AC9219DFAACE006CEAAF /* For Bezel */,
 			);
@@ -2773,6 +2778,7 @@
 				66EDE42719AE765000A5623B /* MMAvatarButton.m in Sources */,
 				66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */,
 				667C6355199FE4BC00E93CD6 /* MPNotification.m in Sources */,
+				6663CC4A19DFC2280084F9FF /* MMImmutableScrapCollectionState.m in Sources */,
 				66CE120317D3AD7C00882275 /* MMBounceButton.m in Sources */,
 				66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */,
 				66AC8D8318E88F4700A65036 /* MMPhotoAlbum.mm in Sources */,

@@ -10,16 +10,12 @@
 #import "MMScrapsInSidebarStateDelegate.h"
 #import "MMScrapCollectionState.h"
 
-@class MMImmutableScrapsInSidebarState;
-
 @interface MMScrapsInSidebarState : MMScrapCollectionState
 
 @property (nonatomic, readonly) NSObject<MMScrapsInSidebarStateDelegate>* delegate;
 @property (readonly) NSString* scrapIDsPath;
 
 -(id) initWithDelegate:(NSObject<MMScrapsInSidebarStateDelegate>*)delegate;
-
--(MMImmutableScrapsInSidebarState*) immutableStateForPath:(NSString*)scrapIDsPath;
 
 #pragma mark - Manage Scraps
 
