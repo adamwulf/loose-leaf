@@ -27,7 +27,6 @@
 @property (nonatomic, readonly) MMScrapViewState* state;
 
 -(id) initWithScrapViewState:(MMScrapViewState*)scrapState andPaperState:(MMScrapsOnPaperState*)paperState;
--(id) initWithBezierPath:(UIBezierPath*)path andPaperState:(MMScrapsOnPaperState*)paperState;
 -(id) initWithBezierPath:(UIBezierPath *)path andScale:(CGFloat)scale andRotation:(CGFloat)rotation andPaperState:(MMScrapsOnPaperState*)paperState;
 
 -(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading;
