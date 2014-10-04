@@ -16,13 +16,9 @@
 
 -(NSString*) uuid;
 
--(MMScrapView*) scrapForUUIDIfAlreadyExists:(NSString*)scrapUUID;
-
--(MMScrapContainerView*) scrapContainerView;
+-(MMScrapView*) scrapForUUIDIfAlreadyExistsInOtherContainer:(NSString*)scrapUUID;
 
 -(BOOL) isEditable;
-
--(NSArray*) scrapsOnPaper;
 
 /**
  * triggered when a scrap is laoded from disk that is

@@ -38,26 +38,35 @@
     // this is the undo hash of our most recent save.
     // if these two are different, then we have a pending save
     NSUInteger lastSavedUndoHash;
+    // the container to hold the scraps
+    MMScrapContainerView* scrapContainerView;
 }
 
 @synthesize delegate;
+@synthesize scrapContainerView;
 
 static dispatch_queue_t importExportStateQueue;
 
 +(dispatch_queue_t) importExportStateQueue{
     if(!importExportStateQueue){
-//        importExportStateQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0);
         importExportStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.importExportStateQueue", DISPATCH_QUEUE_SERIAL);
     }
     return importExportStateQueue;
 }
 
--(id) initWithDelegate:(NSObject<MMScrapsOnPaperStateDelegate>*)_delegate{
+-(id) initWithDelegate:(NSObject<MMScrapsOnPaperStateDelegate>*)_delegate withScrapContainerSize:(CGSize)scrapContainerSize{
     if(self = [super init]){
         expectedUndoHash = 0;
         lastSavedUndoHash = 0;
         delegate = _delegate;
         allScrapsForPage = [NSMutableArray array];
+        scrapContainerView = [[MMScrapContainerView alloc] initWithFrame:CGRectMake(0, 0, scrapContainerSize.width, scrapContainerSize.height)
+                                                   forScrapsOnPaperState:self];
+        // anchor the view to the top left,
+        // so that when we scale down, the drawable view
+        // stays in place
+        scrapContainerView.layer.anchorPoint = CGPointMake(0,0);
+        scrapContainerView.layer.position = CGPointMake(0,0);
     }
     return self;
 }
@@ -68,7 +77,7 @@ static dispatch_queue_t importExportStateQueue;
 
 -(int) fullByteSize{
     int totalBytes = 0;
-    for(MMScrapView* scrap in self.delegate.scrapsOnPaper){
+    for(MMScrapView* scrap in self.scrapsOnPaper){
         totalBytes += scrap.fullByteSize;
     }
     return totalBytes;
@@ -102,7 +111,7 @@ static dispatch_queue_t importExportStateQueue;
                 for(NSDictionary* scrapProperties in scrapProps){
                     NSString* scrapUUID = [scrapProperties objectForKey:@"uuid"];
                     
-                    MMScrapView* scrap = [delegate scrapForUUIDIfAlreadyExists:scrapUUID];
+                    MMScrapView* scrap = [delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrapUUID];
 
                     NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
                     if(scrap){
@@ -185,7 +194,7 @@ static dispatch_queue_t importExportStateQueue;
     }else if([self isStateLoaded] && makeEditable){
         void (^block2)() = ^(void) {
             if([self isStateLoaded]){
-                for(MMScrapView* scrap in self.delegate.scrapsOnPaper){
+                for(MMScrapView* scrap in self.scrapsOnPaper){
                     [scrap loadScrapStateAsynchronously:async];
                     @synchronized(self){
                         if(isUnloading){
@@ -219,7 +228,7 @@ static dispatch_queue_t importExportStateQueue;
                 if([self isStateLoaded]){
                     @synchronized(allScrapsForPage){
                         for(MMScrapView* scrap in allScrapsForPage){
-                            if([delegate scrapForUUIDIfAlreadyExists:scrap.uuid]){
+                            if([delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrap.uuid]){
                                 // if this is true, then the scrap is being held
                                 // by the sidebar, so we shouldn't manage its
                                 // state
@@ -228,7 +237,7 @@ static dispatch_queue_t importExportStateQueue;
                             }
                         }
                     }
-                    NSArray* visibleScraps = [self.delegate.scrapsOnPaper copy];
+                    NSArray* visibleScraps = [self.scrapsOnPaper copy];
                     [allScrapsForPage removeAllObjects];
                     [NSThread performBlockOnMainThread:^{
                         [visibleScraps makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -249,7 +258,7 @@ static dispatch_queue_t importExportStateQueue;
 -(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath{
     if([self isStateLoaded]){
         hasEditsToSave = NO;
-        MMImmutableScrapsOnPaperState* immutable = [[MMImmutableScrapsOnPaperState alloc] initWithScrapIDsPath:scrapIDsPath andAllScraps:allScrapsForPage andScrapsOnPage:self.delegate.scrapsOnPaper andScrapsOnPaperState:self];
+        MMImmutableScrapsOnPaperState* immutable = [[MMImmutableScrapsOnPaperState alloc] initWithScrapIDsPath:scrapIDsPath andAllScraps:allScrapsForPage andScrapsOnPage:self.scrapsOnPaper andScrapsOnPaperState:self];
         expectedUndoHash = [immutable undoHash];
         return immutable;
     }
@@ -269,6 +278,19 @@ static dispatch_queue_t importExportStateQueue;
 
 #pragma mark - Manage Scraps
 
+-(NSArray*) scrapsOnPaper{
+    // we'll be calling this method quite often,
+    // so don't create a new auto-released array
+    // all the time. instead, just return our subview
+    // array, so that if the caller just needs count
+    // or to iterate on the main thread, we don't
+    // spend unnecessary resources copying a potentially
+    // long array.
+    @synchronized(scrapContainerView){
+        return scrapContainerView.subviews;
+    }
+}
+
 -(void) showScrap:(MMScrapView*)scrap atIndex:(NSUInteger)subviewIndex{
     [self showScrap:scrap];
     [scrap.superview insertSubview:scrap atIndex:subviewIndex];
@@ -279,8 +301,8 @@ static dispatch_queue_t importExportStateQueue;
     if(scrap.state.scrapsOnPaperState != self){
         @throw [NSException exceptionWithName:@"ScrapAddedToWrongPageException" reason:@"This scrap was added to a page that doesn't own it" userInfo:nil];
     }
-    @synchronized(delegate.scrapContainerView){
-        [delegate.scrapContainerView addSubview:scrap];
+    @synchronized(scrapContainerView){
+        [scrapContainerView addSubview:scrap];
     }
     [scrap setShouldShowShadow:delegate.isEditable];
     if(isLoaded || isLoading){
@@ -291,8 +313,8 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 -(void) hideScrap:(MMScrapView*)scrap{
-    @synchronized(delegate.scrapContainerView){
-        if(delegate.scrapContainerView == scrap.superview){
+    @synchronized(scrapContainerView){
+        if(scrapContainerView == scrap.superview){
             [scrap setShouldShowShadow:NO];
             [scrap removeFromSuperview];
         }else{
@@ -302,7 +324,7 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 -(BOOL) isScrapVisible:(MMScrapView*)scrap{
-    return [[delegate scrapsOnPaper] containsObject:scrap];
+    return [self.scrapsOnPaper containsObject:scrap];
 }
 
 -(void) scrapVisibilityWasUpdated:(MMScrapView*)scrap{

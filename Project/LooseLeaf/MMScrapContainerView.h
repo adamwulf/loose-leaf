@@ -9,10 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "MMUntouchableView.h"
 
-@class MMScrappedPaperView;
+@class MMScrapsOnPaperState;
 
 @interface MMScrapContainerView : MMUntouchableView
 
-- (id)initWithFrame:(CGRect)frame forPageDelegate:(MMScrappedPaperView*)page;
+- (id)initWithFrame:(CGRect)frame forScrapsOnPaperState:(MMScrapsOnPaperState*)_scrapsOnPaperState;
 
 @end

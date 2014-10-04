@@ -176,7 +176,7 @@
         [self addSubview:exportAnimationHelperView];
 
         
-        scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds forPageDelegate:nil];
+        scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds forScrapsOnPaperState:nil];
         [self addSubview:scrapContainer];
         
         

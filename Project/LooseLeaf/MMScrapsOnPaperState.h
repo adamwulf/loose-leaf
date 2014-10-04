@@ -21,8 +21,10 @@
 @property (nonatomic, readonly) int fullByteSize;
 @property (readonly) BOOL hasEditsToSave;
 @property (readonly) NSUInteger lastSavedUndoHash;
+@property (nonatomic, readonly) MMScrapContainerView* scrapContainerView;
 
--(id) initWithDelegate:(NSObject<MMScrapsOnPaperStateDelegate>*)delegate;
+
+-(id) initWithDelegate:(NSObject<MMScrapsOnPaperStateDelegate>*)delegate withScrapContainerSize:(CGSize)scrapContainerSize;
 
 #pragma mark - Save and Load
 
@@ -39,6 +41,8 @@
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale;
 
 #pragma mark - Manage Scraps
+
+-(NSArray*) scrapsOnPaper;
 
 -(void) showScrap:(MMScrapView*)scrap;
 -(void) showScrap:(MMScrapView*)scrap atIndex:(NSUInteger)subviewIndex;

@@ -41,19 +41,6 @@
     return self;
 }
 
-#pragma mark - Scrap Loading
-
--(NSArray*) scrapsOnPaper{
-    // also tie in here and append any scraps
-    // that are in the undo manager (?)
-    return [super scrapsOnPaper];
-}
-
--(void) didLoadScrapOnPage:(MMScrapView *)scrap{
-    // should i tie in here to give scraps to undo objects?
-    [super didLoadScrapOnPage:scrap];
-}
-
 #pragma mark - MMScrapsOnPaperStateDelegate
 
 -(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{

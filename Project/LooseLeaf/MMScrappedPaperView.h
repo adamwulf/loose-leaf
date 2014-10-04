@@ -23,7 +23,6 @@
 }
 
 @property (readonly) MMScrapsOnPaperState* scrapsOnPaperState;
-@property (readonly) MMScrapContainerView* scrapContainerView;
 @property (readonly) UIImageView* cachedImgView;
 
 -(dispatch_queue_t) serialBackgroundQueue;
@@ -56,6 +55,8 @@
 -(void) updateThumbnailVisibility;
 
 -(NSString*) scrapIDsPath;
+
+-(NSArray*) scrapsOnPaper;
 
 -(CGSize) thumbnailSize;
 
