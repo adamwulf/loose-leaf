@@ -101,7 +101,7 @@ static MMTrashManager* _instance = nil;
             NSArray* thisPagesSavedScrapUUIDs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:thisPagesScrapsPath error:nil];
             NSLog(@"saved scraps for page %@ : %@", page.uuid, thisPagesSavedScrapUUIDs);
             
-            id bcv = page.delegate.bezelContainerView;
+//            id bcv = page.delegate.bezelContainerView;
             
             //
             // Step 4: Delete the rest of the page assets

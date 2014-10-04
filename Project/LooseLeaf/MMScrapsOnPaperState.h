@@ -15,13 +15,12 @@
     __weak NSObject<MMScrapsOnPaperStateDelegate>* delegate;
 }
 
++(dispatch_queue_t) importExportStateQueue;
+
 @property (nonatomic, readonly) NSObject<MMScrapsOnPaperStateDelegate>* delegate;
-@property (readonly) NSString* scrapIDsPath;
 @property (nonatomic, readonly) int fullByteSize;
 @property (readonly) BOOL hasEditsToSave;
 @property (readonly) NSUInteger lastSavedUndoHash;
-
-+(dispatch_queue_t) importExportStateQueue;
 
 -(id) initWithDelegate:(NSObject<MMScrapsOnPaperStateDelegate>*)delegate;
 
@@ -46,6 +45,7 @@
 -(void) hideScrap:(MMScrapView*)scrap;
 -(BOOL) isScrapVisible:(MMScrapView*)scrap;
 -(void) scrapVisibilityWasUpdated:(MMScrapView*)scrap;
+
 // returns the scrap for the specified uuid, or nil if there's no match
 -(MMScrapView*) scrapForUUID:(NSString*)uuid;
 
