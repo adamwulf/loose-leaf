@@ -13,10 +13,12 @@
 
 @property (nonatomic, readonly) NSArray* allScrapProperties;
 
--(id) initWithScrapIDsPath:(NSString *)scrapIDsPath andAllScrapProperties:(NSArray*)allScrapProperties;
+-(id) initWithScrapIDsPath:(NSString *)scrapIDsPath andAllScrapProperties:(NSArray*)allScrapProperties andOwnerState:(MMScrapCollectionState*)ownerState;
 
 // returns YES if any changes actually saved,
 // NO otherwise
 -(BOOL) saveStateToDiskBlocking;
+
+-(NSUInteger) undoHash;
 
 @end

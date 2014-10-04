@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MMScrapsOnPaperStateDelegate.h"
 #import "MMScrapCollectionState.h"
+#import "MMScrapContainerView.h"
 
 @class MMImmutableScrapsOnPaperState;
 

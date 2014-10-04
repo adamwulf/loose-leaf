@@ -41,7 +41,7 @@
     return self;
 }
 
-#pragma mark - MMScrapsOnPaperStateDelegate
+#pragma mark - MMScrapsOnPaperStateDelegate / MMScrapCollectionStateDelegate
 
 -(void) didLoadAllScrapsFor:(MMScrapCollectionState*)scrapState{
     [super didLoadAllScrapsFor:scrapState];

@@ -12,7 +12,7 @@
 
 @property (nonatomic, readonly) NSArray* scraps;
 
--(id) initWithScrapIDsPath:(NSString *)scrapIDsPath andAllScraps:(NSArray*)allScraps andScrapsOnPage:(NSArray*)scrapsOnPage andScrapsOnPaperState:(MMScrapsOnPaperState*)ownerState;
+-(id) initWithScrapIDsPath:(NSString *)scrapIDsPath andAllScraps:(NSArray*)allScraps andScrapsOnPage:(NSArray*)scrapsOnPage andOwnerState:(MMScrapCollectionState*)ownerState;
 
 // returns YES if any changes actually saved,
 // NO otherwise

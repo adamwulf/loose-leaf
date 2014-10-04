@@ -7,10 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MMScrapCollectionStateDelegate.h"
 
-@class MMScrapView, MMScrapsOnPaperState, MMScrapContainerView,MMScrapsInBezelContainerView,MMScrappedPaperView,MMScrapCollectionState;
+@class MMScrapView, MMScrappedPaperView;
 
-@protocol MMScrapsOnPaperStateDelegate <NSObject>
+@protocol MMScrapsOnPaperStateDelegate <MMScrapCollectionStateDelegate>
 
 -(MMScrappedPaperView*) page;
 
@@ -19,23 +20,6 @@
 -(MMScrapView*) scrapForUUIDIfAlreadyExistsInOtherContainer:(NSString*)scrapUUID;
 
 -(BOOL) isEditable;
-
-/**
- * triggered when a scrap is laoded from disk that is
- * actively showing on the page
- */
--(void) didLoadScrapOnPage:(MMScrapView*)scrap;
-
-/**
- * triggered when a scrap is laoded from disk that is
- * NOT actively showing on the page, and is only
- * available inside the page's undo/redo stacks
- */
--(void) didLoadScrapOffPage:(MMScrapView*)scrap;
-
--(void) didLoadAllScrapsFor:(MMScrapCollectionState*)scrapState;
-
--(void) didUnloadAllScrapsFor:(MMScrapCollectionState*)scrapState;
 
 -(NSString*) pagesPath;
 

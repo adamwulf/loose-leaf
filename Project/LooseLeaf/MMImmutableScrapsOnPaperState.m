@@ -7,29 +7,19 @@
 //
 
 #import "MMImmutableScrapsOnPaperState.h"
+#import "MMScrapCollectionState+Private.h"
 #import "MMScrapView.h"
 #import "NSArray+Map.h"
 
-
-@interface MMScrapsOnPaperState (Private)
-
-#pragma mark - Saving Helpers
-
--(void) wasSavedAtUndoHash:(NSUInteger)savedUndoHash;
-
-@end
-
-
-
 @implementation MMImmutableScrapsOnPaperState{
-    MMScrapsOnPaperState* ownerState;
+    MMScrapCollectionState* ownerState;
     NSArray* allScrapsForPage;
     NSArray* scrapsOnPageIDs;
     NSString* scrapIDsPath;
     NSUInteger cachedUndoHash;
 }
 
--(id) initWithScrapIDsPath:(NSString *)_scrapIDsPath andAllScraps:(NSArray*)_allScraps andScrapsOnPage:(NSArray*)_scrapsOnPage andScrapsOnPaperState:(MMScrapsOnPaperState*)_ownerState{
+-(id) initWithScrapIDsPath:(NSString *)_scrapIDsPath andAllScraps:(NSArray*)_allScraps andScrapsOnPage:(NSArray*)_scrapsOnPage andOwnerState:(MMScrapCollectionState *)_ownerState{
     if(self = [super init]){
         ownerState = _ownerState;
         scrapIDsPath = _scrapIDsPath;
@@ -85,10 +75,6 @@
                 [allScrapProperties addObject:properties];
             }
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-        }
-        
-        if(!scrapIDsPath){
-//            NSLog(@"on no");
         }
         
 //        NSLog(@"saving %lu scraps on %@", (unsigned long)[scrapsOnPageIDs count], ownerState.delegate);

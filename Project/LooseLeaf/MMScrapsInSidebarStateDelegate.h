@@ -7,20 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MMScrapCollectionStateDelegate.h"
 
-@class MMScrapView, MMScrapsInSidebarState, MMScrapContainerView,MMScrapsInBezelContainerView,MMScrapsOnPaperState,MMScrapCollectionState;
+@class MMScrapsOnPaperState;
 
-@protocol MMScrapsInSidebarStateDelegate <NSObject>
-
-/**
- * triggered when a scrap is laoded from disk that is
- * actively showing on the page
- */
--(void) didLoadScrapInSidebar:(MMScrapView*)scrap;
-
--(void) didLoadAllScrapsInSidebar:(MMScrapCollectionState*)scrapState;
-
--(void) didUnloadAllScrapsInSidebar:(MMScrapCollectionState*)scrapState;
+@protocol MMScrapsInSidebarStateDelegate <MMScrapCollectionStateDelegate>
 
 -(MMScrapsOnPaperState*) paperStateForPageUUID:(NSString*)uuidOfPage;
 

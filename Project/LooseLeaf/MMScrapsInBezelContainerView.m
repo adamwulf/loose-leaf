@@ -488,14 +488,16 @@ static NSString* bezelStatePath;
 }
 
 -(void) saveScrapContainerToDisk{
-    MMImmutableScrapsInSidebarState* immutableState = [scrapState immutableStateForPath:self.scrapIDsPath];
-    NSMutableDictionary* writeableAdjustments = [rotationAdjustments copy];
-    dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
-        @autoreleasepool {
-            [immutableState saveStateToDiskBlocking];
-            [writeableAdjustments writeToFile:[MMScrapsInBezelContainerView pathToPlist] atomically:YES];
-        }
-    });
+    if([scrapState hasEditsToSave]){
+        MMImmutableScrapsInSidebarState* immutableState = [scrapState immutableStateForPath:self.scrapIDsPath];
+        NSMutableDictionary* writeableAdjustments = [rotationAdjustments copy];
+        dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
+            @autoreleasepool {
+                [immutableState saveStateToDiskBlocking];
+                [writeableAdjustments writeToFile:[MMScrapsInBezelContainerView pathToPlist] atomically:YES];
+            }
+        });
+    }
 }
 
 -(void) loadFromDisk{
@@ -503,20 +505,24 @@ static NSString* bezelStatePath;
 }
 
 
-#pragma mark - MMScrapsInSidebarStateDelegate & MMScrapBezelMenuViewDelegate
+#pragma mark - MMScrapsInSidebarStateDelegate / MMScrapCollectionStateDelegate
 
--(void) didLoadScrapInSidebar:(MMScrapView *)scrap{
+-(void) didLoadScrapInContainer:(MMScrapView *)scrap{
     // add to the bezel
     NSNumber* rotationAdjustment = [rotationAdjustments objectForKey:scrap.uuid];
     scrap.rotation += [rotationAdjustment floatValue];
     [self addScrapToBezelSidebar:scrap animated:NO];
 }
 
--(void) didLoadAllScrapsInSidebar:(MMScrapCollectionState *)_scrapState{
+-(void) didLoadScrapOutOfContainer:(MMScrapView *)scrap{
     // noop
 }
 
--(void) didUnloadAllScrapsInSidebar:(MMScrapCollectionState *)scrapState{
+-(void) didLoadAllScrapsFor:(MMScrapCollectionState *)scrapState{
+    // noop
+}
+
+-(void) didUnloadAllScrapsFor:(MMScrapCollectionState *)scrapState{
     // noop
 }
 

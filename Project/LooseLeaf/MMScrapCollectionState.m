@@ -35,7 +35,7 @@ static dispatch_queue_t importExportStateQueue;
 #pragma mark - Properties
 
 -(BOOL) hasEditsToSave{
-    return expectedUndoHash != lastSavedUndoHash;
+    return hasEditsToSave || expectedUndoHash != lastSavedUndoHash;
 }
 
 -(NSUInteger) lastSavedUndoHash{
@@ -47,7 +47,13 @@ static dispatch_queue_t importExportStateQueue;
 #pragma mark - Save and Load
 
 -(BOOL) isStateLoaded{
-    @throw kAbstractMethodException;
+    return isLoaded;
+}
+
+-(void) wasSavedAtUndoHash:(NSUInteger)savedUndoHash{
+    @synchronized(self){
+        lastSavedUndoHash = savedUndoHash;
+    }
 }
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable{

@@ -434,6 +434,8 @@
 		661885D518F9BC920016A333 /* MMCamViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMCamViewDelegate.h; sourceTree = "<group>"; };
 		661EBA55182AF1AD00893274 /* MMScissorTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScissorTool.h; sourceTree = "<group>"; };
 		661EBA56182AF1AD00893274 /* MMScissorTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorTool.m; sourceTree = "<group>"; };
+		66220FC819DFAF1C0039DA46 /* MMScrapCollectionStateDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapCollectionStateDelegate.h; sourceTree = "<group>"; };
+		66220FC919DFB4BB0039DA46 /* MMScrapCollectionState+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMScrapCollectionState+Private.h"; sourceTree = "<group>"; };
 		662441E4187BC68700011A54 /* Pomax.license */ = {isa = PBXFileReference; lastKnownFileType = text; path = Pomax.license; sourceTree = "<group>"; };
 		66277C9B192BC99D003E97C0 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychain.h; sourceTree = "<group>"; };
 		66277C9C192BC99D003E97C0 /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychain.m; sourceTree = "<group>"; };
@@ -2054,6 +2056,8 @@
 			children = (
 				66E5AC8E19DFA781006CEAAF /* MMScrapCollectionState.h */,
 				66E5AC8F19DFA781006CEAAF /* MMScrapCollectionState.m */,
+				66220FC919DFB4BB0039DA46 /* MMScrapCollectionState+Private.h */,
+				66220FC819DFAF1C0039DA46 /* MMScrapCollectionStateDelegate.h */,
 				66E5AC9119DFAAC9006CEAAF /* For Pages */,
 				66E5AC9219DFAACE006CEAAF /* For Bezel */,
 			);

@@ -15,8 +15,6 @@
 #import "Constants.h"
 
 @implementation MMScrapsInSidebarState{
-    BOOL isLoaded;
-    BOOL isLoading;
     NSMutableArray* allPropertiesForScraps;
 }
 
@@ -50,10 +48,6 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 #pragma mark - Save and Load
-
--(BOOL) isStateLoaded{
-    return isLoaded;
-}
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable{
     if(![self isStateLoaded] && !isLoading){
@@ -104,6 +98,11 @@ static dispatch_queue_t importExportStateQueue;
                 
                 [NSThread performBlockOnMainThread:^{
                     for(NSDictionary* scrapProperties in scrapPropsWithState){
+                        @synchronized(self){
+                            if(isUnloading){
+                                @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"loading during unloading" userInfo:nil];
+                            }
+                        }
                         MMScrapView* scrap = nil;
                         if([scrapProperties objectForKey:@"scrap"]){
                             scrap = [scrapProperties objectForKey:@"scrap"];
@@ -120,7 +119,7 @@ static dispatch_queue_t importExportStateQueue;
                                 [allPropertiesForScraps addObject:scrapProperties];
                             }
                             
-                            [self.delegate didLoadScrapInSidebar:scrap];
+                            [self.delegate didLoadScrapInContainer:scrap];
                             
                             if(makeEditable){
                                 [scrap loadScrapStateAsynchronously:async];
@@ -133,8 +132,11 @@ static dispatch_queue_t importExportStateQueue;
                     @synchronized(self){
                         isLoaded = YES;
                         isLoading = NO;
+                        MMImmutableScrapsInSidebarState* immutableState = [self immutableStateForPath:nil];
+                        expectedUndoHash = [immutableState undoHash];
+                        lastSavedUndoHash = [immutableState undoHash];
                     }
-                    [self.delegate didLoadAllScrapsInSidebar:self];
+                    [self.delegate didLoadAllScrapsFor:self];
                     dispatch_semaphore_signal(sema1);
                 }];
                 dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
@@ -152,6 +154,11 @@ static dispatch_queue_t importExportStateQueue;
                 @synchronized(allLoadedScraps){
                     for(MMScrapView* scrap in allLoadedScraps){
                         [scrap loadScrapStateAsynchronously:async];
+                        @synchronized(self){
+                            if(isUnloading){
+                                @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"loading during unloading" userInfo:nil];
+                            }
+                        }
                     }
                 }
             }
@@ -166,6 +173,9 @@ static dispatch_queue_t importExportStateQueue;
 
 -(void) unload{
     if([self isStateLoaded] || isLoading){
+        @synchronized(self){
+            isUnloading = YES;
+        }
         dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
             @autoreleasepool {
                 if([self isStateLoaded]){
@@ -181,10 +191,13 @@ static dispatch_queue_t importExportStateQueue;
                     }
                     [NSThread performBlockOnMainThread:^{
                         [scraps makeObjectsPerformSelector:@selector(removeFromSuperview)];
-                        [self.delegate didUnloadAllScrapsInSidebar:self];
+                        [self.delegate didUnloadAllScrapsFor:self];
                     }];
                     @synchronized(self){
                         isLoaded = NO;
+                        isUnloading = NO;
+                        expectedUndoHash = 0;
+                        lastSavedUndoHash = 0;
                     }
                 }
             }
@@ -195,10 +208,21 @@ static dispatch_queue_t importExportStateQueue;
 -(MMImmutableScrapsInSidebarState*) immutableStateForPath:(NSString*)scrapIDsPath{
     if([self isStateLoaded]){
         hasEditsToSave = NO;
-        return [[MMImmutableScrapsInSidebarState alloc] initWithScrapIDsPath:scrapIDsPath andAllScrapProperties:allPropertiesForScraps];
+        MMImmutableScrapsInSidebarState* immutable = [[MMImmutableScrapsInSidebarState alloc] initWithScrapIDsPath:scrapIDsPath andAllScrapProperties:allPropertiesForScraps andOwnerState:self];
+        expectedUndoHash = [immutable undoHash];
+        return immutable;
     }
     return nil;
 }
+
+#pragma mark - Saving Helpers
+
+-(void) wasSavedAtUndoHash:(NSUInteger)savedUndoHash{
+    @synchronized(self){
+        lastSavedUndoHash = savedUndoHash;
+    }
+}
+
 
 #pragma mark - Manage Scraps
 
@@ -220,6 +244,7 @@ static dispatch_queue_t importExportStateQueue;
         [props setObject:[scrap owningPageUUID] forKey:@"pageUUID"];
         [allPropertiesForScraps insertObject:props atIndex:0];
         [allLoadedScraps insertObject:scrap atIndex:0];
+        hasEditsToSave = YES;
     }
 }
 
@@ -229,6 +254,7 @@ static dispatch_queue_t importExportStateQueue;
         if(index != NSNotFound){
             [allPropertiesForScraps removeObjectAtIndex:index];
             [allLoadedScraps removeObjectAtIndex:index];
+            hasEditsToSave = YES;
         }
     }
 }

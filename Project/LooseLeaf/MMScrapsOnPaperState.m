@@ -27,9 +27,6 @@
  * track the state for all scraps within a single page
  */
 @implementation MMScrapsOnPaperState{
-    BOOL isLoaded;
-    BOOL isLoading;
-    BOOL isUnloading;
     // the container to hold the scraps
     MMScrapContainerView* scrapContainerView;
 }
@@ -51,10 +48,6 @@
     return self;
 }
 
--(BOOL) hasEditsToSave{
-    return hasEditsToSave || [super hasEditsToSave];
-}
-
 -(int) fullByteSize{
     int totalBytes = 0;
     for(MMScrapView* scrap in allLoadedScraps){
@@ -64,11 +57,6 @@
 }
 
 #pragma mark - Save and Load
-
--(BOOL) isStateLoaded{
-    return isLoaded;
-}
-
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable{
     if(![self isStateLoaded] && !isLoading){
@@ -119,7 +107,7 @@
                     for(NSDictionary* scrapProperties in scrapPropsWithState){
                         @synchronized(self){
                             if(isUnloading){
-                                NSLog(@"loading during unloading");
+                                @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"loading during unloading" userInfo:nil];
                             }
                         }
                         MMScrapView* scrap = nil;
@@ -139,10 +127,10 @@
                             [allLoadedScraps addObject:scrap];
                             
                             if([scrapIDsOnPage containsObject:scrap.uuid]){
-                                [self.delegate didLoadScrapOnPage:scrap];
+                                [self.delegate didLoadScrapInContainer:scrap];
                                 [self showScrap:scrap];
                             }else{
-                                [self.delegate didLoadScrapOffPage:scrap];
+                                [self.delegate didLoadScrapOutOfContainer:scrap];
                             }
                             
                             if(makeEditable){
@@ -178,7 +166,7 @@
                     [scrap loadScrapStateAsynchronously:async];
                     @synchronized(self){
                         if(isUnloading){
-                            NSLog(@"loading during unloading");
+                            @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"loading during unloading" userInfo:nil];
                         }
                     }
                 }
@@ -238,7 +226,7 @@
 -(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath{
     if([self isStateLoaded]){
         hasEditsToSave = NO;
-        MMImmutableScrapsOnPaperState* immutable = [[MMImmutableScrapsOnPaperState alloc] initWithScrapIDsPath:scrapIDsPath andAllScraps:allLoadedScraps andScrapsOnPage:self.scrapsOnPaper andScrapsOnPaperState:self];
+        MMImmutableScrapsOnPaperState* immutable = [[MMImmutableScrapsOnPaperState alloc] initWithScrapIDsPath:scrapIDsPath andAllScraps:allLoadedScraps andScrapsOnPage:self.scrapsOnPaper andOwnerState:self];
         expectedUndoHash = [immutable undoHash];
         return immutable;
     }
@@ -333,12 +321,6 @@
 
 
 #pragma mark - Saving Helpers
-
--(void) wasSavedAtUndoHash:(NSUInteger)savedUndoHash{
-    @synchronized(self){
-        lastSavedUndoHash = savedUndoHash;
-    }
-}
 
 -(void) removeScrapWithUUID:(NSString*)scrapUUID{
     @synchronized(allLoadedScraps){

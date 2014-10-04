@@ -9,6 +9,11 @@
 #import <Foundation/Foundation.h>
 
 @interface MMScrapCollectionState : NSObject{
+    // loading state
+    BOOL isLoaded;
+    BOOL isLoading;
+    BOOL isUnloading;
+    // scraps
     NSMutableArray* allLoadedScraps;
     BOOL hasEditsToSave;
     // this is the undo hash of the most recent immutable state

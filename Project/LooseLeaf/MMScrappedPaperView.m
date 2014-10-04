@@ -1211,11 +1211,11 @@
     return self;
 }
 
--(void) didLoadScrapOnPage:(MMScrapView*)scrap{
+-(void) didLoadScrapInContainer:(MMScrapView*)scrap{
     [scrap setShouldShowShadow:self.isEditable];
 }
 
--(void) didLoadScrapOffPage:(MMScrapView*)scrap{
+-(void) didLoadScrapOutOfContainer:(MMScrapView*)scrap{
     [scrap setShouldShowShadow:self.isEditable];
 }
 
