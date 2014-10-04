@@ -368,7 +368,7 @@ BOOL hasSent = NO;
                        @{@"firstName" : @"Craig",
                          @"lastName" : @"Federighi",
                          @"initials" : @"CF"},
-                       @{@"firstName" : @"Jonny",
+                       @{@"firstName" : @"Jony",
                          @"lastName" : @"Ive",
                          @"initials" : @"JI"},
                        @{@"firstName" : @"Luca",

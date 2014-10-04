@@ -11,6 +11,7 @@
 #import "MMDecompressImagePromiseDelegate.h"
 #import "MMScissorResult.h"
 #import "MMScrapContainerView.h"
+#import "MMScrapsOnPaperState.h"
 #import "MMVector.h"
 #import <MessageUI/MFMailComposeViewController.h>
 
@@ -23,7 +24,6 @@
 }
 
 @property (readonly) MMScrapsOnPaperState* scrapsOnPaperState;
-@property (readonly) MMScrapContainerView* scrapContainerView;
 @property (readonly) UIImageView* cachedImgView;
 
 -(dispatch_queue_t) serialBackgroundQueue;
@@ -32,8 +32,6 @@
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale;
 
 -(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading;
-
--(void) saveToDisk;
 
 #pragma mark - Scissors
 
@@ -58,6 +56,8 @@
 -(void) updateThumbnailVisibility;
 
 -(NSString*) scrapIDsPath;
+
+-(NSArray*) scrapsOnPaper;
 
 -(CGSize) thumbnailSize;
 

@@ -298,7 +298,7 @@ struct SidebarButton{
         // are active
         MMUndoablePaperView* obj = [visibleStackHolder peekSubview];
         [obj.undoRedoManager undo];
-        [obj saveToDisk];
+        [obj saveToDisk:nil];
     }
 }
 
@@ -308,7 +308,7 @@ struct SidebarButton{
         // are active
         MMUndoablePaperView* obj = [visibleStackHolder peekSubview];
         [obj.undoRedoManager redo];
-        [obj saveToDisk];
+        [obj saveToDisk:nil];
     }
 }
 
@@ -527,7 +527,7 @@ struct SidebarButton{
         __block MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
         [pageToSave setEditable:NO];
 //        debug_NSLog(@"page %@ isn't editable", pageToSave.uuid);
-        [[visibleStackHolder peekSubview] saveToDisk];
+        [[visibleStackHolder peekSubview] saveToDisk:nil];
     }else{
         debug_NSLog(@"would save, but can't b/c its readonly page");
     }
@@ -967,7 +967,7 @@ struct SidebarButton{
 #pragma mark - Sidebar Hit Test
 
 -(BOOL) shouldPrioritizeSidebarButtonsForTaps{
-    return YES;
+    return self.isShowingPageView;
 }
 
 -(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{

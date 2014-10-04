@@ -152,11 +152,11 @@
 }
 
 -(void) application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void (^)())completionHandler{
-    NSLog(@"what");
+    NSLog(@"handleActionWithIdentifier");
 }
 
 -(void) application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler{
-    NSLog(@"what");
+    NSLog(@"handleEventsForBackgroundURLSession");
 }
 
 - (void) checkForNotificationToHandleWithNotificationInfo:(NSDictionary *)userInfo {

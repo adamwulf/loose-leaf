@@ -9,7 +9,7 @@
 #import <ImageIO/ImageIO.h>
 #import "MMScrapPaperStackView.h"
 #import "MMUntouchableView.h"
-#import "MMScrapSidebarContainerView.h"
+#import "MMScrapsInBezelContainerView.h"
 #import "MMDebugDrawView.h"
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "MMStretchScrapGestureRecognizer.h"
@@ -33,7 +33,7 @@
 
 @implementation MMScrapPaperStackView{
     
-    MMScrapSidebarContainerView* bezelScrapContainer;
+    MMScrapsInBezelContainerView* bezelScrapContainer;
     MMScrapContainerView* scrapContainer;
     // we get two gestures here, so that we can support
     // grabbing two scraps at the same time
@@ -85,7 +85,7 @@
 //                                                                 repeats:YES];
 
         
-//        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.5
+//        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.25
 //                                                      target:self
 //                                                    selector:@selector(drawTimerDidFire:)
 //                                                    userInfo:nil
@@ -101,7 +101,7 @@
         [countButton addTarget:self action:@selector(showScrapSidebar:) forControlEvents:UIControlEventTouchUpInside];
         [self insertSubview:countButton belowSubview:addPageSidebarButton];
 
-        bezelScrapContainer = [[MMScrapSidebarContainerView alloc] initWithFrame:self.bounds andCountButton:countButton];
+        bezelScrapContainer = [[MMScrapsInBezelContainerView alloc] initWithFrame:self.bounds andCountButton:countButton];
         bezelScrapContainer.delegate = self;
         bezelScrapContainer.bubbleDelegate = self;
         [self insertSubview:bezelScrapContainer belowSubview:countButton];
@@ -176,7 +176,7 @@
         [self addSubview:exportAnimationHelperView];
 
         
-        scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds andPage:nil];
+        scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds forScrapsOnPaperState:nil];
         [self addSubview:scrapContainer];
         
         
@@ -290,7 +290,7 @@
                                               }
                                               completion:^(BOOL finished){
                                                   [topPage.scrapsOnPaperState showScrap:scrap];
-                                                  [topPage saveToDisk];
+                                                  [topPage saveToDisk:nil];
                                               }];
                          }];
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
@@ -436,7 +436,7 @@
                                               cameraView.alpha = 1;
                                               [topPage.scrapsOnPaperState showScrap:scrap];
                                               [topPage addUndoItemForAddedScrap:scrap];
-                                              [topPage saveToDisk];
+                                              [topPage saveToDisk:nil];
                                           }];
                      }];
 }
@@ -539,7 +539,7 @@
                                               bufferedImage.alpha = 1;
                                               [topPage.scrapsOnPaperState showScrap:scrap];
                                               [topPage addUndoItemForAddedScrap:scrap];
-                                              [topPage saveToDisk];
+                                              [topPage saveToDisk:nil];
                                           }];
                      }];
 }
@@ -564,14 +564,23 @@ int skipAll = NO;
         return;
     }
     
-    MMEditablePaperView* page = [visibleStackHolder peekSubview];
+    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     
-    MoveToPathElement* moveTo = [MoveToPathElement elementWithMoveTo:CGPointMake(rand() % (int) page.bounds.size.width, rand() % (int) page.bounds.size.height)];
+    if(!page.isEditable){
+        return;
+    }
+    
+    CGPoint startOfLine = CGPointMake(rand() % (int) page.bounds.size.width, rand() % (int) page.bounds.size.height);
+    CGPoint endOfLine = CGPointMake(rand() % (int) page.bounds.size.width, rand() % (int) page.bounds.size.height);
+    MMVector* v = [[MMVector vectorWithPoint:startOfLine andPoint:endOfLine] normal];
+    endOfLine = [v pointFromPoint:startOfLine distance:100];
+    
+    MoveToPathElement* moveTo = [MoveToPathElement elementWithMoveTo:startOfLine];
     moveTo.width = 3;
     moveTo.color = [UIColor blackColor];
     
     CurveToPathElement* curveTo = [CurveToPathElement elementWithStart:moveTo.startPoint
-                                                             andLineTo:CGPointMake(rand() % (int) page.bounds.size.width, rand() % (int) page.bounds.size.height)];
+                                                             andLineTo:endOfLine];
     curveTo.width = 3;
     curveTo.color = [UIColor blackColor];
     
@@ -582,18 +591,30 @@ int skipAll = NO;
     
     [page.drawableView addElements:shortLine];
     [page.drawableView.state finishCurrentStroke];
+    [page.scrapsOnPaper makeObjectsPerformSelector:@selector(addUndoLevelAndFinishStroke)];
+
     
-    [page saveToDisk];
+    [page saveToDisk:nil];
     
     numLines++;
     
     
-    CGFloat strokesPerPage = 15;
+    int strokesPerPage = 30;
+    numLines = numLines % (int)strokesPerPage;
     
-    if(numLines % (int)strokesPerPage == 12){
-        [[visibleStackHolder peekSubview] completeScissorsCutWithPath:[UIBezierPath bezierPathWithRect:CGRectMake(300, 300, 200, 200)]];
+    if(numLines % ((int)strokesPerPage/2) == 12 && numLines < 30){
+        CGRect scissorRect = CGRectMake(300+rand() % (int) page.bounds.size.width/2, 300+rand() % (int) page.bounds.size.height / 2, 200, 200);
+        scissorRect = CGRectInset(scissorRect, -(rand() % 100), -(rand() % 100));
+        UIBezierPath* scissorPath = [UIBezierPath bezierPathWithRect:scissorRect];
+        [scissorPath applyTransform:CGAffineTransformMakeTranslation(-(scissorRect.origin.x + scissorRect.size.width/2),
+                                                                     -(scissorRect.origin.y + scissorRect.size.height/2))];
+        [scissorPath applyTransform:CGAffineTransformMakeRotation(M_PI * (rand() % 180) / 180.0)];
+        [scissorPath applyTransform:CGAffineTransformMakeTranslation(scissorRect.origin.x + scissorRect.size.width/2,
+                                                                     scissorRect.origin.y + scissorRect.size.height/2)];
+        [[visibleStackHolder peekSubview] completeScissorsCutWithPath:scissorPath];
     }
     if(numLines % (int)strokesPerPage == 0){
+        [self deletePage:[visibleStackHolder peekSubview]];
         [self addPageButtonTapped:nil];
         skipOnce = YES;
     }
@@ -886,7 +907,7 @@ int skipAll = NO;
                 [clonedScrap setSelected:YES];
                 
                 // save the page we just dropped the scrap on
-                [pageToDropScrap saveToDisk];
+                [pageToDropScrap saveToDisk:nil];
             }else if(gesture.scrap == [gesture.scrap.superview.subviews lastObject]){
                 [gesture.scrap.superview insertSubview:gesture.scrap atIndex:0];
             }else{
@@ -978,7 +999,7 @@ int skipAll = NO;
                     [gesture.startingPageForScrap addUndoItemForScrap:gesture.scrap thatMovedFrom:gesture.startingScrapProperties to:[gesture.scrap propertiesDictionary]];
                 }
                 
-                [pageToDropScrap saveToDisk];
+                [pageToDropScrap saveToDisk:nil];
             }else{
                 // couldn't find a page to catch it
                 shouldBezel = YES;
@@ -992,8 +1013,8 @@ int skipAll = NO;
         // save teh page that the scrap came from
         MMEditablePaperView* pageThatGaveUpScrap = gesture.startingPageForScrap;
         if((pageToDropScrap || shouldBezel) && pageThatGaveUpScrap != pageToDropScrap){
-            [pageThatGaveUpScrap saveToDisk];
-            [pageToDropScrap saveToDisk];
+            [pageThatGaveUpScrap saveToDisk:nil];
+            [pageToDropScrap saveToDisk:nil];
         }
         scrapViewIfFinished = gesture.scrap;
     }else if(gesture.scrap && didReset){
@@ -1237,7 +1258,7 @@ int skipAll = NO;
             // so just add it back to the top page
             [page.scrapsOnPaperState showScrap:scrap];
             [page addUndoItemForScrap:scrap thatMovedFrom:stretchScrapGesture.startingScrapProperties to:[scrap propertiesDictionary]];
-            [page saveToDisk];
+            [page saveToDisk:nil];
         }
     }
 }
@@ -1368,7 +1389,7 @@ int skipAll = NO;
     // now that the scrap is where it should be,
     // and contains its background, etc, then
     // save everything
-    [page saveToDisk];
+    [page saveToDisk:nil];
     
     // time to reset the gesture for the cloned scrap
     // now the scrap is in the right place, so hand it off to the pan gesture
@@ -1513,11 +1534,11 @@ int skipAll = NO;
 -(void) finishedPanningAndScalingScrap:(MMScrapView*)scrap{
     // save page if we're not holding any scraps
     if(!panAndPinchScrapGesture.scrap && !panAndPinchScrapGesture2.scrap && !stretchScrapGesture.scrap){
-        [[visibleStackHolder peekSubview] saveToDisk];
+        [[visibleStackHolder peekSubview] saveToDisk:nil];
     }
 }
 
--(MMScrapSidebarContainerView*) bezelContainerView{
+-(MMScrapsInBezelContainerView*) bezelContainerView{
     return bezelScrapContainer;
 }
 
@@ -1553,7 +1574,7 @@ int skipAll = NO;
 
 -(void) willChangeTopPageTo:(MMPaperView *)page{
     [super willChangeTopPageTo:page];
-    [[[MMPageCacheManager sharedInstance] currentEditablePage] saveToDisk];
+    [[[MMPageCacheManager sharedInstance] currentEditablePage] saveToDisk:nil];
 }
 
 
@@ -1597,26 +1618,30 @@ int skipAll = NO;
     isAnimatingScrapToOrFromSidebar = YES;
 }
 
+// @param originalScrap this is the scrap that is asking to be added to this page,
+//        but it might belong to a different page. if that's the case, we'll
+//        need to clone this scrap onto our page and then give the original to
+//        the trashmanager to deal with.
 // returns the page that the scrap was added to
--(MMUndoablePaperView*) didAddScrapBackToPage:(MMScrapView *)scrap atIndex:(NSUInteger)index{
+-(MMUndoablePaperView*) didAddScrapBackToPage:(MMScrapView *)originalScrap atIndex:(NSUInteger)index{
     // first, find the page to add the scrap to.
     // this will check visible + bezelled pages to see
     // which page should get the scrap, and it'll tell us
     // the center/scale to use
     CGPoint center;
     CGFloat scale;
-    MMUndoablePaperView* page = [self pageWouldDropScrap:scrap atCenter:&center andScale:&scale];
+    MMUndoablePaperView* page = [self pageWouldDropScrap:originalScrap atCenter:&center andScale:&scale];
     
-    [scrap blockToFireWhenStateLoads:^{
+    [originalScrap blockToFireWhenStateLoads:^{
         CheckMainThread;
         // we're only allowed to add scraps to a page
         // when their state is loaded, so make sure
         // we have their state loading
-        MMScrapView* scrapToAddToPage = scrap;
-        if(scrap.state.scrapsOnPaperState != page.scrapsOnPaperState){
-            MMScrapView* oldScrap = scrap;
+        MMScrapView* scrapToAddToPage = originalScrap;
+        if(originalScrap.state.scrapsOnPaperState != page.scrapsOnPaperState){
+            MMScrapView* oldScrap = originalScrap;
             [scrapContainer addSubview:oldScrap];
-            scrapToAddToPage = [self cloneScrap:scrap toPage:page];
+            scrapToAddToPage = [self cloneScrap:originalScrap toPage:page];
             [oldScrap removeFromSuperview];
             
             // check the original page of the scrap
@@ -1624,7 +1649,8 @@ int skipAll = NO;
             // scrap. if its undo stack doesn't hold any
             // reference, then we should trigger deleting
             // it's old assets
-            [[MMTrashManager sharedInstance] deleteScrap:scrap.uuid inPage:scrap.state.scrapsOnPaperState.delegate.page];
+            MMScrappedPaperView* owningPageForOriginalScrap = [self pageForUUID:originalScrap.owningPageUUID];
+            [[MMTrashManager sharedInstance] deleteScrap:originalScrap.uuid inPage:owningPageForOriginalScrap];
         }
         // ok, done, just set it
         if(index == NSNotFound){
@@ -1634,7 +1660,7 @@ int skipAll = NO;
         }
         scrapToAddToPage.center = center;
         scrapToAddToPage.scale = scale;
-        [page saveToDisk];
+        [page saveToDisk:nil];
         [bezelScrapContainer saveScrapContainerToDisk];
 
         isAnimatingScrapToOrFromSidebar = NO;
@@ -1820,7 +1846,7 @@ int skipAll = NO;
 // MMEditablePaperStackView calls this method to check
 // if the sidebar buttons should take priority over anything else
 -(BOOL) shouldPrioritizeSidebarButtonsForTaps{
-    return ![importImageSidebar isVisible] && ![sharePageSidebar isVisible];
+    return ![importImageSidebar isVisible] && ![sharePageSidebar isVisible] && [super shouldPrioritizeSidebarButtonsForTaps];
 }
 
 #pragma mark - Check for Active Gestures

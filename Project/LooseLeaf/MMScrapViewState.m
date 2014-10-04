@@ -106,7 +106,7 @@ static dispatch_queue_t importExportScrapStateQueue;
 
 #pragma mark - Init
 
--(id) initWithUUID:(NSString*)_uuid andPaperState:(MMScrapsOnPaperState*)_scrapsOnPaperState{
+-(id) initWithUUID:(NSString*)_uuid andPaperState:(MMScrapCollectionState*)_scrapsOnPaperState{
     // save our UUID and scrapsOnPaperState, everything depends on these
     uuid = _uuid;
     scrapsOnPaperState = _scrapsOnPaperState;
@@ -133,11 +133,11 @@ static dispatch_queue_t importExportScrapStateQueue;
     return self;
 }
 
--(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andPaperState:(MMScrapsOnPaperState*)_scrapsOnPaperState{
+-(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andPaperState:(MMScrapCollectionState*)_scrapsOnPaperState{
     return [self initWithUUID:_uuid andBezierPath:_path andBackgroundView:nil andPaperState:_scrapsOnPaperState andLastSavedUndoHash:0];
 }
 
--(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andBackgroundView:(MMScrapBackgroundView*)backingView andPaperState:(MMScrapsOnPaperState*)_scrapsOnPaperState andLastSavedUndoHash:(NSUInteger)lsuh{
+-(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andBackgroundView:(MMScrapBackgroundView*)backingView andPaperState:(MMScrapCollectionState*)_scrapsOnPaperState andLastSavedUndoHash:(NSUInteger)lsuh{
     if(self = [super init]){
         
         // save our UUID, everything depends on this
@@ -259,7 +259,7 @@ static dispatch_queue_t importExportScrapStateQueue;
         [savedProperties addEntriesFromDictionary:backgroundProps];
         // save properties to disk
         if(![savedProperties writeToFile:pathToSave atomically:YES]){
-            NSLog(@"couldn't save properties!");
+            NSLog(@"couldn't save properties! %p", self);
         }
     };
     
@@ -482,6 +482,18 @@ static dispatch_queue_t importExportScrapStateQueue;
 
 #pragma mark - Paths
 
+#pragma mark Public
+
+-(NSString*) pathForScrapAssets{
+    if(!scrapPath){
+        scrapPath = [scrapsOnPaperState directoryPathForScrapUUID:self.uuid];
+        [NSFileManager ensureDirectoryExistsAtPath:scrapPath];
+    }
+    return scrapPath;
+}
+
+#pragma mark Private
+
 -(NSString*)scrapPropertiesPlistPath{
     if(!scrapPropertiesPlistPath){
         scrapPropertiesPlistPath = [self.pathForScrapAssets stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
@@ -511,39 +523,19 @@ static dispatch_queue_t importExportScrapStateQueue;
 }
 
 -(NSString*) bundledScrapPropertiesPlistPath{
-    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid andScrapsOnPaperState:scrapsOnPaperState] stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
+    return [[scrapsOnPaperState bundledDirectoryPathForScrapUUID:self.uuid] stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
 }
 
 -(NSString*) bundledInkImageFile{
-    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid andScrapsOnPaperState:scrapsOnPaperState] stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
+    return [[scrapsOnPaperState bundledDirectoryPathForScrapUUID:self.uuid] stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
 }
 
 -(NSString*) bundledThumbImageFile{
-    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid andScrapsOnPaperState:scrapsOnPaperState] stringByAppendingPathComponent:[@"thumb" stringByAppendingPathExtension:@"png"]];
+    return [[scrapsOnPaperState bundledDirectoryPathForScrapUUID:self.uuid] stringByAppendingPathComponent:[@"thumb" stringByAppendingPathExtension:@"png"]];
 }
 
 -(NSString*) bundledDrawableViewStateFile{
-    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:self.uuid andScrapsOnPaperState:scrapsOnPaperState] stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
-}
-
-#pragma mark - Private
-
-+(NSString*) scrapDirectoryPathForUUID:(NSString*)uuid andScrapsOnPaperState:(MMScrapsOnPaperState*)scrapsOnPaperState{
-    NSString* scrapPath = [[scrapsOnPaperState.delegate.pagesPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
-    return scrapPath;
-}
-
-+(NSString*) bundledScrapDirectoryPathForUUID:(NSString*)uuid andScrapsOnPaperState:(MMScrapsOnPaperState*)scrapsOnPaperState{
-    NSString* scrapPath = [[scrapsOnPaperState.delegate.bundledPagesPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
-    return scrapPath;
-}
-
--(NSString*) pathForScrapAssets{
-    if(!scrapPath){
-        scrapPath = [MMScrapViewState scrapDirectoryPathForUUID:uuid andScrapsOnPaperState:scrapsOnPaperState];
-        [NSFileManager ensureDirectoryExistsAtPath:scrapPath];
-    }
-    return scrapPath;
+    return [[scrapsOnPaperState bundledDirectoryPathForScrapUUID:self.uuid] stringByAppendingPathComponent:[@"state" stringByAppendingPathExtension:@"plist"]];
 }
 
 #pragma mark - OpenGL

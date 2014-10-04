@@ -16,4 +16,6 @@
 
 -(void) deleteScrap:(NSString*)scrap inPage:(MMScrappedPaperView*)page;
 
+-(void) deletePage:(MMPaperView*)page;
+
 @end

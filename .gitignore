@@ -7,6 +7,7 @@ TestData
 Project/LooseLeaf/Settings.bundle/en.lproj/Acknowledgements.strings
 Project/LooseLeaf/Settings.bundle/Acknowledgements.plist
 *adam.*
+*.xccheckout
 .DS_Store
 Icons/.DS_Store
 DerivedData

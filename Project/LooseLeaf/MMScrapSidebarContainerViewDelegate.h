@@ -18,7 +18,7 @@
 
 -(void) willAddScrapBackToPage:(MMScrapView *)scrap;
 
--(MMUndoablePaperView*) didAddScrapBackToPage:(MMScrapView *)scrap atIndex:(NSUInteger)index;
+-(MMUndoablePaperView*) didAddScrapBackToPage:(MMScrapView *)originalScrap atIndex:(NSUInteger)index;
 
 -(CGPoint) positionOnScreenToScaleScrapTo:(MMScrapView*)scrap;
 

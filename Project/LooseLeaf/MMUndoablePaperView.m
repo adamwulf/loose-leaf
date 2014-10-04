@@ -7,6 +7,7 @@
 //
 
 #import "MMUndoablePaperView.h"
+#import "MMEditablePaperViewSubclass.h"
 #import "MMUndoRedoBlockItem.h"
 #import "MMEditablePaperView+UndoRedo.h"
 #import "MMUndoRedoStrokeItem.h"
@@ -16,7 +17,7 @@
 #import "MMUndoRedoGroupItem.h"
 #import "MMUndoRedoMoveScrapItem.h"
 #import "MMUndoRedoAddScrapFromBezelItem.h"
-#import "MMScrapSidebarContainerView.h"
+#import "MMScrapsInBezelContainerView.h"
 #import "MMImmutableScrapsOnPaperState.h"
 #import "MMTrashManager.h"
 
@@ -35,27 +36,14 @@
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     if (self = [super initWithFrame:frame andUUID:_uuid]) {
         // Initialization code
-        undoRedoManager = [[MMPageUndoRedoManager alloc] initForPage:self];
+        undoRedoManager = [[MMPageUndoRedoManager alloc] initForDelegatePage:self];
     }
     return self;
 }
 
-#pragma mark - Scrap Loading
+#pragma mark - MMScrapsOnPaperStateDelegate / MMScrapCollectionStateDelegate
 
--(NSArray*) scrapsOnPaper{
-    // also tie in here and append any scraps
-    // that are in the undo manager (?)
-    return [super scrapsOnPaper];
-}
-
--(void) didLoadScrapOnPage:(MMScrapView *)scrap{
-    // should i tie in here to give scraps to undo objects?
-    [super didLoadScrapOnPage:scrap];
-}
-
-#pragma mark - MMScrapsOnPaperStateDelegate
-
--(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{
+-(void) didLoadAllScrapsFor:(MMScrapCollectionState*)scrapState{
     [super didLoadAllScrapsFor:scrapState];
 
     dispatch_block_t block = ^{
@@ -69,18 +57,18 @@
     [super didUnloadAllScrapsFor:scrapState];
 }
 
--(MMScrapSidebarContainerView*) bezelContainerView{
+-(MMScrapsInBezelContainerView*) bezelContainerView{
     return self.delegate.bezelContainerView;
 }
 
 #pragma mark - Saving and Loading
 
--(void) saveToDisk:(void (^)(BOOL))onComplete{
+-(void) saveToDiskHelper:(void (^)(BOOL))onComplete{
     
     // track if our back ground page has saved
     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
     __block BOOL hadEditsToSave;
-    [super saveToDisk:^(BOOL _hadEditsToSave){
+    [super saveToDiskHelper:^(BOOL _hadEditsToSave){
         // save all our ink/strokes/thumbs/etc to disk
         hadEditsToSave = _hadEditsToSave;
         dispatch_semaphore_signal(sema1);
@@ -173,6 +161,9 @@
 }
 
 -(MMScissorResult*) completeScissorsCutWithPath:(UIBezierPath *)scissorPath{
+    if(![self hasStateLoaded] || ![self.scrapsOnPaperState isStateLoaded]){
+        return nil;
+    }
     MMScissorResult* result = [super completeScissorsCutWithPath:scissorPath];
     
     if([result.addedScraps count] || [result.removedScraps count]){

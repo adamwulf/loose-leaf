@@ -16,9 +16,11 @@
 #import "MMMemoryManager.h"
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "TestFlight.h"
+#import "MMDeletePageSidebarController.h"
 
 @implementation MMLooseLeafViewController{
     MMMemoryManager* memoryManager;
+    MMDeletePageSidebarController* deleteSidebar;
 }
 
 - (id)init{
@@ -41,10 +43,16 @@
     
         self.view.opaque = YES;
         
-        stackView = [[MMScrapPaperStackView alloc] initWithFrame:self.view.frame];
-        stackView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        [self.view addSubview:stackView];
+        deleteSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.view.bounds];
+        [self.view addSubview:deleteSidebar.deleteSidebarBackground];
         
+        stackView = [[MMScrapPaperStackView alloc] initWithFrame:self.view.bounds];
+        stackView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        stackView.deleteSidebar = deleteSidebar;
+        [self.view addSubview:stackView];
+
+        [self.view addSubview:deleteSidebar.deleteSidebarForeground];
+
         [stackView loadStacksFromDisk];
         
         [[MMTouchVelocityGestureRecognizer sharedInstance] setStackView:stackView];
