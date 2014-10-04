@@ -147,7 +147,7 @@ static dispatch_queue_t importExportStateQueue;
 //                            NSLog(@"page %@ reused scrap %@", delegate.uuid, scrap.uuid);
                         }else{
                             MMScrapViewState* scrapState = [scrapProperties objectForKey:@"state"];
-                            scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState andPaperState:self];
+                            scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState];
 //                            NSLog(@"page %@ built scrap %@", delegate.uuid, scrap.uuid);
                             // only set properties if we built the scrap,
                             // otherwise it's in the sidebar and we don't

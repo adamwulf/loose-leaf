@@ -116,7 +116,7 @@ static dispatch_queue_t importExportStateQueue;
 //                            NSLog(@"sidebar reused scrap %@", scrap.uuid);
                         }else{
                             MMScrapViewState* scrapState = [scrapProperties objectForKey:@"state"];
-                            scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState andPaperState:scrapState.scrapsOnPaperState];
+                            scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState];
 //                            NSLog(@"sidebar built scrap %@", scrap.uuid);
                         }
                         if(scrap){
