@@ -1423,7 +1423,6 @@
 			children = (
 				6612C8821964C0C4003A9575 /* Undo Redo */,
 				66E47E22187F278A000AFD18 /* Ruler */,
-				66B62C4B17F245E6006D31EB /* Scrap Collection State */,
 				66A471C317C7E05C00C2A5B6 /* Scraps */,
 				66D33F4A15A6408A0044C809 /* MMShadowedView.h */,
 				66D33F4B15A6408A0044C809 /* MMShadowedView.m */,
@@ -2076,6 +2075,7 @@
 		66B8A4C6196E43B400E80009 /* Scrap Container */ = {
 			isa = PBXGroup;
 			children = (
+				66B62C4B17F245E6006D31EB /* Scrap Collection State */,
 				66B8A4C7196E43C300E80009 /* MMScrapContainerView.h */,
 				66B8A4C8196E43C300E80009 /* MMScrapContainerView.m */,
 			);
