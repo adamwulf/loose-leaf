@@ -99,6 +99,7 @@
     // copy the path, otherwise any changes made to it outside
     // of this class would also be applied to our state.
     UIBezierPath* originalPath = [_path copy];
+    CGPoint center = originalPath.center;
     
     // one of our other [init] methods may have already created a state
     // for us, but if not, then go ahead and build one
@@ -106,7 +107,9 @@
     _scrapState.delegate = self;
 
     if(self = [self initWithScrapViewState:_scrapState andPaperState:paperState]){
-        // noop
+        // when we create a scrap state, it adjusts the path to have its corner in (0,0), so
+        // we need to set our center after we create the state
+        self.center = center;
     }
     return self;
 }
@@ -114,55 +117,51 @@
 
 
 -(id) initWithScrapViewState:(MMScrapViewState*)_scrapState andPaperState:(MMScrapsOnPaperState*)paperState{
-    if(_scrapState.bezierPath){
-        if ((self = [super initWithFrame:_scrapState.drawableBounds])){
-            scrapState = _scrapState;
-            scrapState.delegate = self;
-            blocksToFireWhenStateIsLoaded = [NSMutableArray array];
-            self.center = scrapState.bezierPath.center;
-            scale = 1;
-            
-            //
-            // this is our white background
-            backgroundColorLayer = [CAShapeLayer layer];
-            [backgroundColorLayer setPath:scrapState.bezierPath.CGPath];
-            backgroundColorLayer.fillColor = [UIColor whiteColor].CGColor;
-            backgroundColorLayer.masksToBounds = YES;
-            backgroundColorLayer.frame = self.layer.bounds;
-            [self.layer addSublayer:backgroundColorLayer];
-            
-            
-            // only the path contents are opaque, but outside the path needs to be transparent
-            self.opaque = NO;
-            // yes clip to bounds so we keep good performance
-            self.clipsToBounds = YES;
-            // update our shadow rotation
-            [self didUpdateAccelerometerWithRawReading:[[MMRotationManager sharedInstance] currentRawRotationReading]];
-            needsClippingPathUpdate = YES;
-            
-            //
-            // the state content view will show a thumbnail while
-            // the drawable view loads
-            [self addSubview:scrapState.contentView];
-            
-            borderView = [[MMScrapBorderView alloc] initWithFrame:self.bounds];
-            borderView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-            [borderView setBezierPath:self.bezierPath];
-            [self addSubview:borderView];
-            borderView.hidden = YES;
-            
-            // now we need to show our shadow.
-            // this is done just as we do with Shadowed view
-            // our view clips to bounds, and our shadow is
-            // displayed inside our bounds. this way we dont
-            // need to do any offscreen rendering when displaying
-            // this view
-            [self setShouldShowShadow:NO];
-        }
-        return self;
+    if ((self = [super initWithFrame:_scrapState.drawableBounds])){
+        scrapState = _scrapState;
+        scrapState.delegate = self;
+        blocksToFireWhenStateIsLoaded = [NSMutableArray array];
+        self.center = scrapState.bezierPath.center;
+        scale = 1;
+        
+        //
+        // this is our white background
+        backgroundColorLayer = [CAShapeLayer layer];
+        [backgroundColorLayer setPath:scrapState.bezierPath.CGPath];
+        backgroundColorLayer.fillColor = [UIColor whiteColor].CGColor;
+        backgroundColorLayer.masksToBounds = YES;
+        backgroundColorLayer.frame = self.layer.bounds;
+        [self.layer addSublayer:backgroundColorLayer];
+        
+        
+        // only the path contents are opaque, but outside the path needs to be transparent
+        self.opaque = NO;
+        // yes clip to bounds so we keep good performance
+        self.clipsToBounds = YES;
+        // update our shadow rotation
+        [self didUpdateAccelerometerWithRawReading:[[MMRotationManager sharedInstance] currentRawRotationReading]];
+        needsClippingPathUpdate = YES;
+        
+        //
+        // the state content view will show a thumbnail while
+        // the drawable view loads
+        [self addSubview:scrapState.contentView];
+        
+        borderView = [[MMScrapBorderView alloc] initWithFrame:self.bounds];
+        borderView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        [borderView setBezierPath:self.bezierPath];
+        [self addSubview:borderView];
+        borderView.hidden = YES;
+        
+        // now we need to show our shadow.
+        // this is done just as we do with Shadowed view
+        // our view clips to bounds, and our shadow is
+        // displayed inside our bounds. this way we dont
+        // need to do any offscreen rendering when displaying
+        // this view
+        [self setShouldShowShadow:NO];
     }
-    // can't find any information about that scrap
-    return nil;
+    return self;
 }
 
 
