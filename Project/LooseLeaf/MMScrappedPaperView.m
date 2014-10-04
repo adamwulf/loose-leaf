@@ -860,7 +860,9 @@
 
 -(void) setEditable:(BOOL)isEditable{
     [super setEditable:isEditable];
-    [scrapsOnPaperState setShouldShowShadows:isEditable];
+    for(MMScrapView* scrap in self.scrapsOnPaper){
+        [scrap setShouldShowShadow:isEditable];
+    }
 }
 
 -(BOOL) hasEditsToSave{
@@ -1228,11 +1230,11 @@
 }
 
 -(void) didLoadScrapOnPage:(MMScrapView*)scrap{
-    // noop, adding scrap to scrapContainerView is handled in the scrapOnPaperState
+    [scrap setShouldShowShadow:self.isEditable];
 }
 
 -(void) didLoadScrapOffPage:(MMScrapView*)scrap{
-    // noop, scrap in the undo/redo stack only
+    [scrap setShouldShowShadow:self.isEditable];
 }
 
 -(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState{

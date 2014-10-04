@@ -41,7 +41,6 @@
 }
 
 @synthesize delegate;
-@synthesize shouldShowShadows;
 
 static dispatch_queue_t importExportStateQueue;
 
@@ -79,13 +78,6 @@ static dispatch_queue_t importExportStateQueue;
 
 -(BOOL) isStateLoaded{
     return isLoaded;
-}
-
--(void) setShouldShowShadows:(BOOL)_shouldShowShadows{
-    shouldShowShadows = _shouldShowShadows;
-    for(MMScrapView* scrap in self.delegate.scrapsOnPaper){
-        [scrap setShouldShowShadow:shouldShowShadows];
-    }
 }
 
 
@@ -167,7 +159,6 @@ static dispatch_queue_t importExportStateQueue;
                             if(makeEditable){
                                 [scrap loadScrapStateAsynchronously:async];
                             }
-                            [scrap setShouldShowShadow:shouldShowShadows];
                         }
                     }
                     @synchronized(self){
@@ -315,17 +306,11 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 -(void) scrapVisibilityWasUpdated:(MMScrapView*)scrap{
-//    if(scrap.superview != delegate.scrapContainerView){
-//        debug_NSLog(@"scrap %@ is invisible, state loaded: %d", scrap.uuid, [self isStateLoaded] || isLoading);
-//    }else{
-//        debug_NSLog(@"scrap %@ is visible, state loaded: %d", scrap.uuid, [self isStateLoaded] || isLoading);
-//    }
     if([self isStateLoaded] && !isLoading && !isUnloading){
         // something changed w/ scrap visibility
         // we only care if we're fully loaded, not if
         // we're loading or unloading.
         hasEditsToSave = YES;
-//        NSLog(@"scrap in state for %@ was changed", self.delegate.uuid);
     }
 }
 
@@ -353,11 +338,9 @@ static dispatch_queue_t importExportStateQueue;
     }
 }
 
-
 -(void) wasSavedAtUndoHash:(NSUInteger)savedUndoHash{
     @synchronized(self){
         lastSavedUndoHash = savedUndoHash;
-//        NSLog(@"notified saved at: %lu", (unsigned long)lastSavedUndoHash);
     }
 }
 
@@ -376,5 +359,16 @@ static dispatch_queue_t importExportStateQueue;
     }
 }
 
+#pragma mark - Paths
+
+-(NSString*) directoryPathForScrapUUID:(NSString*)uuid{
+    NSString* scrapPath = [[self.delegate.pagesPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
+    return scrapPath;
+}
+
+-(NSString*) bundledDirectoryPathForScrapUUID:(NSString*)uuid{
+    NSString* scrapPath = [[self.delegate.bundledPagesPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
+    return scrapPath;
+}
 
 @end

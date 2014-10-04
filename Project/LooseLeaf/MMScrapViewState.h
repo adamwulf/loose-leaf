@@ -56,6 +56,4 @@
 
 -(UIView*) contentView;
 
-+(NSString*) bundledScrapDirectoryPathForUUID:(NSString*)uuid andScrapsOnPaperState:(MMScrapsOnPaperState*)scrapsOnPaperState;
-
 @end

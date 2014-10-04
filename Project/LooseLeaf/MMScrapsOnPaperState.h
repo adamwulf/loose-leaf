@@ -13,12 +13,10 @@
 
 @interface MMScrapsOnPaperState : NSObject{
     __weak NSObject<MMScrapsOnPaperStateDelegate>* delegate;
-    BOOL shouldShowShadows;
 }
 
 @property (nonatomic, readonly) NSObject<MMScrapsOnPaperStateDelegate>* delegate;
 @property (readonly) NSString* scrapIDsPath;
-@property (nonatomic, assign) BOOL shouldShowShadows;
 @property (nonatomic, readonly) int fullByteSize;
 @property (readonly) BOOL hasEditsToSave;
 @property (readonly) NSUInteger lastSavedUndoHash;
@@ -54,5 +52,12 @@
 -(MMScrapView*) mostRecentScrap;
 
 -(void) removeScrapWithUUID:(NSString*)scrapUUID;
+
+#pragma mark - Paths
+
+-(NSString*) directoryPathForScrapUUID:(NSString*)uuid;
+
+-(NSString*) bundledDirectoryPathForScrapUUID:(NSString*)uuid;
+
 
 @end

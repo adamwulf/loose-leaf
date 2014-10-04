@@ -117,7 +117,7 @@ static int totalBackgroundBytes;
 }
 
 -(NSString*) bundledBackgroundJPGFile{
-    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:scrapState.uuid andScrapsOnPaperState:scrapState.scrapsOnPaperState] stringByAppendingPathComponent:[@"background" stringByAppendingPathExtension:@"jpg"]];
+    return [[scrapState.scrapsOnPaperState bundledDirectoryPathForScrapUUID:scrapState.uuid] stringByAppendingPathComponent:[@"background" stringByAppendingPathExtension:@"jpg"]];
 }
 
 #pragma mark - Duplication and Stamping
