@@ -1317,7 +1317,7 @@
 -(MMScrapView*) scrapForUUIDIfAlreadyExistsInOtherContainer:(NSString*)scrapUUID{
     // try to load a scrap from the bezel sidebar if possible,
     // otherwise our scrap state will load it
-    return [delegate.bezelContainerView.scrapState scrapForUUID:scrapUUID];
+    return [delegate.bezelContainerView.sidebarScrapState scrapForUUID:scrapUUID];
 }
 
 #pragma mark - JotViewStateProxyDelegate

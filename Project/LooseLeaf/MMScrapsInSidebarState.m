@@ -18,7 +18,7 @@
     NSMutableArray* allPropertiesForScraps;
 }
 
-@synthesize delegate;
+@dynamic delegate;
 
 static dispatch_queue_t importExportStateQueue;
 
@@ -144,7 +144,7 @@ static dispatch_queue_t importExportStateQueue;
         };
         
         if(async){
-            dispatch_async([MMScrapsOnPaperState importExportStateQueue], block2);
+            dispatch_async([MMScrapCollectionState importExportStateQueue], block2);
         }else{
             block2();
         }
@@ -164,44 +164,10 @@ static dispatch_queue_t importExportStateQueue;
             }
         };
         if(async){
-            dispatch_async([MMScrapsOnPaperState importExportStateQueue], block2);
+            dispatch_async([MMScrapCollectionState importExportStateQueue], block2);
         }else{
             block2();
         }
-    }
-}
-
--(void) unload{
-    if([self isStateLoaded] || isLoading){
-        @synchronized(self){
-            isUnloading = YES;
-        }
-        dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
-            @autoreleasepool {
-                if([self isStateLoaded]){
-                    NSArray* scraps = nil;
-                    @synchronized(allLoadedScraps){
-                        scraps = [allLoadedScraps copy];
-                    }
-                    for(MMScrapView* scrap in scraps){
-                        [scrap unloadState];
-                    }
-                    @synchronized(allLoadedScraps){
-                        [allLoadedScraps removeAllObjects];
-                    }
-                    [NSThread performBlockOnMainThread:^{
-                        [scraps makeObjectsPerformSelector:@selector(removeFromSuperview)];
-                        [self.delegate didUnloadAllScrapsFor:self];
-                    }];
-                    @synchronized(self){
-                        isLoaded = NO;
-                        isUnloading = NO;
-                        expectedUndoHash = 0;
-                        lastSavedUndoHash = 0;
-                    }
-                }
-            }
-        });
     }
 }
 

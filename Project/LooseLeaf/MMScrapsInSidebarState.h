@@ -12,9 +12,7 @@
 
 @class MMImmutableScrapsInSidebarState;
 
-@interface MMScrapsInSidebarState : MMScrapCollectionState{
-    __weak NSObject<MMScrapsInSidebarStateDelegate>* delegate;
-}
+@interface MMScrapsInSidebarState : MMScrapCollectionState
 
 @property (nonatomic, readonly) NSObject<MMScrapsInSidebarStateDelegate>* delegate;
 @property (readonly) NSString* scrapIDsPath;

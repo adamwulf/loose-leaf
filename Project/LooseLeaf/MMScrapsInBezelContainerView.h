@@ -23,7 +23,7 @@
 @property (nonatomic, weak) NSObject<MMScrapSidebarContainerViewDelegate>* bubbleDelegate;
 @property (nonatomic, strong) MMCountBubbleButton* countButton;
 @property (readonly) NSArray* scrapsInSidebar;
-@property (readonly) MMScrapsInSidebarState* scrapState;
+@property (readonly) MMScrapsInSidebarState* sidebarScrapState;
 
 -(id) initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton *)countButton;
 

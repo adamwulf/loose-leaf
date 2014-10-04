@@ -13,9 +13,7 @@
 
 @class MMImmutableScrapsOnPaperState;
 
-@interface MMScrapsOnPaperState : MMScrapCollectionState{
-    __weak NSObject<MMScrapsOnPaperStateDelegate>* delegate;
-}
+@interface MMScrapsOnPaperState : MMScrapCollectionState
 
 @property (nonatomic, readonly) NSObject<MMScrapsOnPaperStateDelegate>* delegate;
 @property (nonatomic, readonly) MMScrapContainerView* scrapContainerView;

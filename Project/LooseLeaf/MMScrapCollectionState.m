@@ -7,6 +7,8 @@
 //
 
 #import "MMScrapCollectionState.h"
+#import "MMScrapView.h"
+#import "NSThread+BlockAdditions.h"
 #import "Constants.h"
 
 @implementation MMScrapCollectionState
@@ -31,6 +33,8 @@ static dispatch_queue_t importExportStateQueue;
     }
     return self;
 }
+
+@synthesize delegate;
 
 #pragma mark - Properties
 
@@ -61,7 +65,46 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 -(void) unload{
-    @throw kAbstractMethodException;
+    if([self hasEditsToSave]){
+        @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"Unloading ScrapCollectionState with edits pending save." userInfo:nil];
+    }
+    if([self isStateLoaded] || isLoading){
+        @synchronized(self){
+            isUnloading = YES;
+        }
+        dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
+            @autoreleasepool {
+                if(isLoading){
+                    @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"unloading during loading" userInfo:nil];
+                }
+                if([self isStateLoaded]){
+                    @synchronized(allLoadedScraps){
+                        for(MMScrapView* scrap in allLoadedScraps){
+                            if([delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrap.uuid]){
+                                // if this is true, then the scrap is being held
+                                // by the sidebar, so we shouldn't manage its
+                                // state
+                            }else{
+                                [scrap unloadState];
+                            }
+                        }
+                        NSArray* visibleScraps = [allLoadedScraps copy];
+                        [NSThread performBlockOnMainThread:^{
+                            [visibleScraps makeObjectsPerformSelector:@selector(removeFromSuperview)];
+                            [self.delegate didUnloadAllScrapsFor:self];
+                        }];
+                        [allLoadedScraps removeAllObjects];
+                    }
+                    @synchronized(self){
+                        isLoaded = NO;
+                        isUnloading = NO;
+                        expectedUndoHash = 0;
+                        lastSavedUndoHash = 0;
+                    }
+                }
+            }
+        });
+    }
 }
 
 

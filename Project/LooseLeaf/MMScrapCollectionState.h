@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MMScrapsOnPaperStateDelegate.h"
 
 @interface MMScrapCollectionState : NSObject{
     // loading state
@@ -22,10 +23,13 @@
     // this is the undo hash of our most recent save.
     // if these two are different, then we have a pending save
     NSUInteger lastSavedUndoHash;
+    // delegate
+    __weak NSObject<MMScrapCollectionStateDelegate>* delegate;
 }
 
 +(dispatch_queue_t) importExportStateQueue;
 
+@property (nonatomic, readonly) NSObject<MMScrapCollectionStateDelegate>* delegate;
 @property (nonatomic, readonly) int fullByteSize;
 @property (readonly) BOOL hasEditsToSave;
 @property (readonly) NSArray* allLoadedScraps;

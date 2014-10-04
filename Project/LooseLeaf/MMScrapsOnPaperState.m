@@ -31,7 +31,7 @@
     MMScrapContainerView* scrapContainerView;
 }
 
-@synthesize delegate;
+@dynamic delegate;
 @synthesize scrapContainerView;
 
 -(id) initWithDelegate:(NSObject<MMScrapsOnPaperStateDelegate>*)_delegate withScrapContainerSize:(CGSize)scrapContainerSize{
@@ -155,7 +155,7 @@
         };
 
         if(async){
-            dispatch_async([MMScrapsOnPaperState importExportStateQueue], block2);
+            dispatch_async([MMScrapCollectionState importExportStateQueue], block2);
         }else{
             block2();
         }
@@ -173,7 +173,7 @@
             }
         };
         if(async){
-            dispatch_async([MMScrapsOnPaperState importExportStateQueue], block2);
+            dispatch_async([MMScrapCollectionState importExportStateQueue], block2);
         }else{
             block2();
         }
@@ -184,43 +184,7 @@
     if(self.delegate == [[MMPageCacheManager sharedInstance] currentEditablePage]){
         NSLog(@"what");
     }
-    if([self isStateLoaded] || isLoading){
-        @synchronized(self){
-            isUnloading = YES;
-        }
-        dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
-            @autoreleasepool {
-                if(isLoading){
-                    NSLog(@"unload during loading");
-                }
-                if([self isStateLoaded]){
-                    @synchronized(allLoadedScraps){
-                        for(MMScrapView* scrap in allLoadedScraps){
-                            if([delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrap.uuid]){
-                                // if this is true, then the scrap is being held
-                                // by the sidebar, so we shouldn't manage its
-                                // state
-                            }else{
-                                [scrap unloadState];
-                            }
-                        }
-                    }
-                    NSArray* visibleScraps = [self.scrapsOnPaper copy];
-                    [allLoadedScraps removeAllObjects];
-                    [NSThread performBlockOnMainThread:^{
-                        [visibleScraps makeObjectsPerformSelector:@selector(removeFromSuperview)];
-                        [self.delegate didUnloadAllScrapsFor:self];
-                    }];
-                    @synchronized(self){
-                        isLoaded = NO;
-                        isUnloading = NO;
-                        expectedUndoHash = 0;
-                        lastSavedUndoHash = 0;
-                    }
-                }
-            }
-        });
-    }
+    [super unload];
 }
 
 -(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath{
@@ -272,7 +236,7 @@
     @synchronized(scrapContainerView){
         [scrapContainerView addSubview:scrap];
     }
-    [scrap setShouldShowShadow:delegate.isEditable];
+    [scrap setShouldShowShadow:self.delegate.isEditable];
     if(isLoaded || isLoading){
         [scrap loadScrapStateAsynchronously:YES];
     }else{
@@ -329,7 +293,7 @@
             if(![scrap.uuid isEqualToString:scrapUUID]){
                 [otherArray addObject:scrap];
             }else{
-                NSLog(@"permanently removed scrap %@ from page %@", scrapUUID, delegate.uuid);
+                NSLog(@"permanently removed scrap %@ from page %@", scrapUUID, self.delegate.uuid);
             }
         }
         allLoadedScraps = otherArray;

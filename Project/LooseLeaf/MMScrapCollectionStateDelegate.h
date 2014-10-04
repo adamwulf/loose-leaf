@@ -12,6 +12,12 @@
 
 @protocol MMScrapCollectionStateDelegate <NSObject>
 
+#pragma mark - Scrap Sharing
+
+-(MMScrapView*) scrapForUUIDIfAlreadyExistsInOtherContainer:(NSString*)scrapUUID;
+
+#pragma mark - Loading and Unloading
+
 /**
  * triggered when a scrap is laoded from disk that is
  * actively showing on the page

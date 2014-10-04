@@ -17,8 +17,6 @@
 
 -(NSString*) uuid;
 
--(MMScrapView*) scrapForUUIDIfAlreadyExistsInOtherContainer:(NSString*)scrapUUID;
-
 -(BOOL) isEditable;
 
 -(NSString*) pagesPath;
