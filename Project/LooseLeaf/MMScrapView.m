@@ -74,7 +74,7 @@
 /**
  * returns a new and loaded scrap with the specified path at the specified scale and rotation.
  */
--(id)initWithBezierPath:(UIBezierPath *)path andScale:(CGFloat)_scale andRotation:(CGFloat)_rotation andPaperState:(MMScrapsOnPaperState*)paperState{
+-(id)initWithBezierPath:(UIBezierPath *)path andScale:(CGFloat)_scale andRotation:(CGFloat)_rotation andPaperState:(MMScrapCollectionState*)paperState{
     // copy the path, otherwise any changes made to it outside
     // of this class would also be applied to our state.
     UIBezierPath* originalPath = [path copy];
@@ -161,7 +161,7 @@
 }
 
 -(NSString*) owningPageUUID{
-    return [scrapState.scrapsOnPaperState.delegate uuid];
+    return [scrapState.scrapsOnPaperState.delegate uuidOfScrapCollectionStateOwner];
 }
 
 -(MMScrapBackgroundView*) backgroundView{

@@ -293,7 +293,7 @@
             if(![scrap.uuid isEqualToString:scrapUUID]){
                 [otherArray addObject:scrap];
             }else{
-                NSLog(@"permanently removed scrap %@ from page %@", scrapUUID, self.delegate.uuid);
+                NSLog(@"permanently removed scrap %@ from page %@", scrapUUID, self.delegate.uuidOfScrapCollectionStateOwner);
             }
         }
         allLoadedScraps = otherArray;

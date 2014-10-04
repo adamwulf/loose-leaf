@@ -89,9 +89,9 @@
 -(NSString*) scrapIDsPath{
     if(!scrapIDsPath){
         NSString* documentsPath = [NSFileManager documentsPath];
-        NSString* pagesPath = [documentsPath stringByAppendingPathComponent:@"Bezel"];
-        [NSFileManager ensureDirectoryExistsAtPath:pagesPath];
-        scrapIDsPath = [[pagesPath stringByAppendingPathComponent:@"scrapIDs"] stringByAppendingPathExtension:@"plist"];
+        NSString* bezelStateDirectory = [documentsPath stringByAppendingPathComponent:@"Bezel"];
+        [NSFileManager ensureDirectoryExistsAtPath:bezelStateDirectory];
+        scrapIDsPath = [[bezelStateDirectory stringByAppendingPathComponent:@"scrapIDs"] stringByAppendingPathExtension:@"plist"];
     }
     return scrapIDsPath;
 }
@@ -506,6 +506,10 @@ static NSString* bezelStatePath;
 
 
 #pragma mark - MMScrapsInSidebarStateDelegate / MMScrapCollectionStateDelegate
+
+-(NSString*) uuidOfScrapCollectionStateOwner{
+    return nil;
+}
 
 -(MMScrapView*) scrapForUUIDIfAlreadyExistsInOtherContainer:(NSString *)scrapUUID{
     // page's scraps might exist inside the bezel (us),

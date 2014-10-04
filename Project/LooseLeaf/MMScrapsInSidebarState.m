@@ -12,6 +12,7 @@
 #import "MMImmutableScrapsOnPaperState.h"
 #import "MMScrapContainerView.h"
 #import "MMImmutableScrapsInSidebarState.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 #import "Constants.h"
 
 @implementation MMScrapsInSidebarState
@@ -188,6 +189,10 @@ static dispatch_queue_t importExportStateQueue;
 
 #pragma mark - Manage Scraps
 
+-(void) scrapVisibilityWasUpdated:(MMScrapView*)scrap{
+    // noop
+}
+
 -(MMScrapView*) scrapForUUID:(NSString*)uuid{
     @synchronized(allLoadedScraps){
         for(MMScrapView*scrap in allLoadedScraps){
@@ -198,7 +203,6 @@ static dispatch_queue_t importExportStateQueue;
     }
     return nil;
 }
-
 
 -(void) scrapIsAddedToSidebar:(MMScrapView *)scrap{
     @synchronized(allLoadedScraps){
@@ -219,6 +223,22 @@ static dispatch_queue_t importExportStateQueue;
             hasEditsToSave = YES;
         }
     }
+}
+
+#pragma mark - Paths
+
+-(NSString*) directoryPathForScrapUUID:(NSString*)uuid{
+    NSString* documentsPath = [NSFileManager documentsPath];
+    NSString* bezelStateDirectory = [documentsPath stringByAppendingPathComponent:@"Bezel"];
+    NSString* scrapPath = [[bezelStateDirectory stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
+    return scrapPath;
+}
+
+-(NSString*) bundledDirectoryPathForScrapUUID:(NSString*)uuid{
+    NSString* documentsPath = [[NSBundle mainBundle] pathForResource:@"Documents" ofType:nil];
+    NSString* bezelStateDirectory = [documentsPath stringByAppendingPathComponent:@"Bezel"];
+    NSString* scrapPath = [[bezelStateDirectory stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
+    return scrapPath;
 }
 
 @end

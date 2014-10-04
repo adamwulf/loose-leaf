@@ -49,6 +49,12 @@ static dispatch_queue_t importExportStateQueue;
     }
 }
 
+#pragma mark - Manage Scraps
+
+-(void) scrapVisibilityWasUpdated:(MMScrapView*)scrap{
+    @throw kAbstractMethodException;
+}
+
 #pragma mark - Save and Load
 
 -(MMImmutableScrapCollectionState*) immutableStateForPath:(NSString *)scrapIDsPath{
@@ -110,6 +116,16 @@ static dispatch_queue_t importExportStateQueue;
             }
         });
     }
+}
+
+#pragma mark - Paths
+
+-(NSString*) directoryPathForScrapUUID:(NSString*)uuid{
+    @throw kAbstractMethodException;
+}
+
+-(NSString*) bundledDirectoryPathForScrapUUID:(NSString*)uuid{
+    @throw kAbstractMethodException;
 }
 
 

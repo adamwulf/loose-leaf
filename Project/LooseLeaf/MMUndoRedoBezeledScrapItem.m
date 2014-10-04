@@ -9,6 +9,7 @@
 #import "MMUndoRedoBezeledScrapItem.h"
 #import "MMUndoablePaperView.h"
 #import "MMScrapsInBezelContainerView.h"
+#import "MMScrapsOnPaperState.h"
 #import "MMTrashManager.h"
 
 

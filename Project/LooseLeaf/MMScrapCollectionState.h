@@ -39,6 +39,10 @@
 @property (readonly) NSArray* allLoadedScraps;
 @property (readonly) NSUInteger lastSavedUndoHash;
 
+#pragma mark - Manage Scraps
+
+-(void) scrapVisibilityWasUpdated:(MMScrapView*)scrap;
+
 #pragma mark - Save and Load
 
 -(MMImmutableScrapCollectionState*) immutableStateForPath:(NSString*)scrapIDsPath;
@@ -49,5 +53,10 @@
 
 -(void) unload;
 
+#pragma mark - Paths
+
+-(NSString*) directoryPathForScrapUUID:(NSString*)uuid;
+
+-(NSString*) bundledDirectoryPathForScrapUUID:(NSString*)uuid;
 
 @end

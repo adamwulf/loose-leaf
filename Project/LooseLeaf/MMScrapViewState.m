@@ -106,7 +106,7 @@ static dispatch_queue_t importExportScrapStateQueue;
 
 #pragma mark - Init
 
--(id) initWithUUID:(NSString*)_uuid andPaperState:(MMScrapsOnPaperState*)_scrapsOnPaperState{
+-(id) initWithUUID:(NSString*)_uuid andPaperState:(MMScrapCollectionState*)_scrapsOnPaperState{
     // save our UUID and scrapsOnPaperState, everything depends on these
     uuid = _uuid;
     scrapsOnPaperState = _scrapsOnPaperState;
@@ -133,11 +133,11 @@ static dispatch_queue_t importExportScrapStateQueue;
     return self;
 }
 
--(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andPaperState:(MMScrapsOnPaperState*)_scrapsOnPaperState{
+-(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andPaperState:(MMScrapCollectionState*)_scrapsOnPaperState{
     return [self initWithUUID:_uuid andBezierPath:_path andBackgroundView:nil andPaperState:_scrapsOnPaperState andLastSavedUndoHash:0];
 }
 
--(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andBackgroundView:(MMScrapBackgroundView*)backingView andPaperState:(MMScrapsOnPaperState*)_scrapsOnPaperState andLastSavedUndoHash:(NSUInteger)lsuh{
+-(id) initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andBackgroundView:(MMScrapBackgroundView*)backingView andPaperState:(MMScrapCollectionState*)_scrapsOnPaperState andLastSavedUndoHash:(NSUInteger)lsuh{
     if(self = [super init]){
         
         // save our UUID, everything depends on this

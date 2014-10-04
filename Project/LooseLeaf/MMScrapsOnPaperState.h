@@ -34,7 +34,6 @@
 -(void) showScrap:(MMScrapView*)scrap atIndex:(NSUInteger)subviewIndex;
 -(void) hideScrap:(MMScrapView*)scrap;
 -(BOOL) isScrapVisible:(MMScrapView*)scrap;
--(void) scrapVisibilityWasUpdated:(MMScrapView*)scrap;
 
 // returns the scrap for the specified uuid, or nil if there's no match
 -(MMScrapView*) scrapForUUID:(NSString*)uuid;

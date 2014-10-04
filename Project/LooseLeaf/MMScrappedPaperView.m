@@ -1205,7 +1205,11 @@
     return [super hasStateLoaded];
 }
 
-#pragma mark - MMScrapsOnPaperStateDelegate
+#pragma mark - MMScrapsOnPaperStateDelegate / MMScrapCollectionStateDelegate
+
+-(NSString*) uuidOfScrapCollectionStateOwner{
+    return self.uuid;
+}
 
 -(MMScrappedPaperView*) page{
     return self;

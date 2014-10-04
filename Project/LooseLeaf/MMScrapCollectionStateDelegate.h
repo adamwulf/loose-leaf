@@ -12,6 +12,8 @@
 
 @protocol MMScrapCollectionStateDelegate <NSObject>
 
+-(NSString*) uuidOfScrapCollectionStateOwner;
+
 #pragma mark - Scrap Sharing
 
 -(MMScrapView*) scrapForUUIDIfAlreadyExistsInOtherContainer:(NSString*)scrapUUID;

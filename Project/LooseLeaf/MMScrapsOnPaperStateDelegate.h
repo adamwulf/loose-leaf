@@ -15,8 +15,6 @@
 
 -(MMScrappedPaperView*) page;
 
--(NSString*) uuid;
-
 -(BOOL) isEditable;
 
 -(NSString*) pagesPath;

@@ -11,6 +11,7 @@
 #import "MMDecompressImagePromiseDelegate.h"
 #import "MMScissorResult.h"
 #import "MMScrapContainerView.h"
+#import "MMScrapsOnPaperState.h"
 #import "MMVector.h"
 #import <MessageUI/MFMailComposeViewController.h>
 

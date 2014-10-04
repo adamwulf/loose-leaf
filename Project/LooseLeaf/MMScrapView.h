@@ -29,7 +29,7 @@
 
 -(id) initWithScrapViewState:(MMScrapViewState*)scrapState;
 
--(id) initWithBezierPath:(UIBezierPath *)path andScale:(CGFloat)scale andRotation:(CGFloat)rotation andPaperState:(MMScrapsOnPaperState*)paperState;
+-(id) initWithBezierPath:(UIBezierPath *)path andScale:(CGFloat)scale andRotation:(CGFloat)rotation andPaperState:(MMScrapCollectionState*)paperState;
 
 -(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading;
 

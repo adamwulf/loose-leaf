@@ -1618,26 +1618,30 @@ int skipAll = NO;
     isAnimatingScrapToOrFromSidebar = YES;
 }
 
+// @param originalScrap this is the scrap that is asking to be added to this page,
+//        but it might belong to a different page. if that's the case, we'll
+//        need to clone this scrap onto our page and then give the original to
+//        the trashmanager to deal with.
 // returns the page that the scrap was added to
--(MMUndoablePaperView*) didAddScrapBackToPage:(MMScrapView *)scrap atIndex:(NSUInteger)index{
+-(MMUndoablePaperView*) didAddScrapBackToPage:(MMScrapView *)originalScrap atIndex:(NSUInteger)index{
     // first, find the page to add the scrap to.
     // this will check visible + bezelled pages to see
     // which page should get the scrap, and it'll tell us
     // the center/scale to use
     CGPoint center;
     CGFloat scale;
-    MMUndoablePaperView* page = [self pageWouldDropScrap:scrap atCenter:&center andScale:&scale];
+    MMUndoablePaperView* page = [self pageWouldDropScrap:originalScrap atCenter:&center andScale:&scale];
     
-    [scrap blockToFireWhenStateLoads:^{
+    [originalScrap blockToFireWhenStateLoads:^{
         CheckMainThread;
         // we're only allowed to add scraps to a page
         // when their state is loaded, so make sure
         // we have their state loading
-        MMScrapView* scrapToAddToPage = scrap;
-        if(scrap.state.scrapsOnPaperState != page.scrapsOnPaperState){
-            MMScrapView* oldScrap = scrap;
+        MMScrapView* scrapToAddToPage = originalScrap;
+        if(originalScrap.state.scrapsOnPaperState != page.scrapsOnPaperState){
+            MMScrapView* oldScrap = originalScrap;
             [scrapContainer addSubview:oldScrap];
-            scrapToAddToPage = [self cloneScrap:scrap toPage:page];
+            scrapToAddToPage = [self cloneScrap:originalScrap toPage:page];
             [oldScrap removeFromSuperview];
             
             // check the original page of the scrap
@@ -1645,7 +1649,8 @@ int skipAll = NO;
             // scrap. if its undo stack doesn't hold any
             // reference, then we should trigger deleting
             // it's old assets
-            [[MMTrashManager sharedInstance] deleteScrap:scrap.uuid inPage:scrap.state.scrapsOnPaperState.delegate.page];
+            MMScrappedPaperView* owningPageForOriginalScrap = [self pageForUUID:originalScrap.owningPageUUID];
+            [[MMTrashManager sharedInstance] deleteScrap:originalScrap.uuid inPage:owningPageForOriginalScrap];
         }
         // ok, done, just set it
         if(index == NSNotFound){

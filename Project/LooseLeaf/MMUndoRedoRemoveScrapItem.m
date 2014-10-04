@@ -9,6 +9,7 @@
 #import "MMUndoRedoRemoveScrapItem.h"
 #import "MMUndoablePaperView.h"
 #import "MMScrapsInBezelContainerView.h"
+#import "MMScrapsOnPaperState.h"
 #import "MMTrashManager.h"
 
 @interface MMUndoRedoRemoveScrapItem (Private)
