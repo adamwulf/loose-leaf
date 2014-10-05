@@ -999,6 +999,15 @@ int skipAll = NO;
                     [gesture.startingPageForScrap addUndoItemForScrap:gesture.scrap thatMovedFrom:gesture.startingScrapProperties to:[gesture.scrap propertiesDictionary]];
                 }
                 
+                // https://github.com/adamwulf/loose-leaf/issues/877
+                // when a scrap is picked up, and then pages are added/bezeled,
+                // the original page's scrap state might be unloaded mid-gesture,
+                // so we need to unload this scrap to match.
+                if(![gesture.startingPageForScrap.scrapsOnPaperState isStateLoaded]){
+//                    NSLog(@"dropping scrap from unloaded starting page!");
+                    [gesture.scrap unloadState];
+                }
+                
                 [pageToDropScrap saveToDisk:nil];
             }else{
                 // couldn't find a page to catch it
@@ -1568,9 +1577,9 @@ int skipAll = NO;
     //    panAndPinchScrapGesture
     if(scrapOwnedByBezel){
         return scrapOwnedByBezel;
-    }else if(scrapOwnedByPan1){
+    }else if([scrapOwnedByPan1.uuid isEqualToString:scrapUUID]){
         return scrapOwnedByPan1;
-    }else if(scrapOwnedByPan2){
+    }else if([scrapOwnedByPan2.uuid isEqualToString:scrapUUID]){
         return scrapOwnedByPan2;
     }
     return nil;
