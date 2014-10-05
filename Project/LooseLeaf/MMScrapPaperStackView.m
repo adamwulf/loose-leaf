@@ -999,6 +999,15 @@ int skipAll = NO;
                     [gesture.startingPageForScrap addUndoItemForScrap:gesture.scrap thatMovedFrom:gesture.startingScrapProperties to:[gesture.scrap propertiesDictionary]];
                 }
                 
+                // https://github.com/adamwulf/loose-leaf/issues/877
+                // when a scrap is picked up, and then pages are added/bezeled,
+                // the original page's scrap state might be unloaded mid-gesture,
+                // so we need to unload this scrap to match.
+                if(![gesture.startingPageForScrap.scrapsOnPaperState isStateLoaded]){
+//                    NSLog(@"dropping scrap from unloaded starting page!");
+                    [gesture.scrap unloadState];
+                }
+                
                 [pageToDropScrap saveToDisk:nil];
             }else{
                 // couldn't find a page to catch it
@@ -1554,7 +1563,27 @@ int skipAll = NO;
     [cloudKitExportView isExportingPage:page withPercentage:percentComplete toZipLocation:fileLocationOnDisk];
 }
 
+#pragma mark - MMScrapViewOwnershipDelegate
 
+-(MMScrapView*) scrapForUUIDIfAlreadyExistsInOtherContainer:(NSString*)scrapUUID{
+    // try to load a scrap from the bezel sidebar if possible,
+    // otherwise our scrap state will load it
+    MMScrapView* scrapOwnedByBezel = [self.bezelContainerView.sidebarScrapState scrapForUUID:scrapUUID];
+    //    MMScrapView* scrapOwnedByPan1 = scr
+    
+    MMScrapView* scrapOwnedByPan1 = panAndPinchScrapGesture.scrap;
+    MMScrapView* scrapOwnedByPan2 = panAndPinchScrapGesture2.scrap;
+    
+    //    panAndPinchScrapGesture
+    if(scrapOwnedByBezel){
+        return scrapOwnedByBezel;
+    }else if([scrapOwnedByPan1.uuid isEqualToString:scrapUUID]){
+        return scrapOwnedByPan1;
+    }else if([scrapOwnedByPan2.uuid isEqualToString:scrapUUID]){
+        return scrapOwnedByPan2;
+    }
+    return nil;
+}
 
 #pragma mark - MMGestureTouchOwnershipDelegate
 

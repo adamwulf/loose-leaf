@@ -62,13 +62,13 @@
 
     dispatch_queue_t serialBackgroundQueue;
 
-    
     NSUInteger lastSavedPaperStateHashForGeneratedThumbnail;
     NSUInteger lastSavedScrapStateHashForGeneratedThumbnail;
 }
 
 @synthesize scrapsOnPaperState;
 @synthesize cachedImgView;
+@dynamic delegate;
 
 
 -(dispatch_queue_t) serialBackgroundQueue{
@@ -1319,9 +1319,7 @@
 }
 
 -(MMScrapView*) scrapForUUIDIfAlreadyExistsInOtherContainer:(NSString*)scrapUUID{
-    // try to load a scrap from the bezel sidebar if possible,
-    // otherwise our scrap state will load it
-    return [delegate.bezelContainerView.sidebarScrapState scrapForUUID:scrapUUID];
+    return [self.delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrapUUID];
 }
 
 #pragma mark - JotViewStateProxyDelegate

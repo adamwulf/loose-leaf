@@ -777,6 +777,7 @@
 		669B764D18E9FE490041DAE7 /* ALAsset+Thumbnail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ALAsset+Thumbnail.h"; sourceTree = "<group>"; };
 		669B764E18E9FE490041DAE7 /* ALAsset+Thumbnail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ALAsset+Thumbnail.m"; sourceTree = "<group>"; };
 		669B765F18EB48470041DAE7 /* MMAlbumRowViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMAlbumRowViewDelegate.h; sourceTree = "<group>"; };
+		669BBA2419E1EA0D00C250DA /* MMScrapViewOwnershipDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapViewOwnershipDelegate.h; sourceTree = "<group>"; };
 		66A02F9419A1D1500013EFAE /* EPPZDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EPPZDevice.h; path = "../../Submodules/eppz-kit/eppz!kit/EPPZDevice.h"; sourceTree = "<group>"; };
 		66A02F9519A1D1500013EFAE /* EPPZDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EPPZDevice.m; path = "../../Submodules/eppz-kit/eppz!kit/EPPZDevice.m"; sourceTree = "<group>"; };
 		66A02F9719A1D1620013EFAE /* EPPZSingletonSubclass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EPPZSingletonSubclass.h; path = "../../Submodules/eppz-kit/eppz!kit/EPPZSingletonSubclass.h"; sourceTree = "<group>"; };
@@ -2062,6 +2063,7 @@
 				66E5AC8F19DFA781006CEAAF /* MMScrapCollectionState.m */,
 				66220FC919DFB4BB0039DA46 /* MMScrapCollectionState+Private.h */,
 				66220FC819DFAF1C0039DA46 /* MMScrapCollectionStateDelegate.h */,
+				669BBA2419E1EA0D00C250DA /* MMScrapViewOwnershipDelegate.h */,
 				6663CC4819DFC2280084F9FF /* MMImmutableScrapCollectionState.h */,
 				6663CC4919DFC2280084F9FF /* MMImmutableScrapCollectionState.m */,
 				66E5AC9119DFAAC9006CEAAF /* For Pages */,
