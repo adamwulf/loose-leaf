@@ -12,6 +12,7 @@
 #import "MMScissorResult.h"
 #import "MMScrapContainerView.h"
 #import "MMScrapsOnPaperState.h"
+#import "MMScrapViewOwnershipDelegate.h"
 #import "MMVector.h"
 #import <MessageUI/MFMailComposeViewController.h>
 
@@ -25,6 +26,7 @@
 
 @property (readonly) MMScrapsOnPaperState* scrapsOnPaperState;
 @property (readonly) UIImageView* cachedImgView;
+@property (nonatomic, weak) NSObject<MMScrapViewOwnershipDelegate,MMPaperViewDelegate>* delegate;
 
 -(dispatch_queue_t) serialBackgroundQueue;
 

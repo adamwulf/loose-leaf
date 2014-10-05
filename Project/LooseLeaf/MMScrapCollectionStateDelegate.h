@@ -7,16 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MMScrapViewOwnershipDelegate.h"
 
 @class MMScrapCollectionState, MMScrapView;
 
-@protocol MMScrapCollectionStateDelegate <NSObject>
+@protocol MMScrapCollectionStateDelegate <MMScrapViewOwnershipDelegate>
 
 -(NSString*) uuidOfScrapCollectionStateOwner;
-
-#pragma mark - Scrap Sharing
-
--(MMScrapView*) scrapForUUIDIfAlreadyExistsInOtherContainer:(NSString*)scrapUUID;
 
 #pragma mark - Loading and Unloading
 

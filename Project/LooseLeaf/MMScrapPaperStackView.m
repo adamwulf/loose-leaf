@@ -1554,7 +1554,27 @@ int skipAll = NO;
     [cloudKitExportView isExportingPage:page withPercentage:percentComplete toZipLocation:fileLocationOnDisk];
 }
 
+#pragma mark - MMScrapViewOwnershipDelegate
 
+-(MMScrapView*) scrapForUUIDIfAlreadyExistsInOtherContainer:(NSString*)scrapUUID{
+    // try to load a scrap from the bezel sidebar if possible,
+    // otherwise our scrap state will load it
+    MMScrapView* scrapOwnedByBezel = [self.bezelContainerView.sidebarScrapState scrapForUUID:scrapUUID];
+    //    MMScrapView* scrapOwnedByPan1 = scr
+    
+    MMScrapView* scrapOwnedByPan1 = panAndPinchScrapGesture.scrap;
+    MMScrapView* scrapOwnedByPan2 = panAndPinchScrapGesture2.scrap;
+    
+    //    panAndPinchScrapGesture
+    if(scrapOwnedByBezel){
+        return scrapOwnedByBezel;
+    }else if(scrapOwnedByPan1){
+        return scrapOwnedByPan1;
+    }else if(scrapOwnedByPan2){
+        return scrapOwnedByPan2;
+    }
+    return nil;
+}
 
 #pragma mark - MMGestureTouchOwnershipDelegate
 

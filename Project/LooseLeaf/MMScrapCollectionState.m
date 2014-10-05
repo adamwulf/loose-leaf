@@ -90,18 +90,26 @@ static dispatch_queue_t importExportStateQueue;
                 }
                 if([self isStateLoaded]){
                     @synchronized(allLoadedScraps){
+                        NSMutableArray* unloadedVisibleScraps = [NSMutableArray array];
                         for(MMScrapView* scrap in allLoadedScraps){
                             if([delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrap.uuid]){
                                 // if this is true, then the scrap is being held
                                 // by the sidebar, so we shouldn't manage its
                                 // state
+                                NSLog(@"skipping unloading: %@", scrap.uuid);
                             }else{
+                                NSLog(@"unloading: %@", scrap.uuid);
                                 [scrap unloadState];
+                                [unloadedVisibleScraps addObject:scrap];
                             }
                         }
-                        NSArray* visibleScraps = [allLoadedScraps copy];
                         [NSThread performBlockOnMainThread:^{
-                            [visibleScraps makeObjectsPerformSelector:@selector(removeFromSuperview)];
+                            for (MMScrapView* visibleScrap in unloadedVisibleScraps) {
+                                // only remove unloaded scraps from their superview.
+                                // all others are held by gestures / bezel
+                                NSLog(@"removing from super: %@", visibleScrap.uuid);
+                                [visibleScrap removeFromSuperview];
+                            }
                             [self.delegate didUnloadAllScrapsFor:self];
                         }];
                         [allLoadedScraps removeAllObjects];
