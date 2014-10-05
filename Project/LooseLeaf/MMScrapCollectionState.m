@@ -96,9 +96,8 @@ static dispatch_queue_t importExportStateQueue;
                                 // if this is true, then the scrap is being held
                                 // by the sidebar, so we shouldn't manage its
                                 // state
-                                NSLog(@"skipping unloading: %@", scrap.uuid);
+//                                NSLog(@"skipping unloading: %@", scrap.uuid);
                             }else{
-                                NSLog(@"unloading: %@", scrap.uuid);
                                 [scrap unloadState];
                                 [unloadedVisibleScraps addObject:scrap];
                             }
@@ -107,7 +106,6 @@ static dispatch_queue_t importExportStateQueue;
                             for (MMScrapView* visibleScrap in unloadedVisibleScraps) {
                                 // only remove unloaded scraps from their superview.
                                 // all others are held by gestures / bezel
-                                NSLog(@"removing from super: %@", visibleScrap.uuid);
                                 [visibleScrap removeFromSuperview];
                             }
                             [self.delegate didUnloadAllScrapsFor:self];
