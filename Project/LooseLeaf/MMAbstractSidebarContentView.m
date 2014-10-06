@@ -86,17 +86,26 @@
     return ceilf(self.bounds.size.width / 2);
 }
 
--(void) reset:(BOOL)animated{
-    albumListScrollView.alpha = 1;
-    photoListScrollView.alpha = 0;
-    
-    if(!currentAlbum.numberOfPhotos){
-        emptyView = [[MMEmptyCollectionViewCell alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.width)];
+-(void) updateEmptyErrorMessage{
+    if(![self numberOfRowsFor:albumListScrollView]){
+        if(!emptyView){
+            emptyView = [[MMEmptyCollectionViewCell alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.width)];
+        }
         [self addSubview:emptyView];
+    }else if(emptyView){
+        [emptyView removeFromSuperview];
+        emptyView = nil;
     }
 }
 
+-(void) reset:(BOOL)animated{
+    albumListScrollView.alpha = 1;
+    photoListScrollView.alpha = 0;
+    [self updateEmptyErrorMessage];
+}
+
 -(void) show:(BOOL)animated{
+    [self updateEmptyErrorMessage];
     [[MMPhotoManager sharedInstance] initializeAlbumCache];
     [self updatePhotoRotation:NO];
     isShowing = YES;
@@ -104,12 +113,9 @@
 
 -(void) hide:(BOOL)animated{
     isShowing = NO;
-    if(emptyView){
-        [emptyView removeFromSuperview];
-        emptyView = nil;
-    }
     [[NSThread mainThread] performBlock:^{
         [photoListScrollView reloadData];
+        [self updateEmptyErrorMessage];
     } afterDelay:.1];
 }
 
