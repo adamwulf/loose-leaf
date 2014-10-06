@@ -22,6 +22,7 @@ typedef void (^MMPhotoGroupEnumerationResultsBlock)(MMPhoto *result, NSUInteger 
 @property (readonly) NSInteger numberOfPhotos;
 @property (readonly) NSArray* previewPhotos;
 @property (assign) BOOL reversed;
+@property (assign) short numberOfPreviewPhotos;
 
 -(id) initWithAssetGroup:(ALAssetsGroup*)group;
 

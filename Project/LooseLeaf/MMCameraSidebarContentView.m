@@ -57,7 +57,8 @@
     albumListScrollView.alpha = 0;
     photoListScrollView.alpha = 1;
     [[MMPhotoManager sharedInstance] initializeAlbumCache];
-    
+    [self updatePhotoRotation:NO];
+
     currentAlbum = [[MMPhotoManager sharedInstance] cameraRoll];
     [self doneLoadingPhotoAlbums];
 }

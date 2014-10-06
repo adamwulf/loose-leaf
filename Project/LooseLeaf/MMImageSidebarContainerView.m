@@ -126,7 +126,6 @@
 
 -(void) show:(BOOL)animated{
     [super show:animated];
-    [self updateInterfaceTo:[[MMRotationManager sharedInstance] lastBestOrientation]];
     if(!cameraListContentView.hidden){
         [cameraListContentView show:animated];
     }
@@ -142,6 +141,7 @@
     if(!pdfListContentView.hidden){
         [pdfListContentView show:animated];
     }
+    [self updateInterfaceTo:[[MMRotationManager sharedInstance] lastBestOrientation] animated:NO];
 }
 
 -(void) hide:(BOOL)animated onComplete:(void (^)(BOOL))onComplete{
@@ -247,37 +247,47 @@
 }
 
 -(void) updateInterfaceTo:(UIInterfaceOrientation)orientation{
+    [self updateInterfaceTo:orientation animated:YES];
+}
+
+-(void) updateInterfaceTo:(UIInterfaceOrientation)orientation animated:(BOOL)animated{
     if(![self isVisible]) return;
     if(!cameraListContentView.hidden){
-        [cameraListContentView updatePhotoRotation:YES];
+        [cameraListContentView updatePhotoRotation:animated];
     }else if(!albumListContentView.hidden){
-        [albumListContentView updatePhotoRotation:YES];
+        [albumListContentView updatePhotoRotation:animated];
     }else if(!faceListContentView.hidden){
-        [faceListContentView updatePhotoRotation:YES];
+        [faceListContentView updatePhotoRotation:animated];
     }else if(!eventListContentView.hidden){
-        [eventListContentView updatePhotoRotation:YES];
+        [eventListContentView updatePhotoRotation:animated];
     }else if(!pdfListContentView.hidden){
-        [pdfListContentView updatePhotoRotation:YES];
+        [pdfListContentView updatePhotoRotation:animated];
     }
     
+    void(^animations)() = ^{
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        cameraAlbumButton.rotation = [self sidebarButtonRotation];
+        cameraAlbumButton.transform = rotationTransform;
+        
+        iPhotoAlbumButton.rotation = [self sidebarButtonRotation];
+        iPhotoAlbumButton.transform = rotationTransform;
+        
+        iPhotoFacesButton.rotation = [self sidebarButtonRotation];
+        iPhotoFacesButton.transform = rotationTransform;
+        
+        iPhotoEventsButton.rotation = [self sidebarButtonRotation];
+        iPhotoEventsButton.transform = rotationTransform;
+        
+        pdfInboxButton.rotation = [self sidebarButtonRotation];
+        pdfInboxButton.transform = rotationTransform;
+    };
+    
     [[NSThread mainThread] performBlock:^{
-        [UIView animateWithDuration:.3 animations:^{
-            CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-            cameraAlbumButton.rotation = [self sidebarButtonRotation];
-            cameraAlbumButton.transform = rotationTransform;
-
-            iPhotoAlbumButton.rotation = [self sidebarButtonRotation];
-            iPhotoAlbumButton.transform = rotationTransform;
-
-            iPhotoFacesButton.rotation = [self sidebarButtonRotation];
-            iPhotoFacesButton.transform = rotationTransform;
-
-            iPhotoEventsButton.rotation = [self sidebarButtonRotation];
-            iPhotoEventsButton.transform = rotationTransform;
-
-            pdfInboxButton.rotation = [self sidebarButtonRotation];
-            pdfInboxButton.transform = rotationTransform;
-        }];
+        if(animated){
+            [UIView animateWithDuration:.3 animations:animations];
+        }else{
+            animations();
+        }
     }];
 }
 

@@ -158,6 +158,12 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                           resultBlock:^(ALAssetsGroup *group) {
                               MMPhotoAlbum* addedAlbum = [[MMPhotoAlbum alloc] initWithAssetGroup:group];
                               @synchronized(self){
+                                  if(!group){
+                                      [[[[albums arrayByAddingObjectsFromArray:events] arrayByAddingObjectsFromArray:faces] arrayByAddingObject:cameraRoll] mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
+                                          [obj loadPreviewPhotos];
+                                          return obj;
+                                      }];
+                                  }
                                   if(addedAlbum.type == ALAssetsGroupAlbum){
                                       albums = [self sortArrayByAlbumName:[albums arrayByAddingObject:addedAlbum]];
                                   }else if(addedAlbum.type == ALAssetsGroupEvent){
@@ -167,6 +173,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                   }else if(addedAlbum.type == ALAssetsGroupSavedPhotos){
                                       cameraRoll = addedAlbum;
                                       cameraRoll.reversed = YES;
+                                      cameraRoll.numberOfPreviewPhotos = 10;
                                   }
                               }
                               [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
@@ -251,7 +258,6 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                                             events = [self sortArrayByAlbumName:updatedEventsList];
                                                             faces = [self sortArrayByAlbumName:updatedFacesList];
                                                             cameraRoll = updatedCameraRoll;
-                                                            cameraRoll.reversed = YES;
                                                             [[[[albums arrayByAddingObjectsFromArray:events] arrayByAddingObjectsFromArray:faces] arrayByAddingObject:cameraRoll] mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
                                                                 [obj loadPreviewPhotos];
                                                                 return obj;
@@ -273,6 +279,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                                         }else if(group.type == ALAssetsGroupSavedPhotos){
                                                             updatedCameraRoll = addedAlbum;
                                                             updatedCameraRoll.reversed = YES;
+                                                            updatedCameraRoll.numberOfPreviewPhotos = 10;
                                                         }
                                                     }
                                                 }
