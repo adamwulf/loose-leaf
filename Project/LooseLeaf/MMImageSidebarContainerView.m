@@ -93,6 +93,8 @@
         cameraAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x, buttonBounds.origin.y,
                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
         cameraAlbumButton.darkBg = YES;
+        cameraAlbumButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
+        cameraAlbumButton.shadowInset = -1;
         [cameraAlbumButton setImage:[UIImage imageNamed:@"clearcamera"]];
         [cameraAlbumButton addTarget:self action:@selector(cameraButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [sidebarContentView addSubview:cameraAlbumButton];
@@ -102,25 +104,34 @@
                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [iPhotoAlbumButton setImage:[UIImage imageNamed:@"clearphotoalbum"]];
         [iPhotoAlbumButton addTarget:self action:@selector(albumButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        iPhotoAlbumButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
+        iPhotoAlbumButton.shadowInset = -1;
         [sidebarContentView addSubview:iPhotoAlbumButton];
         
         // faces button
         iPhotoFacesButton = [[MMFaceButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 2* kWidthOfSidebarButton, buttonBounds.origin.y,
                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [iPhotoFacesButton addTarget:self action:@selector(faceButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        iPhotoFacesButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
+        iPhotoFacesButton.shadowInset = -1;
         [sidebarContentView addSubview:iPhotoFacesButton];
         
         // event button
         iPhotoEventsButton = [[MMPalmTreeButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 3* kWidthOfSidebarButton, buttonBounds.origin.y,
                                                                     kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [iPhotoEventsButton addTarget:self action:@selector(eventButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        iPhotoEventsButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
+        iPhotoEventsButton.shadowInset = -1;
         [sidebarContentView addSubview:iPhotoEventsButton];
         
         pdfInboxButton = [[MMPDFButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4* kWidthOfSidebarButton, buttonBounds.origin.y,
                                                                                 kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [pdfInboxButton addTarget:self action:@selector(pdfButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        pdfInboxButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
+        pdfInboxButton.shadowInset = -1;
         [sidebarContentView addSubview:pdfInboxButton];
         
+        [self highlightButton:cameraAlbumButton];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(killMemory) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 }
     return self;
@@ -181,24 +192,38 @@
     }
 }
 
--(void) cameraButtonTapped:(UIButton*)button{
+-(void) highlightButton:(MMSidebarButton*)button{
+    pdfInboxButton.selected = NO;
+    iPhotoAlbumButton.selected = NO;
+    iPhotoEventsButton.selected = NO;
+    iPhotoFacesButton.selected = NO;
+    cameraAlbumButton.selected = NO;
+    button.selected = YES;
+}
+
+-(void) cameraButtonTapped:(MMSidebarButton*)button{
     [self switchToListView:cameraListContentView];
+    [self highlightButton:button];
 }
 
--(void) albumButtonTapped:(UIButton*)button{
+-(void) albumButtonTapped:(MMSidebarButton*)button{
     [self switchToListView:albumListContentView];
+    [self highlightButton:button];
 }
 
--(void) faceButtonTapped:(UIButton*)button{
+-(void) faceButtonTapped:(MMSidebarButton*)button{
     [self switchToListView:faceListContentView];
+    [self highlightButton:button];
 }
 
--(void) eventButtonTapped:(UIButton*)button{
+-(void) eventButtonTapped:(MMSidebarButton*)button{
     [self switchToListView:eventListContentView];
+    [self highlightButton:button];
 }
 
--(void) pdfButtonTapped:(UIButton*)button{
+-(void) pdfButtonTapped:(MMSidebarButton*)button{
     [self switchToListView:pdfListContentView];
+    [self highlightButton:button];
 }
 
 #pragma mark - MMPhotoManagerDelegate

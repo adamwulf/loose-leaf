@@ -12,10 +12,13 @@
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import <QuartzCore/QuartzCore.h>
 
-@implementation MMSidebarButton
+@implementation MMSidebarButton{
+    CGFloat shadowInset;
+}
 
 @synthesize delegate;
 @synthesize shadowColor;
+@synthesize shadowInset;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -26,6 +29,7 @@
         self.opaque = NO;
         self.adjustsImageWhenDisabled = NO;
         self.adjustsImageWhenHighlighted = NO;
+        self.shadowInset = 0;
     }
     return self;
 }
@@ -91,7 +95,7 @@
         CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)gradientColors, gradientLocations);
         CGContextSaveGState(context);
         
-        UIBezierPath* clipPath = [ovalPath copy];
+        UIBezierPath* clipPath = [UIBezierPath bezierPathWithOvalInRect:CGRectInset(ovalPath.bounds, shadowInset, shadowInset)];
         [clipPath appendPath:[UIBezierPath bezierPathWithRect:CGRectInfinite]];
         clipPath.usesEvenOddFillRule = YES;
         [clipPath addClip];
@@ -99,7 +103,7 @@
         CGFloat width = self.bounds.size.width - (2*kWidthOfSidebarButtonBuffer);
         CGContextDrawRadialGradient(context, gradient,
                                     CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), (width/2.0)-1,
-                                    CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), (width/2.0)+4.5,
+                                    CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), (width/2.0)+(width*0.08),
                                     kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation);
         
         CGGradientRelease(gradient);
