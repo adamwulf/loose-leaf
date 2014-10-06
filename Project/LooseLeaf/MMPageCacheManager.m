@@ -20,6 +20,7 @@
     MMUndoablePaperView* currentEditablePage;
     NSMutableArray* stateLoadedPages;
     NSMutableOrderedSet* pagesWithLoadedCacheImages;
+    BOOL hasEverLoadedAPageState;
 }
 
 @synthesize delegate;
@@ -34,7 +35,7 @@ static MMPageCacheManager* _instance = nil;
         _instance = self;
         stateLoadedPages = [NSMutableArray array];
         pagesWithLoadedCacheImages = [NSMutableOrderedSet orderedSet];
-        
+        hasEverLoadedAPageState = NO;
     }
     return _instance;
 }
@@ -134,6 +135,12 @@ static MMPageCacheManager* _instance = nil;
         if(page.scale > kMinPageZoom){
             [self ensureTopPageIsLoaded:currentlyTopPage];
         }
+    }
+    if(!hasEverLoadedAPageState){
+        hasEverLoadedAPageState = YES;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0),^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:kPageCacheManagerHasLoadedAnyPage object:self];
+        });
     }
 }
 

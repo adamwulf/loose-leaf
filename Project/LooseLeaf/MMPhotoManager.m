@@ -9,6 +9,7 @@
 #import "MMPhotoManager.h"
 #import "MMDefaultPhotoAlbum.h"
 #import "NSThread+BlockAdditions.h"
+#import "NSArray+Map.h"
 #import "Constants.h"
 
 @implementation MMPhotoManager{
@@ -251,6 +252,10 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                                             faces = [self sortArrayByAlbumName:updatedFacesList];
                                                             cameraRoll = updatedCameraRoll;
                                                             cameraRoll.reversed = YES;
+                                                            [[[[albums arrayByAddingObjectsFromArray:events] arrayByAddingObjectsFromArray:faces] arrayByAddingObject:cameraRoll] mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
+                                                                [obj loadPreviewPhotos];
+                                                                return obj;
+                                                            }];
                                                         }
                                                         hasEverInitailized = YES;
                                                         [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];

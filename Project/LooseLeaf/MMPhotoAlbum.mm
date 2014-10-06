@@ -27,6 +27,7 @@ dispatch_queue_t fetchThumbnailQueue;
     NSArray* previewPhotos;
     BOOL previewPhotosAreLoaded;
     BOOL reversed;
+    short numberOfPreviewPhotos;
 }
 
 @synthesize assetURL;
@@ -53,6 +54,7 @@ dispatch_queue_t fetchThumbnailQueue;
         type = group.type;
         numberOfPhotos = group.numberOfAssets;
         previewPhotosAreLoaded = NO;
+        numberOfPreviewPhotos = 5;
     }
     return self;
 }
@@ -105,7 +107,7 @@ BOOL isEnumerating = NO;
             [group enumerateAssetsWithOptions:reversed ? NULL : NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
                 if(result){
                     [updatedPreviewPhotos addObject:[UIImage imageWithCGImage:result.aspectRatioThumbnail]];
-                    if([updatedPreviewPhotos count] >= 5){
+                    if([updatedPreviewPhotos count] >= numberOfPreviewPhotos){
                         stop[0] = YES;
                     }
                 }else{

@@ -16,6 +16,7 @@
 #import "MMMemoryManager.h"
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "MMDeletePageSidebarController.h"
+#import "MMPhotoManager.h"
 
 @implementation MMLooseLeafViewController{
     MMMemoryManager* memoryManager;
@@ -25,6 +26,11 @@
 - (id)init{
     if(self = [super init]){
         [[Crashlytics sharedInstance] setDelegate:self];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(pageCacheManagerDidLoadPage)
+                                                     name:kPageCacheManagerHasLoadedAnyPage
+                                                   object:[MMPageCacheManager sharedInstance]];
 
         // Do any additional setup after loading the view, typically from a nib.
         srand ((uint) time(NULL) );
@@ -92,6 +98,11 @@
         [self.view addSubview:memoryProfileView];
     }
     return self;
+}
+
+-(void) pageCacheManagerDidLoadPage{
+    [[MMPhotoManager sharedInstance] initializeAlbumCache];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kPageCacheManagerHasLoadedAnyPage object:nil];
 }
 
 -(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication{

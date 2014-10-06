@@ -164,6 +164,9 @@ _Pragma("clang diagnostic pop") \
 // photo album
 #define kMaxPhotoRotationInDegrees 20
 
+// page cache manager
+#define kPageCacheManagerHasLoadedAnyPage @"PageCacheManagerLoadedFirstPage"
+
 #define RandomPhotoRotation(a) (^float(NSInteger b){srand((unsigned)b); float output = ((float)(rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees/2)) / 360.0 * M_PI; srand((unsigned)time(NULL)); return output;})(a)
 
 // cache sizes
