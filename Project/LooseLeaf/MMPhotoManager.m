@@ -186,10 +186,14 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
 -(void) albumUpdated:(NSURL*)urlOfUpdatedAlbum{
     [[self assetsLibrary] groupForURL:urlOfUpdatedAlbum
                           resultBlock:^(ALAssetsGroup *group) {
-                              MMPhotoAlbum* updatedAlbum = [self albumWithURL:group.url];
-                              [updatedAlbum refreshAlbumContentsWithGroup:group];
-                              [self resortAlbums];
-                              [self.delegate albumUpdated:updatedAlbum];
+                              if(!group){
+                                  [self albumDeleted:urlOfUpdatedAlbum];
+                              }else{
+                                  MMPhotoAlbum* updatedAlbum = [self albumWithPersistentId:group.persistentId];
+                                  [updatedAlbum refreshAlbumContentsWithGroup:group];
+                                  [self resortAlbums];
+                                  [self.delegate albumUpdated:updatedAlbum];
+                              }
                           }
                          failureBlock:^(NSError *error) {
                              [self processError:error];
@@ -215,8 +219,8 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
     return [arrayToSort sortedArrayUsingComparator:sortByName];
 }
 
--(MMPhotoAlbum*) albumWithURL:(NSURL*)url{
-    if([cameraRoll.assetURL isEqual:url]){
+-(MMPhotoAlbum*) albumWithPersistentId:(NSString*)persistentId{
+    if([cameraRoll.persistentId isEqual:persistentId]){
         return cameraRoll;
     }
     NSArray* allItems = nil;
@@ -224,7 +228,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
         allItems = [[albums arrayByAddingObjectsFromArray:events] arrayByAddingObjectsFromArray:faces];
     }
     for (MMPhotoAlbum* album in allItems) {
-        if([album.assetURL isEqual:url]){
+        if([album.persistentId isEqual:persistentId]){
             return album;
         }
     }
@@ -266,7 +270,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                                         hasEverInitailized = YES;
                                                         [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
                                                     }else if ([group numberOfAssets] > 0 || group.type == ALAssetsGroupSavedPhotos){
-                                                        MMPhotoAlbum* addedAlbum = [self albumWithURL:group.url];
+                                                        MMPhotoAlbum* addedAlbum = [self albumWithPersistentId:group.persistentId];
                                                         if(!addedAlbum){
                                                             addedAlbum = [[MMPhotoAlbum alloc] initWithAssetGroup:group];
                                                         }

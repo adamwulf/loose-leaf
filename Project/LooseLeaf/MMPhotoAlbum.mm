@@ -105,7 +105,7 @@ BOOL isEnumerating = NO;
         NSMutableArray* updatedPreviewPhotos = [NSMutableArray array];
         @synchronized(self){
             isEnumerating = YES;
-            [group enumerateAssetsWithOptions:reversed ? NULL : NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+            [group enumerateAssetsWithOptions:reversed ? NULL : NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger indexOnDisk, BOOL *stop) {
                 if(result){
                     [updatedPreviewPhotos addObject:[[MMPhoto alloc] initWithALAsset:result]];
                     [[updatedPreviewPhotos lastObject] aspectRatioThumbnail]; // force the thumbnail to load.
@@ -124,26 +124,26 @@ BOOL isEnumerating = NO;
 }
 
 
--(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMPhotoGroupEnumerationResultsBlock)enumerationBlock{
+-(void) loadPhotosAtIndexes:(NSIndexSet*)indexSetInView usingBlock:(MMPhotoGroupEnumerationResultsBlock)enumerationBlock{
     @try{
         try{
+            NSIndexSet* indexSetOnDisk = indexSetInView;
             if(reversed){
                 // reverse what we fetch from the real album ordering
-                indexSet = [indexSet mapIndexesUsingBlock:^NSUInteger(NSUInteger idx) {
+                indexSetOnDisk = [indexSetInView mapIndexesUsingBlock:^NSUInteger(NSUInteger idx) {
                     return self.numberOfPhotos - idx - 1;
                 }];
             }
-            ALAssetsGroupEnumerationResultsBlock indexManagerBlock = ^(ALAsset *result, NSUInteger index, BOOL *stop){
-                if(reversed){
-                    // remap the index to what the user asked for.
-                    // this way the user's index values map to
-                    // new values here
-                    index = self.numberOfPhotos - index - 1;
-                }
-                if(index < [previewPhotos count]){
-                    enumerationBlock(result ? [previewPhotos objectAtIndex:index] : nil, index, stop);
+            ALAssetsGroupEnumerationResultsBlock indexManagerBlock = ^(ALAsset *result, NSUInteger indexOnDisk, BOOL *stop){
+                // remap the index to what the user asked for.
+                // this way the user's index values map to
+                // new values here
+                NSUInteger indexInView = reversed ? (self.numberOfPhotos - indexOnDisk - 1) : indexOnDisk;
+                NSUInteger idxInPreviews = !reversed ? (self.numberOfPhotos - indexOnDisk - 1) : indexOnDisk;
+                if(idxInPreviews < [previewPhotos count]){
+                    enumerationBlock(result ? [previewPhotos objectAtIndex:idxInPreviews] : nil, indexInView, stop);
                 }else{
-                    enumerationBlock(result ? [[MMPhoto alloc] initWithALAsset:result] : nil, index, stop);
+                    enumerationBlock(result ? [[MMPhoto alloc] initWithALAsset:result] : nil, indexInView, stop);
                 }
             };
             @synchronized(self){
@@ -151,15 +151,16 @@ BOOL isEnumerating = NO;
                 
                 __block BOOL stop = NO;
                 NSMutableIndexSet* indexesToLoad = [NSMutableIndexSet indexSet];
-                [indexSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *_s) {
-                    NSUInteger unmappedIdx = reversed ? (self.numberOfPhotos - idx - 1) : idx;
-                    if(unmappedIdx < [previewPhotos count]){
-                        enumerationBlock([previewPhotos objectAtIndex:unmappedIdx], unmappedIdx, &stop);
+                [indexSetOnDisk enumerateIndexesUsingBlock:^(NSUInteger indexOnDisk, BOOL *_s) {
+                    NSUInteger idxInView = reversed ? (self.numberOfPhotos - indexOnDisk - 1) : indexOnDisk;
+                    NSUInteger idxInPreviews = !reversed ? (self.numberOfPhotos - indexOnDisk - 1) : indexOnDisk;
+                    if(idxInPreviews < [previewPhotos count]){
+                        enumerationBlock([previewPhotos objectAtIndex:idxInPreviews], idxInView, &stop);
                         if(stop){
                             _s[0] = YES;
                         }
                     }else{
-                        [indexesToLoad addIndex:idx];
+                        [indexesToLoad addIndex:indexOnDisk];
                     }
                 }];
                 
