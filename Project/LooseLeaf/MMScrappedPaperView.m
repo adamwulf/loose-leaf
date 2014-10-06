@@ -1235,12 +1235,17 @@
     [self updateThumbnailVisibility];
 }
 
+-(void) loadCachedPreview{
+    [self loadCachedPreviewAndDecompressImmediately:NO];
+}
+
+
 /**
  * load any scrap previews, if applicable.
  * not sure if i'll just draw these into the
  * page preview or not
  */
--(void) loadCachedPreview{
+-(void) loadCachedPreviewAndDecompressImmediately:(BOOL)forceToDecompressImmediately{
     @autoreleasepool {
         @synchronized(self){
             isAskedToLoadThumbnail = YES;

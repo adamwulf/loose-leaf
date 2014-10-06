@@ -96,7 +96,7 @@
         [message fetchDetailsWithCompletionHandler:^(NSError *error) {
             if(!error){
                 if(!zipFileLocation){
-                    NSString* movedZipFileLocation = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"IncomingPages"] stringByAppendingString:[NSString createStringUUID]];
+                    NSString* movedZipFileLocation = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"IncomingPages"] stringByAppendingPathComponent:[NSString createStringUUID]];
                     NSError* err;
                     [[NSFileManager defaultManager] copyItemAtPath:message.messageData.path toPath:movedZipFileLocation error:&err];
                     if(err){

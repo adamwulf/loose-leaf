@@ -229,12 +229,11 @@
 }
 
 -(void) didProcessIncomingImage:(UIImage*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
-    CGFloat scale = [UIScreen mainScreen].scale;
     
     // import after slight delay so the transition from the other app
     // can complete nicely
     [[NSThread mainThread] performBlock:^{
-        NSLog(@"got image: %p scale: %f width: %f %f", scrapBacking, scale, scrapBacking.size.width, scrapBacking.size.height);
+        NSLog(@"got image: %p width: %f %f", scrapBacking, scrapBacking.size.width, scrapBacking.size.height);
         
         MMVector* up = [[MMRotationManager sharedInstance] upVector];
         MMVector* perp = [[up perpendicular] normal];

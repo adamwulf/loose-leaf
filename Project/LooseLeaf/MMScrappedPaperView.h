@@ -63,4 +63,8 @@
 
 -(CGSize) thumbnailSize;
 
+#pragma mark - protected
+
+-(void) loadCachedPreviewAndDecompressImmediately:(BOOL)forceToDecompressImmediately;
+
 @end

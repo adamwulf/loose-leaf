@@ -121,7 +121,6 @@ static dispatch_queue_t fileSystemQueue;
     
     NSLog(@"found max dimension: %d", maxDim);
     
-    CGFloat scale = [UIScreen mainScreen].scale;
     NSDictionary* d = @{(id)kCGImageSourceShouldAllowFloat: (id)kCFBooleanTrue,
                         (id)kCGImageSourceCreateThumbnailWithTransform: (id)kCFBooleanTrue,
                         (id)kCGImageSourceCreateThumbnailFromImageAlways: (id)kCFBooleanTrue,
@@ -130,7 +129,8 @@ static dispatch_queue_t fileSystemQueue;
     UIImage* scrapBacking = nil;
     
     if(imref){
-        scrapBacking = [UIImage imageWithCGImage:imref scale:scale orientation:UIImageOrientationUp];
+        // need to always import images at 1.0x scale
+        scrapBacking = [UIImage imageWithCGImage:imref scale:1.0 orientation:UIImageOrientationUp];
         CFRelease(imref);
     }
     CFRelease(imageSource);
