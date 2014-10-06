@@ -119,14 +119,17 @@
     lastAlbumScrollOffset = albumListScrollView.contentOffset;
     lastPhotoScrollOffset = photoListScrollView.contentOffset;
     isShowing = NO;
-    [[NSThread mainThread] performBlock:^{
-        [photoListScrollView reloadData];
-        [self updateEmptyErrorMessage];
-    } afterDelay:.1];
 }
 
 -(void) killMemory{
     [albumListScrollView killMemory];
+    if(![self isShowing]){
+        // only clear the cache if its been a while (?)
+        [photoListScrollView reloadData];
+        [self updateEmptyErrorMessage];
+        lastPhotoScrollOffset = CGPointZero;
+        lastAlbumScrollOffset = CGPointZero;
+    }
 }
 
 #pragma mark - MMPhotoManagerDelegate
@@ -253,11 +256,13 @@
     
     if(animated){
         [[NSThread mainThread] performBlock:^{
+            [photoListScrollView reloadData];
             [photoListScrollView setCollectionViewLayout:[[MMPhotoAlbumListLayout alloc] initForRotation:[self idealRotationForOrientation]] animated:YES];
             [UIView animateWithDuration:.3 animations:updateVisibleRowsWithRotation];
         }];
     }else{
         [[NSThread mainThread] performBlock:^{
+            [photoListScrollView reloadData];
             [photoListScrollView setCollectionViewLayout:[[MMPhotoAlbumListLayout alloc] initForRotation:[self idealRotationForOrientation]] animated:NO];
             updateVisibleRowsWithRotation();
         }];

@@ -120,6 +120,8 @@
                                                                                 kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [pdfInboxButton addTarget:self action:@selector(pdfButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [sidebarContentView addSubview:pdfInboxButton];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(killMemory) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 }
     return self;
 }
@@ -152,14 +154,6 @@
         [eventListContentView hide:animated];
         [pdfListContentView hide:animated];
         
-        if(finished){
-            [cameraListContentView killMemory];
-            [albumListContentView killMemory];
-            [faceListContentView killMemory];
-            [eventListContentView killMemory];
-            [pdfListContentView killMemory];
-        }
-
         if(onComplete){
             onComplete(finished);
         }
@@ -289,6 +283,19 @@
             animations();
         }
     }];
+}
+
+
+#pragma mark - Memory
+
+-(void) killMemory{
+    if(![self isVisible]){
+        [cameraListContentView killMemory];
+        [albumListContentView killMemory];
+        [faceListContentView killMemory];
+        [eventListContentView killMemory];
+        [pdfListContentView killMemory];
+    }
 }
 
 
