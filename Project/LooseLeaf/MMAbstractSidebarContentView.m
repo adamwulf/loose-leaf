@@ -24,6 +24,9 @@
 @implementation MMAbstractSidebarContentView{
     NSMutableDictionary* currentRowForAlbum;
     MMEmptyCollectionViewCell* emptyView;
+    
+    CGPoint lastAlbumScrollOffset;
+    CGPoint lastPhotoScrollOffset;
 }
 
 @synthesize delegate;
@@ -109,9 +112,12 @@
     [[MMPhotoManager sharedInstance] initializeAlbumCache];
     [self updatePhotoRotation:NO];
     isShowing = YES;
+    albumListScrollView.contentOffset = lastAlbumScrollOffset;
 }
 
 -(void) hide:(BOOL)animated{
+    lastAlbumScrollOffset = albumListScrollView.contentOffset;
+    lastPhotoScrollOffset = photoListScrollView.contentOffset;
     isShowing = NO;
     [[NSThread mainThread] performBlock:^{
         [photoListScrollView reloadData];
@@ -132,6 +138,7 @@
     }];
     if(photoListScrollView.alpha){
         [photoListScrollView reloadData];
+        photoListScrollView.contentOffset = lastPhotoScrollOffset;
     }
 }
 
