@@ -476,27 +476,29 @@
                 }@catch (id exc) {
                     //        NSAssert(NO, @"need to log this");
                     debug_NSLog(@"need to mail the paths");
-                    
-                    NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
-                    
-                    [dateFormater setDateFormat:@"yyyy-MM-DD HH:mm:ss"];
-                    NSString *convertedDateString = [dateFormater stringFromDate:[NSDate date]];
-                    
-                    NSString* textForEmail = @"Shapes in view:\n\n";
-                    textForEmail = [textForEmail stringByAppendingFormat:@"scissor:\n%@\n\n\n", strokePath];
-                    textForEmail = [textForEmail stringByAppendingFormat:@"shape:\n%@\n\n\n", scrapClippingPath];
-                    
-                    MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
-                    [controller setMailComposeDelegate:self];
-                    [controller setToRecipients:[NSArray arrayWithObject:@"adam.wulf@gmail.com"]];
-                    [controller setSubject:[NSString stringWithFormat:@"Shape Clipping Test Case %@", convertedDateString]];
-                    [controller setMessageBody:textForEmail isHTML:NO];
-                    //        [controller addAttachmentData:imageData mimeType:@"image/png" fileName:@"screenshot.png"];
-                    
-                    if(controller){
-                        UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
-                        [rootController presentViewController:controller animated:YES completion:nil];
-                    }
+
+                    //
+                    // TODO: https://github.com/adamwulf/loose-leaf/issues/664
+//                    NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
+//                    
+//                    [dateFormater setDateFormat:@"yyyy-MM-DD HH:mm:ss"];
+//                    NSString *convertedDateString = [dateFormater stringFromDate:[NSDate date]];
+//                    
+//                    NSString* textForEmail = @"Shapes in view:\n\n";
+//                    textForEmail = [textForEmail stringByAppendingFormat:@"scissor:\n%@\n\n\n", strokePath];
+//                    textForEmail = [textForEmail stringByAppendingFormat:@"shape:\n%@\n\n\n", scrapClippingPath];
+//                    
+//                    MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
+//                    [controller setMailComposeDelegate:self];
+//                    [controller setToRecipients:[NSArray arrayWithObject:@"adam.wulf@gmail.com"]];
+//                    [controller setSubject:[NSString stringWithFormat:@"Shape Clipping Test Case %@", convertedDateString]];
+//                    [controller setMessageBody:textForEmail isHTML:NO];
+//                    //        [controller addAttachmentData:imageData mimeType:@"image/png" fileName:@"screenshot.png"];
+//                    
+//                    if(controller){
+//                        UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+//                        [rootController presentViewController:controller animated:YES completion:nil];
+//                    }
                 }
                 
                 NSArray* redSegments = [redAndBlueSegments firstObject]; // intersection
@@ -801,23 +803,25 @@
         //
         // DEBUG
         //
+        // TODO: https://github.com/adamwulf/loose-leaf/issues/664
+        //
         // send an email with the paths that we cut
-        NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
-        
-        [dateFormater setDateFormat:@"yyyy-MM-DD HH:mm:ss"];
-        NSString *convertedDateString = [dateFormater stringFromDate:[NSDate date]];
-        
-        MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
-        [controller setMailComposeDelegate:self];
-        [controller setToRecipients:[NSArray arrayWithObject:@"adam.wulf@gmail.com"]];
-        [controller setSubject:[NSString stringWithFormat:@"Shape Clipping Test Case %@", convertedDateString]];
-        [controller setMessageBody:debugFullText isHTML:NO];
-//        [controller addAttachmentData:imageData mimeType:@"image/png" fileName:@"screenshot.png"];
-        
-        if(controller){
-            UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
-            [rootController presentViewController:controller animated:YES completion:nil];
-        }
+//        NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
+//        
+//        [dateFormater setDateFormat:@"yyyy-MM-DD HH:mm:ss"];
+//        NSString *convertedDateString = [dateFormater stringFromDate:[NSDate date]];
+//        
+//        MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
+//        [controller setMailComposeDelegate:self];
+//        [controller setToRecipients:[NSArray arrayWithObject:@"adam.wulf@gmail.com"]];
+//        [controller setSubject:[NSString stringWithFormat:@"Shape Clipping Test Case %@", convertedDateString]];
+//        [controller setMessageBody:debugFullText isHTML:NO];
+////        [controller addAttachmentData:imageData mimeType:@"image/png" fileName:@"screenshot.png"];
+//        
+//        if(controller){
+//            UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+//            [rootController presentViewController:controller animated:YES completion:nil];
+//        }
     }
     
     return [[MMScissorResult alloc] initWithAddedScraps:scrapsBeingBuilt

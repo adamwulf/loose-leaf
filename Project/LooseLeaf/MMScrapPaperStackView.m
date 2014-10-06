@@ -728,28 +728,6 @@ int skipAll = NO;
     [[visibleStackHolder peekSubview] cancelAllGestures];
     [self setButtonsVisible:NO withDuration:0.15];
     [sharePageSidebar show:YES];
-    
-    
-    
-    
-    
-    
-//    if([[visibleStackHolder peekSubview] hasEditsToSave]){
-//        wantsExport = [visibleStackHolder peekSubview];
-//    }else{
-//        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
-//        [composer setMailComposeDelegate:self];
-//        if([MFMailComposeViewController canSendMail]) {
-//            [composer setSubject:@"Quick sketch from Loose Leaf"];
-//            [composer setMessageBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
-//            [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-//            
-//            NSData *data = UIImagePNGRepresentation([visibleStackHolder peekSubview].scrappedImgViewImage);
-//            [composer addAttachmentData:data  mimeType:@"image/png" fileName:@"LooseLeaf.png"];
-//            
-//            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:composer animated:YES completion:nil];
-//        }
-//    }
 }
 
 
