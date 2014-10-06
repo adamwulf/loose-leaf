@@ -52,9 +52,6 @@
 
 -(CGSize)collectionViewContentSize{
     NSInteger numSections = self.collectionView.numberOfSections;
-    if(self.collectionView.tag == 1000){
-        NSLog(@"layout told of %d sections", (int) numSections);
-    }
     if(!numSections){
         return CGSizeZero;
     }

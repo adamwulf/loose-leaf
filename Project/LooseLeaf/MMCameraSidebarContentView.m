@@ -40,8 +40,6 @@
         [photoListScrollView registerClass:[MMPermissionPhotosCollectionViewCell class] forCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell"];
         [photoListScrollView registerClass:[MMPermissionCameraPhotosCollectionViewCell class]
                 forCellWithReuseIdentifier:@"MMPermissionCameraPhotosCollectionViewCell"];
-        
-        photoListScrollView.tag = 1000;
     }
     return self;
 }
@@ -92,9 +90,7 @@
     currentAlbum = [[MMPhotoManager sharedInstance] cameraRoll];
     if(self.isShowing && photoListScrollView.alpha){
         [photoListScrollView reloadData];
-        NSLog(@"content size before block: %f %f", photoListScrollView.contentSize.width, photoListScrollView.contentSize.height);
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"content size in block: %f %f", photoListScrollView.contentSize.width, photoListScrollView.contentSize.height);
             [photoListScrollView setContentOffset:lastCameraRollOffset animated:NO];
         });
     }
@@ -135,7 +131,6 @@
         return 1;
     }
     NSInteger ret = isShowing ? 2 : 0;
-    NSLog(@"camera roll has %d sections", (int) ret);
     return ret;
 }
 
