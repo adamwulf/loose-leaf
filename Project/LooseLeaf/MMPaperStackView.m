@@ -135,6 +135,29 @@
  * adds the page to the bottom of the stack
  * and adds to the bottom of the subviews
  */
+-(void) addPage:(MMPaperView*)page belowPage:(MMPaperView*)otherPage{
+    page.isBrandNewPage = NO;
+    page.delegate = self;
+    [page enableAllGestures];
+    if([bezelStackHolder containsSubview:otherPage]){
+        [visibleStackHolder pushSubview:page];
+    }else if([visibleStackHolder containsSubview:otherPage]){
+        // this will convert the frame of the newly inserted page
+        [visibleStackHolder pushSubview:page];
+        // and this will position it at the correct index
+        [visibleStackHolder insertSubview:page belowSubview:otherPage];
+    }else if([hiddenStackHolder containsSubview:otherPage]){
+        // this will convert the frame of the newly inserted page
+        [hiddenStackHolder pushSubview:page];
+        // and this will position it at the correct index
+        [hiddenStackHolder insertSubview:page aboveSubview:otherPage];
+    }
+}
+
+/**
+ * adds the page to the bottom of the stack
+ * and adds to the bottom of the subviews
+ */
 -(void) addPaperToBottomOfHiddenStack:(MMPaperView*)page{
     page.isBrandNewPage = YES;
     page.delegate = self;

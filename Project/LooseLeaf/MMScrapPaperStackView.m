@@ -229,7 +229,7 @@
 }
 
 -(void) didProcessIncomingImage:(UIImage*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
-    
+    [super didProcessIncomingImage:scrapBacking fromURL:url fromApp:sourceApplication];
     // import after slight delay so the transition from the other app
     // can complete nicely
     [[NSThread mainThread] performBlock:^{

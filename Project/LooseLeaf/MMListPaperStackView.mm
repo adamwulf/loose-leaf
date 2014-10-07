@@ -1676,6 +1676,53 @@
     // we can forget about the original frame locations
 }
 
+#pragma mark - MMInboxManagerDelegate
+
+-(void) didProcessIncomingImage:(UIImage*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
+    if(!isShowingPageView){
+        // if we're in list mode, then we need
+        // to move into page mode with a new blank page
+        // that is inserted wherever we're looking
+        MMPaperView* thePageToAddAfter = nil;
+        CGFloat closestDistance = CGFLOAT_MAX;
+        CGPoint pointToAimFor = CGPointMake(self.center.x + self.contentOffset.x, self.center.y + self.contentOffset.y);
+        for(MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
+            CGFloat distanceFromPage = DistanceBetweenTwoPoints(pointToAimFor, [self convertPoint:aPage.center fromView:aPage.superview]);
+            if(closestDistance > distanceFromPage){
+                thePageToAddAfter = aPage;
+                closestDistance = distanceFromPage;
+            }
+        }
+        
+        //
+        // this'll determine the resolution of the canvas too
+        MMEditablePaperView* paper = [[MMExportablePaperView alloc] initWithFrame:self.bounds];
+        // now size it for display
+        paper.frame = addPageButtonInListView.frame;
+        if(!thePageToAddAfter){
+            // if list is empty
+            [self addPaperToBottomOfHiddenStack:paper];
+        }else{
+            // otherwise, add immediately below the
+            // center most page.
+            [self addPage:paper belowPage:thePageToAddAfter];
+        }
+        [self ensurePageIsAtTopOfVisibleStack:paper];
+        [self immediatelyAnimateFromListViewToFullScreenView];
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+        [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];    }
+}
+
+-(void) didProcessIncomingPDF:(MMPDF*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
+    @throw kAbstractMethodException;
+}
+
+-(void) failedToProcessIncomingURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
+    @throw kAbstractMethodException;
+}
+
+
+
 #pragma mark - MMPageCacheManagerDelegate
 
 
