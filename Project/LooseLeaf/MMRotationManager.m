@@ -220,7 +220,6 @@ static BOOL ignoredFirstRotateNotification = NO;
 
 -(MMVector*) upVector{
     MMVector* up = [[[MMVector vectorWithAngle:-([currentRotationReading angle])] flip] normal];
-    NSLog(@"up vector is: %@", up);
     return up;
 }
 

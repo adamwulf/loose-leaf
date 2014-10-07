@@ -105,7 +105,7 @@
 // should show combinations of drawable view, scrap container,
 // ink thumb, or scrapped thumb depending on editable state
 // and what's loaded into memory
--(void) updateThumbnailVisibility{
+-(void) updateThumbnailVisibility:(BOOL)forceUpdateIconImage{
     CheckMainThread;
     if(drawableView && drawableView.superview && (self.scale > kMinPageZoom || hasPendingScrappedIconUpdate)){
         // if we have a drawable view, and it's been added to our page
@@ -968,12 +968,12 @@
         // get a UIImage from the image context- enjoy!!!
         UIImage* generatedScrappedThumbnailImage = UIGraphicsGetImageFromCurrentImageContext();
         scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForDecompressedImage:generatedScrappedThumbnailImage andDelegate:self];
+        [UIImagePNGRepresentation(scrappedImgViewImage.image) writeToFile:[self scrappedThumbnailPath] atomically:YES];
         [[MMLoadImageCache sharedInstance] updateCacheForPath:[self scrappedThumbnailPath] toImage:scrappedImgViewImage.image];
         [[NSThread mainThread] performBlock:^{
             [self didDecompressImage:scrappedImgViewImage];
         }];
         
-        [UIImagePNGRepresentation(scrappedImgViewImage.image) writeToFile:[self scrappedThumbnailPath] atomically:YES];
         definitelyDoesNotHaveAScrappedThumbnail = NO;
         
         // clean up drawing environment
@@ -1129,17 +1129,17 @@
                     // we actually generate the thumbnail.
                     lastSavedPaperStateHashForGeneratedThumbnail = lastSavedPaperStateHash;
                     lastSavedScrapStateHashForGeneratedThumbnail = lastSavedScrapStateHash;
-//                    NSLog(@"generating thumbnail for %@ (at %lu) with %d saves in progress",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+                    NSLog(@"generating thumbnail for %@ (at %lu) with %d saves in progress",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
                     // only save a new thumbnail if we have our state loaded
                     [self updateFullPageThumbnail:immutableScrapState];
                 }else{
-//                    NSLog(@"can't generating thumbnail without immutableScrapState for %@ (at %lu) with %d saves in progress",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+                    NSLog(@"can't generating thumbnail without immutableScrapState for %@ (at %lu) with %d saves in progress",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
                 }
-//                NSLog(@"done generating thumbnail (at %lu) with %d saves in progress", (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+                NSLog(@"done generating thumbnail (at %lu) with %d saves in progress", (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
             }else if(hasPendingScrappedIconUpdate){
-//                NSLog(@"%@ skipped generating thumbnail (at %lu) because of %d pending saves",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+                NSLog(@"%@ skipped generating thumbnail (at %lu) because of %d pending saves",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
             }else{
-//                NSLog(@"%@ skipped generating thumbnail (at %lu) because page and scraps hadn't changed",self, (unsigned long) immutableScrapState.undoHash);
+                NSLog(@"%@ skipped generating thumbnail (at %lu) because page and scraps hadn't changed",self, (unsigned long) immutableScrapState.undoHash);
             }
 
             [NSThread performBlockOnMainThread:^{
@@ -1288,7 +1288,7 @@
 }
 
 -(void) didDecompressImage:(MMDecompressImagePromise*)promise{
-    [self updateThumbnailVisibility];
+    [self updateThumbnailVisibility:YES];
 }
 
 -(void) unloadCachedPreview{

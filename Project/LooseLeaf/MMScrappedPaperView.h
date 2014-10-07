@@ -55,8 +55,6 @@
 
 -(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block;
 
--(void) updateThumbnailVisibility;
-
 -(NSString*) scrapIDsPath;
 
 -(NSArray*) scrapsOnPaper;

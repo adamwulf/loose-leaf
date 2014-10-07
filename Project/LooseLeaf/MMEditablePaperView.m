@@ -18,6 +18,7 @@
 #import "MMLoadImageCache.h"
 #import "UIView+Animations.h"
 #import "Mixpanel.h"
+#import "MMEditablePaperViewSubclass.h"
 
 dispatch_queue_t importThumbnailQueue;
 
@@ -125,6 +126,10 @@ dispatch_queue_t importThumbnailQueue;
 }
 
 -(void) updateThumbnailVisibility{
+    [self updateThumbnailVisibility:NO];
+}
+
+-(void) updateThumbnailVisibility:(BOOL)forceUpdateIconImage{
     @throw kAbstractMethodException;
 }
 

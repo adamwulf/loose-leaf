@@ -14,6 +14,7 @@
 
 -(void) saveToDiskHelper:(void (^)(BOOL didSaveEdits))onComplete;
 
+-(void) updateThumbnailVisibility:(BOOL)forceUpdateIconImage;
 
 @end
 

@@ -233,7 +233,7 @@
     // import after slight delay so the transition from the other app
     // can complete nicely
     [[NSThread mainThread] performBlock:^{
-        NSLog(@"got image: %p width: %f %f", scrapBacking, scrapBacking.size.width, scrapBacking.size.height);
+//        NSLog(@"got image: %p width: %f %f", scrapBacking, scrapBacking.size.width, scrapBacking.size.height);
         
         MMVector* up = [[MMRotationManager sharedInstance] upVector];
         MMVector* perp = [[up perpendicular] normal];
@@ -272,7 +272,12 @@
                              // doesn't need to land exactly center. this way
                              // multiple imports of multiple photos won't all
                              // land exactly on top of each other. looks nicer.
-                             CGPoint center = [visibleStackHolder peekSubview].center;
+                             MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+                             CGPoint center = CGPointMake(page.bounds.size.width/2, page.bounds.size.height/2);
+                             // scale the center point to 1.0 scale
+                             center = CGPointApplyAffineTransform(center, CGAffineTransformMakeScale(1/page.scale, 1/page.scale));
+                             // at this point, we have the true center of the page,
+                             // now add a bit of random to it to give it some variance
                              center.x += random() % 14 - 7;
                              center.y += random() % 14 - 7;
                              scrap.center = center;
