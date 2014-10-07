@@ -276,8 +276,7 @@
 
 -(void) setFrame:(CGRect)frame{
     [super setFrame:frame];
-    CGFloat _scale = frame.size.width / self.superview.frame.size.width;
-    scrapsOnPaperState.scrapContainerView.transform = CGAffineTransformMakeScale(_scale, _scale);
+    scrapsOnPaperState.scrapContainerView.transform = CGAffineTransformMakeScale(self.scale, self.scale);
 }
 
 #pragma mark - MMPanAndPinchScrapGestureRecognizerDelegate

@@ -95,8 +95,7 @@ dispatch_queue_t importThumbnailQueue;
 
 -(void) setFrame:(CGRect)frame{
     [super setFrame:frame];
-    CGFloat _scale = frame.size.width / self.superview.frame.size.width;
-    drawableView.transform = CGAffineTransformMakeScale(_scale, _scale);
+    drawableView.transform = CGAffineTransformMakeScale(self.scale, self.scale);
 }
 
 #pragma mark - Public Methods

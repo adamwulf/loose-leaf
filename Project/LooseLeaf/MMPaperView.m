@@ -13,7 +13,6 @@
 #import "NSString+UUID.h"
 #import "UIView+Debug.h"
 
-
 @implementation MMPaperView{
     CGRect originalUnscaledBounds;
 }
@@ -37,8 +36,8 @@
 }
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
-    self = [super initWithFrame:frame];
-    if (self) {
+    originalUnscaledBounds = CGRectMake(0, 0, frame.size.width, frame.size.height);
+    if (self = [super initWithFrame:frame]) {
         // Initialization code
         uuid = _uuid;
         originalUnscaledBounds = self.bounds;
@@ -123,7 +122,8 @@
     // now that we have adjusted our frame
     // let's set our scale to match exactly what our
     // actual frame scale is
-    self.scale = _frame.size.width / originalUnscaledBounds.size.width;
+    CGFloat newScale = _frame.size.width / originalUnscaledBounds.size.width;
+    self.scale = newScale;
 }
 
 

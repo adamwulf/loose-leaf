@@ -39,7 +39,7 @@ static dispatch_queue_t importExportStateQueue;
 #pragma mark - Properties
 
 -(BOOL) hasEditsToSave{
-    return hasEditsToSave || expectedUndoHash != lastSavedUndoHash;
+    return isLoaded && (hasEditsToSave || expectedUndoHash != lastSavedUndoHash);
 }
 
 -(NSUInteger) lastSavedUndoHash{

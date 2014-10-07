@@ -1606,7 +1606,9 @@
         // visible frame to the correct place
         for(MMPaperView* aPage in pagesThatNeedAnimating){
             if(aPage == [visibleStackHolder peekSubview]){
+                NSLog(@"animating from scale: %f", aPage.scale);
                 aPage.frame = [MMPaperView expandFrame:visibleStackHolder.bounds];
+                NSLog(@"animating to scale: %f", aPage.scale);
             }else if([self isInVisibleStack:aPage]){
                 aPage.frame = visibleStackHolder.bounds;
             }else{
@@ -1697,12 +1699,14 @@
         //
         // this'll determine the resolution of the canvas too
         MMEditablePaperView* paper = [[MMExportablePaperView alloc] initWithFrame:self.bounds];
-        // now size it for display
-        paper.frame = addPageButtonInListView.frame;
         if(!thePageToAddAfter){
+            // now size it for display
+            paper.frame = addPageButtonInListView.frame;
             // if list is empty
             [self addPaperToBottomOfHiddenStack:paper];
         }else{
+            // now size it for display
+            paper.frame = thePageToAddAfter.frame;
             // otherwise, add immediately below the
             // center most page.
             [self addPage:paper belowPage:thePageToAddAfter];
@@ -1772,7 +1776,7 @@
                 }
             }
             
-            page.frame = addPageButtonInListView.frame;
+            page.frame = thePageToAddAfter.frame;
             if(!thePageToAddAfter){
                 // if list is empty
                 [self addPaperToBottomOfHiddenStack:page];
@@ -1782,7 +1786,13 @@
                 [self addPage:page belowPage:thePageToAddAfter];
             }
             [self ensurePageIsAtTopOfVisibleStack:page];
-            [self immediatelyAnimateFromListViewToFullScreenView];
+//            [self realignPagesInListView:[NSSet setWithArray:[self findPagesInVisibleRowsOfListView]] animated:NO];
+            [[NSThread mainThread] performBlock:^{
+                // run on the next dispatch, that way our frame
+                // is definitley set to list view size, and our
+                // animation will zoom in correctly
+                [self immediatelyAnimateFromListViewToFullScreenView];
+            } afterDelay:.2];
             [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
             [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
         }];
