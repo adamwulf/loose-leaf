@@ -30,7 +30,6 @@ static dispatch_queue_t importExportStateQueue;
         expectedUndoHash = 0;
         lastSavedUndoHash = 0;
         allLoadedScraps = [NSMutableArray array];
-        allPropertiesForScraps = [NSMutableArray array];
     }
     return self;
 }
