@@ -53,6 +53,9 @@
 -(CGPoint) offsetNeededToShowPage:(MMPaperView*)page;
 -(NSArray*) findPagesInVisibleRowsOfListViewGivenOffset:(CGPoint)eventualOffsetOfListView;
 
+// returns yes if the imported page was handled
+-(BOOL) importAndShowPage:(MMExportablePaperView*)page;
+
 
 // protected
 

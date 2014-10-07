@@ -1129,17 +1129,17 @@
                     // we actually generate the thumbnail.
                     lastSavedPaperStateHashForGeneratedThumbnail = lastSavedPaperStateHash;
                     lastSavedScrapStateHashForGeneratedThumbnail = lastSavedScrapStateHash;
-                    NSLog(@"generating thumbnail for %@ (at %lu) with %d saves in progress",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+//                    NSLog(@"generating thumbnail for %@ (at %lu) with %d saves in progress",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
                     // only save a new thumbnail if we have our state loaded
                     [self updateFullPageThumbnail:immutableScrapState];
                 }else{
-                    NSLog(@"can't generating thumbnail without immutableScrapState for %@ (at %lu) with %d saves in progress",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+//                    NSLog(@"can't generating thumbnail without immutableScrapState for %@ (at %lu) with %d saves in progress",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
                 }
-                NSLog(@"done generating thumbnail (at %lu) with %d saves in progress", (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+//                NSLog(@"done generating thumbnail (at %lu) with %d saves in progress", (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
             }else if(hasPendingScrappedIconUpdate){
-                NSLog(@"%@ skipped generating thumbnail (at %lu) because of %d pending saves",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+//                NSLog(@"%@ skipped generating thumbnail (at %lu) because of %d pending saves",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
             }else{
-                NSLog(@"%@ skipped generating thumbnail (at %lu) because page and scraps hadn't changed",self, (unsigned long) immutableScrapState.undoHash);
+//                NSLog(@"%@ skipped generating thumbnail (at %lu) because page and scraps hadn't changed",self, (unsigned long) immutableScrapState.undoHash);
             }
 
             [NSThread performBlockOnMainThread:^{

@@ -364,6 +364,7 @@
     
     if(coordinator.uuidOfIncomingPage){
         MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:stackView.bounds andUUID:coordinator.uuidOfIncomingPage];
+        page.delegate = stackView;
         // this like will ensure the new page slides in with
         // its preview properly loaded in time.
         [page loadCachedPreviewAndDecompressImmediately:YES];

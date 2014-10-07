@@ -1710,7 +1710,8 @@
         [self ensurePageIsAtTopOfVisibleStack:paper];
         [self immediatelyAnimateFromListViewToFullScreenView];
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
-        [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];    }
+        [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
+    }
 }
 
 -(void) didProcessIncomingPDF:(MMPDF*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
@@ -1750,6 +1751,44 @@
 
 -(BOOL) isActivelyGesturing{
     return [super isActivelyGesturing] || !isShowingPageView;
+}
+
+#pragma mark - Import
+
+-(BOOL) importAndShowPage:(MMExportablePaperView*)page{
+    if(!isShowingPageView){
+        [[NSThread mainThread] performBlock:^{
+            // if we're in list mode, then we need
+            // to move into page mode with a new blank page
+            // that is inserted wherever we're looking
+            MMPaperView* thePageToAddAfter = nil;
+            CGFloat closestDistance = CGFLOAT_MAX;
+            CGPoint pointToAimFor = CGPointMake(self.center.x + self.contentOffset.x, self.center.y + self.contentOffset.y);
+            for(MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
+                CGFloat distanceFromPage = DistanceBetweenTwoPoints(pointToAimFor, [self convertPoint:aPage.center fromView:aPage.superview]);
+                if(closestDistance > distanceFromPage){
+                    thePageToAddAfter = aPage;
+                    closestDistance = distanceFromPage;
+                }
+            }
+            
+            page.frame = addPageButtonInListView.frame;
+            if(!thePageToAddAfter){
+                // if list is empty
+                [self addPaperToBottomOfHiddenStack:page];
+            }else{
+                // otherwise, add immediately below the
+                // center most page.
+                [self addPage:page belowPage:thePageToAddAfter];
+            }
+            [self ensurePageIsAtTopOfVisibleStack:page];
+            [self immediatelyAnimateFromListViewToFullScreenView];
+            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+            [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
+        }];
+        return YES;
+    }
+    return NO;
 }
 
 @end

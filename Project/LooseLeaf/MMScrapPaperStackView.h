@@ -17,6 +17,4 @@
 
 @interface MMScrapPaperStackView : MMEditablePaperStackView<MMScrapViewOwnershipDelegate,MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapSidebarContainerViewDelegate,MMStretchScrapGestureRecognizerDelegate,MMImageSidebarContainerViewDelegate,MMShareItemDelegate,MMCloudKitManagerDelegate>
 
--(void) importAndShowPage:(MMExportablePaperView*)page;
-
 @end
