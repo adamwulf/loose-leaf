@@ -149,7 +149,6 @@
         return [[obj1 objectForKey:@"firstName"] compare:[obj2 objectForKey:@"firstName"] options:NSCaseInsensitiveSearch];
     }];
     [listOfFriendsView reloadData];
-    
 }
 
 #pragma mark - CloudKit UI
@@ -349,7 +348,10 @@ BOOL hasSent = NO;
 }
 
 -(void) updateInterfaceTo:(UIInterfaceOrientation)orientation{
-    [listOfFriendsView setCollectionViewLayout:[self idealLayoutForOrientation:orientation] animated:YES];
+    if(self.alpha){
+        [self updateDataSource];
+        [listOfFriendsView setCollectionViewLayout:[self idealLayoutForOrientation:orientation] animated:YES];
+    }
 }
 
 

@@ -232,7 +232,7 @@
     // track date of last bezel, if there was one
     if([validTouches count] == 0 && subState == UIGestureRecognizerStateChanged){
         [dateOfLastBezelEnding release];
-        dateOfLastBezelEnding = [[NSDate date] retain];
+        dateOfLastBezelEnding = [[[NSDate date] dateByAddingTimeInterval:-10] retain];
     }
     
     // case: valid touches are empty + other touches

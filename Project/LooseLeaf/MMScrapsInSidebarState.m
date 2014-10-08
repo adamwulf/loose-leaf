@@ -15,7 +15,10 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "Constants.h"
 
-@implementation MMScrapsInSidebarState
+@implementation MMScrapsInSidebarState{
+    // all of the loaded properties for all this state's scraps
+    NSMutableArray* allPropertiesForScraps;
+}
 
 @dynamic delegate;
 
@@ -31,6 +34,7 @@ static dispatch_queue_t importExportStateQueue;
 -(id) initWithDelegate:(NSObject<MMScrapsInSidebarStateDelegate>*)_delegate{
     if(self = [super init]){
         delegate = _delegate;
+        allPropertiesForScraps = [NSMutableArray array];
     }
     return self;
 }

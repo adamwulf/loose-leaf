@@ -17,10 +17,13 @@
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "TestFlight.h"
 #import "MMDeletePageSidebarController.h"
+#import "MMPhotoManager.h"
+#import "MMCloudKitImportExportView.h"
 
 @implementation MMLooseLeafViewController{
     MMMemoryManager* memoryManager;
     MMDeletePageSidebarController* deleteSidebar;
+    MMCloudKitImportExportView* cloudKitExportView;
 }
 
 - (id)init{
@@ -37,6 +40,11 @@
 
         [[Crashlytics sharedInstance] setDelegate:self];
 
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(pageCacheManagerDidLoadPage)
+                                                     name:kPageCacheManagerHasLoadedAnyPage
+                                                   object:[MMPageCacheManager sharedInstance]];
+
         // Do any additional setup after loading the view, typically from a nib.
         srand ((uint) time(NULL) );
         [[MMShadowManager sharedInstance] beginGeneratingShadows];
@@ -51,6 +59,16 @@
         stackView.deleteSidebar = deleteSidebar;
         [self.view addSubview:stackView];
 
+        // export icons will show here, below the sidebars but over the stacks
+        cloudKitExportView = [[MMCloudKitImportExportView alloc] initWithFrame:self.view.bounds];
+        stackView.cloudKitExportView = cloudKitExportView;
+        cloudKitExportView.stackView = stackView;
+        [self.view addSubview:cloudKitExportView];
+        // an extra view to help with animations
+        MMUntouchableView* exportAnimationHelperView = [[MMUntouchableView alloc] initWithFrame:self.view.bounds];
+        cloudKitExportView.animationHelperView = exportAnimationHelperView;
+        [self.view addSubview:exportAnimationHelperView];
+        
         [self.view addSubview:deleteSidebar.deleteSidebarForeground];
 
         [stackView loadStacksFromDisk];
@@ -103,6 +121,11 @@
         [self.view addSubview:memoryProfileView];
     }
     return self;
+}
+
+-(void) pageCacheManagerDidLoadPage{
+    [[MMPhotoManager sharedInstance] initializeAlbumCache];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kPageCacheManagerHasLoadedAnyPage object:nil];
 }
 
 -(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication{
@@ -161,6 +184,5 @@
     [super presentViewController:viewControllerToPresent animated:flag completion:completion];
 //    NSLog(@"presenting view controller");
 }
-
 
 @end

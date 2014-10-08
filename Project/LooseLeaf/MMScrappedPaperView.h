@@ -55,12 +55,14 @@
 
 -(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block;
 
--(void) updateThumbnailVisibility;
-
 -(NSString*) scrapIDsPath;
 
 -(NSArray*) scrapsOnPaper;
 
 -(CGSize) thumbnailSize;
+
+#pragma mark - protected
+
+-(void) loadCachedPreviewAndDecompressImmediately:(BOOL)forceToDecompressImmediately;
 
 @end

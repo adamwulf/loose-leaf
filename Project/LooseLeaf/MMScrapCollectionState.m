@@ -30,7 +30,6 @@ static dispatch_queue_t importExportStateQueue;
         expectedUndoHash = 0;
         lastSavedUndoHash = 0;
         allLoadedScraps = [NSMutableArray array];
-        allPropertiesForScraps = [NSMutableArray array];
     }
     return self;
 }
@@ -40,7 +39,7 @@ static dispatch_queue_t importExportStateQueue;
 #pragma mark - Properties
 
 -(BOOL) hasEditsToSave{
-    return hasEditsToSave || expectedUndoHash != lastSavedUndoHash;
+    return isLoaded && (hasEditsToSave || expectedUndoHash != lastSavedUndoHash);
 }
 
 -(NSUInteger) lastSavedUndoHash{

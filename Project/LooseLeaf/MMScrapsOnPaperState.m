@@ -50,8 +50,10 @@
 
 -(int) fullByteSize{
     int totalBytes = 0;
-    for(MMScrapView* scrap in allLoadedScraps){
-        totalBytes += scrap.fullByteSize;
+    @synchronized(allLoadedScraps){
+        for(MMScrapView* scrap in allLoadedScraps){
+            totalBytes += scrap.fullByteSize;
+        }
     }
     return totalBytes;
 }
@@ -124,7 +126,9 @@
                             [scrap setPropertiesDictionary:scrapProperties];
                         }
                         if(scrap){
-                            [allLoadedScraps addObject:scrap];
+                            @synchronized(allLoadedScraps){
+                                [allLoadedScraps addObject:scrap];
+                            }
                             
                             if([scrapIDsOnPage containsObject:scrap.uuid]){
                                 [self.delegate didLoadScrapInContainer:scrap];
@@ -190,9 +194,13 @@
 -(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath{
     if([self isStateLoaded]){
         hasEditsToSave = NO;
-        MMImmutableScrapsOnPaperState* immutable = [[MMImmutableScrapsOnPaperState alloc] initWithScrapIDsPath:scrapIDsPath andAllScraps:allLoadedScraps andScrapsOnPage:self.scrapsOnPaper andOwnerState:self];
-        expectedUndoHash = [immutable undoHash];
-        return immutable;
+        @synchronized(allLoadedScraps){
+            MMImmutableScrapsOnPaperState* immutable = [[MMImmutableScrapsOnPaperState alloc] initWithScrapIDsPath:scrapIDsPath
+                                                                                                      andAllScraps:allLoadedScraps
+                                                                                                   andScrapsOnPage:self.scrapsOnPaper andOwnerState:self];
+            expectedUndoHash = [immutable undoHash];
+            return immutable;
+        }
     }
     return nil;
 }
@@ -204,7 +212,9 @@
         @throw [NSException exceptionWithName:@"ModifyingUnloadedScrapsOnPaperStateException" reason:@"cannot add scrap to unloaded ScrapsOnPaperState" userInfo:nil];
     }
     MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path andScale:scale andRotation:rotation andPaperState:self];
-    [allLoadedScraps addObject:newScrap];
+    @synchronized(allLoadedScraps){
+        [allLoadedScraps addObject:newScrap];
+    }
     return newScrap;
 }
 
@@ -280,7 +290,9 @@
 }
 
 -(MMScrapView*) mostRecentScrap{
-    return [allLoadedScraps lastObject];
+    @synchronized(allLoadedScraps){
+        return [allLoadedScraps lastObject];
+    }
 }
 
 

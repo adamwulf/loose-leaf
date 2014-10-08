@@ -18,6 +18,7 @@
 #import "MMLoadImageCache.h"
 #import "UIView+Animations.h"
 #import "Mixpanel.h"
+#import "MMEditablePaperViewSubclass.h"
 
 dispatch_queue_t importThumbnailQueue;
 
@@ -94,8 +95,7 @@ dispatch_queue_t importThumbnailQueue;
 
 -(void) setFrame:(CGRect)frame{
     [super setFrame:frame];
-    CGFloat _scale = frame.size.width / self.superview.frame.size.width;
-    drawableView.transform = CGAffineTransformMakeScale(_scale, _scale);
+    drawableView.transform = CGAffineTransformMakeScale(self.scale, self.scale);
 }
 
 #pragma mark - Public Methods
@@ -125,6 +125,10 @@ dispatch_queue_t importThumbnailQueue;
 }
 
 -(void) updateThumbnailVisibility{
+    [self updateThumbnailVisibility:NO];
+}
+
+-(void) updateThumbnailVisibility:(BOOL)forceUpdateIconImage{
     @throw kAbstractMethodException;
 }
 

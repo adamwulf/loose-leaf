@@ -27,8 +27,6 @@
     NSUInteger lastSavedUndoHash;
     // delegate
     __weak NSObject<MMScrapCollectionStateDelegate>* delegate;
-    // all of the loaded properties for all this state's scraps
-    NSMutableArray* allPropertiesForScraps;
 }
 
 +(dispatch_queue_t) importExportStateQueue;

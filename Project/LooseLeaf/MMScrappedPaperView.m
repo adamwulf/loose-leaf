@@ -105,7 +105,7 @@
 // should show combinations of drawable view, scrap container,
 // ink thumb, or scrapped thumb depending on editable state
 // and what's loaded into memory
--(void) updateThumbnailVisibility{
+-(void) updateThumbnailVisibility:(BOOL)forceUpdateIconImage{
     CheckMainThread;
     if(drawableView && drawableView.superview && (self.scale > kMinPageZoom || hasPendingScrappedIconUpdate)){
         // if we have a drawable view, and it's been added to our page
@@ -276,8 +276,7 @@
 
 -(void) setFrame:(CGRect)frame{
     [super setFrame:frame];
-    CGFloat _scale = frame.size.width / self.superview.frame.size.width;
-    scrapsOnPaperState.scrapContainerView.transform = CGAffineTransformMakeScale(_scale, _scale);
+    scrapsOnPaperState.scrapContainerView.transform = CGAffineTransformMakeScale(self.scale, self.scale);
 }
 
 #pragma mark - MMPanAndPinchScrapGestureRecognizerDelegate
@@ -476,27 +475,29 @@
                 }@catch (id exc) {
                     //        NSAssert(NO, @"need to log this");
                     debug_NSLog(@"need to mail the paths");
-                    
-                    NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
-                    
-                    [dateFormater setDateFormat:@"yyyy-MM-DD HH:mm:ss"];
-                    NSString *convertedDateString = [dateFormater stringFromDate:[NSDate date]];
-                    
-                    NSString* textForEmail = @"Shapes in view:\n\n";
-                    textForEmail = [textForEmail stringByAppendingFormat:@"scissor:\n%@\n\n\n", strokePath];
-                    textForEmail = [textForEmail stringByAppendingFormat:@"shape:\n%@\n\n\n", scrapClippingPath];
-                    
-                    MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
-                    [controller setMailComposeDelegate:self];
-                    [controller setToRecipients:[NSArray arrayWithObject:@"adam.wulf@gmail.com"]];
-                    [controller setSubject:[NSString stringWithFormat:@"Shape Clipping Test Case %@", convertedDateString]];
-                    [controller setMessageBody:textForEmail isHTML:NO];
-                    //        [controller addAttachmentData:imageData mimeType:@"image/png" fileName:@"screenshot.png"];
-                    
-                    if(controller){
-                        UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
-                        [rootController presentViewController:controller animated:YES completion:nil];
-                    }
+
+                    //
+                    // TODO: https://github.com/adamwulf/loose-leaf/issues/664
+//                    NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
+//                    
+//                    [dateFormater setDateFormat:@"yyyy-MM-DD HH:mm:ss"];
+//                    NSString *convertedDateString = [dateFormater stringFromDate:[NSDate date]];
+//                    
+//                    NSString* textForEmail = @"Shapes in view:\n\n";
+//                    textForEmail = [textForEmail stringByAppendingFormat:@"scissor:\n%@\n\n\n", strokePath];
+//                    textForEmail = [textForEmail stringByAppendingFormat:@"shape:\n%@\n\n\n", scrapClippingPath];
+//                    
+//                    MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
+//                    [controller setMailComposeDelegate:self];
+//                    [controller setToRecipients:[NSArray arrayWithObject:@"adam.wulf@gmail.com"]];
+//                    [controller setSubject:[NSString stringWithFormat:@"Shape Clipping Test Case %@", convertedDateString]];
+//                    [controller setMessageBody:textForEmail isHTML:NO];
+//                    //        [controller addAttachmentData:imageData mimeType:@"image/png" fileName:@"screenshot.png"];
+//                    
+//                    if(controller){
+//                        UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+//                        [rootController presentViewController:controller animated:YES completion:nil];
+//                    }
                 }
                 
                 NSArray* redSegments = [redAndBlueSegments firstObject]; // intersection
@@ -801,23 +802,25 @@
         //
         // DEBUG
         //
+        // TODO: https://github.com/adamwulf/loose-leaf/issues/664
+        //
         // send an email with the paths that we cut
-        NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
-        
-        [dateFormater setDateFormat:@"yyyy-MM-DD HH:mm:ss"];
-        NSString *convertedDateString = [dateFormater stringFromDate:[NSDate date]];
-        
-        MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
-        [controller setMailComposeDelegate:self];
-        [controller setToRecipients:[NSArray arrayWithObject:@"adam.wulf@gmail.com"]];
-        [controller setSubject:[NSString stringWithFormat:@"Shape Clipping Test Case %@", convertedDateString]];
-        [controller setMessageBody:debugFullText isHTML:NO];
-//        [controller addAttachmentData:imageData mimeType:@"image/png" fileName:@"screenshot.png"];
-        
-        if(controller){
-            UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
-            [rootController presentViewController:controller animated:YES completion:nil];
-        }
+//        NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
+//        
+//        [dateFormater setDateFormat:@"yyyy-MM-DD HH:mm:ss"];
+//        NSString *convertedDateString = [dateFormater stringFromDate:[NSDate date]];
+//        
+//        MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
+//        [controller setMailComposeDelegate:self];
+//        [controller setToRecipients:[NSArray arrayWithObject:@"adam.wulf@gmail.com"]];
+//        [controller setSubject:[NSString stringWithFormat:@"Shape Clipping Test Case %@", convertedDateString]];
+//        [controller setMessageBody:debugFullText isHTML:NO];
+////        [controller addAttachmentData:imageData mimeType:@"image/png" fileName:@"screenshot.png"];
+//        
+//        if(controller){
+//            UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+//            [rootController presentViewController:controller animated:YES completion:nil];
+//        }
     }
     
     return [[MMScissorResult alloc] initWithAddedScraps:scrapsBeingBuilt
@@ -964,12 +967,12 @@
         // get a UIImage from the image context- enjoy!!!
         UIImage* generatedScrappedThumbnailImage = UIGraphicsGetImageFromCurrentImageContext();
         scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForDecompressedImage:generatedScrappedThumbnailImage andDelegate:self];
+        [UIImagePNGRepresentation(scrappedImgViewImage.image) writeToFile:[self scrappedThumbnailPath] atomically:YES];
         [[MMLoadImageCache sharedInstance] updateCacheForPath:[self scrappedThumbnailPath] toImage:scrappedImgViewImage.image];
         [[NSThread mainThread] performBlock:^{
             [self didDecompressImage:scrappedImgViewImage];
         }];
         
-        [UIImagePNGRepresentation(scrappedImgViewImage.image) writeToFile:[self scrappedThumbnailPath] atomically:YES];
         definitelyDoesNotHaveAScrappedThumbnail = NO;
         
         // clean up drawing environment
@@ -1235,12 +1238,17 @@
     [self updateThumbnailVisibility];
 }
 
+-(void) loadCachedPreview{
+    [self loadCachedPreviewAndDecompressImmediately:NO];
+}
+
+
 /**
  * load any scrap previews, if applicable.
  * not sure if i'll just draw these into the
  * page preview or not
  */
--(void) loadCachedPreview{
+-(void) loadCachedPreviewAndDecompressImmediately:(BOOL)forceToDecompressImmediately{
     @autoreleasepool {
         @synchronized(self){
             isAskedToLoadThumbnail = YES;
@@ -1279,7 +1287,7 @@
 }
 
 -(void) didDecompressImage:(MMDecompressImagePromise*)promise{
-    [self updateThumbnailVisibility];
+    [self updateThumbnailVisibility:YES];
 }
 
 -(void) unloadCachedPreview{

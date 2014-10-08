@@ -15,8 +15,9 @@
 #import "MMButtonAwareTapGestureRecognizer.h"
 #import "MMPageCacheManagerDelegate.h"
 #import "MMDeletePageSidebarController.h"
+#import "MMInboxManagerDelegate.h"
 
-@interface MMListPaperStackView : MMPaperStackView<MMPanAndPinchFromListViewGestureRecognizerDelegate,MMListAddPageButtonDelegate,MMPageCacheManagerDelegate>{
+@interface MMListPaperStackView : MMPaperStackView<MMPanAndPinchFromListViewGestureRecognizerDelegate,MMListAddPageButtonDelegate,MMPageCacheManagerDelegate,MMInboxManagerDelegate>{
     //
     // when beginning a zoom, we need to save the
     // frames of all the pages we'll be animating
@@ -51,6 +52,9 @@
 
 -(CGPoint) offsetNeededToShowPage:(MMPaperView*)page;
 -(NSArray*) findPagesInVisibleRowsOfListViewGivenOffset:(CGPoint)eventualOffsetOfListView;
+
+// returns yes if the imported page was handled
+-(BOOL) importAndShowPage:(MMExportablePaperView*)page;
 
 
 // protected

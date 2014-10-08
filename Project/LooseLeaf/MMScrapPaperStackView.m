@@ -58,7 +58,6 @@
     // cloudkit import sidebar
     MMTextButton* cloudKitImportButton;
     MMSlidingSidebarContainerView* cloudKitImportSidebar;
-    MMCloudKitImportExportView* cloudKitExportView;
 
     NSTimer* debugTimer;
     NSTimer* drawTimer;
@@ -73,6 +72,8 @@
     
     UIImageView* testImageView;
 }
+
+@synthesize cloudKitExportView;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -130,11 +131,6 @@
             }
         }
 
-        // export icons will show here, below the sidebars but over the stacks
-        cloudKitExportView = [[MMCloudKitImportExportView alloc] initWithFrame:self.bounds];
-        cloudKitExportView.stackView = self;
-        [self addSubview:cloudKitExportView];
-
 //        UIButton* drawLongElementButton = [[UIButton alloc] initWithFrame:CGRectMake(100, 100, 200, 60)];
 //        [drawLongElementButton addTarget:self action:@selector(drawLine) forControlEvents:UIControlEventTouchUpInside];
 //        [drawLongElementButton setTitle:@"Draw Line" forState:UIControlStateNormal];
@@ -170,11 +166,6 @@
         cloudKitImportSidebar = [[MMSlidingSidebarContainerView alloc] initWithFrame:self.bounds forButton:cloudKitImportButton animateFromLeft:NO];
         [cloudKitImportSidebar hide:NO onComplete:nil];
         [self addSubview:sharePageSidebar];
-        
-        MMUntouchableView* exportAnimationHelperView = [[MMUntouchableView alloc] initWithFrame:self.bounds];
-        cloudKitExportView.animationHelperView = exportAnimationHelperView;
-        [self addSubview:exportAnimationHelperView];
-
         
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds forScrapsOnPaperState:nil];
         [self addSubview:scrapContainer];
@@ -229,12 +220,11 @@
 }
 
 -(void) didProcessIncomingImage:(UIImage*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
-    CGFloat scale = [UIScreen mainScreen].scale;
-    
+    [super didProcessIncomingImage:scrapBacking fromURL:url fromApp:sourceApplication];
     // import after slight delay so the transition from the other app
     // can complete nicely
     [[NSThread mainThread] performBlock:^{
-        NSLog(@"got image: %p scale: %f width: %f %f", scrapBacking, scale, scrapBacking.size.width, scrapBacking.size.height);
+//        NSLog(@"got image: %p width: %f %f", scrapBacking, scrapBacking.size.width, scrapBacking.size.height);
         
         MMVector* up = [[MMRotationManager sharedInstance] upVector];
         MMVector* perp = [[up perpendicular] normal];
@@ -273,7 +263,12 @@
                              // doesn't need to land exactly center. this way
                              // multiple imports of multiple photos won't all
                              // land exactly on top of each other. looks nicer.
-                             CGPoint center = [visibleStackHolder peekSubview].center;
+                             MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+                             CGPoint center = CGPointMake(page.bounds.size.width/2, page.bounds.size.height/2);
+                             // scale the center point to 1.0 scale
+                             center = CGPointApplyAffineTransform(center, CGAffineTransformMakeScale(1/page.scale, 1/page.scale));
+                             // at this point, we have the true center of the page,
+                             // now add a bit of random to it to give it some variance
                              center.x += random() % 14 - 7;
                              center.y += random() % 14 - 7;
                              scrap.center = center;
@@ -729,28 +724,6 @@ int skipAll = NO;
     [[visibleStackHolder peekSubview] cancelAllGestures];
     [self setButtonsVisible:NO withDuration:0.15];
     [sharePageSidebar show:YES];
-    
-    
-    
-    
-    
-    
-//    if([[visibleStackHolder peekSubview] hasEditsToSave]){
-//        wantsExport = [visibleStackHolder peekSubview];
-//    }else{
-//        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
-//        [composer setMailComposeDelegate:self];
-//        if([MFMailComposeViewController canSendMail]) {
-//            [composer setSubject:@"Quick sketch from Loose Leaf"];
-//            [composer setMessageBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
-//            [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-//            
-//            NSData *data = UIImagePNGRepresentation([visibleStackHolder peekSubview].scrappedImgViewImage);
-//            [composer addAttachmentData:data  mimeType:@"image/png" fileName:@"LooseLeaf.png"];
-//            
-//            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:composer animated:YES completion:nil];
-//        }
-//    }
 }
 
 
@@ -1770,7 +1743,6 @@ int skipAll = NO;
     [super didUpdateAccelerometerWithReading:currentRawReading];
     [NSThread performBlockOnMainThread:^{
         [bezelScrapContainer didUpdateAccelerometerWithReading:currentRawReading];
-        [cloudKitExportView didUpdateAccelerometerWithReading:currentRawReading];;
     }];
 }
 
@@ -1941,25 +1913,27 @@ int skipAll = NO;
 
 #pragma mark - Import
 
--(void) importAndShowPage:(MMExportablePaperView*)page{
-    [[MMPageCacheManager sharedInstance] mayChangeTopPageTo:page];
-    [[MMPageCacheManager sharedInstance] willChangeTopPageTo:page];
-    [[NSThread mainThread] performBlock:^{
-        [self forceScrapToScrapContainerDuringGesture];
-        if([setOfPagesBeingPanned count]){
-            NSLog(@"adding new page, but pages are being panned.");
-            for(MMPaperView* page in [setOfPagesBeingPanned copy]){
-                [page cancelAllGestures];
+-(BOOL) importAndShowPage:(MMExportablePaperView*)page{
+    if(![super importAndShowPage:page]){
+        [[MMPageCacheManager sharedInstance] mayChangeTopPageTo:page];
+        [[MMPageCacheManager sharedInstance] willChangeTopPageTo:page];
+        [[NSThread mainThread] performBlock:^{
+            [self forceScrapToScrapContainerDuringGesture];
+            if([setOfPagesBeingPanned count]){
+                NSLog(@"adding new page, but pages are being panned.");
+                for(MMPaperView* page in [setOfPagesBeingPanned copy]){
+                    [page cancelAllGestures];
+                }
             }
-        }
-        [[visibleStackHolder peekSubview] cancelAllGestures];
-        page.delegate = self;
-        [hiddenStackHolder pushSubview:page];
-        [[visibleStackHolder peekSubview] enableAllGestures];
-        [self popTopPageOfHiddenStack];
-        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
-        [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
-    } afterDelay:.1];
+            [[visibleStackHolder peekSubview] cancelAllGestures];
+            [hiddenStackHolder pushSubview:page];
+            [[visibleStackHolder peekSubview] enableAllGestures];
+            [self popTopPageOfHiddenStack];
+            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+            [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
+        } afterDelay:.1];
+    }
+    return YES;
 }
 
 
