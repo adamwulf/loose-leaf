@@ -15,6 +15,7 @@
 #import "MMScrapBackgroundView.h"
 #import "Constants.h"
 #import "UIView+Debug.h"
+#import "MMScrapViewState+Trash.h"
 
 @implementation MMScrapViewState{
     // scrap ID and UI
@@ -257,13 +258,19 @@ static dispatch_queue_t importExportScrapStateQueue;
         [savedProperties addEntriesFromDictionary:backgroundProps];
         // save properties to disk
         if(![savedProperties writeToFile:pathToSave atomically:YES]){
-            NSLog(@"couldn't save properties! %p", self);
+            if(!self.isForgetful){
+                NSLog(@"couldn't save properties! %p", self);
+            }
         }
     };
     
     
     if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
         dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
+            if(self.isForgetful){
+                NSLog(@"forget: skipping scrap state save1");
+                return;
+            }
             @autoreleasepool {
                 [lock lock];
 //                NSLog(@"(%@) saving with background: %d %d", uuid, (int)drawableView, backingViewHasChanged);
@@ -271,6 +278,10 @@ static dispatch_queue_t importExportScrapStateQueue;
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                     [NSThread performBlockOnMainThread:^{
                         @autoreleasepool {
+                            if(self.isForgetful){
+                                NSLog(@"forget: skipping scrap state save2");
+                                return;
+                            }
                             if(drawableView && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
 //                                NSLog(@"(%@) saving background: %d", uuid, backingViewHasChanged);
 
@@ -280,7 +291,9 @@ static dispatch_queue_t importExportScrapStateQueue;
                                     // object and export in the background. this means that everything at this
                                     // instant on the thread will be synced to the content in this drawable view
                                     [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.drawableViewStateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
-                                        if(state){
+                                        if(self.isForgetful){
+                                            NSLog(@"forget: scrap state skipping update after jotview save");
+                                        }else if(state){
                                             [[MMLoadImageCache sharedInstance] updateCacheForPath:self.thumbImageFile toImage:thumb];
                                             [self setActiveThumbnailImage:thumb];
                                             [drawableViewState wasSavedAtImmutableState:state];

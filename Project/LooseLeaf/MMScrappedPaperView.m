@@ -1104,7 +1104,10 @@
             // we need to check [hasPenOrScrapEditsToSave] not [hasEditsToSave].
             // otherwise we'd accidentally take undoManager etc into account
             // when we shouldn't (since undoManager will aways save after us
-            if([self hasPenOrScrapEditsToSave]){
+            if([self hasPenOrScrapEditsToSave] || self.paperState.isForgetful){
+                if(self.paperState.isForgetful){
+                    NSLog(@"forget: page is forgetful, bailing save early");
+                }
 //                NSLog(@"i have more edits to save for %@ (now %lu). bailing. %d %d %d",self.uuid, (unsigned long) immutableScrapState.undoHash, pageHadBeenChanged, scrapsHadBeenChanged, needsThumbnailUpdateSinceLastSave);
                 // our save failed. this may happen if we
                 // call [saveToDisk] in very quick succession
@@ -1143,7 +1146,11 @@
             [NSThread performBlockOnMainThread:^{
 //                NSLog(@"done saving page (at %lu)", (unsigned long) immutableScrapState.undoHash);
                 // reset canvas visibility
-                [self updateThumbnailVisibility];
+                if(!self.paperState.isForgetful){
+                    [self updateThumbnailVisibility];
+                }else{
+                    NSLog(@"forget: skipping thumbnail update");
+                }
                 [self.delegate didSavePage:self];
                 if(onComplete) onComplete(YES);
             }];

@@ -174,8 +174,7 @@
 		6672EFEE19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFED19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png */; };
 		6672EFF119C3AC2B0076009F /* MMCloudErrorIconLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6672EFF019C3AC2B0076009F /* MMCloudErrorIconLayer.m */; };
 		667AA41F19E33342006549EE /* MMPolaroidsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AA41E19E33342006549EE /* MMPolaroidsView.m */; };
-		667AE6A219E5C81B0063DD51 /* MMScrapViewState+Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AE6A119E5C81B0063DD51 /* MMScrapViewState+Trash.m */; };
-		667AE6A519E5C9660063DD51 /* JotViewStateProxy+Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AE6A419E5C9660063DD51 /* JotViewStateProxy+Trash.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		667AE6A219E5C81B0063DD51 /* MMScrapViewState+Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AE6A119E5C81B0063DD51 /* MMScrapViewState+Trash.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		667AE6A819E5D02A0063DD51 /* MMExportablePaperView+Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AE6A719E5D02A0063DD51 /* MMExportablePaperView+Trash.m */; };
 		667AE6AB19E5D0C50063DD51 /* MMPageUndoRedoManager+Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AE6AA19E5D0C50063DD51 /* MMPageUndoRedoManager+Trash.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		667AE6AE19E5D1780063DD51 /* MMScrapCollectionState+Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AE6AD19E5D1780063DD51 /* MMScrapCollectionState+Trash.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -678,8 +677,6 @@
 		667AC03D18CE32D700AE6AF1 /* MMStretchScrapGestureRecognizerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMStretchScrapGestureRecognizerDelegate.h; sourceTree = "<group>"; };
 		667AE6A019E5C81B0063DD51 /* MMScrapViewState+Trash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMScrapViewState+Trash.h"; sourceTree = "<group>"; };
 		667AE6A119E5C81B0063DD51 /* MMScrapViewState+Trash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MMScrapViewState+Trash.m"; sourceTree = "<group>"; };
-		667AE6A319E5C9660063DD51 /* JotViewStateProxy+Trash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JotViewStateProxy+Trash.h"; sourceTree = "<group>"; };
-		667AE6A419E5C9660063DD51 /* JotViewStateProxy+Trash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JotViewStateProxy+Trash.m"; sourceTree = "<group>"; };
 		667AE6A619E5D02A0063DD51 /* MMExportablePaperView+Trash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMExportablePaperView+Trash.h"; sourceTree = "<group>"; };
 		667AE6A719E5D02A0063DD51 /* MMExportablePaperView+Trash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MMExportablePaperView+Trash.m"; sourceTree = "<group>"; };
 		667AE6A919E5D0C50063DD51 /* MMPageUndoRedoManager+Trash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMPageUndoRedoManager+Trash.h"; sourceTree = "<group>"; };
@@ -1729,8 +1726,6 @@
 				667AE6AA19E5D0C50063DD51 /* MMPageUndoRedoManager+Trash.m */,
 				667AE6AC19E5D1780063DD51 /* MMScrapCollectionState+Trash.h */,
 				667AE6AD19E5D1780063DD51 /* MMScrapCollectionState+Trash.m */,
-				667AE6A319E5C9660063DD51 /* JotViewStateProxy+Trash.h */,
-				667AE6A419E5C9660063DD51 /* JotViewStateProxy+Trash.m */,
 			);
 			name = "Trash Helpers";
 			sourceTree = "<group>";
@@ -2799,7 +2794,6 @@
 				66A790B6196896FA0037F01A /* MMUndoRedoAddScrapItem.m in Sources */,
 				665245761996EA2300C36609 /* Reachability.m in Sources */,
 				667C635E199FE4BC00E93CD6 /* UIColor+MPColor.m in Sources */,
-				667AE6A519E5C9660063DD51 /* JotViewStateProxy+Trash.m in Sources */,
 				66A02F9619A1D1500013EFAE /* EPPZDevice.m in Sources */,
 				66EC7B7519ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.m in Sources */,
 				660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */,

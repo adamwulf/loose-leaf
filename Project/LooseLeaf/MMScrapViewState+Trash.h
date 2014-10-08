@@ -10,6 +10,6 @@
 
 @interface MMScrapViewState (Trash)
 
--(void) forgetAllPendingEdits;
+@property (nonatomic, assign) BOOL isForgetful;
 
 @end

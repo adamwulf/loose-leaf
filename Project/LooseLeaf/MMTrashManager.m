@@ -61,6 +61,7 @@ static MMTrashManager* _instance = nil;
 
 -(void) deletePage:(MMExportablePaperView*)page{
     NSLog(@"asking to delete %@", page.uuid);
+    page.delegate = nil;
     [[MMPageCacheManager sharedInstance] forgetAboutPage:page];
     dispatch_async([self trashManagerQueue], ^{
         //
@@ -79,6 +80,8 @@ static MMTrashManager* _instance = nil;
             [page forgetAllPendingEdits];
             if(page.hasEditsToSave){
                 NSLog(@"forget failed");
+            }else{
+                NSLog(@"forget success");
             }
         }
         
