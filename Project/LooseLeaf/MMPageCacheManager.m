@@ -270,6 +270,25 @@ static MMPageCacheManager* _instance = nil;
     }
 }
 
+-(void) forgetAboutPage:(MMPaperView*)page{
+    @synchronized(stateLoadedPages){
+        if([stateLoadedPages containsObject:page]){
+            NSLog(@"gotcha");
+            [stateLoadedPages removeObject:page];
+        }
+        if([pagesWithLoadedCacheImages containsObject:page]){
+            NSLog(@"gotcha");
+            [pagesWithLoadedCacheImages removeObject:page];
+        }
+        if(currentEditablePage == page){
+            currentEditablePage = nil;
+        }
+        if(currentlyTopPage == page){
+            currentEditablePage = nil;
+        }
+    }
+}
+
 #pragma mark - Profiling Helpers
 
 -(NSInteger) numberOfStateLoadedPages{

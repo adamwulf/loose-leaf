@@ -40,6 +40,8 @@
 
 -(void) didSavePage:(MMPaperView*)page;
 
+-(void) forgetAboutPage:(MMPaperView*)page;
+
 -(void) updateVisiblePageImageCache;
 
 -(NSInteger) numberOfStateLoadedPages;
