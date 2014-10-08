@@ -63,16 +63,26 @@ static MMTrashManager* _instance = nil;
         //
         // Step 1: ensure the page is in a stable saved state
         //         with no pending threads active
-        while(page.hasEditsToSave){
-            NSLog(@"deleting a page with active edits");
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [page saveToDisk:^(BOOL didSaveEdits) {
-                    dispatch_semaphore_signal(sema1);
-                }];
-            });
-            dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-            [NSThread sleepForTimeInterval:5];
-            NSLog(@"page was saved, still has edits? %d", page.hasEditsToSave);
+        while(page.hasEditsToSave || page.isStateLoading){
+            if(page.hasEditsToSave){
+                NSLog(@"deleting a page with active edits");
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if(page.hasEditsToSave){
+                        [page saveToDisk:^(BOOL didSaveEdits) {
+                            dispatch_semaphore_signal(sema1);
+                        }];
+                    }
+                });
+                dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+            }else if(page.isStateLoading){
+                NSLog(@"waiting for page to finish loading before deleting...");
+            }
+            [NSThread sleepForTimeInterval:1];
+            if([page hasEditsToSave]){
+                NSLog(@"page was saved, still has edits? %d", page.hasEditsToSave);
+            }else if([page isStateLoading]){
+                NSLog(@"page state is loading");
+            }
         }
         // build some directories
         NSString* documentsPath = [NSFileManager documentsPath];
@@ -211,14 +221,22 @@ static MMTrashManager* _instance = nil;
         // delete from the page's scrapsOnPaperState
         void(^removeFromScrapsOnPaperState)() = ^{
             [page.scrapsOnPaperState removeScrapWithUUID:scrapUUID];
-            [[page.scrapsOnPaperState immutableStateForPath:page.scrapIDsPath] saveStateToDiskBlocking];
         };
         if([page.scrapsOnPaperState isStateLoaded]){
             removeFromScrapsOnPaperState();
         }else{
             [page performBlockForUnloadedScrapStateSynchronously:removeFromScrapsOnPaperState];
         }
-        
+        //
+        // now wait for the save + all blocks to complete
+        // and ensure no pending saves
+        dispatch_semaphore_t semaWaitingOnPaperStateSave = dispatch_semaphore_create(0);
+        dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
+            [[page.scrapsOnPaperState immutableStateForPath:page.scrapIDsPath] saveStateToDiskBlocking];
+            dispatch_semaphore_signal(semaWaitingOnPaperStateSave);
+        });
+        dispatch_semaphore_wait(semaWaitingOnPaperStateSave, DISPATCH_TIME_FOREVER);
+
         //
         // Step 4: delete the assets off disk
         // now that the scrap is out of the page's state, then

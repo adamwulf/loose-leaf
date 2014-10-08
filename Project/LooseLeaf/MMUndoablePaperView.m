@@ -161,7 +161,7 @@
 }
 
 -(MMScissorResult*) completeScissorsCutWithPath:(UIBezierPath *)scissorPath{
-    if(![self hasStateLoaded] || ![self.scrapsOnPaperState isStateLoaded]){
+    if(![self isStateLoaded] || ![self.scrapsOnPaperState isStateLoaded]){
         return nil;
     }
     MMScissorResult* result = [super completeScissorsCutWithPath:scissorPath];

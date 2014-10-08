@@ -27,7 +27,8 @@
 +(dispatch_queue_t) importThumbnailQueue;
 
 -(BOOL) hasEditsToSave;
--(BOOL) hasStateLoaded;
+-(BOOL) isStateLoaded;
+-(BOOL) isStateLoading;
 -(void) unloadCachedPreview;
 -(void) loadCachedPreview;
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePtSize andScale:(CGFloat)scale andContext:(JotGLContext*)context;

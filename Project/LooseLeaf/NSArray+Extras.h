@@ -14,4 +14,12 @@
 
 -(NSArray*) arrayByRemovingObject:(id)obj;
 
+-(NSArray*) shuffledArray;
+
+@end
+
+@interface NSMutableArray (Extras)
+
+-(void) shuffle;
+
 @end

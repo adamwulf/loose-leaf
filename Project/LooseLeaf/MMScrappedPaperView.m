@@ -1187,12 +1187,14 @@
     if([scrapsOnPaperState isStateLoaded]){
         @throw [NSException exceptionWithName:@"LoadedStateForUnloadedBlockException" reason:@"Cannot run block on unloaded state when state is already loaded" userInfo:nil];
     }
-//    NSLog(@"performing block for unloaded scrap state: %@", self);
-    if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
-        [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.scrapIDsPath andMakeEditable:YES];
-    }else{
-        [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.bundledScrapIDsPath andMakeEditable:YES];
+    @autoreleasepool {
+        if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
+            [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.scrapIDsPath andMakeEditable:YES];
+        }else{
+            [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.bundledScrapIDsPath andMakeEditable:YES];
+        }
     }
+    dispatch_semaphore_t semaWaitingOnPaperStateSave = dispatch_semaphore_create(0);
     block();
     dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
         @autoreleasepool {
@@ -1201,12 +1203,18 @@
             [self updateFullPageThumbnail:immutableScrapState];
             [scrapsOnPaperState unload];
         }
+        dispatch_semaphore_signal(semaWaitingOnPaperStateSave);
     });
+    dispatch_semaphore_wait(semaWaitingOnPaperStateSave, DISPATCH_TIME_FOREVER);
 }
 
--(BOOL) hasStateLoaded{
-    return [super hasStateLoaded];
+-(BOOL) isStateLoaded{
+    return [super isStateLoaded];
 }
+-(BOOL) isStateLoading{
+    return [super isStateLoading] || [scrapsOnPaperState isStateLoading];
+}
+
 
 #pragma mark - MMScrapsOnPaperStateDelegate / MMScrapCollectionStateDelegate
 
@@ -1338,7 +1346,7 @@
  * https://github.com/adamwulf/loose-leaf/issues/254
  */
 -(void) didLoadState:(JotViewStateProxy*)state{
-    if([self hasStateLoaded]){
+    if([self isStateLoaded]){
         lastSavedPaperStateHashForGeneratedThumbnail = [state undoHash];
         [NSThread performBlockOnMainThread:^{
             [[MMPageCacheManager sharedInstance] didLoadStateForPage:self];

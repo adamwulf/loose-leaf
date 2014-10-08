@@ -46,6 +46,7 @@
 -(MMImmutableScrapCollectionState*) immutableStateForPath:(NSString*)scrapIDsPath;
 
 -(BOOL) isStateLoaded;
+-(BOOL) isStateLoading;
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable;
 

@@ -177,7 +177,7 @@ dispatch_queue_t importThumbnailQueue;
 
 -(void) setDrawableView:(JotView *)_drawableView{
     CheckMainThread;
-    if(_drawableView && ![self hasStateLoaded]){
+    if(_drawableView && ![self isStateLoaded]){
         NSLog(@"oh no");
     }
     if(drawableView != _drawableView){
@@ -188,7 +188,7 @@ dispatch_queue_t importThumbnailQueue;
         if(drawableView){
             [self generateDebugView:YES];
             [self setFrame:self.frame];
-            if([self.delegate isPageEditable:self] && [self hasStateLoaded]){
+            if([self.delegate isPageEditable:self] && [self isStateLoaded]){
                 // drawableView might be animating from
                 // it's old page, so remove that animation
                 // if any
@@ -208,7 +208,7 @@ dispatch_queue_t importThumbnailQueue;
             [self generateDebugView:NO];
             [self updateThumbnailVisibility];
         }
-    }else if(drawableView && [self hasStateLoaded]){
+    }else if(drawableView && [self isStateLoaded]){
         [self setEditable:YES];
         [self updateThumbnailVisibility];
     }
@@ -234,8 +234,11 @@ dispatch_queue_t importThumbnailQueue;
     [paperState unload];
 }
 
--(BOOL) hasStateLoaded{
+-(BOOL) isStateLoaded{
     return [paperState isStateLoaded];
+}
+-(BOOL) isStateLoading{
+    return [paperState isStateLoading];
 }
 
 

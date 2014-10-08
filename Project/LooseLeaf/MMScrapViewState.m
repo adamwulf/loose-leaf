@@ -365,6 +365,7 @@ static dispatch_queue_t importExportScrapStateQueue;
         targetIsLoadedState = YES;
         isLoadingState = YES;
     }
+//    NSLog(@"(%@) loading scrap state", uuid);
 
 //    NSLog(@"(%@) loading1: %d %d", uuid, targetIsLoadedState, isLoadingState);
     void (^loadBlock)() = ^(void) {
@@ -631,6 +632,7 @@ static dispatch_queue_t importExportScrapStateQueue;
                         // nothing changed in our goals since we started
                         // to load state, so notify our delegate
                         [self.delegate didLoadScrapViewState:self];
+//                        NSLog(@"(%@) loaded scrap state", uuid);
                     }else{
                         // when loading state, we were actually
                         // told that we didn't really need the
@@ -651,6 +653,7 @@ static dispatch_queue_t importExportScrapStateQueue;
 }
 
 -(void) didUnloadState:(JotViewStateProxy *)state{
+//    NSLog(@"(%@) unloaded scrap state", uuid);
     // noop
 }
 

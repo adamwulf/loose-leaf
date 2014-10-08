@@ -64,6 +64,10 @@ static dispatch_queue_t importExportStateQueue;
     return isLoaded;
 }
 
+-(BOOL) isStateLoading{
+    return isLoading;
+}
+
 -(void) wasSavedAtUndoHash:(NSUInteger)savedUndoHash{
     @synchronized(self){
         lastSavedUndoHash = savedUndoHash;

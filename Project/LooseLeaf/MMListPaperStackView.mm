@@ -1606,9 +1606,7 @@
         // visible frame to the correct place
         for(MMPaperView* aPage in pagesThatNeedAnimating){
             if(aPage == [visibleStackHolder peekSubview]){
-                NSLog(@"animating from scale: %f", aPage.scale);
                 aPage.frame = [MMPaperView expandFrame:visibleStackHolder.bounds];
-                NSLog(@"animating to scale: %f", aPage.scale);
             }else if([self isInVisibleStack:aPage]){
                 aPage.frame = visibleStackHolder.bounds;
             }else{
