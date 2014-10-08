@@ -17,10 +17,12 @@
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "MMDeletePageSidebarController.h"
 #import "MMPhotoManager.h"
+#import "MMCloudKitImportExportView.h"
 
 @implementation MMLooseLeafViewController{
     MMMemoryManager* memoryManager;
     MMDeletePageSidebarController* deleteSidebar;
+    MMCloudKitImportExportView* cloudKitExportView;
 }
 
 - (id)init{
@@ -46,6 +48,16 @@
         stackView.deleteSidebar = deleteSidebar;
         [self.view addSubview:stackView];
 
+        // export icons will show here, below the sidebars but over the stacks
+        cloudKitExportView = [[MMCloudKitImportExportView alloc] initWithFrame:self.view.bounds];
+        stackView.cloudKitExportView = cloudKitExportView;
+        cloudKitExportView.stackView = stackView;
+        [self.view addSubview:cloudKitExportView];
+        // an extra view to help with animations
+        MMUntouchableView* exportAnimationHelperView = [[MMUntouchableView alloc] initWithFrame:self.view.bounds];
+        cloudKitExportView.animationHelperView = exportAnimationHelperView;
+        [self.view addSubview:exportAnimationHelperView];
+        
         [self.view addSubview:deleteSidebar.deleteSidebarForeground];
 
         [stackView loadStacksFromDisk];
@@ -161,6 +173,5 @@
     [super presentViewController:viewControllerToPresent animated:flag completion:completion];
 //    NSLog(@"presenting view controller");
 }
-
 
 @end

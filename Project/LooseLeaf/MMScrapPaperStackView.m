@@ -58,7 +58,6 @@
     // cloudkit import sidebar
     MMTextButton* cloudKitImportButton;
     MMSlidingSidebarContainerView* cloudKitImportSidebar;
-    MMCloudKitImportExportView* cloudKitExportView;
 
     NSTimer* debugTimer;
     NSTimer* drawTimer;
@@ -73,6 +72,8 @@
     
     UIImageView* testImageView;
 }
+
+@synthesize cloudKitExportView;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -130,11 +131,6 @@
             }
         }
 
-        // export icons will show here, below the sidebars but over the stacks
-        cloudKitExportView = [[MMCloudKitImportExportView alloc] initWithFrame:self.bounds];
-        cloudKitExportView.stackView = self;
-        [self addSubview:cloudKitExportView];
-
 //        UIButton* drawLongElementButton = [[UIButton alloc] initWithFrame:CGRectMake(100, 100, 200, 60)];
 //        [drawLongElementButton addTarget:self action:@selector(drawLine) forControlEvents:UIControlEventTouchUpInside];
 //        [drawLongElementButton setTitle:@"Draw Line" forState:UIControlStateNormal];
@@ -170,11 +166,6 @@
         cloudKitImportSidebar = [[MMSlidingSidebarContainerView alloc] initWithFrame:self.bounds forButton:cloudKitImportButton animateFromLeft:NO];
         [cloudKitImportSidebar hide:NO onComplete:nil];
         [self addSubview:sharePageSidebar];
-        
-        MMUntouchableView* exportAnimationHelperView = [[MMUntouchableView alloc] initWithFrame:self.bounds];
-        cloudKitExportView.animationHelperView = exportAnimationHelperView;
-        [self addSubview:exportAnimationHelperView];
-
         
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds forScrapsOnPaperState:nil];
         [self addSubview:scrapContainer];
@@ -1752,7 +1743,6 @@ int skipAll = NO;
     [super didUpdateAccelerometerWithReading:currentRawReading];
     [NSThread performBlockOnMainThread:^{
         [bezelScrapContainer didUpdateAccelerometerWithReading:currentRawReading];
-        [cloudKitExportView didUpdateAccelerometerWithReading:currentRawReading];;
     }];
 }
 
