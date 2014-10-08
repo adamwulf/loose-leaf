@@ -25,7 +25,7 @@
 @property (readonly) NSString* uuid;
 @property (readonly) JotView* drawableView;
 @property (readonly) NSString* pathForScrapAssets;
-@property (readonly) MMScrapCollectionState* scrapsOnPaperState;
+@property (nonatomic, weak) MMScrapCollectionState* scrapsOnPaperState;
 @property (nonatomic, readonly) int fullByteSize;
 @property (readonly) NSUInteger lastSavedUndoHash;
 
@@ -40,6 +40,8 @@
 -(void) unloadState;
 
 -(BOOL) isScrapStateLoaded;
+-(BOOL) isScrapStateLoading;
+-(BOOL) hasEditsToSave;
 
 -(UIImage*) activeThumbnailImage;
 

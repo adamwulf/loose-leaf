@@ -58,11 +58,11 @@ static MMTrashManager* _instance = nil;
 
 
 -(void) deletePage:(MMExportablePaperView*)page{
-    dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
     dispatch_async([self trashManagerQueue], ^{
         //
         // Step 1: ensure the page is in a stable saved state
         //         with no pending threads active
+        dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
         while(page.hasEditsToSave || page.isStateLoading){
             if(page.hasEditsToSave){
                 NSLog(@"deleting a page with active edits");
@@ -81,7 +81,7 @@ static MMTrashManager* _instance = nil;
             if([page hasEditsToSave]){
                 NSLog(@"page was saved, still has edits? %d", page.hasEditsToSave);
             }else if([page isStateLoading]){
-                NSLog(@"page state is loading");
+                NSLog(@"page state is still loading");
             }
         }
         // build some directories
@@ -219,8 +219,9 @@ static MMTrashManager* _instance = nil;
         // Step 3: delete from the page's state
         // now the scrap is off disk, so remove it from the page's state too
         // delete from the page's scrapsOnPaperState
+        __block MMScrapView* scrapThatIsBeingDeleted = nil;
         void(^removeFromScrapsOnPaperState)() = ^{
-            [page.scrapsOnPaperState removeScrapWithUUID:scrapUUID];
+            scrapThatIsBeingDeleted = [page.scrapsOnPaperState removeScrapWithUUID:scrapUUID];
         };
         if([page.scrapsOnPaperState isStateLoaded]){
             removeFromScrapsOnPaperState();
@@ -237,8 +238,50 @@ static MMTrashManager* _instance = nil;
         });
         dispatch_semaphore_wait(semaWaitingOnPaperStateSave, DISPATCH_TIME_FOREVER);
 
+        
         //
-        // Step 4: delete the assets off disk
+        // remove from UI
+        dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+        NSLog(@"remove scrap background, if any");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            scrapThatIsBeingDeleted.state.scrapsOnPaperState = nil;
+            if(scrapThatIsBeingDeleted.superview){
+                [scrapThatIsBeingDeleted removeFromSuperview];
+            }
+            dispatch_semaphore_signal(sema1);
+        });
+        dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+        
+
+        
+        //
+        // Step 4: make sure the scrap has fully loaded from disk
+        // and that it's fully saved to disk, or alternatively,
+        // that it is already 100% unloaded
+        while(scrapThatIsBeingDeleted.state.hasEditsToSave || scrapThatIsBeingDeleted.state.isScrapStateLoading){
+            if(scrapThatIsBeingDeleted.state.hasEditsToSave){
+                NSLog(@"waiting to save scrap with active edits");
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if(scrapThatIsBeingDeleted.state.hasEditsToSave){
+                        [scrapThatIsBeingDeleted saveScrapToDisk:^(BOOL hadEditsToSave) {
+                            dispatch_semaphore_signal(sema1);
+                        }];
+                    }
+                });
+                dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+            }else if(scrapThatIsBeingDeleted.state.isScrapStateLoading){
+                NSLog(@"waiting for scrap to finish loading before deleting...");
+            }
+            [NSThread sleepForTimeInterval:1];
+            if(scrapThatIsBeingDeleted.state.hasEditsToSave){
+                NSLog(@"scrap was saved, still has edits? %d", scrapThatIsBeingDeleted.state.hasEditsToSave);
+            }else if(scrapThatIsBeingDeleted.state.isScrapStateLoading){
+                NSLog(@"scrap state is still loading");
+            }
+        }
+        
+        //
+        // Step 5: delete the assets off disk
         // now that the scrap is out of the page's state, then
         // we can delete it off disk too
         NSString* documentsPath = [NSFileManager documentsPath];

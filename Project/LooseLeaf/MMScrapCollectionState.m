@@ -80,6 +80,7 @@ static dispatch_queue_t importExportStateQueue;
 
 -(void) unload{
     if([self hasEditsToSave]){
+        NSLog(@"foobar %d", [self hasEditsToSave]);
         @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"Unloading ScrapCollectionState with edits pending save." userInfo:nil];
     }
     if([self isStateLoaded] || isLoading){

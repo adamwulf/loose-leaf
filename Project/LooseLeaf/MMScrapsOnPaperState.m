@@ -298,18 +298,22 @@
 
 #pragma mark - Saving Helpers
 
--(void) removeScrapWithUUID:(NSString*)scrapUUID{
+-(MMScrapView*) removeScrapWithUUID:(NSString*)scrapUUID{
     @synchronized(allLoadedScraps){
+        MMScrapView* removedScrap = nil;
         NSMutableArray* otherArray = [NSMutableArray array];
         for(MMScrapView* scrap in allLoadedScraps){
             if(![scrap.uuid isEqualToString:scrapUUID]){
                 [otherArray addObject:scrap];
             }else{
+                removedScrap = scrap;
+                [removedScrap removeFromSuperview];
                 NSLog(@"permanently removed scrap %@ from page %@", scrapUUID, self.delegate.uuidOfScrapCollectionStateOwner);
             }
         }
         allLoadedScraps = otherArray;
         hasEditsToSave = YES;
+        return removedScrap;
     }
 }
 

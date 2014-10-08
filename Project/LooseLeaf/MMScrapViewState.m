@@ -234,8 +234,10 @@ static dispatch_queue_t importExportScrapStateQueue;
         [backingImageHolder removeFromSuperview];
     }
     backingImageHolder = backgroundView;
-    backingImageHolder.frame = contentView.bounds;
-    [clippedBackgroundView addSubview:backingImageHolder];
+    if(backingImageHolder){
+        backingImageHolder.frame = contentView.bounds;
+        [clippedBackgroundView addSubview:backingImageHolder];
+    }
 }
 
 
@@ -465,6 +467,14 @@ static dispatch_queue_t importExportScrapStateQueue;
 
 -(BOOL) isScrapStateLoaded{
     return drawableViewState != nil && [drawableViewState isStateLoaded];
+}
+
+-(BOOL) isScrapStateLoading{
+    return isLoadingState;
+}
+
+-(BOOL) hasEditsToSave{
+    return self.isScrapStateLoaded && drawableView && drawableViewState && drawableViewState.hasEditsToSave;
 }
 
 // returns the loaded thumbnail image,
