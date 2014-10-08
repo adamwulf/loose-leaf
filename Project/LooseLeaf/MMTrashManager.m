@@ -85,7 +85,7 @@ static MMTrashManager* _instance = nil;
             }
         }
         
-        while(page.hasEditsToSave || page.isStateLoading){
+        while(page.hasEditsToSave || page.isStateLoading || page.isCurrentlySaving){
             if(page.hasEditsToSave){
                 NSLog(@"deleting a page with active edits");
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -98,8 +98,10 @@ static MMTrashManager* _instance = nil;
                 dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             }else if(page.isStateLoading){
                 NSLog(@"waiting for page to finish loading before deleting...");
+            }else if(page.isCurrentlySaving){
+                NSLog(@"waiting for page to finish saving before deleting...");
             }
-            [NSThread sleepForTimeInterval:1];
+            [NSThread sleepForTimeInterval:.3];
             if([page hasEditsToSave]){
                 NSLog(@"page was saved, still has edits? %d", page.hasEditsToSave);
             }else if([page isStateLoading]){
@@ -117,10 +119,12 @@ static MMTrashManager* _instance = nil;
         //         all that are not in the bezel.
         NSArray* thisPagesScrapsUUIDs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:thisPagesScrapsPath error:nil];
         for (NSString* scrapUUID in thisPagesScrapsUUIDs) {
-            // delete the scrap, and do NOT respect the undo manager.
-            // we can ignore the undo manager since we're just deleting
-            // the page anyways.
-            [self deleteScrap:scrapUUID inPage:page shouldRespectOthers:NO];
+            @autoreleasepool {
+                // delete the scrap, and do NOT respect the undo manager.
+                // we can ignore the undo manager since we're just deleting
+                // the page anyways.
+                [self deleteScrap:scrapUUID inPage:page shouldRespectOthers:NO];
+            }
         }
         
         //
@@ -128,6 +132,10 @@ static MMTrashManager* _instance = nil;
         // for each scrap. So we need to add the rest of our logic
         // to run /after/ those scraps (if any) have been processed.
         dispatch_async([self trashManagerQueue], ^{
+            
+            NSLog(@"page still has %d scraps", (int)[page.scrapsOnPaper count]);
+            NSLog(@"page state still has %d scraps", (int)[page.scrapsOnPaperState countOfAllLoadedScraps]);
+            
             //
             // Step 3: Transfer any remaining scraps to the bezel
             NSArray* thisPagesSavedScrapUUIDs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:thisPagesScrapsPath error:nil];
@@ -235,54 +243,58 @@ static MMTrashManager* _instance = nil;
             }
         }
         
-        
-        //
-        // if we made it this far, then the scrap is not in the page's
-        // undo manager, and it's not in the bezel, so it's safe to delete
-        //
-        // Step 3: delete from the page's state
-        // now the scrap is off disk, so remove it from the page's state too
-        // delete from the page's scrapsOnPaperState
         __block MMScrapView* scrapThatIsBeingDeleted = nil;
-        void(^removeFromScrapsOnPaperState)() = ^{
-            scrapThatIsBeingDeleted = [page.scrapsOnPaperState removeScrapWithUUID:scrapUUID];
-        };
-        if([page.scrapsOnPaperState isStateLoaded]){
-            removeFromScrapsOnPaperState();
-        }else{
-            [page performBlockForUnloadedScrapStateSynchronously:removeFromScrapsOnPaperState];
-        }
-        if(respectOthers){
-            // we only need to save the page's state back to disk
-            // if we respect that page's state at all. if we don't
-            // (it's being deleted anyways), then we can skip it.
+        @autoreleasepool {
             //
-            // now wait for the save + all blocks to complete
-            // and ensure no pending saves
-            dispatch_semaphore_t semaWaitingOnPaperStateSave = dispatch_semaphore_create(0);
-            dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
-                [[page.scrapsOnPaperState immutableStateForPath:page.scrapIDsPath] saveStateToDiskBlocking];
-                dispatch_semaphore_signal(semaWaitingOnPaperStateSave);
-            });
-            dispatch_semaphore_wait(semaWaitingOnPaperStateSave, DISPATCH_TIME_FOREVER);
-        }else{
-            NSLog(@"disrespect to page state saves time");
+            // if we made it this far, then the scrap is not in the page's
+            // undo manager, and it's not in the bezel, so it's safe to delete
+            //
+            // Step 3: delete from the page's state
+            // now the scrap is off disk, so remove it from the page's state too
+            // delete from the page's scrapsOnPaperState
+            void(^removeFromScrapsOnPaperState)() = ^{
+                scrapThatIsBeingDeleted = [page.scrapsOnPaperState removeScrapWithUUID:scrapUUID];
+            };
+            if([page.scrapsOnPaperState isStateLoaded]){
+                removeFromScrapsOnPaperState();
+            }else{
+                [page performBlockForUnloadedScrapStateSynchronously:removeFromScrapsOnPaperState];
+            }
+            if(respectOthers){
+                // we only need to save the page's state back to disk
+                // if we respect that page's state at all. if we don't
+                // (it's being deleted anyways), then we can skip it.
+                //
+                // now wait for the save + all blocks to complete
+                // and ensure no pending saves
+                dispatch_semaphore_t semaWaitingOnPaperStateSave = dispatch_semaphore_create(0);
+                dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
+                    [[page.scrapsOnPaperState immutableStateForPath:page.scrapIDsPath] saveStateToDiskBlocking];
+                    dispatch_semaphore_signal(semaWaitingOnPaperStateSave);
+                });
+                dispatch_semaphore_wait(semaWaitingOnPaperStateSave, DISPATCH_TIME_FOREVER);
+            }else{
+                NSLog(@"disrespect to page state saves time");
+            }
         }
+
 
         
         //
         // Step 4: remove former owner ScrapsOnPaperState
         dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
         dispatch_async(dispatch_get_main_queue(), ^{
-            // we need to remove the scraps on paper state delegate,
-            // otherwise it will recieve notifiactions when this
-            // scrap changes superview (as we throw it away) which
-            // would incorrectly mark the page as hasEdits
-            scrapThatIsBeingDeleted.state.scrapsOnPaperState = nil;
-            // now, without the paper state, we can remove it
-            // from the UI safely
-            if(scrapThatIsBeingDeleted.superview){
-                [scrapThatIsBeingDeleted removeFromSuperview];
+            @autoreleasepool {
+                // we need to remove the scraps on paper state delegate,
+                // otherwise it will recieve notifiactions when this
+                // scrap changes superview (as we throw it away) which
+                // would incorrectly mark the page as hasEdits
+                scrapThatIsBeingDeleted.state.scrapsOnPaperState = nil;
+                // now, without the paper state, we can remove it
+                // from the UI safely
+                if(scrapThatIsBeingDeleted.superview){
+                    [scrapThatIsBeingDeleted removeFromSuperview];
+                }
             }
             dispatch_semaphore_signal(sema1);
         });

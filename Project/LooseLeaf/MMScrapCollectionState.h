@@ -36,6 +36,7 @@
 @property (readonly) BOOL hasEditsToSave;
 @property (readonly) NSArray* allLoadedScraps;
 @property (readonly) NSUInteger lastSavedUndoHash;
+@property (readonly) NSUInteger countOfAllLoadedScraps;
 
 #pragma mark - Manage Scraps
 

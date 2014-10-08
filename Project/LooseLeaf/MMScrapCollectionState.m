@@ -48,6 +48,12 @@ static dispatch_queue_t importExportStateQueue;
     }
 }
 
+-(NSUInteger) countOfAllLoadedScraps{
+    @synchronized(allLoadedScraps){
+        return [allLoadedScraps count];
+    }
+}
+
 #pragma mark - Manage Scraps
 
 -(void) scrapVisibilityWasUpdated:(MMScrapView*)scrap{

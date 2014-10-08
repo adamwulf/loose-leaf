@@ -268,7 +268,7 @@ static dispatch_queue_t importExportScrapStateQueue;
     if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
         dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
             if(self.isForgetful){
-                NSLog(@"forget: skipping scrap state save1");
+                NSLog(@"forget: %@ skipping scrap state save1", self.uuid);
                 doneSavingBlock(NO);
                 return;
             }
@@ -280,7 +280,7 @@ static dispatch_queue_t importExportScrapStateQueue;
                     [NSThread performBlockOnMainThread:^{
                         @autoreleasepool {
                             if(self.isForgetful){
-                                NSLog(@"forget: skipping scrap state save2");
+                                NSLog(@"forget: %@ skipping scrap state save2", self.uuid);
                                 doneSavingBlock(NO);
                                 return;
                             }
@@ -294,7 +294,7 @@ static dispatch_queue_t importExportScrapStateQueue;
                                     // instant on the thread will be synced to the content in this drawable view
                                     [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.drawableViewStateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
                                         if(self.isForgetful){
-                                            NSLog(@"forget: scrap state skipping update after jotview save");
+                                            NSLog(@"forget: %@ scrap state skipping update after jotview save", self.uuid);
                                         }else if(state){
                                             [[MMLoadImageCache sharedInstance] updateCacheForPath:self.thumbImageFile toImage:thumb];
                                             [self setActiveThumbnailImage:thumb];

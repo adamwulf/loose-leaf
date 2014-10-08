@@ -22,6 +22,7 @@
 }
 
 @synthesize cloudKitSenderInfo;
+@synthesize isCurrentlySaving;
 
 #pragma mark - Saving
 
