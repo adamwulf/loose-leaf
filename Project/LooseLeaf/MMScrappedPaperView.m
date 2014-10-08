@@ -63,6 +63,8 @@
 
     NSUInteger lastSavedPaperStateHashForGeneratedThumbnail;
     NSUInteger lastSavedScrapStateHashForGeneratedThumbnail;
+    
+    const void * kSerialQueueIdentifier;
 }
 
 @synthesize scrapsOnPaperState;
@@ -73,13 +75,18 @@
 -(dispatch_queue_t) serialBackgroundQueue{
     if(!serialBackgroundQueue){
         serialBackgroundQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.concurrentBackgroundQueue", DISPATCH_QUEUE_SERIAL);
+        dispatch_queue_set_specific(serialBackgroundQueue, kSerialQueueIdentifier, (void *)kSerialQueueIdentifier, NULL);
     }
     return serialBackgroundQueue;
+}
+-(BOOL) isSerialBackgroundQueue{
+    return dispatch_get_specific(kSerialQueueIdentifier) != NULL;
 }
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
+        kSerialQueueIdentifier = &kSerialQueueIdentifier;
         // Initialization code
         scrapsOnPaperState = [[MMScrapsOnPaperState alloc] initWithDelegate:self withScrapContainerSize:self.bounds.size];
         
@@ -1063,7 +1070,7 @@
     if([scrapsOnPaperState isStateLoaded]){
         // need to keep reference to immutableScrapState so that
         // we can update the thumbnail after the save
-        dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
+        dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
             @autoreleasepool {
                 immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
                 scrapsHadBeenChanged = [immutableScrapState saveStateToDiskBlocking];
@@ -1172,7 +1179,7 @@
 //    debug_NSLog(@"asking %@ to unload", self.uuid);
     [super unloadState];
     __block MMScrapsOnPaperState* strongScrapState = scrapsOnPaperState;
-    dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
+    dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
         @autoreleasepool {
             [[strongScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
             // unloading the scrap state will also remove them
@@ -1202,7 +1209,7 @@
     }
     dispatch_semaphore_t semaWaitingOnPaperStateSave = dispatch_semaphore_create(0);
     block();
-    dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
+    dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
         @autoreleasepool {
             MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
             [immutableScrapState saveStateToDiskBlocking];

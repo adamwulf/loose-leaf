@@ -18,11 +18,17 @@
 
 static dispatch_queue_t importExportStateQueue;
 
+static const void *const kImportExportStateQueueIdentifier = &kImportExportStateQueueIdentifier;
+
 +(dispatch_queue_t) importExportStateQueue{
     if(!importExportStateQueue){
         importExportStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.importExportStateQueue", DISPATCH_QUEUE_SERIAL);
+        dispatch_queue_set_specific(importExportStateQueue, kImportExportStateQueueIdentifier, (void *)kImportExportStateQueueIdentifier, NULL);
     }
     return importExportStateQueue;
+}
++(BOOL) isImportExportStateQueue{
+    return dispatch_get_specific(kImportExportStateQueueIdentifier) != NULL;
 }
 
 -(id) init{

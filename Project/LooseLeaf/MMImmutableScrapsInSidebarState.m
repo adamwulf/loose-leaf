@@ -41,6 +41,9 @@
 }
 
 -(BOOL) saveStateToDiskBlocking{
+    if(![MMScrapCollectionState isImportExportStateQueue]){
+        @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:@"Saving immutable ScrapsInSidebarState in wrong queue" userInfo:nil];
+    }
     __block BOOL hadAnyEditsToSaveAtAll = NO;
     if(ownerState.lastSavedUndoHash != self.undoHash){
         NSDictionary* scrapsOnPaperInfo = [NSDictionary dictionaryWithObjectsAndKeys:allScrapProperties, @"allScrapProperties", nil];

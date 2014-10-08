@@ -17,6 +17,7 @@
 #import "MMScrapViewState+Trash.h"
 #import "MMExportablePaperView+Trash.h"
 
+
 @implementation MMTrashManager{
     dispatch_queue_t trashManagerQueue;
     NSFileManager* fileManager;
@@ -24,11 +25,17 @@
 
 #pragma mark - Dispatch Queue
 
+static const void *const kTrashQueueIdentifier = &kTrashQueueIdentifier;
+
 -(dispatch_queue_t) trashManagerQueue{
     if(!trashManagerQueue){
         trashManagerQueue = dispatch_queue_create("com.milestonemade.looseleaf.trashManagerQueue", DISPATCH_QUEUE_SERIAL);
+        dispatch_queue_set_specific(trashManagerQueue, kTrashQueueIdentifier, (void *)kTrashQueueIdentifier, NULL);
     }
     return trashManagerQueue;
+}
++(BOOL) isTrashManagerQueue{
+    return dispatch_get_specific(kTrashQueueIdentifier) != NULL;
 }
 
 #pragma mark - Singleton
@@ -58,7 +65,6 @@ static MMTrashManager* _instance = nil;
     [self deleteScrap:scrapUUID inPage:page shouldRespectOthers:YES];
 }
 
-
 -(void) deletePage:(MMExportablePaperView*)page{
     NSLog(@"asking to delete %@", page.uuid);
     page.delegate = nil;
@@ -68,12 +74,6 @@ static MMTrashManager* _instance = nil;
         // Step 1: ensure the page is in a stable saved state
         //         with no pending threads active
         dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
-        
-        if(page.hasEditsToSave){
-            // won't be mutated now that we're in the trash manager,
-            // so it's safe to enumerate on a non-UI thread.
-            
-        }
         
         if(page.hasEditsToSave){
             NSLog(@"page should forget");
@@ -268,7 +268,7 @@ static MMTrashManager* _instance = nil;
                 // now wait for the save + all blocks to complete
                 // and ensure no pending saves
                 dispatch_semaphore_t semaWaitingOnPaperStateSave = dispatch_semaphore_create(0);
-                dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
+                dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
                     [[page.scrapsOnPaperState immutableStateForPath:page.scrapIDsPath] saveStateToDiskBlocking];
                     dispatch_semaphore_signal(semaWaitingOnPaperStateSave);
                 });

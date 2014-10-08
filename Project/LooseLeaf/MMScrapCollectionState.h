@@ -30,6 +30,7 @@
 }
 
 +(dispatch_queue_t) importExportStateQueue;
++(BOOL) isImportExportStateQueue;
 
 @property (nonatomic, readonly) NSObject<MMScrapCollectionStateDelegate>* delegate;
 @property (nonatomic, readonly) int fullByteSize;

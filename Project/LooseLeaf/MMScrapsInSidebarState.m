@@ -131,11 +131,11 @@ static dispatch_queue_t importExportStateQueue;
                         }
                     }
                     @synchronized(self){
-                        isLoaded = YES;
-                        isLoading = NO;
                         MMImmutableScrapCollectionState* immutableState = [self immutableStateForPath:nil];
                         expectedUndoHash = [immutableState undoHash];
                         lastSavedUndoHash = [immutableState undoHash];
+                        isLoaded = YES;
+                        isLoading = NO;
                     }
                     [self.delegate didLoadAllScrapsFor:self];
                     dispatch_semaphore_signal(sema1);
@@ -173,7 +173,10 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 -(MMImmutableScrapsInSidebarState*) immutableStateForPath:(NSString*)scrapIDsPath{
-    if([self isStateLoaded]){
+    if(!isLoading && ![MMScrapCollectionState isImportExportStateQueue]){
+        @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:@"Creating immutable ScrapsInSidebarState in wrong queue" userInfo:nil];
+    }
+    if([self isStateLoaded] || isLoading){
         hasEditsToSave = NO;
         MMImmutableScrapsInSidebarState* immutable = [[MMImmutableScrapsInSidebarState alloc] initWithScrapIDsPath:scrapIDsPath andAllScrapProperties:allPropertiesForScraps andOwnerState:self];
         expectedUndoHash = [immutable undoHash];
