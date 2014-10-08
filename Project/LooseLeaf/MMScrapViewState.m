@@ -269,6 +269,7 @@ static dispatch_queue_t importExportScrapStateQueue;
         dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
             if(self.isForgetful){
                 NSLog(@"forget: skipping scrap state save1");
+                doneSavingBlock(NO);
                 return;
             }
             @autoreleasepool {
@@ -280,6 +281,7 @@ static dispatch_queue_t importExportScrapStateQueue;
                         @autoreleasepool {
                             if(self.isForgetful){
                                 NSLog(@"forget: skipping scrap state save2");
+                                doneSavingBlock(NO);
                                 return;
                             }
                             if(drawableView && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
