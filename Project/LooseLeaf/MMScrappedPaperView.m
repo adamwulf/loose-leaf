@@ -43,7 +43,6 @@
 
 @implementation MMScrappedPaperView{
     NSString* scrapIDsPath;
-    MMScrapsOnPaperState* scrapsOnPaperState;
     MMDecompressImagePromise* scrappedImgViewImage;
     // this defaults to NO, which means we'll try to
     // load a thumbnail. if an image does not exist

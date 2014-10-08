@@ -13,7 +13,13 @@
 #import "MMScrapCollectionState.h"
 
 @interface MMScrapViewState : NSObject<JotViewStateProxyDelegate>{
+    // unloadable state
+    // this state can be loaded and unloaded
+    // to conserve memeory as needed
+    JotViewStateProxy* drawableViewState;
+    // delegate
     __weak NSObject<MMScrapViewStateDelegate>* delegate;
+    // our owning paper
     __weak MMScrapCollectionState* scrapsOnPaperState;
 }
 

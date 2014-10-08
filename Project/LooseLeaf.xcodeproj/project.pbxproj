@@ -174,6 +174,11 @@
 		6672EFEE19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFED19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png */; };
 		6672EFF119C3AC2B0076009F /* MMCloudErrorIconLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6672EFF019C3AC2B0076009F /* MMCloudErrorIconLayer.m */; };
 		667AA41F19E33342006549EE /* MMPolaroidsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AA41E19E33342006549EE /* MMPolaroidsView.m */; };
+		667AE6A219E5C81B0063DD51 /* MMScrapViewState+Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AE6A119E5C81B0063DD51 /* MMScrapViewState+Trash.m */; };
+		667AE6A519E5C9660063DD51 /* JotViewStateProxy+Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AE6A419E5C9660063DD51 /* JotViewStateProxy+Trash.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		667AE6A819E5D02A0063DD51 /* MMExportablePaperView+Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AE6A719E5D02A0063DD51 /* MMExportablePaperView+Trash.m */; };
+		667AE6AB19E5D0C50063DD51 /* MMPageUndoRedoManager+Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AE6AA19E5D0C50063DD51 /* MMPageUndoRedoManager+Trash.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		667AE6AE19E5D1780063DD51 /* MMScrapCollectionState+Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AE6AD19E5D1780063DD51 /* MMScrapCollectionState+Trash.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		667C6352199FE4BC00E93CD6 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 667C6337199FE4BC00E93CD6 /* Media.xcassets */; };
 		667C6353199FE4BC00E93CD6 /* MPCloseBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 667C6338199FE4BC00E93CD6 /* MPCloseBtn.png */; };
 		667C6354199FE4BC00E93CD6 /* MPCloseBtn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 667C6339199FE4BC00E93CD6 /* MPCloseBtn@2x.png */; };
@@ -671,6 +676,16 @@
 		667AA41D19E33342006549EE /* MMPolaroidsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPolaroidsView.h; sourceTree = "<group>"; };
 		667AA41E19E33342006549EE /* MMPolaroidsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPolaroidsView.m; sourceTree = "<group>"; };
 		667AC03D18CE32D700AE6AF1 /* MMStretchScrapGestureRecognizerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMStretchScrapGestureRecognizerDelegate.h; sourceTree = "<group>"; };
+		667AE6A019E5C81B0063DD51 /* MMScrapViewState+Trash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMScrapViewState+Trash.h"; sourceTree = "<group>"; };
+		667AE6A119E5C81B0063DD51 /* MMScrapViewState+Trash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MMScrapViewState+Trash.m"; sourceTree = "<group>"; };
+		667AE6A319E5C9660063DD51 /* JotViewStateProxy+Trash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JotViewStateProxy+Trash.h"; sourceTree = "<group>"; };
+		667AE6A419E5C9660063DD51 /* JotViewStateProxy+Trash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JotViewStateProxy+Trash.m"; sourceTree = "<group>"; };
+		667AE6A619E5D02A0063DD51 /* MMExportablePaperView+Trash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMExportablePaperView+Trash.h"; sourceTree = "<group>"; };
+		667AE6A719E5D02A0063DD51 /* MMExportablePaperView+Trash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MMExportablePaperView+Trash.m"; sourceTree = "<group>"; };
+		667AE6A919E5D0C50063DD51 /* MMPageUndoRedoManager+Trash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMPageUndoRedoManager+Trash.h"; sourceTree = "<group>"; };
+		667AE6AA19E5D0C50063DD51 /* MMPageUndoRedoManager+Trash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MMPageUndoRedoManager+Trash.m"; sourceTree = "<group>"; };
+		667AE6AC19E5D1780063DD51 /* MMScrapCollectionState+Trash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMScrapCollectionState+Trash.h"; sourceTree = "<group>"; };
+		667AE6AD19E5D1780063DD51 /* MMScrapCollectionState+Trash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MMScrapCollectionState+Trash.m"; sourceTree = "<group>"; };
 		667C6337199FE4BC00E93CD6 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Media.xcassets; path = ../../Submodules/mixpanel/Mixpanel/Media.xcassets; sourceTree = "<group>"; };
 		667C6338199FE4BC00E93CD6 /* MPCloseBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MPCloseBtn.png; path = ../../Submodules/mixpanel/Mixpanel/MPCloseBtn.png; sourceTree = "<group>"; };
 		667C6339199FE4BC00E93CD6 /* MPCloseBtn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MPCloseBtn@2x.png"; path = "../../Submodules/mixpanel/Mixpanel/MPCloseBtn@2x.png"; sourceTree = "<group>"; };
@@ -1289,6 +1304,7 @@
 		661708EB1984197C006A73EF /* Trash */ = {
 			isa = PBXGroup;
 			children = (
+				667AE69F19E5C7EE0063DD51 /* Trash Helpers */,
 				661708EC19841988006A73EF /* MMTrashManager.h */,
 				661708ED19841988006A73EF /* MMTrashManager.m */,
 			);
@@ -1700,6 +1716,23 @@
 				66E223FF19D631EF000FCA96 /* settings-privacy@2x.png */,
 			);
 			name = "Permission Images";
+			sourceTree = "<group>";
+		};
+		667AE69F19E5C7EE0063DD51 /* Trash Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				667AE6A019E5C81B0063DD51 /* MMScrapViewState+Trash.h */,
+				667AE6A119E5C81B0063DD51 /* MMScrapViewState+Trash.m */,
+				667AE6A619E5D02A0063DD51 /* MMExportablePaperView+Trash.h */,
+				667AE6A719E5D02A0063DD51 /* MMExportablePaperView+Trash.m */,
+				667AE6A919E5D0C50063DD51 /* MMPageUndoRedoManager+Trash.h */,
+				667AE6AA19E5D0C50063DD51 /* MMPageUndoRedoManager+Trash.m */,
+				667AE6AC19E5D1780063DD51 /* MMScrapCollectionState+Trash.h */,
+				667AE6AD19E5D1780063DD51 /* MMScrapCollectionState+Trash.m */,
+				667AE6A319E5C9660063DD51 /* JotViewStateProxy+Trash.h */,
+				667AE6A419E5C9660063DD51 /* JotViewStateProxy+Trash.m */,
+			);
+			name = "Trash Helpers";
 			sourceTree = "<group>";
 		};
 		667D98B2192FBEDF00625879 /* Content Views */ = {
@@ -2741,6 +2774,7 @@
 				6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */,
 				66DCFBCD1582BAED00B4918C /* MMPaperView.m in Sources */,
 				6635BE9619748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m in Sources */,
+				667AE6AB19E5D0C50063DD51 /* MMPageUndoRedoManager+Trash.m in Sources */,
 				660E1DA9158FC6300001DA12 /* NSMutableArray+QueueAdditions.m in Sources */,
 				665245691996DAB800C36609 /* AFURLResponseSerialization.m in Sources */,
 				66BE6CA219D67BC100A5F650 /* MMPolaroidView.m in Sources */,
@@ -2765,6 +2799,7 @@
 				66A790B6196896FA0037F01A /* MMUndoRedoAddScrapItem.m in Sources */,
 				665245761996EA2300C36609 /* Reachability.m in Sources */,
 				667C635E199FE4BC00E93CD6 /* UIColor+MPColor.m in Sources */,
+				667AE6A519E5C9660063DD51 /* JotViewStateProxy+Trash.m in Sources */,
 				66A02F9619A1D1500013EFAE /* EPPZDevice.m in Sources */,
 				66EC7B7519ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.m in Sources */,
 				660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */,
@@ -2842,6 +2877,7 @@
 				66EDA79617CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m in Sources */,
 				665C593417BD7C42006DECBF /* Tool.m in Sources */,
 				66A7AF1D19A53AF400E0AA29 /* MMCloudKitShareItem.m in Sources */,
+				667AE6A219E5C81B0063DD51 /* MMScrapViewState+Trash.m in Sources */,
 				66F968B819C3A0FB00C1F696 /* MMCloudKitDeclinedPermissionHelpView.m in Sources */,
 				66277C9F192BC99D003E97C0 /* SSKeychain.m in Sources */,
 				66BEBFF719BC10450032D30C /* MMOfflineIconView.m in Sources */,
@@ -2874,6 +2910,7 @@
 				66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */,
 				66B42FC019955A47005D8214 /* MMShareSidebarContainerView.m in Sources */,
 				6699715217DBA02700E81467 /* MMDebugDrawView.m in Sources */,
+				667AE6AE19E5D1780063DD51 /* MMScrapCollectionState+Trash.m in Sources */,
 				660116F219ABB1A50065C1B4 /* MMCloudKitDeclinedPermissionState.m in Sources */,
 				66277CA0192BC99D003E97C0 /* SSKeychainQuery.m in Sources */,
 				660116E619ABAAFC0065C1B4 /* MMCloudKitBaseState.m in Sources */,
@@ -2959,6 +2996,7 @@
 				660116F819ABB8980065C1B4 /* MMCloudKitFetchingAccountInfoState.m in Sources */,
 				66052A0317FA170600A94531 /* MMImmutableScrapsOnPaperState.m in Sources */,
 				667C6364199FED6E00E93CD6 /* MMPrintShareItem.m in Sources */,
+				667AE6A819E5D02A0063DD51 /* MMExportablePaperView+Trash.m in Sources */,
 				6693C94C18E4E7860054FF41 /* MMSlidingSidebarContainerView.m in Sources */,
 				66A02F9A19A1D1950013EFAE /* EPPZSingleton.m in Sources */,
 				66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */,

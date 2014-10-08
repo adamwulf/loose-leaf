@@ -29,10 +29,6 @@
     // alive for the duration of this object
     UIBezierPath* bezierPath;
     
-    // unloadable state
-    // this state can be loaded and unloaded
-    // to conserve memeory as needed
-    JotViewStateProxy* drawableViewState;
     // YES if our goal is to be loaded, NO otherwise
     BOOL targetIsLoadedState;
     // YES if we're currently loading our state, NO otherwise

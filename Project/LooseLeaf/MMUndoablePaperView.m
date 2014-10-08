@@ -22,7 +22,6 @@
 #import "MMTrashManager.h"
 
 @implementation MMUndoablePaperView{
-    MMPageUndoRedoManager* undoRedoManager;
     NSString* undoStatePath;
 }
 
