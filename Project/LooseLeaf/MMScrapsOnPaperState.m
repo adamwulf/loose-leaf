@@ -89,7 +89,10 @@
                         [props setObject:scrap forKey:@"scrap"];
                         [scrapPropsWithState addObject:props];
                     }else{
-                        MMScrapViewState* state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:self];
+                        __block MMScrapViewState* state = nil;
+                        [NSThread performBlockOnMainThreadSync:^{
+                            state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:self];
+                        }];
                         if(state){
                             [props setObject:state forKey:@"state"];
                             [scrapPropsWithState addObject:props];

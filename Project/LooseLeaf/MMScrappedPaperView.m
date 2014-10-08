@@ -1320,7 +1320,7 @@
         }];
         if([scrapsOnPaperState isStateLoaded]){
             MMScrapsOnPaperState* strongScrapState = scrapsOnPaperState;
-            dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
+            dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
                 @autoreleasepool {
                     // save if needed
                     // currently this will always save to disk. in the future #338

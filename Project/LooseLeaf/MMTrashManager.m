@@ -58,6 +58,7 @@ static MMTrashManager* _instance = nil;
 
 
 -(void) deletePage:(MMExportablePaperView*)page{
+    NSLog(@"asking to delete %@", page.uuid);
     dispatch_async([self trashManagerQueue], ^{
         //
         // Step 1: ensure the page is in a stable saved state
