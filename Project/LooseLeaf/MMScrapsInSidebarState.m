@@ -22,15 +22,6 @@
 
 @dynamic delegate;
 
-static dispatch_queue_t importExportStateQueue;
-
-+(dispatch_queue_t) importExportStateQueue{
-    if(!importExportStateQueue){
-        importExportStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.importExportStateQueue", DISPATCH_QUEUE_SERIAL);
-    }
-    return importExportStateQueue;
-}
-
 -(id) initWithDelegate:(NSObject<MMScrapsInSidebarStateDelegate>*)_delegate{
     if(self = [super init]){
         delegate = _delegate;

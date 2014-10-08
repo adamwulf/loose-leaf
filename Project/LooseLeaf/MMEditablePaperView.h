@@ -24,8 +24,6 @@
 @property (nonatomic, weak) JotView* drawableView;
 @property (readonly) JotViewStateProxy* paperState;
 
-+(dispatch_queue_t) importThumbnailQueue;
-
 -(BOOL) hasEditsToSave;
 -(BOOL) isStateLoaded;
 -(BOOL) isStateLoading;

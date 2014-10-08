@@ -11,6 +11,7 @@
 
 @interface MMEditablePaperView (Subclass)
 
++(dispatch_queue_t) importThumbnailQueue;
 
 -(void) saveToDiskHelper:(void (^)(BOOL didSaveEdits))onComplete;
 
