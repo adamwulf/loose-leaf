@@ -103,6 +103,7 @@
 
 
 -(id) initWithScrapViewState:(MMScrapViewState*)_scrapState{
+    CheckMainThread;
     if ((self = [super initWithFrame:_scrapState.drawableBounds])){
         scrapState = _scrapState;
         scrapState.delegate = self;

@@ -69,6 +69,12 @@
         
         void (^block2)() = ^(void) {
             @autoreleasepool {
+                @synchronized(self){
+                    if(isUnloading){
+                        // we're not allowed to load while already trying to unload
+                        @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"loading during unloading" userInfo:nil];
+                    }
+                }
                 dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                 NSDictionary* allScrapStateInfo = [NSDictionary dictionaryWithContentsOfFile:scrapIDsPath];
 
@@ -112,7 +118,14 @@
                     for(NSDictionary* scrapProperties in scrapPropsWithState){
                         @synchronized(self){
                             if(isUnloading){
-                                @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"loading during unloading" userInfo:nil];
+                                // we were asked to unload before we were even
+                                // done unloading. just bail here
+                                NSLog(@"ScrapsOnPaperState asked to unload before finished loading");
+                                @synchronized(self){
+                                    isLoaded = NO;
+                                    isLoading = NO;
+                                }
+                                return;
                             }
                         }
                         MMScrapView* scrap = nil;

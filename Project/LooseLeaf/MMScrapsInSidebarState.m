@@ -75,7 +75,10 @@
                         // couldn't find already built scrap, so load a state and
                         // we'll build a scrap
                         if(paperStateForScrap){
-                            MMScrapViewState* state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:paperStateForScrap];
+                            __block MMScrapViewState* state = nil;
+                            [NSThread performBlockOnMainThreadSync:^{
+                                state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:paperStateForScrap];
+                            }];
                             if(state){
                                 NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
                                 [props setObject:state forKey:@"state"];

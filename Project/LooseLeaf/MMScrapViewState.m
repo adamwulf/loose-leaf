@@ -104,6 +104,7 @@ static dispatch_queue_t importExportScrapStateQueue;
 #pragma mark - Init
 
 -(id) initWithUUID:(NSString*)_uuid andPaperState:(MMScrapCollectionState*)_scrapsOnPaperState{
+    CheckMainThread;
     // save our UUID and scrapsOnPaperState, everything depends on these
     uuid = _uuid;
     scrapsOnPaperState = _scrapsOnPaperState;
