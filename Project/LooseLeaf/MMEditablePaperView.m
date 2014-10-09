@@ -178,7 +178,7 @@ dispatch_queue_t importThumbnailQueue;
 -(void) setDrawableView:(JotView *)_drawableView{
     CheckMainThread;
     if(_drawableView && ![self isStateLoaded]){
-        NSLog(@"oh no");
+        NSLog(@"oh no3");
     }
     if(drawableView != _drawableView){
         if(!_drawableView && drawableView){

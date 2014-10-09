@@ -181,6 +181,9 @@ static MMPageCacheManager* _instance = nil;
                 [stateLoadedPages insertObject:currentEditablePage atIndex:0];
             }
             if([stateLoadedPages count] > kMMPageCacheManagerSize){
+                if([stateLoadedPages lastObject] == currentEditablePage){
+                    NSLog(@"what");
+                }
                 // too many pages, kick one out
                 [[stateLoadedPages lastObject] unloadState];
                 [stateLoadedPages removeLastObject];
