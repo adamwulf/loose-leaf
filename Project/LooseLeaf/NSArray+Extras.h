@@ -16,6 +16,8 @@
 
 -(NSArray*) shuffledArray;
 
+-(NSSet*) asSet;
+
 @end
 
 @interface NSMutableArray (Extras)

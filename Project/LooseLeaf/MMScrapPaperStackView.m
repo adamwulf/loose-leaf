@@ -31,6 +31,7 @@
 #import "MMCloudKitManager.h"
 #import "MMCloudKitFetchFriendsState.h"
 #import "MMPhotoManager.h"
+#import "NSArray+Extras.h"
 
 @implementation MMScrapPaperStackView{
     
@@ -1184,36 +1185,36 @@ int skipAll = NO;
 // the stretch failed or ended before splitting, so give
 // the pan gesture back it's scrap if its still alive
 -(void) endStretchWithoutSplittingScrap:(MMScrapView*)scrap atNormalPoint:(CGPoint)np{
-    [stretchScrapGesture say:@"ending start" ISee:[NSSet setWithArray:stretchScrapGesture.validTouches]];
+    // [stretchScrapGesture say:@"ending start" ISee:[NSSet setWithArray:stretchScrapGesture.validTouches]];
     
     // check the gestures first to see if they're still alive,
     // and give the scrap back if possible.
-    NSSet* validTouches = [NSSet setWithArray:[stretchScrapGesture validTouches]];
-    if(panAndPinchScrapGesture.scrap == scrap){
-        [panAndPinchScrapGesture say:@"ending start" ISee:[NSSet setWithArray:panAndPinchScrapGesture.validTouches]];
+    NSArray* validStretchTouches = [stretchScrapGesture validTouches];
+    if(panAndPinchScrapGesture.scrap == scrap && [validStretchTouches count] >= 2){
         // gesture 1 owns it, so give it back and turn gesture 2 back on
-        [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:validTouches];
-        [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[stretchScrapGesture validTouches] withAnchor:np];
+        // [panAndPinchScrapGesture say:@"ending start" ISee:[NSSet setWithArray:panAndPinchScrapGesture.validTouches]];
+        [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:[validStretchTouches asSet]];
+        [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:validStretchTouches withAnchor:np];
         [panAndPinchScrapGesture2 begin];
-    }else if(panAndPinchScrapGesture2.scrap == scrap){
-        [panAndPinchScrapGesture2 say:@"ending start" ISee:[NSSet setWithArray:panAndPinchScrapGesture2.validTouches]];
+    }else if(panAndPinchScrapGesture2.scrap == scrap && [validStretchTouches count] >= 2){
         // gesture 2 owns it, so give it back and turn gesture 1 back on
-        [panAndPinchScrapGesture relinquishOwnershipOfTouches:validTouches];
-        [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture2 withTouches:[stretchScrapGesture validTouches] withAnchor:np];
+        // [panAndPinchScrapGesture2 say:@"ending start" ISee:[NSSet setWithArray:panAndPinchScrapGesture2.validTouches]];
+        [panAndPinchScrapGesture relinquishOwnershipOfTouches:[validStretchTouches asSet]];
+        [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture2 withTouches:validStretchTouches withAnchor:np];
         [panAndPinchScrapGesture begin];
-    }else if([stretchScrapGesture.validTouches count] >= 2){
+    }else if([validStretchTouches count] >= 2){
         // neither has a scrap, but i have at least 2 touches to give away
-        [panAndPinchScrapGesture say:@"ending start" ISee:[NSSet setWithArray:panAndPinchScrapGesture.validTouches]];
         // gesture 1 owns it, so give it back and turn gesture 2 back on
-        [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:validTouches];
-        [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:[stretchScrapGesture validTouches] withAnchor:np];
+        // [panAndPinchScrapGesture say:@"ending start" ISee:[NSSet setWithArray:panAndPinchScrapGesture.validTouches]];
+        [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:[validStretchTouches asSet]];
+        [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:validStretchTouches withAnchor:np];
         [panAndPinchScrapGesture2 begin];
     }else{
-//        NSLog(@"original properties was %@ or %@", stretchScrapGesture.startingPageForScrap, stretchScrapGesture.startingScrapProperties);
+        // NSLog(@"original properties was %@ or %@", stretchScrapGesture.startingPageForScrap, stretchScrapGesture.startingScrapProperties);
 
         // neither has a scrap, and i don't have enough touches to give it away
-        [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:validTouches];
-        [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:validTouches];
+        [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:[validStretchTouches asSet]];
+        [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:[validStretchTouches asSet]];
         // otherwise, unpause both gestures and just
         // put the scrap back into the page
         [panAndPinchScrapGesture begin];
@@ -1294,22 +1295,22 @@ int skipAll = NO;
 }
 
 
--(void) logOutputGestureTouchOwnership:(NSString*) prefix gesture:(MMPanAndPinchScrapGestureRecognizer*)gesture{
-    return;
-//    NSString* validOut = @"valid:";
-//    for (UITouch* t in gesture.validTouches) {
-//        validOut = [validOut stringByAppendingFormat:@" %p", t];
-//    }
-//    NSString* possibleOut = @"possible:";
-//    for (UITouch* t in gesture.possibleTouches) {
-//        possibleOut = [possibleOut stringByAppendingFormat:@" %p", t];
-//    }
-//    NSString* ignoredOut = @"ignored:";
-//    for (UITouch* t in gesture.ignoredTouches) {
-//        ignoredOut = [ignoredOut stringByAppendingFormat:@" %p", t];
-//    }
-//    debug_NSLog(@"%@ (%p) knows about:\n%@\n%@\n%@ ", prefix, gesture, validOut, possibleOut, ignoredOut);
-}
+//-(void) logOutputGestureTouchOwnership:(NSString*) prefix gesture:(MMPanAndPinchScrapGestureRecognizer*)gesture{
+//    return;
+////    NSString* validOut = @"valid:";
+////    for (UITouch* t in gesture.validTouches) {
+////        validOut = [validOut stringByAppendingFormat:@" %p", t];
+////    }
+////    NSString* possibleOut = @"possible:";
+////    for (UITouch* t in gesture.possibleTouches) {
+////        possibleOut = [possibleOut stringByAppendingFormat:@" %p", t];
+////    }
+////    NSString* ignoredOut = @"ignored:";
+////    for (UITouch* t in gesture.ignoredTouches) {
+////        ignoredOut = [ignoredOut stringByAppendingFormat:@" %p", t];
+////    }
+////    debug_NSLog(@"%@ (%p) knows about:\n%@\n%@\n%@ ", prefix, gesture, validOut, possibleOut, ignoredOut);
+//}
 
 
 // time to duplicate the scraps! it's been pulled into two pieces
@@ -1340,19 +1341,19 @@ int skipAll = NO;
         np2 = tnp;
     }
     
-    [self logOutputGestureTouchOwnership:@"before gesture 1" gesture:panScrapGesture1];
-    [self logOutputGestureTouchOwnership:@"before gesture 2" gesture:panScrapGesture2];
+//    [self logOutputGestureTouchOwnership:@"before gesture 1" gesture:panScrapGesture1];
+//    [self logOutputGestureTouchOwnership:@"before gesture 2" gesture:panScrapGesture2];
     
     [panScrapGesture1 relinquishOwnershipOfTouches:[touches2 set]];
     [panScrapGesture2 relinquishOwnershipOfTouches:[touches1 set]];
     
-    [self logOutputGestureTouchOwnership:@"relenquished gesture 1" gesture:panScrapGesture1];
-    [self logOutputGestureTouchOwnership:@"relenquished gesture 2" gesture:panScrapGesture2];
+//    [self logOutputGestureTouchOwnership:@"relenquished gesture 1" gesture:panScrapGesture1];
+//    [self logOutputGestureTouchOwnership:@"relenquished gesture 2" gesture:panScrapGesture2];
     
     [self sendStretchedScrap:scrap toPanGesture:panScrapGesture1 withTouches:[touches1 array] withAnchor:np1];
     
-    [self logOutputGestureTouchOwnership:@"after 1 set gesture 1" gesture:panScrapGesture1];
-    [self logOutputGestureTouchOwnership:@"after 1 set gesture 2" gesture:panScrapGesture2];
+//    [self logOutputGestureTouchOwnership:@"after 1 set gesture 1" gesture:panScrapGesture1];
+//    [self logOutputGestureTouchOwnership:@"after 1 set gesture 2" gesture:panScrapGesture2];
 
 
     // next, add the new scrap to the same page as the stretched scrap
@@ -1379,8 +1380,8 @@ int skipAll = NO;
     // now the scrap is in the right place, so hand it off to the pan gesture
     [self sendStretchedScrap:clonedScrap toPanGesture:panScrapGesture2 withTouches:[touches2 array] withAnchor:np2];
     
-    [self logOutputGestureTouchOwnership:@"after 2 set gesture 1" gesture:panScrapGesture1];
-    [self logOutputGestureTouchOwnership:@"after 2 set gesture 2" gesture:panScrapGesture2];
+//    [self logOutputGestureTouchOwnership:@"after 2 set gesture 1" gesture:panScrapGesture1];
+//    [self logOutputGestureTouchOwnership:@"after 2 set gesture 2" gesture:panScrapGesture2];
 
     
     if(!panScrapGesture1.scrap || !panScrapGesture2.scrap){
@@ -1399,14 +1400,14 @@ int skipAll = NO;
         debug_NSLog(@"success? %d %p,  %d %p", (int)[panScrapGesture1.validTouches count], panScrapGesture1.scrap,
               (int)[panScrapGesture2.validTouches count], panScrapGesture2.scrap);
 
-        if([panScrapGesture1.validTouches count] < 2){
-            [self logOutputGestureTouchOwnership:@"gesture 1 failed gesture 1" gesture:panScrapGesture1];
-            [self logOutputGestureTouchOwnership:@"gesture 1 failed gesture 2" gesture:panScrapGesture2];
-        }
-        if([panScrapGesture2.validTouches count] < 2){
-            [self logOutputGestureTouchOwnership:@"gesture 2 failed gesture 1" gesture:panScrapGesture1];
-            [self logOutputGestureTouchOwnership:@"gesture 2 failed gesture 2" gesture:panScrapGesture2];
-        }
+//        if([panScrapGesture1.validTouches count] < 2){
+//            [self logOutputGestureTouchOwnership:@"gesture 1 failed gesture 1" gesture:panScrapGesture1];
+//            [self logOutputGestureTouchOwnership:@"gesture 1 failed gesture 2" gesture:panScrapGesture2];
+//        }
+//        if([panScrapGesture2.validTouches count] < 2){
+//            [self logOutputGestureTouchOwnership:@"gesture 2 failed gesture 1" gesture:panScrapGesture1];
+//            [self logOutputGestureTouchOwnership:@"gesture 2 failed gesture 2" gesture:panScrapGesture2];
+//        }
         @throw [NSException exceptionWithName:@"DroppedSplitScrap" reason:@"split scrap was dropped by pan gestures" userInfo:nil];
     }
 }

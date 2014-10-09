@@ -33,6 +33,10 @@
     return [NSArray arrayWithArray:temp];
 }
 
+-(NSSet*) asSet{
+    return [NSSet setWithArray:self];
+}
+
 @end
 
 
