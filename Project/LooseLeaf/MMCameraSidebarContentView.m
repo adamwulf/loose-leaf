@@ -62,6 +62,15 @@
     currentAlbum = [[MMPhotoManager sharedInstance] cameraRoll];
     [self doneLoadingPhotoAlbums];
     [self updatePhotoRotation:NO];
+    
+    if([CaptureSessionManager hasCamera] && ![CaptureSessionManager hasCameraPermission]){
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self doneLoadingPhotoAlbums];
+            });
+        }];
+    }
+
 }
 
 -(void) hide:(BOOL)animated{

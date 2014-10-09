@@ -30,6 +30,7 @@
 #import "MMCloudKitImportExportView.h"
 #import "MMCloudKitManager.h"
 #import "MMCloudKitFetchFriendsState.h"
+#import "MMPhotoManager.h"
 
 @implementation MMScrapPaperStackView{
     
@@ -202,6 +203,7 @@
 #pragma mark - Insert Image
 
 -(void) insertImageButtonTapped:(UIButton*)_button{
+    [[MMPhotoManager sharedInstance] bypassAuthRequirement];
     [self cancelAllGestures];
     [[visibleStackHolder peekSubview] cancelAllGestures];
     [self setButtonsVisible:NO withDuration:0.15];

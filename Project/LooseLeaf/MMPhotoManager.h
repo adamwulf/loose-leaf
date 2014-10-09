@@ -29,6 +29,8 @@
 
 +(BOOL) hasPhotosPermission;
 
+-(void) bypassAuthRequirement;
+
 -(void) initializeAlbumCache;
 
 @end
