@@ -17,6 +17,14 @@
 
 static NSMutableDictionary* trackers;
 
++(MMStatTracker*) trackerWithName:(NSString *)name andTargetCount:(NSInteger)targetCount{
+    MMStatTracker* tracker = [trackers objectForKey:name];
+    if(tracker) return tracker;
+    tracker = [[MMStatTracker alloc] initWithName:name andTargetCount:targetCount];
+    [trackers setObject:tracker forKey:name];
+    return tracker;
+}
+
 +(MMStatTracker*) trackerWithName:(NSString *)name{
     MMStatTracker* tracker = [trackers objectForKey:name];
     if(tracker) return tracker;

@@ -12,6 +12,8 @@
 
 +(MMStatTracker*) trackerWithName:(NSString*)name;
 
++(MMStatTracker*) trackerWithName:(NSString *)name andTargetCount:(NSInteger)targetCount;
+
 - (instancetype)init NS_UNAVAILABLE;
 
 - (void) trackValue:(CGFloat)nextVal;
