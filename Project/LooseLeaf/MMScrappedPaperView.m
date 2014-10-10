@@ -568,7 +568,7 @@
     
     
     if([UIBezierPath segmentTestCount] || [UIBezierPath segmentCompareCount]){
-        NSLog(@"segment counts: %d %d", (int)[UIBezierPath segmentTestCount], (int)[UIBezierPath segmentCompareCount]);
+//        NSLog(@"segment counts: %d %d", (int)[UIBezierPath segmentTestCount], (int)[UIBezierPath segmentCompareCount]);
         [[MMStatTracker trackerWithName:kMPStatSegmentTestCount andTargetCount:100] trackValue:[UIBezierPath segmentTestCount]];
         [[MMStatTracker trackerWithName:kMPStatSegmentCompareCount andTargetCount:100] trackValue:[UIBezierPath segmentCompareCount]];
     }
@@ -855,7 +855,7 @@
     
 
     if([UIBezierPath segmentTestCount] || [UIBezierPath segmentCompareCount]){
-        NSLog(@"segment counts: %d %d", (int)[UIBezierPath segmentTestCount], (int)[UIBezierPath segmentCompareCount]);
+//        NSLog(@"segment counts: %d %d", (int)[UIBezierPath segmentTestCount], (int)[UIBezierPath segmentCompareCount]);
         [[MMStatTracker trackerWithName:kMPStatSegmentTestCount andTargetCount:100] trackValue:[UIBezierPath segmentTestCount]];
         [[MMStatTracker trackerWithName:kMPStatSegmentCompareCount andTargetCount:100] trackValue:[UIBezierPath segmentCompareCount]];
     }
