@@ -10,7 +10,6 @@
 #import "MMImageSidebarContainerViewDelegate.h"
 #import "MMPhotoManagerDelegate.h"
 #import "MMAbstractSidebarContentView.h"
-#import "ALAsset+Thumbnail.h"
 
 @interface MMImageSidebarContainerView : MMSlidingSidebarContainerView<MMPhotoManagerDelegate>
 
@@ -18,7 +17,7 @@
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView;
 
--(void) photoWasTapped:(ALAsset *)asset
+-(void) photoWasTapped:(MMPhoto *)asset
               fromView:(MMBufferedImageView *)bufferedImage
           withRotation:(CGFloat)rotation
          fromContainer:(MMAbstractSidebarContentView*)container;

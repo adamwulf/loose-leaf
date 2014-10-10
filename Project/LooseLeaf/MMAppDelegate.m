@@ -30,19 +30,18 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
     debug_NSLog(@"DID FINISH LAUNCHING");
     [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
     [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale, nil]];
     
+    [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
+    [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
+    [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
+    [TestFlight setOptions:@{ TFOptionLogOnCheckpoint : @NO }];
+    [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
     [[NSThread mainThread] performBlock:^{
-        [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
-        [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
-        [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
-        [TestFlight setOptions:@{ TFOptionLogOnCheckpoint : @NO }];
-        [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
         [TestFlight takeOff:kTestflightAppToken];
     } afterDelay:3];
     
@@ -52,7 +51,7 @@
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     
-//    [self.window.layer setSpeed:0.3f];
+//    [self.window.layer setSpeed:0.1f];
 
     // setup the timer that will help log session duration
     [self setupTimer];
@@ -152,11 +151,11 @@
 }
 
 -(void) application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void (^)())completionHandler{
-    NSLog(@"what");
+    NSLog(@"handleActionWithIdentifier");
 }
 
 -(void) application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler{
-    NSLog(@"what");
+    NSLog(@"handleEventsForBackgroundURLSession");
 }
 
 - (void) checkForNotificationToHandleWithNotificationInfo:(NSDictionary *)userInfo {

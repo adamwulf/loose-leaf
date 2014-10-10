@@ -135,6 +135,29 @@
  * adds the page to the bottom of the stack
  * and adds to the bottom of the subviews
  */
+-(void) addPage:(MMPaperView*)page belowPage:(MMPaperView*)otherPage{
+    page.isBrandNewPage = NO;
+    page.delegate = self;
+    [page enableAllGestures];
+    if([bezelStackHolder containsSubview:otherPage]){
+        [visibleStackHolder pushSubview:page];
+    }else if([visibleStackHolder containsSubview:otherPage]){
+        // this will convert the frame of the newly inserted page
+        [visibleStackHolder pushSubview:page];
+        // and this will position it at the correct index
+        [visibleStackHolder insertSubview:page belowSubview:otherPage];
+    }else if([hiddenStackHolder containsSubview:otherPage]){
+        // this will convert the frame of the newly inserted page
+        [hiddenStackHolder pushSubview:page];
+        // and this will position it at the correct index
+        [hiddenStackHolder insertSubview:page aboveSubview:otherPage];
+    }
+}
+
+/**
+ * adds the page to the bottom of the stack
+ * and adds to the bottom of the subviews
+ */
 -(void) addPaperToBottomOfHiddenStack:(MMPaperView*)page{
     page.isBrandNewPage = YES;
     page.delegate = self;
@@ -618,7 +641,7 @@
         // began to changed, because i never know when the delegate has or hasn't
         // been notified about the substate
         bezelGesture.hasSeenSubstateBegin = YES;
-        [[visibleStackHolder peekSubview] saveToDisk];
+        [[visibleStackHolder peekSubview] saveToDisk:nil];
         //
         // ok, the user is beginning the drag two fingers from the
         // right hand bezel. we need to push a page from the hidden
@@ -1111,7 +1134,7 @@
             }];
             [self emptyBezelStackToVisibleStackOnComplete:^(BOOL finished){
                 [self updateIconAnimations];
-                [oldTopVisiblePage saveToDisk];
+                [oldTopVisiblePage saveToDisk:nil];
             }];
         }else{
             // we just picked up the top page close to the bezel,
@@ -1123,7 +1146,7 @@
             [self popHiddenStackForPages:1 onComplete:^(BOOL completed){
                 page.frame = self.bounds;
                 [self didChangeTopPage];
-                [oldTopVisiblePage saveToDisk];
+                [oldTopVisiblePage saveToDisk:nil];
             }];
         }
         return;
@@ -1208,14 +1231,14 @@
                 [self popStackUntilPage:pageToPopUntil onComplete:^(BOOL finished){
                     [self updateIconAnimations];
                     [self didChangeTopPage];
-                    [oldTopVisiblePage saveToDisk];
+                    [oldTopVisiblePage saveToDisk:nil];
                 }];
             }else{
                 [self willChangeTopPageTo:[visibleStackHolder getPageBelow:page]];
                 [self sendPageToHiddenStack:page onComplete:^(BOOL finished){
                     [self updateIconAnimations];
                     [self didChangeTopPage];
-                    [oldTopVisiblePage saveToDisk];
+                    [oldTopVisiblePage saveToDisk:nil];
                 }];
             }
             //
@@ -1231,7 +1254,7 @@
                 [self updateIconAnimations];
                 if([page isKindOfClass:[MMEditablePaperView class]]){
                     MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
-                    [editablePage saveToDisk];
+                    [editablePage saveToDisk:nil];
                 }
             }];
         }
@@ -1394,7 +1417,7 @@
     @throw kAbstractMethodException;
 }
 
--(MMScrapSidebarContainerView*) bezelContainerView{
+-(MMScrapsInBezelContainerView*) bezelContainerView{
     @throw kAbstractMethodException;
 }
 

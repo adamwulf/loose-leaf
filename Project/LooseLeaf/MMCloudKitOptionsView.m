@@ -149,7 +149,6 @@
         return [[obj1 objectForKey:@"firstName"] compare:[obj2 objectForKey:@"firstName"] options:NSCaseInsensitiveSearch];
     }];
     [listOfFriendsView reloadData];
-    
 }
 
 #pragma mark - CloudKit UI
@@ -329,9 +328,11 @@ BOOL hasSent = NO;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     MMCloudKitFriendCollectionViewCell* cell = (MMCloudKitFriendCollectionViewCell*) [collectionView cellForItemAtIndexPath:indexPath];
-    MMAvatarButton* avatarButton = [cell stealAvatarButton];
-    [shareItem userIsAskingToShareTo:[self userInfoForIndexPath:indexPath] fromButton:avatarButton];
-    [cell bounce];
+    if([cell isKindOfClass:[MMCloudKitFriendCollectionViewCell class]]){
+        MMAvatarButton* avatarButton = [cell stealAvatarButton];
+        [shareItem userIsAskingToShareTo:[self userInfoForIndexPath:indexPath] fromButton:avatarButton];
+        [cell bounce];
+    }
 }
 
 #pragma mark - Rotation
@@ -349,7 +350,10 @@ BOOL hasSent = NO;
 }
 
 -(void) updateInterfaceTo:(UIInterfaceOrientation)orientation{
-    [listOfFriendsView setCollectionViewLayout:[self idealLayoutForOrientation:orientation] animated:YES];
+    if(self.alpha){
+        [self updateDataSource];
+        [listOfFriendsView setCollectionViewLayout:[self idealLayoutForOrientation:orientation] animated:YES];
+    }
 }
 
 
@@ -368,7 +372,7 @@ BOOL hasSent = NO;
                        @{@"firstName" : @"Craig",
                          @"lastName" : @"Federighi",
                          @"initials" : @"CF"},
-                       @{@"firstName" : @"Jonny",
+                       @{@"firstName" : @"Jony",
                          @"lastName" : @"Ive",
                          @"initials" : @"JI"},
                        @{@"firstName" : @"Luca",

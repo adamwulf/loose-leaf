@@ -99,6 +99,8 @@ _Pragma("clang diagnostic pop") \
 
 
 // MixPanel People Properties
+#define kMPStatScissorSegments @"Stat: Avg Scissor Segment Count"
+#define kMPStatScrapPathSegments @"Stat: Avg Scrap Segment Count"
 #define kMPPreferredLanguage @"Language"
 #define kMPScreenScale @"Screen Scale"
 #define kMPDurationAppOpen @"Duration App Open"
@@ -163,6 +165,9 @@ _Pragma("clang diagnostic pop") \
 
 // photo album
 #define kMaxPhotoRotationInDegrees 20
+
+// page cache manager
+#define kPageCacheManagerHasLoadedAnyPage @"PageCacheManagerLoadedFirstPage"
 
 #define RandomPhotoRotation(a) (^float(NSInteger b){srand((unsigned)b); float output = ((float)(rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees/2)) / 360.0 * M_PI; srand((unsigned)time(NULL)); return output;})(a)
 

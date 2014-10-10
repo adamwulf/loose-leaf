@@ -7,6 +7,7 @@
 //
 
 #import "MMExportablePaperView.h"
+#import "MMEditablePaperViewSubclass.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "NSString+UUID.h"
 #import <ZipArchive/ZipArchive.h>
@@ -21,26 +22,32 @@
 }
 
 @synthesize cloudKitSenderInfo;
+@synthesize isCurrentlySaving;
 
 #pragma mark - Saving
 
--(void) saveToDisk{
+-(void) saveToDisk:(void (^)(BOOL didSaveEdits))onComplete{
     @synchronized(self){
         if(isCurrentlySaving || isCurrentlyExporting){
             waitingForSave = YES;
+            if(onComplete) onComplete(YES);
             return;
         }
         isCurrentlySaving = YES;
         waitingForSave = NO;
     }
-    [super saveToDisk];
+    [super saveToDisk:^(BOOL didSaveEdits){
+        if(onComplete) onComplete(didSaveEdits);
+    }];
 }
 
--(void) saveToDisk:(void (^)(BOOL))onComplete{
-    [super saveToDisk:^(BOOL hadEditsToSave){
+-(void) saveToDiskHelper:(void (^)(BOOL))onComplete{
+    __block __strong MMExportablePaperView* strongSelf = self;
+    [super saveToDiskHelper:^(BOOL hadEditsToSave){
         @synchronized(self){
             isCurrentlySaving = NO;
-            [self retrySaveOrExport];
+            [strongSelf retrySaveOrExport];
+            strongSelf = nil;
         }
         if(onComplete) onComplete(hadEditsToSave);
     }];
@@ -48,8 +55,10 @@
 
 -(void) retrySaveOrExport{
     if(waitingForSave){
+        __block __strong MMExportablePaperView* strongSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self saveToDisk];
+            [strongSelf saveToDisk:nil];
+            strongSelf = nil;
         });
     }else if(waitingForExport){
         [self exportAsynchronouslyToZipFile];
@@ -109,7 +118,7 @@
             waitingForExport = YES;
         }
         NSLog(@"saved exporing while save is still needed");
-        [self saveToDisk];
+        [self saveToDisk:nil];
         return;
     }
     
@@ -312,6 +321,5 @@
     
     return fullPathToZip;
 }
-
 
 @end

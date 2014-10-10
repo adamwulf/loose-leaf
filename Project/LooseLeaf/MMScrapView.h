@@ -26,9 +26,10 @@
 @property (nonatomic, readonly) NSString* owningPageUUID;
 @property (nonatomic, readonly) MMScrapViewState* state;
 
--(id) initWithScrapViewState:(MMScrapViewState*)scrapState andPaperState:(MMScrapsOnPaperState*)paperState;
--(id) initWithBezierPath:(UIBezierPath*)path andPaperState:(MMScrapsOnPaperState*)paperState;
--(id) initWithBezierPath:(UIBezierPath *)path andScale:(CGFloat)scale andRotation:(CGFloat)rotation andPaperState:(MMScrapsOnPaperState*)paperState;
+
+-(id) initWithScrapViewState:(MMScrapViewState*)scrapState;
+
+-(id) initWithBezierPath:(UIBezierPath *)path andScale:(CGFloat)scale andRotation:(CGFloat)rotation andPaperState:(MMScrapCollectionState*)paperState;
 
 -(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading;
 

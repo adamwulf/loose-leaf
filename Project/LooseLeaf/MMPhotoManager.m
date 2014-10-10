@@ -7,7 +7,9 @@
 //
 
 #import "MMPhotoManager.h"
+#import "MMDefaultPhotoAlbum.h"
 #import "NSThread+BlockAdditions.h"
+#import "NSArray+Map.h"
 #import "Constants.h"
 
 @implementation MMPhotoManager{
@@ -18,6 +20,8 @@
     NSArray* events;
     NSArray* albums;
     MMPhotoAlbum* cameraRoll;
+    
+    BOOL shouldBypassAuthRequirement;
 }
 
 @synthesize delegate;
@@ -31,8 +35,22 @@ static MMPhotoManager* _instance = nil;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(libraryChanged:)
                                                      name:ALAssetsLibraryChangedNotification
                                                    object:[self assetsLibrary]];
+        shouldBypassAuthRequirement = NO;
     }
     return _instance;
+}
+
+-(NSArray*) loadDefaultPhotoAlbums{
+    NSString* directoryOfAlbums = [[NSBundle mainBundle] pathForResource:@"BundledPhotos" ofType:nil];
+    NSArray* defaultAlbumList = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryOfAlbums error:nil];
+    NSLog(@"defaultAlbumList: %@", defaultAlbumList);
+    
+    NSArray* allDefaultAlbums = @[];
+    for(NSString* albumName in defaultAlbumList){
+        NSString* pathToAlbum = [directoryOfAlbums stringByAppendingPathComponent:albumName];
+        allDefaultAlbums = [allDefaultAlbums arrayByAddingObject:[[MMDefaultPhotoAlbum alloc] initWithPhotosInDirectory:pathToAlbum]];
+    }
+    return allDefaultAlbums;
 }
 
 +(MMPhotoManager*) sharedInstance{
@@ -40,6 +58,10 @@ static MMPhotoManager* _instance = nil;
         _instance = [[MMPhotoManager alloc]init];
     }
     return _instance;
+}
+
++(BOOL) hasPhotosPermission{
+    return [ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized;
 }
 
 - (void) dealloc{
@@ -139,6 +161,12 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                           resultBlock:^(ALAssetsGroup *group) {
                               MMPhotoAlbum* addedAlbum = [[MMPhotoAlbum alloc] initWithAssetGroup:group];
                               @synchronized(self){
+                                  if(!group){
+                                      [[[[albums arrayByAddingObjectsFromArray:events] arrayByAddingObjectsFromArray:faces] arrayByAddingObject:cameraRoll] mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
+                                          [obj loadPreviewPhotos];
+                                          return obj;
+                                      }];
+                                  }
                                   if(addedAlbum.type == ALAssetsGroupAlbum){
                                       albums = [self sortArrayByAlbumName:[albums arrayByAddingObject:addedAlbum]];
                                   }else if(addedAlbum.type == ALAssetsGroupEvent){
@@ -148,6 +176,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                   }else if(addedAlbum.type == ALAssetsGroupSavedPhotos){
                                       cameraRoll = addedAlbum;
                                       cameraRoll.reversed = YES;
+                                      cameraRoll.numberOfPreviewPhotos = 10;
                                   }
                               }
                               [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
@@ -160,10 +189,14 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
 -(void) albumUpdated:(NSURL*)urlOfUpdatedAlbum{
     [[self assetsLibrary] groupForURL:urlOfUpdatedAlbum
                           resultBlock:^(ALAssetsGroup *group) {
-                              MMPhotoAlbum* updatedAlbum = [self albumWithURL:group.url];
-                              [updatedAlbum refreshAlbumContentsWithGroup:group];
-                              [self resortAlbums];
-                              [self.delegate albumUpdated:updatedAlbum];
+                              if(!group){
+                                  [self albumDeleted:urlOfUpdatedAlbum];
+                              }else{
+                                  MMPhotoAlbum* updatedAlbum = [self albumWithPersistentId:group.persistentId];
+                                  [updatedAlbum refreshAlbumContentsWithGroup:group];
+                                  [self resortAlbums];
+                                  [self.delegate albumUpdated:updatedAlbum];
+                              }
                           }
                          failureBlock:^(NSError *error) {
                              [self processError:error];
@@ -189,8 +222,8 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
     return [arrayToSort sortedArrayUsingComparator:sortByName];
 }
 
--(MMPhotoAlbum*) albumWithURL:(NSURL*)url{
-    if([cameraRoll.assetURL isEqual:url]){
+-(MMPhotoAlbum*) albumWithPersistentId:(NSString*)persistentId{
+    if([cameraRoll.persistentId isEqual:persistentId]){
         return cameraRoll;
     }
     NSArray* allItems = nil;
@@ -198,16 +231,15 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
         allItems = [[albums arrayByAddingObjectsFromArray:events] arrayByAddingObjectsFromArray:faces];
     }
     for (MMPhotoAlbum* album in allItems) {
-        if([album.assetURL isEqual:url]){
+        if([album.persistentId isEqual:persistentId]){
             return album;
         }
     }
-//    [[self assetsLibrary] groupForURL:url resultBlock:^(ALAssetsGroup *group) {
-//        <#code#>
-//    } failureBlock:^(NSError *error) {
-//        <#code#>
-//    }];
     return nil;
+}
+
+-(void) bypassAuthRequirement{
+    shouldBypassAuthRequirement = YES;
 }
 
 /**
@@ -218,6 +250,10 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
         [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
         return;
     }
+    if(![MMPhotoManager hasPhotosPermission] && !shouldBypassAuthRequirement){
+        return;
+    }
+    
     NSMutableArray* updatedAlbumsList = [NSMutableArray array];
     NSMutableArray* updatedEventsList = [NSMutableArray array];
     NSMutableArray* updatedFacesList = [NSMutableArray array];
@@ -233,15 +269,19 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                                         // from albums -> events -> faces order
                                                         @synchronized(self){
                                                             albums = [self sortArrayByAlbumName:updatedAlbumsList];
+                                                            albums = [[self loadDefaultPhotoAlbums] arrayByAddingObjectsFromArray:albums];
                                                             events = [self sortArrayByAlbumName:updatedEventsList];
                                                             faces = [self sortArrayByAlbumName:updatedFacesList];
                                                             cameraRoll = updatedCameraRoll;
-                                                            cameraRoll.reversed = YES;
+                                                            [[[[albums arrayByAddingObjectsFromArray:events] arrayByAddingObjectsFromArray:faces] arrayByAddingObject:cameraRoll] mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
+                                                                [obj loadPreviewPhotos];
+                                                                return obj;
+                                                            }];
                                                         }
                                                         hasEverInitailized = YES;
                                                         [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
                                                     }else if ([group numberOfAssets] > 0 || group.type == ALAssetsGroupSavedPhotos){
-                                                        MMPhotoAlbum* addedAlbum = [self albumWithURL:group.url];
+                                                        MMPhotoAlbum* addedAlbum = [self albumWithPersistentId:group.persistentId];
                                                         if(!addedAlbum){
                                                             addedAlbum = [[MMPhotoAlbum alloc] initWithAssetGroup:group];
                                                         }
@@ -254,6 +294,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                                         }else if(group.type == ALAssetsGroupSavedPhotos){
                                                             updatedCameraRoll = addedAlbum;
                                                             updatedCameraRoll.reversed = YES;
+                                                            updatedCameraRoll.numberOfPreviewPhotos = 10;
                                                         }
                                                     }
                                                 }

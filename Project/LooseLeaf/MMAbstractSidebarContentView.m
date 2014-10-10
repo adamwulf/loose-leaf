@@ -13,15 +13,20 @@
 #import "MMBufferedImageView.h"
 #import "MMImageSidebarContainerView.h"
 #import "MMSinglePhotoCollectionViewCell.h"
+#import "MMPermissionPhotosCollectionViewCell.h"
+#import "MMEmptyCollectionViewCell.h"
 #import "MMPhotoAlbumListLayout.h"
 #import "MMRotationManager.h"
-#import "ALAsset+Thumbnail.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
 #import "NSArray+Map.h"
 
 @implementation MMAbstractSidebarContentView{
     NSMutableDictionary* currentRowForAlbum;
+    MMEmptyCollectionViewCell* emptyView;
+    
+    CGPoint lastAlbumScrollOffset;
+    CGPoint lastPhotoScrollOffset;
 }
 
 @synthesize delegate;
@@ -42,6 +47,8 @@
         photoListScrollView.backgroundColor = [UIColor clearColor];
         
         [photoListScrollView registerClass:[MMSinglePhotoCollectionViewCell class] forCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell"];
+        [photoListScrollView registerClass:[MMPermissionPhotosCollectionViewCell class] forCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell"];
+        [photoListScrollView registerClass:[MMEmptyCollectionViewCell class] forCellWithReuseIdentifier:@"MMEmptyCollectionViewCell"];
 
         currentAlbum = nil;
         
@@ -82,37 +89,60 @@
     return ceilf(self.bounds.size.width / 2);
 }
 
+-(void) updateEmptyErrorMessage{
+    if(![self numberOfRowsFor:albumListScrollView] && [MMPhotoManager hasPhotosPermission]){
+        if(!emptyView){
+            emptyView = [[MMEmptyCollectionViewCell alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.width)];
+        }
+        [self addSubview:emptyView];
+    }else if(emptyView){
+        [emptyView removeFromSuperview];
+        emptyView = nil;
+    }
+}
+
 -(void) reset:(BOOL)animated{
     albumListScrollView.alpha = 1;
     photoListScrollView.alpha = 0;
+    [self updateEmptyErrorMessage];
 }
 
 -(void) show:(BOOL)animated{
+    [self updateEmptyErrorMessage];
     [[MMPhotoManager sharedInstance] initializeAlbumCache];
     [self updatePhotoRotation:NO];
     isShowing = YES;
+    albumListScrollView.contentOffset = lastAlbumScrollOffset;
 }
 
 -(void) hide:(BOOL)animated{
+    lastAlbumScrollOffset = albumListScrollView.contentOffset;
+    lastPhotoScrollOffset = photoListScrollView.contentOffset;
     isShowing = NO;
-    [[NSThread mainThread] performBlock:^{
-        [photoListScrollView reloadData];
-    } afterDelay:.1];
 }
 
 -(void) killMemory{
     [albumListScrollView killMemory];
+    if(![self isShowing]){
+        // only clear the cache if its been a while (?)
+        [photoListScrollView reloadData];
+        [self updateEmptyErrorMessage];
+        lastPhotoScrollOffset = CGPointZero;
+        lastAlbumScrollOffset = CGPointZero;
+    }
 }
 
 #pragma mark - MMPhotoManagerDelegate
 
 -(void) doneLoadingPhotoAlbums{
+    [self updateEmptyErrorMessage];
     [albumListScrollView refreshVisibleRows];
     [albumListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [self updateRow:obj atIndex:idx forFrame:[obj frame] forScrollView:albumListScrollView];
     }];
     if(photoListScrollView.alpha){
         [photoListScrollView reloadData];
+        photoListScrollView.contentOffset = lastPhotoScrollOffset;
     }
 }
 
@@ -227,11 +257,13 @@
     
     if(animated){
         [[NSThread mainThread] performBlock:^{
+            [photoListScrollView reloadData];
             [photoListScrollView setCollectionViewLayout:[[MMPhotoAlbumListLayout alloc] initForRotation:[self idealRotationForOrientation]] animated:YES];
             [UIView animateWithDuration:.3 animations:updateVisibleRowsWithRotation];
         }];
     }else{
         [[NSThread mainThread] performBlock:^{
+            [photoListScrollView reloadData];
             [photoListScrollView setCollectionViewLayout:[[MMPhotoAlbumListLayout alloc] initForRotation:[self idealRotationForOrientation]] animated:NO];
             updateVisibleRowsWithRotation();
         }];
@@ -247,7 +279,11 @@
 #pragma mark - UICollectionViewDataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     // we're only working with the photoListScrollView. there's no albums here
-    return currentAlbum.numberOfPhotos;
+    if([MMPhotoManager hasPhotosPermission]){
+        return currentAlbum.numberOfPhotos;
+    }else{
+        return 1;
+    }
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
@@ -255,10 +291,17 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    MMSinglePhotoCollectionViewCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell" forIndexPath:indexPath];
-    [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row forVisibleIndex:indexPath.row];
-    photoCell.delegate = self;
-    return photoCell;
+    if([MMPhotoManager hasPhotosPermission]){
+        MMSinglePhotoCollectionViewCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell" forIndexPath:indexPath];
+        [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row forVisibleIndex:indexPath.row];
+        photoCell.delegate = self;
+        return photoCell;
+    }else{
+        MMPermissionPhotosCollectionViewCell* permission = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell" forIndexPath:indexPath];
+        permission.shouldShowLine = NO;
+        [permission showPhotosSteps];
+        return permission;
+    }
 }
 
 #pragma mark - MMSinglePhotoCollectionViewCellDelegate
@@ -267,17 +310,12 @@
     [delegate pictureTakeWithCamera:img fromView:cameraView];
 }
 
--(void) photoWasTapped:(ALAsset *)asset
+-(void) photoWasTapped:(MMPhoto *)asset
               fromView:(MMBufferedImageView *)bufferedImage
           withRotation:(CGFloat)rotation{
     MMPhotoAlbumListLayout* layout = (MMPhotoAlbumListLayout*) photoListScrollView.collectionViewLayout;
     [delegate photoWasTapped:asset fromView:bufferedImage withRotation:(rotation + layout.rotation) fromContainer:self];
 }
-
-
-
-
-
 
 
 

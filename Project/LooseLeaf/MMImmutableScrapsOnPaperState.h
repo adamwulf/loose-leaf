@@ -7,17 +7,12 @@
 //
 
 #import "MMScrapsOnPaperState.h"
+#import "MMImmutableScrapCollectionState.h"
 
-@interface MMImmutableScrapsOnPaperState : MMScrapsOnPaperState
+@interface MMImmutableScrapsOnPaperState : MMImmutableScrapCollectionState
 
 @property (nonatomic, readonly) NSArray* scraps;
 
--(id) initWithScrapIDsPath:(NSString *)scrapIDsPath andAllScraps:(NSArray*)allScraps andScrapsOnPage:(NSArray*)scrapsOnPage andScrapsOnPaperState:(MMScrapsOnPaperState*)ownerState;
-
-// returns YES if any changes actually saved,
-// NO otherwise
--(BOOL) saveStateToDiskBlocking;
-
--(NSUInteger) undoHash;
+-(id) initWithScrapIDsPath:(NSString *)scrapIDsPath andAllScraps:(NSArray*)allScraps andScrapsOnPage:(NSArray*)scrapsOnPage andOwnerState:(MMScrapCollectionState*)ownerState;
 
 @end

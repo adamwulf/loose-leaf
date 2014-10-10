@@ -7,30 +7,19 @@
 //
 
 #import "MMImmutableScrapsOnPaperState.h"
+#import "MMScrapCollectionState+Private.h"
 #import "MMScrapView.h"
 #import "NSArray+Map.h"
 
-
-@interface MMScrapsOnPaperState (Private)
-
-#pragma mark - Saving Helpers
-
--(NSUInteger) lastSavedUndoHash;
--(void) wasSavedAtUndoHash:(NSUInteger)savedUndoHash;
-
-@end
-
-
-
 @implementation MMImmutableScrapsOnPaperState{
-    MMScrapsOnPaperState* ownerState;
+    MMScrapCollectionState* ownerState;
     NSArray* allScrapsForPage;
     NSArray* scrapsOnPageIDs;
     NSString* scrapIDsPath;
     NSUInteger cachedUndoHash;
 }
 
--(id) initWithScrapIDsPath:(NSString *)_scrapIDsPath andAllScraps:(NSArray*)_allScraps andScrapsOnPage:(NSArray*)_scrapsOnPage andScrapsOnPaperState:(MMScrapsOnPaperState*)_ownerState{
+-(id) initWithScrapIDsPath:(NSString *)_scrapIDsPath andAllScraps:(NSArray*)_allScraps andScrapsOnPage:(NSArray*)_scrapsOnPage andOwnerState:(MMScrapCollectionState *)_ownerState{
     if(self = [super init]){
         ownerState = _ownerState;
         scrapIDsPath = _scrapIDsPath;
@@ -61,6 +50,9 @@
 }
 
 -(BOOL) saveStateToDiskBlocking{
+    if(![MMScrapCollectionState isImportExportStateQueue]){
+        @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:@"Saving immutable ScrapsOnPaperState in wrong queue" userInfo:nil];
+    }
     __block BOOL hadAnyEditsToSaveAtAll = NO;
     if(ownerState.lastSavedUndoHash != self.undoHash){
         hadAnyEditsToSaveAtAll = YES;
@@ -88,10 +80,6 @@
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
         }
         
-        if(!scrapIDsPath){
-//            NSLog(@"on no");
-        }
-        
 //        NSLog(@"saving %lu scraps on %@", (unsigned long)[scrapsOnPageIDs count], ownerState.delegate);
         NSDictionary* scrapsOnPaperInfo = [NSDictionary dictionaryWithObjectsAndKeys:allScrapProperties, @"allScrapProperties", scrapsOnPageIDs, @"scrapsOnPageIDs", nil];
         if([scrapsOnPaperInfo writeToFile:scrapIDsPath atomically:YES]){
@@ -107,14 +95,6 @@
 
     return hadAnyEditsToSaveAtAll;
 }
-
--(void) unload{
-    if([self isStateLoaded]){
-        [self saveStateToDiskBlocking];
-    }
-    [super unload];
-}
-
 
 -(NSUInteger) undoHash{
     if(!cachedUndoHash){

@@ -62,6 +62,7 @@ static int totalBackgroundBytes;
 }
 
 -(void) updateBackingImageLocation{
+//    CheckMainThread;
     self.backingContentView.center = CGPointMake(self.bounds.size.width/2 + self.backgroundOffset.x,
                                                                self.bounds.size.height/2 + self.backgroundOffset.y);
     self.backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(self.backgroundRotation),CGAffineTransformMakeScale(self.backgroundScale, self.backgroundScale));
@@ -117,7 +118,7 @@ static int totalBackgroundBytes;
 }
 
 -(NSString*) bundledBackgroundJPGFile{
-    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:scrapState.uuid andScrapsOnPaperState:scrapState.scrapsOnPaperState] stringByAppendingPathComponent:[@"background" stringByAppendingPathExtension:@"jpg"]];
+    return [[scrapState.scrapsOnPaperState bundledDirectoryPathForScrapUUID:scrapState.uuid] stringByAppendingPathComponent:[@"background" stringByAppendingPathExtension:@"jpg"]];
 }
 
 #pragma mark - Duplication and Stamping

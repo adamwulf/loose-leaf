@@ -58,6 +58,7 @@ static dispatch_queue_t fileSystemQueue;
         
         if([pdf pageCount] == 1){
             [self removeInboxItem:itemURL];
+            return;
         }
     }
     
@@ -87,23 +88,23 @@ static dispatch_queue_t fileSystemQueue;
         CFBooleanRef b = (__bridge CFBooleanRef)([NSNumber numberWithBool:YES]);
         NSDictionary * sourceDict = [NSDictionary dictionaryWithObjectsAndKeys:(id)kUTTypeAppleICNS, kCGImageSourceTypeIdentifierHint,
                                      b, kCGImageSourceShouldAllowFloat, nil];
-        NSLog(@"url of image: %@", url);
-        CGImageSourceRef imageSource = CGImageSourceCreateWithURL((__bridge CFURLRef)url, (__bridge CFDictionaryRef)(sourceDict));
+//        NSLog(@"url of image: %@", url);
+//        CGImageSourceRef imageSource = CGImageSourceCreateWithURL((__bridge CFURLRef)url, (__bridge CFDictionaryRef)(sourceDict));
         
-        NSString* type = (__bridge NSString *)(CGImageSourceGetType (imageSource));
-        NSLog(@"input type: %p %@", imageSource, type);
+//        NSString* type = (__bridge NSString *)(CGImageSourceGetType (imageSource));
+//        NSLog(@"input type: %p %@", imageSource, type);
         
-        CGImageSourceStatus status = CGImageSourceGetStatus (imageSource);
-        NSLog(@"status: %d", status);
+//        CGImageSourceStatus status = CGImageSourceGetStatus (imageSource);
+//        NSLog(@"status: %d", status);
         
-        size_t foo = CGImageSourceGetCount (imageSource);
-        NSLog(@"size: %zu", foo);
+//        size_t foo = CGImageSourceGetCount (imageSource);
+//        NSLog(@"size: %zu", foo);
         
         [NSDictionary dictionaryWithDictionary:sourceDict];
         
     }
     
-    NSLog(@"url of image: %@", url);
+//    NSLog(@"url of image: %@", url);
     CGImageSourceRef imageSource = CGImageSourceCreateWithURL((__bridge CFURLRef)url, nil);
     
     CGSize fullScale;
@@ -114,14 +115,13 @@ static dispatch_queue_t fileSystemQueue;
         NSNumber *height = (NSNumber *)CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelHeight);
         fullScale.width = [width floatValue];
         fullScale.height = [height floatValue];
-        NSLog(@"Image dimensions: %@ x %@ px", width, height);
+//        NSLog(@"Image dimensions: %@ x %@ px", width, height);
         CFRelease(imageProperties);
         maxDim = MIN(MAX(fullScale.width, fullScale.height), maxDim);
     }
     
-    NSLog(@"found max dimension: %d", maxDim);
+//    NSLog(@"found max dimension: %d", maxDim);
     
-    CGFloat scale = [UIScreen mainScreen].scale;
     NSDictionary* d = @{(id)kCGImageSourceShouldAllowFloat: (id)kCFBooleanTrue,
                         (id)kCGImageSourceCreateThumbnailWithTransform: (id)kCFBooleanTrue,
                         (id)kCGImageSourceCreateThumbnailFromImageAlways: (id)kCFBooleanTrue,
@@ -130,7 +130,8 @@ static dispatch_queue_t fileSystemQueue;
     UIImage* scrapBacking = nil;
     
     if(imref){
-        scrapBacking = [UIImage imageWithCGImage:imref scale:scale orientation:UIImageOrientationUp];
+        // need to always import images at 1.0x scale
+        scrapBacking = [UIImage imageWithCGImage:imref scale:1.0 orientation:UIImageOrientationUp];
         CFRelease(imref);
     }
     CFRelease(imageSource);

@@ -8,32 +8,17 @@
 
 #import <Foundation/Foundation.h>
 #import "MMScrapsOnPaperStateDelegate.h"
+#import "MMScrapCollectionState.h"
+#import "MMScrapContainerView.h"
 
 @class MMImmutableScrapsOnPaperState;
 
-@interface MMScrapsOnPaperState : NSObject{
-    __weak NSObject<MMScrapsOnPaperStateDelegate>* delegate;
-    BOOL shouldShowShadows;
-}
+@interface MMScrapsOnPaperState : MMScrapCollectionState
 
 @property (nonatomic, readonly) NSObject<MMScrapsOnPaperStateDelegate>* delegate;
-@property (readonly) NSString* scrapIDsPath;
-@property (nonatomic, assign) BOOL shouldShowShadows;
-@property (nonatomic, readonly) int fullByteSize;
-@property (readonly) BOOL hasEditsToSave;
-@property (readonly) NSUInteger lastSavedUndoHash;
+@property (nonatomic, readonly) MMScrapContainerView* scrapContainerView;
 
-+(dispatch_queue_t) importExportStateQueue;
-
--(id) initWithDelegate:(NSObject<MMScrapsOnPaperStateDelegate>*)delegate;
-
-#pragma mark - Save and Load
-
--(BOOL) isStateLoaded;
-
--(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable;
-
--(void) unload;
+-(id) initWithDelegate:(NSObject<MMScrapsOnPaperStateDelegate>*)delegate withScrapContainerSize:(CGSize)scrapContainerSize;
 
 -(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath;
 
@@ -43,16 +28,25 @@
 
 #pragma mark - Manage Scraps
 
+-(NSArray*) scrapsOnPaper;
+
 -(void) showScrap:(MMScrapView*)scrap;
 -(void) showScrap:(MMScrapView*)scrap atIndex:(NSUInteger)subviewIndex;
 -(void) hideScrap:(MMScrapView*)scrap;
 -(BOOL) isScrapVisible:(MMScrapView*)scrap;
--(void) scrapVisibilityWasUpdated:(MMScrapView*)scrap;
+
 // returns the scrap for the specified uuid, or nil if there's no match
 -(MMScrapView*) scrapForUUID:(NSString*)uuid;
 
 -(MMScrapView*) mostRecentScrap;
 
--(void) removeScrapWithUUID:(NSString*)scrapUUID;
+-(MMScrapView*) removeScrapWithUUID:(NSString*)scrapUUID;
+
+#pragma mark - Paths
+
+-(NSString*) directoryPathForScrapUUID:(NSString*)uuid;
+
+-(NSString*) bundledDirectoryPathForScrapUUID:(NSString*)uuid;
+
 
 @end

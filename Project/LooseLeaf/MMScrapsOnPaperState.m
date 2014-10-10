@@ -27,67 +27,38 @@
  * track the state for all scraps within a single page
  */
 @implementation MMScrapsOnPaperState{
-    BOOL isLoaded;
-    BOOL isLoading;
-    BOOL isUnloading;
-    NSMutableArray* allScrapsForPage;
-    BOOL hasEditsToSave;
-    // this is the undo hash of the most recent immutable state
-    // we were asked to generate
-    NSUInteger expectedUndoHash;
-    // this is the undo hash of our most recent save.
-    // if these two are different, then we have a pending save
-    NSUInteger lastSavedUndoHash;
+    // the container to hold the scraps
+    MMScrapContainerView* scrapContainerView;
 }
 
-@synthesize delegate;
-@synthesize shouldShowShadows;
+@dynamic delegate;
+@synthesize scrapContainerView;
 
-static dispatch_queue_t importExportStateQueue;
-
-+(dispatch_queue_t) importExportStateQueue{
-    if(!importExportStateQueue){
-//        importExportStateQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0);
-        importExportStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.importExportStateQueue", DISPATCH_QUEUE_SERIAL);
-    }
-    return importExportStateQueue;
-}
-
--(id) initWithDelegate:(NSObject<MMScrapsOnPaperStateDelegate>*)_delegate{
+-(id) initWithDelegate:(NSObject<MMScrapsOnPaperStateDelegate>*)_delegate withScrapContainerSize:(CGSize)scrapContainerSize{
     if(self = [super init]){
-        expectedUndoHash = 0;
-        lastSavedUndoHash = 0;
         delegate = _delegate;
-        allScrapsForPage = [NSMutableArray array];
+        scrapContainerView = [[MMScrapContainerView alloc] initWithFrame:CGRectMake(0, 0, scrapContainerSize.width, scrapContainerSize.height)
+                                                   forScrapsOnPaperState:self];
+        // anchor the view to the top left,
+        // so that when we scale down, the drawable view
+        // stays in place
+        scrapContainerView.layer.anchorPoint = CGPointMake(0,0);
+        scrapContainerView.layer.position = CGPointMake(0,0);
     }
     return self;
 }
 
--(BOOL) hasEditsToSave{
-    return hasEditsToSave || expectedUndoHash != lastSavedUndoHash;
-}
-
 -(int) fullByteSize{
     int totalBytes = 0;
-    for(MMScrapView* scrap in self.delegate.scrapsOnPaper){
-        totalBytes += scrap.fullByteSize;
+    @synchronized(allLoadedScraps){
+        for(MMScrapView* scrap in allLoadedScraps){
+            totalBytes += scrap.fullByteSize;
+        }
     }
     return totalBytes;
 }
 
 #pragma mark - Save and Load
-
--(BOOL) isStateLoaded{
-    return isLoaded;
-}
-
--(void) setShouldShowShadows:(BOOL)_shouldShowShadows{
-    shouldShowShadows = _shouldShowShadows;
-    for(MMScrapView* scrap in self.delegate.scrapsOnPaper){
-        [scrap setShouldShowShadow:shouldShowShadows];
-    }
-}
-
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable{
     if(![self isStateLoaded] && !isLoading){
@@ -98,6 +69,12 @@ static dispatch_queue_t importExportStateQueue;
         
         void (^block2)() = ^(void) {
             @autoreleasepool {
+                @synchronized(self){
+                    if(isUnloading){
+                        // we're not allowed to load while already trying to unload
+                        @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"loading during unloading" userInfo:nil];
+                    }
+                }
                 dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                 NSDictionary* allScrapStateInfo = [NSDictionary dictionaryWithContentsOfFile:scrapIDsPath];
 
@@ -110,7 +87,7 @@ static dispatch_queue_t importExportStateQueue;
                 for(NSDictionary* scrapProperties in scrapProps){
                     NSString* scrapUUID = [scrapProperties objectForKey:@"uuid"];
                     
-                    MMScrapView* scrap = [delegate scrapForUUIDIfAlreadyExists:scrapUUID];
+                    MMScrapView* scrap = [delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrapUUID];
 
                     NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
                     if(scrap){
@@ -118,7 +95,10 @@ static dispatch_queue_t importExportStateQueue;
                         [props setObject:scrap forKey:@"scrap"];
                         [scrapPropsWithState addObject:props];
                     }else{
-                        MMScrapViewState* state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:self];
+                        __block MMScrapViewState* state = nil;
+                        [NSThread performBlockOnMainThreadSync:^{
+                            state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:self];
+                        }];
                         if(state){
                             [props setObject:state forKey:@"state"];
                             [scrapPropsWithState addObject:props];
@@ -138,7 +118,14 @@ static dispatch_queue_t importExportStateQueue;
                     for(NSDictionary* scrapProperties in scrapPropsWithState){
                         @synchronized(self){
                             if(isUnloading){
-                                NSLog(@"loading during unloading");
+                                // we were asked to unload before we were even
+                                // done unloading. just bail here
+                                NSLog(@"ScrapsOnPaperState asked to unload before finished loading");
+                                @synchronized(self){
+                                    isLoaded = NO;
+                                    isLoading = NO;
+                                }
+                                return;
                             }
                         }
                         MMScrapView* scrap = nil;
@@ -147,7 +134,7 @@ static dispatch_queue_t importExportStateQueue;
 //                            NSLog(@"page %@ reused scrap %@", delegate.uuid, scrap.uuid);
                         }else{
                             MMScrapViewState* scrapState = [scrapProperties objectForKey:@"state"];
-                            scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState andPaperState:self];
+                            scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState];
 //                            NSLog(@"page %@ built scrap %@", delegate.uuid, scrap.uuid);
                             // only set properties if we built the scrap,
                             // otherwise it's in the sidebar and we don't
@@ -155,27 +142,28 @@ static dispatch_queue_t importExportStateQueue;
                             [scrap setPropertiesDictionary:scrapProperties];
                         }
                         if(scrap){
-                            [allScrapsForPage addObject:scrap];
+                            @synchronized(allLoadedScraps){
+                                [allLoadedScraps addObject:scrap];
+                            }
                             
                             if([scrapIDsOnPage containsObject:scrap.uuid]){
-                                [self.delegate didLoadScrapOnPage:scrap];
+                                [self.delegate didLoadScrapInContainer:scrap];
                                 [self showScrap:scrap];
                             }else{
-                                [self.delegate didLoadScrapOffPage:scrap];
+                                [self.delegate didLoadScrapOutOfContainer:scrap];
                             }
                             
                             if(makeEditable){
                                 [scrap loadScrapStateAsynchronously:async];
                             }
-                            [scrap setShouldShowShadow:shouldShowShadows];
                         }
                     }
                     @synchronized(self){
-                        isLoaded = YES;
-                        isLoading = NO;
-                        MMImmutableScrapsOnPaperState* immutableState = [self immutableStateForPath:nil];
+                        MMImmutableScrapCollectionState* immutableState = [self immutableStateForPath:nil];
                         expectedUndoHash = [immutableState undoHash];
                         lastSavedUndoHash = [immutableState undoHash];
+                        isLoaded = YES;
+                        isLoading = NO;
 //                        NSLog(@"loaded scrapsOnPaperState at: %lu", (unsigned long)lastSavedUndoHash);
                     }
                     [self.delegate didLoadAllScrapsFor:self];
@@ -187,25 +175,25 @@ static dispatch_queue_t importExportStateQueue;
         };
 
         if(async){
-            dispatch_async([MMScrapsOnPaperState importExportStateQueue], block2);
+            dispatch_async([MMScrapCollectionState importExportStateQueue], block2);
         }else{
             block2();
         }
     }else if([self isStateLoaded] && makeEditable){
         void (^block2)() = ^(void) {
             if([self isStateLoaded]){
-                for(MMScrapView* scrap in self.delegate.scrapsOnPaper){
+                for(MMScrapView* scrap in self.scrapsOnPaper){
                     [scrap loadScrapStateAsynchronously:async];
                     @synchronized(self){
                         if(isUnloading){
-                            NSLog(@"loading during unloading");
+                            @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"loading during unloading" userInfo:nil];
                         }
                     }
                 }
             }
         };
         if(async){
-            dispatch_async([MMScrapsOnPaperState importExportStateQueue], block2);
+            dispatch_async([MMScrapCollectionState importExportStateQueue], block2);
         }else{
             block2();
         }
@@ -216,51 +204,22 @@ static dispatch_queue_t importExportStateQueue;
     if(self.delegate == [[MMPageCacheManager sharedInstance] currentEditablePage]){
         NSLog(@"what");
     }
-    if([self isStateLoaded] || isLoading){
-        @synchronized(self){
-            isUnloading = YES;
-        }
-        dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
-            @autoreleasepool {
-                if(isLoading){
-                    NSLog(@"unload during loading");
-                }
-                if([self isStateLoaded]){
-                    @synchronized(allScrapsForPage){
-                        for(MMScrapView* scrap in allScrapsForPage){
-                            if([delegate scrapForUUIDIfAlreadyExists:scrap.uuid]){
-                                // if this is true, then the scrap is being held
-                                // by the sidebar, so we shouldn't manage its
-                                // state
-                            }else{
-                                [scrap unloadState];
-                            }
-                        }
-                    }
-                    NSArray* visibleScraps = [self.delegate.scrapsOnPaper copy];
-                    [allScrapsForPage removeAllObjects];
-                    [NSThread performBlockOnMainThread:^{
-                        [visibleScraps makeObjectsPerformSelector:@selector(removeFromSuperview)];
-                        [self.delegate didUnloadAllScrapsFor:self];
-                    }];
-                    @synchronized(self){
-                        isLoaded = NO;
-                        isUnloading = NO;
-                        expectedUndoHash = 0;
-                        lastSavedUndoHash = 0;
-                    }
-                }
-            }
-        });
-    }
+    [super unload];
 }
 
 -(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath{
-    if([self isStateLoaded]){
+    if(!isLoading && ![MMScrapCollectionState isImportExportStateQueue]){
+        @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:@"Creating immutable ScrapsOnPaperState in wrong queue" userInfo:nil];
+    }
+    if([self isStateLoaded] || isLoading){
         hasEditsToSave = NO;
-        MMImmutableScrapsOnPaperState* immutable = [[MMImmutableScrapsOnPaperState alloc] initWithScrapIDsPath:scrapIDsPath andAllScraps:allScrapsForPage andScrapsOnPage:self.delegate.scrapsOnPaper andScrapsOnPaperState:self];
-        expectedUndoHash = [immutable undoHash];
-        return immutable;
+        @synchronized(allLoadedScraps){
+            MMImmutableScrapsOnPaperState* immutable = [[MMImmutableScrapsOnPaperState alloc] initWithScrapIDsPath:scrapIDsPath
+                                                                                                      andAllScraps:allLoadedScraps
+                                                                                                   andScrapsOnPage:self.scrapsOnPaper andOwnerState:self];
+            expectedUndoHash = [immutable undoHash];
+            return immutable;
+        }
     }
     return nil;
 }
@@ -272,11 +231,26 @@ static dispatch_queue_t importExportStateQueue;
         @throw [NSException exceptionWithName:@"ModifyingUnloadedScrapsOnPaperStateException" reason:@"cannot add scrap to unloaded ScrapsOnPaperState" userInfo:nil];
     }
     MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path andScale:scale andRotation:rotation andPaperState:self];
-    [allScrapsForPage addObject:newScrap];
+    @synchronized(allLoadedScraps){
+        [allLoadedScraps addObject:newScrap];
+    }
     return newScrap;
 }
 
 #pragma mark - Manage Scraps
+
+-(NSArray*) scrapsOnPaper{
+    // we'll be calling this method quite often,
+    // so don't create a new auto-released array
+    // all the time. instead, just return our subview
+    // array, so that if the caller just needs count
+    // or to iterate on the main thread, we don't
+    // spend unnecessary resources copying a potentially
+    // long array.
+    @synchronized(scrapContainerView){
+        return scrapContainerView.subviews;
+    }
+}
 
 -(void) showScrap:(MMScrapView*)scrap atIndex:(NSUInteger)subviewIndex{
     [self showScrap:scrap];
@@ -288,10 +262,10 @@ static dispatch_queue_t importExportStateQueue;
     if(scrap.state.scrapsOnPaperState != self){
         @throw [NSException exceptionWithName:@"ScrapAddedToWrongPageException" reason:@"This scrap was added to a page that doesn't own it" userInfo:nil];
     }
-    @synchronized(delegate.scrapContainerView){
-        [delegate.scrapContainerView addSubview:scrap];
+    @synchronized(scrapContainerView){
+        [scrapContainerView addSubview:scrap];
     }
-    [scrap setShouldShowShadow:delegate.isEditable];
+    [scrap setShouldShowShadow:self.delegate.isEditable];
     if(isLoaded || isLoading){
         [scrap loadScrapStateAsynchronously:YES];
     }else{
@@ -300,8 +274,8 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 -(void) hideScrap:(MMScrapView*)scrap{
-    @synchronized(delegate.scrapContainerView){
-        if(delegate.scrapContainerView == scrap.superview){
+    @synchronized(scrapContainerView){
+        if(scrapContainerView == scrap.superview){
             [scrap setShouldShowShadow:NO];
             [scrap removeFromSuperview];
         }else{
@@ -311,27 +285,21 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 -(BOOL) isScrapVisible:(MMScrapView*)scrap{
-    return [[delegate scrapsOnPaper] containsObject:scrap];
+    return [self.scrapsOnPaper containsObject:scrap];
 }
 
 -(void) scrapVisibilityWasUpdated:(MMScrapView*)scrap{
-//    if(scrap.superview != delegate.scrapContainerView){
-//        debug_NSLog(@"scrap %@ is invisible, state loaded: %d", scrap.uuid, [self isStateLoaded] || isLoading);
-//    }else{
-//        debug_NSLog(@"scrap %@ is visible, state loaded: %d", scrap.uuid, [self isStateLoaded] || isLoading);
-//    }
     if([self isStateLoaded] && !isLoading && !isUnloading){
         // something changed w/ scrap visibility
         // we only care if we're fully loaded, not if
         // we're loading or unloading.
         hasEditsToSave = YES;
-//        NSLog(@"scrap in state for %@ was changed", self.delegate.uuid);
     }
 }
 
 -(MMScrapView*) scrapForUUID:(NSString*)uuid{
-    @synchronized(allScrapsForPage){
-        for(MMScrapView*scrap in allScrapsForPage){
+    @synchronized(allLoadedScraps){
+        for(MMScrapView*scrap in allLoadedScraps){
             if([scrap.uuid isEqualToString:uuid]){
                 return scrap;
             }
@@ -341,40 +309,43 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 -(MMScrapView*) mostRecentScrap{
-    return [allScrapsForPage lastObject];
+    @synchronized(allLoadedScraps){
+        return [allLoadedScraps lastObject];
+    }
 }
 
 
 #pragma mark - Saving Helpers
 
--(NSUInteger) lastSavedUndoHash{
-    @synchronized(self){
-        return lastSavedUndoHash;
-    }
-}
-
-
--(void) wasSavedAtUndoHash:(NSUInteger)savedUndoHash{
-    @synchronized(self){
-        lastSavedUndoHash = savedUndoHash;
-//        NSLog(@"notified saved at: %lu", (unsigned long)lastSavedUndoHash);
-    }
-}
-
--(void) removeScrapWithUUID:(NSString*)scrapUUID{
-    @synchronized(allScrapsForPage){
+-(MMScrapView*) removeScrapWithUUID:(NSString*)scrapUUID{
+    @synchronized(allLoadedScraps){
+        MMScrapView* removedScrap = nil;
         NSMutableArray* otherArray = [NSMutableArray array];
-        for(MMScrapView* scrap in allScrapsForPage){
+        for(MMScrapView* scrap in allLoadedScraps){
             if(![scrap.uuid isEqualToString:scrapUUID]){
                 [otherArray addObject:scrap];
             }else{
-                NSLog(@"permanently removed scrap %@ from page %@", scrapUUID, delegate.uuid);
+                removedScrap = scrap;
+                [removedScrap removeFromSuperview];
+                NSLog(@"permanently removed scrap %@ from page %@", scrapUUID, self.delegate.uuidOfScrapCollectionStateOwner);
             }
         }
-        allScrapsForPage = otherArray;
+        allLoadedScraps = otherArray;
         hasEditsToSave = YES;
+        return removedScrap;
     }
 }
 
+#pragma mark - Paths
+
+-(NSString*) directoryPathForScrapUUID:(NSString*)uuid{
+    NSString* scrapPath = [[self.delegate.pagesPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
+    return scrapPath;
+}
+
+-(NSString*) bundledDirectoryPathForScrapUUID:(NSString*)uuid{
+    NSString* scrapPath = [[self.delegate.bundledPagesPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
+    return scrapPath;
+}
 
 @end

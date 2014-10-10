@@ -24,22 +24,20 @@
 @property (nonatomic, weak) JotView* drawableView;
 @property (readonly) JotViewStateProxy* paperState;
 
-+(dispatch_queue_t) importThumbnailQueue;
-
 -(BOOL) hasEditsToSave;
--(BOOL) hasStateLoaded;
+-(BOOL) isStateLoaded;
+-(BOOL) isStateLoading;
 -(void) unloadCachedPreview;
 -(void) loadCachedPreview;
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePtSize andScale:(CGFloat)scale andContext:(JotGLContext*)context;
 -(void) unloadState;
--(void) saveToDisk:(void (^)(BOOL didSaveEdits))onComplete;
 -(void) updateThumbnailVisibility;
 -(void) setEditable:(BOOL)isEditable;
 -(BOOL) isEditable;
 -(void) cancelCurrentStrokeIfAny;
 
 // abstract
--(void) saveToDisk;
+-(void) saveToDisk:(void (^)(BOOL didSaveEdits))onComplete;
 -(NSString*) bundledPagesPath;
 -(NSString*) pagesPath;
 -(NSString*) thumbnailPath;

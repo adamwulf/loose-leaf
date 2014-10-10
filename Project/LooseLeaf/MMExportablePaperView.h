@@ -11,6 +11,7 @@
 @interface MMExportablePaperView : MMUndoablePaperView
 
 @property (nonatomic, readonly) NSDictionary* cloudKitSenderInfo;
+@property (nonatomic, readonly) BOOL isCurrentlySaving;
 
 -(void) exportAsynchronouslyToZipFile;
 

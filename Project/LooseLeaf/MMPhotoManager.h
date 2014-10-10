@@ -27,6 +27,10 @@
 
 +(MMPhotoManager*) sharedInstance;
 
++(BOOL) hasPhotosPermission;
+
+-(void) bypassAuthRequirement;
+
 -(void) initializeAlbumCache;
 
 @end

@@ -359,7 +359,7 @@ struct TouchInterval{
  * to match that of the animation.
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    [self say:@"began" ISee:touches];
+//    [self say:@"began" ISee:touches];
     isShaking = NO;
     for(UITouch* touch in touches){
         [self calculateShakesForTouch:touch];
@@ -501,7 +501,7 @@ struct TouchInterval{
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
-    [self say:@"ended" ISee:touches];
+//    [self say:@"ended" ISee:touches];
     if(paused){
         [validTouches removeObjectsInSet:touches];
         [ignoredTouches removeObjectsInSet:touches];
@@ -625,7 +625,7 @@ struct TouchInterval{
 
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
-    [self say:@"cancelled" ISee:touches];
+//    [self say:@"cancelled" ISee:touches];
     if(paused){
         [validTouches removeObjectsInSet:touches];
         [ignoredTouches removeObjectsInSet:touches];

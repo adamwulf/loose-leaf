@@ -39,6 +39,8 @@
 
 -(MMVector*) averageWith:(MMVector*)vector;
 
+-(MMVector*) addVector:(MMVector*)vector;
+
 -(MMVector*) rotateBy:(CGFloat)angle;
 
 -(MMVector*) mirrorAround:(MMVector*)normal;
