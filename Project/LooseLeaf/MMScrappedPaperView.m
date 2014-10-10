@@ -33,6 +33,7 @@
 #import "MMScrapsInBezelContainerView.h"
 #import "MMScrapsInSidebarState.h"
 #import "UIView+Animations.h"
+#import "MMStatTracker.h"
 
 
 @interface MMEditablePaperView (Private)
@@ -65,6 +66,7 @@
     NSUInteger lastSavedScrapStateHashForGeneratedThumbnail;
     
     const void * kSerialQueueIdentifier;
+    
 }
 
 @synthesize scrapsOnPaperState;
@@ -631,7 +633,7 @@
     NSMutableArray* scrapsBeingRemoved = [NSMutableArray array];
     NSMutableArray* removedScrapProperties = [NSMutableArray array];
     BOOL didFill = NO;
-    
+
     @try {
         // scale the scissors into the zoom of the page, in case the user is
         // pinching and zooming the page our scissor path will be in page coordinates
@@ -687,6 +689,8 @@
                         }
                         // and add the scrap so that it's scale matches the scrap that its built from
                         MMScrapView* addedScrap = [self addScrapWithPath:subshapePath andScale:scrap.scale];
+                        // track the boundary of the scrap
+                        [[MMStatTracker trackerWithName:kMPStatScrapPathSegments] trackValue:addedScrap.bezierPath.elementCount];
                         @synchronized(scrapsOnPaperState.scrapContainerView){
                             [scrapsOnPaperState.scrapContainerView insertSubview:addedScrap aboveSubview:scrap];
                         }
@@ -747,6 +751,9 @@
                 scissorPath = [[[subshapes firstObject] fullPath] copy];
             }
             
+            // track circumference of newly added scrap
+            [[MMStatTracker trackerWithName:kMPStatScrapPathSegments] trackValue:scissorPath.elementCount];
+
             MMScrapView* addedScrap = [self addScrapWithPath:scissorPath andScale:1.0];
             [addedScrap stampContentsFrom:self.drawableView];
             

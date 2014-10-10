@@ -32,6 +32,8 @@
 #import "MMCloudKitFetchFriendsState.h"
 #import "MMPhotoManager.h"
 #import "NSArray+Extras.h"
+#import "MMStatTracker.h"
+#import <DrawKit-iOS/DrawKit-iOS.h>
 
 @implementation MMScrapPaperStackView{
     
@@ -386,6 +388,7 @@
     
     MMUndoablePaperView* topPage = [visibleStackHolder peekSubview];
     MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:0 andScale:startingScale];
+    [[MMStatTracker trackerWithName:kMPStatScrapPathSegments] trackValue:scrap.bezierPath.elementCount];
     [scrapContainer addSubview:scrap];
     
     CGSize fullScaleScrapSize = scrapRect.size;

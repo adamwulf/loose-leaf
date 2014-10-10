@@ -42,6 +42,7 @@
 		66277CA0192BC99D003E97C0 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 66277C9E192BC99D003E97C0 /* SSKeychainQuery.m */; };
 		6627DFA719003DF900592EEF /* CaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6627DFA619003DF900592EEF /* CaptureSessionManager.m */; };
 		662A21D7191D671A00AD9E31 /* Mixpanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 662A21BB191D671A00AD9E31 /* Mixpanel.m */; };
+		662B7D1F19E7A55700C5529B /* MMStatTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 662B7D1E19E7A55700C5529B /* MMStatTracker.m */; };
 		662EFF2D199EBC140086C106 /* MMWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 662EFF2C199EBC140086C106 /* MMWindow.m */; };
 		662EFF30199ECC760086C106 /* MMAirDropShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 662EFF2F199ECC760086C106 /* MMAirDropShareItem.m */; };
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -453,6 +454,8 @@
 		6629058B17FE0C4700FA680B /* MMScrapViewStateDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapViewStateDelegate.h; sourceTree = "<group>"; };
 		662A21BA191D671A00AD9E31 /* Mixpanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mixpanel.h; path = ../../Submodules/mixpanel/Mixpanel/Mixpanel.h; sourceTree = "<group>"; };
 		662A21BB191D671A00AD9E31 /* Mixpanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Mixpanel.m; path = ../../Submodules/mixpanel/Mixpanel/Mixpanel.m; sourceTree = "<group>"; };
+		662B7D1D19E7A55700C5529B /* MMStatTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStatTracker.h; sourceTree = "<group>"; };
+		662B7D1E19E7A55700C5529B /* MMStatTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStatTracker.m; sourceTree = "<group>"; };
 		662EFF2B199EBC140086C106 /* MMWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMWindow.h; sourceTree = "<group>"; };
 		662EFF2C199EBC140086C106 /* MMWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMWindow.m; sourceTree = "<group>"; };
 		662EFF2E199ECC760086C106 /* MMAirDropShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAirDropShareItem.h; sourceTree = "<group>"; };
@@ -835,8 +838,6 @@
 		66A7AF1C19A53AF400E0AA29 /* MMCloudKitShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitShareItem.m; sourceTree = "<group>"; };
 		66A7AF1E19A53C7900E0AA29 /* MMCloudKitOptionsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitOptionsView.h; sourceTree = "<group>"; };
 		66A7AF1F19A53C7900E0AA29 /* MMCloudKitOptionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitOptionsView.m; sourceTree = "<group>"; };
-		66AA212B16FBB31C00E86922 /* MMPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPopoverView.h; sourceTree = "<group>"; };
-		66AA212C16FBB31C00E86922 /* MMPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPopoverView.m; sourceTree = "<group>"; };
 		66AC153B1805F2F8005315C8 /* MMLoadImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLoadImageCache.h; sourceTree = "<group>"; };
 		66AC153C1805F2F8005315C8 /* MMLoadImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLoadImageCache.m; sourceTree = "<group>"; };
 		66AC8D7718E7506A00A65036 /* MMImageSidebarContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImageSidebarContainerView.h; sourceTree = "<group>"; };
@@ -1355,6 +1356,15 @@
 			name = MixPanel;
 			sourceTree = "<group>";
 		};
+		662B7D1C19E7A54C00C5529B /* Trackers */ = {
+			isa = PBXGroup;
+			children = (
+				662B7D1D19E7A55700C5529B /* MMStatTracker.h */,
+				662B7D1E19E7A55700C5529B /* MMStatTracker.m */,
+			);
+			name = Trackers;
+			sourceTree = "<group>";
+		};
 		6634855D19DA2E4200B5CF2D /* Delete Sidebar */ = {
 			isa = PBXGroup;
 			children = (
@@ -1802,15 +1812,6 @@
 			name = "Controller and App Delegate";
 			sourceTree = "<group>";
 		};
-		66932995159984090033E557 /* Experiments */ = {
-			isa = PBXGroup;
-			children = (
-				66AA212B16FBB31C00E86922 /* MMPopoverView.h */,
-				66AA212C16FBB31C00E86922 /* MMPopoverView.m */,
-			);
-			name = Experiments;
-			sourceTree = "<group>";
-		};
 		6693C94318E4BCC70054FF41 /* Sliding Sidebar */ = {
 			isa = PBXGroup;
 			children = (
@@ -2226,8 +2227,8 @@
 		66DCFB901581BCEF00B4918C /* Loose Leaf */ = {
 			isa = PBXGroup;
 			children = (
+				662B7D1C19E7A54C00C5529B /* Trackers */,
 				661708E31981B434006A73EF /* FXBlurView */,
-				66932995159984090033E557 /* Experiments */,
 				6693295715958A890033E557 /* Managers */,
 				6650DD1018F4842E00ADF591 /* Icon Images */,
 				66BD6E811593AF4500D4544C /* Buttons */,
@@ -2979,6 +2980,7 @@
 				66BEC00019BE55C30032D30C /* MMInviteUserButton.m in Sources */,
 				66CE120017D2772400882275 /* MMScrapBorderView.m in Sources */,
 				663523E519A7E32000A26B88 /* MMShareOptionsView.m in Sources */,
+				662B7D1F19E7A55700C5529B /* MMStatTracker.m in Sources */,
 				666E255918F89B1B00C17295 /* MMBorderedCamView.m in Sources */,
 				66C0C9D0178386B8009491B3 /* MMLikeButton.m in Sources */,
 				66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */,
