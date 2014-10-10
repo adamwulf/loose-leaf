@@ -20,9 +20,10 @@
 #import "MMScrapsInBezelContainerView.h"
 #import "MMImmutableScrapsOnPaperState.h"
 #import "MMTrashManager.h"
+#import "MMStatTracker.h"
+#import <DrawKit-iOS/DrawKit-iOS.h>
 
 @implementation MMUndoablePaperView{
-    MMPageUndoRedoManager* undoRedoManager;
     NSString* undoStatePath;
 }
 
@@ -161,9 +162,14 @@
 }
 
 -(MMScissorResult*) completeScissorsCutWithPath:(UIBezierPath *)scissorPath{
-    if(![self hasStateLoaded] || ![self.scrapsOnPaperState isStateLoaded]){
+    if(![self isStateLoaded] || ![self.scrapsOnPaperState isStateLoaded]){
         return nil;
     }
+    
+    // track scissor cuts:
+    [[MMStatTracker trackerWithName:kMPStatScissorSegments] trackValue:[scissorPath elementCount]];
+    
+    
     MMScissorResult* result = [super completeScissorsCutWithPath:scissorPath];
     
     if([result.addedScraps count] || [result.removedScraps count]){

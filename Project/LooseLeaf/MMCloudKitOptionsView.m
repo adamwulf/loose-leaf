@@ -328,9 +328,11 @@ BOOL hasSent = NO;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     MMCloudKitFriendCollectionViewCell* cell = (MMCloudKitFriendCollectionViewCell*) [collectionView cellForItemAtIndexPath:indexPath];
-    MMAvatarButton* avatarButton = [cell stealAvatarButton];
-    [shareItem userIsAskingToShareTo:[self userInfoForIndexPath:indexPath] fromButton:avatarButton];
-    [cell bounce];
+    if([cell isKindOfClass:[MMCloudKitFriendCollectionViewCell class]]){
+        MMAvatarButton* avatarButton = [cell stealAvatarButton];
+        [shareItem userIsAskingToShareTo:[self userInfoForIndexPath:indexPath] fromButton:avatarButton];
+        [cell bounce];
+    }
 }
 
 #pragma mark - Rotation

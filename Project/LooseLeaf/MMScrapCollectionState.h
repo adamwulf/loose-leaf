@@ -30,12 +30,14 @@
 }
 
 +(dispatch_queue_t) importExportStateQueue;
++(BOOL) isImportExportStateQueue;
 
 @property (nonatomic, readonly) NSObject<MMScrapCollectionStateDelegate>* delegate;
 @property (nonatomic, readonly) int fullByteSize;
 @property (readonly) BOOL hasEditsToSave;
 @property (readonly) NSArray* allLoadedScraps;
 @property (readonly) NSUInteger lastSavedUndoHash;
+@property (readonly) NSUInteger countOfAllLoadedScraps;
 
 #pragma mark - Manage Scraps
 
@@ -46,6 +48,7 @@
 -(MMImmutableScrapCollectionState*) immutableStateForPath:(NSString*)scrapIDsPath;
 
 -(BOOL) isStateLoaded;
+-(BOOL) isStateLoading;
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable;
 

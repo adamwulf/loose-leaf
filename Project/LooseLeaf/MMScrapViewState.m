@@ -15,6 +15,7 @@
 #import "MMScrapBackgroundView.h"
 #import "Constants.h"
 #import "UIView+Debug.h"
+#import "MMScrapViewState+Trash.h"
 
 @implementation MMScrapViewState{
     // scrap ID and UI
@@ -29,10 +30,6 @@
     // alive for the duration of this object
     UIBezierPath* bezierPath;
     
-    // unloadable state
-    // this state can be loaded and unloaded
-    // to conserve memeory as needed
-    JotViewStateProxy* drawableViewState;
     // YES if our goal is to be loaded, NO otherwise
     BOOL targetIsLoadedState;
     // YES if we're currently loading our state, NO otherwise
@@ -107,6 +104,7 @@ static dispatch_queue_t importExportScrapStateQueue;
 #pragma mark - Init
 
 -(id) initWithUUID:(NSString*)_uuid andPaperState:(MMScrapCollectionState*)_scrapsOnPaperState{
+    CheckMainThread;
     // save our UUID and scrapsOnPaperState, everything depends on these
     uuid = _uuid;
     scrapsOnPaperState = _scrapsOnPaperState;
@@ -234,8 +232,10 @@ static dispatch_queue_t importExportScrapStateQueue;
         [backingImageHolder removeFromSuperview];
     }
     backingImageHolder = backgroundView;
-    backingImageHolder.frame = contentView.bounds;
-    [clippedBackgroundView addSubview:backingImageHolder];
+    if(backingImageHolder){
+        backingImageHolder.frame = contentView.bounds;
+        [clippedBackgroundView addSubview:backingImageHolder];
+    }
 }
 
 
@@ -259,13 +259,20 @@ static dispatch_queue_t importExportScrapStateQueue;
         [savedProperties addEntriesFromDictionary:backgroundProps];
         // save properties to disk
         if(![savedProperties writeToFile:pathToSave atomically:YES]){
-            NSLog(@"couldn't save properties! %p", self);
+            if(!self.isForgetful){
+                NSLog(@"couldn't save properties! %p", self);
+            }
         }
     };
     
     
     if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
         dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
+            if(self.isForgetful){
+                NSLog(@"forget: %@ skipping scrap state save1", self.uuid);
+                doneSavingBlock(NO);
+                return;
+            }
             @autoreleasepool {
                 [lock lock];
 //                NSLog(@"(%@) saving with background: %d %d", uuid, (int)drawableView, backingViewHasChanged);
@@ -273,6 +280,11 @@ static dispatch_queue_t importExportScrapStateQueue;
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                     [NSThread performBlockOnMainThread:^{
                         @autoreleasepool {
+                            if(self.isForgetful){
+                                NSLog(@"forget: %@ skipping scrap state save2", self.uuid);
+                                doneSavingBlock(NO);
+                                return;
+                            }
                             if(drawableView && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
 //                                NSLog(@"(%@) saving background: %d", uuid, backingViewHasChanged);
 
@@ -282,7 +294,9 @@ static dispatch_queue_t importExportScrapStateQueue;
                                     // object and export in the background. this means that everything at this
                                     // instant on the thread will be synced to the content in this drawable view
                                     [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.drawableViewStateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
-                                        if(state){
+                                        if(self.isForgetful){
+                                            NSLog(@"forget: %@ scrap state skipping update after jotview save", self.uuid);
+                                        }else if(state){
                                             [[MMLoadImageCache sharedInstance] updateCacheForPath:self.thumbImageFile toImage:thumb];
                                             [self setActiveThumbnailImage:thumb];
                                             [drawableViewState wasSavedAtImmutableState:state];
@@ -365,6 +379,7 @@ static dispatch_queue_t importExportScrapStateQueue;
         targetIsLoadedState = YES;
         isLoadingState = YES;
     }
+//    NSLog(@"(%@) loading scrap state", uuid);
 
 //    NSLog(@"(%@) loading1: %d %d", uuid, targetIsLoadedState, isLoadingState);
     void (^loadBlock)() = ^(void) {
@@ -464,6 +479,14 @@ static dispatch_queue_t importExportScrapStateQueue;
 
 -(BOOL) isScrapStateLoaded{
     return drawableViewState != nil && [drawableViewState isStateLoaded];
+}
+
+-(BOOL) isScrapStateLoading{
+    return isLoadingState;
+}
+
+-(BOOL) hasEditsToSave{
+    return self.isScrapStateLoaded && drawableView && drawableViewState && drawableViewState.hasEditsToSave;
 }
 
 // returns the loaded thumbnail image,
@@ -631,6 +654,7 @@ static dispatch_queue_t importExportScrapStateQueue;
                         // nothing changed in our goals since we started
                         // to load state, so notify our delegate
                         [self.delegate didLoadScrapViewState:self];
+//                        NSLog(@"(%@) loaded scrap state", uuid);
                     }else{
                         // when loading state, we were actually
                         // told that we didn't really need the
@@ -651,6 +675,7 @@ static dispatch_queue_t importExportScrapStateQueue;
 }
 
 -(void) didUnloadState:(JotViewStateProxy *)state{
+//    NSLog(@"(%@) unloaded scrap state", uuid);
     // noop
 }
 

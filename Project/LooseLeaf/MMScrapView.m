@@ -103,6 +103,7 @@
 
 
 -(id) initWithScrapViewState:(MMScrapViewState*)_scrapState{
+    CheckMainThread;
     if ((self = [super initWithFrame:_scrapState.drawableBounds])){
         scrapState = _scrapState;
         scrapState.delegate = self;
@@ -596,6 +597,13 @@
  */
 -(void) drawTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4{
     [scrapState importTexture:texture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
+}
+
+
+#pragma mark - dealloc
+
+-(void) dealloc{
+    NSLog(@"dealloc scrap: %@", scrapState.uuid);
 }
 
 @end

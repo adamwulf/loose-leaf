@@ -33,6 +33,7 @@
 #import "MMScrapsInBezelContainerView.h"
 #import "MMScrapsInSidebarState.h"
 #import "UIView+Animations.h"
+#import "MMStatTracker.h"
 
 
 @interface MMEditablePaperView (Private)
@@ -43,7 +44,6 @@
 
 @implementation MMScrappedPaperView{
     NSString* scrapIDsPath;
-    MMScrapsOnPaperState* scrapsOnPaperState;
     MMDecompressImagePromise* scrappedImgViewImage;
     // this defaults to NO, which means we'll try to
     // load a thumbnail. if an image does not exist
@@ -64,6 +64,9 @@
 
     NSUInteger lastSavedPaperStateHashForGeneratedThumbnail;
     NSUInteger lastSavedScrapStateHashForGeneratedThumbnail;
+    
+    const void * kSerialQueueIdentifier;
+    
 }
 
 @synthesize scrapsOnPaperState;
@@ -74,13 +77,18 @@
 -(dispatch_queue_t) serialBackgroundQueue{
     if(!serialBackgroundQueue){
         serialBackgroundQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.concurrentBackgroundQueue", DISPATCH_QUEUE_SERIAL);
+        dispatch_queue_set_specific(serialBackgroundQueue, kSerialQueueIdentifier, (void *)kSerialQueueIdentifier, NULL);
     }
     return serialBackgroundQueue;
+}
+-(BOOL) isSerialBackgroundQueue{
+    return dispatch_get_specific(kSerialQueueIdentifier) != NULL;
 }
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
     self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
+        kSerialQueueIdentifier = &kSerialQueueIdentifier;
         // Initialization code
         scrapsOnPaperState = [[MMScrapsOnPaperState alloc] initWithDelegate:self withScrapContainerSize:self.bounds.size];
         
@@ -625,7 +633,7 @@
     NSMutableArray* scrapsBeingRemoved = [NSMutableArray array];
     NSMutableArray* removedScrapProperties = [NSMutableArray array];
     BOOL didFill = NO;
-    
+
     @try {
         // scale the scissors into the zoom of the page, in case the user is
         // pinching and zooming the page our scissor path will be in page coordinates
@@ -681,6 +689,8 @@
                         }
                         // and add the scrap so that it's scale matches the scrap that its built from
                         MMScrapView* addedScrap = [self addScrapWithPath:subshapePath andScale:scrap.scale];
+                        // track the boundary of the scrap
+                        [[MMStatTracker trackerWithName:kMPStatScrapPathSegments] trackValue:addedScrap.bezierPath.elementCount];
                         @synchronized(scrapsOnPaperState.scrapContainerView){
                             [scrapsOnPaperState.scrapContainerView insertSubview:addedScrap aboveSubview:scrap];
                         }
@@ -741,6 +751,9 @@
                 scissorPath = [[[subshapes firstObject] fullPath] copy];
             }
             
+            // track circumference of newly added scrap
+            [[MMStatTracker trackerWithName:kMPStatScrapPathSegments] trackValue:scissorPath.elementCount];
+
             MMScrapView* addedScrap = [self addScrapWithPath:scissorPath andScale:1.0];
             [addedScrap stampContentsFrom:self.drawableView];
             
@@ -1064,7 +1077,7 @@
     if([scrapsOnPaperState isStateLoaded]){
         // need to keep reference to immutableScrapState so that
         // we can update the thumbnail after the save
-        dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
+        dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
             @autoreleasepool {
                 immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
                 scrapsHadBeenChanged = [immutableScrapState saveStateToDiskBlocking];
@@ -1105,7 +1118,10 @@
             // we need to check [hasPenOrScrapEditsToSave] not [hasEditsToSave].
             // otherwise we'd accidentally take undoManager etc into account
             // when we shouldn't (since undoManager will aways save after us
-            if([self hasPenOrScrapEditsToSave]){
+            if([self hasPenOrScrapEditsToSave] || self.paperState.isForgetful){
+                if(self.paperState.isForgetful){
+                    NSLog(@"forget: page is forgetful, bailing save early");
+                }
 //                NSLog(@"i have more edits to save for %@ (now %lu). bailing. %d %d %d",self.uuid, (unsigned long) immutableScrapState.undoHash, pageHadBeenChanged, scrapsHadBeenChanged, needsThumbnailUpdateSinceLastSave);
                 // our save failed. this may happen if we
                 // call [saveToDisk] in very quick succession
@@ -1144,7 +1160,11 @@
             [NSThread performBlockOnMainThread:^{
 //                NSLog(@"done saving page (at %lu)", (unsigned long) immutableScrapState.undoHash);
                 // reset canvas visibility
-                [self updateThumbnailVisibility];
+                if(!self.paperState.isForgetful){
+                    [self updateThumbnailVisibility];
+                }else{
+                    NSLog(@"forget: skipping thumbnail update");
+                }
                 [self.delegate didSavePage:self];
                 if(onComplete) onComplete(YES);
             }];
@@ -1166,7 +1186,7 @@
 //    debug_NSLog(@"asking %@ to unload", self.uuid);
     [super unloadState];
     __block MMScrapsOnPaperState* strongScrapState = scrapsOnPaperState;
-    dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
+    dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
         @autoreleasepool {
             [[strongScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
             // unloading the scrap state will also remove them
@@ -1187,26 +1207,34 @@
     if([scrapsOnPaperState isStateLoaded]){
         @throw [NSException exceptionWithName:@"LoadedStateForUnloadedBlockException" reason:@"Cannot run block on unloaded state when state is already loaded" userInfo:nil];
     }
-//    NSLog(@"performing block for unloaded scrap state: %@", self);
-    if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
-        [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.scrapIDsPath andMakeEditable:YES];
-    }else{
-        [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.bundledScrapIDsPath andMakeEditable:YES];
+    @autoreleasepool {
+        if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
+            [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.scrapIDsPath andMakeEditable:YES];
+        }else{
+            [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.bundledScrapIDsPath andMakeEditable:YES];
+        }
     }
+    dispatch_semaphore_t semaWaitingOnPaperStateSave = dispatch_semaphore_create(0);
     block();
-    dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
+    dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
         @autoreleasepool {
             MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
             [immutableScrapState saveStateToDiskBlocking];
             [self updateFullPageThumbnail:immutableScrapState];
             [scrapsOnPaperState unload];
         }
+        dispatch_semaphore_signal(semaWaitingOnPaperStateSave);
     });
+    dispatch_semaphore_wait(semaWaitingOnPaperStateSave, DISPATCH_TIME_FOREVER);
 }
 
--(BOOL) hasStateLoaded{
-    return [super hasStateLoaded];
+-(BOOL) isStateLoaded{
+    return [super isStateLoaded];
 }
+-(BOOL) isStateLoading{
+    return [super isStateLoading] || [scrapsOnPaperState isStateLoading];
+}
+
 
 #pragma mark - MMScrapsOnPaperStateDelegate / MMScrapCollectionStateDelegate
 
@@ -1312,7 +1340,7 @@
         }];
         if([scrapsOnPaperState isStateLoaded]){
             MMScrapsOnPaperState* strongScrapState = scrapsOnPaperState;
-            dispatch_async([MMEditablePaperView importThumbnailQueue], ^(void) {
+            dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
                 @autoreleasepool {
                     // save if needed
                     // currently this will always save to disk. in the future #338
@@ -1338,7 +1366,7 @@
  * https://github.com/adamwulf/loose-leaf/issues/254
  */
 -(void) didLoadState:(JotViewStateProxy*)state{
-    if([self hasStateLoaded]){
+    if([self isStateLoaded]){
         lastSavedPaperStateHashForGeneratedThumbnail = [state undoHash];
         [NSThread performBlockOnMainThread:^{
             [[MMPageCacheManager sharedInstance] didLoadStateForPage:self];

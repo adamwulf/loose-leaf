@@ -20,6 +20,8 @@
     NSArray* events;
     NSArray* albums;
     MMPhotoAlbum* cameraRoll;
+    
+    BOOL shouldBypassAuthRequirement;
 }
 
 @synthesize delegate;
@@ -33,6 +35,7 @@ static MMPhotoManager* _instance = nil;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(libraryChanged:)
                                                      name:ALAssetsLibraryChangedNotification
                                                    object:[self assetsLibrary]];
+        shouldBypassAuthRequirement = NO;
     }
     return _instance;
 }
@@ -235,6 +238,10 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
     return nil;
 }
 
+-(void) bypassAuthRequirement{
+    shouldBypassAuthRequirement = YES;
+}
+
 /**
  * initialize the repository of photo albums
  */
@@ -243,6 +250,10 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
         [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
         return;
     }
+    if(![MMPhotoManager hasPhotosPermission] && !shouldBypassAuthRequirement){
+        return;
+    }
+    
     NSMutableArray* updatedAlbumsList = [NSMutableArray array];
     NSMutableArray* updatedEventsList = [NSMutableArray array];
     NSMutableArray* updatedFacesList = [NSMutableArray array];

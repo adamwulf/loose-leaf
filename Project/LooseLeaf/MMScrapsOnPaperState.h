@@ -40,7 +40,7 @@
 
 -(MMScrapView*) mostRecentScrap;
 
--(void) removeScrapWithUUID:(NSString*)scrapUUID;
+-(MMScrapView*) removeScrapWithUUID:(NSString*)scrapUUID;
 
 #pragma mark - Paths
 

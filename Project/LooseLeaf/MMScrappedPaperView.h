@@ -21,6 +21,7 @@
  * scrap functionality for a page
  */
 @interface MMScrappedPaperView : MMEditablePaperView<MFMailComposeViewControllerDelegate,MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapsOnPaperStateDelegate,MMDecompressImagePromiseDelegate>{
+    MMScrapsOnPaperState* scrapsOnPaperState;
     UIImageView* cachedImgView;
 }
 

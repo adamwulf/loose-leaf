@@ -22,15 +22,6 @@
 
 @dynamic delegate;
 
-static dispatch_queue_t importExportStateQueue;
-
-+(dispatch_queue_t) importExportStateQueue{
-    if(!importExportStateQueue){
-        importExportStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.importExportStateQueue", DISPATCH_QUEUE_SERIAL);
-    }
-    return importExportStateQueue;
-}
-
 -(id) initWithDelegate:(NSObject<MMScrapsInSidebarStateDelegate>*)_delegate{
     if(self = [super init]){
         delegate = _delegate;
@@ -84,7 +75,10 @@ static dispatch_queue_t importExportStateQueue;
                         // couldn't find already built scrap, so load a state and
                         // we'll build a scrap
                         if(paperStateForScrap){
-                            MMScrapViewState* state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:paperStateForScrap];
+                            __block MMScrapViewState* state = nil;
+                            [NSThread performBlockOnMainThreadSync:^{
+                                state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:paperStateForScrap];
+                            }];
                             if(state){
                                 NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
                                 [props setObject:state forKey:@"state"];
@@ -131,11 +125,11 @@ static dispatch_queue_t importExportStateQueue;
                         }
                     }
                     @synchronized(self){
-                        isLoaded = YES;
-                        isLoading = NO;
                         MMImmutableScrapCollectionState* immutableState = [self immutableStateForPath:nil];
                         expectedUndoHash = [immutableState undoHash];
                         lastSavedUndoHash = [immutableState undoHash];
+                        isLoaded = YES;
+                        isLoading = NO;
                     }
                     [self.delegate didLoadAllScrapsFor:self];
                     dispatch_semaphore_signal(sema1);
@@ -173,7 +167,10 @@ static dispatch_queue_t importExportStateQueue;
 }
 
 -(MMImmutableScrapsInSidebarState*) immutableStateForPath:(NSString*)scrapIDsPath{
-    if([self isStateLoaded]){
+    if(!isLoading && ![MMScrapCollectionState isImportExportStateQueue]){
+        @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:@"Creating immutable ScrapsInSidebarState in wrong queue" userInfo:nil];
+    }
+    if([self isStateLoaded] || isLoading){
         hasEditsToSave = NO;
         MMImmutableScrapsInSidebarState* immutable = [[MMImmutableScrapsInSidebarState alloc] initWithScrapIDsPath:scrapIDsPath andAllScrapProperties:allPropertiesForScraps andOwnerState:self];
         expectedUndoHash = [immutable undoHash];

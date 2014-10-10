@@ -21,7 +21,6 @@
 #import "UIView+Animations.h"
 #import "NSMutableSet+Extras.h"
 #import "Constants.h"
-#import "MMPopoverView.h"
 #import "MMPageCacheManager.h"
 #import "MMGestureTouchOwnershipDelegate.h"
 

@@ -69,6 +69,12 @@
         
         void (^block2)() = ^(void) {
             @autoreleasepool {
+                @synchronized(self){
+                    if(isUnloading){
+                        // we're not allowed to load while already trying to unload
+                        @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"loading during unloading" userInfo:nil];
+                    }
+                }
                 dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                 NSDictionary* allScrapStateInfo = [NSDictionary dictionaryWithContentsOfFile:scrapIDsPath];
 
@@ -89,7 +95,10 @@
                         [props setObject:scrap forKey:@"scrap"];
                         [scrapPropsWithState addObject:props];
                     }else{
-                        MMScrapViewState* state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:self];
+                        __block MMScrapViewState* state = nil;
+                        [NSThread performBlockOnMainThreadSync:^{
+                            state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:self];
+                        }];
                         if(state){
                             [props setObject:state forKey:@"state"];
                             [scrapPropsWithState addObject:props];
@@ -109,7 +118,14 @@
                     for(NSDictionary* scrapProperties in scrapPropsWithState){
                         @synchronized(self){
                             if(isUnloading){
-                                @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"loading during unloading" userInfo:nil];
+                                // we were asked to unload before we were even
+                                // done unloading. just bail here
+                                NSLog(@"ScrapsOnPaperState asked to unload before finished loading");
+                                @synchronized(self){
+                                    isLoaded = NO;
+                                    isLoading = NO;
+                                }
+                                return;
                             }
                         }
                         MMScrapView* scrap = nil;
@@ -143,11 +159,11 @@
                         }
                     }
                     @synchronized(self){
-                        isLoaded = YES;
-                        isLoading = NO;
                         MMImmutableScrapCollectionState* immutableState = [self immutableStateForPath:nil];
                         expectedUndoHash = [immutableState undoHash];
                         lastSavedUndoHash = [immutableState undoHash];
+                        isLoaded = YES;
+                        isLoading = NO;
 //                        NSLog(@"loaded scrapsOnPaperState at: %lu", (unsigned long)lastSavedUndoHash);
                     }
                     [self.delegate didLoadAllScrapsFor:self];
@@ -192,7 +208,10 @@
 }
 
 -(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath{
-    if([self isStateLoaded]){
+    if(!isLoading && ![MMScrapCollectionState isImportExportStateQueue]){
+        @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:@"Creating immutable ScrapsOnPaperState in wrong queue" userInfo:nil];
+    }
+    if([self isStateLoaded] || isLoading){
         hasEditsToSave = NO;
         @synchronized(allLoadedScraps){
             MMImmutableScrapsOnPaperState* immutable = [[MMImmutableScrapsOnPaperState alloc] initWithScrapIDsPath:scrapIDsPath
@@ -298,18 +317,22 @@
 
 #pragma mark - Saving Helpers
 
--(void) removeScrapWithUUID:(NSString*)scrapUUID{
+-(MMScrapView*) removeScrapWithUUID:(NSString*)scrapUUID{
     @synchronized(allLoadedScraps){
+        MMScrapView* removedScrap = nil;
         NSMutableArray* otherArray = [NSMutableArray array];
         for(MMScrapView* scrap in allLoadedScraps){
             if(![scrap.uuid isEqualToString:scrapUUID]){
                 [otherArray addObject:scrap];
             }else{
+                removedScrap = scrap;
+                [removedScrap removeFromSuperview];
                 NSLog(@"permanently removed scrap %@ from page %@", scrapUUID, self.delegate.uuidOfScrapCollectionStateOwner);
             }
         }
         allLoadedScraps = otherArray;
         hasEditsToSave = YES;
+        return removedScrap;
     }
 }
 

@@ -90,7 +90,7 @@
 }
 
 -(void) updateEmptyErrorMessage{
-    if(![self numberOfRowsFor:albumListScrollView]){
+    if(![self numberOfRowsFor:albumListScrollView] && [MMPhotoManager hasPhotosPermission]){
         if(!emptyView){
             emptyView = [[MMEmptyCollectionViewCell alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.width)];
         }

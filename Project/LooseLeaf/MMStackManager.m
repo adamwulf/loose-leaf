@@ -12,6 +12,8 @@
 #import "MMBlockOperation.h"
 #import "MMExportablePaperView.h"
 #import "Mixpanel.h"
+#import "NSString+UUID.h"
+#import "NSArray+Extras.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 
 @implementation MMStackManager
@@ -88,6 +90,23 @@
             MMPaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:uuid];
             [visiblePages addObject:page];
             [seenPageUUIDs addObject:uuid];
+            //
+            //
+            //
+            // duplicate the page
+//#ifdef DEBUG
+//            NSString* pathOfPage = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Pages"]stringByAppendingPathComponent:uuid];
+//            // create new page uuid
+//            uuid = [NSString createStringUUID];
+//            NSString* duplicatePagePath = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Pages"]stringByAppendingPathComponent:uuid];
+//            [[NSFileManager defaultManager] copyItemAtPath:pathOfPage toPath:duplicatePagePath error:nil];
+//            // create the new page object
+//            page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:uuid];
+//            [visiblePages addObject:page];
+//            [seenPageUUIDs addObject:uuid];
+//#endif
+            //
+            //
         }else{
             NSLog(@"found duplicate page: %@", uuid);
             hasFoundDuplicate++;
@@ -109,6 +128,13 @@
     if(hasFoundDuplicate){
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfDuplicatePages by:@(hasFoundDuplicate)];
     }
+    
+    NSLog(@"loaded %d and %d",(int) [visiblePages count],(int) [hiddenPages count]);
+
+//#ifdef DEBUG
+//    [visiblePages shuffle];
+//    [hiddenPages shuffle];
+//#endif
     
     return [NSDictionary dictionaryWithObjectsAndKeys:visiblePages, @"visiblePages",
             hiddenPages, @"hiddenPages", nil];

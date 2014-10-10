@@ -109,7 +109,7 @@
     if(!isLoaded){
         @throw [NSException exceptionWithName:@"SavingUnloadedUndoManager" reason:@"Cannot save unloaded undo manager" userInfo:nil];
     }
-    if(!hasEditsToSave){
+    if(!self.hasEditsToSave){
 //        NSLog(@"no edits to save for undo state: %@", path);
         return;
     }

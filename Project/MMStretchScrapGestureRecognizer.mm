@@ -440,7 +440,7 @@
         [possibleTouches addObject:touch];
     }];
     [self updateState];
-    [self say:@"sbegan" ISee:touches];
+//    [self say:@"sbegan" ISee:touches];
 }
 
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -459,7 +459,7 @@
         [pinchScrapGesture2 relinquishOwnershipOfTouches:touches];
     }
     [self updateState];
-    [self say:@"scancelled" ISee:touches];
+//    [self say:@"scancelled" ISee:touches];
 }
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -474,7 +474,7 @@
         [pinchScrapGesture2 relinquishOwnershipOfTouches:touches];
     }
     [self updateState];
-    [self say:@"sended" ISee:touches];
+//    [self say:@"sended" ISee:touches];
 }
 
 
