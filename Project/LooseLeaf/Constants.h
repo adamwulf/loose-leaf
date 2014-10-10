@@ -99,10 +99,10 @@ _Pragma("clang diagnostic pop") \
 
 
 // MixPanel People Properties
-#define kMPStatScissorSegments @"Stat: Avg Scissor Segment Count"
-#define kMPStatScrapPathSegments @"Stat: Avg Scrap Segment Count"
-#define kMPStatSegmentTestCount @"Stat: Segment Test Count"
-#define kMPStatSegmentCompareCount @"Stat: Segment Compare Count"
+#define kMPStatScissorSegments @"Stat: Scissor Segment Count"
+#define kMPStatScrapPathSegments @"Stat: Scrap Segment Count"
+#define kMPStatSegmentTestCount @"Stat: Clipping Test Count"
+#define kMPStatSegmentCompareCount @"Stat: Clipping Compare Count"
 #define kMPPreferredLanguage @"Language"
 #define kMPScreenScale @"Screen Scale"
 #define kMPDurationAppOpen @"Duration App Open"
