@@ -67,6 +67,7 @@ static MMTrashManager* _instance = nil;
 
 -(void) deletePage:(MMExportablePaperView*)page{
     NSLog(@"asking to delete %@", page.uuid);
+    NSObject<MMPaperViewDelegate>* pageOriginalDelegate = page.delegate;
     page.delegate = nil;
     [[MMPageCacheManager sharedInstance] forgetAboutPage:page];
     dispatch_async([self trashManagerQueue], ^{
@@ -123,7 +124,11 @@ static MMTrashManager* _instance = nil;
                 // delete the scrap, and do NOT respect the undo manager.
                 // we can ignore the undo manager since we're just deleting
                 // the page anyways.
-                [self deleteScrap:scrapUUID inPage:page shouldRespectOthers:NO];
+                if(![pageOriginalDelegate.bezelContainerView containsScrapUUID:scrapUUID]){
+                    [self deleteScrap:scrapUUID inPage:page shouldRespectOthers:NO];
+                }else{
+                    [pageOriginalDelegate.bezelContainerView stealScrap:scrapUUID fromPage:page];
+                }
             }
         }
         
@@ -144,7 +149,7 @@ static MMTrashManager* _instance = nil;
             // TODO: check the bezel to see if we should keep any scraps,
             // and then give them to a safe place before deleting
             // all the page assets
-//            id bcv = page.delegate.bezelContainerView;
+//            id bcv = pageOriginalDelegate.bezelContainerView;
             
             //
             // Step 4: Delete the rest of the page assets
