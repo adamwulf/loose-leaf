@@ -341,6 +341,9 @@
 #pragma mark - Deleting Assets
 
 -(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers{
+    // for scrapsOnPaperState, we need to ask
+    // the page to delete the scrap, as we don't
+    // own all of the assets for it
     [self.delegate deleteScrapWithUUID:scrapUUID shouldRespectOthers:respectOthers];
 }
 
