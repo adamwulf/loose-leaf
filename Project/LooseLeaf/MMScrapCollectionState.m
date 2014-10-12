@@ -245,8 +245,10 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
             NSLog(@"error deleting directory %@ scrap %@", directoryOfScrap, err);
         }
 
-        
-//        scrapToOwn.state.backgroundView
+
+        // now reload the background view from
+        // the file that's in the new location
+        [scrapToOwn.state reloadBackgroundView];
         
         NSLog(@"done moving scrap files.");
     });
