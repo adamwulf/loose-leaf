@@ -62,7 +62,7 @@ static int totalBackgroundBytes;
 }
 
 -(void) updateBackingImageLocation{
-//    CheckMainThread;
+    CheckMainThread;
     self.backingContentView.center = CGPointMake(self.bounds.size.width/2 + self.backgroundOffset.x,
                                                                self.bounds.size.height/2 + self.backgroundOffset.y);
     self.backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(self.backgroundRotation),CGAffineTransformMakeScale(self.backgroundScale, self.backgroundScale));
