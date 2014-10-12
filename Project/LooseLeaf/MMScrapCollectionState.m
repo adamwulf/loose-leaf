@@ -236,6 +236,15 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
             moveFileIntoBezel(directoryOfScrap, path);
         }
         
+        // remove the old scrap directory
+        NSError* err = nil;
+        [[NSFileManager defaultManager] removeItemAtPath:directoryOfScrap error:&err];
+        if(!err){
+            NSLog(@"deleted: %@", directoryOfScrap);
+        }else{
+            NSLog(@"error deleting directory %@ scrap %@", directoryOfScrap, err);
+        }
+
         
 //        scrapToOwn.state.backgroundView
         

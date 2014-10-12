@@ -144,10 +144,18 @@ static MMTrashManager* _instance = nil;
             NSLog(@"page still has %d scraps", (int)[page.scrapsOnPaper count]);
             NSLog(@"page state still has %d scraps", (int)[page.scrapsOnPaperState countOfAllLoadedScraps]);
             
+            NSString* contentsOfBezel = [[NSFileManager documentsPath] stringByAppendingPathComponent:@"Bezel/Scraps"];
+            
             //
             // Step 3: Transfer any remaining scraps to the bezel
             NSArray* thisPagesSavedScrapUUIDs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:thisPagesScrapsPath error:nil];
+            NSArray* scrapsInBezelUUIDs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:contentsOfBezel error:nil];
             NSLog(@"saved scraps for page %@ : %@", page.uuid, thisPagesSavedScrapUUIDs);
+            NSLog(@"saved scraps in bezel: %@", scrapsInBezelUUIDs);
+            
+            if([thisPagesSavedScrapUUIDs count]){
+                NSLog(@"page wasn't able to delete all scraps.");
+            }
             
             // TODO: check the bezel to see if we should keep any scraps,
             // and then give them to a safe place before deleting
