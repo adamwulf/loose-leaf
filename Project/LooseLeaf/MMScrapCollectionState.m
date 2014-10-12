@@ -11,6 +11,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "Constants.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMImmutableScrapCollectionState.h"
 
 @implementation MMScrapCollectionState
 
@@ -242,7 +243,7 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
 #pragma mark - Deleting Assets
 
 -(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers{
-    
+    NSLog(@"default delete scrap code");
 }
 
 @end

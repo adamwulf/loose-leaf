@@ -1382,6 +1382,10 @@
     return [self.delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrapUUID];
 }
 
+-(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers{
+    @throw kAbstractMethodException;
+}
+
 #pragma mark - JotViewStateProxyDelegate
 
 /**

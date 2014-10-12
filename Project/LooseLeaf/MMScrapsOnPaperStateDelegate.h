@@ -23,7 +23,6 @@
 
 #pragma mark - Scrap Container for Sidebar
 
--(MMScrapsInBezelContainerView*) bezelContainerView;
-
+-(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers;
 
 @end

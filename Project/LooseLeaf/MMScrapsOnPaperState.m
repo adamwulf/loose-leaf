@@ -341,17 +341,7 @@
 #pragma mark - Deleting Assets
 
 -(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers{
-    
-    //
-    // Step 1: check the bezel
-    //
-    // first check the bezel to see if the scrap exists outside the page
-    if([self.delegate.bezelContainerView containsScrapUUID:scrapUUID]){
-        NSLog(@"scrap %@ is in bezel, can't delete assets", scrapUUID);
-        return;
-    }
-    
-
+    [self.delegate deleteScrapWithUUID:scrapUUID shouldRespectOthers:respectOthers];
 }
 
 @end
