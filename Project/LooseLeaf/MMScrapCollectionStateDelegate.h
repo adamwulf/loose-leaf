@@ -34,4 +34,5 @@
 
 -(void) didUnloadAllScrapsFor:(MMScrapCollectionState*)scrapState;
 
+
 @end

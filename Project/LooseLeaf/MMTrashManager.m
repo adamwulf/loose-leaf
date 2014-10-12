@@ -61,8 +61,12 @@ static MMTrashManager* _instance = nil;
 
 #pragma mark - Public Methods
 
--(void) deleteScrap:(NSString*)scrapUUID inPage:(MMUndoablePaperView*)page{
-    [self deleteScrap:scrapUUID inPage:page shouldRespectOthers:YES];
+-(void) deleteScrap:(NSString*)scrapUUID inPage:(MMExportablePaperView*)page{
+    if(page){
+        [self deleteScrap:scrapUUID inPage:page shouldRespectOthers:YES];
+    }else{
+        [self deleteScrapFromBezelContainer:scrapUUID];
+    }
 }
 
 -(void) deletePage:(MMExportablePaperView*)page{
@@ -127,10 +131,13 @@ static MMTrashManager* _instance = nil;
                 if(![pageOriginalDelegate.bezelContainerView containsScrapUUID:scrapUUID]){
                     [self deleteScrap:scrapUUID inPage:page shouldRespectOthers:NO];
                 }else{
-                    [pageOriginalDelegate.bezelContainerView stealScrap:scrapUUID fromPage:page];
+                    // synchronous, so that the files will be gone
+                    // from our page by the time this returns
+                    [pageOriginalDelegate.bezelContainerView.sidebarScrapState stealScrap:scrapUUID fromScrapCollectionState:page.scrapsOnPaperState];
                 }
             }
         }
+        [pageOriginalDelegate.bezelContainerView saveScrapContainerToDisk];
         
         //
         // deleting scraps above will add blocks to the trashManagerQueue
@@ -196,15 +203,8 @@ static MMTrashManager* _instance = nil;
         return;
     }
 
-    //
-    // Step 1: check the bezel
-    //
-    // first check the bezel to see if the scrap exists outside the page
-    if([page.delegate.bezelContainerView containsScrapUUID:scrapUUID]){
-        NSLog(@"scrap %@ is in bezel, can't delete assets", scrapUUID);
-        return;
-    }
-    
+    [page.scrapsOnPaperState deleteScrapWithUUID:scrapUUID shouldRespectOthers:respectOthers];
+
     // first, we need to check if we're even eligible to
     // delete the scrap or not.
     //

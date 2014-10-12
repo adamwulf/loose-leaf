@@ -21,4 +21,9 @@
 
 -(NSString*) bundledPagesPath;
 
+#pragma mark - Scrap Container for Sidebar
+
+-(MMScrapsInBezelContainerView*) bezelContainerView;
+
+
 @end

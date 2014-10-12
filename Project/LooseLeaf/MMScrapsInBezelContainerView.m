@@ -304,56 +304,6 @@
 }
 
 
-#pragma mark - Transfer scraps
-
--(void) stealScrap:(NSString*)scrapUUID fromPage:(MMScrappedPaperView*)page{
-    NSLog(@"need to give the scrap to the bezel");
-    
-    
-    NSString* directoryOfScrap = [page.scrapsOnPaperState directoryPathForScrapUUID:scrapUUID];
-    NSString* bundledDirectoryOfScrap = [page.scrapsOnPaperState bundledDirectoryPathForScrapUUID:scrapUUID];
-
-    NSMutableArray* directoryContents = [[NSFileManager defaultManager] recursiveContentsOfDirectoryAtPath:directoryOfScrap filesOnly:YES].mutableCopy;
-    NSMutableArray* bundledContents = [[NSFileManager defaultManager] recursiveContentsOfDirectoryAtPath:bundledDirectoryOfScrap filesOnly:YES].mutableCopy;
-    [bundledContents removeObjectsInArray:directoryContents];
-    
-    NSLog(@"Need to copy these assets to the bezel:");
-    NSLog(@"  from bundled dir: %@", bundledContents);
-    NSLog(@"  from page's dir: %@", directoryContents);
-
-    
-    NSString* scrapLocationInBezel = [self.sidebarScrapState directoryPathForScrapUUID:scrapUUID];
-    [NSFileManager ensureDirectoryExistsAtPath:scrapLocationInBezel];
-    
-
-    void(^moveFileIntoBezel)(NSString*, NSString*) = ^(NSString* originalDir, NSString* path){
-        NSError* err = nil;
-        [[NSFileManager defaultManager] moveItemAtPath:[originalDir stringByAppendingPathComponent:path]
-                                                toPath:[scrapLocationInBezel stringByAppendingPathComponent:path]
-                                                 error:&err];
-        if(!err){
-            NSLog(@"moved %@ into %@", path, scrapLocationInBezel);
-        }else{
-            NSLog(@"error copying scrap %@", err);
-        }
-
-    };
-    
-    for(NSString* path in bundledContents){
-        moveFileIntoBezel(bundledDirectoryOfScrap, path);
-    }
-    for(NSString* path in directoryContents){
-        moveFileIntoBezel(directoryOfScrap, path);
-    }
-    
-    
-    
-//    sidebarScrapState
-    
-    NSLog(@"done");
-}
-
-
 #pragma mark - Button Tap
 
 -(void) bubbleTapped:(UITapGestureRecognizer*)gesture{

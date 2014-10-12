@@ -33,8 +33,6 @@
 
 -(BOOL) containsScrapUUID:(NSString*)scrapUUID;
 
--(void) stealScrap:(NSString*)scrapUUID fromPage:(MMScrappedPaperView*)page;
-
 -(void) didUpdateAccelerometerWithReading:(MMVector *)currentRawReading;
 
 -(void) saveScrapContainerToDisk;

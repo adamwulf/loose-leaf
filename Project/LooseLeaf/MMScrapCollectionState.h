@@ -43,6 +43,9 @@
 
 -(void) scrapVisibilityWasUpdated:(MMScrapView*)scrap;
 
+// returns the scrap for the specified uuid, or nil if there's no match
+-(MMScrapView*) scrapForUUID:(NSString*)uuid;
+
 #pragma mark - Save and Load
 
 -(MMImmutableScrapCollectionState*) immutableStateForPath:(NSString*)scrapIDsPath;
@@ -59,5 +62,13 @@
 -(NSString*) directoryPathForScrapUUID:(NSString*)uuid;
 
 -(NSString*) bundledDirectoryPathForScrapUUID:(NSString*)uuid;
+
+#pragma mark - Scrap Stealing
+
+-(void) stealScrap:(NSString*)scrapUUID fromScrapCollectionState:(MMScrapCollectionState*)formerScrapOwner;
+
+#pragma mark - Deleting Assets
+
+-(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers;
 
 @end
