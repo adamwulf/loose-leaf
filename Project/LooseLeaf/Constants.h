@@ -160,6 +160,7 @@ _Pragma("clang diagnostic pop") \
 #define kMPEventImportPropScrapCount @"File Extension"
 #define kMPEventImportPropVisibleScrapCount @"File Type"
 #define kMPEventImportInvalidZipErrorCode -1
+#define kMPEventImportMissingZipErrorCode -2
 
 // MixPanel Error Tracking
 #define kMPPathIterationException @"PathIterationException"

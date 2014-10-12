@@ -236,6 +236,9 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
             moveFileIntoBezel(directoryOfScrap, path);
         }
         
+        
+//        scrapToOwn.state.backgroundView
+        
         NSLog(@"done moving scrap files.");
     });
 }

@@ -250,14 +250,19 @@
                         NSLog(@"coordinator failed %@", message.messageRecordID);
                         NSLog(@"invalid zip file");
                         NSLog(@"zip at: %@", zipFileLocation);
-#ifdef DEBUG
-                        if(zipFileLocation){
-                            NSString* savedPath = [[NSFileManager documentsPath] stringByAppendingPathComponent:[zipFileLocation lastPathComponent]];
-                            [[NSFileManager defaultManager] moveItemAtPath:zipFileLocation toPath:savedPath error:nil];
-                            NSLog(@"saved to: %@", savedPath);
+                        
+                        if([[NSFileManager defaultManager] fileExistsAtPath:zipFileLocation]){
+                            [importExportView importCoordinatorFailedPermanently:self withCode:kMPEventImportInvalidZipErrorCode];
+//#ifdef DEBUG
+                            if(zipFileLocation){
+                                NSString* savedPath = [[NSFileManager documentsPath] stringByAppendingPathComponent:[zipFileLocation lastPathComponent]];
+                                [[NSFileManager defaultManager] moveItemAtPath:zipFileLocation toPath:savedPath error:nil];
+                                NSLog(@"saved to: %@", savedPath);
+                            }
+//#endif
+                        }else{
+                            [importExportView importCoordinatorFailedPermanently:self withCode:kMPEventImportMissingZipErrorCode];
                         }
-#endif
-                        [importExportView importCoordinatorFailedPermanently:self withCode:kMPEventImportInvalidZipErrorCode];
                     }
                 });
             }else{
