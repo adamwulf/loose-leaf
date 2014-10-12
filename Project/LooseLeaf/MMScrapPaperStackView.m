@@ -1657,8 +1657,7 @@ int skipAll = NO;
             // scrap. if its undo stack doesn't hold any
             // reference, then we should trigger deleting
             // it's old assets
-            MMScrappedPaperView* owningPageForOriginalScrap = [self pageForUUID:originalScrap.owningPageUUID];
-            [[MMTrashManager sharedInstance] deleteScrap:originalScrap.uuid inPage:owningPageForOriginalScrap];
+            [[MMTrashManager sharedInstance] deleteScrap:originalScrap.uuid inScrapCollectionState:originalScrap.state.scrapsOnPaperState];
         }
         // ok, done, just set it
         if(index == NSNotFound){

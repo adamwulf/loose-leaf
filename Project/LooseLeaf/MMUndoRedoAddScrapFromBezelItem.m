@@ -56,7 +56,7 @@
     // to our page, but then sent it back to the bezel.
     // we should check if it's still in the bezel, and if not
     // then we're the last holder of this scrap and should delete it
-    [[MMTrashManager sharedInstance] deleteScrap:scrapUUID inPage:page];
+    [[MMTrashManager sharedInstance] deleteScrap:scrapUUID inScrapCollectionState:page.scrapsOnPaperState];
 }
 
 #pragma mark - Serialize

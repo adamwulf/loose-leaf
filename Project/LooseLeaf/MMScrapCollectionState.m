@@ -243,7 +243,7 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
 #pragma mark - Deleting Assets
 
 -(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers{
-    NSLog(@"default delete scrap code");
+    @throw kAbstractMethodException;
 }
 
 @end

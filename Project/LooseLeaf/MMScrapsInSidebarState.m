@@ -268,5 +268,8 @@
     }
 }
 
+-(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers{
+    NSLog(@"sidebar needs to delete assets for %@", scrapUUID);
+}
 
 @end

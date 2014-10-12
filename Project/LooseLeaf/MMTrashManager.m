@@ -61,8 +61,8 @@ static MMTrashManager* _instance = nil;
 
 #pragma mark - Public Methods
 
--(void) deleteScrap:(NSString*)scrapUUID inPage:(MMExportablePaperView*)page{
-    [self deleteScrap:scrapUUID inPage:page shouldRespectOthers:YES];
+-(void) deleteScrap:(NSString*)scrapUUID inScrapCollectionState:(MMScrapCollectionState*)scrapCollectionState{
+    [self deleteScrap:scrapUUID inScrapCollectionState:scrapCollectionState shouldRespectOthers:YES];
 }
 
 -(void) deletePage:(MMExportablePaperView*)page{
@@ -125,7 +125,7 @@ static MMTrashManager* _instance = nil;
                 // we can ignore the undo manager since we're just deleting
                 // the page anyways.
                 if(![pageOriginalDelegate.bezelContainerView containsScrapUUID:scrapUUID]){
-                    [self deleteScrap:scrapUUID inPage:page shouldRespectOthers:NO];
+                    [self deleteScrap:scrapUUID inScrapCollectionState:page.scrapsOnPaperState shouldRespectOthers:NO];
                 }else{
                     // synchronous, so that the files will be gone
                     // from our page by the time this returns
@@ -191,15 +191,15 @@ static MMTrashManager* _instance = nil;
 // @param respectOthers YES if we should keep scraps in the page's undoManager and update the page's scrapsOnPaperState,
 //                      NO if we should ignore any other object that might have a vested interested in this scrap.
 //                      (for instance, when deleting the page)
--(void) deleteScrap:(NSString*)scrapUUID inPage:(MMUndoablePaperView*)page shouldRespectOthers:(BOOL)respectOthers{
+-(void) deleteScrap:(NSString*)scrapUUID inScrapCollectionState:(MMScrapCollectionState*)scrapCollectionState shouldRespectOthers:(BOOL)respectOthers{
 
-    if(!page || !scrapUUID){
+    if(!scrapCollectionState || !scrapUUID){
         // sanity
-        NSLog(@"can't delete scrap %@ from page %@", scrapUUID, page);
+        NSLog(@"can't delete scrap %@ from collection %@", scrapUUID, scrapCollectionState);
         return;
     }
 
-    [page.scrapsOnPaperState deleteScrapWithUUID:scrapUUID shouldRespectOthers:respectOthers];
+    [scrapCollectionState deleteScrapWithUUID:scrapUUID shouldRespectOthers:respectOthers];
 
 }
 

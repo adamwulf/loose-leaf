@@ -18,7 +18,7 @@
 
 +(BOOL) isTrashManagerQueue;
 
--(void) deleteScrap:(NSString*)scrap inPage:(MMScrappedPaperView*)page;
+-(void) deleteScrap:(NSString*)scrap inScrapCollectionState:(MMScrapCollectionState*)scrapCollectionState;
 
 -(void) deletePage:(MMPaperView*)page;
 
