@@ -9,6 +9,7 @@
 #ifndef Paper_Stack_Contants_h
 #define Paper_Stack_Contants_h
 
+#define DEBUGLABELS
 
 #ifdef DEBUG
 #define MIXPANEL_TOKEN @"YOUR_DEBUG_MIXPANEL_TOKEN"

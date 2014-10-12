@@ -47,19 +47,21 @@
         // debug image to help show page zoom/pan etc better
         // than a blank page
         //
-//#ifdef DEBUG
+#ifdef DEBUG
+#ifdef DEBUGLABELS
 //        NSInteger photo = rand() % 6 + 1;
 //        UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", photo]];
         
-//        UILabel* label = [[UILabel alloc] initWithFrame:self.bounds];
-//        label.text = uuid;
-//        [label sizeToFit];
-//        CGRect fr = label.frame;
-//        fr.origin.x += 100;
-//        fr.origin.y += 100;
-//        label.frame = fr;
-//        [self addSubview:label];
-//#endif
+        UILabel* label = [[UILabel alloc] initWithFrame:self.bounds];
+        label.text = uuid;
+        [label sizeToFit];
+        CGRect fr = label.frame;
+        fr.origin.x += 100;
+        fr.origin.y += 100;
+        label.frame = fr;
+        [self addSubview:label];
+#endif
+#endif
         //
         // end debug image
         //

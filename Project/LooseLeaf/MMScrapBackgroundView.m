@@ -126,7 +126,12 @@ static int totalBackgroundBytes;
 // returns an exact duplicate of this background, including all properties,
 // and assigns it to the input scrap state
 -(MMScrapBackgroundView*) duplicateFor:(MMScrapViewState*)otherScrapState{
-    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:self.backingImage
+    // we need to swap the image out for another one, because the source image
+    // might be deleted from disk soon. so this image needs to load
+    // from its own assets
+    UIImage* replacementImage = [UIImage imageWithData:UIImagePNGRepresentation(self.backingImage)];
+//    UIImage* replacementImage = self.backingImage;
+    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:replacementImage
                                                                            forScrapState:otherScrapState];
     backgroundView.backgroundRotation = self.backgroundRotation;
     backgroundView.backgroundScale = self.backgroundScale;
