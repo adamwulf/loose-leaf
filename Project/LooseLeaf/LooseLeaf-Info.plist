@@ -14,22 +14,6 @@
 				<string>Loose-Leaf_76.png</string>
 			</array>
 			<key>CFBundleTypeName</key>
-			<string>PDF File</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-			<key>LSHandlerRank</key>
-			<string>Alternate</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>com.adobe.pdf</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeIconFiles</key>
-			<array>
-				<string>Loose-Leaf_76.png</string>
-			</array>
-			<key>CFBundleTypeName</key>
 			<string>Image File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
