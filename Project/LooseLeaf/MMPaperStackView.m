@@ -1272,8 +1272,6 @@
         // ============================================================================
         if(![[visibleStackHolder peekSubview] isBeingPannedAndZoomed]){
             //
-            // TODO: log this to analytics
-            //
             // odd, no idea how this happened. but we
             // just released a non-top page and the top
             // page is not being held.
