@@ -32,8 +32,8 @@
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
     UIColor* halfGreyFill = [self backgroundColor];
-    UIColor* darkBlue = [UIColor colorWithRed: 55/255.0 green:203/255.0 blue:246/255.0 alpha: 0.75];
-    UIColor* lightBlue = [UIColor colorWithRed: 15/255.0 green:170/255.0 blue:215/255.0 alpha: 0.75];
+    UIColor* darkBlue = [UIColor colorWithRed: 0.279 green: 0.380 blue: 0.860 alpha: 0.75];
+    UIColor* lightBlue = [UIColor colorWithRed: 0.286 green: 0.588 blue: 0.929 alpha: 0.75];
 
     //// Gradient Declarations
     NSArray* gradientColors = [NSArray arrayWithObjects:
