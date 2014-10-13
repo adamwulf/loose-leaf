@@ -31,7 +31,6 @@
     
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
-    UIColor* halfGreyFill = [self backgroundColor];
     UIColor* barelyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.25];
     UIColor* mostlyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.65];
     UIColor* darkBlue = [UIColor colorWithRed: 0.279 green: 0.380 blue: 0.860 alpha: 0.75];
