@@ -800,9 +800,9 @@
     if(!nextTopPage){
         NSLog(@"hrmph. out of pages...");
     }
-    [self ensurePageIsAtTopOfVisibleStack:nextTopPage];
-    [[MMPageCacheManager sharedInstance] willChangeTopPageTo:nextTopPage];
     [deleteSidebar deletePage:page];
+    [[MMPageCacheManager sharedInstance] willChangeTopPageTo:nextTopPage];
+    [self ensurePageIsAtTopOfVisibleStack:nextTopPage];
     [[MMPageCacheManager sharedInstance] didChangeToTopPage:nextTopPage];
     [self saveStacksToDisk];
 }
@@ -1747,6 +1747,10 @@
 
 -(BOOL) isShowingPageView{
     return isShowingPageView;
+}
+
+-(NSInteger) countAllPages{
+    return [visibleStackHolder.subviews count] + [bezelStackHolder.subviews count] + [hiddenStackHolder.subviews count];
 }
 
 #pragma mark - Check for Active Gestures
