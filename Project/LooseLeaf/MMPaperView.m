@@ -49,6 +49,7 @@
         //
 #ifdef DEBUG
 #ifdef DEBUGLABELS
+#if DEBUGLABELS
 //        NSInteger photo = rand() % 6 + 1;
 //        UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", photo]];
         
@@ -60,6 +61,7 @@
         fr.origin.y += 100;
         label.frame = fr;
         [self addSubview:label];
+#endif
 #endif
 #endif
         //

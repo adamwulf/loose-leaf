@@ -150,6 +150,7 @@
         
 #ifdef DEBUG
 #ifdef DEBUGLABELS
+#if DEBUGLABELS
         CALayer* cornerTag = [CALayer layer];
         cornerTag.bounds = CGRectMake(10, 10, 10, 10);
         cornerTag.backgroundColor = [UIColor redColor].CGColor;
@@ -160,6 +161,7 @@
         debugLabel.backgroundColor = [UIColor whiteColor];
         debugLabel.text = self.uuid;
         [self addSubview:debugLabel];
+#endif
 #endif
 #endif
     }

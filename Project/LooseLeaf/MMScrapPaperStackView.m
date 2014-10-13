@@ -59,10 +59,6 @@
     // share sidebar
     MMShareSidebarContainerView* sharePageSidebar;
     
-    // cloudkit import sidebar
-    MMTextButton* cloudKitImportButton;
-    MMSlidingSidebarContainerView* cloudKitImportSidebar;
-
     NSTimer* debugTimer;
     NSTimer* drawTimer;
     UIImageView* debugImgView;
@@ -154,26 +150,19 @@
         
         
         [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-
-        sharePageSidebar = [[MMShareSidebarContainerView alloc] initWithFrame:self.bounds forButton:shareButton animateFromLeft:YES];
-        sharePageSidebar.delegate = self;
-        [sharePageSidebar hide:NO onComplete:nil];
-        sharePageSidebar.shareDelegate = self;
-        [self addSubview:sharePageSidebar];
-        
-        cloudKitImportButton = [[MMTextButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)
-                                                           andFont:[UIFont systemFontOfSize:16]
-                                                         andLetter:@"CK"
-                                                        andXOffset:0
-                                                        andYOffset:0];
-        cloudKitImportButton.alpha = 0;
-        cloudKitImportSidebar = [[MMSlidingSidebarContainerView alloc] initWithFrame:self.bounds forButton:cloudKitImportButton animateFromLeft:NO];
-        [cloudKitImportSidebar hide:NO onComplete:nil];
-        [self addSubview:sharePageSidebar];
         
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds forScrapsOnPaperState:nil];
         [self addSubview:scrapContainer];
         
+        
+        [[NSThread mainThread] performBlock:^{
+            // going to delay building this UI so we can startup faster
+            sharePageSidebar = [[MMShareSidebarContainerView alloc] initWithFrame:self.bounds forButton:shareButton animateFromLeft:YES];
+            sharePageSidebar.delegate = self;
+            [sharePageSidebar hide:NO onComplete:nil];
+            sharePageSidebar.shareDelegate = self;
+            [self insertSubview:sharePageSidebar belowSubview:scrapContainer];
+        } afterDelay:1];
         
         fromRightBezelGesture.panDelegate = self;
         fromLeftBezelGesture.panDelegate = self;
