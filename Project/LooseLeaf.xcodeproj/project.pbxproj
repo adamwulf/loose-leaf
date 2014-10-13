@@ -2316,6 +2316,8 @@
 				666E254018F5E43600C17295 /* MMPalmTreeButton.m */,
 				66E100F419EC4B67006E7C15 /* MMCameraButton.h */,
 				66E100F519EC4B67006E7C15 /* MMCameraButton.m */,
+				666E252E18F5D9F100C17295 /* MMFaceButton.h */,
+				666E252F18F5D9F100C17295 /* MMFaceButton.m */,
 			);
 			name = "Import Sidebar";
 			sourceTree = "<group>";
@@ -2442,8 +2444,6 @@
 				6650DD1618F4849800ADF591 /* MMImageViewButton.m */,
 				66BEBFF819BD6AAA0032D30C /* MMProgressedImageViewButton.h */,
 				66BEBFF919BD6AAA0032D30C /* MMProgressedImageViewButton.m */,
-				666E252E18F5D9F100C17295 /* MMFaceButton.h */,
-				666E252F18F5D9F100C17295 /* MMFaceButton.m */,
 				661885CF18F9ABD70016A333 /* MMFlipCameraButton.h */,
 				661885D018F9ABD70016A333 /* MMFlipCameraButton.m */,
 				667D98B8192FC22A00625879 /* MMPDFButton.h */,

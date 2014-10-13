@@ -34,7 +34,16 @@
     UIColor* halfGreyFill = [self backgroundColor];
     UIColor* barelyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.25];
     UIColor* mostlyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.65];
+    UIColor* darkBlue = [UIColor colorWithRed: 0.279 green: 0.380 blue: 0.860 alpha: 0.75];
+    UIColor* lightBlue = [UIColor colorWithRed: 0.286 green: 0.588 blue: 0.929 alpha: 0.75];
     
+    //// Gradient Declarations
+    NSArray* blueGradientColors = [NSArray arrayWithObjects:
+                               (id)darkBlue.CGColor,
+                               (id)lightBlue.CGColor, nil];
+    CGFloat blueGradientLocations[] = {0, 1};
+    CGGradientRef blueGradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)blueGradientColors, blueGradientLocations);
+
     //// Gradient Declarations
     NSArray* faceGradientColors = [NSArray arrayWithObjects:
                                    (id)mostlyWhite.CGColor,
@@ -47,8 +56,20 @@
     
     //// Oval
     UIBezierPath* ovalPath = [self ovalPath];
-    [halfGreyFill setFill];
-    [ovalPath fill];
+//    [halfGreyFill setFill];
+//    [ovalPath fill];
+    
+    // fill face with gradient
+    CGContextSaveGState(context);
+    [ovalPath addClip];
+    CGRect ovalBounds = CGPathGetPathBoundingBox(ovalPath.CGPath);
+    CGContextDrawLinearGradient(context, blueGradient,
+                                CGPointMake(CGRectGetMidX(ovalBounds), CGRectGetMinY(ovalBounds)),
+                                CGPointMake(CGRectGetMidX(ovalBounds), CGRectGetMaxY(ovalBounds)),
+                                0);
+    CGContextRestoreGState(context);
+    
+
     
     // oval clip
     UIBezierPath *circleClipPath = [UIBezierPath bezierPathWithRect:CGRectInfinite];
@@ -58,7 +79,7 @@
 
     
     
-    //// hand Drawing
+    //// face Drawing
     UIBezierPath* facePath = [UIBezierPath bezierPath];
     [facePath moveToPoint: CGPointMake(7.5, 62.5)];
     [facePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.12500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.81148 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(7.5, 62.5) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.12433 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.86320 * CGRectGetHeight(frame))];
